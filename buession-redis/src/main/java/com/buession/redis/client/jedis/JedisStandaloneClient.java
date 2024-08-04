@@ -26,11 +26,9 @@ package com.buession.redis.client.jedis;
 
 import com.buession.redis.client.RedisStandaloneClient;
 import com.buession.redis.client.connection.jedis.JedisConnection;
-import com.buession.redis.client.jedis.operations.JedisAclOperations;
 import com.buession.redis.client.jedis.operations.JedisBitMapOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterOperations;
 import com.buession.redis.client.jedis.operations.JedisConnectionOperations;
-import com.buession.redis.client.jedis.operations.JedisGenericOperations;
 import com.buession.redis.client.jedis.operations.JedisGeoOperations;
 import com.buession.redis.client.jedis.operations.JedisHashOperations;
 import com.buession.redis.client.jedis.operations.JedisHyperLogLogOperations;
@@ -71,15 +69,6 @@ public class JedisStandaloneClient extends AbstractJedisRedisClient<JedisConnect
 	}
 
 	@Override
-	public AclOperations aclOperations() {
-		if(aclOperations == null){
-			aclOperations = new JedisAclOperations(this);
-		}
-
-		return aclOperations;
-	}
-
-	@Override
 	public BitMapOperations bitMapOperations() {
 		if(bitMapOperations == null){
 			bitMapOperations = new JedisBitMapOperations(this);
@@ -104,15 +93,6 @@ public class JedisStandaloneClient extends AbstractJedisRedisClient<JedisConnect
 		}
 
 		return connectionOperations;
-	}
-
-	@Override
-	public GenericOperations genericOperations() {
-		if(genericOperations == null){
-			genericOperations = new JedisGenericOperations(this);
-		}
-
-		return genericOperations;
 	}
 
 	@Override

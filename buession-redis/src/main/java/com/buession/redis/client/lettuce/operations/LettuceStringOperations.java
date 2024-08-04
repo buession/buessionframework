@@ -30,14 +30,10 @@ import com.buession.core.utils.StringUtils;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.Command;
-import com.buession.redis.core.command.args.GetExArgument;
-import com.buession.redis.core.command.args.SetArgument;
+import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.Converters;
-import com.buession.redis.core.internal.lettuce.LettuceGetExArgs;
 import com.buession.redis.core.internal.lettuce.LettuceSetArgs;
 import com.buession.redis.utils.SafeEncoder;
-import io.lettuce.core.GetExArgs;
 import io.lettuce.core.KeyValue;
 import io.lettuce.core.SetArgs;
 import io.lettuce.core.Value;
@@ -63,14 +59,14 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.APPEND, (cmd)->cmd.append(key, value), (v)->v)
+			return new LettucePipelineCommand<>(client, ProtocolCommand.APPEND, (cmd)->cmd.append(key, value), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.APPEND, (cmd)->cmd.append(key, value),
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.APPEND, (cmd)->cmd.append(key, value),
 					(v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, Command.APPEND, (cmd)->cmd.append(key, value), (v)->v)
+			return new LettuceCommand<>(client, ProtocolCommand.APPEND, (cmd)->cmd.append(key, value), (v)->v)
 					.run(args);
 		}
 	}
@@ -80,13 +76,13 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.INCR, (cmd)->cmd.incr(key), (v)->v)
+			return new LettucePipelineCommand<>(client, ProtocolCommand.INCR, (cmd)->cmd.incr(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.INCR, (cmd)->cmd.incr(key), (v)->v)
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.INCR, (cmd)->cmd.incr(key), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, Command.INCR, (cmd)->cmd.incr(key), (v)->v)
+			return new LettuceCommand<>(client, ProtocolCommand.INCR, (cmd)->cmd.incr(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -96,14 +92,14 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.INCRBY, (cmd)->cmd.incrby(key, value), (v)->v)
+			return new LettucePipelineCommand<>(client, ProtocolCommand.INCRBY, (cmd)->cmd.incrby(key, value), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.INCRBY, (cmd)->cmd.incrby(key, value),
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.INCRBY, (cmd)->cmd.incrby(key, value),
 					(v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, Command.INCRBY, (cmd)->cmd.incrby(key, value), (v)->v)
+			return new LettuceCommand<>(client, ProtocolCommand.INCRBY, (cmd)->cmd.incrby(key, value), (v)->v)
 					.run(args);
 		}
 	}
@@ -113,15 +109,15 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.INCRBYFLOAT, (cmd)->cmd.incrbyfloat(key, value),
+			return new LettucePipelineCommand<>(client, ProtocolCommand.INCRBYFLOAT, (cmd)->cmd.incrbyfloat(key, value),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.INCRBYFLOAT,
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.INCRBYFLOAT,
 					(cmd)->cmd.incrbyfloat(key, value), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, Command.INCRBYFLOAT, (cmd)->cmd.incrbyfloat(key, value), (v)->v)
+			return new LettuceCommand<>(client, ProtocolCommand.INCRBYFLOAT, (cmd)->cmd.incrbyfloat(key, value), (v)->v)
 					.run(args);
 		}
 	}
@@ -131,13 +127,13 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.DECR, (cmd)->cmd.decr(key), (v)->v)
+			return new LettucePipelineCommand<>(client, ProtocolCommand.DECR, (cmd)->cmd.decr(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.DECR, (cmd)->cmd.decr(key), (v)->v)
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.DECR, (cmd)->cmd.decr(key), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, Command.DECR, (cmd)->cmd.decr(key), (v)->v)
+			return new LettuceCommand<>(client, ProtocolCommand.DECR, (cmd)->cmd.decr(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -147,14 +143,14 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.DECRBY, (cmd)->cmd.decrby(key, value), (v)->v)
+			return new LettucePipelineCommand<>(client, ProtocolCommand.DECRBY, (cmd)->cmd.decrby(key, value), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.DECRBY, (cmd)->cmd.decrby(key, value),
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.DECRBY, (cmd)->cmd.decrby(key, value),
 					(v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, Command.DECRBY, (cmd)->cmd.decrby(key, value), (v)->v)
+			return new LettuceCommand<>(client, ProtocolCommand.DECRBY, (cmd)->cmd.decrby(key, value), (v)->v)
 					.run(args);
 		}
 	}
@@ -176,18 +172,13 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 	@Override
 	public String getEx(final String key, final GetExArgument getExArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("getExArgument", getExArgument);
-		final byte[] bKey = SafeEncoder.encode(key);
-		final GetExArgs getExArgs = LettuceGetExArgs.from(getExArgument);
-
-		return getEx(bKey, getExArgs, SafeEncoder::encode, args);
+		return getEx(args);
 	}
 
 	@Override
 	public byte[] getEx(final byte[] key, final GetExArgument getExArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("getExArgument", getExArgument);
-		final GetExArgs getExArgs = LettuceGetExArgs.from(getExArgument);
-
-		return getEx(key, getExArgs, (v)->v, args);
+		return getEx(args);
 	}
 
 	@Override
@@ -208,15 +199,13 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 	@Override
 	public String getDel(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		final byte[] bKey = SafeEncoder.encode(key);
-
-		return getDel(bKey, SafeEncoder::encode, args);
+		return getDel(args);
 	}
 
 	@Override
 	public byte[] getDel(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return getDel(key, (v)->v, args);
+		return getDel(args);
 	}
 
 	@Override
@@ -243,15 +232,15 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 		final Map<byte[], byte[]> bValues = Converters.mapStringToBinary().convert(values);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.MSET, (cmd)->cmd.mset(bValues),
+			return new LettucePipelineCommand<>(client, ProtocolCommand.MSET, (cmd)->cmd.mset(bValues),
 					okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.MSET, (cmd)->cmd.mset(bValues),
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.MSET, (cmd)->cmd.mset(bValues),
 					okStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, Command.MSET, (cmd)->cmd.mset(bValues), okStatusConverter)
+			return new LettuceCommand<>(client, ProtocolCommand.MSET, (cmd)->cmd.mset(bValues), okStatusConverter)
 					.run(args);
 		}
 	}
@@ -262,15 +251,15 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 		final Map<byte[], byte[]> bValues = Converters.mapStringToBinary().convert(values);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.MSETNX, (cmd)->cmd.msetnx(bValues),
+			return new LettucePipelineCommand<>(client, ProtocolCommand.MSETNX, (cmd)->cmd.msetnx(bValues),
 					booleanStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.MSETNX, (cmd)->cmd.msetnx(bValues),
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.MSETNX, (cmd)->cmd.msetnx(bValues),
 					booleanStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, Command.MSETNX, (cmd)->cmd.msetnx(bValues),
+			return new LettuceCommand<>(client, ProtocolCommand.MSETNX, (cmd)->cmd.msetnx(bValues),
 					booleanStatusConverter)
 					.run(args);
 		}
@@ -281,15 +270,15 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.PSETEX, (cmd)->cmd.psetex(key, lifetime, value),
+			return new LettucePipelineCommand<>(client, ProtocolCommand.PSETEX, (cmd)->cmd.psetex(key, lifetime, value),
 					okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.PSETEX,
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.PSETEX,
 					(cmd)->cmd.psetex(key, lifetime, value), okStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, Command.PSETEX, (cmd)->cmd.psetex(key, lifetime, value),
+			return new LettuceCommand<>(client, ProtocolCommand.PSETEX, (cmd)->cmd.psetex(key, lifetime, value),
 					okStatusConverter)
 					.run(args);
 		}
@@ -300,15 +289,15 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.SET, (cmd)->cmd.set(key, value),
+			return new LettucePipelineCommand<>(client, ProtocolCommand.SET, (cmd)->cmd.set(key, value),
 					okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.SET, (cmd)->cmd.set(key, value),
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.SET, (cmd)->cmd.set(key, value),
 					okStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, Command.SET, (cmd)->cmd.set(key, value), okStatusConverter)
+			return new LettuceCommand<>(client, ProtocolCommand.SET, (cmd)->cmd.set(key, value), okStatusConverter)
 					.run(args);
 		}
 	}
@@ -319,15 +308,15 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 		final SetArgs setArgs = LettuceSetArgs.from(setArgument);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.SET, (cmd)->cmd.set(key, value, setArgs),
+			return new LettucePipelineCommand<>(client, ProtocolCommand.SET, (cmd)->cmd.set(key, value, setArgs),
 					okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.SET, (cmd)->cmd.set(key, value, setArgs),
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.SET, (cmd)->cmd.set(key, value, setArgs),
 					okStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, Command.SET, (cmd)->cmd.set(key, value, setArgs),
+			return new LettuceCommand<>(client, ProtocolCommand.SET, (cmd)->cmd.set(key, value, setArgs),
 					okStatusConverter)
 					.run(args);
 		}
@@ -338,15 +327,15 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.SETEX, (cmd)->cmd.setex(key, lifetime, value),
+			return new LettucePipelineCommand<>(client, ProtocolCommand.SETEX, (cmd)->cmd.setex(key, lifetime, value),
 					okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.SETEX,
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.SETEX,
 					(cmd)->cmd.setex(key, lifetime, value), okStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, Command.SETEX, (cmd)->cmd.setex(key, lifetime, value),
+			return new LettuceCommand<>(client, ProtocolCommand.SETEX, (cmd)->cmd.setex(key, lifetime, value),
 					okStatusConverter)
 					.run(args);
 		}
@@ -357,15 +346,15 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.SETNX, (cmd)->cmd.setnx(key, value),
+			return new LettucePipelineCommand<>(client, ProtocolCommand.SETNX, (cmd)->cmd.setnx(key, value),
 					booleanStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.SETNX, (cmd)->cmd.setnx(key, value),
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.SETNX, (cmd)->cmd.setnx(key, value),
 					booleanStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, Command.SETNX, (cmd)->cmd.setnx(key, value),
+			return new LettuceCommand<>(client, ProtocolCommand.SETNX, (cmd)->cmd.setnx(key, value),
 					booleanStatusConverter)
 					.run(args);
 		}
@@ -376,15 +365,15 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.SETRANGE,
+			return new LettucePipelineCommand<>(client, ProtocolCommand.SETRANGE,
 					(cmd)->cmd.setrange(key, offset, value), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.SETRANGE,
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.SETRANGE,
 					(cmd)->cmd.setrange(key, offset, value), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, Command.SETRANGE, (cmd)->cmd.setrange(key, offset, value),
+			return new LettuceCommand<>(client, ProtocolCommand.SETRANGE, (cmd)->cmd.setrange(key, offset, value),
 					(v)->v)
 					.run(args);
 		}
@@ -395,15 +384,15 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.GETRANGE, (cmd)->cmd.getrange(key, start, end),
+			return new LettucePipelineCommand<>(client, ProtocolCommand.GETRANGE, (cmd)->cmd.getrange(key, start, end),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.GETRANGE,
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.GETRANGE,
 					(cmd)->cmd.getrange(key, start, end), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, Command.GETRANGE, (cmd)->cmd.getrange(key, start, end), (v)->v)
+			return new LettuceCommand<>(client, ProtocolCommand.GETRANGE, (cmd)->cmd.getrange(key, start, end), (v)->v)
 					.run(args);
 		}
 	}
@@ -413,61 +402,58 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.STRLEN, (cmd)->cmd.strlen(key), (v)->v)
+			return new LettucePipelineCommand<>(client, ProtocolCommand.STRLEN, (cmd)->cmd.strlen(key), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.STRLEN, (cmd)->cmd.strlen(key), (v)->v)
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.STRLEN, (cmd)->cmd.strlen(key), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, Command.STRLEN, (cmd)->cmd.strlen(key), (v)->v)
+			return new LettuceCommand<>(client, ProtocolCommand.STRLEN, (cmd)->cmd.strlen(key), (v)->v)
 					.run(args);
 		}
 	}
 
 	@Override
-	public String substr(final String key, final int start, final int end) {
+	public String substr(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		final byte[] bKey = SafeEncoder.encode(key);
-		final Converter<byte[], String> converter = (v)->StringUtils.substring(SafeEncoder.encode(v), start, end);
+		final Converter<byte[], String> converter = (v)->StringUtils.substring(SafeEncoder.encode(v),
+				(int) start, (int) end);
 
 		return substr(bKey, converter, args);
 	}
 
 	@Override
-	public byte[] substr(final byte[] key, final int start, final int end) {
+	public byte[] substr(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		final Converter<byte[], byte[]> converter = (v)->StringUtils.substring(SafeEncoder.encode(v), start, end)
-				.getBytes(StandardCharsets.UTF_8);
+		final Converter<byte[], byte[]> converter = (v)->StringUtils.substring(SafeEncoder.encode(v), (int) start,
+				(int) end).getBytes(StandardCharsets.UTF_8);
 
 		return substr(key, converter, args);
 	}
 
 	private <V> V get(final byte[] key, final Converter<byte[], V> converter, final CommandArguments args) {
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.GET, (cmd)->cmd.get(key), converter)
+			return new LettucePipelineCommand<>(client, ProtocolCommand.GET, (cmd)->cmd.get(key), converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.GET, (cmd)->cmd.get(key), converter)
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.GET, (cmd)->cmd.get(key), converter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, Command.GET, (cmd)->cmd.get(key), converter)
+			return new LettuceCommand<>(client, ProtocolCommand.GET, (cmd)->cmd.get(key), converter)
 					.run(args);
 		}
 	}
 
-	private <V> V getEx(final byte[] key, final GetExArgs getExArgs, final Converter<byte[], V> converter,
-						final CommandArguments args) {
+	private <V> V getEx(final CommandArguments args) {
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.GETEX, (cmd)->cmd.getex(key, getExArgs),
-					converter)
+			return new LettucePipelineCommand<V, V>(client, ProtocolCommand.GETEX)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.GETEX, (cmd)->cmd.getex(key, getExArgs),
-					converter)
+			return new LettuceTransactionCommand<V, V>(client, ProtocolCommand.GETEX)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, Command.GETEX, (cmd)->cmd.getex(key, getExArgs),
-					converter)
+			return new LettuceCommand<V, V>(client, ProtocolCommand.GETEX)
 					.run(args);
 		}
 	}
@@ -475,29 +461,28 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 	private <V> V getSet(final byte[] key, final byte[] value, final Converter<byte[], V> converter,
 						 final CommandArguments args) {
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.GETSET, (cmd)->cmd.getset(key, value),
+			return new LettucePipelineCommand<>(client, ProtocolCommand.GETSET, (cmd)->cmd.getset(key, value),
 					converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.GETSET, (cmd)->cmd.getset(key, value),
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.GETSET, (cmd)->cmd.getset(key, value),
 					converter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, Command.GETSET, (cmd)->cmd.getset(key, value), converter)
+			return new LettuceCommand<>(client, ProtocolCommand.GETSET, (cmd)->cmd.getset(key, value), converter)
 					.run(args);
 		}
 	}
 
-	private <V> V getDel(final byte[] key, final Converter<byte[], V> converter, final CommandArguments args) {
+	private <V> V getDel(final CommandArguments args) {
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.GETDEL, (cmd)->cmd.getdel(key), converter)
+			return new LettucePipelineCommand<V, V>(client, ProtocolCommand.GETDEL)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.GETDEL, (cmd)->cmd.getdel(key),
-					converter)
+			return new LettuceTransactionCommand<V, V>(client, ProtocolCommand.GETDEL)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, Command.GETDEL, (cmd)->cmd.getdel(key), converter)
+			return new LettuceCommand<V, V>(client, ProtocolCommand.GETDEL)
 					.run(args);
 		}
 	}
@@ -505,26 +490,26 @@ public final class LettuceStringOperations extends AbstractStringOperations<Lett
 	private <V> List<V> mGet(final byte[][] keys, final Converter<List<KeyValue<byte[], byte[]>>, List<V>> converter,
 							 final CommandArguments args) {
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.MGET, (cmd)->cmd.mget(keys), converter)
+			return new LettucePipelineCommand<>(client, ProtocolCommand.MGET, (cmd)->cmd.mget(keys), converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.MGET, (cmd)->cmd.mget(keys), converter)
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.MGET, (cmd)->cmd.mget(keys), converter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, Command.MGET, (cmd)->cmd.mget(keys), converter)
+			return new LettuceCommand<>(client, ProtocolCommand.MGET, (cmd)->cmd.mget(keys), converter)
 					.run(args);
 		}
 	}
 
 	private <V> V substr(final byte[] key, final Converter<byte[], V> converter, final CommandArguments args) {
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.SUBSTR, (cmd)->cmd.get(key), converter)
+			return new LettucePipelineCommand<>(client, ProtocolCommand.SUBSTR, (cmd)->cmd.get(key), converter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.SUBSTR, (cmd)->cmd.get(key), converter)
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.SUBSTR, (cmd)->cmd.get(key), converter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, Command.SUBSTR, (cmd)->cmd.get(key), converter)
+			return new LettuceCommand<>(client, ProtocolCommand.SUBSTR, (cmd)->cmd.get(key), converter)
 					.run(args);
 		}
 	}

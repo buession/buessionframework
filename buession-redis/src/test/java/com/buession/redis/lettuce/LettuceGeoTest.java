@@ -28,7 +28,6 @@ import com.buession.lang.Geo;
 import com.buession.redis.RedisTemplate;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
-import com.buession.redis.core.command.args.GeoRadiusArgument;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -78,8 +77,7 @@ public class LettuceGeoTest extends AbstractLettuceRedisTest {
 	@Test
 	public void geoRadiusWithadiusArgument() {
 		RedisTemplate redisTemplate = redisTemplate();
-		List<GeoRadius> result = redisTemplate.geoRadius("beijing", 116.405706, 39.921797, 5.0, GeoUnit.KM,
-				new GeoRadiusArgument(true, true, true));
+		List<GeoRadius> result = redisTemplate.geoRadius("beijing", 116.405706, 39.921797, 5.0, GeoUnit.KM);
 		result.forEach(System.out::println);
 	}
 

@@ -25,7 +25,6 @@
 package com.buession.redis.core.internal.jedis;
 
 import com.buession.redis.core.StreamEntryId;
-import redis.clients.jedis.StreamEntryID;
 import redis.clients.jedis.params.XPendingParams;
 
 /**
@@ -36,412 +35,44 @@ import redis.clients.jedis.params.XPendingParams;
  */
 public final class JedisXPendingParams extends XPendingParams {
 
-	/**
-	 * 构造函数
-	 *
-	 * @param start
-	 * 		-
-	 * @param end
-	 * 		-
-	 * @param count
-	 * 		返回数量
-	 */
-	public JedisXPendingParams(final String start, final String end, final int count) {
-		this(new StreamEntryID(start), new StreamEntryID(end), count);
+	public JedisXPendingParams() {
+		super();
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param start
-	 * 		-
-	 * @param end
-	 * 		-
-	 * @param count
-	 * 		返回数量
-	 */
-	public JedisXPendingParams(final byte[] start, final byte[] end, final int count) {
-		super(new StreamEntryID(start), new StreamEntryID(end), count);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param start
-	 * 		-
-	 * @param end
-	 * 		-
-	 * @param count
-	 * 		返回数量
-	 */
-	public JedisXPendingParams(final StreamEntryId start, final StreamEntryId end, final int count) {
-		super(JedisStreamEntryID.from(start), JedisStreamEntryID.from(end), count);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param start
-	 * 		-
-	 * @param end
-	 * 		-
-	 * @param count
-	 * 		返回数量
-	 */
-	public JedisXPendingParams(final StreamEntryID start, final StreamEntryID end, final int count) {
-		super(start, end, count);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param start
-	 * 		-
-	 * @param end
-	 * 		-
-	 * @param count
-	 * 		返回数量
-	 * @param idle
-	 * 		-
-	 */
-	public JedisXPendingParams(final String start, final String end, final int count, final long idle) {
-		this(start, end, count);
-		idle(idle);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param start
-	 * 		-
-	 * @param end
-	 * 		-
-	 * @param count
-	 * 		返回数量
-	 * @param idle
-	 * 		-
-	 */
-	public JedisXPendingParams(final byte[] start, final byte[] end, final int count, final long idle) {
-		this(start, end, count);
-		idle(idle);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param start
-	 * 		-
-	 * @param end
-	 * 		-
-	 * @param count
-	 * 		返回数量
-	 * @param idle
-	 * 		-
-	 */
-	public JedisXPendingParams(final StreamEntryId start, final StreamEntryId end, final int count, final long idle) {
-		this(start, end, count);
-		idle(idle);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param start
-	 * 		-
-	 * @param end
-	 * 		-
-	 * @param count
-	 * 		返回数量
-	 * @param idle
-	 * 		-
-	 */
-	public JedisXPendingParams(final StreamEntryID start, final StreamEntryID end, final int count, final long idle) {
-		super(start, end, count);
-		idle(idle);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param start
-	 * 		-
-	 * @param end
-	 * 		-
-	 * @param count
-	 * 		返回数量
-	 * @param consumer
-	 * 		-
-	 */
-	public JedisXPendingParams(final String start, final String end, final int count, final String consumer) {
-		this(start, end, count);
-		consumer(consumer);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param start
-	 * 		-
-	 * @param end
-	 * 		-
-	 * @param count
-	 * 		返回数量
-	 * @param consumer
-	 * 		-
-	 */
-	public JedisXPendingParams(final byte[] start, final byte[] end, final int count, final byte[] consumer) {
-		this(start, end, count);
-		consumer(consumer);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param start
-	 * 		-
-	 * @param end
-	 * 		-
-	 * @param count
-	 * 		返回数量
-	 * @param consumer
-	 * 		-
-	 */
-	public JedisXPendingParams(final StreamEntryId start, final StreamEntryId end, final int count,
-							   final String consumer) {
-		this(start, end, count);
-		consumer(consumer);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param start
-	 * 		-
-	 * @param end
-	 * 		-
-	 * @param count
-	 * 		返回数量
-	 * @param consumer
-	 * 		-
-	 */
-	public JedisXPendingParams(final StreamEntryId start, final StreamEntryId end, final int count,
-							   final byte[] consumer) {
-		this(start, end, count);
-		consumer(consumer);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param start
-	 * 		-
-	 * @param end
-	 * 		-
-	 * @param count
-	 * 		返回数量
-	 * @param consumer
-	 * 		-
-	 */
-	public JedisXPendingParams(final StreamEntryID start, final StreamEntryID end, final int count,
-							   final String consumer) {
-		super(start, end, count);
-		consumer(consumer);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param start
-	 * 		-
-	 * @param end
-	 * 		-
-	 * @param count
-	 * 		返回数量
-	 * @param consumer
-	 * 		-
-	 */
-	public JedisXPendingParams(final StreamEntryID start, final StreamEntryID end, final int count,
-							   final byte[] consumer) {
-		super(start, end, count);
-		consumer(consumer);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param start
-	 * 		-
-	 * @param end
-	 * 		-
-	 * @param count
-	 * 		返回数量
-	 * @param idle
-	 * 		-
-	 * @param consumer
-	 * 		-
-	 */
-	public JedisXPendingParams(final String start, final String end, final int count, final long idle,
-							   final String consumer) {
-		this(start, end, count, idle);
-		consumer(consumer);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param start
-	 * 		-
-	 * @param end
-	 * 		-
-	 * @param count
-	 * 		返回数量
-	 * @param idle
-	 * 		-
-	 * @param consumer
-	 * 		-
-	 */
-	public JedisXPendingParams(final byte[] start, final byte[] end, final int count, final long idle,
-							   final byte[] consumer) {
-		this(start, end, count, idle);
-		consumer(consumer);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param start
-	 * 		-
-	 * @param end
-	 * 		-
-	 * @param count
-	 * 		返回数量
-	 * @param idle
-	 * 		-
-	 * @param consumer
-	 * 		-
-	 */
-	public JedisXPendingParams(final StreamEntryId start, final StreamEntryId end, final int count, final long idle,
-							   final String consumer) {
-		this(start, end, count, idle);
-		consumer(consumer);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param start
-	 * 		-
-	 * @param end
-	 * 		-
-	 * @param count
-	 * 		返回数量
-	 * @param idle
-	 * 		-
-	 * @param consumer
-	 * 		-
-	 */
-	public JedisXPendingParams(final StreamEntryId start, final StreamEntryId end, final int count, final long idle,
-							   final byte[] consumer) {
-		this(start, end, count, idle);
-		consumer(consumer);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param start
-	 * 		-
-	 * @param end
-	 * 		-
-	 * @param count
-	 * 		返回数量
-	 * @param idle
-	 * 		-
-	 * @param consumer
-	 * 		-
-	 */
-	public JedisXPendingParams(final StreamEntryID start, final StreamEntryID end, final int count, final long idle,
-							   final String consumer) {
-		this(start, end, count, idle);
-		consumer(consumer);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param start
-	 * 		-
-	 * @param end
-	 * 		-
-	 * @param count
-	 * 		返回数量
-	 * @param idle
-	 * 		-
-	 * @param consumer
-	 * 		-
-	 */
-	public JedisXPendingParams(final StreamEntryID start, final StreamEntryID end, final int count, final long idle,
-							   final byte[] consumer) {
-		this(start, end, count, idle);
-		consumer(consumer);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param idle
-	 * 		-
-	 */
 	public JedisXPendingParams(final long idle) {
-		super();
+		this();
 		idle(idle);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param consumer
-	 * 		-
-	 */
-	public JedisXPendingParams(final String consumer) {
-		super();
-		consumer(consumer);
+	public JedisXPendingParams(final long idle, final StreamEntryId start, final StreamEntryId end,
+							   final long count) {
+		this(start, end, count);
+		idle(idle);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param consumer
-	 * 		-
-	 */
-	public JedisXPendingParams(final byte[] consumer) {
-		super();
-		consumer(consumer);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param idle
-	 * 		-
-	 * @param consumer
-	 * 		-
-	 */
 	public JedisXPendingParams(final long idle, final String consumer) {
-		idle(idle);
+		this(idle);
 		consumer(consumer);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param idle
-	 * 		-
-	 * @param consumer
-	 * 		-
-	 */
-	public JedisXPendingParams(final long idle, final byte[] consumer) {
-		idle(idle);
+	public JedisXPendingParams(final StreamEntryId start, final StreamEntryId end, final long count) {
+		super(JedisStreamEntryID.from(start), JedisStreamEntryID.from(end), (int) count);
+	}
+
+	public JedisXPendingParams(final StreamEntryId start, final StreamEntryId end, final long count,
+							   final String consumer) {
+		this(start, end, count);
+		consumer(consumer);
+	}
+
+	public JedisXPendingParams(final long idle, final StreamEntryId start, final StreamEntryId end,
+							   final long count, final String consumer) {
+		this(idle, start, end, count);
+		consumer(consumer);
+	}
+
+	public JedisXPendingParams(final String consumer) {
+		this();
 		consumer(consumer);
 	}
 

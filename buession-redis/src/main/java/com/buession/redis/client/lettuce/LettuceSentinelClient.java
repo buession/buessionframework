@@ -26,11 +26,9 @@ package com.buession.redis.client.lettuce;
 
 import com.buession.redis.client.RedisSentinelClient;
 import com.buession.redis.client.connection.lettuce.LettuceSentinelConnection;
-import com.buession.redis.client.lettuce.operations.LettuceSentinelAclOperations;
 import com.buession.redis.client.lettuce.operations.LettuceSentinelBitMapOperations;
 import com.buession.redis.client.lettuce.operations.LettuceSentinelClusterOperations;
 import com.buession.redis.client.lettuce.operations.LettuceSentinelConnectionOperations;
-import com.buession.redis.client.lettuce.operations.LettuceSentinelGenericOperations;
 import com.buession.redis.client.lettuce.operations.LettuceSentinelGeoOperations;
 import com.buession.redis.client.lettuce.operations.LettuceSentinelHashOperations;
 import com.buession.redis.client.lettuce.operations.LettuceSentinelHyperLogLogOperations;
@@ -73,15 +71,6 @@ public class LettuceSentinelClient extends AbstractLettuceRedisClient<LettuceSen
 	}
 
 	@Override
-	public AclOperations aclOperations() {
-		if(aclOperations == null){
-			aclOperations = new LettuceSentinelAclOperations(this);
-		}
-
-		return aclOperations;
-	}
-
-	@Override
 	public BitMapOperations bitMapOperations() {
 		if(bitMapOperations == null){
 			bitMapOperations = new LettuceSentinelBitMapOperations(this);
@@ -106,15 +95,6 @@ public class LettuceSentinelClient extends AbstractLettuceRedisClient<LettuceSen
 		}
 
 		return connectionOperations;
-	}
-
-	@Override
-	public GenericOperations genericOperations() {
-		if(genericOperations == null){
-			genericOperations = new LettuceSentinelGenericOperations(this);
-		}
-
-		return genericOperations;
 	}
 
 	@Override

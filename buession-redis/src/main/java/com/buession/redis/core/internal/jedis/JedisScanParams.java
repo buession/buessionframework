@@ -24,10 +24,7 @@
  */
 package com.buession.redis.core.internal.jedis;
 
-import com.buession.redis.core.command.args.HScanArgument;
 import redis.clients.jedis.params.ScanParams;
-
-import java.util.Optional;
 
 /**
  * Jedis {@link ScanParams} 扩展
@@ -36,91 +33,47 @@ import java.util.Optional;
  */
 public final class JedisScanParams extends ScanParams {
 
-	/**
-	 * 构造函数
-	 */
 	public JedisScanParams() {
 		super();
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param pattern
-	 * 		匹配模式
-	 */
 	public JedisScanParams(final String pattern) {
 		super();
 		match(pattern);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param pattern
-	 * 		匹配模式
-	 */
 	public JedisScanParams(final byte[] pattern) {
 		super();
 		match(pattern);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param count
-	 * 		返回数量
-	 */
 	public JedisScanParams(final int count) {
 		super();
 		count(count);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param pattern
-	 * 		匹配模式
-	 * @param count
-	 * 		返回数量
-	 */
 	public JedisScanParams(final String pattern, final int count) {
-		this(pattern);
+		super();
+		match(pattern);
 		count(count);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param pattern
-	 * 		匹配模式
-	 * @param count
-	 * 		返回数量
-	 */
 	public JedisScanParams(final byte[] pattern, final int count) {
-		this(pattern);
+		super();
+		match(pattern);
 		count(count);
 	}
 
-	/**
-	 * 从 {@link HScanArgument} 创建 {@link ScanParams} 实例
-	 *
-	 * @param scanArgument
-	 *        {@link HScanArgument}
-	 *
-	 * @return {@link JedisScanParams} 实例
-	 */
-	public static <T> JedisScanParams from(final HScanArgument<T> scanArgument) {
-		final JedisScanParams scanParams = new JedisScanParams();
+	public JedisScanParams(final long count) {
+		this((int) count);
+	}
 
-		if(scanArgument.getPattern() instanceof String){
-			scanParams.match((String) scanArgument.getPattern());
-		}else if(scanArgument.getPattern() instanceof byte[]){
-			scanParams.match((byte[]) scanArgument.getPattern());
-		}
-		Optional.ofNullable(scanArgument.getCount()).ifPresent(scanParams::count);
+	public JedisScanParams(final String pattern, final long count) {
+		this(pattern, (int) count);
+	}
 
-		return scanParams;
+	public JedisScanParams(final byte[] pattern, final long count) {
+		this(pattern, (int) count);
 	}
 
 }

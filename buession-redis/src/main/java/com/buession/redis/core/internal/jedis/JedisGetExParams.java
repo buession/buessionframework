@@ -24,8 +24,10 @@
  */
 package com.buession.redis.core.internal.jedis;
 
-import com.buession.redis.core.command.args.GetExArgument;
+import com.buession.redis.core.command.StringCommands;
 import redis.clients.jedis.params.GetExParams;
+
+import java.util.Optional;
 
 /**
  * Jedis {@link GetExParams} 扩展
@@ -35,70 +37,46 @@ import redis.clients.jedis.params.GetExParams;
  */
 public final class JedisGetExParams extends GetExParams {
 
-	/**
-	 * 构造函数
-	 */
 	public JedisGetExParams() {
 		super();
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param type
-	 * 		键过期设置方式
-	 * @param value
-	 * 		键过期时间
-	 */
-	public JedisGetExParams(final GetExArgument.GetExType type, final Long value) {
+	public JedisGetExParams(final boolean persist) {
 		super();
-
-		if(type != null && value != null){
-			switch(type){
-				case EX:
-					ex(value);
-					break;
-				case EXAT:
-					exAt(value);
-					break;
-				case PX:
-					px(value);
-					break;
-				case PXAT:
-					pxAt(value);
-					break;
-				case PERSIST:
-					persist();
-					break;
-				default:
-					break;
-			}
-		}
+		persist(this, persist);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param persist
-	 * 		设置键是否持久化
-	 */
-	public JedisGetExParams(final Boolean persist) {
+	public JedisGetExParams(final long ex, final long exAt, final long px, final long pxAt) {
 		super();
+		ex(ex);
+		exAt(exAt);
+		px(px);
+		pxAt(pxAt);
+	}
+
+	public JedisGetExParams(final long ex, final long exAt, final long px, final long pxAt, final boolean persist) {
+		this(ex, exAt, px, pxAt);
+		persist(this, persist);
+	}
+
+	public static JedisGetExParams from(final StringCommands.GetExArgument getExArgument) {
+		final JedisGetExParams getExParams = new JedisGetExParams();
+
+		if(getExArgument != null){
+			Optional.ofNullable(getExArgument.getEx()).ifPresent(getExParams::ex);
+			Optional.ofNullable(getExArgument.getExAt()).ifPresent(getExParams::exAt);
+			Optional.ofNullable(getExArgument.getPx()).ifPresent(getExParams::px);
+			Optional.ofNullable(getExArgument.getPxAt()).ifPresent(getExParams::pxAt);
+			persist(getExParams, getExArgument.isPersist());
+		}
+
+		return getExParams;
+	}
+
+	private static void persist(final JedisGetExParams getExParams, final Boolean persist) {
 		if(Boolean.TRUE.equals(persist)){
-			persist();
+			getExParams.persist();
 		}
-	}
-
-	/**
-	 * 从 {@link GetExArgument} 创建 {@link GetExParams} 实例
-	 *
-	 * @param getExArgument
-	 *        {@link GetExArgument}
-	 *
-	 * @return {@link JedisGetExParams} 实例
-	 */
-	public static JedisGetExParams from(final GetExArgument getExArgument) {
-		return new JedisGetExParams(getExArgument.getType(), getExArgument.getExpires());
 	}
 
 }

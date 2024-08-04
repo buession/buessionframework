@@ -41,7 +41,6 @@ import java.util.TreeMap;
  */
 public final class MemoryStatsConverter implements Converter<Map<String, Object>, MemoryStats> {
 
-	@SuppressWarnings({"unchecked"})
 	@Override
 	public MemoryStats convert(final Map<String, Object> source) {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
@@ -118,9 +117,11 @@ public final class MemoryStatsConverter implements Converter<Map<String, Object>
 					j++;
 
 					if("overhead.hashtable.main".equals(v)){
-						propertyMapper.from(v).as((dv)->(Long) dv).to(dbStat::setOverheadHashTableMain);
+						propertyMapper.from(dbStatTmp.get(j)).as((dv)->(Long) dv)
+								.to(dbStat::setOverheadHashTableMain);
 					}else if("overhead.hashtable.expires".equals(v)){
-						propertyMapper.from(v).as((dv)->(Long) dv).to(dbStat::setOverheadHashTableExpires);
+						propertyMapper.from(dbStatTmp.get(j)).as((dv)->(Long) dv)
+								.to(dbStat::setOverheadHashTableExpires);
 					}
 				}
 

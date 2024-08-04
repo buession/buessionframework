@@ -24,16 +24,27 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
-import com.buession.lang.KeyValue;
+import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
+import com.buession.core.converter.ListSetConverter;
+import com.buession.core.converter.MapConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceSentinelClient;
-import com.buession.redis.core.ExpireOption;
-import com.buession.redis.core.Keyword;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.Command;
-import com.buession.redis.core.command.args.HScanArgument;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConverter;
+import com.buession.redis.core.internal.lettuce.LettuceScanArgs;
+import com.buession.redis.core.internal.lettuce.LettuceScanCursor;
+import com.buession.redis.utils.SafeEncoder;
+import io.lettuce.core.KeyValue;
+import io.lettuce.core.MapScanCursor;
+import io.lettuce.core.ScanArgs;
+import io.lettuce.core.ScanCursor;
+import io.lettuce.core.Value;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -51,409 +62,472 @@ public final class LettuceSentinelHashOperations extends AbstractHashOperations<
 	}
 
 	@Override
-	public Long hDel(final String key, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(fields);
-		return notCommand(client, Command.HDEL, args);
-	}
-
-	@Override
 	public Long hDel(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(fields);
-		return notCommand(client, Command.HDEL, args);
-	}
+		final CommandArguments args = CommandArguments.create("key", key).put("fields", (Object[]) fields);
 
-	@Override
-	public Boolean hExists(final String key, final String field) {
-		final CommandArguments args = CommandArguments.create(key).add(field);
-		return notCommand(client, Command.HEXISTS, args);
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.HDEL)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.HDEL)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.HDEL)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Boolean hExists(final byte[] key, final byte[] field) {
-		final CommandArguments args = CommandArguments.create(key).add(field);
-		return notCommand(client, Command.HEXISTS, args);
-	}
+		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
 
-	@Override
-	public List<Long> hExpire(final String key, final int lifetime, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(lifetime).add(Keyword.Hash.FIELDS, fields.length)
-				.add(fields);
-		return notCommand(client, Command.HEXPIRE, args);
-	}
-
-	@Override
-	public List<Long> hExpire(final byte[] key, final int lifetime, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(lifetime).add(Keyword.Hash.FIELDS, fields.length)
-				.add(fields);
-		return notCommand(client, Command.HEXPIRE, args);
-	}
-
-	@Override
-	public List<Long> hExpire(final String key, final int lifetime, final ExpireOption expireOption,
-							  final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(lifetime).add(expireOption)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
-		return notCommand(client, Command.HEXPIRE, args);
-	}
-
-	@Override
-	public List<Long> hExpire(final byte[] key, final int lifetime, final ExpireOption expireOption,
-							  final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(lifetime).add(expireOption)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
-		return notCommand(client, Command.HEXPIRE, args);
-	}
-
-	@Override
-	public List<Long> hExpireAt(final String key, final long unixTimestamp, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
-		return notCommand(client, Command.HEXPIREAT, args);
-	}
-
-	@Override
-	public List<Long> hExpireAt(final byte[] key, final long unixTimestamp, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
-		return notCommand(client, Command.HEXPIREAT, args);
-	}
-
-	@Override
-	public List<Long> hExpireAt(final String key, final long unixTimestamp, final ExpireOption expireOption,
-								final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(expireOption)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
-		return notCommand(client, Command.HEXPIREAT, args);
-	}
-
-	@Override
-	public List<Long> hExpireAt(final byte[] key, final long unixTimestamp, final ExpireOption expireOption,
-								final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(expireOption)
-				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
-		return notCommand(client, Command.HEXPIREAT, args);
-	}
-
-	@Override
-	public List<Long> hExpireTime(final String key, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
-		return notCommand(client, Command.HEXPIREAT, args);
-	}
-
-	@Override
-	public List<Long> hExpireTime(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
-		return notCommand(client, Command.HEXPIREAT, args);
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Boolean, Boolean>(client, ProtocolCommand.HEXISTS)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Boolean, Boolean>(client, ProtocolCommand.HEXISTS)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Boolean, Boolean>(client, ProtocolCommand.HEXISTS)
+					.run(args);
+		}
 	}
 
 	@Override
 	public String hGet(final String key, final String field) {
-		final CommandArguments args = CommandArguments.create(key).add(field);
-		return notCommand(client, Command.HGET, args);
+		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
+		final byte[] bKey = SafeEncoder.encode(key);
+		final byte[] bField = SafeEncoder.encode(field);
+
+		return hGet(bKey, bField, SafeEncoder::encode, args);
 	}
 
 	@Override
 	public byte[] hGet(final byte[] key, final byte[] field) {
-		final CommandArguments args = CommandArguments.create(key).add(field);
-		return notCommand(client, Command.HGET, args);
+		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
+		return hGet(key, field, (v)->v, args);
 	}
 
 	@Override
 	public Map<String, String> hGetAll(final String key) {
-		final CommandArguments args = CommandArguments.create(key);
-		return notCommand(client, Command.HGETALL, args);
+		final CommandArguments args = CommandArguments.create("key", key);
+		final byte[] bKey = SafeEncoder.encode(key);
+		final MapConverter<byte[], byte[], String, String> binaryToStringMapConverter = Converters.mapBinaryToString();
+
+		return hGetAll(bKey, binaryToStringMapConverter, args);
 	}
 
 	@Override
 	public Map<byte[], byte[]> hGetAll(final byte[] key) {
-		final CommandArguments args = CommandArguments.create(key);
-		return notCommand(client, Command.HGETALL, args);
-	}
-
-	@Override
-	public Long hIncrBy(final String key, final String field, final long value) {
-		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
-		return notCommand(client, Command.HINCRBY, args);
+		final CommandArguments args = CommandArguments.create("key", key);
+		return hGetAll(key, (v)->v, args);
 	}
 
 	@Override
 	public Long hIncrBy(final byte[] key, final byte[] field, final long value) {
-		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
-		return notCommand(client, Command.HINCRBY, args);
-	}
+		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 
-	@Override
-	public Double hIncrByFloat(final String key, final String field, final double value) {
-		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
-		return notCommand(client, Command.HINCRBYFLOAT, args);
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.HINCRBY)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.HINCRBY)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.HINCRBY)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Double hIncrByFloat(final byte[] key, final byte[] field, final double value) {
-		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
-		return notCommand(client, Command.HINCRBYFLOAT, args);
+		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
+
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Double, Double>(client, ProtocolCommand.HINCRBYFLOAT)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Double, Double>(client, ProtocolCommand.HINCRBYFLOAT)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Double, Double>(client, ProtocolCommand.HINCRBYFLOAT)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Set<String> hKeys(final String key) {
-		final CommandArguments args = CommandArguments.create(key);
-		return notCommand(client, Command.HKEYS, args);
+		final CommandArguments args = CommandArguments.create("key", key);
+		final byte[] bKey = SafeEncoder.encode(key);
+		final ListSetConverter<byte[], String> binaryToStringListSetConverter =
+				Converters.listSetBinaryToString();
+
+		return hKeys(bKey, binaryToStringListSetConverter, args);
 	}
 
 	@Override
 	public Set<byte[]> hKeys(final byte[] key) {
-		final CommandArguments args = CommandArguments.create(key);
-		return notCommand(client, Command.HKEYS, args);
-	}
-
-	@Override
-	public Long hLen(final String key) {
-		final CommandArguments args = CommandArguments.create(key);
-		return notCommand(client, Command.HLEN, args);
+		final CommandArguments args = CommandArguments.create("key", key);
+		return hKeys(key, HashSet::new, args);
 	}
 
 	@Override
 	public Long hLen(final byte[] key) {
-		final CommandArguments args = CommandArguments.create(key);
-		return notCommand(client, Command.HLEN, args);
+		final CommandArguments args = CommandArguments.create("key", key);
+
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.HLEN)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.HLEN)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.HLEN)
+					.run(args);
+		}
 	}
 
 	@Override
 	public List<String> hMGet(final String key, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(fields);
-		return notCommand(client, Command.HMGET, args);
+		final CommandArguments args = CommandArguments.create("key", key).put("fields", (Object[]) fields);
+		final byte[] bKey = SafeEncoder.encode(key);
+		final byte[][] bFields = SafeEncoder.encode(fields);
+		final ListConverter<KeyValue<byte[], byte[]>, String> listConverter =
+				new ListConverter<>((v)->SafeEncoder.encode(v.getValue()));
+
+		return hMGet(bKey, bFields, listConverter, args);
 	}
 
 	@Override
 	public List<byte[]> hMGet(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(fields);
-		return notCommand(client, Command.HMGET, args);
-	}
+		final CommandArguments args = CommandArguments.create("key", key).put("fields", (Object[]) fields);
+		final ListConverter<KeyValue<byte[], byte[]>, byte[]> listConverter = new ListConverter<>(Value::getValue);
 
-	@Override
-	public Status hMSet(final String key, final Map<String, String> data) {
-		final CommandArguments args = CommandArguments.create(key).add(data);
-		return notCommand(client, Command.HMSET, args);
+		return hMGet(key, fields, listConverter, args);
 	}
 
 	@Override
 	public Status hMSet(final byte[] key, final Map<byte[], byte[]> data) {
-		final CommandArguments args = CommandArguments.create(key).add(data);
-		return notCommand(client, Command.HMSET, args);
-	}
+		final CommandArguments args = CommandArguments.create("key", key).put("data", data);
 
-	@Override
-	public List<Long> hPersist(final String key, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields);
-		return notCommand(client, Command.HPERSIST, args);
-	}
-
-	@Override
-	public List<Long> hPersist(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields);
-		return notCommand(client, Command.HPERSIST, args);
-	}
-
-	@Override
-	public List<Long> hpExpire(final String key, final int lifetime, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(lifetime).add(Keyword.Hash.FIELDS, fields);
-		return notCommand(client, Command.HPEXPIRE, args);
-	}
-
-	@Override
-	public List<Long> hpExpire(final byte[] key, final int lifetime, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(lifetime).add(Keyword.Hash.FIELDS, fields);
-		return notCommand(client, Command.HPEXPIRE, args);
-	}
-
-	@Override
-	public List<Long> hpExpire(final String key, final int lifetime, final ExpireOption expireOption,
-							   final String... fields) {
-		final CommandArguments args =
-				CommandArguments.create(key).add(lifetime).add(expireOption).add(Keyword.Hash.FIELDS, fields);
-		return notCommand(client, Command.HPEXPIRE, args);
-	}
-
-	@Override
-	public List<Long> hpExpire(final byte[] key, final int lifetime, final ExpireOption expireOption,
-							   final byte[]... fields) {
-		final CommandArguments args =
-				CommandArguments.create(key).add(lifetime).add(expireOption).add(Keyword.Hash.FIELDS, fields);
-		return notCommand(client, Command.HPEXPIRE, args);
-	}
-
-	@Override
-	public List<Long> hpExpireAt(final String key, final long unixTimestamp, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(Keyword.Hash.FIELDS, fields);
-		return notCommand(client, Command.HPEXPIREAT, args);
-	}
-
-	@Override
-	public List<Long> hpExpireAt(final byte[] key, final long unixTimestamp, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(Keyword.Hash.FIELDS, fields);
-		return notCommand(client, Command.HPEXPIREAT, args);
-	}
-
-	@Override
-	public List<Long> hpExpireAt(final String key, final long unixTimestamp, final ExpireOption expireOption,
-								 final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(expireOption)
-				.add(Keyword.Hash.FIELDS, fields);
-		return notCommand(client, Command.HPEXPIREAT, args);
-	}
-
-	@Override
-	public List<Long> hpExpireAt(final byte[] key, final long unixTimestamp, final ExpireOption expireOption,
-								 final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(expireOption)
-				.add(Keyword.Hash.FIELDS, fields);
-		return notCommand(client, Command.HPEXPIREAT, args);
-	}
-
-	@Override
-	public List<Long> hpExpireTime(final String key, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields);
-		return notCommand(client, Command.HPEXPIRETIME, args);
-	}
-
-	@Override
-	public List<Long> hpExpireTime(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields);
-		return notCommand(client, Command.HPEXPIRETIME, args);
-	}
-
-	@Override
-	public List<Long> hpTtl(final String key, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields);
-		return notCommand(client, Command.HPTTL, args);
-	}
-
-	@Override
-	public List<Long> hpTtl(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields);
-		return notCommand(client, Command.HPTTL, args);
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.HMGET)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.HMGET)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.HMGET)
+					.run(args);
+		}
 	}
 
 	@Override
 	public String hRandField(final String key) {
-		final CommandArguments args = CommandArguments.create(key);
-		return notCommand(client, Command.HRANDFIELD, args);
+		final CommandArguments args = CommandArguments.create("key", key);
+		return hRandField(args);
 	}
 
 	@Override
 	public byte[] hRandField(final byte[] key) {
-		final CommandArguments args = CommandArguments.create(key);
-		return notCommand(client, Command.HRANDFIELD, args);
+		final CommandArguments args = CommandArguments.create("key", key);
+		return hRandField(args);
 	}
 
 	@Override
-	public List<String> hRandField(final String key, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(count);
-		return notCommand(client, Command.HRANDFIELD, args);
+	public List<String> hRandField(final String key, final long count) {
+		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
+		return hRandField(args);
 	}
 
 	@Override
-	public List<byte[]> hRandField(final byte[] key, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(count);
-		return notCommand(client, Command.HRANDFIELD, args);
+	public List<byte[]> hRandField(final byte[] key, final long count) {
+		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
+		return hRandField(args);
 	}
 
 	@Override
-	public List<KeyValue<String, String>> hRandFieldWithValues(final String key, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(count).add(Keyword.Hash.WITHVALUES);
-		return notCommand(client, Command.HRANDFIELD, args);
+	public Map<String, String> hRandFieldWithValues(final String key, final long count) {
+		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
+		return hRandField(args);
 	}
 
 	@Override
-	public List<KeyValue<byte[], byte[]>> hRandFieldWithValues(final byte[] key, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(count).add(Keyword.Hash.WITHVALUES);
-		return notCommand(client, Command.HRANDFIELD, args);
+	public Map<byte[], byte[]> hRandFieldWithValues(final byte[] key, final long count) {
+		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
+		return hRandField(args);
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor);
-		return notCommand(client, Command.HSCAN, args);
+		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
+		final byte[] bKey = SafeEncoder.encode(key);
+		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
+		final ScanCursorConverter.MapScanCursorConverter.BvSvMapScanCursorConverter bvSvMapScanCursorConverter =
+				new ScanCursorConverter.MapScanCursorConverter.BvSvMapScanCursorConverter();
+
+		return hScan(bKey, scanCursor, bvSvMapScanCursorConverter, args);
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor);
-		return notCommand(client, Command.HSCAN, args);
+		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
+		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
+		final ScanCursorConverter.MapScanCursorConverter<byte[], byte[]> mapScanCursorConverter = new ScanCursorConverter.MapScanCursorConverter<>();
+
+		return hScan(key, scanCursor, mapScanCursorConverter, args);
 	}
 
 	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final String cursor,
-												 final HScanArgument<String> scanArgument) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(scanArgument);
-		return notCommand(client, Command.HSCAN, args);
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern) {
+		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
+		final byte[] bKey = SafeEncoder.encode(key);
+		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
+		final ScanArgs scanArgs = new LettuceScanArgs(pattern);
+		final ScanCursorConverter.MapScanCursorConverter.BvSvMapScanCursorConverter bvSvMapScanCursorConverter =
+				new ScanCursorConverter.MapScanCursorConverter.BvSvMapScanCursorConverter();
+
+		return hScan(bKey, scanCursor, scanArgs, bvSvMapScanCursorConverter, args);
 	}
 
 	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor,
-												 final HScanArgument<byte[]> scanArgument) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(scanArgument);
-		return notCommand(client, Command.HSCAN, args);
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
+		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
+		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
+		final ScanArgs scanArgs = new LettuceScanArgs(pattern);
+		final ScanCursorConverter.MapScanCursorConverter<byte[], byte[]> mapScanCursorConverter = new ScanCursorConverter.MapScanCursorConverter<>();
+
+		return hScan(key, scanCursor, scanArgs, mapScanCursorConverter, args);
 	}
 
 	@Override
-	public Long hSet(final String key, final KeyValue<String, String>... data) {
-		final CommandArguments args = CommandArguments.create(key).add(data);
-		return notCommand(client, Command.HSET, args);
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final long count) {
+		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
+		final byte[] bKey = SafeEncoder.encode(key);
+		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
+		final ScanArgs scanArgs = new LettuceScanArgs(count);
+		final ScanCursorConverter.MapScanCursorConverter.BvSvMapScanCursorConverter bvSvMapScanCursorConverter =
+				new ScanCursorConverter.MapScanCursorConverter.BvSvMapScanCursorConverter();
+
+		return hScan(bKey, scanCursor, scanArgs, bvSvMapScanCursorConverter, args);
 	}
 
 	@Override
-	public Long hSet(final byte[] key, final KeyValue<byte[], byte[]>... data) {
-		final CommandArguments args = CommandArguments.create(key).add(data);
-		return notCommand(client, Command.HSET, args);
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final long count) {
+		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
+		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
+		final ScanArgs scanArgs = new LettuceScanArgs(count);
+		final ScanCursorConverter.MapScanCursorConverter<byte[], byte[]> mapScanCursorConverter = new ScanCursorConverter.MapScanCursorConverter<>();
+
+		return hScan(key, scanCursor, scanArgs, mapScanCursorConverter, args);
 	}
 
 	@Override
-	public Status hSetNx(final String key, final String field, final String value) {
-		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
-		return notCommand(client, Command.HSETNX, args);
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
+												 final long count) {
+		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
+		final byte[] bKey = SafeEncoder.encode(key);
+		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
+		final ScanArgs scanArgs = new LettuceScanArgs(pattern, count);
+		final ScanCursorConverter.MapScanCursorConverter.BvSvMapScanCursorConverter bvSvMapScanCursorConverter =
+				new ScanCursorConverter.MapScanCursorConverter.BvSvMapScanCursorConverter();
+
+		return hScan(bKey, scanCursor, scanArgs, bvSvMapScanCursorConverter, args);
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+												 final long count) {
+		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
+				.put("count", count);
+		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
+		final ScanArgs scanArgs = new LettuceScanArgs(pattern, count);
+		final ScanCursorConverter.MapScanCursorConverter<byte[], byte[]> mapScanCursorConverter = new ScanCursorConverter.MapScanCursorConverter<>();
+
+		return hScan(key, scanCursor, scanArgs, mapScanCursorConverter, args);
+	}
+
+	@Override
+	public Long hSet(final byte[] key, final byte[] field, final byte[] value) {
+		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
+		final Converter<Boolean, Long> converter = (v)->Boolean.TRUE.equals(v) ? 1L : 0L;
+
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.HSET)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.HSET)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.HSET)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status hSetNx(final byte[] key, final byte[] field, final byte[] value) {
-		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
-		return notCommand(client, Command.HSETNX, args);
-	}
+		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 
-	@Override
-	public Long hStrLen(final String key, final String field) {
-		final CommandArguments args = CommandArguments.create(key).add(field);
-		return notCommand(client, Command.HSTRLEN, args);
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.HSETNX)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.HSETNX)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.HSETNX)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long hStrLen(final byte[] key, final byte[] field) {
-		final CommandArguments args = CommandArguments.create(key).add(field);
-		return notCommand(client, Command.HSTRLEN, args);
-	}
+		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
 
-	@Override
-	public List<Long> hTtl(final String key, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields);
-		return notCommand(client, Command.HPTTL, args);
-	}
-
-	@Override
-	public List<Long> hTtl(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields);
-		return notCommand(client, Command.HPTTL, args);
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.HSETNX)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.HSETNX)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.HSETNX)
+					.run(args);
+		}
 	}
 
 	@Override
 	public List<String> hVals(final String key) {
-		final CommandArguments args = CommandArguments.create(key);
-		return notCommand(client, Command.HVALS, args);
+		final CommandArguments args = CommandArguments.create("key", key);
+		final byte[] bKey = SafeEncoder.encode(key);
+
+		return hVals(bKey, binaryToStringListConverter, args);
 	}
 
 	@Override
 	public List<byte[]> hVals(final byte[] key) {
-		final CommandArguments args = CommandArguments.create(key);
-		return notCommand(client, Command.HVALS, args);
+		final CommandArguments args = CommandArguments.create("key", key);
+		return hVals(key, (v)->v, args);
+	}
+
+	private <V> V hGet(final byte[] key, final byte[] field, final Converter<byte[], V> converter,
+					   final CommandArguments args) {
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<V, V>(client, ProtocolCommand.HGET)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<V, V>(client, ProtocolCommand.HGET)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<V, V>(client, ProtocolCommand.HGET)
+					.run(args);
+		}
+	}
+
+	private <K, V> Map<K, V> hGetAll(final byte[] key, final Converter<Map<byte[], byte[]>, Map<K, V>> converter,
+									 final CommandArguments args) {
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Map<K, V>, Map<K, V>>(client, ProtocolCommand.HGETALL)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Map<K, V>, Map<K, V>>(client, ProtocolCommand.HGETALL)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Map<K, V>, Map<K, V>>(client, ProtocolCommand.HGETALL)
+					.run(args);
+		}
+	}
+
+	private <V> Set<V> hKeys(final byte[] key, final Converter<List<byte[]>, Set<V>> converter,
+							 final CommandArguments args) {
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Set<V>, Set<V>>(client, ProtocolCommand.HKEYS)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Set<V>, Set<V>>(client, ProtocolCommand.HKEYS)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Set<V>, Set<V>>(client, ProtocolCommand.HKEYS)
+					.run(args);
+		}
+	}
+
+	private <V> List<V> hMGet(final byte[] key, final byte[][] fields,
+							  final Converter<List<KeyValue<byte[], byte[]>>, List<V>> converter,
+							  final CommandArguments args) {
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, ProtocolCommand.HMGET)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, ProtocolCommand.HMGET)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<List<V>, List<V>>(client, ProtocolCommand.HMGET)
+					.run(args);
+		}
+	}
+
+	private <SV, TV> TV hRandField(final CommandArguments args) {
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<SV, TV>(client, ProtocolCommand.HRANDFIELD)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<SV, TV>(client, ProtocolCommand.HRANDFIELD)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<SV, TV>(client, ProtocolCommand.HRANDFIELD)
+					.run(args);
+		}
+	}
+
+	private <K, V> ScanResult<Map<K, V>> hScan(final byte[] key, final ScanCursor cursor,
+											   final Converter<MapScanCursor<byte[], byte[]>, ScanResult<Map<K, V>>> converter,
+											   CommandArguments args) {
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<ScanResult<Map<K, V>>, ScanResult<Map<K, V>>>(client,
+					ProtocolCommand.HSCAN)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<ScanResult<Map<K, V>>, ScanResult<Map<K, V>>>(client,
+					ProtocolCommand.HSCAN)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<ScanResult<Map<K, V>>, ScanResult<Map<K, V>>>(client,
+					ProtocolCommand.HSCAN)
+					.run(args);
+		}
+	}
+
+	private <K, V> ScanResult<Map<K, V>> hScan(final byte[] key, final ScanCursor cursor, final ScanArgs scanArgs,
+											   final Converter<MapScanCursor<byte[], byte[]>, ScanResult<Map<K, V>>> converter,
+											   CommandArguments args) {
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<ScanResult<Map<K, V>>, ScanResult<Map<K, V>>>(client,
+					ProtocolCommand.HSCAN)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<ScanResult<Map<K, V>>, ScanResult<Map<K, V>>>(client,
+					ProtocolCommand.HSCAN)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<ScanResult<Map<K, V>>, ScanResult<Map<K, V>>>(client,
+					ProtocolCommand.HSCAN)
+					.run(args);
+		}
+	}
+
+	private <V> List<V> hVals(final byte[] key, final Converter<List<byte[]>, List<V>> converter,
+							  final CommandArguments args) {
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, ProtocolCommand.HVALS)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, ProtocolCommand.HVALS)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<List<V>, List<V>>(client, ProtocolCommand.HVALS)
+					.run(args);
+		}
 	}
 
 }

@@ -25,8 +25,15 @@
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.StreamEntryId;
+import com.buession.redis.core.Tuple;
+import io.lettuce.core.ScoredValue;
+import io.lettuce.core.StreamMessage;
 import org.springframework.lang.Nullable;
+import redis.clients.jedis.StreamEntryID;
+
+import java.util.List;
 
 /**
  * Lettuce Message Id 转换为 {@link StreamEntryId}
@@ -39,7 +46,7 @@ public class StreamEntryIDConverter implements Converter<String, StreamEntryId> 
 	@Nullable
 	@Override
 	public StreamEntryId convert(final String source) {
-		return source == null ? null : new StreamEntryId(source);
+		return null;
 	}
 
 }

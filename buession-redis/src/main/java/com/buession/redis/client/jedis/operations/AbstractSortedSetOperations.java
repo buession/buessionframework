@@ -44,79 +44,79 @@ import java.util.List;
 public abstract class AbstractSortedSetOperations<C extends JedisRedisClient>
 		extends AbstractJedisRedisOperations<C> implements SortedSetOperations {
 
-	public AbstractSortedSetOperations(final C client) {
+	public AbstractSortedSetOperations(final C client){
 		super(client);
 	}
 
 	@Override
-	public Long zRemRangeByLex(final String key, final double min, final double max) {
-		return 0L;//zRemRangeByLex(key, Double.toString(min), Double.toString(max));
+	public Long zRemRangeByLex(final String key, final double min, final double max){
+		return zRemRangeByLex(key, Double.toString(min), Double.toString(max));
 	}
 
 	@Override
-	public Long zRemRangeByLex(final byte[] key, final double min, final double max) {
-		return 0L;//zRemRangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
+	public Long zRemRangeByLex(final byte[] key, final double min, final double max){
+		return zRemRangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
 	}
 
 	@Override
-	public List<String> zRevRangeByLex(final String key, final double min, final double max) {
-		return null;//zRevRangeByLex(key, Double.toString(min), Double.toString(max));
+	public List<String> zRevRangeByLex(final String key, final double min, final double max){
+		return zRevRangeByLex(key, Double.toString(min), Double.toString(max));
 	}
 
 	@Override
-	public List<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max) {
-		return null;//zRevRangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
+	public List<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max){
+		return zRevRangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
 	}
 
 	@Override
 	public List<String> zRevRangeByLex(final String key, final double min, final double max, final long offset,
-									   final int count) {
-		return null;//zRevRangeByLex(key, Double.toString(min), Double.toString(max), offset, count);
+									   final long count){
+		return zRevRangeByLex(key, Double.toString(min), Double.toString(max), offset, count);
 	}
 
 	@Override
 	public List<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max, final long offset,
-									   final int count) {
-		return null;//zRevRangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max), offset, count);
+									   final long count){
+		return zRevRangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max), offset, count);
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final long cursor) {
+	public ScanResult<List<Tuple>> zScan(final String key, final long cursor){
 		return zScan(key, Long.toString(cursor));
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor) {
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor){
 		return zScan(key, NumberUtils.long2bytes(cursor));
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final String pattern) {
+	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final String pattern){
 		return zScan(key, Long.toString(cursor), pattern);
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final byte[] pattern) {
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final byte[] pattern){
 		return zScan(key, NumberUtils.long2bytes(cursor), pattern);
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final int count) {
+	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final long count){
 		return zScan(key, Long.toString(cursor), Long.toString(count));
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final int count) {
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final long count){
 		return zScan(key, NumberUtils.long2bytes(cursor), NumberUtils.long2bytes(count));
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final String pattern, final int count) {
+	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final String pattern, final long count){
 		return zScan(key, Long.toString(cursor), pattern, count);
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final byte[] pattern, final int count) {
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final byte[] pattern, final long count){
 		return zScan(key, NumberUtils.long2bytes(cursor), pattern, count);
 	}
 

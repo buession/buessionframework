@@ -43,37 +43,37 @@ import java.util.List;
 public abstract class AbstractKeyOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
 		implements KeyOperations {
 
-	public AbstractKeyOperations(final C client) {
+	public AbstractKeyOperations(final C client){
 		super(client);
 	}
 
 	@Override
-	public ScanResult<List<String>> scan(final long cursor) {
+	public ScanResult<List<String>> scan(final long cursor){
 		return scan(Long.toString(cursor));
 	}
 
 	@Override
-	public ScanResult<List<String>> scan(final long cursor, final String pattern) {
+	public ScanResult<List<String>> scan(final long cursor, final String pattern){
 		return scan(Long.toString(cursor), pattern);
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern) {
+	public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern){
 		return scan(NumberUtils.long2bytes(cursor), pattern);
 	}
 
 	@Override
-	public ScanResult<List<String>> scan(final long cursor, final int count) {
+	public ScanResult<List<String>> scan(final long cursor, final long count){
 		return scan(Long.toString(cursor), count);
 	}
 
 	@Override
-	public ScanResult<List<String>> scan(final long cursor, final String pattern, final int count) {
+	public ScanResult<List<String>> scan(final long cursor, final String pattern, final long count){
 		return scan(Long.toString(cursor), pattern, count);
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern, final int count) {
+	public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern, final long count){
 		return scan(NumberUtils.long2bytes(cursor), pattern, count);
 	}
 

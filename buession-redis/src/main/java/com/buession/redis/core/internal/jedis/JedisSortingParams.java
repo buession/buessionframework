@@ -26,7 +26,7 @@ package com.buession.redis.core.internal.jedis;
 
 import com.buession.lang.Order;
 import com.buession.redis.core.Limit;
-import com.buession.redis.core.command.args.SortArgument;
+import com.buession.redis.core.command.KeyCommands;
 import redis.clients.jedis.params.SortingParams;
 
 import java.util.Optional;
@@ -39,239 +39,94 @@ import java.util.Optional;
  */
 public final class JedisSortingParams extends SortingParams {
 
-	/**
-	 * 构造函数
-	 */
 	public JedisSortingParams() {
 		super();
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param by
-	 * 		-
-	 */
 	public JedisSortingParams(final String by) {
 		super();
 		by(by);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param by
-	 * 		-
-	 */
 	public JedisSortingParams(final byte[] by) {
 		super();
 		by(by);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param by
-	 * 		-
-	 * @param gets
-	 * 		-
-	 */
 	public JedisSortingParams(final String by, final String[] gets) {
 		super();
 		by(by);
 		get(gets);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param by
-	 * 		-
-	 * @param gets
-	 * 		-
-	 */
 	public JedisSortingParams(final byte[] by, final byte[][] gets) {
 		super();
 		by(by);
 		get(gets);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param by
-	 * 		-
-	 * @param order
-	 * 		排序方式
-	 */
 	public JedisSortingParams(final String by, final Order order) {
 		this(by);
 		order(this, order);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param by
-	 * 		-
-	 * @param order
-	 * 		排序方式
-	 */
 	public JedisSortingParams(final byte[] by, final Order order) {
 		this(by);
 		order(this, order);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param by
-	 * 		-
-	 * @param gets
-	 * 		-
-	 * @param order
-	 * 		排序方式
-	 */
 	public JedisSortingParams(final String by, final String[] gets, final Order order) {
 		this(by, gets);
 		order(this, order);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param by
-	 * 		-
-	 * @param gets
-	 * 		-
-	 * @param order
-	 * 		排序方式
-	 */
 	public JedisSortingParams(final byte[] by, final byte[][] gets, final Order order) {
 		this(by, gets);
 		order(this, order);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param by
-	 * 		-
-	 * @param gets
-	 * 		-
-	 * @param limit
-	 * 		结果限制
-	 */
 	public JedisSortingParams(final String by, final String[] gets, final Limit limit) {
 		this(by, gets);
 		limit(this, limit);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param by
-	 * 		-
-	 * @param gets
-	 * 		-
-	 * @param limit
-	 * 		结果限制
-	 */
 	public JedisSortingParams(final byte[] by, final byte[][] gets, final Limit limit) {
 		this(by, gets);
 		limit(this, limit);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param by
-	 * 		-
-	 * @param gets
-	 * 		-
-	 * @param order
-	 * 		排序方式
-	 * @param limit
-	 * 		结果限制
-	 */
 	public JedisSortingParams(final String by, final String[] gets, final Order order, final Limit limit) {
 		this(by, gets, order);
 		limit(this, limit);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param by
-	 * 		-
-	 * @param gets
-	 * 		-
-	 * @param order
-	 * 		排序方式
-	 * @param limit
-	 * 		结果限制
-	 */
 	public JedisSortingParams(final byte[] by, final byte[][] gets, final Order order, final Limit limit) {
 		this(by, gets, order);
 		limit(this, limit);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param by
-	 * 		-
-	 * @param gets
-	 * 		-
-	 * @param order
-	 * 		排序方式
-	 * @param limit
-	 * 		结果限制
-	 * @param alpha
-	 * 		-
-	 */
 	public JedisSortingParams(final String by, final String[] gets, final Order order, final Limit limit,
 							  final boolean alpha) {
 		this(by, gets, order, limit);
 		alpha(this, alpha);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param by
-	 * 		-
-	 * @param gets
-	 * 		-
-	 * @param order
-	 * 		排序方式
-	 * @param limit
-	 * 		结果限制
-	 * @param alpha
-	 * 		-
-	 */
 	public JedisSortingParams(final byte[] by, final byte[][] gets, final Order order, final Limit limit,
 							  final boolean alpha) {
 		this(by, gets, order, limit);
 		alpha(this, alpha);
 	}
 
-	/**
-	 * 从 {@link SortArgument} 创建 {@link SortingParams} 实例
-	 *
-	 * @param sortArgument
-	 *        {@link SortArgument}
-	 *
-	 * @return {@link JedisSortingParams} 实例
-	 */
-	public static JedisSortingParams from(final SortArgument sortArgument) {
+	public static JedisSortingParams from(final KeyCommands.SortArgument sortArgument) {
 		final JedisSortingParams sortingParams = new JedisSortingParams();
 
-		Optional.ofNullable(sortArgument.getBy()).ifPresent(sortingParams::by);
-		Optional.ofNullable(sortArgument.getGetPatterns()).ifPresent(sortingParams::get);
-		order(sortingParams, sortArgument.getOrder());
-		limit(sortingParams, sortArgument.getLimit());
-		alpha(sortingParams, sortArgument.isAlpha());
+		if(sortArgument != null){
+			Optional.ofNullable(sortArgument.getBy()).ifPresent(sortingParams::by);
+			Optional.ofNullable(sortArgument.getGetPatterns()).ifPresent(sortingParams::get);
+			order(sortingParams, sortArgument.getOrder());
+			limit(sortingParams, sortArgument.getLimit());
+			alpha(sortingParams, sortArgument.isAlpha());
+		}
 
 		return sortingParams;
 	}

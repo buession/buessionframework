@@ -24,115 +24,53 @@
  */
 package com.buession.redis.core.internal.jedis;
 
-import com.buession.redis.core.command.args.XReadGroupArgument;
 import redis.clients.jedis.params.XReadGroupParams;
 
-import java.util.Optional;
-
 /**
- * Jedis {@link XReadGroupParams} 扩展
- *
  * @author Yong.Teng
  * @since 2.0.0
  */
 public final class JedisXReadGroupParams extends XReadGroupParams {
 
-	/**
-	 * 构造函数
-	 */
 	public JedisXReadGroupParams() {
 		super();
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param count
-	 * 		返回条数
-	 */
-	public JedisXReadGroupParams(final int count) {
+	public JedisXReadGroupParams(final long count) {
 		super();
-		count(count);
+		count((int) count);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param count
-	 * 		返回条数
-	 * @param block
-	 * 		-
-	 */
-	public JedisXReadGroupParams(final int count, final int block) {
+	public JedisXReadGroupParams(final long count, final int block) {
 		this(count);
 		block(block);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param noAck
-	 * 		-
-	 */
-	public JedisXReadGroupParams(final boolean noAck) {
-		super();
-		noAck(this, noAck);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param noAck
-	 * 		-
-	 * @param count
-	 * 		返回条数
-	 */
-	public JedisXReadGroupParams(final boolean noAck, final int count) {
+	public JedisXReadGroupParams(final long count, final boolean noAck) {
 		this(noAck);
-		count(count);
+		count((int) count);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param noAck
-	 * 		-
-	 * @param count
-	 * 		返回数量
-	 * @param block
-	 * 		阻塞时间
-	 */
-	public JedisXReadGroupParams(final boolean noAck, final int count, final int block) {
-		this(noAck, count);
+	public JedisXReadGroupParams(final long count, final int block, final boolean noAck) {
+		this(count, noAck);
 		block(block);
 	}
 
-	public JedisXReadGroupParams noAck(final boolean noAck) {
-		noAck(this, noAck);
-		return this;
+	public JedisXReadGroupParams(final int block) {
+		super();
+		block(block);
 	}
 
-	/**
-	 * 从 {@link XReadGroupArgument} 创建 {@link XReadGroupParams} 实例
-	 *
-	 * @param xReadArgument
-	 *        {@link XReadGroupArgument}
-	 *
-	 * @return {@link JedisXReadGroupParams} 实例
-	 */
-	public static JedisXReadGroupParams from(final XReadGroupArgument xReadArgument) {
-		final JedisXReadGroupParams xReadGroupParams = new JedisXReadGroupParams();
-
-		Optional.ofNullable(xReadArgument.getCount()).ifPresent(xReadGroupParams::count);
-		Optional.ofNullable(xReadArgument.getBlock()).ifPresent(xReadGroupParams::block);
-		noAck(xReadGroupParams, xReadArgument.isNoAck());
-
-		return xReadGroupParams;
+	public JedisXReadGroupParams(final int block, final boolean noAck) {
+		this(noAck);
+		block(block);
 	}
 
-	private static void noAck(final JedisXReadGroupParams xReadGroupParams, final Boolean noAck) {
-		if(Boolean.TRUE.equals(noAck)){
-			xReadGroupParams.noAck();
+	public JedisXReadGroupParams(final boolean noAck) {
+		super();
+
+		if(noAck){
+			noAck();
 		}
 	}
 

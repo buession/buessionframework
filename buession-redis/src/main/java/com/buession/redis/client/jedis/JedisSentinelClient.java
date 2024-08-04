@@ -26,11 +26,9 @@ package com.buession.redis.client.jedis;
 
 import com.buession.redis.client.RedisSentinelClient;
 import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
-import com.buession.redis.client.jedis.operations.JedisSentinelAclOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelBitMapOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelClusterOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelConnectionOperations;
-import com.buession.redis.client.jedis.operations.JedisSentinelGenericOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelGeoOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelHashOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelHyperLogLogOperations;
@@ -73,15 +71,6 @@ public class JedisSentinelClient extends AbstractJedisRedisClient<JedisSentinelC
 	}
 
 	@Override
-	public AclOperations aclOperations() {
-		if(aclOperations == null){
-			aclOperations = new JedisSentinelAclOperations(this);
-		}
-
-		return aclOperations;
-	}
-
-	@Override
 	public BitMapOperations bitMapOperations() {
 		if(bitMapOperations == null){
 			bitMapOperations = new JedisSentinelBitMapOperations(this);
@@ -106,15 +95,6 @@ public class JedisSentinelClient extends AbstractJedisRedisClient<JedisSentinelC
 		}
 
 		return connectionOperations;
-	}
-
-	@Override
-	public GenericOperations genericOperations() {
-		if(genericOperations == null){
-			genericOperations = new JedisSentinelGenericOperations(this);
-		}
-
-		return genericOperations;
 	}
 
 	@Override

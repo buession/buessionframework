@@ -27,6 +27,8 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.core.converter.ListConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisSentinelClient;
+import com.buession.redis.core.AclLog;
+import com.buession.redis.core.AclUser;
 import com.buession.redis.core.FlushMode;
 import com.buession.redis.core.Info;
 import com.buession.redis.core.MemoryStats;
@@ -36,7 +38,9 @@ import com.buession.redis.core.RedisServerTime;
 import com.buession.redis.core.Role;
 import com.buession.redis.core.SlowLog;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.internal.convert.jedis.response.AccessControlLogEntryConverter;
+import com.buession.redis.core.internal.convert.jedis.response.AccessControlUserConverter;
 import com.buession.redis.core.internal.convert.jedis.params.FlushModeConverter;
 import com.buession.redis.core.internal.convert.jedis.response.MemoryStatsConverter;
 import com.buession.redis.core.internal.convert.response.InfoConverter;
@@ -48,6 +52,7 @@ import com.buession.redis.core.internal.jedis.JedisFailoverParams;
 import redis.clients.jedis.JedisMonitor;
 import redis.clients.jedis.args.SaveMode;
 import redis.clients.jedis.params.FailoverParams;
+import redis.clients.jedis.resps.AccessControlLogEntry;
 import redis.clients.jedis.resps.Slowlog;
 
 import java.util.List;
@@ -66,15 +71,301 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	}
 
 	@Override
-	public String bgRewriteAof() {
+	public List<String> aclCat() {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<String, String>(client, Command.BGREWRITEAOF)
+			return new JedisSentinelPipelineCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_CAT)
 					.run();
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<String, String>(client, Command.BGREWRITEAOF)
+			return new JedisSentinelTransactionCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_CAT)
 					.run();
 		}else{
-			return new JedisSentinelCommand<>(client, Command.BGREWRITEAOF, (cmd)->cmd.bgrewriteaof(), (v)->v)
+			return new JedisSentinelCommand<>(client, ProtocolCommand.ACL_CAT, (cmd)->cmd.aclCat(), (v)->v)
+					.run();
+		}
+	}
+
+	@Override
+	public List<String> aclCat(final String categoryName) {
+		final CommandArguments args = CommandArguments.create("categoryName", categoryName);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_CAT)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_CAT)
+					.run();
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.ACL_CAT, (cmd)->cmd.aclCat(categoryName), (v)->v)
+					.run(args);
+		}
+	}
+
+	@Override
+	public List<byte[]> aclCat(final byte[] categoryName) {
+		final CommandArguments args = CommandArguments.create("categoryName", categoryName);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<List<byte[]>, List<byte[]>>(client, ProtocolCommand.ACL_CAT)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<List<byte[]>, List<byte[]>>(client, ProtocolCommand.ACL_CAT)
+					.run();
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.ACL_CAT, (cmd)->cmd.aclCat(categoryName), (v)->v)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Status aclSetUser(final String username, final String... rules) {
+		final CommandArguments args = CommandArguments.create("username", username).put("rules", (Object[]) rules);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.ACL_SETUSER)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.ACL_SETUSER)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.ACL_SETUSER,
+					(cmd)->cmd.aclSetUser(username, rules), okStatusConverter)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Status aclSetUser(final byte[] username, final byte[]... rules) {
+		final CommandArguments args = CommandArguments.create("username", username).put("rules", (Object[]) rules);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.ACL_SETUSER)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.ACL_SETUSER)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.ACL_SETUSER,
+					(cmd)->cmd.aclSetUser(username, rules), okStatusConverter)
+					.run(args);
+		}
+	}
+
+	@Override
+	public AclUser aclGetUser(final String username) {
+		final CommandArguments args = CommandArguments.create("username", username);
+		final AccessControlUserConverter accessControlUserConverter = new AccessControlUserConverter();
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<AclUser, AclUser>(client, ProtocolCommand.ACL_GETUSER)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<AclUser, AclUser>(client, ProtocolCommand.ACL_GETUSER)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.ACL_GETUSER, (cmd)->cmd.aclGetUser(username),
+					accessControlUserConverter)
+					.run(args);
+		}
+	}
+
+	@Override
+	public AclUser aclGetUser(final byte[] username) {
+		final CommandArguments args = CommandArguments.create("username", username);
+		final AccessControlUserConverter accessControlUserConverter = new AccessControlUserConverter();
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<AclUser, AclUser>(client, ProtocolCommand.ACL_GETUSER)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<AclUser, AclUser>(client, ProtocolCommand.ACL_GETUSER)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.ACL_GETUSER, (cmd)->cmd.aclGetUser(username),
+					accessControlUserConverter)
+					.run(args);
+		}
+	}
+
+	@Override
+	public List<String> aclUsers() {
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_USERS)
+					.run();
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_USERS)
+					.run();
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.ACL_USERS, (cmd)->cmd.aclUsers(), (v)->v)
+					.run();
+		}
+	}
+
+	@Override
+	public String aclWhoAmI() {
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<String, String>(client, ProtocolCommand.ACL_WHOAMI)
+					.run();
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<String, String>(client, ProtocolCommand.ACL_WHOAMI)
+					.run();
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.ACL_WHOAMI, (cmd)->cmd.aclWhoAmI(), (v)->v)
+					.run();
+		}
+	}
+
+	@Override
+	public Long aclDelUser(final String... usernames) {
+		final CommandArguments args = CommandArguments.create("usernames", (Object[]) usernames);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.ACL_DELUSER)
+					.run();
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.ACL_DELUSER)
+					.run();
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.ACL_DELUSER, (cmd)->cmd.aclDelUser(usernames),
+					(v)->v)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Long aclDelUser(final byte[]... usernames) {
+		final CommandArguments args = CommandArguments.create("usernames", (Object[]) usernames);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.ACL_DELUSER)
+					.run();
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.ACL_DELUSER)
+					.run();
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.ACL_DELUSER, (cmd)->cmd.aclDelUser(usernames),
+					(v)->v)
+					.run(args);
+		}
+	}
+
+	@Override
+	public String aclGenPass() {
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<String, String>(client, ProtocolCommand.ACL_GENPASS)
+					.run();
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<String, String>(client, ProtocolCommand.ACL_GENPASS)
+					.run();
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.ACL_GENPASS, (cmd)->cmd.aclGenPass(), (v)->v)
+					.run();
+		}
+	}
+
+	@Override
+	public List<String> aclList() {
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_LIST)
+					.run();
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_LIST)
+					.run();
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.ACL_LIST, (cmd)->cmd.aclList(), (v)->v)
+					.run();
+		}
+	}
+
+	@Override
+	public Status aclLoad() {
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.ACL_LOAD)
+					.run();
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.ACL_LOAD)
+					.run();
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.ACL_LOAD, (cmd)->cmd.aclLoad(), okStatusConverter)
+					.run();
+		}
+	}
+
+	@Override
+	public List<AclLog> aclLog() {
+		final ListConverter<AccessControlLogEntry, AclLog> listAccessControlLogEntryConverter =
+				AccessControlLogEntryConverter.listConverter();
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<List<AclLog>, List<AclLog>>(client, ProtocolCommand.ACL_LOG)
+					.run();
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<List<AclLog>, List<AclLog>>(client, ProtocolCommand.ACL_LOG)
+					.run();
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.ACL_LOG, (cmd)->cmd.aclLog(),
+					listAccessControlLogEntryConverter)
+					.run();
+		}
+	}
+
+	@Override
+	public List<AclLog> aclLog(final long count) {
+		final CommandArguments args = CommandArguments.create("count", count);
+		final ListConverter<AccessControlLogEntry, AclLog> listAccessControlLogEntryConverter =
+				AccessControlLogEntryConverter.listConverter();
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<List<AclLog>, List<AclLog>>(client, ProtocolCommand.ACL_LOG)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<List<AclLog>, List<AclLog>>(client, ProtocolCommand.ACL_LOG)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.ACL_LOG, (cmd)->cmd.aclLog((int) count),
+					listAccessControlLogEntryConverter)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Status aclLogReset() {
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.ACL_LOGREST)
+					.run();
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.ACL_LOGREST)
+					.run();
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.ACL_LOGREST, (cmd)->cmd.aclLogReset(),
+					okStatusConverter)
+					.run();
+		}
+	}
+
+	@Override
+	public Status aclLogSave() {
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.ACL_LOGSAVE)
+					.run();
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.ACL_LOGSAVE)
+					.run();
+		}else{
+			return new JedisSentinelCommand<Status, Status>(client, ProtocolCommand.ACL_LOGSAVE)
+					.run();
+		}
+	}
+
+	@Override
+	public String bgRewriteAof() {
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<String, String>(client, ProtocolCommand.BGREWRITEAOF)
+					.run();
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<String, String>(client, ProtocolCommand.BGREWRITEAOF)
+					.run();
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.BGREWRITEAOF, (cmd)->cmd.bgrewriteaof(), (v)->v)
 					.run();
 		}
 	}
@@ -82,13 +373,13 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	@Override
 	public String bgSave() {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<String, String>(client, Command.BGSAVE)
+			return new JedisSentinelPipelineCommand<String, String>(client, ProtocolCommand.BGSAVE)
 					.run();
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<String, String>(client, Command.BGSAVE)
+			return new JedisSentinelTransactionCommand<String, String>(client, ProtocolCommand.BGSAVE)
 					.run();
 		}else{
-			return new JedisSentinelCommand<>(client, Command.BGSAVE, (cmd)->cmd.bgsave(), (v)->v)
+			return new JedisSentinelCommand<>(client, ProtocolCommand.BGSAVE, (cmd)->cmd.bgsave(), (v)->v)
 					.run();
 		}
 	}
@@ -98,13 +389,13 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 		final CommandArguments args = CommandArguments.create("parameter", parameter).put("value", value);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<Status, Status>(client, Command.CONFIG_SET)
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CONFIG_SET)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<Status, Status>(client, Command.CONFIG_SET)
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CONFIG_SET)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, Command.CONFIG_SET,
+			return new JedisSentinelCommand<>(client, ProtocolCommand.CONFIG_SET,
 					(cmd)->cmd.configSet(parameter, value), okStatusConverter)
 					.run(args);
 		}
@@ -115,13 +406,13 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 		final CommandArguments args = CommandArguments.create("parameter", parameter).put("value", value);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<Status, Status>(client, Command.CONFIG_SET)
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CONFIG_SET)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<Status, Status>(client, Command.CONFIG_SET)
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CONFIG_SET)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, Command.CONFIG_SET,
+			return new JedisSentinelCommand<>(client, ProtocolCommand.CONFIG_SET,
 					(cmd)->cmd.configSet(parameter, value), okStatusConverter)
 					.run(args);
 		}
@@ -132,13 +423,13 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 		final CommandArguments args = CommandArguments.create("configs", configs);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<Status, Status>(client, Command.CONFIG_SET)
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CONFIG_SET)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<Status, Status>(client, Command.CONFIG_SET)
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CONFIG_SET)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, Command.CONFIG_SET, (cmd)->{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.CONFIG_SET, (cmd)->{
 				configs.forEach(cmd::configSet);
 				return Status.SUCCESS;
 			}, (v)->v)
@@ -152,14 +443,14 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<Map<String, String>, Map<String, String>>(client,
-					Command.CONFIG_GET)
+					ProtocolCommand.CONFIG_GET)
 					.run(args);
 		}else if(isTransaction()){
 			return new JedisSentinelTransactionCommand<Map<String, String>, Map<String, String>>(client,
-					Command.CONFIG_GET)
+					ProtocolCommand.CONFIG_GET)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, Command.CONFIG_GET, (cmd)->cmd.configGet(pattern),
+			return new JedisSentinelCommand<>(client, ProtocolCommand.CONFIG_GET, (cmd)->cmd.configGet(pattern),
 					(v)->v)
 					.run(args);
 		}
@@ -171,14 +462,14 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<Map<byte[], byte[]>, Map<byte[], byte[]>>(client,
-					Command.CONFIG_GET)
+					ProtocolCommand.CONFIG_GET)
 					.run(args);
 		}else if(isTransaction()){
 			return new JedisSentinelTransactionCommand<Map<byte[], byte[]>, Map<byte[], byte[]>>(client,
-					Command.CONFIG_GET)
+					ProtocolCommand.CONFIG_GET)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, Command.CONFIG_GET, (cmd)->cmd.configGet(parameter),
+			return new JedisSentinelCommand<>(client, ProtocolCommand.CONFIG_GET, (cmd)->cmd.configGet(parameter),
 					(v)->v)
 					.run(args);
 		}
@@ -187,13 +478,13 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	@Override
 	public Status configResetStat() {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<Status, Status>(client, Command.CONFIG_RESETSTAT)
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CONFIG_RESETSTAT)
 					.run();
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<Status, Status>(client, Command.CONFIG_RESETSTAT)
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CONFIG_RESETSTAT)
 					.run();
 		}else{
-			return new JedisSentinelCommand<>(client, Command.CONFIG_RESETSTAT, (cmd)->cmd.configResetStat(),
+			return new JedisSentinelCommand<>(client, ProtocolCommand.CONFIG_RESETSTAT, (cmd)->cmd.configResetStat(),
 					okStatusConverter)
 					.run();
 		}
@@ -202,13 +493,13 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	@Override
 	public Status configRewrite() {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<Status, Status>(client, Command.CONFIG_REWRITE)
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CONFIG_REWRITE)
 					.run();
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<Status, Status>(client, Command.CONFIG_REWRITE)
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.CONFIG_REWRITE)
 					.run();
 		}else{
-			return new JedisSentinelCommand<>(client, Command.CONFIG_REWRITE, (cmd)->cmd.configRewrite(),
+			return new JedisSentinelCommand<>(client, ProtocolCommand.CONFIG_REWRITE, (cmd)->cmd.configRewrite(),
 					okStatusConverter)
 					.run();
 		}
@@ -217,13 +508,13 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	@Override
 	public Long dbSize() {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, Command.DBSIZE, (cmd)->cmd.dbSize(), (v)->v)
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.DBSIZE, (cmd)->cmd.dbSize(), (v)->v)
 					.run();
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<Long, Long>(client, Command.DBSIZE)
+			return new JedisSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.DBSIZE)
 					.run();
 		}else{
-			return new JedisSentinelCommand<>(client, Command.DBSIZE, (cmd)->cmd.dbSize(), (v)->v)
+			return new JedisSentinelCommand<>(client, ProtocolCommand.DBSIZE, (cmd)->cmd.dbSize(), (v)->v)
 					.run();
 		}
 	}
@@ -231,13 +522,13 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	@Override
 	public Status failover() {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<Status, Status>(client, Command.FAILOVER)
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.FAILOVER)
 					.run();
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<Status, Status>(client, Command.FAILOVER)
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.FAILOVER)
 					.run();
 		}else{
-			return new JedisSentinelCommand<>(client, Command.FAILOVER, (cmd)->cmd.failover(),
+			return new JedisSentinelCommand<>(client, ProtocolCommand.FAILOVER, (cmd)->cmd.failover(),
 					okStatusConverter)
 					.run();
 		}
@@ -279,13 +570,13 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	@Override
 	public Status flushAll() {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<Status, Status>(client, Command.FLUSHALL)
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.FLUSHALL)
 					.run();
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<Status, Status>(client, Command.FLUSHALL)
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.FLUSHALL)
 					.run();
 		}else{
-			return new JedisSentinelCommand<>(client, Command.FLUSHALL, (cmd)->cmd.flushAll(),
+			return new JedisSentinelCommand<>(client, ProtocolCommand.FLUSHALL, (cmd)->cmd.flushAll(),
 					okStatusConverter)
 					.run();
 		}
@@ -297,13 +588,13 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 		final redis.clients.jedis.args.FlushMode flushMode = (new FlushModeConverter()).convert(mode);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<Status, Status>(client, Command.FLUSHALL)
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.FLUSHALL)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<Status, Status>(client, Command.FLUSHALL)
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.FLUSHALL)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, Command.FLUSHALL, (cmd)->cmd.flushAll(flushMode),
+			return new JedisSentinelCommand<>(client, ProtocolCommand.FLUSHALL, (cmd)->cmd.flushAll(flushMode),
 					okStatusConverter)
 					.run(args);
 		}
@@ -312,13 +603,13 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	@Override
 	public Status flushDb() {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<Status, Status>(client, Command.FLUSHDB)
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.FLUSHDB)
 					.run();
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<Status, Status>(client, Command.FLUSHDB)
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.FLUSHDB)
 					.run();
 		}else{
-			return new JedisSentinelCommand<>(client, Command.FLUSHDB, (cmd)->cmd.flushDB(), okStatusConverter)
+			return new JedisSentinelCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->cmd.flushDB(), okStatusConverter)
 					.run();
 		}
 	}
@@ -329,13 +620,13 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 		final redis.clients.jedis.args.FlushMode flushMode = (new FlushModeConverter()).convert(mode);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<Status, Status>(client, Command.FLUSHDB)
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.FLUSHDB)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<Status, Status>(client, Command.FLUSHDB)
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.FLUSHDB)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, Command.FLUSHDB, (cmd)->cmd.flushDB(flushMode),
+			return new JedisSentinelCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->cmd.flushDB(flushMode),
 					okStatusConverter)
 					.run(args);
 		}
@@ -346,13 +637,13 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 		final InfoConverter infoConverter = new InfoConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<Info, Info>(client, Command.INFO)
+			return new JedisSentinelPipelineCommand<Info, Info>(client, ProtocolCommand.INFO)
 					.run();
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<Info, Info>(client, Command.INFO)
+			return new JedisSentinelTransactionCommand<Info, Info>(client, ProtocolCommand.INFO)
 					.run();
 		}else{
-			return new JedisSentinelCommand<>(client, Command.INFO, (cmd)->cmd.info(), infoConverter)
+			return new JedisSentinelCommand<>(client, ProtocolCommand.INFO, (cmd)->cmd.info(), infoConverter)
 					.run();
 		}
 	}
@@ -364,13 +655,13 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 		final InfoConverter infoConverter = new InfoConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<Info, Info>(client, Command.INFO)
+			return new JedisSentinelPipelineCommand<Info, Info>(client, ProtocolCommand.INFO)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<Info, Info>(client, Command.INFO)
+			return new JedisSentinelTransactionCommand<Info, Info>(client, ProtocolCommand.INFO)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, Command.INFO, (cmd)->cmd.info(sectionName), infoConverter)
+			return new JedisSentinelCommand<>(client, ProtocolCommand.INFO, (cmd)->cmd.info(sectionName), infoConverter)
 					.run(args);
 		}
 	}
@@ -378,13 +669,13 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	@Override
 	public Long lastSave() {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<Long, Long>(client, Command.LASTSAVE)
+			return new JedisSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.LASTSAVE)
 					.run();
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<Long, Long>(client, Command.LASTSAVE)
+			return new JedisSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.LASTSAVE)
 					.run();
 		}else{
-			return new JedisSentinelCommand<>(client, Command.LASTSAVE, (cmd)->cmd.lastsave(), (v)->v)
+			return new JedisSentinelCommand<>(client, ProtocolCommand.LASTSAVE, (cmd)->cmd.lastsave(), (v)->v)
 					.run();
 		}
 	}
@@ -392,13 +683,13 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	@Override
 	public String memoryDoctor() {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<String, String>(client, Command.MEMORY_DOCTOR)
+			return new JedisSentinelPipelineCommand<String, String>(client, ProtocolCommand.MEMORY_DOCTOR)
 					.run();
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<String, String>(client, Command.MEMORY_DOCTOR)
+			return new JedisSentinelTransactionCommand<String, String>(client, ProtocolCommand.MEMORY_DOCTOR)
 					.run();
 		}else{
-			return new JedisSentinelCommand<>(client, Command.MEMORY_DOCTOR, (cmd)->cmd.memoryDoctor(), (v)->v)
+			return new JedisSentinelCommand<>(client, ProtocolCommand.MEMORY_DOCTOR, (cmd)->cmd.memoryDoctor(), (v)->v)
 					.run();
 		}
 	}
@@ -406,13 +697,13 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	@Override
 	public Status memoryPurge() {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<Status, Status>(client, Command.MEMORY_PURGE)
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.MEMORY_PURGE)
 					.run();
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<Status, Status>(client, Command.MEMORY_PURGE)
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.MEMORY_PURGE)
 					.run();
 		}else{
-			return new JedisSentinelCommand<>(client, Command.MEMORY_PURGE, (cmd)->cmd.memoryPurge(),
+			return new JedisSentinelCommand<>(client, ProtocolCommand.MEMORY_PURGE, (cmd)->cmd.memoryPurge(),
 					okStatusConverter)
 					.run();
 		}
@@ -423,13 +714,13 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 		final MemoryStatsConverter memoryStatsConverter = new MemoryStatsConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<MemoryStats, MemoryStats>(client, Command.MEMORY_STATS)
+			return new JedisSentinelPipelineCommand<MemoryStats, MemoryStats>(client, ProtocolCommand.MEMORY_STATS)
 					.run();
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<MemoryStats, MemoryStats>(client, Command.MEMORY_STATS)
+			return new JedisSentinelTransactionCommand<MemoryStats, MemoryStats>(client, ProtocolCommand.MEMORY_STATS)
 					.run();
 		}else{
-			return new JedisSentinelCommand<>(client, Command.MEMORY_STATS, (cmd)->cmd.memoryStats(),
+			return new JedisSentinelCommand<>(client, ProtocolCommand.MEMORY_STATS, (cmd)->cmd.memoryStats(),
 					memoryStatsConverter)
 					.run();
 		}
@@ -440,15 +731,15 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, Command.MEMORY_USAGE, (cmd)->cmd.memoryUsage(key),
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.MEMORY_USAGE, (cmd)->cmd.memoryUsage(key),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, Command.MEMORY_USAGE,
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.MEMORY_USAGE,
 					(cmd)->cmd.memoryUsage(key), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, Command.MEMORY_USAGE, (cmd)->cmd.memoryUsage(key), (v)->v)
+			return new JedisSentinelCommand<>(client, ProtocolCommand.MEMORY_USAGE, (cmd)->cmd.memoryUsage(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -458,15 +749,15 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, Command.MEMORY_USAGE, (cmd)->cmd.memoryUsage(key),
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.MEMORY_USAGE, (cmd)->cmd.memoryUsage(key),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, Command.MEMORY_USAGE,
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.MEMORY_USAGE,
 					(cmd)->cmd.memoryUsage(key), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, Command.MEMORY_USAGE, (cmd)->cmd.memoryUsage(key), (v)->v)
+			return new JedisSentinelCommand<>(client, ProtocolCommand.MEMORY_USAGE, (cmd)->cmd.memoryUsage(key), (v)->v)
 					.run(args);
 		}
 	}
@@ -476,15 +767,15 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 		final CommandArguments args = CommandArguments.create("key", key).put("samples", samples);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, Command.MEMORY_USAGE,
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.MEMORY_USAGE,
 					(cmd)->cmd.memoryUsage(key, samples), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, Command.MEMORY_USAGE,
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.MEMORY_USAGE,
 					(cmd)->cmd.memoryUsage(key, samples), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, Command.MEMORY_USAGE,
+			return new JedisSentinelCommand<>(client, ProtocolCommand.MEMORY_USAGE,
 					(cmd)->cmd.memoryUsage(key, samples), (v)->v)
 					.run(args);
 		}
@@ -495,15 +786,15 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 		final CommandArguments args = CommandArguments.create("key", key).put("samples", samples);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, Command.MEMORY_USAGE,
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.MEMORY_USAGE,
 					(cmd)->cmd.memoryUsage(key, samples), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, Command.MEMORY_USAGE,
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.MEMORY_USAGE,
 					(cmd)->cmd.memoryUsage(key, samples), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, Command.MEMORY_USAGE,
+			return new JedisSentinelCommand<>(client, ProtocolCommand.MEMORY_USAGE,
 					(cmd)->cmd.memoryUsage(key, samples), (v)->v)
 					.run(args);
 		}
@@ -514,32 +805,15 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 		final ListConverter<redis.clients.jedis.Module, Module> listModuleConverter = ModuleConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<List<Module>, List<Module>>(client, Command.MODULE_LIST)
+			return new JedisSentinelPipelineCommand<List<Module>, List<Module>>(client, ProtocolCommand.MODULE_LIST)
 					.run();
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<List<Module>, List<Module>>(client, Command.MODULE_LIST)
+			return new JedisSentinelTransactionCommand<List<Module>, List<Module>>(client, ProtocolCommand.MODULE_LIST)
 					.run();
 		}else{
-			return new JedisSentinelCommand<>(client, Command.MODULE_LIST, (cmd)->cmd.moduleList(),
+			return new JedisSentinelCommand<>(client, ProtocolCommand.MODULE_LIST, (cmd)->cmd.moduleList(),
 					listModuleConverter)
 					.run();
-		}
-	}
-
-	@Override
-	public Status moduleLoad(final String path) {
-		final CommandArguments args = CommandArguments.create("path", path);
-
-		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<Status, Status>(client, Command.MODULE_LOAD)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<Status, Status>(client, Command.MODULE_LOAD)
-					.run(args);
-		}else{
-			return new JedisSentinelCommand<>(client, Command.MODULE_LOAD, (cmd)->cmd.moduleLoad(path),
-					okStatusConverter)
-					.run(args);
 		}
 	}
 
@@ -548,13 +822,13 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 		final CommandArguments args = CommandArguments.create("path", path).put("arguments", (Object[]) arguments);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<Status, Status>(client, Command.MODULE_LOAD)
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.MODULE_LOAD)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<Status, Status>(client, Command.MODULE_LOAD)
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.MODULE_LOAD)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, Command.MODULE_LOAD,
+			return new JedisSentinelCommand<>(client, ProtocolCommand.MODULE_LOAD,
 					(cmd)->cmd.moduleLoad(path, arguments), okStatusConverter)
 					.run(args);
 		}
@@ -565,13 +839,13 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 		final CommandArguments args = CommandArguments.create("name", name);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<Status, Status>(client, Command.MODULE_UNLOAD)
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.MODULE_UNLOAD)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<Status, Status>(client, Command.MODULE_UNLOAD)
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.MODULE_UNLOAD)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, Command.MODULE_UNLOAD, (cmd)->cmd.moduleUnload(name),
+			return new JedisSentinelCommand<>(client, ProtocolCommand.MODULE_UNLOAD, (cmd)->cmd.moduleUnload(name),
 					okStatusConverter)
 					.run(args);
 		}
@@ -582,13 +856,13 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 		final CommandArguments args = CommandArguments.create("redisMonitor", redisMonitor);
 
 		if(isPipeline()){
-			new JedisSentinelPipelineCommand<>(client, Command.MONITOR)
+			new JedisSentinelPipelineCommand<>(client, ProtocolCommand.MONITOR)
 					.run(args);
 		}else if(isTransaction()){
-			new JedisSentinelTransactionCommand<>(client, Command.MONITOR)
+			new JedisSentinelTransactionCommand<>(client, ProtocolCommand.MONITOR)
 					.run(args);
 		}else{
-			new JedisSentinelCommand<>(client, Command.MONITOR, (cmd)->{
+			new JedisSentinelCommand<>(client, ProtocolCommand.MONITOR, (cmd)->{
 				cmd.monitor(new JedisMonitor() {
 
 					@Override
@@ -606,28 +880,28 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	@Override
 	public Object pSync(final String replicationId, final long offset) {
 		final CommandArguments args = CommandArguments.create("replicationId", replicationId).put("offset", offset);
-		return notCommand(client, Command.PSYNC, args);
+		return pSync(args);
 	}
 
 	@Override
 	public Object pSync(final byte[] replicationId, final long offset) {
 		final CommandArguments args = CommandArguments.create("replicationId", replicationId).put("offset", offset);
-		return notCommand(client, Command.PSYNC, args);
+		return pSync(args);
 	}
 
 	@Override
 	public void sync() {
 		if(isPipeline()){
-			new JedisSentinelPipelineCommand<>(client, Command.SYNC, (cmd)->{
+			new JedisSentinelPipelineCommand<>(client, ProtocolCommand.SYNC, (cmd)->{
 				cmd.sync();
 				return null;
 			}, (v)->v)
 					.run();
 		}else if(isTransaction()){
-			new JedisSentinelTransactionCommand<>(client, Command.SYNC)
+			new JedisSentinelTransactionCommand<>(client, ProtocolCommand.SYNC)
 					.run();
 		}else{
-			new JedisSentinelCommand<>(client, Command.SYNC)
+			new JedisSentinelCommand<>(client, ProtocolCommand.SYNC)
 					.run();
 		}
 	}
@@ -637,13 +911,13 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<Status, Status>(client, Command.REPLICAOF)
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.REPLICAOF)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<Status, Status>(client, Command.REPLICAOF)
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.REPLICAOF)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, Command.REPLICAOF, (cmd)->cmd.replicaof(host, port),
+			return new JedisSentinelCommand<>(client, ProtocolCommand.REPLICAOF, (cmd)->cmd.replicaof(host, port),
 					okStatusConverter)
 					.run(args);
 		}
@@ -654,13 +928,13 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<Status, Status>(client, Command.SLAVEOF)
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.SLAVEOF)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<Status, Status>(client, Command.SLAVEOF)
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.SLAVEOF)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, Command.SLAVEOF, (cmd)->cmd.slaveof(host, port),
+			return new JedisSentinelCommand<>(client, ProtocolCommand.SLAVEOF, (cmd)->cmd.slaveof(host, port),
 					okStatusConverter)
 					.run(args);
 		}
@@ -671,13 +945,13 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 		final RoleConverter roleConverter = new RoleConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<Role, Role>(client, Command.ROLE)
+			return new JedisSentinelPipelineCommand<Role, Role>(client, ProtocolCommand.ROLE)
 					.run();
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<Role, Role>(client, Command.ROLE)
+			return new JedisSentinelTransactionCommand<Role, Role>(client, ProtocolCommand.ROLE)
 					.run();
 		}else{
-			return new JedisSentinelCommand<>(client, Command.ROLE, (cmd)->cmd.role(), roleConverter)
+			return new JedisSentinelCommand<>(client, ProtocolCommand.ROLE, (cmd)->cmd.role(), roleConverter)
 					.run();
 		}
 	}
@@ -685,13 +959,13 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	@Override
 	public Status save() {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<Status, Status>(client, Command.SAVE)
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.SAVE)
 					.run();
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<Status, Status>(client, Command.SAVE)
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.SAVE)
 					.run();
 		}else{
-			return new JedisSentinelCommand<>(client, Command.SAVE, (cmd)->cmd.save(), okStatusConverter)
+			return new JedisSentinelCommand<>(client, ProtocolCommand.SAVE, (cmd)->cmd.save(), okStatusConverter)
 					.run();
 		}
 	}
@@ -699,13 +973,13 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	@Override
 	public void shutdown() {
 		if(isPipeline()){
-			new JedisSentinelPipelineCommand<>(client, Command.SHUTDOWN)
+			new JedisSentinelPipelineCommand<>(client, ProtocolCommand.SHUTDOWN)
 					.run();
 		}else if(isTransaction()){
-			new JedisSentinelTransactionCommand<>(client, Command.SHUTDOWN)
+			new JedisSentinelTransactionCommand<>(client, ProtocolCommand.SHUTDOWN)
 					.run();
 		}else{
-			new JedisSentinelCommand<>(client, Command.SHUTDOWN, (cmd)->{
+			new JedisSentinelCommand<>(client, ProtocolCommand.SHUTDOWN, (cmd)->{
 				cmd.shutdown();
 				return null;
 			}, (v)->v)
@@ -719,17 +993,17 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 		final SaveMode saveMode = save ? SaveMode.SAVE : SaveMode.NOSAVE;
 
 		if(isPipeline()){
-			new JedisSentinelPipelineCommand<>(client, Command.SHUTDOWN)
+			new JedisSentinelPipelineCommand<>(client, ProtocolCommand.SHUTDOWN)
 					.run();
 		}else if(isTransaction()){
-			new JedisSentinelTransactionCommand<>(client, Command.SHUTDOWN)
+			new JedisSentinelTransactionCommand<>(client, ProtocolCommand.SHUTDOWN)
 					.run();
 		}else{
-			new JedisSentinelCommand<>(client, Command.SHUTDOWN, (cmd)->{
+			new JedisSentinelCommand<>(client, ProtocolCommand.SHUTDOWN, (cmd)->{
 				cmd.shutdown(saveMode);
 				return null;
 			}, (v)->v)
-					.run(args);
+					.run();
 		}
 	}
 
@@ -738,33 +1012,33 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 		final ListConverter<Slowlog, SlowLog> listSlowlogConverter = SlowlogConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<List<SlowLog>, List<SlowLog>>(client, Command.SLOWLOG_GET)
+			return new JedisSentinelPipelineCommand<List<SlowLog>, List<SlowLog>>(client, ProtocolCommand.SLOWLOG_GET)
 					.run();
 		}else if(isTransaction()){
 			return new JedisSentinelTransactionCommand<List<SlowLog>, List<SlowLog>>(client,
-					Command.SLOWLOG_GET)
+					ProtocolCommand.SLOWLOG_GET)
 					.run();
 		}else{
-			return new JedisSentinelCommand<>(client, Command.SLOWLOG_GET, (cmd)->cmd.slowlogGet(),
+			return new JedisSentinelCommand<>(client, ProtocolCommand.SLOWLOG_GET, (cmd)->cmd.slowlogGet(),
 					listSlowlogConverter)
 					.run();
 		}
 	}
 
 	@Override
-	public List<SlowLog> slowLogGet(final int count) {
+	public List<SlowLog> slowLogGet(final long count) {
 		final CommandArguments args = CommandArguments.create("count", count);
 		final ListConverter<Slowlog, SlowLog> listSlowlogConverter = SlowlogConverter.listConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<List<SlowLog>, List<SlowLog>>(client, Command.SLOWLOG_GET)
+			return new JedisSentinelPipelineCommand<List<SlowLog>, List<SlowLog>>(client, ProtocolCommand.SLOWLOG_GET)
 					.run(args);
 		}else if(isTransaction()){
 			return new JedisSentinelTransactionCommand<List<SlowLog>, List<SlowLog>>(client,
-					Command.SLOWLOG_GET)
+					ProtocolCommand.SLOWLOG_GET)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, Command.SLOWLOG_GET, (cmd)->cmd.slowlogGet(count),
+			return new JedisSentinelCommand<>(client, ProtocolCommand.SLOWLOG_GET, (cmd)->cmd.slowlogGet(count),
 					listSlowlogConverter)
 					.run(args);
 		}
@@ -773,13 +1047,13 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	@Override
 	public Long slowLogLen() {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<Long, Long>(client, Command.SLOWLOG_LEN)
+			return new JedisSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.SLOWLOG_LEN)
 					.run();
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<Long, Long>(client, Command.SLOWLOG_LEN)
+			return new JedisSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.SLOWLOG_LEN)
 					.run();
 		}else{
-			return new JedisSentinelCommand<>(client, Command.SLOWLOG_RESET, (cmd)->cmd.slowlogLen(), (v)->v)
+			return new JedisSentinelCommand<>(client, ProtocolCommand.SLOWLOG_RESET, (cmd)->cmd.slowlogLen(), (v)->v)
 					.run();
 		}
 	}
@@ -787,13 +1061,13 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	@Override
 	public Status slowLogReset() {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<Status, Status>(client, Command.SLOWLOG_RESET)
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.SLOWLOG_RESET)
 					.run();
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<Status, Status>(client, Command.SLOWLOG_RESET)
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.SLOWLOG_RESET)
 					.run();
 		}else{
-			return new JedisSentinelCommand<>(client, Command.SLOWLOG_RESET, (cmd)->cmd.slowlogReset(),
+			return new JedisSentinelCommand<>(client, ProtocolCommand.SLOWLOG_RESET, (cmd)->cmd.slowlogReset(),
 					okStatusConverter)
 					.run();
 		}
@@ -804,14 +1078,14 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 		final CommandArguments args = CommandArguments.create("db1", db1).put("db2", db2);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, Command.SWAPDB, (cmd)->cmd.swapDB(db1, db2),
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.SWAPDB, (cmd)->cmd.swapDB(db1, db2),
 					okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<Status, Status>(client, Command.SWAPDB)
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.SWAPDB)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, Command.SWAPDB, (cmd)->cmd.swapDB(db1, db2),
+			return new JedisSentinelCommand<>(client, ProtocolCommand.SWAPDB, (cmd)->cmd.swapDB(db1, db2),
 					okStatusConverter)
 					.run(args);
 		}
@@ -822,28 +1096,41 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 		final RedisServerTimeConverter redisServerTimeConverter = new RedisServerTimeConverter();
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, Command.TIME, (cmd)->cmd.time(),
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.TIME, (cmd)->cmd.time(),
 					redisServerTimeConverter)
 					.run();
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<RedisServerTime, RedisServerTime>(client, Command.TIME)
+			return new JedisSentinelTransactionCommand<RedisServerTime, RedisServerTime>(client, ProtocolCommand.TIME)
 					.run();
 		}else{
-			return new JedisSentinelCommand<>(client, Command.TIME, (cmd)->cmd.time(), redisServerTimeConverter)
+			return new JedisSentinelCommand<>(client, ProtocolCommand.TIME, (cmd)->cmd.time(), redisServerTimeConverter)
 					.run();
 		}
 	}
 
 	private Status failover(final FailoverParams failoverParams, final CommandArguments args) {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<Status, Status>(client, Command.FAILOVER)
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.FAILOVER)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<Status, Status>(client, Command.FAILOVER)
+			return new JedisSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.FAILOVER)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, Command.FAILOVER, (cmd)->cmd.failover(failoverParams),
+			return new JedisSentinelCommand<>(client, ProtocolCommand.FAILOVER, (cmd)->cmd.failover(failoverParams),
 					okStatusConverter)
+					.run(args);
+		}
+	}
+
+	private Object pSync(final CommandArguments args) {
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.PSYNC)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.PSYNC)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.PSYNC)
 					.run(args);
 		}
 	}

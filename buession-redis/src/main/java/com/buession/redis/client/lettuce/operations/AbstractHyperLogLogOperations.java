@@ -51,13 +51,13 @@ public abstract class AbstractHyperLogLogOperations<C extends LettuceRedisClient
 	}
 
 	@Override
-	public Long pfCount(final String... keys) {
-		return pfCount(SafeEncoder.encode(keys));
+	public Status pfMerge(final String destKey, final String... keys) {
+		return pfMerge(SafeEncoder.encode(destKey), SafeEncoder.encode(keys));
 	}
 
 	@Override
-	public Status pfMerge(final String destKey, final String... keys) {
-		return pfMerge(SafeEncoder.encode(destKey), SafeEncoder.encode(keys));
+	public Long pfCount(final String... keys) {
+		return pfCount(SafeEncoder.encode(keys));
 	}
 
 }

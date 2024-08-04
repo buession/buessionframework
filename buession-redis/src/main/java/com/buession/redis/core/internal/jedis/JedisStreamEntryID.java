@@ -27,89 +27,37 @@ package com.buession.redis.core.internal.jedis;
 import com.buession.redis.core.StreamEntryId;
 import redis.clients.jedis.StreamEntryID;
 
-import java.util.Objects;
-
 /**
  * Jedis {@link StreamEntryID} 扩展
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class JedisStreamEntryID extends StreamEntryID {
+public final class JedisStreamEntryID extends StreamEntryID {
 
-	/**
-	 * 构造函数
-	 */
 	public JedisStreamEntryID() {
 		super();
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param id
-	 * 		Stream Entry ID
-	 */
 	public JedisStreamEntryID(final String id) {
 		super(id);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param id
-	 * 		Stream Entry ID
-	 */
 	public JedisStreamEntryID(final byte[] id) {
 		super(id);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param time
-	 * 		Stream Entry ID 生成时间戳
-	 */
 	public JedisStreamEntryID(final long time) {
 		super(time);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param time
-	 * 		Stream Entry ID 生成时间戳
-	 * @param sequence
-	 * 		序号
-	 */
 	public JedisStreamEntryID(final long time, final long sequence) {
 		super(time, sequence);
 	}
 
-	/**
-	 * 从 {@link StreamEntryId} 创建 {@link StreamEntryID} 实例
-	 *
-	 * @param streamEntryId
-	 *        {@link StreamEntryId}
-	 *
-	 * @return {@link JedisStreamEntryID} 实例
-	 */
 	public static JedisStreamEntryID from(final StreamEntryId streamEntryId) {
-		final String str = streamEntryId.toString();
-
-		if(Objects.equals(str, NEW_ENTRY.toString())
-				|| Objects.equals(str, UNRECEIVED_ENTRY.toString())
-				|| Objects.equals(str, LAST_ENTRY.toString())
-				|| Objects.equals(str, MINIMUM_ID.toString())
-				|| Objects.equals(str, MAXIMUM_ID.toString())){
-			return new JedisStreamEntryID() {
-
-				@Override
-				public String toString() {
-					return str;
-				}
-
-			};
+		if(streamEntryId == null){
+			return new JedisStreamEntryID();
 		}else{
 			return new JedisStreamEntryID(streamEntryId.getTime(), streamEntryId.getSequence());
 		}

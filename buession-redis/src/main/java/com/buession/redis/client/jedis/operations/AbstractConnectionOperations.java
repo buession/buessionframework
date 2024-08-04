@@ -27,12 +27,7 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.ConnectionOperations;
-import com.buession.redis.core.command.args.ClientKillArgument;
-import com.buession.redis.core.internal.jedis.JedisClientKillParams;
 import com.buession.redis.utils.SafeEncoder;
-import redis.clients.jedis.params.ClientKillParams;
-
-import java.util.Optional;
 
 /**
  * Jedis 连接命令操作抽象类
@@ -46,42 +41,18 @@ import java.util.Optional;
 public abstract class AbstractConnectionOperations<C extends JedisRedisClient>
 		extends AbstractJedisRedisOperations<C> implements ConnectionOperations {
 
-	public AbstractConnectionOperations(final C client) {
+	public AbstractConnectionOperations(final C client){
 		super(client);
 	}
 
 	@Override
-	public Status auth(final byte[] user, final byte[] password) {
+	public Status auth(final byte[] user, final byte[] password){
 		return auth(SafeEncoder.encode(user), SafeEncoder.encode(password));
 	}
 
 	@Override
-	public Status auth(final byte[] password) {
+	public Status auth(final byte[] password){
 		return auth(SafeEncoder.encode(password));
-	}
-
-
-	protected static ClientKillParams createClientKillParamsFromClientKillArgument(
-			final ClientKillArgument... clientKillArguments) {
-		if(clientKillArguments != null && clientKillArguments.length > 0){
-			final JedisClientKillParams clientKillParams = JedisClientKillParams.from(clientKillArguments[0]);
-			ClientKillArgument clientKillArgument;
-
-			for(int i = 1; i < clientKillArguments.length; i++){
-				clientKillArgument = clientKillArguments[i];
-
-				Optional.ofNullable(clientKillArgument.getClientId()).ifPresent(clientKillParams::id);
-				Optional.ofNullable(clientKillArgument.getClientType()).ifPresent(clientKillParams::type);
-				Optional.ofNullable(clientKillArgument.getUsername()).ifPresent(clientKillParams::user);
-				Optional.ofNullable(clientKillArgument.getAddr()).ifPresent(clientKillParams::addr);
-				Optional.ofNullable(clientKillArgument.getLaddr()).ifPresent(clientKillParams::laddr);
-				Optional.ofNullable(clientKillArgument.getSkipMe()).ifPresent(clientKillParams::skipMe);
-			}
-
-			return clientKillParams;
-		}else{
-			return null;
-		}
 	}
 
 }

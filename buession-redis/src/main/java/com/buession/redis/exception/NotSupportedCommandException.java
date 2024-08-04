@@ -25,7 +25,7 @@
 package com.buession.redis.exception;
 
 import com.buession.redis.core.RedisMode;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.ProtocolCommand;
 
 /**
  * 命令不支持异常
@@ -42,19 +42,19 @@ public class NotSupportedCommandException extends RedisException {
 		super();
 	}
 
-	public NotSupportedCommandException(Command command) {
+	public NotSupportedCommandException(ProtocolCommand command) {
 		super("Not supported command: " + command);
 	}
 
-	public NotSupportedCommandException(Type type, Command command) {
+	public NotSupportedCommandException(Type type, ProtocolCommand command) {
 		super("Not supported command: " + command + " in " + type);
 	}
 
-	public NotSupportedCommandException(RedisMode mode, Command command) {
+	public NotSupportedCommandException(RedisMode mode, ProtocolCommand command) {
 		super("Not supported command: " + command + " with " + mode + " mode");
 	}
 
-	public NotSupportedCommandException(RedisMode mode, Type type, Command command) {
+	public NotSupportedCommandException(RedisMode mode, Type type, ProtocolCommand command) {
 		super("Not supported command: " + command + " in " + type + " with " + mode + " mode");
 	}
 

@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core;
 
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.utils.ObjectStringBuilder;
 
 import java.io.Serializable;
@@ -135,7 +135,7 @@ public class Client implements Serializable {
 	/**
 	 * 最近一次执行的命令
 	 */
-	private Command cmd;
+	private ProtocolCommand cmd;
 
 	/**
 	 * 获取客户端 ID
@@ -503,7 +503,7 @@ public class Client implements Serializable {
 	 *
 	 * @return 最近一次执行的命令
 	 */
-	public Command getCmd(){
+	public ProtocolCommand getCmd(){
 		return cmd;
 	}
 
@@ -513,7 +513,7 @@ public class Client implements Serializable {
 	 * @param cmd
 	 * 		最近一次执行的命令
 	 */
-	public void setCmd(Command cmd){
+	public void setCmd(ProtocolCommand cmd){
 		this.cmd = cmd;
 	}
 

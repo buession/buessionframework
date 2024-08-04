@@ -28,7 +28,6 @@ import com.buession.core.utils.NumberUtils;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.HashOperations;
 import com.buession.redis.core.ScanResult;
-import com.buession.redis.core.command.args.HScanArgument;
 
 import java.util.Map;
 
@@ -44,30 +43,50 @@ import java.util.Map;
 public abstract class AbstractHashOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
 		implements HashOperations {
 
-	public AbstractHashOperations(final C client) {
+	public AbstractHashOperations(final C client){
 		super(client);
 	}
 
 	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final long cursor) {
+	public ScanResult<Map<String, String>> hScan(final String key, final long cursor){
 		return hScan(key, Long.toString(cursor));
 	}
 
 	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor) {
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor){
 		return hScan(key, NumberUtils.long2bytes(cursor));
 	}
 
 	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final long cursor,
-												 final HScanArgument.StringHScanArgument scanArgument) {
-		return hScan(key, Long.toString(cursor), scanArgument);
+	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern){
+		return hScan(key, Long.toString(cursor), pattern);
 	}
 
 	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor,
-												 final HScanArgument.ByteHScanArgument scanArgument) {
-		return hScan(key, NumberUtils.long2bytes(cursor), scanArgument);
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern){
+		return hScan(key, NumberUtils.long2bytes(cursor), pattern);
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final long count){
+		return hScan(key, Long.toString(cursor), count);
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final long count){
+		return hScan(key, NumberUtils.long2bytes(cursor), count);
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern,
+												 final long count){
+		return hScan(key, Long.toString(cursor), pattern, count);
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern,
+												 final long count){
+		return hScan(key, NumberUtils.long2bytes(cursor), pattern, count);
 	}
 
 }

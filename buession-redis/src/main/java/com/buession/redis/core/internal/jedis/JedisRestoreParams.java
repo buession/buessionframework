@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.internal.jedis;
 
-import com.buession.redis.core.command.args.RestoreArgument;
+import com.buession.redis.core.command.KeyCommands;
 import redis.clients.jedis.params.RestoreParams;
 
 import java.util.Optional;
@@ -37,99 +37,35 @@ import java.util.Optional;
  */
 public final class JedisRestoreParams extends RestoreParams {
 
-	/**
-	 * 构造函数
-	 */
 	public JedisRestoreParams() {
 		super();
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param replace
-	 * 		是否替换已存在 key
-	 */
 	public JedisRestoreParams(final boolean replace) {
 		super();
 		replace(this, replace);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param replace
-	 * 		是否替换已存在 key
-	 * @param absTtl
-	 * 		-
-	 */
 	public JedisRestoreParams(final boolean replace, final boolean absTtl) {
 		this(replace);
 		absTtl(this, absTtl);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param replace
-	 * 		是否替换已存在 key
-	 * @param idleTime
-	 * 		-
-	 * @param frequency
-	 * 		-
-	 */
-	public JedisRestoreParams(final boolean replace, final long idleTime, final long frequency) {
-		this(replace);
-		idleTime(idleTime);
-		frequency(frequency);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param replace
-	 * 		是否替换已存在 key
-	 * @param absTtl
-	 * 		-
-	 * @param idleTime
-	 * 		-
-	 * @param frequency
-	 * 		-
-	 */
 	public JedisRestoreParams(final boolean replace, final boolean absTtl, final long idleTime, final long frequency) {
-		this(replace, idleTime, frequency);
-		absTtl(this, absTtl);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param idleTime
-	 * 		-
-	 * @param frequency
-	 * 		-
-	 */
-	public JedisRestoreParams(final long idleTime, final long frequency) {
-		super();
+		this(replace, absTtl);
 		idleTime(idleTime);
 		frequency(frequency);
 	}
 
-	/**
-	 * 从 {@link RestoreArgument} 创建 {@link RestoreParams} 实例
-	 *
-	 * @param restoreArgument
-	 *        {@link RestoreArgument}
-	 *
-	 * @return {@link JedisRestoreParams} 实例
-	 */
-	public static JedisRestoreParams from(final RestoreArgument restoreArgument) {
+	public static JedisRestoreParams from(final KeyCommands.RestoreArgument argument) {
 		final JedisRestoreParams restoreParams = new JedisRestoreParams();
 
-		replace(restoreParams, restoreArgument.isReplace());
-		absTtl(restoreParams, restoreArgument.isAbsTtl());
-		Optional.ofNullable(restoreArgument.getIdleTime()).ifPresent(restoreParams::idleTime);
-		Optional.ofNullable(restoreArgument.getFrequency()).ifPresent(restoreParams::frequency);
+		if(argument != null){
+			replace(restoreParams, argument.isReplace());
+			absTtl(restoreParams, argument.isAbsTtl());
+			Optional.ofNullable(argument.getIdleTime()).ifPresent(restoreParams::idleTime);
+			Optional.ofNullable(argument.getFrequency()).ifPresent(restoreParams::frequency);
+		}
 
 		return restoreParams;
 	}

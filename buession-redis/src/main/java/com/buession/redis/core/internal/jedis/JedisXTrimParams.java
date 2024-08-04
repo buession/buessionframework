@@ -24,9 +24,7 @@
  */
 package com.buession.redis.core.internal.jedis;
 
-import com.buession.redis.core.command.args.ApproximateExactTrimming;
-import com.buession.redis.core.command.args.MaxLenMinId;
-import com.buession.redis.core.command.args.XTrimArgument;
+import com.buession.redis.core.command.StreamCommands;
 import redis.clients.jedis.params.XTrimParams;
 
 import java.util.Optional;
@@ -39,115 +37,68 @@ import java.util.Optional;
  */
 public final class JedisXTrimParams extends XTrimParams {
 
-	/**
-	 * 构造函数
-	 */
 	public JedisXTrimParams() {
 		super();
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param maxLenMinId
-	 * 		-
-	 */
-	public JedisXTrimParams(final MaxLenMinId<?> maxLenMinId) {
+	public JedisXTrimParams(final long maxLen) {
 		super();
-		maxLenMinId(this, maxLenMinId);
+		maxLen(maxLen);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param maxLenMinId
-	 * 		-
-	 * @param limit
-	 * 		-
-	 */
-	public JedisXTrimParams(final MaxLenMinId<?> maxLenMinId, final long limit) {
-		this(maxLenMinId);
+	public JedisXTrimParams(final long maxLen, final String minId) {
+		this(maxLen);
+		minId(minId);
+	}
+
+	public JedisXTrimParams(final long maxLen, final long limit) {
+		this(maxLen);
 		limit(limit);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param maxLenMinId
-	 * 		-
-	 * @param approximateExactTrimming
-	 * 		-
-	 */
-	public JedisXTrimParams(final MaxLenMinId<?> maxLenMinId, final ApproximateExactTrimming approximateExactTrimming) {
-		super();
-		maxLenMinId(this, maxLenMinId, approximateExactTrimming);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param maxLenMinId
-	 * 		-
-	 * @param approximateExactTrimming
-	 * 		-
-	 * @param limit
-	 * 		-
-	 */
-	public JedisXTrimParams(final MaxLenMinId<?> maxLenMinId, final ApproximateExactTrimming approximateExactTrimming,
-							final long limit) {
-		this(maxLenMinId, approximateExactTrimming);
+	public JedisXTrimParams(final long maxLen, final String minId, final long limit) {
+		this(maxLen, minId);
 		limit(limit);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param limit
-	 * 		-
-	 */
-	public JedisXTrimParams(final long limit) {
-		super();
+	public JedisXTrimParams(final long maxLen, final boolean approximateTrimming, final boolean exactTrimming) {
+		this(maxLen);
+		approximateTrimming(this, approximateTrimming);
+		exactTrimming(this, exactTrimming);
+	}
+
+	public JedisXTrimParams(final long maxLen, final String minId, final long limit, final boolean approximateTrimming,
+							final boolean exactTrimming) {
+		this(maxLen, approximateTrimming, exactTrimming);
+		maxLen(maxLen);
+		minId(minId);
 		limit(limit);
 	}
 
-	/**
-	 * 从 {@link XTrimArgument} 创建 {@link XTrimParams} 实例
-	 *
-	 * @param xTrimArgument
-	 *        {@link XTrimArgument}
-	 *
-	 * @return {@link JedisXTrimParams} 实例
-	 */
-	public static JedisXTrimParams from(final XTrimArgument xTrimArgument) {
+	public static JedisXTrimParams from(final StreamCommands.XTrimArgument xTrimArgument) {
 		final JedisXTrimParams xTrimParams = new JedisXTrimParams();
 
 		if(xTrimArgument != null){
-			maxLenMinId(xTrimParams, xTrimArgument.getMaxLenMinId());
+			Optional.ofNullable(xTrimArgument.getMaxLen()).ifPresent(xTrimParams::maxLen);
+			Optional.ofNullable(xTrimArgument.getMinId()).ifPresent(xTrimParams::minId);
 			Optional.ofNullable(xTrimArgument.getLimit()).ifPresent(xTrimParams::limit);
+
+			approximateTrimming(xTrimParams, xTrimArgument.isApproximateTrimming());
+			exactTrimming(xTrimParams, xTrimArgument.isExactTrimming());
 		}
 
 		return xTrimParams;
 	}
 
-	private static void maxLenMinId(final JedisXTrimParams xTrimParams, final MaxLenMinId<?> maxLenMinId) {
-		if(maxLenMinId != null){
-			if(maxLenMinId instanceof MaxLenMinId.MaxLen){
-				xTrimParams.maxLen(((MaxLenMinId.MaxLen) maxLenMinId).getValue());
-			}else if(maxLenMinId instanceof MaxLenMinId.MinId){
-				xTrimParams.minId(((MaxLenMinId.MinId) maxLenMinId).getValue().toString());
-			}
+	private static void approximateTrimming(final JedisXTrimParams xTrimParams, final Boolean approximateTrimming) {
+		if(Boolean.TRUE.equals(approximateTrimming)){
+			xTrimParams.approximateTrimming();
 		}
 	}
 
-	private static void maxLenMinId(final JedisXTrimParams xTrimParams, final MaxLenMinId<?> maxLenMinId,
-									final ApproximateExactTrimming approximateExactTrimming) {
-		maxLenMinId(xTrimParams, maxLenMinId);
-		if(maxLenMinId != null){
-			if(approximateExactTrimming == ApproximateExactTrimming.APPROXIMATE){
-				xTrimParams.approximateTrimming();
-			}else if(approximateExactTrimming == ApproximateExactTrimming.EXACT){
-				xTrimParams.exactTrimming();
-			}
+	private static void exactTrimming(final JedisXTrimParams xTrimParams, final Boolean exactTrimming) {
+		if(Boolean.TRUE.equals(exactTrimming)){
+			xTrimParams.exactTrimming();
 		}
 	}
 

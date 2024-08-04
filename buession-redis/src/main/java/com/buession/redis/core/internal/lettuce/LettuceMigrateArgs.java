@@ -24,12 +24,9 @@
  */
 package com.buession.redis.core.internal.lettuce;
 
-import com.buession.core.validator.Validate;
-import com.buession.redis.core.command.args.MigrateArgument;
-import com.buession.redis.core.internal.jedis.JedisMigrateParams;
+import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.MigrateArgs;
-import redis.clients.jedis.params.MigrateParams;
 
 /**
  * Lettuce {@link MigrateArgs} 扩展
@@ -39,303 +36,108 @@ import redis.clients.jedis.params.MigrateParams;
  */
 public final class LettuceMigrateArgs<T> extends MigrateArgs<T> {
 
-	/**
-	 * 构造函数
-	 */
 	public LettuceMigrateArgs() {
 		super();
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param migrateOperation
-	 * 		迁移方式
-	 */
-	public LettuceMigrateArgs(final MigrateArgument.Mode migrateOperation) {
+	public LettuceMigrateArgs(final MigrateOperation migrateOperation) {
 		super();
-		mode(this, migrateOperation);
+
+		if(migrateOperation != null){
+			switch(migrateOperation){
+				case COPY:
+					copy();
+					break;
+				case REPLACE:
+					replace();
+					break;
+				default:
+					break;
+			}
+		}
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param migrateOperation
-	 * 		迁移方式
-	 * @param keys
-	 * 		迁移 Key
-	 */
-	public LettuceMigrateArgs(final MigrateArgument.Mode migrateOperation, final T[] keys) {
+	public LettuceMigrateArgs(final MigrateOperation migrateOperation, final T[] keys) {
 		this(migrateOperation);
 		keys(keys);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param password
-	 * 		密码
-	 */
 	public LettuceMigrateArgs(final String password) {
 		super();
 		auth(password);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param password
-	 * 		密码
-	 */
 	public LettuceMigrateArgs(final byte[] password) {
 		this(SafeEncoder.encode(password));
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param username
-	 * 		用户名
-	 * @param password
-	 * 		密码
-	 */
 	public LettuceMigrateArgs(final String username, final String password) {
 		super();
-		auth2(username, password);
+		auth(password);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param username
-	 * 		用户名
-	 * @param password
-	 * 		密码
-	 */
 	public LettuceMigrateArgs(final byte[] username, final byte[] password) {
 		this(SafeEncoder.encode(username), SafeEncoder.encode(password));
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param keys
-	 * 		迁移 Key
-	 * @param password
-	 * 		密码
-	 */
 	public LettuceMigrateArgs(final T[] keys, final String password) {
 		this(keys);
 		auth(password);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param keys
-	 * 		迁移 Key
-	 * @param password
-	 * 		密码
-	 */
 	public LettuceMigrateArgs(final T[] keys, final byte[] password) {
 		this(keys, SafeEncoder.encode(password));
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param keys
-	 * 		迁移 Key
-	 * @param username
-	 * 		用户名
-	 * @param password
-	 * 		密码
-	 */
 	public LettuceMigrateArgs(final T[] keys, final String username, final String password) {
-		this(username, password);
-		keys(keys);
+		this(keys, password);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param keys
-	 * 		迁移 Key
-	 * @param username
-	 * 		用户名
-	 * @param password
-	 * 		密码
-	 */
 	public LettuceMigrateArgs(final T[] keys, final byte[] username, final byte[] password) {
-		this(username, password);
-		keys(keys);
+		this(keys, SafeEncoder.encode(username), SafeEncoder.encode(password));
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param migrateOperation
-	 * 		迁移方式
-	 * @param password
-	 * 		密码
-	 */
-	public LettuceMigrateArgs(final MigrateArgument.Mode migrateOperation, final String password) {
+	public LettuceMigrateArgs(final MigrateOperation migrateOperation, final String password) {
 		this(migrateOperation);
 		auth(password);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param migrateOperation
-	 * 		迁移方式
-	 * @param password
-	 * 		密码
-	 */
-	public LettuceMigrateArgs(final MigrateArgument.Mode migrateOperation, final byte[] password) {
+	public LettuceMigrateArgs(final MigrateOperation migrateOperation, final byte[] password) {
 		this(migrateOperation, SafeEncoder.encode(password));
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param migrateOperation
-	 * 		迁移方式
-	 * @param username
-	 * 		用户名
-	 * @param password
-	 * 		密码
-	 */
-	public LettuceMigrateArgs(final MigrateArgument.Mode migrateOperation, final String username,
-							  final String password) {
+	public LettuceMigrateArgs(final MigrateOperation migrateOperation, final String username, final String password) {
 		this(migrateOperation);
-		auth2(username, password);
+		auth(password);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param migrateOperation
-	 * 		迁移方式
-	 * @param username
-	 * 		用户名
-	 * @param password
-	 * 		密码
-	 */
-	public LettuceMigrateArgs(final MigrateArgument.Mode migrateOperation, final byte[] username,
-							  final byte[] password) {
+	public LettuceMigrateArgs(final MigrateOperation migrateOperation, final byte[] username, final byte[] password) {
 		this(migrateOperation, SafeEncoder.encode(username), SafeEncoder.encode(password));
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param migrateOperation
-	 * 		迁移方式
-	 * @param keys
-	 * 		迁移 Key
-	 * @param password
-	 * 		密码
-	 */
-	public LettuceMigrateArgs(final MigrateArgument.Mode migrateOperation, final T[] keys, final String password) {
+	public LettuceMigrateArgs(final MigrateOperation migrateOperation, final T[] keys, final String password) {
 		this(migrateOperation, keys);
 		auth(password);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param migrateOperation
-	 * 		迁移方式
-	 * @param keys
-	 * 		迁移 Key
-	 * @param password
-	 * 		密码
-	 */
-	public LettuceMigrateArgs(final MigrateArgument.Mode migrateOperation, final T[] keys, final byte[] password) {
-		this(migrateOperation, password);
-		keys(keys);
+	public LettuceMigrateArgs(final MigrateOperation migrateOperation, final T[] keys, final byte[] password) {
+		this(migrateOperation, keys, SafeEncoder.encode(password));
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param migrateOperation
-	 * 		迁移方式
-	 * @param keys
-	 * 		迁移 Key
-	 * @param username
-	 * 		用户名
-	 * @param password
-	 * 		密码
-	 */
-	public LettuceMigrateArgs(final MigrateArgument.Mode migrateOperation, final T[] keys, final String username,
+	public LettuceMigrateArgs(final MigrateOperation migrateOperation, final T[] keys, final String username,
 							  final String password) {
 		this(migrateOperation, keys);
-		auth2(username, password);
+		auth(password);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param migrateOperation
-	 * 		迁移方式
-	 * @param keys
-	 * 		迁移 Key
-	 * @param username
-	 * 		用户名
-	 * @param password
-	 * 		密码
-	 */
-	public LettuceMigrateArgs(final MigrateArgument.Mode migrateOperation, final T[] keys, final byte[] username,
+	public LettuceMigrateArgs(final MigrateOperation migrateOperation, final T[] keys, final byte[] username,
 							  final byte[] password) {
-		this(migrateOperation, username, password);
-		keys(keys);
+		this(migrateOperation, keys, SafeEncoder.encode(username), SafeEncoder.encode(password));
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param keys
-	 * 		迁移 Key
-	 */
 	public LettuceMigrateArgs(final T[] keys) {
 		super();
 		keys(keys);
-	}
-
-	/**
-	 * 从 {@link MigrateArgument} 创建 {@link MigrateParams} 实例
-	 *
-	 * @param migrateArgument
-	 *        {@link MigrateArgument}
-	 *
-	 * @return {@link JedisMigrateParams} 实例
-	 *
-	 * @since 3.0.0
-	 */
-	public static <T> LettuceMigrateArgs<T> from(final MigrateArgument migrateArgument) {
-		final LettuceMigrateArgs<T> migrateArgs = new LettuceMigrateArgs<>();
-
-		mode(migrateArgs, migrateArgument.getMode());
-
-		if(Validate.hasText(migrateArgument.getPassword())){
-			if(Validate.hasText(migrateArgument.getUsername())){
-				migrateArgs.auth2(migrateArgument.getUsername(), migrateArgument.getPassword());
-			}else{
-				migrateArgs.auth(migrateArgument.getPassword());
-			}
-		}
-
-		return migrateArgs;
-	}
-
-	private static <T> void mode(final MigrateArgs<T> migrateArgs, final MigrateArgument.Mode migrateOperation) {
-		if(migrateOperation == MigrateArgument.Mode.COPY){
-			migrateArgs.copy();
-		}else if(migrateOperation == MigrateArgument.Mode.REPLACE){
-			migrateArgs.replace();
-		}
 	}
 
 }

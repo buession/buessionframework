@@ -25,7 +25,6 @@
 package com.buession.redis.core.internal.jedis;
 
 import com.buession.redis.core.command.ListCommands;
-import com.buession.redis.core.command.args.LPosArgument;
 import redis.clients.jedis.params.LPosParams;
 
 import java.util.Optional;
@@ -38,51 +37,28 @@ import java.util.Optional;
  */
 public final class JedisLPosParams extends LPosParams {
 
-	/**
-	 * 构造函数
-	 */
 	public JedisLPosParams() {
 		super();
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param rank
-	 * 		返回第几个匹配的元素
-	 */
 	public JedisLPosParams(final int rank) {
 		super();
 		rank(rank);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param rank
-	 * 		返回第几个匹配的元素
-	 * @param maxLen
-	 * 		查找成员个数
-	 */
 	public JedisLPosParams(final int rank, final int maxLen) {
 		super();
 		rank(rank);
 		maxlen(maxLen);
 	}
 
-	/**
-	 * 从 {@link LPosArgument} 创建 {@link LPosParams} 实例
-	 *
-	 * @param lPosArgument
-	 *        {@link LPosArgument}
-	 *
-	 * @return {@link JedisLPosParams} 实例
-	 */
-	public static JedisLPosParams from(final LPosArgument lPosArgument) {
+	public static JedisLPosParams from(final ListCommands.LPosArgument lPosArgument) {
 		final JedisLPosParams lPosParams = new JedisLPosParams();
 
-		Optional.ofNullable(lPosArgument.getRank()).ifPresent(lPosParams::rank);
-		Optional.ofNullable(lPosArgument.getMaxLen()).ifPresent(lPosParams::maxlen);
+		if(lPosArgument != null){
+			Optional.ofNullable(lPosArgument.getRank()).ifPresent(lPosParams::rank);
+			Optional.ofNullable(lPosArgument.getMaxLen()).ifPresent(lPosParams::maxlen);
+		}
 
 		return lPosParams;
 	}

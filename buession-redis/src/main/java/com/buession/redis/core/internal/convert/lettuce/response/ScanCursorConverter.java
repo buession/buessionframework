@@ -30,6 +30,7 @@ import com.buession.core.converter.MapConverter;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.KeyScanCursor;
 import io.lettuce.core.MapScanCursor;
 import io.lettuce.core.ScanCursor;
@@ -76,7 +77,8 @@ public interface ScanCursorConverter<T extends ScanCursor, R> extends Converter<
 		public final static class BSKeyScanCursorConverter implements ScanCursorConverter<KeyScanCursor<byte[]>,
 				List<String>> {
 
-			private final ListConverter<byte[], String> binaryToStringListConverter = Converters.listBinaryToString();
+			private final ListConverter<byte[], String> binaryToStringListConverter =
+					new ListConverter<>(SafeEncoder::encode);
 
 			@Override
 			public ScanResult<List<String>> convert(final KeyScanCursor<byte[]> source) {
@@ -110,7 +112,8 @@ public interface ScanCursorConverter<T extends ScanCursor, R> extends Converter<
 		public final static class BSKeyScanCursorConverter implements ScanCursorConverter<ValueScanCursor<byte[]>,
 				List<String>> {
 
-			private final ListConverter<byte[], String> binaryToStringListConverter = Converters.listBinaryToString();
+			private final ListConverter<byte[], String> binaryToStringListConverter =
+					new ListConverter<>(SafeEncoder::encode);
 
 			@Override
 			public ScanResult<List<String>> convert(final ValueScanCursor<byte[]> source) {

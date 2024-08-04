@@ -28,7 +28,6 @@ import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.ListOperations;
 import com.buession.redis.core.ListPosition;
-import com.buession.redis.core.command.args.LPosArgument;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
@@ -75,12 +74,12 @@ public abstract class AbstractListOperations<C extends LettuceRedisClient> exten
 	}
 
 	@Override
-	public List<Long> lPos(final String key, final String element, final LPosArgument lPosArgument, final int count) {
+	public List<Long> lPos(final String key, final String element, final LPosArgument lPosArgument, final long count) {
 		return lPos(SafeEncoder.encode(key), SafeEncoder.encode(element), lPosArgument, count);
 	}
 
 	@Override
-	public Long lRem(final String key, final String value, final int count) {
+	public Long lRem(final String key, final String value, final long count) {
 		return lRem(SafeEncoder.encode(key), SafeEncoder.encode(value), count);
 	}
 

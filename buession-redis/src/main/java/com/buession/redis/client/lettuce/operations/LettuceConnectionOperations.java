@@ -28,30 +28,21 @@ import com.buession.core.converter.Converter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.Client;
-import com.buession.redis.core.ClientAttributeOption;
-import com.buession.redis.core.ClientPauseMode;
 import com.buession.redis.core.ClientReply;
-import com.buession.redis.core.ClientTrackingInfo;
 import com.buession.redis.core.ClientType;
 import com.buession.redis.core.ClientUnblockType;
-import com.buession.redis.core.Keyword;
-import com.buession.redis.core.RedisServer;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.Command;
-import com.buession.redis.core.command.SubCommand;
-import com.buession.redis.core.command.args.ClientKillArgument;
-import com.buession.redis.core.command.args.ClientTracking;
-import com.buession.redis.core.command.args.HelloArgument;
-import com.buession.redis.core.internal.convert.lettuce.params.ClientTypeConverter;
+import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.lettuce.params.ClientUnblockTypeConverter;
 import com.buession.redis.core.internal.convert.response.ClientConverter;
 import com.buession.redis.core.internal.convert.response.PingResultConverter;
-import com.buession.redis.core.internal.lettuce.LettuceTrackingArgs;
 import com.buession.redis.utils.SafeEncoder;
-import io.lettuce.core.ClientListArgs;
-import io.lettuce.core.KillArgs;
-import io.lettuce.core.TrackingArgs;
 import io.lettuce.core.UnblockType;
+import io.lettuce.core.codec.ByteArrayCodec;
+import io.lettuce.core.output.StatusOutput;
+import io.lettuce.core.protocol.CommandArgs;
+import io.lettuce.core.protocol.CommandKeyword;
+import io.lettuce.core.protocol.CommandType;
 
 import java.util.List;
 
@@ -69,331 +60,46 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 
 	@Override
 	public Status auth(final String user, final String password) {
-		final CommandArguments args = CommandArguments.create(user).add(password);
+		final CommandArguments args = CommandArguments.create("user", user).put("password", password);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.AUTH, (cmd)->cmd.auth(user, password),
-					okStatusConverter)
+			return new LettucePipelineCommand<>(client, ProtocolCommand.AUTH,
+					(cmd)->client.getConnection().getStatefulConnection().async().dispatch(CommandType.AUTH,
+							new StatusOutput<>(ByteArrayCodec.INSTANCE),
+							new CommandArgs<>(ByteArrayCodec.INSTANCE).add(password)), okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.AUTH, (cmd)->cmd.auth(user, password),
-					okStatusConverter)
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.AUTH,
+					(cmd)->client.getConnection().getStatefulConnection().async().dispatch(CommandType.AUTH,
+							new StatusOutput<>(ByteArrayCodec.INSTANCE),
+							new CommandArgs<>(ByteArrayCodec.INSTANCE).add(password)), okStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, Command.AUTH, (cmd)->cmd.auth(user, password),
-					okStatusConverter)
+			return new LettuceCommand<>(client, ProtocolCommand.AUTH, (cmd)->cmd.auth(password), okStatusConverter)
 					.run(args);
 		}
 	}
 
 	@Override
 	public Status auth(final String password) {
-		final CommandArguments args = CommandArguments.create(password);
+		final CommandArguments args = CommandArguments.create("password", password);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.AUTH, (cmd)->cmd.auth(password), okStatusConverter)
+			return new LettucePipelineCommand<>(client, ProtocolCommand.AUTH,
+					(cmd)->client.getConnection().getStatefulConnection().async().dispatch(CommandType.AUTH,
+							new StatusOutput<>(ByteArrayCodec.INSTANCE),
+							new CommandArgs<>(ByteArrayCodec.INSTANCE).add(password)), okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.AUTH, (cmd)->cmd.auth(password), okStatusConverter)
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.AUTH,
+					(cmd)->client.getConnection().getStatefulConnection().async().dispatch(CommandType.AUTH,
+							new StatusOutput<>(ByteArrayCodec.INSTANCE),
+							new CommandArgs<>(ByteArrayCodec.INSTANCE).add(password)), okStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, Command.AUTH, (cmd)->cmd.auth(password), okStatusConverter)
+			return new LettuceCommand<>(client, ProtocolCommand.AUTH, (cmd)->cmd.auth(password), okStatusConverter)
 					.run(args);
 		}
-	}
-
-	@Override
-	public Status clientCaching() {
-		return notCommand(client, Command.CLIENT, SubCommand.CLIENT_CACHING);
-	}
-
-	@Override
-	public Status clientCaching(final boolean isYes) {
-		final CommandArguments args = CommandArguments.create(isYes ? Keyword.Common.YES : Keyword.Common.NO);
-		return notCommand(client, Command.CLIENT, SubCommand.CLIENT_CACHING, args);
-	}
-
-	@Override
-	public String clientGetName() {
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.CLIENT, SubCommand.CLIENT_GETNAME,
-					(cmd)->cmd.clientGetname(), SafeEncoder::encode)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.CLIENT, SubCommand.CLIENT_GETNAME,
-					(cmd)->cmd.clientGetname(), SafeEncoder::encode)
-					.run();
-		}else{
-			return new LettuceCommand<>(client, Command.CLIENT, SubCommand.CLIENT_GETNAME, (cmd)->cmd.clientGetname(),
-					SafeEncoder::encode)
-					.run();
-		}
-	}
-
-	@Override
-	public Integer clientGetRedir() {
-		return notCommand(client, Command.CLIENT, SubCommand.CLIENT_GETREDIR);
-	}
-
-	@Override
-	public Long clientId() {
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.CLIENT, SubCommand.CLIENT_ID, (cmd)->cmd.clientId(),
-					(v)->v)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.CLIENT, SubCommand.CLIENT_ID, (cmd)->cmd.clientId(),
-					(v)->v)
-					.run();
-		}else{
-			return new LettuceCommand<>(client, Command.CLIENT, SubCommand.CLIENT_ID, (cmd)->cmd.clientId(), (v)->v)
-					.run();
-		}
-	}
-
-	@Override
-	public Client clientInfo() {
-		final ClientConverter clientConverter = new ClientConverter();
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.CLIENT, SubCommand.CLIENT_INFO, (cmd)->cmd.clientInfo(),
-					clientConverter)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.CLIENT, SubCommand.CLIENT_INFO,
-					(cmd)->cmd.clientInfo(), clientConverter)
-					.run();
-		}else{
-			return new LettuceCommand<>(client, Command.CLIENT, SubCommand.CLIENT_INFO, (cmd)->cmd.clientInfo(),
-					clientConverter)
-					.run();
-		}
-	}
-
-	@Override
-	public Status clientKill(final String host, final int port) {
-		final CommandArguments args = CommandArguments.create(host).add(port);
-		final String addr = host + ':' + port;
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.CLIENT, SubCommand.CLIENT_KILL,
-					(cmd)->cmd.clientKill(addr), okStatusConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.CLIENT, SubCommand.CLIENT_KILL,
-					(cmd)->cmd.clientKill(addr), okStatusConverter)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, Command.CLIENT, SubCommand.CLIENT_KILL, (cmd)->cmd.clientKill(addr),
-					okStatusConverter)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Long clientKill(final ClientKillArgument... clientKillArguments) {
-		final CommandArguments args = CommandArguments.create(clientKillArguments);
-		final KillArgs killArgs = createKillArgsFromClientKillArgument(clientKillArguments);
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.CLIENT, SubCommand.CLIENT_KILL,
-					(cmd)->cmd.clientKill(killArgs), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.CLIENT, SubCommand.CLIENT_KILL,
-					(cmd)->cmd.clientKill(killArgs), (v)->v)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, Command.CLIENT, SubCommand.CLIENT_KILL, (cmd)->cmd.clientKill(killArgs),
-					(v)->v)
-					.run(args);
-		}
-	}
-
-	@Override
-	public List<Client> clientList() {
-		final ClientConverter.ClientListConverter clientListConverter = new ClientConverter.ClientListConverter();
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.CLIENT, SubCommand.CLIENT_LIST, (cmd)->cmd.clientList(),
-					clientListConverter)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.CLIENT, SubCommand.CLIENT_LIST,
-					(cmd)->cmd.clientList(), clientListConverter)
-					.run();
-		}else{
-			return new LettuceCommand<>(client, Command.CLIENT, SubCommand.CLIENT_LIST, (cmd)->cmd.clientList(),
-					clientListConverter)
-					.run();
-		}
-	}
-
-	@Override
-	public List<Client> clientList(final ClientType clientType) {
-		final CommandArguments args = CommandArguments.create(clientType);
-		final ClientListArgs clientListArgs = (new ClientTypeConverter()).convert(clientType);
-
-		return clientList(clientListArgs, args);
-	}
-
-	@Override
-	public List<Client> clientList(final long... clientIds) {
-		final CommandArguments args = CommandArguments.create(clientIds);
-		final ClientListArgs clientListArgs = ClientListArgs.Builder.ids(clientIds);
-
-		return clientList(clientListArgs, args);
-	}
-
-	@Override
-	public Status clientNoEvict(final boolean on) {
-		final CommandArguments args = CommandArguments.create(on ? Keyword.Common.ON : Keyword.Common.OFF);
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.CLIENT, SubCommand.CLIENT_NO_EVICT,
-					(cmd)->cmd.clientNoEvict(on), okStatusConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.CLIENT, SubCommand.CLIENT_NO_EVICT,
-					(cmd)->cmd.clientNoEvict(on), okStatusConverter)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, Command.CLIENT, SubCommand.CLIENT_NO_EVICT,
-					(cmd)->cmd.clientNoEvict(on), okStatusConverter)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Status clientNoTouch(final boolean on) {
-		final CommandArguments args = CommandArguments.create(on ? Keyword.Common.ON : Keyword.Common.OFF);
-		return notCommand(client, Command.CLIENT, SubCommand.CLIENT_NO_TOUCH, args);
-	}
-
-	@Override
-	public Status clientPause(final int timeout) {
-		final CommandArguments args = CommandArguments.create(timeout);
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.CLIENT, SubCommand.CLIENT_PAUSE,
-					(cmd)->cmd.clientPause(timeout), okStatusConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.CLIENT, SubCommand.CLIENT_PAUSE,
-					(cmd)->cmd.clientPause(timeout), okStatusConverter)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, Command.CLIENT, SubCommand.CLIENT_PAUSE,
-					(cmd)->cmd.clientPause(timeout), okStatusConverter)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Status clientPause(final int timeout, final ClientPauseMode pauseMode) {
-		final CommandArguments args = CommandArguments.create(timeout).add(pauseMode);
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.CLIENT, SubCommand.CLIENT_PAUSE,
-					(cmd)->cmd.clientPause(timeout), okStatusConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.CLIENT, SubCommand.CLIENT_PAUSE,
-					(cmd)->cmd.clientPause(timeout), okStatusConverter)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, Command.CLIENT, SubCommand.CLIENT_PAUSE,
-					(cmd)->cmd.clientPause(timeout), okStatusConverter)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Status clientReply(final ClientReply option) {
-		final CommandArguments args = CommandArguments.create(option);
-		return notCommand(client, Command.CLIENT, SubCommand.CLIENT_REPLY, args);
-	}
-
-	@Override
-	public Status clientSetInfo(final ClientAttributeOption clientAttributeOption, final String value) {
-		final CommandArguments args = CommandArguments.create(clientAttributeOption).add(value);
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.CLIENT, SubCommand.CLIENT_SETINFO,
-					(cmd)->cmd.clientSetinfo(clientAttributeOption.name(), value), okStatusConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.CLIENT, SubCommand.CLIENT_SETINFO,
-					(cmd)->cmd.clientSetinfo(clientAttributeOption.name(), value), okStatusConverter)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, Command.CLIENT, SubCommand.CLIENT_SETINFO,
-					(cmd)->cmd.clientSetinfo(clientAttributeOption.name(), value), okStatusConverter)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Status clientSetName(final byte[] name) {
-		final CommandArguments args = CommandArguments.create(name);
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.CLIENT, SubCommand.CLIENT_SETNAME,
-					(cmd)->cmd.clientSetname(name), okStatusConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.CLIENT, SubCommand.CLIENT_SETNAME,
-					(cmd)->cmd.clientSetname(name), okStatusConverter)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, Command.CLIENT, SubCommand.CLIENT_SETNAME,
-					(cmd)->cmd.clientSetname(name), okStatusConverter)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Status clientTracking(final ClientTracking clientTracking) {
-		final CommandArguments args = CommandArguments.create(clientTracking);
-		final TrackingArgs trackingArgs = LettuceTrackingArgs.from(clientTracking);
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.CLIENT, SubCommand.CLIENT_TRACKING,
-					(cmd)->cmd.clientTracking(trackingArgs), okStatusConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.CLIENT, SubCommand.CLIENT_TRACKING,
-					(cmd)->cmd.clientTracking(trackingArgs), okStatusConverter)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, Command.CLIENT, SubCommand.CLIENT_TRACKING,
-					(cmd)->cmd.clientTracking(trackingArgs), okStatusConverter)
-					.run(args);
-		}
-	}
-
-	@Override
-	public ClientTrackingInfo clientTrackingInfo() {
-		return notCommand(client, Command.CLIENT, SubCommand.CLIENT_TRACKINGINFO);
-	}
-
-	@Override
-	public Status clientUnblock(final int clientId) {
-		final CommandArguments args = CommandArguments.create(clientId);
-		return clientUnblock(clientId, UnblockType.TIMEOUT, args);
-	}
-
-	@Override
-	public Status clientUnblock(final int clientId, final ClientUnblockType type) {
-		final CommandArguments args = CommandArguments.create(clientId).add(type);
-		final UnblockType unblockType = (new ClientUnblockTypeConverter()).convert(type);
-
-		return clientUnblock(clientId, unblockType, args);
-	}
-
-	@Override
-	public Status clientUnPause() {
-		return notCommand(client, Command.CLIENT, SubCommand.CLIENT_UNPAUSE);
 	}
 
 	@Override
@@ -411,37 +117,17 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 	}
 
 	@Override
-	public RedisServer hello(final HelloArgument helloArgument) {
-		final CommandArguments args = CommandArguments.create(helloArgument);
-		return notCommand(client, Command.HELLO, args);
-	}
-
-	@Override
 	public Status ping() {
 		final PingResultConverter pingResultConverter = new PingResultConverter();
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.ECHO, (cmd)->cmd.ping(), pingResultConverter)
+			return new LettucePipelineCommand<>(client, ProtocolCommand.ECHO, (cmd)->cmd.ping(), pingResultConverter)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.ECHO, (cmd)->cmd.ping(), pingResultConverter)
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.ECHO, (cmd)->cmd.ping(), pingResultConverter)
 					.run();
 		}else{
-			return new LettuceCommand<>(client, Command.ECHO, (cmd)->cmd.ping(), pingResultConverter)
-					.run();
-		}
-	}
-
-	@Override
-	public Status quit() {
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.QUIT, (cmd)->cmd.quit(), okStatusConverter)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.QUIT, (cmd)->cmd.quit(), okStatusConverter)
-					.run();
-		}else{
-			return new LettuceCommand<>(client, Command.QUIT, (cmd)->cmd.quit(), okStatusConverter)
+			return new LettuceCommand<>(client, ProtocolCommand.ECHO, (cmd)->cmd.ping(), pingResultConverter)
 					.run();
 		}
 	}
@@ -449,19 +135,19 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 	@Override
 	public Status reset() {
 		if(isPipeline()){
-			new LettucePipelineCommand<>(client, Command.RESET, (cmd)->{
-				cmd.reset();
-				return Status.SUCCESS;
-			}, (v)->v)
+			return new LettucePipelineCommand<>(client, ProtocolCommand.RESET,
+					(cmd)->client.getConnection().getStatefulConnection().async().dispatch(CommandKeyword.RESET,
+							new StatusOutput<>(ByteArrayCodec.INSTANCE),
+							new CommandArgs<>(ByteArrayCodec.INSTANCE)), okStatusConverter)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.RESET, (cmd)->{
-				cmd.reset();
-				return Status.SUCCESS;
-			}, (v)->v)
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.RESET,
+					(cmd)->client.getConnection().getStatefulConnection().async().dispatch(CommandKeyword.RESET,
+							new StatusOutput<>(ByteArrayCodec.INSTANCE),
+							new CommandArgs<>(ByteArrayCodec.INSTANCE)), okStatusConverter)
 					.run();
 		}else{
-			return new LettuceCommand<>(client, Command.RESET, (cmd)->{
+			return new LettuceCommand<>(client, ProtocolCommand.RESET, (cmd)->{
 				cmd.reset();
 				return Status.SUCCESS;
 			}, (v)->v)
@@ -470,66 +156,269 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 	}
 
 	@Override
+	public Status quit() {
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.QUIT, (cmd)->cmd.quit(), okStatusConverter)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.QUIT, (cmd)->cmd.quit(), okStatusConverter)
+					.run();
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.QUIT, (cmd)->cmd.quit(), okStatusConverter)
+					.run();
+		}
+	}
+
+	@Override
 	public Status select(final int db) {
-		final CommandArguments args = CommandArguments.create(db);
+		final CommandArguments args = CommandArguments.create("db", db);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.SELECT, (cmd)->cmd.select(db),
-					okStatusConverter)
+			return new LettucePipelineCommand<>(client, ProtocolCommand.SELECT,
+					(cmd)->client.getConnection().getStatefulConnection().async().dispatch(CommandType.SELECT,
+							new StatusOutput<>(ByteArrayCodec.INSTANCE),
+							new CommandArgs<>(ByteArrayCodec.INSTANCE).add(db)), okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.SELECT, (cmd)->cmd.select(db),
-					okStatusConverter)
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.SELECT,
+					(cmd)->client.getConnection().getStatefulConnection().async().dispatch(CommandType.SELECT,
+							new StatusOutput<>(ByteArrayCodec.INSTANCE),
+							new CommandArgs<>(ByteArrayCodec.INSTANCE).add(db)), okStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, Command.SELECT, (cmd)->cmd.select(db), okStatusConverter)
+			return new LettuceCommand<>(client, ProtocolCommand.SELECT, (cmd)->cmd.select(db), okStatusConverter)
 					.run(args);
 		}
 	}
 
-	private List<Client> clientList(final ClientListArgs clientListArgs, final CommandArguments args) {
+	@Override
+	public Status clientCaching(final boolean isYes) {
+		final CommandArguments args = CommandArguments.create("isYes", isYes);
+
+		if(isPipeline()){
+			return new LettucePipelineCommand<Status, Status>(client, ProtocolCommand.CLIENT_CACHING)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<Status, Status>(client, ProtocolCommand.CLIENT_CACHING)
+					.run(args);
+		}else{
+			return new LettuceCommand<Status, Status>(client, ProtocolCommand.CLIENT_CACHING)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Long clientId() {
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.CLIENT_ID, (cmd)->cmd.clientId(), (v)->v)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.CLIENT_ID, (cmd)->cmd.clientId(), (v)->v)
+					.run();
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.CLIENT_ID, (cmd)->cmd.clientId(), (v)->v)
+					.run();
+		}
+	}
+
+	@Override
+	public Status clientSetName(final byte[] name) {
+		final CommandArguments args = CommandArguments.create("name", name);
+
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.CLIENT_SETNAME, (cmd)->cmd.clientSetname(name),
+					okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.CLIENT_SETNAME,
+					(cmd)->cmd.clientSetname(name),
+					okStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.CLIENT_SETNAME, (cmd)->cmd.clientSetname(name),
+					okStatusConverter)
+					.run(args);
+		}
+	}
+
+	@Override
+	public String clientGetName() {
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.CLIENT_GETNAME, (cmd)->cmd.clientGetname(),
+					SafeEncoder::encode)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.CLIENT_GETNAME, (cmd)->cmd.clientGetname(),
+					SafeEncoder::encode)
+					.run();
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.CLIENT_GETNAME, (cmd)->cmd.clientGetname(),
+					SafeEncoder::encode)
+					.run();
+		}
+	}
+
+	@Override
+	public Integer clientGetRedir() {
+		if(isPipeline()){
+			return new LettucePipelineCommand<Integer, Integer>(client, ProtocolCommand.CLIENT_GETREDIR)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<Integer, Integer>(client, ProtocolCommand.CLIENT_GETREDIR)
+					.run();
+		}else{
+			return new LettuceCommand<Integer, Integer>(client, ProtocolCommand.CLIENT_GETREDIR)
+					.run();
+		}
+	}
+
+	@Override
+	public List<Client> clientList() {
 		final ClientConverter.ClientListConverter clientListConverter = new ClientConverter.ClientListConverter();
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.CLIENT, SubCommand.CLIENT_LIST,
-					(cmd)->cmd.clientList(clientListArgs), clientListConverter)
+			return new LettucePipelineCommand<>(client, ProtocolCommand.CLIENT_LIST, (cmd)->cmd.clientList(),
+					clientListConverter)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.CLIENT_LIST, (cmd)->cmd.clientList(),
+					clientListConverter)
+					.run();
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.CLIENT_LIST, (cmd)->cmd.clientList(),
+					clientListConverter)
+					.run();
+		}
+	}
+
+	@Override
+	public List<Client> clientList(final ClientType clientType) {
+		final CommandArguments args = CommandArguments.create("clientType", clientType);
+		final ClientConverter.ClientListConverter clientListConverter = new ClientConverter.ClientListConverter();
+
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.CLIENT_LIST, (cmd)->cmd.clientList(),
+					clientListConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.CLIENT, SubCommand.CLIENT_LIST,
-					(cmd)->cmd.clientList(clientListArgs), clientListConverter)
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.CLIENT_LIST, (cmd)->cmd.clientList(),
+					clientListConverter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, Command.CLIENT, SubCommand.CLIENT_LIST,
-					(cmd)->cmd.clientList(clientListArgs), clientListConverter)
+			return new LettuceCommand<>(client, ProtocolCommand.CLIENT_LIST, (cmd)->cmd.clientList(),
+					clientListConverter)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Client clientInfo() {
+		if(isPipeline()){
+			return new LettucePipelineCommand<Client, Client>(client, ProtocolCommand.CLIENT_INFO)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<Client, Client>(client, ProtocolCommand.CLIENT_INFO)
+					.run();
+		}else{
+			return new LettuceCommand<Client, Client>(client, ProtocolCommand.CLIENT_INFO)
+					.run();
+		}
+	}
+
+	@Override
+	public Status clientPause(final int timeout) {
+		final CommandArguments args = CommandArguments.create("timeout", timeout);
+
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.CLIENT_PAUSE, (cmd)->cmd.clientPause(timeout),
+					okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.CLIENT_PAUSE,
+					(cmd)->cmd.clientPause(timeout), okStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.CLIENT_PAUSE, (cmd)->cmd.clientPause(timeout),
+					okStatusConverter)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Status clientReply(final ClientReply option) {
+		final CommandArguments args = CommandArguments.create("option", option);
+
+		if(isPipeline()){
+			return new LettucePipelineCommand<Status, Status>(client, ProtocolCommand.CLIENT_REPLY)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<Status, Status>(client, ProtocolCommand.CLIENT_REPLY)
+					.run(args);
+		}else{
+			return new LettuceCommand<Status, Status>(client, ProtocolCommand.CLIENT_REPLY)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Status clientKill(final String host, final int port) {
+		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
+		final String addr = host + ':' + port;
+
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.CLIENT_KILL, (cmd)->cmd.clientKill(addr),
+					okStatusConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.CLIENT_KILL, (cmd)->cmd.clientKill(addr),
+					okStatusConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.CLIENT_KILL, (cmd)->cmd.clientKill(addr),
+					okStatusConverter)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Status clientUnblock(final int clientId) {
+		final CommandArguments args = CommandArguments.create("clientId", clientId);
+		return clientUnblock(clientId, UnblockType.ERROR, args);
+	}
+
+	@Override
+	public Status clientUnblock(final int clientId, final ClientUnblockType type) {
+		final CommandArguments args = CommandArguments.create("clientId", clientId).put("type", type);
+		final UnblockType unblockType = (new ClientUnblockTypeConverter()).convert(type);
+
+		return clientUnblock(clientId, unblockType, args);
+	}
+
+	private <V> V echo(final byte[] str, final Converter<byte[], V> converter, final CommandArguments args) {
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.ECHO, (cmd)->cmd.echo(str), converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.ECHO, (cmd)->cmd.echo(str), converter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.ECHO, (cmd)->cmd.echo(str), converter)
 					.run(args);
 		}
 	}
 
 	private Status clientUnblock(final int clientId, final UnblockType unblockType, final CommandArguments args) {
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.CLIENT, SubCommand.CLIENT_UNBLOCK,
+			return new LettucePipelineCommand<>(client, ProtocolCommand.CLIENT_KILL,
 					(cmd)->cmd.clientUnblock(clientId, unblockType), oneStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.CLIENT, SubCommand.CLIENT_UNBLOCK,
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.CLIENT_KILL,
 					(cmd)->cmd.clientUnblock(clientId, unblockType), oneStatusConverter)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, Command.CLIENT, SubCommand.CLIENT_UNBLOCK,
+			return new LettuceCommand<>(client, ProtocolCommand.CLIENT_KILL,
 					(cmd)->cmd.clientUnblock(clientId, unblockType), oneStatusConverter)
-					.run(args);
-		}
-	}
-
-	private <V> V echo(final byte[] str, final Converter<byte[], V> converter, final CommandArguments args) {
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.ECHO, (cmd)->cmd.echo(str), converter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.ECHO, (cmd)->cmd.echo(str), converter)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, Command.ECHO, (cmd)->cmd.echo(str), converter)
 					.run(args);
 		}
 	}

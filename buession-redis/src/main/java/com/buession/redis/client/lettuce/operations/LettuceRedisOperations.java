@@ -32,8 +32,8 @@ import com.buession.redis.client.lettuce.LettuceClusterClient;
 import com.buession.redis.client.lettuce.LettuceSentinelClient;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.client.operations.RedisOperations;
-import com.buession.redis.core.command.Command;
-import com.buession.redis.core.command.SubCommand;
+import com.buession.redis.core.Command;
+import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.lettuce.LettuceResult;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.exception.RedisPipelineException;
@@ -57,80 +57,17 @@ import io.lettuce.core.sentinel.api.sync.RedisSentinelCommands;
  */
 public interface LettuceRedisOperations extends RedisOperations {
 
-	/**
-	 * Lettuce 单机模式常规命令
-	 *
-	 * @param <SR>
-	 * 		原生结果类型
-	 * @param <R>
-	 * 		结果类型
-	 */
 	class LettuceCommand<SR, R> extends
 			AbstractStandaloneCommand<LettuceStandaloneClient, LettuceConnection, RedisCommands<byte[], byte[]>, SR, SR, R> {
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 单机客户端 {@link LettuceStandaloneClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 */
-		public LettuceCommand(final LettuceStandaloneClient client, final Command command) {
+		public LettuceCommand(final LettuceStandaloneClient client, final ProtocolCommand command) {
 			super(client, command);
 		}
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 单机客户端 {@link LettuceStandaloneClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public LettuceCommand(final LettuceStandaloneClient client, final Command command,
+		public LettuceCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
 							  final Executor<RedisCommands<byte[], byte[]>, SR> executor,
 							  final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 单机客户端 {@link LettuceStandaloneClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 */
-		public LettuceCommand(final LettuceStandaloneClient client, final Command command,
-							  final SubCommand subCommand) {
-			super(client, command, subCommand);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 单机客户端 {@link LettuceStandaloneClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public LettuceCommand(final LettuceStandaloneClient client, final Command command, final SubCommand subCommand,
-							  final Executor<RedisCommands<byte[], byte[]>, SR> executor,
-							  final Converter<SR, R> converter) {
-			super(client, command, subCommand, executor, converter);
 		}
 
 		@Override
@@ -141,81 +78,17 @@ public interface LettuceRedisOperations extends RedisOperations {
 
 	}
 
-	/**
-	 * Lettuce 单机模式管道模式命令
-	 *
-	 * @param <SR>
-	 * 		原生结果类型
-	 * @param <R>
-	 * 		结果类型
-	 */
 	class LettucePipelineCommand<SR, R> extends
 			AbstractStandaloneCommand<LettuceStandaloneClient, LettuceConnection, RedisAsyncCommands<byte[], byte[]>, RedisFuture<SR>, SR, R> {
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 单机客户端 {@link LettuceStandaloneClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 */
-		public LettucePipelineCommand(final LettuceStandaloneClient client, final Command command) {
+		public LettucePipelineCommand(final LettuceStandaloneClient client, final ProtocolCommand command) {
 			super(client, command);
 		}
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 单机客户端 {@link LettuceStandaloneClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public LettucePipelineCommand(final LettuceStandaloneClient client, final Command command,
+		public LettucePipelineCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
 									  final Executor<RedisAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
 									  final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 单机客户端 {@link LettuceStandaloneClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 */
-		public LettucePipelineCommand(final LettuceStandaloneClient client, final Command command,
-									  final SubCommand subCommand) {
-			super(client, command, subCommand);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 单机客户端 {@link LettuceStandaloneClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public LettucePipelineCommand(final LettuceStandaloneClient client, final Command command,
-									  final SubCommand subCommand,
-									  final Executor<RedisAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
-									  final Converter<SR, R> converter) {
-			super(client, command, subCommand, executor, converter);
 		}
 
 		@SuppressWarnings({"unchecked"})
@@ -242,82 +115,18 @@ public interface LettuceRedisOperations extends RedisOperations {
 
 	}
 
-	/**
-	 * Lettuce 单机模式事务模式命令
-	 *
-	 * @param <SR>
-	 * 		原生结果类型
-	 * @param <R>
-	 * 		结果类型
-	 */
 	class LettuceTransactionCommand<SR, R> extends
 			AbstractStandaloneCommand<LettuceStandaloneClient, LettuceConnection, RedisAsyncCommands<byte[], byte[]>,
 					RedisFuture<SR>, SR, R> {
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 单机客户端 {@link LettuceStandaloneClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 */
-		public LettuceTransactionCommand(final LettuceStandaloneClient client, final Command command) {
+		public LettuceTransactionCommand(final LettuceStandaloneClient client, final ProtocolCommand command) {
 			super(client, command);
 		}
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 单机客户端 {@link LettuceStandaloneClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public LettuceTransactionCommand(final LettuceStandaloneClient client, final Command command,
+		public LettuceTransactionCommand(final LettuceStandaloneClient client, final ProtocolCommand command,
 										 final Executor<RedisAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
 										 final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 单机客户端 {@link LettuceStandaloneClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 */
-		public LettuceTransactionCommand(final LettuceStandaloneClient client, final Command command,
-										 final SubCommand subCommand) {
-			super(client, command, subCommand);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 单机客户端 {@link LettuceStandaloneClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public LettuceTransactionCommand(final LettuceStandaloneClient client, final Command command,
-										 final SubCommand subCommand,
-										 final Executor<RedisAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
-										 final Converter<SR, R> converter) {
-			super(client, command, subCommand, executor, converter);
 		}
 
 		@SuppressWarnings({"unchecked"})
@@ -343,81 +152,17 @@ public interface LettuceRedisOperations extends RedisOperations {
 
 	}
 
-	/**
-	 * Lettuce 哨兵模式常规命令
-	 *
-	 * @param <SR>
-	 * 		原生结果类型
-	 * @param <R>
-	 * 		结果类型
-	 */
 	class LettuceSentinelCommand<SR, R> extends
 			AbstractSentinelCommand<LettuceSentinelClient, LettuceSentinelConnection, RedisSentinelCommands<byte[], byte[]>, SR, SR, R> {
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 哨兵客户端 {@link LettuceSentinelClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 */
-		public LettuceSentinelCommand(final LettuceSentinelClient client, final Command command) {
+		public LettuceSentinelCommand(final LettuceSentinelClient client, final ProtocolCommand command) {
 			super(client, command);
 		}
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 哨兵客户端 {@link LettuceSentinelClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public LettuceSentinelCommand(final LettuceSentinelClient client, final Command command,
+		public LettuceSentinelCommand(final LettuceSentinelClient client, final ProtocolCommand command,
 									  final Executor<RedisSentinelCommands<byte[], byte[]>, SR> executor,
 									  final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 哨兵客户端 {@link LettuceSentinelClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 */
-		public LettuceSentinelCommand(final LettuceSentinelClient client, final Command command,
-									  final SubCommand subCommand) {
-			super(client, command, subCommand);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 哨兵客户端 {@link LettuceSentinelClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public LettuceSentinelCommand(final LettuceSentinelClient client, final Command command,
-									  final SubCommand subCommand,
-									  final Executor<RedisSentinelCommands<byte[], byte[]>, SR> executor,
-									  final Converter<SR, R> converter) {
-			super(client, command, subCommand, executor, converter);
 		}
 
 		@Override
@@ -428,81 +173,17 @@ public interface LettuceRedisOperations extends RedisOperations {
 
 	}
 
-	/**
-	 * Lettuce 哨兵模式管道模式命令
-	 *
-	 * @param <SR>
-	 * 		原生结果类型
-	 * @param <R>
-	 * 		结果类型
-	 */
 	class LettuceSentinelPipelineCommand<SR, R> extends
 			AbstractSentinelCommand<LettuceSentinelClient, LettuceSentinelConnection, RedisSentinelAsyncCommands<byte[], byte[]>, RedisFuture<SR>, SR, R> {
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 哨兵客户端 {@link LettuceSentinelClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 */
-		public LettuceSentinelPipelineCommand(final LettuceSentinelClient client, final Command command) {
+		public LettuceSentinelPipelineCommand(final LettuceSentinelClient client, final ProtocolCommand command) {
 			super(client, command);
 		}
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 哨兵客户端 {@link LettuceSentinelClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public LettuceSentinelPipelineCommand(final LettuceSentinelClient client, final Command command,
+		public LettuceSentinelPipelineCommand(final LettuceSentinelClient client, final ProtocolCommand command,
 											  final Executor<RedisSentinelAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
 											  final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 哨兵客户端 {@link LettuceSentinelClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 */
-		public LettuceSentinelPipelineCommand(final LettuceSentinelClient client, final Command command,
-											  final SubCommand subCommand) {
-			super(client, command, subCommand);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 哨兵客户端 {@link LettuceSentinelClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public LettuceSentinelPipelineCommand(final LettuceSentinelClient client, final Command command,
-											  final SubCommand subCommand,
-											  final Executor<RedisSentinelAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
-											  final Converter<SR, R> converter) {
-			super(client, command, subCommand, executor, converter);
 		}
 
 		@SuppressWarnings({"unchecked"})
@@ -529,82 +210,18 @@ public interface LettuceRedisOperations extends RedisOperations {
 
 	}
 
-	/**
-	 * Lettuce 哨兵模式事务模式命令
-	 *
-	 * @param <SR>
-	 * 		原生结果类型
-	 * @param <R>
-	 * 		结果类型
-	 */
 	class LettuceSentinelTransactionCommand<SR, R> extends
 			AbstractSentinelCommand<LettuceSentinelClient, LettuceSentinelConnection, RedisSentinelAsyncCommands<byte[], byte[]>,
 					RedisFuture<SR>, SR, R> {
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 哨兵客户端 {@link LettuceSentinelClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 */
-		public LettuceSentinelTransactionCommand(final LettuceSentinelClient client, final Command command) {
+		public LettuceSentinelTransactionCommand(final LettuceSentinelClient client, final ProtocolCommand command) {
 			super(client, command);
 		}
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 哨兵客户端 {@link LettuceSentinelClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public LettuceSentinelTransactionCommand(final LettuceSentinelClient client, final Command command,
+		public LettuceSentinelTransactionCommand(final LettuceSentinelClient client, final ProtocolCommand command,
 												 final Executor<RedisSentinelAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
 												 final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 哨兵客户端 {@link LettuceSentinelClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 */
-		public LettuceSentinelTransactionCommand(final LettuceSentinelClient client, final Command command,
-												 final SubCommand subCommand) {
-			super(client, command, subCommand);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 哨兵客户端 {@link LettuceSentinelClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public LettuceSentinelTransactionCommand(final LettuceSentinelClient client, final Command command,
-												 final SubCommand subCommand,
-												 final Executor<RedisSentinelAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
-												 final Converter<SR, R> converter) {
-			super(client, command, subCommand, executor, converter);
 		}
 
 		@SuppressWarnings({"unchecked"})
@@ -630,81 +247,17 @@ public interface LettuceRedisOperations extends RedisOperations {
 
 	}
 
-	/**
-	 * Lettuce 集群模式常规命令
-	 *
-	 * @param <SR>
-	 * 		原生结果类型
-	 * @param <R>
-	 * 		结果类型
-	 */
 	class LettuceClusterCommand<SR, R> extends
 			AbstractClusterCommand<LettuceClusterClient, LettuceClusterConnection, RedisClusterCommands<byte[], byte[]>, SR, SR, R> {
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 集群客户端 {@link LettuceClusterClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 */
-		public LettuceClusterCommand(final LettuceClusterClient client, final Command command) {
+		public LettuceClusterCommand(final LettuceClusterClient client, final ProtocolCommand command) {
 			super(client, command);
 		}
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 集群客户端 {@link LettuceClusterClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public LettuceClusterCommand(final LettuceClusterClient client, final Command command,
+		public LettuceClusterCommand(final LettuceClusterClient client, final ProtocolCommand command,
 									 final Executor<RedisClusterCommands<byte[], byte[]>, SR> executor,
 									 final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 集群客户端 {@link LettuceClusterClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 */
-		public LettuceClusterCommand(final LettuceClusterClient client, final Command command,
-									 final SubCommand subCommand) {
-			super(client, command, subCommand);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 集群客户端 {@link LettuceClusterClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public LettuceClusterCommand(final LettuceClusterClient client, final Command command,
-									 final SubCommand subCommand,
-									 final Executor<RedisClusterCommands<byte[], byte[]>, SR> executor,
-									 final Converter<SR, R> converter) {
-			super(client, command, subCommand, executor, converter);
 		}
 
 		@Override
@@ -715,81 +268,17 @@ public interface LettuceRedisOperations extends RedisOperations {
 
 	}
 
-	/**
-	 * Lettuce 集群模式管道模式命令
-	 *
-	 * @param <SR>
-	 * 		原生结果类型
-	 * @param <R>
-	 * 		结果类型
-	 */
 	class LettuceClusterPipelineCommand<SR, R> extends
 			AbstractClusterCommand<LettuceClusterClient, LettuceClusterConnection, RedisClusterAsyncCommands<byte[], byte[]>, RedisFuture<SR>, SR, R> {
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 集群客户端 {@link LettuceClusterClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 */
-		public LettuceClusterPipelineCommand(final LettuceClusterClient client, final Command command) {
+		public LettuceClusterPipelineCommand(final LettuceClusterClient client, final ProtocolCommand command) {
 			super(client, command);
 		}
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 集群客户端 {@link LettuceClusterClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public LettuceClusterPipelineCommand(final LettuceClusterClient client, final Command command,
+		public LettuceClusterPipelineCommand(final LettuceClusterClient client, final ProtocolCommand command,
 											 final Executor<RedisClusterAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
 											 final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 集群客户端 {@link LettuceClusterClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 */
-		public LettuceClusterPipelineCommand(final LettuceClusterClient client, final Command command,
-											 final SubCommand subCommand) {
-			super(client, command, subCommand);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 集群客户端 {@link LettuceClusterClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public LettuceClusterPipelineCommand(final LettuceClusterClient client, final Command command,
-											 final SubCommand subCommand,
-											 final Executor<RedisClusterAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
-											 final Converter<SR, R> converter) {
-			super(client, command, subCommand, executor, converter);
 		}
 
 		@SuppressWarnings({"unchecked"})
@@ -816,82 +305,18 @@ public interface LettuceRedisOperations extends RedisOperations {
 
 	}
 
-	/**
-	 * Lettuce 集群模式集群模式命令
-	 *
-	 * @param <SR>
-	 * 		原生结果类型
-	 * @param <R>
-	 * 		结果类型
-	 */
 	class LettuceClusterTransactionCommand<SR, R> extends
 			AbstractClusterCommand<LettuceClusterClient, LettuceClusterConnection, RedisClusterAsyncCommands<byte[], byte[]>,
 					RedisFuture<SR>, SR, R> {
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 集群客户端 {@link LettuceClusterClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 */
-		public LettuceClusterTransactionCommand(final LettuceClusterClient client, final Command command) {
+		public LettuceClusterTransactionCommand(final LettuceClusterClient client, final ProtocolCommand command) {
 			super(client, command);
 		}
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 集群客户端 {@link LettuceClusterClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public LettuceClusterTransactionCommand(final LettuceClusterClient client, final Command command,
+		public LettuceClusterTransactionCommand(final LettuceClusterClient client, final ProtocolCommand command,
 												final Executor<RedisClusterAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
 												final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 集群客户端 {@link LettuceClusterClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 */
-		public LettuceClusterTransactionCommand(final LettuceClusterClient client, final Command command,
-												final SubCommand subCommand) {
-			super(client, command, subCommand);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 集群客户端 {@link LettuceClusterClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public LettuceClusterTransactionCommand(final LettuceClusterClient client, final Command command,
-												final SubCommand subCommand,
-												final Executor<RedisClusterAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
-												final Converter<SR, R> converter) {
-			super(client, command, subCommand, executor, converter);
 		}
 
 		@SuppressWarnings({"unchecked"})
@@ -917,13 +342,13 @@ public interface LettuceRedisOperations extends RedisOperations {
 
 	}
 
-	abstract class PtRunner<T, SR, R> implements com.buession.redis.core.Command.Runner {
+	abstract class PtRunner<T, SR, R> implements Command.Runner {
 
-		protected final com.buession.redis.core.Command.Executor<T, RedisFuture<SR>> executor;
+		protected final Command.Executor<T, RedisFuture<SR>> executor;
 
 		protected final Converter<SR, R> converter;
 
-		public PtRunner(final com.buession.redis.core.Command.Executor<T, RedisFuture<SR>> executor,
+		public PtRunner(final Command.Executor<T, RedisFuture<SR>> executor,
 						final Converter<SR, R> converter) {
 			this.executor = executor;
 			this.converter = converter;
@@ -944,7 +369,7 @@ public interface LettuceRedisOperations extends RedisOperations {
 
 		private final PipelineProxy<T, LettuceResult<Object, Object>> pipelineFactory;
 
-		public PipelineRunner(final com.buession.redis.core.Command.Executor<T, RedisFuture<SR>> executor,
+		public PipelineRunner(final Command.Executor<T, RedisFuture<SR>> executor,
 							  final PipelineProxy<T, LettuceResult<Object, Object>> pipelineFactory,
 							  final Converter<SR, R> converter) {
 			super(executor, converter);
@@ -964,7 +389,7 @@ public interface LettuceRedisOperations extends RedisOperations {
 
 		private final TransactionProxy<T, LettuceResult<Object, Object>> transactionProxy;
 
-		public TransactionRunner(final com.buession.redis.core.Command.Executor<T, RedisFuture<SR>> executor,
+		public TransactionRunner(final Command.Executor<T, RedisFuture<SR>> executor,
 								 final TransactionProxy<T, LettuceResult<Object, Object>> transactionProxy,
 								 final Converter<SR, R> converter) {
 			super(executor, converter);

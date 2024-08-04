@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
@@ -29,7 +29,7 @@ import com.buession.lang.Status;
 /**
  * HyperLogLog 命令
  *
- * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=hyperloglog" target="_blank">https://redis.io/docs/latest/commands/?group=hyperloglog</a></p>
+ * <p>详情说明 <a href="http://redisdoc.com/hyperloglog/index.html" target="_blank">http://redisdoc.com/hyperloglog/index.html</a></p>
  *
  * @author Yong.Teng
  */
@@ -64,30 +64,6 @@ public interface HyperLogLogCommands extends RedisCommands {
 	Status pfAdd(final byte[] key, final byte[]... elements);
 
 	/**
-	 * 获取所有给定 HyperLogLog 的并集的近似基数，这个近似基数是通过将所有给定 HyperLogLog 合并至一个临时 HyperLogLog 来计算得出的
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/pfcount.html" target="_blank">https://www.redis.com.cn/commands/pfcount.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 *
-	 * @return 所有给定 HyperLogLog 的并集的近似基数
-	 */
-	Long pfCount(final String... keys);
-
-	/**
-	 * 获取所有给定 HyperLogLog 的并集的近似基数，这个近似基数是通过将所有给定 HyperLogLog 合并至一个临时 HyperLogLog 来计算得出的
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/pfcount.html" target="_blank">https://www.redis.com.cn/commands/pfcount.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 *
-	 * @return 所有给定 HyperLogLog 的并集的近似基数
-	 */
-	Long pfCount(final byte[]... keys);
-
-	/**
 	 * 将多个 HyperLogLog 合并（merge）为一个 HyperLogLog，并保存到 destKey 中
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/hyperloglog/pfmerge.html" target="_blank">http://redisdoc.com/hyperloglog/pfmerge.html</a></p>
@@ -114,5 +90,29 @@ public interface HyperLogLogCommands extends RedisCommands {
 	 * @return 操作结果
 	 */
 	Status pfMerge(final byte[] destKey, final byte[]... keys);
+
+	/**
+	 * 获取所有给定 HyperLogLog 的并集的近似基数，这个近似基数是通过将所有给定 HyperLogLog 合并至一个临时 HyperLogLog 来计算得出的
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/pfcount.html" target="_blank">https://www.redis.com.cn/commands/pfcount.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 *
+	 * @return 所有给定 HyperLogLog 的并集的近似基数
+	 */
+	Long pfCount(final String... keys);
+
+	/**
+	 * 获取所有给定 HyperLogLog 的并集的近似基数，这个近似基数是通过将所有给定 HyperLogLog 合并至一个临时 HyperLogLog 来计算得出的
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/pfcount.html" target="_blank">https://www.redis.com.cn/commands/pfcount.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 *
+	 * @return 所有给定 HyperLogLog 的并集的近似基数
+	 */
+	Long pfCount(final byte[]... keys);
 
 }

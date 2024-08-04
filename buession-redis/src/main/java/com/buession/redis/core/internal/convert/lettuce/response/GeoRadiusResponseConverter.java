@@ -26,7 +26,6 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
-import com.buession.core.converter.SetListConverter;
 import com.buession.redis.core.GeoRadius;
 import io.lettuce.core.GeoWithin;
 

@@ -42,10 +42,24 @@ import java.util.Set;
 public class LettuceClusterFactory
 		extends AbstractLettuceFactory<StatefulRedisClusterConnection<byte[], byte[]>, RedisClusterClient> {
 
+	/**
+	 * 构造函数
+	 *
+	 * @param nodes
+	 * 		Redis 集群节点
+	 */
 	public LettuceClusterFactory(final Set<HostAndPort> nodes) {
 		this(buildRedisURI(nodes, DefaultLettuceClientConfig.builder().build()));
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param nodes
+	 * 		Redis 集群节点
+	 * @param lettuceClientConfig
+	 * 		客户端配置
+	 */
 	public LettuceClusterFactory(final Set<HostAndPort> nodes, final LettuceClientConfig lettuceClientConfig) {
 		this(buildRedisURI(nodes, lettuceClientConfig));
 	}
@@ -73,7 +87,7 @@ public class LettuceClusterFactory
 				if(Validate.hasText(lettuceClientConfig.getUser())){
 					builder.withAuthentication(lettuceClientConfig.getUser(), lettuceClientConfig.getPassword());
 				}else{
-					builder.withPassword(lettuceClientConfig.getPassword());
+					builder.withPassword(lettuceClientConfig.getPassword().toCharArray());
 				}
 			}
 		});

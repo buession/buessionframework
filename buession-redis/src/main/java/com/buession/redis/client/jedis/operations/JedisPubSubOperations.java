@@ -29,7 +29,7 @@ import com.buession.core.converter.MapConverter;
 import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.core.PubSubListener;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.pubsub.jedis.DefaultBinaryJedisPubSub;
 import com.buession.redis.pubsub.jedis.DefaultJedisPubSub;
@@ -56,13 +56,13 @@ public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisS
 				.put("pubSubListener", pubSubListener);
 
 		if(isPipeline()){
-			new JedisPipelineCommand<>(client, Command.PSUBSCRIBE)
+			new JedisPipelineCommand<>(client, ProtocolCommand.PSUBSCRIBE)
 					.run(args);
 		}else if(isTransaction()){
-			new JedisTransactionCommand<>(client, Command.PSUBSCRIBE)
+			new JedisTransactionCommand<>(client, ProtocolCommand.PSUBSCRIBE)
 					.run(args);
 		}else{
-			new JedisCommand<>(client, Command.PSUBSCRIBE, (cmd)->{
+			new JedisCommand<>(client, ProtocolCommand.PSUBSCRIBE, (cmd)->{
 				cmd.psubscribe(new DefaultJedisPubSub(pubSubListener), patterns);
 				return null;
 			}, (v)->v)
@@ -76,13 +76,13 @@ public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisS
 				.put("pubSubListener", pubSubListener);
 
 		if(isPipeline()){
-			new JedisPipelineCommand<>(client, Command.PSUBSCRIBE)
+			new JedisPipelineCommand<>(client, ProtocolCommand.PSUBSCRIBE)
 					.run(args);
 		}else if(isTransaction()){
-			new JedisTransactionCommand<>(client, Command.PSUBSCRIBE)
+			new JedisTransactionCommand<>(client, ProtocolCommand.PSUBSCRIBE)
 					.run(args);
 		}else{
-			new JedisCommand<>(client, Command.PSUBSCRIBE, (cmd)->{
+			new JedisCommand<>(client, ProtocolCommand.PSUBSCRIBE, (cmd)->{
 				cmd.psubscribe(new DefaultBinaryJedisPubSub(pubSubListener), patterns);
 				return null;
 			}, (v)->v)
@@ -95,14 +95,14 @@ public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisS
 		final CommandArguments args = CommandArguments.create("channel", channel).put("message", message);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, Command.PUBLISH, (cmd)->cmd.publish(channel, message),
+			return new JedisPipelineCommand<>(client, ProtocolCommand.PUBLISH, (cmd)->cmd.publish(channel, message),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<Long, Long>(client, Command.PUBLISH)
+			return new JedisTransactionCommand<Long, Long>(client, ProtocolCommand.PUBLISH)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, Command.PUBLISH, (cmd)->cmd.publish(channel, message), (v)->v)
+			return new JedisCommand<>(client, ProtocolCommand.PUBLISH, (cmd)->cmd.publish(channel, message), (v)->v)
 					.run(args);
 		}
 	}
@@ -112,14 +112,14 @@ public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisS
 		final CommandArguments args = CommandArguments.create("channel", channel).put("message", message);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, Command.PUBLISH, (cmd)->cmd.publish(channel, message),
+			return new JedisPipelineCommand<>(client, ProtocolCommand.PUBLISH, (cmd)->cmd.publish(channel, message),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<Long, Long>(client, Command.PUBLISH)
+			return new JedisTransactionCommand<Long, Long>(client, ProtocolCommand.PUBLISH)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, Command.PUBLISH, (cmd)->cmd.publish(channel, message), (v)->v)
+			return new JedisCommand<>(client, ProtocolCommand.PUBLISH, (cmd)->cmd.publish(channel, message), (v)->v)
 					.run(args);
 		}
 	}
@@ -127,13 +127,13 @@ public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisS
 	@Override
 	public List<String> pubsubChannels() {
 		if(isPipeline()){
-			return new JedisPipelineCommand<List<String>, List<String>>(client, Command.PUBSUB_CHANNELS)
+			return new JedisPipelineCommand<List<String>, List<String>>(client, ProtocolCommand.PUBSUB_CHANNELS)
 					.run();
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<List<String>, List<String>>(client, Command.PUBSUB_CHANNELS)
+			return new JedisTransactionCommand<List<String>, List<String>>(client, ProtocolCommand.PUBSUB_CHANNELS)
 					.run();
 		}else{
-			return new JedisCommand<>(client, Command.PUBSUB_CHANNELS, (cmd)->cmd.pubsubChannels(), (v)->v)
+			return new JedisCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS, (cmd)->cmd.pubsubChannels(), (v)->v)
 					.run();
 		}
 	}
@@ -155,64 +155,15 @@ public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisS
 	}
 
 	@Override
-	public List<String> pubsubShardChannels() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<List<String>, List<String>>(client,
-					Command.PUBSUB_SHARDCHANNELS)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<List<String>, List<String>>(client,
-					Command.PUBSUB_SHARDCHANNELS)
-					.run();
-		}else{
-			return new JedisCommand<>(client, Command.PUBSUB_SHARDCHANNELS, (cmd)->cmd.pubsubShardChannels(),
-					(v)->v)
-					.run();
-		}
-	}
-
-	@Override
-	public List<String> pubsubShardChannels(final String pattern) {
-		final CommandArguments args = CommandArguments.create("pattern", pattern);
-		return pubsubShardChannels(pattern, (v)->v, args);
-	}
-
-	@Override
-	public List<byte[]> pubsubShardChannels(final byte[] pattern) {
-		final CommandArguments args = CommandArguments.create("pattern", pattern);
-		final String sPattern = SafeEncoder.encode(pattern);
-		final com.buession.core.converter.ListConverter<String, byte[]> stringToBinaryListConverter =
-				Converters.listStringToBinary();
-
-		return pubsubShardChannels(sPattern, stringToBinaryListConverter, args);
-	}
-
-	@Override
 	public Long pubsubNumPat() {
 		if(isPipeline()){
-			return new JedisPipelineCommand<Long, Long>(client, Command.PUBSUB_NUMPAT)
+			return new JedisPipelineCommand<Long, Long>(client, ProtocolCommand.PUBSUB_NUMPAT)
 					.run();
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<Long, Long>(client, Command.PUBSUB_NUMPAT)
+			return new JedisTransactionCommand<Long, Long>(client, ProtocolCommand.PUBSUB_NUMPAT)
 					.run();
 		}else{
-			return new JedisCommand<>(client, Command.PUBSUB_NUMPAT, (cmd)->cmd.pubsubNumPat(), (v)->v)
-					.run();
-		}
-	}
-
-	@Override
-	public Map<String, Long> pubsubNumSub() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<Map<String, Long>, Map<String, Long>>(client,
-					Command.PUBSUB_NUMSUB)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Map<String, Long>, Map<String, Long>>(client,
-					Command.PUBSUB_NUMSUB)
-					.run();
-		}else{
-			return new JedisCommand<>(client, Command.PUBSUB_NUMSUB, (cmd)->cmd.pubsubNumSub(), (v)->v)
+			return new JedisCommand<>(client, ProtocolCommand.PUBSUB_NUMPAT, (cmd)->cmd.pubsubNumPat(), (v)->v)
 					.run();
 		}
 	}
@@ -234,48 +185,15 @@ public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisS
 	}
 
 	@Override
-	public Map<String, Long> pubsubShardNumSub() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<Map<String, Long>, Map<String, Long>>(client,
-					Command.PUBSUB_SHARDNUMSUB)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Map<String, Long>, Map<String, Long>>(client,
-					Command.PUBSUB_SHARDNUMSUB)
-					.run();
-		}else{
-			return new JedisCommand<>(client, Command.PUBSUB_SHARDNUMSUB, (cmd)->cmd.pubsubShardNumSub(),
-					(v)->v)
-					.run();
-		}
-	}
-
-	@Override
-	public Map<String, Long> pubsubShardNumSub(final String... shardChannels) {
-		final CommandArguments args = CommandArguments.create("shardChannels", (Object[]) shardChannels);
-		return pubsubShardNumSub(shardChannels, (v)->v, args);
-	}
-
-	@Override
-	public Map<byte[], Long> pubsubShardNumSub(final byte[]... shardChannels) {
-		final CommandArguments args = CommandArguments.create("shardChannels", (Object[]) shardChannels);
-		final String[] sChannels = SafeEncoder.encode(shardChannels);
-		final MapConverter<String, Long, byte[], Long> stringToBinaryKeyPrimitiveValueMapConverter =
-				new MapConverter<>(SafeEncoder::encode, (v)->v);
-
-		return pubsubShardNumSub(sChannels, stringToBinaryKeyPrimitiveValueMapConverter, args);
-	}
-
-	@Override
 	public Object pUnSubscribe() {
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, Command.PUNSUBSCRIBE)
+			return new JedisPipelineCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
 					.run();
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, Command.PUNSUBSCRIBE)
+			return new JedisTransactionCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
 					.run();
 		}else{
-			return new JedisCommand<>(client, Command.PUNSUBSCRIBE)
+			return new JedisCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
 					.run();
 		}
 	}
@@ -298,13 +216,13 @@ public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisS
 				.put("pubSubListener", pubSubListener);
 
 		if(isPipeline()){
-			new JedisPipelineCommand<>(client, Command.SUBSCRIBE)
+			new JedisPipelineCommand<>(client, ProtocolCommand.SUBSCRIBE)
 					.run(args);
 		}else if(isTransaction()){
-			new JedisTransactionCommand<>(client, Command.SUBSCRIBE)
+			new JedisTransactionCommand<>(client, ProtocolCommand.SUBSCRIBE)
 					.run(args);
 		}else{
-			new JedisCommand<>(client, Command.SUBSCRIBE, (cmd)->{
+			new JedisCommand<>(client, ProtocolCommand.SUBSCRIBE, (cmd)->{
 				cmd.subscribe(new DefaultJedisPubSub(pubSubListener), channels);
 				return null;
 			}, (v)->v)
@@ -318,13 +236,13 @@ public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisS
 				.put("pubSubListener", pubSubListener);
 
 		if(isPipeline()){
-			new JedisPipelineCommand<>(client, Command.SUBSCRIBE)
+			new JedisPipelineCommand<>(client, ProtocolCommand.SUBSCRIBE)
 					.run(args);
 		}else if(isTransaction()){
-			new JedisTransactionCommand<>(client, Command.SUBSCRIBE)
+			new JedisTransactionCommand<>(client, ProtocolCommand.SUBSCRIBE)
 					.run(args);
 		}else{
-			new JedisCommand<>(client, Command.SUBSCRIBE, (cmd)->{
+			new JedisCommand<>(client, ProtocolCommand.SUBSCRIBE, (cmd)->{
 				cmd.subscribe(new DefaultBinaryJedisPubSub(pubSubListener), channels);
 				return null;
 			}, (v)->v)
@@ -335,13 +253,13 @@ public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisS
 	@Override
 	public Object unSubscribe() {
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, Command.UNSUBSCRIBE)
+			return new JedisPipelineCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
 					.run();
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, Command.UNSUBSCRIBE)
+			return new JedisTransactionCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
 					.run();
 		}else{
-			return new JedisCommand<>(client, Command.UNSUBSCRIBE)
+			return new JedisCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
 					.run();
 		}
 	}
@@ -361,30 +279,14 @@ public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisS
 	private <V> List<V> pubsubChannels(final String pattern,
 									   final Converter<List<String>, List<V>> converter, final CommandArguments args) {
 		if(isPipeline()){
-			return new JedisPipelineCommand<List<V>, List<V>>(client, Command.PUBSUB_CHANNELS)
+			return new JedisPipelineCommand<List<V>, List<V>>(client, ProtocolCommand.PUBSUB_CHANNELS)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<List<V>, List<V>>(client, Command.PUBSUB_CHANNELS)
+			return new JedisTransactionCommand<List<V>, List<V>>(client, ProtocolCommand.PUBSUB_CHANNELS)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, Command.PUBSUB_CHANNELS, (cmd)->cmd.pubsubChannels(pattern),
+			return new JedisCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS, (cmd)->cmd.pubsubChannels(pattern),
 					converter)
-					.run();
-		}
-	}
-
-	private <V> List<V> pubsubShardChannels(final String pattern,
-											final Converter<List<String>, List<V>> converter,
-											final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisPipelineCommand<List<V>, List<V>>(client, Command.PUBSUB_SHARDCHANNELS)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<List<V>, List<V>>(client, Command.PUBSUB_SHARDCHANNELS)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, Command.PUBSUB_SHARDCHANNELS,
-					(cmd)->cmd.pubsubShardChannels(pattern), converter)
 					.run();
 		}
 	}
@@ -394,56 +296,40 @@ public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisS
 										  final CommandArguments args) {
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<Map<K, Long>, Map<K, Long>>(client, Command.PUBSUB_NUMSUB)
+			return new JedisPipelineCommand<Map<K, Long>, Map<K, Long>>(client, ProtocolCommand.PUBSUB_NUMSUB)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<Map<K, Long>, Map<K, Long>>(client, Command.PUBSUB_NUMSUB)
+			return new JedisTransactionCommand<Map<K, Long>, Map<K, Long>>(client, ProtocolCommand.PUBSUB_NUMSUB)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, Command.PUBSUB_NUMSUB, (cmd)->cmd.pubsubNumSub(channels),
+			return new JedisCommand<>(client, ProtocolCommand.PUBSUB_NUMSUB, (cmd)->cmd.pubsubNumSub(channels),
 					converter)
-					.run(args);
-		}
-	}
-
-	private <K> Map<K, Long> pubsubShardNumSub(final String[] shardChannels,
-											   final Converter<Map<String, Long>, Map<K, Long>> converter,
-											   final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisPipelineCommand<Map<K, Long>, Map<K, Long>>(client, Command.PUBSUB_NUMSUB)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Map<K, Long>, Map<K, Long>>(client, Command.PUBSUB_NUMSUB)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, Command.PUBSUB_NUMSUB,
-					(cmd)->cmd.pubsubShardNumSub(shardChannels), converter)
 					.run(args);
 		}
 	}
 
 	private Object pUnSubscribe(final CommandArguments args) {
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, Command.PUNSUBSCRIBE)
+			return new JedisPipelineCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, Command.PUNSUBSCRIBE)
+			return new JedisTransactionCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, Command.PUNSUBSCRIBE)
+			return new JedisCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
 					.run(args);
 		}
 	}
 
 	private Object unSubscribe(final CommandArguments args) {
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, Command.UNSUBSCRIBE)
+			return new JedisPipelineCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, Command.UNSUBSCRIBE)
+			return new JedisTransactionCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, Command.UNSUBSCRIBE)
+			return new JedisCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
 					.run(args);
 		}
 	}

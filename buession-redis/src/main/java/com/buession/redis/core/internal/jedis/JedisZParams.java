@@ -27,8 +27,6 @@ package com.buession.redis.core.internal.jedis;
 import redis.clients.jedis.params.ZParams;
 
 /**
- * Jedis {@link ZParams} 扩展
- *
  * @author Yong.Teng
  */
 public final class JedisZParams extends ZParams {
@@ -48,21 +46,7 @@ public final class JedisZParams extends ZParams {
 	 */
 	public JedisZParams(final com.buession.redis.core.Aggregate aggregate) {
 		super();
-		if(aggregate != null){
-			switch(aggregate){
-				case MIN:
-					aggregate(Aggregate.MIN);
-					break;
-				case MAX:
-					aggregate(Aggregate.MAX);
-					break;
-				case SUM:
-					aggregate(Aggregate.SUM);
-					break;
-				default:
-					break;
-			}
-		}
+		aggregate(aggregate);
 	}
 
 	/**
@@ -85,8 +69,27 @@ public final class JedisZParams extends ZParams {
 	 * 		权重
 	 */
 	public JedisZParams(final com.buession.redis.core.Aggregate aggregate, final double... weights) {
-		this(aggregate);
+		super();
+		aggregate(aggregate);
 		weights(weights);
+	}
+
+	private void aggregate(final com.buession.redis.core.Aggregate aggregate) {
+		if(aggregate != null){
+			switch(aggregate){
+				case MIN:
+					aggregate(Aggregate.MIN);
+					break;
+				case MAX:
+					aggregate(Aggregate.MAX);
+					break;
+				case SUM:
+					aggregate(Aggregate.SUM);
+					break;
+				default:
+					break;
+			}
+		}
 	}
 
 }

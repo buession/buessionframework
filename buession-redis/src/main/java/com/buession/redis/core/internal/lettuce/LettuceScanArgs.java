@@ -24,10 +24,8 @@
  */
 package com.buession.redis.core.internal.lettuce;
 
-import com.buession.redis.core.command.args.HScanArgument;
+import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.ScanArgs;
-
-import java.util.Optional;
 
 /**
  * Lettuce {@link ScanArgs} 扩展
@@ -37,91 +35,44 @@ import java.util.Optional;
  */
 public final class LettuceScanArgs extends ScanArgs {
 
-	/**
-	 * 构造函数
-	 */
 	public LettuceScanArgs() {
 		super();
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param pattern
-	 * 		匹配模式
-	 */
 	public LettuceScanArgs(final String pattern) {
 		super();
 		match(pattern);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param pattern
-	 * 		匹配模式
-	 */
 	public LettuceScanArgs(final byte[] pattern) {
-		super();
-		match(pattern);
+		this(SafeEncoder.encode(pattern));
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param count
-	 * 		返回数量
-	 */
 	public LettuceScanArgs(final int count) {
 		super();
 		limit(count);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param pattern
-	 * 		匹配模式
-	 * @param count
-	 * 		返回数量
-	 */
 	public LettuceScanArgs(final String pattern, final int count) {
 		this(pattern);
 		limit(count);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param pattern
-	 * 		匹配模式
-	 * @param count
-	 * 		返回数量
-	 */
 	public LettuceScanArgs(final byte[] pattern, final int count) {
 		this(pattern);
 		limit(count);
 	}
 
-	/**
-	 * 从 {@link HScanArgument} 创建 {@link ScanArgs} 实例
-	 *
-	 * @param scanArgument
-	 *        {@link HScanArgument}
-	 *
-	 * @return {@link LettuceScanArgs} 实例
-	 */
-	public static <T> LettuceScanArgs from(final HScanArgument<T> scanArgument) {
-		final LettuceScanArgs scanArgs = new LettuceScanArgs();
+	public LettuceScanArgs(final long count) {
+		this((int) count);
+	}
 
-		if(scanArgument.getPattern() instanceof String){
-			scanArgs.match((String) scanArgument.getPattern());
-		}else if(scanArgument.getPattern() instanceof byte[]){
-			scanArgs.match((byte[]) scanArgument.getPattern());
-		}
-		Optional.ofNullable(scanArgument.getCount()).ifPresent(scanArgs::limit);
+	public LettuceScanArgs(final String pattern, final long count) {
+		this(pattern, (int) count);
+	}
 
-		return scanArgs;
+	public LettuceScanArgs(final byte[] pattern, final long count) {
+		this(pattern, (int) count);
 	}
 
 }

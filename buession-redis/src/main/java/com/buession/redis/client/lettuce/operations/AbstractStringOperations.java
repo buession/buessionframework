@@ -27,7 +27,6 @@ package com.buession.redis.client.lettuce.operations;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.StringOperations;
-import com.buession.redis.core.command.args.SetArgument;
 import com.buession.redis.utils.SafeEncoder;
 
 /**

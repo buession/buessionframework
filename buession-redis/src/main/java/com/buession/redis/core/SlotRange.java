@@ -24,9 +24,10 @@
  */
 package com.buession.redis.core;
 
-import com.buession.core.NumberRange;
-
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * 哈希槽范围
@@ -34,21 +35,48 @@ import java.io.Serializable;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class SlotRange extends NumberRange<Integer> implements Serializable {
+public class SlotRange implements Serializable {
 
 	private final static long serialVersionUID = -185528503728995147L;
 
-	public SlotRange() {
-		super();
+	private final int lowerBound;
+
+	private final int upperBound;
+
+	private final Set<Integer> range;
+
+	public SlotRange(int lowerBound, int upperBound) {
+		this.range = new LinkedHashSet<>();
+		this.lowerBound = lowerBound;
+		this.upperBound = upperBound;
+
+		for(int i = lowerBound; i <= upperBound; i++){
+			this.range.add(i);
+		}
 	}
 
-	public SlotRange(final Integer start, final Integer end) {
-		super(start, end);
+	public boolean contains(int slot) {
+		return range.contains(slot);
+	}
+
+	public Set<Integer> getSlots() {
+		return Collections.unmodifiableSet(range);
+	}
+
+	public int[] getSlotsArray() {
+		int[] slots = new int[range.size()];
+		int pos = 0;
+
+		for(Integer value : range){
+			slots[pos++] = value;
+		}
+
+		return slots;
 	}
 
 	@Override
 	public String toString() {
-		return super.toString();
+		return String.valueOf(lowerBound) + '-' + upperBound;
 	}
 
 }

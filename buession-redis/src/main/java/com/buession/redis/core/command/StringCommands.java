@@ -25,9 +25,10 @@
 package com.buession.redis.core.command;
 
 import com.buession.lang.Status;
-import com.buession.redis.core.command.args.GetExArgument;
-import com.buession.redis.core.command.args.SetArgument;
+import com.buession.redis.core.NxXx;
+import com.buession.redis.utils.ObjectStringBuilder;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -620,7 +621,7 @@ public interface StringCommands extends RedisCommands {
 	 *
 	 * @return 符串值的指定部分，通过保证子字符串的值域(range)不超过实际字符串的值域来处理超出范围的值域请求
 	 */
-	String substr(final String key, final int start, final int end);
+	String substr(final String key, final long start, final long end);
 
 	/**
 	 * 获取键 key 储存的字符串值的指定部分，字符串的截取范围由 start 和 end 两个偏移量决定 (包括 start 和 end 在内)；
@@ -637,6 +638,387 @@ public interface StringCommands extends RedisCommands {
 	 *
 	 * @return 符串值的指定部分，通过保证子字符串的值域(range)不超过实际字符串的值域来处理超出范围的值域请求
 	 */
-	byte[] substr(final byte[] key, final int start, final int end);
+	byte[] substr(final byte[] key, final long start, final long end);
+
+	final class SetArgument {
+
+		private Long ex;
+
+		private Long exAt;
+
+		private Long px;
+
+		private Long pxAt;
+
+		private NxXx nxXx;
+
+		private Boolean keepTtl;
+
+		private SetArgument() {
+		}
+
+		/**
+		 * 获取设置的键过期时间（单位：秒）
+		 *
+		 * @return 设置的键过期时间
+		 */
+		public Long getEx() {
+			return ex;
+		}
+
+		/**
+		 * 获取设置的键过期时间戳
+		 *
+		 * @return 设置的键过期时间戳
+		 */
+		public Long getExAt() {
+			return exAt;
+		}
+
+		/**
+		 * 获取设置的键过期时间（单位：毫秒）
+		 *
+		 * @return 设置的键过期时间
+		 */
+		public Long getPx() {
+			return px;
+		}
+
+		/**
+		 * 获取设置的键过期时间戳
+		 *
+		 * @return 设置的键过期时间戳
+		 */
+		public Long getPxAt() {
+			return pxAt;
+		}
+
+		/**
+		 * 获取设置键的条件，NX：只在键不存在时，才对键进行设置操作；XX：只在键已经存在时，才对键进行设置
+		 *
+		 * @return 设置键的条件
+		 */
+		public NxXx getNxXx() {
+			return nxXx;
+		}
+
+		/**
+		 * Retain the time to live associated with the key
+		 *
+		 * @return the time to live associated with the key
+		 */
+		public Boolean isKeepTtl() {
+			return keepTtl;
+		}
+
+		public static class Builder {
+
+			private final SetArgument setArgument = new SetArgument();
+
+			private Builder() {
+			}
+
+			public static Builder create() {
+				return new Builder();
+			}
+
+			/**
+			 * 设置键的过期时间（单位：秒）
+			 *
+			 * @param lifetime
+			 * 		键的过期时间
+			 *
+			 * @return Builder
+			 */
+			public Builder ex(long lifetime) {
+				setArgument.ex = lifetime;
+				return this;
+			}
+
+			/**
+			 * 设置键的过期时间戳
+			 *
+			 * @param seconds
+			 * 		键的过期时间戳，秒时间戳
+			 *
+			 * @return Builder
+			 */
+			public Builder exAt(long seconds) {
+				setArgument.exAt = seconds;
+				return this;
+			}
+
+			/**
+			 * 设置键的过期时间
+			 *
+			 * @param date
+			 * 		键的过期时间
+			 *
+			 * @return Builder
+			 */
+			public Builder exAt(Date date) {
+				if(date != null){
+					setArgument.exAt = date.getTime() / 1000;
+				}
+
+				return this;
+			}
+
+			/**
+			 * 设置键的过期时间（单位：毫秒）
+			 *
+			 * @param lifetime
+			 * 		键的过期时间
+			 *
+			 * @return Builder
+			 */
+			public Builder px(long lifetime) {
+				setArgument.px = lifetime;
+				return this;
+			}
+
+			/**
+			 * 设置键的过期时间戳
+			 *
+			 * @param milliseconds
+			 * 		键的过期时间戳，毫秒秒时间戳
+			 *
+			 * @return Builder
+			 */
+			public Builder pxAt(long milliseconds) {
+				setArgument.pxAt = milliseconds;
+				return this;
+			}
+
+			/**
+			 * 设置键的过期时间
+			 *
+			 * @param date
+			 * 		键的过期时间
+			 *
+			 * @return Builder
+			 */
+			public Builder pxAt(Date date) {
+				if(date != null){
+					setArgument.exAt = date.getTime();
+				}
+
+				return this;
+			}
+
+			/**
+			 * 设置键的条件，NX：只在键不存在时，才对键进行设置操作；XX：只在键已经存在时，才对键进行设置
+			 *
+			 * @param nxXx
+			 * 		设置键的条件
+			 *
+			 * @return Builder
+			 */
+			public Builder nxXX(NxXx nxXx) {
+				setArgument.nxXx = nxXx;
+				return this;
+			}
+
+			/**
+			 * @return Builder
+			 */
+			public Builder keepTtl() {
+				setArgument.keepTtl = true;
+				return this;
+			}
+
+			public SetArgument build() {
+				return setArgument;
+			}
+
+		}
+
+	}
+
+	final class GetExArgument {
+
+		private Long ex;
+
+		private Long exAt;
+
+		private Long px;
+
+		private Long pxAt;
+
+		private Boolean persist;
+
+		private GetExArgument() {
+		}
+
+		/**
+		 * 获取设置的键过期时间（单位：秒）
+		 *
+		 * @return 设置的键过期时间
+		 */
+		public Long getEx() {
+			return ex;
+		}
+
+		/**
+		 * 获取设置的键过期时间戳
+		 *
+		 * @return 设置的键过期时间戳
+		 */
+		public Long getExAt() {
+			return exAt;
+		}
+
+		/**
+		 * 获取设置的键过期时间（单位：毫秒）
+		 *
+		 * @return 设置的键过期时间
+		 */
+		public Long getPx() {
+			return px;
+		}
+
+		/**
+		 * 获取设置的键过期时间戳
+		 *
+		 * @return 设置的键过期时间戳
+		 */
+		public Long getPxAt() {
+			return pxAt;
+		}
+
+		/**
+		 * 获取设置键是否持久化
+		 *
+		 * @return 设置键是否持久化
+		 */
+		public Boolean isPersist() {
+			return persist;
+		}
+
+		@Override
+		public String toString() {
+			return ObjectStringBuilder.create().
+					add("ex", ex).
+					add("exAt", exAt).
+					add("px", px).
+					add("pxAt", pxAt).
+					add("persist", persist).build();
+		}
+
+		public static class Builder {
+
+			private final GetExArgument getExArgument = new GetExArgument();
+
+			private Builder() {
+			}
+
+			public static Builder create() {
+				return new Builder();
+			}
+
+			/**
+			 * 设置键的过期时间（单位：秒）
+			 *
+			 * @param lifetime
+			 * 		键的过期时间
+			 *
+			 * @return Builder
+			 */
+			public Builder ex(long lifetime) {
+				getExArgument.ex = lifetime;
+				return this;
+			}
+
+			/**
+			 * 设置键的过期时间
+			 *
+			 * @param lifetime
+			 * 		键的过期时间，具体过期时间，秒时间戳
+			 *
+			 * @return Builder
+			 */
+			public Builder exAt(long lifetime) {
+				getExArgument.exAt = lifetime;
+				return this;
+			}
+
+			/**
+			 * 设置键的过期时间
+			 *
+			 * @param date
+			 * 		键的过期时间，具体过期时间
+			 *
+			 * @return Builder
+			 */
+			public Builder exAt(Date date) {
+				if(date != null){
+					getExArgument.exAt = date.getTime() / 1000;
+				}
+
+				return this;
+			}
+
+			/**
+			 * 设置键的过期时间（单位：毫秒）
+			 *
+			 * @param lifetime
+			 * 		键的过期时间
+			 *
+			 * @return Builder
+			 */
+			public Builder px(long lifetime) {
+				getExArgument.px = lifetime;
+				return this;
+			}
+
+			/**
+			 * 设置键的过期时间
+			 *
+			 * @param lifetime
+			 * 		键的过期时间，具体过期时间，毫秒时间戳
+			 *
+			 * @return Builder
+			 */
+			public Builder pxAt(long lifetime) {
+				getExArgument.pxAt = lifetime;
+				return this;
+			}
+
+			/**
+			 * 设置键的过期时间
+			 *
+			 * @param date
+			 * 		键的过期时间，具体过期时间，毫秒时间戳
+			 *
+			 * @return Builder
+			 */
+			public Builder pxAt(Date date) {
+				if(date != null){
+					getExArgument.pxAt = date.getTime();
+				}
+
+				return this;
+			}
+
+			/**
+			 * 设置键是否持久化
+			 *
+			 * @param persist
+			 * 		设置键是否持久化
+			 *
+			 * @return Builder
+			 */
+			public Builder persist(Boolean persist) {
+				getExArgument.persist = persist;
+				return this;
+			}
+
+			public GetExArgument build() {
+				return getExArgument;
+			}
+
+		}
+
+	}
 
 }

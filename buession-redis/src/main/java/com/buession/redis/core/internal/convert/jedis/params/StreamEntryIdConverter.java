@@ -46,10 +46,6 @@ public interface StreamEntryIdConverter extends Converter<StreamEntryId, StreamE
 		return new ArrayConverter<>(JedisStreamEntryID::from, StreamEntryID.class);
 	}
 
-	static ArrayConverter<StreamEntryId, byte[]> binaryArrayConverter() {
-		return new ArrayConverter<>(StreamEntryId::getRaw, byte[].class);
-	}
-
 	static <K> MapConverter<K, StreamEntryId, K, StreamEntryID> mapConverter() {
 		return new MapConverter<>((key)->key, JedisStreamEntryID::from);
 	}

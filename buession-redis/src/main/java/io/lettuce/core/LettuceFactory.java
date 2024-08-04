@@ -38,18 +38,50 @@ import java.util.Optional;
  */
 public class LettuceFactory extends AbstractLettuceFactory<StatefulRedisConnection<byte[], byte[]>, RedisClient> {
 
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 * @param port
+	 * 		Redis 端口
+	 */
 	public LettuceFactory(final String host, final int port) {
 		this(host, port, null);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 * @param port
+	 * 		Redis 端口
+	 * @param lettuceClientConfig
+	 * 		客户端配置
+	 */
 	public LettuceFactory(final String host, final int port, final LettuceClientConfig lettuceClientConfig) {
 		this(RedisURI.builder().withHost(host).withPort(port).build(), lettuceClientConfig);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param uri
+	 *        {@link RedisURI}
+	 */
 	public LettuceFactory(final RedisURI uri) {
 		super(RedisClient.create(uri));
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param uri
+	 *        {@link RedisURI}
+	 * @param lettuceClientConfig
+	 * 		客户端配置
+	 */
 	public LettuceFactory(final RedisURI uri, final LettuceClientConfig lettuceClientConfig) {
 		this(buildRedisURI(uri, lettuceClientConfig));
 	}
@@ -68,7 +100,7 @@ public class LettuceFactory extends AbstractLettuceFactory<StatefulRedisConnecti
 								null, lettuceClientConfig.getPassword().toCharArray()) : null;
 				uri.setCredentialsProvider(redisCredentialsProvider);
 			}
-			
+
 			uri.setDatabase(lettuceClientConfig.getDatabase());
 			Optional.ofNullable(lettuceClientConfig.getConnectionTimeout()).ifPresent(uri::setTimeout);
 			uri.setClientName(lettuceClientConfig.getClientName());

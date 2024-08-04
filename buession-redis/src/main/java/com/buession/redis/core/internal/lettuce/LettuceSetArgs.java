@@ -25,8 +25,10 @@
 package com.buession.redis.core.internal.lettuce;
 
 import com.buession.redis.core.NxXx;
-import com.buession.redis.core.command.args.SetArgument;
+import com.buession.redis.core.command.StringCommands;
 import io.lettuce.core.SetArgs;
+
+import java.util.Optional;
 
 /**
  * Lettuce {@link SetArgs} 扩展
@@ -36,130 +38,56 @@ import io.lettuce.core.SetArgs;
  */
 public class LettuceSetArgs extends SetArgs {
 
-	/**
-	 * 构造函数
-	 */
 	public LettuceSetArgs() {
 		super();
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param type
-	 * 		过期时间方式
-	 * @param expires
-	 * 		过期时间
-	 */
-	public LettuceSetArgs(final SetArgument.SetType type, final long expires) {
-		expx(this, type, expires);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param type
-	 * 		过期时间方式
-	 * @param expires
-	 * 		过期时间
-	 * @param nxXx
-	 * 		只有键 key 不存在/存在的时候才会设置 key 的值
-	 */
-	public LettuceSetArgs(final SetArgument.SetType type, final long expires, final NxXx nxXx) {
-		this(type, expires);
-		nxxx(this, nxXx);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param nxXx
-	 * 		只有键 key 不存在/存在的时候才会设置 key 的值
-	 */
-	public LettuceSetArgs(final NxXx nxXx) {
+	public LettuceSetArgs(final NxXx nx) {
 		super();
-		nxxx(this, nxXx);
+		nxxx(this, nx);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param keepTtl
-	 * 		是否获取 key 的过期时间
-	 */
 	public LettuceSetArgs(final boolean keepTtl) {
 		super();
 		keepTtl(this, keepTtl);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param nxXx
-	 * 		只有键 key 不存在/存在的时候才会设置 key 的值
-	 * @param keepTtl
-	 * 		是否获取 key 的过期时间
-	 */
-	public LettuceSetArgs(final NxXx nxXx, final boolean keepTtl) {
+	public LettuceSetArgs(final long ex, final long exAt, final long px, final long pxAt) {
 		super();
-		nxxx(this, nxXx);
+		ex(ex);
+		px(px);
+	}
+
+	public LettuceSetArgs(final long ex, final long exAt, final long px, final long pxAt, final NxXx nx) {
+		this(ex, exAt, px, pxAt);
+		nxxx(this, nx);
+	}
+
+	public LettuceSetArgs(final long ex, final long exAt, final long px, final long pxAt, final boolean keepTtl) {
+		this(ex, exAt, px, pxAt);
 		keepTtl(this, keepTtl);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param type
-	 * 		过期时间方式
-	 * @param expires
-	 * 		过期时间
-	 * @param nxXx
-	 * 		只有键 key 不存在/存在的时候才会设置 key 的值
-	 * @param keepTtl
-	 * 		是否获取 key 的过期时间
-	 */
-	public LettuceSetArgs(final SetArgument.SetType type, final long expires, final NxXx nxXx, final Boolean keepTtl) {
-		this(type, expires, nxXx);
+	public LettuceSetArgs(final long ex, final long exAt, final long px, final long pxAt, final NxXx nx,
+						  final boolean keepTtl) {
+		this(ex, exAt, px, pxAt, nx);
 		keepTtl(this, keepTtl);
 	}
 
-	/**
-	 * 从 {@link SetArgument} 创建 {@link SetArgs} 实例
-	 *
-	 * @param setArgument
-	 *        {@link SetArgument}
-	 *
-	 * @return {@link LettuceSetArgs} 实例
-	 */
-	public static LettuceSetArgs from(final SetArgument setArgument) {
+	public static LettuceSetArgs from(final StringCommands.SetArgument setArgument) {
 		final LettuceSetArgs setArgs = new LettuceSetArgs();
 
-		expx(setArgs, setArgument.getType(), setArgument.getExpires());
-		nxxx(setArgs, setArgument.getNxXx());
-		keepTtl(setArgs, setArgument.isKeepTtl());
+		if(setArgument != null){
+			Optional.ofNullable(setArgument.getEx()).ifPresent(setArgs::ex);
+			//Optional.ofNullable(setArgument.getExAt()).ifPresent(setArgs::exAt);
+			Optional.ofNullable(setArgument.getPx()).ifPresent(setArgs::px);
+			//Optional.ofNullable(setArgument.getPxAt()).ifPresent(setArgs::pxAt);
+
+			nxxx(setArgs, setArgument.getNxXx());
+			keepTtl(setArgs, setArgument.isKeepTtl());
+		}
 
 		return setArgs;
-	}
-
-	private static void expx(final LettuceSetArgs setArgs, final SetArgument.SetType type, final Long expires) {
-		if(type != null && expires != null){
-			switch(type){
-				case EX:
-					setArgs.ex(expires);
-					break;
-				case EXAT:
-					setArgs.exAt(expires);
-					break;
-				case PX:
-					setArgs.px(expires);
-					break;
-				case PXAT:
-					setArgs.pxAt(expires);
-					break;
-				default:
-					break;
-			}
-		}
 	}
 
 	private static void nxxx(final LettuceSetArgs setArgs, final NxXx nx) {

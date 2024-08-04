@@ -24,10 +24,8 @@
  */
 package com.buession.redis.core.internal.lettuce;
 
-import com.buession.redis.core.command.args.RestoreArgument;
+import com.buession.redis.core.command.KeyCommands;
 import io.lettuce.core.RestoreArgs;
-
-import java.util.Optional;
 
 /**
  * Lettuce {@link RestoreArgs} 扩展
@@ -37,102 +35,30 @@ import java.util.Optional;
  */
 public final class LettuceRestoreArgs extends RestoreArgs {
 
-	/**
-	 * 构造函数
-	 */
 	public LettuceRestoreArgs() {
 		super();
 	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param replace
-	 * 		是否替换已存在 key
-	 */
 
 	public LettuceRestoreArgs(final boolean replace) {
 		super();
 		replace(this, replace);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param replace
-	 * 		是否替换已存在 key
-	 * @param absTtl
-	 * 		-
-	 */
-	public LettuceRestoreArgs(final boolean replace, final boolean absTtl) {
-		super();
-		replace(this, replace);
-		absTtl(this, absTtl);
+	public LettuceRestoreArgs(final boolean replace, final long ttl) {
+		this(replace);
+		ttl(ttl);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param replace
-	 * 		是否替换已存在 key
-	 * @param idleTime
-	 * 		-
-	 * @param frequency
-	 * 		-
-	 */
-	public LettuceRestoreArgs(final boolean replace, final long idleTime, final long frequency) {
-		super();
-		replace(this, replace);
-		idleTime(idleTime);
-		frequency(frequency);
+	public LettuceRestoreArgs(final boolean replace, final long ttl, final long idleTime, final long frequency) {
+		this(replace, ttl);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param replace
-	 * 		是否替换已存在 key
-	 * @param absTtl
-	 * 		-
-	 * @param idleTime
-	 * 		-
-	 * @param frequency
-	 * 		-
-	 */
-	public LettuceRestoreArgs(final boolean replace, final boolean absTtl, final long idleTime, final long frequency) {
-		this(replace, idleTime, frequency);
-		absTtl(this, absTtl);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param idleTime
-	 * 		-
-	 * @param frequency
-	 * 		-
-	 */
-	public LettuceRestoreArgs(final long idleTime, final long frequency) {
-		super();
-		idleTime(idleTime);
-		frequency(frequency);
-	}
-
-	/**
-	 * 从 {@link RestoreArgument} 创建 {@link RestoreArgs} 实例
-	 *
-	 * @param restoreArgument
-	 *        {@link RestoreArgument}
-	 *
-	 * @return {@link LettuceRestoreArgs} 实例
-	 */
-	public static LettuceRestoreArgs from(final RestoreArgument restoreArgument) {
+	public static LettuceRestoreArgs from(final KeyCommands.RestoreArgument restoreArgument) {
 		final LettuceRestoreArgs restoreArgs = new LettuceRestoreArgs();
 
-		replace(restoreArgs, restoreArgument.isReplace());
-		absTtl(restoreArgs, restoreArgument.isAbsTtl());
-		Optional.ofNullable(restoreArgument.getIdleTime()).ifPresent(restoreArgs::idleTime);
-		Optional.ofNullable(restoreArgument.getFrequency()).ifPresent(restoreArgs::frequency);
+		if(restoreArgument != null){
+			replace(restoreArgs, restoreArgument.isReplace());
+		}
 
 		return restoreArgs;
 	}
@@ -140,12 +66,6 @@ public final class LettuceRestoreArgs extends RestoreArgs {
 	private static void replace(final LettuceRestoreArgs restoreArgs, final Boolean replace) {
 		if(Boolean.TRUE.equals(replace)){
 			restoreArgs.replace();
-		}
-	}
-
-	private static void absTtl(final LettuceRestoreArgs restoreArgs, final Boolean absTtl) {
-		if(Boolean.TRUE.equals(absTtl)){
-			restoreArgs.absttl();
 		}
 	}
 

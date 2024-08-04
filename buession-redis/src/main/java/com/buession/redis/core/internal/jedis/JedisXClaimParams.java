@@ -24,10 +24,8 @@
  */
 package com.buession.redis.core.internal.jedis;
 
-import com.buession.redis.core.command.args.XClaimArgument;
+import com.buession.redis.core.command.StreamCommands;
 import redis.clients.jedis.params.XClaimParams;
-
-import java.util.Optional;
 
 /**
  * Jedis {@link XClaimParams} 扩展类
@@ -37,134 +35,14 @@ import java.util.Optional;
  */
 public class JedisXClaimParams extends XClaimParams {
 
-	/**
-	 * 构造函数
-	 */
 	public JedisXClaimParams() {
 		super();
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param idleType
-	 * 		设置过期时间方式
-	 * @param expires
-	 * 		过期时间
-	 */
-	public JedisXClaimParams(final XClaimArgument.IdleType idleType, final long expires) {
-		super();
-		idleTime(this, idleType, expires);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param retryCount
-	 * 		重试次数
-	 */
-	public JedisXClaimParams(final int retryCount) {
-		super();
-		retryCount(retryCount);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param force
-	 * 		是否强制
-	 */
-	public JedisXClaimParams(final boolean force) {
-		super();
-		force(this, force);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param idleType
-	 * 		设置过期时间方式
-	 * @param expires
-	 * 		过期时间
-	 * @param retryCount
-	 * 		重试次数
-	 */
-	public JedisXClaimParams(final XClaimArgument.IdleType idleType, final long expires, final int retryCount) {
-		this(idleType, expires);
-		retryCount(retryCount);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param idleType
-	 * 		设置过期时间方式
-	 * @param expires
-	 * 		过期时间
-	 * @param force
-	 * 		是否强制
-	 */
-	public JedisXClaimParams(final XClaimArgument.IdleType idleType, final long expires, final boolean force) {
-		this(idleType, expires);
-		force(this, force);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param idleType
-	 * 		设置过期时间方式
-	 * @param expires
-	 * 		过期时间
-	 * @param retryCount
-	 * 		重试次数
-	 * @param force
-	 * 		是否强制
-	 */
-	public JedisXClaimParams(final XClaimArgument.IdleType idleType, final long expires, final int retryCount,
-							 final boolean force) {
-		this(idleType, expires, retryCount);
-		force(this, force);
-	}
-
-	/**
-	 * 从 {@link XClaimArgument} 创建 {@link XClaimParams} 实例
-	 *
-	 * @param xClaimArgument
-	 *        {@link XClaimArgument}
-	 *
-	 * @return {@link JedisXClaimParams} 实例
-	 */
-	public static JedisXClaimParams from(final XClaimArgument xClaimArgument) {
+	public static JedisXClaimParams from(final StreamCommands.XClaimArgument xClaimArgument) {
 		final JedisXClaimParams xClaimParams = new JedisXClaimParams();
 
-		idleTime(xClaimParams, xClaimArgument.getIdleType(), xClaimArgument.getIdleTime());
-		Optional.ofNullable(xClaimArgument.getRetryCount()).ifPresent(xClaimParams::retryCount);
-		force(xClaimParams, xClaimArgument.isForce());
-
 		return xClaimParams;
-	}
-
-	private static void idleTime(final XClaimParams xClaimParams, final XClaimArgument.IdleType idleType,
-								 final Long idleTime) {
-		if(idleType != null && idleTime != null){
-			switch(idleType){
-				case IDLE:
-					xClaimParams.idle(idleTime);
-					break;
-				case UNIX_TIME:
-					xClaimParams.time(idleTime);
-					break;
-				default:
-					break;
-			}
-		}
-	}
-
-	private static void force(final XClaimParams xClaimParams, final Boolean force) {
-		if(Boolean.TRUE.equals(force)){
-			xClaimParams.force();
-		}
 	}
 
 }

@@ -31,10 +31,11 @@ import com.buession.redis.client.lettuce.LettuceSentinelClient;
 import com.buession.redis.core.Direction;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.Command;
-import com.buession.redis.core.command.args.LPosArgument;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.internal.lettuce.LettuceLPosArgs;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.KeyValue;
+import io.lettuce.core.LPosArgs;
 
 import java.util.List;
 
@@ -53,127 +54,176 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 	@Override
 	public String lIndex(final String key, final long index) {
 		final CommandArguments args = CommandArguments.create("key", key).put("index", index);
-		return notCommand(client, Command.LINDEX, args);
+		final byte[] bKey = SafeEncoder.encode(key);
+
+		return lIndex(bKey, index, SafeEncoder::encode, args);
 	}
 
 	@Override
 	public byte[] lIndex(final byte[] key, final long index) {
 		final CommandArguments args = CommandArguments.create("key", key).put("index", index);
-		return notCommand(client, Command.LINDEX, args);
-	}
-
-	@Override
-	public Long lInsert(final String key, final ListPosition position, final String pivot, final String value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("position", position).put("pivot", pivot)
-				.put("value", value);
-		return notCommand(client, Command.LINSERT, args);
+		return lIndex(key, index, (v)->v, args);
 	}
 
 	@Override
 	public Long lInsert(final byte[] key, final ListPosition position, final byte[] pivot, final byte[] value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("position", position).put("pivot", pivot)
 				.put("value", value);
-		return notCommand(client, Command.LINSERT, args);
-	}
+		final boolean before = ListPosition.BEFORE == position;
 
-	@Override
-	public Status lSet(final String key, final long index, final String value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("index", index).put("value", value);
-		return notCommand(client, Command.LSET, args);
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.LINSERT)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.LINSERT)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.LINSERT)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status lSet(final byte[] key, final long index, final byte[] value) {
 		final CommandArguments args = CommandArguments.create("key", key).put("index", index).put("value", value);
-		return notCommand(client, Command.LSET, args);
-	}
 
-	@Override
-	public Long lLen(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
-		return notCommand(client, Command.LLEN, args);
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.LSET)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.LSET)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.LSET)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long lLen(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return notCommand(client, Command.LLEN, args);
+
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.LLEN)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.LLEN)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.LLEN)
+					.run(args);
+		}
 	}
 
 	@Override
 	public List<String> lRange(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return notCommand(client, Command.LRANGE, args);
+		final byte[] bKey = SafeEncoder.encode(key);
+
+		return lRange(bKey, start, end, binaryToStringListConverter, args);
 	}
 
 	@Override
 	public List<byte[]> lRange(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return notCommand(client, Command.LRANGE, args);
-	}
-
-	@Override
-	public Long lPos(final String key, final String element) {
-		final CommandArguments args = CommandArguments.create("key", key);
-		return notCommand(client, Command.LPOS, args);
+		return lRange(key, start, end, (v)->v, args);
 	}
 
 	@Override
 	public Long lPos(final byte[] key, final byte[] element) {
 		final CommandArguments args = CommandArguments.create("key", key);
-		return notCommand(client, Command.LPOS, args);
-	}
 
-	@Override
-	public Long lPos(final String key, final String element, final LPosArgument lPosArgument) {
-		final CommandArguments args = CommandArguments.create("key", key).put("lPosArgument", lPosArgument);
-		return notCommand(client, Command.LPOS, args);
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.LPOS)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.LPOS)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.LPOS)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("lPosArgument", lPosArgument);
-		return notCommand(client, Command.LPOS, args);
+		final LPosArgs lPosArgs = LettuceLPosArgs.from(lPosArgument);
+
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.LPOS)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.LPOS)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.LPOS)
+					.run(args);
+		}
 	}
 
 	@Override
-	public List<Long> lPos(final String key, final String element, final LPosArgument lPosArgument, final int count) {
+	public List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("lPosArgument", lPosArgument)
 				.put("count", count);
-		return notCommand(client, Command.LPOS, args);
+		final LPosArgs lPosArgs = LettuceLPosArgs.from(lPosArgument);
+
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<List<Long>, List<Long>>(client, ProtocolCommand.LPOS)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<List<Long>, List<Long>>(client, ProtocolCommand.LPOS)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<List<Long>, List<Long>>(client, ProtocolCommand.LPOS)
+					.run(args);
+		}
 	}
 
 	@Override
-	public List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument, final int count) {
-		final CommandArguments args = CommandArguments.create("key", key).put("lPosArgument", lPosArgument)
-				.put("count", count);
-		return notCommand(client, Command.LPOS, args);
-	}
-
-	@Override
-	public Long lRem(final byte[] key, final byte[] value, final int count) {
+	public Long lRem(final byte[] key, final byte[] value, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("count", count);
-		return notCommand(client, Command.LREM, args);
+
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.LREM)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.LREM)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.LREM)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status lTrim(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return notCommand(client, Command.LTRIM, args);
+
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.LTRIM)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.LTRIM)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.LTRIM)
+					.run(args);
+		}
 	}
 
 	@Override
 	public String lMove(final String key, final String destKey, final Direction from, final Direction to) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("from", from)
 				.put("to", to);
-		return notCommand(client, Command.LMOVE, args);
+		return lMove(args);
 	}
 
 	@Override
 	public byte[] lMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("from", from)
 				.put("to", to);
-		return notCommand(client, Command.LMOVE, args);
+		return lMove(args);
 	}
 
 	@Override
@@ -181,7 +231,7 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 						 final int timeout) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("from", from)
 				.put("to", to);
-		return notCommand(client, Command.BLMOVE, args);
+		return blMove(args);
 	}
 
 	@Override
@@ -189,7 +239,7 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 						 final int timeout) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("from", from)
 				.put("to", to).put("timeout", timeout);
-		return notCommand(client, Command.BLMOVE, args);
+		return blMove(args);
 	}
 
 	@Override
@@ -264,13 +314,13 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 		final CommandArguments args = CommandArguments.create("key", key).put("values", (Object[]) values);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Long, Long>(client, Command.LPUSH)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.LPUSH)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Long, Long>(client, Command.LPUSH)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.LPUSH)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Long, Long>(client, Command.LPUSH)
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.LPUSH)
 					.run(args);
 		}
 	}
@@ -280,13 +330,13 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 		final CommandArguments args = CommandArguments.create("key", key).put("values", (Object[]) values);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Long, Long>(client, Command.LPUSHX)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.LPUSHX)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Long, Long>(client, Command.LPUSHX)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.LPUSHX)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Long, Long>(client, Command.LPUSHX)
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.LPUSHX)
 					.run(args);
 		}
 	}
@@ -325,13 +375,13 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 		final CommandArguments args = CommandArguments.create("key", key).put("values", (Object[]) values);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Long, Long>(client, Command.RPUSH)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.RPUSH)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Long, Long>(client, Command.RPUSH)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.RPUSH)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Long, Long>(client, Command.RPUSH)
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.RPUSH)
 					.run(args);
 		}
 	}
@@ -341,13 +391,27 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 		final CommandArguments args = CommandArguments.create("key", key).put("values", (Object[]) values);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Long, Long>(client, Command.RPUSHX)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.RPUSHX)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Long, Long>(client, Command.RPUSHX)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.RPUSHX)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Long, Long>(client, Command.RPUSHX)
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.RPUSHX)
+					.run(args);
+		}
+	}
+
+	private <V> V lIndex(final byte[] key, final long index, final Converter<byte[], V> converter,
+						 final CommandArguments args) {
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<V, V>(client, ProtocolCommand.LINDEX)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<V, V>(client, ProtocolCommand.LINDEX)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<V, V>(client, ProtocolCommand.LINDEX)
 					.run(args);
 		}
 	}
@@ -355,26 +419,39 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 	private <V> List<V> lRange(final byte[] key, final long start, final long end,
 							   final Converter<List<byte[]>, List<V>> converter, final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, Command.LRANGE)
+			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, ProtocolCommand.LRANGE)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, Command.LRANGE)
+			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, ProtocolCommand.LRANGE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<List<V>, List<V>>(client, Command.LRANGE)
+			return new LettuceSentinelCommand<List<V>, List<V>>(client, ProtocolCommand.LRANGE)
+					.run(args);
+		}
+	}
+
+	private <V> V lMove(final CommandArguments args) {
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<V, V>(client, ProtocolCommand.LMOVE)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<V, V>(client, ProtocolCommand.LMOVE)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<V, V>(client, ProtocolCommand.LMOVE)
 					.run(args);
 		}
 	}
 
 	private <V> V blMove(final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<V, V>(client, Command.BLMOVE)
+			return new LettuceSentinelPipelineCommand<V, V>(client, ProtocolCommand.BLMOVE)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<V, V>(client, Command.BLMOVE)
+			return new LettuceSentinelTransactionCommand<V, V>(client, ProtocolCommand.BLMOVE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<V, V>(client, Command.BLMOVE)
+			return new LettuceSentinelCommand<V, V>(client, ProtocolCommand.BLMOVE)
 					.run(args);
 		}
 	}
@@ -382,13 +459,13 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 	private <V> List<V> blPop(final byte[][] keys, final int timeout, final Converter<KeyValue<byte[], byte[]>,
 			List<V>> converter, final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, Command.BLPOP)
+			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, ProtocolCommand.BLPOP)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, Command.BLPOP)
+			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, ProtocolCommand.BLPOP)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<List<V>, List<V>>(client, Command.BLPOP)
+			return new LettuceSentinelCommand<List<V>, List<V>>(client, ProtocolCommand.BLPOP)
 					.run(args);
 		}
 	}
@@ -396,13 +473,13 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 	private <V> List<V> brPop(final byte[][] keys, final int timeout, final Converter<KeyValue<byte[], byte[]>,
 			List<V>> converter, final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, Command.BRPOP)
+			return new LettuceSentinelPipelineCommand<List<V>, List<V>>(client, ProtocolCommand.BRPOP)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, Command.BRPOP)
+			return new LettuceSentinelTransactionCommand<List<V>, List<V>>(client, ProtocolCommand.BRPOP)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<List<V>, List<V>>(client, Command.BRPOP)
+			return new LettuceSentinelCommand<List<V>, List<V>>(client, ProtocolCommand.BRPOP)
 					.run(args);
 		}
 	}
@@ -410,39 +487,39 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 	private <V> V brPoplPush(final byte[] key, final byte[] destKey, final int timeout,
 							 final Converter<byte[], V> converter, final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<V, V>(client, Command.BRPOPLPUSH)
+			return new LettuceSentinelPipelineCommand<V, V>(client, ProtocolCommand.BRPOPLPUSH)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<V, V>(client, Command.BRPOPLPUSH)
+			return new LettuceSentinelTransactionCommand<V, V>(client, ProtocolCommand.BRPOPLPUSH)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<V, V>(client, Command.BRPOPLPUSH)
+			return new LettuceSentinelCommand<V, V>(client, ProtocolCommand.BRPOPLPUSH)
 					.run(args);
 		}
 	}
 
 	private <V> V lPop(final byte[] key, final Converter<byte[], V> converter, final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<V, V>(client, Command.LPOP)
+			return new LettuceSentinelPipelineCommand<V, V>(client, ProtocolCommand.LPOP)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<V, V>(client, Command.LPOP)
+			return new LettuceSentinelTransactionCommand<V, V>(client, ProtocolCommand.LPOP)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<V, V>(client, Command.LPOP)
+			return new LettuceSentinelCommand<V, V>(client, ProtocolCommand.LPOP)
 					.run(args);
 		}
 	}
 
 	private <V> V rPop(final byte[] key, final Converter<byte[], V> converter, final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<V, V>(client, Command.RPOP)
+			return new LettuceSentinelPipelineCommand<V, V>(client, ProtocolCommand.RPOP)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<V, V>(client, Command.RPOP)
+			return new LettuceSentinelTransactionCommand<V, V>(client, ProtocolCommand.RPOP)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<V, V>(client, Command.RPOP)
+			return new LettuceSentinelCommand<V, V>(client, ProtocolCommand.RPOP)
 					.run(args);
 		}
 	}
@@ -450,13 +527,13 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 	private <V> V rPoplPush(final byte[] key, final byte[] destKey, final Converter<byte[], V> converter,
 							final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<V, V>(client, Command.RPOPLPUSH)
+			return new LettuceSentinelPipelineCommand<V, V>(client, ProtocolCommand.RPOPLPUSH)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<V, V>(client, Command.RPOPLPUSH)
+			return new LettuceSentinelTransactionCommand<V, V>(client, ProtocolCommand.RPOPLPUSH)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<V, V>(client, Command.RPOPLPUSH)
+			return new LettuceSentinelCommand<V, V>(client, ProtocolCommand.RPOPLPUSH)
 					.run(args);
 		}
 	}

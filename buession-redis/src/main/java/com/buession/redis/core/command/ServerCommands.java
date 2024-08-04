@@ -25,6 +25,7 @@
 package com.buession.redis.core.command;
 
 import com.buession.lang.Status;
+import com.buession.redis.core.AclLog;
 import com.buession.redis.core.FlushMode;
 import com.buession.redis.core.Info;
 import com.buession.redis.core.MemoryStats;
@@ -33,6 +34,7 @@ import com.buession.redis.core.RedisMonitor;
 import com.buession.redis.core.RedisServerTime;
 import com.buession.redis.core.Role;
 import com.buession.redis.core.SlowLog;
+import com.buession.redis.core.AclUser;
 
 import java.util.List;
 import java.util.Map;
@@ -45,6 +47,201 @@ import java.util.Map;
  * @author Yong.Teng
  */
 public interface ServerCommands extends RedisCommands {
+
+	/**
+	 * The command shows the available ACL categories
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-cat/" target="_blank">https://redis.io/commands/acl-cat/</a></p>
+	 *
+	 * @return A list of ACL categories or a list of commands inside a given category
+	 */
+	List<String> aclCat();
+
+	/**
+	 * The command shows all the Redis commands in the specified category
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-cat/" target="_blank">https://redis.io/commands/acl-cat/</a></p>
+	 *
+	 * @param categoryName
+	 * 		Category Name
+	 *
+	 * @return A list of ACL categories or a list of commands inside a given category
+	 */
+	List<String> aclCat(final String categoryName);
+
+	/**
+	 * The command shows all the Redis commands in the specified category
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-cat/" target="_blank">https://redis.io/commands/acl-cat/</a></p>
+	 *
+	 * @param categoryName
+	 * 		Category Name
+	 *
+	 * @return A list of ACL categories or a list of commands inside a given category
+	 */
+	List<byte[]> aclCat(final byte[] categoryName);
+
+	/**
+	 * Create an ACL user with the specified rules or modify the rules of an existing user
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-setuser/" target="_blank">https://redis.io/commands/acl-setuser/</a></p>
+	 *
+	 * @param username
+	 * 		用户名
+	 * @param rules
+	 * 		the specified rules
+	 *
+	 * @return 操作成功，返回 Status.Success；否则，返回 Status.Failure
+	 */
+	Status aclSetUser(final String username, final String... rules);
+
+	/**
+	 * Create an ACL user with the specified rules or modify the rules of an existing user
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-setuser/" target="_blank">https://redis.io/commands/acl-setuser/</a></p>
+	 *
+	 * @param username
+	 * 		用户名
+	 * @param rules
+	 * 		the specified rules
+	 *
+	 * @return 操作成功，返回 Status.Success；否则，返回 Status.Failure
+	 */
+	Status aclSetUser(final byte[] username, final byte[]... rules);
+
+	/**
+	 * The command returns all the rules defined for an existing ACL user
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-getuser/" target="_blank">https://redis.io/commands/acl-getuser/</a></p>
+	 *
+	 * @param username
+	 * 		用户名
+	 *
+	 * @return A list of ACL rule definitions for the user
+	 */
+	AclUser aclGetUser(final String username);
+
+	/**
+	 * The command returns all the rules defined for an existing ACL user
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-getuser/" target="_blank">https://redis.io/commands/acl-getuser/</a></p>
+	 *
+	 * @param username
+	 * 		用户名
+	 *
+	 * @return A list of ACL rule definitions for the user
+	 */
+	AclUser aclGetUser(final byte[] username);
+
+	/**
+	 * The command shows a list of all the usernames of the currently configured users in the Redis ACL system
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-users/" target="_blank">https://redis.io/commands/acl-users/</a></p>
+	 *
+	 * @return A list of all the usernames of the currently configured users in the Redis ACL system
+	 */
+	List<String> aclUsers();
+
+	/**
+	 * Return the username the current connection is authenticated with
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-whoami/" target="_blank">https://redis.io/commands/acl-whoami/</a></p>
+	 *
+	 * @return The username of the current connection
+	 */
+	String aclWhoAmI();
+
+	/**
+	 * Delete all the specified ACL users and terminate all the connections that are authenticated with such users
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-deluser/" target="_blank">https://redis.io/commands/acl-deluser/</a></p>
+	 *
+	 * @param usernames
+	 * 		用户名
+	 *
+	 * @return 删除用户数量
+	 */
+	Long aclDelUser(final String... usernames);
+
+	/**
+	 * Delete all the specified ACL users and terminate all the connections that are authenticated with such users
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-deluser/" target="_blank">https://redis.io/commands/acl-deluser/</a></p>
+	 *
+	 * @param usernames
+	 * 		用户名
+	 *
+	 * @return 删除用户数量
+	 */
+	Long aclDelUser(final byte[]... usernames);
+
+	/**
+	 * ACL users need a solid password in order to authenticate to the server without security risks
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-genpass/" target="_blank">https://redis.io/commands/acl-genpass/</a></p>
+	 *
+	 * @return By default 64 bytes string representing 256 bits of pseudorandom data
+	 */
+	String aclGenPass();
+
+	/**
+	 * The command shows the currently active ACL rules in the Redis server
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-list/" target="_blank">https://redis.io/commands/acl-list/</a></p>
+	 *
+	 * @return By default 64 bytes string representing 256 bits of pseudorandom data
+	 */
+	List<String> aclList();
+
+	/**
+	 * When Redis is configured to use an ACL file (with the aclfile configuration option),
+	 * this command will reload the ACLs from the file, replacing all the current ACL rules with the ones defined in the file
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-load/" target="_blank">https://redis.io/commands/acl-load/</a></p>
+	 *
+	 * @return Status.SUCCESS
+	 */
+	Status aclLoad();
+
+	/**
+	 * The optional argument specifies how many entries to show. By default up to ten failures are returned
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-log/" target="_blank">https://redis.io/commands/acl-log/</a></p>
+	 *
+	 * @return A list of ACL security events
+	 */
+	List<AclLog> aclLog();
+
+	/**
+	 * The optional argument specifies how many entries to show. By default up to ten failures are returned
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-log/" target="_blank">https://redis.io/commands/acl-log/</a></p>
+	 *
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return A list of ACL security events
+	 */
+	List<AclLog> aclLog(final long count);
+
+	/**
+	 * The optional argument specifies how many entries to show. By default up to ten failures are returned
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-log/" target="_blank">https://redis.io/commands/acl-log/</a></p>
+	 *
+	 * @return 日志重置成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status aclLogReset();
+
+	/**
+	 * When Redis is configured to use an ACL file (with the aclfile configuration option),
+	 * this command will save the currently defined ACLs from the server memory to the ACL file
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-save/" target="_blank">https://redis.io/commands/acl-save/</a></p>
+	 *
+	 * @return 保存成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status aclLogSave();
 
 	/**
 	 * 执行一个 AOF文件 重写操作；重写会创建一个当前 AOF 文件的体积优化版本
@@ -401,34 +598,6 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @param path
 	 * 		Module Path
-	 *
-	 * @return A list of loaded modules
-	 *
-	 * @since 3.0.0
-	 */
-	Status moduleLoad(final String path);
-
-	/**
-	 * Returns information about the modules loaded to the server
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/module-load/" target="_blank">https://redis.io/commands/module-load/</a></p>
-	 *
-	 * @param path
-	 * 		Module Path
-	 *
-	 * @return A list of loaded modules
-	 *
-	 * @since 3.0.0
-	 */
-	Status moduleLoad(final byte[] path);
-
-	/**
-	 * Returns information about the modules loaded to the server
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/module-load/" target="_blank">https://redis.io/commands/module-load/</a></p>
-	 *
-	 * @param path
-	 * 		Module Path
 	 * @param arguments
 	 * 		Arguments
 	 *
@@ -613,7 +782,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return A list of slow log entries
 	 */
-	List<SlowLog> slowLogGet(final int count);
+	List<SlowLog> slowLogGet(final long count);
 
 	/**
 	 * This command returns the current number of entries in the slow log

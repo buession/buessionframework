@@ -19,160 +19,35 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
 
+import com.buession.lang.Order;
 import com.buession.lang.Status;
 import com.buession.redis.core.ExpireOption;
+import com.buession.redis.core.Limit;
+import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.ObjectEncoding;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Type;
-import com.buession.redis.core.command.args.MigrateArgument;
-import com.buession.redis.core.command.args.RestoreArgument;
-import com.buession.redis.core.command.args.ScanArgument;
-import com.buession.redis.core.command.args.SortArgument;
+import com.buession.redis.utils.ObjectStringBuilder;
+import com.buession.redis.utils.SafeEncoder;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
 /**
  * KEY 命令
  *
- * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=generic" target="_blank">https://redis.io/docs/latest/commands/?group=generic</a></p>
+ * <p>详情说明 <a href="http://redisdoc.com/database/index.html" target="_blank">http://redisdoc.com/database/index.html</a>
+ * 和 <a href="http://redisdoc.com/expire/index.html" target="_blank">http://redisdoc.com/expire/index.html</a></p>
  *
  * @author Yong.Teng
  */
 public interface KeyCommands extends RedisCommands {
-
-	/**
-	 * Copy the value stored at the source key to the destination key
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/copy/" target="_blank">https://redis.io/commands/copy/</a></p>
-	 *
-	 * @param key
-	 * 		待复制 key
-	 * @param destKey
-	 * 		目标 key
-	 *
-	 * @return 复制成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status copy(final String key, final String destKey);
-
-	/**
-	 * Copy the value stored at the source key to the destination key
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/copy/" target="_blank">https://redis.io/commands/copy/</a></p>
-	 *
-	 * @param key
-	 * 		待复制 key
-	 * @param destKey
-	 * 		目标 key
-	 *
-	 * @return 复制成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status copy(final byte[] key, final byte[] destKey);
-
-	/**
-	 * Copy the value stored at the source key to the destination key
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/copy/" target="_blank">https://redis.io/commands/copy/</a></p>
-	 *
-	 * @param key
-	 * 		待复制 key
-	 * @param destKey
-	 * 		目标 key
-	 * @param db
-	 * 		目标 DB
-	 *
-	 * @return 复制成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status copy(final String key, final String destKey, final int db);
-
-	/**
-	 * Copy the value stored at the source key to the destination key
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/copy/" target="_blank">https://redis.io/commands/copy/</a></p>
-	 *
-	 * @param key
-	 * 		待复制 key
-	 * @param destKey
-	 * 		目标 key
-	 * @param db
-	 * 		目标 DB
-	 *
-	 * @return 复制成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status copy(final byte[] key, final byte[] destKey, final int db);
-
-	/**
-	 * Copy the value stored at the source key to the destination key
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/copy/" target="_blank">https://redis.io/commands/copy/</a></p>
-	 *
-	 * @param key
-	 * 		待复制 key
-	 * @param destKey
-	 * 		目标 key
-	 * @param replace
-	 * 		是否替换已存在 Key
-	 *
-	 * @return 复制成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status copy(final String key, final String destKey, final boolean replace);
-
-	/**
-	 * Copy the value stored at the source key to the destination key
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/copy/" target="_blank">https://redis.io/commands/copy/</a></p>
-	 *
-	 * @param key
-	 * 		待复制 key
-	 * @param destKey
-	 * 		目标 key
-	 * @param replace
-	 * 		是否替换已存在 Key
-	 *
-	 * @return 复制成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status copy(final byte[] key, final byte[] destKey, final boolean replace);
-
-	/**
-	 * Copy the value stored at the source key to the destination key
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/copy/" target="_blank">https://redis.io/commands/copy/</a></p>
-	 *
-	 * @param key
-	 * 		待复制 key
-	 * @param destKey
-	 * 		目标 key
-	 * @param db
-	 * 		目标 DB
-	 * @param replace
-	 * 		是否替换已存在 Key
-	 *
-	 * @return 复制成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status copy(final String key, final String destKey, final int db, final boolean replace);
-
-	/**
-	 * Copy the value stored at the source key to the destination key
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/copy/" target="_blank">https://redis.io/commands/copy/</a></p>
-	 *
-	 * @param key
-	 * 		待复制 key
-	 * @param destKey
-	 * 		目标 key
-	 * @param db
-	 * 		目标 DB
-	 * @param replace
-	 * 		是否替换已存在 Key
-	 *
-	 * @return 复制成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status copy(final byte[] key, final byte[] destKey, final int db, final boolean replace);
 
 	/**
 	 * 删除给定的一个或多个 key
@@ -359,96 +234,300 @@ public interface KeyCommands extends RedisCommands {
 	Status expireAt(final byte[] key, final long unixTimestamp);
 
 	/**
+	 * 为给定 key 设置生存时间，当 key 过期时(生存时间为 0)，它会被自动删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/expire/pexpire.html" target="_blank">http://redisdoc.com/expire/pexpire.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param lifetime
+	 * 		生存时间（单位：毫秒）
+	 *
+	 * @return 操作结果
+	 */
+	Status pExpire(final String key, final int lifetime);
+
+	/**
+	 * 为给定 key 设置生存时间，当 key 过期时(生存时间为 0)，它会被自动删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/expire/pexpire.html" target="_blank">http://redisdoc.com/expire/pexpire.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param lifetime
+	 * 		生存时间（单位：毫秒）
+	 *
+	 * @return 操作结果
+	 */
+	Status pExpire(final byte[] key, final int lifetime);
+
+	/**
 	 * 为给定 key 设置过期时间，具体过期时间戳
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/expire/expireat.html" target="_blank">http://redisdoc.com/expire/expireat.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/expire/pexpireat.html" target="_blank">http://redisdoc.com/expire/pexpireat.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
 	 * @param unixTimestamp
-	 * 		过期时间戳（单位：秒）
-	 * @param expireOption
-	 * 		过期选项
+	 * 		过期时间戳（单位：毫秒）
 	 *
 	 * @return 操作结果
-	 *
-	 * @since 3.0.0
 	 */
-	Status expireAt(final String key, final long unixTimestamp, final ExpireOption expireOption);
+	Status pExpireAt(final String key, final long unixTimestamp);
 
 	/**
 	 * 为给定 key 设置过期时间，具体过期时间戳
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/expire/expireat.html" target="_blank">http://redisdoc.com/expire/expireat.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/expire/pexpireat.html" target="_blank">http://redisdoc.com/expire/pexpireat.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
 	 * @param unixTimestamp
-	 * 		过期时间戳（单位：秒）
-	 * @param expireOption
-	 * 		过期选项
+	 * 		过期时间戳（单位：毫秒）
 	 *
 	 * @return 操作结果
-	 *
-	 * @since 3.0.0
 	 */
-	Status expireAt(final byte[] key, final long unixTimestamp, final ExpireOption expireOption);
+	Status pExpireAt(final byte[] key, final long unixTimestamp);
 
 	/**
-	 * Returns the absolute Unix timestamp (since January 1, 1970) in seconds at which the given key will expire.
+	 * 将 key 设置为持久性的 Key
 	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/expiretime/" target="_blank">https://redis.io/docs/latest/commands/expiretime/</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/expire/persist.html" target="_blank">http://redisdoc.com/expire/persist.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
 	 *
-	 * @return The expiration Unix timestamp in seconds;
-	 * -1 if the key exists but has no associated expiration time;
-	 * -2 if the key does not exist;
-	 *
-	 * @since 3.0.0
+	 * @return 操作结果
 	 */
-	Long expireTime(final String key);
+	Status persist(final String key);
 
 	/**
-	 * Returns the absolute Unix timestamp (since January 1, 1970) in seconds at which the given key will expire.
+	 * 将 key 设置为持久性的 Key
 	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/expiretime/" target="_blank">https://redis.io/docs/latest/commands/expiretime/</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/expire/persist.html" target="_blank">http://redisdoc.com/expire/persist.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
 	 *
-	 * @return The expiration Unix timestamp in seconds;
-	 * -1 if the key exists but has no associated expiration time;
-	 * -2 if the key does not exist;
-	 *
-	 * @since 3.0.0
+	 * @return 操作结果
 	 */
-	Long expireTime(final byte[] key);
+	Status persist(final byte[] key);
 
 	/**
-	 * 查找所有符合给定模式 pattern 的 key
+	 * 获取给定 key 的剩余生存时间
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/database/keys.html" target="_blank">http://redisdoc.com/database/keys.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/expire/ttl.html" target="_blank">http://redisdoc.com/expire/ttl.html</a></p>
 	 *
-	 * @param pattern
-	 * 		模式
+	 * @param key
+	 * 		Key
 	 *
-	 * @return 符合给定模式的 key 列表
+	 * @return 当 key 不存在时，返回 -2 ；
+	 * 当 key 存在但没有设置剩余生存时间时，返回 -1 。
+	 * 否则，以秒为单位，返回 key 的剩余生存时间
 	 */
-	Set<String> keys(final String pattern);
+	Long ttl(final String key);
 
 	/**
-	 * 查找所有符合给定模式 pattern 的 key
+	 * 获取给定 key 的剩余生存时间
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/database/keys.html" target="_blank">http://redisdoc.com/database/keys.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/expire/ttl.html" target="_blank">http://redisdoc.com/expire/ttl.html</a></p>
 	 *
-	 * @param pattern
-	 * 		模式
+	 * @param key
+	 * 		Key
 	 *
-	 * @return 符合给定模式的 key 列表
+	 * @return 当 key 不存在时，返回 -2 ；
+	 * 当 key 存在但没有设置剩余生存时间时，返回 -1 。
+	 * 否则，以秒为单位，返回 key 的剩余生存时间
 	 */
-	Set<byte[]> keys(final byte[] pattern);
+	Long ttl(final byte[] key);
+
+	/**
+	 * 获取给定 key 的剩余生存时间
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/expire/pttl.html" target="_blank">http://redisdoc.com/expire/pttl.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 当 key 不存在时，返回 -2 ；
+	 * 当 key 存在但没有设置剩余生存时间时，返回 -1 。
+	 * 否则，以毫秒为单位，返回 key 的剩余生存时间
+	 */
+	Long pTtl(final String key);
+
+	/**
+	 * 获取给定 key 的剩余生存时间
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/expire/pttl.html" target="_blank">http://redisdoc.com/expire/pttl.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 当 key 不存在时，返回 -2 ；
+	 * 当 key 存在但没有设置剩余生存时间时，返回 -1 。
+	 * 否则，以毫秒为单位，返回 key 的剩余生存时间
+	 */
+	Long pTtl(final byte[] key);
+
+	/**
+	 * Copy the value stored at the source key to the destination key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/copy/" target="_blank">https://redis.io/commands/copy/</a></p>
+	 *
+	 * @param key
+	 * 		待复制 key
+	 * @param destKey
+	 * 		目标 key
+	 *
+	 * @return 复制成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status copy(final String key, final String destKey);
+
+	/**
+	 * Copy the value stored at the source key to the destination key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/copy/" target="_blank">https://redis.io/commands/copy/</a></p>
+	 *
+	 * @param key
+	 * 		待复制 key
+	 * @param destKey
+	 * 		目标 key
+	 *
+	 * @return 复制成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status copy(final byte[] key, final byte[] destKey);
+
+	/**
+	 * Copy the value stored at the source key to the destination key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/copy/" target="_blank">https://redis.io/commands/copy/</a></p>
+	 *
+	 * @param key
+	 * 		待复制 key
+	 * @param destKey
+	 * 		目标 key
+	 * @param db
+	 * 		目标 DB
+	 *
+	 * @return 复制成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status copy(final String key, final String destKey, final int db);
+
+	/**
+	 * Copy the value stored at the source key to the destination key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/copy/" target="_blank">https://redis.io/commands/copy/</a></p>
+	 *
+	 * @param key
+	 * 		待复制 key
+	 * @param destKey
+	 * 		目标 key
+	 * @param db
+	 * 		目标 DB
+	 *
+	 * @return 复制成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status copy(final byte[] key, final byte[] destKey, final int db);
+
+	/**
+	 * Copy the value stored at the source key to the destination key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/copy/" target="_blank">https://redis.io/commands/copy/</a></p>
+	 *
+	 * @param key
+	 * 		待复制 key
+	 * @param destKey
+	 * 		目标 key
+	 * @param replace
+	 * 		是否替换已存在 Key
+	 *
+	 * @return 复制成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status copy(final String key, final String destKey, final boolean replace);
+
+	/**
+	 * Copy the value stored at the source key to the destination key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/copy/" target="_blank">https://redis.io/commands/copy/</a></p>
+	 *
+	 * @param key
+	 * 		待复制 key
+	 * @param destKey
+	 * 		目标 key
+	 * @param replace
+	 * 		是否替换已存在 Key
+	 *
+	 * @return 复制成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status copy(final byte[] key, final byte[] destKey, final boolean replace);
+
+	/**
+	 * Copy the value stored at the source key to the destination key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/copy/" target="_blank">https://redis.io/commands/copy/</a></p>
+	 *
+	 * @param key
+	 * 		待复制 key
+	 * @param destKey
+	 * 		目标 key
+	 * @param db
+	 * 		目标 DB
+	 * @param replace
+	 * 		是否替换已存在 Key
+	 *
+	 * @return 复制成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status copy(final String key, final String destKey, final int db, final boolean replace);
+
+	/**
+	 * Copy the value stored at the source key to the destination key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/copy/" target="_blank">https://redis.io/commands/copy/</a></p>
+	 *
+	 * @param key
+	 * 		待复制 key
+	 * @param destKey
+	 * 		目标 key
+	 * @param db
+	 * 		目标 DB
+	 * @param replace
+	 * 		是否替换已存在 Key
+	 *
+	 * @return 复制成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status copy(final byte[] key, final byte[] destKey, final int db, final boolean replace);
+
+	/**
+	 * 将当前数据库的 key 移动到给定的数据库 db 当中；
+	 * 如果当前数据库(源数据库)和给定数据库(目标数据库)有相同名字的给定 key ，
+	 * 或者 key 不存在于当前数据库，那么 MOVE 没有任何效果
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/move.html" target="_blank">http://redisdoc.com/database/move.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param db
+	 * 		目标数据库
+	 *
+	 * @return 移动成功返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	Status move(final String key, final int db);
+
+	/**
+	 * 将当前数据库的 key 移动到给定的数据库 db 当中；
+	 * 如果当前数据库(源数据库)和给定数据库(目标数据库)有相同名字的给定 key ，
+	 * 或者 key 不存在于当前数据库，那么 MOVE 没有任何效果
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/move.html" target="_blank">http://redisdoc.com/database/move.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param db
+	 * 		目标数据库
+	 *
+	 * @return 移动成功返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	Status move(final byte[] key, final int db);
 
 	/**
 	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
@@ -506,15 +585,15 @@ public interface KeyCommands extends RedisCommands {
 	 * 		目标 Redis DB
 	 * @param timeout
 	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
-	 * @param migrateArgument
-	 * 		迁移参数
+	 * @param operation
+	 *        {@link MigrateOperation}
 	 * @param keys
 	 * 		Keys
 	 *
 	 * @return 操作结果
 	 */
-	Status migrate(final String host, final int port, final int db, final int timeout,
-				   final MigrateArgument migrateArgument, final String... keys);
+	Status migrate(final String host, final int port, final int db, final int timeout, final MigrateOperation operation,
+				   final String... keys);
 
 	/**
 	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
@@ -530,355 +609,247 @@ public interface KeyCommands extends RedisCommands {
 	 * 		目标 Redis DB
 	 * @param timeout
 	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
-	 * @param migrateArgument
-	 * 		迁移参数
+	 * @param operation
+	 *        {@link MigrateOperation}
 	 * @param keys
 	 * 		Keys
 	 *
 	 * @return 操作结果
 	 */
-	Status migrate(final String host, final int port, final int db, final int timeout,
-				   final MigrateArgument migrateArgument, final byte[]... keys);
+	Status migrate(final String host, final int port, final int db, final int timeout, final MigrateOperation operation,
+				   final byte[]... keys);
 
 	/**
-	 * 将当前数据库的 key 移动到给定的数据库 db 当中；
-	 * 如果当前数据库(源数据库)和给定数据库(目标数据库)有相同名字的给定 key ，
-	 * 或者 key 不存在于当前数据库，那么 MOVE 没有任何效果
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/database/move.html" target="_blank">http://redisdoc.com/database/move.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
 	 *
-	 * @param key
-	 * 		Key
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param port
+	 * 		目标 Redis Server 端口
 	 * @param db
-	 * 		目标数据库
+	 * 		目标 Redis DB
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param keys
+	 * 		Keys
 	 *
-	 * @return 移动成功返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 * @return 操作结果
 	 */
-	Status move(final String key, final int db);
+	Status migrate(final String host, final int port, final int db, final String password, final int timeout,
+				   final String... keys);
 
 	/**
-	 * 将当前数据库的 key 移动到给定的数据库 db 当中；
-	 * 如果当前数据库(源数据库)和给定数据库(目标数据库)有相同名字的给定 key ，
-	 * 或者 key 不存在于当前数据库，那么 MOVE 没有任何效果
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/database/move.html" target="_blank">http://redisdoc.com/database/move.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
 	 *
-	 * @param key
-	 * 		Key
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param port
+	 * 		目标 Redis Server 端口
 	 * @param db
-	 * 		目标数据库
-	 *
-	 * @return 移动成功返回 Status.SUCCESS；否则返回 Status.FAILURE
-	 */
-	Status move(final byte[] key, final int db);
-
-	/**
-	 * 返回指定 key 对应 value 所使用的内部表示
-	 *
-	 * <p>详情说明 <a href="http://www.redis.cn/commands/object.html" target="_blank">http://www.redis.cn/commands/object.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return key 对应 value 所使用的内部表示
-	 */
-	ObjectEncoding objectEncoding(final String key);
-
-	/**
-	 * 返回指定 key 对应 value 所使用的内部表示
-	 *
-	 * <p>详情说明 <a href="http://www.redis.cn/commands/object.html" target="_blank">http://www.redis.cn/commands/object.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return key 对应 value 所使用的内部表示
-	 */
-	ObjectEncoding objectEncoding(final byte[] key);
-
-	/**
-	 * This command returns the logarithmic access frequency counter of a Redis object stored a key
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/object-freq/" target="_blank">https://redis.io/commands/object-freq/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return The counter’s value
-	 */
-	Long objectFreq(final String key);
-
-	/**
-	 * This command returns the logarithmic access frequency counter of a Redis object stored a key
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/object-freq/" target="_blank">https://redis.io/commands/object-freq/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return The counter’s value
-	 */
-	Long objectFreq(final byte[] key);
-
-	/**
-	 * 返回指定 key 对应的 value 自被存储之后空闲的时间（单位：秒）
-	 *
-	 * <p>详情说明 <a href="http://www.redis.cn/commands/object.html" target="_blank">http://www.redis.cn/commands/object.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return key 对应的 value 自被存储之后空闲的时间（单位：秒）
-	 */
-	Long objectIdleTime(final String key);
-
-	/**
-	 * 返回指定 key 对应的 value 自被存储之后空闲的时间（单位：秒）
-	 *
-	 * <p>详情说明 <a href="http://www.redis.cn/commands/object.html" target="_blank">http://www.redis.cn/commands/object.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return key 对应的 value 自被存储之后空闲的时间（单位：秒）
-	 */
-	Long objectIdleTime(final byte[] key);
-
-	/**
-	 * 返回指定 key 所对应 value 被引用的次数
-	 *
-	 * <p>详情说明 <a href="http://www.redis.cn/commands/object.html" target="_blank">http://www.redis.cn/commands/object.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return key 所对应 value 被引用的次数
-	 */
-	Long objectRefcount(final String key);
-
-	/**
-	 * 返回指定 key 所对应 value 被引用的次数
-	 *
-	 * <p>详情说明 <a href="http://www.redis.cn/commands/object.html" target="_blank">http://www.redis.cn/commands/object.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return key 所对应 value 被引用的次数
-	 */
-	Long objectRefcount(final byte[] key);
-
-	/**
-	 * 将 key 设置为持久性的 Key
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/expire/persist.html" target="_blank">http://redisdoc.com/expire/persist.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
+	 * 		目标 Redis DB
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param keys
+	 * 		Keys
 	 *
 	 * @return 操作结果
 	 */
-	Status persist(final String key);
+	Status migrate(final String host, final int port, final int db, final byte[] password, final int timeout,
+				   final byte[]... keys);
 
 	/**
-	 * 将 key 设置为持久性的 Key
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/expire/persist.html" target="_blank">http://redisdoc.com/expire/persist.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
 	 *
-	 * @param key
-	 * 		Key
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param port
+	 * 		目标 Redis Server 端口
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 * @param keys
+	 * 		Keys
 	 *
 	 * @return 操作结果
 	 */
-	Status persist(final byte[] key);
+	Status migrate(final String host, final int port, final int db, final String password, final int timeout,
+				   final MigrateOperation operation, final String... keys);
 
 	/**
-	 * 为给定 key 设置生存时间，当 key 过期时(生存时间为 0)，它会被自动删除
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/expire/pexpire.html" target="_blank">http://redisdoc.com/expire/pexpire.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
 	 *
-	 * @param key
-	 * 		Key
-	 * @param lifetime
-	 * 		生存时间（单位：毫秒）
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param port
+	 * 		目标 Redis Server 端口
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 * @param keys
+	 * 		Keys
 	 *
 	 * @return 操作结果
 	 */
-	Status pExpire(final String key, final int lifetime);
+	Status migrate(final String host, final int port, final int db, final byte[] password, final int timeout,
+				   final MigrateOperation operation, final byte[]... keys);
 
 	/**
-	 * 为给定 key 设置生存时间，当 key 过期时(生存时间为 0)，它会被自动删除
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/expire/pexpire.html" target="_blank">http://redisdoc.com/expire/pexpire.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
 	 *
-	 * @param key
-	 * 		Key
-	 * @param lifetime
-	 * 		生存时间（单位：毫秒）
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param port
+	 * 		目标 Redis Server 端口
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param user
+	 * 		目标 Redis 用户
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param keys
+	 * 		Keys
 	 *
 	 * @return 操作结果
 	 */
-	Status pExpire(final byte[] key, final int lifetime);
+	Status migrate(final String host, final int port, final int db, final String user, final String password,
+				   final int timeout, final String... keys);
 
 	/**
-	 * 为给定 key 设置生存时间，当 key 过期时(生存时间为 0)，它会被自动删除
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/expire/pexpire.html" target="_blank">http://redisdoc.com/expire/pexpire.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
 	 *
-	 * @param key
-	 * 		Key
-	 * @param lifetime
-	 * 		生存时间（单位：毫秒）
-	 * @param expireOption
-	 * 		过期选项
-	 *
-	 * @return 操作结果
-	 *
-	 * @since 3.0.0
-	 */
-	Status pExpire(final String key, final int lifetime, final ExpireOption expireOption);
-
-	/**
-	 * 为给定 key 设置生存时间，当 key 过期时(生存时间为 0)，它会被自动删除
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/expire/pexpire.html" target="_blank">http://redisdoc.com/expire/pexpire.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param lifetime
-	 * 		生存时间（单位：毫秒）
-	 * @param expireOption
-	 * 		过期选项
-	 *
-	 * @return 操作结果
-	 *
-	 * @since 3.0.0
-	 */
-	Status pExpire(final byte[] key, final int lifetime, final ExpireOption expireOption);
-
-	/**
-	 * 为给定 key 设置过期时间，具体过期时间戳
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/expire/pexpireat.html" target="_blank">http://redisdoc.com/expire/pexpireat.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param unixTimestamp
-	 * 		过期时间戳（单位：毫秒）
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param port
+	 * 		目标 Redis Server 端口
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param user
+	 * 		目标 Redis 用户
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param keys
+	 * 		Keys
 	 *
 	 * @return 操作结果
 	 */
-	Status pExpireAt(final String key, final long unixTimestamp);
+	Status migrate(final String host, final int port, final int db, final byte[] user, final byte[] password,
+				   final int timeout, final byte[]... keys);
 
 	/**
-	 * 为给定 key 设置过期时间，具体过期时间戳
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/expire/pexpireat.html" target="_blank">http://redisdoc.com/expire/pexpireat.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
 	 *
-	 * @param key
-	 * 		Key
-	 * @param unixTimestamp
-	 * 		过期时间戳（单位：毫秒）
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param port
+	 * 		目标 Redis Server 端口
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param user
+	 * 		目标 Redis 用户
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 * @param keys
+	 * 		Keys
 	 *
 	 * @return 操作结果
 	 */
-	Status pExpireAt(final byte[] key, final long unixTimestamp);
+	Status migrate(final String host, final int port, final int db, final String user, final String password,
+				   final int timeout, final MigrateOperation operation, final String... keys);
 
 	/**
-	 * 为给定 key 设置过期时间，具体过期时间戳
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/expire/pexpireat.html" target="_blank">http://redisdoc.com/expire/pexpireat.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
 	 *
-	 * @param key
-	 * 		Key
-	 * @param unixTimestamp
-	 * 		过期时间戳（单位：毫秒）
-	 * @param expireOption
-	 * 		过期选项
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param port
+	 * 		目标 Redis Server 端口
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param user
+	 * 		目标 Redis 用户
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 * @param keys
+	 * 		Keys
 	 *
 	 * @return 操作结果
-	 *
-	 * @since 3.0.0
 	 */
-	Status pExpireAt(final String key, final long unixTimestamp, final ExpireOption expireOption);
+	Status migrate(final String host, final int port, final int db, final byte[] user, final byte[] password,
+				   final int timeout, final MigrateOperation operation, final byte[]... keys);
 
 	/**
-	 * 为给定 key 设置过期时间，具体过期时间戳
+	 * 查找所有符合给定模式 pattern 的 key
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/expire/pexpireat.html" target="_blank">http://redisdoc.com/expire/pexpireat.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/database/keys.html" target="_blank">http://redisdoc.com/database/keys.html</a></p>
 	 *
-	 * @param key
-	 * 		Key
-	 * @param unixTimestamp
-	 * 		过期时间戳（单位：毫秒）
-	 * @param expireOption
-	 * 		过期选项
+	 * @param pattern
+	 * 		模式
 	 *
-	 * @return 操作结果
-	 *
-	 * @since 3.0.0
+	 * @return 符合给定模式的 key 列表
 	 */
-	Status pExpireAt(final byte[] key, final long unixTimestamp, final ExpireOption expireOption);
+	Set<String> keys(final String pattern);
 
 	/**
-	 * Returns the absolute Unix timestamp (since January 1, 1970) in milliseconds at which the given key will expire.
+	 * 查找所有符合给定模式 pattern 的 key
 	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/pexpiretime/" target="_blank">https://redis.io/docs/latest/commands/pexpiretime/</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/database/keys.html" target="_blank">http://redisdoc.com/database/keys.html</a></p>
 	 *
-	 * @param key
-	 * 		Key
+	 * @param pattern
+	 * 		模式
 	 *
-	 * @return The expiration Unix timestamp in milliseconds;
-	 * -1 if the key exists but has no associated expiration time;
-	 * -2 if the key does not exist;
-	 *
-	 * @since 3.0.0
+	 * @return 符合给定模式的 key 列表
 	 */
-	Long pExpireTime(final String key);
-
-	/**
-	 * Returns the absolute Unix timestamp (since January 1, 1970) in milliseconds at which the given key will expire.
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/pexpiretime/" target="_blank">https://redis.io/docs/latest/commands/pexpiretime/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return The expiration Unix timestamp in milliseconds;
-	 * -1 if the key exists but has no associated expiration time;
-	 * -2 if the key does not exist;
-	 *
-	 * @since 3.0.0
-	 */
-	Long pExpireTime(final byte[] key);
-
-	/**
-	 * 获取给定 key 的剩余生存时间
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/expire/pttl.html" target="_blank">http://redisdoc.com/expire/pttl.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 当 key 不存在时，返回 -2 ；
-	 * 当 key 存在但没有设置剩余生存时间时，返回 -1 。
-	 * 否则，以毫秒为单位，返回 key 的剩余生存时间
-	 */
-	Long pTtl(final String key);
-
-	/**
-	 * 获取给定 key 的剩余生存时间
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/expire/pttl.html" target="_blank">http://redisdoc.com/expire/pttl.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 当 key 不存在时，返回 -2 ；
-	 * 当 key 存在但没有设置剩余生存时间时，返回 -1 。
-	 * 否则，以毫秒为单位，返回 key 的剩余生存时间
-	 */
-	Long pTtl(final byte[] key);
+	Set<byte[]> keys(final byte[] pattern);
 
 	/**
 	 * 从当前数据库中随机返回一个 key
@@ -988,13 +959,12 @@ public interface KeyCommands extends RedisCommands {
 	 * 		序列化值
 	 * @param ttl
 	 * 		生存时间（单位：毫秒）
-	 * @param restoreArgument
+	 * @param argument
 	 *        {@link RestoreArgument}
 	 *
 	 * @return 操作结果
 	 */
-	Status restore(final String key, final byte[] serializedValue, final int ttl,
-				   final RestoreArgument restoreArgument);
+	Status restore(final String key, final byte[] serializedValue, final int ttl, final RestoreArgument argument);
 
 	/**
 	 * 反序列化给定的序列化值，并将它和给定的 key 关联
@@ -1007,13 +977,12 @@ public interface KeyCommands extends RedisCommands {
 	 * 		序列化值
 	 * @param ttl
 	 * 		生存时间（单位：毫秒）
-	 * @param restoreArgument
+	 * @param argument
 	 *        {@link RestoreArgument}
 	 *
 	 * @return 操作结果
 	 */
-	Status restore(final byte[] key, final byte[] serializedValue, final int ttl,
-				   final RestoreArgument restoreArgument);
+	Status restore(final byte[] key, final byte[] serializedValue, final int ttl, final RestoreArgument argument);
 
 	/**
 	 * 迭代当前数据库中的数据库键
@@ -1058,14 +1027,12 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @param cursor
 	 * 		游标
-	 * @param scanArgument
-	 *        {@link ScanArgument}
+	 * @param pattern
+	 * 		glob 风格的模式参数
 	 *
 	 * @return 返回和给定模式相匹配的数据库键
-	 *
-	 * @since 3.0.0
 	 */
-	ScanResult<List<String>> scan(final long cursor, final ScanArgument.StringScanArgument scanArgument);
+	ScanResult<List<String>> scan(final long cursor, final String pattern);
 
 	/**
 	 * 迭代当前数据库中的数据库键
@@ -1074,14 +1041,147 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @param cursor
 	 * 		游标
-	 * @param scanArgument
-	 *        {@link ScanArgument}
+	 * @param pattern
+	 * 		glob 风格的模式参数
 	 *
 	 * @return 返回和给定模式相匹配的数据库键
-	 *
-	 * @since 3.0.0
 	 */
-	ScanResult<List<byte[]>> scan(final long cursor, final ScanArgument.ByteScanArgument scanArgument);
+	ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern);
+
+	/**
+	 * 迭代当前数据库中的数据库键
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
+	 *
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 *
+	 * @return 返回和给定模式相匹配的数据库键
+	 */
+	ScanResult<List<String>> scan(final String cursor, final String pattern);
+
+	/**
+	 * 迭代当前数据库中的数据库键
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
+	 *
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 *
+	 * @return 返回和给定模式相匹配的数据库键
+	 */
+	ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern);
+
+	/**
+	 * 迭代当前数据库中的数据库键
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
+	 *
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回指定数量的数据库键
+	 */
+	ScanResult<List<String>> scan(final long cursor, final long count);
+
+	/**
+	 * 迭代当前数据库中的数据库键
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
+	 *
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回指定数量的数据库键
+	 */
+	ScanResult<List<String>> scan(final String cursor, final long count);
+
+	/**
+	 * 迭代当前数据库中的数据库键
+	 *
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
+	 *
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回指定数量的数据库键
+	 */
+	ScanResult<List<byte[]>> scan(final byte[] cursor, final long count);
+
+	/**
+	 * 迭代当前数据库中的数据库键
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
+	 *
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回和给定模式相匹配指定数量的键
+	 */
+	ScanResult<List<String>> scan(final long cursor, final String pattern, final long count);
+
+	/**
+	 * 迭代当前数据库中的数据库键
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
+	 *
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回和给定模式相匹配指定数量的键
+	 */
+	ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern, final long count);
+
+	/**
+	 * 迭代当前数据库中的数据库键
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
+	 *
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回和给定模式相匹配指定数量的键
+	 */
+	ScanResult<List<String>> scan(final String cursor, final String pattern, final long count);
+
+	/**
+	 * 迭代当前数据库中的数据库键
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
+	 *
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回和给定模式相匹配指定数量的键
+	 */
+	ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern, final long count);
 
 	/**
 	 * 返回给定列表、集合、有序集合 key 中经过排序的元素
@@ -1200,66 +1300,6 @@ public interface KeyCommands extends RedisCommands {
 	Long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument);
 
 	/**
-	 * 返回给定列表、集合、有序集合 key 中经过排序的元素
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/sort_ro/" target="_blank">https://redis.io/docs/latest/commands/sort_ro/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 列表形式的排序结果
-	 *
-	 * @since 3.0.0
-	 */
-	List<String> sortRo(final String key);
-
-	/**
-	 * 返回给定列表、集合、有序集合 key 中经过排序的元素
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/sort_ro/" target="_blank">https://redis.io/docs/latest/commands/sort_ro/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 列表形式的排序结果
-	 *
-	 * @since 3.0.0
-	 */
-	List<byte[]> sortRo(final byte[] key);
-
-	/**
-	 * 返回给定列表、集合、有序集合 key 中经过排序的元素
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/sort_ro/" target="_blank">https://redis.io/docs/latest/commands/sort_ro/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param sortArgument
-	 * 		排序参数
-	 *
-	 * @return 列表形式的排序结果
-	 *
-	 * @since 3.0.0
-	 */
-	List<String> sortRo(final String key, final SortArgument sortArgument);
-
-	/**
-	 * 返回给定列表、集合、有序集合 key 中经过排序的元素
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/sort_ro/" target="_blank">https://redis.io/docs/latest/commands/sort_ro/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param sortArgument
-	 * 		排序参数
-	 *
-	 * @return 列表形式的排序结果
-	 *
-	 * @since 3.0.0
-	 */
-	List<byte[]> sortRo(final byte[] key, final SortArgument sortArgument);
-
-	/**
 	 * 修改指定一个或多个 key 最后访问时间
 	 *
 	 * <p>详情说明 <a href="http://www.redis.cn/commands/touch.html" target="_blank">http://www.redis.cn/commands/touch.html</a></p>
@@ -1282,34 +1322,6 @@ public interface KeyCommands extends RedisCommands {
 	 * @return 操作的 key 的数量
 	 */
 	Long touch(final byte[]... keys);
-
-	/**
-	 * 获取给定 key 的剩余生存时间
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/expire/ttl.html" target="_blank">http://redisdoc.com/expire/ttl.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 当 key 不存在时，返回 -2 ；
-	 * 当 key 存在但没有设置剩余生存时间时，返回 -1 。
-	 * 否则，以秒为单位，返回 key 的剩余生存时间
-	 */
-	Long ttl(final String key);
-
-	/**
-	 * 获取给定 key 的剩余生存时间
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/expire/ttl.html" target="_blank">http://redisdoc.com/expire/ttl.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 当 key 不存在时，返回 -2 ；
-	 * 当 key 存在但没有设置剩余生存时间时，返回 -1 。
-	 * 否则，以秒为单位，返回 key 的剩余生存时间
-	 */
-	Long ttl(final byte[] key);
 
 	/**
 	 * 获取 key 所储存的值的类型
@@ -1360,5 +1372,429 @@ public interface KeyCommands extends RedisCommands {
 	 * @return 被删除 key 的数量
 	 */
 	Long unlink(final byte[]... keys);
+
+	/**
+	 * 阻塞当前客户端，直到所有以前的写命令都成功的传输和指定的slaves确认
+	 *
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/wait.html" target="_blank">http://www.redis.cn/commands/wait.html</a></p>
+	 *
+	 * @param replicas
+	 * 		副本数量
+	 * @param timeout
+	 * 		超时（单位：毫秒）
+	 *
+	 * @return 被删除 key 的数量
+	 */
+	Long wait(final int replicas, final int timeout);
+
+	/**
+	 * 返回指定 key 对应 value 所使用的内部表示
+	 *
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/object.html" target="_blank">http://www.redis.cn/commands/object.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return key 对应 value 所使用的内部表示
+	 */
+	ObjectEncoding objectEncoding(final String key);
+
+	/**
+	 * 返回指定 key 对应 value 所使用的内部表示
+	 *
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/object.html" target="_blank">http://www.redis.cn/commands/object.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return key 对应 value 所使用的内部表示
+	 */
+	ObjectEncoding objectEncoding(final byte[] key);
+
+	/**
+	 * This command returns the logarithmic access frequency counter of a Redis object stored a key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/object-freq/" target="_blank">https://redis.io/commands/object-freq/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return The counter’s value
+	 */
+	Long objectFreq(final String key);
+
+	/**
+	 * This command returns the logarithmic access frequency counter of a Redis object stored a key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/object-freq/" target="_blank">https://redis.io/commands/object-freq/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return The counter’s value
+	 */
+	Long objectFreq(final byte[] key);
+
+	/**
+	 * 返回指定 key 对应的 value 自被存储之后空闲的时间（单位：秒）
+	 *
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/object.html" target="_blank">http://www.redis.cn/commands/object.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return key 对应的 value 自被存储之后空闲的时间（单位：秒）
+	 */
+	Long objectIdleTime(final String key);
+
+	/**
+	 * 返回指定 key 对应的 value 自被存储之后空闲的时间（单位：秒）
+	 *
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/object.html" target="_blank">http://www.redis.cn/commands/object.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return key 对应的 value 自被存储之后空闲的时间（单位：秒）
+	 */
+	Long objectIdleTime(final byte[] key);
+
+	/**
+	 * 返回指定 key 所对应 value 被引用的次数
+	 *
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/object.html" target="_blank">http://www.redis.cn/commands/object.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return key 所对应 value 被引用的次数
+	 */
+	Long objectRefcount(final String key);
+
+	/**
+	 * 返回指定 key 所对应 value 被引用的次数
+	 *
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/object.html" target="_blank">http://www.redis.cn/commands/object.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return key 所对应 value 被引用的次数
+	 */
+	Long objectRefcount(final byte[] key);
+
+	/**
+	 * Restore 参数
+	 *
+	 * @author Yong.Teng
+	 */
+	class RestoreArgument {
+
+		private Boolean replace;
+
+		private Boolean absTtl;
+
+		private Long idleTime;
+
+		private Long frequency;
+
+		private RestoreArgument() {
+		}
+
+		/**
+		 * 获取是否替换已存在 key
+		 *
+		 * @return 是否替换已存在 key
+		 */
+		public Boolean isReplace() {
+			return replace;
+		}
+
+		/**
+		 * If the ABSTTL modifier was used,
+		 * ttl should represent an absolute Unix timestamp (in milliseconds) in which the key will expire
+		 *
+		 * @return If the ABSTTL modifier was used,
+		 * ttl should represent an absolute Unix timestamp (in milliseconds) in which the key will expire
+		 */
+		public Boolean isAbsTtl() {
+			return absTtl;
+		}
+
+		public Long getIdleTime() {
+			return idleTime;
+		}
+
+		public Long getFrequency() {
+			return frequency;
+		}
+
+		@Override
+		public String toString() {
+			return ObjectStringBuilder.create().
+					add("replace", replace).
+					add("absTtl", absTtl).
+					add("idleTime", idleTime).
+					add("frequency", frequency).build();
+		}
+
+		public static class Builder {
+
+			private final RestoreArgument restoreArgument = new RestoreArgument();
+
+			private Builder() {
+			}
+
+			public static Builder create() {
+				return new Builder();
+			}
+
+			public Builder replace() {
+				restoreArgument.replace = true;
+				return this;
+			}
+
+			public Builder absTtl() {
+				restoreArgument.absTtl = true;
+				return this;
+			}
+
+			public Builder idleTime(long idleTime) {
+				restoreArgument.idleTime = idleTime;
+				return this;
+			}
+
+			public Builder frequency(long frequency) {
+				restoreArgument.frequency = frequency;
+				return this;
+			}
+
+			public RestoreArgument build() {
+				return restoreArgument;
+			}
+
+		}
+
+	}
+
+	/**
+	 * 排序参数
+	 *
+	 * @author Yong.Teng
+	 */
+	final class SortArgument {
+
+		private byte[] by;
+
+		private Order order;
+
+		private Limit limit;
+
+		private byte[][] getPatterns;
+
+		private Boolean alpha;
+
+		private SortArgument() {
+		}
+
+		/**
+		 * 获取可以让 uid 按其他键的元素来排序模式
+		 *
+		 * @return 可以让 uid 按其他键的元素来排序模式
+		 */
+		public byte[] getBy() {
+			return by;
+		}
+
+		/**
+		 * 获取排序方式
+		 *
+		 * @return 排序方式
+		 */
+		public Order getOrder() {
+			return order;
+		}
+
+		/**
+		 * 获取返回结果限制
+		 *
+		 * @return 返回结果限制
+		 */
+		public Limit getLimit() {
+			return limit;
+		}
+
+		/**
+		 * 获取通过外部 key 排序模式
+		 *
+		 * @return 通过外部 key 排序模式
+		 */
+		public byte[][] getGetPatterns() {
+			return getPatterns;
+		}
+
+		/**
+		 * 使用对字符串进行排序
+		 *
+		 * @return 使用对字符串进行排序
+		 */
+		public Boolean isAlpha() {
+			return alpha;
+		}
+
+		@Override
+		public String toString() {
+			final ObjectStringBuilder builder = ObjectStringBuilder.create();
+
+			if(by != null){
+				builder.add("by", SafeEncoder.encode(by));
+			}
+
+			builder.add("order", order).add("limit", limit);
+
+			if(getPatterns != null){
+				builder.add("get patterns", Arrays.toString(getPatterns));
+			}
+
+			builder.add("alpha", alpha);
+
+			return builder.build();
+		}
+
+		public static class Builder {
+
+			private final SortArgument sortArgument = new SortArgument();
+
+			private Builder() {
+			}
+
+			public static Builder create() {
+				return new Builder();
+			}
+
+			/**
+			 * 设置可以让 uid 按其他键的元素来排序
+			 *
+			 * @param pattern
+			 * 		模式
+			 *
+			 * @return Builder
+			 */
+			public Builder by(String pattern) {
+				sortArgument.by = SafeEncoder.encode(pattern);
+				return this;
+			}
+
+			/**
+			 * 设置可以让 uid 按其他键的元素来排序
+			 *
+			 * @param pattern
+			 * 		模式
+			 *
+			 * @return Builder
+			 */
+			public Builder by(byte[] pattern) {
+				sortArgument.by = pattern;
+				return this;
+			}
+
+			/**
+			 * 设置升序排序
+			 *
+			 * @return Builder
+			 */
+			public Builder asc() {
+				sortArgument.order = Order.ASC;
+				return this;
+			}
+
+			/**
+			 * 设置降序排序
+			 *
+			 * @return Builder
+			 */
+			public Builder desc() {
+				sortArgument.order = Order.DESC;
+				return this;
+			}
+
+			/**
+			 * 设置排序方式
+			 *
+			 * @param order
+			 * 		排序方式
+			 *
+			 * @return Builder
+			 */
+			public Builder order(Order order) {
+				sortArgument.order = order;
+				return this;
+			}
+
+			/**
+			 * 设置返回偏移量为 offset 的 count 条数据
+			 *
+			 * @param offset
+			 * 		偏移量
+			 * @param count
+			 * 		返回数量
+			 *
+			 * @return Builder
+			 */
+			public Builder limit(long offset, long count) {
+				sortArgument.limit = new Limit(offset, count);
+				return this;
+			}
+
+			/**
+			 * 设置通过外部 key 排序模式
+			 *
+			 * @param patterns
+			 * 		外部 key 模式
+			 *
+			 * @return Builder
+			 */
+			public Builder getPatterns(byte[]... patterns) {
+				sortArgument.getPatterns = patterns;
+				return this;
+			}
+
+			/**
+			 * 设置通过外部 key 排序模式
+			 *
+			 * @param patterns
+			 * 		外部 key 模式
+			 *
+			 * @return Builder
+			 */
+			public Builder getPatterns(String... patterns) {
+				if(patterns != null){
+					sortArgument.getPatterns = new byte[patterns.length][];
+
+					for(int i = 0; i < patterns.length; i++){
+						sortArgument.getPatterns[i] = SafeEncoder.encode(patterns[i]);
+					}
+				}
+
+				return this;
+			}
+
+			/**
+			 * SORT 命令默认排序对象为数字，当需要对字符串进行排序时，需要显式地在 SORT 命令之后添加 ALPHA 修饰符
+			 *
+			 * @return 使用对字符串进行排序
+			 */
+			public Builder alpha() {
+				sortArgument.alpha = true;
+				return this;
+			}
+
+			public SortArgument build() {
+				return sortArgument;
+			}
+
+		}
+
+	}
 
 }

@@ -37,25 +37,20 @@ import com.buession.redis.core.StreamGroup;
 import com.buession.redis.core.StreamPending;
 import com.buession.redis.core.StreamPendingSummary;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.Command;
-import com.buession.redis.core.command.args.ApproximateExactTrimming;
-import com.buession.redis.core.command.args.XAddArgument;
-import com.buession.redis.core.command.args.XClaimArgument;
-import com.buession.redis.core.command.args.XReadArgument;
-import com.buession.redis.core.command.args.XReadGroupArgument;
-import com.buession.redis.core.command.args.XTrimArgument;
+import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.lettuce.params.StreamEntryIdConverter;
+import com.buession.redis.core.internal.convert.lettuce.response.StreamEntryIDConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.StreamMessageConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.StreamMessageMapConverter;
+import com.buession.redis.core.internal.lettuce.LettuceXAddArgs;
 import com.buession.redis.core.internal.lettuce.LettuceXClaimArgs;
 import com.buession.redis.core.internal.lettuce.LettuceXReadArgs;
-import com.buession.redis.core.internal.lettuce.LettuceXReadGroupArgs;
-import com.buession.redis.core.internal.lettuce.utils.StreamOffsetUtils;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.Consumer;
 import io.lettuce.core.Limit;
 import io.lettuce.core.Range;
 import io.lettuce.core.StreamMessage;
+import io.lettuce.core.XAddArgs;
 import io.lettuce.core.XClaimArgs;
 import io.lettuce.core.XReadArgs;
 
@@ -75,37 +70,28 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 	}
 
 	@Override
-	public Long xAck(final String key, final String groupName, final StreamEntryId... ids) {
-		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
-				.put("ids", (Object[]) ids);
-		return notCommand(client, Command.XACK, args);
-	}
-
-	@Override
 	public Long xAck(final byte[] key, final byte[] groupName, final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("ids", (Object[]) ids);
-		return notCommand(client, Command.XACK, args);
-	}
 
-	@Override
-	public StreamEntryId xAdd(final String key, final StreamEntryId id, final Map<String, String> hash) {
-		final CommandArguments args = CommandArguments.create("key", key).put("id", id).put("hash", hash);
-		return notCommand(client, Command.XADD, args);
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.XACK)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.XACK)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.XACK)
+					.run(args);
+		}
 	}
 
 	@Override
 	public StreamEntryId xAdd(final byte[] key, final StreamEntryId id, final Map<byte[], byte[]> hash) {
 		final CommandArguments args = CommandArguments.create("key", key).put("id", id).put("hash", hash);
-		return notCommand(client, Command.XADD, args);
-	}
+		final XAddArgs xAddArgs = new LettuceXAddArgs(id);
 
-	@Override
-	public StreamEntryId xAdd(final String key, final StreamEntryId id, final Map<String, String> hash,
-							  final XAddArgument xAddArgument) {
-		final CommandArguments args = CommandArguments.create("key", key).put("id", id).put("hash", hash)
-				.put("xAddArgument", xAddArgument);
-		return notCommand(client, Command.XADD, args);
+		return xAdd(key, hash, xAddArgs, args);
 	}
 
 	@Override
@@ -113,7 +99,10 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 							  final XAddArgument xAddArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("id", id).put("hash", hash)
 				.put("xAddArgument", xAddArgument);
-		return notCommand(client, Command.XADD, args);
+		final StreamEntryIdConverter streamEntryIdConverter = new StreamEntryIdConverter();
+		final XAddArgs xAddArgs = LettuceXAddArgs.from(xAddArgument).id(streamEntryIdConverter.convert(id));
+
+		return xAdd(key, hash, xAddArgs, args);
 	}
 
 	@Override
@@ -137,7 +126,7 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 	@Override
 	public Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final String key, final String groupName,
 															final String consumerName, final int minIdleTime,
-															final StreamEntryId start, final int count) {
+															final StreamEntryId start, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("start", start)
 				.put("count", count);
@@ -147,7 +136,7 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 	@Override
 	public Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final byte[] key, final byte[] groupName,
 															final byte[] consumerName, final int minIdleTime,
-															final StreamEntryId start, final int count) {
+															final StreamEntryId start, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("start", start)
 				.put("count", count);
@@ -177,7 +166,7 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 	@Override
 	public Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final byte[] key, final byte[] groupName,
 																	final byte[] consumerName, final int minIdleTime,
-																	final StreamEntryId start, final int count) {
+																	final StreamEntryId start, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("start", start)
 				.put("count", count);
@@ -187,7 +176,7 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 	@Override
 	public Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final String key, final String groupName,
 																	final String consumerName, final int minIdleTime,
-																	final StreamEntryId start, final int count) {
+																	final StreamEntryId start, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("start", start)
 				.put("count", count);
@@ -224,7 +213,7 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("ids", (Object[]) ids);
 		final Consumer<byte[]> consumer = Consumer.from(groupName, consumerName);
-		final XClaimArgs xClaimArgs = null;//new LettuceXClaimArgs(minIdleTime, true);
+		final XClaimArgs xClaimArgs = new LettuceXClaimArgs(minIdleTime, true);
 
 		return xClaimJustId(key, ids, consumer, xClaimArgs, args);
 	}
@@ -247,13 +236,13 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 		final CommandArguments args = CommandArguments.create("key", key).put("ids", (Object[]) ids);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Long, Long>(client, Command.XDEL)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.XDEL)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Long, Long>(client, Command.XDEL)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.XDEL)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Long, Long>(client, Command.XDEL)
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.XDEL)
 					.run(args);
 		}
 	}
@@ -265,13 +254,13 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 				.put("id", id);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, Command.XGROUP_CREATE)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.XGROUP_CREATE)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, Command.XGROUP_CREATE)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.XGROUP_CREATE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, Command.XGROUP_CREATE)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.XGROUP_CREATE)
 					.run(args);
 		}
 	}
@@ -298,13 +287,13 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 		final Converter<Boolean, Long> converter = (v)->v ? 1L : 0L;
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Long, Long>(client, Command.XGROUP_DELCONSUMER)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.XGROUP_DELCONSUMER)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Long, Long>(client, Command.XGROUP_DELCONSUMER)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.XGROUP_DELCONSUMER)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Long, Long>(client, Command.XGROUP_DELCONSUMER)
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.XGROUP_DELCONSUMER)
 					.run(args);
 		}
 	}
@@ -314,13 +303,13 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, Command.XGROUP_DESTROY)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.XGROUP_DESTROY)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, Command.XGROUP_DESTROY)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.XGROUP_DESTROY)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, Command.XGROUP_DESTROY)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.XGROUP_DESTROY)
 					.run(args);
 		}
 	}
@@ -330,13 +319,13 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName).put("id", id);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, Command.XGROUP_SETID)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.XGROUP_SETID)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, Command.XGROUP_SETID)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.XGROUP_SETID)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, Command.XGROUP_SETID)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.XGROUP_SETID)
 					.run(args);
 		}
 	}
@@ -347,15 +336,15 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<StreamConsumer>, List<StreamConsumer>>(client,
-					Command.XINFO_CONSUMERS)
+					ProtocolCommand.XINFO_CONSUMERS)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceSentinelTransactionCommand<List<StreamConsumer>, List<StreamConsumer>>(client,
-					Command.XINFO_CONSUMERS)
+					ProtocolCommand.XINFO_CONSUMERS)
 					.run(args);
 		}else{
 			return new LettuceSentinelCommand<List<StreamConsumer>, List<StreamConsumer>>(client,
-					Command.XINFO_CONSUMERS)
+					ProtocolCommand.XINFO_CONSUMERS)
 					.run(args);
 		}
 	}
@@ -366,15 +355,15 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<StreamGroup>, List<StreamGroup>>(client,
-					Command.XINFO_GROUPS)
+					ProtocolCommand.XINFO_GROUPS)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceSentinelTransactionCommand<List<StreamGroup>, List<StreamGroup>>(client,
-					Command.XINFO_GROUPS)
+					ProtocolCommand.XINFO_GROUPS)
 					.run(args);
 		}else{
 			return new LettuceSentinelCommand<List<StreamGroup>, List<StreamGroup>>(client,
-					Command.XINFO_GROUPS)
+					ProtocolCommand.XINFO_GROUPS)
 					.run(args);
 		}
 	}
@@ -384,13 +373,13 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Stream, Stream>(client, Command.XINFO_STREAM)
+			return new LettuceSentinelPipelineCommand<Stream, Stream>(client, ProtocolCommand.XINFO_STREAM)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Stream, Stream>(client, Command.XINFO_STREAM)
+			return new LettuceSentinelTransactionCommand<Stream, Stream>(client, ProtocolCommand.XINFO_STREAM)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Stream, Stream>(client, Command.XINFO_STREAM)
+			return new LettuceSentinelCommand<Stream, Stream>(client, ProtocolCommand.XINFO_STREAM)
 					.run(args);
 		}
 	}
@@ -400,29 +389,29 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 		final CommandArguments args = CommandArguments.create("key", key).put("full", full);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<StreamFull, StreamFull>(client, Command.XINFO_STREAM)
+			return new LettuceSentinelPipelineCommand<StreamFull, StreamFull>(client, ProtocolCommand.XINFO_STREAM)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<StreamFull, StreamFull>(client, Command.XINFO_STREAM)
+			return new LettuceSentinelTransactionCommand<StreamFull, StreamFull>(client, ProtocolCommand.XINFO_STREAM)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<StreamFull, StreamFull>(client, Command.XINFO_STREAM)
+			return new LettuceSentinelCommand<StreamFull, StreamFull>(client, ProtocolCommand.XINFO_STREAM)
 					.run(args);
 		}
 	}
 
 	@Override
-	public StreamFull xInfoStream(final byte[] key, final boolean full, final int count) {
+	public StreamFull xInfoStream(final byte[] key, final boolean full, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("full", full).put("count", count);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<StreamFull, StreamFull>(client, Command.XINFO_STREAM)
+			return new LettuceSentinelPipelineCommand<StreamFull, StreamFull>(client, ProtocolCommand.XINFO_STREAM)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<StreamFull, StreamFull>(client, Command.XINFO_STREAM)
+			return new LettuceSentinelTransactionCommand<StreamFull, StreamFull>(client, ProtocolCommand.XINFO_STREAM)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<StreamFull, StreamFull>(client, Command.XINFO_STREAM)
+			return new LettuceSentinelCommand<StreamFull, StreamFull>(client, ProtocolCommand.XINFO_STREAM)
 					.run(args);
 		}
 	}
@@ -432,13 +421,13 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Long, Long>(client, Command.XLEN)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.XLEN)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Long, Long>(client, Command.XLEN)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.XLEN)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Long, Long>(client, Command.XLEN)
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.XLEN)
 					.run(args);
 		}
 	}
@@ -449,15 +438,15 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<StreamPendingSummary, StreamPendingSummary>(client,
-					Command.XPENDING)
+					ProtocolCommand.XPENDING)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceSentinelTransactionCommand<StreamPendingSummary, StreamPendingSummary>(client,
-					Command.XPENDING)
+					ProtocolCommand.XPENDING)
 					.run(args);
 		}else{
 			return new LettuceSentinelCommand<StreamPendingSummary, StreamPendingSummary>(client,
-					Command.XPENDING)
+					ProtocolCommand.XPENDING)
 					.run(args);
 		}
 	}
@@ -469,22 +458,22 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<StreamPending>, List<StreamPending>>(client,
-					Command.XPENDING)
+					ProtocolCommand.XPENDING)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceSentinelTransactionCommand<List<StreamPending>, List<StreamPending>>(client,
-					Command.XPENDING)
+					ProtocolCommand.XPENDING)
 					.run(args);
 		}else{
 			return new LettuceSentinelCommand<List<StreamPending>, List<StreamPending>>(client,
-					Command.XPENDING)
+					ProtocolCommand.XPENDING)
 					.run(args);
 		}
 	}
 
 	@Override
 	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final StreamEntryId start,
-										final StreamEntryId end, final int count) {
+										final StreamEntryId end, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("start", start).put("end", end).put("count", count);
 		final Range<String> range = Range.create(start.toString(), end.toString());
@@ -506,7 +495,7 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 
 	@Override
 	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime,
-										final StreamEntryId start, final StreamEntryId end, final int count) {
+										final StreamEntryId start, final StreamEntryId end, final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("minIdleTime", minIdleTime).put("start", start).put("end", end).put("count", count);
 		final Range<String> range = Range.create(start.toString(), end.toString());
@@ -529,7 +518,7 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 
 	@Override
 	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final StreamEntryId start,
-										final StreamEntryId end, final int count, final byte[] consumerName) {
+										final StreamEntryId end, final long count, final byte[] consumerName) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName);
 		final Consumer<byte[]> consumer = Consumer.from(groupName, consumerName);
@@ -541,7 +530,7 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 
 	@Override
 	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime,
-										final StreamEntryId start, final StreamEntryId end, final int count,
+										final StreamEntryId start, final StreamEntryId end, final long count,
 										final byte[] consumerName) {
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("minIdleTime", minIdleTime).put("consumerName", consumerName);
@@ -558,33 +547,33 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<StreamEntry>, List<StreamEntry>>(client,
-					Command.XRANGE)
+					ProtocolCommand.XRANGE)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceSentinelTransactionCommand<List<StreamEntry>, List<StreamEntry>>(client,
-					Command.XRANGE)
+					ProtocolCommand.XRANGE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<List<StreamEntry>, List<StreamEntry>>(client, Command.XRANGE)
+			return new LettuceSentinelCommand<List<StreamEntry>, List<StreamEntry>>(client, ProtocolCommand.XRANGE)
 					.run(args);
 		}
 	}
 
 	@Override
 	public List<StreamEntry> xRange(final byte[] key, final StreamEntryId start, final StreamEntryId end,
-									final int count) {
+									final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<StreamEntry>, List<StreamEntry>>(client,
-					Command.XRANGE)
+					ProtocolCommand.XRANGE)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceSentinelTransactionCommand<List<StreamEntry>, List<StreamEntry>>(client,
-					Command.XRANGE)
+					ProtocolCommand.XRANGE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<List<StreamEntry>, List<StreamEntry>>(client, Command.XRANGE)
+			return new LettuceSentinelCommand<List<StreamEntry>, List<StreamEntry>>(client, ProtocolCommand.XRANGE)
 					.run(args);
 		}
 	}
@@ -596,10 +585,27 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 	}
 
 	@Override
-	public List<Map<String, List<StreamEntry>>> xRead(final Map<String, StreamEntryId> streams,
-													  final XReadArgument xReadArgument) {
-		final CommandArguments args = CommandArguments.create("streams", streams).put("xReadArgument", xReadArgument);
-		final XReadArgs xReadArgs = LettuceXReadArgs.from(xReadArgument);
+	public List<Map<String, List<StreamEntry>>> xRead(final long count, final Map<String, StreamEntryId> streams) {
+		final CommandArguments args = CommandArguments.create("count", count).put("streams", streams);
+		final XReadArgs xReadArgs = new LettuceXReadArgs(count);
+
+		return xRead(xReadArgs, streams, args);
+	}
+
+	@Override
+	public List<Map<String, List<StreamEntry>>> xRead(final int block, final Map<String, StreamEntryId> streams) {
+		final CommandArguments args = CommandArguments.create("block", block).put("streams", streams);
+		final XReadArgs xReadArgs = new LettuceXReadArgs(block);
+
+		return xRead(xReadArgs, streams, args);
+	}
+
+	@Override
+	public List<Map<String, List<StreamEntry>>> xRead(final long count, final int block,
+													  final Map<String, StreamEntryId> streams) {
+		final CommandArguments args = CommandArguments.create("count", count).put("block", block)
+				.put("streams", streams);
+		final XReadArgs xReadArgs = new LettuceXReadArgs(block, count);
 
 		return xRead(xReadArgs, streams, args);
 	}
@@ -622,22 +628,40 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 
 	@Override
 	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
-														   final Map<String, StreamEntryId> streams,
-														   final XReadGroupArgument xReadGroupArgument) {
+														   final long count, final Map<String, StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
-				.put("streams", streams).put("xReadGroupArgument", xReadGroupArgument);
-		final XReadArgs xReadArgs = LettuceXReadGroupArgs.from(xReadGroupArgument);
+				.put("count", count).put("streams", streams);
+		final XReadArgs xReadArgs = new LettuceXReadArgs(count);
 
 		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
 	}
 
 	@Override
 	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
-														   final Map<byte[], StreamEntryId> streams,
-														   final XReadGroupArgument xReadGroupArgument) {
+														   final long count, final Map<byte[], StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
-				.put("streams", streams).put("xReadGroupArgument", xReadGroupArgument);
-		final XReadArgs xReadArgs = LettuceXReadGroupArgs.from(xReadGroupArgument);
+				.put("count", count).put("streams", streams);
+		final XReadArgs xReadArgs = new LettuceXReadArgs(count);
+
+		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
+	}
+
+	@Override
+	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
+														   final int block, final Map<String, StreamEntryId> streams) {
+		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
+				.put("block", block).put("streams", streams);
+		final XReadArgs xReadArgs = new LettuceXReadArgs(block);
+
+		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
+	}
+
+	@Override
+	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
+														   final int block, final Map<byte[], StreamEntryId> streams) {
+		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
+				.put("block", block).put("streams", streams);
+		final XReadArgs xReadArgs = new LettuceXReadArgs(block);
 
 		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
 	}
@@ -666,24 +690,88 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 
 	@Override
 	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
-														   final boolean isNoAck,
-														   final Map<String, StreamEntryId> streams,
-														   final XReadGroupArgument xReadGroupArgument) {
+														   final long count, final int block,
+														   final Map<String, StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
-				.put("isNoAck", isNoAck).put("streams", streams).put("xReadGroupArgument", xReadGroupArgument);
-		final XReadArgs xReadArgs = LettuceXReadGroupArgs.from(xReadGroupArgument).noack(isNoAck);
+				.put("count", count).put("block", block).put("streams", streams);
+		final XReadArgs xReadArgs = new LettuceXReadArgs(block, count);
 
 		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
 	}
 
 	@Override
 	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
-														   final boolean isNoAck,
-														   final Map<byte[], StreamEntryId> streams,
-														   final XReadGroupArgument xReadGroupArgument) {
+														   final long count, final int block,
+														   final Map<byte[], StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
-				.put("isNoAck", isNoAck).put("streams", streams).put("xReadGroupArgument", xReadGroupArgument);
-		final XReadArgs xReadArgs = LettuceXReadGroupArgs.from(xReadGroupArgument).noack(isNoAck);
+				.put("count", count).put("block", block).put("streams", streams);
+		final XReadArgs xReadArgs = new LettuceXReadArgs(block, count);
+
+		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
+	}
+
+	@Override
+	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
+														   final long count, final boolean isNoAck,
+														   final Map<String, StreamEntryId> streams) {
+		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
+				.put("count", count).put("isNoAck", isNoAck).put("streams", streams);
+		final XReadArgs xReadArgs = new LettuceXReadArgs(isNoAck, count);
+
+		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
+	}
+
+	@Override
+	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
+														   final long count, final boolean isNoAck,
+														   final Map<byte[], StreamEntryId> streams) {
+		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
+				.put("count", count).put("isNoAck", isNoAck).put("streams", streams);
+		final XReadArgs xReadArgs = new LettuceXReadArgs(isNoAck, count);
+
+		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
+	}
+
+	@Override
+	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
+														   final int block, final boolean isNoAck,
+														   final Map<String, StreamEntryId> streams) {
+		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
+				.put("block", block).put("isNoAck", isNoAck).put("streams", streams);
+		final XReadArgs xReadArgs = (new LettuceXReadArgs()).noack(isNoAck);
+
+		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
+	}
+
+	@Override
+	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
+														   final int block, final boolean isNoAck,
+														   final Map<byte[], StreamEntryId> streams) {
+		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
+				.put("block", block).put("isNoAck", isNoAck).put("streams", streams);
+		final XReadArgs xReadArgs = (new LettuceXReadArgs()).noack(isNoAck);
+
+		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
+	}
+
+	@Override
+	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
+														   final long count, final int block, final boolean isNoAck,
+														   final Map<String, StreamEntryId> streams) {
+		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
+				.put("count", count).put("block", block).put("isNoAck", isNoAck).put("streams", streams);
+		final XReadArgs xReadArgs = new LettuceXReadArgs(block, isNoAck, count);
+
+		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
+	}
+
+	@Override
+	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
+														   final long count, final int block, final boolean isNoAck,
+														   final Map<byte[], StreamEntryId> streams) {
+		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
+				.put("count", count).put("block", block).put("isNoAck", isNoAck).put("streams", streams);
+		final XReadArgs xReadArgs = new LettuceXReadArgs(block, isNoAck, count);
 
 		return xReadGroup(groupName, consumerName, streams, xReadArgs, args);
 	}
@@ -697,21 +785,21 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<StreamEntry>, List<StreamEntry>>(client,
-					Command.XREVRANGE)
+					ProtocolCommand.XREVRANGE)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceSentinelTransactionCommand<List<StreamEntry>, List<StreamEntry>>(client,
-					Command.XREVRANGE)
+					ProtocolCommand.XREVRANGE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<List<StreamEntry>, List<StreamEntry>>(client, Command.XREVRANGE)
+			return new LettuceSentinelCommand<List<StreamEntry>, List<StreamEntry>>(client, ProtocolCommand.XREVRANGE)
 					.run(args);
 		}
 	}
 
 	@Override
 	public List<StreamEntry> xRevRange(final byte[] key, final StreamEntryId end, final StreamEntryId start,
-									   final int count) {
+									   final long count) {
 		final CommandArguments args = CommandArguments.create("key", key).put("end", end).put("start", start)
 				.put("count", count);
 		final Range<String> range = Range.create(start.toString(), end.toString());
@@ -721,14 +809,14 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<StreamEntry>, List<StreamEntry>>(client,
-					Command.XREVRANGE)
+					ProtocolCommand.XREVRANGE)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceSentinelTransactionCommand<List<StreamEntry>, List<StreamEntry>>(client,
-					Command.XREVRANGE)
+					ProtocolCommand.XREVRANGE)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<List<StreamEntry>, List<StreamEntry>>(client, Command.XREVRANGE)
+			return new LettuceSentinelCommand<List<StreamEntry>, List<StreamEntry>>(client, ProtocolCommand.XREVRANGE)
 					.run(args);
 		}
 	}
@@ -736,29 +824,45 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 	@Override
 	public Long xTrim(final byte[] key, final XTrimArgument xTrimArgument) {
 		final CommandArguments args = CommandArguments.create("key", key).put("xTrimArgument", xTrimArgument);
-		return xTrim(key, xTrimArgument.getApproximateExactTrimming(), Long.MAX_VALUE, args);
+		return xTrim(key, xTrimArgument.isApproximateTrimming(), Long.MAX_VALUE, args);
 	}
 
 	@Override
 	public Long xTrim(final byte[] key, final XTrimArgument xTrimArgument, final long limit) {
 		final CommandArguments args = CommandArguments.create("key", key).put("xTrimArgument", xTrimArgument)
 				.put("limit", limit);
-		return xTrim(key, xTrimArgument.getApproximateExactTrimming(), limit, args);
+		return xTrim(key, xTrimArgument.isApproximateTrimming(), limit, args);
+	}
+
+	private StreamEntryId xAdd(final byte[] key, final Map<byte[], byte[]> hash, final XAddArgs xAddArgs,
+							   final CommandArguments args) {
+		final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
+
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<StreamEntryId, StreamEntryId>(client, ProtocolCommand.XADD)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<StreamEntryId, StreamEntryId>(client, ProtocolCommand.XADD)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<StreamEntryId, StreamEntryId>(client, ProtocolCommand.XADD)
+					.run(args);
+		}
 	}
 
 	private Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final CommandArguments args) {
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Map<StreamEntryId, List<StreamEntry>>, Map<StreamEntryId, List<StreamEntry>>>(
-					client, Command.XAUTOCLAIM)
+					client, ProtocolCommand.XAUTOCLAIM)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceSentinelTransactionCommand<Map<StreamEntryId, List<StreamEntry>>, Map<StreamEntryId, List<StreamEntry>>>(
-					client, Command.XAUTOCLAIM)
+					client, ProtocolCommand.XAUTOCLAIM)
 					.run(args);
 		}else{
 			return new LettuceSentinelCommand<Map<StreamEntryId, List<StreamEntry>>, Map<StreamEntryId, List<StreamEntry>>>(
-					client, Command.XAUTOCLAIM)
+					client, ProtocolCommand.XAUTOCLAIM)
 					.run(args);
 		}
 	}
@@ -767,15 +871,15 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Map<StreamEntryId, List<StreamEntryId>>, Map<StreamEntryId, List<StreamEntryId>>>(
-					client, Command.XAUTOCLAIM)
+					client, ProtocolCommand.XAUTOCLAIM)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceSentinelTransactionCommand<Map<StreamEntryId, List<StreamEntryId>>, Map<StreamEntryId, List<StreamEntryId>>>(
-					client, Command.XAUTOCLAIM)
+					client, ProtocolCommand.XAUTOCLAIM)
 					.run(args);
 		}else{
 			return new LettuceSentinelCommand<Map<StreamEntryId, List<StreamEntryId>>, Map<StreamEntryId, List<StreamEntryId>>>(
-					client, Command.XAUTOCLAIM)
+					client, ProtocolCommand.XAUTOCLAIM)
 					.run(args);
 		}
 	}
@@ -788,14 +892,14 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<StreamEntry>, List<StreamEntry>>(client,
-					Command.XCLAIM)
+					ProtocolCommand.XCLAIM)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceSentinelTransactionCommand<List<StreamEntry>, List<StreamEntry>>(client,
-					Command.XCLAIM)
+					ProtocolCommand.XCLAIM)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<List<StreamEntry>, List<StreamEntry>>(client, Command.XCLAIM)
+			return new LettuceSentinelCommand<List<StreamEntry>, List<StreamEntry>>(client, ProtocolCommand.XCLAIM)
 					.run(args);
 		}
 	}
@@ -809,28 +913,28 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<StreamEntryId>, List<StreamEntryId>>(client,
-					Command.XCLAIM)
+					ProtocolCommand.XCLAIM)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceSentinelTransactionCommand<List<StreamEntryId>, List<StreamEntryId>>(client,
-					Command.XCLAIM)
+					ProtocolCommand.XCLAIM)
 					.run(args);
 		}else{
 			return new LettuceSentinelCommand<List<StreamEntryId>, List<StreamEntryId>>(client,
-					Command.XCLAIM)
+					ProtocolCommand.XCLAIM)
 					.run(args);
 		}
 	}
 
 	private Status xGroupCreateConsumer(final CommandArguments args) {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, Command.XGROUP_CREATECONSUMER)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.XGROUP_CREATECONSUMER)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, Command.XGROUP_CREATECONSUMER)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.XGROUP_CREATECONSUMER)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, Command.XGROUP_CREATECONSUMER)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.XGROUP_CREATECONSUMER)
 					.run(args);
 		}
 	}
@@ -839,15 +943,15 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 										 final Limit limit, final CommandArguments args) {
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<StreamPending>, List<StreamPending>>(client,
-					Command.XPENDING)
+					ProtocolCommand.XPENDING)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceSentinelTransactionCommand<List<StreamPending>, List<StreamPending>>(client,
-					Command.XPENDING)
+					ProtocolCommand.XPENDING)
 					.run(args);
 		}else{
 			return new LettuceSentinelCommand<List<StreamPending>, List<StreamPending>>(client,
-					Command.XPENDING)
+					ProtocolCommand.XPENDING)
 					.run(args);
 		}
 	}
@@ -856,57 +960,67 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 										 final Limit limit, final CommandArguments args) {
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<StreamPending>, List<StreamPending>>(client,
-					Command.XPENDING)
+					ProtocolCommand.XPENDING)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceSentinelTransactionCommand<List<StreamPending>, List<StreamPending>>(client,
-					Command.XPENDING)
+					ProtocolCommand.XPENDING)
 					.run(args);
 		}else{
 			return new LettuceSentinelCommand<List<StreamPending>, List<StreamPending>>(client,
-					Command.XPENDING)
+					ProtocolCommand.XPENDING)
 					.run(args);
 		}
 	}
 
 	private List<Map<String, List<StreamEntry>>> xRead(final Map<String, StreamEntryId> streams,
 													   final CommandArguments args) {
-		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = StreamOffsetUtils.fromStringMap(streams);
+		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
+		int i = 0;
 		final ListConverter<StreamMessage<byte[], byte[]>, Map<String, List<StreamEntry>>> listStreamMessageMapConverter =
 				StreamMessageMapConverter.listConverter();
 
+		for(Map.Entry<String, StreamEntryId> e : streams.entrySet()){
+			streamOffsets[i++] = XReadArgs.StreamOffset.from(SafeEncoder.encode(e.getKey()), e.getValue().toString());
+		}
+
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<Map<String, List<StreamEntry>>>, List<Map<String, List<StreamEntry>>>>(
-					client, Command.XREAD)
+					client, ProtocolCommand.XREAD)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceSentinelTransactionCommand<List<Map<String, List<StreamEntry>>>, List<Map<String, List<StreamEntry>>>>(
-					client, Command.XREAD)
+					client, ProtocolCommand.XREAD)
 					.run(args);
 		}else{
 			return new LettuceSentinelCommand<List<Map<String, List<StreamEntry>>>, List<Map<String, List<StreamEntry>>>>(
-					client, Command.XREAD)
+					client, ProtocolCommand.XREAD)
 					.run(args);
 		}
 	}
 
 	private List<Map<String, List<StreamEntry>>> xRead(final XReadArgs xReadArgs, final Map<String,
 			StreamEntryId> streams, final CommandArguments args) {
-		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = StreamOffsetUtils.fromStringMap(streams);
+		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
+		int i = 0;
 		final ListConverter<StreamMessage<byte[], byte[]>, Map<String, List<StreamEntry>>> listStreamMessageMapConverter =
 				StreamMessageMapConverter.listConverter();
 
+		for(Map.Entry<String, StreamEntryId> e : streams.entrySet()){
+			streamOffsets[i++] = XReadArgs.StreamOffset.from(SafeEncoder.encode(e.getKey()), e.getValue().toString());
+		}
+
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<Map<String, List<StreamEntry>>>, List<Map<String, List<StreamEntry>>>>(
-					client, Command.XREAD)
+					client, ProtocolCommand.XREAD)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceSentinelTransactionCommand<List<Map<String, List<StreamEntry>>>, List<Map<String, List<StreamEntry>>>>(
-					client, Command.XREAD)
+					client, ProtocolCommand.XREAD)
 					.run(args);
 		}else{
 			return new LettuceSentinelCommand<List<Map<String, List<StreamEntry>>>, List<Map<String, List<StreamEntry>>>>(
-					client, Command.XREAD)
+					client, ProtocolCommand.XREAD)
 					.run(args);
 		}
 	}
@@ -914,9 +1028,14 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 	private List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
 															final Map<String, StreamEntryId> streams,
 															final CommandArguments args) {
-		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = StreamOffsetUtils.fromStringMap(streams);
+		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
 		final ListConverter<StreamMessage<byte[], byte[]>, Map<String, List<StreamEntry>>> listStreamMessageMapConverter =
 				StreamMessageMapConverter.listConverter();
+		int i = 0;
+
+		for(Map.Entry<String, StreamEntryId> e : streams.entrySet()){
+			streamOffsets[i++] = XReadArgs.StreamOffset.from(SafeEncoder.encode(e.getKey()), e.getValue().toString());
+		}
 
 		return xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), streamOffsets,
 				listStreamMessageMapConverter, args);
@@ -925,9 +1044,14 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 	private List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
 															final Map<byte[], StreamEntryId> streams,
 															final CommandArguments args) {
-		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = StreamOffsetUtils.fromBinaryMap(streams);
+		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
 		final ListConverter<StreamMessage<byte[], byte[]>, Map<byte[], List<StreamEntry>>> listStreamMessageMapConverter =
 				StreamMessageMapConverter.listConverter();
+		int i = 0;
+
+		for(Map.Entry<byte[], StreamEntryId> e : streams.entrySet()){
+			streamOffsets[i++] = XReadArgs.StreamOffset.from(e.getKey(), e.getValue().toString());
+		}
 
 		return xReadGroup(groupName, consumerName, streamOffsets, listStreamMessageMapConverter, args);
 	}
@@ -941,15 +1065,15 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<Map<K, List<StreamEntry>>>, List<Map<K, List<StreamEntry>>>>(
-					client, Command.XREADGROUP)
+					client, ProtocolCommand.XREADGROUP)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceSentinelTransactionCommand<List<Map<K, List<StreamEntry>>>, List<Map<K, List<StreamEntry>>>>(
-					client, Command.XREADGROUP)
+					client, ProtocolCommand.XREADGROUP)
 					.run(args);
 		}else{
 			return new LettuceSentinelCommand<List<Map<K, List<StreamEntry>>>, List<Map<K, List<StreamEntry>>>>(
-					client, Command.XREADGROUP)
+					client, ProtocolCommand.XREADGROUP)
 					.run(args);
 		}
 	}
@@ -957,9 +1081,14 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 	private List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
 															final Map<String, StreamEntryId> streams,
 															final XReadArgs xReadArgs, final CommandArguments args) {
-		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = StreamOffsetUtils.fromStringMap(streams);
+		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
 		final ListConverter<StreamMessage<byte[], byte[]>, Map<String, List<StreamEntry>>> listStreamMessageMapConverter =
 				StreamMessageMapConverter.listConverter();
+		int i = 0;
+
+		for(Map.Entry<String, StreamEntryId> e : streams.entrySet()){
+			streamOffsets[i++] = XReadArgs.StreamOffset.from(SafeEncoder.encode(e.getKey()), e.getValue().toString());
+		}
 
 		return xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), streamOffsets, xReadArgs,
 				listStreamMessageMapConverter, args);
@@ -968,9 +1097,14 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 	private List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
 															final Map<byte[], StreamEntryId> streams,
 															final XReadArgs xReadArgs, final CommandArguments args) {
-		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = StreamOffsetUtils.fromBinaryMap(streams);
+		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
 		final ListConverter<StreamMessage<byte[], byte[]>, Map<byte[], List<StreamEntry>>> listStreamMessageMapConverter =
 				StreamMessageMapConverter.listConverter();
+		int i = 0;
+
+		for(Map.Entry<byte[], StreamEntryId> e : streams.entrySet()){
+			streamOffsets[i++] = XReadArgs.StreamOffset.from(e.getKey(), e.getValue().toString());
+		}
 
 		return xReadGroup(groupName, consumerName, streamOffsets, xReadArgs, listStreamMessageMapConverter, args);
 	}
@@ -985,31 +1119,30 @@ public final class LettuceSentinelStreamOperations extends AbstractStreamOperati
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<Map<K, List<StreamEntry>>>, List<Map<K, List<StreamEntry>>>>(
-					client, Command.XREADGROUP)
+					client, ProtocolCommand.XREADGROUP)
 					.run(args);
 		}else if(isTransaction()){
 			return new LettuceSentinelTransactionCommand<List<Map<K, List<StreamEntry>>>, List<Map<K, List<StreamEntry>>>>(
-					client, Command.XREADGROUP)
+					client, ProtocolCommand.XREADGROUP)
 					.run(args);
 		}else{
 			return new LettuceSentinelCommand<List<Map<K, List<StreamEntry>>>, List<Map<K, List<StreamEntry>>>>(
-					client, Command.XREADGROUP)
+					client, ProtocolCommand.XREADGROUP)
 					.run(args);
 		}
 	}
 
-	private Long xTrim(final byte[] key, final ApproximateExactTrimming approximateExactTrimming, final long limit,
+	private Long xTrim(final byte[] key, final boolean approximateTrimming, final long limit,
 					   final CommandArguments args) {
-		final boolean approximateTrimming = ApproximateExactTrimming.APPROXIMATE == approximateExactTrimming;
 
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Long, Long>(client, Command.XTRIM)
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.XTRIM)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Long, Long>(client, Command.XTRIM)
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.XTRIM)
 					.run(args);
 		}else{
-			return new LettuceSentinelCommand<Long, Long>(client, Command.XTRIM)
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.XTRIM)
 					.run(args);
 		}
 	}

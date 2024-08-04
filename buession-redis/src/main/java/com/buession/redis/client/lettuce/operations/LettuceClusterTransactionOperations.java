@@ -27,7 +27,7 @@ package com.buession.redis.client.lettuce.operations;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceClusterClient;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.ProtocolCommand;
 
 import java.util.List;
 
@@ -45,34 +45,74 @@ public final class LettuceClusterTransactionOperations extends AbstractTransacti
 
 	@Override
 	public Status multi() {
-		return notCommand(client, Command.MULTI);
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<Status, Status>(client, ProtocolCommand.MULTI)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<Status, Status>(client, ProtocolCommand.MULTI)
+					.run();
+		}else{
+			return new LettuceClusterCommand<Status, Status>(client, ProtocolCommand.MULTI)
+					.run();
+		}
 	}
 
 	@Override
 	public List<Object> exec() {
-		return notCommand(client, Command.EXEC);
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<List<Object>, List<Object>>(client, ProtocolCommand.MULTI)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<List<Object>, List<Object>>(client, ProtocolCommand.MULTI)
+					.run();
+		}else{
+			return new LettuceClusterCommand<List<Object>, List<Object>>(client, ProtocolCommand.MULTI)
+					.run();
+		}
 	}
 
 	@Override
 	public void discard() {
-		notCommand(client, Command.DISCARD);
-	}
-
-	@Override
-	public Status watch(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return notCommand(client, Command.WATCH, args);
+		if(isPipeline()){
+			new LettuceClusterPipelineCommand<>(client, ProtocolCommand.DISCARD)
+					.run();
+		}else if(isTransaction()){
+			new LettuceClusterTransactionCommand<>(client, ProtocolCommand.DISCARD)
+					.run();
+		}else{
+			new LettuceClusterCommand<>(client, ProtocolCommand.DISCARD)
+					.run();
+		}
 	}
 
 	@Override
 	public Status watch(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return notCommand(client, Command.WATCH, args);
+
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<Status, Status>(client, ProtocolCommand.WATCH)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<Status, Status>(client, ProtocolCommand.WATCH)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<Status, Status>(client, ProtocolCommand.WATCH)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status unwatch() {
-		return notCommand(client, Command.UNWATCH);
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
+					.run();
+		}else{
+			return new LettuceClusterCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
+					.run();
+		}
 	}
 
 }

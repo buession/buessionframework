@@ -32,8 +32,8 @@ import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.client.operations.RedisOperations;
-import com.buession.redis.core.command.Command;
-import com.buession.redis.core.command.SubCommand;
+import com.buession.redis.core.Command;
+import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.jedis.JedisResult;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.exception.RedisPipelineException;
@@ -54,77 +54,16 @@ import redis.clients.jedis.Transaction;
  */
 public interface JedisRedisOperations extends RedisOperations {
 
-	/**
-	 * Jedis 单机模式常规命令
-	 *
-	 * @param <SR>
-	 * 		原生结果类型
-	 * @param <R>
-	 * 		结果类型
-	 */
 	class JedisCommand<SR, R> extends
 			AbstractStandaloneCommand<JedisStandaloneClient, JedisConnection, Jedis, SR, SR, R> {
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 单机客户端 {@link JedisStandaloneClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 */
-		public JedisCommand(final JedisStandaloneClient client, final Command command) {
+		public JedisCommand(final JedisStandaloneClient client, final ProtocolCommand command) {
 			super(client, command);
 		}
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 单机客户端 {@link JedisStandaloneClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public JedisCommand(final JedisStandaloneClient client, final Command command,
+		public JedisCommand(final JedisStandaloneClient client, final ProtocolCommand command,
 							final Executor<Jedis, SR> executor, final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 单机客户端 {@link JedisStandaloneClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 */
-		public JedisCommand(final JedisStandaloneClient client, final Command command, final SubCommand subCommand) {
-			super(client, command, subCommand);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 单机客户端 {@link JedisStandaloneClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public JedisCommand(final JedisStandaloneClient client, final Command command, final SubCommand subCommand,
-							final Executor<Jedis, SR> executor, final Converter<SR, R> converter) {
-			super(client, command, subCommand, executor, converter);
 		}
 
 		@Override
@@ -135,79 +74,16 @@ public interface JedisRedisOperations extends RedisOperations {
 
 	}
 
-	/**
-	 * Jedis 单机模式管道模式命令
-	 *
-	 * @param <SR>
-	 * 		原生结果类型
-	 * @param <R>
-	 * 		结果类型
-	 */
 	class JedisPipelineCommand<SR, R> extends
 			AbstractStandaloneCommand<JedisStandaloneClient, JedisConnection, Pipeline, Response<SR>, SR, R> {
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 单机客户端 {@link JedisStandaloneClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 */
-		public JedisPipelineCommand(final JedisStandaloneClient client, final Command command) {
+		public JedisPipelineCommand(final JedisStandaloneClient client, final ProtocolCommand command) {
 			super(client, command);
 		}
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 单机客户端 {@link JedisStandaloneClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public JedisPipelineCommand(final JedisStandaloneClient client, final Command command,
+		public JedisPipelineCommand(final JedisStandaloneClient client, final ProtocolCommand command,
 									final Executor<Pipeline, Response<SR>> executor, final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 单机客户端 {@link JedisStandaloneClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 */
-		public JedisPipelineCommand(final JedisStandaloneClient client, final Command command,
-									final SubCommand subCommand) {
-			super(client, command, subCommand);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 单机客户端 {@link JedisStandaloneClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public JedisPipelineCommand(final JedisStandaloneClient client, final Command command,
-									final SubCommand subCommand, final Executor<Pipeline, Response<SR>> executor,
-									final Converter<SR, R> converter) {
-			super(client, command, subCommand, executor, converter);
 		}
 
 		@SuppressWarnings({"unchecked"})
@@ -230,80 +106,17 @@ public interface JedisRedisOperations extends RedisOperations {
 
 	}
 
-	/**
-	 * Jedis 单机模式事务模式命令
-	 *
-	 * @param <SR>
-	 * 		原生结果类型
-	 * @param <R>
-	 * 		结果类型
-	 */
 	class JedisTransactionCommand<SR, R> extends
 			AbstractStandaloneCommand<JedisStandaloneClient, JedisConnection, Transaction, Response<SR>, SR, R> {
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 单机客户端 {@link JedisStandaloneClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 */
-		public JedisTransactionCommand(final JedisStandaloneClient client, final Command command) {
+		public JedisTransactionCommand(final JedisStandaloneClient client, final ProtocolCommand command) {
 			super(client, command);
 		}
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 单机客户端 {@link JedisStandaloneClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public JedisTransactionCommand(final JedisStandaloneClient client, final Command command,
+		public JedisTransactionCommand(final JedisStandaloneClient client, final ProtocolCommand command,
 									   final Executor<Transaction, Response<SR>> executor,
 									   final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 单机客户端 {@link JedisStandaloneClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 */
-		public JedisTransactionCommand(final JedisStandaloneClient client, final Command command,
-									   final SubCommand subCommand) {
-			super(client, command, subCommand);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 单机客户端 {@link JedisStandaloneClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public JedisTransactionCommand(final JedisStandaloneClient client, final Command command,
-									   final SubCommand subCommand, final Executor<Transaction, Response<SR>> executor,
-									   final Converter<SR, R> converter) {
-			super(client, command, subCommand, executor, converter);
 		}
 
 		@Override
@@ -325,79 +138,16 @@ public interface JedisRedisOperations extends RedisOperations {
 
 	}
 
-	/**
-	 * Jedis 哨兵模式常规命令
-	 *
-	 * @param <SR>
-	 * 		原生结果类型
-	 * @param <R>
-	 * 		结果类型
-	 */
 	class JedisSentinelCommand<SR, R> extends
 			AbstractSentinelCommand<JedisSentinelClient, JedisSentinelConnection, Jedis, SR, SR, R> {
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 哨兵客户端 {@link JedisSentinelClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 */
-		public JedisSentinelCommand(final JedisSentinelClient client, final Command command) {
+		public JedisSentinelCommand(final JedisSentinelClient client, final ProtocolCommand command) {
 			super(client, command);
 		}
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 哨兵客户端 {@link JedisSentinelClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public JedisSentinelCommand(final JedisSentinelClient client, final Command command,
+		public JedisSentinelCommand(final JedisSentinelClient client, final ProtocolCommand command,
 									final Executor<Jedis, SR> executor, final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 哨兵客户端 {@link JedisSentinelClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 */
-		public JedisSentinelCommand(final JedisSentinelClient client, final Command command,
-									final SubCommand subCommand) {
-			super(client, command, subCommand);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 哨兵客户端 {@link JedisSentinelClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public JedisSentinelCommand(final JedisSentinelClient client, final Command command,
-									final SubCommand subCommand,
-									final Executor<Jedis, SR> executor, final Converter<SR, R> converter) {
-			super(client, command, subCommand, executor, converter);
 		}
 
 		@Override
@@ -408,81 +158,17 @@ public interface JedisRedisOperations extends RedisOperations {
 
 	}
 
-	/**
-	 * Jedis 哨兵模式管道模式命令
-	 *
-	 * @param <SR>
-	 * 		原生结果类型
-	 * @param <R>
-	 * 		结果类型
-	 */
 	class JedisSentinelPipelineCommand<SR, R> extends
 			AbstractSentinelCommand<JedisSentinelClient, JedisSentinelConnection, Pipeline, Response<SR>, SR, R> {
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 哨兵客户端 {@link JedisSentinelClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 */
-		public JedisSentinelPipelineCommand(final JedisSentinelClient client, final Command command) {
+		public JedisSentinelPipelineCommand(final JedisSentinelClient client, final ProtocolCommand command) {
 			super(client, command);
 		}
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 哨兵客户端 {@link JedisSentinelClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public JedisSentinelPipelineCommand(final JedisSentinelClient client, final Command command,
+		public JedisSentinelPipelineCommand(final JedisSentinelClient client, final ProtocolCommand command,
 											final Executor<Pipeline, Response<SR>> executor,
 											final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 哨兵客户端 {@link JedisSentinelClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 */
-		public JedisSentinelPipelineCommand(final JedisSentinelClient client, final Command command,
-											final SubCommand subCommand) {
-			super(client, command, subCommand);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 哨兵客户端 {@link JedisSentinelClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public JedisSentinelPipelineCommand(final JedisSentinelClient client, final Command command,
-											final SubCommand subCommand,
-											final Executor<Pipeline, Response<SR>> executor,
-											final Converter<SR, R> converter) {
-			super(client, command, subCommand, executor, converter);
 		}
 
 		@SuppressWarnings({"unchecked"})
@@ -504,81 +190,17 @@ public interface JedisRedisOperations extends RedisOperations {
 
 	}
 
-	/**
-	 * Jedis 哨兵模式事务模式命令
-	 *
-	 * @param <SR>
-	 * 		原生结果类型
-	 * @param <R>
-	 * 		结果类型
-	 */
 	class JedisSentinelTransactionCommand<SR, R> extends
 			AbstractSentinelCommand<JedisSentinelClient, JedisSentinelConnection, Transaction, Response<SR>, SR, R> {
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 哨兵客户端 {@link JedisSentinelClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 */
-		public JedisSentinelTransactionCommand(final JedisSentinelClient client, final Command command) {
+		public JedisSentinelTransactionCommand(final JedisSentinelClient client, final ProtocolCommand command) {
 			super(client, command);
 		}
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 哨兵客户端 {@link JedisSentinelClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public JedisSentinelTransactionCommand(final JedisSentinelClient client, final Command command,
+		public JedisSentinelTransactionCommand(final JedisSentinelClient client, final ProtocolCommand command,
 											   final Executor<Transaction, Response<SR>> executor,
 											   final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 哨兵客户端 {@link JedisSentinelClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 */
-		public JedisSentinelTransactionCommand(final JedisSentinelClient client, final Command command,
-											   final SubCommand subCommand) {
-			super(client, command, subCommand);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 哨兵客户端 {@link JedisSentinelClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public JedisSentinelTransactionCommand(final JedisSentinelClient client, final Command command,
-											   final SubCommand subCommand,
-											   final Executor<Transaction, Response<SR>> executor,
-											   final Converter<SR, R> converter) {
-			super(client, command, subCommand, executor, converter);
 		}
 
 		@Override
@@ -600,79 +222,16 @@ public interface JedisRedisOperations extends RedisOperations {
 
 	}
 
-	/**
-	 * Jedis 集群模式常规命令
-	 *
-	 * @param <SR>
-	 * 		原生结果类型
-	 * @param <R>
-	 * 		结果类型
-	 */
 	class JedisClusterCommand<SR, R> extends
 			AbstractClusterCommand<JedisClusterClient, JedisClusterConnection, JedisCluster, SR, SR, R> {
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 集群客户端 {@link JedisClusterClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 */
-		public JedisClusterCommand(final JedisClusterClient client, final Command command) {
+		public JedisClusterCommand(final JedisClusterClient client, final ProtocolCommand command) {
 			super(client, command);
 		}
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 集群客户端 {@link JedisClusterClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public JedisClusterCommand(final JedisClusterClient client, final Command command,
+		public JedisClusterCommand(final JedisClusterClient client, final ProtocolCommand command,
 								   final Executor<JedisCluster, SR> executor, final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 集群客户端 {@link JedisClusterClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 */
-		public JedisClusterCommand(final JedisClusterClient client, final Command command,
-								   final SubCommand subCommand) {
-			super(client, command, subCommand);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 集群客户端 {@link JedisClusterClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public JedisClusterCommand(final JedisClusterClient client, final Command command,
-								   final SubCommand subCommand,
-								   final Executor<JedisCluster, SR> executor, final Converter<SR, R> converter) {
-			super(client, command, subCommand, executor, converter);
 		}
 
 		@Override
@@ -683,81 +242,17 @@ public interface JedisRedisOperations extends RedisOperations {
 
 	}
 
-	/**
-	 * Jedis 集群模式管道模式命令
-	 *
-	 * @param <SR>
-	 * 		原生结果类型
-	 * @param <R>
-	 * 		结果类型
-	 */
 	class JedisClusterPipelineCommand<SR, R> extends
 			AbstractClusterCommand<JedisClusterClient, JedisClusterConnection, ClusterPipeline, Response<SR>, SR, R> {
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 集群客户端 {@link JedisClusterClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 */
-		public JedisClusterPipelineCommand(final JedisClusterClient client, final Command command) {
+		public JedisClusterPipelineCommand(final JedisClusterClient client, final ProtocolCommand command) {
 			super(client, command);
 		}
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 集群客户端 {@link JedisClusterClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public JedisClusterPipelineCommand(final JedisClusterClient client, final Command command,
+		public JedisClusterPipelineCommand(final JedisClusterClient client, final ProtocolCommand command,
 										   final Executor<ClusterPipeline, Response<SR>> executor,
 										   final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 集群客户端 {@link JedisClusterClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 */
-		public JedisClusterPipelineCommand(final JedisClusterClient client, final Command command,
-										   final SubCommand subCommand) {
-			super(client, command, subCommand);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 集群客户端 {@link JedisClusterClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public JedisClusterPipelineCommand(final JedisClusterClient client, final Command command,
-										   final SubCommand subCommand,
-										   final Executor<ClusterPipeline, Response<SR>> executor,
-										   final Converter<SR, R> converter) {
-			super(client, command, subCommand, executor, converter);
 		}
 
 		@SuppressWarnings({"unchecked"})
@@ -780,81 +275,17 @@ public interface JedisRedisOperations extends RedisOperations {
 
 	}
 
-	/**
-	 * Jedis 集群模式集群模式命令
-	 *
-	 * @param <SR>
-	 * 		原生结果类型
-	 * @param <R>
-	 * 		结果类型
-	 */
 	class JedisClusterTransactionCommand<SR, R> extends
 			AbstractClusterCommand<JedisClusterClient, JedisClusterConnection, Transaction, Response<SR>, SR, R> {
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 集群客户端 {@link JedisClusterClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 */
-		public JedisClusterTransactionCommand(final JedisClusterClient client, final Command command) {
+		public JedisClusterTransactionCommand(final JedisClusterClient client, final ProtocolCommand command) {
 			super(client, command);
 		}
 
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 集群客户端 {@link JedisClusterClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public JedisClusterTransactionCommand(final JedisClusterClient client, final Command command,
+		public JedisClusterTransactionCommand(final JedisClusterClient client, final ProtocolCommand command,
 											  final Executor<Transaction, Response<SR>> executor,
 											  final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 集群客户端 {@link JedisClusterClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 */
-		public JedisClusterTransactionCommand(final JedisClusterClient client, final Command command,
-											  final SubCommand subCommand) {
-			super(client, command, subCommand);
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param client
-		 * 		Redis 集群客户端 {@link JedisClusterClient} 实例
-		 * @param command
-		 * 		Redis 命令
-		 * @param subCommand
-		 * 		Redis 子命令
-		 * @param executor
-		 * 		Redis 命令执行器
-		 * @param converter
-		 * 		结果转换器
-		 */
-		public JedisClusterTransactionCommand(final JedisClusterClient client, final Command command,
-											  final SubCommand subCommand,
-											  final Executor<Transaction, Response<SR>> executor,
-											  final Converter<SR, R> converter) {
-			super(client, command, subCommand, executor, converter);
 		}
 
 		@Override
@@ -876,14 +307,13 @@ public interface JedisRedisOperations extends RedisOperations {
 
 	}
 
-	abstract class PtRunner<T, SR, R> implements com.buession.redis.core.Command.Runner {
+	abstract class PtRunner<T, SR, R> implements Command.Runner {
 
-		protected final com.buession.redis.core.Command.Executor<T, Response<SR>> executor;
+		protected final Command.Executor<T, Response<SR>> executor;
 
 		protected final Converter<SR, R> converter;
 
-		public PtRunner(final com.buession.redis.core.Command.Executor<T, Response<SR>> executor,
-						final Converter<SR, R> converter) {
+		public PtRunner(final Command.Executor<T, Response<SR>> executor, final Converter<SR, R> converter) {
 			this.executor = executor;
 			this.converter = converter;
 		}
@@ -902,7 +332,7 @@ public interface JedisRedisOperations extends RedisOperations {
 
 		private final PipelineProxy<T, JedisResult<Object, Object>> pipelineFactory;
 
-		public PipelineRunner(final com.buession.redis.core.Command.Executor<T, Response<SR>> executor,
+		public PipelineRunner(final Command.Executor<T, Response<SR>> executor,
 							  final PipelineProxy<T, JedisResult<Object, Object>> pipelineFactory,
 							  final Converter<SR, R> converter) {
 			super(executor, converter);
@@ -922,7 +352,7 @@ public interface JedisRedisOperations extends RedisOperations {
 
 		private final TransactionProxy<T, JedisResult<Object, Object>> transactionFactory;
 
-		public TransactionRunner(final com.buession.redis.core.Command.Executor<T, Response<SR>> executor,
+		public TransactionRunner(final Command.Executor<T, Response<SR>> executor,
 								 final TransactionProxy<T, JedisResult<Object, Object>> transactionFactory,
 								 final Converter<SR, R> converter) {
 			super(executor, converter);

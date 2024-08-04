@@ -470,7 +470,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 被移除的随机元素反序列化后的对象
 	 */
-	<V> Set<V> sPopObject(final String key, final int count);
+	<V> Set<V> sPopObject(final String key, final long count);
 
 	/**
 	 * 移除并返回集合 key 中的 count 个随机元素反序列化后的对象
@@ -486,7 +486,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 被移除的随机元素反序列化后的对象
 	 */
-	<V> Set<V> sPopObject(final byte[] key, final int count);
+	<V> Set<V> sPopObject(final byte[] key, final long count);
 
 	/**
 	 * 移除并返回集合 key 中的 count 个随机元素反序列化 clazz 指定的对象
@@ -504,7 +504,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 被移除的随机元素反序列化后的对象
 	 */
-	<V> Set<V> sPopObject(final String key, final int count, final Class<V> clazz);
+	<V> Set<V> sPopObject(final String key, final long count, final Class<V> clazz);
 
 	/**
 	 * 移除并返回集合 key 中的 count 个随机元素反序列化 clazz 指定的对象
@@ -522,7 +522,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 被移除的随机元素反序列化后的对象
 	 */
-	<V> Set<V> sPopObject(final byte[] key, final int count, final Class<V> clazz);
+	<V> Set<V> sPopObject(final byte[] key, final long count, final Class<V> clazz);
 
 	/**
 	 * 移除并返回集合 key 中的 count 个随机元素反序列化 type 指定的对象
@@ -542,7 +542,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @see TypeReference
 	 */
-	<V> Set<V> sPopObject(final String key, final int count, final TypeReference<V> type);
+	<V> Set<V> sPopObject(final String key, final long count, final TypeReference<V> type);
 
 	/**
 	 * 移除并返回集合 key 中的 count 个随机元素反序列化 type 指定的对象
@@ -562,7 +562,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @see TypeReference
 	 */
-	<V> Set<V> sPopObject(final byte[] key, final int count, final TypeReference<V> type);
+	<V> Set<V> sPopObject(final byte[] key, final long count, final TypeReference<V> type);
 
 	/**
 	 * 返回集合 key 中的一个随机元素，并反序列化为对象
@@ -674,7 +674,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 集合 key 中的随机元素，反序列化后的对象列表
 	 */
-	<V> List<V> sRandMemberObject(final String key, final int count);
+	<V> List<V> sRandMemberObject(final String key, final long count);
 
 	/**
 	 * 返回集合 key 中的 count 个随机元素，并反序列化为对象
@@ -690,7 +690,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 集合 key 中的随机元素，反序列化后的对象列表
 	 */
-	<V> List<V> sRandMemberObject(final byte[] key, final int count);
+	<V> List<V> sRandMemberObject(final byte[] key, final long count);
 
 	/**
 	 * 返回集合 key 中的 count 个随机元素，并反序列化为 clazz 指定的对象
@@ -708,7 +708,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 集合 key 中的随机元素，反序列化后的对象列表
 	 */
-	<V> List<V> sRandMemberObject(final String key, final int count, final Class<V> clazz);
+	<V> List<V> sRandMemberObject(final String key, final long count, final Class<V> clazz);
 
 	/**
 	 * 返回集合 key 中的 count 个随机元素，并反序列化为 clazz 指定的对象
@@ -726,7 +726,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 集合 key 中的随机元素，反序列化后的对象列表
 	 */
-	<V> List<V> sRandMemberObject(final byte[] key, final int count, final Class<V> clazz);
+	<V> List<V> sRandMemberObject(final byte[] key, final long count, final Class<V> clazz);
 
 	/**
 	 * 返回集合 key 中的 count 个随机元素，并反序列化为 type 指定的对象
@@ -746,7 +746,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @see TypeReference
 	 */
-	<V> List<V> sRandMemberObject(final String key, final int count, final TypeReference<V> type);
+	<V> List<V> sRandMemberObject(final String key, final long count, final TypeReference<V> type);
 
 	/**
 	 * 返回集合 key 中的 count 个随机元素，并反序列化为 type 指定的对象
@@ -766,7 +766,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @see TypeReference
 	 */
-	<V> List<V> sRandMemberObject(final byte[] key, final int count, final TypeReference<V> type);
+	<V> List<V> sRandMemberObject(final byte[] key, final long count, final TypeReference<V> type);
 
 	/**
 	 * 移除集合 key 中的 member 序列化后的元素，不存在的 member 元素会被忽略
@@ -1312,7 +1312,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final int count);
+	<V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final long count);
 
 	/**
 	 * 迭代集合键中的元素，并将值反序列化为对象
@@ -1330,7 +1330,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final int count);
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final long count);
 
 	/**
 	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
@@ -1350,7 +1350,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final int count, final Class<V> clazz);
+	<V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final long count, final Class<V> clazz);
 
 	/**
 	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
@@ -1370,7 +1370,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final int count, final Class<V> clazz);
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final long count, final Class<V> clazz);
 
 	/**
 	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
@@ -1392,7 +1392,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @see TypeReference
 	 */
-	<V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final int count,
+	<V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final long count,
 										final TypeReference<V> type);
 
 	/**
@@ -1415,7 +1415,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @see TypeReference
 	 */
-	<V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final int count,
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final long count,
 										final TypeReference<V> type);
 
 	/**
@@ -1434,7 +1434,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final int count);
+	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final long count);
 
 	/**
 	 * 迭代集合键中的元素，并将值反序列化为对象
@@ -1452,7 +1452,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final int count);
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final long count);
 
 	/**
 	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
@@ -1472,7 +1472,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final int count, final Class<V> clazz);
+	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final long count, final Class<V> clazz);
 
 	/**
 	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
@@ -1492,7 +1492,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final int count, final Class<V> clazz);
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final long count, final Class<V> clazz);
 
 	/**
 	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
@@ -1514,7 +1514,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @see TypeReference
 	 */
-	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final int count,
+	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final long count,
 										final TypeReference<V> type);
 
 	/**
@@ -1537,7 +1537,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @see TypeReference
 	 */
-	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final int count,
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final long count,
 										final TypeReference<V> type);
 
 	/**
@@ -1558,7 +1558,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern, final int count);
+	<V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern, final long count);
 
 	/**
 	 * 迭代集合键中的元素，并将值反序列化为对象
@@ -1578,7 +1578,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern, final int count);
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern, final long count);
 
 	/**
 	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
@@ -1600,7 +1600,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern, final int count,
+	<V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern, final long count,
 										final Class<V> clazz);
 
 	/**
@@ -1623,7 +1623,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern, final int count,
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern, final long count,
 										final Class<V> clazz);
 
 	/**
@@ -1648,7 +1648,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @see TypeReference
 	 */
-	<V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern, final int count,
+	<V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern, final long count,
 										final TypeReference<V> type);
 
 	/**
@@ -1673,7 +1673,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @see TypeReference
 	 */
-	<V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern, final int count,
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern, final long count,
 										final TypeReference<V> type);
 
 	/**
@@ -1694,7 +1694,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final String pattern, final int count);
+	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final String pattern, final long count);
 
 	/**
 	 * 迭代集合键中的元素，并将值反序列化为对象
@@ -1714,7 +1714,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final byte[] pattern, final int count);
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final byte[] pattern, final long count);
 
 	/**
 	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
@@ -1736,7 +1736,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final String pattern, final int count,
+	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final String pattern, final long count,
 										final Class<V> clazz);
 
 	/**
@@ -1759,7 +1759,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final byte[] pattern, final int count,
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final byte[] pattern, final long count,
 										final Class<V> clazz);
 
 	/**
@@ -1784,7 +1784,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @see TypeReference
 	 */
-	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final String pattern, final int count,
+	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final String pattern, final long count,
 										final TypeReference<V> type);
 
 	/**
@@ -1809,7 +1809,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @see TypeReference
 	 */
-	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final byte[] pattern, final int count,
+	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final byte[] pattern, final long count,
 										final TypeReference<V> type);
 
 	/**

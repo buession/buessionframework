@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
@@ -27,7 +27,7 @@ package com.buession.redis.core.command;
 import com.buession.lang.Status;
 import com.buession.redis.core.Direction;
 import com.buession.redis.core.ListPosition;
-import com.buession.redis.core.command.args.LPosArgument;
+import com.buession.redis.utils.ObjectStringBuilder;
 
 import java.util.List;
 
@@ -276,7 +276,7 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * @return 返回数据
 	 */
-	List<Long> lPos(final String key, final String element, final LPosArgument lPosArgument, final int count);
+	List<Long> lPos(final String key, final String element, final LPosArgument lPosArgument, final long count);
 
 	/**
 	 * 返回列表 key 中匹配给定 element 成员的索引
@@ -294,7 +294,7 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * @return 返回数据
 	 */
-	List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument, final int count);
+	List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument, final long count);
 
 	/**
 	 * 移除列表中与参数 value 相等的 count 个元素元素
@@ -310,7 +310,7 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * @return 被移除元素的数量
 	 */
-	Long lRem(final String key, final String value, final int count);
+	Long lRem(final String key, final String value, final long count);
 
 	/**
 	 * 移除列表中与参数 value 相等的 count 个元素元素
@@ -326,7 +326,7 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * @return 被移除元素的数量
 	 */
-	Long lRem(final byte[] key, final byte[] value, final int count);
+	Long lRem(final byte[] key, final byte[] value, final long count);
 
 	/**
 	 * 移除列表指定区间外的元素；
@@ -731,5 +731,56 @@ public interface ListCommands extends RedisCommands {
 	 * @return 执行 RPUSHX 之后，表的长度
 	 */
 	Long rPushX(final byte[] key, final byte[]... values);
+
+	final class LPosArgument {
+
+		private Integer rank;
+
+		private Integer maxLen;
+
+		private LPosArgument() {
+		}
+
+		public Integer getRank() {
+			return rank;
+		}
+
+		public Integer getMaxLen() {
+			return maxLen;
+		}
+
+		@Override
+		public String toString() {
+			return ObjectStringBuilder.create().add("rank", rank).add("maxLen", maxLen).build();
+		}
+
+		public static class Builder {
+
+			private final LPosArgument lPosArgument = new LPosArgument();
+
+			private Builder() {
+			}
+
+			public static Builder create() {
+				return new Builder();
+			}
+
+			public Builder rank(int rank) {
+				lPosArgument.rank = rank;
+				return this;
+			}
+
+			public Builder maxLen(int maxLen) {
+				lPosArgument.maxLen = maxLen;
+				return this;
+			}
+
+			public LPosArgument build() {
+				return lPosArgument;
+			}
+
+		}
+
+	}
 
 }

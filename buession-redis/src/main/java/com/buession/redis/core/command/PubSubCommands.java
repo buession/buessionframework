@@ -127,48 +127,6 @@ public interface PubSubCommands extends RedisCommands {
 	List<byte[]> pubsubChannels(final byte[] pattern);
 
 	/**
-	 * 列出当前 active channels 活跃是指信道含有一个或多个订阅者(不包括从模式接收订阅的客户端)
-	 * 如果 pattern未提供，所有的信道都被列出，否则只列出匹配上指定全局-类型模式的信道被列出
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/pubsub-shardchannels/" target="_blank">https://redis.io/docs/latest/commands/pubsub-shardchannels/</a></p>
-	 *
-	 * @return 活跃的信道列表，或者符合指定模式的信道
-	 *
-	 * @since 3.0.0
-	 */
-	List<String> pubsubShardChannels();
-
-	/**
-	 * 列出当前 active channels 活跃是指信道含有一个或多个订阅者(不包括从模式接收订阅的客户端)
-	 * 如果 pattern未提供，所有的信道都被列出，否则只列出匹配上指定全局-类型模式的信道被列出
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/pubsub-shardchannels/" target="_blank">https://redis.io/docs/latest/commands/pubsub-shardchannels/</a></p>
-	 *
-	 * @param pattern
-	 * 		匹配模式
-	 *
-	 * @return 活跃的信道列表，或者符合指定模式的信道
-	 *
-	 * @since 3.0.0
-	 */
-	List<String> pubsubShardChannels(final String pattern);
-
-	/**
-	 * 列出当前 active channels 活跃是指信道含有一个或多个订阅者(不包括从模式接收订阅的客户端)
-	 * 如果 pattern未提供，所有的信道都被列出，否则只列出匹配上指定全局-类型模式的信道被列出
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/pubsub-shardchannels/" target="_blank">https://redis.io/docs/latest/commands/pubsub-shardchannels/</a></p>
-	 *
-	 * @param pattern
-	 * 		匹配模式
-	 *
-	 * @return 活跃的信道列表，或者符合指定模式的信道
-	 *
-	 * @since 3.0.0
-	 */
-	List<byte[]> pubsubShardChannels(final byte[] pattern);
-
-	/**
 	 * 返回订阅模式的数量(使用命令PSUBSCRIBE实现)。
 	 * 注意，这个命令返回的不是订阅模式的客户端的数量， 而是客户端订阅的所有模式的数量总和。
 	 *
@@ -181,18 +139,7 @@ public interface PubSubCommands extends RedisCommands {
 	/**
 	 * 列出指定信道的订阅者个数(不包括订阅模式的客户端订阅者)
 	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/pubsub-numsub/" target="_blank">https://redis.io/docs/latest/commands/pubsub-numsub/</a></p>
-	 *
-	 * @return 指定信道的订阅者个数
-	 *
-	 * @since 3.0.0
-	 */
-	Map<String, Long> pubsubNumSub();
-
-	/**
-	 * 列出指定信道的订阅者个数(不包括订阅模式的客户端订阅者)
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/pubsub-numsub/" target="_blank">https://redis.io/docs/latest/commands/pubsub-numsub/</a></p>
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/pubsub.html" target="_blank">https://www.redis.com.cn/commands/pubsub.html</a></p>
 	 *
 	 * @param channels
 	 * 		一个或多个频道
@@ -204,7 +151,7 @@ public interface PubSubCommands extends RedisCommands {
 	/**
 	 * 列出指定信道的订阅者个数(不包括订阅模式的客户端订阅者)
 	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/pubsub-numsub/" target="_blank">https://redis.io/docs/latest/commands/pubsub-numsub/</a></p>
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/pubsub.html" target="_blank">https://www.redis.com.cn/commands/pubsub.html</a></p>
 	 *
 	 * @param channels
 	 * 		一个或多个频道
@@ -212,41 +159,6 @@ public interface PubSubCommands extends RedisCommands {
 	 * @return 指定信道的订阅者个数
 	 */
 	Map<byte[], Long> pubsubNumSub(final byte[]... channels);
-
-	/**
-	 * 列出指定信道的订阅者个数(不包括订阅模式的客户端订阅者)
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/pubsub-shardnumsub/" target="_blank">https://redis.io/docs/latest/commands/pubsub-shardnumsub/</a></p>
-	 *
-	 * @return 指定信道的订阅者个数
-	 *
-	 * @since 3.0.0
-	 */
-	Map<String, Long> pubsubShardNumSub();
-
-	/**
-	 * 列出指定信道的订阅者个数(不包括订阅模式的客户端订阅者)
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/pubsub-shardnumsub/" target="_blank">https://redis.io/docs/latest/commands/pubsub-shardnumsub/</a></p>
-	 *
-	 * @param shardChannels
-	 * 		一个或多个频道
-	 *
-	 * @return 指定信道的订阅者个数
-	 */
-	Map<String, Long> pubsubShardNumSub(final String... shardChannels);
-
-	/**
-	 * 列出指定信道的订阅者个数(不包括订阅模式的客户端订阅者)
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/pubsub-shardnumsub/" target="_blank">https://redis.io/docs/latest/commands/pubsub-shardnumsub/</a></p>
-	 *
-	 * @param shardChannels
-	 * 		一个或多个频道
-	 *
-	 * @return 指定信道的订阅者个数
-	 */
-	Map<byte[], Long> pubsubShardNumSub(final byte[]... shardChannels);
 
 	/**
 	 * 指示客户端退订使用 PSUBSCRIBE pattern [pattern …] 命令订阅的所有模式消息

@@ -25,17 +25,13 @@
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.utils.NumberUtils;
-import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.HashOperations;
-import com.buession.redis.core.ExpireOption;
 import com.buession.redis.core.ScanResult;
-import com.buession.redis.core.command.args.HScanArgument;
 import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.utils.SafeEncoder;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -65,33 +61,6 @@ public abstract class AbstractHashOperations<C extends LettuceRedisClient> exten
 	}
 
 	@Override
-	public List<Long> hExpire(final String key, final int lifetime, final String... fields) {
-		return hExpire(SafeEncoder.encode(key), lifetime, SafeEncoder.encode(fields));
-	}
-
-	@Override
-	public List<Long> hExpire(final String key, final int lifetime, final ExpireOption expireOption,
-							  final String... fields) {
-		return hExpire(SafeEncoder.encode(key), lifetime, expireOption, SafeEncoder.encode(fields));
-	}
-
-	@Override
-	public List<Long> hExpireAt(final String key, final long unixTimestamp, final String... fields) {
-		return hExpireAt(SafeEncoder.encode(key), unixTimestamp, SafeEncoder.encode(fields));
-	}
-
-	@Override
-	public List<Long> hExpireAt(final String key, final long unixTimestamp, final ExpireOption expireOption,
-								final String... fields) {
-		return hExpireAt(SafeEncoder.encode(key), unixTimestamp, expireOption, SafeEncoder.encode(fields));
-	}
-
-	@Override
-	public List<Long> hExpireTime(final String key, final String... fields) {
-		return hExpireTime(SafeEncoder.encode(key), SafeEncoder.encode(fields));
-	}
-
-	@Override
 	public Long hIncrBy(final String key, final String field, final long value) {
 		return hIncrBy(SafeEncoder.encode(key), SafeEncoder.encode(field), value);
 	}
@@ -111,21 +80,6 @@ public abstract class AbstractHashOperations<C extends LettuceRedisClient> exten
 		return hMSet(SafeEncoder.encode(key), Converters.mapStringToBinary().convert(data));
 	}
 
-	public List<Long> hPersist(final String key, final String... fields) {
-		return hPersist(SafeEncoder.encode(key), SafeEncoder.encode(fields));
-	}
-
-	@Override
-	public List<Long> hpExpire(final String key, final int lifetime, final String... fields) {
-		return hpExpire(SafeEncoder.encode(key), lifetime, SafeEncoder.encode(fields));
-	}
-
-	@Override
-	public List<Long> hpExpire(final String key, final int lifetime, final ExpireOption expireOption,
-							   final String... fields) {
-		return hpExpire(SafeEncoder.encode(key), lifetime, expireOption, SafeEncoder.encode(fields));
-	}
-
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final long cursor) {
 		return hScan(key, Long.toString(cursor));
@@ -137,30 +91,45 @@ public abstract class AbstractHashOperations<C extends LettuceRedisClient> exten
 	}
 
 	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final long cursor,
-												 final HScanArgument<String> scanArgument) {
-		return hScan(key, Long.toString(cursor), scanArgument);
+	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern) {
+		return hScan(key, Long.toString(cursor), pattern);
 	}
 
 	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor,
-												 final HScanArgument<byte[]> scanArgument) {
-		return hScan(key, NumberUtils.long2bytes(cursor), scanArgument);
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern) {
+		return hScan(key, NumberUtils.long2bytes(cursor), pattern);
 	}
 
 	@Override
-	public Long hSet(final String key, final KeyValue<String, String>... data) {
-		return hSet(SafeEncoder.encode(key), data);
+	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final long count) {
+		return hScan(key, Long.toString(cursor), count);
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final long count) {
+		return hScan(key, NumberUtils.long2bytes(cursor), count);
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern,
+												 final long count) {
+		return hScan(key, Long.toString(cursor), pattern, count);
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern,
+												 final long count) {
+		return hScan(key, NumberUtils.long2bytes(cursor), pattern, count);
+	}
+
+	@Override
+	public Long hSet(final String key, final String field, final String value) {
+		return hSet(SafeEncoder.encode(key), SafeEncoder.encode(field), SafeEncoder.encode(value));
 	}
 
 	@Override
 	public Status hSetNx(final String key, final String field, final String value) {
 		return hSetNx(SafeEncoder.encode(key), SafeEncoder.encode(field), SafeEncoder.encode(value));
-	}
-
-	@Override
-	public List<Long> hTtl(final String key, final String... fields) {
-		return hTtl(SafeEncoder.encode(key), SafeEncoder.encode(fields));
 	}
 
 	@Override

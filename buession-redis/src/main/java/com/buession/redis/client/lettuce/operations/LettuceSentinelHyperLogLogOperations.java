@@ -27,7 +27,7 @@ package com.buession.redis.client.lettuce.operations;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceSentinelClient;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.ProtocolCommand;
 
 /**
  * Lettuce 哨兵模式 HyperLogLog 命令操作
@@ -42,39 +42,51 @@ public final class LettuceSentinelHyperLogLogOperations extends AbstractHyperLog
 	}
 
 	@Override
-	public Status pfAdd(final String key, final String... elements) {
-		final CommandArguments args = CommandArguments.create(key).add(elements);
-		return notCommand(client, Command.PFADD, args);
-	}
-
-	@Override
 	public Status pfAdd(final byte[] key, final byte[]... elements) {
-		final CommandArguments args = CommandArguments.create(key).add(elements);
-		return notCommand(client, Command.PFADD, args);
-	}
+		final CommandArguments args = CommandArguments.create("key", key).put("elements", (Object[]) elements);
 
-	@Override
-	public Long pfCount(final String... keys) {
-		final CommandArguments args = CommandArguments.create(keys);
-		return notCommand(client, Command.PFCOUNT, args);
-	}
-
-	@Override
-	public Long pfCount(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create(keys);
-		return notCommand(client, Command.PFCOUNT, args);
-	}
-
-	@Override
-	public Status pfMerge(final String destKey, final String... keys) {
-		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-		return notCommand(client, Command.PFMERGE, args);
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.PFADD)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.PFADD)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.PFADD)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Status pfMerge(final byte[] destKey, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-		return notCommand(client, Command.PFMERGE, args);
+		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
+
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.PFMERGE)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.PFMERGE)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.PFMERGE)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Long pfCount(final byte[]... keys) {
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.PFMERGE)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.PFMERGE)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.PFMERGE)
+					.run(args);
+		}
 	}
 
 }

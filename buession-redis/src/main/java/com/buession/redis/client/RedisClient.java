@@ -19,13 +19,28 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client;
 
 import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.client.operations.*;
+import com.buession.redis.client.operations.BitMapOperations;
+import com.buession.redis.client.operations.ClusterOperations;
+import com.buession.redis.client.operations.ConnectionOperations;
+import com.buession.redis.client.operations.GeoOperations;
+import com.buession.redis.client.operations.HashOperations;
+import com.buession.redis.client.operations.HyperLogLogOperations;
+import com.buession.redis.client.operations.KeyOperations;
+import com.buession.redis.client.operations.ListOperations;
+import com.buession.redis.client.operations.PubSubOperations;
+import com.buession.redis.client.operations.ScriptingOperations;
+import com.buession.redis.client.operations.ServerOperations;
+import com.buession.redis.client.operations.SetOperations;
+import com.buession.redis.client.operations.SortedSetOperations;
+import com.buession.redis.client.operations.StreamOperations;
+import com.buession.redis.client.operations.StringOperations;
+import com.buession.redis.client.operations.TransactionOperations;
 import com.buession.redis.core.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.exception.RedisException;
@@ -53,13 +68,6 @@ public interface RedisClient {
 	void setConnection(RedisConnection connection);
 
 	/**
-	 * 返回权限命令操作实例
-	 *
-	 * @return 权限命令操作实例
-	 */
-	AclOperations aclOperations();
-
-	/**
 	 * 返回 BitMap 命令操作实例
 	 *
 	 * @return BitMap 命令操作实例
@@ -79,15 +87,6 @@ public interface RedisClient {
 	 * @return 连接命令操作实例
 	 */
 	ConnectionOperations connectionOperations();
-
-	/**
-	 * 返回一般命令操作实例
-	 *
-	 * @return 一般命令操作实例
-	 *
-	 * @since 3.0.0
-	 */
-	GenericOperations genericOperations();
 
 	/**
 	 * 返回地理位置命令操作实例
@@ -193,7 +192,7 @@ public interface RedisClient {
 	 * @throws RedisException
 	 * 		Redis Exception
 	 */
-	default <R> R execute(final Command<R> command) throws RedisException {
+	default <R> R execute(final Command<R> command) throws RedisException{
 		return execute(command, null);
 	}
 

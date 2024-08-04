@@ -41,8 +41,6 @@ public class AclUser implements Serializable {
 
 	private final static long serialVersionUID = -2237993389031684508L;
 
-	private final State state;
-
 	private final String commands;
 
 	private final Map<String, Object> userInfo = new HashMap<>();
@@ -71,16 +69,7 @@ public class AclUser implements Serializable {
 		}
 
 		if(flags != null){
-			State state;
-			try{
-				state = Enum.valueOf(State.class, flags.get(0).toUpperCase());
-			}catch(Exception e){
-				state = State.OFF;
-			}
 			this.flags.addAll(flags);
-			this.state = state;
-		}else{
-			this.state = State.OFF;
 		}
 
 		if(keys != null){
@@ -127,7 +116,6 @@ public class AclUser implements Serializable {
 	@Override
 	public String toString() {
 		return ObjectStringBuilder.create()
-				.add("state", state)
 				.add("commands", commands)
 				.add("userInfo", userInfo)
 				.add("passwords", passwords)
@@ -136,12 +124,6 @@ public class AclUser implements Serializable {
 				.add("channels", channels)
 				.add("selectors", selectors)
 				.build();
-	}
-
-	public enum State {
-		ON,
-
-		OFF
 	}
 
 }

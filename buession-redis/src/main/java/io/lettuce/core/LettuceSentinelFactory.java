@@ -41,10 +41,28 @@ import java.util.Set;
 public class LettuceSentinelFactory
 		extends AbstractLettuceFactory<StatefulRedisSentinelConnection<byte[], byte[]>, RedisClient> {
 
+	/**
+	 * 构造函数
+	 *
+	 * @param masterName
+	 * 		Master 名称
+	 * @param sentinels
+	 * 		Redis 哨兵节点
+	 */
 	public LettuceSentinelFactory(final String masterName, final Set<HostAndPort> sentinels) {
 		this(buildRedisURI(masterName, sentinels, DefaultLettuceClientConfig.builder().build()));
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param masterName
+	 * 		Master 名称
+	 * @param sentinels
+	 * 		Redis 哨兵节点
+	 * @param lettuceClientConfig
+	 * 		客户端配置
+	 */
 	public LettuceSentinelFactory(final String masterName, final Set<HostAndPort> sentinels,
 								  final LettuceClientConfig lettuceClientConfig) {
 		this(buildRedisURI(masterName, sentinels, lettuceClientConfig));
@@ -75,7 +93,7 @@ public class LettuceSentinelFactory
 				if(Validate.hasText(lettuceClientConfig.getUser())){
 					builder.withAuthentication(lettuceClientConfig.getUser(), lettuceClientConfig.getPassword());
 				}else{
-					builder.withPassword(lettuceClientConfig.getPassword());
+					builder.withPassword(lettuceClientConfig.getPassword().toCharArray());
 				}
 			}
 		});

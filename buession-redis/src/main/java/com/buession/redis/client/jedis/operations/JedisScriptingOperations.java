@@ -28,7 +28,7 @@ import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.core.FlushMode;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.jedis.params.FlushModeConverter;
 
 import java.util.Arrays;
@@ -51,13 +51,13 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 		final CommandArguments args = CommandArguments.create("script", script);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, Command.EVAL, (cmd)->cmd.eval(script), (v)->v)
+			return new JedisPipelineCommand<>(client, ProtocolCommand.EVAL, (cmd)->cmd.eval(script), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, Command.EVAL, (cmd)->cmd.eval(script), (v)->v)
+			return new JedisTransactionCommand<>(client, ProtocolCommand.EVAL, (cmd)->cmd.eval(script), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, Command.EVAL, (cmd)->cmd.eval(script), (v)->v)
+			return new JedisCommand<>(client, ProtocolCommand.EVAL, (cmd)->cmd.eval(script), (v)->v)
 					.run(args);
 		}
 	}
@@ -67,13 +67,13 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 		final CommandArguments args = CommandArguments.create("script", script);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, Command.EVAL, (cmd)->cmd.eval(script), (v)->v)
+			return new JedisPipelineCommand<>(client, ProtocolCommand.EVAL, (cmd)->cmd.eval(script), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, Command.EVAL, (cmd)->cmd.eval(script), (v)->v)
+			return new JedisTransactionCommand<>(client, ProtocolCommand.EVAL, (cmd)->cmd.eval(script), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, Command.EVAL, (cmd)->cmd.eval(script), (v)->v)
+			return new JedisCommand<>(client, ProtocolCommand.EVAL, (cmd)->cmd.eval(script), (v)->v)
 					.run(args);
 		}
 	}
@@ -84,15 +84,15 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 		final int paramsSize = params == null ? 0 : params.length;
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, Command.EVAL, (cmd)->cmd.eval(script, paramsSize, params),
+			return new JedisPipelineCommand<>(client, ProtocolCommand.EVAL, (cmd)->cmd.eval(script, paramsSize, params),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, Command.EVAL,
+			return new JedisTransactionCommand<>(client, ProtocolCommand.EVAL,
 					(cmd)->cmd.eval(script, paramsSize, params), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, Command.EVAL, (cmd)->cmd.eval(script, paramsSize, params), (v)->v)
+			return new JedisCommand<>(client, ProtocolCommand.EVAL, (cmd)->cmd.eval(script, paramsSize, params), (v)->v)
 					.run(args);
 		}
 	}
@@ -103,15 +103,15 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 		final int paramsSize = params == null ? 0 : params.length;
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, Command.EVAL, (cmd)->cmd.eval(script, paramsSize, params),
+			return new JedisPipelineCommand<>(client, ProtocolCommand.EVAL, (cmd)->cmd.eval(script, paramsSize, params),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, Command.EVAL,
+			return new JedisTransactionCommand<>(client, ProtocolCommand.EVAL,
 					(cmd)->cmd.eval(script, paramsSize, params), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, Command.EVAL, (cmd)->cmd.eval(script, paramsSize, params), (v)->v)
+			return new JedisCommand<>(client, ProtocolCommand.EVAL, (cmd)->cmd.eval(script, paramsSize, params), (v)->v)
 					.run(args);
 		}
 	}
@@ -124,15 +124,15 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 		final List<String> argumentsList = Arrays.asList(arguments);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, Command.EVAL,
+			return new JedisPipelineCommand<>(client, ProtocolCommand.EVAL,
 					(cmd)->cmd.eval(script, keysList, argumentsList), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, Command.EVAL,
+			return new JedisTransactionCommand<>(client, ProtocolCommand.EVAL,
 					(cmd)->cmd.eval(script, keysList, argumentsList), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, Command.EVAL, (cmd)->cmd.eval(script, keysList, argumentsList),
+			return new JedisCommand<>(client, ProtocolCommand.EVAL, (cmd)->cmd.eval(script, keysList, argumentsList),
 					(v)->v)
 					.run(args);
 		}
@@ -146,15 +146,15 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 		final List<byte[]> argumentsList = Arrays.asList(arguments);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, Command.EVAL,
+			return new JedisPipelineCommand<>(client, ProtocolCommand.EVAL,
 					(cmd)->cmd.eval(script, keysList, argumentsList), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, Command.EVAL,
+			return new JedisTransactionCommand<>(client, ProtocolCommand.EVAL,
 					(cmd)->cmd.eval(script, keysList, argumentsList), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, Command.EVAL, (cmd)->cmd.eval(script, keysList, argumentsList),
+			return new JedisCommand<>(client, ProtocolCommand.EVAL, (cmd)->cmd.eval(script, keysList, argumentsList),
 					(v)->v)
 					.run(args);
 		}
@@ -165,13 +165,13 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 		final CommandArguments args = CommandArguments.create("digest", digest);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, Command.EVALSHA, (cmd)->cmd.evalsha(digest), (v)->v)
+			return new JedisPipelineCommand<>(client, ProtocolCommand.EVALSHA, (cmd)->cmd.evalsha(digest), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, Command.EVALSHA, (cmd)->cmd.evalsha(digest), (v)->v)
+			return new JedisTransactionCommand<>(client, ProtocolCommand.EVALSHA, (cmd)->cmd.evalsha(digest), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, Command.EVALSHA, (cmd)->cmd.evalsha(digest), (v)->v)
+			return new JedisCommand<>(client, ProtocolCommand.EVALSHA, (cmd)->cmd.evalsha(digest), (v)->v)
 					.run(args);
 		}
 	}
@@ -181,13 +181,13 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 		final CommandArguments args = CommandArguments.create("digest", digest);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, Command.EVALSHA, (cmd)->cmd.evalsha(digest), (v)->v)
+			return new JedisPipelineCommand<>(client, ProtocolCommand.EVALSHA, (cmd)->cmd.evalsha(digest), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, Command.EVALSHA, (cmd)->cmd.evalsha(digest), (v)->v)
+			return new JedisTransactionCommand<>(client, ProtocolCommand.EVALSHA, (cmd)->cmd.evalsha(digest), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, Command.EVALSHA, (cmd)->cmd.evalsha(digest), (v)->v)
+			return new JedisCommand<>(client, ProtocolCommand.EVALSHA, (cmd)->cmd.evalsha(digest), (v)->v)
 					.run(args);
 		}
 	}
@@ -198,15 +198,15 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 		final int paramsSize = params == null ? 0 : params.length;
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, Command.EVALSHA,
+			return new JedisPipelineCommand<>(client, ProtocolCommand.EVALSHA,
 					(cmd)->cmd.evalsha(digest, paramsSize, params), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, Command.EVALSHA,
+			return new JedisTransactionCommand<>(client, ProtocolCommand.EVALSHA,
 					(cmd)->cmd.evalsha(digest, paramsSize, params), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, Command.EVALSHA, (cmd)->cmd.evalsha(digest, paramsSize, params),
+			return new JedisCommand<>(client, ProtocolCommand.EVALSHA, (cmd)->cmd.evalsha(digest, paramsSize, params),
 					(v)->v)
 					.run(args);
 		}
@@ -218,15 +218,15 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 		final int paramsSize = params == null ? 0 : params.length;
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, Command.EVALSHA,
+			return new JedisPipelineCommand<>(client, ProtocolCommand.EVALSHA,
 					(cmd)->cmd.evalsha(digest, paramsSize, params), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, Command.EVALSHA,
+			return new JedisTransactionCommand<>(client, ProtocolCommand.EVALSHA,
 					(cmd)->cmd.evalsha(digest, paramsSize, params), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, Command.EVALSHA, (cmd)->cmd.evalsha(digest, paramsSize, params),
+			return new JedisCommand<>(client, ProtocolCommand.EVALSHA, (cmd)->cmd.evalsha(digest, paramsSize, params),
 					(v)->v)
 					.run(args);
 		}
@@ -240,15 +240,15 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 		final List<String> argumentsList = Arrays.asList(arguments);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, Command.EVALSHA,
+			return new JedisPipelineCommand<>(client, ProtocolCommand.EVALSHA,
 					(cmd)->cmd.eval(digest, keysList, argumentsList), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, Command.EVALSHA,
+			return new JedisTransactionCommand<>(client, ProtocolCommand.EVALSHA,
 					(cmd)->cmd.eval(digest, keysList, argumentsList), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, Command.EVALSHA, (cmd)->cmd.eval(digest, keysList, argumentsList),
+			return new JedisCommand<>(client, ProtocolCommand.EVALSHA, (cmd)->cmd.eval(digest, keysList, argumentsList),
 					(v)->v)
 					.run(args);
 		}
@@ -262,15 +262,15 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 		final List<byte[]> argumentsList = Arrays.asList(arguments);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, Command.EVALSHA,
+			return new JedisPipelineCommand<>(client, ProtocolCommand.EVALSHA,
 					(cmd)->cmd.eval(digest, keysList, argumentsList), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, Command.EVALSHA,
+			return new JedisTransactionCommand<>(client, ProtocolCommand.EVALSHA,
 					(cmd)->cmd.eval(digest, keysList, argumentsList), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, Command.EVALSHA, (cmd)->cmd.eval(digest, keysList, argumentsList),
+			return new JedisCommand<>(client, ProtocolCommand.EVALSHA, (cmd)->cmd.eval(digest, keysList, argumentsList),
 					(v)->v)
 					.run(args);
 		}
@@ -281,15 +281,15 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 		final CommandArguments args = CommandArguments.create("sha1", (Object[]) sha1);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, Command.SCRIPT_EXISTS, (cmd)->cmd.scriptExists(null,
+			return new JedisPipelineCommand<>(client, ProtocolCommand.SCRIPT_EXISTS, (cmd)->cmd.scriptExists(null,
 					sha1), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, Command.SCRIPT_EXISTS, (cmd)->cmd.scriptExists(null,
+			return new JedisTransactionCommand<>(client, ProtocolCommand.SCRIPT_EXISTS, (cmd)->cmd.scriptExists(null,
 					sha1), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, Command.SCRIPT_EXISTS, (cmd)->cmd.scriptExists(sha1), (v)->v)
+			return new JedisCommand<>(client, ProtocolCommand.SCRIPT_EXISTS, (cmd)->cmd.scriptExists(sha1), (v)->v)
 					.run(args);
 		}
 	}
@@ -299,15 +299,15 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 		final CommandArguments args = CommandArguments.create("sha1", (Object[]) sha1);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, Command.SCRIPT_EXISTS, (cmd)->cmd.scriptExists(null,
+			return new JedisPipelineCommand<>(client, ProtocolCommand.SCRIPT_EXISTS, (cmd)->cmd.scriptExists(null,
 					sha1), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, Command.SCRIPT_EXISTS, (cmd)->cmd.scriptExists(null,
+			return new JedisTransactionCommand<>(client, ProtocolCommand.SCRIPT_EXISTS, (cmd)->cmd.scriptExists(null,
 					sha1), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, Command.SCRIPT_EXISTS, (cmd)->cmd.scriptExists(sha1), (v)->v)
+			return new JedisCommand<>(client, ProtocolCommand.SCRIPT_EXISTS, (cmd)->cmd.scriptExists(sha1), (v)->v)
 					.run(args);
 		}
 	}
@@ -315,15 +315,15 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 	@Override
 	public Status scriptFlush() {
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, Command.SCRIPT_FLUSH,
+			return new JedisPipelineCommand<>(client, ProtocolCommand.SCRIPT_FLUSH,
 					(cmd)->cmd.scriptFlush((String) null), okStatusConverter)
 					.run();
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, Command.SCRIPT_FLUSH,
+			return new JedisTransactionCommand<>(client, ProtocolCommand.SCRIPT_FLUSH,
 					(cmd)->cmd.scriptFlush((String) null), okStatusConverter)
 					.run();
 		}else{
-			return new JedisCommand<>(client, Command.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(), okStatusConverter)
+			return new JedisCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(), okStatusConverter)
 					.run();
 		}
 	}
@@ -334,15 +334,15 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 		final redis.clients.jedis.args.FlushMode flushMode = (new FlushModeConverter()).convert(mode);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, Command.SCRIPT_FLUSH,
+			return new JedisPipelineCommand<>(client, ProtocolCommand.SCRIPT_FLUSH,
 					(cmd)->cmd.scriptFlush((String) null, flushMode), okStatusConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, Command.SCRIPT_FLUSH,
+			return new JedisTransactionCommand<>(client, ProtocolCommand.SCRIPT_FLUSH,
 					(cmd)->cmd.scriptFlush((String) null, flushMode), okStatusConverter)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, Command.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(flushMode),
+			return new JedisCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(flushMode),
 					okStatusConverter)
 					.run(args);
 		}
@@ -353,15 +353,15 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 		final CommandArguments args = CommandArguments.create("script", script);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, Command.SCRIPT_LOAD,
+			return new JedisPipelineCommand<>(client, ProtocolCommand.SCRIPT_LOAD,
 					(cmd)->cmd.scriptLoad(script, null), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, Command.SCRIPT_LOAD,
+			return new JedisTransactionCommand<>(client, ProtocolCommand.SCRIPT_LOAD,
 					(cmd)->cmd.scriptLoad(script, null), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, Command.SCRIPT_LOAD, (cmd)->cmd.scriptLoad(script), (v)->v)
+			return new JedisCommand<>(client, ProtocolCommand.SCRIPT_LOAD, (cmd)->cmd.scriptLoad(script), (v)->v)
 					.run(args);
 		}
 	}
@@ -371,15 +371,15 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 		final CommandArguments args = CommandArguments.create("script", script);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, Command.SCRIPT_LOAD,
+			return new JedisPipelineCommand<>(client, ProtocolCommand.SCRIPT_LOAD,
 					(cmd)->cmd.scriptLoad(script, null), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, Command.SCRIPT_LOAD,
+			return new JedisTransactionCommand<>(client, ProtocolCommand.SCRIPT_LOAD,
 					(cmd)->cmd.scriptLoad(script, null), (v)->v)
 					.run(args);
 		}else{
-			return new JedisCommand<>(client, Command.SCRIPT_LOAD, (cmd)->cmd.scriptLoad(script), (v)->v)
+			return new JedisCommand<>(client, ProtocolCommand.SCRIPT_LOAD, (cmd)->cmd.scriptLoad(script), (v)->v)
 					.run(args);
 		}
 	}
@@ -387,16 +387,16 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 	@Override
 	public Status scriptKill() {
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, Command.SCRIPT_KILL, (cmd)->cmd.scriptKill((String) null),
+			return new JedisPipelineCommand<>(client, ProtocolCommand.SCRIPT_KILL, (cmd)->cmd.scriptKill((String) null),
 					okStatusConverter)
 					.run();
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, Command.SCRIPT_KILL,
+			return new JedisTransactionCommand<>(client, ProtocolCommand.SCRIPT_KILL,
 					(cmd)->cmd.scriptKill((String) null),
 					okStatusConverter)
 					.run();
 		}else{
-			return new JedisCommand<>(client, Command.SCRIPT_KILL, (cmd)->cmd.scriptKill(), okStatusConverter)
+			return new JedisCommand<>(client, ProtocolCommand.SCRIPT_KILL, (cmd)->cmd.scriptKill(), okStatusConverter)
 					.run();
 		}
 	}

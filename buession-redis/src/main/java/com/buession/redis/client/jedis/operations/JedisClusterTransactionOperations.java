@@ -28,7 +28,7 @@ import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.ProtocolCommand;
 import redis.clients.jedis.Builder;
 import redis.clients.jedis.Response;
 
@@ -49,7 +49,7 @@ public final class JedisClusterTransactionOperations extends AbstractTransaction
 	@Override
 	public Status multi() {
 		if(isPipeline()){
-			return new JedisClusterPipelineCommand<>(client, Command.MULTI, (cmd)->{
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.MULTI, (cmd)->{
 				RedisConnection connection = client.getConnection();
 
 				return new Response<>(new Builder<Status>() {
@@ -68,7 +68,7 @@ public final class JedisClusterTransactionOperations extends AbstractTransaction
 			}, (v)->v)
 					.run();
 		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<>(client, Command.MULTI, (cmd)->{
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.MULTI, (cmd)->{
 				RedisConnection connection = client.getConnection();
 
 				return new Response<>(new Builder<Status>() {
@@ -87,7 +87,7 @@ public final class JedisClusterTransactionOperations extends AbstractTransaction
 			}, (v)->v)
 					.run();
 		}else{
-			return new JedisClusterCommand<>(client, Command.MULTI, (cmd)->{
+			return new JedisClusterCommand<>(client, ProtocolCommand.MULTI, (cmd)->{
 				RedisConnection connection = client.getConnection();
 				try{
 					connection.multi();
@@ -103,7 +103,7 @@ public final class JedisClusterTransactionOperations extends AbstractTransaction
 	@Override
 	public List<Object> exec() {
 		if(isPipeline()){
-			return new JedisClusterPipelineCommand<>(client, Command.EXEC, (cmd)->{
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.EXEC, (cmd)->{
 				RedisConnection connection = client.getConnection();
 
 				return new Response<>(new Builder<List<Object>>() {
@@ -116,7 +116,7 @@ public final class JedisClusterTransactionOperations extends AbstractTransaction
 				});
 			}, (v)->v).run();
 		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<>(client, Command.EXEC, (cmd)->{
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.EXEC, (cmd)->{
 				RedisConnection connection = client.getConnection();
 
 				return new Response<>(new Builder<List<Object>>() {
@@ -129,7 +129,7 @@ public final class JedisClusterTransactionOperations extends AbstractTransaction
 				});
 			}, (v)->v).run();
 		}else{
-			return new JedisClusterCommand<>(client, Command.EXEC, (cmd)->{
+			return new JedisClusterCommand<>(client, ProtocolCommand.EXEC, (cmd)->{
 				RedisConnection connection = client.getConnection();
 				return connection.exec();
 			}, (v)->v).run();
@@ -139,21 +139,21 @@ public final class JedisClusterTransactionOperations extends AbstractTransaction
 	@Override
 	public void discard() {
 		if(isPipeline()){
-			new JedisClusterPipelineCommand<>(client, Command.DISCARD, (cmd)->{
+			new JedisClusterPipelineCommand<>(client, ProtocolCommand.DISCARD, (cmd)->{
 				RedisConnection connection = client.getConnection();
 				connection.discard();
 				return null;
 			}, (v)->v)
 					.run();
 		}else if(isTransaction()){
-			new JedisClusterTransactionCommand<>(client, Command.DISCARD, (cmd)->{
+			new JedisClusterTransactionCommand<>(client, ProtocolCommand.DISCARD, (cmd)->{
 				RedisConnection connection = client.getConnection();
 				connection.discard();
 				return null;
 			}, (v)->v)
 					.run();
 		}else{
-			new JedisClusterCommand<>(client, Command.DISCARD, (cmd)->{
+			new JedisClusterCommand<>(client, ProtocolCommand.DISCARD, (cmd)->{
 				RedisConnection connection = client.getConnection();
 				connection.discard();
 				return null;
@@ -167,10 +167,10 @@ public final class JedisClusterTransactionOperations extends AbstractTransaction
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new JedisClusterPipelineCommand<Status, Status>(client, Command.WATCH)
+			return new JedisClusterPipelineCommand<Status, Status>(client, ProtocolCommand.WATCH)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<>(client, Command.WATCH,
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.WATCH,
 					(cmd)->new Response<>(new Builder<String>() {
 
 						@Override
@@ -181,7 +181,7 @@ public final class JedisClusterTransactionOperations extends AbstractTransaction
 					}), okStatusConverter)
 					.run(args);
 		}else{
-			return new JedisClusterCommand<Status, Status>(client, Command.WATCH)
+			return new JedisClusterCommand<Status, Status>(client, ProtocolCommand.WATCH)
 					.run(args);
 		}
 	}
@@ -191,10 +191,10 @@ public final class JedisClusterTransactionOperations extends AbstractTransaction
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new JedisClusterPipelineCommand<Status, Status>(client, Command.WATCH)
+			return new JedisClusterPipelineCommand<Status, Status>(client, ProtocolCommand.WATCH)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<>(client, Command.WATCH,
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.WATCH,
 					(cmd)->new Response<>(new Builder<String>() {
 
 						@Override
@@ -205,7 +205,7 @@ public final class JedisClusterTransactionOperations extends AbstractTransaction
 					}), okStatusConverter)
 					.run(args);
 		}else{
-			return new JedisClusterCommand<Status, Status>(client, Command.WATCH)
+			return new JedisClusterCommand<Status, Status>(client, ProtocolCommand.WATCH)
 					.run(args);
 		}
 	}
@@ -213,10 +213,10 @@ public final class JedisClusterTransactionOperations extends AbstractTransaction
 	@Override
 	public Status unwatch() {
 		if(isPipeline()){
-			return new JedisClusterPipelineCommand<Status, Status>(client, Command.UNWATCH)
+			return new JedisClusterPipelineCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
 					.run();
 		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<>(client, Command.UNWATCH,
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.UNWATCH,
 					(cmd)->new Response<>(new Builder<String>() {
 
 						@Override
@@ -227,7 +227,7 @@ public final class JedisClusterTransactionOperations extends AbstractTransaction
 					}), okStatusConverter)
 					.run();
 		}else{
-			return new JedisClusterCommand<Status, Status>(client, Command.UNWATCH)
+			return new JedisClusterCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
 					.run();
 		}
 	}

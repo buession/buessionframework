@@ -25,12 +25,12 @@
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.redis.client.lettuce.LettuceSentinelClient;
-import com.buession.redis.core.BitType;
+import com.buession.redis.core.BitCountOption;
 import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.Command;
-import com.buession.redis.core.command.args.BitFieldArgument;
-import com.buession.redis.core.command.args.BitFieldRoArgument;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.internal.lettuce.LettuceBitFieldArgs;
+import io.lettuce.core.BitFieldArgs;
 
 import java.util.List;
 
@@ -47,185 +47,177 @@ public final class LettuceSentinelBitMapOperations extends AbstractBitMapOperati
 	}
 
 	@Override
-	public Long bitCount(final String key) {
-		final CommandArguments args = CommandArguments.create(key);
-		return notCommand(client, Command.BITCOUNT, args);
-	}
-
-	@Override
 	public Long bitCount(final byte[] key) {
-		final CommandArguments args = CommandArguments.create(key);
-		return notCommand(client, Command.BITCOUNT, args);
-	}
+		final CommandArguments args = CommandArguments.create("key", key);
 
-	@Override
-	public Long bitCount(final String key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
-		return notCommand(client, Command.BITCOUNT, args);
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.BITCOUNT)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.BITCOUNT)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.BITCOUNT)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long bitCount(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
-		return notCommand(client, Command.BITCOUNT, args);
+		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
+
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.BITCOUNT)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.BITCOUNT)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.BITCOUNT)
+					.run(args);
+		}
 	}
 
 	@Override
-	public Long bitCount(final String key, final long start, final long end, final BitType bitType) {
-		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(bitType);
-		return notCommand(client, Command.BITCOUNT, args);
-	}
+	public Long bitCount(final byte[] key, final long start, final long end, final BitCountOption bitCountOption) {
+		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end)
+				.put("bitCountOption", bitCountOption);
 
-	@Override
-	public Long bitCount(final byte[] key, final long start, final long end, final BitType bitType) {
-		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(bitType);
-		return notCommand(client, Command.BITCOUNT, args);
-	}
-
-	@Override
-	public List<Long> bitField(final String key) {
-		final CommandArguments args = CommandArguments.create(key);
-		return notCommand(client, Command.BITFIELD, args);
-	}
-
-	@Override
-	public List<Long> bitField(final byte[] key) {
-		final CommandArguments args = CommandArguments.create(key);
-		return notCommand(client, Command.BITFIELD, args);
-	}
-
-	@Override
-	public List<Long> bitField(final String key, final BitFieldArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(argument);
-		return notCommand(client, Command.BITFIELD, args);
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.BITCOUNT)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.BITCOUNT)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.BITCOUNT)
+					.run(args);
+		}
 	}
 
 	@Override
 	public List<Long> bitField(final byte[] key, final BitFieldArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(argument);
-		return notCommand(client, Command.BITFIELD, args);
+		final CommandArguments args = CommandArguments.create("key", key).put("arguments", argument);
+		final BitFieldArgs bitFieldArgs = LettuceBitFieldArgs.from(argument);
+
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<List<Long>, List<Long>>(client, ProtocolCommand.BITFIELD)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<List<Long>, List<Long>>(client, ProtocolCommand.BITFIELD)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<List<Long>, List<Long>>(client, ProtocolCommand.BITFIELD)
+					.run(args);
+		}
 	}
 
 	@Override
-	public List<Long> bitFieldRo(final String key) {
-		final CommandArguments args = CommandArguments.create(key);
-		return notCommand(client, Command.BITFIELD_RO, args);
+	public List<Long> bitFieldRo(final String key, final String... arguments) {
+		final CommandArguments args = CommandArguments.create("key", key).put("arguments", (Object[]) arguments);
+		return bitFieldRo(args);
 	}
 
 	@Override
-	public List<Long> bitFieldRo(final byte[] key) {
-		final CommandArguments args = CommandArguments.create(key);
-		return notCommand(client, Command.BITFIELD_RO, args);
-	}
-
-	@Override
-	public List<Long> bitFieldRo(final String key, final BitFieldRoArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(argument);
-		return notCommand(client, Command.BITFIELD_RO, args);
-	}
-
-	@Override
-	public List<Long> bitFieldRo(final byte[] key, final BitFieldRoArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(argument);
-		return notCommand(client, Command.BITFIELD_RO, args);
-	}
-
-	@Override
-	public Long bitOp(final BitOperation operation, final String destKey, final String... keys) {
-		final CommandArguments args = CommandArguments.create(operation).add(destKey).add(keys);
-		return notCommand(client, Command.BITOP, args);
+	public List<Long> bitFieldRo(final byte[] key, final byte[]... arguments) {
+		final CommandArguments args = CommandArguments.create("key", key).put("arguments", (Object[]) arguments);
+		return bitFieldRo(args);
 	}
 
 	@Override
 	public Long bitOp(final BitOperation operation, final byte[] destKey, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create(operation).add(destKey).add(keys);
-		return notCommand(client, Command.BITOP, args);
-	}
+		final CommandArguments args = CommandArguments.create("operation", operation).put("destKey", destKey)
+				.put("keys", (Object[]) keys);
 
-	@Override
-	public Long bitPos(final String key, final boolean value) {
-		final CommandArguments args = CommandArguments.create(key).add(value);
-		return notCommand(client, Command.BITPOS, args);
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.BITOP)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.BITOP)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.BITOP)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value) {
-		final CommandArguments args = CommandArguments.create(key).add(value);
-		return notCommand(client, Command.BITPOS, args);
-	}
+		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 
-	@Override
-	public Long bitPos(final String key, final boolean value, final long start) {
-		final CommandArguments args = CommandArguments.create(key).add(value).add(start);
-		return notCommand(client, Command.BITPOS, args);
-	}
-
-	@Override
-	public Long bitPos(final byte[] key, final boolean value, final long start) {
-		final CommandArguments args = CommandArguments.create(key).add(value).add(start);
-		return notCommand(client, Command.BITPOS, args);
-	}
-
-	@Override
-	public Long bitPos(final String key, final boolean value, final long start, final BitType bitType) {
-		final CommandArguments args = CommandArguments.create(key).add(value).add(start).add(bitType);
-		return notCommand(client, Command.BITPOS, args);
-	}
-
-	@Override
-	public Long bitPos(final byte[] key, final boolean value, final long start, final BitType bitType) {
-		final CommandArguments args = CommandArguments.create(key).add(value).add(start).add(bitType);
-		return notCommand(client, Command.BITPOS, args);
-	}
-
-	@Override
-	public Long bitPos(final String key, final boolean value, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(value).add(start).add(end);
-		return notCommand(client, Command.BITPOS, args);
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.BITPOS)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.BITPOS)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.BITPOS)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(value).add(start).add(end);
-		return notCommand(client, Command.BITPOS, args);
-	}
+		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("start", start)
+				.put("end", end);
 
-	@Override
-	public Long bitPos(final String key, final boolean value, final long start, final long end,
-					   final BitType bitType) {
-		final CommandArguments args = CommandArguments.create(key).add(value).add(start).add(end).add(bitType);
-		return notCommand(client, Command.BITPOS, args);
-	}
-
-	@Override
-	public Long bitPos(final byte[] key, final boolean value, final long start, final long end,
-					   final BitType bitType) {
-		final CommandArguments args = CommandArguments.create(key).add(value).add(start).add(end).add(bitType);
-		return notCommand(client, Command.BITPOS, args);
-	}
-
-	@Override
-	public Boolean getBit(final String key, final long offset) {
-		final CommandArguments args = CommandArguments.create(key).add(offset);
-		return notCommand(client, Command.GETBIT, args);
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.BITPOS)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.BITPOS)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.BITPOS)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Boolean getBit(final byte[] key, final long offset) {
-		final CommandArguments args = CommandArguments.create(key).add(offset);
-		return notCommand(client, Command.GETBIT, args);
-	}
+		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset);
 
-	@Override
-	public Boolean setBit(final String key, final long offset, final boolean value) {
-		final CommandArguments args = CommandArguments.create(key).add(offset).add(value);
-		return notCommand(client, Command.SETBIT, args);
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Boolean, Boolean>(client, ProtocolCommand.GETBIT)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Boolean, Boolean>(client, ProtocolCommand.GETBIT)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Boolean, Boolean>(client, ProtocolCommand.GETBIT)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Boolean setBit(final byte[] key, final long offset, final boolean value) {
-		final CommandArguments args = CommandArguments.create(key).add(offset).add(value);
-		return notCommand(client, Command.SETBIT, args);
+		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
+		final int iValue = value ? 1 : 0;
+
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Boolean, Boolean>(client, ProtocolCommand.SETBIT)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Boolean, Boolean>(client, ProtocolCommand.SETBIT)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Boolean, Boolean>(client, ProtocolCommand.SETBIT)
+					.run(args);
+		}
+	}
+
+	private List<Long> bitFieldRo(final CommandArguments args) {
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<List<Long>, List<Long>>(client, ProtocolCommand.BITFIELD_RO)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<List<Long>, List<Long>>(client, ProtocolCommand.BITFIELD_RO)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<List<Long>, List<Long>>(client, ProtocolCommand.BITFIELD_RO)
+					.run(args);
+		}
 	}
 
 }

@@ -32,7 +32,7 @@ import com.buession.redis.core.internal.convert.response.ClientConverter;
 import redis.clients.jedis.resps.AccessControlLogEntry;
 
 /**
- * Jedis {@link AccessControlLogEntry} 转换为 {@link AclLog}
+ * jedis {@link AccessControlLogEntry} 转换为 {@link AclLog}
  *
  * @author Yong.Teng
  * @since 2.0.0

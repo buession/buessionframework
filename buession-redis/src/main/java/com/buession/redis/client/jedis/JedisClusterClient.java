@@ -26,11 +26,9 @@ package com.buession.redis.client.jedis;
 
 import com.buession.redis.client.RedisClusterClient;
 import com.buession.redis.client.connection.jedis.JedisClusterConnection;
-import com.buession.redis.client.jedis.operations.JedisClusterAclOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterBitMapOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterClusterOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterConnectionOperations;
-import com.buession.redis.client.jedis.operations.JedisClusterGenericOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterGeoOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterHashOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterHyperLogLogOperations;
@@ -72,15 +70,6 @@ public class JedisClusterClient extends AbstractJedisRedisClient<JedisClusterCon
 	}
 
 	@Override
-	public AclOperations aclOperations() {
-		if(aclOperations == null){
-			aclOperations = new JedisClusterAclOperations(this);
-		}
-
-		return aclOperations;
-	}
-
-	@Override
 	public BitMapOperations bitMapOperations() {
 		if(bitMapOperations == null){
 			bitMapOperations = new JedisClusterBitMapOperations(this);
@@ -105,15 +94,6 @@ public class JedisClusterClient extends AbstractJedisRedisClient<JedisClusterCon
 		}
 
 		return connectionOperations;
-	}
-
-	@Override
-	public GenericOperations genericOperations() {
-		if(genericOperations == null){
-			genericOperations = new JedisClusterGenericOperations(this);
-		}
-
-		return genericOperations;
 	}
 
 	@Override

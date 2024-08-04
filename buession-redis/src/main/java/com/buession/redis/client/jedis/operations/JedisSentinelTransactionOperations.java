@@ -28,7 +28,8 @@ import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.exception.RedisException;
 import redis.clients.jedis.Builder;
 import redis.clients.jedis.Response;
 
@@ -49,7 +50,7 @@ public final class JedisSentinelTransactionOperations extends AbstractTransactio
 	@Override
 	public Status multi() {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, Command.MULTI, (cmd)->{
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.MULTI, (cmd)->{
 				RedisConnection connection = client.getConnection();
 
 				return new Response<>(new Builder<Status>() {
@@ -68,7 +69,7 @@ public final class JedisSentinelTransactionOperations extends AbstractTransactio
 			}, (v)->v)
 					.run();
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, Command.MULTI, (cmd)->{
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.MULTI, (cmd)->{
 				RedisConnection connection = client.getConnection();
 
 				return new Response<>(new Builder<Status>() {
@@ -87,7 +88,7 @@ public final class JedisSentinelTransactionOperations extends AbstractTransactio
 			}, (v)->v)
 					.run();
 		}else{
-			return new JedisSentinelCommand<>(client, Command.MULTI, (cmd)->{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.MULTI, (cmd)->{
 				RedisConnection connection = client.getConnection();
 				try{
 					connection.multi();
@@ -103,7 +104,7 @@ public final class JedisSentinelTransactionOperations extends AbstractTransactio
 	@Override
 	public List<Object> exec() {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, Command.EXEC, (cmd)->{
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.EXEC, (cmd)->{
 				RedisConnection connection = client.getConnection();
 
 				return new Response<>(new Builder<List<Object>>() {
@@ -116,7 +117,7 @@ public final class JedisSentinelTransactionOperations extends AbstractTransactio
 				});
 			}, (v)->v).run();
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, Command.EXEC, (cmd)->{
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.EXEC, (cmd)->{
 				RedisConnection connection = client.getConnection();
 
 				return new Response<>(new Builder<List<Object>>() {
@@ -129,7 +130,7 @@ public final class JedisSentinelTransactionOperations extends AbstractTransactio
 				});
 			}, (v)->v).run();
 		}else{
-			return new JedisSentinelCommand<>(client, Command.EXEC, (cmd)->{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.EXEC, (cmd)->{
 				RedisConnection connection = client.getConnection();
 				return connection.exec();
 			}, (v)->v).run();
@@ -139,21 +140,21 @@ public final class JedisSentinelTransactionOperations extends AbstractTransactio
 	@Override
 	public void discard() {
 		if(isPipeline()){
-			new JedisSentinelPipelineCommand<>(client, Command.DISCARD, (cmd)->{
+			new JedisSentinelPipelineCommand<>(client, ProtocolCommand.DISCARD, (cmd)->{
 				RedisConnection connection = client.getConnection();
 				connection.discard();
 				return null;
 			}, (v)->v)
 					.run();
 		}else if(isTransaction()){
-			new JedisSentinelTransactionCommand<>(client, Command.DISCARD, (cmd)->{
+			new JedisSentinelTransactionCommand<>(client, ProtocolCommand.DISCARD, (cmd)->{
 				RedisConnection connection = client.getConnection();
 				connection.discard();
 				return null;
 			}, (v)->v)
 					.run();
 		}else{
-			new JedisSentinelCommand<>(client, Command.DISCARD, (cmd)->{
+			new JedisSentinelCommand<>(client, ProtocolCommand.DISCARD, (cmd)->{
 				RedisConnection connection = client.getConnection();
 				connection.discard();
 				return null;
@@ -167,10 +168,10 @@ public final class JedisSentinelTransactionOperations extends AbstractTransactio
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<Status, Status>(client, Command.WATCH)
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.WATCH)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, Command.WATCH,
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.WATCH,
 					(cmd)->new Response<>(new Builder<String>() {
 
 						@Override
@@ -181,7 +182,7 @@ public final class JedisSentinelTransactionOperations extends AbstractTransactio
 					}), okStatusConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, Command.WATCH, (cmd)->cmd.watch(keys), okStatusConverter)
+			return new JedisSentinelCommand<>(client, ProtocolCommand.WATCH, (cmd)->cmd.watch(keys), okStatusConverter)
 					.run(args);
 		}
 	}
@@ -191,10 +192,10 @@ public final class JedisSentinelTransactionOperations extends AbstractTransactio
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<Status, Status>(client, Command.WATCH)
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.WATCH)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, Command.WATCH,
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.WATCH,
 					(cmd)->new Response<>(new Builder<String>() {
 
 						@Override
@@ -205,7 +206,7 @@ public final class JedisSentinelTransactionOperations extends AbstractTransactio
 					}), okStatusConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, Command.WATCH, (cmd)->cmd.watch(keys), okStatusConverter)
+			return new JedisSentinelCommand<>(client, ProtocolCommand.WATCH, (cmd)->cmd.watch(keys), okStatusConverter)
 					.run(args);
 		}
 	}
@@ -213,10 +214,10 @@ public final class JedisSentinelTransactionOperations extends AbstractTransactio
 	@Override
 	public Status unwatch() {
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<Status, Status>(client, Command.UNWATCH)
+			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
 					.run();
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, Command.UNWATCH,
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.UNWATCH,
 					(cmd)->new Response<>(new Builder<String>() {
 
 						@Override
@@ -227,7 +228,7 @@ public final class JedisSentinelTransactionOperations extends AbstractTransactio
 					}), okStatusConverter)
 					.run();
 		}else{
-			return new JedisSentinelCommand<>(client, Command.UNWATCH, (cmd)->cmd.unwatch(), okStatusConverter)
+			return new JedisSentinelCommand<>(client, ProtocolCommand.UNWATCH, (cmd)->cmd.unwatch(), okStatusConverter)
 					.run();
 		}
 	}

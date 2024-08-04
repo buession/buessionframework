@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.internal.lettuce;
 
-import com.buession.redis.core.command.args.LPosArgument;
+import com.buession.redis.core.command.ListCommands;
 import io.lettuce.core.LPosArgs;
 
 import java.util.Optional;
@@ -37,51 +37,28 @@ import java.util.Optional;
  */
 public final class LettuceLPosArgs extends LPosArgs {
 
-	/**
-	 * 构造函数
-	 */
 	public LettuceLPosArgs() {
 		super();
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param rank
-	 * 		返回第几个匹配的元素
-	 */
 	public LettuceLPosArgs(final int rank) {
 		super();
 		rank(rank);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param rank
-	 * 		返回第几个匹配的元素
-	 * @param maxLen
-	 * 		查找成员个数
-	 */
 	public LettuceLPosArgs(final int rank, final int maxLen) {
 		super();
 		rank(rank);
 		maxlen(maxLen);
 	}
 
-	/**
-	 * 从 {@link LPosArgument} 创建 {@link LPosArgs} 实例
-	 *
-	 * @param lPosArgument
-	 *        {@link LPosArgument}
-	 *
-	 * @return {@link LettuceLPosArgs} 实例
-	 */
-	public static LettuceLPosArgs from(final LPosArgument lPosArgument) {
+	public static LettuceLPosArgs from(final ListCommands.LPosArgument lPosArgument) {
 		final LettuceLPosArgs lPosArgs = new LettuceLPosArgs();
 
-		Optional.ofNullable(lPosArgument.getRank()).ifPresent(lPosArgs::rank);
-		Optional.ofNullable(lPosArgument.getMaxLen()).ifPresent(lPosArgs::maxlen);
+		if(lPosArgument != null){
+			Optional.ofNullable(lPosArgument.getRank()).ifPresent(lPosArgs::rank);
+			Optional.ofNullable(lPosArgument.getMaxLen()).ifPresent(lPosArgs::maxlen);
+		}
 
 		return lPosArgs;
 	}

@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.internal.lettuce;
 
-import com.buession.redis.core.command.args.XClaimArgument;
+import com.buession.redis.core.command.StreamCommands;
 import io.lettuce.core.XClaimArgs;
 
 import java.util.Optional;
@@ -37,133 +37,53 @@ import java.util.Optional;
  */
 public class LettuceXClaimArgs extends XClaimArgs {
 
-	/**
-	 * 构造函数
-	 */
 	public LettuceXClaimArgs() {
 		super();
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param idleType
-	 * 		设置过期时间方式
-	 * @param expires
-	 * 		过期时间
-	 */
-	public LettuceXClaimArgs(final XClaimArgument.IdleType idleType, final long expires) {
+	public LettuceXClaimArgs(final long minIdleTime) {
 		super();
-		idleTime(this, idleType, expires);
+		minIdleTime((minIdleTime));
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param retryCount
-	 * 		重试次数
-	 */
-	public LettuceXClaimArgs(final int retryCount) {
-		super();
+	public LettuceXClaimArgs(final long minIdleTime, final boolean justId) {
+		this(minIdleTime);
+		justId(this, justId);
+	}
+
+	public LettuceXClaimArgs(final long minIdleTime, final long idle, final long time,
+							 final long retryCount, final boolean force, final boolean justId) {
+		this(minIdleTime, force);
+		idle(idle);
+		time(time);
 		retryCount(retryCount);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param force
-	 * 		是否强制
-	 */
-	public LettuceXClaimArgs(final boolean force) {
-		super();
 		force(this, force);
+		justId(this, justId);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param idleType
-	 * 		设置过期时间方式
-	 * @param expires
-	 * 		过期时间
-	 * @param retryCount
-	 * 		重试次数
-	 */
-	public LettuceXClaimArgs(final XClaimArgument.IdleType idleType, final long expires, final int retryCount) {
-		this(idleType, expires);
-		retryCount(retryCount);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param idleType
-	 * 		设置过期时间方式
-	 * @param expires
-	 * 		过期时间
-	 * @param force
-	 * 		是否强制
-	 */
-	public LettuceXClaimArgs(final XClaimArgument.IdleType idleType, final long expires, final boolean force) {
-		this(idleType, expires);
-		force(this, force);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param idleType
-	 * 		设置过期时间方式
-	 * @param expires
-	 * 		过期时间
-	 * @param retryCount
-	 * 		重试次数
-	 * @param force
-	 * 		是否强制
-	 */
-	public LettuceXClaimArgs(final XClaimArgument.IdleType idleType, final long expires, final int retryCount,
-							 final boolean force) {
-		this(idleType, expires, retryCount);
-		force(this, force);
-	}
-
-	/**
-	 * 从 {@link XClaimArgument} 创建 {@link XClaimArgs} 实例
-	 *
-	 * @param xClaimArgument
-	 *        {@link XClaimArgument}
-	 *
-	 * @return {@link LettuceXClaimArgs} 实例
-	 */
-	public static LettuceXClaimArgs from(final XClaimArgument xClaimArgument) {
+	public static LettuceXClaimArgs from(final StreamCommands.XClaimArgument xClaimArgument) {
 		final LettuceXClaimArgs xClaimArgs = new LettuceXClaimArgs();
 
-		idleTime(xClaimArgs, xClaimArgument.getIdleType(), xClaimArgument.getIdleTime());
-		Optional.ofNullable(xClaimArgument.getRetryCount()).ifPresent(xClaimArgs::retryCount);
-		force(xClaimArgs, xClaimArgument.isForce());
+		if(xClaimArgument != null){
+			Optional.ofNullable(xClaimArgument.getIdleTime()).ifPresent(xClaimArgs::idle);
+			Optional.ofNullable(xClaimArgument.getIdleUnixTime()).ifPresent(xClaimArgs::time);
+			Optional.ofNullable(xClaimArgument.getIdleUnixTime()).ifPresent(xClaimArgs::time);
+			Optional.ofNullable(xClaimArgument.getRetryCount()).ifPresent(xClaimArgs::retryCount);
+			force(xClaimArgs, xClaimArgument.isForce());
+		}
 
 		return xClaimArgs;
-	}
-
-	private static void idleTime(final LettuceXClaimArgs xClaimArgs, final XClaimArgument.IdleType idleType,
-								 final Long idleTime) {
-		if(idleType != null && idleTime != null){
-			switch(idleType){
-				case IDLE:
-					xClaimArgs.idle(idleTime);
-					break;
-				case UNIX_TIME:
-					xClaimArgs.time(idleTime);
-					break;
-				default:
-					break;
-			}
-		}
 	}
 
 	private static void force(final LettuceXClaimArgs xClaimArgs, final Boolean force) {
 		if(Boolean.TRUE.equals(force)){
 			xClaimArgs.force();
+		}
+	}
+
+	private static void justId(final LettuceXClaimArgs xClaimArgs, final Boolean justId) {
+		if(Boolean.TRUE.equals(justId)){
+			xClaimArgs.justid();
 		}
 	}
 

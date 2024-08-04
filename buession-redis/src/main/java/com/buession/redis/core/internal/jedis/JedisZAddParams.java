@@ -51,18 +51,7 @@ public final class JedisZAddParams extends ZAddParams {
 	 */
 	public JedisZAddParams(final NxXx nxXx) {
 		super();
-		if(nxXx != null){
-			switch(nxXx){
-				case NX:
-					nx();
-					break;
-				case XX:
-					xx();
-					break;
-				default:
-					break;
-			}
-		}
+		nxXx(nxXx);
 	}
 
 	/**
@@ -96,7 +85,8 @@ public final class JedisZAddParams extends ZAddParams {
 	 * 		更新新的分值方式
 	 */
 	public JedisZAddParams(final NxXx nxXx, final GtLt gtLt) {
-		this(nxXx);
+		super();
+		nxXx(nxXx);
 		gtLt(gtLt);
 	}
 
@@ -109,7 +99,8 @@ public final class JedisZAddParams extends ZAddParams {
 	 * 		是否返回变更成员的数量
 	 */
 	public JedisZAddParams(final NxXx nxXx, final boolean ch) {
-		this(nxXx);
+		super();
+		nxXx(nxXx);
 		ch(ch);
 	}
 
@@ -122,7 +113,8 @@ public final class JedisZAddParams extends ZAddParams {
 	 * 		是否返回变更成员的数量
 	 */
 	public JedisZAddParams(final GtLt gtLt, final boolean ch) {
-		this(gtLt);
+		super();
+		gtLt(gtLt);
 		ch(ch);
 	}
 
@@ -137,10 +129,39 @@ public final class JedisZAddParams extends ZAddParams {
 	 * 		是否返回变更成员的数量
 	 */
 	public JedisZAddParams(final NxXx nxXx, final GtLt gtLt, final boolean ch) {
-		this(nxXx, gtLt);
+		super();
+		nxXx(nxXx);
+		gtLt(gtLt);
 		ch(ch);
 	}
 
+	/**
+	 * 设置更新成员方式
+	 *
+	 * @param nxXx
+	 * 		更新成员方式
+	 */
+	private void nxXx(final NxXx nxXx) {
+		if(nxXx != null){
+			switch(nxXx){
+				case NX:
+					nx();
+					break;
+				case XX:
+					xx();
+					break;
+				default:
+					break;
+			}
+		}
+	}
+
+	/**
+	 * 更新新的分值方式
+	 *
+	 * @param gtLt
+	 * 		更新新的分值方式
+	 */
 	private void gtLt(final GtLt gtLt) {
 		if(gtLt != null){
 			switch(gtLt){
