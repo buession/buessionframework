@@ -106,7 +106,7 @@ public final class LettuceClusterConnectionOperations extends AbstractConnection
 
 	@Override
 	public String echo(final String str) {
-		final CommandArguments args = CommandArguments.create("str", str);
+		final CommandArguments args = CommandArguments.create(str);
 		final byte[] msg = SafeEncoder.encode(str);
 
 		return echo(msg, SafeEncoder::encode, args);
@@ -114,7 +114,7 @@ public final class LettuceClusterConnectionOperations extends AbstractConnection
 
 	@Override
 	public byte[] echo(final byte[] str) {
-		final CommandArguments args = CommandArguments.create("str", str);
+		final CommandArguments args = CommandArguments.create(str);
 		return echo(str, (v)->v, args);
 	}
 

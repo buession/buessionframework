@@ -66,7 +66,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 
 	@Override
 	public Long del(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.DEL, (cmd)->cmd.del(keys), (v)->v)
@@ -82,7 +82,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 
 	@Override
 	public Long del(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.DEL, (cmd)->cmd.del(keys), (v)->v)
@@ -98,7 +98,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 
 	@Override
 	public String dump(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.DUMP, (cmd)->cmd.dump(key),
@@ -116,7 +116,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 
 	@Override
 	public byte[] dump(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.DUMP, (cmd)->cmd.dump(key), (v)->v)
@@ -132,7 +132,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 
 	@Override
 	public Boolean exists(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(key), (v)->v)
@@ -148,7 +148,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 
 	@Override
 	public Boolean exists(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(key), (v)->v)
@@ -164,7 +164,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 
 	@Override
 	public Long exists(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
@@ -180,7 +180,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 
 	@Override
 	public Long exists(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(keys), (v)->v)

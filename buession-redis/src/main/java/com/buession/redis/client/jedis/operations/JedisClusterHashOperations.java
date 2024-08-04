@@ -52,7 +52,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public Long hDel(final String key, final String... fields) {
-		final CommandArguments args = CommandArguments.create("key", key).put("fields", (Object[]) fields);
+		final CommandArguments args = CommandArguments.create(key).add(fields);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.HDEL, (cmd)->cmd.hdel(key, fields), (v)->v)
@@ -69,7 +69,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public Long hDel(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create("key", key).put("fields", (Object[]) fields);
+		final CommandArguments args = CommandArguments.create(key).add(fields);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.HDEL, (cmd)->cmd.hdel(key, fields), (v)->v)
@@ -86,7 +86,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public Boolean hExists(final String key, final String field) {
-		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
+		final CommandArguments args = CommandArguments.create(key).add(field);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.HEXISTS, (cmd)->cmd.hexists(key, field),
@@ -104,7 +104,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public Boolean hExists(final byte[] key, final byte[] field) {
-		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
+		final CommandArguments args = CommandArguments.create(key).add(field);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.HEXISTS, (cmd)->cmd.hexists(key, field),
@@ -122,7 +122,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public String hGet(final String key, final String field) {
-		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
+		final CommandArguments args = CommandArguments.create(key).add(field);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.HGET, (cmd)->cmd.hget(key, field), (v)->v)
@@ -139,7 +139,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public byte[] hGet(final byte[] key, final byte[] field) {
-		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
+		final CommandArguments args = CommandArguments.create(key).add(field);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.HGET, (cmd)->cmd.hget(key, field), (v)->v)
@@ -156,7 +156,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public Map<String, String> hGetAll(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.HGETALL, (cmd)->cmd.hgetAll(key), (v)->v)
@@ -173,7 +173,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public Map<byte[], byte[]> hGetAll(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.HGETALL, (cmd)->cmd.hgetAll(key), (v)->v)
@@ -266,7 +266,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public Set<String> hKeys(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.HKEYS, (cmd)->cmd.hkeys(key), (v)->v)
@@ -282,7 +282,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public Set<byte[]> hKeys(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.HKEYS, (cmd)->cmd.hkeys(key), (v)->v)
@@ -298,7 +298,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public Long hLen(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.HLEN, (cmd)->cmd.hlen(key), (v)->v)
@@ -314,7 +314,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public Long hLen(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.HLEN, (cmd)->cmd.hlen(key), (v)->v)
@@ -404,7 +404,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public String hRandField(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(key),
@@ -422,7 +422,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public byte[] hRandField(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.HRANDFIELD, (cmd)->cmd.hrandfield(key),

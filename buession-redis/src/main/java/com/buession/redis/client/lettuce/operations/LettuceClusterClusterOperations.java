@@ -285,7 +285,7 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 
 	@Override
 	public Status clusterMeet(final String ip, final int port) {
-		final CommandArguments args = CommandArguments.create("ip", ip).put("port", port);
+		final CommandArguments args = CommandArguments.create(ip).add(port);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLUSTER_MEET,

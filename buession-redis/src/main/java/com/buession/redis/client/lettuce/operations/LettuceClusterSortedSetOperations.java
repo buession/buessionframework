@@ -465,13 +465,13 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 
 	@Override
 	public List<Tuple> zInterWithScores(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 		return zInter(args);
 	}
 
 	@Override
 	public List<Tuple> zInterWithScores(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 		return zInter(args);
 	}
 
@@ -595,13 +595,13 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 
 	@Override
 	public String zRandMember(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		return zRandMember(args);
 	}
 
 	@Override
 	public byte[] zRandMember(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		return zRandMember(args);
 	}
 

@@ -66,7 +66,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 
 	@Override
 	public Long del(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.DEL, (cmd)->cmd.del(keys), (v)->v)
@@ -82,7 +82,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 
 	@Override
 	public Long del(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.DEL, (cmd)->cmd.del(keys), (v)->v)
@@ -98,7 +98,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 
 	@Override
 	public String dump(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.DUMP, (cmd)->cmd.dump(key),
@@ -116,7 +116,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 
 	@Override
 	public byte[] dump(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.DUMP, (cmd)->cmd.dump(key), (v)->v)
@@ -132,7 +132,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 
 	@Override
 	public Boolean exists(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(key), (v)->v)
@@ -148,7 +148,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 
 	@Override
 	public Boolean exists(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(key), (v)->v)
@@ -164,7 +164,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 
 	@Override
 	public Long exists(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
@@ -181,7 +181,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 
 	@Override
 	public Long exists(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
@@ -392,7 +392,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 
 	@Override
 	public Status persist(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.PERSIST, (cmd)->cmd.persist(key),
@@ -411,7 +411,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 
 	@Override
 	public Status persist(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.PERSIST, (cmd)->cmd.persist(key),
@@ -430,7 +430,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 
 	@Override
 	public Long ttl(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.TTL, (cmd)->cmd.ttl(key), (v)->v)
@@ -446,7 +446,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 
 	@Override
 	public Long ttl(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.TTL, (cmd)->cmd.ttl(key), (v)->v)
@@ -462,7 +462,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 
 	@Override
 	public Long pTtl(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.PTTL, (cmd)->cmd.pttl(key), (v)->v)
@@ -478,7 +478,7 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 
 	@Override
 	public Long pTtl(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.PTTL, (cmd)->cmd.pttl(key), (v)->v)

@@ -70,7 +70,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public Tuple zPopMin(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		final ScoredValueTupleConverter.BinaryScoredValueTupleConverter scoredValueConverter = new ScoredValueTupleConverter.BinaryScoredValueTupleConverter();
 
 		if(isPipeline()){
@@ -109,7 +109,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public Tuple zPopMax(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		final ScoredValueTupleConverter.BinaryScoredValueTupleConverter scoredValueConverter = new ScoredValueTupleConverter.BinaryScoredValueTupleConverter();
 
 		if(isPipeline()){
@@ -354,25 +354,25 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public List<String> zDiff(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 		return zDiff(args);
 	}
 
 	@Override
 	public List<byte[]> zDiff(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 		return zDiff(args);
 	}
 
 	@Override
 	public List<Tuple> zDiffWithScores(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 		return zDiff(args);
 	}
 
 	@Override
 	public List<Tuple> zDiffWithScores(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 		return zDiff(args);
 	}
 
@@ -410,13 +410,13 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public List<String> zInter(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 		return zInter(args);
 	}
 
 	@Override
 	public List<byte[]> zInter(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 		return zInter(args);
 	}
 
@@ -460,13 +460,13 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public List<Tuple> zInterWithScores(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 		return zInter(args);
 	}
 
 	@Override
 	public List<Tuple> zInterWithScores(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 		return zInter(args);
 	}
 
@@ -589,13 +589,13 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public String zRandMember(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		return zRandMember(args);
 	}
 
 	@Override
 	public byte[] zRandMember(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		return zRandMember(args);
 	}
 

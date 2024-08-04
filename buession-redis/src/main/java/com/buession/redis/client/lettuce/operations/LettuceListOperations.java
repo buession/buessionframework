@@ -107,7 +107,7 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 
 	@Override
 	public Long lLen(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.LLEN, (cmd)->cmd.llen(key), (v)->v)
@@ -137,7 +137,7 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 
 	@Override
 	public Long lPos(final byte[] key, final byte[] element) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element), (v)->v)
@@ -313,7 +313,7 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 
 	@Override
 	public String lPop(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		final byte[] bKey = SafeEncoder.encode(key);
 
 		return lPop(bKey, SafeEncoder::encode, args);
@@ -321,7 +321,7 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 
 	@Override
 	public byte[] lPop(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		return lPop(key, (v)->v, args);
 	}
 
@@ -360,7 +360,7 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 
 	@Override
 	public String rPop(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		final byte[] bKey = SafeEncoder.encode(key);
 
 		return rPop(bKey, SafeEncoder::encode, args);
@@ -368,7 +368,7 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 
 	@Override
 	public byte[] rPop(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		return rPop(key, (v)->v, args);
 	}
 

@@ -214,7 +214,7 @@ public final class JedisClusterClusterOperations extends AbstractClusterOperatio
 
 	@Override
 	public Long clusterKeySlot(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<Long, Long>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT)

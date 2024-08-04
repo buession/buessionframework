@@ -114,7 +114,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 
 	@Override
 	public Set<String> sDiff(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.SDIFF, (cmd)->cmd.sdiff(keys), (v)->v)
@@ -130,7 +130,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 
 	@Override
 	public Set<byte[]> sDiff(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.SDIFF, (cmd)->cmd.sdiff(keys), (v)->v)
@@ -182,7 +182,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 
 	@Override
 	public Set<String> sInter(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.SINTER, (cmd)->cmd.sinter(keys), (v)->v)
@@ -198,7 +198,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 
 	@Override
 	public Set<byte[]> sInter(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.SINTER, (cmd)->cmd.sinter(keys), (v)->v)
@@ -324,7 +324,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 
 	@Override
 	public Set<String> sMembers(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.SMEMBERS, (cmd)->cmd.smembers(key), (v)->v)
@@ -340,7 +340,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 
 	@Override
 	public Set<byte[]> sMembers(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.SMEMBERS, (cmd)->cmd.smembers(key), (v)->v)
@@ -394,7 +394,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 
 	@Override
 	public String sPop(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.SPOP, (cmd)->cmd.spop(key), (v)->v)
@@ -458,7 +458,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 
 	@Override
 	public String sRandMember(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.SRANDMEMBER, (cmd)->cmd.srandmember(key), (v)->v)
@@ -475,7 +475,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 
 	@Override
 	public byte[] sRandMember(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.SRANDMEMBER, (cmd)->cmd.srandmember(key), (v)->v)
@@ -658,7 +658,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 
 	@Override
 	public Set<String> sUnion(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.SUNION, (cmd)->cmd.sunion(keys), (v)->v)
@@ -674,7 +674,7 @@ public final class JedisSetOperations extends AbstractSetOperations<JedisStandal
 
 	@Override
 	public Set<byte[]> sUnion(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.SUNION, (cmd)->cmd.sunion(keys), (v)->v)

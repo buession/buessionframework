@@ -84,8 +84,7 @@ public final class JedisClusterStreamOperations extends AbstractStreamOperations
 
 	@Override
 	public Long xAck(final String key, final String groupName, final StreamEntryId... ids) {
-		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
-				.put("ids", (Object[]) ids);
+		final CommandArguments args = CommandArguments.create(key).add(groupName).add(ids);
 		final StreamEntryID[] streamEntryIDS = StreamEntryIdConverter.arrayConverter().convert(ids);
 
 		if(isPipeline()){

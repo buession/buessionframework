@@ -132,7 +132,7 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 
 	@Override
 	public Long clusterCountKeysInSlot(final int slot) {
-		final CommandArguments args = CommandArguments.create("slot", slot);
+		final CommandArguments args = CommandArguments.create(slot);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.CLUSTER_COUNTKEYSINSLOT)
@@ -149,7 +149,7 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 
 	@Override
 	public Status clusterDelSlots(final int... slots) {
-		final CommandArguments args = CommandArguments.create("slots", slots);
+		final CommandArguments args = CommandArguments.create(slots);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_DELSLOTS)

@@ -69,7 +69,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 
 	@Override
 	public Long del(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.DEL, (cmd)->cmd.del(keys), (v)->v)
@@ -85,7 +85,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 
 	@Override
 	public byte[] dump(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.DUMP, (cmd)->cmd.dump(key), (v)->v)
@@ -101,7 +101,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 
 	@Override
 	public Boolean exists(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(key), (v)->v == 1L)
@@ -117,7 +117,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 
 	@Override
 	public Long exists(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.EXISTS, (cmd)->cmd.exists(keys), (v)->v)
@@ -229,7 +229,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 
 	@Override
 	public Status persist(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.PERSIST, (cmd)->cmd.persist(key),
@@ -248,7 +248,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 
 	@Override
 	public Long ttl(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.TTL, (cmd)->cmd.ttl(key), (v)->v)
@@ -264,7 +264,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 
 	@Override
 	public Long pTtl(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.PTTL, (cmd)->cmd.pttl(key), (v)->v)
@@ -329,8 +329,7 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey, final int db, final boolean replace) {
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
-				.put("db", db)
-				.put("replace", replace);
+				.put("db", db).put("replace", replace);
 		return copy(args);
 	}
 

@@ -634,7 +634,7 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 
 	@Override
 	public String lPop(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.LPOP, (cmd)->cmd.lpop(key), (v)->v)
@@ -650,7 +650,7 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 
 	@Override
 	public byte[] lPop(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.LPOP, (cmd)->cmd.lpop(key), (v)->v)
@@ -738,7 +738,7 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 
 	@Override
 	public String rPop(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.RPOP, (cmd)->cmd.rpop(key), (v)->v)
@@ -754,7 +754,7 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 
 	@Override
 	public byte[] rPop(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.RPOP, (cmd)->cmd.rpop(key), (v)->v)

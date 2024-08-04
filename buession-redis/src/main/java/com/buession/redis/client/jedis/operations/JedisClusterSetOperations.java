@@ -86,7 +86,7 @@ public final class JedisClusterSetOperations extends AbstractSetOperations<Jedis
 
 	@Override
 	public Long sCard(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SCARD, (cmd)->cmd.scard(key), (v)->v)
@@ -102,7 +102,7 @@ public final class JedisClusterSetOperations extends AbstractSetOperations<Jedis
 
 	@Override
 	public Long sCard(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SCARD, (cmd)->cmd.scard(key), (v)->v)
@@ -118,7 +118,7 @@ public final class JedisClusterSetOperations extends AbstractSetOperations<Jedis
 
 	@Override
 	public Set<String> sDiff(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SDIFF, (cmd)->cmd.sdiff(keys), (v)->v)
@@ -134,7 +134,7 @@ public final class JedisClusterSetOperations extends AbstractSetOperations<Jedis
 
 	@Override
 	public Set<byte[]> sDiff(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SDIFF, (cmd)->cmd.sdiff(keys), (v)->v)
@@ -188,7 +188,7 @@ public final class JedisClusterSetOperations extends AbstractSetOperations<Jedis
 
 	@Override
 	public Set<String> sInter(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SINTER, (cmd)->cmd.sinter(keys), (v)->v)
@@ -204,7 +204,7 @@ public final class JedisClusterSetOperations extends AbstractSetOperations<Jedis
 
 	@Override
 	public Set<byte[]> sInter(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SINTER, (cmd)->cmd.sinter(keys), (v)->v)
@@ -334,7 +334,7 @@ public final class JedisClusterSetOperations extends AbstractSetOperations<Jedis
 
 	@Override
 	public Set<String> sMembers(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SMEMBERS, (cmd)->cmd.smembers(key), (v)->v)
@@ -351,7 +351,7 @@ public final class JedisClusterSetOperations extends AbstractSetOperations<Jedis
 
 	@Override
 	public Set<byte[]> sMembers(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SMEMBERS, (cmd)->cmd.smembers(key), (v)->v)
@@ -406,7 +406,7 @@ public final class JedisClusterSetOperations extends AbstractSetOperations<Jedis
 
 	@Override
 	public String sPop(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SPOP, (cmd)->cmd.spop(key), (v)->v)
@@ -422,7 +422,7 @@ public final class JedisClusterSetOperations extends AbstractSetOperations<Jedis
 
 	@Override
 	public byte[] sPop(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SPOP, (cmd)->cmd.spop(key), (v)->v)
@@ -676,7 +676,7 @@ public final class JedisClusterSetOperations extends AbstractSetOperations<Jedis
 
 	@Override
 	public Set<String> sUnion(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SUNION, (cmd)->cmd.sunion(keys), (v)->v)
@@ -692,7 +692,7 @@ public final class JedisClusterSetOperations extends AbstractSetOperations<Jedis
 
 	@Override
 	public Set<byte[]> sUnion(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SUNION, (cmd)->cmd.sunion(keys), (v)->v)

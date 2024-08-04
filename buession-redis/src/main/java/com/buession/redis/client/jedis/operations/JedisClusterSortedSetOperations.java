@@ -66,7 +66,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public Tuple zPopMin(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		final TupleConverter tupleConverter = new TupleConverter();
 
 		if(isPipeline()){
@@ -85,7 +85,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public Tuple zPopMin(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		final TupleConverter tupleConverter = new TupleConverter();
 
 		if(isPipeline()){
@@ -144,7 +144,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public Tuple zPopMax(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		final TupleConverter tupleConverter = new TupleConverter();
 
 		if(isPipeline()){
@@ -163,7 +163,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public Tuple zPopMax(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		final TupleConverter tupleConverter = new TupleConverter();
 
 		if(isPipeline()){
@@ -464,7 +464,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public Long zCard(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.ZCARD, (cmd)->cmd.zcard(key), (v)->v)
@@ -480,7 +480,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public Long zCard(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.ZCARD, (cmd)->cmd.zcard(key), (v)->v)
@@ -570,7 +570,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public List<String> zDiff(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.ZDIFF, (cmd)->cmd.zdiff(keys), (v)->v)
@@ -586,7 +586,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public List<byte[]> zDiff(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.ZDIFF, (cmd)->cmd.zdiff(keys), (v)->v)
@@ -602,7 +602,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public List<Tuple> zDiffWithScores(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
@@ -622,7 +622,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public List<Tuple> zDiffWithScores(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listConverter = TupleConverter.listConverter();
 
 		if(isPipeline()){
@@ -720,7 +720,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public List<String> zInter(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 		final ZParams zParams = new JedisZParams();
 
 		return zInter(keys, zParams, args);
@@ -728,7 +728,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public List<byte[]> zInter(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 		final ZParams zParams = new JedisZParams();
 
 		return zInter(keys, zParams, args);
@@ -786,7 +786,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public List<Tuple> zInterWithScores(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 		final ZParams zParams = new JedisZParams();
 
 		return zInterWithScores(keys, zParams, args);
@@ -794,7 +794,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public List<Tuple> zInterWithScores(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 		final ZParams zParams = new JedisZParams();
 
 		return zInterWithScores(keys, zParams, args);
@@ -1014,7 +1014,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public String zRandMember(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.ZRANDMEMBER, (cmd)->cmd.zrandmember(key),
@@ -1032,7 +1032,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	@Override
 	public byte[] zRandMember(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.ZRANDMEMBER, (cmd)->cmd.zrandmember(key),

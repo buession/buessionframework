@@ -49,7 +49,7 @@ public final class JedisClusterScriptingOperations extends AbstractScriptingOper
 
 	@Override
 	public Object eval(final String script) {
-		final CommandArguments args = CommandArguments.create("script", script);
+		final CommandArguments args = CommandArguments.create(script);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.EVAL, (cmd)->cmd.eval(script), (v)->v)
@@ -65,7 +65,7 @@ public final class JedisClusterScriptingOperations extends AbstractScriptingOper
 
 	@Override
 	public Object eval(final byte[] script) {
-		final CommandArguments args = CommandArguments.create("script", script);
+		final CommandArguments args = CommandArguments.create(script);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.EVAL, (cmd)->cmd.eval(script), (v)->v)
@@ -81,7 +81,7 @@ public final class JedisClusterScriptingOperations extends AbstractScriptingOper
 
 	@Override
 	public Object eval(final String script, final String... params) {
-		final CommandArguments args = CommandArguments.create("script", script).put("params", (Object[]) params);
+		final CommandArguments args = CommandArguments.create(script).add(params);
 		final int paramsSize = params == null ? 0 : params.length;
 
 		if(isPipeline()){
@@ -101,7 +101,7 @@ public final class JedisClusterScriptingOperations extends AbstractScriptingOper
 
 	@Override
 	public Object eval(final byte[] script, final byte[]... params) {
-		final CommandArguments args = CommandArguments.create("script", script).put("params", (Object[]) params);
+		final CommandArguments args = CommandArguments.create(script).add(params);
 		final int paramsSize = params == null ? 0 : params.length;
 
 		if(isPipeline()){
@@ -285,7 +285,7 @@ public final class JedisClusterScriptingOperations extends AbstractScriptingOper
 
 	@Override
 	public List<Boolean> scriptExists(final String... sha1) {
-		final CommandArguments args = CommandArguments.create("sha1", (Object[]) sha1);
+		final CommandArguments args = CommandArguments.create(sha1);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SCRIPT_EXISTS,
@@ -304,7 +304,7 @@ public final class JedisClusterScriptingOperations extends AbstractScriptingOper
 
 	@Override
 	public List<Boolean> scriptExists(final byte[]... sha1) {
-		final CommandArguments args = CommandArguments.create("sha1", (Object[]) sha1);
+		final CommandArguments args = CommandArguments.create(sha1);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SCRIPT_EXISTS,

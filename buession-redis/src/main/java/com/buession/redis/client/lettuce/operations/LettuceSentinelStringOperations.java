@@ -72,7 +72,7 @@ public final class LettuceSentinelStringOperations extends AbstractStringOperati
 
 	@Override
 	public Long incr(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.INCR)
@@ -193,19 +193,19 @@ public final class LettuceSentinelStringOperations extends AbstractStringOperati
 
 	@Override
 	public String getDel(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		return getDel(args);
 	}
 
 	@Override
 	public byte[] getDel(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		return getDel(args);
 	}
 
 	@Override
 	public List<String> mGet(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 		final byte[][] bKeys = SafeEncoder.encode(keys);
 		final ListConverter<KeyValue<byte[], byte[]>, String> listConverter =
 				new ListConverter<>((v)->SafeEncoder.encode(v.getValue()));
@@ -215,7 +215,7 @@ public final class LettuceSentinelStringOperations extends AbstractStringOperati
 
 	@Override
 	public List<byte[]> mGet(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 		final ListConverter<KeyValue<byte[], byte[]>, byte[]> listConverter = new ListConverter<>(Value::getValue);
 
 		return mGet(keys, listConverter, args);

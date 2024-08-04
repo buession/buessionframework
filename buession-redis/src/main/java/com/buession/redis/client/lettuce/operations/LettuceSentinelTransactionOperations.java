@@ -92,7 +92,7 @@ public final class LettuceSentinelTransactionOperations extends AbstractTransact
 
 	@Override
 	public Status watch(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.WATCH)

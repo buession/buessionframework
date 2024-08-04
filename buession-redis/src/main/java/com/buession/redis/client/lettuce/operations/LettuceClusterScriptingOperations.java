@@ -102,7 +102,7 @@ public final class LettuceClusterScriptingOperations extends AbstractScriptingOp
 
 	@Override
 	public List<Boolean> scriptExists(final String... sha1) {
-		final CommandArguments args = CommandArguments.create("sha1", (Object[]) sha1);
+		final CommandArguments args = CommandArguments.create(sha1);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.SCRIPT_EXISTS,

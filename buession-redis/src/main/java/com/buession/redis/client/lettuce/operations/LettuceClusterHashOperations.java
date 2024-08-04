@@ -114,7 +114,7 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 
 	@Override
 	public Map<String, String> hGetAll(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final MapConverter<byte[], byte[], String, String> binaryToStringMapConverter = Converters.mapBinaryToString();
 
@@ -123,7 +123,7 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 
 	@Override
 	public Map<byte[], byte[]> hGetAll(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		return hGetAll(key, (v)->v, args);
 	}
 
@@ -167,7 +167,7 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 
 	@Override
 	public Set<String> hKeys(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ListSetConverter<byte[], String> binaryToStringListSetConverter =
 				Converters.listSetBinaryToString();
@@ -177,13 +177,13 @@ public final class LettuceClusterHashOperations extends AbstractHashOperations<L
 
 	@Override
 	public Set<byte[]> hKeys(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		return hKeys(key, HashSet::new, args);
 	}
 
 	@Override
 	public Long hLen(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.HLEN, (cmd)->cmd.hlen(key), (v)->v)

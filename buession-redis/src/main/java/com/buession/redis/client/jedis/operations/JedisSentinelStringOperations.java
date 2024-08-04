@@ -87,7 +87,7 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 
 	@Override
 	public Long incr(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.INCR, (cmd)->cmd.incr(key), (v)->v)
@@ -103,7 +103,7 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 
 	@Override
 	public Long incr(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.INCR, (cmd)->cmd.incr(key), (v)->v)
@@ -193,7 +193,7 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 
 	@Override
 	public Long decr(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.DECR, (cmd)->cmd.decr(key), (v)->v)
@@ -209,7 +209,7 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 
 	@Override
 	public Long decr(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.DECR, (cmd)->cmd.decr(key), (v)->v)
@@ -261,7 +261,7 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 
 	@Override
 	public String get(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.GET, (cmd)->cmd.get(key), (v)->v)
@@ -277,7 +277,7 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 
 	@Override
 	public byte[] get(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.GET, (cmd)->cmd.get(key), (v)->v)
@@ -367,7 +367,7 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 
 	@Override
 	public String getDel(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.GETDEL, (cmd)->cmd.getDel(key), (v)->v)
@@ -383,7 +383,7 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 
 	@Override
 	public byte[] getDel(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.GETDEL, (cmd)->cmd.getDel(key), (v)->v)
@@ -399,7 +399,7 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 
 	@Override
 	public List<String> mGet(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.MGET, (cmd)->cmd.mget(keys), (v)->v)
@@ -415,7 +415,7 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 
 	@Override
 	public List<byte[]> mGet(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.MGET, (cmd)->cmd.mget(keys), (v)->v)

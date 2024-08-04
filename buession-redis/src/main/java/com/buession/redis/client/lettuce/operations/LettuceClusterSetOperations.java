@@ -91,7 +91,7 @@ public final class LettuceClusterSetOperations extends AbstractSetOperations<Let
 
 	@Override
 	public Set<String> sDiff(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 		final byte[][] bKeys = SafeEncoder.encode(keys);
 		final SetConverter<byte[], String> binaryToStringSetConverter = Converters.setBinaryToString();
 
@@ -100,7 +100,7 @@ public final class LettuceClusterSetOperations extends AbstractSetOperations<Let
 
 	@Override
 	public Set<byte[]> sDiff(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 		return sDiff(keys, (v)->v, args);
 	}
 
@@ -125,7 +125,7 @@ public final class LettuceClusterSetOperations extends AbstractSetOperations<Let
 
 	@Override
 	public Set<String> sInter(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 		final byte[][] bKeys = SafeEncoder.encode(keys);
 		final SetConverter<byte[], String> binaryToStringSetConverter = Converters.setBinaryToString();
 
@@ -134,7 +134,7 @@ public final class LettuceClusterSetOperations extends AbstractSetOperations<Let
 
 	@Override
 	public Set<byte[]> sInter(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 		return sInter(keys, (v)->v, args);
 	}
 
@@ -190,7 +190,7 @@ public final class LettuceClusterSetOperations extends AbstractSetOperations<Let
 
 	@Override
 	public Set<String> sMembers(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final SetConverter<byte[], String> binaryToStringSetConverter = Converters.setBinaryToString();
 
@@ -199,7 +199,7 @@ public final class LettuceClusterSetOperations extends AbstractSetOperations<Let
 
 	@Override
 	public Set<byte[]> sMembers(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		return sMembers(key, (v)->v, args);
 	}
 
@@ -224,7 +224,7 @@ public final class LettuceClusterSetOperations extends AbstractSetOperations<Let
 
 	@Override
 	public String sPop(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		final byte[] bKey = SafeEncoder.encode(key);
 
 		return sPop(bKey, SafeEncoder::encode, args);
@@ -232,13 +232,13 @@ public final class LettuceClusterSetOperations extends AbstractSetOperations<Let
 
 	@Override
 	public byte[] sPop(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		return sPop(key, (v)->v, args);
 	}
 
 	@Override
 	public Set<String> sPop(final String key, final long count) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final SetConverter<byte[], String> binaryToStringSetConverter = Converters.setBinaryToString();
 
@@ -253,7 +253,7 @@ public final class LettuceClusterSetOperations extends AbstractSetOperations<Let
 
 	@Override
 	public String sRandMember(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		final byte[] bKey = SafeEncoder.encode(key);
 
 		return sRandMember(bKey, SafeEncoder::encode, args);
@@ -261,7 +261,7 @@ public final class LettuceClusterSetOperations extends AbstractSetOperations<Let
 
 	@Override
 	public byte[] sRandMember(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		return sRandMember(key, (v)->v, args);
 	}
 
@@ -387,7 +387,7 @@ public final class LettuceClusterSetOperations extends AbstractSetOperations<Let
 
 	@Override
 	public Set<String> sUnion(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 		final byte[][] bKeys = SafeEncoder.encode(keys);
 		final SetConverter<byte[], String> binaryToStringSetConverter = Converters.setBinaryToString();
 
@@ -396,7 +396,7 @@ public final class LettuceClusterSetOperations extends AbstractSetOperations<Let
 
 	@Override
 	public Set<byte[]> sUnion(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 		return sUnion(keys, (v)->v, args);
 	}
 
