@@ -26,8 +26,8 @@ package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.KeyValue;
 import com.buession.redis.client.jedis.JedisSentinelClient;
-import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.jedis.response.KeyValueConverter;
 
 /**
@@ -47,15 +47,15 @@ public final class JedisSentinelGenericOperations extends AbstractGenericOperati
 		final CommandArguments args = CommandArguments.create(replicas).add(timeout);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, Command.WAIT,
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.WAIT,
 					(cmd)->cmd.waitReplicas(replicas, timeout), (v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, Command.WAIT,
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.WAIT,
 					(cmd)->cmd.waitReplicas(replicas, timeout), (v)->v)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, Command.WAIT, (cmd)->cmd.waitReplicas(replicas, timeout),
+			return new JedisSentinelCommand<>(client, ProtocolCommand.WAIT, (cmd)->cmd.waitReplicas(replicas, timeout),
 					(v)->v)
 					.run(args);
 		}
@@ -67,16 +67,16 @@ public final class JedisSentinelGenericOperations extends AbstractGenericOperati
 		final KeyValueConverter<Long, Long, Long, Long> keyValueConverter = new KeyValueConverter<>((k)->k, (v)->v);
 
 		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, Command.WAIT,
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.WAITOF,
 					(cmd)->cmd.waitAOF((String) null, locals, replicas, timeout), keyValueConverter)
 					.run(args);
 		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, Command.WAIT,
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.WAITOF,
 					(cmd)->cmd.waitAOF((String) null, locals, replicas, timeout), keyValueConverter)
 					.run(args);
 		}else{
-			return new JedisSentinelCommand<>(client, Command.WAIT, (cmd)->cmd.waitAOF(locals, replicas, timeout),
-					keyValueConverter)
+			return new JedisSentinelCommand<>(client, ProtocolCommand.WAITOF,
+					(cmd)->cmd.waitAOF(locals, replicas, timeout), keyValueConverter)
 					.run(args);
 		}
 	}

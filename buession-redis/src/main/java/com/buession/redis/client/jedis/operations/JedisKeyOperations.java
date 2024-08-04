@@ -1230,24 +1230,6 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	}
 
 	@Override
-	public Long wait(final int replicas, final int timeout) {
-		final CommandArguments args = CommandArguments.create("replicas", replicas).put("timeout", timeout);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.WAIT, (cmd)->cmd.waitReplicas(replicas, timeout),
-					(v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.WAIT,
-					(cmd)->cmd.waitReplicas(replicas, timeout), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.WAIT, (cmd)->cmd.waitReplicas(replicas, timeout), (v)->v)
-					.run(args);
-		}
-	}
-
-	@Override
 	public ObjectEncoding objectEncoding(final String key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		final ObjectEncodingConverter objectEncodingConverter = new ObjectEncodingConverter();

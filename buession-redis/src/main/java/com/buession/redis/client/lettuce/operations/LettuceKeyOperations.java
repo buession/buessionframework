@@ -718,25 +718,6 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	}
 
 	@Override
-	public Long wait(final int replicas, final int timeout) {
-		final CommandArguments args = CommandArguments.create("replicas", replicas).put("timeout", timeout);
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.WAIT,
-					(cmd)->cmd.waitForReplication(replicas, timeout), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.WAIT,
-					(cmd)->cmd.waitForReplication(replicas, timeout), (v)->v)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.WAIT,
-					(cmd)->cmd.waitForReplication(replicas, timeout), (v)->v)
-					.run(args);
-		}
-	}
-
-	@Override
 	public ObjectEncoding objectEncoding(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		final ObjectEncodingConverter objectEncodingConverter = new ObjectEncodingConverter();

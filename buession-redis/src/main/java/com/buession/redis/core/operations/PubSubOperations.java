@@ -19,12 +19,16 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
 
+import com.buession.redis.core.PubSubListener;
 import com.buession.redis.core.command.PubSubCommands;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 发布与订阅命运算
@@ -34,5 +38,107 @@ import com.buession.redis.core.command.PubSubCommands;
  * @author Yong.Teng
  */
 public interface PubSubOperations extends PubSubCommands, RedisOperations {
+
+	@Override
+	default void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener) {
+		execute((client)->{
+			client.pubSubOperations().pSubscribe(patterns, pubSubListener);
+			return null;
+		});
+	}
+
+	@Override
+	default void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener) {
+		execute((client)->{
+			client.pubSubOperations().pSubscribe(patterns, pubSubListener);
+			return null;
+		});
+	}
+
+	@Override
+	default Long publish(final String channel, final String message) {
+		return execute((client)->client.pubSubOperations().publish(channel, message));
+	}
+
+	@Override
+	default Long publish(final byte[] channel, final byte[] message) {
+		return execute((client)->client.pubSubOperations().publish(channel, message));
+	}
+
+	@Override
+	default List<String> pubsubChannels() {
+		return execute((client)->client.pubSubOperations().pubsubChannels());
+	}
+
+	@Override
+	default List<String> pubsubChannels(final String pattern) {
+		return execute((client)->client.pubSubOperations().pubsubChannels(pattern));
+	}
+
+	@Override
+	default List<byte[]> pubsubChannels(final byte[] pattern) {
+		return execute((client)->client.pubSubOperations().pubsubChannels(pattern));
+	}
+
+	@Override
+	default Long pubsubNumPat() {
+		return execute((client)->client.pubSubOperations().pubsubNumPat());
+	}
+
+	@Override
+	default Map<String, Long> pubsubNumSub(final String... channels) {
+		return execute((client)->client.pubSubOperations().pubsubNumSub(channels));
+	}
+
+	@Override
+	default Map<byte[], Long> pubsubNumSub(final byte[]... channels) {
+		return execute((client)->client.pubSubOperations().pubsubNumSub(channels));
+	}
+
+	@Override
+	default Object pUnSubscribe() {
+		return execute((client)->client.pubSubOperations().pUnSubscribe());
+	}
+
+	@Override
+	default Object pUnSubscribe(final String... patterns) {
+		return execute((client)->client.pubSubOperations().pUnSubscribe(patterns));
+	}
+
+	@Override
+	default Object pUnSubscribe(final byte[]... patterns) {
+		return execute((client)->client.pubSubOperations().pUnSubscribe(patterns));
+	}
+
+	@Override
+	default void subscribe(final String[] channels, final PubSubListener<String> pubSubListener) {
+		execute((client)->{
+			client.pubSubOperations().subscribe(channels, pubSubListener);
+			return null;
+		});
+	}
+
+	@Override
+	default void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener) {
+		execute((client)->{
+			client.pubSubOperations().subscribe(channels, pubSubListener);
+			return null;
+		});
+	}
+
+	@Override
+	default Object unSubscribe() {
+		return execute((client)->client.pubSubOperations().unSubscribe());
+	}
+
+	@Override
+	default Object unSubscribe(final String... channels) {
+		return execute((client)->client.pubSubOperations().unSubscribe(channels));
+	}
+
+	@Override
+	default Object unSubscribe(final byte[]... channels) {
+		return execute((client)->client.pubSubOperations().unSubscribe(channels));
+	}
 
 }

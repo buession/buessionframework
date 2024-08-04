@@ -29,40 +29,19 @@ import com.buession.lang.Geo;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.datasource.DataSource;
-import com.buession.redis.core.AclLog;
 import com.buession.redis.core.Aggregate;
 import com.buession.redis.core.BitCountOption;
 import com.buession.redis.core.BitOperation;
-import com.buession.redis.core.BumpEpoch;
-import com.buession.redis.core.Client;
-import com.buession.redis.core.ClientReply;
-import com.buession.redis.core.ClientType;
-import com.buession.redis.core.ClientUnblockType;
-import com.buession.redis.core.ClusterFailoverOption;
-import com.buession.redis.core.ClusterInfo;
-import com.buession.redis.core.ClusterRedisNode;
-import com.buession.redis.core.ClusterResetOption;
-import com.buession.redis.core.ClusterSetSlotOption;
-import com.buession.redis.core.ClusterSlot;
 import com.buession.redis.core.Direction;
 import com.buession.redis.core.ExpireOption;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.GtLt;
-import com.buession.redis.core.Info;
 import com.buession.redis.core.ListPosition;
-import com.buession.redis.core.MemoryStats;
 import com.buession.redis.core.MigrateOperation;
-import com.buession.redis.core.Module;
 import com.buession.redis.core.NxXx;
 import com.buession.redis.core.ObjectEncoding;
-import com.buession.redis.core.PubSubListener;
-import com.buession.redis.core.RedisMonitor;
-import com.buession.redis.core.RedisServerTime;
-import com.buession.redis.core.Role;
 import com.buession.redis.core.ScanResult;
-import com.buession.redis.core.FlushMode;
-import com.buession.redis.core.SlowLog;
 import com.buession.redis.core.Stream;
 import com.buession.redis.core.StreamConsumer;
 import com.buession.redis.core.StreamEntry;
@@ -73,9 +52,7 @@ import com.buession.redis.core.StreamPending;
 import com.buession.redis.core.StreamPendingSummary;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
-import com.buession.redis.core.AclUser;
 import com.buession.redis.core.ZRangeBy;
-import com.buession.redis.transaction.Transaction;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -87,7 +64,7 @@ import java.util.Set;
  *
  * @author Yong.Teng
  */
-public class BaseRedisTemplate extends AbstractRedisTemplate {
+public abstract class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	/**
 	 * 构造函数
@@ -207,66 +184,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public String clusterMyId() {
-		return execute((client)->client.clusterOperations().clusterMyId());
-	}
-
-	@Override
-	public Status clusterAddSlots(final int... slots) {
-		return execute((client)->client.clusterOperations().clusterAddSlots(slots));
-	}
-
-	@Override
-	public List<ClusterSlot> clusterSlots() {
-		return execute((client)->client.clusterOperations().clusterSlots());
-	}
-
-	@Override
-	public Integer clusterCountFailureReports(final String nodeId) {
-		return execute((client)->client.clusterOperations().clusterCountFailureReports(nodeId));
-	}
-
-	@Override
-	public Integer clusterCountFailureReports(final byte[] nodeId) {
-		return execute((client)->client.clusterOperations().clusterCountFailureReports(nodeId));
-	}
-
-	@Override
-	public Long clusterCountKeysInSlot(final int slot) {
-		return execute((client)->client.clusterOperations().clusterCountKeysInSlot(slot));
-	}
-
-	@Override
-	public Status clusterDelSlots(final int... slots) {
-		return execute((client)->client.clusterOperations().clusterDelSlots(slots));
-	}
-
-	@Override
-	public Status clusterFlushSlots() {
-		return execute((client)->client.clusterOperations().clusterFlushSlots());
-	}
-
-	@Override
-	public Status clusterFailover(final ClusterFailoverOption clusterFailoverOption) {
-		return execute((client)->client.clusterOperations().clusterFailover(clusterFailoverOption));
-	}
-
-	@Override
-	public Status clusterForget(final String nodeId) {
-		return execute((client)->client.clusterOperations().clusterForget(nodeId));
-	}
-
-	@Override
-	public Status clusterForget(final byte[] nodeId) {
-		return execute((client)->client.clusterOperations().clusterForget(nodeId));
-	}
-
-	@Override
-	public List<String> clusterGetKeysInSlot(final int slot, final long count) {
-		return execute((client)->client.clusterOperations().clusterGetKeysInSlot(slot, count));
-	}
-
-	@Override
 	public Long clusterKeySlot(final String key) {
 		return execute((client)->client.clusterOperations().clusterKeySlot(rawKey(key)));
 	}
@@ -274,221 +191,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	@Override
 	public Long clusterKeySlot(final byte[] key) {
 		return execute((client)->client.clusterOperations().clusterKeySlot(rawKey(key)));
-	}
-
-	@Override
-	public ClusterInfo clusterInfo() {
-		return execute((client)->client.clusterOperations().clusterInfo());
-	}
-
-	@Override
-	public Status clusterMeet(final String ip, final int port) {
-		return execute((client)->client.clusterOperations().clusterMeet(ip, port));
-	}
-
-	@Override
-	public List<ClusterRedisNode> clusterNodes() {
-		return execute((client)->client.clusterOperations().clusterNodes());
-	}
-
-	@Override
-	public List<ClusterRedisNode> clusterSlaves(final String nodeId) {
-		return execute((client)->client.clusterOperations().clusterSlaves(nodeId));
-	}
-
-	@Override
-	public List<ClusterRedisNode> clusterSlaves(final byte[] nodeId) {
-		return execute((client)->client.clusterOperations().clusterSlaves(nodeId));
-	}
-
-	@Override
-	public List<ClusterRedisNode> clusterReplicas(final String nodeId) {
-		return execute((client)->client.clusterOperations().clusterReplicas(nodeId));
-	}
-
-	@Override
-	public List<ClusterRedisNode> clusterReplicas(final byte[] nodeId) {
-		return execute((client)->client.clusterOperations().clusterReplicas(nodeId));
-	}
-
-	@Override
-	public Status clusterReplicate(final String nodeId) {
-		return execute((client)->client.clusterOperations().clusterReplicate(nodeId));
-	}
-
-	@Override
-	public Status clusterReplicate(final byte[] nodeId) {
-		return execute((client)->client.clusterOperations().clusterReplicate(nodeId));
-	}
-
-	@Override
-	public Status clusterReset() {
-		return execute((client)->client.clusterOperations().clusterReset());
-	}
-
-	@Override
-	public Status clusterReset(final ClusterResetOption clusterResetOption) {
-		return execute((client)->client.clusterOperations().clusterReset(clusterResetOption));
-	}
-
-	@Override
-	public Status clusterSaveConfig() {
-		return execute((client)->client.clusterOperations().clusterSaveConfig());
-	}
-
-	@Override
-	public Status clusterSetConfigEpoch(final long configEpoch) {
-		return execute((client)->client.clusterOperations().clusterSetConfigEpoch(configEpoch));
-	}
-
-	@Override
-	public KeyValue<BumpEpoch, Integer> clusterBumpEpoch() {
-		return execute((client)->client.clusterOperations().clusterBumpEpoch());
-	}
-
-	@Override
-	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final String nodeId) {
-		return execute((client)->client.clusterOperations().clusterSetSlot(slot, setSlotOption, nodeId));
-	}
-
-	@Override
-	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final byte[] nodeId) {
-		return execute((client)->client.clusterOperations().clusterSetSlot(slot, setSlotOption, nodeId));
-	}
-
-	@Override
-	public Status asking() {
-		return execute((client)->client.clusterOperations().asking());
-	}
-
-	@Override
-	public Status readWrite() {
-		return execute((client)->client.clusterOperations().readWrite());
-	}
-
-	@Override
-	public Status readOnly() {
-		return execute((client)->client.clusterOperations().readOnly());
-	}
-
-	@Override
-	public Status auth(final String user, final String password) {
-		return execute((client)->client.connectionOperations().auth(user, password));
-	}
-
-	@Override
-	public Status auth(final byte[] user, final byte[] password) {
-		return execute((client)->client.connectionOperations().auth(user, password));
-	}
-
-	@Override
-	public Status auth(final String password) {
-		return execute((client)->client.connectionOperations().auth(password));
-	}
-
-	@Override
-	public Status auth(final byte[] password) {
-		return execute((client)->client.connectionOperations().auth(password));
-	}
-
-	@Override
-	public String echo(final String str) {
-		return execute((client)->client.connectionOperations().echo(str));
-	}
-
-	@Override
-	public byte[] echo(final byte[] str) {
-		return execute((client)->client.connectionOperations().echo(str));
-	}
-
-	@Override
-	public Status ping() {
-		return execute((client)->client.connectionOperations().ping());
-	}
-
-	@Override
-	public Status reset() {
-		return execute((client)->client.connectionOperations().reset());
-	}
-
-	@Override
-	public Status quit() {
-		return execute((client)->client.connectionOperations().quit());
-	}
-
-	@Override
-	public Status select(final int db) {
-		return execute((client)->client.connectionOperations().select(db));
-	}
-
-	@Override
-	public Status clientCaching(final boolean isYes) {
-		return execute((client)->client.connectionOperations().clientCaching(isYes));
-	}
-
-	@Override
-	public Long clientId() {
-		return execute((client)->client.connectionOperations().clientId());
-	}
-
-	@Override
-	public Status clientSetName(final String name) {
-		return execute((client)->client.connectionOperations().clientSetName(name));
-	}
-
-	@Override
-	public Status clientSetName(final byte[] name) {
-		return execute((client)->client.connectionOperations().clientSetName(name));
-	}
-
-	@Override
-	public String clientGetName() {
-		return execute((client)->client.connectionOperations().clientGetName());
-	}
-
-	@Override
-	public Integer clientGetRedir() {
-		return execute((client)->client.connectionOperations().clientGetRedir());
-	}
-
-	@Override
-	public List<Client> clientList() {
-		return execute((client)->client.connectionOperations().clientList());
-	}
-
-	@Override
-	public List<Client> clientList(final ClientType clientType) {
-		return execute((client)->client.connectionOperations().clientList(clientType));
-	}
-
-	@Override
-	public Client clientInfo() {
-		return execute((client)->client.connectionOperations().clientInfo());
-	}
-
-	@Override
-	public Status clientPause(final int timeout) {
-		return execute((client)->client.connectionOperations().clientPause(timeout));
-	}
-
-	@Override
-	public Status clientReply(final ClientReply option) {
-		return execute((client)->client.connectionOperations().clientReply(option));
-	}
-
-	@Override
-	public Status clientKill(final String host, final int port) {
-		return execute((client)->client.connectionOperations().clientKill(host, port));
-	}
-
-	@Override
-	public Status clientUnblock(final int clientId) {
-		return execute((client)->client.connectionOperations().clientUnblock(clientId));
-	}
-
-	@Override
-	public Status clientUnblock(final int clientId, final ClientUnblockType type) {
-		return execute((client)->client.connectionOperations().clientUnblock(clientId, type));
 	}
 
 	@Override
@@ -1387,11 +1089,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public Long wait(final int replicas, final int timeout) {
-		return execute((client)->client.keyOperations().wait(replicas, timeout));
-	}
-
-	@Override
 	public ObjectEncoding objectEncoding(final String key) {
 		return execute((client)->client.keyOperations().objectEncoding(rawKey(key)));
 	}
@@ -1654,128 +1351,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener) {
-		execute((client)->{
-			client.pubSubOperations().pSubscribe(patterns, pubSubListener);
-			return null;
-		});
-	}
-
-	@Override
-	public void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener) {
-		execute((client)->{
-			client.pubSubOperations().pSubscribe(patterns, pubSubListener);
-			return null;
-		});
-	}
-
-	@Override
-	public Long publish(final String channel, final String message) {
-		return execute((client)->client.pubSubOperations().publish(channel, message));
-	}
-
-	@Override
-	public Long publish(final byte[] channel, final byte[] message) {
-		return execute((client)->client.pubSubOperations().publish(channel, message));
-	}
-
-	@Override
-	public List<String> pubsubChannels() {
-		return execute((client)->client.pubSubOperations().pubsubChannels());
-	}
-
-	@Override
-	public List<String> pubsubChannels(final String pattern) {
-		return execute((client)->client.pubSubOperations().pubsubChannels(pattern));
-	}
-
-	@Override
-	public List<byte[]> pubsubChannels(final byte[] pattern) {
-		return execute((client)->client.pubSubOperations().pubsubChannels(pattern));
-	}
-
-	@Override
-	public Long pubsubNumPat() {
-		return execute((client)->client.pubSubOperations().pubsubNumPat());
-	}
-
-	@Override
-	public Map<String, Long> pubsubNumSub(final String... channels) {
-		return execute((client)->client.pubSubOperations().pubsubNumSub(channels));
-	}
-
-	@Override
-	public Map<byte[], Long> pubsubNumSub(final byte[]... channels) {
-		return execute((client)->client.pubSubOperations().pubsubNumSub(channels));
-	}
-
-	@Override
-	public Object pUnSubscribe() {
-		return execute((client)->client.pubSubOperations().pUnSubscribe());
-	}
-
-	@Override
-	public Object pUnSubscribe(final String... patterns) {
-		return execute((client)->client.pubSubOperations().pUnSubscribe(patterns));
-	}
-
-	@Override
-	public Object pUnSubscribe(final byte[]... patterns) {
-		return execute((client)->client.pubSubOperations().pUnSubscribe(patterns));
-	}
-
-	@Override
-	public void subscribe(final String[] channels, final PubSubListener<String> pubSubListener) {
-		execute((client)->{
-			client.pubSubOperations().subscribe(channels, pubSubListener);
-			return null;
-		});
-	}
-
-	@Override
-	public void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener) {
-		execute((client)->{
-			client.pubSubOperations().subscribe(channels, pubSubListener);
-			return null;
-		});
-	}
-
-	@Override
-	public Object unSubscribe() {
-		return execute((client)->client.pubSubOperations().unSubscribe());
-	}
-
-	@Override
-	public Object unSubscribe(final String... channels) {
-		return execute((client)->client.pubSubOperations().unSubscribe(channels));
-	}
-
-	@Override
-	public Object unSubscribe(final byte[]... channels) {
-		return execute((client)->client.pubSubOperations().unSubscribe(channels));
-	}
-
-	@Override
-	public Object eval(final String script) {
-		return execute((client)->client.scriptingOperations().eval(script));
-	}
-
-	@Override
-	public Object eval(final byte[] script) {
-		return execute((client)->client.scriptingOperations().eval(script));
-	}
-
-	@Override
-	public Object eval(final String script, final String... params) {
-		return execute((client)->client.scriptingOperations().eval(script, params));
-	}
-
-	@Override
-	public Object eval(final byte[] script, final byte[]... params) {
-		return execute((client)->client.scriptingOperations().eval(script, params));
-	}
-
-	@Override
 	public Object eval(final String script, final String[] keys, final String[] arguments) {
 		return execute((client)->client.scriptingOperations().eval(script, rawKeys(keys), arguments));
 	}
@@ -1786,26 +1361,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public Object evalSha(final String digest) {
-		return execute((client)->client.scriptingOperations().evalSha(digest));
-	}
-
-	@Override
-	public Object evalSha(final byte[] digest) {
-		return execute((client)->client.scriptingOperations().evalSha(digest));
-	}
-
-	@Override
-	public Object evalSha(final String digest, final String... params) {
-		return execute((client)->client.scriptingOperations().evalSha(digest, params));
-	}
-
-	@Override
-	public Object evalSha(final byte[] digest, final byte[]... params) {
-		return execute((client)->client.scriptingOperations().evalSha(digest, params));
-	}
-
-	@Override
 	public Object evalSha(final String digest, final String[] keys, final String[] arguments) {
 		return execute((client)->client.scriptingOperations().evalSha(digest, rawKeys(keys), arguments));
 	}
@@ -1813,256 +1368,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	@Override
 	public Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] arguments) {
 		return execute((client)->client.scriptingOperations().evalSha(digest, rawKeys(keys), arguments));
-	}
-
-	@Override
-	public List<Boolean> scriptExists(final String... sha1) {
-		return execute((client)->client.scriptingOperations().scriptExists(sha1));
-	}
-
-	@Override
-	public List<Boolean> scriptExists(final byte[]... sha1) {
-		return execute((client)->client.scriptingOperations().scriptExists(sha1));
-	}
-
-	@Override
-	public Status scriptFlush() {
-		return execute((client)->client.scriptingOperations().scriptFlush());
-	}
-
-	@Override
-	public Status scriptFlush(final FlushMode mode) {
-		return execute((client)->client.scriptingOperations().scriptFlush(mode));
-	}
-
-	@Override
-	public String scriptLoad(final String script) {
-		return execute((client)->client.scriptingOperations().scriptLoad(script));
-	}
-
-	@Override
-	public byte[] scriptLoad(final byte[] script) {
-		return execute((client)->client.scriptingOperations().scriptLoad(script));
-	}
-
-	@Override
-	public Status scriptKill() {
-		return execute((client)->client.scriptingOperations().scriptKill());
-	}
-
-	@Override
-	public List<String> aclCat() {
-		return execute((client)->client.serverOperations().aclCat());
-	}
-
-	@Override
-	public List<String> aclCat(final String categoryName) {
-		return execute((client)->client.serverOperations().aclCat(categoryName));
-	}
-
-	@Override
-	public List<byte[]> aclCat(final byte[] categoryName) {
-		return execute((client)->client.serverOperations().aclCat(categoryName));
-	}
-
-	@Override
-	public Status aclSetUser(final String username, final String... rules) {
-		return execute((client)->client.serverOperations().aclSetUser(username, rules));
-	}
-
-	@Override
-	public Status aclSetUser(final byte[] username, final byte[]... rules) {
-		return execute((client)->client.serverOperations().aclSetUser(username, rules));
-	}
-
-	@Override
-	public AclUser aclGetUser(final String username) {
-		return execute((client)->client.serverOperations().aclGetUser(username));
-	}
-
-	@Override
-	public AclUser aclGetUser(final byte[] username) {
-		return execute((client)->client.serverOperations().aclGetUser(username));
-	}
-
-	@Override
-	public List<String> aclUsers() {
-		return execute((client)->client.serverOperations().aclUsers());
-	}
-
-	@Override
-	public String aclWhoAmI() {
-		return execute((client)->client.serverOperations().aclWhoAmI());
-	}
-
-	@Override
-	public Long aclDelUser(final String... usernames) {
-		return execute((client)->client.serverOperations().aclDelUser(usernames));
-	}
-
-	@Override
-	public Long aclDelUser(final byte[]... username) {
-		return execute((client)->client.serverOperations().aclDelUser(username));
-	}
-
-	@Override
-	public String aclGenPass() {
-		return execute((client)->client.serverOperations().aclGenPass());
-	}
-
-	@Override
-	public List<String> aclList() {
-		return execute((client)->client.serverOperations().aclList());
-	}
-
-	@Override
-	public Status aclLoad() {
-		return execute((client)->client.serverOperations().aclLoad());
-	}
-
-	@Override
-	public List<AclLog> aclLog() {
-		return execute((client)->client.serverOperations().aclLog());
-	}
-
-	@Override
-	public List<AclLog> aclLog(final long count) {
-		return execute((client)->client.serverOperations().aclLog(count));
-	}
-
-	@Override
-	public Status aclLogReset() {
-		return execute((client)->client.serverOperations().aclLogReset());
-	}
-
-	@Override
-	public Status aclLogSave() {
-		return execute((client)->client.serverOperations().aclLogSave());
-	}
-
-	@Override
-	public String bgRewriteAof() {
-		return execute((client)->client.serverOperations().bgRewriteAof());
-	}
-
-	@Override
-	public String bgSave() {
-		return execute((client)->client.serverOperations().bgSave());
-	}
-
-	@Override
-	public Status configSet(final String parameter, final String value) {
-		return execute((client)->client.serverOperations().configSet(parameter, value));
-	}
-
-	@Override
-	public Status configSet(final byte[] parameter, final byte[] value) {
-		return execute((client)->client.serverOperations().configSet(parameter, value));
-	}
-
-	@Override
-	public Status configSet(final Map<String, String> configs) {
-		return execute((client)->client.serverOperations().configSet(configs));
-	}
-
-	@Override
-	public Map<String, String> configGet(final String pattern) {
-		return execute((client)->client.serverOperations().configGet(pattern));
-	}
-
-	@Override
-	public Map<byte[], byte[]> configGet(final byte[] pattern) {
-		return execute((client)->client.serverOperations().configGet(pattern));
-	}
-
-	@Override
-	public Status configResetStat() {
-		return execute((client)->client.serverOperations().configResetStat());
-	}
-
-	@Override
-	public Status configRewrite() {
-		return execute((client)->client.serverOperations().configRewrite());
-	}
-
-	@Override
-	public Long dbSize() {
-		return execute((client)->client.serverOperations().dbSize());
-	}
-
-	@Override
-	public Status failover() {
-		return execute((client)->client.serverOperations().failover());
-	}
-
-	@Override
-	public Status failover(final String host, final int port) {
-		return execute((client)->client.serverOperations().failover(host, port));
-	}
-
-	@Override
-	public Status failover(final String host, final int port, final int timeout) {
-		return execute((client)->client.serverOperations().failover(host, port, timeout));
-	}
-
-	@Override
-	public Status failover(final String host, final int port, final boolean isForce, final int timeout) {
-		return execute((client)->client.serverOperations().failover(host, port, isForce, timeout));
-	}
-
-	@Override
-	public Status failover(final int timeout) {
-		return execute((client)->client.serverOperations().failover(timeout));
-	}
-
-	@Override
-	public Status flushAll() {
-		return execute((client)->client.serverOperations().flushAll());
-	}
-
-	@Override
-	public Status flushAll(final FlushMode mode) {
-		return execute((client)->client.serverOperations().flushAll(mode));
-	}
-
-	@Override
-	public Status flushDb() {
-		return execute((client)->client.serverOperations().flushDb());
-	}
-
-	@Override
-	public Status flushDb(final FlushMode mode) {
-		return execute((client)->client.serverOperations().flushDb(mode));
-	}
-
-	@Override
-	public Info info() {
-		return execute((client)->client.serverOperations().info());
-	}
-
-	@Override
-	public Info info(final Info.Section section) {
-		return execute((client)->client.serverOperations().info(section));
-	}
-
-	@Override
-	public Long lastSave() {
-		return execute((client)->client.serverOperations().lastSave());
-	}
-
-	@Override
-	public String memoryDoctor() {
-		return execute((client)->client.serverOperations().memoryDoctor());
-	}
-
-	@Override
-	public Status memoryPurge() {
-		return execute((client)->client.serverOperations().memoryPurge());
-	}
-
-	@Override
-	public MemoryStats memoryStats() {
-		return execute((client)->client.serverOperations().memoryStats());
 	}
 
 	@Override
@@ -2083,123 +1388,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	@Override
 	public Long memoryUsage(final byte[] key, final int samples) {
 		return execute((client)->client.serverOperations().memoryUsage(rawKey(key), samples));
-	}
-
-	@Override
-	public List<Module> moduleList() {
-		return execute((client)->client.serverOperations().moduleList());
-	}
-
-	@Override
-	public Status moduleLoad(final String path, final String... arguments) {
-		return execute((client)->client.serverOperations().moduleLoad(path, arguments));
-	}
-
-	@Override
-	public Status moduleLoad(final byte[] path, final byte[]... arguments) {
-		return execute((client)->client.serverOperations().moduleLoad(path, arguments));
-	}
-
-	@Override
-	public Status moduleUnLoad(final String name) {
-		return execute((client)->client.serverOperations().moduleUnLoad(name));
-	}
-
-	@Override
-	public Status moduleUnLoad(final byte[] name) {
-		return execute((client)->client.serverOperations().moduleUnLoad(name));
-	}
-
-	@Override
-	public void monitor(final RedisMonitor redisMonitor) {
-		execute((client)->{
-			client.serverOperations().monitor(redisMonitor);
-			return null;
-		});
-	}
-
-	@Override
-	public Object pSync(final String replicationId, final long offset) {
-		return execute((client)->client.serverOperations().pSync(replicationId, offset));
-	}
-
-	@Override
-	public Object pSync(final byte[] replicationId, final long offset) {
-		return execute((client)->client.serverOperations().pSync(replicationId, offset));
-	}
-
-	@Override
-	public void sync() {
-		execute((client)->{
-			client.serverOperations().sync();
-			return null;
-		});
-	}
-
-	@Override
-	public Status replicaOf(final String host, final int port) {
-		return execute((client)->client.serverOperations().replicaOf(host, port));
-	}
-
-	@Override
-	public Status slaveOf(final String host, final int port) {
-		return execute((client)->client.serverOperations().slaveOf(host, port));
-	}
-
-	@Override
-	public Role role() {
-		return execute((client)->client.serverOperations().role());
-	}
-
-	@Override
-	public Status save() {
-		return execute((client)->client.serverOperations().save());
-	}
-
-	@Override
-	public void shutdown() {
-		execute((client)->{
-			client.serverOperations().shutdown();
-			return null;
-		});
-	}
-
-	@Override
-	public void shutdown(final boolean save) {
-		execute((client)->{
-			client.serverOperations().shutdown(save);
-			return null;
-		});
-	}
-
-	@Override
-	public List<SlowLog> slowLogGet() {
-		return execute((client)->client.serverOperations().slowLogGet());
-	}
-
-	@Override
-	public List<SlowLog> slowLogGet(final long count) {
-		return execute((client)->client.serverOperations().slowLogGet(count));
-	}
-
-	@Override
-	public Long slowLogLen() {
-		return execute((client)->client.serverOperations().slowLogLen());
-	}
-
-	@Override
-	public Status slowLogReset() {
-		return execute((client)->client.serverOperations().slowLogReset());
-	}
-
-	@Override
-	public Status swapdb(final int db1, final int db2) {
-		return execute((client)->client.serverOperations().swapdb(db1, db2));
-	}
-
-	@Override
-	public RedisServerTime time() {
-		return execute((client)->client.serverOperations().time());
 	}
 
 	@Override
@@ -4386,15 +3574,13 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public Status multi() {
-		return execute((client)->{
-			try{
-				final Transaction transaction = client.getConnection().multi();
-				return transaction != null ? Status.SUCCESS : Status.FAILURE;
-			}catch(Exception e){
-				return Status.FAILURE;
-			}
-		});
+	public Status watch(final String... keys) {
+		return execute((client)->client.transactionOperations().watch(rawKeys(keys)));
+	}
+
+	@Override
+	public Status watch(final byte[]... keys) {
+		return execute((client)->client.transactionOperations().watch(rawKeys(keys)));
 	}
 
 	@Override
@@ -4408,21 +3594,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 			client.getConnection().discard();
 			return null;
 		});
-	}
-
-	@Override
-	public Status watch(final String... keys) {
-		return execute((client)->client.transactionOperations().watch(rawKeys(keys)));
-	}
-
-	@Override
-	public Status watch(final byte[]... keys) {
-		return execute((client)->client.transactionOperations().watch(rawKeys(keys)));
-	}
-
-	@Override
-	public Status unwatch() {
-		return execute((client)->client.transactionOperations().unwatch());
 	}
 
 }

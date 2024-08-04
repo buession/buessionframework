@@ -22,16 +22,48 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.operations;
+package com.buession.redis.client.lettuce.operations;
 
-import com.buession.redis.core.SessionCallback;
-import com.buession.redis.exception.RedisException;
+import com.buession.lang.KeyValue;
+import com.buession.redis.client.lettuce.LettuceClusterClient;
+import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.ProtocolCommand;
 
 /**
+ * Lettuce 集群模式一般命令操作
+ *
  * @author Yong.Teng
+ * @since 3.0.0
  */
-public interface RedisOperations {
+public final class LettuceClusterGenericOperations extends AbstractGenericOperations<LettuceClusterClient> {
 
-	<R> R execute(final SessionCallback<R> callback) throws RedisException;
+	public LettuceClusterGenericOperations(final LettuceClusterClient client) {
+		super(client);
+	}
+
+	@Override
+	public Long wait(final int replicas, final int timeout) {
+		final CommandArguments args = CommandArguments.create(replicas).add(timeout);
+
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.WAIT,
+					(cmd)->cmd.waitForReplication(replicas, timeout), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<>(client, ProtocolCommand.WAIT,
+					(cmd)->cmd.waitForReplication(replicas, timeout), (v)->v)
+					.run(args);
+		}else{
+			return new LettuceClusterCommand<>(client, ProtocolCommand.WAIT,
+					(cmd)->cmd.waitForReplication(replicas, timeout), (v)->v)
+					.run(args);
+		}
+	}
+
+	@Override
+	public KeyValue<Long, Long> waitOf(final int locals, final int replicas, final int timeout) {
+		final CommandArguments args = CommandArguments.create(locals).add(replicas).add(timeout);
+		return notCommand(client, ProtocolCommand.WAITOF, args);
+	}
 
 }

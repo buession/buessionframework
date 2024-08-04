@@ -22,21 +22,35 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
+package com.buession.redis.client.lettuce.operations;
+
+import com.buession.lang.KeyValue;
+import com.buession.redis.client.lettuce.LettuceSentinelClient;
+import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.ProtocolCommand;
 
 /**
+ * Lettuce 哨兵模式一般命令操作
+ *
  * @author Yong.Teng
+ * @since 3.0.0
  */
-public enum NxXx {
+public final class LettuceSentinelGenericOperations extends AbstractGenericOperations<LettuceSentinelClient> {
 
-	/**
-	 * 只有键 key 不存在的时候
-	 */
-	NX,
+	public LettuceSentinelGenericOperations(final LettuceSentinelClient client) {
+		super(client);
+	}
 
-	/**
-	 * 只有键 key 存在的时候
-	 */
-	XX
+	@Override
+	public Long wait(final int replicas, final int timeout) {
+		final CommandArguments args = CommandArguments.create(replicas).add(timeout);
+		return notCommand(client, ProtocolCommand.WAIT, args);
+	}
+
+	@Override
+	public KeyValue<Long, Long> waitOf(final int locals, final int replicas, final int timeout) {
+		final CommandArguments args = CommandArguments.create(locals).add(replicas).add(timeout);
+		return notCommand(client, ProtocolCommand.WAITOF, args);
+	}
 
 }

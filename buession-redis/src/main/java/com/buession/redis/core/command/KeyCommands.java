@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
@@ -1372,20 +1372,6 @@ public interface KeyCommands extends RedisCommands {
 	 * @return 被删除 key 的数量
 	 */
 	Long unlink(final byte[]... keys);
-
-	/**
-	 * 阻塞当前客户端，直到所有以前的写命令都成功的传输和指定的slaves确认
-	 *
-	 * <p>详情说明 <a href="http://www.redis.cn/commands/wait.html" target="_blank">http://www.redis.cn/commands/wait.html</a></p>
-	 *
-	 * @param replicas
-	 * 		副本数量
-	 * @param timeout
-	 * 		超时（单位：毫秒）
-	 *
-	 * @return 被删除 key 的数量
-	 */
-	Long wait(final int replicas, final int timeout);
 
 	/**
 	 * 返回指定 key 对应 value 所使用的内部表示

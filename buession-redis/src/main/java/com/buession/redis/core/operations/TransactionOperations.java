@@ -19,12 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
 
+import com.buession.lang.Status;
 import com.buession.redis.core.command.TransactionCommands;
+import com.buession.redis.transaction.Transaction;
 
 /**
  * 事务运算
@@ -34,5 +36,22 @@ import com.buession.redis.core.command.TransactionCommands;
  * @author Yong.Teng
  */
 public interface TransactionOperations extends TransactionCommands, RedisOperations {
+
+	@Override
+	default Status multi() {
+		return execute((client)->{
+			try{
+				final Transaction transaction = client.getConnection().multi();
+				return transaction != null ? Status.SUCCESS : Status.FAILURE;
+			}catch(Exception e){
+				return Status.FAILURE;
+			}
+		});
+	}
+
+	@Override
+	default Status unwatch() {
+		return execute((client)->client.transactionOperations().unwatch());
+	}
 
 }

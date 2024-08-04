@@ -29,6 +29,7 @@ import com.buession.redis.client.connection.jedis.JedisConnection;
 import com.buession.redis.client.jedis.operations.JedisBitMapOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterOperations;
 import com.buession.redis.client.jedis.operations.JedisConnectionOperations;
+import com.buession.redis.client.jedis.operations.JedisGenericOperations;
 import com.buession.redis.client.jedis.operations.JedisGeoOperations;
 import com.buession.redis.client.jedis.operations.JedisHashOperations;
 import com.buession.redis.client.jedis.operations.JedisHyperLogLogOperations;
@@ -93,6 +94,15 @@ public class JedisStandaloneClient extends AbstractJedisRedisClient<JedisConnect
 		}
 
 		return connectionOperations;
+	}
+
+	@Override
+	public GenericOperations genericOperations() {
+		if(genericOperations == null){
+			genericOperations = new JedisGenericOperations(this);
+		}
+
+		return genericOperations;
 	}
 
 	@Override

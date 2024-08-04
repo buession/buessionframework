@@ -28,6 +28,7 @@ import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.operations.BitMapOperations;
 import com.buession.redis.client.operations.ClusterOperations;
 import com.buession.redis.client.operations.ConnectionOperations;
+import com.buession.redis.client.operations.GenericOperations;
 import com.buession.redis.client.operations.GeoOperations;
 import com.buession.redis.client.operations.HashOperations;
 import com.buession.redis.client.operations.HyperLogLogOperations;
@@ -87,6 +88,15 @@ public interface RedisClient {
 	 * @return 连接命令操作实例
 	 */
 	ConnectionOperations connectionOperations();
+
+	/**
+	 * 返回一般命令操作实例
+	 *
+	 * @return 一般命令操作实例
+	 *
+	 * @since 3.0.0
+	 */
+	GenericOperations genericOperations();
 
 	/**
 	 * 返回地理位置命令操作实例
@@ -192,7 +202,7 @@ public interface RedisClient {
 	 * @throws RedisException
 	 * 		Redis Exception
 	 */
-	default <R> R execute(final Command<R> command) throws RedisException{
+	default <R> R execute(final Command<R> command) throws RedisException {
 		return execute(command, null);
 	}
 

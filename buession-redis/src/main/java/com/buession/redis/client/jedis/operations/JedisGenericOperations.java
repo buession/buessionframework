@@ -22,22 +22,23 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.lettuce.operations;
+package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.KeyValue;
-import com.buession.redis.client.lettuce.LettuceStandaloneClient;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.internal.convert.jedis.response.KeyValueConverter;
 
 /**
- * Lettuce 单机模式一般命令操作
+ * Jedis 单机模式一般命令操作
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class LettuceGenericOperations extends AbstractGenericOperations<LettuceStandaloneClient> {
+public final class JedisGenericOperations extends AbstractGenericOperations<JedisStandaloneClient> {
 
-	public LettuceGenericOperations(final LettuceStandaloneClient client) {
+	public JedisGenericOperations(final JedisStandaloneClient client) {
 		super(client);
 	}
 
@@ -46,15 +47,16 @@ public final class LettuceGenericOperations extends AbstractGenericOperations<Le
 		final CommandArguments args = CommandArguments.create(replicas).add(timeout);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, Command.WAIT, (cmd)->cmd.waitForReplication(replicas, timeout),
+			return new JedisPipelineCommand<>(client, ProtocolCommand.WAIT, (cmd)->cmd.waitReplicas(replicas, timeout),
 					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, Command.WAIT,
-					(cmd)->cmd.waitForReplication(replicas, timeout), (v)->v)
+			return new JedisTransactionCommand<>(client, ProtocolCommand.WAIT,
+					(cmd)->cmd.waitReplicas(replicas, timeout),
+					(v)->v)
 					.run(args);
 		}else{
-			return new LettuceCommand<>(client, Command.WAIT, (cmd)->cmd.waitForReplication(replicas, timeout), (v)->v)
+			return new JedisCommand<>(client, ProtocolCommand.WAIT, (cmd)->cmd.waitReplicas(replicas, timeout), (v)->v)
 					.run(args);
 		}
 	}
@@ -62,7 +64,21 @@ public final class LettuceGenericOperations extends AbstractGenericOperations<Le
 	@Override
 	public KeyValue<Long, Long> waitOf(final int locals, final int replicas, final int timeout) {
 		final CommandArguments args = CommandArguments.create(locals).add(replicas).add(timeout);
-		return notCommand(client, Command.WAITOF, args);
+		final KeyValueConverter<Long, Long, Long, Long> keyValueConverter = new KeyValueConverter<>((k)->k, (v)->v);
+
+		if(isPipeline()){
+			return new JedisPipelineCommand<>(client, ProtocolCommand.WAITOF,
+					(cmd)->cmd.waitAOF((String) null, locals, replicas, timeout), keyValueConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisTransactionCommand<>(client, ProtocolCommand.WAITOF,
+					(cmd)->cmd.waitAOF((String) null, locals, replicas, timeout), keyValueConverter)
+					.run(args);
+		}else{
+			return new JedisCommand<>(client, ProtocolCommand.WAITOF, (cmd)->cmd.waitAOF(locals, replicas, timeout),
+					keyValueConverter)
+					.run(args);
+		}
 	}
 
 }

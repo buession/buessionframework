@@ -40,45 +40,7 @@ import java.util.Map;
  */
 public final class CommandArguments {
 
-	private final List<Object> parameters = new ArrayList<>();
-
 	private CommandArguments() {
-	}
-
-	private CommandArguments(final byte[] value) {
-		add(value);
-	}
-
-	private CommandArguments(final char value) {
-		add(value);
-	}
-
-	private CommandArguments(final short value) {
-		add(value);
-	}
-
-	private CommandArguments(final int value) {
-		add(value);
-	}
-
-	private CommandArguments(final long value) {
-		add(value);
-	}
-
-	private CommandArguments(final float value) {
-		add(value);
-	}
-
-	private CommandArguments(final double value) {
-		add(value);
-	}
-
-	private CommandArguments(final boolean value) {
-		add(value);
-	}
-
-	private CommandArguments(final String value) {
-		add(value);
 	}
 
 	private CommandArguments(final Keyword value) {
@@ -93,54 +55,6 @@ public final class CommandArguments {
 		add(value);
 	}
 
-	private CommandArguments(final Collection<?> value) {
-		add(value);
-	}
-
-	private CommandArguments(final Map<?, ?> value) {
-		add(value);
-	}
-
-	private CommandArguments(final Object value) {
-		add(value);
-	}
-
-	private CommandArguments(final byte[]... values) {
-		add(values);
-	}
-
-	private CommandArguments(final char... values) {
-		add(values);
-	}
-
-	private CommandArguments(final short... values) {
-		add(values);
-	}
-
-	private CommandArguments(final int... values) {
-		add(values);
-	}
-
-	private CommandArguments(final long... values) {
-		add(values);
-	}
-
-	private CommandArguments(final float... values) {
-		add(values);
-	}
-
-	private CommandArguments(final double... values) {
-		add(values);
-	}
-
-	private CommandArguments(final boolean... values) {
-		add(values);
-	}
-
-	private CommandArguments(final String... values) {
-		add(values);
-	}
-
 	private CommandArguments(final Keyword... values) {
 		add(values);
 	}
@@ -151,58 +65,6 @@ public final class CommandArguments {
 
 	private CommandArguments(final Range<?>... values) {
 		add(values);
-	}
-
-	private CommandArguments(final Collection<?>... values) {
-		add(values);
-	}
-
-	private CommandArguments(final Map<?, ?>... values) {
-		add(values);
-	}
-
-	private CommandArguments(final Object... values) {
-		add(values);
-	}
-
-	public static CommandArguments create() {
-		return new CommandArguments();
-	}
-
-	public static CommandArguments create(final byte[] value) {
-		return new CommandArguments(value);
-	}
-
-	public static CommandArguments create(final char value) {
-		return new CommandArguments(value);
-	}
-
-	public static CommandArguments create(final short value) {
-		return new CommandArguments(value);
-	}
-
-	public static CommandArguments create(final int value) {
-		return new CommandArguments(value);
-	}
-
-	public static CommandArguments create(final long value) {
-		return new CommandArguments(value);
-	}
-
-	public static CommandArguments create(final float value) {
-		return new CommandArguments(value);
-	}
-
-	public static CommandArguments create(final double value) {
-		return new CommandArguments(value);
-	}
-
-	public static CommandArguments create(final boolean value) {
-		return new CommandArguments(value);
-	}
-
-	public static CommandArguments create(final String value) {
-		return new CommandArguments(value);
 	}
 
 	public static CommandArguments create(final Keyword value) {
@@ -217,54 +79,6 @@ public final class CommandArguments {
 		return new CommandArguments(value);
 	}
 
-	public static CommandArguments create(final Collection<?> value) {
-		return new CommandArguments(value);
-	}
-
-	public static CommandArguments create(final Map<?, ?> value) {
-		return new CommandArguments(value);
-	}
-
-	public static CommandArguments create(final Object value) {
-		return new CommandArguments(value);
-	}
-
-	public static CommandArguments create(final byte[]... values) {
-		return new CommandArguments(values);
-	}
-
-	public static CommandArguments create(final char... values) {
-		return new CommandArguments(values);
-	}
-
-	public static CommandArguments create(final short... values) {
-		return new CommandArguments(values);
-	}
-
-	public static CommandArguments create(final int... values) {
-		return new CommandArguments(values);
-	}
-
-	public static CommandArguments create(final long... values) {
-		return new CommandArguments(values);
-	}
-
-	public static CommandArguments create(final float... values) {
-		return new CommandArguments(values);
-	}
-
-	public static CommandArguments create(final double... values) {
-		return new CommandArguments(values);
-	}
-
-	public static CommandArguments create(final boolean... values) {
-		return new CommandArguments(values);
-	}
-
-	public static CommandArguments create(final String... values) {
-		return new CommandArguments(values);
-	}
-
 	public static CommandArguments create(final Keyword... values) {
 		return new CommandArguments(values);
 	}
@@ -275,69 +89,6 @@ public final class CommandArguments {
 
 	public static CommandArguments create(final Range<?>... values) {
 		return new CommandArguments(values);
-	}
-
-	public static CommandArguments create(final Collection<?>... values) {
-		return new CommandArguments(values);
-	}
-
-	public static CommandArguments create(final Map<?, ?>... values) {
-		return new CommandArguments(values);
-	}
-
-	public static CommandArguments create(final Object... values) {
-		return new CommandArguments(values);
-	}
-
-	public CommandArguments add(final byte[] value) {
-		if(value != null){
-			parameters.add(value);
-		}
-
-		return this;
-	}
-
-	public CommandArguments add(final char value) {
-		parameters.add(value);
-		return this;
-	}
-
-	public CommandArguments add(final short value) {
-		parameters.add(value);
-		return this;
-	}
-
-	public CommandArguments add(final int value) {
-		parameters.add(value);
-		return this;
-	}
-
-	public CommandArguments add(final long value) {
-		parameters.add(value);
-		return this;
-	}
-
-	public CommandArguments add(final float value) {
-		parameters.add(value);
-		return this;
-	}
-
-	public CommandArguments add(final double value) {
-		parameters.add(value);
-		return this;
-	}
-
-	public CommandArguments add(final boolean value) {
-		parameters.add(value ? "1" : "0");
-		return this;
-	}
-
-	public CommandArguments add(final String value) {
-		if(value != null){
-			parameters.add(value);
-		}
-
-		return this;
 	}
 
 	public CommandArguments add(final Keyword value) {
@@ -360,120 +111,6 @@ public final class CommandArguments {
 		if(value != null){
 			parameters.add(value.getStart());
 			parameters.add(value.getEnd());
-		}
-
-		return this;
-	}
-
-	public CommandArguments add(final Collection<?> value) {
-		if(value != null){
-			value.forEach(this::add);
-		}
-
-		return this;
-	}
-
-	public CommandArguments add(final Map<?, ?> value) {
-		if(value != null){
-			value.forEach(this::add);
-		}
-
-		return this;
-	}
-
-	public CommandArguments add(final Object value) {
-		if(value != null){
-			parameters.add(value);
-		}
-
-		return this;
-	}
-
-	public CommandArguments add(final byte[]... values) {
-		if(Validate.isNotEmpty(values)){
-			for(Object value : values){
-				add(value);
-			}
-		}
-
-		return this;
-	}
-
-	public CommandArguments add(final char... values) {
-		if(Validate.isNotEmpty(values)){
-			for(Object value : values){
-				add(value);
-			}
-		}
-
-		return this;
-	}
-
-	public CommandArguments add(final short... values) {
-		if(Validate.isNotEmpty(values)){
-			for(Object value : values){
-				add(value);
-			}
-		}
-
-		return this;
-	}
-
-	public CommandArguments add(final int... values) {
-		if(Validate.isNotEmpty(values)){
-			for(Object value : values){
-				add(value);
-			}
-		}
-
-		return this;
-	}
-
-	public CommandArguments add(final long... values) {
-		if(Validate.isNotEmpty(values)){
-			for(Object value : values){
-				add(value);
-			}
-		}
-
-		return this;
-	}
-
-	public CommandArguments add(final float... values) {
-		if(Validate.isNotEmpty(values)){
-			for(Object value : values){
-				add(value);
-			}
-		}
-
-		return this;
-	}
-
-	public CommandArguments add(final double... values) {
-		if(Validate.isNotEmpty(values)){
-			for(Object value : values){
-				add(value);
-			}
-		}
-
-		return this;
-	}
-
-	public CommandArguments add(final boolean... values) {
-		if(Validate.isNotEmpty(values)){
-			for(Object value : values){
-				add(value);
-			}
-		}
-
-		return this;
-	}
-
-	public CommandArguments add(final String... values) {
-		if(Validate.isNotEmpty(values)){
-			for(Object value : values){
-				add(value);
-			}
 		}
 
 		return this;
@@ -507,57 +144,6 @@ public final class CommandArguments {
 		}
 
 		return this;
-	}
-
-	public CommandArguments add(final Collection<?>... values) {
-		if(Validate.isNotEmpty(values)){
-			for(Object value : values){
-				add(value);
-			}
-		}
-
-		return this;
-	}
-
-	public CommandArguments add(final Map<?, ?>... values) {
-		if(Validate.isNotEmpty(values)){
-			for(Object value : values){
-				add(value);
-			}
-		}
-
-		return this;
-	}
-
-	public CommandArguments add(final Object... values) {
-		if(Validate.isNotEmpty(values)){
-			for(Object value : values){
-				add(value);
-			}
-		}
-
-		return this;
-	}
-
-	public List<Object> getParameters() {
-		return parameters;
-	}
-
-	public List<Object> build() {
-		return getParameters();
-	}
-
-	public String asString() {
-		if(Validate.isEmpty(getParameters())){
-			return Constants.EMPTY_STRING;
-		}else{
-			return StringUtils.join(getParameters(), " ");
-		}
-	}
-
-	@Override
-	public String toString() {
-		return asString();
 	}
 
 }

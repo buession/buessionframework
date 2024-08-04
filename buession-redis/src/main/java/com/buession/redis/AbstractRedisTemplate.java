@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis;
@@ -35,14 +35,14 @@ import com.buession.redis.utils.SafeEncoder;
  * @author Yong.Teng
  */
 public abstract class AbstractRedisTemplate extends RedisAccessor implements BitMapCommands, ClusterCommands,
-		ConnectionCommands, GeoCommands, HashCommands, HyperLogLogCommands, KeyCommands, ListCommands, PubSubCommands,
-		ScriptingCommands, ServerCommands, SetCommands, SortedSetCommands, StreamCommands, StringCommands,
-		TransactionCommands {
+		ConnectionCommands, GenericCommand, GeoCommands, HashCommands, HyperLogLogCommands, KeyCommands, ListCommands,
+		PubSubCommands, ScriptingCommands, ServerCommands, SetCommands, SortedSetCommands, StreamCommands,
+		StringCommands, TransactionCommands {
 
 	/**
 	 * 构造函数
 	 */
-	public AbstractRedisTemplate(){
+	public AbstractRedisTemplate() {
 		super();
 	}
 
@@ -52,26 +52,26 @@ public abstract class AbstractRedisTemplate extends RedisAccessor implements Bit
 	 * @param dataSource
 	 * 		数据源
 	 */
-	public AbstractRedisTemplate(DataSource dataSource){
+	public AbstractRedisTemplate(DataSource dataSource) {
 		super(dataSource);
 	}
 
-	protected final String rawKey(final String key){
+	protected final String rawKey(final String key) {
 		String prefix = getOptions().getPrefix();
 		return Validate.isEmpty(prefix) ? key : prefix.concat(key);
 	}
 
-	protected final byte[] rawKey(byte[] key){
+	protected final byte[] rawKey(byte[] key) {
 		String prefix = getOptions().getPrefix();
 		return Validate.isEmpty(prefix) ? key : ByteUtils.concat(SafeEncoder.encode(prefix), key);
 	}
 
-	protected final String[] rawKeys(final String[] keys){
+	protected final String[] rawKeys(final String[] keys) {
 		String prefix = getOptions().getPrefix();
 		return Validate.isEmpty(prefix) || Validate.isEmpty(keys) ? keys : Arrays.map(keys, String.class, this::rawKey);
 	}
 
-	protected final byte[][] rawKeys(final byte[][] keys){
+	protected final byte[][] rawKeys(final byte[][] keys) {
 		String prefix = getOptions().getPrefix();
 
 		if(Validate.isEmpty(prefix) || Validate.isEmpty(keys)){

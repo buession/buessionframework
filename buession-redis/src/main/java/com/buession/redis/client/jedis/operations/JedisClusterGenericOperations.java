@@ -22,22 +22,23 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.lettuce.operations;
+package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.KeyValue;
-import com.buession.redis.client.lettuce.LettuceClusterClient;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.internal.convert.jedis.response.KeyValueConverter;
 
 /**
- * Lettuce 集群模式一般命令操作
+ * Jedis 集群模式一般命令操作
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class LettuceClusterGenericOperations extends AbstractGenericOperations<LettuceClusterClient> {
+public final class JedisClusterGenericOperations extends AbstractGenericOperations<JedisClusterClient> {
 
-	public LettuceClusterGenericOperations(final LettuceClusterClient client) {
+	public JedisClusterGenericOperations(final JedisClusterClient client) {
 		super(client);
 	}
 
@@ -46,16 +47,17 @@ public final class LettuceClusterGenericOperations extends AbstractGenericOperat
 		final CommandArguments args = CommandArguments.create(replicas).add(timeout);
 
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<>(client, Command.WAIT,
-					(cmd)->cmd.waitForReplication(replicas, timeout), (v)->v)
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.WAIT,
+					(cmd)->cmd.waitReplicas(replicas, timeout),
+					(v)->v)
 					.run(args);
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<>(client, Command.WAIT,
-					(cmd)->cmd.waitForReplication(replicas, timeout), (v)->v)
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.WAIT,
+					(cmd)->cmd.waitReplicas(replicas, timeout), (v)->v)
 					.run(args);
 		}else{
-			return new LettuceClusterCommand<>(client, Command.WAIT,
-					(cmd)->cmd.waitForReplication(replicas, timeout), (v)->v)
+			return new JedisClusterCommand<>(client, ProtocolCommand.WAIT,
+					(cmd)->cmd.waitReplicas((String) null, replicas, timeout), (v)->v)
 					.run(args);
 		}
 	}
@@ -63,7 +65,21 @@ public final class LettuceClusterGenericOperations extends AbstractGenericOperat
 	@Override
 	public KeyValue<Long, Long> waitOf(final int locals, final int replicas, final int timeout) {
 		final CommandArguments args = CommandArguments.create(locals).add(replicas).add(timeout);
-		return notCommand(client, Command.WAITOF, args);
+		final KeyValueConverter<Long, Long, Long, Long> keyValueConverter = new KeyValueConverter<>((k)->k, (v)->v);
+
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.WAITOF,
+					(cmd)->cmd.waitAOF((String) null, locals, replicas, timeout), keyValueConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.WAITOF,
+					(cmd)->cmd.waitAOF((String) null, locals, replicas, timeout), keyValueConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.WAITOF,
+					(cmd)->cmd.waitAOF((String) null, locals, replicas, timeout), keyValueConverter)
+					.run(args);
+		}
 	}
 
 }

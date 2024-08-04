@@ -29,6 +29,7 @@ import com.buession.redis.client.connection.lettuce.LettuceConnection;
 import com.buession.redis.client.lettuce.operations.LettuceBitMapOperations;
 import com.buession.redis.client.lettuce.operations.LettuceClusterOperations;
 import com.buession.redis.client.lettuce.operations.LettuceConnectionOperations;
+import com.buession.redis.client.lettuce.operations.LettuceGenericOperations;
 import com.buession.redis.client.lettuce.operations.LettuceGeoOperations;
 import com.buession.redis.client.lettuce.operations.LettuceHashOperations;
 import com.buession.redis.client.lettuce.operations.LettuceHyperLogLogOperations;
@@ -95,6 +96,15 @@ public class LettuceStandaloneClient extends AbstractLettuceRedisClient<LettuceC
 		}
 
 		return connectionOperations;
+	}
+
+	@Override
+	public GenericOperations genericOperations() {
+		if(genericOperations == null){
+			genericOperations = new LettuceGenericOperations(this);
+		}
+
+		return genericOperations;
 	}
 
 	@Override

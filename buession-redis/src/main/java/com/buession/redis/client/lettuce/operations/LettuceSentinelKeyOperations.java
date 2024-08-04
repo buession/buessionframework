@@ -682,22 +682,6 @@ public final class LettuceSentinelKeyOperations extends AbstractKeyOperations<Le
 	}
 
 	@Override
-	public Long wait(final int replicas, final int timeout) {
-		final CommandArguments args = CommandArguments.create("replicas", replicas).put("timeout", timeout);
-
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.WAIT)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.WAIT)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.WAIT)
-					.run(args);
-		}
-	}
-
-	@Override
 	public ObjectEncoding objectEncoding(final byte[] key) {
 		final CommandArguments args = CommandArguments.create("key", key);
 		final ObjectEncodingConverter objectEncodingConverter = new ObjectEncodingConverter();
