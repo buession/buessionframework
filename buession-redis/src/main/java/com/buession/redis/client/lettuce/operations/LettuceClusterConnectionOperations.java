@@ -60,7 +60,7 @@ public final class LettuceClusterConnectionOperations extends AbstractConnection
 
 	@Override
 	public Status auth(final String user, final String password) {
-		final CommandArguments args = CommandArguments.create("user", user).put("password", password);
+		final CommandArguments args = CommandArguments.create(user).add(password);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.AUTH,
@@ -83,7 +83,7 @@ public final class LettuceClusterConnectionOperations extends AbstractConnection
 
 	@Override
 	public Status auth(final String password) {
-		final CommandArguments args = CommandArguments.create("password", password);
+		final CommandArguments args = CommandArguments.create(password);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.AUTH,
@@ -179,7 +179,7 @@ public final class LettuceClusterConnectionOperations extends AbstractConnection
 
 	@Override
 	public Status select(final int db) {
-		final CommandArguments args = CommandArguments.create("db", db);
+		final CommandArguments args = CommandArguments.create(db);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<Status, Status>(client, ProtocolCommand.SELECT)

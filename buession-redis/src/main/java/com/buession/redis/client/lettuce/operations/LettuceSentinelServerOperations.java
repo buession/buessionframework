@@ -296,7 +296,7 @@ public final class LettuceSentinelServerOperations extends AbstractServerOperati
 
 	@Override
 	public Status configSet(final Map<String, String> configs) {
-		final CommandArguments args = CommandArguments.create("configs", configs);
+		final CommandArguments args = CommandArguments.create(configs);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CONFIG_SET)
@@ -312,13 +312,13 @@ public final class LettuceSentinelServerOperations extends AbstractServerOperati
 
 	@Override
 	public Map<String, String> configGet(final String pattern) {
-		final CommandArguments args = CommandArguments.create("pattern", pattern);
+		final CommandArguments args = CommandArguments.create(pattern);
 		return configGet(pattern, args);
 	}
 
 	@Override
 	public Map<byte[], byte[]> configGet(final byte[] pattern) {
-		final CommandArguments args = CommandArguments.create("pattern", pattern);
+		final CommandArguments args = CommandArguments.create(pattern);
 		final String sPattern = SafeEncoder.encode(pattern);
 
 		return configGet(sPattern, args);
@@ -401,7 +401,7 @@ public final class LettuceSentinelServerOperations extends AbstractServerOperati
 
 	@Override
 	public Status failover(final int timeout) {
-		final CommandArguments args = CommandArguments.create("timeout", timeout);
+		final CommandArguments args = CommandArguments.create(timeout);
 		return failover(args);
 	}
 
@@ -421,7 +421,7 @@ public final class LettuceSentinelServerOperations extends AbstractServerOperati
 
 	@Override
 	public Status flushAll(final FlushMode mode) {
-		final CommandArguments args = CommandArguments.create("mode", mode);
+		final CommandArguments args = CommandArguments.create(mode);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.FLUSHALL)
@@ -451,7 +451,7 @@ public final class LettuceSentinelServerOperations extends AbstractServerOperati
 
 	@Override
 	public Status flushDb(final FlushMode mode) {
-		final CommandArguments args = CommandArguments.create("mode", mode);
+		final CommandArguments args = CommandArguments.create(mode);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.FLUSHDB)
@@ -485,7 +485,7 @@ public final class LettuceSentinelServerOperations extends AbstractServerOperati
 
 	@Override
 	public Info info(final Info.Section section) {
-		final CommandArguments args = CommandArguments.create("section", section);
+		final CommandArguments args = CommandArguments.create(section);
 		final String sectionName = section.name().toLowerCase();
 		final InfoConverter infoConverter = new InfoConverter();
 

@@ -371,7 +371,7 @@ public final class LettuceSentinelSetOperations extends AbstractSetOperations<Le
 
 	@Override
 	public Set<String> sUnion(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 		final byte[][] bKeys = SafeEncoder.encode(keys);
 		final SetConverter<byte[], String> binaryToStringSetConverter = Converters.setBinaryToString();
 
@@ -380,7 +380,7 @@ public final class LettuceSentinelSetOperations extends AbstractSetOperations<Le
 
 	@Override
 	public Set<byte[]> sUnion(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 		return sUnion(keys, (v)->v, args);
 	}
 
