@@ -32,8 +32,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.buession.beans.BeanConverter;
-import com.buession.beans.DefaultBeanConverter;
 import com.buession.core.utils.FieldUtils;
 import com.buession.core.utils.Assert;
 import com.buession.core.utils.RandomUtils;
@@ -49,6 +47,7 @@ import org.slf4j.LoggerFactory;
 
 import com.buession.core.Pagination;
 import com.buession.core.exception.OperationException;
+import org.springframework.cglib.beans.BeanMap;
 
 import javax.annotation.Resource;
 
@@ -140,11 +139,8 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 			Map<Object, Object> eMap = (Map<Object, Object>) e;
 			eMap.forEach((key, value)->data.put(key.toString(), value));
 		}else{
-			BeanConverter beanConverter = new DefaultBeanConverter();
-			Map<String, Object> eData = new HashMap<>();
-
-			beanConverter.convert(e, eData);
-			data.putAll(eData);
+			BeanMap beanMap = BeanMap.create(e);
+			data.putAll(beanMap);
 		}
 
 		return getMasterSqlSessionTemplate().update(getStatement(DML.UPDATE), data);
