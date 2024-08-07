@@ -25,6 +25,7 @@
 - 新增代理方法调用者 ProxyMethodInvoker
 - 新增代理调用处理器 InvocationHandler 抽象类 AbstractInvocationHandler
 - PropertyMapper 增加正数断言 alwaysApplyingWhenPositiveNumber
+- com.buession.io.file.File 新增支持将 InputStream 写入文件
 
 
 ### 🔔 变化
@@ -53,6 +54,7 @@
 - IO MimeType 忽略大小写比较
 - 删除 com.buession.web.mvc.Response 中参数为 com.buession.core.Pagination 的构造函数和 stter 函数
 - 删除 buession-cron 和 buession-session
+- 删除 MobileFilter、PoweredByHeaderFilter
 
 
 ### 🐞 Bug 修复
@@ -61,8 +63,9 @@
 - 修复 okhttp 设置 followRedirects 时，followSslRedirects 未生效的 BUG
 - 修复 jedis 模式下 role 命令未返回数据的 BUG
 - 修复 jedis 模式下 API 中，“命令”参数设置错误的 BUG
-- r修复 jedis GeoRadiusResponseConverter coordinate 为 null 时，空指针异常
+- 修复 jedis GeoRadiusResponseConverter coordinate 为 null 时，空指针异常
 - 修复 jedis 模式下连接中的错误和参数丢失等问题
+- 修复 Validate IPV4 验证，第一段为 10 ~ 99 时，验证失败的 BUG
 
 
 ### ⏪ 优化
@@ -71,6 +74,7 @@
 - 优化 JDBC 数据源连接池设置
 - 优化 httpclient 配置、连接管理器以及连接客户端
 - 优化默认线程池执行器 DefaultThreadPoolExecutor 初始化
+- com.buession.io.file.File 读取文件优化
 
 
 ### 📔 文档

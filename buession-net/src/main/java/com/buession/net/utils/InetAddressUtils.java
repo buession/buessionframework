@@ -35,7 +35,7 @@ import java.net.UnknownHostException;
  */
 public class InetAddressUtils {
 
-	private InetAddressUtils(){
+	private InetAddressUtils() {
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class InetAddressUtils {
 	 *
 	 * @return IPV4 地址
 	 */
-	public static String long2ip(long l){
+	public static String long2ip(long l) {
 		long[] result = new long[4];
 		for(int i = 4; i > 0; i--){
 			result[i - 1] = (l & 0xff);
@@ -64,7 +64,7 @@ public class InetAddressUtils {
 	 *
 	 * @return IPV4 地址的 InetAddress 对象
 	 */
-	public static InetAddress long2InetAddress(long l){
+	public static InetAddress long2InetAddress(long l) {
 		String ip = long2ip(l);
 
 		try{
@@ -82,7 +82,7 @@ public class InetAddressUtils {
 	 *
 	 * @return IPV4 地址的长整型
 	 */
-	public static long ip2long(String ip){
+	public static long ip2long(String ip) {
 		if(Validate.isIpV4(ip) == false){
 			throw new IllegalArgumentException("Illegal ip: " + ip + ", must be ipv4.");
 		}

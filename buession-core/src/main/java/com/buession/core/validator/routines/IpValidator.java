@@ -96,7 +96,7 @@ public class IpValidator {
 			case 1:
 				return digits[0] >= '0' && digits[0] <= '9';
 			case 2:
-				return (digits[0] >= 1 && digits[0] <= 9) && (digits[1] >= '0' && digits[1] <= '9');
+				return (digits[0] >= '1' && digits[0] <= '9') && (digits[1] >= '0' && digits[1] <= '9');
 			case 3:
 				if(digits[0] == '1'){
 					return (digits[1] >= '0' && digits[1] <= '9') && (digits[2] >= '0' && digits[2] <= '9');

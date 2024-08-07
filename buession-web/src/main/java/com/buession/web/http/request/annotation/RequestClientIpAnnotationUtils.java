@@ -19,12 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.http.request.annotation;
 
-import com.buession.net.utils.InetAddressUtils;
+import com.buession.core.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
@@ -62,7 +62,14 @@ public class RequestClientIpAnnotationUtils {
 		Class<?> clazz = parameter.nestedIfOptional().getNestedParameterType();
 
 		if(Long.class.isAssignableFrom(clazz)){
-			return InetAddressUtils.ip2long(fn.apply(parameter));
+			String[] numbers = StringUtils.splitByWholeSeparatorPreserveAllTokens(fn.apply(parameter), ".");
+			long result = 0L;
+
+			for(int i = 0; i < 4; ++i){
+				result = result << 8 | Integer.parseInt(numbers[i]);
+			}
+
+			return result;
 		}else if(CharSequence.class.isAssignableFrom(clazz)){
 			return fn.apply(parameter);
 		}else if(InetAddress.class.isAssignableFrom(clazz)){

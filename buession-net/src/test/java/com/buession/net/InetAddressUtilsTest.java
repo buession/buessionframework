@@ -41,7 +41,7 @@ public class InetAddressUtilsTest {
 
 	@Test
 	public void long2ip() {
-		System.out.println(InetAddressUtils.long2ip(3739974408L));
+		System.out.println(InetAddressUtils.long2ip(InetAddressUtils.ip2long("256.89.154.222")));
 	}
 
 }
