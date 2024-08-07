@@ -57,7 +57,6 @@
 		<module>../buession-aop</module>
 		<module>../buession-beans</module>
 		<module>../buession-core</module>
-		<module>../buession-cron</module>
 		<module>../buession-dao</module>
 		<module>../buession-geoip</module>
 		<module>../buession-git</module>
@@ -68,7 +67,6 @@
 		<module>../buession-lang</module>
 		<module>../buession-net</module>
 		<module>../buession-redis</module>
-		<module>../buession-session</module>
 		<module>../buession-thesaurus</module>
 		<module>../buession-velocity</module>
 		<module>../buession-web</module>

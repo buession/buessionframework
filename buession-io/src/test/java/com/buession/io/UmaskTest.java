@@ -19,38 +19,38 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.io;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Yong.Teng
  */
 public class UmaskTest {
 
-    @Test
-    public void mask(){
-        int $perms = 0777;
+	@Test
+	public void mask() {
+		int $perms = 0777;
 
-        String $info = "";
-        // Owner
-        $info += (($perms & 0x0100) != 0 ? "r" : "-");
-        $info += (($perms & 0x0080) != 0 ? "w" : "-");
-        $info += (($perms & 0x0040) != 0 ? (($perms & 0x0800) != 0 ? "s" : "x") : (($perms & 0x0800) != 0 ? "s" : "-"));
+		String $info = "";
+		// Owner
+		$info += (($perms & 0x0100) != 0 ? "r" : "-");
+		$info += (($perms & 0x0080) != 0 ? "w" : "-");
+		$info += (($perms & 0x0040) != 0 ? (($perms & 0x0800) != 0 ? "s" : "x") : (($perms & 0x0800) != 0 ? "s" : "-"));
 
-        // Group
-        $info += (($perms & 0x0020) != 0 ? "r" : "-");
-        $info += (($perms & 0x0010) != 0 ? "w" : "-");
-        $info += (($perms & 0x0008) != 0 ? (($perms & 0x0400) != 0 ? "s" : "x") : (($perms & 0x0400) != 0 ? "s" : "-"));
+		// Group
+		$info += (($perms & 0x0020) != 0 ? "r" : "-");
+		$info += (($perms & 0x0010) != 0 ? "w" : "-");
+		$info += (($perms & 0x0008) != 0 ? (($perms & 0x0400) != 0 ? "s" : "x") : (($perms & 0x0400) != 0 ? "s" : "-"));
 
-        // World
-        $info += (($perms & 0x0004) != 0 ? "r" : "-");
-        $info += (($perms & 0x0002) != 0 ? "w" : "-");
-        $info += (($perms & 0x0001) != 0 ? (($perms & 0x0200) != 0 ? "t" : "x") : (($perms & 0x0200) != 0 ? "t" : "-"));
-        System.out.println($perms + ": " + $info);
-    }
+		// World
+		$info += (($perms & 0x0004) != 0 ? "r" : "-");
+		$info += (($perms & 0x0002) != 0 ? "w" : "-");
+		$info += (($perms & 0x0001) != 0 ? (($perms & 0x0200) != 0 ? "t" : "x") : (($perms & 0x0200) != 0 ? "t" : "-"));
+		System.out.println($perms + ": " + $info);
+	}
 
 }

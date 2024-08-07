@@ -19,14 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.io;
 
 import com.buession.io.file.File;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
@@ -37,14 +37,14 @@ import java.io.IOException;
 public class FileTest {
 
 	@Test
-	public void mimeType() throws IOException{
+	public void mimeType() throws IOException {
 		File file = new File("tmp.jpeg");
 		MimeType mimeType = file.getMimeType();
 		System.out.println(mimeType + ": " + mimeType.getDescription());
 	}
 
 	@Test
-	public void jsonEncode() throws IOException{
+	public void jsonEncode() throws IOException {
 		File file = new File("tmp.jpeg");
 
 		ObjectMapper objectMapper = new ObjectMapper();

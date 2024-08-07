@@ -19,13 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient;
 
 import com.buession.httpclient.core.ProtocolVersion;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Yong.Teng
@@ -34,7 +34,7 @@ import org.junit.Test;
 public class ProtocolVersionTest {
 
 	@Test
-	public void createInstance(){
+	public void createInstance() {
 		ProtocolVersion protocolVersion = ProtocolVersion.createInstance("http", 1, 1);
 		System.out.println(protocolVersion);
 	}

@@ -19,13 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.lang;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Yong.Teng
@@ -34,40 +34,40 @@ import org.junit.Test;
 public class VersionTest {
 
 	@Test
-	public void create(){
+	public void create() {
 		Version version = new Version("1.11.2");
-		Assert.assertEquals(version.toString(), "1.11.2");
+		Assertions.assertEquals(version.toString(), "1.11.2");
 	}
 
 	@Test
-	public void createBeta(){
+	public void createBeta() {
 		Version version = new Version("1.11.2beta");
-		Assert.assertEquals(version.toString(), "1.11.2beta");
+		Assertions.assertEquals(version.toString(), "1.11.2beta");
 	}
 
 	@Test
-	public void createRc(){
+	public void createRc() {
 		Version version = new Version("1.11.2 RC");
-		Assert.assertEquals(version.toString(), "1.11.2 RC");
+		Assertions.assertEquals(version.toString(), "1.11.2 RC");
 	}
 
 	@Test
-	public void createMajorVersionAndMinorVersion(){
+	public void createMajorVersionAndMinorVersion() {
 		Version version = new Version("1.113");
-		Assert.assertEquals(version.toString(), "1.113");
+		Assertions.assertEquals(version.toString(), "1.113");
 	}
 
 	@Test
-	public void createMajorVersionAndMinorVersionRc(){
+	public void createMajorVersionAndMinorVersionRc() {
 		Version version = new Version("1.113 Rc");
-		Assert.assertEquals(version.toString(), "1.113 Rc");
+		Assertions.assertEquals(version.toString(), "1.113 Rc");
 	}
 
 	@Test
-	public void compare(){
+	public void compare() {
 		Version version1 = new Version("1.11.2");
 		Version version2 = new Version("1.11.2 Beta");
-		Assert.assertEquals(version1.compareTo(version2), 1);
+		Assertions.assertEquals(version1.compareTo(version2), 1);
 	}
 
 }

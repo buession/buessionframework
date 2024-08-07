@@ -19,15 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://buession.buession.com.cn/LICENSE 												       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.json;
 
 import com.buession.json.annotation.JsonEnum2Map;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.StringJoiner;

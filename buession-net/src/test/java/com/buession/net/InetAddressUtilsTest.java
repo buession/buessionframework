@@ -21,13 +21,13 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2024 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.net;
 
 import com.buession.net.utils.InetAddressUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Yong.Teng
@@ -35,12 +35,12 @@ import org.junit.Test;
 public class InetAddressUtilsTest {
 
 	@Test
-	public void ip2long(){
+	public void ip2long() {
 		System.out.println(InetAddressUtils.ip2long("127.0.0.1"));
 	}
 
 	@Test
-	public void long2ip(){
+	public void long2ip() {
 		System.out.println(InetAddressUtils.long2ip(3739974408L));
 	}
 

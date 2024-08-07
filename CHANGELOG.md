@@ -52,6 +52,7 @@
 - redis 不再推荐从 DataSource 中创建 RedisConnection 实例
 - IO MimeType 忽略大小写比较
 - 删除 com.buession.web.mvc.Response 中参数为 com.buession.core.Pagination 的构造函数和 stter 函数
+- 删除 buession-cron 和 buession-session
 
 
 ### 🐞 Bug 修复
