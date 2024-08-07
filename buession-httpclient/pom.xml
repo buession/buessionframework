@@ -67,12 +67,7 @@
 			<groupId>com.buession</groupId>
 			<artifactId>buession-io</artifactId>
 			<version>${project.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.apache.tika</groupId>
-					<artifactId>tika-core</artifactId>
-				</exclusion>
-			</exclusions>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.buession</groupId>

@@ -396,7 +396,7 @@ public class OkHttpHttpClient extends AbstractHttpClient {
 			return httpResponseBuilder.build(httpResponse);
 		}catch(IOException e){
 			if(logger.isErrorEnabled()){
-				logger.error("Request({}) url: {} error.", request.getMethod(), request.getUrl(), e);
+				logger.error("Request({}) url: {} error.", request.getMethod(), request.getUri(), e);
 			}
 
 			if(e instanceof SocketTimeoutException){
