@@ -51,4 +51,11 @@ public class FileTest {
 		System.out.println(objectMapper.writeValueAsString(file));
 	}
 
+	@Test
+	public void read() throws IOException {
+		File file = new File("/Users/tengyong/Downloads/sys_user_role.sql");
+		
+		System.out.println(new String(file.read()));
+	}
+
 }
