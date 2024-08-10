@@ -29,15 +29,72 @@ import com.buession.jdbc.core.TransactionIsolation;
 import com.buession.jdbc.datasource.config.TomcatPoolConfiguration;
 
 import java.time.Duration;
+import java.util.Properties;
 
 /**
- * Tomcat DataSource 抽象类
+ * Tomcat DataSource
  *
  * @author Yong.Teng
  * @since 1.3.2
  */
 public class TomcatDataSource
 		extends AbstractDataSource<org.apache.tomcat.jdbc.pool.DataSource, TomcatPoolConfiguration> {
+
+	/**
+	 * JNDI 数据源的名称
+	 *
+	 * @since 3.0.0
+	 */
+	private String jndi;
+
+	/**
+	 * 是否允许在同一个数据库连接中使用不同的用户名进行身份验证
+	 *
+	 * @since 3.0.0
+	 */
+	private Boolean alternateUsernameAllowed;
+
+	/**
+	 * 连接归还到池时，设置为自动提交
+	 *
+	 * @since 3.0.0
+	 */
+	private Boolean commitOnReturn;
+
+	/**
+	 * 连接归还到池时，是否回滚所有操作
+	 *
+	 * @since 3.0.0
+	 */
+	private Boolean rollbackOnReturn;
+
+	/**
+	 * 实现 {@link org.apache.tomcat.jdbc.pool.Validator} 接口并提供无参构造方法的实现类，用来替代连接验证SQL，对连接进行验证
+	 *
+	 * @since 3.0.0
+	 */
+	private String validatorClassName;
+
+	/**
+	 * 验证连接时间间隔
+	 *
+	 * @since 3.0.0
+	 */
+	private Duration validationInterval;
+
+	/**
+	 * JDBC 拦截器，{@link org.apache.tomcat.jdbc.pool.JdbcInterceptor} 的实现
+	 *
+	 * @since 3.0.0
+	 */
+	private String jdbcInterceptors;
+
+	/**
+	 * 底层数据源相关的属性
+	 *
+	 * @since 3.0.0
+	 */
+	private Properties dbProperties;
 
 	/**
 	 * 构造函数
@@ -160,15 +217,255 @@ public class TomcatDataSource
 		super(driverClassName, url, username, password, poolConfiguration);
 	}
 
+	/**
+	 * 返回 JNDI 数据源的名称
+	 *
+	 * @return JNDI 数据源的名称
+	 *
+	 * @since 3.0.0
+	 */
+	public String getJndi() {
+		return jndi;
+	}
+
+	/**
+	 * 设置 JNDI 数据源的名称
+	 *
+	 * @param jndi
+	 * 		JNDI 数据源的名称
+	 *
+	 * @since 3.0.0
+	 */
+	public void setJndi(String jndi) {
+		this.jndi = jndi;
+	}
+
+	/**
+	 * 返回是否允许在同一个数据库连接中使用不同的用户名进行身份验证
+	 *
+	 * @return 是否允许在同一个数据库连接中使用不同的用户名进行身份验证
+	 *
+	 * @since 3.0.0
+	 */
+	public Boolean isAlternateUsernameAllowed() {
+		return getAlternateUsernameAllowed();
+	}
+
+	/**
+	 * 返回是否允许在同一个数据库连接中使用不同的用户名进行身份验证
+	 *
+	 * @return 是否允许在同一个数据库连接中使用不同的用户名进行身份验证
+	 *
+	 * @since 3.0.0
+	 */
+	public Boolean getAlternateUsernameAllowed() {
+		return alternateUsernameAllowed;
+	}
+
+	/**
+	 * 设置是否允许在同一个数据库连接中使用不同的用户名进行身份验证
+	 *
+	 * @param alternateUsernameAllowed
+	 * 		是否允许在同一个数据库连接中使用不同的用户名进行身份验证
+	 *
+	 * @since 3.0.0
+	 */
+	public void setAlternateUsernameAllowed(Boolean alternateUsernameAllowed) {
+		this.alternateUsernameAllowed = alternateUsernameAllowed;
+	}
+
+	/**
+	 * 返回连接归还到池时，设置为自动提交
+	 *
+	 * @return 连接归还到池时，设置为自动提交
+	 *
+	 * @since 3.0.0
+	 */
+	public Boolean isCommitOnReturn() {
+		return getCommitOnReturn();
+	}
+
+	/**
+	 * 返回连接归还到池时，设置为自动提交
+	 *
+	 * @return 连接归还到池时，设置为自动提交
+	 *
+	 * @since 3.0.0
+	 */
+	public Boolean getCommitOnReturn() {
+		return commitOnReturn;
+	}
+
+	/**
+	 * 设置连接归还到池时，是否自动提交
+	 *
+	 * @param commitOnReturn
+	 * 		连接归还到池时，是否自动提交
+	 *
+	 * @since 3.0.0
+	 */
+	public void setCommitOnReturn(Boolean commitOnReturn) {
+		this.commitOnReturn = commitOnReturn;
+	}
+
+	/**
+	 * 返回连接归还到池时，是否回滚所有操作
+	 *
+	 * @return 连接归还到池时，是否回滚所有操作
+	 *
+	 * @since 3.0.0
+	 */
+	public Boolean isRollbackOnReturn() {
+		return getRollbackOnReturn();
+	}
+
+	/**
+	 * 返回连接归还到池时，是否回滚所有操作
+	 *
+	 * @return 连接归还到池时，是否回滚所有操作
+	 *
+	 * @since 3.0.0
+	 */
+	public Boolean getRollbackOnReturn() {
+		return rollbackOnReturn;
+	}
+
+	/**
+	 * 设置连接归还到池时，是否回滚所有操作
+	 *
+	 * @param rollbackOnReturn
+	 * 		连接归还到池时，是否回滚所有操作
+	 *
+	 * @since 3.0.0
+	 */
+	public void setRollbackOnReturn(Boolean rollbackOnReturn) {
+		this.rollbackOnReturn = rollbackOnReturn;
+	}
+
+	/**
+	 * 返回实现 {@link org.apache.tomcat.jdbc.pool.Validator} 接口并提供无参构造方法的实现类，用来替代连接验证SQL，对连接进行验证的类名
+	 *
+	 * @return 实现 {@link org.apache.tomcat.jdbc.pool.Validator} 接口并提供无参构造方法的实现类，用来替代连接验证SQL，对连接进行验证的类名
+	 *
+	 * @since 3.0.0
+	 */
+	public String getValidatorClassName() {
+		return validatorClassName;
+	}
+
+	/**
+	 * 设置实现 {@link org.apache.tomcat.jdbc.pool.Validator} 接口并提供无参构造方法的实现类，用来替代连接验证SQL，对连接进行验证的类名
+	 *
+	 * @param validatorClassName
+	 * 		实现 {@link org.apache.tomcat.jdbc.pool.Validator} 接口并提供无参构造方法的实现类，用来替代连接验证SQL，对连接进行验证的类名
+	 *
+	 * @since 3.0.0
+	 */
+	public void setValidatorClassName(String validatorClassName) {
+		this.validatorClassName = validatorClassName;
+	}
+
+	/**
+	 * 返回验证连接时间间隔
+	 *
+	 * @return 验证连接时间间隔
+	 *
+	 * @since 3.0.0
+	 */
+	public Duration getValidationInterval() {
+		return validationInterval;
+	}
+
+	/**
+	 * 设置验证连接时间间隔
+	 *
+	 * @param validationInterval
+	 * 		验证连接时间间隔
+	 *
+	 * @since 3.0.0
+	 */
+	public void setValidationInterval(Duration validationInterval) {
+		this.validationInterval = validationInterval;
+	}
+
+	/**
+	 * 返回 JDBC 拦截器，{@link org.apache.tomcat.jdbc.pool.JdbcInterceptor} 的实现
+	 *
+	 * @return JDBC 拦截器
+	 *
+	 * @since 3.0.0
+	 */
+	public String getJdbcInterceptors() {
+		return jdbcInterceptors;
+	}
+
+	/**
+	 * 设置 JDBC 拦截器，{@link org.apache.tomcat.jdbc.pool.JdbcInterceptor} 的实现
+	 *
+	 * @param jdbcInterceptors
+	 * 		JDBC 拦截器
+	 *
+	 * @since 3.0.0
+	 */
+	public void setJdbcInterceptors(String jdbcInterceptors) {
+		this.jdbcInterceptors = jdbcInterceptors;
+	}
+
+	/**
+	 * 返回底层数据源相关的属性
+	 *
+	 * @return 底层数据源相关的属性
+	 */
+	public Properties getDbProperties() {
+		return dbProperties;
+	}
+
+	/**
+	 * 设置底层数据源相关的属性
+	 *
+	 * @param dbProperties
+	 * 		底层数据源相关的属性
+	 */
+	public void setDbProperties(Properties dbProperties) {
+		this.dbProperties = dbProperties;
+		super.setConnectionProperties(dbProperties);
+	}
+
+	@Override
+	public void setConnectionProperties(Properties connectionProperties) {
+		setDbProperties(connectionProperties);
+	}
+
 	@Override
 	public org.apache.tomcat.jdbc.pool.DataSource createDataSource() {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
 		final org.apache.tomcat.jdbc.pool.DataSource dataSource = new org.apache.tomcat.jdbc.pool.DataSource();
 
 		propertyMapper.from(this::getDriverClassName).to(dataSource::setDriverClassName);
+		propertyMapper.from(this::getJndi).to(dataSource::setDataSourceJNDI);
 		propertyMapper.from(this::getUrl).to(dataSource::setUrl);
 		propertyMapper.from(this::getUsername).to(dataSource::setUsername);
 		propertyMapper.from(this::getPassword).to(dataSource::setPassword);
+		propertyMapper.from(this::getLoginTimeout).as((v)->(int) v.getSeconds()).to(dataSource::setLoginTimeout);
+		propertyMapper.from(this::getAlternateUsernameAllowed).to(dataSource::setAlternateUsernameAllowed);
+		propertyMapper.from(this::getDefaultCatalog).to(dataSource::setDefaultCatalog);
+		propertyMapper.from(this::getInitSQL).to(dataSource::setInitSQL);
+		propertyMapper.from(this::getValidationQuery).to(dataSource::setValidationQuery);
+		propertyMapper.from(this::getValidatorClassName).to(dataSource::setValidatorClassName);
+		propertyMapper.from(this::getValidationInterval).as(Duration::toMillis)
+				.to(dataSource::setValidationInterval);
+		propertyMapper.from(this::getValidationQueryTimeout).as((v)->(int) v.getSeconds())
+				.to(dataSource::setValidationQueryTimeout);
+		propertyMapper.from(this::getDefaultTransactionIsolation).as(TransactionIsolation::getValue)
+				.to(dataSource::setDefaultTransactionIsolation);
+		propertyMapper.from(this::getCommitOnReturn).to(dataSource::setCommitOnReturn);
+		propertyMapper.from(this::getRollbackOnReturn).to(dataSource::setRollbackOnReturn);
+		propertyMapper.from(this::getDefaultAutoCommit).to(dataSource::setDefaultAutoCommit);
+		propertyMapper.from(this::getDefaultReadOnly).to(dataSource::setDefaultReadOnly);
+		propertyMapper.from(this::getAccessToUnderlyingConnectionAllowed)
+				.to(dataSource::setAccessToUnderlyingConnectionAllowed);
+		propertyMapper.from(this::getJdbcInterceptors).to(dataSource::setJdbcInterceptors);
+		propertyMapper.from(this::getDbProperties).to(dataSource::setDbProperties);
 
 		if(getPoolConfiguration() != null){
 			applyPoolConfiguration(dataSource, propertyMapper);
@@ -182,56 +479,38 @@ public class TomcatDataSource
 		final TomcatPoolConfiguration poolConfiguration = getPoolConfiguration();
 
 		propertyMapper.from(poolConfiguration::getName).to(dataSource::setName);
-		propertyMapper.from(poolConfiguration::getDefaultCatalog).to(dataSource::setDefaultCatalog);
 		propertyMapper.from(poolConfiguration::getInitialSize).to(dataSource::setInitialSize);
-		propertyMapper.from(poolConfiguration::getMaxActive).to(dataSource::setMaxActive);
 		propertyMapper.from(poolConfiguration::getMinIdle).to(dataSource::setMinIdle);
 		propertyMapper.from(poolConfiguration::getMaxIdle).to(dataSource::setMaxIdle);
-		propertyMapper.from(poolConfiguration::getMaxWait).as((v)->(int) v.getSeconds()).to(dataSource::setMaxWait);
-		propertyMapper.from(poolConfiguration::getMaxAge).to(dataSource::setMaxAge);
-		propertyMapper.from(poolConfiguration::getInitSQL).to(dataSource::setInitSQL);
-		propertyMapper.from(poolConfiguration::getValidationQuery).to(dataSource::setValidationQuery);
-		propertyMapper.from(poolConfiguration::getValidationInterval).as(Duration::toMillis)
-				.to(dataSource::setValidationInterval);
-		propertyMapper.from(poolConfiguration::getValidationQueryTimeout).as((v)->(int) v.getSeconds())
-				.to(dataSource::setValidationQueryTimeout);
-		propertyMapper.from(poolConfiguration::getValidatorClassName).to(dataSource::setValidatorClassName);
-		propertyMapper.from(poolConfiguration::getLogValidationErrors).to(dataSource::setLogValidationErrors);
+		propertyMapper.from(poolConfiguration::getMaxActive).to(dataSource::setMaxActive);
+		propertyMapper.from(poolConfiguration::getMaxAge).as(Duration::toMillis).to(dataSource::setMaxAge);
+		propertyMapper.from(poolConfiguration::getMaxWait).as((v)->(int) v.toMillis()).to(dataSource::setMaxWait);
 		propertyMapper.from(poolConfiguration::getTestOnConnect).to(dataSource::setTestOnConnect);
 		propertyMapper.from(poolConfiguration::getTestOnBorrow).to(dataSource::setTestOnBorrow);
 		propertyMapper.from(poolConfiguration::getTestOnReturn).to(dataSource::setTestOnReturn);
 		propertyMapper.from(poolConfiguration::getTestWhileIdle).to(dataSource::setTestWhileIdle);
-		propertyMapper.from(poolConfiguration::getTimeBetweenEvictionRuns).as((v)->(int) v.getSeconds())
-				.to(dataSource::setTimeBetweenEvictionRunsMillis);
-		propertyMapper.from(poolConfiguration::getNumTestsPerEvictionRun).to(dataSource::setNumTestsPerEvictionRun);
-		propertyMapper.from(poolConfiguration::getMinEvictableIdleTime).as((v)->(int) v.getSeconds())
-				.to(dataSource::setMinEvictableIdleTimeMillis);
-		propertyMapper.from(poolConfiguration::getDefaultTransactionIsolation).as(TransactionIsolation::getValue)
-				.to(dataSource::setDefaultTransactionIsolation);
-		propertyMapper.from(poolConfiguration::getDefaultAutoCommit).to(dataSource::setDefaultAutoCommit);
-		propertyMapper.from(poolConfiguration::getCommitOnReturn).to(dataSource::setCommitOnReturn);
-		propertyMapper.from(poolConfiguration::getRollbackOnReturn).to(dataSource::setRollbackOnReturn);
-		propertyMapper.from(poolConfiguration::getDefaultReadOnly).to(dataSource::setDefaultReadOnly);
 		propertyMapper.from(poolConfiguration::getRemoveAbandoned).to(dataSource::setRemoveAbandoned);
 		propertyMapper.from(poolConfiguration::getRemoveAbandonedTimeout).as((v)->(int) v.getSeconds())
 				.to(dataSource::setRemoveAbandonedTimeout);
+		propertyMapper.from(poolConfiguration::getSuspectTimeout).as((v)->(int) v.getSeconds())
+				.to(dataSource::setSuspectTimeout);
+		propertyMapper.from(poolConfiguration::getUseDisposableConnectionFacade)
+				.to(dataSource::setUseDisposableConnectionFacade);
+		propertyMapper.from(poolConfiguration::getUseStatementFacade).to(dataSource::setUseStatementFacade);
+		propertyMapper.from(poolConfiguration::getIgnoreExceptionOnPreLoad).to(dataSource::setIgnoreExceptionOnPreLoad);
+		propertyMapper.from(poolConfiguration::getFairQueue).to(dataSource::setFairQueue);
 		propertyMapper.from(poolConfiguration::getLogAbandoned).to(dataSource::setLogAbandoned);
 		propertyMapper.from(poolConfiguration::getAbandonWhenPercentageFull)
 				.to(dataSource::setAbandonWhenPercentageFull);
-		propertyMapper.from(poolConfiguration::getSuspectTimeout).as((v)->(int) v.getSeconds())
-				.to(dataSource::setSuspectTimeout);
-		propertyMapper.from(poolConfiguration::getAlternateUsernameAllowed).to(dataSource::setAlternateUsernameAllowed);
-		propertyMapper.from(poolConfiguration::getJdbcInterceptors).to(dataSource::setJdbcInterceptors);
-		propertyMapper.from(poolConfiguration::getIgnoreExceptionOnPreLoad).to(dataSource::setIgnoreExceptionOnPreLoad);
-		propertyMapper.from(poolConfiguration::getUseEquals).to(dataSource::setUseEquals);
-		propertyMapper.from(poolConfiguration::getUseLock).to(dataSource::setUseLock);
-		propertyMapper.from(poolConfiguration::getFairQueue).to(dataSource::setFairQueue);
-		propertyMapper.from(poolConfiguration::getUseDisposableConnectionFacade)
-				.to(dataSource::setUseDisposableConnectionFacade);
+		propertyMapper.from(poolConfiguration::getNumTestsPerEvictionRun).to(dataSource::setNumTestsPerEvictionRun);
+		propertyMapper.from(poolConfiguration::getTimeBetweenEvictionRuns).as((v)->(int) v.toMillis())
+				.to(dataSource::setTimeBetweenEvictionRunsMillis);
+		propertyMapper.from(poolConfiguration::getMinEvictableIdle).as((v)->(int) v.getSeconds())
+				.to(dataSource::setMinEvictableIdleTimeMillis);
 		propertyMapper.from(poolConfiguration::getPropagateInterruptState).to(dataSource::setPropagateInterruptState);
-		propertyMapper.from(poolConfiguration::getUseStatementFacade).to(dataSource::setUseStatementFacade);
-		propertyMapper.from(poolConfiguration::getAccessToUnderlyingConnectionAllowed)
-				.to(dataSource::setAccessToUnderlyingConnectionAllowed);
+		propertyMapper.from(poolConfiguration::getLogValidationErrors).to(dataSource::setLogValidationErrors);
+		propertyMapper.from(poolConfiguration::getUseLock).to(dataSource::setUseLock);
+		propertyMapper.from(poolConfiguration::getUseEquals).to(dataSource::setUseEquals);
 		propertyMapper.from(poolConfiguration::getJmxEnabled).to(dataSource::setJmxEnabled);
 
 		if(Boolean.TRUE.equals(poolConfiguration.getFairQueue()) &&

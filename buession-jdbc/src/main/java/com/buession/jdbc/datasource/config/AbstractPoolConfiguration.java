@@ -19,11 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.jdbc.datasource.config;
 
+import java.time.Duration;
 import java.util.Properties;
 
 /**
@@ -35,107 +36,399 @@ import java.util.Properties;
 public abstract class AbstractPoolConfiguration implements PoolConfiguration {
 
 	/**
-	 * 驱动名
+	 * 初始连接数，池被启动时初始化的创建的连接个数
 	 */
-	@Deprecated
-	private String driverClassName;
+	private Integer initialSize;
 
 	/**
-	 * 连接 URL
+	 * 最小空闲连接数，可以在池中保持空闲的最小连接数，低于设置值时，空闲连接将被创建，以努力保持最小空闲连接数 &gt;= minIdle
 	 */
-	@Deprecated
-	private String url;
+	private Integer minIdle;
 
-	@Deprecated
-	private String username;
+	/**
+	 * 最大空闲连接数，在池中，可以保持空闲状态的最大连接数，超出设置值之外的空闲连接在归还到连接池时将被释放，如设置为负数，则不限制
+	 */
+	private Integer maxIdle;
 
-	@Deprecated
-	private String password;
+	/**
+	 * 最大连接数，可以在这个池中同一时刻被分配的有效连接数的最大值，如设置为负数，则不限制
+	 */
+	private Integer maxTotal;
+
+	/**
+	 * 从连接池获取一个连接时，最大的等待时间，设置为-1时，如果没有可用连接，连接池会一直无限期等待，直到获取到连接为止
+	 */
+	private Duration maxWait;
+
+	/**
+	 * 连接创建后，马上验证有效性；
+	 * 指明对象在创建后是否需要验证是否有效，如果对象验证失败，则触发对象创建的租借尝试将失败
+	 */
+	private Boolean testOnCreate;
+
+	/**
+	 * 从连接池获取一个连接时，验证有效性；
+	 * 指明在从池中租借对象时是否要进行验证有效，如果对象验证失败，则对象将从池子释放，然后我们将尝试租借另一个
+	 */
+	private Boolean testOnBorrow;
+
+	/**
+	 * 连接被归还到连接池时，验证有效性
+	 */
+	private Boolean testOnReturn;
+
+	/**
+	 * 连接空闲时，验证有效性；
+	 * 指明对象是否需要通过对象驱逐者进行校验（如果有的话），假如一个对象验证失败，则对象将被从池中释放
+	 */
+	private Boolean testWhileIdle;
+
+	/**
+	 * 空闲的连接被释放最低要待时间
+	 */
+	private Duration minEvictableIdle;
+
+	/**
+	 * 空闲的连接被释放最高要待时间
+	 */
+	private Duration maxEvictableIdle;
+
+	/**
+	 * 在每个空闲对象驱逐线程运行过程中中进行检查的对象个数
+	 */
+	private Integer numTestsPerEvictionRun;
+
+	/**
+	 * 空闲对象驱逐线程运行时的休眠时间
+	 */
+	private Duration timeBetweenEvictionRuns;
+
+	/**
+	 * 是否启用 JMX
+	 */
+	private Boolean jmxEnabled;
+
+	private String jmxName;
 
 	private Properties properties;
 
 	/**
-	 * 返回驱动名
+	 * 返回初始连接数
 	 *
-	 * @return 驱动名
+	 * @return 初始连接数
 	 */
-	@Deprecated
-	public String getDriverClassName() {
-		return driverClassName;
+	public Integer getInitialSize() {
+		return initialSize;
 	}
 
 	/**
-	 * 设置驱动名
+	 * 设置初始连接数
 	 *
-	 * @param driverClassName
-	 * 		驱动名
+	 * @param initialSize
+	 * 		初始连接数
 	 */
-	@Deprecated
-	public void setDriverClassName(String driverClassName) {
-
+	public void setInitialSize(Integer initialSize) {
+		this.initialSize = initialSize;
 	}
 
 	/**
-	 * 返回连接 URL
+	 * 返回最小空闲连接数
 	 *
-	 * @return 连接 URL
+	 * @return 最小空闲连接数
 	 */
-	@Deprecated
-	public String getUrl() {
-		return url;
+	public Integer getMinIdle() {
+		return minIdle;
 	}
 
 	/**
-	 * 设置连接 URL
+	 * 设置最小空闲连接数
 	 *
-	 * @param url
-	 * 		连接 URL
+	 * @param minIdle
+	 * 		最小空闲连接数
 	 */
-	@Deprecated
-	public void setUrl(String url) {
-
+	public void setMinIdle(Integer minIdle) {
+		this.minIdle = minIdle;
 	}
 
 	/**
-	 * 返回用户名
+	 * 返回最大空闲连接数
 	 *
-	 * @return 用户名
+	 * @return 最大空闲连接数
 	 */
-	@Deprecated
-	public String getUsername() {
-		return username;
+	public Integer getMaxIdle() {
+		return maxIdle;
 	}
 
 	/**
-	 * 设置用户名
+	 * 设置最大空闲连接数，如设置为负数，则不限制
 	 *
-	 * @param username
-	 * 		用户名
+	 * @param maxIdle
+	 * 		最大空闲连接数
 	 */
-	@Deprecated
-	public void setUsername(String username) {
-
+	public void setMaxIdle(Integer maxIdle) {
+		this.maxIdle = maxIdle;
 	}
 
 	/**
-	 * 返回密码
+	 * 返回最大连接数
 	 *
-	 * @return 密码
+	 * @return 最大连接数
 	 */
-	@Deprecated
-	public String getPassword() {
-		return password;
+	public Integer getMaxTotal() {
+		return maxTotal;
 	}
 
 	/**
-	 * 设置密码
+	 * 设置最大连接数，如设置为负数，则不限制
 	 *
-	 * @param password
-	 * 		密码
+	 * @param maxTotal
+	 * 		最大连接数
 	 */
-	@Deprecated
-	public void setPassword(String password) {
+	public void setMaxTotal(Integer maxTotal) {
+		this.maxTotal = maxTotal;
+	}
 
+	/**
+	 * 返回从连接池获取一个连接时，最大的等待时间
+	 *
+	 * @return 从连接池获取一个连接时，最大的等待时间
+	 */
+	public Duration getMaxWait() {
+		return maxWait;
+	}
+
+	/**
+	 * 设置从连接池获取一个连接时，最大的等待时间
+	 *
+	 * @param maxWait
+	 * 		从连接池获取一个连接时，最大的等待时间
+	 */
+	public void setMaxWait(Duration maxWait) {
+		this.maxWait = maxWait;
+	}
+
+	/**
+	 * 返回连接创建后，是否马上验证有效性
+	 *
+	 * @return 连接创建后，是否马上验证有效性
+	 */
+	public Boolean isTestOnCreate() {
+		return getTestOnCreate();
+	}
+
+	/**
+	 * 返回连接创建后，是否马上验证有效性
+	 *
+	 * @return 连接创建后，是否马上验证有效性
+	 */
+	public Boolean getTestOnCreate() {
+		return testOnCreate;
+	}
+
+	/**
+	 * 设置连接创建后，是否马上验证有效性
+	 *
+	 * @param testOnCreate
+	 * 		连接创建后，是否马上验证有效性
+	 */
+	public void setTestOnCreate(Boolean testOnCreate) {
+		this.testOnCreate = testOnCreate;
+	}
+
+	/**
+	 * 返回从连接池获取一个连接时，是否验证有效性
+	 *
+	 * @return 从连接池获取一个连接时，验证有效性
+	 */
+	public Boolean isTestOnBorrow() {
+		return getTestOnBorrow();
+	}
+
+	/**
+	 * 返回从连接池获取一个连接时，是否验证有效性
+	 *
+	 * @return 从连接池获取一个连接时，验证有效性
+	 */
+	public Boolean getTestOnBorrow() {
+		return testOnBorrow;
+	}
+
+	/**
+	 * 设置从连接池获取一个连接时，是否验证有效性
+	 *
+	 * @param testOnBorrow
+	 * 		从连接池获取一个连接时，是否验证有效性
+	 */
+	public void setTestOnBorrow(Boolean testOnBorrow) {
+		this.testOnBorrow = testOnBorrow;
+	}
+
+	/**
+	 * 返回连接被归还到连接池时，是否验证有效性
+	 *
+	 * @return 连接被归还到连接池时，是否验证有效性
+	 */
+	public Boolean isTestOnReturn() {
+		return getTestOnReturn();
+	}
+
+	/**
+	 * 返回连接被归还到连接池时，是否验证有效性
+	 *
+	 * @return 连接被归还到连接池时，是否验证有效性
+	 */
+	public Boolean getTestOnReturn() {
+		return testOnReturn;
+	}
+
+	/**
+	 * 设置连接被归还到连接池时，是否验证有效性
+	 *
+	 * @param testOnReturn
+	 * 		连接被归还到连接池时，是否验证有效性
+	 */
+	public void setTestOnReturn(Boolean testOnReturn) {
+		this.testOnReturn = testOnReturn;
+	}
+
+	/**
+	 * 返回连接空闲时，是否验证有效性
+	 *
+	 * @return 连接空闲时，是否验证有效性
+	 */
+	public Boolean isTestWhileIdle() {
+		return getTestWhileIdle();
+	}
+
+	/**
+	 * 返回连接空闲时，是否验证有效性
+	 *
+	 * @return 连接空闲时，是否验证有效性
+	 */
+	public Boolean getTestWhileIdle() {
+		return testWhileIdle;
+	}
+
+	/**
+	 * 设置连接空闲时，是否验证有效性
+	 *
+	 * @param testWhileIdle
+	 * 		连接空闲时，是否验证有效性
+	 */
+	public void setTestWhileIdle(Boolean testWhileIdle) {
+		this.testWhileIdle = testWhileIdle;
+	}
+
+	/**
+	 * 返回空闲的连接被释放最低要待时间
+	 *
+	 * @return 空闲的连接被释放最低要待时间
+	 */
+	public Duration getMinEvictableIdle() {
+		return minEvictableIdle;
+	}
+
+	/**
+	 * 设置空闲的连接被释放最低要待时间
+	 *
+	 * @param minEvictableIdle
+	 * 		空闲的连接被释放最低要待时间
+	 */
+	public void setMinEvictableIdle(Duration minEvictableIdle) {
+		this.minEvictableIdle = minEvictableIdle;
+	}
+
+	/**
+	 * 返回空闲的连接被释放最高要待时间
+	 *
+	 * @return 空闲的连接被释放最高要待时间
+	 */
+	public Duration getMaxEvictableIdle() {
+		return maxEvictableIdle;
+	}
+
+	/**
+	 * 设置空闲的连接被释放最高要待时间
+	 *
+	 * @param maxEvictableIdle
+	 * 		空闲的连接被释放最高要待时间
+	 */
+	public void setMaxEvictableIdle(Duration maxEvictableIdle) {
+		this.maxEvictableIdle = maxEvictableIdle;
+	}
+
+	/**
+	 * 返回在每个空闲对象驱逐线程运行过程中中进行检查的对象个数
+	 *
+	 * @return 在每个空闲对象驱逐线程运行过程中中进行检查的对象个数
+	 */
+	public Integer getNumTestsPerEvictionRun() {
+		return numTestsPerEvictionRun;
+	}
+
+	/**
+	 * 设置在每个空闲对象驱逐线程运行过程中中进行检查的对象个数
+	 *
+	 * @param numTestsPerEvictionRun
+	 * 		在每个空闲对象驱逐线程运行过程中中进行检查的对象个数
+	 */
+	public void setNumTestsPerEvictionRun(Integer numTestsPerEvictionRun) {
+		this.numTestsPerEvictionRun = numTestsPerEvictionRun;
+	}
+
+	/**
+	 * 返回空闲对象驱逐线程运行时的休眠时间
+	 *
+	 * @return 空闲对象驱逐线程运行时的休眠时间
+	 */
+	public Duration getTimeBetweenEvictionRuns() {
+		return timeBetweenEvictionRuns;
+	}
+
+	/**
+	 * 设置空闲对象驱逐线程运行时的休眠时间
+	 *
+	 * @param timeBetweenEvictionRuns
+	 * 		空闲对象驱逐线程运行时的休眠时间
+	 */
+	public void setTimeBetweenEvictionRuns(Duration timeBetweenEvictionRuns) {
+		this.timeBetweenEvictionRuns = timeBetweenEvictionRuns;
+	}
+
+	/**
+	 * 返回是否启用 JMX
+	 *
+	 * @return 是否启用 JMX
+	 */
+	public Boolean isJmxEnabled() {
+		return getJmxEnabled();
+	}
+
+	/**
+	 * 返回是否启用 JMX
+	 *
+	 * @return 是否启用 JMX
+	 */
+	public Boolean getJmxEnabled() {
+		return jmxEnabled;
+	}
+
+	/**
+	 * 设置是否启用 JMX
+	 *
+	 * @param jmxEnabled
+	 * 		是否启用 JMX
+	 */
+	public void setJmxEnabled(Boolean jmxEnabled) {
+		this.jmxEnabled = jmxEnabled;
+	}
+
+	public String getJmxName() {
+		return jmxName;
+	}
+
+	public void setJmxName(String jmxName) {
+		this.jmxName = jmxName;
 	}
 
 	@Override

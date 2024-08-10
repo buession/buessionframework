@@ -19,12 +19,11 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.jdbc.datasource.config;
 
-import com.buession.jdbc.core.TransactionIsolation;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.metrics.MetricsTrackerFactory;
 
@@ -42,9 +41,9 @@ import java.util.concurrent.ThreadFactory;
 public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 
 	/**
-	 * 为支持 catalog 概念的数据库设置默认 catalog
+	 * 用户定义连接池的名称，主要出现在日志记录和 JMX 管理控制台中以识别池和池配置
 	 */
-	private String catalog;
+	private String poolName;
 
 	/**
 	 * 从连接池获取连接时最大等待时间
@@ -52,14 +51,19 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	private Duration connectionTimeout;
 
 	/**
+	 * 连接池无法成功建立连接，是否会立即抛出异常或进行重试，以及重试的超时时间
+	 */
+	private Duration initializationFailTimeout;
+
+	/**
+	 * 接池中最大连接数，如设置为负数，则不限制
+	 */
+	private Integer maxPoolSize;
+
+	/**
 	 * 连接允许在池中闲置的最长时间，仅适用于 minimumIdle 定义为小于 maximumPoolSize，值为 0 时空闲连接永远不会从池中删除
 	 */
 	private Duration idleTimeout;
-
-	/**
-	 * 控制在记录消息之前连接可能离开池的时间量，表明可能存在连接泄漏，值为 0 时泄漏检测被禁用
-	 */
-	private Long leakDetectionThreshold;
 
 	/**
 	 * 池中连接的最大生存期，值为 0 时表示无限寿命, 推荐设置的比数据库的 wait_timeout 小几秒到几分钟
@@ -67,75 +71,9 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	private Duration maxLifetime;
 
 	/**
-	 * 连接存活时间，值必须小于 maxLifetime 值
-	 * 只会发生在空闲的连接上，当对一个给定的连接进行 "keepalive "的时间到了，该连接将从池中移除
+	 * 连接在空闲时发送“keep-alive”心跳的间隔时间
 	 */
 	private Duration keepaliveTime;
-
-	/**
-	 * 最小空闲连接数量
-	 */
-	private Integer minIdle;
-
-	/**
-	 * 连接池中可以保留连接的最大数
-	 */
-	private Integer maxPoolSize;
-
-	private Duration initializationFailTimeout;
-
-	/**
-	 * 设置一个SQL语句，在将每个新连接创建后，将其添加到池中之前执行该语句
-	 */
-	private String connectionInitSql;
-
-	/**
-	 * 设置一个SQL语句, 从连接池获取连接时, 先执行改 sql, 验证连接是否可用
-	 * 如果是使用了 JDBC 4 那么不建议配置这个选项, 因为JDBC 4 使用 ping 命令, 更加高效
-	 */
-	private String connectionTestQuery;
-
-	/**
-	 * 检测连接是否有效的超时时间
-	 */
-	private Duration validationTimeout;
-
-	/**
-	 * 用户定义连接池的名称，主要出现在日志记录和 JMX 管理控制台中以识别池和池配置
-	 */
-	private String poolName;
-
-	/**
-	 * 设置的默认模式为支持模式的概念数据库；如果未指定此属性，则使用由JDBC驱动程序定义的默认模式
-	 */
-	private String schema;
-
-	/**
-	 * 事务隔离级别
-	 */
-	private TransactionIsolation transactionIsolation;
-
-	/**
-	 * 是否自动提交事务
-	 */
-	private Boolean autoCommit;
-
-	/**
-	 * 连接是否是只读模式
-	 */
-	private Boolean readOnly;
-
-	private Boolean isolateInternalQueries;
-
-	/**
-	 * 是否自动注册 JMX 相关的 bean
-	 */
-	private Boolean registerMbeans;
-
-	/**
-	 * 是否允许JMX 将连接池挂起
-	 */
-	private Boolean allowPoolSuspension;
 
 	/**
 	 * 线程工厂
@@ -147,31 +85,69 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 */
 	private ScheduledExecutorService scheduledExecutor;
 
-	private MetricsTrackerFactory metricsTrackerFactory;
+	/**
+	 * 是否将 HikariCP 执行的内部查询与应用程序的查询隔离
+	 */
+	private Boolean isolateInternalQueries;
 
-	private Object metricRegistry;
+	/**
+	 * 控制在记录消息之前连接可能离开池的时间量，表明可能存在连接泄漏，值为 0 时泄漏检测被禁用
+	 */
+	private Duration leakDetectionThreshold;
 
-	private Object healthCheckRegistry;
+	/**
+	 * 是否允许将连接池挂起
+	 */
+	private Boolean allowPoolSuspension;
 
+	/**
+	 * 连接池的性能指标跟踪器 {@link MetricsTrackerFactory} 类名
+	 *
+	 * @since 3.0.0
+	 */
+	private String metricsTrackerFactoryClassName;
+
+	/**
+	 * 允许将 HikariCP 连接池的性能指标集成到基于 Dropwizard Metrics 的监控系统中
+	 *
+	 * @since 3.0.0
+	 */
+	private String metricRegistryClassName;
+
+	/**
+	 * 允许将 HikariCP 连接池的健康检查功能与基于 Dropwizard Metrics 的健康检查机制集成
+	 *
+	 * @since 3.0.0
+	 */
+	private String healthCheckRegistryClassName;
+
+	/**
+	 * 健康检查的参数集合
+	 */
 	private Properties healthCheckProperties;
 
 	/**
-	 * 返回为支持 catalog 概念的数据库设置默认 catalog
-	 *
-	 * @return 为支持 catalog 概念的数据库设置默认 catalog
+	 * 是否自动注册 JMX 相关的 MBeans
 	 */
-	public String getCatalog(){
-		return catalog;
+	private Boolean registerMbeans;
+
+	/**
+	 * 返回用户定义连接池的名称
+	 *
+	 * @return 用户定义连接池的名称
+	 */
+	public String getPoolName() {
+		return poolName;
 	}
 
 	/**
-	 * 设置为支持 catalog 概念的数据库设置默认 catalog
+	 * 设置连接池的名称
 	 *
-	 * @param catalog
-	 * 		为支持 catalog 概念的数据库设置默认 catalog
+	 * @param poolName
+	 * 		连接池的名称
 	 */
-	public void setCatalog(String catalog){
-		this.catalog = catalog;
+	public void setPoolName(String poolName) {
+		this.poolName = poolName;
 	}
 
 	/**
@@ -179,7 +155,7 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 从连接池获取连接时最大等待时间
 	 */
-	public Duration getConnectionTimeout(){
+	public Duration getConnectionTimeout() {
 		return connectionTimeout;
 	}
 
@@ -189,8 +165,52 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param connectionTimeout
 	 * 		从连接池获取连接时最大等待时间
 	 */
-	public void setConnectionTimeout(Duration connectionTimeout){
+	public void setConnectionTimeout(Duration connectionTimeout) {
 		this.connectionTimeout = connectionTimeout;
+	}
+
+	/**
+	 * 返回连接池无法成功建立连接，是否会立即抛出异常或进行重试，以及重试的超时时间
+	 *
+	 * @return 连接池无法成功建立连接，是否会立即抛出异常或进行重试，以及重试的超时时间
+	 */
+	public Duration getInitializationFailTimeout() {
+		return initializationFailTimeout;
+	}
+
+	/**
+	 * 设置连接池无法成功建立连接，是否会立即抛出异常或进行重试，以及重试的超时时间
+	 *
+	 * @param initializationFailTimeout
+	 * 		连接池无法成功建立连接，是否会立即抛出异常或进行重试，以及重试的超时时间
+	 */
+	public void setInitializationFailTimeout(Duration initializationFailTimeout) {
+		this.initializationFailTimeout = initializationFailTimeout;
+	}
+
+	/**
+	 * 返回接池中最大连接数
+	 *
+	 * @return 接池中最大连接数
+	 */
+	public Integer getMaxPoolSize() {
+		return maxPoolSize;
+	}
+
+	/**
+	 * 设置接池中最大连接数
+	 *
+	 * @param maxPoolSize
+	 * 		接池中最大连接数
+	 */
+	public void setMaxPoolSize(Integer maxPoolSize) {
+		this.maxPoolSize = maxPoolSize;
+		super.setMaxTotal(maxPoolSize);
+	}
+
+	@Override
+	public void setMaxTotal(Integer maxTotal) {
+		setMaxPoolSize(maxTotal);
 	}
 
 	/**
@@ -198,7 +218,7 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接允许在池中闲置的最长时间
 	 */
-	public Duration getIdleTimeout(){
+	public Duration getIdleTimeout() {
 		return idleTimeout;
 	}
 
@@ -210,27 +230,8 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param idleTimeout
 	 * 		连接允许在池中闲置的最长时间
 	 */
-	public void setIdleTimeout(Duration idleTimeout){
+	public void setIdleTimeout(Duration idleTimeout) {
 		this.idleTimeout = idleTimeout;
-	}
-
-	/**
-	 * 返回记录消息之前连接可能离开池的时间量，表明可能存在连接泄漏，值为 0 时泄漏检测被禁用
-	 *
-	 * @return 记录消息之前连接可能离开池的时间量
-	 */
-	public Long getLeakDetectionThreshold(){
-		return leakDetectionThreshold;
-	}
-
-	/**
-	 * 设置记录消息之前连接可能离开池的时间量，表明可能存在连接泄漏，值为 0 时泄漏检测被禁用
-	 *
-	 * @param leakDetectionThreshold
-	 * 		记录消息之前连接可能离开池的时间量
-	 */
-	public void setLeakDetectionThreshold(Long leakDetectionThreshold){
-		this.leakDetectionThreshold = leakDetectionThreshold;
 	}
 
 	/**
@@ -238,7 +239,7 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 池中连接的最大生存期
 	 */
-	public Duration getMaxLifetime(){
+	public Duration getMaxLifetime() {
 		return maxLifetime;
 	}
 
@@ -248,316 +249,27 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param maxLifetime
 	 * 		池中连接的最大生存期
 	 */
-	public void setMaxLifetime(Duration maxLifetime){
+	public void setMaxLifetime(Duration maxLifetime) {
 		this.maxLifetime = maxLifetime;
 	}
 
 	/**
-	 * 返回连接存活时间，当对一个给定的连接进行 "keepalive "的时间到了，该连接将从池中移除
+	 * 返回连接在空闲时发送“keep-alive”心跳的间隔时间
 	 *
-	 * @return 连接存活时间
+	 * @return 连接在空闲时发送“keep-alive”心跳的间隔时间
 	 */
-	public Duration getKeepaliveTime(){
+	public Duration getKeepaliveTime() {
 		return keepaliveTime;
 	}
 
 	/**
-	 * 设置连接存活时间，值必须小于 maxLifetime 值
+	 * 设置连接在空闲时发送“keep-alive”心跳的间隔时间
 	 *
 	 * @param keepaliveTime
-	 * 		连接存活时间
+	 * 		连接在空闲时发送“keep-alive”心跳的间隔时间
 	 */
-	public void setKeepaliveTime(Duration keepaliveTime){
+	public void setKeepaliveTime(Duration keepaliveTime) {
 		this.keepaliveTime = keepaliveTime;
-	}
-
-	/**
-	 * 返回最小空闲连接数量
-	 *
-	 * @return 最小空闲连接数量
-	 */
-	public Integer getMinIdle(){
-		return minIdle;
-	}
-
-	/**
-	 * 设置最小空闲连接数量
-	 *
-	 * @param minIdle
-	 * 		最小空闲连接数量
-	 */
-	public void setMinIdle(Integer minIdle){
-		this.minIdle = minIdle;
-	}
-
-	/**
-	 * 返回连接池中可以保留连接的最大数
-	 *
-	 * @return 连接池中可以保留连接的最大数
-	 */
-	public Integer getMaxPoolSize(){
-		return maxPoolSize;
-	}
-
-	/**
-	 * 设置连接池中可以保留连接的最大数
-	 *
-	 * @param maxPoolSize
-	 * 		连接池中可以保留连接的最大数
-	 */
-	public void setMaxPoolSize(Integer maxPoolSize){
-		this.maxPoolSize = maxPoolSize;
-	}
-
-	public Duration getInitializationFailTimeout(){
-		return initializationFailTimeout;
-	}
-
-	public void setInitializationFailTimeout(Duration initializationFailTimeout){
-		this.initializationFailTimeout = initializationFailTimeout;
-	}
-
-	/**
-	 * 返回在将每个新连接创建后，将其添加到池中之前执行的SQL语句
-	 *
-	 * @return 每个新连接创建后，将其添加到池中之前执行的SQL语句
-	 */
-	public String getConnectionInitSql(){
-		return connectionInitSql;
-	}
-
-	/**
-	 * 设置每个新连接创建后，将其添加到池中之前执行的SQL语句
-	 *
-	 * @param connectionInitSql
-	 * 		每个新连接创建后，将其添加到池中之前执行的SQL语句
-	 */
-	public void setConnectionInitSql(String connectionInitSql){
-		this.connectionInitSql = connectionInitSql;
-	}
-
-	/**
-	 * 返回从连接池获取连接时, 验证连接是否可用的SQL语句
-	 *
-	 * @return 从连接池获取连接时, 验证连接是否可用的SQL语句
-	 */
-	public String getConnectionTestQuery(){
-		return connectionTestQuery;
-	}
-
-	/**
-	 * 设置从连接池获取连接时, 验证连接是否可用的SQL语句
-	 *
-	 * @param connectionTestQuery
-	 * 		从连接池获取连接时, 验证连接是否可用的SQL语句
-	 */
-	public void setConnectionTestQuery(String connectionTestQuery){
-		this.connectionTestQuery = connectionTestQuery;
-	}
-
-	/**
-	 * 返回检测连接是否有效的超时时间
-	 *
-	 * @return 检测连接是否有效的超时时间
-	 */
-	public Duration getValidationTimeout(){
-		return validationTimeout;
-	}
-
-	/**
-	 * 设置检测连接是否有效的超时时间，不能大于 {@link #connectionTimeout}
-	 *
-	 * @param validationTimeout
-	 * 		检测连接是否有效的超时时间
-	 */
-	public void setValidationTimeout(Duration validationTimeout){
-		this.validationTimeout = validationTimeout;
-	}
-
-	/**
-	 * 返回用户定义连接池的名称
-	 *
-	 * @return 用户定义连接池的名称
-	 */
-	public String getPoolName(){
-		return poolName;
-	}
-
-	/**
-	 * 设置连接池的名称
-	 *
-	 * @param poolName
-	 * 		连接池的名称
-	 */
-	public void setPoolName(String poolName){
-		this.poolName = poolName;
-	}
-
-	/**
-	 * 返回默认模式为支持模式的概念数据库
-	 *
-	 * @return 默认模式为支持模式的概念数据库
-	 */
-	public String getSchema(){
-		return schema;
-	}
-
-	/**
-	 * 设置默认模式为支持模式的概念数据库
-	 *
-	 * @param schema
-	 * 		默认模式为支持模式的概念数据库
-	 */
-	public void setSchema(String schema){
-		this.schema = schema;
-	}
-
-	/**
-	 * 返回事务隔离级别
-	 *
-	 * @return 事务隔离级别
-	 */
-	public TransactionIsolation getTransactionIsolation(){
-		return transactionIsolation;
-	}
-
-	/**
-	 * 设置事务隔离级别
-	 *
-	 * @param transactionIsolation
-	 * 		事务隔离级别
-	 */
-	public void setTransactionIsolation(TransactionIsolation transactionIsolation){
-		this.transactionIsolation = transactionIsolation;
-	}
-
-	/**
-	 * 返回是否自动提交事务
-	 *
-	 * @return 是否自动提交事务
-	 */
-	@Deprecated
-	public Boolean isAutoCommit(){
-		return getAutoCommit();
-	}
-
-	/**
-	 * 返回是否自动提交事务
-	 *
-	 * @return 是否自动提交事务
-	 */
-	public Boolean getAutoCommit(){
-		return autoCommit;
-	}
-
-	/**
-	 * 设置是否自动提交事务
-	 *
-	 * @param autoCommit
-	 * 		是否自动提交事务
-	 */
-	public void setAutoCommit(Boolean autoCommit){
-		this.autoCommit = autoCommit;
-	}
-
-	/**
-	 * 返回连接是否是只读模式
-	 *
-	 * @return 连接是否是只读模式
-	 */
-	@Deprecated
-	public Boolean isReadOnly(){
-		return getReadOnly();
-	}
-
-	/**
-	 * 返回连接是否是只读模式
-	 *
-	 * @return 连接是否是只读模式
-	 */
-	public Boolean getReadOnly(){
-		return readOnly;
-	}
-
-	/**
-	 * 设置连接是否是只读模式
-	 *
-	 * @param readOnly
-	 * 		连接是否是只读模式
-	 */
-	public void setReadOnly(Boolean readOnly){
-		this.readOnly = readOnly;
-	}
-
-	@Deprecated
-	public Boolean isIsolateInternalQueries(){
-		return getIsolateInternalQueries();
-	}
-
-	public Boolean getIsolateInternalQueries(){
-		return isolateInternalQueries;
-	}
-
-	public void setIsolateInternalQueries(Boolean isolateInternalQueries){
-		this.isolateInternalQueries = isolateInternalQueries;
-	}
-
-	/**
-	 * 返回是否自动注册 JMX 相关的 bean
-	 *
-	 * @return 是否自动注册 JMX 相关的 bean
-	 */
-	@Deprecated
-	public Boolean isRegisterMbeans(){
-		return getRegisterMbeans();
-	}
-
-	/**
-	 * 返回是否自动注册 JMX 相关的 bean
-	 *
-	 * @return 是否自动注册 JMX 相关的 bean
-	 */
-	public Boolean getRegisterMbeans(){
-		return registerMbeans;
-	}
-
-	/**
-	 * 设置是否自动注册 JMX 相关的 bean
-	 *
-	 * @param registerMbeans
-	 * 		是否自动注册 JMX 相关的 bean
-	 */
-	public void setRegisterMbeans(Boolean registerMbeans){
-		this.registerMbeans = registerMbeans;
-	}
-
-	/**
-	 * 返回是否允许JMX 将连接池挂起
-	 *
-	 * @return 是否允许JMX 将连接池挂起
-	 */
-	@Deprecated
-	public Boolean isAllowPoolSuspension(){
-		return getAllowPoolSuspension();
-	}
-
-	/**
-	 * 返回是否允许JMX 将连接池挂起
-	 *
-	 * @return 是否允许JMX 将连接池挂起
-	 */
-	public Boolean getAllowPoolSuspension(){
-		return allowPoolSuspension;
-	}
-
-	/**
-	 * 设置是否允许JMX 将连接池挂起
-	 *
-	 * @param allowPoolSuspension
-	 * 		是否允许JMX 将连接池挂起
-	 */
-	public void setAllowPoolSuspension(Boolean allowPoolSuspension){
-		this.allowPoolSuspension = allowPoolSuspension;
 	}
 
 	/**
@@ -565,7 +277,7 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 线程工厂
 	 */
-	public ThreadFactory getThreadFactory(){
+	public ThreadFactory getThreadFactory() {
 		return threadFactory;
 	}
 
@@ -575,7 +287,7 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param threadFactory
 	 * 		线程工厂
 	 */
-	public void setThreadFactory(ThreadFactory threadFactory){
+	public void setThreadFactory(ThreadFactory threadFactory) {
 		this.threadFactory = threadFactory;
 	}
 
@@ -584,7 +296,7 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 调度任务执行器
 	 */
-	public ScheduledExecutorService getScheduledExecutor(){
+	public ScheduledExecutorService getScheduledExecutor() {
 		return scheduledExecutor;
 	}
 
@@ -594,40 +306,201 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param scheduledExecutor
 	 * 		调度任务执行器
 	 */
-	public void setScheduledExecutor(ScheduledExecutorService scheduledExecutor){
+	public void setScheduledExecutor(ScheduledExecutorService scheduledExecutor) {
 		this.scheduledExecutor = scheduledExecutor;
 	}
 
-	public MetricsTrackerFactory getMetricsTrackerFactory(){
-		return metricsTrackerFactory;
+	/**
+	 * 返回是否将 HikariCP 执行的内部查询与应用程序的查询隔离
+	 *
+	 * @return 是否将 HikariCP 执行的内部查询与应用程序的查询隔离
+	 */
+	public Boolean isIsolateInternalQueries() {
+		return getIsolateInternalQueries();
 	}
 
-	public void setMetricsTrackerFactory(MetricsTrackerFactory metricsTrackerFactory){
-		this.metricsTrackerFactory = metricsTrackerFactory;
+	/**
+	 * 返回是否将 HikariCP 执行的内部查询与应用程序的查询隔离
+	 *
+	 * @return 是否将 HikariCP 执行的内部查询与应用程序的查询隔离
+	 */
+	public Boolean getIsolateInternalQueries() {
+		return isolateInternalQueries;
 	}
 
-	public Object getMetricRegistry(){
-		return metricRegistry;
+	/**
+	 * 设置是否将 HikariCP 执行的内部查询与应用程序的查询隔离
+	 *
+	 * @param isolateInternalQueries
+	 * 		是否将 HikariCP 执行的内部查询与应用程序的查询隔离
+	 */
+	public void setIsolateInternalQueries(Boolean isolateInternalQueries) {
+		this.isolateInternalQueries = isolateInternalQueries;
 	}
 
-	public void setMetricRegistry(Object metricRegistry){
-		this.metricRegistry = metricRegistry;
+	/**
+	 * 返回记录消息之前连接可能离开池的时间量，表明可能存在连接泄漏，值为 0 时泄漏检测被禁用
+	 *
+	 * @return 记录消息之前连接可能离开池的时间量
+	 */
+	public Duration getLeakDetectionThreshold() {
+		return leakDetectionThreshold;
 	}
 
-	public Object getHealthCheckRegistry(){
-		return healthCheckRegistry;
+	/**
+	 * 设置记录消息之前连接可能离开池的时间量，表明可能存在连接泄漏，值为 0 时泄漏检测被禁用
+	 *
+	 * @param leakDetectionThreshold
+	 * 		记录消息之前连接可能离开池的时间量
+	 */
+	public void setLeakDetectionThreshold(Duration leakDetectionThreshold) {
+		this.leakDetectionThreshold = leakDetectionThreshold;
 	}
 
-	public void setHealthCheckRegistry(Object healthCheckRegistry){
-		this.healthCheckRegistry = healthCheckRegistry;
+	/**
+	 * 返回是否允许将连接池挂起
+	 *
+	 * @return 是否允许将连接池挂起
+	 */
+	public Boolean isAllowPoolSuspension() {
+		return getAllowPoolSuspension();
 	}
 
-	public Properties getHealthCheckProperties(){
+	/**
+	 * 返回是否允许将连接池挂起
+	 *
+	 * @return 是否允许将连接池挂起
+	 */
+	public Boolean getAllowPoolSuspension() {
+		return allowPoolSuspension;
+	}
+
+	/**
+	 * 设置是否允许将连接池挂起
+	 *
+	 * @param allowPoolSuspension
+	 * 		是否允许将连接池挂起
+	 */
+	public void setAllowPoolSuspension(Boolean allowPoolSuspension) {
+		this.allowPoolSuspension = allowPoolSuspension;
+	}
+
+	/**
+	 * 返回连接池的性能指标跟踪器 {@link MetricsTrackerFactory} 类名
+	 *
+	 * @return 连接池的性能指标跟踪器 {@link MetricsTrackerFactory} 类名
+	 *
+	 * @since 3.0.0
+	 */
+	public String getMetricsTrackerFactoryClassName() {
+		return metricsTrackerFactoryClassName;
+	}
+
+	/**
+	 * 设置连接池的性能指标跟踪器 {@link MetricsTrackerFactory} 类名
+	 *
+	 * @param metricsTrackerFactoryClassName
+	 * 		连接池的性能指标跟踪器 {@link MetricsTrackerFactory} 类名
+	 *
+	 * @since 3.0.0
+	 */
+	public void setMetricsTrackerFactoryClassName(String metricsTrackerFactoryClassName) {
+		this.metricsTrackerFactoryClassName = metricsTrackerFactoryClassName;
+	}
+
+	/**
+	 * 返回允许将 HikariCP 连接池的性能指标集成到基于 Dropwizard Metrics 的监控系统中
+	 *
+	 * @return 允许将 HikariCP 连接池的性能指标集成到基于 Dropwizard Metrics 的监控系统中
+	 *
+	 * @since 3.0.0
+	 */
+	public String getMetricRegistryClassName() {
+		return metricRegistryClassName;
+	}
+
+	/**
+	 * 设置允许将 HikariCP 连接池的性能指标集成到基于 Dropwizard Metrics 的监控系统中
+	 *
+	 * @param metricRegistryClassName
+	 * 		允许将 HikariCP 连接池的性能指标集成到基于 Dropwizard Metrics 的监控系统中
+	 *
+	 * @since 3.0.0
+	 */
+	public void setMetricRegistryClassName(String metricRegistryClassName) {
+		this.metricRegistryClassName = metricRegistryClassName;
+	}
+
+	/**
+	 * 返回允许将 HikariCP 连接池的健康检查功能与基于 Dropwizard Metrics 的健康检查机制集成
+	 *
+	 * @return 允许将 HikariCP 连接池的健康检查功能与基于 Dropwizard Metrics 的健康检查机制集成
+	 */
+	public String getHealthCheckRegistryClassName() {
+		return healthCheckRegistryClassName;
+	}
+
+	/**
+	 * 设置允许将 HikariCP 连接池的健康检查功能与基于 Dropwizard Metrics 的健康检查机制集成
+	 *
+	 * @param healthCheckRegistryClassName
+	 * 		允许将 HikariCP 连接池的健康检查功能与基于 Dropwizard Metrics 的健康检查机制集成
+	 */
+	public void setHealthCheckRegistryClassName(String healthCheckRegistryClassName) {
+		this.healthCheckRegistryClassName = healthCheckRegistryClassName;
+	}
+
+	/**
+	 * 返回健康检查的参数集合
+	 *
+	 * @return 健康检查的参数集合
+	 */
+	public Properties getHealthCheckProperties() {
 		return healthCheckProperties;
 	}
 
-	public void setHealthCheckProperties(Properties healthCheckProperties){
+	/**
+	 * 设置健康检查的参数集合
+	 *
+	 * @param healthCheckProperties
+	 * 		健康检查的参数集合
+	 */
+	public void setHealthCheckProperties(Properties healthCheckProperties) {
 		this.healthCheckProperties = healthCheckProperties;
+	}
+
+	/**
+	 * 返回是否自动注册 JMX 相关的 MBeans
+	 *
+	 * @return 是否自动注册 JMX 相关的 MBeans
+	 */
+	public Boolean isRegisterMbeans() {
+		return getRegisterMbeans();
+	}
+
+	/**
+	 * 返回是否自动注册 JMX 相关的 MBeans
+	 *
+	 * @return 是否自动注册 JMX 相关的 MBeans
+	 */
+	public Boolean getRegisterMbeans() {
+		return registerMbeans;
+	}
+
+	/**
+	 * 设置是否自动注册 JMX 相关的 MBeans
+	 *
+	 * @param registerMbeans
+	 * 		是否自动注册 JMX 相关的 MBeans
+	 */
+	public void setRegisterMbeans(Boolean registerMbeans) {
+		this.registerMbeans = registerMbeans;
+		super.setJmxEnabled(registerMbeans);
+	}
+
+	@Override
+	public void setJmxEnabled(Boolean jmxEnabled) {
+		setRegisterMbeans(jmxEnabled);
 	}
 
 }

@@ -19,20 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.jdbc.datasource.config;
 
 import com.alibaba.druid.pool.DruidAbstractDataSource;
-import com.alibaba.druid.pool.DruidDataSourceStatLogger;
-import com.buession.jdbc.core.TransactionIsolation;
 
-import javax.management.ObjectName;
+import java.sql.PreparedStatement;
 import java.time.Duration;
-import java.util.Collection;
-import java.util.Set;
-import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Druid 数据源连接池配置 {@link DruidAbstractDataSource}
@@ -43,181 +38,86 @@ import java.util.concurrent.ScheduledExecutorService;
 public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 
 	/**
-	 * 连接池名称
+	 * 最大连接数，可以在这个池中同一时刻被分配的有效连接数的最大值，如设置为负数，则不限制
 	 */
-	private String name;
+	private Integer maxActive;
 
 	/**
-	 * 为支持 catalog 概念的数据库设置默认 catalog
+	 * 数据库连接池中的空闲连接是否保持存活
+	 *
+	 * @since 3.0.0
 	 */
-	private String defaultCatalog;
+	private Boolean keepAlive;
 
 	/**
-	 * 数据库类型名称
+	 * 连接池中空闲连接的保活间隔时间，这个属性决定了在连接池中，空闲连接每隔多长时间会被检查并进行保活操作，以确保这些连接在空闲时不会被数据库服务器断开
 	 */
-	private String dbTypeName;
+	private Duration keepAliveBetweenTime;
 
-	private ScheduledExecutorService createScheduler;
+	/**
+	 * 测试连接是否有效时是否使用 PING 方法
+	 *
+	 * @since 3.0.0
+	 */
+	private Boolean usePingMethod;
 
-	private ScheduledExecutorService destroyScheduler;
+	/**
+	 * 连接池在将连接返回到连接池时，是否保留连接的原始事务隔离级别
+	 *
+	 * @since 3.0.0
+	 */
+	private Boolean keepConnectionUnderlyingTransactionIsolation;
 
-	private Boolean initExceptionThrow;
-
+	/**
+	 * 连接池中创建连接任务的最大数量
+	 */
 	private Integer maxCreateTaskCount;
 
-	private volatile Integer maxWaitThreadCount;
+	/**
+	 * 连接池中等待数据库连接的最大线程数量
+	 */
+	private Integer maxWaitThreadCount;
 
 	/**
-	 * 初始化时建立连接的个数
+	 * 在发生致命错误（fatal error）时连接池的最大活动连接数
 	 */
-	private Integer initialSize = DruidAbstractDataSource.DEFAULT_INITIAL_SIZE;
+	private Integer onFatalErrorMaxActive;
 
 	/**
-	 * 最大连接池数量
+	 * 在获取连接失败后，是否立即断开（标记为不可用）连接池中的所有连接
 	 */
-	private Integer maxActive = DruidAbstractDataSource.DEFAULT_MAX_ACTIVE_SIZE;
+	private Boolean breakAfterAcquireFailure;
 
 	/**
-	 * 最小空闲连接数
+	 * 当连接池未满且没有可用连接时，系统在超时前重试获取连接的次数
 	 */
-	private Integer minIdle = DruidAbstractDataSource.DEFAULT_MIN_IDLE;
-
-	/**
-	 * 最大空闲连接数
-	 */
-	private Integer maxIdle = DruidAbstractDataSource.DEFAULT_MAX_IDLE;
-
-	/**
-	 * 获取连接时最大等待时间
-	 * 配置了 maxWait 之后，缺省启用公平锁，并发效率会有所下降，如果需要可以通过配置 useUnfairLock 属性为 true 使用非公平锁
-	 */
-	private Duration maxWait = Duration.ofMillis(DruidAbstractDataSource.DEFAULT_MAX_WAIT);
-
-	private Long timeBetweenConnectError = DruidAbstractDataSource.DEFAULT_TIME_BETWEEN_CONNECT_ERROR_MILLIS;
-
-	/**
-	 * 连接出错重试次数
-	 */
-	private Integer connectionErrorRetryAttempts;
-
-	/**
-	 * 在第一次创建时用来初始化物理连接的SQL语句集合，只在配置的连接工厂创建连接时被执行一次
-	 */
-	private Collection<String> connectionInitSqls;
-
-	private Boolean asyncCloseConnectionEnable;
-
-	private Boolean accessToUnderlyingConnectionAllowed;
-
-	/**
-	 * 验证连接使用的 SQL
-	 */
-	private String validationQuery;
-
-	private String validConnectionCheckerClassName;
-
-	/**
-	 * 验证SQL的执行超时时间，为负数表示关闭连接验证超时
-	 */
-	private Duration validationQueryTimeout;
-
-	private Duration queryTimeout;
-
 	private Integer notFullTimeoutRetryCount;
 
 	/**
-	 * 从连接池获取一个连接时，验证有效性；
-	 * 指明在从池中租借对象时是否要进行验证有效，如果对象验证失败，则对象将从池子释放，然后我们将尝试租借另一个
+	 * 是否使用本地会话状态；这个配置主要用于处理连接池中的数据库连接在会话级别的状态管理。
 	 */
-	private Boolean testOnBorrow = DruidAbstractDataSource.DEFAULT_TEST_ON_BORROW;
+	private Boolean useLocalSessionState;
 
 	/**
-	 * 连接被归还到连接池时，验证有效性
-	 */
-	private Boolean testOnReturn = DruidAbstractDataSource.DEFAULT_TEST_ON_RETURN;
-
-	/**
-	 * 连接空闲时，验证有效性；
-	 * 指明对象是否需要通过对象驱逐者进行校验（如果有的话），假如一个对象验证失败，则对象将被从池中释放
-	 */
-	private Boolean testWhileIdle = DruidAbstractDataSource.DEFAULT_WHILE_IDLE;
-
-	/**
-	 * 空闲对象驱逐线程运行时的休眠时间
-	 */
-	private Duration timeBetweenEvictionRuns = Duration.ofMillis(
-			DruidAbstractDataSource.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS);
-
-	/**
-	 * 在每个空闲对象驱逐线程运行过程中中进行检查的对象个数
-	 */
-	private Integer numTestsPerEvictionRun = DruidAbstractDataSource.DEFAULT_NUM_TESTS_PER_EVICTION_RUN;
-
-	/**
-	 * 空闲的连接被释放最低要待时间
-	 */
-	private Duration minEvictableIdleTime = Duration.ofMillis(
-			DruidAbstractDataSource.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS);
-
-	private Duration maxEvictableIdleTime = Duration.ofMillis(
-			DruidAbstractDataSource.DEFAULT_MAX_EVICTABLE_IDLE_TIME_MILLIS);
-
-	private Duration keepAliveBetweenTime = Duration.ofMillis(
-			DruidAbstractDataSource.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS);
-
-	private Duration phyTimeout = Duration.ofMillis(DruidAbstractDataSource.DEFAULT_PHY_TIMEOUT_MILLIS);
-
-	private Long phyMaxUseCount;
-
-	/**
-	 * 默认事务隔离级别
-	 */
-	private TransactionIsolation defaultTransactionIsolation;
-
-	private Long transactionThreshold;
-
-	private Duration transactionQueryTimeout;
-
-	/**
-	 * 默认是否自动提交事务
-	 */
-	private Boolean defaultAutoCommit;
-
-	/**
-	 * 默认连接是否是只读模式
-	 */
-	private Boolean defaultReadOnly;
-
-	/**
-	 * 是否缓存 preparedStatement，也就是PSCache；
+	 * 是否缓存 {@link PreparedStatement}，也就是PSCache；
 	 * PSCache 对支持游标的数据库性能提升巨大，比如说 oracle，在mysql下建议关闭
 	 */
 	private Boolean poolPreparedStatements;
 
 	/**
-	 * 最大打开 PSCache 数，在Druid中，不会存在Oracle下PSCache占用内存过多的问题，可以把这个数值配置大一些
+	 * 连接池中是否启用 {@link PreparedStatement} 的共享功能
 	 */
-	private Integer maxOpenPreparedStatements;
-
 	private Boolean sharePreparedStatements;
 
+	/**
+	 * 每个数据库连接上可以缓存的 {@link PreparedStatement} 对象的最大数量
+	 */
 	private Integer maxPoolPreparedStatementPerConnectionSize;
 
 	/**
-	 * 插件配置
+	 * 最大打开 PSCache 数，在Druid中，不会存在Oracle下PSCache占用内存过多的问题，可以把这个数值配置大一些
 	 */
-	private Set<String> filters;
-
-	private Boolean clearFiltersEnable;
-
-	/**
-	 * {@link com.alibaba.druid.pool.ExceptionSorter} 实例名称
-	 */
-	private String exceptionSorterClassName;
-
-	private DruidDataSourceStatLogger statLogger;
-
-	private Duration timeBetweenLogStats;
+	private Integer maxOpenPreparedStatements;
 
 	/**
 	 * 是否移除抛弃的（abandoned）连接，一个连接使用超过了 removeAbandonedTimeout 上限就被视为抛弃的，
@@ -236,653 +136,394 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 */
 	private Boolean logAbandoned;
 
-	private Boolean useOracleImplicitCache;
+	/**
+	 * 日志统计信息的记录间隔时间
+	 */
+	private Duration timeBetweenLogStats;
 
-	private Boolean initVariants;
-
-	private Boolean initGlobalVariants;
-
-	private Boolean failFast;
-
-	private Integer onFatalErrorMaxActive;
-
-	private Boolean breakAfterAcquireFailure;
-
+	/**
+	 * 是否在连接关闭时记录日志
+	 */
 	private Boolean dupCloseLogEnable;
 
-	private Boolean useUnfairLock;
-
-	private Boolean useLocalSessionState;
-
-	private ObjectName objectName;
+	/**
+	 * 控制在获取连接和关闭连接时是否记录线程不一致的情况
+	 *
+	 * @since 3.0.0
+	 */
+	private Boolean logDifferentThread;
 
 	/**
-	 * 返回连接池名称
+	 * 返回最大连接数
 	 *
-	 * @return 连接池名称
+	 * @return 最大连接数
 	 */
-	public String getName(){
-		return name;
-	}
-
-	/**
-	 * 设置连接池名称
-	 *
-	 * @param name
-	 * 		连接池名称
-	 */
-	public void setName(String name){
-		this.name = name;
-	}
-
-	/**
-	 * 返回为支持 catalog 概念的数据库设置默认 catalog
-	 *
-	 * @return 为支持 catalog 概念的数据库设置默认 catalog
-	 */
-	public String getDefaultCatalog(){
-		return defaultCatalog;
-	}
-
-	/**
-	 * 设置为支持 catalog 概念的数据库设置默认 catalog
-	 *
-	 * @param defaultCatalog
-	 * 		为支持 catalog 概念的数据库设置默认 catalog
-	 */
-	public void setDefaultCatalog(String defaultCatalog){
-		this.defaultCatalog = defaultCatalog;
-	}
-
-	/**
-	 * 返回数据库类型名称
-	 *
-	 * @return 数据库类型名称
-	 */
-	public String getDbTypeName(){
-		return dbTypeName;
-	}
-
-	/**
-	 * 设置数据库类型名称
-	 *
-	 * @param dbTypeName
-	 * 		数据库类型名称
-	 */
-	public void setDbTypeName(String dbTypeName){
-		this.dbTypeName = dbTypeName;
-	}
-
-	public ScheduledExecutorService getCreateScheduler(){
-		return createScheduler;
-	}
-
-	public void setCreateScheduler(ScheduledExecutorService createScheduler){
-		this.createScheduler = createScheduler;
-	}
-
-	public ScheduledExecutorService getDestroyScheduler(){
-		return destroyScheduler;
-	}
-
-	public void setDestroyScheduler(ScheduledExecutorService destroyScheduler){
-		this.destroyScheduler = destroyScheduler;
-	}
-
-	@Deprecated
-	public Boolean isInitExceptionThrow(){
-		return getInitExceptionThrow();
-	}
-
-	public Boolean getInitExceptionThrow(){
-		return initExceptionThrow;
-	}
-
-	public void setInitExceptionThrow(Boolean initExceptionThrow){
-		this.initExceptionThrow = initExceptionThrow;
-	}
-
-	public Integer getMaxCreateTaskCount(){
-		return maxCreateTaskCount;
-	}
-
-	public void setMaxCreateTaskCount(Integer maxCreateTaskCount){
-		this.maxCreateTaskCount = maxCreateTaskCount;
-	}
-
-	public Integer getMaxWaitThreadCount(){
-		return maxWaitThreadCount;
-	}
-
-	public void setMaxWaitThreadCount(Integer maxWaitThreadCount){
-		this.maxWaitThreadCount = maxWaitThreadCount;
-	}
-
-	/**
-	 * 返回初始化时建立连接的个数
-	 *
-	 * @return 初始化时建立连接的个数
-	 */
-	public Integer getInitialSize(){
-		return initialSize;
-	}
-
-	/**
-	 * 设置初始化时建立连接的个数
-	 *
-	 * @param initialSize
-	 * 		初始化时建立连接的个数
-	 */
-	public void setInitialSize(Integer initialSize){
-		this.initialSize = initialSize;
-	}
-
-	/**
-	 * 返回最大连接池数量
-	 *
-	 * @return 最大连接池数量
-	 */
-	public Integer getMaxActive(){
+	public Integer getMaxActive() {
 		return maxActive;
 	}
 
 	/**
-	 * 设置最大连接池数量
+	 * 设置最大连接数
 	 *
 	 * @param maxActive
-	 * 		最大连接池数量
+	 * 		最大连接数
 	 */
-	public void setMaxActive(Integer maxActive){
+	public void setMaxActive(Integer maxActive) {
 		this.maxActive = maxActive;
+		super.setMaxTotal(maxActive);
+	}
+
+	@Override
+	public void setMaxTotal(Integer maxTotal) {
+		setMaxActive(maxTotal);
 	}
 
 	/**
-	 * 返回最小空闲连接数
+	 * 返回数据库连接池中的空闲连接是否保持存活
 	 *
-	 * @return 最小空闲连接数
-	 */
-	public Integer getMinIdle(){
-		return minIdle;
-	}
-
-	/**
-	 * 设置最小空闲连接数
+	 * @return 数据库连接池中的空闲连接是否保持存活
 	 *
-	 * @param minIdle
-	 * 		最小空闲连接数
+	 * @since 3.0.0
 	 */
-	public void setMinIdle(Integer minIdle){
-		this.minIdle = minIdle;
+	public Boolean isKeepAlive() {
+		return getKeepAlive();
 	}
 
 	/**
-	 * 返回最大空闲连接数
+	 * 返回数据库连接池中的空闲连接是否保持存活
 	 *
-	 * @return 最大空闲连接数
-	 */
-	public Integer getMaxIdle(){
-		return maxIdle;
-	}
-
-	/**
-	 * 设置空闲连接数
+	 * @return 数据库连接池中的空闲连接是否保持存活
 	 *
-	 * @param maxIdle
-	 * 		最大空闲连接数
+	 * @since 3.0.0
 	 */
-	public void setMaxIdle(Integer maxIdle){
-		this.maxIdle = maxIdle;
+	public Boolean getKeepAlive() {
+		return keepAlive;
 	}
 
 	/**
-	 * 返回获取连接时最大等待时间
+	 * 设置数据库连接池中的空闲连接是否保持存活
+	 *
+	 * @param keepAlive
+	 * 		数据库连接池中的空闲连接是否保持存活
+	 *
+	 * @since 3.0.0
+	 */
+	public void setKeepAlive(Boolean keepAlive) {
+		this.keepAlive = keepAlive;
+	}
+
+	/**
+	 * 返回连接池中空闲连接的保活间隔时间
+	 *
+	 * @return 连接池中空闲连接的保活间隔时间
+	 */
+	public Duration getKeepAliveBetweenTime() {
+		return keepAliveBetweenTime;
+	}
+
+	/**
+	 * 设置连接池中空闲连接的保活间隔时间
+	 *
+	 * @param keepAliveBetweenTime
+	 * 		连接池中空闲连接的保活间隔时间
+	 */
+	public void setKeepAliveBetweenTime(Duration keepAliveBetweenTime) {
+		this.keepAliveBetweenTime = keepAliveBetweenTime;
+	}
+
+	/**
+	 * 返回测试连接是否有效时是否使用 PING 方法
+	 *
+	 * @return 测试连接是否有效时是否使用 PING 方法
+	 *
+	 * @since 3.0.0
+	 */
+	public Boolean isUsePingMethod() {
+		return getUsePingMethod();
+	}
+
+	/**
+	 * 返回测试连接是否有效时是否使用 PING 方法
+	 *
+	 * @return 测试连接是否有效时是否使用 PING 方法
+	 *
+	 * @since 3.0.0
+	 */
+	public Boolean getUsePingMethod() {
+		return usePingMethod;
+	}
+
+	/**
+	 * 设置测试连接是否有效时是否使用 PING 方法
+	 *
+	 * @param usePingMethod
+	 * 		测试连接是否有效时是否使用 PING 方法
+	 *
+	 * @since 3.0.0
+	 */
+	public void setUsePingMethod(Boolean usePingMethod) {
+		this.usePingMethod = usePingMethod;
+	}
+
+	/**
+	 * 返回连接池在将连接返回到连接池时，是否保留连接的原始事务隔离级别
+	 *
+	 * @return 连接池在将连接返回到连接池时，是否保留连接的原始事务隔离级别
+	 *
+	 * @since 3.0.0
+	 */
+	public Boolean isKeepConnectionUnderlyingTransactionIsolation() {
+		return getKeepConnectionUnderlyingTransactionIsolation();
+	}
+
+	/**
+	 * 返回连接池在将连接返回到连接池时，是否保留连接的原始事务隔离级别
+	 *
+	 * @return 连接池在将连接返回到连接池时，是否保留连接的原始事务隔离级别
+	 *
+	 * @since 3.0.0
+	 */
+	public Boolean getKeepConnectionUnderlyingTransactionIsolation() {
+		return keepConnectionUnderlyingTransactionIsolation;
+	}
+
+	/**
+	 * 设置连接池在将连接返回到连接池时，是否保留连接的原始事务隔离级别
+	 *
+	 * @param keepConnectionUnderlyingTransactionIsolation
+	 * 		连接池在将连接返回到连接池时，是否保留连接的原始事务隔离级别
+	 *
+	 * @since 3.0.0
+	 */
+	public void setKeepConnectionUnderlyingTransactionIsolation(Boolean keepConnectionUnderlyingTransactionIsolation) {
+		this.keepConnectionUnderlyingTransactionIsolation = keepConnectionUnderlyingTransactionIsolation;
+	}
+
+	/**
+	 * 返回获取连接时最大等待时间，配置了 maxWait 之后，缺省启用公平锁，并发效率会有所下降，如果需要可以通过配置 useUnfairLock 属性为 true 使用非公平锁
 	 *
 	 * @return 获取连接时最大等待时间
 	 */
-	public Duration getMaxWait(){
-		return maxWait;
+	public Duration getMaxWait() {
+		return super.getMaxWait();
 	}
 
 	/**
-	 * 设置获取连接时最大等待时间
+	 * 设置获取连接时最大等待时间，配置了 maxWait 之后，缺省启用公平锁，并发效率会有所下降，如果需要可以通过配置 useUnfairLock 属性为 true 使用非公平锁
 	 *
 	 * @param maxWait
 	 * 		获取连接时最大等待时间
 	 */
-	public void setMaxWait(Duration maxWait){
-		this.maxWait = maxWait;
-	}
-
-	public Long getTimeBetweenConnectError(){
-		return timeBetweenConnectError;
-	}
-
-	public void setTimeBetweenConnectError(Long timeBetweenConnectError){
-		this.timeBetweenConnectError = timeBetweenConnectError;
+	public void setMaxWait(Duration maxWait) {
+		super.setMaxWait(maxWait);
 	}
 
 	/**
-	 * 返回连接出错重试次数
+	 * 返回连接池中创建连接任务的最大数量
 	 *
-	 * @return 连接出错重试次数
+	 * @return 连接池中创建连接任务的最大数量
 	 */
-	public Integer getConnectionErrorRetryAttempts(){
-		return connectionErrorRetryAttempts;
+	public Integer getMaxCreateTaskCount() {
+		return maxCreateTaskCount;
 	}
 
 	/**
-	 * 设置连接出错重试次数
+	 * 设置连接池中创建连接任务的最大数量
 	 *
-	 * @param connectionErrorRetryAttempts
-	 * 		连接出错重试次数
+	 * @param maxCreateTaskCount
+	 * 		连接池中创建连接任务的最大数量
 	 */
-	public void setConnectionErrorRetryAttempts(Integer connectionErrorRetryAttempts){
-		this.connectionErrorRetryAttempts = connectionErrorRetryAttempts;
+	public void setMaxCreateTaskCount(Integer maxCreateTaskCount) {
+		this.maxCreateTaskCount = maxCreateTaskCount;
 	}
 
 	/**
-	 * 返回在第一次创建时用来初始化物理连接的SQL语句集合
+	 * 返回连接池中等待数据库连接的最大线程数量
 	 *
-	 * @return 在第一次创建时用来初始化物理连接的SQL语句集合
+	 * @return 连接池中等待数据库连接的最大线程数量
 	 */
-	public Collection<String> getConnectionInitSqls(){
-		return connectionInitSqls;
+	public Integer getMaxWaitThreadCount() {
+		return maxWaitThreadCount;
 	}
 
 	/**
-	 * 设置在第一次创建时用来初始化物理连接的SQL语句集合
+	 * 设置连接池中等待数据库连接的最大线程数量
 	 *
-	 * @param connectionInitSqls
-	 * 		在第一次创建时用来初始化物理连接的SQL语句集合
+	 * @param maxWaitThreadCount
+	 * 		连接池中等待数据库连接的最大线程数量
 	 */
-	public void setConnectionInitSqls(Collection<String> connectionInitSqls){
-		this.connectionInitSqls = connectionInitSqls;
-	}
-
-	@Deprecated
-	public Boolean isAsyncCloseConnectionEnable(){
-		return getAsyncCloseConnectionEnable();
-	}
-
-	public Boolean getAsyncCloseConnectionEnable(){
-		return asyncCloseConnectionEnable;
-	}
-
-	public void setAsyncCloseConnectionEnable(Boolean asyncCloseConnectionEnable){
-		this.asyncCloseConnectionEnable = asyncCloseConnectionEnable;
-	}
-
-	@Deprecated
-	public Boolean isAccessToUnderlyingConnectionAllowed(){
-		return getAccessToUnderlyingConnectionAllowed();
-	}
-
-	public Boolean getAccessToUnderlyingConnectionAllowed(){
-		return accessToUnderlyingConnectionAllowed;
-	}
-
-	public void setAccessToUnderlyingConnectionAllowed(Boolean accessToUnderlyingConnectionAllowed){
-		this.accessToUnderlyingConnectionAllowed = accessToUnderlyingConnectionAllowed;
+	public void setMaxWaitThreadCount(Integer maxWaitThreadCount) {
+		this.maxWaitThreadCount = maxWaitThreadCount;
 	}
 
 	/**
-	 * 返回验证连接使用的 SQL
+	 * 返回在发生致命错误（fatal error）时连接池的最大活动连接数
 	 *
-	 * @return 验证连接使用的 SQL
+	 * @return 在发生致命错误（fatal error）时连接池的最大活动连接数
 	 */
-	public String getValidationQuery(){
-		return validationQuery;
+	public Integer getOnFatalErrorMaxActive() {
+		return onFatalErrorMaxActive;
 	}
 
 	/**
-	 * 设置验证连接使用的 SQL
+	 * 设置在发生致命错误（fatal error）时连接池的最大活动连接数
 	 *
-	 * @param validationQuery
-	 * 		验证连接使用的 SQL
+	 * @param onFatalErrorMaxActive
+	 * 		在发生致命错误（fatal error）时连接池的最大活动连接数
 	 */
-	public void setValidationQuery(String validationQuery){
-		this.validationQuery = validationQuery;
-	}
-
-	public String getValidConnectionCheckerClassName(){
-		return validConnectionCheckerClassName;
-	}
-
-	public void setValidConnectionCheckerClassName(String validConnectionCheckerClassName){
-		this.validConnectionCheckerClassName = validConnectionCheckerClassName;
+	public void setOnFatalErrorMaxActive(Integer onFatalErrorMaxActive) {
+		this.onFatalErrorMaxActive = onFatalErrorMaxActive;
 	}
 
 	/**
-	 * 返回验证SQL的执行超时时间，为负数表示关闭连接验证超时
+	 * 返回在获取连接失败后，是否立即断开（标记为不可用）连接池中的所有连接
 	 *
-	 * @return 验证SQL的执行超时时间
+	 * @return 在获取连接失败后，是否立即断开（标记为不可用）连接池中的所有连接
 	 */
-	public Duration getValidationQueryTimeout(){
-		return validationQueryTimeout;
+	public Boolean isBreakAfterAcquireFailure() {
+		return getBreakAfterAcquireFailure();
 	}
 
 	/**
-	 * 设置验证SQL的执行超时时间，为负数表示关闭连接验证超时
+	 * 返回在获取连接失败后，是否立即断开（标记为不可用）连接池中的所有连接
 	 *
-	 * @param validationQueryTimeout
-	 * 		验证SQL的执行超时时间
+	 * @return 在获取连接失败后，是否立即断开（标记为不可用）连接池中的所有连接
 	 */
-	public void setValidationQueryTimeout(Duration validationQueryTimeout){
-		this.validationQueryTimeout = validationQueryTimeout;
+	public Boolean getBreakAfterAcquireFailure() {
+		return breakAfterAcquireFailure;
 	}
 
-	public Duration getQueryTimeout(){
-		return queryTimeout;
+	/**
+	 * 设置在获取连接失败后，是否立即断开（标记为不可用）连接池中的所有连接
+	 *
+	 * @param breakAfterAcquireFailure
+	 * 		在获取连接失败后，是否立即断开（标记为不可用）连接池中的所有连接
+	 */
+	public void setBreakAfterAcquireFailure(Boolean breakAfterAcquireFailure) {
+		this.breakAfterAcquireFailure = breakAfterAcquireFailure;
 	}
 
-	public void setQueryTimeout(Duration queryTimeout){
-		this.queryTimeout = queryTimeout;
-	}
-
-	public Integer getNotFullTimeoutRetryCount(){
+	/**
+	 * 返回当连接池未满且没有可用连接时，系统在超时前重试获取连接的次数
+	 *
+	 * @return 当连接池未满且没有可用连接时，系统在超时前重试获取连接的次数
+	 */
+	public Integer getNotFullTimeoutRetryCount() {
 		return notFullTimeoutRetryCount;
 	}
 
-	public void setNotFullTimeoutRetryCount(Integer notFullTimeoutRetryCount){
+	/**
+	 * 设置当连接池未满且没有可用连接时，系统在超时前重试获取连接的次数
+	 *
+	 * @param notFullTimeoutRetryCount
+	 * 		当连接池未满且没有可用连接时，系统在超时前重试获取连接的次数
+	 */
+	public void setNotFullTimeoutRetryCount(Integer notFullTimeoutRetryCount) {
 		this.notFullTimeoutRetryCount = notFullTimeoutRetryCount;
 	}
 
 	/**
-	 * 返回从连接池获取一个连接时，是否验证有效性
+	 * 返回是否使用本地会话状态
 	 *
-	 * @return 从连接池获取一个连接时，验证有效性
+	 * @return 是否使用本地会话状态
 	 */
-	@Deprecated
-	public Boolean isTestOnBorrow(){
-		return getTestOnBorrow();
+	public Boolean isUseLocalSessionState() {
+		return getUseLocalSessionState();
 	}
 
 	/**
-	 * 返回从连接池获取一个连接时，是否验证有效性
+	 * 返回是否使用本地会话状态
 	 *
-	 * @return 从连接池获取一个连接时，验证有效性
+	 * @return 是否使用本地会话状态
 	 */
-	public Boolean getTestOnBorrow(){
-		return testOnBorrow;
+	public Boolean getUseLocalSessionState() {
+		return useLocalSessionState;
 	}
 
 	/**
-	 * 设置从连接池获取一个连接时，是否验证有效性
+	 * 设置是否使用本地会话状态
 	 *
-	 * @param testOnBorrow
-	 * 		从连接池获取一个连接时，是否验证有效性
+	 * @param useLocalSessionState
+	 * 		是否使用本地会话状态
 	 */
-	public void setTestOnBorrow(Boolean testOnBorrow){
-		this.testOnBorrow = testOnBorrow;
+	public void setUseLocalSessionState(Boolean useLocalSessionState) {
+		this.useLocalSessionState = useLocalSessionState;
 	}
 
 	/**
-	 * 返回连接被归还到连接池时，是否验证有效性
+	 * 返回是否缓存 preparedStatement，也就是PSCache
 	 *
-	 * @return 连接被归还到连接池时，是否验证有效性
+	 * @return 是否缓存 preparedStatement，也就是PSCache
 	 */
-	@Deprecated
-	public Boolean isTestOnReturn(){
-		return getTestOnReturn();
-	}
-
-	/**
-	 * 返回连接被归还到连接池时，是否验证有效性
-	 *
-	 * @return 连接被归还到连接池时，是否验证有效性
-	 */
-	public Boolean getTestOnReturn(){
-		return testOnReturn;
-	}
-
-	/**
-	 * 设置连接被归还到连接池时，是否验证有效性
-	 *
-	 * @param testOnReturn
-	 * 		连接被归还到连接池时，是否验证有效性
-	 */
-	public void setTestOnReturn(Boolean testOnReturn){
-		this.testOnReturn = testOnReturn;
-	}
-
-	/**
-	 * 返回连接空闲时，是否验证有效性
-	 *
-	 * @return 连接空闲时，是否验证有效性
-	 */
-	@Deprecated
-	public Boolean isTestWhileIdle(){
-		return getTestWhileIdle();
-	}
-
-	/**
-	 * 返回连接空闲时，是否验证有效性
-	 *
-	 * @return 连接空闲时，是否验证有效性
-	 */
-	public Boolean getTestWhileIdle(){
-		return testWhileIdle;
-	}
-
-	/**
-	 * 设置连接空闲时，是否验证有效性
-	 *
-	 * @param testWhileIdle
-	 * 		连接空闲时，是否验证有效性
-	 */
-	public void setTestWhileIdle(Boolean testWhileIdle){
-		this.testWhileIdle = testWhileIdle;
-	}
-
-	/**
-	 * 返回空闲对象驱逐线程运行时的休眠时间
-	 *
-	 * @return 空闲对象驱逐线程运行时的休眠时间
-	 */
-	public Duration getTimeBetweenEvictionRuns(){
-		return timeBetweenEvictionRuns;
-	}
-
-	/**
-	 * 设置空闲对象驱逐线程运行时的休眠时间
-	 *
-	 * @param timeBetweenEvictionRuns
-	 * 		空闲对象驱逐线程运行时的休眠时间
-	 */
-	public void setTimeBetweenEvictionRuns(Duration timeBetweenEvictionRuns){
-		this.timeBetweenEvictionRuns = timeBetweenEvictionRuns;
-	}
-
-	/**
-	 * 返回在每个空闲对象驱逐线程运行过程中中进行检查的对象个数
-	 *
-	 * @return 在每个空闲对象驱逐线程运行过程中中进行检查的对象个数
-	 */
-	public Integer getNumTestsPerEvictionRun(){
-		return numTestsPerEvictionRun;
-	}
-
-	/**
-	 * 设置在每个空闲对象驱逐线程运行过程中中进行检查的对象个数
-	 *
-	 * @param numTestsPerEvictionRun
-	 * 		在每个空闲对象驱逐线程运行过程中中进行检查的对象个数
-	 */
-	public void setNumTestsPerEvictionRun(Integer numTestsPerEvictionRun){
-		this.numTestsPerEvictionRun = numTestsPerEvictionRun;
-	}
-
-	/**
-	 * 返回空闲的连接被释放最低要待时间
-	 *
-	 * @return 空闲的连接被释放最低要待时间
-	 */
-	public Duration getMinEvictableIdleTime(){
-		return minEvictableIdleTime;
-	}
-
-	/**
-	 * 设置空闲的连接被释放最低要待时间
-	 *
-	 * @param minEvictableIdleTime
-	 * 		空闲的连接被释放最低要待时间
-	 */
-	public void setMinEvictableIdleTime(Duration minEvictableIdleTime){
-		this.minEvictableIdleTime = minEvictableIdleTime;
-	}
-
-	public Duration getMaxEvictableIdleTime(){
-		return maxEvictableIdleTime;
-	}
-
-	public void setMaxEvictableIdleTime(Duration maxEvictableIdleTime){
-		this.maxEvictableIdleTime = maxEvictableIdleTime;
-	}
-
-	public Duration getKeepAliveBetweenTime(){
-		return keepAliveBetweenTime;
-	}
-
-	public void setKeepAliveBetweenTime(Duration keepAliveBetweenTime){
-		this.keepAliveBetweenTime = keepAliveBetweenTime;
-	}
-
-	public Duration getPhyTimeout(){
-		return phyTimeout;
-	}
-
-	public void setPhyTimeout(Duration phyTimeout){
-		this.phyTimeout = phyTimeout;
-	}
-
-	public Long getPhyMaxUseCount(){
-		return phyMaxUseCount;
-	}
-
-	public void setPhyMaxUseCount(Long phyMaxUseCount){
-		this.phyMaxUseCount = phyMaxUseCount;
-	}
-
-	/**
-	 * 返回默认事务隔离级别
-	 *
-	 * @return 默认事务隔离级别
-	 */
-	public TransactionIsolation getDefaultTransactionIsolation(){
-		return defaultTransactionIsolation;
-	}
-
-	/**
-	 * 设置默认事务隔离级别
-	 *
-	 * @param defaultTransactionIsolation
-	 * 		默认事务隔离级别
-	 */
-	public void setDefaultTransactionIsolation(TransactionIsolation defaultTransactionIsolation){
-		this.defaultTransactionIsolation = defaultTransactionIsolation;
-	}
-
-	public Long getTransactionThreshold(){
-		return transactionThreshold;
-	}
-
-	public void setTransactionThreshold(Long transactionThreshold){
-		this.transactionThreshold = transactionThreshold;
-	}
-
-	public Duration getTransactionQueryTimeout(){
-		return transactionQueryTimeout;
-	}
-
-	public void setTransactionQueryTimeout(Duration transactionQueryTimeout){
-		this.transactionQueryTimeout = transactionQueryTimeout;
-	}
-
-	/**
-	 * 返回是否自动提交事务
-	 *
-	 * @return 是否自动提交事务
-	 */
-	@Deprecated
-	public Boolean isDefaultAutoCommit(){
-		return getDefaultAutoCommit();
-	}
-
-	/**
-	 * 返回是否自动提交事务
-	 *
-	 * @return 是否自动提交事务
-	 */
-	public Boolean getDefaultAutoCommit(){
-		return defaultAutoCommit;
-	}
-
-	/**
-	 * 设置是否自动提交事务
-	 *
-	 * @param defaultAutoCommit
-	 * 		是否自动提交事务
-	 */
-	public void setDefaultAutoCommit(Boolean defaultAutoCommit){
-		this.defaultAutoCommit = defaultAutoCommit;
-	}
-
-	/**
-	 * 返回连接是否是只读模式
-	 *
-	 * @return 连接是否是只读模式
-	 */
-	@Deprecated
-	public Boolean isDefaultReadOnly(){
-		return getDefaultReadOnly();
-	}
-
-	/**
-	 * 返回连接是否是只读模式
-	 *
-	 * @return 连接是否是只读模式
-	 */
-	public Boolean getDefaultReadOnly(){
-		return defaultReadOnly;
-	}
-
-	/**
-	 * 设置连接是否是只读模式
-	 *
-	 * @param defaultReadOnly
-	 * 		连接是否是只读模式
-	 */
-	public void setDefaultReadOnly(Boolean defaultReadOnly){
-		this.defaultReadOnly = defaultReadOnly;
-	}
-
-	/**
-	 * 返回是否缓存 preparedStatement
-	 *
-	 * @return 是否缓存 preparedStatement
-	 */
-	@Deprecated
-	public Boolean isPoolPreparedStatements(){
+	public Boolean isPoolPreparedStatements() {
 		return getPoolPreparedStatements();
 	}
 
 	/**
-	 * 返回是否缓存 preparedStatement
+	 * 返回是否缓存 {@link PreparedStatement}，也就是PSCache
 	 *
-	 * @return 是否缓存 preparedStatement
+	 * @return 是否缓存 preparedStatement，也就是PSCache
 	 */
-	public Boolean getPoolPreparedStatements(){
+	public Boolean getPoolPreparedStatements() {
 		return poolPreparedStatements;
 	}
 
 	/**
-	 * 设置是否缓存 preparedStatement，PSCache 对支持游标的数据库性能提升巨大，比如说 oracle，在mysql下建议关闭
+	 * 设置是否缓存 {@link PreparedStatement}，也就是PSCache；
+	 * PSCache 对支持游标的数据库性能提升巨大，比如说 oracle，在mysql下建议关闭
 	 *
 	 * @param poolPreparedStatements
 	 * 		是否缓存 preparedStatement
 	 */
-	public void setPoolPreparedStatements(Boolean poolPreparedStatements){
+	public void setPoolPreparedStatements(Boolean poolPreparedStatements) {
 		this.poolPreparedStatements = poolPreparedStatements;
+	}
+
+	/**
+	 * 返回连接池中是否启用 {@link PreparedStatement} 的共享功能
+	 *
+	 * @return 连接池中是否启用 {@link PreparedStatement} 的共享功能
+	 */
+	public Boolean isSharePreparedStatements() {
+		return getSharePreparedStatements();
+	}
+
+	/**
+	 * 返回连接池中是否启用 {@link PreparedStatement} 的共享功能
+	 *
+	 * @return 连接池中是否启用 {@link PreparedStatement} 的共享功能
+	 */
+	public Boolean getSharePreparedStatements() {
+		return sharePreparedStatements;
+	}
+
+	/**
+	 * 设置连接池中是否启用 {@link PreparedStatement} 的共享功能
+	 *
+	 * @param sharePreparedStatements
+	 * 		连接池中是否启用 {@link PreparedStatement} 的共享功能
+	 */
+	public void setSharePreparedStatements(Boolean sharePreparedStatements) {
+		this.sharePreparedStatements = sharePreparedStatements;
+	}
+
+	/**
+	 * 返回每个数据库连接上可以缓存的 {@link PreparedStatement} 对象的最大数量
+	 *
+	 * @return 每个数据库连接上可以缓存的 {@link PreparedStatement} 对象的最大数量
+	 */
+	public Integer getMaxPoolPreparedStatementPerConnectionSize() {
+		return maxPoolPreparedStatementPerConnectionSize;
+	}
+
+	/**
+	 * 设置每个数据库连接上可以缓存的 {@link PreparedStatement} 对象的最大数量
+	 *
+	 * @param maxPoolPreparedStatementPerConnectionSize
+	 * 		每个数据库连接上可以缓存的 {@link PreparedStatement} 对象的最大数量
+	 */
+	public void setMaxPoolPreparedStatementPerConnectionSize(Integer maxPoolPreparedStatementPerConnectionSize) {
+		this.maxPoolPreparedStatementPerConnectionSize = maxPoolPreparedStatementPerConnectionSize;
 	}
 
 	/**
@@ -890,7 +531,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 最大打开 PSCache 数
 	 */
-	public Integer getMaxOpenPreparedStatements(){
+	public Integer getMaxOpenPreparedStatements() {
 		return maxOpenPreparedStatements;
 	}
 
@@ -900,96 +541,8 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param maxOpenPreparedStatements
 	 * 		最大打开 PSCache 数
 	 */
-	public void setMaxOpenPreparedStatements(Integer maxOpenPreparedStatements){
+	public void setMaxOpenPreparedStatements(Integer maxOpenPreparedStatements) {
 		this.maxOpenPreparedStatements = maxOpenPreparedStatements;
-	}
-
-	@Deprecated
-	public Boolean isSharePreparedStatements(){
-		return getSharePreparedStatements();
-	}
-
-	public Boolean getSharePreparedStatements(){
-		return sharePreparedStatements;
-	}
-
-	public void setSharePreparedStatements(Boolean sharePreparedStatements){
-		this.sharePreparedStatements = sharePreparedStatements;
-	}
-
-	public Integer getMaxPoolPreparedStatementPerConnectionSize(){
-		return maxPoolPreparedStatementPerConnectionSize;
-	}
-
-	public void setMaxPoolPreparedStatementPerConnectionSize(Integer maxPoolPreparedStatementPerConnectionSize){
-		this.maxPoolPreparedStatementPerConnectionSize = maxPoolPreparedStatementPerConnectionSize;
-	}
-
-	/**
-	 * 返回插件配置
-	 *
-	 * @return 插件配置
-	 */
-	public Set<String> getFilters(){
-		return filters;
-	}
-
-	/**
-	 * 设置插件配置
-	 *
-	 * @param filters
-	 * 		插件配置
-	 */
-	public void setFilters(Set<String> filters){
-		this.filters = filters;
-	}
-
-	@Deprecated
-	public Boolean isClearFiltersEnable(){
-		return getClearFiltersEnable();
-	}
-
-	public Boolean getClearFiltersEnable(){
-		return clearFiltersEnable;
-	}
-
-	public void setClearFiltersEnable(Boolean clearFiltersEnable){
-		this.clearFiltersEnable = clearFiltersEnable;
-	}
-
-	/**
-	 * 返回 {@link com.alibaba.druid.pool.ExceptionSorter} 实例名称
-	 *
-	 * @return {@link com.alibaba.druid.pool.ExceptionSorter} 实例名称
-	 */
-	public String getExceptionSorterClassName(){
-		return exceptionSorterClassName;
-	}
-
-	/**
-	 * 设置 {@link com.alibaba.druid.pool.ExceptionSorter} 实例名称
-	 *
-	 * @param exceptionSorterClassName
-	 *        {@link com.alibaba.druid.pool.ExceptionSorter} 实例名称
-	 */
-	public void setExceptionSorterClassName(String exceptionSorterClassName){
-		this.exceptionSorterClassName = exceptionSorterClassName;
-	}
-
-	public DruidDataSourceStatLogger getStatLogger(){
-		return statLogger;
-	}
-
-	public void setStatLogger(DruidDataSourceStatLogger statLogger){
-		this.statLogger = statLogger;
-	}
-
-	public Duration getTimeBetweenLogStats(){
-		return timeBetweenLogStats;
-	}
-
-	public void setTimeBetweenLogStats(Duration timeBetweenLogStats){
-		this.timeBetweenLogStats = timeBetweenLogStats;
 	}
 
 	/**
@@ -997,8 +550,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 是否移除抛弃的（abandoned）连接
 	 */
-	@Deprecated
-	public Boolean isRemoveAbandoned(){
+	public Boolean isRemoveAbandoned() {
 		return getRemoveAbandoned();
 	}
 
@@ -1007,7 +559,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 是否移除抛弃的（abandoned）连接
 	 */
-	public Boolean getRemoveAbandoned(){
+	public Boolean getRemoveAbandoned() {
 		return removeAbandoned;
 	}
 
@@ -1017,7 +569,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param removeAbandoned
 	 * 		是否移除抛弃的（abandoned）连接
 	 */
-	public void setRemoveAbandoned(Boolean removeAbandoned){
+	public void setRemoveAbandoned(Boolean removeAbandoned) {
 		this.removeAbandoned = removeAbandoned;
 	}
 
@@ -1026,7 +578,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 一个连接使用超过多久就视为抛弃的
 	 */
-	public Duration getRemoveAbandonedTimeout(){
+	public Duration getRemoveAbandonedTimeout() {
 		return removeAbandonedTimeout;
 	}
 
@@ -1036,7 +588,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param removeAbandonedTimeout
 	 * 		一个连接使用超过多久就视为抛弃的，该值应该超过你的应用中最长的SQL可能运行的时间
 	 */
-	public void setRemoveAbandonedTimeout(Duration removeAbandonedTimeout){
+	public void setRemoveAbandonedTimeout(Duration removeAbandonedTimeout) {
 		this.removeAbandonedTimeout = removeAbandonedTimeout;
 	}
 
@@ -1045,8 +597,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 是否记录抛弃连接的应用的堆栈信息
 	 */
-	@Deprecated
-	public Boolean isLogAbandoned(){
+	public Boolean isLogAbandoned() {
 		return getLogAbandoned();
 	}
 
@@ -1055,7 +606,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 是否记录抛弃连接的应用的堆栈信息
 	 */
-	public Boolean getLogAbandoned(){
+	public Boolean getLogAbandoned() {
 		return logAbandoned;
 	}
 
@@ -1065,123 +616,88 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param logAbandoned
 	 * 		是否记录抛弃连接的应用的堆栈信息
 	 */
-	public void setLogAbandoned(Boolean logAbandoned){
+	public void setLogAbandoned(Boolean logAbandoned) {
 		this.logAbandoned = logAbandoned;
 	}
 
-	@Deprecated
-	public Boolean isUseOracleImplicitCache(){
-		return getUseOracleImplicitCache();
+	/**
+	 * 返回日志统计信息的记录间隔时间
+	 *
+	 * @return 日志统计信息的记录间隔时间
+	 */
+	public Duration getTimeBetweenLogStats() {
+		return timeBetweenLogStats;
 	}
 
-	public Boolean getUseOracleImplicitCache(){
-		return useOracleImplicitCache;
+	/**
+	 * 设置日志统计信息的记录间隔时间
+	 *
+	 * @param timeBetweenLogStats
+	 * 		日志统计信息的记录间隔时间
+	 */
+	public void setTimeBetweenLogStats(Duration timeBetweenLogStats) {
+		this.timeBetweenLogStats = timeBetweenLogStats;
 	}
 
-	public void setUseOracleImplicitCache(Boolean useOracleImplicitCache){
-		this.useOracleImplicitCache = useOracleImplicitCache;
-	}
-
-	@Deprecated
-	public Boolean isInitVariants(){
-		return getInitVariants();
-	}
-
-	public Boolean getInitVariants(){
-		return initVariants;
-	}
-
-	public void setInitVariants(Boolean initVariants){
-		this.initVariants = initVariants;
-	}
-
-	@Deprecated
-	public Boolean isInitGlobalVariants(){
-		return getInitGlobalVariants();
-	}
-
-	public Boolean getInitGlobalVariants(){
-		return initGlobalVariants;
-	}
-
-	public void setInitGlobalVariants(Boolean initGlobalVariants){
-		this.initGlobalVariants = initGlobalVariants;
-	}
-
-	@Deprecated
-	public Boolean isFailFast(){
-		return getFailFast();
-	}
-
-	public Boolean getFailFast(){
-		return failFast;
-	}
-
-	public void setFailFast(Boolean failFast){
-		this.failFast = failFast;
-	}
-
-	public Integer getOnFatalErrorMaxActive(){
-		return onFatalErrorMaxActive;
-	}
-
-	public void setOnFatalErrorMaxActive(Integer onFatalErrorMaxActive){
-		this.onFatalErrorMaxActive = onFatalErrorMaxActive;
-	}
-
-	@Deprecated
-	public Boolean isBreakAfterAcquireFailure(){
-		return getBreakAfterAcquireFailure();
-	}
-
-	public Boolean getBreakAfterAcquireFailure(){
-		return breakAfterAcquireFailure;
-	}
-
-	public void setBreakAfterAcquireFailure(Boolean breakAfterAcquireFailure){
-		this.breakAfterAcquireFailure = breakAfterAcquireFailure;
-	}
-
-	@Deprecated
-	public Boolean isDupCloseLogEnable(){
+	/**
+	 * 返回是否在连接关闭时记录日志
+	 *
+	 * @return 是否在连接关闭时记录日志
+	 */
+	public Boolean isDupCloseLogEnable() {
 		return getDupCloseLogEnable();
 	}
 
-	public Boolean getDupCloseLogEnable(){
+	/**
+	 * 返回是否在连接关闭时记录日志
+	 *
+	 * @return 是否在连接关闭时记录日志
+	 */
+	public Boolean getDupCloseLogEnable() {
 		return dupCloseLogEnable;
 	}
 
-	public void setDupCloseLogEnable(Boolean dupCloseLogEnable){
+	/**
+	 * 设置是否在连接关闭时记录日志
+	 *
+	 * @param dupCloseLogEnable
+	 * 		是否在连接关闭时记录日志
+	 */
+	public void setDupCloseLogEnable(Boolean dupCloseLogEnable) {
 		this.dupCloseLogEnable = dupCloseLogEnable;
 	}
 
-	public Boolean getUseUnfairLock(){
-		return useUnfairLock;
+	/**
+	 * 返回是否在获取连接和关闭连接时是否记录线程不一致的情况
+	 *
+	 * @return 是否在获取连接和关闭连接时是否记录线程不一致的情况
+	 *
+	 * @since 3.0.0
+	 */
+	public Boolean isLogDifferentThread() {
+		return getLogDifferentThread();
 	}
 
-	public void setUseUnfairLock(Boolean useUnfairLock){
-		this.useUnfairLock = useUnfairLock;
+	/**
+	 * 返回是否在获取连接和关闭连接时是否记录线程不一致的情况
+	 *
+	 * @return 是否在获取连接和关闭连接时是否记录线程不一致的情况
+	 *
+	 * @since 3.0.0
+	 */
+	public Boolean getLogDifferentThread() {
+		return logDifferentThread;
 	}
 
-	@Deprecated
-	public Boolean isUseLocalSessionState(){
-		return getUseLocalSessionState();
+	/**
+	 * 设置在获取连接和关闭连接时是否记录线程不一致的情况
+	 *
+	 * @param logDifferentThread
+	 * 		是否在获取连接和关闭连接时是否记录线程不一致的情况
+	 *
+	 * @since 3.0.0
+	 */
+	public void setLogDifferentThread(Boolean logDifferentThread) {
+		this.logDifferentThread = logDifferentThread;
 	}
-
-	public Boolean getUseLocalSessionState(){
-		return useLocalSessionState;
-	}
-
-	public void setUseLocalSessionState(Boolean useLocalSessionState){
-		this.useLocalSessionState = useLocalSessionState;
-	}
-
-	public ObjectName getObjectName(){
-		return objectName;
-	}
-
-	public void setObjectName(ObjectName objectName){
-		this.objectName = objectName;
-	}
-
 }
