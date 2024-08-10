@@ -33,14 +33,14 @@ import java.util.Properties;
 /**
  * 数据源接口
  *
- * @param <T>
+ * @param <DS>
  *        {@link javax.sql.DataSource} 数据源类型
  * @param <P>
  * 		连接池配置
  *
  * @author Yong.Teng
  */
-public interface DataSource<T extends javax.sql.DataSource, P extends PoolConfiguration> {
+public interface DataSource<DS extends javax.sql.DataSource, P extends PoolConfiguration> {
 
 	/**
 	 * 返回 {@link ClassLoader} 实例
@@ -56,6 +56,8 @@ public interface DataSource<T extends javax.sql.DataSource, P extends PoolConfig
 	 *
 	 * @param driverClassLoader
 	 *        {@link ClassLoader} 实例
+	 *
+	 * @since 3.0.0
 	 */
 	void setDriverClassLoader(ClassLoader driverClassLoader);
 
@@ -139,6 +141,8 @@ public interface DataSource<T extends javax.sql.DataSource, P extends PoolConfig
 	 * 返回登录超时
 	 *
 	 * @return 登录超时
+	 *
+	 * @since 3.0.0
 	 */
 	Duration getLoginTimeout();
 
@@ -147,6 +151,8 @@ public interface DataSource<T extends javax.sql.DataSource, P extends PoolConfig
 	 *
 	 * @param loginTimeout
 	 * 		登录超时
+	 *
+	 * @since 3.0.0
 	 */
 	void setLoginTimeout(Duration loginTimeout);
 
@@ -350,7 +356,9 @@ public interface DataSource<T extends javax.sql.DataSource, P extends PoolConfig
 	 *
 	 * @since 3.0.0
 	 */
-	Boolean isAccessToUnderlyingConnectionAllowed();
+	default Boolean isAccessToUnderlyingConnectionAllowed() {
+		return getAccessToUnderlyingConnectionAllowed();
+	}
 
 	/**
 	 * 返回 PoolGuard 是否可以访问底层连接
@@ -410,6 +418,6 @@ public interface DataSource<T extends javax.sql.DataSource, P extends PoolConfig
 	 *
 	 * @return 原始 {@link javax.sql.DataSource} 实例
 	 */
-	T createDataSource();
+	DS createDataSource();
 
 }

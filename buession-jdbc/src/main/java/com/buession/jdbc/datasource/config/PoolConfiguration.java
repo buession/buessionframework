@@ -19,12 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.jdbc.datasource.config;
 
-import java.util.Properties;
+import java.time.Duration;
 
 /**
  * 连接池配置
@@ -35,18 +35,273 @@ import java.util.Properties;
 public interface PoolConfiguration {
 
 	/**
-	 * 返回连接池其它属性
+	 * 返回初始连接数
 	 *
-	 * @return 连接池其它属性
+	 * @return 初始连接数
 	 */
-	Properties getProperties();
+	Integer getInitialSize();
 
 	/**
-	 * 设置连接池其它属性
+	 * 设置初始连接数
 	 *
-	 * @param properties
-	 * 		连接池其它属性
+	 * @param initialSize
+	 * 		初始连接数
 	 */
-	void setProperties(Properties properties);
+	void setInitialSize(Integer initialSize);
+
+	/**
+	 * 返回最小空闲连接数
+	 *
+	 * @return 最小空闲连接数
+	 */
+	Integer getMinIdle();
+
+	/**
+	 * 设置最小空闲连接数
+	 *
+	 * @param minIdle
+	 * 		最小空闲连接数
+	 */
+	void setMinIdle(Integer minIdle);
+
+	/**
+	 * 返回最大空闲连接数
+	 *
+	 * @return 最大空闲连接数
+	 */
+	Integer getMaxIdle();
+
+	/**
+	 * 设置最大空闲连接数，如设置为负数，则不限制
+	 *
+	 * @param maxIdle
+	 * 		最大空闲连接数
+	 */
+	void setMaxIdle(Integer maxIdle);
+
+	/**
+	 * 返回最大连接数
+	 *
+	 * @return 最大连接数
+	 */
+	Integer getMaxTotal();
+
+	/**
+	 * 设置最大连接数，如设置为负数，则不限制
+	 *
+	 * @param maxTotal
+	 * 		最大连接数
+	 */
+	void setMaxTotal(Integer maxTotal);
+
+	/**
+	 * 返回从连接池获取一个连接时，最大的等待时间
+	 *
+	 * @return 从连接池获取一个连接时，最大的等待时间
+	 */
+	Duration getMaxWait();
+
+	/**
+	 * 设置从连接池获取一个连接时，最大的等待时间
+	 *
+	 * @param maxWait
+	 * 		从连接池获取一个连接时，最大的等待时间
+	 */
+	void setMaxWait(Duration maxWait);
+
+	/**
+	 * 返回连接创建后，是否马上验证有效性
+	 *
+	 * @return 连接创建后，是否马上验证有效性
+	 */
+	default Boolean isTestOnCreate() {
+		return getTestOnCreate();
+	}
+
+	/**
+	 * 返回连接创建后，是否马上验证有效性
+	 *
+	 * @return 连接创建后，是否马上验证有效性
+	 */
+	Boolean getTestOnCreate();
+
+	/**
+	 * 设置连接创建后，是否马上验证有效性
+	 *
+	 * @param testOnCreate
+	 * 		连接创建后，是否马上验证有效性
+	 */
+	void setTestOnCreate(Boolean testOnCreate);
+
+	/**
+	 * 返回从连接池获取一个连接时，是否验证有效性
+	 *
+	 * @return 从连接池获取一个连接时，验证有效性
+	 */
+	default Boolean isTestOnBorrow() {
+		return getTestOnBorrow();
+	}
+
+	/**
+	 * 返回从连接池获取一个连接时，是否验证有效性
+	 *
+	 * @return 从连接池获取一个连接时，验证有效性
+	 */
+	Boolean getTestOnBorrow();
+
+	/**
+	 * 设置从连接池获取一个连接时，是否验证有效性
+	 *
+	 * @param testOnBorrow
+	 * 		从连接池获取一个连接时，是否验证有效性
+	 */
+	void setTestOnBorrow(Boolean testOnBorrow);
+
+	/**
+	 * 返回连接被归还到连接池时，是否验证有效性
+	 *
+	 * @return 连接被归还到连接池时，是否验证有效性
+	 */
+	default Boolean isTestOnReturn() {
+		return getTestOnReturn();
+	}
+
+	/**
+	 * 返回连接被归还到连接池时，是否验证有效性
+	 *
+	 * @return 连接被归还到连接池时，是否验证有效性
+	 */
+	Boolean getTestOnReturn();
+
+	/**
+	 * 设置连接被归还到连接池时，是否验证有效性
+	 *
+	 * @param testOnReturn
+	 * 		连接被归还到连接池时，是否验证有效性
+	 */
+	void setTestOnReturn(Boolean testOnReturn);
+
+	/**
+	 * 返回连接空闲时，是否验证有效性
+	 *
+	 * @return 连接空闲时，是否验证有效性
+	 */
+	default Boolean isTestWhileIdle() {
+		return getTestWhileIdle();
+	}
+
+	/**
+	 * 返回连接空闲时，是否验证有效性
+	 *
+	 * @return 连接空闲时，是否验证有效性
+	 */
+	Boolean getTestWhileIdle();
+
+	/**
+	 * 设置连接空闲时，是否验证有效性
+	 *
+	 * @param testWhileIdle
+	 * 		连接空闲时，是否验证有效性
+	 */
+	void setTestWhileIdle(Boolean testWhileIdle);
+
+	/**
+	 * 返回空闲的连接被释放最低要待时间
+	 *
+	 * @return 空闲的连接被释放最低要待时间
+	 */
+	Duration getMinEvictableIdle();
+
+	/**
+	 * 设置空闲的连接被释放最低要待时间
+	 *
+	 * @param minEvictableIdle
+	 * 		空闲的连接被释放最低要待时间
+	 */
+	void setMinEvictableIdle(Duration minEvictableIdle);
+
+	/**
+	 * 返回空闲的连接被释放最高要待时间
+	 *
+	 * @return 空闲的连接被释放最高要待时间
+	 */
+	Duration getMaxEvictableIdle();
+
+	/**
+	 * 设置空闲的连接被释放最高要待时间
+	 *
+	 * @param maxEvictableIdle
+	 * 		空闲的连接被释放最高要待时间
+	 */
+	void setMaxEvictableIdle(Duration maxEvictableIdle);
+
+	/**
+	 * 返回在每个空闲对象驱逐线程运行过程中中进行检查的对象个数
+	 *
+	 * @return 在每个空闲对象驱逐线程运行过程中中进行检查的对象个数
+	 */
+	Integer getNumTestsPerEvictionRun();
+
+	/**
+	 * 设置在每个空闲对象驱逐线程运行过程中中进行检查的对象个数
+	 *
+	 * @param numTestsPerEvictionRun
+	 * 		在每个空闲对象驱逐线程运行过程中中进行检查的对象个数
+	 */
+	void setNumTestsPerEvictionRun(Integer numTestsPerEvictionRun);
+
+	/**
+	 * 返回空闲对象驱逐线程运行时的休眠时间
+	 *
+	 * @return 空闲对象驱逐线程运行时的休眠时间
+	 */
+	Duration getTimeBetweenEvictionRuns();
+
+	/**
+	 * 设置空闲对象驱逐线程运行时的休眠时间
+	 *
+	 * @param timeBetweenEvictionRuns
+	 * 		空闲对象驱逐线程运行时的休眠时间
+	 */
+	void setTimeBetweenEvictionRuns(Duration timeBetweenEvictionRuns);
+
+	/**
+	 * 返回是否启用 JMX
+	 *
+	 * @return 是否启用 JMX
+	 */
+	default Boolean isJmxEnabled() {
+		return getJmxEnabled();
+	}
+
+	/**
+	 * 返回是否启用 JMX
+	 *
+	 * @return 是否启用 JMX
+	 */
+	Boolean getJmxEnabled();
+
+	/**
+	 * 设置是否启用 JMX
+	 *
+	 * @param jmxEnabled
+	 * 		是否启用 JMX
+	 */
+	void setJmxEnabled(Boolean jmxEnabled);
+
+	/**
+	 * 返回 JMX 管理对象的名称
+	 *
+	 * @return JMX 管理对象的名称
+	 */
+	String getJmxName();
+
+	/**
+	 * 设置 JMX 管理对象的名称
+	 *
+	 * @param jmxName
+	 * 		JMX 管理对象的名称
+	 */
+	void setJmxName(String jmxName);
 
 }

@@ -1308,9 +1308,8 @@ public class DruidDataSource
 	}
 
 	@Override
-	public com.alibaba.druid.pool.DruidDataSource createDataSource() {
+	protected com.alibaba.druid.pool.DruidDataSource createDataSource(final PropertyMapper propertyMapper) {
 		Properties properties = null;
-		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
 		final com.alibaba.druid.pool.DruidDataSource dataSource = getFairLock() == null ?
 				new com.alibaba.druid.pool.DruidDataSource() : new com.alibaba.druid.pool.DruidDataSource(
 				getFairLock());
@@ -1348,8 +1347,8 @@ public class DruidDataSource
 		propertyMapper.from(this::getLoginTimeout).as((v)->(int) v.getSeconds()).to(dataSource::setLoginTimeout);
 		propertyMapper.from(this::getTimeBetweenConnectError).as(Duration::toMillis)
 				.to(dataSource::setTimeBetweenConnectErrorMillis);
-		propertyMapper.from(this::getKillWhenSocketReadTimeout).to(dataSource::setKillWhenSocketReadTimeout);
-		propertyMapper.from(this::getAccessToUnderlyingConnectionAllowed)
+		propertyMapper.from(this::isKillWhenSocketReadTimeout).to(dataSource::setKillWhenSocketReadTimeout);
+		propertyMapper.from(this::isAccessToUnderlyingConnectionAllowed)
 				.to(dataSource::setAccessToUnderlyingConnectionAllowed);
 		propertyMapper.from(this::getPhyTimeout).as(Duration::toMillis).to(dataSource::setPhyTimeoutMillis);
 		propertyMapper.from(this::getPhyMaxUseCount).to(dataSource::setPhyMaxUseCount);
@@ -1367,7 +1366,7 @@ public class DruidDataSource
 		}
 
 		propertyMapper.from(this::getConnectionErrorRetryAttempts).to(dataSource::setConnectionErrorRetryAttempts);
-		propertyMapper.from(this::getInitExceptionThrow).to(dataSource::setInitExceptionThrow);
+		propertyMapper.from(this::isInitExceptionThrow).to(dataSource::setInitExceptionThrow);
 
 		if(Validate.hasText(this.getExceptionSorterClassName())){
 			try{
@@ -1379,8 +1378,8 @@ public class DruidDataSource
 			}
 		}
 
-		propertyMapper.from(this::getAsyncCloseConnectionEnable).to(dataSource::setAsyncCloseConnectionEnable);
-		propertyMapper.from(this::getUseOracleImplicitCache).to(dataSource::setUseOracleImplicitCache);
+		propertyMapper.from(this::isAsyncCloseConnectionEnable).to(dataSource::setAsyncCloseConnectionEnable);
+		propertyMapper.from(this::isUseOracleImplicitCache).to(dataSource::setUseOracleImplicitCache);
 		propertyMapper.from(this::getValidationQuery).to(dataSource::setValidationQuery);
 		propertyMapper.from(this::getValidationQueryTimeout).as((v)->(int) v.getSeconds())
 				.to(dataSource::setValidationQueryTimeout);
@@ -1391,19 +1390,19 @@ public class DruidDataSource
 				.to(dataSource::setTransactionQueryTimeout);
 		propertyMapper.from(this::getTransactionThreshold).as(Duration::toMillis)
 				.to(dataSource::setTransactionThresholdMillis);
-		propertyMapper.from(this::getDefaultReadOnly).to(dataSource::setDefaultReadOnly);
-		propertyMapper.from(this::getDefaultAutoCommit).to(dataSource::setDefaultAutoCommit);
+		propertyMapper.from(this::isDefaultReadOnly).to(dataSource::setDefaultReadOnly);
+		propertyMapper.from(this::isDefaultAutoCommit).to(dataSource::setDefaultAutoCommit);
 		propertyMapper.from(this::getName).to(dataSource::setName);
-		propertyMapper.from(this::getAsyncInit).to(dataSource::setAsyncInit);
-		propertyMapper.from(this::getInitVariants).to(dataSource::setInitVariants);
-		propertyMapper.from(this::getInitGlobalVariants).to(dataSource::setInitGlobalVariants);
+		propertyMapper.from(this::isAsyncInit).to(dataSource::setAsyncInit);
+		propertyMapper.from(this::isInitVariants).to(dataSource::setInitVariants);
+		propertyMapper.from(this::isInitGlobalVariants).to(dataSource::setInitGlobalVariants);
 		propertyMapper.from(this::getCreateScheduler).to(dataSource::setCreateScheduler);
 		propertyMapper.from(this::getDestroyScheduler).to(dataSource::setDestroyScheduler);
-		propertyMapper.from(this::getFailFast).to(dataSource::setFailFast);
-		propertyMapper.from(this::getCheckExecuteTime).to(dataSource::setCheckExecuteTime);
-		propertyMapper.from(this::getUseGlobalDataSourceStat).to(dataSource::setUseGlobalDataSourceStat);
+		propertyMapper.from(this::isFailFast).to(dataSource::setFailFast);
+		propertyMapper.from(this::isCheckExecuteTime).to(dataSource::setCheckExecuteTime);
+		propertyMapper.from(this::isUseGlobalDataSourceStat).to(dataSource::setUseGlobalDataSourceStat);
 		propertyMapper.from(this::getStatLoggerClassName).to(dataSource::setStatLoggerClassName);
-		propertyMapper.from(this::getResetStatEnable).to(dataSource::setResetStatEnable);
+		propertyMapper.from(this::isResetStatEnable).to(dataSource::setResetStatEnable);
 		propertyMapper.from(this::getConnectionProperties).to(dataSource::setConnectProperties);
 
 		if(Validate.isNotEmpty(this.getFilters())){
@@ -1433,21 +1432,16 @@ public class DruidDataSource
 			properties.put("druid.load.spifilter.skip", this.getLoadSpifilterSkip());
 		}
 
-		propertyMapper.from(this::getClearFiltersEnable).to(dataSource::setClearFiltersEnable);
-		propertyMapper.from(this::getEnable).to(dataSource::setEnable);
-
-
-		if(getPoolConfiguration() != null){
-			applyPoolConfiguration(dataSource, propertyMapper);
-		}
+		propertyMapper.from(this::isClearFiltersEnable).to(dataSource::setClearFiltersEnable);
+		propertyMapper.from(this::isEnable).to(dataSource::setEnable);
 
 		return dataSource;
 	}
 
+	@Override
 	protected void applyPoolConfiguration(final com.alibaba.druid.pool.DruidDataSource dataSource,
+										  final DruidPoolConfiguration poolConfiguration,
 										  final PropertyMapper propertyMapper) {
-		final DruidPoolConfiguration poolConfiguration = getPoolConfiguration();
-
 		propertyMapper.from(poolConfiguration::getInitialSize).to(dataSource::setInitialSize);
 		propertyMapper.from(poolConfiguration::getMinIdle).to(dataSource::setMinIdle);
 		propertyMapper.from(poolConfiguration::getMaxIdle).to(dataSource::setMaxIdle);
@@ -1458,18 +1452,18 @@ public class DruidDataSource
 		propertyMapper.from(poolConfiguration::getKeepAlive).to(dataSource::setKeepAlive);
 		propertyMapper.from(poolConfiguration::getKeepAliveBetweenTime).as(Duration::toMillis)
 				.to(dataSource::setKeepAliveBetweenTimeMillis);
-		propertyMapper.from(poolConfiguration::getUsePingMethod).to(dataSource::setUsePingMethod);
-		propertyMapper.from(poolConfiguration::getKeepConnectionUnderlyingTransactionIsolation)
+		propertyMapper.from(poolConfiguration::isUsePingMethod).to(dataSource::setUsePingMethod);
+		propertyMapper.from(poolConfiguration::isKeepConnectionUnderlyingTransactionIsolation)
 				.to(dataSource::setKeepConnectionUnderlyingTransactionIsolation);
 		propertyMapper.from(poolConfiguration::getOnFatalErrorMaxActive).to(dataSource::setOnFatalErrorMaxActive);
-		propertyMapper.from(poolConfiguration::getBreakAfterAcquireFailure).to(dataSource::setBreakAfterAcquireFailure);
-		propertyMapper.from(poolConfiguration::getTestOnBorrow).to(dataSource::setTestOnBorrow);
-		propertyMapper.from(poolConfiguration::getTestOnReturn).to(dataSource::setTestOnReturn);
-		propertyMapper.from(poolConfiguration::getTestWhileIdle).to(dataSource::setTestWhileIdle);
+		propertyMapper.from(poolConfiguration::isBreakAfterAcquireFailure).to(dataSource::setBreakAfterAcquireFailure);
+		propertyMapper.from(poolConfiguration::isTestOnBorrow).to(dataSource::setTestOnBorrow);
+		propertyMapper.from(poolConfiguration::isTestOnReturn).to(dataSource::setTestOnReturn);
+		propertyMapper.from(poolConfiguration::isTestWhileIdle).to(dataSource::setTestWhileIdle);
 		propertyMapper.from(poolConfiguration::getNotFullTimeoutRetryCount).to(dataSource::setNotFullTimeoutRetryCount);
-		propertyMapper.from(poolConfiguration::getUseLocalSessionState).to(dataSource::setUseLocalSessionState);
-		propertyMapper.from(poolConfiguration::getPoolPreparedStatements).to(dataSource::setPoolPreparedStatements);
-		propertyMapper.from(poolConfiguration::getSharePreparedStatements).to(dataSource::setSharePreparedStatements);
+		propertyMapper.from(poolConfiguration::isUseLocalSessionState).to(dataSource::setUseLocalSessionState);
+		propertyMapper.from(poolConfiguration::isPoolPreparedStatements).to(dataSource::setPoolPreparedStatements);
+		propertyMapper.from(poolConfiguration::isSharePreparedStatements).to(dataSource::setSharePreparedStatements);
 		propertyMapper.from(poolConfiguration::getMaxOpenPreparedStatements)
 				.to(dataSource::setMaxOpenPreparedStatements);
 		propertyMapper.from(poolConfiguration::getMaxPoolPreparedStatementPerConnectionSize)
@@ -1481,14 +1475,14 @@ public class DruidDataSource
 		propertyMapper.from(poolConfiguration::getNumTestsPerEvictionRun).to(dataSource::setNumTestsPerEvictionRun);
 		propertyMapper.from(poolConfiguration::getTimeBetweenEvictionRuns).as(Duration::toMillis)
 				.to(dataSource::setTimeBetweenEvictionRunsMillis);
-		propertyMapper.from(poolConfiguration::getRemoveAbandoned).to(dataSource::setRemoveAbandoned);
+		propertyMapper.from(poolConfiguration::isRemoveAbandoned).to(dataSource::setRemoveAbandoned);
 		propertyMapper.from(poolConfiguration::getRemoveAbandonedTimeout).as(Duration::toMillis)
 				.to(dataSource::setRemoveAbandonedTimeoutMillis);
-		propertyMapper.from(poolConfiguration::getLogAbandoned).to(dataSource::setLogAbandoned);
+		propertyMapper.from(poolConfiguration::isLogAbandoned).to(dataSource::setLogAbandoned);
 		propertyMapper.from(poolConfiguration::getTimeBetweenLogStats).as(Duration::toMillis)
 				.to(dataSource::setTimeBetweenLogStatsMillis);
-		propertyMapper.from(poolConfiguration::getDupCloseLogEnable).to(dataSource::setDupCloseLogEnable);
-		propertyMapper.from(poolConfiguration::getLogDifferentThread).to(dataSource::setLogDifferentThread);
+		propertyMapper.from(poolConfiguration::isDupCloseLogEnable).to(dataSource::setDupCloseLogEnable);
+		propertyMapper.from(poolConfiguration::isLogDifferentThread).to(dataSource::setLogDifferentThread);
 
 		if(Validate.hasText(poolConfiguration.getJmxName())){
 			try{

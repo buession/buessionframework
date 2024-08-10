@@ -25,7 +25,6 @@
 package com.buession.jdbc.datasource.config;
 
 import java.time.Duration;
-import java.util.Properties;
 
 /**
  * 连接池配置基类
@@ -108,317 +107,119 @@ public abstract class AbstractPoolConfiguration implements PoolConfiguration {
 	 */
 	private Boolean jmxEnabled;
 
+	/**
+	 * JMX 管理对象的名称
+	 */
 	private String jmxName;
 
-	private Properties properties;
-
-	/**
-	 * 返回初始连接数
-	 *
-	 * @return 初始连接数
-	 */
 	public Integer getInitialSize() {
 		return initialSize;
 	}
 
-	/**
-	 * 设置初始连接数
-	 *
-	 * @param initialSize
-	 * 		初始连接数
-	 */
 	public void setInitialSize(Integer initialSize) {
 		this.initialSize = initialSize;
 	}
 
-	/**
-	 * 返回最小空闲连接数
-	 *
-	 * @return 最小空闲连接数
-	 */
 	public Integer getMinIdle() {
 		return minIdle;
 	}
 
-	/**
-	 * 设置最小空闲连接数
-	 *
-	 * @param minIdle
-	 * 		最小空闲连接数
-	 */
 	public void setMinIdle(Integer minIdle) {
 		this.minIdle = minIdle;
 	}
 
-	/**
-	 * 返回最大空闲连接数
-	 *
-	 * @return 最大空闲连接数
-	 */
 	public Integer getMaxIdle() {
 		return maxIdle;
 	}
 
-	/**
-	 * 设置最大空闲连接数，如设置为负数，则不限制
-	 *
-	 * @param maxIdle
-	 * 		最大空闲连接数
-	 */
 	public void setMaxIdle(Integer maxIdle) {
 		this.maxIdle = maxIdle;
 	}
 
-	/**
-	 * 返回最大连接数
-	 *
-	 * @return 最大连接数
-	 */
 	public Integer getMaxTotal() {
 		return maxTotal;
 	}
 
-	/**
-	 * 设置最大连接数，如设置为负数，则不限制
-	 *
-	 * @param maxTotal
-	 * 		最大连接数
-	 */
 	public void setMaxTotal(Integer maxTotal) {
 		this.maxTotal = maxTotal;
 	}
 
-	/**
-	 * 返回从连接池获取一个连接时，最大的等待时间
-	 *
-	 * @return 从连接池获取一个连接时，最大的等待时间
-	 */
 	public Duration getMaxWait() {
 		return maxWait;
 	}
 
-	/**
-	 * 设置从连接池获取一个连接时，最大的等待时间
-	 *
-	 * @param maxWait
-	 * 		从连接池获取一个连接时，最大的等待时间
-	 */
 	public void setMaxWait(Duration maxWait) {
 		this.maxWait = maxWait;
 	}
 
-	/**
-	 * 返回连接创建后，是否马上验证有效性
-	 *
-	 * @return 连接创建后，是否马上验证有效性
-	 */
-	public Boolean isTestOnCreate() {
-		return getTestOnCreate();
-	}
-
-	/**
-	 * 返回连接创建后，是否马上验证有效性
-	 *
-	 * @return 连接创建后，是否马上验证有效性
-	 */
 	public Boolean getTestOnCreate() {
 		return testOnCreate;
 	}
 
-	/**
-	 * 设置连接创建后，是否马上验证有效性
-	 *
-	 * @param testOnCreate
-	 * 		连接创建后，是否马上验证有效性
-	 */
 	public void setTestOnCreate(Boolean testOnCreate) {
 		this.testOnCreate = testOnCreate;
 	}
 
-	/**
-	 * 返回从连接池获取一个连接时，是否验证有效性
-	 *
-	 * @return 从连接池获取一个连接时，验证有效性
-	 */
-	public Boolean isTestOnBorrow() {
-		return getTestOnBorrow();
-	}
-
-	/**
-	 * 返回从连接池获取一个连接时，是否验证有效性
-	 *
-	 * @return 从连接池获取一个连接时，验证有效性
-	 */
 	public Boolean getTestOnBorrow() {
 		return testOnBorrow;
 	}
 
-	/**
-	 * 设置从连接池获取一个连接时，是否验证有效性
-	 *
-	 * @param testOnBorrow
-	 * 		从连接池获取一个连接时，是否验证有效性
-	 */
 	public void setTestOnBorrow(Boolean testOnBorrow) {
 		this.testOnBorrow = testOnBorrow;
 	}
 
-	/**
-	 * 返回连接被归还到连接池时，是否验证有效性
-	 *
-	 * @return 连接被归还到连接池时，是否验证有效性
-	 */
-	public Boolean isTestOnReturn() {
-		return getTestOnReturn();
-	}
-
-	/**
-	 * 返回连接被归还到连接池时，是否验证有效性
-	 *
-	 * @return 连接被归还到连接池时，是否验证有效性
-	 */
 	public Boolean getTestOnReturn() {
 		return testOnReturn;
 	}
 
-	/**
-	 * 设置连接被归还到连接池时，是否验证有效性
-	 *
-	 * @param testOnReturn
-	 * 		连接被归还到连接池时，是否验证有效性
-	 */
 	public void setTestOnReturn(Boolean testOnReturn) {
 		this.testOnReturn = testOnReturn;
 	}
 
-	/**
-	 * 返回连接空闲时，是否验证有效性
-	 *
-	 * @return 连接空闲时，是否验证有效性
-	 */
-	public Boolean isTestWhileIdle() {
-		return getTestWhileIdle();
-	}
-
-	/**
-	 * 返回连接空闲时，是否验证有效性
-	 *
-	 * @return 连接空闲时，是否验证有效性
-	 */
 	public Boolean getTestWhileIdle() {
 		return testWhileIdle;
 	}
 
-	/**
-	 * 设置连接空闲时，是否验证有效性
-	 *
-	 * @param testWhileIdle
-	 * 		连接空闲时，是否验证有效性
-	 */
 	public void setTestWhileIdle(Boolean testWhileIdle) {
 		this.testWhileIdle = testWhileIdle;
 	}
 
-	/**
-	 * 返回空闲的连接被释放最低要待时间
-	 *
-	 * @return 空闲的连接被释放最低要待时间
-	 */
 	public Duration getMinEvictableIdle() {
 		return minEvictableIdle;
 	}
 
-	/**
-	 * 设置空闲的连接被释放最低要待时间
-	 *
-	 * @param minEvictableIdle
-	 * 		空闲的连接被释放最低要待时间
-	 */
 	public void setMinEvictableIdle(Duration minEvictableIdle) {
 		this.minEvictableIdle = minEvictableIdle;
 	}
 
-	/**
-	 * 返回空闲的连接被释放最高要待时间
-	 *
-	 * @return 空闲的连接被释放最高要待时间
-	 */
 	public Duration getMaxEvictableIdle() {
 		return maxEvictableIdle;
 	}
 
-	/**
-	 * 设置空闲的连接被释放最高要待时间
-	 *
-	 * @param maxEvictableIdle
-	 * 		空闲的连接被释放最高要待时间
-	 */
 	public void setMaxEvictableIdle(Duration maxEvictableIdle) {
 		this.maxEvictableIdle = maxEvictableIdle;
 	}
 
-	/**
-	 * 返回在每个空闲对象驱逐线程运行过程中中进行检查的对象个数
-	 *
-	 * @return 在每个空闲对象驱逐线程运行过程中中进行检查的对象个数
-	 */
 	public Integer getNumTestsPerEvictionRun() {
 		return numTestsPerEvictionRun;
 	}
 
-	/**
-	 * 设置在每个空闲对象驱逐线程运行过程中中进行检查的对象个数
-	 *
-	 * @param numTestsPerEvictionRun
-	 * 		在每个空闲对象驱逐线程运行过程中中进行检查的对象个数
-	 */
 	public void setNumTestsPerEvictionRun(Integer numTestsPerEvictionRun) {
 		this.numTestsPerEvictionRun = numTestsPerEvictionRun;
 	}
 
-	/**
-	 * 返回空闲对象驱逐线程运行时的休眠时间
-	 *
-	 * @return 空闲对象驱逐线程运行时的休眠时间
-	 */
 	public Duration getTimeBetweenEvictionRuns() {
 		return timeBetweenEvictionRuns;
 	}
 
-	/**
-	 * 设置空闲对象驱逐线程运行时的休眠时间
-	 *
-	 * @param timeBetweenEvictionRuns
-	 * 		空闲对象驱逐线程运行时的休眠时间
-	 */
 	public void setTimeBetweenEvictionRuns(Duration timeBetweenEvictionRuns) {
 		this.timeBetweenEvictionRuns = timeBetweenEvictionRuns;
 	}
 
-	/**
-	 * 返回是否启用 JMX
-	 *
-	 * @return 是否启用 JMX
-	 */
-	public Boolean isJmxEnabled() {
-		return getJmxEnabled();
-	}
-
-	/**
-	 * 返回是否启用 JMX
-	 *
-	 * @return 是否启用 JMX
-	 */
 	public Boolean getJmxEnabled() {
 		return jmxEnabled;
 	}
 
-	/**
-	 * 设置是否启用 JMX
-	 *
-	 * @param jmxEnabled
-	 * 		是否启用 JMX
-	 */
 	public void setJmxEnabled(Boolean jmxEnabled) {
 		this.jmxEnabled = jmxEnabled;
 	}
@@ -429,16 +230,6 @@ public abstract class AbstractPoolConfiguration implements PoolConfiguration {
 
 	public void setJmxName(String jmxName) {
 		this.jmxName = jmxName;
-	}
-
-	@Override
-	public Properties getProperties() {
-		return properties;
-	}
-
-	@Override
-	public void setProperties(Properties properties) {
-		this.properties = properties;
 	}
 
 }

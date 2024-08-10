@@ -24,6 +24,7 @@
  */
 package com.buession.jdbc.datasource;
 
+import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.jdbc.core.TransactionIsolation;
 import com.buession.jdbc.datasource.config.PoolConfiguration;
 
@@ -33,7 +34,7 @@ import java.util.Properties;
 /**
  * DataSource 抽象类
  *
- * @param <T>
+ * @param <DS>
  *        {@link javax.sql.DataSource} 数据源类型
  * @param <P>
  * 		连接池配置 {@link PoolConfiguration} 实现
@@ -41,8 +42,8 @@ import java.util.Properties;
  * @author Yong.Teng
  * @since 1.3.2
  */
-public abstract class AbstractDataSource<T extends javax.sql.DataSource, P extends PoolConfiguration>
-		implements DataSource<T, P> {
+public abstract class AbstractDataSource<DS extends javax.sql.DataSource, P extends PoolConfiguration>
+		implements DataSource<DS, P> {
 
 	/**
 	 * {@link ClassLoader} 实例
@@ -443,11 +444,6 @@ public abstract class AbstractDataSource<T extends javax.sql.DataSource, P exten
 	}
 
 	@Override
-	public Boolean isAccessToUnderlyingConnectionAllowed() {
-		return getAccessToUnderlyingConnectionAllowed();
-	}
-
-	@Override
 	public Boolean getAccessToUnderlyingConnectionAllowed() {
 		return accessToUnderlyingConnectionAllowed;
 	}
@@ -475,15 +471,21 @@ public abstract class AbstractDataSource<T extends javax.sql.DataSource, P exten
 		this.poolConfiguration = poolConfiguration;
 	}
 
-	@Deprecated
-	protected void initialize(final T dataSource) {
+	public DS createDataSource() {
+		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
+		final DS dataSource = createDataSource(propertyMapper);
+
 		if(getPoolConfiguration() != null){
-			applyPoolConfiguration(dataSource, getPoolConfiguration());
+			applyPoolConfiguration(dataSource, getPoolConfiguration(), propertyMapper);
 		}
+
+		return dataSource;
 	}
 
-	@Deprecated
-	protected void applyPoolConfiguration(final T dataSource, final P poolConfiguration) {
+	protected abstract DS createDataSource(final PropertyMapper propertyMapper);
+
+	protected void applyPoolConfiguration(final DS dataSource, final P poolConfiguration,
+										  final PropertyMapper propertyMapper) {
 
 	}
 

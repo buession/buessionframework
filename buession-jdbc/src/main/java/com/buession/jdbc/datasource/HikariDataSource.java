@@ -488,8 +488,7 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 	}
 
 	@Override
-	public com.zaxxer.hikari.HikariDataSource createDataSource() {
-		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
+	protected com.zaxxer.hikari.HikariDataSource createDataSource(final PropertyMapper propertyMapper) {
 		final com.zaxxer.hikari.HikariDataSource dataSource = new com.zaxxer.hikari.HikariDataSource();
 
 		propertyMapper.from(this::getDriverClassName).to(dataSource::setDriverClassName);
@@ -503,21 +502,17 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 		propertyMapper.from(this::getValidationTimeout).as(Duration::toMillis).to(dataSource::setValidationTimeout);
 		propertyMapper.from(this::getTransactionIsolation).as((v)->"TRANSACTION_" + v.name())
 				.to(dataSource::setTransactionIsolation);
-		propertyMapper.from(this::getAutoCommit).to(dataSource::setAutoCommit);
-		propertyMapper.from(this::getReadOnly).to(dataSource::setReadOnly);
+		propertyMapper.from(this::isAutoCommit).to(dataSource::setAutoCommit);
+		propertyMapper.from(this::isReadOnly).to(dataSource::setReadOnly);
 		propertyMapper.from(this::getDataSourceProperties).to(dataSource::setDataSourceProperties);
-
-		if(getPoolConfiguration() != null){
-			applyPoolConfiguration(dataSource, propertyMapper);
-		}
 
 		return dataSource;
 	}
 
+	@Override
 	protected void applyPoolConfiguration(final com.zaxxer.hikari.HikariDataSource dataSource,
+										  final HikariPoolConfiguration poolConfiguration,
 										  final PropertyMapper propertyMapper) {
-		final HikariPoolConfiguration poolConfiguration = getPoolConfiguration();
-
 		propertyMapper.from(poolConfiguration::getPoolName).to(dataSource::setPoolName);
 		propertyMapper.from(poolConfiguration::getConnectionTimeout).as(Duration::toMillis)
 				.to(dataSource::setConnectionTimeout);
@@ -531,10 +526,10 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 				.to(dataSource::setKeepaliveTime);
 		propertyMapper.from(poolConfiguration::getThreadFactory).to(dataSource::setThreadFactory);
 		propertyMapper.from(poolConfiguration::getScheduledExecutor).to(dataSource::setScheduledExecutor);
-		propertyMapper.from(poolConfiguration::getIsolateInternalQueries).to(dataSource::setIsolateInternalQueries);
+		propertyMapper.from(poolConfiguration::isIsolateInternalQueries).to(dataSource::setIsolateInternalQueries);
 		propertyMapper.from(poolConfiguration::getLeakDetectionThreshold).as(Duration::toMillis)
 				.to(dataSource::setLeakDetectionThreshold);
-		propertyMapper.from(poolConfiguration::getAllowPoolSuspension).to(dataSource::setAllowPoolSuspension);
+		propertyMapper.from(poolConfiguration::isAllowPoolSuspension).to(dataSource::setAllowPoolSuspension);
 
 		if(Validate.hasText(poolConfiguration.getMetricsTrackerFactoryClassName())){
 			Class<?> metricsTrackerFactoryClazz = loadClass(poolConfiguration.getMetricsTrackerFactoryClassName());
@@ -594,8 +589,7 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 		}
 
 		propertyMapper.from(poolConfiguration::getHealthCheckProperties).to(dataSource::setHealthCheckProperties);
-
-		propertyMapper.from(poolConfiguration::getRegisterMbeans).to(dataSource::setRegisterMbeans);
+		propertyMapper.from(poolConfiguration::isRegisterMbeans).to(dataSource::setRegisterMbeans);
 	}
 
 	private Class<?> loadClass(final String className) {

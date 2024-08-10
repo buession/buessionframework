@@ -421,6 +421,15 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 是否将连接池的管理信息注册为 JMX (Java Management Extensions) MBean
 	 */
+	public Boolean isRegisterConnectionMBean() {
+		return getRegisterConnectionMBean();
+	}
+
+	/**
+	 * 返回是否将连接池的管理信息注册为 JMX (Java Management Extensions) MBean
+	 *
+	 * @return 是否将连接池的管理信息注册为 JMX (Java Management Extensions) MBean
+	 */
 	public Boolean getRegisterConnectionMBean() {
 		return registerConnectionMBean;
 	}

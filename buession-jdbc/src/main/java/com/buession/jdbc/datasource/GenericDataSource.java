@@ -24,6 +24,7 @@
  */
 package com.buession.jdbc.datasource;
 
+import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.jdbc.datasource.config.GenericPoolConfiguration;
 
 import javax.sql.DataSource;
@@ -159,6 +160,11 @@ public class GenericDataSource extends AbstractDataSource<DataSource, GenericPoo
 
 	@Override
 	public DataSource createDataSource() {
+		return createDataSource(null);
+	}
+
+	@Override
+	protected DataSource createDataSource(final PropertyMapper propertyMapper) {
 		return null;
 	}
 

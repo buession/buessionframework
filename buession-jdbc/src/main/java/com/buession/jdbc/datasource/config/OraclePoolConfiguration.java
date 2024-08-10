@@ -512,6 +512,15 @@ public class OraclePoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 从连接池获取一个连接时，验证有效性
 	 */
+	public Boolean isValidateConnectionOnBorrow() {
+		return getValidateConnectionOnBorrow();
+	}
+
+	/**
+	 * 返回从连接池获取一个连接时，是否验证有效性
+	 *
+	 * @return 从连接池获取一个连接时，验证有效性
+	 */
 	public Boolean getValidateConnectionOnBorrow() {
 		return validateConnectionOnBorrow;
 	}

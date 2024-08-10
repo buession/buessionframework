@@ -437,8 +437,7 @@ public class TomcatDataSource
 	}
 
 	@Override
-	public org.apache.tomcat.jdbc.pool.DataSource createDataSource() {
-		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
+	protected org.apache.tomcat.jdbc.pool.DataSource createDataSource(final PropertyMapper propertyMapper) {
 		final org.apache.tomcat.jdbc.pool.DataSource dataSource = new org.apache.tomcat.jdbc.pool.DataSource();
 
 		propertyMapper.from(this::getDriverClassName).to(dataSource::setDriverClassName);
@@ -447,37 +446,32 @@ public class TomcatDataSource
 		propertyMapper.from(this::getUsername).to(dataSource::setUsername);
 		propertyMapper.from(this::getPassword).to(dataSource::setPassword);
 		propertyMapper.from(this::getLoginTimeout).as((v)->(int) v.getSeconds()).to(dataSource::setLoginTimeout);
-		propertyMapper.from(this::getAlternateUsernameAllowed).to(dataSource::setAlternateUsernameAllowed);
+		propertyMapper.from(this::isAlternateUsernameAllowed).to(dataSource::setAlternateUsernameAllowed);
 		propertyMapper.from(this::getDefaultCatalog).to(dataSource::setDefaultCatalog);
 		propertyMapper.from(this::getInitSQL).to(dataSource::setInitSQL);
 		propertyMapper.from(this::getValidationQuery).to(dataSource::setValidationQuery);
 		propertyMapper.from(this::getValidatorClassName).to(dataSource::setValidatorClassName);
-		propertyMapper.from(this::getValidationInterval).as(Duration::toMillis)
-				.to(dataSource::setValidationInterval);
+		propertyMapper.from(this::getValidationInterval).as(Duration::toMillis).to(dataSource::setValidationInterval);
 		propertyMapper.from(this::getValidationQueryTimeout).as((v)->(int) v.getSeconds())
 				.to(dataSource::setValidationQueryTimeout);
 		propertyMapper.from(this::getDefaultTransactionIsolation).as(TransactionIsolation::getValue)
 				.to(dataSource::setDefaultTransactionIsolation);
-		propertyMapper.from(this::getCommitOnReturn).to(dataSource::setCommitOnReturn);
-		propertyMapper.from(this::getRollbackOnReturn).to(dataSource::setRollbackOnReturn);
-		propertyMapper.from(this::getDefaultAutoCommit).to(dataSource::setDefaultAutoCommit);
-		propertyMapper.from(this::getDefaultReadOnly).to(dataSource::setDefaultReadOnly);
-		propertyMapper.from(this::getAccessToUnderlyingConnectionAllowed)
+		propertyMapper.from(this::isCommitOnReturn).to(dataSource::setCommitOnReturn);
+		propertyMapper.from(this::isRollbackOnReturn).to(dataSource::setRollbackOnReturn);
+		propertyMapper.from(this::isDefaultAutoCommit).to(dataSource::setDefaultAutoCommit);
+		propertyMapper.from(this::isDefaultReadOnly).to(dataSource::setDefaultReadOnly);
+		propertyMapper.from(this::isAccessToUnderlyingConnectionAllowed)
 				.to(dataSource::setAccessToUnderlyingConnectionAllowed);
 		propertyMapper.from(this::getJdbcInterceptors).to(dataSource::setJdbcInterceptors);
 		propertyMapper.from(this::getDbProperties).to(dataSource::setDbProperties);
 
-		if(getPoolConfiguration() != null){
-			applyPoolConfiguration(dataSource, propertyMapper);
-		}
-
 		return dataSource;
 	}
 
+	@Override
 	protected void applyPoolConfiguration(final org.apache.tomcat.jdbc.pool.DataSource dataSource,
+										  final TomcatPoolConfiguration poolConfiguration,
 										  final PropertyMapper propertyMapper) {
-		final TomcatPoolConfiguration poolConfiguration = getPoolConfiguration();
-
 		propertyMapper.from(poolConfiguration::getName).to(dataSource::setName);
 		propertyMapper.from(poolConfiguration::getInitialSize).to(dataSource::setInitialSize);
 		propertyMapper.from(poolConfiguration::getMinIdle).to(dataSource::setMinIdle);
@@ -485,21 +479,21 @@ public class TomcatDataSource
 		propertyMapper.from(poolConfiguration::getMaxActive).to(dataSource::setMaxActive);
 		propertyMapper.from(poolConfiguration::getMaxAge).as(Duration::toMillis).to(dataSource::setMaxAge);
 		propertyMapper.from(poolConfiguration::getMaxWait).as((v)->(int) v.toMillis()).to(dataSource::setMaxWait);
-		propertyMapper.from(poolConfiguration::getTestOnConnect).to(dataSource::setTestOnConnect);
-		propertyMapper.from(poolConfiguration::getTestOnBorrow).to(dataSource::setTestOnBorrow);
-		propertyMapper.from(poolConfiguration::getTestOnReturn).to(dataSource::setTestOnReturn);
-		propertyMapper.from(poolConfiguration::getTestWhileIdle).to(dataSource::setTestWhileIdle);
-		propertyMapper.from(poolConfiguration::getRemoveAbandoned).to(dataSource::setRemoveAbandoned);
+		propertyMapper.from(poolConfiguration::isTestOnConnect).to(dataSource::setTestOnConnect);
+		propertyMapper.from(poolConfiguration::isTestOnBorrow).to(dataSource::setTestOnBorrow);
+		propertyMapper.from(poolConfiguration::isTestOnReturn).to(dataSource::setTestOnReturn);
+		propertyMapper.from(poolConfiguration::isTestWhileIdle).to(dataSource::setTestWhileIdle);
+		propertyMapper.from(poolConfiguration::isRemoveAbandoned).to(dataSource::setRemoveAbandoned);
 		propertyMapper.from(poolConfiguration::getRemoveAbandonedTimeout).as((v)->(int) v.getSeconds())
 				.to(dataSource::setRemoveAbandonedTimeout);
 		propertyMapper.from(poolConfiguration::getSuspectTimeout).as((v)->(int) v.getSeconds())
 				.to(dataSource::setSuspectTimeout);
-		propertyMapper.from(poolConfiguration::getUseDisposableConnectionFacade)
+		propertyMapper.from(poolConfiguration::isUseDisposableConnectionFacade)
 				.to(dataSource::setUseDisposableConnectionFacade);
-		propertyMapper.from(poolConfiguration::getUseStatementFacade).to(dataSource::setUseStatementFacade);
-		propertyMapper.from(poolConfiguration::getIgnoreExceptionOnPreLoad).to(dataSource::setIgnoreExceptionOnPreLoad);
-		propertyMapper.from(poolConfiguration::getFairQueue).to(dataSource::setFairQueue);
-		propertyMapper.from(poolConfiguration::getLogAbandoned).to(dataSource::setLogAbandoned);
+		propertyMapper.from(poolConfiguration::isUseStatementFacade).to(dataSource::setUseStatementFacade);
+		propertyMapper.from(poolConfiguration::isIgnoreExceptionOnPreLoad).to(dataSource::setIgnoreExceptionOnPreLoad);
+		propertyMapper.from(poolConfiguration::isFairQueue).to(dataSource::setFairQueue);
+		propertyMapper.from(poolConfiguration::isLogAbandoned).to(dataSource::setLogAbandoned);
 		propertyMapper.from(poolConfiguration::getAbandonWhenPercentageFull)
 				.to(dataSource::setAbandonWhenPercentageFull);
 		propertyMapper.from(poolConfiguration::getNumTestsPerEvictionRun).to(dataSource::setNumTestsPerEvictionRun);
@@ -507,10 +501,10 @@ public class TomcatDataSource
 				.to(dataSource::setTimeBetweenEvictionRunsMillis);
 		propertyMapper.from(poolConfiguration::getMinEvictableIdle).as((v)->(int) v.getSeconds())
 				.to(dataSource::setMinEvictableIdleTimeMillis);
-		propertyMapper.from(poolConfiguration::getPropagateInterruptState).to(dataSource::setPropagateInterruptState);
-		propertyMapper.from(poolConfiguration::getLogValidationErrors).to(dataSource::setLogValidationErrors);
-		propertyMapper.from(poolConfiguration::getUseLock).to(dataSource::setUseLock);
-		propertyMapper.from(poolConfiguration::getUseEquals).to(dataSource::setUseEquals);
+		propertyMapper.from(poolConfiguration::isPropagateInterruptState).to(dataSource::setPropagateInterruptState);
+		propertyMapper.from(poolConfiguration::isLogValidationErrors).to(dataSource::setLogValidationErrors);
+		propertyMapper.from(poolConfiguration::isUseLock).to(dataSource::setUseLock);
+		propertyMapper.from(poolConfiguration::isUseEquals).to(dataSource::setUseEquals);
 		propertyMapper.from(poolConfiguration::getJmxEnabled).to(dataSource::setJmxEnabled);
 
 		if(Boolean.TRUE.equals(poolConfiguration.getFairQueue()) &&

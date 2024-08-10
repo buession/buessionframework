@@ -30,7 +30,6 @@ import com.buession.jdbc.core.TransactionIsolation;
 import com.buession.jdbc.datasource.config.Dbcp2PoolConfiguration;
 import org.apache.commons.dbcp2.BasicDataSource;
 
-import java.sql.PreparedStatement;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.Set;
@@ -501,8 +500,7 @@ public class Dbcp2DataSource extends AbstractDataSource<BasicDataSource, Dbcp2Po
 	}
 
 	@Override
-	public BasicDataSource createDataSource() {
-		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
+	protected BasicDataSource createDataSource(final PropertyMapper propertyMapper) {
 		final BasicDataSource dataSource = new BasicDataSource();
 
 		propertyMapper.from(this::getDriverClassLoader).to(dataSource::setDriverClassLoader);
@@ -518,17 +516,17 @@ public class Dbcp2DataSource extends AbstractDataSource<BasicDataSource, Dbcp2Po
 		propertyMapper.from(this::getQueryTimeout).to(dataSource::setDefaultQueryTimeout);
 		propertyMapper.from(this::getDefaultTransactionIsolation).as(TransactionIsolation::getValue)
 				.to(dataSource::setDefaultTransactionIsolation);
-		propertyMapper.from(this::getDefaultReadOnly).to(dataSource::setDefaultReadOnly);
-		propertyMapper.from(this::getDefaultAutoCommit).to(dataSource::setDefaultAutoCommit);
-		propertyMapper.from(this::getAutoCommitOnReturn).to(dataSource::setAutoCommitOnReturn);
-		propertyMapper.from(this::getRollbackOnReturn).to(dataSource::setRollbackOnReturn);
-		propertyMapper.from(this::getAccessToUnderlyingConnectionAllowed)
+		propertyMapper.from(this::isDefaultReadOnly).to(dataSource::setDefaultReadOnly);
+		propertyMapper.from(this::isDefaultAutoCommit).to(dataSource::setDefaultAutoCommit);
+		propertyMapper.from(this::isAutoCommitOnReturn).to(dataSource::setAutoCommitOnReturn);
+		propertyMapper.from(this::isRollbackOnReturn).to(dataSource::setRollbackOnReturn);
+		propertyMapper.from(this::isAccessToUnderlyingConnectionAllowed)
 				.to(dataSource::setAccessToUnderlyingConnectionAllowed);
 		propertyMapper.from(this::getConnectionFactoryClassName).to(dataSource::setConnectionFactoryClassName);
 		propertyMapper.from(this::getMaxConnLifetime).to(dataSource::setMaxConn);
-		propertyMapper.from(this::getFastFailValidation).to(dataSource::setFastFailValidation);
-		propertyMapper.from(this::getLogExpiredConnections).to(dataSource::setLogExpiredConnections);
-		propertyMapper.from(this::getCacheState).to(dataSource::setCacheState);
+		propertyMapper.from(this::isFastFailValidation).to(dataSource::setFastFailValidation);
+		propertyMapper.from(this::isLogExpiredConnections).to(dataSource::setLogExpiredConnections);
+		propertyMapper.from(this::isCacheState).to(dataSource::setCacheState);
 		propertyMapper.from(this::getDisconnectionSqlCodes).to(dataSource::setDisconnectionSqlCodes);
 
 		if(this.getConnectionProperties() != null){
@@ -539,44 +537,41 @@ public class Dbcp2DataSource extends AbstractDataSource<BasicDataSource, Dbcp2Po
 			});
 		}
 
-		if(getPoolConfiguration() != null){
-			applyPoolConfiguration(dataSource, propertyMapper);
-		}
-
 		return dataSource;
 	}
 
-	protected void applyPoolConfiguration(final BasicDataSource dataSource, final PropertyMapper propertyMapper) {
-		final Dbcp2PoolConfiguration poolConfiguration = getPoolConfiguration();
-
+	@Override
+	protected void applyPoolConfiguration(final BasicDataSource dataSource,
+										  final Dbcp2PoolConfiguration poolConfiguration,
+										  final PropertyMapper propertyMapper) {
 		propertyMapper.from(poolConfiguration::getInitialSize).to(dataSource::setInitialSize);
 		propertyMapper.from(poolConfiguration::getMinIdle).to(dataSource::setMinIdle);
 		propertyMapper.from(poolConfiguration::getMaxIdle).to(dataSource::setMaxIdle);
 		propertyMapper.from(poolConfiguration::getMaxTotal).to(dataSource::setMaxTotal);
 		propertyMapper.from(poolConfiguration::getMaxWait).to(dataSource::setMaxWait);
-		propertyMapper.from(poolConfiguration::getTestOnCreate).to(dataSource::setTestOnCreate);
-		propertyMapper.from(poolConfiguration::getTestOnBorrow).to(dataSource::setTestOnBorrow);
-		propertyMapper.from(poolConfiguration::getTestOnReturn).to(dataSource::setTestOnReturn);
-		propertyMapper.from(poolConfiguration::getTestWhileIdle).to(dataSource::setTestWhileIdle);
-		propertyMapper.from(poolConfiguration::getPoolPreparedStatements).to(dataSource::setPoolPreparedStatements);
+		propertyMapper.from(poolConfiguration::isTestOnCreate).to(dataSource::setTestOnCreate);
+		propertyMapper.from(poolConfiguration::isTestOnBorrow).to(dataSource::setTestOnBorrow);
+		propertyMapper.from(poolConfiguration::isTestOnReturn).to(dataSource::setTestOnReturn);
+		propertyMapper.from(poolConfiguration::isTestWhileIdle).to(dataSource::setTestWhileIdle);
+		propertyMapper.from(poolConfiguration::isPoolPreparedStatements).to(dataSource::setPoolPreparedStatements);
 		propertyMapper.from(poolConfiguration::getMaxOpenPreparedStatements)
 				.to(dataSource::setMaxOpenPreparedStatements);
-		propertyMapper.from(poolConfiguration::getClearStatementPoolOnReturn)
+		propertyMapper.from(poolConfiguration::isClearStatementPoolOnReturn)
 				.to(dataSource::setClearStatementPoolOnReturn);
-		propertyMapper.from(poolConfiguration::getRemoveAbandonedOnBorrow).to(dataSource::setRemoveAbandonedOnBorrow);
-		propertyMapper.from(poolConfiguration::getRemoveAbandonedOnMaintenance)
+		propertyMapper.from(poolConfiguration::isRemoveAbandonedOnBorrow).to(dataSource::setRemoveAbandonedOnBorrow);
+		propertyMapper.from(poolConfiguration::isRemoveAbandonedOnMaintenance)
 				.to(dataSource::setRemoveAbandonedOnMaintenance);
 		propertyMapper.from(poolConfiguration::getRemoveAbandonedTimeout).to(dataSource::setRemoveAbandonedTimeout);
-		propertyMapper.from(poolConfiguration::getAbandonedUsageTracking).to(dataSource::setAbandonedUsageTracking);
-		propertyMapper.from(poolConfiguration::getLogAbandoned).to(dataSource::setLogAbandoned);
+		propertyMapper.from(poolConfiguration::isAbandonedUsageTracking).to(dataSource::setAbandonedUsageTracking);
+		propertyMapper.from(poolConfiguration::isLogAbandoned).to(dataSource::setLogAbandoned);
 		propertyMapper.from(poolConfiguration::getMinEvictableIdle).to(dataSource::setMinEvictableIdle);
 		propertyMapper.from(poolConfiguration::getSoftMinEvictableIdle).to(dataSource::setSoftMinEvictableIdle);
 		propertyMapper.from(poolConfiguration::getNumTestsPerEvictionRun).to(dataSource::setNumTestsPerEvictionRun);
 		propertyMapper.from(poolConfiguration::getTimeBetweenEvictionRuns)
 				.to(dataSource::setDurationBetweenEvictionRuns);
 		propertyMapper.from(poolConfiguration::getEvictionPolicyClassName).to(dataSource::setEvictionPolicyClassName);
-		propertyMapper.from(poolConfiguration::getLifo).to(dataSource::setLifo);
-		propertyMapper.from(poolConfiguration::getRegisterConnectionMBean).to(dataSource::setRegisterConnectionMBean);
+		propertyMapper.from(poolConfiguration::isLifo).to(dataSource::setLifo);
+		propertyMapper.from(poolConfiguration::isRegisterConnectionMBean).to(dataSource::setRegisterConnectionMBean);
 		propertyMapper.from(poolConfiguration::getJmxName).to(dataSource::setJmxName);
 	}
 
