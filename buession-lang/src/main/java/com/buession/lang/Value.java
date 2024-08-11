@@ -19,26 +19,27 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core;
-
-import org.springframework.lang.Nullable;
+package com.buession.lang;
 
 /**
- * 名称节点，约定实现该接口的类应该返回一个名称
+ * 值接口
+ *
+ * @param <T>
+ * 		值类型
  *
  * @author Yong.Teng
+ * @since 3.0.0
  */
-public interface NamedNode {
+public interface Value<T> {
 
 	/**
-	 * 返回节点名称
+	 * 返回值
 	 *
-	 * @return 节点名称
+	 * @return 值
 	 */
-	@Nullable
-	String getName();
+	T getValue();
 
 }

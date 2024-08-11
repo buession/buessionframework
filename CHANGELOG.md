@@ -44,6 +44,7 @@
 - apache httpcomponents 异步请求时 HttpAsyncResponseConsumer 采用 ZeroCopyConsumer
 - okhttp maxRequestsPerHost 大于 0 时，才会更新 okhttp 原生 maxRequestsPerHost 的值
 - 删除 OkHttpClient
+- 重构 JDBC 连接池和数据源
 - redis 删除参数为字符串数组或 byte[] 数组的方法 bitField
 - redis 废弃字符串型 / byte[]型 min、max 参数的方法
 - redis role 命令直接返回 Role，不再返回 List&lt;Role&gt;

@@ -66,12 +66,6 @@ public class GeoIPResolverFactory {
 	private InputStream asnStream;
 
 	/**
-	 * IP 库加载模式
-	 */
-	@Deprecated
-	private LoadMode loadMode = LoadMode.STREAM;
-
-	/**
 	 * 是否开启缓存
 	 */
 	private boolean enableCache = true;
@@ -280,16 +274,6 @@ public class GeoIPResolverFactory {
 	public void setAsnStream(InputStream asnStream) {
 		Assert.isNull(asnStream, "Ip asn database stream cloud not be null.");
 		this.asnStream = asnStream;
-	}
-
-	/**
-	 * 返回 IP 库加载模式
-	 *
-	 * @return IP 库加载模式
-	 */
-	@Deprecated
-	public LoadMode getLoadMode() {
-		return loadMode;
 	}
 
 	/**

@@ -37,6 +37,7 @@ import com.buession.redis.core.StreamPending;
 import com.buession.redis.core.StreamPendingSummary;
 import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.utils.SafeEncoder;
+import io.lettuce.core.XReadArgs;
 
 import java.util.List;
 import java.util.Map;
@@ -240,6 +241,32 @@ public abstract class AbstractStreamOperations<C extends LettuceRedisClient> ext
 	@Override
 	public Long xTrim(final String key, final XTrimArgument xTrimArgument, final long limit) {
 		return xTrim(SafeEncoder.encode(key), xTrimArgument, limit);
+	}
+
+	@SuppressWarnings({"unchecked"})
+	protected XReadArgs.StreamOffset<byte[]>[] createStreamOffsetFromStreamEntryIdMap(final Map<String,
+			StreamEntryId> streams) {
+		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
+		int i = 0;
+
+		for(Map.Entry<String, StreamEntryId> e : streams.entrySet()){
+			streamOffsets[i++] = XReadArgs.StreamOffset.from(SafeEncoder.encode(e.getKey()), e.getValue().toString());
+		}
+
+		return streamOffsets;
+	}
+
+	@SuppressWarnings({"unchecked"})
+	protected XReadArgs.StreamOffset<byte[]>[] createStreamOffsetFromBinaryStreamEntryIdMap(final Map<byte[],
+			StreamEntryId> streams) {
+		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
+		int i = 0;
+
+		for(Map.Entry<byte[], StreamEntryId> e : streams.entrySet()){
+			streamOffsets[i++] = XReadArgs.StreamOffset.from(e.getKey(), e.getValue().toString());
+		}
+
+		return streamOffsets;
 	}
 
 }

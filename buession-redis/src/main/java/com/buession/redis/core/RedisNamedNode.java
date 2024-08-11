@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core;
 
-import com.buession.core.NamedNode;
+import com.buession.lang.NamedNode;
 
 /**
  * @author Yong.Teng

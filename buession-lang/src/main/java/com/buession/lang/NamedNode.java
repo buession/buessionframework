@@ -22,24 +22,21 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core;
+package com.buession.lang;
 
 /**
- * 值接口
- *
- * @param <T>
- * 		值类型
+ * 名称节点，约定实现该接口的类应该返回一个名称
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public interface Value<T> {
+public interface NamedNode {
 
 	/**
-	 * 返回值
+	 * 返回节点名称
 	 *
-	 * @return 值
+	 * @return 节点名称
 	 */
-	T getValue();
+	String getName();
 
 }

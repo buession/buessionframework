@@ -387,7 +387,7 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 	}
 
 	/**
-	 * 设置检测连接是否有效的超时时间，不能大于 {@link HikariPoolConfiguration#getConnectionTimeout()}
+	 * 设置检测连接是否有效的超时时间，不能大于 {@link #getConnectionTimeout()}
 	 *
 	 * @param validationTimeout
 	 * 		检测连接是否有效的超时时间
