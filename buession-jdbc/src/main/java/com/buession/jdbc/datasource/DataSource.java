@@ -25,7 +25,7 @@
 package com.buession.jdbc.datasource;
 
 import com.buession.jdbc.core.TransactionIsolation;
-import com.buession.jdbc.datasource.config.PoolConfiguration;
+import com.buession.jdbc.datasource.pool.PoolConfiguration;
 
 import java.time.Duration;
 import java.util.Properties;

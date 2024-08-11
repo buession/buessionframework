@@ -26,9 +26,10 @@ package com.buession.jdbc.datasource;
 
 import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.core.validator.Validate;
+import com.buession.jdbc.core.Jmx;
 import com.buession.jdbc.core.TransactionIsolation;
-import com.buession.jdbc.datasource.config.HikariPoolConfiguration;
-import com.zaxxer.hikari.metrics.MetricsTrackerFactory;
+import com.buession.jdbc.datasource.pool.HikariPoolConfiguration;
+import com.zaxxer.hikari.utils.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +47,11 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 	private String dataSourceClassName;
 
 	private String dataSourceJndiName;
+
+	/**
+	 * 从连接池获取连接时最大等待时间
+	 */
+	private Duration connectionTimeout;
 
 	/**
 	 * 为支持 catalog 概念的数据库设置默认 catalog
@@ -89,6 +95,11 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 	 * @since 3.0.0
 	 */
 	private TransactionIsolation transactionIsolation = TransactionIsolation.DEFAULT;
+
+	/**
+	 * 是否将 HikariCP 执行的内部查询与应用程序的查询隔离
+	 */
+	private Boolean isolateInternalQueries;
 
 	/**
 	 * 是否自动提交事务
@@ -232,6 +243,25 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 	public HikariDataSource(String driverClassName, String url, String username, String password,
 							HikariPoolConfiguration poolConfiguration) {
 		super(driverClassName, url, username, password, poolConfiguration);
+	}
+
+	/**
+	 * 返回从连接池获取连接时最大等待时间
+	 *
+	 * @return 从连接池获取连接时最大等待时间
+	 */
+	public Duration getConnectionTimeout() {
+		return connectionTimeout;
+	}
+
+	/**
+	 * 设置从连接池获取连接时最大等待时间
+	 *
+	 * @param connectionTimeout
+	 * 		从连接池获取连接时最大等待时间
+	 */
+	public void setConnectionTimeout(Duration connectionTimeout) {
+		this.connectionTimeout = connectionTimeout;
 	}
 
 	/**
@@ -395,6 +425,34 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 	}
 
 	/**
+	 * 返回是否将 HikariCP 执行的内部查询与应用程序的查询隔离
+	 *
+	 * @return 是否将 HikariCP 执行的内部查询与应用程序的查询隔离
+	 */
+	public Boolean isIsolateInternalQueries() {
+		return getIsolateInternalQueries();
+	}
+
+	/**
+	 * 返回是否将 HikariCP 执行的内部查询与应用程序的查询隔离
+	 *
+	 * @return 是否将 HikariCP 执行的内部查询与应用程序的查询隔离
+	 */
+	public Boolean getIsolateInternalQueries() {
+		return isolateInternalQueries;
+	}
+
+	/**
+	 * 设置是否将 HikariCP 执行的内部查询与应用程序的查询隔离
+	 *
+	 * @param isolateInternalQueries
+	 * 		是否将 HikariCP 执行的内部查询与应用程序的查询隔离
+	 */
+	public void setIsolateInternalQueries(Boolean isolateInternalQueries) {
+		this.isolateInternalQueries = isolateInternalQueries;
+	}
+
+	/**
 	 * 返回是否自动提交事务
 	 *
 	 * @return 是否自动提交事务
@@ -492,18 +550,28 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 		final com.zaxxer.hikari.HikariDataSource dataSource = new com.zaxxer.hikari.HikariDataSource();
 
 		propertyMapper.from(this::getDriverClassName).to(dataSource::setDriverClassName);
+
 		propertyMapper.from(this::getUrl).to(dataSource::setJdbcUrl);
 		propertyMapper.from(this::getUsername).to(dataSource::setUsername);
 		propertyMapper.from(this::getPassword).to(dataSource::setPassword);
+
+		propertyMapper.from(this::getConnectionTimeout).as(Duration::toMillis).to(dataSource::setConnectionTimeout);
+
 		propertyMapper.from(this::getCatalog).to(dataSource::setCatalog);
 		propertyMapper.from(this::getSchema).to(dataSource::setSchema);
+
 		propertyMapper.from(this::getConnectionInitSql).to(dataSource::setConnectionInitSql);
+
 		propertyMapper.from(this::getConnectionTestQuery).to(dataSource::setConnectionTestQuery);
 		propertyMapper.from(this::getValidationTimeout).as(Duration::toMillis).to(dataSource::setValidationTimeout);
+
 		propertyMapper.from(this::getTransactionIsolation).as((v)->"TRANSACTION_" + v.name())
 				.to(dataSource::setTransactionIsolation);
+		propertyMapper.from(this::isIsolateInternalQueries).to(dataSource::setIsolateInternalQueries);
+
 		propertyMapper.from(this::isAutoCommit).to(dataSource::setAutoCommit);
 		propertyMapper.from(this::isReadOnly).to(dataSource::setReadOnly);
+
 		propertyMapper.from(this::getDataSourceProperties).to(dataSource::setDataSourceProperties);
 
 		return dataSource;
@@ -514,103 +582,63 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 										  final HikariPoolConfiguration poolConfiguration,
 										  final PropertyMapper propertyMapper) {
 		propertyMapper.from(poolConfiguration::getPoolName).to(dataSource::setPoolName);
-		propertyMapper.from(poolConfiguration::getConnectionTimeout).as(Duration::toMillis)
-				.to(dataSource::setConnectionTimeout);
+
 		propertyMapper.from(poolConfiguration::getInitializationFailTimeout).as(Duration::toMillis)
 				.to(dataSource::setInitializationFailTimeout);
+
 		propertyMapper.from(poolConfiguration::getMinIdle).to(dataSource::setMinimumIdle);
 		propertyMapper.from(poolConfiguration::getMaxPoolSize).to(dataSource::setMaximumPoolSize);
-		propertyMapper.from(poolConfiguration::getIdleTimeout).as(Duration::toMillis).to(dataSource::setIdleTimeout);
-		propertyMapper.from(poolConfiguration::getMaxLifetime).as(Duration::toMillis).to(dataSource::setMaxLifetime);
+
 		propertyMapper.from(poolConfiguration::getKeepaliveTime).as(Duration::toMillis)
 				.to(dataSource::setKeepaliveTime);
+		propertyMapper.from(poolConfiguration::getIdleTimeout).as(Duration::toMillis).to(dataSource::setIdleTimeout);
+		propertyMapper.from(poolConfiguration::getMaxLifetime).as(Duration::toMillis).to(dataSource::setMaxLifetime);
+
 		propertyMapper.from(poolConfiguration::getThreadFactory).to(dataSource::setThreadFactory);
 		propertyMapper.from(poolConfiguration::getScheduledExecutor).to(dataSource::setScheduledExecutor);
-		propertyMapper.from(poolConfiguration::isIsolateInternalQueries).to(dataSource::setIsolateInternalQueries);
 		propertyMapper.from(poolConfiguration::getLeakDetectionThreshold).as(Duration::toMillis)
 				.to(dataSource::setLeakDetectionThreshold);
 		propertyMapper.from(poolConfiguration::isAllowPoolSuspension).to(dataSource::setAllowPoolSuspension);
 
-		if(Validate.hasText(poolConfiguration.getMetricsTrackerFactoryClassName())){
-			Class<?> metricsTrackerFactoryClazz = loadClass(poolConfiguration.getMetricsTrackerFactoryClassName());
 
-			if(metricsTrackerFactoryClazz != null){
-				try{
-					dataSource.setMetricsTrackerFactory(
-							(MetricsTrackerFactory) metricsTrackerFactoryClazz.newInstance());
-				}catch(InstantiationException e){
-					logger.error("load metricRegistry[{}] error : {}",
-							poolConfiguration.getMetricsTrackerFactoryClassName(), e.getMessage());
-				}catch(IllegalAccessException e){
-					logger.error("load metricsTrackerFactory[{}] error : {}",
-							poolConfiguration.getMetricsTrackerFactoryClassName(), e.getMessage());
-				}
-			}else{
-				logger.error("load metricsTrackerFactory error : {}",
-						poolConfiguration.getMetricsTrackerFactoryClassName());
+		if(Validate.hasText(poolConfiguration.getMetricsTrackerFactoryClassName())){
+			try{
+				dataSource.setMetricsTrackerFactory(
+						ObjectUtils.newInstance(poolConfiguration.getMetricsTrackerFactoryClassName()));
+			}catch(IllegalStateException e){
+				logger.error("load metricsTrackerFactory[{}] error : {}",
+						poolConfiguration.getMetricsTrackerFactoryClassName(), e.getMessage());
 			}
 		}
 
 		if(Validate.hasText(poolConfiguration.getMetricRegistryClassName())){
-			Class<?> metricRegistryClazz = loadClass(poolConfiguration.getMetricRegistryClassName());
-
-			if(metricRegistryClazz != null){
-				try{
-					dataSource.setMetricRegistry(metricRegistryClazz.newInstance());
-				}catch(InstantiationException e){
-					logger.error("load metricRegistry[{}] error : {}", poolConfiguration.getMetricRegistryClassName(),
-							e.getMessage());
-				}catch(IllegalAccessException e){
-					logger.error("load metricRegistry[{}] error : {}", poolConfiguration.getMetricRegistryClassName(),
-							e.getMessage());
-				}
-			}else{
-				logger.error("load metricRegistry error : {}", poolConfiguration.getMetricRegistryClassName());
+			try{
+				dataSource.setMetricRegistry(
+						ObjectUtils.newInstance(poolConfiguration.getMetricRegistryClassName()));
+			}catch(IllegalStateException e){
+				logger.error("load metricRegistry[{}] error : {}", poolConfiguration.getMetricRegistryClassName(),
+						e.getMessage());
 			}
 		}
 
 		if(Validate.hasText(poolConfiguration.getHealthCheckRegistryClassName())){
-			Class<?> healthCheckRegistryClazz = loadClass(poolConfiguration.getHealthCheckRegistryClassName());
-
-			if(healthCheckRegistryClazz != null){
-				try{
-					dataSource.setHealthCheckRegistry(healthCheckRegistryClazz.newInstance());
-				}catch(InstantiationException e){
-					logger.error("load healthCheckRegistry[{}] error : {}",
-							poolConfiguration.getHealthCheckRegistryClassName(), e.getMessage());
-				}catch(IllegalAccessException e){
-					logger.error("load healthCheckRegistry[{}] error : {}",
-							poolConfiguration.getHealthCheckRegistryClassName(), e.getMessage());
-				}
-			}else{
-				logger.error("load healthCheckRegistry error : {}",
-						poolConfiguration.getHealthCheckRegistryClassName());
+			try{
+				dataSource.setHealthCheckRegistry(
+						ObjectUtils.newInstance(poolConfiguration.getHealthCheckRegistryClassName()));
+			}catch(IllegalStateException e){
+				logger.error("load healthCheckRegistry[{}] error : {}",
+						poolConfiguration.getHealthCheckRegistryClassName(), e.getMessage());
 			}
 		}
 
 		propertyMapper.from(poolConfiguration::getHealthCheckProperties).to(dataSource::setHealthCheckProperties);
+
 		propertyMapper.from(poolConfiguration::isRegisterMbeans).to(dataSource::setRegisterMbeans);
-	}
+		if(poolConfiguration.getJmx() != null){
+			final Jmx jmx = poolConfiguration.getJmx();
 
-	private Class<?> loadClass(final String className) {
-		Class<?> clazz = null;
-
-		try{
-			clazz = Class.forName(className);
-		}catch(ClassNotFoundException e){
-			//
+			propertyMapper.from(jmx::isEnabled).to(dataSource::setRegisterMbeans);
 		}
-
-		ClassLoader ctxClassLoader = Thread.currentThread().getContextClassLoader();
-		if(ctxClassLoader != null){
-			try{
-				clazz = ctxClassLoader.loadClass(className);
-			}catch(ClassNotFoundException e){
-				// skip
-			}
-		}
-
-		return clazz;
 	}
 
 }

@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.jdbc.datasource.config;
+package com.buession.jdbc.datasource.pool;
 
 import com.alibaba.druid.pool.DruidAbstractDataSource;
 
@@ -124,11 +124,6 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 * 开启该开关可以恢复那些应用没有关闭的连接
 	 */
 	private Boolean removeAbandoned;
-
-	/**
-	 * 一个连接使用超过多久就视为抛弃的，该值应该超过你的应用中最长的SQL可能运行的时间
-	 */
-	private Duration removeAbandonedTimeout;
 
 	/**
 	 * 记录抛弃连接的应用的堆栈信息；
@@ -300,7 +295,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	}
 
 	/**
-	 * 返回获取连接时最大等待时间，配置了 maxWait 之后，缺省启用公平锁，并发效率会有所下降，如果需要可以通过配置 useUnfairLock 属性为 true 使用非公平锁
+	 * 返回获取连接时最大等待时间，配置了 maxWait 之后，缺省启用公平锁，并发效率会有所下降
 	 *
 	 * @return 获取连接时最大等待时间
 	 */
@@ -309,7 +304,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	}
 
 	/**
-	 * 设置获取连接时最大等待时间，配置了 maxWait 之后，缺省启用公平锁，并发效率会有所下降，如果需要可以通过配置 useUnfairLock 属性为 true 使用非公平锁
+	 * 设置获取连接时最大等待时间，配置了 maxWait 之后，缺省启用公平锁，并发效率会有所下降
 	 *
 	 * @param maxWait
 	 * 		获取连接时最大等待时间
@@ -571,25 +566,6 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 */
 	public void setRemoveAbandoned(Boolean removeAbandoned) {
 		this.removeAbandoned = removeAbandoned;
-	}
-
-	/**
-	 * 返回一个连接使用超过多久就视为抛弃的
-	 *
-	 * @return 一个连接使用超过多久就视为抛弃的
-	 */
-	public Duration getRemoveAbandonedTimeout() {
-		return removeAbandonedTimeout;
-	}
-
-	/**
-	 * 设置一个连接使用超过多久就视为抛弃的，该值应该超过你的应用中最长的SQL可能运行的时间
-	 *
-	 * @param removeAbandonedTimeout
-	 * 		一个连接使用超过多久就视为抛弃的，该值应该超过你的应用中最长的SQL可能运行的时间
-	 */
-	public void setRemoveAbandonedTimeout(Duration removeAbandonedTimeout) {
-		this.removeAbandonedTimeout = removeAbandonedTimeout;
 	}
 
 	/**

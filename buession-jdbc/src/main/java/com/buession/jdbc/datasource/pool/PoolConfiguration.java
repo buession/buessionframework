@@ -22,7 +22,9 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.jdbc.datasource.config;
+package com.buession.jdbc.datasource.pool;
+
+import com.buession.jdbc.core.Jmx;
 
 import java.time.Duration;
 
@@ -33,6 +35,21 @@ import java.time.Duration;
  * @since 1.3.2
  */
 public interface PoolConfiguration {
+
+	/**
+	 * 返回用户定义连接池的名称
+	 *
+	 * @return 用户定义连接池的名称
+	 */
+	String getPoolName();
+
+	/**
+	 * 设置连接池的名称
+	 *
+	 * @param poolName
+	 * 		连接池的名称
+	 */
+	void setPoolName(String poolName);
 
 	/**
 	 * 返回初始连接数
@@ -266,42 +283,37 @@ public interface PoolConfiguration {
 	void setTimeBetweenEvictionRuns(Duration timeBetweenEvictionRuns);
 
 	/**
-	 * 返回是否启用 JMX
+	 * 返回指定连接在被认为是废弃连接（abandoned connection）之前的超时时间
 	 *
-	 * @return 是否启用 JMX
+	 * @return 指定连接在被认为是废弃连接（abandoned connection）之前的超时时间
+	 *
+	 * @since 3.0.0
 	 */
-	default Boolean isJmxEnabled() {
-		return getJmxEnabled();
-	}
+	Duration getRemoveAbandonedTimeout();
 
 	/**
-	 * 返回是否启用 JMX
+	 * 设置指定连接在被认为是废弃连接（abandoned connection）之前的超时时间
 	 *
-	 * @return 是否启用 JMX
+	 * @param removeAbandonedTimeout
+	 * 		指定连接在被认为是废弃连接（abandoned connection）之前的超时时间
+	 *
+	 * @since 3.0.0
 	 */
-	Boolean getJmxEnabled();
+	void setRemoveAbandonedTimeout(Duration removeAbandonedTimeout);
 
 	/**
-	 * 设置是否启用 JMX
+	 * 返回 JMX 管理对象配置
 	 *
-	 * @param jmxEnabled
-	 * 		是否启用 JMX
+	 * @return JMX 管理对象配置
 	 */
-	void setJmxEnabled(Boolean jmxEnabled);
+	Jmx getJmx();
 
 	/**
-	 * 返回 JMX 管理对象的名称
+	 * 设置 JMX 管理对象配置
 	 *
-	 * @return JMX 管理对象的名称
+	 * @param jmx
+	 * 		JMX 管理对象配置
 	 */
-	String getJmxName();
-
-	/**
-	 * 设置 JMX 管理对象的名称
-	 *
-	 * @param jmxName
-	 * 		JMX 管理对象的名称
-	 */
-	void setJmxName(String jmxName);
+	void setJmx(Jmx jmx);
 
 }

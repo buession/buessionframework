@@ -25,16 +25,18 @@
 package com.buession.jdbc.datasource;
 
 import com.buession.core.converter.mapper.PropertyMapper;
+import com.buession.core.utils.MethodUtils;
 import com.buession.core.validator.Validate;
-import com.buession.jdbc.datasource.config.OraclePoolConfiguration;
+import com.buession.jdbc.datasource.pool.OraclePoolConfiguration;
 import oracle.ucp.jdbc.PoolDataSource;
 import oracle.ucp.jdbc.PoolDataSourceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.SQLException;
 import java.time.Duration;
-import java.util.Optional;
 import java.util.Properties;
 
 /**
@@ -602,6 +604,7 @@ public class OracleDataSource extends AbstractDataSource<PoolDataSource, OracleP
 			if(Validate.hasText(this.getNetworkProtocol())){
 				dataSource.setNetworkProtocol(this.getNetworkProtocol());
 			}
+
 			if(Validate.hasText(this.getUrl())){
 				dataSource.setURL(this.getUrl());
 			}
@@ -629,33 +632,51 @@ public class OracleDataSource extends AbstractDataSource<PoolDataSource, OracleP
 			if(Validate.hasText(this.getPassword())){
 				dataSource.setPassword(this.getPassword());
 			}
+
 			if(this.getLoginTimeout() != null){
 				dataSource.setLoginTimeout((int) this.getLoginTimeout().getSeconds());
 			}
+
+			if(Validate.hasText(this.getConnectionFactoryClassName())){
+				dataSource.setConnectionFactoryClassName(this.getConnectionFactoryClassName());
+			}
+
 			if(Validate.hasText(this.getRoleName())){
 				dataSource.setRoleName(this.getRoleName());
 			}
 			if(this.getPdbRoles() != null){
-				//
+				try{
+					Method method = dataSource.getClass().getMethod("setPdbRoles", Properties.class);
+					MethodUtils.setAccessible(method);
+					method.invoke(dataSource, this.getPdbRoles());
+				}catch(NoSuchMethodException e){
+					//
+				}catch(InvocationTargetException e){
+					//
+				}catch(IllegalAccessException e){
+					//
+				}
 			}
+
 			if(Validate.hasText(this.getSqlForValidateConnection())){
 				dataSource.setSQLForValidateConnection(this.getSqlForValidateConnection());
 			}
 			if(this.getConnectionValidationTimeout() != null){
 				dataSource.setConnectionValidationTimeout((int) this.getConnectionValidationTimeout().getSeconds());
 			}
-			if(Validate.hasText(this.getConnectionFactoryClassName())){
-				dataSource.setConnectionFactoryClassName(this.getConnectionFactoryClassName());
-			}
+
 			if(this.isFastConnectionFailoverEnabled() != null){
 				dataSource.setFastConnectionFailoverEnabled(this.isFastConnectionFailoverEnabled());
 			}
+
 			if(this.getQueryTimeout() != null){
 				dataSource.setQueryTimeout((int) this.getQueryTimeout().getSeconds());
 			}
+
 			if(Validate.hasText(this.getOnsConfiguration())){
 				dataSource.setONSConfiguration(this.getOnsConfiguration());
 			}
+
 			if(this.isShardingMode() != null){
 				dataSource.setShardingMode(this.isShardingMode());
 			}
@@ -688,28 +709,36 @@ public class OracleDataSource extends AbstractDataSource<PoolDataSource, OracleP
 			if(poolConfiguration.getInitialPoolSize() != null){
 				dataSource.setInitialPoolSize(poolConfiguration.getInitialPoolSize());
 			}
-
 			if(poolConfiguration.getMinIdle() != null){
 				dataSource.setMinIdle(poolConfiguration.getMinIdle());
 			}
-
 			if(poolConfiguration.getMinPoolSize() != null){
 				dataSource.setMinPoolSize(poolConfiguration.getMinPoolSize());
 			}
-
 			if(poolConfiguration.getMaxPoolSize() != null){
 				dataSource.setMaxPoolSize(poolConfiguration.getMaxPoolSize());
+			}
+
+			if(poolConfiguration.isValidateConnectionOnBorrow() != null){
+				dataSource.setValidateConnectionOnBorrow(poolConfiguration.isValidateConnectionOnBorrow());
+			}
+
+			if(poolConfiguration.isCreateConnectionInBorrowThread() != null){
+				dataSource.setCreateConnectionInBorrowThread(poolConfiguration.isCreateConnectionInBorrowThread());
 			}
 
 			if(poolConfiguration.getConnectionWait() != null){
 				dataSource.setConnectionWaitDuration(poolConfiguration.getConnectionWait());
 			}
 
+			if(poolConfiguration.getTimeoutCheckInterval() != null){
+				dataSource.setTimeoutCheckInterval((int) poolConfiguration.getTimeoutCheckInterval().getSeconds());
+			}
+
 			if(poolConfiguration.getInactiveConnectionTimeout() != null){
 				dataSource.setInactiveConnectionTimeout(
 						(int) poolConfiguration.getInactiveConnectionTimeout().getSeconds());
 			}
-
 			if(poolConfiguration.getTimeToLiveConnectionTimeout() != null){
 				dataSource.setTimeToLiveConnectionTimeout(
 						(int) poolConfiguration.getTimeToLiveConnectionTimeout().getSeconds());
@@ -719,7 +748,6 @@ public class OracleDataSource extends AbstractDataSource<PoolDataSource, OracleP
 				dataSource.setSecondsToTrustIdleConnection(
 						(int) poolConfiguration.getTrustIdleConnection().getSeconds());
 			}
-
 			if(poolConfiguration.getMaxConnectionReuseTime() != null){
 				dataSource.setMaxConnectionReuseTime(poolConfiguration.getMaxConnectionReuseTime().toMillis());
 			}
@@ -728,50 +756,31 @@ public class OracleDataSource extends AbstractDataSource<PoolDataSource, OracleP
 				dataSource.setConnectionLabelingHighCost(
 						(int) poolConfiguration.getConnectionLabelingHighCost().toMillis());
 			}
-
 			if(poolConfiguration.getHighCostConnectionReuseThreshold() != null){
 				dataSource.setHighCostConnectionReuseThreshold(poolConfiguration.getHighCostConnectionReuseThreshold());
 			}
-
 			if(poolConfiguration.getConnectionRepurposeThreshold() != null){
 				dataSource.setConnectionRepurposeThreshold(poolConfiguration.getConnectionRepurposeThreshold());
 			}
 
-			if(poolConfiguration.getTimeoutCheckInterval() != null){
-				dataSource.setTimeoutCheckInterval((int) poolConfiguration.getTimeoutCheckInterval().getSeconds());
+			if(poolConfiguration.getConnectionHarvestTriggerCount() != null){
+				dataSource.setConnectionHarvestTriggerCount(poolConfiguration.getConnectionHarvestTriggerCount());
 			}
-
-			if(poolConfiguration.getTimeoutCheckInterval() != null){
-				dataSource.setTimeoutCheckInterval((int) poolConfiguration.getTimeoutCheckInterval().getSeconds());
+			if(poolConfiguration.getConnectionHarvestMaxCount() != null){
+				dataSource.setConnectionHarvestMaxCount(poolConfiguration.getConnectionHarvestMaxCount());
 			}
 
 			if(poolConfiguration.getMaxStatements() != null){
 				dataSource.setMaxStatements(poolConfiguration.getMaxStatements());
 			}
 
-			if(poolConfiguration.getConnectionHarvestTriggerCount() != null){
-				dataSource.setConnectionHarvestTriggerCount(poolConfiguration.getConnectionHarvestTriggerCount());
-			}
-
-			if(poolConfiguration.getConnectionHarvestMaxCount() != null){
-				dataSource.setConnectionHarvestMaxCount(poolConfiguration.getConnectionHarvestMaxCount());
-			}
-
-			if(poolConfiguration.isValidateConnectionOnBorrow() != null){
-				dataSource.setValidateConnectionOnBorrow(poolConfiguration.isValidateConnectionOnBorrow());
+			if(poolConfiguration.isReadOnlyInstanceAllowed() != null){
+				dataSource.setReadOnlyInstanceAllowed(poolConfiguration.isReadOnlyInstanceAllowed());
 			}
 
 			if(poolConfiguration.getAbandonedConnectionTimeout() != null){
 				dataSource.setAbandonedConnectionTimeout(
 						(int) poolConfiguration.getAbandonedConnectionTimeout().getSeconds());
-			}
-
-			if(poolConfiguration.isReadOnlyInstanceAllowed() != null){
-				dataSource.setReadOnlyInstanceAllowed(poolConfiguration.isReadOnlyInstanceAllowed());
-			}
-
-			if(poolConfiguration.isCreateConnectionInBorrowThread() != null){
-				dataSource.setCreateConnectionInBorrowThread(poolConfiguration.isCreateConnectionInBorrowThread());
 			}
 		}catch(SQLException e){
 			logger.error("OracleDataSource pool set error: {}.", e.getMessage(), e);

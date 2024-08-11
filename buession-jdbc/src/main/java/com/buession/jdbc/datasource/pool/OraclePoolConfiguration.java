@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.jdbc.datasource.config;
+package com.buession.jdbc.datasource.pool;
 
 import java.time.Duration;
 
@@ -33,11 +33,6 @@ import java.time.Duration;
  * @since 3.0.0
  */
 public class OraclePoolConfiguration extends AbstractPoolConfiguration {
-
-	/**
-	 * 用户定义连接池的名称，主要出现在日志记录和 JMX 管理控制台中以识别池和池配置
-	 */
-	private String poolName;
 
 	/**
 	 * 初始连接数，池被启动时初始化的创建的连接个数
@@ -55,7 +50,7 @@ public class OraclePoolConfiguration extends AbstractPoolConfiguration {
 	private Integer maxPoolSize;
 
 	/**
-	 * 等待超时
+	 * 获取连接时最大等待时间
 	 */
 	private Duration connectionWait;
 
@@ -146,25 +141,6 @@ public class OraclePoolConfiguration extends AbstractPoolConfiguration {
 	private Boolean createConnectionInBorrowThread;
 
 	/**
-	 * 返回用户定义连接池的名称
-	 *
-	 * @return 用户定义连接池的名称
-	 */
-	public String getPoolName() {
-		return poolName;
-	}
-
-	/**
-	 * 设置连接池的名称
-	 *
-	 * @param poolName
-	 * 		连接池的名称
-	 */
-	public void setPoolName(String poolName) {
-		this.poolName = poolName;
-	}
-
-	/**
 	 * 返回初始连接数
 	 *
 	 * @return 初始连接数
@@ -234,19 +210,19 @@ public class OraclePoolConfiguration extends AbstractPoolConfiguration {
 	}
 
 	/**
-	 * 返回等待超时（单位：毫秒）
+	 * 返回获取连接时最大等待时间
 	 *
-	 * @return 等待超时
+	 * @return 获取连接时最大等待时间
 	 */
 	public Duration getConnectionWait() {
 		return connectionWait;
 	}
 
 	/**
-	 * 设置等待超时
+	 * 设置获取连接时最大等待时间
 	 *
 	 * @param connectionWait
-	 * 		等待超时（单位：毫秒）
+	 * 		获取连接时最大等待时间
 	 */
 	public void setConnectionWait(Duration connectionWait) {
 		this.connectionWait = connectionWait;
@@ -558,6 +534,12 @@ public class OraclePoolConfiguration extends AbstractPoolConfiguration {
 	 */
 	public void setAbandonedConnectionTimeout(Duration abandonedConnectionTimeout) {
 		this.abandonedConnectionTimeout = abandonedConnectionTimeout;
+		super.setRemoveAbandonedTimeout(abandonedConnectionTimeout);
+	}
+
+	@Override
+	public void setRemoveAbandonedTimeout(Duration removeAbandonedTimeout) {
+		setAbandonedConnectionTimeout(removeAbandonedTimeout);
 	}
 
 	/**
@@ -615,4 +597,5 @@ public class OraclePoolConfiguration extends AbstractPoolConfiguration {
 	public void setCreateConnectionInBorrowThread(Boolean createConnectionInBorrowThread) {
 		this.createConnectionInBorrowThread = createConnectionInBorrowThread;
 	}
+
 }

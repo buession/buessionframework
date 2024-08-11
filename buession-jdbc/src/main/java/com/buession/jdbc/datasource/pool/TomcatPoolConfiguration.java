@@ -22,9 +22,8 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.jdbc.datasource.config;
+package com.buession.jdbc.datasource.pool;
 
-import com.buession.jdbc.core.TransactionIsolation;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
 
 import java.beans.Statement;
@@ -37,11 +36,6 @@ import java.time.Duration;
  * @since 1.3.2
  */
 public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
-
-	/**
-	 * 连接池名称
-	 */
-	private String name;
 
 	/**
 	 * 最大连接数，可以在这个池中同一时刻被分配的有效连接数的最大值，如设置为负数，则不限制
@@ -87,11 +81,6 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	private Boolean removeAbandoned;
 
 	/**
-	 * 一个连接使用超过多久就视为抛弃的，该值应该超过你的应用中最长的SQL可能运行的时间
-	 */
-	private Duration removeAbandonedTimeout;
-
-	/**
 	 * 连接被认为是可疑的超时时间
 	 */
 	private Duration suspectTimeout;
@@ -128,25 +117,6 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 * 是否使用 {@link #equals()} 方法来比较连接池中的连接
 	 */
 	private Boolean useEquals;
-
-	/**
-	 * 返回连接池名称
-	 *
-	 * @return 连接池名称
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * 设置连接池名称
-	 *
-	 * @param name
-	 * 		连接池名称
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
 
 	/**
 	 * 返回最大连接数
@@ -195,7 +165,6 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	public void setMaxAge(Duration maxAge) {
 		this.maxAge = maxAge;
 	}
-
 
 	/**
 	 * 返回创建连接时是否测试连接的有效性
@@ -369,25 +338,6 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 */
 	public void setRemoveAbandoned(Boolean removeAbandoned) {
 		this.removeAbandoned = removeAbandoned;
-	}
-
-	/**
-	 * 返回一个连接使用超过多久就视为抛弃的
-	 *
-	 * @return 一个连接使用超过多久就视为抛弃的
-	 */
-	public Duration getRemoveAbandonedTimeout() {
-		return removeAbandonedTimeout;
-	}
-
-	/**
-	 * 设置一个连接使用超过多久就视为抛弃的，该值应该超过你的应用中最长的SQL可能运行的时间
-	 *
-	 * @param removeAbandonedTimeout
-	 * 		一个连接使用超过多久就视为抛弃的，该值应该超过你的应用中最长的SQL可能运行的时间
-	 */
-	public void setRemoveAbandonedTimeout(Duration removeAbandonedTimeout) {
-		this.removeAbandonedTimeout = removeAbandonedTimeout;
 	}
 
 	/**

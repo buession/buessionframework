@@ -22,8 +22,9 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.jdbc.datasource.config;
+package com.buession.jdbc.datasource.pool;
 
+import com.buession.jdbc.core.Jmx;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.PreparedStatement;
@@ -36,6 +37,12 @@ import java.time.Duration;
  * @since 1.3.2
  */
 public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
+
+	/**
+	 * 连接的最大存活时间；
+	 * 如果超过这个时间，则连接在下次激活、钝化、校验时都将会失败。如果设置为0或小于0的值，则连接的存活时间是无限的
+	 */
+	private Duration maxConnLifetime;
 
 	/**
 	 * 是否缓存 preparedStatement，也就是PSCache；
@@ -66,13 +73,6 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 * @since 3.0.0
 	 */
 	private Boolean removeAbandonedOnMaintenance;
-
-	/**
-	 * 指定连接在被认为是废弃连接（abandoned connection）之前的超时时间
-	 *
-	 * @since 3.0.0
-	 */
-	private Duration removeAbandonedTimeout;
 
 	/**
 	 * 是否在每次连接被借出时记录当前的堆栈跟踪信息
@@ -114,6 +114,25 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 * @since 3.0.0
 	 */
 	private Boolean registerConnectionMBean;
+
+	/**
+	 * 返回连接的最大存活时间
+	 *
+	 * @return 连接的最大存活时间
+	 */
+	public Duration getMaxConnLifetime() {
+		return maxConnLifetime;
+	}
+
+	/**
+	 * 设置连接的最大存活时间
+	 *
+	 * @param maxConnLifetime
+	 * 		连接的最大存活时间
+	 */
+	public void setMaxConnLifetime(Duration maxConnLifetime) {
+		this.maxConnLifetime = maxConnLifetime;
+	}
 
 	/**
 	 * 返回是否缓存 preparedStatement，也就是PSCache
@@ -257,29 +276,6 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 */
 	public void setRemoveAbandonedOnMaintenance(Boolean removeAbandonedOnMaintenance) {
 		this.removeAbandonedOnMaintenance = removeAbandonedOnMaintenance;
-	}
-
-	/**
-	 * 返回指定连接在被认为是废弃连接（abandoned connection）之前的超时时间
-	 *
-	 * @return 指定连接在被认为是废弃连接（abandoned connection）之前的超时时间
-	 *
-	 * @since 3.0.0
-	 */
-	public Duration getRemoveAbandonedTimeout() {
-		return removeAbandonedTimeout;
-	}
-
-	/**
-	 * 设置指定连接在被认为是废弃连接（abandoned connection）之前的超时时间
-	 *
-	 * @param removeAbandonedTimeout
-	 * 		指定连接在被认为是废弃连接（abandoned connection）之前的超时时间
-	 *
-	 * @since 3.0.0
-	 */
-	public void setRemoveAbandonedTimeout(Duration removeAbandonedTimeout) {
-		this.removeAbandonedTimeout = removeAbandonedTimeout;
 	}
 
 	/**
@@ -431,6 +427,12 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 * @return 是否将连接池的管理信息注册为 JMX (Java Management Extensions) MBean
 	 */
 	public Boolean getRegisterConnectionMBean() {
+		if(registerConnectionMBean == null){
+			if(getJmx() != null){
+				return getJmx().isEnabled();
+			}
+		}
+
 		return registerConnectionMBean;
 	}
 
@@ -442,12 +444,12 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 */
 	public void setRegisterConnectionMBean(Boolean registerConnectionMBean) {
 		this.registerConnectionMBean = registerConnectionMBean;
-		super.setJmxEnabled(registerConnectionMBean);
-	}
 
-	@Override
-	public void setJmxEnabled(Boolean jmxEnabled) {
-		setRegisterConnectionMBean(jmxEnabled);
+		if(getJmx() == null){
+			setJmx(new Jmx(registerConnectionMBean));
+		}else{
+			getJmx().setEnabled(registerConnectionMBean);
+		}
 	}
 
 }

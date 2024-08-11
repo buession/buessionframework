@@ -25,9 +25,15 @@
 package com.buession.jdbc.datasource;
 
 import com.buession.core.converter.mapper.PropertyMapper;
+import com.buession.core.validator.Validate;
+import com.buession.jdbc.core.Jmx;
 import com.buession.jdbc.core.TransactionIsolation;
-import com.buession.jdbc.datasource.config.TomcatPoolConfiguration;
+import com.buession.jdbc.datasource.pool.TomcatPoolConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
 import java.time.Duration;
 import java.util.Properties;
 
@@ -89,12 +95,7 @@ public class TomcatDataSource
 	 */
 	private String jdbcInterceptors;
 
-	/**
-	 * 底层数据源相关的属性
-	 *
-	 * @since 3.0.0
-	 */
-	private Properties dbProperties;
+	private final static Logger logger = LoggerFactory.getLogger(TomcatDataSource.class);
 
 	/**
 	 * 构造函数
@@ -411,59 +412,43 @@ public class TomcatDataSource
 		this.jdbcInterceptors = jdbcInterceptors;
 	}
 
-	/**
-	 * 返回底层数据源相关的属性
-	 *
-	 * @return 底层数据源相关的属性
-	 */
-	public Properties getDbProperties() {
-		return dbProperties;
-	}
-
-	/**
-	 * 设置底层数据源相关的属性
-	 *
-	 * @param dbProperties
-	 * 		底层数据源相关的属性
-	 */
-	public void setDbProperties(Properties dbProperties) {
-		this.dbProperties = dbProperties;
-		super.setConnectionProperties(dbProperties);
-	}
-
-	@Override
-	public void setConnectionProperties(Properties connectionProperties) {
-		setDbProperties(connectionProperties);
-	}
-
 	@Override
 	protected org.apache.tomcat.jdbc.pool.DataSource createDataSource(final PropertyMapper propertyMapper) {
 		final org.apache.tomcat.jdbc.pool.DataSource dataSource = new org.apache.tomcat.jdbc.pool.DataSource();
 
 		propertyMapper.from(this::getDriverClassName).to(dataSource::setDriverClassName);
+
 		propertyMapper.from(this::getJndi).to(dataSource::setDataSourceJNDI);
 		propertyMapper.from(this::getUrl).to(dataSource::setUrl);
 		propertyMapper.from(this::getUsername).to(dataSource::setUsername);
 		propertyMapper.from(this::getPassword).to(dataSource::setPassword);
+
 		propertyMapper.from(this::getLoginTimeout).as((v)->(int) v.getSeconds()).to(dataSource::setLoginTimeout);
-		propertyMapper.from(this::isAlternateUsernameAllowed).to(dataSource::setAlternateUsernameAllowed);
+
 		propertyMapper.from(this::getDefaultCatalog).to(dataSource::setDefaultCatalog);
+
 		propertyMapper.from(this::getInitSQL).to(dataSource::setInitSQL);
+
 		propertyMapper.from(this::getValidationQuery).to(dataSource::setValidationQuery);
 		propertyMapper.from(this::getValidatorClassName).to(dataSource::setValidatorClassName);
 		propertyMapper.from(this::getValidationInterval).as(Duration::toMillis).to(dataSource::setValidationInterval);
 		propertyMapper.from(this::getValidationQueryTimeout).as((v)->(int) v.getSeconds())
 				.to(dataSource::setValidationQueryTimeout);
+
 		propertyMapper.from(this::getDefaultTransactionIsolation).as(TransactionIsolation::getValue)
 				.to(dataSource::setDefaultTransactionIsolation);
+
+		propertyMapper.from(this::isDefaultReadOnly).to(dataSource::setDefaultReadOnly);
+		propertyMapper.from(this::isDefaultAutoCommit).to(dataSource::setDefaultAutoCommit);
 		propertyMapper.from(this::isCommitOnReturn).to(dataSource::setCommitOnReturn);
 		propertyMapper.from(this::isRollbackOnReturn).to(dataSource::setRollbackOnReturn);
-		propertyMapper.from(this::isDefaultAutoCommit).to(dataSource::setDefaultAutoCommit);
-		propertyMapper.from(this::isDefaultReadOnly).to(dataSource::setDefaultReadOnly);
+
+		propertyMapper.from(this::isAlternateUsernameAllowed).to(dataSource::setAlternateUsernameAllowed);
 		propertyMapper.from(this::isAccessToUnderlyingConnectionAllowed)
 				.to(dataSource::setAccessToUnderlyingConnectionAllowed);
 		propertyMapper.from(this::getJdbcInterceptors).to(dataSource::setJdbcInterceptors);
-		propertyMapper.from(this::getDbProperties).to(dataSource::setDbProperties);
+
+		propertyMapper.from(this::getConnectionProperties).to(dataSource::setDbProperties);
 
 		return dataSource;
 	}
@@ -472,40 +457,65 @@ public class TomcatDataSource
 	protected void applyPoolConfiguration(final org.apache.tomcat.jdbc.pool.DataSource dataSource,
 										  final TomcatPoolConfiguration poolConfiguration,
 										  final PropertyMapper propertyMapper) {
-		propertyMapper.from(poolConfiguration::getName).to(dataSource::setName);
+		propertyMapper.from(poolConfiguration::getPoolName).to(dataSource::setName);
+
 		propertyMapper.from(poolConfiguration::getInitialSize).to(dataSource::setInitialSize);
 		propertyMapper.from(poolConfiguration::getMinIdle).to(dataSource::setMinIdle);
 		propertyMapper.from(poolConfiguration::getMaxIdle).to(dataSource::setMaxIdle);
 		propertyMapper.from(poolConfiguration::getMaxActive).to(dataSource::setMaxActive);
-		propertyMapper.from(poolConfiguration::getMaxAge).as(Duration::toMillis).to(dataSource::setMaxAge);
+
 		propertyMapper.from(poolConfiguration::getMaxWait).as((v)->(int) v.toMillis()).to(dataSource::setMaxWait);
+
 		propertyMapper.from(poolConfiguration::isTestOnConnect).to(dataSource::setTestOnConnect);
 		propertyMapper.from(poolConfiguration::isTestOnBorrow).to(dataSource::setTestOnBorrow);
 		propertyMapper.from(poolConfiguration::isTestOnReturn).to(dataSource::setTestOnReturn);
 		propertyMapper.from(poolConfiguration::isTestWhileIdle).to(dataSource::setTestWhileIdle);
-		propertyMapper.from(poolConfiguration::isRemoveAbandoned).to(dataSource::setRemoveAbandoned);
-		propertyMapper.from(poolConfiguration::getRemoveAbandonedTimeout).as((v)->(int) v.getSeconds())
-				.to(dataSource::setRemoveAbandonedTimeout);
-		propertyMapper.from(poolConfiguration::getSuspectTimeout).as((v)->(int) v.getSeconds())
-				.to(dataSource::setSuspectTimeout);
-		propertyMapper.from(poolConfiguration::isUseDisposableConnectionFacade)
-				.to(dataSource::setUseDisposableConnectionFacade);
-		propertyMapper.from(poolConfiguration::isUseStatementFacade).to(dataSource::setUseStatementFacade);
-		propertyMapper.from(poolConfiguration::isIgnoreExceptionOnPreLoad).to(dataSource::setIgnoreExceptionOnPreLoad);
-		propertyMapper.from(poolConfiguration::isFairQueue).to(dataSource::setFairQueue);
-		propertyMapper.from(poolConfiguration::isLogAbandoned).to(dataSource::setLogAbandoned);
-		propertyMapper.from(poolConfiguration::getAbandonWhenPercentageFull)
-				.to(dataSource::setAbandonWhenPercentageFull);
+
+		propertyMapper.from(poolConfiguration::getMaxAge).as(Duration::toMillis).to(dataSource::setMaxAge);
+
+		propertyMapper.from(poolConfiguration::getMinEvictableIdle).as((v)->(int) v.toMillis())
+				.to(dataSource::setMinEvictableIdleTimeMillis);
+
 		propertyMapper.from(poolConfiguration::getNumTestsPerEvictionRun).to(dataSource::setNumTestsPerEvictionRun);
 		propertyMapper.from(poolConfiguration::getTimeBetweenEvictionRuns).as((v)->(int) v.toMillis())
 				.to(dataSource::setTimeBetweenEvictionRunsMillis);
-		propertyMapper.from(poolConfiguration::getMinEvictableIdle).as((v)->(int) v.getSeconds())
-				.to(dataSource::setMinEvictableIdleTimeMillis);
+
+		propertyMapper.from(poolConfiguration::isUseDisposableConnectionFacade)
+				.to(dataSource::setUseDisposableConnectionFacade);
+
+		propertyMapper.from(poolConfiguration::isUseStatementFacade).to(dataSource::setUseStatementFacade);
+
+		propertyMapper.from(poolConfiguration::getSuspectTimeout).as((v)->(int) v.getSeconds())
+				.to(dataSource::setSuspectTimeout);
+
+		propertyMapper.from(poolConfiguration::isRemoveAbandoned).to(dataSource::setRemoveAbandoned);
+		propertyMapper.from(poolConfiguration::getRemoveAbandonedTimeout).as((v)->(int) v.getSeconds())
+				.to(dataSource::setRemoveAbandonedTimeout);
+		propertyMapper.from(poolConfiguration::isLogAbandoned).to(dataSource::setLogAbandoned);
+		propertyMapper.from(poolConfiguration::getAbandonWhenPercentageFull)
+				.to(dataSource::setAbandonWhenPercentageFull);
+
+		propertyMapper.from(poolConfiguration::isIgnoreExceptionOnPreLoad).to(dataSource::setIgnoreExceptionOnPreLoad);
+		propertyMapper.from(poolConfiguration::isFairQueue).to(dataSource::setFairQueue);
 		propertyMapper.from(poolConfiguration::isPropagateInterruptState).to(dataSource::setPropagateInterruptState);
 		propertyMapper.from(poolConfiguration::isLogValidationErrors).to(dataSource::setLogValidationErrors);
 		propertyMapper.from(poolConfiguration::isUseLock).to(dataSource::setUseLock);
 		propertyMapper.from(poolConfiguration::isUseEquals).to(dataSource::setUseEquals);
-		propertyMapper.from(poolConfiguration::getJmxEnabled).to(dataSource::setJmxEnabled);
+
+		if(poolConfiguration.getJmx() != null){
+			final Jmx jmx = poolConfiguration.getJmx();
+			propertyMapper.from(jmx::isEnabled).to(dataSource::setJmxEnabled);
+
+			if(Validate.hasText(jmx.getName())){
+				try{
+					dataSource.createObjectName(new ObjectName(jmx.getName()));
+				}catch(MalformedObjectNameException e){
+					if(logger.isErrorEnabled()){
+						logger.error("create {} instance error: {}", ObjectName.class.getName(), e.getMessage());
+					}
+				}
+			}
+		}
 
 		if(Boolean.TRUE.equals(poolConfiguration.getFairQueue()) &&
 				"Linux".equalsIgnoreCase(System.getProperties().getProperty("os.name"))){

@@ -22,8 +22,9 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.jdbc.datasource.config;
+package com.buession.jdbc.datasource.pool;
 
+import com.buession.jdbc.core.Jmx;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.metrics.MetricsTrackerFactory;
 
@@ -39,16 +40,6 @@ import java.util.concurrent.ThreadFactory;
  * @since 1.3.2
  */
 public class HikariPoolConfiguration extends AbstractPoolConfiguration {
-
-	/**
-	 * 用户定义连接池的名称，主要出现在日志记录和 JMX 管理控制台中以识别池和池配置
-	 */
-	private String poolName;
-
-	/**
-	 * 从连接池获取连接时最大等待时间
-	 */
-	private Duration connectionTimeout;
 
 	/**
 	 * 连接池无法成功建立连接，是否会立即抛出异常或进行重试，以及重试的超时时间
@@ -84,11 +75,6 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 * 调度任务执行器
 	 */
 	private ScheduledExecutorService scheduledExecutor;
-
-	/**
-	 * 是否将 HikariCP 执行的内部查询与应用程序的查询隔离
-	 */
-	private Boolean isolateInternalQueries;
 
 	/**
 	 * 控制在记录消息之前连接可能离开池的时间量，表明可能存在连接泄漏，值为 0 时泄漏检测被禁用
@@ -130,44 +116,6 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 * 是否自动注册 JMX 相关的 MBeans
 	 */
 	private Boolean registerMbeans;
-
-	/**
-	 * 返回用户定义连接池的名称
-	 *
-	 * @return 用户定义连接池的名称
-	 */
-	public String getPoolName() {
-		return poolName;
-	}
-
-	/**
-	 * 设置连接池的名称
-	 *
-	 * @param poolName
-	 * 		连接池的名称
-	 */
-	public void setPoolName(String poolName) {
-		this.poolName = poolName;
-	}
-
-	/**
-	 * 返回从连接池获取连接时最大等待时间
-	 *
-	 * @return 从连接池获取连接时最大等待时间
-	 */
-	public Duration getConnectionTimeout() {
-		return connectionTimeout;
-	}
-
-	/**
-	 * 设置从连接池获取连接时最大等待时间
-	 *
-	 * @param connectionTimeout
-	 * 		从连接池获取连接时最大等待时间
-	 */
-	public void setConnectionTimeout(Duration connectionTimeout) {
-		this.connectionTimeout = connectionTimeout;
-	}
 
 	/**
 	 * 返回连接池无法成功建立连接，是否会立即抛出异常或进行重试，以及重试的超时时间
@@ -308,34 +256,6 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 */
 	public void setScheduledExecutor(ScheduledExecutorService scheduledExecutor) {
 		this.scheduledExecutor = scheduledExecutor;
-	}
-
-	/**
-	 * 返回是否将 HikariCP 执行的内部查询与应用程序的查询隔离
-	 *
-	 * @return 是否将 HikariCP 执行的内部查询与应用程序的查询隔离
-	 */
-	public Boolean isIsolateInternalQueries() {
-		return getIsolateInternalQueries();
-	}
-
-	/**
-	 * 返回是否将 HikariCP 执行的内部查询与应用程序的查询隔离
-	 *
-	 * @return 是否将 HikariCP 执行的内部查询与应用程序的查询隔离
-	 */
-	public Boolean getIsolateInternalQueries() {
-		return isolateInternalQueries;
-	}
-
-	/**
-	 * 设置是否将 HikariCP 执行的内部查询与应用程序的查询隔离
-	 *
-	 * @param isolateInternalQueries
-	 * 		是否将 HikariCP 执行的内部查询与应用程序的查询隔离
-	 */
-	public void setIsolateInternalQueries(Boolean isolateInternalQueries) {
-		this.isolateInternalQueries = isolateInternalQueries;
 	}
 
 	/**
@@ -484,6 +404,12 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 * @return 是否自动注册 JMX 相关的 MBeans
 	 */
 	public Boolean getRegisterMbeans() {
+		if(registerMbeans == null){
+			if(getJmx() != null){
+				return getJmx().isEnabled();
+			}
+		}
+
 		return registerMbeans;
 	}
 
@@ -495,12 +421,12 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 */
 	public void setRegisterMbeans(Boolean registerMbeans) {
 		this.registerMbeans = registerMbeans;
-		super.setJmxEnabled(registerMbeans);
-	}
 
-	@Override
-	public void setJmxEnabled(Boolean jmxEnabled) {
-		setRegisterMbeans(jmxEnabled);
+		if(getJmx() == null){
+			setJmx(new Jmx(registerMbeans));
+		}else{
+			getJmx().setEnabled(registerMbeans);
+		}
 	}
 
 }

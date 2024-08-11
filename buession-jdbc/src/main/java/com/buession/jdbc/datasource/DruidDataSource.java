@@ -30,8 +30,9 @@ import com.buession.core.builder.ListBuilder;
 import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
+import com.buession.jdbc.core.Jmx;
 import com.buession.jdbc.core.TransactionIsolation;
-import com.buession.jdbc.datasource.config.DruidPoolConfiguration;
+import com.buession.jdbc.datasource.pool.DruidPoolConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +43,6 @@ import javax.security.auth.callback.PasswordCallback;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.util.Collection;
-import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -110,13 +110,6 @@ public class DruidDataSource
 	 * @since 3.0.0
 	 */
 	private Long phyMaxUseCount;
-
-	/**
-	 * 数据源实例的名称，主要用于监控和统计分析，在有多个数据源时，通过该值可以区分不同的数据源实例
-	 *
-	 * @since 3.0.0
-	 */
-	private String name;
 
 	/**
 	 * 数据源初始化时是否以异步方式进行
@@ -603,29 +596,6 @@ public class DruidDataSource
 	 */
 	public void setPhyMaxUseCount(Long phyMaxUseCount) {
 		this.phyMaxUseCount = phyMaxUseCount;
-	}
-
-	/**
-	 * 返回数据源实例的名称
-	 *
-	 * @return 数据源实例的名称
-	 *
-	 * @since 3.0.0
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * 设置数据源实例的名称
-	 *
-	 * @param name
-	 * 		数据源实例的名称
-	 *
-	 * @since 3.0.0
-	 */
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	/**
@@ -1309,16 +1279,18 @@ public class DruidDataSource
 
 	@Override
 	protected com.alibaba.druid.pool.DruidDataSource createDataSource(final PropertyMapper propertyMapper) {
-		Properties properties = null;
 		final com.alibaba.druid.pool.DruidDataSource dataSource = getFairLock() == null ?
 				new com.alibaba.druid.pool.DruidDataSource() : new com.alibaba.druid.pool.DruidDataSource(
 				getFairLock());
 
 		propertyMapper.from(this::getDriverClassLoader).to(dataSource::setDriverClassLoader);
 		propertyMapper.from(this::getDriverClassName).to(dataSource::setDriverClassName);
+
 		propertyMapper.from(this::getUrl).to(dataSource::setUrl);
 		propertyMapper.from(this::getUsername).to(dataSource::setUsername);
 		propertyMapper.from(this::getPassword).to(dataSource::setPassword);
+
+		propertyMapper.from(this::getLoginTimeout).as((v)->(int) v.getSeconds()).to(dataSource::setLoginTimeout);
 
 		try{
 			if(Validate.hasText(this.getUserCallbackClassName())){
@@ -1345,6 +1317,28 @@ public class DruidDataSource
 		propertyMapper.from(this::getConnectTimeout).as((v)->(int) v.toMillis()).to(dataSource::setConnectTimeout);
 		propertyMapper.from(this::getSocketTimeout).as((v)->(int) v.toMillis()).to(dataSource::setSocketTimeout);
 		propertyMapper.from(this::getLoginTimeout).as((v)->(int) v.getSeconds()).to(dataSource::setLoginTimeout);
+
+		propertyMapper.from(this::getDefaultCatalog).to(dataSource::setDefaultCatalog);
+
+		propertyMapper.from(this::getConnectionInitSqls).to(dataSource::setConnectionInitSqls);
+
+		propertyMapper.from(this::getValidationQuery).to(dataSource::setValidationQuery);
+		propertyMapper.from(this::getValidationQueryTimeout).as((v)->(int) v.getSeconds())
+				.to(dataSource::setValidationQueryTimeout);
+
+		propertyMapper.from(this::getQueryTimeout).as((v)->(int) v.getSeconds()).to(dataSource::setQueryTimeout);
+
+		propertyMapper.from(this::getDefaultTransactionIsolation).as(TransactionIsolation::getValue)
+				.to(dataSource::setDefaultTransactionIsolation);
+		propertyMapper.from(this::getTransactionQueryTimeout).as((v)->(int) v.getSeconds())
+				.to(dataSource::setTransactionQueryTimeout);
+		propertyMapper.from(this::getTransactionThreshold).as(Duration::toMillis)
+				.to(dataSource::setTransactionThresholdMillis);
+
+		propertyMapper.from(this::isDefaultReadOnly).to(dataSource::setDefaultReadOnly);
+		propertyMapper.from(this::isDefaultAutoCommit).to(dataSource::setDefaultAutoCommit);
+
+
 		propertyMapper.from(this::getTimeBetweenConnectError).as(Duration::toMillis)
 				.to(dataSource::setTimeBetweenConnectErrorMillis);
 		propertyMapper.from(this::isKillWhenSocketReadTimeout).to(dataSource::setKillWhenSocketReadTimeout);
@@ -1352,15 +1346,13 @@ public class DruidDataSource
 				.to(dataSource::setAccessToUnderlyingConnectionAllowed);
 		propertyMapper.from(this::getPhyTimeout).as(Duration::toMillis).to(dataSource::setPhyTimeoutMillis);
 		propertyMapper.from(this::getPhyMaxUseCount).to(dataSource::setPhyMaxUseCount);
-		propertyMapper.from(this::getDefaultCatalog).to(dataSource::setDefaultCatalog);
-		propertyMapper.from(this::getConnectionInitSqls).to(dataSource::setConnectionInitSqls);
 
 		if(Validate.hasText(this.getValidConnectionCheckerClassName())){
 			try{
 				dataSource.setValidConnectionCheckerClassName(this.getValidConnectionCheckerClassName());
 			}catch(Exception e){
 				if(logger.isErrorEnabled()){
-					logger.error("Set valid connection checker error: {}", e.getMessage());
+					logger.error("Set validConnectionChecker error: {}", e.getMessage());
 				}
 			}
 		}
@@ -1373,36 +1365,27 @@ public class DruidDataSource
 				dataSource.setExceptionSorterClassName(this.getExceptionSorterClassName());
 			}catch(Exception e){
 				if(logger.isErrorEnabled()){
-					logger.error("Set exception sorter error: {}", e.getMessage());
+					logger.error("Set exceptionSorter error: {}", e.getMessage());
 				}
 			}
 		}
 
 		propertyMapper.from(this::isAsyncCloseConnectionEnable).to(dataSource::setAsyncCloseConnectionEnable);
 		propertyMapper.from(this::isUseOracleImplicitCache).to(dataSource::setUseOracleImplicitCache);
-		propertyMapper.from(this::getValidationQuery).to(dataSource::setValidationQuery);
-		propertyMapper.from(this::getValidationQueryTimeout).as((v)->(int) v.getSeconds())
-				.to(dataSource::setValidationQueryTimeout);
-		propertyMapper.from(this::getQueryTimeout).as((v)->(int) v.getSeconds()).to(dataSource::setQueryTimeout);
-		propertyMapper.from(this::getDefaultTransactionIsolation).as(TransactionIsolation::getValue)
-				.to(dataSource::setDefaultTransactionIsolation);
-		propertyMapper.from(this::getTransactionQueryTimeout).as((v)->(int) v.getSeconds())
-				.to(dataSource::setTransactionQueryTimeout);
-		propertyMapper.from(this::getTransactionThreshold).as(Duration::toMillis)
-				.to(dataSource::setTransactionThresholdMillis);
-		propertyMapper.from(this::isDefaultReadOnly).to(dataSource::setDefaultReadOnly);
-		propertyMapper.from(this::isDefaultAutoCommit).to(dataSource::setDefaultAutoCommit);
-		propertyMapper.from(this::getName).to(dataSource::setName);
 		propertyMapper.from(this::isAsyncInit).to(dataSource::setAsyncInit);
+
 		propertyMapper.from(this::isInitVariants).to(dataSource::setInitVariants);
 		propertyMapper.from(this::isInitGlobalVariants).to(dataSource::setInitGlobalVariants);
+
 		propertyMapper.from(this::getCreateScheduler).to(dataSource::setCreateScheduler);
 		propertyMapper.from(this::getDestroyScheduler).to(dataSource::setDestroyScheduler);
+
 		propertyMapper.from(this::isFailFast).to(dataSource::setFailFast);
 		propertyMapper.from(this::isCheckExecuteTime).to(dataSource::setCheckExecuteTime);
 		propertyMapper.from(this::isUseGlobalDataSourceStat).to(dataSource::setUseGlobalDataSourceStat);
 		propertyMapper.from(this::getStatLoggerClassName).to(dataSource::setStatLoggerClassName);
 		propertyMapper.from(this::isResetStatEnable).to(dataSource::setResetStatEnable);
+
 		propertyMapper.from(this::getConnectionProperties).to(dataSource::setConnectProperties);
 
 		if(Validate.isNotEmpty(this.getFilters())){
@@ -1417,19 +1400,11 @@ public class DruidDataSource
 		}
 
 		if(this.getMaxSqlSize() != null){
-			if(properties == null){
-				properties = new Properties();
-			}
-
-			properties.put(Constants.DRUID_STAT_SQL_MAX_SIZE, this.getMaxSqlSize());
+			dataSource.addConnectionProperty(Constants.DRUID_STAT_SQL_MAX_SIZE, Integer.toString(this.getMaxSqlSize()));
 		}
 
-		if(this.getLoadSpifilterSkip() != null){
-			if(properties == null){
-				properties = new Properties();
-			}
-
-			properties.put("druid.load.spifilter.skip", this.getLoadSpifilterSkip());
+		if(this.isLoadSpifilterSkip() != null){
+			System.setProperty("druid.load.spifilter.skip", Boolean.toString(this.getLoadSpifilterSkip()));
 		}
 
 		propertyMapper.from(this::isClearFiltersEnable).to(dataSource::setClearFiltersEnable);
@@ -1442,54 +1417,73 @@ public class DruidDataSource
 	protected void applyPoolConfiguration(final com.alibaba.druid.pool.DruidDataSource dataSource,
 										  final DruidPoolConfiguration poolConfiguration,
 										  final PropertyMapper propertyMapper) {
+		propertyMapper.from(poolConfiguration::getPoolName).to(dataSource::setName);
+
 		propertyMapper.from(poolConfiguration::getInitialSize).to(dataSource::setInitialSize);
 		propertyMapper.from(poolConfiguration::getMinIdle).to(dataSource::setMinIdle);
 		propertyMapper.from(poolConfiguration::getMaxIdle).to(dataSource::setMaxIdle);
 		propertyMapper.from(poolConfiguration::getMaxActive).to(dataSource::setMaxActive);
+		propertyMapper.from(poolConfiguration::getOnFatalErrorMaxActive).to(dataSource::setOnFatalErrorMaxActive);
+
+		propertyMapper.from(poolConfiguration::getMaxWait).as(Duration::toMillis).to(dataSource::setMaxWait);
+
 		propertyMapper.from(poolConfiguration::getMaxCreateTaskCount).to(dataSource::setMaxCreateTaskCount);
 		propertyMapper.from(poolConfiguration::getMaxWaitThreadCount).to(dataSource::setMaxWaitThreadCount);
-		propertyMapper.from(poolConfiguration::getMaxWait).as(Duration::toMillis).to(dataSource::setMaxWait);
-		propertyMapper.from(poolConfiguration::getKeepAlive).to(dataSource::setKeepAlive);
-		propertyMapper.from(poolConfiguration::getKeepAliveBetweenTime).as(Duration::toMillis)
-				.to(dataSource::setKeepAliveBetweenTimeMillis);
-		propertyMapper.from(poolConfiguration::isUsePingMethod).to(dataSource::setUsePingMethod);
-		propertyMapper.from(poolConfiguration::isKeepConnectionUnderlyingTransactionIsolation)
-				.to(dataSource::setKeepConnectionUnderlyingTransactionIsolation);
-		propertyMapper.from(poolConfiguration::getOnFatalErrorMaxActive).to(dataSource::setOnFatalErrorMaxActive);
-		propertyMapper.from(poolConfiguration::isBreakAfterAcquireFailure).to(dataSource::setBreakAfterAcquireFailure);
+		propertyMapper.from(poolConfiguration::getNotFullTimeoutRetryCount).to(dataSource::setNotFullTimeoutRetryCount);
+
 		propertyMapper.from(poolConfiguration::isTestOnBorrow).to(dataSource::setTestOnBorrow);
 		propertyMapper.from(poolConfiguration::isTestOnReturn).to(dataSource::setTestOnReturn);
 		propertyMapper.from(poolConfiguration::isTestWhileIdle).to(dataSource::setTestWhileIdle);
-		propertyMapper.from(poolConfiguration::getNotFullTimeoutRetryCount).to(dataSource::setNotFullTimeoutRetryCount);
-		propertyMapper.from(poolConfiguration::isUseLocalSessionState).to(dataSource::setUseLocalSessionState);
+		propertyMapper.from(poolConfiguration::getKeepAlive).to(dataSource::setKeepAlive);
+
+		propertyMapper.from(poolConfiguration::getKeepAliveBetweenTime).as(Duration::toMillis)
+				.to(dataSource::setKeepAliveBetweenTimeMillis);
+
+		propertyMapper.from(poolConfiguration::isUsePingMethod).to(dataSource::setUsePingMethod);
+
+		propertyMapper.from(poolConfiguration::getMinEvictableIdle).as(Duration::toMillis)
+				.to(dataSource::setMinEvictableIdleTimeMillis);
+		propertyMapper.from(poolConfiguration::getMaxEvictableIdle).as(Duration::toMillis)
+				.to(dataSource::setMaxEvictableIdleTimeMillis);
+
+		propertyMapper.from(poolConfiguration::getNumTestsPerEvictionRun).to(dataSource::setNumTestsPerEvictionRun);
+		propertyMapper.from(poolConfiguration::getTimeBetweenEvictionRuns).as(Duration::toMillis)
+				.to(dataSource::setTimeBetweenEvictionRunsMillis);
+
+		propertyMapper.from(poolConfiguration::isKeepConnectionUnderlyingTransactionIsolation)
+				.to(dataSource::setKeepConnectionUnderlyingTransactionIsolation);
+
+		propertyMapper.from(poolConfiguration::isBreakAfterAcquireFailure).to(dataSource::setBreakAfterAcquireFailure);
+
 		propertyMapper.from(poolConfiguration::isPoolPreparedStatements).to(dataSource::setPoolPreparedStatements);
 		propertyMapper.from(poolConfiguration::isSharePreparedStatements).to(dataSource::setSharePreparedStatements);
 		propertyMapper.from(poolConfiguration::getMaxOpenPreparedStatements)
 				.to(dataSource::setMaxOpenPreparedStatements);
 		propertyMapper.from(poolConfiguration::getMaxPoolPreparedStatementPerConnectionSize)
 				.to(dataSource::setMaxPoolPreparedStatementPerConnectionSize);
-		propertyMapper.from(poolConfiguration::getMinEvictableIdle).as(Duration::toMillis)
-				.to(dataSource::setMinEvictableIdleTimeMillis);
-		propertyMapper.from(poolConfiguration::getMaxEvictableIdle).as(Duration::toMillis)
-				.to(dataSource::setMaxEvictableIdleTimeMillis);
-		propertyMapper.from(poolConfiguration::getNumTestsPerEvictionRun).to(dataSource::setNumTestsPerEvictionRun);
-		propertyMapper.from(poolConfiguration::getTimeBetweenEvictionRuns).as(Duration::toMillis)
-				.to(dataSource::setTimeBetweenEvictionRunsMillis);
+
 		propertyMapper.from(poolConfiguration::isRemoveAbandoned).to(dataSource::setRemoveAbandoned);
 		propertyMapper.from(poolConfiguration::getRemoveAbandonedTimeout).as(Duration::toMillis)
 				.to(dataSource::setRemoveAbandonedTimeoutMillis);
 		propertyMapper.from(poolConfiguration::isLogAbandoned).to(dataSource::setLogAbandoned);
+
+		propertyMapper.from(poolConfiguration::isUseLocalSessionState).to(dataSource::setUseLocalSessionState);
+
 		propertyMapper.from(poolConfiguration::getTimeBetweenLogStats).as(Duration::toMillis)
 				.to(dataSource::setTimeBetweenLogStatsMillis);
 		propertyMapper.from(poolConfiguration::isDupCloseLogEnable).to(dataSource::setDupCloseLogEnable);
 		propertyMapper.from(poolConfiguration::isLogDifferentThread).to(dataSource::setLogDifferentThread);
 
-		if(Validate.hasText(poolConfiguration.getJmxName())){
-			try{
-				dataSource.setObjectName(new ObjectName(poolConfiguration.getJmxName()));
-			}catch(MalformedObjectNameException e){
-				if(logger.isErrorEnabled()){
-					logger.error("create {} instance error: {}", ObjectName.class.getName(), e.getMessage());
+		if(poolConfiguration.getJmx() != null){
+			final Jmx jmx = poolConfiguration.getJmx();
+
+			if(Validate.hasText(jmx.getName())){
+				try{
+					dataSource.setObjectName(new ObjectName(jmx.getName()));
+				}catch(MalformedObjectNameException e){
+					if(logger.isErrorEnabled()){
+						logger.error("create {} instance error: {}", ObjectName.class.getName(), e.getMessage());
+					}
 				}
 			}
 		}

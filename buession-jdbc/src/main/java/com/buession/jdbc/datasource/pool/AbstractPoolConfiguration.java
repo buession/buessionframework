@@ -22,7 +22,9 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.jdbc.datasource.config;
+package com.buession.jdbc.datasource.pool;
+
+import com.buession.jdbc.core.Jmx;
 
 import java.time.Duration;
 
@@ -33,6 +35,11 @@ import java.time.Duration;
  * @since 1.3.2
  */
 public abstract class AbstractPoolConfiguration implements PoolConfiguration {
+
+	/**
+	 * 连接池的名称
+	 */
+	private String poolName;
 
 	/**
 	 * 初始连接数，池被启动时初始化的创建的连接个数
@@ -103,14 +110,35 @@ public abstract class AbstractPoolConfiguration implements PoolConfiguration {
 	private Duration timeBetweenEvictionRuns;
 
 	/**
-	 * 是否启用 JMX
+	 * 指定连接在被认为是废弃连接（abandoned connection）之前的超时时间
+	 *
+	 * @since 3.0.0
 	 */
-	private Boolean jmxEnabled;
+	private Duration removeAbandonedTimeout;
 
 	/**
-	 * JMX 管理对象的名称
+	 * JMX 管理对象配置
 	 */
-	private String jmxName;
+	private Jmx jmx;
+
+	/**
+	 * 返回用户定义连接池的名称
+	 *
+	 * @return 用户定义连接池的名称
+	 */
+	public String getPoolName() {
+		return poolName;
+	}
+
+	/**
+	 * 设置连接池的名称
+	 *
+	 * @param poolName
+	 * 		连接池的名称
+	 */
+	public void setPoolName(String poolName) {
+		this.poolName = poolName;
+	}
 
 	public Integer getInitialSize() {
 		return initialSize;
@@ -216,20 +244,37 @@ public abstract class AbstractPoolConfiguration implements PoolConfiguration {
 		this.timeBetweenEvictionRuns = timeBetweenEvictionRuns;
 	}
 
-	public Boolean getJmxEnabled() {
-		return jmxEnabled;
+	/**
+	 * 返回指定连接在被认为是废弃连接（abandoned connection）之前的超时时间
+	 *
+	 * @return 指定连接在被认为是废弃连接（abandoned connection）之前的超时时间
+	 *
+	 * @since 3.0.0
+	 */
+	public Duration getRemoveAbandonedTimeout() {
+		return removeAbandonedTimeout;
 	}
 
-	public void setJmxEnabled(Boolean jmxEnabled) {
-		this.jmxEnabled = jmxEnabled;
+	/**
+	 * 设置指定连接在被认为是废弃连接（abandoned connection）之前的超时时间
+	 *
+	 * @param removeAbandonedTimeout
+	 * 		指定连接在被认为是废弃连接（abandoned connection）之前的超时时间
+	 *
+	 * @since 3.0.0
+	 */
+	public void setRemoveAbandonedTimeout(Duration removeAbandonedTimeout) {
+		this.removeAbandonedTimeout = removeAbandonedTimeout;
 	}
 
-	public String getJmxName() {
-		return jmxName;
+	@Override
+	public Jmx getJmx() {
+		return jmx;
 	}
 
-	public void setJmxName(String jmxName) {
-		this.jmxName = jmxName;
+	@Override
+	public void setJmx(Jmx jmx) {
+		this.jmx = jmx;
 	}
 
 }

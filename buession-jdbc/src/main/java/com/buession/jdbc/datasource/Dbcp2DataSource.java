@@ -26,8 +26,9 @@ package com.buession.jdbc.datasource;
 
 import com.buession.core.builder.ListBuilder;
 import com.buession.core.converter.mapper.PropertyMapper;
+import com.buession.jdbc.core.Jmx;
 import com.buession.jdbc.core.TransactionIsolation;
-import com.buession.jdbc.datasource.config.Dbcp2PoolConfiguration;
+import com.buession.jdbc.datasource.pool.Dbcp2PoolConfiguration;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.time.Duration;
@@ -55,14 +56,6 @@ public class Dbcp2DataSource extends AbstractDataSource<BasicDataSource, Dbcp2Po
 	 * @since 3.0.0
 	 */
 	private String connectionFactoryClassName;
-
-	/**
-	 * 连接的最大存活时间；
-	 * 如果超过这个时间，则连接在下次激活、钝化、校验时都将会失败。如果设置为0或小于0的值，则连接的存活时间是无限的
-	 *
-	 * @since 3.0.0
-	 */
-	private Duration maxConnLifetime;
 
 	/**
 	 * 验证快速失败
@@ -284,29 +277,6 @@ public class Dbcp2DataSource extends AbstractDataSource<BasicDataSource, Dbcp2Po
 	}
 
 	/**
-	 * 返回连接的最大存活时间
-	 *
-	 * @return 连接的最大存活时间
-	 *
-	 * @since 3.0.0
-	 */
-	public Duration getMaxConnLifetime() {
-		return maxConnLifetime;
-	}
-
-	/**
-	 * 设置连接的最大存活时间
-	 *
-	 * @param maxConnLifetime
-	 * 		连接的最大存活时间
-	 *
-	 * @since 3.0.0
-	 */
-	public void setMaxConnLifetime(Duration maxConnLifetime) {
-		this.maxConnLifetime = maxConnLifetime;
-	}
-
-	/**
 	 * 返回验证快速失败
 	 *
 	 * @return 验证快速失败
@@ -505,26 +475,35 @@ public class Dbcp2DataSource extends AbstractDataSource<BasicDataSource, Dbcp2Po
 
 		propertyMapper.from(this::getDriverClassLoader).to(dataSource::setDriverClassLoader);
 		propertyMapper.from(this::getDriverClassName).to(dataSource::setDriverClassName);
+
 		propertyMapper.from(this::getUrl).to(dataSource::setUrl);
 		propertyMapper.from(this::getUsername).to(dataSource::setUsername);
 		propertyMapper.from(this::getPassword).to(dataSource::setPassword);
+
 		propertyMapper.from(this::getDefaultCatalog).to(dataSource::setDefaultCatalog);
 		propertyMapper.from(this::getDefaultSchema).to(dataSource::setDefaultSchema);
+
+		propertyMapper.from(this::getConnectionFactoryClassName).to(dataSource::setConnectionFactoryClassName);
+
 		propertyMapper.from(this::getConnectionInitSqls).to(dataSource::setConnectionInitSqls);
+
 		propertyMapper.from(this::getValidationQuery).to(dataSource::setValidationQuery);
 		propertyMapper.from(this::getValidationQueryTimeout).to(dataSource::setValidationQueryTimeout);
+		propertyMapper.from(this::isFastFailValidation).to(dataSource::setFastFailValidation);
+
 		propertyMapper.from(this::getQueryTimeout).to(dataSource::setDefaultQueryTimeout);
+
 		propertyMapper.from(this::getDefaultTransactionIsolation).as(TransactionIsolation::getValue)
 				.to(dataSource::setDefaultTransactionIsolation);
+
 		propertyMapper.from(this::isDefaultReadOnly).to(dataSource::setDefaultReadOnly);
 		propertyMapper.from(this::isDefaultAutoCommit).to(dataSource::setDefaultAutoCommit);
 		propertyMapper.from(this::isAutoCommitOnReturn).to(dataSource::setAutoCommitOnReturn);
 		propertyMapper.from(this::isRollbackOnReturn).to(dataSource::setRollbackOnReturn);
+
+
 		propertyMapper.from(this::isAccessToUnderlyingConnectionAllowed)
 				.to(dataSource::setAccessToUnderlyingConnectionAllowed);
-		propertyMapper.from(this::getConnectionFactoryClassName).to(dataSource::setConnectionFactoryClassName);
-		propertyMapper.from(this::getMaxConnLifetime).to(dataSource::setMaxConn);
-		propertyMapper.from(this::isFastFailValidation).to(dataSource::setFastFailValidation);
 		propertyMapper.from(this::isLogExpiredConnections).to(dataSource::setLogExpiredConnections);
 		propertyMapper.from(this::isCacheState).to(dataSource::setCacheState);
 		propertyMapper.from(this::getDisconnectionSqlCodes).to(dataSource::setDisconnectionSqlCodes);
@@ -548,31 +527,45 @@ public class Dbcp2DataSource extends AbstractDataSource<BasicDataSource, Dbcp2Po
 		propertyMapper.from(poolConfiguration::getMinIdle).to(dataSource::setMinIdle);
 		propertyMapper.from(poolConfiguration::getMaxIdle).to(dataSource::setMaxIdle);
 		propertyMapper.from(poolConfiguration::getMaxTotal).to(dataSource::setMaxTotal);
+
 		propertyMapper.from(poolConfiguration::getMaxWait).to(dataSource::setMaxWait);
+		propertyMapper.from(poolConfiguration::getMaxConnLifetime).to(dataSource::setMaxConn);
+
 		propertyMapper.from(poolConfiguration::isTestOnCreate).to(dataSource::setTestOnCreate);
 		propertyMapper.from(poolConfiguration::isTestOnBorrow).to(dataSource::setTestOnBorrow);
 		propertyMapper.from(poolConfiguration::isTestOnReturn).to(dataSource::setTestOnReturn);
 		propertyMapper.from(poolConfiguration::isTestWhileIdle).to(dataSource::setTestWhileIdle);
+
+		propertyMapper.from(poolConfiguration::getMinEvictableIdle).to(dataSource::setMinEvictableIdle);
+		propertyMapper.from(poolConfiguration::getSoftMinEvictableIdle).to(dataSource::setSoftMinEvictableIdle);
+		propertyMapper.from(poolConfiguration::getEvictionPolicyClassName).to(dataSource::setEvictionPolicyClassName);
+
+		propertyMapper.from(poolConfiguration::getNumTestsPerEvictionRun).to(dataSource::setNumTestsPerEvictionRun);
+		propertyMapper.from(poolConfiguration::getTimeBetweenEvictionRuns)
+				.to(dataSource::setDurationBetweenEvictionRuns);
+
 		propertyMapper.from(poolConfiguration::isPoolPreparedStatements).to(dataSource::setPoolPreparedStatements);
 		propertyMapper.from(poolConfiguration::getMaxOpenPreparedStatements)
 				.to(dataSource::setMaxOpenPreparedStatements);
 		propertyMapper.from(poolConfiguration::isClearStatementPoolOnReturn)
 				.to(dataSource::setClearStatementPoolOnReturn);
+
 		propertyMapper.from(poolConfiguration::isRemoveAbandonedOnBorrow).to(dataSource::setRemoveAbandonedOnBorrow);
 		propertyMapper.from(poolConfiguration::isRemoveAbandonedOnMaintenance)
 				.to(dataSource::setRemoveAbandonedOnMaintenance);
 		propertyMapper.from(poolConfiguration::getRemoveAbandonedTimeout).to(dataSource::setRemoveAbandonedTimeout);
 		propertyMapper.from(poolConfiguration::isAbandonedUsageTracking).to(dataSource::setAbandonedUsageTracking);
 		propertyMapper.from(poolConfiguration::isLogAbandoned).to(dataSource::setLogAbandoned);
-		propertyMapper.from(poolConfiguration::getMinEvictableIdle).to(dataSource::setMinEvictableIdle);
-		propertyMapper.from(poolConfiguration::getSoftMinEvictableIdle).to(dataSource::setSoftMinEvictableIdle);
-		propertyMapper.from(poolConfiguration::getNumTestsPerEvictionRun).to(dataSource::setNumTestsPerEvictionRun);
-		propertyMapper.from(poolConfiguration::getTimeBetweenEvictionRuns)
-				.to(dataSource::setDurationBetweenEvictionRuns);
-		propertyMapper.from(poolConfiguration::getEvictionPolicyClassName).to(dataSource::setEvictionPolicyClassName);
+
 		propertyMapper.from(poolConfiguration::isLifo).to(dataSource::setLifo);
+
 		propertyMapper.from(poolConfiguration::isRegisterConnectionMBean).to(dataSource::setRegisterConnectionMBean);
-		propertyMapper.from(poolConfiguration::getJmxName).to(dataSource::setJmxName);
+		if(poolConfiguration.getJmx() != null){
+			final Jmx jmx = poolConfiguration.getJmx();
+
+			propertyMapper.from(jmx.isEnabled()).to(dataSource::setRegisterConnectionMBean);
+			propertyMapper.from(jmx::getName).to(dataSource::setJmxName);
+		}
 	}
 
 }

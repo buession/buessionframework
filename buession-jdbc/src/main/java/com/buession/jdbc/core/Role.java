@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.jdbc.datasource;
+package com.buession.jdbc.core;
 
 /**
  * 角色
