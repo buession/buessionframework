@@ -90,6 +90,16 @@ public abstract class AbstractPoolConfiguration implements PoolConfiguration {
 	private Boolean testWhileIdle;
 
 	/**
+	 * 设置一个SQL语句, 从连接池获取连接时, 先执行改 sql, 验证连接是否可用
+	 */
+	private String validationQuery;
+
+	/**
+	 * 连接有效SQL的执行查询超时时间
+	 */
+	private Duration validationQueryTimeout;
+
+	/**
 	 * 空闲的连接被释放最低要待时间
 	 */
 	private Duration minEvictableIdle;
@@ -210,6 +220,26 @@ public abstract class AbstractPoolConfiguration implements PoolConfiguration {
 
 	public void setTestWhileIdle(Boolean testWhileIdle) {
 		this.testWhileIdle = testWhileIdle;
+	}
+
+	@Override
+	public String getValidationQuery() {
+		return validationQuery;
+	}
+
+	@Override
+	public void setValidationQuery(String validationQuery) {
+		this.validationQuery = validationQuery;
+	}
+
+	@Override
+	public Duration getValidationQueryTimeout() {
+		return validationQueryTimeout;
+	}
+
+	@Override
+	public void setValidationQueryTimeout(Duration validationQueryTimeout) {
+		this.validationQueryTimeout = validationQueryTimeout;
 	}
 
 	public Duration getMinEvictableIdle() {

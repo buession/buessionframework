@@ -52,6 +52,19 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	private Integer maxPoolSize;
 
 	/**
+	 * 设置一个SQL语句, 从连接池获取连接时, 先执行改 sql, 验证连接是否可用
+	 * 如果是使用了 JDBC 4 那么不建议配置这个选项, 因为JDBC 4 使用 ping 命令, 更加高效
+	 */
+	private String connectionTestQuery;
+
+	/**
+	 * 检测连接是否有效的超时时间
+	 *
+	 * @since 3.0.0
+	 */
+	private Duration validationTimeout;
+
+	/**
 	 * 连接允许在池中闲置的最长时间，仅适用于 minimumIdle 定义为小于 maximumPoolSize，值为 0 时空闲连接永远不会从池中删除
 	 */
 	private Duration idleTimeout;
@@ -159,6 +172,54 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	@Override
 	public void setMaxTotal(Integer maxTotal) {
 		setMaxPoolSize(maxTotal);
+	}
+
+	/**
+	 * 返回从连接池获取连接时, 验证连接是否可用的SQL语句
+	 *
+	 * @return 从连接池获取连接时, 验证连接是否可用的SQL语句
+	 *
+	 * @since 3.0.0
+	 */
+	public String getConnectionTestQuery() {
+		return connectionTestQuery;
+	}
+
+	/**
+	 * 设置从连接池获取连接时, 验证连接是否可用的SQL语句
+	 *
+	 * @param connectionTestQuery
+	 * 		从连接池获取连接时, 验证连接是否可用的SQL语句
+	 *
+	 * @since 3.0.0
+	 */
+	public void setConnectionTestQuery(String connectionTestQuery) {
+		this.connectionTestQuery = connectionTestQuery;
+		super.setValidationQuery(connectionTestQuery);
+	}
+
+	/**
+	 * 返回检测连接是否有效的超时时间
+	 *
+	 * @return 检测连接是否有效的超时时间
+	 *
+	 * @since 3.0.0
+	 */
+	public Duration getValidationTimeout() {
+		return validationTimeout;
+	}
+
+	/**
+	 * 设置检测连接是否有效的超时时间，不能大于 {@link com.buession.jdbc.datasource.HikariDataSource#getConnectionTimeout()}
+	 *
+	 * @param validationTimeout
+	 * 		检测连接是否有效的超时时间
+	 *
+	 * @since 3.0.0
+	 */
+	public void setValidationTimeout(Duration validationTimeout) {
+		this.validationTimeout = validationTimeout;
+		super.setValidationQueryTimeout(validationTimeout);
 	}
 
 	/**

@@ -36,7 +36,6 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.SQLException;
-import java.time.Duration;
 import java.util.Properties;
 
 /**
@@ -101,16 +100,6 @@ public class OracleDataSource extends AbstractDataSource<PoolDataSource, OracleP
 	 * 是否启用快速连接故障切换
 	 */
 	private Boolean fastConnectionFailoverEnabled;
-
-	/**
-	 * 验证连接使用的 SQL
-	 */
-	private String sqlForValidateConnection;
-
-	/**
-	 * 连接验证操作的超时时间
-	 */
-	private Duration connectionValidationTimeout;
 
 	/**
 	 * Oracle Notification Services (ONS) 的属性
@@ -462,56 +451,6 @@ public class OracleDataSource extends AbstractDataSource<PoolDataSource, OracleP
 	}
 
 	/**
-	 * 返回验证连接使用的 SQL
-	 *
-	 * @return 验证连接使用的 SQL
-	 */
-	public String getSqlForValidateConnection() {
-		return sqlForValidateConnection;
-	}
-
-	/**
-	 * 设置验证连接使用的 SQL
-	 *
-	 * @param sqlForValidateConnection
-	 * 		验证连接使用的 SQL
-	 */
-	public void setSqlForValidateConnection(String sqlForValidateConnection) {
-		this.sqlForValidateConnection = sqlForValidateConnection;
-		super.setValidationQuery(sqlForValidateConnection);
-	}
-
-	@Override
-	public void setValidationQuery(String validationQuery) {
-		setSqlForValidateConnection(validationQuery);
-	}
-
-	/**
-	 * 返回连接验证操作的超时时间
-	 *
-	 * @return 连接验证操作的超时时间
-	 */
-	public Duration getConnectionValidationTimeout() {
-		return connectionValidationTimeout;
-	}
-
-	/**
-	 * 设置连接验证操作的超时时间
-	 *
-	 * @param connectionValidationTimeout
-	 * 		连接验证操作的超时时间
-	 */
-	public void setConnectionValidationTimeout(Duration connectionValidationTimeout) {
-		this.connectionValidationTimeout = connectionValidationTimeout;
-		super.setValidationQueryTimeout(connectionValidationTimeout);
-	}
-
-	@Override
-	public void setValidationQueryTimeout(Duration validationQueryTimeout) {
-		setConnectionValidationTimeout(validationQueryTimeout);
-	}
-
-	/**
 	 * 返回 Oracle Notification Services (ONS) 的属性
 	 *
 	 * @return Oracle Notification Services (ONS) 的属性
@@ -597,7 +536,8 @@ public class OracleDataSource extends AbstractDataSource<PoolDataSource, OracleP
 	}
 
 	@Override
-	protected PoolDataSource createDataSource(final PropertyMapper propertyMapper) {
+	protected PoolDataSource createDataSource(final PropertyMapper nullPropertyMapper,
+											  final PropertyMapper hasTextPropertyMapper) {
 		final PoolDataSource dataSource = new PoolDataSourceImpl();
 
 		try{
@@ -658,13 +598,6 @@ public class OracleDataSource extends AbstractDataSource<PoolDataSource, OracleP
 				}
 			}
 
-			if(Validate.hasText(this.getSqlForValidateConnection())){
-				dataSource.setSQLForValidateConnection(this.getSqlForValidateConnection());
-			}
-			if(this.getConnectionValidationTimeout() != null){
-				dataSource.setConnectionValidationTimeout((int) this.getConnectionValidationTimeout().getSeconds());
-			}
-
 			if(this.isFastConnectionFailoverEnabled() != null){
 				dataSource.setFastConnectionFailoverEnabled(this.isFastConnectionFailoverEnabled());
 			}
@@ -700,7 +633,8 @@ public class OracleDataSource extends AbstractDataSource<PoolDataSource, OracleP
 	@Override
 	protected void applyPoolConfiguration(final oracle.ucp.jdbc.PoolDataSource dataSource,
 										  final OraclePoolConfiguration poolConfiguration,
-										  final PropertyMapper propertyMapper) {
+										  final PropertyMapper nullPropertyMapper,
+										  final PropertyMapper hasTextPropertyMapper) {
 		try{
 			if(poolConfiguration.getPoolName() != null){
 				dataSource.setConnectionPoolName(poolConfiguration.getPoolName());
@@ -721,6 +655,14 @@ public class OracleDataSource extends AbstractDataSource<PoolDataSource, OracleP
 
 			if(poolConfiguration.isValidateConnectionOnBorrow() != null){
 				dataSource.setValidateConnectionOnBorrow(poolConfiguration.isValidateConnectionOnBorrow());
+			}
+
+			if(Validate.hasText(poolConfiguration.getSqlForValidateConnection())){
+				dataSource.setSQLForValidateConnection(poolConfiguration.getSqlForValidateConnection());
+			}
+			if(poolConfiguration.getConnectionValidationTimeout() != null){
+				dataSource.setConnectionValidationTimeout(
+						(int) poolConfiguration.getConnectionValidationTimeout().getSeconds());
 			}
 
 			if(poolConfiguration.isCreateConnectionInBorrowThread() != null){

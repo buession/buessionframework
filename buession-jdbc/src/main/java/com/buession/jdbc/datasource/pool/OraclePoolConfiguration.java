@@ -55,6 +55,16 @@ public class OraclePoolConfiguration extends AbstractPoolConfiguration {
 	private Duration connectionWait;
 
 	/**
+	 * 验证连接使用的 SQL
+	 */
+	private String sqlForValidateConnection;
+
+	/**
+	 * 连接验证操作的超时时间
+	 */
+	private Duration connectionValidationTimeout;
+
+	/**
 	 * 连接在连接池中保持空闲状态的最大时间
 	 */
 	private Duration inactiveConnectionTimeout;
@@ -232,6 +242,56 @@ public class OraclePoolConfiguration extends AbstractPoolConfiguration {
 	@Override
 	public void setMaxWait(Duration maxWait) {
 		setConnectionWait(maxWait);
+	}
+
+	/**
+	 * 返回验证连接使用的 SQL
+	 *
+	 * @return 验证连接使用的 SQL
+	 */
+	public String getSqlForValidateConnection() {
+		return sqlForValidateConnection;
+	}
+
+	/**
+	 * 设置验证连接使用的 SQL
+	 *
+	 * @param sqlForValidateConnection
+	 * 		验证连接使用的 SQL
+	 */
+	public void setSqlForValidateConnection(String sqlForValidateConnection) {
+		this.sqlForValidateConnection = sqlForValidateConnection;
+		super.setValidationQuery(sqlForValidateConnection);
+	}
+
+	@Override
+	public void setValidationQuery(String validationQuery) {
+		setSqlForValidateConnection(validationQuery);
+	}
+
+	/**
+	 * 返回连接验证操作的超时时间
+	 *
+	 * @return 连接验证操作的超时时间
+	 */
+	public Duration getConnectionValidationTimeout() {
+		return connectionValidationTimeout;
+	}
+
+	/**
+	 * 设置连接验证操作的超时时间
+	 *
+	 * @param connectionValidationTimeout
+	 * 		连接验证操作的超时时间
+	 */
+	public void setConnectionValidationTimeout(Duration connectionValidationTimeout) {
+		this.connectionValidationTimeout = connectionValidationTimeout;
+		super.setValidationQueryTimeout(connectionValidationTimeout);
+	}
+
+	@Override
+	public void setValidationQueryTimeout(Duration validationQueryTimeout) {
+		setConnectionValidationTimeout(validationQueryTimeout);
 	}
 
 	/**

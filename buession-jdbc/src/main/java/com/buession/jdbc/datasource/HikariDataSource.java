@@ -44,9 +44,12 @@ import java.util.Properties;
  */
 public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.HikariDataSource, HikariPoolConfiguration> {
 
-	private String dataSourceClassName;
-
-	private String dataSourceJndiName;
+	/**
+	 * JNDI 数据源的名称
+	 *
+	 * @since 3.0.0
+	 */
+	private String jndiName;
 
 	/**
 	 * 从连接池获取连接时最大等待时间
@@ -73,21 +76,6 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 	 * @since 3.0.0
 	 */
 	private String connectionInitSql;
-
-	/**
-	 * 设置一个SQL语句, 从连接池获取连接时, 先执行改 sql, 验证连接是否可用
-	 * 如果是使用了 JDBC 4 那么不建议配置这个选项, 因为JDBC 4 使用 ping 命令, 更加高效
-	 *
-	 * @since 3.0.0
-	 */
-	private String connectionTestQuery;
-
-	/**
-	 * 检测连接是否有效的超时时间
-	 *
-	 * @since 3.0.0
-	 */
-	private Duration validationTimeout;
 
 	/**
 	 * 默认事务隔离级别
@@ -246,6 +234,29 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 	}
 
 	/**
+	 * 返回 JNDI 数据源的名称
+	 *
+	 * @return JNDI 数据源的名称
+	 *
+	 * @since 3.0.0
+	 */
+	public String getJndiName() {
+		return jndiName;
+	}
+
+	/**
+	 * 设置 JNDI 数据源的名称
+	 *
+	 * @param jndiName
+	 * 		JNDI 数据源的名称
+	 *
+	 * @since 3.0.0
+	 */
+	public void setJndiName(String jndiName) {
+		this.jndiName = jndiName;
+	}
+
+	/**
 	 * 返回从连接池获取连接时最大等待时间
 	 *
 	 * @return 从连接池获取连接时最大等待时间
@@ -349,54 +360,6 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 	@Override
 	public void setInitSQL(String initSQL) {
 		setConnectionInitSql(initSQL);
-	}
-
-	/**
-	 * 返回从连接池获取连接时, 验证连接是否可用的SQL语句
-	 *
-	 * @return 从连接池获取连接时, 验证连接是否可用的SQL语句
-	 *
-	 * @since 3.0.0
-	 */
-	public String getConnectionTestQuery() {
-		return connectionTestQuery;
-	}
-
-	/**
-	 * 设置从连接池获取连接时, 验证连接是否可用的SQL语句
-	 *
-	 * @param connectionTestQuery
-	 * 		从连接池获取连接时, 验证连接是否可用的SQL语句
-	 *
-	 * @since 3.0.0
-	 */
-	public void setConnectionTestQuery(String connectionTestQuery) {
-		this.connectionTestQuery = connectionTestQuery;
-		super.setValidationQuery(connectionTestQuery);
-	}
-
-	/**
-	 * 返回检测连接是否有效的超时时间
-	 *
-	 * @return 检测连接是否有效的超时时间
-	 *
-	 * @since 3.0.0
-	 */
-	public Duration getValidationTimeout() {
-		return validationTimeout;
-	}
-
-	/**
-	 * 设置检测连接是否有效的超时时间，不能大于 {@link #getConnectionTimeout()}
-	 *
-	 * @param validationTimeout
-	 * 		检测连接是否有效的超时时间
-	 *
-	 * @since 3.0.0
-	 */
-	public void setValidationTimeout(Duration validationTimeout) {
-		this.validationTimeout = validationTimeout;
-		super.setValidationQueryTimeout(validationTimeout);
 	}
 
 	/**
@@ -546,33 +509,32 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 	}
 
 	@Override
-	protected com.zaxxer.hikari.HikariDataSource createDataSource(final PropertyMapper propertyMapper) {
+	protected com.zaxxer.hikari.HikariDataSource createDataSource(final PropertyMapper nullPropertyMapper,
+																  final PropertyMapper hasTextPropertyMapper) {
 		final com.zaxxer.hikari.HikariDataSource dataSource = new com.zaxxer.hikari.HikariDataSource();
 
-		propertyMapper.from(this::getDriverClassName).to(dataSource::setDriverClassName);
+		hasTextPropertyMapper.from(this::getDriverClassName).to(dataSource::setDriverClassName);
 
-		propertyMapper.from(this::getUrl).to(dataSource::setJdbcUrl);
-		propertyMapper.from(this::getUsername).to(dataSource::setUsername);
-		propertyMapper.from(this::getPassword).to(dataSource::setPassword);
+		hasTextPropertyMapper.from(this::getJndiName).to(dataSource::setDataSourceJNDI);
+		hasTextPropertyMapper.from(this::getUrl).to(dataSource::setJdbcUrl);
+		hasTextPropertyMapper.from(this::getUsername).to(dataSource::setUsername);
+		hasTextPropertyMapper.from(this::getPassword).to(dataSource::setPassword);
 
-		propertyMapper.from(this::getConnectionTimeout).as(Duration::toMillis).to(dataSource::setConnectionTimeout);
+		nullPropertyMapper.from(this::getConnectionTimeout).as(Duration::toMillis).to(dataSource::setConnectionTimeout);
 
-		propertyMapper.from(this::getCatalog).to(dataSource::setCatalog);
-		propertyMapper.from(this::getSchema).to(dataSource::setSchema);
+		hasTextPropertyMapper.from(this::getCatalog).to(dataSource::setCatalog);
+		hasTextPropertyMapper.from(this::getSchema).to(dataSource::setSchema);
 
-		propertyMapper.from(this::getConnectionInitSql).to(dataSource::setConnectionInitSql);
+		hasTextPropertyMapper.from(this::getConnectionInitSql).to(dataSource::setConnectionInitSql);
 
-		propertyMapper.from(this::getConnectionTestQuery).to(dataSource::setConnectionTestQuery);
-		propertyMapper.from(this::getValidationTimeout).as(Duration::toMillis).to(dataSource::setValidationTimeout);
-
-		propertyMapper.from(this::getTransactionIsolation).as((v)->"TRANSACTION_" + v.name())
+		nullPropertyMapper.from(this::getTransactionIsolation).as((v)->"TRANSACTION_" + v.name())
 				.to(dataSource::setTransactionIsolation);
-		propertyMapper.from(this::isIsolateInternalQueries).to(dataSource::setIsolateInternalQueries);
+		nullPropertyMapper.from(this::isIsolateInternalQueries).to(dataSource::setIsolateInternalQueries);
+		nullPropertyMapper.from(this::isAutoCommit).to(dataSource::setAutoCommit);
 
-		propertyMapper.from(this::isAutoCommit).to(dataSource::setAutoCommit);
-		propertyMapper.from(this::isReadOnly).to(dataSource::setReadOnly);
+		nullPropertyMapper.from(this::isReadOnly).to(dataSource::setReadOnly);
 
-		propertyMapper.from(this::getDataSourceProperties).to(dataSource::setDataSourceProperties);
+		nullPropertyMapper.from(this::getDataSourceProperties).to(dataSource::setDataSourceProperties);
 
 		return dataSource;
 	}
@@ -580,26 +542,32 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 	@Override
 	protected void applyPoolConfiguration(final com.zaxxer.hikari.HikariDataSource dataSource,
 										  final HikariPoolConfiguration poolConfiguration,
-										  final PropertyMapper propertyMapper) {
-		propertyMapper.from(poolConfiguration::getPoolName).to(dataSource::setPoolName);
+										  final PropertyMapper nullPropertyMapper,
+										  final PropertyMapper hasTextPropertyMapper) {
+		hasTextPropertyMapper.from(poolConfiguration::getPoolName).to(dataSource::setPoolName);
 
-		propertyMapper.from(poolConfiguration::getInitializationFailTimeout).as(Duration::toMillis)
+		nullPropertyMapper.from(poolConfiguration::getInitializationFailTimeout).as(Duration::toMillis)
 				.to(dataSource::setInitializationFailTimeout);
 
-		propertyMapper.from(poolConfiguration::getMinIdle).to(dataSource::setMinimumIdle);
-		propertyMapper.from(poolConfiguration::getMaxPoolSize).to(dataSource::setMaximumPoolSize);
+		nullPropertyMapper.from(poolConfiguration::getMinIdle).to(dataSource::setMinimumIdle);
+		nullPropertyMapper.from(poolConfiguration::getMaxPoolSize).to(dataSource::setMaximumPoolSize);
 
-		propertyMapper.from(poolConfiguration::getKeepaliveTime).as(Duration::toMillis)
+		hasTextPropertyMapper.from(poolConfiguration::getConnectionTestQuery).to(dataSource::setConnectionTestQuery);
+		nullPropertyMapper.from(poolConfiguration::getValidationTimeout).as(Duration::toMillis)
+				.to(dataSource::setValidationTimeout);
+
+		nullPropertyMapper.from(poolConfiguration::getKeepaliveTime).as(Duration::toMillis)
 				.to(dataSource::setKeepaliveTime);
-		propertyMapper.from(poolConfiguration::getIdleTimeout).as(Duration::toMillis).to(dataSource::setIdleTimeout);
-		propertyMapper.from(poolConfiguration::getMaxLifetime).as(Duration::toMillis).to(dataSource::setMaxLifetime);
+		nullPropertyMapper.from(poolConfiguration::getIdleTimeout).as(Duration::toMillis)
+				.to(dataSource::setIdleTimeout);
+		nullPropertyMapper.from(poolConfiguration::getMaxLifetime).as(Duration::toMillis)
+				.to(dataSource::setMaxLifetime);
 
-		propertyMapper.from(poolConfiguration::getThreadFactory).to(dataSource::setThreadFactory);
-		propertyMapper.from(poolConfiguration::getScheduledExecutor).to(dataSource::setScheduledExecutor);
-		propertyMapper.from(poolConfiguration::getLeakDetectionThreshold).as(Duration::toMillis)
+		nullPropertyMapper.from(poolConfiguration::getThreadFactory).to(dataSource::setThreadFactory);
+		nullPropertyMapper.from(poolConfiguration::getScheduledExecutor).to(dataSource::setScheduledExecutor);
+		nullPropertyMapper.from(poolConfiguration::getLeakDetectionThreshold).as(Duration::toMillis)
 				.to(dataSource::setLeakDetectionThreshold);
-		propertyMapper.from(poolConfiguration::isAllowPoolSuspension).to(dataSource::setAllowPoolSuspension);
-
+		nullPropertyMapper.from(poolConfiguration::isAllowPoolSuspension).to(dataSource::setAllowPoolSuspension);
 
 		if(Validate.hasText(poolConfiguration.getMetricsTrackerFactoryClassName())){
 			try{
@@ -631,13 +599,13 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 			}
 		}
 
-		propertyMapper.from(poolConfiguration::getHealthCheckProperties).to(dataSource::setHealthCheckProperties);
+		nullPropertyMapper.from(poolConfiguration::getHealthCheckProperties).to(dataSource::setHealthCheckProperties);
 
-		propertyMapper.from(poolConfiguration::isRegisterMbeans).to(dataSource::setRegisterMbeans);
+		nullPropertyMapper.from(poolConfiguration::isRegisterMbeans).to(dataSource::setRegisterMbeans);
 		if(poolConfiguration.getJmx() != null){
 			final Jmx jmx = poolConfiguration.getJmx();
 
-			propertyMapper.from(jmx::isEnabled).to(dataSource::setRegisterMbeans);
+			nullPropertyMapper.from(jmx::isEnabled).to(dataSource::setRegisterMbeans);
 		}
 	}
 

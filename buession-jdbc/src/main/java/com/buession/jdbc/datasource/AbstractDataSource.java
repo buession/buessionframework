@@ -109,20 +109,6 @@ public abstract class AbstractDataSource<DS extends javax.sql.DataSource, P exte
 	private String initSQL;
 
 	/**
-	 * 设置一个SQL语句, 从连接池获取连接时, 先执行改 sql, 验证连接是否可用
-	 *
-	 * @since 3.0.0
-	 */
-	private String validationQuery;
-
-	/**
-	 * 连接有效SQL的执行查询超时时间
-	 *
-	 * @since 3.0.0
-	 */
-	private Duration validationQueryTimeout;
-
-	/**
 	 * 查询超时时间
 	 *
 	 * @since 3.0.0
@@ -137,18 +123,18 @@ public abstract class AbstractDataSource<DS extends javax.sql.DataSource, P exte
 	private TransactionIsolation defaultTransactionIsolation = TransactionIsolation.DEFAULT;
 
 	/**
-	 * 默认连接是否是只读模式
-	 *
-	 * @since 3.0.0
-	 */
-	private Boolean defaultReadOnly;
-
-	/**
 	 * 默认是否自动提交事务
 	 *
 	 * @since 3.0.0
 	 */
 	private Boolean defaultAutoCommit;
+
+	/**
+	 * 默认连接是否是只读模式
+	 *
+	 * @since 3.0.0
+	 */
+	private Boolean defaultReadOnly;
 
 	/**
 	 * PoolGuard 是否可以访问底层连接
@@ -383,27 +369,6 @@ public abstract class AbstractDataSource<DS extends javax.sql.DataSource, P exte
 	}
 
 	@Override
-	public String getValidationQuery() {
-		return validationQuery;
-	}
-
-	@Override
-	public void setValidationQuery(String validationQuery) {
-		this.validationQuery = validationQuery;
-	}
-
-	@Override
-	public Duration getValidationQueryTimeout() {
-		return validationQueryTimeout;
-	}
-
-
-	@Override
-	public void setValidationQueryTimeout(Duration validationQueryTimeout) {
-		this.validationQueryTimeout = validationQueryTimeout;
-	}
-
-	@Override
 	public Duration getQueryTimeout() {
 		return queryTimeout;
 	}
@@ -424,16 +389,6 @@ public abstract class AbstractDataSource<DS extends javax.sql.DataSource, P exte
 	}
 
 	@Override
-	public Boolean getDefaultReadOnly() {
-		return defaultReadOnly;
-	}
-
-	@Override
-	public void setDefaultReadOnly(Boolean defaultReadOnly) {
-		this.defaultReadOnly = defaultReadOnly;
-	}
-
-	@Override
 	public Boolean getDefaultAutoCommit() {
 		return defaultAutoCommit;
 	}
@@ -441,6 +396,16 @@ public abstract class AbstractDataSource<DS extends javax.sql.DataSource, P exte
 	@Override
 	public void setDefaultAutoCommit(Boolean defaultAutoCommit) {
 		this.defaultAutoCommit = defaultAutoCommit;
+	}
+
+	@Override
+	public Boolean getDefaultReadOnly() {
+		return defaultReadOnly;
+	}
+
+	@Override
+	public void setDefaultReadOnly(Boolean defaultReadOnly) {
+		this.defaultReadOnly = defaultReadOnly;
 	}
 
 	@Override
@@ -472,20 +437,23 @@ public abstract class AbstractDataSource<DS extends javax.sql.DataSource, P exte
 	}
 
 	public DS createDataSource() {
-		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
-		final DS dataSource = createDataSource(propertyMapper);
+		final PropertyMapper nullPropertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
+		final PropertyMapper hasTextPropertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
+		final DS dataSource = createDataSource(nullPropertyMapper, hasTextPropertyMapper);
 
 		if(getPoolConfiguration() != null){
-			applyPoolConfiguration(dataSource, getPoolConfiguration(), propertyMapper);
+			applyPoolConfiguration(dataSource, getPoolConfiguration(), nullPropertyMapper, hasTextPropertyMapper);
 		}
 
 		return dataSource;
 	}
 
-	protected abstract DS createDataSource(final PropertyMapper propertyMapper);
+	protected abstract DS createDataSource(final PropertyMapper nullPropertyMapper,
+										   final PropertyMapper hasTextPropertyMapper);
 
 	protected void applyPoolConfiguration(final DS dataSource, final P poolConfiguration,
-										  final PropertyMapper propertyMapper) {
+										  final PropertyMapper nullPropertyMapper,
+										  final PropertyMapper hasTextPropertyMapper) {
 
 	}
 

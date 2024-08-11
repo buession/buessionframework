@@ -1278,19 +1278,20 @@ public class DruidDataSource
 	}
 
 	@Override
-	protected com.alibaba.druid.pool.DruidDataSource createDataSource(final PropertyMapper propertyMapper) {
+	protected com.alibaba.druid.pool.DruidDataSource createDataSource(final PropertyMapper nullPropertyMapper,
+																	  final PropertyMapper hasTextPropertyMapper) {
 		final com.alibaba.druid.pool.DruidDataSource dataSource = getFairLock() == null ?
 				new com.alibaba.druid.pool.DruidDataSource() : new com.alibaba.druid.pool.DruidDataSource(
 				getFairLock());
 
-		propertyMapper.from(this::getDriverClassLoader).to(dataSource::setDriverClassLoader);
-		propertyMapper.from(this::getDriverClassName).to(dataSource::setDriverClassName);
+		nullPropertyMapper.from(this::getDriverClassLoader).to(dataSource::setDriverClassLoader);
+		hasTextPropertyMapper.from(this::getDriverClassName).to(dataSource::setDriverClassName);
 
-		propertyMapper.from(this::getUrl).to(dataSource::setUrl);
-		propertyMapper.from(this::getUsername).to(dataSource::setUsername);
-		propertyMapper.from(this::getPassword).to(dataSource::setPassword);
+		hasTextPropertyMapper.from(this::getUrl).to(dataSource::setUrl);
+		hasTextPropertyMapper.from(this::getUsername).to(dataSource::setUsername);
+		hasTextPropertyMapper.from(this::getPassword).to(dataSource::setPassword);
 
-		propertyMapper.from(this::getLoginTimeout).as((v)->(int) v.getSeconds()).to(dataSource::setLoginTimeout);
+		nullPropertyMapper.from(this::getLoginTimeout).as((v)->(int) v.getSeconds()).to(dataSource::setLoginTimeout);
 
 		try{
 			if(Validate.hasText(this.getUserCallbackClassName())){
@@ -1314,38 +1315,33 @@ public class DruidDataSource
 			logger.error("load passwordCallback[{}] error : {}", this.getPasswordCallbackClassName(), e.getMessage());
 		}
 
-		propertyMapper.from(this::getConnectTimeout).as((v)->(int) v.toMillis()).to(dataSource::setConnectTimeout);
-		propertyMapper.from(this::getSocketTimeout).as((v)->(int) v.toMillis()).to(dataSource::setSocketTimeout);
-		propertyMapper.from(this::getLoginTimeout).as((v)->(int) v.getSeconds()).to(dataSource::setLoginTimeout);
+		nullPropertyMapper.from(this::getConnectTimeout).as((v)->(int) v.toMillis()).to(dataSource::setConnectTimeout);
+		nullPropertyMapper.from(this::getSocketTimeout).as((v)->(int) v.toMillis()).to(dataSource::setSocketTimeout);
+		nullPropertyMapper.from(this::getLoginTimeout).as((v)->(int) v.getSeconds()).to(dataSource::setLoginTimeout);
 
-		propertyMapper.from(this::getDefaultCatalog).to(dataSource::setDefaultCatalog);
+		hasTextPropertyMapper.from(this::getDefaultCatalog).to(dataSource::setDefaultCatalog);
 
-		propertyMapper.from(this::getConnectionInitSqls).to(dataSource::setConnectionInitSqls);
+		nullPropertyMapper.from(this::getConnectionInitSqls).to(dataSource::setConnectionInitSqls);
 
-		propertyMapper.from(this::getValidationQuery).to(dataSource::setValidationQuery);
-		propertyMapper.from(this::getValidationQueryTimeout).as((v)->(int) v.getSeconds())
-				.to(dataSource::setValidationQueryTimeout);
+		nullPropertyMapper.from(this::getQueryTimeout).as((v)->(int) v.getSeconds()).to(dataSource::setQueryTimeout);
 
-		propertyMapper.from(this::getQueryTimeout).as((v)->(int) v.getSeconds()).to(dataSource::setQueryTimeout);
-
-		propertyMapper.from(this::getDefaultTransactionIsolation).as(TransactionIsolation::getValue)
+		nullPropertyMapper.from(this::getDefaultTransactionIsolation).as(TransactionIsolation::getValue)
 				.to(dataSource::setDefaultTransactionIsolation);
-		propertyMapper.from(this::getTransactionQueryTimeout).as((v)->(int) v.getSeconds())
+		nullPropertyMapper.from(this::getTransactionQueryTimeout).as((v)->(int) v.getSeconds())
 				.to(dataSource::setTransactionQueryTimeout);
-		propertyMapper.from(this::getTransactionThreshold).as(Duration::toMillis)
+		nullPropertyMapper.from(this::getTransactionThreshold).as(Duration::toMillis)
 				.to(dataSource::setTransactionThresholdMillis);
+		nullPropertyMapper.from(this::isDefaultAutoCommit).to(dataSource::setDefaultAutoCommit);
 
-		propertyMapper.from(this::isDefaultReadOnly).to(dataSource::setDefaultReadOnly);
-		propertyMapper.from(this::isDefaultAutoCommit).to(dataSource::setDefaultAutoCommit);
+		nullPropertyMapper.from(this::isDefaultReadOnly).to(dataSource::setDefaultReadOnly);
 
-
-		propertyMapper.from(this::getTimeBetweenConnectError).as(Duration::toMillis)
+		nullPropertyMapper.from(this::getTimeBetweenConnectError).as(Duration::toMillis)
 				.to(dataSource::setTimeBetweenConnectErrorMillis);
-		propertyMapper.from(this::isKillWhenSocketReadTimeout).to(dataSource::setKillWhenSocketReadTimeout);
-		propertyMapper.from(this::isAccessToUnderlyingConnectionAllowed)
+		nullPropertyMapper.from(this::isKillWhenSocketReadTimeout).to(dataSource::setKillWhenSocketReadTimeout);
+		nullPropertyMapper.from(this::isAccessToUnderlyingConnectionAllowed)
 				.to(dataSource::setAccessToUnderlyingConnectionAllowed);
-		propertyMapper.from(this::getPhyTimeout).as(Duration::toMillis).to(dataSource::setPhyTimeoutMillis);
-		propertyMapper.from(this::getPhyMaxUseCount).to(dataSource::setPhyMaxUseCount);
+		nullPropertyMapper.from(this::getPhyTimeout).as(Duration::toMillis).to(dataSource::setPhyTimeoutMillis);
+		nullPropertyMapper.from(this::getPhyMaxUseCount).to(dataSource::setPhyMaxUseCount);
 
 		if(Validate.hasText(this.getValidConnectionCheckerClassName())){
 			try{
@@ -1357,8 +1353,8 @@ public class DruidDataSource
 			}
 		}
 
-		propertyMapper.from(this::getConnectionErrorRetryAttempts).to(dataSource::setConnectionErrorRetryAttempts);
-		propertyMapper.from(this::isInitExceptionThrow).to(dataSource::setInitExceptionThrow);
+		nullPropertyMapper.from(this::getConnectionErrorRetryAttempts).to(dataSource::setConnectionErrorRetryAttempts);
+		nullPropertyMapper.from(this::isInitExceptionThrow).to(dataSource::setInitExceptionThrow);
 
 		if(Validate.hasText(this.getExceptionSorterClassName())){
 			try{
@@ -1370,23 +1366,23 @@ public class DruidDataSource
 			}
 		}
 
-		propertyMapper.from(this::isAsyncCloseConnectionEnable).to(dataSource::setAsyncCloseConnectionEnable);
-		propertyMapper.from(this::isUseOracleImplicitCache).to(dataSource::setUseOracleImplicitCache);
-		propertyMapper.from(this::isAsyncInit).to(dataSource::setAsyncInit);
+		nullPropertyMapper.from(this::isAsyncCloseConnectionEnable).to(dataSource::setAsyncCloseConnectionEnable);
+		nullPropertyMapper.from(this::isUseOracleImplicitCache).to(dataSource::setUseOracleImplicitCache);
+		nullPropertyMapper.from(this::isAsyncInit).to(dataSource::setAsyncInit);
 
-		propertyMapper.from(this::isInitVariants).to(dataSource::setInitVariants);
-		propertyMapper.from(this::isInitGlobalVariants).to(dataSource::setInitGlobalVariants);
+		nullPropertyMapper.from(this::isInitVariants).to(dataSource::setInitVariants);
+		nullPropertyMapper.from(this::isInitGlobalVariants).to(dataSource::setInitGlobalVariants);
 
-		propertyMapper.from(this::getCreateScheduler).to(dataSource::setCreateScheduler);
-		propertyMapper.from(this::getDestroyScheduler).to(dataSource::setDestroyScheduler);
+		nullPropertyMapper.from(this::getCreateScheduler).to(dataSource::setCreateScheduler);
+		nullPropertyMapper.from(this::getDestroyScheduler).to(dataSource::setDestroyScheduler);
 
-		propertyMapper.from(this::isFailFast).to(dataSource::setFailFast);
-		propertyMapper.from(this::isCheckExecuteTime).to(dataSource::setCheckExecuteTime);
-		propertyMapper.from(this::isUseGlobalDataSourceStat).to(dataSource::setUseGlobalDataSourceStat);
-		propertyMapper.from(this::getStatLoggerClassName).to(dataSource::setStatLoggerClassName);
-		propertyMapper.from(this::isResetStatEnable).to(dataSource::setResetStatEnable);
+		nullPropertyMapper.from(this::isFailFast).to(dataSource::setFailFast);
+		nullPropertyMapper.from(this::isCheckExecuteTime).to(dataSource::setCheckExecuteTime);
+		nullPropertyMapper.from(this::isUseGlobalDataSourceStat).to(dataSource::setUseGlobalDataSourceStat);
+		hasTextPropertyMapper.from(this::getStatLoggerClassName).to(dataSource::setStatLoggerClassName);
+		nullPropertyMapper.from(this::isResetStatEnable).to(dataSource::setResetStatEnable);
 
-		propertyMapper.from(this::getConnectionProperties).to(dataSource::setConnectProperties);
+		nullPropertyMapper.from(this::getConnectionProperties).to(dataSource::setConnectProperties);
 
 		if(Validate.isNotEmpty(this.getFilters())){
 			try{
@@ -1407,8 +1403,8 @@ public class DruidDataSource
 			System.setProperty("druid.load.spifilter.skip", Boolean.toString(this.getLoadSpifilterSkip()));
 		}
 
-		propertyMapper.from(this::isClearFiltersEnable).to(dataSource::setClearFiltersEnable);
-		propertyMapper.from(this::isEnable).to(dataSource::setEnable);
+		nullPropertyMapper.from(this::isClearFiltersEnable).to(dataSource::setClearFiltersEnable);
+		nullPropertyMapper.from(this::isEnable).to(dataSource::setEnable);
 
 		return dataSource;
 	}
@@ -1416,63 +1412,72 @@ public class DruidDataSource
 	@Override
 	protected void applyPoolConfiguration(final com.alibaba.druid.pool.DruidDataSource dataSource,
 										  final DruidPoolConfiguration poolConfiguration,
-										  final PropertyMapper propertyMapper) {
-		propertyMapper.from(poolConfiguration::getPoolName).to(dataSource::setName);
+										  final PropertyMapper nullPropertyMapper,
+										  final PropertyMapper hasTextPropertyMapper) {
+		hasTextPropertyMapper.from(poolConfiguration::getPoolName).to(dataSource::setName);
 
-		propertyMapper.from(poolConfiguration::getInitialSize).to(dataSource::setInitialSize);
-		propertyMapper.from(poolConfiguration::getMinIdle).to(dataSource::setMinIdle);
-		propertyMapper.from(poolConfiguration::getMaxIdle).to(dataSource::setMaxIdle);
-		propertyMapper.from(poolConfiguration::getMaxActive).to(dataSource::setMaxActive);
-		propertyMapper.from(poolConfiguration::getOnFatalErrorMaxActive).to(dataSource::setOnFatalErrorMaxActive);
+		nullPropertyMapper.from(poolConfiguration::getInitialSize).to(dataSource::setInitialSize);
+		nullPropertyMapper.from(poolConfiguration::getMinIdle).to(dataSource::setMinIdle);
+		nullPropertyMapper.from(poolConfiguration::getMaxIdle).to(dataSource::setMaxIdle);
+		nullPropertyMapper.from(poolConfiguration::getMaxActive).to(dataSource::setMaxActive);
+		nullPropertyMapper.from(poolConfiguration::getOnFatalErrorMaxActive).to(dataSource::setOnFatalErrorMaxActive);
 
-		propertyMapper.from(poolConfiguration::getMaxWait).as(Duration::toMillis).to(dataSource::setMaxWait);
+		nullPropertyMapper.from(poolConfiguration::getMaxWait).as(Duration::toMillis).to(dataSource::setMaxWait);
 
-		propertyMapper.from(poolConfiguration::getMaxCreateTaskCount).to(dataSource::setMaxCreateTaskCount);
-		propertyMapper.from(poolConfiguration::getMaxWaitThreadCount).to(dataSource::setMaxWaitThreadCount);
-		propertyMapper.from(poolConfiguration::getNotFullTimeoutRetryCount).to(dataSource::setNotFullTimeoutRetryCount);
+		nullPropertyMapper.from(poolConfiguration::getMaxCreateTaskCount).to(dataSource::setMaxCreateTaskCount);
+		nullPropertyMapper.from(poolConfiguration::getMaxWaitThreadCount).to(dataSource::setMaxWaitThreadCount);
+		nullPropertyMapper.from(poolConfiguration::getNotFullTimeoutRetryCount)
+				.to(dataSource::setNotFullTimeoutRetryCount);
 
-		propertyMapper.from(poolConfiguration::isTestOnBorrow).to(dataSource::setTestOnBorrow);
-		propertyMapper.from(poolConfiguration::isTestOnReturn).to(dataSource::setTestOnReturn);
-		propertyMapper.from(poolConfiguration::isTestWhileIdle).to(dataSource::setTestWhileIdle);
-		propertyMapper.from(poolConfiguration::getKeepAlive).to(dataSource::setKeepAlive);
+		nullPropertyMapper.from(poolConfiguration::isTestOnBorrow).to(dataSource::setTestOnBorrow);
+		nullPropertyMapper.from(poolConfiguration::isTestOnReturn).to(dataSource::setTestOnReturn);
+		nullPropertyMapper.from(poolConfiguration::isTestWhileIdle).to(dataSource::setTestWhileIdle);
 
-		propertyMapper.from(poolConfiguration::getKeepAliveBetweenTime).as(Duration::toMillis)
+		hasTextPropertyMapper.from(poolConfiguration::getValidationQuery).to(dataSource::setValidationQuery);
+		nullPropertyMapper.from(poolConfiguration::getValidationQueryTimeout).as((v)->(int) v.getSeconds())
+				.to(dataSource::setValidationQueryTimeout);
+
+		nullPropertyMapper.from(poolConfiguration::getKeepAlive).to(dataSource::setKeepAlive);
+
+		nullPropertyMapper.from(poolConfiguration::getKeepAliveBetweenTime).as(Duration::toMillis)
 				.to(dataSource::setKeepAliveBetweenTimeMillis);
 
-		propertyMapper.from(poolConfiguration::isUsePingMethod).to(dataSource::setUsePingMethod);
+		nullPropertyMapper.from(poolConfiguration::isUsePingMethod).to(dataSource::setUsePingMethod);
 
-		propertyMapper.from(poolConfiguration::getMinEvictableIdle).as(Duration::toMillis)
+		nullPropertyMapper.from(poolConfiguration::getMinEvictableIdle).as(Duration::toMillis)
 				.to(dataSource::setMinEvictableIdleTimeMillis);
-		propertyMapper.from(poolConfiguration::getMaxEvictableIdle).as(Duration::toMillis)
+		nullPropertyMapper.from(poolConfiguration::getMaxEvictableIdle).as(Duration::toMillis)
 				.to(dataSource::setMaxEvictableIdleTimeMillis);
 
-		propertyMapper.from(poolConfiguration::getNumTestsPerEvictionRun).to(dataSource::setNumTestsPerEvictionRun);
-		propertyMapper.from(poolConfiguration::getTimeBetweenEvictionRuns).as(Duration::toMillis)
+		nullPropertyMapper.from(poolConfiguration::getNumTestsPerEvictionRun).to(dataSource::setNumTestsPerEvictionRun);
+		nullPropertyMapper.from(poolConfiguration::getTimeBetweenEvictionRuns).as(Duration::toMillis)
 				.to(dataSource::setTimeBetweenEvictionRunsMillis);
 
-		propertyMapper.from(poolConfiguration::isKeepConnectionUnderlyingTransactionIsolation)
+		nullPropertyMapper.from(poolConfiguration::isKeepConnectionUnderlyingTransactionIsolation)
 				.to(dataSource::setKeepConnectionUnderlyingTransactionIsolation);
 
-		propertyMapper.from(poolConfiguration::isBreakAfterAcquireFailure).to(dataSource::setBreakAfterAcquireFailure);
+		nullPropertyMapper.from(poolConfiguration::isBreakAfterAcquireFailure)
+				.to(dataSource::setBreakAfterAcquireFailure);
 
-		propertyMapper.from(poolConfiguration::isPoolPreparedStatements).to(dataSource::setPoolPreparedStatements);
-		propertyMapper.from(poolConfiguration::isSharePreparedStatements).to(dataSource::setSharePreparedStatements);
-		propertyMapper.from(poolConfiguration::getMaxOpenPreparedStatements)
+		nullPropertyMapper.from(poolConfiguration::isPoolPreparedStatements).to(dataSource::setPoolPreparedStatements);
+		nullPropertyMapper.from(poolConfiguration::isSharePreparedStatements)
+				.to(dataSource::setSharePreparedStatements);
+		nullPropertyMapper.from(poolConfiguration::getMaxOpenPreparedStatements)
 				.to(dataSource::setMaxOpenPreparedStatements);
-		propertyMapper.from(poolConfiguration::getMaxPoolPreparedStatementPerConnectionSize)
+		nullPropertyMapper.from(poolConfiguration::getMaxPoolPreparedStatementPerConnectionSize)
 				.to(dataSource::setMaxPoolPreparedStatementPerConnectionSize);
 
-		propertyMapper.from(poolConfiguration::isRemoveAbandoned).to(dataSource::setRemoveAbandoned);
-		propertyMapper.from(poolConfiguration::getRemoveAbandonedTimeout).as(Duration::toMillis)
+		nullPropertyMapper.from(poolConfiguration::isRemoveAbandoned).to(dataSource::setRemoveAbandoned);
+		nullPropertyMapper.from(poolConfiguration::getRemoveAbandonedTimeout).as(Duration::toMillis)
 				.to(dataSource::setRemoveAbandonedTimeoutMillis);
-		propertyMapper.from(poolConfiguration::isLogAbandoned).to(dataSource::setLogAbandoned);
+		nullPropertyMapper.from(poolConfiguration::isLogAbandoned).to(dataSource::setLogAbandoned);
 
-		propertyMapper.from(poolConfiguration::isUseLocalSessionState).to(dataSource::setUseLocalSessionState);
+		nullPropertyMapper.from(poolConfiguration::isUseLocalSessionState).to(dataSource::setUseLocalSessionState);
 
-		propertyMapper.from(poolConfiguration::getTimeBetweenLogStats).as(Duration::toMillis)
+		nullPropertyMapper.from(poolConfiguration::getTimeBetweenLogStats).as(Duration::toMillis)
 				.to(dataSource::setTimeBetweenLogStatsMillis);
-		propertyMapper.from(poolConfiguration::isDupCloseLogEnable).to(dataSource::setDupCloseLogEnable);
-		propertyMapper.from(poolConfiguration::isLogDifferentThread).to(dataSource::setLogDifferentThread);
+		nullPropertyMapper.from(poolConfiguration::isDupCloseLogEnable).to(dataSource::setDupCloseLogEnable);
+		nullPropertyMapper.from(poolConfiguration::isLogDifferentThread).to(dataSource::setLogDifferentThread);
 
 		if(poolConfiguration.getJmx() != null){
 			final Jmx jmx = poolConfiguration.getJmx();

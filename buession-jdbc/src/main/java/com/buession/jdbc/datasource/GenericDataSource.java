@@ -160,11 +160,12 @@ public class GenericDataSource extends AbstractDataSource<DataSource, GenericPoo
 
 	@Override
 	public DataSource createDataSource() {
-		return createDataSource(null);
+		return null;
 	}
 
 	@Override
-	protected DataSource createDataSource(final PropertyMapper propertyMapper) {
+	protected DataSource createDataSource(final PropertyMapper nullPropertyMapper,
+										  final PropertyMapper hasTextPropertyMapper) {
 		return null;
 	}
 

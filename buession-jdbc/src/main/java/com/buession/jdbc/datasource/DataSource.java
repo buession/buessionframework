@@ -214,44 +214,6 @@ public interface DataSource<DS extends javax.sql.DataSource, P extends PoolConfi
 	void setInitSQL(String initSQL);
 
 	/**
-	 * 返回从连接池获取连接时, 验证连接是否可用的SQL语句
-	 *
-	 * @return 从连接池获取连接时, 验证连接是否可用的SQL语句
-	 *
-	 * @since 3.0.0
-	 */
-	String getValidationQuery();
-
-	/**
-	 * 设置从连接池获取连接时, 验证连接是否可用的SQL语句
-	 *
-	 * @param validationQuery
-	 * 		从连接池获取连接时, 验证连接是否可用的SQL语句
-	 *
-	 * @since 3.0.0
-	 */
-	void setValidationQuery(String validationQuery);
-
-	/**
-	 * 返回连接有效SQL的执行查询超时时间
-	 *
-	 * @return 连接有效SQL的执行查询超时时间
-	 *
-	 * @since 3.0.0
-	 */
-	Duration getValidationQueryTimeout();
-
-	/**
-	 * 设置连接有效SQL的执行查询超时时间
-	 *
-	 * @param validationQueryTimeout
-	 * 		连接有效SQL的执行查询超时时间
-	 *
-	 * @since 3.0.0
-	 */
-	void setValidationQueryTimeout(Duration validationQueryTimeout);
-
-	/**
 	 * 返回查询超时时间
 	 *
 	 * @return 查询超时时间
@@ -290,36 +252,6 @@ public interface DataSource<DS extends javax.sql.DataSource, P extends PoolConfi
 	void setDefaultTransactionIsolation(TransactionIsolation defaultTransactionIsolation);
 
 	/**
-	 * 返回连接是否是只读模式
-	 *
-	 * @return 连接是否是只读模式
-	 *
-	 * @since 3.0.0
-	 */
-	default Boolean isDefaultReadOnly() {
-		return getDefaultReadOnly();
-	}
-
-	/**
-	 * 返回连接是否是只读模式
-	 *
-	 * @return 连接是否是只读模式
-	 *
-	 * @since 3.0.0
-	 */
-	Boolean getDefaultReadOnly();
-
-	/**
-	 * 设置连接是否是只读模式
-	 *
-	 * @param defaultReadOnly
-	 * 		连接是否是只读模式
-	 *
-	 * @since 3.0.0
-	 */
-	void setDefaultReadOnly(Boolean defaultReadOnly);
-
-	/**
 	 * 返回是否自动提交事务
 	 *
 	 * @return 是否自动提交事务
@@ -348,6 +280,36 @@ public interface DataSource<DS extends javax.sql.DataSource, P extends PoolConfi
 	 * @since 3.0.0
 	 */
 	void setDefaultAutoCommit(Boolean defaultAutoCommit);
+
+	/**
+	 * 返回连接是否是只读模式
+	 *
+	 * @return 连接是否是只读模式
+	 *
+	 * @since 3.0.0
+	 */
+	default Boolean isDefaultReadOnly() {
+		return getDefaultReadOnly();
+	}
+
+	/**
+	 * 返回连接是否是只读模式
+	 *
+	 * @return 连接是否是只读模式
+	 *
+	 * @since 3.0.0
+	 */
+	Boolean getDefaultReadOnly();
+
+	/**
+	 * 设置连接是否是只读模式
+	 *
+	 * @param defaultReadOnly
+	 * 		连接是否是只读模式
+	 *
+	 * @since 3.0.0
+	 */
+	void setDefaultReadOnly(Boolean defaultReadOnly);
 
 	/**
 	 * 返回 PoolGuard 是否可以访问底层连接

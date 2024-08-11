@@ -223,6 +223,40 @@ public interface PoolConfiguration {
 	void setTestWhileIdle(Boolean testWhileIdle);
 
 	/**
+	 * 返回从连接池获取连接时, 验证连接是否可用的SQL语句
+	 *
+	 * @return 从连接池获取连接时, 验证连接是否可用的SQL语句
+	 */
+	String getValidationQuery();
+
+	/**
+	 * 设置从连接池获取连接时, 验证连接是否可用的SQL语句
+	 *
+	 * @param validationQuery
+	 * 		从连接池获取连接时, 验证连接是否可用的SQL语句
+	 */
+	void setValidationQuery(String validationQuery);
+
+	/**
+	 * 返回连接有效SQL的执行查询超时时间
+	 *
+	 * @return 连接有效SQL的执行查询超时时间
+	 *
+	 * @since 3.0.0
+	 */
+	Duration getValidationQueryTimeout();
+
+	/**
+	 * 设置连接有效SQL的执行查询超时时间
+	 *
+	 * @param validationQueryTimeout
+	 * 		连接有效SQL的执行查询超时时间
+	 *
+	 * @since 3.0.0
+	 */
+	void setValidationQueryTimeout(Duration validationQueryTimeout);
+
+	/**
 	 * 返回空闲的连接被释放最低要待时间
 	 *
 	 * @return 空闲的连接被释放最低要待时间
