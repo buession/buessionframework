@@ -86,12 +86,6 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	private Duration suspectTimeout;
 
 	/**
-	 * 记录抛弃连接的应用的堆栈信息；
-	 * 会增加系统开销，因为为了能够在可能发生的连接被抛弃时记录堆栈 ，应用每次获取连接时都需要生成堆栈信息
-	 */
-	private Boolean logAbandoned;
-
-	/**
 	 * 除非正在使用的连接数超过定义的百分比，
 	 * 否则已放弃（超时）的连接不会关闭并报告 abandonWhenPercentageFull；
 	 * 该值应介于0到100之间。默认值为0，这表示一旦 removeAbandonedTimeout 达到连接就可以关闭连接
@@ -357,34 +351,6 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	 */
 	public void setSuspectTimeout(Duration suspectTimeout) {
 		this.suspectTimeout = suspectTimeout;
-	}
-
-	/**
-	 * 返回是否记录抛弃连接的应用的堆栈信息
-	 *
-	 * @return 是否记录抛弃连接的应用的堆栈信息
-	 */
-	public Boolean isLogAbandoned() {
-		return getLogAbandoned();
-	}
-
-	/**
-	 * 返回是否记录抛弃连接的应用的堆栈信息
-	 *
-	 * @return 是否记录抛弃连接的应用的堆栈信息
-	 */
-	public Boolean getLogAbandoned() {
-		return logAbandoned;
-	}
-
-	/**
-	 * 设置是否记录抛弃连接的应用的堆栈信息
-	 *
-	 * @param logAbandoned
-	 * 		是否记录抛弃连接的应用的堆栈信息
-	 */
-	public void setLogAbandoned(Boolean logAbandoned) {
-		this.logAbandoned = logAbandoned;
 	}
 
 	/**

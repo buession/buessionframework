@@ -120,6 +120,13 @@ public abstract class AbstractPoolConfiguration implements PoolConfiguration {
 	private Duration timeBetweenEvictionRuns;
 
 	/**
+	 * 当连接被认为是废弃并且被移除时是否记录日志
+	 *
+	 * @since 3.0.0
+	 */
+	private Boolean logAbandoned;
+
+	/**
 	 * 指定连接在被认为是废弃连接（abandoned connection）之前的超时时间
 	 *
 	 * @since 3.0.0
@@ -140,12 +147,6 @@ public abstract class AbstractPoolConfiguration implements PoolConfiguration {
 		return poolName;
 	}
 
-	/**
-	 * 设置连接池的名称
-	 *
-	 * @param poolName
-	 * 		连接池的名称
-	 */
 	public void setPoolName(String poolName) {
 		this.poolName = poolName;
 	}
@@ -274,25 +275,18 @@ public abstract class AbstractPoolConfiguration implements PoolConfiguration {
 		this.timeBetweenEvictionRuns = timeBetweenEvictionRuns;
 	}
 
-	/**
-	 * 返回指定连接在被认为是废弃连接（abandoned connection）之前的超时时间
-	 *
-	 * @return 指定连接在被认为是废弃连接（abandoned connection）之前的超时时间
-	 *
-	 * @since 3.0.0
-	 */
+	public Boolean getLogAbandoned() {
+		return logAbandoned;
+	}
+
+	public void setLogAbandoned(Boolean logAbandoned) {
+		this.logAbandoned = logAbandoned;
+	}
+
 	public Duration getRemoveAbandonedTimeout() {
 		return removeAbandonedTimeout;
 	}
 
-	/**
-	 * 设置指定连接在被认为是废弃连接（abandoned connection）之前的超时时间
-	 *
-	 * @param removeAbandonedTimeout
-	 * 		指定连接在被认为是废弃连接（abandoned connection）之前的超时时间
-	 *
-	 * @since 3.0.0
-	 */
 	public void setRemoveAbandonedTimeout(Duration removeAbandonedTimeout) {
 		this.removeAbandonedTimeout = removeAbandonedTimeout;
 	}

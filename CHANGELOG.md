@@ -45,6 +45,7 @@
 - okhttp maxRequestsPerHost 大于 0 时，才会更新 okhttp 原生 maxRequestsPerHost 的值
 - 删除 OkHttpClient
 - 重构 JDBC 连接池和数据源
+- MyBatisDao 废弃 masterTemplate、slaveSqlSessionTemplate，通过其它数据库本身或其它中间件实现读写分离
 - redis 删除参数为字符串数组或 byte[] 数组的方法 bitField
 - redis 废弃字符串型 / byte[]型 min、max 参数的方法
 - redis role 命令直接返回 Role，不再返回 List&lt;Role&gt;
@@ -53,7 +54,7 @@
 - redis 连接池调整在连接对象中创建，不再在 DataSource 中创建
 - redis 不再推荐从 DataSource 中创建 RedisConnection 实例
 - IO MimeType 忽略大小写比较
-- 删除 com.buession.web.mvc.Response 中参数为 com.buession.core.Pagination 的构造函数和 stter 函数
+- 删除 com.buession.web.mvc.Response 中参数为 com.buession.core.Pagination 的构造函数和 setter 函数
 - 删除 buession-cron 和 buession-session
 - 删除 MobileFilter、PoweredByHeaderFilter
 

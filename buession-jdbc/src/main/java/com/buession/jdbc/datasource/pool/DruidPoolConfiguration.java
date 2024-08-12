@@ -126,12 +126,6 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	private Boolean removeAbandoned;
 
 	/**
-	 * 记录抛弃连接的应用的堆栈信息；
-	 * 会增加系统开销，因为为了能够在可能发生的连接被抛弃时记录堆栈 ，应用每次获取连接时都需要生成堆栈信息
-	 */
-	private Boolean logAbandoned;
-
-	/**
 	 * 日志统计信息的记录间隔时间
 	 */
 	private Duration timeBetweenLogStats;
@@ -566,34 +560,6 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	 */
 	public void setRemoveAbandoned(Boolean removeAbandoned) {
 		this.removeAbandoned = removeAbandoned;
-	}
-
-	/**
-	 * 返回是否记录抛弃连接的应用的堆栈信息
-	 *
-	 * @return 是否记录抛弃连接的应用的堆栈信息
-	 */
-	public Boolean isLogAbandoned() {
-		return getLogAbandoned();
-	}
-
-	/**
-	 * 返回是否记录抛弃连接的应用的堆栈信息
-	 *
-	 * @return 是否记录抛弃连接的应用的堆栈信息
-	 */
-	public Boolean getLogAbandoned() {
-		return logAbandoned;
-	}
-
-	/**
-	 * 设置是否记录抛弃连接的应用的堆栈信息
-	 *
-	 * @param logAbandoned
-	 * 		是否记录抛弃连接的应用的堆栈信息
-	 */
-	public void setLogAbandoned(Boolean logAbandoned) {
-		this.logAbandoned = logAbandoned;
 	}
 
 	/**

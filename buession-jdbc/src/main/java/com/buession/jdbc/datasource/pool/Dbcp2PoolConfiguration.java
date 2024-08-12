@@ -82,13 +82,6 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	private Boolean abandonedUsageTracking;
 
 	/**
-	 * 当连接被认为是废弃并且被移除时是否记录日志
-	 *
-	 * @since 3.0.0
-	 */
-	private Boolean logAbandoned;
-
-	/**
 	 * 空闲的连接被释放最低要待时间，但有额外条件
 	 * 额外的条件是池中至少保留有 minIdle 所指定的个数的连接；
 	 * 当 miniEvictableIdleTime 被设置为一个正数，空闲连接驱逐者首先检测 miniEvictableIdleTime ，
@@ -310,40 +303,6 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	 */
 	public void setAbandonedUsageTracking(Boolean abandonedUsageTracking) {
 		this.abandonedUsageTracking = abandonedUsageTracking;
-	}
-
-	/**
-	 * 返回当连接被认为是废弃并且被移除时是否记录日志
-	 *
-	 * @return 当连接被认为是废弃并且被移除时是否记录日志
-	 *
-	 * @since 3.0.0
-	 */
-	public Boolean isLogAbandoned() {
-		return getLogAbandoned();
-	}
-
-	/**
-	 * 返回当连接被认为是废弃并且被移除时是否记录日志
-	 *
-	 * @return 当连接被认为是废弃并且被移除时是否记录日志
-	 *
-	 * @since 3.0.0
-	 */
-	public Boolean getLogAbandoned() {
-		return logAbandoned;
-	}
-
-	/**
-	 * 设置当连接被认为是废弃并且被移除时是否记录日志
-	 *
-	 * @param logAbandoned
-	 * 		当连接被认为是废弃并且被移除时是否记录日志
-	 *
-	 * @since 3.0.0
-	 */
-	public void setLogAbandoned(Boolean logAbandoned) {
-		this.logAbandoned = logAbandoned;
 	}
 
 	/**

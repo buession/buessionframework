@@ -317,6 +317,36 @@ public interface PoolConfiguration {
 	void setTimeBetweenEvictionRuns(Duration timeBetweenEvictionRuns);
 
 	/**
+	 * 返回当连接被认为是废弃并且被移除时是否记录日志
+	 *
+	 * @return 当连接被认为是废弃并且被移除时是否记录日志
+	 *
+	 * @since 3.0.0
+	 */
+	default Boolean isLogAbandoned() {
+		return getLogAbandoned();
+	}
+
+	/**
+	 * 返回当连接被认为是废弃并且被移除时是否记录日志
+	 *
+	 * @return 当连接被认为是废弃并且被移除时是否记录日志
+	 *
+	 * @since 3.0.0
+	 */
+	Boolean getLogAbandoned();
+
+	/**
+	 * 设置当连接被认为是废弃并且被移除时是否记录日志
+	 *
+	 * @param logAbandoned
+	 * 		当连接被认为是废弃并且被移除时是否记录日志
+	 *
+	 * @since 3.0.0
+	 */
+	void setLogAbandoned(Boolean logAbandoned);
+
+	/**
 	 * 返回指定连接在被认为是废弃连接（abandoned connection）之前的超时时间
 	 *
 	 * @return 指定连接在被认为是废弃连接（abandoned connection）之前的超时时间
