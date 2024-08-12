@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2023 Buession.com Inc.														|
+ * | Copyright @ 2013-2024 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao;
@@ -34,7 +34,6 @@ import java.util.Map;
 
 import com.buession.core.utils.FieldUtils;
 import com.buession.core.utils.Assert;
-import com.buession.core.utils.RandomUtils;
 import com.buession.core.validator.Validate;
 import com.buession.dao.mybatis.PageRowBounds;
 import com.buession.lang.Order;
@@ -46,7 +45,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.buession.core.Pagination;
-import com.buession.core.exception.OperationException;
 import org.springframework.cglib.beans.BeanMap;
 
 import javax.annotation.Resource;
@@ -67,62 +65,37 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 	 * master SqlSessionTemplate
 	 */
 	@Resource
-	protected SqlSessionTemplate masterSqlSessionTemplate;
-
-	/**
-	 * slave SqlSessionTemplate
-	 */
-	@Resource
-	protected List<SqlSessionTemplate> slaveSqlSessionTemplates;
+	protected SqlSessionTemplate sqlSessionTemplate;
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
 	/**
-	 * 返回 master SqlSessionTemplate
+	 * 返回  SqlSessionTemplate
 	 *
-	 * @return master SqlSessionTemplate
+	 * @return SqlSessionTemplate
 	 */
-	public SqlSessionTemplate getMasterSqlSessionTemplate() {
-		return masterSqlSessionTemplate;
+	public SqlSessionTemplate getSqlSessionTemplate() {
+		return sqlSessionTemplate;
 	}
 
 	/**
-	 * 设置 master SqlSessionTemplate
+	 * 设置 SqlSessionTemplate
 	 *
-	 * @param masterSqlSessionTemplate
-	 * 		master SqlSessionTemplate
+	 * @param sqlSessionTemplate
+	 * 		SqlSessionTemplate
 	 */
-	public void setMasterSqlSessionTemplate(final SqlSessionTemplate masterSqlSessionTemplate) {
-		this.masterSqlSessionTemplate = masterSqlSessionTemplate;
-	}
-
-	/**
-	 * 返回 slave SqlSessionTemplate
-	 *
-	 * @return slave SqlSessionTemplate
-	 */
-	public List<SqlSessionTemplate> getSlaveSqlSessionTemplates() {
-		return slaveSqlSessionTemplates;
-	}
-
-	/**
-	 * 设置 slave SqlSessionTemplate
-	 *
-	 * @param slaveSqlSessionTemplates
-	 * 		slave SqlSessionTemplate
-	 */
-	public void setSlaveSqlSessionTemplates(final List<SqlSessionTemplate> slaveSqlSessionTemplates) {
-		this.slaveSqlSessionTemplates = slaveSqlSessionTemplates;
+	public void setSqlSessionTemplate(final SqlSessionTemplate sqlSessionTemplate) {
+		this.sqlSessionTemplate = sqlSessionTemplate;
 	}
 
 	@Override
 	public int insert(E e) {
-		return getMasterSqlSessionTemplate().insert(getStatement(DML.INSERT), e);
+		return getSqlSessionTemplate().insert(getStatement(DML.INSERT), e);
 	}
 
 	@Override
 	public int replace(E e) {
-		return getMasterSqlSessionTemplate().insert(getStatement(DML.REPLACE), e);
+		return getSqlSessionTemplate().insert(getStatement(DML.REPLACE), e);
 	}
 
 	@Override
@@ -143,24 +116,18 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 			data.putAll(beanMap);
 		}
 
-		return getMasterSqlSessionTemplate().update(getStatement(DML.UPDATE), data);
+		return getSqlSessionTemplate().update(getStatement(DML.UPDATE), data);
 	}
 
 	@Override
 	public int updateByPrimary(P primary, E e) {
 		updatePrimary(e, primary);
-		return getMasterSqlSessionTemplate().update(getStatement(DML.UPDATE_BY_PRIMARY), e);
+		return getSqlSessionTemplate().update(getStatement(DML.UPDATE_BY_PRIMARY), e);
 	}
 
 	@Override
 	public E getByPrimary(P primary) {
-		try{
-			return getSlaveSqlSessionTemplate().selectOne(getStatement(DML.GET_BY_PRIMARY), primary);
-		}catch(OperationException e){
-			logger.error(e.getMessage());
-		}
-
-		return null;
+		return getSqlSessionTemplate().selectOne(getStatement(DML.GET_BY_PRIMARY), primary);
 	}
 
 	@Override
@@ -171,13 +138,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 			parameters.put(ORDERS_PARAMETER_NAME, orders);
 		}
 
-		try{
-			return getSlaveSqlSessionTemplate().selectOne(getStatement(DML.SELECT_ONE), parameters);
-		}catch(OperationException e){
-			logger.error(e.getMessage());
-		}
-
-		return null;
+		return getSqlSessionTemplate().selectOne(getStatement(DML.SELECT_ONE), parameters);
 	}
 
 	@Override
@@ -188,13 +149,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 			parameters.put(ORDERS_PARAMETER_NAME, orders);
 		}
 
-		try{
-			return getSlaveSqlSessionTemplate().selectList(getStatement(DML.SELECT), parameters);
-		}catch(OperationException e){
-			logger.error(e.getMessage());
-		}
-
-		return null;
+		return getSqlSessionTemplate().selectList(getStatement(DML.SELECT), parameters);
 	}
 
 	@Override
@@ -208,14 +163,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 			parameters.put(ORDERS_PARAMETER_NAME, orders);
 		}
 
-		try{
-			return getSlaveSqlSessionTemplate().selectList(getStatement(DML.SELECT), parameters,
-					new RowBounds(offset, size));
-		}catch(OperationException e){
-			logger.error(e.getMessage());
-		}
-
-		return null;
+		return getSqlSessionTemplate().selectList(getStatement(DML.SELECT), parameters, new RowBounds(offset, size));
 	}
 
 	@Override
@@ -234,13 +182,9 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 				parameters.put(ORDERS_PARAMETER_NAME, orders);
 			}
 
-			try{
-				List<E> result = getSlaveSqlSessionTemplate().selectList(getStatement(DML.SELECT), parameters,
-						new PageRowBounds(pagination.getOffset(), pagination.getPagesize()));
-				pagination.setData(result);
-			}catch(OperationException e){
-				logger.error(e.getMessage());
-			}
+			List<E> result = getSqlSessionTemplate().selectList(getStatement(DML.SELECT), parameters,
+					new PageRowBounds(pagination.getOffset(), pagination.getPagesize()));
+			pagination.setData(result);
 		}
 
 		return pagination;
@@ -248,40 +192,22 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 
 	@Override
 	public List<E> getAll() {
-		try{
-			return getSlaveSqlSessionTemplate().selectList(getStatement(DML.GET_ALL));
-		}catch(OperationException e){
-			logger.error(e.getMessage());
-		}
-
-		return null;
+		return getSqlSessionTemplate().selectList(getStatement(DML.GET_ALL));
 	}
 
 	@Override
 	public long count() {
-		try{
-			return getSlaveSqlSessionTemplate().selectOne(getStatement("count"));
-		}catch(OperationException e){
-			logger.error(e.getMessage());
-		}
-
-		return 0L;
+		return getSqlSessionTemplate().selectOne(getStatement("count"));
 	}
 
 	@Override
 	public long count(Map<String, Object> conditions) {
-		try{
-			return getSlaveSqlSessionTemplate().selectOne(getStatement("count"), conditions);
-		}catch(OperationException e){
-			logger.error(e.getMessage());
-		}
-
-		return 0L;
+		return getSqlSessionTemplate().selectOne(getStatement("count"), conditions);
 	}
 
 	@Override
 	public int delete(Map<String, Object> conditions) {
-		return getMasterSqlSessionTemplate().delete(getStatement(DML.DELETE), conditions);
+		return getSqlSessionTemplate().delete(getStatement(DML.DELETE), conditions);
 	}
 
 	@Override
@@ -290,51 +216,26 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 
 		parameters.put("SIZE", size);
 
-		return getMasterSqlSessionTemplate().delete(getStatement(DML.DELETE), parameters);
+		return getSqlSessionTemplate().delete(getStatement(DML.DELETE), parameters);
 	}
 
 	@Override
 	public int deleteByPrimary(P primary) {
-		return getMasterSqlSessionTemplate().delete(getStatement(DML.DELETE_BY_PRIMARY), primary);
+		return getSqlSessionTemplate().delete(getStatement(DML.DELETE_BY_PRIMARY), primary);
 	}
 
 	@Override
 	public int clear() {
-		return getMasterSqlSessionTemplate().delete(getStatement(DML.CLEAR));
+		return getSqlSessionTemplate().delete(getStatement(DML.CLEAR));
 	}
 
 	@Override
 	public int truncate() {
-		return getMasterSqlSessionTemplate().delete(getStatement(DML.TRUNCATE));
-	}
-
-	protected final SqlSessionTemplate getSlaveSqlSessionTemplate(final int index) throws OperationException {
-		if(Validate.isEmpty(slaveSqlSessionTemplates)){
-			return getMasterSqlSessionTemplate();
-		}else{
-			SqlSessionTemplate sqlSessionTemplate = slaveSqlSessionTemplates.get(index);
-
-			if(sqlSessionTemplate == null){
-				throw new OperationException("Could not find the \"" + index + "\" slave SqlSessionTemplate.");
-			}
-
-			return sqlSessionTemplate;
-		}
-	}
-
-	protected final SqlSessionTemplate getSlaveSqlSessionTemplate() throws OperationException {
-		if(Validate.isEmpty(slaveSqlSessionTemplates)){
-			return getMasterSqlSessionTemplate();
-		}else if(slaveSqlSessionTemplates.size() == 1){
-			return getSlaveSqlSessionTemplate(0);
-		}else{
-			int index = RandomUtils.nextInt(slaveSqlSessionTemplates.size());
-			return getSlaveSqlSessionTemplate(index);
-		}
+		return getSqlSessionTemplate().delete(getStatement(DML.TRUNCATE));
 	}
 
 	protected void updatePrimary(E e, P primary) {
-		final Collection<ResultMap> resultMaps = masterSqlSessionTemplate.getConfiguration().getResultMaps();
+		final Collection<ResultMap> resultMaps = getSqlSessionTemplate().getConfiguration().getResultMaps();
 
 		if(Validate.isEmpty(resultMaps)){
 			return;
