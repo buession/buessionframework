@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core;
@@ -27,25 +27,21 @@ package com.buession.core;
 /**
  * 定制器接口
  *
- * @param <S>
- * 		源类型
  * @param <T>
- * 		待定制对象类型
+ * 		定制对象类型
  *
  * @author Yong.Teng
  * @since 2.3.0
  */
 @FunctionalInterface
-public interface Customizer<S, T> {
+public interface Customizer<T> {
 
 	/**
 	 * 定制
 	 *
-	 * @param source
-	 * 		源实例
-	 * @param target
-	 * 		待定制实例
+	 * @param object
+	 * 		定制对象
 	 */
-	void customize(S source, T target);
+	void customize(T object);
 
 }
