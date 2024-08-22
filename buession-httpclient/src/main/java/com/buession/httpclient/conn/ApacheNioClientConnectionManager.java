@@ -333,7 +333,6 @@ public class ApacheNioClientConnectionManager extends ApacheBaseClientConnection
 		org.apache.http.impl.nio.reactor.IOReactorConfig ioReactorConfig = null;
 
 		if(getIoReactorConfig() != null){
-			final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
 			final org.apache.http.impl.nio.reactor.IOReactorConfig.Builder ioReactorConfigBuilder =
 					org.apache.http.impl.nio.reactor.IOReactorConfig.custom();
 

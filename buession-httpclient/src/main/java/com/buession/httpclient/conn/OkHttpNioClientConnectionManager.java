@@ -24,7 +24,6 @@
  */
 package com.buession.httpclient.conn;
 
-import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.httpclient.core.Configuration;
 import okhttp3.nio.NioHttpClientConnectionManager;
 
@@ -34,8 +33,7 @@ import okhttp3.nio.NioHttpClientConnectionManager;
  * @author Yong.Teng
  * @since 2.3.0
  */
-public class OkHttpNioClientConnectionManager
-		extends OkHttpBaseClientConnectionManager<NioHttpClientConnectionManager>
+public class OkHttpNioClientConnectionManager extends OkHttpBaseClientConnectionManager<NioHttpClientConnectionManager>
 		implements com.buession.httpclient.okhttp.OkHttpNioClientConnectionManager {
 
 	/**
@@ -86,7 +84,6 @@ public class OkHttpNioClientConnectionManager
 	@Override
 	protected NioHttpClientConnectionManager createDefaultClientConnectionManager() {
 		final NioHttpClientConnectionManager connectionManager = new NioHttpClientConnectionManager();
-		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenPositiveNumber();
 
 		// 最大连接数
 		propertyMapper.from(getConfiguration().getMaxConnections()).to(connectionManager::setMaxConnections);

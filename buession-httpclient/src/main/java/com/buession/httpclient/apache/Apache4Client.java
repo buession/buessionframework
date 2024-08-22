@@ -371,12 +371,9 @@ public class Apache4Client extends AbstractApacheClient {
 	protected RequestConfig createRequestConfig(final Configuration configuration) {
 		final RequestConfig.Builder builder = RequestConfig.custom();
 
-		propertyMapper.alwaysApplyingWhenPositiveNumber().from(configuration.getConnectTimeout())
-				.to(builder::setConnectTimeout);
-		propertyMapper.alwaysApplyingWhenPositiveNumber().from(configuration.getConnectionRequestTimeout())
-				.to(builder::setConnectionRequestTimeout);
-		propertyMapper.alwaysApplyingWhenPositiveNumber().from(configuration.getReadTimeout())
-				.to(builder::setSocketTimeout);
+		propertyMapper.from(configuration.getConnectTimeout()).to(builder::setConnectTimeout);
+		propertyMapper.from(configuration.getConnectionRequestTimeout()).to(builder::setConnectionRequestTimeout);
+		propertyMapper.from(configuration.getReadTimeout()).to(builder::setSocketTimeout);
 		propertyMapper.from(configuration.isExpectContinueEnabled()).to(builder::setExpectContinueEnabled);
 		propertyMapper.from(configuration.isAllowRedirects()).to(builder::setRedirectsEnabled);
 		propertyMapper.from(configuration.getMaxRedirects()).to(builder::setMaxRedirects);
@@ -385,10 +382,8 @@ public class Apache4Client extends AbstractApacheClient {
 		propertyMapper.from(configuration.isAuthenticationEnabled()).to(builder::setAuthenticationEnabled);
 		propertyMapper.from(configuration.isContentCompressionEnabled()).to(builder::setContentCompressionEnabled);
 		propertyMapper.from(configuration.isNormalizeUri()).to(builder::setNormalizeUri);
-		propertyMapper.alwaysApplyingWhenNonNull().from(configuration.getTargetPreferredAuthSchemes())
-				.to(builder::setTargetPreferredAuthSchemes);
-		propertyMapper.alwaysApplyingWhenNonNull().from(configuration.getProxyPreferredAuthSchemes())
-				.to(builder::setProxyPreferredAuthSchemes);
+		propertyMapper.from(configuration.getTargetPreferredAuthSchemes()).to(builder::setTargetPreferredAuthSchemes);
+		propertyMapper.from(configuration.getProxyPreferredAuthSchemes()).to(builder::setProxyPreferredAuthSchemes);
 		propertyMapper.from(configuration.getCookieSpec()).to(builder::setCookieSpec);
 
 		final Configuration.Proxy proxy = configuration.getProxy();

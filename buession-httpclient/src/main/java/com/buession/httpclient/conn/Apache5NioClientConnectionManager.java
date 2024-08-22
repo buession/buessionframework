@@ -24,7 +24,6 @@
  */
 package com.buession.httpclient.conn;
 
-import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.httpclient.conn.nio.IOReactorConfig;
 import com.buession.httpclient.core.Configuration;
 import org.apache.hc.client5.http.config.ConnectionConfig;
@@ -308,11 +307,11 @@ public class Apache5NioClientConnectionManager extends ApacheBaseClientConnectio
 	@Override
 	protected AsyncClientConnectionManager createDefaultClientConnectionManager() {
 		final PoolingAsyncClientConnectionManager connectionManager =
-				getConfiguration().getConnectionTimeToLive() >
-						-1 ? new PoolingAsyncClientConnectionManager(getDefaultLookup(), PoolConcurrencyPolicy.STRICT,
-						Timeout.ofMilliseconds(
-								getConfiguration().getConnectionTimeToLive())) : new PoolingAsyncClientConnectionManager();
-		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenPositiveNumber();
+				getConfiguration().getConnectionTimeToLive() != null ?
+						new PoolingAsyncClientConnectionManager(getDefaultLookup(), PoolConcurrencyPolicy.STRICT,
+								Timeout.ofMilliseconds(
+										getConfiguration().getConnectionTimeToLive())) : new PoolingAsyncClientConnectionManager(
+						getDefaultLookup());
 
 		// 最大连接数
 		propertyMapper.from(getConfiguration().getMaxConnections()).to(connectionManager::setMaxTotal);
@@ -331,7 +330,6 @@ public class Apache5NioClientConnectionManager extends ApacheBaseClientConnectio
 
 	protected ConnectionConfig createDefaultConnectionConfig() {
 		final ConnectionConfig.Builder connectionConfigBuilder = ConnectionConfig.custom();
-		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenPositiveNumber();
 
 		propertyMapper.from(getConfiguration().getConnectTimeout()).as(Timeout::ofMilliseconds)
 				.to(connectionConfigBuilder::setConnectTimeout);

@@ -24,7 +24,6 @@
  */
 package com.buession.httpclient.conn;
 
-import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.httpclient.core.Configuration;
 import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
@@ -94,11 +93,10 @@ public class Apache5ClientConnectionManager extends ApacheBaseClientConnectionMa
 	@Override
 	protected HttpClientConnectionManager createDefaultClientConnectionManager() {
 		final PoolingHttpClientConnectionManager connectionManager =
-				getConfiguration().getConnectionTimeToLive() > -1 ? new PoolingHttpClientConnectionManager(
+				getConfiguration().getConnectionTimeToLive() != null ? new PoolingHttpClientConnectionManager(
 						getDefaultRegistry(), PoolConcurrencyPolicy.STRICT,
-						Timeout.ofMilliseconds(getConfiguration().getConnectionTimeToLive())
-						, null) : new PoolingHttpClientConnectionManager();
-		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenPositiveNumber();
+						Timeout.ofMilliseconds(getConfiguration().getConnectionTimeToLive()),
+						null) : new PoolingHttpClientConnectionManager(getDefaultRegistry());
 
 		// 最大连接数
 		propertyMapper.from(getConfiguration().getMaxConnections()).to(connectionManager::setMaxTotal);
@@ -117,7 +115,6 @@ public class Apache5ClientConnectionManager extends ApacheBaseClientConnectionMa
 
 	protected ConnectionConfig createDefaultConnectionConfig() {
 		final ConnectionConfig.Builder connectionConfigBuilder = ConnectionConfig.custom();
-		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenPositiveNumber();
 
 		propertyMapper.from(getConfiguration().getConnectTimeout()).as(Timeout::ofMilliseconds)
 				.to(connectionConfigBuilder::setConnectTimeout);

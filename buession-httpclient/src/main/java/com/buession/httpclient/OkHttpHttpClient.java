@@ -98,8 +98,7 @@ public class OkHttpHttpClient extends AbstractHttpClient {
 			final HttpClientBuilder builder = HttpClientBuilder.create()
 					.setConnectionManager(okHttpClientConnectionManager.getClientConnectionManager());
 
-			propertyMapper.alwaysApplyingWhenPositiveNumber().from(configuration.getConnectTimeout())
-					.to(builder::setConnectTimeout);
+			propertyMapper.from(configuration.getConnectTimeout()).to(builder::setConnectTimeout);
 			propertyMapper.alwaysApplyingWhenPositiveNumber().from(configuration.getReadTimeout())
 					.to(builder::setReadTimeout);
 			propertyMapper.alwaysApplyingWhenPositiveNumber().from(configuration.getWriteTimeout())

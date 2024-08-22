@@ -24,6 +24,7 @@
  */
 package com.buession.httpclient.conn;
 
+import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.httpclient.core.Configuration;
 
 import java.util.Optional;
@@ -37,6 +38,8 @@ import java.util.Optional;
  * @author Yong.Teng
  */
 public abstract class AbstractConnectionManager<CM> implements ConnectionManager {
+
+	protected final static PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
 
 	/**
 	 * 配置

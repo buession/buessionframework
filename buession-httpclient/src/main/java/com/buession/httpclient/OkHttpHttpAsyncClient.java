@@ -90,8 +90,7 @@ public class OkHttpHttpAsyncClient extends AbstractHttpAsyncClient {
 			final HttpAsyncClientBuilder builder = HttpAsyncClientBuilder.create()
 					.setConnectionManager(okHttpNioClientConnectionManager.getClientConnectionManager());
 
-			propertyMapper.alwaysApplyingWhenPositiveNumber().from(configuration.getConnectTimeout())
-					.to(builder::setConnectTimeout);
+			propertyMapper.from(configuration.getConnectTimeout()).to(builder::setConnectTimeout);
 			propertyMapper.alwaysApplyingWhenPositiveNumber().from(configuration.getReadTimeout())
 					.to(builder::setReadTimeout);
 			propertyMapper.alwaysApplyingWhenPositiveNumber().from(configuration.getWriteTimeout())

@@ -54,51 +54,51 @@ public class Configuration {
 	/**
 	 * 最大连接数
 	 */
-	private int maxConnections = 5000;
+	private Integer maxConnections = 5000;
 
 	/**
 	 * 每个路由的最大连接数
 	 */
-	private int maxPerRoute = 500;
+	private Integer maxPerRoute = 500;
 
 	/**
 	 * 最大并发请求数量
 	 *
 	 * @since 2.3.2
 	 */
-	private int maxRequests;
+	private Integer maxRequests;
 
 	/**
 	 * 空闲连接存活时长，单位：毫秒
 	 */
-	private int idleConnectionTime = 60 * 1000;
+	private Integer idleConnectionTime = 60 * 1000;
 
 	/**
 	 * 连接超时时间，单位：毫秒
 	 */
-	private int connectTimeout = 3000;
+	private Integer connectTimeout = 3000;
 
 	/**
 	 * 从连接池获取连接的超时时间，单位：毫秒
 	 */
-	private int connectionRequestTimeout = 5000;
+	private Integer connectionRequestTimeout = 5000;
 
 	/**
 	 * The maximum time to live for persistent connections.
 	 *
 	 * @since 3.0.0
 	 */
-	private int connectionTimeToLive = -1;
+	private Integer connectionTimeToLive = -1;
 
 	/**
 	 * 读取超时时间，单位：毫秒
 	 */
-	private int readTimeout = 5000;
+	private Integer readTimeout = 5000;
 
 	/**
-	 * 写超时时间，单位：毫秒；小于等于 0 时，使用原生库默认写超时时间
+	 * 写超时时间，单位：毫秒
 	 */
-	private int writeTimeout = -1;
+	private Integer writeTimeout = -1;
 
 	/**
 	 * Determines whether the 'Expect: 100-Continue' handshake is enabled for entity enclosing methods.
@@ -193,6 +193,17 @@ public class Configuration {
 	 *
 	 * @since 3.0.0
 	 */
+	public Boolean isConnectionManagerShared() {
+		return getConnectionManagerShared();
+	}
+
+	/**
+	 * 返回是否在多个实例之间共享连接管理器
+	 *
+	 * @return True / False
+	 *
+	 * @since 3.0.0
+	 */
 	public Boolean getConnectionManagerShared() {
 		return connectionManagerShared;
 	}
@@ -207,6 +218,17 @@ public class Configuration {
 	 */
 	public void setConnectionManagerShared(Boolean connectionManagerShared) {
 		this.connectionManagerShared = connectionManagerShared;
+	}
+
+	/**
+	 * 返回连接失败是否重试
+	 *
+	 * @return 连接失败是否重试
+	 *
+	 * @since 2.3.0
+	 */
+	public Boolean isRetryOnConnectionFailure() {
+		return getRetryOnConnectionFailure();
 	}
 
 	/**
@@ -237,7 +259,7 @@ public class Configuration {
 	 *
 	 * @return 最大连接数
 	 */
-	public int getMaxConnections() {
+	public Integer getMaxConnections() {
 		return maxConnections;
 	}
 
@@ -247,7 +269,7 @@ public class Configuration {
 	 * @param maxConnections
 	 * 		最大连接数
 	 */
-	public void setMaxConnections(int maxConnections) {
+	public void setMaxConnections(Integer maxConnections) {
 		this.maxConnections = maxConnections;
 	}
 
@@ -256,7 +278,7 @@ public class Configuration {
 	 *
 	 * @return 每个路由的最大连接数
 	 */
-	public int getMaxPerRoute() {
+	public Integer getMaxPerRoute() {
 		return maxPerRoute;
 	}
 
@@ -266,7 +288,7 @@ public class Configuration {
 	 * @param maxPerRoute
 	 * 		每个路由的最大连接数
 	 */
-	public void setMaxPerRoute(int maxPerRoute) {
+	public void setMaxPerRoute(Integer maxPerRoute) {
 		this.maxPerRoute = maxPerRoute;
 	}
 
@@ -275,7 +297,7 @@ public class Configuration {
 	 *
 	 * @return 最大并发请求数量
 	 */
-	public int getMaxRequests() {
+	public Integer getMaxRequests() {
 		return maxRequests;
 	}
 
@@ -285,7 +307,7 @@ public class Configuration {
 	 * @param maxRequests
 	 * 		最大并发请求数量
 	 */
-	public void setMaxRequests(int maxRequests) {
+	public void setMaxRequests(Integer maxRequests) {
 		this.maxRequests = maxRequests;
 	}
 
@@ -294,7 +316,7 @@ public class Configuration {
 	 *
 	 * @return 空闲连接存活时长
 	 */
-	public int getIdleConnectionTime() {
+	public Integer getIdleConnectionTime() {
 		return idleConnectionTime;
 	}
 
@@ -304,7 +326,7 @@ public class Configuration {
 	 * @param idleConnectionTime
 	 * 		空闲连接存活时长，单位：毫秒
 	 */
-	public void setIdleConnectionTime(int idleConnectionTime) {
+	public void setIdleConnectionTime(Integer idleConnectionTime) {
 		this.idleConnectionTime = idleConnectionTime;
 	}
 
@@ -313,7 +335,7 @@ public class Configuration {
 	 *
 	 * @return 连接超时时间
 	 */
-	public int getConnectTimeout() {
+	public Integer getConnectTimeout() {
 		return connectTimeout;
 	}
 
@@ -323,7 +345,7 @@ public class Configuration {
 	 * @param connectTimeout
 	 * 		连接超时时间，单位：毫秒
 	 */
-	public void setConnectTimeout(int connectTimeout) {
+	public void setConnectTimeout(Integer connectTimeout) {
 		this.connectTimeout = connectTimeout;
 	}
 
@@ -332,7 +354,7 @@ public class Configuration {
 	 *
 	 * @return 从连接池获取连接的超时时间
 	 */
-	public int getConnectionRequestTimeout() {
+	public Integer getConnectionRequestTimeout() {
 		return connectionRequestTimeout;
 	}
 
@@ -342,7 +364,7 @@ public class Configuration {
 	 * @param connectionRequestTimeout
 	 * 		从连接池获取连接的超时时间，单位：毫秒
 	 */
-	public void setConnectionRequestTimeout(int connectionRequestTimeout) {
+	public void setConnectionRequestTimeout(Integer connectionRequestTimeout) {
 		this.connectionRequestTimeout = connectionRequestTimeout;
 	}
 
@@ -353,7 +375,7 @@ public class Configuration {
 	 *
 	 * @since 3.0.0
 	 */
-	public int getConnectionTimeToLive() {
+	public Integer getConnectionTimeToLive() {
 		return connectionTimeToLive;
 	}
 
@@ -365,7 +387,7 @@ public class Configuration {
 	 *
 	 * @since 3.0.0
 	 */
-	public void setConnectionTimeToLive(int connectionTimeToLive) {
+	public void setConnectionTimeToLive(Integer connectionTimeToLive) {
 		this.connectionTimeToLive = connectionTimeToLive;
 	}
 
@@ -374,7 +396,7 @@ public class Configuration {
 	 *
 	 * @return 读取超时时间
 	 */
-	public int getReadTimeout() {
+	public Integer getReadTimeout() {
 		return readTimeout;
 	}
 
@@ -384,7 +406,7 @@ public class Configuration {
 	 * @param readTimeout
 	 * 		读取超时时间，单位：毫秒
 	 */
-	public void setReadTimeout(int readTimeout) {
+	public void setReadTimeout(Integer readTimeout) {
 		this.readTimeout = readTimeout;
 	}
 
@@ -395,7 +417,7 @@ public class Configuration {
 	 *
 	 * @since 2.3.0
 	 */
-	public int getWriteTimeout() {
+	public Integer getWriteTimeout() {
 		return writeTimeout;
 	}
 
@@ -407,7 +429,7 @@ public class Configuration {
 	 *
 	 * @since 2.3.0
 	 */
-	public void setWriteTimeout(int writeTimeout) {
+	public void setWriteTimeout(Integer writeTimeout) {
 		this.writeTimeout = writeTimeout;
 	}
 

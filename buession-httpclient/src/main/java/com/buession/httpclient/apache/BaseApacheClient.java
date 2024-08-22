@@ -63,8 +63,8 @@ abstract class BaseApacheClient {
 		newQuery.append(HttpURI.toQueryString(parameters, false));
 
 		try{
-			return new URI(uri.getScheme(), uri.getAuthority(), uri.getHost(), uri.getPort(),
-					uri.getPath(), newQuery.toString(), uri.getFragment());
+			return new URI(uri.getScheme(), uri.getAuthority(), uri.getHost(), uri.getPort(), uri.getPath(),
+					newQuery.toString(), uri.getFragment());
 		}catch(URISyntaxException e){
 			if(logger.isErrorEnabled()){
 				logger.error("URL {} add parameters syntax: {}, reason: {}", uri, e.getMessage(), e.getReason());

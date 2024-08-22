@@ -24,7 +24,6 @@
  */
 package com.buession.httpclient.conn;
 
-import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.httpclient.core.Configuration;
 import okhttp3.HttpClientConnectionManager;
 
@@ -84,7 +83,6 @@ public class OkHttpClientConnectionManager extends OkHttpBaseClientConnectionMan
 	@Override
 	protected HttpClientConnectionManager createDefaultClientConnectionManager() {
 		final HttpClientConnectionManager connectionManager = new HttpClientConnectionManager();
-		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenPositiveNumber();
 
 		// 最大连接数
 		propertyMapper.from(getConfiguration().getMaxConnections()).to(connectionManager::setMaxConnections);

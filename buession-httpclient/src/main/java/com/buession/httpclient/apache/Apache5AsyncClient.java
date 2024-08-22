@@ -386,8 +386,8 @@ public class Apache5AsyncClient extends AbstractApacheAsyncClient {
 	protected RequestConfig createRequestConfig(final Configuration configuration) {
 		final RequestConfig.Builder builder = RequestConfig.custom();
 
-		propertyMapper.alwaysApplyingWhenPositiveNumber().from(configuration.getConnectionRequestTimeout())
-				.as(Timeout::ofMilliseconds).to(builder::setConnectionRequestTimeout);
+		propertyMapper.from(configuration.getConnectionRequestTimeout()).as(Timeout::ofMilliseconds)
+				.to(builder::setConnectionRequestTimeout);
 		propertyMapper.from(configuration.isExpectContinueEnabled()).to(builder::setExpectContinueEnabled);
 		propertyMapper.from(configuration.isAllowRedirects()).to(builder::setRedirectsEnabled);
 		propertyMapper.from(configuration.getMaxRedirects()).to(builder::setMaxRedirects);
@@ -395,10 +395,8 @@ public class Apache5AsyncClient extends AbstractApacheAsyncClient {
 		propertyMapper.from(configuration.isHardCancellationEnabled()).to(builder::setHardCancellationEnabled);
 		propertyMapper.from(configuration.isAuthenticationEnabled()).to(builder::setAuthenticationEnabled);
 		propertyMapper.from(configuration.isContentCompressionEnabled()).to(builder::setContentCompressionEnabled);
-		propertyMapper.alwaysApplyingWhenNonNull().from(configuration.getTargetPreferredAuthSchemes())
-				.to(builder::setTargetPreferredAuthSchemes);
-		propertyMapper.alwaysApplyingWhenNonNull().from(configuration.getProxyPreferredAuthSchemes())
-				.to(builder::setProxyPreferredAuthSchemes);
+		propertyMapper.from(configuration.getTargetPreferredAuthSchemes()).to(builder::setTargetPreferredAuthSchemes);
+		propertyMapper.from(configuration.getProxyPreferredAuthSchemes()).to(builder::setProxyPreferredAuthSchemes);
 		propertyMapper.from(configuration.getCookieSpec()).to(builder::setCookieSpec);
 
 		return builder.build();
