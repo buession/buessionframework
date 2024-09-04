@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.serializer;
@@ -52,30 +52,6 @@ public abstract class AbstractJsonSerializer extends AbstractSerializer implemen
 	@Override
 	public <V> byte[] serializeAsBytes(final V object, final Charset charset) throws SerializerException {
 		return serializeAsBytes(object);
-	}
-
-	@Deprecated
-	@Override
-	public <V> V deserialize(final String str, final String charsetName) throws SerializerException {
-		return deserialize(str);
-	}
-
-	@Deprecated
-	@Override
-	public <V> V deserialize(final String str, final Charset charset) throws SerializerException {
-		return deserialize(str);
-	}
-
-	@Deprecated
-	@Override
-	public <V> V deserialize(final byte[] bytes, final String charsetName) throws SerializerException {
-		return deserialize(bytes);
-	}
-
-	@Deprecated
-	@Override
-	public <V> V deserialize(final byte[] bytes, final Charset charset) throws SerializerException {
-		return deserialize(bytes);
 	}
 
 }
