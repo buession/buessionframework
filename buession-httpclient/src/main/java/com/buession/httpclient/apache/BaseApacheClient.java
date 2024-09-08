@@ -29,7 +29,7 @@ import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.RequestBodyConverter;
-import com.buession.net.HttpURI;
+import com.buession.httpclient.core.utils.UriUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,15 +52,17 @@ abstract class BaseApacheClient {
 			return uri;
 		}
 
-		final StringBuilder newQuery = new StringBuilder(uri.getRawQuery().length());
+		final StringBuilder newQuery = new StringBuilder();
 
-		newQuery.append(uri.getRawQuery());
+		if(uri.getRawQuery() != null){
+			newQuery.append(uri.getRawQuery());
 
-		if(StringUtils.endsWith(uri.getRawQuery(), '&') == false){
-			newQuery.append('&');
+			if(StringUtils.endsWith(uri.getRawQuery(), '&') == false){
+				newQuery.append('&');
+			}
+
+			newQuery.append(UriUtils.buildQuery(parameters, false));
 		}
-
-		newQuery.append(HttpURI.toQueryString(parameters, false));
 
 		try{
 			return new URI(uri.getScheme(), uri.getAuthority(), uri.getHost(), uri.getPort(), uri.getPath(),
@@ -72,7 +74,7 @@ abstract class BaseApacheClient {
 			return uri;
 		}
 	}
-
+	
 	@SuppressWarnings({"unchecked"})
 	protected static <S, T> RequestBodyConverter<S, T> findBodyConverter(final Map<Class<? extends RequestBody>,
 			RequestBodyConverter> converters, final RequestBody<?> body) {
