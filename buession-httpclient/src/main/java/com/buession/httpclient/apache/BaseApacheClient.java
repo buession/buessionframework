@@ -60,9 +60,9 @@ abstract class BaseApacheClient {
 			if(StringUtils.endsWith(uri.getRawQuery(), '&') == false){
 				newQuery.append('&');
 			}
-
-			newQuery.append(UriUtils.buildQuery(parameters, false));
 		}
+
+		newQuery.append(UriUtils.buildQuery(parameters, false));
 
 		try{
 			return new URI(uri.getScheme(), uri.getAuthority(), uri.getHost(), uri.getPort(), uri.getPath(),
@@ -74,7 +74,7 @@ abstract class BaseApacheClient {
 			return uri;
 		}
 	}
-	
+
 	@SuppressWarnings({"unchecked"})
 	protected static <S, T> RequestBodyConverter<S, T> findBodyConverter(final Map<Class<? extends RequestBody>,
 			RequestBodyConverter> converters, final RequestBody<?> body) {

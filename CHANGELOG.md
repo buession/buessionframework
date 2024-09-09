@@ -57,6 +57,7 @@
 - 删除 com.buession.web.mvc.Response 中参数为 com.buession.core.Pagination 的构造函数和 setter 函数
 - 删除 buession-cron 和 buession-session
 - 删除 MobileFilter、PoweredByHeaderFilter
+- 序列化类删除反序列化方法
 
 
 ### 🐞 Bug 修复
