@@ -325,7 +325,7 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 	 */
 	public void setSchema(String schema) {
 		this.schema = schema;
-		setDefaultSchema(schema);
+		super.setDefaultSchema(schema);
 	}
 
 	@Override
@@ -527,8 +527,12 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 
 		hasTextPropertyMapper.from(this::getConnectionInitSql).to(dataSource::setConnectionInitSql);
 
-		nullPropertyMapper.from(this::getTransactionIsolation).as((v)->"TRANSACTION_" + v.name())
-				.to(dataSource::setTransactionIsolation);
+		if(this.getTransactionIsolation() != null){
+			if(this.getTransactionIsolation() != TransactionIsolation.DEFAULT){
+				dataSource.setTransactionIsolation("TRANSACTION_" + this.getTransactionIsolation().name());
+			}
+		}
+
 		nullPropertyMapper.from(this::isIsolateInternalQueries).to(dataSource::setIsolateInternalQueries);
 		nullPropertyMapper.from(this::isAutoCommit).to(dataSource::setAutoCommit);
 
