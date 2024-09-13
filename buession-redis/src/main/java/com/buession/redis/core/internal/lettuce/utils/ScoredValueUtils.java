@@ -41,6 +41,7 @@ public class ScoredValueUtils {
 
 	}
 
+	@SuppressWarnings({"unchecked"})
 	public static ScoredValue<byte[]>[] fromStringMap(final Map<String, Double> values) {
 		if(values == null){
 			return null;
@@ -57,6 +58,7 @@ public class ScoredValueUtils {
 		}
 	}
 
+	@SuppressWarnings({"unchecked"})
 	public static ScoredValue<byte[]>[] fromBinaryMap(final Map<byte[], Double> values) {
 		if(values == null){
 			return null;

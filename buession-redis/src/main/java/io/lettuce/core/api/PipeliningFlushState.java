@@ -56,5 +56,4 @@ public interface PipeliningFlushState {
 	 */
 	void onClose(StatefulConnection<?, ?> connection);
 
-
 }

@@ -189,9 +189,9 @@ public abstract class AbstractRedisClient<CONN extends RedisConnection> implemen
 
 		if(logger.isDebugEnabled()){
 			if(arguments != null){
-				logger.debug("Execute command '{}' {} {}", command, command.getCommand(), arguments);
+				logger.debug("Execute command: {} {}", command.getCommand(), arguments);
 			}else{
-				logger.debug("Execute command '{}' {}", command, command.getCommand());
+				logger.debug("Execute command: {}", command.getCommand());
 			}
 		}
 
@@ -200,11 +200,10 @@ public abstract class AbstractRedisClient<CONN extends RedisConnection> implemen
 		}catch(RedisException e){
 			if(logger.isErrorEnabled()){
 				if(arguments != null){
-					logger.error("Execute command '{}' {} {}, failure: {}", command, command.getCommand(),
-							arguments, e.getMessage(), e);
+					logger.error("Execute command: {} {}, failure: {}", command.getCommand(), arguments,
+							e.getMessage(), e);
 				}else{
-					logger.error("Execute command '{}' {}, failure: {}", command, command.getCommand(), e.getMessage(),
-							e);
+					logger.error("Execute command: {}, failure: {}", command.getCommand(), e.getMessage(), e);
 				}
 			}
 			throw e;

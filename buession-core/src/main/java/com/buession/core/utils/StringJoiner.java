@@ -74,9 +74,7 @@ public class StringJoiner {
 	 * @param suffix
 	 * 		后缀
 	 */
-	public StringJoiner(CharSequence delimiter,
-						CharSequence prefix,
-						CharSequence suffix) {
+	public StringJoiner(CharSequence delimiter, CharSequence prefix, CharSequence suffix) {
 		this.prefix = prefix == null ? Constants.EMPTY_STRING : prefix.toString();
 		this.delimiter = delimiter == null ? Constants.EMPTY_STRING : delimiter.toString();
 		this.suffix = suffix == null ? Constants.EMPTY_STRING : suffix.toString();
@@ -103,9 +101,7 @@ public class StringJoiner {
 	 * @param suffix
 	 * 		后缀
 	 */
-	public StringJoiner(char delimiter,
-						CharSequence prefix,
-						CharSequence suffix) {
+	public StringJoiner(char delimiter, CharSequence prefix, CharSequence suffix) {
 		this.prefix = prefix == null ? Constants.EMPTY_STRING : prefix.toString();
 		this.delimiter = delimiter + "";
 		this.suffix = suffix == null ? Constants.EMPTY_STRING : suffix.toString();

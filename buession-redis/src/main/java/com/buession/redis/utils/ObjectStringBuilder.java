@@ -24,7 +24,7 @@
  */
 package com.buession.redis.utils;
 
-import java.util.StringJoiner;
+import com.buession.core.utils.StringJoiner;
 
 /**
  * @author Yong.Teng

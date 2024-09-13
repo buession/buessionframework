@@ -21,11 +21,12 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2024 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -36,7 +37,9 @@ import java.util.List;
  *
  * @author Yong.Teng
  */
-public class Pagination<E> {
+public class Pagination<E> implements Serializable {
+
+	private final static long serialVersionUID = 1135345190741903064L;
 
 	/**
 	 * 默认每页大小
@@ -81,7 +84,7 @@ public class Pagination<E> {
 	/**
 	 * Constructs with default configuration.
 	 */
-	public Pagination(){
+	public Pagination() {
 	}
 
 	/**
@@ -92,7 +95,7 @@ public class Pagination<E> {
 	 * @param pagesize
 	 * 		每页大小
 	 */
-	public Pagination(int page, int pagesize){
+	public Pagination(int page, int pagesize) {
 		setPagesize(pagesize);
 		setPage(page);
 	}
@@ -107,7 +110,7 @@ public class Pagination<E> {
 	 * @param totalRecords
 	 * 		总记录数
 	 */
-	public Pagination(int page, int pagesize, long totalRecords){
+	public Pagination(int page, int pagesize, long totalRecords) {
 		setPagesize(pagesize);
 		setTotalRecords(totalRecords);
 		setPage(page);
@@ -118,7 +121,7 @@ public class Pagination<E> {
 	 *
 	 * @return 当前页码
 	 */
-	public int getPage(){
+	public int getPage() {
 		return page;
 	}
 
@@ -128,7 +131,7 @@ public class Pagination<E> {
 	 * @param page
 	 * 		当前页码
 	 */
-	public void setPage(int page){
+	public void setPage(int page) {
 		this.page = page < 1 ? 1 : (totalPages > 1 && page > totalPages ? totalPages : page);
 	}
 
@@ -137,7 +140,7 @@ public class Pagination<E> {
 	 *
 	 * @return 每页大小
 	 */
-	public int getPagesize(){
+	public int getPagesize() {
 		return pagesize;
 	}
 
@@ -147,7 +150,7 @@ public class Pagination<E> {
 	 * @param pagesize
 	 * 		每页大小
 	 */
-	public void setPagesize(int pagesize){
+	public void setPagesize(int pagesize) {
 		this.pagesize = pagesize < 1 ? PAGESIZE : pagesize;
 	}
 
@@ -156,7 +159,7 @@ public class Pagination<E> {
 	 *
 	 * @return 前一页页码
 	 */
-	public int getPreviousPage(){
+	public int getPreviousPage() {
 		return previousPage;
 	}
 
@@ -166,7 +169,7 @@ public class Pagination<E> {
 	 * @param previousPage
 	 * 		前一页页码
 	 */
-	public void setPreviousPage(int previousPage){
+	public void setPreviousPage(int previousPage) {
 		this.previousPage = (page <= 1 ? 1 : previousPage);
 	}
 
@@ -175,7 +178,7 @@ public class Pagination<E> {
 	 *
 	 * @return 下一页页码
 	 */
-	public int getNextPage(){
+	public int getNextPage() {
 		return nextPage;
 	}
 
@@ -185,7 +188,7 @@ public class Pagination<E> {
 	 * @param nextPage
 	 * 		下一页页码
 	 */
-	public void setNextPage(int nextPage){
+	public void setNextPage(int nextPage) {
 		this.nextPage = totalPages < page ? page : nextPage;
 	}
 
@@ -194,7 +197,7 @@ public class Pagination<E> {
 	 *
 	 * @return 总页码
 	 */
-	public int getTotalPages(){
+	public int getTotalPages() {
 		return totalPages;
 	}
 
@@ -204,7 +207,7 @@ public class Pagination<E> {
 	 * @param totalPages
 	 * 		总页码
 	 */
-	public void setTotalPages(int totalPages){
+	public void setTotalPages(int totalPages) {
 		this.totalPages = Math.max(totalPages, 1);
 	}
 
@@ -213,7 +216,7 @@ public class Pagination<E> {
 	 *
 	 * @return 总记录数
 	 */
-	public long getTotalRecords(){
+	public long getTotalRecords() {
 		return totalRecords;
 	}
 
@@ -223,7 +226,7 @@ public class Pagination<E> {
 	 * @param totalRecords
 	 * 		总记录数
 	 */
-	public void setTotalRecords(long totalRecords){
+	public void setTotalRecords(long totalRecords) {
 		this.totalRecords = totalRecords < 0 ? 0 : totalRecords;
 
 		setTotalPages((int) Math.ceil((double) this.totalRecords / pagesize));
@@ -236,7 +239,7 @@ public class Pagination<E> {
 	 *
 	 * @return 结果数据
 	 */
-	public List<E> getData(){
+	public List<E> getData() {
 		return data;
 	}
 
@@ -246,7 +249,7 @@ public class Pagination<E> {
 	 * @param data
 	 * 		结果数据
 	 */
-	public void setData(List<E> data){
+	public void setData(List<E> data) {
 		this.data = data;
 	}
 

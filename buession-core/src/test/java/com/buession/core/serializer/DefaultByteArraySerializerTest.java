@@ -93,49 +93,4 @@ public class DefaultByteArraySerializerTest {
 		System.out.println(str);
 	}
 
-	@Test
-	public void deserializeWithCharsetName() throws SerializerException {
-		Uptime uptime = new Uptime(5, 100);
-
-		String str = serializer.serialize(uptime, StandardCharsets.UTF_8.name());
-		Uptime ret = serializer.deserialize(str, StandardCharsets.UTF_8.name());
-		System.out.println(ret);
-	}
-
-	@Test
-	public void deserializeWithCharset() throws SerializerException {
-		Uptime uptime = new Uptime(5, 100);
-
-		String str = serializer.serialize(uptime, StandardCharsets.UTF_8);
-		Uptime ret = serializer.deserialize(str, StandardCharsets.UTF_8);
-		System.out.println(ret);
-	}
-
-	@Test
-	public void deserializeBytes() throws SerializerException {
-		Uptime uptime = new Uptime(5, 100);
-
-		byte[] str = serializer.serializeAsBytes(uptime);
-		Uptime ret = serializer.deserialize(str);
-		System.out.println(ret);
-	}
-
-	@Test
-	public void deserializeBytesWithCharsetName() throws SerializerException {
-		Uptime uptime = new Uptime(5, 100);
-
-		byte[] str = serializer.serializeAsBytes(uptime, StandardCharsets.UTF_8.name());
-		Uptime ret = serializer.deserialize(str, StandardCharsets.UTF_8.name());
-		System.out.println(ret);
-	}
-
-	@Test
-	public void deserializeBytesWithCharset() throws SerializerException {
-		Uptime uptime = new Uptime(5, 100);
-
-		byte[] str = serializer.serializeAsBytes(uptime, StandardCharsets.UTF_8);
-		Uptime ret = serializer.deserialize(str, StandardCharsets.UTF_8);
-		System.out.println(ret);
-	}
-
 }

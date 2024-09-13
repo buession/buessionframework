@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2023 Buession.com Inc.														|
+ * | Copyright @ 2013-2024 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao;
@@ -35,6 +35,8 @@ package com.buession.dao;
  * @author Yong.Teng
  */
 public class Pagination<E> extends com.buession.core.Pagination<E> {
+
+	private final static long serialVersionUID = -861860070044591052L;
 
 	/**
 	 * 偏移量
