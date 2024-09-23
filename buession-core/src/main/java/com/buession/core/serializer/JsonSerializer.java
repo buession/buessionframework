@@ -24,12 +24,44 @@
  */
 package com.buession.core.serializer;
 
+import com.buession.core.Customizer;
+
 /**
  * JSON 序列化
  *
+ * @param <T>
+ * 		JSON 序列化原生类型
+ *
  * @author Yong.Teng
  */
-@Deprecated
-public interface JsonSerializer extends Serializer {
+public interface JsonSerializer<T> extends Serializer {
+
+	/**
+	 * 序列化配置
+	 *
+	 * @param object
+	 * 		JSON 原生对象
+	 *
+	 * @since 3.0.0
+	 */
+	default void configure(T object) {
+
+	}
+
+	/**
+	 * 序列化配置
+	 *
+	 * @param object
+	 * 		JSON 原生对象
+	 * @param customizer
+	 * 		配置定制
+	 *
+	 * @since 3.0.0
+	 */
+	default void configure(T object, Customizer<T> customizer) {
+		if(customizer != null){
+			customizer.customize(object);
+		}
+	}
 
 }

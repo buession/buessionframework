@@ -36,8 +36,7 @@ import java.nio.charset.Charset;
  *
  * @author Yong.Teng
  */
-@Deprecated
-public class FastJsonJsonSerializer extends AbstractJsonSerializer {
+public class FastJsonJsonSerializer extends AbstractJsonSerializer<JSON> {
 
 	@Override
 	public <V> String serialize(final V object) throws SerializerException {

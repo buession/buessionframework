@@ -29,10 +29,12 @@ import java.nio.charset.Charset;
 /**
  * JSON 序列化抽象类
  *
+ * @param <T>
+ * 		JSON 序列化原生类型
+ *
  * @author Yong.Teng
  */
-@Deprecated
-public abstract class AbstractJsonSerializer extends AbstractSerializer implements JsonSerializer {
+public abstract class AbstractJsonSerializer<T> extends AbstractSerializer implements JsonSerializer<T> {
 
 	@Override
 	public <V> String serialize(final V object, final String charsetName) throws SerializerException {

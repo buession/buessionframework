@@ -34,14 +34,18 @@ import java.nio.charset.Charset;
  *
  * @author Yong.Teng
  */
-@Deprecated
-public class GsonJsonSerializer extends AbstractJsonSerializer {
+public class GsonJsonSerializer extends AbstractJsonSerializer<Gson> {
+
+	private final Gson gson = new Gson();
+
+	public GsonJsonSerializer() {
+		configure(gson);
+	}
 
 	@Override
 	public <V> String serialize(final V object) throws SerializerException {
 		Assert.isNull(object, "Object cloud not be null.");
 
-		Gson gson = new Gson();
 		return gson.toJson(object);
 	}
 

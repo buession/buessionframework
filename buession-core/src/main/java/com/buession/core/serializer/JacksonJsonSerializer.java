@@ -34,15 +34,25 @@ import com.fasterxml.jackson.databind.SerializationFeature;
  *
  * @author Yong.Teng
  */
-@Deprecated
-public class JacksonJsonSerializer extends AbstractJsonSerializer {
+public class JacksonJsonSerializer extends AbstractJsonSerializer<ObjectMapper> {
+
+	private final ObjectMapper objectMapper = new ObjectMapper();
+
+	public JacksonJsonSerializer() {
+		configure(objectMapper);
+	}
+
+	@Override
+	public void configure(ObjectMapper objectMapper) {
+		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+	}
 
 	@Override
 	public <V> String serialize(final V object) throws SerializerException {
 		Assert.isNull(object, "Object cloud not be null.");
 
 		try{
-			return getObjectMapper().writeValueAsString(object);
+			return objectMapper.writeValueAsString(object);
 		}catch(JsonProcessingException e){
 			throw new SerializerException(object.getClass().getName() + " json serialize failure.", e);
 		}
@@ -53,18 +63,10 @@ public class JacksonJsonSerializer extends AbstractJsonSerializer {
 		Assert.isNull(object, "Object cloud not be null.");
 
 		try{
-			return getObjectMapper().writeValueAsBytes(object);
+			return objectMapper.writeValueAsBytes(object);
 		}catch(JsonProcessingException e){
 			throw new SerializerException(object.getClass().getName() + " json serialize failure.", e);
 		}
-	}
-
-	protected static ObjectMapper getObjectMapper() {
-		ObjectMapper objectMapper = new ObjectMapper();
-
-		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-
-		return objectMapper;
 	}
 
 }

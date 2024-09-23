@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.deserializer;
@@ -34,8 +34,7 @@ import com.buession.core.utils.Assert;
  * @author Yong.Teng
  * @since 2.3.0
  */
-@Deprecated
-public class FastJsonJsonDeserializer extends AbstractJsonDeserializer {
+public class FastJsonJsonDeserializer extends AbstractJsonDeserializer<JSON> {
 
 	@Override
 	public <V> V deserialize(final String str) throws DeserializerException {
