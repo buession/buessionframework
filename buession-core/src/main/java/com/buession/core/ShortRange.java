@@ -25,20 +25,17 @@
 package com.buession.core;
 
 /**
- * 数值范围
- *
- * @param <T>
- * 		数值类型
+ * {@code Short} 范围
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class NumberRange<T extends Number> extends Range<T> {
+public class ShortRange extends NumberRange<Short> {
 
 	/**
 	 * 构造函数
 	 */
-	public NumberRange() {
+	public ShortRange() {
 		super();
 	}
 
@@ -50,7 +47,7 @@ public class NumberRange<T extends Number> extends Range<T> {
 	 * @param end
 	 * 		截止值
 	 */
-	public NumberRange(T start, T end) {
+	public ShortRange(Short start, Short end) {
 		super(start, end);
 	}
 

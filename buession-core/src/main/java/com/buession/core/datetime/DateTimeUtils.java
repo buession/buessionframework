@@ -21,37 +21,10 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */
-package com.buession.core;
-
-/**
- * 数值范围
- *
- * @param <T>
- * 		数值类型
+ */package com.buession.core.datetime;/**
+ * 
  *
  * @author Yong.Teng
  * @since 3.0.0
- */
-public class NumberRange<T extends Number> extends Range<T> {
-
-	/**
-	 * 构造函数
-	 */
-	public NumberRange() {
-		super();
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param start
-	 * 		起始值
-	 * @param end
-	 * 		截止值
-	 */
-	public NumberRange(T start, T end) {
-		super(start, end);
-	}
-
+ */public class DateTimeUtils {
 }
