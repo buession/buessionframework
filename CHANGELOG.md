@@ -26,6 +26,9 @@
 - 新增代理调用处理器 InvocationHandler 抽象类 AbstractInvocationHandler
 - PropertyMapper 增加正数断言 alwaysApplyingWhenPositiveNumber
 - com.buession.io.file.File 新增支持将 InputStream 写入文件
+- JSON 序列化和反序列化支持对原生对象进行配置
+- 增加范围类 Range 及其衍生类
+- 新增日期时间工具类 DateTimeUtils
 
 
 ### 🔔 变化
