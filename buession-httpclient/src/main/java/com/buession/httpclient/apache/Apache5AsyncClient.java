@@ -36,6 +36,7 @@ import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.RequestBodyConverter;
 import com.buession.httpclient.core.Response;
 import com.buession.httpclient.core.concurrent.Callback;
+import com.buession.httpclient.core.utils.HeadersBuilder;
 import com.buession.httpclient.exception.RequestException;
 import com.buession.net.ssl.SslConfiguration;
 import org.apache.hc.client5.http.async.HttpAsyncClient;
@@ -493,14 +494,32 @@ public class Apache5AsyncClient extends AbstractApacheAsyncClient {
 							 final List<Header> headers, final RequestBody<?> body, final Callback callback)
 			throws IOException, RequestException {
 		Optional.ofNullable(body).map(this::buildHttpEntity).ifPresent(request::setEntity);
-		doRequest(request, requestConfig, headers, callback);
+		final HeadersBuilder headersBuilder = new HeadersBuilder();
+
+		if(body != null && body.getContentType() != null){
+			headersBuilder.add("Content-Type", body.getContentType().getMimeType());
+		}
+		if(headers != null){
+			headersBuilder.add(headers);
+		}
+
+		doRequest(request, requestConfig, headersBuilder.build(), callback);
 	}
 
 	protected void doRequest(final HttpUriRequestBase request, final RequestConfig requestConfig,
 							 final int readTimeout, final List<Header> headers, final RequestBody<?> body,
 							 final Callback callback) throws IOException, RequestException {
 		Optional.ofNullable(body).map(this::buildHttpEntity).ifPresent(request::setEntity);
-		doRequest(request, requestConfig, readTimeout, headers, callback);
+		final HeadersBuilder headersBuilder = new HeadersBuilder();
+
+		if(body != null && body.getContentType() != null){
+			headersBuilder.add("Content-Type", body.getContentType().getMimeType());
+		}
+		if(headers != null){
+			headersBuilder.add(headers);
+		}
+
+		doRequest(request, requestConfig, readTimeout, headersBuilder.build(), callback);
 	}
 
 	protected void doRequest(final HttpUriRequestBase request, final Callback callback) throws IOException,

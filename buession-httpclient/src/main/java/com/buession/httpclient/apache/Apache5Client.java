@@ -458,14 +458,26 @@ public class Apache5Client extends AbstractApacheClient {
 								 final List<Header> headers, final RequestBody<?> body)
 			throws IOException, RequestException {
 		Optional.ofNullable(body).map(this::buildHttpEntity).ifPresent(request::setEntity);
-		return doRequest(request, requestConfig, headers);
+		final List<Header> headersCopy = headers == null ? new ArrayList<>(1) : headers;
+
+		if(body != null && body.getContentType() != null){
+			headersCopy.add(new Header("Content-Type", body.getContentType().getMimeType()));
+		}
+
+		return doRequest(request, requestConfig, headersCopy);
 	}
 
 	protected Response doRequest(final HttpUriRequestBase request, final RequestConfig requestConfig,
 								 final int readTimeout, final List<Header> headers, final RequestBody<?> body)
 			throws IOException, RequestException {
 		Optional.ofNullable(body).map(this::buildHttpEntity).ifPresent(request::setEntity);
-		return doRequest(request, requestConfig, readTimeout, headers);
+		final List<Header> headersCopy = headers == null ? new ArrayList<>(1) : headers;
+
+		if(body != null && body.getContentType() != null){
+			headersCopy.add(new Header("Content-Type", body.getContentType().getMimeType()));
+		}
+
+		return doRequest(request, requestConfig, readTimeout, headersCopy);
 	}
 
 	protected Response doRequest(final ClassicHttpRequest request) throws IOException, RequestException {

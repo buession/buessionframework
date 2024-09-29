@@ -19,63 +19,22 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.okhttp;
+package com.buession.core.utils;
 
-import com.buession.httpclient.core.Header;
-import com.buession.httpclient.core.RequestMethod;
-
-import java.net.URI;
-import java.util.List;
+import org.junit.jupiter.api.Test;
 
 /**
- * Okhttp3 Request.
- *
  * @author Yong.Teng
- * @since 2.3.0
+ * @since 3.0.0
  */
-public class OkHttpRequest {
+public class StringJoinerTest {
 
-	private RequestMethod method;
-
-	private URI uri;
-
-	private List<Header> headers;
-
-	private okhttp3.Request.Builder builder;
-
-	public RequestMethod getMethod() {
-		return method;
-	}
-
-	public void setMethod(RequestMethod method) {
-		this.method = method;
-	}
-
-	public URI getUri() {
-		return uri;
-	}
-
-	public void setUri(URI uri) {
-		this.uri = uri;
-	}
-
-	public List<Header> getHeaders() {
-		return headers;
-	}
-
-	public void setHeaders(List<Header> headers) {
-		this.headers = headers;
-	}
-
-	public okhttp3.Request.Builder getRequestBuilder() {
-		return builder;
-	}
-
-	public void setRequestBuilder(okhttp3.Request.Builder builder) {
-		this.builder = builder;
+	@Test
+	public void join() {
+		System.out.println(new StringJoiner(", ", '[', ']').add("A").add("B").toString());
 	}
 
 }

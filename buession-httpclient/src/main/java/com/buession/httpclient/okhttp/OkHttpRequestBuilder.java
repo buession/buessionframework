@@ -24,9 +24,11 @@
  */
 package com.buession.httpclient.okhttp;
 
+import com.buession.core.builder.MapBuilder;
 import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
 import com.buession.httpclient.core.ChunkedInputStreamRequestBody;
+import com.buession.httpclient.core.ContentType;
 import com.buession.httpclient.core.EncodedFormRequestBody;
 import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.HtmlRawRequestBody;
@@ -185,17 +187,17 @@ public class OkHttpRequestBuilder {
 
 	public OkHttpRequestBuilder post(RequestBody<?> body) {
 		return setRequest(body == null ? new okhttp3.RequestBuilder().post() : new okhttp3.RequestBuilder().post(
-				buildRequestBody(body)), RequestMethod.POST);
+				buildRequestBody(body)).headers(builderHeaders(body)), RequestMethod.POST);
 	}
 
 	public OkHttpRequestBuilder patch(RequestBody<?> body) {
 		return setRequest(body == null ? new okhttp3.RequestBuilder().patch() : new okhttp3.RequestBuilder().patch(
-				buildRequestBody(body)), RequestMethod.PATCH);
+				buildRequestBody(body)).headers(builderHeaders(body)), RequestMethod.PATCH);
 	}
 
 	public OkHttpRequestBuilder put(RequestBody<?> body) {
 		return setRequest(body == null ? new okhttp3.RequestBuilder().put() : new okhttp3.RequestBuilder().put(
-				buildRequestBody(body)), RequestMethod.PUT);
+				buildRequestBody(body)).headers(builderHeaders(body)), RequestMethod.PUT);
 	}
 
 	public OkHttpRequestBuilder delete() {
@@ -253,13 +255,13 @@ public class OkHttpRequestBuilder {
 	public OkHttpRequestBuilder proppatch(RequestBody<?> body) {
 		return setRequest(
 				body == null ? new okhttp3.RequestBuilder().proppatch() : new okhttp3.RequestBuilder().proppatch(
-						buildRequestBody(body)), RequestMethod.PROPPATCH);
+						buildRequestBody(body)).headers(builderHeaders(body)), RequestMethod.PROPPATCH);
 	}
 
 	public OkHttpRequestBuilder report(RequestBody<?> body) {
 		return setRequest(
 				body == null ? new okhttp3.RequestBuilder().report() : new okhttp3.RequestBuilder().report(
-						buildRequestBody(body)), RequestMethod.REPORT);
+						buildRequestBody(body)).headers(builderHeaders(body)), RequestMethod.REPORT);
 	}
 
 	public OkHttpRequestBuilder view() {
@@ -289,6 +291,19 @@ public class OkHttpRequestBuilder {
 		request.setRequestBuilder(requestBuilder);
 		request.setMethod(method);
 		return this;
+	}
+
+	private static Headers builderHeaders(final RequestBody<?> body) {
+		ContentType contentType = body.getContentType();
+		if(contentType == null){
+			return Headers.of();
+		}else{
+			final Headers.Builder builder = new Headers.Builder();
+
+			builder.add("Content-Type", contentType.getMimeType());
+
+			return builder.build();
+		}
 	}
 
 	@SuppressWarnings({"unchecked"})

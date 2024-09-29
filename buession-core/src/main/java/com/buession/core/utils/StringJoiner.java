@@ -52,7 +52,7 @@ public class StringJoiner {
 
 	private StringBuilder value;
 
-	private String emptyValue;
+	private final String emptyValue;
 
 	/**
 	 * 构造函数
@@ -86,6 +86,20 @@ public class StringJoiner {
 	 *
 	 * @param delimiter
 	 * 		分隔符
+	 * @param prefix
+	 * 		前缀
+	 * @param suffix
+	 * 		后缀
+	 */
+	public StringJoiner(CharSequence delimiter, char prefix, char suffix) {
+		this(delimiter, prefix + "", suffix + "");
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param delimiter
+	 * 		分隔符
 	 */
 	public StringJoiner(char delimiter) {
 		this(delimiter, Constants.EMPTY_STRING, Constants.EMPTY_STRING);
@@ -102,10 +116,21 @@ public class StringJoiner {
 	 * 		后缀
 	 */
 	public StringJoiner(char delimiter, CharSequence prefix, CharSequence suffix) {
-		this.prefix = prefix == null ? Constants.EMPTY_STRING : prefix.toString();
-		this.delimiter = delimiter + "";
-		this.suffix = suffix == null ? Constants.EMPTY_STRING : suffix.toString();
-		this.emptyValue = this.prefix + this.suffix;
+		this(delimiter + "", prefix, suffix);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param delimiter
+	 * 		分隔符
+	 * @param prefix
+	 * 		前缀
+	 * @param suffix
+	 * 		后缀
+	 */
+	public StringJoiner(char delimiter, char prefix, char suffix) {
+		this(delimiter + "", prefix + "", suffix + "");
 	}
 
 	public StringJoiner add(final boolean value) {
