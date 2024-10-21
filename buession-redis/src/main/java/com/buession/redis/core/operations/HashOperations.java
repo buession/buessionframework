@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
@@ -30,6 +30,7 @@ import com.buession.lang.Status;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.HashCommands;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -54,7 +55,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 被成功删除的域的数量
 	 */
-	default Long hDelete(final String key, final String... fields){
+	default Long hDelete(final String key, final String... fields) {
 		return hDel(key, fields);
 	}
 
@@ -70,7 +71,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 被成功删除的域的数量
 	 */
-	default Long hDelete(final byte[] key, final byte[]... fields){
+	default Long hDelete(final byte[] key, final byte[]... fields) {
 		return hDel(key, fields);
 	}
 
@@ -276,7 +277,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @see TypeReference
 	 */
-	<V> Map<byte[], V> hGetAllObject(final byte[] key, TypeReference<V> type);
+	<V> Map<byte[], V> hGetAllObject(final byte[] key, final TypeReference<V> type);
 
 	/**
 	 * 为哈希表 key 中的域 field 的值加上减量 increment
@@ -292,7 +293,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中域 field 减量 increment 后的值
 	 */
-	default Long hDecrBy(final String key, final String field, final long value){
+	default Long hDecrBy(final String key, final String field, final long value) {
 		return hIncrBy(key, field, value > 0 ? value * -1 : value);
 	}
 
@@ -310,7 +311,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中域 field 减量 increment 后的值
 	 */
-	default Long hDecrBy(final byte[] key, final byte[] field, final long value){
+	default Long hDecrBy(final byte[] key, final byte[] field, final long value) {
 		return hIncrBy(key, field, value > 0 ? value * -1 : value);
 	}
 
@@ -328,7 +329,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中域 field 减量 increment 后的值
 	 */
-	default Double hDecrByFloat(final String key, final String field, final double value){
+	default Double hDecrByFloat(final String key, final String field, final double value) {
 		return hIncrByFloat(key, field, value > 0 ? value * -1 : value);
 	}
 
@@ -346,7 +347,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中域 field 减量 increment 后的值
 	 */
-	default Double hDecrByFloat(final byte[] key, final byte[] field, final double value){
+	default Double hDecrByFloat(final byte[] key, final byte[] field, final double value) {
 		return hIncrByFloat(key, field, value > 0 ? value * -1 : value);
 	}
 
@@ -467,12 +468,10 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		Key
 	 * @param data
 	 * 		field =&gt; value (域-值)对
-	 * @param <V>
-	 * 		值类型
 	 *
 	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
 	 */
-	<V> Status hMSet(final String key, final List<KeyValue<String, V>> data);
+	Status hMSet(final String key, final List<KeyValue<String, ?>> data);
 
 	/**
 	 * 批量将多个 field =&gt; value (域-值)对设置到哈希表 key 中
@@ -483,12 +482,46 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		Key
 	 * @param data
 	 * 		field =&gt; value (域-值)对
-	 * @param <V>
-	 * 		值类型
 	 *
 	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
 	 */
-	<V> Status hMSet(final byte[] key, final List<KeyValue<byte[], V>> data);
+	Status hMSet(final byte[] key, final List<KeyValue<byte[], ?>> data);
+
+	/**
+	 * 批量将多个 field =&gt; value (域-值)对设置到哈希表 key 中
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hmset.html" target="_blank">http://redisdoc.com/hash/hmset.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param data
+	 * 		field =&gt; value (域-值)对
+	 *
+	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
+	 *
+	 * @since 3.0.0
+	 */
+	default Status hMSet(final String key, final KeyValue<String, ?>... data) {
+		return hMSet(key, Arrays.asList(data));
+	}
+
+	/**
+	 * 批量将多个 field =&gt; value (域-值)对设置到哈希表 key 中
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hmset.html" target="_blank">http://redisdoc.com/hash/hmset.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param data
+	 * 		field =&gt; value (域-值)对
+	 *
+	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
+	 *
+	 * @since 3.0.0
+	 */
+	default Status hMSet(final byte[] key, final KeyValue<byte[], ?>... data) {
+		return hMSet(key, Arrays.asList(data));
+	}
 
 	/**
 	 * When called with just the key argument, return a random field from the hash value stored at key.

@@ -24,6 +24,8 @@
  */
 package com.buession.aop;
 
+import com.buession.aop.utils.ProxyUtils;
+
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
@@ -31,6 +33,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 
 /**
  * {@link InvocationHandler} 抽象类
@@ -40,9 +43,8 @@ import java.lang.reflect.Method;
  */
 public abstract class AbstractInvocationHandler implements InvocationHandler {
 
-	private final static int ALLOWED_MODES =
-			MethodHandles.Lookup.PRIVATE | MethodHandles.Lookup.PROTECTED | MethodHandles.Lookup.PUBLIC
-					| MethodHandles.Lookup.PACKAGE;
+	private final static int ALLOWED_MODES = MethodHandles.Lookup.PRIVATE | MethodHandles.Lookup.PROTECTED
+			| MethodHandles.Lookup.PUBLIC | MethodHandles.Lookup.PACKAGE;
 
 	protected final static Constructor<MethodHandles.Lookup> lookupConstructor;
 
@@ -74,19 +76,83 @@ public abstract class AbstractInvocationHandler implements InvocationHandler {
 		lookupConstructor = lookup;
 	}
 
+	@Override
+	public final Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+		if(args == null){
+			args = ProxyMethodInvoker.NO_ARGS;
+		}
+
+		if(args.length == 0){
+			if("hashCode".equals(method.getName())){
+				return doHashCode();
+			}else if("toString".equals(method.getName())){
+				return doToString();
+			}
+		}
+
+		if(args.length == 1 && "equals".equals(method.getName()) && method.getParameterTypes()[0] == Object.class){
+			Object arg = args[0];
+			return doEquals(proxy, arg);
+		}
+
+		return doInvoke(proxy, method, args);
+	}
+
+	protected Object doHashCode() {
+		return hashCode();
+	}
+
+	protected Object doEquals(final Object proxy, final Object arg) {
+		if(arg == null){
+			return false;
+		}
+
+		if(proxy == arg){
+			return true;
+		}
+
+		return ProxyUtils.isProxyOfSameInterfaces(arg, proxy.getClass()) && equals(Proxy.getInvocationHandler(arg));
+	}
+
+	protected Object doToString() {
+		return toString();
+	}
+
+	protected Object doInvoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+		if(Object.class.equals(method.getDeclaringClass())){
+			return method.invoke(this, args);
+		}
+
+		return handleInvocation(proxy, method, args);
+	}
+
+	protected abstract Object handleInvocation(final Object proxy, final Method method, final Object[] args)
+			throws Throwable;
+
 	protected int getAllowedModes() {
 		return ALLOWED_MODES;
 	}
 
-	protected MethodHandle getMethodHandleJava8(Method method) throws IllegalAccessException, InstantiationException,
-			InvocationTargetException {
+	protected <T> ProxyMethodInvoker<T> createMethodInvoker(final Method method)
+			throws InvocationTargetException, IllegalAccessException, InstantiationException, NoSuchMethodException {
+		if(method.isDefault()){
+			final MethodHandle methodHandle = privateLookupInMethod == null ? getMethodHandleJava8(method) :
+					getMethodHandleJava9(method);
+			return new DefaultMethodInvoker<>(methodHandle);
+		}else{
+			return new PlainMethodInvoker<>();
+		}
+	}
+
+	protected MethodHandle getMethodHandleJava8(final Method method)
+			throws IllegalAccessException, InstantiationException, InvocationTargetException {
 		final Class<?> declaringClass = method.getDeclaringClass();
 		return lookupConstructor.newInstance(declaringClass, getAllowedModes())
 				.unreflectSpecial(method, declaringClass);
 	}
 
-	protected MethodHandle getMethodHandleJava9(Method method) throws NoSuchMethodException, IllegalAccessException,
-			InvocationTargetException {
+	protected MethodHandle getMethodHandleJava9(final Method method)
+			throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 		final Class<?> declaringClass = method.getDeclaringClass();
 		final MethodType methodType = MethodType.methodType(method.getReturnType(), method.getParameterTypes());
 
