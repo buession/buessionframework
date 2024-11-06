@@ -253,7 +253,6 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 	@Override
 	public StatefulRedisConnection<byte[], byte[]> getResource() {
 		StatefulRedisConnection<byte[], byte[]> connection = super.getResource();
-		//jedis.setDataSource(this);
 		return connection;
 	}
 
