@@ -47,15 +47,15 @@ public final class LettuceSentinelTransactionOperations extends AbstractTransact
 	}
 
 	@Override
-	public Status multi() {
+	public void discard() {
 		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.MULTI)
+			new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.DISCARD)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.MULTI)
+			new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.DISCARD)
 					.run();
 		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.MULTI)
+			new LettuceSentinelCommand<>(client, ProtocolCommand.DISCARD)
 					.run();
 		}
 	}
@@ -77,15 +77,29 @@ public final class LettuceSentinelTransactionOperations extends AbstractTransact
 	}
 
 	@Override
-	public void discard() {
+	public Status multi() {
 		if(isPipeline()){
-			new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.DISCARD)
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.MULTI)
 					.run();
 		}else if(isTransaction()){
-			new LettuceSentinelTransactionCommand<>(client, ProtocolCommand.DISCARD)
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.MULTI)
 					.run();
 		}else{
-			new LettuceSentinelCommand<>(client, ProtocolCommand.DISCARD)
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.MULTI)
+					.run();
+		}
+	}
+
+	@Override
+	public Status unwatch() {
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
+					.run();
+		}else{
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
 					.run();
 		}
 	}
@@ -103,20 +117,6 @@ public final class LettuceSentinelTransactionOperations extends AbstractTransact
 		}else{
 			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.WATCH)
 					.run(args);
-		}
-	}
-
-	@Override
-	public Status unwatch() {
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
-					.run();
-		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
-					.run();
 		}
 	}
 

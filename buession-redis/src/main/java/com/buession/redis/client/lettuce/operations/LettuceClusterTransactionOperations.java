@@ -44,15 +44,15 @@ public final class LettuceClusterTransactionOperations extends AbstractTransacti
 	}
 
 	@Override
-	public Status multi() {
+	public void discard() {
 		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<Status, Status>(client, ProtocolCommand.MULTI)
+			new LettuceClusterPipelineCommand<>(client, ProtocolCommand.DISCARD)
 					.run();
 		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<Status, Status>(client, ProtocolCommand.MULTI)
+			new LettuceClusterTransactionCommand<>(client, ProtocolCommand.DISCARD)
 					.run();
 		}else{
-			return new LettuceClusterCommand<Status, Status>(client, ProtocolCommand.MULTI)
+			new LettuceClusterCommand<>(client, ProtocolCommand.DISCARD)
 					.run();
 		}
 	}
@@ -72,15 +72,29 @@ public final class LettuceClusterTransactionOperations extends AbstractTransacti
 	}
 
 	@Override
-	public void discard() {
+	public Status multi() {
 		if(isPipeline()){
-			new LettuceClusterPipelineCommand<>(client, ProtocolCommand.DISCARD)
+			return new LettuceClusterPipelineCommand<Status, Status>(client, ProtocolCommand.MULTI)
 					.run();
 		}else if(isTransaction()){
-			new LettuceClusterTransactionCommand<>(client, ProtocolCommand.DISCARD)
+			return new LettuceClusterTransactionCommand<Status, Status>(client, ProtocolCommand.MULTI)
 					.run();
 		}else{
-			new LettuceClusterCommand<>(client, ProtocolCommand.DISCARD)
+			return new LettuceClusterCommand<Status, Status>(client, ProtocolCommand.MULTI)
+					.run();
+		}
+	}
+
+	@Override
+	public Status unwatch() {
+		if(isPipeline()){
+			return new LettuceClusterPipelineCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
+					.run();
+		}else if(isTransaction()){
+			return new LettuceClusterTransactionCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
+					.run();
+		}else{
+			return new LettuceClusterCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
 					.run();
 		}
 	}
@@ -98,20 +112,6 @@ public final class LettuceClusterTransactionOperations extends AbstractTransacti
 		}else{
 			return new LettuceClusterCommand<Status, Status>(client, ProtocolCommand.WATCH)
 					.run(args);
-		}
-	}
-
-	@Override
-	public Status unwatch() {
-		if(isPipeline()){
-			return new LettuceClusterPipelineCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
-					.run();
-		}else if(isTransaction()){
-			return new LettuceClusterTransactionCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
-					.run();
-		}else{
-			return new LettuceClusterCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
-					.run();
 		}
 	}
 

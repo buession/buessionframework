@@ -3574,13 +3574,11 @@ public abstract class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public Status watch(final String... keys) {
-		return execute((client)->client.transactionOperations().watch(rawKeys(keys)));
-	}
-
-	@Override
-	public Status watch(final byte[]... keys) {
-		return execute((client)->client.transactionOperations().watch(rawKeys(keys)));
+	public void discard() {
+		execute((client)->{
+			client.getConnection().discard();
+			return null;
+		});
 	}
 
 	@Override
@@ -3589,11 +3587,13 @@ public abstract class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public void discard() {
-		execute((client)->{
-			client.getConnection().discard();
-			return null;
-		});
+	public Status watch(final String... keys) {
+		return execute((client)->client.transactionOperations().watch(rawKeys(keys)));
+	}
+
+	@Override
+	public Status watch(final byte[]... keys) {
+		return execute((client)->client.transactionOperations().watch(rawKeys(keys)));
 	}
 
 }
