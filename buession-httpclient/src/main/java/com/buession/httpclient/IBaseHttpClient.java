@@ -19,13 +19,10 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient;
-
-import com.buession.httpclient.conn.ConnectionManager;
-import com.buession.httpclient.core.ProtocolVersion;
 
 /**
  * HttpClient 基接口
@@ -33,36 +30,7 @@ import com.buession.httpclient.core.ProtocolVersion;
  * @author Yong.Teng
  * @since 2.3.0
  */
-public interface IBaseHttpClient {
-
-	/**
-	 * 获取连接管理器
-	 *
-	 * @return 连接管理器
-	 */
-	ConnectionManager getConnectionManager();
-
-	/**
-	 * 设置连接管理器
-	 *
-	 * @param connectionManager
-	 * 		连接管理器
-	 */
-	void setConnectionManager(ConnectionManager connectionManager);
-
-	/**
-	 * 获取 HTTP 协议版本
-	 *
-	 * @return HTTP 协议版本
-	 */
-	ProtocolVersion getHttpVersion();
-
-	/**
-	 * 设置 HTTP 协议版本
-	 *
-	 * @param httpVersion
-	 * 		HTTP 协议版本
-	 */
-	void setHttpVersion(ProtocolVersion httpVersion);
+@Deprecated
+public interface IBaseHttpClient extends IHttpClient {
 
 }

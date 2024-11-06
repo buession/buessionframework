@@ -19,12 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.collect.Maps;
+import com.buession.core.converter.ListConverter;
 import com.buession.core.converter.MapConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
@@ -42,7 +43,6 @@ import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Jedis Stream 命令操作抽象类
@@ -67,16 +67,7 @@ public abstract class AbstractStreamOperations<C extends JedisRedisClient> exten
 
 	@Override
 	public StreamEntryId xAdd(final byte[] key, final StreamEntryId id, final Map<byte[], byte[]> hash) {
-		return xAdd(SafeEncoder.encode(key), id,
-				Converters.BINARY_MAP_TO_STRING_MAP_CONVERTER.convert(hash));
-	}
-
-	@Override
-	public Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final byte[] key, final byte[] groupName,
-															final byte[] consumerName, final int minIdleTime,
-															final StreamEntryId start, final long count) {
-		return xAutoClaim(SafeEncoder.encode(key), SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName),
-				minIdleTime, start, count);
+		return xAdd(SafeEncoder.encode(key), id, Converters.mapBinaryToString().convert(hash));
 	}
 
 	@Override
@@ -85,6 +76,14 @@ public abstract class AbstractStreamOperations<C extends JedisRedisClient> exten
 															final StreamEntryId start) {
 		return xAutoClaim(SafeEncoder.encode(key), SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName),
 				minIdleTime, start);
+	}
+
+	@Override
+	public Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final byte[] key, final byte[] groupName,
+															final byte[] consumerName, final int minIdleTime,
+															final StreamEntryId start, final long count) {
+		return xAutoClaim(SafeEncoder.encode(key), SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName),
+				minIdleTime, start, count);
 	}
 
 	@Override
@@ -364,9 +363,9 @@ public abstract class AbstractStreamOperations<C extends JedisRedisClient> exten
 		if(data == null){
 			return null;
 		}else{
-			final MapConverter<String, List<StreamEntry>, byte[], List<StreamEntry>> converter = new MapConverter<>(
-					SafeEncoder::encode, (value)->value);
-			return data.stream().map(converter::convert).collect(Collectors.toList());
+			final ListConverter<Map<String, List<StreamEntry>>, Map<byte[], List<StreamEntry>>> converter =
+					new ListConverter<>(new MapConverter<>(SafeEncoder::encode, (v)->v));
+			return converter.convert(data);
 		}
 	}
 

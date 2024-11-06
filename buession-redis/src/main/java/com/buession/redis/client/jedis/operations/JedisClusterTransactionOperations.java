@@ -19,19 +19,16 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.TransactionResultConverter;
-import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import redis.clients.jedis.Builder;
 import redis.clients.jedis.Response;
 
@@ -45,109 +42,194 @@ import java.util.List;
  */
 public final class JedisClusterTransactionOperations extends AbstractTransactionOperations<JedisClusterClient> {
 
-	public JedisClusterTransactionOperations(final JedisClusterClient client){
+	public JedisClusterTransactionOperations(final JedisClusterClient client) {
 		super(client);
 	}
 
 	@Override
-	public Status multi(){
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.MULTI)
-				.general((cmd)->{
-					RedisConnection connection = client.getConnection();
-					connection.multi();
+	public void discard() {
+		if(isPipeline()){
+			new JedisClusterPipelineCommand<>(client, ProtocolCommand.DISCARD, (cmd)->{
+				RedisConnection connection = client.getConnection();
+				connection.discard();
+				return null;
+			}, (v)->v)
+					.run();
+		}else if(isTransaction()){
+			new JedisClusterTransactionCommand<>(client, ProtocolCommand.DISCARD, (cmd)->{
+				RedisConnection connection = client.getConnection();
+				connection.discard();
+				return null;
+			}, (v)->v)
+					.run();
+		}else{
+			new JedisClusterCommand<>(client, ProtocolCommand.DISCARD, (cmd)->{
+				RedisConnection connection = client.getConnection();
+				connection.discard();
+				return null;
+			}, (v)->v)
+					.run();
+		}
+	}
 
-					return Status.SUCCESS;
-				}).transaction((cmd)->{
-					RedisConnection connection = client.getConnection();
-					connection.multi();
+	@Override
+	public List<Object> exec() {
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.EXEC, (cmd)->{
+				RedisConnection connection = client.getConnection();
 
-					return new Response<>(new Builder<Status>() {
+				return new Response<>(new Builder<List<Object>>() {
 
-						@Override
-						public Status build(Object data){
+					@Override
+					public List<Object> build(Object data) {
+						return connection.exec();
+					}
+
+				});
+			}, (v)->v).run();
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.EXEC, (cmd)->{
+				RedisConnection connection = client.getConnection();
+
+				return new Response<>(new Builder<List<Object>>() {
+
+					@Override
+					public List<Object> build(Object data) {
+						return connection.exec();
+					}
+
+				});
+			}, (v)->v).run();
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.EXEC, (cmd)->{
+				RedisConnection connection = client.getConnection();
+				return connection.exec();
+			}, (v)->v).run();
+		}
+	}
+
+	@Override
+	public Status multi() {
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.MULTI, (cmd)->{
+				RedisConnection connection = client.getConnection();
+
+				return new Response<>(new Builder<Status>() {
+
+					@Override
+					public Status build(Object data) {
+						try{
+							connection.multi();
 							return Status.SUCCESS;
+						}catch(Exception e){
+							return Status.FAILURE;
 						}
+					}
 
-					});
-				})
-				.run();
+				});
+			}, (v)->v)
+					.run();
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.MULTI, (cmd)->{
+				RedisConnection connection = client.getConnection();
+
+				return new Response<>(new Builder<Status>() {
+
+					@Override
+					public Status build(Object data) {
+						try{
+							connection.multi();
+							return Status.SUCCESS;
+						}catch(Exception e){
+							return Status.FAILURE;
+						}
+					}
+
+				});
+			}, (v)->v)
+					.run();
+		}else{
+			return new JedisClusterCommand<>(client, ProtocolCommand.MULTI, (cmd)->{
+				RedisConnection connection = client.getConnection();
+				try{
+					connection.multi();
+					return Status.SUCCESS;
+				}catch(Exception e){
+					return Status.FAILURE;
+				}
+			}, (v)->v)
+					.run();
+		}
 	}
 
 	@Override
-	public List<Object> exec(){
-		return new JedisClusterCommand<List<Object>>(client,
-				ProtocolCommand.EXEC)
-				.transaction((cmd)->{
-					RedisConnection connection = client.getConnection();
-					List<Object> results = connection.exec();
-
-					return new Response<>(new Builder<List<Object>>() {
+	public Status unwatch() {
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
+					.run();
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.UNWATCH,
+					(cmd)->new Response<>(new Builder<String>() {
 
 						@Override
-						public List<Object> build(Object data){
-							return Validate.isEmpty(results) ? results : new TransactionResultConverter<>(
-									client.getTxResults()).convert(
-									results);
+						public String build(Object data) {
+							return cmd.unwatch();
 						}
 
-					});
-				})
-				.run();
+					}), okStatusConverter)
+					.run();
+		}else{
+			return new JedisClusterCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
+					.run();
+		}
 	}
 
 	@Override
-	public void discard(){
-		new JedisClusterCommand<>(client, ProtocolCommand.DISCARD)
-				.transaction((cmd)->{
-					RedisConnection connection = client.getConnection();
-					connection.discard();
-					return null;
-				})
-				.run();
-	}
-
-	@Override
-	public Status watch(final String... keys){
+	public Status watch(final String... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.WATCH)
-				.transaction((cmd)->new Response<>(new Builder<String>() {
 
-					@Override
-					public String build(Object data){
-						return cmd.watch(keys);
-					}
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<Status, Status>(client, ProtocolCommand.WATCH)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.WATCH,
+					(cmd)->new Response<>(new Builder<String>() {
 
-				}), OkStatusConverter.INSTANCE)
-				.run(args);
+						@Override
+						public String build(Object data) {
+							return cmd.watch(keys);
+						}
+
+					}), okStatusConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<Status, Status>(client, ProtocolCommand.WATCH)
+					.run(args);
+		}
 	}
 
 	@Override
-	public Status watch(final byte[]... keys){
+	public Status watch(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.WATCH)
-				.transaction((cmd)->new Response<>(new Builder<String>() {
 
-					@Override
-					public String build(Object data){
-						return cmd.watch(keys);
-					}
+		if(isPipeline()){
+			return new JedisClusterPipelineCommand<Status, Status>(client, ProtocolCommand.WATCH)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisClusterTransactionCommand<>(client, ProtocolCommand.WATCH,
+					(cmd)->new Response<>(new Builder<String>() {
 
-				}), OkStatusConverter.INSTANCE)
-				.run(args);
-	}
+						@Override
+						public String build(Object data) {
+							return cmd.watch(keys);
+						}
 
-	@Override
-	public Status unwatch(){
-		return new JedisClusterCommand<Status>(client, ProtocolCommand.UNWATCH)
-				.transaction((cmd)->new Response<>(new Builder<String>() {
-
-					@Override
-					public String build(Object data){
-						return cmd.unwatch();
-					}
-
-				}), OkStatusConverter.INSTANCE)
-				.run();
+					}), okStatusConverter)
+					.run(args);
+		}else{
+			return new JedisClusterCommand<Status, Status>(client, ProtocolCommand.WATCH)
+					.run(args);
+		}
 	}
 
 }

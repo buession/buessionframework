@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.params;
@@ -28,7 +28,10 @@ import com.buession.core.converter.ArrayConverter;
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.MapConverter;
 import com.buession.redis.core.StreamEntryId;
+import com.buession.redis.core.internal.jedis.JedisStreamEntryID;
 import redis.clients.jedis.StreamEntryID;
+
+import java.util.Map;
 
 /**
  * {@link StreamEntryId} 转换为 jedis {@link StreamEntryID}
@@ -36,31 +39,15 @@ import redis.clients.jedis.StreamEntryID;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class StreamEntryIdConverter implements Converter<StreamEntryId, StreamEntryID> {
+@FunctionalInterface
+public interface StreamEntryIdConverter extends Converter<StreamEntryId, StreamEntryID> {
 
-	public final static StreamEntryIdConverter INSTANCE = new StreamEntryIdConverter();
-
-	public final static ArrayConverter<StreamEntryId, StreamEntryID> ARRAY_CONVERTER = new ArrayConverter<>(INSTANCE,
-			StreamEntryID.class);
-
-	@Override
-	public StreamEntryID convert(final StreamEntryId source){
-		return new StreamEntryID(source.getTime(), source.getSequence());
+	static ArrayConverter<StreamEntryId, StreamEntryID> arrayConverter() {
+		return new ArrayConverter<>(JedisStreamEntryID::from, StreamEntryID.class);
 	}
 
-	public final static class MapStreamEntryIdConverter<SK, TK>
-			extends MapConverter<SK, StreamEntryId, TK, StreamEntryID> {
-
-		public final static MapStreamEntryIdConverter<String, String> STRING_MAP_CONVERTER = new MapStreamEntryIdConverter<>(
-				(key)->key);
-
-		public final static MapStreamEntryIdConverter<byte[], byte[]> BINARY_MAP_CONVERTER = new MapStreamEntryIdConverter<>(
-				(key)->key);
-
-		public MapStreamEntryIdConverter(final Converter<SK, TK> keyConverter){
-			super(keyConverter, StreamEntryIdConverter.INSTANCE);
-		}
-
+	static <K> MapConverter<K, StreamEntryId, K, StreamEntryID> mapConverter() {
+		return new MapConverter<>((key)->key, JedisStreamEntryID::from);
 	}
 
 }

@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2023 Buession.com Inc.														|
+ * | Copyright @ 2013-2024 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.serializer;
@@ -96,18 +96,6 @@ public interface Serializer {
 	<V> V deserialize(final String str);
 
 	/**
-	 * 将字节反序列化为对象
-	 *
-	 * @param bytes
-	 * 		待反序列化的字节
-	 * @param <V>
-	 * 		对象类型
-	 *
-	 * @return 反序列化后的对象
-	 */
-	<V> V deserializeBytes(final byte[] bytes);
-
-	/**
 	 * 将字符串反序列化为 clazz 指定的对象
 	 *
 	 * @param str
@@ -122,20 +110,6 @@ public interface Serializer {
 	<V> V deserialize(final String str, final Class<V> clazz);
 
 	/**
-	 * 将字节反序列化为 clazz 指定的对象
-	 *
-	 * @param bytes
-	 * 		待反序列化的字节
-	 * @param clazz
-	 * 		对象类
-	 * @param <V>
-	 * 		对象类型
-	 *
-	 * @return 反序列化后的对象
-	 */
-	<V> V deserializeBytes(final byte[] bytes, final Class<V> clazz);
-
-	/**
 	 * 将字符串反序列化为 type 指定的对象
 	 *
 	 * @param str
@@ -148,6 +122,32 @@ public interface Serializer {
 	 * @return 反序列化后的对象
 	 */
 	<V> V deserialize(final String str, final TypeReference<V> type);
+
+	/**
+	 * 将字节反序列化为对象
+	 *
+	 * @param bytes
+	 * 		待反序列化的字节
+	 * @param <V>
+	 * 		对象类型
+	 *
+	 * @return 反序列化后的对象
+	 */
+	<V> V deserializeBytes(final byte[] bytes);
+
+	/**
+	 * 将字节反序列化为 clazz 指定的对象
+	 *
+	 * @param bytes
+	 * 		待反序列化的字节
+	 * @param clazz
+	 * 		对象类
+	 * @param <V>
+	 * 		对象类型
+	 *
+	 * @return 反序列化后的对象
+	 */
+	<V> V deserializeBytes(final byte[] bytes, final Class<V> clazz);
 
 	/**
 	 * 将字符串反序列化为 type 指定的对象

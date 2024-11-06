@@ -19,60 +19,59 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert;
 
-import com.buession.core.converter.ArrayConverter;
-import com.buession.core.converter.BinaryEnumConverter;
-import com.buession.core.converter.BooleanStatusConverter;
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.EnumConverter;
 import com.buession.core.converter.ListConverter;
+import com.buession.core.converter.ListSetConverter;
 import com.buession.core.converter.MapConverter;
-import com.buession.core.converter.PredicateStatusConverter;
-import com.buession.redis.core.ObjectEncoding;
-import com.buession.redis.core.Type;
+import com.buession.core.converter.SetConverter;
 import com.buession.redis.utils.SafeEncoder;
 
 /**
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 3.0.0
  */
 public interface Converters {
 
-	Converter<String, byte[]> STRING_TO_BINARY_CONVERTER = SafeEncoder::encode;
+	static ListConverter<String, byte[]> listStringToBinary() {
+		return new ListConverter<>(SafeEncoder::encode);
+	}
 
-	Converter<byte[], String> BINARY_TO_STRING_CONVERTER = SafeEncoder::encode;
+	static ListConverter<byte[], String> listBinaryToString() {
+		return new ListConverter<>(SafeEncoder::encode);
+	}
 
-	PredicateStatusConverter<Long> ONE_STATUS_CONVERTER = new PredicateStatusConverter<>((val)->val == 1L);
+	static SetConverter<String, byte[]> setStringToBinary() {
+		return new SetConverter<>(SafeEncoder::encode);
+	}
 
-	Converter<Long, Boolean> LONG_BOOLEAN_CONVERTER = (val)->val == 1L;
+	static SetConverter<byte[], String> setBinaryToString() {
+		return new SetConverter<>(SafeEncoder::encode);
+	}
 
-	BooleanStatusConverter BOOLEAN_STATUS_CONVERTER = new BooleanStatusConverter();
+	static ListSetConverter<byte[], String> listSetBinaryToString() {
+		return new ListSetConverter<>(SafeEncoder::encode);
+	}
 
-	ListConverter<String, byte[]> STRING_LIST_TO_BINARY_LIST_CONVERTER = new ListConverter<>(SafeEncoder::encode);
+	static ListSetConverter<byte[], String> setListBinaryToString() {
+		return new ListSetConverter<>(SafeEncoder::encode);
+	}
 
-	ListConverter<byte[], String> BINARY_LIST_TO_STRING_LIST_CONVERTER = new ListConverter<>(SafeEncoder::encode);
+	static MapConverter<String, String, byte[], byte[]> mapStringToBinary() {
+		return new MapConverter<>(SafeEncoder::encode, SafeEncoder::encode);
+	}
 
-	MapConverter<String, String, byte[], byte[]> STRING_MAP_TO_BINARY_MAP_CONVERTER = new MapConverter<>(
-			SafeEncoder::encode, SafeEncoder::encode);
+	static MapConverter<byte[], byte[], String, String> mapBinaryToString() {
+		return new MapConverter<>(SafeEncoder::encode, SafeEncoder::encode);
+	}
 
-	MapConverter<byte[], byte[], String, String> BINARY_MAP_TO_STRING_MAP_CONVERTER = new MapConverter<>(
-			SafeEncoder::encode, SafeEncoder::encode);
-
-	ArrayConverter<String, byte[]> STRING_ARRAY_TO_BINARY_ARRAY_CONVERTER = new ArrayConverter<>(
-			SafeEncoder::encode, byte[].class);
-
-	ArrayConverter<byte[], String> BINARY_ARRAY_TO_STRING_ARRAY_CONVERTER = new ArrayConverter<>(
-			SafeEncoder::encode, String.class);
-
-	EnumConverter<Type> TYPE_RESULT_CONVERTER = new EnumConverter<>(Type.class);
-
-	EnumConverter<ObjectEncoding> STRING_OBJECT_ENCODING_RESULT_CONVERTER = new EnumConverter<>(ObjectEncoding.class);
-
-	Converter<byte[], ObjectEncoding> BINARY_OBJECT_ENCODING_RESULT_CONVERTER = new BinaryEnumConverter<>(
-			ObjectEncoding.class);
+	@SuppressWarnings({"unchecked"})
+	static <S, T> Converter<S, T> always() {
+		return (value)->(T) value;
+	}
 
 }

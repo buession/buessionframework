@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.jedis;
@@ -27,50 +27,52 @@ package com.buession.redis.core.internal.jedis;
 import redis.clients.jedis.params.ScanParams;
 
 /**
+ * Jedis {@link ScanParams} 扩展
+ *
  * @author Yong.Teng
  */
 public final class JedisScanParams extends ScanParams {
 
-	public JedisScanParams(){
+	public JedisScanParams() {
 		super();
 	}
 
-	public JedisScanParams(final String pattern){
-		super();
-		match(pattern);
-	}
-
-	public JedisScanParams(final byte[] pattern){
+	public JedisScanParams(final String pattern) {
 		super();
 		match(pattern);
 	}
 
-	public JedisScanParams(final int count){
+	public JedisScanParams(final byte[] pattern) {
+		super();
+		match(pattern);
+	}
+
+	public JedisScanParams(final int count) {
 		super();
 		count(count);
 	}
 
-	public JedisScanParams(final String pattern, final int count){
-		super();
-		match(pattern);
-		count(count);
-	}
-
-	public JedisScanParams(final byte[] pattern, final int count){
+	public JedisScanParams(final String pattern, final int count) {
 		super();
 		match(pattern);
 		count(count);
 	}
 
-	public JedisScanParams(final long count){
+	public JedisScanParams(final byte[] pattern, final int count) {
+		super();
+		match(pattern);
+		count(count);
+	}
+
+	public JedisScanParams(final long count) {
 		this((int) count);
 	}
 
-	public JedisScanParams(final String pattern, final long count){
+	public JedisScanParams(final String pattern, final long count) {
 		this(pattern, (int) count);
 	}
 
-	public JedisScanParams(final byte[] pattern, final long count){
+	public JedisScanParams(final byte[] pattern, final long count) {
 		this(pattern, (int) count);
 	}
 

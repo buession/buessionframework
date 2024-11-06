@@ -19,13 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis;
 
 import com.buession.core.utils.Assert;
 import com.buession.redis.client.RedisClient;
+import com.buession.redis.client.connection.JedisConnectionFactory;
+import com.buession.redis.client.connection.LettuceConnectionFactory;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.RedisConnectionFactory;
 import com.buession.redis.client.connection.RedisConnectionUtils;
@@ -33,9 +35,15 @@ import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisClusterDataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisSentinelDataSource;
+import com.buession.redis.client.connection.datasource.lettuce.LettuceClusterDataSource;
+import com.buession.redis.client.connection.datasource.lettuce.LettuceDataSource;
+import com.buession.redis.client.connection.datasource.lettuce.LettuceSentinelDataSource;
 import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.client.jedis.JedisSentinelClient;
+import com.buession.redis.client.lettuce.LettuceClusterClient;
+import com.buession.redis.client.lettuce.LettuceSentinelClient;
+import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 import com.buession.redis.core.Command;
 import com.buession.redis.core.Options;
 import com.buession.redis.core.SessionCallback;
@@ -53,6 +61,8 @@ import java.util.Map;
 import java.util.function.Function;
 
 /**
+ * Base class for {@link RedisTemplate} defining common properties. Not intended to be used directly.
+ *
  * @author Yong.Teng
  */
 public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
@@ -76,6 +86,8 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 	protected RedisConnectionFactory connectionFactory;
 
 	protected boolean enableTransactionSupport = false;
+
+	protected RedisClient redisClient;
 
 	protected final static ThreadLocal<Map<Integer, Function<?, ?>>> txConverters = new ThreadLocal<>();
 
@@ -138,7 +150,15 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 		}
 
 		if(connectionFactory == null){
-			connectionFactory = new RedisConnectionFactory(getDataSource());
+			DataSource dataSource = getDataSource();
+
+			if(dataSource instanceof LettuceDataSource){
+				connectionFactory = new LettuceConnectionFactory((LettuceDataSource) dataSource);
+			}else if(dataSource instanceof JedisDataSource){
+				connectionFactory = new JedisConnectionFactory((JedisDataSource) dataSource);
+			}else{
+				Assert.isNull(getDataSource(), "DataSource is required");
+			}
 		}
 	}
 
@@ -161,7 +181,7 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 
 			@Override
 			public Pipeline run(final CommandArguments arguments) throws RedisException {
-				return client.getConnection().openPipeline();
+				return execute();
 			}
 
 		});
@@ -169,21 +189,18 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 
 	public <R> R execute(final SessionCallback<R> callback) throws RedisException {
 		Assert.isNull(callback, "callback cloud not be null.");
-		checkInitialized();
 
-		RedisConnection connection = fetchConnection();
+		RedisConnection connection = fetchRequiredConnection();
 
 		RedisClient client = doGetRedisClient();
 		client.setConnection(connection);
 
-		if(isTransactionOrPipeline(connection)){
+		if(isMulti(connection)){
 			index.set(index.get() + 1);
 		}
 
 		try{
 			return callback.execute(client);
-		}catch(Exception e){
-			throw new RedisException(e.getMessage(), e);
 		}finally{
 			RedisConnectionUtils.releaseConnection(connectionFactory, connection, enableTransactionSupport);
 		}
@@ -192,21 +209,18 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 	public <SR, TR> TR execute(final SessionCallback<SR> callback, final Converter<SR, TR> converter)
 			throws RedisException {
 		Assert.isNull(callback, "callback cloud not be null.");
-		checkInitialized();
 
-		RedisConnection connection = fetchConnection();
+		RedisConnection connection = fetchRequiredConnection();
 
 		RedisClient client = doGetRedisClient();
 		client.setConnection(connection);
 
-		if(isTransactionOrPipeline(connection)){
+		if(isMulti(connection)){
 			index.set(index.get() + 1);
 		}
 
 		try{
 			return converter.convert(connection, callback.execute(client));
-		}catch(Exception e){
-			throw new RedisException(e.getMessage(), e);
 		}finally{
 			RedisConnectionUtils.releaseConnection(connectionFactory, connection, enableTransactionSupport);
 		}
@@ -218,24 +232,36 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 	}
 
 	protected RedisConnection fetchConnection() {
-		if(enableTransactionSupport){
-			return RedisConnectionUtils.bindConnection(connectionFactory, true);
-		}else{
-			return RedisConnectionUtils.getConnection(connectionFactory);
-		}
+		return RedisConnectionUtils.bindConnection(connectionFactory, enableTransactionSupport);
+	}
+
+	protected RedisConnection fetchRequiredConnection() {
+		checkInitialized();
+		return fetchConnection();
 	}
 
 	protected RedisClient doGetRedisClient() throws RedisException {
-		DataSource dataSource = getDataSource();
-		if(dataSource instanceof JedisDataSource){
-			return new JedisStandaloneClient();
-		}else if(dataSource instanceof JedisSentinelDataSource){
-			return new JedisSentinelClient();
-		}else if(dataSource instanceof JedisClusterDataSource){
-			return new JedisClusterClient();
-		}else{
-			throw new RedisException("Cloud not initialize RedisClient for: " + dataSource);
+		if(redisClient == null){
+			DataSource dataSource = getDataSource();
+
+			if(dataSource instanceof JedisDataSource){
+				redisClient = new JedisStandaloneClient();
+			}else if(dataSource instanceof JedisSentinelDataSource){
+				redisClient = new JedisSentinelClient();
+			}else if(dataSource instanceof JedisClusterDataSource){
+				redisClient = new JedisClusterClient();
+			}else if(dataSource instanceof LettuceDataSource){
+				redisClient = new LettuceStandaloneClient();
+			}else if(dataSource instanceof LettuceSentinelDataSource){
+				redisClient = new LettuceSentinelClient();
+			}else if(dataSource instanceof LettuceClusterDataSource){
+				redisClient = new LettuceClusterClient();
+			}else{
+				throw new RedisException("Cloud not initialize RedisClient for: " + dataSource);
+			}
 		}
+
+		return redisClient;
 	}
 
 	protected final void checkInitialized() {
@@ -251,7 +277,12 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 		return connection.isPipeline();
 	}
 
+	@Deprecated
 	protected boolean isTransactionOrPipeline(final RedisConnection connection) {
+		return isMulti(connection);
+	}
+
+	protected boolean isMulti(final RedisConnection connection) {
 		return isTransaction(connection) || isPipeline(connection);
 	}
 

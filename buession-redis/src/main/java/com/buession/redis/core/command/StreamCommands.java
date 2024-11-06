@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
@@ -1960,6 +1960,8 @@ public interface StreamCommands extends RedisCommands {
 
 		private String minId;
 
+		private Long limit;
+
 		private XTrimArgument() {
 		}
 
@@ -1979,13 +1981,18 @@ public interface StreamCommands extends RedisCommands {
 			return minId;
 		}
 
+		public Long getLimit() {
+			return limit;
+		}
+
 		@Override
 		public String toString() {
 			return ObjectStringBuilder.create().
 					add("maxLen", maxLen).
 					add("approximateTrimming", approximateTrimming).
 					add("exactTrimming", exactTrimming).
-					add("minId", minId).build();
+					add("minId", minId).
+					add("limit", limit).build();
 		}
 
 		public final static class Builder {
@@ -2016,6 +2023,11 @@ public interface StreamCommands extends RedisCommands {
 
 			public Builder minId(String minId) {
 				xTrimArgument.minId = minId;
+				return this;
+			}
+
+			public Builder limit(long limit) {
+				xTrimArgument.limit = limit;
 				return this;
 			}
 

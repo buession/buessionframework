@@ -24,6 +24,7 @@
  */
 package com.buession.httpclient;
 
+import com.buession.httpclient.conn.ConnectionManager;
 import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.RequestMethod;
@@ -41,7 +42,22 @@ import java.util.Map;
  *
  * @author Yong.Teng
  */
-public interface HttpClient extends IBaseHttpClient {
+public interface HttpClient extends IBaseHttpClient, IHttpClient {
+
+	/**
+	 * 获取连接管理器
+	 *
+	 * @return 连接管理器
+	 */
+	ConnectionManager getConnectionManager();
+
+	/**
+	 * 设置连接管理器
+	 *
+	 * @param connectionManager
+	 * 		连接管理器
+	 */
+	void setConnectionManager(ConnectionManager connectionManager);
 
 	/**
 	 * GET 请求
@@ -56,7 +72,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response get(String url) throws IOException, RequestException{
+	default Response get(String url) throws IOException, RequestException {
 		return get(URI.create(url));
 	}
 
@@ -106,7 +122,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response get(String url, Map<String, Object> parameters) throws IOException, RequestException{
+	default Response get(String url, Map<String, Object> parameters) throws IOException, RequestException {
 		return get(URI.create(url), parameters);
 	}
 
@@ -160,7 +176,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response get(String url, List<Header> headers) throws IOException, RequestException{
+	default Response get(String url, List<Header> headers) throws IOException, RequestException {
 		return get(URI.create(url), headers);
 	}
 
@@ -217,7 +233,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response get(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return get(URI.create(url), parameters, headers);
 	}
 
@@ -276,7 +292,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response get(String url, int readTimeout) throws IOException, RequestException{
+	default Response get(String url, int readTimeout) throws IOException, RequestException {
 		return get(URI.create(url), readTimeout);
 	}
 
@@ -335,7 +351,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response get(String url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return get(URI.create(url), readTimeout, parameters);
 	}
 
@@ -397,7 +413,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response get(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+	default Response get(String url, int readTimeout, List<Header> headers) throws IOException, RequestException {
 		return get(URI.create(url), readTimeout, headers);
 	}
 
@@ -462,7 +478,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response get(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return get(URI.create(url), readTimeout, parameters, headers);
 	}
 
@@ -525,7 +541,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response post(String url) throws IOException, RequestException{
+	default Response post(String url) throws IOException, RequestException {
 		return post(URI.create(url));
 	}
 
@@ -575,7 +591,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response post(String url, Map<String, Object> parameters) throws IOException, RequestException{
+	default Response post(String url, Map<String, Object> parameters) throws IOException, RequestException {
 		return post(URI.create(url), parameters);
 	}
 
@@ -629,7 +645,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response post(String url, List<Header> headers) throws IOException, RequestException{
+	default Response post(String url, List<Header> headers) throws IOException, RequestException {
 		return post(URI.create(url), headers);
 	}
 
@@ -686,7 +702,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response post(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return post(URI.create(url), parameters, headers);
 	}
 
@@ -744,7 +760,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response post(String url, RequestBody<?> data) throws IOException, RequestException{
+	default Response post(String url, RequestBody<?> data) throws IOException, RequestException {
 		return post(URI.create(url), data);
 	}
 
@@ -801,7 +817,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response post(String url, RequestBody<?> data, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return post(URI.create(url), data, parameters);
 	}
 
@@ -861,7 +877,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response post(String url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
+	default Response post(String url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException {
 		return post(URI.create(url), data, headers);
 	}
 
@@ -924,7 +940,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response post(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return post(URI.create(url), data, parameters, headers);
 	}
 
@@ -989,7 +1005,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response post(String url, int readTimeout) throws IOException, RequestException{
+	default Response post(String url, int readTimeout) throws IOException, RequestException {
 		return post(URI.create(url), readTimeout);
 	}
 
@@ -1048,7 +1064,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response post(String url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return post(URI.create(url), readTimeout, parameters);
 	}
 
@@ -1110,7 +1126,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response post(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+	default Response post(String url, int readTimeout, List<Header> headers) throws IOException, RequestException {
 		return post(URI.create(url), readTimeout, headers);
 	}
 
@@ -1175,7 +1191,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response post(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return post(URI.create(url), readTimeout, parameters, headers);
 	}
 
@@ -1243,7 +1259,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response post(String url, int readTimeout, RequestBody<?> data) throws IOException, RequestException{
+	default Response post(String url, int readTimeout, RequestBody<?> data) throws IOException, RequestException {
 		return post(URI.create(url), readTimeout, data);
 	}
 
@@ -1308,7 +1324,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response post(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return post(URI.create(url), readTimeout, data, parameters);
 	}
 
@@ -1379,7 +1395,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response post(String url, int readTimeout, RequestBody<?> data, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return post(URI.create(url), readTimeout, data, headers);
 	}
 
@@ -1452,7 +1468,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response post(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-						  List<Header> headers) throws IOException, RequestException{
+						  List<Header> headers) throws IOException, RequestException {
 		return post(URI.create(url), readTimeout, data, parameters, headers);
 	}
 
@@ -1519,7 +1535,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response put(String url) throws IOException, RequestException{
+	default Response put(String url) throws IOException, RequestException {
 		return put(URI.create(url));
 	}
 
@@ -1569,7 +1585,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response put(String url, Map<String, Object> parameters) throws IOException, RequestException{
+	default Response put(String url, Map<String, Object> parameters) throws IOException, RequestException {
 		return put(URI.create(url), parameters);
 	}
 
@@ -1623,7 +1639,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response put(String url, List<Header> headers) throws IOException, RequestException{
+	default Response put(String url, List<Header> headers) throws IOException, RequestException {
 		return put(URI.create(url), headers);
 	}
 
@@ -1680,7 +1696,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response put(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return put(URI.create(url), parameters, headers);
 	}
 
@@ -1738,7 +1754,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response put(String url, RequestBody<?> data) throws IOException, RequestException{
+	default Response put(String url, RequestBody<?> data) throws IOException, RequestException {
 		return put(URI.create(url), data);
 	}
 
@@ -1795,7 +1811,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response put(String url, RequestBody<?> data, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return put(URI.create(url), data, parameters);
 	}
 
@@ -1855,7 +1871,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response put(String url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
+	default Response put(String url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException {
 		return put(URI.create(url), data, headers);
 	}
 
@@ -1918,7 +1934,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response put(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return put(URI.create(url), data, parameters, headers);
 	}
 
@@ -1983,7 +1999,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response put(String url, int readTimeout) throws IOException, RequestException{
+	default Response put(String url, int readTimeout) throws IOException, RequestException {
 		return put(URI.create(url), readTimeout);
 	}
 
@@ -2042,7 +2058,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response put(String url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return put(URI.create(url), readTimeout, parameters);
 	}
 
@@ -2104,7 +2120,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response put(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+	default Response put(String url, int readTimeout, List<Header> headers) throws IOException, RequestException {
 		return put(URI.create(url), readTimeout, headers);
 	}
 
@@ -2169,7 +2185,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response put(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return put(URI.create(url), readTimeout, parameters, headers);
 	}
 
@@ -2237,7 +2253,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response put(String url, int readTimeout, RequestBody<?> data) throws IOException, RequestException{
+	default Response put(String url, int readTimeout, RequestBody<?> data) throws IOException, RequestException {
 		return put(URI.create(url), readTimeout, data);
 	}
 
@@ -2302,7 +2318,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response put(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return put(URI.create(url), readTimeout, data, parameters);
 	}
 
@@ -2373,7 +2389,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response put(String url, int readTimeout, RequestBody<?> data, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return put(URI.create(url), readTimeout, data, headers);
 	}
 
@@ -2446,7 +2462,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response put(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-						 List<Header> headers) throws IOException, RequestException{
+						 List<Header> headers) throws IOException, RequestException {
 		return put(URI.create(url), readTimeout, data, parameters, headers);
 	}
 
@@ -2513,7 +2529,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response patch(String url) throws IOException, RequestException{
+	default Response patch(String url) throws IOException, RequestException {
 		return patch(URI.create(url));
 	}
 
@@ -2563,7 +2579,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response patch(String url, Map<String, Object> parameters) throws IOException, RequestException{
+	default Response patch(String url, Map<String, Object> parameters) throws IOException, RequestException {
 		return patch(URI.create(url), parameters);
 	}
 
@@ -2617,7 +2633,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response patch(String url, List<Header> headers) throws IOException, RequestException{
+	default Response patch(String url, List<Header> headers) throws IOException, RequestException {
 		return patch(URI.create(url), headers);
 	}
 
@@ -2674,7 +2690,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response patch(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return patch(URI.create(url), parameters, headers);
 	}
 
@@ -2732,7 +2748,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response patch(String url, RequestBody<?> data) throws IOException, RequestException{
+	default Response patch(String url, RequestBody<?> data) throws IOException, RequestException {
 		return patch(URI.create(url), data);
 	}
 
@@ -2789,7 +2805,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response patch(String url, RequestBody<?> data, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return patch(URI.create(url), data, parameters);
 	}
 
@@ -2849,7 +2865,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response patch(String url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
+	default Response patch(String url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException {
 		return patch(URI.create(url), data, headers);
 	}
 
@@ -2912,7 +2928,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response patch(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return patch(URI.create(url), data, parameters, headers);
 	}
 
@@ -2977,7 +2993,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response patch(String url, int readTimeout) throws IOException, RequestException{
+	default Response patch(String url, int readTimeout) throws IOException, RequestException {
 		return patch(URI.create(url), readTimeout);
 	}
 
@@ -3036,7 +3052,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response patch(String url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return patch(URI.create(url), readTimeout, parameters);
 	}
 
@@ -3098,7 +3114,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response patch(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+	default Response patch(String url, int readTimeout, List<Header> headers) throws IOException, RequestException {
 		return patch(URI.create(url), readTimeout, headers);
 	}
 
@@ -3163,7 +3179,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response patch(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return patch(URI.create(url), readTimeout, parameters, headers);
 	}
 
@@ -3231,7 +3247,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response patch(String url, int readTimeout, RequestBody<?> data) throws IOException, RequestException{
+	default Response patch(String url, int readTimeout, RequestBody<?> data) throws IOException, RequestException {
 		return patch(URI.create(url), readTimeout, data);
 	}
 
@@ -3296,7 +3312,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response patch(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return patch(URI.create(url), readTimeout, data, parameters);
 	}
 
@@ -3367,7 +3383,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response patch(String url, int readTimeout, RequestBody<?> data, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return patch(URI.create(url), readTimeout, data, headers);
 	}
 
@@ -3440,7 +3456,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response patch(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-						   List<Header> headers) throws IOException, RequestException{
+						   List<Header> headers) throws IOException, RequestException {
 		return patch(URI.create(url), readTimeout, data, parameters, headers);
 	}
 
@@ -3507,7 +3523,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response delete(String url) throws IOException, RequestException{
+	default Response delete(String url) throws IOException, RequestException {
 		return delete(URI.create(url));
 	}
 
@@ -3557,7 +3573,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response delete(String url, Map<String, Object> parameters) throws IOException, RequestException{
+	default Response delete(String url, Map<String, Object> parameters) throws IOException, RequestException {
 		return delete(URI.create(url), parameters);
 	}
 
@@ -3611,7 +3627,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response delete(String url, List<Header> headers) throws IOException, RequestException{
+	default Response delete(String url, List<Header> headers) throws IOException, RequestException {
 		return delete(URI.create(url), headers);
 	}
 
@@ -3668,7 +3684,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response delete(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return delete(URI.create(url), parameters, headers);
 	}
 
@@ -3727,7 +3743,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response delete(String url, int readTimeout) throws IOException, RequestException{
+	default Response delete(String url, int readTimeout) throws IOException, RequestException {
 		return delete(URI.create(url), readTimeout);
 	}
 
@@ -3786,7 +3802,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response delete(String url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return delete(URI.create(url), readTimeout, parameters);
 	}
 
@@ -3848,7 +3864,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response delete(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+	default Response delete(String url, int readTimeout, List<Header> headers) throws IOException, RequestException {
 		return delete(URI.create(url), readTimeout, headers);
 	}
 
@@ -3913,7 +3929,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response delete(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return delete(URI.create(url), readTimeout, parameters, headers);
 	}
 
@@ -3976,7 +3992,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response connect(String url) throws IOException, RequestException{
+	default Response connect(String url) throws IOException, RequestException {
 		return connect(URI.create(url));
 	}
 
@@ -4026,7 +4042,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response connect(String url, Map<String, Object> parameters) throws IOException, RequestException{
+	default Response connect(String url, Map<String, Object> parameters) throws IOException, RequestException {
 		return connect(URI.create(url), parameters);
 	}
 
@@ -4080,7 +4096,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response connect(String url, List<Header> headers) throws IOException, RequestException{
+	default Response connect(String url, List<Header> headers) throws IOException, RequestException {
 		return connect(URI.create(url), headers);
 	}
 
@@ -4137,7 +4153,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response connect(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return connect(URI.create(url), parameters, headers);
 	}
 
@@ -4198,7 +4214,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response connect(String url, int readTimeout) throws IOException, RequestException{
+	default Response connect(String url, int readTimeout) throws IOException, RequestException {
 		return connect(URI.create(url), readTimeout);
 	}
 
@@ -4257,7 +4273,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response connect(String url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return connect(URI.create(url), readTimeout, parameters);
 	}
 
@@ -4319,7 +4335,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response connect(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+	default Response connect(String url, int readTimeout, List<Header> headers) throws IOException, RequestException {
 		return connect(URI.create(url), readTimeout, headers);
 	}
 
@@ -4384,7 +4400,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response connect(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return connect(URI.create(url), readTimeout, parameters, headers);
 	}
 
@@ -4447,7 +4463,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response trace(String url) throws IOException, RequestException{
+	default Response trace(String url) throws IOException, RequestException {
 		return trace(URI.create(url));
 	}
 
@@ -4497,7 +4513,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response trace(String url, Map<String, Object> parameters) throws IOException, RequestException{
+	default Response trace(String url, Map<String, Object> parameters) throws IOException, RequestException {
 		return trace(URI.create(url), parameters);
 	}
 
@@ -4551,7 +4567,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response trace(String url, List<Header> headers) throws IOException, RequestException{
+	default Response trace(String url, List<Header> headers) throws IOException, RequestException {
 		return trace(URI.create(url), headers);
 	}
 
@@ -4608,7 +4624,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response trace(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return trace(URI.create(url), parameters, headers);
 	}
 
@@ -4667,7 +4683,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response trace(String url, int readTimeout) throws IOException, RequestException{
+	default Response trace(String url, int readTimeout) throws IOException, RequestException {
 		return trace(URI.create(url), readTimeout);
 	}
 
@@ -4726,7 +4742,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response trace(String url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return trace(URI.create(url), readTimeout, parameters);
 	}
 
@@ -4788,7 +4804,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response trace(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+	default Response trace(String url, int readTimeout, List<Header> headers) throws IOException, RequestException {
 		return trace(URI.create(url), readTimeout, headers);
 	}
 
@@ -4853,7 +4869,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response trace(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return trace(URI.create(url), readTimeout, parameters, headers);
 	}
 
@@ -4916,7 +4932,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response copy(String url) throws IOException, RequestException{
+	default Response copy(String url) throws IOException, RequestException {
 		return copy(URI.create(url));
 	}
 
@@ -4966,7 +4982,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response copy(String url, Map<String, Object> parameters) throws IOException, RequestException{
+	default Response copy(String url, Map<String, Object> parameters) throws IOException, RequestException {
 		return copy(URI.create(url), parameters);
 	}
 
@@ -5020,7 +5036,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response copy(String url, List<Header> headers) throws IOException, RequestException{
+	default Response copy(String url, List<Header> headers) throws IOException, RequestException {
 		return copy(URI.create(url), headers);
 	}
 
@@ -5077,7 +5093,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response copy(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return copy(URI.create(url), parameters, headers);
 	}
 
@@ -5136,7 +5152,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response copy(String url, int readTimeout) throws IOException, RequestException{
+	default Response copy(String url, int readTimeout) throws IOException, RequestException {
 		return copy(URI.create(url), readTimeout);
 	}
 
@@ -5195,7 +5211,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response copy(String url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return copy(URI.create(url), readTimeout, parameters);
 	}
 
@@ -5257,7 +5273,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response copy(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+	default Response copy(String url, int readTimeout, List<Header> headers) throws IOException, RequestException {
 		return copy(URI.create(url), readTimeout, headers);
 	}
 
@@ -5322,7 +5338,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response copy(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return copy(URI.create(url), readTimeout, parameters, headers);
 	}
 
@@ -5385,7 +5401,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response move(String url) throws IOException, RequestException{
+	default Response move(String url) throws IOException, RequestException {
 		return move(URI.create(url));
 	}
 
@@ -5435,7 +5451,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response move(String url, Map<String, Object> parameters) throws IOException, RequestException{
+	default Response move(String url, Map<String, Object> parameters) throws IOException, RequestException {
 		return move(URI.create(url), parameters);
 	}
 
@@ -5489,7 +5505,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response move(String url, List<Header> headers) throws IOException, RequestException{
+	default Response move(String url, List<Header> headers) throws IOException, RequestException {
 		return move(URI.create(url), headers);
 	}
 
@@ -5546,7 +5562,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response move(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return move(URI.create(url), parameters, headers);
 	}
 
@@ -5605,7 +5621,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response move(String url, int readTimeout) throws IOException, RequestException{
+	default Response move(String url, int readTimeout) throws IOException, RequestException {
 		return move(URI.create(url), readTimeout);
 	}
 
@@ -5664,7 +5680,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response move(String url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return move(URI.create(url), readTimeout, parameters);
 	}
 
@@ -5726,7 +5742,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response move(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+	default Response move(String url, int readTimeout, List<Header> headers) throws IOException, RequestException {
 		return move(URI.create(url), readTimeout, headers);
 	}
 
@@ -5791,7 +5807,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response move(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return move(URI.create(url), readTimeout, parameters, headers);
 	}
 
@@ -5854,7 +5870,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response head(String url) throws IOException, RequestException{
+	default Response head(String url) throws IOException, RequestException {
 		return head(URI.create(url));
 	}
 
@@ -5904,7 +5920,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response head(String url, Map<String, Object> parameters) throws IOException, RequestException{
+	default Response head(String url, Map<String, Object> parameters) throws IOException, RequestException {
 		return head(URI.create(url), parameters);
 	}
 
@@ -5958,7 +5974,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response head(String url, List<Header> headers) throws IOException, RequestException{
+	default Response head(String url, List<Header> headers) throws IOException, RequestException {
 		return head(URI.create(url), headers);
 	}
 
@@ -6015,7 +6031,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response head(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return head(URI.create(url), parameters, headers);
 	}
 
@@ -6074,7 +6090,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response head(String url, int readTimeout) throws IOException, RequestException{
+	default Response head(String url, int readTimeout) throws IOException, RequestException {
 		return head(URI.create(url), readTimeout);
 	}
 
@@ -6133,7 +6149,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response head(String url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return head(URI.create(url), readTimeout, parameters);
 	}
 
@@ -6195,7 +6211,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response head(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+	default Response head(String url, int readTimeout, List<Header> headers) throws IOException, RequestException {
 		return head(URI.create(url), readTimeout, headers);
 	}
 
@@ -6260,7 +6276,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response head(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return head(URI.create(url), readTimeout, parameters, headers);
 	}
 
@@ -6323,7 +6339,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response options(String url) throws IOException, RequestException{
+	default Response options(String url) throws IOException, RequestException {
 		return options(URI.create(url));
 	}
 
@@ -6373,7 +6389,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response options(String url, Map<String, Object> parameters) throws IOException, RequestException{
+	default Response options(String url, Map<String, Object> parameters) throws IOException, RequestException {
 		return options(URI.create(url), parameters);
 	}
 
@@ -6427,7 +6443,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response options(String url, List<Header> headers) throws IOException, RequestException{
+	default Response options(String url, List<Header> headers) throws IOException, RequestException {
 		return options(URI.create(url), headers);
 	}
 
@@ -6484,7 +6500,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response options(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return options(URI.create(url), parameters, headers);
 	}
 
@@ -6545,7 +6561,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response options(String url, int readTimeout) throws IOException, RequestException{
+	default Response options(String url, int readTimeout) throws IOException, RequestException {
 		return options(URI.create(url), readTimeout);
 	}
 
@@ -6604,7 +6620,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response options(String url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return options(URI.create(url), readTimeout, parameters);
 	}
 
@@ -6666,7 +6682,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response options(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+	default Response options(String url, int readTimeout, List<Header> headers) throws IOException, RequestException {
 		return options(URI.create(url), readTimeout, headers);
 	}
 
@@ -6731,7 +6747,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response options(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return options(URI.create(url), readTimeout, parameters, headers);
 	}
 
@@ -6794,7 +6810,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response link(String url) throws IOException, RequestException{
+	default Response link(String url) throws IOException, RequestException {
 		return link(URI.create(url));
 	}
 
@@ -6844,7 +6860,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response link(String url, Map<String, Object> parameters) throws IOException, RequestException{
+	default Response link(String url, Map<String, Object> parameters) throws IOException, RequestException {
 		return link(URI.create(url), parameters);
 	}
 
@@ -6898,7 +6914,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response link(String url, List<Header> headers) throws IOException, RequestException{
+	default Response link(String url, List<Header> headers) throws IOException, RequestException {
 		return link(URI.create(url), headers);
 	}
 
@@ -6955,7 +6971,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response link(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return link(URI.create(url), parameters, headers);
 	}
 
@@ -7014,7 +7030,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response link(String url, int readTimeout) throws IOException, RequestException{
+	default Response link(String url, int readTimeout) throws IOException, RequestException {
 		return link(URI.create(url), readTimeout);
 	}
 
@@ -7073,7 +7089,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response link(String url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return link(URI.create(url), readTimeout, parameters);
 	}
 
@@ -7135,7 +7151,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response link(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+	default Response link(String url, int readTimeout, List<Header> headers) throws IOException, RequestException {
 		return link(URI.create(url), readTimeout, headers);
 	}
 
@@ -7200,7 +7216,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response link(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return link(URI.create(url), readTimeout, parameters, headers);
 	}
 
@@ -7263,7 +7279,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response unlink(String url) throws IOException, RequestException{
+	default Response unlink(String url) throws IOException, RequestException {
 		return unlink(URI.create(url));
 	}
 
@@ -7313,7 +7329,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response unlink(String url, Map<String, Object> parameters) throws IOException, RequestException{
+	default Response unlink(String url, Map<String, Object> parameters) throws IOException, RequestException {
 		return unlink(URI.create(url), parameters);
 	}
 
@@ -7367,7 +7383,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response unlink(String url, List<Header> headers) throws IOException, RequestException{
+	default Response unlink(String url, List<Header> headers) throws IOException, RequestException {
 		return unlink(URI.create(url), headers);
 	}
 
@@ -7424,7 +7440,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response unlink(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return unlink(URI.create(url), parameters, headers);
 	}
 
@@ -7483,7 +7499,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response unlink(String url, int readTimeout) throws IOException, RequestException{
+	default Response unlink(String url, int readTimeout) throws IOException, RequestException {
 		return unlink(URI.create(url), readTimeout);
 	}
 
@@ -7542,7 +7558,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response unlink(String url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return unlink(URI.create(url), readTimeout, parameters);
 	}
 
@@ -7604,7 +7620,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response unlink(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+	default Response unlink(String url, int readTimeout, List<Header> headers) throws IOException, RequestException {
 		return unlink(URI.create(url), readTimeout, headers);
 	}
 
@@ -7669,7 +7685,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response unlink(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return unlink(URI.create(url), readTimeout, parameters, headers);
 	}
 
@@ -7732,7 +7748,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response purge(String url) throws IOException, RequestException{
+	default Response purge(String url) throws IOException, RequestException {
 		return purge(URI.create(url));
 	}
 
@@ -7782,7 +7798,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response purge(String url, Map<String, Object> parameters) throws IOException, RequestException{
+	default Response purge(String url, Map<String, Object> parameters) throws IOException, RequestException {
 		return purge(URI.create(url), parameters);
 	}
 
@@ -7836,7 +7852,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response purge(String url, List<Header> headers) throws IOException, RequestException{
+	default Response purge(String url, List<Header> headers) throws IOException, RequestException {
 		return purge(URI.create(url), headers);
 	}
 
@@ -7893,7 +7909,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response purge(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return purge(URI.create(url), parameters, headers);
 	}
 
@@ -7952,7 +7968,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response purge(String url, int readTimeout) throws IOException, RequestException{
+	default Response purge(String url, int readTimeout) throws IOException, RequestException {
 		return purge(URI.create(url), readTimeout);
 	}
 
@@ -8011,7 +8027,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response purge(String url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return purge(URI.create(url), readTimeout, parameters);
 	}
 
@@ -8073,7 +8089,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response purge(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+	default Response purge(String url, int readTimeout, List<Header> headers) throws IOException, RequestException {
 		return purge(URI.create(url), readTimeout, headers);
 	}
 
@@ -8138,7 +8154,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response purge(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return purge(URI.create(url), readTimeout, parameters, headers);
 	}
 
@@ -8201,7 +8217,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response lock(String url) throws IOException, RequestException{
+	default Response lock(String url) throws IOException, RequestException {
 		return lock(URI.create(url));
 	}
 
@@ -8251,7 +8267,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response lock(String url, Map<String, Object> parameters) throws IOException, RequestException{
+	default Response lock(String url, Map<String, Object> parameters) throws IOException, RequestException {
 		return lock(URI.create(url), parameters);
 	}
 
@@ -8305,7 +8321,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response lock(String url, List<Header> headers) throws IOException, RequestException{
+	default Response lock(String url, List<Header> headers) throws IOException, RequestException {
 		return lock(URI.create(url), headers);
 	}
 
@@ -8362,7 +8378,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response lock(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return lock(URI.create(url), parameters, headers);
 	}
 
@@ -8421,7 +8437,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response lock(String url, int readTimeout) throws IOException, RequestException{
+	default Response lock(String url, int readTimeout) throws IOException, RequestException {
 		return lock(URI.create(url), readTimeout);
 	}
 
@@ -8480,7 +8496,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response lock(String url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return lock(URI.create(url), readTimeout, parameters);
 	}
 
@@ -8542,7 +8558,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response lock(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+	default Response lock(String url, int readTimeout, List<Header> headers) throws IOException, RequestException {
 		return lock(URI.create(url), readTimeout, headers);
 	}
 
@@ -8607,7 +8623,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response lock(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return lock(URI.create(url), readTimeout, parameters, headers);
 	}
 
@@ -8670,7 +8686,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response unlock(String url) throws IOException, RequestException{
+	default Response unlock(String url) throws IOException, RequestException {
 		return unlock(URI.create(url));
 	}
 
@@ -8720,7 +8736,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response unlock(String url, Map<String, Object> parameters) throws IOException, RequestException{
+	default Response unlock(String url, Map<String, Object> parameters) throws IOException, RequestException {
 		return unlock(URI.create(url), parameters);
 	}
 
@@ -8774,7 +8790,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response unlock(String url, List<Header> headers) throws IOException, RequestException{
+	default Response unlock(String url, List<Header> headers) throws IOException, RequestException {
 		return unlock(URI.create(url), headers);
 	}
 
@@ -8831,7 +8847,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response unlock(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return unlock(URI.create(url), parameters, headers);
 	}
 
@@ -8890,7 +8906,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response unlock(String url, int readTimeout) throws IOException, RequestException{
+	default Response unlock(String url, int readTimeout) throws IOException, RequestException {
 		return unlock(URI.create(url), readTimeout);
 	}
 
@@ -8949,7 +8965,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response unlock(String url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return unlock(URI.create(url), readTimeout, parameters);
 	}
 
@@ -9011,7 +9027,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response unlock(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+	default Response unlock(String url, int readTimeout, List<Header> headers) throws IOException, RequestException {
 		return unlock(URI.create(url), readTimeout, headers);
 	}
 
@@ -9076,7 +9092,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response unlock(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return unlock(URI.create(url), readTimeout, parameters, headers);
 	}
 
@@ -9139,7 +9155,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response propfind(String url) throws IOException, RequestException{
+	default Response propfind(String url) throws IOException, RequestException {
 		return propfind(URI.create(url));
 	}
 
@@ -9189,7 +9205,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response propfind(String url, Map<String, Object> parameters) throws IOException, RequestException{
+	default Response propfind(String url, Map<String, Object> parameters) throws IOException, RequestException {
 		return propfind(URI.create(url), parameters);
 	}
 
@@ -9243,7 +9259,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response propfind(String url, List<Header> headers) throws IOException, RequestException{
+	default Response propfind(String url, List<Header> headers) throws IOException, RequestException {
 		return propfind(URI.create(url), headers);
 	}
 
@@ -9300,7 +9316,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response propfind(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return propfind(URI.create(url), parameters, headers);
 	}
 
@@ -9361,7 +9377,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response propfind(String url, int readTimeout) throws IOException, RequestException{
+	default Response propfind(String url, int readTimeout) throws IOException, RequestException {
 		return propfind(URI.create(url), readTimeout);
 	}
 
@@ -9420,7 +9436,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response propfind(String url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return propfind(URI.create(url), readTimeout, parameters);
 	}
 
@@ -9482,7 +9498,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response propfind(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+	default Response propfind(String url, int readTimeout, List<Header> headers) throws IOException, RequestException {
 		return propfind(URI.create(url), readTimeout, headers);
 	}
 
@@ -9547,7 +9563,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response propfind(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return propfind(URI.create(url), readTimeout, parameters, headers);
 	}
 
@@ -9610,7 +9626,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response proppatch(String url) throws IOException, RequestException{
+	default Response proppatch(String url) throws IOException, RequestException {
 		return proppatch(URI.create(url));
 	}
 
@@ -9660,7 +9676,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response proppatch(String url, Map<String, Object> parameters) throws IOException, RequestException{
+	default Response proppatch(String url, Map<String, Object> parameters) throws IOException, RequestException {
 		return proppatch(URI.create(url), parameters);
 	}
 
@@ -9714,7 +9730,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response proppatch(String url, List<Header> headers) throws IOException, RequestException{
+	default Response proppatch(String url, List<Header> headers) throws IOException, RequestException {
 		return proppatch(URI.create(url), headers);
 	}
 
@@ -9771,7 +9787,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response proppatch(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return proppatch(URI.create(url), parameters, headers);
 	}
 
@@ -9831,7 +9847,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response proppatch(String url, RequestBody<?> data) throws IOException, RequestException{
+	default Response proppatch(String url, RequestBody<?> data) throws IOException, RequestException {
 		return proppatch(URI.create(url), data);
 	}
 
@@ -9888,7 +9904,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response proppatch(String url, RequestBody<?> data, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return proppatch(URI.create(url), data, parameters);
 	}
 
@@ -9951,7 +9967,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response proppatch(String url, RequestBody<?> data, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return proppatch(URI.create(url), data, headers);
 	}
 
@@ -10014,7 +10030,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response proppatch(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return proppatch(URI.create(url), data, parameters, headers);
 	}
 
@@ -10079,7 +10095,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response proppatch(String url, int readTimeout) throws IOException, RequestException{
+	default Response proppatch(String url, int readTimeout) throws IOException, RequestException {
 		return proppatch(URI.create(url), readTimeout);
 	}
 
@@ -10138,7 +10154,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response proppatch(String url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return proppatch(URI.create(url), readTimeout, parameters);
 	}
 
@@ -10201,7 +10217,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response proppatch(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+	default Response proppatch(String url, int readTimeout, List<Header> headers) throws IOException, RequestException {
 		return proppatch(URI.create(url), readTimeout, headers);
 	}
 
@@ -10266,7 +10282,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response proppatch(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return proppatch(URI.create(url), readTimeout, parameters, headers);
 	}
 
@@ -10334,7 +10350,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response proppatch(String url, int readTimeout, RequestBody<?> data) throws IOException, RequestException{
+	default Response proppatch(String url, int readTimeout, RequestBody<?> data) throws IOException, RequestException {
 		return proppatch(URI.create(url), readTimeout, data);
 	}
 
@@ -10399,7 +10415,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response proppatch(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return proppatch(URI.create(url), readTimeout, data, parameters);
 	}
 
@@ -10470,7 +10486,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response proppatch(String url, int readTimeout, RequestBody<?> data, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return proppatch(URI.create(url), readTimeout, data, headers);
 	}
 
@@ -10543,7 +10559,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response proppatch(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-							   List<Header> headers) throws IOException, RequestException{
+							   List<Header> headers) throws IOException, RequestException {
 		return proppatch(URI.create(url), readTimeout, data, parameters, headers);
 	}
 
@@ -10610,7 +10626,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response report(String url) throws IOException, RequestException{
+	default Response report(String url) throws IOException, RequestException {
 		return report(URI.create(url));
 	}
 
@@ -10660,7 +10676,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response report(String url, Map<String, Object> parameters) throws IOException, RequestException{
+	default Response report(String url, Map<String, Object> parameters) throws IOException, RequestException {
 		return report(URI.create(url), parameters);
 	}
 
@@ -10714,7 +10730,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response report(String url, List<Header> headers) throws IOException, RequestException{
+	default Response report(String url, List<Header> headers) throws IOException, RequestException {
 		return report(URI.create(url), headers);
 	}
 
@@ -10771,7 +10787,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response report(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return report(URI.create(url), parameters, headers);
 	}
 
@@ -10829,7 +10845,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response report(String url, RequestBody<?> data) throws IOException, RequestException{
+	default Response report(String url, RequestBody<?> data) throws IOException, RequestException {
 		return report(URI.create(url), data);
 	}
 
@@ -10886,7 +10902,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response report(String url, RequestBody<?> data, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return report(URI.create(url), data, parameters);
 	}
 
@@ -10946,7 +10962,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response report(String url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
+	default Response report(String url, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException {
 		return report(URI.create(url), data, headers);
 	}
 
@@ -11009,7 +11026,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response report(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return report(URI.create(url), data, parameters, headers);
 	}
 
@@ -11074,7 +11091,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response report(String url, int readTimeout) throws IOException, RequestException{
+	default Response report(String url, int readTimeout) throws IOException, RequestException {
 		return report(URI.create(url), readTimeout);
 	}
 
@@ -11133,7 +11150,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response report(String url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return report(URI.create(url), readTimeout, parameters);
 	}
 
@@ -11195,7 +11212,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response report(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+	default Response report(String url, int readTimeout, List<Header> headers) throws IOException, RequestException {
 		return report(URI.create(url), readTimeout, headers);
 	}
 
@@ -11260,7 +11277,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response report(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return report(URI.create(url), readTimeout, parameters, headers);
 	}
 
@@ -11328,7 +11345,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response report(String url, int readTimeout, RequestBody<?> data) throws IOException, RequestException{
+	default Response report(String url, int readTimeout, RequestBody<?> data) throws IOException, RequestException {
 		return report(URI.create(url), readTimeout, data);
 	}
 
@@ -11393,7 +11410,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response report(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return report(URI.create(url), readTimeout, data, parameters);
 	}
 
@@ -11464,7 +11481,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response report(String url, int readTimeout, RequestBody<?> data, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return report(URI.create(url), readTimeout, data, headers);
 	}
 
@@ -11537,7 +11554,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response report(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-							List<Header> headers) throws IOException, RequestException{
+							List<Header> headers) throws IOException, RequestException {
 		return report(URI.create(url), readTimeout, data, parameters, headers);
 	}
 
@@ -11604,7 +11621,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response view(String url) throws IOException, RequestException{
+	default Response view(String url) throws IOException, RequestException {
 		return view(URI.create(url));
 	}
 
@@ -11654,7 +11671,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response view(String url, Map<String, Object> parameters) throws IOException, RequestException{
+	default Response view(String url, Map<String, Object> parameters) throws IOException, RequestException {
 		return view(URI.create(url), parameters);
 	}
 
@@ -11708,7 +11725,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response view(String url, List<Header> headers) throws IOException, RequestException{
+	default Response view(String url, List<Header> headers) throws IOException, RequestException {
 		return view(URI.create(url), headers);
 	}
 
@@ -11765,7 +11782,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response view(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return view(URI.create(url), parameters, headers);
 	}
 
@@ -11824,7 +11841,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response view(String url, int readTimeout) throws IOException, RequestException{
+	default Response view(String url, int readTimeout) throws IOException, RequestException {
 		return view(URI.create(url), readTimeout);
 	}
 
@@ -11883,7 +11900,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response view(String url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return view(URI.create(url), readTimeout, parameters);
 	}
 
@@ -11945,7 +11962,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response view(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+	default Response view(String url, int readTimeout, List<Header> headers) throws IOException, RequestException {
 		return view(URI.create(url), readTimeout, headers);
 	}
 
@@ -12010,7 +12027,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response view(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return view(URI.create(url), readTimeout, parameters, headers);
 	}
 
@@ -12073,7 +12090,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response wrapped(String url) throws IOException, RequestException{
+	default Response wrapped(String url) throws IOException, RequestException {
 		return wrapped(URI.create(url));
 	}
 
@@ -12123,7 +12140,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response wrapped(String url, Map<String, Object> parameters) throws IOException, RequestException{
+	default Response wrapped(String url, Map<String, Object> parameters) throws IOException, RequestException {
 		return wrapped(URI.create(url), parameters);
 	}
 
@@ -12177,7 +12194,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response wrapped(String url, List<Header> headers) throws IOException, RequestException{
+	default Response wrapped(String url, List<Header> headers) throws IOException, RequestException {
 		return wrapped(URI.create(url), headers);
 	}
 
@@ -12234,7 +12251,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response wrapped(String url, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return wrapped(URI.create(url), parameters, headers);
 	}
 
@@ -12295,7 +12312,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response wrapped(String url, int readTimeout) throws IOException, RequestException{
+	default Response wrapped(String url, int readTimeout) throws IOException, RequestException {
 		return wrapped(URI.create(url), readTimeout);
 	}
 
@@ -12354,7 +12371,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response wrapped(String url, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return wrapped(URI.create(url), readTimeout, parameters);
 	}
 
@@ -12416,7 +12433,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 * @since 2.3.0
 	 */
-	default Response wrapped(String url, int readTimeout, List<Header> headers) throws IOException, RequestException{
+	default Response wrapped(String url, int readTimeout, List<Header> headers) throws IOException, RequestException {
 		return wrapped(URI.create(url), readTimeout, headers);
 	}
 
@@ -12481,7 +12498,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @since 2.3.0
 	 */
 	default Response wrapped(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return wrapped(URI.create(url), readTimeout, parameters, headers);
 	}
 
@@ -12546,7 +12563,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default Response request(String url, RequestMethod requestMethod) throws IOException, RequestException{
+	default Response request(String url, RequestMethod requestMethod) throws IOException, RequestException {
 		return request(URI.create(url), requestMethod);
 	}
 
@@ -12603,7 +12620,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response request(String url, RequestMethod requestMethod, Map<String, Object> parameters) throws
-			IOException, RequestException{
+			IOException, RequestException {
 		return request(URI.create(url), requestMethod, parameters);
 	}
 
@@ -12666,7 +12683,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response request(String url, RequestMethod requestMethod, List<Header> headers) throws IOException,
-			RequestException{
+			RequestException {
 		return request(URI.create(url), requestMethod, headers);
 	}
 
@@ -12730,7 +12747,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response request(String url, RequestMethod requestMethod, Map<String, Object> parameters,
-							 List<Header> headers) throws IOException, RequestException{
+							 List<Header> headers) throws IOException, RequestException {
 		return request(URI.create(url), requestMethod, parameters, headers);
 	}
 
@@ -12797,7 +12814,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response request(String url, RequestMethod requestMethod, RequestBody<?> data) throws IOException,
-			RequestException{
+			RequestException {
 		return request(URI.create(url), requestMethod, data);
 	}
 
@@ -12861,7 +12878,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response request(String url, RequestMethod requestMethod, RequestBody<?> data,
-							 Map<String, Object> parameters) throws IOException, RequestException{
+							 Map<String, Object> parameters) throws IOException, RequestException {
 		return request(URI.create(url), requestMethod, data, parameters);
 	}
 
@@ -12930,7 +12947,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response request(String url, RequestMethod requestMethod, RequestBody<?> data, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return request(URI.create(url), requestMethod, data, headers);
 	}
 
@@ -13001,7 +13018,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response request(String url, RequestMethod requestMethod, RequestBody<?> data,
-							 Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException{
+							 Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
 		return request(URI.create(url), requestMethod, data, parameters, headers);
 	}
 
@@ -13072,7 +13090,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response request(String url, RequestMethod requestMethod, int readTimeout)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return request(URI.create(url), requestMethod, readTimeout);
 	}
 
@@ -13135,7 +13153,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response request(String url, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return request(URI.create(url), requestMethod, readTimeout, parameters);
 	}
 
@@ -13204,7 +13222,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response request(String url, RequestMethod requestMethod, int readTimeout, List<Header> headers)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return request(URI.create(url), requestMethod, readTimeout, headers);
 	}
 
@@ -13275,7 +13293,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response request(String url, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters,
-							 List<Header> headers) throws IOException, RequestException{
+							 List<Header> headers) throws IOException, RequestException {
 		return request(URI.create(url), requestMethod, readTimeout, parameters, headers);
 	}
 
@@ -13348,7 +13366,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response request(String url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		return request(URI.create(url), requestMethod, readTimeout, data);
 	}
 
@@ -13419,7 +13437,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response request(String url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
-							 Map<String, Object> parameters) throws IOException, RequestException{
+							 Map<String, Object> parameters) throws IOException, RequestException {
 		return request(URI.create(url), requestMethod, readTimeout, data, parameters);
 	}
 
@@ -13494,7 +13512,7 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response request(String url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
-							 List<Header> headers) throws IOException, RequestException{
+							 List<Header> headers) throws IOException, RequestException {
 		return request(URI.create(url), requestMethod, readTimeout, data, headers);
 	}
 
@@ -13571,7 +13589,8 @@ public interface HttpClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default Response request(String url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
-							 Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException{
+							 Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException {
 		return request(URI.create(url), requestMethod, readTimeout, data, parameters, headers);
 	}
 

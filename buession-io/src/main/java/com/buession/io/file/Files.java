@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2024 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.io.file;
@@ -40,6 +40,8 @@ import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Set;
 
 /**
+ * {@link java.nio.file.Files} 扩展
+ *
  * @author Yong.Teng
  */
 public class Files {
@@ -55,7 +57,7 @@ public class Files {
 	 * @throws IOException
 	 * 		IO 异常
 	 */
-	public static void changeGroup(final Path path, final String group) throws IOException{
+	public static void changeGroup(final Path path, final String group) throws IOException {
 		chgrp(path, group);
 	}
 
@@ -70,7 +72,7 @@ public class Files {
 	 * @throws IOException
 	 * 		IO 异常
 	 */
-	public static void changeGroup(final File file, final String group) throws IOException{
+	public static void changeGroup(final File file, final String group) throws IOException {
 		chgrp(file, group);
 	}
 
@@ -85,7 +87,7 @@ public class Files {
 	 * @throws IOException
 	 * 		IO 异常
 	 */
-	public static void changeGroup(final String path, final String group) throws IOException{
+	public static void changeGroup(final String path, final String group) throws IOException {
 		chgrp(path, group);
 	}
 
@@ -100,7 +102,7 @@ public class Files {
 	 * @throws IOException
 	 * 		IO 异常
 	 */
-	public static void chgrp(final Path path, final String group) throws IOException{
+	public static void chgrp(final Path path, final String group) throws IOException {
 		Assert.isNull(path, "File path cloud not be null.");
 		Assert.isNull(group, "Group cloud not be null.");
 
@@ -109,9 +111,7 @@ public class Files {
 		PosixFileAttributeView view = java.nio.file.Files.getFileAttributeView(path, PosixFileAttributeView.class,
 				LinkOption.NOFOLLOW_LINKS);
 
-		if(view == null){
-			throw new UnsupportedOperationException();
-		}
+		Assert.isNull(view, UnsupportedOperationException::new);
 
 		view.setGroup(groupPrincipal);
 	}
@@ -127,7 +127,7 @@ public class Files {
 	 * @throws IOException
 	 * 		IO 异常
 	 */
-	public static void chgrp(final File file, final String group) throws IOException{
+	public static void chgrp(final File file, final String group) throws IOException {
 		Assert.isNull(file, "File cloud not be null.");
 		chgrp(file.toPath(), group);
 	}
@@ -143,7 +143,7 @@ public class Files {
 	 * @throws IOException
 	 * 		IO 异常
 	 */
-	public static void chgrp(final String path, final String group) throws IOException{
+	public static void chgrp(final String path, final String group) throws IOException {
 		Assert.isBlank(path, "File path must be contain entity string.");
 		chgrp(new File(path), group);
 	}
@@ -159,7 +159,7 @@ public class Files {
 	 * @throws IOException
 	 * 		IO 异常
 	 */
-	public static void changeOwner(final Path path, final String owner) throws IOException{
+	public static void changeOwner(final Path path, final String owner) throws IOException {
 		chown(path, owner);
 	}
 
@@ -174,7 +174,7 @@ public class Files {
 	 * @throws IOException
 	 * 		IO 异常
 	 */
-	public static void changeOwner(final File file, final String owner) throws IOException{
+	public static void changeOwner(final File file, final String owner) throws IOException {
 		chown(file, owner);
 	}
 
@@ -189,7 +189,7 @@ public class Files {
 	 * @throws IOException
 	 * 		IO 异常
 	 */
-	public static void changeOwner(final String path, final String owner) throws IOException{
+	public static void changeOwner(final String path, final String owner) throws IOException {
 		chown(path, owner);
 	}
 
@@ -204,7 +204,7 @@ public class Files {
 	 * @throws IOException
 	 * 		IO 异常
 	 */
-	public static void chown(final Path path, final String owner) throws IOException{
+	public static void chown(final Path path, final String owner) throws IOException {
 		Assert.isNull(path, "File path cloud not be null.");
 		Assert.isNull(owner, "Owner coult not be null.");
 
@@ -223,7 +223,7 @@ public class Files {
 	 * @throws IOException
 	 * 		IO 异常
 	 */
-	public static void chown(final File file, final String owner) throws IOException{
+	public static void chown(final File file, final String owner) throws IOException {
 		Assert.isNull(file, "File cloud not be null.");
 		chown(file.toPath(), owner);
 	}
@@ -239,7 +239,7 @@ public class Files {
 	 * @throws IOException
 	 * 		IO 异常
 	 */
-	public static void chown(final String path, final String owner) throws IOException{
+	public static void chown(final String path, final String owner) throws IOException {
 		Assert.isBlank(path, "File path must be contain entity string.");
 		chown(new File(path), owner);
 	}
@@ -259,7 +259,7 @@ public class Files {
 	 * @throws IOException
 	 * 		IO 异常
 	 */
-	public static void chmod(final Path path, final int mode) throws IOException{
+	public static void chmod(final Path path, final int mode) throws IOException {
 		Assert.isNull(path, "File path cloud not be null.");
 		chmod(path, mode2perms(mode));
 	}
@@ -279,7 +279,7 @@ public class Files {
 	 * @throws IOException
 	 * 		IO 异常
 	 */
-	public static void chmod(final File file, final int mode) throws IOException{
+	public static void chmod(final File file, final int mode) throws IOException {
 		Assert.isNull(file, "File cloud not be null.");
 		chmod(file.toPath(), mode);
 	}
@@ -299,7 +299,7 @@ public class Files {
 	 * @throws IOException
 	 * 		IO 异常
 	 */
-	public static void chmod(final String path, final int mode) throws IOException{
+	public static void chmod(final String path, final int mode) throws IOException {
 		Assert.isBlank(path, "File path must be contain entity string.");
 		chmod(new File(path), mode);
 	}
@@ -316,7 +316,7 @@ public class Files {
 	 * 		IO 异常
 	 * @see java.nio.file.attribute.PosixFilePermissions
 	 */
-	public static void chmod(final Path path, final String perms) throws IOException{
+	public static void chmod(final Path path, final String perms) throws IOException {
 		Assert.isNull(path, "File path cloud not be null.");
 		Assert.isBlank(perms, "File permission not be empty or null.");
 
@@ -336,7 +336,7 @@ public class Files {
 	 * 		IO 异常
 	 * @see java.nio.file.attribute.PosixFilePermissions
 	 */
-	public static void chmod(final File file, final String perms) throws IOException{
+	public static void chmod(final File file, final String perms) throws IOException {
 		Assert.isNull(file, "File cloud not be null.");
 		chmod(file.toPath(), perms);
 	}
@@ -353,7 +353,7 @@ public class Files {
 	 * 		IO 异常
 	 * @see java.nio.file.attribute.PosixFilePermissions
 	 */
-	public static void chmod(final String path, final String perms) throws IOException{
+	public static void chmod(final String path, final String perms) throws IOException {
 		Assert.isBlank(path, "File path must be contain entity string.");
 		chmod(new File(path), perms);
 	}
@@ -366,7 +366,7 @@ public class Files {
 	 *
 	 * @return 文件权限表示
 	 */
-	public static String mode2perms(final int mode){
+	public static String mode2perms(final int mode) {
 		char[] perms = new char[9];
 
 		perms[0] = getFilePerm(mode, 0x0100, FilePermission.READ);
@@ -396,11 +396,11 @@ public class Files {
 		return new String(perms);
 	}
 
-	private static char getFilePerm(final int mode, final int factor, final FilePermission defaultValue){
+	private static char getFilePerm(final int mode, final int factor, final FilePermission defaultValue) {
 		return getFilePerm(mode, factor, defaultValue, FilePermission.NONE);
 	}
 
-	private static char getFilePerm(final int mode, final int factor, final FilePermission t, final FilePermission f){
+	private static char getFilePerm(final int mode, final int factor, final FilePermission t, final FilePermission f) {
 		return (mode & factor) != 0 ? t.getValue() : f.getValue();
 	}
 

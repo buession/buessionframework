@@ -271,8 +271,6 @@ public enum ProtocolCommand {
 
 	UNLINK(ProtocolCommandGroup.KEY),
 
-	WAIT(ProtocolCommandGroup.KEY),
-
 	OBJECT_ENCODING(ProtocolCommandGroup.KEY),
 
 	OBJECT_REFQ(ProtocolCommandGroup.KEY),
@@ -280,7 +278,13 @@ public enum ProtocolCommand {
 	OBJECT_IDLETIME(ProtocolCommandGroup.KEY),
 
 	OBJECT_REFCOUNT(ProtocolCommandGroup.KEY),
-	/** key command end **/
+	/**
+	 * key command end
+	 **/
+
+	WAIT(ProtocolCommandGroup.GENERIC),
+
+	WAITOF(ProtocolCommandGroup.GENERIC),
 
 	/**
 	 * list command start
@@ -687,16 +691,16 @@ public enum ProtocolCommand {
 
 	private final ProtocolCommandGroup group;
 
-	ProtocolCommand(final ProtocolCommandGroup group){
+	ProtocolCommand(final ProtocolCommandGroup group) {
 		this.group = group;
 	}
 
-	public ProtocolCommandGroup getGroup(){
+	public ProtocolCommandGroup getGroup() {
 		return group;
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 		return StringUtils.replace(name(), "_", " ");
 	}
 

@@ -19,11 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.converter.Converter;
+import com.buession.core.converter.MapConverter;
 import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.core.PubSubListener;
 import com.buession.redis.core.command.CommandArguments;
@@ -33,7 +35,6 @@ import com.buession.redis.pubsub.jedis.DefaultBinaryJedisPubSub;
 import com.buession.redis.pubsub.jedis.DefaultJedisPubSub;
 import com.buession.redis.utils.SafeEncoder;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,173 +46,298 @@ import java.util.Map;
  */
 public final class JedisSentinelPubSubOperations extends AbstractPubSubOperations<JedisSentinelClient> {
 
-	public JedisSentinelPubSubOperations(final JedisSentinelClient client){
+	public JedisSentinelPubSubOperations(final JedisSentinelClient client) {
 		super(client);
 	}
 
 	@Override
-	public void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener){
+	public void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns)
 				.put("pubSubListener", pubSubListener);
-		new JedisSentinelCommand<Void>(client, ProtocolCommand.PSUBSCRIBE)
-				.general((cmd)->{
-					cmd.psubscribe(new DefaultJedisPubSub(pubSubListener), patterns);
-					return null;
-				})
-				.run(args);
+
+		if(isPipeline()){
+			new JedisSentinelPipelineCommand<>(client, ProtocolCommand.PSUBSCRIBE)
+					.run(args);
+		}else if(isTransaction()){
+			new JedisSentinelTransactionCommand<>(client, ProtocolCommand.PSUBSCRIBE)
+					.run(args);
+		}else{
+			new JedisSentinelCommand<>(client, ProtocolCommand.PSUBSCRIBE, (cmd)->{
+				cmd.psubscribe(new DefaultJedisPubSub(pubSubListener), patterns);
+				return null;
+			}, (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
-	public void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener){
+	public void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns)
 				.put("pubSubListener", pubSubListener);
-		new JedisSentinelCommand<Void>(client, ProtocolCommand.PSUBSCRIBE)
-				.general((cmd)->{
-					cmd.psubscribe(new DefaultBinaryJedisPubSub(pubSubListener), patterns);
-					return null;
-				})
-				.run(args);
+
+		if(isPipeline()){
+			new JedisSentinelPipelineCommand<>(client, ProtocolCommand.PSUBSCRIBE)
+					.run(args);
+		}else if(isTransaction()){
+			new JedisSentinelTransactionCommand<>(client, ProtocolCommand.PSUBSCRIBE)
+					.run(args);
+		}else{
+			new JedisSentinelCommand<>(client, ProtocolCommand.PSUBSCRIBE, (cmd)->{
+				cmd.psubscribe(new DefaultBinaryJedisPubSub(pubSubListener), patterns);
+				return null;
+			}, (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
-	public Long publish(final String channel, final String message){
+	public Long publish(final String channel, final String message) {
 		final CommandArguments args = CommandArguments.create("channel", channel).put("message", message);
-		return new JedisSentinelCommand<Long>(client, ProtocolCommand.PUBLISH)
-				.general((cmd)->cmd.publish(channel, message))
-				.pipeline((cmd)->cmd.publish(channel, message))
-				.transaction((cmd)->cmd.publish(channel, message))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.PUBLISH,
+					(cmd)->cmd.publish(channel, message), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.PUBLISH)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.PUBLISH, (cmd)->cmd.publish(channel, message),
+					(v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
-	public Long publish(final byte[] channel, final byte[] message){
+	public Long publish(final byte[] channel, final byte[] message) {
 		final CommandArguments args = CommandArguments.create("channel", channel).put("message", message);
-		return new JedisSentinelCommand<Long>(client, ProtocolCommand.PUBLISH)
-				.general((cmd)->cmd.publish(channel, message))
-				.pipeline((cmd)->cmd.publish(channel, message))
-				.transaction((cmd)->cmd.publish(channel, message))
-				.run(args);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.PUBLISH,
+					(cmd)->cmd.publish(channel, message), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.PUBLISH)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.PUBLISH, (cmd)->cmd.publish(channel, message),
+					(v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
-	public List<String> pubsubChannels(){
-		return new JedisSentinelCommand<List<String>>(client, ProtocolCommand.PUBSUB_CHANNELS)
-				.general((cmd)->cmd.pubsubChannels())
-				.run();
+	public List<String> pubsubChannels() {
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<List<String>, List<String>>(client, ProtocolCommand.PUBSUB_CHANNELS)
+					.run();
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<List<String>, List<String>>(client,
+					ProtocolCommand.PUBSUB_CHANNELS)
+					.run();
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS, (cmd)->cmd.pubsubChannels(),
+					(v)->v)
+					.run();
+		}
 	}
 
 	@Override
-	public List<String> pubsubChannels(final String pattern){
+	public List<String> pubsubChannels(final String pattern) {
 		final CommandArguments args = CommandArguments.create("pattern", pattern);
-		return new JedisSentinelCommand<List<String>>(client, ProtocolCommand.PUBSUB_CHANNELS)
-				.general((cmd)->cmd.pubsubChannels(pattern))
-				.run(args);
+		return pubsubChannels(pattern, (v)->v, args);
 	}
 
 	@Override
-	public List<byte[]> pubsubChannels(final byte[] pattern){
+	public List<byte[]> pubsubChannels(final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create("pattern", pattern);
-		return new JedisSentinelCommand<List<byte[]>>(client, ProtocolCommand.PUBSUB_CHANNELS)
-				.general((cmd)->cmd.pubsubChannels(SafeEncoder.encode(pattern)),
-						Converters.STRING_LIST_TO_BINARY_LIST_CONVERTER)
-				.run(args);
+		final String sPattern = SafeEncoder.encode(pattern);
+		final com.buession.core.converter.ListConverter<String, byte[]> stringToBinaryListConverter =
+				Converters.listStringToBinary();
+
+		return pubsubChannels(sPattern, stringToBinaryListConverter, args);
 	}
 
 	@Override
-	public Long pubsubNumPat(){
-		return new JedisSentinelCommand<Long>(client, ProtocolCommand.PUBSUB_NUMPAT)
-				.general((cmd)->cmd.pubsubNumPat())
-				.run();
+	public Long pubsubNumPat() {
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.PUBSUB_NUMPAT)
+					.run();
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<Long, Long>(client, ProtocolCommand.PUBSUB_NUMPAT)
+					.run();
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.PUBSUB_NUMPAT, (cmd)->cmd.pubsubNumPat(), (v)->v)
+					.run();
+		}
 	}
 
 	@Override
-	public Map<String, Long> pubsubNumSub(final String... channels){
+	public Map<String, Long> pubsubNumSub(final String... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
-		return new JedisSentinelCommand<Map<String, Long>>(client, ProtocolCommand.PUBSUB_NUMSUB)
-				.general((cmd)->cmd.pubsubNumSub(channels))
-				.run(args);
+		return pubsubNumSub(channels, (v)->v, args);
 	}
 
 	@Override
-	public Map<byte[], Long> pubsubNumSub(final byte[]... channels){
+	public Map<byte[], Long> pubsubNumSub(final byte[]... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
-		return new JedisSentinelCommand<Map<byte[], Long>>(client, ProtocolCommand.PUBSUB_NUMSUB)
-				.general((cmd)->{
-					final Map<String, Long> temp = cmd.pubsubNumSub(
-							Converters.BINARY_ARRAY_TO_STRING_ARRAY_CONVERTER.convert(channels));
-					final Map<byte[], Long> result = new HashMap<>(temp.size());
+		final String[] sChannels = SafeEncoder.encode(channels);
+		final MapConverter<String, Long, byte[], Long> stringToBinaryKeyPrimitiveValueMapConverter =
+				new MapConverter<>(SafeEncoder::encode, (v)->v);
 
-					temp.forEach((key, value)->{
-						result.put(SafeEncoder.encode(key), value);
-					});
-
-					return result;
-				})
-				.run(args);
+		return pubsubNumSub(sChannels, stringToBinaryKeyPrimitiveValueMapConverter, args);
 	}
 
 	@Override
-	public Object pUnSubscribe(){
-		return new JedisSentinelCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
-				.run();
+	public Object pUnSubscribe() {
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
+					.run();
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
+					.run();
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
+					.run();
+		}
 	}
 
 	@Override
-	public Object pUnSubscribe(final String... patterns){
+	public Object pUnSubscribe(final String... patterns) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns);
-		return new JedisSentinelCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
-				.run(args);
+		return pUnSubscribe(args);
 	}
 
 	@Override
-	public Object pUnSubscribe(final byte[]... patterns){
+	public Object pUnSubscribe(final byte[]... patterns) {
 		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns);
-		return new JedisSentinelCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
-				.run(args);
+		return pUnSubscribe(args);
 	}
 
 	@Override
-	public void subscribe(final String[] channels, final PubSubListener<String> pubSubListener){
+	public void subscribe(final String[] channels, final PubSubListener<String> pubSubListener) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels)
 				.put("pubSubListener", pubSubListener);
-		new JedisSentinelCommand<Void>(client, ProtocolCommand.PUBLISH)
-				.general((cmd)->{
-					cmd.subscribe(new DefaultJedisPubSub(pubSubListener), channels);
-					return null;
-				})
-				.run(args);
+
+		if(isPipeline()){
+			new JedisSentinelPipelineCommand<>(client, ProtocolCommand.SUBSCRIBE)
+					.run(args);
+		}else if(isTransaction()){
+			new JedisSentinelTransactionCommand<>(client, ProtocolCommand.SUBSCRIBE)
+					.run(args);
+		}else{
+			new JedisSentinelCommand<>(client, ProtocolCommand.SUBSCRIBE, (cmd)->{
+				cmd.subscribe(new DefaultJedisPubSub(pubSubListener), channels);
+				return null;
+			}, (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
-	public void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener){
+	public void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels)
 				.put("pubSubListener", pubSubListener);
-		new JedisSentinelCommand<Void>(client, ProtocolCommand.PUBLISH)
-				.general((cmd)->{
-					cmd.subscribe(new DefaultBinaryJedisPubSub(pubSubListener), channels);
-					return null;
-				})
-				.run(args);
+
+		if(isPipeline()){
+			new JedisSentinelPipelineCommand<>(client, ProtocolCommand.SUBSCRIBE)
+					.run(args);
+		}else if(isTransaction()){
+			new JedisSentinelTransactionCommand<>(client, ProtocolCommand.SUBSCRIBE)
+					.run(args);
+		}else{
+			new JedisSentinelCommand<>(client, ProtocolCommand.SUBSCRIBE, (cmd)->{
+				cmd.subscribe(new DefaultBinaryJedisPubSub(pubSubListener), channels);
+				return null;
+			}, (v)->v)
+					.run(args);
+		}
 	}
 
 	@Override
-	public Object unSubscribe(){
-		return new JedisSentinelCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
-				.run();
+	public Object unSubscribe() {
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
+					.run();
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
+					.run();
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
+					.run();
+		}
 	}
 
 	@Override
-	public Object unSubscribe(final String... channels){
+	public Object unSubscribe(final String... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
-		return new JedisSentinelCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
-				.run(args);
+		return unSubscribe(args);
 	}
 
 	@Override
-	public Object unSubscribe(final byte[]... channels){
+	public Object unSubscribe(final byte[]... channels) {
 		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
-		return new JedisSentinelCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
-				.run(args);
+		return unSubscribe(args);
+	}
+
+	private <V> List<V> pubsubChannels(final String pattern,
+									   final Converter<List<String>, List<V>> converter, final CommandArguments args) {
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<List<V>, List<V>>(client, ProtocolCommand.PUBSUB_CHANNELS)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<List<V>, List<V>>(client, ProtocolCommand.PUBSUB_CHANNELS)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.PUBSUB_CHANNELS,
+					(cmd)->cmd.pubsubChannels(pattern),
+					converter)
+					.run();
+		}
+	}
+
+	private <K> Map<K, Long> pubsubNumSub(final String[] channels,
+										  final Converter<Map<String, Long>, Map<K, Long>> converter,
+										  final CommandArguments args) {
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<Map<K, Long>, Map<K, Long>>(client, ProtocolCommand.PUBSUB_NUMSUB)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<Map<K, Long>, Map<K, Long>>(client,
+					ProtocolCommand.PUBSUB_NUMSUB)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.PUBSUB_NUMSUB, (cmd)->cmd.pubsubNumSub(channels),
+					converter)
+					.run(args);
+		}
+	}
+
+	private Object pUnSubscribe(final CommandArguments args) {
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.PUNSUBSCRIBE)
+					.run(args);
+		}
+	}
+
+	private Object unSubscribe(final CommandArguments args) {
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.UNSUBSCRIBE)
+					.run(args);
+		}
 	}
 
 }

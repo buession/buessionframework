@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -50,7 +50,7 @@ public class StatusLine {
 	 * 构造函数
 	 */
 	@Deprecated
-	public StatusLine(){
+	public StatusLine() {
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class StatusLine {
 	 * @param statusText
 	 * 		状态信息
 	 */
-	public StatusLine(int statusCode, String statusText){
+	public StatusLine(int statusCode, String statusText) {
 		setStatusCode(statusCode);
 		this.statusText = statusText;
 	}
@@ -71,7 +71,7 @@ public class StatusLine {
 	 *
 	 * @return 状态码
 	 */
-	public int getStatusCode(){
+	public int getStatusCode() {
 		return statusCode;
 	}
 
@@ -81,7 +81,7 @@ public class StatusLine {
 	 * @param statusCode
 	 * 		状态码
 	 */
-	public void setStatusCode(final int statusCode){
+	public void setStatusCode(final int statusCode) {
 		if(statusCode != 0 && (statusCode < 100 || statusCode > 599)){
 			throw new IllegalArgumentException("Illegal HTTP response status code: " + statusCode);
 		}
@@ -93,7 +93,7 @@ public class StatusLine {
 	 *
 	 * @return 状态信息
 	 */
-	public String getStatusText(){
+	public String getStatusText() {
 		return statusText;
 	}
 
@@ -103,13 +103,13 @@ public class StatusLine {
 	 * @param statusText
 	 * 		状态信息
 	 */
-	public void setStatusText(final String statusText){
+	public void setStatusText(final String statusText) {
 		Assert.isBlank(statusText, "HTTP response status text cloud not be null or empty.");
 		this.statusText = statusText;
 	}
 
 	@Override
-	public int hashCode(){
+	public int hashCode() {
 		int result = 16;
 
 		result = 32 * result + statusCode;
@@ -119,7 +119,7 @@ public class StatusLine {
 	}
 
 	@Override
-	public boolean equals(Object obj){
+	public boolean equals(Object obj) {
 		if(this == obj){
 			return true;
 		}
@@ -133,12 +133,8 @@ public class StatusLine {
 	}
 
 	@Override
-	public String toString(){
-		final StringBuilder sb = new StringBuilder(50);
-
-		sb.append(statusCode).append(Constants.SPACING_STRING).append(statusText);
-
-		return sb.toString();
+	public String toString() {
+		return statusCode + Constants.SPACING_STRING + statusText;
 	}
 
 }

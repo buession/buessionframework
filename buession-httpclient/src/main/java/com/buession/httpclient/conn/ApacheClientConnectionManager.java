@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 											   |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.conn;
@@ -31,16 +31,17 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Apache HttpComponents 连接管理器
+ * Apache HttpComponents Client 连接管理器
  *
  * @author Yong.Teng
  */
-public class ApacheClientConnectionManager extends ApacheBaseClientConnectionManager<HttpClientConnectionManager> {
+public class ApacheClientConnectionManager extends ApacheBaseClientConnectionManager<HttpClientConnectionManager>
+		implements com.buession.httpclient.apache.ApacheClientConnectionManager {
 
 	/**
 	 * 构造函数，创建驱动默认连接管理器
 	 */
-	public ApacheClientConnectionManager(){
+	public ApacheClientConnectionManager() {
 		super();
 	}
 
@@ -48,9 +49,9 @@ public class ApacheClientConnectionManager extends ApacheBaseClientConnectionMan
 	 * 构造函数，创建驱动默认连接管理器
 	 *
 	 * @param configuration
-	 * 		连接对象
+	 * 		配置
 	 */
-	public ApacheClientConnectionManager(Configuration configuration){
+	public ApacheClientConnectionManager(Configuration configuration) {
 		super(configuration);
 	}
 
@@ -58,9 +59,9 @@ public class ApacheClientConnectionManager extends ApacheBaseClientConnectionMan
 	 * 构造函数
 	 *
 	 * @param clientConnectionManager
-	 * 		驱动连接管理器
+	 * 		原生连接管理器
 	 */
-	public ApacheClientConnectionManager(HttpClientConnectionManager clientConnectionManager){
+	public ApacheClientConnectionManager(HttpClientConnectionManager clientConnectionManager) {
 		super(clientConnectionManager);
 	}
 
@@ -68,12 +69,12 @@ public class ApacheClientConnectionManager extends ApacheBaseClientConnectionMan
 	 * 构造函数
 	 *
 	 * @param configuration
-	 * 		连接对象
+	 * 		配置
 	 * @param clientConnectionManager
-	 * 		驱动连接管理器
+	 * 		原生连接管理器
 	 */
 	public ApacheClientConnectionManager(Configuration configuration,
-										 HttpClientConnectionManager clientConnectionManager){
+										 HttpClientConnectionManager clientConnectionManager) {
 		super(configuration, clientConnectionManager);
 	}
 
@@ -83,15 +84,22 @@ public class ApacheClientConnectionManager extends ApacheBaseClientConnectionMan
 	 * @return 连接管理器
 	 */
 	@Override
-	protected HttpClientConnectionManager createDefaultClientConnectionManager(){
-		final PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
+	protected HttpClientConnectionManager createDefaultClientConnectionManager() {
+		final PoolingHttpClientConnectionManager connectionManager =
+				getConfiguration().getConnectionTimeToLive() == null ? new PoolingHttpClientConnectionManager() :
+						new PoolingHttpClientConnectionManager(getConfiguration().getConnectionTimeToLive(),
+								TimeUnit.MILLISECONDS);
 
-		//最大连接数
-		connectionManager.setMaxTotal(getConfiguration().getMaxConnections());
-		//并发数
-		connectionManager.setDefaultMaxPerRoute(getConfiguration().getMaxPerRoute());
+		// 最大连接数
+		propertyMapper.from(getConfiguration().getMaxConnections()).to(connectionManager::setMaxTotal);
+		// 每个路由的最大连接数
+		propertyMapper.from(getConfiguration().getMaxPerRoute()).to(connectionManager::setDefaultMaxPerRoute);
+		// 连接池中最大连接数
+		propertyMapper.from(getConfiguration().getMaxRequests()).to(connectionManager::setMaxTotal);
 		// 空闲连接存活时长
-		connectionManager.closeIdleConnections(getConfiguration().getIdleConnectionTime(), TimeUnit.MILLISECONDS);
+		if(getConfiguration().getIdleConnectionTime() != null){
+			connectionManager.closeIdleConnections(getConfiguration().getIdleConnectionTime(), TimeUnit.MILLISECONDS);
+		}
 
 		return connectionManager;
 	}

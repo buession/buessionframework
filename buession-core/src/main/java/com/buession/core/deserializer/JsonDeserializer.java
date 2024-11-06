@@ -19,21 +19,52 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.deserializer;
 
+import com.buession.core.Customizer;
 import com.buession.core.type.TypeReference;
 
 /**
  * JSON 反序列化
  *
+ * @param <T>
+ * 		JSON 序列化原生类型
+ *
  * @author Yong.Teng
  * @since 2.3.0
  */
-@Deprecated
-public interface JsonDeserializer extends Deserializer {
+public interface JsonDeserializer<T> extends Deserializer {
+
+	/**
+	 * 反序列化配置
+	 *
+	 * @param object
+	 * 		JSON 原生对象
+	 *
+	 * @since 3.0.0
+	 */
+	default void configure(T object) {
+
+	}
+
+	/**
+	 * 反序列化配置
+	 *
+	 * @param object
+	 * 		JSON 原生对象
+	 * @param customizer
+	 * 		配置定制
+	 *
+	 * @since 3.0.0
+	 */
+	default void configure(T object, Customizer<T> customizer) {
+		if(customizer != null){
+			customizer.customize(object);
+		}
+	}
 
 	/**
 	 * 字符串反序列化

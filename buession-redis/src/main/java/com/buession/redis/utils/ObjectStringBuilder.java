@@ -19,12 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.utils;
 
-import java.util.StringJoiner;
+import com.buession.core.utils.StringJoiner;
 
 /**
  * @author Yong.Teng
@@ -34,44 +34,44 @@ public final class ObjectStringBuilder {
 
 	private final StringJoiner joiner = new StringJoiner(", ", "{", "}");
 
-	private ObjectStringBuilder(){
+	private ObjectStringBuilder() {
 	}
 
-	public static ObjectStringBuilder create(){
+	public static ObjectStringBuilder create() {
 		return new ObjectStringBuilder();
 	}
 
-	public ObjectStringBuilder add(final String name, final boolean value){
+	public ObjectStringBuilder add(final String name, final boolean value) {
 		joiner.add(name + '=' + value);
 		return this;
 	}
 
-	public ObjectStringBuilder add(final String name, final short value){
+	public ObjectStringBuilder add(final String name, final short value) {
 		joiner.add(name + '=' + value);
 		return this;
 	}
 
-	public ObjectStringBuilder add(final String name, final int value){
+	public ObjectStringBuilder add(final String name, final int value) {
 		joiner.add(name + '=' + value);
 		return this;
 	}
 
-	public ObjectStringBuilder add(final String name, final long value){
+	public ObjectStringBuilder add(final String name, final long value) {
 		joiner.add(name + '=' + value);
 		return this;
 	}
 
-	public ObjectStringBuilder add(final String name, final float value){
+	public ObjectStringBuilder add(final String name, final float value) {
 		joiner.add(name + '=' + value);
 		return this;
 	}
 
-	public ObjectStringBuilder add(final String name, final double value){
+	public ObjectStringBuilder add(final String name, final double value) {
 		joiner.add(name + '=' + value);
 		return this;
 	}
 
-	public ObjectStringBuilder add(final String name, final byte[] value){
+	public ObjectStringBuilder add(final String name, final byte[] value) {
 		if(value != null){
 			joiner.add(name + '=' + SafeEncoder.encode(value));
 		}
@@ -79,7 +79,12 @@ public final class ObjectStringBuilder {
 		return this;
 	}
 
-	public ObjectStringBuilder add(final String name, final String value){
+	public ObjectStringBuilder add(final String name, final Object value) {
+		joiner.add(name + '=' + value);
+		return this;
+	}
+
+	public ObjectStringBuilder addIfAbsent(final String name, final Object value) {
 		if(value != null){
 			joiner.add(name + '=' + value);
 		}
@@ -87,15 +92,7 @@ public final class ObjectStringBuilder {
 		return this;
 	}
 
-	public ObjectStringBuilder add(final String name, final Object value){
-		if(value != null){
-			joiner.add(name + '=' + value);
-		}
-
-		return this;
-	}
-
-	public ObjectStringBuilder append(final CharSequence seq){
+	public ObjectStringBuilder append(final CharSequence seq) {
 		if(seq != null){
 			joiner.add(seq);
 		}
@@ -103,7 +100,7 @@ public final class ObjectStringBuilder {
 		return this;
 	}
 
-	public String build(){
+	public String build() {
 		return joiner.toString();
 	}
 

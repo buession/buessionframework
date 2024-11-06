@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient;
@@ -28,7 +28,7 @@ import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.Response;
 import com.buession.httpclient.core.concurrent.Callback;
 import com.buession.httpclient.exception.RequestException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -42,24 +42,24 @@ public class OkHttpHttpAsyncClientTest {
 	private static OkHttpHttpAsyncClient httpClient = new OkHttpHttpAsyncClient();
 
 	@Test
-	public void responseHeaders() throws IOException, RequestException{
+	public void responseHeaders() throws IOException, RequestException {
 		httpClient.get("https://www.baidu.com",
 				new Callback() {
 
 					@Override
-					public void completed(Response response){
+					public void completed(Response response) {
 						for(Header header : response.getHeaders()){
 							System.out.println(header.toString());
 						}
 					}
 
 					@Override
-					public void failed(Exception ex){
+					public void failed(Exception ex) {
 						System.out.println("failed");
 					}
 
 					@Override
-					public void cancelled(){
+					public void cancelled() {
 						System.out.println("cancelled");
 					}
 				});
@@ -67,7 +67,7 @@ public class OkHttpHttpAsyncClientTest {
 	}
 
 	@Test
-	public void okhttp3Native(){
+	public void okhttp3Native() {
 		//  构建okHttpClient，相当于请求的客户端，Builder设计模式
 		okhttp3.OkHttpClient okHttpClient = new okhttp3.OkHttpClient.Builder().readTimeout(5, TimeUnit.SECONDS).build();
 		// 构建一个请求体，同样也是Builder设计模式
@@ -78,12 +78,12 @@ public class OkHttpHttpAsyncClientTest {
 		call.enqueue(new okhttp3.Callback() {
 
 			@Override
-			public void onFailure(okhttp3.Call call, IOException e){
+			public void onFailure(okhttp3.Call call, IOException e) {
 				System.out.println(e);
 			}
 
 			@Override
-			public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException{
+			public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
 				System.out.println(response.body());
 			}
 		});

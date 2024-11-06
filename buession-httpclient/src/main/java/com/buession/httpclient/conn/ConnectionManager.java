@@ -19,33 +19,16 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.conn;
-
-import com.buession.httpclient.core.Configuration;
 
 /**
  * 连接管理器
  *
  * @author Yong.Teng
  */
-public interface ConnectionManager {
-
-	/**
-	 * 获取连接对象
-	 *
-	 * @return 连接对象
-	 */
-	Configuration getConfiguration();
-
-	/**
-	 * 设置连接对象
-	 *
-	 * @param configuration
-	 * 		连接对象
-	 */
-	void setConfiguration(Configuration configuration);
+public interface ConnectionManager extends IConnectionManager {
 
 }

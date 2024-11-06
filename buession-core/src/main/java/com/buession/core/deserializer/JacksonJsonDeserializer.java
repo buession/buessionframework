@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.deserializer;
@@ -40,15 +40,26 @@ import java.util.Arrays;
  * @author Yong.Teng
  * @since 2.3.0
  */
-@Deprecated
-public class JacksonJsonDeserializer extends AbstractJsonDeserializer {
+public class JacksonJsonDeserializer extends AbstractJsonDeserializer<ObjectMapper> {
+
+	private final ObjectMapper objectMapper = new ObjectMapper();
+
+	public JacksonJsonDeserializer() {
+		configure(objectMapper);
+	}
+
+	@Override
+	public void configure(ObjectMapper object) {
+		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+				.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+	}
 
 	@Override
 	public <V> V deserialize(final String str) throws DeserializerException {
 		Assert.isNull(str, "String cloud not be null.");
 
 		try{
-			return getObjectMapper().readValue(str, new com.fasterxml.jackson.core.type.TypeReference<V>() {
+			return objectMapper.readValue(str, new com.fasterxml.jackson.core.type.TypeReference<V>() {
 
 			});
 		}catch(IOException e){
@@ -61,7 +72,7 @@ public class JacksonJsonDeserializer extends AbstractJsonDeserializer {
 		Assert.isNull(str, "String cloud not be null.");
 
 		try{
-			return getObjectMapper().readValue(str, clazz);
+			return objectMapper.readValue(str, clazz);
 		}catch(IOException e){
 			final String className = clazz == null ? "null" : clazz.getName();
 			throw new DeserializerException(str + " json deserialize to " + className + " failure.", e);
@@ -73,7 +84,7 @@ public class JacksonJsonDeserializer extends AbstractJsonDeserializer {
 		Assert.isNull(str, "String cloud not be null.");
 
 		try{
-			return getObjectMapper().readValue(str, new com.fasterxml.jackson.core.type.TypeReference<V>() {
+			return objectMapper.readValue(str, new com.fasterxml.jackson.core.type.TypeReference<V>() {
 
 				@Override
 				public Type getType() {
@@ -92,7 +103,7 @@ public class JacksonJsonDeserializer extends AbstractJsonDeserializer {
 		Assert.isNull(bytes, "Bytes cloud not be null.");
 
 		try{
-			return getObjectMapper().readValue(bytes, new com.fasterxml.jackson.core.type.TypeReference<V>() {
+			return objectMapper.readValue(bytes, new com.fasterxml.jackson.core.type.TypeReference<V>() {
 
 			});
 		}catch(IOException e){
@@ -105,7 +116,7 @@ public class JacksonJsonDeserializer extends AbstractJsonDeserializer {
 		Assert.isNull(bytes, "Bytes cloud not be null.");
 
 		try{
-			return getObjectMapper().readValue(bytes, clazz);
+			return objectMapper.readValue(bytes, clazz);
 		}catch(IOException e){
 			final String className = clazz == null ? "null" : clazz.getName();
 			throw new DeserializerException(Arrays.toString(bytes) + " json deserialize to " + className + " failure.",
@@ -118,7 +129,7 @@ public class JacksonJsonDeserializer extends AbstractJsonDeserializer {
 		Assert.isNull(bytes, "Bytes cloud not be null.");
 
 		try{
-			return getObjectMapper().readValue(bytes, new com.fasterxml.jackson.core.type.TypeReference<V>() {
+			return objectMapper.readValue(bytes, new com.fasterxml.jackson.core.type.TypeReference<V>() {
 
 				@Override
 				public Type getType() {
@@ -131,15 +142,6 @@ public class JacksonJsonDeserializer extends AbstractJsonDeserializer {
 			throw new DeserializerException(Arrays.toString(bytes) + " json deserialize to " + typeName + " failure.",
 					e);
 		}
-	}
-
-	protected static ObjectMapper getObjectMapper() {
-		ObjectMapper objectMapper = new ObjectMapper();
-
-		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
-				.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-
-		return objectMapper;
 	}
 
 }

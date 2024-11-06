@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package org.apache.http.client.methods;
@@ -29,6 +29,8 @@ import com.buession.httpclient.core.RequestMethod;
 import java.net.URI;
 
 /**
+ * Unlock 请求
+ *
  * @author Yong.Teng
  */
 public class HttpUnlock extends HttpRequestBase {
@@ -38,7 +40,7 @@ public class HttpUnlock extends HttpRequestBase {
 	/**
 	 * 构造函数
 	 */
-	public HttpUnlock(){
+	public HttpUnlock() {
 		super();
 	}
 
@@ -48,7 +50,7 @@ public class HttpUnlock extends HttpRequestBase {
 	 * @param uri
 	 * 		URL {@link URI}
 	 */
-	public HttpUnlock(final URI uri){
+	public HttpUnlock(final URI uri) {
 		super();
 		setURI(uri);
 	}
@@ -62,13 +64,13 @@ public class HttpUnlock extends HttpRequestBase {
 	 * @throws IllegalArgumentException
 	 * 		if the uri is invalid.
 	 */
-	public HttpUnlock(final String uri){
+	public HttpUnlock(final String uri) {
 		super();
 		setURI(URI.create(uri));
 	}
 
 	@Override
-	public String getMethod(){
+	public String getMethod() {
 		return METHOD_NAME;
 	}
 

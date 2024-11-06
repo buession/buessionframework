@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.aop.aopalliance;
@@ -42,12 +42,12 @@ public abstract class AbstractAopAllianceAnnotationsMethodInterceptor extends Ab
 	/**
 	 * 构造函数
 	 */
-	public AbstractAopAllianceAnnotationsMethodInterceptor(){
+	public AbstractAopAllianceAnnotationsMethodInterceptor() {
 		super();
 	}
 
 	@Override
-	public Object invoke(MethodInvocation methodInvocation) throws Throwable{
+	public Object invoke(MethodInvocation methodInvocation) throws Throwable {
 		com.buession.aop.MethodInvocation mi = createMethodInvocation(methodInvocation);
 		return super.invoke(mi);
 	}
@@ -60,32 +60,32 @@ public abstract class AbstractAopAllianceAnnotationsMethodInterceptor extends Ab
 	 *
 	 * @return The instance of {@link com.buession.aop.MethodInvocation}
 	 */
-	protected com.buession.aop.MethodInvocation createMethodInvocation(final MethodInvocation mi){
+	protected com.buession.aop.MethodInvocation createMethodInvocation(final MethodInvocation mi) {
 		return new com.buession.aop.MethodInvocation() {
 
 			@Override
-			public Object getThis(){
+			public Object getThis() {
 				return mi.getThis();
 			}
 
 			@Override
-			public Method getMethod(){
+			public Method getMethod() {
 				return mi.getMethod();
 			}
 
 			@Override
-			public Object[] getArguments(){
+			public Object[] getArguments() {
 				return mi.getArguments();
 			}
 
 			@Override
-			public Object proceed() throws Throwable{
+			public Object proceed() throws Throwable {
 				return mi.proceed();
 			}
 
 			@Override
-			public String toString(){
-				return "Method invocation [" + mi.getMethod() + "]";
+			public String toString() {
+				return "Method invocation [" + mi.getMethod() + ']';
 			}
 
 		};

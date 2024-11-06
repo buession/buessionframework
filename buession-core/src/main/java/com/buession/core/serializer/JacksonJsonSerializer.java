@@ -19,14 +19,11 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.serializer;
 
-import com.buession.core.deserializer.DeserializerException;
-import com.buession.core.deserializer.JacksonJsonDeserializer;
-import com.buession.core.type.TypeReference;
 import com.buession.core.utils.Assert;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,15 +34,25 @@ import com.fasterxml.jackson.databind.SerializationFeature;
  *
  * @author Yong.Teng
  */
-@Deprecated
-public class JacksonJsonSerializer extends AbstractJsonSerializer {
+public class JacksonJsonSerializer extends AbstractJsonSerializer<ObjectMapper> {
+
+	private final ObjectMapper objectMapper = new ObjectMapper();
+
+	public JacksonJsonSerializer() {
+		configure(objectMapper);
+	}
+
+	@Override
+	public void configure(ObjectMapper objectMapper) {
+		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+	}
 
 	@Override
 	public <V> String serialize(final V object) throws SerializerException {
 		Assert.isNull(object, "Object cloud not be null.");
 
 		try{
-			return getObjectMapper().writeValueAsString(object);
+			return objectMapper.writeValueAsString(object);
 		}catch(JsonProcessingException e){
 			throw new SerializerException(object.getClass().getName() + " json serialize failure.", e);
 		}
@@ -56,78 +63,10 @@ public class JacksonJsonSerializer extends AbstractJsonSerializer {
 		Assert.isNull(object, "Object cloud not be null.");
 
 		try{
-			return getObjectMapper().writeValueAsBytes(object);
+			return objectMapper.writeValueAsBytes(object);
 		}catch(JsonProcessingException e){
 			throw new SerializerException(object.getClass().getName() + " json serialize failure.", e);
 		}
-	}
-
-	@Override
-	public <V> V deserialize(final String str) throws SerializerException {
-		JacksonJsonDeserializer deserializer = new JacksonJsonDeserializer();
-		try{
-			return deserializer.deserialize(str);
-		}catch(DeserializerException e){
-			throw new SerializerException(e.getMessage(), e);
-		}
-	}
-
-	@Override
-	public <V> V deserialize(final String str, final Class<V> clazz) throws SerializerException {
-		JacksonJsonDeserializer deserializer = new JacksonJsonDeserializer();
-		try{
-			return deserializer.deserialize(str, clazz);
-		}catch(DeserializerException e){
-			throw new SerializerException(e.getMessage(), e);
-		}
-	}
-
-	@Override
-	public <V> V deserialize(final String str, final TypeReference<V> type) throws SerializerException {
-		JacksonJsonDeserializer deserializer = new JacksonJsonDeserializer();
-		try{
-			return deserializer.deserialize(str, type);
-		}catch(DeserializerException e){
-			throw new SerializerException(e.getMessage(), e);
-		}
-	}
-
-	@Override
-	public <V> V deserialize(final byte[] bytes) throws SerializerException {
-		JacksonJsonDeserializer deserializer = new JacksonJsonDeserializer();
-		try{
-			return deserializer.deserialize(bytes);
-		}catch(DeserializerException e){
-			throw new SerializerException(e.getMessage(), e);
-		}
-	}
-
-	@Override
-	public <V> V deserialize(final byte[] bytes, final Class<V> clazz) throws SerializerException {
-		JacksonJsonDeserializer deserializer = new JacksonJsonDeserializer();
-		try{
-			return deserializer.deserialize(bytes, clazz);
-		}catch(DeserializerException e){
-			throw new SerializerException(e.getMessage(), e);
-		}
-	}
-
-	@Override
-	public <V> V deserialize(final byte[] bytes, final TypeReference<V> type) throws SerializerException {
-		JacksonJsonDeserializer deserializer = new JacksonJsonDeserializer();
-		try{
-			return deserializer.deserialize(bytes, type);
-		}catch(DeserializerException e){
-			throw new SerializerException(e.getMessage(), e);
-		}
-	}
-
-	protected static ObjectMapper getObjectMapper() {
-		ObjectMapper objectMapper = new ObjectMapper();
-
-		objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-
-		return objectMapper;
 	}
 
 }

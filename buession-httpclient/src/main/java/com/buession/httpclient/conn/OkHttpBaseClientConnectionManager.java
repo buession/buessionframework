@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.conn;
@@ -40,7 +40,7 @@ public abstract class OkHttpBaseClientConnectionManager<CM> extends AbstractConn
 	/**
 	 * 构造函数，创建驱动默认连接管理器
 	 */
-	public OkHttpBaseClientConnectionManager(){
+	public OkHttpBaseClientConnectionManager() {
 		super();
 	}
 
@@ -48,9 +48,9 @@ public abstract class OkHttpBaseClientConnectionManager<CM> extends AbstractConn
 	 * 构造函数，创建驱动默认连接管理器
 	 *
 	 * @param configuration
-	 * 		连接对象
+	 * 		配置
 	 */
-	public OkHttpBaseClientConnectionManager(Configuration configuration){
+	public OkHttpBaseClientConnectionManager(Configuration configuration) {
 		super(configuration);
 	}
 
@@ -58,9 +58,9 @@ public abstract class OkHttpBaseClientConnectionManager<CM> extends AbstractConn
 	 * 构造函数
 	 *
 	 * @param clientConnectionManager
-	 * 		驱动连接管理器
+	 * 		原生连接管理器
 	 */
-	public OkHttpBaseClientConnectionManager(CM clientConnectionManager){
+	public OkHttpBaseClientConnectionManager(CM clientConnectionManager) {
 		super(clientConnectionManager);
 	}
 
@@ -68,11 +68,11 @@ public abstract class OkHttpBaseClientConnectionManager<CM> extends AbstractConn
 	 * 构造函数
 	 *
 	 * @param configuration
-	 * 		连接对象
+	 * 		配置
 	 * @param clientConnectionManager
-	 * 		驱动连接管理器
+	 * 		原生连接管理器
 	 */
-	public OkHttpBaseClientConnectionManager(Configuration configuration, CM clientConnectionManager){
+	public OkHttpBaseClientConnectionManager(Configuration configuration, CM clientConnectionManager) {
 		super(configuration, clientConnectionManager);
 	}
 

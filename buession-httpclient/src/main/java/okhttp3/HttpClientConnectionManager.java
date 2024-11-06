@@ -37,6 +37,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class HttpClientConnectionManager implements Closeable {
 
+	/**
+	 * 连接池
+	 */
 	private ConnectionPool connectionPool;
 
 	/**
@@ -67,13 +70,27 @@ public class HttpClientConnectionManager implements Closeable {
 	 */
 	private int maxRequestsPerHost;
 
+	/**
+	 * 构造函数
+	 */
 	public HttpClientConnectionManager() {
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param connectionPool
+	 * 		连接池
+	 */
 	public HttpClientConnectionManager(ConnectionPool connectionPool) {
 		this.connectionPool = connectionPool;
 	}
 
+	/**
+	 * 返回连接池
+	 *
+	 * @return 连接池
+	 */
 	public ConnectionPool getConnectionPool() {
 		if(connectionPool == null){
 			connectionPool = new ConnectionPool(maxConnections, idleConnectionTime, TimeUnit.MILLISECONDS);
@@ -82,6 +99,12 @@ public class HttpClientConnectionManager implements Closeable {
 		return connectionPool;
 	}
 
+	/**
+	 * 设置连接池
+	 *
+	 * @param connectionPool
+	 * 		连接池
+	 */
 	public void setConnectionPool(ConnectionPool connectionPool) {
 		this.connectionPool = connectionPool;
 	}

@@ -38,6 +38,11 @@ public enum TransactionIsolation {
 	DEFAULT(-1),
 
 	/**
+	 * 不支持事务
+	 */
+	NONE(0),
+
+	/**
 	 * 读未提交，即能够读取到没有被提交的数据
 	 */
 	READ_UNCOMMITTED(1),
@@ -59,11 +64,11 @@ public enum TransactionIsolation {
 
 	private final int value;
 
-	TransactionIsolation(final int value){
+	TransactionIsolation(final int value) {
 		this.value = value;
 	}
 
-	public int getValue(){
+	public int getValue() {
 		return value;
 	}
 

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.collect;
@@ -30,6 +30,7 @@ import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -134,7 +135,13 @@ public class Maps {
 	 * @return 当 map 为 null 时，返回 null；否则返回 V 类型的 {@link List}
 	 */
 	public static <K, V> List<V> toList(final Map<K, V> map) {
-		return map == null ? null : new ArrayList<>(map.values());
+		if(map == null){
+			return null;
+		}else if(map instanceof LinkedHashMap){
+			return new LinkedList<>(map.values());
+		}else{
+			return new ArrayList<>(map.values());
+		}
 	}
 
 	/**

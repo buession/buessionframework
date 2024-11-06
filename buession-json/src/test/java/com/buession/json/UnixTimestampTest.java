@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.json;
@@ -30,7 +30,7 @@ import com.buession.json.annotation.SqlDateUnixTimestamp;
 import com.buession.json.annotation.TimestampUnixTimestamp;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -42,7 +42,7 @@ import java.util.Date;
 public class UnixTimestampTest {
 
 	@Test
-	public void serialize() throws JsonProcessingException{
+	public void serialize() throws JsonProcessingException {
 		User user = new User();
 
 		user.setCalendar(Calendar.getInstance());
@@ -56,7 +56,7 @@ public class UnixTimestampTest {
 	}
 
 	@Test
-	public void deserialize() throws JsonProcessingException{
+	public void deserialize() throws JsonProcessingException {
 		String str = "{\"date\":1588253558,\"sqlDate\":1588253558,\"calendar\":1588253558,\"timestamp\":1588253558}";
 
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -80,40 +80,40 @@ public class UnixTimestampTest {
 		@TimestampUnixTimestamp
 		private Timestamp timestamp;
 
-		public Date getDate(){
+		public Date getDate() {
 			return date;
 		}
 
-		public void setDate(Date date){
+		public void setDate(Date date) {
 			this.date = date;
 		}
 
-		public java.sql.Date getSqlDate(){
+		public java.sql.Date getSqlDate() {
 			return sqlDate;
 		}
 
-		public void setSqlDate(java.sql.Date sqlDate){
+		public void setSqlDate(java.sql.Date sqlDate) {
 			this.sqlDate = sqlDate;
 		}
 
-		public Calendar getCalendar(){
+		public Calendar getCalendar() {
 			return calendar;
 		}
 
-		public void setCalendar(Calendar calendar){
+		public void setCalendar(Calendar calendar) {
 			this.calendar = calendar;
 		}
 
-		public Timestamp getTimestamp(){
+		public Timestamp getTimestamp() {
 			return timestamp;
 		}
 
-		public void setTimestamp(Timestamp timestamp){
+		public void setTimestamp(Timestamp timestamp) {
 			this.timestamp = timestamp;
 		}
 
 		@Override
-		public String toString(){
+		public String toString() {
 			return "User{" + "date=" + date + ", sqlDate=" + sqlDate + ", calendar=" + calendar + ", timestamp=" +
 					timestamp + '}';
 		}

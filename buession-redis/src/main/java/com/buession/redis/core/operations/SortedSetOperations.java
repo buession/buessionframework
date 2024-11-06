@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
@@ -32,7 +32,6 @@ import com.buession.redis.core.NxXx;
 import com.buession.redis.core.command.SortedSetCommands;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * 有序集合运算
@@ -57,7 +56,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default Long zAdd(final String key, final double score, final String member){
+	default Long zAdd(final String key, final double score, final String member) {
 		return zAdd(key, MapBuilder.of(member, score));
 	}
 
@@ -75,7 +74,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default Long zAdd(final byte[] key, final double score, final byte[] member){
+	default Long zAdd(final byte[] key, final double score, final byte[] member) {
 		return zAdd(key, MapBuilder.of(member, score));
 	}
 
@@ -97,7 +96,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default Long zAdd(final String key, final double score, final String member, final NxXx nxXx){
+	default Long zAdd(final String key, final double score, final String member, final NxXx nxXx) {
 		return zAdd(key, MapBuilder.of(member, score), nxXx);
 	}
 
@@ -119,7 +118,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default Long zAdd(final byte[] key, final double score, final byte[] member, final NxXx nxXx){
+	default Long zAdd(final byte[] key, final double score, final byte[] member, final NxXx nxXx) {
 		return zAdd(key, MapBuilder.of(member, score), nxXx);
 	}
 
@@ -141,7 +140,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default Long zAdd(final String key, final double score, final String member, final GtLt gtLt){
+	default Long zAdd(final String key, final double score, final String member, final GtLt gtLt) {
 		return zAdd(key, MapBuilder.of(member, score), gtLt);
 	}
 
@@ -163,7 +162,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default Long zAdd(final byte[] key, final double score, final byte[] member, final GtLt gtLt){
+	default Long zAdd(final byte[] key, final double score, final byte[] member, final GtLt gtLt) {
 		return zAdd(key, MapBuilder.of(member, score), gtLt);
 	}
 
@@ -184,7 +183,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default Long zAdd(final String key, final double score, final String member, final boolean ch){
+	default Long zAdd(final String key, final double score, final String member, final boolean ch) {
 		return zAdd(key, MapBuilder.of(member, score), ch);
 	}
 
@@ -205,7 +204,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default Long zAdd(final byte[] key, final double score, final byte[] member, final boolean ch){
+	default Long zAdd(final byte[] key, final double score, final byte[] member, final boolean ch) {
 		return zAdd(key, MapBuilder.of(member, score), ch);
 	}
 
@@ -231,7 +230,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default Long zAdd(final String key, final double score, final String member, final NxXx nxXx, final GtLt gtLt){
+	default Long zAdd(final String key, final double score, final String member, final NxXx nxXx, final GtLt gtLt) {
 		return zAdd(key, MapBuilder.of(member, score), nxXx, gtLt);
 	}
 
@@ -257,7 +256,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default Long zAdd(final byte[] key, final double score, final byte[] member, final NxXx nxXx, final GtLt gtLt){
+	default Long zAdd(final byte[] key, final double score, final byte[] member, final NxXx nxXx, final GtLt gtLt) {
 		return zAdd(key, MapBuilder.of(member, score), nxXx, gtLt);
 	}
 
@@ -282,7 +281,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default Long zAdd(final String key, final double score, final String member, final NxXx nxXx, final boolean ch){
+	default Long zAdd(final String key, final double score, final String member, final NxXx nxXx, final boolean ch) {
 		return zAdd(key, MapBuilder.of(member, score), nxXx, ch);
 	}
 
@@ -307,7 +306,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default Long zAdd(final byte[] key, final double score, final byte[] member, final NxXx nxXx, final boolean ch){
+	default Long zAdd(final byte[] key, final double score, final byte[] member, final NxXx nxXx, final boolean ch) {
 		return zAdd(key, MapBuilder.of(member, score), nxXx, ch);
 	}
 
@@ -332,7 +331,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default Long zAdd(final String key, final double score, final String member, final GtLt gtLt, final boolean ch){
+	default Long zAdd(final String key, final double score, final String member, final GtLt gtLt, final boolean ch) {
 		return zAdd(key, MapBuilder.of(member, score), gtLt, ch);
 	}
 
@@ -357,7 +356,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default Long zAdd(final byte[] key, final double score, final byte[] member, final GtLt gtLt, final boolean ch){
+	default Long zAdd(final byte[] key, final double score, final byte[] member, final GtLt gtLt, final boolean ch) {
 		return zAdd(key, MapBuilder.of(member, score), gtLt, ch);
 	}
 
@@ -387,7 +386,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
 	default Long zAdd(final String key, final double score, final String member, final NxXx nxXx, final GtLt gtLt,
-					  final boolean ch){
+					  final boolean ch) {
 		return zAdd(key, MapBuilder.of(member, score), nxXx, gtLt, ch);
 	}
 
@@ -417,7 +416,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
 	default Long zAdd(final byte[] key, final double score, final byte[] member, final NxXx nxXx, final GtLt gtLt,
-					  final boolean ch){
+					  final boolean ch) {
 		return zAdd(key, MapBuilder.of(member, score), nxXx, gtLt, ch);
 	}
 
@@ -811,7 +810,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return The result of the difference
 	 */
-	<V> Set<V> zDiffObject(final String[] keys);
+	<V> List<V> zDiffObject(final String[] keys);
 
 	/**
 	 * This command is similar to ZDIFFSTORE, but instead of storing the resulting sorted set, it is returned to the client
@@ -825,23 +824,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return The result of the difference
 	 */
-	<V> Set<V> zDiffObject(final byte[][] keys);
-
-	/**
-	 * This command is similar to ZDIFFSTORE, but instead of storing the resulting sorted set, it is returned to the client
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/zdiff/" target="_blank">https://redis.io/commands/zdiff/</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return The result of the difference
-	 */
-	<V> Set<V> zDiffObject(final String[] keys, final Class<V> clazz);
+	<V> List<V> zDiffObject(final byte[][] keys);
 
 	/**
 	 * This command is similar to ZDIFFSTORE, but instead of storing the resulting sorted set, it is returned to the client
@@ -857,7 +840,23 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return The result of the difference
 	 */
-	<V> Set<V> zDiffObject(final byte[][] keys, final Class<V> clazz);
+	<V> List<V> zDiffObject(final String[] keys, final Class<V> clazz);
+
+	/**
+	 * This command is similar to ZDIFFSTORE, but instead of storing the resulting sorted set, it is returned to the client
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zdiff/" target="_blank">https://redis.io/commands/zdiff/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return The result of the difference
+	 */
+	<V> List<V> zDiffObject(final byte[][] keys, final Class<V> clazz);
 
 	/**
 	 * This command is similar to ZDIFFSTORE, but instead of storing the resulting sorted set, it is returned to the client
@@ -875,7 +874,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @see TypeReference
 	 */
-	<V> Set<V> zDiffObject(final String[] keys, final TypeReference<V> type);
+	<V> List<V> zDiffObject(final String[] keys, final TypeReference<V> type);
 
 	/**
 	 * This command is similar to ZDIFFSTORE, but instead of storing the resulting sorted set, it is returned to the client
@@ -893,7 +892,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @see TypeReference
 	 */
-	<V> Set<V> zDiffObject(final byte[][] keys, final TypeReference<V> type);
+	<V> List<V> zDiffObject(final byte[][] keys, final TypeReference<V> type);
 
 	/**
 	 * 为有序集 key 的成员 member 的 score 值加上增量一
@@ -905,7 +904,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return member 成员的新 score 值
 	 */
-	default Double zIncr(final String key, final String member){
+	default Double zIncr(final String key, final String member) {
 		return zIncrBy(key, 1, member);
 	}
 
@@ -919,7 +918,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return member 成员的新 score 值
 	 */
-	default Double zIncr(final byte[] key, final byte[] member){
+	default Double zIncr(final byte[] key, final byte[] member) {
 		return zIncrBy(key, 1, member);
 	}
 
@@ -933,7 +932,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return member 成员的新 score 值
 	 */
-	default Double zDecr(final String key, final String member){
+	default Double zDecr(final String key, final String member) {
 		return zIncrBy(key, -1, member);
 	}
 
@@ -947,7 +946,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return member 成员的新 score 值
 	 */
-	default Double zDecr(final byte[] key, final byte[] member){
+	default Double zDecr(final byte[] key, final byte[] member) {
 		return zIncrBy(key, -1, member);
 	}
 
@@ -965,7 +964,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return member 成员的新 score 值
 	 */
-	default Double zDecrBy(final String key, final double increment, final String member){
+	default Double zDecrBy(final String key, final double increment, final String member) {
 		return zIncrBy(key, increment * -1, member);
 	}
 
@@ -983,7 +982,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return member 成员的新 score 值
 	 */
-	default Double zDecrBy(final byte[] key, final double increment, final byte[] member){
+	default Double zDecrBy(final byte[] key, final double increment, final byte[] member) {
 		return zIncrBy(key, increment * -1, member);
 	}
 
@@ -999,7 +998,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 有序集合的交集反序列为对象
 	 */
-	<V> Set<V> zInterObject(final String[] keys);
+	<V> List<V> zInterObject(final String[] keys);
 
 	/**
 	 * 计算给定的一个或多个有序集合的交集，并反序列为对象
@@ -1013,7 +1012,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 有序集合的交集反序列为对象
 	 */
-	<V> Set<V> zInterObject(final byte[][] keys);
+	<V> List<V> zInterObject(final byte[][] keys);
 
 	/**
 	 * 计算给定的一个或多个有序集合的交集，并反序列化为 clazz 指定的对象
@@ -1029,7 +1028,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 有序集合的交集反序列为对象
 	 */
-	<V> Set<V> zInterObject(final String[] keys, final Class<V> clazz);
+	<V> List<V> zInterObject(final String[] keys, final Class<V> clazz);
 
 	/**
 	 * 计算给定的一个或多个有序集合的交集，并反序列化为 clazz 指定的对象
@@ -1045,7 +1044,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 有序集合的交集反序列为对象
 	 */
-	<V> Set<V> zInterObject(final byte[][] keys, final Class<V> clazz);
+	<V> List<V> zInterObject(final byte[][] keys, final Class<V> clazz);
 
 	/**
 	 * 计算给定的一个或多个有序集合的交集，并反序列化为 type 指定的对象
@@ -1063,7 +1062,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @see TypeReference
 	 */
-	<V> Set<V> zInterObject(final String[] keys, final TypeReference<V> type);
+	<V> List<V> zInterObject(final String[] keys, final TypeReference<V> type);
 
 	/**
 	 * 计算给定的一个或多个有序集合的交集，并反序列化为 type 指定的对象
@@ -1081,7 +1080,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @see TypeReference
 	 */
-	<V> Set<V> zInterObject(final byte[][] keys, final TypeReference<V> type);
+	<V> List<V> zInterObject(final byte[][] keys, final TypeReference<V> type);
 
 	/**
 	 * 计算给定的一个或多个有序集合的交集，并反序列化为对象
@@ -1097,7 +1096,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 有序集合的交集反序列为对象
 	 */
-	<V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate);
+	<V> List<V> zInterObject(final String[] keys, final Aggregate aggregate);
 
 	/**
 	 * 计算给定的一个或多个有序集合的交集，并反序列化为对象
@@ -1113,7 +1112,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 有序集合的交集反序列为对象
 	 */
-	<V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate);
+	<V> List<V> zInterObject(final byte[][] keys, final Aggregate aggregate);
 
 	/**
 	 * 计算给定的一个或多个有序集合的交集，并反序列化为 clazz 指定的对象
@@ -1131,7 +1130,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 有序集合的交集反序列为对象
 	 */
-	<V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate, final Class<V> clazz);
+	<V> List<V> zInterObject(final String[] keys, final Aggregate aggregate, final Class<V> clazz);
 
 	/**
 	 * 计算给定的一个或多个有序集合的交集，并反序列化为 clazz 指定的对象
@@ -1149,7 +1148,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 有序集合的交集反序列为对象
 	 */
-	<V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final Class<V> clazz);
+	<V> List<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final Class<V> clazz);
 
 	/**
 	 * 计算给定的一个或多个有序集合的交集，并反序列化为 clazz 指定的对象
@@ -1169,7 +1168,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @see TypeReference
 	 */
-	<V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate, final TypeReference<V> type);
+	<V> List<V> zInterObject(final String[] keys, final Aggregate aggregate, final TypeReference<V> type);
 
 	/**
 	 * 计算给定的一个或多个有序集合的交集，并反序列化为 type 指定的对象
@@ -1189,7 +1188,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @see TypeReference
 	 */
-	<V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final TypeReference<V> type);
+	<V> List<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final TypeReference<V> type);
 
 	/**
 	 * 计算给定的一个或多个有序集合的交集，并反序列化对象
@@ -1205,7 +1204,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 有序集合的交集反序列为对象
 	 */
-	<V> Set<V> zInterObject(final String[] keys, final double[] weights);
+	<V> List<V> zInterObject(final String[] keys, final double[] weights);
 
 	/**
 	 * 计算给定的一个或多个有序集合的交集，并反序列化为对象
@@ -1221,7 +1220,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 有序集合的交集反序列为对象
 	 */
-	<V> Set<V> zInterObject(final byte[][] keys, final double[] weights);
+	<V> List<V> zInterObject(final byte[][] keys, final double[] weights);
 
 	/**
 	 * 计算给定的一个或多个有序集合的交集，并反序列化为 clazz 指定的对象
@@ -1239,7 +1238,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 有序集合的交集反序列为对象
 	 */
-	<V> Set<V> zInterObject(final String[] keys, final double[] weights, final Class<V> clazz);
+	<V> List<V> zInterObject(final String[] keys, final double[] weights, final Class<V> clazz);
 
 	/**
 	 * 计算给定的一个或多个有序集合的交集，并反序列化为 clazz 指定的对象
@@ -1257,7 +1256,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 有序集合的交集反序列为对象
 	 */
-	<V> Set<V> zInterObject(final byte[][] keys, final double[] weights, final Class<V> clazz);
+	<V> List<V> zInterObject(final byte[][] keys, final double[] weights, final Class<V> clazz);
 
 	/**
 	 * 计算给定的一个或多个有序集合的交集，并反序列化为 type 指定的对象
@@ -1277,7 +1276,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @see TypeReference
 	 */
-	<V> Set<V> zInterObject(final String[] keys, final double[] weights, final TypeReference<V> type);
+	<V> List<V> zInterObject(final String[] keys, final double[] weights, final TypeReference<V> type);
 
 	/**
 	 * 计算给定的一个或多个有序集合的交集，并反序列化为 type 指定的对象
@@ -1297,7 +1296,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @see TypeReference
 	 */
-	<V> Set<V> zInterObject(final byte[][] keys, final double[] weights, final TypeReference<V> type);
+	<V> List<V> zInterObject(final byte[][] keys, final double[] weights, final TypeReference<V> type);
 
 	/**
 	 * 计算给定的一个或多个有序集合的交集，并反序列化为对象
@@ -1315,7 +1314,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 有序集合的交集反序列为对象
 	 */
-	<V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate, final double[] weights);
+	<V> List<V> zInterObject(final String[] keys, final Aggregate aggregate, final double[] weights);
 
 	/**
 	 * 计算给定的一个或多个有序集合的交集，并反序列化为对象
@@ -1333,7 +1332,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return The result of intersection
 	 */
-	<V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final double[] weights);
+	<V> List<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final double[] weights);
 
 	/**
 	 * 计算给定的一个或多个有序集合的交集，并反序列化为 clazz 指定的对象
@@ -1353,8 +1352,8 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 有序集合的交集反序列为对象
 	 */
-	<V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate, final double[] weights,
-							final Class<V> clazz);
+	<V> List<V> zInterObject(final String[] keys, final Aggregate aggregate, final double[] weights,
+							 final Class<V> clazz);
 
 	/**
 	 * 计算给定的一个或多个有序集合的交集，并反序列化为 clazz 指定的对象
@@ -1374,8 +1373,8 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 有序集合的交集反序列为对象
 	 */
-	<V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final double[] weights,
-							final Class<V> clazz);
+	<V> List<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final double[] weights,
+							 final Class<V> clazz);
 
 	/**
 	 * 计算给定的一个或多个有序集合的交集，并反序列化为 type 指定的对象
@@ -1397,8 +1396,8 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @see TypeReference
 	 */
-	<V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate, final double[] weights,
-							final TypeReference<V> type);
+	<V> List<V> zInterObject(final String[] keys, final Aggregate aggregate, final double[] weights,
+							 final TypeReference<V> type);
 
 	/**
 	 * 计算给定的一个或多个有序集合的交集，并反序列化为 type 指定的对象
@@ -1420,8 +1419,8 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @see TypeReference
 	 */
-	<V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final double[] weights,
-							final TypeReference<V> type);
+	<V> List<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final double[] weights,
+							 final TypeReference<V> type);
 
 	/**
 	 * 返回有序集合 key 中的一个随机元素，并反序列为对象
@@ -2599,7 +2598,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功移除的成员的数量，不包括被忽略的成员
 	 */
-	default long zRem(final String key, final String member){
+	default long zRem(final String key, final String member) {
 		return zRem(key, new String[]{member});
 	}
 
@@ -2615,7 +2614,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功移除的成员的数量，不包括被忽略的成员
 	 */
-	default long zRem(final byte[] key, final byte[] member){
+	default long zRem(final byte[] key, final byte[] member) {
 		return zRem(key, new byte[][]{member});
 	}
 
@@ -3931,7 +3930,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 反序列化为对象后的集合并集
 	 */
-	<V> Set<V> zUnionObject(final String[] keys);
+	<V> List<V> zUnionObject(final String[] keys);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集，并反序列为对象
@@ -3945,7 +3944,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 反序列化为对象后的集合并集
 	 */
-	<V> Set<V> zUnionObject(final byte[][] keys);
+	<V> List<V> zUnionObject(final byte[][] keys);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集，并反序列化为 clazz 指定的对象
@@ -3961,7 +3960,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 反序列化为对象后的集合并集
 	 */
-	<V> Set<V> zUnionObject(final String[] keys, final Class<V> clazz);
+	<V> List<V> zUnionObject(final String[] keys, final Class<V> clazz);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集，并反序列化为 clazz 指定的对象
@@ -3977,25 +3976,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 反序列化为对象后的集合并集
 	 */
-	<V> Set<V> zUnionObject(final byte[][] keys, final Class<V> clazz);
-
-	/**
-	 * 计算给定的一个或多个有序集的并集，并反序列化为 type 指定的对象
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param type
-	 * 		值类型引用
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 反序列化为对象后的集合并集
-	 *
-	 * @see TypeReference
-	 */
-	<V> Set<V> zUnionObject(final String[] keys, final TypeReference<V> type);
+	<V> List<V> zUnionObject(final byte[][] keys, final Class<V> clazz);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集，并反序列化为 type 指定的对象
@@ -4013,7 +3994,25 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @see TypeReference
 	 */
-	<V> Set<V> zUnionObject(final byte[][] keys, final TypeReference<V> type);
+	<V> List<V> zUnionObject(final String[] keys, final TypeReference<V> type);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 反序列化为对象后的集合并集
+	 *
+	 * @see TypeReference
+	 */
+	<V> List<V> zUnionObject(final byte[][] keys, final TypeReference<V> type);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集，并反序列为对象
@@ -4029,7 +4028,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 并集成员反序列化为对象的列表
 	 */
-	<V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate);
+	<V> List<V> zUnionObject(final String[] keys, final Aggregate aggregate);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集，并反序列为对象
@@ -4045,7 +4044,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 并集成员反序列化为对象的列表
 	 */
-	<V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate);
+	<V> List<V> zUnionObject(final byte[][] keys, final Aggregate aggregate);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集，并反序列化为 clazz 指定的对象
@@ -4063,7 +4062,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 并集成员反序列化为对象的列表
 	 */
-	<V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate, final Class<V> clazz);
+	<V> List<V> zUnionObject(final String[] keys, final Aggregate aggregate, final Class<V> clazz);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集，并反序列化为 clazz 指定的对象
@@ -4081,7 +4080,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 并集成员反序列化为对象的列表
 	 */
-	<V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final Class<V> clazz);
+	<V> List<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final Class<V> clazz);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集，并反序列化为 type 指定的对象
@@ -4101,7 +4100,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @see TypeReference
 	 */
-	<V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate, final TypeReference<V> type);
+	<V> List<V> zUnionObject(final String[] keys, final Aggregate aggregate, final TypeReference<V> type);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集，并反序列化为 type 指定的对象
@@ -4121,7 +4120,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @see TypeReference
 	 */
-	<V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final TypeReference<V> type);
+	<V> List<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final TypeReference<V> type);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集，并反序列为对象
@@ -4137,7 +4136,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 并集成员反序列化为对象的列表
 	 */
-	<V> Set<V> zUnionObject(final String[] keys, final double[] weights);
+	<V> List<V> zUnionObject(final String[] keys, final double[] weights);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集，并反序列为对象
@@ -4153,7 +4152,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 并集成员反序列化为对象的列表
 	 */
-	<V> Set<V> zUnionObject(final byte[][] keys, final double[] weights);
+	<V> List<V> zUnionObject(final byte[][] keys, final double[] weights);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集，并反序列化为 clazz 指定的对象
@@ -4171,7 +4170,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 并集成员反序列化为对象的列表
 	 */
-	<V> Set<V> zUnionObject(final String[] keys, final double[] weights, final Class<V> clazz);
+	<V> List<V> zUnionObject(final String[] keys, final double[] weights, final Class<V> clazz);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集，并反序列化为 clazz 指定的对象
@@ -4189,7 +4188,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 并集成员反序列化为对象的列表
 	 */
-	<V> Set<V> zUnionObject(final byte[][] keys, final double[] weights, final Class<V> clazz);
+	<V> List<V> zUnionObject(final byte[][] keys, final double[] weights, final Class<V> clazz);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集，并反序列化为 type 指定的对象
@@ -4209,7 +4208,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @see TypeReference
 	 */
-	<V> Set<V> zUnionObject(final String[] keys, final double[] weights, final TypeReference<V> type);
+	<V> List<V> zUnionObject(final String[] keys, final double[] weights, final TypeReference<V> type);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集，并反序列化为 type 指定的对象
@@ -4229,7 +4228,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @see TypeReference
 	 */
-	<V> Set<V> zUnionObject(final byte[][] keys, final double[] weights, final TypeReference<V> type);
+	<V> List<V> zUnionObject(final byte[][] keys, final double[] weights, final TypeReference<V> type);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集，并反序列为对象
@@ -4247,7 +4246,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 并集成员反序列化为对象的列表
 	 */
-	<V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate, final double[] weights);
+	<V> List<V> zUnionObject(final String[] keys, final Aggregate aggregate, final double[] weights);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集，并反序列为对象
@@ -4265,28 +4264,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 并集成员反序列化为对象的列表
 	 */
-	<V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final double[] weights);
-
-	/**
-	 * 计算给定的一个或多个有序集的并集，并反序列化为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param aggregate
-	 * 		并集的结果集的聚合方式
-	 * @param weights
-	 * 		每个给定有序集的乘法因子
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 并集成员反序列化为对象的列表
-	 */
-	<V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate, final double[] weights,
-							final Class<V> clazz);
+	<V> List<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final double[] weights);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集，并反序列化为 clazz 指定的对象
@@ -4306,8 +4284,29 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 并集成员反序列化为对象的列表
 	 */
-	<V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final double[] weights,
-							final Class<V> clazz);
+	<V> List<V> zUnionObject(final String[] keys, final Aggregate aggregate, final double[] weights,
+							 final Class<V> clazz);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param aggregate
+	 * 		并集的结果集的聚合方式
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 并集成员反序列化为对象的列表
+	 */
+	<V> List<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final double[] weights,
+							 final Class<V> clazz);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集，并反序列化为 type 指定的对象
@@ -4329,8 +4328,8 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @see TypeReference
 	 */
-	<V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate, final double[] weights,
-							final TypeReference<V> type);
+	<V> List<V> zUnionObject(final String[] keys, final Aggregate aggregate, final double[] weights,
+							 final TypeReference<V> type);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集，并反序列化为 type 指定的对象
@@ -4352,7 +4351,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @see TypeReference
 	 */
-	<V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final double[] weights,
-							final TypeReference<V> type);
+	<V> List<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final double[] weights,
+							 final TypeReference<V> type);
 
 }

@@ -21,37 +21,47 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2023 Buession.com Inc.														|
+ * | Copyright @ 2013-2024 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.serializer;
 
-import com.buession.core.deserializer.DeserializerException;
 import com.buession.core.type.TypeReference;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
+import java.nio.charset.StandardCharsets;
 
 /**
  * GSON 序列化和反序列化
  *
  * @author Yong.Teng
  */
-public class GsonJsonSerializer extends AbstractSerializer<com.buession.core.serializer.GsonJsonSerializer,
-		com.buession.core.deserializer.GsonJsonDeserializer> {
+public class GsonJsonSerializer extends AbstractSerializer {
 
-	/**
-	 * 构造函数
-	 */
-	public GsonJsonSerializer(){
-		super(new com.buession.core.serializer.GsonJsonSerializer(),
-				new com.buession.core.deserializer.GsonJsonDeserializer());
+	private final Gson gson = new Gson();
+
+	@Override
+	public <V> String serialize(final V object) {
+		return object == null ? null : gson.toJson(object);
 	}
 
 	@Override
-	public <V> V deserialize(final String str, final Class<V> clazz){
+	public <V> byte[] serializeAsBytes(final V object) {
+		return object == null ? null : gson.toJson(object).getBytes(StandardCharsets.UTF_8);
+	}
+
+	@Override
+	public <V> V deserialize(final String str) {
 		if(str != null){
 			try{
-				return deserializer.deserialize(str, clazz);
-			}catch(DeserializerException e){
-				logger.error("{} deserialize to {} error.", str, clazz.getName(), e);
+				return gson.fromJson(str, new TypeReference<V>() {
+
+				}.getType());
+			}catch(JsonSyntaxException e){
+				if(logger.isErrorEnabled()){
+					logger.error("{} deserialize error.", str, e);
+				}
 			}
 		}
 
@@ -59,25 +69,14 @@ public class GsonJsonSerializer extends AbstractSerializer<com.buession.core.ser
 	}
 
 	@Override
-	public <V> V deserializeBytes(final byte[] bytes, final Class<V> clazz){
-		if(bytes != null){
-			try{
-				return deserializer.deserialize(bytes, clazz);
-			}catch(DeserializerException e){
-				logger.error("{} deserialize to {} error.", bytes, clazz.getName(), e);
-			}
-		}
-
-		return null;
-	}
-
-	@Override
-	public <V> V deserialize(final String str, final TypeReference<V> type){
+	public <V> V deserialize(final String str, final Class<V> clazz) {
 		if(str != null){
 			try{
-				return deserializer.deserialize(str, type);
-			}catch(DeserializerException e){
-				logger.error("{} deserialize to {} error.", str, type.getType().getTypeName(), e);
+				return gson.fromJson(str, clazz);
+			}catch(JsonSyntaxException e){
+				if(logger.isErrorEnabled()){
+					logger.error("{} deserialize to: [{}] error.", str, clazz.getName(), e);
+				}
 			}
 		}
 
@@ -85,16 +84,33 @@ public class GsonJsonSerializer extends AbstractSerializer<com.buession.core.ser
 	}
 
 	@Override
-	public <V> V deserializeBytes(final byte[] bytes, final TypeReference<V> type){
-		if(bytes != null){
+	public <V> V deserialize(final String str, final TypeReference<V> type) {
+		if(str != null){
 			try{
-				return deserializer.deserialize(bytes, type);
-			}catch(DeserializerException e){
-				logger.error("{} deserialize to {} error.", bytes, type.getType().getTypeName(), e);
+				return gson.fromJson(str, type.getType());
+			}catch(JsonSyntaxException e){
+				if(logger.isErrorEnabled()){
+					logger.error("{} deserialize to: [{}] error.", str, type.getType().getTypeName(), e);
+				}
 			}
 		}
 
 		return null;
+	}
+
+	@Override
+	public <V> V deserializeBytes(final byte[] bytes) {
+		return bytes == null ? null : deserialize(new String(bytes));
+	}
+
+	@Override
+	public <V> V deserializeBytes(final byte[] bytes, final Class<V> clazz) {
+		return bytes == null ? null : deserialize(new String(bytes), clazz);
+	}
+
+	@Override
+	public <V> V deserializeBytes(final byte[] bytes, final TypeReference<V> type) {
+		return bytes == null ? null : deserialize(new String(bytes), type);
 	}
 
 }

@@ -7,13 +7,13 @@
 		<groupId>com.buession</groupId>
 		<artifactId>parent</artifactId>
 		<relativePath/>
-		<version>2.3.3</version>
+		<version>3.0.0</version>
 	</parent>
 	<groupId>com.buession</groupId>
 	<artifactId>buession-parent</artifactId>
 	<url>http://www.buession.com/</url>
 	<description>Buession Framework Parent</description>
-	<version>2.3.3</version>
+	<version>3.0.0</version>
 	<packaging>pom</packaging>
 
 	<organization>
@@ -57,7 +57,6 @@
 		<module>../buession-aop</module>
 		<module>../buession-beans</module>
 		<module>../buession-core</module>
-		<module>../buession-cron</module>
 		<module>../buession-dao</module>
 		<module>../buession-geoip</module>
 		<module>../buession-git</module>
@@ -68,7 +67,6 @@
 		<module>../buession-lang</module>
 		<module>../buession-net</module>
 		<module>../buession-redis</module>
-		<module>../buession-session</module>
 		<module>../buession-thesaurus</module>
 		<module>../buession-velocity</module>
 		<module>../buession-web</module>
@@ -95,20 +93,9 @@
 				<artifactId>maven-gpg-plugin</artifactId>
 			</plugin>
 			<plugin>
-				<groupId>org.sonatype.plugins</groupId>
-				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<groupId>org.sonatype.central</groupId>
+				<artifactId>central-publishing-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>
-
-	<distributionManagement>
-		<snapshotRepository>
-			<id>sonatype-nexus-snapshots</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		</snapshotRepository>
-		<repository>
-			<id>sonatype-nexus-staging</id>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-		</repository>
-	</distributionManagement>
 </project>

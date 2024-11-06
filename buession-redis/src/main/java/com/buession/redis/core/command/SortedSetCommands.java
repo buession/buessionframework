@@ -19,14 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
 
+import com.buession.lang.KeyValue;
 import com.buession.redis.core.Aggregate;
 import com.buession.redis.core.GtLt;
-import com.buession.redis.core.KeyedZSetElement;
 import com.buession.redis.core.NxXx;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
@@ -34,7 +34,6 @@ import com.buession.redis.core.ZRangeBy;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * 有序集合命令
@@ -154,7 +153,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 元素 key 名称，成员名称，元素分数
 	 */
-	KeyedZSetElement bzPopMin(final String[] keys, final int timeout);
+	KeyValue<String, Tuple> bzPopMin(final String[] keys, final int timeout);
 
 	/**
 	 * 从非空的第一个有序集中弹出得分最小的成员，按照命令中 key 出现的顺序检查；是有序集 ZPOPMIN 的阻塞变体；
@@ -169,7 +168,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 元素 key 名称，成员名称，元素分数
 	 */
-	KeyedZSetElement bzPopMin(final byte[][] keys, final int timeout);
+	KeyValue<byte[], Tuple> bzPopMin(final byte[][] keys, final int timeout);
 
 	/**
 	 * 从非空的第一个有序集中弹出得分最高的成员，按照命令中 key 出现的顺序检查；是有序集 ZPOPMAX 的阻塞变体；
@@ -184,7 +183,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 元素 key 名称，成员名称，元素分数
 	 */
-	KeyedZSetElement bzPopMax(final String[] keys, final int timeout);
+	KeyValue<String, Tuple> bzPopMax(final String[] keys, final int timeout);
 
 	/**
 	 * 从非空的第一个有序集中弹出得分最高的成员，按照命令中 key 出现的顺序检查；是有序集 ZPOPMAX 的阻塞变体；
@@ -199,7 +198,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 元素 key 名称，成员名称，元素分数
 	 */
-	KeyedZSetElement bzPopMax(final byte[][] keys, final int timeout);
+	KeyValue<byte[], Tuple> bzPopMax(final byte[][] keys, final int timeout);
 
 	/**
 	 * 将一个或多个 member 元素及其 score 值加入到有序集 key 当中
@@ -583,6 +582,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return score 值在 min 和 max 之间的成员的数量
 	 */
+	@Deprecated
 	Long zCount(final String key, final String min, final String max);
 
 	/**
@@ -599,6 +599,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return score 值在 min 和 max 之间的成员的数量
 	 */
+	@Deprecated
 	Long zCount(final byte[] key, final byte[] min, final byte[] max);
 
 	/**
@@ -611,7 +612,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return The result of the difference
 	 */
-	Set<String> zDiff(final String... keys);
+	List<String> zDiff(final String... keys);
 
 	/**
 	 * This command is similar to ZDIFFSTORE, but instead of storing the resulting sorted set, it is returned to the client
@@ -623,7 +624,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return The result of the difference
 	 */
-	Set<byte[]> zDiff(final byte[]... keys);
+	List<byte[]> zDiff(final byte[]... keys);
 
 	/**
 	 * This command is similar to ZDIFFSTORE, but instead of storing the resulting sorted set, it is returned to the client
@@ -635,7 +636,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return The result of the difference with their scores
 	 */
-	Set<Tuple> zDiffWithScores(final String... keys);
+	List<Tuple> zDiffWithScores(final String... keys);
 
 	/**
 	 * This command is similar to ZDIFFSTORE, but instead of storing the resulting sorted set, it is returned to the client
@@ -647,7 +648,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return The result of the difference with their scores
 	 */
-	Set<Tuple> zDiffWithScores(final byte[]... keys);
+	List<Tuple> zDiffWithScores(final byte[]... keys);
 
 	/**
 	 * Computes the difference between the first and all successive input sorted sets and stores the result in destination
@@ -719,7 +720,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 有序集合的交集
 	 */
-	Set<String> zInter(final String... keys);
+	List<String> zInter(final String... keys);
 
 	/**
 	 * 计算给定的一个或多个有序集合的交集
@@ -731,21 +732,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 有序集合的交集
 	 */
-	Set<byte[]> zInter(final byte[]... keys);
-
-	/**
-	 * 计算给定的一个或多个有序集合的交集
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param aggregate
-	 *        {@link Aggregate}
-	 *
-	 * @return 有序集合的交集
-	 */
-	Set<String> zInter(final String[] keys, final Aggregate aggregate);
+	List<byte[]> zInter(final byte[]... keys);
 
 	/**
 	 * 计算给定的一个或多个有序集合的交集
@@ -759,35 +746,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 有序集合的交集
 	 */
-	Set<byte[]> zInter(final byte[][] keys, final Aggregate aggregate);
-
-	/**
-	 * 计算给定的一个或多个有序集合的交集
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param weights
-	 * 		每个给定有序集的乘法因子
-	 *
-	 * @return 有序集合的交集
-	 */
-	Set<String> zInter(final String[] keys, final double... weights);
-
-	/**
-	 * 计算给定的一个或多个有序集合的交集
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param weights
-	 * 		每个给定有序集的乘法因子
-	 *
-	 * @return 有序集合的交集
-	 */
-	Set<byte[]> zInter(final byte[][] keys, final double... weights);
+	List<String> zInter(final String[] keys, final Aggregate aggregate);
 
 	/**
 	 * 计算给定的一个或多个有序集合的交集
@@ -798,12 +757,38 @@ public interface SortedSetCommands extends RedisCommands {
 	 * 		一个或多个 Key
 	 * @param aggregate
 	 *        {@link Aggregate}
+	 *
+	 * @return 有序集合的交集
+	 */
+	List<byte[]> zInter(final byte[][] keys, final Aggregate aggregate);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
 	 * @param weights
 	 * 		每个给定有序集的乘法因子
 	 *
 	 * @return 有序集合的交集
 	 */
-	Set<String> zInter(final String[] keys, final Aggregate aggregate, final double... weights);
+	List<String> zInter(final String[] keys, final double... weights);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 *
+	 * @return 有序集合的交集
+	 */
+	List<byte[]> zInter(final byte[][] keys, final double... weights);
 
 	/**
 	 * 计算给定的一个或多个有序集合的交集
@@ -819,87 +804,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 有序集合的交集
 	 */
-	Set<byte[]> zInter(final byte[][] keys, final Aggregate aggregate, final double... weights);
-
-	/**
-	 * 计算给定的一个或多个有序集合的交集
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 *
-	 * @return 含 scores 的有序集合的交集
-	 */
-	Set<Tuple> zInterWithScores(final String... keys);
-
-	/**
-	 * 计算给定的一个或多个有序集合的交集
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 *
-	 * @return 含 scores 的有序集合的交集
-	 */
-	Set<Tuple> zInterWithScores(final byte[]... keys);
-
-	/**
-	 * 计算给定的一个或多个有序集合的交集
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param aggregate
-	 *        {@link Aggregate}
-	 *
-	 * @return 含 scores 的有序集合的交集
-	 */
-	Set<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate);
-
-	/**
-	 * 计算给定的一个或多个有序集合的交集
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param aggregate
-	 *        {@link Aggregate}
-	 *
-	 * @return 含 scores 的有序集合的交集
-	 */
-	Set<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate);
-
-	/**
-	 * 计算给定的一个或多个有序集合的交集
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param weights
-	 * 		每个给定有序集的乘法因子
-	 *
-	 * @return 含 scores 的有序集合的交集
-	 */
-	Set<Tuple> zInterWithScores(final String[] keys, final double... weights);
-
-	/**
-	 * 计算给定的一个或多个有序集合的交集
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param weights
-	 * 		每个给定有序集的乘法因子
-	 *
-	 * @return 含 scores 的有序集合的交集
-	 */
-	Set<Tuple> zInterWithScores(final byte[][] keys, final double... weights);
+	List<String> zInter(final String[] keys, final Aggregate aggregate, final double... weights);
 
 	/**
 	 * 计算给定的一个或多个有序集合的交集
@@ -913,9 +818,89 @@ public interface SortedSetCommands extends RedisCommands {
 	 * @param weights
 	 * 		每个给定有序集的乘法因子
 	 *
+	 * @return 有序集合的交集
+	 */
+	List<byte[]> zInter(final byte[][] keys, final Aggregate aggregate, final double... weights);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 *
 	 * @return 含 scores 的有序集合的交集
 	 */
-	Set<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate, final double... weights);
+	List<Tuple> zInterWithScores(final String... keys);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 *
+	 * @return 含 scores 的有序集合的交集
+	 */
+	List<Tuple> zInterWithScores(final byte[]... keys);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param aggregate
+	 *        {@link Aggregate}
+	 *
+	 * @return 含 scores 的有序集合的交集
+	 */
+	List<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param aggregate
+	 *        {@link Aggregate}
+	 *
+	 * @return 含 scores 的有序集合的交集
+	 */
+	List<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 *
+	 * @return 含 scores 的有序集合的交集
+	 */
+	List<Tuple> zInterWithScores(final String[] keys, final double... weights);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 *
+	 * @return 含 scores 的有序集合的交集
+	 */
+	List<Tuple> zInterWithScores(final byte[][] keys, final double... weights);
 
 	/**
 	 * 计算给定的一个或多个有序集合的交集
@@ -931,7 +916,23 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 含 scores 的有序集合的交集
 	 */
-	Set<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights);
+	List<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate, final double... weights);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param aggregate
+	 *        {@link Aggregate}
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 *
+	 * @return 含 scores 的有序集合的交集
+	 */
+	List<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights);
 
 	/**
 	 * 计算给定的一个或多个有序集的交集，并将该交集储存到 destKey 中
@@ -1107,6 +1108,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 集合 Key 中，成员介于 min 和 max 范围内的元素数量
 	 */
+	@Deprecated
 	Long zLexCount(final String key, final String min, final String max);
 
 	/**
@@ -1123,6 +1125,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 集合 Key 中，成员介于 min 和 max 范围内的元素数量
 	 */
+	@Deprecated
 	Long zLexCount(final byte[] key, final byte[] min, final byte[] max);
 
 	/**
@@ -1362,6 +1365,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 包含了有序集合在指定范围内的成员的列表
 	 */
+	@Deprecated
 	List<String> zRangeByLex(final String key, final String min, final String max);
 
 	/**
@@ -1379,6 +1383,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 包含了有序集合在指定范围内的成员的列表
 	 */
+	@Deprecated
 	List<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max);
 
 	/**
@@ -1442,6 +1447,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 包含了有序集合在指定范围内从 offset 开始的 count 个成员的列表
 	 */
+	@Deprecated
 	List<String> zRangeByLex(final String key, final String min, final String max, final long offset, final long count);
 
 	/**
@@ -1463,6 +1469,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 包含了有序集合在指定范围内从 offset 开始的 count 个成员的列表
 	 */
+	@Deprecated
 	List<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max, final long offset, final long count);
 
 	/**
@@ -1514,6 +1521,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内，有序集成员的列表
 	 */
+	@Deprecated
 	List<String> zRangeByScore(final String key, final String min, final String max);
 
 	/**
@@ -1532,6 +1540,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内，有序集成员的列表
 	 */
+	@Deprecated
 	List<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max);
 
 	/**
@@ -1597,6 +1606,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内从 offset 开是的 count 个，有序集成员的列表
 	 */
+	@Deprecated
 	List<String> zRangeByScore(final String key, final String min, final String max, final long offset,
 							   final long count);
 
@@ -1619,6 +1629,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内从 offset 开是的 count 个，有序集成员的列表
 	 */
+	@Deprecated
 	List<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max, final long offset,
 							   final long count);
 
@@ -1671,6 +1682,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内，带有 score 的有序集成员的列表
 	 */
+	@Deprecated
 	List<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max);
 
 	/**
@@ -1688,6 +1700,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内，带有 score 的有序集成员的列表
 	 */
+	@Deprecated
 	List<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max);
 
 	/**
@@ -1753,6 +1766,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内带有 score 的从 offset 开是的 count 个，有序集成员的列表
 	 */
+	@Deprecated
 	List<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max, final long offset,
 										final long count);
 
@@ -1775,6 +1789,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内带有 score 的从 offset 开是的 count 个，有序集成员的列表
 	 */
+	@Deprecated
 	List<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max, final long offset,
 										final long count);
 
@@ -2244,6 +2259,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 被移除的元素数量
 	 */
+	@Deprecated
 	Long zRemRangeByLex(final String key, final String min, final String max);
 
 	/**
@@ -2260,6 +2276,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 被移除的元素数量
 	 */
+	@Deprecated
 	Long zRemRangeByLex(final byte[] key, final byte[] min, final byte[] max);
 
 	/**
@@ -2308,6 +2325,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 被移除成员的数量
 	 */
+	@Deprecated
 	Long zRemRangeByScore(final String key, final String min, final String max);
 
 	/**
@@ -2324,6 +2342,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 被移除成员的数量
 	 */
+	@Deprecated
 	Long zRemRangeByScore(final byte[] key, final byte[] min, final byte[] max);
 
 	/**
@@ -2489,6 +2508,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 包含了有序集合在指定范围内的成员列表
 	 */
+	@Deprecated
 	List<String> zRevRangeByLex(final String key, final String min, final String max);
 
 	/**
@@ -2506,6 +2526,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 包含了有序集合在指定范围内的成员列表
 	 */
+	@Deprecated
 	List<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max);
 
 	/**
@@ -2571,6 +2592,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 包含了有序集合在指定范围内的成员列表
 	 */
+	@Deprecated
 	List<String> zRevRangeByLex(final String key, final String min, final String max, final long offset,
 								final long count);
 
@@ -2593,6 +2615,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 包含了有序集合在指定范围内的成员列表
 	 */
+	@Deprecated
 	List<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max, final long offset,
 								final long count);
 
@@ -2648,6 +2671,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内，有序集成员的列表
 	 */
+	@Deprecated
 	List<String> zRevRangeByScore(final String key, final String min, final String max);
 
 	/**
@@ -2666,6 +2690,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内，有序集成员的列表
 	 */
+	@Deprecated
 	List<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max);
 
 	/**
@@ -2734,6 +2759,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内，有序集成员的列表
 	 */
+	@Deprecated
 	List<String> zRevRangeByScore(final String key, final String min, final String max, final long offset,
 								  final long count);
 
@@ -2757,6 +2783,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内，有序集成员的列表
 	 */
+	@Deprecated
 	List<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max, final long offset,
 								  final long count);
 
@@ -2812,6 +2839,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内，有序集成员的列表
 	 */
+	@Deprecated
 	List<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max);
 
 	/**
@@ -2830,6 +2858,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内，有序集成员的列表
 	 */
+	@Deprecated
 	List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max);
 
 	/**
@@ -2898,6 +2927,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内，有序集成员的列表
 	 */
+	@Deprecated
 	List<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max, final long offset,
 										   final long count);
 
@@ -2921,6 +2951,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 指定区间内，有序集成员的列表
 	 */
+	@Deprecated
 	List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max, final long offset,
 										   final long count);
 
@@ -3248,7 +3279,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 集合的并集
 	 */
-	Set<String> zUnion(final String... keys);
+	List<String> zUnion(final String... keys);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集
@@ -3260,21 +3291,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 集合的并集
 	 */
-	Set<byte[]> zUnion(final byte[]... keys);
-
-	/**
-	 * 计算给定的一个或多个有序集的并集
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param aggregate
-	 * 		并集的结果集的聚合方式
-	 *
-	 * @return 集合的并集
-	 */
-	Set<String> zUnion(final String[] keys, final Aggregate aggregate);
+	List<byte[]> zUnion(final byte[]... keys);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集
@@ -3288,35 +3305,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 集合的并集
 	 */
-	Set<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate);
-
-	/**
-	 * 计算给定的一个或多个有序集的并集
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param weights
-	 * 		每个给定有序集的乘法因子
-	 *
-	 * @return 集合的并集
-	 */
-	Set<String> zUnion(final String[] keys, final double... weights);
-
-	/**
-	 * 计算给定的一个或多个有序集的并集
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param weights
-	 * 		每个给定有序集的乘法因子
-	 *
-	 * @return 集合的并集
-	 */
-	Set<byte[]> zUnion(final byte[][] keys, final double... weights);
+	List<String> zUnion(final String[] keys, final Aggregate aggregate);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集
@@ -3327,12 +3316,38 @@ public interface SortedSetCommands extends RedisCommands {
 	 * 		一个或多个 Key
 	 * @param aggregate
 	 * 		并集的结果集的聚合方式
+	 *
+	 * @return 集合的并集
+	 */
+	List<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
 	 * @param weights
 	 * 		每个给定有序集的乘法因子
 	 *
 	 * @return 集合的并集
 	 */
-	Set<String> zUnion(final String[] keys, final Aggregate aggregate, final double... weights);
+	List<String> zUnion(final String[] keys, final double... weights);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 *
+	 * @return 集合的并集
+	 */
+	List<byte[]> zUnion(final byte[][] keys, final double... weights);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集
@@ -3348,87 +3363,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 集合的并集
 	 */
-	Set<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate, final double... weights);
-
-	/**
-	 * 计算给定的一个或多个有序集的并集
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 *
-	 * @return 带有分数的集合的并集
-	 */
-	Set<Tuple> zUnionWithScores(final String... keys);
-
-	/**
-	 * 计算给定的一个或多个有序集的并集
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 *
-	 * @return 带有分数的集合的并集
-	 */
-	Set<Tuple> zUnionWithScores(final byte[]... keys);
-
-	/**
-	 * 计算给定的一个或多个有序集的并集
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param aggregate
-	 * 		并集的结果集的聚合方式
-	 *
-	 * @return 带有分数的集合的并集
-	 */
-	Set<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate);
-
-	/**
-	 * 计算给定的一个或多个有序集的并集
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param aggregate
-	 * 		并集的结果集的聚合方式
-	 *
-	 * @return 带有分数的集合的并集
-	 */
-	Set<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate);
-
-	/**
-	 * 计算给定的一个或多个有序集的并集
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param weights
-	 * 		每个给定有序集的乘法因子
-	 *
-	 * @return 带有分数的集合的并集
-	 */
-	Set<Tuple> zUnionWithScores(final String[] keys, final double... weights);
-
-	/**
-	 * 计算给定的一个或多个有序集的并集
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param weights
-	 * 		每个给定有序集的乘法因子
-	 *
-	 * @return 带有分数的集合的并集
-	 */
-	Set<Tuple> zUnionWithScores(final byte[][] keys, final double... weights);
+	List<String> zUnion(final String[] keys, final Aggregate aggregate, final double... weights);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集
@@ -3442,9 +3377,89 @@ public interface SortedSetCommands extends RedisCommands {
 	 * @param weights
 	 * 		每个给定有序集的乘法因子
 	 *
+	 * @return 集合的并集
+	 */
+	List<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate, final double... weights);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 *
 	 * @return 带有分数的集合的并集
 	 */
-	Set<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate, final double... weights);
+	List<Tuple> zUnionWithScores(final String... keys);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 *
+	 * @return 带有分数的集合的并集
+	 */
+	List<Tuple> zUnionWithScores(final byte[]... keys);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param aggregate
+	 * 		并集的结果集的聚合方式
+	 *
+	 * @return 带有分数的集合的并集
+	 */
+	List<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param aggregate
+	 * 		并集的结果集的聚合方式
+	 *
+	 * @return 带有分数的集合的并集
+	 */
+	List<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 *
+	 * @return 带有分数的集合的并集
+	 */
+	List<Tuple> zUnionWithScores(final String[] keys, final double... weights);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 *
+	 * @return 带有分数的集合的并集
+	 */
+	List<Tuple> zUnionWithScores(final byte[][] keys, final double... weights);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集
@@ -3460,7 +3475,23 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 带有分数的集合的并集
 	 */
-	Set<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights);
+	List<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate, final double... weights);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param aggregate
+	 * 		并集的结果集的聚合方式
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 *
+	 * @return 带有分数的集合的并集
+	 */
+	List<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集，并将该并集储存到 destKey

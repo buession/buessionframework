@@ -48,10 +48,7 @@ public class HttpClientBuilder {
 	}
 
 	public HttpClientBuilder setRetryOnConnectionFailure(Boolean retryOnConnectionFailure) {
-		if(retryOnConnectionFailure != null){
-			builder.retryOnConnectionFailure(retryOnConnectionFailure);
-		}
-
+		Optional.ofNullable(retryOnConnectionFailure).ifPresent(builder::retryOnConnectionFailure);
 		return this;
 	}
 
@@ -80,33 +77,22 @@ public class HttpClientBuilder {
 	}
 
 	public HttpClientBuilder setFollowRedirects(Boolean followRedirects) {
-		if(followRedirects != null){
-			builder.followRedirects(followRedirects);
-		}
-
+		Optional.ofNullable(followRedirects).ifPresent(builder::followRedirects);
+		Optional.ofNullable(followRedirects).ifPresent(builder::followSslRedirects);
 		return this;
 	}
 
 	public HttpClientBuilder setSSLSocketFactory(SSLSocketFactory sslSocketFactory) {
-		if(sslSocketFactory != null){
-			builder.sslSocketFactory(sslSocketFactory);
-		}
-
+		Optional.ofNullable(sslSocketFactory).ifPresent(builder::sslSocketFactory);
 		return this;
 	}
 
 	public HttpClientBuilder setSSLHostnameVerifier(HostnameVerifier hostnameVerifier) {
-		if(hostnameVerifier != null){
-			builder.hostnameVerifier(hostnameVerifier);
-		}
-
+		Optional.ofNullable(hostnameVerifier).ifPresent(builder::hostnameVerifier);
 		return this;
 	}
 
 	public HttpClientBuilder setSSLContext(SSLContext sslContext) {
-		if(sslContext != null){
-		}
-
 		return this;
 	}
 
@@ -116,8 +102,9 @@ public class HttpClientBuilder {
 	}
 
 	public OkHttpClient build() {
-		Optional.ofNullable(connectionManager)
-				.ifPresent((connectionManager)->builder.connectionPool(connectionManager.getConnectionPool()));
+		if(connectionManager != null){
+			builder.connectionPool(connectionManager.getConnectionPool());
+		}
 
 		OkHttpClient client = builder.build();
 
@@ -125,7 +112,9 @@ public class HttpClientBuilder {
 			if(connectionManager.getMaxRequests() > 0){
 				client.dispatcher().setMaxRequests(connectionManager.getMaxRequests());
 			}
-			client.dispatcher().setMaxRequestsPerHost(connectionManager.getMaxRequestsPerHost());
+			if(connectionManager.getMaxRequestsPerHost() > 0){
+				client.dispatcher().setMaxRequestsPerHost(connectionManager.getMaxRequestsPerHost());
+			}
 		}
 
 		return client;

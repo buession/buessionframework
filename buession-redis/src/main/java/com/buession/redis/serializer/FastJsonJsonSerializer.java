@@ -21,80 +21,76 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2023 Buession.com Inc.														|
+ * | Copyright @ 2013-2024 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.serializer;
 
-import com.buession.core.deserializer.DeserializerException;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializeConfig;
+import com.alibaba.fastjson.serializer.SerializeFilter;
 import com.buession.core.type.TypeReference;
+
+import java.nio.charset.Charset;
 
 /**
  * FastJSON 序列化和反序列化
  *
  * @author Yong.Teng
  */
-public class FastJsonJsonSerializer extends AbstractSerializer<com.buession.core.serializer.FastJsonJsonSerializer,
-		com.buession.core.deserializer.FastJsonJsonDeserializer> {
+public class FastJsonJsonSerializer extends AbstractSerializer {
 
-	/**
-	 * 构造函数
-	 */
-	public FastJsonJsonSerializer(){
-		super(new com.buession.core.serializer.FastJsonJsonSerializer(),
-				new com.buession.core.deserializer.FastJsonJsonDeserializer());
+	@Override
+	public <V> String serialize(final V object) {
+		return object == null ? null : JSON.toJSONString(object);
 	}
 
 	@Override
-	public <V> V deserialize(final String str, final Class<V> clazz){
+	public <V> byte[] serializeAsBytes(final V object) {
+		if(object != null){
+			return JSON.toJSONBytes(Charset.defaultCharset(), object, SerializeConfig.globalInstance,
+					new SerializeFilter[0], null, JSON.DEFAULT_GENERATE_FEATURE);
+		}
+
+		return null;
+	}
+
+	@Override
+	public <V> V deserialize(final String str) {
 		if(str != null){
-			try{
-				return deserializer.deserialize(str, clazz);
-			}catch(DeserializerException e){
-				logger.error("{} deserialize to {} error.", str, clazz.getName(), e);
-			}
+			return JSON.parseObject(str, new com.alibaba.fastjson.TypeReference<V>() {
+
+			});
 		}
 
 		return null;
 	}
 
 	@Override
-	public <V> V deserializeBytes(final byte[] bytes, final Class<V> clazz){
-		if(bytes != null){
-			try{
-				return deserializer.deserialize(bytes, clazz);
-			}catch(DeserializerException e){
-				logger.error("{} deserialize to {} error.", bytes, clazz.getName(), e);
-			}
-		}
-
-		return null;
+	public <V> V deserialize(final String str, final Class<V> clazz) {
+		return str == null ? null : JSON.parseObject(str, clazz);
 	}
 
 	@Override
-	public <V> V deserialize(final String str, final TypeReference<V> type){
-		if(str != null){
-			try{
-				return deserializer.deserialize(str, type);
-			}catch(DeserializerException e){
-				logger.error("{} deserialize to {} error.", str, type.getType().getTypeName(), e);
-			}
-		}
-
-		return null;
+	public <V> V deserialize(final String str, final TypeReference<V> type) {
+		return str == null ? null : JSON.parseObject(str, type.getType());
 	}
 
 	@Override
-	public <V> V deserializeBytes(final byte[] bytes, final TypeReference<V> type){
-		if(bytes != null){
-			try{
-				return deserializer.deserialize(bytes, type);
-			}catch(DeserializerException e){
-				logger.error("{} deserialize to {} error.", bytes, type.getType().getTypeName(), e);
-			}
-		}
+	public <V> V deserializeBytes(final byte[] bytes) {
+		return bytes == null ? null : JSON.parseObject(new String(bytes), new com.alibaba.fastjson.TypeReference<V>() {
 
-		return null;
+		});
+	}
+
+	@Override
+	public <V> V deserializeBytes(final byte[] bytes, final Class<V> clazz) {
+		return bytes == null ? null : JSON.parseObject(new String(bytes), clazz);
+	}
+
+	@Override
+	public <V> V deserializeBytes(final byte[] bytes, final TypeReference<V> type) {
+		return bytes == null ? null : JSON.parseObject(new String(bytes), type.getType());
 	}
 
 }

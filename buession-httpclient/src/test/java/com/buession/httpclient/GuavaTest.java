@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient;
@@ -27,9 +27,8 @@ package com.buession.httpclient;
 import com.buession.core.utils.StringUtils;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
 import java.util.Iterator;
 
 /**
@@ -39,7 +38,7 @@ import java.util.Iterator;
 public class GuavaTest {
 
 	@Test
-	public void testMultimap(){
+	public void testMultimap() {
 		Multimap<String, String> map = HashMultimap.create();
 
 		map.put("a", "A1");
@@ -47,7 +46,7 @@ public class GuavaTest {
 	}
 
 	@Test
-	public void forEach(){
+	public void forEach() {
 		Multimap<String, String> map = HashMultimap.create();
 
 		map.put("a", "A1");

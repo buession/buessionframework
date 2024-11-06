@@ -26,7 +26,7 @@ package com.buession.core.serializer;
 
 import com.buession.core.type.TypeReference;
 import com.buession.lang.Uptime;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
 
@@ -39,7 +39,7 @@ public class FastJsonJsonSerializerTest {
 	private final static FastJsonJsonSerializer serializer = new FastJsonJsonSerializer();
 
 	@Test
-	public void serialize() throws SerializerException{
+	public void serialize() throws SerializerException {
 		Uptime uptime = new Uptime(5, 100);
 
 		String str = serializer.serialize(uptime);
@@ -47,7 +47,7 @@ public class FastJsonJsonSerializerTest {
 	}
 
 	@Test
-	public void serializeWithCharsetName() throws SerializerException{
+	public void serializeWithCharsetName() throws SerializerException {
 		Uptime uptime = new Uptime(5, 100);
 
 		String str = serializer.serialize(uptime, StandardCharsets.UTF_8.name());
@@ -55,7 +55,7 @@ public class FastJsonJsonSerializerTest {
 	}
 
 	@Test
-	public void serializeWithCharset() throws SerializerException{
+	public void serializeWithCharset() throws SerializerException {
 		Uptime uptime = new Uptime(5, 100);
 
 		String str = serializer.serialize(uptime, StandardCharsets.UTF_8);
@@ -63,7 +63,7 @@ public class FastJsonJsonSerializerTest {
 	}
 
 	@Test
-	public void serializeAsBytes() throws SerializerException{
+	public void serializeAsBytes() throws SerializerException {
 		Uptime uptime = new Uptime(5, 100);
 
 		byte[] str = serializer.serializeAsBytes(uptime);
@@ -71,7 +71,7 @@ public class FastJsonJsonSerializerTest {
 	}
 
 	@Test
-	public void serializeAsBytesWithCharsetName() throws SerializerException{
+	public void serializeAsBytesWithCharsetName() throws SerializerException {
 		Uptime uptime = new Uptime(5, 100);
 
 		byte[] str = serializer.serializeAsBytes(uptime, StandardCharsets.UTF_8.name());
@@ -79,68 +79,11 @@ public class FastJsonJsonSerializerTest {
 	}
 
 	@Test
-	public void serializeAsBytesWithCharset() throws SerializerException{
+	public void serializeAsBytesWithCharset() throws SerializerException {
 		Uptime uptime = new Uptime(5, 100);
 
 		byte[] str = serializer.serializeAsBytes(uptime, StandardCharsets.UTF_8);
 		System.out.println(str);
-	}
-
-	@Test
-	public void deserialize() throws SerializerException{
-		Uptime uptime = new Uptime(5, 100);
-
-		String str = serializer.serialize(uptime);
-		System.out.println(String.format("%s", serializer.deserialize(str, Uptime.class)));
-		System.out.println(String.format("%s", serializer.deserialize(str, new TypeReference<Uptime>() {
-
-		})));
-		System.out.println(String.format("%s", serializer.deserialize(str)));
-	}
-
-	@Test
-	public void deserializeWithCharsetName() throws SerializerException{
-		Uptime uptime = new Uptime(5, 100);
-
-		String str = serializer.serialize(uptime, StandardCharsets.UTF_8.name());
-		Uptime ret = serializer.deserialize(str, StandardCharsets.UTF_8.name());
-		System.out.println(ret);
-	}
-
-	@Test
-	public void deserializeWithCharset() throws SerializerException{
-		Uptime uptime = new Uptime(5, 100);
-
-		String str = serializer.serialize(uptime, StandardCharsets.UTF_8);
-		Uptime ret = serializer.deserialize(str, StandardCharsets.UTF_8);
-		System.out.println(ret);
-	}
-
-	@Test
-	public void deserializeBytes() throws SerializerException{
-		Uptime uptime = new Uptime(5, 100);
-
-		byte[] str = serializer.serializeAsBytes(uptime);
-		Uptime ret = serializer.deserialize(str);
-		System.out.println(ret);
-	}
-
-	@Test
-	public void deserializeBytesWithCharsetName() throws SerializerException{
-		Uptime uptime = new Uptime(5, 100);
-
-		byte[] str = serializer.serializeAsBytes(uptime, StandardCharsets.UTF_8.name());
-		Uptime ret = serializer.deserialize(str, StandardCharsets.UTF_8.name());
-		System.out.println(ret);
-	}
-
-	@Test
-	public void deserializeBytesWithCharset() throws SerializerException{
-		Uptime uptime = new Uptime(5, 100);
-
-		byte[] str = serializer.serializeAsBytes(uptime, StandardCharsets.UTF_8);
-		Uptime ret = serializer.deserialize(str, StandardCharsets.UTF_8);
-		System.out.println(ret);
 	}
 
 }

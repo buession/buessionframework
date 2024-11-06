@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -82,6 +82,24 @@ public interface Command<R> {
 	R run(final CommandArguments arguments) throws RedisException;
 
 	/**
+	 * Redis 命令执行器
+	 *
+	 * @param <C>
+	 * 		Redis 对象上下文
+	 * @param <R>
+	 * 		命令执行返回值类型
+	 *
+	 * @since 3.0.0
+	 */
+	@FunctionalInterface
+	interface Executor<C, R> extends com.buession.core.Executor<C, R> {
+
+		@Override
+		R execute(C context) throws RedisException;
+
+	}
+
+	/**
 	 * Redis 命令运行器
 	 *
 	 * @author Yong.Teng
@@ -97,10 +115,10 @@ public interface Command<R> {
 		 *
 		 * @return Redis 命令运行结果
 		 *
-		 * @throws Exception
+		 * @throws RedisException
 		 * 		Redis 命令运行异常
 		 */
-		<R> R run() throws Exception;
+		<R> R run() throws RedisException;
 
 	}
 

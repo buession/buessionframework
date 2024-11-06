@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.jedis;
@@ -27,31 +27,86 @@ package com.buession.redis.core.internal.jedis;
 import redis.clients.jedis.params.FailoverParams;
 
 /**
+ * Jedis {@link FailoverParams} 扩展
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
 public final class JedisFailoverParams extends FailoverParams {
 
+	/**
+	 * 构造函数
+	 */
+	public JedisFailoverParams() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		主机地址
+	 * @param port
+	 * 		端口
+	 */
 	public JedisFailoverParams(final String host, final int port) {
 		super();
 		to(host, port);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		主机地址
+	 * @param port
+	 * 		端口
+	 * @param timeout
+	 * 		超时
+	 */
 	public JedisFailoverParams(final String host, final int port, final int timeout) {
 		this(host, port);
 		timeout(timeout);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		主机地址
+	 * @param port
+	 * 		端口
+	 * @param force
+	 * 		是否强制
+	 */
 	public JedisFailoverParams(final String host, final int port, final boolean force) {
 		this(host, port);
 		force(force);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		主机地址
+	 * @param port
+	 * 		端口
+	 * @param timeout
+	 * 		超时
+	 * @param force
+	 * 		是否强制
+	 */
 	public JedisFailoverParams(final String host, final int port, final int timeout, final boolean force) {
 		this(host, port, timeout);
 		force(force);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param timeout
+	 * 		超时
+	 */
 	public JedisFailoverParams(final int timeout) {
 		super();
 		timeout(timeout);

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package org.apache.http.client.methods;
@@ -29,6 +29,8 @@ import com.buession.httpclient.core.RequestMethod;
 import java.net.URI;
 
 /**
+ * Purge 请求
+ *
  * @author Yong.Teng
  */
 public class HttpPurge extends HttpRequestBase {
@@ -38,7 +40,7 @@ public class HttpPurge extends HttpRequestBase {
 	/**
 	 * 构造函数
 	 */
-	public HttpPurge(){
+	public HttpPurge() {
 		super();
 	}
 
@@ -48,7 +50,7 @@ public class HttpPurge extends HttpRequestBase {
 	 * @param uri
 	 * 		URL {@link URI}
 	 */
-	public HttpPurge(final URI uri){
+	public HttpPurge(final URI uri) {
 		super();
 		setURI(uri);
 	}
@@ -62,13 +64,13 @@ public class HttpPurge extends HttpRequestBase {
 	 * @throws IllegalArgumentException
 	 * 		if the uri is invalid.
 	 */
-	public HttpPurge(final String uri){
+	public HttpPurge(final String uri) {
 		super();
 		setURI(URI.create(uri));
 	}
 
 	@Override
-	public String getMethod(){
+	public String getMethod() {
 		return METHOD_NAME;
 	}
 

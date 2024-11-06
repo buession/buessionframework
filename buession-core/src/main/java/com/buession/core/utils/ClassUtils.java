@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2023 Buession.com Inc.														|
+ * | Copyright @ 2013-2024 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
@@ -59,6 +59,98 @@ import kotlin.reflect.jvm.ReflectJvmMapping;
  */
 public class ClassUtils extends org.apache.commons.lang3.ClassUtils {
 
+	/**
+	 * 获取默认类加载器
+	 *
+	 * @return 默认类加载器
+	 *
+	 * @since 3.0.0
+	 */
+	public static ClassLoader getDefaultClassLoader() {
+		ClassLoader classLoader = null;
+		try{
+			classLoader = Thread.currentThread().getContextClassLoader();
+		}catch(Throwable ex){
+			// Cannot access thread context ClassLoader - falling back...
+		}
+
+		if(classLoader == null){
+			// No thread context class loader -> use class loader of this class.
+			classLoader = ClassUtils.class.getClassLoader();
+			if(classLoader == null){
+				// getClassLoader() returning null indicates the bootstrap ClassLoader
+				try{
+					classLoader = ClassLoader.getSystemClassLoader();
+				}catch(Throwable ex){
+					// Cannot access system ClassLoader - oh well, maybe the caller can live with null...
+				}
+			}
+		}
+
+		return classLoader;
+	}
+
+	/**
+	 * 判断类是否存在
+	 *
+	 * @param className
+	 * 		类名
+	 *
+	 * @return true / false
+	 *
+	 * @since 3.0.0
+	 */
+	public static boolean isPresent(String className) {
+		try{
+			getClass(getDefaultClassLoader(), className, false);
+			return true;
+		}catch(IllegalAccessError error){
+			throw new IllegalStateException("Readability mismatch in inheritance hierarchy of class [" +
+					className + "]: " + error.getMessage(), error);
+		}catch(Throwable e){
+			return false;
+		}
+	}
+
+	/**
+	 * 判断类是否存在
+	 *
+	 * @param className
+	 * 		类名
+	 * @param classLoader
+	 * 		类加载器
+	 *
+	 * @return true / false
+	 *
+	 * @since 3.0.0
+	 */
+	public static boolean isPresent(String className, @Nullable ClassLoader classLoader) {
+		try{
+			getClass(classLoader, className, false);
+			return true;
+		}catch(IllegalAccessError error){
+			throw new IllegalStateException("Readability mismatch in inheritance hierarchy of class [" +
+					className + "]: " + error.getMessage(), error);
+		}catch(Throwable e){
+			return false;
+		}
+	}
+
+	/**
+	 * 类初始化
+	 *
+	 * @param clazz
+	 * 		类
+	 * @param args
+	 * 		构造函数参数
+	 * @param <T>
+	 * 		实例类型
+	 *
+	 * @return 类实例
+	 *
+	 * @throws ClassInstantiationException
+	 * 		类初始化异常
+	 */
 	public static <T> T instantiate(Class<T> clazz, Object... args) throws ClassInstantiationException {
 		Assert.isNull(clazz, "Class cloud not be null");
 		Assert.isTrue(clazz.isInterface(),

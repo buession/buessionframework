@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.okhttp.nio;
@@ -37,17 +37,17 @@ import java.io.IOException;
  */
 public class DefaultCallback extends BaseCallback implements okhttp3.Callback {
 
-	public DefaultCallback(final Callback delegate){
+	public DefaultCallback(final Callback delegate) {
 		super(delegate);
 	}
 
 	@Override
-	public void onFailure(@NotNull okhttp3.Call call, @NotNull IOException e){
+	public void onFailure(@NotNull okhttp3.Call call, @NotNull IOException e) {
 		delegate.failed(e);
 	}
 
 	@Override
-	public void onResponse(@NotNull okhttp3.Call call, @NotNull okhttp3.Response response) throws IOException{
+	public void onResponse(@NotNull okhttp3.Call call, @NotNull okhttp3.Response response) {
 		final OkHttpResponseBuilder httpResponseBuilder = new OkHttpResponseBuilder();
 		delegate.completed(httpResponseBuilder.build(response));
 	}

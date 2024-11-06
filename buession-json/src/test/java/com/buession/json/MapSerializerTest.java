@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://buession.buession.com.cn/LICENSE 												       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2018 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.json;
@@ -30,7 +30,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -42,304 +42,304 @@ import java.util.List;
  */
 public class MapSerializerTest {
 
-    @Test
-    public void enum2MapSerializer(){
-        Example example = new Example();
+	@Test
+	public void enum2MapSerializer() {
+		Example example = new Example();
 
-        example.setGender(Gender.FEMALE);
+		example.setGender(Gender.FEMALE);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        try{
-            System.out.println(objectMapper.writeValueAsString(example));
-        }catch(JsonProcessingException e){
-            e.printStackTrace();
-        }
-    }
+		ObjectMapper objectMapper = new ObjectMapper();
+		try{
+			System.out.println(objectMapper.writeValueAsString(example));
+		}catch(JsonProcessingException e){
+			e.printStackTrace();
+		}
+	}
 
-    @Test
-    public void map2EnumDeserizlizer(){
-        String str = "[{\"id\":1,\"customerId\":1,\"customer\":null,\"email\":\"webmaster@liangvi.com\"," +
-                "\"password\":null,\"salt\":null,\"realName\":\"腾勇\",\"mobile\":\"13438174292\"," +
-                "\"createdAt\":1487421335000,\"createdIp\":\"127.0.0.1\",\"createdLocation\":null,\"loginTimes\":265," +
+	@Test
+	public void map2EnumDeserizlizer() {
+		String str = "[{\"id\":1,\"customerId\":1,\"customer\":null,\"email\":\"webmaster@liangvi.com\"," +
+				"\"password\":null,\"salt\":null,\"realName\":\"腾勇\",\"mobile\":\"13438174292\"," +
+				"\"createdAt\":1487421335000,\"createdIp\":\"127.0.0.1\",\"createdLocation\":null,\"loginTimes\":265," +
 
-                "\"loginAt\":1524409881000," + "\"loginIp\":\"0:0:0:0:0:0:0:1\"," + "\"loginLocation\":null," +
-                "\"lastLoginAt\":1524409086000," + "\"lastLoginIp\":\"0:0:0:0:0:0:0:1\"," +
-                "\"lastLoginLocation\":null," + "\"status\":{\"value\":1," + "\"description\":\"正常\"}}]";
+				"\"loginAt\":1524409881000," + "\"loginIp\":\"0:0:0:0:0:0:0:1\"," + "\"loginLocation\":null," +
+				"\"lastLoginAt\":1524409086000," + "\"lastLoginIp\":\"0:0:0:0:0:0:0:1\"," +
+				"\"lastLoginLocation\":null," + "\"status\":{\"value\":1," + "\"description\":\"正常\"}}]";
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        try{
-            List<User> users = objectMapper.readValue(str, new TypeReference<List<User>>() {
+		try{
+			List<User> users = objectMapper.readValue(str, new TypeReference<List<User>>() {
 
-            });
+			});
 
-            System.out.println(users.get(0).getStatus());
-        }catch(JsonProcessingException e){
-            e.printStackTrace();
-        }catch(IOException e){
-            e.printStackTrace();
-        }
-    }
+			System.out.println(users.get(0).getStatus());
+		}catch(JsonProcessingException e){
+			e.printStackTrace();
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
 
-    @Test
-    public void map2EnumDeserizlizerS(){
-        String str = "{\"gender\":{\"value\":1," + "\"desc\":\"女\"}}";
+	@Test
+	public void map2EnumDeserizlizerS() {
+		String str = "{\"gender\":{\"value\":1," + "\"desc\":\"女\"}}";
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        try{
-            Example user = objectMapper.readValue(str, Example.class);
+		try{
+			Example user = objectMapper.readValue(str, Example.class);
 
-            System.out.println(user.getGender());
-        }catch(JsonProcessingException e){
-            e.printStackTrace();
-        }catch(IOException e){
-            e.printStackTrace();
-        }
-    }
+			System.out.println(user.getGender());
+		}catch(JsonProcessingException e){
+			e.printStackTrace();
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
 
-    private final static class Example {
+	private final static class Example {
 
-        @JsonEnum2Map
-        private Gender gender;
+		@JsonEnum2Map
+		private Gender gender;
 
-        @JsonEnum2Map
-        public Gender getGender(){
-            return gender;
-        }
+		@JsonEnum2Map
+		public Gender getGender() {
+			return gender;
+		}
 
-        public void setGender(Gender gender){
-            this.gender = gender;
-        }
-    }
+		public void setGender(Gender gender) {
+			this.gender = gender;
+		}
+	}
 
-    private enum Gender {
+	private enum Gender {
 
-        MALE(0, "男"),
+		MALE(0, "男"),
 
-        FEMALE(1, "女");
+		FEMALE(1, "女");
 
-        private int value;
+		private int value;
 
-        private String desc;
+		private String desc;
 
-        Gender(int value, String desc){
-            this.value = value;
-            this.desc = desc;
-        }
+		Gender(int value, String desc) {
+			this.value = value;
+			this.desc = desc;
+		}
 
-    }
+	}
 
-    public final static class User implements Serializable {
+	public final static class User implements Serializable {
 
-        private static final long serialVersionUID = -1924992522420542301L;
+		private static final long serialVersionUID = -1924992522420542301L;
 
-        private int id;
+		private int id;
 
-        private short customerId;
+		private short customerId;
 
-        private String email;
+		private String email;
 
-        private String password;
+		private String password;
 
-        private String salt;
+		private String salt;
 
-        private String realName;
+		private String realName;
 
-        private String mobile;
+		private String mobile;
 
-        private Date createdAt;
+		private Date createdAt;
 
-        private String createdIp;
+		private String createdIp;
 
-        private short loginTimes;
+		private short loginTimes;
 
-        private Date loginAt;
+		private Date loginAt;
 
-        private String loginIp;
+		private String loginIp;
 
-        private Date lastLoginAt;
+		private Date lastLoginAt;
 
-        private String lastLoginIp;
+		private String lastLoginIp;
 
-        @JsonEnum2Map
-        private Status status;
+		@JsonEnum2Map
+		private Status status;
 
-        @JsonIgnore
-        private boolean isDeleted;
+		@JsonIgnore
+		private boolean isDeleted;
 
-        public int getId(){
-            return id;
-        }
+		public int getId() {
+			return id;
+		}
 
-        public void setId(int id){
-            this.id = id;
-        }
+		public void setId(int id) {
+			this.id = id;
+		}
 
-        public short getCustomerId(){
-            return customerId;
-        }
+		public short getCustomerId() {
+			return customerId;
+		}
 
-        public void setCustomerId(short customerId){
-            this.customerId = customerId;
-        }
+		public void setCustomerId(short customerId) {
+			this.customerId = customerId;
+		}
 
-        public String getEmail(){
-            return email;
-        }
+		public String getEmail() {
+			return email;
+		}
 
-        public void setEmail(String email){
-            this.email = email;
-        }
+		public void setEmail(String email) {
+			this.email = email;
+		}
 
-        public String getPassword(){
-            return password;
-        }
+		public String getPassword() {
+			return password;
+		}
 
-        public void setPassword(String password){
-            this.password = password;
-        }
+		public void setPassword(String password) {
+			this.password = password;
+		}
 
-        public String getSalt(){
-            return salt;
-        }
+		public String getSalt() {
+			return salt;
+		}
 
-        public void setSalt(String salt){
-            this.salt = salt;
-        }
+		public void setSalt(String salt) {
+			this.salt = salt;
+		}
 
-        public String getRealName(){
-            return realName;
-        }
+		public String getRealName() {
+			return realName;
+		}
 
-        public void setRealName(String realName){
-            this.realName = realName;
-        }
+		public void setRealName(String realName) {
+			this.realName = realName;
+		}
 
-        public String getMobile(){
-            return mobile;
-        }
+		public String getMobile() {
+			return mobile;
+		}
 
-        public void setMobile(String mobile){
-            this.mobile = mobile;
-        }
+		public void setMobile(String mobile) {
+			this.mobile = mobile;
+		}
 
-        public Date getCreatedAt(){
-            return createdAt;
-        }
+		public Date getCreatedAt() {
+			return createdAt;
+		}
 
-        public void setCreatedAt(Date createdAt){
-            this.createdAt = createdAt;
-        }
+		public void setCreatedAt(Date createdAt) {
+			this.createdAt = createdAt;
+		}
 
-        public String getCreatedIp(){
-            return createdIp;
-        }
+		public String getCreatedIp() {
+			return createdIp;
+		}
 
-        public void setCreatedIp(String createdIp){
-            this.createdIp = createdIp;
-        }
+		public void setCreatedIp(String createdIp) {
+			this.createdIp = createdIp;
+		}
 
-        public short getLoginTimes(){
-            return loginTimes;
-        }
+		public short getLoginTimes() {
+			return loginTimes;
+		}
 
-        public void setLoginTimes(short loginTimes){
-            this.loginTimes = loginTimes;
-        }
+		public void setLoginTimes(short loginTimes) {
+			this.loginTimes = loginTimes;
+		}
 
-        public Date getLoginAt(){
-            return loginAt;
-        }
+		public Date getLoginAt() {
+			return loginAt;
+		}
 
-        public void setLoginAt(Date loginAt){
-            this.loginAt = loginAt;
-        }
+		public void setLoginAt(Date loginAt) {
+			this.loginAt = loginAt;
+		}
 
-        public String getLoginIp(){
-            return loginIp;
-        }
+		public String getLoginIp() {
+			return loginIp;
+		}
 
-        public void setLoginIp(String loginIp){
-            this.loginIp = loginIp;
-        }
+		public void setLoginIp(String loginIp) {
+			this.loginIp = loginIp;
+		}
 
-        public Date getLastLoginAt(){
-            return lastLoginAt;
-        }
+		public Date getLastLoginAt() {
+			return lastLoginAt;
+		}
 
-        public void setLastLoginAt(Date lastLoginAt){
-            this.lastLoginAt = lastLoginAt;
-        }
+		public void setLastLoginAt(Date lastLoginAt) {
+			this.lastLoginAt = lastLoginAt;
+		}
 
-        public String getLastLoginIp(){
-            return lastLoginIp;
-        }
+		public String getLastLoginIp() {
+			return lastLoginIp;
+		}
 
-        public void setLastLoginIp(String lastLoginIp){
-            this.lastLoginIp = lastLoginIp;
-        }
+		public void setLastLoginIp(String lastLoginIp) {
+			this.lastLoginIp = lastLoginIp;
+		}
 
-        @JsonEnum2Map
-        public Status getStatus(){
-            return status;
-        }
+		@JsonEnum2Map
+		public Status getStatus() {
+			return status;
+		}
 
-        public void setStatus(Status status){
-            this.status = status;
-        }
+		public void setStatus(Status status) {
+			this.status = status;
+		}
 
-        @JsonIgnore
-        public boolean isDeleted(){
-            return getIsDeleted();
-        }
+		@JsonIgnore
+		public boolean isDeleted() {
+			return getIsDeleted();
+		}
 
-        @JsonIgnore
-        public boolean getIsDeleted(){
-            return isDeleted;
-        }
+		@JsonIgnore
+		public boolean getIsDeleted() {
+			return isDeleted;
+		}
 
-        public void setDeleted(boolean isDeleted){
-            setIsDeleted(isDeleted);
-        }
+		public void setDeleted(boolean isDeleted) {
+			setIsDeleted(isDeleted);
+		}
 
-        public void setIsDeleted(boolean isDeleted){
-            this.isDeleted = isDeleted;
-        }
+		public void setIsDeleted(boolean isDeleted) {
+			this.isDeleted = isDeleted;
+		}
 
-        public enum Status {
+		public enum Status {
 
-            // 未激活
-            NOT_ACTIVATED(0, "未激活"),
+			// 未激活
+			NOT_ACTIVATED(0, "未激活"),
 
-            // 正常
-            NORMAL(1, "正常"),
+			// 正常
+			NORMAL(1, "正常"),
 
-            // 冻结
-            FREEZE(2, "冻结");
+			// 冻结
+			FREEZE(2, "冻结");
 
-            private int value;
+			private int value;
 
-            private String description;
+			private String description;
 
-            Status(int value, String description){
-                this.value = value;
-                this.description = description;
-            }
+			Status(int value, String description) {
+				this.value = value;
+				this.description = description;
+			}
 
-            public int getValue(){
-                return value;
-            }
+			public int getValue() {
+				return value;
+			}
 
-            public String getDescription(){
-                return description;
-            }
+			public String getDescription() {
+				return description;
+			}
 
-        }
+		}
 
-    }
+	}
 
 
 }

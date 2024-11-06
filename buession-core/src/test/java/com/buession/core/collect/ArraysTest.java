@@ -25,10 +25,9 @@
 package com.buession.core.collect;
 
 import com.buession.core.converter.ArrayConverter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Set;
-import java.util.function.Function;
 
 /**
  * @author Yong.Teng
@@ -39,7 +38,7 @@ public class ArraysTest {
 	@Test
 	public void convert() {
 		String[] data = new String[]{"1", "2"};
-		ArrayConverter<String, Integer> converter = new ArrayConverter<>((value)->Integer.parseInt(value),
+		ArrayConverter<String, Integer> converter = new ArrayConverter<>(Integer::parseInt,
 				Integer.class);
 		Integer[] result = converter.convert(data);
 

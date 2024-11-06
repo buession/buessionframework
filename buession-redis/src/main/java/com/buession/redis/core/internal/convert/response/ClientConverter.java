@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.response;
@@ -32,10 +32,11 @@ import com.buession.core.validator.Validate;
 import com.buession.redis.core.Client;
 import com.buession.redis.core.command.ProtocolCommand;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Client Info 命令结果转换为 {@link Client}
@@ -45,10 +46,8 @@ import java.util.Set;
  */
 public final class ClientConverter implements Converter<String, Client> {
 
-	public final static ClientConverter INSTANCE = new ClientConverter();
-
 	@Override
-	public Client convert(final String source){
+	public Client convert(final String source) {
 		String[] properties = StringUtils.splitByWholeSeparatorPreserveAllTokens(source, " ");
 
 		if(Validate.isEmpty(properties)){
@@ -122,30 +121,20 @@ public final class ClientConverter implements Converter<String, Client> {
 		return client;
 	}
 
+	/**
+	 * Client Info 命令结果转换为 {@link List} {@link Client}
+	 *
+	 * @author Yong.Teng
+	 * @since 2.3.0
+	 */
 	public final static class ClientListConverter implements Converter<String, List<Client>> {
 
-		public final static ClientListConverter INSTANCE = new ClientListConverter();
+		private final ClientConverter clientConverter = new ClientConverter();
 
 		@Override
-		public List<Client> convert(final String source){
-			if(Validate.isBlank(source)){
-				return null;
-			}
-
-			String[] clients = source.split("[\\r\\n]");
-			List<Client> result = new ArrayList<>(clients.length);
-
-			if(Validate.isNotEmpty(clients)){
-				for(String s : clients){
-					Client client = ClientConverter.INSTANCE.convert(s);
-
-					if(client != null){
-						result.add(client);
-					}
-				}
-			}
-
-			return result;
+		public List<Client> convert(final String source) {
+			return Arrays.stream(StringUtils.split(source, "\r\n")).map(clientConverter::convert).collect(
+					Collectors.toList());
 		}
 	}
 

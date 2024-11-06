@@ -24,7 +24,11 @@
  */
 package com.buession.httpclient.okhttp;
 
-import com.buession.httpclient.core.Request;
+import com.buession.httpclient.core.Header;
+import com.buession.httpclient.core.RequestMethod;
+
+import java.net.URI;
+import java.util.List;
 
 /**
  * Okhttp3 Request.
@@ -32,15 +36,45 @@ import com.buession.httpclient.core.Request;
  * @author Yong.Teng
  * @since 2.3.0
  */
-public class OkHttpRequest extends Request {
+public class OkHttpRequest {
+
+	private RequestMethod method;
+
+	private URI uri;
+
+	private List<Header> headers;
 
 	private okhttp3.Request.Builder builder;
 
-	public okhttp3.Request.Builder getRequestBuilder(){
+	public RequestMethod getMethod() {
+		return method;
+	}
+
+	public void setMethod(RequestMethod method) {
+		this.method = method;
+	}
+
+	public URI getUri() {
+		return uri;
+	}
+
+	public void setUri(URI uri) {
+		this.uri = uri;
+	}
+
+	public List<Header> getHeaders() {
+		return headers;
+	}
+
+	public void setHeaders(List<Header> headers) {
+		this.headers = headers;
+	}
+
+	public okhttp3.Request.Builder getRequestBuilder() {
 		return builder;
 	}
 
-	public void setRequestBuilder(okhttp3.Request.Builder builder){
+	public void setRequestBuilder(okhttp3.Request.Builder builder) {
 		this.builder = builder;
 	}
 

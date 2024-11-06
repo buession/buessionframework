@@ -19,29 +19,33 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient;
 
-import com.buession.core.utils.Assert;
-import com.buession.httpclient.conn.ConnectionManager;
+import com.buession.httpclient.conn.IConnectionManager;
 import com.buession.httpclient.core.ProtocolVersion;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 
 /**
  * HttpClient 基类
  *
+ * @param <CM>
+ * 		连接管理器类型
+ *
  * @author Yong.Teng
  * @since 2.3.0
  */
-abstract class AbstractBaseHttpClient implements IBaseHttpClient {
+abstract class AbstractBaseHttpClient<CM extends IConnectionManager> implements IBaseHttpClient, IHttpClient {
 
-	private ConnectionManager connectionManager;
+	/**
+	 * 连接管理器
+	 */
+	private CM connectionManager;
 
+	/**
+	 * HTTP 协议版本
+	 */
 	private ProtocolVersion httpVersion;
 
 	/**
@@ -56,17 +60,26 @@ abstract class AbstractBaseHttpClient implements IBaseHttpClient {
 	 * @param connectionManager
 	 * 		连接管理器
 	 */
-	public AbstractBaseHttpClient(ConnectionManager connectionManager) {
+	public AbstractBaseHttpClient(CM connectionManager) {
 		this.connectionManager = connectionManager;
 	}
 
-	@Override
-	public ConnectionManager getConnectionManager() {
+	/**
+	 * 返回连接管理器
+	 *
+	 * @return 连接管理器
+	 */
+	public CM getConnectionManager() {
 		return connectionManager;
 	}
 
-	@Override
-	public void setConnectionManager(ConnectionManager connectionManager) {
+	/**
+	 * 设置连接管理器
+	 *
+	 * @param connectionManager
+	 * 		连接管理器
+	 */
+	public void setConnectionManager(CM connectionManager) {
 		this.connectionManager = connectionManager;
 	}
 
@@ -78,11 +91,6 @@ abstract class AbstractBaseHttpClient implements IBaseHttpClient {
 	@Override
 	public void setHttpVersion(ProtocolVersion httpVersion) {
 		this.httpVersion = httpVersion;
-	}
-
-	protected static URI URL2URI(final URL url) throws URISyntaxException {
-		Assert.isNull(url, "Request URL cloud not be null.");
-		return url.toURI();
 	}
 
 }

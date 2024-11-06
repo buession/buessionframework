@@ -19,17 +19,18 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.jdbc.datasource;
 
-import com.buession.jdbc.datasource.config.GenericPoolConfiguration;
+import com.buession.core.converter.mapper.PropertyMapper;
+import com.buession.jdbc.datasource.pool.GenericPoolConfiguration;
 
 import javax.sql.DataSource;
 
 /**
- * 常规 DataSource 抽象类
+ * 一般 DataSource
  *
  * @author Yong.Teng
  * @since 1.3.2
@@ -39,7 +40,7 @@ public class GenericDataSource extends AbstractDataSource<DataSource, GenericPoo
 	/**
 	 * 构造函数
 	 */
-	public GenericDataSource(){
+	public GenericDataSource() {
 		super();
 	}
 
@@ -53,7 +54,7 @@ public class GenericDataSource extends AbstractDataSource<DataSource, GenericPoo
 	 *
 	 * @since 2.3.0
 	 */
-	public GenericDataSource(String driverClassName, String url){
+	public GenericDataSource(String driverClassName, String url) {
 		super(driverClassName, url);
 	}
 
@@ -69,7 +70,7 @@ public class GenericDataSource extends AbstractDataSource<DataSource, GenericPoo
 	 *
 	 * @since 2.3.0
 	 */
-	public GenericDataSource(String driverClassName, String url, String username){
+	public GenericDataSource(String driverClassName, String url, String username) {
 		super(driverClassName, url, username);
 	}
 
@@ -87,7 +88,7 @@ public class GenericDataSource extends AbstractDataSource<DataSource, GenericPoo
 	 *
 	 * @since 2.3.0
 	 */
-	public GenericDataSource(String driverClassName, String url, String username, String password){
+	public GenericDataSource(String driverClassName, String url, String username, String password) {
 		super(driverClassName, url, username, password);
 	}
 
@@ -97,7 +98,7 @@ public class GenericDataSource extends AbstractDataSource<DataSource, GenericPoo
 	 * @param poolConfiguration
 	 * 		连接池配置
 	 */
-	public GenericDataSource(GenericPoolConfiguration poolConfiguration){
+	public GenericDataSource(GenericPoolConfiguration poolConfiguration) {
 		super(poolConfiguration);
 	}
 
@@ -113,7 +114,7 @@ public class GenericDataSource extends AbstractDataSource<DataSource, GenericPoo
 	 *
 	 * @since 2.3.0
 	 */
-	public GenericDataSource(String driverClassName, String url, GenericPoolConfiguration poolConfiguration){
+	public GenericDataSource(String driverClassName, String url, GenericPoolConfiguration poolConfiguration) {
 		super(driverClassName, url, poolConfiguration);
 	}
 
@@ -132,7 +133,7 @@ public class GenericDataSource extends AbstractDataSource<DataSource, GenericPoo
 	 * @since 2.3.0
 	 */
 	public GenericDataSource(String driverClassName, String url, String username,
-							 GenericPoolConfiguration poolConfiguration){
+							 GenericPoolConfiguration poolConfiguration) {
 		super(driverClassName, url, username, poolConfiguration);
 	}
 
@@ -153,12 +154,18 @@ public class GenericDataSource extends AbstractDataSource<DataSource, GenericPoo
 	 * @since 2.3.0
 	 */
 	public GenericDataSource(String driverClassName, String url, String username, String password,
-							 GenericPoolConfiguration poolConfiguration){
+							 GenericPoolConfiguration poolConfiguration) {
 		super(driverClassName, url, username, password, poolConfiguration);
 	}
 
 	@Override
-	public DataSource createDataSource(){
+	public DataSource createDataSource() {
+		return null;
+	}
+
+	@Override
+	protected DataSource createDataSource(final PropertyMapper nullPropertyMapper,
+										  final PropertyMapper hasTextPropertyMapper) {
 		return null;
 	}
 

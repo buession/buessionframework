@@ -27,7 +27,6 @@
 package com.buession.dao;
 
 import com.buession.core.Pagination;
-import com.buession.core.builder.ListBuilder;
 import com.buession.core.builder.MapBuilder;
 import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
@@ -37,8 +36,6 @@ import com.buession.lang.Order;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -64,69 +61,12 @@ import java.util.Map;
 public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> implements MongoDBDao<P, E> {
 
 	/**
-	 * master MongoTemplate
-	 */
-	@Deprecated
-	private MongoTemplate masterMongoTemplate;
-
-	/**
-	 * slave MongoTemplate
-	 */
-	@Deprecated
-	private List<MongoTemplate> slaveMongoTemplates;
-
-	/**
 	 * {@link MongoTemplate}
 	 *
 	 * @since 2.3.3
 	 */
 	@Resource
 	private MongoTemplate mongoTemplate;
-
-	protected final Logger logger = LoggerFactory.getLogger(getClass());
-
-	/**
-	 * 返回 master MongoTemplate
-	 *
-	 * @return master MongoTemplate
-	 */
-	@Deprecated
-	public MongoTemplate getMasterMongoTemplate() {
-		return masterMongoTemplate;
-	}
-
-	/**
-	 * 设置 master MongoTemplate
-	 *
-	 * @param masterMongoTemplate
-	 * 		master MongoTemplate
-	 */
-	@Deprecated
-	public void setMasterMongoTemplate(MongoTemplate masterMongoTemplate) {
-		this.masterMongoTemplate = masterMongoTemplate;
-		this.mongoTemplate = masterMongoTemplate;
-	}
-
-	/**
-	 * 返回 slave MongoTemplate
-	 *
-	 * @return slave MongoTemplate
-	 */
-	@Deprecated
-	public List<MongoTemplate> getSlaveMongoTemplates() {
-		return slaveMongoTemplates;
-	}
-
-	/**
-	 * 设置 slave MongoTemplate
-	 *
-	 * @param slaveMongoTemplates
-	 * 		slave MongoTemplate
-	 */
-	@Deprecated
-	public void setSlaveMongoTemplates(List<MongoTemplate> slaveMongoTemplates) {
-		this.slaveMongoTemplates = slaveMongoTemplates;
-	}
 
 	/**
 	 * 返回 {@link MongoTemplate} 实例
@@ -149,8 +89,6 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 	 */
 	public void setMongoTemplate(MongoTemplate mongoTemplate) {
 		this.mongoTemplate = mongoTemplate;
-		this.masterMongoTemplate = mongoTemplate;
-		this.slaveMongoTemplates = ListBuilder.of(mongoTemplate);
 	}
 
 	/**
@@ -353,7 +291,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 	private int delete(final Query query, final Map<String, Object> conditions) {
 		query.addCriteria(buildCriteria(conditions));
 
-		DeleteResult writeResult = getMasterMongoTemplate().remove(query, getStatement());
+		DeleteResult writeResult = getMongoTemplate().remove(query, getStatement());
 		return (int) writeResult.getDeletedCount();
 	}
 

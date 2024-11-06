@@ -19,14 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.git;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Yong.Teng
@@ -35,7 +35,7 @@ import org.junit.Test;
 public class GitTest {
 
 	@Test
-	public void gitToString(){
+	public void gitToString() {
 		Git git = new Git();
 
 		git.setBranch("master");
@@ -47,14 +47,14 @@ public class GitTest {
 	}
 
 	@Test
-	public void buildToString(){
+	public void buildToString() {
 		Build build = new Build();
 
 		System.out.println(build.toString());
 	}
 
 	@Test
-	public void gitJsonEncode() throws JsonProcessingException{
+	public void gitJsonEncode() throws JsonProcessingException {
 		Git git = new Git();
 
 		git.setBranch("master");
@@ -74,7 +74,7 @@ public class GitTest {
 	}
 
 	@Test
-	public void totalJsonEncode() throws JsonProcessingException{
+	public void totalJsonEncode() throws JsonProcessingException {
 		Total total = new Total();
 
 		ObjectMapper objectMapper = new ObjectMapper();

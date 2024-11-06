@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.collect;
@@ -27,6 +27,8 @@ package com.buession.core.collect;
 import com.buession.core.utils.StringUtils;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -50,7 +52,7 @@ public class Sets {
 	 *
 	 * @return 拼接后的字符串
 	 */
-	public static <O> String toString(final Set<O> data){
+	public static <O> String toString(final Set<O> data) {
 		return StringUtils.join(data, DEFAULT_GLUE);
 	}
 
@@ -66,7 +68,7 @@ public class Sets {
 	 *
 	 * @return 拼接后的字符串
 	 */
-	public static <O> String toString(final Set<O> data, final String glue){
+	public static <O> String toString(final Set<O> data, final String glue) {
 		return StringUtils.join(data, glue);
 	}
 
@@ -80,8 +82,14 @@ public class Sets {
 	 *
 	 * @return 当 data 为 null 时，返回 null；否则，返回 O 类型的 {@link List}
 	 */
-	public static <O> List<O> toList(final Set<O> data){
-		return data == null ? null : new ArrayList<>(data);
+	public static <O> List<O> toList(final Set<O> data) {
+		if(data == null){
+			return null;
+		}else if(data instanceof LinkedHashSet){
+			return new LinkedList<>(data);
+		}else{
+			return new ArrayList<>(data);
+		}
 	}
 
 }

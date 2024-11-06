@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
@@ -39,7 +39,7 @@ public class NumberUtils {
 	 *
 	 * @return byte[] 值
 	 */
-	public static byte[] int2bytes(final int value){
+	public static byte[] int2bytes(final int value) {
 		byte[] result = new byte[4];
 
 		for(int i = 0; i < 4; ++i){
@@ -58,7 +58,7 @@ public class NumberUtils {
 	 *
 	 * @return int 值
 	 */
-	public static int bytes2int(final byte[] value){
+	public static int bytes2int(final byte[] value) {
 		int result = 0;
 
 		for(int i = 0; i < 4; ++i){
@@ -77,7 +77,7 @@ public class NumberUtils {
 	 *
 	 * @return byte[] 值
 	 */
-	public static byte[] long2bytes(final long value){
+	public static byte[] long2bytes(final long value) {
 		byte[] result = new byte[8];
 
 		for(int i = 0; i < 8; ++i){
@@ -96,7 +96,7 @@ public class NumberUtils {
 	 *
 	 * @return long 值
 	 */
-	public static long bytes2long(final byte[] value){
+	public static long bytes2long(final byte[] value) {
 		long result = 0;
 
 		for(int i = 0; i < 8; ++i){
@@ -115,7 +115,7 @@ public class NumberUtils {
 	 *
 	 * @return byte[] 值
 	 */
-	public static byte[] float2bytes(final float value){
+	public static byte[] float2bytes(final float value) {
 		return int2bytes(Float.floatToIntBits(value));
 	}
 
@@ -127,7 +127,7 @@ public class NumberUtils {
 	 *
 	 * @return float 值
 	 */
-	public static double bytes2float(final byte[] value){
+	public static double bytes2float(final byte[] value) {
 		return (float) bytes2int(value);
 	}
 
@@ -139,7 +139,7 @@ public class NumberUtils {
 	 *
 	 * @return byte[] 值
 	 */
-	public static byte[] double2bytes(final double value){
+	public static byte[] double2bytes(final double value) {
 		return long2bytes(Double.doubleToLongBits(value));
 	}
 
@@ -151,7 +151,7 @@ public class NumberUtils {
 	 *
 	 * @return double 值
 	 */
-	public static double bytes2double(final byte[] value){
+	public static double bytes2double(final byte[] value) {
 		return (double) bytes2long(value);
 	}
 

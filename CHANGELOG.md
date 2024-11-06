@@ -2,6 +2,97 @@
 ===========================
 
 
+## [3.0.0](https://github.com/buession/buessionframework/releases/tag/v3.0.0) (2024-11-07)
+
+### 🔨依赖升级
+
+- [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v3.0.0)
+
+
+### ⭐ 新特性
+
+- ClassUtils 新增检测类是否存在方法 isPresent
+- 新增 list 到 set 转换器 ListSetConverter
+- 新增 set 到 list 转换器 SetListConverter
+- 新增断言转换器 PredicateConverter
+- 新增 集合转换器 CollectionConverter
+- 新增 Map.Entry 到 Map 转换器 MapEntryMapConverter
+- httpClient Configuration 新增 expectContinueEnabled、hardCancellationEnabled、targetPreferredAuthSchemes、cookieSpec、proxy 配置
+- httpClient 新增代理支持
+- ApacheClient 新增支持 apache httpcomponents 5，根据依赖的 apache httpcomponents 5 和 apache httpcomponents 4 自动判断，优先使用 apache httpcomponents 5
+- 新增支持 Lettuce（stream 命令不稳定，不推荐使用）
+- jedis 模式下，集群支持管道
+- 新增代理方法调用者 ProxyMethodInvoker
+- 新增代理调用处理器 InvocationHandler 抽象类 AbstractInvocationHandler
+- PropertyMapper 增加正数断言 alwaysApplyingWhenPositiveNumber
+- com.buession.io.file.File 新增支持将 InputStream 写入文件
+- JSON 序列化和反序列化支持对原生对象进行配置
+- 增加范围类 Range 及其衍生类
+- 新增日期时间工具类 DateTimeUtils
+
+
+### 🔔 变化
+
+- Maps.toList 参数为 LinkedHashMap 时返回 LinkedList
+- Lists.toSet 参数为 LinkedList 返回 LinkedHashSet
+- Sets.toList 参数为 LinkedHashSet 返回 LinkedList
+- core 包中删除依赖 commons-beanutils
+- 删除 ArrayUtils、StatusUtils、ObjectUtils、MapUtils、BuesssionFrameworkVersion
+- 删除 AbstractAspectAnnotationsMethodInterceptor
+- geoip 删除依赖 apache httpcomponents
+- 废弃 ApacheRequest、ApacheRequestBuilder、ApacheHttpClientBuilder
+- httpClient 优化 ConnectionManager 创建默认原生 ConnectionManager，以解决在创建原生 ConnectionManager 之前，更新了 Configuration 不生效的问题
+- ApacheHttpClient 删除 apache httpcomponents 4 中的特有方法
+- httpClient 参数为 URL 时，不再验证是否为 null
+- apache httpcomponents 异步请求时 HttpAsyncResponseConsumer 采用 ZeroCopyConsumer
+- okhttp maxRequestsPerHost 大于 0 时，才会更新 okhttp 原生 maxRequestsPerHost 的值
+- 删除 OkHttpClient
+- 重构 JDBC 连接池和数据源
+- MyBatisDao 废弃 masterTemplate、slaveSqlSessionTemplate，通过其它数据库本身或其它中间件实现读写分离
+- redis 删除参数为字符串数组或 byte[] 数组的方法 bitField
+- redis 废弃字符串型 / byte[]型 min、max 参数的方法
+- redis role 命令直接返回 Role，不再返回 List&lt;Role&gt;
+- redis 重构管道、事务内部实现
+- redis 哨兵连接，如果指定了连接超时、读取超时，但未指定哨兵节点连接超时、读取超时，哨兵节点连接超时、读取超时也使用该值
+- redis 连接池调整在连接对象中创建，不再在 DataSource 中创建
+- redis 不再推荐从 DataSource 中创建 RedisConnection 实例
+- IO MimeType 忽略大小写比较
+- 删除 com.buession.web.mvc.Response 中参数为 com.buession.core.Pagination 的构造函数和 setter 函数
+- 删除 buession-cron 和 buession-session
+- 删除 MobileFilter、PoweredByHeaderFilter
+- 序列化类删除反序列化方法
+
+
+### 🐞 Bug 修复
+
+- httpClient 修复 ConnectionManager 未设置 connectionManagerShared 时，无法从 Configuration 中获取 connectionManagerShared 值的 BUG
+- 修复 okhttp 设置 followRedirects 时，followSslRedirects 未生效的 BUG
+- 修复 jedis 模式下 role 命令未返回数据的 BUG
+- 修复 jedis 模式下 API 中，“命令”参数设置错误的 BUG
+- 修复 jedis GeoRadiusResponseConverter coordinate 为 null 时，空指针异常
+- 修复 jedis 模式下连接中的错误和参数丢失等问题
+- 修复 Validate IPV4 验证，第一段为 10 ~ 99 时，验证失败的 BUG
+
+
+### ⏪ 优化
+- 优化 redis 转换器，不使用静态属性，以减少内存占用
+- jedis 模式命令运算优化
+- 优化 JDBC 数据源连接池设置
+- 优化 httpclient 配置、连接管理器以及连接客户端
+- 优化默认线程池执行器 DefaultThreadPoolExecutor 初始化
+- com.buession.io.file.File 读取文件优化
+
+
+### 📔 文档
+
+- 完善 redis 注释
+- 修正 httpclient 错误注释
+- 完善 httpclient 注释
+
+
+---
+
+
 ## [2.3.3](https://github.com/buession/buessionframework/releases/tag/v2.3.3) (2024-05-06)
 
 ### 🔨依赖升级

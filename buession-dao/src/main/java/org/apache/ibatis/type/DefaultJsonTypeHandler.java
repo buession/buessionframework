@@ -19,11 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package org.apache.ibatis.type;
 
+import com.buession.core.deserializer.DeserializerException;
+import com.buession.core.deserializer.JacksonJsonDeserializer;
 import com.buession.core.serializer.JacksonJsonSerializer;
 import com.buession.core.serializer.SerializerException;
 import com.buession.core.validator.Validate;
@@ -39,14 +41,16 @@ import java.sql.SQLException;
  */
 public class DefaultJsonTypeHandler<E> extends AbstractJsonTypeHandler<E> {
 
+	private final JacksonJsonSerializer jsonSerializer = new JacksonJsonSerializer();
+
+	private final JacksonJsonDeserializer jsonDeserializer = new JacksonJsonDeserializer();
+
 	public DefaultJsonTypeHandler(final Class<E> type) {
 		super(type);
 	}
 
 	@Override
 	public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType) throws SQLException {
-		JacksonJsonSerializer jsonSerializer = new JacksonJsonSerializer();
-
 		try{
 			if(jdbcType == null){
 				ps.setString(i, jsonSerializer.serialize(parameter));
@@ -61,11 +65,9 @@ public class DefaultJsonTypeHandler<E> extends AbstractJsonTypeHandler<E> {
 	@Override
 	protected E parseResult(final String str) throws SQLException {
 		if(Validate.hasText(str)){
-			JacksonJsonSerializer jsonSerializer = new JacksonJsonSerializer();
-
 			try{
-				return jsonSerializer.deserialize(str, type);
-			}catch(SerializerException e){
+				return jsonDeserializer.deserialize(str, type);
+			}catch(DeserializerException e){
 				throw new SQLException(str + " cloud not be deserialize to " + type.getName() + ": " + e.getMessage());
 			}
 		}

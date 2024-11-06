@@ -19,12 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.conn;
 
+import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.httpclient.core.Configuration;
+
+import java.util.Optional;
 
 /**
  * 连接管理器抽象类
@@ -36,12 +39,20 @@ import com.buession.httpclient.core.Configuration;
  */
 public abstract class AbstractConnectionManager<CM> implements ConnectionManager {
 
+	protected final static PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
+
+	/**
+	 * 配置
+	 */
 	private Configuration configuration = new Configuration();
 
+	/**
+	 * 原生连接管理器
+	 */
 	private CM clientConnectionManager;
 
 	/**
-	 * @since 2.3.0
+	 * @since 3.0.0
 	 */
 	private Boolean connectionManagerShared;
 
@@ -49,25 +60,23 @@ public abstract class AbstractConnectionManager<CM> implements ConnectionManager
 	 * 构造函数，创建驱动默认连接管理器
 	 */
 	public AbstractConnectionManager() {
-		clientConnectionManager = createDefaultClientConnectionManager();
 	}
 
 	/**
 	 * 构造函数，创建驱动默认连接管理器
 	 *
 	 * @param configuration
-	 * 		连接对象
+	 * 		配置
 	 */
 	public AbstractConnectionManager(Configuration configuration) {
 		this.configuration = configuration;
-		clientConnectionManager = createDefaultClientConnectionManager();
 	}
 
 	/**
 	 * 构造函数
 	 *
 	 * @param clientConnectionManager
-	 * 		驱动连接管理器
+	 * 		原生连接管理器
 	 */
 	public AbstractConnectionManager(CM clientConnectionManager) {
 		this.clientConnectionManager = clientConnectionManager;
@@ -77,9 +86,9 @@ public abstract class AbstractConnectionManager<CM> implements ConnectionManager
 	 * 构造函数
 	 *
 	 * @param configuration
-	 * 		连接对象
+	 * 		配置
 	 * @param clientConnectionManager
-	 * 		驱动连接管理器
+	 * 		原生连接管理器
 	 */
 	public AbstractConnectionManager(Configuration configuration, CM clientConnectionManager) {
 		this.configuration = configuration;
@@ -87,9 +96,9 @@ public abstract class AbstractConnectionManager<CM> implements ConnectionManager
 	}
 
 	/**
-	 * 获取连接对象
+	 * 获取配置
 	 *
-	 * @return 连接对象
+	 * @return 配置
 	 */
 	@Override
 	public Configuration getConfiguration() {
@@ -97,10 +106,10 @@ public abstract class AbstractConnectionManager<CM> implements ConnectionManager
 	}
 
 	/**
-	 * 设置连接对象
+	 * 设置配置
 	 *
 	 * @param configuration
-	 * 		连接对象
+	 * 		配置
 	 */
 	@Override
 	public void setConfiguration(Configuration configuration) {
@@ -108,19 +117,23 @@ public abstract class AbstractConnectionManager<CM> implements ConnectionManager
 	}
 
 	/**
-	 * 获取驱动连接管理器
+	 * 获取原生连接管理器
 	 *
-	 * @return 连接管理器
+	 * @return 原生连接管理器
 	 */
 	public CM getClientConnectionManager() {
+		if(clientConnectionManager == null){
+			clientConnectionManager = createDefaultClientConnectionManager();
+		}
+
 		return clientConnectionManager;
 	}
 
 	/**
-	 * 设置连接管理器
+	 * 设置原生连接管理器
 	 *
 	 * @param clientConnectionManager
-	 * 		连接管理器
+	 * 		原生连接管理器
 	 */
 	public void setClientConnectionManager(CM clientConnectionManager) {
 		this.clientConnectionManager = clientConnectionManager;
@@ -131,10 +144,10 @@ public abstract class AbstractConnectionManager<CM> implements ConnectionManager
 	 *
 	 * @return True / False
 	 *
-	 * @since 2.3.0
+	 * @since 3.0.0
 	 */
 	public Boolean getConnectionManagerShared() {
-		return connectionManagerShared;
+		return Optional.ofNullable(connectionManagerShared).orElse(getConfiguration().getConnectionManagerShared());
 	}
 
 	/**
@@ -143,7 +156,7 @@ public abstract class AbstractConnectionManager<CM> implements ConnectionManager
 	 * @param connectionManagerShared
 	 * 		链接管理器是否共享
 	 *
-	 * @since 2.3.0
+	 * @since 3.0.0
 	 */
 	public void setConnectionManagerShared(Boolean connectionManagerShared) {
 		this.connectionManagerShared = connectionManagerShared;

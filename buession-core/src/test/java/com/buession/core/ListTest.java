@@ -24,7 +24,7 @@
  */
 package com.buession.core;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,12 +36,12 @@ import java.util.List;
 public class ListTest {
 
 	@Test
-	public void test(){
+	public void test() {
 		List<Object> list = new ArrayList<>(2);
 
 		list.add("A");
 		list.add("B");
-		
+
 	}
 
 }

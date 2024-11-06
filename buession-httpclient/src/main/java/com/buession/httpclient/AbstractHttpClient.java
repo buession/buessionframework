@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient;
@@ -44,7 +44,7 @@ import java.util.Map;
  *
  * @author Yong.Teng
  */
-public abstract class AbstractHttpClient extends AbstractBaseHttpClient implements HttpClient {
+public abstract class AbstractHttpClient extends AbstractBaseHttpClient<ConnectionManager> implements HttpClient {
 
 	/**
 	 * 构造函数
@@ -70,7 +70,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response get(URL url) throws IOException, RequestException {
-		return execute(()->get(URL2URI(url)));
+		return execute(()->get(url.toURI()));
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response get(URL url, Map<String, Object> parameters) throws IOException, RequestException {
-		return execute(()->get(URL2URI(url), parameters));
+		return execute(()->get(url.toURI(), parameters));
 	}
 
 	@Override
@@ -90,13 +90,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response get(URL url, List<Header> headers) throws IOException, RequestException {
-		return execute(()->get(URL2URI(url), headers));
+		return execute(()->get(url.toURI(), headers));
 	}
 
 	@Override
 	public Response get(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->get(URL2URI(url), parameters, headers));
+		return execute(()->get(url.toURI(), parameters, headers));
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response get(URL url, int readTimeout) throws IOException, RequestException {
-		return execute(()->get(URL2URI(url), readTimeout));
+		return execute(()->get(url.toURI(), readTimeout));
 	}
 
 	@Override
@@ -116,7 +116,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response get(URL url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException {
-		return execute(()->get(URL2URI(url), readTimeout, parameters));
+		return execute(()->get(url.toURI(), readTimeout, parameters));
 	}
 
 	@Override
@@ -126,13 +126,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response get(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException {
-		return execute(()->get(URL2URI(url), readTimeout, headers));
+		return execute(()->get(url.toURI(), readTimeout, headers));
 	}
 
 	@Override
 	public Response get(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->get(URL2URI(url), readTimeout, parameters, headers));
+		return execute(()->get(url.toURI(), readTimeout, parameters, headers));
 	}
 
 	@Override
@@ -142,7 +142,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response post(URL url) throws IOException, RequestException {
-		return execute(()->post(URL2URI(url)));
+		return execute(()->post(url.toURI()));
 	}
 
 	@Override
@@ -152,7 +152,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response post(URL url, Map<String, Object> parameters) throws IOException, RequestException {
-		return execute(()->post(URL2URI(url), parameters));
+		return execute(()->post(url.toURI(), parameters));
 	}
 
 	@Override
@@ -162,7 +162,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response post(URL url, List<Header> headers) throws IOException, RequestException {
-		return execute(()->post(URL2URI(url), headers));
+		return execute(()->post(url.toURI(), headers));
 	}
 
 	@Override
@@ -174,7 +174,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response post(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->post(URL2URI(url), parameters, headers));
+		return execute(()->post(url.toURI(), parameters, headers));
 	}
 
 	@Override
@@ -184,7 +184,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response post(URL url, RequestBody<?> data) throws IOException, RequestException {
-		return execute(()->post(URL2URI(url), data));
+		return execute(()->post(url.toURI(), data));
 	}
 
 	@Override
@@ -196,7 +196,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response post(URL url, RequestBody<?> data, Map<String, Object> parameters)
 			throws IOException, RequestException {
-		return execute(()->post(URL2URI(url), data, parameters));
+		return execute(()->post(url.toURI(), data, parameters));
 	}
 
 	@Override
@@ -206,13 +206,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response post(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException {
-		return execute(()->post(URL2URI(url), data, headers));
+		return execute(()->post(url.toURI(), data, headers));
 	}
 
 	@Override
 	public Response post(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->post(URL2URI(url), data, parameters, headers));
+		return execute(()->post(url.toURI(), data, parameters, headers));
 	}
 
 	@Override
@@ -222,7 +222,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response post(URL url, int readTimeout) throws IOException, RequestException {
-		return execute(()->post(URL2URI(url), readTimeout));
+		return execute(()->post(url.toURI(), readTimeout));
 	}
 
 	@Override
@@ -234,7 +234,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response post(URL url, int readTimeout, Map<String, Object> parameters)
 			throws IOException, RequestException {
-		return execute(()->post(URL2URI(url), readTimeout, parameters));
+		return execute(()->post(url.toURI(), readTimeout, parameters));
 	}
 
 	@Override
@@ -244,7 +244,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response post(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException {
-		return execute(()->post(URL2URI(url), readTimeout, headers));
+		return execute(()->post(url.toURI(), readTimeout, headers));
 	}
 
 	@Override
@@ -256,7 +256,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response post(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->post(URL2URI(url), readTimeout, parameters, headers));
+		return execute(()->post(url.toURI(), readTimeout, parameters, headers));
 	}
 
 	@Override
@@ -266,7 +266,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response post(URL url, int readTimeout, RequestBody<?> data) throws IOException, RequestException {
-		return execute(()->post(URL2URI(url), readTimeout, data));
+		return execute(()->post(url.toURI(), readTimeout, data));
 	}
 
 	@Override
@@ -278,7 +278,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response post(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
 			throws IOException, RequestException {
-		return execute(()->post(URL2URI(url), readTimeout, data, parameters));
+		return execute(()->post(url.toURI(), readTimeout, data, parameters));
 	}
 
 	@Override
@@ -290,13 +290,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response post(URL url, int readTimeout, RequestBody<?> data, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->post(URL2URI(url), readTimeout, data, headers));
+		return execute(()->post(url.toURI(), readTimeout, data, headers));
 	}
 
 	@Override
 	public Response post(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
 						 List<Header> headers) throws IOException, RequestException {
-		return execute(()->post(URL2URI(url), readTimeout, data, parameters, headers));
+		return execute(()->post(url.toURI(), readTimeout, data, parameters, headers));
 	}
 
 	@Override
@@ -306,7 +306,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response put(URL url) throws IOException, RequestException {
-		return execute(()->put(URL2URI(url)));
+		return execute(()->put(url.toURI()));
 	}
 
 	@Override
@@ -316,7 +316,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response put(URL url, Map<String, Object> parameters) throws IOException, RequestException {
-		return execute(()->put(URL2URI(url), parameters));
+		return execute(()->put(url.toURI(), parameters));
 	}
 
 	@Override
@@ -326,7 +326,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response put(URL url, List<Header> headers) throws IOException, RequestException {
-		return execute(()->put(URL2URI(url), headers));
+		return execute(()->put(url.toURI(), headers));
 	}
 
 	@Override
@@ -338,7 +338,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response put(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->put(URL2URI(url), parameters, headers));
+		return execute(()->put(url.toURI(), parameters, headers));
 	}
 
 	@Override
@@ -348,7 +348,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response put(URL url, RequestBody<?> data) throws IOException, RequestException {
-		return execute(()->put(URL2URI(url), data));
+		return execute(()->put(url.toURI(), data));
 	}
 
 	@Override
@@ -360,7 +360,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response put(URL url, RequestBody<?> data, Map<String, Object> parameters)
 			throws IOException, RequestException {
-		return execute(()->put(URL2URI(url), data, parameters));
+		return execute(()->put(url.toURI(), data, parameters));
 	}
 
 	@Override
@@ -370,13 +370,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response put(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException {
-		return execute(()->put(URL2URI(url), data, headers));
+		return execute(()->put(url.toURI(), data, headers));
 	}
 
 	@Override
 	public Response put(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->put(URL2URI(url), data, parameters, headers));
+		return execute(()->put(url.toURI(), data, parameters, headers));
 	}
 
 	@Override
@@ -386,7 +386,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response put(URL url, int readTimeout) throws IOException, RequestException {
-		return execute(()->put(URL2URI(url), readTimeout));
+		return execute(()->put(url.toURI(), readTimeout));
 	}
 
 	@Override
@@ -396,7 +396,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response put(URL url, int readTimeout, Map<String, Object> parameters) throws IOException, RequestException {
-		return execute(()->put(URL2URI(url), readTimeout, parameters));
+		return execute(()->put(url.toURI(), readTimeout, parameters));
 	}
 
 	@Override
@@ -406,7 +406,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response put(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException {
-		return execute(()->put(URL2URI(url), readTimeout, headers));
+		return execute(()->put(url.toURI(), readTimeout, headers));
 	}
 
 	@Override
@@ -418,7 +418,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response put(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->put(URL2URI(url), readTimeout, parameters, headers));
+		return execute(()->put(url.toURI(), readTimeout, parameters, headers));
 	}
 
 	@Override
@@ -428,7 +428,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response put(URL url, int readTimeout, RequestBody<?> data) throws IOException, RequestException {
-		return execute(()->put(URL2URI(url), readTimeout, data));
+		return execute(()->put(url.toURI(), readTimeout, data));
 	}
 
 	@Override
@@ -440,7 +440,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response put(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
 			throws IOException, RequestException {
-		return execute(()->put(URL2URI(url), readTimeout, data, parameters));
+		return execute(()->put(url.toURI(), readTimeout, data, parameters));
 	}
 
 	@Override
@@ -452,13 +452,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response put(URL url, int readTimeout, RequestBody<?> data, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->put(URL2URI(url), readTimeout, data, headers));
+		return execute(()->put(url.toURI(), readTimeout, data, headers));
 	}
 
 	@Override
 	public Response put(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
 						List<Header> headers) throws IOException, RequestException {
-		return execute(()->put(URL2URI(url), readTimeout, data, parameters, headers));
+		return execute(()->put(url.toURI(), readTimeout, data, parameters, headers));
 	}
 
 	@Override
@@ -468,7 +468,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response patch(URL url) throws IOException, RequestException {
-		return execute(()->patch(URL2URI(url)));
+		return execute(()->patch(url.toURI()));
 	}
 
 	@Override
@@ -478,7 +478,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response patch(URL url, Map<String, Object> parameters) throws IOException, RequestException {
-		return execute(()->patch(URL2URI(url), parameters));
+		return execute(()->patch(url.toURI(), parameters));
 	}
 
 	@Override
@@ -488,7 +488,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response patch(URL url, List<Header> headers) throws IOException, RequestException {
-		return execute(()->patch(URL2URI(url), headers));
+		return execute(()->patch(url.toURI(), headers));
 	}
 
 	@Override
@@ -500,7 +500,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response patch(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->patch(URL2URI(url), parameters, headers));
+		return execute(()->patch(url.toURI(), parameters, headers));
 	}
 
 	@Override
@@ -510,7 +510,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response patch(URL url, RequestBody<?> data) throws IOException, RequestException {
-		return execute(()->patch(URL2URI(url), data));
+		return execute(()->patch(url.toURI(), data));
 	}
 
 	@Override
@@ -522,7 +522,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response patch(URL url, RequestBody<?> data, Map<String, Object> parameters)
 			throws IOException, RequestException {
-		return execute(()->patch(URL2URI(url), data, parameters));
+		return execute(()->patch(url.toURI(), data, parameters));
 	}
 
 	@Override
@@ -532,13 +532,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response patch(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException {
-		return execute(()->patch(URL2URI(url), data, headers));
+		return execute(()->patch(url.toURI(), data, headers));
 	}
 
 	@Override
 	public Response patch(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->patch(URL2URI(url), data, parameters, headers));
+		return execute(()->patch(url.toURI(), data, parameters, headers));
 	}
 
 	@Override
@@ -548,7 +548,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response patch(URL url, int readTimeout) throws IOException, RequestException {
-		return execute(()->patch(URL2URI(url), readTimeout));
+		return execute(()->patch(url.toURI(), readTimeout));
 	}
 
 	@Override
@@ -560,7 +560,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response patch(URL url, int readTimeout, Map<String, Object> parameters)
 			throws IOException, RequestException {
-		return execute(()->patch(URL2URI(url), readTimeout, parameters));
+		return execute(()->patch(url.toURI(), readTimeout, parameters));
 	}
 
 	@Override
@@ -570,7 +570,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response patch(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException {
-		return execute(()->patch(URL2URI(url), readTimeout, headers));
+		return execute(()->patch(url.toURI(), readTimeout, headers));
 	}
 
 	@Override
@@ -582,7 +582,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response patch(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->patch(URL2URI(url), readTimeout, parameters, headers));
+		return execute(()->patch(url.toURI(), readTimeout, parameters, headers));
 	}
 
 	@Override
@@ -592,7 +592,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response patch(URL url, int readTimeout, RequestBody<?> data) throws IOException, RequestException {
-		return execute(()->patch(URL2URI(url), readTimeout, data));
+		return execute(()->patch(url.toURI(), readTimeout, data));
 	}
 
 	@Override
@@ -604,7 +604,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response patch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
 			throws IOException, RequestException {
-		return execute(()->patch(URL2URI(url), readTimeout, data, parameters));
+		return execute(()->patch(url.toURI(), readTimeout, data, parameters));
 	}
 
 	@Override
@@ -616,13 +616,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response patch(URL url, int readTimeout, RequestBody<?> data, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->patch(URL2URI(url), readTimeout, data, headers));
+		return execute(()->patch(url.toURI(), readTimeout, data, headers));
 	}
 
 	@Override
 	public Response patch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
 						  List<Header> headers) throws IOException, RequestException {
-		return execute(()->patch(URL2URI(url), readTimeout, data, parameters, headers));
+		return execute(()->patch(url.toURI(), readTimeout, data, parameters, headers));
 	}
 
 	@Override
@@ -637,12 +637,12 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response delete(URL url) throws IOException, RequestException {
-		return execute(()->delete(URL2URI(url)));
+		return execute(()->delete(url.toURI()));
 	}
 
 	@Override
 	public Response delete(URL url, Map<String, Object> parameters) throws IOException, RequestException {
-		return execute(()->delete(URL2URI(url), parameters));
+		return execute(()->delete(url.toURI(), parameters));
 	}
 
 	@Override
@@ -652,13 +652,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response delete(URL url, List<Header> headers) throws IOException, RequestException {
-		return execute(()->delete(URL2URI(url), headers));
+		return execute(()->delete(url.toURI(), headers));
 	}
 
 	@Override
 	public Response delete(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->delete(URL2URI(url), parameters, headers));
+		return execute(()->delete(url.toURI(), parameters, headers));
 	}
 
 	@Override
@@ -674,13 +674,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response delete(URL url, int readTimeout) throws IOException, RequestException {
-		return execute(()->delete(URL2URI(url), readTimeout));
+		return execute(()->delete(url.toURI(), readTimeout));
 	}
 
 	@Override
 	public Response delete(URL url, int readTimeout, Map<String, Object> parameters)
 			throws IOException, RequestException {
-		return execute(()->delete(URL2URI(url), readTimeout, parameters));
+		return execute(()->delete(url.toURI(), readTimeout, parameters));
 	}
 
 	@Override
@@ -690,13 +690,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response delete(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException {
-		return execute(()->delete(URL2URI(url), readTimeout, headers));
+		return execute(()->delete(url.toURI(), readTimeout, headers));
 	}
 
 	@Override
 	public Response delete(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->delete(URL2URI(url), readTimeout, parameters, headers));
+		return execute(()->delete(url.toURI(), readTimeout, parameters, headers));
 	}
 
 	@Override
@@ -706,7 +706,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response connect(URL url) throws IOException, RequestException {
-		return execute(()->connect(URL2URI(url)));
+		return execute(()->connect(url.toURI()));
 	}
 
 	@Override
@@ -716,7 +716,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response connect(URL url, Map<String, Object> parameters) throws IOException, RequestException {
-		return execute(()->connect(URL2URI(url), parameters));
+		return execute(()->connect(url.toURI(), parameters));
 	}
 
 	@Override
@@ -726,13 +726,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response connect(URL url, List<Header> headers) throws IOException, RequestException {
-		return execute(()->connect(URL2URI(url), headers));
+		return execute(()->connect(url.toURI(), headers));
 	}
 
 	@Override
 	public Response connect(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->connect(URL2URI(url), parameters, headers));
+		return execute(()->connect(url.toURI(), parameters, headers));
 	}
 
 	@Override
@@ -742,7 +742,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response connect(URL url, int readTimeout) throws IOException, RequestException {
-		return execute(()->connect(URL2URI(url), readTimeout));
+		return execute(()->connect(url.toURI(), readTimeout));
 	}
 
 	@Override
@@ -754,7 +754,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response connect(URL url, int readTimeout, Map<String, Object> parameters)
 			throws IOException, RequestException {
-		return execute(()->connect(URL2URI(url), readTimeout, parameters));
+		return execute(()->connect(url.toURI(), readTimeout, parameters));
 	}
 
 	@Override
@@ -764,13 +764,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response connect(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException {
-		return execute(()->connect(URL2URI(url), readTimeout, headers));
+		return execute(()->connect(url.toURI(), readTimeout, headers));
 	}
 
 	@Override
 	public Response connect(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->connect(URL2URI(url), readTimeout, parameters, headers));
+		return execute(()->connect(url.toURI(), readTimeout, parameters, headers));
 	}
 
 	@Override
@@ -780,7 +780,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response trace(URL url) throws IOException, RequestException {
-		return execute(()->trace(URL2URI(url)));
+		return execute(()->trace(url.toURI()));
 	}
 
 	@Override
@@ -790,7 +790,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response trace(URL url, Map<String, Object> parameters) throws IOException, RequestException {
-		return execute(()->trace(URL2URI(url), parameters));
+		return execute(()->trace(url.toURI(), parameters));
 	}
 
 	@Override
@@ -800,13 +800,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response trace(URL url, List<Header> headers) throws IOException, RequestException {
-		return execute(()->trace(URL2URI(url), headers));
+		return execute(()->trace(url.toURI(), headers));
 	}
 
 	@Override
 	public Response trace(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->trace(URL2URI(url), parameters, headers));
+		return execute(()->trace(url.toURI(), parameters, headers));
 	}
 
 	@Override
@@ -816,7 +816,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response trace(URL url, int readTimeout) throws IOException, RequestException {
-		return execute(()->trace(URL2URI(url), readTimeout));
+		return execute(()->trace(url.toURI(), readTimeout));
 	}
 
 	@Override
@@ -828,7 +828,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response trace(URL url, int readTimeout, Map<String, Object> parameters)
 			throws IOException, RequestException {
-		return execute(()->trace(URL2URI(url), readTimeout, parameters));
+		return execute(()->trace(url.toURI(), readTimeout, parameters));
 	}
 
 	@Override
@@ -838,13 +838,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response trace(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException {
-		return execute(()->trace(URL2URI(url), readTimeout, headers));
+		return execute(()->trace(url.toURI(), readTimeout, headers));
 	}
 
 	@Override
 	public Response trace(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->trace(URL2URI(url), readTimeout, parameters, headers));
+		return execute(()->trace(url.toURI(), readTimeout, parameters, headers));
 	}
 
 	@Override
@@ -854,7 +854,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response copy(URL url) throws IOException, RequestException {
-		return execute(()->copy(URL2URI(url)));
+		return execute(()->copy(url.toURI()));
 	}
 
 	@Override
@@ -864,7 +864,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response copy(URL url, Map<String, Object> parameters) throws IOException, RequestException {
-		return execute(()->copy(URL2URI(url), parameters));
+		return execute(()->copy(url.toURI(), parameters));
 	}
 
 	@Override
@@ -874,13 +874,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response copy(URL url, List<Header> headers) throws IOException, RequestException {
-		return execute(()->copy(URL2URI(url), headers));
+		return execute(()->copy(url.toURI(), headers));
 	}
 
 	@Override
 	public Response copy(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->copy(URL2URI(url), parameters, headers));
+		return execute(()->copy(url.toURI(), parameters, headers));
 	}
 
 	@Override
@@ -890,7 +890,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response copy(URL url, int readTimeout) throws IOException, RequestException {
-		return execute(()->copy(URL2URI(url), readTimeout));
+		return execute(()->copy(url.toURI(), readTimeout));
 	}
 
 	@Override
@@ -902,7 +902,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response copy(URL url, int readTimeout, Map<String, Object> parameters)
 			throws IOException, RequestException {
-		return execute(()->copy(URL2URI(url), readTimeout, parameters));
+		return execute(()->copy(url.toURI(), readTimeout, parameters));
 	}
 
 	@Override
@@ -912,13 +912,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response copy(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException {
-		return execute(()->copy(URL2URI(url), readTimeout, headers));
+		return execute(()->copy(url.toURI(), readTimeout, headers));
 	}
 
 	@Override
 	public Response copy(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->copy(URL2URI(url), readTimeout, parameters, headers));
+		return execute(()->copy(url.toURI(), readTimeout, parameters, headers));
 	}
 
 	@Override
@@ -928,7 +928,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response move(URL url) throws IOException, RequestException {
-		return execute(()->move(URL2URI(url)));
+		return execute(()->move(url.toURI()));
 	}
 
 	@Override
@@ -938,7 +938,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response move(URL url, Map<String, Object> parameters) throws IOException, RequestException {
-		return execute(()->move(URL2URI(url), parameters));
+		return execute(()->move(url.toURI(), parameters));
 	}
 
 	@Override
@@ -948,13 +948,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response move(URL url, List<Header> headers) throws IOException, RequestException {
-		return execute(()->move(URL2URI(url), headers));
+		return execute(()->move(url.toURI(), headers));
 	}
 
 	@Override
 	public Response move(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->move(URL2URI(url), parameters, headers));
+		return execute(()->move(url.toURI(), parameters, headers));
 	}
 
 	@Override
@@ -964,7 +964,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response move(URL url, int readTimeout) throws IOException, RequestException {
-		return execute(()->move(URL2URI(url), readTimeout));
+		return execute(()->move(url.toURI(), readTimeout));
 	}
 
 	@Override
@@ -976,7 +976,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response move(URL url, int readTimeout, Map<String, Object> parameters)
 			throws IOException, RequestException {
-		return execute(()->move(URL2URI(url), readTimeout, parameters));
+		return execute(()->move(url.toURI(), readTimeout, parameters));
 	}
 
 	@Override
@@ -986,13 +986,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response move(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException {
-		return execute(()->move(URL2URI(url), readTimeout, headers));
+		return execute(()->move(url.toURI(), readTimeout, headers));
 	}
 
 	@Override
 	public Response move(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->move(URL2URI(url), readTimeout, parameters, headers));
+		return execute(()->move(url.toURI(), readTimeout, parameters, headers));
 	}
 
 	@Override
@@ -1002,7 +1002,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response head(URL url) throws IOException, RequestException {
-		return execute(()->head(URL2URI(url)));
+		return execute(()->head(url.toURI()));
 	}
 
 	@Override
@@ -1012,7 +1012,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response head(URL url, Map<String, Object> parameters) throws IOException, RequestException {
-		return execute(()->head(URL2URI(url), parameters));
+		return execute(()->head(url.toURI(), parameters));
 	}
 
 	@Override
@@ -1022,13 +1022,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response head(URL url, List<Header> headers) throws IOException, RequestException {
-		return execute(()->head(URL2URI(url), headers));
+		return execute(()->head(url.toURI(), headers));
 	}
 
 	@Override
 	public Response head(URL url, Map<String, Object> parameters, List<Header> headers) throws IOException,
 			RequestException {
-		return execute(()->head(URL2URI(url), parameters, headers));
+		return execute(()->head(url.toURI(), parameters, headers));
 	}
 
 	@Override
@@ -1038,7 +1038,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response head(URL url, int readTimeout) throws IOException, RequestException {
-		return execute(()->head(URL2URI(url), readTimeout));
+		return execute(()->head(url.toURI(), readTimeout));
 	}
 
 	@Override
@@ -1050,7 +1050,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response head(URL url, int readTimeout, Map<String, Object> parameters)
 			throws IOException, RequestException {
-		return execute(()->head(URL2URI(url), readTimeout, parameters));
+		return execute(()->head(url.toURI(), readTimeout, parameters));
 	}
 
 	@Override
@@ -1060,13 +1060,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response head(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException {
-		return execute(()->head(URL2URI(url), readTimeout, headers));
+		return execute(()->head(url.toURI(), readTimeout, headers));
 	}
 
 	@Override
 	public Response head(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->head(URL2URI(url), readTimeout, parameters, headers));
+		return execute(()->head(url.toURI(), readTimeout, parameters, headers));
 	}
 
 	@Override
@@ -1076,7 +1076,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response options(URL url) throws IOException, RequestException {
-		return execute(()->options(URL2URI(url)));
+		return execute(()->options(url.toURI()));
 	}
 
 	@Override
@@ -1086,7 +1086,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response options(URL url, Map<String, Object> parameters) throws IOException, RequestException {
-		return execute(()->options(URL2URI(url), parameters));
+		return execute(()->options(url.toURI(), parameters));
 	}
 
 	@Override
@@ -1096,13 +1096,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response options(URL url, List<Header> headers) throws IOException, RequestException {
-		return execute(()->options(URL2URI(url), headers));
+		return execute(()->options(url.toURI(), headers));
 	}
 
 	@Override
 	public Response options(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->options(URL2URI(url), parameters, headers));
+		return execute(()->options(url.toURI(), parameters, headers));
 	}
 
 	@Override
@@ -1112,7 +1112,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response options(URL url, int readTimeout) throws IOException, RequestException {
-		return execute(()->options(URL2URI(url), readTimeout));
+		return execute(()->options(url.toURI(), readTimeout));
 	}
 
 	@Override
@@ -1124,7 +1124,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response options(URL url, int readTimeout, Map<String, Object> parameters)
 			throws IOException, RequestException {
-		return execute(()->options(URL2URI(url), readTimeout, parameters));
+		return execute(()->options(url.toURI(), readTimeout, parameters));
 	}
 
 	@Override
@@ -1134,13 +1134,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response options(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException {
-		return execute(()->options(URL2URI(url), readTimeout, headers));
+		return execute(()->options(url.toURI(), readTimeout, headers));
 	}
 
 	@Override
 	public Response options(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->options(URL2URI(url), readTimeout, parameters, headers));
+		return execute(()->options(url.toURI(), readTimeout, parameters, headers));
 	}
 
 	@Override
@@ -1150,7 +1150,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response link(URL url) throws IOException, RequestException {
-		return execute(()->link(URL2URI(url)));
+		return execute(()->link(url.toURI()));
 	}
 
 	@Override
@@ -1160,7 +1160,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response link(URL url, Map<String, Object> parameters) throws IOException, RequestException {
-		return execute(()->link(URL2URI(url), parameters));
+		return execute(()->link(url.toURI(), parameters));
 	}
 
 	@Override
@@ -1170,13 +1170,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response link(URL url, List<Header> headers) throws IOException, RequestException {
-		return execute(()->link(URL2URI(url), headers));
+		return execute(()->link(url.toURI(), headers));
 	}
 
 	@Override
 	public Response link(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->link(URL2URI(url), parameters, headers));
+		return execute(()->link(url.toURI(), parameters, headers));
 	}
 
 	@Override
@@ -1186,7 +1186,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response link(URL url, int readTimeout) throws IOException, RequestException {
-		return execute(()->link(URL2URI(url), readTimeout));
+		return execute(()->link(url.toURI(), readTimeout));
 	}
 
 	@Override
@@ -1198,7 +1198,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response link(URL url, int readTimeout, Map<String, Object> parameters)
 			throws IOException, RequestException {
-		return execute(()->link(URL2URI(url), readTimeout, parameters));
+		return execute(()->link(url.toURI(), readTimeout, parameters));
 	}
 
 	@Override
@@ -1208,13 +1208,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response link(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException {
-		return execute(()->link(URL2URI(url), readTimeout, headers));
+		return execute(()->link(url.toURI(), readTimeout, headers));
 	}
 
 	@Override
 	public Response link(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->link(URL2URI(url), readTimeout, parameters, headers));
+		return execute(()->link(url.toURI(), readTimeout, parameters, headers));
 	}
 
 	@Override
@@ -1224,7 +1224,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response unlink(URL url) throws IOException, RequestException {
-		return execute(()->unlink(URL2URI(url)));
+		return execute(()->unlink(url.toURI()));
 	}
 
 	@Override
@@ -1234,7 +1234,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response unlink(URL url, Map<String, Object> parameters) throws IOException, RequestException {
-		return execute(()->unlink(URL2URI(url), parameters));
+		return execute(()->unlink(url.toURI(), parameters));
 	}
 
 	@Override
@@ -1244,13 +1244,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response unlink(URL url, List<Header> headers) throws IOException, RequestException {
-		return execute(()->unlink(URL2URI(url), headers));
+		return execute(()->unlink(url.toURI(), headers));
 	}
 
 	@Override
 	public Response unlink(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->unlink(URL2URI(url), parameters, headers));
+		return execute(()->unlink(url.toURI(), parameters, headers));
 	}
 
 	@Override
@@ -1260,7 +1260,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response unlink(URL url, int readTimeout) throws IOException, RequestException {
-		return execute(()->unlink(URL2URI(url), readTimeout));
+		return execute(()->unlink(url.toURI(), readTimeout));
 	}
 
 	@Override
@@ -1272,7 +1272,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response unlink(URL url, int readTimeout, Map<String, Object> parameters)
 			throws IOException, RequestException {
-		return execute(()->unlink(URL2URI(url), readTimeout, parameters));
+		return execute(()->unlink(url.toURI(), readTimeout, parameters));
 	}
 
 	@Override
@@ -1282,13 +1282,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response unlink(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException {
-		return execute(()->unlink(URL2URI(url), readTimeout, headers));
+		return execute(()->unlink(url.toURI(), readTimeout, headers));
 	}
 
 	@Override
 	public Response unlink(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->unlink(URL2URI(url), readTimeout, parameters, headers));
+		return execute(()->unlink(url.toURI(), readTimeout, parameters, headers));
 	}
 
 	@Override
@@ -1298,7 +1298,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response purge(URL url) throws IOException, RequestException {
-		return execute(()->purge(URL2URI(url)));
+		return execute(()->purge(url.toURI()));
 	}
 
 	@Override
@@ -1308,7 +1308,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response purge(URL url, Map<String, Object> parameters) throws IOException, RequestException {
-		return execute(()->purge(URL2URI(url), parameters));
+		return execute(()->purge(url.toURI(), parameters));
 	}
 
 	@Override
@@ -1318,13 +1318,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response purge(URL url, List<Header> headers) throws IOException, RequestException {
-		return execute(()->purge(URL2URI(url), headers));
+		return execute(()->purge(url.toURI(), headers));
 	}
 
 	@Override
 	public Response purge(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->purge(URL2URI(url), parameters, headers));
+		return execute(()->purge(url.toURI(), parameters, headers));
 	}
 
 	@Override
@@ -1334,7 +1334,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response purge(URL url, int readTimeout) throws IOException, RequestException {
-		return execute(()->purge(URL2URI(url), readTimeout));
+		return execute(()->purge(url.toURI(), readTimeout));
 	}
 
 	@Override
@@ -1346,7 +1346,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response purge(URL url, int readTimeout, Map<String, Object> parameters)
 			throws IOException, RequestException {
-		return execute(()->purge(URL2URI(url), readTimeout, parameters));
+		return execute(()->purge(url.toURI(), readTimeout, parameters));
 	}
 
 	@Override
@@ -1356,13 +1356,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response purge(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException {
-		return execute(()->purge(URL2URI(url), readTimeout, headers));
+		return execute(()->purge(url.toURI(), readTimeout, headers));
 	}
 
 	@Override
 	public Response purge(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->purge(URL2URI(url), readTimeout, parameters, headers));
+		return execute(()->purge(url.toURI(), readTimeout, parameters, headers));
 	}
 
 	@Override
@@ -1372,7 +1372,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response lock(URL url) throws IOException, RequestException {
-		return execute(()->lock(URL2URI(url)));
+		return execute(()->lock(url.toURI()));
 	}
 
 	@Override
@@ -1382,7 +1382,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response lock(URL url, Map<String, Object> parameters) throws IOException, RequestException {
-		return execute(()->lock(URL2URI(url), parameters));
+		return execute(()->lock(url.toURI(), parameters));
 	}
 
 	@Override
@@ -1392,13 +1392,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response lock(URL url, List<Header> headers) throws IOException, RequestException {
-		return execute(()->lock(URL2URI(url), headers));
+		return execute(()->lock(url.toURI(), headers));
 	}
 
 	@Override
 	public Response lock(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->lock(URL2URI(url), parameters, headers));
+		return execute(()->lock(url.toURI(), parameters, headers));
 	}
 
 	@Override
@@ -1408,7 +1408,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response lock(URL url, int readTimeout) throws IOException, RequestException {
-		return execute(()->lock(URL2URI(url), readTimeout));
+		return execute(()->lock(url.toURI(), readTimeout));
 	}
 
 	@Override
@@ -1420,7 +1420,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response lock(URL url, int readTimeout, Map<String, Object> parameters)
 			throws IOException, RequestException {
-		return execute(()->lock(URL2URI(url), readTimeout, parameters));
+		return execute(()->lock(url.toURI(), readTimeout, parameters));
 	}
 
 	@Override
@@ -1430,13 +1430,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response lock(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException {
-		return execute(()->lock(URL2URI(url), readTimeout, headers));
+		return execute(()->lock(url.toURI(), readTimeout, headers));
 	}
 
 	@Override
 	public Response lock(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->lock(URL2URI(url), readTimeout, parameters, headers));
+		return execute(()->lock(url.toURI(), readTimeout, parameters, headers));
 	}
 
 	@Override
@@ -1446,7 +1446,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response unlock(URL url) throws IOException, RequestException {
-		return execute(()->unlock(URL2URI(url)));
+		return execute(()->unlock(url.toURI()));
 	}
 
 	@Override
@@ -1456,7 +1456,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response unlock(URL url, Map<String, Object> parameters) throws IOException, RequestException {
-		return execute(()->unlock(URL2URI(url), parameters));
+		return execute(()->unlock(url.toURI(), parameters));
 	}
 
 	@Override
@@ -1466,13 +1466,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response unlock(URL url, List<Header> headers) throws IOException, RequestException {
-		return execute(()->unlock(URL2URI(url), headers));
+		return execute(()->unlock(url.toURI(), headers));
 	}
 
 	@Override
 	public Response unlock(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->unlock(URL2URI(url), parameters, headers));
+		return execute(()->unlock(url.toURI(), parameters, headers));
 	}
 
 	@Override
@@ -1482,7 +1482,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response unlock(URL url, int readTimeout) throws IOException, RequestException {
-		return execute(()->unlock(URL2URI(url), readTimeout));
+		return execute(()->unlock(url.toURI(), readTimeout));
 	}
 
 	@Override
@@ -1494,7 +1494,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response unlock(URL url, int readTimeout, Map<String, Object> parameters)
 			throws IOException, RequestException {
-		return execute(()->unlock(URL2URI(url), readTimeout, parameters));
+		return execute(()->unlock(url.toURI(), readTimeout, parameters));
 	}
 
 	@Override
@@ -1504,13 +1504,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response unlock(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException {
-		return execute(()->unlock(URL2URI(url), readTimeout, headers));
+		return execute(()->unlock(url.toURI(), readTimeout, headers));
 	}
 
 	@Override
 	public Response unlock(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->unlock(URL2URI(url), readTimeout, parameters, headers));
+		return execute(()->unlock(url.toURI(), readTimeout, parameters, headers));
 	}
 
 	@Override
@@ -1520,7 +1520,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response propfind(URL url) throws IOException, RequestException {
-		return execute(()->propfind(URL2URI(url)));
+		return execute(()->propfind(url.toURI()));
 	}
 
 	@Override
@@ -1530,7 +1530,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response propfind(URL url, Map<String, Object> parameters) throws IOException, RequestException {
-		return execute(()->propfind(URL2URI(url), parameters));
+		return execute(()->propfind(url.toURI(), parameters));
 	}
 
 	@Override
@@ -1540,13 +1540,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response propfind(URL url, List<Header> headers) throws IOException, RequestException {
-		return execute(()->propfind(URL2URI(url), headers));
+		return execute(()->propfind(url.toURI(), headers));
 	}
 
 	@Override
 	public Response propfind(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->propfind(URL2URI(url), parameters, headers));
+		return execute(()->propfind(url.toURI(), parameters, headers));
 	}
 
 	@Override
@@ -1556,7 +1556,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response propfind(URL url, int readTimeout) throws IOException, RequestException {
-		return execute(()->propfind(URL2URI(url), readTimeout));
+		return execute(()->propfind(url.toURI(), readTimeout));
 	}
 
 	@Override
@@ -1568,7 +1568,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response propfind(URL url, int readTimeout, Map<String, Object> parameters)
 			throws IOException, RequestException {
-		return execute(()->propfind(URL2URI(url), readTimeout, parameters));
+		return execute(()->propfind(url.toURI(), readTimeout, parameters));
 	}
 
 	@Override
@@ -1578,13 +1578,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response propfind(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException {
-		return execute(()->propfind(URL2URI(url), readTimeout, headers));
+		return execute(()->propfind(url.toURI(), readTimeout, headers));
 	}
 
 	@Override
 	public Response propfind(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->propfind(URL2URI(url), readTimeout, parameters, headers));
+		return execute(()->propfind(url.toURI(), readTimeout, parameters, headers));
 	}
 
 	@Override
@@ -1594,7 +1594,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response proppatch(URL url) throws IOException, RequestException {
-		return execute(()->proppatch(URL2URI(url)));
+		return execute(()->proppatch(url.toURI()));
 	}
 
 	@Override
@@ -1604,7 +1604,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response proppatch(URL url, Map<String, Object> parameters) throws IOException, RequestException {
-		return execute(()->proppatch(URL2URI(url), parameters));
+		return execute(()->proppatch(url.toURI(), parameters));
 	}
 
 	@Override
@@ -1614,7 +1614,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response proppatch(URL url, List<Header> headers) throws IOException, RequestException {
-		return execute(()->proppatch(URL2URI(url), headers));
+		return execute(()->proppatch(url.toURI(), headers));
 	}
 
 	@Override
@@ -1626,7 +1626,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response proppatch(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->proppatch(URL2URI(url), parameters, headers));
+		return execute(()->proppatch(url.toURI(), parameters, headers));
 	}
 
 	@Override
@@ -1636,7 +1636,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response proppatch(URL url, RequestBody<?> data) throws IOException, RequestException {
-		return execute(()->proppatch(URL2URI(url), data));
+		return execute(()->proppatch(url.toURI(), data));
 	}
 
 	@Override
@@ -1648,7 +1648,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response proppatch(URL url, RequestBody<?> data, Map<String, Object> parameters)
 			throws IOException, RequestException {
-		return execute(()->proppatch(URL2URI(url), data, parameters));
+		return execute(()->proppatch(url.toURI(), data, parameters));
 	}
 
 	@Override
@@ -1658,13 +1658,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response proppatch(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException {
-		return execute(()->proppatch(URL2URI(url), data, headers));
+		return execute(()->proppatch(url.toURI(), data, headers));
 	}
 
 	@Override
 	public Response proppatch(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->proppatch(URL2URI(url), data, parameters, headers));
+		return execute(()->proppatch(url.toURI(), data, parameters, headers));
 	}
 
 	@Override
@@ -1674,7 +1674,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response proppatch(URL url, int readTimeout) throws IOException, RequestException {
-		return execute(()->proppatch(URL2URI(url), readTimeout));
+		return execute(()->proppatch(url.toURI(), readTimeout));
 	}
 
 	@Override
@@ -1686,7 +1686,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response proppatch(URL url, int readTimeout, Map<String, Object> parameters)
 			throws IOException, RequestException {
-		return execute(()->proppatch(URL2URI(url), readTimeout, parameters));
+		return execute(()->proppatch(url.toURI(), readTimeout, parameters));
 	}
 
 	@Override
@@ -1696,7 +1696,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response proppatch(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException {
-		return execute(()->proppatch(URL2URI(url), readTimeout, headers));
+		return execute(()->proppatch(url.toURI(), readTimeout, headers));
 	}
 
 	@Override
@@ -1708,7 +1708,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response proppatch(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->proppatch(URL2URI(url), readTimeout, parameters, headers));
+		return execute(()->proppatch(url.toURI(), readTimeout, parameters, headers));
 	}
 
 	@Override
@@ -1718,7 +1718,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response proppatch(URL url, int readTimeout, RequestBody<?> data) throws IOException, RequestException {
-		return execute(()->proppatch(URL2URI(url), readTimeout, data));
+		return execute(()->proppatch(url.toURI(), readTimeout, data));
 	}
 
 	@Override
@@ -1730,7 +1730,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response proppatch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
 			throws IOException, RequestException {
-		return execute(()->proppatch(URL2URI(url), readTimeout, data, parameters));
+		return execute(()->proppatch(url.toURI(), readTimeout, data, parameters));
 	}
 
 	@Override
@@ -1742,13 +1742,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response proppatch(URL url, int readTimeout, RequestBody<?> data, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->proppatch(URL2URI(url), readTimeout, data, headers));
+		return execute(()->proppatch(url.toURI(), readTimeout, data, headers));
 	}
 
 	@Override
 	public Response proppatch(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
 							  List<Header> headers) throws IOException, RequestException {
-		return execute(()->proppatch(URL2URI(url), readTimeout, data, parameters, headers));
+		return execute(()->proppatch(url.toURI(), readTimeout, data, parameters, headers));
 	}
 
 	@Override
@@ -1758,7 +1758,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response report(URL url) throws IOException, RequestException {
-		return execute(()->report(URL2URI(url)));
+		return execute(()->report(url.toURI()));
 	}
 
 	@Override
@@ -1768,7 +1768,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response report(URL url, Map<String, Object> parameters) throws IOException, RequestException {
-		return execute(()->report(URL2URI(url), parameters));
+		return execute(()->report(url.toURI(), parameters));
 	}
 
 	@Override
@@ -1778,7 +1778,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response report(URL url, List<Header> headers) throws IOException, RequestException {
-		return execute(()->report(URL2URI(url), headers));
+		return execute(()->report(url.toURI(), headers));
 	}
 
 	@Override
@@ -1790,7 +1790,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response report(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->report(URL2URI(url), parameters, headers));
+		return execute(()->report(url.toURI(), parameters, headers));
 	}
 
 	@Override
@@ -1800,7 +1800,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response report(URL url, RequestBody<?> data) throws IOException, RequestException {
-		return execute(()->report(URL2URI(url), data));
+		return execute(()->report(url.toURI(), data));
 	}
 
 	@Override
@@ -1812,7 +1812,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response report(URL url, RequestBody<?> data, Map<String, Object> parameters)
 			throws IOException, RequestException {
-		return execute(()->report(URL2URI(url), data, parameters));
+		return execute(()->report(url.toURI(), data, parameters));
 	}
 
 	@Override
@@ -1822,13 +1822,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response report(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException {
-		return execute(()->report(URL2URI(url), data, headers));
+		return execute(()->report(url.toURI(), data, headers));
 	}
 
 	@Override
 	public Response report(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->report(URL2URI(url), data, parameters, headers));
+		return execute(()->report(url.toURI(), data, parameters, headers));
 	}
 
 	@Override
@@ -1838,7 +1838,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response report(URL url, int readTimeout) throws IOException, RequestException {
-		return execute(()->report(URL2URI(url), readTimeout));
+		return execute(()->report(url.toURI(), readTimeout));
 	}
 
 	@Override
@@ -1850,7 +1850,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response report(URL url, int readTimeout, Map<String, Object> parameters)
 			throws IOException, RequestException {
-		return execute(()->report(URL2URI(url), readTimeout, parameters));
+		return execute(()->report(url.toURI(), readTimeout, parameters));
 	}
 
 	@Override
@@ -1860,7 +1860,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response report(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException {
-		return execute(()->report(URL2URI(url), readTimeout, headers));
+		return execute(()->report(url.toURI(), readTimeout, headers));
 	}
 
 	@Override
@@ -1872,7 +1872,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response report(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->report(URL2URI(url), readTimeout, parameters, headers));
+		return execute(()->report(url.toURI(), readTimeout, parameters, headers));
 	}
 
 	@Override
@@ -1882,7 +1882,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response report(URL url, int readTimeout, RequestBody<?> data) throws IOException, RequestException {
-		return execute(()->report(URL2URI(url), readTimeout, data));
+		return execute(()->report(url.toURI(), readTimeout, data));
 	}
 
 	@Override
@@ -1894,7 +1894,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response report(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters)
 			throws IOException, RequestException {
-		return execute(()->report(URL2URI(url), readTimeout, data, parameters));
+		return execute(()->report(url.toURI(), readTimeout, data, parameters));
 	}
 
 	@Override
@@ -1906,13 +1906,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response report(URL url, int readTimeout, RequestBody<?> data, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->report(URL2URI(url), readTimeout, data, headers));
+		return execute(()->report(url.toURI(), readTimeout, data, headers));
 	}
 
 	@Override
 	public Response report(URL url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
 						   List<Header> headers) throws IOException, RequestException {
-		return execute(()->report(URL2URI(url), readTimeout, data, parameters, headers));
+		return execute(()->report(url.toURI(), readTimeout, data, parameters, headers));
 	}
 
 	@Override
@@ -1922,7 +1922,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response view(URL url) throws IOException, RequestException {
-		return execute(()->view(URL2URI(url)));
+		return execute(()->view(url.toURI()));
 	}
 
 	@Override
@@ -1932,7 +1932,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response view(URL url, Map<String, Object> parameters) throws IOException, RequestException {
-		return execute(()->view(URL2URI(url), parameters));
+		return execute(()->view(url.toURI(), parameters));
 	}
 
 	@Override
@@ -1942,13 +1942,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response view(URL url, List<Header> headers) throws IOException, RequestException {
-		return execute(()->view(URL2URI(url), headers));
+		return execute(()->view(url.toURI(), headers));
 	}
 
 	@Override
 	public Response view(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->view(URL2URI(url), parameters, headers));
+		return execute(()->view(url.toURI(), parameters, headers));
 	}
 
 	@Override
@@ -1958,7 +1958,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response view(URL url, int readTimeout) throws IOException, RequestException {
-		return execute(()->view(URL2URI(url), readTimeout));
+		return execute(()->view(url.toURI(), readTimeout));
 	}
 
 	@Override
@@ -1970,7 +1970,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response view(URL url, int readTimeout, Map<String, Object> parameters)
 			throws IOException, RequestException {
-		return execute(()->view(URL2URI(url), readTimeout, parameters));
+		return execute(()->view(url.toURI(), readTimeout, parameters));
 	}
 
 	@Override
@@ -1980,13 +1980,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response view(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException {
-		return execute(()->view(URL2URI(url), readTimeout, headers));
+		return execute(()->view(url.toURI(), readTimeout, headers));
 	}
 
 	@Override
 	public Response view(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->view(URL2URI(url), readTimeout, parameters, headers));
+		return execute(()->view(url.toURI(), readTimeout, parameters, headers));
 	}
 
 	@Override
@@ -1996,7 +1996,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response wrapped(URL url) throws IOException, RequestException {
-		return execute(()->wrapped(URL2URI(url)));
+		return execute(()->wrapped(url.toURI()));
 	}
 
 	@Override
@@ -2006,7 +2006,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response wrapped(URL url, Map<String, Object> parameters) throws IOException, RequestException {
-		return execute(()->wrapped(URL2URI(url), parameters));
+		return execute(()->wrapped(url.toURI(), parameters));
 	}
 
 	@Override
@@ -2016,13 +2016,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response wrapped(URL url, List<Header> headers) throws IOException, RequestException {
-		return execute(()->wrapped(URL2URI(url), headers));
+		return execute(()->wrapped(url.toURI(), headers));
 	}
 
 	@Override
 	public Response wrapped(URL url, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->wrapped(URL2URI(url), parameters, headers));
+		return execute(()->wrapped(url.toURI(), parameters, headers));
 	}
 
 	@Override
@@ -2032,7 +2032,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response wrapped(URL url, int readTimeout) throws IOException, RequestException {
-		return execute(()->wrapped(URL2URI(url), readTimeout));
+		return execute(()->wrapped(url.toURI(), readTimeout));
 	}
 
 	@Override
@@ -2044,7 +2044,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response wrapped(URL url, int readTimeout, Map<String, Object> parameters)
 			throws IOException, RequestException {
-		return execute(()->wrapped(URL2URI(url), readTimeout, parameters));
+		return execute(()->wrapped(url.toURI(), readTimeout, parameters));
 	}
 
 	@Override
@@ -2054,13 +2054,13 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response wrapped(URL url, int readTimeout, List<Header> headers) throws IOException, RequestException {
-		return execute(()->wrapped(URL2URI(url), readTimeout, headers));
+		return execute(()->wrapped(url.toURI(), readTimeout, headers));
 	}
 
 	@Override
 	public Response wrapped(URL url, int readTimeout, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->wrapped(URL2URI(url), readTimeout, parameters, headers));
+		return execute(()->wrapped(url.toURI(), readTimeout, parameters, headers));
 	}
 
 	@Override
@@ -2070,7 +2070,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 
 	@Override
 	public Response request(URL url, RequestMethod requestMethod) throws IOException, RequestException {
-		return execute(()->request(URL2URI(url), requestMethod));
+		return execute(()->request(url.toURI(), requestMethod));
 	}
 
 	@Override
@@ -2082,7 +2082,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response request(URL url, RequestMethod requestMethod, Map<String, Object> parameters) throws
 			IOException, RequestException {
-		return execute(()->request(URL2URI(url), requestMethod, parameters));
+		return execute(()->request(url.toURI(), requestMethod, parameters));
 	}
 
 	@Override
@@ -2094,7 +2094,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response request(URL url, RequestMethod requestMethod, List<Header> headers) throws IOException,
 			RequestException {
-		return execute(()->request(URL2URI(url), requestMethod, headers));
+		return execute(()->request(url.toURI(), requestMethod, headers));
 	}
 
 	@Override
@@ -2106,7 +2106,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response request(URL url, RequestMethod requestMethod, Map<String, Object> parameters, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->request(URL2URI(url), requestMethod, parameters, headers));
+		return execute(()->request(url.toURI(), requestMethod, parameters, headers));
 	}
 
 	@Override
@@ -2118,7 +2118,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response request(URL url, RequestMethod requestMethod, RequestBody<?> data) throws IOException,
 			RequestException {
-		return execute(()->request(URL2URI(url), requestMethod, data));
+		return execute(()->request(url.toURI(), requestMethod, data));
 	}
 
 	@Override
@@ -2130,7 +2130,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response request(URL url, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters)
 			throws IOException, RequestException {
-		return execute(()->request(URL2URI(url), requestMethod, data, parameters));
+		return execute(()->request(url.toURI(), requestMethod, data, parameters));
 	}
 
 	@Override
@@ -2142,7 +2142,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response request(URL url, RequestMethod requestMethod, RequestBody<?> data, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->request(URL2URI(url), requestMethod, data, headers));
+		return execute(()->request(url.toURI(), requestMethod, data, headers));
 	}
 
 	@Override
@@ -2199,7 +2199,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response request(URL url, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters,
 							List<Header> headers) throws IOException, RequestException {
-		return execute(()->request(URL2URI(url), requestMethod, data, parameters, headers));
+		return execute(()->request(url.toURI(), requestMethod, data, parameters, headers));
 	}
 
 	@Override
@@ -2211,7 +2211,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response request(URL url, RequestMethod requestMethod, int readTimeout)
 			throws IOException, RequestException {
-		return execute(()->request(URL2URI(url), requestMethod, readTimeout));
+		return execute(()->request(url.toURI(), requestMethod, readTimeout));
 	}
 
 	@Override
@@ -2223,7 +2223,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response request(URL url, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters)
 			throws IOException, RequestException {
-		return execute(()->request(URL2URI(url), requestMethod, readTimeout, parameters));
+		return execute(()->request(url.toURI(), requestMethod, readTimeout, parameters));
 	}
 
 	@Override
@@ -2235,7 +2235,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response request(URL url, RequestMethod requestMethod, int readTimeout, List<Header> headers)
 			throws IOException, RequestException {
-		return execute(()->request(URL2URI(url), requestMethod, readTimeout, headers));
+		return execute(()->request(url.toURI(), requestMethod, readTimeout, headers));
 	}
 
 	@Override
@@ -2247,7 +2247,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response request(URL url, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters,
 							List<Header> headers) throws IOException, RequestException {
-		return execute(()->request(URL2URI(url), requestMethod, readTimeout, parameters, headers));
+		return execute(()->request(url.toURI(), requestMethod, readTimeout, parameters, headers));
 	}
 
 	@Override
@@ -2259,7 +2259,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data)
 			throws IOException, RequestException {
-		return execute(()->request(URL2URI(url), requestMethod, readTimeout, data));
+		return execute(()->request(url.toURI(), requestMethod, readTimeout, data));
 	}
 
 	@Override
@@ -2272,7 +2272,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
 							Map<String, Object> parameters) throws IOException, RequestException {
-		return execute(()->request(URL2URI(url), requestMethod, readTimeout, data, parameters));
+		return execute(()->request(url.toURI(), requestMethod, readTimeout, data, parameters));
 	}
 
 	@Override
@@ -2284,7 +2284,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
 							List<Header> headers) throws IOException, RequestException {
-		return execute(()->request(URL2URI(url), requestMethod, readTimeout, data, headers));
+		return execute(()->request(url.toURI(), requestMethod, readTimeout, data, headers));
 	}
 
 	@Override
@@ -2341,7 +2341,7 @@ public abstract class AbstractHttpClient extends AbstractBaseHttpClient implemen
 	@Override
 	public Response request(URL url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
 							Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException {
-		return execute(()->request(URL2URI(url), requestMethod, readTimeout, data, parameters, headers));
+		return execute(()->request(url.toURI(), requestMethod, readTimeout, data, parameters, headers));
 	}
 
 	protected static <T> T execute(final Execute<T> execute) throws IOException, RequestException {

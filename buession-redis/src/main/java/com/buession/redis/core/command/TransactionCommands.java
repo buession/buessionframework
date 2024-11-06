@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
@@ -38,13 +38,11 @@ import java.util.List;
 public interface TransactionCommands extends RedisCommands {
 
 	/**
-	 * 标记事务开始
+	 * 取消事务，放弃执行事务块内的所有命令
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/transaction/multi.html" target="_blank">http://redisdoc.com/transaction/multi.html</a></p>
-	 *
-	 * @return 开启事务状态
+	 * <p>详情说明 <a href="http://redisdoc.com/transaction/discard.html" target="_blank">http://redisdoc.com/transaction/discard.html</a></p>
 	 */
-	Status multi();
+	void discard();
 
 	/**
 	 * 执行所有事务块内的命令
@@ -56,11 +54,24 @@ public interface TransactionCommands extends RedisCommands {
 	List<Object> exec();
 
 	/**
-	 * 取消事务，放弃执行事务块内的所有命令
+	 * 标记事务开始
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/transaction/discard.html" target="_blank">http://redisdoc.com/transaction/discard.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/transaction/multi.html" target="_blank">http://redisdoc.com/transaction/multi.html</a></p>
+	 *
+	 * @return 开启事务状态
 	 */
-	void discard();
+	Status multi();
+
+	/**
+	 * 取消 WATCH 命令对所有 key 的监视；
+	 * 如果在执行 WATCH 命令之后， EXEC 命令或 DISCARD 命令先被执行了的话，那么就不需要再执行 UNWATCH 了
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/transaction/unwatch.html" target="_blank">http://redisdoc
+	 * .com/transaction/unwatch.html</a></p>
+	 *
+	 * @return 总是返回 Status.SUCCESS
+	 */
+	Status unwatch();
 
 	/**
 	 * 监视一个或多个 key ，如果在事务执行之前这个或这些 key 被其他命令所改动，那么事务将被打断
@@ -85,16 +96,5 @@ public interface TransactionCommands extends RedisCommands {
 	 * @return 总是返回 Status.SUCCESS
 	 */
 	Status watch(final byte[]... keys);
-
-	/**
-	 * 取消 WATCH 命令对所有 key 的监视；
-	 * 如果在执行 WATCH 命令之后， EXEC 命令或 DISCARD 命令先被执行了的话，那么就不需要再执行 UNWATCH 了
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/transaction/unwatch.html" target="_blank">http://redisdoc
-	 * .com/transaction/unwatch.html</a></p>
-	 *
-	 * @return 总是返回 Status.SUCCESS
-	 */
-	Status unwatch();
 
 }

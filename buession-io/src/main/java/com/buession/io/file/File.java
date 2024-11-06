@@ -40,12 +40,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 
 /**
+ * {@link java.io.File} 扩展
+ *
  * @author Yong.Teng
  */
 public class File extends java.io.File {
@@ -130,25 +132,11 @@ public class File extends java.io.File {
 	 * 		IO 异常
 	 */
 	public byte[] read() throws IOException {
-		int size = 4096;
-		BufferedInputStream bis = new FileBufferedInputStream(this);
-		byte[] tempChars = new byte[size];
-		int num = 0;
-		ArrayList<Byte> bytes = new ArrayList<>();
+		final BufferedInputStream bis = new FileBufferedInputStream(this);
+		final byte[] result = new byte[(int) this.length()];
 
-		while((num = bis.read(tempChars)) != -1){
-			for(int i = 0; i < num; i++){
-				bytes.add(tempChars[i]);
-			}
-		}
+		bis.read(result);
 		bis.close();
-
-		Byte[] oBytes = bytes.toArray(new Byte[0]);
-		byte[] result = new byte[oBytes.length];
-
-		for(int i = 0; i < oBytes.length; i++){
-			result[i] = oBytes[i];
-		}
 
 		return result;
 	}
@@ -176,18 +164,8 @@ public class File extends java.io.File {
 	 * 		IO 异常
 	 */
 	public void write(final char[] chars) throws IOException {
-		BufferedOutputStream bos = new FileBufferedOutputStream(this);
-
-		for(char c : chars){
-			byte[] b = new byte[2];
-			b[0] = (byte) ((c & 0xFF00) >> 8);
-			b[1] = (byte) (c & 0xFF);
-
-			bos.write(b);
-		}
-
-		bos.flush();
-		bos.close();
+		final BufferedOutputStream bos = new FileBufferedOutputStream(this);
+		write(bos, chars);
 	}
 
 	/**
@@ -200,11 +178,25 @@ public class File extends java.io.File {
 	 * 		IO 异常
 	 */
 	public void write(final byte[] bytes) throws IOException {
-		BufferedOutputStream bos = new FileBufferedOutputStream(this);
+		final BufferedOutputStream bos = new FileBufferedOutputStream(this);
 
 		bos.write(bytes);
-		bos.flush();
-		bos.close();
+		afterWrite(bos);
+	}
+
+	/**
+	 * 将输入流写入文件
+	 *
+	 * @param stream
+	 * 		输入流
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @since 3.0.0
+	 */
+	public void write(final InputStream stream) throws IOException {
+		final BufferedOutputStream bos = new FileBufferedOutputStream(this);
+		write(bos, stream);
 	}
 
 	/**
@@ -236,18 +228,8 @@ public class File extends java.io.File {
 	 * @since 1.2.0
 	 */
 	public void write(final char[] chars, boolean append) throws IOException {
-		BufferedOutputStream bos = new FileBufferedOutputStream(this, append);
-
-		for(char c : chars){
-			byte[] b = new byte[2];
-			b[0] = (byte) ((c & 0xFF00) >> 8);
-			b[1] = (byte) (c & 0xFF);
-
-			bos.write(b);
-		}
-
-		bos.flush();
-		bos.close();
+		final BufferedOutputStream bos = new FileBufferedOutputStream(this, append);
+		write(bos, chars);
 	}
 
 	/**
@@ -263,11 +245,27 @@ public class File extends java.io.File {
 	 * @since 1.2.0
 	 */
 	public void write(final byte[] bytes, boolean append) throws IOException {
-		BufferedOutputStream bos = new FileBufferedOutputStream(this, append);
+		final BufferedOutputStream bos = new FileBufferedOutputStream(this, append);
 
 		bos.write(bytes);
-		bos.flush();
-		bos.close();
+		afterWrite(bos);
+	}
+
+	/**
+	 * 将输入流写入文件
+	 *
+	 * @param stream
+	 * 		输入流
+	 * @param append
+	 * 		是否追加写入
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @since 3.0.0
+	 */
+	public void write(final InputStream stream, boolean append) throws IOException {
+		final BufferedOutputStream bos = new FileBufferedOutputStream(this, append);
+		write(bos, stream);
 	}
 
 	/**
@@ -290,10 +288,10 @@ public class File extends java.io.File {
 			throw new IOException(getPath() + " is not a file.");
 		}
 
-		FileInputStream fs = new FileInputStream(this);
-		String result = DigestUtils.md5Hex(fs);
+		final FileInputStream fis = new FileInputStream(this);
+		String result = DigestUtils.md5Hex(fis);
 
-		fs.close();
+		fis.close();
 
 		return result;
 	}
@@ -318,10 +316,10 @@ public class File extends java.io.File {
 			throw new IOException(getPath() + " is not a file.");
 		}
 
-		FileInputStream fs = new FileInputStream(this);
-		String result = DigestUtils.sha1Hex(fs);
+		final FileInputStream fis = new FileInputStream(this);
+		String result = DigestUtils.sha1Hex(fis);
 
-		fs.close();
+		fis.close();
 
 		return result;
 	}
@@ -396,7 +394,7 @@ public class File extends java.io.File {
 	 * @since 2.3.3
 	 */
 	public void createSymbolicLink(final java.io.File dest, final boolean overwrite) throws IOException {
-		Assert.isNull(dest, "Dest path cloud not be null.");
+		Assert.isNull(dest, "Destination path cloud not be null.");
 
 		final Path destPath = dest.toPath();
 
@@ -417,6 +415,34 @@ public class File extends java.io.File {
 		}
 
 		Files.createSymbolicLink(destPath, this.toPath());
+	}
+
+	private void write(final BufferedOutputStream bos, final char[] chars) throws IOException {
+		for(char c : chars){
+			byte[] b = new byte[2];
+			b[0] = (byte) ((c & 0xFF00) >> 8);
+			b[1] = (byte) (c & 0xFF);
+
+			bos.write(b);
+		}
+
+		afterWrite(bos);
+	}
+
+	private void write(final BufferedOutputStream bos, final InputStream stream) throws IOException {
+		final byte[] buffer = new byte[1024];
+		int readSize;
+
+		while((readSize = stream.read(buffer)) != -1){
+			bos.write(buffer, 0, readSize);
+		}
+
+		afterWrite(bos);
+	}
+
+	protected static void afterWrite(final BufferedOutputStream bos) throws IOException {
+		bos.flush();
+		bos.close();
 	}
 
 	private final static class FileBufferedInputStream extends BufferedInputStream {

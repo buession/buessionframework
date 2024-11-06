@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.params;
@@ -37,17 +37,13 @@ import redis.clients.jedis.GeoCoordinate;
  */
 public final class GeoConverter implements Converter<Geo, GeoCoordinate> {
 
-	public final static GeoConverter INSTANCE = new GeoConverter();
-
-	public final static MapConverter<String, Geo, String, GeoCoordinate> STRING_MAP_CONVERTER = new MapConverter<>(
-			(key)->key, INSTANCE);
-
-	public final static MapConverter<byte[], Geo, byte[], GeoCoordinate> BINARY_MAP_CONVERTER = new MapConverter<>(
-			(key)->key, INSTANCE);
-
 	@Override
-	public GeoCoordinate convert(final Geo source){
+	public GeoCoordinate convert(final Geo source) {
 		return new GeoCoordinate(source.getLongitude(), source.getLatitude());
+	}
+
+	public static <K> MapConverter<K, Geo, K, GeoCoordinate> mapConverter() {
+		return new MapConverter<>((key)->key, new GeoConverter());
 	}
 
 }

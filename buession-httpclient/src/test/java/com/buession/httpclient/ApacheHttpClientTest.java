@@ -19,24 +19,20 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient;
 
-import com.buession.httpclient.core.ChunkedInputStreamRequestBody;
+import com.buession.httpclient.core.Configuration;
 import com.buession.httpclient.core.EncodedFormRequestBody;
 import com.buession.httpclient.core.Header;
-import com.buession.httpclient.core.HtmlRawRequestBody;
-import com.buession.httpclient.core.MultipartFormRequestBody;
 import com.buession.httpclient.core.Response;
 import com.buession.httpclient.exception.RequestException;
 import com.buession.lang.Gender;
 import com.google.common.io.CharStreams;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -50,7 +46,7 @@ public class ApacheHttpClientTest {
 	private static ApacheHttpClient httpClient = new ApacheHttpClient();
 
 	@Test
-	public void responseHeaders() throws IOException, RequestException{
+	public void responseHeaders() throws IOException, RequestException {
 		Response response = httpClient.get("https://shirojs.buession.com/manual/1.1/index.html");
 		for(Header header : response.getHeaders()){
 			System.out.println(header.toString());
@@ -58,7 +54,7 @@ public class ApacheHttpClientTest {
 	}
 
 	@Test
-	public void responseBody() throws IOException, RequestException{
+	public void responseBody() throws IOException, RequestException {
 		Response response = httpClient.get("https://shirojs.buession.com/support.html");
 		System.out.println(response.getBody());
 
@@ -67,7 +63,7 @@ public class ApacheHttpClientTest {
 	}
 
 	@Test
-	public void encodedFormRequestBody() throws IOException, RequestException{
+	public void encodedFormRequestBody() throws IOException, RequestException {
 		EncodedFormRequestBody encodedFormRequestBody = new EncodedFormRequestBody();
 
 		encodedFormRequestBody.addRequestBodyElement("username", "username");
@@ -77,6 +73,24 @@ public class ApacheHttpClientTest {
 		Response response = httpClient.post("https://www.buession.com/upload/test/encodedFormRequest",
 				encodedFormRequestBody);
 		System.out.println(response.getBody());
+	}
+
+	@Test
+	public void proxy() throws IOException, RequestException {
+		Configuration.Proxy proxy = new Configuration.Proxy();
+
+		proxy.setHostname("127.0.0.1");
+		proxy.setPort(7890);
+
+		Configuration configuration = new Configuration();
+
+		configuration.setProxy(proxy);
+
+		ApacheHttpClient httpClient = new ApacheHttpClient(configuration);
+		Response response = httpClient.get("https://www.google.com");
+		for(Header header : response.getHeaders()){
+			System.out.println(header.toString());
+		}
 	}
 
 }

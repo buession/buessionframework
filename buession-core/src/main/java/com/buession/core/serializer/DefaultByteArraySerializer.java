@@ -19,13 +19,11 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.serializer;
 
-import com.buession.core.deserializer.DefaultByteArrayDeserializer;
-import com.buession.core.deserializer.DeserializerException;
 import com.buession.core.utils.Assert;
 
 import java.io.ByteArrayOutputStream;
@@ -46,7 +44,7 @@ public class DefaultByteArraySerializer extends AbstractByteArraySerializer {
 	private final static int BYTE_ARRAY_OUTPUT_STREAM_SIZE = 128;
 
 	@Override
-	public <V> String serialize(final V object, final String charsetName) throws SerializerException{
+	public <V> String serialize(final V object, final String charsetName) throws SerializerException {
 		try{
 			return URLEncoder.encode(baosWrite(object), charsetName);
 		}catch(IOException e){
@@ -56,12 +54,12 @@ public class DefaultByteArraySerializer extends AbstractByteArraySerializer {
 	}
 
 	@Override
-	public <V> String serialize(final V object, final Charset charset) throws SerializerException{
+	public <V> String serialize(final V object, final Charset charset) throws SerializerException {
 		return serialize(object, charset.name());
 	}
 
 	@Override
-	public <V> byte[] serializeAsBytes(final V object, final String charsetName) throws SerializerException{
+	public <V> byte[] serializeAsBytes(final V object, final String charsetName) throws SerializerException {
 		Assert.isNull(object, "Object cloud not be null.");
 
 		if((object instanceof Serializable) == false){
@@ -89,55 +87,11 @@ public class DefaultByteArraySerializer extends AbstractByteArraySerializer {
 	}
 
 	@Override
-	public <V> byte[] serializeAsBytes(final V object, final Charset charset) throws SerializerException{
+	public <V> byte[] serializeAsBytes(final V object, final Charset charset) throws SerializerException {
 		return serializeAsBytes(object, charset.name());
 	}
 
-	@Deprecated
-	@Override
-	public <V> V deserialize(final String str, final String charsetName) throws SerializerException{
-		DefaultByteArrayDeserializer deserializer = new DefaultByteArrayDeserializer();
-		try{
-			return deserializer.deserialize(str, charsetName);
-		}catch(DeserializerException e){
-			throw new SerializerException(e.getMessage(), e);
-		}
-	}
-
-	@Deprecated
-	@Override
-	public <V> V deserialize(final String str, final Charset charset) throws SerializerException{
-		DefaultByteArrayDeserializer deserializer = new DefaultByteArrayDeserializer();
-		try{
-			return deserializer.deserialize(str, charset);
-		}catch(DeserializerException e){
-			throw new SerializerException(e.getMessage(), e);
-		}
-	}
-
-	@Deprecated
-	@Override
-	public <V> V deserialize(final byte[] bytes, final String charsetName) throws SerializerException{
-		DefaultByteArrayDeserializer deserializer = new DefaultByteArrayDeserializer();
-		try{
-			return deserializer.deserialize(bytes, charsetName);
-		}catch(DeserializerException e){
-			throw new SerializerException(e.getMessage(), e);
-		}
-	}
-
-	@Deprecated
-	@Override
-	public <V> V deserialize(final byte[] bytes, final Charset charset) throws SerializerException{
-		DefaultByteArrayDeserializer deserializer = new DefaultByteArrayDeserializer();
-		try{
-			return deserializer.deserialize(bytes, charset);
-		}catch(DeserializerException e){
-			throw new SerializerException(e.getMessage(), e);
-		}
-	}
-
-	protected static <V> String baosWrite(final V value) throws IOException{
+	protected static <V> String baosWrite(final V value) throws IOException {
 		Assert.isNull(value, "Object cloud not be null.");
 
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

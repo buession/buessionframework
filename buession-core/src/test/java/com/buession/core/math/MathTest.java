@@ -24,8 +24,8 @@
  */
 package com.buession.core.math;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Yong.Teng
@@ -34,8 +34,8 @@ import org.junit.Test;
 public class MathTest {
 
 	@Test
-	public void continuousSum(){
-		Assert.assertEquals(5050, Math.continuousSum(1, 100));
+	public void continuousSum() {
+		Assertions.assertEquals(5050, Math.continuousSum(1, 100));
 	}
 
 }

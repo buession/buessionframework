@@ -19,34 +19,34 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://buession.buession.com.cn/LICENSE 												       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2018 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Yong.Teng
  */
 public class TypeTest {
 
-    @Test
-    public void test(){
-        SimpleType<String> simpleType = new SimpleType<>();
-        simpleType.getType();
-    }
+	@Test
+	public void test() {
+		SimpleType<String> simpleType = new SimpleType<>();
+		simpleType.getType();
+	}
 
-    public static interface IType<T> {
+	public static interface IType<T> {
 
-    }
+	}
 
 
-    public final static class SimpleType<T> implements IType<T> {
+	public final static class SimpleType<T> implements IType<T> {
 
-        public void getType(){
-        }
+		public void getType() {
+		}
 
-    }
+	}
 
 }

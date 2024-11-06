@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package okhttp3.nio;
@@ -29,6 +29,7 @@ import okhttp3.OkHttpClient;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -46,6 +47,11 @@ public class HttpAsyncClientBuilder {
 
 	public static HttpAsyncClientBuilder create() {
 		return new HttpAsyncClientBuilder();
+	}
+
+	public HttpAsyncClientBuilder setRetryOnConnectionFailure(Boolean retryOnConnectionFailure) {
+		Optional.ofNullable(retryOnConnectionFailure).ifPresent(builder::retryOnConnectionFailure);
+		return this;
 	}
 
 	public HttpAsyncClientBuilder setConnectTimeout(long connectTimeout) {
@@ -73,26 +79,18 @@ public class HttpAsyncClientBuilder {
 	}
 
 	public HttpAsyncClientBuilder setFollowRedirects(Boolean followRedirects) {
-		if(followRedirects != null){
-			builder.followRedirects(followRedirects);
-		}
-
+		Optional.ofNullable(followRedirects).ifPresent(builder::followRedirects);
+		Optional.ofNullable(followRedirects).ifPresent(builder::followSslRedirects);
 		return this;
 	}
 
 	public HttpAsyncClientBuilder setSSLSocketFactory(SSLSocketFactory sslSocketFactory) {
-		if(sslSocketFactory != null){
-			builder.sslSocketFactory(sslSocketFactory);
-		}
-
+		Optional.ofNullable(sslSocketFactory).ifPresent(builder::sslSocketFactory);
 		return this;
 	}
 
 	public HttpAsyncClientBuilder setSSLHostnameVerifier(HostnameVerifier hostnameVerifier) {
-		if(hostnameVerifier != null){
-			builder.hostnameVerifier(hostnameVerifier);
-		}
-
+		Optional.ofNullable(hostnameVerifier).ifPresent(builder::hostnameVerifier);
 		return this;
 	}
 
@@ -116,7 +114,9 @@ public class HttpAsyncClientBuilder {
 			if(connectionManager.getMaxRequests() > 0){
 				client.dispatcher().setMaxRequests(connectionManager.getMaxRequests());
 			}
-			client.dispatcher().setMaxRequestsPerHost(connectionManager.getMaxRequestsPerHost());
+			if(connectionManager.getMaxRequestsPerHost() > 0){
+				client.dispatcher().setMaxRequestsPerHost(connectionManager.getMaxRequestsPerHost());
+			}
 		}
 
 		return client;

@@ -19,13 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
 
 import com.buession.net.ssl.SslConfiguration;
 
+import java.net.InetAddress;
+import java.util.Collection;
 import java.util.StringJoiner;
 
 /**
@@ -36,7 +38,9 @@ import java.util.StringJoiner;
 public class Configuration {
 
 	/**
-	 * @since 2.3.0
+	 * 是否在多个实例之间共享连接管理器
+	 *
+	 * @since 3.0.0
 	 */
 	private Boolean connectionManagerShared;
 
@@ -50,44 +54,58 @@ public class Configuration {
 	/**
 	 * 最大连接数
 	 */
-	private int maxConnections = 5000;
+	private Integer maxConnections = 5000;
 
 	/**
 	 * 每个路由的最大连接数
 	 */
-	private int maxPerRoute = 500;
+	private Integer maxPerRoute = 500;
 
 	/**
 	 * 最大并发请求数量
 	 *
 	 * @since 2.3.2
 	 */
-	private int maxRequests;
+	private Integer maxRequests;
 
 	/**
 	 * 空闲连接存活时长，单位：毫秒
 	 */
-	private int idleConnectionTime = 60 * 1000;
+	private Integer idleConnectionTime = 60 * 1000;
 
 	/**
 	 * 连接超时时间，单位：毫秒
 	 */
-	private int connectTimeout = 3000;
+	private Integer connectTimeout = 3000;
 
 	/**
 	 * 从连接池获取连接的超时时间，单位：毫秒
 	 */
-	private int connectionRequestTimeout = 5000;
+	private Integer connectionRequestTimeout = 5000;
+
+	/**
+	 * The maximum time to live for persistent connections.
+	 *
+	 * @since 3.0.0
+	 */
+	private Integer connectionTimeToLive = -1;
 
 	/**
 	 * 读取超时时间，单位：毫秒
 	 */
-	private int readTimeout = 5000;
+	private Integer readTimeout = 5000;
 
 	/**
-	 * 写超时时间，单位：毫秒；小于等于 0 时，使用原生库默认写超时时间
+	 * 写超时时间，单位：毫秒
 	 */
-	private int writeTimeout = -1;
+	private Integer writeTimeout = -1;
+
+	/**
+	 * Determines whether the 'Expect: 100-Continue' handshake is enabled for entity enclosing methods.
+	 *
+	 * @since 3.0.0
+	 */
+	private Boolean expectContinueEnabled;
 
 	/**
 	 * 是否允许重定向
@@ -110,19 +128,49 @@ public class Configuration {
 	private Integer maxRedirects;
 
 	/**
+	 * Determines whether request cancellation, such as through {@code Future#cancel(boolean)}, should kill the
+	 * underlying connection. If this option is set to false, the client will attempt to preserve the underlying
+	 * connection by allowing the request to complete in the background, discarding the response.
+	 *
+	 * @since 3.0.0
+	 */
+	private Boolean hardCancellationEnabled;
+
+	/**
 	 * 是否开启 Http Basic 认证
 	 */
-	private boolean authenticationEnabled;
+	private Boolean authenticationEnabled;
+
+	/**
+	 * Determines the order of preference for supported authentication schemes by their names when authenticating with the target host.
+	 *
+	 * @since 3.0.0
+	 */
+	private Collection<String> targetPreferredAuthSchemes;
+
+	/**
+	 * Determines the order of preference for supported authentication schemes by their names when authenticating with the proxy host.
+	 *
+	 * @since 3.0.0
+	 */
+	private Collection<String> proxyPreferredAuthSchemes;
 
 	/**
 	 * 是否启用内容压缩
 	 */
-	private boolean contentCompressionEnabled;
+	private Boolean contentCompressionEnabled;
 
 	/**
 	 * 是否标准化 URI
 	 */
-	private boolean normalizeUri;
+	private Boolean normalizeUri;
+
+	/**
+	 * Determines the name of the cookie specification to be used for HTTP state management.
+	 *
+	 * @since 3.0.0
+	 */
+	private String cookieSpec;
 
 	/**
 	 * SSL 配置
@@ -132,26 +180,55 @@ public class Configuration {
 	private SslConfiguration sslConfiguration;
 
 	/**
-	 * 返回链接管理器是否共享
+	 * 代理配置
+	 *
+	 * @since 3.0.0
+	 */
+	private Proxy proxy;
+
+	/**
+	 * 返回是否在多个实例之间共享连接管理器
 	 *
 	 * @return True / False
 	 *
-	 * @since 2.3.0
+	 * @since 3.0.0
+	 */
+	public Boolean isConnectionManagerShared() {
+		return getConnectionManagerShared();
+	}
+
+	/**
+	 * 返回是否在多个实例之间共享连接管理器
+	 *
+	 * @return True / False
+	 *
+	 * @since 3.0.0
 	 */
 	public Boolean getConnectionManagerShared() {
 		return connectionManagerShared;
 	}
 
 	/**
-	 * 设置链接管理器是否共享
+	 * 设置是否在多个实例之间共享连接管理器
 	 *
 	 * @param connectionManagerShared
-	 * 		链接管理器是否共享
+	 * 		是否在多个实例之间共享连接管理器
 	 *
-	 * @since 2.3.0
+	 * @since 3.0.0
 	 */
 	public void setConnectionManagerShared(Boolean connectionManagerShared) {
 		this.connectionManagerShared = connectionManagerShared;
+	}
+
+	/**
+	 * 返回连接失败是否重试
+	 *
+	 * @return 连接失败是否重试
+	 *
+	 * @since 2.3.0
+	 */
+	public Boolean isRetryOnConnectionFailure() {
+		return getRetryOnConnectionFailure();
 	}
 
 	/**
@@ -182,7 +259,7 @@ public class Configuration {
 	 *
 	 * @return 最大连接数
 	 */
-	public int getMaxConnections() {
+	public Integer getMaxConnections() {
 		return maxConnections;
 	}
 
@@ -192,7 +269,7 @@ public class Configuration {
 	 * @param maxConnections
 	 * 		最大连接数
 	 */
-	public void setMaxConnections(int maxConnections) {
+	public void setMaxConnections(Integer maxConnections) {
 		this.maxConnections = maxConnections;
 	}
 
@@ -201,7 +278,7 @@ public class Configuration {
 	 *
 	 * @return 每个路由的最大连接数
 	 */
-	public int getMaxPerRoute() {
+	public Integer getMaxPerRoute() {
 		return maxPerRoute;
 	}
 
@@ -211,7 +288,7 @@ public class Configuration {
 	 * @param maxPerRoute
 	 * 		每个路由的最大连接数
 	 */
-	public void setMaxPerRoute(int maxPerRoute) {
+	public void setMaxPerRoute(Integer maxPerRoute) {
 		this.maxPerRoute = maxPerRoute;
 	}
 
@@ -220,7 +297,7 @@ public class Configuration {
 	 *
 	 * @return 最大并发请求数量
 	 */
-	public int getMaxRequests() {
+	public Integer getMaxRequests() {
 		return maxRequests;
 	}
 
@@ -230,7 +307,7 @@ public class Configuration {
 	 * @param maxRequests
 	 * 		最大并发请求数量
 	 */
-	public void setMaxRequests(int maxRequests) {
+	public void setMaxRequests(Integer maxRequests) {
 		this.maxRequests = maxRequests;
 	}
 
@@ -239,7 +316,7 @@ public class Configuration {
 	 *
 	 * @return 空闲连接存活时长
 	 */
-	public int getIdleConnectionTime() {
+	public Integer getIdleConnectionTime() {
 		return idleConnectionTime;
 	}
 
@@ -249,7 +326,7 @@ public class Configuration {
 	 * @param idleConnectionTime
 	 * 		空闲连接存活时长，单位：毫秒
 	 */
-	public void setIdleConnectionTime(int idleConnectionTime) {
+	public void setIdleConnectionTime(Integer idleConnectionTime) {
 		this.idleConnectionTime = idleConnectionTime;
 	}
 
@@ -258,7 +335,7 @@ public class Configuration {
 	 *
 	 * @return 连接超时时间
 	 */
-	public int getConnectTimeout() {
+	public Integer getConnectTimeout() {
 		return connectTimeout;
 	}
 
@@ -268,7 +345,7 @@ public class Configuration {
 	 * @param connectTimeout
 	 * 		连接超时时间，单位：毫秒
 	 */
-	public void setConnectTimeout(int connectTimeout) {
+	public void setConnectTimeout(Integer connectTimeout) {
 		this.connectTimeout = connectTimeout;
 	}
 
@@ -277,7 +354,7 @@ public class Configuration {
 	 *
 	 * @return 从连接池获取连接的超时时间
 	 */
-	public int getConnectionRequestTimeout() {
+	public Integer getConnectionRequestTimeout() {
 		return connectionRequestTimeout;
 	}
 
@@ -287,8 +364,31 @@ public class Configuration {
 	 * @param connectionRequestTimeout
 	 * 		从连接池获取连接的超时时间，单位：毫秒
 	 */
-	public void setConnectionRequestTimeout(int connectionRequestTimeout) {
+	public void setConnectionRequestTimeout(Integer connectionRequestTimeout) {
 		this.connectionRequestTimeout = connectionRequestTimeout;
+	}
+
+	/**
+	 * Return maximum time to live for persistent connections.
+	 *
+	 * @return The maximum time to live for persistent connections.
+	 *
+	 * @since 3.0.0
+	 */
+	public Integer getConnectionTimeToLive() {
+		return connectionTimeToLive;
+	}
+
+	/**
+	 * Sets maximum time to live for persistent connections.
+	 *
+	 * @param connectionTimeToLive
+	 * 		The maximum time to live for persistent connections.
+	 *
+	 * @since 3.0.0
+	 */
+	public void setConnectionTimeToLive(Integer connectionTimeToLive) {
+		this.connectionTimeToLive = connectionTimeToLive;
 	}
 
 	/**
@@ -296,7 +396,7 @@ public class Configuration {
 	 *
 	 * @return 读取超时时间
 	 */
-	public int getReadTimeout() {
+	public Integer getReadTimeout() {
 		return readTimeout;
 	}
 
@@ -306,7 +406,7 @@ public class Configuration {
 	 * @param readTimeout
 	 * 		读取超时时间，单位：毫秒
 	 */
-	public void setReadTimeout(int readTimeout) {
+	public void setReadTimeout(Integer readTimeout) {
 		this.readTimeout = readTimeout;
 	}
 
@@ -317,7 +417,7 @@ public class Configuration {
 	 *
 	 * @since 2.3.0
 	 */
-	public int getWriteTimeout() {
+	public Integer getWriteTimeout() {
 		return writeTimeout;
 	}
 
@@ -329,8 +429,42 @@ public class Configuration {
 	 *
 	 * @since 2.3.0
 	 */
-	public void setWriteTimeout(int writeTimeout) {
+	public void setWriteTimeout(Integer writeTimeout) {
 		this.writeTimeout = writeTimeout;
+	}
+
+	/**
+	 * Return determines whether the 'Expect: 100-Continue' handshake is enabled for entity enclosing methods.
+	 *
+	 * @return true / false
+	 *
+	 * @since 3.0.0
+	 */
+	public Boolean isExpectContinueEnabled() {
+		return getExpectContinueEnabled();
+	}
+
+	/**
+	 * Return determines whether the 'Expect: 100-Continue' handshake is enabled for entity enclosing methods.
+	 *
+	 * @return true / false
+	 *
+	 * @since 3.0.0
+	 */
+	public Boolean getExpectContinueEnabled() {
+		return expectContinueEnabled;
+	}
+
+	/**
+	 * Sets determines whether the 'Expect: 100-Continue' handshake is enabled for entity enclosing methods.
+	 *
+	 * @param expectContinueEnabled
+	 * 		true / false
+	 *
+	 * @since 3.0.0
+	 */
+	public void setExpectContinueEnabled(Boolean expectContinueEnabled) {
+		this.expectContinueEnabled = expectContinueEnabled;
 	}
 
 	/**
@@ -437,11 +571,51 @@ public class Configuration {
 	}
 
 	/**
+	 * Return determines whether request cancellation, such as through {@code Future#cancel(boolean)}, should kill the
+	 * underlying connection. If this option is set to false, the client will attempt to preserve the underlying
+	 * connection by allowing the request to complete in the background, discarding the response.
+	 *
+	 * @return true / false
+	 *
+	 * @since 3.0.0
+	 */
+	public Boolean isHardCancellationEnabled() {
+		return getHardCancellationEnabled();
+	}
+
+	/**
+	 * Return determines whether request cancellation, such as through {@code Future#cancel(boolean)}, should kill the
+	 * underlying connection. If this option is set to false, the client will attempt to preserve the underlying
+	 * connection by allowing the request to complete in the background, discarding the response.
+	 *
+	 * @return true / false
+	 *
+	 * @since 3.0.0
+	 */
+	public Boolean getHardCancellationEnabled() {
+		return hardCancellationEnabled;
+	}
+
+	/**
+	 * Sets determines whether request cancellation, such as through {@code Future#cancel(boolean)}, should kill the
+	 * underlying connection. If this option is set to false, the client will attempt to preserve the underlying
+	 * connection by allowing the request to complete in the background, discarding the response.
+	 *
+	 * @param hardCancellationEnabled
+	 * 		Enabled hard cancellation
+	 *
+	 * @since 3.0.0
+	 */
+	public void setHardCancellationEnabled(Boolean hardCancellationEnabled) {
+		this.hardCancellationEnabled = hardCancellationEnabled;
+	}
+
+	/**
 	 * 获取是否开启 Http Basic 认证
 	 *
 	 * @return 是否开启 Http Basic 认证
 	 */
-	public boolean isAuthenticationEnabled() {
+	public Boolean isAuthenticationEnabled() {
 		return getAuthenticationEnabled();
 	}
 
@@ -450,7 +624,7 @@ public class Configuration {
 	 *
 	 * @return 是否开启 Http Basic 认证
 	 */
-	public boolean getAuthenticationEnabled() {
+	public Boolean getAuthenticationEnabled() {
 		return authenticationEnabled;
 	}
 
@@ -460,8 +634,58 @@ public class Configuration {
 	 * @param authenticationEnabled
 	 * 		是否开启 Http Basic 认证
 	 */
-	public void setAuthenticationEnabled(boolean authenticationEnabled) {
+	public void setAuthenticationEnabled(Boolean authenticationEnabled) {
 		this.authenticationEnabled = authenticationEnabled;
+	}
+
+	/**
+	 * Return determines the order of preference for supported authentication schemes by their names when
+	 * authenticating with the target host.
+	 *
+	 * @return Determines the order of preference for supported authentication schemes by their names when authenticating with the target host.
+	 *
+	 * @since 3.0.0
+	 */
+	public Collection<String> getTargetPreferredAuthSchemes() {
+		return targetPreferredAuthSchemes;
+	}
+
+	/**
+	 * Sets determines the order of preference for supported authentication schemes by their names when
+	 * authenticating with the target host.
+	 *
+	 * @param targetPreferredAuthSchemes
+	 * 		Determines the order of preference for supported authentication schemes by their names when authenticating with the target host.
+	 *
+	 * @since 3.0.0
+	 */
+	public void setTargetPreferredAuthSchemes(Collection<String> targetPreferredAuthSchemes) {
+		this.targetPreferredAuthSchemes = targetPreferredAuthSchemes;
+	}
+
+	/**
+	 * Return determines the order of preference for supported authentication schemes by their names when
+	 * authenticating with the proxy host.
+	 *
+	 * @return Determines the order of preference for supported authentication schemes by their names when authenticating with the proxy host.
+	 *
+	 * @since 3.0.0
+	 */
+	public Collection<String> getProxyPreferredAuthSchemes() {
+		return proxyPreferredAuthSchemes;
+	}
+
+	/**
+	 * Sets determines the order of preference for supported authentication schemes by their names when
+	 * authenticating with the proxy host.
+	 *
+	 * @param proxyPreferredAuthSchemes
+	 * 		Determines the order of preference for supported authentication schemes by their names when authenticating with the proxy host.
+	 *
+	 * @since 3.0.0
+	 */
+	public void setProxyPreferredAuthSchemes(Collection<String> proxyPreferredAuthSchemes) {
+		this.proxyPreferredAuthSchemes = proxyPreferredAuthSchemes;
 	}
 
 	/**
@@ -469,7 +693,7 @@ public class Configuration {
 	 *
 	 * @return 是否启用内容压缩
 	 */
-	public boolean isContentCompressionEnabled() {
+	public Boolean isContentCompressionEnabled() {
 		return getContentCompressionEnabled();
 	}
 
@@ -478,7 +702,7 @@ public class Configuration {
 	 *
 	 * @return 是否启用内容压缩
 	 */
-	public boolean getContentCompressionEnabled() {
+	public Boolean getContentCompressionEnabled() {
 		return contentCompressionEnabled;
 	}
 
@@ -488,7 +712,7 @@ public class Configuration {
 	 * @param contentCompressionEnabled
 	 * 		是否启用内容压缩
 	 */
-	public void setContentCompressionEnabled(boolean contentCompressionEnabled) {
+	public void setContentCompressionEnabled(Boolean contentCompressionEnabled) {
 		this.contentCompressionEnabled = contentCompressionEnabled;
 	}
 
@@ -497,7 +721,7 @@ public class Configuration {
 	 *
 	 * @return 是否标准化 URI
 	 */
-	public boolean isNormalizeUri() {
+	public Boolean isNormalizeUri() {
 		return getNormalizeUri();
 	}
 
@@ -506,7 +730,7 @@ public class Configuration {
 	 *
 	 * @return 是否标准化 URI
 	 */
-	public boolean getNormalizeUri() {
+	public Boolean getNormalizeUri() {
 		return normalizeUri;
 	}
 
@@ -516,8 +740,31 @@ public class Configuration {
 	 * @param normalizeUri
 	 * 		是否标准化 URI
 	 */
-	public void setNormalizeUri(boolean normalizeUri) {
+	public void setNormalizeUri(Boolean normalizeUri) {
 		this.normalizeUri = normalizeUri;
+	}
+
+	/**
+	 * Return determines the name of the cookie specification to be used for HTTP state management.
+	 *
+	 * @return Determines the name of the cookie specification to be used for HTTP state management.
+	 *
+	 * @since 3.0.0
+	 */
+	public String getCookieSpec() {
+		return cookieSpec;
+	}
+
+	/**
+	 * Sets determines the name of the cookie specification to be used for HTTP state management.
+	 *
+	 * @param cookieSpec
+	 * 		Determines the name of the cookie specification to be used for HTTP state management.
+	 *
+	 * @since 3.0.0
+	 */
+	public void setCookieSpec(String cookieSpec) {
+		this.cookieSpec = cookieSpec;
 	}
 
 	/**
@@ -539,6 +786,29 @@ public class Configuration {
 		this.sslConfiguration = sslConfiguration;
 	}
 
+	/**
+	 * 返回代理配置
+	 *
+	 * @return 代理配置
+	 *
+	 * @since 3.0.0
+	 */
+	public Proxy getProxy() {
+		return proxy;
+	}
+
+	/**
+	 * 设置代理配置
+	 *
+	 * @param proxy
+	 * 		代理配置
+	 *
+	 * @since 3.0.0
+	 */
+	public void setProxy(Proxy proxy) {
+		this.proxy = proxy;
+	}
+
 	@Override
 	public String toString() {
 		return new StringJoiner(", ")
@@ -550,17 +820,148 @@ public class Configuration {
 				.add("idleConnectionTime: " + idleConnectionTime)
 				.add("connectTimeout: " + connectTimeout)
 				.add("connectionRequestTimeout: " + connectionRequestTimeout)
+				.add("connectionTimeToLive: " + connectionTimeToLive)
 				.add("readTimeout: " + readTimeout)
 				.add("writeTimeout: " + writeTimeout)
+				.add("expectContinueEnabled: " + expectContinueEnabled)
 				.add("allowRedirects: " + allowRedirects)
 				.add("relativeRedirectsAllowed: " + relativeRedirectsAllowed)
 				.add("circularRedirectsAllowed: " + circularRedirectsAllowed)
 				.add("maxRedirects: " + maxRedirects)
+				.add("hardCancellationEnabled: " + hardCancellationEnabled)
 				.add("authenticationEnabled: " + authenticationEnabled)
+				.add("targetPreferredAuthSchemes: " + targetPreferredAuthSchemes)
+				.add("proxyPreferredAuthSchemes: " + proxyPreferredAuthSchemes)
 				.add("contentCompressionEnabled: " + contentCompressionEnabled)
 				.add("normalizeUri: " + normalizeUri)
+				.add("cookieSpec: " + cookieSpec)
 				.add("sslConfiguration: " + sslConfiguration)
+				.add("proxy: " + proxy)
 				.toString();
+	}
+
+	/**
+	 * 代理配置
+	 *
+	 * @author yong.teng
+	 * @since 3.0.0
+	 */
+	public final static class Proxy {
+
+		/**
+		 * The name of the scheme.
+		 */
+		private Scheme scheme;
+
+		/**
+		 * The inet address.
+		 */
+		private InetAddress address;
+
+		/**
+		 * The hostname (IP or DNS name).
+		 */
+		private String hostname;
+
+		/**
+		 * The port number. {@code -1} indicates the scheme default port.
+		 */
+		private int port;
+
+		/**
+		 * Return the name of the scheme.
+		 *
+		 * @return The name of the scheme.
+		 */
+		public Scheme getScheme() {
+			return scheme;
+		}
+
+		/**
+		 * Sets the name of the scheme.
+		 *
+		 * @param scheme
+		 * 		The name of the scheme.
+		 */
+		public void setScheme(Scheme scheme) {
+			this.scheme = scheme;
+		}
+
+		/**
+		 * Return the inet address.
+		 *
+		 * @return The inet address.
+		 */
+		public InetAddress getAddress() {
+			return address;
+		}
+
+		/**
+		 * Sets the inet address.
+		 *
+		 * @param address
+		 * 		The inet address.
+		 */
+		public void setAddress(InetAddress address) {
+			this.address = address;
+		}
+
+		/**
+		 * Return the hostname (IP or DNS name).
+		 *
+		 * @return The hostname (IP or DNS name).
+		 */
+		public String getHostname() {
+			return hostname;
+		}
+
+		/**
+		 * Sets the hostname (IP or DNS name).
+		 *
+		 * @param hostname
+		 * 		The hostname (IP or DNS name).
+		 */
+		public void setHostname(String hostname) {
+			this.hostname = hostname;
+		}
+
+		/**
+		 * Return the port number. {@code -1} indicates the scheme default port.
+		 *
+		 * @return The port number.
+		 */
+		public int getPort() {
+			return port;
+		}
+
+		/**
+		 * Sets the port number. {@code -1} indicates the scheme default port.
+		 *
+		 * @param port
+		 * 		The port number.
+		 */
+		public void setPort(int port) {
+			this.port = port;
+		}
+
+		@Override
+		public String toString() {
+			return new StringJoiner(", ")
+					.add("scheme: " + scheme)
+					.add("address: " + address)
+					.add("hostname: " + hostname)
+					.add("port: " + port)
+					.toString();
+		}
+
+		public enum Scheme {
+
+			HTTP,
+
+			HTTPS
+
+		}
+
 	}
 
 }

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
@@ -37,6 +37,7 @@ import com.buession.redis.core.SlowLog;
 import com.buession.redis.core.AclUser;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 服务端命令
@@ -277,7 +278,7 @@ public interface ServerCommands extends RedisCommands {
 	/**
 	 * 动态地调整 Redis 服务器的配置
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/configure/config_set.html" target="_blank">http://redisdoc.com/configure/config_set.html</a></p>
+	 * <p>详情说明 <a href="https://www.redisio.com/commands/Config-Set.html" target="_blank">https://www.redisio.com/commands/Config-Set.html</a></p>
 	 *
 	 * @param parameter
 	 * 		配置项
@@ -289,28 +290,42 @@ public interface ServerCommands extends RedisCommands {
 	Status configSet(final byte[] parameter, final byte[] value);
 
 	/**
-	 * 获取 Redis 服务器的配置参数
+	 * 批量动态地调整 Redis 服务器的配置
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/configure/config_get.html" target="_blank">http://redisdoc.com/configure/config_get.html</a></p>
+	 * <p>详情说明 <a href="https://www.redisio.com/commands/Config-Set.html" target="_blank">https://www.redisio.com/commands/Config-Set.html</a></p>
 	 *
-	 * @param parameter
-	 * 		配置项
+	 * @param configs
+	 * 		配置
 	 *
-	 * @return 给定配置参数的值
+	 * @return 设置成功时返回，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 *
+	 * @since 3.0.0
 	 */
-	List<String> configGet(final String parameter);
+	Status configSet(final Map<String, String> configs);
 
 	/**
 	 * 获取 Redis 服务器的配置参数
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/configure/config_get.html" target="_blank">http://redisdoc.com/configure/config_get.html</a></p>
+	 * <p>详情说明 <a href="https://www.redisio.com/commands/Config-Get.html" target="_blank">https://www.redisio.com/commands/Config-Get.html</a></p>
 	 *
-	 * @param parameter
+	 * @param pattern
 	 * 		配置项
 	 *
 	 * @return 给定配置参数的值
 	 */
-	List<byte[]> configGet(final byte[] parameter);
+	Map<String, String> configGet(final String pattern);
+
+	/**
+	 * 获取 Redis 服务器的配置参数
+	 *
+	 * <p>详情说明 <a href="https://www.redisio.com/commands/Config-Get.html" target="_blank">https://www.redisio.com/commands/Config-Get.html</a></p>
+	 *
+	 * @param pattern
+	 * 		配置项
+	 *
+	 * @return 给定配置参数的值
+	 */
+	Map<byte[], byte[]> configGet(final byte[] pattern);
 
 	/**
 	 * 重置 INFO 命令中的某些统计数据，包括：
@@ -711,7 +726,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return 实例在复制中担任的角色信息
 	 */
-	List<Role> role();
+	Role role();
 
 	/**
 	 * 执行一个同步保存操作，将当前 Redis 实例的所有数据快照(snapshot)以 RDB 文件的形式保存到硬盘；

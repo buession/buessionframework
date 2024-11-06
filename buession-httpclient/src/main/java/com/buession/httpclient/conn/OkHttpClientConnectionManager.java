@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.conn;
@@ -32,7 +32,8 @@ import okhttp3.HttpClientConnectionManager;
  *
  * @author Yong.Teng
  */
-public class OkHttpClientConnectionManager extends OkHttpBaseClientConnectionManager<HttpClientConnectionManager> {
+public class OkHttpClientConnectionManager extends OkHttpBaseClientConnectionManager<HttpClientConnectionManager>
+		implements com.buession.httpclient.okhttp.OkHttpClientConnectionManager {
 
 	/**
 	 * 构造函数，创建驱动默认连接管理器
@@ -45,7 +46,7 @@ public class OkHttpClientConnectionManager extends OkHttpBaseClientConnectionMan
 	 * 构造函数，创建驱动默认连接管理器
 	 *
 	 * @param configuration
-	 * 		连接对象
+	 * 		配置
 	 */
 	public OkHttpClientConnectionManager(Configuration configuration) {
 		super(configuration);
@@ -55,7 +56,7 @@ public class OkHttpClientConnectionManager extends OkHttpBaseClientConnectionMan
 	 * 构造函数
 	 *
 	 * @param clientConnectionManager
-	 * 		驱动连接管理器
+	 * 		原生连接管理器
 	 */
 	public OkHttpClientConnectionManager(HttpClientConnectionManager clientConnectionManager) {
 		super(clientConnectionManager);
@@ -65,9 +66,9 @@ public class OkHttpClientConnectionManager extends OkHttpBaseClientConnectionMan
 	 * 构造函数
 	 *
 	 * @param configuration
-	 * 		连接对象
+	 * 		配置
 	 * @param clientConnectionManager
-	 * 		驱动连接管理器
+	 * 		原生连接管理器
 	 */
 	public OkHttpClientConnectionManager(Configuration configuration,
 										 HttpClientConnectionManager clientConnectionManager) {
@@ -83,14 +84,14 @@ public class OkHttpClientConnectionManager extends OkHttpBaseClientConnectionMan
 	protected HttpClientConnectionManager createDefaultClientConnectionManager() {
 		final HttpClientConnectionManager connectionManager = new HttpClientConnectionManager();
 
-		//最大连接数
-		connectionManager.setMaxConnections(getConfiguration().getMaxConnections());
-		// 默认的最大并发请求数量
-		connectionManager.setMaxRequests(getConfiguration().getMaxRequests());
+		// 最大连接数
+		propertyMapper.from(getConfiguration().getMaxConnections()).to(connectionManager::setMaxConnections);
 		// 同时请求相同主机的请求数量最大值
-		connectionManager.setMaxRequestsPerHost(getConfiguration().getMaxPerRoute());
+		propertyMapper.from(getConfiguration().getMaxPerRoute()).to(connectionManager::setMaxRequestsPerHost);
+		// 默认的最大并发请求数量
+		propertyMapper.from(getConfiguration().getMaxRequests()).to(connectionManager::setMaxRequests);
 		// 空闲连接存活时长
-		connectionManager.setIdleConnectionTime(getConfiguration().getIdleConnectionTime());
+		propertyMapper.from(getConfiguration().getIdleConnectionTime()).to(connectionManager::setIdleConnectionTime);
 
 		return connectionManager;
 	}

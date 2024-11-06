@@ -24,7 +24,8 @@
  */
 package com.buession.core.datetime;
 
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Yong.Teng

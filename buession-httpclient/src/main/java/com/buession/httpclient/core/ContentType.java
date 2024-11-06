@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -59,34 +59,34 @@ public final class ContentType {
 
 	private Charset charset;
 
-	public ContentType(final String mimeType){
+	public ContentType(final String mimeType) {
 		this.mimeType = mimeType;
 	}
 
-	public ContentType(final String mimeType, final Charset charset){
+	public ContentType(final String mimeType, final Charset charset) {
 		this.mimeType = mimeType;
 		this.charset = charset;
 	}
 
-	public String getMimeType(){
+	public String getMimeType() {
 		return mimeType;
 	}
 
-	public Charset getCharset(){
+	public Charset getCharset() {
 		return charset;
 	}
 
-	public String valueOf(){
+	public String valueOf() {
 		return valueOf(this);
 	}
 
 	@Override
-	public int hashCode(){
+	public int hashCode() {
 		return Objects.hash(mimeType, charset);
 	}
 
 	@Override
-	public boolean equals(Object obj){
+	public boolean equals(Object obj) {
 		if(this == obj){
 			return true;
 		}
@@ -100,20 +100,19 @@ public final class ContentType {
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 		final StringBuilder sb = new StringBuilder(mimeType.length() + (charset == null ? 0 : 16));
 
 		sb.append(mimeType);
 
 		if(charset != null){
-			sb.append("; charset=");
-			sb.append(charset.name());
+			sb.append("; charset=").append(charset.name());
 		}
 
 		return sb.toString();
 	}
 
-	public static String valueOf(ContentType contentType){
+	public static String valueOf(ContentType contentType) {
 		return contentType == null ? null : contentType.toString();
 	}
 

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient;
@@ -28,7 +28,7 @@ import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.Response;
 import com.buession.httpclient.core.concurrent.Callback;
 import com.buession.httpclient.exception.RequestException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
@@ -41,24 +41,24 @@ public class ApacheHttpAsyncClientTest {
 	private static ApacheHttpAsyncClient httpClient = new ApacheHttpAsyncClient();
 
 	@Test
-	public void responseHeaders() throws IOException, RequestException{
+	public void responseHeaders() throws IOException, RequestException {
 		httpClient.get("https://www.baidu.com",
 				new Callback() {
 
 					@Override
-					public void completed(Response response){
+					public void completed(Response response) {
 						for(Header header : response.getHeaders()){
 							System.out.println(header.toString());
 						}
 					}
 
 					@Override
-					public void failed(Exception ex){
+					public void failed(Exception ex) {
 
 					}
 
 					@Override
-					public void cancelled(){
+					public void cancelled() {
 
 					}
 				});
@@ -69,23 +69,45 @@ public class ApacheHttpAsyncClientTest {
 				new Callback() {
 
 					@Override
-					public void completed(Response response){
+					public void completed(Response response) {
 						for(Header header : response.getHeaders()){
 							System.out.println(header.toString());
 						}
 					}
 
 					@Override
-					public void failed(Exception ex){
+					public void failed(Exception ex) {
 
 					}
 
 					@Override
-					public void cancelled(){
+					public void cancelled() {
 
 					}
 				});
 		//response.get();
+	}
+
+	@Test
+	public void body() throws IOException, RequestException {
+		httpClient.get("https://www.baidu.com",
+				new Callback() {
+
+					@Override
+					public void completed(Response response) {
+						System.out.println(response.getBody());
+					}
+
+					@Override
+					public void failed(Exception ex) {
+
+					}
+
+					@Override
+					public void cancelled() {
+
+					}
+				});
 	}
 
 }

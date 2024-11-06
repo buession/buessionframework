@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package okhttp3.nio;
@@ -28,6 +28,7 @@ import okhttp3.ConnectionPool;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -38,6 +39,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class NioHttpClientConnectionManager implements Closeable {
 
+	/**
+	 * 连接池
+	 */
 	private ConnectionPool connectionPool;
 
 	/**
@@ -60,13 +64,27 @@ public class NioHttpClientConnectionManager implements Closeable {
 	 */
 	private int maxRequestsPerHost;
 
+	/**
+	 * 构造函数
+	 */
 	public NioHttpClientConnectionManager() {
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param connectionPool
+	 * 		连接池
+	 */
 	public NioHttpClientConnectionManager(ConnectionPool connectionPool) {
 		this.connectionPool = connectionPool;
 	}
 
+	/**
+	 * 返回连接池
+	 *
+	 * @return 连接池
+	 */
 	public ConnectionPool getConnectionPool() {
 		if(connectionPool == null){
 			connectionPool = new ConnectionPool(maxConnections, idleConnectionTime, TimeUnit.MILLISECONDS);
@@ -75,6 +93,12 @@ public class NioHttpClientConnectionManager implements Closeable {
 		return connectionPool;
 	}
 
+	/**
+	 * 设置连接池
+	 *
+	 * @param connectionPool
+	 * 		连接池
+	 */
 	public void setConnectionPool(ConnectionPool connectionPool) {
 		this.connectionPool = connectionPool;
 	}
@@ -159,9 +183,7 @@ public class NioHttpClientConnectionManager implements Closeable {
 
 	@Override
 	public void close() throws IOException {
-		if(connectionPool != null){
-			connectionPool.evictAll();
-		}
+		Optional.ofNullable(connectionPool).ifPresent(ConnectionPool::evictAll);
 	}
 
 }

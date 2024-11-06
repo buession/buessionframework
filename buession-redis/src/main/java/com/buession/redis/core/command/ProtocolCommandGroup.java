@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
@@ -45,6 +45,13 @@ public enum ProtocolCommandGroup {
 	 * 连接命令
 	 */
 	CONNECTION("Connection"),
+
+	/**
+	 * 一般命令
+	 *
+	 * @since 3.0.0
+	 */
+	GENERIC("Generic"),
 
 	/**
 	 * 地理位置命令

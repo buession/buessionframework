@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
@@ -36,10 +36,10 @@ import com.buession.redis.client.operations.GeoOperations;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public abstract class AbstractGeoOperations<C extends JedisRedisClient>
-		extends AbstractJedisRedisOperations<C> implements GeoOperations {
+public abstract class AbstractGeoOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
+		implements GeoOperations {
 
-	public AbstractGeoOperations(final C client){
+	public AbstractGeoOperations(final C client) {
 		super(client);
 	}
 

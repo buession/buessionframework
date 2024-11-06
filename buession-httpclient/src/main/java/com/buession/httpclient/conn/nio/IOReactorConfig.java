@@ -19,12 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.conn.nio;
 
 /**
+ * 异步 I/O 线程配置
+ *
  * @author Yong.Teng
  * @since 2.3.0
  */
@@ -32,157 +34,481 @@ public final class IOReactorConfig implements Cloneable {
 
 	public final static IOReactorConfig DEFAULT = new IOReactorConfig();
 
-	private Long selectInterval;
-
-	private Long shutdownGracePeriod;
-
-	private Boolean interestOpQueued;
-
-	private Integer ioThreadCount;
-
-	private Integer soTimeout;
-
-	private Boolean soReuseAddress;
-
-	private Integer soLinger;
-
-	private Boolean soKeepAlive;
-
-	private Boolean tcpNoDelay;
-
+	/**
+	 * 连接超时（单位：毫秒）
+	 */
 	private Integer connectTimeout;
 
+	/**
+	 * I/O 操作超时时间（单位：毫秒）
+	 */
+	private Integer soTimeout;
+
+	/**
+	 * 选择器的轮询间隔时间（单位：毫秒）
+	 */
+	private Long selectInterval;
+
+	/**
+	 * 优雅关闭等待时长（单位：毫秒）
+	 */
+	private Long shutdownGracePeriod;
+
+	/**
+	 * 是否启用兴趣操作队列
+	 */
+	private Boolean interestOpQueued;
+
+	/**
+	 * I/O 线程数量
+	 */
+	private Integer ioThreadCount;
+
+	/**
+	 * 是否启用 SO_REUSEADDR 套接字选项
+	 */
+	private Boolean soReuseAddress;
+
+	/**
+	 * SO_LINGER
+	 */
+	private Integer soLinger;
+
+	/**
+	 * 是否启用 TCP 的 keep-alive 套接字选项
+	 */
+	private Boolean soKeepAlive;
+
+	/**
+	 * 是否启用 TCP_NODELAY 选项
+	 */
+	private Boolean tcpNoDelay;
+
+	/**
+	 * 发送缓冲区大小（单位：字节）
+	 */
 	private Integer sndBufSize;
 
+	/**
+	 * 接收缓冲区大小（单位：字节）
+	 */
 	private Integer rcvBufSize;
 
+	/**
+	 * 服务端套接字的连接请求队列的大小
+	 */
 	private Integer backlogSize;
 
-	public IOReactorConfig(){
+	/**
+	 * 构造函数
+	 */
+	public IOReactorConfig() {
 	}
 
-	public IOReactorConfig(Long selectInterval, Long shutdownGracePeriod, Boolean interestOpQueued,
-						   Integer ioThreadCount, Integer soTimeout, Boolean soReuseAddress, Integer soLinger,
-						   Boolean soKeepAlive, Boolean tcpNoDelay, Integer connectTimeout, Integer sndBufSize,
-						   Integer rcvBufSize, Integer backlogSize){
+	/**
+	 * 构造函数
+	 *
+	 * @param connectTimeout
+	 * 		连接超时（单位：毫秒）
+	 * @param soTimeout
+	 * 		I/O 操作超时时间（单位：毫秒）
+	 * @param selectInterval
+	 * 		选择器的轮询间隔时间（单位：毫秒）
+	 * @param shutdownGracePeriod
+	 * 		优雅关闭等待时长（单位：毫秒）
+	 * @param interestOpQueued
+	 * 		是否启用兴趣操作队列
+	 * @param ioThreadCount
+	 * 		I/O 线程数量
+	 * @param soReuseAddress
+	 * 		是否启用 SO_REUSEADDR 套接字选项
+	 * @param soLinger
+	 * 		SO_LINGER
+	 * @param soKeepAlive
+	 * 		是否启用 TCP 的 keep-alive 套接字选项
+	 * @param tcpNoDelay
+	 * 		是否启用 TCP_NODELAY 选项
+	 * @param sndBufSize
+	 * 		发送缓冲区大小（单位：字节）
+	 * @param rcvBufSize
+	 * 		接收缓冲区大小（单位：字节）
+	 * @param backlogSize
+	 * 		服务端套接字的连接请求队列的大小
+	 */
+	public IOReactorConfig(Integer connectTimeout, Integer soTimeout, Long selectInterval, Long shutdownGracePeriod,
+						   Boolean interestOpQueued, Integer ioThreadCount, Boolean soReuseAddress, Integer soLinger,
+						   Boolean soKeepAlive, Boolean tcpNoDelay, Integer sndBufSize, Integer rcvBufSize,
+						   Integer backlogSize) {
+		this.connectTimeout = connectTimeout;
+		this.soTimeout = soTimeout;
 		this.selectInterval = selectInterval;
 		this.shutdownGracePeriod = shutdownGracePeriod;
 		this.interestOpQueued = interestOpQueued;
 		this.ioThreadCount = ioThreadCount;
-		this.soTimeout = soTimeout;
 		this.soReuseAddress = soReuseAddress;
 		this.soLinger = soLinger;
 		this.soKeepAlive = soKeepAlive;
 		this.tcpNoDelay = tcpNoDelay;
-		this.connectTimeout = connectTimeout;
 		this.sndBufSize = sndBufSize;
 		this.rcvBufSize = rcvBufSize;
 		this.backlogSize = backlogSize;
 	}
 
-	public Long getSelectInterval(){
-		return selectInterval;
+	/**
+	 * 构造函数
+	 *
+	 * @param selectInterval
+	 * 		选择器的轮询间隔时间（单位：毫秒）
+	 * @param shutdownGracePeriod
+	 * 		优雅关闭等待时长（单位：毫秒）
+	 * @param interestOpQueued
+	 * 		是否启用兴趣操作队列
+	 * @param ioThreadCount
+	 * 		I/O 线程数量
+	 * @param soTimeout
+	 * 		I/O 操作超时时间（单位：毫秒）
+	 * @param soReuseAddress
+	 * 		是否启用 SO_REUSEADDR 套接字选项
+	 * @param soLinger
+	 * 		SO_LINGER
+	 * @param soKeepAlive
+	 * 		是否启用 TCP 的 keep-alive 套接字选项
+	 * @param tcpNoDelay
+	 * 		是否启用 TCP_NODELAY 选项
+	 * @param connectTimeout
+	 * 		连接超时（单位：毫秒）
+	 * @param sndBufSize
+	 * 		发送缓冲区大小（单位：字节）
+	 * @param rcvBufSize
+	 * 		接收缓冲区大小（单位：字节）
+	 * @param backlogSize
+	 * 		服务端套接字的连接请求队列的大小
+	 */
+	@Deprecated
+	public IOReactorConfig(Long selectInterval, Long shutdownGracePeriod, Boolean interestOpQueued,
+						   Integer ioThreadCount, Integer soTimeout, Boolean soReuseAddress, Integer soLinger,
+						   Boolean soKeepAlive, Boolean tcpNoDelay, Integer connectTimeout, Integer sndBufSize,
+						   Integer rcvBufSize, Integer backlogSize) {
+		this(connectTimeout, soTimeout, selectInterval, shutdownGracePeriod, interestOpQueued, ioThreadCount,
+				soReuseAddress, soLinger, soKeepAlive, tcpNoDelay, sndBufSize, rcvBufSize, backlogSize);
 	}
 
-	public void setSelectInterval(Long selectInterval){
-		this.selectInterval = selectInterval;
-	}
-
-	public Long getShutdownGracePeriod(){
-		return shutdownGracePeriod;
-	}
-
-	public void setShutdownGracePeriod(Long shutdownGracePeriod){
-		this.shutdownGracePeriod = shutdownGracePeriod;
-	}
-
-	public Boolean isInterestOpQueued(){
-		return interestOpQueued;
-	}
-
-	public void setInterestOpQueued(Boolean interestOpQueued){
-		this.interestOpQueued = interestOpQueued;
-	}
-
-	public Integer getIoThreadCount(){
-		return ioThreadCount;
-	}
-
-	public void setIoThreadCount(Integer ioThreadCount){
-		this.ioThreadCount = ioThreadCount;
-	}
-
-	public Integer getSoTimeout(){
-		return soTimeout;
-	}
-
-	public void setSoTimeout(Integer soTimeout){
-		this.soTimeout = soTimeout;
-	}
-
-	public Boolean isSoReuseAddress(){
-		return soReuseAddress;
-	}
-
-	public void setSoReuseAddress(Boolean soReuseAddress){
-		this.soReuseAddress = soReuseAddress;
-	}
-
-	public Integer getSoLinger(){
-		return soLinger;
-	}
-
-	public void setSoLinger(Integer soLinger){
-		this.soLinger = soLinger;
-	}
-
-	public Boolean isSoKeepalive(){
-		return soKeepAlive;
-	}
-
-	public void setSoKeepalive(Boolean soKeepAlive){
-		this.soKeepAlive = soKeepAlive;
-	}
-
-	public Boolean isTcpNoDelay(){
-		return tcpNoDelay;
-	}
-
-	public void setTcpNoDelay(Boolean tcpNoDelay){
-		this.tcpNoDelay = tcpNoDelay;
-	}
-
-	public Integer getConnectTimeout(){
+	/**
+	 * 返回连接超时（单位：毫秒）
+	 *
+	 * @return 连接超时
+	 */
+	public Integer getConnectTimeout() {
 		return connectTimeout;
 	}
 
-	public void setConnectTimeout(Integer connectTimeout){
+	/**
+	 * 设置连接超时（单位：毫秒）
+	 *
+	 * @param connectTimeout
+	 * 		连接超时
+	 */
+	public void setConnectTimeout(Integer connectTimeout) {
 		this.connectTimeout = connectTimeout;
 	}
 
-	public Integer getSndBufSize(){
+	/**
+	 * 返回 I/O 操作超时时间（单位：毫秒）
+	 *
+	 * @return I/O 操作超时时间
+	 */
+	public Integer getSoTimeout() {
+		return soTimeout;
+	}
+
+	/**
+	 * 设置 I/O 操作超时时间（单位：毫秒）
+	 *
+	 * @param soTimeout
+	 * 		I/O 操作超时时间
+	 */
+	public void setSoTimeout(Integer soTimeout) {
+		this.soTimeout = soTimeout;
+	}
+
+	/**
+	 * 返回选择器的轮询间隔时间（单位：毫秒）
+	 *
+	 * @return 选择器的轮询间隔时间
+	 */
+	public Long getSelectInterval() {
+		return selectInterval;
+	}
+
+	/**
+	 * 设置选择器的轮询间隔时间（单位：毫秒）
+	 *
+	 * @param selectInterval
+	 * 		选择器的轮询间隔时间
+	 */
+	public void setSelectInterval(Long selectInterval) {
+		this.selectInterval = selectInterval;
+	}
+
+	/**
+	 * 返回优雅关闭等待时长（单位：毫秒）
+	 *
+	 * @return 优雅关闭等待时长
+	 */
+	public Long getShutdownGracePeriod() {
+		return shutdownGracePeriod;
+	}
+
+	/**
+	 * 设置优雅关闭等待时长（单位：毫秒）
+	 *
+	 * @param shutdownGracePeriod
+	 * 		优雅关闭等待时长
+	 */
+	public void setShutdownGracePeriod(Long shutdownGracePeriod) {
+		this.shutdownGracePeriod = shutdownGracePeriod;
+	}
+
+	/**
+	 * 返回是否启用兴趣操作队列
+	 *
+	 * @return true / false
+	 */
+	public Boolean isInterestOpQueued() {
+		return getInterestOpQueued();
+	}
+
+	/**
+	 * 返回是否启用兴趣操作队列
+	 *
+	 * @return true / false
+	 *
+	 * @since 3.0.0
+	 */
+	public Boolean getInterestOpQueued() {
+		return interestOpQueued;
+	}
+
+	/**
+	 * 设置是否启用兴趣操作队列
+	 *
+	 * @param interestOpQueued
+	 * 		true / false
+	 */
+	public void setInterestOpQueued(Boolean interestOpQueued) {
+		this.interestOpQueued = interestOpQueued;
+	}
+
+	/**
+	 * 返回 I/O 线程数量
+	 *
+	 * @return I/O 线程数量
+	 */
+	public Integer getIoThreadCount() {
+		return ioThreadCount;
+	}
+
+	/**
+	 * 设置 I/O 线程数量
+	 *
+	 * @param ioThreadCount
+	 * 		I/O 线程数量
+	 */
+	public void setIoThreadCount(Integer ioThreadCount) {
+		this.ioThreadCount = ioThreadCount;
+	}
+
+	/**
+	 * 返回是否启用 SO_REUSEADDR 套接字选项
+	 *
+	 * @return true / false
+	 */
+	public Boolean isSoReuseAddress() {
+		return getSoReuseAddress();
+	}
+
+	/**
+	 * 返回是否启用 SO_REUSEADDR 套接字选项
+	 *
+	 * @return true / false
+	 */
+	public Boolean getSoReuseAddress() {
+		return soReuseAddress;
+	}
+
+	/**
+	 * 设置是否启用 SO_REUSEADDR 套接字选项
+	 *
+	 * @param soReuseAddress
+	 * 		true / false
+	 */
+	public void setSoReuseAddress(Boolean soReuseAddress) {
+		this.soReuseAddress = soReuseAddress;
+	}
+
+	/**
+	 * 返回 SO_LINGER 值
+	 *
+	 * @return SO_LINGER 值
+	 */
+	public Integer getSoLinger() {
+		return soLinger;
+	}
+
+	/**
+	 * 设置 SO_LINGER 值
+	 *
+	 * @param soLinger
+	 * 		SO_LINGER 值
+	 */
+	public void setSoLinger(Integer soLinger) {
+		this.soLinger = soLinger;
+	}
+
+	/**
+	 * 返回是否启用 TCP 的 keep-alive 套接字选项
+	 *
+	 * @return true / false
+	 *
+	 * @see #isSoKeepAlive()
+	 */
+	@Deprecated
+	public Boolean isSoKeepalive() {
+		return getSoKeepAlive();
+	}
+
+	/**
+	 * 返回是否启用 TCP 的 keep-alive 套接字选项
+	 *
+	 * @return true / false
+	 *
+	 * @since 3.0.0
+	 */
+	public Boolean isSoKeepAlive() {
+		return getSoKeepAlive();
+	}
+
+	/**
+	 * 返回是否启用 TCP 的 keep-alive 套接字选项
+	 *
+	 * @return true / false
+	 *
+	 * @since 3.0
+	 */
+	public Boolean getSoKeepAlive() {
+		return soKeepAlive;
+	}
+
+	/**
+	 * 设置是否启用 TCP 的 keep-alive 套接字选项
+	 *
+	 * @param soKeepAlive
+	 * 		true / false
+	 *
+	 * @see #setSoKeepAlive(Boolean)
+	 */
+	@Deprecated
+	public void setSoKeepalive(Boolean soKeepAlive) {
+		setSoKeepAlive(soKeepAlive);
+	}
+
+	/**
+	 * 设置是否启用 TCP 的 keep-alive 套接字选项
+	 *
+	 * @param soKeepAlive
+	 * 		true / false
+	 *
+	 * @since 3.0.0
+	 */
+	public void setSoKeepAlive(Boolean soKeepAlive) {
+		this.soKeepAlive = soKeepAlive;
+	}
+
+	/**
+	 * 返回是否启用 TCP_NODELAY 选项
+	 *
+	 * @return true / false
+	 */
+	public Boolean isTcpNoDelay() {
+		return getTcpNoDelay();
+	}
+
+	/**
+	 * 返回是否启用 TCP_NODELAY 选项
+	 *
+	 * @return true / false
+	 *
+	 * @since 3.0.0
+	 */
+	public Boolean getTcpNoDelay() {
+		return tcpNoDelay;
+	}
+
+	/**
+	 * 设置是否启用 TCP_NODELAY 选项
+	 *
+	 * @param tcpNoDelay
+	 * 		true / false
+	 */
+	public void setTcpNoDelay(Boolean tcpNoDelay) {
+		this.tcpNoDelay = tcpNoDelay;
+	}
+
+	/**
+	 * 返回发送缓冲区大小（单位：字节）
+	 *
+	 * @return 发送缓冲区大小
+	 */
+	public Integer getSndBufSize() {
 		return sndBufSize;
 	}
 
-	public void setSndBufSize(Integer sndBufSize){
+	/**
+	 * 设置发送缓冲区大小（单位：字节）
+	 *
+	 * @param sndBufSize
+	 * 		发送缓冲区大小（单位：字节）
+	 */
+	public void setSndBufSize(Integer sndBufSize) {
 		this.sndBufSize = sndBufSize;
 	}
 
-	public Integer getRcvBufSize(){
+	/**
+	 * 返回接收缓冲区大小（单位：字节）
+	 *
+	 * @return 接收缓冲区大小（单位：字节）
+	 */
+	public Integer getRcvBufSize() {
 		return rcvBufSize;
 	}
 
-	public void setRcvBufSize(Integer rcvBufSize){
+	/**
+	 * 设置接收缓冲区大小（单位：字节）
+	 *
+	 * @param rcvBufSize
+	 * 		接收缓冲区大小（单位：字节）
+	 */
+	public void setRcvBufSize(Integer rcvBufSize) {
 		this.rcvBufSize = rcvBufSize;
 	}
 
-	public Integer getBacklogSize(){
+	/**
+	 * 返回服务端套接字的连接请求队列的大小
+	 *
+	 * @return 服务端套接字的连接请求队列的大小
+	 */
+	public Integer getBacklogSize() {
 		return backlogSize;
 	}
 
-	@Override
-	protected IOReactorConfig clone() throws CloneNotSupportedException{
-		return (IOReactorConfig) super.clone();
+	/**
+	 * 设置服务端套接字的连接请求队列的大小
+	 *
+	 * @param backlogSize
+	 * 		服务端套接字的连接请求队列的大小
+	 */
+	public void setBacklogSize(Integer backlogSize) {
+		this.backlogSize = backlogSize;
 	}
 
 }

@@ -19,12 +19,16 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.okhttp;
 
+import com.buession.core.builder.MapBuilder;
+import com.buession.core.utils.StringUtils;
+import com.buession.core.validator.Validate;
 import com.buession.httpclient.core.ChunkedInputStreamRequestBody;
+import com.buession.httpclient.core.ContentType;
 import com.buession.httpclient.core.EncodedFormRequestBody;
 import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.HtmlRawRequestBody;
@@ -39,7 +43,7 @@ import com.buession.httpclient.core.RequestBodyConverter;
 import com.buession.httpclient.core.RequestMethod;
 import com.buession.httpclient.core.TextRawRequestBody;
 import com.buession.httpclient.core.XmlRawRequestBody;
-import com.buession.httpclient.core.AbstractRequestBuilder;
+import com.buession.httpclient.core.utils.UriUtils;
 import com.buession.httpclient.okhttp.convert.ChunkedInputStreamRequestBodyConverter;
 import com.buession.httpclient.okhttp.convert.EncodedFormRequestBodyConverter;
 import com.buession.httpclient.okhttp.convert.HtmlRawRequestBodyConverter;
@@ -52,8 +56,11 @@ import com.buession.httpclient.okhttp.convert.TextRawRequestBodyConverter;
 import com.buession.httpclient.okhttp.convert.XmlRawRequestBodyConverter;
 import okhttp3.FormBody;
 import okhttp3.Headers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,14 +68,22 @@ import java.util.Map;
 /**
  * @author Yong.Teng
  */
-public class OkHttpRequestBuilder extends AbstractRequestBuilder<com.buession.httpclient.okhttp.OkHttpRequest> {
+public class OkHttpRequestBuilder {
 
 	private final static okhttp3.RequestBody DEFAULT_REQUEST_BODY = new FormBody.Builder().build();
 
 	private final static Map<Class<? extends RequestBody>, RequestBodyConverter> REQUEST_BODY_CONVERTS = new HashMap<>(
 			16, 0.8F);
 
-	static{
+	protected URI uri;
+
+	protected Map<String, Object> parameters;
+
+	protected OkHttpRequest request;
+
+	private final static Logger logger = LoggerFactory.getLogger(OkHttpRequestBuilder.class);
+
+	static {
 		REQUEST_BODY_CONVERTS.put(ChunkedInputStreamRequestBody.class, new ChunkedInputStreamRequestBodyConverter());
 		REQUEST_BODY_CONVERTS.put(EncodedFormRequestBody.class, new EncodedFormRequestBodyConverter());
 		REQUEST_BODY_CONVERTS.put(HtmlRawRequestBody.class, new HtmlRawRequestBodyConverter());
@@ -82,84 +97,13 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder<com.buession.ht
 		REQUEST_BODY_CONVERTS.put(XmlRawRequestBody.class, new XmlRawRequestBodyConverter());
 	}
 
-	private OkHttpRequestBuilder(){
+	private OkHttpRequestBuilder() {
 		request = new OkHttpRequest();
 	}
 
 	/**
 	 * 创建 {@link OkHttpRequestBuilder} 实例
 	 *
-	 * @return {@link OkHttpRequestBuilder} 实例
-	 */
-	public static OkHttpRequestBuilder create(){
-		return new OkHttpRequestBuilder();
-	}
-
-	/**
-	 * 创建 {@link OkHttpRequestBuilder} 实例
-	 *
-	 * @param url
-	 * 		请求 URL
-	 *
-	 * @return {@link OkHttpRequestBuilder} 实例
-	 */
-	@Deprecated
-	public static OkHttpRequestBuilder create(String url){
-		final OkHttpRequestBuilder builder = create();
-		builder.setUrl(url);
-		return builder;
-	}
-
-	/**
-	 * 创建 {@link OkHttpRequestBuilder} 实例
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 *
-	 * @return {@link OkHttpRequestBuilder} 实例
-	 */
-	@Deprecated
-	public static OkHttpRequestBuilder create(String url, Map<String, Object> parameters){
-		return create(url).setParameters(parameters);
-	}
-
-	/**
-	 * 创建 {@link OkHttpRequestBuilder} 实例
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return {@link OkHttpRequestBuilder} 实例
-	 */
-	@Deprecated
-	public static OkHttpRequestBuilder create(String url, List<Header> headers){
-		return create(url).setHeaders(headers);
-	}
-
-	/**
-	 * 创建 {@link OkHttpRequestBuilder} 实例
-	 *
-	 * @param url
-	 * 		请求 URL
-	 * @param parameters
-	 * 		请求参数
-	 * @param headers
-	 * 		请求头
-	 *
-	 * @return {@link OkHttpRequestBuilder} 实例
-	 */
-	@Deprecated
-	public static OkHttpRequestBuilder create(String url, Map<String, Object> parameters, List<Header> headers){
-		return create(url, parameters).setHeaders(headers);
-	}
-
-	/**
-	 * 创建 {@link OkHttpRequestBuilder} 实例
-	 *
 	 * @param uri
 	 * 		请求 URL
 	 *
@@ -167,9 +111,9 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder<com.buession.ht
 	 *
 	 * @since 2.3.0
 	 */
-	public static OkHttpRequestBuilder create(URI uri){
-		final OkHttpRequestBuilder builder = create();
-		builder.setUri(uri);
+	public static OkHttpRequestBuilder create(URI uri) {
+		final OkHttpRequestBuilder builder = new OkHttpRequestBuilder();
+		builder.uri = uri;
 		return builder;
 	}
 
@@ -185,7 +129,7 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder<com.buession.ht
 	 *
 	 * @since 2.3.0
 	 */
-	public static OkHttpRequestBuilder create(URI uri, Map<String, Object> parameters){
+	public static OkHttpRequestBuilder create(URI uri, Map<String, Object> parameters) {
 		return create(uri).setParameters(parameters);
 	}
 
@@ -201,7 +145,7 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder<com.buession.ht
 	 *
 	 * @since 2.3.0
 	 */
-	public static OkHttpRequestBuilder create(URI uri, List<Header> headers){
+	public static OkHttpRequestBuilder create(URI uri, List<Header> headers) {
 		return create(uri).setHeaders(headers);
 	}
 
@@ -219,143 +163,116 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder<com.buession.ht
 	 *
 	 * @since 2.3.0
 	 */
-	public static OkHttpRequestBuilder create(URI uri, Map<String, Object> parameters, List<Header> headers){
+	public static OkHttpRequestBuilder create(URI uri, Map<String, Object> parameters, List<Header> headers) {
 		return create(uri, parameters).setHeaders(headers);
 	}
 
-	@Override
-	public OkHttpRequestBuilder setProtocolVersion(ProtocolVersion protocolVersion){
+	public OkHttpRequestBuilder setProtocolVersion(ProtocolVersion protocolVersion) {
 		return this;
 	}
 
-	@Override
-	public OkHttpRequestBuilder setHeaders(List<Header> headers){
+	public OkHttpRequestBuilder setHeaders(List<Header> headers) {
 		request.setHeaders(headers);
 		return this;
 	}
 
-	@Override
-	public OkHttpRequestBuilder setParameters(Map<String, Object> parameters){
+	public OkHttpRequestBuilder setParameters(Map<String, Object> parameters) {
 		this.parameters = parameters;
 		return this;
 	}
 
-	@Override
-	public OkHttpRequestBuilder get(){
+	public OkHttpRequestBuilder get() {
 		return setRequest(new okhttp3.RequestBuilder().get(), RequestMethod.GET);
 	}
 
-	@Override
-	public OkHttpRequestBuilder post(RequestBody<?> body){
+	public OkHttpRequestBuilder post(RequestBody<?> body) {
 		return setRequest(body == null ? new okhttp3.RequestBuilder().post() : new okhttp3.RequestBuilder().post(
-				buildRequestBody(body)), RequestMethod.POST);
+				buildRequestBody(body)).headers(builderHeaders(body)), RequestMethod.POST);
 	}
 
-	@Override
-	public OkHttpRequestBuilder patch(RequestBody<?> body){
+	public OkHttpRequestBuilder patch(RequestBody<?> body) {
 		return setRequest(body == null ? new okhttp3.RequestBuilder().patch() : new okhttp3.RequestBuilder().patch(
-				buildRequestBody(body)), RequestMethod.PATCH);
+				buildRequestBody(body)).headers(builderHeaders(body)), RequestMethod.PATCH);
 	}
 
-	@Override
-	public OkHttpRequestBuilder put(RequestBody<?> body){
+	public OkHttpRequestBuilder put(RequestBody<?> body) {
 		return setRequest(body == null ? new okhttp3.RequestBuilder().put() : new okhttp3.RequestBuilder().put(
-				buildRequestBody(body)), RequestMethod.PUT);
+				buildRequestBody(body)).headers(builderHeaders(body)), RequestMethod.PUT);
 	}
 
-	@Override
-	public OkHttpRequestBuilder delete(){
+	public OkHttpRequestBuilder delete() {
 		return setRequest(new okhttp3.RequestBuilder().delete(), RequestMethod.DELETE);
 	}
 
-	@Override
-	public OkHttpRequestBuilder connect(){
+	public OkHttpRequestBuilder connect() {
 		return setRequest(new okhttp3.RequestBuilder().connect(), RequestMethod.CONNECT);
 	}
 
-	@Override
-	public OkHttpRequestBuilder trace(){
+	public OkHttpRequestBuilder trace() {
 		return setRequest(new okhttp3.RequestBuilder().trace(), RequestMethod.TRACE);
 	}
 
-	@Override
-	public OkHttpRequestBuilder copy(){
+	public OkHttpRequestBuilder copy() {
 		return setRequest(new okhttp3.RequestBuilder().copy(), RequestMethod.COPY);
 	}
 
-	@Override
-	public OkHttpRequestBuilder move(){
+	public OkHttpRequestBuilder move() {
 		return setRequest(new okhttp3.RequestBuilder().move(), RequestMethod.MOVE);
 	}
 
-	@Override
-	public OkHttpRequestBuilder head(){
+	public OkHttpRequestBuilder head() {
 		return setRequest(new okhttp3.RequestBuilder().head(), RequestMethod.HEAD);
 	}
 
-	@Override
-	public OkHttpRequestBuilder options(){
+	public OkHttpRequestBuilder options() {
 		return setRequest(new okhttp3.RequestBuilder().options(), RequestMethod.OPTIONS);
 	}
 
-	@Override
-	public OkHttpRequestBuilder link(){
+	public OkHttpRequestBuilder link() {
 		return setRequest(new okhttp3.RequestBuilder().link(), RequestMethod.LINK);
 	}
 
-	@Override
-	public OkHttpRequestBuilder unlink(){
+	public OkHttpRequestBuilder unlink() {
 		return setRequest(new okhttp3.RequestBuilder().unlink(), RequestMethod.UNLINK);
 	}
 
-	@Override
-	public OkHttpRequestBuilder purge(){
+	public OkHttpRequestBuilder purge() {
 		return setRequest(new okhttp3.RequestBuilder().purge(), RequestMethod.PURGE);
 	}
 
-	@Override
-	public OkHttpRequestBuilder lock(){
+	public OkHttpRequestBuilder lock() {
 		return setRequest(new okhttp3.RequestBuilder().lock(), RequestMethod.LOCK);
 	}
 
-	@Override
-	public OkHttpRequestBuilder unlock(){
+	public OkHttpRequestBuilder unlock() {
 		return setRequest(new okhttp3.RequestBuilder().unlock(), RequestMethod.UNLOCK);
 	}
 
-	@Override
-	public OkHttpRequestBuilder propfind(){
+	public OkHttpRequestBuilder propfind() {
 		return setRequest(new okhttp3.RequestBuilder().propfind(), RequestMethod.PROPFIND);
 	}
 
-	@Override
-	public OkHttpRequestBuilder proppatch(RequestBody<?> body){
+	public OkHttpRequestBuilder proppatch(RequestBody<?> body) {
 		return setRequest(
 				body == null ? new okhttp3.RequestBuilder().proppatch() : new okhttp3.RequestBuilder().proppatch(
-						buildRequestBody(body)), RequestMethod.PROPPATCH);
+						buildRequestBody(body)).headers(builderHeaders(body)), RequestMethod.PROPPATCH);
 	}
 
-	@Override
-	public OkHttpRequestBuilder report(RequestBody<?> body){
+	public OkHttpRequestBuilder report(RequestBody<?> body) {
 		return setRequest(
 				body == null ? new okhttp3.RequestBuilder().report() : new okhttp3.RequestBuilder().report(
-						buildRequestBody(body)), RequestMethod.REPORT);
+						buildRequestBody(body)).headers(builderHeaders(body)), RequestMethod.REPORT);
 	}
 
-	@Override
-	public OkHttpRequestBuilder view(){
+	public OkHttpRequestBuilder view() {
 		return setRequest(new okhttp3.RequestBuilder().view(), RequestMethod.VIEW);
 	}
 
-	@Override
-	public OkHttpRequestBuilder wrapped(){
+	public OkHttpRequestBuilder wrapped() {
 		return setRequest(new okhttp3.RequestBuilder().wrapped(), RequestMethod.WRAPPED);
 	}
 
-	@Override
-	public com.buession.httpclient.okhttp.OkHttpRequest build(){
-		com.buession.httpclient.okhttp.OkHttpRequest request = super.build();
-
+	public com.buession.httpclient.okhttp.OkHttpRequest build() {
 		final Headers.Builder headersBuilder = new Headers.Builder();
 
 		if(request.getHeaders() != null){
@@ -364,20 +281,33 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder<com.buession.ht
 			}
 		}
 
-		request.getRequestBuilder().url(request.getUrl()).headers(headersBuilder.build());
+		request.getRequestBuilder().url(determineRequestUrl(uri, parameters)).headers(headersBuilder.build());
 
 		return request;
 	}
 
 	protected OkHttpRequestBuilder setRequest(final okhttp3.Request.Builder requestBuilder,
-											  final RequestMethod method){
+											  final RequestMethod method) {
 		request.setRequestBuilder(requestBuilder);
 		request.setMethod(method);
 		return this;
 	}
 
+	private static Headers builderHeaders(final RequestBody<?> body) {
+		ContentType contentType = body.getContentType();
+		if(contentType == null){
+			return Headers.of();
+		}else{
+			final Headers.Builder builder = new Headers.Builder();
+
+			builder.add("Content-Type", contentType.getMimeType());
+
+			return builder.build();
+		}
+	}
+
 	@SuppressWarnings({"unchecked"})
-	private okhttp3.RequestBody buildRequestBody(final RequestBody<?> data){
+	private okhttp3.RequestBody buildRequestBody(final RequestBody<?> data) {
 		if(data == null){
 			return DEFAULT_REQUEST_BODY;
 		}
@@ -387,9 +317,30 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder<com.buession.ht
 		return convert == null ? DEFAULT_REQUEST_BODY : convert.convert(data);
 	}
 
-	@Deprecated
-	public final static class OkHttpRequest extends com.buession.httpclient.okhttp.OkHttpRequest {
+	private static String determineRequestUrl(final URI uri, final Map<String, Object> parameters) {
+		if(Validate.isEmpty(uri.getRawQuery())){
+			return uri.toString();
+		}
 
+		final StringBuilder newQuery = new StringBuilder(uri.getRawQuery().length());
+
+		newQuery.append(uri.getRawQuery());
+
+		if(StringUtils.endsWith(uri.getRawQuery(), '&') == false){
+			newQuery.append('&');
+		}
+
+		newQuery.append(UriUtils.buildQuery(parameters, false));
+
+		try{
+			return new URI(uri.getScheme(), uri.getAuthority(), uri.getHost(), uri.getPort(),
+					uri.getPath(), newQuery.toString(), uri.getFragment()).toString();
+		}catch(URISyntaxException e){
+			if(logger.isErrorEnabled()){
+				logger.error("URL {} add parameters syntax: {}, reason: {}", uri, e.getMessage(), e.getReason());
+			}
+			return uri.toString();
+		}
 	}
 
 }

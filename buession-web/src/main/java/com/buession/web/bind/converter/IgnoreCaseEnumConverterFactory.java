@@ -30,6 +30,7 @@ import com.buession.core.validator.Validate;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.converter.ConverterFactory;
 import org.springframework.lang.Nullable;
+import org.springframework.util.ClassUtils;
 
 /**
  * 忽略大小写将字符串转换为枚举值
@@ -41,11 +42,11 @@ import org.springframework.lang.Nullable;
 public class IgnoreCaseEnumConverterFactory implements ConverterFactory<String, Enum> {
 
 	@Override
-	public <T extends Enum> Converter<String, T> getConverter(Class<T> targetType){
+	public <T extends Enum> Converter<String, T> getConverter(Class<T> targetType) {
 		return new StringToEnum(getEnumType(targetType));
 	}
 
-	private static Class<?> getEnumType(Class<?> targetType){
+	private static Class<?> getEnumType(Class<?> targetType) {
 		Class<?> enumType = targetType;
 
 		while(enumType != null && enumType.isEnum() == false){
@@ -62,13 +63,13 @@ public class IgnoreCaseEnumConverterFactory implements ConverterFactory<String, 
 
 		private final Class<T> enumType;
 
-		public StringToEnum(Class<T> enumType){
+		public StringToEnum(Class<T> enumType) {
 			this.enumType = enumType;
 		}
 
 		@Override
 		@Nullable
-		public T convert(String source){
+		public T convert(String source) {
 			if(Validate.isEmpty(source)){
 				return null;
 			}

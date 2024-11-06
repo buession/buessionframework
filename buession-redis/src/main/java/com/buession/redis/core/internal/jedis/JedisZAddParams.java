@@ -19,19 +19,22 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.jedis;
 
 import com.buession.redis.core.GtLt;
 import com.buession.redis.core.NxXx;
+import redis.clients.jedis.params.ZAddParams;
 
 /**
+ * Jedis {@link ZAddParams} 扩展
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class JedisZAddParams extends redis.clients.jedis.params.ZAddParams {
+public final class JedisZAddParams extends ZAddParams {
 
 	/**
 	 * 构造函数
@@ -139,15 +142,17 @@ public final class JedisZAddParams extends redis.clients.jedis.params.ZAddParams
 	 * 		更新成员方式
 	 */
 	private void nxXx(final NxXx nxXx) {
-		switch(nxXx){
-			case NX:
-				nx();
-				break;
-			case XX:
-				xx();
-				break;
-			default:
-				break;
+		if(nxXx != null){
+			switch(nxXx){
+				case NX:
+					nx();
+					break;
+				case XX:
+					xx();
+					break;
+				default:
+					break;
+			}
 		}
 	}
 
@@ -158,15 +163,17 @@ public final class JedisZAddParams extends redis.clients.jedis.params.ZAddParams
 	 * 		更新新的分值方式
 	 */
 	private void gtLt(final GtLt gtLt) {
-		switch(gtLt){
-			case GT:
-				gt();
-				break;
-			case LT:
-				lt();
-				break;
-			default:
-				break;
+		if(gtLt != null){
+			switch(gtLt){
+				case GT:
+					gt();
+					break;
+				case LT:
+					lt();
+					break;
+				default:
+					break;
+			}
 		}
 	}
 

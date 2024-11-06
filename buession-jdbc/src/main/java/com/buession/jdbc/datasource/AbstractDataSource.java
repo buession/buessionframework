@@ -19,17 +19,22 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.jdbc.datasource;
 
-import com.buession.jdbc.datasource.config.PoolConfiguration;
+import com.buession.core.converter.mapper.PropertyMapper;
+import com.buession.jdbc.core.TransactionIsolation;
+import com.buession.jdbc.datasource.pool.PoolConfiguration;
+
+import java.time.Duration;
+import java.util.Properties;
 
 /**
  * DataSource 抽象类
  *
- * @param <T>
+ * @param <DS>
  *        {@link javax.sql.DataSource} 数据源类型
  * @param <P>
  * 		连接池配置 {@link PoolConfiguration} 实现
@@ -37,8 +42,15 @@ import com.buession.jdbc.datasource.config.PoolConfiguration;
  * @author Yong.Teng
  * @since 1.3.2
  */
-public abstract class AbstractDataSource<T extends javax.sql.DataSource, P extends PoolConfiguration>
-		implements DataSource<T, P> {
+public abstract class AbstractDataSource<DS extends javax.sql.DataSource, P extends PoolConfiguration>
+		implements DataSource<DS, P> {
+
+	/**
+	 * {@link ClassLoader} 实例
+	 *
+	 * @since 3.0.0
+	 */
+	private ClassLoader driverClassLoader;
 
 	/**
 	 * 数据库驱动类名
@@ -69,6 +81,76 @@ public abstract class AbstractDataSource<T extends javax.sql.DataSource, P exten
 	private String password;
 
 	/**
+	 * 登录超时
+	 *
+	 * @since 3.0.0
+	 */
+	private Duration loginTimeout;
+
+	/**
+	 * 为支持 catalog 概念的数据库设置默认 catalog
+	 *
+	 * @since 3.0.0
+	 */
+	private String defaultCatalog;
+
+	/**
+	 * 设置的默认模式为支持模式的概念数据库
+	 *
+	 * @since 3.0.0
+	 */
+	private String defaultSchema;
+
+	/**
+	 * 设置一个SQL语句，在将每个新连接创建后，将其添加到池中之前执行该语句
+	 *
+	 * @since 3.0.0
+	 */
+	private String initSQL;
+
+	/**
+	 * 查询超时时间
+	 *
+	 * @since 3.0.0
+	 */
+	private Duration queryTimeout;
+
+	/**
+	 * 默认事务隔离级别
+	 *
+	 * @since 3.0.0
+	 */
+	private TransactionIsolation defaultTransactionIsolation = TransactionIsolation.DEFAULT;
+
+	/**
+	 * 默认是否自动提交事务
+	 *
+	 * @since 3.0.0
+	 */
+	private Boolean defaultAutoCommit;
+
+	/**
+	 * 默认连接是否是只读模式
+	 *
+	 * @since 3.0.0
+	 */
+	private Boolean defaultReadOnly;
+
+	/**
+	 * PoolGuard 是否可以访问底层连接
+	 *
+	 * @since 3.0.0
+	 */
+	private Boolean accessToUnderlyingConnectionAllowed;
+
+	/**
+	 * 连接属性
+	 *
+	 * @since 3.0.0
+	 */
+	private Properties connectionProperties;
+
+	/**
 	 * 连接池配置
 	 */
 	private P poolConfiguration;
@@ -76,7 +158,7 @@ public abstract class AbstractDataSource<T extends javax.sql.DataSource, P exten
 	/**
 	 * 构造函数
 	 */
-	public AbstractDataSource(){
+	public AbstractDataSource() {
 	}
 
 	/**
@@ -89,7 +171,7 @@ public abstract class AbstractDataSource<T extends javax.sql.DataSource, P exten
 	 *
 	 * @since 2.3.0
 	 */
-	public AbstractDataSource(String driverClassName, String url){
+	public AbstractDataSource(String driverClassName, String url) {
 		this.driverClassName = driverClassName;
 		this.url = url;
 	}
@@ -106,7 +188,7 @@ public abstract class AbstractDataSource<T extends javax.sql.DataSource, P exten
 	 *
 	 * @since 2.3.0
 	 */
-	public AbstractDataSource(String driverClassName, String url, String username){
+	public AbstractDataSource(String driverClassName, String url, String username) {
 		this(driverClassName, url);
 		this.username = username;
 	}
@@ -125,7 +207,7 @@ public abstract class AbstractDataSource<T extends javax.sql.DataSource, P exten
 	 *
 	 * @since 2.3.0
 	 */
-	public AbstractDataSource(String driverClassName, String url, String username, String password){
+	public AbstractDataSource(String driverClassName, String url, String username, String password) {
 		this(driverClassName, url, username);
 		this.password = password;
 	}
@@ -136,7 +218,7 @@ public abstract class AbstractDataSource<T extends javax.sql.DataSource, P exten
 	 * @param poolConfiguration
 	 * 		连接池配置
 	 */
-	public AbstractDataSource(P poolConfiguration){
+	public AbstractDataSource(P poolConfiguration) {
 		this.poolConfiguration = poolConfiguration;
 	}
 
@@ -152,7 +234,7 @@ public abstract class AbstractDataSource<T extends javax.sql.DataSource, P exten
 	 *
 	 * @since 2.3.0
 	 */
-	public AbstractDataSource(String driverClassName, String url, P poolConfiguration){
+	public AbstractDataSource(String driverClassName, String url, P poolConfiguration) {
 		this(driverClassName, url);
 		this.poolConfiguration = poolConfiguration;
 	}
@@ -171,7 +253,7 @@ public abstract class AbstractDataSource<T extends javax.sql.DataSource, P exten
 	 *
 	 * @since 2.3.0
 	 */
-	public AbstractDataSource(String driverClassName, String url, String username, P poolConfiguration){
+	public AbstractDataSource(String driverClassName, String url, String username, P poolConfiguration) {
 		this(driverClassName, url, username);
 		this.poolConfiguration = poolConfiguration;
 	}
@@ -193,68 +275,185 @@ public abstract class AbstractDataSource<T extends javax.sql.DataSource, P exten
 	 * @since 2.3.0
 	 */
 	public AbstractDataSource(String driverClassName, String url, String username, String password,
-							  P poolConfiguration){
+							  P poolConfiguration) {
 		this(driverClassName, url, username, password);
 		this.poolConfiguration = poolConfiguration;
 	}
 
 	@Override
-	public String getDriverClassName(){
+	public ClassLoader getDriverClassLoader() {
+		return driverClassLoader;
+	}
+
+	@Override
+	public void setDriverClassLoader(ClassLoader driverClassLoader) {
+		this.driverClassLoader = driverClassLoader;
+	}
+
+	@Override
+	public String getDriverClassName() {
 		return driverClassName;
 	}
 
 	@Override
-	public void setDriverClassName(String driverClassName){
+	public void setDriverClassName(String driverClassName) {
 		this.driverClassName = driverClassName;
 	}
 
 	@Override
-	public String getUrl(){
+	public String getUrl() {
 		return url;
 	}
 
 	@Override
-	public void setUrl(String url){
+	public void setUrl(String url) {
 		this.url = url;
 	}
 
 	@Override
-	public String getUsername(){
+	public String getUsername() {
 		return username;
 	}
 
 	@Override
-	public void setUsername(String username){
+	public void setUsername(String username) {
 		this.username = username;
 	}
 
 	@Override
-	public String getPassword(){
+	public String getPassword() {
 		return password;
 	}
 
 	@Override
-	public void setPassword(String password){
+	public void setPassword(String password) {
 		this.password = password;
 	}
 
 	@Override
-	public P getPoolConfiguration(){
+	public Duration getLoginTimeout() {
+		return loginTimeout;
+	}
+
+	@Override
+	public void setLoginTimeout(Duration loginTimeout) {
+		this.loginTimeout = loginTimeout;
+	}
+
+	@Override
+	public String getDefaultCatalog() {
+		return defaultCatalog;
+	}
+
+	@Override
+	public void setDefaultCatalog(String defaultCatalog) {
+		this.defaultCatalog = defaultCatalog;
+	}
+
+	@Override
+	public String getDefaultSchema() {
+		return defaultSchema;
+	}
+
+	@Override
+	public void setDefaultSchema(String defaultSchema) {
+		this.defaultSchema = defaultSchema;
+	}
+
+	public String getInitSQL() {
+		return initSQL;
+	}
+
+	public void setInitSQL(String initSQL) {
+		this.initSQL = initSQL;
+	}
+
+	@Override
+	public Duration getQueryTimeout() {
+		return queryTimeout;
+	}
+
+	@Override
+	public void setQueryTimeout(Duration queryTimeout) {
+		this.queryTimeout = queryTimeout;
+	}
+
+	@Override
+	public TransactionIsolation getDefaultTransactionIsolation() {
+		return defaultTransactionIsolation;
+	}
+
+	@Override
+	public void setDefaultTransactionIsolation(TransactionIsolation defaultTransactionIsolation) {
+		this.defaultTransactionIsolation = defaultTransactionIsolation;
+	}
+
+	@Override
+	public Boolean getDefaultAutoCommit() {
+		return defaultAutoCommit;
+	}
+
+	@Override
+	public void setDefaultAutoCommit(Boolean defaultAutoCommit) {
+		this.defaultAutoCommit = defaultAutoCommit;
+	}
+
+	@Override
+	public Boolean getDefaultReadOnly() {
+		return defaultReadOnly;
+	}
+
+	@Override
+	public void setDefaultReadOnly(Boolean defaultReadOnly) {
+		this.defaultReadOnly = defaultReadOnly;
+	}
+
+	@Override
+	public Boolean getAccessToUnderlyingConnectionAllowed() {
+		return accessToUnderlyingConnectionAllowed;
+	}
+
+	@Override
+	public void setAccessToUnderlyingConnectionAllowed(Boolean accessToUnderlyingConnectionAllowed) {
+		this.accessToUnderlyingConnectionAllowed = accessToUnderlyingConnectionAllowed;
+	}
+
+	public Properties getConnectionProperties() {
+		return connectionProperties;
+	}
+
+	public void setConnectionProperties(Properties connectionProperties) {
+		this.connectionProperties = connectionProperties;
+	}
+
+	@Override
+	public P getPoolConfiguration() {
 		return poolConfiguration;
 	}
 
 	@Override
-	public void setPoolConfiguration(P poolConfiguration){
+	public void setPoolConfiguration(P poolConfiguration) {
 		this.poolConfiguration = poolConfiguration;
 	}
 
-	protected void initialize(final T dataSource){
+	public DS createDataSource() {
+		final PropertyMapper nullPropertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
+		final PropertyMapper hasTextPropertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
+		final DS dataSource = createDataSource(nullPropertyMapper, hasTextPropertyMapper);
+
 		if(getPoolConfiguration() != null){
-			applyPoolConfiguration(dataSource, getPoolConfiguration());
+			applyPoolConfiguration(dataSource, getPoolConfiguration(), nullPropertyMapper, hasTextPropertyMapper);
 		}
+
+		return dataSource;
 	}
 
-	protected void applyPoolConfiguration(final T dataSource, final P poolConfiguration){
+	protected abstract DS createDataSource(final PropertyMapper nullPropertyMapper,
+										   final PropertyMapper hasTextPropertyMapper);
+
+	protected void applyPoolConfiguration(final DS dataSource, final P poolConfiguration,
+										  final PropertyMapper nullPropertyMapper,
+										  final PropertyMapper hasTextPropertyMapper) {
 
 	}
 

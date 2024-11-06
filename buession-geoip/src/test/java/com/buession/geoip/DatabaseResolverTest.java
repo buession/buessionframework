@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip;
@@ -28,7 +28,7 @@ import com.buession.geoip.model.Country;
 import com.buession.geoip.model.District;
 import com.buession.geoip.model.Location;
 import com.buession.geoip.spring.GeoIPResolverFactoryBean;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Yong.Teng
@@ -37,7 +37,7 @@ import org.junit.Test;
 public class DatabaseResolverTest {
 
 	@Test
-	public void country() throws Exception{
+	public void country() throws Exception {
 		DatabaseResolver resolver = new DatabaseResolver(
 				DatabaseResolver.class.getResourceAsStream("/maxmind/City.mmdb"));
 		Country country = resolver.country("114.114.114.114");
@@ -45,7 +45,7 @@ public class DatabaseResolverTest {
 	}
 
 	@Test
-	public void country1() throws Exception{
+	public void country1() throws Exception {
 		DatabaseResolver resolver = new DatabaseResolver(
 				DatabaseResolver.class.getResourceAsStream("/maxmind/City.mmdb"));
 		Country country = resolver.country(3739974408L);
@@ -53,7 +53,7 @@ public class DatabaseResolverTest {
 	}
 
 	@Test
-	public void country2() throws Exception{
+	public void country2() throws Exception {
 		GeoIPResolverFactoryBean factoryBean = new GeoIPResolverFactoryBean();
 
 		factoryBean.afterPropertiesSet();
@@ -64,7 +64,7 @@ public class DatabaseResolverTest {
 	}
 
 	@Test
-	public void country3() throws Exception{
+	public void country3() throws Exception {
 		DatabaseResolver resolver = new CacheDatabaseResolver(
 				DatabaseResolver.class.getResourceAsStream("/maxmind/City.mmdb"));
 		Country country = resolver.country(3739974408L);
@@ -72,7 +72,7 @@ public class DatabaseResolverTest {
 	}
 
 	@Test
-	public void district() throws Exception{
+	public void district() throws Exception {
 		DatabaseResolver resolver = new DatabaseResolver(
 				DatabaseResolver.class.getResourceAsStream("/maxmind/City.mmdb"));
 		District district = resolver.district("114.114.114.114");
@@ -80,7 +80,7 @@ public class DatabaseResolverTest {
 	}
 
 	@Test
-	public void district1() throws Exception{
+	public void district1() throws Exception {
 		DatabaseResolver resolver = new DatabaseResolver(
 				DatabaseResolver.class.getResourceAsStream("/maxmind/City.mmdb"));
 		District district = resolver.district(3739974408L);
@@ -88,7 +88,7 @@ public class DatabaseResolverTest {
 	}
 
 	@Test
-	public void location() throws Exception{
+	public void location() throws Exception {
 		DatabaseResolver resolver = new DatabaseResolver(
 				DatabaseResolver.class.getResourceAsStream("/maxmind/City.mmdb"));
 		Location location = resolver.location("1.11.64.11");
@@ -96,7 +96,7 @@ public class DatabaseResolverTest {
 	}
 
 	@Test
-	public void location1() throws Exception{
+	public void location1() throws Exception {
 		DatabaseResolver resolver = new DatabaseResolver(
 				DatabaseResolver.class.getResourceAsStream("/maxmind/City.mmdb"));
 		Location location = resolver.location(3739974408L);

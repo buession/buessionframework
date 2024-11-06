@@ -19,11 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient;
 
+import com.buession.httpclient.conn.NioConnectionManager;
 import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.RequestMethod;
@@ -42,7 +43,22 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 2.3.0
  */
-public interface HttpAsyncClient extends IBaseHttpClient {
+public interface HttpAsyncClient extends IBaseHttpClient, IHttpClient {
+
+	/**
+	 * 获取连接管理器
+	 *
+	 * @return 连接管理器
+	 */
+	NioConnectionManager getConnectionManager();
+
+	/**
+	 * 设置连接管理器
+	 *
+	 * @param connectionManager
+	 * 		连接管理器
+	 */
+	void setConnectionManager(NioConnectionManager connectionManager);
 
 	/**
 	 * GET 请求
@@ -57,7 +73,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void get(String url, Callback callback) throws IOException, RequestException{
+	default void get(String url, Callback callback) throws IOException, RequestException {
 		get(URI.create(url), callback);
 	}
 
@@ -107,7 +123,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void get(String url, Map<String, Object> parameters, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		get(URI.create(url), parameters, callback);
 	}
 
@@ -160,7 +176,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void get(String url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	default void get(String url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		get(URI.create(url), headers, callback);
 	}
 
@@ -216,7 +232,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void get(String url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		get(URI.create(url), parameters, headers, callback);
 	}
 
@@ -275,7 +291,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void get(String url, int readTimeout, Callback callback) throws IOException, RequestException{
+	default void get(String url, int readTimeout, Callback callback) throws IOException, RequestException {
 		get(URI.create(url), readTimeout, callback);
 	}
 
@@ -331,7 +347,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void get(String url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		get(URI.create(url), readTimeout, parameters, callback);
 	}
 
@@ -393,7 +409,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void get(String url, int readTimeout, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		get(URI.create(url), readTimeout, headers, callback);
 	}
 
@@ -455,7 +471,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void get(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					 Callback callback) throws IOException, RequestException{
+					 Callback callback) throws IOException, RequestException {
 		get(URI.create(url), readTimeout, parameters, headers, callback);
 	}
 
@@ -516,7 +532,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void post(String url, Callback callback) throws IOException, RequestException{
+	default void post(String url, Callback callback) throws IOException, RequestException {
 		post(URI.create(url), callback);
 	}
 
@@ -566,7 +582,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void post(String url, Map<String, Object> parameters, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		post(URI.create(url), parameters, callback);
 	}
 
@@ -619,7 +635,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void post(String url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	default void post(String url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		post(URI.create(url), headers, callback);
 	}
 
@@ -675,7 +691,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void post(String url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		post(URI.create(url), parameters, headers, callback);
 	}
 
@@ -734,7 +750,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void post(String url, RequestBody<?> data, Callback callback) throws IOException, RequestException{
+	default void post(String url, RequestBody<?> data, Callback callback) throws IOException, RequestException {
 		post(URI.create(url), data, callback);
 	}
 
@@ -790,7 +806,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void post(String url, RequestBody<?> data, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		post(URI.create(url), data, parameters, callback);
 	}
 
@@ -852,7 +868,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void post(String url, RequestBody<?> data, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		post(URI.create(url), data, headers, callback);
 	}
 
@@ -916,7 +932,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void post(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
-					  Callback callback) throws IOException, RequestException{
+					  Callback callback) throws IOException, RequestException {
 		post(URI.create(url), data, parameters, headers, callback);
 	}
 
@@ -979,7 +995,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void post(String url, int readTimeout, Callback callback) throws IOException, RequestException{
+	default void post(String url, int readTimeout, Callback callback) throws IOException, RequestException {
 		post(URI.create(url), readTimeout, callback);
 	}
 
@@ -1035,7 +1051,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void post(String url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		post(URI.create(url), readTimeout, parameters, callback);
 	}
 
@@ -1097,7 +1113,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void post(String url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		post(URI.create(url), readTimeout, headers, callback);
 	}
 
@@ -1159,7 +1175,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void post(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					  Callback callback) throws IOException, RequestException{
+					  Callback callback) throws IOException, RequestException {
 		post(URI.create(url), readTimeout, parameters, headers, callback);
 	}
 
@@ -1225,7 +1241,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void post(String url, int readTimeout, RequestBody<?> data, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		post(URI.create(url), readTimeout, data, callback);
 	}
 
@@ -1287,7 +1303,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void post(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-					  Callback callback) throws IOException, RequestException{
+					  Callback callback) throws IOException, RequestException {
 		post(URI.create(url), readTimeout, data, parameters, callback);
 	}
 
@@ -1355,7 +1371,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void post(String url, int readTimeout, RequestBody<?> data, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		post(URI.create(url), readTimeout, data, headers, callback);
 	}
 
@@ -1425,7 +1441,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void post(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-					  List<Header> headers, Callback callback) throws IOException, RequestException{
+					  List<Header> headers, Callback callback) throws IOException, RequestException {
 		post(URI.create(url), readTimeout, data, parameters, headers, callback);
 	}
 
@@ -1490,7 +1506,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void put(String url, Callback callback) throws IOException, RequestException{
+	default void put(String url, Callback callback) throws IOException, RequestException {
 		put(URI.create(url), callback);
 	}
 
@@ -1540,7 +1556,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void put(String url, Map<String, Object> parameters, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		put(URI.create(url), parameters, callback);
 	}
 
@@ -1593,7 +1609,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void put(String url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	default void put(String url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		put(URI.create(url), headers, callback);
 	}
 
@@ -1649,7 +1665,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void put(String url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		put(URI.create(url), parameters, headers, callback);
 	}
 
@@ -1708,7 +1724,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void put(String url, RequestBody<?> data, Callback callback) throws IOException, RequestException{
+	default void put(String url, RequestBody<?> data, Callback callback) throws IOException, RequestException {
 		put(URI.create(url), data, callback);
 	}
 
@@ -1764,7 +1780,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void put(String url, RequestBody<?> data, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		put(URI.create(url), data, parameters, callback);
 	}
 
@@ -1826,7 +1842,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void put(String url, RequestBody<?> data, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		put(URI.create(url), data, headers, callback);
 	}
 
@@ -1890,7 +1906,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void put(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
-					 Callback callback) throws IOException, RequestException{
+					 Callback callback) throws IOException, RequestException {
 		put(URI.create(url), data, parameters, headers, callback);
 	}
 
@@ -1953,7 +1969,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void put(String url, int readTimeout, Callback callback) throws IOException, RequestException{
+	default void put(String url, int readTimeout, Callback callback) throws IOException, RequestException {
 		put(URI.create(url), readTimeout, callback);
 	}
 
@@ -2009,7 +2025,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void put(String url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		put(URI.create(url), readTimeout, parameters, callback);
 	}
 
@@ -2071,7 +2087,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void put(String url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		put(URI.create(url), readTimeout, headers, callback);
 	}
 
@@ -2133,7 +2149,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void put(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					 Callback callback) throws IOException, RequestException{
+					 Callback callback) throws IOException, RequestException {
 		put(URI.create(url), readTimeout, parameters, headers, callback);
 	}
 
@@ -2199,7 +2215,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void put(String url, int readTimeout, RequestBody<?> data, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		put(URI.create(url), readTimeout, data, callback);
 	}
 
@@ -2261,7 +2277,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void put(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-					 Callback callback) throws IOException, RequestException{
+					 Callback callback) throws IOException, RequestException {
 		put(URI.create(url), readTimeout, data, parameters, callback);
 	}
 
@@ -2329,7 +2345,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void put(String url, int readTimeout, RequestBody<?> data, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		put(URI.create(url), readTimeout, data, headers, callback);
 	}
 
@@ -2399,7 +2415,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void put(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-					 List<Header> headers, Callback callback) throws IOException, RequestException{
+					 List<Header> headers, Callback callback) throws IOException, RequestException {
 		put(URI.create(url), readTimeout, data, parameters, headers, callback);
 	}
 
@@ -2464,7 +2480,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void patch(String url, Callback callback) throws IOException, RequestException{
+	default void patch(String url, Callback callback) throws IOException, RequestException {
 		patch(URI.create(url), callback);
 	}
 
@@ -2514,7 +2530,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void patch(String url, Map<String, Object> parameters, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		patch(URI.create(url), parameters, callback);
 	}
 
@@ -2567,7 +2583,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void patch(String url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	default void patch(String url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		patch(URI.create(url), headers, callback);
 	}
 
@@ -2623,7 +2639,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void patch(String url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		patch(URI.create(url), parameters, headers, callback);
 	}
 
@@ -2682,7 +2698,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void patch(String url, RequestBody<?> data, Callback callback) throws IOException, RequestException{
+	default void patch(String url, RequestBody<?> data, Callback callback) throws IOException, RequestException {
 		patch(URI.create(url), data, callback);
 	}
 
@@ -2738,7 +2754,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void patch(String url, RequestBody<?> data, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		patch(URI.create(url), data, parameters, callback);
 	}
 
@@ -2800,7 +2816,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void patch(String url, RequestBody<?> data, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		patch(URI.create(url), data, headers, callback);
 	}
 
@@ -2864,7 +2880,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void patch(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
-					   Callback callback) throws IOException, RequestException{
+					   Callback callback) throws IOException, RequestException {
 		patch(URI.create(url), data, parameters, headers, callback);
 	}
 
@@ -2927,7 +2943,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void patch(String url, int readTimeout, Callback callback) throws IOException, RequestException{
+	default void patch(String url, int readTimeout, Callback callback) throws IOException, RequestException {
 		patch(URI.create(url), readTimeout, callback);
 	}
 
@@ -2983,7 +2999,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void patch(String url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		patch(URI.create(url), readTimeout, parameters, callback);
 	}
 
@@ -3045,7 +3061,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void patch(String url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		patch(URI.create(url), readTimeout, headers, callback);
 	}
 
@@ -3107,7 +3123,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void patch(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					   Callback callback) throws IOException, RequestException{
+					   Callback callback) throws IOException, RequestException {
 		patch(URI.create(url), readTimeout, parameters, headers, callback);
 	}
 
@@ -3173,7 +3189,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void patch(String url, int readTimeout, RequestBody<?> data, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		patch(URI.create(url), readTimeout, data, callback);
 	}
 
@@ -3235,7 +3251,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void patch(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-					   Callback callback) throws IOException, RequestException{
+					   Callback callback) throws IOException, RequestException {
 		patch(URI.create(url), readTimeout, data, parameters, callback);
 	}
 
@@ -3303,7 +3319,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void patch(String url, int readTimeout, RequestBody<?> data, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		patch(URI.create(url), readTimeout, data, headers, callback);
 	}
 
@@ -3373,7 +3389,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void patch(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-					   List<Header> headers, Callback callback) throws IOException, RequestException{
+					   List<Header> headers, Callback callback) throws IOException, RequestException {
 		patch(URI.create(url), readTimeout, data, parameters, headers, callback);
 	}
 
@@ -3438,7 +3454,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void delete(String url, Callback callback) throws IOException, RequestException{
+	default void delete(String url, Callback callback) throws IOException, RequestException {
 		delete(URI.create(url), callback);
 	}
 
@@ -3488,7 +3504,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void delete(String url, Map<String, Object> parameters, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		delete(URI.create(url), parameters, callback);
 	}
 
@@ -3541,7 +3557,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void delete(String url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	default void delete(String url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		delete(URI.create(url), headers, callback);
 	}
 
@@ -3597,7 +3613,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void delete(String url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		delete(URI.create(url), parameters, headers, callback);
 	}
 
@@ -3656,7 +3672,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void delete(String url, int readTimeout, Callback callback) throws IOException, RequestException{
+	default void delete(String url, int readTimeout, Callback callback) throws IOException, RequestException {
 		delete(URI.create(url), readTimeout, callback);
 	}
 
@@ -3712,7 +3728,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void delete(String url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		delete(URI.create(url), readTimeout, parameters, callback);
 	}
 
@@ -3774,7 +3790,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void delete(String url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		delete(URI.create(url), readTimeout, headers, callback);
 	}
 
@@ -3836,7 +3852,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void delete(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-						Callback callback) throws IOException, RequestException{
+						Callback callback) throws IOException, RequestException {
 		delete(URI.create(url), readTimeout, parameters, headers, callback);
 	}
 
@@ -3897,7 +3913,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void connect(String url, Callback callback) throws IOException, RequestException{
+	default void connect(String url, Callback callback) throws IOException, RequestException {
 		connect(URI.create(url), callback);
 	}
 
@@ -3947,7 +3963,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void connect(String url, Map<String, Object> parameters, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		connect(URI.create(url), parameters, callback);
 	}
 
@@ -4000,7 +4016,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void connect(String url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	default void connect(String url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		connect(URI.create(url), headers, callback);
 	}
 
@@ -4056,7 +4072,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void connect(String url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		connect(URI.create(url), parameters, headers, callback);
 	}
 
@@ -4115,7 +4131,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void connect(String url, int readTimeout, Callback callback) throws IOException, RequestException{
+	default void connect(String url, int readTimeout, Callback callback) throws IOException, RequestException {
 		connect(URI.create(url), readTimeout, callback);
 	}
 
@@ -4171,7 +4187,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void connect(String url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		connect(URI.create(url), readTimeout, parameters, callback);
 	}
 
@@ -4233,7 +4249,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void connect(String url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		connect(URI.create(url), readTimeout, headers, callback);
 	}
 
@@ -4297,7 +4313,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void connect(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-						 Callback callback) throws IOException, RequestException{
+						 Callback callback) throws IOException, RequestException {
 		connect(URI.create(url), readTimeout, parameters, headers, callback);
 	}
 
@@ -4358,7 +4374,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void trace(String url, Callback callback) throws IOException, RequestException{
+	default void trace(String url, Callback callback) throws IOException, RequestException {
 		trace(URI.create(url), callback);
 	}
 
@@ -4408,7 +4424,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void trace(String url, Map<String, Object> parameters, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		trace(URI.create(url), parameters, callback);
 	}
 
@@ -4461,7 +4477,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void trace(String url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	default void trace(String url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		trace(URI.create(url), headers, callback);
 	}
 
@@ -4517,7 +4533,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void trace(String url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		trace(URI.create(url), parameters, headers, callback);
 	}
 
@@ -4576,7 +4592,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void trace(String url, int readTimeout, Callback callback) throws IOException, RequestException{
+	default void trace(String url, int readTimeout, Callback callback) throws IOException, RequestException {
 		trace(URI.create(url), readTimeout, callback);
 	}
 
@@ -4632,7 +4648,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void trace(String url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		trace(URI.create(url), readTimeout, parameters, callback);
 	}
 
@@ -4694,7 +4710,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void trace(String url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		trace(URI.create(url), readTimeout, headers, callback);
 	}
 
@@ -4756,7 +4772,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void trace(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					   Callback callback) throws IOException, RequestException{
+					   Callback callback) throws IOException, RequestException {
 		trace(URI.create(url), readTimeout, parameters, headers, callback);
 	}
 
@@ -4817,7 +4833,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void copy(String url, Callback callback) throws IOException, RequestException{
+	default void copy(String url, Callback callback) throws IOException, RequestException {
 		copy(URI.create(url), callback);
 	}
 
@@ -4867,7 +4883,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void copy(String url, Map<String, Object> parameters, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		copy(URI.create(url), parameters, callback);
 	}
 
@@ -4920,7 +4936,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void copy(String url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	default void copy(String url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		copy(URI.create(url), headers, callback);
 	}
 
@@ -4976,7 +4992,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void copy(String url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		copy(URI.create(url), parameters, headers, callback);
 	}
 
@@ -5035,7 +5051,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void copy(String url, int readTimeout, Callback callback) throws IOException, RequestException{
+	default void copy(String url, int readTimeout, Callback callback) throws IOException, RequestException {
 		copy(URI.create(url), readTimeout, callback);
 	}
 
@@ -5091,7 +5107,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void copy(String url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		copy(URI.create(url), readTimeout, parameters, callback);
 	}
 
@@ -5153,7 +5169,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void copy(String url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		copy(URI.create(url), readTimeout, headers, callback);
 	}
 
@@ -5215,7 +5231,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void copy(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					  Callback callback) throws IOException, RequestException{
+					  Callback callback) throws IOException, RequestException {
 		copy(URI.create(url), readTimeout, parameters, headers, callback);
 	}
 
@@ -5276,7 +5292,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void move(String url, Callback callback) throws IOException, RequestException{
+	default void move(String url, Callback callback) throws IOException, RequestException {
 		move(URI.create(url), callback);
 	}
 
@@ -5326,7 +5342,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void move(String url, Map<String, Object> parameters, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		move(URI.create(url), parameters, callback);
 	}
 
@@ -5379,7 +5395,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void move(String url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	default void move(String url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		move(URI.create(url), headers, callback);
 	}
 
@@ -5435,7 +5451,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void move(String url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		move(URI.create(url), parameters, headers, callback);
 	}
 
@@ -5494,7 +5510,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void move(String url, int readTimeout, Callback callback) throws IOException, RequestException{
+	default void move(String url, int readTimeout, Callback callback) throws IOException, RequestException {
 		move(URI.create(url), readTimeout, callback);
 	}
 
@@ -5550,7 +5566,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void move(String url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		move(URI.create(url), readTimeout, parameters, callback);
 	}
 
@@ -5612,7 +5628,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void move(String url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		move(URI.create(url), readTimeout, headers, callback);
 	}
 
@@ -5674,7 +5690,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void move(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					  Callback callback) throws IOException, RequestException{
+					  Callback callback) throws IOException, RequestException {
 		move(URI.create(url), readTimeout, parameters, headers, callback);
 	}
 
@@ -5735,7 +5751,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void head(String url, Callback callback) throws IOException, RequestException{
+	default void head(String url, Callback callback) throws IOException, RequestException {
 		head(URI.create(url), callback);
 	}
 
@@ -5785,7 +5801,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void head(String url, Map<String, Object> parameters, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		head(URI.create(url), parameters, callback);
 	}
 
@@ -5838,7 +5854,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void head(String url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	default void head(String url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		head(URI.create(url), headers, callback);
 	}
 
@@ -5894,7 +5910,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void head(String url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		head(URI.create(url), parameters, headers, callback);
 	}
 
@@ -5953,7 +5969,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void head(String url, int readTimeout, Callback callback) throws IOException, RequestException{
+	default void head(String url, int readTimeout, Callback callback) throws IOException, RequestException {
 		head(URI.create(url), readTimeout, callback);
 	}
 
@@ -6009,7 +6025,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void head(String url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		head(URI.create(url), readTimeout, parameters, callback);
 	}
 
@@ -6071,7 +6087,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void head(String url, int readTimeout, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		head(URI.create(url), readTimeout, headers, callback);
 	}
 
@@ -6133,7 +6149,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void head(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					  Callback callback) throws IOException, RequestException{
+					  Callback callback) throws IOException, RequestException {
 		head(URI.create(url), readTimeout, parameters, headers, callback);
 	}
 
@@ -6194,7 +6210,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void options(String url, Callback callback) throws IOException, RequestException{
+	default void options(String url, Callback callback) throws IOException, RequestException {
 		options(URI.create(url), callback);
 	}
 
@@ -6244,7 +6260,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void options(String url, Map<String, Object> parameters, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		options(URI.create(url), parameters, callback);
 	}
 
@@ -6297,7 +6313,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void options(String url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	default void options(String url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		options(URI.create(url), headers, callback);
 	}
 
@@ -6353,7 +6369,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void options(String url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		options(URI.create(url), parameters, headers, callback);
 	}
 
@@ -6412,7 +6428,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void options(String url, int readTimeout, Callback callback) throws IOException, RequestException{
+	default void options(String url, int readTimeout, Callback callback) throws IOException, RequestException {
 		options(URI.create(url), readTimeout, callback);
 	}
 
@@ -6468,7 +6484,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void options(String url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		options(URI.create(url), readTimeout, parameters, callback);
 	}
 
@@ -6530,7 +6546,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void options(String url, int readTimeout, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		options(URI.create(url), readTimeout, headers, callback);
 	}
 
@@ -6594,7 +6610,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void options(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-						 Callback callback) throws IOException, RequestException{
+						 Callback callback) throws IOException, RequestException {
 		options(URI.create(url), readTimeout, parameters, headers, callback);
 	}
 
@@ -6655,7 +6671,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void link(String url, Callback callback) throws IOException, RequestException{
+	default void link(String url, Callback callback) throws IOException, RequestException {
 		link(URI.create(url), callback);
 	}
 
@@ -6705,7 +6721,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void link(String url, Map<String, Object> parameters, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		link(URI.create(url), parameters, callback);
 	}
 
@@ -6758,7 +6774,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void link(String url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	default void link(String url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		link(URI.create(url), headers, callback);
 	}
 
@@ -6814,7 +6830,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void link(String url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		link(URI.create(url), parameters, headers, callback);
 	}
 
@@ -6873,7 +6889,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void link(String url, int readTimeout, Callback callback) throws IOException, RequestException{
+	default void link(String url, int readTimeout, Callback callback) throws IOException, RequestException {
 		link(URI.create(url), readTimeout, callback);
 	}
 
@@ -6929,7 +6945,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void link(String url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		link(URI.create(url), readTimeout, parameters, callback);
 	}
 
@@ -6991,7 +7007,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void link(String url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		link(URI.create(url), readTimeout, headers, callback);
 	}
 
@@ -7053,7 +7069,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void link(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					  Callback callback) throws IOException, RequestException{
+					  Callback callback) throws IOException, RequestException {
 		link(URI.create(url), readTimeout, parameters, headers, callback);
 	}
 
@@ -7114,7 +7130,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void unlink(String url, Callback callback) throws IOException, RequestException{
+	default void unlink(String url, Callback callback) throws IOException, RequestException {
 		unlink(URI.create(url), callback);
 	}
 
@@ -7164,7 +7180,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void unlink(String url, Map<String, Object> parameters, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		unlink(URI.create(url), parameters, callback);
 	}
 
@@ -7217,7 +7233,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void unlink(String url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	default void unlink(String url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		unlink(URI.create(url), headers, callback);
 	}
 
@@ -7273,7 +7289,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void unlink(String url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		unlink(URI.create(url), parameters, headers, callback);
 	}
 
@@ -7332,7 +7348,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void unlink(String url, int readTimeout, Callback callback) throws IOException, RequestException{
+	default void unlink(String url, int readTimeout, Callback callback) throws IOException, RequestException {
 		unlink(URI.create(url), readTimeout, callback);
 	}
 
@@ -7388,7 +7404,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void unlink(String url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		unlink(URI.create(url), readTimeout, parameters, callback);
 	}
 
@@ -7450,7 +7466,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void unlink(String url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		unlink(URI.create(url), readTimeout, headers, callback);
 	}
 
@@ -7512,7 +7528,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void unlink(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-						Callback callback) throws IOException, RequestException{
+						Callback callback) throws IOException, RequestException {
 		unlink(URI.create(url), readTimeout, parameters, headers, callback);
 	}
 
@@ -7573,7 +7589,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void purge(String url, Callback callback) throws IOException, RequestException{
+	default void purge(String url, Callback callback) throws IOException, RequestException {
 		purge(URI.create(url), callback);
 	}
 
@@ -7623,7 +7639,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void purge(String url, Map<String, Object> parameters, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		purge(URI.create(url), parameters, callback);
 	}
 
@@ -7676,7 +7692,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void purge(String url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	default void purge(String url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		purge(URI.create(url), headers, callback);
 	}
 
@@ -7732,7 +7748,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void purge(String url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		purge(URI.create(url), parameters, headers, callback);
 	}
 
@@ -7791,7 +7807,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void purge(String url, int readTimeout, Callback callback) throws IOException, RequestException{
+	default void purge(String url, int readTimeout, Callback callback) throws IOException, RequestException {
 		purge(URI.create(url), readTimeout, callback);
 	}
 
@@ -7847,7 +7863,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void purge(String url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		purge(URI.create(url), readTimeout, parameters, callback);
 	}
 
@@ -7909,7 +7925,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void purge(String url, int readTimeout, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		purge(URI.create(url), readTimeout, headers, callback);
 	}
 
@@ -7971,7 +7987,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void purge(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					   Callback callback) throws IOException, RequestException{
+					   Callback callback) throws IOException, RequestException {
 		purge(URI.create(url), readTimeout, parameters, headers, callback);
 	}
 
@@ -8032,7 +8048,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void lock(String url, Callback callback) throws IOException, RequestException{
+	default void lock(String url, Callback callback) throws IOException, RequestException {
 		lock(URI.create(url), callback);
 	}
 
@@ -8082,7 +8098,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void lock(String url, Map<String, Object> parameters, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		lock(URI.create(url), parameters, callback);
 	}
 
@@ -8135,7 +8151,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void lock(String url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	default void lock(String url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		lock(URI.create(url), headers, callback);
 	}
 
@@ -8191,7 +8207,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void lock(String url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		lock(URI.create(url), parameters, headers, callback);
 	}
 
@@ -8250,7 +8266,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void lock(String url, int readTimeout, Callback callback) throws IOException, RequestException{
+	default void lock(String url, int readTimeout, Callback callback) throws IOException, RequestException {
 		lock(URI.create(url), readTimeout, callback);
 	}
 
@@ -8306,7 +8322,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void lock(String url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		lock(URI.create(url), readTimeout, parameters, callback);
 	}
 
@@ -8368,7 +8384,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void lock(String url, int readTimeout, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		lock(URI.create(url), readTimeout, headers, callback);
 	}
 
@@ -8430,7 +8446,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void lock(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					  Callback callback) throws IOException, RequestException{
+					  Callback callback) throws IOException, RequestException {
 		lock(URI.create(url), readTimeout, parameters, headers, callback);
 	}
 
@@ -8491,7 +8507,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void unlock(String url, Callback callback) throws IOException, RequestException{
+	default void unlock(String url, Callback callback) throws IOException, RequestException {
 		unlock(URI.create(url), callback);
 	}
 
@@ -8541,7 +8557,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void unlock(String url, Map<String, Object> parameters, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		unlock(URI.create(url), parameters, callback);
 	}
 
@@ -8594,7 +8610,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void unlock(String url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	default void unlock(String url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		unlock(URI.create(url), headers, callback);
 	}
 
@@ -8650,7 +8666,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void unlock(String url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		unlock(URI.create(url), parameters, headers, callback);
 	}
 
@@ -8709,7 +8725,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void unlock(String url, int readTimeout, Callback callback) throws IOException, RequestException{
+	default void unlock(String url, int readTimeout, Callback callback) throws IOException, RequestException {
 		unlock(URI.create(url), readTimeout, callback);
 	}
 
@@ -8765,7 +8781,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void unlock(String url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		unlock(URI.create(url), readTimeout, parameters, callback);
 	}
 
@@ -8827,7 +8843,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void unlock(String url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		unlock(URI.create(url), readTimeout, headers, callback);
 	}
 
@@ -8889,7 +8905,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void unlock(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-						Callback callback) throws IOException, RequestException{
+						Callback callback) throws IOException, RequestException {
 		unlock(URI.create(url), readTimeout, parameters, headers, callback);
 	}
 
@@ -8950,7 +8966,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void propfind(String url, Callback callback) throws IOException, RequestException{
+	default void propfind(String url, Callback callback) throws IOException, RequestException {
 		propfind(URI.create(url), callback);
 	}
 
@@ -9000,7 +9016,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void propfind(String url, Map<String, Object> parameters, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		propfind(URI.create(url), parameters, callback);
 	}
 
@@ -9053,7 +9069,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void propfind(String url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	default void propfind(String url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		propfind(URI.create(url), headers, callback);
 	}
 
@@ -9109,7 +9125,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void propfind(String url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		propfind(URI.create(url), parameters, headers, callback);
 	}
 
@@ -9168,7 +9184,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void propfind(String url, int readTimeout, Callback callback) throws IOException, RequestException{
+	default void propfind(String url, int readTimeout, Callback callback) throws IOException, RequestException {
 		propfind(URI.create(url), readTimeout, callback);
 	}
 
@@ -9224,7 +9240,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void propfind(String url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		propfind(URI.create(url), readTimeout, parameters, callback);
 	}
 
@@ -9286,7 +9302,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void propfind(String url, int readTimeout, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		propfind(URI.create(url), readTimeout, headers, callback);
 	}
 
@@ -9350,7 +9366,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void propfind(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-						  Callback callback) throws IOException, RequestException{
+						  Callback callback) throws IOException, RequestException {
 		propfind(URI.create(url), readTimeout, parameters, headers, callback);
 	}
 
@@ -9411,7 +9427,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void proppatch(String url, Callback callback) throws IOException, RequestException{
+	default void proppatch(String url, Callback callback) throws IOException, RequestException {
 		proppatch(URI.create(url), callback);
 	}
 
@@ -9461,7 +9477,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void proppatch(String url, Map<String, Object> parameters, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		proppatch(URI.create(url), parameters, callback);
 	}
 
@@ -9514,7 +9530,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void proppatch(String url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	default void proppatch(String url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		proppatch(URI.create(url), headers, callback);
 	}
 
@@ -9570,7 +9586,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void proppatch(String url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		proppatch(URI.create(url), parameters, headers, callback);
 	}
 
@@ -9629,7 +9645,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void proppatch(String url, RequestBody<?> data, Callback callback) throws IOException, RequestException{
+	default void proppatch(String url, RequestBody<?> data, Callback callback) throws IOException, RequestException {
 		proppatch(URI.create(url), data, callback);
 	}
 
@@ -9685,7 +9701,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void proppatch(String url, RequestBody<?> data, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		proppatch(URI.create(url), data, parameters, callback);
 	}
 
@@ -9747,7 +9763,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void proppatch(String url, RequestBody<?> data, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		proppatch(URI.create(url), data, headers, callback);
 	}
 
@@ -9812,7 +9828,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 */
 	default void proppatch(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
 						   Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		proppatch(URI.create(url), data, parameters, headers, callback);
 	}
 
@@ -9875,7 +9891,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void proppatch(String url, int readTimeout, Callback callback) throws IOException, RequestException{
+	default void proppatch(String url, int readTimeout, Callback callback) throws IOException, RequestException {
 		proppatch(URI.create(url), readTimeout, callback);
 	}
 
@@ -9931,7 +9947,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void proppatch(String url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		proppatch(URI.create(url), readTimeout, parameters, callback);
 	}
 
@@ -9993,7 +10009,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void proppatch(String url, int readTimeout, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		proppatch(URI.create(url), readTimeout, headers, callback);
 	}
 
@@ -10057,7 +10073,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void proppatch(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-						   Callback callback) throws IOException, RequestException{
+						   Callback callback) throws IOException, RequestException {
 		proppatch(URI.create(url), readTimeout, parameters, headers, callback);
 	}
 
@@ -10123,7 +10139,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void proppatch(String url, int readTimeout, RequestBody<?> data, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		proppatch(URI.create(url), readTimeout, data, callback);
 	}
 
@@ -10187,7 +10203,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void proppatch(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-						   Callback callback) throws IOException, RequestException{
+						   Callback callback) throws IOException, RequestException {
 		proppatch(URI.create(url), readTimeout, data, parameters, callback);
 	}
 
@@ -10255,7 +10271,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void proppatch(String url, int readTimeout, RequestBody<?> data, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		proppatch(URI.create(url), readTimeout, data, headers, callback);
 	}
 
@@ -10325,7 +10341,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void proppatch(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-						   List<Header> headers, Callback callback) throws IOException, RequestException{
+						   List<Header> headers, Callback callback) throws IOException, RequestException {
 		proppatch(URI.create(url), readTimeout, data, parameters, headers, callback);
 	}
 
@@ -10390,7 +10406,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void report(String url, Callback callback) throws IOException, RequestException{
+	default void report(String url, Callback callback) throws IOException, RequestException {
 		report(URI.create(url), callback);
 	}
 
@@ -10440,7 +10456,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void report(String url, Map<String, Object> parameters, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		report(URI.create(url), parameters, callback);
 	}
 
@@ -10493,7 +10509,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void report(String url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	default void report(String url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		report(URI.create(url), headers, callback);
 	}
 
@@ -10549,7 +10565,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void report(String url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		report(URI.create(url), parameters, headers, callback);
 	}
 
@@ -10608,7 +10624,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void report(String url, RequestBody<?> data, Callback callback) throws IOException, RequestException{
+	default void report(String url, RequestBody<?> data, Callback callback) throws IOException, RequestException {
 		report(URI.create(url), data, callback);
 	}
 
@@ -10664,7 +10680,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void report(String url, RequestBody<?> data, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		report(URI.create(url), data, parameters, callback);
 	}
 
@@ -10726,7 +10742,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void report(String url, RequestBody<?> data, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		report(URI.create(url), data, headers, callback);
 	}
 
@@ -10790,7 +10806,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void report(String url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers,
-						Callback callback) throws IOException, RequestException{
+						Callback callback) throws IOException, RequestException {
 		report(URI.create(url), data, parameters, headers, callback);
 	}
 
@@ -10853,7 +10869,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void report(String url, int readTimeout, Callback callback) throws IOException, RequestException{
+	default void report(String url, int readTimeout, Callback callback) throws IOException, RequestException {
 		report(URI.create(url), readTimeout, callback);
 	}
 
@@ -10909,7 +10925,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void report(String url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		report(URI.create(url), readTimeout, parameters, callback);
 	}
 
@@ -10971,7 +10987,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void report(String url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		report(URI.create(url), readTimeout, headers, callback);
 	}
 
@@ -11033,7 +11049,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void report(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-						Callback callback) throws IOException, RequestException{
+						Callback callback) throws IOException, RequestException {
 		report(URI.create(url), readTimeout, parameters, headers, callback);
 	}
 
@@ -11099,7 +11115,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void report(String url, int readTimeout, RequestBody<?> data, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		report(URI.create(url), readTimeout, data, callback);
 	}
 
@@ -11161,7 +11177,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void report(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-						Callback callback) throws IOException, RequestException{
+						Callback callback) throws IOException, RequestException {
 		report(URI.create(url), readTimeout, data, parameters, callback);
 	}
 
@@ -11229,7 +11245,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void report(String url, int readTimeout, RequestBody<?> data, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		report(URI.create(url), readTimeout, data, headers, callback);
 	}
 
@@ -11299,7 +11315,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void report(String url, int readTimeout, RequestBody<?> data, Map<String, Object> parameters,
-						List<Header> headers, Callback callback) throws IOException, RequestException{
+						List<Header> headers, Callback callback) throws IOException, RequestException {
 		report(URI.create(url), readTimeout, data, parameters, headers, callback);
 	}
 
@@ -11364,7 +11380,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void view(String url, Callback callback) throws IOException, RequestException{
+	default void view(String url, Callback callback) throws IOException, RequestException {
 		view(URI.create(url), callback);
 	}
 
@@ -11414,7 +11430,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void view(String url, Map<String, Object> parameters, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		view(URI.create(url), parameters, callback);
 	}
 
@@ -11467,7 +11483,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void view(String url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	default void view(String url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		view(URI.create(url), headers, callback);
 	}
 
@@ -11523,7 +11539,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void view(String url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		view(URI.create(url), parameters, headers, callback);
 	}
 
@@ -11582,7 +11598,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void view(String url, int readTimeout, Callback callback) throws IOException, RequestException{
+	default void view(String url, int readTimeout, Callback callback) throws IOException, RequestException {
 		view(URI.create(url), readTimeout, callback);
 	}
 
@@ -11638,7 +11654,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void view(String url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		view(URI.create(url), readTimeout, parameters, callback);
 	}
 
@@ -11700,7 +11716,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void view(String url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		view(URI.create(url), readTimeout, headers, callback);
 	}
 
@@ -11762,7 +11778,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void view(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-					  Callback callback) throws IOException, RequestException{
+					  Callback callback) throws IOException, RequestException {
 		view(URI.create(url), readTimeout, parameters, headers, callback);
 	}
 
@@ -11823,7 +11839,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void wrapped(String url, Callback callback) throws IOException, RequestException{
+	default void wrapped(String url, Callback callback) throws IOException, RequestException {
 		wrapped(URI.create(url), callback);
 	}
 
@@ -11873,7 +11889,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void wrapped(String url, Map<String, Object> parameters, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		wrapped(URI.create(url), parameters, callback);
 	}
 
@@ -11926,7 +11942,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void wrapped(String url, List<Header> headers, Callback callback) throws IOException, RequestException{
+	default void wrapped(String url, List<Header> headers, Callback callback) throws IOException, RequestException {
 		wrapped(URI.create(url), headers, callback);
 	}
 
@@ -11982,7 +11998,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void wrapped(String url, Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		wrapped(URI.create(url), parameters, headers, callback);
 	}
 
@@ -12041,7 +12057,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * @throws RequestException
 	 * 		请求异常
 	 */
-	default void wrapped(String url, int readTimeout, Callback callback) throws IOException, RequestException{
+	default void wrapped(String url, int readTimeout, Callback callback) throws IOException, RequestException {
 		wrapped(URI.create(url), readTimeout, callback);
 	}
 
@@ -12097,7 +12113,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void wrapped(String url, int readTimeout, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		wrapped(URI.create(url), readTimeout, parameters, callback);
 	}
 
@@ -12159,7 +12175,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void wrapped(String url, int readTimeout, List<Header> headers, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		wrapped(URI.create(url), readTimeout, headers, callback);
 	}
 
@@ -12223,7 +12239,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void wrapped(String url, int readTimeout, Map<String, Object> parameters, List<Header> headers,
-						 Callback callback) throws IOException, RequestException{
+						 Callback callback) throws IOException, RequestException {
 		wrapped(URI.create(url), readTimeout, parameters, headers, callback);
 	}
 
@@ -12287,7 +12303,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void request(String url, RequestMethod requestMethod, Callback callback) throws IOException,
-			RequestException{
+			RequestException {
 		request(URI.create(url), requestMethod, callback);
 	}
 
@@ -12343,7 +12359,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void request(String url, RequestMethod requestMethod, Map<String, Object> parameters, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		request(URI.create(url), requestMethod, parameters, callback);
 	}
 
@@ -12405,7 +12421,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void request(String url, RequestMethod requestMethod, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		request(URI.create(url), requestMethod, headers, callback);
 	}
 
@@ -12469,7 +12485,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void request(String url, RequestMethod requestMethod, Map<String, Object> parameters,
-						 List<Header> headers, Callback callback) throws IOException, RequestException{
+						 List<Header> headers, Callback callback) throws IOException, RequestException {
 		request(URI.create(url), requestMethod, parameters, headers, callback);
 	}
 
@@ -12535,7 +12551,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void request(String url, RequestMethod requestMethod, RequestBody<?> data, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		request(URI.create(url), requestMethod, data, callback);
 	}
 
@@ -12599,7 +12615,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void request(String url, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters,
-						 Callback callback) throws IOException, RequestException{
+						 Callback callback) throws IOException, RequestException {
 		request(URI.create(url), requestMethod, data, parameters, callback);
 	}
 
@@ -12667,7 +12683,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void request(String url, RequestMethod requestMethod, RequestBody<?> data, List<Header> headers,
-						 Callback callback) throws IOException, RequestException{
+						 Callback callback) throws IOException, RequestException {
 		request(URI.create(url), requestMethod, data, headers, callback);
 	}
 
@@ -12737,7 +12753,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void request(String url, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters,
-						 List<Header> headers, Callback callback) throws IOException, RequestException{
+						 List<Header> headers, Callback callback) throws IOException, RequestException {
 		request(URI.create(url), requestMethod, data, parameters, headers, callback);
 	}
 
@@ -12807,7 +12823,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void request(String url, RequestMethod requestMethod, int readTimeout, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		request(URI.create(url), requestMethod, readTimeout, callback);
 	}
 
@@ -12871,7 +12887,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void request(String url, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters,
-						 Callback callback) throws IOException, RequestException{
+						 Callback callback) throws IOException, RequestException {
 		request(URI.create(url), requestMethod, readTimeout, parameters, callback);
 	}
 
@@ -12939,7 +12955,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void request(String url, RequestMethod requestMethod, int readTimeout, List<Header> headers,
-						 Callback callback) throws IOException, RequestException{
+						 Callback callback) throws IOException, RequestException {
 		request(URI.create(url), requestMethod, readTimeout, headers, callback);
 	}
 
@@ -13009,7 +13025,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void request(String url, RequestMethod requestMethod, int readTimeout, Map<String, Object> parameters,
-						 List<Header> headers, Callback callback) throws IOException, RequestException{
+						 List<Header> headers, Callback callback) throws IOException, RequestException {
 		request(URI.create(url), requestMethod, readTimeout, parameters, headers, callback);
 	}
 
@@ -13081,7 +13097,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void request(String url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
-						 Callback callback) throws IOException, RequestException{
+						 Callback callback) throws IOException, RequestException {
 		request(URI.create(url), requestMethod, readTimeout, data, callback);
 	}
 
@@ -13151,7 +13167,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void request(String url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
-						 Map<String, Object> parameters, Callback callback) throws IOException, RequestException{
+						 Map<String, Object> parameters, Callback callback) throws IOException, RequestException {
 		request(URI.create(url), requestMethod, readTimeout, data, parameters, callback);
 	}
 
@@ -13225,7 +13241,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 * 		请求异常
 	 */
 	default void request(String url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
-						 List<Header> headers, Callback callback) throws IOException, RequestException{
+						 List<Header> headers, Callback callback) throws IOException, RequestException {
 		request(URI.create(url), requestMethod, readTimeout, data, headers, callback);
 	}
 
@@ -13302,7 +13318,7 @@ public interface HttpAsyncClient extends IBaseHttpClient {
 	 */
 	default void request(String url, RequestMethod requestMethod, int readTimeout, RequestBody<?> data,
 						 Map<String, Object> parameters, List<Header> headers, Callback callback)
-			throws IOException, RequestException{
+			throws IOException, RequestException {
 		request(URI.create(url), requestMethod, readTimeout, data, parameters, headers, callback);
 	}
 

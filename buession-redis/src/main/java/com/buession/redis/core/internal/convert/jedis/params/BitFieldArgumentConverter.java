@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.params;
@@ -37,11 +37,9 @@ import org.springframework.lang.Nullable;
  */
 public final class BitFieldArgumentConverter implements Converter<BitMapCommands.BitFieldArgument, String[]> {
 
-	public final static BitFieldArgumentConverter INSTANCE = new BitFieldArgumentConverter();
-
 	@Nullable
 	@Override
-	public String[] convert(final BitMapCommands.BitFieldArgument source){
+	public String[] convert(final BitMapCommands.BitFieldArgument source) {
 		return source == null ? null : StringUtils.split(source.toString(), " ");
 	}
 
