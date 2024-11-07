@@ -181,7 +181,7 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public Status hMSet(final String key, final List<KeyValue<String, ?>> data) {
+	public Status hMSet(final String key, final List<KeyValue<String, Object>> data) {
 		Map<String, String> temp = data.stream()
 				.collect(Collectors.toMap(KeyValue::getKey, (e)->serializer.serialize(e.getValue()),
 						(key1, key2)->key2, LinkedHashMap::new));
@@ -190,7 +190,7 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public Status hMSet(final byte[] key, final List<KeyValue<byte[], ?>> data) {
+	public Status hMSet(final byte[] key, final List<KeyValue<byte[], Object>> data) {
 		Map<byte[], byte[]> temp = data.stream()
 				.collect(Collectors.toMap(KeyValue::getKey, (e)->serializer.serializeAsBytes(e.getValue()),
 						(key1, key2)->key2, LinkedHashMap::new));

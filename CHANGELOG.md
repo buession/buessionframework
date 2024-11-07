@@ -9,6 +9,21 @@
 - [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v3.0.1)
 
 
+### ⭐ 新特性
+
+
+### 🔔 变化
+
+
+### 🐞 Bug 修复
+
+- 修复 redis HashOperations hMSet 方法参数类型
+
+
+### ⏪ 优化
+
+
+
 ---
 
 
