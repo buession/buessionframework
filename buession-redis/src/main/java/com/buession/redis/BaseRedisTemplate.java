@@ -626,16 +626,6 @@ public abstract class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public Status pfMerge(final String destKey, final String... keys) {
-		return execute((client)->client.hyperLogLogOperations().pfMerge(rawKey(destKey), rawKeys(keys)));
-	}
-
-	@Override
-	public Status pfMerge(final byte[] destKey, final byte[]... keys) {
-		return execute((client)->client.hyperLogLogOperations().pfMerge(rawKey(destKey), rawKeys(keys)));
-	}
-
-	@Override
 	public Long pfCount(final String... keys) {
 		return execute((client)->client.hyperLogLogOperations().pfCount(rawKeys(keys)));
 	}
@@ -643,6 +633,16 @@ public abstract class BaseRedisTemplate extends AbstractRedisTemplate {
 	@Override
 	public Long pfCount(final byte[]... keys) {
 		return execute((client)->client.hyperLogLogOperations().pfCount(rawKeys(keys)));
+	}
+
+	@Override
+	public Status pfMerge(final String destKey, final String... keys) {
+		return execute((client)->client.hyperLogLogOperations().pfMerge(rawKey(destKey), rawKeys(keys)));
+	}
+
+	@Override
+	public Status pfMerge(final byte[] destKey, final byte[]... keys) {
+		return execute((client)->client.hyperLogLogOperations().pfMerge(rawKey(destKey), rawKeys(keys)));
 	}
 
 	@Override

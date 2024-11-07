@@ -80,6 +80,40 @@ public final class JedisSentinelHyperLogLogOperations extends AbstractHyperLogLo
 	}
 
 	@Override
+	public Long pfCount(final String... keys) {
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.PFCOUNT, (cmd)->cmd.pfcount(keys), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.PFCOUNT, (cmd)->cmd.pfcount(keys),
+					(v)->v)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.PFCOUNT, (cmd)->cmd.pfcount(keys), (v)->v)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Long pfCount(final byte[]... keys) {
+		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+
+		if(isPipeline()){
+			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.PFCOUNT, (cmd)->cmd.pfcount(keys), (v)->v)
+					.run(args);
+		}else if(isTransaction()){
+			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.PFCOUNT, (cmd)->cmd.pfcount(keys),
+					(v)->v)
+					.run(args);
+		}else{
+			return new JedisSentinelCommand<>(client, ProtocolCommand.PFCOUNT, (cmd)->cmd.pfcount(keys), (v)->v)
+					.run(args);
+		}
+	}
+
+	@Override
 	public Status pfMerge(final String destKey, final String... keys) {
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
 
@@ -113,40 +147,6 @@ public final class JedisSentinelHyperLogLogOperations extends AbstractHyperLogLo
 		}else{
 			return new JedisSentinelCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
 					okStatusConverter)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Long pfCount(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-
-		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.PFCOUNT, (cmd)->cmd.pfcount(keys), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.PFCOUNT, (cmd)->cmd.pfcount(keys),
-					(v)->v)
-					.run(args);
-		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.PFCOUNT, (cmd)->cmd.pfcount(keys), (v)->v)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Long pfCount(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
-
-		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.PFCOUNT, (cmd)->cmd.pfcount(keys), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<>(client, ProtocolCommand.PFCOUNT, (cmd)->cmd.pfcount(keys),
-					(v)->v)
-					.run(args);
-		}else{
-			return new JedisSentinelCommand<>(client, ProtocolCommand.PFCOUNT, (cmd)->cmd.pfcount(keys), (v)->v)
 					.run(args);
 		}
 	}
