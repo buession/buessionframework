@@ -77,7 +77,7 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 
 	@Override
 	public Status clusterAddSlots(final int... slots) {
-		final CommandArguments args = CommandArguments.create("slots", slots);
+		final CommandArguments args = CommandArguments.create(slots);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_ADDSLOTS)
@@ -113,7 +113,7 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 
 	@Override
 	public Integer clusterCountFailureReports(final String nodeId) {
-		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
+		final CommandArguments args = CommandArguments.create(nodeId);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<Integer, Integer>(client,
@@ -181,7 +181,7 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 
 	@Override
 	public Status clusterFailover(final ClusterFailoverOption clusterFailoverOption) {
-		final CommandArguments args = CommandArguments.create("clusterFailoverOption", clusterFailoverOption);
+		final CommandArguments args = CommandArguments.create(clusterFailoverOption);
 		final redis.clients.jedis.args.ClusterFailoverOption failoverOption =
 				(new ClusterFailoverOptionConverter()).convert(clusterFailoverOption);
 
@@ -200,7 +200,7 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 
 	@Override
 	public Status clusterForget(final String nodeId) {
-		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
+		final CommandArguments args = CommandArguments.create(nodeId);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_FORGET)
@@ -217,7 +217,7 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 
 	@Override
 	public List<String> clusterGetKeysInSlot(final int slot, final long count) {
-		final CommandArguments args = CommandArguments.create("slot", slot).put("count", count);
+		final CommandArguments args = CommandArguments.create(slot).put("count", count);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<List<String>, List<String>>(client,
@@ -236,7 +236,7 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 
 	@Override
 	public Long clusterKeySlot(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT)
@@ -270,7 +270,7 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 
 	@Override
 	public Status clusterMeet(final String ip, final int port) {
-		final CommandArguments args = CommandArguments.create("ip", ip).put("port", port);
+		final CommandArguments args = CommandArguments.create(ip).put("port", port);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_MEET)
@@ -306,7 +306,7 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 
 	@Override
 	public List<ClusterRedisNode> clusterSlaves(final String nodeId) {
-		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
+		final CommandArguments args = CommandArguments.create(nodeId);
 		final ListConverter<String, ClusterRedisNode> listClusterNodeConverter = ClusterNodeConverter.listConverter();
 
 		if(isPipeline()){
@@ -326,7 +326,7 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 
 	@Override
 	public List<ClusterRedisNode> clusterReplicas(final String nodeId) {
-		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
+		final CommandArguments args = CommandArguments.create(nodeId);
 		final ListConverter<String, ClusterRedisNode> listClusterReplicasConverter = ClusterReplicasConverter.listConverter();
 
 		if(isPipeline()){
@@ -346,7 +346,7 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 
 	@Override
 	public Status clusterReplicate(final String nodeId) {
-		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
+		final CommandArguments args = CommandArguments.create(nodeId);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_REPLICATE)
@@ -363,7 +363,7 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 
 	@Override
 	public Status clusterReset(final ClusterResetOption clusterResetOption) {
-		final CommandArguments args = CommandArguments.create("clusterResetOption", clusterResetOption);
+		final CommandArguments args = CommandArguments.create(clusterResetOption);
 		final ClusterResetType clusterResetType = (new ClusterResetOptionConverter()).convert(clusterResetOption);
 
 		if(isPipeline()){
@@ -396,7 +396,7 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 
 	@Override
 	public Status clusterSetConfigEpoch(final long configEpoch) {
-		final CommandArguments args = CommandArguments.create("configEpoch", configEpoch);
+		final CommandArguments args = CommandArguments.create(configEpoch);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SETCONFIGEPOCH)
@@ -433,7 +433,7 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 
 	@Override
 	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final String nodeId) {
-		final CommandArguments args = CommandArguments.create("slot", slot).put("setSlotOption", setSlotOption)
+		final CommandArguments args = CommandArguments.create(slot).put("setSlotOption", setSlotOption)
 				.put("nodeId", nodeId);
 
 		if(isPipeline()){

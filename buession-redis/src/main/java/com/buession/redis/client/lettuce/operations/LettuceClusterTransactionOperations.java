@@ -101,7 +101,7 @@ public final class LettuceClusterTransactionOperations extends AbstractTransacti
 
 	@Override
 	public Status watch(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<Status, Status>(client, ProtocolCommand.WATCH)

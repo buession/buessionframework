@@ -55,7 +55,7 @@ public final class LettuceSentinelConnectionOperations extends AbstractConnectio
 
 	@Override
 	public Status auth(final String user, final String password) {
-		final CommandArguments args = CommandArguments.create("user", user).put("password", password);
+		final CommandArguments args = CommandArguments.create(user).put("password", password);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.AUTH)
@@ -71,7 +71,7 @@ public final class LettuceSentinelConnectionOperations extends AbstractConnectio
 
 	@Override
 	public Status auth(final String password) {
-		final CommandArguments args = CommandArguments.create("password", password);
+		final CommandArguments args = CommandArguments.create(password);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.AUTH)
@@ -87,7 +87,7 @@ public final class LettuceSentinelConnectionOperations extends AbstractConnectio
 
 	@Override
 	public String echo(final String str) {
-		final CommandArguments args = CommandArguments.create("str", str);
+		final CommandArguments args = CommandArguments.create(str);
 		final byte[] msg = SafeEncoder.encode(str);
 
 		return echo(msg, SafeEncoder::encode, args);
@@ -95,7 +95,7 @@ public final class LettuceSentinelConnectionOperations extends AbstractConnectio
 
 	@Override
 	public byte[] echo(final byte[] str) {
-		final CommandArguments args = CommandArguments.create("str", str);
+		final CommandArguments args = CommandArguments.create(str);
 		return echo(str, (v)->v, args);
 	}
 
@@ -147,7 +147,7 @@ public final class LettuceSentinelConnectionOperations extends AbstractConnectio
 
 	@Override
 	public Status select(final int db) {
-		final CommandArguments args = CommandArguments.create("db", db);
+		final CommandArguments args = CommandArguments.create(db);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.SELECT)
@@ -163,7 +163,7 @@ public final class LettuceSentinelConnectionOperations extends AbstractConnectio
 
 	@Override
 	public Status clientCaching(final boolean isYes) {
-		final CommandArguments args = CommandArguments.create("isYes", isYes);
+		final CommandArguments args = CommandArguments.create(isYes);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLIENT_CACHING)
@@ -193,7 +193,7 @@ public final class LettuceSentinelConnectionOperations extends AbstractConnectio
 
 	@Override
 	public Status clientSetName(final byte[] name) {
-		final CommandArguments args = CommandArguments.create("name", name);
+		final CommandArguments args = CommandArguments.create(name);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.CLIENT_SETNAME,
@@ -266,7 +266,7 @@ public final class LettuceSentinelConnectionOperations extends AbstractConnectio
 
 	@Override
 	public List<Client> clientList(final ClientType clientType) {
-		final CommandArguments args = CommandArguments.create("clientType", clientType);
+		final CommandArguments args = CommandArguments.create(clientType);
 		final ClientConverter.ClientListConverter clientListConverter = new ClientConverter.ClientListConverter();
 
 		if(isPipeline()){
@@ -300,7 +300,7 @@ public final class LettuceSentinelConnectionOperations extends AbstractConnectio
 
 	@Override
 	public Status clientPause(final int timeout) {
-		final CommandArguments args = CommandArguments.create("timeout", timeout);
+		final CommandArguments args = CommandArguments.create(timeout);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.CLIENT_PAUSE,
@@ -320,7 +320,7 @@ public final class LettuceSentinelConnectionOperations extends AbstractConnectio
 
 	@Override
 	public Status clientReply(final ClientReply option) {
-		final CommandArguments args = CommandArguments.create("option", option);
+		final CommandArguments args = CommandArguments.create(option);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLIENT_REPLY)
@@ -336,7 +336,7 @@ public final class LettuceSentinelConnectionOperations extends AbstractConnectio
 
 	@Override
 	public Status clientKill(final String host, final int port) {
-		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
+		final CommandArguments args = CommandArguments.create(host).put("port", port);
 		final String addr = host + ':' + port;
 
 		if(isPipeline()){
@@ -358,13 +358,13 @@ public final class LettuceSentinelConnectionOperations extends AbstractConnectio
 
 	@Override
 	public Status clientUnblock(final int clientId) {
-		final CommandArguments args = CommandArguments.create("clientId", clientId);
+		final CommandArguments args = CommandArguments.create(clientId);
 		return clientUnblock(clientId, UnblockType.ERROR, args);
 	}
 
 	@Override
 	public Status clientUnblock(final int clientId, final ClientUnblockType type) {
-		final CommandArguments args = CommandArguments.create("clientId", clientId).put("type", type);
+		final CommandArguments args = CommandArguments.create(clientId).put("type", type);
 		final UnblockType unblockType = (new ClientUnblockTypeConverter()).convert(type);
 
 		return clientUnblock(clientId, unblockType, args);

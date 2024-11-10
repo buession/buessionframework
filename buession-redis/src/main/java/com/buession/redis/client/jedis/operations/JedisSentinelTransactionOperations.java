@@ -187,7 +187,7 @@ public final class JedisSentinelTransactionOperations extends AbstractTransactio
 
 	@Override
 	public Status watch(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.WATCH)
@@ -211,7 +211,7 @@ public final class JedisSentinelTransactionOperations extends AbstractTransactio
 
 	@Override
 	public Status watch(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.WATCH)

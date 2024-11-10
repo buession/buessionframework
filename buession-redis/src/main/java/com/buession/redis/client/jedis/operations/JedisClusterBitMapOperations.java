@@ -86,7 +86,7 @@ public final class JedisClusterBitMapOperations extends AbstractBitMapOperations
 
 	@Override
 	public Long bitCount(final String key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.BITCOUNT,
@@ -105,7 +105,7 @@ public final class JedisClusterBitMapOperations extends AbstractBitMapOperations
 
 	@Override
 	public Long bitCount(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.BITCOUNT,
@@ -124,7 +124,7 @@ public final class JedisClusterBitMapOperations extends AbstractBitMapOperations
 
 	@Override
 	public Long bitCount(final String key, final long start, final long end, final BitCountOption bitCountOption) {
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end)
+		final CommandArguments args = CommandArguments.create(key).put("start", start).put("end", end)
 				.put("bitCountOption", bitCountOption);
 		final redis.clients.jedis.args.BitCountOption option = (new BitCountOptionConverter()).convert(
 				bitCountOption);
@@ -147,7 +147,7 @@ public final class JedisClusterBitMapOperations extends AbstractBitMapOperations
 
 	@Override
 	public Long bitCount(final byte[] key, final long start, final long end, final BitCountOption bitCountOption) {
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end)
+		final CommandArguments args = CommandArguments.create(key).put("start", start).put("end", end)
 				.put("bitCountOption", bitCountOption);
 		final redis.clients.jedis.args.BitCountOption option = (new BitCountOptionConverter()).convert(
 				bitCountOption);
@@ -170,7 +170,7 @@ public final class JedisClusterBitMapOperations extends AbstractBitMapOperations
 
 	@Override
 	public List<Long> bitField(final String key, final BitFieldArgument argument) {
-		final CommandArguments args = CommandArguments.create("key", key).put("arguments", argument);
+		final CommandArguments args = CommandArguments.create(key).put("arguments", argument);
 		final String[] arguments = (new BitFieldArgumentConverter()).convert(argument);
 
 		if(isPipeline()){
@@ -190,7 +190,7 @@ public final class JedisClusterBitMapOperations extends AbstractBitMapOperations
 
 	@Override
 	public List<Long> bitField(final byte[] key, final BitFieldArgument argument) {
-		final CommandArguments args = CommandArguments.create("key", key).put("arguments", argument);
+		final CommandArguments args = CommandArguments.create(key).put("arguments", argument);
 		final byte[][] arguments = SafeEncoder.encode((new BitFieldArgumentConverter()).convert(argument));
 
 		if(isPipeline()){
@@ -210,7 +210,7 @@ public final class JedisClusterBitMapOperations extends AbstractBitMapOperations
 
 	@Override
 	public List<Long> bitFieldRo(final String key, final String... arguments) {
-		final CommandArguments args = CommandArguments.create("key", key).put("arguments", (Object[]) arguments);
+		final CommandArguments args = CommandArguments.create(key).put("arguments", (Object[]) arguments);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.BITFIELD_RO,
@@ -230,7 +230,7 @@ public final class JedisClusterBitMapOperations extends AbstractBitMapOperations
 
 	@Override
 	public List<Long> bitFieldRo(final byte[] key, final byte[]... arguments) {
-		final CommandArguments args = CommandArguments.create("key", key).put("arguments", (Object[]) arguments);
+		final CommandArguments args = CommandArguments.create(key).put("arguments", (Object[]) arguments);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.BITFIELD_RO,
@@ -250,7 +250,7 @@ public final class JedisClusterBitMapOperations extends AbstractBitMapOperations
 
 	@Override
 	public Long bitOp(final BitOperation operation, final String destKey, final String... keys) {
-		final CommandArguments args = CommandArguments.create("operation", operation).put("destKey", destKey)
+		final CommandArguments args = CommandArguments.create(operation).put("destKey", destKey)
 				.put("keys", (Object[]) keys);
 		final BitOP bitOP = (new BitOperationConverter()).convert(operation);
 
@@ -271,7 +271,7 @@ public final class JedisClusterBitMapOperations extends AbstractBitMapOperations
 
 	@Override
 	public Long bitOp(final BitOperation operation, final byte[] destKey, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("operation", operation).put("destKey", destKey)
+		final CommandArguments args = CommandArguments.create(operation).put("destKey", destKey)
 				.put("keys", (Object[]) keys);
 		final BitOP bitOP = (new BitOperationConverter()).convert(operation);
 
@@ -292,7 +292,7 @@ public final class JedisClusterBitMapOperations extends AbstractBitMapOperations
 
 	@Override
 	public Long bitPos(final String key, final boolean value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).put("value", value);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.BITPOS, (cmd)->cmd.bitpos(key, value),
@@ -310,7 +310,7 @@ public final class JedisClusterBitMapOperations extends AbstractBitMapOperations
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).put("value", value);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.BITPOS, (cmd)->cmd.bitpos(key, value),
@@ -328,7 +328,7 @@ public final class JedisClusterBitMapOperations extends AbstractBitMapOperations
 
 	@Override
 	public Long bitPos(final String key, final boolean value, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("start", start)
+		final CommandArguments args = CommandArguments.create(key).put("value", value).put("start", start)
 				.put("end", end);
 		final BitPosParams bitPosParams = new BitPosParams(start, end);
 
@@ -350,7 +350,7 @@ public final class JedisClusterBitMapOperations extends AbstractBitMapOperations
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("start", start)
+		final CommandArguments args = CommandArguments.create(key).put("value", value).put("start", start)
 				.put("end", end);
 		final BitPosParams bitPosParams = new BitPosParams(start, end);
 
@@ -371,7 +371,7 @@ public final class JedisClusterBitMapOperations extends AbstractBitMapOperations
 
 	@Override
 	public Boolean getBit(final String key, final long offset) {
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset);
+		final CommandArguments args = CommandArguments.create(key).put("offset", offset);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.GETBIT, (cmd)->cmd.getbit(key, offset),
@@ -389,7 +389,7 @@ public final class JedisClusterBitMapOperations extends AbstractBitMapOperations
 
 	@Override
 	public Boolean getBit(final byte[] key, final long offset) {
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset);
+		final CommandArguments args = CommandArguments.create(key).put("offset", offset);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.GETBIT, (cmd)->cmd.getbit(key, offset),
@@ -407,7 +407,7 @@ public final class JedisClusterBitMapOperations extends AbstractBitMapOperations
 
 	@Override
 	public Boolean setBit(final String key, final long offset, final boolean value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).put("offset", offset).put("value", value);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SETBIT,
@@ -426,7 +426,7 @@ public final class JedisClusterBitMapOperations extends AbstractBitMapOperations
 
 	@Override
 	public Boolean setBit(final byte[] key, final long offset, final boolean value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).put("offset", offset).put("value", value);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SETBIT,

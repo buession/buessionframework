@@ -53,7 +53,7 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 
 	@Override
 	public String lIndex(final String key, final long index) {
-		final CommandArguments args = CommandArguments.create("key", key).put("index", index);
+		final CommandArguments args = CommandArguments.create(key).put("index", index);
 		final byte[] bKey = SafeEncoder.encode(key);
 
 		return lIndex(bKey, index, SafeEncoder::encode, args);
@@ -61,13 +61,13 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 
 	@Override
 	public byte[] lIndex(final byte[] key, final long index) {
-		final CommandArguments args = CommandArguments.create("key", key).put("index", index);
+		final CommandArguments args = CommandArguments.create(key).put("index", index);
 		return lIndex(key, index, (v)->v, args);
 	}
 
 	@Override
 	public Long lInsert(final byte[] key, final ListPosition position, final byte[] pivot, final byte[] value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("position", position).put("pivot", pivot)
+		final CommandArguments args = CommandArguments.create(key).put("position", position).put("pivot", pivot)
 				.put("value", value);
 		final boolean before = ListPosition.BEFORE == position;
 
@@ -85,7 +85,7 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 
 	@Override
 	public Status lSet(final byte[] key, final long index, final byte[] value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("index", index).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).put("index", index).put("value", value);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.LSET)
@@ -117,7 +117,7 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 
 	@Override
 	public List<String> lRange(final String key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
+		final CommandArguments args = CommandArguments.create(key).put("start", start).put("end", end);
 		final byte[] bKey = SafeEncoder.encode(key);
 
 		return lRange(bKey, start, end, binaryToStringListConverter, args);
@@ -125,7 +125,7 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 
 	@Override
 	public List<byte[]> lRange(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
+		final CommandArguments args = CommandArguments.create(key).put("start", start).put("end", end);
 		return lRange(key, start, end, (v)->v, args);
 	}
 
@@ -147,7 +147,7 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 
 	@Override
 	public Long lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument) {
-		final CommandArguments args = CommandArguments.create("key", key).put("lPosArgument", lPosArgument);
+		final CommandArguments args = CommandArguments.create(key).put("lPosArgument", lPosArgument);
 		final LPosArgs lPosArgs = LettuceLPosArgs.from(lPosArgument);
 
 		if(isPipeline()){
@@ -164,7 +164,7 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 
 	@Override
 	public List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument, final long count) {
-		final CommandArguments args = CommandArguments.create("key", key).put("lPosArgument", lPosArgument)
+		final CommandArguments args = CommandArguments.create(key).put("lPosArgument", lPosArgument)
 				.put("count", count);
 		final LPosArgs lPosArgs = LettuceLPosArgs.from(lPosArgument);
 
@@ -182,7 +182,7 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 
 	@Override
 	public Long lRem(final byte[] key, final byte[] value, final long count) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).put("value", value).put("count", count);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.LREM)
@@ -198,7 +198,7 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 
 	@Override
 	public Status lTrim(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
+		final CommandArguments args = CommandArguments.create(key).put("start", start).put("end", end);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.LTRIM)
@@ -214,14 +214,14 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 
 	@Override
 	public String lMove(final String key, final String destKey, final Direction from, final Direction to) {
-		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("from", from)
+		final CommandArguments args = CommandArguments.create(key).put("destKey", destKey).put("from", from)
 				.put("to", to);
 		return lMove(args);
 	}
 
 	@Override
 	public byte[] lMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to) {
-		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("from", from)
+		final CommandArguments args = CommandArguments.create(key).put("destKey", destKey).put("from", from)
 				.put("to", to);
 		return lMove(args);
 	}
@@ -229,7 +229,7 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 	@Override
 	public String blMove(final String key, final String destKey, final Direction from, final Direction to,
 						 final int timeout) {
-		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("from", from)
+		final CommandArguments args = CommandArguments.create(key).put("destKey", destKey).put("from", from)
 				.put("to", to);
 		return blMove(args);
 	}
@@ -237,14 +237,14 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 	@Override
 	public byte[] blMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
 						 final int timeout) {
-		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("from", from)
+		final CommandArguments args = CommandArguments.create(key).put("destKey", destKey).put("from", from)
 				.put("to", to).put("timeout", timeout);
 		return blMove(args);
 	}
 
 	@Override
 	public List<String> blPop(final String[] keys, final int timeout) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("timeout", timeout);
+		final CommandArguments args = CommandArguments.create(keys).put("timeout", timeout);
 		final byte[][] bKeys = SafeEncoder.encode(keys);
 		final Converter<KeyValue<byte[], byte[]>, List<String>> converter =
 				(v)->ListBuilder.of(SafeEncoder.encode(v.getValue()));
@@ -254,7 +254,7 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 
 	@Override
 	public List<byte[]> blPop(final byte[][] keys, final int timeout) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("timeout", timeout);
+		final CommandArguments args = CommandArguments.create(keys).put("timeout", timeout);
 		final Converter<KeyValue<byte[], byte[]>, List<byte[]>> converter = (v)->ListBuilder.of(v.getValue());
 
 		return blPop(keys, timeout, converter, args);
@@ -262,7 +262,7 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 
 	@Override
 	public List<String> brPop(final String[] keys, final int timeout) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("timeout", timeout);
+		final CommandArguments args = CommandArguments.create(keys).put("timeout", timeout);
 		final byte[][] bKeys = SafeEncoder.encode(keys);
 		final Converter<KeyValue<byte[], byte[]>, List<String>> converter =
 				(v)->ListBuilder.of(SafeEncoder.encode(v.getValue()));
@@ -272,7 +272,7 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 
 	@Override
 	public List<byte[]> brPop(final byte[][] keys, final int timeout) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys).put("timeout", timeout);
+		final CommandArguments args = CommandArguments.create(keys).put("timeout", timeout);
 		final Converter<KeyValue<byte[], byte[]>, List<byte[]>> converter = (v)->ListBuilder.of(v.getValue());
 
 		return brPop(keys, timeout, converter, args);
@@ -280,7 +280,7 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 
 	@Override
 	public String brPoplPush(final String key, final String destKey, final int timeout) {
-		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
+		final CommandArguments args = CommandArguments.create(key).put("destKey", destKey)
 				.put("timeout", timeout);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final byte[] bDestKey = SafeEncoder.encode(destKey);
@@ -290,7 +290,7 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 
 	@Override
 	public byte[] brPoplPush(final byte[] key, final byte[] destKey, final int timeout) {
-		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
+		final CommandArguments args = CommandArguments.create(key).put("destKey", destKey)
 				.put("timeout", timeout);
 		return brPoplPush(key, destKey, timeout, (v)->v, args);
 	}
@@ -311,7 +311,7 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 
 	@Override
 	public Long lPush(final byte[] key, final byte[]... values) {
-		final CommandArguments args = CommandArguments.create("key", key).put("values", (Object[]) values);
+		final CommandArguments args = CommandArguments.create(key).put("values", (Object[]) values);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.LPUSH)
@@ -327,7 +327,7 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 
 	@Override
 	public Long lPushX(final byte[] key, final byte[]... values) {
-		final CommandArguments args = CommandArguments.create("key", key).put("values", (Object[]) values);
+		final CommandArguments args = CommandArguments.create(key).put("values", (Object[]) values);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.LPUSHX)
@@ -357,7 +357,7 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 
 	@Override
 	public String rPoplPush(final String key, final String destKey) {
-		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
+		final CommandArguments args = CommandArguments.create(key).put("destKey", destKey);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final byte[] bDestKey = SafeEncoder.encode(destKey);
 
@@ -366,13 +366,13 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 
 	@Override
 	public byte[] rPoplPush(final byte[] key, final byte[] destKey) {
-		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
+		final CommandArguments args = CommandArguments.create(key).put("destKey", destKey);
 		return rPoplPush(key, destKey, (v)->v, args);
 	}
 
 	@Override
 	public Long rPush(final byte[] key, final byte[]... values) {
-		final CommandArguments args = CommandArguments.create("key", key).put("values", (Object[]) values);
+		final CommandArguments args = CommandArguments.create(key).put("values", (Object[]) values);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.RPUSH)
@@ -388,7 +388,7 @@ public final class LettuceSentinelListOperations extends AbstractListOperations<
 
 	@Override
 	public Long rPushX(final byte[] key, final byte[]... values) {
-		final CommandArguments args = CommandArguments.create("key", key).put("values", (Object[]) values);
+		final CommandArguments args = CommandArguments.create(key).put("values", (Object[]) values);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.RPUSHX)

@@ -81,7 +81,7 @@ public final class JedisClusterHyperLogLogOperations extends AbstractHyperLogLog
 
 	@Override
 	public Long pfCount(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.PFCOUNT, (cmd)->cmd.pfcount(keys), (v)->v)
@@ -98,7 +98,7 @@ public final class JedisClusterHyperLogLogOperations extends AbstractHyperLogLog
 
 	@Override
 	public Long pfCount(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.PFCOUNT, (cmd)->cmd.pfcount(keys), (v)->v)
@@ -115,7 +115,7 @@ public final class JedisClusterHyperLogLogOperations extends AbstractHyperLogLog
 
 	@Override
 	public Status pfMerge(final String destKey, final String... keys) {
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
@@ -134,7 +134,7 @@ public final class JedisClusterHyperLogLogOperations extends AbstractHyperLogLog
 
 	@Override
 	public Status pfMerge(final byte[] destKey, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),

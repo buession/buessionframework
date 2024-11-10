@@ -84,7 +84,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 
 	@Override
 	public Long xAck(final String key, final String groupName, final StreamEntryId... ids) {
-		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
+		final CommandArguments args = CommandArguments.create(key).put("groupName", groupName)
 				.put("ids", (Object[]) ids);
 		final StreamEntryID[] streamEntryIDS = StreamEntryIdConverter.arrayConverter().convert(ids);
 
@@ -105,7 +105,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 
 	@Override
 	public StreamEntryId xAdd(final String key, final StreamEntryId id, final Map<String, String> hash) {
-		final CommandArguments args = CommandArguments.create("key", key).put("id", id).put("hash", hash);
+		final CommandArguments args = CommandArguments.create(key).put("id", id).put("hash", hash);
 		final StreamEntryID streamEntryID = JedisStreamEntryID.from(id);
 		final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
 
@@ -127,7 +127,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	@Override
 	public StreamEntryId xAdd(final String key, final StreamEntryId id, final Map<String, String> hash,
 							  final XAddArgument xAddArgument) {
-		final CommandArguments args = CommandArguments.create("key", key).put("id", id).put("hash", hash)
+		final CommandArguments args = CommandArguments.create(key).put("id", id).put("hash", hash)
 				.put("xAddArgument", xAddArgument);
 		final StreamEntryID streamEntryID = JedisStreamEntryID.from(id);
 		final XAddParams xAddParams = JedisXAddParams.from(xAddArgument).id(streamEntryID);
@@ -151,7 +151,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	@Override
 	public StreamEntryId xAdd(final byte[] key, final StreamEntryId id, final Map<byte[], byte[]> hash,
 							  final XAddArgument xAddArgument) {
-		final CommandArguments args = CommandArguments.create("key", key).put("id", id).put("hash", hash)
+		final CommandArguments args = CommandArguments.create(key).put("id", id).put("hash", hash)
 				.put("xAddArgument", xAddArgument);
 		final StreamEntryID streamEntryID = JedisStreamEntryID.from(id);
 		final XAddParams xAddParams = JedisXAddParams.from(xAddArgument).id(streamEntryID);
@@ -177,7 +177,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	public Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final String key, final String groupName,
 															final String consumerName, final int minIdleTime,
 															final StreamEntryId start) {
-		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
+		final CommandArguments args = CommandArguments.create(key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("start", start);
 		final XAutoClaimParams xAutoClaimParams = new JedisXAutoClaimParams();
 
@@ -188,7 +188,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	public Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final String key, final String groupName,
 															final String consumerName, final int minIdleTime,
 															final StreamEntryId start, final long count) {
-		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
+		final CommandArguments args = CommandArguments.create(key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("start", start)
 				.put("count", count);
 		final XAutoClaimParams xAutoClaimParams = new JedisXAutoClaimParams(count);
@@ -200,7 +200,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	public Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final String key, final String groupName,
 																	final String consumerName, final int minIdleTime,
 																	final StreamEntryId start) {
-		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
+		final CommandArguments args = CommandArguments.create(key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("start", start)
 				.put("count");
 		final XAutoClaimParams xAutoClaimParams = new JedisXAutoClaimParams();
@@ -212,7 +212,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	public Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final String key, final String groupName,
 																	final String consumerName, final int minIdleTime,
 																	final StreamEntryId start, final long count) {
-		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
+		final CommandArguments args = CommandArguments.create(key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("start", start)
 				.put("count", count);
 		final XAutoClaimParams xAutoClaimParams = new JedisXAutoClaimParams();
@@ -223,7 +223,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	@Override
 	public List<StreamEntry> xClaim(final String key, final String groupName, final String consumerName,
 									final int minIdleTime, final StreamEntryId... ids) {
-		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
+		final CommandArguments args = CommandArguments.create(key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("ids", (Object[]) ids);
 		final XClaimParams xClaimParams = new JedisXClaimParams();
 
@@ -234,7 +234,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	public List<StreamEntry> xClaim(final String key, final String groupName, final String consumerName,
 									final int minIdleTime, final StreamEntryId[] ids,
 									final XClaimArgument xClaimArgument) {
-		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
+		final CommandArguments args = CommandArguments.create(key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("ids", (Object[]) ids)
 				.put("xClaimArgument", xClaimArgument);
 		final XClaimParams xClaimParams = JedisXClaimParams.from(xClaimArgument);
@@ -245,7 +245,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	@Override
 	public List<StreamEntryId> xClaimJustId(final String key, final String groupName, final String consumerName,
 											final int minIdleTime, final StreamEntryId... ids) {
-		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
+		final CommandArguments args = CommandArguments.create(key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("ids", (Object[]) ids);
 		final XClaimParams xClaimParams = new JedisXClaimParams();
 
@@ -256,7 +256,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	public List<StreamEntryId> xClaimJustId(final String key, final String groupName, final String consumerName,
 											final int minIdleTime, final StreamEntryId[] ids,
 											final XClaimArgument xClaimArgument) {
-		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
+		final CommandArguments args = CommandArguments.create(key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("ids", (Object[]) ids)
 				.put("xClaimArgument", xClaimArgument);
 		final XClaimParams xClaimParams = JedisXClaimParams.from(xClaimArgument);
@@ -266,7 +266,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 
 	@Override
 	public Long xDel(final String key, final StreamEntryId... ids) {
-		final CommandArguments args = CommandArguments.create("key", key).put("ids", (Object[]) ids);
+		final CommandArguments args = CommandArguments.create(key).put("ids", (Object[]) ids);
 		final StreamEntryID[] streamEntryIDs = StreamEntryIdConverter.arrayConverter().convert(ids);
 
 		if(isPipeline()){
@@ -286,7 +286,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	@Override
 	public Status xGroupCreate(final String key, final String groupName, final StreamEntryId id,
 							   final boolean makeStream) {
-		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
+		final CommandArguments args = CommandArguments.create(key).put("groupName", groupName)
 				.put("id", id);
 		final StreamEntryID streamEntryID = JedisStreamEntryID.from(id);
 
@@ -307,7 +307,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 
 	@Override
 	public Status xGroupCreateConsumer(final String key, final String groupName, final String consumerName) {
-		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
+		final CommandArguments args = CommandArguments.create(key).put("groupName", groupName)
 				.put("consumerName", consumerName);
 
 		if(isPipeline()){
@@ -327,7 +327,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 
 	@Override
 	public Status xGroupCreateConsumer(final byte[] key, final byte[] groupName, final byte[] consumerName) {
-		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
+		final CommandArguments args = CommandArguments.create(key).put("groupName", groupName)
 				.put("consumerName", consumerName);
 
 		if(isPipeline()){
@@ -347,7 +347,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 
 	@Override
 	public Long xGroupDelConsumer(final String key, final String groupName, final String consumerName) {
-		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
+		final CommandArguments args = CommandArguments.create(key).put("groupName", groupName)
 				.put("consumerName", consumerName);
 
 		if(isPipeline()){
@@ -369,7 +369,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 
 	@Override
 	public Long xGroupDelConsumer(final byte[] key, final byte[] groupName, final byte[] consumerName) {
-		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
+		final CommandArguments args = CommandArguments.create(key).put("groupName", groupName)
 				.put("consumerName", consumerName);
 
 		if(isPipeline()){
@@ -391,7 +391,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 
 	@Override
 	public Status xGroupDestroy(final String key, final String groupName) {
-		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName);
+		final CommandArguments args = CommandArguments.create(key).put("groupName", groupName);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.XGROUP_DESTROY,
@@ -410,7 +410,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 
 	@Override
 	public Status xGroupDestroy(final byte[] key, final byte[] groupName) {
-		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName);
+		final CommandArguments args = CommandArguments.create(key).put("groupName", groupName);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.XGROUP_DESTROY,
@@ -429,7 +429,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 
 	@Override
 	public Status xGroupSetId(final String key, final String groupName, final StreamEntryId id) {
-		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName).put("id", id);
+		final CommandArguments args = CommandArguments.create(key).put("groupName", groupName).put("id", id);
 		final StreamEntryID streamEntryID = JedisStreamEntryID.from(id);
 
 		if(isPipeline()){
@@ -449,7 +449,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 
 	@Override
 	public List<StreamConsumer> xInfoConsumers(final String key, final String groupName) {
-		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName);
+		final CommandArguments args = CommandArguments.create(key).put("groupName", groupName);
 		final ListConverter<StreamConsumersInfo, StreamConsumer> listStreamConsumersInfoConverter =
 				StreamConsumersInfoConverter.listConverter();
 
@@ -470,7 +470,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 
 	@Override
 	public List<StreamGroup> xInfoGroups(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		final ListConverter<StreamGroupInfo, StreamGroup> listStreamGroupInfoConverter =
 				StreamGroupInfoConverter.listConverter();
 
@@ -491,7 +491,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 
 	@Override
 	public Stream xInfoStream(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		final StreamInfoConverter streamInfoConverter = new StreamInfoConverter();
 
 		if(isPipeline()){
@@ -511,7 +511,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 
 	@Override
 	public StreamFull xInfoStream(final String key, final boolean full) {
-		final CommandArguments args = CommandArguments.create("key", key).put("full", full);
+		final CommandArguments args = CommandArguments.create(key).put("full", full);
 		final StreamFullInfoConverter streamFullInfoConverter = new StreamFullInfoConverter();
 
 		if(isPipeline()){
@@ -531,7 +531,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 
 	@Override
 	public StreamFull xInfoStream(final String key, final boolean full, final long count) {
-		final CommandArguments args = CommandArguments.create("key", key).put("full", full).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).put("full", full).put("count", count);
 		final StreamFullInfoConverter streamFullInfoConverter = new StreamFullInfoConverter();
 
 		if(isPipeline()){
@@ -551,7 +551,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 
 	@Override
 	public Long xLen(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.XLEN, (cmd)->cmd.xlen(key), (v)->v)
@@ -567,7 +567,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 
 	@Override
 	public Long xLen(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.XLEN, (cmd)->cmd.xlen(key), (v)->v)
@@ -583,7 +583,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 
 	@Override
 	public StreamPendingSummary xPending(final String key, final String groupName) {
-		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName);
+		final CommandArguments args = CommandArguments.create(key).put("groupName", groupName);
 		final StreamPendingSummaryConverter streamPendingSummaryConverter = new StreamPendingSummaryConverter();
 
 		if(isPipeline()){
@@ -603,7 +603,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 
 	@Override
 	public List<StreamPending> xPending(final String key, final String groupName, final long minIdleTime) {
-		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
+		final CommandArguments args = CommandArguments.create(key).put("groupName", groupName)
 				.put("minIdleTime", minIdleTime);
 		final XPendingParams xPendingParams = new JedisXPendingParams(minIdleTime);
 
@@ -613,7 +613,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	@Override
 	public List<StreamPending> xPending(final String key, final String groupName, final StreamEntryId start,
 										final StreamEntryId end, final long count) {
-		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
+		final CommandArguments args = CommandArguments.create(key).put("groupName", groupName)
 				.put("start", start).put("end", end).put("count", count);
 		final XPendingParams xPendingParams = new JedisXPendingParams(start, end, count);
 
@@ -622,7 +622,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 
 	@Override
 	public List<StreamPending> xPending(final String key, final String groupName, final String consumerName) {
-		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
+		final CommandArguments args = CommandArguments.create(key).put("groupName", groupName)
 				.put("consumerName", consumerName);
 		final XPendingParams xPendingParams = new JedisXPendingParams(consumerName);
 
@@ -632,7 +632,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	@Override
 	public List<StreamPending> xPending(final String key, final String groupName, final long minIdleTime,
 										final StreamEntryId start, final StreamEntryId end, final long count) {
-		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
+		final CommandArguments args = CommandArguments.create(key).put("groupName", groupName)
 				.put("minIdleTime", minIdleTime).put("start", start).put("end", end).put("count", count);
 		final XPendingParams xPendingParams = new JedisXPendingParams(minIdleTime, start, end, count);
 
@@ -642,7 +642,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	@Override
 	public List<StreamPending> xPending(final String key, final String groupName, final long minIdleTime,
 										final String consumerName) {
-		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
+		final CommandArguments args = CommandArguments.create(key).put("groupName", groupName)
 				.put("minIdleTime", minIdleTime).put("consumerName", consumerName);
 		final XPendingParams xPendingParams = new JedisXPendingParams(minIdleTime, consumerName);
 
@@ -652,7 +652,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	@Override
 	public List<StreamPending> xPending(final String key, final String groupName, final StreamEntryId start,
 										final StreamEntryId end, final long count, final String consumerName) {
-		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
+		final CommandArguments args = CommandArguments.create(key).put("groupName", groupName)
 				.put("consumerName", consumerName);
 		final XPendingParams xPendingParams = new JedisXPendingParams(start, end, count, consumerName);
 
@@ -663,7 +663,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	public List<StreamPending> xPending(final String key, final String groupName, final long minIdleTime,
 										final StreamEntryId start, final StreamEntryId end, final long count,
 										final String consumerName) {
-		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
+		final CommandArguments args = CommandArguments.create(key).put("groupName", groupName)
 				.put("minIdleTime", minIdleTime).put("consumerName", consumerName);
 		final XPendingParams xPendingParams = new JedisXPendingParams(minIdleTime, start, end, count,
 				consumerName);
@@ -673,7 +673,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 
 	@Override
 	public List<StreamEntry> xRange(final String key, final StreamEntryId start, final StreamEntryId end) {
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
+		final CommandArguments args = CommandArguments.create(key).put("start", start).put("end", end);
 		final StreamEntryID startStreamEntryID = JedisStreamEntryID.from(start);
 		final StreamEntryID endStreamEntryID = JedisStreamEntryID.from(end);
 		final ListConverter<redis.clients.jedis.resps.StreamEntry, StreamEntry> listStreamEntryConverter =
@@ -697,7 +697,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	@Override
 	public List<StreamEntry> xRange(final String key, final StreamEntryId start, final StreamEntryId end,
 									final long count) {
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
+		final CommandArguments args = CommandArguments.create(key).put("start", start).put("end", end);
 		final StreamEntryID startStreamEntryID = JedisStreamEntryID.from(start);
 		final StreamEntryID endStreamEntryID = JedisStreamEntryID.from(end);
 		final ListConverter<redis.clients.jedis.resps.StreamEntry, StreamEntry> listStreamEntryConverter =
@@ -720,7 +720,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 
 	@Override
 	public List<Map<String, List<StreamEntry>>> xRead(final Map<String, StreamEntryId> streams) {
-		final CommandArguments args = CommandArguments.create("streams", streams);
+		final CommandArguments args = CommandArguments.create(streams);
 		final XReadParams xReadParams = new JedisXReadParams();
 
 		return xRead(streams, xReadParams, args);
@@ -728,7 +728,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 
 	@Override
 	public List<Map<String, List<StreamEntry>>> xRead(final long count, final Map<String, StreamEntryId> streams) {
-		final CommandArguments args = CommandArguments.create("count", count).put("streams", streams);
+		final CommandArguments args = CommandArguments.create(count).put("streams", streams);
 		final XReadParams xReadParams = new JedisXReadParams(count);
 
 		return xRead(streams, xReadParams, args);
@@ -736,7 +736,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 
 	@Override
 	public List<Map<String, List<StreamEntry>>> xRead(final int block, final Map<String, StreamEntryId> streams) {
-		final CommandArguments args = CommandArguments.create("block", block).put("streams", streams);
+		final CommandArguments args = CommandArguments.create(block).put("streams", streams);
 		final XReadParams xReadParams = new JedisXReadParams(block);
 
 		return xRead(streams, xReadParams, args);
@@ -745,7 +745,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	@Override
 	public List<Map<String, List<StreamEntry>>> xRead(final long count, final int block,
 													  final Map<String, StreamEntryId> streams) {
-		final CommandArguments args = CommandArguments.create("count", count).put("block", block)
+		final CommandArguments args = CommandArguments.create(count).put("block", block)
 				.put("streams", streams);
 		final XReadParams xReadParams = new JedisXReadParams(count, block);
 
@@ -755,7 +755,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	@Override
 	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
 														   final Map<String, StreamEntryId> streams) {
-		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
+		final CommandArguments args = CommandArguments.create(groupName).put("consumerName", consumerName)
 				.put("streams", streams);
 		final XReadGroupParams xReadGroupParams = new JedisXReadGroupParams();
 
@@ -765,7 +765,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	@Override
 	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
 														   final long count, final Map<String, StreamEntryId> streams) {
-		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
+		final CommandArguments args = CommandArguments.create(groupName).put("consumerName", consumerName)
 				.put("count", count).put("streams", streams);
 		final XReadGroupParams xReadGroupParams = new JedisXReadGroupParams(count);
 
@@ -775,7 +775,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	@Override
 	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
 														   final int block, final Map<String, StreamEntryId> streams) {
-		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
+		final CommandArguments args = CommandArguments.create(groupName).put("consumerName", consumerName)
 				.put("block", block).put("streams", streams);
 		final XReadGroupParams xReadGroupParams = new JedisXReadGroupParams(block);
 
@@ -786,7 +786,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
 														   final boolean isNoAck,
 														   final Map<String, StreamEntryId> streams) {
-		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
+		final CommandArguments args = CommandArguments.create(groupName).put("consumerName", consumerName)
 				.put("isNoAck", isNoAck).put("streams", streams);
 		final XReadGroupParams xReadGroupParams = new JedisXReadGroupParams(isNoAck);
 
@@ -797,7 +797,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
 														   final long count, final int block,
 														   final Map<String, StreamEntryId> streams) {
-		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
+		final CommandArguments args = CommandArguments.create(groupName).put("consumerName", consumerName)
 				.put("count", count).put("block", block).put("streams", streams);
 		final XReadGroupParams xReadGroupParams = new JedisXReadGroupParams(count, block);
 
@@ -808,7 +808,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
 														   final long count, final boolean isNoAck,
 														   final Map<String, StreamEntryId> streams) {
-		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
+		final CommandArguments args = CommandArguments.create(groupName).put("consumerName", consumerName)
 				.put("count", count).put("isNoAck", isNoAck).put("streams", streams);
 		final XReadGroupParams xReadGroupParams = new JedisXReadGroupParams(count, isNoAck);
 
@@ -819,7 +819,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
 														   final int block, final boolean isNoAck,
 														   final Map<String, StreamEntryId> streams) {
-		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
+		final CommandArguments args = CommandArguments.create(groupName).put("consumerName", consumerName)
 				.put("block", block).put("isNoAck", isNoAck).put("streams", streams);
 		final XReadGroupParams xReadGroupParams = new JedisXReadGroupParams(block, isNoAck);
 
@@ -830,7 +830,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
 														   final long count, final int block, final boolean isNoAck,
 														   final Map<String, StreamEntryId> streams) {
-		final CommandArguments args = CommandArguments.create("groupName", groupName).put("consumerName", consumerName)
+		final CommandArguments args = CommandArguments.create(groupName).put("consumerName", consumerName)
 				.put("count", count).put("block", block).put("isNoAck", isNoAck).put("streams", streams);
 		final XReadGroupParams xReadGroupParams = new JedisXReadGroupParams(count, block, isNoAck);
 
@@ -839,7 +839,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 
 	@Override
 	public List<StreamEntry> xRevRange(final String key, final StreamEntryId end, final StreamEntryId start) {
-		final CommandArguments args = CommandArguments.create("key", key).put("end", end).put("start", start);
+		final CommandArguments args = CommandArguments.create(key).put("end", end).put("start", start);
 		final StreamEntryID endID = JedisStreamEntryID.from(end);
 		final StreamEntryID startID = JedisStreamEntryID.from(start);
 		final ListConverter<redis.clients.jedis.resps.StreamEntry, StreamEntry> listStreamEntryConverter =
@@ -865,7 +865,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 	@Override
 	public List<StreamEntry> xRevRange(final String key, final StreamEntryId end, final StreamEntryId start,
 									   final long count) {
-		final CommandArguments args = CommandArguments.create("key", key).put("end", end).put("start", start)
+		final CommandArguments args = CommandArguments.create(key).put("end", end).put("start", start)
 				.put("count", count);
 		final StreamEntryID endID = JedisStreamEntryID.from(end);
 		final StreamEntryID startID = JedisStreamEntryID.from(start);
@@ -889,7 +889,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 
 	@Override
 	public Long xTrim(final String key, final XTrimArgument xTrimArgument) {
-		final CommandArguments args = CommandArguments.create("key", key).put("xTrimArgument", xTrimArgument);
+		final CommandArguments args = CommandArguments.create(key).put("xTrimArgument", xTrimArgument);
 		final XTrimParams xTrimParams = JedisXTrimParams.from(xTrimArgument);
 
 		return xTrim(key, xTrimParams, args);
@@ -897,7 +897,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 
 	@Override
 	public Long xTrim(final byte[] key, final XTrimArgument xTrimArgument) {
-		final CommandArguments args = CommandArguments.create("key", key).put("xTrimArgument", xTrimArgument);
+		final CommandArguments args = CommandArguments.create(key).put("xTrimArgument", xTrimArgument);
 		final XTrimParams xTrimParams = JedisXTrimParams.from(xTrimArgument);
 
 		return xTrim(key, xTrimParams, args);
@@ -905,7 +905,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 
 	@Override
 	public Long xTrim(final String key, final XTrimArgument xTrimArgument, final long limit) {
-		final CommandArguments args = CommandArguments.create("key", key).put("xTrimArgument", xTrimArgument)
+		final CommandArguments args = CommandArguments.create(key).put("xTrimArgument", xTrimArgument)
 				.put("limit", limit);
 		final XTrimParams xTrimParams = JedisXTrimParams.from(xTrimArgument).limit(limit);
 
@@ -914,7 +914,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisS
 
 	@Override
 	public Long xTrim(final byte[] key, final XTrimArgument xTrimArgument, final long limit) {
-		final CommandArguments args = CommandArguments.create("key", key).put("xTrimArgument", xTrimArgument)
+		final CommandArguments args = CommandArguments.create(key).put("xTrimArgument", xTrimArgument)
 				.put("limit", limit);
 		final XTrimParams xTrimParams = JedisXTrimParams.from(xTrimArgument).limit(limit);
 

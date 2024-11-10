@@ -48,7 +48,7 @@ public final class JedisClusterConnectionOperations extends AbstractConnectionOp
 
 	@Override
 	public Status auth(final String user, final String password) {
-		final CommandArguments args = CommandArguments.create("user", user).put("password", password);
+		final CommandArguments args = CommandArguments.create(user).add(password);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<Status, Status>(client, ProtocolCommand.AUTH)
@@ -236,7 +236,7 @@ public final class JedisClusterConnectionOperations extends AbstractConnectionOp
 
 	@Override
 	public List<Client> clientList(final ClientType clientType) {
-		final CommandArguments args = CommandArguments.create("clientType", clientType);
+		final CommandArguments args = CommandArguments.create(clientType);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<List<Client>, List<Client>>(client, ProtocolCommand.CLIENT_LIST)
@@ -266,7 +266,7 @@ public final class JedisClusterConnectionOperations extends AbstractConnectionOp
 
 	@Override
 	public Status clientPause(final int timeout) {
-		final CommandArguments args = CommandArguments.create("timeout", timeout);
+		final CommandArguments args = CommandArguments.create(timeout);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<Status, Status>(client, ProtocolCommand.CLIENT_PAUSE)
@@ -298,7 +298,7 @@ public final class JedisClusterConnectionOperations extends AbstractConnectionOp
 
 	@Override
 	public Status clientKill(final String host, final int port) {
-		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
+		final CommandArguments args = CommandArguments.create(host).add(port);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<Status, Status>(client, ProtocolCommand.CLIENT_KILL)
@@ -314,7 +314,7 @@ public final class JedisClusterConnectionOperations extends AbstractConnectionOp
 
 	@Override
 	public Status clientUnblock(final int clientId) {
-		final CommandArguments args = CommandArguments.create("clientId", clientId);
+		final CommandArguments args = CommandArguments.create(clientId);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<Status, Status>(client, ProtocolCommand.CLIENT_UNBLOCK)
@@ -330,7 +330,7 @@ public final class JedisClusterConnectionOperations extends AbstractConnectionOp
 
 	@Override
 	public Status clientUnblock(final int clientId, final ClientUnblockType type) {
-		final CommandArguments args = CommandArguments.create("clientId", clientId).put("type", type);
+		final CommandArguments args = CommandArguments.create(clientId).add(type);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<Status, Status>(client, ProtocolCommand.CLIENT_UNBLOCK)

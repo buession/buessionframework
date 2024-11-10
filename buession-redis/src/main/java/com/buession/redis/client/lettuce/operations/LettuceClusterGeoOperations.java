@@ -61,7 +61,7 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 
 	@Override
 	public Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude) {
-		final CommandArguments args = CommandArguments.create("key", key).put("member", member)
+		final CommandArguments args = CommandArguments.create(key).put("member", member)
 				.put("longitude", longitude).put("latitude", latitude);
 
 		if(isPipeline()){
@@ -81,19 +81,19 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 
 	@Override
 	public Long geoAdd(final String key, final Map<String, Geo> memberCoordinates) {
-		final CommandArguments args = CommandArguments.create("key", key).put("memberCoordinates", memberCoordinates);
+		final CommandArguments args = CommandArguments.create(key).put("memberCoordinates", memberCoordinates);
 		return geoAdd(key, memberCoordinates, args);
 	}
 
 	@Override
 	public Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates) {
-		final CommandArguments args = CommandArguments.create("key", key).put("memberCoordinates", memberCoordinates);
+		final CommandArguments args = CommandArguments.create(key).put("memberCoordinates", memberCoordinates);
 		return geoAdd(key, memberCoordinates, args);
 	}
 
 	@Override
 	public List<String> geoHash(final String key, final String... members) {
-		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
+		final CommandArguments args = CommandArguments.create(key).put("members", (Object[]) members);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final byte[][] bMembers = SafeEncoder.encode(members);
 		final ListConverter<Value<String>, String> listConverter = new ListConverter<>(Value::getValue);
@@ -103,7 +103,7 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 
 	@Override
 	public List<byte[]> geoHash(final byte[] key, final byte[]... members) {
-		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
+		final CommandArguments args = CommandArguments.create(key).put("members", (Object[]) members);
 		final ListConverter<Value<String>, byte[]> listConverter = new ListConverter<>(
 				(v)->SafeEncoder.encode(v.getValue()));
 
@@ -112,7 +112,7 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 
 	@Override
 	public List<Geo> geoPos(final byte[] key, final byte[]... members) {
-		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
+		final CommandArguments args = CommandArguments.create(key).put("members", (Object[]) members);
 		final ListConverter<GeoCoordinates, Geo> listGeoCoordinateConverter = GeoCoordinateConverter.listConverter();
 
 		if(isPipeline()){
@@ -132,14 +132,14 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 
 	@Override
 	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2) {
-		final CommandArguments args = CommandArguments.create("key", key).put("member1", member1)
+		final CommandArguments args = CommandArguments.create(key).put("member1", member1)
 				.put("member2", member2);
 		return geoDist(key, member1, member2, GeoArgs.Unit.m, args);
 	}
 
 	@Override
 	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit) {
-		final CommandArguments args = CommandArguments.create("key", key).put("member1", member1)
+		final CommandArguments args = CommandArguments.create(key).put("member1", member1)
 				.put("member2", member2).put("unit", unit);
 		final GeoArgs.Unit geoArgsUnit = (new GeoUnitConverter()).convert(unit);
 
@@ -149,7 +149,7 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 	@Override
 	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
 									 final double radius, final GeoUnit unit) {
-		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
+		final CommandArguments args = CommandArguments.create(key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit);
 		final GeoArgs.Unit geoArgsUnit = (new GeoUnitConverter()).convert(unit);
 		final SetListConverter<byte[], GeoRadius> setListGeoRadiusGeneralResultConverter =
@@ -177,7 +177,7 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
 									 final double radius, final GeoUnit unit,
 									 final GeoRadiusArgument geoRadiusArgument) {
-		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
+		final CommandArguments args = CommandArguments.create(key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit)
 				.put("geoRadiusArgument", geoRadiusArgument);
 		final GeoArgs.Unit geoArgsUnit = (new GeoUnitConverter()).convert(unit);
@@ -206,7 +206,7 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 	@Override
 	public List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
 									   final double radius, final GeoUnit unit) {
-		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
+		final CommandArguments args = CommandArguments.create(key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit);
 		return geoRadiusRo(args);
 	}
@@ -214,7 +214,7 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 	@Override
 	public List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
 									   final double radius, final GeoUnit unit) {
-		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
+		final CommandArguments args = CommandArguments.create(key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit);
 		return geoRadiusRo(args);
 	}
@@ -223,7 +223,7 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 	public List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
 									   final double radius, final GeoUnit unit,
 									   final GeoRadiusArgument geoRadiusArgument) {
-		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
+		final CommandArguments args = CommandArguments.create(key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit)
 				.put("geoRadiusArgument", geoRadiusArgument);
 		return geoRadiusRo(args);
@@ -233,7 +233,7 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 	public List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
 									   final double radius, final GeoUnit unit,
 									   final GeoRadiusArgument geoRadiusArgument) {
-		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
+		final CommandArguments args = CommandArguments.create(key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit)
 				.put("geoRadiusArgument", geoRadiusArgument);
 		return geoRadiusRo(args);
@@ -242,7 +242,7 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
 											 final GeoUnit unit) {
-		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
+		final CommandArguments args = CommandArguments.create(key).put("member", member).put("radius", radius)
 				.put("unit", unit);
 		final GeoArgs.Unit geoArgsUnit = (new GeoUnitConverter()).convert(unit);
 		final SetListConverter<byte[], GeoRadius> setListGeoRadiusGeneralResultConverter =
@@ -269,7 +269,7 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
 											 final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
-		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
+		final CommandArguments args = CommandArguments.create(key).put("member", member).put("radius", radius)
 				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
 		final GeoArgs.Unit geoArgsUnit = (new GeoUnitConverter()).convert(unit);
 		final GeoArgs geoArgs = LettuceGeoArgs.from(geoRadiusArgument);
@@ -297,7 +297,7 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 	@Override
 	public List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
 											   final GeoUnit unit) {
-		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
+		final CommandArguments args = CommandArguments.create(key).put("member", member).put("radius", radius)
 				.put("unit", unit);
 		return geoRadiusByMemberRo(args);
 	}
@@ -305,7 +305,7 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 	@Override
 	public List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
 											   final GeoUnit unit) {
-		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
+		final CommandArguments args = CommandArguments.create(key).put("member", member).put("radius", radius)
 				.put("unit", unit);
 		return geoRadiusByMemberRo(args);
 	}
@@ -313,7 +313,7 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 	@Override
 	public List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
 											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
-		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
+		final CommandArguments args = CommandArguments.create(key).put("member", member).put("radius", radius)
 				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
 		return geoRadiusByMemberRo(args);
 	}
@@ -321,7 +321,7 @@ public final class LettuceClusterGeoOperations extends AbstractGeoOperations<Let
 	@Override
 	public List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
 											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
-		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
+		final CommandArguments args = CommandArguments.create(key).put("member", member).put("radius", radius)
 				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
 		return geoRadiusByMemberRo(args);
 	}

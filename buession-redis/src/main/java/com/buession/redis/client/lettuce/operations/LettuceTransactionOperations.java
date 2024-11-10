@@ -108,7 +108,7 @@ public final class LettuceTransactionOperations extends AbstractTransactionOpera
 
 	@Override
 	public Status watch(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.WATCH, (cmd)->cmd.watch(keys),

@@ -121,7 +121,7 @@ public final class JedisClusterScriptingOperations extends AbstractScriptingOper
 
 	@Override
 	public Object eval(final String script, final String[] keys, final String[] arguments) {
-		final CommandArguments args = CommandArguments.create("script", script).put("keys", (Object[]) keys)
+		final CommandArguments args = CommandArguments.create(script).put("keys", (Object[]) keys)
 				.put("arguments", (Object[]) arguments);
 		final List<String> keysList = Arrays.asList(keys);
 		final List<String> argumentsList = Arrays.asList(arguments);
@@ -143,7 +143,7 @@ public final class JedisClusterScriptingOperations extends AbstractScriptingOper
 
 	@Override
 	public Object eval(final byte[] script, final byte[][] keys, final byte[][] arguments) {
-		final CommandArguments args = CommandArguments.create("script", script).put("keys", (Object[]) keys)
+		final CommandArguments args = CommandArguments.create(script).put("keys", (Object[]) keys)
 				.put("arguments", (Object[]) arguments);
 		final List<byte[]> keysList = Arrays.asList(keys);
 		final List<byte[]> argumentsList = Arrays.asList(arguments);
@@ -165,7 +165,7 @@ public final class JedisClusterScriptingOperations extends AbstractScriptingOper
 
 	@Override
 	public Object evalSha(final String digest) {
-		final CommandArguments args = CommandArguments.create("digest", digest);
+		final CommandArguments args = CommandArguments.create(digest);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.EVALSHA, (cmd)->cmd.evalsha(digest),
@@ -183,7 +183,7 @@ public final class JedisClusterScriptingOperations extends AbstractScriptingOper
 
 	@Override
 	public Object evalSha(final byte[] digest) {
-		final CommandArguments args = CommandArguments.create("digest", digest);
+		final CommandArguments args = CommandArguments.create(digest);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.EVALSHA, (cmd)->cmd.evalsha(digest),
@@ -201,7 +201,7 @@ public final class JedisClusterScriptingOperations extends AbstractScriptingOper
 
 	@Override
 	public Object evalSha(final String digest, final String... params) {
-		final CommandArguments args = CommandArguments.create("digest", digest).put("params", (Object[]) params);
+		final CommandArguments args = CommandArguments.create(digest).put("params", (Object[]) params);
 		final int paramsSize = params == null ? 0 : params.length;
 
 		if(isPipeline()){
@@ -221,7 +221,7 @@ public final class JedisClusterScriptingOperations extends AbstractScriptingOper
 
 	@Override
 	public Object evalSha(final byte[] digest, final byte[]... params) {
-		final CommandArguments args = CommandArguments.create("digest", digest).put("params", (Object[]) params);
+		final CommandArguments args = CommandArguments.create(digest).put("params", (Object[]) params);
 		final int paramsSize = params == null ? 0 : params.length;
 
 		if(isPipeline()){
@@ -241,7 +241,7 @@ public final class JedisClusterScriptingOperations extends AbstractScriptingOper
 
 	@Override
 	public Object evalSha(final String digest, final String[] keys, final String[] arguments) {
-		final CommandArguments args = CommandArguments.create("digest", digest).put("keys", (Object[]) keys)
+		final CommandArguments args = CommandArguments.create(digest).put("keys", (Object[]) keys)
 				.put("arguments", (Object[]) arguments);
 		final List<String> keysList = Arrays.asList(keys);
 		final List<String> argumentsList = Arrays.asList(arguments);
@@ -263,7 +263,7 @@ public final class JedisClusterScriptingOperations extends AbstractScriptingOper
 
 	@Override
 	public Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] arguments) {
-		final CommandArguments args = CommandArguments.create("digest", digest).put("keys", (Object[]) keys)
+		final CommandArguments args = CommandArguments.create(digest).put("keys", (Object[]) keys)
 				.put("arguments", (Object[]) arguments);
 		final List<byte[]> keysList = Arrays.asList(keys);
 		final List<byte[]> argumentsList = Arrays.asList(arguments);
@@ -340,7 +340,7 @@ public final class JedisClusterScriptingOperations extends AbstractScriptingOper
 
 	@Override
 	public Status scriptFlush(final FlushMode mode) {
-		final CommandArguments args = CommandArguments.create("mode", mode);
+		final CommandArguments args = CommandArguments.create(mode);
 		final redis.clients.jedis.args.FlushMode flushMode = (new FlushModeConverter()).convert(mode);
 
 		if(isPipeline()){
@@ -360,7 +360,7 @@ public final class JedisClusterScriptingOperations extends AbstractScriptingOper
 
 	@Override
 	public String scriptLoad(final String script) {
-		final CommandArguments args = CommandArguments.create("script", script);
+		final CommandArguments args = CommandArguments.create(script);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SCRIPT_LOAD,
@@ -378,7 +378,7 @@ public final class JedisClusterScriptingOperations extends AbstractScriptingOper
 
 	@Override
 	public byte[] scriptLoad(final byte[] script) {
-		final CommandArguments args = CommandArguments.create("script", script);
+		final CommandArguments args = CommandArguments.create(script);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.SCRIPT_LOAD,

@@ -166,7 +166,7 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 
 	@Override
 	public Status watch(final String... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.WATCH)
@@ -190,7 +190,7 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 
 	@Override
 	public Status watch(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.WATCH)

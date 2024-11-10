@@ -48,7 +48,7 @@ public final class LettuceClusterScriptingOperations extends AbstractScriptingOp
 
 	@Override
 	public Object eval(final String script) {
-		final CommandArguments args = CommandArguments.create("script", script);
+		final CommandArguments args = CommandArguments.create(script);
 		final byte[][] bKeys = new byte[][]{};
 
 		return eval(script, bKeys, null, args);
@@ -56,7 +56,7 @@ public final class LettuceClusterScriptingOperations extends AbstractScriptingOp
 
 	@Override
 	public Object eval(final String script, final String... params) {
-		final CommandArguments args = CommandArguments.create("script", script).put("params", (Object[]) params);
+		final CommandArguments args = CommandArguments.create(script).put("params", (Object[]) params);
 		final byte[][] bKeys = new byte[][]{};
 		final byte[][] bParams = SafeEncoder.encode(params);
 
@@ -65,7 +65,7 @@ public final class LettuceClusterScriptingOperations extends AbstractScriptingOp
 
 	@Override
 	public Object eval(final String script, final String[] keys, final String[] arguments) {
-		final CommandArguments args = CommandArguments.create("script", script).put("keys", (Object[]) keys)
+		final CommandArguments args = CommandArguments.create(script).put("keys", (Object[]) keys)
 				.put("arguments", (Object[]) arguments);
 		final byte[][] bKeys = SafeEncoder.encode(keys);
 		final byte[][] bArguments = SafeEncoder.encode(arguments);
@@ -75,7 +75,7 @@ public final class LettuceClusterScriptingOperations extends AbstractScriptingOp
 
 	@Override
 	public Object evalSha(final String digest) {
-		final CommandArguments args = CommandArguments.create("digest", digest);
+		final CommandArguments args = CommandArguments.create(digest);
 		final byte[][] bKeys = new byte[][]{};
 
 		return evalSha(digest, bKeys, null, args);
@@ -83,7 +83,7 @@ public final class LettuceClusterScriptingOperations extends AbstractScriptingOp
 
 	@Override
 	public Object evalSha(final String digest, final String... params) {
-		final CommandArguments args = CommandArguments.create("digest", digest).put("params", (Object[]) params);
+		final CommandArguments args = CommandArguments.create(digest).put("params", (Object[]) params);
 		final byte[][] bKeys = new byte[][]{};
 		final byte[][] bParams = SafeEncoder.encode(params);
 
@@ -92,7 +92,7 @@ public final class LettuceClusterScriptingOperations extends AbstractScriptingOp
 
 	@Override
 	public Object evalSha(final String digest, final String[] keys, final String[] arguments) {
-		final CommandArguments args = CommandArguments.create("digest", digest).put("keys", (Object[]) keys)
+		final CommandArguments args = CommandArguments.create(digest).put("keys", (Object[]) keys)
 				.put("arguments", (Object[]) arguments);
 		final byte[][] bKeys = SafeEncoder.encode(keys);
 		final byte[][] bArguments = SafeEncoder.encode(arguments);
@@ -138,7 +138,7 @@ public final class LettuceClusterScriptingOperations extends AbstractScriptingOp
 
 	@Override
 	public Status scriptFlush(final FlushMode mode) {
-		final CommandArguments args = CommandArguments.create("mode", mode);
+		final CommandArguments args = CommandArguments.create(mode);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
@@ -157,7 +157,7 @@ public final class LettuceClusterScriptingOperations extends AbstractScriptingOp
 
 	@Override
 	public String scriptLoad(final String script) {
-		final CommandArguments args = CommandArguments.create("script", script);
+		final CommandArguments args = CommandArguments.create(script);
 		final byte[] bScript = SafeEncoder.encode(script);
 
 		return scriptLoad(bScript, (v)->v, args);
@@ -165,7 +165,7 @@ public final class LettuceClusterScriptingOperations extends AbstractScriptingOp
 
 	@Override
 	public byte[] scriptLoad(final byte[] script) {
-		final CommandArguments args = CommandArguments.create("script", script);
+		final CommandArguments args = CommandArguments.create(script);
 		return scriptLoad(script, SafeEncoder::encode, args);
 	}
 

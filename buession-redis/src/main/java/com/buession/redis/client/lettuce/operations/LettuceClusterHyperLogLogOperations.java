@@ -43,7 +43,7 @@ public final class LettuceClusterHyperLogLogOperations extends AbstractHyperLogL
 
 	@Override
 	public Status pfAdd(final byte[] key, final byte[]... elements) {
-		final CommandArguments args = CommandArguments.create("key", key).put("elements", (Object[]) elements);
+		final CommandArguments args = CommandArguments.create(key).add(elements);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.PFADD, (cmd)->cmd.pfadd(key, elements),
@@ -62,7 +62,7 @@ public final class LettuceClusterHyperLogLogOperations extends AbstractHyperLogL
 
 	@Override
 	public Status pfMerge(final byte[] destKey, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.PFMERGE,
@@ -81,7 +81,7 @@ public final class LettuceClusterHyperLogLogOperations extends AbstractHyperLogL
 
 	@Override
 	public Long pfCount(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfcount(keys),

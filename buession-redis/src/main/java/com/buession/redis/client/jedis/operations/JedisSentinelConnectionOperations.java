@@ -54,7 +54,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 
 	@Override
 	public Status auth(final String user, final String password) {
-		final CommandArguments args = CommandArguments.create("user", user).put("password", password);
+		final CommandArguments args = CommandArguments.create(user).put("password", password);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.AUTH)
@@ -71,7 +71,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 
 	@Override
 	public Status auth(final String password) {
-		final CommandArguments args = CommandArguments.create("password", password);
+		final CommandArguments args = CommandArguments.create(password);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.AUTH)
@@ -88,7 +88,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 
 	@Override
 	public String echo(final String str) {
-		final CommandArguments args = CommandArguments.create("str", str);
+		final CommandArguments args = CommandArguments.create(str);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<String, String>(client, ProtocolCommand.ECHO)
@@ -104,7 +104,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 
 	@Override
 	public byte[] echo(final byte[] str) {
-		final CommandArguments args = CommandArguments.create("str", str);
+		final CommandArguments args = CommandArguments.create(str);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<byte[], byte[]>(client, ProtocolCommand.ECHO)
@@ -164,7 +164,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 
 	@Override
 	public Status select(final int db) {
-		final CommandArguments args = CommandArguments.create("db", db);
+		final CommandArguments args = CommandArguments.create(db);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.SELECT, (cmd)->cmd.select(db),
@@ -181,7 +181,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 
 	@Override
 	public Status clientCaching(final boolean isYes) {
-		final CommandArguments args = CommandArguments.create("isYes", isYes);
+		final CommandArguments args = CommandArguments.create(isYes);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLIENT_CACHING)
@@ -211,7 +211,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 
 	@Override
 	public Status clientSetName(final String name) {
-		final CommandArguments args = CommandArguments.create("name", name);
+		final CommandArguments args = CommandArguments.create(name);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLIENT_SETNAME)
@@ -228,7 +228,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 
 	@Override
 	public Status clientSetName(final byte[] name) {
-		final CommandArguments args = CommandArguments.create("name", name);
+		final CommandArguments args = CommandArguments.create(name);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLIENT_SETNAME)
@@ -291,7 +291,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 
 	@Override
 	public List<Client> clientList(final ClientType clientType) {
-		final CommandArguments args = CommandArguments.create("clientType", clientType);
+		final CommandArguments args = CommandArguments.create(clientType);
 		final redis.clients.jedis.args.ClientType jClientType = (new ClientTypeConverter()).convert(clientType);
 		final ClientConverter.ClientListConverter clientListConverter = new ClientConverter.ClientListConverter();
 
@@ -327,7 +327,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 
 	@Override
 	public Status clientPause(final int timeout) {
-		final CommandArguments args = CommandArguments.create("timeout", timeout);
+		final CommandArguments args = CommandArguments.create(timeout);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLIENT_PAUSE)
@@ -344,7 +344,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 
 	@Override
 	public Status clientReply(final ClientReply option) {
-		final CommandArguments args = CommandArguments.create("option", option);
+		final CommandArguments args = CommandArguments.create(option);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLIENT_REPLY)
@@ -360,7 +360,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 
 	@Override
 	public Status clientKill(final String host, final int port) {
-		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
+		final CommandArguments args = CommandArguments.create(host).put("port", port);
 		final String addr = host + ':' + port;
 
 		if(isPipeline()){
@@ -378,7 +378,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 
 	@Override
 	public Status clientUnblock(final int clientId) {
-		final CommandArguments args = CommandArguments.create("clientId", clientId);
+		final CommandArguments args = CommandArguments.create(clientId);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CLIENT_UNBLOCK)
@@ -396,7 +396,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 
 	@Override
 	public Status clientUnblock(final int clientId, final ClientUnblockType type) {
-		final CommandArguments args = CommandArguments.create("clientId", clientId).put("type", type);
+		final CommandArguments args = CommandArguments.create(clientId).put("type", type);
 		final UnblockType unblockType = (new ClientUnblockTypeConverter()).convert(type);
 
 		if(isPipeline()){

@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.command;
 
+import com.buession.core.Range;
 import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
 import com.buession.lang.Constants;
@@ -87,6 +88,14 @@ public final class CommandArguments {
 		add(value);
 	}
 
+	private CommandArguments(final Range<?> value) {
+		add(value);
+	}
+
+	private CommandArguments(final Enum<?> value) {
+		add(value);
+	}
+
 	private CommandArguments(final Object value) {
 		add(value);
 	}
@@ -132,6 +141,14 @@ public final class CommandArguments {
 	}
 
 	private CommandArguments(final Map<?, ?>... values) {
+		add(values);
+	}
+
+	private CommandArguments(final Range<?>... values) {
+		add(values);
+	}
+
+	private CommandArguments(final Enum<?>... values) {
 		add(values);
 	}
 
@@ -187,6 +204,14 @@ public final class CommandArguments {
 		return new CommandArguments(value);
 	}
 
+	public static CommandArguments create(final Range<?> value) {
+		return new CommandArguments(value);
+	}
+
+	public static CommandArguments create(final Enum<?> value) {
+		return new CommandArguments(value);
+	}
+
 	public static CommandArguments create(final Object value) {
 		return new CommandArguments(value);
 	}
@@ -235,17 +260,15 @@ public final class CommandArguments {
 		return new CommandArguments(values);
 	}
 
-	public static CommandArguments create(final Object... values) {
+	public static CommandArguments create(final Enum<?>... values) {
 		return new CommandArguments(values);
 	}
 
-	@Deprecated
-	public static CommandArguments create(final String key, final Object value) {
-		return new CommandArguments(value);
+	public static CommandArguments create(final Range<?>... values) {
+		return new CommandArguments(values);
 	}
 
-	@Deprecated
-	public static CommandArguments create(final String key, final Object... values) {
+	public static CommandArguments create(final Object... values) {
 		return new CommandArguments(values);
 	}
 
@@ -316,6 +339,23 @@ public final class CommandArguments {
 		return this;
 	}
 
+	public CommandArguments add(final Enum<?> value) {
+		if(value != null){
+			parameters.add(value.name());
+		}
+
+		return this;
+	}
+
+	public CommandArguments add(final Range<?> value) {
+		if(value != null){
+			parameters.add(value.getStart());
+			parameters.add(value.getEnd());
+		}
+
+		return this;
+	}
+
 	public CommandArguments add(final Object value) {
 		if(value != null){
 			parameters.add(value);
@@ -325,123 +365,59 @@ public final class CommandArguments {
 	}
 
 	public CommandArguments add(final byte[]... values) {
-		if(Validate.isNotEmpty(values)){
-			for(Object value : values){
-				add(value);
-			}
-		}
-
-		return this;
+		return doBatchAdd(values);
 	}
 
 	public CommandArguments add(final char... values) {
-		if(Validate.isNotEmpty(values)){
-			for(Object value : values){
-				add(value);
-			}
-		}
-
-		return this;
+		return doBatchAdd(values);
 	}
 
 	public CommandArguments add(final short... values) {
-		if(Validate.isNotEmpty(values)){
-			for(Object value : values){
-				add(value);
-			}
-		}
-
-		return this;
+		return doBatchAdd(values);
 	}
 
 	public CommandArguments add(final int... values) {
-		if(Validate.isNotEmpty(values)){
-			for(Object value : values){
-				add(value);
-			}
-		}
-
-		return this;
+		return doBatchAdd(values);
 	}
 
 	public CommandArguments add(final long... values) {
-		if(Validate.isNotEmpty(values)){
-			for(Object value : values){
-				add(value);
-			}
-		}
-
-		return this;
+		return doBatchAdd(values);
 	}
 
 	public CommandArguments add(final float... values) {
-		if(Validate.isNotEmpty(values)){
-			for(Object value : values){
-				add(value);
-			}
-		}
-
-		return this;
+		return doBatchAdd(values);
 	}
 
 	public CommandArguments add(final double... values) {
-		if(Validate.isNotEmpty(values)){
-			for(Object value : values){
-				add(value);
-			}
-		}
-
-		return this;
+		return doBatchAdd(values);
 	}
 
 	public CommandArguments add(final boolean... values) {
-		if(Validate.isNotEmpty(values)){
-			for(Object value : values){
-				add(value);
-			}
-		}
-
-		return this;
+		return doBatchAdd(values);
 	}
 
 	public CommandArguments add(final String... values) {
-		if(Validate.isNotEmpty(values)){
-			for(Object value : values){
-				add(value);
-			}
-		}
-
-		return this;
+		return doBatchAdd(values);
 	}
 
 	public CommandArguments add(final Collection<?>... values) {
-		if(Validate.isNotEmpty(values)){
-			for(Object value : values){
-				add(value);
-			}
-		}
-
-		return this;
+		return doBatchAdd(values);
 	}
 
 	public CommandArguments add(final Map<?, ?>... values) {
-		if(Validate.isNotEmpty(values)){
-			for(Object value : values){
-				add(value);
-			}
-		}
+		return doBatchAdd(values);
+	}
 
-		return this;
+	public CommandArguments add(final Enum<?>... values) {
+		return doBatchAdd(values);
+	}
+
+	public CommandArguments add(final Range<?>... values) {
+		return doBatchAdd(values);
 	}
 
 	public CommandArguments add(final Object... values) {
-		if(Validate.isNotEmpty(values)){
-			for(Object value : values){
-				add(value);
-			}
-		}
-
-		return this;
+		return doBatchAdd(values);
 	}
 
 	@Deprecated
@@ -473,6 +449,16 @@ public final class CommandArguments {
 	@Override
 	public String toString() {
 		return asString();
+	}
+
+	private <T> CommandArguments doBatchAdd(final T... values) {
+		if(Validate.isNotEmpty(values)){
+			for(T value : values){
+				add(value);
+			}
+		}
+
+		return this;
 	}
 
 }
