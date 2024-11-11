@@ -56,7 +56,7 @@ public final class LettuceClusterStringOperations extends AbstractStringOperatio
 
 	@Override
 	public Long append(final byte[] key, final byte[] value) {
-		final CommandArguments args = CommandArguments.create(key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.APPEND, (cmd)->cmd.append(key, value),
@@ -90,7 +90,7 @@ public final class LettuceClusterStringOperations extends AbstractStringOperatio
 
 	@Override
 	public Long incrBy(final byte[] key, final long value) {
-		final CommandArguments args = CommandArguments.create(key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.INCRBY, (cmd)->cmd.incrby(key, value),
@@ -108,7 +108,7 @@ public final class LettuceClusterStringOperations extends AbstractStringOperatio
 
 	@Override
 	public Double incrByFloat(final byte[] key, final double value) {
-		final CommandArguments args = CommandArguments.create(key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.INCRBYFLOAT,
@@ -143,7 +143,7 @@ public final class LettuceClusterStringOperations extends AbstractStringOperatio
 
 	@Override
 	public Long decrBy(final byte[] key, final long value) {
-		final CommandArguments args = CommandArguments.create(key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.DECRBY, (cmd)->cmd.decrby(key, value),
@@ -175,19 +175,19 @@ public final class LettuceClusterStringOperations extends AbstractStringOperatio
 
 	@Override
 	public String getEx(final String key, final GetExArgument getExArgument) {
-		final CommandArguments args = CommandArguments.create(key).put("getExArgument", getExArgument);
+		final CommandArguments args = CommandArguments.create(key).add(getExArgument);
 		return getEx(args);
 	}
 
 	@Override
 	public byte[] getEx(final byte[] key, final GetExArgument getExArgument) {
-		final CommandArguments args = CommandArguments.create(key).put("getExArgument", getExArgument);
+		final CommandArguments args = CommandArguments.create(key).add(getExArgument);
 		return getEx(args);
 	}
 
 	@Override
 	public String getSet(final String key, final String value) {
-		final CommandArguments args = CommandArguments.create(key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final byte[] bValue = SafeEncoder.encode(value);
 
@@ -196,7 +196,7 @@ public final class LettuceClusterStringOperations extends AbstractStringOperatio
 
 	@Override
 	public byte[] getSet(final byte[] key, final byte[] value) {
-		final CommandArguments args = CommandArguments.create(key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 		return getSet(key, value, (v)->v, args);
 	}
 
@@ -272,7 +272,7 @@ public final class LettuceClusterStringOperations extends AbstractStringOperatio
 
 	@Override
 	public Status pSetEx(final byte[] key, final byte[] value, final int lifetime) {
-		final CommandArguments args = CommandArguments.create(key).put("value", value).put("lifetime", lifetime);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(lifetime);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.PSETEX,
@@ -291,7 +291,7 @@ public final class LettuceClusterStringOperations extends AbstractStringOperatio
 
 	@Override
 	public Status set(final byte[] key, final byte[] value) {
-		final CommandArguments args = CommandArguments.create(key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.SET, (cmd)->cmd.set(key, value),
@@ -310,7 +310,7 @@ public final class LettuceClusterStringOperations extends AbstractStringOperatio
 
 	@Override
 	public Status set(final byte[] key, final byte[] value, final SetArgument setArgument) {
-		final CommandArguments args = CommandArguments.create(key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 		final SetArgs setArgs = LettuceSetArgs.from(setArgument);
 
 		if(isPipeline()){
@@ -330,7 +330,7 @@ public final class LettuceClusterStringOperations extends AbstractStringOperatio
 
 	@Override
 	public Status setEx(final byte[] key, final byte[] value, final int lifetime) {
-		final CommandArguments args = CommandArguments.create(key).put("value", value).put("lifetime", lifetime);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(lifetime);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.SETEX,
@@ -349,7 +349,7 @@ public final class LettuceClusterStringOperations extends AbstractStringOperatio
 
 	@Override
 	public Status setNx(final byte[] key, final byte[] value) {
-		final CommandArguments args = CommandArguments.create(key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.SETNX, (cmd)->cmd.setnx(key, value),
@@ -368,7 +368,7 @@ public final class LettuceClusterStringOperations extends AbstractStringOperatio
 
 	@Override
 	public Long setRange(final byte[] key, final long offset, final byte[] value) {
-		final CommandArguments args = CommandArguments.create(key).put("offset", offset).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(offset).add(value);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.SETRANGE,
@@ -388,7 +388,7 @@ public final class LettuceClusterStringOperations extends AbstractStringOperatio
 
 	@Override
 	public byte[] getRange(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).put("start", start).put("end", end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.GETRANGE,
@@ -424,7 +424,7 @@ public final class LettuceClusterStringOperations extends AbstractStringOperatio
 
 	@Override
 	public String substr(final String key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).put("start", start).put("end", end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final Converter<byte[], String> converter = (v)->StringUtils.substring(SafeEncoder.encode(v),
 				(int) start, (int) end);
@@ -434,7 +434,7 @@ public final class LettuceClusterStringOperations extends AbstractStringOperatio
 
 	@Override
 	public byte[] substr(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).put("start", start).put("end", end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		final Converter<byte[], byte[]> converter = (v)->StringUtils.substring(SafeEncoder.encode(v), (int) start,
 				(int) end).getBytes(StandardCharsets.UTF_8);
 

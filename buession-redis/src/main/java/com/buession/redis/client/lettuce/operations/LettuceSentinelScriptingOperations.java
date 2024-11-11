@@ -56,7 +56,7 @@ public final class LettuceSentinelScriptingOperations extends AbstractScriptingO
 
 	@Override
 	public Object eval(final String script, final String... params) {
-		final CommandArguments args = CommandArguments.create(script).put("params", (Object[]) params);
+		final CommandArguments args = CommandArguments.create(script).add(params);
 		final byte[][] bKeys = new byte[][]{};
 		final byte[][] bParams = SafeEncoder.encode(params);
 
@@ -65,8 +65,8 @@ public final class LettuceSentinelScriptingOperations extends AbstractScriptingO
 
 	@Override
 	public Object eval(final String script, final String[] keys, final String[] arguments) {
-		final CommandArguments args = CommandArguments.create(script).put("keys", (Object[]) keys)
-				.put("arguments", (Object[]) arguments);
+		final CommandArguments args = CommandArguments.create(script).add(keys)
+				.add(arguments);
 		final byte[][] bKeys = SafeEncoder.encode(keys);
 		final byte[][] bArguments = SafeEncoder.encode(arguments);
 
@@ -83,7 +83,7 @@ public final class LettuceSentinelScriptingOperations extends AbstractScriptingO
 
 	@Override
 	public Object evalSha(final String digest, final String... params) {
-		final CommandArguments args = CommandArguments.create(digest).put("params", (Object[]) params);
+		final CommandArguments args = CommandArguments.create(digest).add(params);
 		final byte[][] bKeys = new byte[][]{};
 		final byte[][] bParams = SafeEncoder.encode(params);
 
@@ -92,8 +92,8 @@ public final class LettuceSentinelScriptingOperations extends AbstractScriptingO
 
 	@Override
 	public Object evalSha(final String digest, final String[] keys, final String[] arguments) {
-		final CommandArguments args = CommandArguments.create(digest).put("keys", (Object[]) keys)
-				.put("arguments", (Object[]) arguments);
+		final CommandArguments args = CommandArguments.create(digest).add(keys)
+				.add(arguments);
 		final byte[][] bKeys = SafeEncoder.encode(keys);
 		final byte[][] bArguments = SafeEncoder.encode(arguments);
 

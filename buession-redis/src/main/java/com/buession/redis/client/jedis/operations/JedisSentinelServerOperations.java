@@ -118,7 +118,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 
 	@Override
 	public Status aclSetUser(final String username, final String... rules) {
-		final CommandArguments args = CommandArguments.create(username).put("rules", (Object[]) rules);
+		final CommandArguments args = CommandArguments.create(username).add(rules);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.ACL_SETUSER)
@@ -135,7 +135,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 
 	@Override
 	public Status aclSetUser(final byte[] username, final byte[]... rules) {
-		final CommandArguments args = CommandArguments.create(username).put("rules", (Object[]) rules);
+		final CommandArguments args = CommandArguments.create(username).add(rules);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.ACL_SETUSER)
@@ -386,7 +386,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 
 	@Override
 	public Status configSet(final String parameter, final String value) {
-		final CommandArguments args = CommandArguments.create(parameter).put("value", value);
+		final CommandArguments args = CommandArguments.create(parameter).add(value);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CONFIG_SET)
@@ -403,7 +403,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 
 	@Override
 	public Status configSet(final byte[] parameter, final byte[] value) {
-		final CommandArguments args = CommandArguments.create(parameter).put("value", value);
+		final CommandArguments args = CommandArguments.create(parameter).add(value);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CONFIG_SET)
@@ -536,7 +536,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 
 	@Override
 	public Status failover(final String host, final int port) {
-		final CommandArguments args = CommandArguments.create(host).put("port", port);
+		final CommandArguments args = CommandArguments.create(host).add(port);
 		final FailoverParams failoverParams = new JedisFailoverParams(host, port);
 
 		return failover(failoverParams, args);
@@ -544,7 +544,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 
 	@Override
 	public Status failover(final String host, final int port, final int timeout) {
-		final CommandArguments args = CommandArguments.create(host).put("port", port).put("timeout", timeout);
+		final CommandArguments args = CommandArguments.create(host).add(port).add(timeout);
 		final FailoverParams failoverParams = new JedisFailoverParams(host, port, timeout);
 
 		return failover(failoverParams, args);
@@ -552,8 +552,8 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 
 	@Override
 	public Status failover(final String host, final int port, final boolean isForce, final int timeout) {
-		final CommandArguments args = CommandArguments.create(host).put("port", port).put("isForce", isForce)
-				.put("timeout", timeout);
+		final CommandArguments args = CommandArguments.create(host).add(port).add(isForce)
+				.add(timeout);
 		final FailoverParams failoverParams = new JedisFailoverParams(host, port, timeout, isForce);
 
 		return failover(failoverParams, args);
@@ -764,7 +764,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 
 	@Override
 	public Long memoryUsage(final String key, final int samples) {
-		final CommandArguments args = CommandArguments.create(key).put("samples", samples);
+		final CommandArguments args = CommandArguments.create(key).add(samples);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.MEMORY_USAGE,
@@ -783,7 +783,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 
 	@Override
 	public Long memoryUsage(final byte[] key, final int samples) {
-		final CommandArguments args = CommandArguments.create(key).put("samples", samples);
+		final CommandArguments args = CommandArguments.create(key).add(samples);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.MEMORY_USAGE,
@@ -819,7 +819,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 
 	@Override
 	public Status moduleLoad(final String path, final String... arguments) {
-		final CommandArguments args = CommandArguments.create(path).put("arguments", (Object[]) arguments);
+		final CommandArguments args = CommandArguments.create(path).add(arguments);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.MODULE_LOAD)
@@ -879,13 +879,13 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 
 	@Override
 	public Object pSync(final String replicationId, final long offset) {
-		final CommandArguments args = CommandArguments.create(replicationId).put("offset", offset);
+		final CommandArguments args = CommandArguments.create(replicationId).add(offset);
 		return pSync(args);
 	}
 
 	@Override
 	public Object pSync(final byte[] replicationId, final long offset) {
-		final CommandArguments args = CommandArguments.create(replicationId).put("offset", offset);
+		final CommandArguments args = CommandArguments.create(replicationId).add(offset);
 		return pSync(args);
 	}
 
@@ -908,7 +908,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 
 	@Override
 	public Status replicaOf(final String host, final int port) {
-		final CommandArguments args = CommandArguments.create(host).put("port", port);
+		final CommandArguments args = CommandArguments.create(host).add(port);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.REPLICAOF)
@@ -925,7 +925,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 
 	@Override
 	public Status slaveOf(final String host, final int port) {
-		final CommandArguments args = CommandArguments.create(host).put("port", port);
+		final CommandArguments args = CommandArguments.create(host).add(port);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.SLAVEOF)
@@ -1075,7 +1075,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 
 	@Override
 	public Status swapdb(final int db1, final int db2) {
-		final CommandArguments args = CommandArguments.create(db1).put("db2", db2);
+		final CommandArguments args = CommandArguments.create(db1).add(db2);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<>(client, ProtocolCommand.SWAPDB, (cmd)->cmd.swapDB(db1, db2),

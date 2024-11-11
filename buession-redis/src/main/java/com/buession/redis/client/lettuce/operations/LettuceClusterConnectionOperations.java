@@ -364,7 +364,7 @@ public final class LettuceClusterConnectionOperations extends AbstractConnection
 
 	@Override
 	public Status clientKill(final String host, final int port) {
-		final CommandArguments args = CommandArguments.create(host).put("port", port);
+		final CommandArguments args = CommandArguments.create(host).add(port);
 		final String addr = host + ':' + port;
 
 		if(isPipeline()){
@@ -390,7 +390,7 @@ public final class LettuceClusterConnectionOperations extends AbstractConnection
 
 	@Override
 	public Status clientUnblock(final int clientId, final ClientUnblockType type) {
-		final CommandArguments args = CommandArguments.create(clientId).put("type", type);
+		final CommandArguments args = CommandArguments.create(clientId).add(type);
 		final UnblockType unblockType = (new ClientUnblockTypeConverter()).convert(type);
 
 		return clientUnblock(clientId, unblockType, args);

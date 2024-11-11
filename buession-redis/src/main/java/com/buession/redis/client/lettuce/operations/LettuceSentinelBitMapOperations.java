@@ -80,8 +80,8 @@ public final class LettuceSentinelBitMapOperations extends AbstractBitMapOperati
 
 	@Override
 	public Long bitCount(final byte[] key, final long start, final long end, final BitCountOption bitCountOption) {
-		final CommandArguments args = CommandArguments.create(key).put("start", start).put("end", end)
-				.put("bitCountOption", bitCountOption);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end)
+				.add(bitCountOption);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.BITCOUNT)
@@ -97,7 +97,7 @@ public final class LettuceSentinelBitMapOperations extends AbstractBitMapOperati
 
 	@Override
 	public List<Long> bitField(final byte[] key, final BitFieldArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).put("arguments", argument);
+		final CommandArguments args = CommandArguments.create(key).add(argument);
 		final BitFieldArgs bitFieldArgs = LettuceBitFieldArgs.from(argument);
 
 		if(isPipeline()){
@@ -114,20 +114,20 @@ public final class LettuceSentinelBitMapOperations extends AbstractBitMapOperati
 
 	@Override
 	public List<Long> bitFieldRo(final String key, final String... arguments) {
-		final CommandArguments args = CommandArguments.create(key).put("arguments", (Object[]) arguments);
+		final CommandArguments args = CommandArguments.create(key).add(arguments);
 		return bitFieldRo(args);
 	}
 
 	@Override
 	public List<Long> bitFieldRo(final byte[] key, final byte[]... arguments) {
-		final CommandArguments args = CommandArguments.create(key).put("arguments", (Object[]) arguments);
+		final CommandArguments args = CommandArguments.create(key).add(arguments);
 		return bitFieldRo(args);
 	}
 
 	@Override
 	public Long bitOp(final BitOperation operation, final byte[] destKey, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create(operation).put("destKey", destKey)
-				.put("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(operation).add(destKey)
+				.add(keys);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.BITOP)
@@ -143,7 +143,7 @@ public final class LettuceSentinelBitMapOperations extends AbstractBitMapOperati
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value) {
-		final CommandArguments args = CommandArguments.create(key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.BITPOS)
@@ -159,8 +159,8 @@ public final class LettuceSentinelBitMapOperations extends AbstractBitMapOperati
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).put("value", value).put("start", start)
-				.put("end", end);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(start)
+				.add(end);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.BITPOS)
@@ -176,7 +176,7 @@ public final class LettuceSentinelBitMapOperations extends AbstractBitMapOperati
 
 	@Override
 	public Boolean getBit(final byte[] key, final long offset) {
-		final CommandArguments args = CommandArguments.create(key).put("offset", offset);
+		final CommandArguments args = CommandArguments.create(key).add(offset);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Boolean, Boolean>(client, ProtocolCommand.GETBIT)
@@ -192,7 +192,7 @@ public final class LettuceSentinelBitMapOperations extends AbstractBitMapOperati
 
 	@Override
 	public Boolean setBit(final byte[] key, final long offset, final boolean value) {
-		final CommandArguments args = CommandArguments.create(key).put("offset", offset).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(offset).add(value);
 		final int iValue = value ? 1 : 0;
 
 		if(isPipeline()){

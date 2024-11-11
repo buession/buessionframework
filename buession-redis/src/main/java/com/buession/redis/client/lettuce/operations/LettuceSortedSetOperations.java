@@ -89,7 +89,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public List<Tuple> zPopMin(final byte[] key, final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(count);
 		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueTupleConverter.BinaryScoredValueTupleConverter.listConverter();
 
 		if(isPipeline()){
@@ -128,7 +128,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public List<Tuple> zPopMax(final byte[] key, final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(count);
 		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueTupleConverter.BinaryScoredValueTupleConverter.listConverter();
 
 		if(isPipeline()){
@@ -148,7 +148,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public com.buession.lang.KeyValue<String, Tuple> bzPopMin(final String[] keys, final int timeout) {
-		final CommandArguments args = CommandArguments.create(keys).put("timeout", timeout);
+		final CommandArguments args = CommandArguments.create(keys).add(timeout);
 		final byte[][] bKeys = SafeEncoder.encode(keys);
 		final KeyValueConverter<byte[], ScoredValue<byte[]>, String, Tuple> converter = new KeyValueConverter<>(
 				SafeEncoder::encode, new ScoredValueTupleConverter.BinaryScoredValueTupleConverter());
@@ -158,7 +158,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public com.buession.lang.KeyValue<byte[], Tuple> bzPopMin(final byte[][] keys, final int timeout) {
-		final CommandArguments args = CommandArguments.create(keys).put("timeout", timeout);
+		final CommandArguments args = CommandArguments.create(keys).add(timeout);
 		final KeyValueConverter<byte[], ScoredValue<byte[]>, byte[], Tuple> converter = new KeyValueConverter<>(
 				(k)->k, new ScoredValueTupleConverter.BinaryScoredValueTupleConverter());
 
@@ -167,7 +167,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public com.buession.lang.KeyValue<String, Tuple> bzPopMax(final String[] keys, final int timeout) {
-		final CommandArguments args = CommandArguments.create(keys).put("timeout", timeout);
+		final CommandArguments args = CommandArguments.create(keys).add(timeout);
 		final byte[][] bKeys = SafeEncoder.encode(keys);
 		final KeyValueConverter<byte[], ScoredValue<byte[]>, String, Tuple> converter = new KeyValueConverter<>(
 				SafeEncoder::encode, new ScoredValueTupleConverter.BinaryScoredValueTupleConverter());
@@ -177,7 +177,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public com.buession.lang.KeyValue<byte[], Tuple> bzPopMax(final byte[][] keys, final int timeout) {
-		final CommandArguments args = CommandArguments.create(keys).put("timeout", timeout);
+		final CommandArguments args = CommandArguments.create(keys).add(timeout);
 		final KeyValueConverter<byte[], ScoredValue<byte[]>, byte[], Tuple> converter = new KeyValueConverter<>(
 				(k)->k, new ScoredValueTupleConverter.BinaryScoredValueTupleConverter());
 
@@ -186,19 +186,19 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public Long zAdd(final String key, final Map<String, Double> members) {
-		final CommandArguments args = CommandArguments.create(key).put("members", members);
+		final CommandArguments args = CommandArguments.create(key).add(members);
 		return zAdd(key, members, args);
 	}
 
 	@Override
 	public Long zAdd(final byte[] key, final Map<byte[], Double> members) {
-		final CommandArguments args = CommandArguments.create(key).put("members", members);
+		final CommandArguments args = CommandArguments.create(key).add(members);
 		return zAdd(key, members, args);
 	}
 
 	@Override
 	public Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx) {
-		final CommandArguments args = CommandArguments.create(key).put("members", members).put("nxXx", nxXx);
+		final CommandArguments args = CommandArguments.create(key).add(members).add(nxXx);
 		final ZAddArgs zAddArgs = new LettuceZAddArgs(nxXx);
 
 		return zAdd(key, members, zAddArgs, args);
@@ -206,7 +206,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx) {
-		final CommandArguments args = CommandArguments.create(key).put("members", members).put("nxXx", nxXx);
+		final CommandArguments args = CommandArguments.create(key).add(members).add(nxXx);
 		final ZAddArgs zAddArgs = new LettuceZAddArgs(nxXx);
 
 		return zAdd(key, members, zAddArgs, args);
@@ -214,7 +214,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public Long zAdd(final String key, final Map<String, Double> members, final GtLt gtLt) {
-		final CommandArguments args = CommandArguments.create(key).put("members", members).put("gtLt", gtLt);
+		final CommandArguments args = CommandArguments.create(key).add(members).add(gtLt);
 		final ZAddArgs zAddArgs = new LettuceZAddArgs(gtLt);
 
 		return zAdd(key, members, zAddArgs, args);
@@ -222,7 +222,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final GtLt gtLt) {
-		final CommandArguments args = CommandArguments.create(key).put("members", members).put("gtLt", gtLt);
+		final CommandArguments args = CommandArguments.create(key).add(members).add(gtLt);
 		final ZAddArgs zAddArgs = new LettuceZAddArgs(gtLt);
 
 		return zAdd(key, members, zAddArgs, args);
@@ -230,7 +230,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public Long zAdd(final String key, final Map<String, Double> members, final boolean ch) {
-		final CommandArguments args = CommandArguments.create(key).put("members", members).put("ch", ch);
+		final CommandArguments args = CommandArguments.create(key).add(members).add(ch);
 		final ZAddArgs zAddArgs = new LettuceZAddArgs(ch);
 
 		return zAdd(key, members, zAddArgs, args);
@@ -238,7 +238,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final boolean ch) {
-		final CommandArguments args = CommandArguments.create(key).put("members", members).put("ch", ch);
+		final CommandArguments args = CommandArguments.create(key).add(members).add(ch);
 		final ZAddArgs zAddArgs = new LettuceZAddArgs(ch);
 
 		return zAdd(key, members, zAddArgs, args);
@@ -246,8 +246,8 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final GtLt gtLt) {
-		final CommandArguments args = CommandArguments.create(key).put("members", members).put("nxXx", nxXx)
-				.put("gtLt", gtLt);
+		final CommandArguments args = CommandArguments.create(key).add(members).add(nxXx)
+				.add(gtLt);
 		final ZAddArgs zAddArgs = new LettuceZAddArgs(nxXx, gtLt);
 
 		return zAdd(key, members, zAddArgs, args);
@@ -255,8 +255,8 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final GtLt gtLt) {
-		final CommandArguments args = CommandArguments.create(key).put("members", members).put("nxXx", nxXx)
-				.put("gtLt", gtLt);
+		final CommandArguments args = CommandArguments.create(key).add(members).add(nxXx)
+				.add(gtLt);
 		final ZAddArgs zAddArgs = new LettuceZAddArgs(nxXx, gtLt);
 
 		return zAdd(key, members, zAddArgs, args);
@@ -264,8 +264,8 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final boolean ch) {
-		final CommandArguments args = CommandArguments.create(key).put("members", members).put("nxXx", nxXx)
-				.put("ch", ch);
+		final CommandArguments args = CommandArguments.create(key).add(members).add(nxXx)
+				.add(ch);
 		final ZAddArgs zAddArgs = new LettuceZAddArgs(nxXx, ch);
 
 		return zAdd(key, members, zAddArgs, args);
@@ -273,8 +273,8 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final boolean ch) {
-		final CommandArguments args = CommandArguments.create(key).put("members", members).put("nxXx", nxXx)
-				.put("ch", ch);
+		final CommandArguments args = CommandArguments.create(key).add(members).add(nxXx)
+				.add(ch);
 		final ZAddArgs zAddArgs = new LettuceZAddArgs(nxXx, ch);
 
 		return zAdd(key, members, zAddArgs, args);
@@ -282,8 +282,8 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public Long zAdd(final String key, final Map<String, Double> members, final GtLt gtLt, final boolean ch) {
-		final CommandArguments args = CommandArguments.create(key).put("members", members).put("gtLt", gtLt)
-				.put("ch", ch);
+		final CommandArguments args = CommandArguments.create(key).add(members).add(gtLt)
+				.add(ch);
 		final ZAddArgs zAddArgs = new LettuceZAddArgs(gtLt, ch);
 
 		return zAdd(key, members, zAddArgs, args);
@@ -291,8 +291,8 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final GtLt gtLt, final boolean ch) {
-		final CommandArguments args = CommandArguments.create(key).put("members", members).put("gtLt", gtLt)
-				.put("ch", ch);
+		final CommandArguments args = CommandArguments.create(key).add(members).add(gtLt)
+				.add(ch);
 		final ZAddArgs zAddArgs = new LettuceZAddArgs(gtLt, ch);
 
 		return zAdd(key, members, zAddArgs, args);
@@ -301,8 +301,8 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	@Override
 	public Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final GtLt gtLt,
 					 final boolean ch) {
-		final CommandArguments args = CommandArguments.create(key).put("members", members).put("nxXx", nxXx)
-				.put("gtLt", gtLt).put("ch", ch);
+		final CommandArguments args = CommandArguments.create(key).add(members).add(nxXx)
+				.add(gtLt).add(ch);
 		final ZAddArgs zAddArgs = new LettuceZAddArgs(nxXx, gtLt, ch);
 
 		return zAdd(key, members, zAddArgs, args);
@@ -311,8 +311,8 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	@Override
 	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final GtLt gtLt,
 					 final boolean ch) {
-		final CommandArguments args = CommandArguments.create(key).put("members", members).put("nxXx", nxXx)
-				.put("gtLt", gtLt).put("ch", ch);
+		final CommandArguments args = CommandArguments.create(key).add(members).add(nxXx)
+				.add(gtLt).add(ch);
 		final ZAddArgs zAddArgs = new LettuceZAddArgs(nxXx, gtLt, ch);
 
 		return zAdd(key, members, zAddArgs, args);
@@ -336,7 +336,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public Long zCount(final byte[] key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		final Range<Double> range = Range.create(min, max);
 
 		if(isPipeline()){
@@ -378,20 +378,20 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public Long zDiffStore(final String destKey, final String... keys) {
-		final CommandArguments args = CommandArguments.create(destKey).put("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys);
 		return zDiffStore(args);
 	}
 
 	@Override
 	public Long zDiffStore(final byte[] destKey, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create(destKey).put("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys);
 		return zDiffStore(args);
 	}
 
 	@Override
 	public Double zIncrBy(final byte[] key, final double increment, final byte[] member) {
-		final CommandArguments args = CommandArguments.create(key).put("increment", increment)
-				.put("member", member);
+		final CommandArguments args = CommandArguments.create(key).add(increment)
+				.add(member);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.ZINCRBY,
@@ -422,39 +422,39 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public List<String> zInter(final String[] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(keys).put("aggregate", aggregate);
+		final CommandArguments args = CommandArguments.create(keys).add(aggregate);
 		return zInter(args);
 	}
 
 	@Override
 	public List<byte[]> zInter(final byte[][] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(keys).put("aggregate", aggregate);
+		final CommandArguments args = CommandArguments.create(keys).add(aggregate);
 		return zInter(args);
 	}
 
 	@Override
 	public List<String> zInter(final String[] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).put("weights", weights);
+		final CommandArguments args = CommandArguments.create(keys).add(weights);
 		return zInter(args);
 	}
 
 	@Override
 	public List<byte[]> zInter(final byte[][] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).put("weights", weights);
+		final CommandArguments args = CommandArguments.create(keys).add(weights);
 		return zInter(args);
 	}
 
 	@Override
 	public List<String> zInter(final String[] keys, final Aggregate aggregate, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).put("aggregate", aggregate)
-				.put("weights", weights);
+		final CommandArguments args = CommandArguments.create(keys).add(aggregate)
+				.add(weights);
 		return zInter(args);
 	}
 
 	@Override
 	public List<byte[]> zInter(final byte[][] keys, final Aggregate aggregate, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).put("aggregate", aggregate)
-				.put("weights", weights);
+		final CommandArguments args = CommandArguments.create(keys).add(aggregate)
+				.add(weights);
 		return zInter(args);
 	}
 
@@ -472,45 +472,45 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public List<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(keys).put("aggregate", aggregate);
+		final CommandArguments args = CommandArguments.create(keys).add(aggregate);
 		return zInter(args);
 	}
 
 	@Override
 	public List<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(keys).put("aggregate", aggregate);
+		final CommandArguments args = CommandArguments.create(keys).add(aggregate);
 		return zInter(args);
 	}
 
 	@Override
 	public List<Tuple> zInterWithScores(final String[] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).put("weights", weights);
+		final CommandArguments args = CommandArguments.create(keys).add(weights);
 		return zInter(args);
 	}
 
 	@Override
 	public List<Tuple> zInterWithScores(final byte[][] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).put("weights", weights);
+		final CommandArguments args = CommandArguments.create(keys).add(weights);
 		return zInter(args);
 	}
 
 	@Override
 	public List<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).put("aggregate", aggregate)
-				.put("weights", weights);
+		final CommandArguments args = CommandArguments.create(keys).add(aggregate)
+				.add(weights);
 		return zInter(args);
 	}
 
 	@Override
 	public List<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).put("aggregate", aggregate)
-				.put("weights", weights);
+		final CommandArguments args = CommandArguments.create(keys).add(aggregate)
+				.add(weights);
 		return zInter(args);
 	}
 
 	@Override
 	public Long zInterStore(final byte[] destKey, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create(destKey).put("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.ZINTERSTORE,
@@ -529,8 +529,8 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public Long zInterStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(destKey).put("keys", (Object[]) keys)
-				.put("aggregate", aggregate);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys)
+				.add(aggregate);
 		final ZStoreArgs zStoreArgs = new LettuceZStoreArgs(aggregate);
 
 		return zInterStore(destKey, keys, zStoreArgs, args);
@@ -538,8 +538,8 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public Long zInterStore(final byte[] destKey, final byte[][] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(destKey).put("keys", (Object[]) keys)
-				.put("weights", weights);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys)
+				.add(weights);
 		final ZStoreArgs zStoreArgs = new LettuceZStoreArgs(weights);
 
 		return zInterStore(destKey, keys, zStoreArgs, args);
@@ -548,8 +548,8 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	@Override
 	public Long zInterStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate,
 							final double... weights) {
-		final CommandArguments args = CommandArguments.create(destKey).put("keys", (Object[]) keys)
-				.put("aggregate", aggregate).put("weights", weights);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys)
+				.add(aggregate).add(weights);
 		final ZStoreArgs zStoreArgs = new LettuceZStoreArgs(aggregate, weights);
 
 		return zInterStore(destKey, keys, zStoreArgs, args);
@@ -558,7 +558,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	@Deprecated
 	@Override
 	public Long zLexCount(final byte[] key, final byte[] min, final byte[] max) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		final Range<byte[]> range = Range.create(min, max);
 
 		if(isPipeline()){
@@ -577,13 +577,13 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public List<Double> zMScore(final String key, final String... members) {
-		final CommandArguments args = CommandArguments.create(key).put("members", (Object[]) members);
+		final CommandArguments args = CommandArguments.create(key).add(members);
 		return zMScore(args);
 	}
 
 	@Override
 	public List<Double> zMScore(final byte[] key, final byte[]... members) {
-		final CommandArguments args = CommandArguments.create(key).put("members", (Object[]) members);
+		final CommandArguments args = CommandArguments.create(key).add(members);
 		return zMScore(args);
 	}
 
@@ -601,31 +601,31 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public List<String> zRandMember(final String key, final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(count);
 		return zRandMember(args);
 	}
 
 	@Override
 	public List<byte[]> zRandMember(final byte[] key, final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(count);
 		return zRandMember(args);
 	}
 
 	@Override
 	public List<Tuple> zRandMemberWithScores(final String key, final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(count);
 		return zRandMember(args);
 	}
 
 	@Override
 	public List<Tuple> zRandMemberWithScores(final byte[] key, final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(count);
 		return zRandMember(args);
 	}
 
 	@Override
 	public List<String> zRange(final String key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).put("start", start).put("end", end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		final byte[] bKey = SafeEncoder.encode(key);
 
 		return zRange(bKey, start, end, binaryToStringListConverter, args);
@@ -633,13 +633,13 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public List<byte[]> zRange(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).put("start", start).put("end", end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		return zRange(key, start, end, (v)->v, args);
 	}
 
 	@Override
 	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).put("start", start).put("end", end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueTupleConverter.BinaryScoredValueTupleConverter.listConverter();
 
 		if(isPipeline()){
@@ -659,7 +659,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public List<String> zRangeByLex(final String key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final byte[] bMin = NumberUtils.double2bytes(min);
 		final byte[] bMax = NumberUtils.double2bytes(max);
@@ -669,7 +669,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public List<byte[]> zRangeByLex(final byte[] key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		final byte[] bMin = NumberUtils.double2bytes(min);
 		final byte[] bMax = NumberUtils.double2bytes(max);
 
@@ -679,7 +679,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	@Deprecated
 	@Override
 	public List<String> zRangeByLex(final String key, final String min, final String max) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final byte[] bMin = SafeEncoder.encode(min);
 		final byte[] bMax = SafeEncoder.encode(max);
@@ -690,15 +690,15 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	@Deprecated
 	@Override
 	public List<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		return zRangeByLex(key, min, max, (v)->v, args);
 	}
 
 	@Override
 	public List<String> zRangeByLex(final String key, final double min, final double max, final long offset,
 									final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max)
-				.put("offset", offset).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max)
+				.add(offset).add(count);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final byte[] bMin = NumberUtils.double2bytes(min);
 		final byte[] bMax = NumberUtils.double2bytes(max);
@@ -709,8 +709,8 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	@Override
 	public List<byte[]> zRangeByLex(final byte[] key, final double min, final double max, final long offset,
 									final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max)
-				.put("offset", offset).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max)
+				.add(offset).add(count);
 		final byte[] bMin = NumberUtils.double2bytes(min);
 		final byte[] bMax = NumberUtils.double2bytes(max);
 
@@ -721,8 +721,8 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	@Override
 	public List<String> zRangeByLex(final String key, final String min, final String max, final long offset,
 									final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max)
-				.put("offset", offset).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max)
+				.add(offset).add(count);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final byte[] bMin = SafeEncoder.encode(min);
 		final byte[] bMax = SafeEncoder.encode(max);
@@ -734,14 +734,14 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	@Override
 	public List<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max, final long offset,
 									final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max)
-				.put("offset", offset).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max)
+				.add(offset).add(count);
 		return zRangeByLex(key, min, max, offset, count, (v)->v, args);
 	}
 
 	@Override
 	public List<String> zRangeByScore(final String key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		final byte[] bKey = SafeEncoder.encode(key);
 
 		return zRangeByScore(bKey, min, max, binaryToStringListConverter, args);
@@ -749,15 +749,15 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public List<byte[]> zRangeByScore(final byte[] key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		return zRangeByScore(key, min, max, (v)->v, args);
 	}
 
 	@Override
 	public List<String> zRangeByScore(final String key, final double min, final double max, final long offset,
 									  final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max)
-				.put("offset", offset).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max)
+				.add(offset).add(count);
 		final byte[] bKey = SafeEncoder.encode(key);
 
 		return zRangeByScore(bKey, min, max, offset, count, binaryToStringListConverter, args);
@@ -766,14 +766,14 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	@Override
 	public List<byte[]> zRangeByScore(final byte[] key, final double min, final double max, final long offset,
 									  final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max)
-				.put("offset", offset).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max)
+				.add(offset).add(count);
 		return zRangeByScore(key, min, max, offset, count, (v)->v, args);
 	}
 
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		final Range<Double> range = Range.create(min, max);
 		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueTupleConverter.BinaryScoredValueTupleConverter.listConverter();
 
@@ -795,8 +795,8 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max, final long offset,
 											   final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max)
-				.put("offset", offset).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max)
+				.add(offset).add(count);
 		final Range<Double> range = Range.create(min, max);
 		final Limit limit = Limit.create(offset, count);
 		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueTupleConverter.BinaryScoredValueTupleConverter.listConverter();
@@ -818,133 +818,133 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(destKey).put("key", key).put("start", start)
-				.put("end", end);
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
+				.add(end);
 		return zRangeStore(args);
 	}
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(destKey).put("key", key).put("start", start)
-				.put("end", end);
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
+				.add(end);
 		return zRangeStore(args);
 	}
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end,
 							final ZRangeBy by) {
-		final CommandArguments args = CommandArguments.create(destKey).put("key", key).put("start", start)
-				.put("end", end).put("by", by);
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
+				.add(end).add(by);
 		return zRangeStore(args);
 	}
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
 							final ZRangeBy by) {
-		final CommandArguments args = CommandArguments.create(destKey).put("key", key).put("start", start)
-				.put("end", end).put("by", by);
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
+				.add(end).add(by);
 		return zRangeStore(args);
 	}
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end,
 							final boolean rev) {
-		final CommandArguments args = CommandArguments.create(destKey).put("key", key).put("start", start)
-				.put("end", end).put("rev", rev);
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
+				.add(end).add(rev);
 		return zRangeStore(args);
 	}
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
 							final boolean rev) {
-		final CommandArguments args = CommandArguments.create(destKey).put("key", key).put("start", start)
-				.put("end", end).put("rev", rev);
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
+				.add(end).add(rev);
 		return zRangeStore(args);
 	}
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end, final long offset,
 							final long count) {
-		final CommandArguments args = CommandArguments.create(destKey).put("key", key).put("start", start)
-				.put("end", end).put("offset", offset).put("count", count);
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
+				.add(end).add(offset).add(count);
 		return zRangeStore(args);
 	}
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final long offset,
 							final long count) {
-		final CommandArguments args = CommandArguments.create(destKey).put("key", key).put("start", start)
-				.put("end", end).put("offset", offset).put("count", count);
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
+				.add(end).add(offset).add(count);
 		return zRangeStore(args);
 	}
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end,
 							final ZRangeBy by, final boolean rev) {
-		final CommandArguments args = CommandArguments.create(destKey).put("key", key).put("start", start)
-				.put("end", end).put("by", by).put("rev", rev);
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
+				.add(end).add(by).add(rev);
 		return zRangeStore(args);
 	}
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
 							final ZRangeBy by, final boolean rev) {
-		final CommandArguments args = CommandArguments.create(destKey).put("key", key).put("start", start)
-				.put("end", end).put("by", by).put("rev", rev);
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
+				.add(end).add(by).add(rev);
 		return zRangeStore(args);
 	}
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end,
 							final ZRangeBy by, final long offset, final long count) {
-		final CommandArguments args = CommandArguments.create(destKey).put("key", key).put("start", start)
-				.put("end", end).put("by", by).put("offset", offset).put("count", count);
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
+				.add(end).add(by).add(offset).add(count);
 		return zRangeStore(args);
 	}
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
 							final ZRangeBy by, final long offset, final long count) {
-		final CommandArguments args = CommandArguments.create(destKey).put("key", key).put("start", start)
-				.put("end", end).put("by", by).put("offset", offset).put("count", count);
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
+				.add(end).add(by).add(offset).add(count);
 		return zRangeStore(args);
 	}
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end, final boolean rev,
 							final long offset, final long count) {
-		final CommandArguments args = CommandArguments.create(destKey).put("key", key).put("start", start)
-				.put("end", end).put("rev", rev).put("offset", offset).put("count", count);
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
+				.add(end).add(rev).add(offset).add(count);
 		return zRangeStore(args);
 	}
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final boolean rev,
 							final long offset, final long count) {
-		final CommandArguments args = CommandArguments.create(destKey).put("key", key).put("start", start)
-				.put("end", end).put("rev", rev).put("offset", offset).put("count", count);
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
+				.add(end).add(rev).add(offset).add(count);
 		return zRangeStore(args);
 	}
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end, final ZRangeBy by,
 							final boolean rev, final long offset, final long count) {
-		final CommandArguments args = CommandArguments.create(destKey).put("key", key).put("start", start)
-				.put("end", end).put("by", by).put("rev", rev).put("offset", offset).put("count", count);
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
+				.add(end).add(by).add(rev).add(offset).add(count);
 		return zRangeStore(args);
 	}
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final ZRangeBy by,
 							final boolean rev, final long offset, final long count) {
-		final CommandArguments args = CommandArguments.create(destKey).put("key", key).put("start", start)
-				.put("end", end).put("by", by).put("rev", rev).put("offset", offset).put("count", count);
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
+				.add(end).add(by).add(rev).add(offset).add(count);
 		return zRangeStore(args);
 	}
 
 	@Override
 	public Long zRank(final byte[] key, final byte[] member) {
-		final CommandArguments args = CommandArguments.create(key).put("member", member);
+		final CommandArguments args = CommandArguments.create(key).add(member);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.ZRANK, (cmd)->cmd.zrank(key, member), (v)->v)
@@ -960,7 +960,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public Long zRem(final byte[] key, final byte[]... members) {
-		final CommandArguments args = CommandArguments.create(key).put("members", (Object[]) members);
+		final CommandArguments args = CommandArguments.create(key).add(members);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.ZREM, (cmd)->cmd.zrem(key, members), (v)->v)
@@ -977,7 +977,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	@Deprecated
 	@Override
 	public Long zRemRangeByLex(final byte[] key, final byte[] min, final byte[] max) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		final Range<byte[]> range = Range.create(min, max);
 
 		if(isPipeline()){
@@ -997,7 +997,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public Long zRemRangeByScore(final byte[] key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		final Range<Double> range = Range.create(min, max);
 
 		if(isPipeline()){
@@ -1017,7 +1017,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public Long zRemRangeByRank(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).put("start", start).put("end", end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.ZREMRANGEBYRANK,
@@ -1036,7 +1036,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public List<String> zRevRange(final String key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).put("start", start).put("end", end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		final byte[] bKey = SafeEncoder.encode(key);
 
 		return zRevRange(bKey, start, end, binaryToStringListConverter, args);
@@ -1044,13 +1044,13 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public List<byte[]> zRevRange(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).put("start", start).put("end", end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		return zRevRange(key, start, end, (v)->v, args);
 	}
 
 	@Override
 	public List<Tuple> zRevRangeWithScores(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).put("start", start).put("end", end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueTupleConverter.BinaryScoredValueTupleConverter.listConverter();
 
 		if(isPipeline()){
@@ -1070,7 +1070,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public List<String> zRevRangeByLex(final String key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final byte[] bMin = NumberUtils.double2bytes(min);
 		final byte[] bMax = NumberUtils.double2bytes(max);
@@ -1080,7 +1080,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public List<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		final byte[] bMin = NumberUtils.double2bytes(min);
 		final byte[] bMax = NumberUtils.double2bytes(max);
 
@@ -1090,7 +1090,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	@Deprecated
 	@Override
 	public List<String> zRevRangeByLex(final String key, final String min, final String max) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final byte[] bMin = SafeEncoder.encode(min);
 		final byte[] bMax = SafeEncoder.encode(max);
@@ -1101,15 +1101,14 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	@Deprecated
 	@Override
 	public List<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		return zRevRangeByLex(key, min, max, (v)->v, args);
 	}
 
 	@Override
 	public List<String> zRevRangeByLex(final String key, final double min, final double max, final long offset,
 									   final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max).put("count"
-				, count);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(count);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final byte[] bMin = NumberUtils.double2bytes(min);
 		final byte[] bMax = NumberUtils.double2bytes(max);
@@ -1120,8 +1119,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	@Override
 	public List<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max, final long offset,
 									   final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max).put("count"
-				, count);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(count);
 		final byte[] bMin = NumberUtils.double2bytes(min);
 		final byte[] bMax = NumberUtils.double2bytes(max);
 
@@ -1132,8 +1130,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	@Override
 	public List<String> zRevRangeByLex(final String key, final String min, final String max, final long offset,
 									   final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max).put("count"
-				, count);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(count);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final byte[] bMin = SafeEncoder.encode(min);
 		final byte[] bMax = SafeEncoder.encode(max);
@@ -1145,14 +1142,13 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	@Override
 	public List<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max, final long offset,
 									   final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max).put("count"
-				, count);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(count);
 		return zRevRangeByLex(key, min, max, offset, count, (v)->v, args);
 	}
 
 	@Override
 	public List<String> zRevRangeByScore(final String key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		final byte[] bKey = SafeEncoder.encode(key);
 
 		return zRevRangeByScore(bKey, min, max, binaryToStringListConverter, args);
@@ -1160,15 +1156,15 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public List<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		return zRevRangeByScore(key, min, max, (v)->v, args);
 	}
 
 	@Override
 	public List<String> zRevRangeByScore(final String key, final double min, final double max, final long offset,
 										 final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max)
-				.put("offset", offset).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max)
+				.add(offset).add(count);
 		final byte[] bKey = SafeEncoder.encode(key);
 
 		return zRevRangeByScore(bKey, min, max, offset, count, binaryToStringListConverter, args);
@@ -1177,14 +1173,14 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	@Override
 	public List<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max, final long offset,
 										 final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max)
-				.put("offset", offset).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max)
+				.add(offset).add(count);
 		return zRevRangeByScore(key, min, max, offset, count, (v)->v, args);
 	}
 
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
 		final Range<Double> range = Range.create(min, max);
 		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueTupleConverter.BinaryScoredValueTupleConverter.listConverter();
 
@@ -1206,8 +1202,8 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max,
 												  final long offset, final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("min", min).put("max", max)
-				.put("offset", offset).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max)
+				.add(offset).add(count);
 		final Range<Double> range = Range.create(min, max);
 		final Limit limit = Limit.create(offset, count);
 		final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = ScoredValueTupleConverter.BinaryScoredValueTupleConverter.listConverter();
@@ -1229,7 +1225,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public Long zRevRank(final byte[] key, final byte[] member) {
-		final CommandArguments args = CommandArguments.create(key).put("member", member);
+		final CommandArguments args = CommandArguments.create(key).add(member);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.ZREVRANK, (cmd)->cmd.zrevrank(key, member),
@@ -1247,7 +1243,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final String cursor) {
-		final CommandArguments args = CommandArguments.create(key).put("cursor", cursor);
+		final CommandArguments args = CommandArguments.create(key).add(cursor);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanCursorConverter.ValueScanCursorConverter.ScoredValueScanCursorConverter scoredValueScanCursorConverter =
@@ -1258,7 +1254,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor) {
-		final CommandArguments args = CommandArguments.create(key).put("cursor", cursor);
+		final CommandArguments args = CommandArguments.create(key).add(cursor);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanCursorConverter.ValueScanCursorConverter.ScoredValueScanCursorConverter scoredValueScanCursorConverter =
 				new ScanCursorConverter.ValueScanCursorConverter.ScoredValueScanCursorConverter();
@@ -1268,7 +1264,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern) {
-		final CommandArguments args = CommandArguments.create(key).put("cursor", cursor).put("pattern", pattern);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(pattern);
@@ -1280,7 +1276,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
-		final CommandArguments args = CommandArguments.create(key).put("cursor", cursor).put("pattern", pattern);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(pattern);
 		final ScanCursorConverter.ValueScanCursorConverter.ScoredValueScanCursorConverter scoredValueScanCursorConverter =
@@ -1291,7 +1287,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("cursor", cursor).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(count);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(count);
@@ -1303,7 +1299,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("cursor", cursor).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(count);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(count);
 		final ScanCursorConverter.ValueScanCursorConverter.ScoredValueScanCursorConverter scoredValueScanCursorConverter =
@@ -1315,8 +1311,8 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern,
 										 final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("cursor", cursor).put("pattern", pattern)
-				.put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern)
+				.add(count);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(pattern, count);
@@ -1329,8 +1325,8 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern,
 										 final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("cursor", cursor).put("pattern", pattern)
-				.put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern)
+				.add(count);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(pattern, count);
 		final ScanCursorConverter.ValueScanCursorConverter.ScoredValueScanCursorConverter scoredValueScanCursorConverter =
@@ -1341,7 +1337,7 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public Double zScore(final byte[] key, final byte[] member) {
-		final CommandArguments args = CommandArguments.create(key).put("member", member);
+		final CommandArguments args = CommandArguments.create(key).add(member);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.ZSCORE, (cmd)->cmd.zscore(key, member), (v)->v)
@@ -1370,39 +1366,39 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public List<String> zUnion(final String[] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(keys).put("aggregate", aggregate);
+		final CommandArguments args = CommandArguments.create(keys).add(aggregate);
 		return zUnion(args);
 	}
 
 	@Override
 	public List<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(keys).put("aggregate", aggregate);
+		final CommandArguments args = CommandArguments.create(keys).add(aggregate);
 		return zUnion(args);
 	}
 
 	@Override
 	public List<String> zUnion(final String[] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).put("weights", weights);
+		final CommandArguments args = CommandArguments.create(keys).add(weights);
 		return zUnion(args);
 	}
 
 	@Override
 	public List<byte[]> zUnion(final byte[][] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).put("weights", weights);
+		final CommandArguments args = CommandArguments.create(keys).add(weights);
 		return zUnion(args);
 	}
 
 	@Override
 	public List<String> zUnion(final String[] keys, final Aggregate aggregate, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).put("aggregate", aggregate)
-				.put("weights", weights);
+		final CommandArguments args = CommandArguments.create(keys).add(aggregate)
+				.add(weights);
 		return zUnion(args);
 	}
 
 	@Override
 	public List<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).put("aggregate", aggregate)
-				.put("weights", weights);
+		final CommandArguments args = CommandArguments.create(keys).add(aggregate)
+				.add(weights);
 		return zUnion(args);
 	}
 
@@ -1420,45 +1416,45 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public List<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(keys).put("aggregate", aggregate);
+		final CommandArguments args = CommandArguments.create(keys).add(aggregate);
 		return zUnion(args);
 	}
 
 	@Override
 	public List<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(keys).put("aggregate", aggregate);
+		final CommandArguments args = CommandArguments.create(keys).add(aggregate);
 		return zUnion(args);
 	}
 
 	@Override
 	public List<Tuple> zUnionWithScores(final String[] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).put("weights", weights);
+		final CommandArguments args = CommandArguments.create(keys).add(weights);
 		return zUnion(args);
 	}
 
 	@Override
 	public List<Tuple> zUnionWithScores(final byte[][] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).put("weights", weights);
+		final CommandArguments args = CommandArguments.create(keys).add(weights);
 		return zUnion(args);
 	}
 
 	@Override
 	public List<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).put("aggregate", aggregate)
-				.put("weights", weights);
+		final CommandArguments args = CommandArguments.create(keys).add(aggregate)
+				.add(weights);
 		return zUnion(args);
 	}
 
 	@Override
 	public List<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).put("aggregate", aggregate)
-				.put("weights", weights);
+		final CommandArguments args = CommandArguments.create(keys).add(aggregate)
+				.add(weights);
 		return zUnion(args);
 	}
 
 	@Override
 	public Long zUnionStore(final byte[] destKey, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create(destKey).put("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.ZUNIONSTORE,
@@ -1477,8 +1473,8 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public Long zUnionStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(destKey).put("keys", (Object[]) keys)
-				.put("aggregate", aggregate);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys)
+				.add(aggregate);
 		final ZStoreArgs zStoreArgs = new LettuceZStoreArgs(aggregate);
 
 		return zUnionStore(destKey, keys, zStoreArgs, args);
@@ -1486,8 +1482,8 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 
 	@Override
 	public Long zUnionStore(final byte[] destKey, final byte[][] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(destKey).put("keys", (Object[]) keys)
-				.put("weights", weights);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys)
+				.add(weights);
 		final ZStoreArgs zStoreArgs = new LettuceZStoreArgs(weights);
 
 		return zUnionStore(destKey, keys, zStoreArgs, args);
@@ -1496,8 +1492,8 @@ public final class LettuceSortedSetOperations extends AbstractSortedSetOperation
 	@Override
 	public Long zUnionStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate,
 							final double... weights) {
-		final CommandArguments args = CommandArguments.create(destKey).put("keys", (Object[]) keys)
-				.put("aggregate", aggregate).put("weights", weights);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys)
+				.add(aggregate).add(weights);
 		final ZStoreArgs zStoreArgs = new LettuceZStoreArgs(aggregate, weights);
 
 		return zUnionStore(destKey, keys, zStoreArgs, args);

@@ -122,7 +122,7 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 
 	@Override
 	public List<String> lRange(final String key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).put("start", start).put("end", end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		final byte[] bKey = SafeEncoder.encode(key);
 
 		return lRange(bKey, start, end, binaryToStringListConverter, args);
@@ -130,7 +130,7 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 
 	@Override
 	public List<byte[]> lRange(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).put("start", start).put("end", end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		return lRange(key, start, end, (v)->v, args);
 	}
 
@@ -152,7 +152,7 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 
 	@Override
 	public Long lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument) {
-		final CommandArguments args = CommandArguments.create(key).put("lPosArgument", lPosArgument);
+		final CommandArguments args = CommandArguments.create(key).add(lPosArgument);
 		final LPosArgs lPosArgs = LettuceLPosArgs.from(lPosArgument);
 
 		if(isPipeline()){
@@ -171,8 +171,8 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 
 	@Override
 	public List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument, final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("lPosArgument", lPosArgument)
-				.put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(lPosArgument)
+				.add(count);
 		final LPosArgs lPosArgs = LettuceLPosArgs.from(lPosArgument);
 
 		if(isPipeline()){
@@ -192,7 +192,7 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 
 	@Override
 	public Long lRem(final byte[] key, final byte[] value, final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("value", value).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(count);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.LREM, (cmd)->cmd.lrem(key, count, value),
@@ -210,7 +210,7 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 
 	@Override
 	public Status lTrim(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).put("start", start).put("end", end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.LTRIM, (cmd)->cmd.ltrim(key, start, end),
@@ -229,31 +229,31 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 
 	@Override
 	public String lMove(final String key, final String destKey, final Direction from, final Direction to) {
-		final CommandArguments args = CommandArguments.create(key).put("destKey", destKey).put("from", from)
-				.put("to", to);
+		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from)
+				.add(to);
 		return lMove(args);
 	}
 
 	@Override
 	public byte[] lMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to) {
-		final CommandArguments args = CommandArguments.create(key).put("destKey", destKey).put("from", from)
-				.put("to", to);
+		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from)
+				.add(to);
 		return lMove(args);
 	}
 
 	@Override
 	public String blMove(final String key, final String destKey, final Direction from, final Direction to,
 						 final int timeout) {
-		final CommandArguments args = CommandArguments.create(key).put("destKey", destKey).put("from", from)
-				.put("to", to);
+		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from)
+				.add(to);
 		return blMove(args);
 	}
 
 	@Override
 	public byte[] blMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
 						 final int timeout) {
-		final CommandArguments args = CommandArguments.create(key).put("destKey", destKey).put("from", from)
-				.put("to", to).put("timeout", timeout);
+		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from)
+				.add(to).add(timeout);
 		return blMove(args);
 	}
 
@@ -295,8 +295,8 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 
 	@Override
 	public String brPoplPush(final String key, final String destKey, final int timeout) {
-		final CommandArguments args = CommandArguments.create(key).put("destKey", destKey)
-				.put("timeout", timeout);
+		final CommandArguments args = CommandArguments.create(key).add(destKey)
+				.add(timeout);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final byte[] bDestKey = SafeEncoder.encode(destKey);
 
@@ -305,8 +305,8 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 
 	@Override
 	public byte[] brPoplPush(final byte[] key, final byte[] destKey, final int timeout) {
-		final CommandArguments args = CommandArguments.create(key).put("destKey", destKey)
-				.put("timeout", timeout);
+		final CommandArguments args = CommandArguments.create(key).add(destKey)
+				.add(timeout);
 		return brPoplPush(key, destKey, timeout, (v)->v, args);
 	}
 

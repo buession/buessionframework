@@ -60,7 +60,7 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 
 	@Override
 	public Status auth(final String user, final String password) {
-		final CommandArguments args = CommandArguments.create(user).put("password", password);
+		final CommandArguments args = CommandArguments.create(user).add(password);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.AUTH,
@@ -362,7 +362,7 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 
 	@Override
 	public Status clientKill(final String host, final int port) {
-		final CommandArguments args = CommandArguments.create(host).put("port", port);
+		final CommandArguments args = CommandArguments.create(host).add(port);
 		final String addr = host + ':' + port;
 
 		if(isPipeline()){
@@ -388,7 +388,7 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 
 	@Override
 	public Status clientUnblock(final int clientId, final ClientUnblockType type) {
-		final CommandArguments args = CommandArguments.create(clientId).put("type", type);
+		final CommandArguments args = CommandArguments.create(clientId).add(type);
 		final UnblockType unblockType = (new ClientUnblockTypeConverter()).convert(type);
 
 		return clientUnblock(clientId, unblockType, args);

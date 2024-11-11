@@ -330,7 +330,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public List<String> hMGet(final String key, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).put("fields", (Object[]) fields);
+		final CommandArguments args = CommandArguments.create(key).add(fields);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmget(key, fields),
@@ -348,7 +348,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public List<byte[]> hMGet(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).put("fields", (Object[]) fields);
+		final CommandArguments args = CommandArguments.create(key).add(fields);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmget(key, fields),
@@ -366,7 +366,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public Status hMSet(final String key, final Map<String, String> data) {
-		final CommandArguments args = CommandArguments.create(key).put("data", data);
+		final CommandArguments args = CommandArguments.create(key).add(data);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmset(key, data),
@@ -385,7 +385,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public Status hMSet(final byte[] key, final Map<byte[], byte[]> data) {
-		final CommandArguments args = CommandArguments.create(key).put("data", data);
+		final CommandArguments args = CommandArguments.create(key).add(data);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.HMGET, (cmd)->cmd.hmset(key, data),
@@ -440,7 +440,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public List<String> hRandField(final String key, final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(count);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.HRANDFIELD,
@@ -459,7 +459,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public List<byte[]> hRandField(final byte[] key, final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(count);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.HRANDFIELD,
@@ -478,7 +478,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public Map<String, String> hRandFieldWithValues(final String key, final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(count);
 		final ListMapEntryMapConverter<String, String, String, String> converter =
 				new ListMapEntryMapConverter<>((k)->k, (v)->v);
 
@@ -499,7 +499,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public Map<byte[], byte[]> hRandFieldWithValues(final byte[] key, final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(count);
 		final ListMapEntryMapConverter<byte[], byte[], byte[], byte[]> converter =
 				new ListMapEntryMapConverter<>((k)->k, (v)->v);
 
@@ -520,7 +520,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor) {
-		final CommandArguments args = CommandArguments.create(key).put("cursor", cursor);
+		final CommandArguments args = CommandArguments.create(key).add(cursor);
 		final ScanResultConverter.MapScanResultConverter<String, String> mapScanResultConverter =
 				new ScanResultConverter.MapScanResultConverter<>();
 
@@ -541,7 +541,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor) {
-		final CommandArguments args = CommandArguments.create(key).put("cursor", cursor);
+		final CommandArguments args = CommandArguments.create(key).add(cursor);
 		final ScanResultConverter.MapScanResultConverter<byte[], byte[]> mapScanResultConverter =
 				new ScanResultConverter.MapScanResultConverter<>();
 
@@ -562,7 +562,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern) {
-		final CommandArguments args = CommandArguments.create(key).put("cursor", cursor).put("pattern", pattern);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern);
 		final ScanParams scanParams = new JedisScanParams(pattern);
 
 		return hScan(key, cursor, scanParams, args);
@@ -570,7 +570,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
-		final CommandArguments args = CommandArguments.create(key).put("cursor", cursor).put("pattern", pattern);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern);
 		final ScanParams scanParams = new JedisScanParams(pattern);
 
 		return hScan(key, cursor, scanParams, args);
@@ -578,7 +578,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("cursor", cursor).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(count);
 		final ScanParams scanParams = new JedisScanParams(count);
 
 		return hScan(key, cursor, scanParams, args);
@@ -586,7 +586,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("cursor", cursor).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(count);
 		final ScanParams scanParams = new JedisScanParams(count);
 
 		return hScan(key, cursor, scanParams, args);
@@ -595,7 +595,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
 												 final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("cursor", cursor).put("pattern", pattern);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern);
 		final ScanParams scanParams = new JedisScanParams(pattern, count);
 
 		return hScan(key, cursor, scanParams, args);
@@ -604,8 +604,8 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
 												 final long count) {
-		final CommandArguments args = CommandArguments.create(key).put("cursor", cursor).put("pattern", pattern)
-				.put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern)
+				.add(count);
 		final ScanParams scanParams = new JedisScanParams(pattern, count);
 
 		return hScan(key, cursor, scanParams, args);
@@ -613,7 +613,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public Long hSet(final String key, final String field, final String value) {
-		final CommandArguments args = CommandArguments.create(key).put("field", field).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.HSET, (cmd)->cmd.hset(key, field, value),
@@ -631,7 +631,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public Long hSet(final byte[] key, final byte[] field, final byte[] value) {
-		final CommandArguments args = CommandArguments.create(key).put("field", field).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.HSET, (cmd)->cmd.hset(key, field, value),
@@ -649,7 +649,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public Status hSetNx(final String key, final String field, final String value) {
-		final CommandArguments args = CommandArguments.create(key).put("field", field).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.HSETNX,
@@ -668,7 +668,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public Status hSetNx(final byte[] key, final byte[] field, final byte[] value) {
-		final CommandArguments args = CommandArguments.create(key).put("field", field).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.HSETNX,
@@ -687,7 +687,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public Long hStrLen(final String key, final String field) {
-		final CommandArguments args = CommandArguments.create(key).put("field", field);
+		final CommandArguments args = CommandArguments.create(key).add(field);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.HSTRLEN, (cmd)->cmd.hstrlen(key, field),
@@ -705,7 +705,7 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 
 	@Override
 	public Long hStrLen(final byte[] key, final byte[] field) {
-		final CommandArguments args = CommandArguments.create(key).put("field", field);
+		final CommandArguments args = CommandArguments.create(key).add(field);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.HSTRLEN, (cmd)->cmd.hstrlen(key, field),

@@ -54,7 +54,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 
 	@Override
 	public Status auth(final String user, final String password) {
-		final CommandArguments args = CommandArguments.create(user).put("password", password);
+		final CommandArguments args = CommandArguments.create(user).add(password);
 
 		if(isPipeline()){
 			return new JedisSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.AUTH)
@@ -360,7 +360,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 
 	@Override
 	public Status clientKill(final String host, final int port) {
-		final CommandArguments args = CommandArguments.create(host).put("port", port);
+		final CommandArguments args = CommandArguments.create(host).add(port);
 		final String addr = host + ':' + port;
 
 		if(isPipeline()){
@@ -396,7 +396,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 
 	@Override
 	public Status clientUnblock(final int clientId, final ClientUnblockType type) {
-		final CommandArguments args = CommandArguments.create(clientId).put("type", type);
+		final CommandArguments args = CommandArguments.create(clientId).add(type);
 		final UnblockType unblockType = (new ClientUnblockTypeConverter()).convert(type);
 
 		if(isPipeline()){

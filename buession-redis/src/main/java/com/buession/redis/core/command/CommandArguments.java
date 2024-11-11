@@ -420,16 +420,6 @@ public final class CommandArguments {
 		return doBatchAdd(values);
 	}
 
-	@Deprecated
-	public CommandArguments put(final String key, final Object value) {
-		return add(value);
-	}
-
-	@Deprecated
-	public CommandArguments put(final String key, final Object... values) {
-		return add(values);
-	}
-
 	public List<Object> getParameters() {
 		return parameters;
 	}

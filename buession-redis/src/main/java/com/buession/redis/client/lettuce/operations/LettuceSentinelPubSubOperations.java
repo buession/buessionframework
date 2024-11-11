@@ -50,20 +50,20 @@ public final class LettuceSentinelPubSubOperations extends AbstractPubSubOperati
 	@Override
 	public void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener) {
 		final CommandArguments args = CommandArguments.create(patterns)
-				.put("pubSubListener", pubSubListener);
+				.add(pubSubListener);
 		pSubscribe(args);
 	}
 
 	@Override
 	public void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener) {
 		final CommandArguments args = CommandArguments.create(patterns)
-				.put("pubSubListener", pubSubListener);
+				.add(pubSubListener);
 		pSubscribe(args);
 	}
 
 	@Override
 	public Long publish(final byte[] channel, final byte[] message) {
-		final CommandArguments args = CommandArguments.create(channel).put("message", message);
+		final CommandArguments args = CommandArguments.create(channel).add(message);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.PUBLISH)
@@ -165,14 +165,14 @@ public final class LettuceSentinelPubSubOperations extends AbstractPubSubOperati
 	@Override
 	public void subscribe(final String[] channels, final PubSubListener<String> pubSubListener) {
 		final CommandArguments args = CommandArguments.create(channels)
-				.put("pubSubListener", pubSubListener);
+				.add(pubSubListener);
 		subscribe(args);
 	}
 
 	@Override
 	public void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener) {
 		final CommandArguments args = CommandArguments.create(channels)
-				.put("pubSubListener", pubSubListener);
+				.add(pubSubListener);
 		subscribe(args);
 	}
 

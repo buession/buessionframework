@@ -43,7 +43,7 @@ public final class LettuceHyperLogLogOperations extends AbstractHyperLogLogOpera
 
 	@Override
 	public Status pfAdd(final byte[] key, final byte[]... elements) {
-		final CommandArguments args = CommandArguments.create(key).put("elements", (Object[]) elements);
+		final CommandArguments args = CommandArguments.create(key).add(elements);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.PFADD, (cmd)->cmd.pfadd(key, elements),
@@ -62,7 +62,7 @@ public final class LettuceHyperLogLogOperations extends AbstractHyperLogLogOpera
 
 	@Override
 	public Status pfMerge(final byte[] destKey, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create(destKey).put("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),

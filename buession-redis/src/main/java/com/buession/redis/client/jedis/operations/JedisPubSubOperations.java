@@ -90,7 +90,7 @@ public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisS
 
 	@Override
 	public Long publish(final String channel, final String message) {
-		final CommandArguments args = CommandArguments.create(channel).put("message", message);
+		final CommandArguments args = CommandArguments.create(channel).add(message);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.PUBLISH, (cmd)->cmd.publish(channel, message),
@@ -107,7 +107,7 @@ public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisS
 
 	@Override
 	public Long publish(final byte[] channel, final byte[] message) {
-		final CommandArguments args = CommandArguments.create(channel).put("message", message);
+		final CommandArguments args = CommandArguments.create(channel).add(message);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.PUBLISH, (cmd)->cmd.publish(channel, message),
@@ -211,7 +211,7 @@ public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisS
 	@Override
 	public void subscribe(final String[] channels, final PubSubListener<String> pubSubListener) {
 		final CommandArguments args = CommandArguments.create(channels)
-				.put("pubSubListener", pubSubListener);
+				.add(pubSubListener);
 
 		if(isPipeline()){
 			new JedisPipelineCommand<>(client, ProtocolCommand.SUBSCRIBE)
@@ -231,7 +231,7 @@ public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisS
 	@Override
 	public void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener) {
 		final CommandArguments args = CommandArguments.create(channels)
-				.put("pubSubListener", pubSubListener);
+				.add(pubSubListener);
 
 		if(isPipeline()){
 			new JedisPipelineCommand<>(client, ProtocolCommand.SUBSCRIBE)

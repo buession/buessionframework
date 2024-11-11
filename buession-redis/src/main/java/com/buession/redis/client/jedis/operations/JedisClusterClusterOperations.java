@@ -394,8 +394,8 @@ public final class JedisClusterClusterOperations extends AbstractClusterOperatio
 
 	@Override
 	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final String nodeId) {
-		final CommandArguments args = CommandArguments.create(slot).put("setSlotOption", setSlotOption)
-				.put("nodeId", nodeId);
+		final CommandArguments args = CommandArguments.create(slot).add(setSlotOption)
+				.add(nodeId);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<Status, Status>(client, ProtocolCommand.CLUSTER_SETSLOT)

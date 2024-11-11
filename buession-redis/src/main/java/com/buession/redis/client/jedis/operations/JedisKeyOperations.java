@@ -233,8 +233,8 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 
 	@Override
 	public Status expire(final String key, final int lifetime, final ExpireOption expireOption) {
-		final CommandArguments args = CommandArguments.create(key).put("lifetime", lifetime)
-				.put("expireOption", expireOption);
+		final CommandArguments args = CommandArguments.create(key).add(lifetime)
+				.add(expireOption);
 		final ExpiryOption expiryOption = (new ExpireOptionConverter()).convert(expireOption);
 
 		if(isPipeline()){
@@ -254,8 +254,8 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 
 	@Override
 	public Status expire(final byte[] key, final int lifetime, final ExpireOption expireOption) {
-		final CommandArguments args = CommandArguments.create(key).put("lifetime", lifetime)
-				.put("expireOption", expireOption);
+		final CommandArguments args = CommandArguments.create(key).add(lifetime)
+				.add(expireOption);
 		final ExpiryOption expiryOption = (new ExpireOptionConverter()).convert(expireOption);
 
 		if(isPipeline()){
@@ -275,7 +275,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 
 	@Override
 	public Status expireAt(final String key, final long unixTimestamp) {
-		final CommandArguments args = CommandArguments.create(key).put("unixTimestamp", unixTimestamp);
+		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.EXPIREAT, (cmd)->cmd.expireAt(key, unixTimestamp),
@@ -294,7 +294,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 
 	@Override
 	public Status expireAt(final byte[] key, final long unixTimestamp) {
-		final CommandArguments args = CommandArguments.create(key).put("unixTimestamp", unixTimestamp);
+		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.EXPIREAT, (cmd)->cmd.expireAt(key, unixTimestamp),
@@ -313,7 +313,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 
 	@Override
 	public Status pExpire(final String key, final int lifetime) {
-		final CommandArguments args = CommandArguments.create(key).put("lifetime", lifetime);
+		final CommandArguments args = CommandArguments.create(key).add(lifetime);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.PEXPIRE, (cmd)->cmd.pexpire(key, lifetime),
@@ -332,7 +332,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 
 	@Override
 	public Status pExpire(final byte[] key, final int lifetime) {
-		final CommandArguments args = CommandArguments.create(key).put("lifetime", lifetime);
+		final CommandArguments args = CommandArguments.create(key).add(lifetime);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.PEXPIRE, (cmd)->cmd.pexpire(key, lifetime),
@@ -351,7 +351,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 
 	@Override
 	public Status pExpireAt(final String key, final long unixTimestamp) {
-		final CommandArguments args = CommandArguments.create(key).put("unixTimestamp", unixTimestamp);
+		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.PEXPIREAT,
@@ -370,7 +370,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 
 	@Override
 	public Status pExpireAt(final byte[] key, final long unixTimestamp) {
-		final CommandArguments args = CommandArguments.create(key).put("unixTimestamp", unixTimestamp);
+		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.PEXPIREAT,
@@ -489,59 +489,59 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 
 	@Override
 	public Status copy(final String key, final String destKey) {
-		final CommandArguments args = CommandArguments.create(key).put("destKey", destKey);
+		final CommandArguments args = CommandArguments.create(key).add(destKey);
 		return copy(key, destKey, false, args);
 	}
 
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey) {
-		final CommandArguments args = CommandArguments.create(key).put("destKey", destKey);
+		final CommandArguments args = CommandArguments.create(key).add(destKey);
 		return copy(key, destKey, false, args);
 	}
 
 	@Override
 	public Status copy(final String key, final String destKey, final int db) {
-		final CommandArguments args = CommandArguments.create(key).put("destKey", destKey).put("db", db);
+		final CommandArguments args = CommandArguments.create(key).add(destKey).add(db);
 		return copy(key, destKey, db, false, args);
 	}
 
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey, final int db) {
-		final CommandArguments args = CommandArguments.create(key).put("destKey", destKey).put("db", db);
+		final CommandArguments args = CommandArguments.create(key).add(destKey).add(db);
 		return copy(key, destKey, db, false, args);
 	}
 
 	@Override
 	public Status copy(final String key, final String destKey, final boolean replace) {
-		final CommandArguments args = CommandArguments.create(key).put("destKey", destKey)
-				.put("replace", replace);
+		final CommandArguments args = CommandArguments.create(key).add(destKey)
+				.add(replace);
 		return copy(key, destKey, replace, args);
 	}
 
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey, final boolean replace) {
-		final CommandArguments args = CommandArguments.create(key).put("destKey", destKey)
-				.put("replace", replace);
+		final CommandArguments args = CommandArguments.create(key).add(destKey)
+				.add(replace);
 		return copy(key, destKey, replace, args);
 	}
 
 	@Override
 	public Status copy(final String key, final String destKey, final int db, final boolean replace) {
-		final CommandArguments args = CommandArguments.create(key).put("destKey", destKey).put("db", db)
-				.put("replace", replace);
+		final CommandArguments args = CommandArguments.create(key).add(destKey).add(db)
+				.add(replace);
 		return copy(key, destKey, db, replace, args);
 	}
 
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey, final int db, final boolean replace) {
-		final CommandArguments args = CommandArguments.create(key).put("destKey", destKey).put("db", db)
-				.put("replace", replace);
+		final CommandArguments args = CommandArguments.create(key).add(destKey).add(db)
+				.add(replace);
 		return copy(key, destKey, db, replace, args);
 	}
 
 	@Override
 	public Status move(final String key, final int db) {
-		final CommandArguments args = CommandArguments.create(key).put("db", db);
+		final CommandArguments args = CommandArguments.create(key).add(db);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.MOVE, (cmd)->cmd.move(key, db),
@@ -558,7 +558,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 
 	@Override
 	public Status move(final byte[] key, final int db) {
-		final CommandArguments args = CommandArguments.create(key).put("db", db);
+		final CommandArguments args = CommandArguments.create(key).add(db);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.MOVE, (cmd)->cmd.move(key, db),
@@ -575,8 +575,8 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final int timeout, final String... keys) {
-		final CommandArguments args = CommandArguments.create(host).put("port", port).put("db", db)
-				.put("timeout", timeout).put("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(host).add(port).add(db)
+				.add(timeout).add(keys);
 		final MigrateParams migrateParams = new JedisMigrateParams();
 
 		return migrate(host, port, db, timeout, keys, migrateParams, args);
@@ -584,8 +584,8 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final int timeout, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create(host).put("port", port).put("db", db)
-				.put("timeout", timeout).put("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(host).add(port).add(db)
+				.add(timeout).add(keys);
 		final MigrateParams migrateParams = new JedisMigrateParams();
 
 		return migrate(host, port, db, timeout, keys, migrateParams, args);
@@ -594,8 +594,8 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	@Override
 	public Status migrate(final String host, final int port, final int db, final int timeout,
 						  final MigrateOperation operation, final String... keys) {
-		final CommandArguments args = CommandArguments.create(host).put("port", port).put("db", db)
-				.put("timeout", timeout).put("operation", operation).put("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(host).add(port).add(db)
+				.add(timeout).add(operation).add(keys);
 		final MigrateParams migrateParams = new JedisMigrateParams(operation);
 
 		return migrate(host, port, db, timeout, keys, migrateParams, args);
@@ -604,8 +604,8 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	@Override
 	public Status migrate(final String host, final int port, final int db, final int timeout,
 						  final MigrateOperation operation, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create(host).put("port", port).put("db", db)
-				.put("timeout", timeout).put("operation", operation).put("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(host).add(port).add(db)
+				.add(timeout).add(operation).add(keys);
 		final MigrateParams migrateParams = new JedisMigrateParams(operation);
 
 		return migrate(host, port, db, timeout, keys, migrateParams, args);
@@ -614,8 +614,8 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	@Override
 	public Status migrate(final String host, final int port, final int db, final String password, final int timeout,
 						  final String... keys) {
-		final CommandArguments args = CommandArguments.create(host).put("port", port).put("db", db)
-				.put("password", password).put("timeout", timeout).put("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(host).add(port).add(db)
+				.add(password).add(timeout).add(keys);
 		final MigrateParams migrateParams = new JedisMigrateParams(password);
 
 		return migrate(host, port, db, timeout, keys, migrateParams, args);
@@ -624,8 +624,8 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	@Override
 	public Status migrate(final String host, final int port, final int db, final byte[] password, final int timeout,
 						  final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create(host).put("port", port).put("db", db)
-				.put("password", password).put("timeout", timeout).put("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(host).add(port).add(db)
+				.add(password).add(timeout).add(keys);
 		final MigrateParams migrateParams = new JedisMigrateParams(password);
 
 		return migrate(host, port, db, timeout, keys, migrateParams, args);
@@ -634,9 +634,9 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	@Override
 	public Status migrate(final String host, final int port, final int db, final String password, final int timeout,
 						  final MigrateOperation operation, final String... keys) {
-		final CommandArguments args = CommandArguments.create(host).put("port", port).put("db", db)
-				.put("password", password).put("timeout", timeout).put("operation", operation)
-				.put("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(host).add(port).add(db)
+				.add(password).add(timeout).add(operation)
+				.add(keys);
 		final MigrateParams migrateParams = new JedisMigrateParams(operation, password);
 
 		return migrate(host, port, db, timeout, keys, migrateParams, args);
@@ -645,9 +645,9 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	@Override
 	public Status migrate(final String host, final int port, final int db, final byte[] password, final int timeout,
 						  final MigrateOperation operation, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create(host).put("port", port).put("db", db)
-				.put("password", password).put("timeout", timeout).put("operation", operation)
-				.put("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(host).add(port).add(db)
+				.add(password).add(timeout).add(operation)
+				.add(keys);
 		final MigrateParams migrateParams = new JedisMigrateParams(operation, password);
 
 		return migrate(host, port, db, timeout, keys, migrateParams, args);
@@ -656,8 +656,8 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	@Override
 	public Status migrate(final String host, final int port, final int db, final String user, final String password,
 						  final int timeout, final String... keys) {
-		final CommandArguments args = CommandArguments.create(host).put("port", port).put("db", db)
-				.put("user", user).put("password", password).put("timeout", timeout).put("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(host).add(port).add(db)
+				.add(user).add(password).add(timeout).add(keys);
 		final MigrateParams migrateParams = new JedisMigrateParams(user, password);
 
 		return migrate(host, port, db, timeout, keys, migrateParams, args);
@@ -666,8 +666,8 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	@Override
 	public Status migrate(final String host, final int port, final int db, final byte[] user, final byte[] password,
 						  final int timeout, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create(host).put("port", port).put("db", db)
-				.put("user", user).put("password", password).put("timeout", timeout).put("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(host).add(port).add(db)
+				.add(user).add(password).add(timeout).add(keys);
 		final MigrateParams migrateParams = new JedisMigrateParams(user, password);
 
 		return migrate(host, port, db, timeout, keys, migrateParams, args);
@@ -676,9 +676,9 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	@Override
 	public Status migrate(final String host, final int port, final int db, final String user, final String password,
 						  final int timeout, final MigrateOperation operation, final String... keys) {
-		final CommandArguments args = CommandArguments.create(host).put("port", port).put("db", db)
-				.put("user", user).put("password", password).put("timeout", timeout).put("operation", operation)
-				.put("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(host).add(port).add(db)
+				.add(user).add(password).add(timeout).add(operation)
+				.add(keys);
 		final MigrateParams migrateParams = new JedisMigrateParams(operation, user, password);
 
 		return migrate(host, port, db, timeout, keys, migrateParams, args);
@@ -687,9 +687,9 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	@Override
 	public Status migrate(final String host, final int port, final int db, final byte[] user, final byte[] password,
 						  final int timeout, final MigrateOperation operation, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create(host).put("port", port).put("db", db)
-				.put("user", user).put("password", password).put("timeout", timeout).put("operation", operation)
-				.put("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(host).add(port).add(db)
+				.add(user).add(password).add(timeout).add(operation)
+				.add(keys);
 		final MigrateParams migrateParams = new JedisMigrateParams(operation, user, password);
 
 		return migrate(host, port, db, timeout, keys, migrateParams, args);
@@ -817,8 +817,8 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 
 	@Override
 	public Status restore(final String key, final byte[] serializedValue, final int ttl) {
-		final CommandArguments args = CommandArguments.create(key).put("serializedValue", serializedValue)
-				.put("ttl", ttl);
+		final CommandArguments args = CommandArguments.create(key).add(serializedValue)
+				.add(ttl);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.RESTORE,
@@ -837,8 +837,8 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 
 	@Override
 	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl) {
-		final CommandArguments args = CommandArguments.create(key).put("serializedValue", serializedValue)
-				.put("ttl", ttl);
+		final CommandArguments args = CommandArguments.create(key).add(serializedValue)
+				.add(ttl);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.RESTORE,
@@ -858,8 +858,8 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	@Override
 	public Status restore(final String key, final byte[] serializedValue, final int ttl,
 						  final RestoreArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).put("serializedValue", serializedValue)
-				.put("ttl", ttl).put("argument", argument);
+		final CommandArguments args = CommandArguments.create(key).add(serializedValue)
+				.add(ttl).add(argument);
 		final RestoreParams restoreParams = JedisRestoreParams.from(argument);
 
 		if(isPipeline()){
@@ -880,8 +880,8 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 	@Override
 	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl,
 						  final RestoreArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).put("serializedValue", serializedValue)
-				.put("ttl", ttl).put("argument", argument);
+		final CommandArguments args = CommandArguments.create(key).add(serializedValue)
+				.add(ttl).add(argument);
 		final RestoreParams restoreParams = JedisRestoreParams.from(argument);
 
 		if(isPipeline()){
@@ -941,7 +941,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final String pattern) {
-		final CommandArguments args = CommandArguments.create(cursor).put("pattern", pattern);
+		final CommandArguments args = CommandArguments.create(cursor).add(pattern);
 		final ScanParams scanParams = new JedisScanParams(pattern);
 
 		return scan(cursor, scanParams, args);
@@ -949,7 +949,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern) {
-		final CommandArguments args = CommandArguments.create(cursor).put("pattern", pattern);
+		final CommandArguments args = CommandArguments.create(cursor).add(pattern);
 		final ScanParams scanParams = new JedisScanParams(pattern);
 
 		return scan(cursor, scanParams, args);
@@ -957,7 +957,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final long count) {
-		final CommandArguments args = CommandArguments.create(cursor).put("count", count);
+		final CommandArguments args = CommandArguments.create(cursor).add(count);
 		final ScanParams scanParams = new JedisScanParams(count);
 
 		return scan(cursor, scanParams, args);
@@ -965,7 +965,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final long count) {
-		final CommandArguments args = CommandArguments.create(cursor).put("count", count);
+		final CommandArguments args = CommandArguments.create(cursor).add(count);
 		final ScanParams scanParams = new JedisScanParams(count);
 
 		return scan(cursor, scanParams, args);
@@ -973,8 +973,8 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final String pattern, final long count) {
-		final CommandArguments args = CommandArguments.create(cursor).put("pattern", pattern)
-				.put("count", count);
+		final CommandArguments args = CommandArguments.create(cursor).add(pattern)
+				.add(count);
 		final ScanParams scanParams = new JedisScanParams(pattern, count);
 
 		return scan(cursor, scanParams, args);
@@ -982,8 +982,8 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern, final long count) {
-		final CommandArguments args = CommandArguments.create(cursor).put("pattern", pattern)
-				.put("count", count);
+		final CommandArguments args = CommandArguments.create(cursor).add(pattern)
+				.add(count);
 		final ScanParams scanParams = new JedisScanParams(pattern, count);
 
 		return scan(cursor, scanParams, args);
@@ -1023,7 +1023,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 
 	@Override
 	public List<String> sort(final String key, final SortArgument sortArgument) {
-		final CommandArguments args = CommandArguments.create(key).put("sortArgument", sortArgument);
+		final CommandArguments args = CommandArguments.create(key).add(sortArgument);
 		final SortingParams sortingParams = JedisSortingParams.from(sortArgument);
 
 		if(isPipeline()){
@@ -1041,7 +1041,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 
 	@Override
 	public List<byte[]> sort(final byte[] key, final SortArgument sortArgument) {
-		final CommandArguments args = CommandArguments.create(key).put("sortArgument", sortArgument);
+		final CommandArguments args = CommandArguments.create(key).add(sortArgument);
 		final SortingParams sortingParams = JedisSortingParams.from(sortArgument);
 
 		if(isPipeline()){
@@ -1059,7 +1059,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 
 	@Override
 	public Long sort(final String key, final String destKey) {
-		final CommandArguments args = CommandArguments.create(key).put("destKey", destKey);
+		final CommandArguments args = CommandArguments.create(key).add(destKey);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, destKey), (v)->v)
@@ -1075,7 +1075,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 
 	@Override
 	public Long sort(final byte[] key, final byte[] destKey) {
-		final CommandArguments args = CommandArguments.create(key).put("destKey", destKey);
+		final CommandArguments args = CommandArguments.create(key).add(destKey);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.SORT, (cmd)->cmd.sort(key, destKey), (v)->v)
@@ -1091,8 +1091,8 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 
 	@Override
 	public Long sort(final String key, final String destKey, final SortArgument sortArgument) {
-		final CommandArguments args = CommandArguments.create(key).put("destKey", destKey)
-				.put("sortArgument", sortArgument);
+		final CommandArguments args = CommandArguments.create(key).add(destKey)
+				.add(sortArgument);
 		final SortingParams sortingParams = JedisSortingParams.from(sortArgument);
 
 		if(isPipeline()){
@@ -1112,8 +1112,8 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisStandal
 
 	@Override
 	public Long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument) {
-		final CommandArguments args = CommandArguments.create(key).put("destKey", destKey)
-				.put("sortArgument", sortArgument);
+		final CommandArguments args = CommandArguments.create(key).add(destKey)
+				.add(sortArgument);
 		final SortingParams sortingParams = JedisSortingParams.from(sortArgument);
 
 		if(isPipeline()){

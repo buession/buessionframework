@@ -80,7 +80,7 @@ public final class JedisSentinelScriptingOperations extends AbstractScriptingOpe
 
 	@Override
 	public Object eval(final String script, final String... params) {
-		final CommandArguments args = CommandArguments.create(script).put("params", (Object[]) params);
+		final CommandArguments args = CommandArguments.create(script).add(params);
 		final int paramsSize = params == null ? 0 : params.length;
 
 		if(isPipeline()){
@@ -100,7 +100,7 @@ public final class JedisSentinelScriptingOperations extends AbstractScriptingOpe
 
 	@Override
 	public Object eval(final byte[] script, final byte[]... params) {
-		final CommandArguments args = CommandArguments.create(script).put("params", (Object[]) params);
+		final CommandArguments args = CommandArguments.create(script).add(params);
 		final int paramsSize = params == null ? 0 : params.length;
 
 		if(isPipeline()){
@@ -120,8 +120,8 @@ public final class JedisSentinelScriptingOperations extends AbstractScriptingOpe
 
 	@Override
 	public Object eval(final String script, final String[] keys, final String[] arguments) {
-		final CommandArguments args = CommandArguments.create(script).put("keys", (Object[]) keys)
-				.put("arguments", (Object[]) arguments);
+		final CommandArguments args = CommandArguments.create(script).add(keys)
+				.add(arguments);
 		final List<String> keysList = Arrays.asList(keys);
 		final List<String> argumentsList = Arrays.asList(arguments);
 
@@ -142,8 +142,8 @@ public final class JedisSentinelScriptingOperations extends AbstractScriptingOpe
 
 	@Override
 	public Object eval(final byte[] script, final byte[][] keys, final byte[][] arguments) {
-		final CommandArguments args = CommandArguments.create(script).put("keys", (Object[]) keys)
-				.put("arguments", (Object[]) arguments);
+		final CommandArguments args = CommandArguments.create(script).add(keys)
+				.add(arguments);
 		final List<byte[]> keysList = Arrays.asList(keys);
 		final List<byte[]> argumentsList = Arrays.asList(arguments);
 
@@ -200,7 +200,7 @@ public final class JedisSentinelScriptingOperations extends AbstractScriptingOpe
 
 	@Override
 	public Object evalSha(final String digest, final String... params) {
-		final CommandArguments args = CommandArguments.create(digest).put("params", (Object[]) params);
+		final CommandArguments args = CommandArguments.create(digest).add(params);
 		final int paramsSize = params == null ? 0 : params.length;
 
 		if(isPipeline()){
@@ -220,7 +220,7 @@ public final class JedisSentinelScriptingOperations extends AbstractScriptingOpe
 
 	@Override
 	public Object evalSha(final byte[] digest, final byte[]... params) {
-		final CommandArguments args = CommandArguments.create(digest).put("params", (Object[]) params);
+		final CommandArguments args = CommandArguments.create(digest).add(params);
 		final int paramsSize = params == null ? 0 : params.length;
 
 		if(isPipeline()){
@@ -240,8 +240,8 @@ public final class JedisSentinelScriptingOperations extends AbstractScriptingOpe
 
 	@Override
 	public Object evalSha(final String digest, final String[] keys, final String[] arguments) {
-		final CommandArguments args = CommandArguments.create(digest).put("keys", (Object[]) keys)
-				.put("arguments", (Object[]) arguments);
+		final CommandArguments args = CommandArguments.create(digest).add(keys)
+				.add(arguments);
 		final List<String> keysList = Arrays.asList(keys);
 		final List<String> argumentsList = Arrays.asList(arguments);
 
@@ -262,8 +262,8 @@ public final class JedisSentinelScriptingOperations extends AbstractScriptingOpe
 
 	@Override
 	public Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] arguments) {
-		final CommandArguments args = CommandArguments.create(digest).put("keys", (Object[]) keys)
-				.put("arguments", (Object[]) arguments);
+		final CommandArguments args = CommandArguments.create(digest).add(keys)
+				.add(arguments);
 		final List<byte[]> keysList = Arrays.asList(keys);
 		final List<byte[]> argumentsList = Arrays.asList(arguments);
 
