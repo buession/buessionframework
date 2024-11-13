@@ -441,7 +441,8 @@ public final class CommandArguments {
 		return asString();
 	}
 
-	private <T> CommandArguments doBatchAdd(final T... values) {
+	@SafeVarargs
+	private final <T> CommandArguments doBatchAdd(final T... values) {
 		if(Validate.isNotEmpty(values)){
 			for(T value : values){
 				add(value);
