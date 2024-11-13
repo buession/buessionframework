@@ -21,10 +21,52 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.core.utils;/**
- * 
+ */
+package com.buession.core.utils;
+
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+/**
+ * 对象工具
  *
  * @author Yong.Teng
  * @since 3.0.1
- */public class Objects {
+ */
+public final class Objects {
+
+	private Objects() {
+
+	}
+
+	/**
+	 * 如果 {@code supplier1} 返回 null，则执行 {@code supplier2}，如果 {@code supplier2} 返回值不为 null，
+	 * 则执行 {@code function.apply}，否则返回当前值
+	 *
+	 * @param supplier1
+	 *        {@link Supplier}
+	 * @param supplier2
+	 *        {@link Supplier}
+	 * @param function
+	 *        {@link Function}
+	 * @param <T>
+	 * 		返回值类型
+	 *
+	 * @return 返回值
+	 */
+	public static <T> T applyIfAbsent(final Supplier<T> supplier1, final Supplier<T> supplier2,
+									  final Function<T, T> function) {
+		T value = supplier1.get();
+
+		if(value == null){
+			value = supplier2.get();
+
+			if(value != null){
+				function.apply(value);
+			}
+		}
+
+		return value;
+	}
+
 }
