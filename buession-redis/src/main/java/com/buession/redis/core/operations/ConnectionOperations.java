@@ -65,53 +65,8 @@ public interface ConnectionOperations extends ConnectionCommands, RedisOperation
 	}
 
 	@Override
-	default String echo(final String str) {
-		return execute((client)->client.connectionOperations().echo(str));
-	}
-
-	@Override
-	default byte[] echo(final byte[] str) {
-		return execute((client)->client.connectionOperations().echo(str));
-	}
-
-	@Override
-	default Status ping() {
-		return execute((client)->client.connectionOperations().ping());
-	}
-
-	@Override
-	default Status reset() {
-		return execute((client)->client.connectionOperations().reset());
-	}
-
-	@Override
-	default Status quit() {
-		return execute((client)->client.connectionOperations().quit());
-	}
-
-	@Override
-	default Status select(final int db) {
-		return execute((client)->client.connectionOperations().select(db));
-	}
-
-	@Override
 	default Status clientCaching(final boolean isYes) {
 		return execute((client)->client.connectionOperations().clientCaching(isYes));
-	}
-
-	@Override
-	default Long clientId() {
-		return execute((client)->client.connectionOperations().clientId());
-	}
-
-	@Override
-	default Status clientSetName(final String name) {
-		return execute((client)->client.connectionOperations().clientSetName(name));
-	}
-
-	@Override
-	default Status clientSetName(final byte[] name) {
-		return execute((client)->client.connectionOperations().clientSetName(name));
 	}
 
 	@Override
@@ -125,28 +80,13 @@ public interface ConnectionOperations extends ConnectionCommands, RedisOperation
 	}
 
 	@Override
-	default List<Client> clientList() {
-		return execute((client)->client.connectionOperations().clientList());
-	}
-
-	@Override
-	default List<Client> clientList(final ClientType clientType) {
-		return execute((client)->client.connectionOperations().clientList(clientType));
+	default Long clientId() {
+		return execute((client)->client.connectionOperations().clientId());
 	}
 
 	@Override
 	default Client clientInfo() {
 		return execute((client)->client.connectionOperations().clientInfo());
-	}
-
-	@Override
-	default Status clientPause(final int timeout) {
-		return execute((client)->client.connectionOperations().clientPause(timeout));
-	}
-
-	@Override
-	default Status clientReply(final ClientReply option) {
-		return execute((client)->client.connectionOperations().clientReply(option));
 	}
 
 	@Override
@@ -170,6 +110,36 @@ public interface ConnectionOperations extends ConnectionCommands, RedisOperation
 	}
 
 	@Override
+	default List<Client> clientList() {
+		return execute((client)->client.connectionOperations().clientList());
+	}
+
+	@Override
+	default List<Client> clientList(final ClientType clientType) {
+		return execute((client)->client.connectionOperations().clientList(clientType));
+	}
+
+	@Override
+	default Status clientPause(final int timeout) {
+		return execute((client)->client.connectionOperations().clientPause(timeout));
+	}
+
+	@Override
+	default Status clientReply(final ClientReply option) {
+		return execute((client)->client.connectionOperations().clientReply(option));
+	}
+
+	@Override
+	default Status clientSetName(final String name) {
+		return execute((client)->client.connectionOperations().clientSetName(name));
+	}
+
+	@Override
+	default Status clientSetName(final byte[] name) {
+		return execute((client)->client.connectionOperations().clientSetName(name));
+	}
+
+	@Override
 	default Status clientUnblock(final int clientId) {
 		return execute((client)->client.connectionOperations().clientUnblock(clientId));
 	}
@@ -177,6 +147,36 @@ public interface ConnectionOperations extends ConnectionCommands, RedisOperation
 	@Override
 	default Status clientUnblock(final int clientId, final ClientUnblockType type) {
 		return execute((client)->client.connectionOperations().clientUnblock(clientId, type));
+	}
+
+	@Override
+	default String echo(final String str) {
+		return execute((client)->client.connectionOperations().echo(str));
+	}
+
+	@Override
+	default byte[] echo(final byte[] str) {
+		return execute((client)->client.connectionOperations().echo(str));
+	}
+
+	@Override
+	default Status ping() {
+		return execute((client)->client.connectionOperations().ping());
+	}
+
+	@Override
+	default Status quit() {
+		return execute((client)->client.connectionOperations().quit());
+	}
+
+	@Override
+	default Status reset() {
+		return execute((client)->client.connectionOperations().reset());
+	}
+
+	@Override
+	default Status select(final int db) {
+		return execute((client)->client.connectionOperations().select(db));
 	}
 
 }
