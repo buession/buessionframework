@@ -74,6 +74,9 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 	 */
 	protected final static Serializer DEFAULT_SERIALIZER = new JacksonJsonSerializer();
 
+	/**
+	 * 配置选项
+	 */
 	protected Options options = DEFAULT_OPTIONS;
 
 	/**
@@ -81,12 +84,24 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 	 */
 	protected Serializer serializer;
 
+	/**
+	 * Redis 数据源
+	 */
 	protected DataSource dataSource;
 
+	/**
+	 * Redis 连接工厂
+	 */
 	protected RedisConnectionFactory connectionFactory;
 
+	/**
+	 * 是否启用事务支持
+	 */
 	protected boolean enableTransactionSupport = false;
 
+	/**
+	 * Redis 客户端
+	 */
 	protected RedisClient redisClient;
 
 	protected final static ThreadLocal<Map<Integer, Function<?, ?>>> txConverters = new ThreadLocal<>();
@@ -114,26 +129,53 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 		setDataSource(dataSource);
 	}
 
+	/**
+	 * 返回配置选项
+	 *
+	 * @return 配置选项
+	 */
 	public Options getOptions() {
 		return options;
 	}
 
+	/**
+	 * 设置配置选项
+	 *
+	 * @param options
+	 * 		配置选项
+	 */
 	public void setOptions(Options options) {
 		this.options = options;
 	}
 
-	@Nullable
-	public RedisConnectionFactory getConnectionFactory() {
-		return connectionFactory;
-	}
-
+	/**
+	 * 返回 Redis 数据源
+	 *
+	 * @return Redis 数据源
+	 */
 	@Nullable
 	public DataSource getDataSource() {
 		return dataSource;
 	}
 
+	/**
+	 * 设置 Redis 数据源
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 */
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
+	}
+
+	/**
+	 * 返回 Redis 连接工厂
+	 *
+	 * @return Redis 连接工厂
+	 */
+	@Nullable
+	public RedisConnectionFactory getConnectionFactory() {
+		return connectionFactory;
 	}
 
 	@Override

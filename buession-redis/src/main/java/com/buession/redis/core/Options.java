@@ -33,6 +33,8 @@ import com.buession.redis.serializer.JacksonJsonSerializer;
 import java.util.Optional;
 
 /**
+ * 配置选项
+ *
  * @author Yong.Teng
  */
 public class Options {
