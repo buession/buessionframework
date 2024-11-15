@@ -30,6 +30,7 @@ import com.buession.httpclient.apache.Apache5Client;
 import com.buession.httpclient.apache.ApacheClient;
 import com.buession.httpclient.conn.Apache5ClientConnectionManager;
 import com.buession.httpclient.conn.ApacheClientConnectionManager;
+import com.buession.httpclient.conn.ConnectionManager;
 import com.buession.httpclient.core.Configuration;
 import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.RequestBody;
@@ -100,9 +101,10 @@ public class ApacheHttpClient extends AbstractHttpClient {
 
 	public ApacheClient getHttpClient() {
 		if(httpClient == null){
-			httpClient = V5 ? new Apache5Client((Apache5ClientConnectionManager) getConnectionManager(),
-					getHttpVersion()) : new Apache4Client((ApacheClientConnectionManager) getConnectionManager(),
-					getHttpVersion());
+			ConnectionManager connectionManager = getConnectionManager();
+			httpClient = connectionManager instanceof Apache5ClientConnectionManager ?
+					new Apache5Client((Apache5ClientConnectionManager) connectionManager, getHttpVersion()) :
+					new Apache4Client((ApacheClientConnectionManager) connectionManager, getHttpVersion());
 		}
 
 		return httpClient;

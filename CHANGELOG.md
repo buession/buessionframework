@@ -20,6 +20,7 @@
 ### 🐞 Bug 修复
 
 - 修复 redis HashOperations hMSet 方法参数类型
+- 修复 ApacheHttpClient、ApacheHttpAsyncClient 指定为 apache client 4 ConnectionManager 且包含 apache client 5 的包时，初始化 ApacheClient 时 ConnectionManager 类型转换异常的 BUG
 
 
 ### ⏪ 优化
