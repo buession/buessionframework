@@ -19,15 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2023 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.servlet;
+package com.buession.web.reactive;
 
 import com.buession.web.exception.IErrorHandler;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 
 /**
  * 异常错误处理器
@@ -36,9 +35,9 @@ import javax.servlet.http.HttpServletResponse;
  * 		异常
  *
  * @author Yong.Teng
- * @since 2.2.1
+ * @since 3.0.1
  */
 @FunctionalInterface
-public interface ErrorHandler<EX extends Throwable> extends IErrorHandler<HttpServletRequest, HttpServletResponse, EX> {
+public interface ErrorHandler<EX extends Throwable> extends IErrorHandler<ServerHttpRequest, ServerHttpResponse, EX> {
 
 }

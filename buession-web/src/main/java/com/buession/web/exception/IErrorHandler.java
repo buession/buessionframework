@@ -22,23 +22,33 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.servlet;
+package com.buession.web.exception;
 
-import com.buession.web.exception.IErrorHandler;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.buession.web.http.Error;
 
 /**
  * 异常错误处理器
  *
- * @param <EX>
- * 		异常
- *
  * @author Yong.Teng
- * @since 2.2.1
+ * @since 3.0.1
  */
 @FunctionalInterface
-public interface ErrorHandler<EX extends Throwable> extends IErrorHandler<HttpServletRequest, HttpServletResponse, EX> {
+public interface IErrorHandler<REQ, RES, EX extends Throwable> {
+
+	/**
+	 * 对异常 {code EX} 进行处理，并返回 {@link Error}
+	 *
+	 * @param request
+	 * 		请求对象
+	 * @param response
+	 * 		响应对象
+	 * @param handler
+	 * 		handler
+	 * @param ex
+	 * 		异常
+	 *
+	 * @return {@link Error} 实例
+	 */
+	Error apply(final REQ request, final RES response, final Object handler, final EX ex);
 
 }
