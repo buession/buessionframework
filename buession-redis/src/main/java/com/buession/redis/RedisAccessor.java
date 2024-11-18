@@ -99,11 +99,6 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 	 */
 	protected boolean enableTransactionSupport = false;
 
-	/**
-	 * Redis 客户端
-	 */
-	protected RedisClient redisClient;
-
 	protected final static ThreadLocal<Map<Integer, Function<?, ?>>> txConverters = new ThreadLocal<>();
 
 	protected final static ThreadLocal<Integer> index = new ThreadLocal<>();
@@ -283,27 +278,23 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 	}
 
 	protected RedisClient doGetRedisClient() throws RedisException {
-		if(redisClient == null){
-			DataSource dataSource = getDataSource();
+		DataSource dataSource = getDataSource();
 
-			if(dataSource instanceof JedisDataSource){
-				redisClient = new JedisStandaloneClient();
-			}else if(dataSource instanceof JedisSentinelDataSource){
-				redisClient = new JedisSentinelClient();
-			}else if(dataSource instanceof JedisClusterDataSource){
-				redisClient = new JedisClusterClient();
-			}else if(dataSource instanceof LettuceDataSource){
-				redisClient = new LettuceStandaloneClient();
-			}else if(dataSource instanceof LettuceSentinelDataSource){
-				redisClient = new LettuceSentinelClient();
-			}else if(dataSource instanceof LettuceClusterDataSource){
-				redisClient = new LettuceClusterClient();
-			}else{
-				throw new RedisException("Cloud not initialize RedisClient for: " + dataSource);
-			}
+		if(dataSource instanceof JedisDataSource){
+			return new JedisStandaloneClient();
+		}else if(dataSource instanceof JedisSentinelDataSource){
+			return new JedisSentinelClient();
+		}else if(dataSource instanceof JedisClusterDataSource){
+			return new JedisClusterClient();
+		}else if(dataSource instanceof LettuceDataSource){
+			return new LettuceStandaloneClient();
+		}else if(dataSource instanceof LettuceSentinelDataSource){
+			return new LettuceSentinelClient();
+		}else if(dataSource instanceof LettuceClusterDataSource){
+			return new LettuceClusterClient();
+		}else{
+			throw new RedisException("Cloud not initialize RedisClient for: " + dataSource);
 		}
-
-		return redisClient;
 	}
 
 	protected final void checkInitialized() {
