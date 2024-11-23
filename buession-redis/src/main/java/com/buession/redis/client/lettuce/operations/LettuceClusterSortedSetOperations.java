@@ -43,7 +43,6 @@ import com.buession.redis.core.internal.lettuce.LettuceScanArgs;
 import com.buession.redis.core.internal.lettuce.LettuceScanCursor;
 import com.buession.redis.core.internal.lettuce.LettuceZAddArgs;
 import com.buession.redis.core.internal.lettuce.LettuceZStoreArgs;
-import com.buession.redis.core.internal.lettuce.utils.ScoredValueUtils;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.Limit;
 import io.lettuce.core.Range;
@@ -1555,22 +1554,28 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 
 	private Long zAdd(final String key, final Map<String, Double> members, final CommandArguments args) {
 		final byte[] bKey = SafeEncoder.encode(key);
-		return zAdd(bKey, ScoredValueUtils.fromStringMap(members), args);
+		final ScoredValue<byte[]>[] scoredValues = createScoredValueFromValues(members);
+
+		return zAdd(bKey, scoredValues, args);
 	}
 
 	private Long zAdd(final String key, final Map<String, Double> members, final ZAddArgs zAddArgs,
 					  final CommandArguments args) {
 		final byte[] bKey = SafeEncoder.encode(key);
-		return zAdd(bKey, ScoredValueUtils.fromStringMap(members), zAddArgs, args);
+		final ScoredValue<byte[]>[] scoredValues = createScoredValueFromValues(members);
+
+		return zAdd(bKey, scoredValues, zAddArgs, args);
 	}
 
 	private Long zAdd(final byte[] key, final Map<byte[], Double> members, final CommandArguments args) {
-		return zAdd(key, ScoredValueUtils.fromBinaryMap(members), args);
+		final ScoredValue<byte[]>[] scoredValues = createScoredValueFromBinaryValues(members);
+		return zAdd(key, scoredValues, args);
 	}
 
 	private Long zAdd(final byte[] key, final Map<byte[], Double> members, final ZAddArgs zAddArgs,
 					  final CommandArguments args) {
-		return zAdd(key, ScoredValueUtils.fromBinaryMap(members), zAddArgs, args);
+		final ScoredValue<byte[]>[] scoredValues = createScoredValueFromBinaryValues(members);
+		return zAdd(key, scoredValues, zAddArgs, args);
 	}
 
 	private Long zAdd(final byte[] key, final ScoredValue<byte[]>[] scoredValues, final CommandArguments args) {

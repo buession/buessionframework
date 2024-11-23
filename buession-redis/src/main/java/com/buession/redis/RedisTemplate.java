@@ -942,11 +942,13 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 		return lPush(key, serializer.serializeAsBytes(value));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public <V> Long lPush(final String key, final V... values) {
 		return lPush(key, serializer.serialize(values));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public <V> Long lPush(final byte[] key, final V... values) {
 		return lPush(key, serializer.serializeAsBytes(values));
@@ -962,11 +964,13 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 		return lPushX(key, serializer.serializeAsBytes(value));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public <V> Long lPushX(final String key, final V... values) {
 		return lPushX(key, serializer.serialize(values));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public <V> Long lPushX(final byte[] key, final V... values) {
 		return lPushX(key, serializer.serializeAsBytes(values));
@@ -1054,11 +1058,13 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 		return rPush(key, serializer.serializeAsBytes(value));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public <V> Long rPush(final String key, final V... values) {
 		return rPush(key, serializer.serialize(values));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public <V> Long rPush(final byte[] key, final V... values) {
 		return rPush(key, serializer.serializeAsBytes(values));
@@ -1074,21 +1080,25 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 		return rPushX(key, serializer.serializeAsBytes(value));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public <V> Long rPushX(final String key, final V... values) {
 		return rPushX(key, serializer.serialize(values));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public <V> Long rPushX(final byte[] key, final V... values) {
 		return rPushX(key, serializer.serializeAsBytes(values));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public <V> Long sAdd(final String key, final V... members) {
 		return sAdd(key, serializer.serialize(members));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public <V> Long sAdd(final byte[] key, final V... members) {
 		return sAdd(key, serializer.serializeAsBytes(members));
@@ -1355,11 +1365,13 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 		return sRem(key, serializer.serializeAsBytes(member));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public <V> Long sRem(final String key, final V... members) {
 		return sRem(key, serializer.serialize(members));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public <V> Long sRem(final byte[] key, final V... members) {
 		return sRem(key, serializer.serializeAsBytes(members));
@@ -3079,6 +3091,7 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 		resetTransactionOrPipeline();
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public List<Object> exec() {
 		List<Object> result = super.exec();

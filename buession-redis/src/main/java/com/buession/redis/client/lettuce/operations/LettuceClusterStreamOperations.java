@@ -1125,14 +1125,9 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 	private List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
 															final Map<String, StreamEntryId> streams,
 															final XReadArgs xReadArgs, final CommandArguments args) {
-		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
+		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = createStreamOffsetFromStreamEntryIdMap(streams);
 		final ListConverter<StreamMessage<byte[], byte[]>, Map<String, List<StreamEntry>>> listStreamMessageMapConverter =
 				StreamMessageMapConverter.listConverter();
-		int i = 0;
-
-		for(Map.Entry<String, StreamEntryId> e : streams.entrySet()){
-			streamOffsets[i++] = XReadArgs.StreamOffset.from(SafeEncoder.encode(e.getKey()), e.getValue().toString());
-		}
 
 		return xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), streamOffsets, xReadArgs,
 				listStreamMessageMapConverter, args);
@@ -1141,14 +1136,9 @@ public final class LettuceClusterStreamOperations extends AbstractStreamOperatio
 	private List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
 															final Map<byte[], StreamEntryId> streams,
 															final XReadArgs xReadArgs, final CommandArguments args) {
-		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
+		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = createStreamOffsetFromBinaryStreamEntryIdMap(streams);
 		final ListConverter<StreamMessage<byte[], byte[]>, Map<byte[], List<StreamEntry>>> listStreamMessageMapConverter =
 				StreamMessageMapConverter.listConverter();
-		int i = 0;
-
-		for(Map.Entry<byte[], StreamEntryId> e : streams.entrySet()){
-			streamOffsets[i++] = XReadArgs.StreamOffset.from(e.getKey(), e.getValue().toString());
-		}
 
 		return xReadGroup(groupName, consumerName, streamOffsets, xReadArgs, listStreamMessageMapConverter, args);
 	}

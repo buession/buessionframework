@@ -119,6 +119,7 @@ public interface JedisRedisOperations extends RedisOperations {
 			super(client, command, executor, converter);
 		}
 
+		@SuppressWarnings({"unchecked"})
 		@Override
 		protected R doExecute() throws RedisException {
 			final com.buession.redis.transaction.Transaction transaction = transaction();
@@ -203,6 +204,7 @@ public interface JedisRedisOperations extends RedisOperations {
 			super(client, command, executor, converter);
 		}
 
+		@SuppressWarnings({"unchecked"})
 		@Override
 		protected R doExecute() throws RedisException {
 			final com.buession.redis.transaction.Transaction transaction = transaction();
@@ -288,6 +290,7 @@ public interface JedisRedisOperations extends RedisOperations {
 			super(client, command, executor, converter);
 		}
 
+		@SuppressWarnings({"unchecked"})
 		@Override
 		protected R doExecute() throws RedisException {
 			final com.buession.redis.transaction.Transaction transaction = transaction();

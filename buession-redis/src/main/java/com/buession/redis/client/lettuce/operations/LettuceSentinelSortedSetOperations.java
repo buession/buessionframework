@@ -1475,13 +1475,7 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 
 	private Long zAdd(final String key, final Map<String, Double> members, final CommandArguments args) {
 		final byte[] bKey = SafeEncoder.encode(key);
-		final ScoredValue<byte[]>[] scoredValues = new ScoredValue[members.size()];
-		int i = 0;
-
-		for(Map.Entry<String, Double> e : members.entrySet()){
-			scoredValues[i++] = e.getValue() == null ? ScoredValue.empty() : ScoredValue.just(e.getValue(),
-					SafeEncoder.encode(e.getKey()));
-		}
+		final ScoredValue<byte[]>[] scoredValues = createScoredValueFromValues(members);
 
 		return zAdd(bKey, scoredValues, args);
 	}
@@ -1489,39 +1483,19 @@ public final class LettuceSentinelSortedSetOperations extends AbstractSortedSetO
 	private Long zAdd(final String key, final Map<String, Double> members, final ZAddArgs zAddArgs,
 					  final CommandArguments args) {
 		final byte[] bKey = SafeEncoder.encode(key);
-		final ScoredValue<byte[]>[] scoredValues = new ScoredValue[members.size()];
-		int i = 0;
-
-		for(Map.Entry<String, Double> e : members.entrySet()){
-			scoredValues[i++] = e.getValue() == null ? ScoredValue.empty() : ScoredValue.just(e.getValue(),
-					SafeEncoder.encode(e.getKey()));
-		}
+		final ScoredValue<byte[]>[] scoredValues = createScoredValueFromValues(members);
 
 		return zAdd(bKey, scoredValues, zAddArgs, args);
 	}
 
 	private Long zAdd(final byte[] key, final Map<byte[], Double> members, final CommandArguments args) {
-		final ScoredValue<byte[]>[] scoredValues = new ScoredValue[members.size()];
-		int i = 0;
-
-		for(Map.Entry<byte[], Double> e : members.entrySet()){
-			scoredValues[i++] = e.getValue() == null ? ScoredValue.empty() : ScoredValue.just(e.getValue(),
-					e.getKey());
-		}
-
+		final ScoredValue<byte[]>[] scoredValues = createScoredValueFromBinaryValues(members);
 		return zAdd(key, scoredValues, args);
 	}
 
 	private Long zAdd(final byte[] key, final Map<byte[], Double> members, final ZAddArgs zAddArgs,
 					  final CommandArguments args) {
-		final ScoredValue<byte[]>[] scoredValues = new ScoredValue[members.size()];
-		int i = 0;
-
-		for(Map.Entry<byte[], Double> e : members.entrySet()){
-			scoredValues[i++] = e.getValue() == null ? ScoredValue.empty() : ScoredValue.just(e.getValue(),
-					e.getKey());
-		}
-
+		final ScoredValue<byte[]>[] scoredValues = createScoredValueFromBinaryValues(members);
 		return zAdd(key, scoredValues, zAddArgs, args);
 	}
 

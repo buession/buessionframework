@@ -507,6 +507,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @since 3.0.0
 	 */
+	@SuppressWarnings({"unchecked"})
 	default <V> Status hMSet(final String key, final KeyValue<String, V>... data) {
 		return hMSet(key, Arrays.asList(data));
 	}
@@ -527,6 +528,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @since 3.0.0
 	 */
+	@SuppressWarnings({"unchecked"})
 	default <V> Status hMSet(final byte[] key, final KeyValue<byte[], V>... data) {
 		return hMSet(key, Arrays.asList(data));
 	}

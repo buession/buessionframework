@@ -194,16 +194,17 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 			}else if(dataSource instanceof JedisDataSource){
 				connectionFactory = new JedisConnectionFactory((JedisDataSource) dataSource);
 			}else{
-				Assert.isNull(getDataSource(), "DataSource is required");
+				throw new RedisException("dataSource must be an instance of " + JedisDataSource.class.getName() +
+						" or " + JedisDataSource.class.getName() + ", but an instance of " +
+						dataSource.getClass().getName() + ".");
 			}
 		}
 	}
 
 	public void pipeline() {
 		RedisConnection connection = fetchConnection();
+		RedisClient client = fetchGetRedisClient(connection);
 
-		RedisClient client = doGetRedisClient();
-		client.setConnection(connection);
 		client.execute(new Command<Pipeline>() {
 
 			@Override
@@ -228,9 +229,7 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 		Assert.isNull(callback, "callback cloud not be null.");
 
 		RedisConnection connection = fetchRequiredConnection();
-
-		RedisClient client = doGetRedisClient();
-		client.setConnection(connection);
+		RedisClient client = fetchGetRedisClient(connection);
 
 		if(isMulti(connection)){
 			index.set(index.get() + 1);
@@ -248,9 +247,7 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 		Assert.isNull(callback, "callback cloud not be null.");
 
 		RedisConnection connection = fetchRequiredConnection();
-
-		RedisClient client = doGetRedisClient();
-		client.setConnection(connection);
+		RedisClient client = fetchGetRedisClient(connection);
 
 		if(isMulti(connection)){
 			index.set(index.get() + 1);
@@ -277,24 +274,32 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 		return fetchConnection();
 	}
 
-	protected RedisClient doGetRedisClient() throws RedisException {
+	protected RedisClient fetchGetRedisClient(final RedisConnection connection) throws RedisException {
 		DataSource dataSource = getDataSource();
+		RedisClient client;
 
 		if(dataSource instanceof JedisDataSource){
-			return new JedisStandaloneClient();
+			client = new JedisStandaloneClient();
 		}else if(dataSource instanceof JedisSentinelDataSource){
-			return new JedisSentinelClient();
+			client = new JedisSentinelClient();
 		}else if(dataSource instanceof JedisClusterDataSource){
-			return new JedisClusterClient();
+			client = new JedisClusterClient();
 		}else if(dataSource instanceof LettuceDataSource){
-			return new LettuceStandaloneClient();
+			client = new LettuceStandaloneClient();
 		}else if(dataSource instanceof LettuceSentinelDataSource){
-			return new LettuceSentinelClient();
+			client = new LettuceSentinelClient();
 		}else if(dataSource instanceof LettuceClusterDataSource){
-			return new LettuceClusterClient();
+			client = new LettuceClusterClient();
 		}else{
 			throw new RedisException("Cloud not initialize RedisClient for: " + dataSource);
 		}
+
+		int identityHashCode = System.identityHashCode(connection);
+		System.out.println(identityHashCode + ": " + Integer.toHexString(identityHashCode));
+
+		client.setConnection(connection);
+
+		return client;
 	}
 
 	protected final void checkInitialized() {
