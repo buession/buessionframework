@@ -3191,6 +3191,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
 	 */
+	@Deprecated
 	<V> List<V> zRevRangeByLexObject(final String key, final String min, final String max, final long offset,
 									 final long count);
 
@@ -3215,6 +3216,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
 	 */
+	@Deprecated
 	<V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
 									 final long count);
 
@@ -3241,6 +3243,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
 	 */
+	@Deprecated
 	<V> List<V> zRevRangeByLexObject(final String key, final String min, final String max, final long offset,
 									 final long count, final Class<V> clazz);
 
@@ -3267,6 +3270,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
 	 */
+	@Deprecated
 	<V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
 									 final long count, final Class<V> clazz);
 
@@ -3295,6 +3299,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @see TypeReference
 	 */
+	@Deprecated
 	<V> List<V> zRevRangeByLexObject(final String key, final String min, final String max, final long offset,
 									 final long count, final TypeReference<V> type);
 
@@ -3323,6 +3328,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @see TypeReference
 	 */
+	@Deprecated
 	<V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
 									 final long count, final TypeReference<V> type);
 

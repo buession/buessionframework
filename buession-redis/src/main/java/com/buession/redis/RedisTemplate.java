@@ -2501,6 +2501,7 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 				new Converter.TypeListBinaryConverter<>(this, type));
 	}
 
+	@Deprecated
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final String key, final String min, final String max, final long offset,
 											final long count) {
@@ -2508,6 +2509,7 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 				new Converter.SimpleListStringConverter<>(this));
 	}
 
+	@Deprecated
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
 											final long count) {
@@ -2515,6 +2517,7 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 				new Converter.SimpleListBinaryConverter<>(this));
 	}
 
+	@Deprecated
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final String key, final String min, final String max, final long offset,
 											final long count, final Class<V> clazz) {
@@ -2522,6 +2525,7 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 				new Converter.ClazzListStringConverter<>(this, clazz));
 	}
 
+	@Deprecated
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
 											final long count, final Class<V> clazz) {
@@ -2529,6 +2533,7 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 				new Converter.ClazzListBinaryConverter<>(this, clazz));
 	}
 
+	@Deprecated
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final String key, final String min, final String max, final long offset,
 											final long count, final TypeReference<V> type) {
@@ -2536,6 +2541,7 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 				new Converter.TypeListStringConverter<>(this, type));
 	}
 
+	@Deprecated
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
 											final long count, final TypeReference<V> type) {
