@@ -192,11 +192,7 @@ public interface RedisOperations {
 							NotSupportedCommandException.Type.NORMAL, getCommand());
 				}
 			}else{
-				try{
-					return doExecute();
-				}catch(Exception e){
-					throw new RedisException(e.getMessage(), e);
-				}
+				return doExecute();
 			}
 		}
 

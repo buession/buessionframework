@@ -65,6 +65,10 @@ public abstract class AbstractConnectionFactory<DS extends DataSource> implement
 				}
 			}
 		}
+		
+		if(redisConnection.isConnect() == false){
+			redisConnection.connect();
+		}
 
 		return redisConnection;
 	}

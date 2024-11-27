@@ -469,6 +469,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 
 	@Override
 	public boolean isConnect() {
+		logger.error("jedis {}", jedis);
 		return jedis != null && jedis.isConnected();
 	}
 

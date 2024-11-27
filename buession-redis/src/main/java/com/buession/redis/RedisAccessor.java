@@ -94,6 +94,8 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 	 */
 	protected RedisConnectionFactory connectionFactory;
 
+	protected RedisClient client;
+
 	/**
 	 * 是否启用事务支持
 	 */
@@ -202,8 +204,8 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 	}
 
 	public void pipeline() {
-		RedisConnection connection = fetchConnection();
-		RedisClient client = fetchGetRedisClient(connection);
+		RedisConnection connection = fetchRequiredConnection();
+		RedisClient client = fetchRequiredRedisClient(connection);
 
 		client.execute(new Command<Pipeline>() {
 
@@ -229,7 +231,7 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 		Assert.isNull(callback, "callback cloud not be null.");
 
 		RedisConnection connection = fetchRequiredConnection();
-		RedisClient client = fetchGetRedisClient(connection);
+		RedisClient client = fetchRequiredRedisClient(connection);
 
 		if(isMulti(connection)){
 			index.set(index.get() + 1);
@@ -247,7 +249,7 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 		Assert.isNull(callback, "callback cloud not be null.");
 
 		RedisConnection connection = fetchRequiredConnection();
-		RedisClient client = fetchGetRedisClient(connection);
+		RedisClient client = fetchRequiredRedisClient(connection);
 
 		if(isMulti(connection)){
 			index.set(index.get() + 1);
@@ -266,7 +268,7 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 	}
 
 	protected RedisConnection fetchConnection() {
-		return RedisConnectionUtils.bindConnection(connectionFactory, enableTransactionSupport);
+		return RedisConnectionUtils.getConnection(connectionFactory, enableTransactionSupport);
 	}
 
 	protected RedisConnection fetchRequiredConnection() {
@@ -274,28 +276,26 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 		return fetchConnection();
 	}
 
-	protected RedisClient fetchGetRedisClient(final RedisConnection connection) throws RedisException {
-		DataSource dataSource = getDataSource();
-		RedisClient client;
+	protected RedisClient fetchRequiredRedisClient(final RedisConnection connection) throws RedisException {
+		if(client == null){
+			DataSource dataSource = getDataSource();
 
-		if(dataSource instanceof JedisDataSource){
-			client = new JedisStandaloneClient();
-		}else if(dataSource instanceof JedisSentinelDataSource){
-			client = new JedisSentinelClient();
-		}else if(dataSource instanceof JedisClusterDataSource){
-			client = new JedisClusterClient();
-		}else if(dataSource instanceof LettuceDataSource){
-			client = new LettuceStandaloneClient();
-		}else if(dataSource instanceof LettuceSentinelDataSource){
-			client = new LettuceSentinelClient();
-		}else if(dataSource instanceof LettuceClusterDataSource){
-			client = new LettuceClusterClient();
-		}else{
-			throw new RedisException("Cloud not initialize RedisClient for: " + dataSource);
+			if(dataSource instanceof JedisDataSource){
+				client = new JedisStandaloneClient();
+			}else if(dataSource instanceof JedisSentinelDataSource){
+				client = new JedisSentinelClient();
+			}else if(dataSource instanceof JedisClusterDataSource){
+				client = new JedisClusterClient();
+			}else if(dataSource instanceof LettuceDataSource){
+				client = new LettuceStandaloneClient();
+			}else if(dataSource instanceof LettuceSentinelDataSource){
+				client = new LettuceSentinelClient();
+			}else if(dataSource instanceof LettuceClusterDataSource){
+				client = new LettuceClusterClient();
+			}else{
+				throw new RedisException("Cloud not initialize RedisClient for: " + dataSource);
+			}
 		}
-
-		int identityHashCode = System.identityHashCode(connection);
-		System.out.println(identityHashCode + ": " + Integer.toHexString(identityHashCode));
 
 		client.setConnection(connection);
 

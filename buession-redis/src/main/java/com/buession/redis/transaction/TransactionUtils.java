@@ -34,35 +34,38 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  */
 public class TransactionUtils {
 
-	private TransactionUtils(){
+	private TransactionUtils() {
 	}
 
-	public static boolean isActualNonReadonlyTransactionActive(){
-		return TransactionSynchronizationManager.isActualTransactionActive() &&
-				!TransactionSynchronizationManager.isCurrentTransactionReadOnly();
+	public static boolean isActualTransactionActive() {
+		return TransactionSynchronizationManager.isActualTransactionActive();
+	}
+
+	public static boolean isActualNonReadonlyTransactionActive() {
+		return isActualTransactionActive() && TransactionSynchronizationManager.isCurrentTransactionReadOnly() == false;
 	}
 
 	public static void bindResource(final RedisConnectionFactory factory,
-									final RedisConnectionHolder connectionHolder){
+									final RedisConnectionHolder connectionHolder) {
 		TransactionSynchronizationManager.bindResource(factory, connectionHolder);
 	}
 
-	public static RedisConnectionHolder getResource(final RedisConnectionFactory factory){
+	public static RedisConnectionHolder getResource(final RedisConnectionFactory factory) {
 		return (RedisConnectionHolder) TransactionSynchronizationManager.getResource(factory);
 	}
 
-	public static RedisConnectionHolder unbindResourceIfPossible(final RedisConnectionFactory factory){
+	public static RedisConnectionHolder unbindResourceIfPossible(final RedisConnectionFactory factory) {
 		return (RedisConnectionHolder) TransactionSynchronizationManager.unbindResourceIfPossible(factory);
 	}
 
 	public static void registerSynchronization(final RedisConnectionFactory factory,
 											   final RedisConnectionHolder connectionHolder,
-											   final RedisConnection connection){
+											   final RedisConnection connection, final boolean readOnly) {
 		TransactionSynchronizationManager.registerSynchronization(new RedisTransactionSynchronizationAdapter(factory,
-				connectionHolder, connection));
+				connectionHolder, connection, readOnly));
 	}
 
-	public static boolean isCurrentTransactionReadOnly(){
+	public static boolean isCurrentTransactionReadOnly() {
 		return TransactionSynchronizationManager.isCurrentTransactionReadOnly();
 	}
 

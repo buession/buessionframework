@@ -28,6 +28,8 @@
 
 - 优化 redis 命令参数日志
 - 优化 redis RedisTemplate 对象转换器
+- 优化 redis 命令运行器数据类型优化
+- 优化 redis 稳定性优化
 
 
 ### 📔 文档
