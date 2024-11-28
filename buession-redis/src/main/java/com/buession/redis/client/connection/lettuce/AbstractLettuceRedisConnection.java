@@ -279,7 +279,9 @@ public abstract class AbstractLettuceRedisConnection extends AbstractRedisConnec
 		try{
 			return executor.execute(this);
 		}catch(Exception e){
-			logger.error("Redis execute command failure: {}", e.getMessage(), e);
+			if(logger.isErrorEnabled()){
+				logger.error("Redis execute command failure: {}", e.getMessage(), e);
+			}
 			throw LettuceRedisExceptionUtils.convert(e);
 		}
 	}

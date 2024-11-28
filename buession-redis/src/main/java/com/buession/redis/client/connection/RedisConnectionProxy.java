@@ -19,18 +19,39 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.connection.datasource.jedis;
+package com.buession.redis.client.connection;
 
-import com.buession.redis.client.connection.datasource.DataSource;
+import org.springframework.aop.RawTargetAccess;
+import org.springframework.aop.framework.ProxyFactory;
 
 /**
- * Jedis 数据源
+ * Subinterface of {@link RedisConnection} to be implemented by {@link RedisConnection} proxies. Allows access to the
+ * underlying target {@link RedisConnection}.
  *
- * @author Yong.Teng
+ * @see RedisConnectionUtils#getTargetConnection(RedisConnection)
+ * @since 3.0.1
  */
-public interface JedisRedisDataSource extends DataSource {
+interface RedisConnectionProxy extends RedisConnection, RawTargetAccess {
+
+	/**
+	 * Return the target {@link RedisConnection} of this proxy.
+	 * This will typically be the native driver {@link RedisConnection} or a wrapper from a connection pool.
+	 *
+	 * @return The underlying {@link RedisConnection}.
+	 */
+	RedisConnection getTargetConnection();
+
+	static RedisConnection createConnectionSplittingProxy(final RedisConnectionFactory factory, final
+	RedisConnection connection) {
+		final ProxyFactory proxyFactory = new ProxyFactory(connection);
+
+		proxyFactory.addAdvice(new ConnectionSplittingInterceptor(factory));
+		proxyFactory.addInterface(RedisConnectionProxy.class);
+
+		return (RedisConnection) proxyFactory.getProxy();
+	}
 
 }

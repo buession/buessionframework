@@ -297,17 +297,16 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 		try{
 			return executor.execute(this);
 		}catch(Exception e){
-			logger.error("Redis execute command failure: {}", e.getMessage(), e);
+			if(logger.isErrorEnabled()){
+				logger.error("Redis execute command failure: {}", e.getMessage(), e);
+			}
 			throw JedisRedisExceptionUtils.convert(e);
 		}
 	}
 
 	@Override
 	protected void doDestroy() throws IOException {
-		if(pipeline != null){
-			pipeline.close();
-			pipeline = null;
-		}
+		doClose();
 	}
 
 	@Override

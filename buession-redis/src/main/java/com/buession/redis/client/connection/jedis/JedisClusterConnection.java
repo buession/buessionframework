@@ -920,8 +920,10 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 
 	@Override
 	protected void doConnect() throws RedisConnectionFailureException {
-		cluster = new JedisCluster(connectionProvider, getMaxRedirects(),
-				Duration.ofMillis(getMaxTotalRetriesDuration()));
+		if(cluster != null){
+			cluster = new JedisCluster(connectionProvider, getMaxRedirects(),
+					Duration.ofMillis(getMaxTotalRetriesDuration()));
+		}
 	}
 
 	protected ClusterConnectionProvider createConnectionProvider() {
@@ -947,14 +949,14 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	@Override
 	protected void doDestroy() throws IOException {
 		super.doDestroy();
-		logger.info("Jedis cluster destroy.");
+		logger.debug("Jedis cluster destroy.");
 	}
 
 	@Override
 	protected void doClose() throws IOException {
 		super.doClose();
 
-		logger.info("Jedis cluster close.");
+		logger.debug("Jedis cluster close.");
 		if(cluster != null){
 			cluster.close();
 		}

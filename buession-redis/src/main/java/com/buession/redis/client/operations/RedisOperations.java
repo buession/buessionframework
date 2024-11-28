@@ -188,8 +188,8 @@ public interface RedisOperations {
 				}else if(connection.isTransaction()){
 					throw new NotSupportedTransactionCommandException(mode, getCommand());
 				}else{
-					throw new NotSupportedCommandException(RedisConnectionUtils.getRedisMode(connection),
-							NotSupportedCommandException.Type.NORMAL, getCommand());
+					throw new NotSupportedCommandException(mode, NotSupportedCommandException.Type.NORMAL,
+							getCommand());
 				}
 			}else{
 				return doExecute();

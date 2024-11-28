@@ -316,7 +316,6 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 
 	@Override
 	public Transaction multi() {
-		System.out.println("transaction: " + (transaction == null ? "false" : "true"));
 		if(transaction == null){
 			final RedisCommands<byte[], byte[]> commands = delegate.sync();
 			commands.multi();
@@ -384,8 +383,8 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 			try{
 				delegate = pool.getResource();
 
-				if(logger.isInfoEnabled()){
-					logger.info("StatefulConnection initialized with pool success.");
+				if(logger.isDebugEnabled()){
+					logger.debug("StatefulConnection initialized with pool success.");
 				}
 			}catch(Exception e){
 				if(logger.isErrorEnabled()){
@@ -450,16 +449,18 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	protected void doDestroy() throws IOException {
 		super.doDestroy();
 
-		logger.info("Lettuce destroy.");
+		logger.debug("Lettuce destroy.");
 		if(pool != null){
-			if(logger.isInfoEnabled()){
-				logger.info("Lettuce pool for {} destroy.", pool.getClass().getName());
+			if(logger.isDebugEnabled()){
+				logger.debug("Lettuce pool for {} destroy.", pool.getClass().getName());
 			}
 
 			try{
 				pool.destroy();
 			}catch(Exception ex){
-				logger.warn("Cannot properly close Lettuce pool.", ex);
+				if(logger.isWarnEnabled()){
+					logger.warn("Cannot properly close Lettuce pool.", ex);
+				}
 			}
 
 			pool = null;
@@ -470,7 +471,7 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	protected void doClose() throws IOException {
 		super.doClose();
 
-		logger.info("Lettuce close.");
+		logger.debug("Lettuce close.");
 
 		if(delegate != null){
 			delegate.close();

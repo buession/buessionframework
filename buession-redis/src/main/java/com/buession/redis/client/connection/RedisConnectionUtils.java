@@ -29,8 +29,6 @@ import com.buession.redis.core.RedisMode;
 import com.buession.redis.transaction.TransactionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.aop.RawTargetAccess;
-import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.lang.Nullable;
 
@@ -190,7 +188,7 @@ public final class RedisConnectionUtils {
 		boolean bindSynchronization = TransactionUtils.isActualTransactionActive() && enableTransactionSupport;
 		if(bind || bindSynchronization){
 			if(bindSynchronization && TransactionUtils.isActualNonReadonlyTransactionActive()){
-				connection = createConnectionSplittingProxy(factory, connection);
+				connection = RedisConnectionProxy.createConnectionSplittingProxy(factory, connection);
 			}
 
 			try{
@@ -352,32 +350,25 @@ public final class RedisConnectionUtils {
 	private static void potentiallyRegisterTransactionSynchronisation(
 			final RedisConnectionFactory factory, final RedisConnectionHolder connectionHolder) {
 		// Should go actually into RedisTransactionManager
-		if(connectionHolder.isTransactionActive() == false){
-			connectionHolder.setTransactionActive(true);
-			connectionHolder.setSynchronizedWithTransaction(true);
-			connectionHolder.requested();
-
-			RedisConnection connection = connectionHolder.getRequiredConnection();
-			boolean readOnly = TransactionUtils.isCurrentTransactionReadOnly();
-			if(readOnly == false){
-				connection.multi();
-			}
-
-			if(logger.isDebugEnabled()){
-				logger.debug("Register Transaction Synchronization.");
-			}
-
-			TransactionUtils.registerSynchronization(factory, connectionHolder, connection, false);
+		if(connectionHolder.isTransactionActive()){
+			return;
 		}
-	}
 
-	private static RedisConnection createConnectionSplittingProxy(final RedisConnectionFactory factory, final
-	RedisConnection connection) {
-		ProxyFactory proxyFactory = new ProxyFactory(connection);
-		proxyFactory.addAdvice(new ConnectionSplittingInterceptor(factory));
-		proxyFactory.addInterface(RedisConnectionProxy.class);
+		connectionHolder.setTransactionActive(true);
+		connectionHolder.setSynchronizedWithTransaction(true);
+		connectionHolder.requested();
 
-		return RedisConnection.class.cast(proxyFactory.getProxy());
+		RedisConnection connection = connectionHolder.getRequiredConnection();
+		boolean readOnly = TransactionUtils.isCurrentTransactionReadOnly();
+		if(readOnly == false){
+			connection.multi();
+		}
+
+		if(logger.isDebugEnabled()){
+			logger.debug("Register Transaction Synchronization.");
+		}
+
+		TransactionUtils.registerSynchronization(factory, connectionHolder, connection, readOnly);
 	}
 
 	/**
@@ -396,7 +387,7 @@ public final class RedisConnectionUtils {
 	private static boolean connectionEquals(final RedisConnectionHolder connectionHolder,
 											final RedisConnection connection) {
 		if(connectionHolder.hasConnection()){
-			final RedisConnection heldCConnection = connectionHolder.getRequiredConnection();
+			RedisConnection heldCConnection = connectionHolder.getRequiredConnection();
 			return heldCConnection.equals(connection) || getTargetConnection(heldCConnection).equals(connection);
 		}else{
 			return false;
@@ -419,24 +410,6 @@ public final class RedisConnectionUtils {
 		}catch(Throwable t){
 			logger.error("Unexpected exception on closing Redis Connection", t);
 		}
-	}
-
-	/**
-	 * Subinterface of {@link RedisConnection} to be implemented by {@link RedisConnection} proxies. Allows access to the
-	 * underlying target {@link RedisConnection}.
-	 *
-	 * @see RedisConnectionUtils#getTargetConnection(RedisConnection)
-	 * @since 3.0.1
-	 */
-	public interface RedisConnectionProxy extends RedisConnection, RawTargetAccess {
-
-		/**
-		 * Return the target {@link RedisConnection} of this proxy. This will typically be the native driver {@link RedisConnection} or a wrapper from a connection pool.
-		 *
-		 * @return The underlying {@link RedisConnection}.
-		 */
-		RedisConnection getTargetConnection();
-
 	}
 
 }

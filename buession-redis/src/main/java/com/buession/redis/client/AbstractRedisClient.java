@@ -210,7 +210,7 @@ public abstract class AbstractRedisClient<CONN extends RedisConnection> implemen
 		}finally{
 			if(logger.isDebugEnabled()){
 				long finishTime = System.nanoTime();
-				logger.debug("Command execution time: {}", finishTime - startTime);
+				logger.debug("Command execution time: {}ns", finishTime - startTime);
 			}
 		}
 	}

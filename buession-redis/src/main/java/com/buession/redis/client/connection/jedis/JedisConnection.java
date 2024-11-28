@@ -469,7 +469,6 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 
 	@Override
 	public boolean isConnect() {
-		logger.error("jedis {}", jedis);
 		return jedis != null && jedis.isConnected();
 	}
 
@@ -506,16 +505,20 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 				throw JedisRedisExceptionUtils.convert(e);
 			}
 		}else{
-			final JedisDataSource dataSource = (JedisDataSource) getDataSource();
-			final DefaultJedisClientConfig clientConfig = JedisClientConfigBuilder.create(dataSource,
-							getSslConfiguration())
-					.connectTimeout(getConnectTimeout())
-					.socketTimeout(getSoTimeout())
-					.infiniteSoTimeout(getInfiniteSoTimeout())
-					.database(dataSource.getDatabase())
-					.build();
+			if(jedis == null){
+				final JedisDataSource dataSource = (JedisDataSource) getDataSource();
+				final DefaultJedisClientConfig clientConfig = JedisClientConfigBuilder.create(dataSource,
+								getSslConfiguration())
+						.connectTimeout(getConnectTimeout())
+						.socketTimeout(getSoTimeout())
+						.infiniteSoTimeout(getInfiniteSoTimeout())
+						.database(dataSource.getDatabase())
+						.build();
 
-			jedis = new Jedis(dataSource.getHost(), dataSource.getPort(), clientConfig);
+				jedis = new Jedis(dataSource.getHost(), dataSource.getPort(), clientConfig);
+			}
+
+			jedis.connect();
 		}
 	}
 
@@ -548,14 +551,16 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 
 		logger.info("Jedis destroy.");
 		if(pool != null){
-			if(logger.isInfoEnabled()){
-				logger.info("Jedis pool for {} destroy.", pool.getClass().getName());
+			if(logger.isDebugEnabled()){
+				logger.debug("Jedis pool for {} destroy.", pool.getClass().getName());
 			}
 
 			try{
 				pool.destroy();
 			}catch(Exception ex){
-				logger.warn("Cannot properly close Jedis pool.", ex);
+				if(logger.isWarnEnabled()){
+					logger.warn("Cannot properly close Jedis pool.", ex);
+				}
 			}
 
 			pool = null;
@@ -567,13 +572,13 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 		super.doClose();
 
 		if(isUsePool()){
-			logger.info("Jedis close.");
+			logger.debug("Jedis close.");
 
 			if(jedis != null){
 				jedis.close();
 			}
 		}else{
-			logger.info("Jedis disconnect.");
+			logger.debug("Jedis disconnect.");
 
 			if(jedis != null){
 				Exception ex = null;

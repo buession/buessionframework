@@ -953,7 +953,7 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 				return jedis;
 			}catch(JedisException e){
 				logger.warn("Cannot get master address from sentinel running @ {}. Reason: {}. Trying next one.",
-						sentinel, e);
+						sentinel, e.getMessage());
 			}
 		}
 
@@ -1005,8 +1005,8 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 			try{
 				jedis = pool.getResource();
 
-				if(logger.isInfoEnabled()){
-					logger.info("Jedis initialized with pool success.");
+				if(logger.isDebugEnabled()){
+					logger.debug("Jedis initialized with pool success.");
 				}
 			}catch(Exception e){
 				if(logger.isErrorEnabled()){
@@ -1048,16 +1048,18 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	protected void doDestroy() throws IOException {
 		super.doDestroy();
 
-		logger.info("Jedis destroy.");
+		logger.debug("Jedis destroy.");
 		if(pool != null){
-			if(logger.isInfoEnabled()){
-				logger.info("Jedis sentinel pool for {} destroy.", pool.getClass().getName());
+			if(logger.isDebugEnabled()){
+				logger.debug("Jedis sentinel pool for {} destroy.", pool.getClass().getName());
 			}
 
 			try{
 				pool.destroy();
 			}catch(Exception ex){
-				logger.warn("Cannot properly close Jedis sentinel pool.", ex);
+				if(logger.isWarnEnabled()){
+					logger.warn("Cannot properly close Jedis sentinel pool.", ex);
+				}
 			}
 
 			pool = null;
@@ -1069,13 +1071,13 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 		super.doClose();
 
 		if(isUsePool()){
-			logger.info("Jedis close.");
+			logger.debug("Jedis close.");
 
 			if(jedis != null){
 				jedis.close();
 			}
 		}else{
-			logger.info("Jedis disconnect.");
+			logger.debug("Jedis disconnect.");
 
 			if(jedis != null){
 				Exception ex = null;
@@ -1118,11 +1120,12 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 			return null;
 		}
 
-		return nodes.stream().map((node)->{
+		return nodes.stream().filter(Objects::nonNull).map((node)->{
 			Properties properties = new Properties();
 			properties.putAll(node);
 
-			RedisServer redisServer = new RedisServer(node.get("ip"), Integer.parseInt(node.get("port")), properties);
+			RedisServer redisServer = new RedisServer(node.get("ip"), Integer.parseInt(node.get("port")),
+					properties);
 			redisServer.setName(node.get("name"));
 			redisServer.setRole(role);
 

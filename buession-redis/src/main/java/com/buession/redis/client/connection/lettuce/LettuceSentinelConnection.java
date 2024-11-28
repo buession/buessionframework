@@ -746,8 +746,8 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 			try{
 				delegate = pool.getResource();
 
-				if(logger.isInfoEnabled()){
-					logger.info("StatefulRedisSentinelConnection initialized with pool success.");
+				if(logger.isDebugEnabled()){
+					logger.debug("StatefulRedisSentinelConnection initialized with pool success.");
 				}
 			}catch(Exception e){
 				if(logger.isErrorEnabled()){
@@ -791,16 +791,18 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 	protected void doDestroy() throws IOException {
 		super.doDestroy();
 
-		logger.info("Lettuce destroy.");
+		logger.debug("Lettuce destroy.");
 		if(pool != null){
-			if(logger.isInfoEnabled()){
-				logger.info("Lettuce sentinel pool for {} destroy.", pool.getClass().getName());
+			if(logger.isDebugEnabled()){
+				logger.debug("Lettuce sentinel pool for {} destroy.", pool.getClass().getName());
 			}
 
 			try{
 				pool.destroy();
 			}catch(Exception ex){
-				logger.warn("Cannot properly close Lettuce sentinel pool.", ex);
+				if(logger.isWarnEnabled()){
+					logger.warn("Cannot properly close Lettuce sentinel pool.", ex);
+				}
 			}
 
 			pool = null;
@@ -811,7 +813,7 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 	protected void doClose() throws IOException {
 		super.doClose();
 
-		logger.info("Lettuce close.");
+		logger.debug("Lettuce close.");
 
 		if(delegate != null){
 			delegate.close();
@@ -843,26 +845,22 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 			return null;
 		}
 
-		return nodes.stream().map((node)->{
-			if(node == null){
-				return null;
-			}else{
-				final Map<String, String> sNodes = new HashMap<>(node.size());
-				final Properties properties = new Properties();
+		return nodes.stream().filter(Objects::nonNull).map((node)->{
+			final Map<String, String> sNodes = new HashMap<>(node.size());
+			final Properties properties = new Properties();
 
-				node.forEach((key, value)->{
-					sNodes.put(SafeEncoder.encode(key), SafeEncoder.encode(value));
-				});
+			node.forEach((key, value)->{
+				sNodes.put(SafeEncoder.encode(key), SafeEncoder.encode(value));
+			});
 
-				properties.putAll(sNodes);
+			properties.putAll(sNodes);
 
-				final RedisServer redisServer = new RedisServer(sNodes.get("ip"),
-						Integer.parseInt(sNodes.get("port")), properties);
-				redisServer.setName(sNodes.get("name"));
-				redisServer.setRole(role);
+			final RedisServer redisServer = new RedisServer(sNodes.get("ip"),
+					Integer.parseInt(sNodes.get("port")), properties);
+			redisServer.setName(sNodes.get("name"));
+			redisServer.setRole(role);
 
-				return redisServer;
-			}
+			return redisServer;
 		}).collect(Collectors.toList());
 	}
 
