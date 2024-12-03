@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive;
@@ -39,14 +39,13 @@ public class OnWebFluxCondition implements Condition {
 	private static volatile Boolean result = null;
 
 	@Override
-	public boolean matches(@Nullable ConditionContext context, @Nullable AnnotatedTypeMetadata metadata){
+	public boolean matches(@Nullable ConditionContext context, @Nullable AnnotatedTypeMetadata metadata) {
 		if(result == null){
 			synchronized(OnWebFluxCondition.class){
 				if(result == null){
-					ClassLoader classLoader =
-							context == null || context.getClassLoader() ==
-									null ? OnWebFluxCondition.class.getClassLoader() : context.getClassLoader();
-					result = ClassUtils.isPresent("org.springframework.web.reactive.config.WebFluxConfigurationSupport",
+					ClassLoader classLoader = context == null || context.getClassLoader() == null ?
+									OnWebFluxCondition.class.getClassLoader() : context.getClassLoader();
+					result = ClassUtils.isPresent("org.springframework.web.reactive.config.WebFluxConfigurer",
 							classLoader);
 				}
 			}
