@@ -56,17 +56,71 @@ public final class Objects {
 	 */
 	public static <T> T applyIfAbsent(final Supplier<T> supplier1, final Supplier<T> supplier2,
 									  final Function<T, T> function) {
-		T value = supplier1.get();
+		return applyIfAbsent(supplier1.get(), supplier2, function);
+	}
 
-		if(value == null){
-			value = supplier2.get();
+	/**
+	 * 如果 {@code value} 为 null，则执行 {@code supplier}，如果 {@code supplier} 返回值不为 null，
+	 * 则执行 {@code function.apply}，否则返回当前值
+	 *
+	 * @param value
+	 * 		值
+	 * @param supplier
+	 *        {@link Supplier}
+	 * @param function
+	 *        {@link Function}
+	 * @param <T>
+	 * 		返回值类型
+	 *
+	 * @return 返回值
+	 */
+	public static <T> T applyIfAbsent(final T value, final Supplier<T> supplier, final Function<T, T> function) {
+		T val = value;
+		if(val == null){
+			val = supplier.get();
 
-			if(value != null){
-				function.apply(value);
+			if(val != null){
+				function.apply(val);
 			}
 		}
 
-		return value;
+		return val;
+	}
+
+	/**
+	 * 如果{@code supplier} 返回 null，则执行 {@code call.get()}，否则返回 {@code call.get()} 的结果
+	 *
+	 * @param supplier
+	 * 		值
+	 * @param call
+	 *        {@link Supplier}
+	 * @param <T>
+	 * 		值类型
+	 * @param <R>
+	 * 		返回值类型
+	 *
+	 * @return 返回值
+	 */
+	public static <T, R> R callIfAbsent(final Supplier<T> supplier, final Supplier<R> call) {
+		return callIfAbsent(supplier.get(), call);
+	}
+
+	/**
+	 * 如果 {@code value} 为 null，则执行 {@code call.get()}，否则返回 {@code call.get()} 的结果
+	 *
+	 * @param value
+	 * 		值
+	 * @param call
+	 *        {@link Supplier}
+	 * @param <T>
+	 * 		值类型
+	 * @param <R>
+	 * 		返回值类型
+	 *
+	 * @return 返回值
+	 */
+	public static <T, R> R callIfAbsent(final T value, final Supplier<R> call) {
+		return value == null ? call.get() : null;
 	}
 
 }
