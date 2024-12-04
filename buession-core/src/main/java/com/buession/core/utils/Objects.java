@@ -88,12 +88,12 @@ public final class Objects {
 	}
 
 	/**
-	 * 如果{@code supplier} 返回 null，则执行 {@code call.get()}，否则返回 {@code call.get()} 的结果
+	 * 如果{@code supplier} 返回 null，则执行 {@code call.apply()}，否则返回 {@code call.apply()} 的结果
 	 *
 	 * @param supplier
 	 * 		值
 	 * @param call
-	 *        {@link Supplier}
+	 *        {@link Function}
 	 * @param <T>
 	 * 		值类型
 	 * @param <R>
@@ -101,17 +101,17 @@ public final class Objects {
 	 *
 	 * @return 返回值
 	 */
-	public static <T, R> R callIfAbsent(final Supplier<T> supplier, final Supplier<R> call) {
+	public static <T, R> R callIfAbsent(final Supplier<T> supplier, final Function<T, R> call) {
 		return callIfAbsent(supplier.get(), call);
 	}
 
 	/**
-	 * 如果 {@code value} 为 null，则执行 {@code call.get()}，否则返回 {@code call.get()} 的结果
+	 * 如果 {@code value} 为 null，则执行 {@code call.apply()}，否则返回 {@code call.apply()} 的结果
 	 *
 	 * @param value
 	 * 		值
 	 * @param call
-	 *        {@link Supplier}
+	 *        {@link Function}
 	 * @param <T>
 	 * 		值类型
 	 * @param <R>
@@ -119,8 +119,8 @@ public final class Objects {
 	 *
 	 * @return 返回值
 	 */
-	public static <T, R> R callIfAbsent(final T value, final Supplier<R> call) {
-		return value == null ? call.get() : null;
+	public static <T, R> R callIfAbsent(final T value, final Function<T, R> call) {
+		return value == null ? null : call.apply(value);
 	}
 
 }

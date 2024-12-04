@@ -11,7 +11,7 @@
 
 ### ⭐ 新特性
 
-- 新增 Objects 类
+- 新增对象工具类 com.buession.core.utils.Objects
 - 新增 webflux 异常处理器 ErrorHandler
 
 
