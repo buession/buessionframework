@@ -32,6 +32,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.buession.core.builder.MapBuilder;
 import com.buession.core.utils.FieldUtils;
 import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
@@ -193,6 +194,12 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 	@Override
 	public List<E> getAll() {
 		return getSqlSessionTemplate().selectList(getStatement(DML.GET_ALL));
+	}
+
+	@Override
+	public List<E> getAll(Map<String, Order> orders) {
+		final Map<String, Object> parameters = orders == null ? null : MapBuilder.of(ORDERS_PARAMETER_NAME, orders);
+		return getSqlSessionTemplate().selectList(getStatement(DML.GET_ALL), parameters);
 	}
 
 	@Override

@@ -13,6 +13,7 @@
 
 - 新增对象工具类 com.buession.core.utils.Objects
 - 新增 webflux 异常处理器 ErrorHandler
+- Dao getAll 支持排序
 
 
 ### 🔔 变化
