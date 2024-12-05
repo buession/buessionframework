@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.git.parser;
@@ -30,6 +30,7 @@ import com.buession.core.validator.Validate;
 import com.buession.git.Build;
 import com.buession.git.Closest;
 import com.buession.git.Commit;
+import com.buession.git.Constants;
 import com.buession.git.Local;
 import com.buession.git.Remote;
 import com.buession.git.Total;
@@ -56,11 +57,11 @@ class GitInfoParser {
 
 	private final static Logger logger = LoggerFactory.getLogger(GitInfoParser.class);
 
-	public GitInfoParser(final Properties properties){
+	public GitInfoParser(final Properties properties) {
 		this.properties = properties;
 	}
 
-	public Build build(){
+	public Build build() {
 		final Build build = new Build();
 
 		build.setHost(getValue("build.host"));
@@ -74,7 +75,7 @@ class GitInfoParser {
 		return build;
 	}
 
-	public Remote remote(){
+	public Remote remote() {
 		final Remote remote = new Remote();
 
 		final Remote.Origin origin = new Remote.Origin(getValue("remote.origin.url"));
@@ -84,7 +85,7 @@ class GitInfoParser {
 		return remote;
 	}
 
-	public Local local(){
+	public Local local() {
 		final Local local = new Local();
 
 		final Local.Branch branch = new Local.Branch(getValue("local.branch.ahead"),
@@ -95,7 +96,7 @@ class GitInfoParser {
 		return local;
 	}
 
-	public Commit commit(){
+	public Commit commit() {
 		final Commit commit = new Commit();
 
 		commit.setTime(coercePropertyToZonedDateTime(getValue("commit.time")));
@@ -112,13 +113,11 @@ class GitInfoParser {
 
 		commit.setUser(uer);
 
-		final Commit.Author author = new Commit.Author(
-				coercePropertyToZonedDateTime("commit.author.time"));
+		final Commit.Author author = new Commit.Author(coercePropertyToZonedDateTime("commit.author.time"));
 
 		commit.setAuthor(author);
 
-		final Commit.Committer committer = new Commit.Committer(
-				coercePropertyToZonedDateTime("commit.committer.time"));
+		final Commit.Committer committer = new Commit.Committer(coercePropertyToZonedDateTime("commit.committer.time"));
 
 		commit.setCommitter(committer);
 
@@ -130,7 +129,7 @@ class GitInfoParser {
 		return commit;
 	}
 
-	public Closest closest(){
+	public Closest closest() {
 		final Closest closest = new Closest();
 
 		final Closest.Tag tag = new Closest.Tag();
@@ -142,7 +141,7 @@ class GitInfoParser {
 		try{
 			tagCommit.setCount(Integer.parseInt(s));
 		}catch(NumberFormatException e){
-			logger.warn("git.closest.tag.commit.count value: {} cloud not convert to int.", s);
+			logger.warn(Constants.PROPERTY_PREFIX + ".closest.tag.commit.count value: {} cloud not convert to int.", s);
 		}
 
 		tag.setCommit(tagCommit);
@@ -152,7 +151,7 @@ class GitInfoParser {
 		return closest;
 	}
 
-	public Set<String> tags(){
+	public Set<String> tags() {
 		final String tags = getValue("tags");
 
 		if(Validate.hasText(tags)){
@@ -162,7 +161,7 @@ class GitInfoParser {
 		}
 	}
 
-	public Total total(){
+	public Total total() {
 		final Total total = new Total();
 
 		final Total.Commit commit = new Total.Commit();
@@ -171,7 +170,7 @@ class GitInfoParser {
 		try{
 			commit.setCount(Integer.parseInt(s));
 		}catch(NumberFormatException e){
-			logger.warn("git.total.commit.count value: {} cloud not convert to int.", s);
+			logger.warn(Constants.PROPERTY_PREFIX + ".total.commit.count value: {} cloud not convert to int.", s);
 		}
 
 		total.setCommit(commit);
@@ -179,18 +178,18 @@ class GitInfoParser {
 		return total;
 	}
 
-	private String getValue(final String key){
-		return properties.getProperty("git." + key);
+	private String getValue(final String key) {
+		return properties.getProperty(Constants.PROPERTY_PREFIX + +'.' + key);
 	}
 
-	private ZonedDateTime coercePropertyToZonedDateTime(final String tag){
+	private ZonedDateTime coercePropertyToZonedDateTime(final String tag) {
 		final String value = getValue(tag);
 
 		if(Validate.hasText(value)){
 			final Instant instant = coerceToEpoch(value);
 
 			if(instant == null){
-				logger.warn("git.{} value: {} cloud not convert to ZonedDateTime.", tag, value);
+				logger.warn(Constants.PROPERTY_PREFIX + ".{} value: {} cloud not convert to Instant.", tag, value);
 				return null;
 			}
 
@@ -200,7 +199,7 @@ class GitInfoParser {
 		}
 	}
 
-	private static Instant coerceToEpoch(final String s){
+	private static Instant coerceToEpoch(final String s) {
 		try{
 			return Instant.ofEpochMilli(Long.parseLong(s) * 1000);
 		}catch(NumberFormatException e){

@@ -19,12 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.git.parser;
 
 import com.buession.core.utils.Assert;
+import com.buession.git.Constants;
 import com.buession.git.Git;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -83,8 +84,8 @@ public abstract class AbstractGitParser implements GitParser {
 		final Git git = new Git();
 		final GitInfoParser infoParser = new GitInfoParser(properties);
 
-		git.setBranch(properties.getProperty("git.branch"));
-		git.setDirty(Boolean.parseBoolean(properties.getProperty("git.dirty")));
+		git.setBranch(properties.getProperty(Constants.PROPERTY_PREFIX + ".branch"));
+		git.setDirty(Boolean.parseBoolean(properties.getProperty(Constants.PROPERTY_PREFIX + ".dirty")));
 
 		git.setBuild(infoParser.build());
 		git.setRemote(infoParser.remote());

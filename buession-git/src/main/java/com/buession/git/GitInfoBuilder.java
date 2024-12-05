@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.git;
@@ -34,8 +34,6 @@ import java.util.Set;
  * @since 2.2.0
  */
 class GitInfoBuilder {
-
-	private final static String PREFIX = "git";
 
 	private final StringBuilder sb = new StringBuilder();
 
@@ -113,9 +111,7 @@ class GitInfoBuilder {
 				endDotReplaceToEqualsSign();
 			}
 
-			if(value != null){
-				sb.append(String.join(",", value));
-			}
+			sb.append(String.join(",", value));
 		}
 
 		return this;
@@ -159,7 +155,7 @@ class GitInfoBuilder {
 	}
 
 	private void ensurePrefix() {
-		sb.append(PREFIX).append('.');
+		sb.append(com.buession.git.Constants.PROPERTY_PREFIX).append('.');
 		if(group != null){
 			sb.append(group).append('.');
 		}
