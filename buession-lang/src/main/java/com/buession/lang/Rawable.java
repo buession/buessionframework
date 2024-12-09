@@ -28,7 +28,7 @@ package com.buession.lang;
  * 原始的，约定实现该接口的类，必须返回原始字节数组
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 3.0.1
  */
 @FunctionalInterface
 public interface Rawable {
