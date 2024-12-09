@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -27,33 +27,34 @@ package com.buession.redis.core;
 /**
  * @author Yong.Teng
  */
-public enum Type {
+public enum Type implements Keyword {
 
-	STRING("String"),
+	STRING("string"),
 
-	LIST("List"),
+	LIST("list"),
 
-	SET("Set"),
+	SET("set"),
 
-	ZSET("ZSet"),
+	ZSET("zSet"),
 
-	HASH("Hash"),
+	HASH("hash"),
 
-	STREAM("Stream"),
+	STREAM("stream"),
 
-	NONE("None");
+	NONE("none");
 
 	private final String value;
 
-	Type(final String value){
+	Type(final String value) {
 		this.value = value;
 	}
 
-	public String getValue(){
+	@Override
+	public String getValue() {
 		return value;
 	}
 
-	public static Type fromCode(String code){
+	public static Type fromCode(String code) {
 		try{
 			return Enum.valueOf(Type.class, code.toUpperCase());
 		}catch(Exception e){

@@ -28,6 +28,7 @@ import com.buession.core.Range;
 import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
 import com.buession.lang.Constants;
+import com.buession.redis.core.Keyword;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -92,6 +93,10 @@ public final class CommandArguments {
 		add(value);
 	}
 
+	private CommandArguments(final Keyword value) {
+		add(value);
+	}
+
 	private CommandArguments(final Enum<?> value) {
 		add(value);
 	}
@@ -145,6 +150,10 @@ public final class CommandArguments {
 	}
 
 	private CommandArguments(final Range<?>... values) {
+		add(values);
+	}
+
+	private CommandArguments(final Keyword... values) {
 		add(values);
 	}
 
@@ -208,6 +217,10 @@ public final class CommandArguments {
 		return new CommandArguments(value);
 	}
 
+	public static CommandArguments create(final Keyword value) {
+		return new CommandArguments(value);
+	}
+
 	public static CommandArguments create(final Enum<?> value) {
 		return new CommandArguments(value);
 	}
@@ -260,11 +273,15 @@ public final class CommandArguments {
 		return new CommandArguments(values);
 	}
 
-	public static CommandArguments create(final Enum<?>... values) {
+	public static CommandArguments create(final Range<?>... values) {
 		return new CommandArguments(values);
 	}
 
-	public static CommandArguments create(final Range<?>... values) {
+	public static CommandArguments create(final Keyword... values) {
+		return new CommandArguments(values);
+	}
+
+	public static CommandArguments create(final Enum<?>... values) {
 		return new CommandArguments(values);
 	}
 
@@ -339,18 +356,26 @@ public final class CommandArguments {
 		return this;
 	}
 
-	public CommandArguments add(final Enum<?> value) {
+	public CommandArguments add(final Range<?> value) {
 		if(value != null){
-			parameters.add(value.name());
+			parameters.add(value.getStart());
+			parameters.add(value.getEnd());
 		}
 
 		return this;
 	}
 
-	public CommandArguments add(final Range<?> value) {
+	public CommandArguments add(final Keyword value) {
 		if(value != null){
-			parameters.add(value.getStart());
-			parameters.add(value.getEnd());
+			parameters.add(value.getValue());
+		}
+
+		return this;
+	}
+
+	public CommandArguments add(final Enum<?> value) {
+		if(value != null){
+			parameters.add(value.name());
 		}
 
 		return this;
@@ -409,6 +434,10 @@ public final class CommandArguments {
 	}
 
 	public CommandArguments add(final Enum<?>... values) {
+		return doBatchAdd(values);
+	}
+
+	public CommandArguments add(final Keyword... values) {
 		return doBatchAdd(values);
 	}
 

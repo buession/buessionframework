@@ -40,16 +40,9 @@ import java.util.Map;
  */
 public final class CommandArguments {
 
-	private CommandArguments(final Keyword value) {
-		add(value);
-	}
 
 	private CommandArguments(final ProtocolCommand value) {
 		add(value);
-	}
-
-	private CommandArguments(final Keyword... values) {
-		add(values);
 	}
 
 	private CommandArguments(final ProtocolCommand... values) {
@@ -64,35 +57,13 @@ public final class CommandArguments {
 		return new CommandArguments(value);
 	}
 
-	public static CommandArguments create(final Keyword... values) {
-		return new CommandArguments(values);
-	}
-
 	public static CommandArguments create(final ProtocolCommand... values) {
 		return new CommandArguments(values);
-	}
-
-	public CommandArguments add(final Keyword value) {
-		if(value != null){
-			parameters.add(value.getValue());
-		}
-
-		return this;
 	}
 
 	public CommandArguments add(final ProtocolCommand value) {
 		if(value != null){
 			parameters.add(value.getName());
-		}
-
-		return this;
-	}
-
-	public CommandArguments add(final Keyword... values) {
-		if(Validate.isNotEmpty(values)){
-			for(Object value : values){
-				add(value);
-			}
 		}
 
 		return this;

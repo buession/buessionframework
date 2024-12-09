@@ -27,7 +27,7 @@ package com.buession.redis.core;
 /**
  * @author Yong.Teng
  */
-public enum NxXx {
+public enum NxXx implements Keyword {
 
 	/**
 	 * 只有键 key 不存在的时候
@@ -37,6 +37,11 @@ public enum NxXx {
 	/**
 	 * 只有键 key 存在的时候
 	 */
-	XX
+	XX;
+
+	@Override
+	public String getValue() {
+		return name();
+	}
 
 }

@@ -19,18 +19,19 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
+import com.buession.lang.Value;
+
 /**
+ * 关键字
+ *
  * @author Yong.Teng
+ * @since 3.0.1
  */
-public enum ClientUnblockType {
-
-	TIMEOUT,
-
-	ERROR
+public interface Keyword extends Value<String> {
 
 }
