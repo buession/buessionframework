@@ -18,6 +18,8 @@
 
 ### 🔔 变化
 
+- 废弃 com.buession.core.Rawable，迁移至 com.buession.lang.Rawable
+
 
 ### 🐞 Bug 修复
 
