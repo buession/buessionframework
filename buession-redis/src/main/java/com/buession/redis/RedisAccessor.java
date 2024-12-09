@@ -26,8 +26,8 @@ package com.buession.redis;
 
 import com.buession.core.utils.Assert;
 import com.buession.redis.client.RedisClient;
-import com.buession.redis.client.connection.JedisConnectionFactory;
-import com.buession.redis.client.connection.LettuceConnectionFactory;
+import com.buession.redis.client.connection.jedis.JedisConnectionFactory;
+import com.buession.redis.client.connection.lettuce.LettuceConnectionFactory;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.RedisConnectionFactory;
 import com.buession.redis.client.connection.RedisConnectionUtils;

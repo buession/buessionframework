@@ -32,6 +32,11 @@ package com.buession.redis.core.command;
 public enum ProtocolCommandGroup {
 
 	/**
+	 * 权限命令
+	 */
+	ACL("Acl"),
+
+	/**
 	 * 位图命令
 	 */
 	BITMAP("BitMap"),
@@ -45,13 +50,6 @@ public enum ProtocolCommandGroup {
 	 * 连接命令
 	 */
 	CONNECTION("Connection"),
-
-	/**
-	 * 一般命令
-	 *
-	 * @since 3.0.0
-	 */
-	GENERIC("Generic"),
 
 	/**
 	 * 地理位置命令
@@ -118,19 +116,24 @@ public enum ProtocolCommandGroup {
 	 */
 	TRANSACTION("Transaction");
 
-	private final String value;
+	private final String name;
 
-	ProtocolCommandGroup(final String value) {
-		this.value = value;
+	ProtocolCommandGroup(final String name) {
+		this.name = name;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	@Deprecated
 	public String getValue() {
-		return value;
+		return getName();
 	}
 
 	@Override
 	public String toString() {
-		return value;
+		return getName();
 	}
 
 }
