@@ -22,15 +22,16 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.connection;
+package com.buession.redis.client.connection.jedis;
 
+import com.buession.redis.client.connection.AbstractConnectionFactory;
+import com.buession.redis.client.connection.RedisClusterConnection;
+import com.buession.redis.client.connection.RedisSentinelConnection;
+import com.buession.redis.client.connection.RedisStandaloneConnection;
 import com.buession.redis.client.connection.datasource.jedis.JedisClusterDataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisRedisDataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisSentinelDataSource;
-import com.buession.redis.client.connection.jedis.JedisClusterConnection;
-import com.buession.redis.client.connection.jedis.JedisConnection;
-import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
 import com.buession.redis.exception.RedisConnectionFailureException;
 
 /**

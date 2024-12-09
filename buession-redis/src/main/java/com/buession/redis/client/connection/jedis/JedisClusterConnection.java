@@ -898,7 +898,7 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	}
 
 	@Override
-	public boolean isConnect() {
+	public boolean isConnected() {
 		return cluster != null;
 	}
 

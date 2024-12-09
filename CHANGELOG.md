@@ -19,6 +19,7 @@
 ### 🔔 变化
 
 - 废弃 com.buession.core.Rawable，迁移至 com.buession.lang.Rawable
+- 废弃 RedisConnection 方法 isConnect()，新增方法 isConnected()
 
 
 ### 🐞 Bug 修复

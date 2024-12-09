@@ -923,7 +923,7 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	}
 
 	@Override
-	public boolean isConnect() {
+	public boolean isConnected() {
 		return jedis != null && jedis.isConnected();
 	}
 

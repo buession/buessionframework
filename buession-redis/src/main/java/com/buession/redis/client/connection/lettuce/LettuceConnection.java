@@ -357,7 +357,7 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	}
 
 	@Override
-	public boolean isConnect() {
+	public boolean isConnected() {
 		return delegate != null && delegate.isOpen();
 	}
 
