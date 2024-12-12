@@ -196,7 +196,7 @@ public abstract class AbstractRedisClient<CONN extends RedisConnection> implemen
 		}
 
 		try{
-			return doExecute(command);
+			return getConnection().execute((conn)->command.execute());
 		}catch(RedisException e){
 			if(logger.isErrorEnabled()){
 				if(arguments != null){
@@ -213,10 +213,6 @@ public abstract class AbstractRedisClient<CONN extends RedisConnection> implemen
 				logger.debug("Command execution time: {}ns", finishTime - startTime);
 			}
 		}
-	}
-
-	private <R> R doExecute(final Command<R> command) {
-		return getConnection().execute((conn)->command.execute());
 	}
 
 }

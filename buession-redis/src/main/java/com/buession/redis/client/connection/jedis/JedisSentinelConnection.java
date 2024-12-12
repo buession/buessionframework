@@ -26,6 +26,7 @@ package com.buession.redis.client.connection.jedis;
 
 import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
+import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisSentinelConnection;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.datasource.DataSource;
@@ -999,27 +1000,6 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 		}
 	}
 
-	@Override
-	protected void doConnect() throws RedisConnectionFailureException {
-		if(isUsePool()){
-			try{
-				jedis = pool.getResource();
-
-				if(logger.isDebugEnabled()){
-					logger.debug("Jedis initialized with pool success.");
-				}
-			}catch(Exception e){
-				if(logger.isErrorEnabled()){
-					logger.error("Jedis initialized with pool failure: {}", e.getMessage(), e);
-				}
-
-				throw JedisRedisExceptionUtils.convert(e);
-			}
-		}else{
-			jedis = createJedis();
-		}
-	}
-
 	protected JedisSentinelPool createPool() {
 		final JedisSentinelDataSource dataSource = (JedisSentinelDataSource) getDataSource();
 		final JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
@@ -1045,6 +1025,33 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	}
 
 	@Override
+	protected Status doConnect() throws RedisConnectionFailureException {
+		if(isConnected()){
+			return Status.SUCCESS;
+		}
+
+		if(isUsePool()){
+			try{
+				jedis = pool.getResource();
+
+				if(logger.isDebugEnabled()){
+					logger.debug("Jedis initialized with pool success.");
+				}
+			}catch(Exception e){
+				if(logger.isErrorEnabled()){
+					logger.error("Jedis initialized with pool failure: {}", e.getMessage(), e);
+				}
+
+				throw JedisRedisExceptionUtils.convert(e);
+			}
+		}else{
+			jedis = createJedis();
+		}
+
+		return jedis == null ? Status.FAILURE : Status.SUCCESS;
+	}
+
+	@Override
 	protected void doDestroy() throws IOException {
 		super.doDestroy();
 
@@ -1056,10 +1063,11 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 
 			try{
 				pool.destroy();
-			}catch(Exception ex){
+			}catch(Exception e){
 				if(logger.isWarnEnabled()){
-					logger.warn("Cannot properly close Jedis sentinel pool.", ex);
+					logger.warn("Cannot properly close Jedis sentinel pool.", e);
 				}
+				throw new RedisException(e);
 			}
 
 			pool = null;
@@ -1080,16 +1088,13 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 			logger.debug("Jedis disconnect.");
 
 			if(jedis != null){
-				Exception ex = null;
-
 				try{
 					jedis.disconnect();
 				}catch(Exception e){
-					ex = e;
-				}
-
-				if(ex != null){
-					throw new RedisException(ex);
+					if(logger.isWarnEnabled()){
+						logger.warn("Cannot properly disconnect Jedis.", e);
+					}
+					throw new RedisException(e);
 				}
 			}
 		}

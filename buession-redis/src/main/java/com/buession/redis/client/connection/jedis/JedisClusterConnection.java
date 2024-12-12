@@ -24,6 +24,7 @@
  */
 package com.buession.redis.client.connection.jedis;
 
+import com.buession.lang.Status;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.RedisClusterConnection;
 import com.buession.redis.client.connection.datasource.jedis.JedisClusterDataSource;
@@ -919,11 +920,17 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	}
 
 	@Override
-	protected void doConnect() throws RedisConnectionFailureException {
+	protected Status doConnect() throws RedisConnectionFailureException {
+		if(isConnected()){
+			return Status.SUCCESS;
+		}
+
 		if(cluster != null){
 			cluster = new JedisCluster(connectionProvider, getMaxRedirects(),
 					Duration.ofMillis(getMaxTotalRetriesDuration()));
 		}
+
+		return cluster == null ? Status.FAILURE : Status.SUCCESS;
 	}
 
 	protected ClusterConnectionProvider createConnectionProvider() {

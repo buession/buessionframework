@@ -27,6 +27,7 @@ package com.buession.redis.client.connection.lettuce;
 import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
+import com.buession.lang.Status;
 import com.buession.net.HostAndPort;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.RedisSentinelConnection;
@@ -740,34 +741,11 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 		return RedisClient.create(redisURIBuilder.build()).connectSentinel(codec);
 	}
 
-	@Override
-	protected void doConnect() throws RedisConnectionFailureException {
-		if(isUsePool()){
-			try{
-				delegate = pool.getResource();
-
-				if(logger.isDebugEnabled()){
-					logger.debug("StatefulRedisSentinelConnection initialized with pool success.");
-				}
-			}catch(Exception e){
-				if(logger.isErrorEnabled()){
-					logger.error("StatefulRedisSentinelConnection initialized with pool failure: {}", e.getMessage(),
-							e);
-				}
-
-				throw LettuceRedisExceptionUtils.convert(e);
-			}
-		}else{
-			delegate = createStatefulRedisSentinelConnection(new ByteArrayCodec());
-		}
-	}
-
 	protected LettuceSentinelPool createPool() {
 		final LettuceSentinelDataSource dataSource = (LettuceSentinelDataSource) getDataSource();
 		final LettucePoolConfig<byte[], byte[], StatefulRedisSentinelConnection<byte[], byte[]>> lettucePoolConfig = new LettucePoolConfig<>();
 		final Set<HostAndPort> sentinels = createSentinelHosts(dataSource.getSentinels());
-		final LettuceClientConfig clientConfig = LettuceClientConfigBuilder.create(dataSource,
-						getSslConfiguration())
+		final LettuceClientConfig clientConfig = LettuceClientConfigBuilder.create(dataSource, getSslConfiguration())
 				.connectTimeout(getConnectTimeout())
 				.socketTimeout(getSoTimeout())
 				.infiniteSoTimeout(getInfiniteSoTimeout())
@@ -788,6 +766,34 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 	}
 
 	@Override
+	protected Status doConnect() throws RedisConnectionFailureException {
+		if(isConnected()){
+			return Status.SUCCESS;
+		}
+
+		if(isUsePool()){
+			try{
+				delegate = pool.getResource();
+
+				if(logger.isDebugEnabled()){
+					logger.debug("StatefulRedisSentinelConnection initialized with pool success.");
+				}
+			}catch(Exception e){
+				if(logger.isErrorEnabled()){
+					logger.error("StatefulRedisSentinelConnection initialized with pool failure: {}", e.getMessage(),
+							e);
+				}
+
+				throw LettuceRedisExceptionUtils.convert(e);
+			}
+		}else{
+			delegate = createStatefulRedisSentinelConnection(new ByteArrayCodec());
+		}
+
+		return delegate == null ? Status.FAILURE : Status.SUCCESS;
+	}
+
+	@Override
 	protected void doDestroy() throws IOException {
 		super.doDestroy();
 
@@ -799,10 +805,11 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 
 			try{
 				pool.destroy();
-			}catch(Exception ex){
+			}catch(Exception e){
 				if(logger.isWarnEnabled()){
-					logger.warn("Cannot properly close Lettuce sentinel pool.", ex);
+					logger.warn("Cannot properly close Lettuce sentinel pool.", e);
 				}
+				throw new RedisException(e);
 			}
 
 			pool = null;
@@ -855,8 +862,8 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 
 			properties.putAll(sNodes);
 
-			final RedisServer redisServer = new RedisServer(sNodes.get("ip"),
-					Integer.parseInt(sNodes.get("port")), properties);
+			final RedisServer redisServer = new RedisServer(sNodes.get("ip"), Integer.parseInt(sNodes.get("port")),
+					properties);
 			redisServer.setName(sNodes.get("name"));
 			redisServer.setRole(role);
 

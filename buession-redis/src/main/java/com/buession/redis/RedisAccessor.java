@@ -276,25 +276,29 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 		return fetchConnection();
 	}
 
+	protected RedisClient fetchRedisClient(final RedisConnection connection) throws RedisException {
+		DataSource dataSource = getDataSource();
+
+		if(dataSource instanceof JedisDataSource){
+			return new JedisStandaloneClient();
+		}else if(dataSource instanceof JedisSentinelDataSource){
+			return new JedisSentinelClient();
+		}else if(dataSource instanceof JedisClusterDataSource){
+			return new JedisClusterClient();
+		}else if(dataSource instanceof LettuceDataSource){
+			return new LettuceStandaloneClient();
+		}else if(dataSource instanceof LettuceSentinelDataSource){
+			return new LettuceSentinelClient();
+		}else if(dataSource instanceof LettuceClusterDataSource){
+			return new LettuceClusterClient();
+		}else{
+			throw new RedisException("Cloud not initialize RedisClient for: " + dataSource);
+		}
+	}
+
 	protected RedisClient fetchRequiredRedisClient(final RedisConnection connection) throws RedisException {
 		if(client == null){
-			DataSource dataSource = getDataSource();
-
-			if(dataSource instanceof JedisDataSource){
-				client = new JedisStandaloneClient();
-			}else if(dataSource instanceof JedisSentinelDataSource){
-				client = new JedisSentinelClient();
-			}else if(dataSource instanceof JedisClusterDataSource){
-				client = new JedisClusterClient();
-			}else if(dataSource instanceof LettuceDataSource){
-				client = new LettuceStandaloneClient();
-			}else if(dataSource instanceof LettuceSentinelDataSource){
-				client = new LettuceSentinelClient();
-			}else if(dataSource instanceof LettuceClusterDataSource){
-				client = new LettuceClusterClient();
-			}else{
-				throw new RedisException("Cloud not initialize RedisClient for: " + dataSource);
-			}
+			client = fetchRedisClient(connection);
 		}
 
 		client.setConnection(connection);

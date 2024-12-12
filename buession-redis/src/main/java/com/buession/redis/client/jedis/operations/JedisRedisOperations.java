@@ -69,7 +69,7 @@ public interface JedisRedisOperations extends RedisOperations {
 		@Override
 		protected R doExecute() throws RedisException {
 			final SR result = executor.execute(connection.getJedis());
-			return result == null ? null : converter.convert(result);
+			return converter.convert(result);
 		}
 
 	}
@@ -155,7 +155,7 @@ public interface JedisRedisOperations extends RedisOperations {
 		@Override
 		protected R doExecute() throws RedisException {
 			final SR result = executor.execute(connection.getJedis());
-			return result == null ? null : converter.convert(result);
+			return converter.convert(result);
 		}
 
 	}
@@ -241,7 +241,7 @@ public interface JedisRedisOperations extends RedisOperations {
 		@Override
 		protected R doExecute() throws RedisException {
 			final SR result = executor.execute(connection.getCluster());
-			return result == null ? null : converter.convert(result);
+			return converter.convert(result);
 		}
 
 	}

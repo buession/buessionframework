@@ -93,10 +93,6 @@ public final class CommandArguments {
 		add(value);
 	}
 
-	private CommandArguments(final Keyword value) {
-		add(value);
-	}
-
 	private CommandArguments(final Enum<?> value) {
 		add(value);
 	}
@@ -150,10 +146,6 @@ public final class CommandArguments {
 	}
 
 	private CommandArguments(final Range<?>... values) {
-		add(values);
-	}
-
-	private CommandArguments(final Keyword... values) {
 		add(values);
 	}
 
@@ -217,10 +209,6 @@ public final class CommandArguments {
 		return new CommandArguments(value);
 	}
 
-	public static CommandArguments create(final Keyword value) {
-		return new CommandArguments(value);
-	}
-
 	public static CommandArguments create(final Enum<?> value) {
 		return new CommandArguments(value);
 	}
@@ -274,10 +262,6 @@ public final class CommandArguments {
 	}
 
 	public static CommandArguments create(final Range<?>... values) {
-		return new CommandArguments(values);
-	}
-
-	public static CommandArguments create(final Keyword... values) {
 		return new CommandArguments(values);
 	}
 
@@ -365,17 +349,13 @@ public final class CommandArguments {
 		return this;
 	}
 
-	public CommandArguments add(final Keyword value) {
-		if(value != null){
-			parameters.add(value.getValue());
-		}
-
-		return this;
-	}
-
 	public CommandArguments add(final Enum<?> value) {
 		if(value != null){
-			parameters.add(value.name());
+			if(value instanceof Keyword){
+				parameters.add(((Keyword) value).getValue());
+			}else{
+				parameters.add(value.name());
+			}
 		}
 
 		return this;
@@ -434,10 +414,6 @@ public final class CommandArguments {
 	}
 
 	public CommandArguments add(final Enum<?>... values) {
-		return doBatchAdd(values);
-	}
-
-	public CommandArguments add(final Keyword... values) {
 		return doBatchAdd(values);
 	}
 

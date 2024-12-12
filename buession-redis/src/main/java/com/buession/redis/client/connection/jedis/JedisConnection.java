@@ -24,6 +24,7 @@
  */
 package com.buession.redis.client.connection.jedis;
 
+import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisStandaloneConnection;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
@@ -427,7 +428,6 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 
 	@Override
 	public Transaction multi() {
-		System.out.println("transaction: " + (transaction == null ? "false" : "true"));
 		if(transaction == null){
 			final redis.clients.jedis.Transaction tran = jedis.multi();
 			transaction = new JedisTransactionProxy(new JedisTransaction(tran), tran);
@@ -488,38 +488,17 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 		return pool != null;
 	}
 
-	@Override
-	protected void doConnect() throws RedisConnectionFailureException {
-		if(isUsePool()){
-			try{
-				jedis = pool.getResource();
+	protected Jedis createJedis() {
+		final JedisDataSource dataSource = (JedisDataSource) getDataSource();
+		final DefaultJedisClientConfig clientConfig = JedisClientConfigBuilder.create(dataSource,
+						getSslConfiguration())
+				.connectTimeout(getConnectTimeout())
+				.socketTimeout(getSoTimeout())
+				.infiniteSoTimeout(getInfiniteSoTimeout())
+				.database(dataSource.getDatabase())
+				.build();
 
-				if(logger.isInfoEnabled()){
-					logger.info("Jedis initialized with pool success.");
-				}
-			}catch(Exception e){
-				if(logger.isErrorEnabled()){
-					logger.error("Jedis initialized with pool failure: {}", e.getMessage(), e);
-				}
-
-				throw JedisRedisExceptionUtils.convert(e);
-			}
-		}else{
-			if(jedis == null){
-				final JedisDataSource dataSource = (JedisDataSource) getDataSource();
-				final DefaultJedisClientConfig clientConfig = JedisClientConfigBuilder.create(dataSource,
-								getSslConfiguration())
-						.connectTimeout(getConnectTimeout())
-						.socketTimeout(getSoTimeout())
-						.infiniteSoTimeout(getInfiniteSoTimeout())
-						.database(dataSource.getDatabase())
-						.build();
-
-				jedis = new Jedis(dataSource.getHost(), dataSource.getPort(), clientConfig);
-			}
-
-			jedis.connect();
-		}
+		return new Jedis(dataSource.getHost(), dataSource.getPort(), clientConfig);
 	}
 
 	protected JedisPool createPool() {
@@ -546,6 +525,34 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	}
 
 	@Override
+	protected Status doConnect() throws RedisConnectionFailureException {
+		if(isConnected()){
+			return Status.SUCCESS;
+		}
+
+		if(isUsePool()){
+			try{
+				jedis = pool.getResource();
+				if(logger.isInfoEnabled()){
+					logger.info("Jedis initialized with pool success.");
+				}
+			}catch(Exception e){
+				if(logger.isErrorEnabled()){
+					logger.error("Jedis initialized with pool failure: {}", e.getMessage(), e);
+				}
+
+				throw JedisRedisExceptionUtils.convert(e);
+			}
+		}else{
+			if(jedis == null){
+				jedis = createJedis();
+			}
+		}
+
+		return jedis == null ? Status.FAILURE : Status.SUCCESS;
+	}
+
+	@Override
 	protected void doDestroy() throws IOException {
 		super.doDestroy();
 
@@ -557,10 +564,11 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 
 			try{
 				pool.destroy();
-			}catch(Exception ex){
+			}catch(Exception e){
 				if(logger.isWarnEnabled()){
-					logger.warn("Cannot properly close Jedis pool.", ex);
+					logger.warn("Cannot properly close Jedis pool.", e);
 				}
+				throw new RedisException(e);
 			}
 
 			pool = null;
@@ -581,16 +589,13 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 			logger.debug("Jedis disconnect.");
 
 			if(jedis != null){
-				Exception ex = null;
-
 				try{
 					jedis.disconnect();
 				}catch(Exception e){
-					ex = e;
-				}
-
-				if(ex != null){
-					throw new RedisException(ex);
+					if(logger.isWarnEnabled()){
+						logger.warn("Cannot properly disconnect Jedis.", e);
+					}
+					throw new RedisException(e);
 				}
 			}
 		}

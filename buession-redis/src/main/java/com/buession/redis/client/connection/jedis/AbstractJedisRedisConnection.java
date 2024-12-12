@@ -297,9 +297,6 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 		try{
 			return executor.execute(this);
 		}catch(Exception e){
-			if(logger.isErrorEnabled()){
-				logger.error("Redis execute command failure: {}", e.getMessage(), e);
-			}
 			throw JedisRedisExceptionUtils.convert(e);
 		}
 	}

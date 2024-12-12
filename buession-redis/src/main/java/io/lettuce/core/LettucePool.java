@@ -267,5 +267,5 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 			}
 		}
 	}
-
+	
 }

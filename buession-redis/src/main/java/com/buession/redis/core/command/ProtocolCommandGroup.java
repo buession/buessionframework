@@ -52,6 +52,11 @@ public enum ProtocolCommandGroup {
 	CONNECTION("Connection"),
 
 	/**
+	 * 常规命令
+	 */
+	GENERIC("Generic"),
+
+	/**
 	 * 地理位置命令
 	 */
 	GEO("Geo"),

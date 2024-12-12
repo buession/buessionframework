@@ -387,9 +387,7 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 
 		try{
 			initialized();
-			doConnect();
-
-			return Status.SUCCESS;
+			return doConnect();
 		}catch(Exception e){
 			logger.error("Connection redis server error: {}.", e.getMessage());
 			throw new RedisConnectionFailureException(e.getMessage(), e);
@@ -421,7 +419,7 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 
 	protected abstract void internalInit();
 
-	protected abstract void doConnect() throws RedisConnectionFailureException;
+	protected abstract Status doConnect() throws RedisConnectionFailureException;
 
 	protected abstract void doDestroy() throws IOException;
 
