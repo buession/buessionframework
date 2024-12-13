@@ -311,16 +311,6 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 	/**
 	 * 构造函数
 	 *
-	 * @param poolConfig
-	 * 		连接池配置
-	 */
-	public LettuceSentinelConnection(PoolConfig poolConfig) {
-		super(poolConfig);
-	}
-
-	/**
-	 * 构造函数
-	 *
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param poolConfig

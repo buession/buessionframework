@@ -38,8 +38,6 @@ public abstract class AbstractConnectionFactory<DS extends DataSource> implement
 
 	private final DS dataSource;
 
-	private RedisConnection redisConnection;
-
 	public AbstractConnectionFactory(final DS dataSource) {
 		this.dataSource = dataSource;
 	}
@@ -54,16 +52,14 @@ public abstract class AbstractConnectionFactory<DS extends DataSource> implement
 
 	@Override
 	public RedisConnection getConnection() {
-		if(redisConnection == null){
-			synchronized(this){
-				if(isRedisClusterAware()){
-					redisConnection = getClusterConnection();
-				}else if(isRedisSentinelAware()){
-					redisConnection = getSentinelConnection();
-				}else{
-					redisConnection = getStandaloneConnection();
-				}
-			}
+		RedisConnection redisConnection;
+
+		if(isRedisClusterAware()){
+			redisConnection = getClusterConnection();
+		}else if(isRedisSentinelAware()){
+			redisConnection = getSentinelConnection();
+		}else{
+			redisConnection = getStandaloneConnection();
 		}
 
 		if(redisConnection.isConnected() == false){

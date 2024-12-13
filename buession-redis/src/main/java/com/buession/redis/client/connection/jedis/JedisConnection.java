@@ -58,11 +58,6 @@ import java.util.List;
 public class JedisConnection extends AbstractJedisRedisConnection implements RedisStandaloneConnection {
 
 	/**
-	 * 连接池
-	 */
-	private JedisPool pool;
-
-	/**
 	 * Jedis 对象
 	 */
 	private Jedis jedis;
@@ -179,7 +174,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	@Deprecated
 	public JedisConnection(JedisDataSource dataSource, JedisPool pool) {
 		super(dataSource);
-		this.pool = pool;
+		dataSource.setPool(pool);
 	}
 
 	/**
@@ -197,7 +192,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	@Deprecated
 	public JedisConnection(JedisDataSource dataSource, JedisPool pool, int connectTimeout, int soTimeout) {
 		super(dataSource, connectTimeout, soTimeout);
-		this.pool = pool;
+		dataSource.setPool(pool);
 	}
 
 	/**
@@ -218,7 +213,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	public JedisConnection(JedisDataSource dataSource, JedisPool pool, int connectTimeout, int soTimeout,
 						   int infiniteSoTimeout) {
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
-		this.pool = pool;
+		dataSource.setPool(pool);
 	}
 
 	/**
@@ -234,7 +229,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	@Deprecated
 	public JedisConnection(JedisDataSource dataSource, JedisPool pool, SslConfiguration sslConfiguration) {
 		super(dataSource, sslConfiguration);
-		this.pool = pool;
+		dataSource.setPool(pool);
 	}
 
 	/**
@@ -255,7 +250,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	public JedisConnection(JedisDataSource dataSource, JedisPool pool, int connectTimeout, int soTimeout,
 						   SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
-		this.pool = pool;
+		dataSource.setPool(pool);
 	}
 
 	/**
@@ -278,19 +273,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	public JedisConnection(JedisDataSource dataSource, JedisPool pool, int connectTimeout, int soTimeout,
 						   int infiniteSoTimeout, SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
-		this.pool = pool;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param poolConfig
-	 * 		连接池配置
-	 *
-	 * @since 3.0.0
-	 */
-	public JedisConnection(PoolConfig poolConfig) {
-		super(poolConfig);
+		dataSource.setPool(pool);
 	}
 
 	/**
@@ -305,6 +288,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 */
 	public JedisConnection(JedisDataSource dataSource, PoolConfig poolConfig) {
 		super(dataSource, poolConfig);
+		dataSource.setPool(createPool());
 	}
 
 	/**
@@ -323,6 +307,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 */
 	public JedisConnection(JedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout);
+		dataSource.setPool(createPool());
 	}
 
 	/**
@@ -344,6 +329,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	public JedisConnection(JedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
 						   int infiniteSoTimeout) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
+		dataSource.setPool(createPool());
 	}
 
 	/**
@@ -360,6 +346,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 */
 	public JedisConnection(JedisDataSource dataSource, PoolConfig poolConfig, SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, sslConfiguration);
+		dataSource.setPool(createPool());
 	}
 
 	/**
@@ -381,6 +368,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	public JedisConnection(JedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
 						   SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
+		dataSource.setPool(createPool());
 	}
 
 	/**
@@ -404,6 +392,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	public JedisConnection(JedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
 						   int infiniteSoTimeout, SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
+		dataSource.setPool(createPool());
 	}
 
 	public Jedis getJedis() {
@@ -468,6 +457,12 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	}
 
 	@Override
+	protected void internalInit() {
+		final JedisDataSource dataSource = (JedisDataSource) getDataSource();
+		setUsePool(dataSource.getPool() != null);
+	}
+
+	@Override
 	public boolean isConnected() {
 		return jedis != null && jedis.isConnected();
 	}
@@ -475,17 +470,6 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	@Override
 	public boolean isClosed() {
 		return jedis == null || jedis.isConnected() == false;
-	}
-
-	@Override
-	protected void internalInit() {
-		if(pool == null && getPoolConfig() != null){
-			pool = createPool();
-		}
-	}
-
-	protected boolean isUsePool() {
-		return pool != null;
 	}
 
 	protected Jedis createJedis() {
@@ -503,25 +487,30 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 
 	protected JedisPool createPool() {
 		final JedisDataSource dataSource = (JedisDataSource) getDataSource();
-		final JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-		final HostAndPort hostAndPort = new HostAndPort(dataSource.getHost(), dataSource.getPort());
-		final DefaultJedisClientConfig clientConfig = JedisClientConfigBuilder.create(dataSource,
-						getSslConfiguration())
-				.connectTimeout(getConnectTimeout())
-				.socketTimeout(getSoTimeout())
-				.infiniteSoTimeout(getInfiniteSoTimeout())
-				.database(dataSource.getDatabase())
-				.build();
 
-		getPoolConfig().toGenericObjectPoolConfig(jedisPoolConfig);
+		if(dataSource.getPool() == null){
+			final JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+			final HostAndPort hostAndPort = new HostAndPort(dataSource.getHost(), dataSource.getPort());
+			final DefaultJedisClientConfig clientConfig = JedisClientConfigBuilder.create(dataSource,
+							getSslConfiguration())
+					.connectTimeout(getConnectTimeout())
+					.socketTimeout(getSoTimeout())
+					.infiniteSoTimeout(getInfiniteSoTimeout())
+					.database(dataSource.getDatabase())
+					.build();
 
-		if(getSslConfiguration() == null){
-			logger.debug("Create JedisPool.");
+			getPoolConfig().toGenericObjectPoolConfig(jedisPoolConfig);
+
+			if(getSslConfiguration() == null){
+				logger.debug("Create JedisPool.");
+			}else{
+				logger.debug("Create JedisPool with ssl.");
+			}
+
+			return new JedisPool(jedisPoolConfig, hostAndPort, clientConfig);
 		}else{
-			logger.debug("Create JedisPool with ssl.");
+			return dataSource.getPool();
 		}
-
-		return new JedisPool(jedisPoolConfig, hostAndPort, clientConfig);
 	}
 
 	@Override
@@ -531,8 +520,10 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 		}
 
 		if(isUsePool()){
+			final JedisDataSource dataSource = (JedisDataSource) getDataSource();
+
 			try{
-				jedis = pool.getResource();
+				jedis = dataSource.getPool().getResource();
 				if(logger.isInfoEnabled()){
 					logger.info("Jedis initialized with pool success.");
 				}
@@ -554,16 +545,17 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 
 	@Override
 	protected void doDestroy() throws IOException {
+		final JedisDataSource dataSource = (JedisDataSource) getDataSource();
 		super.doDestroy();
 
 		logger.info("Jedis destroy.");
-		if(pool != null){
+		if(dataSource.getPool() != null){
 			if(logger.isDebugEnabled()){
-				logger.debug("Jedis pool for {} destroy.", pool.getClass().getName());
+				logger.debug("Jedis pool for {} destroy.", dataSource.getPool().getClass().getName());
 			}
 
 			try{
-				pool.destroy();
+				dataSource.getPool().destroy();
 			}catch(Exception e){
 				if(logger.isWarnEnabled()){
 					logger.warn("Cannot properly close Jedis pool.", e);
@@ -571,7 +563,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 				throw new RedisException(e);
 			}
 
-			pool = null;
+			dataSource.setPool(null);
 		}
 	}
 

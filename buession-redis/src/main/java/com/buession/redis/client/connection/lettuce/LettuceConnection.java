@@ -182,16 +182,6 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	/**
 	 * 构造函数
 	 *
-	 * @param poolConfig
-	 * 		连接池配置
-	 */
-	public LettuceConnection(PoolConfig poolConfig) {
-		super(poolConfig);
-	}
-
-	/**
-	 * 构造函数
-	 *
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param poolConfig

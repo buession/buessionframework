@@ -158,18 +158,6 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 	/**
 	 * 构造函数
 	 *
-	 * @param poolConfig
-	 * 		连接池配置
-	 *
-	 * @since 3.0.0
-	 */
-	public AbstractJedisRedisConnection(PoolConfig poolConfig) {
-		super(poolConfig);
-	}
-
-	/**
-	 * 构造函数
-	 *
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param poolConfig
