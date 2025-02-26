@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.git.parser;
@@ -27,7 +27,7 @@ package com.buession.git.parser;
 import com.buession.core.utils.Assert;
 import com.buession.git.Constants;
 import com.buession.git.Git;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.lang.Nullable;
 
@@ -69,7 +69,7 @@ public abstract class AbstractGitParser implements GitParser {
 	 */
 	public AbstractGitParser(final String path) {
 		Assert.isBlank(path, "Git properties path cloud not be empty or null.");
-		this.resource = new ClassPathResource(path);
+		this.resource = new FileSystemResource(path);
 	}
 
 	@Nullable

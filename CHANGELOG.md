@@ -20,12 +20,15 @@
 
 - 废弃 com.buession.core.Rawable，迁移至 com.buession.lang.Rawable
 - 废弃 RedisConnection 方法 isConnect()，新增方法 isConnected()
+- PropertiesGitParser、JsonGitParser 字符串构造函数，使用 FileSystemResource 解析文件路径
 
 
 ### 🐞 Bug 修复
 
 - 修复 redis HashOperations hMSet 方法参数类型
 - 修复 ApacheHttpClient、ApacheHttpAsyncClient 指定为 apache client 4 ConnectionManager 且包含 apache client 5 的包时，初始化 ApacheClient 时 ConnectionManager 类型转换异常的 BUG
+- 修复 Redis Jedis 模式下多线程环境中出现 Scoket closed 异常
+- 修复 GitParser 无法正常解析 git 信息的 BUG
 
 
 ### ⏪ 优化

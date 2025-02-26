@@ -179,7 +179,7 @@ class GitInfoParser {
 	}
 
 	private String getValue(final String key) {
-		return properties.getProperty(Constants.PROPERTY_PREFIX + +'.' + key);
+		return properties.getProperty(Constants.PROPERTY_PREFIX + '.' + key);
 	}
 
 	private ZonedDateTime coercePropertyToZonedDateTime(final String tag) {

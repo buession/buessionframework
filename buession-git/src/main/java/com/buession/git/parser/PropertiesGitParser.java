@@ -19,11 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.git.parser;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
@@ -38,10 +40,12 @@ import java.util.Properties;
  */
 public class PropertiesGitParser extends AbstractGitParser {
 
+	private final static Logger logger = LoggerFactory.getLogger(PropertiesGitParser.class);
+
 	/**
 	 * 构造函数
 	 */
-	public PropertiesGitParser(){
+	public PropertiesGitParser() {
 		super(new ClassPathResource("git.properties"));
 	}
 
@@ -51,7 +55,7 @@ public class PropertiesGitParser extends AbstractGitParser {
 	 * @param resource
 	 * 		文件资源
 	 */
-	public PropertiesGitParser(final Resource resource){
+	public PropertiesGitParser(final Resource resource) {
 		super(resource);
 	}
 
@@ -61,15 +65,16 @@ public class PropertiesGitParser extends AbstractGitParser {
 	 * @param path
 	 * 		Git 信息文件路径
 	 */
-	public PropertiesGitParser(final String path){
+	public PropertiesGitParser(final String path) {
 		super(path);
 	}
 
 	@Override
-	protected Properties loadData(){
+	protected Properties loadData() {
 		try{
 			return PropertiesLoaderUtils.loadProperties(resource);
 		}catch(Exception e){
+			logger.error("Failed to load git properties", e);
 			return null;
 		}
 	}
