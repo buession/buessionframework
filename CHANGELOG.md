@@ -21,6 +21,8 @@
 - 废弃 com.buession.core.Rawable，迁移至 com.buession.lang.Rawable
 - 废弃 RedisConnection 方法 isConnect()，新增方法 isConnected()
 - PropertiesGitParser、JsonGitParser 字符串构造函数，使用 FileSystemResource 解析文件路径
+- RandomDigitIdGenerator 最小值允许为 Long.MIN_VALUE
+- RandomIdGenerator 允许指定随机字符串词典
 
 
 ### 🐞 Bug 修复

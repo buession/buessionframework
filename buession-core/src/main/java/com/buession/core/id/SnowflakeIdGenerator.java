@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.id;
@@ -85,7 +85,7 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 	 */
 	protected int sequenceBits = SEQUENCE_BITS;
 
-	protected BitsAllocator bitsAllocator;
+	private final BitsAllocator bitsAllocator;
 
 	/**
 	 * 数据中心ID(0~31)
@@ -110,7 +110,7 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 	/**
 	 * 构造函数，使用 IPv4 A、B 段作为 datacenterId，C、D 段作为 workerId
 	 */
-	public SnowflakeIdGenerator(){
+	public SnowflakeIdGenerator() {
 		this(TIME_BITS, DATACENTER_BITS, WORKER_BITS, SEQUENCE_BITS);
 	}
 
@@ -127,7 +127,7 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 	 * 		序列id中占的位数
 	 */
 	public SnowflakeIdGenerator(final int timeBits, final int datacenterBits, final int workerBits,
-								final int sequenceBits){
+								final int sequenceBits) {
 		if(timeBits > 0){
 			this.timeBits = timeBits;
 		}
@@ -172,7 +172,7 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 	 * @param workerId
 	 * 		工作机器ID
 	 */
-	public SnowflakeIdGenerator(final long datacenterId, final long workerId){
+	public SnowflakeIdGenerator(final long datacenterId, final long workerId) {
 		this(datacenterId, workerId, TIME_BITS, DATACENTER_BITS, WORKER_BITS, SEQUENCE_BITS);
 	}
 
@@ -193,7 +193,7 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 	 * 		序列id中占的位数
 	 */
 	public SnowflakeIdGenerator(final long datacenterId, final long workerId, final int timeBits,
-								final int datacenterBits, final int workerBits, final int sequenceBits){
+								final int datacenterBits, final int workerBits, final int sequenceBits) {
 		if(timeBits > 0){
 			this.timeBits = timeBits;
 		}
@@ -216,7 +216,7 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 	}
 
 	@Override
-	public synchronized Long nextId(){
+	public synchronized Long nextId() {
 		long currentTimestamp = getCurrentTimestamp();
 
 		//如果当前时间小于上一次ID生成的时间戳，说明系统时钟回退过这个时候应当抛出异常
@@ -246,7 +246,7 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 		return bitsAllocator.allocate(currentTimestamp - START_TIMESTAMP, datacenterId, workerId, sequence);
 	}
 
-	private long getCurrentTimestamp(){
+	private long getCurrentTimestamp() {
 		long currentTimestamp = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
 
 		if(currentTimestamp - START_TIMESTAMP > bitsAllocator.getMaxDeltaSeconds()){
@@ -257,7 +257,7 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 		return currentTimestamp;
 	}
 
-	private long getNextTimestamp(long lastTimestamp){
+	private long getNextTimestamp(long lastTimestamp) {
 		long timestamp = getCurrentTimestamp();
 		while(timestamp <= lastTimestamp){
 			timestamp = getCurrentTimestamp();
@@ -307,7 +307,7 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 		private final int workerIdShift;
 
 		public BitsAllocator(final int timestampBits, final int datacenterIdBits, final int workerIdBits,
-							 final int sequenceBits){
+							 final int sequenceBits) {
 			// make sure allocated 64 bits
 			int allocateTotalBits = signBits + timestampBits + datacenterIdBits + workerIdBits + sequenceBits;
 			Assert.isFalse(allocateTotalBits == TOTAL_BITS,
@@ -332,56 +332,56 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 		}
 
 		public long allocate(final long deltaSeconds, final long datacenterId, final long workerId,
-							 final long sequence){
+							 final long sequence) {
 			return (deltaSeconds << timestampShift) | (datacenterId << datacenterIdShift) |
 					(workerId << workerIdShift) | sequence;
 		}
 
-		public int getSignBits(){
+		public int getSignBits() {
 			return signBits;
 		}
 
-		public int getTimestampBits(){
+		public int getTimestampBits() {
 			return timestampBits;
 		}
 
-		public int getDatacenterIdBits(){
+		public int getDatacenterIdBits() {
 			return datacenterIdBits;
 		}
 
-		public int getWorkerIdBits(){
+		public int getWorkerIdBits() {
 			return workerIdBits;
 		}
 
-		public int getSequenceBits(){
+		public int getSequenceBits() {
 			return sequenceBits;
 		}
 
-		public long getMaxDeltaSeconds(){
+		public long getMaxDeltaSeconds() {
 			return maxDeltaSeconds;
 		}
 
-		public long getMaxDatacenterId(){
+		public long getMaxDatacenterId() {
 			return maxDatacenterId;
 		}
 
-		public long getMaxWorkerId(){
+		public long getMaxWorkerId() {
 			return maxWorkerId;
 		}
 
-		public long getMaxSequence(){
+		public long getMaxSequence() {
 			return maxSequence;
 		}
 
-		public int getTimestampShift(){
+		public int getTimestampShift() {
 			return timestampShift;
 		}
 
-		public int getDatacenterIdShift(){
+		public int getDatacenterIdShift() {
 			return datacenterIdShift;
 		}
 
-		public int getWorkerIdShift(){
+		public int getWorkerIdShift() {
 			return workerIdShift;
 		}
 	}
