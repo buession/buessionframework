@@ -65,9 +65,21 @@ public class RandomDigitIdGenerator implements IdGenerator<Long> {
 		this.max = max;
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param max
+	 * 		最大值
+	 *
+	 * @since 3.0.1
+	 */
+	public RandomDigitIdGenerator(final long max) {
+		this.max = max;
+	}
+
 	@Override
 	public Long nextId() {
-		return RandomUtils.nextLong(min, max);
+		return min == max ? min : RandomUtils.nextLong(min, max);
 	}
 
 }

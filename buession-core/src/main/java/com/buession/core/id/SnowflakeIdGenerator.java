@@ -85,7 +85,7 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 	 */
 	protected int sequenceBits = SEQUENCE_BITS;
 
-	private final BitsAllocator bitsAllocator;
+	private BitsAllocator bitsAllocator;
 
 	/**
 	 * 数据中心ID(0~31)
@@ -128,23 +128,7 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 	 */
 	public SnowflakeIdGenerator(final int timeBits, final int datacenterBits, final int workerBits,
 								final int sequenceBits) {
-		if(timeBits > 0){
-			this.timeBits = timeBits;
-		}
-
-		if(datacenterBits > 0){
-			this.datacenterBits = datacenterBits;
-		}
-
-		if(workerBits > 0){
-			this.workerBits = workerBits;
-		}
-
-		if(sequenceBits > 0){
-			this.sequenceBits = sequenceBits;
-		}
-
-		this.bitsAllocator = new BitsAllocator(timeBits, datacenterBits, workerBits, sequenceBits);
+		initialize(timeBits, datacenterBits, workerBits, sequenceBits);
 
 		try{
 			String address = InetAddress.getLocalHost().getHostAddress();
@@ -153,6 +137,7 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 			this.datacenterId = Long.parseLong(addrs[0] + addrs[1]);
 			this.workerId = Long.parseLong(addrs[2] + addrs[3]);
 		}catch(UnknownHostException e){
+			//
 		}
 
 		if(this.datacenterId == 0L){
@@ -194,23 +179,8 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 	 */
 	public SnowflakeIdGenerator(final long datacenterId, final long workerId, final int timeBits,
 								final int datacenterBits, final int workerBits, final int sequenceBits) {
-		if(timeBits > 0){
-			this.timeBits = timeBits;
-		}
+		initialize(timeBits, datacenterBits, workerBits, sequenceBits);
 
-		if(datacenterBits > 0){
-			this.datacenterBits = datacenterBits;
-		}
-
-		if(workerBits > 0){
-			this.workerBits = workerBits;
-		}
-
-		if(sequenceBits > 0){
-			this.sequenceBits = sequenceBits;
-		}
-
-		this.bitsAllocator = new BitsAllocator(timeBits, datacenterBits, workerBits, sequenceBits);
 		this.datacenterId = datacenterId;
 		this.workerId = workerId;
 	}
@@ -244,6 +214,27 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 
 		//移位并通过或运算拼到一起组成64位的ID
 		return bitsAllocator.allocate(currentTimestamp - START_TIMESTAMP, datacenterId, workerId, sequence);
+	}
+
+	private void initialize(final int timeBits, final int datacenterBits, final int workerBits,
+							final int sequenceBits) {
+		if(timeBits > 0){
+			this.timeBits = timeBits;
+		}
+
+		if(datacenterBits > 0){
+			this.datacenterBits = datacenterBits;
+		}
+
+		if(workerBits > 0){
+			this.workerBits = workerBits;
+		}
+
+		if(sequenceBits > 0){
+			this.sequenceBits = sequenceBits;
+		}
+
+		this.bitsAllocator = new BitsAllocator(timeBits, datacenterBits, workerBits, sequenceBits);
 	}
 
 	private long getCurrentTimestamp() {
@@ -306,8 +297,8 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 
 		private final int workerIdShift;
 
-		public BitsAllocator(final int timestampBits, final int datacenterIdBits, final int workerIdBits,
-							 final int sequenceBits) {
+		BitsAllocator(final int timestampBits, final int datacenterIdBits, final int workerIdBits,
+					  final int sequenceBits) {
 			// make sure allocated 64 bits
 			int allocateTotalBits = signBits + timestampBits + datacenterIdBits + workerIdBits + sequenceBits;
 			Assert.isFalse(allocateTotalBits == TOTAL_BITS,
@@ -384,6 +375,7 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 		public int getWorkerIdShift() {
 			return workerIdShift;
 		}
+
 	}
 
 }

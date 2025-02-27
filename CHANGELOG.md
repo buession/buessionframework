@@ -23,6 +23,7 @@
 - PropertiesGitParser、JsonGitParser 字符串构造函数，使用 FileSystemResource 解析文件路径
 - RandomDigitIdGenerator 最小值允许为 Long.MIN_VALUE
 - RandomIdGenerator 允许指定随机字符串词典
+- RandomUtils nextInt、nextLong、nextFloat、nextDouble 起始值允许为负数
 
 
 ### 🐞 Bug 修复
