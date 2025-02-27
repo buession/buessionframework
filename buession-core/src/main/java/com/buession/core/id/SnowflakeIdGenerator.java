@@ -43,7 +43,7 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 	/**
 	 * 开始时间截，2000-01-01 00:00:00
 	 */
-	private final static long START_TIMESTAMP = TimeUnit.MILLISECONDS.toSeconds(1577808000000L);
+	private final static long START_TIMESTAMP = System.currentTimeMillis();
 
 	/**
 	 * 默认时间所占的位数
@@ -238,9 +238,9 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 	}
 
 	private long getCurrentTimestamp() {
-		long currentTimestamp = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
+		long currentTimestamp = System.currentTimeMillis();
 
-		if(currentTimestamp - START_TIMESTAMP > bitsAllocator.getMaxDeltaSeconds()){
+		if(currentTimestamp - START_TIMESTAMP > bitsAllocator.getMaxDeltaMillis()){
 			throw new IdGenerateException(
 					"Timestamp bits is exhausted. Refusing ID generate. Now: " + currentTimestamp);
 		}
@@ -280,7 +280,7 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 		/**
 		 * Max value for workId & sequence
 		 */
-		private final long maxDeltaSeconds;
+		private final long maxDeltaMillis;
 
 		private final long maxDatacenterId;
 
@@ -311,7 +311,7 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 			this.sequenceBits = sequenceBits;
 
 			// initialize max value
-			this.maxDeltaSeconds = ~(-1L << timestampBits);
+			this.maxDeltaMillis = ~(-1L << timestampBits);
 			this.maxDatacenterId = ~(-1L << datacenterIdBits);
 			this.maxWorkerId = ~(-1L << workerIdBits);
 			this.maxSequence = ~(-1L << sequenceBits);
@@ -348,8 +348,8 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 			return sequenceBits;
 		}
 
-		public long getMaxDeltaSeconds() {
-			return maxDeltaSeconds;
+		public long getMaxDeltaMillis() {
+			return maxDeltaMillis;
 		}
 
 		public long getMaxDatacenterId() {

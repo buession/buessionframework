@@ -34,10 +34,12 @@ public class IdGeneratorTest {
 
 	@Test
 	public void snowflake() {
-		SnowflakeIdGenerator idGenerator = new SnowflakeIdGenerator();
+		SnowflakeIdGenerator idGenerator = new SnowflakeIdGenerator(2L, 32L);
 
 		for(int i = 1; i <= 10; i++){
-			System.out.println(idGenerator.nextId());
+			Long id = idGenerator.nextId();
+			String sid = id.toString();
+			System.out.println(id + ": " + sid + ": " + sid.length());
 		}
 	}
 
