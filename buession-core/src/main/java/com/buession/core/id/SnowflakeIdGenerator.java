@@ -41,29 +41,29 @@ import java.util.concurrent.TimeUnit;
 public class SnowflakeIdGenerator implements IdGenerator<Long> {
 
 	/**
-	 * 开始时间截，2000-01-01 00:00:00
+	 * 开始时间截，2020-01-01 00:00:00
 	 */
-	private final static long START_TIMESTAMP = System.currentTimeMillis();
+	private final static long START_TIMESTAMP = 1577808000000L;
 
 	/**
 	 * 默认时间所占的位数
 	 */
-	private final static int TIME_BITS = 32;
+	private final static int TIME_BITS = 41;
 
 	/**
 	 * 默认数据中心id所占的位数
 	 */
-	private final static int DATACENTER_BITS = 9;
+	private final static int DATACENTER_BITS = 5;
 
 	/**
 	 * 默认机器id所占的位数
 	 */
-	private final static int WORKER_BITS = 9;
+	private final static int WORKER_BITS = 5;
 
 	/**
 	 * 默认序列id中占的位数
 	 */
-	private final static int SEQUENCE_BITS = 13;
+	private final static int SEQUENCE_BITS = 12;
 
 	/**
 	 * 时间所占的位数
@@ -238,14 +238,7 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 	}
 
 	private long getCurrentTimestamp() {
-		long currentTimestamp = System.currentTimeMillis();
-
-		if(currentTimestamp - START_TIMESTAMP > bitsAllocator.getMaxDeltaMillis()){
-			throw new IdGenerateException(
-					"Timestamp bits is exhausted. Refusing ID generate. Now: " + currentTimestamp);
-		}
-
-		return currentTimestamp;
+		return System.currentTimeMillis();
 	}
 
 	private long getNextTimestamp(long lastTimestamp) {
@@ -280,8 +273,6 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 		/**
 		 * Max value for workId & sequence
 		 */
-		private final long maxDeltaMillis;
-
 		private final long maxDatacenterId;
 
 		private final long maxWorkerId;
@@ -311,7 +302,6 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 			this.sequenceBits = sequenceBits;
 
 			// initialize max value
-			this.maxDeltaMillis = ~(-1L << timestampBits);
 			this.maxDatacenterId = ~(-1L << datacenterIdBits);
 			this.maxWorkerId = ~(-1L << workerIdBits);
 			this.maxSequence = ~(-1L << sequenceBits);
@@ -346,10 +336,6 @@ public class SnowflakeIdGenerator implements IdGenerator<Long> {
 
 		public int getSequenceBits() {
 			return sequenceBits;
-		}
-
-		public long getMaxDeltaMillis() {
-			return maxDeltaMillis;
 		}
 
 		public long getMaxDatacenterId() {

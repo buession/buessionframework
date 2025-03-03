@@ -34,7 +34,7 @@ public class IdGeneratorTest {
 
 	@Test
 	public void snowflake() {
-		SnowflakeIdGenerator idGenerator = new SnowflakeIdGenerator(2L, 32L);
+		SnowflakeIdGenerator idGenerator = new SnowflakeIdGenerator(1L, 2L);
 
 		for(int i = 1; i <= 10; i++){
 			Long id = idGenerator.nextId();
