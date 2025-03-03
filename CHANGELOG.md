@@ -40,6 +40,7 @@
 - 优化 redis RedisTemplate 对象转换器
 - 优化 redis 命令运行器数据类型优化
 - 优化 redis 稳定性优化
+- 优化雪花算法稳定性
 
 
 ### 📔 文档
