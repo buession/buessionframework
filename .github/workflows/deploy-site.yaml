@@ -1,7 +1,7 @@
 name: Docs CI
 
 on:
-  release:
+  merge:
     branches:
       - master
 
@@ -19,7 +19,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: 2. install dep
+      - name: 2. install dependency
         run: |
           cd site
           rm -rf node_modules
@@ -35,5 +35,5 @@ jobs:
           PUBLISH_DIR: ./_site
           CNAME: www.buession.com
         run: |
-          chmod +x ./scripts/deploy-site.sh
-          bash ./scripts/deploy-site.sh
+          chmod +x ./site/scripts/deploy-site.sh
+          bash ./site/scripts/deploy-site.sh
