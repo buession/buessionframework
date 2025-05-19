@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -67,6 +67,13 @@ public class Configuration {
 	 * @since 2.3.2
 	 */
 	private Integer maxRequests;
+
+	/**
+	 * 连接池中最大空闲连接数
+	 *
+	 * @since 3.0.1
+	 */
+	private Integer maxIdleConnections = 5;
 
 	/**
 	 * 空闲连接存活时长，单位：毫秒
@@ -309,6 +316,29 @@ public class Configuration {
 	 */
 	public void setMaxRequests(Integer maxRequests) {
 		this.maxRequests = maxRequests;
+	}
+
+	/**
+	 * 返回连接池中最大空闲连接数
+	 *
+	 * @return 连接池中最大空闲连接数
+	 *
+	 * @since 3.0.1
+	 */
+	public Integer getMaxIdleConnections() {
+		return maxIdleConnections;
+	}
+
+	/**
+	 * 设置连接池中最大空闲连接数
+	 *
+	 * @param maxIdleConnections
+	 * 		连接池中最大空闲连接数
+	 *
+	 * @since 3.0.1
+	 */
+	public void setMaxIdleConnections(Integer maxIdleConnections) {
+		this.maxIdleConnections = maxIdleConnections;
 	}
 
 	/**
@@ -817,6 +847,7 @@ public class Configuration {
 				.add("maxConnections: " + maxConnections)
 				.add("maxPerRoute: " + maxPerRoute)
 				.add("maxRequests:" + maxRequests)
+				.add("maxIdleConnections: " + maxIdleConnections)
 				.add("idleConnectionTime: " + idleConnectionTime)
 				.add("connectTimeout: " + connectTimeout)
 				.add("connectionRequestTimeout: " + connectionRequestTimeout)

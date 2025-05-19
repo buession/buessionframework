@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 											   |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.conn;
@@ -317,8 +317,6 @@ public class Apache5NioClientConnectionManager extends ApacheBaseClientConnectio
 		propertyMapper.from(getConfiguration().getMaxConnections()).to(connectionManager::setMaxTotal);
 		// 每个路由的最大连接数
 		propertyMapper.from(getConfiguration().getMaxPerRoute()).to(connectionManager::setDefaultMaxPerRoute);
-		// 连接池中最大连接数
-		propertyMapper.from(getConfiguration().getMaxRequests()).to(connectionManager::setMaxTotal);
 		// 空闲连接存活时长
 		propertyMapper.from(getConfiguration().getIdleConnectionTime()).as(Timeout::ofMilliseconds)
 				.to(connectionManager::closeIdle);
