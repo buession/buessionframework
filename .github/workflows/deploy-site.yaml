@@ -3,7 +3,7 @@ name: Docs CI
 on:
   release:
     branches:
-      - development
+      - master
 
 jobs:
   build:
