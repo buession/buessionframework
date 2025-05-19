@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -30,10 +30,15 @@ package com.buession.redis.core;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public enum ClusterFailoverOption {
+public enum ClusterFailoverOption implements Keyword {
 
 	FORCE,
 
-	TAKEOVER
+	TAKEOVER;
+
+	@Override
+	public String getValue() {
+		return name();
+	}
 
 }

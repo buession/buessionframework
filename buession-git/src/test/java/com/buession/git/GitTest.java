@@ -24,6 +24,8 @@
  */
 package com.buession.git;
 
+import com.buession.git.parser.GitParser;
+import com.buession.git.parser.PropertiesGitParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -79,6 +81,13 @@ public class GitTest {
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		System.out.println(objectMapper.writeValueAsString(total));
+	}
+
+	@Test
+	public void parse() throws JsonProcessingException {
+		GitParser gitParser = new PropertiesGitParser();
+
+		System.out.println(gitParser.parse());
 	}
 
 }

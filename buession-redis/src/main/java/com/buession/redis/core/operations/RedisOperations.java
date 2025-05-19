@@ -30,6 +30,7 @@ import com.buession.redis.exception.RedisException;
 /**
  * @author Yong.Teng
  */
+@FunctionalInterface
 public interface RedisOperations {
 
 	/**

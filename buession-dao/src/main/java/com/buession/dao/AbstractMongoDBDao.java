@@ -199,6 +199,11 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 	}
 
 	@Override
+	public List<E> getAll(Map<String, Order> orders) {
+		return getMongoTemplate().findAll(getStatement());
+	}
+
+	@Override
 	public long count() {
 		return count(new Query());
 	}

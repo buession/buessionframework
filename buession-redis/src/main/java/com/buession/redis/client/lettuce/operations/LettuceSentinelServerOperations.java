@@ -76,37 +76,37 @@ public final class LettuceSentinelServerOperations extends AbstractServerOperati
 
 	@Override
 	public List<String> aclCat(final String categoryName) {
-		final CommandArguments args = CommandArguments.create("categoryName", categoryName);
+		final CommandArguments args = CommandArguments.create(categoryName);
 		return aclCat(args);
 	}
 
 	@Override
 	public List<byte[]> aclCat(final byte[] categoryName) {
-		final CommandArguments args = CommandArguments.create("categoryName", categoryName);
+		final CommandArguments args = CommandArguments.create(categoryName);
 		return aclCat(args);
 	}
 
 	@Override
 	public Status aclSetUser(final String username, final String... rules) {
-		final CommandArguments args = CommandArguments.create("username", username).put("rules", (Object[]) rules);
+		final CommandArguments args = CommandArguments.create(username).add(rules);
 		return aclSetUser(args);
 	}
 
 	@Override
 	public Status aclSetUser(final byte[] username, final byte[]... rules) {
-		final CommandArguments args = CommandArguments.create("username", username).put("rules", (Object[]) rules);
+		final CommandArguments args = CommandArguments.create(username).add(rules);
 		return aclSetUser(args);
 	}
 
 	@Override
 	public AclUser aclGetUser(final String username) {
-		final CommandArguments args = CommandArguments.create("username", username);
+		final CommandArguments args = CommandArguments.create(username);
 		return aclGetUser(args);
 	}
 
 	@Override
 	public AclUser aclGetUser(final byte[] username) {
-		final CommandArguments args = CommandArguments.create("username", username);
+		final CommandArguments args = CommandArguments.create(username);
 		return aclGetUser(args);
 	}
 
@@ -140,13 +140,13 @@ public final class LettuceSentinelServerOperations extends AbstractServerOperati
 
 	@Override
 	public Long aclDelUser(final String... usernames) {
-		final CommandArguments args = CommandArguments.create("usernames", (Object[]) usernames);
+		final CommandArguments args = CommandArguments.create(usernames);
 		return aclDelUser(args);
 	}
 
 	@Override
 	public Long aclDelUser(final byte[]... usernames) {
-		final CommandArguments args = CommandArguments.create("usernames", (Object[]) usernames);
+		final CommandArguments args = CommandArguments.create(usernames);
 		return aclDelUser(args);
 	}
 
@@ -208,7 +208,7 @@ public final class LettuceSentinelServerOperations extends AbstractServerOperati
 
 	@Override
 	public List<AclLog> aclLog(final long count) {
-		final CommandArguments args = CommandArguments.create("count", count);
+		final CommandArguments args = CommandArguments.create(count);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<List<AclLog>, List<AclLog>>(client, ProtocolCommand.ACL_LOG)
@@ -280,7 +280,7 @@ public final class LettuceSentinelServerOperations extends AbstractServerOperati
 
 	@Override
 	public Status configSet(final String parameter, final String value) {
-		final CommandArguments args = CommandArguments.create("parameter", parameter).put("value", value);
+		final CommandArguments args = CommandArguments.create(parameter).add(value);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.CONFIG_SET)
@@ -382,20 +382,20 @@ public final class LettuceSentinelServerOperations extends AbstractServerOperati
 
 	@Override
 	public Status failover(final String host, final int port) {
-		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
+		final CommandArguments args = CommandArguments.create(host).add(port);
 		return failover(args);
 	}
 
 	@Override
 	public Status failover(final String host, final int port, final int timeout) {
-		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("timeout", timeout);
+		final CommandArguments args = CommandArguments.create(host).add(port).add(timeout);
 		return failover(args);
 	}
 
 	@Override
 	public Status failover(final String host, final int port, final boolean isForce, final int timeout) {
-		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("isForce", isForce)
-				.put("timeout", timeout);
+		final CommandArguments args = CommandArguments.create(host).add(port).add(isForce)
+				.add(timeout);
 		return failover(args);
 	}
 
@@ -562,7 +562,7 @@ public final class LettuceSentinelServerOperations extends AbstractServerOperati
 
 	@Override
 	public Long memoryUsage(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.MEMORY_USAGE)
@@ -578,7 +578,7 @@ public final class LettuceSentinelServerOperations extends AbstractServerOperati
 
 	@Override
 	public Long memoryUsage(final byte[] key, final int samples) {
-		final CommandArguments args = CommandArguments.create("key", key).put("samples", samples);
+		final CommandArguments args = CommandArguments.create(key).add(samples);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.MEMORY_USAGE)
@@ -609,31 +609,31 @@ public final class LettuceSentinelServerOperations extends AbstractServerOperati
 
 	@Override
 	public Status moduleLoad(final String path, final String... arguments) {
-		final CommandArguments args = CommandArguments.create("path", path).put("arguments", (Object[]) arguments);
+		final CommandArguments args = CommandArguments.create(path).add(arguments);
 		return moduleLoad(args);
 	}
 
 	@Override
 	public Status moduleLoad(final byte[] path, final byte[]... arguments) {
-		final CommandArguments args = CommandArguments.create("path", path).put("arguments", (Object[]) arguments);
+		final CommandArguments args = CommandArguments.create(path).add(arguments);
 		return moduleLoad(args);
 	}
 
 	@Override
 	public Status moduleUnLoad(final String name) {
-		final CommandArguments args = CommandArguments.create("name", name);
+		final CommandArguments args = CommandArguments.create(name);
 		return moduleUnLoad(args);
 	}
 
 	@Override
 	public Status moduleUnLoad(final byte[] name) {
-		final CommandArguments args = CommandArguments.create("name", name);
+		final CommandArguments args = CommandArguments.create(name);
 		return moduleUnLoad(args);
 	}
 
 	@Override
 	public void monitor(final RedisMonitor redisMonitor) {
-		final CommandArguments args = CommandArguments.create("redisMonitor", redisMonitor);
+		final CommandArguments args = CommandArguments.create(redisMonitor);
 
 		if(isPipeline()){
 			new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.MONITOR)
@@ -649,13 +649,13 @@ public final class LettuceSentinelServerOperations extends AbstractServerOperati
 
 	@Override
 	public Object pSync(final String replicationId, final long offset) {
-		final CommandArguments args = CommandArguments.create("replicationId", replicationId).put("offset", offset);
+		final CommandArguments args = CommandArguments.create(replicationId).add(offset);
 		return pSync(args);
 	}
 
 	@Override
 	public Object pSync(final byte[] replicationId, final long offset) {
-		final CommandArguments args = CommandArguments.create("replicationId", replicationId).put("offset", offset);
+		final CommandArguments args = CommandArguments.create(replicationId).add(offset);
 		return pSync(args);
 	}
 
@@ -675,7 +675,7 @@ public final class LettuceSentinelServerOperations extends AbstractServerOperati
 
 	@Override
 	public Status replicaOf(final String host, final int port) {
-		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
+		final CommandArguments args = CommandArguments.create(host).add(port);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.REPLICAOF)
@@ -691,7 +691,7 @@ public final class LettuceSentinelServerOperations extends AbstractServerOperati
 
 	@Override
 	public Status slaveOf(final String host, final int port) {
-		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
+		final CommandArguments args = CommandArguments.create(host).add(port);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.SLAVEOF)
@@ -751,7 +751,7 @@ public final class LettuceSentinelServerOperations extends AbstractServerOperati
 
 	@Override
 	public void shutdown(final boolean save) {
-		final CommandArguments args = CommandArguments.create("save", save);
+		final CommandArguments args = CommandArguments.create(save);
 
 		if(isPipeline()){
 			new LettuceSentinelPipelineCommand<>(client, ProtocolCommand.SHUTDOWN)
@@ -784,7 +784,7 @@ public final class LettuceSentinelServerOperations extends AbstractServerOperati
 
 	@Override
 	public List<SlowLog> slowLogGet(final long count) {
-		final CommandArguments args = CommandArguments.create("count", count);
+		final CommandArguments args = CommandArguments.create(count);
 		final ListConverter<Object, SlowLog> listSlowlogConverter = SlowlogConverter.listConverter();
 
 		if(isPipeline()){
@@ -830,7 +830,7 @@ public final class LettuceSentinelServerOperations extends AbstractServerOperati
 
 	@Override
 	public Status swapdb(final int db1, final int db2) {
-		final CommandArguments args = CommandArguments.create("db1", db1).put("db2", db2);
+		final CommandArguments args = CommandArguments.create(db1).add(db2);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.SWAPDB)

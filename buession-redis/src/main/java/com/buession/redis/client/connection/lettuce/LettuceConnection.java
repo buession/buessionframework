@@ -26,6 +26,7 @@ package com.buession.redis.client.connection.lettuce;
 
 import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.core.validator.Validate;
+import com.buession.lang.Status;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.RedisStandaloneConnection;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceDataSource;
@@ -181,16 +182,6 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	/**
 	 * 构造函数
 	 *
-	 * @param poolConfig
-	 * 		连接池配置
-	 */
-	public LettuceConnection(PoolConfig poolConfig) {
-		super(poolConfig);
-	}
-
-	/**
-	 * 构造函数
-	 *
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param poolConfig
@@ -316,7 +307,6 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 
 	@Override
 	public Transaction multi() {
-		System.out.println("transaction: " + (transaction == null ? "false" : "true"));
 		if(transaction == null){
 			final RedisCommands<byte[], byte[]> commands = delegate.sync();
 			commands.multi();
@@ -358,7 +348,7 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	}
 
 	@Override
-	public boolean isConnect() {
+	public boolean isConnected() {
 		return delegate != null && delegate.isOpen();
 	}
 
@@ -376,27 +366,6 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 
 	protected boolean isUsePool() {
 		return pool != null;
-	}
-
-	@Override
-	protected void doConnect() throws RedisConnectionFailureException {
-		if(isUsePool()){
-			try{
-				delegate = pool.getResource();
-
-				if(logger.isInfoEnabled()){
-					logger.info("StatefulConnection initialized with pool success.");
-				}
-			}catch(Exception e){
-				if(logger.isErrorEnabled()){
-					logger.error("StatefulConnection initialized with pool failure: {}", e.getMessage(), e);
-				}
-
-				throw LettuceRedisExceptionUtils.convert(e);
-			}
-		}else{
-			delegate = createStatefulRedisConnection(new ByteArrayCodec());
-		}
 	}
 
 	protected <K, V> StatefulRedisConnection<K, V> createStatefulRedisConnection(final RedisCodec<K, V> codec) {
@@ -426,8 +395,7 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	protected LettucePool createPool() {
 		final LettuceDataSource dataSource = (LettuceDataSource) getDataSource();
 		final LettucePoolConfig<byte[], byte[], StatefulRedisConnection<byte[], byte[]>> lettucePoolConfig = new LettucePoolConfig<>();
-		final LettuceClientConfig clientConfig = LettuceClientConfigBuilder.create(dataSource,
-						getSslConfiguration())
+		final LettuceClientConfig clientConfig = LettuceClientConfigBuilder.create(dataSource, getSslConfiguration())
 				.connectTimeout(getConnectTimeout())
 				.socketTimeout(getSoTimeout())
 				.infiniteSoTimeout(getInfiniteSoTimeout())
@@ -447,19 +415,49 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	}
 
 	@Override
+	protected Status doConnect() throws RedisConnectionFailureException {
+		if(isConnected()){
+			return Status.SUCCESS;
+		}
+
+		if(isUsePool()){
+			try{
+				delegate = pool.getResource();
+
+				if(logger.isDebugEnabled()){
+					logger.debug("StatefulConnection initialized with pool success.");
+				}
+			}catch(Exception e){
+				if(logger.isErrorEnabled()){
+					logger.error("StatefulConnection initialized with pool failure: {}", e.getMessage(), e);
+				}
+
+				throw LettuceRedisExceptionUtils.convert(e);
+			}
+		}else{
+			delegate = createStatefulRedisConnection(new ByteArrayCodec());
+		}
+
+		return delegate == null ? Status.FAILURE : Status.SUCCESS;
+	}
+
+	@Override
 	protected void doDestroy() throws IOException {
 		super.doDestroy();
 
-		logger.info("Lettuce destroy.");
+		logger.debug("Lettuce destroy.");
 		if(pool != null){
-			if(logger.isInfoEnabled()){
-				logger.info("Lettuce pool for {} destroy.", pool.getClass().getName());
+			if(logger.isDebugEnabled()){
+				logger.debug("Lettuce pool for {} destroy.", pool.getClass().getName());
 			}
 
 			try{
 				pool.destroy();
-			}catch(Exception ex){
-				logger.warn("Cannot properly close Lettuce pool.", ex);
+			}catch(Exception e){
+				if(logger.isWarnEnabled()){
+					logger.warn("Cannot properly close Lettuce pool.", e);
+				}
+				throw new RedisException(e);
 			}
 
 			pool = null;
@@ -470,7 +468,7 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 	protected void doClose() throws IOException {
 		super.doClose();
 
-		logger.info("Lettuce close.");
+		logger.debug("Lettuce close.");
 
 		if(delegate != null){
 			delegate.close();

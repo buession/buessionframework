@@ -27,6 +27,7 @@ package com.buession.redis.client.connection.datasource.jedis;
 import com.buession.redis.client.connection.datasource.StandaloneDataSource;
 import com.buession.redis.client.connection.jedis.JedisConnection;
 import com.buession.redis.core.RedisNode;
+import redis.clients.jedis.JedisPool;
 
 /**
  * Jedis 单机模式数据源
@@ -49,6 +50,13 @@ public class JedisDataSource extends AbstractJedisDataSource implements Standalo
 	 * 数据库
 	 */
 	private int database = RedisNode.DEFAULT_DATABASE;
+
+	/**
+	 * 连接池
+	 *
+	 * @since 3.0.1
+	 */
+	private JedisPool pool;
 
 	@Override
 	public String getHost() {
@@ -78,6 +86,14 @@ public class JedisDataSource extends AbstractJedisDataSource implements Standalo
 	@Override
 	public void setDatabase(int database) {
 		this.database = database;
+	}
+
+	public JedisPool getPool() {
+		return pool;
+	}
+
+	public void setPool(JedisPool pool) {
+		this.pool = pool;
 	}
 
 	@Deprecated

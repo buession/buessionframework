@@ -50,7 +50,6 @@ import com.buession.redis.core.internal.convert.lettuce.response.StreamMessageMa
 import com.buession.redis.core.internal.lettuce.LettuceXClaimArgs;
 import com.buession.redis.core.internal.lettuce.LettuceXReadArgs;
 import com.buession.redis.core.internal.lettuce.LettuceXReadGroupArgs;
-import com.buession.redis.core.internal.lettuce.utils.StreamOffsetUtils;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.Consumer;
 import io.lettuce.core.Limit;

@@ -227,7 +227,19 @@ public interface RedisConnection extends Destroyable, Closeable {
 	 *
 	 * @return 是否处于连接状态
 	 */
-	boolean isConnect();
+	@Deprecated
+	default boolean isConnect() {
+		return isConnected();
+	}
+
+	/**
+	 * 检测是否处于连接状态
+	 *
+	 * @return 是否处于连接状态
+	 *
+	 * @since 3.0.0
+	 */
+	boolean isConnected();
 
 	/**
 	 * 检测连接是否关闭

@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2023 Buession.com Inc.														|
+ * | Copyright @ 2013-2024 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao;
@@ -342,6 +342,18 @@ public interface Dao<P, E> {
 	 * @return 结果集
 	 */
 	List<E> getAll();
+
+	/**
+	 * 查询所有数据
+	 *
+	 * @param orders
+	 * 		排序
+	 *
+	 * @return 结果集
+	 *
+	 * @since 3.0.1
+	 */
+	List<E> getAll(Map<String, Order> orders);
 
 	/**
 	 * 数据记录总数

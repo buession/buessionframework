@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
@@ -54,6 +54,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 被添加到集合中的新元素的数量，不包括被忽略的元素
 	 */
+	@SuppressWarnings({"unchecked"})
 	<V> Long sAdd(final String key, final V... members);
 
 	/**
@@ -70,6 +71,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 被添加到集合中的新元素的数量，不包括被忽略的元素
 	 */
+	@SuppressWarnings({"unchecked"})
 	<V> Long sAdd(final byte[] key, final V... members);
 
 	/**
@@ -814,6 +816,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 被成功移除的元素的数量，不包括被忽略的元素
 	 */
+	@SuppressWarnings({"unchecked"})
 	<V> Long sRem(final String key, final V... members);
 
 	/**
@@ -830,6 +833,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 被成功移除的元素的数量，不包括被忽略的元素
 	 */
+	@SuppressWarnings({"unchecked"})
 	<V> Long sRem(final byte[] key, final V... members);
 
 	/**

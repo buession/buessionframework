@@ -158,18 +158,6 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 	/**
 	 * 构造函数
 	 *
-	 * @param poolConfig
-	 * 		连接池配置
-	 *
-	 * @since 3.0.0
-	 */
-	public AbstractJedisRedisConnection(PoolConfig poolConfig) {
-		super(poolConfig);
-	}
-
-	/**
-	 * 构造函数
-	 *
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param poolConfig
@@ -297,17 +285,13 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 		try{
 			return executor.execute(this);
 		}catch(Exception e){
-			logger.error("Redis execute command failure: {}", e.getMessage(), e);
 			throw JedisRedisExceptionUtils.convert(e);
 		}
 	}
 
 	@Override
 	protected void doDestroy() throws IOException {
-		if(pipeline != null){
-			pipeline.close();
-			pipeline = null;
-		}
+		doClose();
 	}
 
 	@Override

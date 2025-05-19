@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.exception;
@@ -33,7 +33,7 @@ import redis.clients.jedis.exceptions.JedisConnectionException;
  */
 public class JedisRedisExceptionUtils {
 
-	public static RedisException convert(final Exception e){
+	public static RedisException convert(final Exception e) {
 		if(e instanceof JedisConnectionException){
 			if(StringUtils.contains(e.getMessage(), "pool")){
 				return new PoolException(e.getMessage(), e);
@@ -42,6 +42,8 @@ public class JedisRedisExceptionUtils {
 			}
 		}else if(e instanceof NotSupportedCommandException){
 			return (NotSupportedCommandException) e;
+		}else if(e instanceof RedisException){
+			return (RedisException) e;
 		}else{
 			return new RedisException(e.getMessage(), e);
 		}

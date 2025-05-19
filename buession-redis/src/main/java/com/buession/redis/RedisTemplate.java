@@ -181,7 +181,7 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public Status hMSet(final String key, final List<KeyValue<String, ?>> data) {
+	public <V> Status hMSet(final String key, final List<KeyValue<String, V>> data) {
 		Map<String, String> temp = data.stream()
 				.collect(Collectors.toMap(KeyValue::getKey, (e)->serializer.serialize(e.getValue()),
 						(key1, key2)->key2, LinkedHashMap::new));
@@ -190,7 +190,7 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public Status hMSet(final byte[] key, final List<KeyValue<byte[], ?>> data) {
+	public <V> Status hMSet(final byte[] key, final List<KeyValue<byte[], V>> data) {
 		Map<byte[], byte[]> temp = data.stream()
 				.collect(Collectors.toMap(KeyValue::getKey, (e)->serializer.serializeAsBytes(e.getValue()),
 						(key1, key2)->key2, LinkedHashMap::new));
@@ -942,11 +942,13 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 		return lPush(key, serializer.serializeAsBytes(value));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public <V> Long lPush(final String key, final V... values) {
 		return lPush(key, serializer.serialize(values));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public <V> Long lPush(final byte[] key, final V... values) {
 		return lPush(key, serializer.serializeAsBytes(values));
@@ -962,11 +964,13 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 		return lPushX(key, serializer.serializeAsBytes(value));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public <V> Long lPushX(final String key, final V... values) {
 		return lPushX(key, serializer.serialize(values));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public <V> Long lPushX(final byte[] key, final V... values) {
 		return lPushX(key, serializer.serializeAsBytes(values));
@@ -1054,11 +1058,13 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 		return rPush(key, serializer.serializeAsBytes(value));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public <V> Long rPush(final String key, final V... values) {
 		return rPush(key, serializer.serialize(values));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public <V> Long rPush(final byte[] key, final V... values) {
 		return rPush(key, serializer.serializeAsBytes(values));
@@ -1074,21 +1080,25 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 		return rPushX(key, serializer.serializeAsBytes(value));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public <V> Long rPushX(final String key, final V... values) {
 		return rPushX(key, serializer.serialize(values));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public <V> Long rPushX(final byte[] key, final V... values) {
 		return rPushX(key, serializer.serializeAsBytes(values));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public <V> Long sAdd(final String key, final V... members) {
 		return sAdd(key, serializer.serialize(members));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public <V> Long sAdd(final byte[] key, final V... members) {
 		return sAdd(key, serializer.serializeAsBytes(members));
@@ -1355,11 +1365,13 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 		return sRem(key, serializer.serializeAsBytes(member));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public <V> Long sRem(final String key, final V... members) {
 		return sRem(key, serializer.serialize(members));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public <V> Long sRem(final byte[] key, final V... members) {
 		return sRem(key, serializer.serializeAsBytes(members));
@@ -2489,6 +2501,7 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 				new Converter.TypeListBinaryConverter<>(this, type));
 	}
 
+	@Deprecated
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final String key, final String min, final String max, final long offset,
 											final long count) {
@@ -2496,6 +2509,7 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 				new Converter.SimpleListStringConverter<>(this));
 	}
 
+	@Deprecated
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
 											final long count) {
@@ -2503,6 +2517,7 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 				new Converter.SimpleListBinaryConverter<>(this));
 	}
 
+	@Deprecated
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final String key, final String min, final String max, final long offset,
 											final long count, final Class<V> clazz) {
@@ -2510,6 +2525,7 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 				new Converter.ClazzListStringConverter<>(this, clazz));
 	}
 
+	@Deprecated
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
 											final long count, final Class<V> clazz) {
@@ -2517,6 +2533,7 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 				new Converter.ClazzListBinaryConverter<>(this, clazz));
 	}
 
+	@Deprecated
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final String key, final String min, final String max, final long offset,
 											final long count, final TypeReference<V> type) {
@@ -2524,6 +2541,7 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 				new Converter.TypeListStringConverter<>(this, type));
 	}
 
+	@Deprecated
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
 											final long count, final TypeReference<V> type) {
@@ -3079,6 +3097,7 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 		resetTransactionOrPipeline();
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public List<Object> exec() {
 		List<Object> result = super.exec();

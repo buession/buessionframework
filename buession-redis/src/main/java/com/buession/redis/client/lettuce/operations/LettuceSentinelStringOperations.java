@@ -56,7 +56,7 @@ public final class LettuceSentinelStringOperations extends AbstractStringOperati
 
 	@Override
 	public Long append(final byte[] key, final byte[] value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.APPEND)
@@ -88,7 +88,7 @@ public final class LettuceSentinelStringOperations extends AbstractStringOperati
 
 	@Override
 	public Long incrBy(final byte[] key, final long value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.INCRBY)
@@ -104,7 +104,7 @@ public final class LettuceSentinelStringOperations extends AbstractStringOperati
 
 	@Override
 	public Double incrByFloat(final byte[] key, final double value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Double, Double>(client, ProtocolCommand.INCRBYFLOAT)
@@ -120,7 +120,7 @@ public final class LettuceSentinelStringOperations extends AbstractStringOperati
 
 	@Override
 	public Long decr(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.DECR)
@@ -136,7 +136,7 @@ public final class LettuceSentinelStringOperations extends AbstractStringOperati
 
 	@Override
 	public Long decrBy(final byte[] key, final long value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.DECRBY)
@@ -152,7 +152,7 @@ public final class LettuceSentinelStringOperations extends AbstractStringOperati
 
 	@Override
 	public String get(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		final byte[] bKey = SafeEncoder.encode(key);
 
 		return get(bKey, SafeEncoder::encode, args);
@@ -160,25 +160,25 @@ public final class LettuceSentinelStringOperations extends AbstractStringOperati
 
 	@Override
 	public byte[] get(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		return get(key, (v)->v, args);
 	}
 
 	@Override
 	public String getEx(final String key, final GetExArgument getExArgument) {
-		final CommandArguments args = CommandArguments.create("key", key).put("getExArgument", getExArgument);
+		final CommandArguments args = CommandArguments.create(key).add(getExArgument);
 		return getEx(args);
 	}
 
 	@Override
 	public byte[] getEx(final byte[] key, final GetExArgument getExArgument) {
-		final CommandArguments args = CommandArguments.create("key", key).put("getExArgument", getExArgument);
+		final CommandArguments args = CommandArguments.create(key).add(getExArgument);
 		return getEx(args);
 	}
 
 	@Override
 	public String getSet(final String key, final String value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final byte[] bValue = SafeEncoder.encode(value);
 
@@ -187,7 +187,7 @@ public final class LettuceSentinelStringOperations extends AbstractStringOperati
 
 	@Override
 	public byte[] getSet(final byte[] key, final byte[] value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 		return getSet(key, value, (v)->v, args);
 	}
 
@@ -223,7 +223,7 @@ public final class LettuceSentinelStringOperations extends AbstractStringOperati
 
 	@Override
 	public Status mSet(final Map<String, String> values) {
-		final CommandArguments args = CommandArguments.create("values", values);
+		final CommandArguments args = CommandArguments.create(values);
 		final Map<byte[], byte[]> bValues = Converters.mapStringToBinary().convert(values);
 
 		if(isPipeline()){
@@ -240,7 +240,7 @@ public final class LettuceSentinelStringOperations extends AbstractStringOperati
 
 	@Override
 	public Status mSetNx(final Map<String, String> values) {
-		final CommandArguments args = CommandArguments.create("values", values);
+		final CommandArguments args = CommandArguments.create(values);
 		final Map<byte[], byte[]> bValues = Converters.mapStringToBinary().convert(values);
 
 		if(isPipeline()){
@@ -257,7 +257,7 @@ public final class LettuceSentinelStringOperations extends AbstractStringOperati
 
 	@Override
 	public Status pSetEx(final byte[] key, final byte[] value, final int lifetime) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(lifetime);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.PSETEX)
@@ -273,7 +273,7 @@ public final class LettuceSentinelStringOperations extends AbstractStringOperati
 
 	@Override
 	public Status set(final byte[] key, final byte[] value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.SET)
@@ -289,7 +289,7 @@ public final class LettuceSentinelStringOperations extends AbstractStringOperati
 
 	@Override
 	public Status set(final byte[] key, final byte[] value, final SetArgument setArgument) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 		final SetArgs setArgs = LettuceSetArgs.from(setArgument);
 
 		if(isPipeline()){
@@ -306,7 +306,7 @@ public final class LettuceSentinelStringOperations extends AbstractStringOperati
 
 	@Override
 	public Status setEx(final byte[] key, final byte[] value, final int lifetime) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(lifetime);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.SETEX)
@@ -322,7 +322,7 @@ public final class LettuceSentinelStringOperations extends AbstractStringOperati
 
 	@Override
 	public Status setNx(final byte[] key, final byte[] value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.SETNX)
@@ -338,7 +338,7 @@ public final class LettuceSentinelStringOperations extends AbstractStringOperati
 
 	@Override
 	public Long setRange(final byte[] key, final long offset, final byte[] value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(offset).add(value);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.SETRANGE)
@@ -354,7 +354,7 @@ public final class LettuceSentinelStringOperations extends AbstractStringOperati
 
 	@Override
 	public byte[] getRange(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<byte[], byte[]>(client, ProtocolCommand.GETRANGE)
@@ -370,7 +370,7 @@ public final class LettuceSentinelStringOperations extends AbstractStringOperati
 
 	@Override
 	public Long strlen(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.STRLEN)
@@ -386,7 +386,7 @@ public final class LettuceSentinelStringOperations extends AbstractStringOperati
 
 	@Override
 	public String substr(final String key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final Converter<byte[], String> converter = (v)->StringUtils.substring(SafeEncoder.encode(v),
 				(int) start, (int) end);
@@ -396,7 +396,7 @@ public final class LettuceSentinelStringOperations extends AbstractStringOperati
 
 	@Override
 	public byte[] substr(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		final Converter<byte[], byte[]> converter = (v)->StringUtils.substring(SafeEncoder.encode(v), (int) start,
 				(int) end).getBytes(StandardCharsets.UTF_8);
 

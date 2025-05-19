@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2023 Buession.com Inc.														|
+ * | Copyright @ 2013-2025 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.codec;
@@ -48,16 +48,41 @@ public @interface Message {
 
 	String DEFAULT_TEXT_FIELD = "message";
 
+	/**
+	 * 消息 Key 名称
+	 *
+	 * @return 消息 Key 名称
+	 */
 	@AliasFor("value")
 	String name() default "";
 
+	/**
+	 * 消息 Key 名称
+	 *
+	 * @return 消息 Key 名称
+	 */
 	@AliasFor("name")
 	String value() default "";
 
-	boolean required() default true;
-
+	/**
+	 * 错误码属性名称
+	 *
+	 * @return 错误码属性名称
+	 */
 	String codeField() default DEFAULT_CODE_FIELD;
 
+	/**
+	 * 错误文本消息属性名称
+	 *
+	 * @return 错误文本消息属性名称
+	 */
 	String textField() default DEFAULT_TEXT_FIELD;
+
+	/**
+	 * 是否必须
+	 *
+	 * @return true / false
+	 */
+	boolean required() default true;
 
 }

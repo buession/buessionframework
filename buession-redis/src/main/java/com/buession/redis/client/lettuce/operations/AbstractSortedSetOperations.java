@@ -31,8 +31,10 @@ import com.buession.redis.core.Aggregate;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.utils.SafeEncoder;
+import io.lettuce.core.ScoredValue;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Lettuce 有序集合命令操作抽象类
@@ -391,6 +393,39 @@ public abstract class AbstractSortedSetOperations<C extends LettuceRedisClient>
 	public Long zUnionStore(final String destKey, final String[] keys, final Aggregate aggregate,
 							final double... weights) {
 		return zUnionStore(SafeEncoder.encode(destKey), SafeEncoder.encode(keys), aggregate, weights);
+	}
+
+	@SuppressWarnings({"unchecked"})
+	protected static ScoredValue<byte[]>[] createScoredValueFromValues(final Map<String, Double> values) {
+		if(values == null){
+			return null;
+		}else{
+			final ScoredValue<byte[]>[] result = new ScoredValue[values.size()];
+			int i = 0;
+
+			for(Map.Entry<String, Double> e : values.entrySet()){
+				result[i++] = e.getValue() == null ? ScoredValue.empty() : ScoredValue.just(e.getValue(),
+						SafeEncoder.encode(e.getKey()));
+			}
+
+			return result;
+		}
+	}
+
+	@SuppressWarnings({"unchecked"})
+	protected static ScoredValue<byte[]>[] createScoredValueFromBinaryValues(final Map<byte[], Double> values) {
+		if(values == null){
+			return null;
+		}else{
+			final ScoredValue<byte[]>[] result = new ScoredValue[values.size()];
+			int i = 0;
+
+			for(Map.Entry<byte[], Double> e : values.entrySet()){
+				result[i++] = e.getValue() == null ? ScoredValue.empty() : ScoredValue.just(e.getValue(), e.getKey());
+			}
+
+			return result;
+		}
 	}
 
 }

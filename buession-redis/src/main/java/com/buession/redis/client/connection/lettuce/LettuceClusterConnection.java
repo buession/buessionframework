@@ -26,6 +26,7 @@ package com.buession.redis.client.connection.lettuce;
 
 import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.core.validator.Validate;
+import com.buession.lang.Status;
 import com.buession.net.HostAndPort;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.RedisClusterConnection;
@@ -576,7 +577,7 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 	}
 
 	@Override
-	public boolean isConnect() {
+	public boolean isConnected() {
 		return delegate != null && delegate.isOpen();
 	}
 
@@ -622,33 +623,10 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 		return RedisClusterClient.create(redisURIs).connect(codec);
 	}
 
-	@Override
-	protected void doConnect() throws RedisConnectionFailureException {
-		if(isUsePool()){
-			try{
-				delegate = pool.getResource();
-
-				if(logger.isInfoEnabled()){
-					logger.info("StatefulRedisClusterConnection initialized with pool success.");
-				}
-			}catch(Exception e){
-				if(logger.isErrorEnabled()){
-					logger.error("StatefulRedisClusterConnection initialized with pool failure: {}", e.getMessage(),
-							e);
-				}
-
-				throw LettuceRedisExceptionUtils.convert(e);
-			}
-		}else{
-			delegate = createStatefulRedisClusterConnection(new ByteArrayCodec());
-		}
-	}
-
 	protected LettuceClusterPool createPool() {
 		final LettuceClusterDataSource dataSource = (LettuceClusterDataSource) getDataSource();
 		final LettucePoolConfig<byte[], byte[], StatefulRedisClusterConnection<byte[], byte[]>> lettucePoolConfig = new LettucePoolConfig<>();
-		final LettuceClientConfig clientConfig = LettuceClientConfigBuilder.create(dataSource,
-						getSslConfiguration())
+		final LettuceClientConfig clientConfig = LettuceClientConfigBuilder.create(dataSource, getSslConfiguration())
 				.connectTimeout(getConnectTimeout())
 				.socketTimeout(getSoTimeout())
 				.infiniteSoTimeout(getInfiniteSoTimeout())
@@ -667,19 +645,50 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 	}
 
 	@Override
+	protected Status doConnect() throws RedisConnectionFailureException {
+		if(isConnected()){
+			return Status.SUCCESS;
+		}
+
+		if(isUsePool()){
+			try{
+				delegate = pool.getResource();
+
+				if(logger.isDebugEnabled()){
+					logger.debug("StatefulRedisClusterConnection initialized with pool success.");
+				}
+			}catch(Exception e){
+				if(logger.isErrorEnabled()){
+					logger.error("StatefulRedisClusterConnection initialized with pool failure: {}", e.getMessage(),
+							e);
+				}
+
+				throw LettuceRedisExceptionUtils.convert(e);
+			}
+		}else{
+			delegate = createStatefulRedisClusterConnection(new ByteArrayCodec());
+		}
+
+		return delegate == null ? Status.FAILURE : Status.SUCCESS;
+	}
+
+	@Override
 	protected void doDestroy() throws IOException {
 		super.doDestroy();
 
-		logger.info("Lettuce destroy.");
+		logger.debug("Lettuce destroy.");
 		if(pool != null){
-			if(logger.isInfoEnabled()){
-				logger.info("Lettuce cluster pool for {} destroy.", pool.getClass().getName());
+			if(logger.isDebugEnabled()){
+				logger.debug("Lettuce cluster pool for {} destroy.", pool.getClass().getName());
 			}
 
 			try{
 				pool.destroy();
-			}catch(Exception ex){
-				logger.warn("Cannot properly close Lettuce cluster pool.", ex);
+			}catch(Exception e){
+				if(logger.isWarnEnabled()){
+					logger.warn("Cannot properly close Lettuce cluster pool.", e);
+				}
+				throw new RedisException(e);
 			}
 
 			pool = null;
@@ -690,7 +699,7 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 	protected void doClose() throws IOException {
 		super.doClose();
 
-		logger.info("Lettuce close.");
+		logger.debug("Lettuce close.");
 
 		if(delegate != null){
 			delegate.close();

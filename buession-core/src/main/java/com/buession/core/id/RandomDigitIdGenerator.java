@@ -19,14 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.id;
 
 import com.buession.core.utils.Assert;
 import com.buession.core.utils.RandomUtils;
-import com.buession.core.utils.StringUtils;
 
 /**
  * 随机数 ID 生成器
@@ -39,7 +38,7 @@ public class RandomDigitIdGenerator implements IdGenerator<Long> {
 	/**
 	 * 最小值
 	 */
-	private long min = 1L;
+	private long min = Long.MIN_VALUE;
 
 	/**
 	 * 最大值
@@ -49,7 +48,7 @@ public class RandomDigitIdGenerator implements IdGenerator<Long> {
 	/**
 	 * 构造函数，生成 1 到 Long.MAX_VALUE 间的随机 ID
 	 */
-	public RandomDigitIdGenerator(){
+	public RandomDigitIdGenerator() {
 	}
 
 	/**
@@ -60,17 +59,27 @@ public class RandomDigitIdGenerator implements IdGenerator<Long> {
 	 * @param max
 	 * 		最大值
 	 */
-	public RandomDigitIdGenerator(final long min, final long max){
-		Assert.isFalse(min >= 1 && min <= Long.MAX_VALUE, "Id min value must between 1 and " + Long.MAX_VALUE + ".");
-		Assert.isFalse(max >= 1 && max <= Long.MAX_VALUE, "Id max value must between 1 and " + Long.MAX_VALUE + ".");
+	public RandomDigitIdGenerator(final long min, final long max) {
 		Assert.isTrue(min > max, "Id max value has to be greater than or equal to id min value.");
 		this.min = min;
 		this.max = max;
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param max
+	 * 		最大值
+	 *
+	 * @since 3.0.1
+	 */
+	public RandomDigitIdGenerator(final long max) {
+		this.max = max;
+	}
+
 	@Override
-	public Long nextId(){
-		return RandomUtils.nextLong(min, max);
+	public Long nextId() {
+		return min == max ? min : RandomUtils.nextLong(min, max);
 	}
 
 }

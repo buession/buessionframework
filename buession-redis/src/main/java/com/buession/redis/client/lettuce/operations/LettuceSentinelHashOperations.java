@@ -63,7 +63,7 @@ public final class LettuceSentinelHashOperations extends AbstractHashOperations<
 
 	@Override
 	public Long hDel(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create("key", key).put("fields", (Object[]) fields);
+		final CommandArguments args = CommandArguments.create(key).add(fields);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.HDEL)
@@ -79,7 +79,7 @@ public final class LettuceSentinelHashOperations extends AbstractHashOperations<
 
 	@Override
 	public Boolean hExists(final byte[] key, final byte[] field) {
-		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
+		final CommandArguments args = CommandArguments.create(key).add(field);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Boolean, Boolean>(client, ProtocolCommand.HEXISTS)
@@ -95,7 +95,7 @@ public final class LettuceSentinelHashOperations extends AbstractHashOperations<
 
 	@Override
 	public String hGet(final String key, final String field) {
-		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
+		final CommandArguments args = CommandArguments.create(key).add(field);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final byte[] bField = SafeEncoder.encode(field);
 
@@ -104,7 +104,7 @@ public final class LettuceSentinelHashOperations extends AbstractHashOperations<
 
 	@Override
 	public byte[] hGet(final byte[] key, final byte[] field) {
-		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
+		final CommandArguments args = CommandArguments.create(key).add(field);
 		return hGet(key, field, (v)->v, args);
 	}
 
@@ -125,7 +125,7 @@ public final class LettuceSentinelHashOperations extends AbstractHashOperations<
 
 	@Override
 	public Long hIncrBy(final byte[] key, final byte[] field, final long value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.HINCRBY)
@@ -141,7 +141,7 @@ public final class LettuceSentinelHashOperations extends AbstractHashOperations<
 
 	@Override
 	public Double hIncrByFloat(final byte[] key, final byte[] field, final double value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Double, Double>(client, ProtocolCommand.HINCRBYFLOAT)
@@ -189,7 +189,7 @@ public final class LettuceSentinelHashOperations extends AbstractHashOperations<
 
 	@Override
 	public List<String> hMGet(final String key, final String... fields) {
-		final CommandArguments args = CommandArguments.create("key", key).put("fields", (Object[]) fields);
+		final CommandArguments args = CommandArguments.create(key).add(fields);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final byte[][] bFields = SafeEncoder.encode(fields);
 		final ListConverter<KeyValue<byte[], byte[]>, String> listConverter =
@@ -200,7 +200,7 @@ public final class LettuceSentinelHashOperations extends AbstractHashOperations<
 
 	@Override
 	public List<byte[]> hMGet(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create("key", key).put("fields", (Object[]) fields);
+		final CommandArguments args = CommandArguments.create(key).add(fields);
 		final ListConverter<KeyValue<byte[], byte[]>, byte[]> listConverter = new ListConverter<>(Value::getValue);
 
 		return hMGet(key, fields, listConverter, args);
@@ -208,7 +208,7 @@ public final class LettuceSentinelHashOperations extends AbstractHashOperations<
 
 	@Override
 	public Status hMSet(final byte[] key, final Map<byte[], byte[]> data) {
-		final CommandArguments args = CommandArguments.create("key", key).put("data", data);
+		final CommandArguments args = CommandArguments.create(key).add(data);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.HMGET)
@@ -236,31 +236,31 @@ public final class LettuceSentinelHashOperations extends AbstractHashOperations<
 
 	@Override
 	public List<String> hRandField(final String key, final long count) {
-		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(count);
 		return hRandField(args);
 	}
 
 	@Override
 	public List<byte[]> hRandField(final byte[] key, final long count) {
-		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(count);
 		return hRandField(args);
 	}
 
 	@Override
 	public Map<String, String> hRandFieldWithValues(final String key, final long count) {
-		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(count);
 		return hRandField(args);
 	}
 
 	@Override
 	public Map<byte[], byte[]> hRandFieldWithValues(final byte[] key, final long count) {
-		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(count);
 		return hRandField(args);
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor) {
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
+		final CommandArguments args = CommandArguments.create(key).add(cursor);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanCursorConverter.MapScanCursorConverter.BvSvMapScanCursorConverter bvSvMapScanCursorConverter =
@@ -271,7 +271,7 @@ public final class LettuceSentinelHashOperations extends AbstractHashOperations<
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor) {
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
+		final CommandArguments args = CommandArguments.create(key).add(cursor);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanCursorConverter.MapScanCursorConverter<byte[], byte[]> mapScanCursorConverter = new ScanCursorConverter.MapScanCursorConverter<>();
 
@@ -280,7 +280,7 @@ public final class LettuceSentinelHashOperations extends AbstractHashOperations<
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern) {
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(pattern);
@@ -292,7 +292,7 @@ public final class LettuceSentinelHashOperations extends AbstractHashOperations<
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(pattern);
 		final ScanCursorConverter.MapScanCursorConverter<byte[], byte[]> mapScanCursorConverter = new ScanCursorConverter.MapScanCursorConverter<>();
@@ -302,7 +302,7 @@ public final class LettuceSentinelHashOperations extends AbstractHashOperations<
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final long count) {
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(count);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(count);
@@ -314,7 +314,7 @@ public final class LettuceSentinelHashOperations extends AbstractHashOperations<
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final long count) {
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(count);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(count);
 		final ScanCursorConverter.MapScanCursorConverter<byte[], byte[]> mapScanCursorConverter = new ScanCursorConverter.MapScanCursorConverter<>();
@@ -325,7 +325,7 @@ public final class LettuceSentinelHashOperations extends AbstractHashOperations<
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
 												 final long count) {
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(pattern, count);
@@ -338,8 +338,8 @@ public final class LettuceSentinelHashOperations extends AbstractHashOperations<
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
 												 final long count) {
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
-				.put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern)
+				.add(count);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(pattern, count);
 		final ScanCursorConverter.MapScanCursorConverter<byte[], byte[]> mapScanCursorConverter = new ScanCursorConverter.MapScanCursorConverter<>();
@@ -349,7 +349,7 @@ public final class LettuceSentinelHashOperations extends AbstractHashOperations<
 
 	@Override
 	public Long hSet(final byte[] key, final byte[] field, final byte[] value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
 		final Converter<Boolean, Long> converter = (v)->Boolean.TRUE.equals(v) ? 1L : 0L;
 
 		if(isPipeline()){
@@ -366,7 +366,7 @@ public final class LettuceSentinelHashOperations extends AbstractHashOperations<
 
 	@Override
 	public Status hSetNx(final byte[] key, final byte[] field, final byte[] value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.HSETNX)
@@ -382,7 +382,7 @@ public final class LettuceSentinelHashOperations extends AbstractHashOperations<
 
 	@Override
 	public Long hStrLen(final byte[] key, final byte[] field) {
-		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
+		final CommandArguments args = CommandArguments.create(key).add(field);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.HSETNX)
@@ -398,7 +398,7 @@ public final class LettuceSentinelHashOperations extends AbstractHashOperations<
 
 	@Override
 	public List<String> hVals(final String key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		final byte[] bKey = SafeEncoder.encode(key);
 
 		return hVals(bKey, binaryToStringListConverter, args);
@@ -406,7 +406,7 @@ public final class LettuceSentinelHashOperations extends AbstractHashOperations<
 
 	@Override
 	public List<byte[]> hVals(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 		return hVals(key, (v)->v, args);
 	}
 

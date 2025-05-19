@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -27,7 +27,7 @@ package com.buession.redis.core;
 /**
  * @author Yong.Teng
  */
-public enum MigrateOperation {
+public enum MigrateOperation implements Keyword {
 
 	/**
 	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，不移除源实例上的 key
@@ -37,6 +37,11 @@ public enum MigrateOperation {
 	/**
 	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，替换目标实例上已存在的 key
 	 */
-	REPLACE
+	REPLACE;
+
+	@Override
+	public String getValue() {
+		return name();
+	}
 
 }

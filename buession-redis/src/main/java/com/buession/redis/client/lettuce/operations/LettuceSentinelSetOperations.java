@@ -57,7 +57,7 @@ public final class LettuceSentinelSetOperations extends AbstractSetOperations<Le
 
 	@Override
 	public Long sAdd(final byte[] key, final byte[]... members) {
-		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
+		final CommandArguments args = CommandArguments.create(key).add(members);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.SADD)
@@ -73,7 +73,7 @@ public final class LettuceSentinelSetOperations extends AbstractSetOperations<Le
 
 	@Override
 	public Long sCard(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.SCARD)
@@ -104,7 +104,7 @@ public final class LettuceSentinelSetOperations extends AbstractSetOperations<Le
 
 	@Override
 	public Long sDiffStore(final byte[] destKey, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.SDIFFSTORE)
@@ -135,7 +135,7 @@ public final class LettuceSentinelSetOperations extends AbstractSetOperations<Le
 
 	@Override
 	public Long sInterStore(final byte[] destKey, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.SINTERSTORE)
@@ -151,7 +151,7 @@ public final class LettuceSentinelSetOperations extends AbstractSetOperations<Le
 
 	@Override
 	public Boolean sIsMember(final byte[] key, final byte[] member) {
-		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
+		final CommandArguments args = CommandArguments.create(key).add(member);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Boolean, Boolean>(client, ProtocolCommand.SISMEMBER)
@@ -167,13 +167,13 @@ public final class LettuceSentinelSetOperations extends AbstractSetOperations<Le
 
 	@Override
 	public List<Boolean> smIsMember(final String key, final String... members) {
-		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
+		final CommandArguments args = CommandArguments.create(key).add(members);
 		return smIsMember(args);
 	}
 
 	@Override
 	public List<Boolean> smIsMember(final byte[] key, final byte[]... members) {
-		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
+		final CommandArguments args = CommandArguments.create(key).add(members);
 		return smIsMember(args);
 	}
 
@@ -194,7 +194,7 @@ public final class LettuceSentinelSetOperations extends AbstractSetOperations<Le
 
 	@Override
 	public Status sMove(final byte[] key, final byte[] destKey, final byte[] member) {
-		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("member", member);
+		final CommandArguments args = CommandArguments.create(key).add(destKey).add(member);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.SMOVE)
@@ -253,7 +253,7 @@ public final class LettuceSentinelSetOperations extends AbstractSetOperations<Le
 
 	@Override
 	public List<String> sRandMember(final String key, final long count) {
-		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(count);
 		final byte[] bKey = SafeEncoder.encode(key);
 
 		return sRandMember(bKey, count, binaryToStringListConverter, args);
@@ -261,13 +261,13 @@ public final class LettuceSentinelSetOperations extends AbstractSetOperations<Le
 
 	@Override
 	public List<byte[]> sRandMember(final byte[] key, final long count) {
-		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(count);
 		return sRandMember(key, count, (v)->v, args);
 	}
 
 	@Override
 	public Long sRem(final byte[] key, final byte[]... members) {
-		final CommandArguments args = CommandArguments.create("key", key).put("members", (Object[]) members);
+		final CommandArguments args = CommandArguments.create(key).add(members);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.SREM)
@@ -283,7 +283,7 @@ public final class LettuceSentinelSetOperations extends AbstractSetOperations<Le
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor) {
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
+		final CommandArguments args = CommandArguments.create(key).add(cursor);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanCursorConverter.ValueScanCursorConverter.BSKeyScanCursorConverter bsKeyScanCursorConverter =
@@ -294,7 +294,7 @@ public final class LettuceSentinelSetOperations extends AbstractSetOperations<Le
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor) {
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
+		final CommandArguments args = CommandArguments.create(key).add(cursor);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanCursorConverter.ValueScanCursorConverter<byte[]> valueScanCursorConverter = new ScanCursorConverter.ValueScanCursorConverter<>();
 
@@ -303,7 +303,7 @@ public final class LettuceSentinelSetOperations extends AbstractSetOperations<Le
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern) {
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ScanCursor scanCursor = new LettuceScanCursor(pattern);
 		final ScanCursorConverter.ValueScanCursorConverter.BSKeyScanCursorConverter bsKeyScanCursorConverter =
@@ -314,7 +314,7 @@ public final class LettuceSentinelSetOperations extends AbstractSetOperations<Le
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern);
 		final ScanCursor scanCursor = new LettuceScanCursor(pattern);
 		final ScanCursorConverter.ValueScanCursorConverter<byte[]> valueScanCursorConverter = new ScanCursorConverter.ValueScanCursorConverter<>();
 
@@ -323,7 +323,7 @@ public final class LettuceSentinelSetOperations extends AbstractSetOperations<Le
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final long count) {
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(count);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(count);
@@ -335,7 +335,7 @@ public final class LettuceSentinelSetOperations extends AbstractSetOperations<Le
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final long count) {
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(count);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(count);
 		final ScanCursorConverter.ValueScanCursorConverter<byte[]> valueScanCursorConverter = new ScanCursorConverter.ValueScanCursorConverter<>();
@@ -346,8 +346,8 @@ public final class LettuceSentinelSetOperations extends AbstractSetOperations<Le
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern,
 										  final long count) {
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
-				.put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern)
+				.add(count);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(pattern, count);
@@ -360,8 +360,8 @@ public final class LettuceSentinelSetOperations extends AbstractSetOperations<Le
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern,
 										  final long count) {
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
-				.put("count", count);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern)
+				.add(count);
 		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
 		final ScanArgs scanArgs = new LettuceScanArgs(pattern, count);
 		final ScanCursorConverter.ValueScanCursorConverter<byte[]> valueScanCursorConverter = new ScanCursorConverter.ValueScanCursorConverter<>();
@@ -386,7 +386,7 @@ public final class LettuceSentinelSetOperations extends AbstractSetOperations<Le
 
 	@Override
 	public Long sUnionStore(final byte[] destKey, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.SUNIONSTORE)

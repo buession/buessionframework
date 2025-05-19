@@ -24,6 +24,7 @@
  */
 package com.buession.redis.client.connection.jedis;
 
+import com.buession.lang.Status;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.RedisClusterConnection;
 import com.buession.redis.client.connection.datasource.jedis.JedisClusterDataSource;
@@ -558,18 +559,6 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	/**
 	 * 构造函数
 	 *
-	 * @param poolConfig
-	 * 		连接池配置
-	 *
-	 * @since 3.0.0
-	 */
-	public JedisClusterConnection(PoolConfig poolConfig) {
-		super(poolConfig);
-	}
-
-	/**
-	 * 构造函数
-	 *
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param poolConfig
@@ -898,7 +887,7 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	}
 
 	@Override
-	public boolean isConnect() {
+	public boolean isConnected() {
 		return cluster != null;
 	}
 
@@ -919,9 +908,17 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	}
 
 	@Override
-	protected void doConnect() throws RedisConnectionFailureException {
-		cluster = new JedisCluster(connectionProvider, getMaxRedirects(),
-				Duration.ofMillis(getMaxTotalRetriesDuration()));
+	protected Status doConnect() throws RedisConnectionFailureException {
+		if(isConnected()){
+			return Status.SUCCESS;
+		}
+
+		if(cluster != null){
+			cluster = new JedisCluster(connectionProvider, getMaxRedirects(),
+					Duration.ofMillis(getMaxTotalRetriesDuration()));
+		}
+
+		return cluster == null ? Status.FAILURE : Status.SUCCESS;
 	}
 
 	protected ClusterConnectionProvider createConnectionProvider() {
@@ -947,14 +944,14 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	@Override
 	protected void doDestroy() throws IOException {
 		super.doDestroy();
-		logger.info("Jedis cluster destroy.");
+		logger.debug("Jedis cluster destroy.");
 	}
 
 	@Override
 	protected void doClose() throws IOException {
 		super.doClose();
 
-		logger.info("Jedis cluster close.");
+		logger.debug("Jedis cluster close.");
 		if(cluster != null){
 			cluster.close();
 		}

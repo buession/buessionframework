@@ -48,8 +48,8 @@ public class JedisClusterPubSubOperations extends AbstractPubSubOperations<Jedis
 
 	@Override
 	public void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener) {
-		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns)
-				.put("pubSubListener", pubSubListener);
+		final CommandArguments args = CommandArguments.create(patterns)
+				.add(pubSubListener);
 
 		if(isPipeline()){
 			new JedisClusterPipelineCommand<>(client, ProtocolCommand.PSUBSCRIBE)
@@ -68,8 +68,8 @@ public class JedisClusterPubSubOperations extends AbstractPubSubOperations<Jedis
 
 	@Override
 	public void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener) {
-		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns)
-				.put("pubSubListener", pubSubListener);
+		final CommandArguments args = CommandArguments.create(patterns)
+				.add(pubSubListener);
 
 		if(isPipeline()){
 			new JedisClusterPipelineCommand<>(client, ProtocolCommand.PSUBSCRIBE)
@@ -88,7 +88,7 @@ public class JedisClusterPubSubOperations extends AbstractPubSubOperations<Jedis
 
 	@Override
 	public Long publish(final String channel, final String message) {
-		final CommandArguments args = CommandArguments.create("channel", channel).put("message", message);
+		final CommandArguments args = CommandArguments.create(channel).add(message);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.PUBLISH,
@@ -106,7 +106,7 @@ public class JedisClusterPubSubOperations extends AbstractPubSubOperations<Jedis
 
 	@Override
 	public Long publish(final byte[] channel, final byte[] message) {
-		final CommandArguments args = CommandArguments.create("channel", channel).put("message", message);
+		final CommandArguments args = CommandArguments.create(channel).add(message);
 
 		if(isPipeline()){
 			return new JedisClusterPipelineCommand<>(client, ProtocolCommand.PUBLISH,
@@ -139,13 +139,13 @@ public class JedisClusterPubSubOperations extends AbstractPubSubOperations<Jedis
 
 	@Override
 	public List<String> pubsubChannels(final String pattern) {
-		final CommandArguments args = CommandArguments.create("pattern", pattern);
+		final CommandArguments args = CommandArguments.create(pattern);
 		return pubsubChannels(args);
 	}
 
 	@Override
 	public List<byte[]> pubsubChannels(final byte[] pattern) {
-		final CommandArguments args = CommandArguments.create("pattern", pattern);
+		final CommandArguments args = CommandArguments.create(pattern);
 		return pubsubChannels(args);
 	}
 
@@ -165,13 +165,13 @@ public class JedisClusterPubSubOperations extends AbstractPubSubOperations<Jedis
 
 	@Override
 	public Map<String, Long> pubsubNumSub(final String... channels) {
-		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
+		final CommandArguments args = CommandArguments.create(channels);
 		return pubsubNumSub(args);
 	}
 
 	@Override
 	public Map<byte[], Long> pubsubNumSub(final byte[]... channels) {
-		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
+		final CommandArguments args = CommandArguments.create(channels);
 		return pubsubNumSub(args);
 	}
 
@@ -191,20 +191,20 @@ public class JedisClusterPubSubOperations extends AbstractPubSubOperations<Jedis
 
 	@Override
 	public Object pUnSubscribe(final String... patterns) {
-		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns);
+		final CommandArguments args = CommandArguments.create(patterns);
 		return pUnSubscribe(args);
 	}
 
 	@Override
 	public Object pUnSubscribe(final byte[]... patterns) {
-		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns);
+		final CommandArguments args = CommandArguments.create(patterns);
 		return pUnSubscribe(args);
 	}
 
 	@Override
 	public void subscribe(final String[] channels, final PubSubListener<String> pubSubListener) {
-		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels)
-				.put("pubSubListener", pubSubListener);
+		final CommandArguments args = CommandArguments.create(channels)
+				.add(pubSubListener);
 
 		if(isPipeline()){
 			new JedisClusterPipelineCommand<>(client, ProtocolCommand.SUBSCRIBE)
@@ -223,8 +223,8 @@ public class JedisClusterPubSubOperations extends AbstractPubSubOperations<Jedis
 
 	@Override
 	public void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener) {
-		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels)
-				.put("pubSubListener", pubSubListener);
+		final CommandArguments args = CommandArguments.create(channels)
+				.add(pubSubListener);
 
 		if(isPipeline()){
 			new JedisClusterPipelineCommand<>(client, ProtocolCommand.SUBSCRIBE)
@@ -257,13 +257,13 @@ public class JedisClusterPubSubOperations extends AbstractPubSubOperations<Jedis
 
 	@Override
 	public Object unSubscribe(final String... channels) {
-		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
+		final CommandArguments args = CommandArguments.create(channels);
 		return unSubscribe(args);
 	}
 
 	@Override
 	public Object unSubscribe(final byte[]... channels) {
-		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
+		final CommandArguments args = CommandArguments.create(channels);
 		return unSubscribe(args);
 	}
 

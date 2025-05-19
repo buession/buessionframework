@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.conn;
@@ -90,6 +90,8 @@ public class OkHttpClientConnectionManager extends OkHttpBaseClientConnectionMan
 		propertyMapper.from(getConfiguration().getMaxPerRoute()).to(connectionManager::setMaxRequestsPerHost);
 		// 默认的最大并发请求数量
 		propertyMapper.from(getConfiguration().getMaxRequests()).to(connectionManager::setMaxRequests);
+		// 连接池中最大空闲连接数
+		propertyMapper.from(getConfiguration().getMaxIdleConnections()).to(connectionManager::setMaxIdleConnections);
 		// 空闲连接存活时长
 		propertyMapper.from(getConfiguration().getIdleConnectionTime()).to(connectionManager::setIdleConnectionTime);
 

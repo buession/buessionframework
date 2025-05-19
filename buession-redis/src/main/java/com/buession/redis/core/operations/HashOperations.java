@@ -468,10 +468,12 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		Key
 	 * @param data
 	 * 		field =&gt; value (域-值)对
+	 * @param <V>
+	 * 		元素值类型
 	 *
 	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
 	 */
-	Status hMSet(final String key, final List<KeyValue<String, ?>> data);
+	<V> Status hMSet(final String key, final List<KeyValue<String, V>> data);
 
 	/**
 	 * 批量将多个 field =&gt; value (域-值)对设置到哈希表 key 中
@@ -482,10 +484,12 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		Key
 	 * @param data
 	 * 		field =&gt; value (域-值)对
+	 * @param <V>
+	 * 		元素值类型
 	 *
 	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
 	 */
-	Status hMSet(final byte[] key, final List<KeyValue<byte[], ?>> data);
+	<V> Status hMSet(final byte[] key, final List<KeyValue<byte[], V>> data);
 
 	/**
 	 * 批量将多个 field =&gt; value (域-值)对设置到哈希表 key 中
@@ -496,12 +500,15 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		Key
 	 * @param data
 	 * 		field =&gt; value (域-值)对
+	 * @param <V>
+	 * 		元素值类型
 	 *
 	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
 	 *
 	 * @since 3.0.0
 	 */
-	default Status hMSet(final String key, final KeyValue<String, ?>... data) {
+	@SuppressWarnings({"unchecked"})
+	default <V> Status hMSet(final String key, final KeyValue<String, V>... data) {
 		return hMSet(key, Arrays.asList(data));
 	}
 
@@ -514,12 +521,15 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		Key
 	 * @param data
 	 * 		field =&gt; value (域-值)对
+	 * @param <V>
+	 * 		元素值类型
 	 *
 	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
 	 *
 	 * @since 3.0.0
 	 */
-	default Status hMSet(final byte[] key, final KeyValue<byte[], ?>... data) {
+	@SuppressWarnings({"unchecked"})
+	default <V> Status hMSet(final byte[] key, final KeyValue<byte[], V>... data) {
 		return hMSet(key, Arrays.asList(data));
 	}
 

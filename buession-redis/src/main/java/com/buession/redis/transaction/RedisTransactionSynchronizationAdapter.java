@@ -46,41 +46,47 @@ public class RedisTransactionSynchronizationAdapter extends TransactionSynchroni
 
 	private final RedisConnection connection;
 
+	private final boolean readOnly;
+
 	private final static Logger logger = LoggerFactory.getLogger(RedisTransactionSynchronizationAdapter.class);
 
 	public RedisTransactionSynchronizationAdapter(final RedisConnectionFactory factory, final RedisConnectionHolder
-			connectionHolder, final RedisConnection connection){
+			connectionHolder, final RedisConnection connection, final boolean readOnly) {
 		this.factory = factory;
 		this.connectionHolder = connectionHolder;
 		this.connection = connection;
+		this.readOnly = readOnly;
 	}
 
 	@Override
-	public void afterCompletion(final int status){
+	public void afterCompletion(final int status) {
 		try{
-			switch(status){
-				case TransactionSynchronization.STATUS_COMMITTED:
-					connection.exec();
-					break;
-				case TransactionSynchronization.STATUS_ROLLED_BACK:
-				case TransactionSynchronization.STATUS_UNKNOWN:
-					connection.discard();
-					break;
-				default:
-					connection.discard();
-					break;
+			if(readOnly == false){
+				switch(status){
+					case TransactionSynchronization.STATUS_COMMITTED:
+						connection.exec();
+						break;
+					case TransactionSynchronization.STATUS_ROLLED_BACK:
+					case TransactionSynchronization.STATUS_UNKNOWN:
+						connection.discard();
+						break;
+					default:
+						connection.discard();
+						break;
+				}
 			}
 		}finally{
 			final String message = "Closing bound redisConnection after transaction completed with {}";
 			logger.debug(message, status);
 
-			connectionHolder.setTransactionSyncronisationActive(false);
+			connectionHolder.setTransactionActive(false);
 			try{
 				connection.close();
 			}catch(IOException e){
 				logger.error(message + ", error: {}", status, e.getMessage());
 			}
 			TransactionSynchronizationManager.unbindResource(factory);
+			connectionHolder.reset();
 		}
 	}
 

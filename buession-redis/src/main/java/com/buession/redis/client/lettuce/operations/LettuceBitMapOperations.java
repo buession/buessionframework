@@ -48,7 +48,7 @@ public final class LettuceBitMapOperations extends AbstractBitMapOperations<Lett
 
 	@Override
 	public Long bitCount(final byte[] key) {
-		final CommandArguments args = CommandArguments.create("key", key);
+		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key), (v)->v)
@@ -64,7 +64,7 @@ public final class LettuceBitMapOperations extends AbstractBitMapOperations<Lett
 
 	@Override
 	public Long bitCount(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key, start, end),
@@ -82,8 +82,8 @@ public final class LettuceBitMapOperations extends AbstractBitMapOperations<Lett
 
 	@Override
 	public Long bitCount(final byte[] key, final long start, final long end, final BitCountOption bitCountOption) {
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end)
-				.put("bitCountOption", bitCountOption);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end)
+				.add(bitCountOption);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.BITCOUNT, (cmd)->cmd.bitcount(key, start, end),
@@ -101,7 +101,7 @@ public final class LettuceBitMapOperations extends AbstractBitMapOperations<Lett
 
 	@Override
 	public List<Long> bitField(final byte[] key, final BitFieldArgument argument) {
-		final CommandArguments args = CommandArguments.create("key", key).put("arguments", argument);
+		final CommandArguments args = CommandArguments.create(key).add(argument);
 		final BitFieldArgs bitFieldArgs = LettuceBitFieldArgs.from(argument);
 
 		if(isPipeline()){
@@ -121,20 +121,20 @@ public final class LettuceBitMapOperations extends AbstractBitMapOperations<Lett
 
 	@Override
 	public List<Long> bitFieldRo(final String key, final String... arguments) {
-		final CommandArguments args = CommandArguments.create("key", key).put("arguments", (Object[]) arguments);
+		final CommandArguments args = CommandArguments.create(key).add(arguments);
 		return bitFieldRo(args);
 	}
 
 	@Override
 	public List<Long> bitFieldRo(final byte[] key, final byte[]... arguments) {
-		final CommandArguments args = CommandArguments.create("key", key).put("arguments", (Object[]) arguments);
+		final CommandArguments args = CommandArguments.create(key).add(arguments);
 		return bitFieldRo(args);
 	}
 
 	@Override
 	public Long bitOp(final BitOperation operation, final byte[] destKey, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("operation", operation).put("destKey", destKey)
-				.put("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(operation).add(destKey)
+				.add(keys);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.BITOP, (cmd)->{
@@ -186,7 +186,7 @@ public final class LettuceBitMapOperations extends AbstractBitMapOperations<Lett
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.BITPOS, (cmd)->cmd.bitpos(key, value), (v)->v)
@@ -203,8 +203,8 @@ public final class LettuceBitMapOperations extends AbstractBitMapOperations<Lett
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("start", start)
-				.put("end", end);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(start)
+				.add(end);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.BITPOS,
@@ -223,7 +223,7 @@ public final class LettuceBitMapOperations extends AbstractBitMapOperations<Lett
 
 	@Override
 	public Boolean getBit(final byte[] key, final long offset) {
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset);
+		final CommandArguments args = CommandArguments.create(key).add(offset);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.GETBIT, (cmd)->cmd.getbit(key, offset),
@@ -242,7 +242,7 @@ public final class LettuceBitMapOperations extends AbstractBitMapOperations<Lett
 
 	@Override
 	public Boolean setBit(final byte[] key, final long offset, final boolean value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(offset).add(value);
 		final int iValue = value ? 1 : 0;
 
 		if(isPipeline()){

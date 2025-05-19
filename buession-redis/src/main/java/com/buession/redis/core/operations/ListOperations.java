@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
@@ -1147,6 +1147,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 执行 LPUSH 命令后，列表的长度
 	 */
+	@SuppressWarnings({"unchecked"})
 	<V> Long lPush(final String key, final V... values);
 
 	/**
@@ -1163,6 +1164,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 执行 LPUSH 命令后，列表的长度
 	 */
+	@SuppressWarnings({"unchecked"})
 	<V> Long lPush(final byte[] key, final V... values);
 
 	/**
@@ -1211,6 +1213,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 执行 LPUSHX 命令后，列表的长度
 	 */
+	@SuppressWarnings({"unchecked"})
 	<V> Long lPushX(final String key, final V... values);
 
 	/**
@@ -1227,6 +1230,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 执行 LPUSHX 命令后，列表的长度
 	 */
+	@SuppressWarnings({"unchecked"})
 	<V> Long lPushX(final byte[] key, final V... values);
 
 	/**
@@ -1487,6 +1491,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 执行 RPUSH 操作后，表的长度
 	 */
+	@SuppressWarnings({"unchecked"})
 	<V> Long rPush(final String key, final V... values);
 
 	/**
@@ -1503,6 +1508,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 执行 RPUSH 操作后，表的长度
 	 */
+	@SuppressWarnings({"unchecked"})
 	<V> Long rPush(final byte[] key, final V... values);
 
 	/**
@@ -1551,6 +1557,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 执行 RPUSHX 之后，表的长度
 	 */
+	@SuppressWarnings({"unchecked"})
 	<V> Long rPushX(final String key, final V... values);
 
 	/**
@@ -1567,6 +1574,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 执行 RPUSHX 之后，表的长度
 	 */
+	@SuppressWarnings({"unchecked"})
 	<V> Long rPushX(final byte[] key, final V... values);
 
 }

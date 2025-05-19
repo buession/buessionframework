@@ -73,12 +73,14 @@ public interface RedisClusterConnection extends RedisConnection {
 
 	@Override
 	default Pipeline openPipeline() {
-		throw new NotSupportedCommandException("Pipeline is currently not supported for JedisClusterConnection.");
+		throw new NotSupportedCommandException(
+				"Pipeline is currently not supported for " + getClass().getSimpleName() + ".");
 	}
 
 	@Override
 	default void closePipeline() {
-		throw new NotSupportedCommandException("Pipeline is currently not supported for JedisClusterConnection.");
+		throw new NotSupportedCommandException(
+				"Pipeline is currently not supported for " + getClass().getSimpleName() + ".");
 	}
 
 	@Override
