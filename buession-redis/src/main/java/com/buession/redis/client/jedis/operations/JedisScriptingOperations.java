@@ -48,7 +48,7 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 
 	@Override
 	public Object eval(final String script) {
-		final CommandArguments args = CommandArguments.create("script", script);
+		final CommandArguments args = CommandArguments.create(script);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.EVAL, (cmd)->cmd.eval(script), (v)->v)
@@ -64,7 +64,7 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 
 	@Override
 	public Object eval(final byte[] script) {
-		final CommandArguments args = CommandArguments.create("script", script);
+		final CommandArguments args = CommandArguments.create(script);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.EVAL, (cmd)->cmd.eval(script), (v)->v)
@@ -80,7 +80,7 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 
 	@Override
 	public Object eval(final String script, final String... params) {
-		final CommandArguments args = CommandArguments.create("script", script).put("params", (Object[]) params);
+		final CommandArguments args = CommandArguments.create(script).add(params);
 		final int paramsSize = params == null ? 0 : params.length;
 
 		if(isPipeline()){
@@ -99,7 +99,7 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 
 	@Override
 	public Object eval(final byte[] script, final byte[]... params) {
-		final CommandArguments args = CommandArguments.create("script", script).put("params", (Object[]) params);
+		final CommandArguments args = CommandArguments.create(script).add(params);
 		final int paramsSize = params == null ? 0 : params.length;
 
 		if(isPipeline()){
@@ -118,8 +118,8 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 
 	@Override
 	public Object eval(final String script, final String[] keys, final String[] arguments) {
-		final CommandArguments args = CommandArguments.create("script", script).put("keys", (Object[]) keys)
-				.put("arguments", (Object[]) arguments);
+		final CommandArguments args = CommandArguments.create(script).add(keys)
+				.add(arguments);
 		final List<String> keysList = Arrays.asList(keys);
 		final List<String> argumentsList = Arrays.asList(arguments);
 
@@ -140,8 +140,8 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 
 	@Override
 	public Object eval(final byte[] script, final byte[][] keys, final byte[][] arguments) {
-		final CommandArguments args = CommandArguments.create("script", script).put("keys", (Object[]) keys)
-				.put("arguments", (Object[]) arguments);
+		final CommandArguments args = CommandArguments.create(script).add(keys)
+				.add(arguments);
 		final List<byte[]> keysList = Arrays.asList(keys);
 		final List<byte[]> argumentsList = Arrays.asList(arguments);
 
@@ -162,7 +162,7 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 
 	@Override
 	public Object evalSha(final String digest) {
-		final CommandArguments args = CommandArguments.create("digest", digest);
+		final CommandArguments args = CommandArguments.create(digest);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.EVALSHA, (cmd)->cmd.evalsha(digest), (v)->v)
@@ -178,7 +178,7 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 
 	@Override
 	public Object evalSha(final byte[] digest) {
-		final CommandArguments args = CommandArguments.create("digest", digest);
+		final CommandArguments args = CommandArguments.create(digest);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.EVALSHA, (cmd)->cmd.evalsha(digest), (v)->v)
@@ -194,7 +194,7 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 
 	@Override
 	public Object evalSha(final String digest, final String... params) {
-		final CommandArguments args = CommandArguments.create("digest", digest).put("params", (Object[]) params);
+		final CommandArguments args = CommandArguments.create(digest).add(params);
 		final int paramsSize = params == null ? 0 : params.length;
 
 		if(isPipeline()){
@@ -214,7 +214,7 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 
 	@Override
 	public Object evalSha(final byte[] digest, final byte[]... params) {
-		final CommandArguments args = CommandArguments.create("digest", digest).put("params", (Object[]) params);
+		final CommandArguments args = CommandArguments.create(digest).add(params);
 		final int paramsSize = params == null ? 0 : params.length;
 
 		if(isPipeline()){
@@ -234,8 +234,8 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 
 	@Override
 	public Object evalSha(final String digest, final String[] keys, final String[] arguments) {
-		final CommandArguments args = CommandArguments.create("digest", digest).put("keys", (Object[]) keys)
-				.put("arguments", (Object[]) arguments);
+		final CommandArguments args = CommandArguments.create(digest).add(keys)
+				.add(arguments);
 		final List<String> keysList = Arrays.asList(keys);
 		final List<String> argumentsList = Arrays.asList(arguments);
 
@@ -256,8 +256,8 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 
 	@Override
 	public Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] arguments) {
-		final CommandArguments args = CommandArguments.create("digest", digest).put("keys", (Object[]) keys)
-				.put("arguments", (Object[]) arguments);
+		final CommandArguments args = CommandArguments.create(digest).add(keys)
+				.add(arguments);
 		final List<byte[]> keysList = Arrays.asList(keys);
 		final List<byte[]> argumentsList = Arrays.asList(arguments);
 
@@ -278,7 +278,7 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 
 	@Override
 	public List<Boolean> scriptExists(final String... sha1) {
-		final CommandArguments args = CommandArguments.create("sha1", (Object[]) sha1);
+		final CommandArguments args = CommandArguments.create(sha1);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.SCRIPT_EXISTS, (cmd)->cmd.scriptExists(null,
@@ -296,7 +296,7 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 
 	@Override
 	public List<Boolean> scriptExists(final byte[]... sha1) {
-		final CommandArguments args = CommandArguments.create("sha1", (Object[]) sha1);
+		final CommandArguments args = CommandArguments.create(sha1);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.SCRIPT_EXISTS, (cmd)->cmd.scriptExists(null,
@@ -330,7 +330,7 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 
 	@Override
 	public Status scriptFlush(final FlushMode mode) {
-		final CommandArguments args = CommandArguments.create("mode", mode);
+		final CommandArguments args = CommandArguments.create(mode);
 		final redis.clients.jedis.args.FlushMode flushMode = (new FlushModeConverter()).convert(mode);
 
 		if(isPipeline()){
@@ -350,7 +350,7 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 
 	@Override
 	public String scriptLoad(final String script) {
-		final CommandArguments args = CommandArguments.create("script", script);
+		final CommandArguments args = CommandArguments.create(script);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.SCRIPT_LOAD,
@@ -368,7 +368,7 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 
 	@Override
 	public byte[] scriptLoad(final byte[] script) {
-		final CommandArguments args = CommandArguments.create("script", script);
+		final CommandArguments args = CommandArguments.create(script);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.SCRIPT_LOAD,

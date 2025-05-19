@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection;
@@ -28,6 +28,7 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cglib.proxy.MethodProxy;
+import org.springframework.dao.DataAccessException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -42,12 +43,17 @@ class ConnectionSplittingInterceptor implements org.aopalliance.intercept.Method
 
 	private final static Logger logger = LoggerFactory.getLogger(ConnectionSplittingInterceptor.class);
 
-	public ConnectionSplittingInterceptor(RedisConnectionFactory factory){
+	public ConnectionSplittingInterceptor(RedisConnectionFactory factory) {
 		this.factory = factory;
 	}
 
 	@Override
-	public Object intercept(Object instance, Method method, Object[] args, MethodProxy proxy) throws Throwable{
+	public Object intercept(Object instance, Method method, Object[] args, MethodProxy proxy) throws Throwable {
+		if("getTargetConnection".equals(method.getName())){
+			// Handle getTargetConnection method: return underlying RedisConnection.
+			return instance;
+		}
+
 		if(logger.isDebugEnabled()){
 			logger.debug("Invoke '{}' on unbound connection.", method.getName());
 		}
@@ -58,22 +64,32 @@ class ConnectionSplittingInterceptor implements org.aopalliance.intercept.Method
 			return invoke(method, connection, args);
 		}finally{
 			if(connection.isClosed() == false){
-				connection.close();
+				if(logger.isDebugEnabled()){
+					logger.debug("Closing Redis Connection.");
+				}
+
+				try{
+					connection.close();
+				}catch(DataAccessException ex){
+					logger.debug("Could not close Redis Connection", ex);
+				}catch(Throwable ex){
+					logger.debug("Unexpected exception on closing Redis Connection", ex);
+				}
 			}
 		}
 	}
 
-	private Object invoke(Method method, Object target, Object[] args) throws Throwable{
+	@Override
+	public Object invoke(MethodInvocation invocation) throws Throwable {
+		return intercept(invocation.getThis(), invocation.getMethod(), invocation.getArguments(), null);
+	}
+
+	private Object invoke(Method method, Object target, Object[] args) throws Throwable {
 		try{
 			return method.invoke(target, args);
 		}catch(InvocationTargetException e){
 			throw e.getCause();
 		}
-	}
-
-	@Override
-	public Object invoke(MethodInvocation invocation) throws Throwable{
-		return intercept(invocation.getThis(), invocation.getMethod(), invocation.getArguments(), null);
 	}
 
 }

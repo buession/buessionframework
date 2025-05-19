@@ -60,7 +60,6 @@ import com.buession.redis.core.internal.lettuce.LettuceXGroupCreateArgs;
 import com.buession.redis.core.internal.lettuce.LettuceXPendingArgs;
 import com.buession.redis.core.internal.lettuce.LettuceXReadArgs;
 import com.buession.redis.core.internal.lettuce.LettuceXReadGroupArgs;
-import com.buession.redis.core.internal.lettuce.utils.StreamOffsetUtils;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.Consumer;
 import io.lettuce.core.Limit;

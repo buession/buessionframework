@@ -19,56 +19,74 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection;
 
-import org.springframework.transaction.support.ResourceHolder;
+import com.buession.core.utils.Assert;
+import org.springframework.lang.Nullable;
+import org.springframework.transaction.support.ResourceHolderSupport;
 
 /**
  * @author Yong.Teng
  */
-public class RedisConnectionHolder implements ResourceHolder {
+public final class RedisConnectionHolder extends ResourceHolderSupport {
 
-	private boolean unbound;
+	@Nullable
+	private RedisConnection connection;
 
-	private final RedisConnection connection;
+	private boolean transactionActive;
 
-	private boolean transactionSyncronisationActive;
-
-	public RedisConnectionHolder(RedisConnection connection){
+	public RedisConnectionHolder(@Nullable RedisConnection connection) {
 		this.connection = connection;
 	}
 
-	public boolean isTransactionSyncronisationActive(){
-		return getTransactionSyncronisationActive();
+	public boolean isTransactionActive() {
+		return getTransactionActive();
 	}
 
-	public boolean getTransactionSyncronisationActive(){
-		return transactionSyncronisationActive;
+	public boolean getTransactionActive() {
+		return transactionActive;
 	}
 
-	public void setTransactionSyncronisationActive(boolean transactionSyncronisationActive){
-		this.transactionSyncronisationActive = transactionSyncronisationActive;
+	public void setTransactionActive(boolean transactionActive) {
+		this.transactionActive = transactionActive;
 	}
 
-	public RedisConnection getConnection(){
+	public boolean hasConnection() {
+		return connection != null;
+	}
+
+	@Nullable
+	public RedisConnection getConnection() {
 		return connection;
 	}
 
-	@Override
-	public void reset(){
+	public RedisConnection getRequiredConnection() {
+		RedisConnection connection = getConnection();
+
+		Assert.isNull(connection, ()->new IllegalStateException("No active redis connection."));
+
+		return connection;
+	}
+
+	public void setConnection(@Nullable RedisConnection connection) {
+		this.connection = connection;
 	}
 
 	@Override
-	public void unbound(){
-		unbound = true;
+	public void released() {
+		super.released();
+		if(isOpen() == false){
+			setConnection(null);
+		}
 	}
 
 	@Override
-	public boolean isVoid(){
-		return unbound;
+	public void clear() {
+		super.clear();
+		this.transactionActive = false;
 	}
 
 }

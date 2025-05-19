@@ -69,7 +69,7 @@ public interface JedisRedisOperations extends RedisOperations {
 		@Override
 		protected R doExecute() throws RedisException {
 			final SR result = executor.execute(connection.getJedis());
-			return result == null ? null : converter.convert(result);
+			return converter.convert(result);
 		}
 
 	}
@@ -92,9 +92,9 @@ public interface JedisRedisOperations extends RedisOperations {
 			final com.buession.redis.pipeline.Pipeline pipeline = pipeline();
 
 			if(pipeline instanceof PipelineProxy){
-				final PipelineProxy<Pipeline, JedisResult<Object, Object>> pipelineFactory =
-						(PipelineProxy<Pipeline, JedisResult<Object, Object>>) pipeline;
-				final Runner runner = new PipelineRunner<>(executor, pipelineFactory, converter);
+				final PipelineProxy<Pipeline, JedisResult<SR, R>> pipelineFactory =
+						(PipelineProxy<Pipeline, JedisResult<SR, R>>) pipeline;
+				final Runner<JedisResult<SR, R>> runner = new PipelineRunner<>(executor, pipelineFactory, converter);
 
 				pipelineFactory.getTxResults().add(runner.run());
 
@@ -119,14 +119,16 @@ public interface JedisRedisOperations extends RedisOperations {
 			super(client, command, executor, converter);
 		}
 
+		@SuppressWarnings({"unchecked"})
 		@Override
 		protected R doExecute() throws RedisException {
 			final com.buession.redis.transaction.Transaction transaction = transaction();
 
 			if(transaction instanceof TransactionProxy){
-				final TransactionProxy<Transaction, JedisResult<Object, Object>> transactionFactory =
-						(TransactionProxy<Transaction, JedisResult<Object, Object>>) transaction;
-				final Runner runner = new TransactionRunner<>(executor, transactionFactory, converter);
+				final TransactionProxy<Transaction, JedisResult<SR, R>> transactionFactory =
+						(TransactionProxy<Transaction, JedisResult<SR, R>>) transaction;
+				final Runner<JedisResult<SR, R>> runner = new TransactionRunner<>(executor, transactionFactory,
+						converter);
 
 				transactionFactory.getTxResults().add(runner.run());
 
@@ -153,7 +155,7 @@ public interface JedisRedisOperations extends RedisOperations {
 		@Override
 		protected R doExecute() throws RedisException {
 			final SR result = executor.execute(connection.getJedis());
-			return result == null ? null : converter.convert(result);
+			return converter.convert(result);
 		}
 
 	}
@@ -177,8 +179,8 @@ public interface JedisRedisOperations extends RedisOperations {
 			final com.buession.redis.pipeline.Pipeline pipeline = pipeline();
 
 			if(pipeline instanceof PipelineProxy){
-				final PipelineProxy<Pipeline, JedisResult<Object, Object>> pipelineFactory = (PipelineProxy<Pipeline, JedisResult<Object, Object>>) pipeline;
-				final Runner runner = new PipelineRunner<>(executor, pipelineFactory, converter);
+				final PipelineProxy<Pipeline, JedisResult<SR, R>> pipelineFactory = (PipelineProxy<Pipeline, JedisResult<SR, R>>) pipeline;
+				final Runner<JedisResult<SR, R>> runner = new PipelineRunner<>(executor, pipelineFactory, converter);
 
 				pipelineFactory.getTxResults().add(runner.run());
 
@@ -203,14 +205,16 @@ public interface JedisRedisOperations extends RedisOperations {
 			super(client, command, executor, converter);
 		}
 
+		@SuppressWarnings({"unchecked"})
 		@Override
 		protected R doExecute() throws RedisException {
 			final com.buession.redis.transaction.Transaction transaction = transaction();
 
 			if(transaction instanceof TransactionProxy){
-				final TransactionProxy<Transaction, JedisResult<Object, Object>> transactionFactory =
-						(TransactionProxy<Transaction, JedisResult<Object, Object>>) transaction;
-				final Runner runner = new TransactionRunner<>(executor, transactionFactory, converter);
+				final TransactionProxy<Transaction, JedisResult<SR, R>> transactionFactory =
+						(TransactionProxy<Transaction, JedisResult<SR, R>>) transaction;
+				final Runner<JedisResult<SR, R>> runner = new TransactionRunner<>(executor, transactionFactory,
+						converter);
 
 				transactionFactory.getTxResults().add(runner.run());
 
@@ -237,7 +241,7 @@ public interface JedisRedisOperations extends RedisOperations {
 		@Override
 		protected R doExecute() throws RedisException {
 			final SR result = executor.execute(connection.getCluster());
-			return result == null ? null : converter.convert(result);
+			return converter.convert(result);
 		}
 
 	}
@@ -261,9 +265,9 @@ public interface JedisRedisOperations extends RedisOperations {
 			final com.buession.redis.pipeline.Pipeline pipeline = pipeline();
 
 			if(pipeline instanceof PipelineProxy){
-				final PipelineProxy<ClusterPipeline, JedisResult<Object, Object>> pipelineFactory = (PipelineProxy<ClusterPipeline,
-						JedisResult<Object, Object>>) pipeline;
-				final Runner runner = new PipelineRunner<>(executor, pipelineFactory, converter);
+				final PipelineProxy<ClusterPipeline, JedisResult<SR, R>> pipelineFactory = (PipelineProxy<ClusterPipeline,
+						JedisResult<SR, R>>) pipeline;
+				final Runner<JedisResult<SR, R>> runner = new PipelineRunner<>(executor, pipelineFactory, converter);
 
 				pipelineFactory.getTxResults().add(runner.run());
 
@@ -288,14 +292,16 @@ public interface JedisRedisOperations extends RedisOperations {
 			super(client, command, executor, converter);
 		}
 
+		@SuppressWarnings({"unchecked"})
 		@Override
 		protected R doExecute() throws RedisException {
 			final com.buession.redis.transaction.Transaction transaction = transaction();
 
 			if(transaction instanceof TransactionProxy){
-				final TransactionProxy<Transaction, JedisResult<Object, Object>> transactionFactory =
-						(TransactionProxy<Transaction, JedisResult<Object, Object>>) transaction;
-				final Runner runner = new TransactionRunner<>(executor, transactionFactory, converter);
+				final TransactionProxy<Transaction, JedisResult<SR, R>> transactionFactory =
+						(TransactionProxy<Transaction, JedisResult<SR, R>>) transaction;
+				final Runner<JedisResult<SR, R>> runner = new TransactionRunner<>(executor, transactionFactory,
+						converter);
 
 				transactionFactory.getTxResults().add(runner.run());
 
@@ -307,15 +313,25 @@ public interface JedisRedisOperations extends RedisOperations {
 
 	}
 
-	abstract class PtRunner<T, SR, R> implements Command.Runner {
+	abstract class PtRunner<T, SR, R> implements Command.Runner<JedisResult<SR, R>> {
 
 		protected final Command.Executor<T, Response<SR>> executor;
 
+		protected final T context;
+
 		protected final Converter<SR, R> converter;
 
-		public PtRunner(final Command.Executor<T, Response<SR>> executor, final Converter<SR, R> converter) {
+		public PtRunner(final Command.Executor<T, Response<SR>> executor, final T context,
+						final Converter<SR, R> converter) {
 			this.executor = executor;
+			this.context = context;
 			this.converter = converter;
+		}
+
+		@Override
+		public JedisResult<SR, R> run() throws RedisException {
+			final Response<SR> response = executor.execute(context);
+			return converter == null ? newJedisResult(response) : newJedisResult(response, converter);
 		}
 
 		protected JedisResult<SR, R> newJedisResult(final Response<SR> response) {
@@ -330,40 +346,20 @@ public interface JedisRedisOperations extends RedisOperations {
 
 	final class PipelineRunner<T, SR, R> extends PtRunner<T, SR, R> {
 
-		private final PipelineProxy<T, JedisResult<Object, Object>> pipelineFactory;
-
 		public PipelineRunner(final Command.Executor<T, Response<SR>> executor,
-							  final PipelineProxy<T, JedisResult<Object, Object>> pipelineFactory,
+							  final PipelineProxy<T, JedisResult<SR, R>> pipelineFactory,
 							  final Converter<SR, R> converter) {
-			super(executor, converter);
-			this.pipelineFactory = pipelineFactory;
-		}
-
-		@SuppressWarnings({"unchecked"})
-		@Override
-		public JedisResult<SR, R> run() throws RedisException {
-			final Response<SR> response = executor.execute(pipelineFactory.getObject());
-			return converter == null ? newJedisResult(response) : newJedisResult(response, converter);
+			super(executor, pipelineFactory.getObject(), converter);
 		}
 
 	}
 
 	final class TransactionRunner<T, SR, R> extends PtRunner<T, SR, R> {
 
-		private final TransactionProxy<T, JedisResult<Object, Object>> transactionFactory;
-
 		public TransactionRunner(final Command.Executor<T, Response<SR>> executor,
-								 final TransactionProxy<T, JedisResult<Object, Object>> transactionFactory,
+								 final TransactionProxy<T, JedisResult<SR, R>> transactionFactory,
 								 final Converter<SR, R> converter) {
-			super(executor, converter);
-			this.transactionFactory = transactionFactory;
-		}
-
-		@SuppressWarnings({"unchecked"})
-		@Override
-		public JedisResult<SR, R> run() throws RedisException {
-			final Response<SR> response = executor.execute(transactionFactory.getObject());
-			return converter == null ? newJedisResult(response) : newJedisResult(response, converter);
+			super(executor, transactionFactory.getObject(), converter);
 		}
 
 	}

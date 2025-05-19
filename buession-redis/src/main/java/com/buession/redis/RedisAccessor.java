@@ -26,8 +26,8 @@ package com.buession.redis;
 
 import com.buession.core.utils.Assert;
 import com.buession.redis.client.RedisClient;
-import com.buession.redis.client.connection.JedisConnectionFactory;
-import com.buession.redis.client.connection.LettuceConnectionFactory;
+import com.buession.redis.client.connection.jedis.JedisConnectionFactory;
+import com.buession.redis.client.connection.lettuce.LettuceConnectionFactory;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.RedisConnectionFactory;
 import com.buession.redis.client.connection.RedisConnectionUtils;
@@ -74,6 +74,9 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 	 */
 	protected final static Serializer DEFAULT_SERIALIZER = new JacksonJsonSerializer();
 
+	/**
+	 * 配置选项
+	 */
 	protected Options options = DEFAULT_OPTIONS;
 
 	/**
@@ -81,13 +84,22 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 	 */
 	protected Serializer serializer;
 
+	/**
+	 * Redis 数据源
+	 */
 	protected DataSource dataSource;
 
+	/**
+	 * Redis 连接工厂
+	 */
 	protected RedisConnectionFactory connectionFactory;
 
-	protected boolean enableTransactionSupport = false;
+	protected RedisClient client;
 
-	protected RedisClient redisClient;
+	/**
+	 * 是否启用事务支持
+	 */
+	protected boolean enableTransactionSupport = false;
 
 	protected final static ThreadLocal<Map<Integer, Function<?, ?>>> txConverters = new ThreadLocal<>();
 
@@ -114,26 +126,53 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 		setDataSource(dataSource);
 	}
 
+	/**
+	 * 返回配置选项
+	 *
+	 * @return 配置选项
+	 */
 	public Options getOptions() {
 		return options;
 	}
 
+	/**
+	 * 设置配置选项
+	 *
+	 * @param options
+	 * 		配置选项
+	 */
 	public void setOptions(Options options) {
 		this.options = options;
 	}
 
-	@Nullable
-	public RedisConnectionFactory getConnectionFactory() {
-		return connectionFactory;
-	}
-
+	/**
+	 * 返回 Redis 数据源
+	 *
+	 * @return Redis 数据源
+	 */
 	@Nullable
 	public DataSource getDataSource() {
 		return dataSource;
 	}
 
+	/**
+	 * 设置 Redis 数据源
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 */
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
+	}
+
+	/**
+	 * 返回 Redis 连接工厂
+	 *
+	 * @return Redis 连接工厂
+	 */
+	@Nullable
+	public RedisConnectionFactory getConnectionFactory() {
+		return connectionFactory;
 	}
 
 	@Override
@@ -157,16 +196,17 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 			}else if(dataSource instanceof JedisDataSource){
 				connectionFactory = new JedisConnectionFactory((JedisDataSource) dataSource);
 			}else{
-				Assert.isNull(getDataSource(), "DataSource is required");
+				throw new RedisException("dataSource must be an instance of " + JedisDataSource.class.getName() +
+						" or " + JedisDataSource.class.getName() + ", but an instance of " +
+						dataSource.getClass().getName() + ".");
 			}
 		}
 	}
 
 	public void pipeline() {
-		RedisConnection connection = fetchConnection();
+		RedisConnection connection = fetchRequiredConnection();
+		RedisClient client = fetchRequiredRedisClient(connection);
 
-		RedisClient client = doGetRedisClient();
-		client.setConnection(connection);
 		client.execute(new Command<Pipeline>() {
 
 			@Override
@@ -191,9 +231,7 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 		Assert.isNull(callback, "callback cloud not be null.");
 
 		RedisConnection connection = fetchRequiredConnection();
-
-		RedisClient client = doGetRedisClient();
-		client.setConnection(connection);
+		RedisClient client = fetchRequiredRedisClient(connection);
 
 		if(isMulti(connection)){
 			index.set(index.get() + 1);
@@ -211,9 +249,7 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 		Assert.isNull(callback, "callback cloud not be null.");
 
 		RedisConnection connection = fetchRequiredConnection();
-
-		RedisClient client = doGetRedisClient();
-		client.setConnection(connection);
+		RedisClient client = fetchRequiredRedisClient(connection);
 
 		if(isMulti(connection)){
 			index.set(index.get() + 1);
@@ -232,7 +268,7 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 	}
 
 	protected RedisConnection fetchConnection() {
-		return RedisConnectionUtils.bindConnection(connectionFactory, enableTransactionSupport);
+		return RedisConnectionUtils.getConnection(connectionFactory, enableTransactionSupport);
 	}
 
 	protected RedisConnection fetchRequiredConnection() {
@@ -240,28 +276,34 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 		return fetchConnection();
 	}
 
-	protected RedisClient doGetRedisClient() throws RedisException {
-		if(redisClient == null){
-			DataSource dataSource = getDataSource();
+	protected RedisClient fetchRedisClient(final RedisConnection connection) throws RedisException {
+		DataSource dataSource = getDataSource();
 
-			if(dataSource instanceof JedisDataSource){
-				redisClient = new JedisStandaloneClient();
-			}else if(dataSource instanceof JedisSentinelDataSource){
-				redisClient = new JedisSentinelClient();
-			}else if(dataSource instanceof JedisClusterDataSource){
-				redisClient = new JedisClusterClient();
-			}else if(dataSource instanceof LettuceDataSource){
-				redisClient = new LettuceStandaloneClient();
-			}else if(dataSource instanceof LettuceSentinelDataSource){
-				redisClient = new LettuceSentinelClient();
-			}else if(dataSource instanceof LettuceClusterDataSource){
-				redisClient = new LettuceClusterClient();
-			}else{
-				throw new RedisException("Cloud not initialize RedisClient for: " + dataSource);
-			}
+		if(dataSource instanceof JedisDataSource){
+			return new JedisStandaloneClient();
+		}else if(dataSource instanceof JedisSentinelDataSource){
+			return new JedisSentinelClient();
+		}else if(dataSource instanceof JedisClusterDataSource){
+			return new JedisClusterClient();
+		}else if(dataSource instanceof LettuceDataSource){
+			return new LettuceStandaloneClient();
+		}else if(dataSource instanceof LettuceSentinelDataSource){
+			return new LettuceSentinelClient();
+		}else if(dataSource instanceof LettuceClusterDataSource){
+			return new LettuceClusterClient();
+		}else{
+			throw new RedisException("Cloud not initialize RedisClient for: " + dataSource);
+		}
+	}
+
+	protected RedisClient fetchRequiredRedisClient(final RedisConnection connection) throws RedisException {
+		if(client == null){
+			client = fetchRedisClient(connection);
 		}
 
-		return redisClient;
+		client.setConnection(connection);
+
+		return client;
 	}
 
 	protected final void checkInitialized() {

@@ -228,7 +228,7 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 
 	@Override
 	public List<String> clusterGetKeysInSlot(final int slot, final long count) {
-		final CommandArguments args = CommandArguments.create("slot", slot).put("count", count);
+		final CommandArguments args = CommandArguments.create(slot).add(count);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLUSTER_GETKEYSINSLOT,
@@ -419,7 +419,7 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 
 	@Override
 	public Status clusterSetConfigEpoch(final long configEpoch) {
-		final CommandArguments args = CommandArguments.create("configEpoch", configEpoch);
+		final CommandArguments args = CommandArguments.create(configEpoch);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLUSTER_SETCONFIGEPOCH,
@@ -457,8 +457,8 @@ public final class LettuceClusterClusterOperations extends AbstractClusterOperat
 
 	@Override
 	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final String nodeId) {
-		final CommandArguments args = CommandArguments.create("slot", slot).put("setSlotOption", setSlotOption)
-				.put("nodeId", nodeId);
+		final CommandArguments args = CommandArguments.create(slot).add(setSlotOption)
+				.add(nodeId);
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.CLUSTER_SETSLOT, (cmd)->{

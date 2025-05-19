@@ -97,10 +97,10 @@ public interface LettuceRedisOperations extends RedisOperations {
 			final com.buession.redis.pipeline.Pipeline pipeline = pipeline();
 
 			if(pipeline instanceof PipelineProxy){
-				final PipelineProxy<FlushEachCommand, LettuceResult<Object, Object>> pipelineFactory =
-						(PipelineProxy<FlushEachCommand, LettuceResult<Object, Object>>) pipeline;
+				final PipelineProxy<FlushEachCommand, LettuceResult<SR, R>> pipelineFactory =
+						(PipelineProxy<FlushEachCommand, LettuceResult<SR, R>>) pipeline;
 
-				final Runner runner = new PipelineRunner<>((context)->{
+				final Runner<LettuceResult<SR, R>> runner = new PipelineRunner<>((context)->{
 					context.onCommand(connection.getStatefulConnection());
 					return executor.execute(connection.getStatefulConnection().async());
 				}, pipelineFactory, converter);
@@ -135,10 +135,10 @@ public interface LettuceRedisOperations extends RedisOperations {
 			final com.buession.redis.transaction.Transaction transaction = transaction();
 
 			if(transaction instanceof TransactionProxy){
-				final TransactionProxy<RedisCommands<byte[], byte[]>, LettuceResult<Object, Object>> transactionFactory =
-						(TransactionProxy<RedisCommands<byte[], byte[]>, LettuceResult<Object, Object>>) transaction;
+				final TransactionProxy<RedisCommands<byte[], byte[]>, LettuceResult<SR, R>> transactionFactory =
+						(TransactionProxy<RedisCommands<byte[], byte[]>, LettuceResult<SR, R>>) transaction;
 
-				final Runner runner = new TransactionRunner<>(
+				final Runner<LettuceResult<SR, R>> runner = new TransactionRunner<>(
 						(context)->executor.execute(connection.getStatefulConnection().async()), transactionFactory,
 						converter);
 
@@ -192,10 +192,10 @@ public interface LettuceRedisOperations extends RedisOperations {
 			final com.buession.redis.pipeline.Pipeline pipeline = pipeline();
 
 			if(pipeline instanceof PipelineProxy){
-				final PipelineProxy<FlushEachCommand, LettuceResult<Object, Object>> pipelineFactory =
-						(PipelineProxy<FlushEachCommand, LettuceResult<Object, Object>>) pipeline;
+				final PipelineProxy<FlushEachCommand, LettuceResult<SR, R>> pipelineFactory =
+						(PipelineProxy<FlushEachCommand, LettuceResult<SR, R>>) pipeline;
 
-				final Runner runner = new PipelineRunner<>((context)->{
+				final Runner<LettuceResult<SR, R>> runner = new PipelineRunner<>((context)->{
 					context.onCommand(connection.getStatefulRedisSentinelConnection());
 					return executor.execute(connection.getStatefulRedisSentinelConnection().async());
 				}, pipelineFactory, converter);
@@ -230,10 +230,10 @@ public interface LettuceRedisOperations extends RedisOperations {
 			final com.buession.redis.transaction.Transaction transaction = transaction();
 
 			if(transaction instanceof TransactionProxy){
-				final TransactionProxy<RedisCommands<byte[], byte[]>, LettuceResult<Object, Object>> transactionFactory =
-						(TransactionProxy<RedisCommands<byte[], byte[]>, LettuceResult<Object, Object>>) transaction;
+				final TransactionProxy<RedisCommands<byte[], byte[]>, LettuceResult<SR, R>> transactionFactory =
+						(TransactionProxy<RedisCommands<byte[], byte[]>, LettuceResult<SR, R>>) transaction;
 
-				final Runner runner = new TransactionRunner<>(
+				final Runner<LettuceResult<SR, R>> runner = new TransactionRunner<>(
 						(context)->executor.execute(connection.getStatefulRedisSentinelConnection().async()),
 						transactionFactory, converter);
 
@@ -287,10 +287,10 @@ public interface LettuceRedisOperations extends RedisOperations {
 			final com.buession.redis.pipeline.Pipeline pipeline = pipeline();
 
 			if(pipeline instanceof PipelineProxy){
-				final PipelineProxy<FlushEachCommand, LettuceResult<Object, Object>> pipelineFactory =
-						(PipelineProxy<FlushEachCommand, LettuceResult<Object, Object>>) pipeline;
+				final PipelineProxy<FlushEachCommand, LettuceResult<SR, R>> pipelineFactory =
+						(PipelineProxy<FlushEachCommand, LettuceResult<SR, R>>) pipeline;
 
-				final Runner runner = new PipelineRunner<>((context)->{
+				final Runner<LettuceResult<SR, R>> runner = new PipelineRunner<>((context)->{
 					context.onCommand(connection.getStatefulRedisClusterConnection());
 					return executor.execute(connection.getStatefulRedisClusterConnection().async());
 				}, pipelineFactory, converter);
@@ -325,10 +325,10 @@ public interface LettuceRedisOperations extends RedisOperations {
 			final com.buession.redis.transaction.Transaction transaction = transaction();
 
 			if(transaction instanceof TransactionProxy){
-				final TransactionProxy<RedisCommands<byte[], byte[]>, LettuceResult<Object, Object>> transactionFactory =
-						(TransactionProxy<RedisCommands<byte[], byte[]>, LettuceResult<Object, Object>>) transaction;
+				final TransactionProxy<RedisCommands<byte[], byte[]>, LettuceResult<SR, R>> transactionFactory =
+						(TransactionProxy<RedisCommands<byte[], byte[]>, LettuceResult<SR, R>>) transaction;
 
-				final Runner runner = new TransactionRunner<>(
+				final Runner<LettuceResult<SR, R>> runner = new TransactionRunner<>(
 						(context)->executor.execute(connection.getStatefulRedisClusterConnection().async()),
 						transactionFactory, converter);
 
@@ -342,16 +342,25 @@ public interface LettuceRedisOperations extends RedisOperations {
 
 	}
 
-	abstract class PtRunner<T, SR, R> implements Command.Runner {
+	abstract class PtRunner<T, SR, R> implements Command.Runner<LettuceResult<SR, R>> {
 
 		protected final Command.Executor<T, RedisFuture<SR>> executor;
+
+		protected final T context;
 
 		protected final Converter<SR, R> converter;
 
 		public PtRunner(final Command.Executor<T, RedisFuture<SR>> executor,
-						final Converter<SR, R> converter) {
+						final T context, final Converter<SR, R> converter) {
 			this.executor = executor;
+			this.context = context;
 			this.converter = converter;
+		}
+
+		@Override
+		public LettuceResult<SR, R> run() throws RedisException {
+			final RedisFuture<SR> future = executor.execute(context);
+			return converter == null ? newLettuceResult(future) : newLettuceResult(future, converter);
 		}
 
 		protected LettuceResult<SR, R> newLettuceResult(final RedisFuture<SR> future) {
@@ -367,40 +376,20 @@ public interface LettuceRedisOperations extends RedisOperations {
 
 	final class PipelineRunner<T, SR, R> extends PtRunner<T, SR, R> {
 
-		private final PipelineProxy<T, LettuceResult<Object, Object>> pipelineFactory;
-
 		public PipelineRunner(final Command.Executor<T, RedisFuture<SR>> executor,
-							  final PipelineProxy<T, LettuceResult<Object, Object>> pipelineFactory,
+							  final PipelineProxy<T, LettuceResult<SR, R>> pipelineFactory,
 							  final Converter<SR, R> converter) {
-			super(executor, converter);
-			this.pipelineFactory = pipelineFactory;
-		}
-
-		@SuppressWarnings({"unchecked"})
-		@Override
-		public LettuceResult<SR, R> run() throws RedisException {
-			final RedisFuture<SR> future = executor.execute(pipelineFactory.getObject());
-			return converter == null ? newLettuceResult(future) : newLettuceResult(future, converter);
+			super(executor, pipelineFactory.getObject(), converter);
 		}
 
 	}
 
 	final class TransactionRunner<T, SR, R> extends PtRunner<T, SR, R> {
 
-		private final TransactionProxy<T, LettuceResult<Object, Object>> transactionProxy;
-
 		public TransactionRunner(final Command.Executor<T, RedisFuture<SR>> executor,
-								 final TransactionProxy<T, LettuceResult<Object, Object>> transactionProxy,
+								 final TransactionProxy<T, LettuceResult<SR, R>> transactionProxy,
 								 final Converter<SR, R> converter) {
-			super(executor, converter);
-			this.transactionProxy = transactionProxy;
-		}
-
-		@SuppressWarnings({"unchecked"})
-		@Override
-		public LettuceResult<SR, R> run() throws RedisException {
-			final RedisFuture<SR> future = executor.execute(transactionProxy.getObject());
-			return converter == null ? newLettuceResult(future) : newLettuceResult(future, converter);
+			super(executor, transactionProxy.getObject(), converter);
 		}
 
 	}

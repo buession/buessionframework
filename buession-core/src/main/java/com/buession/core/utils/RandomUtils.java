@@ -107,8 +107,6 @@ public class RandomUtils {
 	 * @since 1.2.0
 	 */
 	public static int nextInt(final int start, final int end) {
-		Assert.isTrue(start < 0, "Both range values must be non-negative.");
-
 		if(start == end){
 			return start;
 		}
@@ -155,8 +153,6 @@ public class RandomUtils {
 	 * @since 1.2.0
 	 */
 	public static long nextLong(final long start, final long end) {
-		Assert.isTrue(start < 0, "Both range values must be non-negative.");
-
 		if(start == end){
 			return start;
 		}
@@ -203,8 +199,6 @@ public class RandomUtils {
 	 * @since 1.2.0
 	 */
 	public static float nextFloat(final float start, final float end) {
-		Assert.isTrue(start < 0, "Both range values must be non-negative.");
-
 		if(Objects.equals(start, end)){
 			return start;
 		}
@@ -251,8 +245,6 @@ public class RandomUtils {
 	 * @since 1.2.0
 	 */
 	public static double nextDouble(final double start, final double end) {
-		Assert.isTrue(start < 0, "Both range values must be non-negative.");
-
 		if(Objects.equals(start, end)){
 			return start;
 		}

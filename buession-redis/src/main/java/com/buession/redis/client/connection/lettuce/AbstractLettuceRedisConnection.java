@@ -154,16 +154,6 @@ public abstract class AbstractLettuceRedisConnection extends AbstractRedisConnec
 	/**
 	 * 构造函数
 	 *
-	 * @param poolConfig
-	 * 		连接池配置
-	 */
-	public AbstractLettuceRedisConnection(PoolConfig poolConfig) {
-		super(poolConfig);
-	}
-
-	/**
-	 * 构造函数
-	 *
 	 * @param dataSource
 	 * 		Redis 数据源
 	 * @param poolConfig
@@ -279,7 +269,6 @@ public abstract class AbstractLettuceRedisConnection extends AbstractRedisConnec
 		try{
 			return executor.execute(this);
 		}catch(Exception e){
-			logger.error("Redis execute command failure: {}", e.getMessage(), e);
 			throw LettuceRedisExceptionUtils.convert(e);
 		}
 	}

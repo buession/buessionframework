@@ -30,6 +30,7 @@ import com.buession.httpclient.apache.Apache5AsyncClient;
 import com.buession.httpclient.apache.ApacheAsyncClient;
 import com.buession.httpclient.conn.Apache5NioClientConnectionManager;
 import com.buession.httpclient.conn.ApacheNioClientConnectionManager;
+import com.buession.httpclient.conn.NioConnectionManager;
 import com.buession.httpclient.core.Configuration;
 import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.RequestBody;
@@ -100,9 +101,10 @@ public class ApacheHttpAsyncClient extends AbstractHttpAsyncClient {
 
 	public ApacheAsyncClient getHttpClient() {
 		if(httpAsyncClient == null){
-			httpAsyncClient = V5 ? new Apache5AsyncClient((Apache5NioClientConnectionManager) getConnectionManager(),
-					getHttpVersion()) : new Apache4AsyncClient(
-					(ApacheNioClientConnectionManager) getConnectionManager(), getHttpVersion());
+			NioConnectionManager connectionManager = getConnectionManager();
+			httpAsyncClient = connectionManager instanceof Apache5NioClientConnectionManager ?
+					new Apache5AsyncClient((Apache5NioClientConnectionManager) connectionManager, getHttpVersion()) :
+					new Apache4AsyncClient((ApacheNioClientConnectionManager) connectionManager, getHttpVersion());
 		}
 
 		return httpAsyncClient;

@@ -43,7 +43,7 @@ public final class LettuceSentinelHyperLogLogOperations extends AbstractHyperLog
 
 	@Override
 	public Status pfAdd(final byte[] key, final byte[]... elements) {
-		final CommandArguments args = CommandArguments.create("key", key).put("elements", (Object[]) elements);
+		final CommandArguments args = CommandArguments.create(key).add(elements);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.PFADD)
@@ -58,24 +58,8 @@ public final class LettuceSentinelHyperLogLogOperations extends AbstractHyperLog
 	}
 
 	@Override
-	public Status pfMerge(final byte[] destKey, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", (Object[]) keys);
-
-		if(isPipeline()){
-			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.PFMERGE)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.PFMERGE)
-					.run(args);
-		}else{
-			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.PFMERGE)
-					.run(args);
-		}
-	}
-
-	@Override
 	public Long pfCount(final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create("keys", (Object[]) keys);
+		final CommandArguments args = CommandArguments.create(keys);
 
 		if(isPipeline()){
 			return new LettuceSentinelPipelineCommand<Long, Long>(client, ProtocolCommand.PFMERGE)
@@ -85,6 +69,22 @@ public final class LettuceSentinelHyperLogLogOperations extends AbstractHyperLog
 					.run(args);
 		}else{
 			return new LettuceSentinelCommand<Long, Long>(client, ProtocolCommand.PFMERGE)
+					.run(args);
+		}
+	}
+
+	@Override
+	public Status pfMerge(final byte[] destKey, final byte[]... keys) {
+		final CommandArguments args = CommandArguments.create(destKey).add(keys);
+
+		if(isPipeline()){
+			return new LettuceSentinelPipelineCommand<Status, Status>(client, ProtocolCommand.PFMERGE)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceSentinelTransactionCommand<Status, Status>(client, ProtocolCommand.PFMERGE)
+					.run(args);
+		}else{
+			return new LettuceSentinelCommand<Status, Status>(client, ProtocolCommand.PFMERGE)
 					.run(args);
 		}
 	}

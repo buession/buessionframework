@@ -49,21 +49,21 @@ public final class LettucePubSubOperations extends AbstractPubSubOperations<Lett
 
 	@Override
 	public void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener) {
-		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns)
-				.put("pubSubListener", pubSubListener);
+		final CommandArguments args = CommandArguments.create(patterns)
+				.add(pubSubListener);
 		pSubscribe(args);
 	}
 
 	@Override
 	public void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener) {
-		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns)
-				.put("pubSubListener", pubSubListener);
+		final CommandArguments args = CommandArguments.create(patterns)
+				.add(pubSubListener);
 		pSubscribe(args);
 	}
 
 	@Override
 	public Long publish(final byte[] channel, final byte[] message) {
-		final CommandArguments args = CommandArguments.create("channel", channel).put("message", message);
+		final CommandArguments args = CommandArguments.create(channel).add(message);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.PUBLISH, (cmd)->cmd.publish(channel, message),
@@ -98,7 +98,7 @@ public final class LettucePubSubOperations extends AbstractPubSubOperations<Lett
 
 	@Override
 	public List<String> pubsubChannels(final String pattern) {
-		final CommandArguments args = CommandArguments.create("pattern", pattern);
+		final CommandArguments args = CommandArguments.create(pattern);
 		final byte[] bPattern = SafeEncoder.encode(pattern);
 
 		return pubsubChannels(bPattern, binaryToStringListConverter, args);
@@ -106,7 +106,7 @@ public final class LettucePubSubOperations extends AbstractPubSubOperations<Lett
 
 	@Override
 	public List<byte[]> pubsubChannels(final byte[] pattern) {
-		final CommandArguments args = CommandArguments.create("pattern", pattern);
+		final CommandArguments args = CommandArguments.create(pattern);
 		return pubsubChannels(pattern, (v)->v, args);
 	}
 
@@ -128,7 +128,7 @@ public final class LettucePubSubOperations extends AbstractPubSubOperations<Lett
 
 	@Override
 	public Map<String, Long> pubsubNumSub(final String... channels) {
-		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
+		final CommandArguments args = CommandArguments.create(channels);
 		final byte[][] bChannels = SafeEncoder.encode(channels);
 		final MapConverter<byte[], Long, String, Long> converter = new MapConverter<>(SafeEncoder::encode, (v)->v);
 
@@ -137,7 +137,7 @@ public final class LettucePubSubOperations extends AbstractPubSubOperations<Lett
 
 	@Override
 	public Map<byte[], Long> pubsubNumSub(final byte[]... channels) {
-		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
+		final CommandArguments args = CommandArguments.create(channels);
 		return pubsubNumSub(channels, (v)->v, args);
 	}
 
@@ -157,27 +157,27 @@ public final class LettucePubSubOperations extends AbstractPubSubOperations<Lett
 
 	@Override
 	public Object pUnSubscribe(final String... patterns) {
-		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns);
+		final CommandArguments args = CommandArguments.create(patterns);
 		return pUnSubscribe(args);
 	}
 
 	@Override
 	public Object pUnSubscribe(final byte[]... patterns) {
-		final CommandArguments args = CommandArguments.create("patterns", (Object[]) patterns);
+		final CommandArguments args = CommandArguments.create(patterns);
 		return pUnSubscribe(args);
 	}
 
 	@Override
 	public void subscribe(final String[] channels, final PubSubListener<String> pubSubListener) {
-		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels)
-				.put("pubSubListener", pubSubListener);
+		final CommandArguments args = CommandArguments.create(channels)
+				.add(pubSubListener);
 		subscribe(args);
 	}
 
 	@Override
 	public void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener) {
-		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels)
-				.put("pubSubListener", pubSubListener);
+		final CommandArguments args = CommandArguments.create(channels)
+				.add(pubSubListener);
 		subscribe(args);
 	}
 
@@ -197,13 +197,13 @@ public final class LettucePubSubOperations extends AbstractPubSubOperations<Lett
 
 	@Override
 	public Object unSubscribe(final String... channels) {
-		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
+		final CommandArguments args = CommandArguments.create(channels);
 		return unSubscribe(args);
 	}
 
 	@Override
 	public Object unSubscribe(final byte[]... channels) {
-		final CommandArguments args = CommandArguments.create("channels", (Object[]) channels);
+		final CommandArguments args = CommandArguments.create(channels);
 		return unSubscribe(args);
 	}
 

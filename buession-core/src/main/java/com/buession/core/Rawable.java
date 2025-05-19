@@ -31,13 +31,7 @@ package com.buession.core;
  * @since 2.0.0
  */
 @FunctionalInterface
-public interface Rawable {
-
-	/**
-	 * 返回原始的字节数组
-	 *
-	 * @return 原始的字节数组
-	 */
-	byte[] getRaw();
+@Deprecated
+public interface Rawable extends com.buession.lang.Rawable {
 
 }

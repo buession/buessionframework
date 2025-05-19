@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package okhttp3.nio;
@@ -48,6 +48,13 @@ public class NioHttpClientConnectionManager implements Closeable {
 	 * 最大连接数
 	 */
 	private int maxConnections = 5;
+
+	/**
+	 * 连接池中最大空闲连接数
+	 *
+	 * @since 3.0.1
+	 */
+	private int maxIdleConnections = 5;
 
 	/**
 	 * 闲连接存活时长，单位：毫秒
@@ -87,7 +94,8 @@ public class NioHttpClientConnectionManager implements Closeable {
 	 */
 	public ConnectionPool getConnectionPool() {
 		if(connectionPool == null){
-			connectionPool = new ConnectionPool(maxConnections, idleConnectionTime, TimeUnit.MILLISECONDS);
+			connectionPool = new ConnectionPool(getMaxIdleConnections(), getIdleConnectionTime(),
+					TimeUnit.MILLISECONDS);
 		}
 
 		return connectionPool;
@@ -122,6 +130,29 @@ public class NioHttpClientConnectionManager implements Closeable {
 	 */
 	public void setMaxConnections(int maxConnections) {
 		this.maxConnections = maxConnections;
+	}
+
+	/**
+	 * 返回连接池中最大空闲连接数
+	 *
+	 * @return 连接池中最大空闲连接数
+	 *
+	 * @since 3.0.1
+	 */
+	public int getMaxIdleConnections() {
+		return maxIdleConnections;
+	}
+
+	/**
+	 * 设置连接池中最大空闲连接数
+	 *
+	 * @param maxIdleConnections
+	 * 		连接池中最大空闲连接数
+	 *
+	 * @since 3.0.1
+	 */
+	public void setMaxIdleConnections(int maxIdleConnections) {
+		this.maxIdleConnections = maxIdleConnections;
 	}
 
 	/**

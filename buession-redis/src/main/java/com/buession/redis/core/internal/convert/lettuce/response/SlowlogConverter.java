@@ -41,6 +41,7 @@ import java.util.stream.Collectors;
  */
 public final class SlowlogConverter implements Converter<Object, SlowLog> {
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public SlowLog convert(final Object source) {
 		if(source instanceof List){
@@ -74,6 +75,7 @@ public final class SlowlogConverter implements Converter<Object, SlowLog> {
 		return value == null ? null : new String((byte[]) value);
 	}
 
+	@SuppressWarnings({"unchecked"})
 	private static List<String> parseArgs(final Object value) {
 		if(value == null){
 			return null;

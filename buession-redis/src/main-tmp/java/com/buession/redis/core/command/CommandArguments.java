@@ -40,30 +40,12 @@ import java.util.Map;
  */
 public final class CommandArguments {
 
-	private CommandArguments() {
-	}
-
-	private CommandArguments(final Keyword value) {
-		add(value);
-	}
 
 	private CommandArguments(final ProtocolCommand value) {
 		add(value);
 	}
 
-	private CommandArguments(final Range<?> value) {
-		add(value);
-	}
-
-	private CommandArguments(final Keyword... values) {
-		add(values);
-	}
-
 	private CommandArguments(final ProtocolCommand... values) {
-		add(values);
-	}
-
-	private CommandArguments(final Range<?>... values) {
 		add(values);
 	}
 
@@ -75,28 +57,8 @@ public final class CommandArguments {
 		return new CommandArguments(value);
 	}
 
-	public static CommandArguments create(final Range<?> value) {
-		return new CommandArguments(value);
-	}
-
-	public static CommandArguments create(final Keyword... values) {
-		return new CommandArguments(values);
-	}
-
 	public static CommandArguments create(final ProtocolCommand... values) {
 		return new CommandArguments(values);
-	}
-
-	public static CommandArguments create(final Range<?>... values) {
-		return new CommandArguments(values);
-	}
-
-	public CommandArguments add(final Keyword value) {
-		if(value != null){
-			parameters.add(value.getValue());
-		}
-
-		return this;
 	}
 
 	public CommandArguments add(final ProtocolCommand value) {
@@ -107,36 +69,7 @@ public final class CommandArguments {
 		return this;
 	}
 
-	public CommandArguments add(final Range<?> value) {
-		if(value != null){
-			parameters.add(value.getStart());
-			parameters.add(value.getEnd());
-		}
-
-		return this;
-	}
-
-	public CommandArguments add(final Keyword... values) {
-		if(Validate.isNotEmpty(values)){
-			for(Object value : values){
-				add(value);
-			}
-		}
-
-		return this;
-	}
-
 	public CommandArguments add(final ProtocolCommand... values) {
-		if(Validate.isNotEmpty(values)){
-			for(Object value : values){
-				add(value);
-			}
-		}
-
-		return this;
-	}
-
-	public CommandArguments add(final Range<?>... values) {
 		if(Validate.isNotEmpty(values)){
 			for(Object value : values){
 				add(value);

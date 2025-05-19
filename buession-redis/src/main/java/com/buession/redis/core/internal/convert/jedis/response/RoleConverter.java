@@ -39,6 +39,7 @@ import java.util.List;
  */
 public final class RoleConverter implements Converter<Object, Role> {
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public Role convert(final Object source) {
 		if(source instanceof List){

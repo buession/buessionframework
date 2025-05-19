@@ -19,13 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.id;
 
 import com.buession.core.utils.Assert;
 import com.buession.core.utils.StringUtils;
+import com.buession.core.validator.Validate;
+import com.buession.lang.Constants;
 
 /**
  * 随机 ID 生成器
@@ -46,9 +48,16 @@ public class RandomIdGenerator implements IdGenerator<String> {
 	private int length = DEFAULT_LENGTH;
 
 	/**
+	 * 随机字符词典
+	 *
+	 * @since 3.0.1
+	 */
+	private char[] chars;
+
+	/**
 	 * 构造函数，生成 16 位随机 ID
 	 */
-	public RandomIdGenerator(){
+	public RandomIdGenerator() {
 	}
 
 	/**
@@ -57,14 +66,41 @@ public class RandomIdGenerator implements IdGenerator<String> {
 	 * @param length
 	 * 		ID 长度
 	 */
-	public RandomIdGenerator(final int length){
+	public RandomIdGenerator(final int length) {
 		Assert.isNegative(length, "Id length can't be less than 0");
 		this.length = length;
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param chars
+	 * 		随机字符词典
+	 *
+	 * @since 3.0.1
+	 */
+	public RandomIdGenerator(final char[] chars) {
+		this.chars = chars;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param chars
+	 * 		随机字符词典
+	 * @param length
+	 * 		ID 长度
+	 *
+	 * @since 3.0.1
+	 */
+	public RandomIdGenerator(final char[] chars, final int length) {
+		this(length);
+		this.chars = chars;
+	}
+
 	@Override
-	public String nextId(){
-		return StringUtils.random(length);
+	public String nextId() {
+		return StringUtils.random(length, Validate.isEmpty(chars) ? Constants.ALNUM : chars);
 	}
 
 }

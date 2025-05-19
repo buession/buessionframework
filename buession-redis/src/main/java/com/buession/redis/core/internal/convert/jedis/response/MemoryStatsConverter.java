@@ -41,6 +41,7 @@ import java.util.TreeMap;
  */
 public final class MemoryStatsConverter implements Converter<Map<String, Object>, MemoryStats> {
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public MemoryStats convert(final Map<String, Object> source) {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();

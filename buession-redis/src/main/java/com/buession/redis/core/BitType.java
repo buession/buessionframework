@@ -28,10 +28,15 @@ package com.buession.redis.core;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public enum BitType {
+public enum BitType implements Keyword {
 
 	BYTE,
 
-	BIT
+	BIT;
+
+	@Override
+	public String getValue() {
+		return name();
+	}
 
 }

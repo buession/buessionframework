@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package okhttp3;
@@ -43,11 +43,11 @@ public class HttpClientConnectionManager implements Closeable {
 	private ConnectionPool connectionPool;
 
 	/**
-	 * 最大连接数
+	 * 连接池中最大空闲连接数
 	 *
-	 * @since 2.0.1
+	 * @since 3.0.1
 	 */
-	private int maxConnections = 5;
+	private int maxIdleConnections = 5;
 
 	/**
 	 * 闲连接存活时长，单位：毫秒
@@ -93,7 +93,8 @@ public class HttpClientConnectionManager implements Closeable {
 	 */
 	public ConnectionPool getConnectionPool() {
 		if(connectionPool == null){
-			connectionPool = new ConnectionPool(maxConnections, idleConnectionTime, TimeUnit.MILLISECONDS);
+			connectionPool = new ConnectionPool(getMaxIdleConnections(), getIdleConnectionTime(),
+					TimeUnit.MILLISECONDS);
 		}
 
 		return connectionPool;
@@ -110,14 +111,39 @@ public class HttpClientConnectionManager implements Closeable {
 	}
 
 	/**
+	 * 返回连接池中最大空闲连接数
+	 *
+	 * @return 连接池中最大空闲连接数
+	 *
+	 * @since 3.0.1
+	 */
+	public int getMaxIdleConnections() {
+		return maxIdleConnections;
+	}
+
+	/**
+	 * 设置连接池中最大空闲连接数
+	 *
+	 * @param maxIdleConnections
+	 * 		连接池中最大空闲连接数
+	 *
+	 * @since 3.0.1
+	 */
+	public void setMaxIdleConnections(int maxIdleConnections) {
+		this.maxIdleConnections = maxIdleConnections;
+	}
+
+	/**
 	 * 返回最大链接数
 	 *
 	 * @return 最大链接数
 	 *
+	 * @see #getMaxRequests()
 	 * @since 2.3.0
+	 * @deprecated 3.0.1
 	 */
 	public int getMaxConnections() {
-		return maxConnections;
+		return getMaxRequests();
 	}
 
 	/**
@@ -126,10 +152,12 @@ public class HttpClientConnectionManager implements Closeable {
 	 * @param maxConnections
 	 * 		最大链接数
 	 *
+	 * @see #setMaxRequests(int)
 	 * @since 2.0.1
+	 * @deprecated 3.0.1
 	 */
 	public void setMaxConnections(int maxConnections) {
-		this.maxConnections = maxConnections;
+		setMaxRequests(maxConnections);
 	}
 
 	/**

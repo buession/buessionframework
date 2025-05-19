@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2023 Buession.com Inc.														|
+ * | Copyright @ 2013-2025 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao;
@@ -123,7 +123,9 @@ public interface Dao<P, E> {
 	 *
 	 * @return 查询结果
 	 */
-	E getOne();
+	default E getOne() {
+		return selectOne();
+	}
 
 	/**
 	 * 获取一条记录
@@ -133,7 +135,9 @@ public interface Dao<P, E> {
 	 *
 	 * @return 查询结果
 	 */
-	E getOne(Map<String, Object> conditions);
+	default E getOne(Map<String, Object> conditions) {
+		return selectOne(conditions);
+	}
 
 	/**
 	 * 获取一条记录
@@ -145,7 +149,9 @@ public interface Dao<P, E> {
 	 *
 	 * @return 查询结果
 	 */
-	E getOne(Map<String, Object> conditions, int offset);
+	default E getOne(Map<String, Object> conditions, int offset) {
+		return selectOne(conditions, offset);
+	}
 
 	/**
 	 * 获取一条记录
@@ -157,7 +163,9 @@ public interface Dao<P, E> {
 	 *
 	 * @return 查询结果
 	 */
-	E getOne(Map<String, Object> conditions, Map<String, Order> orders);
+	default E getOne(Map<String, Object> conditions, Map<String, Order> orders) {
+		return selectOne(conditions, orders);
+	}
 
 	/**
 	 * 获取一条记录
@@ -171,7 +179,9 @@ public interface Dao<P, E> {
 	 *
 	 * @return 查询结果
 	 */
-	E getOne(Map<String, Object> conditions, int offset, Map<String, Order> orders);
+	default E getOne(Map<String, Object> conditions, int offset, Map<String, Order> orders) {
+		return selectOne(conditions, offset, orders);
+	}
 
 	/**
 	 * 获取一条记录
@@ -342,6 +352,18 @@ public interface Dao<P, E> {
 	 * @return 结果集
 	 */
 	List<E> getAll();
+
+	/**
+	 * 查询所有数据
+	 *
+	 * @param orders
+	 * 		排序
+	 *
+	 * @return 结果集
+	 *
+	 * @since 3.0.1
+	 */
+	List<E> getAll(Map<String, Order> orders);
 
 	/**
 	 * 数据记录总数

@@ -51,7 +51,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 
 	@Override
 	public Long append(final String key, final String value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.APPEND, (cmd)->cmd.append(key, value), (v)->v)
@@ -67,7 +67,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 
 	@Override
 	public Long append(final byte[] key, final byte[] value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.APPEND, (cmd)->cmd.append(key, value), (v)->v)
@@ -115,7 +115,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 
 	@Override
 	public Long incrBy(final String key, final long value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.INCRBY, (cmd)->cmd.incrBy(key, value), (v)->v)
@@ -131,7 +131,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 
 	@Override
 	public Long incrBy(final byte[] key, final long value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.INCRBY, (cmd)->cmd.incrBy(key, value), (v)->v)
@@ -147,7 +147,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 
 	@Override
 	public Double incrByFloat(final String key, final double value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.INCRBYFLOAT, (cmd)->cmd.incrByFloat(key, value),
@@ -165,7 +165,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 
 	@Override
 	public Double incrByFloat(final byte[] key, final double value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.INCRBYFLOAT, (cmd)->cmd.incrByFloat(key, value),
@@ -215,7 +215,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 
 	@Override
 	public Long decrBy(final String key, final long value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.DECRBY, (cmd)->cmd.decrBy(key, value), (v)->v)
@@ -231,7 +231,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 
 	@Override
 	public Long decrBy(final byte[] key, final long value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.DECRBY, (cmd)->cmd.decrBy(key, value), (v)->v)
@@ -279,7 +279,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 
 	@Override
 	public String getEx(final String key, final GetExArgument getExArgument) {
-		final CommandArguments args = CommandArguments.create("key", key).put("getExArgument", getExArgument);
+		final CommandArguments args = CommandArguments.create(key).add(getExArgument);
 		final GetExParams getExParams = JedisGetExParams.from(getExArgument);
 
 		if(isPipeline()){
@@ -297,7 +297,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 
 	@Override
 	public byte[] getEx(final byte[] key, final GetExArgument getExArgument) {
-		final CommandArguments args = CommandArguments.create("key", key).put("getExArgument", getExArgument);
+		final CommandArguments args = CommandArguments.create(key).add(getExArgument);
 		final GetExParams getExParams = JedisGetExParams.from(getExArgument);
 
 		if(isPipeline()){
@@ -315,7 +315,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 
 	@Override
 	public String getSet(final String key, final String value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.GETSET, (cmd)->cmd.getSet(key, value), (v)->v)
@@ -331,7 +331,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 
 	@Override
 	public byte[] getSet(final byte[] key, final byte[] value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(value);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.GETSET, (cmd)->cmd.getSet(key, value), (v)->v)
@@ -463,7 +463,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 
 	@Override
 	public Status pSetEx(final String key, final String value, final int lifetime) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(lifetime);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.PSETEX, (cmd)->cmd.psetex(key, lifetime, value),
@@ -482,7 +482,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 
 	@Override
 	public Status pSetEx(final byte[] key, final byte[] value, final int lifetime) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(lifetime);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.PSETEX, (cmd)->cmd.psetex(key, lifetime, value),
@@ -577,7 +577,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 
 	@Override
 	public Status setEx(final String key, final String value, final int lifetime) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(lifetime);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.SETEX, (cmd)->cmd.setex(key, lifetime, value),
@@ -596,7 +596,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 
 	@Override
 	public Status setEx(final byte[] key, final byte[] value, final int lifetime) {
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(lifetime);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.SETEX, (cmd)->cmd.setex(key, lifetime, value),
@@ -651,7 +651,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 
 	@Override
 	public Long setRange(final String key, final long offset, final String value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(offset).add(value);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.SETRANGE, (cmd)->cmd.setrange(key, offset, value),
@@ -669,7 +669,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 
 	@Override
 	public Long setRange(final byte[] key, final long offset, final byte[] value) {
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
+		final CommandArguments args = CommandArguments.create(key).add(offset).add(value);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.SETRANGE, (cmd)->cmd.setrange(key, offset, value),
@@ -687,7 +687,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 
 	@Override
 	public String getRange(final String key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.GETRANGE, (cmd)->cmd.getrange(key, start, end),
@@ -705,7 +705,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 
 	@Override
 	public byte[] getRange(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.GETRANGE, (cmd)->cmd.getrange(key, start, end),
@@ -755,7 +755,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 
 	@Override
 	public String substr(final String key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.SUBSTR,
@@ -774,7 +774,7 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisS
 
 	@Override
 	public byte[] substr(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.SUBSTR,

@@ -102,23 +102,23 @@ public interface Command<R> {
 	/**
 	 * Redis 命令运行器
 	 *
+	 * @param <R>
+	 * 		命令运行结果类型
+	 *
 	 * @author Yong.Teng
 	 */
 	@FunctionalInterface
-	interface Runner {
+	interface Runner<R> {
 
 		/**
 		 * 运行 Redis 命令
-		 *
-		 * @param <R>
-		 * 		命令运行结果类型
 		 *
 		 * @return Redis 命令运行结果
 		 *
 		 * @throws RedisException
 		 * 		Redis 命令运行异常
 		 */
-		<R> R run() throws RedisException;
+		R run() throws RedisException;
 
 	}
 

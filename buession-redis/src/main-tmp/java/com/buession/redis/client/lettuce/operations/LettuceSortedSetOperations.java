@@ -44,7 +44,6 @@ import com.buession.redis.core.internal.lettuce.LettuceScanArgs;
 import com.buession.redis.core.internal.lettuce.LettuceScanCursor;
 import com.buession.redis.core.internal.lettuce.LettuceZAddArgs;
 import com.buession.redis.core.internal.lettuce.LettuceZStoreArgs;
-import com.buession.redis.core.internal.lettuce.utils.ScoredValueUtils;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.Limit;
 import io.lettuce.core.Range;

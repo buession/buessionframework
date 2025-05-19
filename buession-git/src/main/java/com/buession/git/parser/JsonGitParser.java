@@ -19,13 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.git.parser;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
@@ -39,10 +41,12 @@ import java.util.Properties;
  */
 public class JsonGitParser extends AbstractGitParser {
 
+	private final static Logger logger = LoggerFactory.getLogger(JsonGitParser.class);
+
 	/**
 	 * 构造函数
 	 */
-	public JsonGitParser(){
+	public JsonGitParser() {
 		super(new ClassPathResource("git.properties"));
 	}
 
@@ -52,7 +56,7 @@ public class JsonGitParser extends AbstractGitParser {
 	 * @param resource
 	 * 		文件资源
 	 */
-	public JsonGitParser(final Resource resource){
+	public JsonGitParser(final Resource resource) {
 		super(resource);
 	}
 
@@ -62,12 +66,12 @@ public class JsonGitParser extends AbstractGitParser {
 	 * @param path
 	 * 		Git 信息文件路径
 	 */
-	public JsonGitParser(final String path){
+	public JsonGitParser(final String path) {
 		super(path);
 	}
 
 	@Override
-	protected Properties loadData(){
+	protected Properties loadData() {
 		ObjectMapper objectMapper = new ObjectMapper();
 
 		try{
@@ -75,7 +79,7 @@ public class JsonGitParser extends AbstractGitParser {
 
 			});
 		}catch(Exception e){
-			//
+			logger.error("Failed to load git properties", e);
 		}
 
 		return null;

@@ -70,6 +70,11 @@ public class JedisSentinelDataSource extends AbstractJedisDataSource implements 
 	 */
 	private List<RedisNode> sentinels;
 
+	/**
+	 * 连接池
+	 *
+	 * @since 3.0.1
+	 */
 	private JedisSentinelPool pool;
 
 	@Override
@@ -130,6 +135,14 @@ public class JedisSentinelDataSource extends AbstractJedisDataSource implements 
 	@Override
 	public void setSentinels(List<RedisNode> sentinels) {
 		this.sentinels = sentinels;
+	}
+
+	public JedisSentinelPool getPool() {
+		return pool;
+	}
+
+	public void setPool(JedisSentinelPool pool) {
+		this.pool = pool;
 	}
 
 	@Deprecated

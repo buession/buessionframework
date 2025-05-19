@@ -1,13 +1,55 @@
- Buession Framework Changelog
+Buession Framework Changelog
 ===========================
 
+## [3.0.1](https://github.com/buession/buessionframework/releases/tag/v3.0.1) (2025-05-19)
+
+### 🔨依赖升级
+
+- [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v3.0.1)
+
+### ⭐ 新特性
+
+- 新增对象工具类 com.buession.core.utils.Objects
+- 新增 webflux 异常处理器 ErrorHandler
+- Dao getAll 支持排序
+
+### 🔔 变化
+
+- 废弃 com.buession.core.Rawable，迁移至 com.buession.lang.Rawable
+- 废弃 RedisConnection 方法 isConnect()，新增方法 isConnected()
+- PropertiesGitParser、JsonGitParser 字符串构造函数，使用 FileSystemResource 解析文件路径
+- RandomDigitIdGenerator 最小值允许为 Long.MIN_VALUE
+- RandomIdGenerator 允许指定随机字符串词典
+- RandomUtils nextInt、nextLong、nextFloat、nextDouble 起始值允许为负数
+
+### 🐞 Bug 修复
+
+- 修复 redis HashOperations hMSet 方法参数类型
+- 修复 ApacheHttpClient、ApacheHttpAsyncClient 指定为 apache client 4 ConnectionManager 且包含 apache client 5 的包时，初始化
+  ApacheClient 时 ConnectionManager 类型转换异常的 BUG
+- 修复 Redis Jedis 模式下多线程环境中出现 Scoket closed 异常
+- 修复 GitParser 无法正常解析 git 信息的 BUG
+
+### ⏪ 优化
+
+- 优化 redis 命令参数日志
+- 优化 redis RedisTemplate 对象转换器
+- 优化 redis 命令运行器数据类型优化
+- 优化 redis 稳定性优化
+- 优化雪花算法稳定性
+- 优化和规范化 httpclient 连接池参数设置
+
+### 📔 文档
+
+- 完善 redis 注释
+
+---
 
 ## [3.0.0](https://github.com/buession/buessionframework/releases/tag/v3.0.0) (2024-11-07)
 
 ### 🔨依赖升级
 
 - [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v3.0.0)
-
 
 ### ⭐ 新特性
 
@@ -17,9 +59,11 @@
 - 新增断言转换器 PredicateConverter
 - 新增 集合转换器 CollectionConverter
 - 新增 Map.Entry 到 Map 转换器 MapEntryMapConverter
-- httpClient Configuration 新增 expectContinueEnabled、hardCancellationEnabled、targetPreferredAuthSchemes、cookieSpec、proxy 配置
+- httpClient Configuration 新增
+  expectContinueEnabled、hardCancellationEnabled、targetPreferredAuthSchemes、cookieSpec、proxy 配置
 - httpClient 新增代理支持
-- ApacheClient 新增支持 apache httpcomponents 5，根据依赖的 apache httpcomponents 5 和 apache httpcomponents 4 自动判断，优先使用 apache httpcomponents 5
+- ApacheClient 新增支持 apache httpcomponents 5，根据依赖的 apache httpcomponents 5 和 apache httpcomponents 4 自动判断，优先使用
+  apache httpcomponents 5
 - 新增支持 Lettuce（stream 命令不稳定，不推荐使用）
 - jedis 模式下，集群支持管道
 - 新增代理方法调用者 ProxyMethodInvoker
@@ -29,7 +73,6 @@
 - JSON 序列化和反序列化支持对原生对象进行配置
 - 增加范围类 Range 及其衍生类
 - 新增日期时间工具类 DateTimeUtils
-
 
 ### 🔔 变化
 
@@ -41,7 +84,8 @@
 - 删除 AbstractAspectAnnotationsMethodInterceptor
 - geoip 删除依赖 apache httpcomponents
 - 废弃 ApacheRequest、ApacheRequestBuilder、ApacheHttpClientBuilder
-- httpClient 优化 ConnectionManager 创建默认原生 ConnectionManager，以解决在创建原生 ConnectionManager 之前，更新了 Configuration 不生效的问题
+- httpClient 优化 ConnectionManager 创建默认原生 ConnectionManager，以解决在创建原生 ConnectionManager 之前，更新了
+  Configuration 不生效的问题
 - ApacheHttpClient 删除 apache httpcomponents 4 中的特有方法
 - httpClient 参数为 URL 时，不再验证是否为 null
 - apache httpcomponents 异步请求时 HttpAsyncResponseConsumer 采用 ZeroCopyConsumer
@@ -62,10 +106,10 @@
 - 删除 MobileFilter、PoweredByHeaderFilter
 - 序列化类删除反序列化方法
 
-
 ### 🐞 Bug 修复
 
-- httpClient 修复 ConnectionManager 未设置 connectionManagerShared 时，无法从 Configuration 中获取 connectionManagerShared 值的 BUG
+- httpClient 修复 ConnectionManager 未设置 connectionManagerShared 时，无法从 Configuration 中获取
+  connectionManagerShared 值的 BUG
 - 修复 okhttp 设置 followRedirects 时，followSslRedirects 未生效的 BUG
 - 修复 jedis 模式下 role 命令未返回数据的 BUG
 - 修复 jedis 模式下 API 中，“命令”参数设置错误的 BUG
@@ -73,8 +117,8 @@
 - 修复 jedis 模式下连接中的错误和参数丢失等问题
 - 修复 Validate IPV4 验证，第一段为 10 ~ 99 时，验证失败的 BUG
 
-
 ### ⏪ 优化
+
 - 优化 redis 转换器，不使用静态属性，以减少内存占用
 - jedis 模式命令运算优化
 - 优化 JDBC 数据源连接池设置
@@ -82,16 +126,13 @@
 - 优化默认线程池执行器 DefaultThreadPoolExecutor 初始化
 - com.buession.io.file.File 读取文件优化
 
-
 ### 📔 文档
 
 - 完善 redis 注释
 - 修正 httpclient 错误注释
 - 完善 httpclient 注释
 
-
 ---
-
 
 ## [2.3.3](https://github.com/buession/buessionframework/releases/tag/v2.3.3) (2024-05-06)
 
@@ -99,14 +140,13 @@
 
 - [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.3.3)
 
-
 ### ⭐ 新特性
 
 - **buession-core：** 新增默认线程工厂 DefaultThreadFactory
 - **buession-core：** 新增默认线程池执行器 DefaultThreadPoolExecutor
 - **buession-core：** File 新增创建软链接方法
-- **buession-core：** PropertyMapper 新增 alwaysApplyingWhenNull 条件为 null 时，alwaysApplyingWhenNonText 条件为 null 或无字符串（不含空格、换行符、制表位）时
-
+- **buession-core：** PropertyMapper 新增 alwaysApplyingWhenNull 条件为 null 时，alwaysApplyingWhenNonText 条件为 null
+  或无字符串（不含空格、换行符、制表位）时
 
 ### 🔔 变化
 
@@ -115,28 +155,23 @@
 - **buession-core：** 废弃 ObjectUtils 使用 java 原生 API Optional
 - **buession-core：** 废弃 StatusUtils ，迁移至枚举 Status 本身
 
-
 ### 🐞 Bug 修复
 
 - **buession-core：** 修复 StringUtils 类忽略大小写判断是否以字符开头或结尾，错误判断的 BUG
 - **buession-dao：** 修复 MongoDBDao 处理 in、nin 条件值错误传递问题
-
 
 ### ⏪ 优化
 
 - **buession-core：** 优化数据验证，减少内存占用
 - **buession-json：** 数据脱敏，性能优化
 
-
 ---
-
 
 ## [2.3.2](https://github.com/buession/buessionframework/releases/tag/v2.3.2) (2023-12-27)
 
 ### 🔨依赖升级
 
 - [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.3.2)
-
 
 ### ⭐ 新特性
 
@@ -152,14 +187,12 @@
 - **buession-velocity：** 新增验证工具 ValidateTool
 - **buession-web：** 新增注解处理器支持解析注解属性中的变量
 
-
 ### 🔔 变化
 
 - **buession-core：** 废弃 JsonSerializer 和 JsonDeserializer
 - **buession-core：** ListConverter、SetConverter、MapConverter 默认返回原始类型
 - **buession-core：** 移除 spring-beans 依赖
 - **buession-json：** 注解 @Sensitive 内容替换策略，替换符可通过属性 replacement 设置
-
 
 ### 🐞 Bug 修复
 
@@ -172,7 +205,6 @@
 - **buession-git：** 修复无法解析 git 信息时，空指针异常
 - **buession-web：** 修复分页对象下一页值错误的 BUG
 
-
 ### ⏪ 优化
 
 - **buession-beans：** 代码优化
@@ -183,7 +215,6 @@
 - **buession-thesaurus：** 优化 ThesaurusFactoryBean 多次调用 afterPropertiesSet 时，重复初始化 Parser
 - **buession-velocity：** 优化 VelocityEngineFactoryBean 多次调用 afterPropertiesSet 时，重复初始化 VelocityEngine
 
-
 ### 📔 文档
 
 - **buession-aop：** 完善注释
@@ -192,16 +223,13 @@
 - **buession-velocity：** 完善注释
 - **buession-web：** 完善注释
 
-
 ---
-
 
 ## [2.3.1](https://github.com/buession/buessionframework/releases/tag/v2.3.1) (2023-11-17)
 
 ### 🔨依赖升级
 
 - [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.3.1)
-
 
 ### ⭐ 新特性
 
@@ -212,7 +240,6 @@
 - **buession-dao：** 新增实验性的 MyBatis 分页插件
 - **buession-json：** 注解 Sensitive 增加 strategyType 用于定义脱敏策略类，优先级高于 strategy
 
-
 ### 🐞 Bug 修复
 
 - **buession-core：** 修复 ClassUtils instantiate 方法初始化类时，参数长度错误判断异常
@@ -221,14 +248,11 @@
 - **buession-web：** 修复获取客户端真实 IP 注解判断错误 BUG
 - **buession-web：** 修复 velocity JsonTool 为设置日期时间格式时，无法设置时区的 BUG
 
-
 ### ⏪ 优化
 
 - **buession-httpclient：** okhttp3 连接池关闭时驱逐连接资源
 
-
 ---
-
 
 ## [2.3.0](https://github.com/buession/buessionframework/releases/tag/v2.3.0) (2023-08-15)
 
@@ -236,23 +260,25 @@
 
 - [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.3.0)
 
-
 ### 🔔 变化
 
-- **buession-core：** 废弃 com.buession.core.serializer.type.TypeReference 使用 com.buession.core.type.TypeReference【3.0.0 版本删除】
+- **buession-core：** 废弃 com.buession.core.serializer.type.TypeReference 使用
+  com.buession.core.type.TypeReference【3.0.0 版本删除】
 - **buession-core：** 将序列化类，拆分成序列化和反序列化
 - **buession-dao：** 废弃 DefaultEnumTypeHandler 使用 mybatis 原生 EnumTypeHandler【3.0.0 版本删除】
 - **buession-httpclient：** 废弃 Request.setUrl(String url) 使用 Request.setUri(URI uri) 替代【3.0.0 版本删除】
 - **buession-web：** AbstractRestController 添加主键类型、数据传输对象类型、数据输出对象类型
-- **buession-web：** Response 的 Pagination 类型由 com.buession.core.Pagination 更改为 com.buession.web.mvc.Pagination 不再返回数据
+- **buession-web：** Response 的 Pagination 类型由 com.buession.core.Pagination 更改为 com.buession.web.mvc.Pagination
+  不再返回数据
 - **buession-redis：** 废弃 bitfield 通过可变参数传参
-
 
 ### ⭐ 新特性
 
-- **buession-lang：** 新增浏览器类型 BrowserType、设备类型 DeviceType、渲染引擎 RenderingEngine、版本 Version、浏览器 Browser、操作系统 OperatingSystem 定义
+- **buession-lang：** 新增浏览器类型 BrowserType、设备类型 DeviceType、渲染引擎 RenderingEngine、版本 Version、浏览器
+  Browser、操作系统 OperatingSystem 定义
 - **buession-lang：** 新增重试配置 Retry
-- **buession-aop：** 增加 AfterReturningAdviceMethodInvocationAdapter、AfterThrowingAdviceMethodInvocationAdapter、AroundAdviceMethodInvocationAdapter
+- **buession-aop：** 增加
+  AfterReturningAdviceMethodInvocationAdapter、AfterThrowingAdviceMethodInvocationAdapter、AroundAdviceMethodInvocationAdapter
 - **buession-core：** 新增类型引用类 com.buession.core.type.TypeReference
 - **buession-core：** 新增配置器接口 Configurer
 - **buession-core：** 新增定制器接口 Customizer
@@ -270,7 +296,6 @@
 - **buession-net：** SslConfiguration 增加 sslContext 属性
 - **buession-net：** 新增 SSL 配置 SslConfigure
 
-
 ### 🐞 Bug 修复
 
 - **buession-redis：** 修复 Jedis StringCommands.SetArgument 设置过期时间戳，处理成过期时间的 BUG
@@ -284,15 +309,12 @@
 - **buession-web：** 修复 ServletContentTypeAnnotationHandler、ServletResponseHeadersAnnotationHandler 空指针 BUG
 - **buession-web：** 修复 servlet 下 ExceptionResolver 处理异常时，响应流异常关闭的 BUG
 
-
 ### ⏪ 优化
 
 - **buession-httpclient：** 内部优化
 - 其它优化
 
-
 ---
-
 
 ## [2.2.1](https://github.com/buession/buessionframework/releases/tag/v2.2.1) (2023-03-31)
 
@@ -301,18 +323,15 @@
 - [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.2.1)
 - **buession-geoip：** 升级 IP 库
 
-
 ### 🔔 变化
-- **buession-web：** Servlet AbstractHandlerExceptionResolver doResolve 方法支持接收 handler
 
+- **buession-web：** Servlet AbstractHandlerExceptionResolver doResolve 方法支持接收 handler
 
 ### ⭐ 新特性
 
 - **buession-web：** 新增实验性 User-Agent 解析工具
 
-
 ---
-
 
 ## [2.2.0](https://github.com/buession/buessionframework/releases/tag/v2.2.0) (2023-03-10)
 
@@ -320,7 +339,6 @@
 
 - [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.2.0)
 - **buession-geoip：** 升级 IP 库
-
 
 ### ⭐ 新特性
 
@@ -333,11 +351,12 @@
 - **buession-web：** 增加 web binder 转换器工厂 IgnoreCaseEnumConverterFactory 忽略大小写将字符串转换为枚举值
 - **buession-web：** 获取客户端真实 IP，增加标头 Client-IP 的支持
 
-
 ### 🔔 变化
-- **buession-web：** 废弃 web binder 转换器 CaseTypeConverter、DomainTLDConverter、DomainTLDTypeConverter、GenderConverter、IpTypeConverter、ISBNTypeConverter、OrderConverter、StatusConverter，统一使用 web binder 转换器工厂 IgnoreCaseEnumConverterFactory
-- **buession-core：** Executor、Resolve 增加异常支持
 
+- **buession-web：** 废弃 web binder 转换器
+  CaseTypeConverter、DomainTLDConverter、DomainTLDTypeConverter、GenderConverter、IpTypeConverter、ISBNTypeConverter、OrderConverter、StatusConverter，统一使用
+  web binder 转换器工厂 IgnoreCaseEnumConverterFactory
+- **buession-core：** Executor、Resolve 增加异常支持
 
 ### 🐞 Bug 修复
 
@@ -345,15 +364,12 @@
 - **buession-httpclient：** 修复 Response 返回错误的 statusCode 和 statusText
 - **buession-dao：** 修复 DefaultJsonTypeHandler 为 null 或空字符串反序列化出错的 BUG
 
-
 ### ⏪ 优化
 
 - 其它性能优化
 - 其它代码优化
 
-
 ---
-
 
 ## [2.1.2](https://github.com/buession/buessionframework/releases/tag/v2.1.2) (2022-11-13)
 
@@ -361,30 +377,28 @@
 
 - [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.1.2)
 
-
 ### ⭐ 新特性
 
-- **buession-core：** ListBuilder、MapBuilder、QueueBuilder、SetBuilder 增加可以指定 initialCapacity 和 Collection / Map 的 create 方法
-
+- **buession-core：** ListBuilder、MapBuilder、QueueBuilder、SetBuilder 增加可以指定 initialCapacity 和 Collection / Map 的
+  create 方法
 
 ### ⏪ 优化
+
 - **buession-http：** 优化 Response，使 statusCode、statusText 与 statusLine 的值始终保持一致
-- **buession-geoip：** 优化国家和地区词典解析，GeoIPResolverFactory 支持从默认词典返回文件对象或流对象，以及支持从 classpath 家长词典文件
+- **buession-geoip：** 优化国家和地区词典解析，GeoIPResolverFactory 支持从默认词典返回文件对象或流对象，以及支持从
+  classpath 家长词典文件
 - 其它优化
 - **buession-velocity：** 配置属性 resource.loader 替换 resource.loaders
-
 
 ### 🐞 Bug 修复
 
 - **buession-redis：** 修复 jedis 单例模式、哨兵模式下，不使用连接池的情况下，未创建 jedis 实例的 BUG
 
-
 ### 📔 文档
+
 - **buession-redis：** 修正错误的注释
 
-
 ---
-
 
 ## [2.1.1](https://github.com/buession/buessionframework/releases/tag/v2.1.1) (2022-08-18)
 
@@ -392,21 +406,17 @@
 
 - [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.1.1)
 
-
 ### ⭐ 新特性
 
 - **buession-core：** DateTime 增加统计年、月天数
 
-
 ---
-
 
 ## [2.1.0](https://github.com/buession/buessionframework/releases/tag/v2.1.0) (2022-08-07)
 
 ### 🔨依赖升级
 
 - [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.1.0)
-
 
 ### ⭐ 新特性
 
@@ -415,31 +425,30 @@
 - **buession-web：** 注解 @RequestClientIp 增加支持返回 InetAddress
 - **buession-web：** 注解 @RequestClientIp 支持指定获取真实 IP 的请求头名称
 
-
 ### 🔔 变化
 
 - **buession-aop：** 调整 AnnotationResolver 及其实现泛型参数，由类泛型参数，调整为 getAnnotation 泛型
 - **buession-aop：** AnnotationHandler execute 方法不再返回值
-- **buession-web：** 优化注解 @RequestClientIp HandlerMethodArgumentResolver，继承 spring 原生 HandlerMethodArgumentResolver 实现抽象类
+- **buession-web：** 优化注解 @RequestClientIp HandlerMethodArgumentResolver，继承 spring 原生
+  HandlerMethodArgumentResolver 实现抽象类
 - **buession-web：** 废弃 MobileFilter，根据需要直接使用 RequestUtils.isMobile(request) 判断
 - **buession-web：** 删除 AopUtils、MethodUtils，删除 servlet HttpServlet、webflux ServerHttp
 - **buession-web：** MethodInterceptor 的抽象类移至 buession-aop
-- **buession-velocity：** 配置属性 springMacro.resource.loader.class 替换为 resource.loader.springMacro.class，resource.loader 替换 resource.loaders
-
+- **buession-velocity：** 配置属性 springMacro.resource.loader.class 替换为
+  resource.loader.springMacro.class，resource.loader 替换 resource.loaders
 
 ### ⏪ 优化
+
 - **buession-aop：** 优化注解处理程序
 - **buession-web：** 优化 servlet 注解处理
-
 
 ### 🐞 Bug 修复
 
 - **buession-aop：** 修复注解在 cglib 代理模式下，连接点重复执行的 BUG
-- **buession-web：** 修复 ReactiveContentTypeAnnotationMethodInterceptor 使用成了 servlet 模式下的 ContentTypeAnnotationMethodInterceptor 的 BUG
-
+- **buession-web：** 修复 ReactiveContentTypeAnnotationMethodInterceptor 使用成了 servlet 模式下的
+  ContentTypeAnnotationMethodInterceptor 的 BUG
 
 ---
-
 
 ## [2.0.2](https://github.com/buession/buessionframework/releases/tag/v2.0.2) (2022-07-28)
 
@@ -447,9 +456,7 @@
 
 - [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.0.2)
 
-
 ---
-
 
 ## [2.0.1](https://github.com/buession/buessionframework/releases/tag/v2.0.1) (2022-07-17)
 
@@ -458,33 +465,27 @@
 - [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.0.1)
 - [maxmind geoip2](https://dev.maxmind.com/geoip?lang=en) 版本升级至 3.0.1
 
-
 ### ⭐ 新特性
 
 - **buession-core：** 新增 PropertyMapper 用于将值从提供的源映射到目标
-
 
 ### 🔔 变化
 
 - **buession-jdbc：** 连接池属性废弃 JDBC url、用户名、密码属性配置
 - **buession-jdbc：** 连接池基础类型的原始类型改为包装类型，为 null 使用原生数据源的默认配置值
 
-
 ### 🐞 Bug 修复
 
 - **buession-core：** Math 连续两个数之间连续相加之和计算错误的 BUG
 - **buession-core：** @Isbn、@MimeType 的使用了错误的校验器的问题
 
-
 ---
-
 
 ## [2.0.0](https://github.com/buession/buessionframework/releases/tag/v2.0.0) (2022-07-06)
 
 ### 🔨依赖升级
 
 - [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v2.0.0)
-
 
 ### ⭐ 新特性
 
@@ -502,7 +503,6 @@
 - **buession-redis：** 新增支持 xtream 命令
 - **buession-redis：** 新增支持 redis 6.0.x
 
-
 ### 🔔 变化
 
 - **buession-aop：** 注解 AOP 重构
@@ -510,12 +510,15 @@
 - **buession-core：** 移除布尔值转换 Status 转换器 BooleanStatusConvert ，使用 BooleanStatusConverter
 - **buession-core：** 移除 Status 转换布尔值换器 StatusBooleanConvert ，使用 StatusBooleanConverter
 - **buession-core：** 移除反射工具类 com.buession.core.utils.ReflectUtils
-- **buession-core：** ListBuilder、MapBuilder、SetBuilder、QueueBuilder 从包 com.buession.core.utils 迁移至包 com.buession.core.builder
+- **buession-core：** ListBuilder、MapBuilder、SetBuilder、QueueBuilder 从包 com.buession.core.utils 迁移至包
+  com.buession.core.builder
 - **buession-dao：** 优化部分底层逻辑
 - **buession-httpclient：** 重构底层代码，内部包结构做重大调整
 - **buession-httpclient：** 移除 ObjectRequestBodyConverter
-- **buession-httpclient：** okhttp 连接管理器 com.buession.httpclient.okhttp.OkHttpClientConnectionManager 类，使用 okhttp3.HttpClientConnectionManager，API okhttp 保持一致
-- **buession-httpclient：** okhttp 连接管理器 com.buession.httpclient.okhttp.RequestBuilder 类，使用 okhttp3.RequestBuilder，API okhttp 保持一致
+- **buession-httpclient：** okhttp 连接管理器 com.buession.httpclient.okhttp.OkHttpClientConnectionManager 类，使用
+  okhttp3.HttpClientConnectionManager，API okhttp 保持一致
+- **buession-httpclient：** okhttp 连接管理器 com.buession.httpclient.okhttp.RequestBuilder 类，使用
+  okhttp3.RequestBuilder，API okhttp 保持一致
 - **buession-httpclient：** 废弃 OkHttpClient ，使用统一风格的命名 OkHttpHttpClient
 - **buession-io：** 移除 FilePermission 字符串值字段
 - **buession-jdbc：** 时间配置由 int/long ，变更为 java.time.Duration
@@ -523,10 +526,10 @@
 - **buession-redis：** 新增 RedisTemplate 通过 DataSource 初始化，不再通过 RedisConnection 初始化
 - **buession-redis：** 移除 jedis shared redis API
 - **buession-redis：** 优化内部 API
-- **buession-web：** 移除 com.buession.web.reponse 包中的 response 注解，改由 com.buession.web.reponse.annotation 包中 response 注解替代
+- **buession-web：** 移除 com.buession.web.reponse 包中的 response 注解，改由 com.buession.web.reponse.annotation 包中
+  response 注解替代
 - **buession-web：** AOP 注解重构
 - **buession-web：** @Cors 注解及 CorsFilter
-
 
 ### 🐞 Bug 修复
 

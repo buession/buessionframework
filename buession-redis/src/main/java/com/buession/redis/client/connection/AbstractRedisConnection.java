@@ -76,6 +76,11 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	 */
 	private SslConfiguration sslConfiguration;
 
+	/**
+	 * 是否使用连接池
+	 */
+	private boolean usePool = false;
+
 	private volatile boolean initialized = false;
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
@@ -183,18 +188,6 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 								   int infiniteSoTimeout, SslConfiguration sslConfiguration) {
 		this(dataSource, connectTimeout, soTimeout, sslConfiguration);
 		this.infiniteSoTimeout = infiniteSoTimeout;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param poolConfig
-	 * 		连接池配置
-	 *
-	 * @since 3.0.0
-	 */
-	public AbstractRedisConnection(PoolConfig poolConfig) {
-		this.poolConfig = poolConfig;
 	}
 
 	/**
@@ -387,9 +380,7 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 
 		try{
 			initialized();
-			doConnect();
-
-			return Status.SUCCESS;
+			return doConnect();
 		}catch(Exception e){
 			logger.error("Connection redis server error: {}.", e.getMessage());
 			throw new RedisConnectionFailureException(e.getMessage(), e);
@@ -419,9 +410,17 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 		}
 	}
 
+	protected boolean isUsePool() {
+		return usePool;
+	}
+
+	protected void setUsePool(boolean usePool) {
+		this.usePool = usePool;
+	}
+
 	protected abstract void internalInit();
 
-	protected abstract void doConnect() throws RedisConnectionFailureException;
+	protected abstract Status doConnect() throws RedisConnectionFailureException;
 
 	protected abstract void doDestroy() throws IOException;
 
