@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2025 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao;
@@ -32,7 +32,6 @@ import com.buession.lang.Order;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 /**
@@ -48,83 +47,58 @@ import java.util.stream.Collectors;
 public abstract class AbstractDao<P, E> implements Dao<P, E> {
 
 	@Override
-	public List<Integer> batchInsert(List<E> data){
+	public List<Integer> batchInsert(List<E> data) {
 		return data == null ? null : data.stream().map(this::insert).collect(Collectors.toList());
 	}
 
 	@Override
-	public List<Integer> batchReplace(List<E> data){
+	public List<Integer> batchReplace(List<E> data) {
 		return data == null ? null : data.stream().map(this::replace).collect(Collectors.toList());
 	}
 
 	@Override
-	public E getOne(){
-		return selectOne();
-	}
-
-	@Override
-	public E getOne(Map<String, Object> conditions){
-		return selectOne(conditions);
-	}
-
-	@Override
-	public E getOne(Map<String, Object> conditions, int offset){
-		return selectOne(conditions, offset);
-	}
-
-	@Override
-	public E getOne(Map<String, Object> conditions, Map<String, Order> orders){
-		return selectOne(conditions, orders);
-	}
-
-	@Override
-	public E getOne(Map<String, Object> conditions, int offset, Map<String, Order> orders){
-		return selectOne(conditions, offset, orders);
-	}
-
-	@Override
-	public E selectOne(){
+	public E selectOne() {
 		return selectOne(null, null);
 	}
 
 	@Override
-	public E selectOne(Map<String, Object> conditions){
+	public E selectOne(Map<String, Object> conditions) {
 		return selectOne(conditions, null);
 	}
 
 	@Override
-	public E selectOne(Map<String, Object> conditions, int offset){
+	public E selectOne(Map<String, Object> conditions, int offset) {
 		return selectOne(conditions, offset, null);
 	}
 
 	@Override
-	public E selectOne(Map<String, Object> conditions, Map<String, Order> orders){
+	public E selectOne(Map<String, Object> conditions, Map<String, Order> orders) {
 		return selectOne(conditions, 0, orders);
 	}
 
 	@Override
-	public List<E> select(Map<String, Object> conditions){
+	public List<E> select(Map<String, Object> conditions) {
 		return select(conditions, null);
 	}
 
 	@Override
-	public List<E> select(Map<String, Object> conditions, int size){
+	public List<E> select(Map<String, Object> conditions, int size) {
 		return select(conditions, size, null);
 	}
 
 	@Override
-	public List<E> select(Map<String, Object> conditions, int offset, int size){
+	public List<E> select(Map<String, Object> conditions, int offset, int size) {
 		return select(conditions, offset, size, null);
 	}
 
 	@Override
-	public List<E> select(Map<String, Object> conditions, int size, Map<String, Order> orders){
+	public List<E> select(Map<String, Object> conditions, int size, Map<String, Order> orders) {
 		Assert.isZeroNegative(size, "Size argument value must be positive integer");
 		return select(conditions, 0, size, orders);
 	}
 
 	@Override
-	public Pagination<E> paging(Map<String, Object> conditions, int page, int pagesize){
+	public Pagination<E> paging(Map<String, Object> conditions, int page, int pagesize) {
 		return paging(conditions, page, pagesize, null);
 	}
 
