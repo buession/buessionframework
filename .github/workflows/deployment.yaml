@@ -35,5 +35,5 @@ jobs:
           PUBLISH_DIR: ./_site
           CNAME: www.buession.com
         run: |
-          chmod +x ./site/scripts/deploy-site.sh
-          bash ./site/scripts/deploy-site.sh
+          chmod +x ./scripts/deploy.sh
+          bash ./scripts/deploy.sh
