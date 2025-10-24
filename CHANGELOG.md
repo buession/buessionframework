@@ -7,6 +7,15 @@ Buession Framework Changelog
 
 - [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v4.0.0)
 
+### 🔔 变化
+
+- 废弃 java.io.FileAlreadyExistedException，迁移至 com.buession.lang.FileAlreadyExistedException
+- 删除 org.apache.ibatis.type.DefaultEnumTypeHandler
+
+### 🐞 Bug 修复
+
+- 修复 Converter 中链式操作的问题
+
 ---
 
 ## [3.0.1](https://github.com/buession/buessionframework/releases/tag/v3.0.1) (2025-05-19)

@@ -19,15 +19,19 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.converter;
 
 import org.springframework.beans.BeanUtils;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -77,17 +81,23 @@ public class MapConverter<SK, SV, TK, TV> implements Converter<Map<SK, SV>, Map<
 		if(source == null){
 			return null;
 		}else{
-			Stream<Map.Entry<SK, SV>> stream = source.entrySet().stream();
-
 			try{
-				return stream.collect(Collectors.toMap(entry->keyConverter.convert(entry.getKey()),
-						entry->valueConverter.convert(entry.getValue()), (a, b)->a,
-						()->BeanUtils.instantiateClass(source.getClass())));
+				Map<TK, TV> instance = BeanUtils.instantiateClass(source.getClass());
+				return source.entrySet().stream()
+						.collect(Collectors.toMap(this::keyMapper, this::valueMapper, (a, b)->a, ()->instance));
 			}catch(Exception e){
-				return stream.collect(Collectors.toMap(entry->keyConverter.convert(entry.getKey()),
-						entry->valueConverter.convert(entry.getValue()), (a, b)->a, HashMap::new));
+				return source.entrySet().stream()
+						.collect(Collectors.toMap(this::keyMapper, this::valueMapper, (a, b)->a, HashMap::new));
 			}
 		}
+	}
+
+	private TK keyMapper(final Map.Entry<SK, SV> entry) {
+		return keyConverter.convert(entry.getKey());
+	}
+
+	private TV valueMapper(final Map.Entry<SK, SV> entry) {
+		return valueConverter.convert(entry.getValue());
 	}
 
 }

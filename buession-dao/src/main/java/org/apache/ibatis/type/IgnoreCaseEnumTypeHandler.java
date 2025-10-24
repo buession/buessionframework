@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2023 Buession.com Inc.														|
+ * | Copyright @ 2013-2025 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package org.apache.ibatis.type;
@@ -51,30 +51,6 @@ public class IgnoreCaseEnumTypeHandler<E extends Enum<E>> extends AbstractEnumTy
 
 	public IgnoreCaseEnumTypeHandler(final Class<E> type) {
 		super(type);
-	}
-
-	@Override
-	public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType) throws SQLException {
-		if(jdbcType == null){
-			ps.setString(i, parameter.name());
-		}else{
-			ps.setObject(i, parameter.name(), jdbcType.TYPE_CODE);
-		}
-	}
-
-	@Override
-	public E getNullableResult(ResultSet rs, String columnName) throws SQLException {
-		return parseResult(rs.getString(columnName));
-	}
-
-	@Override
-	public E getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
-		return parseResult(rs.getString(columnIndex));
-	}
-
-	@Override
-	public E getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
-		return parseResult(cs.getString(columnIndex));
 	}
 
 	@Override

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.io;
@@ -32,14 +32,14 @@ import java.nio.file.Path;
  * @author Yong.Teng
  * @since 1.3.2
  */
-public class FileAlreadyExistedException extends java.io.FileAlreadyExistedException {
+public class FileAlreadyExistedException extends com.buession.lang.FileAlreadyExistedException {
 
 	private final static long serialVersionUID = -7537875384315242141L;
 
 	/**
 	 * 构造函数
 	 */
-	public FileAlreadyExistedException(){
+	public FileAlreadyExistedException() {
 		super();
 	}
 
@@ -49,7 +49,7 @@ public class FileAlreadyExistedException extends java.io.FileAlreadyExistedExcep
 	 * @param message
 	 * 		异常信息
 	 */
-	public FileAlreadyExistedException(String message){
+	public FileAlreadyExistedException(String message) {
 		super(message);
 	}
 
@@ -59,7 +59,7 @@ public class FileAlreadyExistedException extends java.io.FileAlreadyExistedExcep
 	 * @param path
 	 * 		文件路径
 	 */
-	public FileAlreadyExistedException(Path path){
+	public FileAlreadyExistedException(Path path) {
 		this(path, "already existed");
 	}
 
@@ -71,7 +71,7 @@ public class FileAlreadyExistedException extends java.io.FileAlreadyExistedExcep
 	 * @param message
 	 * 		异常信息
 	 */
-	public FileAlreadyExistedException(Path path, String message){
+	public FileAlreadyExistedException(Path path, String message) {
 		super(String.format("%s %s", path, message));
 	}
 

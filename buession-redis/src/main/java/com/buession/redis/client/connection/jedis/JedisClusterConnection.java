@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.jedis;
@@ -37,8 +37,8 @@ import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.jedis.JedisClusterPipeline;
 import com.buession.redis.pipeline.jedis.JedisPipelineProxy;
 import com.buession.redis.transaction.Transaction;
-import com.buession.redis.transaction.jedis.JedisTransaction;
-import com.buession.redis.transaction.jedis.JedisTransactionProxy;
+import com.buession.redis.transaction.jedis.JedisClusterTransaction;
+import com.buession.redis.transaction.jedis.JedisClusterTransactionProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.ConnectionPoolConfig;
@@ -854,12 +854,12 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 
 	@Override
 	public Transaction multi() {
-		if(transaction == null){
-			final redis.clients.jedis.Transaction tran = cluster.multi();
-			transaction = new JedisTransactionProxy(new JedisTransaction(tran), tran);
+		if(this.transaction == null){
+			final redis.clients.jedis.AbstractTransaction transaction = cluster.multi();
+			this.transaction = new JedisClusterTransactionProxy(new JedisClusterTransaction(transaction), transaction);
 		}
 
-		return transaction;
+		return this.transaction;
 	}
 
 	@Override

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.converter;
@@ -64,13 +64,11 @@ public class SetConverter<S, T> implements Converter<Set<S>, Set<T>> {
 		if(source == null){
 			return null;
 		}else{
-			Stream<T> stream = source.stream().map(itemConverter::convert);
-
 			try{
-				return stream.collect(
+				return source.stream().map(itemConverter::convert).collect(
 						Collectors.toCollection(()->(Set<T>) BeanUtils.instantiateClass(source.getClass())));
 			}catch(Exception e){
-				return stream.collect(Collectors.toSet());
+				return source.stream().map(itemConverter::convert).collect(Collectors.toSet());
 			}
 		}
 	}

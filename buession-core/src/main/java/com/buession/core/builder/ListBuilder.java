@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.builder;
@@ -54,7 +54,7 @@ public class ListBuilder<V> {
 	 * @param data
 	 * 		List 数据
 	 */
-	private ListBuilder(final List<V> data){
+	private ListBuilder(final List<V> data) {
 		this.data = data;
 	}
 
@@ -66,7 +66,7 @@ public class ListBuilder<V> {
 	 *
 	 * @return {@link ListBuilder} 实例
 	 */
-	public static <V> ListBuilder<V> create(){
+	public static <V> ListBuilder<V> create() {
 		return new ListBuilder<>(new ArrayList<>());
 	}
 
@@ -82,7 +82,7 @@ public class ListBuilder<V> {
 	 *
 	 * @since 2.1.2
 	 */
-	public static <V> ListBuilder<V> create(final int initialCapacity){
+	public static <V> ListBuilder<V> create(final int initialCapacity) {
 		return new ListBuilder<>(new ArrayList<>(initialCapacity));
 	}
 
@@ -98,7 +98,7 @@ public class ListBuilder<V> {
 	 *
 	 * @since 2.2.0
 	 */
-	public static <V> ListBuilder<V> create(final List<V> list){
+	public static <V> ListBuilder<V> create(final List<V> list) {
 		return new ListBuilder<>(list);
 	}
 
@@ -114,7 +114,7 @@ public class ListBuilder<V> {
 	 *
 	 * @since 2.1.2
 	 */
-	public static <V> ListBuilder<V> create(final Collection<? extends V> c){
+	public static <V> ListBuilder<V> create(final Collection<? extends V> c) {
 		return new ListBuilder<>(new ArrayList<>(c));
 	}
 
@@ -130,12 +130,12 @@ public class ListBuilder<V> {
 	 *
 	 * @return {@link ListBuilder} 实例
 	 */
-	public static <V, S extends List<V>> ListBuilder<V> create(final Class<S> clazz){
+	public static <V, S extends List<V>> ListBuilder<V> create(final Class<S> clazz) {
 		Assert.isNull(clazz, "java.util.List class cloud not be null.");
 
 		List<V> data;
 		try{
-			data = clazz.newInstance();
+			data = clazz.getDeclaredConstructor().newInstance();
 		}catch(Exception e){
 			logger.error("Create {} instance error: {}", clazz.getName(), e.getMessage());
 			data = new ArrayList<>();
@@ -152,7 +152,7 @@ public class ListBuilder<V> {
 	 *
 	 * @return {@link ListBuilder} 实例
 	 */
-	public ListBuilder<V> add(final V value){
+	public ListBuilder<V> add(final V value) {
 		data.add(value);
 		return this;
 	}
@@ -167,7 +167,7 @@ public class ListBuilder<V> {
 	 *
 	 * @since 2.0.0
 	 */
-	public ListBuilder<V> addIfPresent(final V value){
+	public ListBuilder<V> addIfPresent(final V value) {
 		if(value != null){
 			data.add(value);
 		}
@@ -182,7 +182,7 @@ public class ListBuilder<V> {
 	 *
 	 * @return {@link ListBuilder} 实例
 	 */
-	public ListBuilder<V> addAll(final Collection<V> data){
+	public ListBuilder<V> addAll(final Collection<V> data) {
 		if(Validate.isNotEmpty(data)){
 			this.data.addAll(data);
 		}
@@ -197,7 +197,7 @@ public class ListBuilder<V> {
 	 *
 	 * @return {@link ListBuilder} 实例
 	 */
-	public ListBuilder<V> remove(final V value){
+	public ListBuilder<V> remove(final V value) {
 		data.remove(value);
 		return this;
 	}
@@ -207,7 +207,7 @@ public class ListBuilder<V> {
 	 *
 	 * @return {@link ListBuilder} 实例
 	 */
-	public ListBuilder<V> clear(){
+	public ListBuilder<V> clear() {
 		data.clear();
 		return this;
 	}
@@ -217,7 +217,7 @@ public class ListBuilder<V> {
 	 *
 	 * @return List 数据
 	 */
-	public List<V> build(){
+	public List<V> build() {
 		return data;
 	}
 
@@ -229,7 +229,7 @@ public class ListBuilder<V> {
 	 *
 	 * @return 空 Set
 	 */
-	public static <V> List<V> empty(){
+	public static <V> List<V> empty() {
 		return ListBuilder.<V>create().build();
 	}
 
@@ -241,7 +241,7 @@ public class ListBuilder<V> {
 	 *
 	 * @return 空 Set
 	 */
-	public static <V> List<V> of(){
+	public static <V> List<V> of() {
 		return empty();
 	}
 
@@ -255,7 +255,7 @@ public class ListBuilder<V> {
 	 *
 	 * @return 单一元素 List
 	 */
-	public static <V> List<V> of(final V value){
+	public static <V> List<V> of(final V value) {
 		return ListBuilder.<V>create(1).add(value).build();
 	}
 

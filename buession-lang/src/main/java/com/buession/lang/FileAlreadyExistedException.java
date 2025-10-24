@@ -19,16 +19,18 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package java.io;
+package com.buession.lang;
+
+import java.io.IOException;
 
 /**
  * 文件已存在异常
  *
  * @author Yong.Teng
- * @since 1.3.2
+ * @since 4.0.0
  */
 public class FileAlreadyExistedException extends IOException {
 
@@ -37,7 +39,7 @@ public class FileAlreadyExistedException extends IOException {
 	/**
 	 * 构造函数
 	 */
-	public FileAlreadyExistedException(){
+	public FileAlreadyExistedException() {
 		super();
 	}
 
@@ -47,7 +49,7 @@ public class FileAlreadyExistedException extends IOException {
 	 * @param message
 	 * 		异常信息
 	 */
-	public FileAlreadyExistedException(String message){
+	public FileAlreadyExistedException(String message) {
 		super(message);
 	}
 
@@ -59,7 +61,7 @@ public class FileAlreadyExistedException extends IOException {
 	 * @param reason
 	 * 		原因
 	 */
-	private FileAlreadyExistedException(String path, String reason){
+	private FileAlreadyExistedException(String path, String reason) {
 		super(path + ((reason == null) ? "" : " (" + reason + ")"));
 	}
 

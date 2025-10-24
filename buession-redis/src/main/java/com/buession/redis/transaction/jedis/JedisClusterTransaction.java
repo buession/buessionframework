@@ -19,11 +19,44 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
+package com.buession.redis.transaction.jedis;
+
+import com.buession.core.utils.Assert;
+import com.buession.redis.transaction.Transaction;
+
+import java.util.List;
+
 /**
+ * Jedis Cluster 事务
+ *
  * @author Yong.Teng
- * @since 1.3.2
+ * @since 4.0.0
  */
-package java.io;
+public class JedisClusterTransaction implements Transaction {
+
+	private final redis.clients.jedis.AbstractTransaction delegate;
+
+	public JedisClusterTransaction(redis.clients.jedis.AbstractTransaction transaction) {
+		Assert.isNull(transaction, "Redis Transaction cloud not be null.");
+		this.delegate = transaction;
+	}
+
+	@Override
+	public List<Object> exec() {
+		return delegate.exec();
+	}
+
+	@Override
+	public String discard() {
+		return delegate.discard();
+	}
+
+	@Override
+	public void close() {
+		delegate.close();
+	}
+
+}

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.builder;
@@ -54,7 +54,7 @@ public class SetBuilder<V> {
 	 * @param data
 	 * 		Set 数据
 	 */
-	private SetBuilder(final Set<V> data){
+	private SetBuilder(final Set<V> data) {
 		this.data = data;
 	}
 
@@ -66,7 +66,7 @@ public class SetBuilder<V> {
 	 *
 	 * @return {@link SetBuilder} 实例
 	 */
-	public static <V> SetBuilder<V> create(){
+	public static <V> SetBuilder<V> create() {
 		return new SetBuilder<>(new HashSet<>());
 	}
 
@@ -82,7 +82,7 @@ public class SetBuilder<V> {
 	 *
 	 * @since 2.1.2
 	 */
-	public static <V> SetBuilder<V> create(final int initialCapacity){
+	public static <V> SetBuilder<V> create(final int initialCapacity) {
 		return new SetBuilder<>(new HashSet<>(initialCapacity));
 	}
 
@@ -100,7 +100,7 @@ public class SetBuilder<V> {
 	 *
 	 * @since 2.1.2
 	 */
-	public static <V> SetBuilder<V> create(final int initialCapacity, final float loadFactor){
+	public static <V> SetBuilder<V> create(final int initialCapacity, final float loadFactor) {
 		return new SetBuilder<>(new HashSet<>(initialCapacity, loadFactor));
 	}
 
@@ -116,7 +116,7 @@ public class SetBuilder<V> {
 	 *
 	 * @since 2.2.0
 	 */
-	public static <V> SetBuilder<V> create(final Set<V> set){
+	public static <V> SetBuilder<V> create(final Set<V> set) {
 		return new SetBuilder<>(set);
 	}
 
@@ -132,7 +132,7 @@ public class SetBuilder<V> {
 	 *
 	 * @since 2.1.2
 	 */
-	public static <V> SetBuilder<V> create(final Collection<? extends V> c){
+	public static <V> SetBuilder<V> create(final Collection<? extends V> c) {
 		return new SetBuilder<>(new HashSet<>(c));
 	}
 
@@ -148,12 +148,12 @@ public class SetBuilder<V> {
 	 *
 	 * @return {@link SetBuilder} 实例
 	 */
-	public static <V, S extends Set<V>> SetBuilder<V> create(final Class<S> clazz){
+	public static <V, S extends Set<V>> SetBuilder<V> create(final Class<S> clazz) {
 		Assert.isNull(clazz, "java.util.Set class cloud not be null.");
 
 		Set<V> data;
 		try{
-			data = clazz.newInstance();
+			data = clazz.getDeclaredConstructor().newInstance();
 		}catch(Exception e){
 			logger.error("Create {} instance error: {}", clazz.getName(), e.getMessage());
 			data = new HashSet<>();
@@ -170,7 +170,7 @@ public class SetBuilder<V> {
 	 *
 	 * @return {@link SetBuilder} 实例
 	 */
-	public SetBuilder<V> add(final V value){
+	public SetBuilder<V> add(final V value) {
 		data.add(value);
 		return this;
 	}
@@ -183,7 +183,7 @@ public class SetBuilder<V> {
 	 *
 	 * @return {@link SetBuilder} 实例
 	 */
-	public SetBuilder<V> addIfPresent(final V value){
+	public SetBuilder<V> addIfPresent(final V value) {
 		if(value != null){
 			data.add(value);
 		}
@@ -198,7 +198,7 @@ public class SetBuilder<V> {
 	 *
 	 * @return {@link SetBuilder} 实例
 	 */
-	public SetBuilder<V> addAll(final Collection<V> data){
+	public SetBuilder<V> addAll(final Collection<V> data) {
 		if(Validate.isNotEmpty(data)){
 			this.data.addAll(data);
 		}
@@ -213,7 +213,7 @@ public class SetBuilder<V> {
 	 *
 	 * @return {@link SetBuilder} 实例
 	 */
-	public SetBuilder<V> remove(final V value){
+	public SetBuilder<V> remove(final V value) {
 		data.remove(value);
 		return this;
 	}
@@ -223,7 +223,7 @@ public class SetBuilder<V> {
 	 *
 	 * @return {@link SetBuilder} 实例
 	 */
-	public SetBuilder<V> clear(){
+	public SetBuilder<V> clear() {
 		data.clear();
 		return this;
 	}
@@ -233,7 +233,7 @@ public class SetBuilder<V> {
 	 *
 	 * @return Set 数据
 	 */
-	public Set<V> build(){
+	public Set<V> build() {
 		return data;
 	}
 
@@ -245,7 +245,7 @@ public class SetBuilder<V> {
 	 *
 	 * @return 空 Set
 	 */
-	public static <V> Set<V> empty(){
+	public static <V> Set<V> empty() {
 		return SetBuilder.<V>create().build();
 	}
 
@@ -257,7 +257,7 @@ public class SetBuilder<V> {
 	 *
 	 * @return 空 Set
 	 */
-	public static <V> Set<V> of(){
+	public static <V> Set<V> of() {
 		return empty();
 	}
 
@@ -271,7 +271,7 @@ public class SetBuilder<V> {
 	 *
 	 * @return 单一元素 Set
 	 */
-	public static <V> Set<V> of(final V value){
+	public static <V> Set<V> of(final V value) {
 		return SetBuilder.<V>create(1).add(value).build();
 	}
 

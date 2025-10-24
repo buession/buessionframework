@@ -19,12 +19,11 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package okhttp3;
 
-import okhttp3.internal.Util;
 import okio.BufferedSink;
 import okio.Okio;
 import okio.Source;
@@ -60,7 +59,7 @@ public class StreamRequestBody extends okhttp3.RequestBody {
 	 * @param inputStream
 	 * 		输入流
 	 */
-	protected StreamRequestBody(final @Nullable MediaType contentType, final @Nullable InputStream inputStream){
+	protected StreamRequestBody(final @Nullable MediaType contentType, final @Nullable InputStream inputStream) {
 		this.inputStream = inputStream;
 		this.contentType = contentType;
 	}
@@ -76,18 +75,18 @@ public class StreamRequestBody extends okhttp3.RequestBody {
 	 * @return 流请求体
 	 */
 	public static StreamRequestBody create(final @Nullable InputStream inputStream,
-										   final @Nullable MediaType contentType){
+										   final @Nullable MediaType contentType) {
 		return new StreamRequestBody(contentType, inputStream);
 	}
 
 	@Nullable
 	@Override
-	public MediaType contentType(){
+	public MediaType contentType() {
 		return contentType;
 	}
 
 	@Override
-	public long contentLength() throws IOException{
+	public long contentLength() throws IOException {
 		try{
 			return inputStream.available();
 		}catch(IOException e){
@@ -96,14 +95,15 @@ public class StreamRequestBody extends okhttp3.RequestBody {
 	}
 
 	@Override
-	public void writeTo(@NotNull BufferedSink bufferedSink) throws IOException{
+	public void writeTo(@NotNull BufferedSink bufferedSink) throws IOException {
 		Source source = null;
 		try{
 			source = Okio.source(inputStream);
 			bufferedSink.writeAll(source);
 		}finally{
-			assert source != null;
-			Util.closeQuietly(source);
+			if(source != null){
+				source.close();
+			}
 		}
 	}
 

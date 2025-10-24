@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.converter;
@@ -64,12 +64,11 @@ public class CollectionConverter<S, T> implements Converter<Collection<S>, Colle
 		if(source == null){
 			return null;
 		}else{
-			Stream<T> stream = source.stream().map(itemConverter::convert);
-
 			try{
-				return stream.collect(Collectors.toCollection(()->BeanUtils.instantiateClass(source.getClass())));
+				Collection<T> instance = BeanUtils.instantiateClass(source.getClass());
+				return source.stream().map(itemConverter::convert).collect(Collectors.toCollection(()->instance));
 			}catch(Exception e){
-				return stream.collect(Collectors.toList());
+				return source.stream().map(itemConverter::convert).collect(Collectors.toList());
 			}
 		}
 	}

@@ -22,55 +22,24 @@
  * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.converter;
+package com.buession.redis.transaction.jedis;
 
-import org.springframework.beans.BeanUtils;
-
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import com.buession.redis.core.internal.jedis.JedisResult;
+import com.buession.redis.transaction.AbstractTransactionProxy;
+import com.buession.redis.transaction.Transaction;
 
 /**
- * List 转换器
- *
- * @param <S>
- * 		原类型
- * @param <T>
- * 		目标类型
+ * Jedis Cluster 事务代理类
  *
  * @author Yong.Teng
- * @since 1.2.0
+ * @since 4.0.0
  */
-public class ListConverter<S, T> implements Converter<List<S>, List<T>> {
+public class JedisClusterTransactionProxy
+		extends AbstractTransactionProxy<redis.clients.jedis.AbstractTransaction, JedisResult<?, ?>> {
 
-	/**
-	 * List item 转换器
-	 */
-	private final Converter<S, T> itemConverter;
-
-	/**
-	 * 构造函数
-	 *
-	 * @param itemConverter
-	 * 		List item 转换器
-	 */
-	public ListConverter(final Converter<S, T> itemConverter) {
-		this.itemConverter = itemConverter;
-	}
-
-	@SuppressWarnings({"unchecked"})
-	@Override
-	public List<T> convert(final List<S> source) {
-		if(source == null){
-			return null;
-		}else{
-			try{
-				return source.stream().map(itemConverter::convert).collect(
-						Collectors.toCollection(()->(List<T>) BeanUtils.instantiateClass(source.getClass())));
-			}catch(Exception e){
-				return source.stream().map(itemConverter::convert).collect(Collectors.toList());
-			}
-		}
+	public JedisClusterTransactionProxy(final Transaction target,
+										final redis.clients.jedis.AbstractTransaction object) {
+		super(target, object);
 	}
 
 }
