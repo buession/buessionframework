@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.json.deserializer;
@@ -54,6 +54,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @JacksonStdImpl
 public class Map2EnumDeserializer extends StdScalarDeserializer<Enum<?>> implements ContextualDeserializer {
 
+	private final static long serialVersionUID = 519940321650314022L;
+
 	private final static Map<String, Enum<?>> cache = new ConcurrentHashMap<>(32);
 
 	private final static Logger logger = LoggerFactory.getLogger(Map2EnumDeserializer.class);
@@ -72,9 +74,9 @@ public class Map2EnumDeserializer extends StdScalarDeserializer<Enum<?>> impleme
 			throws IOException {
 		JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 		/** 当前节点名 */
-		String fieldName = jsonParser.getCurrentName();
+		String fieldName = jsonParser.currentName();
 		/** 当前值 */
-		Object currentValue = jsonParser.getCurrentValue();
+		Object currentValue = jsonParser.currentValue();
 		Class<?> clazz = currentValue.getClass();
 
 		try{

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.collect;
@@ -2592,9 +2592,7 @@ public class Arrays extends org.apache.commons.lang3.ArrayUtils {
 
 		byte[] result = new byte[size];
 
-		for(int i = 0; i < size; i++){
-			result[i] = value;
-		}
+		java.util.Arrays.fill(result, value);
 
 		return result;
 	}
@@ -2616,9 +2614,7 @@ public class Arrays extends org.apache.commons.lang3.ArrayUtils {
 
 		char[] result = new char[size];
 
-		for(int i = 0; i < size; i++){
-			result[i] = value;
-		}
+		java.util.Arrays.fill(result, value);
 
 		return result;
 	}
@@ -2640,9 +2636,7 @@ public class Arrays extends org.apache.commons.lang3.ArrayUtils {
 
 		boolean[] result = new boolean[size];
 
-		for(int i = 0; i < size; i++){
-			result[i] = value;
-		}
+		java.util.Arrays.fill(result, value);
 
 		return result;
 	}
@@ -2664,9 +2658,7 @@ public class Arrays extends org.apache.commons.lang3.ArrayUtils {
 
 		short[] result = new short[size];
 
-		for(int i = 0; i < size; i++){
-			result[i] = value;
-		}
+		java.util.Arrays.fill(result, value);
 
 		return result;
 	}
@@ -2688,9 +2680,7 @@ public class Arrays extends org.apache.commons.lang3.ArrayUtils {
 
 		int[] result = new int[size];
 
-		for(int i = 0; i < size; i++){
-			result[i] = value;
-		}
+		java.util.Arrays.fill(result, value);
 
 		return result;
 	}
@@ -2712,9 +2702,7 @@ public class Arrays extends org.apache.commons.lang3.ArrayUtils {
 
 		long[] result = new long[size];
 
-		for(int i = 0; i < size; i++){
-			result[i] = value;
-		}
+		java.util.Arrays.fill(result, value);
 
 		return result;
 	}
@@ -2736,9 +2724,7 @@ public class Arrays extends org.apache.commons.lang3.ArrayUtils {
 
 		float[] result = new float[size];
 
-		for(int i = 0; i < size; i++){
-			result[i] = value;
-		}
+		java.util.Arrays.fill(result, value);
 
 		return result;
 	}
@@ -2760,9 +2746,7 @@ public class Arrays extends org.apache.commons.lang3.ArrayUtils {
 
 		double[] result = new double[size];
 
-		for(int i = 0; i < size; i++){
-			result[i] = value;
-		}
+		java.util.Arrays.fill(result, value);
 
 		return result;
 	}
@@ -2787,9 +2771,7 @@ public class Arrays extends org.apache.commons.lang3.ArrayUtils {
 
 		T[] result = (T[]) Array.newInstance(value.getClass(), size);
 
-		for(int i = 0; i < size; i++){
-			result[i] = value;
-		}
+		java.util.Arrays.fill(result, value);
 
 		return result;
 	}
@@ -3014,6 +2996,7 @@ public class Arrays extends org.apache.commons.lang3.ArrayUtils {
 	 *
 	 * @return 合并后的数组
 	 */
+	@SafeVarargs
 	public static <T> T[] merge(final T[] a, final T[]... b) {
 		Assert.isNull(a, "Source array cloud not be null.");
 

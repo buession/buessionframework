@@ -19,10 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.zaxxer.hikari.utils;
+
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author Yong.Teng
@@ -37,13 +39,17 @@ public class ObjectUtils {
 	public static <T> T newInstance(final String className) throws IllegalStateException {
 		try{
 			Class<?> clazz = loadClass(className);
-			return (T) clazz.newInstance();
+			return (T) clazz.getDeclaredConstructor().newInstance();
 		}catch(ClassNotFoundException e){
 			throw new IllegalStateException(e);
 		}catch(InstantiationException e){
 			throw new IllegalStateException(e);
 		}catch(IllegalAccessException e){
 			throw new IllegalStateException(e);
+		}catch(NoSuchMethodException e){
+			throw new IllegalStateException(e);
+		}catch(InvocationTargetException e){
+			throw new RuntimeException(e);
 		}
 	}
 

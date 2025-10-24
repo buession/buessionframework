@@ -142,6 +142,7 @@ public class HttpClientConnectionManager implements Closeable {
 	 * @since 2.3.0
 	 * @deprecated 3.0.1
 	 */
+	@Deprecated
 	public int getMaxConnections() {
 		return getMaxRequests();
 	}
@@ -156,6 +157,7 @@ public class HttpClientConnectionManager implements Closeable {
 	 * @since 2.0.1
 	 * @deprecated 3.0.1
 	 */
+	@Deprecated
 	public void setMaxConnections(int maxConnections) {
 		setMaxRequests(maxConnections);
 	}

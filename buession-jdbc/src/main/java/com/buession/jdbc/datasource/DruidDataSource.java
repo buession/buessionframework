@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.jdbc.datasource;
@@ -1298,7 +1298,7 @@ public class DruidDataSource
 				Class<?> userCallbackClazz = Utils.loadClass(this.getUserCallbackClassName());
 
 				if(userCallbackClazz != null){
-					dataSource.setUserCallback((NameCallback) userCallbackClazz.newInstance());
+					dataSource.setUserCallback((NameCallback) userCallbackClazz.getDeclaredConstructor().newInstance());
 				}else{
 					logger.error("load userCallback error : {}", this.getUserCallbackClassName());
 				}

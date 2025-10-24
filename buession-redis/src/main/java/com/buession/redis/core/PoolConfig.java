@@ -593,8 +593,8 @@ public class PoolConfig {
 		poolConfig.setMinIdle(getMinIdle());
 		poolConfig.setMaxIdle(getMaxIdle());
 
-		propertyMapper.from(getMinEvictableIdleTime()).to(poolConfig::setMinEvictableIdleTime);
-		propertyMapper.from(getSoftMinEvictableIdleTime()).to(poolConfig::setSoftMinEvictableIdleTime);
+		propertyMapper.from(getMinEvictableIdleTime()).to(poolConfig::setMinEvictableIdleDuration);
+		propertyMapper.from(getSoftMinEvictableIdleTime()).to(poolConfig::setSoftMinEvictableIdleDuration);
 		propertyMapper.from(getEvictorShutdownTimeout()).to(poolConfig::setEvictorShutdownTimeout);
 		propertyMapper.from(getTimeBetweenEvictionRuns()).to(poolConfig::setTimeBetweenEvictionRuns);
 		propertyMapper.alwaysApplyingWhenHasText().from(getEvictionPolicyClassName())

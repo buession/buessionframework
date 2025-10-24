@@ -85,7 +85,7 @@ public class OkHttpClientConnectionManager extends OkHttpBaseClientConnectionMan
 		final HttpClientConnectionManager connectionManager = new HttpClientConnectionManager();
 
 		// 最大连接数
-		propertyMapper.from(getConfiguration().getMaxConnections()).to(connectionManager::setMaxConnections);
+		propertyMapper.from(getConfiguration().getMaxConnections()).to(connectionManager::setMaxRequests);
 		// 同时请求相同主机的请求数量最大值
 		propertyMapper.from(getConfiguration().getMaxPerRoute()).to(connectionManager::setMaxRequestsPerHost);
 		// 默认的最大并发请求数量

@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2023 Buession.com Inc.														|
+ * | Copyright @ 2013-2025 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.velocity.servlet;
@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.NestedIOException;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Locale;
 
@@ -99,10 +100,10 @@ public class VelocityLayoutView extends VelocityToolboxView {
 			getTemplate(layoutUrl);
 			return true;
 		}catch(ResourceNotFoundException e){
-			throw new NestedIOException("Cannot find Velocity template for URL [" + layoutUrl + "]: " +
+			throw new IOException("Cannot find Velocity template for URL [" + layoutUrl + "]: " +
 					"Did you specify the correct resource loader path?", e);
 		}catch(Exception e){
-			throw new NestedIOException("Cannot load Velocity template for URL [" + layoutUrl + "]", e);
+			throw new IOException("Cannot load Velocity template for URL [" + layoutUrl + "]", e);
 		}
 	}
 

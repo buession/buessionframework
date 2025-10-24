@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2025 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.velocity.servlet;
@@ -41,12 +41,12 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContextException;
-import org.springframework.core.NestedIOException;
 import org.springframework.web.servlet.view.AbstractTemplateView;
 import org.springframework.web.util.NestedServletException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Locale;
 import java.util.Map;
@@ -72,64 +72,64 @@ public class VelocityView extends AbstractTemplateView {
 
 	private final static Logger logger = LoggerFactory.getLogger(VelocityView.class);
 
-	public Map<String, Class<?>> getToolAttributes(){
+	public Map<String, Class<?>> getToolAttributes() {
 		return toolAttributes;
 	}
 
-	public void setToolAttributes(Map<String, Class<?>> toolAttributes){
+	public void setToolAttributes(Map<String, Class<?>> toolAttributes) {
 		this.toolAttributes = toolAttributes;
 	}
 
-	public String getDateToolAttribute(){
+	public String getDateToolAttribute() {
 		return dateToolAttribute;
 	}
 
-	public void setDateToolAttribute(String dateToolAttribute){
+	public void setDateToolAttribute(String dateToolAttribute) {
 		this.dateToolAttribute = dateToolAttribute;
 	}
 
-	public String getNumberToolAttribute(){
+	public String getNumberToolAttribute() {
 		return numberToolAttribute;
 	}
 
-	public void setNumberToolAttribute(String numberToolAttribute){
+	public void setNumberToolAttribute(String numberToolAttribute) {
 		this.numberToolAttribute = numberToolAttribute;
 	}
 
-	public String getEncoding(){
+	public String getEncoding() {
 		return encoding;
 	}
 
-	public void setEncoding(String encoding){
+	public void setEncoding(String encoding) {
 		this.encoding = encoding;
 	}
 
-	public void setCharset(Charset charset){
+	public void setCharset(Charset charset) {
 		this.encoding = charset.name();
 	}
 
-	public boolean isCacheTemplate(){
+	public boolean isCacheTemplate() {
 		return getCacheTemplate();
 	}
 
-	public boolean getCacheTemplate(){
+	public boolean getCacheTemplate() {
 		return cacheTemplate;
 	}
 
-	public void setCacheTemplate(boolean cacheTemplate){
+	public void setCacheTemplate(boolean cacheTemplate) {
 		this.cacheTemplate = cacheTemplate;
 	}
 
-	public VelocityEngine getVelocityEngine(){
+	public VelocityEngine getVelocityEngine() {
 		return velocityEngine;
 	}
 
-	public void setVelocityEngine(VelocityEngine velocityEngine){
+	public void setVelocityEngine(VelocityEngine velocityEngine) {
 		this.velocityEngine = velocityEngine;
 	}
 
 	@Override
-	protected void initApplicationContext() throws BeansException{
+	protected void initApplicationContext() throws BeansException {
 		super.initApplicationContext();
 
 		if(getVelocityEngine() == null){
@@ -137,7 +137,7 @@ public class VelocityView extends AbstractTemplateView {
 		}
 	}
 
-	protected VelocityEngine autodetectVelocityEngine() throws BeansException{
+	protected VelocityEngine autodetectVelocityEngine() throws BeansException {
 		try{
 			VelocityConfig velocityConfig = BeanFactoryUtils.beanOfTypeIncludingAncestors(getApplicationContext(),
 					VelocityConfig.class, true, false);
@@ -150,7 +150,7 @@ public class VelocityView extends AbstractTemplateView {
 	}
 
 	@Override
-	public boolean checkResource(Locale locale) throws Exception{
+	public boolean checkResource(Locale locale) throws Exception {
 		try{
 			template = getTemplate(getUrl());
 			return true;
@@ -160,13 +160,13 @@ public class VelocityView extends AbstractTemplateView {
 			}
 			return false;
 		}catch(Exception ex){
-			throw new NestedIOException("Could not load Velocity template for URL [" + getUrl() + "]", ex);
+			throw new IOException("Could not load Velocity template for URL [" + getUrl() + "]", ex);
 		}
 	}
 
 	@Override
 	protected void renderMergedTemplateModel(Map<String, Object> model, HttpServletRequest request,
-											 HttpServletResponse response) throws Exception{
+											 HttpServletResponse response) throws Exception {
 		exposeHelpers(model, request);
 
 		Context velocityContext = createVelocityContext(model, request, response);
@@ -176,27 +176,27 @@ public class VelocityView extends AbstractTemplateView {
 		doRender(velocityContext, response);
 	}
 
-	protected void exposeHelpers(Map<String, Object> model, HttpServletRequest request) throws Exception{
+	protected void exposeHelpers(Map<String, Object> model, HttpServletRequest request) throws Exception {
 	}
 
 	protected void exposeHelpers(Context velocityContext, HttpServletRequest request, HttpServletResponse response)
-			throws Exception{
+			throws Exception {
 		exposeHelpers(velocityContext, request);
 	}
 
-	protected void exposeHelpers(Context velocityContext, HttpServletRequest request) throws Exception{
+	protected void exposeHelpers(Context velocityContext, HttpServletRequest request) throws Exception {
 	}
 
 	protected Context createVelocityContext(Map<String, Object> model, HttpServletRequest request,
-											HttpServletResponse response) throws Exception{
+											HttpServletResponse response) throws Exception {
 		return createVelocityContext(model);
 	}
 
-	protected Context createVelocityContext(Map<String, Object> model) throws Exception{
+	protected Context createVelocityContext(Map<String, Object> model) throws Exception {
 		return new VelocityContext(model);
 	}
 
-	protected void exposeToolAttributes(Context velocityContext, HttpServletRequest request) throws Exception{
+	protected void exposeToolAttributes(Context velocityContext, HttpServletRequest request) throws Exception {
 		// Expose generic attributes.
 		if(toolAttributes != null){
 			for(Map.Entry<String, Class<?>> entry : toolAttributes.entrySet()){
@@ -204,7 +204,7 @@ public class VelocityView extends AbstractTemplateView {
 				Class<?> toolClass = entry.getValue();
 
 				try{
-					Object tool = toolClass.newInstance();
+					Object tool = toolClass.getDeclaredConstructor().newInstance();
 					initTool(tool, velocityContext);
 					velocityContext.put(attributeName, tool);
 				}catch(Exception ex){
@@ -223,10 +223,10 @@ public class VelocityView extends AbstractTemplateView {
 		}
 	}
 
-	protected void initTool(Object tool, Context velocityContext) throws Exception{
+	protected void initTool(Object tool, Context velocityContext) throws Exception {
 	}
 
-	protected void doRender(Context context, HttpServletResponse response) throws Exception{
+	protected void doRender(Context context, HttpServletResponse response) throws Exception {
 		if(logger.isDebugEnabled()){
 			logger.debug("Rendering Velocity template [{}] in VelocityView '{}'", getUrl(), getBeanName());
 		}
@@ -234,16 +234,16 @@ public class VelocityView extends AbstractTemplateView {
 		mergeTemplate(getTemplate(), context, response);
 	}
 
-	protected Template getTemplate() throws Exception{
+	protected Template getTemplate() throws Exception {
 		return isCacheTemplate() && template != null ? template : getTemplate(getUrl());
 	}
 
-	protected Template getTemplate(String name) throws Exception{
+	protected Template getTemplate(String name) throws Exception {
 		return (getEncoding() != null ? getVelocityEngine().getTemplate(name, getEncoding()) :
 				getVelocityEngine().getTemplate(name));
 	}
 
-	protected void mergeTemplate(Template template, Context context, HttpServletResponse response) throws Exception{
+	protected void mergeTemplate(Template template, Context context, HttpServletResponse response) throws Exception {
 		try{
 			template.merge(context, response.getWriter());
 		}catch(MethodInvocationException ex){
