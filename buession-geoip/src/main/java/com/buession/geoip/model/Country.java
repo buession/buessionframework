@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2025 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.model;
@@ -34,39 +34,21 @@ import java.util.Objects;
  *
  * @author Yong.Teng
  */
-public final class Country implements Serializable {
+public final class Country extends AbstractConfidenceRecord implements Serializable {
 
 	private final static long serialVersionUID = -7665239490542479833L;
-
-	/**
-	 * 国家名称 ID
-	 */
-	private final Integer geoNameId;
-
-	/**
-	 * The confidence for Country
-	 */
-	private final Integer confidence;
-
-	/**
-	 * 国家编码
-	 */
-	private final String code;
-
-	/**
-	 * 国家原始名称
-	 */
-	private final String originalName;
-
-	/**
-	 * 国家名称
-	 */
-	private final String name;
 
 	/**
 	 * 国家名称全称
 	 */
 	private final String fullName;
+
+	/**
+	 * 国家 ISO Code
+	 *
+	 * @since 4.0.0
+	 */
+	private final String isoCode;
 
 	/**
 	 * IP 地址是否在欧盟
@@ -80,73 +62,36 @@ public final class Country implements Serializable {
 	 *
 	 * @param geoNameId
 	 * 		国家名称 ID
-	 * @param confidence
-	 * 		The confidence for Country
-	 * @param code
-	 * 		国家编码
+	 * @param isoCode
+	 * 		国家 ISO Code
 	 * @param originalName
 	 * 		国家原始名称
 	 * @param name
 	 * 		国家名称
 	 * @param fullName
 	 * 		国家名称全称
+	 * @param confidence
+	 * 		A value from 0-100 indicating MaxMind's confidence that the country is correct.
 	 * @param isInEuropeanUnion
 	 * 		IP 地址是否在欧盟
 	 */
-	public Country(final Integer geoNameId, final Integer confidence, final String code, final String originalName,
-				   final String name, final String fullName, final boolean isInEuropeanUnion){
-		this.geoNameId = geoNameId;
-		this.confidence = confidence;
-		this.code = code;
-		this.originalName = originalName;
-		this.name = name;
+	public Country(final Long geoNameId, final String isoCode, final String originalName, final String name,
+				   final String fullName, final Integer confidence, final boolean isInEuropeanUnion) {
+		super(geoNameId, originalName, name, confidence);
+		this.isoCode = isoCode;
 		this.fullName = fullName;
 		this.isInEuropeanUnion = isInEuropeanUnion;
 	}
 
 	/**
-	 * 返回国家名称 ID
+	 * 返回国家 ISO Code
 	 *
-	 * @return 国家名称 ID
-	 */
-	public Integer getGeoNameId(){
-		return geoNameId;
-	}
-
-	/**
-	 * Return the confidence for Country
+	 * @return 国家 ISO Code
 	 *
-	 * @return The confidence for Country
+	 * @since 4.0.0
 	 */
-	public Integer getConfidence(){
-		return confidence;
-	}
-
-	/**
-	 * 返回国家编码
-	 *
-	 * @return 国家编码
-	 */
-	public String getCode(){
-		return code;
-	}
-
-	/**
-	 * 返回国家原始名称
-	 *
-	 * @return 国家原始名称
-	 */
-	public String getOriginalName(){
-		return originalName;
-	}
-
-	/**
-	 * 返回国家名称
-	 *
-	 * @return 国家名称
-	 */
-	public String getName(){
-		return name;
+	public String getIsoCode() {
+		return isoCode;
 	}
 
 	/**
@@ -154,7 +99,7 @@ public final class Country implements Serializable {
 	 *
 	 * @return 国家名称全称
 	 */
-	public String getFullName(){
+	public String getFullName() {
 		return fullName;
 	}
 
@@ -165,36 +110,39 @@ public final class Country implements Serializable {
 	 *
 	 * @since 1.3.0
 	 */
-	public boolean isInEuropeanUnion(){
+	public boolean isInEuropeanUnion() {
 		return isInEuropeanUnion;
 	}
 
 	@Override
-	public int hashCode(){
-		return Objects.hash(geoNameId, confidence, code, originalName, name, fullName, isInEuropeanUnion);
+	public int hashCode() {
+		return Objects.hash(getGeoNameId(), getIsoCode(), getConfidence(), getOriginalName(), getName(), fullName,
+				isInEuropeanUnion);
 	}
 
 	@Override
-	public boolean equals(Object obj){
+	public boolean equals(Object obj) {
 		if(this == obj){
 			return true;
 		}
 
 		if(obj instanceof Country){
 			Country that = (Country) obj;
-			return Objects.equals(geoNameId, that.geoNameId) && Objects.equals(confidence, that.confidence) &&
-					Objects.equals(code, that.code) && Objects.equals(originalName, that.originalName) &&
-					Objects.equals(name, that.name);
+			return Objects.equals(getGeoNameId(), that.getGeoNameId()) &&
+					Objects.equals(getIsoCode(), that.getIsoCode()) &&
+					Objects.equals(getConfidence(), that.getConfidence()) &&
+					Objects.equals(getOriginalName(), that.getOriginalName()) &&
+					Objects.equals(getName(), that.getName());
 		}
-		
+
 		return false;
 	}
 
 	@Override
-	public String toString(){
-		return "Country{" + "geoNameId=" + geoNameId + ", confidence=" + confidence + ", code=" + code +
-				", originalName=" + originalName + ", name=" + name + ", fullName=" + fullName +
-				", isInEuropeanUnion=" + isInEuropeanUnion + '}';
+	public String toString() {
+		return "Country{" + "geoNameId=" + getGeoNameId() + ", ISO code=" + getIsoCode() + ", confidence=" +
+				getConfidence() + ", originalName=" + getOriginalName() + ", name=" + getName() + ", fullName=" +
+				fullName + ", isInEuropeanUnion=" + isInEuropeanUnion + '}';
 	}
 
 }

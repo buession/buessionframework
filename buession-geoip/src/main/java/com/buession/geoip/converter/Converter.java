@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2025 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.converter;
@@ -32,12 +32,12 @@ import com.maxmind.geoip2.record.AbstractRecord;
 import java.util.Locale;
 
 /**
- * 将 maxmind geoip Record 转换为模型实体类接口
+ * 将 maxmind GeoIP Record 转换为模型实体类接口
  *
  * @param <M>
  * 		模型实体类
  * @param <S>
- * 		maxmind geoip Record {@link AbstractRecord}
+ * 		maxmind GeoIP Record {@link AbstractRecord}
  * @param <R>
  * 		maxmind Response {@link AbstractResponse}
  *
@@ -47,51 +47,36 @@ import java.util.Locale;
 public interface Converter<M, S extends AbstractRecord, R extends AbstractResponse> {
 
 	/**
-	 * 将 maxmind geoip Record 转换为模型实体类
+	 * 将 maxmind GeoIP Record 转换为模型实体类
 	 *
 	 * @param s
-	 * 		maxmind geoip Record {@link AbstractRecord}
+	 * 		maxmind GeoIP Record {@link AbstractRecord}
 	 *
 	 * @return 模型实体类
 	 */
-	default M converter(S s){
+	default M converter(S s) {
 		return converter(s, null, null);
 	}
 
 	/**
-	 * 将 maxmind geoip Record 转换为模型实体类
+	 * 将 maxmind GeoIP Record 转换为模型实体类
 	 *
 	 * @param s
-	 * 		maxmind geoip Record {@link AbstractRecord}
+	 * 		maxmind GeoIP Record {@link AbstractRecord}
 	 * @param locale
 	 *        {@link Locale} 实例
 	 *
 	 * @return 模型实体类
 	 */
-	default M converter(S s, Locale locale){
+	default M converter(S s, Locale locale) {
 		return converter(s, null, locale);
 	}
 
 	/**
-	 * 将 maxmind geoip Record 转换为模型实体类
+	 * 将 maxmind GeoIP Record 转换为模型实体类
 	 *
 	 * @param s
-	 * 		maxmind geoip Record {@link AbstractRecord}
-	 * @param response
-	 * 		maxmind Response  {@link AbstractResponse}
-	 *
-	 * @return 模型实体类
-	 */
-	@Deprecated
-	default M converter(S s, R response){
-		return converter(s, response, null);
-	}
-
-	/**
-	 * 将 maxmind geoip Record 转换为模型实体类
-	 *
-	 * @param s
-	 * 		maxmind geoip Record {@link AbstractRecord}
+	 * 		maxmind GeoIP Record {@link AbstractRecord}
 	 * @param response
 	 * 		maxmind Response  {@link AbstractResponse}
 	 * @param locale

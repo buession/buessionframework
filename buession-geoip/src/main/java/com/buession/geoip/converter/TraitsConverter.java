@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2025 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.converter;
@@ -53,16 +53,16 @@ public class TraitsConverter extends AbstractConverter<Traits, com.maxmind.geoip
 
 	private AsnResponse asnResponse;
 
-	public AsnResponse getAsnResponse(){
+	public AsnResponse getAsnResponse() {
 		return asnResponse;
 	}
 
-	public void setAsnResponse(AsnResponse asnResponse){
+	public void setAsnResponse(AsnResponse asnResponse) {
 		this.asnResponse = asnResponse;
 	}
 
 	@Override
-	public Traits converter(com.maxmind.geoip2.record.Traits traits){
+	public Traits converter(com.maxmind.geoip2.record.Traits traits) {
 		if(traits == null){
 			return null;
 		}
@@ -82,7 +82,7 @@ public class TraitsConverter extends AbstractConverter<Traits, com.maxmind.geoip
 		final Organization organization =
 				traits.getOrganization() == null ? null : new Organization(traits.getOrganization());
 		final Organization autonomousSystemOrganization = parseAutonomousSystemOrganization(traits);
-		final Integer autonomousSystemNumber = parseAutonomousSystemNumber(traits);
+		final Long autonomousSystemNumber = parseAutonomousSystemNumber(traits);
 
 		return new Traits(traits.getIpAddress(), traits.getDomain(), traits.getIsp(), network, connectionType,
 				organization, autonomousSystemOrganization, autonomousSystemNumber,
@@ -94,11 +94,11 @@ public class TraitsConverter extends AbstractConverter<Traits, com.maxmind.geoip
 	}
 
 	@Override
-	public Traits converter(com.maxmind.geoip2.record.Traits traits, AbstractResponse response, Locale locale){
+	public Traits converter(com.maxmind.geoip2.record.Traits traits, AbstractResponse response, Locale locale) {
 		return converter(traits);
 	}
 
-	private Integer parseAutonomousSystemNumber(com.maxmind.geoip2.record.Traits traits){
+	private Long parseAutonomousSystemNumber(com.maxmind.geoip2.record.Traits traits) {
 		if(traits.getAutonomousSystemNumber() == null){
 			return asnResponse == null ? null : asnResponse.getAutonomousSystemNumber();
 		}else{
@@ -106,7 +106,7 @@ public class TraitsConverter extends AbstractConverter<Traits, com.maxmind.geoip
 		}
 	}
 
-	private Organization parseAutonomousSystemOrganization(com.maxmind.geoip2.record.Traits traits){
+	private Organization parseAutonomousSystemOrganization(com.maxmind.geoip2.record.Traits traits) {
 		if(traits.getAutonomousSystemOrganization() == null){
 			return asnResponse == null ? null : new Organization(asnResponse.getAutonomousSystemOrganization());
 		}else{

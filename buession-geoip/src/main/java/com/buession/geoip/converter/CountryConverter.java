@@ -42,7 +42,7 @@ public class CountryConverter extends AbstractConverter<Country, com.maxmind.geo
 	private final static CountryResource countryResource = new CountryResource();
 
 	@Override
-	public Country converter(com.maxmind.geoip2.record.Country country, CountryResponse response, Locale locale){
+	public Country converter(com.maxmind.geoip2.record.Country country, CountryResponse response, Locale locale) {
 		if(country == null){
 			return null;
 		}
@@ -51,8 +51,8 @@ public class CountryConverter extends AbstractConverter<Country, com.maxmind.geo
 		final String fullName = country.getIsoCode() == null ? null :
 				countryResource.getData().get(country.getIsoCode());
 
-		return new Country(country.getGeoNameId(), country.getConfidence(), country.getIsoCode(), country.getName(),
-				name, fullName, country.isInEuropeanUnion());
+		return new Country(country.getGeoNameId(), country.getIsoCode(), country.getName(),
+				name, fullName, country.getConfidence(), country.isInEuropeanUnion());
 	}
 
 }

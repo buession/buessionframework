@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2025 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.converter;
@@ -41,7 +41,7 @@ public class SubdivisionConverter extends AbstractConverter<District, com.maxmin
 		CityResponse> {
 
 	@Override
-	public District converter(Subdivision subdivision, CityResponse response, Locale locale){
+	public District converter(Subdivision subdivision, CityResponse response, Locale locale) {
 		if(subdivision == null){
 			return null;
 		}
@@ -55,19 +55,19 @@ public class SubdivisionConverter extends AbstractConverter<District, com.maxmin
 			}
 		}
 
-		return new District(subdivision.getGeoNameId(), subdivision.getConfidence(), subdivision.getName(), name, null
-				, parent);
+		return new District(subdivision.getGeoNameId(), subdivision.getIsoCode(), subdivision.getName(), name,
+				subdivision.getConfidence(), null, parent);
 	}
 
 	private static District converter(Subdivision subdivision, CityResponse response, Locale locale,
-									  boolean isPrivate){
+									  boolean isPrivate) {
 		if(subdivision == null){
 			return null;
 		}
 
 		final String name = getName(subdivision.getNames(), locale);
-		return new District(subdivision.getGeoNameId(), subdivision.getConfidence(), subdivision.getName(), name, null
-				, null);
+		return new District(subdivision.getGeoNameId(), subdivision.getIsoCode(), subdivision.getName(), name,
+				subdivision.getConfidence(), null, null);
 	}
 
 }
