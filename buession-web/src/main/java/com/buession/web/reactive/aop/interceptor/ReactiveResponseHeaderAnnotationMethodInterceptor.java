@@ -42,7 +42,6 @@ public class ReactiveResponseHeaderAnnotationMethodInterceptor
 	/**
 	 * 构造函数
 	 */
-	@Deprecated
 	public ReactiveResponseHeaderAnnotationMethodInterceptor() {
 		super(new ReactiveResponseHeaderAnnotationHandler());
 	}

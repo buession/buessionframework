@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.beans;
@@ -38,7 +38,6 @@ import org.springframework.util.ClassUtils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -172,22 +171,6 @@ public class BeanUtils {
 				(key)->BeanCopier.create(source.getClass(), target.getClass(), converter != null));
 
 		beanCopier.copy(source, target, converter);
-	}
-
-	/**
-	 * 将 bean 对象转换成 {@link Map} 对象
-	 *
-	 * @param bean
-	 * 		Bean 对象
-	 *
-	 * @return Map
-	 */
-	@Deprecated
-	public static Map<String, Object> toMap(final Object bean) {
-		final BeanConverter converter = new DefaultBeanConverter();
-		final Map<String, Object> result = new HashMap<>(16);
-
-		return converter.convert(bean, result);
 	}
 
 	private final static class HumpBeanUtilsBean extends BeanUtilsBean {

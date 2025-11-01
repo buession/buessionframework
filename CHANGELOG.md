@@ -14,12 +14,17 @@ Buession Framework Changelog
 - 删除 org.apache.ibatis.type.DefaultEnumTypeHandler
 - 删除 com.buession.httpclient.IBaseHttpClient
 - GEO IP Model 字段发生变化
+- 删除 com.buession.beans.BeanUtils#toMap()
+- 删除 buession-velocity 模块
+- 删除 com.buession.redis.client.connection.datasource.DataSource#getConnection()
 
 ### 🐞 Bug 修复
 
 - 修复 Converter 中链式操作的问题
 
+
 ---
+
 
 ## [3.0.1](https://github.com/buession/buessionframework/releases/tag/v3.0.1) (2025-05-19)
 

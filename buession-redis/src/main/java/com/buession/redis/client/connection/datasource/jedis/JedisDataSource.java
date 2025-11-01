@@ -19,13 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
 import com.buession.redis.client.connection.datasource.StandaloneDataSource;
-import com.buession.redis.client.connection.jedis.JedisConnection;
 import com.buession.redis.core.RedisNode;
 import redis.clients.jedis.JedisPool;
 
@@ -94,18 +93,6 @@ public class JedisDataSource extends AbstractJedisDataSource implements Standalo
 
 	public void setPool(JedisPool pool) {
 		this.pool = pool;
-	}
-
-	@Deprecated
-	@Override
-	public JedisConnection getConnection() {
-		if(getPoolConfig() == null){
-			return new JedisConnection(this, getConnectTimeout(), getSoTimeout(), getInfiniteSoTimeout(),
-					getSslConfiguration());
-		}else{
-			return new JedisConnection(this, getPoolConfig(), getConnectTimeout(), getSoTimeout(),
-					getInfiniteSoTimeout(), getSslConfiguration());
-		}
 	}
 
 }

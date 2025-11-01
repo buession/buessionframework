@@ -19,13 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.datasource.lettuce;
 
 import com.buession.redis.client.connection.datasource.SentinelDataSource;
-import com.buession.redis.client.connection.lettuce.LettuceSentinelConnection;
 import com.buession.redis.core.Constants;
 import com.buession.redis.core.RedisNode;
 
@@ -127,18 +126,6 @@ public class LettuceSentinelDataSource extends AbstractLettuceDataSource impleme
 	@Override
 	public void setSentinels(List<RedisNode> sentinels) {
 		this.sentinels = sentinels;
-	}
-
-	@Deprecated
-	@Override
-	public LettuceSentinelConnection getConnection() {
-		if(getPoolConfig() == null){
-			return new LettuceSentinelConnection(this, getConnectTimeout(), getSoTimeout(),
-					getInfiniteSoTimeout(), getSentinelConnectTimeout(), getSentinelSoTimeout(), getSslConfiguration());
-		}else{
-			return new LettuceSentinelConnection(this, getPoolConfig(), getConnectTimeout(), getSoTimeout(),
-					getInfiniteSoTimeout(), getSentinelConnectTimeout(), getSentinelSoTimeout(), getSslConfiguration());
-		}
 	}
 
 }

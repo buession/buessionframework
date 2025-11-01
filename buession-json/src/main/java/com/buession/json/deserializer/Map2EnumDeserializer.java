@@ -42,7 +42,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -88,7 +87,7 @@ public class Map2EnumDeserializer extends StdScalarDeserializer<Enum<?>> impleme
 			}
 
 			/** 可能只是字符串 **/
-			if(node.size() == 0){
+			if(node.isEmpty()){
 				return Enum.valueOf((Class<Enum>) nodeCurrentFieldType, node.asText());
 			}
 
@@ -163,12 +162,9 @@ public class Map2EnumDeserializer extends StdScalarDeserializer<Enum<?>> impleme
 			return null;
 		}
 
-		final Iterator<Map.Entry<String, JsonNode>> iterator = node.fields();
 		final Map<String, JsonNode> result = new HashMap<>(node.size());
-		Map.Entry<String, JsonNode> entry;
 
-		while(iterator.hasNext()){
-			entry = iterator.next();
+		for(Map.Entry<String, JsonNode> entry : node.properties()){
 			result.put(entry.getKey(), entry.getValue());
 		}
 

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.io.json.deserializer;
@@ -58,20 +58,20 @@ public class MimeTypeStringDeserializer extends StdScalarDeserializer<MimeType> 
 	@Override
 	public MimeType deserialize(JsonParser jsonParser, DeserializationContext context)
 			throws IOException, JacksonException {
-		Object currentValue = jsonParser.getCurrentValue();
+		Object currentValue = jsonParser.currentValue();
 		Class<?> clazz = currentValue.getClass();
 
 		if(clazz.isAssignableFrom(String.class)){
 			try{
 				return MimeType.parse(currentValue.toString());
 			}catch(Exception e){
-				throw new JsonParseException(jsonParser, e.getMessage(), jsonParser.getCurrentLocation(), e);
+				throw new JsonParseException(jsonParser, e.getMessage(), jsonParser.currentLocation(), e);
 			}
 		}
 
 		throw new JsonParseException(jsonParser,
 				clazz.getName() + " cloud not deserialize to: " + MimeType.class.getName(),
-				jsonParser.getCurrentLocation());
+				jsonParser.currentLocation());
 	}
 
 	@SuppressWarnings({"unchecked"})

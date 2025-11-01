@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis;
@@ -317,11 +317,6 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 
 	protected boolean isPipeline(final RedisConnection connection) {
 		return connection.isPipeline();
-	}
-
-	@Deprecated
-	protected boolean isTransactionOrPipeline(final RedisConnection connection) {
-		return isMulti(connection);
 	}
 
 	protected boolean isMulti(final RedisConnection connection) {

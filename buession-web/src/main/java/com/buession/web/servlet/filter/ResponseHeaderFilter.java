@@ -21,19 +21,19 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2025 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.filter;
 
 import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -57,7 +57,7 @@ public class ResponseHeaderFilter extends OncePerRequestFilter {
 	/**
 	 * 构造函数
 	 */
-	public ResponseHeaderFilter(){
+	public ResponseHeaderFilter() {
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class ResponseHeaderFilter extends OncePerRequestFilter {
 	 * @param value
 	 * 		响应头值
 	 */
-	public ResponseHeaderFilter(final String name, final String value){
+	public ResponseHeaderFilter(final String name, final String value) {
 		setName(name);
 		this.value = value;
 	}
@@ -78,7 +78,7 @@ public class ResponseHeaderFilter extends OncePerRequestFilter {
 	 *
 	 * @return 响应头名称
 	 */
-	public String getName(){
+	public String getName() {
 		return name;
 	}
 
@@ -88,7 +88,7 @@ public class ResponseHeaderFilter extends OncePerRequestFilter {
 	 * @param name
 	 * 		响应头名称
 	 */
-	public void setName(String name){
+	public void setName(String name) {
 		Assert.isBlank(name, "HTTP Response header name cloud not be empty or null");
 		this.name = name;
 	}
@@ -98,7 +98,7 @@ public class ResponseHeaderFilter extends OncePerRequestFilter {
 	 *
 	 * @return 响应头值
 	 */
-	public String getValue(){
+	public String getValue() {
 		return value;
 	}
 
@@ -108,13 +108,13 @@ public class ResponseHeaderFilter extends OncePerRequestFilter {
 	 * @param value
 	 * 		响应头值
 	 */
-	public void setValue(String value){
+	public void setValue(String value) {
 		this.value = value;
 	}
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException{
+			throws ServletException, IOException {
 		if(Validate.hasText(getName())){
 			response.addHeader(getName(), getValue());
 		}

@@ -19,15 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.datasource.lettuce;
 
-import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.datasource.ClusterDataSource;
-import com.buession.redis.client.connection.lettuce.LettuceClusterConnection;
-import com.buession.redis.client.connection.lettuce.LettuceSentinelConnection;
 import com.buession.redis.core.RedisNode;
 
 import java.util.List;
@@ -83,18 +80,6 @@ public class LettuceClusterDataSource extends AbstractLettuceDataSource implemen
 	@Override
 	public void setMaxTotalRetriesDuration(int maxTotalRetriesDuration) {
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
-	}
-
-	@Deprecated
-	@Override
-	public RedisConnection getConnection() {
-		if(getPoolConfig() == null){
-			return new LettuceClusterConnection(this, getConnectTimeout(), getSoTimeout(),
-					getInfiniteSoTimeout(), getMaxRedirects(), getMaxTotalRetriesDuration(), getSslConfiguration());
-		}else{
-			return new LettuceClusterConnection(this, getPoolConfig(), getConnectTimeout(), getSoTimeout(),
-					getInfiniteSoTimeout(), getMaxRedirects(), getMaxTotalRetriesDuration(), getSslConfiguration());
-		}
 	}
 
 }

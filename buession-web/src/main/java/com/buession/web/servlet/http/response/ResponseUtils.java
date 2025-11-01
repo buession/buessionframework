@@ -21,14 +21,14 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2024 Buession.com Inc.														|
+ * | Copyright @ 2013-2025 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.http.response;
 
 import com.buession.web.http.HttpHeader;
+import jakarta.servlet.http.HttpServletResponse;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.Optional;
 

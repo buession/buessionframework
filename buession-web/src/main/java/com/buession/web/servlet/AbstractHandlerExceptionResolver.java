@@ -19,12 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet;
 
 import com.buession.core.collect.Arrays;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.ConversionNotSupportedException;
@@ -51,8 +53,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 import org.springframework.web.util.WebUtils;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -319,7 +320,7 @@ public abstract class AbstractHandlerExceptionResolver
 																		 final HttpServletResponse response,
 																		 @Nullable final Object handler,
 																		 final MissingServletRequestParameterException ex) {
-		response.setStatus(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
+		sendError(response, HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
 		return doResolve(request, response, handler, ex);
 	}
 
@@ -342,7 +343,7 @@ public abstract class AbstractHandlerExceptionResolver
 																final HttpServletResponse response,
 																@Nullable final Object handler,
 																final ServletRequestBindingException ex) {
-		response.setStatus(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
+		sendError(response, HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
 		return doResolve(request, response, handler, ex);
 	}
 
@@ -435,7 +436,7 @@ public abstract class AbstractHandlerExceptionResolver
 																		final HttpServletResponse response,
 																		@Nullable final Object handler,
 																		final HttpRequestMethodNotSupportedException ex) {
-		response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED, ex.getMessage());
+		sendError(response, HttpServletResponse.SC_METHOD_NOT_ALLOWED, ex.getMessage());
 
 		String[] supportedMethods = ex.getSupportedMethods();
 		if(supportedMethods != null){
@@ -516,7 +517,7 @@ public abstract class AbstractHandlerExceptionResolver
 															  final HttpServletResponse response,
 															  @Nullable final Object handler,
 															  final MissingPathVariableException ex) {
-		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
+		sendError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
 		return doResolve(request, response, handler, ex);
 	}
 
@@ -672,6 +673,14 @@ public abstract class AbstractHandlerExceptionResolver
 				response.setHeader("Cache-Control", getCacheControl());
 			}
 			request.setAttribute(WebUtils.ERROR_STATUS_CODE_ATTRIBUTE, statusCode);
+		}
+	}
+
+	protected static void sendError(final HttpServletResponse response, final int sc, final String msg) {
+		try{
+			response.sendError(sc, msg);
+		}catch(IOException e){
+			response.setStatus(sc);
 		}
 	}
 

@@ -19,13 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
 import com.buession.redis.client.connection.datasource.ClusterDataSource;
-import com.buession.redis.client.connection.jedis.JedisClusterConnection;
 import com.buession.redis.core.RedisNode;
 
 import java.util.List;
@@ -81,18 +80,6 @@ public class JedisClusterDataSource extends AbstractJedisDataSource implements C
 	@Override
 	public void setMaxTotalRetriesDuration(int maxTotalRetriesDuration) {
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
-	}
-
-	@Deprecated
-	@Override
-	public JedisClusterConnection getConnection() {
-		if(getPoolConfig() == null){
-			return new JedisClusterConnection(this, getConnectTimeout(), getSoTimeout(),
-					getInfiniteSoTimeout(), getMaxRedirects(), getMaxTotalRetriesDuration(), getSslConfiguration());
-		}else{
-			return new JedisClusterConnection(this, getPoolConfig(), getConnectTimeout(), getSoTimeout(),
-					getInfiniteSoTimeout(), getMaxRedirects(), getMaxTotalRetriesDuration(), getSslConfiguration());
-		}
 	}
 
 }

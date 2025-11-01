@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.aop.aopalliance;
@@ -28,6 +28,7 @@ import com.buession.aop.interceptor.AbstractAnnotationsMethodInterceptor;
 import com.buession.aop.interceptor.AnnotationsMethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
 
 /**
@@ -47,7 +48,7 @@ public abstract class AbstractAopAllianceAnnotationsMethodInterceptor extends Ab
 	}
 
 	@Override
-	public Object invoke(MethodInvocation methodInvocation) throws Throwable {
+	public Object invoke(@Nonnull MethodInvocation methodInvocation) throws Throwable {
 		com.buession.aop.MethodInvocation mi = createMethodInvocation(methodInvocation);
 		return super.invoke(mi);
 	}

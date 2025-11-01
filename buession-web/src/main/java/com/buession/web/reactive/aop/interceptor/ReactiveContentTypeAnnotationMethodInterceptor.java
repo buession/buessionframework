@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.aop.interceptor;
@@ -41,7 +41,6 @@ public class ReactiveContentTypeAnnotationMethodInterceptor extends AbstractCont
 	/**
 	 * 构造函数
 	 */
-	@Deprecated
 	public ReactiveContentTypeAnnotationMethodInterceptor() {
 		super(new ReactiveContentTypeAnnotationHandler());
 	}
@@ -52,7 +51,6 @@ public class ReactiveContentTypeAnnotationMethodInterceptor extends AbstractCont
 	 * @param resolver
 	 * 		注解解析器
 	 */
-	@Deprecated
 	public ReactiveContentTypeAnnotationMethodInterceptor(AnnotationResolver resolver) {
 		super(new ReactiveContentTypeAnnotationHandler(), resolver);
 	}
