@@ -68,7 +68,6 @@
 		<module>../buession-net</module>
 		<module>../buession-redis</module>
 		<module>../buession-thesaurus</module>
-		<module>../buession-velocity</module>
 		<module>../buession-web</module>
 	</modules>
 
