@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.lettuce.operations;
@@ -423,19 +423,41 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 	@Override
 	public Set<String> keys(final String pattern) {
 		final CommandArguments args = CommandArguments.create(pattern);
-		final byte[] bPattern = SafeEncoder.encode(pattern);
 		final ListSetConverter<byte[], String> binaryToStringListSetConverter =
 				Converters.listSetBinaryToString();
 
-		return keys(bPattern, binaryToStringListSetConverter, args);
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(pattern),
+					binaryToStringListSetConverter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(pattern),
+					binaryToStringListSetConverter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(pattern),
+					binaryToStringListSetConverter)
+					.run(args);
+		}
 	}
 
 	@Override
 	public Set<byte[]> keys(final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create(pattern);
+		final String sPattern = SafeEncoder.encode(pattern);
 		final ListSetConverter<byte[], byte[]> converter = new ListSetConverter<>((v)->v);
 
-		return keys(pattern, converter, args);
+		if(isPipeline()){
+			return new LettucePipelineCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(sPattern),
+					converter)
+					.run(args);
+		}else if(isTransaction()){
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(sPattern), converter)
+					.run(args);
+		}else{
+			return new LettuceCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(sPattern), converter)
+					.run(args);
+		}
 	}
 
 	@Override
@@ -816,20 +838,6 @@ public final class LettuceKeyOperations extends AbstractKeyOperations<LettuceSta
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.MIGRATE,
 					(cmd)->cmd.migrate(host, port, db, timeout, migrateArgs), okStatusConverter)
-					.run(args);
-		}
-	}
-
-	private <V> Set<V> keys(final byte[] pattern, final ListSetConverter<byte[], V> converter,
-							final CommandArguments args) {
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(pattern), converter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(pattern), converter)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.KEYS, (cmd)->cmd.keys(pattern), converter)
 					.run(args);
 		}
 	}

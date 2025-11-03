@@ -22,30 +22,122 @@
  * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.http;
+package com.buession.lang;
+
+import java.io.Serializable;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
- * SameSite 是HTTP响应头
- * <a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Set-Cookie/SameSite" target="_blank">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Set-Cookie/SameSite</a> Set-Cookie 的属性之一，它允许您声明该 Cookie 是否仅限于第一方或者同一站点上下文
+ * 名称 =&lt; Value 键值对对象
+ *
+ * @param <K>
+ * 		名称类型
+ * @param <V>
+ * 		值类型
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 4.0.0
  */
-public enum SameSite {
+public class NameValue<K, V> implements Serializable {
+
+	private final static long serialVersionUID = -8641226699277448976L;
 
 	/**
-	 * Cookies 将在所有上下文中发送，即允许跨站发送
+	 * 名称
 	 */
-	NONE,
+	private K name;
 
 	/**
-	 * Cookies 允许与顶级导航一起发送，并将与第三方网站发起的GET请求一起发送，这是浏览器中的默认值
+	 * 值
 	 */
-	LAX,
+	private V value;
 
 	/**
-	 * Cookies 只会在第一方上下文中发送，不会与第三方网站发起的请求一起发送
+	 * 构造函数
 	 */
-	STRICT
+	public NameValue() {
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param name
+	 * 		名称
+	 * @param value
+	 * 		值
+	 */
+	public NameValue(K name, V value) {
+		setName(name);
+		this.value = value;
+	}
+
+	/**
+	 * 返回名称
+	 *
+	 * @return 名称
+	 */
+	public K getName() {
+		return name;
+	}
+
+	/**
+	 * 设置名称
+	 *
+	 * @param name
+	 * 		名称
+	 */
+	public void setName(K name) {
+		if(name == null){
+			throw new IllegalArgumentException("Name cloud not be null.");
+		}
+		this.name = name;
+	}
+
+	/**
+	 * 返回值
+	 *
+	 * @return 值
+	 */
+	public V getValue() {
+		return value;
+	}
+
+	/**
+	 * 设置值
+	 *
+	 * @param value
+	 * 		值
+	 */
+	public void setValue(V value) {
+		this.value = value;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getName(), getValue());
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(this == obj){
+			return true;
+		}
+
+		if(obj instanceof NameValue){
+			NameValue that = (NameValue) obj;
+			return Objects.equals(name, that.name) && Objects.deepEquals(value, that.value);
+		}
+
+		return false;
+	}
+
+	@Override
+	public String toString() {
+		return new StringJoiner(", ", "{", "}")
+				.add("name: " + name)
+				.add("value: " + value)
+				.toString();
+	}
 
 }

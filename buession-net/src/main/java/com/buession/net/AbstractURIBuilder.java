@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.net;
@@ -32,38 +32,89 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 /**
+ * URI 构建器
+ *
+ * @param <T>
+ * 		URI 类型
+ *
  * @author Yong.Teng
  */
-public abstract class AbstractURIBuilder<T> {
+public abstract class AbstractURIBuilder<T extends AbstractURI> {
 
+	/**
+	 * URI Scheme
+	 */
 	protected String scheme;
 
+	/**
+	 * URI 主机地址
+	 */
 	protected String host;
 
+	/**
+	 * URI 端口
+	 */
 	protected int port;
 
-	protected AbstractURIBuilder(){
+	/**
+	 * 构造函数
+	 */
+	protected AbstractURIBuilder() {
 	}
 
-	public AbstractURIBuilder scheme(final String scheme){
+	/**
+	 * 设置 URI Scheme
+	 *
+	 * @param scheme
+	 * 		URI Scheme
+	 *
+	 * @return {@link AbstractURIBuilder} 实例
+	 */
+	public AbstractURIBuilder scheme(final String scheme) {
 		Assert.isBlank(scheme, "Scheme must not be null or empty.");
 		this.scheme = scheme;
 		return this;
 	}
 
-	public AbstractURIBuilder host(final String host){
+	/**
+	 * 设置 URI 主机地址
+	 *
+	 * @param host
+	 * 		URI 主机地址
+	 *
+	 * @return {@link AbstractURIBuilder} 实例
+	 */
+	public AbstractURIBuilder host(final String host) {
 		Assert.isBlank(host, "Host must not be null or empty.");
 		this.host = host;
 		return this;
 	}
 
-	public AbstractURIBuilder port(final int port){
+	/**
+	 * 设置 URI 端口
+	 *
+	 * @param port
+	 * 		URI 端口
+	 *
+	 * @return {@link AbstractURIBuilder} 实例
+	 */
+	public AbstractURIBuilder port(final int port) {
 		Assert.isTrue(Validate.isPort(port), "Port out of range: " + port + ".");
 		this.port = port;
 		return this;
 	}
 
-	public AbstractURIBuilder hostAndPort(final String host, final int port){
+	/**
+	 * 设置 URI 主机地址和端口
+	 *
+	 * @param host
+	 * 		URI 主机地址
+	 * @param port
+	 * 		URI 端口
+	 *
+	 * @return {@link AbstractURIBuilder} 实例
+	 */
+	public AbstractURIBuilder hostAndPort(final String host, final int port) {
 		Assert.isBlank(host, "Host must not be null or empty.");
 		Assert.isTrue(Validate.isPort(port), "Port out of range: " + port + ".");
 
@@ -73,9 +124,14 @@ public abstract class AbstractURIBuilder<T> {
 		return this;
 	}
 
+	/**
+	 * 构建 URI 实例
+	 *
+	 * @return URI 实例
+	 */
 	public abstract T build();
 
-	protected static Map<String, String> parseParameters(final String queryString){
+	protected static Map<String, String> parseParameters(final String queryString) {
 		if(Validate.isBlank(queryString)){
 			return null;
 		}

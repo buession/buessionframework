@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2023 Buession.com Inc.														|
+ * | Copyright @ 2013-2025 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip;
@@ -39,7 +39,7 @@ import java.net.InetAddress;
 import java.util.Locale;
 
 /**
- * Maxmind Geoip 解析器接口
+ * Maxmind GeoIP 解析器接口
  *
  * @author Yong.Teng
  */
@@ -64,7 +64,7 @@ public interface Resolver extends Closeable {
 	 * @throws GeoIp2Exception
 	 * 		if there is an error looking up the IP
 	 */
-	default Country country(String ipAddress) throws IOException, GeoIp2Exception{
+	default Country country(String ipAddress) throws IOException, GeoIp2Exception {
 		return country(ipAddress, Locale.getDefault());
 	}
 
@@ -98,7 +98,7 @@ public interface Resolver extends Closeable {
 	 * @throws GeoIp2Exception
 	 * 		if there is an error looking up the IP
 	 */
-	default Country country(long ipAddress) throws IOException, GeoIp2Exception{
+	default Country country(long ipAddress) throws IOException, GeoIp2Exception {
 		return country(ipAddress, Locale.getDefault());
 	}
 
@@ -117,7 +117,7 @@ public interface Resolver extends Closeable {
 	 * @throws GeoIp2Exception
 	 * 		if there is an error looking up the IP
 	 */
-	default Country country(long ipAddress, Locale locale) throws IOException, GeoIp2Exception{
+	default Country country(long ipAddress, Locale locale) throws IOException, GeoIp2Exception {
 		return country(InetAddressUtils.long2InetAddress(ipAddress), locale);
 	}
 
@@ -134,7 +134,7 @@ public interface Resolver extends Closeable {
 	 * @throws GeoIp2Exception
 	 * 		if there is an error looking up the IP
 	 */
-	default Country country(InetAddress ipAddress) throws IOException, GeoIp2Exception{
+	default Country country(InetAddress ipAddress) throws IOException, GeoIp2Exception {
 		return country(ipAddress, Locale.getDefault());
 	}
 
@@ -168,7 +168,7 @@ public interface Resolver extends Closeable {
 	 * @throws GeoIp2Exception
 	 * 		if there is an error looking up the IP
 	 */
-	default District district(String ipAddress) throws IOException, GeoIp2Exception{
+	default District district(String ipAddress) throws IOException, GeoIp2Exception {
 		return district(ipAddress, Locale.getDefault());
 	}
 
@@ -202,7 +202,7 @@ public interface Resolver extends Closeable {
 	 * @throws GeoIp2Exception
 	 * 		if there is an error looking up the IP
 	 */
-	default District district(long ipAddress) throws IOException, GeoIp2Exception{
+	default District district(long ipAddress) throws IOException, GeoIp2Exception {
 		return district(ipAddress, Locale.getDefault());
 	}
 
@@ -221,7 +221,7 @@ public interface Resolver extends Closeable {
 	 * @throws GeoIp2Exception
 	 * 		if there is an error looking up the IP
 	 */
-	default District district(long ipAddress, Locale locale) throws IOException, GeoIp2Exception{
+	default District district(long ipAddress, Locale locale) throws IOException, GeoIp2Exception {
 		return district(InetAddressUtils.long2InetAddress(ipAddress), locale);
 	}
 
@@ -238,7 +238,7 @@ public interface Resolver extends Closeable {
 	 * @throws GeoIp2Exception
 	 * 		if there is an error looking up the IP
 	 */
-	default District district(InetAddress ipAddress) throws IOException, GeoIp2Exception{
+	default District district(InetAddress ipAddress) throws IOException, GeoIp2Exception {
 		return district(ipAddress, Locale.getDefault());
 	}
 
@@ -272,7 +272,7 @@ public interface Resolver extends Closeable {
 	 * @throws GeoIp2Exception
 	 * 		if there is an error looking up the IP
 	 */
-	default Location location(String ipAddress) throws IOException, GeoIp2Exception{
+	default Location location(String ipAddress) throws IOException, GeoIp2Exception {
 		return location(ipAddress, Locale.getDefault());
 	}
 
@@ -306,7 +306,7 @@ public interface Resolver extends Closeable {
 	 * @throws GeoIp2Exception
 	 * 		if there is an error looking up the IP
 	 */
-	default Location location(long ipAddress) throws IOException, GeoIp2Exception{
+	default Location location(long ipAddress) throws IOException, GeoIp2Exception {
 		return location(ipAddress, Locale.getDefault());
 	}
 
@@ -325,7 +325,7 @@ public interface Resolver extends Closeable {
 	 * @throws GeoIp2Exception
 	 * 		if there is an error looking up the IP
 	 */
-	default Location location(long ipAddress, Locale locale) throws IOException, GeoIp2Exception{
+	default Location location(long ipAddress, Locale locale) throws IOException, GeoIp2Exception {
 		return location(InetAddressUtils.long2InetAddress(ipAddress), locale);
 	}
 
@@ -342,7 +342,7 @@ public interface Resolver extends Closeable {
 	 * @throws GeoIp2Exception
 	 * 		if there is an error looking up the IP
 	 */
-	default Location location(InetAddress ipAddress) throws IOException, GeoIp2Exception{
+	default Location location(InetAddress ipAddress) throws IOException, GeoIp2Exception {
 		return location(ipAddress, Locale.getDefault());
 	}
 
@@ -363,6 +363,11 @@ public interface Resolver extends Closeable {
 	 */
 	Location location(InetAddress ipAddress, Locale locale) throws IOException, GeoIp2Exception;
 
+	/**
+	 * 获取元数据
+	 *
+	 * @return 元数据
+	 */
 	Metadata getMetadata();
 
 }

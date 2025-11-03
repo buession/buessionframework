@@ -48,8 +48,6 @@ import org.slf4j.LoggerFactory;
 import com.buession.core.Pagination;
 import org.springframework.cglib.beans.BeanMap;
 
-import javax.annotation.Resource;
-
 /**
  * MyBatis Data Access Object 抽象类
  *
@@ -63,12 +61,23 @@ import javax.annotation.Resource;
 public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> implements MyBatisDao<P, E> {
 
 	/**
-	 * master SqlSessionTemplate
+	 * {@link SqlSessionTemplate}
 	 */
-	@Resource
 	protected SqlSessionTemplate sqlSessionTemplate;
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
+
+	/**
+	 * 构造函数
+	 *
+	 * @param sqlSessionTemplate
+	 *        {@link SqlSessionTemplate}
+	 *
+	 * @since 4.0.0
+	 */
+	public AbstractMyBatisDao(SqlSessionTemplate sqlSessionTemplate) {
+		this.sqlSessionTemplate = sqlSessionTemplate;
+	}
 
 	/**
 	 * 返回  SqlSessionTemplate

@@ -40,13 +40,7 @@ public class ObjectUtils {
 		try{
 			Class<?> clazz = loadClass(className);
 			return (T) clazz.getDeclaredConstructor().newInstance();
-		}catch(ClassNotFoundException e){
-			throw new IllegalStateException(e);
-		}catch(InstantiationException e){
-			throw new IllegalStateException(e);
-		}catch(IllegalAccessException e){
-			throw new IllegalStateException(e);
-		}catch(NoSuchMethodException e){
+		}catch(ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException e){
 			throw new IllegalStateException(e);
 		}catch(InvocationTargetException e){
 			throw new RuntimeException(e);
@@ -60,11 +54,7 @@ public class ObjectUtils {
 			ClassLoader ctxClassLoader = Thread.currentThread().getContextClassLoader();
 
 			if(ctxClassLoader != null){
-				try{
-					return ctxClassLoader.loadClass(className);
-				}catch(ClassNotFoundException ex){
-					throw ex;
-				}
+				return ctxClassLoader.loadClass(className);
 			}
 		}
 

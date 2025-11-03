@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.aop.interceptor;
@@ -133,6 +133,14 @@ public abstract class AbstractAnnotationMethodInterceptor<A extends Annotation> 
 		getHandler().execute(mi, getAnnotation(mi));
 	}
 
+	/**
+	 * 获取方法注解
+	 *
+	 * @param mi
+	 * 		方法调用的描述
+	 *
+	 * @return 方法注解
+	 */
 	protected A getAnnotation(MethodInvocation mi) {
 		return getResolver().getAnnotation(mi, getHandler().getAnnotationClass());
 	}

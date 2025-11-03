@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.lettuce.operations;
@@ -40,6 +40,7 @@ import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.UnblockType;
 import io.lettuce.core.codec.ByteArrayCodec;
 import io.lettuce.core.output.StatusOutput;
+import io.lettuce.core.protocol.Command;
 import io.lettuce.core.protocol.CommandArgs;
 import io.lettuce.core.protocol.CommandKeyword;
 import io.lettuce.core.protocol.CommandType;
@@ -364,10 +365,10 @@ public final class LettuceConnectionOperations extends AbstractConnectionOperati
 							new CommandArgs<>(ByteArrayCodec.INSTANCE)), okStatusConverter)
 					.run();
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.RESET, (cmd)->{
-				cmd.reset();
-				return Status.SUCCESS;
-			}, (v)->v)
+			return new LettuceCommand<>(client, ProtocolCommand.RESET,
+					(cmd)->client.getConnection().getStatefulConnection()
+							.dispatch(new Command<>(CommandKeyword.RESET, new StatusOutput<>(ByteArrayCodec.INSTANCE),
+									new CommandArgs<>(ByteArrayCodec.INSTANCE))).getOutput().get(), okStatusConverter)
 					.run();
 		}
 	}

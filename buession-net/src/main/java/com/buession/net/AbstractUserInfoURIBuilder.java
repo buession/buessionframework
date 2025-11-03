@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.net;
@@ -27,29 +27,58 @@ package com.buession.net;
 import java.nio.charset.StandardCharsets;
 
 /**
+ * 含用户信息的 URI 构建器
+ *
  * @author Yong.Teng
  */
-public abstract class AbstractUserInfoURIBuilder<T> extends AbstractURIBuilder<T> {
+public abstract class AbstractUserInfoURIBuilder<T extends AbstractURI> extends AbstractURIBuilder<T> {
 
 	protected String username;
 
 	protected String password;
 
-	protected AbstractUserInfoURIBuilder(){
+	/**
+	 * 构造函数
+	 */
+	protected AbstractUserInfoURIBuilder() {
 		super();
 	}
 
-	public AbstractUserInfoURIBuilder username(final String username){
+	/**
+	 * 设置 URI 用户名
+	 *
+	 * @param username
+	 * 		URI 用户名
+	 *
+	 * @return {@link AbstractUserInfoURIBuilder} 实例
+	 */
+	public AbstractUserInfoURIBuilder username(final String username) {
 		this.username = username;
 		return this;
 	}
 
-	public AbstractUserInfoURIBuilder password(final String password){
+	/**
+	 * 设置 URI 密码
+	 *
+	 * @param password
+	 * 		URI 密码
+	 *
+	 * @return {@link AbstractUserInfoURIBuilder} 实例
+	 */
+	public AbstractUserInfoURIBuilder password(final String password) {
 		this.password = password;
 		return this;
 	}
 
-	public AbstractUserInfoURIBuilder password(final byte[] password){
+	/**
+	 * 设置 URI 密码
+	 *
+	 * @param password
+	 * 		URI 密码
+	 *
+	 * @return {@link AbstractUserInfoURIBuilder} 实例
+	 */
+	public AbstractUserInfoURIBuilder password(final byte[] password) {
 		this.password = new String(password, StandardCharsets.UTF_8);
 		return this;
 	}

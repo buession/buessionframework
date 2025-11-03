@@ -430,7 +430,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient<Nio
 	@Override
 	public void put(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 					Callback callback) throws IOException, RequestException {
-		put(uri, readTimeout, parameters, headers, callback);
+		asyncExecute(()->put(uri, readTimeout, null, parameters, headers, callback));
 	}
 
 	@Override
@@ -1944,7 +1944,7 @@ public abstract class AbstractHttpAsyncClient extends AbstractBaseHttpClient<Nio
 	@Override
 	public void report(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers,
 					   Callback callback) throws IOException, RequestException {
-		report(uri, readTimeout, parameters, headers, callback);
+		asyncExecute(()->report(uri, readTimeout, null, parameters, headers, callback));
 	}
 
 	@Override

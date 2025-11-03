@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.net;
@@ -34,40 +34,92 @@ public abstract class AbstractURI implements Serializable {
 
 	private final static long serialVersionUID = -1695251022185424158L;
 
+	/**
+	 * URI Scheme
+	 */
 	protected String scheme;
 
+	/**
+	 * URI 主机地址
+	 */
 	protected String host;
 
+	/**
+	 * URI 端口
+	 */
 	protected int port;
 
-	public String getScheme(){
+	/**
+	 * 返回 URI Scheme
+	 *
+	 * @return URI Scheme
+	 */
+	public String getScheme() {
 		return scheme;
 	}
 
-	public void setScheme(String scheme){
+	/**
+	 * 设置 URI Scheme
+	 *
+	 * @param scheme
+	 * 		URI Scheme
+	 */
+	public void setScheme(String scheme) {
 		this.scheme = scheme;
 	}
 
-	public String getHost(){
+	/**
+	 * 返回 URI 主机地址
+	 *
+	 * @return URI 主机地址
+	 */
+	public String getHost() {
 		return host;
 	}
 
-	public void setHost(String host){
+	/**
+	 * 设置 URI 主机地址
+	 *
+	 * @param host
+	 * 		URI 主机地址
+	 */
+	public void setHost(String host) {
 		this.host = host;
 	}
 
-	public int getPort(){
+	/**
+	 * 返回 URI 端口
+	 *
+	 * @return URI 端口
+	 */
+	public int getPort() {
 		return port;
 	}
 
-	public void setPort(int port){
+	/**
+	 * 设置 URI 端口
+	 *
+	 * @param port
+	 * 		URI 端口
+	 */
+	public void setPort(int port) {
 		this.port = port;
 	}
 
-	public boolean isSsl(){
+	/**
+	 * 返回是否为 SSL
+	 *
+	 * @return true/false
+	 */
+	public boolean isSsl() {
 		return false;
 	}
 
+	/**
+	 * 转换为 {@link URI}
+	 *
+	 * @return {@link URI} 实例
+	 */
 	public abstract URI toURI();
 
 }

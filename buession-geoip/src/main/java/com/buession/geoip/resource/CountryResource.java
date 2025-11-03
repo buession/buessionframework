@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.resource;
@@ -44,27 +44,35 @@ public class CountryResource {
 
 	private final static Logger logger = LoggerFactory.getLogger(CountryResource.class);
 
-	public Map<String, String> getData(){
-		if(DATA.size() == 0){
+	public Map<String, String> getData() {
+		if(DATA.isEmpty()){
 			synchronized(this){
-				if(DATA.size() == 0){
+				if(DATA.isEmpty()){
 					InputStream stream = CountryResource.class.getResourceAsStream("/country.db");
-					BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+					BufferedReader reader = null;
 
-					try{
-						KeyValueParser keyValueParser;
+					if(stream != null){
+						reader = new BufferedReader(new InputStreamReader(stream));
 
-						while(reader.ready()){
-							keyValueParser = new KeyValueParser(reader.readLine(), ':');
-							DATA.put(keyValueParser.getKey(), keyValueParser.getValue());
+						try{
+							KeyValueParser keyValueParser;
+
+							while(reader.ready()){
+								keyValueParser = new KeyValueParser(reader.readLine(), ':');
+								DATA.put(keyValueParser.getKey(), keyValueParser.getValue());
+							}
+						}catch(IOException e){
+							logger.error("Load dict error.", e);
 						}
-					}catch(IOException e){
-						logger.error("Load dict error.", e);
 					}
 
 					try{
-						stream.close();
-						reader.close();
+						if(stream != null){
+							stream.close();
+						}
+						if(reader != null){
+							reader.close();
+						}
 					}catch(IOException e){
 						//
 					}

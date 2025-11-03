@@ -26,7 +26,7 @@ package com.buession.web.http;
 
 /**
  * HTTP X-XSS-Protection 响应头是 Internet Explorer，Chrome 和 Safari 的一个特性，当检测到跨站脚本攻击 (XSS) 时，浏览器将停止加载页面。
- * <p>https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Reference/Headers/X-XSS-Protection</p>
+ * <p><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Reference/Headers/X-XSS-Protection">...</a></p>
  *
  * @author Yong.Teng
  * @since 4.0.0

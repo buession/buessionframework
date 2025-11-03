@@ -17,10 +17,13 @@ Buession Framework Changelog
 - 删除 com.buession.beans.BeanUtils#toMap()
 - 删除 buession-velocity 模块
 - 删除 com.buession.redis.client.connection.datasource.DataSource#getConnection()
+- MyBatisDao 使用构造方式注入 SqlSessionTemplate 和 MongoDBDao 使用构造方法注入 MongoTemplate
 
 ### 🐞 Bug 修复
 
 - 修复 Converter 中链式操作的问题
+- 修复 com.buession.httpclient.AbstractHttpAsyncClient#put(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers, Callback callback) 无限递归的 BUG
+- 修复 com.buession.httpclient.AbstractHttpAsyncClient#report(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers, Callback callback) 无限递归的 BUG
 
 
 ---
