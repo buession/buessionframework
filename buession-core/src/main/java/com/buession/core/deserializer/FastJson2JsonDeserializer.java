@@ -22,46 +22,58 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command;
+package com.buession.core.deserializer;
 
-import com.buession.core.Rawable;
+import com.alibaba.fastjson.JSON;
+import com.buession.core.type.TypeReference;
+import com.buession.core.utils.Assert;
 
 /**
- * Redis 协议命令
+ * FastJson JSON 反序列化
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 2.3.0
  */
-public interface ProtocolCommand extends Rawable {
+public class FastJsonJsonDeserializer extends AbstractJsonDeserializer<JSON> {
 
-	/**
-	 * 返回命令名称
-	 *
-	 * @return 命令名称
-	 */
-	String getName();
+	@Override
+	public <V> V deserialize(final String str) throws DeserializerException {
+		Assert.isNull(str, "String cloud not be null.");
+		return JSON.parseObject(str, new com.alibaba.fastjson.TypeReference<V>() {
 
-	/**
-	 * 返回是否为读命令
-	 *
-	 * @return true / false
-	 */
-	boolean isRead();
-
-	/**
-	 * 返回是否为只读命令
-	 *
-	 * @return true / false
-	 */
-	default boolean isReadonly() {
-		return isRead() && isWrite() == false;
+		});
 	}
 
-	/**
-	 * 返回是否为写命令
-	 *
-	 * @return true / false
-	 */
-	boolean isWrite();
+	@Override
+	public <V> V deserialize(final String str, final Class<V> clazz) throws DeserializerException {
+		Assert.isNull(str, "String cloud not be null.");
+		return JSON.parseObject(str, clazz);
+	}
+
+	@Override
+	public <V> V deserialize(final String str, final TypeReference<V> type) throws DeserializerException {
+		Assert.isNull(str, "String cloud not be null.");
+		return JSON.parseObject(str, type.getType());
+	}
+
+	@Override
+	public <V> V deserialize(final byte[] bytes) throws DeserializerException {
+		Assert.isNull(bytes, "Bytes cloud not be null.");
+		return JSON.parseObject(new String(bytes), new com.alibaba.fastjson.TypeReference<V>() {
+
+		});
+	}
+
+	@Override
+	public <V> V deserialize(byte[] bytes, Class<V> clazz) throws DeserializerException {
+		Assert.isNull(bytes, "Bytes cloud not be null.");
+		return JSON.parseObject(bytes, clazz);
+	}
+
+	@Override
+	public <V> V deserialize(final byte[] bytes, final TypeReference<V> type) throws DeserializerException {
+		Assert.isNull(bytes, "Bytes cloud not be null.");
+		return deserialize(new String(bytes), type);
+	}
 
 }

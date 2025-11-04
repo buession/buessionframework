@@ -19,79 +19,47 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
+package com.buession.core.serializer;
 
-import org.springframework.lang.Nullable;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializeConfig;
+import com.alibaba.fastjson.serializer.SerializeFilter;
+import com.buession.core.utils.Assert;
+
+import java.nio.charset.Charset;
 
 /**
- * Redis 哨兵节点
+ * FastJson JSON 序列化
  *
  * @author Yong.Teng
- * @since 2.0.0
  */
-public class RedisSentinelNode extends RedisNode {
+public class FastJsonJsonSerializer extends AbstractJsonSerializer<JSON> {
 
-	private final static long serialVersionUID = 7609068824843419481L;
-
-	private int quorum;
-
-	/**
-	 * 构造函数
-	 *
-	 * @param host
-	 * 		主机地址
-	 */
-	public RedisSentinelNode(@Nullable String host){
-		super(host);
+	@Override
+	public <V> String serialize(final V object) throws SerializerException {
+		Assert.isNull(object, "Object cloud not be null.");
+		return JSON.toJSONString(object);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param host
-	 * 		主机地址
-	 * @param port
-	 * 		端口
-	 */
-	public RedisSentinelNode(@Nullable String host, int port){
-		super(host, port);
+	@Override
+	public <V> byte[] serializeAsBytes(final V object) throws SerializerException {
+		Assert.isNull(object, "Object cloud not be null.");
+		return JSON.toJSONBytes(object);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param host
-	 * 		主机地址
-	 * @param role
-	 * 		主机角色
-	 */
-	public RedisSentinelNode(@Nullable String host, @Nullable Role role){
-		super(host, role);
+	@Override
+	public <V> byte[] serializeAsBytes(final V object, final String charsetName) throws SerializerException {
+		return serializeAsBytes(object, Charset.forName(charsetName));
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param host
-	 * 		主机地址
-	 * @param port
-	 * 		端口
-	 * @param role
-	 * 		主机角色
-	 */
-	public RedisSentinelNode(@Nullable String host, int port, @Nullable Role role){
-		super(host, port, role);
-	}
-
-	public int getQuorum(){
-		return quorum;
-	}
-
-	public void setQuorum(int quorum){
-		this.quorum = quorum;
+	@Override
+	public <V> byte[] serializeAsBytes(final V object, final Charset charset) throws SerializerException {
+		Assert.isNull(object, "Object cloud not be null.");
+		return JSON.toJSONBytes(charset, object, SerializeConfig.globalInstance, new SerializeFilter[0], null, JSON
+				.DEFAULT_GENERATE_FEATURE);
 	}
 
 }
