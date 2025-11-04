@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -33,34 +33,12 @@ import java.util.Objects;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class Module implements Serializable {
+public record Module(String name, int version) implements Serializable {
 
 	private final static long serialVersionUID = 8584149197825340590L;
 
-	private final String name;
-
-	private final int version;
-
-	public Module(final String name, final int version){
-		this.name = name;
-		this.version = version;
-	}
-
-	public String getName(){
-		return name;
-	}
-
-	public int getVersion(){
-		return version;
-	}
-
 	@Override
-	public int hashCode(){
-		return Objects.hash(name, version);
-	}
-
-	@Override
-	public boolean equals(Object obj){
+	public boolean equals(Object obj) {
 		if(obj == this){
 			return true;
 		}
@@ -74,7 +52,7 @@ public final class Module implements Serializable {
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 		return ObjectStringBuilder.create()
 				.add("name", name)
 				.add("version", version)

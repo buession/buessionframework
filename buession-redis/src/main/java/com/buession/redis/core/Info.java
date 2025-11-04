@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -45,168 +45,36 @@ import java.util.StringJoiner;
 /**
  * Redis 服务器的各种信息和统计数值
  *
+ * @param server
+ * 		Redis 服务器的信息
+ * @param clients
+ * 		已连接客户端的信息
+ * @param memory
+ * 		Redis 服务器的内存信息
+ * @param persistence
+ * 		RDB 持久化和 AOF 持久化有关的信息
+ * @param stats
+ * 		一般统计信息
+ * @param replication
+ * 		主从复制信息
+ * @param sentinel
+ * 		Sentinel 信息
+ * @param cpu
+ * 		CPU 的计算量统计信息
+ * @param cluster
+ * 		集群有关的信息
+ * @param keyspace
+ * 		数据库相关的统计信息
+ *
  * @author Yong.Teng
  */
-public class Info implements Serializable {
+public record Info(Server server, Clients clients, Memory memory, Persistence persistence, Stats stats,
+				   Replication replication, Sentinel sentinel, Cpu cpu, Cluster cluster, List<Keyspace> keyspace)
+		implements Serializable {
 
 	private final static long serialVersionUID = -2772690110674245981L;
 
-	/**
-	 * Redis 服务器的信息
-	 */
-	private final Server server;
-
-	/**
-	 * 已连接客户端的信息
-	 */
-	private final Clients clients;
-
-	/**
-	 * Redis 服务器的内存信息
-	 */
-	private final Memory memory;
-
-	/**
-	 * RDB 持久化和 AOF 持久化有关的信息
-	 */
-	private final Persistence persistence;
-
-	/**
-	 * 一般统计信息
-	 */
-	private final Stats stats;
-
-	/**
-	 * 主从复制信息
-	 */
-	private final Replication replication;
-
-	/**
-	 * Sentinel 信息
-	 */
-	private final Sentinel sentinel;
-
-	/**
-	 * CPU 的计算量统计信息
-	 */
-	private final Cpu cpu;
-
-	/**
-	 * 集群有关的信息
-	 */
-	private final Cluster cluster;
-
-	/**
-	 * 数据库相关的统计信息
-	 */
-	private final List<Keyspace> keyspace;
-
-	public Info(final Server server, final Clients clients, final Memory memory, final Persistence persistence,
-				final Stats stats, final Replication replication, final Sentinel sentinel, final Cpu cpu,
-				final Cluster cluster, final List<Keyspace> keyspaces){
-		this.server = server;
-		this.clients = clients;
-		this.memory = memory;
-		this.persistence = persistence;
-		this.stats = stats;
-		this.replication = replication;
-		this.sentinel = sentinel;
-		this.cpu = cpu;
-		this.cluster = cluster;
-		this.keyspace = keyspaces;
-	}
-
-	/**
-	 * 获取 Redis 服务器的信息
-	 *
-	 * @return Redis 服务器的信息
-	 */
-	public Server getServer(){
-		return server;
-	}
-
-	/**
-	 * 获取已连接客户端的信息
-	 *
-	 * @return 已连接客户端的信息
-	 */
-	public Clients getClients(){
-		return clients;
-	}
-
-	/**
-	 * 获取 Redis 服务器的内存信息
-	 *
-	 * @return Redis 服务器的内存信息
-	 */
-	public Memory getMemory(){
-		return memory;
-	}
-
-	/**
-	 * 获取 RDB 持久化和 AOF 持久化有关的信息
-	 *
-	 * @return RDB 持久化和 AOF 持久化有关的信息
-	 */
-	public Persistence getPersistence(){
-		return persistence;
-	}
-
-	/**
-	 * 获取集群有关的信息
-	 *
-	 * @return 集群有关的信息
-	 */
-	public Cluster getCluster(){
-		return cluster;
-	}
-
-	/**
-	 * 获取一般统计信息
-	 *
-	 * @return 一般统计信息
-	 */
-	public Stats getStats(){
-		return stats;
-	}
-
-	/**
-	 * 获取主从复制信息
-	 *
-	 * @return 主从复制信息
-	 */
-	public Replication getReplication(){
-		return replication;
-	}
-
-	/**
-	 * 获取 Sentinel 信息
-	 *
-	 * @return Sentinel 信息
-	 */
-	public Sentinel getSentinel(){
-		return sentinel;
-	}
-
-	/**
-	 * 获取 CPU 的计算量统计信息
-	 *
-	 * @return CPU 的计算量统计信息
-	 */
-	public Cpu getCpu(){
-		return cpu;
-	}
-
-	/**
-	 * 获取数据库相关的统计信息
-	 *
-	 * @return 数据库相关的统计信息
-	 */
-	public List<Keyspace> getKeyspace(){
-		return keyspace;
-	}
-
-	public String toPrettyString(){
+	public String toPrettyString() {
 		final StringBuilder sb = new StringBuilder();
 		String lineSeparator = System.lineSeparator();
 		boolean init = false;
@@ -291,7 +159,7 @@ public class Info implements Serializable {
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 		final StringBuilder sb = new StringBuilder();
 		boolean init = false;
 
@@ -374,12 +242,12 @@ public class Info implements Serializable {
 		return sb.toString();
 	}
 
-	protected static Double getPercent(final Properties properties, final String key){
+	private static Double getPercent(final Properties properties, final String key) {
 		String str = properties.getProperty(key);
 		return Validate.hasText(str) ? Double.parseDouble(str.substring(0, str.length() - 1)) : null;
 	}
 
-	protected static Boolean getBoolean(final Properties properties, final String key){
+	private static Boolean getBoolean(final Properties properties, final String key) {
 		String str = properties.getProperty(key);
 
 		if(Validate.hasText(str) == false){
@@ -397,7 +265,7 @@ public class Info implements Serializable {
 		}
 	}
 
-	protected static Date getDate(final Properties properties, final String key, final boolean isUnixTimestamp){
+	private static Date getDate(final Properties properties, final String key, final boolean isUnixTimestamp) {
 		String str = properties.getProperty(key);
 
 		if(Validate.hasText(str) == false){
@@ -414,11 +282,11 @@ public class Info implements Serializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected static <E> E getObject(final Properties properties, final String key){
+	private static <E> E getObject(final Properties properties, final String key) {
 		return (E) properties.get(key);
 	}
 
-	protected static String toPrettyString(final Properties properties){
+	private static String toPrettyString(final Properties properties) {
 		int max = properties.size() - 1;
 		if(max == -1){
 			return Constants.EMPTY_STRING;
@@ -444,7 +312,7 @@ public class Info implements Serializable {
 		}
 	}
 
-	protected static String toString(final Properties properties){
+	private static String toString(final Properties properties) {
 		int max = properties.size() - 1;
 		if(max == -1){
 			return Constants.EMPTY_STRING;
@@ -505,7 +373,7 @@ public class Info implements Serializable {
 
 		private final Properties properties;
 
-		public Server(final Properties properties){
+		public Server(final Properties properties) {
 			this.properties = properties;
 		}
 
@@ -514,7 +382,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 架构
 		 */
-		public Processor.Arch getArch(){
+		public Processor.Arch getArch() {
 			return getObject(properties, Key.ARCH.value);
 		}
 
@@ -523,7 +391,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis atomicvar API
 		 */
-		public AtomicvarApi getAtomicvarApi(){
+		public AtomicvarApi getAtomicvarApi() {
 			return getObject(properties, Key.ATOMICVAR_API.value);
 		}
 
@@ -532,11 +400,11 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis build id
 		 */
-		public String getBuildId(){
+		public String getBuildId() {
 			return PropertiesUtils.get(properties, Key.BUILD_ID.value);
 		}
 
-		public Integer getConfiguredHz(){
+		public Integer getConfiguredHz() {
 			return PropertiesUtils.getInt(properties, Key.CONFIGURED_HZ.value);
 		}
 
@@ -545,7 +413,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 可执行文件路径
 		 */
-		public String getExecutable(){
+		public String getExecutable() {
 			return PropertiesUtils.get(properties, Key.EXECUTABLE.value);
 		}
 
@@ -554,7 +422,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 配置文件路径
 		 */
-		public String getConfigFile(){
+		public String getConfigFile() {
 			return PropertiesUtils.get(properties, Key.CONFIG_FILE.value);
 		}
 
@@ -563,7 +431,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 编译 Redis 时所使用的 GCC 版本
 		 */
-		public String getGccVersion(){
+		public String getGccVersion() {
 			return PropertiesUtils.get(properties, Key.GCC_VESION.value);
 		}
 
@@ -572,7 +440,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis Git dirty flag
 		 */
-		public String getGitDirty(){
+		public String getGitDirty() {
 			return PropertiesUtils.get(properties, Key.GIT_DIRTY.value);
 		}
 
@@ -581,7 +449,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis Git SHA1
 		 */
-		public String getGitSha1(){
+		public String getGitSha1() {
 			return PropertiesUtils.get(properties, Key.GIT_SHA1.value);
 		}
 
@@ -590,7 +458,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 内部调度（进行关闭 timeout 的客户端，删除过期key等等）频率
 		 */
-		public Integer getHz(){
+		public Integer getHz() {
 			return PropertiesUtils.getInt(properties, Key.HZ.value);
 		}
 
@@ -599,7 +467,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 以分钟为单位进行自增的时钟，用于 LRU 管理
 		 */
-		public Integer getLruClock(){
+		public Integer getLruClock() {
 			return PropertiesUtils.getInt(properties, Key.LRU_CLOCK.value);
 		}
 
@@ -608,7 +476,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 运行模式
 		 */
-		public RedisMode getMode(){
+		public RedisMode getMode() {
 			return getObject(properties, Key.MODE.value);
 		}
 
@@ -617,7 +485,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 所使用的事件处理机制
 		 */
-		public Multiplexing getMultiplexingApi(){
+		public Multiplexing getMultiplexingApi() {
 			return getObject(properties, Key.MULTIPLEXING_API.value);
 		}
 
@@ -626,7 +494,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 服务器的宿主操作系统
 		 */
-		public String getOs(){
+		public String getOs() {
 			return PropertiesUtils.get(properties, Key.OS.value);
 		}
 
@@ -635,7 +503,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 服务器主机端口
 		 */
-		public Integer getPort(){
+		public Integer getPort() {
 			return PropertiesUtils.getInt(properties, Key.PORT.value);
 		}
 
@@ -644,7 +512,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 服务器进程的 PID
 		 */
-		public Integer getProcessId(){
+		public Integer getProcessId() {
 			return PropertiesUtils.getInt(properties, Key.PROCESS_ID.value);
 		}
 
@@ -653,7 +521,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 服务器的随机标识符（用于 Sentinel 和集群）
 		 */
-		public String getRunId(){
+		public String getRunId() {
 			return PropertiesUtils.get(properties, Key.RUN_ID.value);
 		}
 
@@ -662,7 +530,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 自 Redis 服务器启动以来的运行时间
 		 */
-		public Uptime getUptime(){
+		public Uptime getUptime() {
 			return getObject(properties, Key.UPTIME.value);
 		}
 
@@ -671,16 +539,16 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 服务器版本
 		 */
-		public String getVersion(){
+		public String getVersion() {
 			return PropertiesUtils.get(properties, Key.VERSION.value);
 		}
 
-		public String toPrettyString(){
+		public String toPrettyString() {
 			return Info.toPrettyString(properties);
 		}
 
 		@Override
-		public String toString(){
+		public String toString() {
 			return Info.toString(properties);
 		}
 
@@ -726,11 +594,11 @@ public class Info implements Serializable {
 
 			private final String value;
 
-			Key(final String value){
+			Key(final String value) {
 				this.value = value;
 			}
 
-			public String getValue(){
+			public String getValue() {
 				return value;
 			}
 
@@ -749,7 +617,7 @@ public class Info implements Serializable {
 
 		private final Properties properties;
 
-		public Clients(final Properties properties){
+		public Clients(final Properties properties) {
 			this.properties = properties;
 		}
 
@@ -758,7 +626,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 当前连接的客户端当中，最大输入缓存
 		 */
-		public Integer getBiggestInputBuffer(){
+		public Integer getBiggestInputBuffer() {
 			return PropertiesUtils.getInt(properties, Key.BIGGES_TINPUT_BUFFER.value);
 		}
 
@@ -767,7 +635,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 正在等待阻塞命令的客户端的数量
 		 */
-		public Integer getBlockeds(){
+		public Integer getBlockeds() {
 			return PropertiesUtils.getInt(properties, Key.BLOCKEDS.value);
 		}
 
@@ -776,7 +644,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 已连接客户端的数量
 		 */
-		public Integer getConnecteds(){
+		public Integer getConnecteds() {
 			return PropertiesUtils.getInt(properties, Key.CONNECTEDS.value);
 		}
 
@@ -785,7 +653,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 当前连接的客户端中最大输入
 		 */
-		public Integer getClientRecentMaxInputBuffer(){
+		public Integer getClientRecentMaxInputBuffer() {
 			return PropertiesUtils.getInt(properties, Key.CLIENT_RECENT_MAX_INPUT_BUFFER.value);
 		}
 
@@ -794,7 +662,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 当前连接的客户端中最大输出
 		 */
-		public Integer getClientRecentMaxOutputBuffer(){
+		public Integer getClientRecentMaxOutputBuffer() {
 			return PropertiesUtils.getInt(properties, Key.CLIENT_RECENT_MAX_OUTPUT_BUFFER.value);
 		}
 
@@ -803,16 +671,16 @@ public class Info implements Serializable {
 		 *
 		 * @return 当前连接的客户端当中，最长的输出列表
 		 */
-		public Integer getLongestOutputList(){
+		public Integer getLongestOutputList() {
 			return PropertiesUtils.getInt(properties, Key.LONGEST_OUTPUT_LIST.value);
 		}
 
-		public String toPrettyString(){
+		public String toPrettyString() {
 			return Info.toPrettyString(properties);
 		}
 
 		@Override
-		public String toString(){
+		public String toString() {
 			return Info.toString(properties);
 		}
 
@@ -832,11 +700,11 @@ public class Info implements Serializable {
 
 			private final String value;
 
-			Key(final String value){
+			Key(final String value) {
 				this.value = value;
 			}
 
-			public String getValue(){
+			public String getValue() {
 				return value;
 			}
 
@@ -855,7 +723,7 @@ public class Info implements Serializable {
 
 		private final Properties properties;
 
-		public Memory(final Properties properties){
+		public Memory(final Properties properties) {
 			this.properties = properties;
 		}
 
@@ -864,7 +732,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 内存整理是否处于活动状态
 		 */
-		public Boolean isActiveDefragRunning(){
+		public Boolean isActiveDefragRunning() {
 			return getActiveDefragRunning();
 		}
 
@@ -873,7 +741,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 内存整理是否处于活动状态
 		 */
-		public Boolean getActiveDefragRunning(){
+		public Boolean getActiveDefragRunning() {
 			return getBoolean(properties, Key.ACTIVE_DEFRAG_RUNNING.value);
 		}
 
@@ -882,7 +750,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 中分配器活跃内存数
 		 */
-		public Long getAllocatorActive(){
+		public Long getAllocatorActive() {
 			return PropertiesUtils.getLong(properties, Key.ALLOCATOR_ACTIVE.value);
 		}
 
@@ -891,7 +759,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 中分配器分配内存数
 		 */
-		public Long getAllocatorAllocated(){
+		public Long getAllocatorAllocated() {
 			return PropertiesUtils.getLong(properties, Key.ALLOCATOR_ALLOCATED.value);
 		}
 
@@ -900,7 +768,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 分配器内存碎片大小
 		 */
-		public Long getAllocatorFragBytes(){
+		public Long getAllocatorFragBytes() {
 			return PropertiesUtils.getLong(properties, Key.ALLOCATOR_FRAG_BYTES.value);
 		}
 
@@ -909,7 +777,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 分配器碎片率
 		 */
-		public Double getAllocatorFragRatio(){
+		public Double getAllocatorFragRatio() {
 			return PropertiesUtils.getDouble(properties, Key.ALLOCATOR_FRAG_RATIO.value);
 		}
 
@@ -918,7 +786,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 中分配器常驻内存数
 		 */
-		public Long getAllocatorResident(){
+		public Long getAllocatorResident() {
 			return PropertiesUtils.getLong(properties, Key.ALLOCATOR_RESIDENT.value);
 		}
 
@@ -927,7 +795,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 分配器常驻内存大小
 		 */
-		public Long getAllocatorRssBytes(){
+		public Long getAllocatorRssBytes() {
 			return PropertiesUtils.getLong(properties, Key.ALLOCATOR_RSS_BYTES.value);
 		}
 
@@ -936,7 +804,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 分配器常驻内存比例
 		 */
-		public Double getAllocatorRssRatio(){
+		public Double getAllocatorRssRatio() {
 			return PropertiesUtils.getDouble(properties, Key.ALLOCATOR_RSS_RATIO.value);
 		}
 
@@ -945,7 +813,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 等待释放对象数
 		 */
-		public Integer getLazyfreePendingObjects(){
+		public Integer getLazyfreePendingObjects() {
 			return PropertiesUtils.getInt(properties, Key.LAZYFREE_PENDING_OBJECTS.value);
 		}
 
@@ -954,7 +822,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 中可分配的最大内存数
 		 */
-		public Long getMaxMemory(){
+		public Long getMaxMemory() {
 			return PropertiesUtils.getLong(properties, Key.MAX_MEMORY.value);
 		}
 
@@ -963,7 +831,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 中可分配的最大内存数的可读信息
 		 */
-		public String getMaxMemoryHuman(){
+		public String getMaxMemoryHuman() {
 			return PropertiesUtils.get(properties, Key.MAX_MEMORY_HUMAN.value);
 		}
 
@@ -972,7 +840,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 达到 Redis 最大内存数 maxmemory 后的处理策略
 		 */
-		public MaxMemoryPolicy getMaxMemoryPolicy(){
+		public MaxMemoryPolicy getMaxMemoryPolicy() {
 			return getObject(properties, Key.MAX_MEMORY_POLICY.value);
 		}
 
@@ -981,7 +849,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 在编译时指定的，Redis 所使用的内存分配器及其版本
 		 */
-		public String getMemAllocator(){
+		public String getMemAllocator() {
 			return PropertiesUtils.get(properties, Key.MEM_ALLOCATOR.value);
 		}
 
@@ -990,15 +858,15 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 使用 ao f持久化方式中 aof_buffer 缓冲区大小
 		 */
-		public Long getMemAofBuffer(){
+		public Long getMemAofBuffer() {
 			return PropertiesUtils.getLong(properties, Key.MEM_AOF_BUFFER.value);
 		}
 
-		public Integer getMemClientsNormal(){
+		public Integer getMemClientsNormal() {
 			return PropertiesUtils.getInt(properties, Key.MEM_CLIENTS_NORMAL.value);
 		}
 
-		public Integer getMemClientsSlaves(){
+		public Integer getMemClientsSlaves() {
 			return PropertiesUtils.getInt(properties, Key.MEM_CLIENTS_SLAVES.value);
 		}
 
@@ -1007,7 +875,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 中内存碎片大小
 		 */
-		public Long getMemFragmentationBytes(){
+		public Long getMemFragmentationBytes() {
 			return PropertiesUtils.getLong(properties, Key.MEM_FRAGMENTATION_BYTES.value);
 		}
 
@@ -1016,7 +884,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 中内存碎片率
 		 */
-		public Double getMemFragmentationRatio(){
+		public Double getMemFragmentationRatio() {
 			return PropertiesUtils.getDouble(properties, Key.MEM_FRAGMENTATION_RATIO.value);
 		}
 
@@ -1025,7 +893,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 被驱逐的内存大小
 		 */
-		public Long getMemNotCountedForEvict(){
+		public Long getMemNotCountedForEvict() {
 			return PropertiesUtils.getLong(properties, Key.MEM_NOT_COUNTED_FOR_EVICT.value);
 		}
 
@@ -1034,11 +902,11 @@ public class Info implements Serializable {
 		 *
 		 * @return 从服务其中 backlog 内存大小
 		 */
-		public Long getMemReplicationBacklog(){
+		public Long getMemReplicationBacklog() {
 			return PropertiesUtils.getLong(properties, Key.MEM_REPLICATION_BACKLOG.value);
 		}
 
-		public Integer getNumberOfCachedScripts(){
+		public Integer getNumberOfCachedScripts() {
 			return PropertiesUtils.getInt(properties, Key.NUMBER_OF_CACHED_SCRIPTS.value);
 		}
 
@@ -1047,7 +915,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 常驻内存开销比例
 		 */
-		public Double getRssOverheadRatio(){
+		public Double getRssOverheadRatio() {
 			return PropertiesUtils.getDouble(properties, Key.RSS_OVERHEAD_RATIO.value);
 		}
 
@@ -1056,7 +924,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 常驻内存开销大小
 		 */
-		public Long getRssOverheadBytes(){
+		public Long getRssOverheadBytes() {
 			return PropertiesUtils.getLong(properties, Key.RSS_OVERHEAD_BYTES.value);
 		}
 
@@ -1065,7 +933,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 系统内存总数
 		 */
-		public Long getTotalSystemMemory(){
+		public Long getTotalSystemMemory() {
 			return PropertiesUtils.getLong(properties, Key.TOTAL_SYSTEM_MEMORY.value);
 		}
 
@@ -1074,7 +942,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 系统内存总数的可读信息
 		 */
-		public String getTotalSystemMemoryHuman(){
+		public String getTotalSystemMemoryHuman() {
 			return PropertiesUtils.get(properties, Key.TOTAL_SYSTEM_MEMORY_HUMAN.value);
 		}
 
@@ -1083,7 +951,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 由 Redis 分配器分配的内存总量，包括使用的虚拟内存
 		 */
-		public Long getUsedMemory(){
+		public Long getUsedMemory() {
 			return PropertiesUtils.getLong(properties, Key.USED_MEMORY.value);
 		}
 
@@ -1092,7 +960,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 中数据集所占内存数据大小
 		 */
-		public Long getUsedMemoryDataset(){
+		public Long getUsedMemoryDataset() {
 			return PropertiesUtils.getLong(properties, Key.USED_MEMORY_DATASET.value);
 		}
 
@@ -1102,7 +970,7 @@ public class Info implements Serializable {
 		 *
 		 * @return used_memory_dataset 在净内存（used_memory - used_memory_startup）使用量中所占的百分比
 		 */
-		public Double getUsedMemoryDatasetPerc(){
+		public Double getUsedMemoryDatasetPerc() {
 			return getPercent(properties, Key.USED_MEMORY_DATASET_PERC.value);
 		}
 
@@ -1111,7 +979,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 由 Redis 分配器分配的内存总量，包括使用的虚拟内存的可读信息
 		 */
-		public String getUsedMemoryHuman(){
+		public String getUsedMemoryHuman() {
 			return PropertiesUtils.get(properties, Key.USED_MEMORY_HUMAN.value);
 		}
 
@@ -1120,7 +988,7 @@ public class Info implements Serializable {
 		 *
 		 * @return lua 引擎使用内存量
 		 */
-		public Long getUsedMemoryLua(){
+		public Long getUsedMemoryLua() {
 			return PropertiesUtils.getLong(properties, Key.USED_MEMORY_LUA.value);
 		}
 
@@ -1129,7 +997,7 @@ public class Info implements Serializable {
 		 *
 		 * @return lua 引擎使用内存量的可读信息
 		 */
-		public String getUsedMemoryLuaHuman(){
+		public String getUsedMemoryLuaHuman() {
 			return PropertiesUtils.get(properties, Key.USED_MEMORY_LUA_HUMAN.value);
 		}
 
@@ -1139,7 +1007,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 维护整个内存数据集可用内部机制所需要的内存开销
 		 */
-		public Long getUsedMemoryOverhead(){
+		public Long getUsedMemoryOverhead() {
 			return PropertiesUtils.getLong(properties, Key.USED_MEMORY_OVERHEAD.value);
 		}
 
@@ -1148,7 +1016,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 的内存消耗峰值，即：Redis 内存使用的最大值
 		 */
-		public Long getUsedMemoryPeak(){
+		public Long getUsedMemoryPeak() {
 			return PropertiesUtils.getLong(properties, Key.USED_MEMORY_PEAK.value);
 		}
 
@@ -1157,7 +1025,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 的内存消耗峰值，即：Redis 内存使用的最大值的可读信息
 		 */
-		public String getUsedMemoryPeakHuman(){
+		public String getUsedMemoryPeakHuman() {
 			return PropertiesUtils.get(properties, Key.USED_MEMORY_PEAK_HUMAN.value);
 		}
 
@@ -1166,7 +1034,7 @@ public class Info implements Serializable {
 		 *
 		 * @return used_memory_peak 在 used_memory 中所占的百分比
 		 */
-		public Double getUsedMemoryPeakPerc(){
+		public Double getUsedMemoryPeakPerc() {
 			return getPercent(properties, Key.USED_MEMORY_PEAK_PERC.value);
 		}
 
@@ -1176,7 +1044,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 使用内存数
 		 */
-		public Long getUsedMemoryRss(){
+		public Long getUsedMemoryRss() {
 			return PropertiesUtils.getLong(properties, Key.USED_MEMORY_RSS.value);
 		}
 
@@ -1185,15 +1053,15 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 使用内存数的可读信息
 		 */
-		public String getUsedMemoryRssHuman(){
+		public String getUsedMemoryRssHuman() {
 			return PropertiesUtils.get(properties, Key.USED_MEMORY_RSS_HUMAN.value);
 		}
 
-		public Long getUsedMemoryScripts(){
+		public Long getUsedMemoryScripts() {
 			return PropertiesUtils.getLong(properties, Key.USED_MEMORY_SCRIPTS.value);
 		}
 
-		public String getUsedMemoryScriptsHuman(){
+		public String getUsedMemoryScriptsHuman() {
 			return PropertiesUtils.get(properties, Key.USED_MEMORY_SCRIPTS_HUMAN.value);
 		}
 
@@ -1202,16 +1070,16 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 消耗的初始内存值
 		 */
-		public Long getUsedMemoryStartup(){
+		public Long getUsedMemoryStartup() {
 			return PropertiesUtils.getLong(properties, Key.USED_MEMORY_STARTUP.value);
 		}
 
-		public String toPrettyString(){
+		public String toPrettyString() {
 			return Info.toPrettyString(properties);
 		}
 
 		@Override
-		public String toString(){
+		public String toString() {
 			return Info.toString(properties);
 		}
 
@@ -1299,11 +1167,11 @@ public class Info implements Serializable {
 
 			private final String value;
 
-			Key(final String value){
+			Key(final String value) {
 				this.value = value;
 			}
 
-			public String getValue(){
+			public String getValue() {
 				return value;
 			}
 
@@ -1322,7 +1190,7 @@ public class Info implements Serializable {
 
 		private final Properties properties;
 
-		public Persistence(final Properties properties){
+		public Persistence(final Properties properties) {
 			this.properties = properties;
 		}
 
@@ -1331,7 +1199,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 服务器启动时或者 AOF 重写最近一次执行之后，AOF 文件的大小
 		 */
-		public Long getAofBaseSize(){
+		public Long getAofBaseSize() {
 			return PropertiesUtils.getLong(properties, Key.AOF_BASE_SIZE.value);
 		}
 
@@ -1340,7 +1208,7 @@ public class Info implements Serializable {
 		 *
 		 * @return AOF 缓冲区的大小
 		 */
-		public Integer getAofBufferLength(){
+		public Integer getAofBufferLength() {
 			return PropertiesUtils.getInt(properties, Key.AOF_BUFFER_LENGTH.value);
 		}
 
@@ -1349,7 +1217,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 如果服务器正在创建 AOF 文件，那么这个域记录的就是当前的创建操作已经耗费的秒数
 		 */
-		public Integer getAofCurrentRewriteTimeSec(){
+		public Integer getAofCurrentRewriteTimeSec() {
 			return PropertiesUtils.getInt(properties, Key.AOF_CURRENT_REWRITE_TIME_SEC.value);
 		}
 
@@ -1358,7 +1226,7 @@ public class Info implements Serializable {
 		 *
 		 * @return AOF 文件目前的大小
 		 */
-		public Long getAofCurrentSize(){
+		public Long getAofCurrentSize() {
 			return PropertiesUtils.getLong(properties, Key.AOF_CURRENT_SIZE.value);
 		}
 
@@ -1367,7 +1235,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 被延迟的 fsync 调用数量
 		 */
-		public Integer getAofDelayedFsync(){
+		public Integer getAofDelayedFsync() {
 			return PropertiesUtils.getInt(properties, Key.AOF_DELAYED_FSYNC.value);
 		}
 
@@ -1376,7 +1244,7 @@ public class Info implements Serializable {
 		 *
 		 * @return AOF 是否处于打开状态
 		 */
-		public Boolean isAofEnabled(){
+		public Boolean isAofEnabled() {
 			return getAofEnabled();
 		}
 
@@ -1385,7 +1253,7 @@ public class Info implements Serializable {
 		 *
 		 * @return AOF 是否处于打开状态
 		 */
-		public Boolean getAofEnabled(){
+		public Boolean getAofEnabled() {
 			return getBoolean(properties, Key.AOF_ENABLED.value);
 		}
 
@@ -1394,7 +1262,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 后台 I/O 队列里面，等待执行的 fsync 调用数量
 		 */
-		public Integer getAofPendingBioFsync(){
+		public Integer getAofPendingBioFsync() {
 			return PropertiesUtils.getInt(properties, Key.AOF_PENDING_BIO_FSYNC.value);
 		}
 
@@ -1403,7 +1271,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 是否有 AOF 重写操作在等待 RDB 文件创建完毕之后执行
 		 */
-		public Boolean isAofPendingRewrite(){
+		public Boolean isAofPendingRewrite() {
 			return getAofPendingRewrite();
 		}
 
@@ -1412,7 +1280,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 是否有 AOF 重写操作在等待 RDB 文件创建完毕之后执行
 		 */
-		public Boolean getAofPendingRewrite(){
+		public Boolean getAofPendingRewrite() {
 			return getBoolean(properties, Key.AOF_PENDING_REWRITE.value);
 		}
 
@@ -1421,7 +1289,7 @@ public class Info implements Serializable {
 		 *
 		 * @return AOF 重写缓冲区的大小
 		 */
-		public Integer getAofRewriteBufferLength(){
+		public Integer getAofRewriteBufferLength() {
 			return PropertiesUtils.getInt(properties, Key.AOF_REWRITE_BUFFER_LENGTH.value);
 		}
 
@@ -1430,7 +1298,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 最后一次 bgrewriteaof 重写是否成功
 		 */
-		public Status getAofLastBgRewriteStatus(){
+		public Status getAofLastBgRewriteStatus() {
 			return getObject(properties, Key.AOF_LAST_BGREWRITE_STATUS.value);
 		}
 
@@ -1439,7 +1307,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 最后一次执行 AOF 重写操作期间 copy-on-write 分配的字节大小
 		 */
-		public Long getAofLastCowSize(){
+		public Long getAofLastCowSize() {
 			return PropertiesUtils.getLong(properties, Key.AOF_LAST_COW_SIZE.value);
 		}
 
@@ -1448,7 +1316,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 最近一次创建 AOF 文件耗费的时长
 		 */
-		public Integer getAofLastRewriteTimeSec(){
+		public Integer getAofLastRewriteTimeSec() {
 			return PropertiesUtils.getInt(properties, Key.AOF_LAST_REWRITE_TIME_SEC.value);
 		}
 
@@ -1457,7 +1325,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 最后一次 AOF 重写是否成功
 		 */
-		public Status getAofLastWriteStatus(){
+		public Status getAofLastWriteStatus() {
 			return getObject(properties, Key.AOF_LAST_WRITE_STATUS.value);
 		}
 
@@ -1466,7 +1334,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 服务器是否正在创建 AOF 文件
 		 */
-		public Boolean isAofRewriteInProgress(){
+		public Boolean isAofRewriteInProgress() {
 			return getAofRewriteInProgress();
 		}
 
@@ -1475,7 +1343,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 服务器是否正在创建 AOF 文件
 		 */
-		public Boolean getAofRewriteInProgress(){
+		public Boolean getAofRewriteInProgress() {
 			return getBoolean(properties, Key.AOF_REWRITE_IN_PROGRESS.value);
 		}
 
@@ -1484,7 +1352,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 在 RDB 文件创建完毕之后，是否需要执行预约的 AOF 重写操作
 		 */
-		public Boolean isAofRewriteScheduled(){
+		public Boolean isAofRewriteScheduled() {
 			return getAofRewriteScheduled();
 		}
 
@@ -1493,7 +1361,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 在 RDB 文件创建完毕之后，是否需要执行预约的 AOF 重写操作
 		 */
-		public Boolean getAofRewriteScheduled(){
+		public Boolean getAofRewriteScheduled() {
 			return getBoolean(properties, Key.AOF_REWRITE_SCHEDULED.value);
 		}
 
@@ -1502,7 +1370,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 服务器是否正在载入持久化文件
 		 */
-		public Boolean isLoading(){
+		public Boolean isLoading() {
 			return getLoading();
 		}
 
@@ -1511,7 +1379,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 服务器是否正在载入持久化文件
 		 */
-		public Boolean getLoading(){
+		public Boolean getLoading() {
 			return getBoolean(properties, Key.LOADING.value);
 		}
 
@@ -1520,7 +1388,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 服务器是否正在创建 RDB 文件
 		 */
-		public Boolean isRdbBgSaveInProgress(){
+		public Boolean isRdbBgSaveInProgress() {
 			return getRdbBgSaveInProgress();
 		}
 
@@ -1529,7 +1397,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 服务器是否正在创建 RDB 文件
 		 */
-		public Boolean getRdbBgSaveInProgress(){
+		public Boolean getRdbBgSaveInProgress() {
 			return getBoolean(properties, Key.RDB_BGSAVE_IN_PROGRESS.value);
 		}
 
@@ -1538,7 +1406,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 距离最近一次成功创建持久化文件之后，经过了多少秒
 		 */
-		public Integer getRdbChangesSinceLastSave(){
+		public Integer getRdbChangesSinceLastSave() {
 			return PropertiesUtils.getInt(properties, Key.RDB_CHANGES_SINCE_LAST_SAVE.value);
 		}
 
@@ -1547,7 +1415,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 如果服务器正在创建 RDB 文件，那么这个域记录的就是当前的创建操作已经耗费的秒数
 		 */
-		public Integer getRdbCurrentBgSaveTimeSec(){
+		public Integer getRdbCurrentBgSaveTimeSec() {
 			return PropertiesUtils.getInt(properties, Key.RDB_CURRENT_BGSAVE_TIME_SEC.value);
 		}
 
@@ -1556,7 +1424,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 最近一次创建 RDB 文件的结果是成功还是失败
 		 */
-		public Status getRdbLastBgSaveStatus(){
+		public Status getRdbLastBgSaveStatus() {
 			return getObject(properties, Key.RDB_LAST_BGSAVE_STATUS.value);
 		}
 
@@ -1565,7 +1433,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 最近一次创建 RDB 文件耗费的秒数
 		 */
-		public Integer getRdbLastBgSaveTimeSec(){
+		public Integer getRdbLastBgSaveTimeSec() {
 			return PropertiesUtils.getInt(properties, Key.RDB_LAST_BGSAVE_TIME_SEC.value);
 		}
 
@@ -1574,7 +1442,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 最后一次执行 rdb 操作期间 copy-on-write 分配的字节大小
 		 */
-		public Long getRdbLastCowSize(){
+		public Long getRdbLastCowSize() {
 			return PropertiesUtils.getLong(properties, Key.RDB_LAST_COW_SIZE.value);
 		}
 
@@ -1583,16 +1451,16 @@ public class Info implements Serializable {
 		 *
 		 * @return 最近一次成功创建 RDB 文件的时间
 		 */
-		public Date getRdbLastSaveTime(){
+		public Date getRdbLastSaveTime() {
 			return getDate(properties, Key.RDB_LAST_SAVE_TIME.getValue(), true);
 		}
 
-		public String toPrettyString(){
+		public String toPrettyString() {
 			return Info.toPrettyString(properties);
 		}
 
 		@Override
-		public String toString(){
+		public String toString() {
 			return Info.toString(properties);
 		}
 
@@ -1646,11 +1514,11 @@ public class Info implements Serializable {
 
 			private final String value;
 
-			Key(final String value){
+			Key(final String value) {
 				this.value = value;
 			}
 
-			public String getValue(){
+			public String getValue() {
 				return value;
 			}
 
@@ -1669,7 +1537,7 @@ public class Info implements Serializable {
 
 		private final Properties properties;
 
-		public Stats(final Properties properties){
+		public Stats(final Properties properties) {
 			this.properties = properties;
 		}
 
@@ -1678,7 +1546,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 主动垃圾碎片整理命中次数
 		 */
-		public Integer getActiveDefragHits(){
+		public Integer getActiveDefragHits() {
 			return PropertiesUtils.getInt(properties, Key.ACTIVE_DEFRAG_HITS.value);
 		}
 
@@ -1687,7 +1555,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 主动垃圾碎片整理 key 命中次数
 		 */
-		public Integer getActiveDefragKeyHits(){
+		public Integer getActiveDefragKeyHits() {
 			return PropertiesUtils.getInt(properties, Key.ACTIVE_DEFRAG_KEY_HITS.value);
 		}
 
@@ -1696,7 +1564,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 主动垃圾碎片整理 key 未命中次数
 		 */
-		public Integer getActiveDefragKeyMisses(){
+		public Integer getActiveDefragKeyMisses() {
 			return PropertiesUtils.getInt(properties, Key.ACTIVE_DEFRAG_KEY_MISSES.value);
 		}
 
@@ -1705,7 +1573,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 主动垃圾碎片整理未命中
 		 */
-		public Integer getActiveDefragMisses(){
+		public Integer getActiveDefragMisses() {
 			return PropertiesUtils.getInt(properties, Key.ACTIVE_DEFRAG_MISSES.value);
 		}
 
@@ -1714,7 +1582,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 因为过期而被自动删除的数据库键数量
 		 */
-		public Integer getExpiredKeys(){
+		public Integer getExpiredKeys() {
 			return PropertiesUtils.getInt(properties, Key.EXPIRED_KEYS.value);
 		}
 
@@ -1723,7 +1591,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 过期 key 占总 key 比率
 		 */
-		public Double getExpiredStalePerc(){
+		public Double getExpiredStalePerc() {
 			return getPercent(properties, Key.EXPIRED_STALE_PERC.value);
 		}
 
@@ -1732,7 +1600,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 过期计数
 		 */
-		public Integer getExpiredTimeCapReachedCount(){
+		public Integer getExpiredTimeCapReachedCount() {
 			return PropertiesUtils.getInt(properties, Key.EXPIRED_TIME_CAP_REACHED_COUNT.value);
 		}
 
@@ -1741,7 +1609,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 因为最大内存容量限制而被驱逐（evict）的键数量
 		 */
-		public Integer getEvictedKeys(){
+		public Integer getEvictedKeys() {
 			return PropertiesUtils.getInt(properties, Key.EVICTED_KEYS.value);
 		}
 
@@ -1750,7 +1618,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 输入带宽，Redis 服务每秒读字节数
 		 */
-		public Integer getInstantaneousInputKbps(){
+		public Integer getInstantaneousInputKbps() {
 			return PropertiesUtils.getInt(properties, Key.INSTANTANEOUS_INPUT.value);
 		}
 
@@ -1759,7 +1627,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 服务器每秒钟执行的命令数量
 		 */
-		public Integer getInstantaneousOpsPerSec(){
+		public Integer getInstantaneousOpsPerSec() {
 			return PropertiesUtils.getInt(properties, Key.INSTANTANEOUS_INPUT.value);
 		}
 
@@ -1768,7 +1636,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 输出带宽，Redis 服务每秒写字节数
 		 */
-		public Integer getInstantaneousOutput(){
+		public Integer getInstantaneousOutput() {
 			return PropertiesUtils.getInt(properties, Key.INSTANTANEOUS_OUTPUT.value);
 		}
 
@@ -1777,7 +1645,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 查找数据库键成功的次数
 		 */
-		public Integer getKeyspaceHits(){
+		public Integer getKeyspaceHits() {
 			return PropertiesUtils.getInt(properties, Key.KEYSPACE_HITS.value);
 		}
 
@@ -1786,7 +1654,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 查找数据库键失败的次数
 		 */
-		public Integer getKeyspaceMisses(){
+		public Integer getKeyspaceMisses() {
 			return PropertiesUtils.getInt(properties, Key.KEYSPACE_MISSES.value);
 		}
 
@@ -1795,11 +1663,11 @@ public class Info implements Serializable {
 		 *
 		 * @return 最近一次 fork() 操作耗费的毫秒数
 		 */
-		public Integer getLatestForkUsec(){
+		public Integer getLatestForkUsec() {
 			return PropertiesUtils.getInt(properties, Key.LATEST_FORK_USEC.value);
 		}
 
-		public Integer getMigrateCachedSockets(){
+		public Integer getMigrateCachedSockets() {
 			return PropertiesUtils.getInt(properties, Key.MIGRATE_CACHED_SOCKETS.value);
 		}
 
@@ -1808,7 +1676,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 目前被订阅的频道数量
 		 */
-		public Integer getPubsubChannels(){
+		public Integer getPubsubChannels() {
 			return PropertiesUtils.getInt(properties, Key.PUBSUB_CHANNELS.value);
 		}
 
@@ -1817,7 +1685,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 目前被订阅的模式数量
 		 */
-		public Integer getPubsubPatterns(){
+		public Integer getPubsubPatterns() {
 			return PropertiesUtils.getInt(properties, Key.PUBSUB_PATTERNS.value);
 		}
 
@@ -1826,7 +1694,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 因为最大客户端数量限制而被拒绝的连接请求数量
 		 */
-		public Integer getRejectedConnections(){
+		public Integer getRejectedConnections() {
 			return PropertiesUtils.getInt(properties, Key.REJECTED_CONNECTIONS.value);
 		}
 
@@ -1835,7 +1703,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 从服务器中到期 key 数量
 		 */
-		public Integer getSlaveExpiresTrackedKeys(){
+		public Integer getSlaveExpiresTrackedKeys() {
 			return PropertiesUtils.getInt(properties, Key.SLAVE_EXPIRES_TRACKED_KEYS.value);
 		}
 
@@ -1844,7 +1712,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 主从之间数据同步完全成功次数
 		 */
-		public Integer getSyncFull(){
+		public Integer getSyncFull() {
 			return PropertiesUtils.getInt(properties, Key.SYNC_FULL.value);
 		}
 
@@ -1853,7 +1721,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 主从之间数据同步部分失败次数
 		 */
-		public Integer getSyncPartialErr(){
+		public Integer getSyncPartialErr() {
 			return PropertiesUtils.getInt(properties, Key.SYNC_PARTIAL_ERR.value);
 		}
 
@@ -1862,7 +1730,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 主从之间数据同步部分成功次数
 		 */
-		public Integer getSyncPartialOk(){
+		public Integer getSyncPartialOk() {
 			return PropertiesUtils.getInt(properties, Key.SYNC_PARTIAL_OK.value);
 		}
 
@@ -1871,7 +1739,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 服务器已执行的命令数量
 		 */
-		public Integer getTotalCommandsProcessed(){
+		public Integer getTotalCommandsProcessed() {
 			return PropertiesUtils.getInt(properties, Key.TOTAL_COMMANDS_PROCESSED.value);
 		}
 
@@ -1880,7 +1748,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 服务器已接受的连接请求数量
 		 */
-		public Integer getTotalConnectionsReceived(){
+		public Integer getTotalConnectionsReceived() {
 			return PropertiesUtils.getInt(properties, Key.TOTAL_CONNECTIONS_RECEIVED.value);
 		}
 
@@ -1889,7 +1757,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 服务接受输入总数据量
 		 */
-		public Integer getTotalNetInput(){
+		public Integer getTotalNetInput() {
 			return PropertiesUtils.getInt(properties, Key.TOTAL_NET_INPUT.value);
 		}
 
@@ -1898,16 +1766,16 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 服务输出总数据量
 		 */
-		public Integer getTotalNetOutput(){
+		public Integer getTotalNetOutput() {
 			return PropertiesUtils.getInt(properties, Key.TOTAL_NET_OUTPUT.value);
 		}
 
-		public String toPrettyString(){
+		public String toPrettyString() {
 			return Info.toPrettyString(properties);
 		}
 
 		@Override
-		public String toString(){
+		public String toString() {
 			return Info.toString(properties);
 		}
 
@@ -1967,11 +1835,11 @@ public class Info implements Serializable {
 
 			private final String value;
 
-			Key(final String value){
+			Key(final String value) {
 				this.value = value;
 			}
 
-			public String getValue(){
+			public String getValue() {
 				return value;
 			}
 
@@ -1990,7 +1858,7 @@ public class Info implements Serializable {
 
 		private final Properties properties;
 
-		public Replication(final Properties properties){
+		public Replication(final Properties properties) {
 			this.properties = properties;
 		}
 
@@ -1999,7 +1867,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 已连接的从服务器数量
 		 */
-		public Integer getConnectedSlaves(){
+		public Integer getConnectedSlaves() {
 			return PropertiesUtils.getInt(properties, Key.CONNECTED_SLAVES.value);
 		}
 
@@ -2008,7 +1876,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Master 节点
 		 */
-		public RedisNode getMaster(){
+		public RedisNode getMaster() {
 			return getObject(properties, Key.MASTER.value);
 		}
 
@@ -2017,7 +1885,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Slave 节点
 		 */
-		public List<RedisNode> getSlave(){
+		public List<RedisNode> getSlave() {
 			return getObject(properties, Key.SLAVE.value);
 		}
 
@@ -2026,7 +1894,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 距离最近一次与主服务器进行通信已经过去了多少秒钟
 		 */
-		public Integer getMasterLastIoSecondsAgo(){
+		public Integer getMasterLastIoSecondsAgo() {
 			return PropertiesUtils.getInt(properties, Key.MASTER_LAST_IO_SECONDS_AGO.value);
 		}
 
@@ -2035,7 +1903,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 复制连接当前的状态，up 表示连接正常，down 表示连接断开
 		 */
-		public MasterLinkStatus getMasterLinkStatus(){
+		public MasterLinkStatus getMasterLinkStatus() {
 			return getObject(properties, Key.MASTER_LINK_STATUS.value);
 		}
 
@@ -2044,7 +1912,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 主服务器是否正在与这个从服务器进行同步
 		 */
-		public Boolean isMasterSyncInProgress(){
+		public Boolean isMasterSyncInProgress() {
 			return getMasterSyncInProgress();
 		}
 
@@ -2053,7 +1921,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 主服务器是否正在与这个从服务器进行同步
 		 */
-		public Boolean getMasterSyncInProgress(){
+		public Boolean getMasterSyncInProgress() {
 			return getBoolean(properties, Key.MASTER_SYNC_IN_PROGRESS.value);
 		}
 
@@ -2062,7 +1930,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 当前 master 记录的复制偏移量
 		 */
-		public Integer getMasterReplOffset(){
+		public Integer getMasterReplOffset() {
 			return PropertiesUtils.getInt(properties, Key.MASTER_REPL_OFFSET.value);
 		}
 
@@ -2071,7 +1939,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 服务器的复制 ID
 		 */
-		public String getMasterReplId(){
+		public String getMasterReplId() {
 			return PropertiesUtils.get(properties, Key.MASTER_REPL_ID.value);
 		}
 
@@ -2080,11 +1948,11 @@ public class Info implements Serializable {
 		 *
 		 * @return 第二服务器复制 ID
 		 */
-		public String getMasterReplId2(){
+		public String getMasterReplId2() {
 			return PropertiesUtils.get(properties, Key.MASTER_REPL_ID2.value);
 		}
 
-		public ReplBacklog getReplBackLog(){
+		public ReplBacklog getReplBackLog() {
 			return getObject(properties, Key.REPL_BACK_LOG.value);
 		}
 
@@ -2093,7 +1961,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 服务器角色
 		 */
-		public Role getRole(){
+		public Role getRole() {
 			return getObject(properties, Key.ROLE.value);
 		}
 
@@ -2102,15 +1970,15 @@ public class Info implements Serializable {
 		 *
 		 * @return 第二服务器复制偏移量
 		 */
-		public Integer getSecondReplOffset(){
+		public Integer getSecondReplOffset() {
 			return PropertiesUtils.getInt(properties, Key.SECOND_REPL_OFFSET.value);
 		}
 
-		public Integer getSlaveReplOffset(){
+		public Integer getSlaveReplOffset() {
 			return PropertiesUtils.getInt(properties, Key.SLAVE_REPL_OFFSET.value);
 		}
 
-		public Integer getSlavePriority(){
+		public Integer getSlavePriority() {
 			return PropertiesUtils.getInt(properties, Key.SLAVE_PRIORITY.value);
 		}
 
@@ -2119,32 +1987,32 @@ public class Info implements Serializable {
 		 *
 		 * @return 从节点是否为只读
 		 */
-		public Boolean getSlaveReadOnly(){
+		public Boolean getSlaveReadOnly() {
 			return getBoolean(properties, Key.SLAVE_READ_ONLY.value);
 		}
 
-		public Integer getReplBackLogActive(){
+		public Integer getReplBackLogActive() {
 			return PropertiesUtils.getInt(properties, Key.REPL_BACKLOG_ACTIVE.value);
 		}
 
-		public Integer getReplBackLogSize(){
+		public Integer getReplBackLogSize() {
 			return PropertiesUtils.getInt(properties, Key.REPL_BACKLOG_ACTIVE.value);
 		}
 
-		public Integer getReplBackLogByteOffset(){
+		public Integer getReplBackLogByteOffset() {
 			return PropertiesUtils.getInt(properties, Key.REPL_BACKLOG_FIRST_BYTE_OFFSET.value);
 		}
 
-		public Integer getReplBackLogHistLen(){
+		public Integer getReplBackLogHistLen() {
 			return PropertiesUtils.getInt(properties, Key.REPL_BACKLOG_FIRST_BYTE_OFFSET.value);
 		}
 
-		public String toPrettyString(){
+		public String toPrettyString() {
 			return Info.toPrettyString(properties);
 		}
 
 		@Override
-		public String toString(){
+		public String toString() {
 			return Info.toString(properties);
 		}
 
@@ -2190,11 +2058,11 @@ public class Info implements Serializable {
 
 			private final String value;
 
-			Key(final String value){
+			Key(final String value) {
 				this.value = value;
 			}
 
-			public String getValue(){
+			public String getValue() {
 				return value;
 			}
 
@@ -2208,11 +2076,11 @@ public class Info implements Serializable {
 
 			private final String value;
 
-			MasterLinkStatus(final String value){
+			MasterLinkStatus(final String value) {
 				this.value = value;
 			}
 
-			public String getValue(){
+			public String getValue() {
 				return value;
 			}
 
@@ -2224,7 +2092,7 @@ public class Info implements Serializable {
 
 			private final Properties properties;
 
-			public Slave(final Properties properties){
+			public Slave(final Properties properties) {
 				super(PropertiesUtils.get(properties, Key.IP.value),
 						PropertiesUtils.getInt(properties, Key.PORT.value));
 				this.properties = properties;
@@ -2235,7 +2103,7 @@ public class Info implements Serializable {
 			 *
 			 * @return 从服务器状态
 			 */
-			public SlaveState getState(){
+			public SlaveState getState() {
 				return getObject(properties, Key.STATE.value);
 			}
 
@@ -2244,7 +2112,7 @@ public class Info implements Serializable {
 			 *
 			 * @return 复制偏移量
 			 */
-			public Integer getOffset(){
+			public Integer getOffset() {
 				return PropertiesUtils.getInt(properties, Key.OFFSET.value);
 			}
 
@@ -2253,12 +2121,12 @@ public class Info implements Serializable {
 			 *
 			 * @return 复制延迟
 			 */
-			public Integer getLag(){
+			public Integer getLag() {
 				return PropertiesUtils.getInt(properties, Key.LAG.value);
 			}
 
 			@Override
-			public String toString(){
+			public String toString() {
 				return "ip=" + getIp() + ", port=" + getPort() + ", state=" + getState() + ", offset=" + getOffset() +
 						", " + "lag=" + getLag();
 			}
@@ -2277,11 +2145,11 @@ public class Info implements Serializable {
 
 				private final String value;
 
-				Key(final String value){
+				Key(final String value) {
 					this.value = value;
 				}
 
-				public String getValue(){
+				public String getValue() {
 					return value;
 				}
 
@@ -2293,11 +2161,11 @@ public class Info implements Serializable {
 
 				private final String value;
 
-				SlaveState(final String value){
+				SlaveState(final String value) {
 					this.value = value;
 				}
 
-				public String getValue(){
+				public String getValue() {
 					return value;
 				}
 
@@ -2311,32 +2179,32 @@ public class Info implements Serializable {
 
 			private final Properties properties;
 
-			public ReplBacklog(final Properties properties){
+			public ReplBacklog(final Properties properties) {
 				this.properties = properties;
 			}
 
-			public Integer getActive(){
+			public Integer getActive() {
 				return PropertiesUtils.getInt(properties, Key.ACTIVE.value);
 			}
 
-			public Integer getSize(){
+			public Integer getSize() {
 				return PropertiesUtils.getInt(properties, Key.SIZE.value);
 			}
 
-			public Integer getFirstByteOffset(){
+			public Integer getFirstByteOffset() {
 				return PropertiesUtils.getInt(properties, Key.FIRST_BYTE_OFFSET.value);
 			}
 
-			public Integer getHistlen(){
+			public Integer getHistlen() {
 				return PropertiesUtils.getInt(properties, Key.HISTLEN.value);
 			}
 
-			public String toPrettyString(){
+			public String toPrettyString() {
 				return Info.toPrettyString(properties);
 			}
 
 			@Override
-			public String toString(){
+			public String toString() {
 				return Info.toString(properties);
 			}
 
@@ -2352,11 +2220,11 @@ public class Info implements Serializable {
 
 				private final String value;
 
-				Key(final String value){
+				Key(final String value) {
 					this.value = value;
 				}
 
-				public String getValue(){
+				public String getValue() {
 					return value;
 				}
 
@@ -2377,7 +2245,7 @@ public class Info implements Serializable {
 
 		private final Properties properties;
 
-		public Sentinel(Properties properties){
+		public Sentinel(Properties properties) {
 			this.properties = properties;
 		}
 
@@ -2386,7 +2254,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Master 节点列表
 		 */
-		public List<Master> getMasters(){
+		public List<Master> getMasters() {
 			return getObject(properties, Key.MASTERS.value);
 		}
 
@@ -2395,7 +2263,7 @@ public class Info implements Serializable {
 		 *
 		 * @return sentinel 正在运行的脚本数量
 		 */
-		public Integer getRunningScripts(){
+		public Integer getRunningScripts() {
 			return PropertiesUtils.getInt(properties, Key.RUNNING_SCRIPTS.value);
 		}
 
@@ -2404,7 +2272,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Master 数量
 		 */
-		public Integer getSentinelMasters(){
+		public Integer getSentinelMasters() {
 			return PropertiesUtils.getInt(properties, Key.SENTINEL_MASTERS.value);
 		}
 
@@ -2413,7 +2281,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 是否进入了 tilt 模式
 		 */
-		public Boolean isTilt(){
+		public Boolean isTilt() {
 			return getTilt();
 		}
 
@@ -2422,7 +2290,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 是否进入了 tilt 模式
 		 */
-		public Boolean getTilt(){
+		public Boolean getTilt() {
 			return getBoolean(properties, Key.TILT.value);
 		}
 
@@ -2431,20 +2299,20 @@ public class Info implements Serializable {
 		 *
 		 * @return sentinel 在队列中正在排队的脚本的个数
 		 */
-		public Integer getScriptsQueueLength(){
+		public Integer getScriptsQueueLength() {
 			return PropertiesUtils.getInt(properties, Key.SCRIPTS_QUEUE_LENGTH.value);
 		}
 
-		public Integer getSentinelSimulateFailureFlags(){
+		public Integer getSentinelSimulateFailureFlags() {
 			return PropertiesUtils.getInt(properties, Key.SIMULATE_FAILURE_FLAGS.value);
 		}
 
-		public String toPrettyString(){
+		public String toPrettyString() {
 			return Info.toPrettyString(properties);
 		}
 
 		@Override
-		public String toString(){
+		public String toString() {
 			return Info.toString(properties);
 		}
 
@@ -2464,11 +2332,11 @@ public class Info implements Serializable {
 
 			private final String value;
 
-			Key(final String value){
+			Key(final String value) {
 				this.value = value;
 			}
 
-			public String getValue(){
+			public String getValue() {
 				return value;
 			}
 
@@ -2480,7 +2348,7 @@ public class Info implements Serializable {
 
 			private final Properties properties;
 
-			public Master(Properties properties){
+			public Master(Properties properties) {
 				super(PropertiesUtils.get(properties, Key.HOST.value),
 						PropertiesUtils.getInt(properties, Key.PORT.value));
 				setName(PropertiesUtils.get(properties, Key.NAME.value));
@@ -2492,7 +2360,7 @@ public class Info implements Serializable {
 			 *
 			 * @return 状态
 			 */
-			public HostAndPort getAddress(){
+			public HostAndPort getAddress() {
 				return getObject(properties, Key.ADDRESS.value);
 			}
 
@@ -2501,7 +2369,7 @@ public class Info implements Serializable {
 			 *
 			 * @return 状态
 			 */
-			public Status getStatus(){
+			public Status getStatus() {
 				return getObject(properties, Key.STATUS.value);
 			}
 
@@ -2510,7 +2378,7 @@ public class Info implements Serializable {
 			 *
 			 * @return 从节点数量
 			 */
-			public Integer getSlaves(){
+			public Integer getSlaves() {
 				return PropertiesUtils.getInt(properties, Key.SENTINELS.value);
 			}
 
@@ -2519,12 +2387,12 @@ public class Info implements Serializable {
 			 *
 			 * @return 哨兵节点数量
 			 */
-			public Integer getSentinels(){
+			public Integer getSentinels() {
 				return PropertiesUtils.getInt(properties, Key.SLAVES.value);
 			}
 
 			@Override
-			public String toString(){
+			public String toString() {
 				return "name=" + getName() + ", status=" + getStatus() + ", address=" + getAddress() + ", slaves=" +
 						getSlaves() + ", sentinels=" + getSentinels();
 			}
@@ -2547,11 +2415,11 @@ public class Info implements Serializable {
 
 				private final String value;
 
-				Key(final String value){
+				Key(final String value) {
 					this.value = value;
 				}
 
-				public String getValue(){
+				public String getValue() {
 					return value;
 				}
 
@@ -2569,11 +2437,11 @@ public class Info implements Serializable {
 
 			private final String value;
 
-			Status(final String value){
+			Status(final String value) {
 				this.value = value;
 			}
 
-			public String getValue(){
+			public String getValue() {
 				return value;
 			}
 
@@ -2592,7 +2460,7 @@ public class Info implements Serializable {
 
 		private final Properties properties;
 
-		public Cpu(Properties properties){
+		public Cpu(Properties properties) {
 			this.properties = properties;
 		}
 
@@ -2601,7 +2469,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 服务器耗费的系统 CPU
 		 */
-		public Double getUsedSys(){
+		public Double getUsedSys() {
 			return PropertiesUtils.getDouble(properties, Key.USED_SYS.value);
 		}
 
@@ -2610,7 +2478,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 后台进程耗费的系统 CPU
 		 */
-		public Double getUsedSysChildren(){
+		public Double getUsedSysChildren() {
 			return PropertiesUtils.getDouble(properties, Key.USED_SYS_CHILDREN.value);
 		}
 
@@ -2619,7 +2487,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 服务器耗费的用户 CPU
 		 */
-		public Double getUsedCpuUser(){
+		public Double getUsedCpuUser() {
 			return PropertiesUtils.getDouble(properties, Key.USED_USER.value);
 		}
 
@@ -2628,16 +2496,16 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 后台进程耗费的用户 CPU
 		 */
-		public Double getUsedUserChildren(){
+		public Double getUsedUserChildren() {
 			return PropertiesUtils.getDouble(properties, Key.USED_USER_CHILDREN.value);
 		}
 
-		public String toPrettyString(){
+		public String toPrettyString() {
 			return Info.toPrettyString(properties);
 		}
 
 		@Override
-		public String toString(){
+		public String toString() {
 			return Info.toString(properties);
 		}
 
@@ -2653,11 +2521,11 @@ public class Info implements Serializable {
 
 			private final String value;
 
-			Key(final String value){
+			Key(final String value) {
 				this.value = value;
 			}
 
-			public String getValue(){
+			public String getValue() {
 				return value;
 			}
 
@@ -2676,7 +2544,7 @@ public class Info implements Serializable {
 
 		private final Properties properties;
 
-		public Cluster(final Properties properties){
+		public Cluster(final Properties properties) {
 			this.properties = properties;
 		}
 
@@ -2685,7 +2553,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 获取集群功能是否已经开启
 		 */
-		public Boolean isEnabled(){
+		public Boolean isEnabled() {
 			return getEnabled();
 		}
 
@@ -2694,16 +2562,16 @@ public class Info implements Serializable {
 		 *
 		 * @return 获取集群功能是否已经开启
 		 */
-		public Boolean getEnabled(){
+		public Boolean getEnabled() {
 			return getBoolean(properties, Key.ENABLED.value);
 		}
 
-		public String toPrettyString(){
+		public String toPrettyString() {
 			return Info.toPrettyString(properties);
 		}
 
 		@Override
-		public String toString(){
+		public String toString() {
 			return Info.toString(properties);
 		}
 
@@ -2713,11 +2581,11 @@ public class Info implements Serializable {
 
 			private final String value;
 
-			Key(final String value){
+			Key(final String value) {
 				this.value = value;
 			}
 
-			public String getValue(){
+			public String getValue() {
 				return value;
 			}
 
@@ -2736,11 +2604,11 @@ public class Info implements Serializable {
 
 		private final Properties properties;
 
-		public Keyspace(final Properties properties){
+		public Keyspace(final Properties properties) {
 			this.properties = properties;
 		}
 
-		public Long getAvgTtl(){
+		public Long getAvgTtl() {
 			return PropertiesUtils.getLong(properties, Key.AVG_TTL.value);
 		}
 
@@ -2749,7 +2617,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 数据库
 		 */
-		public Integer getDb(){
+		public Integer getDb() {
 			return PropertiesUtils.getInt(properties, Key.DB.value);
 		}
 
@@ -2758,7 +2626,7 @@ public class Info implements Serializable {
 		 *
 		 * @return 带有生存期的 Key 的数量
 		 */
-		public Integer getExpires(){
+		public Integer getExpires() {
 			return PropertiesUtils.getInt(properties, Key.EXPIRES.value);
 		}
 
@@ -2767,16 +2635,16 @@ public class Info implements Serializable {
 		 *
 		 * @return Key 数量
 		 */
-		public Integer getKeys(){
+		public Integer getKeys() {
 			return PropertiesUtils.getInt(properties, Key.KEYS.value);
 		}
 
-		public String toPrettyString(){
+		public String toPrettyString() {
 			return toString();
 		}
 
 		@Override
-		public String toString(){
+		public String toString() {
 			final StringJoiner stringJoiner = new StringJoiner(", ");
 
 			stringJoiner.add("db=" + getDb()).add("keys=" + getKeys()).add("expires=" + getExpires())
@@ -2797,11 +2665,11 @@ public class Info implements Serializable {
 
 			private final String value;
 
-			Key(final String value){
+			Key(final String value) {
 				this.value = value;
 			}
 
-			public String getValue(){
+			public String getValue() {
 				return value;
 			}
 

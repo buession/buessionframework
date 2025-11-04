@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -33,73 +33,13 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class Stream implements Serializable {
+public record Stream(long length, long radixTreeKeys, long radixTreeNodes, long groups, StreamEntryId lastGeneratedId,
+					 StreamEntry firstEntry, StreamEntry lastEntry, Map<String, Object> infos) implements Serializable {
 
 	private final static long serialVersionUID = -4336316668706617743L;
 
-	private final long length;
-
-	private final long radixTreeKeys;
-
-	private final long radixTreeNodes;
-
-	private final long groups;
-
-	private final StreamEntryId lastGeneratedId;
-
-	private final StreamEntry firstEntry;
-
-	private final StreamEntry lastEntry;
-
-	private final Map<String, Object> infos;
-
-	public Stream(final long length, final long radixTreeKeys, final long radixTreeNodes, final long groups,
-				  final StreamEntryId lastGeneratedId, final StreamEntry firstEntry, final StreamEntry lastEntry,
-				  final Map<String, Object> infos){
-		this.length = length;
-		this.radixTreeKeys = radixTreeKeys;
-		this.radixTreeNodes = radixTreeNodes;
-		this.groups = groups;
-		this.lastGeneratedId = lastGeneratedId;
-		this.firstEntry = firstEntry;
-		this.lastEntry = lastEntry;
-		this.infos = infos;
-	}
-
-	public long getLength(){
-		return length;
-	}
-
-	public long getRadixTreeKeys(){
-		return radixTreeKeys;
-	}
-
-	public long getRadixTreeNodes(){
-		return radixTreeNodes;
-	}
-
-	public long getGroups(){
-		return groups;
-	}
-
-	public StreamEntryId getLastGeneratedId(){
-		return lastGeneratedId;
-	}
-
-	public StreamEntry getFirstEntry(){
-		return firstEntry;
-	}
-
-	public StreamEntry getLastEntry(){
-		return lastEntry;
-	}
-
-	public Map<String, Object> getInfos(){
-		return infos;
-	}
-
 	@Override
-	public String toString(){
+	public String toString() {
 		return ObjectStringBuilder.create()
 				.add("length", length)
 				.add("radixTreeKeys", radixTreeKeys)

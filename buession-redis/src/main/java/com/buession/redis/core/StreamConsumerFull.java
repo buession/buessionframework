@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -34,51 +34,13 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class StreamConsumerFull implements Serializable {
+public record StreamConsumerFull(String name, Long seenTime, Long pelCount, List<Long> pending,
+								 Map<String, Object> infos) implements Serializable {
 
 	private final static long serialVersionUID = -4058066725300830836L;
 
-	private final String name;
-
-	private final Long seenTime;
-
-	private final Long pelCount;
-
-	private final List<Long> pending;
-
-	private final Map<String, Object> infos;
-
-	public StreamConsumerFull(final String name, final Long seenTime, final Long pelCount, final List<Long> pending,
-							  final Map<String, Object> infos){
-		this.name = name;
-		this.seenTime = seenTime;
-		this.pelCount = pelCount;
-		this.pending = pending;
-		this.infos = infos;
-	}
-
-	public String getName(){
-		return name;
-	}
-
-	public Long getSeenTime(){
-		return seenTime;
-	}
-
-	public Long getPelCount(){
-		return pelCount;
-	}
-
-	public List<Long> getPending(){
-		return pending;
-	}
-
-	public Map<String, Object> getInfos(){
-		return infos;
-	}
-
 	@Override
-	public String toString(){
+	public String toString() {
 		return ObjectStringBuilder.create()
 				.add("name", name)
 				.add("seenTime", seenTime)

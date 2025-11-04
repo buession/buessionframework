@@ -19,15 +19,19 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
+import java.io.Serializable;
+
 /**
  * @author Yong.Teng
  */
-public class Limit {
+public class Limit implements Serializable {
+
+	private final static long serialVersionUID = -678415567045333642L;
 
 	private final static Limit UNLIMITED = new Limit(null, null);
 
@@ -35,29 +39,29 @@ public class Limit {
 
 	private final Long count;
 
-	public Limit(final Long offset, final Long count){
+	public Limit(final Long offset, final Long count) {
 		this.offset = offset;
 		this.count = count;
 	}
 
-	public static Limit unlimited(){
+	public static Limit unlimited() {
 		return UNLIMITED;
 	}
 
-	public long getOffset(){
+	public long getOffset() {
 		return offset == null ? -1 : offset;
 	}
 
-	public long getCount(){
+	public long getCount() {
 		return count == null ? -1 : count;
 	}
 
-	public boolean isLimited(){
+	public boolean isLimited() {
 		return offset != null && count != null;
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 		final StringBuilder sb = new StringBuilder();
 
 		sb.append("Limit ");

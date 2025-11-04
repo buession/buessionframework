@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -33,44 +33,13 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class StreamPendingSummary implements Serializable {
+public record StreamPendingSummary(long total, StreamEntryId minId, StreamEntryId maxId,
+								   Map<String, Long> consumerMessageCount) implements Serializable {
 
 	private final static long serialVersionUID = 4352578196582945851L;
 
-	private final long total;
-
-	private final StreamEntryId minId;
-
-	private final StreamEntryId maxId;
-
-	private final Map<String, Long> consumerMessageCount;
-
-	public StreamPendingSummary(final long total, final StreamEntryId minId, final StreamEntryId maxId,
-								final Map<String, Long> consumerMessageCount){
-		this.total = total;
-		this.minId = minId;
-		this.maxId = maxId;
-		this.consumerMessageCount = consumerMessageCount;
-	}
-
-	public long getTotal(){
-		return total;
-	}
-
-	public StreamEntryId getMinId(){
-		return minId;
-	}
-
-	public StreamEntryId getMaxId(){
-		return maxId;
-	}
-
-	public Map<String, Long> getConsumerMessageCount(){
-		return consumerMessageCount;
-	}
-
 	@Override
-	public String toString(){
+	public String toString() {
 		return ObjectStringBuilder.create()
 				.add("total", total)
 				.add("minId", minId)

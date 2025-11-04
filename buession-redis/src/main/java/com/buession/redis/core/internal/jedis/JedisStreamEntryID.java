@@ -59,7 +59,7 @@ public final class JedisStreamEntryID extends StreamEntryID {
 		if(streamEntryId == null){
 			return new JedisStreamEntryID();
 		}else{
-			return new JedisStreamEntryID(streamEntryId.getTime(), streamEntryId.getSequence());
+			return new JedisStreamEntryID(streamEntryId.time(), streamEntryId.sequence());
 		}
 	}
 

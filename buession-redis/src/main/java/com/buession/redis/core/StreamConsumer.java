@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -35,43 +35,12 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class StreamConsumer implements Serializable {
+public record StreamConsumer(String name, long idle, long pending, Map<String, Object> infos) implements Serializable {
 
 	private final static long serialVersionUID = 1432302411997199283L;
 
-	private final String name;
-
-	private final long idle;
-
-	private final long pending;
-
-	private final Map<String, Object> infos;
-
-	public StreamConsumer(final String name, final long idle, final long pending, final Map<String, Object> infos){
-		this.name = name;
-		this.idle = idle;
-		this.pending = pending;
-		this.infos = infos;
-	}
-
-	public String getName(){
-		return name;
-	}
-
-	public long getIdle(){
-		return idle;
-	}
-
-	public long getPending(){
-		return pending;
-	}
-
-	public Map<String, Object> getInfos(){
-		return infos;
-	}
-
 	@Override
-	public String toString(){
+	public String toString() {
 		return ObjectStringBuilder.create()
 				.add("name", name)
 				.add("idle", idle)

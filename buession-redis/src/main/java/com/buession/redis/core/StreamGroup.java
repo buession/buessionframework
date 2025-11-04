@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -35,51 +35,13 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class StreamGroup implements Serializable {
+public record StreamGroup(String name, long consumers, long pending, StreamEntryId lastDeliveredId,
+						  Map<String, Object> infos) implements Serializable {
 
 	private final static long serialVersionUID = -3992031318445262909L;
 
-	private final String name;
-
-	private final long consumers;
-
-	private final long pending;
-
-	private final StreamEntryId lastDeliveredId;
-
-	private final Map<String, Object> infos;
-
-	public StreamGroup(final String name, final long consumers, final long pending, final StreamEntryId lastDeliveredId,
-					   final Map<String, Object> infos){
-		this.name = name;
-		this.consumers = consumers;
-		this.pending = pending;
-		this.lastDeliveredId = lastDeliveredId;
-		this.infos = infos;
-	}
-
-	public String getName(){
-		return name;
-	}
-
-	public long getConsumers(){
-		return consumers;
-	}
-
-	public long getPending(){
-		return pending;
-	}
-
-	public StreamEntryId getLastDeliveredId(){
-		return lastDeliveredId;
-	}
-
-	public Map<String, Object> getInfos(){
-		return infos;
-	}
-
 	@Override
-	public String toString(){
+	public String toString() {
 		return ObjectStringBuilder.create()
 				.add("name", name)
 				.add("consumers", consumers)

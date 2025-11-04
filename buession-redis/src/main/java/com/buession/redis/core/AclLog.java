@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -32,10 +32,35 @@ import java.util.Map;
 /**
  * Acl 日志
  *
+ * @param entryId
+ * 		条目 ID
+ * @param count
+ * 		该事件发生的次数
+ * @param reason
+ * 		失败原因
+ * @param context
+ * 		上下文
+ * @param object
+ * 		涉及的对象，如被拒绝的命令名或 key 名
+ * @param username
+ * 		尝试操作的用户名
+ * @param ageSeconds
+ * 		事件发生距今的秒数
+ * @param clientInfo
+ * 		客户端连接信息（IP、端口、客户端 ID 等）
+ * @param timestampCreated
+ * 		-
+ * @param timestampLastUpdated
+ * 		-
+ * @param logEntry
+ * 		-
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class AclLog implements Serializable {
+public record AclLog(long entryId, long count, String reason, String context, String object, String username,
+					 Double ageSeconds, Client clientInfo, long timestampCreated, long timestampLastUpdated,
+					 Map<String, Object> logEntry) implements Serializable {
 
 	private final static long serialVersionUID = -1362912160889551004L;
 
@@ -59,88 +84,6 @@ public class AclLog implements Serializable {
 	public final static String TIMESTAMP_CREATED = "timestamp-created";
 
 	public final static String TIMESTAMP_LAST_UPDATED = "timestamp-last-updated";
-
-	private final long entryId;
-
-	private final long count;
-
-	private final String reason;
-
-	private final String context;
-
-	private final String object;
-
-	private final String username;
-
-	private final Double ageSeconds;
-
-	private final Client clientInfo;
-
-	private final long timestampCreated;
-
-	private final long timestampLastUpdated;
-
-	private final Map<String, Object> logEntry;
-
-	public AclLog(final long entryId, final long count, final String reason, final String context, final String object,
-				  final String username, final Double ageSeconds, final Client clientInfo, final long timestampCreated,
-				  final long timestampLastUpdated, final Map<String, Object> logEntry) {
-		this.entryId = entryId;
-		this.count = count;
-		this.reason = reason;
-		this.context = context;
-		this.object = object;
-		this.username = username;
-		this.ageSeconds = ageSeconds;
-		this.clientInfo = clientInfo;
-		this.timestampCreated = timestampCreated;
-		this.timestampLastUpdated = timestampLastUpdated;
-		this.logEntry = logEntry;
-	}
-
-	public long getEntryId() {
-		return entryId;
-	}
-
-	public long getCount() {
-		return count;
-	}
-
-	public String getReason() {
-		return reason;
-	}
-
-	public String getContext() {
-		return context;
-	}
-
-	public String getObject() {
-		return object;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public Double getAgeSeconds() {
-		return ageSeconds;
-	}
-
-	public Client getClientInfo() {
-		return clientInfo;
-	}
-
-	public long getTimestampCreated() {
-		return timestampCreated;
-	}
-
-	public long getTimestampLastUpdated() {
-		return timestampLastUpdated;
-	}
-
-	public Map<String, Object> getLogEntry() {
-		return logEntry;
-	}
 
 	@Override
 	public String toString() {

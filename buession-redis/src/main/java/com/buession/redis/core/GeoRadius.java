@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -35,15 +35,9 @@ import java.util.Objects;
 /**
  * @author Yong.Teng
  */
-public class GeoRadius implements Serializable {
+public record GeoRadius(byte[] member, Double distance, Geo geo) implements Serializable {
 
 	private final static long serialVersionUID = 8391863034011700419L;
-
-	private final byte[] member;
-
-	private final Double distance;
-
-	private final Geo geo;
 
 	public GeoRadius(final byte[] member) {
 		this(member, null, null);
@@ -57,26 +51,8 @@ public class GeoRadius implements Serializable {
 		this(member, null, geo);
 	}
 
-	public GeoRadius(final byte[] member, final Double distance, final Geo geo) {
-		this.member = member;
-		this.distance = distance;
-		this.geo = geo;
-	}
-
-	public byte[] getMember() {
-		return member;
-	}
-
 	public String getMemberAsString() {
 		return new String(member, StandardCharsets.UTF_8);
-	}
-
-	public Double getDistance() {
-		return distance;
-	}
-
-	public Geo getGeo() {
-		return geo;
 	}
 
 	@Override
