@@ -56,11 +56,19 @@
 			<groupId>com.buession</groupId>
 			<artifactId>buession-core</artifactId>
 			<version>${project.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>io.micrometer</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
 			<groupId>aopalliance</groupId>
 			<artifactId>aopalliance</artifactId>
+			<version>1.0</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
