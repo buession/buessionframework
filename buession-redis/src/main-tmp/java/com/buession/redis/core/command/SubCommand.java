@@ -188,55 +188,8 @@ public enum SubCommand implements ProtocolCommand {
 	 **/
 	;
 
-	private final String name;
-
 	private final byte[] raw;
-
-	/**
-	 * 是否为读操作命令
-	 */
-	private final boolean read;
-
-	/**
-	 * 是否为写操作命令
-	 */
-	private final boolean write;
-
-	SubCommand(final String mode) {
-		String[] names = StringUtils.split(name(), "_", 2);
-
-		name = names.length > 1 ? names[1] : name();
-
-		raw = SafeEncoder.encode(name);
-		if(Validate.hasText(mode)){
-			String modeLower = mode.toLowerCase();
-			this.read = modeLower.indexOf('r') > -1;
-			this.write = modeLower.indexOf('w') > -1;
-		}else{
-			this.read = true;
-			this.write = false;
-		}
-	}
-
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public byte[] getRaw() {
-		return raw;
-	}
-
-	@Override
-	public boolean isRead() {
-		return read;
-	}
-
-	@Override
-	public boolean isWrite() {
-		return write;
-	}
+	
 
 	@Override
 	public String toString() {

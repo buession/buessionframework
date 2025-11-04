@@ -19,35 +19,38 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
 
 import com.buession.core.utils.StringUtils;
+import com.buession.core.validator.Validate;
+import com.buession.lang.Rawable;
+import com.buession.redis.utils.SafeEncoder;
 
 /**
  * Redis 协议命令
  *
  * @author Yong.Teng
  */
-public enum ProtocolCommand {
+public enum ProtocolCommand implements Rawable {
 	/**
 	 * bitmat command start
 	 **/
-	BITCOUNT(ProtocolCommandGroup.BITMAP),
+	BITCOUNT(ProtocolCommandGroup.BITMAP, "r"),
 
-	BITFIELD(ProtocolCommandGroup.BITMAP),
+	BITFIELD(ProtocolCommandGroup.BITMAP, "r"),
 
-	BITFIELD_RO(ProtocolCommandGroup.BITMAP),
+	BITFIELD_RO(ProtocolCommandGroup.BITMAP, "r"),
 
-	BITOP(ProtocolCommandGroup.BITMAP),
+	BITOP(ProtocolCommandGroup.BITMAP, "r"),
 
-	BITPOS(ProtocolCommandGroup.BITMAP),
+	BITPOS(ProtocolCommandGroup.BITMAP, "r"),
 
-	GETBIT(ProtocolCommandGroup.BITMAP),
+	GETBIT(ProtocolCommandGroup.BITMAP, "r"),
 
-	SETBIT(ProtocolCommandGroup.BITMAP),
+	SETBIT(ProtocolCommandGroup.BITMAP, "w"),
 	/**
 	 * bitmat command end
 	 **/
@@ -55,55 +58,55 @@ public enum ProtocolCommand {
 	/**
 	 * cluster command start
 	 **/
-	CLUSTER_MY_ID(ProtocolCommandGroup.CLUSTER),
+	CLUSTER_MY_ID(ProtocolCommandGroup.CLUSTER, "r"),
 
-	CLUSTER_ADDSLOTS(ProtocolCommandGroup.CLUSTER),
+	CLUSTER_ADDSLOTS(ProtocolCommandGroup.CLUSTER, "w"),
 
-	CLUSTER_SLOTS(ProtocolCommandGroup.CLUSTER),
+	CLUSTER_SLOTS(ProtocolCommandGroup.CLUSTER, "r"),
 
-	CLUSTER_COUNTFAILUREREPORTS(ProtocolCommandGroup.CLUSTER),
+	CLUSTER_COUNTFAILUREREPORTS(ProtocolCommandGroup.CLUSTER, "r"),
 
-	CLUSTER_COUNTKEYSINSLOT(ProtocolCommandGroup.CLUSTER),
+	CLUSTER_COUNTKEYSINSLOT(ProtocolCommandGroup.CLUSTER, "r"),
 
-	CLUSTER_DELSLOTS(ProtocolCommandGroup.CLUSTER),
+	CLUSTER_DELSLOTS(ProtocolCommandGroup.CLUSTER, "w"),
 
-	CLUSTER_FLUSHSLOTS(ProtocolCommandGroup.CLUSTER),
+	CLUSTER_FLUSHSLOTS(ProtocolCommandGroup.CLUSTER, "w"),
 
-	CLUSTER_FAILOVER(ProtocolCommandGroup.CLUSTER),
+	CLUSTER_FAILOVER(ProtocolCommandGroup.CLUSTER, "w"),
 
-	CLUSTER_FORGET(ProtocolCommandGroup.CLUSTER),
+	CLUSTER_FORGET(ProtocolCommandGroup.CLUSTER, "w"),
 
-	CLUSTER_GETKEYSINSLOT(ProtocolCommandGroup.CLUSTER),
+	CLUSTER_GETKEYSINSLOT(ProtocolCommandGroup.CLUSTER, "r"),
 
-	CLUSTER_KEYSLOT(ProtocolCommandGroup.CLUSTER),
+	CLUSTER_KEYSLOT(ProtocolCommandGroup.CLUSTER, "r"),
 
-	CLUSTER_SETCONFIGEPOCH(ProtocolCommandGroup.CLUSTER),
+	CLUSTER_SETCONFIGEPOCH(ProtocolCommandGroup.CLUSTER, "w"),
 
-	CLUSTER_BUMPEPOCH(ProtocolCommandGroup.CLUSTER),
+	CLUSTER_BUMPEPOCH(ProtocolCommandGroup.CLUSTER, "rw"),
 
-	CLUSTER_INFO(ProtocolCommandGroup.CLUSTER),
+	CLUSTER_INFO(ProtocolCommandGroup.CLUSTER, "r"),
 
-	CLUSTER_MEET(ProtocolCommandGroup.CLUSTER),
+	CLUSTER_MEET(ProtocolCommandGroup.CLUSTER, "w"),
 
-	CLUSTER_NODES(ProtocolCommandGroup.CLUSTER),
+	CLUSTER_NODES(ProtocolCommandGroup.CLUSTER, "r"),
 
-	CLUSTER_SLAVES(ProtocolCommandGroup.CLUSTER),
+	CLUSTER_SLAVES(ProtocolCommandGroup.CLUSTER, "r"),
 
-	CLUSTER_REPLICAS(ProtocolCommandGroup.CLUSTER),
+	CLUSTER_REPLICAS(ProtocolCommandGroup.CLUSTER, "r"),
 
-	CLUSTER_REPLICATE(ProtocolCommandGroup.CLUSTER),
+	CLUSTER_REPLICATE(ProtocolCommandGroup.CLUSTER, "w"),
 
-	CLUSTER_RESET(ProtocolCommandGroup.CLUSTER),
+	CLUSTER_RESET(ProtocolCommandGroup.CLUSTER, "w"),
 
-	CLUSTER_SAVECONFIG(ProtocolCommandGroup.CLUSTER),
+	CLUSTER_SAVECONFIG(ProtocolCommandGroup.CLUSTER, "w"),
 
-	CLUSTER_SETSLOT(ProtocolCommandGroup.CLUSTER),
+	CLUSTER_SETSLOT(ProtocolCommandGroup.CLUSTER, "w"),
 
-	ASKING(ProtocolCommandGroup.CLUSTER),
+	ASKING(ProtocolCommandGroup.CLUSTER, "r"),
 
-	READWRITE(ProtocolCommandGroup.CLUSTER),
+	READWRITE(ProtocolCommandGroup.CLUSTER, "r"),
 
-	READONLY(ProtocolCommandGroup.CLUSTER),
+	READONLY(ProtocolCommandGroup.CLUSTER, "r"),
 	/**
 	 * cluster command end
 	 **/
@@ -111,39 +114,39 @@ public enum ProtocolCommand {
 	/**
 	 * connection command start
 	 */
-	AUTH(ProtocolCommandGroup.CONNECTION),
+	AUTH(ProtocolCommandGroup.CONNECTION, "rw"),
 
-	ECHO(ProtocolCommandGroup.CONNECTION),
+	ECHO(ProtocolCommandGroup.CONNECTION, "w"),
 
-	PING(ProtocolCommandGroup.CONNECTION),
+	PING(ProtocolCommandGroup.CONNECTION, "r"),
 
-	RESET(ProtocolCommandGroup.CONNECTION),
+	RESET(ProtocolCommandGroup.CONNECTION, "w"),
 
-	QUIT(ProtocolCommandGroup.CONNECTION),
+	QUIT(ProtocolCommandGroup.CONNECTION, "rw"),
 
-	SELECT(ProtocolCommandGroup.CONNECTION),
+	SELECT(ProtocolCommandGroup.CONNECTION, "w"),
 
-	CLIENT_KILL(ProtocolCommandGroup.CONNECTION),
+	CLIENT_KILL(ProtocolCommandGroup.CONNECTION, "w"),
 
-	CLIENT_SETNAME(ProtocolCommandGroup.CONNECTION),
+	CLIENT_SETNAME(ProtocolCommandGroup.CONNECTION, "w"),
 
-	CLIENT_GETNAME(ProtocolCommandGroup.CONNECTION),
+	CLIENT_GETNAME(ProtocolCommandGroup.CONNECTION, "r"),
 
-	CLIENT_GETREDIR(ProtocolCommandGroup.CONNECTION),
+	CLIENT_GETREDIR(ProtocolCommandGroup.CONNECTION, "r"),
 
-	CLIENT_CACHING(ProtocolCommandGroup.CONNECTION),
+	CLIENT_CACHING(ProtocolCommandGroup.CONNECTION, "w"),
 
-	CLIENT_ID(ProtocolCommandGroup.CONNECTION),
+	CLIENT_ID(ProtocolCommandGroup.CONNECTION, "r"),
 
-	CLIENT_LIST(ProtocolCommandGroup.CONNECTION),
+	CLIENT_LIST(ProtocolCommandGroup.CONNECTION, "r"),
 
-	CLIENT_INFO(ProtocolCommandGroup.CONNECTION),
+	CLIENT_INFO(ProtocolCommandGroup.CONNECTION, "r"),
 
-	CLIENT_PAUSE(ProtocolCommandGroup.CONNECTION),
+	CLIENT_PAUSE(ProtocolCommandGroup.CONNECTION, "w"),
 
-	CLIENT_REPLY(ProtocolCommandGroup.CONNECTION),
+	CLIENT_REPLY(ProtocolCommandGroup.CONNECTION, "w"),
 
-	CLIENT_UNBLOCK(ProtocolCommandGroup.CONNECTION),
+	CLIENT_UNBLOCK(ProtocolCommandGroup.CONNECTION, "w"),
 	/**
 	 * connection command end
 	 */
@@ -151,21 +154,25 @@ public enum ProtocolCommand {
 	/**
 	 * geo command start
 	 **/
-	GEOADD(ProtocolCommandGroup.GEO),
+	GEOADD(ProtocolCommandGroup.GEO, "w"),
 
-	GEOHASH(ProtocolCommandGroup.GEO),
+	GEOHASH(ProtocolCommandGroup.GEO, "r"),
 
-	GEOPOS(ProtocolCommandGroup.GEO),
+	GEOPOS(ProtocolCommandGroup.GEO, "r"),
 
-	GEODIST(ProtocolCommandGroup.GEO),
+	GEODIST(ProtocolCommandGroup.GEO, "r"),
 
-	GEORADIUS(ProtocolCommandGroup.GEO),
+	GEORADIUS(ProtocolCommandGroup.GEO, "r"),
 
-	GEORADIUS_RO(ProtocolCommandGroup.GEO),
+	GEORADIUS_RO(ProtocolCommandGroup.GEO, "r"),
 
-	GEORADIUSBYMEMBER(ProtocolCommandGroup.GEO),
+	GEORADIUSBYMEMBER(ProtocolCommandGroup.GEO, "r"),
 
-	GEORADIUSBYMEMBER_RO(ProtocolCommandGroup.TRANSACTION),
+	GEORADIUSBYMEMBER_RO(ProtocolCommandGroup.GEO, "r"),
+
+	GEOSEARCH(ProtocolCommandGroup.GEO, "r"),
+
+	GEOSEARCHSTORE(ProtocolCommandGroup.GEO, "rw"),
 	/**
 	 * geo command end
 	 **/
@@ -173,37 +180,37 @@ public enum ProtocolCommand {
 	/**
 	 * hash command start
 	 **/
-	HDEL(ProtocolCommandGroup.HASH),
+	HDEL(ProtocolCommandGroup.HASH, "w"),
 
-	HEXISTS(ProtocolCommandGroup.HASH),
+	HEXISTS(ProtocolCommandGroup.HASH, "r"),
 
-	HGET(ProtocolCommandGroup.HASH),
+	HGET(ProtocolCommandGroup.HASH, "r"),
 
-	HGETALL(ProtocolCommandGroup.HASH),
+	HGETALL(ProtocolCommandGroup.HASH, "r"),
 
-	HINCRBY(ProtocolCommandGroup.HASH),
+	HINCRBY(ProtocolCommandGroup.HASH, "rw"),
 
-	HINCRBYFLOAT(ProtocolCommandGroup.HASH),
+	HINCRBYFLOAT(ProtocolCommandGroup.HASH, "rw"),
 
-	HKEYS(ProtocolCommandGroup.HASH),
+	HKEYS(ProtocolCommandGroup.HASH, "r"),
 
-	HLEN(ProtocolCommandGroup.HASH),
+	HLEN(ProtocolCommandGroup.HASH, "r"),
 
-	HMGET(ProtocolCommandGroup.HASH),
+	HMGET(ProtocolCommandGroup.HASH, "r"),
 
-	HMSET(ProtocolCommandGroup.HASH),
+	HMSET(ProtocolCommandGroup.HASH, "w"),
 
-	HRANDFIELD(ProtocolCommandGroup.HASH),
+	HRANDFIELD(ProtocolCommandGroup.HASH, "r"),
 
-	HSCAN(ProtocolCommandGroup.HASH),
+	HSCAN(ProtocolCommandGroup.HASH, "r"),
 
-	HSET(ProtocolCommandGroup.HASH),
+	HSET(ProtocolCommandGroup.HASH, "w"),
 
-	HSETNX(ProtocolCommandGroup.HASH),
+	HSETNX(ProtocolCommandGroup.HASH, "w"),
 
-	HSTRLEN(ProtocolCommandGroup.HASH),
+	HSTRLEN(ProtocolCommandGroup.HASH, "r"),
 
-	HVALS(ProtocolCommandGroup.HASH),
+	HVALS(ProtocolCommandGroup.HASH, "r"),
 	/**
 	 * hash command end
 	 **/
@@ -211,11 +218,11 @@ public enum ProtocolCommand {
 	/**
 	 * hyperloglog command start
 	 **/
-	PFADD(ProtocolCommandGroup.HYPERLOGLOG),
+	PFADD(ProtocolCommandGroup.HYPERLOGLOG, "w"),
 
-	PFCOUNT(ProtocolCommandGroup.HYPERLOGLOG),
+	PFCOUNT(ProtocolCommandGroup.HYPERLOGLOG, "r"),
 
-	PFMERGE(ProtocolCommandGroup.HYPERLOGLOG),
+	PFMERGE(ProtocolCommandGroup.HYPERLOGLOG, "w"),
 	/**
 	 * hyperloglog command end
 	 **/
@@ -223,111 +230,111 @@ public enum ProtocolCommand {
 	/**
 	 * key command start
 	 **/
-	COPY(ProtocolCommandGroup.KEY),
+	COPY(ProtocolCommandGroup.KEY, "w"),
 
-	DEL(ProtocolCommandGroup.KEY),
+	DEL(ProtocolCommandGroup.KEY, "w"),
 
-	DUMP(ProtocolCommandGroup.KEY),
+	DUMP(ProtocolCommandGroup.KEY, "w"),
 
-	EXISTS(ProtocolCommandGroup.KEY),
+	EXISTS(ProtocolCommandGroup.KEY, "r"),
 
-	EXPIRE(ProtocolCommandGroup.KEY),
+	EXPIRE(ProtocolCommandGroup.KEY, "w"),
 
-	EXPIREAT(ProtocolCommandGroup.KEY),
+	EXPIREAT(ProtocolCommandGroup.KEY, "w"),
 
-	MIGRATE(ProtocolCommandGroup.KEY),
+	MIGRATE(ProtocolCommandGroup.KEY, "w"),
 
-	MOVE(ProtocolCommandGroup.KEY),
+	MOVE(ProtocolCommandGroup.KEY, "w"),
 
-	KEYS(ProtocolCommandGroup.KEY),
+	KEYS(ProtocolCommandGroup.KEY, "r"),
 
-	PERSIST(ProtocolCommandGroup.KEY),
+	PERSIST(ProtocolCommandGroup.KEY, "w"),
 
-	PEXPIRE(ProtocolCommandGroup.KEY),
+	PEXPIRE(ProtocolCommandGroup.KEY, "w"),
 
-	PEXPIREAT(ProtocolCommandGroup.KEY),
+	PEXPIREAT(ProtocolCommandGroup.KEY, "w"),
 
-	PTTL(ProtocolCommandGroup.KEY),
+	PTTL(ProtocolCommandGroup.KEY, "r"),
 
-	RANDOMKEY(ProtocolCommandGroup.KEY),
+	RANDOMKEY(ProtocolCommandGroup.KEY, "r"),
 
-	RENAME(ProtocolCommandGroup.KEY),
+	RENAME(ProtocolCommandGroup.KEY, "w"),
 
-	RENAMENX(ProtocolCommandGroup.KEY),
+	RENAMENX(ProtocolCommandGroup.KEY, "w"),
 
-	RESTORE(ProtocolCommandGroup.KEY),
+	RESTORE(ProtocolCommandGroup.KEY, "w"),
 
-	SCAN(ProtocolCommandGroup.KEY),
+	SCAN(ProtocolCommandGroup.KEY, "r"),
 
-	SORT(ProtocolCommandGroup.KEY),
+	SORT(ProtocolCommandGroup.KEY, "rw"),
 
-	SORT_RO(ProtocolCommandGroup.KEY),
+	SORT_RO(ProtocolCommandGroup.KEY, "r"),
 
-	TTL(ProtocolCommandGroup.KEY),
+	TTL(ProtocolCommandGroup.KEY, "r"),
 
-	TYPE(ProtocolCommandGroup.KEY),
+	TYPE(ProtocolCommandGroup.KEY, "r"),
 
-	TOUCH(ProtocolCommandGroup.KEY),
+	TOUCH(ProtocolCommandGroup.KEY, "w"),
 
-	UNLINK(ProtocolCommandGroup.KEY),
+	UNLINK(ProtocolCommandGroup.KEY, "w"),
 
-	OBJECT_ENCODING(ProtocolCommandGroup.KEY),
+	OBJECT_ENCODING(ProtocolCommandGroup.KEY, "r"),
 
-	OBJECT_REFQ(ProtocolCommandGroup.KEY),
+	OBJECT_REFQ(ProtocolCommandGroup.KEY, "r"),
 
-	OBJECT_IDLETIME(ProtocolCommandGroup.KEY),
+	OBJECT_IDLETIME(ProtocolCommandGroup.KEY, "r"),
 
-	OBJECT_REFCOUNT(ProtocolCommandGroup.KEY),
+	OBJECT_REFCOUNT(ProtocolCommandGroup.KEY, "r"),
 	/**
 	 * key command end
 	 **/
 
-	WAIT(ProtocolCommandGroup.GENERIC),
+	WAIT(ProtocolCommandGroup.GENERIC, "w"),
 
-	WAITOF(ProtocolCommandGroup.GENERIC),
+	WAITOF(ProtocolCommandGroup.GENERIC, "w"),
 
 	/**
 	 * list command start
 	 **/
-	BLPOP(ProtocolCommandGroup.LIST),
+	BLPOP(ProtocolCommandGroup.LIST, "rw"),
 
-	BRPOP(ProtocolCommandGroup.LIST),
+	BRPOP(ProtocolCommandGroup.LIST, "rw"),
 
-	BRPOPLPUSH(ProtocolCommandGroup.LIST),
+	BRPOPLPUSH(ProtocolCommandGroup.LIST, "rw"),
 
-	LINDEX(ProtocolCommandGroup.LIST),
+	LINDEX(ProtocolCommandGroup.LIST, "r"),
 
-	LINSERT(ProtocolCommandGroup.LIST),
+	LINSERT(ProtocolCommandGroup.LIST, "w"),
 
-	LLEN(ProtocolCommandGroup.LIST),
+	LLEN(ProtocolCommandGroup.LIST, "r"),
 
-	LPOP(ProtocolCommandGroup.LIST),
+	LPOP(ProtocolCommandGroup.LIST, "rw"),
 
-	LPOS(ProtocolCommandGroup.LIST),
+	LPOS(ProtocolCommandGroup.LIST, "r"),
 
-	LPUSH(ProtocolCommandGroup.LIST),
+	LPUSH(ProtocolCommandGroup.LIST, "w"),
 
-	LPUSHX(ProtocolCommandGroup.LIST),
+	LPUSHX(ProtocolCommandGroup.LIST, "w"),
 
-	LRANGE(ProtocolCommandGroup.LIST),
+	LRANGE(ProtocolCommandGroup.LIST, "r"),
 
-	LREM(ProtocolCommandGroup.LIST),
+	LREM(ProtocolCommandGroup.LIST, "rw"),
 
-	LSET(ProtocolCommandGroup.LIST),
+	LSET(ProtocolCommandGroup.LIST, "w"),
 
-	LTRIM(ProtocolCommandGroup.LIST),
+	LTRIM(ProtocolCommandGroup.LIST, "rw"),
 
-	RPOP(ProtocolCommandGroup.LIST),
+	RPOP(ProtocolCommandGroup.LIST, "rw"),
 
-	RPOPLPUSH(ProtocolCommandGroup.LIST),
+	RPOPLPUSH(ProtocolCommandGroup.LIST, "rw"),
 
-	RPUSH(ProtocolCommandGroup.LIST),
+	RPUSH(ProtocolCommandGroup.LIST, "rw"),
 
-	RPUSHX(ProtocolCommandGroup.LIST),
+	RPUSHX(ProtocolCommandGroup.LIST, "rw"),
 
-	LMOVE(ProtocolCommandGroup.LIST),
+	LMOVE(ProtocolCommandGroup.LIST, "w"),
 
-	BLMOVE(ProtocolCommandGroup.LIST),
+	BLMOVE(ProtocolCommandGroup.LIST, "w"),
 	/**
 	 * list command end
 	 **/
@@ -335,21 +342,21 @@ public enum ProtocolCommand {
 	/**
 	 * pubsub command start
 	 **/
-	PSUBSCRIBE(ProtocolCommandGroup.PUBSUB),
+	PSUBSCRIBE(ProtocolCommandGroup.PUBSUB, "w"),
 
-	PUBSUB_CHANNELS(ProtocolCommandGroup.PUBSUB),
+	PUBSUB_CHANNELS(ProtocolCommandGroup.PUBSUB, "r"),
 
-	PUBSUB_NUMPAT(ProtocolCommandGroup.PUBSUB),
+	PUBSUB_NUMPAT(ProtocolCommandGroup.PUBSUB, "r"),
 
-	PUBSUB_NUMSUB(ProtocolCommandGroup.PUBSUB),
+	PUBSUB_NUMSUB(ProtocolCommandGroup.PUBSUB, "r"),
 
-	PUBLISH(ProtocolCommandGroup.PUBSUB),
+	PUBLISH(ProtocolCommandGroup.PUBSUB, "w"),
 
-	PUNSUBSCRIBE(ProtocolCommandGroup.PUBSUB),
+	PUNSUBSCRIBE(ProtocolCommandGroup.PUBSUB, "w"),
 
-	SUBSCRIBE(ProtocolCommandGroup.PUBSUB),
+	SUBSCRIBE(ProtocolCommandGroup.PUBSUB, "w"),
 
-	UNSUBSCRIBE(ProtocolCommandGroup.PUBSUB),
+	UNSUBSCRIBE(ProtocolCommandGroup.PUBSUB, "w"),
 	/**
 	 * pubsub command end
 	 **/
@@ -357,17 +364,17 @@ public enum ProtocolCommand {
 	/**
 	 * scripting command start
 	 **/
-	EVAL(ProtocolCommandGroup.SCRIPTING),
+	EVAL(ProtocolCommandGroup.SCRIPTING, "w"),
 
-	EVALSHA(ProtocolCommandGroup.SCRIPTING),
+	EVALSHA(ProtocolCommandGroup.SCRIPTING, "w"),
 
-	SCRIPT_EXISTS(ProtocolCommandGroup.SCRIPTING),
+	SCRIPT_EXISTS(ProtocolCommandGroup.SCRIPTING, "r"),
 
-	SCRIPT_FLUSH(ProtocolCommandGroup.SCRIPTING),
+	SCRIPT_FLUSH(ProtocolCommandGroup.SCRIPTING, "w"),
 
-	SCRIPT_KILL(ProtocolCommandGroup.SCRIPTING),
+	SCRIPT_KILL(ProtocolCommandGroup.SCRIPTING, "w"),
 
-	SCRIPT_LOAD(ProtocolCommandGroup.SCRIPTING),
+	SCRIPT_LOAD(ProtocolCommandGroup.SCRIPTING, "r"),
 	/**
 	 * scripting command end
 	 **/
@@ -375,97 +382,97 @@ public enum ProtocolCommand {
 	/**
 	 * server command start
 	 **/
-	ACL_CAT(ProtocolCommandGroup.SERVER),
+	ACL_CAT(ProtocolCommandGroup.SERVER, "r"),
 
-	ACL_SETUSER(ProtocolCommandGroup.SERVER),
+	ACL_SETUSER(ProtocolCommandGroup.SERVER, "w"),
 
-	ACL_GETUSER(ProtocolCommandGroup.SERVER),
+	ACL_GETUSER(ProtocolCommandGroup.SERVER, "r"),
 
-	ACL_USERS(ProtocolCommandGroup.SERVER),
+	ACL_USERS(ProtocolCommandGroup.SERVER, "r"),
 
-	ACL_WHOAMI(ProtocolCommandGroup.SERVER),
+	ACL_WHOAMI(ProtocolCommandGroup.SERVER, "r"),
 
-	ACL_DELUSER(ProtocolCommandGroup.SERVER),
+	ACL_DELUSER(ProtocolCommandGroup.SERVER, "w"),
 
-	ACL_GENPASS(ProtocolCommandGroup.SERVER),
+	ACL_GENPASS(ProtocolCommandGroup.SERVER, "r"),
 
-	ACL_LIST(ProtocolCommandGroup.SERVER),
+	ACL_LIST(ProtocolCommandGroup.SERVER, "r"),
 
-	ACL_LOAD(ProtocolCommandGroup.SERVER),
+	ACL_LOAD(ProtocolCommandGroup.SERVER, "r"),
 
-	ACL_LOG(ProtocolCommandGroup.SERVER),
+	ACL_LOG(ProtocolCommandGroup.SERVER, "r"),
 
-	ACL_LOGREST(ProtocolCommandGroup.SERVER),
+	ACL_LOGREST(ProtocolCommandGroup.SERVER, "w"),
 
-	ACL_LOGSAVE(ProtocolCommandGroup.SERVER),
+	ACL_LOGSAVE(ProtocolCommandGroup.SERVER, "w"),
 
-	BGREWRITEAOF(ProtocolCommandGroup.SERVER),
+	BGREWRITEAOF(ProtocolCommandGroup.SERVER, "w"),
 
-	BGSAVE(ProtocolCommandGroup.SERVER),
+	BGSAVE(ProtocolCommandGroup.SERVER, "w"),
 
-	CONFIG_GET(ProtocolCommandGroup.SERVER),
+	CONFIG_GET(ProtocolCommandGroup.SERVER, "r"),
 
-	CONFIG_RESETSTAT(ProtocolCommandGroup.SERVER),
+	CONFIG_RESETSTAT(ProtocolCommandGroup.SERVER, "w"),
 
-	CONFIG_REWRITE(ProtocolCommandGroup.SERVER),
+	CONFIG_REWRITE(ProtocolCommandGroup.SERVER, "w"),
 
-	CONFIG_SET(ProtocolCommandGroup.SERVER),
+	CONFIG_SET(ProtocolCommandGroup.SERVER, "w"),
 
-	DBSIZE(ProtocolCommandGroup.SERVER),
+	DBSIZE(ProtocolCommandGroup.SERVER, "r"),
 
-	DEBUG(ProtocolCommandGroup.SERVER),
+	DEBUG(ProtocolCommandGroup.SERVER, "w"),
 
-	FLUSHALL(ProtocolCommandGroup.SERVER),
+	FLUSHALL(ProtocolCommandGroup.SERVER, "w"),
 
-	FLUSHDB(ProtocolCommandGroup.SERVER),
+	FLUSHDB(ProtocolCommandGroup.SERVER, "w"),
 
-	INFO(ProtocolCommandGroup.SERVER),
+	INFO(ProtocolCommandGroup.SERVER, "r"),
 
-	LASTSAVE(ProtocolCommandGroup.SERVER),
+	LASTSAVE(ProtocolCommandGroup.SERVER, "w"),
 
-	MEMORY_DOCTOR(ProtocolCommandGroup.SERVER),
+	MEMORY_DOCTOR(ProtocolCommandGroup.SERVER, "w"),
 
-	MEMORY_MALLOCSTATS(ProtocolCommandGroup.SERVER),
+	MEMORY_MALLOCSTATS(ProtocolCommandGroup.SERVER, "r"),
 
-	MEMORY_PURGE(ProtocolCommandGroup.SERVER),
+	MEMORY_PURGE(ProtocolCommandGroup.SERVER, "w"),
 
-	MEMORY_STATS(ProtocolCommandGroup.SERVER),
+	MEMORY_STATS(ProtocolCommandGroup.SERVER, "r"),
 
-	MEMORY_USAGE(ProtocolCommandGroup.SERVER),
+	MEMORY_USAGE(ProtocolCommandGroup.SERVER, "r"),
 
-	MONITOR(ProtocolCommandGroup.SERVER),
+	MONITOR(ProtocolCommandGroup.SERVER, "w"),
 
-	REPLICAOF(ProtocolCommandGroup.SERVER),
+	REPLICAOF(ProtocolCommandGroup.SERVER, "w"),
 
-	ROLE(ProtocolCommandGroup.SERVER),
+	ROLE(ProtocolCommandGroup.SERVER, "r"),
 
-	SAVE(ProtocolCommandGroup.SERVER),
+	SAVE(ProtocolCommandGroup.SERVER, "w"),
 
-	SHUTDOWN(ProtocolCommandGroup.SERVER),
+	SHUTDOWN(ProtocolCommandGroup.SERVER, "w"),
 
-	SLAVEOF(ProtocolCommandGroup.SERVER),
+	SLAVEOF(ProtocolCommandGroup.SERVER, "w"),
 
-	SLOWLOG_GET(ProtocolCommandGroup.SERVER),
+	SLOWLOG_GET(ProtocolCommandGroup.SERVER, "r"),
 
-	SLOWLOG_LEN(ProtocolCommandGroup.SERVER),
+	SLOWLOG_LEN(ProtocolCommandGroup.SERVER, "r"),
 
-	SLOWLOG_RESET(ProtocolCommandGroup.SERVER),
+	SLOWLOG_RESET(ProtocolCommandGroup.SERVER, "w"),
 
-	SYNC(ProtocolCommandGroup.SERVER),
+	SYNC(ProtocolCommandGroup.SERVER, "w"),
 
-	PSYNC(ProtocolCommandGroup.SERVER),
+	PSYNC(ProtocolCommandGroup.SERVER, "w"),
 
-	TIME(ProtocolCommandGroup.SERVER),
+	TIME(ProtocolCommandGroup.SERVER, "r"),
 
-	FAILOVER(ProtocolCommandGroup.SERVER),
+	FAILOVER(ProtocolCommandGroup.SERVER, "w"),
 
-	MODULE_LIST(ProtocolCommandGroup.SERVER),
+	MODULE_LIST(ProtocolCommandGroup.SERVER, "r"),
 
-	MODULE_LOAD(ProtocolCommandGroup.SERVER),
+	MODULE_LOAD(ProtocolCommandGroup.SERVER, "r"),
 
-	MODULE_UNLOAD(ProtocolCommandGroup.SERVER),
+	MODULE_UNLOAD(ProtocolCommandGroup.SERVER, "w"),
 
-	SWAPDB(ProtocolCommandGroup.SERVER),
+	SWAPDB(ProtocolCommandGroup.SERVER, "w"),
 	/**
 	 * server command end
 	 **/
@@ -473,37 +480,37 @@ public enum ProtocolCommand {
 	/**
 	 * set command start
 	 **/
-	SADD(ProtocolCommandGroup.SET),
+	SADD(ProtocolCommandGroup.SET, "w"),
 
-	SCARD(ProtocolCommandGroup.SET),
+	SCARD(ProtocolCommandGroup.SET, "r"),
 
-	SDIFF(ProtocolCommandGroup.SET),
+	SDIFF(ProtocolCommandGroup.SET, "r"),
 
-	SDIFFSTORE(ProtocolCommandGroup.SET),
+	SDIFFSTORE(ProtocolCommandGroup.SET, "r"),
 
-	SINTER(ProtocolCommandGroup.SET),
+	SINTER(ProtocolCommandGroup.SET, "w"),
 
-	SINTERSTORE(ProtocolCommandGroup.SET),
+	SINTERSTORE(ProtocolCommandGroup.SET, "w"),
 
-	SISMEMBER(ProtocolCommandGroup.SET),
+	SISMEMBER(ProtocolCommandGroup.SET, "r"),
 
-	SMISMEMBER(ProtocolCommandGroup.SET),
+	SMISMEMBER(ProtocolCommandGroup.SET, "r"),
 
-	SMEMBERS(ProtocolCommandGroup.SET),
+	SMEMBERS(ProtocolCommandGroup.SET, "r"),
 
-	SMOVE(ProtocolCommandGroup.SET),
+	SMOVE(ProtocolCommandGroup.SET, "w"),
 
-	SPOP(ProtocolCommandGroup.SET),
+	SPOP(ProtocolCommandGroup.SET, "rw"),
 
-	SRANDMEMBER(ProtocolCommandGroup.SET),
+	SRANDMEMBER(ProtocolCommandGroup.SET, "r"),
 
-	SREM(ProtocolCommandGroup.SET),
+	SREM(ProtocolCommandGroup.SET, "w"),
 
-	SSCAN(ProtocolCommandGroup.SET),
+	SSCAN(ProtocolCommandGroup.SET, "r"),
 
-	SUNION(ProtocolCommandGroup.SET),
+	SUNION(ProtocolCommandGroup.SET, "r"),
 
-	SUNIONSTORE(ProtocolCommandGroup.SET),
+	SUNIONSTORE(ProtocolCommandGroup.SET, "rw"),
 	/**
 	 * set command end
 	 **/
@@ -511,69 +518,69 @@ public enum ProtocolCommand {
 	/**
 	 * sorted set command start
 	 **/
-	ZADD(ProtocolCommandGroup.SORTEDSET),
+	ZADD(ProtocolCommandGroup.SORTEDSET, "w"),
 
-	ZCARD(ProtocolCommandGroup.SORTEDSET),
+	ZCARD(ProtocolCommandGroup.SORTEDSET, "r"),
 
-	ZCOUNT(ProtocolCommandGroup.SORTEDSET),
+	ZCOUNT(ProtocolCommandGroup.SORTEDSET, "r"),
 
-	ZINCRBY(ProtocolCommandGroup.SORTEDSET),
+	ZINCRBY(ProtocolCommandGroup.SORTEDSET, "w"),
 
-	ZINTERSTORE(ProtocolCommandGroup.SORTEDSET),
+	ZINTERSTORE(ProtocolCommandGroup.SORTEDSET, "w"),
 
-	ZLEXCOUNT(ProtocolCommandGroup.SORTEDSET),
+	ZLEXCOUNT(ProtocolCommandGroup.SORTEDSET, "r"),
 
-	ZMSCORE(ProtocolCommandGroup.SORTEDSET),
+	ZMSCORE(ProtocolCommandGroup.SORTEDSET, "w"),
 
-	ZRANGE(ProtocolCommandGroup.SORTEDSET),
+	ZRANGE(ProtocolCommandGroup.SORTEDSET, "r"),
 
-	ZRANGEBYLEX(ProtocolCommandGroup.SORTEDSET),
+	ZRANGEBYLEX(ProtocolCommandGroup.SORTEDSET, "r"),
 
-	ZRANGEBYSCORE(ProtocolCommandGroup.SORTEDSET),
+	ZRANGEBYSCORE(ProtocolCommandGroup.SORTEDSET, "r"),
 
-	ZRANGESTORE(ProtocolCommandGroup.SORTEDSET),
+	ZRANGESTORE(ProtocolCommandGroup.SORTEDSET, "r"),
 
-	ZRANK(ProtocolCommandGroup.SORTEDSET),
+	ZRANK(ProtocolCommandGroup.SORTEDSET, "r"),
 
-	ZPOPMAX(ProtocolCommandGroup.SORTEDSET),
+	ZPOPMAX(ProtocolCommandGroup.SORTEDSET, "rw"),
 
-	ZPOPMIN(ProtocolCommandGroup.SORTEDSET),
+	ZPOPMIN(ProtocolCommandGroup.SORTEDSET, "rw"),
 
-	ZREM(ProtocolCommandGroup.SORTEDSET),
+	ZREM(ProtocolCommandGroup.SORTEDSET, "w"),
 
-	ZREMRANGEBYLEX(ProtocolCommandGroup.SORTEDSET),
+	ZREMRANGEBYLEX(ProtocolCommandGroup.SORTEDSET, "w"),
 
-	ZREMRANGEBYSCORE(ProtocolCommandGroup.SORTEDSET),
+	ZREMRANGEBYSCORE(ProtocolCommandGroup.SORTEDSET, "w"),
 
-	ZREMRANGEBYRANK(ProtocolCommandGroup.SORTEDSET),
+	ZREMRANGEBYRANK(ProtocolCommandGroup.SORTEDSET, "w"),
 
-	ZREVRANGE(ProtocolCommandGroup.SORTEDSET),
+	ZREVRANGE(ProtocolCommandGroup.SORTEDSET, "r"),
 
-	ZREVRANGEBYLEX(ProtocolCommandGroup.SORTEDSET),
+	ZREVRANGEBYLEX(ProtocolCommandGroup.SORTEDSET, "r"),
 
-	ZREVRANGEBYSCORE(ProtocolCommandGroup.SORTEDSET),
+	ZREVRANGEBYSCORE(ProtocolCommandGroup.SORTEDSET, "r"),
 
-	ZREVRANK(ProtocolCommandGroup.SORTEDSET),
+	ZREVRANK(ProtocolCommandGroup.SORTEDSET, "r"),
 
-	ZSCAN(ProtocolCommandGroup.SORTEDSET),
+	ZSCAN(ProtocolCommandGroup.SORTEDSET, "r"),
 
-	ZSCORE(ProtocolCommandGroup.SORTEDSET),
+	ZSCORE(ProtocolCommandGroup.SORTEDSET, "w"),
 
-	ZUNIONSTORE(ProtocolCommandGroup.SORTEDSET),
+	ZUNIONSTORE(ProtocolCommandGroup.SORTEDSET, "w"),
 
-	BZPOPMIN(ProtocolCommandGroup.SORTEDSET),
+	BZPOPMIN(ProtocolCommandGroup.SORTEDSET, "w"),
 
-	BZPOPMAX(ProtocolCommandGroup.SORTEDSET),
+	BZPOPMAX(ProtocolCommandGroup.SORTEDSET, "w"),
 
-	ZDIFF(ProtocolCommandGroup.SORTEDSET),
+	ZDIFF(ProtocolCommandGroup.SORTEDSET, "w"),
 
-	ZDIFFSTORE(ProtocolCommandGroup.SORTEDSET),
+	ZDIFFSTORE(ProtocolCommandGroup.SORTEDSET, "w"),
 
-	ZINTER(ProtocolCommandGroup.SORTEDSET),
+	ZINTER(ProtocolCommandGroup.SORTEDSET, "w"),
 
-	ZRANDMEMBER(ProtocolCommandGroup.SORTEDSET),
+	ZRANDMEMBER(ProtocolCommandGroup.SORTEDSET, "r"),
 
-	ZUNION(ProtocolCommandGroup.SORTEDSET),
+	ZUNION(ProtocolCommandGroup.SORTEDSET, "w"),
 	/**
 	 * sorted set command end
 	 **/
@@ -581,47 +588,47 @@ public enum ProtocolCommand {
 	/**
 	 * stream command start
 	 **/
-	XACK(ProtocolCommandGroup.STREAM),
+	XACK(ProtocolCommandGroup.STREAM, "w"),
 
-	XADD(ProtocolCommandGroup.STREAM),
+	XADD(ProtocolCommandGroup.STREAM, "w"),
 
-	XAUTOCLAIM(ProtocolCommandGroup.STREAM),
+	XAUTOCLAIM(ProtocolCommandGroup.STREAM, "w"),
 
-	XCLAIM(ProtocolCommandGroup.STREAM),
+	XCLAIM(ProtocolCommandGroup.STREAM, "w"),
 
-	XDEL(ProtocolCommandGroup.STREAM),
+	XDEL(ProtocolCommandGroup.STREAM, "w"),
 
-	XGROUP_CREATE(ProtocolCommandGroup.STREAM),
+	XGROUP_CREATE(ProtocolCommandGroup.STREAM, "w"),
 
-	XGROUP_CREATECONSUMER(ProtocolCommandGroup.STREAM),
+	XGROUP_CREATECONSUMER(ProtocolCommandGroup.STREAM, "w"),
 
-	XGROUP_DELCONSUMER(ProtocolCommandGroup.STREAM),
+	XGROUP_DELCONSUMER(ProtocolCommandGroup.STREAM, "w"),
 
-	XGROUP_DESTROY(ProtocolCommandGroup.STREAM),
+	XGROUP_DESTROY(ProtocolCommandGroup.STREAM, "w"),
 
-	XGROUP_SETID(ProtocolCommandGroup.STREAM),
+	XGROUP_SETID(ProtocolCommandGroup.STREAM, "w"),
 
-	XINFO_CONSUMERS(ProtocolCommandGroup.STREAM),
+	XINFO_CONSUMERS(ProtocolCommandGroup.STREAM, "r"),
 
-	XINFO_GROUPS(ProtocolCommandGroup.STREAM),
+	XINFO_GROUPS(ProtocolCommandGroup.STREAM, "r"),
 
-	XINFO_STREAM(ProtocolCommandGroup.STREAM),
+	XINFO_STREAM(ProtocolCommandGroup.STREAM, "w"),
 
-	XLEN(ProtocolCommandGroup.STREAM),
+	XLEN(ProtocolCommandGroup.STREAM, "r"),
 
-	XPENDING(ProtocolCommandGroup.STREAM),
+	XPENDING(ProtocolCommandGroup.STREAM, "w"),
 
-	XRANGE(ProtocolCommandGroup.STREAM),
+	XRANGE(ProtocolCommandGroup.STREAM, "w"),
 
-	XREAD(ProtocolCommandGroup.STREAM),
+	XREAD(ProtocolCommandGroup.STREAM, "r"),
 
-	XREADGROUP(ProtocolCommandGroup.STREAM),
+	XREADGROUP(ProtocolCommandGroup.STREAM, "r"),
 
-	XREVRANGE(ProtocolCommandGroup.STREAM),
+	XREVRANGE(ProtocolCommandGroup.STREAM, "w"),
 
-	XSETID(ProtocolCommandGroup.STREAM),
+	XSETID(ProtocolCommandGroup.STREAM, "w"),
 
-	XTRIM(ProtocolCommandGroup.STREAM),
+	XTRIM(ProtocolCommandGroup.STREAM, "w"),
 	/**
 	 * stream command end
 	 **/
@@ -629,74 +636,175 @@ public enum ProtocolCommand {
 	/**
 	 * string command start
 	 **/
-	APPEND(ProtocolCommandGroup.STRING),
+	APPEND(ProtocolCommandGroup.STRING, "w"),
 
-	DECR(ProtocolCommandGroup.STRING),
+	DECR(ProtocolCommandGroup.STRING, "w"),
 
-	DECRBY(ProtocolCommandGroup.STRING),
+	DECRBY(ProtocolCommandGroup.STRING, "w"),
 
-	GET(ProtocolCommandGroup.STRING),
+	GET(ProtocolCommandGroup.STRING, "r"),
 
-	GETRANGE(ProtocolCommandGroup.STRING),
+	GETRANGE(ProtocolCommandGroup.STRING, "r"),
 
-	GETSET(ProtocolCommandGroup.STRING),
+	GETSET(ProtocolCommandGroup.STRING, "rw"),
 
-	GETEX(ProtocolCommandGroup.STRING),
+	GETEX(ProtocolCommandGroup.STRING, "r"),
 
-	GETDEL(ProtocolCommandGroup.STRING),
+	GETDEL(ProtocolCommandGroup.STRING, "rw"),
 
-	INCR(ProtocolCommandGroup.STRING),
+	INCR(ProtocolCommandGroup.STRING, "w"),
 
-	INCRBY(ProtocolCommandGroup.STRING),
+	INCRBY(ProtocolCommandGroup.STRING, "w"),
 
-	INCRBYFLOAT(ProtocolCommandGroup.STRING),
+	INCRBYFLOAT(ProtocolCommandGroup.STRING, "w"),
 
-	MGET(ProtocolCommandGroup.STRING),
+	MGET(ProtocolCommandGroup.STRING, "r"),
 
-	MSET(ProtocolCommandGroup.STRING),
+	MSET(ProtocolCommandGroup.STRING, "w"),
 
-	MSETNX(ProtocolCommandGroup.STRING),
+	MSETNX(ProtocolCommandGroup.STRING, "w"),
 
-	PSETEX(ProtocolCommandGroup.STRING),
+	PSETEX(ProtocolCommandGroup.STRING, "w"),
 
-	SET(ProtocolCommandGroup.STRING),
+	SET(ProtocolCommandGroup.STRING, "w"),
 
-	SETEX(ProtocolCommandGroup.STRING),
+	SETEX(ProtocolCommandGroup.STRING, "w"),
 
-	SETNX(ProtocolCommandGroup.STRING),
+	SETNX(ProtocolCommandGroup.STRING, "w"),
 
-	SETRANGE(ProtocolCommandGroup.STRING),
+	SETRANGE(ProtocolCommandGroup.STRING, "w"),
 
-	STRLEN(ProtocolCommandGroup.STRING),
+	STRLEN(ProtocolCommandGroup.STRING, "r"),
 
-	SUBSTR(ProtocolCommandGroup.STRING),
+	SUBSTR(ProtocolCommandGroup.STRING, "r"),
 	/** string command end **/
 
 	/**
 	 * transaction command start
 	 **/
-	DISCARD(ProtocolCommandGroup.TRANSACTION),
+	DISCARD(ProtocolCommandGroup.TRANSACTION, "w"),
 
-	EXEC(ProtocolCommandGroup.TRANSACTION),
+	EXEC(ProtocolCommandGroup.TRANSACTION, "w"),
 
-	MULTI(ProtocolCommandGroup.TRANSACTION),
+	MULTI(ProtocolCommandGroup.TRANSACTION, "w"),
 
-	UNWATCH(ProtocolCommandGroup.TRANSACTION),
+	UNWATCH(ProtocolCommandGroup.TRANSACTION, "w"),
 
-	WATCH(ProtocolCommandGroup.TRANSACTION);
+	WATCH(ProtocolCommandGroup.TRANSACTION, "w");
 
 	/**
 	 * transaction command end
 	 **/
 
+	/**
+	 * 命令分组
+	 */
 	private final ProtocolCommandGroup group;
 
-	ProtocolCommand(final ProtocolCommandGroup group) {
+	/**
+	 * 命令名称
+	 *
+	 * @since 4.0.0
+	 */
+	private final String name;
+
+	/**
+	 * 命令名称 raw 格式
+	 *
+	 * @since 4.0.0
+	 */
+	private final byte[] raw;
+
+	/**
+	 * 是否为读操作命令
+	 *
+	 * @since 4.0.0
+	 */
+	private final boolean read;
+
+	/**
+	 * 是否为写操作命令
+	 *
+	 * @since 4.0.0
+	 */
+	private final boolean write;
+
+	/**
+	 * 构造函数
+	 *
+	 * @param group
+	 * 		命令分组
+	 * @param mode
+	 * 		命令模式
+	 *
+	 * @since 4.0.0
+	 */
+	ProtocolCommand(final ProtocolCommandGroup group, final String mode) {
 		this.group = group;
+		String[] names = StringUtils.split(name(), "_", 2);
+
+		name = names.length > 1 ? names[1] : name();
+		raw = SafeEncoder.encode(name);
+		if(Validate.hasText(mode)){
+			String modeLower = mode.toLowerCase();
+			this.read = modeLower.indexOf('r') > -1;
+			this.write = modeLower.indexOf('w') > -1;
+		}else{
+			this.read = true;
+			this.write = false;
+		}
 	}
 
+	/**
+	 * 返回命令分组
+	 *
+	 * @return 命令分组
+	 */
 	public ProtocolCommandGroup getGroup() {
 		return group;
+	}
+
+	/**
+	 * 返回命令名称
+	 *
+	 * @return 命令名称
+	 *
+	 * @since 4.0.0
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * 返回是否为只读命令
+	 *
+	 * @return true / false
+	 */
+	public boolean isReadonly() {
+		return isRead() && isWrite() == false;
+	}
+
+	/**
+	 * 返回是否为读命令
+	 *
+	 * @return true / false
+	 */
+	public boolean isRead() {
+		return read;
+	}
+
+	/**
+	 * 返回是否为写命令
+	 *
+	 * @return true / false
+	 */
+	public boolean isWrite() {
+		return write;
+	}
+
+	@Override
+	public byte[] getRaw() {
+		return raw;
 	}
 
 	@Override

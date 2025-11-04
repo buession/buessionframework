@@ -52,7 +52,7 @@ public class Validate {
 
 	private final static Pattern MIME_TYPE_PATTERN = Pattern.compile("[a-zA-Z\\d]+/[a-zA-Z\\d]+([.-][a-zA-Z\\d]+)*");
 
-	private Validate(){
+	private Validate() {
 
 	}
 
@@ -64,7 +64,7 @@ public class Validate {
 	 *
 	 * @return 为 NULL 时，返回 TRUE；否则，返回 FALSE
 	 */
-	public static boolean isNull(final Object var){
+	public static boolean isNull(final Object var) {
 		return var == null;
 	}
 
@@ -76,7 +76,7 @@ public class Validate {
 	 *
 	 * @return 不为 NULL 时，返回 TRUE；否则，返回 FALSE
 	 */
-	public static boolean isNotNull(final Object var){
+	public static boolean isNotNull(final Object var) {
 		return var != null;
 	}
 
@@ -90,7 +90,7 @@ public class Validate {
 	 *
 	 * @since 1.3.0
 	 */
-	public static boolean isBlank(final CharSequence charSequence){
+	public static boolean isBlank(final CharSequence charSequence) {
 		if(isNotEmpty(charSequence)){
 			for(int i = 0, j = charSequence.length(); i < j; i++){
 				if(Character.isWhitespace(charSequence.charAt(i)) == false){
@@ -110,7 +110,7 @@ public class Validate {
 	 *
 	 * @return 不为 null、空字符串且不仅仅为空白字符串时，返回 TRUE；否则，返回 FALSE
 	 */
-	public static boolean isNotBlank(final CharSequence charSequence){
+	public static boolean isNotBlank(final CharSequence charSequence) {
 		if(isNotEmpty(charSequence)){
 			for(int i = 0, j = charSequence.length(); i < j; i++){
 				if(Character.isWhitespace(charSequence.charAt(i)) == false){
@@ -130,8 +130,8 @@ public class Validate {
 	 *
 	 * @return 为 NULL 或长度为 0 时，返回 TRUE；否则，返回 FALSE
 	 */
-	public static boolean isEmpty(final CharSequence charSequence){
-		return charSequence == null || charSequence.length() == 0;
+	public static boolean isEmpty(final CharSequence charSequence) {
+		return charSequence == null || charSequence.isEmpty();
 	}
 
 	/**
@@ -142,7 +142,7 @@ public class Validate {
 	 *
 	 * @return 为 NULL 或长度为 0 时，返回 TRUE；否则，返回 FALSE
 	 */
-	public static boolean isEmpty(final float[] array){
+	public static boolean isEmpty(final float[] array) {
 		return array == null || array.length == 0;
 	}
 
@@ -154,7 +154,7 @@ public class Validate {
 	 *
 	 * @return 为 NULL 或长度为 0 时，返回 TRUE；否则，返回 FALSE
 	 */
-	public static boolean isEmpty(final double[] array){
+	public static boolean isEmpty(final double[] array) {
 		return array == null || array.length == 0;
 	}
 
@@ -166,7 +166,7 @@ public class Validate {
 	 *
 	 * @return 为 NULL 或长度为 0 时，返回 TRUE；否则，返回 FALSE
 	 */
-	public static boolean isEmpty(final short[] array){
+	public static boolean isEmpty(final short[] array) {
 		return array == null || array.length == 0;
 	}
 
@@ -178,7 +178,7 @@ public class Validate {
 	 *
 	 * @return 为 NULL 或长度为 0 时，返回 TRUE；否则，返回 FALSE
 	 */
-	public static boolean isEmpty(final int[] array){
+	public static boolean isEmpty(final int[] array) {
 		return array == null || array.length == 0;
 	}
 
@@ -190,7 +190,7 @@ public class Validate {
 	 *
 	 * @return 为 NULL 或长度为 0 时，返回 TRUE；否则，返回 FALSE
 	 */
-	public static boolean isEmpty(final long[] array){
+	public static boolean isEmpty(final long[] array) {
 		return array == null || array.length == 0;
 	}
 
@@ -202,7 +202,7 @@ public class Validate {
 	 *
 	 * @return 为 NULL 或长度为 0 时，返回 TRUE；否则，返回 FALSE
 	 */
-	public static boolean isEmpty(final byte[] array){
+	public static boolean isEmpty(final byte[] array) {
 		return array == null || array.length == 0;
 	}
 
@@ -214,7 +214,7 @@ public class Validate {
 	 *
 	 * @return 为 NULL 或长度为 0 时，返回 TRUE；否则，返回 FALSE
 	 */
-	public static boolean isEmpty(final char[] array){
+	public static boolean isEmpty(final char[] array) {
 		return array == null || array.length == 0;
 	}
 
@@ -226,7 +226,7 @@ public class Validate {
 	 *
 	 * @return 为 NULL 或长度为 0 时，返回 TRUE；否则，返回 FALSE
 	 */
-	public static boolean isEmpty(final boolean[] array){
+	public static boolean isEmpty(final boolean[] array) {
 		return array == null || array.length == 0;
 	}
 
@@ -240,7 +240,7 @@ public class Validate {
 	 *
 	 * @return 为 NULL 或长度为 0 时，返回 TRUE；否则，返回 FALSE
 	 */
-	public static <O> boolean isEmpty(final O[] array){
+	public static <O> boolean isEmpty(final O[] array) {
 		return array == null || array.length == 0;
 	}
 
@@ -252,7 +252,7 @@ public class Validate {
 	 *
 	 * @return 为 NULL 或不含有元素时，返回 TRUE；否则，返回 FALSE
 	 */
-	public static boolean isEmpty(final Collection<?> collection){
+	public static boolean isEmpty(final Collection<?> collection) {
 		return collection == null || collection.isEmpty();
 	}
 
@@ -264,7 +264,7 @@ public class Validate {
 	 *
 	 * @return 为 NULL 或不含有元素时，返回 TRUE；否则，返回 FALSE
 	 */
-	public static boolean isEmpty(final Map<?, ?> map){
+	public static boolean isEmpty(final Map<?, ?> map) {
 		return map == null || map.isEmpty();
 	}
 
@@ -276,7 +276,7 @@ public class Validate {
 	 *
 	 * @return 为 NULL 或不含有元素时，返回 TRUE；否则，返回 FALSE
 	 */
-	public static boolean isEmpty(final Iterator<?> iterator){
+	public static boolean isEmpty(final Iterator<?> iterator) {
 		return iterator == null || iterator.hasNext() == false;
 	}
 
@@ -288,7 +288,7 @@ public class Validate {
 	 *
 	 * @return 为 NULL 或不含有元素时，返回 TRUE；否则，返回 FALSE
 	 */
-	public static boolean isEmpty(final Enumeration<?> enumeration){
+	public static boolean isEmpty(final Enumeration<?> enumeration) {
 		return enumeration == null || enumeration.hasMoreElements() == false;
 	}
 
@@ -302,7 +302,7 @@ public class Validate {
 	 *
 	 * @since 1.2.0
 	 */
-	public static boolean isNotEmpty(final CharSequence charSequence){
+	public static boolean isNotEmpty(final CharSequence charSequence) {
 		return charSequence != null && charSequence.length() > 0;
 	}
 
@@ -316,7 +316,7 @@ public class Validate {
 	 *
 	 * @since 1.2.0
 	 */
-	public static boolean isNotEmpty(final float[] array){
+	public static boolean isNotEmpty(final float[] array) {
 		return array != null && array.length > 0;
 	}
 
@@ -330,7 +330,7 @@ public class Validate {
 	 *
 	 * @since 1.2.0
 	 */
-	public static boolean isNotEmpty(final double[] array){
+	public static boolean isNotEmpty(final double[] array) {
 		return array != null && array.length > 0;
 	}
 
@@ -344,7 +344,7 @@ public class Validate {
 	 *
 	 * @since 1.2.0
 	 */
-	public static boolean isNotEmpty(final short[] array){
+	public static boolean isNotEmpty(final short[] array) {
 		return array != null && array.length > 0;
 	}
 
@@ -358,7 +358,7 @@ public class Validate {
 	 *
 	 * @since 1.2.0
 	 */
-	public static boolean isNotEmpty(final int[] array){
+	public static boolean isNotEmpty(final int[] array) {
 		return array != null && array.length > 0;
 	}
 
@@ -372,7 +372,7 @@ public class Validate {
 	 *
 	 * @since 1.2.0
 	 */
-	public static boolean isNotEmpty(final long[] array){
+	public static boolean isNotEmpty(final long[] array) {
 		return array != null && array.length > 0;
 	}
 
@@ -386,7 +386,7 @@ public class Validate {
 	 *
 	 * @since 1.2.0
 	 */
-	public static boolean isNotEmpty(final byte[] array){
+	public static boolean isNotEmpty(final byte[] array) {
 		return array != null && array.length > 0;
 	}
 
@@ -400,7 +400,7 @@ public class Validate {
 	 *
 	 * @since 1.2.0
 	 */
-	public static boolean isNotEmpty(final char[] array){
+	public static boolean isNotEmpty(final char[] array) {
 		return array != null && array.length > 0;
 	}
 
@@ -414,7 +414,7 @@ public class Validate {
 	 *
 	 * @since 1.2.0
 	 */
-	public static boolean isNotEmpty(final boolean[] array){
+	public static boolean isNotEmpty(final boolean[] array) {
 		return array != null && array.length > 0;
 	}
 
@@ -430,7 +430,7 @@ public class Validate {
 	 *
 	 * @since 1.2.0
 	 */
-	public static <O> boolean isNotEmpty(final O[] array){
+	public static <O> boolean isNotEmpty(final O[] array) {
 		return array != null && array.length > 0;
 	}
 
@@ -444,7 +444,7 @@ public class Validate {
 	 *
 	 * @since 1.2.0
 	 */
-	public static boolean isNotEmpty(final Collection<?> collection){
+	public static boolean isNotEmpty(final Collection<?> collection) {
 		return collection != null && collection.isEmpty() == false;
 	}
 
@@ -458,7 +458,7 @@ public class Validate {
 	 *
 	 * @since 1.2.0
 	 */
-	public static boolean isNotEmpty(final Map<?, ?> map){
+	public static boolean isNotEmpty(final Map<?, ?> map) {
 		return map != null && map.isEmpty() == false;
 	}
 
@@ -472,7 +472,7 @@ public class Validate {
 	 *
 	 * @since 1.2.0
 	 */
-	public static boolean isNotEmpty(final Iterator<?> iterator){
+	public static boolean isNotEmpty(final Iterator<?> iterator) {
 		return iterator != null && iterator.hasNext();
 	}
 
@@ -486,7 +486,7 @@ public class Validate {
 	 *
 	 * @since 1.2.0
 	 */
-	public static boolean isNotEmpty(final Enumeration<?> enumeration){
+	public static boolean isNotEmpty(final Enumeration<?> enumeration) {
 		return enumeration != null && enumeration.hasMoreElements();
 	}
 
@@ -498,7 +498,7 @@ public class Validate {
 	 *
 	 * @return 不为 null、空字符串且不仅仅为空白字符串时，返回 TRUE；否则，返回 FALSE
 	 */
-	public static boolean hasText(final CharSequence charSequence){
+	public static boolean hasText(final CharSequence charSequence) {
 		return isNotBlank(charSequence);
 	}
 
@@ -514,7 +514,7 @@ public class Validate {
 	 *
 	 * @return 在两个值之间时，返回 TRUE；否则，返回 FALSE
 	 */
-	public static boolean isBetween(final long value, final long min, final long max){
+	public static boolean isBetween(final long value, final long min, final long max) {
 		return isBetween(value, min, max, false);
 	}
 
@@ -532,7 +532,7 @@ public class Validate {
 	 *
 	 * @return 在两个值之间时，返回 TRUE；否则，返回 FALSE
 	 */
-	public static boolean isBetween(final long value, final long min, final long max, final boolean isContain){
+	public static boolean isBetween(final long value, final long min, final long max, final boolean isContain) {
 		return isContain ? (value >= min && value <= max) : (value > min && value < max);
 	}
 
@@ -548,7 +548,7 @@ public class Validate {
 	 *
 	 * @return 在两个值之间时，返回 TRUE；否则，返回 FALSE
 	 */
-	public static boolean isBetween(final int value, final int min, final int max){
+	public static boolean isBetween(final int value, final int min, final int max) {
 		return isBetween(value, min, max, false);
 	}
 
@@ -566,7 +566,7 @@ public class Validate {
 	 *
 	 * @return 在两个值之间时，返回 TRUE；否则，返回 FALSE
 	 */
-	public static boolean isBetween(final int value, final int min, final int max, final boolean isContain){
+	public static boolean isBetween(final int value, final int min, final int max, final boolean isContain) {
 		return isContain ? (value >= min && value <= max) : (value > min && value < max);
 	}
 
@@ -582,7 +582,7 @@ public class Validate {
 	 *
 	 * @return 在两个值之间时，返回 TRUE；否则，返回 FALSE
 	 */
-	public static boolean isBetween(final double value, final double min, final double max){
+	public static boolean isBetween(final double value, final double min, final double max) {
 		return isBetween(value, min, max, false);
 	}
 
@@ -600,7 +600,7 @@ public class Validate {
 	 *
 	 * @return 在两个值之间时，返回 TRUE；否则，返回 FALSE
 	 */
-	public static boolean isBetween(final double value, final double min, final double max, final boolean isContain){
+	public static boolean isBetween(final double value, final double min, final double max, final boolean isContain) {
 		return isContain ? (value >= min && value <= max) : (value > min && value < max);
 	}
 
@@ -616,7 +616,7 @@ public class Validate {
 	 *
 	 * @return 在两个值之间时，返回 TRUE；否则，返回 FALSE
 	 */
-	public static boolean isBetween(final float value, final float min, final float max){
+	public static boolean isBetween(final float value, final float min, final float max) {
 		return isBetween(value, min, max, false);
 	}
 
@@ -634,7 +634,7 @@ public class Validate {
 	 *
 	 * @return 在两个值之间时，返回 TRUE；否则，返回 FALSE
 	 */
-	public static boolean isBetween(final float value, final float min, final float max, final boolean isContain){
+	public static boolean isBetween(final float value, final float min, final float max, final boolean isContain) {
 		return isContain ? (value >= min && value <= max) : (value > min && value < max);
 	}
 
@@ -646,7 +646,7 @@ public class Validate {
 	 *
 	 * @return Boolean
 	 */
-	public static boolean isAlpha(final CharSequence charSequence){
+	public static boolean isAlpha(final CharSequence charSequence) {
 		if(isEmpty(charSequence)){
 			return false;
 		}
@@ -668,7 +668,7 @@ public class Validate {
 	 *
 	 * @return Boolean
 	 */
-	public static boolean isAlpha(final char ch){
+	public static boolean isAlpha(final char ch) {
 		return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z');
 	}
 
@@ -680,7 +680,7 @@ public class Validate {
 	 *
 	 * @return Boolean
 	 */
-	public static boolean isNumeric(final CharSequence charSequence){
+	public static boolean isNumeric(final CharSequence charSequence) {
 		if(isEmpty(charSequence)){
 			return false;
 		}
@@ -702,7 +702,7 @@ public class Validate {
 	 *
 	 * @return Boolean
 	 */
-	public static boolean isNumeric(final char ch){
+	public static boolean isNumeric(final char ch) {
 		return ch >= '0' && ch <= '9';
 	}
 
@@ -714,7 +714,7 @@ public class Validate {
 	 *
 	 * @return Boolean
 	 */
-	public static boolean isDigit(final CharSequence charSequence){
+	public static boolean isDigit(final CharSequence charSequence) {
 		return isNumeric(charSequence);
 	}
 
@@ -726,7 +726,7 @@ public class Validate {
 	 *
 	 * @return Boolean
 	 */
-	public static boolean isDigit(final char ch){
+	public static boolean isDigit(final char ch) {
 		return isNumeric(ch);
 	}
 
@@ -738,7 +738,7 @@ public class Validate {
 	 *
 	 * @return Boolean
 	 */
-	public static boolean isAlnum(final CharSequence charSequence){
+	public static boolean isAlnum(final CharSequence charSequence) {
 		if(isEmpty(charSequence)){
 			return false;
 		}
@@ -760,7 +760,7 @@ public class Validate {
 	 *
 	 * @return Boolean
 	 */
-	public static boolean isAlnum(final char ch){
+	public static boolean isAlnum(final char ch) {
 		return isAlpha(ch) || isNumeric(ch);
 	}
 
@@ -772,7 +772,7 @@ public class Validate {
 	 *
 	 * @return Boolean
 	 */
-	public static boolean isXdigit(final CharSequence charSequence){
+	public static boolean isXdigit(final CharSequence charSequence) {
 		if(isEmpty(charSequence)){
 			return false;
 		}
@@ -794,7 +794,7 @@ public class Validate {
 	 *
 	 * @return Boolean
 	 */
-	public static boolean isXdigit(final char ch){
+	public static boolean isXdigit(final char ch) {
 		return isNumeric(ch) || ch >= 'a' && ch <= 'f' || ch >= 'A' && ch <= 'F';
 	}
 
@@ -806,7 +806,7 @@ public class Validate {
 	 *
 	 * @return Boolean
 	 */
-	public static boolean isTel(final CharSequence charSequence){
+	public static boolean isTel(final CharSequence charSequence) {
 		return isTel(charSequence, TelValidator.AreaCodeType.BOTH);
 	}
 
@@ -820,7 +820,7 @@ public class Validate {
 	 *
 	 * @return Boolean
 	 */
-	public static boolean isTel(final CharSequence charSequence, final TelValidator.AreaCodeType areaCodeType){
+	public static boolean isTel(final CharSequence charSequence, final TelValidator.AreaCodeType areaCodeType) {
 		return TelValidator.isValid(charSequence, areaCodeType);
 	}
 
@@ -832,7 +832,7 @@ public class Validate {
 	 *
 	 * @return Boolean
 	 */
-	public static boolean isMobile(final CharSequence charSequence){
+	public static boolean isMobile(final CharSequence charSequence) {
 		return MobileValidator.isValid(charSequence);
 	}
 
@@ -844,7 +844,7 @@ public class Validate {
 	 *
 	 * @return Boolean
 	 */
-	public static boolean isPostCode(final CharSequence charSequence){
+	public static boolean isPostCode(final CharSequence charSequence) {
 		return PostCodeValidator.isValid(charSequence);
 	}
 
@@ -856,7 +856,7 @@ public class Validate {
 	 *
 	 * @return Boolean
 	 */
-	public static boolean isEmail(final CharSequence charSequence){
+	public static boolean isEmail(final CharSequence charSequence) {
 		return EmailValidator.isValid(charSequence);
 	}
 
@@ -868,7 +868,7 @@ public class Validate {
 	 *
 	 * @return Boolean
 	 */
-	public static boolean isQQ(final CharSequence charSequence){
+	public static boolean isQQ(final CharSequence charSequence) {
 		return QQValidator.isValid(charSequence);
 	}
 
@@ -880,7 +880,7 @@ public class Validate {
 	 *
 	 * @return Boolean
 	 */
-	public static boolean isIDCard(final CharSequence charSequence){
+	public static boolean isIDCard(final CharSequence charSequence) {
 		return IDCardValidator.isValid(charSequence, false, null);
 	}
 
@@ -896,7 +896,7 @@ public class Validate {
 	 *
 	 * @return Boolean
 	 */
-	public static boolean isIDCard(final CharSequence charSequence, final boolean strict, final Date birthday){
+	public static boolean isIDCard(final CharSequence charSequence, final boolean strict, final Date birthday) {
 		return IDCardValidator.isValid(charSequence, strict, birthday);
 	}
 
@@ -910,7 +910,7 @@ public class Validate {
 	 *
 	 * @return Boolean
 	 */
-	public static boolean isIsbn10(final CharSequence charSequence, final char separator){
+	public static boolean isIsbn10(final CharSequence charSequence, final char separator) {
 		return ISBNValidator.isIsbn10(charSequence, separator);
 	}
 
@@ -924,7 +924,7 @@ public class Validate {
 	 *
 	 * @return Boolean
 	 */
-	public static boolean isIsbn13(final CharSequence charSequence, final char separator){
+	public static boolean isIsbn13(final CharSequence charSequence, final char separator) {
 		return ISBNValidator.isIsbn13(charSequence, separator);
 	}
 
@@ -938,7 +938,7 @@ public class Validate {
 	 *
 	 * @return Boolean
 	 */
-	public static boolean isIsbn(final CharSequence charSequence, final char separator){
+	public static boolean isIsbn(final CharSequence charSequence, final char separator) {
 		return ISBNValidator.isIsbn10(charSequence, separator) || ISBNValidator.isIsbn13(charSequence, separator);
 	}
 
@@ -950,7 +950,7 @@ public class Validate {
 	 *
 	 * @return Boolean
 	 */
-	public static boolean isIpV4(final CharSequence charSequence){
+	public static boolean isIpV4(final CharSequence charSequence) {
 		return IpValidator.isValid(charSequence, IpType.IP_V4);
 	}
 
@@ -962,7 +962,7 @@ public class Validate {
 	 *
 	 * @return Boolean
 	 */
-	public static boolean isIpV6(final CharSequence charSequence){
+	public static boolean isIpV6(final CharSequence charSequence) {
 		return IpValidator.isValid(charSequence, IpType.IP_V6);
 	}
 
@@ -974,7 +974,7 @@ public class Validate {
 	 *
 	 * @return Boolean
 	 */
-	public static boolean isIp(final CharSequence charSequence){
+	public static boolean isIp(final CharSequence charSequence) {
 		return isIpV4(charSequence) || isIpV6(charSequence);
 	}
 
@@ -986,7 +986,7 @@ public class Validate {
 	 *
 	 * @return Boolean
 	 */
-	public static boolean isPort(final int port){
+	public static boolean isPort(final int port) {
 		return isBetween(port, 0, 65535, true);
 	}
 
@@ -998,7 +998,7 @@ public class Validate {
 	 *
 	 * @return Boolean
 	 */
-	public static boolean isMimeType(final CharSequence charSequence){
+	public static boolean isMimeType(final CharSequence charSequence) {
 		return MIME_TYPE_PATTERN.matcher(charSequence).matches();
 	}
 

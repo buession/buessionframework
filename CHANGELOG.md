@@ -8,6 +8,10 @@ Buession Framework Changelog
 - [依赖库版本升级和安全漏洞修复](https://github.com/buession/buession-parent/releases/tag/v4.0.0)
 - [geoip2](https://dev.maxmind.com/geoip?lang=en) 版本升级至 4.4.0
 
+### ⭐ 新特性
+
+- 新增 com.buession.core.serializer.FastJson2JsonSerializer 和 com.buession.core.deserializer.FastJson2JsonDeserializer
+
 ### 🔔 变化
 
 - 删除 java.io.FileAlreadyExistedException，迁移至 com.buession.lang.FileAlreadyExistedException

@@ -698,6 +698,9 @@ public class DatabaseResolver extends AbstractResolver {
 		if(reader != null){
 			reader.close();
 		}
+		if(asnReader != null){
+			asnReader.close();
+		}
 	}
 
 	protected static DatabaseReader.Builder getDefaultAsnReaderBuilder() {

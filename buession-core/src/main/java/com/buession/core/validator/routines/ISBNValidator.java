@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2023 Buession.com Inc.														|
+ * | Copyright @ 2013-2025 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.routines;
@@ -128,17 +128,11 @@ public class ISBNValidator {
 		}
 
 		int checksum = 11 - (sum % 11);
-		switch(checksum){
-			case 11:
-				ch = '0';
-				break;
-			case 10:
-				ch = 'X';
-				break;
-			default:
-				ch = (char) (checksum + '0');
-				break;
-		}
+		ch = switch(checksum){
+			case 11 -> '0';
+			case 10 -> 'X';
+			default -> (char) (checksum + '0');
+		};
 
 		return ch == lash_ch;
 	}

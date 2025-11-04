@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
@@ -130,7 +130,7 @@ public class SystemPropertyUtils {
 	 */
 	public static String setPropertyIfPresent(final String name, final String value) {
 		if(value != null){
-			return System.setProperty(name, value);
+			System.setProperty(name, value);
 		}
 
 		return value;
