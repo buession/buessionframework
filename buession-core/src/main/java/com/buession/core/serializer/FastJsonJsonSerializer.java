@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.serializer;
@@ -47,7 +47,7 @@ public class FastJsonJsonSerializer extends AbstractJsonSerializer<JSON> {
 	@Override
 	public <V> byte[] serializeAsBytes(final V object) throws SerializerException {
 		Assert.isNull(object, "Object cloud not be null.");
-		return JSON.toJSONBytes(object);
+		return serializeAsBytes(object, Charset.defaultCharset());
 	}
 
 	@Override

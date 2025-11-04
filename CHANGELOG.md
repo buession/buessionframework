@@ -11,6 +11,7 @@ Buession Framework Changelog
 ### ⭐ 新特性
 
 - 新增 com.buession.core.serializer.FastJson2JsonSerializer 和 com.buession.core.deserializer.FastJson2JsonDeserializer
+- redis 序列化和反序列化新增 fastjson2 支持
 
 ### 🔔 变化
 

@@ -21,152 +21,27 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2024 Buession.com Inc.														|
+ * | Copyright @ 2013-2025 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.serializer;
 
 import com.buession.core.deserializer.DefaultByteArrayDeserializer;
-import com.buession.core.deserializer.DeserializerException;
 import com.buession.core.serializer.DefaultByteArraySerializer;
-import com.buession.core.serializer.SerializerException;
-import com.buession.core.type.TypeReference;
 
 /**
  * 字节数组序列化和反序列化
  *
  * @author Yong.Teng
  */
-public class ByteArraySerializer extends AbstractSerializer {
+public class ByteArraySerializer extends
+		AbstractSerializer<com.buession.core.serializer.ByteArraySerializer, com.buession.core.deserializer.ByteArrayDeserializer> {
 
 	/**
-	 * 序列化器
+	 * 构造函数
 	 */
-	private final com.buession.core.serializer.ByteArraySerializer serializer = new DefaultByteArraySerializer();
-
-	/**
-	 * 反序列化器
-	 */
-	private final com.buession.core.deserializer.ByteArrayDeserializer deserializer = new DefaultByteArrayDeserializer();
-
-	@Override
-	public <V> String serialize(final V object) {
-		if(object != null){
-			try{
-				return serializer.serialize(object);
-			}catch(SerializerException e){
-				if(logger.isErrorEnabled()){
-					logger.error("{} serializer error.", object, e);
-				}
-			}
-		}
-
-		return null;
-	}
-
-	@Override
-	public <V> byte[] serializeAsBytes(final V object) {
-		if(object != null){
-			try{
-				return serializer.serializeAsBytes(object);
-			}catch(SerializerException e){
-				if(logger.isErrorEnabled()){
-					logger.error("{} serializer error.", object, e);
-				}
-			}
-		}
-
-		return null;
-	}
-
-	@Override
-	public <V> V deserialize(final String str) {
-		if(str != null){
-			try{
-				return deserializer.deserialize(str);
-			}catch(DeserializerException e){
-				if(logger.isErrorEnabled()){
-					logger.error("{} deserialize error.", str, e);
-				}
-			}
-		}
-
-		return null;
-	}
-
-	@Override
-	public <V> V deserialize(final String str, final Class<V> clazz) {
-		if(str != null){
-			try{
-				return deserializer.deserialize(str);
-			}catch(DeserializerException e){
-				if(logger.isErrorEnabled()){
-					logger.error("{} deserialize to: [{}] error.", str, clazz.getName(), e);
-				}
-			}
-		}
-
-		return null;
-	}
-
-	@Override
-	public <V> V deserialize(final String str, final TypeReference<V> type) {
-		if(str != null){
-			try{
-				return deserializer.deserialize(str);
-			}catch(DeserializerException e){
-				if(logger.isErrorEnabled()){
-					logger.error("{} deserialize to: [{}] error.", str, type.getType().getTypeName(), e);
-				}
-			}
-		}
-
-		return null;
-	}
-
-	@Override
-	public <V> V deserializeBytes(final byte[] bytes) {
-		if(bytes != null){
-			try{
-				return deserializer.deserialize(bytes);
-			}catch(DeserializerException e){
-				if(logger.isErrorEnabled()){
-					logger.error("{} deserialize error.", bytes, e);
-				}
-			}
-		}
-
-		return null;
-	}
-
-	@Override
-	public <V> V deserializeBytes(final byte[] bytes, final Class<V> clazz) {
-		if(bytes != null){
-			try{
-				return deserializer.deserialize(bytes);
-			}catch(DeserializerException e){
-				if(logger.isErrorEnabled()){
-					logger.error("{} deserialize to: [{}] error.", bytes, clazz.getName(), e);
-				}
-			}
-		}
-
-		return null;
-	}
-
-	@Override
-	public <V> V deserializeBytes(final byte[] bytes, final TypeReference<V> type) {
-		if(bytes != null){
-			try{
-				return deserializer.deserialize(bytes);
-			}catch(DeserializerException e){
-				if(logger.isErrorEnabled()){
-					logger.error("{} deserialize to: [{}] error.", bytes, type.getType().getTypeName(), e);
-				}
-			}
-		}
-
-		return null;
+	public ByteArraySerializer() {
+		super(new DefaultByteArraySerializer(), new DefaultByteArrayDeserializer());
 	}
 
 }

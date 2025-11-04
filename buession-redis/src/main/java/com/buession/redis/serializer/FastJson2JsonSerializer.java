@@ -27,19 +27,20 @@
 package com.buession.redis.serializer;
 
 /**
- * GSON 序列化和反序列化
+ * FastJSON2 序列化和反序列化
  *
  * @author Yong.Teng
+ * @since 4.0.0
  */
-public class GsonJsonSerializer extends AbstractSerializer<com.buession.core.serializer.GsonJsonSerializer,
-		com.buession.core.deserializer.GsonJsonDeserializer> {
+public class FastJson2JsonSerializer extends AbstractSerializer<com.buession.core.serializer.FastJson2JsonSerializer,
+		com.buession.core.deserializer.FastJson2JsonDeserializer> {
 
 	/**
 	 * 构造函数
 	 */
-	public GsonJsonSerializer() {
-		super(new com.buession.core.serializer.GsonJsonSerializer(),
-				new com.buession.core.deserializer.GsonJsonDeserializer());
+	public FastJson2JsonSerializer() {
+		super(new com.buession.core.serializer.FastJson2JsonSerializer(),
+				new com.buession.core.deserializer.FastJson2JsonDeserializer());
 	}
 
 }
