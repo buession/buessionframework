@@ -19,24 +19,24 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.serializer;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializeConfig;
-import com.alibaba.fastjson.serializer.SerializeFilter;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONWriter;
 import com.buession.core.utils.Assert;
 
 import java.nio.charset.Charset;
 
 /**
- * FastJson JSON 序列化
+ * FastJson2 JSON 序列化
  *
  * @author Yong.Teng
+ * @since 4.0.0
  */
-public class FastJsonJsonSerializer extends AbstractJsonSerializer<JSON> {
+public class FastJson2JsonSerializer extends AbstractJsonSerializer<JSON> {
 
 	@Override
 	public <V> String serialize(final V object) throws SerializerException {
@@ -58,8 +58,8 @@ public class FastJsonJsonSerializer extends AbstractJsonSerializer<JSON> {
 	@Override
 	public <V> byte[] serializeAsBytes(final V object, final Charset charset) throws SerializerException {
 		Assert.isNull(object, "Object cloud not be null.");
-		return JSON.toJSONBytes(charset, object, SerializeConfig.globalInstance, new SerializeFilter[0], null, JSON
-				.DEFAULT_GENERATE_FEATURE);
+		return JSON.toJSONBytes(object, charset, JSONWriter.Feature.WriteNulls, JSONWriter.Feature.WriteMapNullValue,
+				JSONWriter.Feature.ReferenceDetection);
 	}
 
 }

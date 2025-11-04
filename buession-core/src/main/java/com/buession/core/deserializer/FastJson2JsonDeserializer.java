@@ -19,27 +19,27 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.deserializer;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.buession.core.type.TypeReference;
 import com.buession.core.utils.Assert;
 
 /**
- * FastJson JSON 反序列化
+ * FastJson2 JSON 反序列化
  *
  * @author Yong.Teng
- * @since 2.3.0
+ * @since 4.0.0
  */
-public class FastJsonJsonDeserializer extends AbstractJsonDeserializer<JSON> {
+public class FastJson2JsonDeserializer extends AbstractJsonDeserializer<JSON> {
 
 	@Override
 	public <V> V deserialize(final String str) throws DeserializerException {
 		Assert.isNull(str, "String cloud not be null.");
-		return JSON.parseObject(str, new com.alibaba.fastjson.TypeReference<V>() {
+		return JSON.parseObject(str, new com.alibaba.fastjson2.TypeReference<V>() {
 
 		});
 	}
@@ -59,7 +59,7 @@ public class FastJsonJsonDeserializer extends AbstractJsonDeserializer<JSON> {
 	@Override
 	public <V> V deserialize(final byte[] bytes) throws DeserializerException {
 		Assert.isNull(bytes, "Bytes cloud not be null.");
-		return JSON.parseObject(new String(bytes), new com.alibaba.fastjson.TypeReference<V>() {
+		return JSON.parseObject(new String(bytes), new com.alibaba.fastjson2.TypeReference<V>() {
 
 		});
 	}
