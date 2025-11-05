@@ -24,7 +24,6 @@
  */
 package com.buession.redis.core;
 
-import com.buession.redis.serializer.FastJson2JsonSerializer;
 import com.buession.redis.serializer.Serializer;
 import com.buession.redis.serializer.ByteArraySerializer;
 import com.buession.redis.serializer.FastJsonJsonSerializer;
@@ -51,7 +50,6 @@ public class Options {
 	 * @see Serializer
 	 * @see ByteArraySerializer
 	 * @see FastJsonJsonSerializer
-	 * @see FastJson2JsonSerializer
 	 * @see GsonJsonSerializer
 	 * @see JacksonJsonSerializer
 	 */
@@ -194,7 +192,6 @@ public class Options {
 	 * @see Serializer
 	 * @see ByteArraySerializer
 	 * @see FastJsonJsonSerializer
-	 * @see FastJson2JsonSerializer
 	 * @see GsonJsonSerializer
 	 * @see JacksonJsonSerializer
 	 */
@@ -211,7 +208,6 @@ public class Options {
 	 * @see Serializer
 	 * @see ByteArraySerializer
 	 * @see FastJsonJsonSerializer
-	 * @see FastJson2JsonSerializer
 	 * @see GsonJsonSerializer
 	 * @see JacksonJsonSerializer
 	 */
