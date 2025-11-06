@@ -64,7 +64,7 @@ public final class LettuceBitFieldArgs extends BitFieldArgs {
 						setOp.getValue());
 			}
 
-			final BitMapCommands.BitFieldArgument.Op getOp = bitFieldArgument.getSet();
+			final BitMapCommands.BitFieldArgument.Op getOp = bitFieldArgument.getGet();
 			if(getOp != null){
 				bitFieldArgs.get(
 						getOp.getBitFieldType().isSigned() ? BitFieldArgs.signed(getOp.getBitFieldType().getBits()) :

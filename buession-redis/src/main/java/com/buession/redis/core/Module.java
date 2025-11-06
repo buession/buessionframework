@@ -30,12 +30,60 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
+ * 模块信息
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public record Module(String name, int version) implements Serializable {
+public final class Module implements Serializable {
 
 	private final static long serialVersionUID = 8584149197825340590L;
+
+	/**
+	 * 模块名称
+	 */
+	private final String name;
+
+	/**
+	 * 模块版本号
+	 */
+	private final int version;
+
+	/**
+	 * 构造函数
+	 *
+	 * @param name
+	 * 		模块名称
+	 * @param version
+	 * 		模块版本号
+	 */
+	public Module(final String name, final int version) {
+		this.name = name;
+		this.version = version;
+	}
+
+	/**
+	 * 返回模块名称
+	 *
+	 * @return 模块名称
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * 返回模块版本号
+	 *
+	 * @return 模块版本号
+	 */
+	public int getVersion() {
+		return version;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, version);
+	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -43,8 +91,7 @@ public record Module(String name, int version) implements Serializable {
 			return true;
 		}
 
-		if(obj instanceof Module){
-			Module that = (Module) obj;
+		if(obj instanceof Module that){
 			return Objects.equals(name, that.name) && version == that.version;
 		}
 

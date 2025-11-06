@@ -24,7 +24,6 @@
  */
 package com.buession.redis.core;
 
-import com.buession.core.Rawable;
 import com.buession.core.Value;
 
 /**

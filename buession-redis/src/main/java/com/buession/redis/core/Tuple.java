@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -43,30 +43,30 @@ public class Tuple implements Comparable<Tuple>, Serializable {
 
 	private final Double score;
 
-	public Tuple(final String element, final Double score){
+	public Tuple(final String element, final Double score) {
 		this(SafeEncoder.encode(element), score);
 	}
 
-	public Tuple(final byte[] element, final Double score){
+	public Tuple(final byte[] element, final Double score) {
 		super();
 		this.element = element;
 		this.score = score;
 	}
 
-	public String getElement(){
+	public String getElement() {
 		return element == null ? null : SafeEncoder.encode(element);
 	}
 
-	public byte[] getBinaryElement(){
+	public byte[] getBinaryElement() {
 		return element;
 	}
 
-	public double getScore(){
+	public double getScore() {
 		return score;
 	}
 
 	@Override
-	public int hashCode(){
+	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 
@@ -83,13 +83,12 @@ public class Tuple implements Comparable<Tuple>, Serializable {
 	}
 
 	@Override
-	public boolean equals(Object obj){
+	public boolean equals(Object obj) {
 		if(this == obj){
 			return true;
 		}
 
-		if(obj instanceof Tuple){
-			Tuple that = (Tuple) obj;
+		if(obj instanceof Tuple that){
 			return Arrays.equals(element, that.element) && Objects.equals(score, that.score);
 		}
 
@@ -97,7 +96,7 @@ public class Tuple implements Comparable<Tuple>, Serializable {
 	}
 
 	@Override
-	public int compareTo(Tuple that){
+	public int compareTo(Tuple that) {
 		int compScore = Double.compare(this.score, that.score);
 
 		if(compScore != 0){
@@ -109,7 +108,7 @@ public class Tuple implements Comparable<Tuple>, Serializable {
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 		return new StringJoiner(", ", "{", "}")
 				.add("element=" + SafeEncoder.encode(element))
 				.add("score=" + score)

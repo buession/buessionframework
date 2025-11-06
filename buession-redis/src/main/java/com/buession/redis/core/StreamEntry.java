@@ -28,12 +28,31 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
+ * Stream 消息内容
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public record StreamEntry(StreamEntryId id, Map<String, String> fields) implements Serializable {
+public class StreamEntry implements Serializable {
 
 	private final static long serialVersionUID = 6763043914884686198L;
+
+	private final StreamEntryId id;
+
+	private final Map<String, String> fields;
+
+	public StreamEntry(final StreamEntryId id, final Map<String, String> fields) {
+		this.id = id;
+		this.fields = fields;
+	}
+
+	public StreamEntryId getId() {
+		return id;
+	}
+
+	public Map<String, String> getFields() {
+		return fields;
+	}
 
 	@Override
 	public String toString() {

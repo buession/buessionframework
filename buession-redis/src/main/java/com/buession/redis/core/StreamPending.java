@@ -29,13 +29,46 @@ import com.buession.redis.utils.ObjectStringBuilder;
 import java.io.Serializable;
 
 /**
+ * Pending 消息的摘要信息
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public record StreamPending(StreamEntryId id, String consumerName, long idleTime, long deliveredTimes)
-		implements Serializable {
+public class StreamPending implements Serializable {
 
 	private static final long serialVersionUID = -9058837565507153831L;
+
+	private final StreamEntryId id;
+
+	private final String consumerName;
+
+	private final long idleTime;
+
+	private final long deliveredTimes;
+
+	public StreamPending(final StreamEntryId id, final String consumerName, final long idleTime,
+						 final long deliveredTimes) {
+		this.id = id;
+		this.consumerName = consumerName;
+		this.idleTime = idleTime;
+		this.deliveredTimes = deliveredTimes;
+	}
+
+	public StreamEntryId getId() {
+		return id;
+	}
+
+	public String getConsumerName() {
+		return consumerName;
+	}
+
+	public long getIdleTime() {
+		return idleTime;
+	}
+
+	public long getDeliveredTimes() {
+		return deliveredTimes;
+	}
 
 	@Override
 	public String toString() {

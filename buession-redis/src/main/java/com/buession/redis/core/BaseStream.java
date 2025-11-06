@@ -19,73 +19,99 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
-import com.buession.redis.utils.ObjectStringBuilder;
-
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 
 /**
+ * Stream 元数据基类
+ *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 4.0.0
  */
-public class StreamConsumerFull implements Serializable {
+class BaseStream implements Serializable {
 
-	private final static long serialVersionUID = -4058066725300830836L;
+	private final static long serialVersionUID = 2904055326472770982L;
 
-	private final String name;
+	/**
+	 * Stream 中消息的总条数
+	 */
+	private final long length;
 
-	private final Long seenTime;
+	/**
+	 * Stream 内部 Radix Tree 结构信息
+	 */
+	private final long radixTreeKeys;
 
-	private final Long pelCount;
+	/**
+	 * Stream 内部 Radix Tree 结构信息
+	 */
+	private final long radixTreeNodes;
 
-	private final List<Long> pending;
+	private final StreamEntryId lastGeneratedId;
 
 	private final Map<String, Object> infos;
 
-	public StreamConsumerFull(final String name, final Long seenTime, final Long pelCount, final List<Long> pending,
-							  final Map<String, Object> infos){
-		this.name = name;
-		this.seenTime = seenTime;
-		this.pelCount = pelCount;
-		this.pending = pending;
+	/**
+	 * 构造函数
+	 *
+	 * @param length
+	 * 		Stream 中消息的总条数
+	 * @param radixTreeKeys
+	 * 		Stream 内部 Radix Tree 结构信息
+	 * @param radixTreeNodes
+	 * 		Stream 内部 Radix Tree 结构信息
+	 * @param lastGeneratedId
+	 * 		-
+	 * @param infos
+	 * 		-
+	 */
+	public BaseStream(final long length, final long radixTreeKeys, final long radixTreeNodes,
+					  final StreamEntryId lastGeneratedId, final Map<String, Object> infos) {
+		this.length = length;
+		this.radixTreeKeys = radixTreeKeys;
+		this.radixTreeNodes = radixTreeNodes;
+		this.lastGeneratedId = lastGeneratedId;
 		this.infos = infos;
 	}
 
-	public String getName(){
-		return name;
+	/**
+	 * 返回 Stream 中消息的总条数
+	 *
+	 * @return Stream 中消息的总条数
+	 */
+	public long getLength() {
+		return length;
 	}
 
-	public Long getSeenTime(){
-		return seenTime;
+	/**
+	 * 返回 Stream 内部 Radix Tree 结构信息
+	 *
+	 * @return Stream 内部 Radix Tree 结构信息
+	 */
+	public long getRadixTreeKeys() {
+		return radixTreeKeys;
 	}
 
-	public Long getPelCount(){
-		return pelCount;
+	/**
+	 * 返回 Stream 内部 Radix Tree 结构信息
+	 *
+	 * @return Stream 内部 Radix Tree 结构信息
+	 */
+	public long getRadixTreeNodes() {
+		return radixTreeNodes;
 	}
 
-	public List<Long> getPending(){
-		return pending;
+	public StreamEntryId getLastGeneratedId() {
+		return lastGeneratedId;
 	}
 
-	public Map<String, Object> getInfos(){
+	public Map<String, Object> getInfos() {
 		return infos;
-	}
-
-	@Override
-	public String toString(){
-		return ObjectStringBuilder.create()
-				.add("name", name)
-				.add("seenTime", seenTime)
-				.add("pelCount", pelCount)
-				.add("pending", pending)
-				.add("infos", infos)
-				.build();
 	}
 
 }

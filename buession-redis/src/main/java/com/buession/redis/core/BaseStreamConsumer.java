@@ -19,65 +19,55 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
-
-import com.buession.redis.utils.ObjectStringBuilder;
 
 import java.io.Serializable;
 import java.util.Map;
 
 /**
- * Stream Consumer
+ * Stream 消费者基类
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 4.0.0
  */
-public class StreamConsumer implements Serializable {
+class BaseStreamConsumer implements Serializable {
 
-	private final static long serialVersionUID = 1432302411997199283L;
+	private final static long serialVersionUID = -5325953754460072820L;
 
+	/**
+	 * 消费者名称
+	 */
 	private final String name;
-
-	private final long idle;
-
-	private final long pending;
 
 	private final Map<String, Object> infos;
 
-	public StreamConsumer(final String name, final long idle, final long pending, final Map<String, Object> infos){
+	/**
+	 * 返回消费者名称
+	 *
+	 * @param name
+	 * 		消费者名称
+	 * @param infos
+	 * 		-
+	 */
+	public BaseStreamConsumer(final String name, final Map<String, Object> infos) {
 		this.name = name;
-		this.idle = idle;
-		this.pending = pending;
 		this.infos = infos;
 	}
 
-	public String getName(){
+	/**
+	 * 返回消费者名称
+	 *
+	 * @return 消费者名称
+	 */
+	public String getName() {
 		return name;
 	}
 
-	public long getIdle(){
-		return idle;
-	}
-
-	public long getPending(){
-		return pending;
-	}
-
-	public Map<String, Object> getInfos(){
+	public Map<String, Object> getInfos() {
 		return infos;
-	}
-
-	@Override
-	public String toString(){
-		return ObjectStringBuilder.create()
-				.add("name", name)
-				.add("idle", idle)
-				.add("pending", pending)
-				.add("infos", infos)
-				.build();
 	}
 
 }

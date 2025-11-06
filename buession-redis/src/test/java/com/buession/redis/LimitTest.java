@@ -19,28 +19,23 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis;
 
-import com.buession.redis.client.jedis.JedisRedisClient;
-import com.buession.redis.client.operations.ScriptingOperations;
+import com.buession.redis.core.Limit;
 
 /**
- * Jedis Script 命令操作抽象类
  *
- * @param <C>
- * 		Redis Client {@link JedisRedisClient}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 4.0.0
  */
-public abstract class AbstractScriptingOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
-		implements ScriptingOperations {
+public class LimitTest {
 
-	public AbstractScriptingOperations(final C client){
-		super(client);
+	public void test() {
+		Limit limit = new Limit(1L, 2L);
 	}
 
 }

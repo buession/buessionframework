@@ -26,26 +26,71 @@ package com.buession.redis.core;
 
 import com.buession.redis.utils.ObjectStringBuilder;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
- * Stream Consumer
+ * Stream 消费者
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public record StreamConsumer(String name, long idle, long pending, Map<String, Object> infos) implements Serializable {
+public class StreamConsumer extends BaseStreamConsumer {
 
 	private final static long serialVersionUID = 1432302411997199283L;
+
+	/**
+	 * 自上次活跃以来的空闲时间（单位：毫秒）
+	 */
+	private final long idle;
+
+	/**
+	 * 未 ACK（确认）的消息数量
+	 */
+	private final long pending;
+
+	/**
+	 * 返回消费者名称
+	 *
+	 * @param name
+	 * 		消费者名称
+	 * @param idle
+	 * 		自上次活跃以来的空闲时间（单位：毫秒）
+	 * @param pending
+	 * 		未 ACK（确认）的消息数量
+	 * @param infos
+	 * 		-
+	 */
+	public StreamConsumer(final String name, final long idle, final long pending, final Map<String, Object> infos) {
+		super(name, infos);
+		this.idle = idle;
+		this.pending = pending;
+	}
+
+	/**
+	 * 返回自上次活跃以来的空闲时间（单位：毫秒）
+	 *
+	 * @return 自上次活跃以来的空闲时间
+	 */
+	public long getIdle() {
+		return idle;
+	}
+
+	/**
+	 * 返回未 ACK（确认）的消息数量
+	 *
+	 * @return 未 ACK（确认）的消息数量
+	 */
+	public long getPending() {
+		return pending;
+	}
 
 	@Override
 	public String toString() {
 		return ObjectStringBuilder.create()
-				.add("name", name)
+				.add("name", getName())
 				.add("idle", idle)
 				.add("pending", pending)
-				.add("infos", infos)
+				.add("infos", getInfos())
 				.build();
 	}
 

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -36,17 +36,36 @@ import org.slf4j.LoggerFactory;
 /**
  * Redis 命令抽象类
  *
+ * @param <C>
+ *        {@link RedisClient} 实例
+ * @param <R>
+ * 		命令返回结果类型
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
 public abstract class AbstractRedisCommand<C extends RedisClient, R> implements Command<R> {
 
+	/**
+	 * {@link RedisClient} 实例
+	 */
 	protected final C client;
 
+	/**
+	 * Redis 协议命令
+	 */
 	private final ProtocolCommand command;
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
+	/**
+	 * 构造函数
+	 *
+	 * @param client
+	 *        {@link RedisClient} 实例
+	 * @param command
+	 * 		Redis 协议命令
+	 */
 	protected AbstractRedisCommand(final C client, final ProtocolCommand command) {
 		this.client = client;
 		this.command = command;

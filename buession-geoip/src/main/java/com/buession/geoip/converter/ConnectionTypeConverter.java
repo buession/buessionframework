@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2022 Buession.com Inc.														|
+ * | Copyright @ 2013-2025 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.converter;
@@ -40,25 +40,19 @@ class ConnectionTypeConverter implements Converter<ConnectionTypeResponse.Connec
 		com.buession.geoip.model.ConnectionType> {
 
 	@Override
-	public ConnectionType convert(final ConnectionTypeResponse.ConnectionType source){
+	public ConnectionType convert(final ConnectionTypeResponse.ConnectionType source) {
 		if(source == null){
 			return null;
 		}
 
-		switch(source){
-			case DIALUP:
-				return ConnectionType.DIALUP;
-			case CABLE_DSL:
-				return ConnectionType.CABLE_DSL;
-			case CORPORATE:
-				return ConnectionType.CORPORATE;
-			case CELLULAR:
-				return ConnectionType.CELLULAR;
-			default:
-				break;
-		}
+		return switch(source){
+			case DIALUP -> ConnectionType.DIALUP;
+			case CABLE_DSL -> ConnectionType.CABLE_DSL;
+			case CORPORATE -> ConnectionType.CORPORATE;
+			case CELLULAR -> ConnectionType.CELLULAR;
+			default -> null;
+		};
 
-		return null;
 	}
 
 }

@@ -163,9 +163,7 @@ public class ClassUtils extends org.apache.commons.lang3.ClassUtils {
 				Class<?>[] ctorTypes = new Class[args.length];
 
 				for(int i = 0; i < args.length; i++){
-					if(args[i] == null){
-						//
-					}else{
+					if(args[i] != null){
 						ctorTypes[i] = args[i].getClass();
 					}
 				}

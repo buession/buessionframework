@@ -39,6 +39,12 @@ public class JedisClusterTransaction implements Transaction {
 
 	private final redis.clients.jedis.AbstractTransaction delegate;
 
+	/**
+	 * 构造函数
+	 *
+	 * @param transaction
+	 * 		原生事务对象 {@link redis.clients.jedis.AbstractTransaction} 实例
+	 */
 	public JedisClusterTransaction(redis.clients.jedis.AbstractTransaction transaction) {
 		Assert.isNull(transaction, "Redis Transaction cloud not be null.");
 		this.delegate = transaction;

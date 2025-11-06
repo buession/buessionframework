@@ -26,29 +26,76 @@ package com.buession.redis.core;
 
 import com.buession.redis.utils.ObjectStringBuilder;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
+ * Stream 元数据
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public record Stream(long length, long radixTreeKeys, long radixTreeNodes, long groups, StreamEntryId lastGeneratedId,
-					 StreamEntry firstEntry, StreamEntry lastEntry, Map<String, Object> infos) implements Serializable {
+public class Stream extends BaseStream {
 
 	private final static long serialVersionUID = -4336316668706617743L;
+
+	private final StreamEntry firstEntry;
+
+	private final StreamEntry lastEntry;
+
+	private final long groups;
+
+	/**
+	 * 构造函数
+	 *
+	 * @param length
+	 * 		Stream 中消息的总条数
+	 * @param radixTreeKeys
+	 * 		Stream 内部 Radix Tree 结构信息
+	 * @param radixTreeNodes
+	 * 		Stream 内部 Radix Tree 结构信息
+	 * @param groups
+	 * 		关联的消费者组数量
+	 * @param lastGeneratedId
+	 * 		-
+	 * @param firstEntry
+	 * 		-
+	 * @param lastEntry
+	 * 		-
+	 * @param infos
+	 * 		-
+	 */
+	public Stream(final long length, final long radixTreeKeys, final long radixTreeNodes, final long groups,
+				  final StreamEntryId lastGeneratedId, final StreamEntry firstEntry, final StreamEntry lastEntry,
+				  final Map<String, Object> infos) {
+		super(length, radixTreeKeys, radixTreeNodes, lastGeneratedId, infos);
+		this.firstEntry = firstEntry;
+		this.lastEntry = lastEntry;
+		this.groups = groups;
+	}
+
+	public StreamEntry getFirstEntry() {
+		return firstEntry;
+	}
+
+	public StreamEntry getLastEntry() {
+		return lastEntry;
+	}
+
+	public long getGroups() {
+		return groups;
+	}
 
 	@Override
 	public String toString() {
 		return ObjectStringBuilder.create()
-				.add("length", length)
-				.add("radixTreeKeys", radixTreeKeys)
-				.add("radixTreeNodes", radixTreeNodes)
+				.add("length", getLength())
+				.add("radixTreeKeys", getRadixTreeKeys())
+				.add("radixTreeNodes", getRadixTreeNodes())
 				.add("groups", groups)
-				.add("lastGeneratedId", lastGeneratedId)
+				.add("lastGeneratedId", getLastGeneratedId())
 				.add("firstEntry", firstEntry)
 				.add("lastEntry", lastEntry)
-				.add("infos", infos)
+				.add("infos", getInfos())
 				.build();
 	}
 

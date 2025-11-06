@@ -31,22 +31,49 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Stream 消费者
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public record StreamConsumerFull(String name, Long seenTime, Long pelCount, List<Long> pending,
-								 Map<String, Object> infos) implements Serializable {
+public class StreamConsumerFull extends BaseStreamConsumer {
 
 	private final static long serialVersionUID = -4058066725300830836L;
+
+	private final Long seenTime;
+
+	private final Long pelCount;
+
+	private final List<Long> pending;
+
+	public StreamConsumerFull(final String name, final Long seenTime, final Long pelCount, final List<Long> pending,
+							  final Map<String, Object> infos) {
+		super(name, infos);
+		this.seenTime = seenTime;
+		this.pelCount = pelCount;
+		this.pending = pending;
+	}
+
+	public Long getSeenTime() {
+		return seenTime;
+	}
+
+	public Long getPelCount() {
+		return pelCount;
+	}
+
+	public List<Long> getPending() {
+		return pending;
+	}
 
 	@Override
 	public String toString() {
 		return ObjectStringBuilder.create()
-				.add("name", name)
+				.add("name", getName())
 				.add("seenTime", seenTime)
 				.add("pelCount", pelCount)
 				.add("pending", pending)
-				.add("infos", infos)
+				.add("infos", getInfos())
 				.build();
 	}
 

@@ -24,8 +24,6 @@
  */
 package com.buession.core.utils;
 
-import org.apache.commons.lang3.Strings;
-
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;

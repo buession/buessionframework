@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.jedis;
@@ -31,6 +31,8 @@ import com.buession.redis.client.connection.datasource.jedis.JedisRedisDataSourc
 import redis.clients.jedis.DefaultJedisClientConfig;
 
 /**
+ * Jedis 客户端配置构建器
+ *
  * @author Yong.Teng
  * @since 2.1.2
  */

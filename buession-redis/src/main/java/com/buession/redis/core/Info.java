@@ -45,34 +45,166 @@ import java.util.StringJoiner;
 /**
  * Redis 服务器的各种信息和统计数值
  *
- * @param server
- * 		Redis 服务器的信息
- * @param clients
- * 		已连接客户端的信息
- * @param memory
- * 		Redis 服务器的内存信息
- * @param persistence
- * 		RDB 持久化和 AOF 持久化有关的信息
- * @param stats
- * 		一般统计信息
- * @param replication
- * 		主从复制信息
- * @param sentinel
- * 		Sentinel 信息
- * @param cpu
- * 		CPU 的计算量统计信息
- * @param cluster
- * 		集群有关的信息
- * @param keyspace
- * 		数据库相关的统计信息
- *
  * @author Yong.Teng
  */
-public record Info(Server server, Clients clients, Memory memory, Persistence persistence, Stats stats,
-				   Replication replication, Sentinel sentinel, Cpu cpu, Cluster cluster, List<Keyspace> keyspace)
-		implements Serializable {
+public class Info implements Serializable {
 
 	private final static long serialVersionUID = -2772690110674245981L;
+
+	/**
+	 * Redis 服务器的信息
+	 */
+	private final Server server;
+
+	/**
+	 * 已连接客户端的信息
+	 */
+	private final Clients clients;
+
+	/**
+	 * Redis 服务器的内存信息
+	 */
+	private final Memory memory;
+
+	/**
+	 * RDB 持久化和 AOF 持久化有关的信息
+	 */
+	private final Persistence persistence;
+
+	/**
+	 * 一般统计信息
+	 */
+	private final Stats stats;
+
+	/**
+	 * 主从复制信息
+	 */
+	private final Replication replication;
+
+	/**
+	 * Sentinel 信息
+	 */
+	private final Sentinel sentinel;
+
+	/**
+	 * CPU 的计算量统计信息
+	 */
+	private final Cpu cpu;
+
+	/**
+	 * 集群有关的信息
+	 */
+	private final Cluster cluster;
+
+	/**
+	 * 数据库相关的统计信息
+	 */
+	private final List<Keyspace> keyspace;
+
+	public Info(final Server server, final Clients clients, final Memory memory, final Persistence persistence,
+				final Stats stats, final Replication replication, final Sentinel sentinel, final Cpu cpu,
+				final Cluster cluster, final List<Keyspace> keyspaces) {
+		this.server = server;
+		this.clients = clients;
+		this.memory = memory;
+		this.persistence = persistence;
+		this.stats = stats;
+		this.replication = replication;
+		this.sentinel = sentinel;
+		this.cpu = cpu;
+		this.cluster = cluster;
+		this.keyspace = keyspaces;
+	}
+
+	/**
+	 * 获取 Redis 服务器的信息
+	 *
+	 * @return Redis 服务器的信息
+	 */
+	public Server getServer() {
+		return server;
+	}
+
+	/**
+	 * 获取已连接客户端的信息
+	 *
+	 * @return 已连接客户端的信息
+	 */
+	public Clients getClients() {
+		return clients;
+	}
+
+	/**
+	 * 获取 Redis 服务器的内存信息
+	 *
+	 * @return Redis 服务器的内存信息
+	 */
+	public Memory getMemory() {
+		return memory;
+	}
+
+	/**
+	 * 获取 RDB 持久化和 AOF 持久化有关的信息
+	 *
+	 * @return RDB 持久化和 AOF 持久化有关的信息
+	 */
+	public Persistence getPersistence() {
+		return persistence;
+	}
+
+	/**
+	 * 获取集群有关的信息
+	 *
+	 * @return 集群有关的信息
+	 */
+	public Cluster getCluster() {
+		return cluster;
+	}
+
+	/**
+	 * 获取一般统计信息
+	 *
+	 * @return 一般统计信息
+	 */
+	public Stats getStats() {
+		return stats;
+	}
+
+	/**
+	 * 获取主从复制信息
+	 *
+	 * @return 主从复制信息
+	 */
+	public Replication getReplication() {
+		return replication;
+	}
+
+	/**
+	 * 获取 Sentinel 信息
+	 *
+	 * @return Sentinel 信息
+	 */
+	public Sentinel getSentinel() {
+		return sentinel;
+	}
+
+	/**
+	 * 获取 CPU 的计算量统计信息
+	 *
+	 * @return CPU 的计算量统计信息
+	 */
+	public Cpu getCpu() {
+		return cpu;
+	}
+
+	/**
+	 * 获取数据库相关的统计信息
+	 *
+	 * @return 数据库相关的统计信息
+	 */
+	public List<Keyspace> getKeyspace() {
+		return keyspace;
+	}
 
 	public String toPrettyString() {
 		final StringBuilder sb = new StringBuilder();
@@ -242,12 +374,12 @@ public record Info(Server server, Clients clients, Memory memory, Persistence pe
 		return sb.toString();
 	}
 
-	private static Double getPercent(final Properties properties, final String key) {
+	protected static Double getPercent(final Properties properties, final String key) {
 		String str = properties.getProperty(key);
 		return Validate.hasText(str) ? Double.parseDouble(str.substring(0, str.length() - 1)) : null;
 	}
 
-	private static Boolean getBoolean(final Properties properties, final String key) {
+	protected static Boolean getBoolean(final Properties properties, final String key) {
 		String str = properties.getProperty(key);
 
 		if(Validate.hasText(str) == false){
@@ -265,7 +397,7 @@ public record Info(Server server, Clients clients, Memory memory, Persistence pe
 		}
 	}
 
-	private static Date getDate(final Properties properties, final String key, final boolean isUnixTimestamp) {
+	protected static Date getDate(final Properties properties, final String key, final boolean isUnixTimestamp) {
 		String str = properties.getProperty(key);
 
 		if(Validate.hasText(str) == false){
@@ -282,11 +414,11 @@ public record Info(Server server, Clients clients, Memory memory, Persistence pe
 	}
 
 	@SuppressWarnings("unchecked")
-	private static <E> E getObject(final Properties properties, final String key) {
+	protected static <E> E getObject(final Properties properties, final String key) {
 		return (E) properties.get(key);
 	}
 
-	private static String toPrettyString(final Properties properties) {
+	protected static String toPrettyString(final Properties properties) {
 		int max = properties.size() - 1;
 		if(max == -1){
 			return Constants.EMPTY_STRING;
@@ -312,7 +444,7 @@ public record Info(Server server, Clients clients, Memory memory, Persistence pe
 		}
 	}
 
-	private static String toString(final Properties properties) {
+	protected static String toString(final Properties properties) {
 		int max = properties.size() - 1;
 		if(max == -1){
 			return Constants.EMPTY_STRING;
