@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis;
@@ -2144,44 +2144,6 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public <V> List<V> zRangeByLexObject(final String key, final String min, final String max) {
-		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max),
-				new Converter.SimpleListStringConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> zRangeByLexObject(final byte[] key, final byte[] min, final byte[] max) {
-		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max),
-				new Converter.SimpleListBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> zRangeByLexObject(final String key, final String min, final String max, final Class<V> clazz) {
-		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max),
-				new Converter.ClazzListStringConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> zRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final Class<V> clazz) {
-		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max),
-				new Converter.ClazzListBinaryConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> zRangeByLexObject(final String key, final String min, final String max,
-										 final TypeReference<V> type) {
-		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max),
-				new Converter.TypeListStringConverter<>(this, type));
-	}
-
-	@Override
-	public <V> List<V> zRangeByLexObject(final byte[] key, final byte[] min, final byte[] max,
-										 final TypeReference<V> type) {
-		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max),
-				new Converter.TypeListBinaryConverter<>(this, type));
-	}
-
-	@Override
 	public <V> List<V> zRangeByScoreObject(final String key, final double min, final double max) {
 		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max),
 				new Converter.SimpleListStringConverter<>(this));
@@ -2220,44 +2182,6 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public <V> List<V> zRangeByScoreObject(final String key, final String min, final String max) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max),
-				new Converter.SimpleListStringConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max),
-				new Converter.SimpleListBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> zRangeByScoreObject(final String key, final String min, final String max, final Class<V> clazz) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max),
-				new Converter.ClazzListStringConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final Class<V> clazz) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max),
-				new Converter.ClazzListBinaryConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> zRangeByScoreObject(final String key, final String min, final String max,
-										   final TypeReference<V> type) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max),
-				new Converter.TypeListStringConverter<>(this, type));
-	}
-
-	@Override
-	public <V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max,
-										   final TypeReference<V> type) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max),
-				new Converter.TypeListBinaryConverter<>(this, type));
-	}
-
-	@Override
 	public <V> List<V> zRangeByScoreObject(final String key, final double min, final double max, final long offset,
 										   final long count) {
 		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
@@ -2294,48 +2218,6 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 
 	@Override
 	public <V> List<V> zRangeByScoreObject(final byte[] key, final double min, final double max, final long offset,
-										   final long count, final TypeReference<V> type) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
-				new Converter.TypeListBinaryConverter<>(this, type));
-	}
-
-	@Override
-	public <V> List<V> zRangeByScoreObject(final String key, final String min, final String max, final long offset,
-										   final long count) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
-				new Converter.SimpleListStringConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
-										   final long count) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
-				new Converter.SimpleListBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> zRangeByScoreObject(final String key, final String min, final String max, final long offset,
-										   final long count, final Class<V> clazz) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
-				new Converter.ClazzListStringConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
-										   final long count, final Class<V> clazz) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
-				new Converter.ClazzListBinaryConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> zRangeByScoreObject(final String key, final String min, final String max, final long offset,
-										   final long count, final TypeReference<V> type) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
-				new Converter.TypeListStringConverter<>(this, type));
-	}
-
-	@Override
-	public <V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
 										   final long count, final TypeReference<V> type) {
 		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count),
 				new Converter.TypeListBinaryConverter<>(this, type));
@@ -2420,46 +2302,6 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public <V> List<V> zRevRangeByLexObject(final String key, final String min, final String max) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max),
-				new Converter.SimpleListStringConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max),
-				new Converter.SimpleListBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByLexObject(final String key, final String min, final String max,
-											final Class<V> clazz) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max),
-				new Converter.ClazzListStringConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max,
-											final Class<V> clazz) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max),
-				new Converter.ClazzListBinaryConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByLexObject(final String key, final String min, final String max,
-											final TypeReference<V> type) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max),
-				new Converter.TypeListStringConverter<>(this, type));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max,
-											final TypeReference<V> type) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max),
-				new Converter.TypeListBinaryConverter<>(this, type));
-	}
-
-	@Override
 	public <V> List<V> zRevRangeByLexObject(final String key, final double min, final double max, final long offset,
 											final long count) {
 		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
@@ -2496,54 +2338,6 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 
 	@Override
 	public <V> List<V> zRevRangeByLexObject(final byte[] key, final double min, final double max, final long offset,
-											final long count, final TypeReference<V> type) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
-				new Converter.TypeListBinaryConverter<>(this, type));
-	}
-
-	@Deprecated
-	@Override
-	public <V> List<V> zRevRangeByLexObject(final String key, final String min, final String max, final long offset,
-											final long count) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
-				new Converter.SimpleListStringConverter<>(this));
-	}
-
-	@Deprecated
-	@Override
-	public <V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
-											final long count) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
-				new Converter.SimpleListBinaryConverter<>(this));
-	}
-
-	@Deprecated
-	@Override
-	public <V> List<V> zRevRangeByLexObject(final String key, final String min, final String max, final long offset,
-											final long count, final Class<V> clazz) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
-				new Converter.ClazzListStringConverter<>(this, clazz));
-	}
-
-	@Deprecated
-	@Override
-	public <V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
-											final long count, final Class<V> clazz) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
-				new Converter.ClazzListBinaryConverter<>(this, clazz));
-	}
-
-	@Deprecated
-	@Override
-	public <V> List<V> zRevRangeByLexObject(final String key, final String min, final String max, final long offset,
-											final long count, final TypeReference<V> type) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
-				new Converter.TypeListStringConverter<>(this, type));
-	}
-
-	@Deprecated
-	@Override
-	public <V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
 											final long count, final TypeReference<V> type) {
 		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count),
 				new Converter.TypeListBinaryConverter<>(this, type));
@@ -2590,46 +2384,6 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public <V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max),
-				new Converter.SimpleListStringConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max),
-				new Converter.SimpleListBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max,
-											  final Class<V> clazz) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max),
-				new Converter.ClazzListStringConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max,
-											  final Class<V> clazz) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max),
-				new Converter.ClazzListBinaryConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max,
-											  final TypeReference<V> type) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max),
-				new Converter.TypeListStringConverter<>(this, type));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max,
-											  final TypeReference<V> type) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max),
-				new Converter.TypeListBinaryConverter<>(this, type));
-	}
-
-	@Override
 	public <V> List<V> zRevRangeByScoreObject(final String key, final double min, final double max, final long offset,
 											  final long count) {
 		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
@@ -2666,48 +2420,6 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 
 	@Override
 	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final double min, final double max, final long offset,
-											  final long count, final TypeReference<V> type) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
-				new Converter.TypeListBinaryConverter<>(this, type));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max, final long offset,
-											  final long count) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
-				new Converter.SimpleListStringConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
-											  final long count) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
-				new Converter.SimpleListBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max, final long offset,
-											  final long count, final Class<V> clazz) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
-				new Converter.ClazzListStringConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
-											  final long count, final Class<V> clazz) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
-				new Converter.ClazzListBinaryConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max, final long offset,
-											  final long count, final TypeReference<V> type) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
-				new Converter.TypeListStringConverter<>(this, type));
-	}
-
-	@Override
-	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
 											  final long count, final TypeReference<V> type) {
 		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count),
 				new Converter.TypeListBinaryConverter<>(this, type));

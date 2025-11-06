@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.lettuce.operations;
@@ -559,11 +559,10 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 		return zInterStore(destKey, keys, zStoreArgs, args);
 	}
 
-	@Deprecated
 	@Override
-	public Long zLexCount(final byte[] key, final byte[] min, final byte[] max) {
+	public Long zLexCount(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
-		final Range<byte[]> range = Range.create(min, max);
+		final Range<byte[]> range = Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.ZLEXCOUNT,
@@ -681,24 +680,6 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 		return zRangeByLex(key, bMin, bMax, (v)->v, args);
 	}
 
-	@Deprecated
-	@Override
-	public List<String> zRangeByLex(final String key, final String min, final String max) {
-		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
-		final byte[] bKey = SafeEncoder.encode(key);
-		final byte[] bMin = SafeEncoder.encode(min);
-		final byte[] bMax = SafeEncoder.encode(max);
-
-		return zRangeByLex(bKey, bMin, bMax, binaryToStringListConverter, args);
-	}
-
-	@Deprecated
-	@Override
-	public List<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max) {
-		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
-		return zRangeByLex(key, min, max, (v)->v, args);
-	}
-
 	@Override
 	public List<String> zRangeByLex(final String key, final double min, final double max, final long offset,
 									final long count) {
@@ -720,28 +701,6 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 		final byte[] bMax = NumberUtils.double2bytes(max);
 
 		return zRangeByLex(key, bMin, bMax, offset, count, (v)->v, args);
-	}
-
-	@Deprecated
-	@Override
-	public List<String> zRangeByLex(final String key, final String min, final String max, final long offset,
-									final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(min).add(max)
-				.add(offset).add(count);
-		final byte[] bKey = SafeEncoder.encode(key);
-		final byte[] bMin = SafeEncoder.encode(min);
-		final byte[] bMax = SafeEncoder.encode(max);
-
-		return zRangeByLex(bKey, bMin, bMax, offset, count, binaryToStringListConverter, args);
-	}
-
-	@Deprecated
-	@Override
-	public List<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max, final long offset,
-									final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(min).add(max)
-				.add(offset).add(count);
-		return zRangeByLex(key, min, max, offset, count, (v)->v, args);
 	}
 
 	@Override
@@ -983,11 +942,10 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 		}
 	}
 
-	@Deprecated
 	@Override
-	public Long zRemRangeByLex(final byte[] key, final byte[] min, final byte[] max) {
+	public Long zRemRangeByLex(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
-		final Range<byte[]> range = Range.create(min, max);
+		final Range<byte[]> range = Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
 
 		if(isPipeline()){
 			return new LettuceClusterPipelineCommand<>(client, ProtocolCommand.ZREMRANGEBYLEX,
@@ -999,8 +957,7 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 					.run(args);
 		}else{
 			return new LettuceClusterCommand<>(client, ProtocolCommand.ZREMRANGEBYLEX,
-					(cmd)->cmd.zremrangebylex(key, range),
-					(v)->v)
+					(cmd)->cmd.zremrangebylex(key, range), (v)->v)
 					.run(args);
 		}
 	}
@@ -1097,24 +1054,6 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 		return zRevRangeByLex(key, bMin, bMax, (v)->v, args);
 	}
 
-	@Deprecated
-	@Override
-	public List<String> zRevRangeByLex(final String key, final String min, final String max) {
-		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
-		final byte[] bKey = SafeEncoder.encode(key);
-		final byte[] bMin = SafeEncoder.encode(min);
-		final byte[] bMax = SafeEncoder.encode(max);
-
-		return zRevRangeByLex(bKey, bMin, bMax, binaryToStringListConverter, args);
-	}
-
-	@Deprecated
-	@Override
-	public List<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max) {
-		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
-		return zRevRangeByLex(key, min, max, (v)->v, args);
-	}
-
 	@Override
 	public List<String> zRevRangeByLex(final String key, final double min, final double max, final long offset,
 									   final long count) {
@@ -1134,26 +1073,6 @@ public final class LettuceClusterSortedSetOperations extends AbstractSortedSetOp
 		final byte[] bMax = NumberUtils.double2bytes(max);
 
 		return zRevRangeByLex(key, bMin, bMax, offset, count, (v)->v, args);
-	}
-
-	@Deprecated
-	@Override
-	public List<String> zRevRangeByLex(final String key, final String min, final String max, final long offset,
-									   final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(count);
-		final byte[] bKey = SafeEncoder.encode(key);
-		final byte[] bMin = SafeEncoder.encode(min);
-		final byte[] bMax = SafeEncoder.encode(max);
-
-		return zRevRangeByLex(bKey, bMin, bMax, offset, count, binaryToStringListConverter, args);
-	}
-
-	@Deprecated
-	@Override
-	public List<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max, final long offset,
-									   final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(count);
-		return zRevRangeByLex(key, min, max, offset, count, (v)->v, args);
 	}
 
 	@Override

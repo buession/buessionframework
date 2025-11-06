@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis;
@@ -1804,18 +1804,6 @@ public abstract class BaseRedisTemplate extends AbstractRedisTemplate {
 		return execute((client)->client.sortedSetOperations().zCount(rawKey(key), min, max));
 	}
 
-	@Deprecated
-	@Override
-	public Long zCount(final String key, final String min, final String max) {
-		return execute((client)->client.sortedSetOperations().zCount(rawKey(key), min, max));
-	}
-
-	@Deprecated
-	@Override
-	public Long zCount(final byte[] key, final byte[] min, final byte[] max) {
-		return execute((client)->client.sortedSetOperations().zCount(rawKey(key), min, max));
-	}
-
 	@Override
 	public List<String> zDiff(final String... keys) {
 		return execute((client)->client.sortedSetOperations().zDiff(rawKeys(keys)));
@@ -1990,18 +1978,6 @@ public abstract class BaseRedisTemplate extends AbstractRedisTemplate {
 		return execute((client)->client.sortedSetOperations().zLexCount(rawKey(key), min, max));
 	}
 
-	@Deprecated
-	@Override
-	public Long zLexCount(final String key, final String min, final String max) {
-		return execute((client)->client.sortedSetOperations().zLexCount(rawKey(key), min, max));
-	}
-
-	@Deprecated
-	@Override
-	public Long zLexCount(final byte[] key, final byte[] min, final byte[] max) {
-		return execute((client)->client.sortedSetOperations().zLexCount(rawKey(key), min, max));
-	}
-
 	@Override
 	public List<Double> zMScore(final String key, final String... members) {
 		return execute((client)->client.sortedSetOperations().zMScore(rawKey(key), members));
@@ -2072,18 +2048,6 @@ public abstract class BaseRedisTemplate extends AbstractRedisTemplate {
 		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max));
 	}
 
-	@Deprecated
-	@Override
-	public List<String> zRangeByLex(final String key, final String min, final String max) {
-		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max));
-	}
-
-	@Deprecated
-	@Override
-	public List<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max) {
-		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max));
-	}
-
 	@Override
 	public List<String> zRangeByLex(final String key, final double min, final double max, final long offset,
 									final long count) {
@@ -2096,20 +2060,6 @@ public abstract class BaseRedisTemplate extends AbstractRedisTemplate {
 		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max, offset, count));
 	}
 
-	@Deprecated
-	@Override
-	public List<String> zRangeByLex(final String key, final String min, final String max, final long offset,
-									final long count) {
-		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max, offset, count));
-	}
-
-	@Deprecated
-	@Override
-	public List<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max, final long offset,
-									final long count) {
-		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max, offset, count));
-	}
-
 	@Override
 	public List<String> zRangeByScore(final String key, final double min, final double max) {
 		return execute((client)->client.sortedSetOperations().zRangeByLex(rawKey(key), min, max));
@@ -2117,18 +2067,6 @@ public abstract class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public List<byte[]> zRangeByScore(final byte[] key, final double min, final double max) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(rawKey(key), min, max));
-	}
-
-	@Deprecated
-	@Override
-	public List<String> zRangeByScore(final String key, final String min, final String max) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(rawKey(key), min, max));
-	}
-
-	@Deprecated
-	@Override
-	public List<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max) {
 		return execute((client)->client.sortedSetOperations().zRangeByScore(rawKey(key), min, max));
 	}
 
@@ -2144,20 +2082,6 @@ public abstract class BaseRedisTemplate extends AbstractRedisTemplate {
 		return execute((client)->client.sortedSetOperations().zRangeByScore(rawKey(key), min, max, offset, count));
 	}
 
-	@Deprecated
-	@Override
-	public List<String> zRangeByScore(final String key, String min, String max, long offset,
-									  long count) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(rawKey(key), min, max, offset, count));
-	}
-
-	@Deprecated
-	@Override
-	public List<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max, final long offset,
-									  final long count) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(rawKey(key), min, max, offset, count));
-	}
-
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max) {
 		return execute((client)->client.sortedSetOperations().zRangeByScoreWithScores(rawKey(key), min, max));
@@ -2165,18 +2089,6 @@ public abstract class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max) {
-		return execute((client)->client.sortedSetOperations().zRangeByScoreWithScores(rawKey(key), min, max));
-	}
-
-	@Deprecated
-	@Override
-	public List<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max) {
-		return execute((client)->client.sortedSetOperations().zRangeByScoreWithScores(rawKey(key), min, max));
-	}
-
-	@Deprecated
-	@Override
-	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max) {
 		return execute((client)->client.sortedSetOperations().zRangeByScoreWithScores(rawKey(key), min, max));
 	}
 
@@ -2189,22 +2101,6 @@ public abstract class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max, final long offset,
-											   final long count) {
-		return execute(
-				(client)->client.sortedSetOperations().zRangeByScoreWithScores(rawKey(key), min, max, offset, count));
-	}
-
-	@Deprecated
-	@Override
-	public List<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max, final long offset,
-											   final long count) {
-		return execute(
-				(client)->client.sortedSetOperations().zRangeByScoreWithScores(rawKey(key), min, max, offset, count));
-	}
-
-	@Deprecated
-	@Override
-	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max, final long offset,
 											   final long count) {
 		return execute(
 				(client)->client.sortedSetOperations().zRangeByScoreWithScores(rawKey(key), min, max, offset, count));
@@ -2348,18 +2244,6 @@ public abstract class BaseRedisTemplate extends AbstractRedisTemplate {
 		return execute((client)->client.sortedSetOperations().zRemRangeByLex(rawKey(key), min, max));
 	}
 
-	@Deprecated
-	@Override
-	public Long zRemRangeByLex(final String key, final String min, final String max) {
-		return execute((client)->client.sortedSetOperations().zRemRangeByLex(rawKey(key), min, max));
-	}
-
-	@Deprecated
-	@Override
-	public Long zRemRangeByLex(final byte[] key, final byte[] min, final byte[] max) {
-		return execute((client)->client.sortedSetOperations().zRemRangeByLex(rawKey(key), min, max));
-	}
-
 	@Override
 	public Long zRemRangeByScore(final String key, final double min, final double max) {
 		return execute((client)->client.sortedSetOperations().zRemRangeByScore(rawKey(key), min, max));
@@ -2367,18 +2251,6 @@ public abstract class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public Long zRemRangeByScore(final byte[] key, final double min, final double max) {
-		return execute((client)->client.sortedSetOperations().zRemRangeByScore(rawKey(key), min, max));
-	}
-
-	@Deprecated
-	@Override
-	public Long zRemRangeByScore(final String key, final String min, final String max) {
-		return execute((client)->client.sortedSetOperations().zRemRangeByScore(rawKey(key), min, max));
-	}
-
-	@Deprecated
-	@Override
-	public Long zRemRangeByScore(final byte[] key, final byte[] min, final byte[] max) {
 		return execute((client)->client.sortedSetOperations().zRemRangeByScore(rawKey(key), min, max));
 	}
 
@@ -2422,18 +2294,6 @@ public abstract class BaseRedisTemplate extends AbstractRedisTemplate {
 		return execute((client)->client.sortedSetOperations().zRevRangeByLex(rawKey(key), min, max));
 	}
 
-	@Deprecated
-	@Override
-	public List<String> zRevRangeByLex(final String key, final String min, final String max) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(rawKey(key), min, max));
-	}
-
-	@Deprecated
-	@Override
-	public List<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(rawKey(key), min, max));
-	}
-
 	@Override
 	public List<String> zRevRangeByLex(final String key, final double min, final double max, final long offset,
 									   final long count) {
@@ -2446,20 +2306,6 @@ public abstract class BaseRedisTemplate extends AbstractRedisTemplate {
 		return execute((client)->client.sortedSetOperations().zRevRangeByLex(rawKey(key), min, max, offset, count));
 	}
 
-	@Deprecated
-	@Override
-	public List<String> zRevRangeByLex(final String key, final String min, final String max, final long offset,
-									   final long count) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(rawKey(key), min, max, offset, count));
-	}
-
-	@Deprecated
-	@Override
-	public List<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max, final long offset,
-									   final long count) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(rawKey(key), min, max, offset, count));
-	}
-
 	@Override
 	public List<String> zRevRangeByScore(final String key, final double min, final double max) {
 		return execute((client)->client.sortedSetOperations().zRevRangeByScore(rawKey(key), min, max));
@@ -2467,18 +2313,6 @@ public abstract class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public List<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(rawKey(key), min, max));
-	}
-
-	@Deprecated
-	@Override
-	public List<String> zRevRangeByScore(final String key, final String min, final String max) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(rawKey(key), min, max));
-	}
-
-	@Deprecated
-	@Override
-	public List<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max) {
 		return execute((client)->client.sortedSetOperations().zRevRangeByScore(rawKey(key), min, max));
 	}
 
@@ -2494,20 +2328,6 @@ public abstract class BaseRedisTemplate extends AbstractRedisTemplate {
 		return execute((client)->client.sortedSetOperations().zRevRangeByScore(rawKey(key), min, max, offset, count));
 	}
 
-	@Deprecated
-	@Override
-	public List<String> zRevRangeByScore(final String key, final String min, final String max, final long offset,
-										 final long count) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(rawKey(key), min, max, offset, count));
-	}
-
-	@Deprecated
-	@Override
-	public List<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max, final long offset,
-										 final long count) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(rawKey(key), min, max, offset, count));
-	}
-
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max) {
 		return execute((client)->client.sortedSetOperations().zRevRangeByScoreWithScores(rawKey(key), min, max));
@@ -2515,18 +2335,6 @@ public abstract class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScoreWithScores(rawKey(key), min, max));
-	}
-
-	@Deprecated
-	@Override
-	public List<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScoreWithScores(rawKey(key), min, max));
-	}
-
-	@Deprecated
-	@Override
-	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max) {
 		return execute((client)->client.sortedSetOperations().zRevRangeByScoreWithScores(rawKey(key), min, max));
 	}
 
@@ -2539,22 +2347,6 @@ public abstract class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max,
-												  final long offset, final long count) {
-		return execute((client)->client.sortedSetOperations()
-				.zRevRangeByScoreWithScores(rawKey(key), min, max, offset, count));
-	}
-
-	@Deprecated
-	@Override
-	public List<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max,
-												  final long offset, final long count) {
-		return execute((client)->client.sortedSetOperations()
-				.zRevRangeByScoreWithScores(rawKey(key), min, max, offset, count));
-	}
-
-	@Deprecated
-	@Override
-	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max,
 												  final long offset, final long count) {
 		return execute((client)->client.sortedSetOperations()
 				.zRevRangeByScoreWithScores(rawKey(key), min, max, offset, count));

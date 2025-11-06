@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.lettuce.operations;
@@ -82,18 +82,6 @@ public abstract class AbstractSortedSetOperations<C extends LettuceRedisClient>
 		return zCount(SafeEncoder.encode(key), min, max);
 	}
 
-	@Deprecated
-	@Override
-	public Long zCount(final String key, final String min, final String max) {
-		return zCount(key, Double.parseDouble(min), Double.parseDouble(max));
-	}
-
-	@Deprecated
-	@Override
-	public Long zCount(final byte[] key, final byte[] min, final byte[] max) {
-		return zCount(key, NumberUtils.bytes2double(min), NumberUtils.bytes2double(max));
-	}
-
 	@Override
 	public Double zIncrBy(final String key, final double increment, final String member) {
 		return zIncrBy(SafeEncoder.encode(key), increment, SafeEncoder.encode(member));
@@ -122,18 +110,7 @@ public abstract class AbstractSortedSetOperations<C extends LettuceRedisClient>
 
 	@Override
 	public Long zLexCount(final String key, final double min, final double max) {
-		return zLexCount(SafeEncoder.encode(key), NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
-	}
-
-	@Override
-	public Long zLexCount(final byte[] key, final double min, final double max) {
-		return zLexCount(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
-	}
-
-	@Deprecated
-	@Override
-	public Long zLexCount(final String key, final String min, final String max) {
-		return zLexCount(SafeEncoder.encode(key), SafeEncoder.encode(min), SafeEncoder.encode(max));
+		return zLexCount(SafeEncoder.encode(key), min, max);
 	}
 
 	@Override
@@ -141,68 +118,15 @@ public abstract class AbstractSortedSetOperations<C extends LettuceRedisClient>
 		return zRangeWithScores(SafeEncoder.encode(key), start, end);
 	}
 
-	@Deprecated
-	@Override
-	public List<String> zRangeByScore(final String key, final String min, final String max) {
-		return zRangeByScore(key, Double.parseDouble(min), Double.parseDouble(max));
-	}
-
-	@Deprecated
-	@Override
-	public List<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max) {
-		return zRangeByScore(key, NumberUtils.bytes2double(min), NumberUtils.bytes2double(max));
-	}
-
-	@Deprecated
-	@Override
-	public List<String> zRangeByScore(final String key, final String min, final String max, final long offset,
-									  final long count) {
-		return zRangeByScore(key, Double.parseDouble(min), Double.parseDouble(max), offset, count);
-	}
-
-	@Deprecated
-	@Override
-	public List<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max, final long offset,
-									  final long count) {
-		return zRangeByScore(key, NumberUtils.bytes2double(min), NumberUtils.bytes2double(max), offset, count);
-	}
-
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max) {
 		return zRangeByScoreWithScores(SafeEncoder.encode(key), min, max);
-	}
-
-	@Deprecated
-	@Override
-	public List<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max) {
-		return zRangeByScoreWithScores(key, Double.parseDouble(min), Double.parseDouble(max));
-	}
-
-	@Deprecated
-	@Override
-	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max) {
-		return zRangeByScoreWithScores(key, NumberUtils.bytes2double(min), NumberUtils.bytes2double(max));
 	}
 
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max, final long offset,
 											   final long count) {
 		return zRangeByScoreWithScores(SafeEncoder.encode(key), min, max, offset, count);
-	}
-
-	@Deprecated
-	@Override
-	public List<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max, final long offset,
-											   final long count) {
-		return zRangeByScoreWithScores(key, Double.parseDouble(min), Double.parseDouble(max), offset, count);
-	}
-
-	@Deprecated
-	@Override
-	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max, final long offset,
-											   final long count) {
-		return zRangeByScoreWithScores(key, NumberUtils.bytes2double(min), NumberUtils.bytes2double(max), offset,
-				count);
 	}
 
 	@Override
@@ -217,35 +141,12 @@ public abstract class AbstractSortedSetOperations<C extends LettuceRedisClient>
 
 	@Override
 	public Long zRemRangeByLex(final String key, final double min, final double max) {
-		return zRemRangeByLex(SafeEncoder.encode(key), NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
-	}
-
-	@Override
-	public Long zRemRangeByLex(final byte[] key, final double min, final double max) {
-		return zRemRangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
-	}
-
-	@Deprecated
-	@Override
-	public Long zRemRangeByLex(final String key, final String min, final String max) {
-		return zRemRangeByLex(SafeEncoder.encode(key), SafeEncoder.encode(min), SafeEncoder.encode(max));
+		return zRemRangeByLex(SafeEncoder.encode(key), min, max);
 	}
 
 	@Override
 	public Long zRemRangeByScore(final String key, final double min, final double max) {
 		return zRemRangeByScore(SafeEncoder.encode(key), min, max);
-	}
-
-	@Deprecated
-	@Override
-	public Long zRemRangeByScore(final String key, final String min, final String max) {
-		return zRemRangeByScore(key, Double.parseDouble(min), Double.parseDouble(max));
-	}
-
-	@Deprecated
-	@Override
-	public Long zRemRangeByScore(final byte[] key, final byte[] min, final byte[] max) {
-		return zRemRangeByScore(key, NumberUtils.bytes2double(min), NumberUtils.bytes2double(max));
 	}
 
 	@Override
@@ -258,69 +159,15 @@ public abstract class AbstractSortedSetOperations<C extends LettuceRedisClient>
 		return zRevRangeWithScores(SafeEncoder.encode(key), start, end);
 	}
 
-	@Deprecated
-	@Override
-	public List<String> zRevRangeByScore(final String key, final String min, final String max) {
-		return zRevRangeByScore(key, Double.parseDouble(min), Double.parseDouble(max));
-	}
-
-	@Deprecated
-	@Override
-	public List<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max) {
-		return zRevRangeByScore(key, NumberUtils.bytes2double(min), NumberUtils.bytes2double(max));
-	}
-
-	@Deprecated
-	@Override
-	public List<String> zRevRangeByScore(final String key, final String min, final String max, final long offset,
-										 final long count) {
-		return zRevRangeByScore(key, Double.parseDouble(min), Double.parseDouble(max), offset, count);
-	}
-
-	@Deprecated
-	@Override
-	public List<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max, final long offset,
-										 final long count) {
-		return zRevRangeByScore(key, NumberUtils.bytes2double(min), NumberUtils.bytes2double(max), offset, count);
-	}
-
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max) {
 		return zRevRangeByScoreWithScores(SafeEncoder.encode(key), min, max);
-	}
-
-	@Deprecated
-	@Override
-	public List<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max) {
-		return zRevRangeByScoreWithScores(SafeEncoder.encode(key), Double.parseDouble(min), Double.parseDouble(max));
-	}
-
-	@Deprecated
-	@Override
-	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max) {
-		return zRevRangeByScoreWithScores(key, NumberUtils.bytes2double(min), NumberUtils.bytes2double(max));
 	}
 
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max,
 												  final long offset, final long count) {
 		return zRevRangeByScoreWithScores(SafeEncoder.encode(key), min, max, offset, count);
-	}
-
-	@Deprecated
-	@Override
-	public List<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max,
-												  final long offset, final long count) {
-		return zRevRangeByScoreWithScores(SafeEncoder.encode(key), Double.parseDouble(min), Double.parseDouble(max),
-				offset, count);
-	}
-
-	@Deprecated
-	@Override
-	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max,
-												  final long offset, final long count) {
-		return zRevRangeByScoreWithScores(key, NumberUtils.bytes2double(min), NumberUtils.bytes2double(max), offset,
-				count);
 	}
 
 	@Override
