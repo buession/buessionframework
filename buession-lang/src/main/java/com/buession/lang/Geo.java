@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.lang;
@@ -49,7 +49,7 @@ public class Geo implements Serializable {
 	/**
 	 * 构造函数
 	 */
-	public Geo(){
+	public Geo() {
 
 	}
 
@@ -61,7 +61,7 @@ public class Geo implements Serializable {
 	 * @param latitude
 	 * 		纬度
 	 */
-	public Geo(double longitude, double latitude){
+	public Geo(double longitude, double latitude) {
 		this.longitude = longitude;
 		this.latitude = latitude;
 	}
@@ -71,7 +71,7 @@ public class Geo implements Serializable {
 	 *
 	 * @return 经度
 	 */
-	public double getLongitude(){
+	public double getLongitude() {
 		return longitude;
 	}
 
@@ -81,7 +81,7 @@ public class Geo implements Serializable {
 	 * @param longitude
 	 * 		经度
 	 */
-	public void setLongitude(double longitude){
+	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
 
@@ -90,7 +90,7 @@ public class Geo implements Serializable {
 	 *
 	 * @return 纬度
 	 */
-	public double getLatitude(){
+	public double getLatitude() {
 		return latitude;
 	}
 
@@ -100,23 +100,22 @@ public class Geo implements Serializable {
 	 * @param latitude
 	 * 		纬度
 	 */
-	public void setLatitude(double latitude){
+	public void setLatitude(double latitude) {
 		this.latitude = latitude;
 	}
 
 	@Override
-	public int hashCode(){
+	public int hashCode() {
 		return Objects.hash(longitude, latitude);
 	}
 
 	@Override
-	public boolean equals(Object obj){
+	public boolean equals(Object obj) {
 		if(this == obj){
 			return true;
 		}
 
-		if(obj instanceof Geo){
-			Geo that = (Geo) obj;
+		if(obj instanceof Geo that){
 			return that.getLongitude() == longitude && that.getLatitude() == latitude;
 		}
 
@@ -124,7 +123,7 @@ public class Geo implements Serializable {
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 		return longitude + ", " + latitude;
 	}
 

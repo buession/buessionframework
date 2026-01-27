@@ -19,37 +19,34 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core.internal.convert.lettuce.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.BitOperation;
-import redis.clients.jedis.args.BitOP;
+import org.springframework.lang.Nullable;
 
 /**
- * {@link BitOperation} 转换为 jedis {@link BitOP}
+ * {@link com.buession.redis.core.FlushMode} 转换为 Lettuce {@link io.lettuce.core.FlushMode}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 3.0.0
  */
-public final class BitOperationConverter implements Converter<BitOperation, BitOP> {
+public final class FlushModeConverter
+		implements Converter<com.buession.redis.core.FlushMode, io.lettuce.core.FlushMode> {
 
+	@Nullable
 	@Override
-	public BitOP convert(final BitOperation source) {
-		switch(source){
-			case AND:
-				return BitOP.AND;
-			case OR:
-				return BitOP.OR;
-			case NOT:
-				return BitOP.NOT;
-			case XOR:
-				return BitOP.XOR;
-			default:
-				return null;
+	public io.lettuce.core.FlushMode convert(final com.buession.redis.core.FlushMode source) {
+		if(source == null){
+			return null;
 		}
+
+		return switch(source){
+			case ASYNC -> io.lettuce.core.FlushMode.ASYNC;
+			case SYNC -> io.lettuce.core.FlushMode.SYNC;
+		};
 	}
 
 }

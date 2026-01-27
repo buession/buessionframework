@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.net;
@@ -127,8 +127,7 @@ public class HostAndPort implements Serializable {
 			return true;
 		}
 
-		if(o instanceof HostAndPort){
-			HostAndPort that = (HostAndPort) o;
+		if(o instanceof HostAndPort that){
 			return Objects.equals(host, that.host) && Objects.equals(port, that.port);
 		}
 

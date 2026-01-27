@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
@@ -50,26 +50,6 @@ public final class CommandArguments {
 	}
 
 	private CommandArguments(final char value) {
-		add(value);
-	}
-
-	private CommandArguments(final short value) {
-		add(value);
-	}
-
-	private CommandArguments(final int value) {
-		add(value);
-	}
-
-	private CommandArguments(final long value) {
-		add(value);
-	}
-
-	private CommandArguments(final float value) {
-		add(value);
-	}
-
-	private CommandArguments(final double value) {
 		add(value);
 	}
 
@@ -169,23 +149,7 @@ public final class CommandArguments {
 		return new CommandArguments(value);
 	}
 
-	public static CommandArguments create(final short value) {
-		return new CommandArguments(value);
-	}
-
-	public static CommandArguments create(final int value) {
-		return new CommandArguments(value);
-	}
-
-	public static CommandArguments create(final long value) {
-		return new CommandArguments(value);
-	}
-
-	public static CommandArguments create(final float value) {
-		return new CommandArguments(value);
-	}
-
-	public static CommandArguments create(final double value) {
+	public static CommandArguments create(final Number value) {
 		return new CommandArguments(value);
 	}
 
@@ -447,7 +411,7 @@ public final class CommandArguments {
 	}
 
 	@SafeVarargs
-	private final <T> CommandArguments doBatchAdd(final T... values) {
+	private <T> CommandArguments doBatchAdd(final T... values) {
 		if(Validate.isNotEmpty(values)){
 			for(T value : values){
 				add(value);

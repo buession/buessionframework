@@ -22,38 +22,34 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.params;
+package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.GeoUnit;
-import io.lettuce.core.GeoArgs;
+import com.buession.redis.core.BitType;
+import redis.clients.jedis.args.BitCountOption;
 
 /**
- * {@link GeoUnit} 转换为 Lettuce {@link GeoArgs.Unit}
+ * {@link BitType} 转换为 Jedis {@link BitCountOption} 互转
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public final class GeoUnitConverter implements Converter<GeoUnit, GeoArgs.Unit> {
+public final class BitTypeConverter implements Converter<BitType, BitCountOption> {
 
 	@Override
-	public GeoArgs.Unit convert(final GeoUnit source) {
-		if(source == null){
-			return null;
+	public BitCountOption convert(final BitType source) {
+		if(source != null){
+			switch(source){
+				case BYTE:
+					return BitCountOption.BYTE;
+				case BIT:
+					return BitCountOption.BIT;
+				default:
+					break;
+			}
 		}
-		
-		switch(source){
-			case M:
-				return GeoArgs.Unit.m;
-			case KM:
-				return GeoArgs.Unit.km;
-			case MI:
-				return GeoArgs.Unit.mi;
-			case FT:
-				return GeoArgs.Unit.ft;
-			default:
-				return null;
-		}
+
+		return null;
 	}
 
 }

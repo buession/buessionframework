@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.lang;
@@ -55,7 +55,7 @@ public class KeyValue<K, V> implements Serializable {
 	/**
 	 * 构造函数
 	 */
-	public KeyValue(){
+	public KeyValue() {
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class KeyValue<K, V> implements Serializable {
 	 * @param value
 	 * 		值
 	 */
-	public KeyValue(K key, V value){
+	public KeyValue(K key, V value) {
 		setKey(key);
 		this.value = value;
 	}
@@ -76,7 +76,7 @@ public class KeyValue<K, V> implements Serializable {
 	 *
 	 * @return 键名
 	 */
-	public K getKey(){
+	public K getKey() {
 		return key;
 	}
 
@@ -86,7 +86,7 @@ public class KeyValue<K, V> implements Serializable {
 	 * @param key
 	 * 		键名
 	 */
-	public void setKey(K key){
+	public void setKey(K key) {
 		if(key == null){
 			throw new IllegalArgumentException("Key cloud not be null.");
 		}
@@ -98,7 +98,7 @@ public class KeyValue<K, V> implements Serializable {
 	 *
 	 * @return 值
 	 */
-	public V getValue(){
+	public V getValue() {
 		return value;
 	}
 
@@ -108,23 +108,22 @@ public class KeyValue<K, V> implements Serializable {
 	 * @param value
 	 * 		值
 	 */
-	public void setValue(V value){
+	public void setValue(V value) {
 		this.value = value;
 	}
 
 	@Override
-	public int hashCode(){
+	public int hashCode() {
 		return Objects.hash(getKey(), getValue());
 	}
 
 	@Override
-	public boolean equals(Object obj){
+	public boolean equals(Object obj) {
 		if(this == obj){
 			return true;
 		}
 
-		if(obj instanceof KeyValue){
-			KeyValue that = (KeyValue) obj;
+		if(obj instanceof KeyValue<?, ?> that){
 			return Objects.equals(key, that.key) && Objects.deepEquals(value, that.value);
 		}
 
@@ -132,7 +131,7 @@ public class KeyValue<K, V> implements Serializable {
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 		return new StringJoiner(", ", "{", "}")
 				.add("key: " + key)
 				.add("value: " + value)

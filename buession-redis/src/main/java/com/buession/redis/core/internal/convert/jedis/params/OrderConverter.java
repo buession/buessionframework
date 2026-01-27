@@ -25,27 +25,31 @@
 package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.Direction;
-import redis.clients.jedis.args.ListDirection;
+import com.buession.lang.Order;
+import redis.clients.jedis.args.SortingOrder;
 
 /**
- * {@link Direction} 转换为 jedis {@link ListDirection}
+ * {@link Order} 转换为 jedis {@link SortingOrder}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 4.0.0
  */
-public final class DirectionConverter implements Converter<Direction, ListDirection> {
+public final class OrderConverter implements Converter<Order, SortingOrder> {
 
 	@Override
-	public ListDirection convert(final Direction source) {
-		switch(source){
-			case LEFT:
-				return ListDirection.LEFT;
-			case RIGHT:
-				return ListDirection.RIGHT;
-			default:
-				return null;
+	public SortingOrder convert(final Order source) {
+		if(source != null){
+			switch(source){
+				case ASC:
+					return SortingOrder.ASC;
+				case DESC:
+					return SortingOrder.DESC;
+				default:
+					break;
+			}
 		}
+
+		return null;
 	}
 
 }

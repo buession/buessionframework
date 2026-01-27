@@ -19,37 +19,60 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.io;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.BitType;
-import redis.clients.jedis.args.BitCountOption;
+import java.nio.file.Path;
 
 /**
- * {@link BitType} 转换为 Jedis {@link BitCountOption} 互转
+ * 文件已存在异常
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public final class BitTypeConverter implements Converter<BitType, BitCountOption> {
+public class FileAlreadyExistsException extends java.nio.file.FileAlreadyExistsException {
 
-	@Override
-	public BitCountOption convert(final BitType source) {
-		if(source != null){
-			switch(source){
-				case BYTE:
-					return BitCountOption.BYTE;
-				case BIT:
-					return BitCountOption.BIT;
-				default:
-					break;
-			}
-		}
+	private final static long serialVersionUID = -3710489861960564960L;
 
-		return null;
+	/**
+	 * 构造函数
+	 */
+	public FileAlreadyExistsException() {
+		super(null);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param message
+	 * 		异常信息
+	 */
+	public FileAlreadyExistsException(String message) {
+		super(message);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param path
+	 * 		文件路径
+	 */
+	public FileAlreadyExistsException(Path path) {
+		this(path, "already existed");
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param path
+	 * 		文件路径
+	 * @param message
+	 * 		异常信息
+	 */
+	public FileAlreadyExistsException(Path path, String message) {
+		super(String.format("%s %s", path, message));
 	}
 
 }

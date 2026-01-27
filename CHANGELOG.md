@@ -15,7 +15,7 @@ Buession Framework Changelog
 
 ### 🔔 变化
 
-- 删除 java.io.FileAlreadyExistedException，迁移至 com.buession.lang.FileAlreadyExistedException
+- 删除 java.io.FileAlreadyExistedException，迁移至 com.buession.lang.FileAlreadyExisteException
 - 删除 org.apache.ibatis.type.DefaultEnumTypeHandler
 - 删除 com.buession.httpclient.IBaseHttpClient
 - GEO IP Model 字段发生变化

@@ -124,8 +124,7 @@ public class NameValue<K, V> implements Serializable {
 			return true;
 		}
 
-		if(obj instanceof NameValue){
-			NameValue that = (NameValue) obj;
+		if(obj instanceof NameValue<?, ?> that){
 			return Objects.equals(name, that.name) && Objects.deepEquals(value, that.value);
 		}
 

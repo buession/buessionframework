@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -147,8 +147,7 @@ public class GeoRadius implements Serializable {
 			return true;
 		}
 
-		if(obj instanceof GeoRadius){
-			GeoRadius geoRadius = (GeoRadius) obj;
+		if(obj instanceof GeoRadius geoRadius){
 			return Double.compare(geoRadius.distance, distance) == 0 && Arrays.equals(member, geoRadius.member) &&
 					Objects.equals(geo, geoRadius.geo);
 		}
