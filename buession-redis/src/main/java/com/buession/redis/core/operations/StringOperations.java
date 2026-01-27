@@ -19,11 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
 
+import com.buession.core.collect.Maps;
 import com.buession.core.type.TypeReference;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
@@ -41,6 +42,76 @@ import java.util.Map;
  * @author Yong.Teng
  */
 public interface StringOperations extends StringCommands, RedisOperations {
+
+	@Override
+	default Long append(final String key, final String value) {
+		return execute((client)->client.stringOperations().append(key, value));
+	}
+
+	@Override
+	default Long append(final byte[] key, final byte[] value) {
+		return execute((client)->client.stringOperations().append(key, value));
+	}
+
+	@Override
+	default Long incr(final String key) {
+		return execute((client)->client.stringOperations().incr(key));
+	}
+
+	@Override
+	default Long incr(final byte[] key) {
+		return execute((client)->client.stringOperations().incr(key));
+	}
+
+	@Override
+	default Long incrBy(final String key, final long value) {
+		return execute((client)->client.stringOperations().incrBy(key, value));
+	}
+
+	@Override
+	default Long incrBy(final byte[] key, final long value) {
+		return execute((client)->client.stringOperations().incrBy(key, value));
+	}
+
+	@Override
+	default Double incrByFloat(final String key, final double value) {
+		return execute((client)->client.stringOperations().incrByFloat(key, value));
+	}
+
+	@Override
+	default Double incrByFloat(final byte[] key, final double value) {
+		return execute((client)->client.stringOperations().incrByFloat(key, value));
+	}
+
+	@Override
+	default Long decr(final String key) {
+		return execute((client)->client.stringOperations().decr(key));
+	}
+
+	@Override
+	default Long decr(final byte[] key) {
+		return execute((client)->client.stringOperations().decr(key));
+	}
+
+	@Override
+	default Long decrBy(final String key, final long value) {
+		return execute((client)->client.stringOperations().decrBy(key, value));
+	}
+
+	@Override
+	default Long decrBy(final byte[] key, final long value) {
+		return execute((client)->client.stringOperations().decrBy(key, value));
+	}
+
+	@Override
+	default String get(final String key) {
+		return execute((client)->client.stringOperations().get(key));
+	}
+
+	@Override
+	default byte[] get(final byte[] key) {
+		return execute((client)->client.stringOperations().get(key));
+	}
 
 	/**
 	 * 获取键 key 相关联的字符串值，并将值反序列化为对象
@@ -143,6 +214,16 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 * @see TypeReference
 	 */
 	<V> V getObject(final byte[] key, final TypeReference<V> type);
+
+	@Override
+	default String getEx(final String key, final GetExArgument getExArgument) {
+		return execute((client)->client.stringOperations().getEx(key, getExArgument));
+	}
+
+	@Override
+	default byte[] getEx(final byte[] key, final GetExArgument getExArgument) {
+		return execute((client)->client.stringOperations().getEx(key, getExArgument));
+	}
 
 	/**
 	 * 获取键 key 的值反序列化后对象，并重置 key 的过期时间
@@ -252,6 +333,16 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 */
 	<V> V getExObject(final byte[] key, final GetExArgument getExArgument, final TypeReference<V> type);
 
+	@Override
+	default String getSet(final String key, final String value) {
+		return execute((client)->client.stringOperations().getSet(key, value));
+	}
+
+	@Override
+	default byte[] getSet(final byte[] key, final byte[] value) {
+		return execute((client)->client.stringOperations().getSet(key, value));
+	}
+
 	/**
 	 * 将键 key 的值设为 value ，并返回键 key 在被设置之前的旧值反序列化后对象
 	 *
@@ -360,6 +451,16 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 */
 	<V> V getSet(final byte[] key, final V value, final TypeReference<V> type);
 
+	@Override
+	default String getDel(final String key) {
+		return execute((client)->client.stringOperations().getDel(key));
+	}
+
+	@Override
+	default byte[] getDel(final byte[] key) {
+		return execute((client)->client.stringOperations().getDel(key));
+	}
+
 	/**
 	 * 获取键 key 相关联的字符串值，并将值反序列化为对象；并删除该 key
 	 *
@@ -461,6 +562,16 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 * @see TypeReference
 	 */
 	<V> V getDelObject(final byte[] key, final TypeReference<V> type);
+
+	@Override
+	default List<String> mGet(final String... keys) {
+		return execute((client)->client.stringOperations().mGet(keys));
+	}
+
+	@Override
+	default List<byte[]> mGet(final byte[]... keys) {
+		return execute((client)->client.stringOperations().mGet(keys));
+	}
 
 	/**
 	 * 获取给定的一个或多个字符串键的值，并反序列化为对象
@@ -574,7 +685,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 *
 	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	default Status mSet(final List<KeyValue<String, String>> values){
+	default Status mSet(final List<KeyValue<String, String>> values) {
 		if(values == null){
 			return Status.FAILURE;
 		}else{
@@ -598,7 +709,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 *
 	 * @return 当所有给定键都设置成功时，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	default Status mSetNx(final List<KeyValue<String, String>> values){
+	default Status mSetNx(final List<KeyValue<String, String>> values) {
 		if(values == null){
 			return Status.FAILURE;
 		}else{
@@ -610,6 +721,16 @@ public interface StringOperations extends StringCommands, RedisOperations {
 
 			return mSetNx(data);
 		}
+	}
+
+	@Override
+	default Status pSetEx(final String key, String value, int lifetime) {
+		return execute((client)->client.stringOperations().pSetEx(key, value, lifetime));
+	}
+
+	@Override
+	default Status pSetEx(final byte[] key, final byte[] value, final int lifetime) {
+		return execute((client)->client.stringOperations().pSetEx(key, value, lifetime));
 	}
 
 	/**
@@ -649,6 +770,26 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
 	<V> Status pSetEx(final byte[] key, final V value, final int lifetime);
+
+	@Override
+	default Status set(final String key, final String value) {
+		return execute((client)->client.stringOperations().set(key, value));
+	}
+
+	@Override
+	default Status set(final byte[] key, final byte[] value) {
+		return execute((client)->client.stringOperations().set(key, value));
+	}
+
+	@Override
+	default Status set(final String key, final String value, final SetArgument setArgument) {
+		return execute((client)->client.stringOperations().set(key, value, setArgument));
+	}
+
+	@Override
+	default Status set(final byte[] key, final byte[] value, final SetArgument setArgument) {
+		return execute((client)->client.stringOperations().set(key, value, setArgument));
+	}
 
 	/**
 	 * 将对象 value 序列化后关联到 key；
@@ -722,6 +863,26 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 */
 	<V> Status set(final byte[] key, final V value, final SetArgument setArgument);
 
+	@Override
+	default Status setEx(final String key, final String value, final int lifetime) {
+		return execute((client)->client.stringOperations().setEx(key, value, lifetime));
+	}
+
+	@Override
+	default Status setEx(final byte[] key, final byte[] value, final int lifetime) {
+		return execute((client)->client.stringOperations().setEx(key, value, lifetime));
+	}
+
+	@Override
+	default Status setNx(final String key, final String value) {
+		return execute((client)->client.stringOperations().setNx(key, value));
+	}
+
+	@Override
+	default Status setNx(final byte[] key, final byte[] value) {
+		return execute((client)->client.stringOperations().setNx(key, value));
+	}
+
 	/**
 	 * 将键 key 的值设置为 value ，并将键 key 的生存时间设置为 lifetime；
 	 * 如果键 key 已经存在，那么将覆盖已有的值
@@ -791,5 +952,45 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
 	<V> Status setNx(final byte[] key, final V value);
+
+	@Override
+	default Long setRange(final String key, final long offset, final String value) {
+		return execute((client)->client.stringOperations().setRange(key, offset, value));
+	}
+
+	@Override
+	default Long setRange(final byte[] key, final long offset, final byte[] value) {
+		return execute((client)->client.stringOperations().setRange(key, offset, value));
+	}
+
+	@Override
+	default String getRange(final String key, final long start, final long end) {
+		return execute((client)->client.stringOperations().getRange(key, start, end));
+	}
+
+	@Override
+	default byte[] getRange(final byte[] key, final long start, final long end) {
+		return execute((client)->client.stringOperations().getRange(key, start, end));
+	}
+
+	@Override
+	default Long strlen(final String key) {
+		return execute((client)->client.stringOperations().strlen(key));
+	}
+
+	@Override
+	default Long strlen(final byte[] key) {
+		return execute((client)->client.stringOperations().strlen(key));
+	}
+
+	@Override
+	default String substr(final String key, final long start, final long end) {
+		return execute((client)->client.stringOperations().substr(key, start, end));
+	}
+
+	@Override
+	default byte[] substr(final byte[] key, final long start, final long end) {
+		return execute((client)->client.stringOperations().substr(key, start, end));
+	}
 
 }

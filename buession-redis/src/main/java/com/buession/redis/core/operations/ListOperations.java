@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
@@ -40,6 +40,16 @@ import java.util.List;
  * @author Yong.Teng
  */
 public interface ListOperations extends ListCommands, RedisOperations {
+
+	@Override
+	default String lIndex(final String key, final long index) {
+		return execute((client)->client.listOperations().lIndex(key, index));
+	}
+
+	@Override
+	default byte[] lIndex(final byte[] key, final long index) {
+		return execute((client)->client.listOperations().lIndex(key, index));
+	}
 
 	/**
 	 * 获取列表 key 中，下标为 index 的元素，并反序列为对象
@@ -153,6 +163,16 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 */
 	<V> V lIndexObject(final byte[] key, final long index, final TypeReference<V> type);
 
+	@Override
+	default Long lInsert(final String key, final ListPosition position, final String pivot, final String value) {
+		return execute((client)->client.listOperations().lInsert(key, position, pivot, value));
+	}
+
+	@Override
+	default Long lInsert(final byte[] key, final ListPosition position, final byte[] pivot, final byte[] value) {
+		return execute((client)->client.listOperations().lInsert(key, position, pivot, value));
+	}
+
 	/**
 	 * 将值 value 序列化后，插入到列表 key 当中，位于值 pivot 之前或之后
 	 *
@@ -195,6 +215,16 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 */
 	<V> Long lInsert(final byte[] key, final ListPosition position, final V pivot, final V value);
 
+	@Override
+	default Status lSet(final String key, final long index, final String value) {
+		return execute((client)->client.listOperations().lSet(key, index, value));
+	}
+
+	@Override
+	default Status lSet(final byte[] key, final long index, final byte[] value) {
+		return execute((client)->client.listOperations().lSet(key, index, value));
+	}
+
 	/**
 	 * 将列表 key 下标为 index 的元素的值设置为 value 序列化的值
 	 *
@@ -230,6 +260,26 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * @return 操作结果；设置成功时返回 Status.Success，否则返回 Status.FAILURE
 	 */
 	<V> Status lSet(final byte[] key, final long index, final V value);
+
+	@Override
+	default Long lLen(final String key) {
+		return execute((client)->client.listOperations().lLen(key));
+	}
+
+	@Override
+	default Long lLen(final byte[] key) {
+		return execute((client)->client.listOperations().lLen(key));
+	}
+
+	@Override
+	default List<String> lRange(final String key, final long start, final long end) {
+		return execute((client)->client.listOperations().lRange(key, start, end));
+	}
+
+	@Override
+	default List<byte[]> lRange(final byte[] key, final long start, final long end) {
+		return execute((client)->client.listOperations().lRange(key, start, end));
+	}
 
 	/**
 	 * 获取列表 key 中指定区间内的元素，区间以偏移量 start 和 stop 之间的元素（包含 start 和 stop）并反序列化为对象；
@@ -369,6 +419,66 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 */
 	<V> List<V> lRangeObject(final byte[] key, final long start, final long end, final TypeReference<V> type);
 
+	@Override
+	default Long lPos(final String key, final String element) {
+		return execute((client)->client.listOperations().lPos(key, element));
+	}
+
+	@Override
+	default Long lPos(final byte[] key, final byte[] element) {
+		return execute((client)->client.listOperations().lPos(key, element));
+	}
+
+	@Override
+	default Long lPos(final String key, final String element, final LPosArgument lPosArgument) {
+		return execute((client)->client.listOperations().lPos(key, element, lPosArgument));
+	}
+
+	@Override
+	default Long lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument) {
+		return execute((client)->client.listOperations().lPos(key, element, lPosArgument));
+	}
+
+	@Override
+	default List<Long> lPos(final String key, String element, final LPosArgument lPosArgument, final long count) {
+		return execute((client)->client.listOperations().lPos(key, element, lPosArgument, count));
+	}
+
+	@Override
+	default List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument, final long count) {
+		return execute((client)->client.listOperations().lPos(key, element, lPosArgument, count));
+	}
+
+	@Override
+	default Long lRem(final String key, final String value, final long count) {
+		return execute((client)->client.listOperations().lRem(key, value, count));
+	}
+
+	@Override
+	default Long lRem(final byte[] key, final byte[] value, final long count) {
+		return execute((client)->client.listOperations().lRem(key, value, count));
+	}
+
+	@Override
+	default Status lTrim(final String key, final long start, final long end) {
+		return execute((client)->client.listOperations().lTrim(key, start, end));
+	}
+
+	@Override
+	default Status lTrim(final byte[] key, final long start, final long end) {
+		return execute((client)->client.listOperations().lTrim(key, start, end));
+	}
+
+	@Override
+	default String lMove(final String key, final String destKey, final Direction from, final Direction to) {
+		return execute((client)->client.listOperations().lMove(key, destKey, from, to));
+	}
+
+	@Override
+	default byte[] lMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to) {
+		return execute((client)->client.listOperations().lMove(key, destKey, from, to));
+	}
+
 	/**
 	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化后的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)
 	 *
@@ -493,6 +603,18 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	<V> V lMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
 					  final TypeReference<V> type);
 
+	@Override
+	default String blMove(final String key, final String destKey, final Direction from, final Direction to,
+						  final int timeout) {
+		return execute((client)->client.listOperations().blMove(key, destKey, from, to, timeout));
+	}
+
+	@Override
+	default byte[] blMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
+						  final int timeout) {
+		return execute((client)->client.listOperations().blMove(key, destKey, from, to, timeout));
+	}
+
 	/**
 	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化后的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
 	 * 是 lmove 的阻塞版
@@ -636,6 +758,16 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 */
 	<V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
 					   final int timeout, final TypeReference<V> type);
+
+	@Override
+	default List<String> blPop(final String[] keys, final int timeout) {
+		return execute((client)->client.listOperations().blPop(keys, timeout));
+	}
+
+	@Override
+	default List<byte[]> blPop(final byte[][] keys, final int timeout) {
+		return execute((client)->client.listOperations().blPop(keys, timeout));
+	}
 
 	/**
 	 * 移除并返回 key 的头元素反序列化后的对象，BLPOP 是列表的阻塞式(blocking)弹出原语；
@@ -753,6 +885,16 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 */
 	<V> List<V> blPopObject(final byte[][] keys, final int timeout, final TypeReference<V> type);
 
+	@Override
+	default List<String> brPop(final String[] keys, final int timeout) {
+		return execute((client)->client.listOperations().brPop(keys, timeout));
+	}
+
+	@Override
+	default List<byte[]> brPop(final byte[][] keys, final int timeout) {
+		return execute((client)->client.listOperations().brPop(keys, timeout));
+	}
+
 	/**
 	 * 移除并返回列表中 key 的尾元素反序列化后的对象，BRPOP 是列表的阻塞式(blocking)弹出原语；
 	 * 当给定列表内没有任何元素可供弹出的时候，连接将被阻塞，直到等待超时或发现可弹出元素为止
@@ -866,6 +1008,16 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * @see TypeReference
 	 */
 	<V> List<V> brPopObject(final byte[][] keys, final int timeout, final TypeReference<V> type);
+
+	@Override
+	default String brPoplPush(final String key, final String destKey, final int timeout) {
+		return execute((client)->client.listOperations().brPoplPush(key, destKey, timeout));
+	}
+
+	@Override
+	default byte[] brPoplPush(final byte[] key, final byte[] destKey, final int timeout) {
+		return execute((client)->client.listOperations().brPoplPush(key, destKey, timeout));
+	}
 
 	/**
 	 * 将列表 key 中的最后尾元素弹出，并返回反序列化后的对象；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
@@ -1005,6 +1157,16 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 */
 	<V> V brPoplPushObject(final byte[] key, final byte[] destKey, final int timeout, final TypeReference<V> type);
 
+	@Override
+	default String lPop(final String key) {
+		return execute((client)->client.listOperations().lPop(key));
+	}
+
+	@Override
+	default byte[] lPop(final byte[] key) {
+		return execute((client)->client.listOperations().lPop(key));
+	}
+
 	/**
 	 * 移除并返回列表 key 的头元素，并反序列为对象
 	 *
@@ -1101,6 +1263,16 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 */
 	<V> V lPopObject(final byte[] key, final TypeReference<V> type);
 
+	@Override
+	default Long lPush(final String key, final String... values) {
+		return execute((client)->client.listOperations().lPush(key, values));
+	}
+
+	@Override
+	default Long lPush(final byte[] key, final byte[]... values) {
+		return execute((client)->client.listOperations().lPush(key, values));
+	}
+
 	/**
 	 * 将一个值 value 序列化后，插入到列表 key 的表头
 	 *
@@ -1167,6 +1339,16 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	@SuppressWarnings({"unchecked"})
 	<V> Long lPush(final byte[] key, final V... values);
 
+	@Override
+	default Long lPushX(final String key, final String... values) {
+		return execute((client)->client.listOperations().lPushX(key, values));
+	}
+
+	@Override
+	default Long lPushX(final byte[] key, final byte[]... values) {
+		return execute((client)->client.listOperations().lPushX(key, values));
+	}
+
 	/**
 	 * 将值 value 序列化后，插入到列表 key 的表头，当且仅当 key 存在并且是一个列表
 	 *
@@ -1232,6 +1414,16 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 */
 	@SuppressWarnings({"unchecked"})
 	<V> Long lPushX(final byte[] key, final V... values);
+
+	@Override
+	default String rPop(final String key) {
+		return execute((client)->client.listOperations().rPop(key));
+	}
+
+	@Override
+	default byte[] rPop(final byte[] key) {
+		return execute((client)->client.listOperations().rPop(key));
+	}
 
 	/**
 	 * 移除并返回列表 key 的尾元素，并反序列化为对象
@@ -1324,6 +1516,16 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * @see TypeReference
 	 */
 	<V> V rPopObject(final byte[] key, final TypeReference<V> type);
+
+	@Override
+	default String rPoplPush(final String key, final String destKey) {
+		return execute((client)->client.listOperations().rPoplPush(key, destKey));
+	}
+
+	@Override
+	default byte[] rPoplPush(final byte[] key, final byte[] destKey) {
+		return execute((client)->client.listOperations().rPoplPush(key, destKey));
+	}
 
 	/**
 	 * 将列表 key 中的最后尾元素弹出，并反序列化为对象后返回；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
@@ -1445,6 +1647,16 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 */
 	<V> V rPoplPushObject(final byte[] key, final byte[] destKey, final TypeReference<V> type);
 
+	@Override
+	default Long rPush(final String key, final String... values) {
+		return execute((client)->client.listOperations().rPush(key, values));
+	}
+
+	@Override
+	default Long rPush(final byte[] key, final byte[]... values) {
+		return execute((client)->client.listOperations().rPush(key, values));
+	}
+
 	/**
 	 * 将值 value 序列化后，插入到列表 key 的表尾
 	 *
@@ -1510,6 +1722,16 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 */
 	@SuppressWarnings({"unchecked"})
 	<V> Long rPush(final byte[] key, final V... values);
+
+	@Override
+	default Long rPushX(final String key, final String... values) {
+		return execute((client)->client.listOperations().rPushX(key, values));
+	}
+
+	@Override
+	default Long rPushX(final byte[] key, final byte[]... values) {
+		return execute((client)->client.listOperations().rPushX(key, values));
+	}
 
 	/**
 	 * 将值 value 序列化后，插入到列表 key 的表尾，当且仅当 key 存在并且是一个列表

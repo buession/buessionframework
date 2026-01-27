@@ -19,11 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis;
 
+import com.buession.core.collect.Maps;
 import com.buession.core.type.TypeReference;
 import com.buession.core.validator.Validate;
 import com.buession.lang.KeyValue;
@@ -48,9 +49,9 @@ import java.util.stream.Collectors;
  * Redis 命令操作封装扩展，可序列化对象和反序列化为对象
  *
  * @author Yong.Teng
- * @see BaseRedisTemplate
+ * @see AbstractRedisTemplate
  */
-public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations, ClusterOperations,
+public class RedisTemplate extends AbstractRedisTemplate implements BitMapOperations, ClusterOperations,
 		ConnectionOperations, GenericOperations, GeoOperations, HashOperations, HyperLogLogOperations, KeyOperations,
 		ListOperations, PubSubOperations, ScriptingOperations, ServerOperations, SetOperations, SortedSetOperations,
 		StreamOperations, StringOperations, TransactionOperations {
@@ -2718,6 +2719,20 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
+	public Status mSet(final Map<String, String> values) {
+		final Map<String, String> newValues = Maps.map(values, this::rawKey, (value)->value,
+				new LinkedHashMap<>(values.size()));
+		return execute((client)->client.stringOperations().mSet(newValues));
+	}
+
+	@Override
+	public Status mSetNx(final Map<String, String> values) {
+		final Map<String, String> newValues = Maps.map(values, this::rawKey, (value)->value,
+				new LinkedHashMap<>(values.size()));
+		return execute((client)->client.stringOperations().mSetNx(newValues));
+	}
+
+	@Override
 	public <V> List<V> mGetObject(final String... keys) {
 		return execute((client)->client.stringOperations().mGet(rawKeys(keys)),
 				new Converter.SimpleListStringConverter<>(this));
@@ -2805,14 +2820,17 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 
 	@Override
 	public void discard() {
-		super.discard();
+		execute((client)->{
+			client.getConnection().discard();
+			return null;
+		});
 		resetTransactionOrPipeline();
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	public List<Object> exec() {
-		List<Object> result = super.exec();
+		List<Object> result = execute((client)->client.getConnection().exec());
 
 		if(result != null){
 			Map<Integer, Function<?, ?>> map = txConverters.get();

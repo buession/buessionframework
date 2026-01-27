@@ -19,12 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
 
 import com.buession.core.type.TypeReference;
+import com.buession.lang.Status;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.SetCommands;
 
@@ -39,6 +40,16 @@ import java.util.Set;
  * @author Yong.Teng
  */
 public interface SetOperations extends SetCommands, RedisOperations {
+
+	@Override
+	default Long sAdd(final String key, final String... members) {
+		return execute((client)->client.setOperations().sAdd(key, members));
+	}
+
+	@Override
+	default Long sAdd(final byte[] key, final byte[]... members) {
+		return execute((client)->client.setOperations().sAdd(key, members));
+	}
 
 	/**
 	 * 将一个或多个 member 元素序列化后加入到集合 key 当中，已经存在于集合的 member 元素将被忽略
@@ -73,6 +84,26 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 */
 	@SuppressWarnings({"unchecked"})
 	<V> Long sAdd(final byte[] key, final V... members);
+
+	@Override
+	default Long sCard(final String key) {
+		return execute((client)->client.setOperations().sCard(key));
+	}
+
+	@Override
+	default Long sCard(final byte[] key) {
+		return execute((client)->client.setOperations().sCard(key));
+	}
+
+	@Override
+	default Set<String> sDiff(final String... keys) {
+		return execute((client)->client.setOperations().sDiff(keys));
+	}
+
+	@Override
+	default Set<byte[]> sDiff(final byte[]... keys) {
+		return execute((client)->client.setOperations().sDiff(keys));
+	}
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为对象
@@ -170,6 +201,26 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 */
 	<V> Set<V> sDiffObject(final byte[][] keys, final TypeReference<V> type);
 
+	@Override
+	default Long sDiffStore(final String destKey, final String... keys) {
+		return execute((client)->client.setOperations().sDiffStore(destKey, keys));
+	}
+
+	@Override
+	default Long sDiffStore(final byte[] destKey, final byte[]... keys) {
+		return execute((client)->client.setOperations().sDiffStore(destKey, keys));
+	}
+
+	@Override
+	default Set<String> sInter(final String... keys) {
+		return execute((client)->client.setOperations().sInter(keys));
+	}
+
+	@Override
+	default Set<byte[]> sInter(final byte[]... keys) {
+		return execute((client)->client.setOperations().sInter(keys));
+	}
+
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并反序列为对象
 	 *
@@ -265,6 +316,106 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * @see TypeReference
 	 */
 	<V> Set<V> sInterObject(final byte[][] keys, final TypeReference<V> type);
+
+	@Override
+	default Long sInterStore(final String destKey, final String... keys) {
+		return execute((client)->client.setOperations().sDiffStore(destKey, keys));
+	}
+
+	@Override
+	default Long sInterStore(final byte[] destKey, final byte[]... keys) {
+		return execute((client)->client.setOperations().sDiffStore(destKey, keys));
+	}
+
+	@Override
+	default Boolean sIsMember(final String key, final String member) {
+		return execute((client)->client.setOperations().sIsMember(key, member));
+	}
+
+	@Override
+	default Boolean sIsMember(final byte[] key, final byte[] member) {
+		return execute((client)->client.setOperations().sIsMember(key, member));
+	}
+
+	@Override
+	default List<Boolean> smIsMember(final String key, final String... members) {
+		return execute((client)->client.setOperations().smIsMember(key, members));
+	}
+
+	@Override
+	default List<Boolean> smIsMember(final byte[] key, final byte[]... members) {
+		return execute((client)->client.setOperations().smIsMember(key, members));
+	}
+
+	@Override
+	default Set<String> sMembers(final String key) {
+		return execute((client)->client.setOperations().sMembers(key));
+	}
+
+	@Override
+	default Set<byte[]> sMembers(final byte[] key) {
+		return execute((client)->client.setOperations().sMembers(key));
+	}
+
+	@Override
+	default Status sMove(final String key, final String destKey, final String member) {
+		return execute((client)->client.setOperations().sMove(key, destKey, member));
+	}
+
+	@Override
+	default Status sMove(final byte[] key, final byte[] destKey, final byte[] member) {
+		return execute((client)->client.setOperations().sMove(key, destKey, member));
+	}
+
+	@Override
+	default String sPop(final String key) {
+		return execute((client)->client.setOperations().sPop(key));
+	}
+
+	@Override
+	default byte[] sPop(final byte[] key) {
+		return execute((client)->client.setOperations().sPop(key));
+	}
+
+	@Override
+	default Set<String> sPop(final String key, final long count) {
+		return execute((client)->client.setOperations().sPop(key, count));
+	}
+
+	@Override
+	default Set<byte[]> sPop(final byte[] key, final long count) {
+		return execute((client)->client.setOperations().sPop(key, count));
+	}
+
+	@Override
+	default String sRandMember(final String key) {
+		return execute((client)->client.setOperations().sRandMember(key));
+	}
+
+	@Override
+	default byte[] sRandMember(final byte[] key) {
+		return execute((client)->client.setOperations().sRandMember(key));
+	}
+
+	@Override
+	default List<String> sRandMember(final String key, final long count) {
+		return execute((client)->client.setOperations().sRandMember(key, count));
+	}
+
+	@Override
+	default List<byte[]> sRandMember(final byte[] key, final long count) {
+		return execute((client)->client.setOperations().sRandMember(key, count));
+	}
+
+	@Override
+	default Long sRem(final String key, final String... members) {
+		return execute((client)->client.setOperations().sRem(key, members));
+	}
+
+	@Override
+	default Long sRem(final byte[] key, final byte[]... members) {
+		return execute((client)->client.setOperations().sRem(key, members));
+	}
 
 	/**
 	 * 获取集合 key 中的所有成员反序列化后的对象
@@ -835,6 +986,90 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 */
 	@SuppressWarnings({"unchecked"})
 	<V> Long sRem(final byte[] key, final V... members);
+
+	@Override
+	default ScanResult<List<String>> sScan(final String key, final long cursor) {
+		return execute((client)->client.setOperations().sScan(key, cursor));
+	}
+
+	@Override
+	default ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor) {
+		return execute((client)->client.setOperations().sScan(key, cursor));
+	}
+
+	@Override
+	default ScanResult<List<String>> sScan(final String key, final String cursor) {
+		return execute((client)->client.setOperations().sScan(key, cursor));
+	}
+
+	@Override
+	default ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor) {
+		return execute((client)->client.setOperations().sScan(key, cursor));
+	}
+
+	@Override
+	default ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern) {
+		return execute((client)->client.setOperations().sScan(key, cursor, pattern));
+	}
+
+	@Override
+	default ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern) {
+		return execute((client)->client.setOperations().sScan(key, cursor, pattern));
+	}
+
+	@Override
+	default ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern) {
+		return execute((client)->client.setOperations().sScan(key, cursor, pattern));
+	}
+
+	@Override
+	default ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
+		return execute((client)->client.setOperations().sScan(key, cursor, pattern));
+	}
+
+	@Override
+	default ScanResult<List<String>> sScan(final String key, final long cursor, final long count) {
+		return execute((client)->client.setOperations().sScan(key, cursor, count));
+	}
+
+	@Override
+	default ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final long count) {
+		return execute((client)->client.setOperations().sScan(key, cursor, count));
+	}
+
+	@Override
+	default ScanResult<List<String>> sScan(final String key, final String cursor, final long count) {
+		return execute((client)->client.setOperations().sScan(key, cursor, count));
+	}
+
+	@Override
+	default ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final long count) {
+		return execute((client)->client.setOperations().sScan(key, cursor, count));
+	}
+
+	@Override
+	default ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern,
+										   final long count) {
+		return execute((client)->client.setOperations().sScan(key, cursor, pattern, count));
+	}
+
+	@Override
+	default ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern,
+										   final long count) {
+		return execute((client)->client.setOperations().sScan(key, cursor, pattern, count));
+	}
+
+	@Override
+	default ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern,
+										   final long count) {
+		return execute((client)->client.setOperations().sScan(key, cursor, pattern, count));
+	}
+
+	@Override
+	default ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+										   final long count) {
+		return execute((client)->client.setOperations().sScan(key, cursor, pattern, count));
+	}
 
 	/**
 	 * 迭代集合键中的元素，并将值反序列化为对象
@@ -1816,6 +2051,16 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final byte[] pattern, final long count,
 										final TypeReference<V> type);
 
+	@Override
+	default Set<String> sUnion(final String... keys) {
+		return execute((client)->client.setOperations().sUnion(keys));
+	}
+
+	@Override
+	default Set<byte[]> sUnion(final byte[]... keys) {
+		return execute((client)->client.setOperations().sUnion(keys));
+	}
+
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的并集，并反序列为对象
 	 *
@@ -1911,5 +2156,15 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * @see TypeReference
 	 */
 	<V> Set<V> sUnionObject(final byte[][] keys, final TypeReference<V> type);
+
+	@Override
+	default Long sUnionStore(final String destKey, final String... keys) {
+		return execute((client)->client.setOperations().sUnionStore(destKey, keys));
+	}
+
+	@Override
+	default Long sUnionStore(final byte[] destKey, final byte[]... keys) {
+		return execute((client)->client.setOperations().sUnionStore(destKey, keys));
+	}
 
 }

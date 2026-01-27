@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
@@ -60,6 +60,16 @@ public interface ScriptingOperations extends ScriptingCommands, RedisOperations 
 	}
 
 	@Override
+	default Object eval(final String script, final String[] keys, final String[] arguments) {
+		return execute((client)->client.scriptingOperations().eval(script, keys, arguments));
+	}
+
+	@Override
+	default Object eval(final byte[] script, final byte[][] keys, final byte[][] arguments) {
+		return execute((client)->client.scriptingOperations().eval(script, keys, arguments));
+	}
+
+	@Override
 	default Object evalSha(final String digest) {
 		return execute((client)->client.scriptingOperations().evalSha(digest));
 	}
@@ -77,6 +87,16 @@ public interface ScriptingOperations extends ScriptingCommands, RedisOperations 
 	@Override
 	default Object evalSha(final byte[] digest, final byte[]... params) {
 		return execute((client)->client.scriptingOperations().evalSha(digest, params));
+	}
+
+	@Override
+	default Object evalSha(final String digest, final String[] keys, final String[] arguments) {
+		return execute((client)->client.scriptingOperations().evalSha(digest, keys, arguments));
+	}
+
+	@Override
+	default Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] arguments) {
+		return execute((client)->client.scriptingOperations().evalSha(digest, keys, arguments));
 	}
 
 	@Override

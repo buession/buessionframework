@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
@@ -108,6 +108,16 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	@Override
 	default List<String> clusterGetKeysInSlot(final int slot, final long count) {
 		return execute((client)->client.clusterOperations().clusterGetKeysInSlot(slot, count));
+	}
+
+	@Override
+	default Long clusterKeySlot(final String key) {
+		return execute((client)->client.clusterOperations().clusterKeySlot(key));
+	}
+
+	@Override
+	default Long clusterKeySlot(final byte[] key) {
+		return execute((client)->client.clusterOperations().clusterKeySlot(key));
 	}
 
 	@Override

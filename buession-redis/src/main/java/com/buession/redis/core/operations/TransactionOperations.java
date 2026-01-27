@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
@@ -52,6 +52,16 @@ public interface TransactionOperations extends TransactionCommands, RedisOperati
 	@Override
 	default Status unwatch() {
 		return execute((client)->client.transactionOperations().unwatch());
+	}
+
+	@Override
+	default Status watch(final String... keys) {
+		return execute((client)->client.transactionOperations().watch(keys));
+	}
+
+	@Override
+	default Status watch(final byte[]... keys) {
+		return execute((client)->client.transactionOperations().watch(keys));
 	}
 
 }

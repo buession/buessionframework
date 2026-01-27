@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
@@ -33,6 +33,7 @@ import com.buession.redis.core.command.HashCommands;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 哈希表运算
@@ -42,6 +43,16 @@ import java.util.Map;
  * @author Yong.Teng
  */
 public interface HashOperations extends HashCommands, RedisOperations {
+
+	@Override
+	default Long hDel(final String key, final String... fields) {
+		return execute((client)->client.hashOperations().hDel(key, fields));
+	}
+
+	@Override
+	default Long hDel(final byte[] key, final byte[]... fields) {
+		return execute((client)->client.hashOperations().hDel(key, fields));
+	}
 
 	/**
 	 * 删除哈希表 key 中的一个或多个指定域
@@ -73,6 +84,26 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 */
 	default Long hDelete(final byte[] key, final byte[]... fields) {
 		return hDel(key, fields);
+	}
+
+	@Override
+	default Boolean hExists(final String key, final String field) {
+		return execute((client)->client.hashOperations().hExists(key, field));
+	}
+
+	@Override
+	default Boolean hExists(final byte[] key, final byte[] field) {
+		return execute((client)->client.hashOperations().hExists(key, field));
+	}
+
+	@Override
+	default String hGet(final String key, final String field) {
+		return execute((client)->client.hashOperations().hGet(key, field));
+	}
+
+	@Override
+	default byte[] hGet(final byte[] key, final byte[] field) {
+		return execute((client)->client.hashOperations().hGet(key, field));
 	}
 
 	/**
@@ -183,6 +214,16 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 */
 	<V> V hGetObject(final byte[] key, final byte[] field, final TypeReference<V> type);
 
+	@Override
+	default Map<String, String> hGetAll(final String key) {
+		return execute((client)->client.hashOperations().hGetAll(key));
+	}
+
+	@Override
+	default Map<byte[], byte[]> hGetAll(final byte[] key) {
+		return execute((client)->client.hashOperations().hGetAll(key));
+	}
+
 	/**
 	 * 获取哈希表 key 中，所有的域和值，并将值反序列化为对象
 	 *
@@ -279,6 +320,16 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 */
 	<V> Map<byte[], V> hGetAllObject(final byte[] key, final TypeReference<V> type);
 
+	@Override
+	default Long hIncrBy(final String key, final String field, final long value) {
+		return execute((client)->client.hashOperations().hIncrBy(key, field, value));
+	}
+
+	@Override
+	default Long hIncrBy(final byte[] key, final byte[] field, final long value) {
+		return execute((client)->client.hashOperations().hIncrBy(key, field, value));
+	}
+
 	/**
 	 * 为哈希表 key 中的域 field 的值加上减量 increment
 	 *
@@ -315,6 +366,16 @@ public interface HashOperations extends HashCommands, RedisOperations {
 		return hIncrBy(key, field, value > 0 ? value * -1 : value);
 	}
 
+	@Override
+	default Double hIncrByFloat(final String key, final String field, final double value) {
+		return execute((client)->client.hashOperations().hIncrByFloat(key, field, value));
+	}
+
+	@Override
+	default Double hIncrByFloat(final byte[] key, final byte[] field, final double value) {
+		return execute((client)->client.hashOperations().hIncrByFloat(key, field, value));
+	}
+
 	/**
 	 * 为哈希表 key 中的域 field 加上浮点数减量 increment
 	 *
@@ -349,6 +410,36 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 */
 	default Double hDecrByFloat(final byte[] key, final byte[] field, final double value) {
 		return hIncrByFloat(key, field, value > 0 ? value * -1 : value);
+	}
+
+	@Override
+	default Set<String> hKeys(final String key) {
+		return execute((client)->client.hashOperations().hKeys(key));
+	}
+
+	@Override
+	default Set<byte[]> hKeys(final byte[] key) {
+		return execute((client)->client.hashOperations().hKeys(key));
+	}
+
+	@Override
+	default Long hLen(final String key) {
+		return execute((client)->client.hashOperations().hLen(key));
+	}
+
+	@Override
+	default Long hLen(final byte[] key) {
+		return execute((client)->client.hashOperations().hLen(key));
+	}
+
+	@Override
+	default List<String> hMGet(final String key, final String... fields) {
+		return execute((client)->client.hashOperations().hMGet(key, fields));
+	}
+
+	@Override
+	default List<byte[]> hMGet(final byte[] key, final byte[]... fields) {
+		return execute((client)->client.hashOperations().hMGet(key, fields));
 	}
 
 	/**
@@ -459,6 +550,16 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 */
 	<V> List<V> hMGetObject(final byte[] key, final byte[][] fields, final TypeReference<V> type);
 
+	@Override
+	default Status hMSet(final String key, final Map<String, String> data) {
+		return execute((client)->client.hashOperations().hMSet(key, data));
+	}
+
+	@Override
+	default Status hMSet(final byte[] key, final Map<byte[], byte[]> data) {
+		return execute((client)->client.hashOperations().hMSet(key, data));
+	}
+
 	/**
 	 * 批量将多个 field =&gt; value (域-值)对设置到哈希表 key 中
 	 *
@@ -531,6 +632,36 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	@SuppressWarnings({"unchecked"})
 	default <V> Status hMSet(final byte[] key, final KeyValue<byte[], V>... data) {
 		return hMSet(key, Arrays.asList(data));
+	}
+
+	@Override
+	default String hRandField(final String key) {
+		return execute((client)->client.hashOperations().hRandField(key));
+	}
+
+	@Override
+	default byte[] hRandField(final byte[] key) {
+		return execute((client)->client.hashOperations().hRandField(key));
+	}
+
+	@Override
+	default List<String> hRandField(final String key, final long count) {
+		return execute((client)->client.hashOperations().hRandField(key, count));
+	}
+
+	@Override
+	default List<byte[]> hRandField(final byte[] key, final long count) {
+		return execute((client)->client.hashOperations().hRandField(key, count));
+	}
+
+	@Override
+	default Map<String, String> hRandFieldWithValues(final String key, final long count) {
+		return execute((client)->client.hashOperations().hRandFieldWithValues(key, count));
+	}
+
+	@Override
+	default Map<byte[], byte[]> hRandFieldWithValues(final byte[] key, final long count) {
+		return execute((client)->client.hashOperations().hRandFieldWithValues(key, count));
 	}
 
 	/**
@@ -652,6 +783,26 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @see TypeReference
 	 */
 	<V> Map<byte[], V> hRandFieldWithValuesObject(final byte[] key, final long count, final TypeReference<V> type);
+
+	@Override
+	default ScanResult<Map<String, String>> hScan(final String key, final long cursor) {
+		return execute((client)->client.hashOperations().hScan(key, cursor));
+	}
+
+	@Override
+	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor) {
+		return execute((client)->client.hashOperations().hScan(key, cursor));
+	}
+
+	@Override
+	default ScanResult<Map<String, String>> hScan(final String key, final String cursor) {
+		return execute((client)->client.hashOperations().hScan(key, cursor));
+	}
+
+	@Override
+	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor) {
+		return execute((client)->client.hashOperations().hScan(key, cursor));
+	}
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
@@ -871,6 +1022,26 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @see TypeReference
 	 */
 	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final TypeReference<V> type);
+
+	@Override
+	default ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern) {
+		return execute((client)->client.hashOperations().hScan(key, cursor, pattern));
+	}
+
+	@Override
+	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern) {
+		return execute((client)->client.hashOperations().hScan(key, cursor, pattern));
+	}
+
+	@Override
+	default ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern) {
+		return execute((client)->client.hashOperations().hScan(key, cursor, pattern));
+	}
+
+	@Override
+	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
+		return execute((client)->client.hashOperations().hScan(key, cursor, pattern));
+	}
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
@@ -1120,6 +1291,26 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
 											   final TypeReference<V> type);
 
+	@Override
+	default ScanResult<Map<String, String>> hScan(final String key, final long cursor, final long count) {
+		return execute((client)->client.hashOperations().hScan(key, cursor, count));
+	}
+
+	@Override
+	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final long count) {
+		return execute((client)->client.hashOperations().hScan(key, cursor, count));
+	}
+
+	@Override
+	default ScanResult<Map<String, String>> hScan(final String key, final String cursor, final long count) {
+		return execute((client)->client.hashOperations().hScan(key, cursor, count));
+	}
+
+	@Override
+	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final long count) {
+		return execute((client)->client.hashOperations().hScan(key, cursor, count));
+	}
+
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
 	 *
@@ -1368,6 +1559,30 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final long count,
 											   final TypeReference<V> type);
 
+	@Override
+	default ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern,
+												  final long count) {
+		return execute((client)->client.hashOperations().hScan(key, cursor, pattern, count));
+	}
+
+	@Override
+	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern,
+												  final long count) {
+		return execute((client)->client.hashOperations().hScan(key, cursor, pattern, count));
+	}
+
+	@Override
+	default ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
+												  final long count) {
+		return execute((client)->client.hashOperations().hScan(key, cursor, pattern, count));
+	}
+
+	@Override
+	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+												  final long count) {
+		return execute((client)->client.hashOperations().hScan(key, cursor, pattern, count));
+	}
+
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
 	 *
@@ -1647,6 +1862,16 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
 											   final long count, final TypeReference<V> type);
 
+	@Override
+	default Long hSet(final String key, final String field, final String value) {
+		return execute((client)->client.hashOperations().hSet(key, field, value));
+	}
+
+	@Override
+	default Long hSet(final byte[] key, final byte[] field, final byte[] value) {
+		return execute((client)->client.hashOperations().hSet(key, field, value));
+	}
+
 	/**
 	 * 将哈希表 key 中域 field 的值设置为 value。
 	 * 如果给定的哈希表并不存在，那么一个新的哈希表；
@@ -1683,6 +1908,16 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 */
 	<V> Long hSet(final byte[] key, final byte[] field, final V value);
 
+	@Override
+	default Status hSetNx(final String key, final String field, final String value) {
+		return execute((client)->client.hashOperations().hSetNx(key, field, value));
+	}
+
+	@Override
+	default Status hSetNx(final byte[] key, final byte[] field, final byte[] value) {
+		return execute((client)->client.hashOperations().hSetNx(key, field, value));
+	}
+
 	/**
 	 * 当且仅当域 field 尚未存在于哈希表 key 中的情况下，将它的值设置为 value
 	 *
@@ -1714,6 +1949,26 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
 	 */
 	<V> Status hSetNx(final byte[] key, final byte[] field, final V value);
+
+	@Override
+	default Long hStrLen(final String key, final String field) {
+		return execute((client)->client.hashOperations().hStrLen(key, field));
+	}
+
+	@Override
+	default Long hStrLen(final byte[] key, final byte[] field) {
+		return execute((client)->client.hashOperations().hStrLen(key, field));
+	}
+
+	@Override
+	default List<String> hVals(final String key) {
+		return execute((client)->client.hashOperations().hVals(key));
+	}
+
+	@Override
+	default List<byte[]> hVals(final byte[] key) {
+		return execute((client)->client.hashOperations().hVals(key));
+	}
 
 	/**
 	 * 获取哈希表 key 中所有域的值，并将值反序列化为对象

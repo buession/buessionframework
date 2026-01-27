@@ -19,18 +19,24 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
 
 import com.buession.core.utils.Assert;
 import com.buession.lang.Status;
+import com.buession.redis.core.ExpireOption;
 import com.buession.redis.core.MigrateOperation;
+import com.buession.redis.core.ObjectEncoding;
 import com.buession.redis.core.RedisNode;
+import com.buession.redis.core.ScanResult;
+import com.buession.redis.core.Type;
 import com.buession.redis.core.command.KeyCommands;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 /**
  * KEY 运算
@@ -42,6 +48,16 @@ import java.util.Date;
  */
 public interface KeyOperations extends KeyCommands, RedisOperations {
 
+	@Override
+	default Long del(final String... keys) {
+		return execute((client)->client.keyOperations().del(keys));
+	}
+
+	@Override
+	default Long del(final byte[]... keys) {
+		return execute((client)->client.keyOperations().del(keys));
+	}
+
 	/**
 	 * 删除给定的一个或多个 key
 	 *
@@ -52,7 +68,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 *
 	 * @return 被删除 key 的数量
 	 */
-	default Long delete(final String... keys){
+	default Long delete(final String... keys) {
 		return del(keys);
 	}
 
@@ -66,8 +82,68 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 *
 	 * @return 被删除 key 的数量
 	 */
-	default Long delete(final byte[]... keys){
+	default Long delete(final byte[]... keys) {
 		return del(keys);
+	}
+
+	@Override
+	default String dump(final String key) {
+		return execute((client)->client.keyOperations().dump(key));
+	}
+
+	@Override
+	default byte[] dump(final byte[] key) {
+		return execute((client)->client.keyOperations().dump(key));
+	}
+
+	@Override
+	default Boolean exists(final String key) {
+		return execute((client)->client.keyOperations().exists(key));
+	}
+
+	@Override
+	default Boolean exists(final byte[] key) {
+		return execute((client)->client.keyOperations().exists(key));
+	}
+
+	@Override
+	default Long exists(final String... keys) {
+		return execute((client)->client.keyOperations().exists(keys));
+	}
+
+	@Override
+	default Long exists(final byte[]... keys) {
+		return execute((client)->client.keyOperations().exists(keys));
+	}
+
+	@Override
+	default Status expire(final String key, final int lifetime) {
+		return execute((client)->client.keyOperations().expire(key, lifetime));
+	}
+
+	@Override
+	default Status expire(final byte[] key, final int lifetime) {
+		return execute((client)->client.keyOperations().expire(key, lifetime));
+	}
+
+	@Override
+	default Status expire(final String key, final int lifetime, final ExpireOption expireOption) {
+		return execute((client)->client.keyOperations().expire(key, lifetime, expireOption));
+	}
+
+	@Override
+	default Status expire(final byte[] key, final int lifetime, final ExpireOption expireOption) {
+		return execute((client)->client.keyOperations().expire(key, lifetime, expireOption));
+	}
+
+	@Override
+	default Status expireAt(final String key, final long unixTimestamp) {
+		return execute((client)->client.keyOperations().expireAt(key, unixTimestamp));
+	}
+
+	@Override
+	default Status expireAt(final byte[] key, final long unixTimestamp) {
+		return execute((client)->client.keyOperations().expireAt(key, unixTimestamp));
 	}
 
 	/**
@@ -82,7 +158,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 *
 	 * @return 操作结果
 	 */
-	default Status expireAt(final String key, final Date date){
+	default Status expireAt(final String key, final Date date) {
 		Assert.isNull(date, "Expire date could not be null");
 		return expireAt(key, date.getTime() / 1000L);
 	}
@@ -99,11 +175,31 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 *
 	 * @return 操作结果
 	 */
-	default Status expireAt(final byte[] key, final Date date){
+	default Status expireAt(final byte[] key, final Date date) {
 		Assert.isNull(date, "Expire date could not be null");
 		return expireAt(key, date.getTime() / 1000L);
 	}
 
+	@Override
+	default Status pExpire(final String key, final int lifetime) {
+		return execute((client)->client.keyOperations().pExpire(key, lifetime));
+	}
+
+	@Override
+	default Status pExpire(final byte[] key, final int lifetime) {
+		return execute((client)->client.keyOperations().pExpire(key, lifetime));
+	}
+
+	@Override
+	default Status pExpireAt(final String key, final long unixTimestamp) {
+		return execute((client)->client.keyOperations().pExpireAt(key, unixTimestamp));
+	}
+
+	@Override
+	default Status pExpireAt(final byte[] key, final long unixTimestamp) {
+		return execute((client)->client.keyOperations().pExpireAt(key, unixTimestamp));
+	}
+
 	/**
 	 * 为给定 key 设置过期时间
 	 *
@@ -116,7 +212,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 *
 	 * @return 操作结果
 	 */
-	default Status pExpireAt(final String key, final Date date){
+	default Status pExpireAt(final String key, final Date date) {
 		Assert.isNull(date, "Expire date could not be null");
 		return pExpireAt(key, date.getTime());
 	}
@@ -133,11 +229,31 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 *
 	 * @return 操作结果
 	 */
-	default Status pExpireAt(final byte[] key, final Date date){
+	default Status pExpireAt(final byte[] key, final Date date) {
 		Assert.isNull(date, "Expire date could not be null");
 		return pExpireAt(key, date.getTime());
 	}
 
+	@Override
+	default Status persist(final String key) {
+		return execute((client)->client.keyOperations().persist(key));
+	}
+
+	@Override
+	default Status persist(final byte[] key) {
+		return execute((client)->client.keyOperations().persist(key));
+	}
+
+	@Override
+	default Long ttl(final String key) {
+		return execute((client)->client.keyOperations().ttl(key));
+	}
+
+	@Override
+	default Long ttl(final byte[] key) {
+		return execute((client)->client.keyOperations().ttl(key));
+	}
+
 	/**
 	 * 获取给定 key 的过期时间
 	 *
@@ -148,7 +264,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 *
 	 * @return 当 key 不存在时，或没有设置剩余生存时间时，返回 null；否则返回过期时间
 	 */
-	default Date ttlAt(final String key){
+	default Date ttlAt(final String key) {
 		Long ttl = ttl(key);
 		return ttl != null && ttl >= 0 ? new Date(System.currentTimeMillis() + ttl * 1000L) : null;
 	}
@@ -163,11 +279,21 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 *
 	 * @return 当 key 不存在时，或没有设置剩余生存时间时，返回 null；否则返回过期时间
 	 */
-	default Date ttlAt(final byte[] key){
+	default Date ttlAt(final byte[] key) {
 		Long ttl = ttl(key);
 		return ttl != null && ttl >= 0 ? new Date(System.currentTimeMillis() + ttl * 1000L) : null;
 	}
 
+	@Override
+	default Long pTtl(final String key) {
+		return execute((client)->client.keyOperations().pTtl(key));
+	}
+
+	@Override
+	default Long pTtl(final byte[] key) {
+		return execute((client)->client.keyOperations().pTtl(key));
+	}
+
 	/**
 	 * 获取给定 key 的过期时间
 	 *
@@ -178,7 +304,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 *
 	 * @return 当 key 不存在时，或没有设置剩余生存时间时，返回 null；否则返回过期时间
 	 */
-	default Date pTtlAt(final String key){
+	default Date pTtlAt(final String key) {
 		Long ttl = pTtl(key);
 		return ttl != null && ttl >= 0 ? new Date(System.currentTimeMillis() + pTtl(key)) : null;
 	}
@@ -193,9 +319,69 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 *
 	 * @return 当 key 不存在时，或没有设置剩余生存时间时，返回 null；否则返回过期时间
 	 */
-	default Date pTtlAt(final byte[] key){
+	default Date pTtlAt(final byte[] key) {
 		Long ttl = pTtl(key);
 		return ttl != null && ttl >= 0 ? new Date(System.currentTimeMillis() + pTtl(key)) : null;
+	}
+
+	@Override
+	default Status copy(final String key, final String destKey) {
+		return execute((client)->client.keyOperations().copy(key, destKey));
+	}
+
+	@Override
+	default Status copy(final byte[] key, final byte[] destKey) {
+		return execute((client)->client.keyOperations().copy(key, destKey));
+	}
+
+	@Override
+	default Status copy(final String key, final String destKey, final int db) {
+		return execute((client)->client.keyOperations().copy(key, destKey, db));
+	}
+
+	@Override
+	default Status copy(final byte[] key, final byte[] destKey, final int db) {
+		return execute((client)->client.keyOperations().copy(key, destKey, db));
+	}
+
+	@Override
+	default Status copy(final String key, final String destKey, final boolean replace) {
+		return execute((client)->client.keyOperations().copy(key, destKey, replace));
+	}
+
+	@Override
+	default Status copy(final byte[] key, final byte[] destKey, final boolean replace) {
+		return execute((client)->client.keyOperations().copy(key, destKey, replace));
+	}
+
+	@Override
+	default Status copy(final String key, final String destKey, final int db, final boolean replace) {
+		return execute((client)->client.keyOperations().copy(key, destKey, db, replace));
+	}
+
+	@Override
+	default Status copy(final byte[] key, final byte[] destKey, final int db, final boolean replace) {
+		return execute((client)->client.keyOperations().copy(key, destKey, db, replace));
+	}
+
+	@Override
+	default Status move(final String key, final int db) {
+		return execute((client)->client.keyOperations().move(key, db));
+	}
+
+	@Override
+	default Status move(final byte[] key, final int db) {
+		return execute((client)->client.keyOperations().move(key, db));
+	}
+
+	@Override
+	default Status migrate(final String host, final int port, final int db, final int timeout, final String... keys) {
+		return execute((client)->client.keyOperations().migrate(host, port, db, timeout, keys));
+	}
+
+	@Override
+	default Status migrate(final String host, final int port, final int db, final int timeout, final byte[]... keys) {
+		return execute((client)->client.keyOperations().migrate(host, port, db, timeout, keys));
 	}
 
 	/**
@@ -215,7 +401,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 *
 	 * @return 操作结果
 	 */
-	default Status migrate(final String host, final int db, final int timeout, final String... keys){
+	default Status migrate(final String host, final int db, final int timeout, final String... keys) {
 		return migrate(host, RedisNode.DEFAULT_PORT, db, timeout, keys);
 	}
 
@@ -236,8 +422,20 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 *
 	 * @return 操作结果
 	 */
-	default Status migrate(final String host, final int db, final int timeout, final byte[]... keys){
+	default Status migrate(final String host, final int db, final int timeout, final byte[]... keys) {
 		return migrate(host, RedisNode.DEFAULT_PORT, db, timeout, keys);
+	}
+
+	@Override
+	default Status migrate(final String host, final int port, final int db, final int timeout,
+						   final MigrateOperation operation, final String... keys) {
+		return execute((client)->client.keyOperations().migrate(host, port, db, timeout, operation, keys));
+	}
+
+	@Override
+	default Status migrate(final String host, final int port, final int db, final int timeout,
+						   final MigrateOperation operation, final byte[]... keys) {
+		return execute((client)->client.keyOperations().migrate(host, port, db, timeout, operation, keys));
 	}
 
 	/**
@@ -260,7 +458,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status migrate(final String host, final int db, final int timeout, final MigrateOperation operation,
-						   final String... keys){
+						   final String... keys) {
 		return migrate(host, RedisNode.DEFAULT_PORT, db, timeout, operation, keys);
 	}
 
@@ -284,8 +482,20 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status migrate(final String host, final int db, final int timeout, final MigrateOperation operation,
-						   final byte[]... keys){
+						   final byte[]... keys) {
 		return migrate(host, RedisNode.DEFAULT_PORT, db, timeout, operation, keys);
+	}
+
+	@Override
+	default Status migrate(final String host, final int port, final int db, final String password, final int timeout,
+						   final String... keys) {
+		return execute((client)->client.keyOperations().migrate(host, port, db, password, timeout, keys));
+	}
+
+	@Override
+	default Status migrate(final String host, final int port, final int db, final byte[] password, final int timeout,
+						   final byte[]... keys) {
+		return execute((client)->client.keyOperations().migrate(host, port, db, password, timeout, keys));
 	}
 
 	/**
@@ -308,7 +518,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status migrate(final String host, final int db, final String password, final int timeout,
-						   final String... keys){
+						   final String... keys) {
 		return migrate(host, RedisNode.DEFAULT_PORT, db, password, timeout, keys);
 	}
 
@@ -332,8 +542,22 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status migrate(final String host, final int db, final byte[] password, final int timeout,
-						   final byte[]... keys){
+						   final byte[]... keys) {
 		return migrate(host, RedisNode.DEFAULT_PORT, db, password, timeout, keys);
+	}
+
+	@Override
+	default Status migrate(final String host, final int port, final int db, final String password, final int timeout,
+						   final MigrateOperation operation, final String... keys) {
+		return execute(
+				(client)->client.keyOperations().migrate(host, port, db, password, timeout, operation, keys));
+	}
+
+	@Override
+	default Status migrate(final String host, final int port, final int db, final byte[] password, final int timeout,
+						   final MigrateOperation operation, final byte[]... keys) {
+		return execute(
+				(client)->client.keyOperations().migrate(host, port, db, password, timeout, operation, keys));
 	}
 
 	/**
@@ -358,7 +582,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status migrate(final String host, final int db, final String password, final int timeout,
-						   final MigrateOperation operation, final String... keys){
+						   final MigrateOperation operation, final String... keys) {
 		return migrate(host, RedisNode.DEFAULT_PORT, db, password, timeout, operation, keys);
 	}
 
@@ -384,8 +608,22 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status migrate(final String host, final int db, final byte[] password, final int timeout,
-						   final MigrateOperation operation, final byte[]... keys){
+						   final MigrateOperation operation, final byte[]... keys) {
 		return migrate(host, RedisNode.DEFAULT_PORT, db, password, timeout, operation, keys);
+	}
+
+	@Override
+	default Status migrate(final String host, final int port, final int db, final String user, final String password,
+						   final int timeout, final String... keys) {
+		return execute(
+				(client)->client.keyOperations().migrate(host, port, db, user, password, timeout, keys));
+	}
+
+	@Override
+	default Status migrate(final String host, final int port, final int db, final byte[] user, final byte[] password,
+						   final int timeout, final byte[]... keys) {
+		return execute(
+				(client)->client.keyOperations().migrate(host, port, db, user, password, timeout, keys));
 	}
 
 	/**
@@ -410,7 +648,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status migrate(final String host, final int db, final String user, final String password, final int timeout,
-						   final String... keys){
+						   final String... keys) {
 		return migrate(host, RedisNode.DEFAULT_PORT, db, user, password, timeout, keys);
 	}
 
@@ -436,8 +674,22 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status migrate(final String host, final int db, final byte[] user, final byte[] password, final int timeout,
-						   final byte[]... keys){
+						   final byte[]... keys) {
 		return migrate(host, RedisNode.DEFAULT_PORT, db, user, password, timeout, keys);
+	}
+
+	@Override
+	default Status migrate(final String host, final int port, final int db, final String user, final String password,
+						   final int timeout, final MigrateOperation operation, final String... keys) {
+		return execute((client)->client.keyOperations()
+				.migrate(host, port, db, user, password, timeout, operation, keys));
+	}
+
+	@Override
+	default Status migrate(final String host, final int port, final int db, final byte[] user, final byte[] password,
+						   final int timeout, final MigrateOperation operation, final byte[]... keys) {
+		return execute((client)->client.keyOperations()
+				.migrate(host, port, db, user, password, timeout, operation, keys));
 	}
 
 	/**
@@ -464,7 +716,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status migrate(final String host, final int db, final String user, final String password, final int timeout,
-						   final MigrateOperation operation, final String... keys){
+						   final MigrateOperation operation, final String... keys) {
 		return migrate(host, RedisNode.DEFAULT_PORT, db, user, password, timeout, operation, keys);
 	}
 
@@ -492,7 +744,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status migrate(final String host, final int db, final byte[] user, final byte[] password, final int timeout,
-						   final MigrateOperation operation, final byte[]... keys){
+						   final MigrateOperation operation, final byte[]... keys) {
 		return migrate(host, RedisNode.DEFAULT_PORT, db, user, password, timeout, operation, keys);
 	}
 
@@ -513,7 +765,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 *
 	 * @return 操作结果
 	 */
-	default Status migrate(final RedisNode server, final int db, final int timeout, final String... keys){
+	default Status migrate(final RedisNode server, final int db, final int timeout, final String... keys) {
 		Assert.isNull(server, "Destination redis node cloud not be null");
 		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
 
@@ -537,7 +789,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 *
 	 * @return 操作结果
 	 */
-	default Status migrate(final RedisNode server, final int db, final int timeout, final byte[]... keys){
+	default Status migrate(final RedisNode server, final int db, final int timeout, final byte[]... keys) {
 		Assert.isNull(server, "Destination redis node cloud not be null");
 		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
 
@@ -564,7 +816,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status migrate(final RedisNode server, final int db, final int timeout, final MigrateOperation operation,
-						   final String... keys){
+						   final String... keys) {
 		Assert.isNull(server, "Destination redis node cloud not be null");
 		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
 
@@ -591,7 +843,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status migrate(final RedisNode server, final int db, final int timeout, final MigrateOperation operation,
-						   final byte[]... keys){
+						   final byte[]... keys) {
 		Assert.isNull(server, "Destination redis node cloud not be null");
 		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
 
@@ -618,7 +870,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status migrate(final RedisNode server, final int db, final String password, final int timeout,
-						   final String... keys){
+						   final String... keys) {
 		Assert.isNull(server, "Destination redis node cloud not be null");
 		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
 
@@ -645,7 +897,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status migrate(final RedisNode server, final int db, final byte[] password, final int timeout,
-						   final byte[]... keys){
+						   final byte[]... keys) {
 		Assert.isNull(server, "Destination redis node cloud not be null");
 		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
 
@@ -674,7 +926,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status migrate(final RedisNode server, final int db, final String password, final int timeout,
-						   final MigrateOperation operation, final String... keys){
+						   final MigrateOperation operation, final String... keys) {
 		Assert.isNull(server, "Destination redis node cloud not be null");
 		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
 
@@ -703,7 +955,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status migrate(final RedisNode server, final int db, final byte[] password, final int timeout,
-						   final MigrateOperation operation, final byte[]... keys){
+						   final MigrateOperation operation, final byte[]... keys) {
 		Assert.isNull(server, "Destination redis node cloud not be null");
 		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
 
@@ -732,7 +984,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status migrate(final RedisNode server, final int db, final String user, final String password,
-						   final int timeout, final String... keys){
+						   final int timeout, final String... keys) {
 		Assert.isNull(server, "Destination redis node cloud not be null");
 		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
 
@@ -761,7 +1013,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status migrate(final RedisNode server, final int db, final byte[] user, final byte[] password,
-						   final int timeout, final byte[]... keys){
+						   final int timeout, final byte[]... keys) {
 		Assert.isNull(server, "Destination redis node cloud not be null");
 		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
 
@@ -792,7 +1044,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status migrate(final RedisNode server, final int db, final String user, final String password,
-						   final int timeout, final MigrateOperation operation, final String... keys){
+						   final int timeout, final MigrateOperation operation, final String... keys) {
 		Assert.isNull(server, "Destination redis node cloud not be null");
 		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
 
@@ -823,13 +1075,70 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status migrate(final RedisNode server, final int db, final byte[] user, final byte[] password,
-						   final int timeout, final MigrateOperation operation, final byte[]... keys){
+						   final int timeout, final MigrateOperation operation, final byte[]... keys) {
 		Assert.isNull(server, "Destination redis node cloud not be null");
 		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
 
 		return migrate(server.getHost(), server.getPort(), db, user, password, timeout, operation, keys);
 	}
 
+	@Override
+	default Set<String> keys(final String pattern) {
+		return execute((client)->client.keyOperations().keys(pattern));
+	}
+
+	@Override
+	default Set<byte[]> keys(final byte[] pattern) {
+		return execute((client)->client.keyOperations().keys(pattern));
+	}
+
+	@Override
+	default String randomKey() {
+		return execute((client)->client.keyOperations().randomKey());
+	}
+
+	@Override
+	default Status rename(final String key, final String newKey) {
+		return execute((client)->client.keyOperations().rename(key, newKey));
+	}
+
+	@Override
+	default Status rename(final byte[] key, final byte[] newKey) {
+		return execute((client)->client.keyOperations().rename(key, newKey));
+	}
+
+	@Override
+	default Status renameNx(final String key, final String newKey) {
+		return execute((client)->client.keyOperations().renameNx(key, newKey));
+	}
+
+	@Override
+	default Status renameNx(final byte[] key, final byte[] newKey) {
+		return execute((client)->client.keyOperations().renameNx(key, newKey));
+	}
+
+	@Override
+	default Status restore(final String key, final byte[] serializedValue, final int ttl) {
+		return execute((client)->client.keyOperations().restore(key, serializedValue, ttl));
+	}
+
+	@Override
+	default Status restore(final byte[] key, final byte[] serializedValue, final int ttl) {
+		return execute((client)->client.keyOperations().restore(key, serializedValue, ttl));
+	}
+
+	@Override
+	default Status restore(final String key, final byte[] serializedValue, final int ttl,
+						   final RestoreArgument argument) {
+		return execute((client)->client.keyOperations().restore(key, serializedValue, ttl, argument));
+	}
+
+	@Override
+	default Status restore(final byte[] key, final byte[] serializedValue, final int ttl,
+						   final RestoreArgument argument) {
+		return execute((client)->client.keyOperations().restore(key, serializedValue, ttl, argument));
+	}
+
 	/**
 	 * 反序列化给定的序列化值，并将它和给定的 key 关联
 	 *
@@ -842,7 +1151,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 *
 	 * @return 操作结果
 	 */
-	default Status restore(final String key, final byte[] serializedValue, final Date ttl){
+	default Status restore(final String key, final byte[] serializedValue, final Date ttl) {
 		Assert.isNull(ttl, "Ttl date could not be null");
 		return restore(key, serializedValue, (int) (ttl.getTime() - System.currentTimeMillis()));
 	}
@@ -859,9 +1168,189 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 *
 	 * @return 操作结果
 	 */
-	default Status restore(final byte[] key, final byte[] serializedValue, final Date ttl){
+	default Status restore(final byte[] key, final byte[] serializedValue, final Date ttl) {
 		Assert.isNull(ttl, "Ttl date could not be null");
 		return restore(key, serializedValue, (int) (ttl.getTime() - System.currentTimeMillis()));
+	}
+
+	@Override
+	default ScanResult<List<String>> scan(final long cursor) {
+		return execute((client)->client.keyOperations().scan(cursor));
+	}
+
+	@Override
+	default ScanResult<List<String>> scan(final String cursor) {
+		return execute((client)->client.keyOperations().scan(cursor));
+	}
+
+	@Override
+	default ScanResult<List<byte[]>> scan(final byte[] cursor) {
+		return execute((client)->client.keyOperations().scan(cursor));
+	}
+
+	@Override
+	default ScanResult<List<String>> scan(final long cursor, final String pattern) {
+		return execute((client)->client.keyOperations().scan(cursor, pattern));
+	}
+
+	@Override
+	default ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern) {
+		return execute((client)->client.keyOperations().scan(cursor, pattern));
+	}
+
+	@Override
+	default ScanResult<List<String>> scan(final String cursor, final String pattern) {
+		return execute((client)->client.keyOperations().scan(cursor, pattern));
+	}
+
+	@Override
+	default ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern) {
+		return execute((client)->client.keyOperations().scan(cursor, pattern));
+	}
+
+	@Override
+	default ScanResult<List<String>> scan(final long cursor, final long count) {
+		return execute((client)->client.keyOperations().scan(cursor, count));
+	}
+
+	@Override
+	default ScanResult<List<String>> scan(final String cursor, final long count) {
+		return execute((client)->client.keyOperations().scan(cursor, count));
+	}
+
+	@Override
+	default ScanResult<List<byte[]>> scan(final byte[] cursor, final long count) {
+		return execute((client)->client.keyOperations().scan(cursor, count));
+	}
+
+	@Override
+	default ScanResult<List<String>> scan(final long cursor, final String pattern, final long count) {
+		return execute((client)->client.keyOperations().scan(cursor, pattern, count));
+	}
+
+	@Override
+	default ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern, final long count) {
+		return execute((client)->client.keyOperations().scan(cursor, pattern, count));
+	}
+
+	@Override
+	default ScanResult<List<String>> scan(final String cursor, final String pattern, final long count) {
+		return execute((client)->client.keyOperations().scan(cursor, pattern, count));
+	}
+
+	@Override
+	default ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern, final long count) {
+		return execute((client)->client.keyOperations().scan(cursor, pattern, count));
+	}
+
+	@Override
+	default List<String> sort(final String key) {
+		return execute((client)->client.keyOperations().sort(key));
+	}
+
+	@Override
+	default List<byte[]> sort(final byte[] key) {
+		return execute((client)->client.keyOperations().sort(key));
+	}
+
+	@Override
+	default List<String> sort(final String key, final SortArgument sortArgument) {
+		return execute((client)->client.keyOperations().sort(key, sortArgument));
+	}
+
+	@Override
+	default List<byte[]> sort(final byte[] key, final SortArgument sortArgument) {
+		return execute((client)->client.keyOperations().sort(key, sortArgument));
+	}
+
+	@Override
+	default Long sort(final String key, final String destKey) {
+		return execute((client)->client.keyOperations().sort(key, destKey));
+	}
+
+	@Override
+	default Long sort(final byte[] key, final byte[] destKey) {
+		return execute((client)->client.keyOperations().sort(key, destKey));
+	}
+
+	@Override
+	default Long sort(final String key, final String destKey, final SortArgument sortArgument) {
+		return execute((client)->client.keyOperations().sort(key, destKey, sortArgument));
+	}
+
+	@Override
+	default Long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument) {
+		return execute((client)->client.keyOperations().sort(key, destKey, sortArgument));
+	}
+
+	@Override
+	default Long touch(final String... keys) {
+		return execute((client)->client.keyOperations().touch(keys));
+	}
+
+	@Override
+	default Long touch(final byte[]... keys) {
+		return execute((client)->client.keyOperations().touch(keys));
+	}
+
+	@Override
+	default Type type(final String key) {
+		return execute((client)->client.keyOperations().type(key));
+	}
+
+	@Override
+	default Type type(final byte[] key) {
+		return execute((client)->client.keyOperations().type(key));
+	}
+
+	@Override
+	default Long unlink(final String... keys) {
+		return execute((client)->client.keyOperations().unlink(keys));
+	}
+
+	@Override
+	default Long unlink(final byte[]... keys) {
+		return execute((client)->client.keyOperations().unlink(keys));
+	}
+
+	@Override
+	default ObjectEncoding objectEncoding(final String key) {
+		return execute((client)->client.keyOperations().objectEncoding(key));
+	}
+
+	@Override
+	default ObjectEncoding objectEncoding(final byte[] key) {
+		return execute((client)->client.keyOperations().objectEncoding(key));
+	}
+
+	@Override
+	default Long objectFreq(final String key) {
+		return execute((client)->client.keyOperations().objectFreq(key));
+	}
+
+	@Override
+	default Long objectFreq(final byte[] key) {
+		return execute((client)->client.keyOperations().objectFreq(key));
+	}
+
+	@Override
+	default Long objectIdleTime(final String key) {
+		return execute((client)->client.keyOperations().objectIdleTime(key));
+	}
+
+	@Override
+	default Long objectIdleTime(final byte[] key) {
+		return execute((client)->client.keyOperations().objectIdleTime(key));
+	}
+
+	@Override
+	default Long objectRefcount(final String key) {
+		return execute((client)->client.keyOperations().objectRefcount(key));
+	}
+
+	@Override
+	default Long objectRefcount(final byte[] key) {
+		return execute((client)->client.keyOperations().objectRefcount(key));
 	}
 
 }

@@ -24,6 +24,7 @@ Buession Framework Changelog
 - 删除 com.buession.redis.client.connection.datasource.DataSource#getConnection()
 - MyBatisDao 使用构造方式注入 SqlSessionTemplate 和 MongoDBDao 使用构造方法注入 MongoTemplate
 - 删除 RedisTemplate 已废弃的方法
+- 优化 RedisTemplate 内部实现
 
 ### 🐞 Bug 修复
 
@@ -31,6 +32,8 @@ Buession Framework Changelog
 - 修复 com.buession.httpclient.AbstractHttpAsyncClient#put(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers, Callback callback) 无限递归的 BUG
 - 修复 com.buession.httpclient.AbstractHttpAsyncClient#report(URI uri, int readTimeout, Map<String, Object> parameters, List<Header> headers, Callback callback) 无限递归的 BUG
 - 修复 RedisTemplate 中无限递归调用的 BUG
+- 修复 RedisTemplate 中 lMove(final String key, final String destKey, final Direction from, final Direction to) 中原 key 设置成目标 key 了的 BUG；
+- 修复 RedisTemplate 中 blMove(final String key, final String destKey, final Direction from, final Direction to, final int timeout) 中原 key 设置成目标 key 了的 BUG；
 
 ### 📔 文档
 
