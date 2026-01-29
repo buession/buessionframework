@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.params;
@@ -30,16 +30,16 @@ import com.buession.redis.core.command.BitMapCommands;
 import org.springframework.lang.Nullable;
 
 /**
- * {@link BitMapCommands.BitFieldArgument} 转换为 jedis bitfield 参数
+ * {@link BitMapCommands.BitFieldRoArgument} 转换为 jedis bitfield_ro 参数
  *
  * @author Yong.Teng
- * @since 2.3.0
+ * @since 4.0.0
  */
-public final class BitFieldArgumentConverter implements Converter<BitMapCommands.BitFieldArgument, String[]> {
+public final class BitFieldRoArgumentConverter implements Converter<BitMapCommands.BitFieldRoArgument, String[]> {
 
 	@Nullable
 	@Override
-	public String[] convert(final BitMapCommands.BitFieldArgument source) {
+	public String[] convert(final BitMapCommands.BitFieldRoArgument source) {
 		return source == null ? null : StringUtils.split(source.toString(), " ");
 	}
 
