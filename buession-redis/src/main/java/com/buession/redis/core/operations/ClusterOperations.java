@@ -49,7 +49,6 @@ import java.util.List;
  */
 public interface ClusterOperations extends ClusterCommands, RedisOperations {
 
-
 	@Override
 	default String clusterMyId() {
 		return execute((client)->client.clusterOperations().clusterMyId());

@@ -27,7 +27,7 @@ package com.buession.redis.client.lettuce.operations;
 import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 
 /**
- * Lettuce 单机模式布隆过滤命令操作抽象类
+ * Lettuce 单机模式布隆过滤器命令操作抽象类
  *
  * @author Yong.Teng
  * @since 4.0.0

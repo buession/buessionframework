@@ -30,6 +30,7 @@ import com.buession.redis.client.jedis.operations.JedisClusterBitMapOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterBloomFilterOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterClusterOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterConnectionOperations;
+import com.buession.redis.client.jedis.operations.JedisClusterCuckooFilterOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterGenericOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterGeoOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterHashOperations;
@@ -87,6 +88,15 @@ public class JedisClusterClient extends AbstractJedisRedisClient<JedisClusterCon
 		}
 
 		return bitMapOperations;
+	}
+
+	@Override
+	public CuckooFilterOperations cuckooFilterOperations() {
+		if(cuckooFilterOperations == null){
+			cuckooFilterOperations = new JedisClusterCuckooFilterOperations(this);
+		}
+
+		return cuckooFilterOperations;
 	}
 
 	@Override

@@ -89,6 +89,44 @@ public final class ArgStringBuilder {
 		return this;
 	}
 
+	public ArgStringBuilder append(final boolean value) {
+		joiner.add(value);
+		return this;
+	}
+
+	public ArgStringBuilder append(final short value) {
+		joiner.add(value);
+		return this;
+	}
+
+	public ArgStringBuilder append(final int value) {
+		joiner.add(value);
+		return this;
+	}
+
+	public ArgStringBuilder append(final long value) {
+		joiner.add(value);
+		return this;
+	}
+
+	public ArgStringBuilder append(final float value) {
+		joiner.add(value);
+		return this;
+	}
+
+	public ArgStringBuilder append(final double value) {
+		joiner.add(value);
+		return this;
+	}
+
+	public ArgStringBuilder append(final byte[] value) {
+		if(value != null){
+			joiner.add(SafeEncoder.encode(value));
+		}
+
+		return this;
+	}
+
 	public ArgStringBuilder append(final CharSequence seq) {
 		if(seq != null){
 			joiner.add(seq);

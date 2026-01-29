@@ -27,7 +27,7 @@ package com.buession.redis.client.lettuce.operations;
 import com.buession.redis.client.lettuce.LettuceClusterClient;
 
 /**
- * Lettuce 集群模式布隆过滤命令操作抽象类
+ * Lettuce 集群模式布隆过滤器命令操作抽象类
  *
  * @author Yong.Teng
  * @since 4.0.0

@@ -50,7 +50,7 @@ import java.util.List;
  * @since 3.0.0
  */
 public abstract class AbstractLettuceRedisConnection<C extends StatefulConnection<byte[], byte[]>>
-		extends AbstractRedisConnection implements LettuceRedisConnection {
+		extends AbstractRedisConnection implements LettuceRedisConnection<C> {
 
 	/**
 	 * Redis 连接对象实例 {@link StatefulConnection}

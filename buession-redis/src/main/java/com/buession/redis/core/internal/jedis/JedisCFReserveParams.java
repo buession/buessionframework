@@ -22,20 +22,55 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.core.internal.jedis;
 
-import com.buession.redis.client.jedis.JedisStandaloneClient;
+import com.buession.redis.core.command.CuckooFilterCommands;
+import redis.clients.jedis.bloom.CFReserveParams;
+
+import java.util.Optional;
 
 /**
- * Jedis 单机模式布隆过滤器命令操作抽象类
+ * Jedis {@link CFReserveParams} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class JedisBloomFilterOperations extends AbstractBloomFilterOperations<JedisStandaloneClient> {
+public final class JedisCFReserveParams extends CFReserveParams {
 
-	public JedisBloomFilterOperations(final JedisStandaloneClient client) {
-		super(client);
+	/**
+	 * 构造函数
+	 */
+	public JedisCFReserveParams() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param bucketSize
+	 * 		每个桶能存储的指纹数量
+	 * @param maxIterations
+	 * 		插入时最大“踢出”尝试次数
+	 * @param expansion
+	 * 		扩容倍数
+	 */
+	public JedisCFReserveParams(final Long bucketSize, final Integer maxIterations, final Integer expansion) {
+		super();
+		bucketSize(bucketSize);
+		maxIterations(maxIterations);
+		expansion(expansion);
+	}
+
+	public static JedisCFReserveParams from(final CuckooFilterCommands.CFReserveArgument cfReserveArgument) {
+		final JedisCFReserveParams cfReserveParams = new JedisCFReserveParams();
+
+		if(cfReserveArgument != null){
+			Optional.ofNullable(cfReserveArgument.getBucketSize()).ifPresent(cfReserveParams::bucketSize);
+			Optional.ofNullable(cfReserveArgument.getMaxIterations()).ifPresent(cfReserveParams::maxIterations);
+			Optional.ofNullable(cfReserveArgument.getExpansion()).ifPresent(cfReserveParams::expansion);
+		}
+
+		return cfReserveParams;
 	}
 
 }

@@ -27,7 +27,7 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.redis.client.jedis.JedisSentinelClient;
 
 /**
- * Jedis 哨兵模式布隆过滤命令操作抽象类
+ * Jedis 哨兵模式布隆过滤器命令操作抽象类
  *
  * @author Yong.Teng
  * @since 4.0.0

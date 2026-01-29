@@ -29,6 +29,7 @@ import com.buession.redis.client.operations.BitMapOperations;
 import com.buession.redis.client.operations.BloomFilterOperations;
 import com.buession.redis.client.operations.ClusterOperations;
 import com.buession.redis.client.operations.ConnectionOperations;
+import com.buession.redis.client.operations.CuckooFilterOperations;
 import com.buession.redis.client.operations.GenericOperations;
 import com.buession.redis.client.operations.GeoOperations;
 import com.buession.redis.client.operations.HashOperations;
@@ -70,9 +71,9 @@ public interface RedisClient {
 	void setConnection(RedisConnection connection);
 
 	/**
-	 * 返回布隆命令操作实例
+	 * 返回布隆过滤器命令操作实例
 	 *
-	 * @return 布隆命令操作实例
+	 * @return 布隆过滤器命令操作实例
 	 *
 	 * @since 4.0.0
 	 */
@@ -84,6 +85,15 @@ public interface RedisClient {
 	 * @return BitMap 命令操作实例
 	 */
 	BitMapOperations bitMapOperations();
+
+	/**
+	 * 返回布谷鸟过滤器命令操作实例
+	 *
+	 * @return 布谷鸟过滤器命令操作实例
+	 *
+	 * @since 4.0.0
+	 */
+	CuckooFilterOperations cuckooFilterOperations();
 
 	/**
 	 * 返回集群命令操作实例

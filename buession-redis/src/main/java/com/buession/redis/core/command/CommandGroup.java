@@ -33,19 +33,24 @@ package com.buession.redis.core.command;
 public enum CommandGroup {
 
 	/**
-	 * 布隆过滤
+	 * 布隆过滤器
 	 */
 	BLOOM_FILTER("Bloom filter"),
-
-	/**
-	 * 权限命令
-	 */
-	ACL("Acl"),
 
 	/**
 	 * 位图命令
 	 */
 	BITMAP("BitMap"),
+
+	/**
+	 * 布谷鸟过滤器
+	 */
+	CUCKOO_FILTER("Cuckoo filter"),
+
+	/**
+	 * 权限命令
+	 */
+	ACL("Acl"),
 
 	/**
 	 * 集群命令

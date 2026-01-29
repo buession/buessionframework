@@ -30,6 +30,7 @@ import com.buession.redis.client.lettuce.operations.LettuceSentinelBitMapOperati
 import com.buession.redis.client.lettuce.operations.LettuceSentinelBloomFilterOperations;
 import com.buession.redis.client.lettuce.operations.LettuceSentinelClusterOperations;
 import com.buession.redis.client.lettuce.operations.LettuceSentinelConnectionOperations;
+import com.buession.redis.client.lettuce.operations.LettuceSentinelCuckooFilterOperations;
 import com.buession.redis.client.lettuce.operations.LettuceSentinelGenericOperations;
 import com.buession.redis.client.lettuce.operations.LettuceSentinelGeoOperations;
 import com.buession.redis.client.lettuce.operations.LettuceSentinelHashOperations;
@@ -88,6 +89,15 @@ public class LettuceSentinelClient extends AbstractLettuceRedisClient<LettuceSen
 		}
 
 		return bitMapOperations;
+	}
+
+	@Override
+	public CuckooFilterOperations cuckooFilterOperations() {
+		if(cuckooFilterOperations == null){
+			cuckooFilterOperations = new LettuceSentinelCuckooFilterOperations(this);
+		}
+
+		return cuckooFilterOperations;
 	}
 
 	@Override

@@ -22,19 +22,19 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.client.lettuce.operations;
 
-import com.buession.redis.client.jedis.JedisStandaloneClient;
+import com.buession.redis.client.lettuce.LettuceStandaloneClient;
 
 /**
- * Jedis 单机模式布隆过滤器命令操作抽象类
+ * Lettuce 单机模式布谷鸟过滤器命令操作抽象类
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class JedisBloomFilterOperations extends AbstractBloomFilterOperations<JedisStandaloneClient> {
+public final class LettuceCuckooFilterOperations extends AbstractCuckooFilterOperations<LettuceStandaloneClient> {
 
-	public JedisBloomFilterOperations(final JedisStandaloneClient client) {
+	public LettuceCuckooFilterOperations(final LettuceStandaloneClient client) {
 		super(client);
 	}
 

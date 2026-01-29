@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 布隆过滤命令
+ * 布隆过滤器命令
  *
  * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=bf" target="_blank">https://redis.io/docs/latest/commands/?group=bf</a></p>
  *
@@ -131,47 +131,13 @@ public interface BloomFilterOperations extends BloomFilterCommands, RedisOperati
 	}
 
 	@Override
-	default Status bfReserve(final String key, final double errorRate, final long capacity) {
-		return execute((client)->client.bloomFilterOperations().bfReserve(key, errorRate, capacity));
+	default Status bfReserve(final String key, final BFReserveArgument bfInsertArgument) {
+		return execute((client)->client.bloomFilterOperations().bfReserve(key, bfInsertArgument));
 	}
 
 	@Override
-	default Status bfReserve(final byte[] key, final double errorRate, final long capacity) {
-		return execute((client)->client.bloomFilterOperations().bfReserve(key, errorRate, capacity));
-	}
-
-	@Override
-	default Status bfReserve(final String key, final double errorRate, final long capacity, final int expansion) {
-		return execute((client)->client.bloomFilterOperations().bfReserve(key, errorRate, capacity, expansion));
-	}
-
-	@Override
-	default Status bfReserve(final byte[] key, final double errorRate, final long capacity, final int expansion) {
-		return execute((client)->client.bloomFilterOperations().bfReserve(key, errorRate, capacity, expansion));
-	}
-
-	@Override
-	default Status bfReserve(final String key, final double errorRate, final long capacity, final boolean nonScaling) {
-		return execute((client)->client.bloomFilterOperations().bfReserve(key, errorRate, capacity, nonScaling));
-	}
-
-	@Override
-	default Status bfReserve(final byte[] key, final double errorRate, final long capacity, final boolean nonScaling) {
-		return execute((client)->client.bloomFilterOperations().bfReserve(key, errorRate, capacity, nonScaling));
-	}
-
-	@Override
-	default Status bfReserve(final String key, final double errorRate, final long capacity, final int expansion,
-							 final boolean nonScaling) {
-		return execute(
-				(client)->client.bloomFilterOperations().bfReserve(key, errorRate, capacity, expansion, nonScaling));
-	}
-
-	@Override
-	default Status bfReserve(final byte[] key, final double errorRate, final long capacity, final int expansion,
-							 final boolean nonScaling) {
-		return execute(
-				(client)->client.bloomFilterOperations().bfReserve(key, errorRate, capacity, expansion, nonScaling));
+	default Status bfReserve(final byte[] key, final BFReserveArgument bfInsertArgument) {
+		return execute((client)->client.bloomFilterOperations().bfReserve(key, bfInsertArgument));
 	}
 
 	@Override
@@ -183,5 +149,5 @@ public interface BloomFilterOperations extends BloomFilterCommands, RedisOperati
 	default Map<Long, byte[]> bfScandump(final byte[] key, final long iterator) {
 		return execute((client)->client.bloomFilterOperations().bfScandump(key, iterator));
 	}
-	
+
 }

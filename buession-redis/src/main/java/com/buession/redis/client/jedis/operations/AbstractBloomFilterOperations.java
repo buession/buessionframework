@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Jedis 布隆过滤命令操作抽象类
+ * Jedis 布隆过滤器命令操作抽象类
  *
  * @param <C>
  * 		Redis Client {@link JedisRedisClient}
@@ -164,51 +164,22 @@ public abstract class AbstractBloomFilterOperations<C extends JedisRedisClient> 
 	}
 
 	@Override
-	public Status bfReserve(final String key, final double errorRate, final long capacity) {
-		final CommandArguments args = CommandArguments.create(key).add(errorRate).add(capacity);
-		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.BF_RESERVE)
-				.executor((cmd)->cmd.bfReserve(key, errorRate, capacity)).arguments(args).converter(okStatusConverter)
-				.run();
+	public Status bfReserve(final String key, final BFReserveArgument bfInsertArgument) {
+		final CommandArguments args = CommandArguments.create(key).add(bfInsertArgument);
+		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.BF_RESERVE).executor((cmd)->{
+			if(bfInsertArgument.getExpansion() == null && bfInsertArgument.isNonScaling() == null){
+				return cmd.bfReserve(key, bfInsertArgument.getErrorRate(), bfInsertArgument.getCapacity());
+			}else{
+				final JedisBFReserveParams bfReserveParams = JedisBFReserveParams.from(bfInsertArgument);
+				return cmd.bfReserve(key, bfInsertArgument.getErrorRate(), bfInsertArgument.getCapacity(),
+						bfReserveParams);
+			}
+		}).arguments(args).converter(okStatusConverter).run();
 	}
 
 	@Override
-	public Status bfReserve(final byte[] key, final double errorRate, final long capacity) {
-		return bfReserve(SafeEncoder.encode(key), errorRate, capacity);
-	}
-
-	@Override
-	public Status bfReserve(final String key, final double errorRate, final long capacity, final int expansion) {
-		final JedisBFReserveParams bfReserveParams = new JedisBFReserveParams(expansion);
-		return bfReserve(key, errorRate, capacity, bfReserveParams);
-	}
-
-	@Override
-	public Status bfReserve(final byte[] key, final double errorRate, final long capacity, final int expansion) {
-		return bfReserve(SafeEncoder.encode(key), errorRate, capacity, expansion);
-	}
-
-	@Override
-	public Status bfReserve(final String key, final double errorRate, final long capacity, final boolean nonScaling) {
-		final JedisBFReserveParams bfReserveParams = new JedisBFReserveParams(nonScaling);
-		return bfReserve(key, errorRate, capacity, bfReserveParams);
-	}
-
-	@Override
-	public Status bfReserve(final byte[] key, final double errorRate, final long capacity, final boolean nonScaling) {
-		return bfReserve(SafeEncoder.encode(key), errorRate, capacity, nonScaling);
-	}
-
-	@Override
-	public Status bfReserve(final String key, final double errorRate, final long capacity, final int expansion,
-							final boolean nonScaling) {
-		final JedisBFReserveParams bfReserveParams = new JedisBFReserveParams(expansion, nonScaling);
-		return bfReserve(key, errorRate, capacity, bfReserveParams);
-	}
-
-	@Override
-	public Status bfReserve(final byte[] key, final double errorRate, final long capacity, final int expansion,
-							final boolean nonScaling) {
-		return bfReserve(SafeEncoder.encode(key), errorRate, capacity, expansion, nonScaling);
+	public Status bfReserve(final byte[] key, final BFReserveArgument bfInsertArgument) {
+		return bfReserve(SafeEncoder.encode(key), bfInsertArgument);
 	}
 
 	@Override
@@ -216,22 +187,12 @@ public abstract class AbstractBloomFilterOperations<C extends JedisRedisClient> 
 		final CommandArguments args = CommandArguments.create(key).add(iterator);
 		return JedisCommandBuilder.<Map.Entry<Long, byte[]>, Map<Long, byte[]>>newBuilder(client, Command.BF_SCANDUMP)
 				.executor((cmd)->cmd.bfScanDump(key, iterator)).arguments(args)
-				.converter(new MapEntryMapConverter<>((k)->k, (v)->v))
-				.run();
+				.converter(new MapEntryMapConverter<>((k)->k, (v)->v)).run();
 	}
 
 	@Override
 	public Map<Long, byte[]> bfScandump(final byte[] key, final long iterator) {
 		return bfScandump(SafeEncoder.encode(key), iterator);
-	}
-
-	private Status bfReserve(final String key, final double errorRate, final long capacity,
-							 final JedisBFReserveParams bfReserveParams) {
-		final CommandArguments args = CommandArguments.create(key).add(errorRate).add(capacity).add(bfReserveParams);
-		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.BF_RESERVE)
-				.executor((cmd)->cmd.bfReserve(key, errorRate, capacity, bfReserveParams)).arguments(args)
-				.converter(okStatusConverter)
-				.run();
 	}
 
 }

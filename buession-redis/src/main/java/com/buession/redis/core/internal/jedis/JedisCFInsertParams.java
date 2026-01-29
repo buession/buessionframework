@@ -22,20 +22,77 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.core.internal.jedis;
 
-import com.buession.redis.client.jedis.JedisStandaloneClient;
+import com.buession.redis.core.command.CuckooFilterCommands;
+import redis.clients.jedis.bloom.CFInsertParams;
+
+import java.util.Optional;
 
 /**
- * Jedis 单机模式布隆过滤器命令操作抽象类
+ * Jedis {@link CFInsertParams} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class JedisBloomFilterOperations extends AbstractBloomFilterOperations<JedisStandaloneClient> {
+public final class JedisCFInsertParams extends CFInsertParams {
 
-	public JedisBloomFilterOperations(final JedisStandaloneClient client) {
-		super(client);
+	/**
+	 * 构造函数
+	 */
+	public JedisCFInsertParams() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param capacity
+	 * 		初始容量
+	 */
+	public JedisCFInsertParams(final long capacity) {
+		super();
+		capacity(capacity);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param noCreate
+	 * 		是否当 key 不存在时不自动创建
+	 */
+	public JedisCFInsertParams(final boolean noCreate) {
+		super();
+		if(noCreate){
+			noCreate();
+		}
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param capacity
+	 * 		初始容量
+	 * @param noCreate
+	 * 		是否当 key 不存在时不自动创建
+	 */
+	public JedisCFInsertParams(final long capacity, final boolean noCreate) {
+		this(noCreate);
+		capacity(capacity);
+	}
+
+	public static JedisCFInsertParams from(final CuckooFilterCommands.CFInsertArgument cfInsertArgument) {
+		final JedisCFInsertParams cfInsertParams = new JedisCFInsertParams();
+
+		if(cfInsertArgument != null){
+			Optional.ofNullable(cfInsertArgument.getCapacity()).ifPresent(cfInsertParams::capacity);
+
+			if(cfInsertArgument.isNoCreate()){
+				cfInsertParams.noCreate();
+			}
+		}
+
+		return cfInsertParams;
 	}
 
 }

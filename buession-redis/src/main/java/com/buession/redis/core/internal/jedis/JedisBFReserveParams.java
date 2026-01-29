@@ -24,10 +24,10 @@
  */
 package com.buession.redis.core.internal.jedis;
 
-import com.buession.redis.utils.ArgStringBuilder;
+import com.buession.redis.core.command.BloomFilterCommands;
 import redis.clients.jedis.bloom.BFReserveParams;
 
-import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Jedis {@link BFReserveParams} 扩展
@@ -36,10 +36,6 @@ import java.util.Objects;
  * @since 4.0.0
  */
 public final class JedisBFReserveParams extends BFReserveParams {
-
-	private Integer expansion;
-
-	private boolean nonScaling = false;
 
 	/**
 	 * 构造函数
@@ -52,12 +48,11 @@ public final class JedisBFReserveParams extends BFReserveParams {
 	 * 构造函数
 	 *
 	 * @param expansion
-	 * 		-
+	 * 		扩容倍数
 	 */
 	public JedisBFReserveParams(final Integer expansion) {
 		super();
 		expansion(expansion);
-		this.expansion = expansion;
 	}
 
 	/**
@@ -70,7 +65,6 @@ public final class JedisBFReserveParams extends BFReserveParams {
 		super();
 		if(Boolean.TRUE.equals(nonScaling)){
 			nonScaling();
-			this.nonScaling = true;
 		}
 	}
 
@@ -85,15 +79,20 @@ public final class JedisBFReserveParams extends BFReserveParams {
 	public JedisBFReserveParams(final Integer expansion, final Boolean nonScaling) {
 		this(nonScaling);
 		expansion(expansion);
-		this.expansion = expansion;
 	}
 
-	@Override
-	public String toString() {
-		return ArgStringBuilder.create()
-				.add("EXPANSION", expansion)
-				.append(Objects.equals(nonScaling, true) ? "NONSCALING" : null)
-				.toString();
+	public static JedisBFReserveParams from(final BloomFilterCommands.BFReserveArgument bfInsertArgument) {
+		final JedisBFReserveParams bfReserveParams = new JedisBFReserveParams();
+
+		if(bfInsertArgument != null){
+			Optional.ofNullable(bfInsertArgument.getExpansion()).ifPresent(bfReserveParams::expansion);
+
+			if(bfInsertArgument.isNonScaling()){
+				bfReserveParams.nonScaling();
+			}
+		}
+
+		return bfReserveParams;
 	}
 
 }

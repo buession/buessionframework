@@ -30,14 +30,13 @@ import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.BloomFilterOperations;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.internal.lettuce.LettuceBFReserveArgs;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- * Lettuce 布隆过滤命令操作抽象类
+ * Lettuce 布隆过滤器命令操作抽象类
  *
  * @param <C>
  * 		Redis Client {@link LettuceRedisClient}
@@ -161,61 +160,18 @@ public abstract class AbstractBloomFilterOperations<C extends LettuceRedisClient
 	}
 
 	@Override
-	public Status bfReserve(final String key, final double errorRate, final long capacity) {
-		final CommandArguments args = CommandArguments.create(key).add(errorRate).add(capacity);
+	public Status bfReserve(final String key, final BFReserveArgument bfInsertArgument) {
+		final CommandArguments args = CommandArguments.create(key).add(bfInsertArgument);
 		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.BF_RESERVE)
 				.arguments(args).converter(okStatusConverter)
 				.run();
 	}
 
 	@Override
-	public Status bfReserve(final byte[] key, final double errorRate, final long capacity) {
-		return bfReserve(SafeEncoder.encode(key), errorRate, capacity);
+	public Status bfReserve(final byte[] key, final BFReserveArgument bfInsertArgument) {
+		return bfReserve(SafeEncoder.encode(key), bfInsertArgument);
 	}
 
-	@Override
-	public Status bfReserve(final String key, final double errorRate, final long capacity, final int expansion) {
-		final LettuceBFReserveArgs bfReserveArgs = new LettuceBFReserveArgs(expansion);
-		final CommandArguments args = CommandArguments.create(key).add(errorRate).add(capacity).add(bfReserveArgs);
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.BF_RESERVE)
-				.arguments(args).converter(okStatusConverter)
-				.run();
-	}
-
-	@Override
-	public Status bfReserve(final byte[] key, final double errorRate, final long capacity, final int expansion) {
-		return bfReserve(SafeEncoder.encode(key), errorRate, capacity, expansion);
-	}
-
-	@Override
-	public Status bfReserve(final String key, final double errorRate, final long capacity, final boolean nonScaling) {
-		final LettuceBFReserveArgs bfReserveArgs = new LettuceBFReserveArgs(nonScaling);
-		final CommandArguments args = CommandArguments.create(key).add(errorRate).add(capacity).add(bfReserveArgs);
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.BF_RESERVE)
-				.arguments(args).converter(okStatusConverter)
-				.run();
-	}
-
-	@Override
-	public Status bfReserve(final byte[] key, final double errorRate, final long capacity, final boolean nonScaling) {
-		return bfReserve(SafeEncoder.encode(key), errorRate, capacity, nonScaling);
-	}
-
-	@Override
-	public Status bfReserve(final String key, final double errorRate, final long capacity, final int expansion,
-							final boolean nonScaling) {
-		final LettuceBFReserveArgs bfReserveArgs = new LettuceBFReserveArgs(expansion, nonScaling);
-		final CommandArguments args = CommandArguments.create(key).add(errorRate).add(capacity).add(bfReserveArgs);
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.BF_RESERVE)
-				.arguments(args).converter(okStatusConverter)
-				.run();
-	}
-
-	@Override
-	public Status bfReserve(final byte[] key, final double errorRate, final long capacity, final int expansion,
-							final boolean nonScaling) {
-		return bfReserve(SafeEncoder.encode(key), errorRate, capacity, expansion, nonScaling);
-	}
 
 	@Override
 	public Map<Long, byte[]> bfScandump(final String key, final long iterator) {

@@ -37,8 +37,8 @@ import io.lettuce.core.api.StatefulConnection;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public abstract class AbstractLettuceRedisClient<CONN extends LettuceRedisConnection<?
-		extends StatefulConnection<byte[], byte[]>>> extends AbstractRedisClient<CONN> implements LettuceRedisClient {
+public abstract class AbstractLettuceRedisClient<CONN extends LettuceRedisConnection<? extends StatefulConnection<byte[], byte[]>>>
+		extends AbstractRedisClient<CONN> implements LettuceRedisClient {
 
 	/**
 	 * 构造函数

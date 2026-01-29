@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * 布隆过滤命令
+ * 布隆过滤器命令
  *
  * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=bf" target="_blank">https://redis.io/docs/latest/commands/?group=bf</a></p>
  *
@@ -208,7 +208,7 @@ public interface BloomFilterCommands extends RedisCommands {
 	/**
 	 * 从外部导入布隆过滤器数据块
 	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/bf.loadchunk/" target="_blank"https://redis.io/docs/latest/commands/bf.loadchunk/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/bf.loadchunk/" target="_blank">https://redis.io/docs/latest/commands/bf.loadchunk/</a></p>
 	 *
 	 * @param key
 	 * 		布隆过滤器的目标名称
@@ -300,14 +300,12 @@ public interface BloomFilterCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		布隆过滤器的名称
-	 * @param errorRate
-	 * 		期望的最大误判概率
-	 * @param capacity
-	 * 		预计要插入的元素数量上限
+	 * @param bfInsertArgument
+	 * 		BF.RESERVE 参数
 	 *
 	 * @return 操作结果
 	 */
-	Status bfReserve(final String key, final double errorRate, final long capacity);
+	Status bfReserve(final String key, final BFReserveArgument bfInsertArgument);
 
 	/**
 	 * 控制布隆过滤器的关键参数：预期容量（capacity） 和 可接受的误判率（error rate）
@@ -316,128 +314,12 @@ public interface BloomFilterCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		布隆过滤器的名称
-	 * @param errorRate
-	 * 		期望的最大误判概率
-	 * @param capacity
-	 * 		预计要插入的元素数量上限
+	 * @param bfInsertArgument
+	 * 		BF.RESERVE 参数
 	 *
 	 * @return 操作结果
 	 */
-	Status bfReserve(final byte[] key, final double errorRate, final long capacity);
-
-	/**
-	 * 控制布隆过滤器的关键参数：预期容量（capacity） 和 可接受的误判率（error rate）
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/bf.reserve/" target="_blank">https://redis.io/docs/latest/commands/bf.reserve/</a></p>
-	 *
-	 * @param key
-	 * 		布隆过滤器的名称
-	 * @param errorRate
-	 * 		期望的最大误判概率
-	 * @param capacity
-	 * 		预计要插入的元素数量上限
-	 * @param expansion
-	 * 		-
-	 *
-	 * @return 操作结果
-	 */
-	Status bfReserve(final String key, final double errorRate, final long capacity, final int expansion);
-
-	/**
-	 * 控制布隆过滤器的关键参数：预期容量（capacity） 和 可接受的误判率（error rate）
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/bf.reserve/" target="_blank">https://redis.io/docs/latest/commands/bf.reserve/</a></p>
-	 *
-	 * @param key
-	 * 		布隆过滤器的名称
-	 * @param errorRate
-	 * 		期望的最大误判概率
-	 * @param capacity
-	 * 		预计要插入的元素数量上限
-	 * @param expansion
-	 * 		-
-	 *
-	 * @return 操作结果
-	 */
-	Status bfReserve(final byte[] key, final double errorRate, final long capacity, final int expansion);
-
-	/**
-	 * 控制布隆过滤器的关键参数：预期容量（capacity） 和 可接受的误判率（error rate）
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/bf.reserve/" target="_blank">https://redis.io/docs/latest/commands/bf.reserve/</a></p>
-	 *
-	 * @param key
-	 * 		布隆过滤器的名称
-	 * @param errorRate
-	 * 		期望的最大误判概率
-	 * @param capacity
-	 * 		预计要插入的元素数量上限
-	 * @param nonScaling
-	 * 		是否禁用自动扩容机制
-	 *
-	 * @return 操作结果
-	 */
-	Status bfReserve(final String key, final double errorRate, final long capacity, final boolean nonScaling);
-
-	/**
-	 * 控制布隆过滤器的关键参数：预期容量（capacity） 和 可接受的误判率（error rate）
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/bf.reserve/" target="_blank">https://redis.io/docs/latest/commands/bf.reserve/</a></p>
-	 *
-	 * @param key
-	 * 		布隆过滤器的名称
-	 * @param errorRate
-	 * 		期望的最大误判概率
-	 * @param capacity
-	 * 		预计要插入的元素数量上限
-	 * @param nonScaling
-	 * 		是否禁用自动扩容机制
-	 *
-	 * @return 操作结果
-	 */
-	Status bfReserve(final byte[] key, final double errorRate, final long capacity, final boolean nonScaling);
-
-	/**
-	 * 控制布隆过滤器的关键参数：预期容量（capacity） 和 可接受的误判率（error rate）
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/bf.reserve/" target="_blank">https://redis.io/docs/latest/commands/bf.reserve/</a></p>
-	 *
-	 * @param key
-	 * 		布隆过滤器的名称
-	 * @param errorRate
-	 * 		期望的最大误判概率
-	 * @param capacity
-	 * 		预计要插入的元素数量上限
-	 * @param expansion
-	 * 		-
-	 * @param nonScaling
-	 * 		是否禁用自动扩容机制
-	 *
-	 * @return 操作结果
-	 */
-	Status bfReserve(final String key, final double errorRate, final long capacity, final int expansion,
-					 final boolean nonScaling);
-
-	/**
-	 * 控制布隆过滤器的关键参数：预期容量（capacity） 和 可接受的误判率（error rate）
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/bf.reserve/" target="_blank">https://redis.io/docs/latest/commands/bf.reserve/</a></p>
-	 *
-	 * @param key
-	 * 		布隆过滤器的名称
-	 * @param errorRate
-	 * 		期望的最大误判概率
-	 * @param capacity
-	 * 		预计要插入的元素数量上限
-	 * @param expansion
-	 * 		-
-	 * @param nonScaling
-	 * 		是否禁用自动扩容机制
-	 *
-	 * @return 操作结果
-	 */
-	Status bfReserve(final byte[] key, final double errorRate, final long capacity, final int expansion,
-					 final boolean nonScaling);
+	Status bfReserve(final byte[] key, final BFReserveArgument bfInsertArgument);
 
 	/**
 	 * 采用分块迭代方式导出布隆过滤器 key 的数据
@@ -468,7 +350,7 @@ public interface BloomFilterCommands extends RedisCommands {
 	Map<Long, byte[]> bfScandump(final byte[] key, final long iterator);
 
 	/**
-	 * BFInsert 参数
+	 * BF.INSERT 参数
 	 */
 	class BFInsertArgument {
 
@@ -483,7 +365,7 @@ public interface BloomFilterCommands extends RedisCommands {
 		private Double errorRate;
 
 		/**
-		 * -
+		 * 扩容倍数
 		 */
 		private Integer expansion;
 
@@ -554,10 +436,18 @@ public interface BloomFilterCommands extends RedisCommands {
 
 		public static class Builder extends BaseArgumentBuilder<BFInsertArgument> {
 
+			/**
+			 * 构造函数
+			 */
 			private Builder() {
 				super(new BFInsertArgument());
 			}
 
+			/**
+			 * 创建 {@link BFInsertArgument} 构建器 {@link Builder}
+			 *
+			 * @return {@link BFInsertArgument} 构建器 {@link Builder}
+			 */
 			public static Builder create() {
 				return new Builder();
 			}
@@ -589,10 +479,10 @@ public interface BloomFilterCommands extends RedisCommands {
 			}
 
 			/**
-			 * -
+			 * 设置扩容倍数
 			 *
 			 * @param expansion
-			 * 		-
+			 * 		扩容倍数
 			 *
 			 * @return {@link Builder}
 			 */
@@ -608,6 +498,189 @@ public interface BloomFilterCommands extends RedisCommands {
 			 */
 			public Builder noCreate() {
 				arguament.noCreate = true;
+				return this;
+			}
+
+			/**
+			 * 设置禁用自动扩容
+			 *
+			 * @return {@link Builder}
+			 */
+			public Builder nonScaling() {
+				arguament.nonScaling = true;
+				return this;
+			}
+
+		}
+
+	}
+
+	/**
+	 * BF.RESERVE 参数
+	 */
+	class BFReserveArgument {
+
+		/**
+		 * 期望的误判率
+		 */
+		private final double errorRate;
+
+		/**
+		 * 初始容量
+		 */
+		private final long capacity;
+
+		/**
+		 * 扩容倍数
+		 */
+		private Integer expansion;
+
+		/**
+		 * 是否禁用自动扩容
+		 */
+		private Boolean nonScaling;
+
+		/**
+		 * 构造函数
+		 *
+		 * @param errorRate
+		 * 		期望的最大误判概率
+		 * @param capacity
+		 * 		预计要插入的元素数量上限
+		 */
+		private BFReserveArgument(final double errorRate, final long capacity) {
+			this.errorRate = errorRate;
+			this.capacity = capacity;
+		}
+
+		/**
+		 * 构造函数
+		 *
+		 * @param errorRate
+		 * 		期望的最大误判概率
+		 * @param capacity
+		 * 		预计要插入的元素数量上限
+		 * @param expansion
+		 * 		扩容倍数
+		 */
+		private BFReserveArgument(final double errorRate, final long capacity, final Integer expansion) {
+			this(errorRate, capacity);
+			this.expansion = expansion;
+		}
+
+		/**
+		 * 构造函数
+		 *
+		 * @param errorRate
+		 * 		期望的最大误判概率
+		 * @param capacity
+		 * 		预计要插入的元素数量上限
+		 * @param nonScaling
+		 * 		是否禁用自动扩容
+		 */
+		private BFReserveArgument(final double errorRate, final long capacity, final Boolean nonScaling) {
+			this(errorRate, capacity);
+			this.nonScaling = nonScaling;
+		}
+
+		/**
+		 * 构造函数
+		 *
+		 * @param errorRate
+		 * 		期望的最大误判概率
+		 * @param capacity
+		 * 		预计要插入的元素数量上限
+		 * @param expansion
+		 * 		扩容倍数
+		 * @param nonScaling
+		 * 		是否禁用自动扩容
+		 */
+		private BFReserveArgument(final double errorRate, final long capacity, final Integer expansion,
+								  final Boolean nonScaling) {
+			this(errorRate, capacity, expansion);
+			this.nonScaling = nonScaling;
+		}
+
+		/**
+		 * 获取期望的误判率
+		 *
+		 * @return 期望的误判率
+		 */
+		public Double getErrorRate() {
+			return errorRate;
+		}
+
+		/**
+		 * 获取初始容量
+		 *
+		 * @return 初始容量
+		 */
+		public Long getCapacity() {
+			return capacity;
+		}
+
+		/**
+		 * -
+		 *
+		 * @return -
+		 */
+		public Integer getExpansion() {
+			return expansion;
+		}
+
+		/**
+		 * 获取是否禁用自动扩容
+		 *
+		 * @return 是否是否禁用自动扩容
+		 */
+		public Boolean isNonScaling() {
+			return nonScaling;
+		}
+
+		@Override
+		public String toString() {
+			return ArgStringBuilder.create().append(errorRate).append(capacity)
+					.append(Objects.equals(nonScaling, true) ? "NONSCALING" : null).build();
+		}
+
+		public static class Builder extends BaseArgumentBuilder<BFReserveArgument> {
+
+			/**
+			 * 构造函数
+			 *
+			 * @param errorRate
+			 * 		期望的误判率
+			 * @param capacity
+			 * 		预计要插入的元素数量上限
+			 */
+			private Builder(final double errorRate, final long capacity) {
+				super(new BFReserveArgument(errorRate, capacity));
+			}
+
+			/**
+			 * 创建 {@link BFReserveArgument} 构建器 {@link Builder}
+			 *
+			 * @param errorRate
+			 * 		期望的误判率
+			 * @param capacity
+			 * 		预计要插入的元素数量上限
+			 *
+			 * @return {@link BFReserveArgument} 构建器 {@link Builder}
+			 */
+			public static Builder create(final double errorRate, final long capacity) {
+				return new Builder(errorRate, capacity);
+			}
+
+			/**
+			 * 设置扩容倍数
+			 *
+			 * @param expansion
+			 * 		扩容倍数
+			 *
+			 * @return {@link Builder}
+			 */
+			public Builder expansion(final Integer expansion) {
+				arguament.expansion = expansion;
 				return this;
 			}
 

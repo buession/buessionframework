@@ -52,7 +52,7 @@ public enum Command implements ProtocolCommand {
 
 	BF_MADD(CommandGroup.BLOOM_FILTER, "BF.MADD", "w"),
 
-	BF_MEXISTS(CommandGroup.BLOOM_FILTER, "BF.MEXISTS", "w"),
+	BF_MEXISTS(CommandGroup.BLOOM_FILTER, "BF.MEXISTS", "r"),
 
 	BF_RESERVE(CommandGroup.BLOOM_FILTER, "BF.RESERVE", "w"),
 
@@ -79,6 +79,36 @@ public enum Command implements ProtocolCommand {
 	SETBIT(CommandGroup.BITMAP, "w"),
 	/**
 	 * BitMap command end
+	 */
+
+	/**
+	 * Cuckoo filter command start
+	 */
+	CF_ADD(CommandGroup.CUCKOO_FILTER, "CF.ADD", "w"),
+
+	CF_ADDNX(CommandGroup.CUCKOO_FILTER, "CF.ADDNX", "w"),
+
+	CF_COUNT(CommandGroup.CUCKOO_FILTER, "CF.COUNT", "r"),
+
+	CF_DEL(CommandGroup.CUCKOO_FILTER, "CF.DEL", "w"),
+
+	CF_EXISTS(CommandGroup.CUCKOO_FILTER, "CF.EXISTS", "r"),
+
+	CF_INFO(CommandGroup.CUCKOO_FILTER, "CF.INFO", "r"),
+
+	CF_INSERT(CommandGroup.CUCKOO_FILTER, "CF.INSERT", "w"),
+
+	CF_INSERTNX(CommandGroup.CUCKOO_FILTER, "CF.INSERTNX", "w"),
+
+	CF_LOADCHUNK(CommandGroup.CUCKOO_FILTER, "CF.LOADCHUNK", "r"),
+
+	CF_MEXISTS(CommandGroup.CUCKOO_FILTER, "CF.MEXISTS", "r"),
+
+	CF_RESERVE(CommandGroup.CUCKOO_FILTER, "CF.RESERVE", "w"),
+
+	CF_SCANDUMP(CommandGroup.CUCKOO_FILTER, "CF.SCANDUMP", "w"),
+	/**
+	 * Cuckoo filter command end
 	 */
 	;
 

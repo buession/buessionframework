@@ -48,7 +48,7 @@ public abstract class AbstractRedisClient<CONN extends RedisConnection> implemen
 	protected CONN connection;
 
 	/**
-	 * 布隆过滤命令操作
+	 * 布隆过滤器命令操作
 	 *
 	 * @since 4.0.0
 	 */
@@ -58,6 +58,13 @@ public abstract class AbstractRedisClient<CONN extends RedisConnection> implemen
 	 * BitMap 命令操作
 	 */
 	protected BitMapOperations bitMapOperations;
+
+	/**
+	 * 布谷鸟过滤器命令操作
+	 *
+	 * @since 4.0.0
+	 */
+	protected CuckooFilterOperations cuckooFilterOperations;
 
 	/**
 	 * 集群命令操作

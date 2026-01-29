@@ -51,9 +51,9 @@ import java.util.stream.Collectors;
  * @author Yong.Teng
  * @see AbstractRedisTemplate
  */
-public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterOperations, BitMapOperations,
-		ClusterOperations, ConnectionOperations, GenericOperations, GeoOperations, HashOperations,
-		HyperLogLogOperations, KeyOperations,
+public class RedisTemplate extends AbstractRedisTemplate
+		implements BloomFilterOperations, BitMapOperations, CuckooFilterOperations, ClusterOperations,
+		ConnectionOperations, GenericOperations, GeoOperations, HashOperations, HyperLogLogOperations, KeyOperations,
 		ListOperations, PubSubOperations, ScriptingOperations, ServerOperations, SetOperations, SortedSetOperations,
 		StreamOperations, StringOperations, TransactionOperations {
 
@@ -184,18 +184,18 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 
 	@Override
 	public <V> Status hMSet(final String key, final List<KeyValue<String, V>> data) {
-		Map<String, String> temp = data.stream()
-				.collect(Collectors.toMap(KeyValue::getKey, (e)->serializer.serialize(e.getValue()),
-						(key1, key2)->key2, LinkedHashMap::new));
+		Map<String, String> temp = data.stream().collect(
+				Collectors.toMap(KeyValue::getKey, (e)->serializer.serialize(e.getValue()), (key1, key2)->key2,
+						LinkedHashMap::new));
 
 		return hMSet(key, temp);
 	}
 
 	@Override
 	public <V> Status hMSet(final byte[] key, final List<KeyValue<byte[], V>> data) {
-		Map<byte[], byte[]> temp = data.stream()
-				.collect(Collectors.toMap(KeyValue::getKey, (e)->serializer.serializeAsBytes(e.getValue()),
-						(key1, key2)->key2, LinkedHashMap::new));
+		Map<byte[], byte[]> temp = data.stream().collect(
+				Collectors.toMap(KeyValue::getKey, (e)->serializer.serializeAsBytes(e.getValue()), (key1, key2)->key2,
+						LinkedHashMap::new));
 
 		return hMSet(key, temp);
 	}
@@ -1440,15 +1440,13 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScanObject(final String key, final String cursor,
-											   final TypeReference<V> type) {
+	public <V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final TypeReference<V> type) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor),
 				new Converter.TypeScanResultListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor,
-											   final TypeReference<V> type) {
+	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final TypeReference<V> type) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor),
 				new Converter.TypeScanResultListBinaryConverter<>(this, type));
 	}
@@ -1560,8 +1558,7 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, long count,
-											   TypeReference<V> type) {
+	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, long count, TypeReference<V> type) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
 				new Converter.TypeScanResultListStringConverter<>(this, type));
 	}

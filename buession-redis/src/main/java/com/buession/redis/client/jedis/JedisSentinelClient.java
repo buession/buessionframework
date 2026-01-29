@@ -30,6 +30,7 @@ import com.buession.redis.client.jedis.operations.JedisSentinelBitMapOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelBloomFilterOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelClusterOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelConnectionOperations;
+import com.buession.redis.client.jedis.operations.JedisSentinelCuckooFilterOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelGenericOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelGeoOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelHashOperations;
@@ -88,6 +89,15 @@ public class JedisSentinelClient extends AbstractJedisRedisClient<JedisSentinelC
 		}
 
 		return bitMapOperations;
+	}
+
+	@Override
+	public CuckooFilterOperations cuckooFilterOperations() {
+		if(cuckooFilterOperations == null){
+			cuckooFilterOperations = new JedisSentinelCuckooFilterOperations(this);
+		}
+
+		return cuckooFilterOperations;
 	}
 
 	@Override

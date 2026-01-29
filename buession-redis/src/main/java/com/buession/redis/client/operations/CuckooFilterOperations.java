@@ -22,20 +22,18 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.client.operations;
 
-import com.buession.redis.client.jedis.JedisStandaloneClient;
+import com.buession.redis.core.command.CuckooFilterCommands;
 
 /**
- * Jedis 单机模式布隆过滤器命令操作抽象类
+ * 布谷鸟过滤器命令
+ *
+ * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=cf" target="_blank">https://redis.io/docs/latest/commands/?group=cf</a></p>
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class JedisBloomFilterOperations extends AbstractBloomFilterOperations<JedisStandaloneClient> {
-
-	public JedisBloomFilterOperations(final JedisStandaloneClient client) {
-		super(client);
-	}
+public interface CuckooFilterOperations extends CuckooFilterCommands, RedisOperations {
 
 }
