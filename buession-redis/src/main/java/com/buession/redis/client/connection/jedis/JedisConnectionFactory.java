@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.jedis;
@@ -32,7 +32,6 @@ import com.buession.redis.client.connection.datasource.jedis.JedisClusterDataSou
 import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisRedisDataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisSentinelDataSource;
-import com.buession.redis.exception.RedisConnectionFailureException;
 
 /**
  * Jedis Redis 连接工厂
@@ -82,11 +81,13 @@ public final class JedisConnectionFactory extends AbstractConnectionFactory<Jedi
 		if(dataSource.getPoolConfig() == null){
 			return new JedisClusterConnection(dataSource, dataSource.getConnectTimeout(), dataSource.getSoTimeout(),
 					dataSource.getInfiniteSoTimeout(), dataSource.getMaxRedirects(),
-					dataSource.getMaxTotalRetriesDuration(), dataSource.getSslConfiguration());
+					dataSource.getMaxTotalRetriesDuration(), dataSource.getTopologyRefreshPeriod(),
+					dataSource.getSslConfiguration());
 		}else{
 			return new JedisClusterConnection(dataSource, dataSource.getPoolConfig(), dataSource.getConnectTimeout(),
 					dataSource.getSoTimeout(), dataSource.getInfiniteSoTimeout(), dataSource.getMaxRedirects(),
-					dataSource.getMaxTotalRetriesDuration(), dataSource.getSslConfiguration());
+					dataSource.getMaxTotalRetriesDuration(), dataSource.getTopologyRefreshPeriod(),
+					dataSource.getSslConfiguration());
 		}
 	}
 

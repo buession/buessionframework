@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.lettuce;
@@ -82,12 +82,13 @@ public final class LettuceConnectionFactory extends AbstractConnectionFactory<Le
 		if(dataSource.getPoolConfig() == null){
 			return new LettuceClusterConnection(dataSource, dataSource.getConnectTimeout(), dataSource.getSoTimeout(),
 					dataSource.getInfiniteSoTimeout(), dataSource.getMaxRedirects(),
-					dataSource.getMaxTotalRetriesDuration(), dataSource.getSslConfiguration());
+					dataSource.getMaxTotalRetriesDuration(), dataSource.getTopologyRefreshPeriod(),
+					dataSource.getSslConfiguration());
 		}else{
 			return new LettuceClusterConnection(dataSource, dataSource.getPoolConfig(),
 					dataSource.getConnectTimeout(), dataSource.getSoTimeout(), dataSource.getInfiniteSoTimeout(),
 					dataSource.getMaxRedirects(), dataSource.getMaxTotalRetriesDuration(),
-					dataSource.getSslConfiguration());
+					dataSource.getTopologyRefreshPeriod(), dataSource.getSslConfiguration());
 		}
 	}
 

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.lettuce;
@@ -48,6 +48,8 @@ import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.lettuce.LettucePipeline;
 import com.buession.redis.pipeline.lettuce.LettucePipelineProxy;
 import com.buession.redis.transaction.Transaction;
+import com.buession.redis.transaction.lettuce.LettuceTransaction;
+import com.buession.redis.transaction.lettuce.LettuceTransactionProxy;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.LettuceClientConfig;
 import io.lettuce.core.LettucePoolConfig;
@@ -58,6 +60,8 @@ import io.lettuce.core.RedisURI;
 import io.lettuce.core.StaticCredentialsProvider;
 import io.lettuce.core.api.PipeliningFlushPolicy;
 import io.lettuce.core.api.PipeliningFlushState;
+import io.lettuce.core.api.StatefulRedisConnection;
+import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.codec.ByteArrayCodec;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.sentinel.api.StatefulRedisSentinelConnection;
@@ -84,7 +88,8 @@ import java.util.stream.Collectors;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class LettuceSentinelConnection extends AbstractLettuceRedisConnection implements RedisSentinelConnection {
+public class LettuceSentinelConnection extends AbstractLettuceRedisConnection<StatefulRedisConnection<byte[], byte[]>>
+		implements RedisSentinelConnection {
 
 	/**
 	 * 哨兵节点连接超时（单位：毫秒）
@@ -103,10 +108,10 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 
 	/**
 	 * {@link StatefulRedisSentinelConnection} 实例
+	 *
+	 * @since 4.0.0
 	 */
-	private StatefulRedisSentinelConnection<byte[], byte[]> delegate;
-
-	private final PipeliningFlushPolicy pipeliningFlushPolicy = PipeliningFlushPolicy.flushEachCommand();
+	private StatefulRedisSentinelConnection<byte[], byte[]> sentinelConn;
 
 	private final static Logger logger = LoggerFactory.getLogger(LettuceSentinelConnection.class);
 
@@ -603,60 +608,19 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 				.monitor(SafeEncoder.encode(server.getName()), server.getHost(), server.getPort(), server.getQuorum());
 	}
 
-	public StatefulRedisSentinelConnection<byte[], byte[]> getStatefulRedisSentinelConnection() {
-		return delegate;
-	}
-
-	@Override
-	public Pipeline openPipeline() {
-		if(pipeline == null){
-			final PipeliningFlushState flushState = pipeliningFlushPolicy.newPipeline();
-			final LettucePipelineProxy<PipeliningFlushState> lettucePipelineProxy =
-					new LettucePipelineProxy<>(flushState);
-
-			lettucePipelineProxy.setTarget(
-					new LettucePipeline(delegate, flushState, lettucePipelineProxy.getTxResults()));
-			pipeline = lettucePipelineProxy;
-		}
-
-		return pipeline;
-	}
-
-	@Override
-	public void closePipeline() {
-		pipeline.close();
-		pipeline = null;
+	public StatefulRedisSentinelConnection<byte[], byte[]> getSentinelDelegate() {
+		return sentinelDelegate;
 	}
 
 	@Override
 	public Transaction multi() {
 		if(transaction == null){
-			final RedisSentinelCommands<byte[], byte[]> commands = delegate.sync();
-			//transaction = new LettuceTransactionProxy(new LettuceTransaction(commands), commands);
+			final RedisCommands<byte[], byte[]> commands = conn.sync();
+			commands.multi();
+			transaction = new LettuceTransactionProxy(new LettuceTransaction(commands), commands);
 		}
 
 		return transaction;
-	}
-
-	@Override
-	public List<Object> exec() throws RedisException {
-		if(pipeline != null){
-			final List<Object> result = pipeline.syncAndReturnAll();
-
-			pipeline.close();
-			pipeline = null;
-
-			return result;
-		}else if(transaction != null){
-			final List<Object> result = transaction.exec();
-
-			transaction.close();
-			transaction = null;
-
-			return result;
-		}else{
-			throw new RedisException("ERR EXEC without MULTI. Did you forget to call multi?");
-		}
 	}
 
 	@Override
@@ -682,16 +646,6 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 	}
 
 	@Override
-	public boolean isConnected() {
-		return delegate != null && delegate.isOpen();
-	}
-
-	@Override
-	public boolean isClosed() {
-		return delegate == null || delegate.isOpen() == false;
-	}
-
-	@Override
 	protected void internalInit() {
 		if(pool == null && getPoolConfig() != null){
 			pool = createPool();
@@ -706,7 +660,7 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 		return pool != null;
 	}
 
-	protected <K, V> StatefulRedisSentinelConnection<K, V> createStatefulRedisSentinelConnection(
+	protected <K, V> StatefulRedisConnection<K, V> createStatefulRedisConnection(
 			final RedisCodec<K, V> codec) {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
 		final LettuceSentinelDataSource dataSource = (LettuceSentinelDataSource) getDataSource();
@@ -728,7 +682,28 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 
 		redisURIBuilder.withSsl(dataSource.getSslConfiguration() != null);
 
-		return RedisClient.create(redisURIBuilder.build()).connectSentinel(codec);
+		return RedisClient.create(redisURIBuilder.build()).connect(codec);
+	}
+
+	protected <K, V> StatefulRedisConnection<K, V> createStatefulRedisSentinelConnection(
+			final RedisCodec<K, V> codec) {
+		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
+		final LettuceSentinelDataSource dataSource = (LettuceSentinelDataSource) getDataSource();
+		final RedisURI.Builder redisURIBuilder = RedisURI.builder();
+		final RedisCredentialsProvider redisCredentialsProvider = Validate.hasText(dataSource.getPassword()) ?
+				new StaticCredentialsProvider(Validate.hasText(dataSource.getUsername()) ? dataSource.getUsername() :
+						null, dataSource.getPassword().toCharArray()) : null;
+
+		propertyMapper.from(redisCredentialsProvider).to(redisURIBuilder::withAuthentication);
+		propertyMapper.from(dataSource.getSentinelClientName()).to(redisURIBuilder::withClientName);
+
+		if(dataSource.getSentinelConnectTimeout() > 0){
+			redisURIBuilder.withTimeout(Duration.ofMillis(dataSource.getSentinelConnectTimeout()));
+		}
+
+		redisURIBuilder.withSsl(dataSource.getSslConfiguration() != null);
+
+		return RedisClient.create(redisURIBuilder.build()).connect(codec);
 	}
 
 	protected LettuceSentinelPool createPool() {
@@ -763,7 +738,7 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 
 		if(isUsePool()){
 			try{
-				delegate = pool.getResource();
+				conn = pool.getResource();
 
 				if(logger.isDebugEnabled()){
 					logger.debug("StatefulRedisSentinelConnection initialized with pool success.");
@@ -777,10 +752,10 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 				throw LettuceRedisExceptionUtils.convert(e);
 			}
 		}else{
-			delegate = createStatefulRedisSentinelConnection(new ByteArrayCodec());
+			conn = createStatefulRedisConnection(new ByteArrayCodec());
 		}
 
-		return delegate == null ? Status.FAILURE : Status.SUCCESS;
+		return conn == null ? Status.FAILURE : Status.SUCCESS;
 	}
 
 	@Override
@@ -803,17 +778,6 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection im
 			}
 
 			pool = null;
-		}
-	}
-
-	@Override
-	protected void doClose() throws IOException {
-		super.doClose();
-
-		logger.debug("Lettuce close.");
-
-		if(delegate != null){
-			delegate.close();
 		}
 	}
 

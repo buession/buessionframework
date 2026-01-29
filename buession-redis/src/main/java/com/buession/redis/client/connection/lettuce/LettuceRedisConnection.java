@@ -19,19 +19,32 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.lettuce;
 
 import com.buession.redis.client.connection.RedisConnection;
+import io.lettuce.core.api.StatefulConnection;
 
 /**
  * Lettuce Redis 连接对象
  *
+ * @param <C>
+ *        {@link StatefulConnection} 类型
+ *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public interface LettuceRedisConnection extends RedisConnection {
+public interface LettuceRedisConnection<C extends StatefulConnection<byte[], byte[]>> extends RedisConnection {
+
+	/**
+	 * 返回 Redis 连接对象实例 {@link StatefulConnection}
+	 *
+	 * @return Redis 连接对象实例 {@link StatefulConnection}
+	 *
+	 * @since 4.0.0
+	 */
+	C getConn();
 
 }

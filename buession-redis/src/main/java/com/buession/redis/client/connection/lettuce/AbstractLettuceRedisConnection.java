@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.lettuce;
@@ -33,9 +33,15 @@ import com.buession.redis.core.PoolConfig;
 import com.buession.redis.exception.LettuceRedisExceptionUtils;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
+import com.buession.redis.pipeline.lettuce.LettucePipeline;
+import com.buession.redis.pipeline.lettuce.LettucePipelineProxy;
 import com.buession.redis.transaction.Transaction;
+import io.lettuce.core.api.PipeliningFlushPolicy;
+import io.lettuce.core.api.PipeliningFlushState;
+import io.lettuce.core.api.StatefulConnection;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Lettuce Redis 连接对象抽象类
@@ -43,7 +49,15 @@ import java.io.IOException;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public abstract class AbstractLettuceRedisConnection extends AbstractRedisConnection implements LettuceRedisConnection {
+public abstract class AbstractLettuceRedisConnection<C extends StatefulConnection<byte[], byte[]>>
+		extends AbstractRedisConnection implements LettuceRedisConnection {
+
+	/**
+	 * Redis 连接对象实例 {@link StatefulConnection}
+	 *
+	 * @since 4.0.0
+	 */
+	protected C conn;
 
 	/**
 	 * 事务
@@ -54,6 +68,8 @@ public abstract class AbstractLettuceRedisConnection extends AbstractRedisConnec
 	 * 管道
 	 */
 	protected volatile Pipeline pipeline;
+
+	private final PipeliningFlushPolicy pipeliningFlushPolicy = PipeliningFlushPolicy.flushEachCommand();
 
 	/**
 	 * 构造函数
@@ -254,14 +270,68 @@ public abstract class AbstractLettuceRedisConnection extends AbstractRedisConnec
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 	}
 
+	/**
+	 * 返回 Redis 连接对象实例 {@link StatefulConnection}
+	 *
+	 * @return Redis 连接对象实例 {@link StatefulConnection}
+	 *
+	 * @since 4.0.0
+	 */
+	@Override
+	public C getConn() {
+		return conn;
+	}
+
 	@Override
 	public boolean isPipeline() {
 		return pipeline != null;
 	}
 
 	@Override
+	public Pipeline openPipeline() {
+		if(pipeline == null){
+			final PipeliningFlushState flushState = pipeliningFlushPolicy.newPipeline();
+			final LettucePipelineProxy<PipeliningFlushState> lettucePipelineProxy =
+					new LettucePipelineProxy<>(flushState);
+
+			lettucePipelineProxy.setTarget(
+					new LettucePipeline(conn, flushState, lettucePipelineProxy.getTxResults()));
+			pipeline = lettucePipelineProxy;
+		}
+
+		return pipeline;
+	}
+
+	@Override
+	public void closePipeline() {
+		pipeline.close();
+		pipeline = null;
+	}
+
+	@Override
 	public boolean isTransaction() {
 		return transaction != null;
+	}
+
+	@Override
+	public List<Object> exec() throws RedisException {
+		if(pipeline != null){
+			final List<Object> result = pipeline.syncAndReturnAll();
+
+			pipeline.close();
+			pipeline = null;
+
+			return result;
+		}else if(transaction != null){
+			final List<Object> result = transaction.exec();
+
+			transaction.close();
+			transaction = null;
+
+			return result;
+		}else{
+			throw new RedisException("ERR EXEC without MULTI. Did you forget to call multi?");
+		}
 	}
 
 	@Override
@@ -271,6 +341,16 @@ public abstract class AbstractLettuceRedisConnection extends AbstractRedisConnec
 		}catch(Exception e){
 			throw LettuceRedisExceptionUtils.convert(e);
 		}
+	}
+
+	@Override
+	public boolean isConnected() {
+		return conn != null && conn.isOpen();
+	}
+
+	@Override
+	public boolean isClosed() {
+		return conn == null || conn.isOpen() == false;
 	}
 
 	@Override
@@ -286,6 +366,12 @@ public abstract class AbstractLettuceRedisConnection extends AbstractRedisConnec
 		if(pipeline != null){
 			pipeline.close();
 			pipeline = null;
+		}
+
+		logger.debug("Lettuce close.");
+
+		if(conn != null){
+			conn.close();
 		}
 	}
 

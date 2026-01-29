@@ -68,19 +68,13 @@ import java.util.List;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class LettuceConnection extends AbstractLettuceRedisConnection implements RedisStandaloneConnection {
+public class LettuceConnection extends AbstractLettuceRedisConnection<StatefulRedisConnection<byte[], byte[]>>
+		implements RedisStandaloneConnection {
 
 	/**
 	 * 连接池
 	 */
 	private LettucePool pool;
-
-	/**
-	 * {@link StatefulRedisConnection} 实例
-	 */
-	private StatefulRedisConnection<byte[], byte[]> delegate;
-
-	private final PipeliningFlushPolicy pipeliningFlushPolicy = PipeliningFlushPolicy.flushEachCommand();
 
 	private final static Logger logger = LoggerFactory.getLogger(LettuceConnection.class);
 
@@ -280,61 +274,15 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 	}
 
-	public StatefulRedisConnection<byte[], byte[]> getStatefulConnection() {
-		return delegate;
-	}
-
-	@Override
-	public Pipeline openPipeline() {
-		if(pipeline == null){
-			final PipeliningFlushState flushState = pipeliningFlushPolicy.newPipeline();
-			final LettucePipelineProxy<PipeliningFlushState> lettucePipelineProxy =
-					new LettucePipelineProxy<>(flushState);
-
-			lettucePipelineProxy.setTarget(
-					new LettucePipeline(delegate, flushState, lettucePipelineProxy.getTxResults()));
-			pipeline = lettucePipelineProxy;
-		}
-
-		return pipeline;
-	}
-
-	@Override
-	public void closePipeline() {
-		pipeline.close();
-		pipeline = null;
-	}
-
 	@Override
 	public Transaction multi() {
 		if(transaction == null){
-			final RedisCommands<byte[], byte[]> commands = delegate.sync();
+			final RedisCommands<byte[], byte[]> commands = conn.sync();
 			commands.multi();
 			transaction = new LettuceTransactionProxy(new LettuceTransaction(commands), commands);
 		}
 
 		return transaction;
-	}
-
-	@Override
-	public List<Object> exec() throws RedisException {
-		if(pipeline != null){
-			final List<Object> result = pipeline.syncAndReturnAll();
-
-			pipeline.close();
-			pipeline = null;
-
-			return result;
-		}else if(transaction != null){
-			final List<Object> result = transaction.exec();
-
-			transaction.close();
-			transaction = null;
-
-			return result;
-		}else{
-			throw new RedisException("ERR EXEC without MULTI. Did you forget to call multi?");
-		}
 	}
 
 	@Override
@@ -345,16 +293,6 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 		}else{
 			throw new RedisException("ERR DISCARD without MULTI. Did you forget to call multi?");
 		}
-	}
-
-	@Override
-	public boolean isConnected() {
-		return delegate != null && delegate.isOpen();
-	}
-
-	@Override
-	public boolean isClosed() {
-		return delegate == null || delegate.isOpen() == false;
 	}
 
 	@Override
@@ -422,7 +360,7 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 
 		if(isUsePool()){
 			try{
-				delegate = pool.getResource();
+				conn = pool.getResource();
 
 				if(logger.isDebugEnabled()){
 					logger.debug("StatefulConnection initialized with pool success.");
@@ -435,10 +373,10 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 				throw LettuceRedisExceptionUtils.convert(e);
 			}
 		}else{
-			delegate = createStatefulRedisConnection(new ByteArrayCodec());
+			conn = createStatefulRedisConnection(new ByteArrayCodec());
 		}
 
-		return delegate == null ? Status.FAILURE : Status.SUCCESS;
+		return conn == null ? Status.FAILURE : Status.SUCCESS;
 	}
 
 	@Override
@@ -461,17 +399,6 @@ public class LettuceConnection extends AbstractLettuceRedisConnection implements
 			}
 
 			pool = null;
-		}
-	}
-
-	@Override
-	protected void doClose() throws IOException {
-		super.doClose();
-
-		logger.debug("Lettuce close.");
-
-		if(delegate != null){
-			delegate.close();
 		}
 	}
 

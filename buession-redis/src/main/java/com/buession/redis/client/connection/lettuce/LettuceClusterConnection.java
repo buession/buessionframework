@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.lettuce;
@@ -41,6 +41,8 @@ import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.lettuce.LettucePipeline;
 import com.buession.redis.pipeline.lettuce.LettucePipelineProxy;
 import com.buession.redis.transaction.Transaction;
+import com.buession.redis.transaction.lettuce.LettuceTransaction;
+import com.buession.redis.transaction.lettuce.LettuceTransactionProxy;
 import io.lettuce.core.LettuceClientConfig;
 import io.lettuce.core.LettuceClusterPool;
 import io.lettuce.core.LettucePoolConfig;
@@ -69,7 +71,9 @@ import java.util.stream.Collectors;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class LettuceClusterConnection extends AbstractLettuceRedisConnection implements RedisClusterConnection {
+public class LettuceClusterConnection
+		extends AbstractLettuceRedisConnection<StatefulRedisClusterConnection<byte[], byte[]>>
+		implements RedisClusterConnection {
 
 	/**
 	 * 最大重定向次数
@@ -77,21 +81,21 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 	private int maxRedirects;
 
 	/**
-	 * 最大重数时长（单位：毫秒）
+	 * 最大重数时长
 	 */
-	private int maxTotalRetriesDuration;
+	private Duration maxTotalRetriesDuration;
+
+	/**
+	 * 定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
+	 *
+	 * @since 4.0.0
+	 */
+	private Duration topologyRefreshPeriod;
 
 	/**
 	 * 连接池
 	 */
 	private LettuceClusterPool pool;
-
-	/**
-	 * {@link StatefulRedisClusterConnection} 实例
-	 */
-	private StatefulRedisClusterConnection<byte[], byte[]> delegate;
-
-	private final PipeliningFlushPolicy pipeliningFlushPolicy = PipeliningFlushPolicy.flushEachCommand();
 
 	private final static Logger logger = LoggerFactory.getLogger(LettuceClusterConnection.class);
 
@@ -306,10 +310,10 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 	 * @param maxRedirects
 	 * 		最大重定向次数
 	 * @param maxTotalRetriesDuration
-	 * 		最大重试时长（单位：毫秒）
+	 * 		最大重试时长
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, int connectTimeout, int soTimeout,
-									int maxRedirects, int maxTotalRetriesDuration) {
+									int maxRedirects, Duration maxTotalRetriesDuration) {
 		super(dataSource, connectTimeout, soTimeout);
 		this.maxRedirects = maxRedirects;
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
@@ -324,15 +328,40 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
 	 * 		读取超时（单位：毫秒）
+	 * @param maxRedirects
+	 * 		最大重定向次数
+	 * @param maxTotalRetriesDuration
+	 * 		最大重试时长
+	 * @param topologyRefreshPeriod
+	 * 		定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
+	 *
+	 * @since 4.0.0
+	 */
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, int connectTimeout, int soTimeout,
+									int maxRedirects, Duration maxTotalRetriesDuration,
+									Duration topologyRefreshPeriod) {
+		this(dataSource, connectTimeout, soTimeout, maxRedirects, maxTotalRetriesDuration);
+		this.topologyRefreshPeriod = topologyRefreshPeriod;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param connectTimeout
+	 * 		连接超时（单位：毫秒）
+	 * @param soTimeout
+	 * 		读取超时（单位：毫秒）
 	 * @param infiniteSoTimeout
 	 * 		Infinite 读取超时
 	 * @param maxRedirects
 	 * 		最大重定向次数
 	 * @param maxTotalRetriesDuration
-	 * 		最大重试时长（单位：毫秒）
+	 * 		最大重试时长
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, int connectTimeout, int soTimeout,
-									int infiniteSoTimeout, int maxRedirects, int maxTotalRetriesDuration) {
+									int infiniteSoTimeout, int maxRedirects, Duration maxTotalRetriesDuration) {
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
 		this.maxRedirects = maxRedirects;
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
@@ -347,16 +376,97 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
 	 * 		读取超时（单位：毫秒）
+	 * @param infiniteSoTimeout
+	 * 		Infinite 读取超时
 	 * @param maxRedirects
 	 * 		最大重定向次数
 	 * @param maxTotalRetriesDuration
-	 * 		最大重试时长（单位：毫秒）
+	 * 		最大重试时长
+	 * @param topologyRefreshPeriod
+	 * 		定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
+	 *
+	 * @since 4.0.0
+	 */
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, int connectTimeout, int soTimeout,
+									int infiniteSoTimeout, int maxRedirects, Duration maxTotalRetriesDuration,
+									Duration topologyRefreshPeriod) {
+		this(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, maxRedirects, maxTotalRetriesDuration);
+		this.topologyRefreshPeriod = topologyRefreshPeriod;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param connectTimeout
+	 * 		连接超时（单位：毫秒）
+	 * @param soTimeout
+	 * 		读取超时（单位：毫秒）
+	 * @param maxRedirects
+	 * 		最大重定向次数
+	 * @param maxTotalRetriesDuration
+	 * 		最大重试时长
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, int connectTimeout, int soTimeout,
-									int maxRedirects, int maxTotalRetriesDuration, SslConfiguration sslConfiguration) {
+									int maxRedirects, Duration maxTotalRetriesDuration,
+									SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
+		this.maxRedirects = maxRedirects;
+		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param connectTimeout
+	 * 		连接超时（单位：毫秒）
+	 * @param soTimeout
+	 * 		读取超时（单位：毫秒）
+	 * @param maxRedirects
+	 * 		最大重定向次数
+	 * @param maxTotalRetriesDuration
+	 * 		最大重试时长
+	 * @param topologyRefreshPeriod
+	 * 		定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 *
+	 * @since 4.0.0
+	 */
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, int connectTimeout, int soTimeout,
+									int maxRedirects, Duration maxTotalRetriesDuration, Duration topologyRefreshPeriod,
+									SslConfiguration sslConfiguration) {
+		this(dataSource, connectTimeout, soTimeout, maxRedirects, maxTotalRetriesDuration, sslConfiguration);
+		this.topologyRefreshPeriod = topologyRefreshPeriod;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param connectTimeout
+	 * 		连接超时（单位：毫秒）
+	 * @param soTimeout
+	 * 		读取超时（单位：毫秒）
+	 * @param infiniteSoTimeout
+	 * 		Infinite 读取超时
+	 * @param maxRedirects
+	 * 		最大重定向次数
+	 * @param maxTotalRetriesDuration
+	 * 		最大重试时长
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, int connectTimeout, int soTimeout,
+									int infiniteSoTimeout, int maxRedirects, Duration maxTotalRetriesDuration,
+									SslConfiguration sslConfiguration) {
+		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 		this.maxRedirects = maxRedirects;
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
 	}
@@ -375,14 +485,41 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 	 * @param maxRedirects
 	 * 		最大重定向次数
 	 * @param maxTotalRetriesDuration
-	 * 		最大重试时长（单位：毫秒）
+	 * 		最大重试时长
+	 * @param topologyRefreshPeriod
+	 * 		定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
 	 * @param sslConfiguration
 	 * 		SSL 配置
+	 *
+	 * @since 4.0.0
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, int connectTimeout, int soTimeout,
-									int infiniteSoTimeout, int maxRedirects, int maxTotalRetriesDuration,
-									SslConfiguration sslConfiguration) {
-		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
+									int infiniteSoTimeout, int maxRedirects, Duration maxTotalRetriesDuration,
+									Duration topologyRefreshPeriod, SslConfiguration sslConfiguration) {
+		this(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, maxRedirects, maxTotalRetriesDuration,
+				sslConfiguration);
+		this.topologyRefreshPeriod = topologyRefreshPeriod;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时（单位：毫秒）
+	 * @param soTimeout
+	 * 		读取超时（单位：毫秒）
+	 * @param maxRedirects
+	 * 		最大重定向次数
+	 * @param maxTotalRetriesDuration
+	 * 		最大重试时长
+	 */
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
+									int soTimeout, int maxRedirects, Duration maxTotalRetriesDuration) {
+		super(dataSource, poolConfig, connectTimeout, soTimeout);
 		this.maxRedirects = maxRedirects;
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
 	}
@@ -401,11 +538,41 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 	 * @param maxRedirects
 	 * 		最大重定向次数
 	 * @param maxTotalRetriesDuration
-	 * 		最大重试时长（单位：毫秒）
+	 * 		最大重试时长
+	 * @param topologyRefreshPeriod
+	 * 		定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
+	 *
+	 * @since 4.0.0
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-									int soTimeout, int maxRedirects, int maxTotalRetriesDuration) {
-		super(dataSource, poolConfig, connectTimeout, soTimeout);
+									int soTimeout, int maxRedirects, Duration maxTotalRetriesDuration,
+									Duration topologyRefreshPeriod) {
+		this(dataSource, poolConfig, connectTimeout, soTimeout, maxRedirects, maxTotalRetriesDuration);
+		this.topologyRefreshPeriod = topologyRefreshPeriod;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时（单位：毫秒）
+	 * @param soTimeout
+	 * 		读取超时（单位：毫秒）
+	 * @param infiniteSoTimeout
+	 * 		Infinite 读取超时（单位：毫秒）
+	 * @param maxRedirects
+	 * 		最大重定向次数
+	 * @param maxTotalRetriesDuration
+	 * 		最大重试时长
+	 */
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
+									int soTimeout, int infiniteSoTimeout, int maxRedirects,
+									Duration maxTotalRetriesDuration) {
+		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
 		this.maxRedirects = maxRedirects;
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
 	}
@@ -426,14 +593,18 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 	 * @param maxRedirects
 	 * 		最大重定向次数
 	 * @param maxTotalRetriesDuration
-	 * 		最大重试时长（单位：毫秒）
+	 * 		最大重试时长
+	 * @param topologyRefreshPeriod
+	 * 		定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
+	 *
+	 * @since 4.0.0
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
 									int soTimeout, int infiniteSoTimeout, int maxRedirects,
-									int maxTotalRetriesDuration) {
-		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
-		this.maxRedirects = maxRedirects;
-		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
+									Duration maxTotalRetriesDuration, Duration topologyRefreshPeriod) {
+		this(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, maxRedirects,
+				maxTotalRetriesDuration);
+		this.topologyRefreshPeriod = topologyRefreshPeriod;
 	}
 
 	/**
@@ -450,12 +621,12 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 	 * @param maxRedirects
 	 * 		最大重定向次数
 	 * @param maxTotalRetriesDuration
-	 * 		最大重试时长（单位：毫秒）
+	 * 		最大重试时长
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-									int soTimeout, int maxRedirects, int maxTotalRetriesDuration,
+									int soTimeout, int maxRedirects, Duration maxTotalRetriesDuration,
 									SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
 		this.maxRedirects = maxRedirects;
@@ -473,21 +644,84 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 	 * 		连接超时（单位：毫秒）
 	 * @param soTimeout
 	 * 		读取超时（单位：毫秒）
+	 * @param maxRedirects
+	 * 		最大重定向次数
+	 * @param maxTotalRetriesDuration
+	 * 		最大重试时长
+	 * @param topologyRefreshPeriod
+	 * 		定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 *
+	 * @since 4.0.0
+	 */
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
+									int soTimeout, int maxRedirects, Duration maxTotalRetriesDuration,
+									Duration topologyRefreshPeriod, SslConfiguration sslConfiguration) {
+		this(dataSource, poolConfig, connectTimeout, soTimeout, maxRedirects, maxTotalRetriesDuration,
+				sslConfiguration);
+		this.topologyRefreshPeriod = topologyRefreshPeriod;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时（单位：毫秒）
+	 * @param soTimeout
+	 * 		读取超时（单位：毫秒）
 	 * @param infiniteSoTimeout
 	 * 		Infinite 读取超时（单位：毫秒）
 	 * @param maxRedirects
 	 * 		最大重定向次数
 	 * @param maxTotalRetriesDuration
-	 * 		最大重试时长（单位：毫秒）
+	 * 		最大重试时长
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-									int soTimeout, int infiniteSoTimeout, int maxRedirects, int maxTotalRetriesDuration,
-									SslConfiguration sslConfiguration) {
+									int soTimeout, int infiniteSoTimeout, int maxRedirects,
+									Duration maxTotalRetriesDuration, SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 		this.maxRedirects = maxRedirects;
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时（单位：毫秒）
+	 * @param soTimeout
+	 * 		读取超时（单位：毫秒）
+	 * @param infiniteSoTimeout
+	 * 		Infinite 读取超时（单位：毫秒）
+	 * @param maxRedirects
+	 * 		最大重定向次数
+	 * @param maxTotalRetriesDuration
+	 * 		最大重试时长
+	 * @param topologyRefreshPeriod
+	 * 		定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 *
+	 * @since 4.0.0
+	 */
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
+									int soTimeout, int infiniteSoTimeout, int maxRedirects,
+									Duration maxTotalRetriesDuration, Duration topologyRefreshPeriod,
+									SslConfiguration sslConfiguration) {
+		this(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, maxRedirects,
+				maxTotalRetriesDuration, sslConfiguration);
+		this.topologyRefreshPeriod = topologyRefreshPeriod;
 	}
 
 	@Override
@@ -501,69 +735,28 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 	}
 
 	@Override
-	public int getMaxTotalRetriesDuration() {
+	public Duration getMaxTotalRetriesDuration() {
 		return maxTotalRetriesDuration;
 	}
 
 	@Override
-	public void setMaxTotalRetriesDuration(int maxTotalRetriesDuration) {
+	public void setMaxTotalRetriesDuration(Duration maxTotalRetriesDuration) {
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
 	}
 
-	public StatefulRedisClusterConnection<byte[], byte[]> getStatefulRedisClusterConnection() {
-		return delegate;
+	@Override
+	public Duration getTopologyRefreshPeriod() {
+		return topologyRefreshPeriod;
 	}
 
 	@Override
-	public Pipeline openPipeline() {
-		if(pipeline == null){
-			final PipeliningFlushState flushState = pipeliningFlushPolicy.newPipeline();
-			final LettucePipelineProxy<PipeliningFlushState> lettucePipelineProxy =
-					new LettucePipelineProxy<>(flushState);
-
-			lettucePipelineProxy.setTarget(
-					new LettucePipeline(delegate, flushState, lettucePipelineProxy.getTxResults()));
-			pipeline = lettucePipelineProxy;
-		}
-
-		return pipeline;
-	}
-
-	@Override
-	public void closePipeline() {
-		pipeline.close();
-		pipeline = null;
+	public void setTopologyRefreshPeriod(Duration topologyRefreshPeriod) {
+		this.topologyRefreshPeriod = topologyRefreshPeriod;
 	}
 
 	@Override
 	public Transaction multi() {
-		if(transaction == null){
-			//final RedisSentinelCommands<byte[], byte[]> commands = delegate.sync();
-			//transaction = new LettuceTransactionProxy(new LettuceTransaction(commands), commands);
-		}
-
-		return transaction;
-	}
-
-	@Override
-	public List<Object> exec() throws RedisException {
-		if(pipeline != null){
-			final List<Object> result = pipeline.syncAndReturnAll();
-
-			pipeline.close();
-			pipeline = null;
-
-			return result;
-		}else if(transaction != null){
-			final List<Object> result = transaction.exec();
-
-			transaction.close();
-			transaction = null;
-
-			return result;
-		}else{
-			throw new RedisException("ERR EXEC without MULTI. Did you forget to call multi?");
-		}
+		throw new RedisException("MULTI is currently not supported in cluster mode");
 	}
 
 	@Override
@@ -574,16 +767,6 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 		}else{
 			throw new RedisException("ERR DISCARD without MULTI. Did you forget to call multi?");
 		}
-	}
-
-	@Override
-	public boolean isConnected() {
-		return delegate != null && delegate.isOpen();
-	}
-
-	@Override
-	public boolean isClosed() {
-		return delegate == null || delegate.isOpen() == false;
 	}
 
 	@Override
@@ -652,7 +835,7 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 
 		if(isUsePool()){
 			try{
-				delegate = pool.getResource();
+				conn = pool.getResource();
 
 				if(logger.isDebugEnabled()){
 					logger.debug("StatefulRedisClusterConnection initialized with pool success.");
@@ -666,10 +849,10 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 				throw LettuceRedisExceptionUtils.convert(e);
 			}
 		}else{
-			delegate = createStatefulRedisClusterConnection(new ByteArrayCodec());
+			conn = createStatefulRedisClusterConnection(new ByteArrayCodec());
 		}
 
-		return delegate == null ? Status.FAILURE : Status.SUCCESS;
+		return conn == null ? Status.FAILURE : Status.SUCCESS;
 	}
 
 	@Override
@@ -692,17 +875,6 @@ public class LettuceClusterConnection extends AbstractLettuceRedisConnection imp
 			}
 
 			pool = null;
-		}
-	}
-
-	@Override
-	protected void doClose() throws IOException {
-		super.doClose();
-
-		logger.debug("Lettuce close.");
-
-		if(delegate != null){
-			delegate.close();
 		}
 	}
 

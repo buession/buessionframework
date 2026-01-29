@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.jedis;
@@ -32,22 +32,11 @@ import com.buession.redis.core.PoolConfig;
 import com.buession.redis.core.internal.jedis.JedisClientConfigBuilder;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
-import com.buession.redis.exception.JedisRedisExceptionUtils;
-import com.buession.redis.pipeline.Pipeline;
-import com.buession.redis.pipeline.jedis.JedisPipeline;
-import com.buession.redis.pipeline.jedis.JedisPipelineProxy;
-import com.buession.redis.transaction.Transaction;
-import com.buession.redis.transaction.jedis.JedisTransaction;
-import com.buession.redis.transaction.jedis.JedisTransactionProxy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import redis.clients.jedis.DefaultJedisClientConfig;
 import redis.clients.jedis.HostAndPort;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.RedisClient;
+import redis.clients.jedis.builders.StandaloneClientBuilder;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -55,14 +44,7 @@ import java.util.List;
  *
  * @author Yong.Teng
  */
-public class JedisConnection extends AbstractJedisRedisConnection implements RedisStandaloneConnection {
-
-	/**
-	 * Jedis 对象
-	 */
-	private Jedis jedis;
-
-	private final static Logger logger = LoggerFactory.getLogger(JedisConnection.class);
+public class JedisConnection extends AbstractJedisRedisConnection<RedisClient> implements RedisStandaloneConnection {
 
 	/**
 	 * 构造函数
@@ -175,7 +157,6 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 */
 	public JedisConnection(JedisDataSource dataSource, PoolConfig poolConfig) {
 		super(dataSource, poolConfig);
-		dataSource.setPool(createPool());
 	}
 
 	/**
@@ -194,7 +175,6 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 */
 	public JedisConnection(JedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout);
-		dataSource.setPool(createPool());
 	}
 
 	/**
@@ -216,7 +196,6 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	public JedisConnection(JedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
 						   int infiniteSoTimeout) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
-		dataSource.setPool(createPool());
 	}
 
 	/**
@@ -233,7 +212,6 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	 */
 	public JedisConnection(JedisDataSource dataSource, PoolConfig poolConfig, SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, sslConfiguration);
-		dataSource.setPool(createPool());
 	}
 
 	/**
@@ -255,7 +233,6 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	public JedisConnection(JedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
 						   SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
-		dataSource.setPool(createPool());
 	}
 
 	/**
@@ -279,37 +256,6 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	public JedisConnection(JedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
 						   int infiniteSoTimeout, SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
-		dataSource.setPool(createPool());
-	}
-
-	public Jedis getJedis() {
-		return jedis;
-	}
-
-	@Override
-	public Pipeline openPipeline() {
-		if(pipeline == null){
-			final redis.clients.jedis.Pipeline pipelineObject = jedis.pipelined();
-			pipeline = new JedisPipelineProxy<>(new JedisPipeline(pipelineObject), pipelineObject);
-		}
-
-		return pipeline;
-	}
-
-	@Override
-	public void closePipeline() {
-		pipeline.close();
-		pipeline = null;
-	}
-
-	@Override
-	public Transaction multi() {
-		if(transaction == null){
-			final redis.clients.jedis.Transaction tran = jedis.multi();
-			transaction = new JedisTransactionProxy(new JedisTransaction(tran), tran);
-		}
-
-		return transaction;
 	}
 
 	@Override
@@ -346,58 +292,17 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	@Override
 	protected void internalInit() {
 		final JedisDataSource dataSource = (JedisDataSource) getDataSource();
-		setUsePool(dataSource.getPool() != null);
+		setUsePool(dataSource.getPoolConfig() != null);
 	}
 
 	@Override
 	public boolean isConnected() {
-		return jedis != null && jedis.isConnected();
+		return client != null;
 	}
 
 	@Override
 	public boolean isClosed() {
-		return jedis == null || jedis.isConnected() == false;
-	}
-
-	protected Jedis createJedis() {
-		final JedisDataSource dataSource = (JedisDataSource) getDataSource();
-		final DefaultJedisClientConfig clientConfig = JedisClientConfigBuilder.create(dataSource,
-						getSslConfiguration())
-				.connectTimeout(getConnectTimeout())
-				.socketTimeout(getSoTimeout())
-				.infiniteSoTimeout(getInfiniteSoTimeout())
-				.database(dataSource.getDatabase())
-				.build();
-
-		return new Jedis(dataSource.getHost(), dataSource.getPort(), clientConfig);
-	}
-
-	protected JedisPool createPool() {
-		final JedisDataSource dataSource = (JedisDataSource) getDataSource();
-
-		if(dataSource.getPool() == null){
-			final JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-			final HostAndPort hostAndPort = new HostAndPort(dataSource.getHost(), dataSource.getPort());
-			final DefaultJedisClientConfig clientConfig = JedisClientConfigBuilder.create(dataSource,
-							getSslConfiguration())
-					.connectTimeout(getConnectTimeout())
-					.socketTimeout(getSoTimeout())
-					.infiniteSoTimeout(getInfiniteSoTimeout())
-					.database(dataSource.getDatabase())
-					.build();
-
-			getPoolConfig().toGenericObjectPoolConfig(jedisPoolConfig);
-
-			if(getSslConfiguration() == null){
-				logger.debug("Create JedisPool.");
-			}else{
-				logger.debug("Create JedisPool with ssl.");
-			}
-
-			return new JedisPool(jedisPoolConfig, hostAndPort, clientConfig);
-		}else{
-			return dataSource.getPool();
-		}
+		return client == null;
 	}
 
 	@Override
@@ -406,78 +311,23 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 			return Status.SUCCESS;
 		}
 
-		if(isUsePool()){
+		if(client == null){
 			final JedisDataSource dataSource = (JedisDataSource) getDataSource();
+			final DefaultJedisClientConfig clientConfig = JedisClientConfigBuilder.create(dataSource,
+							getSslConfiguration()).connectTimeout(getConnectTimeout()).socketTimeout(getSoTimeout())
+					.infiniteSoTimeout(getInfiniteSoTimeout()).database(dataSource.getDatabase()).build();
 
-			try{
-				jedis = dataSource.getPool().getResource();
-				if(logger.isInfoEnabled()){
-					logger.info("Jedis initialized with pool success.");
-				}
-			}catch(Exception e){
-				if(logger.isErrorEnabled()){
-					logger.error("Jedis initialized with pool failure: {}", e.getMessage(), e);
-				}
+			final StandaloneClientBuilder<RedisClient> builder = RedisClient.builder().clientConfig(clientConfig)
+					.cacheConfig(getCacheConfig())
+					.hostAndPort(new HostAndPort(dataSource.getHost(), dataSource.getPort()));
+			if(isUsePool()){
+				builder.poolConfig(getConnectionPoolConfig());
+			}
 
-				throw JedisRedisExceptionUtils.convert(e);
-			}
-		}else{
-			if(jedis == null){
-				jedis = createJedis();
-			}
+			client = builder.build();
 		}
 
-		return jedis == null ? Status.FAILURE : Status.SUCCESS;
-	}
-
-	@Override
-	protected void doDestroy() throws IOException {
-		final JedisDataSource dataSource = (JedisDataSource) getDataSource();
-		super.doDestroy();
-
-		logger.info("Jedis destroy.");
-		if(dataSource.getPool() != null){
-			if(logger.isDebugEnabled()){
-				logger.debug("Jedis pool for {} destroy.", dataSource.getPool().getClass().getName());
-			}
-
-			try{
-				dataSource.getPool().destroy();
-			}catch(Exception e){
-				if(logger.isWarnEnabled()){
-					logger.warn("Cannot properly close Jedis pool.", e);
-				}
-				throw new RedisException(e);
-			}
-
-			dataSource.setPool(null);
-		}
-	}
-
-	@Override
-	protected void doClose() throws IOException {
-		super.doClose();
-
-		if(isUsePool()){
-			logger.debug("Jedis close.");
-
-			if(jedis != null){
-				jedis.close();
-			}
-		}else{
-			logger.debug("Jedis disconnect.");
-
-			if(jedis != null){
-				try{
-					jedis.disconnect();
-				}catch(Exception e){
-					if(logger.isWarnEnabled()){
-						logger.warn("Cannot properly disconnect Jedis.", e);
-					}
-					throw new RedisException(e);
-				}
-			}
-		}
+		return client == null ? Status.FAILURE : Status.SUCCESS;
 	}
 
 }

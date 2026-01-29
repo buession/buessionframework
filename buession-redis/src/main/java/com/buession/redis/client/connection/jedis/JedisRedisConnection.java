@@ -19,18 +19,51 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.jedis;
 
 import com.buession.redis.client.connection.RedisConnection;
+import redis.clients.jedis.UnifiedJedis;
+import redis.clients.jedis.csc.CacheConfig;
 
 /**
  * Jedis Redis 连接对象
  *
+ * @param <C>
+ *        {@link UnifiedJedis} 类型
+ *
  * @author Yong.Teng
  */
-public interface JedisRedisConnection extends RedisConnection {
+public interface JedisRedisConnection<C extends UnifiedJedis> extends RedisConnection {
+
+	/**
+	 * 返回缓存配置
+	 *
+	 * @return 缓存配置
+	 *
+	 * @since 4.0.0
+	 */
+	CacheConfig getCacheConfig();
+
+	/**
+	 * 设置缓存配置
+	 *
+	 * @param cacheConfig
+	 * 		缓存配置
+	 *
+	 * @since 4.0.0
+	 */
+	void setCacheConfig(CacheConfig cacheConfig);
+
+	/**
+	 * 返回 Jedis 原生客户端
+	 *
+	 * @return Jedis 原生客户端
+	 *
+	 * @since 4.0.0
+	 */
+	C getClient();
 
 }

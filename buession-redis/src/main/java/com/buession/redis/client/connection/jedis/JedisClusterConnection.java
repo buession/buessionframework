@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.jedis;
@@ -29,29 +29,15 @@ import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.RedisClusterConnection;
 import com.buession.redis.client.connection.datasource.jedis.JedisClusterDataSource;
 import com.buession.redis.core.PoolConfig;
-import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.internal.jedis.JedisClientConfigBuilder;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
-import com.buession.redis.pipeline.Pipeline;
-import com.buession.redis.pipeline.jedis.JedisClusterPipeline;
-import com.buession.redis.pipeline.jedis.JedisPipelineProxy;
-import com.buession.redis.transaction.Transaction;
-import com.buession.redis.transaction.jedis.JedisClusterTransaction;
-import com.buession.redis.transaction.jedis.JedisClusterTransactionProxy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import redis.clients.jedis.ConnectionPoolConfig;
-import redis.clients.jedis.HostAndPort;
-import redis.clients.jedis.JedisClientConfig;
-import redis.clients.jedis.JedisCluster;
-import redis.clients.jedis.providers.ClusterConnectionProvider;
+import redis.clients.jedis.DefaultJedisClientConfig;
+import redis.clients.jedis.RedisClusterClient;
+import redis.clients.jedis.builders.ClusterClientBuilder;
 
-import java.io.IOException;
 import java.time.Duration;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Jedis 集群模式连接器
@@ -59,7 +45,8 @@ import java.util.stream.Collectors;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class JedisClusterConnection extends AbstractJedisRedisConnection implements RedisClusterConnection {
+public class JedisClusterConnection extends AbstractJedisRedisConnection<RedisClusterClient>
+		implements RedisClusterConnection {
 
 	/**
 	 * 最大重定向次数
@@ -67,23 +54,16 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	private int maxRedirects;
 
 	/**
-	 * 最大重数时长（单位：毫秒）
+	 * 最大重数时长
 	 */
-	private int maxTotalRetriesDuration;
+	private Duration maxTotalRetriesDuration;
 
 	/**
-	 * 连接提供者
+	 * 定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
 	 *
-	 * @since 3.0.0
+	 * @since 4.0.0
 	 */
-	private ClusterConnectionProvider connectionProvider;
-
-	/**
-	 * JedisCluster 对象
-	 */
-	private JedisCluster cluster;
-
-	private final static Logger logger = LoggerFactory.getLogger(JedisClusterConnection.class);
+	private Duration topologyRefreshPeriod;
 
 	/**
 	 * 构造函数
@@ -167,12 +147,39 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	 * @param maxRedirects
 	 * 		最大重定向次数
 	 * @param maxTotalRetriesDuration
-	 * 		最大重试时长（单位：毫秒）
+	 * 		最大重试时长
 	 */
 	public JedisClusterConnection(JedisClusterDataSource dataSource, int connectTimeout, int soTimeout,
-								  int infiniteSoTimeout, int maxRedirects, int maxTotalRetriesDuration) {
+								  int infiniteSoTimeout, int maxRedirects, Duration maxTotalRetriesDuration) {
 		this(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, maxRedirects);
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param connectTimeout
+	 * 		连接超时（单位：毫秒）
+	 * @param soTimeout
+	 * 		读取超时（单位：毫秒）
+	 * @param infiniteSoTimeout
+	 * 		Infinite 读取超时（单位：毫秒）
+	 * @param maxRedirects
+	 * 		最大重定向次数
+	 * @param maxTotalRetriesDuration
+	 * 		最大重试时长
+	 * @param topologyRefreshPeriod
+	 * 		定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
+	 *
+	 * @since 4.0.0
+	 */
+	public JedisClusterConnection(JedisClusterDataSource dataSource, int connectTimeout, int soTimeout,
+								  int infiniteSoTimeout, int maxRedirects, Duration maxTotalRetriesDuration,
+								  Duration topologyRefreshPeriod) {
+		this(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, maxRedirects, maxTotalRetriesDuration);
+		this.topologyRefreshPeriod = topologyRefreshPeriod;
 	}
 
 	/**
@@ -259,16 +266,44 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	 * @param maxRedirects
 	 * 		最大重定向次数
 	 * @param maxTotalRetriesDuration
-	 * 		最大重试时长（单位：毫秒）
+	 * 		最大重试时长
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
 	public JedisClusterConnection(JedisClusterDataSource dataSource, int connectTimeout, int soTimeout,
-								  int infiniteSoTimeout, int maxRedirects, int maxTotalRetriesDuration,
+								  int infiniteSoTimeout, int maxRedirects, Duration maxTotalRetriesDuration,
 								  SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 		this.maxRedirects = maxRedirects;
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param connectTimeout
+	 * 		连接超时（单位：毫秒）
+	 * @param soTimeout
+	 * 		读取超时（单位：毫秒）
+	 * @param infiniteSoTimeout
+	 * 		Infinite 读取超时（单位：毫秒）
+	 * @param maxRedirects
+	 * 		最大重定向次数
+	 * @param maxTotalRetriesDuration
+	 * 		最大重试时长
+	 * @param topologyRefreshPeriod
+	 * 		定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	public JedisClusterConnection(JedisClusterDataSource dataSource, int connectTimeout, int soTimeout,
+								  int infiniteSoTimeout, int maxRedirects, Duration maxTotalRetriesDuration,
+								  Duration topologyRefreshPeriod, SslConfiguration sslConfiguration) {
+		this(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, maxRedirects, maxTotalRetriesDuration,
+				sslConfiguration);
+		this.topologyRefreshPeriod = topologyRefreshPeriod;
 	}
 
 	/**
@@ -466,13 +501,68 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	 * @param maxRedirects
 	 * 		最大重定向次数（单位：毫秒）
 	 * @param maxTotalRetriesDuration
-	 * 		最大重试时长（单位：毫秒）
+	 * 		最大重试时长
 	 *
 	 * @since 3.0.0
 	 */
 	public JedisClusterConnection(JedisClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-								  int soTimeout, int maxRedirects, int maxTotalRetriesDuration) {
+								  int soTimeout, int maxRedirects, Duration maxTotalRetriesDuration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout);
+		this.maxRedirects = maxRedirects;
+		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时（单位：毫秒）
+	 * @param soTimeout
+	 * 		读取超时（单位：毫秒）
+	 * @param maxRedirects
+	 * 		最大重定向次数（单位：毫秒）
+	 * @param maxTotalRetriesDuration
+	 * 		最大重试时长
+	 * @param topologyRefreshPeriod
+	 * 		定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
+	 *
+	 * @since 4.0.0
+	 */
+	public JedisClusterConnection(JedisClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
+								  int soTimeout, int maxRedirects, Duration maxTotalRetriesDuration,
+								  Duration topologyRefreshPeriod) {
+		this(dataSource, poolConfig, connectTimeout, soTimeout, maxRedirects, maxTotalRetriesDuration);
+		this.topologyRefreshPeriod = topologyRefreshPeriod;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时（单位：毫秒）
+	 * @param soTimeout
+	 * 		读取超时（单位：毫秒）
+	 * @param maxRedirects
+	 * 		最大重定向次数
+	 * @param maxTotalRetriesDuration
+	 * 		最大重试时长
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 *
+	 * @since 3.0.0
+	 */
+	public JedisClusterConnection(JedisClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
+								  int soTimeout, int maxRedirects, Duration maxTotalRetriesDuration,
+								  SslConfiguration sslConfiguration) {
+		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
 		this.maxRedirects = maxRedirects;
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
 	}
@@ -491,18 +581,20 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	 * @param maxRedirects
 	 * 		最大重定向次数
 	 * @param maxTotalRetriesDuration
-	 * 		最大重试时长（单位：毫秒）
+	 * 		最大重试时长
+	 * @param topologyRefreshPeriod
+	 * 		定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 *
-	 * @since 3.0.0
+	 * @since 4.0.0
 	 */
 	public JedisClusterConnection(JedisClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-								  int soTimeout, int maxRedirects, int maxTotalRetriesDuration,
-								  SslConfiguration sslConfiguration) {
-		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
-		this.maxRedirects = maxRedirects;
-		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
+								  int soTimeout, int maxRedirects, Duration maxTotalRetriesDuration,
+								  Duration topologyRefreshPeriod, SslConfiguration sslConfiguration) {
+		this(dataSource, poolConfig, connectTimeout, soTimeout, maxRedirects, maxTotalRetriesDuration,
+				sslConfiguration);
+		this.topologyRefreshPeriod = topologyRefreshPeriod;
 	}
 
 	/**
@@ -521,12 +613,13 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	 * @param maxRedirects
 	 * 		最大重定向次数
 	 * @param maxTotalRetriesDuration
-	 * 		最大重试时长（单位：毫秒）
+	 * 		最大重试时长
 	 *
 	 * @since 3.0.0
 	 */
 	public JedisClusterConnection(JedisClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-								  int soTimeout, int infiniteSoTimeout, int maxRedirects, int maxTotalRetriesDuration) {
+								  int soTimeout, int infiniteSoTimeout, int maxRedirects,
+								  Duration maxTotalRetriesDuration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
 		this.maxRedirects = maxRedirects;
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
@@ -548,18 +641,81 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	 * @param maxRedirects
 	 * 		最大重定向次数
 	 * @param maxTotalRetriesDuration
-	 * 		最大重试时长（单位：毫秒）
+	 * 		最大重试时长
+	 * @param topologyRefreshPeriod
+	 * 		定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
+	 *
+	 * @since 4.0.0
+	 */
+	public JedisClusterConnection(JedisClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
+								  int soTimeout, int infiniteSoTimeout, int maxRedirects,
+								  Duration maxTotalRetriesDuration, Duration topologyRefreshPeriod) {
+		this(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, maxRedirects,
+				maxTotalRetriesDuration);
+		this.topologyRefreshPeriod = topologyRefreshPeriod;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时（单位：毫秒）
+	 * @param soTimeout
+	 * 		读取超时（单位：毫秒）
+	 * @param infiniteSoTimeout
+	 * 		Infinite 读取超时（单位：毫秒）
+	 * @param maxRedirects
+	 * 		最大重定向次数
+	 * @param maxTotalRetriesDuration
+	 * 		最大重试时长
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 *
 	 * @since 3.0.0
 	 */
 	public JedisClusterConnection(JedisClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-								  int soTimeout, int infiniteSoTimeout, int maxRedirects, int maxTotalRetriesDuration,
-								  SslConfiguration sslConfiguration) {
+								  int soTimeout, int infiniteSoTimeout, int maxRedirects,
+								  Duration maxTotalRetriesDuration, SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 		this.maxRedirects = maxRedirects;
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时（单位：毫秒）
+	 * @param soTimeout
+	 * 		读取超时（单位：毫秒）
+	 * @param infiniteSoTimeout
+	 * 		Infinite 读取超时（单位：毫秒）
+	 * @param maxRedirects
+	 * 		最大重定向次数
+	 * @param maxTotalRetriesDuration
+	 * 		最大重试时长
+	 * @param topologyRefreshPeriod
+	 * 		定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 *
+	 * @since 4.0.0
+	 */
+	public JedisClusterConnection(JedisClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
+								  int soTimeout, int infiniteSoTimeout, int maxRedirects,
+								  Duration maxTotalRetriesDuration, Duration topologyRefreshPeriod,
+								  SslConfiguration sslConfiguration) {
+		this(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, maxRedirects,
+				maxTotalRetriesDuration, sslConfiguration);
+		this.topologyRefreshPeriod = topologyRefreshPeriod;
 	}
 
 	@Override
@@ -573,37 +729,23 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	}
 
 	@Override
-	public int getMaxTotalRetriesDuration() {
+	public Duration getMaxTotalRetriesDuration() {
 		return maxTotalRetriesDuration;
 	}
 
 	@Override
-	public void setMaxTotalRetriesDuration(int maxTotalRetriesDuration) {
+	public void setMaxTotalRetriesDuration(Duration maxTotalRetriesDuration) {
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
 	}
 
-	public JedisCluster getCluster() {
-		return cluster;
+	@Override
+	public Duration getTopologyRefreshPeriod() {
+		return topologyRefreshPeriod;
 	}
 
 	@Override
-	public Pipeline openPipeline() {
-		if(pipeline == null){
-			final redis.clients.jedis.ClusterPipeline pipelineObject = cluster.pipelined();
-			pipeline = new JedisPipelineProxy<>(new JedisClusterPipeline(pipelineObject), pipelineObject);
-		}
-
-		return pipeline;
-	}
-
-	@Override
-	public Transaction multi() {
-		if(this.transaction == null){
-			final redis.clients.jedis.AbstractTransaction transaction = cluster.multi();
-			this.transaction = new JedisClusterTransactionProxy(new JedisClusterTransaction(transaction), transaction);
-		}
-
-		return this.transaction;
+	public void setTopologyRefreshPeriod(Duration topologyRefreshPeriod) {
+		this.topologyRefreshPeriod = topologyRefreshPeriod;
 	}
 
 	@Override
@@ -632,19 +774,16 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 
 	@Override
 	public boolean isConnected() {
-		return cluster != null;
+		return client != null;
 	}
 
 	@Override
 	public boolean isClosed() {
-		return cluster == null;
+		return client == null;
 	}
 
 	@Override
 	protected void internalInit() {
-		if(cluster == null){
-			connectionProvider = createConnectionProvider();
-		}
 	}
 
 	protected boolean isUsePool() {
@@ -657,55 +796,27 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 			return Status.SUCCESS;
 		}
 
-		if(cluster != null){
-			cluster = new JedisCluster(connectionProvider, getMaxRedirects(),
-					Duration.ofMillis(getMaxTotalRetriesDuration()));
+		if(client == null){
+			final JedisClusterDataSource dataSource = (JedisClusterDataSource) getDataSource();
+			final DefaultJedisClientConfig clientConfig = JedisClientConfigBuilder.create(dataSource,
+							getSslConfiguration()).connectTimeout(getConnectTimeout()).socketTimeout(getSoTimeout())
+					.infiniteSoTimeout(getInfiniteSoTimeout()).build();
+
+			final ClusterClientBuilder<RedisClusterClient> builder = RedisClusterClient.builder()
+					.clientConfig(clientConfig)
+					.cacheConfig(getCacheConfig())
+					.maxAttempts(getMaxRedirects())
+					.maxTotalRetriesDuration(getMaxTotalRetriesDuration())
+					.topologyRefreshPeriod(getTopologyRefreshPeriod());
+
+			if(isUsePool()){
+				builder.poolConfig(getConnectionPoolConfig());
+			}
+
+			client = builder.build();
 		}
 
-		return cluster == null ? Status.FAILURE : Status.SUCCESS;
-	}
-
-	protected ClusterConnectionProvider createConnectionProvider() {
-		final JedisClusterDataSource dataSource = (JedisClusterDataSource) getDataSource();
-		final JedisClientConfig clientConfig = JedisClientConfigBuilder.create(dataSource, getSslConfiguration())
-				.connectTimeout(getConnectTimeout())
-				.socketTimeout(getSoTimeout())
-				.infiniteSoTimeout(getInfiniteSoTimeout())
-				.build();
-		final Set<HostAndPort> nodes = createHostAndPorts(dataSource);
-
-		if(isUsePool()){
-			final ConnectionPoolConfig connectionPoolConfig = new ConnectionPoolConfig();
-
-			getPoolConfig().toGenericObjectPoolConfig(connectionPoolConfig);
-
-			return new ClusterConnectionProvider(nodes, clientConfig, connectionPoolConfig);
-		}else{
-			return new ClusterConnectionProvider(nodes, clientConfig);
-		}
-	}
-
-	@Override
-	protected void doDestroy() throws IOException {
-		super.doDestroy();
-		logger.debug("Jedis cluster destroy.");
-	}
-
-	@Override
-	protected void doClose() throws IOException {
-		super.doClose();
-
-		logger.debug("Jedis cluster close.");
-		if(cluster != null){
-			cluster.close();
-		}
-	}
-
-	private static Set<HostAndPort> createHostAndPorts(final JedisClusterDataSource clusterDataSource) {
-		return clusterDataSource.getNodes().stream().map((node)->{
-			int port = node.getPort() == 0 ? RedisNode.DEFAULT_PORT : node.getPort();
-			return new HostAndPort(node.getHost(), port);
-		}).collect(Collectors.toSet());
+		return client == null ? Status.FAILURE : Status.SUCCESS;
 	}
 
 }

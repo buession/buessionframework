@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.jedis;
@@ -34,16 +34,41 @@ import com.buession.redis.core.PoolConfig;
 import com.buession.redis.exception.JedisRedisExceptionUtils;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
+import com.buession.redis.pipeline.jedis.JedisPipeline;
+import com.buession.redis.pipeline.jedis.JedisPipelineProxy;
 import com.buession.redis.transaction.Transaction;
+import com.buession.redis.transaction.jedis.JedisTransaction;
+import com.buession.redis.transaction.jedis.JedisTransactionProxy;
+import redis.clients.jedis.ConnectionPoolConfig;
+import redis.clients.jedis.UnifiedJedis;
+import redis.clients.jedis.csc.CacheConfig;
 
 import java.io.IOException;
 
 /**
  * Jedis Redis 连接对象抽象类
  *
+ * @param <C>
+ *        {@link UnifiedJedis} 类型
+ *
  * @author Yong.Teng
  */
-public abstract class AbstractJedisRedisConnection extends AbstractRedisConnection implements JedisRedisConnection {
+public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> extends AbstractRedisConnection
+		implements JedisRedisConnection<C> {
+
+	/**
+	 * Jedis 原生客户端
+	 *
+	 * @since 4.0.0
+	 */
+	protected C client;
+
+	/**
+	 * 缓存配置
+	 *
+	 * @since 4.0.0
+	 */
+	private CacheConfig cacheConfig;
 
 	/**
 	 * 事务
@@ -271,13 +296,54 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 	}
 
 	@Override
+	public CacheConfig getCacheConfig() {
+		return cacheConfig;
+	}
+
+	@Override
+	public void setCacheConfig(CacheConfig cacheConfig) {
+		this.cacheConfig = cacheConfig;
+	}
+
+	@Override
+	public C getClient() {
+		return client;
+	}
+
+	@Override
 	public boolean isPipeline() {
 		return pipeline != null;
 	}
 
 	@Override
+	public Pipeline openPipeline() {
+		if(this.pipeline == null){
+			final redis.clients.jedis.AbstractPipeline pipeline = client.pipelined();
+			this.pipeline = new JedisPipelineProxy<>(new JedisPipeline(pipeline), pipeline);
+		}
+
+		return this.pipeline;
+	}
+
+	@Override
+	public void closePipeline() {
+		pipeline.close();
+		pipeline = null;
+	}
+
+	@Override
 	public boolean isTransaction() {
 		return transaction != null;
+	}
+
+	@Override
+	public Transaction multi() {
+		if(this.transaction == null){
+			final redis.clients.jedis.AbstractTransaction transaction = client.multi();
+			this.transaction = new JedisTransactionProxy(new JedisTransaction(transaction), transaction);
+		}
+
+		return this.transaction;
 	}
 
 	@Override
@@ -289,9 +355,21 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 		}
 	}
 
+	protected ConnectionPoolConfig getConnectionPoolConfig() {
+		final ConnectionPoolConfig connectionPoolConfig = new ConnectionPoolConfig();
+
+		getPoolConfig().toGenericObjectPoolConfig(connectionPoolConfig);
+
+		return connectionPoolConfig;
+	}
+
 	@Override
 	protected void doDestroy() throws IOException {
 		doClose();
+
+		if(logger.isInfoEnabled()){
+			logger.debug("{} destroy.", getClass().getSimpleName());
+		}
 	}
 
 	@Override
@@ -299,6 +377,10 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 		if(pipeline != null){
 			pipeline.close();
 			pipeline = null;
+		}
+
+		if(logger.isInfoEnabled()){
+			logger.debug("{} close.", getClass().getSimpleName());
 		}
 	}
 
