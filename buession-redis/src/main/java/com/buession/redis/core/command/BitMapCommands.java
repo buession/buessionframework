@@ -26,6 +26,7 @@ package com.buession.redis.core.command;
 
 import com.buession.redis.core.BitCountOption;
 import com.buession.redis.core.BitOperation;
+import com.buession.redis.utils.ArgStringBuilder;
 
 import java.util.List;
 
@@ -192,7 +193,7 @@ public interface BitMapCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param arguments
+	 * @param argument
 	 * 		命令参数
 	 *
 	 * @return 返回值是一个数组，数组中的每个元素对应一个被执行的子命令
@@ -365,53 +366,74 @@ public interface BitMapCommands extends RedisCommands {
 	 */
 	final class BitFieldArgument {
 
+		/**
+		 * 写操作
+		 */
 		private Op set;
 
+		/**
+		 * 获取操作
+		 */
 		private Op get;
 
+		/**
+		 * 加操作
+		 */
 		private Op incrBy;
 
+		/**
+		 * 数值溢出行为
+		 */
 		private Overflow overflow;
 
 		private BitFieldArgument() {
 
 		}
 
+		/**
+		 * 返回写操作
+		 *
+		 * @return 写操作
+		 */
 		public Op getSet() {
 			return set;
 		}
 
+		/**
+		 * 返回获取操作
+		 *
+		 * @return 获取操作
+		 */
 		public Op getGet() {
 			return get;
 		}
 
+		/**
+		 * 返回加操作
+		 *
+		 * @return 加操作
+		 */
 		public Op getIncrBy() {
 			return incrBy;
 		}
 
+		/**
+		 * 返回数值溢出行为
+		 *
+		 * @return 数值溢出行为
+		 */
 		public Overflow getOverflow() {
 			return overflow;
 		}
 
 		@Override
 		public String toString() {
-			final StringBuilder builder = new StringBuilder();
+			final ArgStringBuilder builder = ArgStringBuilder.create();
 
-			if(set != null){
-				builder.append(" ").append(set);
-			}
-
-			if(get != null){
-				builder.append(" ").append(get);
-			}
-
-			if(incrBy != null){
-				builder.append(" ").append(incrBy);
-			}
-
-			if(overflow != null){
-				builder.append(" ").append(overflow);
-			}
+			builder.append(set);
+			builder.append(get);
+			builder.append(incrBy);
+			builder.append(overflow);
 
 			return builder.toString();
 		}
@@ -423,6 +445,11 @@ public interface BitMapCommands extends RedisCommands {
 			private Builder() {
 			}
 
+			/**
+			 * 创建 {@link BitFieldArgument} 狗坚器 {@link Builder}
+			 *
+			 * @return {@link BitFieldArgument} 狗坚器 {@link Builder}
+			 */
 			public static Builder create() {
 				return new Builder();
 			}
@@ -477,88 +504,6 @@ public interface BitMapCommands extends RedisCommands {
 
 		}
 
-		public final static class BitFieldType {
-
-			private final boolean signed;
-
-			private final int bits;
-
-			private BitFieldType(final boolean signed, final int bits) {
-				this.signed = signed;
-				this.bits = bits;
-			}
-
-			public boolean isSigned() {
-				return signed;
-			}
-
-			public int getBits() {
-				return bits;
-			}
-
-			@Override
-			public String toString() {
-				return (signed ? "i" : "u") + bits;
-			}
-
-		}
-
-		public final static class Op {
-
-			private final String commandType;
-
-			private final BitFieldType bitFieldType;
-
-			private final boolean bitOffset;
-
-			private final int offset;
-
-			private final long value;
-
-			private Op(final String commandType, final BitFieldType bitFieldType, final boolean bitOffset,
-					   final int offset, final long value) {
-				this.commandType = commandType;
-				this.bitFieldType = bitFieldType;
-				this.bitOffset = bitOffset;
-				this.offset = offset;
-				this.value = value;
-			}
-
-			public BitFieldType getBitFieldType() {
-				return bitFieldType;
-			}
-
-			public boolean isBitOffset() {
-				return bitOffset;
-			}
-
-			public int getOffset() {
-				return offset;
-			}
-
-			public long getValue() {
-				return value;
-			}
-
-			@Override
-			public String toString() {
-				final StringBuilder sb = new StringBuilder(commandType);
-
-				sb.append(" ").append(bitFieldType);
-
-				if(bitOffset){
-					sb.append(" #").append(offset);
-				}else{
-					sb.append(" ").append(offset);
-				}
-
-				sb.append(" ").append(value);
-
-				return sb.toString();
-			}
-
-		}
-
 		public enum Overflow {
 			WRAP,
 
@@ -595,15 +540,10 @@ public interface BitMapCommands extends RedisCommands {
 
 		@Override
 		public String toString() {
-			final StringBuilder builder = new StringBuilder();
+			final ArgStringBuilder builder = ArgStringBuilder.create();
 
-			if(set != null){
-				builder.append(" ").append(set);
-			}
-
-			if(get != null){
-				builder.append(" ").append(get);
-			}
+			builder.append(set);
+			builder.append(get);
 
 			return builder.toString();
 		}
@@ -651,86 +591,86 @@ public interface BitMapCommands extends RedisCommands {
 
 		}
 
-		public final static class BitFieldType {
+	}
 
-			private final boolean signed;
+	class BitFieldType {
 
-			private final int bits;
+		private final boolean signed;
 
-			private BitFieldType(final boolean signed, final int bits) {
-				this.signed = signed;
-				this.bits = bits;
-			}
+		private final int bits;
 
-			public boolean isSigned() {
-				return signed;
-			}
-
-			public int getBits() {
-				return bits;
-			}
-
-			@Override
-			public String toString() {
-				return (signed ? "i" : "u") + bits;
-			}
-
+		private BitFieldType(final boolean signed, final int bits) {
+			this.signed = signed;
+			this.bits = bits;
 		}
 
-		public final static class Op {
+		public boolean isSigned() {
+			return signed;
+		}
 
-			private final String commandType;
+		public int getBits() {
+			return bits;
+		}
 
-			private final BitFieldType bitFieldType;
+		@Override
+		public String toString() {
+			return (signed ? "i" : "u") + bits;
+		}
 
-			private final boolean bitOffset;
+	}
 
-			private final int offset;
+	final class Op {
 
-			private final long value;
+		private final String commandType;
 
-			private Op(final String commandType, final BitFieldType bitFieldType, final boolean bitOffset,
-					   final int offset, final long value) {
-				this.commandType = commandType;
-				this.bitFieldType = bitFieldType;
-				this.bitOffset = bitOffset;
-				this.offset = offset;
-				this.value = value;
+		private final BitFieldType bitFieldType;
+
+		private final boolean bitOffset;
+
+		private final int offset;
+
+		private final long value;
+
+		private Op(final String commandType, final BitFieldType bitFieldType, final boolean bitOffset,
+				   final int offset, final long value) {
+			this.commandType = commandType;
+			this.bitFieldType = bitFieldType;
+			this.bitOffset = bitOffset;
+			this.offset = offset;
+			this.value = value;
+		}
+
+		public BitFieldType getBitFieldType() {
+			return bitFieldType;
+		}
+
+		public boolean isBitOffset() {
+			return bitOffset;
+		}
+
+		public int getOffset() {
+			return offset;
+		}
+
+		public long getValue() {
+			return value;
+		}
+
+		@Override
+		public String toString() {
+			final StringBuilder sb = new StringBuilder(commandType);
+
+			sb.append(" ").append(bitFieldType);
+
+			if(bitOffset){
+				sb.append(" #").append(offset);
+			}else{
+				sb.append(" ").append(offset);
 			}
 
-			public BitFieldType getBitFieldType() {
-				return bitFieldType;
-			}
+			sb.append(" ").append(value);
 
-			public boolean isBitOffset() {
-				return bitOffset;
-			}
-
-			public int getOffset() {
-				return offset;
-			}
-
-			public long getValue() {
-				return value;
-			}
-
-			@Override
-			public String toString() {
-				final StringBuilder sb = new StringBuilder(commandType);
-
-				sb.append(" ").append(bitFieldType);
-
-				if(bitOffset){
-					sb.append(" #").append(offset);
-				}else{
-					sb.append(" ").append(offset);
-				}
-
-				sb.append(" ").append(value);
-
-				return sb.toString();
-			}
-
+			return sb.toString();
 		}
 
 	}

@@ -135,6 +135,14 @@ public final class ArgStringBuilder {
 		return this;
 	}
 
+	public ArgStringBuilder append(final Object seq) {
+		if(seq != null){
+			joiner.add(seq);
+		}
+
+		return this;
+	}
+
 	public String build() {
 		return joiner.toString();
 	}
