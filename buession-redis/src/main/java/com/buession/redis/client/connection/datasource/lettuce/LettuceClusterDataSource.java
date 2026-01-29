@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.datasource.lettuce;
@@ -27,6 +27,7 @@ package com.buession.redis.client.connection.datasource.lettuce;
 import com.buession.redis.client.connection.datasource.ClusterDataSource;
 import com.buession.redis.core.RedisNode;
 
+import java.time.Duration;
 import java.util.List;
 
 /**
@@ -45,12 +46,19 @@ public class LettuceClusterDataSource extends AbstractLettuceDataSource implemen
 	/**
 	 * 最大重定向次数
 	 */
-	private int maxRedirects = DEFAULT_MAX_REDIRECTS;
+	private int maxRedirects = 5;
 
 	/**
-	 * 最大重数时长（单位：秒）
+	 * 最大重数时长
 	 */
-	private int maxTotalRetriesDuration = -1;
+	private Duration maxTotalRetriesDuration = Duration.ofMillis(maxRedirects * 3000);
+
+	/**
+	 * 定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
+	 *
+	 * @since 4.0.0
+	 */
+	private Duration topologyRefreshPeriod = Duration.ofMillis(3000);
 
 	@Override
 	public List<RedisNode> getNodes() {
@@ -73,13 +81,23 @@ public class LettuceClusterDataSource extends AbstractLettuceDataSource implemen
 	}
 
 	@Override
-	public int getMaxTotalRetriesDuration() {
+	public Duration getMaxTotalRetriesDuration() {
 		return maxTotalRetriesDuration;
 	}
 
 	@Override
-	public void setMaxTotalRetriesDuration(int maxTotalRetriesDuration) {
+	public void setMaxTotalRetriesDuration(Duration maxTotalRetriesDuration) {
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
+	}
+
+	@Override
+	public Duration getTopologyRefreshPeriod() {
+		return topologyRefreshPeriod;
+	}
+
+	@Override
+	public void setTopologyRefreshPeriod(Duration topologyRefreshPeriod) {
+		this.topologyRefreshPeriod = topologyRefreshPeriod;
 	}
 
 }
