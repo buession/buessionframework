@@ -22,129 +22,83 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command;
+package com.buession.redis.utils;
+
+import com.buession.core.utils.StringJoiner;
 
 /**
- * Redis 协议命令分组
+ * 参数构建器
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public enum CommandGroup {
+public final class ArgStringBuilder {
 
-	/**
-	 * 布隆过滤
-	 */
-	BLOOM_FILTER("Bloom filter"),
+	private final StringJoiner joiner = new StringJoiner(" ", "", "");
 
-	/**
-	 * 权限命令
-	 */
-	ACL("Acl"),
-
-	/**
-	 * 位图命令
-	 */
-	BITMAP("BitMap"),
-
-	/**
-	 * 集群命令
-	 */
-	CLUSTER("Cluster"),
-
-	/**
-	 * 连接命令
-	 */
-	CONNECTION("Connection"),
-
-	/**
-	 * 常规命令
-	 */
-	GENERIC("Generic"),
-
-	/**
-	 * 地理位置命令
-	 */
-	GEO("Geo"),
-
-	/**
-	 * 哈希命令
-	 */
-	HASH("Hash"),
-
-	/**
-	 * HyperLogLog 命令
-	 */
-	HYPERLOGLOG("HyperLogLog"),
-
-	/**
-	 * 键命令
-	 */
-	KEY("Key"),
-
-	/**
-	 * 列表命令
-	 */
-	LIST("List"),
-
-	/**
-	 * 发布订阅命令
-	 */
-	PUBSUB("PubSub"),
-
-	/**
-	 * 脚本命令
-	 */
-	SCRIPTING("Scripting"),
-
-	/**
-	 * 服务器命令
-	 */
-	SERVER("Server"),
-
-	/**
-	 * 集合命令
-	 */
-	SET("Set"),
-
-	/**
-	 * 有序集合命令
-	 */
-	SORTEDSET("Sorted Set"),
-
-	/**
-	 * 流命令
-	 */
-	STREAM("Stream"),
-
-	/**
-	 * 字符串命令
-	 */
-	STRING("String"),
-
-	/**
-	 * 事务命令
-	 */
-	TRANSACTION("Transaction");
-
-	private final String name;
-
-	CommandGroup(final String name) {
-		this.name = name;
+	private ArgStringBuilder() {
 	}
 
-	public String getName() {
-		return name;
+	public static ArgStringBuilder create() {
+		return new ArgStringBuilder();
 	}
 
-	@Deprecated
-	public String getValue() {
-		return getName();
+	public ArgStringBuilder add(final String name, final boolean value) {
+		joiner.add(name).add(value);
+		return this;
 	}
 
-	@Override
-	public String toString() {
-		return getName();
+	public ArgStringBuilder add(final String name, final short value) {
+		joiner.add(name).add(value);
+		return this;
+	}
+
+	public ArgStringBuilder add(final String name, final int value) {
+		joiner.add(name).add(value);
+		return this;
+	}
+
+	public ArgStringBuilder add(final String name, final long value) {
+		joiner.add(name).add(value);
+		return this;
+	}
+
+	public ArgStringBuilder add(final String name, final float value) {
+		joiner.add(name).add(value);
+		return this;
+	}
+
+	public ArgStringBuilder add(final String name, final double value) {
+		joiner.add(name).add(value);
+		return this;
+	}
+
+	public ArgStringBuilder add(final String name, final byte[] value) {
+		if(value != null){
+			joiner.add(name).add(SafeEncoder.encode(value));
+		}
+
+		return this;
+	}
+
+	public ArgStringBuilder add(final String name, final Object value) {
+		if(value != null){
+			joiner.add(name).add(value);
+		}
+
+		return this;
+	}
+
+	public ArgStringBuilder append(final CharSequence seq) {
+		if(seq != null){
+			joiner.add(seq);
+		}
+
+		return this;
+	}
+
+	public String build() {
+		return joiner.toString();
 	}
 
 }

@@ -21,10 +21,21 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.client.lettuce.operations;/**
- * 
+ */
+package com.buession.redis.client.lettuce.operations;
+
+import com.buession.redis.client.lettuce.LettuceClusterClient;
+
+/**
+ * Lettuce 集群模式布隆过滤命令操作抽象类
  *
  * @author Yong.Teng
  * @since 4.0.0
- */public class LettuceClusterBloomFilterOperations {
+ */
+public final class LettuceClusterBloomFilterOperations extends AbstractBloomFilterOperations<LettuceClusterClient> {
+
+	public LettuceClusterBloomFilterOperations(final LettuceClusterClient client) {
+		super(client);
+	}
+
 }

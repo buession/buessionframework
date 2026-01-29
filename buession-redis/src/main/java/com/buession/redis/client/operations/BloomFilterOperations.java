@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.operations;
+package com.buession.redis.client.operations;
 
 import com.buession.redis.core.command.BloomFilterCommands;
 

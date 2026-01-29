@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.lettuce;
@@ -27,6 +27,7 @@ package com.buession.redis.client.lettuce;
 import com.buession.redis.client.RedisSentinelClient;
 import com.buession.redis.client.connection.lettuce.LettuceSentinelConnection;
 import com.buession.redis.client.lettuce.operations.LettuceSentinelBitMapOperations;
+import com.buession.redis.client.lettuce.operations.LettuceSentinelBloomFilterOperations;
 import com.buession.redis.client.lettuce.operations.LettuceSentinelClusterOperations;
 import com.buession.redis.client.lettuce.operations.LettuceSentinelConnectionOperations;
 import com.buession.redis.client.lettuce.operations.LettuceSentinelGenericOperations;
@@ -69,6 +70,15 @@ public class LettuceSentinelClient extends AbstractLettuceRedisClient<LettuceSen
 	 */
 	public LettuceSentinelClient(final LettuceSentinelConnection connection) {
 		super(connection);
+	}
+
+	@Override
+	public BloomFilterOperations bloomFilterOperations() {
+		if(bloomFilterOperations == null){
+			bloomFilterOperations = new LettuceSentinelBloomFilterOperations(this);
+		}
+
+		return bloomFilterOperations;
 	}
 
 	@Override

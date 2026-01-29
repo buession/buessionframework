@@ -36,7 +36,6 @@ import com.buession.redis.utils.SafeEncoder;
 public enum Command implements ProtocolCommand {
 
 
-
 	/**
 	 * Cluster command end
 	 **/
@@ -107,23 +106,6 @@ public enum Command implements ProtocolCommand {
 	ACL("rw", CommandGroup.ACL, SubCommand.ACL_CAT, SubCommand.ACL_DELUSER, SubCommand.ACL_DRYRUN,
 			SubCommand.ACL_GENPASS, SubCommand.ACL_GETUSER, SubCommand.LIST, SubCommand.LOAD, SubCommand.ACL_LOG,
 			SubCommand.SAVE, SubCommand.ACL_SETUSER, SubCommand.ACL_USERS, SubCommand.ACL_WHOAMI),
-
-
-	/**
-	 * transaction command end
-	 **/
-
-	private final byte[] raw;
-
-	/**
-	 * 命令分组
-	 */
-	private final CommandGroup group;
-
-	/**
-	 * 子命令
-	 */
-	private final SubCommand[] subCommands;
 
 
 }

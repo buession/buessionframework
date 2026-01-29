@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.lettuce;
@@ -27,6 +27,7 @@ package com.buession.redis.client.lettuce;
 import com.buession.redis.client.RedisStandaloneClient;
 import com.buession.redis.client.connection.lettuce.LettuceConnection;
 import com.buession.redis.client.lettuce.operations.LettuceBitMapOperations;
+import com.buession.redis.client.lettuce.operations.LettuceBloomFilterOperations;
 import com.buession.redis.client.lettuce.operations.LettuceClusterOperations;
 import com.buession.redis.client.lettuce.operations.LettuceConnectionOperations;
 import com.buession.redis.client.lettuce.operations.LettuceGenericOperations;
@@ -69,6 +70,15 @@ public class LettuceStandaloneClient extends AbstractLettuceRedisClient<LettuceC
 	 */
 	public LettuceStandaloneClient(final LettuceConnection connection) {
 		super(connection);
+	}
+
+	@Override
+	public BloomFilterOperations bloomFilterOperations() {
+		if(bloomFilterOperations == null){
+			bloomFilterOperations = new LettuceBloomFilterOperations(this);
+		}
+
+		return bloomFilterOperations;
 	}
 
 	@Override

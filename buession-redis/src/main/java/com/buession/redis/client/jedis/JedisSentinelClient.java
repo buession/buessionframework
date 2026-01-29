@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis;
@@ -27,6 +27,7 @@ package com.buession.redis.client.jedis;
 import com.buession.redis.client.RedisSentinelClient;
 import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
 import com.buession.redis.client.jedis.operations.JedisSentinelBitMapOperations;
+import com.buession.redis.client.jedis.operations.JedisSentinelBloomFilterOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelClusterOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelConnectionOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelGenericOperations;
@@ -69,6 +70,15 @@ public class JedisSentinelClient extends AbstractJedisRedisClient<JedisSentinelC
 	 */
 	public JedisSentinelClient(final JedisSentinelConnection connection) {
 		super(connection);
+	}
+
+	@Override
+	public BloomFilterOperations bloomFilterOperations() {
+		if(bloomFilterOperations == null){
+			bloomFilterOperations = new JedisSentinelBloomFilterOperations(this);
+		}
+
+		return bloomFilterOperations;
 	}
 
 	@Override

@@ -188,12 +188,4 @@ public enum SubCommand implements ProtocolCommand {
 	 **/
 	;
 
-	private final byte[] raw;
-	
-
-	@Override
-	public String toString() {
-		return getName();
-	}
-
 }

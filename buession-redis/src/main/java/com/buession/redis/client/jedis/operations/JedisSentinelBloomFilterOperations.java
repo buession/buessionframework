@@ -21,10 +21,21 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.client.jedis.operations;/**
- * 
+ */
+package com.buession.redis.client.jedis.operations;
+
+import com.buession.redis.client.jedis.JedisSentinelClient;
+
+/**
+ * Jedis 哨兵模式布隆过滤命令操作抽象类
  *
  * @author Yong.Teng
  * @since 4.0.0
- */public class JedisSentinelBloomFilterOperations {
+ */
+public final class JedisSentinelBloomFilterOperations extends AbstractBloomFilterOperations<JedisSentinelClient> {
+
+	public JedisSentinelBloomFilterOperations(final JedisSentinelClient client) {
+		super(client);
+	}
+
 }

@@ -1,0 +1,764 @@
+
+	/**
+	 * bitmat command start
+	 **/
+	/**
+	 * bitmat command end
+	 **/
+
+	/**
+	 * cluster command start
+	 **/
+	CLUSTER_MY_ID(CommandGroup.CLUSTER, "r"),
+
+	CLUSTER_ADDSLOTS(CommandGroup.CLUSTER, "w"),
+
+	CLUSTER_SLOTS(CommandGroup.CLUSTER, "r"),
+
+	CLUSTER_COUNTFAILUREREPORTS(CommandGroup.CLUSTER, "r"),
+
+	CLUSTER_COUNTKEYSINSLOT(CommandGroup.CLUSTER, "r"),
+
+	CLUSTER_DELSLOTS(CommandGroup.CLUSTER, "w"),
+
+	CLUSTER_FLUSHSLOTS(CommandGroup.CLUSTER, "w"),
+
+	CLUSTER_FAILOVER(CommandGroup.CLUSTER, "w"),
+
+	CLUSTER_FORGET(CommandGroup.CLUSTER, "w"),
+
+	CLUSTER_GETKEYSINSLOT(CommandGroup.CLUSTER, "r"),
+
+	CLUSTER_KEYSLOT(CommandGroup.CLUSTER, "r"),
+
+	CLUSTER_SETCONFIGEPOCH(CommandGroup.CLUSTER, "w"),
+
+	CLUSTER_BUMPEPOCH(CommandGroup.CLUSTER, "rw"),
+
+	CLUSTER_INFO(CommandGroup.CLUSTER, "r"),
+
+	CLUSTER_MEET(CommandGroup.CLUSTER, "w"),
+
+	CLUSTER_NODES(CommandGroup.CLUSTER, "r"),
+
+	CLUSTER_SLAVES(CommandGroup.CLUSTER, "r"),
+
+	CLUSTER_REPLICAS(CommandGroup.CLUSTER, "r"),
+
+	CLUSTER_REPLICATE(CommandGroup.CLUSTER, "w"),
+
+	CLUSTER_RESET(CommandGroup.CLUSTER, "w"),
+
+	CLUSTER_SAVECONFIG(CommandGroup.CLUSTER, "w"),
+
+	CLUSTER_SETSLOT(CommandGroup.CLUSTER, "w"),
+
+	ASKING(CommandGroup.CLUSTER, "r"),
+
+	READWRITE(CommandGroup.CLUSTER, "r"),
+
+	READONLY(CommandGroup.CLUSTER, "r"),
+	/**
+	 * cluster command end
+	 **/
+
+	/**
+	 * connection command start
+	 */
+	AUTH(CommandGroup.CONNECTION, "rw"),
+
+	ECHO(CommandGroup.CONNECTION, "w"),
+
+	PING(CommandGroup.CONNECTION, "r"),
+
+	RESET(CommandGroup.CONNECTION, "w"),
+
+	QUIT(CommandGroup.CONNECTION, "rw"),
+
+	SELECT(CommandGroup.CONNECTION, "w"),
+
+	CLIENT_KILL(CommandGroup.CONNECTION, "w"),
+
+	CLIENT_SETNAME(CommandGroup.CONNECTION, "w"),
+
+	CLIENT_GETNAME(CommandGroup.CONNECTION, "r"),
+
+	CLIENT_GETREDIR(CommandGroup.CONNECTION, "r"),
+
+	CLIENT_CACHING(CommandGroup.CONNECTION, "w"),
+
+	CLIENT_ID(CommandGroup.CONNECTION, "r"),
+
+	CLIENT_LIST(CommandGroup.CONNECTION, "r"),
+
+	CLIENT_INFO(CommandGroup.CONNECTION, "r"),
+
+	CLIENT_PAUSE(CommandGroup.CONNECTION, "w"),
+
+	CLIENT_REPLY(CommandGroup.CONNECTION, "w"),
+
+	CLIENT_UNBLOCK(CommandGroup.CONNECTION, "w"),
+	/**
+	 * connection command end
+	 */
+
+	/**
+	 * geo command start
+	 **/
+	GEOADD(CommandGroup.GEO, "w"),
+
+	GEOHASH(CommandGroup.GEO, "r"),
+
+	GEOPOS(CommandGroup.GEO, "r"),
+
+	GEODIST(CommandGroup.GEO, "r"),
+
+	GEORADIUS(CommandGroup.GEO, "r"),
+
+	GEORADIUS_RO(CommandGroup.GEO, "r"),
+
+	GEORADIUSBYMEMBER(CommandGroup.GEO, "r"),
+
+	GEORADIUSBYMEMBER_RO(CommandGroup.GEO, "r"),
+
+	GEOSEARCH(CommandGroup.GEO, "r"),
+
+	GEOSEARCHSTORE(CommandGroup.GEO, "rw"),
+	/**
+	 * geo command end
+	 **/
+
+	/**
+	 * hash command start
+	 **/
+	HDEL(CommandGroup.HASH, "w"),
+
+	HEXISTS(CommandGroup.HASH, "r"),
+
+	HGET(CommandGroup.HASH, "r"),
+
+	HGETALL(CommandGroup.HASH, "r"),
+
+	HINCRBY(CommandGroup.HASH, "rw"),
+
+	HINCRBYFLOAT(CommandGroup.HASH, "rw"),
+
+	HKEYS(CommandGroup.HASH, "r"),
+
+	HLEN(CommandGroup.HASH, "r"),
+
+	HMGET(CommandGroup.HASH, "r"),
+
+	HMSET(CommandGroup.HASH, "w"),
+
+	HRANDFIELD(CommandGroup.HASH, "r"),
+
+	HSCAN(CommandGroup.HASH, "r"),
+
+	HSET(CommandGroup.HASH, "w"),
+
+	HSETNX(CommandGroup.HASH, "w"),
+
+	HSTRLEN(CommandGroup.HASH, "r"),
+
+	HVALS(CommandGroup.HASH, "r"),
+	/**
+	 * hash command end
+	 **/
+
+	/**
+	 * hyperloglog command start
+	 **/
+	PFADD(CommandGroup.HYPERLOGLOG, "w"),
+
+	PFCOUNT(CommandGroup.HYPERLOGLOG, "r"),
+
+	PFMERGE(CommandGroup.HYPERLOGLOG, "w"),
+	/**
+	 * hyperloglog command end
+	 **/
+
+	/**
+	 * key command start
+	 **/
+	COPY(CommandGroup.KEY, "w"),
+
+	DEL(CommandGroup.KEY, "w"),
+
+	DUMP(CommandGroup.KEY, "w"),
+
+	EXISTS(CommandGroup.KEY, "r"),
+
+	EXPIRE(CommandGroup.KEY, "w"),
+
+	EXPIREAT(CommandGroup.KEY, "w"),
+
+	MIGRATE(CommandGroup.KEY, "w"),
+
+	MOVE(CommandGroup.KEY, "w"),
+
+	KEYS(CommandGroup.KEY, "r"),
+
+	PERSIST(CommandGroup.KEY, "w"),
+
+	PEXPIRE(CommandGroup.KEY, "w"),
+
+	PEXPIREAT(CommandGroup.KEY, "w"),
+
+	PTTL(CommandGroup.KEY, "r"),
+
+	RANDOMKEY(CommandGroup.KEY, "r"),
+
+	RENAME(CommandGroup.KEY, "w"),
+
+	RENAMENX(CommandGroup.KEY, "w"),
+
+	RESTORE(CommandGroup.KEY, "w"),
+
+	SCAN(CommandGroup.KEY, "r"),
+
+	SORT(CommandGroup.KEY, "rw"),
+
+	SORT_RO(CommandGroup.KEY, "r"),
+
+	TTL(CommandGroup.KEY, "r"),
+
+	TYPE(CommandGroup.KEY, "r"),
+
+	TOUCH(CommandGroup.KEY, "w"),
+
+	UNLINK(CommandGroup.KEY, "w"),
+
+	OBJECT_ENCODING(CommandGroup.KEY, "r"),
+
+	OBJECT_REFQ(CommandGroup.KEY, "r"),
+
+	OBJECT_IDLETIME(CommandGroup.KEY, "r"),
+
+	OBJECT_REFCOUNT(CommandGroup.KEY, "r"),
+	/**
+	 * key command end
+	 **/
+
+	WAIT(CommandGroup.GENERIC, "w"),
+
+	WAITOF(CommandGroup.GENERIC, "w"),
+
+	/**
+	 * list command start
+	 **/
+	BLPOP(CommandGroup.LIST, "rw"),
+
+	BRPOP(CommandGroup.LIST, "rw"),
+
+	BRPOPLPUSH(CommandGroup.LIST, "rw"),
+
+	LINDEX(CommandGroup.LIST, "r"),
+
+	LINSERT(CommandGroup.LIST, "w"),
+
+	LLEN(CommandGroup.LIST, "r"),
+
+	LPOP(CommandGroup.LIST, "rw"),
+
+	LPOS(CommandGroup.LIST, "r"),
+
+	LPUSH(CommandGroup.LIST, "w"),
+
+	LPUSHX(CommandGroup.LIST, "w"),
+
+	LRANGE(CommandGroup.LIST, "r"),
+
+	LREM(CommandGroup.LIST, "rw"),
+
+	LSET(CommandGroup.LIST, "w"),
+
+	LTRIM(CommandGroup.LIST, "rw"),
+
+	RPOP(CommandGroup.LIST, "rw"),
+
+	RPOPLPUSH(CommandGroup.LIST, "rw"),
+
+	RPUSH(CommandGroup.LIST, "rw"),
+
+	RPUSHX(CommandGroup.LIST, "rw"),
+
+	LMOVE(CommandGroup.LIST, "w"),
+
+	BLMOVE(CommandGroup.LIST, "w"),
+	/**
+	 * list command end
+	 **/
+
+	/**
+	 * pubsub command start
+	 **/
+	PSUBSCRIBE(CommandGroup.PUBSUB, "w"),
+
+	PUBSUB_CHANNELS(CommandGroup.PUBSUB, "r"),
+
+	PUBSUB_NUMPAT(CommandGroup.PUBSUB, "r"),
+
+	PUBSUB_NUMSUB(CommandGroup.PUBSUB, "r"),
+
+	PUBLISH(CommandGroup.PUBSUB, "w"),
+
+	PUNSUBSCRIBE(CommandGroup.PUBSUB, "w"),
+
+	SUBSCRIBE(CommandGroup.PUBSUB, "w"),
+
+	UNSUBSCRIBE(CommandGroup.PUBSUB, "w"),
+	/**
+	 * pubsub command end
+	 **/
+
+	/**
+	 * scripting command start
+	 **/
+	EVAL(CommandGroup.SCRIPTING, "w"),
+
+	EVALSHA(CommandGroup.SCRIPTING, "w"),
+
+	SCRIPT_EXISTS(CommandGroup.SCRIPTING, "r"),
+
+	SCRIPT_FLUSH(CommandGroup.SCRIPTING, "w"),
+
+	SCRIPT_KILL(CommandGroup.SCRIPTING, "w"),
+
+	SCRIPT_LOAD(CommandGroup.SCRIPTING, "r"),
+	/**
+	 * scripting command end
+	 **/
+
+	/**
+	 * server command start
+	 **/
+	ACL_CAT(CommandGroup.SERVER, "r"),
+
+	ACL_SETUSER(CommandGroup.SERVER, "w"),
+
+	ACL_GETUSER(CommandGroup.SERVER, "r"),
+
+	ACL_USERS(CommandGroup.SERVER, "r"),
+
+	ACL_WHOAMI(CommandGroup.SERVER, "r"),
+
+	ACL_DELUSER(CommandGroup.SERVER, "w"),
+
+	ACL_GENPASS(CommandGroup.SERVER, "r"),
+
+	ACL_LIST(CommandGroup.SERVER, "r"),
+
+	ACL_LOAD(CommandGroup.SERVER, "r"),
+
+	ACL_LOG(CommandGroup.SERVER, "r"),
+
+	ACL_LOGREST(CommandGroup.SERVER, "w"),
+
+	ACL_LOGSAVE(CommandGroup.SERVER, "w"),
+
+	BGREWRITEAOF(CommandGroup.SERVER, "w"),
+
+	BGSAVE(CommandGroup.SERVER, "w"),
+
+	CONFIG_GET(CommandGroup.SERVER, "r"),
+
+	CONFIG_RESETSTAT(CommandGroup.SERVER, "w"),
+
+	CONFIG_REWRITE(CommandGroup.SERVER, "w"),
+
+	CONFIG_SET(CommandGroup.SERVER, "w"),
+
+	DBSIZE(CommandGroup.SERVER, "r"),
+
+	DEBUG(CommandGroup.SERVER, "w"),
+
+	FLUSHALL(CommandGroup.SERVER, "w"),
+
+	FLUSHDB(CommandGroup.SERVER, "w"),
+
+	INFO(CommandGroup.SERVER, "r"),
+
+	LASTSAVE(CommandGroup.SERVER, "w"),
+
+	MEMORY_DOCTOR(CommandGroup.SERVER, "w"),
+
+	MEMORY_MALLOCSTATS(CommandGroup.SERVER, "r"),
+
+	MEMORY_PURGE(CommandGroup.SERVER, "w"),
+
+	MEMORY_STATS(CommandGroup.SERVER, "r"),
+
+	MEMORY_USAGE(CommandGroup.SERVER, "r"),
+
+	MONITOR(CommandGroup.SERVER, "w"),
+
+	REPLICAOF(CommandGroup.SERVER, "w"),
+
+	ROLE(CommandGroup.SERVER, "r"),
+
+	SAVE(CommandGroup.SERVER, "w"),
+
+	SHUTDOWN(CommandGroup.SERVER, "w"),
+
+	SLAVEOF(CommandGroup.SERVER, "w"),
+
+	SLOWLOG_GET(CommandGroup.SERVER, "r"),
+
+	SLOWLOG_LEN(CommandGroup.SERVER, "r"),
+
+	SLOWLOG_RESET(CommandGroup.SERVER, "w"),
+
+	SYNC(CommandGroup.SERVER, "w"),
+
+	PSYNC(CommandGroup.SERVER, "w"),
+
+	TIME(CommandGroup.SERVER, "r"),
+
+	FAILOVER(CommandGroup.SERVER, "w"),
+
+	MODULE_LIST(CommandGroup.SERVER, "r"),
+
+	MODULE_LOAD(CommandGroup.SERVER, "r"),
+
+	MODULE_UNLOAD(CommandGroup.SERVER, "w"),
+
+	SWAPDB(CommandGroup.SERVER, "w"),
+	/**
+	 * server command end
+	 **/
+
+	/**
+	 * set command start
+	 **/
+	SADD(CommandGroup.SET, "w"),
+
+	SCARD(CommandGroup.SET, "r"),
+
+	SDIFF(CommandGroup.SET, "r"),
+
+	SDIFFSTORE(CommandGroup.SET, "r"),
+
+	SINTER(CommandGroup.SET, "w"),
+
+	SINTERSTORE(CommandGroup.SET, "w"),
+
+	SISMEMBER(CommandGroup.SET, "r"),
+
+	SMISMEMBER(CommandGroup.SET, "r"),
+
+	SMEMBERS(CommandGroup.SET, "r"),
+
+	SMOVE(CommandGroup.SET, "w"),
+
+	SPOP(CommandGroup.SET, "rw"),
+
+	SRANDMEMBER(CommandGroup.SET, "r"),
+
+	SREM(CommandGroup.SET, "w"),
+
+	SSCAN(CommandGroup.SET, "r"),
+
+	SUNION(CommandGroup.SET, "r"),
+
+	SUNIONSTORE(CommandGroup.SET, "rw"),
+	/**
+	 * set command end
+	 **/
+
+	/**
+	 * sorted set command start
+	 **/
+	ZADD(CommandGroup.SORTEDSET, "w"),
+
+	ZCARD(CommandGroup.SORTEDSET, "r"),
+
+	ZCOUNT(CommandGroup.SORTEDSET, "r"),
+
+	ZINCRBY(CommandGroup.SORTEDSET, "w"),
+
+	ZINTERSTORE(CommandGroup.SORTEDSET, "w"),
+
+	ZLEXCOUNT(CommandGroup.SORTEDSET, "r"),
+
+	ZMSCORE(CommandGroup.SORTEDSET, "w"),
+
+	ZRANGE(CommandGroup.SORTEDSET, "r"),
+
+	ZRANGEBYLEX(CommandGroup.SORTEDSET, "r"),
+
+	ZRANGEBYSCORE(CommandGroup.SORTEDSET, "r"),
+
+	ZRANGESTORE(CommandGroup.SORTEDSET, "r"),
+
+	ZRANK(CommandGroup.SORTEDSET, "r"),
+
+	ZPOPMAX(CommandGroup.SORTEDSET, "rw"),
+
+	ZPOPMIN(CommandGroup.SORTEDSET, "rw"),
+
+	ZREM(CommandGroup.SORTEDSET, "w"),
+
+	ZREMRANGEBYLEX(CommandGroup.SORTEDSET, "w"),
+
+	ZREMRANGEBYSCORE(CommandGroup.SORTEDSET, "w"),
+
+	ZREMRANGEBYRANK(CommandGroup.SORTEDSET, "w"),
+
+	ZREVRANGE(CommandGroup.SORTEDSET, "r"),
+
+	ZREVRANGEBYLEX(CommandGroup.SORTEDSET, "r"),
+
+	ZREVRANGEBYSCORE(CommandGroup.SORTEDSET, "r"),
+
+	ZREVRANK(CommandGroup.SORTEDSET, "r"),
+
+	ZSCAN(CommandGroup.SORTEDSET, "r"),
+
+	ZSCORE(CommandGroup.SORTEDSET, "w"),
+
+	ZUNIONSTORE(CommandGroup.SORTEDSET, "w"),
+
+	BZPOPMIN(CommandGroup.SORTEDSET, "w"),
+
+	BZPOPMAX(CommandGroup.SORTEDSET, "w"),
+
+	ZDIFF(CommandGroup.SORTEDSET, "w"),
+
+	ZDIFFSTORE(CommandGroup.SORTEDSET, "w"),
+
+	ZINTER(CommandGroup.SORTEDSET, "w"),
+
+	ZRANDMEMBER(CommandGroup.SORTEDSET, "r"),
+
+	ZUNION(CommandGroup.SORTEDSET, "w"),
+	/**
+	 * sorted set command end
+	 **/
+
+	/**
+	 * stream command start
+	 **/
+	XACK(CommandGroup.STREAM, "w"),
+
+	XADD(CommandGroup.STREAM, "w"),
+
+	XAUTOCLAIM(CommandGroup.STREAM, "w"),
+
+	XCLAIM(CommandGroup.STREAM, "w"),
+
+	XDEL(CommandGroup.STREAM, "w"),
+
+	XGROUP_CREATE(CommandGroup.STREAM, "w"),
+
+	XGROUP_CREATECONSUMER(CommandGroup.STREAM, "w"),
+
+	XGROUP_DELCONSUMER(CommandGroup.STREAM, "w"),
+
+	XGROUP_DESTROY(CommandGroup.STREAM, "w"),
+
+	XGROUP_SETID(CommandGroup.STREAM, "w"),
+
+	XINFO_CONSUMERS(CommandGroup.STREAM, "r"),
+
+	XINFO_GROUPS(CommandGroup.STREAM, "r"),
+
+	XINFO_STREAM(CommandGroup.STREAM, "w"),
+
+	XLEN(CommandGroup.STREAM, "r"),
+
+	XPENDING(CommandGroup.STREAM, "w"),
+
+	XRANGE(CommandGroup.STREAM, "w"),
+
+	XREAD(CommandGroup.STREAM, "r"),
+
+	XREADGROUP(CommandGroup.STREAM, "r"),
+
+	XREVRANGE(CommandGroup.STREAM, "w"),
+
+	XSETID(CommandGroup.STREAM, "w"),
+
+	XTRIM(CommandGroup.STREAM, "w"),
+	/**
+	 * stream command end
+	 **/
+
+	/**
+	 * string command start
+	 **/
+	APPEND(CommandGroup.STRING, "w"),
+
+	DECR(CommandGroup.STRING, "w"),
+
+	DECRBY(CommandGroup.STRING, "w"),
+
+	GET(CommandGroup.STRING, "r"),
+
+	GETRANGE(CommandGroup.STRING, "r"),
+
+	GETSET(CommandGroup.STRING, "rw"),
+
+	GETEX(CommandGroup.STRING, "r"),
+
+	GETDEL(CommandGroup.STRING, "rw"),
+
+	INCR(CommandGroup.STRING, "w"),
+
+	INCRBY(CommandGroup.STRING, "w"),
+
+	INCRBYFLOAT(CommandGroup.STRING, "w"),
+
+	MGET(CommandGroup.STRING, "r"),
+
+	MSET(CommandGroup.STRING, "w"),
+
+	MSETNX(CommandGroup.STRING, "w"),
+
+	PSETEX(CommandGroup.STRING, "w"),
+
+	SET(CommandGroup.STRING, "w"),
+
+	SETEX(CommandGroup.STRING, "w"),
+
+	SETNX(CommandGroup.STRING, "w"),
+
+	SETRANGE(CommandGroup.STRING, "w"),
+
+	STRLEN(CommandGroup.STRING, "r"),
+
+	SUBSTR(CommandGroup.STRING, "r"),
+	/** string command end **/
+
+	/**
+	 * transaction command start
+	 **/
+	DISCARD(CommandGroup.TRANSACTION, "w"),
+
+	EXEC(CommandGroup.TRANSACTION, "w"),
+
+	MULTI(CommandGroup.TRANSACTION, "w"),
+
+	UNWATCH(CommandGroup.TRANSACTION, "w"),
+
+	WATCH(CommandGroup.TRANSACTION, "w");
+
+	/**
+	 * transaction command end
+	 **/
+
+	/**
+	 * 命令分组
+	 */
+	private final CommandGroup group;
+
+	/**
+	 * 命令名称
+	 *
+	 * @since 4.0.0
+	 */
+	private final String name;
+
+	/**
+	 * 命令名称 raw 格式
+	 *
+	 * @since 4.0.0
+	 */
+	private final byte[] raw;
+
+	/**
+	 * 是否为读操作命令
+	 *
+	 * @since 4.0.0
+	 */
+	private final boolean read;
+
+	/**
+	 * 是否为写操作命令
+	 *
+	 * @since 4.0.0
+	 */
+	private final boolean write;
+
+	/**
+	 * 构造函数
+	 *
+	 * @param group
+	 * 		命令分组
+	 * @param mode
+	 * 		命令模式
+	 *
+	 * @since 4.0.0
+	 */
+	ProtocolCommand(final CommandGroup group, final String mode) {
+		this.group = group;
+		String[] names = StringUtils.split(name(), "_", 2);
+
+		name = names.length > 1 ? names[1] : name();
+		raw = SafeEncoder.encode(name);
+		if(Validate.hasText(mode)){
+			String modeLower = mode.toLowerCase();
+			this.read = modeLower.indexOf('r') > -1;
+			this.write = modeLower.indexOf('w') > -1;
+		}else{
+			this.read = true;
+			this.write = false;
+		}
+	}
+
+	/**
+	 * 返回命令分组
+	 *
+	 * @return 命令分组
+	 */
+	public CommandGroup getGroup() {
+		return group;
+	}
+
+	/**
+	 * 返回命令名称
+	 *
+	 * @return 命令名称
+	 *
+	 * @since 4.0.0
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * 返回是否为只读命令
+	 *
+	 * @return true / false
+	 */
+	public boolean isReadonly() {
+		return isRead() && isWrite() == false;
+	}
+
+	/**
+	 * 返回是否为读命令
+	 *
+	 * @return true / false
+	 */
+	public boolean isRead() {
+		return read;
+	}
+
+	/**
+	 * 返回是否为写命令
+	 *
+	 * @return true / false
+	 */
+	public boolean isWrite() {
+		return write;
+	}
+
+	@Override
+	public byte[] getRaw() {
+		return raw;
+	}
+
+	@Override
+	public String toString() {
+		return StringUtils.replace(name(), "_", " ");
+	}

@@ -19,13 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client;
 
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.operations.BitMapOperations;
+import com.buession.redis.client.operations.BloomFilterOperations;
 import com.buession.redis.client.operations.ClusterOperations;
 import com.buession.redis.client.operations.ConnectionOperations;
 import com.buession.redis.client.operations.GenericOperations;
@@ -67,6 +68,15 @@ public interface RedisClient {
 	 * 		Redis 连接对象 {@link RedisConnection}
 	 */
 	void setConnection(RedisConnection connection);
+
+	/**
+	 * 返回布隆命令操作实例
+	 *
+	 * @return 布隆命令操作实例
+	 *
+	 * @since 4.0.0
+	 */
+	BloomFilterOperations bloomFilterOperations();
 
 	/**
 	 * 返回 BitMap 命令操作实例
