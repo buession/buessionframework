@@ -19,14 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
 import com.buession.redis.client.RedisClient;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.SubCommand;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.transaction.Transaction;
@@ -54,7 +54,14 @@ public abstract class AbstractRedisCommand<C extends RedisClient, R> implements 
 	/**
 	 * Redis 协议命令
 	 */
-	private final ProtocolCommand command;
+	private final com.buession.redis.core.command.Command command;
+
+	/**
+	 * Redis 协议子命令
+	 *
+	 * @since 4.0.0
+	 */
+	private final SubCommand subCommand;
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -66,14 +73,37 @@ public abstract class AbstractRedisCommand<C extends RedisClient, R> implements 
 	 * @param command
 	 * 		Redis 协议命令
 	 */
-	protected AbstractRedisCommand(final C client, final ProtocolCommand command) {
+	protected AbstractRedisCommand(final C client, final com.buession.redis.core.command.Command command) {
+		this(client, command, null);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param client
+	 *        {@link RedisClient} 实例
+	 * @param command
+	 * 		Redis 协议命令
+	 * @param subCommand
+	 * 		Redis 协议子命令
+	 *
+	 * @since 4.0.0
+	 */
+	protected AbstractRedisCommand(final C client, final com.buession.redis.core.command.Command command,
+								   final SubCommand subCommand) {
 		this.client = client;
 		this.command = command;
+		this.subCommand = subCommand;
 	}
 
 	@Override
-	public ProtocolCommand getCommand() {
+	public com.buession.redis.core.command.Command getCommand() {
 		return command;
+	}
+
+	@Override
+	public SubCommand getSubCommand() {
+		return subCommand;
 	}
 
 	@Override

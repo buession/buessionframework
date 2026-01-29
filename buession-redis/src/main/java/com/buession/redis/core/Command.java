@@ -19,13 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.SubCommand;
 import com.buession.redis.exception.RedisException;
 
 /**
@@ -44,7 +44,16 @@ public interface Command<R> {
 	 *
 	 * @return 协议命令
 	 */
-	ProtocolCommand getCommand();
+	com.buession.redis.core.command.Command getCommand();
+
+	/**
+	 * 返回协议子命令
+	 *
+	 * @return 协议子命令
+	 *
+	 * @since 4.0.0
+	 */
+	SubCommand getSubCommand();
 
 	/**
 	 * 执行 Redis 命令
