@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package io.lettuce.core;
@@ -147,7 +147,7 @@ public class LettuceSentinelPool extends Pool<StatefulRedisSentinelConnection<by
 	@Override
 	public StatefulRedisSentinelConnection<byte[], byte[]> getResource() {
 		StatefulRedisSentinelConnection<byte[], byte[]> connection = super.getResource();
-		//jedis.setDataSource(this);
+		//connection.setDataSource(this);
 		return connection;
 	}
 

@@ -21,10 +21,40 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package io.lettuce.core;/**
- * 
+ */
+package io.lettuce.core;
+
+import io.lettuce.core.api.sync.BaseRedisCommands;
+import io.lettuce.core.api.sync.RediSearchCommands;
+import io.lettuce.core.api.sync.RedisAclCommands;
+import io.lettuce.core.api.sync.RedisFunctionCommands;
+import io.lettuce.core.api.sync.RedisGeoCommands;
+import io.lettuce.core.api.sync.RedisHLLCommands;
+import io.lettuce.core.api.sync.RedisHashCommands;
+import io.lettuce.core.api.sync.RedisJsonCommands;
+import io.lettuce.core.api.sync.RedisKeyCommands;
+import io.lettuce.core.api.sync.RedisListCommands;
+import io.lettuce.core.api.sync.RedisScriptingCommands;
+import io.lettuce.core.api.sync.RedisServerCommands;
+import io.lettuce.core.api.sync.RedisSetCommands;
+import io.lettuce.core.api.sync.RedisSortedSetCommands;
+import io.lettuce.core.api.sync.RedisStreamCommands;
+import io.lettuce.core.api.sync.RedisStringCommands;
+import io.lettuce.core.api.sync.RedisTransactionalCommands;
+import io.lettuce.core.api.sync.RedisVectorSetCommands;
+import io.lettuce.core.cluster.api.sync.RedisClusterCommands;
+
+/**
+ *
  *
  * @author Yong.Teng
  * @since 4.0.0
- */public interface RedisCommands {
+ */
+public interface RedisCommands<K, V> extends BaseRedisCommands<K, V>, RedisAclCommands<K, V>,
+		RedisClusterCommands<K, V>, RedisFunctionCommands<K, V>, RedisGeoCommands<K, V>, RedisHashCommands<K, V>,
+		RedisHLLCommands<K, V>, RedisKeyCommands<K, V>, RedisListCommands<K, V>, RedisScriptingCommands<K, V>,
+		RedisServerCommands<K, V>, RedisSetCommands<K, V>, RedisSortedSetCommands<K, V>, RedisStreamCommands<K, V>,
+		RedisStringCommands<K, V>, RedisTransactionalCommands<K, V>, RedisJsonCommands<K, V>,
+		RedisVectorSetCommands<K, V>, RediSearchCommands<K, V> {
+
 }
