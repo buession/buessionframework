@@ -22,61 +22,18 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.connection.datasource.jedis;
+package com.buession.redis.core.operations;
 
-import com.buession.redis.client.connection.datasource.StandaloneDataSource;
-import com.buession.redis.core.RedisNode;
+import com.buession.redis.core.command.BloomFilterCommands;
 
 /**
- * Jedis 单机模式数据源
+ * 布隆过滤命令
+ *
+ * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=bf" target="_blank">https://redis.io/docs/latest/commands/?group=bf</a></p>
  *
  * @author Yong.Teng
+ * @since 4.0.0
  */
-public class JedisDataSource extends AbstractJedisDataSource implements StandaloneDataSource {
-
-	/**
-	 * Redis 主机地址
-	 */
-	private String host = RedisNode.DEFAULT_HOST;
-
-	/**
-	 * Redis 端口
-	 */
-	private int port = RedisNode.DEFAULT_PORT;
-
-	/**
-	 * 数据库
-	 */
-	private int database = RedisNode.DEFAULT_DATABASE;
-
-	@Override
-	public String getHost() {
-		return host;
-	}
-
-	@Override
-	public void setHost(String host) {
-		this.host = host;
-	}
-
-	@Override
-	public int getPort() {
-		return port;
-	}
-
-	@Override
-	public void setPort(int port) {
-		this.port = port;
-	}
-
-	@Override
-	public int getDatabase() {
-		return database;
-	}
-
-	@Override
-	public void setDatabase(int database) {
-		this.database = database;
-	}
+public interface BloomFilterOperations extends BloomFilterCommands, RedisOperations {
 
 }

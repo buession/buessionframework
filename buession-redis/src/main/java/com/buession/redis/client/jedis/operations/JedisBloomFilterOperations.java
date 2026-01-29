@@ -21,62 +21,10 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */
-package com.buession.redis.client.connection.datasource.jedis;
-
-import com.buession.redis.client.connection.datasource.StandaloneDataSource;
-import com.buession.redis.core.RedisNode;
-
-/**
- * Jedis 单机模式数据源
+ */package com.buession.redis.client.jedis.operations;/**
+ * 
  *
  * @author Yong.Teng
- */
-public class JedisDataSource extends AbstractJedisDataSource implements StandaloneDataSource {
-
-	/**
-	 * Redis 主机地址
-	 */
-	private String host = RedisNode.DEFAULT_HOST;
-
-	/**
-	 * Redis 端口
-	 */
-	private int port = RedisNode.DEFAULT_PORT;
-
-	/**
-	 * 数据库
-	 */
-	private int database = RedisNode.DEFAULT_DATABASE;
-
-	@Override
-	public String getHost() {
-		return host;
-	}
-
-	@Override
-	public void setHost(String host) {
-		this.host = host;
-	}
-
-	@Override
-	public int getPort() {
-		return port;
-	}
-
-	@Override
-	public void setPort(int port) {
-		this.port = port;
-	}
-
-	@Override
-	public int getDatabase() {
-		return database;
-	}
-
-	@Override
-	public void setDatabase(int database) {
-		this.database = database;
-	}
-
+ * @since 4.0.0
+ */public class JedisBloomFilterOperations {
 }

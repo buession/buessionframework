@@ -19,44 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */
-package com.buession.redis.pipeline.jedis;
-
-import com.buession.core.utils.Assert;
-import com.buession.redis.pipeline.Pipeline;
-
-import java.util.List;
-
-/**
- * Jedis 集群模式管道
+ */package com.buession.redis.client.operations.command;/**
+ * 
  *
  * @author Yong.Teng
- * @since 3.0.0
- */
-public class JedisClusterPipeline implements Pipeline {
-
-	private final redis.clients.jedis.ClusterPipeline delegate;
-
-	public JedisClusterPipeline(final redis.clients.jedis.ClusterPipeline pipeline) {
-		Assert.isNull(pipeline, "Redis Pipeline cloud not be null.");
-		this.delegate = pipeline;
-	}
-
-	@Override
-	public void sync() {
-		delegate.sync();
-	}
-
-	@Override
-	public List<Object> syncAndReturnAll() {
-		return null;
-	}
-
-	@Override
-	public void close() {
-		delegate.close();
-	}
-
+ * @since 4.0.0
+ */public interface RedisGeneralOperationsCommand {
 }

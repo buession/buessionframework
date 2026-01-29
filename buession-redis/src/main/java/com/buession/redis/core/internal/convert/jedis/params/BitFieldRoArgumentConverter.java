@@ -19,50 +19,28 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.transaction.jedis;
+package com.buession.redis.core.internal.convert.jedis.params;
 
-import com.buession.core.utils.Assert;
-import com.buession.redis.transaction.Transaction;
-
-import java.util.List;
+import com.buession.core.converter.Converter;
+import com.buession.core.utils.StringUtils;
+import com.buession.redis.core.command.BitMapCommands;
+import org.springframework.lang.Nullable;
 
 /**
- * Jedis Cluster 事务
+ * {@link BitMapCommands.BitFieldArgument} 转换为 jedis bitfield 参数
  *
  * @author Yong.Teng
- * @since 4.0.0
+ * @since 2.3.0
  */
-public class JedisClusterTransaction implements Transaction {
+public final class BitFieldArgumentConverter implements Converter<BitMapCommands.BitFieldArgument, String[]> {
 
-	private final redis.clients.jedis.AbstractTransaction delegate;
-
-	/**
-	 * 构造函数
-	 *
-	 * @param transaction
-	 * 		原生事务对象 {@link redis.clients.jedis.AbstractTransaction} 实例
-	 */
-	public JedisClusterTransaction(redis.clients.jedis.AbstractTransaction transaction) {
-		Assert.isNull(transaction, "Redis Transaction cloud not be null.");
-		this.delegate = transaction;
-	}
-
+	@Nullable
 	@Override
-	public List<Object> exec() {
-		return delegate.exec();
-	}
-
-	@Override
-	public String discard() {
-		return delegate.discard();
-	}
-
-	@Override
-	public void close() {
-		delegate.close();
+	public String[] convert(final BitMapCommands.BitFieldArgument source) {
+		return source == null ? null : StringUtils.split(source.toString(), " ");
 	}
 
 }

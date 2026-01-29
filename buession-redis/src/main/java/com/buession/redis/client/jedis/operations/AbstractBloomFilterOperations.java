@@ -19,27 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */
-package com.buession.redis.transaction.jedis;
-
-import com.buession.redis.core.internal.jedis.JedisResult;
-import com.buession.redis.transaction.AbstractTransactionProxy;
-import com.buession.redis.transaction.Transaction;
-
-/**
- * Jedis Cluster 事务代理类
+ */package com.buession.redis.client.jedis.operations;/**
+ * 
  *
  * @author Yong.Teng
  * @since 4.0.0
- */
-public class JedisClusterTransactionProxy
-		extends AbstractTransactionProxy<redis.clients.jedis.AbstractTransaction, JedisResult<?, ?>> {
-
-	public JedisClusterTransactionProxy(final Transaction target,
-										final redis.clients.jedis.AbstractTransaction object) {
-		super(target, object);
-	}
-
+ */public class AbstractBloomFilterOperations {
 }

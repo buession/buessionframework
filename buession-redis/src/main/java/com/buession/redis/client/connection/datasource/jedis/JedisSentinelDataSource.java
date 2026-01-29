@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.datasource.jedis;
@@ -27,7 +27,6 @@ package com.buession.redis.client.connection.datasource.jedis;
 import com.buession.redis.client.connection.datasource.SentinelDataSource;
 import com.buession.redis.core.Constants;
 import com.buession.redis.core.RedisNode;
-import redis.clients.jedis.JedisSentinelPool;
 
 import java.util.List;
 
@@ -68,13 +67,6 @@ public class JedisSentinelDataSource extends AbstractJedisDataSource implements 
 	 * 哨兵节点
 	 */
 	private List<RedisNode> sentinels;
-
-	/**
-	 * 连接池
-	 *
-	 * @since 3.0.1
-	 */
-	private JedisSentinelPool pool;
 
 	@Override
 	public int getDatabase() {
@@ -134,14 +126,6 @@ public class JedisSentinelDataSource extends AbstractJedisDataSource implements 
 	@Override
 	public void setSentinels(List<RedisNode> sentinels) {
 		this.sentinels = sentinels;
-	}
-
-	public JedisSentinelPool getPool() {
-		return pool;
-	}
-
-	public void setPool(JedisSentinelPool pool) {
-		this.pool = pool;
 	}
 
 }

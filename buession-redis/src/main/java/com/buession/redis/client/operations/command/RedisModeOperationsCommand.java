@@ -22,61 +22,39 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.connection.datasource.jedis;
+package com.buession.redis.client.operations.command;
 
-import com.buession.redis.client.connection.datasource.StandaloneDataSource;
-import com.buession.redis.core.RedisNode;
+import com.buession.redis.client.RedisClient;
+import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.exception.RedisException;
 
 /**
- * Jedis 单机模式数据源
+ * Redis 运算命令
+ * *
+ * * @param <CLIENT>
+ * * 		Redis 客户端 {@link RedisClient}
+ * * @param <CONN>
+ * * 		Redis 连接对象 {@link RedisConnection}
  *
  * @author Yong.Teng
+ * @since 4.0.0
  */
-public class JedisDataSource extends AbstractJedisDataSource implements StandaloneDataSource {
+public interface RedisAOperationsCommand<CLIENT extends RedisClient, CONN extends RedisConnection> {
 
 	/**
-	 * Redis 主机地址
+	 * 运行 Redis 命令
+	 *
+	 * @param arguments
+	 *        {@link CommandArguments}
+	 * @param <R>
+	 * 		返回值类型
+	 *
+	 * @return 返回值
+	 *
+	 * @throws RedisException
+	 * 		Redis 命令运行异常
 	 */
-	private String host = RedisNode.DEFAULT_HOST;
-
-	/**
-	 * Redis 端口
-	 */
-	private int port = RedisNode.DEFAULT_PORT;
-
-	/**
-	 * 数据库
-	 */
-	private int database = RedisNode.DEFAULT_DATABASE;
-
-	@Override
-	public String getHost() {
-		return host;
-	}
-
-	@Override
-	public void setHost(String host) {
-		this.host = host;
-	}
-
-	@Override
-	public int getPort() {
-		return port;
-	}
-
-	@Override
-	public void setPort(int port) {
-		this.port = port;
-	}
-
-	@Override
-	public int getDatabase() {
-		return database;
-	}
-
-	@Override
-	public void setDatabase(int database) {
-		this.database = database;
-	}
+	<R> R run(final CommandArguments arguments) throws RedisException;
 
 }
