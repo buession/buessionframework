@@ -19,13 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis;
 
 import com.buession.redis.client.AbstractRedisClient;
 import com.buession.redis.client.connection.jedis.JedisRedisConnection;
+import redis.clients.jedis.UnifiedJedis;
 
 /**
  * Jedis Redis 客户端抽象类
@@ -35,8 +36,8 @@ import com.buession.redis.client.connection.jedis.JedisRedisConnection;
  *
  * @author Yong.Teng
  */
-public abstract class AbstractJedisRedisClient<CONN extends JedisRedisConnection> extends AbstractRedisClient<CONN>
-		implements JedisRedisClient {
+public abstract class AbstractJedisRedisClient<CONN extends JedisRedisConnection<? extends UnifiedJedis>>
+		extends AbstractRedisClient<CONN> implements JedisRedisClient {
 
 	/**
 	 * 构造函数

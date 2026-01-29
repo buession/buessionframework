@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis;
@@ -34,10 +34,10 @@ import com.buession.redis.utils.SafeEncoder;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractRedisTemplate extends RedisAccessor implements BitMapCommands, ClusterCommands,
-		ConnectionCommands, GenericCommand, GeoCommands, HashCommands, HyperLogLogCommands, KeyCommands, ListCommands,
-		PubSubCommands, ScriptingCommands, ServerCommands, SetCommands, SortedSetCommands, StreamCommands,
-		StringCommands, TransactionCommands {
+public abstract class AbstractRedisTemplate extends RedisAccessor implements BloomFilterCommands, BitMapCommands,
+		ClusterCommands, ConnectionCommands, GenericCommand, GeoCommands, HashCommands, HyperLogLogCommands,
+		KeyCommands, ListCommands, PubSubCommands, ScriptingCommands, ServerCommands, SetCommands, SortedSetCommands,
+		StreamCommands, StringCommands, TransactionCommands {
 
 	/**
 	 * 构造函数

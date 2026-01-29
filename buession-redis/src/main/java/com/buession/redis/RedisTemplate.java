@@ -51,8 +51,9 @@ import java.util.stream.Collectors;
  * @author Yong.Teng
  * @see AbstractRedisTemplate
  */
-public class RedisTemplate extends AbstractRedisTemplate implements BitMapOperations, ClusterOperations,
-		ConnectionOperations, GenericOperations, GeoOperations, HashOperations, HyperLogLogOperations, KeyOperations,
+public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterOperations, BitMapOperations,
+		ClusterOperations, ConnectionOperations, GenericOperations, GeoOperations, HashOperations,
+		HyperLogLogOperations, KeyOperations,
 		ListOperations, PubSubOperations, ScriptingOperations, ServerOperations, SetOperations, SortedSetOperations,
 		StreamOperations, StringOperations, TransactionOperations {
 

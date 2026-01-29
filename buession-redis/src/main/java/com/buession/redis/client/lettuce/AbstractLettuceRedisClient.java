@@ -19,13 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.lettuce;
 
 import com.buession.redis.client.AbstractRedisClient;
 import com.buession.redis.client.connection.lettuce.LettuceRedisConnection;
+import io.lettuce.core.api.StatefulConnection;
 
 /**
  * Lettuce Redis 客户端抽象类
@@ -36,8 +37,8 @@ import com.buession.redis.client.connection.lettuce.LettuceRedisConnection;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public abstract class AbstractLettuceRedisClient<CONN extends LettuceRedisConnection> extends AbstractRedisClient<CONN>
-		implements LettuceRedisClient {
+public abstract class AbstractLettuceRedisClient<CONN extends LettuceRedisConnection<?
+		extends StatefulConnection<byte[], byte[]>>> extends AbstractRedisClient<CONN> implements LettuceRedisClient {
 
 	/**
 	 * 构造函数

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
@@ -81,13 +81,13 @@ public interface BitMapOperations extends BitMapCommands, RedisOperations {
 	}
 
 	@Override
-	default List<Long> bitFieldRo(final String key, final String... arguments) {
-		return execute((client)->client.bitMapOperations().bitFieldRo(key, arguments));
+	default List<Long> bitFieldRo(final String key, final BitFieldRoArgument argument) {
+		return execute((client)->client.bitMapOperations().bitFieldRo(key, argument));
 	}
 
 	@Override
-	default List<Long> bitFieldRo(final byte[] key, final byte[]... arguments) {
-		return execute((client)->client.bitMapOperations().bitFieldRo(key, arguments));
+	default List<Long> bitFieldRo(final byte[] key, final BitFieldRoArgument argument) {
+		return execute((client)->client.bitMapOperations().bitFieldRo(key, argument));
 	}
 
 	@Override
