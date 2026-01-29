@@ -19,13 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.datasource;
 
 import com.buession.redis.core.RedisNode;
 
+import java.time.Duration;
 import java.util.List;
 
 /**
@@ -34,11 +35,6 @@ import java.util.List;
  * @author Yong.Teng
  */
 public interface ClusterDataSource extends DataSource {
-
-	/**
-	 * 默认最大重定向次数
-	 */
-	int DEFAULT_MAX_REDIRECTS = 5;
 
 	/**
 	 * 获取集群主机节点
@@ -75,14 +71,33 @@ public interface ClusterDataSource extends DataSource {
 	 *
 	 * @return 最大重试持续时长
 	 */
-	int getMaxTotalRetriesDuration();
+	Duration getMaxTotalRetriesDuration();
 
 	/**
-	 * 设置最大重试持续时长（单位：秒）
+	 * 设置最大重试持续时长
 	 *
 	 * @param maxTotalRetriesDuration
 	 * 		最大重试持续时长
 	 */
-	void setMaxTotalRetriesDuration(int maxTotalRetriesDuration);
+	void setMaxTotalRetriesDuration(Duration maxTotalRetriesDuration);
+
+	/**
+	 * 返回定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
+	 *
+	 * @return 定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
+	 *
+	 * @since 4.0.0
+	 */
+	Duration getTopologyRefreshPeriod();
+
+	/**
+	 * 设置定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
+	 *
+	 * @param topologyRefreshPeriod
+	 * 		定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
+	 *
+	 * @since 4.0.0
+	 */
+	void setTopologyRefreshPeriod(Duration topologyRefreshPeriod);
 
 }
