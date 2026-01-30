@@ -26,24 +26,18 @@ package com.buession.redis;
 
 import com.buession.core.utils.Assert;
 import com.buession.redis.client.RedisClient;
+import com.buession.redis.client.connection.datasource.jedis.JedisRedisDataSource;
+import com.buession.redis.client.connection.datasource.lettuce.LettuceRedisDataSource;
 import com.buession.redis.client.connection.jedis.JedisConnectionFactory;
 import com.buession.redis.client.connection.lettuce.LettuceConnectionFactory;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.RedisConnectionFactory;
 import com.buession.redis.client.connection.RedisConnectionUtils;
 import com.buession.redis.client.connection.datasource.DataSource;
-import com.buession.redis.client.connection.datasource.jedis.JedisClusterDataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
-import com.buession.redis.client.connection.datasource.jedis.JedisSentinelDataSource;
-import com.buession.redis.client.connection.datasource.lettuce.LettuceClusterDataSource;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceDataSource;
-import com.buession.redis.client.connection.datasource.lettuce.LettuceSentinelDataSource;
-import com.buession.redis.client.jedis.JedisStandaloneClient;
-import com.buession.redis.client.jedis.JedisClusterClient;
-import com.buession.redis.client.jedis.JedisSentinelClient;
-import com.buession.redis.client.lettuce.LettuceClusterClient;
-import com.buession.redis.client.lettuce.LettuceSentinelClient;
-import com.buession.redis.client.lettuce.LettuceStandaloneClient;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.core.Command;
 import com.buession.redis.core.Options;
 import com.buession.redis.core.SessionCallback;
@@ -284,18 +278,10 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 	protected RedisClient fetchRedisClient(final RedisConnection connection) throws RedisException {
 		DataSource dataSource = getDataSource();
 
-		if(dataSource instanceof JedisDataSource){
-			return new JedisStandaloneClient();
-		}else if(dataSource instanceof JedisSentinelDataSource){
-			return new JedisSentinelClient();
-		}else if(dataSource instanceof JedisClusterDataSource){
-			return new JedisClusterClient();
-		}else if(dataSource instanceof LettuceDataSource){
-			return new LettuceStandaloneClient();
-		}else if(dataSource instanceof LettuceSentinelDataSource){
-			return new LettuceSentinelClient();
-		}else if(dataSource instanceof LettuceClusterDataSource){
-			return new LettuceClusterClient();
+		if(dataSource instanceof JedisRedisDataSource){
+			return new JedisRedisClient();
+		}else if(dataSource instanceof LettuceRedisDataSource){
+			return new LettuceRedisClient();
 		}else{
 			throw new RedisException("Cloud not initialize RedisClient for: " + dataSource);
 		}

@@ -43,7 +43,7 @@ import java.util.List;
 /**
  * 集群命令
  *
- * <p>详情说明 <a href="http://doc.redisfans.com/topic/cluster-tutorial/" target="_blank">http://doc.redisfans.com/topic/cluster-tutorial/</a></p>
+ * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=cluster" target="_blank">https://redis.io/docs/latest/commands/?group=cluster</a></p>
  *
  * @author Yong.Teng
  * @since 2.0.0

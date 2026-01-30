@@ -21,10 +21,154 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.operations;/**
- * 
+ */
+package com.buession.redis.core.operations;
+
+import com.buession.lang.KeyValue;
+import com.buession.lang.Status;
+import com.buession.redis.core.CmsInfo;
+import com.buession.redis.core.command.CountMinSketchCommands;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 计数最小草图命令
+ *
+ * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=cms" target="_blank">https://redis.io/docs/latest/commands/?group=cms</a></p>
  *
  * @author Yong.Teng
  * @since 4.0.0
- */public interface CountMinSketchOperations {
+ */
+public interface CountMinSketchOperations extends CountMinSketchCommands, RedisOperations {
+
+	@Override
+	default List<Long> cmsIncrby(final String key, final List<KeyValue<String, Long>> items) {
+		return execute((client)->client.countMinSketchOperations().cmsIncrby(key, items));
+	}
+
+	@Override
+	default List<Long> cmsIncrby(final byte[] key, final List<KeyValue<byte[], Long>> items) {
+		return execute((client)->client.countMinSketchOperations().cmsIncrby(key, items));
+	}
+
+	/**
+	 * 对 Count-Min Sketch（CMS）一个或多个元素执行频次增量更新
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cms.incrby/" target="_blank">https://redis.io/docs/latest/commands/cms.incrby/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param items
+	 * 		要增加的元素及其增加值
+	 *
+	 * @return 返回结果列表
+	 */
+	default List<Long> cmsIncrby(final String key, final KeyValue<String, Long>... items) {
+		return cmsIncrby(key, Arrays.asList(items));
+	}
+
+	/**
+	 * 对 Count-Min Sketch（CMS）一个或多个元素执行频次增量更新
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cms.incrby/" target="_blank">https://redis.io/docs/latest/commands/cms.incrby/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param items
+	 * 		要增加的元素及其增加值
+	 *
+	 * @return 返回结果列表
+	 */
+	default List<Long> cmsIncrby(final byte[] key, final KeyValue<byte[], Long>... items) {
+		return cmsIncrby(key, Arrays.asList(items));
+	}
+
+	@Override
+	default CmsInfo cmsInfo(final String key) {
+		return execute((client)->client.countMinSketchOperations().cmsInfo(key));
+	}
+
+	@Override
+	default CmsInfo cmsInfo(final byte[] key) {
+		return execute((client)->client.countMinSketchOperations().cmsInfo(key));
+	}
+
+	@Override
+	default Status cmsInitByDim(final String key, final int width, final int depth) {
+		return execute((client)->client.countMinSketchOperations().cmsInitByDim(key, width, depth));
+	}
+
+	@Override
+	default Status cmsInitByDim(final byte[] key, final int width, final int depth) {
+		return execute((client)->client.countMinSketchOperations().cmsInitByDim(key, width, depth));
+	}
+
+	@Override
+	default Status cmsInitByProb(final String key, final double error, final double probability) {
+		return execute((client)->client.countMinSketchOperations().cmsInitByProb(key, error, probability));
+	}
+
+	@Override
+	default Status cmsInitByProb(final byte[] key, final double error, final double probability) {
+		return execute((client)->client.countMinSketchOperations().cmsInitByProb(key, error, probability));
+	}
+
+	@Override
+	default Status cmsMerge(final String destKey, final Map<String, Long> keysAndWeights) {
+		return execute((client)->client.countMinSketchOperations().cmsMerge(destKey, keysAndWeights));
+	}
+
+	@Override
+	default Status cmsMerge(final byte[] destKey, final Map<byte[], Long> keysAndWeights) {
+		return execute((client)->client.countMinSketchOperations().cmsMerge(destKey, keysAndWeights));
+	}
+
+	/**
+	 * 将多个 Count-Min Sketch（CMS）对象合并成一个新的 CMS
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cms.merge/" target="_blank">https://redis.io/docs/latest/commands/cms.merge/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param sourceKey
+	 * 		原始 Key
+	 * @param weight
+	 * 		权重
+	 *
+	 * @return 操作结果
+	 */
+	default Status cmsMerge(final String destKey, final String sourceKey, final Long weight) {
+		return cmsMerge(destKey, Map.of(sourceKey, weight));
+	}
+
+	/**
+	 * 将多个 Count-Min Sketch（CMS）对象合并成一个新的 CMS
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cms.merge/" target="_blank">https://redis.io/docs/latest/commands/cms.merge/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param sourceKey
+	 * 		原始 Key
+	 * @param weight
+	 * 		权重
+	 *
+	 * @return 操作结果
+	 */
+	default Status cmsMerge(final byte[] destKey, final byte[] sourceKey, final Long weight) {
+		return cmsMerge(destKey, Map.of(sourceKey, weight));
+	}
+
+	@Override
+	default List<Long> cmsQuery(final String key, final String... items) {
+		return execute((client)->client.countMinSketchOperations().cmsQuery(key, items));
+	}
+
+	@Override
+	default List<Long> cmsQuery(final byte[] key, final byte[]... items) {
+		return execute((client)->client.countMinSketchOperations().cmsQuery(key, items));
+	}
+
 }

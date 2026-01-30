@@ -21,10 +21,56 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core;/**
- * 
+ */
+package com.buession.redis.core;
+
+import com.buession.redis.utils.ObjectStringBuilder;
+
+/**
+ * Count-Min Sketch（CMS） 数据结构的元信息
  *
  * @author Yong.Teng
  * @since 4.0.0
- */public class CmsInfo {
+ */
+public class CmsInfo {
+
+	private int width;
+
+	private int depth;
+
+	private int count;
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getDepth() {
+		return depth;
+	}
+
+	public void setDepth(int depth) {
+		this.depth = depth;
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
+
+	@Override
+	public String toString() {
+		return ObjectStringBuilder.create()
+				.add("width", width)
+				.add("depth", depth)
+				.add("count", count)
+				.build();
+	}
+
 }

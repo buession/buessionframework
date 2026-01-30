@@ -95,10 +95,6 @@ public enum SubCommand implements ProtocolCommand {
 	CLUSTER_SLOT_STATS("SLOT-STATS", "r"),
 
 	CLUSTER_SLOTS("r"),
-
-	READONLY("w"),
-
-	READWRITE("w"),
 	/**
 	 * Cluster command end
 	 **/

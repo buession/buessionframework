@@ -24,18 +24,198 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
-import com.buession.redis.client.lettuce.LettuceStandaloneClient;
+import com.buession.redis.client.lettuce.LettuceRedisClient;
+import com.buession.redis.client.operations.BitMapOperations;
+import com.buession.redis.core.BitCountOption;
+import com.buession.redis.core.BitOperation;
+import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.internal.lettuce.LettuceBitFieldArgs;
+import com.buession.redis.utils.SafeEncoder;
+import io.lettuce.core.BitFieldArgs;
+
+import java.util.List;
 
 /**
- * Lettuce 单机模式 BitMap 命令操作抽象类
+ * Lettuce BitMap 命令操作抽象类
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class LettuceBitMapOperations extends AbstractBitMapOperations<LettuceStandaloneClient> {
+public final class LettuceBitMapOperations extends AbstractLettuceRedisOperations<LettuceRedisClient> implements
+		BitMapOperations {
 
-	public LettuceBitMapOperations(final LettuceStandaloneClient client) {
+	public LettuceBitMapOperations(final LettuceRedisClient client) {
 		super(client);
+	}
+
+	@Override
+	public Long bitCount(final String key) {
+		return bitCount(SafeEncoder.encode(key));
+	}
+
+	@Override
+	public Long bitCount(final byte[] key) {
+		final CommandArguments args = CommandArguments.create(key);
+		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.BITCOUNT)
+				.executor((cmd)->cmd.bitcount(key))
+				.arguments(args)
+				.converter((v)->v)
+				.run();
+	}
+
+	@Override
+	public Long bitCount(final String key, final long start, final long end) {
+		return bitCount(SafeEncoder.encode(key), start, end);
+	}
+
+	@Override
+	public Long bitCount(final byte[] key, final long start, final long end) {
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
+		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.BITCOUNT)
+				.executor((cmd)->cmd.bitcount(key, start, end))
+				.arguments(args)
+				.converter((v)->v)
+				.run();
+	}
+
+	@Override
+	public Long bitCount(final String key, final long start, final long end, final BitCountOption bitCountOption) {
+		return bitCount(SafeEncoder.encode(key), start, end, bitCountOption);
+	}
+
+	@Override
+	public Long bitCount(final byte[] key, final long start, final long end, final BitCountOption bitCountOption) {
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end)
+				.add(bitCountOption);
+		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.BITCOUNT)
+				.executor((cmd)->cmd.bitcount(key, start, end))
+				.arguments(args)
+				.converter((v)->v)
+				.run();
+	}
+
+	@Override
+	public List<Long> bitField(final String key, final BitFieldArgument argument) {
+		return bitField(SafeEncoder.encode(key), argument);
+	}
+
+	@Override
+	public List<Long> bitField(final byte[] key, final BitFieldArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add(argument);
+		final BitFieldArgs bitFieldArgs = LettuceBitFieldArgs.from(argument);
+		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.BITFIELD)
+				.executor((cmd)->cmd.bitfield(key, bitFieldArgs))
+				.arguments(args)
+				.converter((v)->v)
+				.run();
+	}
+
+	@Override
+	public List<Long> bitFieldRo(final String key, final BitFieldRoArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add(argument);
+		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.BITFIELD_RO)
+				.arguments(args)
+				.converter((v)->v)
+				.run();
+	}
+
+	@Override
+	public List<Long> bitFieldRo(final byte[] key, final BitFieldRoArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add(argument);
+		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.BITFIELD_RO)
+				.arguments(args)
+				.converter((v)->v)
+				.run();
+	}
+
+	@Override
+	public Long bitOp(final BitOperation operation, final String destKey, final String... keys) {
+		return bitOp(operation, SafeEncoder.encode(destKey), SafeEncoder.encode(keys));
+	}
+
+	@Override
+	public Long bitOp(final BitOperation operation, final byte[] destKey, final byte[]... keys) {
+		final CommandArguments args = CommandArguments.create(operation).add(destKey)
+				.add(keys);
+		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.BITOP)
+				.executor((cmd)->{
+					if(operation == BitOperation.AND){
+						return cmd.bitopAnd(destKey, keys);
+					}else if(operation == BitOperation.OR){
+						return cmd.bitopOr(destKey, keys);
+					}else if(operation == BitOperation.NOT){
+						return cmd.bitopNot(destKey, keys[0]);
+					}else if(operation == BitOperation.XOR){
+						return cmd.bitopXor(destKey, keys);
+					}else{
+						return null;
+					}
+				})
+				.arguments(args)
+				.converter((v)->v)
+				.run();
+	}
+
+	@Override
+	public Long bitPos(final String key, final boolean value) {
+		return bitPos(SafeEncoder.encode(key), value);
+	}
+
+	@Override
+	public Long bitPos(final byte[] key, final boolean value) {
+		final CommandArguments args = CommandArguments.create(key).add(value);
+		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.BITPOS)
+				.executor((cmd)->cmd.bitpos(key, value))
+				.arguments(args)
+				.converter((v)->v)
+				.run();
+	}
+
+	@Override
+	public Long bitPos(final String key, final boolean value, final long start, final long end) {
+		return bitPos(SafeEncoder.encode(key), value, start, end);
+	}
+
+	@Override
+	public Long bitPos(final byte[] key, final boolean value, final long start, final long end) {
+		final CommandArguments args = CommandArguments.create(key).add(value).add(start)
+				.add(end);
+		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.BITPOS)
+				.executor((cmd)->cmd.bitpos(key, value, start, end))
+				.arguments(args)
+				.converter((v)->v)
+				.run();
+	}
+
+	@Override
+	public Boolean getBit(final String key, final long offset) {
+		return getBit(SafeEncoder.encode(key), offset);
+	}
+
+	@Override
+	public Boolean getBit(final byte[] key, final long offset) {
+		final CommandArguments args = CommandArguments.create(key).add(offset);
+		return LettuceCommandBuilder.<Long, Boolean>newBuilder(client, Command.GETBIT)
+				.executor((cmd)->cmd.getbit(key, offset))
+				.arguments(args)
+				.converter(oneBooleanConverter)
+				.run();
+	}
+
+	@Override
+	public Boolean setBit(final String key, final long offset, final boolean value) {
+		return setBit(SafeEncoder.encode(key), offset, value);
+	}
+
+	@Override
+	public Boolean setBit(final byte[] key, final long offset, final boolean value) {
+		final CommandArguments args = CommandArguments.create(key).add(offset).add(value);
+		return LettuceCommandBuilder.<Long, Boolean>newBuilder(client, Command.SETBIT)
+				.executor((cmd)->cmd.setbit(key, offset, value ? 1 : 0))
+				.arguments(args)
+				.converter(oneBooleanConverter)
+				.run();
 	}
 
 }

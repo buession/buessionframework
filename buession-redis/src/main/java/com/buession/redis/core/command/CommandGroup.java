@@ -48,14 +48,19 @@ public enum CommandGroup {
 	CUCKOO_FILTER("Cuckoo filter"),
 
 	/**
-	 * 权限命令
-	 */
-	ACL("Acl"),
-
-	/**
 	 * 集群命令
 	 */
 	CLUSTER("Cluster"),
+
+	/**
+	 * 计数最小草图
+	 */
+	COUNT_MIN_SKETCH("Count-min sketch"),
+
+	/**
+	 * 权限命令
+	 */
+	ACL("Acl"),
 
 	/**
 	 * 连接命令

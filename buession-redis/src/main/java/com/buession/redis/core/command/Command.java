@@ -125,9 +125,31 @@ public enum Command implements ProtocolCommand {
 			SubCommand.CLUSTER_NODES, SubCommand.CLUSTER_REPLICAS, SubCommand.CLUSTER_REPLICATE,
 			SubCommand.CLUSTER_RESET, SubCommand.CLUSTER_SAVECONFIG, SubCommand.CLUSTER_SETCONFIGEPOCH,
 			SubCommand.CLUSTER_SETSLOT, SubCommand.CLUSTER_SHARDS, SubCommand.CLUSTER_SLAVES,
-			SubCommand.CLUSTER_SLOT_STATS, SubCommand.CLUSTER_SLOTS, SubCommand.READONLY, SubCommand.READWRITE}),
+			SubCommand.CLUSTER_SLOT_STATS, SubCommand.CLUSTER_SLOTS}),
+
+	READONLY(CommandGroup.CLUSTER, "w"),
+
+	READWRITE(CommandGroup.CLUSTER, "w"),
 	/**
 	 * Cluster command end
+	 **/
+
+	/**
+	 * Count-min sketch command start
+	 **/
+	CMS_INCRBY(CommandGroup.COUNT_MIN_SKETCH, "CMS.INCRBY", "w"),
+
+	CMS_INFO(CommandGroup.COUNT_MIN_SKETCH, "CMS.INFO", "r"),
+
+	CMS_INITBYDIM(CommandGroup.COUNT_MIN_SKETCH, "CMS.INITBYDIM", "r"),
+
+	CMS_INITBYPROB(CommandGroup.COUNT_MIN_SKETCH, "CMS.INITBYPROB", "r"),
+
+	CMS_MERGE(CommandGroup.COUNT_MIN_SKETCH, "CMS.MERGE", "r"),
+
+	CMS_QUERY(CommandGroup.COUNT_MIN_SKETCH, "CMS.QUERY", "r"),
+	/**
+	 * Count-min sketch command end
 	 **/
 	;
 

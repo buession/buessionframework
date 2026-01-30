@@ -19,12 +19,16 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.lettuce;
 
-import com.buession.redis.client.RedisClient;
+import com.buession.redis.client.AbstractRedisClient;
+import com.buession.redis.client.connection.lettuce.LettuceRedisConnection;
+import com.buession.redis.client.lettuce.operations.*;
+import com.buession.redis.client.operations.*;
+import io.lettuce.core.api.StatefulConnection;
 
 /**
  * Lettuce Redis 客户端
@@ -32,6 +36,205 @@ import com.buession.redis.client.RedisClient;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public interface LettuceRedisClient extends RedisClient {
+public class LettuceRedisClient
+		extends AbstractRedisClient<LettuceRedisConnection<? extends StatefulConnection<byte[], byte[]>>>
+		implements LettuceRedisClient {
+
+	/**
+	 * 构造函数
+	 */
+	public LettuceRedisClient() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param connection
+	 * 		Lettuce Redis 连接对象 {@link LettuceRedisConnection}
+	 */
+	public LettuceRedisClient(final LettuceRedisConnection<? extends StatefulConnection<byte[], byte[]>> connection) {
+		super(connection);
+	}
+
+	@Override
+	public BloomFilterOperations bloomFilterOperations() {
+		if(bloomFilterOperations == null){
+			bloomFilterOperations = new LettuceBloomFilterOperations(this);
+		}
+
+		return bloomFilterOperations;
+	}
+
+	@Override
+	public BitMapOperations bitMapOperations() {
+		if(bitMapOperations == null){
+			bitMapOperations = new LettuceBitMapOperations(this);
+		}
+
+		return bitMapOperations;
+	}
+
+	@Override
+	public CuckooFilterOperations cuckooFilterOperations() {
+		if(cuckooFilterOperations == null){
+			cuckooFilterOperations = new LettuceCuckooFilterOperations(this);
+		}
+
+		return cuckooFilterOperations;
+	}
+
+	@Override
+	public CountMinSketchOperations countMinSketchOperations() {
+		if(countMinSketchOperations == null){
+			countMinSketchOperations = new LettuceCountMinSketchOperations(this);
+		}
+
+		return countMinSketchOperations;
+	}
+
+	@Override
+	public ClusterOperations clusterOperations() {
+		if(clusterOperations == null){
+			clusterOperations = new LettuceClusterOperations(this);
+		}
+
+		return clusterOperations;
+	}
+
+	@Override
+	public ConnectionOperations connectionOperations() {
+		if(connectionOperations == null){
+			connectionOperations = new LettuceConnectionOperations(this);
+		}
+
+		return connectionOperations;
+	}
+
+	@Override
+	public GenericOperations genericOperations() {
+		if(genericOperations == null){
+			genericOperations = new LettuceGenericOperations(this);
+		}
+
+		return genericOperations;
+	}
+
+	@Override
+	public GeoOperations geoOperations() {
+		if(geoOperations == null){
+			geoOperations = new LettuceGeoOperations(this);
+		}
+
+		return geoOperations;
+	}
+
+	@Override
+	public HashOperations hashOperations() {
+		if(hashOperations == null){
+			hashOperations = new LettuceHashOperations(this);
+		}
+
+		return hashOperations;
+	}
+
+	@Override
+	public HyperLogLogOperations hyperLogLogOperations() {
+		if(hyperLogLogOperations == null){
+			hyperLogLogOperations = new LettuceHyperLogLogOperations(this);
+		}
+
+		return hyperLogLogOperations;
+	}
+
+	@Override
+	public KeyOperations keyOperations() {
+		if(keyOperations == null){
+			keyOperations = new LettuceKeyOperations(this);
+		}
+
+		return keyOperations;
+	}
+
+	@Override
+	public ListOperations listOperations() {
+		if(listOperations == null){
+			listOperations = new LettuceListOperations(this);
+		}
+
+		return listOperations;
+	}
+
+	@Override
+	public PubSubOperations pubSubOperations() {
+		if(pubSubOperations == null){
+			pubSubOperations = new LettucePubSubOperations(this);
+		}
+
+		return pubSubOperations;
+	}
+
+	@Override
+	public ScriptingOperations scriptingOperations() {
+		if(scriptingOperations == null){
+			scriptingOperations = new LettuceScriptingOperations(this);
+		}
+
+		return scriptingOperations;
+	}
+
+	@Override
+	public ServerOperations serverOperations() {
+		if(serverOperations == null){
+			serverOperations = new LettuceServerOperations(this);
+		}
+
+		return serverOperations;
+	}
+
+	@Override
+	public SetOperations setOperations() {
+		if(setOperations == null){
+			setOperations = new LettuceSetOperations(this);
+		}
+
+		return setOperations;
+	}
+
+	@Override
+	public SortedSetOperations sortedSetOperations() {
+		if(sortedSetOperations == null){
+			sortedSetOperations = new LettuceSortedSetOperations(this);
+		}
+
+		return sortedSetOperations;
+	}
+
+	@Override
+	public StreamOperations streamOperations() {
+		if(streamOperations == null){
+			streamOperations = new LettuceStreamOperations(this);
+		}
+
+		return streamOperations;
+	}
+
+	@Override
+	public StringOperations stringOperations() {
+		if(stringOperations == null){
+			stringOperations = new LettuceStringOperations(this);
+		}
+
+		return stringOperations;
+	}
+
+	@Override
+	public TransactionOperations transactionOperations() {
+		if(transactionOperations == null){
+			transactionOperations = new LettuceTransactionOperations(this);
+		}
+
+		return transactionOperations;
+	}
 
 }

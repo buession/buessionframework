@@ -22,7 +22,9 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.operations;
+package com.buession.redis.client.operations;
+
+import com.buession.redis.core.command.CountMinSketchCommands;
 
 /**
  * 计数最小草图命令
@@ -32,6 +34,6 @@ package com.buession.redis.core.operations;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public interface CountMinSketchOperations {
+public interface CountMinSketchOperations extends CountMinSketchCommands, RedisOperations {
 
 }

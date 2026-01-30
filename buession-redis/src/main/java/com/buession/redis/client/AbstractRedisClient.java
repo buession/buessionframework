@@ -72,6 +72,11 @@ public abstract class AbstractRedisClient<CONN extends RedisConnection> implemen
 	protected ClusterOperations clusterOperations;
 
 	/**
+	 * 计数最小草图命令操作
+	 */
+	protected CountMinSketchOperations countMinSketchOperations;
+
+	/**
 	 * 连接命令操作
 	 */
 	protected ConnectionOperations connectionOperations;

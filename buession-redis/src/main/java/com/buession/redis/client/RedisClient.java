@@ -29,6 +29,7 @@ import com.buession.redis.client.operations.BitMapOperations;
 import com.buession.redis.client.operations.BloomFilterOperations;
 import com.buession.redis.client.operations.ClusterOperations;
 import com.buession.redis.client.operations.ConnectionOperations;
+import com.buession.redis.client.operations.CountMinSketchOperations;
 import com.buession.redis.client.operations.CuckooFilterOperations;
 import com.buession.redis.client.operations.GenericOperations;
 import com.buession.redis.client.operations.GeoOperations;
@@ -101,6 +102,13 @@ public interface RedisClient {
 	 * @return 集群命令操作实例
 	 */
 	ClusterOperations clusterOperations();
+
+	/**
+	 * 返回计数最小草图命令操作实例
+	 *
+	 * @return 计数最小草图命令操作实例
+	 */
+	CountMinSketchOperations countMinSketchOperations();
 
 	/**
 	 * 返回连接命令操作实例

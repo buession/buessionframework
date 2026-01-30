@@ -24,146 +24,20 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.client.jedis.JedisRedisClient;
-import com.buession.redis.client.jedis.JedisSentinelClient;
-import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.client.operations.AbstractRedisOperations;
-import com.buession.redis.core.command.Command;
-import com.buession.redis.core.command.CommandArguments;
-import redis.clients.jedis.Pipeline;
-import redis.clients.jedis.Response;
-import redis.clients.jedis.Transaction;
 
 /**
  * Jedis Redis 命令操作抽象类
  *
- * @param <C>
- * 		Redis Client {@link JedisRedisClient}
- *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public abstract class AbstractJedisRedisOperations<C extends JedisRedisClient> extends AbstractRedisOperations<C>
+public abstract class AbstractJedisRedisOperations extends AbstractRedisOperations<JedisRedisClient>
 		implements JedisRedisOperations {
 
-	public AbstractJedisRedisOperations(final C client) {
+	public AbstractJedisRedisOperations(final JedisRedisClient client) {
 		super(client);
-	}
-
-	protected <SR, R> R runCommand(final JedisStandaloneClient client, final Command command,
-								   final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisPipelineCommand<SR, R>(client, command).run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<SR, R>(client, command).run(args);
-		}else{
-			return new JedisCommand<SR, R>(client, command).run(args);
-		}
-	}
-
-	protected <SR, R> R runCommand(final JedisSentinelClient client, final Command command,
-								   final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<SR, R>(client, command).run(args);
-		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<SR, R>(client, command).run(args);
-		}else{
-			return new JedisSentinelCommand<SR, R>(client, command).run(args);
-		}
-	}
-
-	protected <SR, R> R runCommand(final JedisClusterClient client, final Command command,
-								   final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisClusterPipelineCommand<SR, R>(client, command).run(args);
-		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<SR, R>(client, command).run(args);
-		}else{
-			return new JedisClusterCommand<SR, R>(client, command).run(args);
-		}
-	}
-
-	protected <SR, R> R runCommand(final JedisStandaloneClient client, final Command command,
-								   final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisPipelineCommand<SR, R>(client, command).run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<SR, R>(client, command).run(args);
-		}else{
-			return new JedisCommand<SR, R>(client, command).run(args);
-		}
-	}
-
-	protected <SR, R> R runCommand(final JedisSentinelClient client, final Command command,
-								   final com.buession.redis.core.Command.Executor<Pipeline, Response<SR>> executor,
-								   final Converter<SR, R> converter,
-								   final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<SR, R>(client, command).run(args);
-		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<SR, R>(client, command).run(args);
-		}else{
-			return new JedisSentinelCommand<SR, R>(client, command).run(args);
-		}
-	}
-
-	protected <SR, R> R runCommand(final JedisClusterClient client, final Command command,
-								   final com.buession.redis.core.Command.Executor<Transaction, Response<SR>> executor,
-								   final Converter<SR, R> converter,
-								   final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisClusterPipelineCommand<SR, R>(client, command).run(args);
-		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<SR, R>(client, command).run(args);
-		}else{
-			return new JedisClusterCommand<SR, R>(client, command).run(args);
-		}
-	}
-
-	/***/
-
-	protected <T> T notCommand(final JedisStandaloneClient client, final Command command,
-							   final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisPipelineCommand<T, T>(client, command)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<T, T>(client, command)
-					.run(args);
-		}else{
-			return new JedisCommand<T, T>(client, command)
-					.run(args);
-		}
-	}
-
-	protected <T> T notCommand(final JedisSentinelClient client, final Command command,
-							   final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisSentinelPipelineCommand<T, T>(client, command)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisSentinelTransactionCommand<T, T>(client, command)
-					.run(args);
-		}else{
-			return new JedisSentinelCommand<T, T>(client, command)
-					.run(args);
-		}
-	}
-
-	protected <T> T notCommand(final JedisClusterClient client, final Command command,
-							   final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisClusterPipelineCommand<T, T>(client, command)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisClusterTransactionCommand<T, T>(client, command)
-					.run(args);
-		}else{
-			return new JedisClusterCommand<T, T>(client, command)
-					.run(args);
-		}
 	}
 
 }

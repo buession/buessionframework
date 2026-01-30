@@ -21,10 +21,37 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.convert.response;/**
- * 
+ */
+package com.buession.redis.core.internal.convert.response;
+
+import com.buession.core.converter.Converter;
+import com.buession.core.converter.mapper.PropertyMapper;
+import com.buession.redis.core.CmsInfo;
+
+import java.util.Map;
+
+/**
+ * CMS.INFO 命令结果转换器
  *
  * @author Yong.Teng
  * @since 4.0.0
- */public class CmsInfoConverter {
+ */
+public final class CmsInfoConverter implements Converter<Map<String, Object>, CmsInfo> {
+
+	@Override
+	public CmsInfo convert(final Map<String, Object> source) {
+		if(source == null){
+			return null;
+		}
+
+		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
+		final CmsInfo cmsInfo = new CmsInfo();
+
+		propertyMapper.from(source.get("width")).as((v)->(Integer) v).to(cmsInfo::setWidth);
+		propertyMapper.from(source.get("depth")).as((v)->(Integer) v).to(cmsInfo::setDepth);
+		propertyMapper.from(source.get("count")).as((v)->(Integer) v).to(cmsInfo::setCount);
+
+		return cmsInfo;
+	}
+
 }
