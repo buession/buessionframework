@@ -31,6 +31,7 @@ import com.buession.redis.client.connection.RedisConnectionUtils;
 import com.buession.redis.core.AbstractRedisCommand;
 import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.SubCommand;
 import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.NotSupportedPipelineCommandException;
@@ -188,6 +189,49 @@ public interface RedisOperations {
 		}
 
 		protected abstract R doExecute() throws RedisException;
+
+	}
+
+	abstract class BaseCommandBuilder<C extends RedisClient, O, SR, R> {
+
+		protected final C client;
+
+		protected final Command command;
+
+		protected SubCommand subCommand;
+
+		protected com.buession.redis.core.Command.Executor<O, SR> executor;
+
+		protected CommandArguments arguments;
+
+		protected Converter<SR, R> converter;
+
+		protected BaseCommandBuilder(final C client, final Command command) {
+			this.client = client;
+			this.command = command;
+		}
+
+		protected BaseCommandBuilder(final C client, final Command command, final SubCommand subCommand) {
+			this(client, command);
+			this.subCommand = subCommand;
+		}
+
+		public BaseCommandBuilder<C, O, SR, R> executor(com.buession.redis.core.Command.Executor<O, SR> executor) {
+			this.executor = executor;
+			return this;
+		}
+
+		public BaseCommandBuilder<C, O, SR, R> arguments(CommandArguments arguments) {
+			this.arguments = arguments;
+			return this;
+		}
+
+		public BaseCommandBuilder<C, O, SR, R> converter(Converter<SR, R> converter) {
+			this.converter = converter;
+			return this;
+		}
+
+		abstract public R run();
 
 	}
 

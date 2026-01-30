@@ -19,13 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.ClusterSlot;
 import com.buession.redis.core.RedisServer;
 import com.buession.redis.utils.SafeEncoder;
@@ -69,10 +68,6 @@ public final class ClusterSlotConverter implements Converter<Object, ClusterSlot
 		}
 
 		return null;
-	}
-
-	public static ListConverter<Object, ClusterSlot> listConverter() {
-		return new ListConverter<>(new ClusterSlotConverter());
 	}
 
 }

@@ -22,20 +22,27 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.lettuce.operations;
+package com.buession.redis.core.internal.convert.lettuce.response;
 
-import com.buession.redis.client.lettuce.LettuceClusterClient;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.ClusterShardInfo;
 
 /**
- * Lettuce 集群模式集群命令操作
+ * Lettuce Redis 集群节点和槽分布信息 转换为 {@link ClusterShardInfo}
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public final class LettuceClusterClusterOperations extends AbstractClusterOperations<LettuceClusterClient> {
+public final class ClusterShardInfoConverter implements Converter<Object, ClusterShardInfo> {
 
-	public LettuceClusterClusterOperations(final LettuceClusterClient client) {
-		super(client);
+	@Override
+	public ClusterShardInfo convert(final Object source) {
+		if(source == null){
+			return null;
+		}
+
+		final ClusterShardInfo clusterShardInfo = new ClusterShardInfo();
+		return clusterShardInfo;
 	}
 
 }

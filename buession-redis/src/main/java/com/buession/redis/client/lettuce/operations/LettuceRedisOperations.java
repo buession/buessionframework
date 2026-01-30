@@ -28,7 +28,7 @@ import com.buession.core.converter.Converter;
 import com.buession.redis.client.connection.lettuce.LettuceRedisConnection;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.RedisOperations;
-import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.SubCommand;
 import com.buession.redis.core.internal.lettuce.LettuceResult;
 import com.buession.redis.exception.RedisException;
@@ -100,48 +100,33 @@ public interface LettuceRedisOperations extends RedisOperations {
 	 *
 	 * @since 4.0.0
 	 */
-	final class LettuceCommandBuilder<SR, R> {
+	final class LettuceCommandBuilder<SR, R> extends BaseCommandBuilder<LettuceRedisClient, RedisCommands<byte[],
+			byte[]>, SR, R> {
 
-		private final LettuceRedisClient client;
+		private LettuceCommandBuilder(final LettuceRedisClient client, final Command command) {
+			super(client, command);
+		}
 
-		private final com.buession.redis.core.command.Command command;
-
-		private com.buession.redis.core.Command.Executor<RedisCommands<byte[], byte[]>, SR> executor;
-
-		private CommandArguments arguments;
-
-		private Converter<SR, R> converter;
-
-		private LettuceCommandBuilder(final LettuceRedisClient client,
-									  final com.buession.redis.core.command.Command command) {
-			this.client = client;
-			this.command = command;
+		private LettuceCommandBuilder(final LettuceRedisClient client, final Command command,
+									  final SubCommand subCommand) {
+			super(client, command, subCommand);
 		}
 
 		public static <SR, R> LettuceCommandBuilder<SR, R> newBuilder(final LettuceRedisClient client,
-																	  final com.buession.redis.core.command.Command command) {
+																	  final Command command) {
 			return new LettuceCommandBuilder<>(client, command);
 		}
 
-		public LettuceCommandBuilder<SR, R> executor(
-				com.buession.redis.core.Command.Executor<RedisCommands<byte[], byte[]>, SR> executor) {
-			this.executor = executor;
-			return this;
+		public static <SR, R> LettuceCommandBuilder<SR, R> newBuilder(final LettuceRedisClient client,
+																	  final Command command,
+																	  final SubCommand subCommand) {
+			return new LettuceCommandBuilder<>(client, command, subCommand);
 		}
 
-		public LettuceCommandBuilder<SR, R> arguments(CommandArguments arguments) {
-			this.arguments = arguments;
-			return this;
-		}
-
-		public LettuceCommandBuilder<SR, R> converter(Converter<SR, R> converter) {
-			this.converter = converter;
-			return this;
-		}
-
+		@Override
 		public R run() {
-			final LettuceCommand<SR, R> command = new LettuceCommand<>(this.client, this.command, this.executor,
-					this.converter);
+			final LettuceCommand<SR, R> command = new LettuceCommand<>(this.client, this.command, this.subCommand,
+					this.executor, this.converter);
 			return command.run(this.arguments);
 		}
 

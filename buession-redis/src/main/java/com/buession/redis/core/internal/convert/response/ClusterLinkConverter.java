@@ -25,45 +25,50 @@
 package com.buession.redis.core.internal.convert.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.utils.EnumUtils;
-import com.buession.core.utils.StringUtils;
-import com.buession.redis.core.ClusterRedisNode;
-import com.buession.redis.core.SlotRange;
+import com.buession.core.converter.mapper.PropertyMapper;
+import com.buession.redis.core.ClusterLink;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Map;
+import java.util.Objects;
 
 /**
- * Cluster Slaves 命令结果转换为 {@link ClusterRedisNode}
+ * Cluster Links 命令结果转换为 {@link ClusterLink}
  *
  * @author Yong.Teng
- * @since 2.3.0
+ * @since 4.0.0
  */
-public final class ClusterNodeConverter implements Converter<String, ClusterRedisNode> {
+public class ClusterLinkConverter implements Converter<Map<String, Object>, ClusterLink> {
 
 	@Override
-	public ClusterRedisNode convert(final String source) {
-		String[] values = StringUtils.split(source, " ");
-		String[] hostAndPort = StringUtils.split(values[1], ":");
-		String host = hostAndPort[0];
-		String port = hostAndPort[1].substring(0, hostAndPort[1].indexOf('@'));
-		String[] flagsValues = StringUtils.split(values[2], ":");
-		Set<ClusterRedisNode.Flag> flags = new HashSet<>(flagsValues.length);
-
-		for(String flagsValue : flagsValues){
-			flags.add(EnumUtils.getEnumIgnoreCase(ClusterRedisNode.Flag.class, flagsValue));
+	public ClusterLink convert(final Map<String, Object> source) {
+		if(source == null){
+			return null;
 		}
 
-		ClusterRedisNode.LinkState linkState = EnumUtils.getEnumIgnoreCase(ClusterRedisNode.LinkState.class, values[7]);
-		SlotRange slotRange = null;
+		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
+		final ClusterLink clusterLink = new ClusterLink();
 
-		if(values.length == 9){
-			String[] slotRangeValues = StringUtils.split(values[8], "-");
-			slotRange = new SlotRange(Integer.parseInt(slotRangeValues[0]), Integer.parseInt(slotRangeValues[1]));
-		}
+		propertyMapper.from(source.get("direction"))
+				.as((v)->Enum.valueOf(ClusterLink.Direction.class, v.toString().toUpperCase()))
+				.to(clusterLink::setDirection);
+		propertyMapper.from(source.get("node")).as(Object::toString).to(clusterLink::setNode);
+		propertyMapper.from(source.get("create-time")).as((v)->(Long) v).to(clusterLink::setCreateTime);
+		propertyMapper.from(source.get("events")).as((v)->{
+			if(Objects.equals(v, "rw")){
+				return new ClusterLink.Event[]{ClusterLink.Event.R, ClusterLink.Event.W};
+			}else if(Objects.equals(v, "r")){
+				return new ClusterLink.Event[]{ClusterLink.Event.R};
+			}else if(Objects.equals(v, "w")){
+				return new ClusterLink.Event[]{ClusterLink.Event.W};
+			}else{
+				return new ClusterLink.Event[]{};
+			}
+		}).to(clusterLink::setEvents);
+		propertyMapper.from(source.get("send-buffer-allocated")).as((v)->(Integer) v)
+				.to(clusterLink::setSendBufferAllocated);
+		propertyMapper.from(source.get("send-buffer-used")).as((v)->(Integer) v).to(clusterLink::setSendBufferUsed);
 
-		return new ClusterRedisNode(values[0], host, Integer.parseInt(port), flags, values[3],
-				Long.parseLong(values[4]), Long.parseLong(values[5]), Long.parseLong(values[6]), linkState, slotRange);
+		return clusterLink;
 	}
 
 }

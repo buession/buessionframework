@@ -1,68 +1,5 @@
 
 	/**
-	 * bitmat command start
-	 **/
-	/**
-	 * bitmat command end
-	 **/
-
-	/**
-	 * cluster command start
-	 **/
-	CLUSTER_MY_ID(CommandGroup.CLUSTER, "r"),
-
-	CLUSTER_ADDSLOTS(CommandGroup.CLUSTER, "w"),
-
-	CLUSTER_SLOTS(CommandGroup.CLUSTER, "r"),
-
-	CLUSTER_COUNTFAILUREREPORTS(CommandGroup.CLUSTER, "r"),
-
-	CLUSTER_COUNTKEYSINSLOT(CommandGroup.CLUSTER, "r"),
-
-	CLUSTER_DELSLOTS(CommandGroup.CLUSTER, "w"),
-
-	CLUSTER_FLUSHSLOTS(CommandGroup.CLUSTER, "w"),
-
-	CLUSTER_FAILOVER(CommandGroup.CLUSTER, "w"),
-
-	CLUSTER_FORGET(CommandGroup.CLUSTER, "w"),
-
-	CLUSTER_GETKEYSINSLOT(CommandGroup.CLUSTER, "r"),
-
-	CLUSTER_KEYSLOT(CommandGroup.CLUSTER, "r"),
-
-	CLUSTER_SETCONFIGEPOCH(CommandGroup.CLUSTER, "w"),
-
-	CLUSTER_BUMPEPOCH(CommandGroup.CLUSTER, "rw"),
-
-	CLUSTER_INFO(CommandGroup.CLUSTER, "r"),
-
-	CLUSTER_MEET(CommandGroup.CLUSTER, "w"),
-
-	CLUSTER_NODES(CommandGroup.CLUSTER, "r"),
-
-	CLUSTER_SLAVES(CommandGroup.CLUSTER, "r"),
-
-	CLUSTER_REPLICAS(CommandGroup.CLUSTER, "r"),
-
-	CLUSTER_REPLICATE(CommandGroup.CLUSTER, "w"),
-
-	CLUSTER_RESET(CommandGroup.CLUSTER, "w"),
-
-	CLUSTER_SAVECONFIG(CommandGroup.CLUSTER, "w"),
-
-	CLUSTER_SETSLOT(CommandGroup.CLUSTER, "w"),
-
-	ASKING(CommandGroup.CLUSTER, "r"),
-
-	READWRITE(CommandGroup.CLUSTER, "r"),
-
-	READONLY(CommandGroup.CLUSTER, "r"),
-	/**
-	 * cluster command end
-	 **/
-
-	/**
 	 * connection command start
 	 */
 	AUTH(CommandGroup.CONNECTION, "rw"),
@@ -643,122 +580,189 @@
 
 	WATCH(CommandGroup.TRANSACTION, "w");
 
+
+
 	/**
-	 * transaction command end
+	 * Cluster command end
 	 **/
 
 	/**
-	 * 命令分组
+	 * Connection command start
 	 */
-	private final CommandGroup group;
+
+	CLIENT("rw", CommandGroup.CONNECTION, SubCommand.CLIENT_CACHING, SubCommand.CLIENT_GETNAME,
+			SubCommand.CLIENT_GETREDIR, SubCommand.CLIENT_ID, SubCommand.CLIENT_INFO, SubCommand.CLIENT_KILL,
+			SubCommand.CLIENT_LIST, SubCommand.CLIENT_NO_EVICT, SubCommand.CLIENT_NO_TOUCH, SubCommand.CLIENT_PAUSE,
+			SubCommand.CLIENT_REPLY, SubCommand.CLIENT_SETINFO, SubCommand.CLIENT_SETNAME, SubCommand.CLIENT_TRACKING,
+			SubCommand.CLIENT_TRACKINGINFO, SubCommand.CLIENT_UNBLOCK, SubCommand.CLIENT_UNPAUSE),
+
+
+	HELLO("w", CommandGroup.CONNECTION),
+
 
 	/**
-	 * 命令名称
-	 *
-	 * @since 4.0.0
+	 * Connection command end
 	 */
-	private final String name;
 
 	/**
-	 * 命令名称 raw 格式
-	 *
-	 * @since 4.0.0
-	 */
-	private final byte[] raw;
+	 * Key command start
+	 **/
+
+	EXPIRETIME("r", CommandGroup.KEY),
+
+
+	PEXPIRETIME("r", CommandGroup.KEY),
 
 	/**
-	 * 是否为读操作命令
-	 *
-	 * @since 4.0.0
-	 */
-	private final boolean read;
+	 * Key command end
+	 **/
+
 
 	/**
-	 * 是否为写操作命令
-	 *
-	 * @since 4.0.0
-	 */
-	private final boolean write;
+	 * Hash command start
+	 **/
+
+	HEXPIRE("w", CommandGroup.HASH),
+
+	HEXPIREAT("w", CommandGroup.HASH),
+
+	HEXPIRETIME("r", CommandGroup.HASH),
+
+	HPERSIST("w", CommandGroup.HASH),
+
+	HPEXPIRE("w", CommandGroup.HASH),
+
+	HPEXPIREAT("w", CommandGroup.HASH),
+
+	HPEXPIRETIME("r", CommandGroup.HASH),
+
+	HPTTL("r", CommandGroup.HASH),
+
+	HTTL("r", CommandGroup.HASH),
+
+	HVALS("r", CommandGroup.HASH),
+	/**
+	 * Hash command start
+	 **/
+
 
 	/**
-	 * 构造函数
-	 *
-	 * @param group
-	 * 		命令分组
-	 * @param mode
-	 * 		命令模式
-	 *
-	 * @since 4.0.0
-	 */
-	ProtocolCommand(final CommandGroup group, final String mode) {
-		this.group = group;
-		String[] names = StringUtils.split(name(), "_", 2);
+	 * ACL command start
+	 **/
+	ACL("rw", CommandGroup.ACL, SubCommand.ACL_CAT, SubCommand.ACL_DELUSER, SubCommand.ACL_DRYRUN,
+			SubCommand.ACL_GENPASS, SubCommand.ACL_GETUSER, SubCommand.LIST, SubCommand.LOAD, SubCommand.ACL_LOG,
+			SubCommand.SAVE, SubCommand.ACL_SETUSER, SubCommand.ACL_USERS, SubCommand.ACL_WHOAMI),
 
-		name = names.length > 1 ? names[1] : name();
-		raw = SafeEncoder.encode(name);
-		if(Validate.hasText(mode)){
-			String modeLower = mode.toLowerCase();
-			this.read = modeLower.indexOf('r') > -1;
-			this.write = modeLower.indexOf('w') > -1;
-		}else{
-			this.read = true;
-			this.write = false;
-		}
-	}
+			public enum SubCommand implements ProtocolCommand {
+            	/**
+            	 * Common command start
+            	 **/
+            	GET("r"),
 
-	/**
-	 * 返回命令分组
-	 *
-	 * @return 命令分组
-	 */
-	public CommandGroup getGroup() {
-		return group;
-	}
+            	INFO("r"),
 
-	/**
-	 * 返回命令名称
-	 *
-	 * @return 命令名称
-	 *
-	 * @since 4.0.0
-	 */
-	public String getName() {
-		return name;
-	}
+            	LIST("r"),
 
-	/**
-	 * 返回是否为只读命令
-	 *
-	 * @return true / false
-	 */
-	public boolean isReadonly() {
-		return isRead() && isWrite() == false;
-	}
+            	LOAD("r"),
 
-	/**
-	 * 返回是否为读命令
-	 *
-	 * @return true / false
-	 */
-	public boolean isRead() {
-		return read;
-	}
+            	NODES("rw"),
 
-	/**
-	 * 返回是否为写命令
-	 *
-	 * @return true / false
-	 */
-	public boolean isWrite() {
-		return write;
-	}
+            	RESET("w"),
 
-	@Override
-	public byte[] getRaw() {
-		return raw;
-	}
+            	SAVE("w"),
 
-	@Override
-	public String toString() {
-		return StringUtils.replace(name(), "_", " ");
-	}
+            	SLAVES("r"),
+            	/**
+            	 * Common command end
+            	 **/
+
+            	/**
+            	 * Cluster command start
+            	 **/
+
+            	CLUSTER_KEYSLOT("r"),
+
+            	/**
+            	 * Cluster command end
+            	 **/
+
+            	/**
+            	 * Client command start
+            	 **/
+            	CLIENT_CACHING("r"),
+
+            	CLIENT_GETNAME("r"),
+
+            	CLIENT_GETREDIR("r"),
+
+            	CLIENT_ID("r"),
+
+            	CLIENT_INFO("r"),
+
+            	CLIENT_KILL("w"),
+
+            	CLIENT_LIST("r"),
+
+            	CLIENT_NO_EVICT("r"),
+
+            	CLIENT_NO_TOUCH("r"),
+
+            	CLIENT_PAUSE("w"),
+
+            	CLIENT_REPLY("w"),
+
+            	CLIENT_SETINFO("w"),
+
+            	CLIENT_SETNAME("w"),
+
+            	CLIENT_TRACKING("r"),
+
+            	CLIENT_TRACKINGINFO("r"),
+
+            	CLIENT_UNBLOCK("w"),
+
+            	CLIENT_UNPAUSE("w"),
+            	/**
+            	 * Client command end
+            	 **/
+
+            	/**
+            	 * Key command start
+            	 **/
+            	OBJECT_ENCODING("r"),
+
+            	OBJECT_REFQ("r"),
+
+            	OBJECT_IDLETIME("r"),
+
+            	OBJECT_REFCOUNT("r"),
+            	/**
+            	 * Key command end
+            	 **/
+
+            	/**
+            	 * ACL command start
+            	 **/
+            	ACL_CAT("r"),
+
+            	ACL_DELUSER("w"),
+
+            	ACL_DRYRUN("w"),
+
+            	ACL_GENPASS("r"),
+
+            	ACL_GETUSER("r"),
+
+            	ACL_LOG("rw"),
+
+            	ACL_SETUSER("w"),
+
+            	ACL_USERS("r"),
+
+            	ACL_WHOAMI("r"),
+            	/**
+            	 * ACL command end
+            	 **/
+            	;
+
+            }

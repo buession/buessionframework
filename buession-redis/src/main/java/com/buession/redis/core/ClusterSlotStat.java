@@ -22,20 +22,69 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.lettuce.operations;
+package com.buession.redis.core;
 
-import com.buession.redis.client.lettuce.LettuceClusterClient;
+import java.io.Serial;
+import java.io.Serializable;
 
 /**
- * Lettuce 集群模式集群命令操作
+ * 哈希槽的详细统计信息
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public final class LettuceClusterClusterOperations extends AbstractClusterOperations<LettuceClusterClient> {
+public class ClusterSlotStat implements Serializable {
 
-	public LettuceClusterClusterOperations(final LettuceClusterClient client) {
-		super(client);
+	private final static long serialVersionUID = 8893587588409047546L;
+
+	private long keyCount;
+
+	private double cpuUsec;
+
+	private long memoryBytes;
+
+	private long networkBytesIn;
+
+	private long networkBytesOut;
+
+	public long getKeyCount() {
+		return keyCount;
+	}
+
+	public void setKeyCount(long keyCount) {
+		this.keyCount = keyCount;
+	}
+
+	public double getCpuUsec() {
+		return cpuUsec;
+	}
+
+	public void setCpuUsec(double cpuUsec) {
+		this.cpuUsec = cpuUsec;
+	}
+
+	public long getMemoryBytes() {
+		return memoryBytes;
+	}
+
+	public void setMemoryBytes(long memoryBytes) {
+		this.memoryBytes = memoryBytes;
+	}
+
+	public long getNetworkBytesIn() {
+		return networkBytesIn;
+	}
+
+	public void setNetworkBytesIn(long networkBytesIn) {
+		this.networkBytesIn = networkBytesIn;
+	}
+
+	public long getNetworkBytesOut() {
+		return networkBytesOut;
+	}
+
+	public void setNetworkBytesOut(long networkBytesOut) {
+		this.networkBytesOut = networkBytesOut;
 	}
 
 }

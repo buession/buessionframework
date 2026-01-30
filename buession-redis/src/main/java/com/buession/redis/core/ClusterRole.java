@@ -22,20 +22,16 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.lettuce.operations;
-
-import com.buession.redis.client.lettuce.LettuceClusterClient;
+package com.buession.redis.core;
 
 /**
- * Lettuce 集群模式集群命令操作
+ * Redis 集群角色
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public final class LettuceClusterClusterOperations extends AbstractClusterOperations<LettuceClusterClient> {
+public enum ClusterRole {
+	MASTER,
 
-	public LettuceClusterClusterOperations(final LettuceClusterClient client) {
-		super(client);
-	}
-
+	REPLICA
 }

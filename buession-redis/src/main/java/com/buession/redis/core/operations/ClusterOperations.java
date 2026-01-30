@@ -24,16 +24,20 @@
  */
 package com.buession.redis.core.operations;
 
+import com.buession.core.IntegerRange;
 import com.buession.core.utils.Assert;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.core.BumpEpoch;
 import com.buession.redis.core.ClusterFailoverOption;
 import com.buession.redis.core.ClusterInfo;
+import com.buession.redis.core.ClusterLink;
 import com.buession.redis.core.ClusterRedisNode;
 import com.buession.redis.core.ClusterResetOption;
 import com.buession.redis.core.ClusterSetSlotOption;
+import com.buession.redis.core.ClusterShardInfo;
 import com.buession.redis.core.ClusterSlot;
+import com.buession.redis.core.ClusterSlotStat;
 import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.command.ClusterCommands;
 
@@ -50,8 +54,8 @@ import java.util.List;
 public interface ClusterOperations extends ClusterCommands, RedisOperations {
 
 	@Override
-	default String clusterMyId() {
-		return execute((client)->client.clusterOperations().clusterMyId());
+	default Status asking() {
+		return execute((client)->client.clusterOperations().asking());
 	}
 
 	@Override
@@ -60,8 +64,13 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	}
 
 	@Override
-	default List<ClusterSlot> clusterSlots() {
-		return execute((client)->client.clusterOperations().clusterSlots());
+	default Status clusterAddSlotsRange(final IntegerRange slots) {
+		return execute((client)->client.clusterOperations().clusterAddSlotsRange(slots));
+	}
+
+	@Override
+	default KeyValue<BumpEpoch, Integer> clusterBumpEpoch() {
+		return execute((client)->client.clusterOperations().clusterBumpEpoch());
 	}
 
 	@Override
@@ -85,13 +94,18 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	}
 
 	@Override
-	default Status clusterFlushSlots() {
-		return execute((client)->client.clusterOperations().clusterFlushSlots());
+	default Status clusterDelSlotsRange(final IntegerRange slots) {
+		return execute((client)->client.clusterOperations().clusterDelSlotsRange(slots));
 	}
 
 	@Override
 	default Status clusterFailover(final ClusterFailoverOption clusterFailoverOption) {
 		return execute((client)->client.clusterOperations().clusterFailover(clusterFailoverOption));
+	}
+
+	@Override
+	default Status clusterFlushSlots() {
+		return execute((client)->client.clusterOperations().clusterFlushSlots());
 	}
 
 	@Override
@@ -110,6 +124,11 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	}
 
 	@Override
+	default ClusterInfo clusterInfo() {
+		return execute((client)->client.clusterOperations().clusterInfo());
+	}
+
+	@Override
 	default Long clusterKeySlot(final String key) {
 		return execute((client)->client.clusterOperations().clusterKeySlot(key));
 	}
@@ -120,8 +139,8 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	}
 
 	@Override
-	default ClusterInfo clusterInfo() {
-		return execute((client)->client.clusterOperations().clusterInfo());
+	default List<ClusterLink> clusterLinks() {
+		return execute((client)->client.clusterOperations().clusterLinks());
 	}
 
 	@Override
@@ -132,8 +151,7 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	/**
 	 * 用来连接不同的开启集群支持的 Redis 节点，以进入工作集群
 	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-meet.html" target="_blank">http://www.redis.cn/commands/cluster-meet.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cluster-meet/" target="_blank">https://redis.io/docs/latest/commands/cluster-meet/</a></p>
 	 *
 	 * @param ip
 	 * 		Redis 集群节点 IP
@@ -147,8 +165,7 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	/**
 	 * 用来连接不同的开启集群支持的 Redis 节点，以进入工作集群
 	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-meet.html" target="_blank">http://www.redis.cn/commands/cluster-meet.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cluster-meet/" target="_blank">https://redis.io/docs/latest/commands/cluster-meet/</a></p>
 	 *
 	 * @param node
 	 * 		Redis 集群节点
@@ -162,19 +179,31 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 		return clusterMeet(node.getHost(), node.getPort());
 	}
 
+	default Status clusterMigration(final IntegerRange slots) {
+		return execute((client)->client.clusterOperations().clusterMigration(slots));
+	}
+
+	default Object clusterMigration(final ClusterMigrationOp migrationOp) {
+		return execute((client)->client.clusterOperations().clusterMigration(migrationOp));
+	}
+
+	default Object clusterMigration(final ClusterMigrationOp migrationOp, final String id) {
+		return execute((client)->client.clusterOperations().clusterMigration(migrationOp, id));
+	}
+
+	@Override
+	default String clusterMyId() {
+		return execute((client)->client.clusterOperations().clusterMyId());
+	}
+
+	@Override
+	default String clusterMyShardId() {
+		return execute((client)->client.clusterOperations().clusterMyShardId());
+	}
+
 	@Override
 	default List<ClusterRedisNode> clusterNodes() {
 		return execute((client)->client.clusterOperations().clusterNodes());
-	}
-
-	@Override
-	default List<ClusterRedisNode> clusterSlaves(final String nodeId) {
-		return execute((client)->client.clusterOperations().clusterSlaves(nodeId));
-	}
-
-	@Override
-	default List<ClusterRedisNode> clusterSlaves(final byte[] nodeId) {
-		return execute((client)->client.clusterOperations().clusterSlaves(nodeId));
 	}
 
 	@Override
@@ -218,11 +247,6 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	}
 
 	@Override
-	default KeyValue<BumpEpoch, Integer> clusterBumpEpoch() {
-		return execute((client)->client.clusterOperations().clusterBumpEpoch());
-	}
-
-	@Override
 	default Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final String nodeId) {
 		return execute((client)->client.clusterOperations().clusterSetSlot(slot, setSlotOption, nodeId));
 	}
@@ -233,18 +257,38 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	}
 
 	@Override
-	default Status asking() {
-		return execute((client)->client.clusterOperations().asking());
+	default List<ClusterShardInfo> clusterShards() {
+		return execute((client)->client.clusterOperations().clusterShards());
 	}
 
 	@Override
-	default Status readWrite() {
-		return execute((client)->client.clusterOperations().readWrite());
+	default List<ClusterRedisNode> clusterSlaves(final String nodeId) {
+		return execute((client)->client.clusterOperations().clusterSlaves(nodeId));
+	}
+
+	@Override
+	default List<ClusterRedisNode> clusterSlaves(final byte[] nodeId) {
+		return execute((client)->client.clusterOperations().clusterSlaves(nodeId));
+	}
+
+	@Override
+	default ClusterSlotStat clusterSlotStats() {
+		return execute((client)->client.clusterOperations().clusterSlotStats());
+	}
+
+	@Override
+	default List<ClusterSlot> clusterSlots() {
+		return execute((client)->client.clusterOperations().clusterSlots());
 	}
 
 	@Override
 	default Status readOnly() {
 		return execute((client)->client.clusterOperations().readOnly());
+	}
+
+	@Override
+	default Status readWrite() {
+		return execute((client)->client.clusterOperations().readWrite());
 	}
 
 }

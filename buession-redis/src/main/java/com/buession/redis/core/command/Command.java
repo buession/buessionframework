@@ -110,6 +110,25 @@ public enum Command implements ProtocolCommand {
 	/**
 	 * Cuckoo filter command end
 	 */
+
+	/**
+	 * Cluster command start
+	 **/
+	ASKING(CommandGroup.CLUSTER, "r"),
+
+	CLUSTER(CommandGroup.CLUSTER, "w", new SubCommand[]{SubCommand.CLUSTER_ADDSLOTS, SubCommand.CLUSTER_ADDSLOTSRANGE,
+			SubCommand.CLUSTER_BUMPEPOCH, SubCommand.CLUSTER_COUNTFAILUREREPORTS, SubCommand.CLUSTER_COUNTKEYSINSLOT,
+			SubCommand.CLUSTER_DELSLOTS, SubCommand.CLUSTER_DELSLOTSRANGE, SubCommand.CLUSTER_FAILOVER,
+			SubCommand.CLUSTER_FLUSHSLOTS, SubCommand.CLUSTER_FORGET, SubCommand.CLUSTER_GETKEYSINSLOT,
+			SubCommand.CLUSTER_INFO, SubCommand.CLUSTER_KEYSLOT, SubCommand.CLUSTER_LINKS, SubCommand.CLUSTER_MEET,
+			SubCommand.CLUSTER_MIGRATION, SubCommand.CLUSTER_MYID, SubCommand.CLUSTER_MYSHARDID,
+			SubCommand.CLUSTER_NODES, SubCommand.CLUSTER_REPLICAS, SubCommand.CLUSTER_REPLICATE,
+			SubCommand.CLUSTER_RESET, SubCommand.CLUSTER_SAVECONFIG, SubCommand.CLUSTER_SETCONFIGEPOCH,
+			SubCommand.CLUSTER_SETSLOT, SubCommand.CLUSTER_SHARDS, SubCommand.CLUSTER_SLAVES,
+			SubCommand.CLUSTER_SLOT_STATS, SubCommand.CLUSTER_SLOTS, SubCommand.READONLY, SubCommand.READWRITE}),
+	/**
+	 * Cluster command end
+	 **/
 	;
 
 	/**

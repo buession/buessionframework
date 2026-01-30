@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.command;
 
+import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
 import com.buession.redis.utils.SafeEncoder;
 
@@ -34,6 +35,73 @@ import com.buession.redis.utils.SafeEncoder;
  * @since 4.0.0
  */
 public enum SubCommand implements ProtocolCommand {
+	/**
+	 * Cluster command start
+	 **/
+	CLUSTER_ADDSLOTS("w"),
+
+	CLUSTER_ADDSLOTSRANGE("w"),
+
+	CLUSTER_BUMPEPOCH("r"),
+
+	CLUSTER_COUNTFAILUREREPORTS("COUNT-FAILURE-REPORTS", "rw"),
+
+	CLUSTER_COUNTKEYSINSLOT("r"),
+
+	CLUSTER_DELSLOTS("w"),
+
+	CLUSTER_DELSLOTSRANGE("w"),
+
+	CLUSTER_FAILOVER("rw"),
+
+	CLUSTER_FLUSHSLOTS("w"),
+
+	CLUSTER_FORGET("w"),
+
+	CLUSTER_GETKEYSINSLOT("r"),
+
+	CLUSTER_INFO("r"),
+
+	CLUSTER_KEYSLOT("r"),
+
+	CLUSTER_LINKS("r"),
+
+	CLUSTER_MEET("w"),
+
+	CLUSTER_MIGRATION("w"),
+
+	CLUSTER_MYID("r"),
+
+	CLUSTER_MYSHARDID("r"),
+
+	CLUSTER_NODES("r"),
+
+	CLUSTER_REPLICAS("r"),
+
+	CLUSTER_REPLICATE("w"),
+
+	CLUSTER_RESET("w"),
+
+	CLUSTER_SAVECONFIG("w"),
+
+	CLUSTER_SETCONFIGEPOCH("SET-CONFIG-EPOCH", "w"),
+
+	CLUSTER_SETSLOT("w"),
+
+	CLUSTER_SHARDS("r"),
+
+	CLUSTER_SLAVES("r"),
+
+	CLUSTER_SLOT_STATS("SLOT-STATS", "r"),
+
+	CLUSTER_SLOTS("r"),
+
+	READONLY("w"),
+
+	READWRITE("w"),
+	/**
+	 * Cluster command end
+	 **/
 	;
 
 	/**
@@ -55,6 +123,19 @@ public enum SubCommand implements ProtocolCommand {
 	 * 是否为写操作命令
 	 */
 	private final boolean write;
+
+	SubCommand(final String mode) {
+		this.name = StringUtils.split(name(), '_')[0];
+		this.raw = SafeEncoder.encode(name);
+		if(Validate.hasText(mode)){
+			String modeLower = mode.toLowerCase();
+			this.read = modeLower.indexOf('r') > -1;
+			this.write = modeLower.indexOf('w') > -1;
+		}else{
+			this.read = true;
+			this.write = false;
+		}
+	}
 
 	SubCommand(final String name, final String mode) {
 		this.name = name;

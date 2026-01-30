@@ -29,7 +29,6 @@ import com.buession.redis.client.connection.jedis.JedisRedisConnection;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.RedisOperations;
 import com.buession.redis.core.command.Command;
-import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.SubCommand;
 import com.buession.redis.core.internal.jedis.JedisResult;
 import com.buession.redis.exception.RedisException;
@@ -95,21 +94,14 @@ public interface JedisRedisOperations extends RedisOperations {
 	 *
 	 * @since 4.0.0
 	 */
-	final class JedisCommandBuilder<SR, R> {
-
-		private final JedisRedisClient client;
-
-		private final Command command;
-
-		private com.buession.redis.core.Command.Executor<UnifiedJedis, SR> executor;
-
-		private CommandArguments arguments;
-
-		private Converter<SR, R> converter;
+	final class JedisCommandBuilder<SR, R> extends BaseCommandBuilder<JedisRedisClient, UnifiedJedis, SR, R> {
 
 		private JedisCommandBuilder(final JedisRedisClient client, final Command command) {
-			this.client = client;
-			this.command = command;
+			super(client, command);
+		}
+
+		private JedisCommandBuilder(final JedisRedisClient client, final Command command, final SubCommand subCommand) {
+			super(client, command, subCommand);
 		}
 
 		public static <SR, R> JedisCommandBuilder<SR, R> newBuilder(final JedisRedisClient client,
@@ -117,25 +109,16 @@ public interface JedisRedisOperations extends RedisOperations {
 			return new JedisCommandBuilder<>(client, command);
 		}
 
-		public JedisCommandBuilder<SR, R> executor(
-				com.buession.redis.core.Command.Executor<UnifiedJedis, SR> executor) {
-			this.executor = executor;
-			return this;
+		public static <SR, R> JedisCommandBuilder<SR, R> newBuilder(final JedisRedisClient client,
+																	final Command command,
+																	final SubCommand subCommand) {
+			return new JedisCommandBuilder<>(client, command, subCommand);
 		}
 
-		public JedisCommandBuilder<SR, R> arguments(CommandArguments arguments) {
-			this.arguments = arguments;
-			return this;
-		}
-
-		public JedisCommandBuilder<SR, R> converter(Converter<SR, R> converter) {
-			this.converter = converter;
-			return this;
-		}
-
+		@Override
 		public R run() {
-			final JedisCommand<SR, R> command = new JedisCommand<>(this.client, this.command, this.executor,
-					this.converter);
+			final JedisCommand<SR, R> command = new JedisCommand<>(this.client, this.command, this.subCommand,
+					this.executor, this.converter);
 			return command.run(this.arguments);
 		}
 

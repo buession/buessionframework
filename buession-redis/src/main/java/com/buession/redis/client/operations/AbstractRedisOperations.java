@@ -27,7 +27,6 @@ package com.buession.redis.client.operations;
 import com.buession.core.converter.BooleanStatusConverter;
 import com.buession.core.converter.ListConverter;
 import com.buession.redis.client.RedisClient;
-import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.response.OneBooleanConverter;
 import com.buession.redis.core.internal.convert.response.OneStatusConverter;
@@ -66,11 +65,6 @@ public abstract class AbstractRedisOperations<C extends RedisClient> implements 
 
 	protected boolean isTransaction() {
 		return client.getConnection().isTransaction();
-	}
-
-	protected boolean isMulti() {
-		final RedisConnection connection = client.getConnection();
-		return connection.isPipeline() || connection.isTransaction();
 	}
 
 }
