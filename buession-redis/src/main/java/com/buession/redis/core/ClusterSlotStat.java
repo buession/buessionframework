@@ -24,6 +24,8 @@
  */
 package com.buession.redis.core;
 
+import com.buession.redis.utils.ObjectStringBuilder;
+
 import java.io.Serial;
 import java.io.Serializable;
 
@@ -85,6 +87,17 @@ public class ClusterSlotStat implements Serializable {
 
 	public void setNetworkBytesOut(long networkBytesOut) {
 		this.networkBytesOut = networkBytesOut;
+	}
+
+	@Override
+	public String toString() {
+		return ObjectStringBuilder.create()
+				.add("keyCount", keyCount)
+				.add("cpuUsec", cpuUsec)
+				.add("memoryBytes", memoryBytes)
+				.add("networkBytesIn", networkBytesIn)
+				.add("networkBytesOut", networkBytesOut)
+				.build();
 	}
 
 }

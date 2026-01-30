@@ -24,7 +24,9 @@
  */
 package com.buession.redis.core;
 
+import com.buession.lang.Rawable;
 import com.buession.lang.Value;
+import com.buession.redis.utils.SafeEncoder;
 
 /**
  * 关键字
@@ -32,6 +34,11 @@ import com.buession.lang.Value;
  * @author Yong.Teng
  * @since 3.0.1
  */
-public interface Keyword extends Value<String> {
+public interface Keyword extends Value<String>, Rawable {
+
+	@Override
+	default byte[] getRaw() {
+		return SafeEncoder.encode(getValue());
+	}
 
 }

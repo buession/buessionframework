@@ -30,6 +30,12 @@ package com.buession.redis.core;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public enum ClusterHealth {
-	ONLINE
+public enum ClusterHealth implements Keyword {
+	ONLINE;
+
+	@Override
+	public String getValue() {
+		return name();
+	}
+
 }

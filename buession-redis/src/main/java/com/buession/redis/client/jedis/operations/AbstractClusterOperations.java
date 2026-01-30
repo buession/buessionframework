@@ -65,7 +65,7 @@ public abstract class AbstractClusterOperations<C extends JedisRedisClient> exte
 
 	@Override
 	public Status asking() {
-		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.ASKING).executor((cmd)->cmd.asking())
+		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.ASKING)
 				.converter(okStatusConverter).run();
 	}
 
@@ -73,20 +73,20 @@ public abstract class AbstractClusterOperations<C extends JedisRedisClient> exte
 	public Status clusterAddSlots(final int... slots) {
 		final CommandArguments args = CommandArguments.create(slots);
 		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.CLUSTER, SubCommand.CLUSTER_ADDSLOTS)
-				.executor((cmd)->cmd.clusterAddSlots()).converter(okStatusConverter).run();
+				.converter(okStatusConverter).run();
 	}
 
 	@Override
 	public Status clusterAddSlotsRange(final IntegerRange slots) {
 		final CommandArguments args = CommandArguments.create(slots);
 		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.CLUSTER, SubCommand.CLUSTER_ADDSLOTSRANGE)
-				.executor((cmd)->cmd.clusterAddSlots()).arguments(args).converter(okStatusConverter).run();
+				.arguments(args).converter(okStatusConverter).run();
 	}
 
 	@Override
 	public KeyValue<BumpEpoch, Integer> clusterBumpEpoch() {
 		return JedisCommandBuilder.<String, KeyValue<BumpEpoch, Integer>>newBuilder(client, Command.CLUSTER,
-						SubCommand.CLUSTER_BUMPEPOCH).executor((cmd)->cmd.clusterBumpEpoch())
+						SubCommand.CLUSTER_BUMPEPOCH)
 				.converter(new BumpEpochConverter()).run();
 	}
 
@@ -94,7 +94,7 @@ public abstract class AbstractClusterOperations<C extends JedisRedisClient> exte
 	public Integer clusterCountFailureReports(final String nodeId) {
 		final CommandArguments args = CommandArguments.create(nodeId);
 		return JedisCommandBuilder.<Integer, Integer>newBuilder(client, Command.CLUSTER,
-						SubCommand.CLUSTER_COUNTFAILUREREPORTS).executor((cmd)->cmd.clusterBumpEpoch())
+						SubCommand.CLUSTER_COUNTFAILUREREPORTS)
 				.arguments(args).converter((v)->v).run();
 	}
 

@@ -25,6 +25,7 @@
 package com.buession.redis.core;
 
 import com.buession.core.IntegerRange;
+import com.buession.redis.utils.ObjectStringBuilder;
 
 import java.io.Serializable;
 import java.util.List;
@@ -57,6 +58,14 @@ public class ClusterShardInfo implements Serializable {
 
 	public void setNodes(List<ClusterShardNode> nodes) {
 		this.nodes = nodes;
+	}
+
+	@Override
+	public String toString() {
+		return ObjectStringBuilder.create()
+				.add("slots", slots)
+				.add("nodes", nodes)
+				.build();
 	}
 
 	public final static class ClusterShardNode implements Serializable {
@@ -132,6 +141,20 @@ public class ClusterShardInfo implements Serializable {
 		public void setHealth(ClusterHealth health) {
 			this.health = health;
 		}
+
+		@Override
+		public String toString() {
+			return ObjectStringBuilder.create()
+					.add("id", id)
+					.add("port", port)
+					.add("ip", ip)
+					.add("endpoint", endpoint)
+					.add("role", role)
+					.add("replicationOffset", replicationOffset)
+					.add("health", health)
+					.build();
+		}
+
 	}
 
 }

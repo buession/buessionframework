@@ -186,10 +186,27 @@ public class ClusterLink implements Serializable {
 		TO
 	}
 
-	public enum Event {
-		R,
+	public enum Event implements Keyword {
+		R("r"),
 
-		W
+		W("w");
+
+		private final String value;
+
+		Event(final String value) {
+			this.value = value;
+		}
+
+		@Override
+		public String getValue() {
+			return value;
+		}
+
+		@Override
+		public String toString() {
+			return getValue();
+		}
+
 	}
 
 }
