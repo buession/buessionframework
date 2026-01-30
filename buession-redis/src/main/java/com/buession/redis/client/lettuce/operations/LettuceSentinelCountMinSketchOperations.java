@@ -24,17 +24,18 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
-import com.buession.redis.client.lettuce.LettuceSentinelClient;
+import com.buession.redis.client.lettuce.LettuceClusterClient;
 
 /**
- * Lettuce 哨兵模式集群命令操作
+ * Lettuce 集群模式计数最小草图命令操作抽象类
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public final class LettuceSentinelClusterOperations extends AbstractClusterOperations<LettuceSentinelClient> {
+public final class LettuceClusterCountMinSketchOperations
+		extends AbstractCountMinSketchOperations<LettuceClusterClient> {
 
-	public LettuceSentinelClusterOperations(final LettuceSentinelClient client) {
+	public LettuceClusterCountMinSketchOperations(final LettuceClusterClient client) {
 		super(client);
 	}
 

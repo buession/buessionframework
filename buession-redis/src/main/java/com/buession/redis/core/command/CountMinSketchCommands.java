@@ -21,21 +21,10 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */
-package com.buession.redis.client.lettuce.operations;
-
-import com.buession.redis.client.lettuce.LettuceClusterClient;
-
-/**
- * Lettuce 集群模式集群命令操作
+ */package com.buession.redis.core.command;/**
+ * 
  *
  * @author Yong.Teng
- * @since 3.0.0
- */
-public final class LettuceClusterClusterOperations extends AbstractClusterOperations<LettuceClusterClient> {
-
-	public LettuceClusterClusterOperations(final LettuceClusterClient client) {
-		super(client);
-	}
-
+ * @since 4.0.0
+ */public interface CountMinSketchCommands {
 }

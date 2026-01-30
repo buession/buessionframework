@@ -21,39 +21,10 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */
-package com.buession.redis.client.jedis;
-
-import com.buession.redis.client.AbstractRedisClient;
-import com.buession.redis.client.connection.jedis.JedisRedisConnection;
-import redis.clients.jedis.UnifiedJedis;
-
-/**
- * Jedis Redis 客户端抽象类
- *
- * @param <CONN>
- * 		Jedis Redis 连接对象类型 {@link JedisRedisConnection}
+ */package com.buession.redis.core.operations;/**
+ * 
  *
  * @author Yong.Teng
- */
-public abstract class AbstractJedisRedisClient<CONN extends JedisRedisConnection<? extends UnifiedJedis>>
-		extends AbstractRedisClient<CONN> implements JedisRedisClient {
-
-	/**
-	 * 构造函数
-	 */
-	public AbstractJedisRedisClient() {
-		super();
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param connection
-	 * 		Jedis Redis 连接对象 {@link JedisRedisConnection}
-	 */
-	public AbstractJedisRedisClient(final CONN connection) {
-		super(connection);
-	}
-
+ * @since 4.0.0
+ */public interface CountMinSketchOperations {
 }

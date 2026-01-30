@@ -24,17 +24,22 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.redis.client.jedis.JedisClusterClient;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.operations.CountMinSketchOperations;
 
 /**
- * Jedis 集群模式布隆过滤器命令操作抽象类
+ * Jedis 计数最小草图命令操作抽象类
+ *
+ * @param <C>
+ * 		Redis Client {@link JedisRedisClient}
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class JedisClusterBloomFilterOperations extends AbstractBloomFilterOperations<JedisClusterClient> {
+public abstract class AbstractCountMinSketchOperations<C extends JedisRedisClient>
+		extends AbstractJedisRedisOperations<C> implements CountMinSketchOperations {
 
-	public JedisClusterBloomFilterOperations(final JedisClusterClient client) {
+	public AbstractCountMinSketchOperations(final C client) {
 		super(client);
 	}
 

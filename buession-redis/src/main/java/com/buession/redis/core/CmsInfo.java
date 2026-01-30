@@ -21,21 +21,10 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */
-package com.buession.redis.client.jedis.operations;
-
-import com.buession.redis.client.jedis.JedisSentinelClient;
-
-/**
- * Jedis 哨兵模式布谷鸟过滤器命令操作抽象类
+ */package com.buession.redis.core;/**
+ * 
  *
  * @author Yong.Teng
  * @since 4.0.0
- */
-public final class JedisSentinelCuckooFilterOperations extends AbstractCuckooFilterOperations<JedisSentinelClient> {
-
-	public JedisSentinelCuckooFilterOperations(final JedisSentinelClient client) {
-		super(client);
-	}
-
+ */public class CmsInfo {
 }

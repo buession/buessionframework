@@ -22,39 +22,16 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.lettuce;
-
-import com.buession.redis.client.AbstractRedisClient;
-import com.buession.redis.client.connection.lettuce.LettuceRedisConnection;
-import io.lettuce.core.api.StatefulConnection;
+package com.buession.redis.core.operations;
 
 /**
- * Lettuce Redis 客户端抽象类
+ * 计数最小草图命令
  *
- * @param <CONN>
- * 		Lettuce Redis 连接对象类型 {@link LettuceRedisConnection}
+ * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=cms" target="_blank">https://redis.io/docs/latest/commands/?group=cms</a></p>
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public abstract class AbstractLettuceRedisClient<CONN extends LettuceRedisConnection<? extends StatefulConnection<byte[], byte[]>>>
-		extends AbstractRedisClient<CONN> implements LettuceRedisClient {
-
-	/**
-	 * 构造函数
-	 */
-	public AbstractLettuceRedisClient() {
-		super();
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param connection
-	 * 		Lettuce Redis 连接对象 {@link LettuceRedisConnection}
-	 */
-	public AbstractLettuceRedisClient(final CONN connection) {
-		super(connection);
-	}
+public interface CountMinSketchOperations {
 
 }

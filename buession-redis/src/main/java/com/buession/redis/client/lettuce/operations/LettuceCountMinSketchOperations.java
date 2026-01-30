@@ -22,19 +22,20 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.client.lettuce.operations;
 
-import com.buession.redis.client.jedis.JedisClusterClient;
+import com.buession.redis.client.lettuce.LettuceClusterClient;
 
 /**
- * Jedis 集群模式布隆过滤器命令操作抽象类
+ * Lettuce 集群模式计数最小草图命令操作抽象类
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class JedisClusterCuckooFilterOperations extends AbstractCuckooFilterOperations<JedisClusterClient> {
+public final class LettuceClusterCountMinSketchOperations
+		extends AbstractCountMinSketchOperations<LettuceClusterClient> {
 
-	public JedisClusterCuckooFilterOperations(final JedisClusterClient client) {
+	public LettuceClusterCountMinSketchOperations(final LettuceClusterClient client) {
 		super(client);
 	}
 
