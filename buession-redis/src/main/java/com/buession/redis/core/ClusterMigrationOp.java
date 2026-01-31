@@ -19,40 +19,31 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
-
-import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisRedisClient;
-import com.buession.redis.client.operations.ConnectionOperations;
-import com.buession.redis.utils.SafeEncoder;
+package com.buession.redis.core;
 
 /**
- * Jedis 连接命令操作抽象类
- *
- * @param <C>
- * 		Redis Client {@link JedisRedisClient}
+ * 集群合并操作
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 4.0.0
  */
-public abstract class AbstractConnectionOperations<C extends JedisRedisClient>
-		extends AbstractJedisRedisOperations<C> implements ConnectionOperations {
+public enum ClusterMigrationOp implements Keyword {
 
-	public AbstractConnectionOperations(final C client){
-		super(client);
+	CANCEL,
+
+	STATUS;
+
+	@Override
+	public String getValue() {
+		return name();
 	}
 
 	@Override
-	public Status auth(final byte[] user, final byte[] password){
-		return auth(SafeEncoder.encode(user), SafeEncoder.encode(password));
-	}
-
-	@Override
-	public Status auth(final byte[] password){
-		return auth(SafeEncoder.encode(password));
+	public String toString() {
+		return getValue();
 	}
 
 }

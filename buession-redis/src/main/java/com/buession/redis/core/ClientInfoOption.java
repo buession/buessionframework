@@ -22,20 +22,34 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.lettuce.operations;
-
-import com.buession.redis.client.lettuce.LettuceClusterClient;
+package com.buession.redis.core;
 
 /**
- * Lettuce 集群模式布谷鸟过滤器命令操作抽象类
+ * 集群信息选项
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class LettuceClusterCuckooFilterOperations extends AbstractCuckooFilterOperations<LettuceClusterClient> {
+public enum ClientInfoOption implements Keyword {
 
-	public LettuceClusterCuckooFilterOperations(final LettuceClusterClient client) {
-		super(client);
+	LIB_NAME("LIB-NAME"),
+
+	LIB_VER("LIB-VER");
+
+	private final String value;
+
+	ClientInfoOption(final String value) {
+		this.value = value;
+	}
+
+	@Override
+	public String getValue() {
+		return value;
+	}
+
+	@Override
+	public String toString() {
+		return getValue();
 	}
 
 }

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -35,119 +35,39 @@ import java.util.List;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class SlowLog implements Serializable {
+public record SlowLog(
+		/**
+		 * 每个慢查询条目的唯一的递增标识符
+		 */
+		long id,
+
+		/**
+		 * 处理记录命令的unix时间戳
+		 */
+		long timestamp,
+
+		/**
+		 * 命令执行所需的总时间（单位：毫秒）
+		 */
+		long executionTime,
+
+		/**
+		 * 组成该命令的参数的数组
+		 */
+		List<String> args,
+
+		/**
+		 * 客户端信息
+		 */
+		Client client,
+
+		/**
+		 * 客户端名称
+		 */
+		String clientName
+) implements Serializable {
 
 	private final static long serialVersionUID = 4948377124212583969L;
-
-	/**
-	 * 每个慢查询条目的唯一的递增标识符
-	 */
-	private final long id;
-
-	/**
-	 * 处理记录命令的unix时间戳
-	 */
-	private final long timestamp;
-
-	/**
-	 * 命令执行所需的总时间（单位：毫秒）
-	 */
-	private final long executionTime;
-
-	/**
-	 * 组成该命令的参数的数组
-	 */
-	private final List<String> args;
-
-	/**
-	 * 客户端信息
-	 */
-	private final Client client;
-
-	/**
-	 * 客户端名称
-	 */
-	private final String clientName;
-
-	/**
-	 * 构造函数
-	 *
-	 * @param id
-	 * 		每个慢查询条目的唯一的递增标识符
-	 * @param timestamp
-	 * 		处理记录命令的unix时间戳
-	 * @param executionTime
-	 * 		命令执行所需的总时间（单位：毫秒）
-	 * @param args
-	 * 		组成该命令的参数的数组
-	 * @param client
-	 * 		客户端信息
-	 * @param clientName
-	 * 		客户端名称
-	 */
-	public SlowLog(final long id, final long timestamp, final long executionTime, final List<String> args,
-				   final Client client, final String clientName) {
-		this.id = id;
-		this.timestamp = timestamp;
-		this.executionTime = executionTime;
-		this.args = args;
-		this.client = client;
-		this.clientName = clientName;
-	}
-
-	/**
-	 * 返回每个慢查询条目的唯一的递增标识符
-	 *
-	 * @return 每个慢查询条目的唯一的递增标识符
-	 */
-	public long getId() {
-		return id;
-	}
-
-	/**
-	 * 返回处理记录命令的unix时间戳
-	 *
-	 * @return 处理记录命令的unix时间戳
-	 */
-	public long getTimestamp() {
-		return timestamp;
-	}
-
-	/**
-	 * 返回命令执行所需的总时间（单位：毫秒）
-	 *
-	 * @return 命令执行所需的总时间
-	 */
-	public long getExecutionTime() {
-		return executionTime;
-	}
-
-	/**
-	 * 返回组成该命令的参数的数组
-	 *
-	 * @return 组成该命令的参数的数组
-	 */
-	public List<String> getArgs() {
-		return args;
-	}
-
-	/**
-	 * 返回客户端信息
-	 *
-	 * @return 客户端信息
-	 */
-	public Client getClient() {
-		return client;
-	}
-
-	/**
-	 * 返回客户端名称
-	 *
-	 * @return 客户端名称
-	 */
-	public String getClientName() {
-		return clientName;
-	}
 
 	@Override
 	public String toString() {

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -27,7 +27,7 @@ package com.buession.redis.core;
 /**
  * @author Yong.Teng
  */
-public enum RedisMode {
+public enum RedisMode implements Keyword {
 
 	STANDALONE("Standalone"),
 
@@ -41,17 +41,17 @@ public enum RedisMode {
 
 	private final String value;
 
-	RedisMode(final String value){
+	RedisMode(final String value) {
 		this.value = value;
 	}
 
-	public String getValue(){
+	public String getValue() {
 		return value;
 	}
 
 	@Override
-	public String toString(){
-		return value;
+	public String toString() {
+		return getValue();
 	}
 
 }

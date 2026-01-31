@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -35,73 +35,24 @@ import java.util.List;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class ClusterSlot implements Serializable {
+public record ClusterSlot(
+		/*
+		哈希槽起止编号
+		 */
+		SlotRange range,
+
+		/*
+		 * master 节点副本列表
+		 */
+		List<RedisServer> masterNodes
+) implements Serializable {
 
 	private final static long serialVersionUID = -809787517243228575L;
-
-	/**
-	 * 哈希槽起始编号
-	 */
-	private final long start;
-
-	/**
-	 * 哈希槽结束编号
-	 */
-	private final long end;
-
-	/**
-	 * master 节点副本列表
-	 */
-	private final List<RedisServer> masterNodes;
-
-	/**
-	 * 构造函数
-	 *
-	 * @param start
-	 * 		哈希槽起始编号
-	 * @param end
-	 * 		哈希槽结束编号
-	 * @param masterNodes
-	 * 		master 节点副本列表
-	 */
-	public ClusterSlot(final long start, final long end, final List<RedisServer> masterNodes) {
-		this.start = start;
-		this.end = end;
-		this.masterNodes = masterNodes;
-	}
-
-	/**
-	 * 返回哈希槽起始编号
-	 *
-	 * @return 哈希槽起始编号
-	 */
-	public long getStart() {
-		return start;
-	}
-
-	/**
-	 * 返回哈希槽结束编号
-	 *
-	 * @return 哈希槽结束编号
-	 */
-	public long getEnd() {
-		return end;
-	}
-
-	/**
-	 * 返回 master 节点副本列表
-	 *
-	 * @return master 节点副本列表
-	 */
-	public List<RedisServer> getMasterNodes() {
-		return masterNodes;
-	}
 
 	@Override
 	public String toString() {
 		return ObjectStringBuilder.create()
-				.add("start", start)
-				.add("end", end)
+				.add("range", range)
 				.add("masterNodes", masterNodes)
 				.build();
 	}

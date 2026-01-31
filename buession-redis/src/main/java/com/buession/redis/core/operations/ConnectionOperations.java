@@ -27,6 +27,7 @@ package com.buession.redis.core.operations;
 import com.buession.core.utils.Assert;
 import com.buession.lang.Status;
 import com.buession.redis.core.Client;
+import com.buession.redis.core.ClientInfoOption;
 import com.buession.redis.core.ClientReply;
 import com.buession.redis.core.ClientType;
 import com.buession.redis.core.ClientUnblockType;
@@ -94,6 +95,11 @@ public interface ConnectionOperations extends ConnectionCommands, RedisOperation
 		return execute((client)->client.connectionOperations().clientKill(host, port));
 	}
 
+	@Override
+	default Status clientKill(final byte[] host, final int port) {
+		return execute((client)->client.connectionOperations().clientKill(host, port));
+	}
+
 	/**
 	 * 关闭地址为 host:port 的客户端
 	 *
@@ -120,6 +126,21 @@ public interface ConnectionOperations extends ConnectionCommands, RedisOperation
 	}
 
 	@Override
+	default List<Client> clientList(final long... clientIds) {
+		return execute((client)->client.connectionOperations().clientList(clientIds));
+	}
+
+	@Override
+	default Status clientNoEvict(final boolean on) {
+		return execute((client)->client.connectionOperations().clientNoEvict(on));
+	}
+
+	@Override
+	default Status clientNoTouch(final boolean on) {
+		return execute((client)->client.connectionOperations().clientNoTouch(on));
+	}
+
+	@Override
 	default Status clientPause(final int timeout) {
 		return execute((client)->client.connectionOperations().clientPause(timeout));
 	}
@@ -130,6 +151,11 @@ public interface ConnectionOperations extends ConnectionCommands, RedisOperation
 	}
 
 	@Override
+	default Status clientSetInfo(final ClientInfoOption option, final String value) {
+		return execute((client)->client.connectionOperations().clientSetInfo(option, value));
+	}
+
+	@Override
 	default Status clientSetName(final String name) {
 		return execute((client)->client.connectionOperations().clientSetName(name));
 	}
@@ -137,6 +163,11 @@ public interface ConnectionOperations extends ConnectionCommands, RedisOperation
 	@Override
 	default Status clientSetName(final byte[] name) {
 		return execute((client)->client.connectionOperations().clientSetName(name));
+	}
+
+	@Override
+	default Status clientTracking(final boolean on, final TrackingArgument trackingArgument) {
+		return execute((client)->client.connectionOperations().clientTracking(on, trackingArgument));
 	}
 
 	@Override

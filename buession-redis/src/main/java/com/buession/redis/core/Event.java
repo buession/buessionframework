@@ -19,45 +19,37 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.lettuce.operations;
-
-import com.buession.lang.Status;
-import com.buession.redis.client.lettuce.LettuceRedisClient;
-import com.buession.redis.client.operations.ConnectionOperations;
-import com.buession.redis.utils.SafeEncoder;
+package com.buession.redis.core;
 
 /**
- * Jedis 连接命令操作抽象类
- *
- * @param <C>
- * 		Redis Client {@link LettuceRedisClient}
+ * 事件
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public abstract class AbstractConnectionOperations<C extends LettuceRedisClient>
-		extends AbstractLettuceRedisOperations<C> implements ConnectionOperations {
+public enum Event implements Keyword {
 
-	public AbstractConnectionOperations(final C client) {
-		super(client);
+	R("r"),
+
+	W("w");
+
+	private final String value;
+
+	Event(final String value) {
+		this.value = value;
 	}
 
 	@Override
-	public Status auth(final byte[] user, final byte[] password) {
-		return auth(SafeEncoder.encode(user), SafeEncoder.encode(password));
+	public String getValue() {
+		return value;
 	}
 
 	@Override
-	public Status auth(final byte[] password) {
-		return auth(SafeEncoder.encode(password));
-	}
-
-	@Override
-	public Status clientSetName(final String name) {
-		return clientSetName(SafeEncoder.encode(name));
+	public String toString() {
+		return getValue();
 	}
 
 }

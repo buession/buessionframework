@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -32,6 +32,7 @@ import com.buession.net.Multiplexing;
 import com.buession.lang.Status;
 import com.buession.lang.Uptime;
 import com.buession.net.HostAndPort;
+import com.buession.redis.utils.ObjectStringBuilder;
 import org.apache.commons.lang3.arch.Processor;
 
 import java.io.Serializable;
@@ -40,171 +41,66 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.StringJoiner;
 
 /**
  * Redis 服务器的各种信息和统计数值
  *
  * @author Yong.Teng
  */
-public class Info implements Serializable {
+public record Info(
 
-	private final static long serialVersionUID = -2772690110674245981L;
+		/*
+		  Redis 服务器的信息
+		 */
+		Server server,
 
-	/**
-	 * Redis 服务器的信息
-	 */
-	private final Server server;
+		/*
+		  已连接客户端的信息
+		 */
+		Clients clients,
 
-	/**
-	 * 已连接客户端的信息
-	 */
-	private final Clients clients;
+		/*
+		  Redis 服务器的内存信息
+		 */
+		Memory memory,
 
-	/**
-	 * Redis 服务器的内存信息
-	 */
-	private final Memory memory;
+		/*
+		 * RDB 持久化和 AOF 持久化有关的信息
+		 */
+		Persistence persistence,
 
-	/**
-	 * RDB 持久化和 AOF 持久化有关的信息
-	 */
-	private final Persistence persistence;
+		/*
+		 * 一般统计信息
+		 */
+		Stats stats,
 
-	/**
-	 * 一般统计信息
-	 */
-	private final Stats stats;
+		/*
+		 * 主从复制信息
+		 */
+		Replication replication,
 
-	/**
-	 * 主从复制信息
-	 */
-	private final Replication replication;
+		/*
+		 * Sentinel 信息
+		 */
+		Sentinel sentinel,
 
-	/**
-	 * Sentinel 信息
-	 */
-	private final Sentinel sentinel;
+		/*
+		 * CPU 的计算量统计信息
+		 */
+		Cpu cpu,
 
-	/**
-	 * CPU 的计算量统计信息
-	 */
-	private final Cpu cpu;
+		/*
+		 * 集群有关的信息
+		 */
+		Cluster cluster,
 
-	/**
-	 * 集群有关的信息
-	 */
-	private final Cluster cluster;
+		/*
+		 * 数据库相关的统计信息
+		 */
+		List<Keyspace> keyspace
+) implements Serializable {
 
-	/**
-	 * 数据库相关的统计信息
-	 */
-	private final List<Keyspace> keyspace;
-
-	public Info(final Server server, final Clients clients, final Memory memory, final Persistence persistence,
-				final Stats stats, final Replication replication, final Sentinel sentinel, final Cpu cpu,
-				final Cluster cluster, final List<Keyspace> keyspaces) {
-		this.server = server;
-		this.clients = clients;
-		this.memory = memory;
-		this.persistence = persistence;
-		this.stats = stats;
-		this.replication = replication;
-		this.sentinel = sentinel;
-		this.cpu = cpu;
-		this.cluster = cluster;
-		this.keyspace = keyspaces;
-	}
-
-	/**
-	 * 获取 Redis 服务器的信息
-	 *
-	 * @return Redis 服务器的信息
-	 */
-	public Server getServer() {
-		return server;
-	}
-
-	/**
-	 * 获取已连接客户端的信息
-	 *
-	 * @return 已连接客户端的信息
-	 */
-	public Clients getClients() {
-		return clients;
-	}
-
-	/**
-	 * 获取 Redis 服务器的内存信息
-	 *
-	 * @return Redis 服务器的内存信息
-	 */
-	public Memory getMemory() {
-		return memory;
-	}
-
-	/**
-	 * 获取 RDB 持久化和 AOF 持久化有关的信息
-	 *
-	 * @return RDB 持久化和 AOF 持久化有关的信息
-	 */
-	public Persistence getPersistence() {
-		return persistence;
-	}
-
-	/**
-	 * 获取集群有关的信息
-	 *
-	 * @return 集群有关的信息
-	 */
-	public Cluster getCluster() {
-		return cluster;
-	}
-
-	/**
-	 * 获取一般统计信息
-	 *
-	 * @return 一般统计信息
-	 */
-	public Stats getStats() {
-		return stats;
-	}
-
-	/**
-	 * 获取主从复制信息
-	 *
-	 * @return 主从复制信息
-	 */
-	public Replication getReplication() {
-		return replication;
-	}
-
-	/**
-	 * 获取 Sentinel 信息
-	 *
-	 * @return Sentinel 信息
-	 */
-	public Sentinel getSentinel() {
-		return sentinel;
-	}
-
-	/**
-	 * 获取 CPU 的计算量统计信息
-	 *
-	 * @return CPU 的计算量统计信息
-	 */
-	public Cpu getCpu() {
-		return cpu;
-	}
-
-	/**
-	 * 获取数据库相关的统计信息
-	 *
-	 * @return 数据库相关的统计信息
-	 */
-	public List<Keyspace> getKeyspace() {
-		return keyspace;
-	}
+	static long serialVersionUID = -2772690110674245981L;
 
 	public String toPrettyString() {
 		final StringBuilder sb = new StringBuilder();
@@ -374,12 +270,12 @@ public class Info implements Serializable {
 		return sb.toString();
 	}
 
-	protected static Double getPercent(final Properties properties, final String key) {
+	private static Double getPercent(final Properties properties, final String key) {
 		String str = properties.getProperty(key);
 		return Validate.hasText(str) ? Double.parseDouble(str.substring(0, str.length() - 1)) : null;
 	}
 
-	protected static Boolean getBoolean(final Properties properties, final String key) {
+	private static Boolean getBoolean(final Properties properties, final String key) {
 		String str = properties.getProperty(key);
 
 		if(Validate.hasText(str) == false){
@@ -397,7 +293,7 @@ public class Info implements Serializable {
 		}
 	}
 
-	protected static Date getDate(final Properties properties, final String key, final boolean isUnixTimestamp) {
+	private static Date getDate(final Properties properties, final String key, final boolean isUnixTimestamp) {
 		String str = properties.getProperty(key);
 
 		if(Validate.hasText(str) == false){
@@ -414,11 +310,11 @@ public class Info implements Serializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected static <E> E getObject(final Properties properties, final String key) {
+	private static <E> E getObject(final Properties properties, final String key) {
 		return (E) properties.get(key);
 	}
 
-	protected static String toPrettyString(final Properties properties) {
+	private static String toPrettyString(final Properties properties) {
 		int max = properties.size() - 1;
 		if(max == -1){
 			return Constants.EMPTY_STRING;
@@ -444,7 +340,7 @@ public class Info implements Serializable {
 		}
 	}
 
-	protected static String toString(final Properties properties) {
+	private static String toString(final Properties properties) {
 		int max = properties.size() - 1;
 		if(max == -1){
 			return Constants.EMPTY_STRING;
@@ -470,7 +366,7 @@ public class Info implements Serializable {
 		}
 	}
 
-	public enum Section {
+	public enum Section implements Keyword {
 
 		SERVER,
 
@@ -490,7 +386,17 @@ public class Info implements Serializable {
 
 		COMMAND_STATS,
 
-		KEYSPACE
+		KEYSPACE;
+
+		@Override
+		public String getValue() {
+			return name();
+		}
+
+		@Override
+		public String toString() {
+			return getValue();
+		}
 
 	}
 
@@ -684,7 +590,7 @@ public class Info implements Serializable {
 			return Info.toString(properties);
 		}
 
-		public enum Key {
+		public enum Key implements Keyword {
 
 			ARCH("arch_bits"),
 
@@ -730,8 +636,14 @@ public class Info implements Serializable {
 				this.value = value;
 			}
 
+			@Override
 			public String getValue() {
 				return value;
+			}
+
+			@Override
+			public String toString() {
+				return getValue();
 			}
 
 		}
@@ -816,7 +728,7 @@ public class Info implements Serializable {
 			return Info.toString(properties);
 		}
 
-		public enum Key {
+		public enum Key implements Keyword {
 
 			BIGGES_TINPUT_BUFFER("client_biggest_input_buf"),
 
@@ -836,8 +748,14 @@ public class Info implements Serializable {
 				this.value = value;
 			}
 
+			@Override
 			public String getValue() {
 				return value;
+			}
+
+			@Override
+			public String toString() {
+				return getValue();
 			}
 
 		}
@@ -1215,7 +1133,7 @@ public class Info implements Serializable {
 			return Info.toString(properties);
 		}
 
-		public enum Key {
+		public enum Key implements Keyword {
 
 			ACTIVE_DEFRAG_RUNNING("active_defrag_running"),
 
@@ -1303,8 +1221,14 @@ public class Info implements Serializable {
 				this.value = value;
 			}
 
+			@Override
 			public String getValue() {
 				return value;
+			}
+
+			@Override
+			public String toString() {
+				return getValue();
 			}
 
 		}
@@ -1596,7 +1520,7 @@ public class Info implements Serializable {
 			return Info.toString(properties);
 		}
 
-		public enum Key {
+		public enum Key implements Keyword {
 
 			AOF_BASE_SIZE("aof_base_size"),
 
@@ -1650,8 +1574,14 @@ public class Info implements Serializable {
 				this.value = value;
 			}
 
+			@Override
 			public String getValue() {
 				return value;
+			}
+
+			@Override
+			public String toString() {
+				return getValue();
 			}
 
 		}
@@ -1911,7 +1841,7 @@ public class Info implements Serializable {
 			return Info.toString(properties);
 		}
 
-		public enum Key {
+		public enum Key implements Keyword {
 
 			ACTIVE_DEFRAG_HITS("active_defrag_hits"),
 
@@ -1971,8 +1901,14 @@ public class Info implements Serializable {
 				this.value = value;
 			}
 
+			@Override
 			public String getValue() {
 				return value;
+			}
+
+			@Override
+			public String toString() {
+				return getValue();
 			}
 
 		}
@@ -2148,7 +2084,7 @@ public class Info implements Serializable {
 			return Info.toString(properties);
 		}
 
-		public enum Key {
+		public enum Key implements Keyword {
 
 			CONNECTED_SLAVES("connected_slaves"),
 
@@ -2194,13 +2130,19 @@ public class Info implements Serializable {
 				this.value = value;
 			}
 
+			@Override
 			public String getValue() {
 				return value;
 			}
 
+			@Override
+			public String toString() {
+				return getValue();
+			}
+
 		}
 
-		public enum MasterLinkStatus {
+		public enum MasterLinkStatus implements Keyword {
 
 			UP("up"),
 
@@ -2212,8 +2154,14 @@ public class Info implements Serializable {
 				this.value = value;
 			}
 
+			@Override
 			public String getValue() {
 				return value;
+			}
+
+			@Override
+			public String toString() {
+				return getValue();
 			}
 
 		}
@@ -2259,11 +2207,11 @@ public class Info implements Serializable {
 
 			@Override
 			public String toString() {
-				return "ip=" + getIp() + ", port=" + getPort() + ", state=" + getState() + ", offset=" + getOffset() +
-						", " + "lag=" + getLag();
+				return ObjectStringBuilder.create().add("ip", getIp()).add("port", getPort())
+						.add("state", getState()).add("offset", getOffset()).add("lag", getLag()).build();
 			}
 
-			public enum Key {
+			public enum Key implements Keyword {
 
 				IP("ip"),
 
@@ -2281,13 +2229,19 @@ public class Info implements Serializable {
 					this.value = value;
 				}
 
+				@Override
 				public String getValue() {
 					return value;
 				}
 
+				@Override
+				public String toString() {
+					return getValue();
+				}
+
 			}
 
-			public enum SlaveState {
+			public enum SlaveState implements Keyword {
 
 				ONLINE("online");
 
@@ -2297,8 +2251,14 @@ public class Info implements Serializable {
 					this.value = value;
 				}
 
+				@Override
 				public String getValue() {
 					return value;
+				}
+
+				@Override
+				public String toString() {
+					return getValue();
 				}
 
 			}
@@ -2340,7 +2300,7 @@ public class Info implements Serializable {
 				return Info.toString(properties);
 			}
 
-			public enum Key {
+			public enum Key implements Keyword {
 
 				ACTIVE("repl_backlog_active"),
 
@@ -2356,8 +2316,14 @@ public class Info implements Serializable {
 					this.value = value;
 				}
 
+				@Override
 				public String getValue() {
 					return value;
+				}
+
+				@Override
+				public String toString() {
+					return getValue();
 				}
 
 			}
@@ -2377,7 +2343,7 @@ public class Info implements Serializable {
 
 		private final Properties properties;
 
-		public Sentinel(Properties properties) {
+		public Sentinel(final Properties properties) {
 			this.properties = properties;
 		}
 
@@ -2448,7 +2414,7 @@ public class Info implements Serializable {
 			return Info.toString(properties);
 		}
 
-		public enum Key {
+		public enum Key implements Keyword {
 
 			MASTERS("masters"),
 
@@ -2468,8 +2434,14 @@ public class Info implements Serializable {
 				this.value = value;
 			}
 
+			@Override
 			public String getValue() {
 				return value;
+			}
+
+			@Override
+			public String toString() {
+				return getValue();
 			}
 
 		}
@@ -2480,7 +2452,7 @@ public class Info implements Serializable {
 
 			private final Properties properties;
 
-			public Master(Properties properties) {
+			public Master(final Properties properties) {
 				super(PropertiesUtils.get(properties, Key.HOST.value),
 						PropertiesUtils.getInt(properties, Key.PORT.value));
 				setName(PropertiesUtils.get(properties, Key.NAME.value));
@@ -2525,11 +2497,12 @@ public class Info implements Serializable {
 
 			@Override
 			public String toString() {
-				return "name=" + getName() + ", status=" + getStatus() + ", address=" + getAddress() + ", slaves=" +
-						getSlaves() + ", sentinels=" + getSentinels();
+				return ObjectStringBuilder.create().add("name", getName()).add("status", getStatus())
+						.add("address", getAddress()).add("slaves", getSlaves())
+						.add("sentinels", getSentinels()).build();
 			}
 
-			public enum Key {
+			public enum Key implements Keyword {
 
 				ADDRESS("address"),
 
@@ -2551,15 +2524,21 @@ public class Info implements Serializable {
 					this.value = value;
 				}
 
+				@Override
 				public String getValue() {
 					return value;
+				}
+
+				@Override
+				public String toString() {
+					return getValue();
 				}
 
 			}
 
 		}
 
-		public enum Status {
+		public enum Status implements Keyword {
 
 			OK("ok"),
 
@@ -2573,8 +2552,14 @@ public class Info implements Serializable {
 				this.value = value;
 			}
 
+			@Override
 			public String getValue() {
 				return value;
+			}
+
+			@Override
+			public String toString() {
+				return getValue();
 			}
 
 		}
@@ -2592,7 +2577,7 @@ public class Info implements Serializable {
 
 		private final Properties properties;
 
-		public Cpu(Properties properties) {
+		public Cpu(final Properties properties) {
 			this.properties = properties;
 		}
 
@@ -2641,7 +2626,7 @@ public class Info implements Serializable {
 			return Info.toString(properties);
 		}
 
-		public enum Key {
+		public enum Key implements Keyword {
 
 			USED_SYS("used_cpu_sys"),
 
@@ -2657,8 +2642,14 @@ public class Info implements Serializable {
 				this.value = value;
 			}
 
+			@Override
 			public String getValue() {
 				return value;
+			}
+
+			@Override
+			public String toString() {
+				return getValue();
 			}
 
 		}
@@ -2707,7 +2698,7 @@ public class Info implements Serializable {
 			return Info.toString(properties);
 		}
 
-		public enum Key {
+		public enum Key implements Keyword {
 
 			ENABLED("cluster_enabled");
 
@@ -2717,8 +2708,14 @@ public class Info implements Serializable {
 				this.value = value;
 			}
 
+			@Override
 			public String getValue() {
 				return value;
+			}
+
+			@Override
+			public String toString() {
+				return getValue();
 			}
 
 		}
@@ -2777,15 +2774,11 @@ public class Info implements Serializable {
 
 		@Override
 		public String toString() {
-			final StringJoiner stringJoiner = new StringJoiner(", ");
-
-			stringJoiner.add("db=" + getDb()).add("keys=" + getKeys()).add("expires=" + getExpires())
-					.add("avg_ttl=" + getAvgTtl());
-
-			return stringJoiner.toString();
+			return ObjectStringBuilder.create().add("db", getDb()).add("keys", getKeys()).add("expires", getExpires())
+					.add("avg_ttl", getAvgTtl()).build();
 		}
 
-		public enum Key {
+		public enum Key implements Keyword {
 
 			AVG_TTL("avg_ttl"),
 
@@ -2801,8 +2794,14 @@ public class Info implements Serializable {
 				this.value = value;
 			}
 
+			@Override
 			public String getValue() {
 				return value;
+			}
+
+			@Override
+			public String toString() {
+				return getValue();
 			}
 
 		}

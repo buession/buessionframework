@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -27,7 +27,7 @@ package com.buession.redis.core;
 /**
  * @author Yong.Teng
  */
-public enum MaxMemoryPolicy {
+public enum MaxMemoryPolicy implements Keyword {
 
 	/**
 	 * 最近最少使用算法，从设置了过期时间的键中选择空转时间最长的键值对清除掉
@@ -71,17 +71,18 @@ public enum MaxMemoryPolicy {
 
 	private final String value;
 
-	MaxMemoryPolicy(final String value){
+	MaxMemoryPolicy(final String value) {
 		this.value = value;
 	}
 
-	public String getValue(){
+	@Override
+	public String getValue() {
 		return value;
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 		return getValue();
 	}
-	
+
 }

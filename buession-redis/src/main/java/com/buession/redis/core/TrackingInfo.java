@@ -19,55 +19,28 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
-import java.io.Serializable;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
- * Stream 消费者基类
+ *
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-class BaseStreamConsumer implements Serializable {
+public class TrackingInfo {
 
-	private final static long serialVersionUID = -5325953754460072820L;
+	private final Set<io.lettuce.core.TrackingInfo.TrackingFlag> flags = new HashSet<>();
 
-	/**
-	 * 消费者名称
-	 */
-	private final String name;
+	private final long redirect;
 
-	private final Map<String, Object> infos;
-
-	/**
-	 * 返回消费者名称
-	 *
-	 * @param name
-	 * 		消费者名称
-	 * @param infos
-	 * 		-
-	 */
-	public BaseStreamConsumer(final String name, final Map<String, Object> infos) {
-		this.name = name;
-		this.infos = infos;
-	}
-
-	/**
-	 * 返回消费者名称
-	 *
-	 * @return 消费者名称
-	 */
-	public String getName() {
-		return name;
-	}
-
-	public Map<String, Object> getInfos() {
-		return infos;
-	}
+	private final List<String> prefixes = new ArrayList<>();
 
 }

@@ -28,7 +28,7 @@ package com.buession.redis.core;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public enum ClientType {
+public enum ClientType implements Keyword {
 
 	NORMAL,
 
@@ -38,6 +38,16 @@ public enum ClientType {
 
 	REPLICA,
 
-	PUBSUB
+	PUBSUB;
+
+	@Override
+	public String getValue() {
+		return name();
+	}
+
+	@Override
+	public String toString() {
+		return getValue();
+	}
 
 }

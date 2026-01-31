@@ -36,29 +36,13 @@ import java.util.List;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class ClusterShardInfo implements Serializable {
+public record ClusterShardInfo(
+		IntegerRange slots,
+
+		List<ClusterShardNode> nodes
+) implements Serializable {
 
 	private final static long serialVersionUID = -6906496894720683515L;
-
-	private IntegerRange slots;
-
-	private List<ClusterShardNode> nodes;
-
-	public IntegerRange getSlots() {
-		return slots;
-	}
-
-	public void setSlots(IntegerRange slots) {
-		this.slots = slots;
-	}
-
-	public List<ClusterShardNode> getNodes() {
-		return nodes;
-	}
-
-	public void setNodes(List<ClusterShardNode> nodes) {
-		this.nodes = nodes;
-	}
 
 	@Override
 	public String toString() {
@@ -68,79 +52,23 @@ public class ClusterShardInfo implements Serializable {
 				.build();
 	}
 
-	public final static class ClusterShardNode implements Serializable {
+	public record ClusterShardNode(
+			String id,
+
+			int port,
+
+			String ip,
+
+			String endpoint,
+
+			ClusterRole role,
+
+			int replicationOffset,
+
+			ClusterHealth health
+	) implements Serializable {
 
 		private final static long serialVersionUID = -3226058616174727906L;
-
-		private String id;
-
-		private int port;
-
-		private String ip;
-
-		private String endpoint;
-
-		private ClusterRole role;
-
-		private int replicationOffset;
-
-		private ClusterHealth health;
-
-		public String getId() {
-			return id;
-		}
-
-		public void setId(String id) {
-			this.id = id;
-		}
-
-		public int getPort() {
-			return port;
-		}
-
-		public void setPort(int port) {
-			this.port = port;
-		}
-
-		public String getIp() {
-			return ip;
-		}
-
-		public void setIp(String ip) {
-			this.ip = ip;
-		}
-
-		public String getEndpoint() {
-			return endpoint;
-		}
-
-		public void setEndpoint(String endpoint) {
-			this.endpoint = endpoint;
-		}
-
-		public ClusterRole getRole() {
-			return role;
-		}
-
-		public void setRole(ClusterRole role) {
-			this.role = role;
-		}
-
-		public int getReplicationOffset() {
-			return replicationOffset;
-		}
-
-		public void setReplicationOffset(int replicationOffset) {
-			this.replicationOffset = replicationOffset;
-		}
-
-		public ClusterHealth getHealth() {
-			return health;
-		}
-
-		public void setHealth(ClusterHealth health) {
-			this.health = health;
-		}
 
 		@Override
 		public String toString() {

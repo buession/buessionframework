@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -35,82 +35,29 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class StreamPendingSummary implements Serializable {
+public record StreamPendingSummary(
+		/*
+		  Pending 消息总数
+		 */
+		long total,
+
+		/*
+		  最小消息 ID
+		 */
+		StreamEntryId minId,
+
+		/*
+		  最大消息 ID
+		 */
+		StreamEntryId maxId,
+
+		/*
+		  各消费者的 pending 消息数统计
+		 */
+		Map<String, Long> consumerMessageCount
+) implements Serializable {
 
 	private final static long serialVersionUID = 4352578196582945851L;
-
-	/**
-	 * Pending 消息总数
-	 */
-	private final long total;
-
-	/**
-	 * 最小消息 ID
-	 */
-	private final StreamEntryId minId;
-
-	private final StreamEntryId maxId;
-
-	/**
-	 * 各消费者的 pending 消息数统计
-	 */
-	private final Map<String, Long> consumerMessageCount;
-
-	/**
-	 * 构造函数
-	 *
-	 * @param total
-	 * 		Pending 消息总数
-	 * @param minId
-	 * 		最小消息 ID
-	 * @param maxId
-	 * 		最大消息 ID
-	 * @param consumerMessageCount
-	 * 		各消费者的 pending 消息数统计
-	 */
-	public StreamPendingSummary(final long total, final StreamEntryId minId, final StreamEntryId maxId,
-								final Map<String, Long> consumerMessageCount) {
-		this.total = total;
-		this.minId = minId;
-		this.maxId = maxId;
-		this.consumerMessageCount = consumerMessageCount;
-	}
-
-	/**
-	 * 返回 Pending 消息总数
-	 *
-	 * @return Pending 消息总数
-	 */
-	public long getTotal() {
-		return total;
-	}
-
-	/**
-	 * 返回最小消息 ID
-	 *
-	 * @return 最小消息 ID
-	 */
-	public StreamEntryId getMinId() {
-		return minId;
-	}
-
-	/**
-	 * 返回最大消息 ID
-	 *
-	 * @return 最大消息 ID
-	 */
-	public StreamEntryId getMaxId() {
-		return maxId;
-	}
-
-	/**
-	 * 返回各消费者的 pending 消息数统计
-	 *
-	 * @return 各消费者的 pending 消息数统计
-	 */
-	public Map<String, Long> getConsumerMessageCount() {
-		return consumerMessageCount;
-	}
 
 	@Override
 	public String toString() {

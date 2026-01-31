@@ -19,13 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
 import com.buession.redis.utils.ObjectStringBuilder;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -34,68 +35,45 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class Stream extends BaseStream {
+public record Stream(
+		/*
+		  Stream 中消息的总条数
+		 */
+		long length,
+
+		long groups,
+
+		/*
+		  Stream 内部 Radix Tree 结构信息
+		 */
+		long radixTreeKeys,
+
+		/*
+		  Stream 内部 Radix Tree 结构信息
+		 */
+		long radixTreeNodes,
+
+		StreamEntryId lastGeneratedId,
+
+		StreamEntry firstEntry,
+
+		StreamEntry lastEntry,
+
+		Map<String, Object> infos) implements Serializable {
 
 	private final static long serialVersionUID = -4336316668706617743L;
-
-	private final StreamEntry firstEntry;
-
-	private final StreamEntry lastEntry;
-
-	private final long groups;
-
-	/**
-	 * 构造函数
-	 *
-	 * @param length
-	 * 		Stream 中消息的总条数
-	 * @param radixTreeKeys
-	 * 		Stream 内部 Radix Tree 结构信息
-	 * @param radixTreeNodes
-	 * 		Stream 内部 Radix Tree 结构信息
-	 * @param groups
-	 * 		关联的消费者组数量
-	 * @param lastGeneratedId
-	 * 		-
-	 * @param firstEntry
-	 * 		-
-	 * @param lastEntry
-	 * 		-
-	 * @param infos
-	 * 		-
-	 */
-	public Stream(final long length, final long radixTreeKeys, final long radixTreeNodes, final long groups,
-				  final StreamEntryId lastGeneratedId, final StreamEntry firstEntry, final StreamEntry lastEntry,
-				  final Map<String, Object> infos) {
-		super(length, radixTreeKeys, radixTreeNodes, lastGeneratedId, infos);
-		this.firstEntry = firstEntry;
-		this.lastEntry = lastEntry;
-		this.groups = groups;
-	}
-
-	public StreamEntry getFirstEntry() {
-		return firstEntry;
-	}
-
-	public StreamEntry getLastEntry() {
-		return lastEntry;
-	}
-
-	public long getGroups() {
-		return groups;
-	}
 
 	@Override
 	public String toString() {
 		return ObjectStringBuilder.create()
-				.add("length", getLength())
-				.add("radixTreeKeys", getRadixTreeKeys())
-				.add("radixTreeNodes", getRadixTreeNodes())
+				.add("length", length)
 				.add("groups", groups)
-				.add("lastGeneratedId", getLastGeneratedId())
+				.add("radixTreeKeys", radixTreeKeys)
+				.add("radixTreeNodes", radixTreeNodes)
+				.add("lastGeneratedId", lastGeneratedId)
 				.add("firstEntry", firstEntry)
 				.add("lastEntry", lastEntry)
-				.add("infos", getInfos())
+				.add("infos", infos)
 				.build();
 	}
 

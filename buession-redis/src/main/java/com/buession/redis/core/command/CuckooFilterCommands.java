@@ -444,7 +444,7 @@ public interface CuckooFilterCommands extends RedisCommands {
 	/**
 	 * CF.INSERT 参数
 	 */
-	class CFInsertArgument {
+	final class CFInsertArgument {
 
 		/**
 		 * 初始容量
@@ -531,7 +531,7 @@ public interface CuckooFilterCommands extends RedisCommands {
 	/**
 	 * CF.RESERVE 参数
 	 */
-	class CFReserveArgument {
+	final class CFReserveArgument {
 
 		/**
 		 * 初始容量
@@ -601,11 +601,8 @@ public interface CuckooFilterCommands extends RedisCommands {
 
 		@Override
 		public String toString() {
-			return ArgStringBuilder.create().append(capacity)
-					.add("BUCKETSIZE", bucketSize)
-					.add("MAXITERATIONS", maxIterations)
-					.add("EXPANSION", expansion)
-					.build();
+			return ArgStringBuilder.create().append(capacity).add("BUCKETSIZE", bucketSize)
+					.add("MAXITERATIONS", maxIterations).add("EXPANSION", expansion).build();
 		}
 
 		public static class Builder extends BaseArgumentBuilder<CFReserveArgument> {

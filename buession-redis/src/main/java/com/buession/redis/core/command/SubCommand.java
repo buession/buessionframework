@@ -98,6 +98,42 @@ public enum SubCommand implements ProtocolCommand {
 	/**
 	 * Cluster command end
 	 **/
+
+	/**
+	 * connection command start
+	 */
+	CLIENT_CACHING("w"),
+
+	CLIENT_GETNAME("r"),
+
+	CLIENT_GETREDIR("r"),
+
+	CLIENT_ID("r"),
+
+	CLIENT_INFO("r"),
+
+	CLIENT_KILL("w"),
+
+	CLIENT_LIST("r"),
+
+	CLIENT_NO_EVICT("NO-EVICT", "r"),
+
+	CLIENT_NO_TOUCH("NO-TOUCH", "r"),
+
+	CLIENT_PAUSE("w"),
+
+	CLIENT_REPLY("w"),
+
+	CLIENT_SETINFO("w"),
+
+	CLIENT_SETNAME("w"),
+
+	CLIENT_TRACKING("w"),
+
+	CLIENT_TRACKINGINFO("r"),
+	/**
+	 * connection command end
+	 */
 	;
 
 	/**

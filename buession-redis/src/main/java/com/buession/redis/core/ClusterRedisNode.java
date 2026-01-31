@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -192,7 +192,7 @@ public class ClusterRedisNode extends RedisNode {
 	/**
 	 * 标记位
 	 */
-	public enum Flag {
+	public enum Flag implements Keyword {
 
 		/**
 		 * 当前连接的节点
@@ -240,6 +240,7 @@ public class ClusterRedisNode extends RedisNode {
 			this.value = value;
 		}
 
+		@Override
 		public String getValue() {
 			return value;
 		}
@@ -254,7 +255,7 @@ public class ClusterRedisNode extends RedisNode {
 	/**
 	 * node-to-node 集群总线使用的链接的状态
 	 */
-	public enum LinkState {
+	public enum LinkState implements Keyword {
 
 		CONNECTED("connected"),
 
@@ -266,6 +267,7 @@ public class ClusterRedisNode extends RedisNode {
 			this.value = value;
 		}
 
+		@Override
 		public String getValue() {
 			return value;
 		}

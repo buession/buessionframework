@@ -26,7 +26,6 @@ package com.buession.redis.core;
 
 import com.buession.redis.utils.ObjectStringBuilder;
 
-import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -35,59 +34,19 @@ import java.io.Serializable;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class ClusterSlotStat implements Serializable {
+public record ClusterSlotStat(
+		long keyCount,
+
+		double cpuUsec,
+
+		long memoryBytes,
+
+		long networkBytesIn,
+
+		long networkBytesOut
+) implements Serializable {
 
 	private final static long serialVersionUID = 8893587588409047546L;
-
-	private long keyCount;
-
-	private double cpuUsec;
-
-	private long memoryBytes;
-
-	private long networkBytesIn;
-
-	private long networkBytesOut;
-
-	public long getKeyCount() {
-		return keyCount;
-	}
-
-	public void setKeyCount(long keyCount) {
-		this.keyCount = keyCount;
-	}
-
-	public double getCpuUsec() {
-		return cpuUsec;
-	}
-
-	public void setCpuUsec(double cpuUsec) {
-		this.cpuUsec = cpuUsec;
-	}
-
-	public long getMemoryBytes() {
-		return memoryBytes;
-	}
-
-	public void setMemoryBytes(long memoryBytes) {
-		this.memoryBytes = memoryBytes;
-	}
-
-	public long getNetworkBytesIn() {
-		return networkBytesIn;
-	}
-
-	public void setNetworkBytesIn(long networkBytesIn) {
-		this.networkBytesIn = networkBytesIn;
-	}
-
-	public long getNetworkBytesOut() {
-		return networkBytesOut;
-	}
-
-	public void setNetworkBytesOut(long networkBytesOut) {
-		this.networkBytesOut = networkBytesOut;
-	}
 
 	@Override
 	public String toString() {

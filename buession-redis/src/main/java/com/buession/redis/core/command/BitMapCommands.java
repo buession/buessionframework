@@ -26,6 +26,7 @@ package com.buession.redis.core.command;
 
 import com.buession.redis.core.BitCountOption;
 import com.buession.redis.core.BitOperation;
+import com.buession.redis.core.Keyword;
 import com.buession.redis.utils.ArgStringBuilder;
 
 import java.util.List;
@@ -504,12 +505,21 @@ public interface BitMapCommands extends RedisCommands {
 
 		}
 
-		public enum Overflow {
+		public enum Overflow implements Keyword {
 			WRAP,
 
 			SAT,
 
-			FAIL
+			FAIL;
+
+			public String getValue() {
+				return name();
+			}
+
+			@Override
+			public String toString() {
+				return getValue();
+			}
 		}
 
 	}

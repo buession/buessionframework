@@ -116,7 +116,7 @@ public enum Command implements ProtocolCommand {
 	 **/
 	ASKING(CommandGroup.CLUSTER, "r"),
 
-	CLUSTER(CommandGroup.CLUSTER, "w", new SubCommand[]{SubCommand.CLUSTER_ADDSLOTS, SubCommand.CLUSTER_ADDSLOTSRANGE,
+	CLUSTER(CommandGroup.CLUSTER, "rw", new SubCommand[]{SubCommand.CLUSTER_ADDSLOTS, SubCommand.CLUSTER_ADDSLOTSRANGE,
 			SubCommand.CLUSTER_BUMPEPOCH, SubCommand.CLUSTER_COUNTFAILUREREPORTS, SubCommand.CLUSTER_COUNTKEYSINSLOT,
 			SubCommand.CLUSTER_DELSLOTS, SubCommand.CLUSTER_DELSLOTSRANGE, SubCommand.CLUSTER_FAILOVER,
 			SubCommand.CLUSTER_FLUSHSLOTS, SubCommand.CLUSTER_FORGET, SubCommand.CLUSTER_GETKEYSINSLOT,
@@ -151,6 +151,19 @@ public enum Command implements ProtocolCommand {
 	/**
 	 * Count-min sketch command end
 	 **/
+
+	/**
+	 * connection command start
+	 */
+	AUTH(CommandGroup.CONNECTION, "r"),
+
+	CLIENT(CommandGroup.CONNECTION, "rw", new SubCommand[]{SubCommand.CLIENT_CACHING, SubCommand.CLIENT_GETNAME,
+			SubCommand.CLIENT_GETREDIR, SubCommand.CLIENT_ID, SubCommand.CLIENT_INFO, SubCommand.CLIENT_KILL,
+			SubCommand.CLIENT_LIST, SubCommand.CLIENT_NO_EVICT, SubCommand.CLIENT_NO_TOUCH, SubCommand.CLIENT_PAUSE,
+			SubCommand.CLIENT_REPLY, SubCommand.CLIENT_SETINFO, SubCommand.CLIENT_SETNAME, SubCommand.CLIENT_TRACKING}),
+	/**
+	 * connection command end
+	 */
 	;
 
 	/**

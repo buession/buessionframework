@@ -31,11 +31,22 @@ package com.buession.redis.core;
  * @since 4.0.0
  */
 public enum ClusterHealth implements Keyword {
-	ONLINE;
+	ONLINE("online");
+
+	private final String value;
+
+	ClusterHealth(final String value) {
+		this.value = value;
+	}
 
 	@Override
 	public String getValue() {
-		return name();
+		return value;
+	}
+
+	@Override
+	public String toString() {
+		return getValue();
 	}
 
 }

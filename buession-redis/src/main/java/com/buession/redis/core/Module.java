@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -35,50 +35,19 @@ import java.util.Objects;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class Module implements Serializable {
+public record Module(
+		/**
+		 * 模块名称
+		 */
+		String name,
+
+		/**
+		 * 模块版本号
+		 */
+		int version
+) implements Serializable {
 
 	private final static long serialVersionUID = 8584149197825340590L;
-
-	/**
-	 * 模块名称
-	 */
-	private final String name;
-
-	/**
-	 * 模块版本号
-	 */
-	private final int version;
-
-	/**
-	 * 构造函数
-	 *
-	 * @param name
-	 * 		模块名称
-	 * @param version
-	 * 		模块版本号
-	 */
-	public Module(final String name, final int version) {
-		this.name = name;
-		this.version = version;
-	}
-
-	/**
-	 * 返回模块名称
-	 *
-	 * @return 模块名称
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * 返回模块版本号
-	 *
-	 * @return 模块版本号
-	 */
-	public int getVersion() {
-		return version;
-	}
 
 	@Override
 	public int hashCode() {

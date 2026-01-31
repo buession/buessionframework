@@ -352,7 +352,7 @@ public interface BloomFilterCommands extends RedisCommands {
 	/**
 	 * BF.INSERT 参数
 	 */
-	class BFInsertArgument {
+	final class BFInsertArgument {
 
 		/**
 		 * 初始容量
@@ -518,7 +518,7 @@ public interface BloomFilterCommands extends RedisCommands {
 	/**
 	 * BF.RESERVE 参数
 	 */
-	class BFReserveArgument {
+	final class BFReserveArgument {
 
 		/**
 		 * 期望的误判率

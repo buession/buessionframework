@@ -41,4 +41,10 @@ public interface Keyword extends Value<String>, Rawable {
 		return SafeEncoder.encode(getValue());
 	}
 
+	enum Common {
+		ON,
+
+		OFF
+	}
+
 }
