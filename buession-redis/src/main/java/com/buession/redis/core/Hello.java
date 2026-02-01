@@ -22,33 +22,14 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.lettuce.operations;
-
-import com.buession.core.converter.MapEntryMapConverter;
-import com.buession.lang.Status;
-import com.buession.redis.client.lettuce.LettuceRedisClient;
-import com.buession.redis.client.operations.CuckooFilterOperations;
-import com.buession.redis.core.command.Command;
-import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.utils.SafeEncoder;
-
-import java.util.List;
-import java.util.Map;
+package com.buession.redis.core;
 
 /**
- * Lettuce 布谷鸟过滤器命令操作抽象类
- *
- * @param <C>
- * 		Redis Client {@link LettuceRedisClient}
+ * HELLO 命令结果
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public abstract class AbstractCuckooFilterOperations<C extends LettuceRedisClient>
-		extends AbstractLettuceRedisOperations<C> implements CuckooFilterOperations {
-
-	public AbstractCuckooFilterOperations(final C client) {
-		super(client);
-	}
+public record Hello() {
 
 }

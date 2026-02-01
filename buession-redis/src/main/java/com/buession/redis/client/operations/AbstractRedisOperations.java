@@ -25,6 +25,7 @@
 package com.buession.redis.client.operations;
 
 import com.buession.core.converter.BooleanStatusConverter;
+import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.redis.client.RedisClient;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
@@ -46,6 +47,10 @@ public abstract class AbstractRedisOperations<C extends RedisClient> implements 
 
 	protected final ListConverter<byte[], String> binaryToStringListConverter =
 			new ListConverter<>(SafeEncoder::encode);
+
+	protected final Converter<byte[], String> binaryToStringConverter = SafeEncoder::encode;
+
+	protected final Converter<String, byte[]> stringToBinaryConverter = SafeEncoder::encode;
 
 	protected final static OkStatusConverter okStatusConverter = new OkStatusConverter();
 

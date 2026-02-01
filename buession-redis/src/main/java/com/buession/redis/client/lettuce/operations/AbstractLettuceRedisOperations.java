@@ -30,16 +30,13 @@ import com.buession.redis.client.operations.AbstractRedisOperations;
 /**
  * Lettuce Redis 命令操作抽象类
  *
- * @param <C>
- * 		Redis Client {@link LettuceRedisClient}
- *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public abstract class AbstractLettuceRedisOperations<C extends LettuceRedisClient> extends AbstractRedisOperations<C>
+public abstract class AbstractLettuceRedisOperations extends AbstractRedisOperations<LettuceRedisClient>
 		implements LettuceRedisOperations {
 
-	public AbstractLettuceRedisOperations(final C client) {
+	public AbstractLettuceRedisOperations(final LettuceRedisClient client) {
 		super(client);
 	}
 

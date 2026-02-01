@@ -131,6 +131,10 @@ public enum SubCommand implements ProtocolCommand {
 	CLIENT_TRACKING("w"),
 
 	CLIENT_TRACKINGINFO("r"),
+
+	CLIENT_UNBLOCK("w"),
+
+	CLIENT_UNPAUSE("w"),
 	/**
 	 * connection command end
 	 */

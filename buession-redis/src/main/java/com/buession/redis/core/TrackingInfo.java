@@ -24,8 +24,6 @@
  */
 package com.buession.redis.core;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -35,12 +33,64 @@ import java.util.Set;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class TrackingInfo {
+public record TrackingInfo(
+		Set<TrackingFlag> flags,
 
-	private final Set<io.lettuce.core.TrackingInfo.TrackingFlag> flags = new HashSet<>();
+		long redirect,
 
-	private final long redirect;
+		List<String> prefixes
+) {
 
-	private final List<String> prefixes = new ArrayList<>();
+	public enum TrackingFlag implements Keyword {
+
+		/**
+		 * The connection isn't using server assisted client side caching.
+		 */
+		OFF,
+		/**
+		 * Server assisted client side caching is enabled for the connection.
+		 */
+		ON,
+		/**
+		 * The client uses broadcasting mode.
+		 */
+		BCAST,
+		/**
+		 * The client does not cache keys by default.
+		 */
+		OPTIN,
+		/**
+		 * The client caches keys by default.
+		 */
+		OPTOUT,
+		/**
+		 * The next command will cache keys (exists only together with optin).
+		 */
+		CACHING_YES,
+		/**
+		 * The next command won't cache keys (exists only together with optout).
+		 */
+		CACHING_NO,
+		/**
+		 * The client isn't notified about keys modified by itself.
+		 */
+		NOLOOP,
+		/**
+		 * The client ID used for redirection isn't valid anymore.
+		 */
+		BROKEN_REDIRECT;
+
+
+		@Override
+		public String getValue() {
+			return name();
+		}
+
+		@Override
+		public String toString() {
+			return getValue();
+		}
+
+	}
 
 }

@@ -1,43 +1,4 @@
 
-	/**
-	 * connection command start
-	 */
-	AUTH(CommandGroup.CONNECTION, "rw"),
-
-	ECHO(CommandGroup.CONNECTION, "w"),
-
-	PING(CommandGroup.CONNECTION, "r"),
-
-	RESET(CommandGroup.CONNECTION, "w"),
-
-	QUIT(CommandGroup.CONNECTION, "rw"),
-
-	SELECT(CommandGroup.CONNECTION, "w"),
-
-	CLIENT_KILL(CommandGroup.CONNECTION, "w"),
-
-	CLIENT_SETNAME(CommandGroup.CONNECTION, "w"),
-
-	CLIENT_GETNAME(CommandGroup.CONNECTION, "r"),
-
-	CLIENT_GETREDIR(CommandGroup.CONNECTION, "r"),
-
-	CLIENT_CACHING(CommandGroup.CONNECTION, "w"),
-
-	CLIENT_ID(CommandGroup.CONNECTION, "r"),
-
-	CLIENT_LIST(CommandGroup.CONNECTION, "r"),
-
-	CLIENT_INFO(CommandGroup.CONNECTION, "r"),
-
-	CLIENT_PAUSE(CommandGroup.CONNECTION, "w"),
-
-	CLIENT_REPLY(CommandGroup.CONNECTION, "w"),
-
-	CLIENT_UNBLOCK(CommandGroup.CONNECTION, "w"),
-	/**
-	 * connection command end
-	 */
 
 	/**
 	 * geo command start
@@ -581,20 +542,11 @@
 	WATCH(CommandGroup.TRANSACTION, "w");
 
 
-
-	/**
-	 * Cluster command end
-	 **/
-
 	/**
 	 * Connection command start
 	 */
 
-	CLIENT("rw", CommandGroup.CONNECTION, SubCommand.CLIENT_CACHING, SubCommand.CLIENT_GETNAME,
-			SubCommand.CLIENT_GETREDIR, SubCommand.CLIENT_ID, SubCommand.CLIENT_INFO, SubCommand.CLIENT_KILL,
-			SubCommand.CLIENT_LIST, SubCommand.CLIENT_NO_EVICT, SubCommand.CLIENT_NO_TOUCH, SubCommand.CLIENT_PAUSE,
-			SubCommand.CLIENT_REPLY, SubCommand.CLIENT_SETINFO, SubCommand.CLIENT_SETNAME, SubCommand.CLIENT_TRACKING,
-			SubCommand.CLIENT_TRACKINGINFO, SubCommand.CLIENT_UNBLOCK, SubCommand.CLIENT_UNPAUSE),
+
 
 
 	HELLO("w", CommandGroup.CONNECTION),
@@ -674,56 +626,6 @@
             	SLAVES("r"),
             	/**
             	 * Common command end
-            	 **/
-
-            	/**
-            	 * Cluster command start
-            	 **/
-
-            	CLUSTER_KEYSLOT("r"),
-
-            	/**
-            	 * Cluster command end
-            	 **/
-
-            	/**
-            	 * Client command start
-            	 **/
-            	CLIENT_CACHING("r"),
-
-            	CLIENT_GETNAME("r"),
-
-            	CLIENT_GETREDIR("r"),
-
-            	CLIENT_ID("r"),
-
-            	CLIENT_INFO("r"),
-
-            	CLIENT_KILL("w"),
-
-            	CLIENT_LIST("r"),
-
-            	CLIENT_NO_EVICT("r"),
-
-            	CLIENT_NO_TOUCH("r"),
-
-            	CLIENT_PAUSE("w"),
-
-            	CLIENT_REPLY("w"),
-
-            	CLIENT_SETINFO("w"),
-
-            	CLIENT_SETNAME("w"),
-
-            	CLIENT_TRACKING("r"),
-
-            	CLIENT_TRACKINGINFO("r"),
-
-            	CLIENT_UNBLOCK("w"),
-
-            	CLIENT_UNPAUSE("w"),
-            	/**
-            	 * Client command end
             	 **/
 
             	/**

@@ -41,7 +41,7 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class LettuceBloomFilterOperations extends AbstractLettuceRedisOperations<LettuceRedisClient> implements
+public final class LettuceBloomFilterOperations extends AbstractLettuceRedisOperations implements
 		BloomFilterOperations {
 
 	public LettuceBloomFilterOperations(final LettuceRedisClient client) {

@@ -30,11 +30,10 @@ import com.buession.redis.core.ClientInfoOption;
 import com.buession.redis.core.ClientReply;
 import com.buession.redis.core.ClientType;
 import com.buession.redis.core.ClientUnblockType;
-import com.buession.redis.core.Keyword;
+import com.buession.redis.core.Hello;
+import com.buession.redis.core.TrackingInfo;
 import com.buession.redis.utils.ArgStringBuilder;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
 
@@ -321,7 +320,7 @@ public interface ConnectionCommands extends RedisCommands {
 	 *
 	 * @return Information about the current client connection's use of the server assisted client side caching feature
 	 */
-	Status clientTrackingInfo();
+	TrackingInfo clientTrackingInfo();
 
 	/**
 	 * 该命令可以通过其他连接解除客户端的阻塞
@@ -350,6 +349,15 @@ public interface ConnectionCommands extends RedisCommands {
 	Status clientUnblock(final int clientId, final ClientUnblockType type);
 
 	/**
+	 * 用于恢复被暂停的客户端命令处理
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/client-unpause/" target="_blank">https://redis.io/docs/latest/commands/client-unpause/</a></p>
+	 *
+	 * @return 当执行命令设置为 OFF 或 SKIP，设置命令收不到任何回复，当设置为 ON 时，返回OK
+	 */
+	Status clientUnpause();
+
+	/**
 	 * 打印一个特定的字符串
 	 *
 	 * <p>详情说明 <a href="http://www.redis.cn/commands/echo.html" target="_blank">http://www.redis.cn/commands/echo.html</a></p>
@@ -372,6 +380,123 @@ public interface ConnectionCommands extends RedisCommands {
 	 * @return 字符串本身
 	 */
 	byte[] echo(final byte[] str);
+
+	/**
+	 * 切换通信协议版本、获取服务器基本信息（类似 INFO 的轻量版）、认证
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hello/" target="_blank">https://redis.io/docs/latest/commands/hello/</a></p>
+	 *
+	 * @return 相关操作结果
+	 */
+	Hello hello();
+
+	/**
+	 * 切换通信协议版本、获取服务器基本信息（类似 INFO 的轻量版）、认证
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hello/" target="_blank">https://redis.io/docs/latest/commands/hello/</a></p>
+	 *
+	 * @param protover
+	 * 		协议版本
+	 *
+	 * @return 相关操作结果
+	 */
+	Hello hello(final int protover);
+
+	/**
+	 * 切换通信协议版本、获取服务器基本信息（类似 INFO 的轻量版）、认证
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hello/" target="_blank">https://redis.io/docs/latest/commands/hello/</a></p>
+	 *
+	 * @param protover
+	 * 		协议版本
+	 * @param password
+	 * 		密码
+	 *
+	 * @return 相关操作结果
+	 */
+	Hello hello(final int protover, final String password);
+
+	/**
+	 * 切换通信协议版本、获取服务器基本信息（类似 INFO 的轻量版）、认证
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hello/" target="_blank">https://redis.io/docs/latest/commands/hello/</a></p>
+	 *
+	 * @param protover
+	 * 		协议版本
+	 * @param password
+	 * 		密码
+	 *
+	 * @return 相关操作结果
+	 */
+	Hello hello(final int protover, final byte[] password);
+
+	/**
+	 * 切换通信协议版本、获取服务器基本信息（类似 INFO 的轻量版）、认证
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hello/" target="_blank">https://redis.io/docs/latest/commands/hello/</a></p>
+	 *
+	 * @param protover
+	 * 		协议版本
+	 * @param username
+	 * 		用户名
+	 * @param password
+	 * 		密码
+	 *
+	 * @return 相关操作结果
+	 */
+	Hello hello(final int protover, final String username, final String password);
+
+	/**
+	 * 切换通信协议版本、获取服务器基本信息（类似 INFO 的轻量版）、认证
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hello/" target="_blank">https://redis.io/docs/latest/commands/hello/</a></p>
+	 *
+	 * @param protover
+	 * 		协议版本
+	 * @param username
+	 * 		用户名
+	 * @param password
+	 * 		密码
+	 *
+	 * @return 相关操作结果
+	 */
+	Hello hello(final int protover, final byte[] username, final byte[] password);
+
+	/**
+	 * 切换通信协议版本、获取服务器基本信息（类似 INFO 的轻量版）、认证
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hello/" target="_blank">https://redis.io/docs/latest/commands/hello/</a></p>
+	 *
+	 * @param protover
+	 * 		协议版本
+	 * @param username
+	 * 		用户名
+	 * @param password
+	 * 		密码
+	 * @param clientName
+	 * 		客户端名称
+	 *
+	 * @return 相关操作结果
+	 */
+	Hello hello(final int protover, final String username, final String password, final String clientName);
+
+	/**
+	 * 切换通信协议版本、获取服务器基本信息（类似 INFO 的轻量版）、认证
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hello/" target="_blank">https://redis.io/docs/latest/commands/hello/</a></p>
+	 *
+	 * @param protover
+	 * 		协议版本
+	 * @param username
+	 * 		用户名
+	 * @param password
+	 * 		密码
+	 * @param clientName
+	 * 		客户端名称
+	 *
+	 * @return 相关操作结果
+	 */
+	Hello hello(final int protover, final byte[] username, final byte[] password, final byte[] clientName);
 
 	/**
 	 * 使用客户端向 Redis 服务器发送一个 PING ，如果服务器运作正常的话，会返回一个 PONG；

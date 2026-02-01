@@ -89,9 +89,7 @@ public interface Keyword extends Value<String>, Rawable {
 
 		NO,
 
-		ON,
 
-		OFF
 	}
 
 	enum Key {

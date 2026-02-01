@@ -42,7 +42,7 @@ import java.util.List;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class LettuceBitMapOperations extends AbstractLettuceRedisOperations<LettuceRedisClient> implements
+public final class LettuceBitMapOperations extends AbstractLettuceRedisOperations implements
 		BitMapOperations {
 
 	public LettuceBitMapOperations(final LettuceRedisClient client) {

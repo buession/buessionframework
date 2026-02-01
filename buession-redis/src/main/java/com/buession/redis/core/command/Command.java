@@ -160,7 +160,20 @@ public enum Command implements ProtocolCommand {
 	CLIENT(CommandGroup.CONNECTION, "rw", new SubCommand[]{SubCommand.CLIENT_CACHING, SubCommand.CLIENT_GETNAME,
 			SubCommand.CLIENT_GETREDIR, SubCommand.CLIENT_ID, SubCommand.CLIENT_INFO, SubCommand.CLIENT_KILL,
 			SubCommand.CLIENT_LIST, SubCommand.CLIENT_NO_EVICT, SubCommand.CLIENT_NO_TOUCH, SubCommand.CLIENT_PAUSE,
-			SubCommand.CLIENT_REPLY, SubCommand.CLIENT_SETINFO, SubCommand.CLIENT_SETNAME, SubCommand.CLIENT_TRACKING}),
+			SubCommand.CLIENT_REPLY, SubCommand.CLIENT_SETINFO, SubCommand.CLIENT_SETNAME, SubCommand.CLIENT_TRACKING,
+			SubCommand.CLIENT_TRACKINGINFO, SubCommand.CLIENT_UNBLOCK, SubCommand.CLIENT_UNPAUSE}),
+
+	ECHO(CommandGroup.CONNECTION, "w"),
+
+	HELLO(CommandGroup.CONNECTION, "r"),
+
+	PING(CommandGroup.CONNECTION, "r"),
+
+	RESET(CommandGroup.CONNECTION, "w"),
+
+	QUIT(CommandGroup.CONNECTION, "rw"),
+
+	SELECT(CommandGroup.CONNECTION, "w"),
 	/**
 	 * connection command end
 	 */

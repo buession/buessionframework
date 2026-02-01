@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
@@ -31,7 +31,9 @@ import com.buession.redis.core.ClientInfoOption;
 import com.buession.redis.core.ClientReply;
 import com.buession.redis.core.ClientType;
 import com.buession.redis.core.ClientUnblockType;
+import com.buession.redis.core.Hello;
 import com.buession.redis.core.RedisNode;
+import com.buession.redis.core.TrackingInfo;
 import com.buession.redis.core.command.ConnectionCommands;
 
 import java.util.List;
@@ -171,6 +173,11 @@ public interface ConnectionOperations extends ConnectionCommands, RedisOperation
 	}
 
 	@Override
+	default TrackingInfo clientTrackingInfo() {
+		return execute((client)->client.connectionOperations().clientTrackingInfo());
+	}
+
+	@Override
 	default Status clientUnblock(final int clientId) {
 		return execute((client)->client.connectionOperations().clientUnblock(clientId));
 	}
@@ -181,6 +188,11 @@ public interface ConnectionOperations extends ConnectionCommands, RedisOperation
 	}
 
 	@Override
+	default Status clientUnpause() {
+		return execute((client)->client.connectionOperations().clientUnpause());
+	}
+
+	@Override
 	default String echo(final String str) {
 		return execute((client)->client.connectionOperations().echo(str));
 	}
@@ -188,6 +200,46 @@ public interface ConnectionOperations extends ConnectionCommands, RedisOperation
 	@Override
 	default byte[] echo(final byte[] str) {
 		return execute((client)->client.connectionOperations().echo(str));
+	}
+
+	@Override
+	default Hello hello() {
+		return execute((client)->client.connectionOperations().hello());
+	}
+
+	@Override
+	default Hello hello(final int protover) {
+		return execute((client)->client.connectionOperations().hello(protover));
+	}
+
+	@Override
+	default Hello hello(final int protover, final String password) {
+		return execute((client)->client.connectionOperations().hello(protover, password));
+	}
+
+	@Override
+	default Hello hello(final int protover, final byte[] password) {
+		return execute((client)->client.connectionOperations().hello(protover, password));
+	}
+
+	@Override
+	default Hello hello(final int protover, final String username, final String password) {
+		return execute((client)->client.connectionOperations().hello(protover, username, password));
+	}
+
+	@Override
+	default Hello hello(final int protover, final byte[] username, final byte[] password) {
+		return execute((client)->client.connectionOperations().hello(protover, username, password));
+	}
+
+	@Override
+	default Hello hello(final int protover, final String username, final String password, final String clientName) {
+		return execute((client)->client.connectionOperations().hello(protover, username, password, clientName));
+	}
+
+	@Override
+	default Hello hello(final int protover, final byte[] username, final byte[] password, final byte[] clientName) {
+		return execute((client)->client.connectionOperations().hello(protover, username, password, clientName));
 	}
 
 	@Override
@@ -208,6 +260,17 @@ public interface ConnectionOperations extends ConnectionCommands, RedisOperation
 	@Override
 	default Status select(final int db) {
 		return execute((client)->client.connectionOperations().select(db));
+	}
+
+	/**
+	 * 切换到数据库 db 0
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/select.html" target="_blank">http://redisdoc.com/database/select.html</a></p>
+	 *
+	 * @return 切换成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	default Status select() {
+		return execute((client)->client.connectionOperations().select(0));
 	}
 
 }

@@ -62,7 +62,7 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class LettuceClusterOperations extends AbstractLettuceRedisOperations<LettuceRedisClient> implements
+public final class LettuceClusterOperations extends AbstractLettuceRedisOperations implements
 		ClusterOperations {
 
 	public LettuceClusterOperations(final LettuceRedisClient client) {
@@ -79,7 +79,10 @@ public final class LettuceClusterOperations extends AbstractLettuceRedisOperatio
 	public Status clusterAddSlots(final int... slots) {
 		final CommandArguments args = CommandArguments.create(slots);
 		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.CLUSTER, SubCommand.CLUSTER_ADDSLOTS)
-				.executor((cmd)->cmd.clusterAddSlots(slots)).arguments(args).converter(okStatusConverter).run();
+				.executor((cmd)->cmd.clusterAddSlots(slots))
+				.arguments(args)
+				.converter(okStatusConverter)
+				.run();
 	}
 
 	@Override

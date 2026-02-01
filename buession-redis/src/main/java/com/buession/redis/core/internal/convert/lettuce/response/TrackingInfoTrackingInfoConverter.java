@@ -22,33 +22,60 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.lettuce.operations;
+package com.buession.redis.core.internal.convert.lettuce.response;
 
-import com.buession.core.converter.MapEntryMapConverter;
-import com.buession.lang.Status;
-import com.buession.redis.client.lettuce.LettuceRedisClient;
-import com.buession.redis.client.operations.CuckooFilterOperations;
-import com.buession.redis.core.command.Command;
-import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.utils.SafeEncoder;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.TrackingInfo;
 
-import java.util.List;
-import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
- * Lettuce 布谷鸟过滤器命令操作抽象类
- *
- * @param <C>
- * 		Redis Client {@link LettuceRedisClient}
+ * Lettuce {@link io.lettuce.core.TrackingInfo} 转换为 {@link com.buession.redis.core.TrackingInfo}
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public abstract class AbstractCuckooFilterOperations<C extends LettuceRedisClient>
-		extends AbstractLettuceRedisOperations<C> implements CuckooFilterOperations {
+public final class TrackingInfoTrackingInfoConverter
+		implements Converter<io.lettuce.core.TrackingInfo, com.buession.redis.core.TrackingInfo> {
 
-	public AbstractCuckooFilterOperations(final C client) {
-		super(client);
+	@Override
+	public com.buession.redis.core.TrackingInfo convert(final io.lettuce.core.TrackingInfo source) {
+		if(source == null){
+			return null;
+		}
+
+		final Set<TrackingInfo.TrackingFlag> flags = source.getFlags() == null ?
+				null : source.getFlags().stream().map((v)->{
+			if(v == null){
+				return null;
+			}else{
+				switch(v){
+					case OFF:
+						return TrackingInfo.TrackingFlag.OFF;
+					case ON:
+						return TrackingInfo.TrackingFlag.ON;
+					case BCAST:
+						return TrackingInfo.TrackingFlag.BCAST;
+					case OPTIN:
+						return TrackingInfo.TrackingFlag.OPTIN;
+					case OPTOUT:
+						return TrackingInfo.TrackingFlag.OPTOUT;
+					case CACHING_YES:
+						return TrackingInfo.TrackingFlag.CACHING_YES;
+					case CACHING_NO:
+						return TrackingInfo.TrackingFlag.CACHING_NO;
+					case NOLOOP:
+						return TrackingInfo.TrackingFlag.NOLOOP;
+					case BROKEN_REDIRECT:
+						return TrackingInfo.TrackingFlag.BROKEN_REDIRECT;
+					default:
+						return null;
+				}
+			}
+		}).collect(Collectors.toSet());
+
+		return new com.buession.redis.core.TrackingInfo(flags, source.getRedirect(), source.getPrefixes());
 	}
 
 }
