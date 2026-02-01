@@ -177,6 +177,16 @@ public enum Command implements ProtocolCommand {
 	/**
 	 * connection command end
 	 */
+
+	/**
+	 * generic command start
+	 */
+	WAIT(CommandGroup.GENERIC, "w"),
+
+	WAITOF(CommandGroup.GENERIC, "w"),
+	/**
+	 * generic command end
+	 */
 	;
 
 	/**

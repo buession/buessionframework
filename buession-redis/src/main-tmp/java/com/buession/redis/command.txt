@@ -138,9 +138,7 @@
 	 * key command end
 	 **/
 
-	WAIT(CommandGroup.GENERIC, "w"),
 
-	WAITOF(CommandGroup.GENERIC, "w"),
 
 	/**
 	 * list command start

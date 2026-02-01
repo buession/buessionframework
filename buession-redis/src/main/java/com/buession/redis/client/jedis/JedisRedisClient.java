@@ -37,8 +37,7 @@ import redis.clients.jedis.UnifiedJedis;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class JedisRedisClient extends AbstractRedisClient<JedisRedisConnection<? extends UnifiedJedis>>
-		implements RedisClient {
+public class JedisRedisClient extends AbstractRedisClient<JedisRedisConnection<? extends UnifiedJedis>> {
 
 	/**
 	 * 构造函数

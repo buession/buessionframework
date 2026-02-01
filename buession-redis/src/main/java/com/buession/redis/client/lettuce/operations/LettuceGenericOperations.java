@@ -19,52 +19,47 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.lang.KeyValue;
-import com.buession.redis.client.lettuce.LettuceStandaloneClient;
+import com.buession.redis.client.lettuce.LettuceRedisClient;
+import com.buession.redis.client.operations.GenericOperations;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
 
 /**
- * Lettuce 单机模式一般命令操作
+ * Lettuce 常规命令操作
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class LettuceGenericOperations extends AbstractGenericOperations<LettuceStandaloneClient> {
+public final class LettuceGenericOperations extends AbstractLettuceRedisOperations implements GenericOperations {
 
-	public LettuceGenericOperations(final LettuceStandaloneClient client) {
+	public LettuceGenericOperations(final LettuceRedisClient client) {
 		super(client);
 	}
 
 	@Override
 	public Long wait(final int replicas, final int timeout) {
 		final CommandArguments args = CommandArguments.create(replicas).add(timeout);
+		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.WAIT)
+				.executor((cmd)->cmd.waitForReplication(replicas, timeout))
+				.arguments(args)
+				.converter((v)->v)
+				.run();
 
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.WAIT,
-					(cmd)->cmd.waitForReplication(replicas, timeout),
-					(v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.WAIT,
-					(cmd)->cmd.waitForReplication(replicas, timeout), (v)->v)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.WAIT, (cmd)->cmd.waitForReplication(replicas, timeout),
-					(v)->v)
-					.run(args);
-		}
 	}
 
 	@Override
 	public KeyValue<Long, Long> waitOf(final int locals, final int replicas, final int timeout) {
 		final CommandArguments args = CommandArguments.create(locals).add(replicas).add(timeout);
-		return notCommand(client, ProtocolCommand.WAITOF, args);
+		return LettuceCommandBuilder.<KeyValue<Long, Long>, KeyValue<Long, Long>>newBuilder(client, Command.WAITOF)
+				.arguments(args)
+				.converter((v)->v)
+				.run();
 	}
 
 }

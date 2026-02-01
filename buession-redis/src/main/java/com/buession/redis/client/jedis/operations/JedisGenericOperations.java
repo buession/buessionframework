@@ -19,66 +19,45 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.KeyValue;
-import com.buession.redis.client.jedis.JedisStandaloneClient;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.operations.GenericOperations;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.jedis.response.KeyValueConverter;
 
 /**
- * Jedis 单机模式一般命令操作
+ * Jedis 常规命令操作
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class JedisGenericOperations extends AbstractGenericOperations<JedisStandaloneClient> {
+public final class JedisGenericOperations extends AbstractJedisRedisOperations implements GenericOperations {
 
-	public JedisGenericOperations(final JedisStandaloneClient client) {
+	public JedisGenericOperations(final JedisRedisClient client) {
 		super(client);
 	}
 
 	@Override
 	public Long wait(final int replicas, final int timeout) {
 		final CommandArguments args = CommandArguments.create(replicas).add(timeout);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.WAIT, (cmd)->cmd.waitReplicas(replicas, timeout),
-					(v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.WAIT,
-					(cmd)->cmd.waitReplicas(replicas, timeout),
-					(v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.WAIT, (cmd)->cmd.waitReplicas(replicas, timeout), (v)->v)
-					.run(args);
-		}
+		return JedisCommandBuilder.<Long, Long>newBuilder(client, Command.WAIT)
+				.executor((cmd)->cmd.waitReplicas((String) null, replicas, timeout)).arguments(args).converter((v)->v)
+				.run();
 	}
 
 	@Override
 	public KeyValue<Long, Long> waitOf(final int locals, final int replicas, final int timeout) {
 		final CommandArguments args = CommandArguments.create(locals).add(replicas).add(timeout);
-		final KeyValueConverter<Long, Long, Long, Long> keyValueConverter = new KeyValueConverter<>((k)->k, (v)->v);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.WAITOF,
-					(cmd)->cmd.waitAOF((String) null, locals, replicas, timeout), keyValueConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.WAITOF,
-					(cmd)->cmd.waitAOF((String) null, locals, replicas, timeout), keyValueConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.WAITOF, (cmd)->cmd.waitAOF(locals, replicas, timeout),
-					keyValueConverter)
-					.run(args);
-		}
+		return JedisCommandBuilder.<redis.clients.jedis.util.KeyValue<Long, Long>, KeyValue<Long, Long>>newBuilder(
+						client, Command.WAITOF)
+				.executor((cmd)->cmd.waitAOF((String) null, locals, replicas, timeout)).arguments(args)
+				.converter(new KeyValueConverter<>((k)->k, (v)->v)).run();
 	}
 
 }

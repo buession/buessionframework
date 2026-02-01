@@ -27,7 +27,7 @@ package com.buession.redis.core.command;
 import com.buession.lang.KeyValue;
 
 /**
- * 一般命令
+ * 常规命令
  *
  * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=generic" target="_blank">https://redis.io/docs/latest/commands/?group=generic</a></p>
  *
