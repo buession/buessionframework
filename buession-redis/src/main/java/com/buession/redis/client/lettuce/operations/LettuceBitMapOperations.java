@@ -30,9 +30,8 @@ import com.buession.redis.core.BitCountOption;
 import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.internal.lettuce.LettuceBitFieldArgs;
+import com.buession.redis.core.internal.lettuce.CompositeArgumentUtils;
 import com.buession.redis.utils.SafeEncoder;
-import io.lettuce.core.BitFieldArgs;
 
 import java.util.List;
 
@@ -80,14 +79,13 @@ public final class LettuceBitMapOperations extends AbstractLettuceRedisOperation
 	}
 
 	@Override
-	public Long bitCount(final String key, final long start, final long end, final BitCountOption bitCountOption) {
-		return bitCount(SafeEncoder.encode(key), start, end, bitCountOption);
+	public Long bitCount(final String key, final long start, final long end, final BitCountOption option) {
+		return bitCount(SafeEncoder.encode(key), start, end, option);
 	}
 
 	@Override
-	public Long bitCount(final byte[] key, final long start, final long end, final BitCountOption bitCountOption) {
-		final CommandArguments args = CommandArguments.create(key).add(start).add(end)
-				.add(bitCountOption);
+	public Long bitCount(final byte[] key, final long start, final long end, final BitCountOption option) {
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(option);
 		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.BITCOUNT)
 				.executor((cmd)->cmd.bitcount(key, start, end))
 				.arguments(args)
@@ -103,9 +101,8 @@ public final class LettuceBitMapOperations extends AbstractLettuceRedisOperation
 	@Override
 	public List<Long> bitField(final byte[] key, final BitFieldArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument);
-		final BitFieldArgs bitFieldArgs = LettuceBitFieldArgs.from(argument);
 		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.BITFIELD)
-				.executor((cmd)->cmd.bitfield(key, bitFieldArgs))
+				.executor((cmd)->cmd.bitfield(key, CompositeArgumentUtils.bitFieldArgs(argument)))
 				.arguments(args)
 				.converter((v)->v)
 				.run();

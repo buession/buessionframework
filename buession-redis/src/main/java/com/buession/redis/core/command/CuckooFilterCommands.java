@@ -240,14 +240,14 @@ public interface CuckooFilterCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		布谷鸟过滤器的名称
-	 * @param cfInsertArgument
+	 * @param argument
 	 * 		CFInsert 参数
 	 * @param items
 	 * 		待添加的元素
 	 *
 	 * @return 返回一个数组，每个元素对应输入项的插入结果；true 表示添加成功，false 表示添加失败
 	 */
-	List<Boolean> cfInsert(final String key, final CFInsertArgument cfInsertArgument, final String... items);
+	List<Boolean> cfInsert(final String key, final CFInsertArgument argument, final String... items);
 
 	/**
 	 * 向布谷鸟过滤器 key 中批量添加元素
@@ -256,14 +256,14 @@ public interface CuckooFilterCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		布谷鸟过滤器的名称
-	 * @param cfInsertArgument
+	 * @param argument
 	 * 		CFInsert 参数
 	 * @param items
 	 * 		待添加的元素
 	 *
 	 * @return 返回一个数组，每个元素对应输入项的插入结果；true 表示添加成功，false 表示添加失败
 	 */
-	List<Boolean> cfInsert(final byte[] key, final CFInsertArgument cfInsertArgument, final byte[]... items);
+	List<Boolean> cfInsert(final byte[] key, final CFInsertArgument argument, final byte[]... items);
 
 	/**
 	 * 向布谷鸟过滤器 key 中批量添加元素，仅当元素尚未存在于布谷鸟过滤器中
@@ -300,14 +300,14 @@ public interface CuckooFilterCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		布谷鸟过滤器的名称
-	 * @param cfInsertArgument
+	 * @param argument
 	 * 		CFInsert 参数
 	 * @param items
 	 * 		待添加的元素
 	 *
 	 * @return 返回一个数组，每个元素对应输入项的插入结果；true 表示添加成功，false 表示添加失败
 	 */
-	List<Boolean> cfInsertNx(final String key, final CFInsertArgument cfInsertArgument, final String... items);
+	List<Boolean> cfInsertNx(final String key, final CFInsertArgument argument, final String... items);
 
 	/**
 	 * 向布谷鸟过滤器 key 中批量添加元素，仅当元素尚未存在于布谷鸟过滤器中
@@ -316,14 +316,14 @@ public interface CuckooFilterCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		布谷鸟过滤器的名称
-	 * @param cfInsertArgument
+	 * @param argument
 	 * 		CFInsert 参数
 	 * @param items
 	 * 		待添加的元素
 	 *
 	 * @return 返回一个数组，每个元素对应输入项的插入结果；true 表示添加成功，false 表示添加失败
 	 */
-	List<Boolean> cfInsertNx(final byte[] key, final CFInsertArgument cfInsertArgument, final byte[]... items);
+	List<Boolean> cfInsertNx(final byte[] key, final CFInsertArgument argument, final byte[]... items);
 
 	/**
 	 * 从外部导入布谷鸟过滤器数据块
@@ -392,12 +392,12 @@ public interface CuckooFilterCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		布谷鸟过滤器的名称
-	 * @param cfReserveArgument
+	 * @param argument
 	 * 		CF.RESERVE 参数
 	 *
 	 * @return 操作结果
 	 */
-	Status cfReserve(final String key, final CFReserveArgument cfReserveArgument);
+	Status cfReserve(final String key, final CFReserveArgument argument);
 
 	/**
 	 * 控制布谷鸟过滤器的关键参数：预期容量（capacity）
@@ -406,12 +406,12 @@ public interface CuckooFilterCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		布谷鸟过滤器的名称
-	 * @param cfReserveArgument
+	 * @param argument
 	 * 		CF.RESERVE 参数
 	 *
 	 * @return 操作结果
 	 */
-	Status cfReserve(final byte[] key, final CFReserveArgument cfReserveArgument);
+	Status cfReserve(final byte[] key, final CFReserveArgument argument);
 
 	/**
 	 * 采用分块迭代方式导出布谷鸟过滤器 key 的数据

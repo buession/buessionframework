@@ -24,385 +24,603 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
-import com.buession.core.builder.ListBuilder;
 import com.buession.core.converter.ListConverter;
 import com.buession.core.converter.SetListConverter;
 import com.buession.lang.Geo;
-import com.buession.redis.client.lettuce.LettuceStandaloneClient;
+import com.buession.redis.client.lettuce.LettuceRedisClient;
+import com.buession.redis.client.operations.GeoOperations;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.lettuce.params.GeoUnitConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.GeoCoordinateConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.GeoRadiusGeneralResultConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.GeoRadiusResponseConverter;
-import com.buession.redis.core.internal.lettuce.LettuceGeoArgs;
+import com.buession.redis.core.internal.lettuce.CompositeArgumentUtils;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.GeoArgs;
 import io.lettuce.core.GeoCoordinates;
+import io.lettuce.core.GeoSearch;
+import io.lettuce.core.GeoValue;
 import io.lettuce.core.GeoWithin;
 import io.lettuce.core.Value;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
- * Lettuce 单机模式地理位置命令操作
+ * Lettuce 地理位置命令操作
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class LettuceGeoOperations extends AbstractGeoOperations<LettuceStandaloneClient> {
+public final class LettuceGeoOperations extends AbstractLettuceRedisOperations implements GeoOperations {
 
-	public LettuceGeoOperations(final LettuceStandaloneClient client) {
+	public LettuceGeoOperations(final LettuceRedisClient client) {
 		super(client);
 	}
 
 	@Override
-	public Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude) {
-		final CommandArguments args = CommandArguments.create(key).add(member).add(longitude).add(latitude);
+	public Long geoAdd(final String key, final String member, final double longitude, final double latitude) {
+		return geoAdd(SafeEncoder.encode(key), SafeEncoder.encode(member), longitude, latitude);
+	}
 
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.GEOADD,
-					(cmd)->cmd.geoadd(key, longitude, latitude, member), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.GEOADD,
-					(cmd)->cmd.geoadd(key, longitude, latitude, member), (v)->v)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.GEOADD,
-					(cmd)->cmd.geoadd(key, longitude, latitude, member), (v)->v)
-					.run(args);
-		}
+	@Override
+	public Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude).add(latitude).add(member);
+		return geoAdd((cmd)->cmd.geoadd(key, longitude, latitude, member), args);
 	}
 
 	@Override
 	public Long geoAdd(final String key, final Map<String, Geo> memberCoordinates) {
 		final CommandArguments args = CommandArguments.create(key).add(memberCoordinates);
-		return geoAdd(key, memberCoordinates, args);
+		return geoAdd((cmd)->cmd.geoadd(SafeEncoder.encode(key), stringMemberCoordinatesToGeoValue(memberCoordinates)),
+				args);
 	}
 
 	@Override
 	public Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates) {
 		final CommandArguments args = CommandArguments.create(key).add(memberCoordinates);
-		return geoAdd(key, memberCoordinates, args);
+		return geoAdd((cmd)->cmd.geoadd(key, byteMemberCoordinatesToGeoValue(memberCoordinates)), args);
+	}
+
+	@Override
+	public Long geoAdd(final String key, final GeoAddArgument argument, final String member, final double longitude,
+					   final double latitude) {
+		return geoAdd(SafeEncoder.encode(key), argument, SafeEncoder.encode(member), longitude, latitude);
+	}
+
+	@Override
+	public Long geoAdd(final byte[] key, final GeoAddArgument argument, final byte[] member, final double longitude,
+					   final double latitude) {
+		final CommandArguments args = CommandArguments.create(key).add(argument).add(longitude).add(latitude)
+				.add(member);
+		return geoAdd((cmd)->cmd.geoadd(key, longitude, latitude, member, CompositeArgumentUtils.geoAddArgs(argument)),
+				args);
+	}
+
+	@Override
+	public Long geoAdd(final String key, final GeoAddArgument argument, final Map<String, Geo> memberCoordinates) {
+		final CommandArguments args = CommandArguments.create(key).add(argument).add(memberCoordinates);
+		return geoAdd((cmd)->cmd.geoadd(SafeEncoder.encode(key), CompositeArgumentUtils.geoAddArgs(argument),
+				stringMemberCoordinatesToGeoValue(memberCoordinates)), args);
+	}
+
+	@Override
+	public Long geoAdd(final byte[] key, final GeoAddArgument argument, final Map<byte[], Geo> memberCoordinates) {
+		final CommandArguments args = CommandArguments.create(key).add(argument).add(memberCoordinates);
+		return geoAdd((cmd)->cmd.geoadd(key, CompositeArgumentUtils.geoAddArgs(argument),
+				byteMemberCoordinatesToGeoValue(memberCoordinates)), args);
+	}
+
+	@Override
+	public Double geoDist(final String key, final String member1, final String member2) {
+		return geoDist(SafeEncoder.encode(key), SafeEncoder.encode(member1), SafeEncoder.encode(member2));
+	}
+
+	@Override
+	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2) {
+		final CommandArguments args = CommandArguments.create(key).add(member1).add(member2);
+		return LettuceCommandBuilder.<Double, Double>newBuilder(client, Command.GEODIST)
+				.executor((cmd)->cmd.geodist(key, member1, member2, GeoArgs.Unit.m)).arguments(args).converter((v)->v)
+				.run();
+	}
+
+	@Override
+	public Double geoDist(final String key, final String member1, final String member2, final GeoUnit unit) {
+		return geoDist(SafeEncoder.encode(key), SafeEncoder.encode(member1), SafeEncoder.encode(member2), unit);
+	}
+
+	@Override
+	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit) {
+		final CommandArguments args = CommandArguments.create(key).add(member1).add(member2).add(unit);
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+
+		return LettuceCommandBuilder.<Double, Double>newBuilder(client, Command.GEODIST)
+				.executor((cmd)->cmd.geodist(key, member1, member2, geoUnitConverter.convert(unit))).arguments(args)
+				.converter((v)->v).run();
 	}
 
 	@Override
 	public List<String> geoHash(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		final byte[] bKey = SafeEncoder.encode(key);
-		final byte[][] bMembers = SafeEncoder.encode(members);
-		final ListConverter<Value<String>, String> listConverter = new ListConverter<>(Value::getValue);
-
-		return geoHash(bKey, bMembers, listConverter, args);
+		return LettuceCommandBuilder.<List<Value<String>>, List<String>>newBuilder(client, Command.GEOHASH)
+				.executor((cmd)->cmd.geohash(SafeEncoder.encode(key), SafeEncoder.encode(members))).arguments(args)
+				.converter(new ListConverter<>(Value::getValue)).run();
 	}
 
 	@Override
 	public List<byte[]> geoHash(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		final ListConverter<Value<String>, byte[]> listConverter = new ListConverter<>(
-				(v)->SafeEncoder.encode(v.getValue()));
+		return LettuceCommandBuilder.<List<Value<String>>, List<byte[]>>newBuilder(client, Command.GEOHASH)
+				.executor((cmd)->cmd.geohash(key, members)).arguments(args)
+				.converter(new ListConverter<>((v)->SafeEncoder.encode(v.getValue()))).run();
+	}
 
-		return geoHash(key, members, listConverter, args);
+	@Override
+	public List<Geo> geoPos(final String key, final String... members) {
+		return geoPos(SafeEncoder.encode(key), SafeEncoder.encode(members));
 	}
 
 	@Override
 	public List<Geo> geoPos(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		final ListConverter<GeoCoordinates, Geo> listGeoCoordinateConverter = GeoCoordinateConverter.listConverter();
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.GEOPOS, (cmd)->cmd.geopos(key, members),
-					listGeoCoordinateConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.GEOPOS, (cmd)->cmd.geopos(key, members),
-					listGeoCoordinateConverter)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.GEOPOS, (cmd)->cmd.geopos(key, members),
-					listGeoCoordinateConverter)
-					.run(args);
-		}
+		return LettuceCommandBuilder.<List<GeoCoordinates>, List<Geo>>newBuilder(client, Command.GEOPOS)
+				.executor((cmd)->cmd.geopos(key, members)).arguments(args)
+				.converter(new ListConverter<>(new GeoCoordinateConverter())).run();
 	}
 
 	@Override
-	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2) {
-		final CommandArguments args = CommandArguments.create(key).add(member1)
-				.add(member2);
-		return geoDist(key, member1, member2, GeoArgs.Unit.m, args);
-	}
-
-	@Override
-	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit) {
-		final CommandArguments args = CommandArguments.create(key).add(member1)
-				.add(member2).add(unit);
-		final GeoArgs.Unit geoArgsUnit = (new GeoUnitConverter()).convert(unit);
-
-		return geoDist(key, member1, member2, geoArgsUnit, args);
+	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
+									 final double radius, final GeoUnit unit) {
+		return geoRadius(SafeEncoder.encode(key), longitude, latitude, radius, unit);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
 									 final double radius, final GeoUnit unit) {
-		final CommandArguments args = CommandArguments.create(key).add(longitude)
-				.add(latitude).add(radius).add(unit);
-		final GeoArgs.Unit geoArgsUnit = (new GeoUnitConverter()).convert(unit);
-		final SetListConverter<byte[], GeoRadius> setListGeoRadiusGeneralResultConverter =
-				GeoRadiusGeneralResultConverter.setListConverter();
+		final CommandArguments args = CommandArguments.create(key).add(longitude).add(latitude).add(radius).add(unit);
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return LettuceCommandBuilder.<Set<byte[]>, List<GeoRadius>>newBuilder(client, Command.GEORADIUS)
+				.executor((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnitConverter.convert(unit)))
+				.arguments(args).converter(new SetListConverter<>(new GeoRadiusGeneralResultConverter())).run();
+	}
 
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.GEORADIUS,
-					(cmd)->cmd.georadius(key, longitude, latitude, radius, geoArgsUnit),
-					setListGeoRadiusGeneralResultConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.GEORADIUS,
-					(cmd)->cmd.georadius(key, longitude, latitude, radius, geoArgsUnit),
-					setListGeoRadiusGeneralResultConverter)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.GEORADIUS,
-					(cmd)->cmd.georadius(key, longitude, latitude, radius, geoArgsUnit),
-					setListGeoRadiusGeneralResultConverter)
-					.run(args);
-		}
+	@Override
+	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
+									 final double radius, final GeoUnit unit, final GeoRadiusArgument argument) {
+		return geoRadius(SafeEncoder.encode(key), longitude, latitude, radius, unit, argument);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-									 final double radius, final GeoUnit unit,
-									 final GeoRadiusArgument geoRadiusArgument) {
-		final CommandArguments args = CommandArguments.create(key).add(longitude)
-				.add(latitude).add(radius).add(unit)
-				.add(geoRadiusArgument);
-		final GeoArgs.Unit geoArgsUnit = (new GeoUnitConverter()).convert(unit);
-		final GeoArgs geoArgs = LettuceGeoArgs.from(geoRadiusArgument);
-		final ListConverter<GeoWithin<byte[]>, GeoRadius> listGeoRadiusResponseConverter =
-				GeoRadiusResponseConverter.listConverter();
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.GEORADIUS,
-					(cmd)->cmd.georadius(key, longitude, latitude, radius, geoArgsUnit, geoArgs),
-					listGeoRadiusResponseConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.GEORADIUS,
-					(cmd)->cmd.georadius(key, longitude, latitude, radius, geoArgsUnit, geoArgs),
-					listGeoRadiusResponseConverter)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.GEORADIUS,
-					(cmd)->cmd.georadius(key, longitude, latitude, radius, geoArgsUnit, geoArgs),
-					listGeoRadiusResponseConverter)
-					.run(args);
-		}
+									 final double radius, final GeoUnit unit, final GeoRadiusArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude).add(latitude).add(radius).add(unit)
+				.add(argument);
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return LettuceCommandBuilder.<List<GeoWithin<byte[]>>, List<GeoRadius>>newBuilder(client, Command.GEORADIUS)
+				.executor((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnitConverter.convert(unit),
+						CompositeArgumentUtils.geoArgs(argument))).arguments(args)
+				.converter(new ListConverter<>(new GeoRadiusResponseConverter())).run();
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
 									   final double radius, final GeoUnit unit) {
-		final CommandArguments args = CommandArguments.create(key).add(longitude)
-				.add(latitude).add(radius).add(unit);
-		return geoRadiusRo(args);
+		final CommandArguments args = CommandArguments.create(key).add(longitude).add(latitude).add(radius).add(unit);
+		return LettuceCommandBuilder.<List<GeoRadius>, List<GeoRadius>>newBuilder(client, Command.GEORADIUS_RO)
+				.arguments(args).converter((v)->v).run();
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
 									   final double radius, final GeoUnit unit) {
-		final CommandArguments args = CommandArguments.create(key).add(longitude)
-				.add(latitude).add(radius).add(unit);
-		return geoRadiusRo(args);
+		final CommandArguments args = CommandArguments.create(key).add(longitude).add(latitude).add(radius).add(unit);
+		return LettuceCommandBuilder.<List<GeoRadius>, List<GeoRadius>>newBuilder(client, Command.GEORADIUS_RO)
+				.arguments(args).converter((v)->v).run();
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
-									   final double radius, final GeoUnit unit,
-									   final GeoRadiusArgument geoRadiusArgument) {
-		final CommandArguments args = CommandArguments.create(key).add(longitude)
-				.add(latitude).add(radius).add(unit)
-				.add(geoRadiusArgument);
-		return geoRadiusRo(args);
+									   final double radius, final GeoUnit unit, final GeoRadiusArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude).add(latitude).add(radius).add(unit)
+				.add(argument);
+		return LettuceCommandBuilder.<List<GeoRadius>, List<GeoRadius>>newBuilder(client, Command.GEORADIUS_RO)
+				.arguments(args).converter((v)->v).run();
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
-									   final double radius, final GeoUnit unit,
-									   final GeoRadiusArgument geoRadiusArgument) {
-		final CommandArguments args = CommandArguments.create(key).add(longitude)
-				.add(latitude).add(radius).add(unit)
-				.add(geoRadiusArgument);
-		return geoRadiusRo(args);
+									   final double radius, final GeoUnit unit, final GeoRadiusArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude).add(latitude).add(radius).add(unit)
+				.add(argument);
+		return LettuceCommandBuilder.<List<GeoRadius>, List<GeoRadius>>newBuilder(client, Command.GEORADIUS_RO)
+				.arguments(args).converter((v)->v).run();
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
+											 final GeoUnit unit) {
+		return geoRadiusByMember(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
 											 final GeoUnit unit) {
-		final CommandArguments args = CommandArguments.create(key).add(member).add(radius)
-				.add(unit);
-		final GeoArgs.Unit geoArgsUnit = (new GeoUnitConverter()).convert(unit);
-		final SetListConverter<byte[], GeoRadius> setListGeoRadiusGeneralResultConverter =
-				GeoRadiusGeneralResultConverter.setListConverter();
+		final CommandArguments args = CommandArguments.create(key).add(member).add(radius).add(unit);
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return LettuceCommandBuilder.<Set<byte[]>, List<GeoRadius>>newBuilder(client, Command.GEORADIUSBYMEMBER)
+				.executor((cmd)->cmd.georadiusbymember(key, member, radius, geoUnitConverter.convert(unit)))
+				.arguments(args).converter(new SetListConverter<>(new GeoRadiusGeneralResultConverter())).run();
+	}
 
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.GEORADIUSBYMEMBER,
-					(cmd)->cmd.georadiusbymember(key, member, radius, geoArgsUnit),
-					setListGeoRadiusGeneralResultConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.GEORADIUSBYMEMBER,
-					(cmd)->cmd.georadiusbymember(key, member, radius, geoArgsUnit),
-					setListGeoRadiusGeneralResultConverter)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.GEORADIUSBYMEMBER,
-					(cmd)->cmd.georadiusbymember(key, member, radius, geoArgsUnit),
-					setListGeoRadiusGeneralResultConverter)
-					.run(args);
-		}
+	@Override
+	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
+											 final GeoUnit unit, final GeoRadiusArgument argument) {
+		return geoRadiusByMember(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit, argument);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-											 final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
-		final CommandArguments args = CommandArguments.create(key).add(member).add(radius)
-				.add(unit).add(geoRadiusArgument);
-		final GeoArgs.Unit geoArgsUnit = (new GeoUnitConverter()).convert(unit);
-		final GeoArgs geoArgs = LettuceGeoArgs.from(geoRadiusArgument);
-		final ListConverter<GeoWithin<byte[]>, GeoRadius> listGeoRadiusResponseConverter =
-				GeoRadiusResponseConverter.listConverter();
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.GEORADIUSBYMEMBER,
-					(cmd)->cmd.georadiusbymember(key, member, radius, geoArgsUnit, geoArgs),
-					listGeoRadiusResponseConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.GEORADIUSBYMEMBER,
-					(cmd)->cmd.georadiusbymember(key, member, radius, geoArgsUnit, geoArgs),
-					listGeoRadiusResponseConverter)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.GEORADIUSBYMEMBER,
-					(cmd)->cmd.georadiusbymember(key, member, radius, geoArgsUnit, geoArgs),
-					listGeoRadiusResponseConverter)
-					.run(args);
-		}
+											 final GeoUnit unit, final GeoRadiusArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add(member).add(radius).add(unit).add(argument);
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return LettuceCommandBuilder.<List<GeoWithin<byte[]>>, List<GeoRadius>>newBuilder(client,
+						Command.GEORADIUSBYMEMBER).executor(
+						(cmd)->cmd.georadiusbymember(key, member, radius, geoUnitConverter.convert(unit),
+								CompositeArgumentUtils.geoArgs(argument))).arguments(args)
+				.converter(new ListConverter<>(new GeoRadiusResponseConverter())).run();
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
 											   final GeoUnit unit) {
-		final CommandArguments args = CommandArguments.create(key).add(member).add(radius)
-				.add(unit);
-		return geoRadiusByMemberRo(args);
+		final CommandArguments args = CommandArguments.create(key).add(member).add(radius).add(unit);
+		return LettuceCommandBuilder.<List<GeoRadius>, List<GeoRadius>>newBuilder(client, Command.GEORADIUSBYMEMBER_RO)
+				.arguments(args).converter((v)->v).run();
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
 											   final GeoUnit unit) {
-		final CommandArguments args = CommandArguments.create(key).add(member).add(radius)
-				.add(unit);
-		return geoRadiusByMemberRo(args);
+		final CommandArguments args = CommandArguments.create(key).add(member).add(radius).add(unit);
+		return LettuceCommandBuilder.<List<GeoRadius>, List<GeoRadius>>newBuilder(client, Command.GEORADIUSBYMEMBER_RO)
+				.arguments(args).converter((v)->v).run();
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
-											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
-		final CommandArguments args = CommandArguments.create(key).add(member).add(radius)
-				.add(unit).add(geoRadiusArgument);
-		return geoRadiusByMemberRo(args);
+											   final GeoUnit unit, final GeoRadiusArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add(member).add(radius).add(unit).add(argument);
+		return LettuceCommandBuilder.<List<GeoRadius>, List<GeoRadius>>newBuilder(client, Command.GEORADIUSBYMEMBER_RO)
+				.arguments(args).converter((v)->v).run();
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
-											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
-		final CommandArguments args = CommandArguments.create(key).add(member).add(radius)
-				.add(unit).add(geoRadiusArgument);
-		return geoRadiusByMemberRo(args);
+											   final GeoUnit unit, final GeoRadiusArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add(member).add(radius).add(unit).add(argument);
+		return LettuceCommandBuilder.<List<GeoRadius>, List<GeoRadius>>newBuilder(client, Command.GEORADIUSBYMEMBER_RO)
+				.arguments(args).converter((v)->v).run();
 	}
 
 	@Override
-	protected Long geoAdd(final byte[] key, final ListBuilder<Object> lngLatMemberBuilder,
-						  final CommandArguments args) {
-		final Object[] lngLatMembers = lngLatMemberBuilder.build().toArray(new Object[]{});
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.GEOADD, (cmd)->cmd.geoadd(key, lngLatMembers),
-					(v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.GEOADD,
-					(cmd)->cmd.geoadd(key, lngLatMembers), (v)->v)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.GEOADD, (cmd)->cmd.geoadd(key, lngLatMembers), (v)->v)
-					.run(args);
-		}
+	public List<GeoRadius> geoSearch(final String key, final String member, final double radius, final GeoUnit unit) {
+		return geoSearch(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit);
 	}
 
-	private <V> List<V> geoHash(final byte[] key, final byte[][] members,
-								final ListConverter<Value<String>, V> converter, final CommandArguments args) {
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.GEOHASH, (cmd)->cmd.geohash(key, members),
-					converter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.GEOHASH, (cmd)->cmd.geohash(key, members),
-					converter)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.GEOHASH, (cmd)->cmd.geohash(key, members), converter)
-					.run(args);
-		}
+	@Override
+	public List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double radius, final GeoUnit unit) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER").add(member).add("BYRADIUS")
+				.add(radius).add(unit);
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return LettuceCommandBuilder.<Set<byte[]>, List<GeoRadius>>newBuilder(client, Command.GEOSEARCH).executor(
+						(cmd)->cmd.geosearch(key, GeoSearch.fromMember(member),
+								GeoSearch.byRadius(radius, geoUnitConverter.convert(unit)))).arguments(args)
+				.converter(new SetListConverter<>(new GeoRadiusGeneralResultConverter())).run();
 	}
 
-	private Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoArgs.Unit unit,
-						   final CommandArguments args) {
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.GEODIST,
-					(cmd)->cmd.geodist(key, member1, member2, unit), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.GEODIST,
-					(cmd)->cmd.geodist(key, member1, member2, unit), (v)->v)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.GEODIST,
-					(cmd)->cmd.geodist(key, member1, member2, unit), (v)->v)
-					.run(args);
-		}
+	@Override
+	public List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude,
+									 final double radius, final GeoUnit unit) {
+		return geoSearch(SafeEncoder.encode(key), longitude, latitude, radius, unit);
 	}
 
-	private List<GeoRadius> geoRadiusRo(final CommandArguments args) {
-		if(isPipeline()){
-			return new LettucePipelineCommand<List<GeoRadius>, List<GeoRadius>>(client, ProtocolCommand.GEORADIUS_RO)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<List<GeoRadius>, List<GeoRadius>>(client, ProtocolCommand.GEORADIUS_RO)
-					.run(args);
-		}else{
-			return new LettuceCommand<List<GeoRadius>, List<GeoRadius>>(client, ProtocolCommand.GEORADIUS_RO)
-					.run(args);
-		}
+	@Override
+	public List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
+									 final double radius, final GeoUnit unit) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude).add(latitude)
+				.add("BYRADIUS").add(radius).add(unit);
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return LettuceCommandBuilder.<Set<byte[]>, List<GeoRadius>>newBuilder(client, Command.GEOSEARCH).executor(
+						(cmd)->cmd.geosearch(key, GeoSearch.fromCoordinates(longitude, latitude),
+								GeoSearch.byRadius(radius, geoUnitConverter.convert(unit)))).arguments(args)
+				.converter(new SetListConverter<>(new GeoRadiusGeneralResultConverter())).run();
 	}
 
-	private List<GeoRadius> geoRadiusByMemberRo(final CommandArguments args) {
-		if(isPipeline()){
-			return new LettucePipelineCommand<List<GeoRadius>, List<GeoRadius>>(client,
-					ProtocolCommand.GEORADIUSBYMEMBER_RO)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<List<GeoRadius>, List<GeoRadius>>(client,
-					ProtocolCommand.GEORADIUSBYMEMBER_RO)
-					.run(args);
-		}else{
-			return new LettuceCommand<List<GeoRadius>, List<GeoRadius>>(client, ProtocolCommand.GEORADIUSBYMEMBER_RO)
-					.run(args);
-		}
+	@Override
+	public List<GeoRadius> geoSearch(final String key, final String member, final double width, final double height,
+									 final GeoUnit unit) {
+		return geoSearch(SafeEncoder.encode(key), SafeEncoder.encode(member), width, height, unit);
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double width, final double height,
+									 final GeoUnit unit) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER").add(member).add("BYBOX").add(width)
+				.add(height).add(unit);
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return LettuceCommandBuilder.<Set<byte[]>, List<GeoRadius>>newBuilder(client, Command.GEOSEARCH).executor(
+						(cmd)->cmd.geosearch(key, GeoSearch.fromMember(member),
+								GeoSearch.byBox(width, height, geoUnitConverter.convert(unit)))).arguments(args)
+				.converter(new SetListConverter<>(new GeoRadiusGeneralResultConverter())).run();
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude,
+									 final double width, final double height, final GeoUnit unit) {
+		return geoSearch(SafeEncoder.encode(key), longitude, latitude, width, height, unit);
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
+									 final double width, final double height, final GeoUnit unit) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude).add(latitude)
+				.add("BYBOX").add(width).add(height).add(unit);
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return LettuceCommandBuilder.<Set<byte[]>, List<GeoRadius>>newBuilder(client, Command.GEOSEARCH).executor(
+						(cmd)->cmd.geosearch(key, GeoSearch.fromCoordinates(longitude, latitude),
+								GeoSearch.byBox(width, height, geoUnitConverter.convert(unit)))).arguments(args)
+				.converter(new SetListConverter<>(new GeoRadiusGeneralResultConverter())).run();
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final String key, final String member, final double radius, final GeoUnit unit,
+									 final GeoSearchArgument argument) {
+		return geoSearch(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit, argument);
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double radius, final GeoUnit unit,
+									 final GeoSearchArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER").add(member).add("BYRADIUS")
+				.add(radius).add(unit).add(argument);
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return LettuceCommandBuilder.<List<GeoWithin<byte[]>>, List<GeoRadius>>newBuilder(client, Command.GEOSEARCH)
+				.executor((cmd)->cmd.geosearch(key, GeoSearch.fromMember(member),
+						GeoSearch.byRadius(radius, geoUnitConverter.convert(unit)),
+						CompositeArgumentUtils.geoArgs(argument))).arguments(args)
+				.converter(new ListConverter<>(new GeoRadiusResponseConverter())).run();
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude,
+									 final double radius, final GeoUnit unit, final GeoSearchArgument argument) {
+		return geoSearch(SafeEncoder.encode(key), longitude, latitude, radius, unit, argument);
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
+									 final double radius, final GeoUnit unit, final GeoSearchArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude).add(latitude)
+				.add("BYRADIUS").add(radius).add(unit).add(argument);
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return LettuceCommandBuilder.<List<GeoWithin<byte[]>>, List<GeoRadius>>newBuilder(client, Command.GEOSEARCH)
+				.executor((cmd)->cmd.geosearch(key, GeoSearch.fromCoordinates(longitude, latitude),
+						GeoSearch.byRadius(radius, geoUnitConverter.convert(unit)),
+						CompositeArgumentUtils.geoArgs(argument))).arguments(args)
+				.converter(new ListConverter<>(new GeoRadiusResponseConverter())).run();
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final String key, final String member, final double width, final double height,
+									 final GeoUnit unit, final GeoSearchArgument argument) {
+		return geoSearch(SafeEncoder.encode(key), SafeEncoder.encode(member), width, height, unit, argument);
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double width, final double height,
+									 final GeoUnit unit, final GeoSearchArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER").add(member).add("BYBOX").add(width)
+				.add(height).add(unit).add(argument);
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return LettuceCommandBuilder.<List<GeoWithin<byte[]>>, List<GeoRadius>>newBuilder(client, Command.GEOSEARCH)
+				.executor((cmd)->cmd.geosearch(key, GeoSearch.fromMember(member),
+						GeoSearch.byBox(width, height, geoUnitConverter.convert(unit)),
+						CompositeArgumentUtils.geoArgs(argument))).arguments(args)
+				.converter(new ListConverter<>(new GeoRadiusResponseConverter())).run();
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude,
+									 final double width, final double height, final GeoUnit unit,
+									 final GeoSearchArgument argument) {
+		return geoSearch(SafeEncoder.encode(key), longitude, latitude, width, height, unit, argument);
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
+									 final double width, final double height, final GeoUnit unit,
+									 final GeoSearchArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude).add(latitude)
+				.add("BYBOX").add(width).add(height).add(unit).add(argument);
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return LettuceCommandBuilder.<List<GeoWithin<byte[]>>, List<GeoRadius>>newBuilder(client, Command.GEOSEARCH)
+				.executor((cmd)->cmd.geosearch(key, GeoSearch.fromCoordinates(longitude, latitude),
+						GeoSearch.byBox(width, height, geoUnitConverter.convert(unit)),
+						CompositeArgumentUtils.geoArgs(argument))).arguments(args)
+				.converter(new ListConverter<>(new GeoRadiusResponseConverter())).run();
+	}
+
+	@Override
+	public Long geoSearchStore(final String destKey, final String key, final String member, final double radius,
+							   final GeoUnit unit) {
+		return geoSearchStore(SafeEncoder.encode(destKey), SafeEncoder.encode(key), SafeEncoder.encode(member), radius,
+				unit);
+	}
+
+	@Override
+	public Long geoSearchStore(final byte[] destKey, final byte[] key, final byte[] member, final double radius,
+							   final GeoUnit unit) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER").add(member).add("BYRADIUS")
+				.add(radius).add(unit);
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return geoSearchStore((cmd)->cmd.geosearchstore(destKey, key, GeoSearch.fromMember(member),
+				GeoSearch.byRadius(radius, geoUnitConverter.convert(unit)), new GeoArgs(), false), args);
+	}
+
+	@Override
+	public Long geoSearchStore(final String destKey, final String key, final double longitude, final double latitude,
+							   final double radius, final GeoUnit unit) {
+		return geoSearchStore(SafeEncoder.encode(destKey), SafeEncoder.encode(key), longitude, latitude, radius, unit);
+	}
+
+	@Override
+	public Long geoSearchStore(final byte[] destKey, final byte[] key, final double longitude, final double latitude,
+							   final double radius, final GeoUnit unit) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude).add(latitude)
+				.add("BYRADIUS").add(radius).add(unit);
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return geoSearchStore((cmd)->cmd.geosearchstore(destKey, key, GeoSearch.fromCoordinates(longitude, latitude),
+				GeoSearch.byRadius(radius, geoUnitConverter.convert(unit)), new GeoArgs(), false), args);
+	}
+
+	@Override
+	public Long geoSearchStore(final String destKey, final String key, final String member, final double width,
+							   final double height, final GeoUnit unit) {
+		return geoSearchStore(SafeEncoder.encode(destKey), SafeEncoder.encode(key), SafeEncoder.encode(member), width,
+				height, unit);
+	}
+
+	@Override
+	public Long geoSearchStore(final byte[] destKey, final byte[] key, final byte[] member, final double width,
+							   final double height, final GeoUnit unit) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER").add(member).add("BYBOX").add(width)
+				.add(height).add(unit);
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return geoSearchStore((cmd)->cmd.geosearchstore(destKey, key, GeoSearch.fromMember(member),
+				GeoSearch.byBox(width, height, geoUnitConverter.convert(unit)), new GeoArgs(), false), args);
+	}
+
+	@Override
+	public Long geoSearchStore(final String destKey, final String key, final double longitude, final double latitude,
+							   final double width, final double height, final GeoUnit unit) {
+		return geoSearchStore(SafeEncoder.encode(destKey), SafeEncoder.encode(key), longitude, latitude, width, height,
+				unit);
+	}
+
+	@Override
+	public Long geoSearchStore(final byte[] destKey, final byte[] key, final double longitude, final double latitude,
+							   final double width, final double height, final GeoUnit unit) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude).add(latitude)
+				.add("BYBOX").add(width).add(height).add(unit);
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return geoSearchStore((cmd)->cmd.geosearchstore(destKey, key, GeoSearch.fromCoordinates(longitude, latitude),
+				GeoSearch.byBox(width, height, geoUnitConverter.convert(unit)), new GeoArgs(), false), args);
+	}
+
+	@Override
+	public Long geoSearchStore(final String destKey, final String key, final String member, final double radius,
+							   final GeoUnit unit, final GeoSearchArgument argument) {
+		return geoSearchStore(SafeEncoder.encode(destKey), SafeEncoder.encode(key), SafeEncoder.encode(member), radius,
+				unit, argument);
+	}
+
+	@Override
+	public Long geoSearchStore(final byte[] destKey, final byte[] key, final byte[] member, final double radius,
+							   final GeoUnit unit, final GeoSearchArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER").add(member).add("BYRADIUS")
+				.add(radius).add(unit).add(argument);
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return geoSearchStore((cmd)->cmd.geosearchstore(destKey, key, GeoSearch.fromMember(member),
+				GeoSearch.byRadius(radius, geoUnitConverter.convert(unit)), CompositeArgumentUtils.geoArgs(argument),
+				Boolean.TRUE.equals(argument.isWithDist())), args);
+	}
+
+	@Override
+	public Long geoSearchStore(final String destKey, final String key, final double longitude, final double latitude,
+							   final double radius, final GeoUnit unit, final GeoSearchArgument argument) {
+		return geoSearchStore(SafeEncoder.encode(destKey), SafeEncoder.encode(key), longitude, latitude, radius, unit,
+				argument);
+	}
+
+	@Override
+	public Long geoSearchStore(final byte[] destKey, final byte[] key, final double longitude, final double latitude,
+							   final double radius, final GeoUnit unit, final GeoSearchArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude).add(latitude)
+				.add("BYRADIUS").add(radius).add(unit).add(argument);
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return geoSearchStore((cmd)->cmd.geosearchstore(destKey, key, GeoSearch.fromCoordinates(longitude, latitude),
+				GeoSearch.byRadius(radius, geoUnitConverter.convert(unit)), CompositeArgumentUtils.geoArgs(argument),
+				Boolean.TRUE.equals(argument.isWithDist())), args);
+	}
+
+	@Override
+	public Long geoSearchStore(final String destKey, final String key, final String member, final double width,
+							   final double height, final GeoUnit unit, final GeoSearchArgument argument) {
+		return geoSearchStore(SafeEncoder.encode(destKey), SafeEncoder.encode(key), SafeEncoder.encode(member), width,
+				height, unit, argument);
+	}
+
+	@Override
+	public Long geoSearchStore(final byte[] destKey, final byte[] key, final byte[] member, final double width,
+							   final double height, final GeoUnit unit, final GeoSearchArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER").add(member).add("BYBOX").add(width)
+				.add(height).add(unit).add(argument);
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return geoSearchStore((cmd)->cmd.geosearchstore(destKey, key, GeoSearch.fromMember(member),
+				GeoSearch.byBox(width, height, geoUnitConverter.convert(unit)),
+				CompositeArgumentUtils.geoArgs(argument), Boolean.TRUE.equals(argument.isWithDist())), args);
+	}
+
+	@Override
+	public Long geoSearchStore(final String destKey, final String key, final double longitude, final double latitude,
+							   final double width, final double height, final GeoUnit unit,
+							   final GeoSearchArgument argument) {
+		return geoSearchStore(SafeEncoder.encode(destKey), SafeEncoder.encode(key), longitude, latitude, width, height,
+				unit, argument);
+	}
+
+	@Override
+	public Long geoSearchStore(final byte[] destKey, final byte[] key, final double longitude, final double latitude,
+							   final double width, final double height, final GeoUnit unit,
+							   final GeoSearchArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude).add(latitude)
+				.add("BYBOX").add(width).add(height).add(unit).add(argument);
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return geoSearchStore((cmd)->cmd.geosearchstore(destKey, key, GeoSearch.fromCoordinates(longitude, latitude),
+				GeoSearch.byBox(width, height, geoUnitConverter.convert(unit)),
+				CompositeArgumentUtils.geoArgs(argument), Boolean.TRUE.equals(argument.isWithDist())), args);
+	}
+
+	private Long geoAdd(
+			final com.buession.redis.core.Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, Long> executor,
+			final CommandArguments args) {
+		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.GEOADD).executor(executor).arguments(args)
+				.converter((v)->v).run();
+	}
+
+	private Long geoSearchStore(
+			final com.buession.redis.core.Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, Long> executor,
+			final CommandArguments args) {
+		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.GEOSEARCHSTORE).executor(executor)
+				.arguments(args).converter((v)->v).run();
+	}
+
+	@SuppressWarnings("unchecked")
+	private static GeoValue<String>[] stringMemberCoordinatesToGeoValue(final Map<String, Geo> memberCoordinates) {
+		return memberCoordinates.entrySet().stream()
+				.map((e)->GeoValue.just(e.getValue().getLongitude(), e.getValue().getLatitude(),
+						SafeEncoder.encode(e.getKey()))).toArray(GeoValue[]::new);
+	}
+
+	@SuppressWarnings("unchecked")
+	private static GeoValue<byte[]>[] byteMemberCoordinatesToGeoValue(final Map<byte[], Geo> memberCoordinates) {
+		return memberCoordinates.entrySet().stream()
+				.map((e)->GeoValue.just(e.getValue().getLongitude(), e.getValue().getLatitude(), e.getKey()))
+				.toArray(GeoValue[]::new);
 	}
 
 }

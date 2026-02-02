@@ -306,12 +306,12 @@ public interface ConnectionCommands extends RedisCommands {
 	 *
 	 * @param on
 	 * 		是否启用
-	 * @param trackingArgument
+	 * @param argument
 	 * 		CLIENT TRACKING 参数
 	 *
 	 * @return 设置成功时返回 Status.SUCCESS；否则，返回 Status.FAILURE
 	 */
-	Status clientTracking(final boolean on, final TrackingArgument trackingArgument);
+	Status clientTracking(final boolean on, final TrackingArgument argument);
 
 	/**
 	 * Returns information about the current client connection's use of the server assisted client side caching feature.
@@ -577,7 +577,7 @@ public interface ConnectionCommands extends RedisCommands {
 		/**
 		 * 构造函数
 		 */
-		public TrackingArgument() {
+		private TrackingArgument() {
 		}
 
 		/**
@@ -596,7 +596,7 @@ public interface ConnectionCommands extends RedisCommands {
 		 * @param prefixes
 		 * 		仅跟踪以该前缀开头的 key
 		 */
-		public TrackingArgument(final String[] prefixes) {
+		private TrackingArgument(final String[] prefixes) {
 			this.prefixes = prefixes;
 		}
 
@@ -608,7 +608,7 @@ public interface ConnectionCommands extends RedisCommands {
 		 * @param prefixes
 		 * 		仅跟踪以该前缀开头的 key
 		 */
-		public TrackingArgument(final Long redirect, final String[] prefixes) {
+		private TrackingArgument(final Long redirect, final String[] prefixes) {
 			this(redirect);
 			this.prefixes = prefixes;
 		}
@@ -627,8 +627,8 @@ public interface ConnectionCommands extends RedisCommands {
 		 * @param noloop
 		 * 		是否不向自己发送失效通知
 		 */
-		public TrackingArgument(final Long redirect, final boolean bcast, final boolean optin, final boolean optout,
-								final boolean noloop) {
+		private TrackingArgument(final Long redirect, final boolean bcast, final boolean optin, final boolean optout,
+								 final boolean noloop) {
 			this(redirect);
 			this.bcast = bcast;
 			this.optin = optin;
@@ -650,8 +650,9 @@ public interface ConnectionCommands extends RedisCommands {
 		 * @param noloop
 		 * 		是否不向自己发送失效通知
 		 */
-		public TrackingArgument(final String[] prefixes, final boolean bcast, final boolean optin, final boolean optout,
-								final boolean noloop) {
+		private TrackingArgument(final String[] prefixes, final boolean bcast, final boolean optin,
+								 final boolean optout,
+								 final boolean noloop) {
 			this(prefixes);
 			this.bcast = bcast;
 			this.optin = optin;
@@ -675,8 +676,8 @@ public interface ConnectionCommands extends RedisCommands {
 		 * @param noloop
 		 * 		是否不向自己发送失效通知
 		 */
-		public TrackingArgument(final Long redirect, final String[] prefixes, final boolean bcast, final boolean optin,
-								final boolean optout, final boolean noloop) {
+		private TrackingArgument(final Long redirect, final String[] prefixes, final boolean bcast, final boolean optin,
+								 final boolean optout, final boolean noloop) {
 			this(redirect, bcast, optin, optout, noloop);
 			this.prefixes = prefixes;
 		}

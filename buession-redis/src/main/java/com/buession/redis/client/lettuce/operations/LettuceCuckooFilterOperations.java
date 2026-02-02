@@ -57,7 +57,9 @@ public final class LettuceCuckooFilterOperations extends AbstractLettuceRedisOpe
 
 	@Override
 	public Status cfAdd(final byte[] key, final byte[] item) {
-		return cfAdd(SafeEncoder.encode(key), SafeEncoder.encode(item));
+		final CommandArguments args = CommandArguments.create(key).add(item);
+		return LettuceCommandBuilder.<Long, Status>newBuilder(client, Command.CF_ADD).arguments(args)
+				.converter(oneStatusConverter).run();
 	}
 
 	@Override
@@ -69,7 +71,9 @@ public final class LettuceCuckooFilterOperations extends AbstractLettuceRedisOpe
 
 	@Override
 	public Status cfAddNx(final byte[] key, final byte[] item) {
-		return cfAdd(SafeEncoder.encode(key), SafeEncoder.encode(item));
+		final CommandArguments args = CommandArguments.create(key).add(item);
+		return LettuceCommandBuilder.<Long, Status>newBuilder(client, Command.CF_ADDNX).arguments(args)
+				.converter(oneStatusConverter).run();
 	}
 
 	@Override
@@ -81,7 +85,9 @@ public final class LettuceCuckooFilterOperations extends AbstractLettuceRedisOpe
 
 	@Override
 	public Long cfCount(final byte[] key, final byte[] item) {
-		return cfCount(SafeEncoder.encode(key), SafeEncoder.encode(item));
+		final CommandArguments args = CommandArguments.create(key).add(item);
+		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.CF_COUNT).arguments(args)
+				.converter((v)->v).run();
 	}
 
 	@Override
@@ -93,7 +99,9 @@ public final class LettuceCuckooFilterOperations extends AbstractLettuceRedisOpe
 
 	@Override
 	public Status cfDel(final byte[] key, final byte[] item) {
-		return cfDel(SafeEncoder.encode(key), SafeEncoder.encode(item));
+		final CommandArguments args = CommandArguments.create(key);
+		return LettuceCommandBuilder.<Boolean, Status>newBuilder(client, Command.CF_DEL)
+				.arguments(args).converter(booleanStatusConverter).run();
 	}
 
 	@Override
@@ -105,7 +113,9 @@ public final class LettuceCuckooFilterOperations extends AbstractLettuceRedisOpe
 
 	@Override
 	public Boolean cfExists(final byte[] key, final byte[] item) {
-		return cfExists(SafeEncoder.encode(key), SafeEncoder.encode(item));
+		final CommandArguments args = CommandArguments.create(key).add(item);
+		return LettuceCommandBuilder.<Boolean, Boolean>newBuilder(client, Command.CF_EXISTS).arguments(args)
+				.converter((v)->v).run();
 	}
 
 	@Override
@@ -117,7 +127,9 @@ public final class LettuceCuckooFilterOperations extends AbstractLettuceRedisOpe
 
 	@Override
 	public Map<String, Object> cfInfo(final byte[] key) {
-		return cfInfo(SafeEncoder.encode(key));
+		final CommandArguments args = CommandArguments.create(key);
+		return LettuceCommandBuilder.<Map<String, Object>, Map<String, Object>>newBuilder(client, Command.CF_INFO)
+				.arguments(args).converter((v)->v).run();
 	}
 
 	@Override
@@ -129,19 +141,23 @@ public final class LettuceCuckooFilterOperations extends AbstractLettuceRedisOpe
 
 	@Override
 	public List<Boolean> cfInsert(final byte[] key, final byte[]... items) {
-		return cfInsert(SafeEncoder.encode(key), SafeEncoder.encode(items));
+		final CommandArguments args = CommandArguments.create(key).add("ITEMS").add(items);
+		return LettuceCommandBuilder.<List<Boolean>, List<Boolean>>newBuilder(client, Command.CF_INSERT).arguments(args)
+				.converter((v)->v).run();
 	}
 
 	@Override
-	public List<Boolean> cfInsert(final String key, final CFInsertArgument cfInsertArgument, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add(cfInsertArgument).add("ITEMS").add(items);
+	public List<Boolean> cfInsert(final String key, final CFInsertArgument argument, final String... items) {
+		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS").add(items);
 		return LettuceCommandBuilder.<List<Boolean>, List<Boolean>>newBuilder(client, Command.BF_INSERT).arguments(args)
 				.converter((v)->v).run();
 	}
 
 	@Override
-	public List<Boolean> cfInsert(final byte[] key, final CFInsertArgument cfInsertArgument, final byte[]... items) {
-		return cfInsert(SafeEncoder.encode(key), cfInsertArgument, SafeEncoder.encode(items));
+	public List<Boolean> cfInsert(final byte[] key, final CFInsertArgument argument, final byte[]... items) {
+		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS").add(items);
+		return LettuceCommandBuilder.<List<Boolean>, List<Boolean>>newBuilder(client, Command.BF_INSERT).arguments(args)
+				.converter((v)->v).run();
 	}
 
 	@Override
@@ -153,31 +169,37 @@ public final class LettuceCuckooFilterOperations extends AbstractLettuceRedisOpe
 
 	@Override
 	public List<Boolean> cfInsertNx(final byte[] key, final byte[]... items) {
-		return cfInsertNx(SafeEncoder.encode(key), SafeEncoder.encode(items));
-	}
-
-	@Override
-	public List<Boolean> cfInsertNx(final String key, final CFInsertArgument cfInsertArgument, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add(cfInsertArgument).add("ITEMS").add(items);
+		final CommandArguments args = CommandArguments.create(key).add("ITEMS").add(items);
 		return LettuceCommandBuilder.<List<Boolean>, List<Boolean>>newBuilder(client, Command.CF_INSERTNX)
 				.arguments(args).converter((v)->v).run();
 	}
 
 	@Override
-	public List<Boolean> cfInsertNx(final byte[] key, final CFInsertArgument cfInsertArgument, final byte[]... items) {
-		return cfInsertNx(SafeEncoder.encode(key), cfInsertArgument, SafeEncoder.encode(items));
+	public List<Boolean> cfInsertNx(final String key, final CFInsertArgument argument, final String... items) {
+		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS").add(items);
+		return LettuceCommandBuilder.<List<Boolean>, List<Boolean>>newBuilder(client, Command.CF_INSERTNX)
+				.arguments(args).converter((v)->v).run();
+	}
+
+	@Override
+	public List<Boolean> cfInsertNx(final byte[] key, final CFInsertArgument argument, final byte[]... items) {
+		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS").add(items);
+		return LettuceCommandBuilder.<List<Boolean>, List<Boolean>>newBuilder(client, Command.CF_INSERTNX)
+				.arguments(args).converter((v)->v).run();
 	}
 
 	@Override
 	public Status cfLoadchunk(final String key, final long iterator, final byte[] data) {
-		final CommandArguments args = CommandArguments.create(key).add(iterator).add(SafeEncoder.encode(data));
+		final CommandArguments args = CommandArguments.create(key).add(iterator).add(data);
 		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.CF_LOADCHUNK).arguments(args)
 				.converter(okStatusConverter).run();
 	}
 
 	@Override
 	public Status cfLoadchunk(final byte[] key, final long iterator, final byte[] data) {
-		return cfLoadchunk(SafeEncoder.encode(key), iterator, data);
+		final CommandArguments args = CommandArguments.create(key).add(iterator).add(data);
+		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.CF_LOADCHUNK).arguments(args)
+				.converter(okStatusConverter).run();
 	}
 
 	@Override
@@ -189,20 +211,25 @@ public final class LettuceCuckooFilterOperations extends AbstractLettuceRedisOpe
 
 	@Override
 	public List<Boolean> cfMExists(final byte[] key, final byte[]... items) {
-		return cfMExists(SafeEncoder.encode(key), SafeEncoder.encode(items));
+		final CommandArguments args = CommandArguments.create(key).add(items);
+		return LettuceCommandBuilder.<List<Boolean>, List<Boolean>>newBuilder(client, Command.CF_MEXISTS)
+				.arguments(args).converter((v)->v).run();
 	}
 
 	@Override
-	public Status cfReserve(final String key, final CFReserveArgument cfReserveArgument) {
-		final CommandArguments args = CommandArguments.create(key).add(cfReserveArgument);
+	public Status cfReserve(final String key, final CFReserveArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add(argument);
 		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.CF_RESERVE).arguments(args)
 				.converter(okStatusConverter)
 				.run();
 	}
 
 	@Override
-	public Status cfReserve(final byte[] key, final CFReserveArgument cfReserveArgument) {
-		return cfReserve(SafeEncoder.encode(key), cfReserveArgument);
+	public Status cfReserve(final byte[] key, final CFReserveArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add(argument);
+		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.CF_RESERVE).arguments(args)
+				.converter(okStatusConverter)
+				.run();
 	}
 
 	@Override
@@ -216,7 +243,11 @@ public final class LettuceCuckooFilterOperations extends AbstractLettuceRedisOpe
 
 	@Override
 	public Map<Long, byte[]> cfScandump(final byte[] key, final long iterator) {
-		return cfScandump(SafeEncoder.encode(key), iterator);
+		final CommandArguments args = CommandArguments.create(key).add(iterator);
+		return LettuceCommandBuilder.<Map.Entry<Long, byte[]>, Map<Long, byte[]>>newBuilder(client, Command.CF_SCANDUMP)
+				.arguments(args)
+				.converter(new MapEntryMapConverter<>((k)->k, (v)->v))
+				.run();
 	}
 
 }

@@ -111,13 +111,13 @@ public interface CuckooFilterOperations extends CuckooFilterCommands, RedisOpera
 	}
 
 	@Override
-	default List<Boolean> cfInsert(final String key, final CFInsertArgument cfInsertArgument, final String... items) {
-		return execute((client)->client.cuckooFilterOperations().cfInsert(key, cfInsertArgument, items));
+	default List<Boolean> cfInsert(final String key, final CFInsertArgument argument, final String... items) {
+		return execute((client)->client.cuckooFilterOperations().cfInsert(key, argument, items));
 	}
 
 	@Override
-	default List<Boolean> cfInsert(final byte[] key, final CFInsertArgument cfInsertArgument, final byte[]... items) {
-		return execute((client)->client.cuckooFilterOperations().cfInsert(key, cfInsertArgument, items));
+	default List<Boolean> cfInsert(final byte[] key, final CFInsertArgument argument, final byte[]... items) {
+		return execute((client)->client.cuckooFilterOperations().cfInsert(key, argument, items));
 	}
 
 	@Override
@@ -131,13 +131,13 @@ public interface CuckooFilterOperations extends CuckooFilterCommands, RedisOpera
 	}
 
 	@Override
-	default List<Boolean> cfInsertNx(final String key, final CFInsertArgument cfInsertArgument, final String... items) {
-		return execute((client)->client.cuckooFilterOperations().cfInsertNx(key, cfInsertArgument, items));
+	default List<Boolean> cfInsertNx(final String key, final CFInsertArgument argument, final String... items) {
+		return execute((client)->client.cuckooFilterOperations().cfInsertNx(key, argument, items));
 	}
 
 	@Override
-	default List<Boolean> cfInsertNx(final byte[] key, final CFInsertArgument cfInsertArgument, final byte[]... items) {
-		return execute((client)->client.cuckooFilterOperations().cfInsertNx(key, cfInsertArgument, items));
+	default List<Boolean> cfInsertNx(final byte[] key, final CFInsertArgument argument, final byte[]... items) {
+		return execute((client)->client.cuckooFilterOperations().cfInsertNx(key, argument, items));
 	}
 
 	@Override
@@ -161,13 +161,13 @@ public interface CuckooFilterOperations extends CuckooFilterCommands, RedisOpera
 	}
 
 	@Override
-	default Status cfReserve(final String key, final CFReserveArgument cfReserveArgument) {
-		return execute((client)->client.cuckooFilterOperations().cfReserve(key, cfReserveArgument));
+	default Status cfReserve(final String key, final CFReserveArgument argument) {
+		return execute((client)->client.cuckooFilterOperations().cfReserve(key, argument));
 	}
 
 	@Override
-	default Status cfReserve(final byte[] key, final CFReserveArgument cfReserveArgument) {
-		return execute((client)->client.cuckooFilterOperations().cfReserve(key, cfReserveArgument));
+	default Status cfReserve(final byte[] key, final CFReserveArgument argument) {
+		return execute((client)->client.cuckooFilterOperations().cfReserve(key, argument));
 	}
 
 	@Override

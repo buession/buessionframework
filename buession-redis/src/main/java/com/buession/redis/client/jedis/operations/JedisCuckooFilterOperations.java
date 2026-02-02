@@ -30,8 +30,7 @@ import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.CuckooFilterOperations;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.internal.jedis.JedisCFInsertParams;
-import com.buession.redis.core.internal.jedis.JedisCFReserveParams;
+import com.buession.redis.core.internal.jedis.IParamsUtils;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
@@ -70,7 +69,7 @@ public final class JedisCuckooFilterOperations extends AbstractJedisRedisOperati
 
 	@Override
 	public Status cfAddNx(final byte[] key, final byte[] item) {
-		return cfAdd(SafeEncoder.encode(key), SafeEncoder.encode(item));
+		return cfAddNx(SafeEncoder.encode(key), SafeEncoder.encode(item));
 	}
 
 	@Override
@@ -135,16 +134,16 @@ public final class JedisCuckooFilterOperations extends AbstractJedisRedisOperati
 	}
 
 	@Override
-	public List<Boolean> cfInsert(final String key, final CFInsertArgument cfInsertArgument, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add(cfInsertArgument).add("ITEMS").add(items);
-		final JedisCFInsertParams cfInsertParams = JedisCFInsertParams.from(cfInsertArgument);
+	public List<Boolean> cfInsert(final String key, final CFInsertArgument argument, final String... items) {
+		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS").add(items);
 		return JedisCommandBuilder.<List<Boolean>, List<Boolean>>newBuilder(client, Command.CF_INSERT)
-				.executor((cmd)->cmd.cfInsert(key, cfInsertParams, items)).arguments(args).converter((v)->v).run();
+				.executor((cmd)->cmd.cfInsert(key, IParamsUtils.cfInsertParams(argument), items))
+				.arguments(args).converter((v)->v).run();
 	}
 
 	@Override
-	public List<Boolean> cfInsert(final byte[] key, final CFInsertArgument cfInsertArgument, final byte[]... items) {
-		return cfInsert(SafeEncoder.encode(key), cfInsertArgument, SafeEncoder.encode(items));
+	public List<Boolean> cfInsert(final byte[] key, final CFInsertArgument argument, final byte[]... items) {
+		return cfInsert(SafeEncoder.encode(key), argument, SafeEncoder.encode(items));
 	}
 
 	@Override
@@ -160,16 +159,16 @@ public final class JedisCuckooFilterOperations extends AbstractJedisRedisOperati
 	}
 
 	@Override
-	public List<Boolean> cfInsertNx(final String key, final CFInsertArgument cfInsertArgument, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add(cfInsertArgument).add("ITEMS").add(items);
-		final JedisCFInsertParams cfInsertParams = JedisCFInsertParams.from(cfInsertArgument);
+	public List<Boolean> cfInsertNx(final String key, final CFInsertArgument argument, final String... items) {
+		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS").add(items);
 		return JedisCommandBuilder.<List<Boolean>, List<Boolean>>newBuilder(client, Command.CF_INSERTNX)
-				.executor((cmd)->cmd.cfInsertNx(key, cfInsertParams, items)).arguments(args).converter((v)->v).run();
+				.executor((cmd)->cmd.cfInsertNx(key, IParamsUtils.cfInsertParams(argument), items))
+				.arguments(args).converter((v)->v).run();
 	}
 
 	@Override
-	public List<Boolean> cfInsertNx(final byte[] key, final CFInsertArgument cfInsertArgument, final byte[]... items) {
-		return cfInsertNx(SafeEncoder.encode(key), cfInsertArgument, SafeEncoder.encode(items));
+	public List<Boolean> cfInsertNx(final byte[] key, final CFInsertArgument argument, final byte[]... items) {
+		return cfInsertNx(SafeEncoder.encode(key), argument, SafeEncoder.encode(items));
 	}
 
 	@Override
@@ -198,24 +197,23 @@ public final class JedisCuckooFilterOperations extends AbstractJedisRedisOperati
 	}
 
 	@Override
-	public Status cfReserve(final String key, final CFReserveArgument cfReserveArgument) {
-		final CommandArguments args = CommandArguments.create(key).add(cfReserveArgument);
+	public Status cfReserve(final String key, final CFReserveArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add(argument);
 		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.CF_RESERVE)
 				.executor((cmd)->{
-					if(cfReserveArgument.getBucketSize() == null && cfReserveArgument.getMaxIterations() == null &&
-							cfReserveArgument.getExpansion() == null){
-						return cmd.cfReserve(key, cfReserveArgument.getCapacity());
+					if(argument.getBucketSize() == null && argument.getMaxIterations() == null &&
+							argument.getExpansion() == null){
+						return cmd.cfReserve(key, argument.getCapacity());
 					}else{
-						final JedisCFReserveParams cfReserveParams = JedisCFReserveParams.from(cfReserveArgument);
-						return cmd.cfReserve(key, cfReserveArgument.getCapacity(), cfReserveParams);
+						return cmd.cfReserve(key, argument.getCapacity(), IParamsUtils.cfReserveParams(argument));
 					}
 				}).arguments(args).converter(okStatusConverter)
 				.run();
 	}
 
 	@Override
-	public Status cfReserve(final byte[] key, final CFReserveArgument cfReserveArgument) {
-		return cfReserve(SafeEncoder.encode(key), cfReserveArgument);
+	public Status cfReserve(final byte[] key, final CFReserveArgument argument) {
+		return cfReserve(SafeEncoder.encode(key), argument);
 	}
 
 	@Override

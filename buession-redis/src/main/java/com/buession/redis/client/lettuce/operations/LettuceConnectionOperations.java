@@ -42,10 +42,9 @@ import com.buession.redis.core.internal.convert.lettuce.params.ClientUnblockType
 import com.buession.redis.core.internal.convert.lettuce.response.TrackingInfoTrackingInfoConverter;
 import com.buession.redis.core.internal.convert.response.ClientConverter;
 import com.buession.redis.core.internal.convert.response.PingResultConverter;
-import com.buession.redis.core.internal.lettuce.LettuceTrackingArgs;
+import com.buession.redis.core.internal.lettuce.CompositeArgumentUtils;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.ClientListArgs;
-import io.lettuce.core.TrackingArgs;
 import io.lettuce.core.UnblockType;
 
 import java.util.List;
@@ -226,13 +225,14 @@ public final class LettuceConnectionOperations extends AbstractLettuceRedisOpera
 	}
 
 	@Override
-	public Status clientTracking(final boolean on, final TrackingArgument trackingArgument) {
+	public Status clientTracking(final boolean on, final TrackingArgument argument) {
 		final CommandArguments args = CommandArguments.create(on ? Keyword.Common.ON : Keyword.Common.OFF)
-				.add(trackingArgument);
-		final TrackingArgs trackingArgs = (LettuceTrackingArgs.from(trackingArgument)).enabled(on);
-
+				.add(argument);
 		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_TRACKING)
-				.executor((cmd)->cmd.clientTracking(trackingArgs)).arguments(args).converter(okStatusConverter).run();
+				.executor((cmd)->cmd.clientTracking(
+						CompositeArgumentUtils.trackingArgs(argument).enabled(on))).arguments(args)
+				.converter(okStatusConverter)
+				.run();
 	}
 
 	@Override
@@ -287,74 +287,51 @@ public final class LettuceConnectionOperations extends AbstractLettuceRedisOpera
 
 	@Override
 	public Hello hello() {
-		return LettuceCommandBuilder.<Hello, Hello>newBuilder(client, Command.HELLO)
-				.converter((v)->v)
-				.run();
+		return hello(null);
 	}
 
 	@Override
 	public Hello hello(int protover) {
 		final CommandArguments args = CommandArguments.create(protover);
-		return LettuceCommandBuilder.<Hello, Hello>newBuilder(client, Command.HELLO)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return hello(args);
 	}
 
 	@Override
 	public Hello hello(int protover, String password) {
 		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(password);
-		return LettuceCommandBuilder.<Hello, Hello>newBuilder(client, Command.HELLO)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return hello(args);
 	}
 
 	@Override
 	public Hello hello(int protover, byte[] password) {
 		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(password);
-		return LettuceCommandBuilder.<Hello, Hello>newBuilder(client, Command.HELLO)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return hello(args);
 	}
 
 	@Override
 	public Hello hello(int protover, String username, String password) {
 		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(username).add(password);
-		return LettuceCommandBuilder.<Hello, Hello>newBuilder(client, Command.HELLO)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return hello(args);
 	}
 
 	@Override
 	public Hello hello(int protover, byte[] username, byte[] password) {
 		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(username).add(password);
-		return LettuceCommandBuilder.<Hello, Hello>newBuilder(client, Command.HELLO)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return hello(args);
 	}
 
 	@Override
 	public Hello hello(int protover, String username, String password, String clientName) {
 		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(username).add(password).add(
 				"SETNAME").add(clientName);
-		return LettuceCommandBuilder.<Hello, Hello>newBuilder(client, Command.HELLO)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return hello(args);
 	}
 
 	@Override
 	public Hello hello(int protover, byte[] username, byte[] password, byte[] clientName) {
 		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(username).add(password).add(
 				"SETNAME").add(clientName);
-		return LettuceCommandBuilder.<Hello, Hello>newBuilder(client, Command.HELLO)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return hello(args);
 	}
 
 	@Override
@@ -385,6 +362,12 @@ public final class LettuceConnectionOperations extends AbstractLettuceRedisOpera
 		final CommandArguments args = CommandArguments.create(db);
 		return LettuceCommandBuilder.<Status, Status>newBuilder(client, Command.SELECT)
 				.arguments(args)
+				.converter((v)->v)
+				.run();
+	}
+
+	private Hello hello(final CommandArguments args) {
+		return LettuceCommandBuilder.<Hello, Hello>newBuilder(client, Command.HELLO)
 				.converter((v)->v)
 				.run();
 	}

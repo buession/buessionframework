@@ -91,13 +91,13 @@ public interface BloomFilterOperations extends BloomFilterCommands, RedisOperati
 	}
 
 	@Override
-	default List<Boolean> bfInsert(final String key, final BFInsertArgument bfInsertArgument, final String... items) {
-		return execute((client)->client.bloomFilterOperations().bfInsert(key, bfInsertArgument, items));
+	default List<Boolean> bfInsert(final String key, final BFInsertArgument argument, final String... items) {
+		return execute((client)->client.bloomFilterOperations().bfInsert(key, argument, items));
 	}
 
 	@Override
-	default List<Boolean> bfInsert(final byte[] key, final BFInsertArgument bfInsertArgument, final byte[]... items) {
-		return execute((client)->client.bloomFilterOperations().bfInsert(key, bfInsertArgument, items));
+	default List<Boolean> bfInsert(final byte[] key, final BFInsertArgument argument, final byte[]... items) {
+		return execute((client)->client.bloomFilterOperations().bfInsert(key, argument, items));
 	}
 
 	@Override
@@ -131,13 +131,13 @@ public interface BloomFilterOperations extends BloomFilterCommands, RedisOperati
 	}
 
 	@Override
-	default Status bfReserve(final String key, final BFReserveArgument bfInsertArgument) {
-		return execute((client)->client.bloomFilterOperations().bfReserve(key, bfInsertArgument));
+	default Status bfReserve(final String key, final BFReserveArgument argument) {
+		return execute((client)->client.bloomFilterOperations().bfReserve(key, argument));
 	}
 
 	@Override
-	default Status bfReserve(final byte[] key, final BFReserveArgument bfInsertArgument) {
-		return execute((client)->client.bloomFilterOperations().bfReserve(key, bfInsertArgument));
+	default Status bfReserve(final byte[] key, final BFReserveArgument argument) {
+		return execute((client)->client.bloomFilterOperations().bfReserve(key, argument));
 	}
 
 	@Override

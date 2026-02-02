@@ -61,11 +61,7 @@ public final class JedisCountMinSketchOperations extends AbstractJedisRedisOpera
 			itemIncrements.put(item.getKey(), item.getValue());
 		}
 
-		return JedisCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.CMS_INCRBY)
-				.executor((cmd)->cmd.cmsIncrBy(key, itemIncrements))
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return cmsIncrby(key, itemIncrements, args);
 	}
 
 	@Override
@@ -77,11 +73,7 @@ public final class JedisCountMinSketchOperations extends AbstractJedisRedisOpera
 			itemIncrements.put(SafeEncoder.encode(item.getKey()), item.getValue());
 		}
 
-		return JedisCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.CMS_INCRBY)
-				.executor((cmd)->cmd.cmsIncrBy(SafeEncoder.encode(key), itemIncrements))
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return cmsIncrby(SafeEncoder.encode(key), itemIncrements, args);
 	}
 
 	@Override
@@ -159,6 +151,15 @@ public final class JedisCountMinSketchOperations extends AbstractJedisRedisOpera
 	@Override
 	public List<Long> cmsQuery(byte[] key, byte[]... items) {
 		return cmsQuery(SafeEncoder.encode(key), SafeEncoder.encode(items));
+	}
+
+	private List<Long> cmsIncrby(final String key, final Map<String, Long> itemIncrements,
+								 final CommandArguments args) {
+		return JedisCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.CMS_INCRBY)
+				.executor((cmd)->cmd.cmsIncrBy(key, itemIncrements))
+				.arguments(args)
+				.converter((v)->v)
+				.run();
 	}
 
 }

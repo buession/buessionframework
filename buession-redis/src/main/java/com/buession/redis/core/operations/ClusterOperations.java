@@ -100,8 +100,8 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	}
 
 	@Override
-	default Status clusterFailover(final ClusterFailoverOption clusterFailoverOption) {
-		return execute((client)->client.clusterOperations().clusterFailover(clusterFailoverOption));
+	default Status clusterFailover(final ClusterFailoverOption option) {
+		return execute((client)->client.clusterOperations().clusterFailover(option));
 	}
 
 	@Override
@@ -184,12 +184,12 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 		return execute((client)->client.clusterOperations().clusterMigration(slots));
 	}
 
-	default Object clusterMigration(final ClusterMigrationOp migrationOp) {
-		return execute((client)->client.clusterOperations().clusterMigration(migrationOp));
+	default Object clusterMigration(final ClusterMigrationOp option) {
+		return execute((client)->client.clusterOperations().clusterMigration(option));
 	}
 
-	default Object clusterMigration(final ClusterMigrationOp migrationOp, final String id) {
-		return execute((client)->client.clusterOperations().clusterMigration(migrationOp, id));
+	default Object clusterMigration(final ClusterMigrationOp option, final String id) {
+		return execute((client)->client.clusterOperations().clusterMigration(option, id));
 	}
 
 	@Override
@@ -233,8 +233,8 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	}
 
 	@Override
-	default Status clusterReset(final ClusterResetOption clusterResetOption) {
-		return execute((client)->client.clusterOperations().clusterReset(clusterResetOption));
+	default Status clusterReset(final ClusterResetOption option) {
+		return execute((client)->client.clusterOperations().clusterReset(option));
 	}
 
 	@Override
@@ -248,13 +248,13 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	}
 
 	@Override
-	default Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final String nodeId) {
-		return execute((client)->client.clusterOperations().clusterSetSlot(slot, setSlotOption, nodeId));
+	default Status clusterSetSlot(final int slot, final ClusterSetSlotOption option, final String nodeId) {
+		return execute((client)->client.clusterOperations().clusterSetSlot(slot, option, nodeId));
 	}
 
 	@Override
-	default Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final byte[] nodeId) {
-		return execute((client)->client.clusterOperations().clusterSetSlot(slot, setSlotOption, nodeId));
+	default Status clusterSetSlot(final int slot, final ClusterSetSlotOption option, final byte[] nodeId) {
+		return execute((client)->client.clusterOperations().clusterSetSlot(slot, option, nodeId));
 	}
 
 	@Override

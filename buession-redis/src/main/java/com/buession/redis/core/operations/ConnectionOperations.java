@@ -168,8 +168,8 @@ public interface ConnectionOperations extends ConnectionCommands, RedisOperation
 	}
 
 	@Override
-	default Status clientTracking(final boolean on, final TrackingArgument trackingArgument) {
-		return execute((client)->client.connectionOperations().clientTracking(on, trackingArgument));
+	default Status clientTracking(final boolean on, final TrackingArgument argument) {
+		return execute((client)->client.connectionOperations().clientTracking(on, argument));
 	}
 
 	@Override
@@ -270,7 +270,7 @@ public interface ConnectionOperations extends ConnectionCommands, RedisOperation
 	 * @return 切换成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
 	 */
 	default Status select() {
-		return execute((client)->client.connectionOperations().select(0));
+		return select(0);
 	}
 
 }

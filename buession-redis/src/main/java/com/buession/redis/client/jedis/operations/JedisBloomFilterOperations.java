@@ -30,8 +30,7 @@ import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.BloomFilterOperations;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.internal.jedis.JedisBFInsertParams;
-import com.buession.redis.core.internal.jedis.JedisBFReserveParams;
+import com.buession.redis.core.internal.jedis.IParamsUtils;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
@@ -110,16 +109,17 @@ public final class JedisBloomFilterOperations extends AbstractJedisRedisOperatio
 	}
 
 	@Override
-	public List<Boolean> bfInsert(final String key, final BFInsertArgument bfInsertArgument, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add(bfInsertArgument).add("ITEMS").add(items);
-		final JedisBFInsertParams bfInsertParams = JedisBFInsertParams.from(bfInsertArgument);
+	public List<Boolean> bfInsert(final String key, final BFInsertArgument argument, final String... items) {
+		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS").add(items);
 		return JedisCommandBuilder.<List<Boolean>, List<Boolean>>newBuilder(client, Command.BF_INSERT)
-				.executor((cmd)->cmd.bfInsert(key, bfInsertParams, items)).arguments(args).converter((v)->v).run();
+				.executor((cmd)->cmd.bfInsert(key, IParamsUtils.bfnsertParams(argument), items))
+				.arguments(args)
+				.converter((v)->v).run();
 	}
 
 	@Override
-	public List<Boolean> bfInsert(final byte[] key, final BFInsertArgument bfInsertArgument, final byte[]... items) {
-		return bfInsert(SafeEncoder.encode(key), bfInsertArgument, SafeEncoder.encode(items));
+	public List<Boolean> bfInsert(final byte[] key, final BFInsertArgument argument, final byte[]... items) {
+		return bfInsert(SafeEncoder.encode(key), argument, SafeEncoder.encode(items));
 	}
 
 	@Override
@@ -160,22 +160,21 @@ public final class JedisBloomFilterOperations extends AbstractJedisRedisOperatio
 	}
 
 	@Override
-	public Status bfReserve(final String key, final BFReserveArgument bfInsertArgument) {
-		final CommandArguments args = CommandArguments.create(key).add(bfInsertArgument);
+	public Status bfReserve(final String key, final BFReserveArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add(argument);
 		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.BF_RESERVE).executor((cmd)->{
-			if(bfInsertArgument.getExpansion() == null && bfInsertArgument.isNonScaling() == null){
-				return cmd.bfReserve(key, bfInsertArgument.getErrorRate(), bfInsertArgument.getCapacity());
+			if(argument.getExpansion() == null && argument.isNonScaling() == null){
+				return cmd.bfReserve(key, argument.getErrorRate(), argument.getCapacity());
 			}else{
-				final JedisBFReserveParams bfReserveParams = JedisBFReserveParams.from(bfInsertArgument);
-				return cmd.bfReserve(key, bfInsertArgument.getErrorRate(), bfInsertArgument.getCapacity(),
-						bfReserveParams);
+				return cmd.bfReserve(key, argument.getErrorRate(), argument.getCapacity(),
+						IParamsUtils.bfReserveParams(argument));
 			}
 		}).arguments(args).converter(okStatusConverter).run();
 	}
 
 	@Override
-	public Status bfReserve(final byte[] key, final BFReserveArgument bfInsertArgument) {
-		return bfReserve(SafeEncoder.encode(key), bfInsertArgument);
+	public Status bfReserve(final byte[] key, final BFReserveArgument argument) {
+		return bfReserve(SafeEncoder.encode(key), argument);
 	}
 
 	@Override

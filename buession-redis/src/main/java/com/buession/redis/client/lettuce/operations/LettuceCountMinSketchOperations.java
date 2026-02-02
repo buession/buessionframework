@@ -24,7 +24,6 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
-import com.buession.core.converter.MapConverter;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
@@ -32,7 +31,6 @@ import com.buession.redis.client.operations.CountMinSketchOperations;
 import com.buession.redis.core.CmsInfo;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
 import java.util.Map;
@@ -43,7 +41,7 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class LettuceCountMinSketchOperations extends AbstractLettuceRedisOperations<LettuceRedisClient>
+public final class LettuceCountMinSketchOperations extends AbstractLettuceRedisOperations
 		implements CountMinSketchOperations {
 
 	public LettuceCountMinSketchOperations(final LettuceRedisClient client) {
@@ -79,7 +77,11 @@ public final class LettuceCountMinSketchOperations extends AbstractLettuceRedisO
 
 	@Override
 	public CmsInfo cmsInfo(final byte[] key) {
-		return cmsInfo(SafeEncoder.encode(key));
+		final CommandArguments args = CommandArguments.create(key);
+		return LettuceCommandBuilder.<CmsInfo, CmsInfo>newBuilder(client, Command.CMS_INFO)
+				.arguments(args)
+				.converter((v)->v)
+				.run();
 	}
 
 	@Override
@@ -93,7 +95,11 @@ public final class LettuceCountMinSketchOperations extends AbstractLettuceRedisO
 
 	@Override
 	public Status cmsInitByDim(final byte[] key, final int width, final int depth) {
-		return cmsInitByDim(SafeEncoder.encode(key), width, depth);
+		final CommandArguments args = CommandArguments.create(key).add(width).add(depth);
+		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.CMS_INITBYDIM)
+				.arguments(args)
+				.converter(okStatusConverter)
+				.run();
 	}
 
 	@Override
@@ -107,7 +113,11 @@ public final class LettuceCountMinSketchOperations extends AbstractLettuceRedisO
 
 	@Override
 	public Status cmsInitByProb(final byte[] key, final double error, final double probability) {
-		return cmsInitByProb(SafeEncoder.encode(key), error, probability);
+		final CommandArguments args = CommandArguments.create(key).add(error).add(probability);
+		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.CMS_INITBYPROB)
+				.arguments(args)
+				.converter(okStatusConverter)
+				.run();
 	}
 
 	@Override
@@ -121,9 +131,11 @@ public final class LettuceCountMinSketchOperations extends AbstractLettuceRedisO
 
 	@Override
 	public Status cmsMerge(final byte[] key, final Map<byte[], Long> keysAndWeights) {
-		final MapConverter<byte[], Long, String, Long> keysAndWeightsConverter =
-				new MapConverter<>(SafeEncoder::encode, (v)->v);
-		return cmsMerge(SafeEncoder.encode(key), keysAndWeightsConverter.convert(keysAndWeights));
+		final CommandArguments args = CommandArguments.create(key).add(keysAndWeights);
+		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.CMS_MERGE)
+				.arguments(args)
+				.converter(okStatusConverter)
+				.run();
 	}
 
 	@Override
@@ -137,7 +149,11 @@ public final class LettuceCountMinSketchOperations extends AbstractLettuceRedisO
 
 	@Override
 	public List<Long> cmsQuery(byte[] key, byte[]... items) {
-		return cmsQuery(SafeEncoder.encode(key), SafeEncoder.encode(items));
+		final CommandArguments args = CommandArguments.create(key).add(items);
+		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.CMS_QUERY)
+				.arguments(args)
+				.converter((v)->v)
+				.run();
 	}
 
 }

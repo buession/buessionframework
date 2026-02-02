@@ -34,6 +34,7 @@ import com.buession.redis.core.BumpEpoch;
 import com.buession.redis.core.ClusterFailoverOption;
 import com.buession.redis.core.ClusterInfo;
 import com.buession.redis.core.ClusterLink;
+import com.buession.redis.core.ClusterMigrationOp;
 import com.buession.redis.core.ClusterRedisNode;
 import com.buession.redis.core.ClusterResetOption;
 import com.buession.redis.core.ClusterSetSlotOption;
@@ -138,10 +139,10 @@ public final class LettuceClusterOperations extends AbstractLettuceRedisOperatio
 	}
 
 	@Override
-	public Status clusterFailover(final ClusterFailoverOption clusterFailoverOption) {
-		final CommandArguments args = CommandArguments.create(clusterFailoverOption);
+	public Status clusterFailover(final ClusterFailoverOption option) {
+		final CommandArguments args = CommandArguments.create(option);
 		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.CLUSTER, SubCommand.CLUSTER_FAILOVER)
-				.executor((cmd)->cmd.clusterFailover(ClusterFailoverOption.FORCE == clusterFailoverOption))
+				.executor((cmd)->cmd.clusterFailover(ClusterFailoverOption.FORCE == option))
 				.arguments(args).converter(okStatusConverter).run();
 	}
 
@@ -212,15 +213,15 @@ public final class LettuceClusterOperations extends AbstractLettuceRedisOperatio
 	}
 
 	@Override
-	public Object clusterMigration(final ClusterMigrationOp migrationOp) {
-		final CommandArguments args = CommandArguments.create(migrationOp).add("ALL");
+	public Object clusterMigration(final ClusterMigrationOp option) {
+		final CommandArguments args = CommandArguments.create(option).add("ALL");
 		return LettuceCommandBuilder.newBuilder(client, Command.CLUSTER, SubCommand.CLUSTER_MIGRATION).arguments(args)
 				.converter((v)->v).run();
 	}
 
 	@Override
-	public Object clusterMigration(final ClusterMigrationOp migrationOp, final String id) {
-		final CommandArguments args = CommandArguments.create(migrationOp).add("ID").add(id);
+	public Object clusterMigration(final ClusterMigrationOp option, final String id) {
+		final CommandArguments args = CommandArguments.create(option).add("ID").add(id);
 		return LettuceCommandBuilder.newBuilder(client, Command.CLUSTER, SubCommand.CLUSTER_MIGRATION).arguments(args)
 				.converter((v)->v).run();
 	}
@@ -275,10 +276,10 @@ public final class LettuceClusterOperations extends AbstractLettuceRedisOperatio
 	}
 
 	@Override
-	public Status clusterReset(final ClusterResetOption clusterResetOption) {
-		final CommandArguments args = CommandArguments.create(clusterResetOption);
+	public Status clusterReset(final ClusterResetOption option) {
+		final CommandArguments args = CommandArguments.create(option);
 		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.CLUSTER, SubCommand.CLUSTER_RESET)
-				.executor((cmd)->cmd.clusterReset(ClusterResetOption.HARD == clusterResetOption)).arguments(args)
+				.executor((cmd)->cmd.clusterReset(ClusterResetOption.HARD == option)).arguments(args)
 				.converter(okStatusConverter).run();
 	}
 
@@ -297,10 +298,10 @@ public final class LettuceClusterOperations extends AbstractLettuceRedisOperatio
 	}
 
 	@Override
-	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final String nodeId) {
-		final CommandArguments args = CommandArguments.create(slot).add(setSlotOption).add(nodeId);
+	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption option, final String nodeId) {
+		final CommandArguments args = CommandArguments.create(slot).add(option).add(nodeId);
 		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.CLUSTER, SubCommand.CLUSTER_SETSLOT)
-				.executor((cmd)->switch(setSlotOption){
+				.executor((cmd)->switch(option){
 					case IMPORTING -> cmd.clusterSetSlotImporting(slot, nodeId);
 					case MIGRATING -> cmd.clusterSetSlotMigrating(slot, nodeId);
 					case STABLE -> cmd.clusterSetSlotStable(slot);
@@ -309,8 +310,8 @@ public final class LettuceClusterOperations extends AbstractLettuceRedisOperatio
 	}
 
 	@Override
-	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final byte[] nodeId) {
-		return clusterSetSlot(slot, setSlotOption, SafeEncoder.encode(nodeId));
+	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption option, final byte[] nodeId) {
+		return clusterSetSlot(slot, option, SafeEncoder.encode(nodeId));
 	}
 
 	@Override

@@ -19,17 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
 import com.buession.lang.Geo;
 import redis.clients.jedis.GeoCoordinate;
-
-import java.util.List;
 
 /**
  * Jedis {@link GeoCoordinate} 转换为 {@link Geo}
@@ -42,10 +39,6 @@ public final class GeoCoordinateConverter implements Converter<GeoCoordinate, Ge
 	@Override
 	public Geo convert(final GeoCoordinate source) {
 		return new Geo(source.getLongitude(), source.getLatitude());
-	}
-
-	public static ListConverter<GeoCoordinate, Geo> listConverter() {
-		return new ListConverter<>(new GeoCoordinateConverter());
 	}
 
 }

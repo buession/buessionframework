@@ -109,15 +109,15 @@ public final class LettuceBloomFilterOperations extends AbstractLettuceRedisOper
 	}
 
 	@Override
-	public List<Boolean> bfInsert(final String key, final BFInsertArgument bfInsertArgument, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add(bfInsertArgument).add("ITEMS").add(items);
+	public List<Boolean> bfInsert(final String key, final BFInsertArgument argument, final String... items) {
+		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS").add(items);
 		return LettuceCommandBuilder.<List<Boolean>, List<Boolean>>newBuilder(client, Command.BF_INSERT).arguments(args)
 				.converter((v)->v).run();
 	}
 
 	@Override
-	public List<Boolean> bfInsert(final byte[] key, final BFInsertArgument bfInsertArgument, final byte[]... items) {
-		return bfInsert(SafeEncoder.encode(key), bfInsertArgument, SafeEncoder.encode(items));
+	public List<Boolean> bfInsert(final byte[] key, final BFInsertArgument argument, final byte[]... items) {
+		return bfInsert(SafeEncoder.encode(key), argument, SafeEncoder.encode(items));
 	}
 
 	@Override

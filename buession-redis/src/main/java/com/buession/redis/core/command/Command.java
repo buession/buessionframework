@@ -187,6 +187,32 @@ public enum Command implements ProtocolCommand {
 	/**
 	 * generic command end
 	 */
+
+	/**
+	 * geo command start
+	 **/
+	GEOADD(CommandGroup.GEO, "w"),
+
+	GEODIST(CommandGroup.GEO, "r"),
+
+	GEOHASH(CommandGroup.GEO, "r"),
+
+	GEOPOS(CommandGroup.GEO, "r"),
+
+	GEORADIUS(CommandGroup.GEO, "r"),
+
+	GEORADIUS_RO(CommandGroup.GEO, "r"),
+
+	GEORADIUSBYMEMBER(CommandGroup.GEO, "r"),
+
+	GEORADIUSBYMEMBER_RO(CommandGroup.GEO, "r"),
+
+	GEOSEARCH(CommandGroup.GEO, "r"),
+
+	GEOSEARCHSTORE(CommandGroup.GEO, "rw"),
+	/**
+	 * geo command end
+	 **/
 	;
 
 	/**

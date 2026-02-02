@@ -62,29 +62,25 @@ public final class JedisConnectionOperations extends AbstractJedisRedisOperation
 	@Override
 	public Status auth(final String user, final String password) {
 		final CommandArguments args = CommandArguments.create(user).add(password);
-		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.AUTH)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return auth(args);
 	}
 
 	@Override
 	public Status auth(final byte[] user, final byte[] password) {
-		return auth(SafeEncoder.encode(user), SafeEncoder.encode(password));
+		final CommandArguments args = CommandArguments.create(user).add(password);
+		return auth(args);
 	}
 
 	@Override
 	public Status auth(final String password) {
 		final CommandArguments args = CommandArguments.create(password);
-		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.AUTH)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return auth(args);
 	}
 
 	@Override
 	public Status auth(final byte[] password) {
-		return auth(SafeEncoder.encode(password));
+		final CommandArguments args = CommandArguments.create(password);
+		return auth(args);
 	}
 
 	@Override
@@ -144,28 +140,20 @@ public final class JedisConnectionOperations extends AbstractJedisRedisOperation
 
 	@Override
 	public List<Client> clientList() {
-		return JedisCommandBuilder.<String, List<Client>>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_LIST)
-				.converter(new ClientConverter.ClientListConverter())
-				.run();
+		return clientList((CommandArguments) null);
 	}
 
 	@Override
 	public List<Client> clientList(final ClientType clientType) {
 		final CommandArguments args = CommandArguments.create("TYPE").add(clientType);
 		final redis.clients.jedis.args.ClientType jClientType = (new ClientTypeConverter()).convert(clientType);
-		return JedisCommandBuilder.<String, List<Client>>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_LIST)
-				.arguments(args)
-				.converter(new ClientConverter.ClientListConverter())
-				.run();
+		return clientList(args);
 	}
 
 	@Override
 	public List<Client> clientList(final long... ids) {
 		final CommandArguments args = CommandArguments.create("ID").add(ids);
-		return JedisCommandBuilder.<String, List<Client>>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_LIST)
-				.arguments(args)
-				.converter(new ClientConverter.ClientListConverter())
-				.run();
+		return clientList(args);
 	}
 
 	@Override
@@ -232,9 +220,9 @@ public final class JedisConnectionOperations extends AbstractJedisRedisOperation
 	}
 
 	@Override
-	public Status clientTracking(final boolean on, final TrackingArgument trackingArgument) {
+	public Status clientTracking(final boolean on, final TrackingArgument argument) {
 		final CommandArguments args =
-				CommandArguments.create(on ? Keyword.Common.ON : Keyword.Common.OFF).add(trackingArgument);
+				CommandArguments.create(on ? Keyword.Common.ON : Keyword.Common.OFF).add(argument);
 		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_TRACKING)
 				.arguments(args)
 				.converter(okStatusConverter)
@@ -298,74 +286,51 @@ public final class JedisConnectionOperations extends AbstractJedisRedisOperation
 
 	@Override
 	public Hello hello() {
-		return JedisCommandBuilder.<Hello, Hello>newBuilder(client, Command.HELLO)
-				.converter((v)->v)
-				.run();
+		return hello(null);
 	}
 
 	@Override
 	public Hello hello(int protover) {
 		final CommandArguments args = CommandArguments.create(protover);
-		return JedisCommandBuilder.<Hello, Hello>newBuilder(client, Command.HELLO)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return hello(args);
 	}
 
 	@Override
 	public Hello hello(int protover, String password) {
 		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(password);
-		return JedisCommandBuilder.<Hello, Hello>newBuilder(client, Command.HELLO)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return hello(args);
 	}
 
 	@Override
 	public Hello hello(int protover, byte[] password) {
 		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(password);
-		return JedisCommandBuilder.<Hello, Hello>newBuilder(client, Command.HELLO)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return hello(args);
 	}
 
 	@Override
 	public Hello hello(int protover, String username, String password) {
 		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(username).add(password);
-		return JedisCommandBuilder.<Hello, Hello>newBuilder(client, Command.HELLO)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return hello(args);
 	}
 
 	@Override
 	public Hello hello(int protover, byte[] username, byte[] password) {
 		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(username).add(password);
-		return JedisCommandBuilder.<Hello, Hello>newBuilder(client, Command.HELLO)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return hello(args);
 	}
 
 	@Override
 	public Hello hello(int protover, String username, String password, String clientName) {
 		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(username).add(password).add(
 				"SETNAME").add(clientName);
-		return JedisCommandBuilder.<Hello, Hello>newBuilder(client, Command.HELLO)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return hello(args);
 	}
 
 	@Override
 	public Hello hello(int protover, byte[] username, byte[] password, byte[] clientName) {
 		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(username).add(password).add(
 				"SETNAME").add(clientName);
-		return JedisCommandBuilder.<Hello, Hello>newBuilder(client, Command.HELLO)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return hello(args);
 	}
 
 	@Override
@@ -394,6 +359,27 @@ public final class JedisConnectionOperations extends AbstractJedisRedisOperation
 	public Status select(final int db) {
 		final CommandArguments args = CommandArguments.create(db);
 		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.SELECT)
+				.arguments(args)
+				.converter((v)->v)
+				.run();
+	}
+
+	private Status auth(final CommandArguments args) {
+		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.AUTH)
+				.arguments(args)
+				.converter((v)->v)
+				.run();
+	}
+
+	private List<Client> clientList(final CommandArguments args) {
+		return JedisCommandBuilder.<String, List<Client>>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_LIST)
+				.arguments(args)
+				.converter(new ClientConverter.ClientListConverter())
+				.run();
+	}
+
+	private Hello hello(final CommandArguments args) {
+		return JedisCommandBuilder.<Hello, Hello>newBuilder(client, Command.HELLO)
 				.arguments(args)
 				.converter((v)->v)
 				.run();

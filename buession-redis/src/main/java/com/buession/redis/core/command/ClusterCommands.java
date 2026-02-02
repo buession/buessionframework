@@ -162,12 +162,12 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cluster-failover/" target="_blank">https://redis.io/docs/latest/commands/cluster-failover/</a></p>
 	 *
-	 * @param clusterFailoverOption
+	 * @param option
 	 * 		切换选项
 	 *
 	 * @return 该命令已被接受并进行人工故障转移，返回 Status.SUCCESS；切换操作无法执行，返回 Status.FAILURE
 	 */
-	Status clusterFailover(final ClusterFailoverOption clusterFailoverOption);
+	Status clusterFailover(final ClusterFailoverOption option);
 
 	/**
 	 * Deletes all slots from a node
@@ -289,26 +289,26 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cluster-migration/" target="_blank">https://redis.io/docs/latest/commands/cluster-migration/</a></p>
 	 *
-	 * @param migrationOp
+	 * @param option
 	 * 		迁移操作类型
 	 *
 	 * @return -
 	 */
-	Object clusterMigration(final ClusterMigrationOp migrationOp);
+	Object clusterMigration(final ClusterMigrationOp option);
 
 	/**
 	 * 执行原子化的哈希槽迁移操作
 	 *
 	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cluster-migration/" target="_blank">https://redis.io/docs/latest/commands/cluster-migration/</a></p>
 	 *
-	 * @param migrationOp
+	 * @param option
 	 * 		迁移操作类型
 	 * @param id
 	 * 		ID
 	 *
 	 * @return -
 	 */
-	Object clusterMigration(final ClusterMigrationOp migrationOp, final String id);
+	Object clusterMigration(final ClusterMigrationOp option, final String id);
 
 	/**
 	 * 返回当前节点 Id
@@ -399,12 +399,12 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cluster-reset/" target="_blank">https://redis.io/docs/latest/commands/cluster-reset/</a></p>
 	 *
-	 * @param clusterResetOption
+	 * @param option
 	 * 		Reset 类型
 	 *
 	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	Status clusterReset(final ClusterResetOption clusterResetOption);
+	Status clusterReset(final ClusterResetOption option);
 
 	/**
 	 * 强制保存配置 nodes.conf 至磁盘
@@ -436,14 +436,14 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @param slot
 	 * 		hash slot
-	 * @param setSlotOption
+	 * @param option
 	 * 		命令选项 {@link ClusterSetSlotOption}
 	 * @param nodeId
 	 * 		节点 Id
 	 *
 	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final String nodeId);
+	Status clusterSetSlot(final int slot, final ClusterSetSlotOption option, final String nodeId);
 
 	/**
 	 * 根据如下子命令选项，修改接受节点中哈希槽的状态
@@ -452,14 +452,14 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @param slot
 	 * 		hash slot
-	 * @param setSlotOption
+	 * @param option
 	 * 		命令选项 {@link ClusterSetSlotOption}
 	 * @param nodeId
 	 * 		节点 Id
 	 *
 	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final byte[] nodeId);
+	Status clusterSetSlot(final int slot, final ClusterSetSlotOption option, final byte[] nodeId);
 
 	/**
 	 * 返回整个 Redis Cluster 的节点和槽分布信息

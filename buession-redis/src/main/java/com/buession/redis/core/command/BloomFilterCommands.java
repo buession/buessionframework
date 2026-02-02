@@ -180,14 +180,14 @@ public interface BloomFilterCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		布隆过滤器的名称
-	 * @param bfInsertArgument
+	 * @param argument
 	 * 		BFInsert 参数
 	 * @param items
 	 * 		待添加的元素
 	 *
 	 * @return 返回一个数组，每个元素对应输入项的插入结果；true 表示添加成功，false 表示添加失败
 	 */
-	List<Boolean> bfInsert(final String key, final BFInsertArgument bfInsertArgument, final String... items);
+	List<Boolean> bfInsert(final String key, final BFInsertArgument argument, final String... items);
 
 	/**
 	 * 向布隆过滤器 key 中批量添加元素
@@ -196,14 +196,14 @@ public interface BloomFilterCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		布隆过滤器的名称
-	 * @param bfInsertArgument
+	 * @param argument
 	 * 		BFInsert 参数
 	 * @param items
 	 * 		待添加的元素
 	 *
 	 * @return 返回一个数组，每个元素对应输入项的插入结果；true 表示添加成功，false 表示添加失败
 	 */
-	List<Boolean> bfInsert(final byte[] key, final BFInsertArgument bfInsertArgument, final byte[]... items);
+	List<Boolean> bfInsert(final byte[] key, final BFInsertArgument argument, final byte[]... items);
 
 	/**
 	 * 从外部导入布隆过滤器数据块
@@ -300,12 +300,12 @@ public interface BloomFilterCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		布隆过滤器的名称
-	 * @param bfInsertArgument
+	 * @param argument
 	 * 		BF.RESERVE 参数
 	 *
 	 * @return 操作结果
 	 */
-	Status bfReserve(final String key, final BFReserveArgument bfInsertArgument);
+	Status bfReserve(final String key, final BFReserveArgument argument);
 
 	/**
 	 * 控制布隆过滤器的关键参数：预期容量（capacity） 和 可接受的误判率（error rate）
@@ -314,12 +314,12 @@ public interface BloomFilterCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		布隆过滤器的名称
-	 * @param bfInsertArgument
+	 * @param argument
 	 * 		BF.RESERVE 参数
 	 *
 	 * @return 操作结果
 	 */
-	Status bfReserve(final byte[] key, final BFReserveArgument bfInsertArgument);
+	Status bfReserve(final byte[] key, final BFReserveArgument argument);
 
 	/**
 	 * 采用分块迭代方式导出布隆过滤器 key 的数据

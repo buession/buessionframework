@@ -61,13 +61,13 @@ public interface BitMapOperations extends BitMapCommands, RedisOperations {
 	}
 
 	@Override
-	default Long bitCount(final String key, final long start, final long end, final BitCountOption bitCountOption) {
-		return execute((client)->client.bitMapOperations().bitCount(key, start, end, bitCountOption));
+	default Long bitCount(final String key, final long start, final long end, final BitCountOption option) {
+		return execute((client)->client.bitMapOperations().bitCount(key, start, end, option));
 	}
 
 	@Override
-	default Long bitCount(final byte[] key, final long start, final long end, final BitCountOption bitCountOption) {
-		return execute((client)->client.bitMapOperations().bitCount(key, start, end, bitCountOption));
+	default Long bitCount(final byte[] key, final long start, final long end, final BitCountOption option) {
+		return execute((client)->client.bitMapOperations().bitCount(key, start, end, option));
 	}
 
 	@Override

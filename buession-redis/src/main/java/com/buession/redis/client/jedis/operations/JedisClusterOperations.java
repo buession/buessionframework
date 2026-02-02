@@ -71,6 +71,7 @@ public final class JedisClusterOperations extends AbstractJedisRedisOperations i
 	public Status clusterAddSlots(final int... slots) {
 		final CommandArguments args = CommandArguments.create(slots);
 		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.CLUSTER, SubCommand.CLUSTER_ADDSLOTS)
+				.arguments(args)
 				.converter(okStatusConverter).run();
 	}
 
@@ -123,8 +124,8 @@ public final class JedisClusterOperations extends AbstractJedisRedisOperations i
 	}
 
 	@Override
-	public Status clusterFailover(final ClusterFailoverOption clusterFailoverOption) {
-		final CommandArguments args = CommandArguments.create(clusterFailoverOption);
+	public Status clusterFailover(final ClusterFailoverOption option) {
+		final CommandArguments args = CommandArguments.create(option);
 		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.CLUSTER, SubCommand.CLUSTER_FAILOVER)
 				.arguments(args).converter((v)->v).run();
 	}
@@ -144,7 +145,9 @@ public final class JedisClusterOperations extends AbstractJedisRedisOperations i
 
 	@Override
 	public Status clusterForget(final byte[] nodeId) {
-		return clusterForget(SafeEncoder.encode(nodeId));
+		final CommandArguments args = CommandArguments.create(nodeId);
+		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.CLUSTER, SubCommand.CLUSTER_FORGET)
+				.arguments(args).converter((v)->v).run();
 	}
 
 	@Override
@@ -171,7 +174,9 @@ public final class JedisClusterOperations extends AbstractJedisRedisOperations i
 
 	@Override
 	public Long clusterKeySlot(final byte[] key) {
-		return clusterKeySlot(SafeEncoder.encode(key));
+		final CommandArguments args = CommandArguments.create(key);
+		return JedisCommandBuilder.<Long, Long>newBuilder(client, Command.CLUSTER, SubCommand.CLUSTER_KEYSLOT)
+				.arguments(args).converter((v)->v).run();
 	}
 
 	@Override
@@ -249,7 +254,11 @@ public final class JedisClusterOperations extends AbstractJedisRedisOperations i
 
 	@Override
 	public List<ClusterRedisNode> clusterReplicas(final byte[] nodeId) {
-		return clusterReplicas(SafeEncoder.encode(nodeId));
+		final CommandArguments args = CommandArguments.create(nodeId);
+		return JedisCommandBuilder.<List<ClusterRedisNode>, List<ClusterRedisNode>>newBuilder(client, Command.CLUSTER,
+						SubCommand.CLUSTER_REPLICAS)
+				.arguments(args).converter((v)->v)
+				.run();
 	}
 
 	@Override
@@ -263,7 +272,11 @@ public final class JedisClusterOperations extends AbstractJedisRedisOperations i
 
 	@Override
 	public Status clusterReplicate(final byte[] nodeId) {
-		return clusterReplicate(SafeEncoder.encode(nodeId));
+		final CommandArguments args = CommandArguments.create(nodeId);
+		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.CLUSTER,
+						SubCommand.CLUSTER_REPLICATE)
+				.arguments(args).converter((v)->v)
+				.run();
 	}
 
 	@Override
@@ -272,18 +285,16 @@ public final class JedisClusterOperations extends AbstractJedisRedisOperations i
 	}
 
 	@Override
-	public Status clusterReset(final ClusterResetOption clusterResetOption) {
-		final CommandArguments args = CommandArguments.create(clusterResetOption);
-		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.CLUSTER,
-						SubCommand.CLUSTER_RESET)
+	public Status clusterReset(final ClusterResetOption option) {
+		final CommandArguments args = CommandArguments.create(option);
+		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.CLUSTER, SubCommand.CLUSTER_RESET)
 				.arguments(args).converter((v)->v)
 				.run();
 	}
 
 	@Override
 	public Status clusterSaveConfig() {
-		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.CLUSTER,
-						SubCommand.CLUSTER_SAVECONFIG)
+		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.CLUSTER, SubCommand.CLUSTER_SAVECONFIG)
 				.converter((v)->v)
 				.run();
 	}
@@ -298,8 +309,8 @@ public final class JedisClusterOperations extends AbstractJedisRedisOperations i
 	}
 
 	@Override
-	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final String nodeId) {
-		final CommandArguments args = CommandArguments.create(slot).add(setSlotOption).add(nodeId);
+	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption option, final String nodeId) {
+		final CommandArguments args = CommandArguments.create(slot).add(option).add(nodeId);
 		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.CLUSTER,
 						SubCommand.CLUSTER_SETSLOT)
 				.arguments(args).converter((v)->v)
@@ -307,8 +318,12 @@ public final class JedisClusterOperations extends AbstractJedisRedisOperations i
 	}
 
 	@Override
-	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final byte[] nodeId) {
-		return clusterSetSlot(slot, setSlotOption, SafeEncoder.encode(nodeId));
+	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption option, final byte[] nodeId) {
+		final CommandArguments args = CommandArguments.create(slot).add(option).add(nodeId);
+		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.CLUSTER,
+						SubCommand.CLUSTER_SETSLOT)
+				.arguments(args).converter((v)->v)
+				.run();
 	}
 
 	@Override
@@ -328,7 +343,10 @@ public final class JedisClusterOperations extends AbstractJedisRedisOperations i
 
 	@Override
 	public List<ClusterRedisNode> clusterSlaves(final byte[] nodeId) {
-		return clusterSlaves(SafeEncoder.encode(nodeId));
+		final CommandArguments args = CommandArguments.create(nodeId);
+		return JedisCommandBuilder.<List<ClusterRedisNode>, List<ClusterRedisNode>>newBuilder(client, Command.CLUSTER,
+						SubCommand.CLUSTER_SLAVES)
+				.arguments(args).converter((v)->v).run();
 	}
 
 	@Override

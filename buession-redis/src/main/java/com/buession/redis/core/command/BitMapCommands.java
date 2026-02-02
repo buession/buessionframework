@@ -108,12 +108,12 @@ public interface BitMapCommands extends RedisCommands {
 	 * 		开始位置
 	 * @param end
 	 * 		结束位置
-	 * @param bitCountOption
+	 * @param option
 	 *        {@link BitCountOption}
 	 *
 	 * @return 被设置为 1 的位的数量
 	 */
-	Long bitCount(final String key, final long start, final long end, final BitCountOption bitCountOption);
+	Long bitCount(final String key, final long start, final long end, final BitCountOption option);
 
 	/**
 	 * 计算给定字符串中，被设置为 1 的比特位的数量
@@ -126,12 +126,12 @@ public interface BitMapCommands extends RedisCommands {
 	 * 		开始位置
 	 * @param end
 	 * 		结束位置
-	 * @param bitCountOption
+	 * @param option
 	 *        {@link BitCountOption}
 	 *
 	 * @return 被设置为 1 的位的数量
 	 */
-	Long bitCount(final byte[] key, final long start, final long end, final BitCountOption bitCountOption);
+	Long bitCount(final byte[] key, final long start, final long end, final BitCountOption option);
 
 	/**
 	 * 可以将一个 Redis 字符串看作是一个由二进制位组成的数组，并对这个数组中储存的长度不同的整数进行访问；
@@ -439,11 +439,10 @@ public interface BitMapCommands extends RedisCommands {
 			return builder.toString();
 		}
 
-		public static class Builder {
-
-			private final BitFieldArgument bitFieldArgument = new BitFieldArgument();
+		public static class Builder extends BaseArgumentBuilder<BitFieldArgument> {
 
 			private Builder() {
+				super(new BitFieldArgument());
 			}
 
 			/**
@@ -464,7 +463,7 @@ public interface BitMapCommands extends RedisCommands {
 			}
 
 			public Builder set(BitFieldType bitFieldType, boolean bitOffset, int offset, long value) {
-				bitFieldArgument.set = new Op("SET", bitFieldType, bitOffset, offset, value);
+				arguament.set = new Op("SET", bitFieldType, bitOffset, offset, value);
 				return this;
 			}
 
@@ -477,7 +476,7 @@ public interface BitMapCommands extends RedisCommands {
 			}
 
 			public Builder get(BitFieldType bitFieldType, boolean bitOffset, int offset, long value) {
-				bitFieldArgument.get = new Op("GET", bitFieldType, bitOffset, offset, value);
+				arguament.get = new Op("GET", bitFieldType, bitOffset, offset, value);
 				return this;
 			}
 
@@ -490,17 +489,13 @@ public interface BitMapCommands extends RedisCommands {
 			}
 
 			public Builder incrBy(BitFieldType bitFieldType, boolean bitOffset, int offset, long value) {
-				bitFieldArgument.incrBy = new Op("INCRBY", bitFieldType, bitOffset, offset, value);
+				arguament.incrBy = new Op("INCRBY", bitFieldType, bitOffset, offset, value);
 				return this;
 			}
 
 			public Builder overflow(Overflow overflow) {
-				bitFieldArgument.overflow = overflow;
+				arguament.overflow = overflow;
 				return this;
-			}
-
-			public BitFieldArgument build() {
-				return bitFieldArgument;
 			}
 
 		}
@@ -558,11 +553,10 @@ public interface BitMapCommands extends RedisCommands {
 			return builder.toString();
 		}
 
-		public static class Builder {
-
-			private final BitFieldRoArgument bitFieldRoArgument = new BitFieldRoArgument();
+		public static class Builder extends BaseArgumentBuilder<BitFieldRoArgument> {
 
 			private Builder() {
+				super(new BitFieldRoArgument());
 			}
 
 			public static Builder create() {
@@ -578,7 +572,7 @@ public interface BitMapCommands extends RedisCommands {
 			}
 
 			public Builder set(BitFieldType bitFieldType, boolean bitOffset, int offset, long value) {
-				bitFieldRoArgument.set = new Op("SET", bitFieldType, bitOffset, offset, value);
+				arguament.set = new Op("SET", bitFieldType, bitOffset, offset, value);
 				return this;
 			}
 
@@ -591,12 +585,8 @@ public interface BitMapCommands extends RedisCommands {
 			}
 
 			public Builder get(BitFieldType bitFieldType, boolean bitOffset, int offset, long value) {
-				bitFieldRoArgument.get = new Op("GET", bitFieldType, bitOffset, offset, value);
+				arguament.get = new Op("GET", bitFieldType, bitOffset, offset, value);
 				return this;
-			}
-
-			public BitFieldRoArgument build() {
-				return bitFieldRoArgument;
 			}
 
 		}

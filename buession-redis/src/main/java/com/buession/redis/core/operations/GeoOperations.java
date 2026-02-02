@@ -35,7 +35,7 @@ import java.util.Map;
 /**
  * 地理位置运算
  *
- * <p>详情说明 <a href="http://redisdoc.com/geo/index.html" target="_blank">http://redisdoc.com/geo/index.html</a></p>
+ * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=geo" target="_blank">https://redis.io/docs/latest/commands/?group=geo</a></p>
  *
  * @author Yong.Teng
  */
@@ -59,6 +59,28 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	@Override
 	default Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates) {
 		return execute((client)->client.geoOperations().geoAdd(key, memberCoordinates));
+	}
+
+	@Override
+	default Long geoAdd(final String key, final GeoAddArgument argument, final String member, final double longitude,
+						final double latitude) {
+		return execute((client)->client.geoOperations().geoAdd(key, argument, member, longitude, latitude));
+	}
+
+	@Override
+	default Long geoAdd(final byte[] key, final GeoAddArgument argument, final byte[] member, final double longitude,
+						final double latitude) {
+		return execute((client)->client.geoOperations().geoAdd(key, argument, member, longitude, latitude));
+	}
+
+	@Override
+	default Long geoAdd(final String key, final GeoAddArgument argument, final Map<String, Geo> memberCoordinates) {
+		return execute((client)->client.geoOperations().geoAdd(key, argument, memberCoordinates));
+	}
+
+	@Override
+	default Long geoAdd(final byte[] key, final GeoAddArgument argument, final Map<byte[], Geo> memberCoordinates) {
+		return execute((client)->client.geoOperations().geoAdd(key, argument, memberCoordinates));
 	}
 
 	/**
@@ -97,24 +119,44 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 		return geoAdd(key, member, geo.getLongitude(), geo.getLatitude());
 	}
 
-	@Override
-	default List<String> geoHash(final String key, final String... members) {
-		return execute((client)->client.geoOperations().geoHash(key, members));
+	/**
+	 * 将给定的空间元素（经度、纬度、名字）添加到指定的键里面
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/geoadd.html" target="_blank">http://redisdoc.com/geo/geoadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		名字
+	 * @param argument
+	 * 		参数
+	 * @param geo
+	 * 		经纬度对象
+	 *
+	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
+	 */
+	default Long geoAdd(final String key, final GeoAddArgument argument, final String member, final Geo geo) {
+		return geoAdd(key, argument, member, geo.getLongitude(), geo.getLatitude());
 	}
 
-	@Override
-	default List<byte[]> geoHash(final byte[] key, final byte[]... members) {
-		return execute((client)->client.geoOperations().geoHash(key, members));
-	}
-
-	@Override
-	default List<Geo> geoPos(final String key, final String... members) {
-		return execute((client)->client.geoOperations().geoPos(key, members));
-	}
-
-	@Override
-	default List<Geo> geoPos(final byte[] key, final byte[]... members) {
-		return execute((client)->client.geoOperations().geoPos(key, members));
+	/**
+	 * 将给定的空间元素（经度、纬度、名字）添加到指定的键里面
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/geoadd.html" target="_blank">http://redisdoc.com/geo/geoadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param argument
+	 * 		参数
+	 * @param member
+	 * 		名字
+	 * @param geo
+	 * 		经纬度对象
+	 *
+	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
+	 */
+	default Long geoAdd(final byte[] key, final GeoAddArgument argument, final byte[] member, final Geo geo) {
+		return geoAdd(key, argument, member, geo.getLongitude(), geo.getLatitude());
 	}
 
 	@Override
@@ -138,6 +180,26 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	}
 
 	@Override
+	default List<String> geoHash(final String key, final String... members) {
+		return execute((client)->client.geoOperations().geoHash(key, members));
+	}
+
+	@Override
+	default List<byte[]> geoHash(final byte[] key, final byte[]... members) {
+		return execute((client)->client.geoOperations().geoHash(key, members));
+	}
+
+	@Override
+	default List<Geo> geoPos(final String key, final String... members) {
+		return execute((client)->client.geoOperations().geoPos(key, members));
+	}
+
+	@Override
+	default List<Geo> geoPos(final byte[] key, final byte[]... members) {
+		return execute((client)->client.geoOperations().geoPos(key, members));
+	}
+
+	@Override
 	default List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
 									  final double radius, final GeoUnit unit) {
 		return execute((client)->client.geoOperations().geoRadius(key, longitude, latitude, radius, unit));
@@ -151,18 +213,14 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 
 	@Override
 	default List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-									  final double radius, final GeoUnit unit,
-									  final GeoRadiusArgument geoRadiusArgument) {
-		return execute((client)->client.geoOperations()
-				.geoRadius(key, longitude, latitude, radius, unit, geoRadiusArgument));
+									  final double radius, final GeoUnit unit, final GeoRadiusArgument argument) {
+		return execute((client)->client.geoOperations().geoRadius(key, longitude, latitude, radius, unit, argument));
 	}
 
 	@Override
 	default List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-									  final double radius, final GeoUnit unit,
-									  final GeoRadiusArgument geoRadiusArgument) {
-		return execute((client)->client.geoOperations()
-				.geoRadius(key, longitude, latitude, radius, unit, geoRadiusArgument));
+									  final double radius, final GeoUnit unit, final GeoRadiusArgument argument) {
+		return execute((client)->client.geoOperations().geoRadius(key, longitude, latitude, radius, unit, argument));
 	}
 
 	/**
@@ -297,14 +355,14 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * 		纬度
 	 * @param radius
 	 * 		范围（单位：米）
-	 * @param geoRadiusArgument
-	 * 		GEO 参数
+	 * @param argument
+	 * 		GEO Radius 参数
 	 *
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-									  final double radius, final GeoRadiusArgument geoRadiusArgument) {
-		return geoRadius(key, longitude, latitude, radius, GeoUnit.M, geoRadiusArgument);
+									  final double radius, final GeoRadiusArgument argument) {
+		return geoRadius(key, longitude, latitude, radius, GeoUnit.M, argument);
 	}
 
 	/**
@@ -320,14 +378,14 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * 		纬度
 	 * @param radius
 	 * 		范围（单位：米）
-	 * @param geoRadiusArgument
-	 * 		GEO 参数
+	 * @param argument
+	 * 		GEO Radius 参数
 	 *
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-									  final double radius, final GeoRadiusArgument geoRadiusArgument) {
-		return geoRadius(key, longitude, latitude, radius, GeoUnit.M, geoRadiusArgument);
+									  final double radius, final GeoRadiusArgument argument) {
+		return geoRadius(key, longitude, latitude, radius, GeoUnit.M, argument);
 	}
 
 	/**
@@ -341,14 +399,14 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * 		经纬度对象
 	 * @param radius
 	 * 		范围（单位：米）
-	 * @param geoRadiusArgument
-	 * 		GEO 参数
+	 * @param argument
+	 * 		GEO Radius 参数
 	 *
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadius(final String key, final Geo geo, final double radius,
-									  final GeoRadiusArgument geoRadiusArgument) {
-		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, geoRadiusArgument);
+									  final GeoRadiusArgument argument) {
+		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, argument);
 	}
 
 	/**
@@ -362,14 +420,14 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * 		经纬度对象
 	 * @param radius
 	 * 		范围（单位：米）
-	 * @param geoRadiusArgument
-	 * 		GEO 参数
+	 * @param argument
+	 * 		GEO Radius 参数
 	 *
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadius(final byte[] key, final Geo geo, final double radius,
-									  final GeoRadiusArgument geoRadiusArgument) {
-		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, geoRadiusArgument);
+									  final GeoRadiusArgument argument) {
+		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, argument);
 	}
 
 	/**
@@ -385,14 +443,14 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * 		范围
 	 * @param unit
 	 * 		距离单位
-	 * @param geoRadiusArgument
-	 * 		GEO 参数
+	 * @param argument
+	 * 		GEO Radius 参数
 	 *
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadius(final String key, final Geo geo, final double radius, final GeoUnit unit,
-									  final GeoRadiusArgument geoRadiusArgument) {
-		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, unit, geoRadiusArgument);
+									  final GeoRadiusArgument argument) {
+		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, unit, argument);
 	}
 
 	/**
@@ -408,14 +466,14 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * 		范围
 	 * @param unit
 	 * 		距离单位
-	 * @param geoRadiusArgument
-	 * 		GEO 参数
+	 * @param argument
+	 * 		GEO Radius 参数
 	 *
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadius(final byte[] key, final Geo geo, final double radius, final GeoUnit unit,
-									  final GeoRadiusArgument geoRadiusArgument) {
-		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, unit, geoRadiusArgument);
+									  final GeoRadiusArgument argument) {
+		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, unit, argument);
 	}
 
 	@Override
@@ -432,18 +490,14 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 
 	@Override
 	default List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
-										final double radius, final GeoUnit unit,
-										final GeoRadiusArgument geoRadiusArgument) {
-		return execute((client)->client.geoOperations()
-				.geoRadiusRo(key, longitude, latitude, radius, unit, geoRadiusArgument));
+										final double radius, final GeoUnit unit, final GeoRadiusArgument argument) {
+		return execute((client)->client.geoOperations().geoRadiusRo(key, longitude, latitude, radius, unit, argument));
 	}
 
 	@Override
 	default List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
-										final double radius, final GeoUnit unit,
-										final GeoRadiusArgument geoRadiusArgument) {
-		return execute((client)->client.geoOperations()
-				.geoRadiusRo(key, longitude, latitude, radius, unit, geoRadiusArgument));
+										final double radius, final GeoUnit unit, final GeoRadiusArgument argument) {
+		return execute((client)->client.geoOperations().geoRadiusRo(key, longitude, latitude, radius, unit, argument));
 	}
 
 	/**
@@ -578,14 +632,14 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * 		纬度
 	 * @param radius
 	 * 		范围（单位：米）
-	 * @param geoRadiusArgument
-	 * 		GEO 参数
+	 * @param argument
+	 * 		GEO Radius 参数
 	 *
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
-										final double radius, final GeoRadiusArgument geoRadiusArgument) {
-		return geoRadiusRo(key, longitude, latitude, radius, GeoUnit.M, geoRadiusArgument);
+										final double radius, final GeoRadiusArgument argument) {
+		return geoRadiusRo(key, longitude, latitude, radius, GeoUnit.M, argument);
 	}
 
 	/**
@@ -601,14 +655,14 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * 		纬度
 	 * @param radius
 	 * 		范围（单位：米）
-	 * @param geoRadiusArgument
-	 * 		GEO 参数
+	 * @param argument
+	 * 		GEO Radius 参数
 	 *
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
-										final double radius, final GeoRadiusArgument geoRadiusArgument) {
-		return geoRadiusRo(key, longitude, latitude, radius, GeoUnit.M, geoRadiusArgument);
+										final double radius, final GeoRadiusArgument argument) {
+		return geoRadiusRo(key, longitude, latitude, radius, GeoUnit.M, argument);
 	}
 
 	/**
@@ -622,14 +676,14 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * 		经纬度对象
 	 * @param radius
 	 * 		范围（单位：米）
-	 * @param geoRadiusArgument
-	 * 		GEO 参数
+	 * @param argument
+	 * 		GEO Radius 参数
 	 *
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadiusRo(final String key, final Geo geo, final double radius,
-										final GeoRadiusArgument geoRadiusArgument) {
-		return geoRadiusRo(key, geo.getLongitude(), geo.getLatitude(), radius, geoRadiusArgument);
+										final GeoRadiusArgument argument) {
+		return geoRadiusRo(key, geo.getLongitude(), geo.getLatitude(), radius, argument);
 	}
 
 	/**
@@ -643,14 +697,14 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * 		经纬度对象
 	 * @param radius
 	 * 		范围（单位：米）
-	 * @param geoRadiusArgument
-	 * 		GEO 参数
+	 * @param argument
+	 * 		GEO Radius 参数
 	 *
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadiusRo(final byte[] key, final Geo geo, final double radius,
-										final GeoRadiusArgument geoRadiusArgument) {
-		return geoRadiusRo(key, geo.getLongitude(), geo.getLatitude(), radius, geoRadiusArgument);
+										final GeoRadiusArgument argument) {
+		return geoRadiusRo(key, geo.getLongitude(), geo.getLatitude(), radius, argument);
 	}
 
 	/**
@@ -666,14 +720,14 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * 		范围
 	 * @param unit
 	 * 		距离单位
-	 * @param geoRadiusArgument
-	 * 		GEO 参数
+	 * @param argument
+	 * 		GEO Radius 参数
 	 *
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadiusRo(final String key, final Geo geo, final double radius, final GeoUnit unit,
-										final GeoRadiusArgument geoRadiusArgument) {
-		return geoRadiusRo(key, geo.getLongitude(), geo.getLatitude(), radius, unit, geoRadiusArgument);
+										final GeoRadiusArgument argument) {
+		return geoRadiusRo(key, geo.getLongitude(), geo.getLatitude(), radius, unit, argument);
 	}
 
 	/**
@@ -689,14 +743,14 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * 		范围
 	 * @param unit
 	 * 		距离单位
-	 * @param geoRadiusArgument
-	 * 		GEO 参数
+	 * @param argument
+	 * 		GEO Radius 参数
 	 *
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadiusRo(final byte[] key, final Geo geo, final double radius, final GeoUnit unit,
-										final GeoRadiusArgument geoRadiusArgument) {
-		return geoRadiusRo(key, geo.getLongitude(), geo.getLatitude(), radius, unit, geoRadiusArgument);
+										final GeoRadiusArgument argument) {
+		return geoRadiusRo(key, geo.getLongitude(), geo.getLatitude(), radius, unit, argument);
 	}
 
 	@Override
@@ -713,16 +767,14 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 
 	@Override
 	default List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-											  final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
-		return execute((client)->client.geoOperations()
-				.geoRadiusByMember(key, member, radius, unit, geoRadiusArgument));
+											  final GeoUnit unit, final GeoRadiusArgument argument) {
+		return execute((client)->client.geoOperations().geoRadiusByMember(key, member, radius, unit, argument));
 	}
 
 	@Override
 	default List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-											  final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
-		return execute((client)->client.geoOperations()
-				.geoRadiusByMember(key, member, radius, unit, geoRadiusArgument));
+											  final GeoUnit unit, final GeoRadiusArgument argument) {
+		return execute((client)->client.geoOperations().geoRadiusByMember(key, member, radius, unit, argument));
 	}
 
 	/**
@@ -775,14 +827,14 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * 		位置元素
 	 * @param radius
 	 * 		范围（单位：米）
-	 * @param geoRadiusArgument
-	 * 		GEO 参数
+	 * @param argument
+	 * 		GEO Radius 参数
 	 *
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-											  final GeoRadiusArgument geoRadiusArgument) {
-		return geoRadiusByMember(key, member, radius, GeoUnit.M, geoRadiusArgument);
+											  final GeoRadiusArgument argument) {
+		return geoRadiusByMember(key, member, radius, GeoUnit.M, argument);
 	}
 
 	/**
@@ -797,14 +849,14 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * 		位置元素
 	 * @param radius
 	 * 		范围（单位：米）
-	 * @param geoRadiusArgument
-	 * 		GEO 参数
+	 * @param argument
+	 * 		GEO Radius 参数
 	 *
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-											  final GeoRadiusArgument geoRadiusArgument) {
-		return geoRadiusByMember(key, member, radius, GeoUnit.M, geoRadiusArgument);
+											  final GeoRadiusArgument argument) {
+		return geoRadiusByMember(key, member, radius, GeoUnit.M, argument);
 	}
 
 	@Override
@@ -821,16 +873,1755 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 
 	@Override
 	default List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
-												final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
-		return execute((client)->client.geoOperations()
-				.geoRadiusByMemberRo(key, member, radius, unit, geoRadiusArgument));
+												final GeoUnit unit, final GeoRadiusArgument argument) {
+		return execute((client)->client.geoOperations().geoRadiusByMemberRo(key, member, radius, unit, argument));
 	}
 
 	@Override
 	default List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
-												final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument) {
+												final GeoUnit unit, final GeoRadiusArgument argument) {
+		return execute((client)->client.geoOperations().geoRadiusByMemberRo(key, member, radius, unit, argument));
+	}
+
+	/**
+	 * Read-only variant of the GEORADIUSBYMEMBER command
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/georadiusbymember_ro/" target="_blank">https://redis.io/commands/georadiusbymember_ro/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		位置元素
+	 * @param radius
+	 * 		范围
+	 *
+	 * @return 位置元素
+	 */
+	default List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius) {
+		return geoRadiusByMemberRo(key, member, radius, GeoUnit.M);
+	}
+
+	/**
+	 * Read-only variant of the GEORADIUSBYMEMBER command
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/georadiusbymember_ro/" target="_blank">https://redis.io/commands/georadiusbymember_ro/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		位置元素
+	 * @param radius
+	 * 		范围
+	 *
+	 * @return 位置元素
+	 */
+	default List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius) {
+		return geoRadiusByMemberRo(key, member, radius, GeoUnit.M);
+	}
+
+	/**
+	 * Read-only variant of the GEORADIUSBYMEMBER command
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/georadiusbymember_ro/" target="_blank">https://redis.io/commands/georadiusbymember_ro/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		位置元素
+	 * @param radius
+	 * 		范围
+	 * @param argument
+	 * 		GEO 参数
+	 *
+	 * @return 位置元素
+	 */
+	default List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
+												final GeoRadiusArgument argument) {
+		return geoRadiusByMemberRo(key, member, radius, GeoUnit.M, argument);
+	}
+
+	/**
+	 * Read-only variant of the GEORADIUSBYMEMBER command
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/georadiusbymember_ro/" target="_blank">https://redis.io/commands/georadiusbymember_ro/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		位置元素
+	 * @param radius
+	 * 		范围
+	 * @param argument
+	 * 		GEO 参数
+	 *
+	 * @return 位置元素
+	 */
+	default List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
+												final GeoRadiusArgument argument) {
+		return geoRadiusByMemberRo(key, member, radius, GeoUnit.M, argument);
+	}
+
+	@Override
+	default List<GeoRadius> geoSearch(final String key, final String member, final double radius, final GeoUnit unit) {
+		return execute((client)->client.geoOperations().geoSearch(key, member, radius, unit));
+	}
+
+	@Override
+	default List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double radius, final GeoUnit unit) {
+		return execute((client)->client.geoOperations().geoSearch(key, member, radius, unit));
+	}
+
+	@Override
+	default List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude,
+									  final double radius, final GeoUnit unit) {
+		return execute((client)->client.geoOperations().geoSearch(key, longitude, latitude, radius, unit));
+	}
+
+	@Override
+	default List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
+									  final double radius, final GeoUnit unit) {
+		return execute((client)->client.geoOperations().geoSearch(key, longitude, latitude, radius, unit));
+	}
+
+	@Override
+	default List<GeoRadius> geoSearch(final String key, final String member, final double width, final double height,
+									  final GeoUnit unit) {
+		return execute((client)->client.geoOperations().geoSearch(key, member, width, height, unit));
+	}
+
+	@Override
+	default List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double width, final double height,
+									  final GeoUnit unit) {
+		return execute((client)->client.geoOperations().geoSearch(key, member, width, height, unit));
+	}
+
+	@Override
+	default List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude,
+									  final double width, final double height, final GeoUnit unit) {
+		return execute((client)->client.geoOperations().geoSearch(key, longitude, latitude, width, height, unit));
+	}
+
+	@Override
+	default List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
+									  final double width, final double height, final GeoUnit unit) {
+		return execute((client)->client.geoOperations().geoSearch(key, longitude, latitude, width, height, unit));
+	}
+
+	@Override
+	default List<GeoRadius> geoSearch(final String key, final String member, final double radius, final GeoUnit unit,
+									  final GeoSearchArgument argument) {
+		return execute((client)->client.geoOperations().geoSearch(key, member, radius, unit, argument));
+	}
+
+	@Override
+	default List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double radius, final GeoUnit unit,
+									  final GeoSearchArgument argument) {
+		return execute((client)->client.geoOperations().geoSearch(key, member, radius, unit, argument));
+	}
+
+	@Override
+	default List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude,
+									  final double radius, final GeoUnit unit, final GeoSearchArgument argument) {
+		return execute((client)->client.geoOperations().geoSearch(key, longitude, latitude, radius, unit, argument));
+	}
+
+	@Override
+	default List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
+									  final double radius, final GeoUnit unit, final GeoSearchArgument argument) {
+		return execute((client)->client.geoOperations().geoSearch(key, longitude, latitude, radius, unit, argument));
+	}
+
+	@Override
+	default List<GeoRadius> geoSearch(final String key, final String member, final double width, final double height,
+									  final GeoUnit unit, final GeoSearchArgument argument) {
+		return execute((client)->client.geoOperations().geoSearch(key, member, width, height, unit, argument));
+	}
+
+	@Override
+	default List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double width, final double height,
+									  final GeoUnit unit, final GeoSearchArgument argument) {
+		return execute((client)->client.geoOperations().geoSearch(key, member, width, height, unit, argument));
+	}
+
+	@Override
+	default List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude,
+									  final double width, final double height, final GeoUnit unit,
+									  final GeoSearchArgument argument) {
+		return execute(
+				(client)->client.geoOperations().geoSearch(key, longitude, latitude, width, height, unit, argument));
+	}
+
+	@Override
+	default List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
+									  final double width, final double height, final GeoUnit unit,
+									  final GeoSearchArgument argument) {
+		return execute(
+				(client)->client.geoOperations().geoSearch(key, longitude, latitude, width, height, unit, argument));
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		位置元素
+	 * @param radius
+	 * 		范围
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final String key, final String member, final double radius) {
+		return geoSearch(key, member, radius, GeoUnit.M);
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		位置元素
+	 * @param radius
+	 * 		范围
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double radius) {
+		return geoSearch(key, member, radius, GeoUnit.M);
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude,
+									  final double radius) {
+		return geoSearch(key, longitude, latitude, radius, GeoUnit.M);
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
+									  final double radius) {
+		return geoSearch(key, longitude, latitude, radius, GeoUnit.M);
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final String key, final Geo geo, final double radius, final GeoUnit unit) {
+		return geoSearch(key, geo.getLongitude(), geo.getLatitude(), radius, unit);
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final byte[] key, final Geo geo, final double radius, final GeoUnit unit) {
+		return geoSearch(key, geo.getLongitude(), geo.getLatitude(), radius, unit);
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param radius
+	 * 		范围
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final String key, final Geo geo, final double radius) {
+		return geoSearch(key, geo, radius, GeoUnit.M);
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param radius
+	 * 		范围
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final byte[] key, final Geo geo, final double radius) {
+		return geoSearch(key, geo, radius, GeoUnit.M);
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		位置元素
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final String key, final String member, final double width, final double height) {
+		return geoSearch(key, member, width, height, GeoUnit.M);
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		位置元素
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double width, final double height) {
+		return geoSearch(key, member, width, height, GeoUnit.M);
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude,
+									  final double width, final double height) {
+		return geoSearch(key, longitude, latitude, width, height, GeoUnit.M);
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
+									  final double width, final double height) {
+		return geoSearch(key, longitude, latitude, width, height, GeoUnit.M);
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param unit
+	 * 		距离单位
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final String key, final Geo geo, final double width, final double height,
+									  final GeoUnit unit) {
+		return geoSearch(key, geo.getLongitude(), geo.getLatitude(), width, height, unit);
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param unit
+	 * 		距离单位
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final byte[] key, final Geo geo, final double width, final double height,
+									  final GeoUnit unit) {
+		return geoSearch(key, geo.getLongitude(), geo.getLatitude(), width, height, unit);
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final String key, final Geo geo, final double width, final double height) {
+		return geoSearch(key, geo.getLongitude(), geo.getLatitude(), width, height, GeoUnit.M);
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final byte[] key, final Geo geo, final double width, final double height) {
+		return geoSearch(key, geo.getLongitude(), geo.getLatitude(), width, height, GeoUnit.M);
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		位置元素
+	 * @param radius
+	 * 		范围
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final String key, final String member, final double radius,
+									  final GeoSearchArgument argument) {
+		return geoSearch(key, member, radius, GeoUnit.M, argument);
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		位置元素
+	 * @param radius
+	 * 		范围
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double radius,
+									  final GeoSearchArgument argument) {
+		return geoSearch(key, member, radius, GeoUnit.M, argument);
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude,
+									  final double radius, final GeoSearchArgument argument) {
+		return geoSearch(key, longitude, latitude, radius, GeoUnit.M, argument);
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
+									  final double radius, final GeoSearchArgument argument) {
+		return geoSearch(key, longitude, latitude, radius, GeoUnit.M, argument);
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final String key, final Geo geo, final double radius, final GeoUnit unit,
+									  final GeoSearchArgument argument) {
+		return geoSearch(key, geo.getLongitude(), geo.getLatitude(), radius, unit, argument);
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final byte[] key, final Geo geo, final double radius, final GeoUnit unit,
+									  final GeoSearchArgument argument) {
+		return geoSearch(key, geo.getLongitude(), geo.getLatitude(), radius, unit, argument);
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param radius
+	 * 		范围
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final String key, final Geo geo, final double radius,
+									  final GeoSearchArgument argument) {
+		return geoSearch(key, geo, radius, GeoUnit.M, argument);
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param radius
+	 * 		范围
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final byte[] key, final Geo geo, final double radius,
+									  final GeoSearchArgument argument) {
+		return geoSearch(key, geo, radius, GeoUnit.M, argument);
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		位置元素
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final String key, final String member, final double width, final double height,
+									  final GeoSearchArgument argument) {
+		return geoSearch(key, member, width, height, GeoUnit.M, argument);
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		位置元素
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double width, final double height,
+									  final GeoSearchArgument argument) {
+		return geoSearch(key, member, width, height, GeoUnit.M, argument);
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude,
+									  final double width, final double height, final GeoSearchArgument argument) {
+		return geoSearch(key, longitude, latitude, width, height, GeoUnit.M, argument);
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
+									  final double width, final double height, final GeoSearchArgument argument) {
+		return geoSearch(key, longitude, latitude, width, height, GeoUnit.M, argument);
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final String key, final Geo geo, final double width, final double height,
+									  final GeoUnit unit, final GeoSearchArgument argument) {
+		return geoSearch(key, geo.getLongitude(), geo.getLatitude(), width, height, unit, argument);
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final byte[] key, final Geo geo, final double width, final double height,
+									  final GeoUnit unit, final GeoSearchArgument argument) {
+		return geoSearch(key, geo.getLongitude(), geo.getLatitude(), width, height, unit, argument);
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final String key, final Geo geo, final double width, final double height,
+									  final GeoSearchArgument argument) {
+		return geoSearch(key, geo.getLongitude(), geo.getLatitude(), width, height, GeoUnit.M, argument);
+	}
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	default List<GeoRadius> geoSearch(final byte[] key, final Geo geo, final double width, final double height,
+									  final GeoSearchArgument argument) {
+		return geoSearch(key, geo.getLongitude(), geo.getLatitude(), width, height, GeoUnit.M, argument);
+	}
+
+	@Override
+	default Long geoSearchStore(final String destKey, final String key, final String member, final double radius,
+								final GeoUnit unit) {
+		return execute((client)->client.geoOperations().geoSearchStore(destKey, key, member, radius, unit));
+	}
+
+	@Override
+	default Long geoSearchStore(final byte[] destKey, final byte[] key, final byte[] member, final double radius,
+								final GeoUnit unit) {
+		return execute((client)->client.geoOperations().geoSearchStore(destKey, key, member, radius, unit));
+	}
+
+	@Override
+	default Long geoSearchStore(final String destKey, final String key, final double longitude, final double latitude,
+								final double radius, final GeoUnit unit) {
+		return execute(
+				(client)->client.geoOperations().geoSearchStore(destKey, key, longitude, latitude, radius, unit));
+	}
+
+	@Override
+	default Long geoSearchStore(final byte[] destKey, final byte[] key, final double longitude, final double latitude,
+								final double radius, final GeoUnit unit) {
+		return execute(
+				(client)->client.geoOperations().geoSearchStore(destKey, key, longitude, latitude, radius, unit));
+	}
+
+	@Override
+	default Long geoSearchStore(final String destKey, final String key, final String member, final double width,
+								final double height, final GeoUnit unit) {
+		return execute((client)->client.geoOperations().geoSearchStore(destKey, key, member, width, height, unit));
+	}
+
+	@Override
+	default Long geoSearchStore(final byte[] destKey, final byte[] key, final byte[] member, final double width,
+								final double height, final GeoUnit unit) {
+		return execute((client)->client.geoOperations().geoSearchStore(destKey, key, member, width, height, unit));
+	}
+
+	@Override
+	default Long geoSearchStore(final String destKey, final String key, final double longitude, final double latitude,
+								final double width, final double height, final GeoUnit unit) {
+		return execute(
+				(client)->client.geoOperations()
+						.geoSearchStore(destKey, key, longitude, latitude, width, height, unit));
+	}
+
+	@Override
+	default Long geoSearchStore(final byte[] destKey, final byte[] key, final double longitude, final double latitude,
+								final double width, final double height, final GeoUnit unit) {
+		return execute(
+				(client)->client.geoOperations()
+						.geoSearchStore(destKey, key, longitude, latitude, width, height, unit));
+	}
+
+	@Override
+	default Long geoSearchStore(final String destKey, final String key, final String member, final double radius,
+								final GeoUnit unit, final GeoSearchArgument argument) {
+		return execute((client)->client.geoOperations().geoSearchStore(destKey, key, member, radius, unit, argument));
+	}
+
+	@Override
+	default Long geoSearchStore(final byte[] destKey, final byte[] key, final byte[] member, final double radius,
+								final GeoUnit unit, final GeoSearchArgument argument) {
+		return execute((client)->client.geoOperations().geoSearchStore(destKey, key, member, radius, unit, argument));
+	}
+
+	@Override
+	default Long geoSearchStore(final String destKey, final String key, final double longitude, final double latitude,
+								final double radius, final GeoUnit unit, final GeoSearchArgument argument) {
 		return execute((client)->client.geoOperations()
-				.geoRadiusByMemberRo(key, member, radius, unit, geoRadiusArgument));
+				.geoSearchStore(destKey, key, longitude, latitude, radius, unit, argument));
+	}
+
+	@Override
+	default Long geoSearchStore(final byte[] destKey, final byte[] key, final double longitude, final double latitude,
+								final double radius, final GeoUnit unit, final GeoSearchArgument argument) {
+		return execute((client)->client.geoOperations()
+				.geoSearchStore(destKey, key, longitude, latitude, radius, unit, argument));
+	}
+
+	@Override
+	default Long geoSearchStore(final String destKey, final String key, final String member, final double width,
+								final double height,
+								final GeoUnit unit, final GeoSearchArgument argument) {
+		return execute(
+				(client)->client.geoOperations().geoSearchStore(destKey, key, member, width, height, unit, argument));
+	}
+
+	@Override
+	default Long geoSearchStore(final byte[] destKey, final byte[] key, final byte[] member, final double width,
+								final double height, final GeoUnit unit, final GeoSearchArgument argument) {
+		return execute(
+				(client)->client.geoOperations().geoSearchStore(destKey, key, member, width, height, unit, argument));
+	}
+
+	@Override
+	default Long geoSearchStore(final String destKey, final String key, final double longitude, final double latitude,
+								final double width, final double height, final GeoUnit unit,
+								final GeoSearchArgument argument) {
+		return execute(
+				(client)->client.geoOperations()
+						.geoSearchStore(destKey, key, longitude, latitude, width, height, unit, argument));
+	}
+
+	@Override
+	default Long geoSearchStore(final byte[] destKey, final byte[] key, final double longitude, final double latitude,
+								final double width, final double height, final GeoUnit unit,
+								final GeoSearchArgument argument) {
+		return execute(
+				(client)->client.geoOperations()
+						.geoSearchStore(destKey, key, longitude, latitude, width, height, unit, argument));
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		位置元素
+	 * @param radius
+	 * 		范围
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final String destKey, final String key, final String member, final double radius) {
+		return geoSearchStore(destKey, key, member, radius, GeoUnit.M);
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		位置元素
+	 * @param radius
+	 * 		范围
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final byte[] destKey, final byte[] key, final byte[] member, final double radius) {
+		return geoSearchStore(destKey, key, member, radius, GeoUnit.M);
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final String destKey, final String key, final double longitude, final double latitude,
+								final double radius) {
+		return geoSearchStore(destKey, key, longitude, latitude, radius, GeoUnit.M);
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final byte[] destKey, final byte[] key, final double longitude, final double latitude,
+								final double radius) {
+		return geoSearchStore(destKey, key, longitude, latitude, radius, GeoUnit.M);
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final String destKey, final String key, final Geo geo, final double radius,
+								final GeoUnit unit) {
+		return geoSearchStore(destKey, key, geo.getLongitude(), geo.getLatitude(), radius, unit);
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final byte[] destKey, final byte[] key, final Geo geo, final double radius,
+								final GeoUnit unit) {
+		return geoSearchStore(destKey, key, geo.getLongitude(), geo.getLatitude(), radius, unit);
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param radius
+	 * 		范围
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final String destKey, final String key, final Geo geo, final double radius) {
+		return geoSearchStore(destKey, key, geo, radius, GeoUnit.M);
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param radius
+	 * 		范围
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final byte[] destKey, final byte[] key, final Geo geo, final double radius) {
+		return geoSearchStore(destKey, key, geo, radius, GeoUnit.M);
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		位置元素
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final String destKey, final String key, final String member, final double width,
+								final double height) {
+		return geoSearchStore(destKey, key, member, width, height, GeoUnit.M);
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		位置元素
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final byte[] destKey, final byte[] key, final byte[] member, final double width,
+								final double height) {
+		return geoSearchStore(destKey, key, member, width, height, GeoUnit.M);
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final String destKey, final String key, final double longitude, final double latitude,
+								final double width, final double height) {
+		return geoSearchStore(destKey, key, longitude, latitude, width, height, GeoUnit.M);
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final byte[] destKey, final byte[] key, final double longitude, final double latitude,
+								final double width, final double height) {
+		return geoSearchStore(destKey, key, longitude, latitude, width, height, GeoUnit.M);
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param unit
+	 * 		距离单位
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final String destKey, final String key, final Geo geo, final double width,
+								final double height, final GeoUnit unit) {
+		return geoSearchStore(destKey, key, geo.getLongitude(), geo.getLatitude(), width, height, unit);
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param unit
+	 * 		距离单位
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final byte[] destKey, final byte[] key, final Geo geo, final double width,
+								final double height, final GeoUnit unit) {
+		return geoSearchStore(destKey, key, geo.getLongitude(), geo.getLatitude(), width, height, unit);
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final String destKey, final String key, final Geo geo, final double width,
+								final double height) {
+		return geoSearchStore(destKey, key, geo.getLongitude(), geo.getLatitude(), width, height, GeoUnit.M);
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final byte[] destKey, final byte[] key, final Geo geo, final double width,
+								final double height) {
+		return geoSearchStore(destKey, key, geo.getLongitude(), geo.getLatitude(), width, height, GeoUnit.M);
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		位置元素
+	 * @param radius
+	 * 		范围
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final String destKey, final String key, final String member, final double radius,
+								final GeoSearchArgument argument) {
+		return geoSearchStore(destKey, key, member, radius, GeoUnit.M, argument);
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		位置元素
+	 * @param radius
+	 * 		范围
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final byte[] destKey, final byte[] key, final byte[] member, final double radius,
+								final GeoSearchArgument argument) {
+		return geoSearchStore(destKey, key, member, radius, GeoUnit.M, argument);
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final String destKey, final String key, final double longitude, final double latitude,
+								final double radius, final GeoSearchArgument argument) {
+		return geoSearchStore(destKey, key, longitude, latitude, radius, GeoUnit.M, argument);
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final byte[] destKey, final byte[] key, final double longitude, final double latitude,
+								final double radius, final GeoSearchArgument argument) {
+		return geoSearchStore(destKey, key, longitude, latitude, radius, GeoUnit.M, argument);
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final String destKey, final String key, final Geo geo, final double radius,
+								final GeoUnit unit,
+								final GeoSearchArgument argument) {
+		return geoSearchStore(destKey, key, geo.getLongitude(), geo.getLatitude(), radius, unit, argument);
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final byte[] destKey, final byte[] key, final Geo geo, final double radius,
+								final GeoUnit unit,
+								final GeoSearchArgument argument) {
+		return geoSearchStore(destKey, key, geo.getLongitude(), geo.getLatitude(), radius, unit, argument);
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param radius
+	 * 		范围
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final String destKey, final String key, final Geo geo, final double radius,
+								final GeoSearchArgument argument) {
+		return geoSearchStore(destKey, key, geo, radius, GeoUnit.M, argument);
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param radius
+	 * 		范围
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final byte[] destKey, final byte[] key, final Geo geo, final double radius,
+								final GeoSearchArgument argument) {
+		return geoSearchStore(destKey, key, geo, radius, GeoUnit.M, argument);
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		位置元素
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final String destKey, final String key, final String member, final double width,
+								final double height,
+								final GeoSearchArgument argument) {
+		return geoSearchStore(destKey, key, member, width, height, GeoUnit.M, argument);
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		位置元素
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final byte[] destKey, final byte[] key, final byte[] member, final double width,
+								final double height,
+								final GeoSearchArgument argument) {
+		return geoSearchStore(destKey, key, member, width, height, GeoUnit.M, argument);
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final String destKey, final String key, final double longitude, final double latitude,
+								final double width, final double height, final GeoSearchArgument argument) {
+		return geoSearchStore(destKey, key, longitude, latitude, width, height, GeoUnit.M, argument);
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final byte[] destKey, final byte[] key, final double longitude, final double latitude,
+								final double width, final double height, final GeoSearchArgument argument) {
+		return geoSearchStore(destKey, key, longitude, latitude, width, height, GeoUnit.M, argument);
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final String destKey, final String key, final Geo geo, final double width,
+								final double height, final GeoUnit unit, final GeoSearchArgument argument) {
+		return geoSearchStore(destKey, key, geo.getLongitude(), geo.getLatitude(), width, height, unit, argument);
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final byte[] destKey, final byte[] key, final Geo geo, final double width,
+								final double height, final GeoUnit unit, final GeoSearchArgument argument) {
+		return geoSearchStore(destKey, key, geo.getLongitude(), geo.getLatitude(), width, height, unit, argument);
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final String destKey, final String key, final Geo geo, final double width,
+								final double height, final GeoSearchArgument argument) {
+		return geoSearchStore(destKey, key, geo.getLongitude(), geo.getLatitude(), width, height, GeoUnit.M, argument);
+	}
+
+	/**
+	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param geo
+	 * 		经纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 存储的元素数量
+	 */
+	default Long geoSearchStore(final byte[] destKey, final byte[] key, final Geo geo, final double width,
+								final double height, final GeoSearchArgument argument) {
+		return geoSearchStore(destKey, key, geo.getLongitude(), geo.getLatitude(), width, height, GeoUnit.M, argument);
 	}
 
 }
