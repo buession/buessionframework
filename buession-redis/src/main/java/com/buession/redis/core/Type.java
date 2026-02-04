@@ -41,6 +41,8 @@ public enum Type implements Keyword {
 
 	STREAM("stream"),
 
+	VECTORSET("vectorset"),
+
 	NONE("none");
 
 	private final String value;

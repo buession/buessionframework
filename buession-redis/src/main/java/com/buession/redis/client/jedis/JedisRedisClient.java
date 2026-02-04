@@ -25,7 +25,6 @@
 package com.buession.redis.client.jedis;
 
 import com.buession.redis.client.AbstractRedisClient;
-import com.buession.redis.client.RedisClient;
 import com.buession.redis.client.connection.jedis.JedisRedisConnection;
 import com.buession.redis.client.jedis.operations.*;
 import com.buession.redis.client.operations.*;

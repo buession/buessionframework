@@ -19,14 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.utils.NumberUtils;
 import com.buession.redis.core.RedisServerTime;
-import com.buession.redis.utils.SafeEncoder;
 
 import java.util.Date;
 import java.util.List;
@@ -42,8 +42,8 @@ public final class RedisServerTimeConverter implements Converter<List<byte[]>, R
 	@Override
 	public RedisServerTime convert(final List<byte[]> source) {
 		if(source != null && source.size() == 2){
-			Date date = new Date(Long.parseLong(SafeEncoder.encode(source.get(0))) * 1000L);
-			return new RedisServerTime(date, Long.parseLong(SafeEncoder.encode(source.get(1))));
+			Date date = new Date(NumberUtils.bytes2long(source.get(0)) * 1000L);
+			return new RedisServerTime(date, NumberUtils.bytes2long(source.get(1)));
 		}
 
 		return null;

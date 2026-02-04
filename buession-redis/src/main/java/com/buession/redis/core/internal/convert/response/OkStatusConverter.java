@@ -24,8 +24,7 @@
  */
 package com.buession.redis.core.internal.convert.response;
 
-import com.buession.core.converter.Converter;
-import com.buession.lang.Status;
+import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.redis.core.Constants;
 
 /**
@@ -34,11 +33,10 @@ import com.buession.redis.core.Constants;
  * @author Yong.Teng
  * @since 1.2.2
  */
-public final class OkStatusConverter implements Converter<String, Status> {
+public final class OkStatusConverter extends PredicateStatusConverter<String> {
 
-	@Override
-	public Status convert(final String source) {
-		return Status.valueOf(Constants.OK.equalsIgnoreCase(source));
+	public OkStatusConverter() {
+		super(Constants.OK::equalsIgnoreCase);
 	}
 
 }
