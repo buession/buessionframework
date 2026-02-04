@@ -26,11 +26,9 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
-import com.buession.core.converter.MapConverter;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.internal.convert.Converters;
-import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.KeyScanCursor;
 import io.lettuce.core.MapScanCursor;
 import io.lettuce.core.ScanCursor;
@@ -77,12 +75,10 @@ public interface ScanCursorConverter<T extends ScanCursor, R> extends Converter<
 		public final static class BSKeyScanCursorConverter implements ScanCursorConverter<KeyScanCursor<byte[]>,
 				List<String>> {
 
-			private final ListConverter<byte[], String> binaryToStringListConverter =
-					new ListConverter<>(SafeEncoder::encode);
-
 			@Override
 			public ScanResult<List<String>> convert(final KeyScanCursor<byte[]> source) {
-				return new ScanResult<>(source.getCursor(), binaryToStringListConverter.convert(source.getKeys()));
+				return new ScanResult<>(source.getCursor(),
+						Converters.binaryListToStringListConverter().convert(source.getKeys()));
 			}
 
 		}
@@ -112,12 +108,10 @@ public interface ScanCursorConverter<T extends ScanCursor, R> extends Converter<
 		public final static class BSKeyScanCursorConverter implements ScanCursorConverter<ValueScanCursor<byte[]>,
 				List<String>> {
 
-			private final ListConverter<byte[], String> binaryToStringListConverter =
-					new ListConverter<>(SafeEncoder::encode);
-
 			@Override
 			public ScanResult<List<String>> convert(final ValueScanCursor<byte[]> source) {
-				return new ScanResult<>(source.getCursor(), binaryToStringListConverter.convert(source.getValues()));
+				return new ScanResult<>(source.getCursor(),
+						Converters.binaryListToStringListConverter().convert(source.getValues()));
 			}
 
 		}
@@ -167,12 +161,10 @@ public interface ScanCursorConverter<T extends ScanCursor, R> extends Converter<
 		public final static class BvSvMapScanCursorConverter implements ScanCursorConverter<MapScanCursor<byte[],
 				byte[]>, Map<String, String>> {
 
-			private final MapConverter<byte[], byte[], String, String> binaryToStringMapConverter =
-					Converters.mapBinaryToString();
-
 			@Override
 			public ScanResult<Map<String, String>> convert(final MapScanCursor<byte[], byte[]> source) {
-				return new ScanResult<>(source.getCursor(), binaryToStringMapConverter.convert(source.getMap()));
+				return new ScanResult<>(source.getCursor(),
+						Converters.binaryMapToStringMapConverter().convert(source.getMap()));
 			}
 
 		}

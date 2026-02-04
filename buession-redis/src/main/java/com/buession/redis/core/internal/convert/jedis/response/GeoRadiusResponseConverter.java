@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
@@ -45,10 +45,6 @@ public class GeoRadiusResponseConverter implements Converter<GeoRadiusResponse, 
 	public GeoRadius convert(final GeoRadiusResponse source) {
 		return new GeoRadius(source.getMember(), source.getDistance(),
 				source.getCoordinate() == null ? null : geoCoordinateConverter.convert(source.getCoordinate()));
-	}
-
-	public static ListConverter<GeoRadiusResponse, GeoRadius> listConverter() {
-		return new ListConverter<>(new GeoRadiusResponseConverter());
 	}
 
 }

@@ -159,7 +159,6 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status expireAt(final String key, final Date date) {
-		Assert.isNull(date, "Expire date could not be null");
 		return expireAt(key, date.getTime() / 1000L);
 	}
 
@@ -176,7 +175,6 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status expireAt(final byte[] key, final Date date) {
-		Assert.isNull(date, "Expire date could not be null");
 		return expireAt(key, date.getTime() / 1000L);
 	}
 
@@ -213,7 +211,6 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status pExpireAt(final String key, final Date date) {
-		Assert.isNull(date, "Expire date could not be null");
 		return pExpireAt(key, date.getTime());
 	}
 
@@ -230,7 +227,6 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status pExpireAt(final byte[] key, final Date date) {
-		Assert.isNull(date, "Expire date could not be null");
 		return pExpireAt(key, date.getTime());
 	}
 

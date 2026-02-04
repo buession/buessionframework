@@ -50,7 +50,7 @@ public class ClusterLinkConverter implements Converter<Map<String, Object>, Clus
 
 		propertyMapper.from(source.get("direction"))
 				.as((v)->Enum.valueOf(ClusterLink.Direction.class, v.toString().toUpperCase()))
-				.to(clusterLink::setDirection);
+				.to(clusterLink::direction);
 		propertyMapper.from(source.get("node")).as(Object::toString).to(clusterLink::setNode);
 		propertyMapper.from(source.get("create-time")).as((v)->(Long) v).to(clusterLink::setCreateTime);
 		propertyMapper.from(source.get("events")).as((v)->{

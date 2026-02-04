@@ -36,6 +36,8 @@ import com.buession.redis.core.GtLt;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.NxXx;
 import com.buession.redis.core.ScanResult;
+import com.buession.redis.core.command.args.GetExArgument;
+import com.buession.redis.core.command.args.HSetExArgument;
 import com.buession.redis.core.operations.*;
 
 import java.util.LinkedHashMap;
@@ -147,6 +149,118 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 	}
 
 	@Override
+	public <V> List<V> hGetDelObject(final String key, final String... fields) {
+		return execute((client)->client.hashOperations().hGetDel(rawKey(key), fields),
+				new Converter.SimpleListStringConverter<>(this));
+	}
+
+	@Override
+	public <V> List<V> hGetDelObject(final byte[] key, final byte[]... fields) {
+		return execute((client)->client.hashOperations().hGetDel(rawKey(key), fields),
+				new Converter.SimpleListBinaryConverter<>(this));
+	}
+
+	@Override
+	public <V> List<V> hGetDelObject(final String key, final String[] fields, final Class<V> clazz) {
+		return execute((client)->client.hashOperations().hGetDel(rawKey(key), fields),
+				new Converter.ClazzListStringConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> List<V> hGetDelObject(final byte[] key, final byte[][] fields, final Class<V> clazz) {
+		return execute((client)->client.hashOperations().hGetDel(rawKey(key), fields),
+				new Converter.ClazzListBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> List<V> hGetDelObject(final String key, final String[] fields, final TypeReference<V> type) {
+		return execute((client)->client.hashOperations().hGetDel(rawKey(key), fields),
+				new Converter.TypeListStringConverter<>(this, type));
+	}
+
+	@Override
+	public <V> List<V> hGetDelObject(final byte[] key, final byte[][] fields, final TypeReference<V> type) {
+		return execute((client)->client.hashOperations().hGetDel(rawKey(key), fields),
+				new Converter.TypeListBinaryConverter<>(this, type));
+	}
+
+	@Override
+	public <V> List<V> hGetExObject(final String key, final String... fields) {
+		return execute((client)->client.hashOperations().hGetEx(rawKey(key), fields),
+				new Converter.SimpleListStringConverter<>(this));
+	}
+
+	@Override
+	public <V> List<V> hGetExObject(final byte[] key, final byte[]... fields) {
+		return execute((client)->client.hashOperations().hGetEx(rawKey(key), fields),
+				new Converter.SimpleListBinaryConverter<>(this));
+	}
+
+	@Override
+	public <V> List<V> hGetExObject(final String key, final String[] fields, final Class<V> clazz) {
+		return execute((client)->client.hashOperations().hGetEx(rawKey(key), fields),
+				new Converter.ClazzListStringConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> List<V> hGetExObject(final byte[] key, final byte[][] fields, final Class<V> clazz) {
+		return execute((client)->client.hashOperations().hGetEx(rawKey(key), fields),
+				new Converter.ClazzListBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> List<V> hGetExObject(final String key, final String[] fields, final TypeReference<V> type) {
+		return execute((client)->client.hashOperations().hGetEx(rawKey(key), fields),
+				new Converter.TypeListStringConverter<>(this, type));
+	}
+
+	@Override
+	public <V> List<V> hGetExObject(final byte[] key, final byte[][] fields, TypeReference<V> type) {
+		return execute((client)->client.hashOperations().hGetEx(rawKey(key), fields),
+				new Converter.TypeListBinaryConverter<>(this, type));
+	}
+
+	@Override
+	public <V> List<V> hGetExObject(final String key, final GetExArgument argument, final String... fields) {
+		return execute((client)->client.hashOperations().hGetEx(rawKey(key), argument, fields),
+				new Converter.SimpleListStringConverter<>(this));
+	}
+
+	@Override
+	public <V> List<V> hGetExObject(final byte[] key, final GetExArgument argument, final byte[]... fields) {
+		return execute((client)->client.hashOperations().hGetEx(rawKey(key), argument, fields),
+				new Converter.SimpleListBinaryConverter<>(this));
+	}
+
+	@Override
+	public <V> List<V> hGetExObject(final String key, final GetExArgument argument, final String[] fields,
+									final Class<V> clazz) {
+		return execute((client)->client.hashOperations().hGetEx(rawKey(key), argument, fields),
+				new Converter.ClazzListStringConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> List<V> hGetExObject(final byte[] key, final GetExArgument argument, final byte[][] fields,
+									final Class<V> clazz) {
+		return execute((client)->client.hashOperations().hGetEx(rawKey(key), argument, fields),
+				new Converter.ClazzListBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> List<V> hGetExObject(final String key, final GetExArgument argument, final String[] fields,
+									final TypeReference<V> type) {
+		return execute((client)->client.hashOperations().hGetEx(rawKey(key), argument, fields),
+				new Converter.TypeListStringConverter<>(this, type));
+	}
+
+	@Override
+	public <V> List<V> hGetExObject(final byte[] key, final GetExArgument argument, final byte[][] fields,
+									final TypeReference<V> type) {
+		return execute((client)->client.hashOperations().hGetEx(rawKey(key), argument, fields),
+				new Converter.TypeListBinaryConverter<>(this, type));
+	}
+
+	@Override
 	public <V> List<V> hMGetObject(final String key, final String... fields) {
 		return execute((client)->client.hashOperations().hMGet(rawKey(key), fields),
 				new Converter.SimpleListStringConverter<>(this));
@@ -239,44 +353,6 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 	}
 
 	@Override
-	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor),
-				new Converter.SimpleScanResultMapStringConverter<>(this));
-	}
-
-	@Override
-	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor),
-				new Converter.SimpleScanResultMapBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final Class<V> clazz) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor),
-				new Converter.ClazzScanResultMapStringConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final Class<V> clazz) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor),
-				new Converter.ClazzScanResultMapBinaryConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor,
-													  final TypeReference<V> type) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor),
-				new Converter.TypeScanResultMapStringConverter<>(this, type));
-	}
-
-	@Override
-	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor,
-													  final TypeReference<V> type) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor),
-				new Converter.TypeScanResultMapBinaryConverter<>(this, type));
-	}
-
-	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor),
 				new Converter.SimpleScanResultMapStringConverter<>(this));
@@ -311,46 +387,6 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor,
 													  final TypeReference<V> type) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor),
-				new Converter.TypeScanResultMapBinaryConverter<>(this, type));
-	}
-
-	@Override
-	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern),
-				new Converter.SimpleScanResultMapStringConverter<>(this));
-	}
-
-	@Override
-	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern),
-				new Converter.SimpleScanResultMapBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern,
-													  final Class<V> clazz) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern),
-				new Converter.ClazzScanResultMapStringConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern,
-													  final Class<V> clazz) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern),
-				new Converter.ClazzScanResultMapBinaryConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern,
-													  final TypeReference<V> type) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern),
-				new Converter.TypeScanResultMapStringConverter<>(this, type));
-	}
-
-	@Override
-	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern,
-													  final TypeReference<V> type) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern),
 				new Converter.TypeScanResultMapBinaryConverter<>(this, type));
 	}
 
@@ -395,46 +431,6 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 	}
 
 	@Override
-	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final long count) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count),
-				new Converter.SimpleScanResultMapStringConverter<>(this));
-	}
-
-	@Override
-	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final long count) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count),
-				new Converter.SimpleScanResultMapBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final long count,
-													  final Class<V> clazz) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count),
-				new Converter.ClazzScanResultMapStringConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final long count,
-													  final Class<V> clazz) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count),
-				new Converter.ClazzScanResultMapBinaryConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, long count,
-													  TypeReference<V> type) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count),
-				new Converter.TypeScanResultMapStringConverter<>(this, type));
-	}
-
-	@Override
-	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final long count,
-													  final TypeReference<V> type) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count),
-				new Converter.TypeScanResultMapBinaryConverter<>(this, type));
-	}
-
-	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final long count) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, count),
 				new Converter.SimpleScanResultMapStringConverter<>(this));
@@ -475,48 +471,6 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 	}
 
 	@Override
-	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern,
-													  final long count) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count),
-				new Converter.SimpleScanResultMapStringConverter<>(this));
-	}
-
-	@Override
-	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern,
-													  final long count) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count),
-				new Converter.SimpleScanResultMapBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern,
-													  final long count, final Class<V> clazz) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count),
-				new Converter.ClazzScanResultMapStringConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern,
-													  final long count, final Class<V> clazz) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count),
-				new Converter.ClazzScanResultMapBinaryConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern,
-													  final long count, final TypeReference<V> type) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count),
-				new Converter.TypeScanResultMapStringConverter<>(this, type));
-	}
-
-	@Override
-	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern,
-													  final long count, final TypeReference<V> type) {
-		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count),
-				new Converter.TypeScanResultMapBinaryConverter<>(this, type));
-	}
-
-	@Override
 	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final String pattern,
 													  final long count) {
 		return execute((client)->client.hashOperations().hScan(rawKey(key), cursor, pattern, count),
@@ -559,13 +513,57 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 	}
 
 	@Override
-	public <V> Long hSet(final String key, final String field, final V value) {
-		return hSet(key, field, serializer.serialize(value));
+	public <V> Long hSet(final String key, final List<KeyValue<String, V>> data) {
+		Map<String, String> temp = data.stream().collect(
+				Collectors.toMap(KeyValue::getKey, (e)->serializer.serialize(e.getValue()), (key1, key2)->key2,
+						LinkedHashMap::new));
+
+		return hSet(key, temp);
 	}
 
 	@Override
-	public <V> Long hSet(final byte[] key, final byte[] field, final V value) {
-		return hSet(key, field, serializer.serializeAsBytes(value));
+	public <V> Long hSet(final byte[] key, final List<KeyValue<byte[], V>> data) {
+		Map<byte[], byte[]> temp = data.stream().collect(
+				Collectors.toMap(KeyValue::getKey, (e)->serializer.serializeAsBytes(e.getValue()), (key1, key2)->key2,
+						LinkedHashMap::new));
+
+		return hSet(key, temp);
+	}
+
+	@Override
+	public <V> Status hSetEx(final String key, final List<KeyValue<String, V>> data) {
+		Map<String, String> temp = data.stream().collect(
+				Collectors.toMap(KeyValue::getKey, (e)->serializer.serialize(e.getValue()), (key1, key2)->key2,
+						LinkedHashMap::new));
+
+		return hSetEx(key, temp);
+	}
+
+	@Override
+	public <V> Status hSetEx(final byte[] key, final List<KeyValue<byte[], V>> data) {
+		Map<byte[], byte[]> temp = data.stream().collect(
+				Collectors.toMap(KeyValue::getKey, (e)->serializer.serializeAsBytes(e.getValue()), (key1, key2)->key2,
+						LinkedHashMap::new));
+
+		return hSetEx(key, temp);
+	}
+
+	@Override
+	public <V> Status hSetEx(final String key, final List<KeyValue<String, V>> data, final HSetExArgument argument) {
+		Map<String, String> temp = data.stream().collect(
+				Collectors.toMap(KeyValue::getKey, (e)->serializer.serialize(e.getValue()), (key1, key2)->key2,
+						LinkedHashMap::new));
+
+		return hSetEx(key, temp, argument);
+	}
+
+	@Override
+	public <V> Status hSetEx(final byte[] key, final List<KeyValue<byte[], V>> data, final HSetExArgument argument) {
+		Map<byte[], byte[]> temp = data.stream().collect(
+				Collectors.toMap(KeyValue::getKey, (e)->serializer.serializeAsBytes(e.getValue()), (key1, key2)->key2,
+						LinkedHashMap::new));
+
+		return hSetEx(key, temp, argument);
 	}
 
 	@Override

@@ -24,8 +24,16 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
+import com.buession.core.converter.Converter;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.AbstractRedisOperations;
+import com.buession.redis.utils.SafeEncoder;
+import io.lettuce.core.KeyValue;
+import io.lettuce.core.Value;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Lettuce Redis 命令操作抽象类
@@ -35,6 +43,34 @@ import com.buession.redis.client.operations.AbstractRedisOperations;
  */
 public abstract class AbstractLettuceRedisOperations extends AbstractRedisOperations<LettuceRedisClient>
 		implements LettuceRedisOperations {
+
+	protected final Converter<KeyValue<byte[], byte[]>, byte[]> binaryKeyValueToBinaryValueConverter =
+			Value::getValue;
+
+	protected final Converter<KeyValue<byte[], byte[]>, String> binaryKeyValueToStringValueConverter =
+			(kv)->SafeEncoder.encode(kv.getValue());
+
+	protected final Converter<List<KeyValue<byte[], byte[]>>, Map<byte[], byte[]>> binaryListKeyValueToBinaryMapConverter =
+			(list)->{
+				final Map<byte[], byte[]> map = new HashMap<>(list.size());
+
+				for(KeyValue<byte[], byte[]> kv : list){
+					map.put(kv.getKey(), kv.getValue());
+				}
+
+				return map;
+			};
+
+	protected final Converter<List<KeyValue<byte[], byte[]>>, Map<String, String>> binaryListKeyValueToStringMapConverter =
+			(list)->{
+				final Map<String, String> map = new HashMap<>(list.size());
+
+				for(KeyValue<byte[], byte[]> kv : list){
+					map.put(SafeEncoder.encode(kv.getKey()), SafeEncoder.encode(kv.getValue()));
+				}
+
+				return map;
+			};
 
 	public AbstractLettuceRedisOperations(final LettuceRedisClient client) {
 		super(client);

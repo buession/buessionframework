@@ -19,13 +19,16 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
 
 import com.buession.lang.Status;
+import com.buession.redis.core.ExpireOption;
 import com.buession.redis.core.ScanResult;
+import com.buession.redis.core.command.args.GetExArgument;
+import com.buession.redis.core.command.args.HSetExArgument;
 
 import java.util.List;
 import java.util.Map;
@@ -34,7 +37,7 @@ import java.util.Set;
 /**
  * 哈希表命令
  *
- * <p>详情说明 <a href="http://redisdoc.com/hash/index.html" target="_blank">http://redisdoc.com/hash/index.html</a></p>
+ * <p>详情说明 <a href="https://redis.io/docs/latest/commands//?group=hash" target="_blank">https://redis.io/docs/latest/commands//?group=hash</a></p>
  *
  * @author Yong.Teng
  */
@@ -97,6 +100,188 @@ public interface HashCommands extends RedisCommands {
 	Boolean hExists(final byte[] key, final byte[] field);
 
 	/**
+	 * 为哈希中的一个或多个字段设置生存时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpire/" target="_blank">https://redis.io/docs/latest/commands/hexpire/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param ttl
+	 * 		生存时间（单位：秒）
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	List<Long> hExpire(final String key, final long ttl, final String... fields);
+
+	/**
+	 * 为哈希中的一个或多个字段设置生存时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpire/" target="_blank">https://redis.io/docs/latest/commands/hexpire/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param ttl
+	 * 		生存时间（单位：秒）
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	List<Long> hExpire(final byte[] key, final long ttl, final byte[]... fields);
+
+	/**
+	 * 为哈希中的一个或多个字段设置生存时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpire/" target="_blank">https://redis.io/docs/latest/commands/hexpire/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param ttl
+	 * 		生存时间（单位：秒）
+	 * @param option
+	 * 		选项
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	List<Long> hExpire(final String key, final long ttl, final ExpireOption option, final String... fields);
+
+	/**
+	 * 为哈希中的一个或多个字段设置生存时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpire/" target="_blank">https://redis.io/docs/latest/commands/hexpire/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param ttl
+	 * 		生存时间（单位：秒）
+	 * @param option
+	 * 		选项
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	List<Long> hExpire(final byte[] key, final long ttl, final ExpireOption option, final byte[]... fields);
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param unixTimestamp
+	 * 		过期时间戳（单位：秒）
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	List<Long> hExpireAt(final String key, final long unixTimestamp, final String... fields);
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param unixTimestamp
+	 * 		过期时间戳（单位：秒）
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	List<Long> hExpireAt(final byte[] key, final long unixTimestamp, final byte[]... fields);
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param unixTimestamp
+	 * 		过期时间戳（单位：秒）
+	 * @param option
+	 * 		选项
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	List<Long> hExpireAt(final String key, final long unixTimestamp, final ExpireOption option, final String... fields);
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param unixTimestamp
+	 * 		过期时间戳（单位：秒）
+	 * @param option
+	 * 		选项
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	List<Long> hExpireAt(final byte[] key, final long unixTimestamp, final ExpireOption option, final byte[]... fields);
+
+	/**
+	 * 获取哈希中的一个或多个字段的过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpiretime/" target="_blank">https://redis.io/docs/latest/commands/hexpiretime/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;-1 if the field exists but has no associated expiration set;
+	 * the expiration (Unix timestamp) in seconds.
+	 */
+	List<Long> hExpireTime(final String key, final String... fields);
+
+	/**
+	 * 获取哈希中的一个或多个字段的过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpiretime/" target="_blank">https://redis.io/docs/latest/commands/hexpiretime/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;-1 if the field exists but has no associated expiration set;
+	 * the expiration (Unix timestamp) in seconds.
+	 */
+	List<Long> hExpireTime(final byte[] key, final byte[]... fields);
+
+	/**
 	 * 获取哈希表中给定域的值
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/hash/hget.html" target="_blank">http://redisdoc.com/hash/hget.html</a></p>
@@ -147,6 +332,94 @@ public interface HashCommands extends RedisCommands {
 	 * @return 哈希表 key 中，所有的域和值
 	 */
 	Map<byte[], byte[]> hGetAll(final byte[] key);
+
+	/**
+	 * 从哈希（Hash）中获取一个字段的值，并同时删除该字段
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hgetdel/" target="_blank">https://redis.io/docs/latest/commands/hgetdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return 哈希表 key 中获取并删除域的值
+	 */
+	List<String> hGetDel(final String key, final String... fields);
+
+	/**
+	 * 从哈希（Hash）中获取一个字段的值，并同时删除该字段
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hgetdel/" target="_blank">https://redis.io/docs/latest/commands/hgetdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return 哈哈希表 key 中获取并删除域的值
+	 */
+	List<byte[]> hGetDel(final byte[] key, final byte[]... fields);
+
+	/**
+	 * 从哈希（Hash）中获取一个或多个字段的值，并同时为这些字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hgetex/" target="_blank">https://redis.io/docs/latest/commands/hgetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return 哈希表 key 中获取并删除域的值
+	 */
+	List<String> hGetEx(final String key, final String... fields);
+
+	/**
+	 * 从哈希（Hash）中获取一个或多个字段的值，并同时为这些字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hgetex/" target="_blank">https://redis.io/docs/latest/commands/hgetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return 哈哈希表 key 中获取并删除域的值
+	 */
+	List<byte[]> hGetEx(final byte[] key, final byte[]... fields);
+
+	/**
+	 * 从哈希（Hash）中获取一个或多个字段的值，并同时为这些字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hgetex/" target="_blank">https://redis.io/docs/latest/commands/hgetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param argument
+	 * 		参数
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return 哈希表 key 中获取并删除域的值
+	 */
+	List<String> hGetEx(final String key, final GetExArgument argument, final String... fields);
+
+	/**
+	 * 从哈希（Hash）中获取一个或多个字段的值，并同时为这些字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hgetex/" target="_blank">https://redis.io/docs/latest/commands/hgetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param argument
+	 * 		参数
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return 哈哈希表 key 中获取并删除域的值
+	 */
+	List<byte[]> hGetEx(final byte[] key, final GetExArgument argument, final byte[]... fields);
 
 	/**
 	 * 为哈希表 key 中的域 field 的值加上增量 increment
@@ -317,6 +590,252 @@ public interface HashCommands extends RedisCommands {
 	Status hMSet(final byte[] key, final Map<byte[], byte[]> data);
 
 	/**
+	 * 移除哈希（Hash）中一个或多个字段（field）的过期时间（TTL），使其变为永不过期
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hpersist/" target="_blank">https://redis.io/docs/latest/commands/hpersist/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;
+	 * -1 if the field exists but has no associated expiration set;
+	 * 1 the expiration was removed.
+	 */
+	List<Long> hPersist(final String key, final String... fields);
+
+	/**
+	 * 移除哈希（Hash）中一个或多个字段（field）的过期时间（TTL），使其变为永不过期
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hpersist/" target="_blank">https://redis.io/docs/latest/commands/hpersist/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;
+	 * -1 if the field exists but has no associated expiration set;
+	 * 1 the expiration was removed.
+	 */
+	List<Long> hPersist(final byte[] key, final byte[]... fields);
+
+	/**
+	 * 为哈希中的一个或多个字段设置生存时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hpexpire/" target="_blank">https://redis.io/docs/latest/commands/hpexpire/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param ttl
+	 * 		生存时间（单位：毫秒）
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	List<Long> hPExpire(final String key, final long ttl, final String... fields);
+
+	/**
+	 * 为哈希中的一个或多个字段设置生存时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hpexpire/" target="_blank">https://redis.io/docs/latest/commands/hpexpire/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param ttl
+	 * 		生存时间（单位：毫秒）
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	List<Long> hPExpire(final byte[] key, final long ttl, final byte[]... fields);
+
+	/**
+	 * 为哈希中的一个或多个字段设置生存时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hpexpire/" target="_blank">https://redis.io/docs/latest/commands/hpexpire/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param ttl
+	 * 		生存时间（单位：毫秒）
+	 * @param option
+	 * 		选项
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	List<Long> hPExpire(final String key, final long ttl, final ExpireOption option, final String... fields);
+
+	/**
+	 * 为哈希中的一个或多个字段设置生存时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hpexpire/" target="_blank">https://redis.io/docs/latest/commands/hpexpire/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param ttl
+	 * 		生存时间（单位：毫秒）
+	 * @param option
+	 * 		选项
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	List<Long> hPExpire(final byte[] key, final long ttl, final ExpireOption option, final byte[]... fields);
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hpexpireat/" target="_blank">https://redis.io/docs/latest/commands/hpexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param unixTimestamp
+	 * 		过期时间戳（单位：毫秒）
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	List<Long> hPExpireAt(final String key, final long unixTimestamp, final String... fields);
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hpexpireat/" target="_blank">https://redis.io/docs/latest/commands/hpexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param unixTimestamp
+	 * 		过期时间戳（单位：毫秒）
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	List<Long> hPExpireAt(final byte[] key, final long unixTimestamp, final byte[]... fields);
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hpexpireat/" target="_blank">https://redis.io/docs/latest/commands/hpexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param unixTimestamp
+	 * 		过期时间戳（单位：毫秒）
+	 * @param option
+	 * 		选项
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	List<Long> hPExpireAt(final String key, final long unixTimestamp, final ExpireOption option,
+						  final String... fields);
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hpexpireat/" target="_blank">https://redis.io/docs/latest/commands/hpexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param unixTimestamp
+	 * 		过期时间戳（单位：毫秒）
+	 * @param option
+	 * 		选项
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	List<Long> hPExpireAt(final byte[] key, final long unixTimestamp, final ExpireOption option,
+						  final byte[]... fields);
+
+	/**
+	 * 获取哈希中的一个或多个字段的过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hpexpiretime/" target="_blank">https://redis.io/docs/latest/commands/hpexpiretime/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;-1 if the field exists but has no associated expiration set;
+	 * the expiration (Unix timestamp) in milliseconds.
+	 */
+	List<Long> hPExpireTime(final String key, final String... fields);
+
+	/**
+	 * 获取哈希中的一个或多个字段的过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hpexpiretime/" target="_blank">https://redis.io/docs/latest/commands/hpexpiretime/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;-1 if the field exists but has no associated expiration set;
+	 * the expiration (Unix timestamp) in milliseconds.
+	 */
+	List<Long> hPExpireTime(final byte[] key, final byte[]... fields);
+
+	/**
+	 * 获取哈希中的一个或多个字段的剩余过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hpttl/" target="_blank">https://redis.io/docs/latest/commands/hpttl/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;-1 if the field exists but has no associated expiration set.;
+	 * the TTL in milliseconds.
+	 */
+	List<Long> hPTtl(final String key, final String... fields);
+
+	/**
+	 * 获取哈希中的一个或多个字段的剩余过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hpttl/" target="_blank">https://redis.io/docs/latest/commands/hpttl/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;-1 if the field exists but has no associated expiration set.;
+	 * the TTL in milliseconds.
+	 */
+	List<Long> hPTtl(final byte[] key, final byte[]... fields);
+
+	/**
 	 * 随机返回一个哈希表中存在的域
 	 *
 	 * <p>详情说明 <a href="https://redis.io/commands/hrandfield/" target="_blank">https://redis.io/commands/hrandfield/</a></p>
@@ -412,34 +931,6 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	ScanResult<Map<String, String>> hScan(final String key, final long cursor);
-
-	/**
-	 * 迭代哈希键 key 中的键值对
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor);
-
-	/**
-	 * 迭代哈希键 key 中的键值对
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
 	ScanResult<Map<String, String>> hScan(final String key, final String cursor);
 
 	/**
@@ -455,38 +946,6 @@ public interface HashCommands extends RedisCommands {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor);
-
-	/**
-	 * 迭代哈希键 key 中的键值对
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 *
-	 * @return 返回和给定模式相匹配的元素
-	 */
-	ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern);
-
-	/**
-	 * 迭代哈希键 key 中的键值对
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 *
-	 * @return 返回和给定模式相匹配的元素
-	 */
-	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern);
 
 	/**
 	 * 迭代哈希键 key 中的键值对
@@ -519,38 +978,6 @@ public interface HashCommands extends RedisCommands {
 	 * @return 返回和给定模式相匹配的元素
 	 */
 	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern);
-
-	/**
-	 * 迭代哈希键 key 中的键值对
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回的指定数量的键值对
-	 */
-	ScanResult<Map<String, String>> hScan(final String key, final long cursor, final long count);
-
-	/**
-	 * 迭代哈希键 key 中的键值对
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回的指定数量的键值对
-	 */
-	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final long count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对
@@ -600,42 +1027,6 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
-	ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern, final long count);
-
-	/**
-	 * 迭代哈希键 key 中的键值对
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回和给定模式相匹配指定数量的元素
-	 */
-	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern, final long count);
-
-	/**
-	 * 迭代哈希键 key 中的键值对
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回和给定模式相匹配指定数量的元素
-	 */
 	ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
 										  final long count);
 
@@ -659,40 +1050,92 @@ public interface HashCommands extends RedisCommands {
 										  final long count);
 
 	/**
-	 * 将哈希表 key 中域 field 的值设置为 value。
-	 * 如果给定的哈希表并不存在，那么一个新的哈希表；
-	 * 如果域 field 已经存在于哈希表中，那么 value 将覆盖旧值
+	 * 批量将多个 field =&gt; value (域-值)对设置到哈希表 key 中
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hset.html" target="_blank">http://redisdoc.com/hash/hset.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hset/" target="_blank">https://redis.io/docs/latest/commands/hset/</a></p>
 	 *
 	 * @param key
 	 * 		Key
-	 * @param field
-	 * 		域
-	 * @param value
-	 * 		值
+	 * @param data
+	 * 		field =&gt; value (域-值)对
 	 *
 	 * @return 被修改或增加的 field 个数
 	 */
-	Long hSet(final String key, final String field, final String value);
+	Long hSet(final String key, final Map<String, String> data);
 
 	/**
-	 * 将哈希表 key 中域 field 的值设置为 value。
-	 * 如果给定的哈希表并不存在，那么一个新的哈希表；
-	 * 如果域 field 已经存在于哈希表中，那么 value 将覆盖旧值
+	 * 批量将多个 field =&gt; value (域-值)对设置到哈希表 key 中
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hset.html" target="_blank">http://redisdoc.com/hash/hset.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hset/" target="_blank">https://redis.io/docs/latest/commands/hset/</a></p>
 	 *
 	 * @param key
 	 * 		Key
-	 * @param field
-	 * 		域
-	 * @param value
-	 * 		值
+	 * @param data
+	 * 		field =&gt; value (域-值)对
 	 *
 	 * @return 被修改或增加的 field 个数
 	 */
-	Long hSet(final byte[] key, final byte[] field, final byte[] value);
+	Long hSet(final byte[] key, final Map<byte[], byte[]> data);
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param data
+	 * 		field =&gt; value (域-值)对
+	 *
+	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
+	 */
+	Status hSetEx(final String key, final Map<String, String> data);
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param data
+	 * 		field =&gt; value (域-值)对
+	 *
+	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
+	 */
+	Status hSetEx(final byte[] key, final Map<byte[], byte[]> data);
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param data
+	 * 		field =&gt; value (域-值)对
+	 * @param argument
+	 * 		参数
+	 *
+	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
+	 */
+	Status hSetEx(final String key, final Map<String, String> data, final HSetExArgument argument);
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param data
+	 * 		field =&gt; value (域-值)对
+	 * @param argument
+	 * 		参数
+	 *
+	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
+	 */
+	Status hSetEx(final byte[] key, final Map<byte[], byte[]> data, final HSetExArgument argument);
 
 	/**
 	 * 当且仅当域 field 尚未存在于哈希表 key 中的情况下，将它的值设置为 value
@@ -753,6 +1196,34 @@ public interface HashCommands extends RedisCommands {
 	 * @return 哈希表 key 中，与给定域 field 相关联的值的字符串长度
 	 */
 	Long hStrLen(final byte[] key, final byte[] field);
+
+	/**
+	 * 获取哈希表 key 中字段 field 的剩余生存时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/httl/" target="_blank">https://redis.io/docs/latest/commands/httl/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return 哈希表 key 中字段 field 的剩余生存时间（单位：秒）;-1 为永不过期；-2为 key 或 field 不存在，或 key 不为 hash
+	 */
+	List<Long> hTtl(final String key, final String... fields);
+
+	/**
+	 * 获取哈希表 key 中字段 field 的剩余生存时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/httl/" target="_blank">https://redis.io/docs/latest/commands/httl/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return 哈希表 key 中字段 field 的剩余生存时间（单位：秒）;-1 为永不过期；-2为 key 或 field 不存在，或 key 不为 hash
+	 */
+	List<Long> hTtl(final byte[] key, final byte[]... fields);
 
 	/**
 	 * 获取哈希表 key 中所有域的值

@@ -19,13 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.MapConverter;
 import com.buession.lang.Geo;
 import redis.clients.jedis.GeoCoordinate;
 
@@ -40,10 +39,6 @@ public final class GeoConverter implements Converter<Geo, GeoCoordinate> {
 	@Override
 	public GeoCoordinate convert(final Geo source) {
 		return new GeoCoordinate(source.getLongitude(), source.getLatitude());
-	}
-
-	public static <K> MapConverter<K, Geo, K, GeoCoordinate> mapConverter() {
-		return new MapConverter<>((key)->key, new GeoConverter());
 	}
 
 }

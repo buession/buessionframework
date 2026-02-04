@@ -29,18 +29,4 @@ package com.buession.redis.core.command;
  */
 public interface RedisCommands {
 
-	abstract class BaseArgumentBuilder<ARG> {
-
-		protected final ARG arguament;
-
-		public BaseArgumentBuilder(final ARG arguament) {
-			this.arguament = arguament;
-		}
-
-		public ARG build() {
-			return arguament;
-		}
-
-	}
-
 }

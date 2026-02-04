@@ -157,11 +157,13 @@ public enum Command implements ProtocolCommand {
 	 */
 	AUTH(CommandGroup.CONNECTION, "r"),
 
-	CLIENT(CommandGroup.CONNECTION, "rw", new SubCommand[]{SubCommand.CLIENT_CACHING, SubCommand.CLIENT_GETNAME,
-			SubCommand.CLIENT_GETREDIR, SubCommand.CLIENT_ID, SubCommand.CLIENT_INFO, SubCommand.CLIENT_KILL,
-			SubCommand.CLIENT_LIST, SubCommand.CLIENT_NO_EVICT, SubCommand.CLIENT_NO_TOUCH, SubCommand.CLIENT_PAUSE,
-			SubCommand.CLIENT_REPLY, SubCommand.CLIENT_SETINFO, SubCommand.CLIENT_SETNAME, SubCommand.CLIENT_TRACKING,
-			SubCommand.CLIENT_TRACKINGINFO, SubCommand.CLIENT_UNBLOCK, SubCommand.CLIENT_UNPAUSE}),
+	CLIENT(CommandGroup.CONNECTION, "rw",
+			new SubCommand[]{SubCommand.CLIENT_CACHING, SubCommand.CLIENT_GETNAME, SubCommand.CLIENT_GETREDIR,
+					SubCommand.CLIENT_ID, SubCommand.CLIENT_INFO, SubCommand.CLIENT_KILL, SubCommand.CLIENT_LIST,
+					SubCommand.CLIENT_NO_EVICT, SubCommand.CLIENT_NO_TOUCH, SubCommand.CLIENT_PAUSE,
+					SubCommand.CLIENT_REPLY, SubCommand.CLIENT_SETINFO, SubCommand.CLIENT_SETNAME,
+					SubCommand.CLIENT_TRACKING, SubCommand.CLIENT_TRACKINGINFO, SubCommand.CLIENT_UNBLOCK,
+					SubCommand.CLIENT_UNPAUSE}),
 
 	ECHO(CommandGroup.CONNECTION, "w"),
 
@@ -212,6 +214,68 @@ public enum Command implements ProtocolCommand {
 	GEOSEARCHSTORE(CommandGroup.GEO, "rw"),
 	/**
 	 * geo command end
+	 **/
+
+	/**
+	 * hash command start
+	 **/
+	HDEL(CommandGroup.HASH, "w"),
+
+	HEXISTS(CommandGroup.HASH, "r"),
+
+	HEXPIRE(CommandGroup.HASH, "w"),
+
+	HEXPIREAT(CommandGroup.HASH, "w"),
+
+	HEXPIRETIME(CommandGroup.HASH, "w"),
+
+	HGET(CommandGroup.HASH, "r"),
+
+	HGETALL(CommandGroup.HASH, "r"),
+
+	HGETDEL(CommandGroup.HASH, "rw"),
+
+	HGETEX(CommandGroup.HASH, "rw"),
+
+	HINCRBY(CommandGroup.HASH, "rw"),
+
+	HINCRBYFLOAT(CommandGroup.HASH, "rw"),
+
+	HKEYS(CommandGroup.HASH, "r"),
+
+	HLEN(CommandGroup.HASH, "r"),
+
+	HMGET(CommandGroup.HASH, "r"),
+
+	HMSET(CommandGroup.HASH, "w"),
+
+	HPERSIST(CommandGroup.HASH, "w"),
+
+	HPEXPIRE(CommandGroup.HASH, "w"),
+
+	HPEXPIREAT(CommandGroup.HASH, "w"),
+
+	HPEXPIRETIME(CommandGroup.HASH, "w"),
+
+	HPTTL(CommandGroup.HASH, "r"),
+
+	HRANDFIELD(CommandGroup.HASH, "r"),
+
+	HSCAN(CommandGroup.HASH, "r"),
+
+	HSET(CommandGroup.HASH, "w"),
+
+	HSETEX(CommandGroup.HASH, "w"),
+
+	HSETNX(CommandGroup.HASH, "w"),
+
+	HSTRLEN(CommandGroup.HASH, "r"),
+
+	HTTL(CommandGroup.HASH, "r"),
+
+	HVALS(CommandGroup.HASH, "r"),
+	/**
+	 * hash command end
 	 **/
 	;
 

@@ -25,12 +25,21 @@
 package com.buession.redis.core.operations;
 
 import com.buession.core.type.TypeReference;
+import com.buession.core.utils.NumberUtils;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
+import com.buession.redis.core.ExpireOption;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.HashCommands;
+import com.buession.redis.core.command.args.GetExArgument;
+import com.buession.redis.core.command.args.HSetExArgument;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -38,7 +47,7 @@ import java.util.Set;
 /**
  * 哈希表运算
  *
- * <p>详情说明 <a href="http://redisdoc.com/hash/index.html" target="_blank">http://redisdoc.com/hash/index.html</a></p>
+ * <p>详情说明 <a href="https://redis.io/docs/latest/commands//?group=hash" target="_blank">https://redis.io/docs/latest/commands//?group=hash</a></p>
  *
  * @author Yong.Teng
  */
@@ -94,6 +103,400 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	@Override
 	default Boolean hExists(final byte[] key, final byte[] field) {
 		return execute((client)->client.hashOperations().hExists(key, field));
+	}
+
+	@Override
+	default List<Long> hExpire(final String key, final long ttl, final String... fields) {
+		return execute((client)->client.hashOperations().hExpire(key, ttl, fields));
+	}
+
+	@Override
+	default List<Long> hExpire(final byte[] key, final long ttl, final byte[]... fields) {
+		return execute((client)->client.hashOperations().hExpire(key, ttl, fields));
+	}
+
+	@Override
+	default List<Long> hExpire(final String key, final long ttl, final ExpireOption option, final String... fields) {
+		return execute((client)->client.hashOperations().hExpire(key, ttl, option, fields));
+	}
+
+	@Override
+	default List<Long> hExpire(final byte[] key, final long ttl, final ExpireOption option, final byte[]... fields) {
+		return execute((client)->client.hashOperations().hExpire(key, ttl, option, fields));
+	}
+
+	@Override
+	default List<Long> hExpireAt(final String key, final long unixTimestamp, final String... fields) {
+		return execute((client)->client.hashOperations().hExpireAt(key, unixTimestamp, fields));
+	}
+
+	@Override
+	default List<Long> hExpireAt(final byte[] key, final long unixTimestamp, final byte[]... fields) {
+		return execute((client)->client.hashOperations().hExpireAt(key, unixTimestamp, fields));
+	}
+
+	@Override
+	default List<Long> hExpireAt(final String key, final long unixTimestamp, final ExpireOption option,
+								 final String... fields) {
+		return execute((client)->client.hashOperations().hExpireAt(key, unixTimestamp, option, fields));
+	}
+
+	@Override
+	default List<Long> hExpireAt(final byte[] key, final long unixTimestamp, final ExpireOption option,
+								 final byte[]... fields) {
+		return execute((client)->client.hashOperations().hExpireAt(key, unixTimestamp, option, fields));
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param date
+	 * 		过期时间
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hExpireAt(final String key, final Date date, final String... fields) {
+		return hExpireAt(key, date.getTime() / 1000, fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param date
+	 * 		过期时间
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hExpireAt(final byte[] key, final Date date, final byte[]... fields) {
+		return hExpireAt(key, date.getTime() / 1000, fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param dateTime
+	 * 		过期时间
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hExpireAt(final String key, final LocalDateTime dateTime, final String... fields) {
+		return hExpireAt(key, dateTime.atZone(ZoneId.systemDefault()).toInstant(), fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param dateTime
+	 * 		过期时间
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hExpireAt(final byte[] key, final LocalDateTime dateTime, final byte[]... fields) {
+		return hExpireAt(key, dateTime.atZone(ZoneId.systemDefault()).toInstant(), fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param dateTime
+	 * 		过期时间
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hExpireAt(final String key, final ZonedDateTime dateTime, final String... fields) {
+		return hExpireAt(key, dateTime.toEpochSecond(), fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param dateTime
+	 * 		过期时间
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hExpireAt(final byte[] key, final ZonedDateTime dateTime, final byte[]... fields) {
+		return hExpireAt(key, dateTime.toEpochSecond(), fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param instant
+	 * 		过期时间
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hExpireAt(final String key, final Instant instant, final String... fields) {
+		return hExpireAt(key, instant.toEpochMilli() / 1000, fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param instant
+	 * 		过期时间
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hExpireAt(final byte[] key, final Instant instant, final byte[]... fields) {
+		return hExpireAt(key, instant.toEpochMilli() / 1000, fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param date
+	 * 		过期时间
+	 * @param option
+	 * 		选项
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hExpireAt(final String key, final Date date, final ExpireOption option, final String... fields) {
+		return hExpireAt(key, date.getTime(), option, fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param dateTime
+	 * 		过期时间
+	 * @param option
+	 * 		选项
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hExpireAt(final String key, final LocalDateTime dateTime, final ExpireOption option,
+								 final String... fields) {
+		return hExpireAt(key, dateTime.atZone(ZoneId.systemDefault()).toInstant(), option, fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param dateTime
+	 * 		过期时间
+	 * @param option
+	 * 		选项
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hExpireAt(final String key, final ZonedDateTime dateTime, final ExpireOption option,
+								 final String... fields) {
+		return hExpireAt(key, dateTime.toEpochSecond(), option, fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param instant
+	 * 		过期时间
+	 * @param option
+	 * 		选项
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hExpireAt(final String key, final Instant instant, final ExpireOption option,
+								 final String... fields) {
+		return hExpireAt(key, instant.toEpochMilli() / 1000, option, fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param date
+	 * 		过期时间
+	 * @param option
+	 * 		选项
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hExpireAt(final byte[] key, final Date date, final ExpireOption option, final byte[]... fields) {
+		return hExpireAt(key, date.getTime(), option, fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param dateTime
+	 * 		过期时间
+	 * @param option
+	 * 		选项
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hExpireAt(final byte[] key, final LocalDateTime dateTime, final ExpireOption option,
+								 final byte[]... fields) {
+		return hExpireAt(key, dateTime.atZone(ZoneId.systemDefault()).toInstant(), option, fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param instant
+	 * 		过期时间
+	 * @param option
+	 * 		选项
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hExpireAt(final byte[] key, final Instant instant, final ExpireOption option,
+								 final byte[]... fields) {
+		return hExpireAt(key, instant.toEpochMilli() / 1000, option, fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param dateTime
+	 * 		过期时间
+	 * @param option
+	 * 		选项
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hExpireAt(final byte[] key, final ZonedDateTime dateTime, final ExpireOption option,
+								 final byte[]... fields) {
+		return hExpireAt(key, dateTime.toEpochSecond(), option, fields);
+	}
+
+	@Override
+	default List<Long> hExpireTime(final String key, final String... fields) {
+		return execute((client)->client.hashOperations().hExpireTime(key, fields));
+	}
+
+	@Override
+	default List<Long> hExpireTime(final byte[] key, final byte[]... fields) {
+		return execute((client)->client.hashOperations().hExpireTime(key, fields));
 	}
 
 	@Override
@@ -189,8 +592,6 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 哈希表中给定域的值反序列化后的对象，如果给定域不存在于哈希表中，又或者给定的哈希表并不存在，则返回 null
-	 *
-	 * @see TypeReference
 	 */
 	<V> V hGetObject(final String key, final String field, final TypeReference<V> type);
 
@@ -209,8 +610,6 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 哈希表中给定域的值反序列化后的对象，如果给定域不存在于哈希表中，又或者给定的哈希表并不存在，则返回 null
-	 *
-	 * @see TypeReference
 	 */
 	<V> V hGetObject(final byte[] key, final byte[] field, final TypeReference<V> type);
 
@@ -297,8 +696,6 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 哈希表 key 中，所有的域和值
-	 *
-	 * @see TypeReference
 	 */
 	<V> Map<String, V> hGetAllObject(final String key, final TypeReference<V> type);
 
@@ -315,10 +712,364 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 哈希表 key 中，所有的域和值
-	 *
-	 * @see TypeReference
 	 */
 	<V> Map<byte[], V> hGetAllObject(final byte[] key, final TypeReference<V> type);
+
+	@Override
+	default List<String> hGetDel(final String key, final String... fields) {
+		return execute((client)->client.hashOperations().hGetDel(key, fields));
+	}
+
+	@Override
+	default List<byte[]> hGetDel(final byte[] key, final byte[]... fields) {
+		return execute((client)->client.hashOperations().hGetDel(key, fields));
+	}
+
+	/**
+	 * 从哈希（Hash）中获取一个字段的值，并同时删除该字段
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hgetdel/" target="_blank">https://redis.io/docs/latest/commands/hgetdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		一个或多个域
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 哈希表 key 中获取并删除域的值
+	 */
+	<V> List<V> hGetDelObject(final String key, final String... fields);
+
+	/**
+	 * 获取哈希表 key 中，所有的域和值，并将值反序列化为对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hgetdel/" target="_blank">https://redis.io/docs/latest/commands/hgetdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		一个或多个域
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 哈希表 key 中获取并删除域的值
+	 */
+	<V> List<V> hGetDelObject(final byte[] key, final byte[]... fields);
+
+	/**
+	 * 获取哈希表 key 中，所有的域和值，并将值反序列化为对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hgetdel/" target="_blank">https://redis.io/docs/latest/commands/hgetdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		一个或多个域
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 哈希表 key 中，所有的域和值
+	 */
+	<V> List<V> hGetDelObject(final String key, final String[] fields, final Class<V> clazz);
+
+	/**
+	 * 获取哈希表 key 中，所有的域和值，并将值反序列化为对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hgetdel/" target="_blank">https://redis.io/docs/latest/commands/hgetdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		一个或多个域
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 哈希表 key 中，所有的域和值
+	 */
+	<V> List<V> hGetDelObject(final byte[] key, final byte[][] fields, final Class<V> clazz);
+
+	/**
+	 * 获取哈希表 key 中，所有的域和值，并将值反序列化为对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hgetdel/" target="_blank">https://redis.io/docs/latest/commands/hgetdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		一个或多个域
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 哈希表 key 中，所有的域和值
+	 */
+	<V> List<V> hGetDelObject(final String key, final String[] fields, final TypeReference<V> type);
+
+	/**
+	 * 获取哈希表 key 中，所有的域和值，并将值反序列化为对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hgetdel/" target="_blank">https://redis.io/docs/latest/commands/hgetdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		一个或多个域
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 哈希表 key 中，所有的域和值
+	 */
+	<V> List<V> hGetDelObject(final byte[] key, final byte[][] fields, final TypeReference<V> type);
+
+	@Override
+	default List<String> hGetEx(final String key, final String... fields) {
+		return execute((client)->client.hashOperations().hGetEx(key, fields));
+	}
+
+	@Override
+	default List<byte[]> hGetEx(final byte[] key, final byte[]... fields) {
+		return execute((client)->client.hashOperations().hGetEx(key, fields));
+	}
+
+	@Override
+	default List<String> hGetEx(final String key, final GetExArgument argument, final String... fields) {
+		return execute((client)->client.hashOperations().hGetEx(key, argument, fields));
+	}
+
+	@Override
+	default List<byte[]> hGetEx(final byte[] key, final GetExArgument argument, final byte[]... fields) {
+		return execute((client)->client.hashOperations().hGetEx(key, argument, fields));
+	}
+
+	/**
+	 * 从哈希（Hash）中获取一个字段的值，并将值反序列化为对象，并同时删除该字段
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hgetdel/" target="_blank">https://redis.io/docs/latest/commands/hgetdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		一个或多个域
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 哈希表 key 中获取并删除域的值
+	 */
+	<V> List<V> hGetExObject(final String key, final String... fields);
+
+	/**
+	 * 从哈希（Hash）中获取一个字段的值，并将值反序列化为对象，并同时删除该字段
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hgetdel/" target="_blank">https://redis.io/docs/latest/commands/hgetdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		一个或多个域
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 哈希表 key 中获取并删除域的值
+	 */
+	<V> List<V> hGetExObject(final byte[] key, final byte[]... fields);
+
+	/**
+	 * 从哈希（Hash）中获取一个字段的值，并将值反序列化为对象，并同时删除该字段
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hgetdel/" target="_blank">https://redis.io/docs/latest/commands/hgetdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		一个或多个域
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 哈希表 key 中获取并删除域的值
+	 */
+	<V> List<V> hGetExObject(final String key, final String[] fields, final Class<V> clazz);
+
+	/**
+	 * 从哈希（Hash）中获取一个字段的值，并将值反序列化为对象，并同时删除该字段
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hgetdel/" target="_blank">https://redis.io/docs/latest/commands/hgetdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		一个或多个域
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 哈希表 key 中获取并删除域的值
+	 */
+	<V> List<V> hGetExObject(final byte[] key, final byte[][] fields, final Class<V> clazz);
+
+	/**
+	 * 从哈希（Hash）中获取一个字段的值，并将值反序列化为对象，并同时删除该字段
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hgetdel/" target="_blank">https://redis.io/docs/latest/commands/hgetdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		一个或多个域
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 哈希表 key 中获取并删除域的值
+	 */
+	<V> List<V> hGetExObject(final String key, final String[] fields, final TypeReference<V> type);
+
+	/**
+	 * 从哈希（Hash）中获取一个字段的值，并将值反序列化为对象，并同时删除该字段
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hgetdel/" target="_blank">https://redis.io/docs/latest/commands/hgetdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		一个或多个域
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 哈希表 key 中获取并删除域的值
+	 */
+	<V> List<V> hGetExObject(final byte[] key, final byte[][] fields, final TypeReference<V> type);
+
+	/**
+	 * 从哈希（Hash）中获取一个字段的值，并将值反序列化为对象，并同时删除该字段
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hgetdel/" target="_blank">https://redis.io/docs/latest/commands/hgetdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param argument
+	 * 		参数
+	 * @param fields
+	 * 		一个或多个域
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 哈希表 key 中获取并删除域的值
+	 */
+	<V> List<V> hGetExObject(final String key, final GetExArgument argument, final String... fields);
+
+	/**
+	 * 从哈希（Hash）中获取一个字段的值，并将值反序列化为对象，并同时删除该字段
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hgetdel/" target="_blank">https://redis.io/docs/latest/commands/hgetdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param argument
+	 * 		参数
+	 * @param fields
+	 * 		一个或多个域
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 哈希表 key 中获取并删除域的值
+	 */
+	<V> List<V> hGetExObject(final byte[] key, final GetExArgument argument, final byte[]... fields);
+
+	/**
+	 * 从哈希（Hash）中获取一个字段的值，并将值反序列化为对象，并同时删除该字段
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hgetdel/" target="_blank">https://redis.io/docs/latest/commands/hgetdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		一个或多个域
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 哈希表 key 中获取并删除域的值
+	 */
+	<V> List<V> hGetExObject(final String key, final GetExArgument argument, final String[] fields,
+							 final Class<V> clazz);
+
+	/**
+	 * 从哈希（Hash）中获取一个字段的值，并将值反序列化为对象，并同时删除该字段
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hgetdel/" target="_blank">https://redis.io/docs/latest/commands/hgetdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param argument
+	 * 		参数
+	 * @param fields
+	 * 		一个或多个域
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 哈希表 key 中获取并删除域的值
+	 */
+	<V> List<V> hGetExObject(final byte[] key, final GetExArgument argument, final byte[][] fields,
+							 final Class<V> clazz);
+
+	/**
+	 * 从哈希（Hash）中获取一个字段的值，并将值反序列化为对象，并同时删除该字段
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hgetdel/" target="_blank">https://redis.io/docs/latest/commands/hgetdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param argument
+	 * 		参数
+	 * @param fields
+	 * 		一个或多个域
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 哈希表 key 中获取并删除域的值
+	 */
+	<V> List<V> hGetExObject(final String key, final GetExArgument argument, final String[] fields,
+							 final TypeReference<V> type);
+
+	/**
+	 * 从哈希（Hash）中获取一个字段的值，并将值反序列化为对象，并同时删除该字段
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hgetdel/" target="_blank">https://redis.io/docs/latest/commands/hgetdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param argument
+	 * 		参数
+	 * @param fields
+	 * 		一个或多个域
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 哈希表 key 中获取并删除域的值
+	 */
+	<V> List<V> hGetExObject(final byte[] key, final GetExArgument argument, final byte[][] fields,
+							 final TypeReference<V> type);
 
 	@Override
 	default Long hIncrBy(final String key, final String field, final long value) {
@@ -525,8 +1276,6 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 一个包含多个给定域的关联值的表，值的排列顺序和给定域参数的请求顺序一样
-	 *
-	 * @see TypeReference
 	 */
 	<V> List<V> hMGetObject(final String key, final String[] fields, final TypeReference<V> type);
 
@@ -545,8 +1294,6 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 一个包含多个给定域的关联值的表，值的排列顺序和给定域参数的请求顺序一样
-	 *
-	 * @see TypeReference
 	 */
 	<V> List<V> hMGetObject(final byte[] key, final byte[][] fields, final TypeReference<V> type);
 
@@ -632,6 +1379,412 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	@SuppressWarnings({"unchecked"})
 	default <V> Status hMSet(final byte[] key, final KeyValue<byte[], V>... data) {
 		return hMSet(key, Arrays.asList(data));
+	}
+
+	@Override
+	default List<Long> hPersist(final String key, final String... fields) {
+		return execute((client)->client.hashOperations().hPersist(key, fields));
+	}
+
+	@Override
+	default List<Long> hPersist(final byte[] key, final byte[]... fields) {
+		return execute((client)->client.hashOperations().hPersist(key, fields));
+	}
+
+	@Override
+	default List<Long> hPExpire(final String key, final long ttl, final String... fields) {
+		return execute((client)->client.hashOperations().hPExpire(key, ttl, fields));
+	}
+
+	@Override
+	default List<Long> hPExpire(final byte[] key, final long ttl, final byte[]... fields) {
+		return execute((client)->client.hashOperations().hPExpire(key, ttl, fields));
+	}
+
+	@Override
+	default List<Long> hPExpire(final String key, final long ttl, final ExpireOption option, final String... fields) {
+		return execute((client)->client.hashOperations().hPExpire(key, ttl, option, fields));
+	}
+
+	@Override
+	default List<Long> hPExpire(final byte[] key, final long ttl, final ExpireOption option, final byte[]... fields) {
+		return execute((client)->client.hashOperations().hPExpire(key, ttl, option, fields));
+	}
+
+	@Override
+	default List<Long> hPExpireAt(final String key, final long unixTimestamp, final String... fields) {
+		return execute((client)->client.hashOperations().hPExpireAt(key, unixTimestamp, fields));
+	}
+
+	@Override
+	default List<Long> hPExpireAt(final byte[] key, final long unixTimestamp, final byte[]... fields) {
+		return execute((client)->client.hashOperations().hPExpireAt(key, unixTimestamp, fields));
+	}
+
+	@Override
+	default List<Long> hPExpireAt(final String key, final long unixTimestamp, final ExpireOption option,
+								  final String... fields) {
+		return execute((client)->client.hashOperations().hPExpireAt(key, unixTimestamp, option, fields));
+	}
+
+	@Override
+	default List<Long> hPExpireAt(final byte[] key, final long unixTimestamp, final ExpireOption option,
+								  final byte[]... fields) {
+		return execute((client)->client.hashOperations().hPExpireAt(key, unixTimestamp, option, fields));
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param date
+	 * 		过期时间
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hPExpireAt(final String key, final Date date, final String... fields) {
+		return hPExpireAt(key, date.getTime(), fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param date
+	 * 		过期时间
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hPExpireAt(final byte[] key, final Date date, final byte[]... fields) {
+		return hPExpireAt(key, date.getTime(), fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param dateTime
+	 * 		过期时间
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hPExpireAt(final String key, final LocalDateTime dateTime, final String... fields) {
+		return hPExpireAt(key, dateTime.atZone(ZoneId.systemDefault()).toInstant(), fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param dateTime
+	 * 		过期时间
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hPExpireAt(final byte[] key, final LocalDateTime dateTime, final byte[]... fields) {
+		return hPExpireAt(key, dateTime.atZone(ZoneId.systemDefault()).toInstant(), fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param dateTime
+	 * 		过期时间
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hPExpireAt(final String key, final ZonedDateTime dateTime, final String... fields) {
+		return hPExpireAt(key, dateTime.toInstant(), fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param dateTime
+	 * 		过期时间
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hPExpireAt(final byte[] key, final ZonedDateTime dateTime, final byte[]... fields) {
+		return hPExpireAt(key, dateTime.toInstant(), fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param instant
+	 * 		过期时间
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hPExpireAt(final String key, final Instant instant, final String... fields) {
+		return hPExpireAt(key, instant.toEpochMilli(), fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param instant
+	 * 		过期时间
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hPExpireAt(final byte[] key, final Instant instant, final byte[]... fields) {
+		return hPExpireAt(key, instant.toEpochMilli(), fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param date
+	 * 		过期时间
+	 * @param option
+	 * 		选项
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hPExpireAt(final String key, final Date date, final ExpireOption option,
+								  final String... fields) {
+		return hPExpireAt(key, date.getTime(), option, fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param dateTime
+	 * 		过期时间
+	 * @param option
+	 * 		选项
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hPExpireAt(final String key, final LocalDateTime dateTime, final ExpireOption option,
+								  final String... fields) {
+		return hPExpireAt(key, dateTime.atZone(ZoneId.systemDefault()).toInstant(), option, fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param dateTime
+	 * 		过期时间
+	 * @param option
+	 * 		选项
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hPExpireAt(final String key, final ZonedDateTime dateTime, final ExpireOption option,
+								  final String... fields) {
+		return hPExpireAt(key, dateTime.toInstant(), option, fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param instant
+	 * 		过期时间
+	 * @param option
+	 * 		选项
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hPExpireAt(final String key, final Instant instant, final ExpireOption option,
+								  final String... fields) {
+		return hPExpireAt(key, instant.toEpochMilli(), option, fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param date
+	 * 		过期时间
+	 * @param option
+	 * 		选项
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hPExpireAt(final byte[] key, final Date date, final ExpireOption option,
+								  final byte[]... fields) {
+		return hPExpireAt(key, date.getTime(), option, fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param dateTime
+	 * 		过期时间
+	 * @param option
+	 * 		选项
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hPExpireAt(final byte[] key, final LocalDateTime dateTime, final ExpireOption option,
+								  final byte[]... fields) {
+		return hPExpireAt(key, dateTime.atZone(ZoneId.systemDefault()).toInstant(), option, fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param instant
+	 * 		过期时间
+	 * @param option
+	 * 		选项
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hPExpireAt(final byte[] key, final Instant instant, final ExpireOption option,
+								  final byte[]... fields) {
+		return hPExpireAt(key, instant.toEpochMilli(), option, fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpireat/" target="_blank">https://redis.io/docs/latest/commands/hexpireat/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param dateTime
+	 * 		过期时间
+	 * @param option
+	 * 		选项
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hPExpireAt(final byte[] key, final ZonedDateTime dateTime, final ExpireOption option,
+								  final byte[]... fields) {
+		return hPExpireAt(key, dateTime.toInstant(), option, fields);
+	}
+
+	@Override
+	default List<Long> hPExpireTime(final String key, final String... fields) {
+		return execute((client)->client.hashOperations().hPExpireTime(key, fields));
+	}
+
+	@Override
+	default List<Long> hPExpireTime(final byte[] key, final byte[]... fields) {
+		return execute((client)->client.hashOperations().hPExpireTime(key, fields));
 	}
 
 	@Override
@@ -757,8 +1910,6 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return A list fields and their values from the hash
-	 *
-	 * @see TypeReference
 	 */
 	<V> Map<String, V> hRandFieldWithValuesObject(final String key, final long count, final TypeReference<V> type);
 
@@ -779,20 +1930,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return A list fields and their values from the hash
-	 *
-	 * @see TypeReference
 	 */
 	<V> Map<byte[], V> hRandFieldWithValuesObject(final byte[] key, final long count, final TypeReference<V> type);
-
-	@Override
-	default ScanResult<Map<String, String>> hScan(final String key, final long cursor) {
-		return execute((client)->client.hashOperations().hScan(key, cursor));
-	}
-
-	@Override
-	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor) {
-		return execute((client)->client.hashOperations().hScan(key, cursor));
-	}
 
 	@Override
 	default ScanResult<Map<String, String>> hScan(final String key, final String cursor) {
@@ -804,22 +1943,183 @@ public interface HashOperations extends HashCommands, RedisOperations {
 		return execute((client)->client.hashOperations().hScan(key, cursor));
 	}
 
+	@Override
+	default ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern) {
+		return execute((client)->client.hashOperations().hScan(key, cursor, pattern));
+	}
+
+	@Override
+	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
+		return execute((client)->client.hashOperations().hScan(key, cursor, pattern));
+	}
+
+	@Override
+	default ScanResult<Map<String, String>> hScan(final String key, final String cursor, final long count) {
+		return execute((client)->client.hashOperations().hScan(key, cursor, count));
+	}
+
+	@Override
+	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final long count) {
+		return execute((client)->client.hashOperations().hScan(key, cursor, count));
+	}
+
+	@Override
+	default ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
+												  final long count) {
+		return execute((client)->client.hashOperations().hScan(key, cursor, pattern, count));
+	}
+
+	@Override
+	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+												  final long count) {
+		return execute((client)->client.hashOperations().hScan(key, cursor, pattern, count));
+	}
+
 	/**
-	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
+	 * 迭代哈希键 key 中的键值对
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
 	 * @param cursor
 	 * 		游标
-	 * @param <V>
-	 * 		值类型
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor);
+	default ScanResult<Map<String, String>> hScan(final String key, final long cursor) {
+		return hScan(key, Long.toString(cursor));
+	}
+
+	/**
+	 * 迭代哈希键 key 中的键值对
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor) {
+		return hScan(key, NumberUtils.long2bytes(cursor));
+	}
+
+	/**
+	 * 迭代哈希键 key 中的键值对
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 *
+	 * @return 返回和给定模式相匹配的元素
+	 */
+	default ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern) {
+		return hScan(key, Long.toString(cursor), pattern);
+	}
+
+	/**
+	 * 迭代哈希键 key 中的键值对
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 *
+	 * @return 返回和给定模式相匹配的元素
+	 */
+	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern) {
+		return hScan(key, NumberUtils.long2bytes(cursor), pattern);
+	}
+
+	/**
+	 * 迭代哈希键 key 中的键值对
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回的指定数量的键值对
+	 */
+	default ScanResult<Map<String, String>> hScan(final String key, final long cursor, final long count) {
+		return hScan(key, Long.toString(cursor), count);
+	}
+
+	/**
+	 * 迭代哈希键 key 中的键值对
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回的指定数量的键值对
+	 */
+	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final long count) {
+		return hScan(key, NumberUtils.long2bytes(cursor), count);
+	}
+
+	/**
+	 * 迭代哈希键 key 中的键值对
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回和给定模式相匹配指定数量的元素
+	 */
+	default ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern,
+												  final long count) {
+		return hScan(key, Long.toString(cursor), pattern, count);
+	}
+
+	/**
+	 * 迭代哈希键 key 中的键值对
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回和给定模式相匹配指定数量的元素
+	 */
+	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern,
+												  final long count) {
+		return hScan(key, NumberUtils.long2bytes(cursor), pattern, count);
+	}
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
@@ -836,7 +2136,28 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor);
+	default <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor) {
+		return hScanObject(key, Long.toString(cursor));
+	}
+
+	/**
+	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
+	 * </p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	default <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor) {
+		return hScanObject(key, NumberUtils.long2bytes(cursor));
+	}
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
@@ -855,7 +2176,9 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final Class<V> clazz);
+	default <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final Class<V> clazz) {
+		return hScanObject(key, Long.toString(cursor), clazz);
+	}
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
@@ -873,7 +2196,9 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final Class<V> clazz);
+	default <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final Class<V> clazz) {
+		return hScanObject(key, NumberUtils.long2bytes(cursor), clazz);
+	}
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -890,10 +2215,11 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 返回的每个元素都是一个键值对
-	 *
-	 * @see TypeReference
 	 */
-	<V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final TypeReference<V> type);
+	default <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor,
+													   final TypeReference<V> type) {
+		return hScanObject(key, Long.toString(cursor), type);
+	}
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -910,10 +2236,11 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 返回的每个元素都是一个键值对
-	 *
-	 * @see TypeReference
 	 */
-	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final TypeReference<V> type);
+	default <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor,
+													   final TypeReference<V> type) {
+		return hScanObject(key, NumberUtils.long2bytes(cursor), type);
+	}
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
@@ -998,8 +2325,6 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 返回的每个元素都是一个键值对
-	 *
-	 * @see TypeReference
 	 */
 	<V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final TypeReference<V> type);
 
@@ -1018,29 +2343,27 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 返回的每个元素都是一个键值对
-	 *
-	 * @see TypeReference
 	 */
 	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final TypeReference<V> type);
 
-	@Override
-	default ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern) {
-		return execute((client)->client.hashOperations().hScan(key, cursor, pattern));
-	}
-
-	@Override
-	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern) {
-		return execute((client)->client.hashOperations().hScan(key, cursor, pattern));
-	}
-
-	@Override
-	default ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern) {
-		return execute((client)->client.hashOperations().hScan(key, cursor, pattern));
-	}
-
-	@Override
-	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
-		return execute((client)->client.hashOperations().hScan(key, cursor, pattern));
+	/**
+	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	default <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern) {
+		return hScanObject(key, Long.toString(cursor), pattern);
 	}
 
 	/**
@@ -1059,25 +2382,9 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern);
-
-	/**
-	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern);
+	default <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern) {
+		return hScanObject(key, NumberUtils.long2bytes(cursor), pattern);
+	}
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
@@ -1097,8 +2404,10 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern,
-											   final Class<V> clazz);
+	default <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern,
+													   final Class<V> clazz) {
+		return hScanObject(key, Long.toString(cursor), pattern, clazz);
+	}
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
@@ -1118,8 +2427,10 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern,
-											   final Class<V> clazz);
+	default <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern,
+													   final Class<V> clazz) {
+		return hScanObject(key, NumberUtils.long2bytes(cursor), pattern, clazz);
+	}
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -1138,11 +2449,11 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 返回的每个元素都是一个键值对
-	 *
-	 * @see TypeReference
 	 */
-	<V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern,
-											   final TypeReference<V> type);
+	default <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern,
+													   final TypeReference<V> type) {
+		return hScanObject(key, Long.toString(cursor), pattern, type);
+	}
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -1161,11 +2472,11 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 返回的每个元素都是一个键值对
-	 *
-	 * @see TypeReference
 	 */
-	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern,
-											   final TypeReference<V> type);
+	default <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern,
+													   final TypeReference<V> type) {
+		return hScanObject(key, NumberUtils.long2bytes(cursor), pattern, type);
+	}
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
@@ -1262,8 +2573,6 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 返回的每个元素都是一个键值对
-	 *
-	 * @see TypeReference
 	 */
 	<V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final String pattern,
 											   final TypeReference<V> type);
@@ -1285,30 +2594,28 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 返回的每个元素都是一个键值对
-	 *
-	 * @see TypeReference
 	 */
 	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
 											   final TypeReference<V> type);
 
-	@Override
-	default ScanResult<Map<String, String>> hScan(final String key, final long cursor, final long count) {
-		return execute((client)->client.hashOperations().hScan(key, cursor, count));
-	}
-
-	@Override
-	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final long count) {
-		return execute((client)->client.hashOperations().hScan(key, cursor, count));
-	}
-
-	@Override
-	default ScanResult<Map<String, String>> hScan(final String key, final String cursor, final long count) {
-		return execute((client)->client.hashOperations().hScan(key, cursor, count));
-	}
-
-	@Override
-	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final long count) {
-		return execute((client)->client.hashOperations().hScan(key, cursor, count));
+	/**
+	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	default <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final long count) {
+		return hScanObject(key, Long.toString(cursor), count);
 	}
 
 	/**
@@ -1327,25 +2634,9 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final long count);
-
-	/**
-	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final long count);
+	default <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final long count) {
+		return hScanObject(key, NumberUtils.long2bytes(cursor), count);
+	}
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
@@ -1365,8 +2656,10 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final long count,
-											   final Class<V> clazz);
+	default <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final long count,
+													   final Class<V> clazz) {
+		return hScanObject(key, Long.toString(cursor), count, clazz);
+	}
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
@@ -1386,8 +2679,10 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final long count,
-											   final Class<V> clazz);
+	default <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final long count,
+													   final Class<V> clazz) {
+		return hScanObject(key, NumberUtils.long2bytes(cursor), count, clazz);
+	}
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -1409,8 +2704,10 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @see TypeReference
 	 */
-	<V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final long count,
-											   final TypeReference<V> type);
+	default <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final long count,
+													   final TypeReference<V> type) {
+		return hScanObject(key, Long.toString(cursor), count, type);
+	}
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -1432,8 +2729,10 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @see TypeReference
 	 */
-	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final long count,
-											   final TypeReference<V> type);
+	default <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final long count,
+													   final TypeReference<V> type) {
+		return hScanObject(key, NumberUtils.long2bytes(cursor), count, type);
+	}
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
@@ -1530,8 +2829,6 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 返回的每个元素都是一个键值对
-	 *
-	 * @see TypeReference
 	 */
 	<V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final long count,
 											   final TypeReference<V> type);
@@ -1553,177 +2850,10 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 返回的每个元素都是一个键值对
-	 *
-	 * @see TypeReference
 	 */
 	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final long count,
 											   final TypeReference<V> type);
 
-	@Override
-	default ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern,
-												  final long count) {
-		return execute((client)->client.hashOperations().hScan(key, cursor, pattern, count));
-	}
-
-	@Override
-	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern,
-												  final long count) {
-		return execute((client)->client.hashOperations().hScan(key, cursor, pattern, count));
-	}
-
-	@Override
-	default ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
-												  final long count) {
-		return execute((client)->client.hashOperations().hScan(key, cursor, pattern, count));
-	}
-
-	@Override
-	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-												  final long count) {
-		return execute((client)->client.hashOperations().hScan(key, cursor, pattern, count));
-	}
-
-	/**
-	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param count
-	 * 		返回元素数量
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern,
-											   final long count);
-
-	/**
-	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param count
-	 * 		返回元素数量
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern,
-											   final long count);
-
-	/**
-	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param count
-	 * 		返回元素数量
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern,
-											   final long count,
-											   final Class<V> clazz);
-
-	/**
-	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param count
-	 * 		返回元素数量
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern,
-											   final long count,
-											   final Class<V> clazz);
-
-	/**
-	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param count
-	 * 		返回元素数量
-	 * @param type
-	 * 		值类型引用
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 *
-	 * @see TypeReference
-	 */
-	<V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern,
-											   final long count, final TypeReference<V> type);
-
-	/**
-	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param count
-	 * 		返回元素数量
-	 * @param type
-	 * 		值类型引用
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 *
-	 * @see TypeReference
-	 */
-	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern,
-											   final long count,
-											   final TypeReference<V> type);
-
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
 	 *
@@ -1831,8 +2961,6 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 返回的每个元素都是一个键值对
-	 *
-	 * @see TypeReference
 	 */
 	<V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final String pattern,
 											   final long count, final TypeReference<V> type);
@@ -1856,57 +2984,255 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 返回的每个元素都是一个键值对
-	 *
-	 * @see TypeReference
 	 */
 	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
 											   final long count, final TypeReference<V> type);
 
 	@Override
-	default Long hSet(final String key, final String field, final String value) {
-		return execute((client)->client.hashOperations().hSet(key, field, value));
+	default Long hSet(final String key, final Map<String, String> data) {
+		return execute((client)->client.hashOperations().hSet(key, data));
 	}
 
 	@Override
-	default Long hSet(final byte[] key, final byte[] field, final byte[] value) {
-		return execute((client)->client.hashOperations().hSet(key, field, value));
+	default Long hSet(final byte[] key, final Map<byte[], byte[]> data) {
+		return execute((client)->client.hashOperations().hSet(key, data));
 	}
 
 	/**
-	 * 将哈希表 key 中域 field 的值设置为 value。
-	 * 如果给定的哈希表并不存在，那么一个新的哈希表；
-	 * 如果域 field 已经存在于哈希表中，那么 value 将覆盖旧值
+	 * 批量将多个 field =&gt; value (域-值)对设置到哈希表 key 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hset/" target="_blank">https://redis.io/docs/latest/commands/hset/</a></p>
 	 *
 	 * @param key
 	 * 		Key
-	 * @param field
-	 * 		域
-	 * @param value
-	 * 		值
+	 * @param data
+	 * 		field =&gt; value (域-值)对
 	 * @param <V>
-	 * 		值类型
+	 * 		元素值类型
 	 *
 	 * @return 被修改或增加的 field 个数
 	 */
-	<V> Long hSet(final String key, final String field, final V value);
+	<V> Long hSet(final String key, final List<KeyValue<String, V>> data);
 
 	/**
-	 * 将哈希表 key 中域 field 的值设置为 value。
-	 * 如果给定的哈希表并不存在，那么一个新的哈希表；
-	 * 如果域 field 已经存在于哈希表中，那么 value 将覆盖旧值
+	 * 批量将多个 field =&gt; value (域-值)对设置到哈希表 key 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hset/" target="_blank">https://redis.io/docs/latest/commands/hset/</a></p>
 	 *
 	 * @param key
 	 * 		Key
-	 * @param field
-	 * 		域
-	 * @param value
-	 * 		值
+	 * @param data
+	 * 		field =&gt; value (域-值)对
 	 * @param <V>
-	 * 		值类型
+	 * 		元素值类型
 	 *
 	 * @return 被修改或增加的 field 个数
 	 */
-	<V> Long hSet(final byte[] key, final byte[] field, final V value);
+	<V> Long hSet(final byte[] key, final List<KeyValue<byte[], V>> data);
+
+	/**
+	 * 批量将多个 field =&gt; value (域-值)对设置到哈希表 key 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hset/" target="_blank">https://redis.io/docs/latest/commands/hset/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param data
+	 * 		field =&gt; value (域-值)对
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被修改或增加的 field 个数
+	 */
+	@SuppressWarnings({"unchecked"})
+	default <V> Long hSet(final String key, final KeyValue<String, V>... data) {
+		return hSet(key, Arrays.asList(data));
+	}
+
+	/**
+	 * 批量将多个 field =&gt; value (域-值)对设置到哈希表 key 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hset/" target="_blank">https://redis.io/docs/latest/commands/hset/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param data
+	 * 		field =&gt; value (域-值)对
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被修改或增加的 field 个数
+	 */
+	@SuppressWarnings({"unchecked"})
+	default <V> Long hSet(final byte[] key, final KeyValue<byte[], V>... data) {
+		return hSet(key, Arrays.asList(data));
+	}
+
+	@Override
+	default Status hSetEx(final String key, final Map<String, String> data) {
+		return execute((client)->client.hashOperations().hSetEx(key, data));
+	}
+
+	@Override
+	default Status hSetEx(final byte[] key, final Map<byte[], byte[]> data) {
+		return execute((client)->client.hashOperations().hSetEx(key, data));
+	}
+
+	@Override
+	default Status hSetEx(final String key, final Map<String, String> data, final HSetExArgument argument) {
+		return execute((client)->client.hashOperations().hSetEx(key, data, argument));
+	}
+
+	@Override
+	default Status hSetEx(final byte[] key, final Map<byte[], byte[]> data, final HSetExArgument argument) {
+		return execute((client)->client.hashOperations().hSetEx(key, data, argument));
+	}
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param data
+	 * 		field =&gt; value (域-值)对
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
+	 */
+	<V> Status hSetEx(final String key, final List<KeyValue<String, V>> data);
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param data
+	 * 		field =&gt; value (域-值)对
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
+	 */
+	<V> Status hSetEx(final byte[] key, final List<KeyValue<byte[], V>> data);
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param data
+	 * 		field =&gt; value (域-值)对
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
+	 */
+	@SuppressWarnings({"unchecked"})
+	default <V> Status hSetEx(final String key, final KeyValue<String, V>... data) {
+		return hSetEx(key, Arrays.asList(data));
+	}
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param data
+	 * 		field =&gt; value (域-值)对
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
+	 */
+	@SuppressWarnings({"unchecked"})
+	default <V> Status hSetEx(final byte[] key, final KeyValue<byte[], V>... data) {
+		return hSetEx(key, Arrays.asList(data));
+	}
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param data
+	 * 		field =&gt; value (域-值)对
+	 * @param argument
+	 * 		参数
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
+	 */
+	<V> Status hSetEx(final String key, final List<KeyValue<String, V>> data, final HSetExArgument argument);
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param data
+	 * 		field =&gt; value (域-值)对
+	 * @param argument
+	 * 		参数
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
+	 */
+	<V> Status hSetEx(final byte[] key, final List<KeyValue<byte[], V>> data, final HSetExArgument argument);
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param data
+	 * 		field =&gt; value (域-值)对
+	 * @param argument
+	 * 		参数
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
+	 */
+	default <V> Status hSetEx(final String key, final KeyValue<String, V>[] data, final HSetExArgument argument) {
+		return hSetEx(key, Arrays.asList(data), argument);
+	}
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param data
+	 * 		field =&gt; value (域-值)对
+	 * @param argument
+	 * 		参数
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
+	 */
+	default <V> Status hSetEx(final byte[] key, final KeyValue<byte[], V>[] data, final HSetExArgument argument) {
+		return hSetEx(key, Arrays.asList(data), argument);
+	}
 
 	@Override
 	default Status hSetNx(final String key, final String field, final String value) {
@@ -1958,6 +3284,16 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	@Override
 	default Long hStrLen(final byte[] key, final byte[] field) {
 		return execute((client)->client.hashOperations().hStrLen(key, field));
+	}
+
+	@Override
+	default List<Long> hTtl(final String key, final String... fields) {
+		return execute((client)->client.hashOperations().hTtl(key, fields));
+	}
+
+	@Override
+	default List<Long> hTtl(final byte[] key, final byte[]... fields) {
+		return execute((client)->client.hashOperations().hTtl(key, fields));
 	}
 
 	@Override
@@ -2033,8 +3369,6 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 哈希表 key 中所有域的值反序列化后的对象
-	 *
-	 * @see TypeReference
 	 */
 	<V> List<V> hValsObject(final String key, final TypeReference<V> type);
 
@@ -2049,8 +3383,6 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 哈希表 key 中所有域的值反序列化后的对象
-	 *
-	 * @see TypeReference
 	 */
 	<V> List<V> hValsObject(final byte[] key, final TypeReference<V> type);
 

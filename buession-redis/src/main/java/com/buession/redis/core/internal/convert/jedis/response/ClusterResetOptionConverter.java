@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
@@ -38,14 +38,10 @@ public final class ClusterResetOptionConverter implements Converter<ClusterReset
 
 	@Override
 	public ClusterResetType convert(final ClusterResetOption source) {
-		switch(source){
-			case SOFT:
-				return ClusterResetType.SOFT;
-			case HARD:
-				return ClusterResetType.HARD;
-			default:
-				return null;
-		}
+		return switch(source){
+			case SOFT -> ClusterResetType.SOFT;
+			case HARD -> ClusterResetType.HARD;
+		};
 	}
 
 }

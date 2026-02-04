@@ -19,36 +19,77 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.response;
+package com.buession.redis.core.command.args;
 
-import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
-import com.buession.redis.core.GeoRadius;
-import redis.clients.jedis.resps.GeoRadiusResponse;
+import com.buession.redis.utils.ArgStringBuilder;
 
-import java.util.List;
+import java.util.Objects;
 
 /**
- * Jedis {@link GeoRadiusResponse} 转换为 {@link GeoRadius}
+ * GEO ADD 参数
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 4.0.0
  */
-public class GeoRadiusResponseConverter implements Converter<GeoRadiusResponse, GeoRadius> {
+public class GeoAddArgument {
 
-	private final GeoCoordinateConverter geoCoordinateConverter = new GeoCoordinateConverter();
+	private Boolean nx;
 
-	@Override
-	public GeoRadius convert(final GeoRadiusResponse source) {
-		return new GeoRadius(source.getMember(), source.getDistance(),
-				source.getCoordinate() == null ? null : geoCoordinateConverter.convert(source.getCoordinate()));
+	private Boolean xx;
+
+	private Boolean ch;
+
+	/**
+	 * 构造函数
+	 */
+	public GeoAddArgument() {
+
 	}
 
-	public static ListConverter<GeoRadiusResponse, GeoRadius> listConverter() {
-		return new ListConverter<>(new GeoRadiusResponseConverter());
+	/**
+	 * 构造函数
+	 */
+	public GeoAddArgument(boolean nx, boolean xx, boolean ch) {
+		this.nx = nx;
+		this.xx = xx;
+		this.ch = ch;
+	}
+
+	public Boolean isNx() {
+		return nx;
+	}
+
+	public GeoAddArgument setNx() {
+		this.nx = true;
+		return this;
+	}
+
+	public Boolean isXx() {
+		return xx;
+	}
+
+	public GeoAddArgument setXx() {
+		this.xx = true;
+		return this;
+	}
+
+	public Boolean isCh() {
+		return ch;
+	}
+
+	public GeoAddArgument setCh() {
+		this.ch = true;
+		return this;
+	}
+
+	@Override
+	public String toString() {
+		return ArgStringBuilder.create().append(Objects.equals(nx, true) ? "NX" : null)
+				.append(Objects.equals(xx, true) ? "XX" : null).append(Objects.equals(ch, true) ? "CH" : null)
+				.build();
 	}
 
 }

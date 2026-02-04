@@ -50,28 +50,17 @@ public final class TrackingInfoTrackingInfoConverter
 			if(v == null){
 				return null;
 			}else{
-				switch(v){
-					case OFF:
-						return TrackingInfo.TrackingFlag.OFF;
-					case ON:
-						return TrackingInfo.TrackingFlag.ON;
-					case BCAST:
-						return TrackingInfo.TrackingFlag.BCAST;
-					case OPTIN:
-						return TrackingInfo.TrackingFlag.OPTIN;
-					case OPTOUT:
-						return TrackingInfo.TrackingFlag.OPTOUT;
-					case CACHING_YES:
-						return TrackingInfo.TrackingFlag.CACHING_YES;
-					case CACHING_NO:
-						return TrackingInfo.TrackingFlag.CACHING_NO;
-					case NOLOOP:
-						return TrackingInfo.TrackingFlag.NOLOOP;
-					case BROKEN_REDIRECT:
-						return TrackingInfo.TrackingFlag.BROKEN_REDIRECT;
-					default:
-						return null;
-				}
+				return switch(v){
+					case OFF -> TrackingInfo.TrackingFlag.OFF;
+					case ON -> TrackingInfo.TrackingFlag.ON;
+					case BCAST -> TrackingInfo.TrackingFlag.BCAST;
+					case OPTIN -> TrackingInfo.TrackingFlag.OPTIN;
+					case OPTOUT -> TrackingInfo.TrackingFlag.OPTOUT;
+					case CACHING_YES -> TrackingInfo.TrackingFlag.CACHING_YES;
+					case CACHING_NO -> TrackingInfo.TrackingFlag.CACHING_NO;
+					case NOLOOP -> TrackingInfo.TrackingFlag.NOLOOP;
+					case BROKEN_REDIRECT -> TrackingInfo.TrackingFlag.BROKEN_REDIRECT;
+				};
 			}
 		}).collect(Collectors.toSet());
 

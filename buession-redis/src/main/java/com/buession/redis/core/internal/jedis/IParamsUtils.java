@@ -25,9 +25,15 @@
 package com.buession.redis.core.internal.jedis;
 
 import com.buession.lang.Order;
-import com.buession.redis.core.command.BloomFilterCommands;
-import com.buession.redis.core.command.CuckooFilterCommands;
-import com.buession.redis.core.command.GeoCommands;
+import com.buession.redis.core.command.args.BFInsertArgument;
+import com.buession.redis.core.command.args.BFReserveArgument;
+import com.buession.redis.core.command.args.CFInsertArgument;
+import com.buession.redis.core.command.args.CFReserveArgument;
+import com.buession.redis.core.command.args.GeoAddArgument;
+import com.buession.redis.core.command.args.GeoRadiusArgument;
+import com.buession.redis.core.command.args.GeoSearchArgument;
+import com.buession.redis.core.command.args.GetExArgument;
+import com.buession.redis.core.command.args.HSetExArgument;
 import redis.clients.jedis.bloom.BFInsertParams;
 import redis.clients.jedis.bloom.BFReserveParams;
 import redis.clients.jedis.bloom.CFInsertParams;
@@ -35,6 +41,8 @@ import redis.clients.jedis.bloom.CFReserveParams;
 import redis.clients.jedis.params.GeoAddParams;
 import redis.clients.jedis.params.GeoRadiusParam;
 import redis.clients.jedis.params.GeoSearchParam;
+import redis.clients.jedis.params.HGetExParams;
+import redis.clients.jedis.params.HSetExParams;
 
 import java.util.Optional;
 
@@ -50,7 +58,7 @@ public class IParamsUtils {
 
 	}
 
-	public static BFInsertParams bfnsertParams(final BloomFilterCommands.BFInsertArgument bfInsertArgument) {
+	public static BFInsertParams bfnsertParams(final BFInsertArgument bfInsertArgument) {
 		if(bfInsertArgument == null){
 			return null;
 		}
@@ -73,7 +81,7 @@ public class IParamsUtils {
 		return bfInsertParams;
 	}
 
-	public static BFReserveParams bfReserveParams(final BloomFilterCommands.BFReserveArgument bfInsertArgument) {
+	public static BFReserveParams bfReserveParams(final BFReserveArgument bfInsertArgument) {
 		if(bfInsertArgument == null){
 			return null;
 		}
@@ -89,7 +97,7 @@ public class IParamsUtils {
 		return bfReserveParams;
 	}
 
-	public static CFInsertParams cfInsertParams(final CuckooFilterCommands.CFInsertArgument cfInsertArgument) {
+	public static CFInsertParams cfInsertParams(final CFInsertArgument cfInsertArgument) {
 		if(cfInsertArgument == null){
 			return null;
 		}
@@ -105,7 +113,7 @@ public class IParamsUtils {
 		return cfInsertParams;
 	}
 
-	public static CFReserveParams cfReserveParams(final CuckooFilterCommands.CFReserveArgument cfReserveArgument) {
+	public static CFReserveParams cfReserveParams(final CFReserveArgument cfReserveArgument) {
 		if(cfReserveArgument == null){
 			return null;
 		}
@@ -119,7 +127,7 @@ public class IParamsUtils {
 		return cfReserveParams;
 	}
 
-	public static GeoAddParams geoAddParams(final GeoCommands.GeoAddArgument geoAddArgument) {
+	public static GeoAddParams geoAddParams(final GeoAddArgument geoAddArgument) {
 		if(geoAddArgument == null){
 			return null;
 		}
@@ -139,7 +147,7 @@ public class IParamsUtils {
 		return geoAddParams;
 	}
 
-	public static GeoRadiusParam geoRadiusParam(final GeoCommands.GeoRadiusArgument geoRadiusArgument) {
+	public static GeoRadiusParam geoRadiusParam(final GeoRadiusArgument geoRadiusArgument) {
 		if(geoRadiusArgument == null){
 			return null;
 		}
@@ -171,7 +179,7 @@ public class IParamsUtils {
 		return geoRadiusParam;
 	}
 
-	public static GeoSearchParam geoSearchParam(final GeoCommands.GeoSearchArgument geoSearchArgument) {
+	public static GeoSearchParam geoSearchParam(final GeoSearchArgument geoSearchArgument) {
 		if(geoSearchArgument == null){
 			return null;
 		}
@@ -201,7 +209,51 @@ public class IParamsUtils {
 		}
 
 		return geoSearchParam;
+	}
 
+	public static HGetExParams hGetExParams(final GetExArgument getExArgument) {
+		if(getExArgument == null || getExArgument.getType() == null){
+			return null;
+		}
+
+		final HGetExParams hGetExParams = new HGetExParams();
+
+		switch(getExArgument.getType()){
+			case EX -> hGetExParams.ex(getExArgument.getValue());
+			case EXAT -> hGetExParams.exAt(getExArgument.getValue());
+			case PX -> hGetExParams.px(getExArgument.getValue());
+			case PXAT -> hGetExParams.pxAt(getExArgument.getValue());
+			case PERSIST -> hGetExParams.persist();
+		}
+
+		return hGetExParams;
+	}
+
+	public static HSetExParams hSetExParams(final HSetExArgument hSetExArgument) {
+		if(hSetExArgument == null){
+			return null;
+		}
+
+		final HSetExParams hSetExParams = new HSetExParams();
+
+		if(hSetExArgument.getType() == null){
+			switch(hSetExArgument.getType()){
+				case EX -> hSetExParams.ex(hSetExArgument.getValue());
+				case EXAT -> hSetExParams.exAt(hSetExArgument.getValue());
+				case PX -> hSetExParams.px(hSetExArgument.getValue());
+				case PXAT -> hSetExParams.pxAt(hSetExArgument.getValue());
+				case KEEPTTL -> hSetExParams.keepTtl();
+			}
+		}
+
+		if(hSetExArgument.getFnxFxx() != null){
+			switch(hSetExArgument.getFnxFxx()){
+				case FNX -> hSetExParams.fnx();
+				case FXX -> hSetExParams.fxx();
+			}
+		}
+
+		return hSetExParams;
 	}
 
 }

@@ -49,7 +49,7 @@ public final class MemoryStatsConverter implements Converter<Map<String, Object>
 
 		source.forEach((name, value)->{
 			if("dataset.bytes".equals(name)){
-				propertyMapper.from(value).as((v)->(Long) v).to(memoryStats::setDataset);
+				propertyMapper.from(value).as((v)->(Long) v).to(memoryStats::dataset);
 			}else if("dataset.percentage".equals(name)){
 				propertyMapper.from(value).as((v)->Double.parseDouble(v.toString()))
 						.to(memoryStats::setDatasetPercentage);

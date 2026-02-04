@@ -38,6 +38,7 @@ import com.buession.redis.core.TrackingInfo;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.SubCommand;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.params.ClientUnblockTypeConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.TrackingInfoTrackingInfoConverter;
 import com.buession.redis.core.internal.convert.response.ClientConverter;
@@ -101,7 +102,9 @@ public final class LettuceConnectionOperations extends AbstractLettuceRedisOpera
 	@Override
 	public String clientGetName() {
 		return LettuceCommandBuilder.<byte[], String>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_GETNAME)
-				.executor((cmd)->cmd.clientGetname()).converter(binaryToStringConverter).run();
+				.executor((cmd)->cmd.clientGetname())
+				.converter(Converters.binaryToStringConverter())
+				.run();
 	}
 
 	@Override
@@ -273,7 +276,7 @@ public final class LettuceConnectionOperations extends AbstractLettuceRedisOpera
 		return LettuceCommandBuilder.<byte[], String>newBuilder(client, Command.ECHO)
 				.executor((cmd)->cmd.echo(SafeEncoder.encode(str)))
 				.arguments(args)
-				.converter(binaryToStringConverter).run();
+				.converter(Converters.binaryToStringConverter()).run();
 	}
 
 	@Override

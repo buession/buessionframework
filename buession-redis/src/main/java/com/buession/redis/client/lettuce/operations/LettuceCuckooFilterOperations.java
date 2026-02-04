@@ -30,6 +30,8 @@ import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.CuckooFilterOperations;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.args.CFInsertArgument;
+import com.buession.redis.core.command.args.CFReserveArgument;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;

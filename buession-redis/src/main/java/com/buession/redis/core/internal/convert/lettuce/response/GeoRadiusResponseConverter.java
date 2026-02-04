@@ -19,17 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.GeoRadius;
 import io.lettuce.core.GeoWithin;
-
-import java.util.List;
 
 /**
  * Lettuce georadius 命令结果转换为 {@link GeoRadius}
@@ -45,10 +42,6 @@ public final class GeoRadiusResponseConverter implements Converter<GeoWithin<byt
 	public GeoRadius convert(final GeoWithin<byte[]> source) {
 		return new GeoRadius(source.getMember(), source.getDistance(),
 				source.getCoordinates() == null ? null : geoCoordinateConverter.convert(source.getCoordinates()));
-	}
-
-	public static ListConverter<GeoWithin<byte[]>, GeoRadius> listConverter() {
-		return new ListConverter<>(new GeoRadiusResponseConverter());
 	}
 
 }

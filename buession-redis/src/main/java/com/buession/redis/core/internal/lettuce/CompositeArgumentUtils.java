@@ -25,14 +25,24 @@
 package com.buession.redis.core.internal.lettuce;
 
 import com.buession.lang.Order;
-import com.buession.redis.core.command.BitMapCommands;
-import com.buession.redis.core.command.ConnectionCommands;
-import com.buession.redis.core.command.GeoCommands;
+import com.buession.redis.core.ExpireOption;
+import com.buession.redis.core.command.args.BitFieldArgument;
+import com.buession.redis.core.command.args.GeoAddArgument;
+import com.buession.redis.core.command.args.GeoRadiusArgument;
+import com.buession.redis.core.command.args.GeoSearchArgument;
+import com.buession.redis.core.command.args.GetExArgument;
+import com.buession.redis.core.command.args.HSetExArgument;
+import com.buession.redis.core.command.args.TrackingArgument;
 import io.lettuce.core.BitFieldArgs;
+import io.lettuce.core.ExpireArgs;
 import io.lettuce.core.GeoAddArgs;
 import io.lettuce.core.GeoArgs;
+import io.lettuce.core.HGetExArgs;
+import io.lettuce.core.HSetExArgs;
 import io.lettuce.core.TrackingArgs;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Optional;
 
 /**
@@ -46,35 +56,32 @@ public class CompositeArgumentUtils {
 	private CompositeArgumentUtils() {
 	}
 
-	public static BitFieldArgs bitFieldArgs(final BitMapCommands.BitFieldArgument bitFieldArgument) {
+	public static BitFieldArgs bitFieldArgs(final BitFieldArgument bitFieldArgument) {
 		if(bitFieldArgument == null){
 			return null;
 		}
 
 		final BitFieldArgs bitFieldArgs = new BitFieldArgs();
 
-		final BitMapCommands.Op setOp = bitFieldArgument.getSet();
+		final BitFieldArgument.SetOp setOp = bitFieldArgument.getSet();
 		if(setOp != null){
-			bitFieldArgs.set(
-					setOp.getBitFieldType().isSigned() ? BitFieldArgs.signed(setOp.getBitFieldType().getBits()) :
-							BitFieldArgs.unsigned(setOp.getBitFieldType().getBits()), setOp.getOffset(),
-					setOp.getValue());
+			bitFieldArgs.set(setOp.getBitFieldType().isSigned() ? BitFieldArgs.signed(
+							setOp.getBitFieldType().getBits()) : BitFieldArgs.unsigned(setOp.getBitFieldType().getBits()),
+					setOp.getOffset(), setOp.getValue());
 		}
 
-		final BitMapCommands.Op getOp = bitFieldArgument.getGet();
+		final BitFieldArgument.GetOp getOp = bitFieldArgument.getGet();
 		if(getOp != null){
-			bitFieldArgs.get(
-					getOp.getBitFieldType().isSigned() ? BitFieldArgs.signed(getOp.getBitFieldType().getBits()) :
-							BitFieldArgs.unsigned(getOp.getBitFieldType().getBits()), getOp.getOffset());
+			bitFieldArgs.get(getOp.getBitFieldType().isSigned() ? BitFieldArgs.signed(
+							getOp.getBitFieldType().getBits()) : BitFieldArgs.unsigned(getOp.getBitFieldType().getBits()),
+					getOp.getOffset());
 		}
 
-		final BitMapCommands.Op incrByOp = bitFieldArgument.getIncrBy();
+		final BitFieldArgument.IncrbyOp incrByOp = bitFieldArgument.getIncrBy();
 		if(incrByOp != null){
-			bitFieldArgs.incrBy(
-					incrByOp.getBitFieldType().isSigned() ? BitFieldArgs.signed(
-							incrByOp.getBitFieldType().getBits()) :
-							BitFieldArgs.unsigned(incrByOp.getBitFieldType().getBits()), incrByOp.getOffset(),
-					incrByOp.getValue());
+			bitFieldArgs.incrBy(incrByOp.getBitFieldType().isSigned() ? BitFieldArgs.signed(
+							incrByOp.getBitFieldType().getBits()) : BitFieldArgs.unsigned(incrByOp.getBitFieldType().getBits()),
+					incrByOp.getOffset(), incrByOp.getValue());
 		}
 
 		if(bitFieldArgument.getOverflow() != null){
@@ -96,7 +103,7 @@ public class CompositeArgumentUtils {
 		return bitFieldArgs;
 	}
 
-	public static TrackingArgs trackingArgs(final ConnectionCommands.TrackingArgument trackingArgument) {
+	public static TrackingArgs trackingArgs(final TrackingArgument trackingArgument) {
 		if(trackingArgument == null){
 			return null;
 		}
@@ -121,7 +128,7 @@ public class CompositeArgumentUtils {
 		return trackingArgs;
 	}
 
-	public static GeoAddArgs geoAddArgs(final GeoCommands.GeoAddArgument geoAddArgument) {
+	public static GeoAddArgs geoAddArgs(final GeoAddArgument geoAddArgument) {
 		if(geoAddArgument == null){
 			return null;
 		}
@@ -140,7 +147,7 @@ public class CompositeArgumentUtils {
 		return geoAddArgs;
 	}
 
-	public static GeoArgs geoArgs(final GeoCommands.GeoRadiusArgument geoRadiusArgument) {
+	public static GeoArgs geoArgs(final GeoRadiusArgument geoRadiusArgument) {
 		if(geoRadiusArgument == null){
 			return null;
 		}
@@ -172,7 +179,7 @@ public class CompositeArgumentUtils {
 		return geoArgs;
 	}
 
-	public static GeoArgs geoArgs(final GeoCommands.GeoSearchArgument geoSearchArgument) {
+	public static GeoArgs geoArgs(final GeoSearchArgument geoSearchArgument) {
 		if(geoSearchArgument == null){
 			return null;
 		}
@@ -202,6 +209,78 @@ public class CompositeArgumentUtils {
 		}
 
 		return geoArgs;
+	}
+
+	public static ExpireArgs expireArgs(final ExpireOption expireOption) {
+		if(expireOption == null){
+			return null;
+		}
+
+		final ExpireArgs expireArgs = new ExpireArgs();
+
+		switch(expireOption){
+			case NX:
+				expireArgs.nx();
+				break;
+			case XX:
+				expireArgs.xx();
+				break;
+			case GT:
+				expireArgs.gt();
+				break;
+			case LT:
+				expireArgs.lt();
+				break;
+			default:
+				break;
+		}
+
+		return expireArgs;
+	}
+
+	public static HGetExArgs hGetExArgs(final GetExArgument getExArgument) {
+		if(getExArgument == null || getExArgument.getType() == null){
+			return null;
+		}
+
+		final HGetExArgs hGetExArgs = new HGetExArgs();
+
+		switch(getExArgument.getType()){
+			case EX -> hGetExArgs.ex(Duration.ofSeconds(getExArgument.getValue()));
+			case EXAT -> hGetExArgs.exAt(Instant.ofEpochSecond(getExArgument.getValue()));
+			case PX -> hGetExArgs.px(Duration.ofMillis(getExArgument.getValue()));
+			case PXAT -> hGetExArgs.pxAt(Instant.ofEpochMilli(getExArgument.getValue()));
+			case PERSIST -> hGetExArgs.persist();
+		}
+
+		return hGetExArgs;
+	}
+
+	public static HSetExArgs hSetExArgs(final HSetExArgument hSetExArgument) {
+		if(hSetExArgument == null){
+			return null;
+		}
+
+		final HSetExArgs hSetExArgs = new HSetExArgs();
+
+		if(hSetExArgument.getType() == null){
+			switch(hSetExArgument.getType()){
+				case EX -> hSetExArgs.ex(Duration.ofSeconds(hSetExArgument.getValue()));
+				case EXAT -> hSetExArgs.exAt(Instant.ofEpochSecond(hSetExArgument.getValue()));
+				case PX -> hSetExArgs.px(Duration.ofMillis(hSetExArgument.getValue()));
+				case PXAT -> hSetExArgs.pxAt(Instant.ofEpochMilli(hSetExArgument.getValue()));
+				case KEEPTTL -> hSetExArgs.keepttl();
+			}
+		}
+
+		if(hSetExArgument.getFnxFxx() != null){
+			switch(hSetExArgument.getFnxFxx()){
+				case FNX -> hSetExArgs.fnx();
+				case FXX -> hSetExArgs.fxx();
+			}
+		}
+
+		return hSetExArgs;
 	}
 
 }

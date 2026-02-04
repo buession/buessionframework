@@ -19,39 +19,68 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core.command.args;
 
-import com.buession.core.converter.Converter;
-import org.springframework.lang.Nullable;
+import com.buession.redis.utils.ArgStringBuilder;
 
 /**
- * {@link com.buession.redis.core.ClientAttributeOption} 转换为 {@link redis.clients.jedis.args.ClientAttributeOption}
+ * BITFIELD_RO 命令参数
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public final class ClientAttributeOptionConverter implements
-		Converter<com.buession.redis.core.ClientAttributeOption, redis.clients.jedis.args.ClientAttributeOption> {
+public class BitFieldRoArgument extends BaseBitFieldArgument {
 
-	@Nullable
+	/**
+	 * 构造函数
+	 */
+	public BitFieldRoArgument() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param set
+	 * 		写操作
+	 */
+	public BitFieldRoArgument(SetOp set) {
+		super(set);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param set
+	 * 		写操作
+	 * @param get
+	 * 		获取操作
+	 */
+	public BitFieldRoArgument(SetOp set, GetOp get) {
+		super(set, get);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param get
+	 * 		获取操作
+	 */
+	public BitFieldRoArgument(GetOp get) {
+		super(get);
+	}
+
 	@Override
-	public redis.clients.jedis.args.ClientAttributeOption convert(
-			final com.buession.redis.core.ClientAttributeOption source) {
-		if(source == null){
-			return null;
-		}else{
-			switch(source){
-				case LIB_NAME:
-					return redis.clients.jedis.args.ClientAttributeOption.LIB_NAME;
-				case LIB_VER:
-					return redis.clients.jedis.args.ClientAttributeOption.LIB_VER;
-				default:
-					return null;
-			}
-		}
+	public String toString() {
+		final ArgStringBuilder builder = ArgStringBuilder.create();
+
+		builder.append(getSet());
+		builder.append(getGet());
+
+		return builder.toString();
 	}
 
 }

@@ -38,6 +38,8 @@ import com.buession.redis.core.TrackingInfo;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.SubCommand;
+import com.buession.redis.core.command.args.TrackingArgument;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.jedis.params.ClientTypeConverter;
 import com.buession.redis.core.internal.convert.jedis.params.ClientUnblockTypeConverter;
 import com.buession.redis.core.internal.convert.response.ClientConverter;
@@ -280,7 +282,7 @@ public final class JedisConnectionOperations extends AbstractJedisRedisOperation
 		return JedisCommandBuilder.<String, byte[]>newBuilder(client, Command.ECHO)
 				.executor((cmd)->cmd.echo(s))
 				.arguments(args)
-				.converter(stringToBinaryConverter)
+				.converter(Converters.stringToBinaryConverter())
 				.run();
 	}
 

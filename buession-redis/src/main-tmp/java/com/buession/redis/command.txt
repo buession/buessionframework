@@ -1,47 +1,4 @@
 
-
-	/**
-	 * geo command start
-	 **/
-
-	/**
-	 * hash command start
-	 **/
-	HDEL(CommandGroup.HASH, "w"),
-
-	HEXISTS(CommandGroup.HASH, "r"),
-
-	HGET(CommandGroup.HASH, "r"),
-
-	HGETALL(CommandGroup.HASH, "r"),
-
-	HINCRBY(CommandGroup.HASH, "rw"),
-
-	HINCRBYFLOAT(CommandGroup.HASH, "rw"),
-
-	HKEYS(CommandGroup.HASH, "r"),
-
-	HLEN(CommandGroup.HASH, "r"),
-
-	HMGET(CommandGroup.HASH, "r"),
-
-	HMSET(CommandGroup.HASH, "w"),
-
-	HRANDFIELD(CommandGroup.HASH, "r"),
-
-	HSCAN(CommandGroup.HASH, "r"),
-
-	HSET(CommandGroup.HASH, "w"),
-
-	HSETNX(CommandGroup.HASH, "w"),
-
-	HSTRLEN(CommandGroup.HASH, "r"),
-
-	HVALS(CommandGroup.HASH, "r"),
-	/**
-	 * hash command end
-	 **/
-
 	/**
 	 * hyperloglog command start
 	 **/
@@ -549,22 +506,6 @@
 	/**
 	 * Hash command start
 	 **/
-
-	HEXPIRE("w", CommandGroup.HASH),
-
-	HEXPIREAT("w", CommandGroup.HASH),
-
-	HEXPIRETIME("r", CommandGroup.HASH),
-
-	HPERSIST("w", CommandGroup.HASH),
-
-	HPEXPIRE("w", CommandGroup.HASH),
-
-	HPEXPIREAT("w", CommandGroup.HASH),
-
-	HPEXPIRETIME("r", CommandGroup.HASH),
-
-	HPTTL("r", CommandGroup.HASH),
 
 	HTTL("r", CommandGroup.HASH),
 
