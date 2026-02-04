@@ -1,15 +1,5 @@
 
-	/**
-	 * hyperloglog command start
-	 **/
-	PFADD(CommandGroup.HYPERLOGLOG, "w"),
 
-	PFCOUNT(CommandGroup.HYPERLOGLOG, "r"),
-
-	PFMERGE(CommandGroup.HYPERLOGLOG, "w"),
-	/**
-	 * hyperloglog command end
-	 **/
 
 	/**
 	 * key command start

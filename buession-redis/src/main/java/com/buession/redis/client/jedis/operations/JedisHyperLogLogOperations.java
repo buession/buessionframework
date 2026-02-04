@@ -19,134 +19,89 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisStandaloneClient;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.operations.HyperLogLogOperations;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.internal.convert.Converters;
 
 /**
- * Jedis 单机模式 HyperLogLog 命令操作
+ * Jedis HyperLogLog 命令操作
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class JedisHyperLogLogOperations extends AbstractHyperLogLogOperations<JedisStandaloneClient> {
+public final class JedisHyperLogLogOperations extends AbstractJedisRedisOperations implements HyperLogLogOperations {
 
-	public JedisHyperLogLogOperations(final JedisStandaloneClient client) {
+	public JedisHyperLogLogOperations(final JedisRedisClient client) {
 		super(client);
 	}
 
 	@Override
 	public Status pfAdd(final String key, final String... elements) {
 		final CommandArguments args = CommandArguments.create(key).add(elements);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.PFADD, (cmd)->cmd.pfadd(key, elements),
-					oneStatusConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.PFADD, (cmd)->cmd.pfadd(key, elements),
-					oneStatusConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.PFADD, (cmd)->cmd.pfadd(key, elements),
-					oneStatusConverter)
-					.run(args);
-		}
+		return JedisCommandBuilder.<Long, Status>newBuilder(client, Command.PFADD)
+				.executor((cmd)->cmd.pfadd(key, elements)).arguments(args)
+				.converter(Converters.oneStatusConverter())
+				.run();
 	}
 
 	@Override
 	public Status pfAdd(final byte[] key, final byte[]... elements) {
 		final CommandArguments args = CommandArguments.create(key).add(elements);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.PFADD, (cmd)->cmd.pfadd(key, elements),
-					oneStatusConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.PFADD, (cmd)->cmd.pfadd(key, elements),
-					oneStatusConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.PFADD, (cmd)->cmd.pfadd(key, elements),
-					oneStatusConverter)
-					.run(args);
-		}
+		return JedisCommandBuilder.<Long, Status>newBuilder(client, Command.PFADD)
+				.executor((cmd)->cmd.pfadd(key, elements)).arguments(args)
+				.converter(Converters.oneStatusConverter())
+				.run();
 	}
 
 	@Override
 	public Long pfCount(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.PFCOUNT, (cmd)->cmd.pfcount(keys), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.PFCOUNT, (cmd)->cmd.pfcount(keys), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.PFCOUNT, (cmd)->cmd.pfcount(keys), (v)->v)
-					.run(args);
-		}
+		return JedisCommandBuilder.<Long, Long>newBuilder(client, Command.PFCOUNT)
+				.executor((cmd)->cmd.pfcount(keys)).arguments(args)
+				.converter((v)->v)
+				.run();
 	}
 
 	@Override
 	public Long pfCount(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.PFCOUNT, (cmd)->cmd.pfcount(keys), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.PFCOUNT, (cmd)->cmd.pfcount(keys), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.PFCOUNT, (cmd)->cmd.pfcount(keys), (v)->v)
-					.run(args);
-		}
+		return JedisCommandBuilder.<Long, Long>newBuilder(client, Command.PFMERGE)
+				.executor((cmd)->cmd.pfcount(keys)).arguments(args)
+				.converter((v)->v)
+				.run();
 	}
 
 	@Override
 	public Status pfMerge(final String destKey, final String... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
-					okStatusConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
-					okStatusConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
-					okStatusConverter)
-					.run(args);
-		}
+		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.PFADD)
+				.executor((cmd)->cmd.pfmerge(destKey, keys)).arguments(args)
+				.converter(Converters.okStatusConverter())
+				.run();
 	}
 
 	@Override
 	public Status pfMerge(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
+		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.PFADD)
+				.executor((cmd)->cmd.pfmerge(destKey, keys)).arguments(args)
+				.converter(Converters.okStatusConverter())
+				.run();
+	}
 
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
-					okStatusConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
-					okStatusConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
-					okStatusConverter)
-					.run(args);
-		}
+	@Override
+	public Status pfSelftest() {
+		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.PFSELFTEST)
+				.converter(Converters.okStatusConverter())
+				.run();
 	}
 
 }

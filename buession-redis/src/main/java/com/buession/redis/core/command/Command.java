@@ -277,6 +277,20 @@ public enum Command implements ProtocolCommand {
 	/**
 	 * hash command end
 	 **/
+
+	/**
+	 * hyperloglog command start
+	 **/
+	PFADD(CommandGroup.HYPERLOGLOG, "w"),
+
+	PFCOUNT(CommandGroup.HYPERLOGLOG, "r"),
+
+	PFMERGE(CommandGroup.HYPERLOGLOG, "w"),
+
+	PFSELFTEST(CommandGroup.HYPERLOGLOG, "w")
+	/**
+	 * hyperloglog command end
+	 **/
 	;
 
 	/**

@@ -30,7 +30,7 @@ import com.buession.redis.core.command.HyperLogLogCommands;
 /**
  * HyperLogLog 运算
  *
- * <p>详情说明 <a href="http://redisdoc.com/hyperloglog/index.html" target="_blank">http://redisdoc.com/hyperloglog/index.html</a></p>
+ * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=hyperloglog" target="_blank">https://redis.io/docs/latest/commands/?group=hyperloglog</a></p>
  *
  * @author Yong.Teng
  */
@@ -64,6 +64,11 @@ public interface HyperLogLogOperations extends HyperLogLogCommands, RedisOperati
 	@Override
 	default Status pfMerge(final byte[] destKey, final byte[]... keys) {
 		return execute((client)->client.hyperLogLogOperations().pfMerge(destKey, keys));
+	}
+
+	@Override
+	default Status pfSelftest() {
+		return execute((client)->client.hyperLogLogOperations().pfSelftest());
 	}
 
 }

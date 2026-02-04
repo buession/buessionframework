@@ -25,74 +25,73 @@
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.lettuce.LettuceStandaloneClient;
+import com.buession.redis.client.lettuce.LettuceRedisClient;
+import com.buession.redis.client.operations.HyperLogLogOperations;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.utils.SafeEncoder;
 
 /**
- * Lettuce 单机模式 HyperLogLog 命令操作
+ * Lettuce HyperLogLog 命令操作
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class LettuceHyperLogLogOperations extends AbstractHyperLogLogOperations<LettuceStandaloneClient> {
+public final class LettuceHyperLogLogOperations extends AbstractLettuceRedisOperations implements
+		HyperLogLogOperations {
 
-	public LettuceHyperLogLogOperations(final LettuceStandaloneClient client) {
+	public LettuceHyperLogLogOperations(final LettuceRedisClient client) {
 		super(client);
+	}
+
+	@Override
+	public Status pfAdd(final String key, final String... elements) {
+		return pfAdd(SafeEncoder.encode(key), SafeEncoder.encode(elements));
 	}
 
 	@Override
 	public Status pfAdd(final byte[] key, final byte[]... elements) {
 		final CommandArguments args = CommandArguments.create(key).add(elements);
+		return LettuceCommandBuilder.<Long, Status>newBuilder(client, Command.PFADD)
+				.executor((cmd)->cmd.pfadd(key, elements)).arguments(args)
+				.converter(Converters.oneStatusConverter())
+				.run();
+	}
 
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.PFADD, (cmd)->cmd.pfadd(key, elements),
-					oneStatusConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.PFADD, (cmd)->cmd.pfadd(key, elements),
-					oneStatusConverter)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.PFADD, (cmd)->cmd.pfadd(key, elements),
-					oneStatusConverter)
-					.run(args);
-		}
+	@Override
+	public Long pfCount(final String... keys) {
+		return pfCount(SafeEncoder.encode(keys));
 	}
 
 	@Override
 	public Long pfCount(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
+		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.PFCOUNT)
+				.executor((cmd)->cmd.pfcount(keys)).arguments(args)
+				.converter((v)->v)
+				.run();
+	}
 
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfcount(keys), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfcount(keys), (v)->v)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfcount(keys), (v)->v)
-					.run(args);
-		}
+	@Override
+	public Status pfMerge(final String destKey, final String... keys) {
+		return pfMerge(SafeEncoder.encode(destKey), SafeEncoder.encode(keys));
 	}
 
 	@Override
 	public Status pfMerge(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
+		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.PFMERGE)
+				.executor((cmd)->cmd.pfmerge(destKey, keys)).arguments(args)
+				.converter(Converters.okStatusConverter())
+				.run();
+	}
 
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
-					okStatusConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
-					okStatusConverter)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.PFMERGE, (cmd)->cmd.pfmerge(destKey, keys),
-					okStatusConverter)
-					.run(args);
-		}
+	@Override
+	public Status pfSelftest() {
+		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.PFSELFTEST)
+				.converter(Converters.okStatusConverter())
+				.run();
 	}
 
 }

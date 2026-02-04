@@ -45,19 +45,4 @@ public abstract class AbstractHyperLogLogOperations<C extends LettuceRedisClient
 		super(client);
 	}
 
-	@Override
-	public Status pfAdd(final String key, final String... elements) {
-		return pfAdd(SafeEncoder.encode(key), SafeEncoder.encode(elements));
-	}
-
-	@Override
-	public Long pfCount(final String... keys) {
-		return pfCount(SafeEncoder.encode(keys));
-	}
-
-	@Override
-	public Status pfMerge(final String destKey, final String... keys) {
-		return pfMerge(SafeEncoder.encode(destKey), SafeEncoder.encode(keys));
-	}
-
 }
