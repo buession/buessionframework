@@ -38,6 +38,10 @@ public final class BitOperationConverter implements Converter<BitOperation, BitO
 
 	@Override
 	public BitOP convert(final BitOperation source) {
+		if(source == null){
+			return null;
+		}
+
 		return switch(source){
 			case AND -> BitOP.AND;
 			case OR -> BitOP.OR;

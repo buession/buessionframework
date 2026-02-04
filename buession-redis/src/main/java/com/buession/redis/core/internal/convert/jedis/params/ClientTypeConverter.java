@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.params;
@@ -37,20 +37,17 @@ public final class ClientTypeConverter implements Converter<ClientType, redis.cl
 
 	@Override
 	public redis.clients.jedis.args.ClientType convert(final ClientType source) {
-		switch(source){
-			case NORMAL:
-				return redis.clients.jedis.args.ClientType.NORMAL;
-			case MASTER:
-				return redis.clients.jedis.args.ClientType.MASTER;
-			case SLAVE:
-				return redis.clients.jedis.args.ClientType.SLAVE;
-			case REPLICA:
-				return redis.clients.jedis.args.ClientType.REPLICA;
-			case PUBSUB:
-				return redis.clients.jedis.args.ClientType.PUBSUB;
-			default:
-				return null;
+		if(source == null){
+			return null;
 		}
+
+		return switch(source){
+			case NORMAL -> redis.clients.jedis.args.ClientType.NORMAL;
+			case MASTER -> redis.clients.jedis.args.ClientType.MASTER;
+			case SLAVE -> redis.clients.jedis.args.ClientType.SLAVE;
+			case REPLICA -> redis.clients.jedis.args.ClientType.REPLICA;
+			case PUBSUB -> redis.clients.jedis.args.ClientType.PUBSUB;
+		};
 	}
 
 }

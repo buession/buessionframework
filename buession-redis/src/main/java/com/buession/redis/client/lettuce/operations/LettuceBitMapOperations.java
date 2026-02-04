@@ -32,7 +32,7 @@ import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.args.BitFieldArgument;
 import com.buession.redis.core.command.args.BitFieldRoArgument;
-import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.core.internal.convert.response.OneBooleanConverter;
 import com.buession.redis.core.internal.lettuce.CompositeArgumentUtils;
 import com.buession.redis.utils.SafeEncoder;
 
@@ -199,7 +199,7 @@ public final class LettuceBitMapOperations extends AbstractLettuceRedisOperation
 		return LettuceCommandBuilder.<Long, Boolean>newBuilder(client, Command.GETBIT)
 				.executor((cmd)->cmd.getbit(key, offset))
 				.arguments(args)
-				.converter(Converters.oneBooleanConverter())
+				.converter(new OneBooleanConverter())
 				.run();
 	}
 
@@ -214,7 +214,7 @@ public final class LettuceBitMapOperations extends AbstractLettuceRedisOperation
 		return LettuceCommandBuilder.<Long, Boolean>newBuilder(client, Command.SETBIT)
 				.executor((cmd)->cmd.setbit(key, offset, value ? 1 : 0))
 				.arguments(args)
-				.converter(Converters.oneBooleanConverter())
+				.converter(new OneBooleanConverter())
 				.run();
 	}
 

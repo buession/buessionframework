@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.params;
@@ -37,18 +37,16 @@ public final class GeoUnitConverter implements Converter<GeoUnit, redis.clients.
 
 	@Override
 	public redis.clients.jedis.args.GeoUnit convert(final GeoUnit source) {
-		switch(source){
-			case M:
-				return redis.clients.jedis.args.GeoUnit.M;
-			case KM:
-				return redis.clients.jedis.args.GeoUnit.KM;
-			case MI:
-				return redis.clients.jedis.args.GeoUnit.MI;
-			case FT:
-				return redis.clients.jedis.args.GeoUnit.FT;
-			default:
-				return null;
+		if(source == null){
+			return null;
 		}
+
+		return switch(source){
+			case M -> redis.clients.jedis.args.GeoUnit.M;
+			case KM -> redis.clients.jedis.args.GeoUnit.KM;
+			case MI -> redis.clients.jedis.args.GeoUnit.MI;
+			case FT -> redis.clients.jedis.args.GeoUnit.FT;
+		};
 	}
 
 }

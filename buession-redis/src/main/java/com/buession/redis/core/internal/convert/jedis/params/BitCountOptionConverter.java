@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.params;
@@ -38,14 +38,14 @@ public final class BitCountOptionConverter
 
 	@Override
 	public redis.clients.jedis.args.BitCountOption convert(final BitCountOption source) {
-		switch(source){
-			case BYTE:
-				return redis.clients.jedis.args.BitCountOption.BYTE;
-			case BIT:
-				return redis.clients.jedis.args.BitCountOption.BIT;
-			default:
-				return null;
+		if(source == null){
+			return null;
 		}
+
+		return switch(source){
+			case BYTE -> redis.clients.jedis.args.BitCountOption.BYTE;
+			case BIT -> redis.clients.jedis.args.BitCountOption.BIT;
+		};
 	}
 
 }

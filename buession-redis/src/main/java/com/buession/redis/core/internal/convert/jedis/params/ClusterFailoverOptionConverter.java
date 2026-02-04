@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.params;
@@ -38,14 +38,14 @@ public final class ClusterFailoverOptionConverter
 
 	@Override
 	public redis.clients.jedis.args.ClusterFailoverOption convert(final ClusterFailoverOption source) {
-		switch(source){
-			case FORCE:
-				return redis.clients.jedis.args.ClusterFailoverOption.FORCE;
-			case TAKEOVER:
-				return redis.clients.jedis.args.ClusterFailoverOption.TAKEOVER;
-			default:
-				return null;
+		if(source == null){
+			return null;
 		}
+
+		return switch(source){
+			case FORCE -> redis.clients.jedis.args.ClusterFailoverOption.FORCE;
+			case TAKEOVER -> redis.clients.jedis.args.ClusterFailoverOption.TAKEOVER;
+		};
 	}
 
 }

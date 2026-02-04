@@ -38,6 +38,10 @@ public final class GeoConverter implements Converter<Geo, GeoCoordinate> {
 
 	@Override
 	public GeoCoordinate convert(final Geo source) {
+		if(source == null){
+			return null;
+		}
+
 		return new GeoCoordinate(source.getLongitude(), source.getLatitude());
 	}
 

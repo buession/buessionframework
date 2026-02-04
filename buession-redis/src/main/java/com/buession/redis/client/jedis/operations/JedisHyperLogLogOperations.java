@@ -29,7 +29,8 @@ import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.HyperLogLogOperations;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.core.internal.convert.response.OkStatusConverter;
+import com.buession.redis.core.internal.convert.response.OneStatusConverter;
 
 /**
  * Jedis HyperLogLog 命令操作
@@ -48,7 +49,7 @@ public final class JedisHyperLogLogOperations extends AbstractJedisRedisOperatio
 		final CommandArguments args = CommandArguments.create(key).add(elements);
 		return JedisCommandBuilder.<Long, Status>newBuilder(client, Command.PFADD)
 				.executor((cmd)->cmd.pfadd(key, elements)).arguments(args)
-				.converter(Converters.oneStatusConverter())
+				.converter(new OneStatusConverter())
 				.run();
 	}
 
@@ -57,7 +58,7 @@ public final class JedisHyperLogLogOperations extends AbstractJedisRedisOperatio
 		final CommandArguments args = CommandArguments.create(key).add(elements);
 		return JedisCommandBuilder.<Long, Status>newBuilder(client, Command.PFADD)
 				.executor((cmd)->cmd.pfadd(key, elements)).arguments(args)
-				.converter(Converters.oneStatusConverter())
+				.converter(new OneStatusConverter())
 				.run();
 	}
 
@@ -84,7 +85,7 @@ public final class JedisHyperLogLogOperations extends AbstractJedisRedisOperatio
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
 		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.PFADD)
 				.executor((cmd)->cmd.pfmerge(destKey, keys)).arguments(args)
-				.converter(Converters.okStatusConverter())
+				.converter(new OkStatusConverter())
 				.run();
 	}
 
@@ -93,14 +94,14 @@ public final class JedisHyperLogLogOperations extends AbstractJedisRedisOperatio
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
 		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.PFADD)
 				.executor((cmd)->cmd.pfmerge(destKey, keys)).arguments(args)
-				.converter(Converters.okStatusConverter())
+				.converter(new OkStatusConverter())
 				.run();
 	}
 
 	@Override
 	public Status pfSelftest() {
 		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.PFSELFTEST)
-				.converter(Converters.okStatusConverter())
+				.converter(new OkStatusConverter())
 				.run();
 	}
 

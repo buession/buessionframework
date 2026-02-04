@@ -167,9 +167,9 @@ public record MemoryStats(
 	final static long serialVersionUID = -5308964580953471955L;
 
 	public record Db(
-			long overheadHashTableMain,
+			Long overheadHashTableMain,
 
-			long overheadHashTableExpires
+			Long overheadHashTableExpires
 	) implements Serializable {
 
 	}

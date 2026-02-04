@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
@@ -68,7 +68,7 @@ public interface ScanResultConverter<S, T> extends Converter<redis.clients.jedis
 			implements ScanResultConverter<redis.clients.jedis.resps.Tuple, List<Tuple>> {
 
 		private final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter =
-				TupleConverter.listConverter();
+				new ListConverter<>(new TupleConverter());
 
 		@Override
 		public ScanResult<List<Tuple>> convert(

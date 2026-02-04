@@ -67,8 +67,4 @@ public final class ClusterReplicasConverter implements Converter<String, Cluster
 				Long.parseLong(values[4]), Long.parseLong(values[5]), Long.parseLong(values[6]), linkState, slotRange);
 	}
 
-	public static ListConverter<String, ClusterRedisNode> listConverter() {
-		return new ListConverter<>(new ClusterReplicasConverter());
-	}
-
 }

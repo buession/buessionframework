@@ -29,7 +29,8 @@ import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.HyperLogLogOperations;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.core.internal.convert.response.OkStatusConverter;
+import com.buession.redis.core.internal.convert.response.OneStatusConverter;
 import com.buession.redis.utils.SafeEncoder;
 
 /**
@@ -55,7 +56,7 @@ public final class LettuceHyperLogLogOperations extends AbstractLettuceRedisOper
 		final CommandArguments args = CommandArguments.create(key).add(elements);
 		return LettuceCommandBuilder.<Long, Status>newBuilder(client, Command.PFADD)
 				.executor((cmd)->cmd.pfadd(key, elements)).arguments(args)
-				.converter(Converters.oneStatusConverter())
+				.converter(new OneStatusConverter())
 				.run();
 	}
 
@@ -83,14 +84,14 @@ public final class LettuceHyperLogLogOperations extends AbstractLettuceRedisOper
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
 		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.PFMERGE)
 				.executor((cmd)->cmd.pfmerge(destKey, keys)).arguments(args)
-				.converter(Converters.okStatusConverter())
+				.converter(new OkStatusConverter())
 				.run();
 	}
 
 	@Override
 	public Status pfSelftest() {
 		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.PFSELFTEST)
-				.converter(Converters.okStatusConverter())
+				.converter(new OkStatusConverter())
 				.run();
 	}
 

@@ -24,6 +24,7 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
+import com.buession.core.converter.BooleanStatusConverter;
 import com.buession.core.converter.ListConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
@@ -36,6 +37,8 @@ import com.buession.redis.core.command.args.GetExArgument;
 import com.buession.redis.core.command.args.HSetExArgument;
 import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConverter;
+import com.buession.redis.core.internal.convert.response.OkStatusConverter;
+import com.buession.redis.core.internal.convert.response.OneStatusConverter;
 import com.buession.redis.core.internal.lettuce.CompositeArgumentUtils;
 import com.buession.redis.core.internal.lettuce.LettuceScanArgs;
 import com.buession.redis.core.internal.lettuce.LettuceScanCursor;
@@ -307,7 +310,7 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	public Status hMSet(final byte[] key, final Map<byte[], byte[]> data) {
 		final CommandArguments args = CommandArguments.create(key).add(data);
 		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.HMSET)
-				.executor((cmd)->cmd.hmset(key, data)).arguments(args).converter(Converters.okStatusConverter()).run();
+				.executor((cmd)->cmd.hmset(key, data)).arguments(args).converter(new OkStatusConverter()).run();
 	}
 
 	@Override
@@ -525,7 +528,7 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 		final CommandArguments args = CommandArguments.create(key).add(data);
 		return LettuceCommandBuilder.<Long, Status>newBuilder(client, Command.HSET)
 				.executor((cmd)->cmd.hsetex(key, data))
-				.arguments(args).converter(Converters.oneStatusConverter()).run();
+				.arguments(args).converter(new OneStatusConverter()).run();
 	}
 
 	@Override
@@ -538,7 +541,7 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(data);
 		return LettuceCommandBuilder.<Long, Status>newBuilder(client, Command.HSET)
 				.executor((cmd)->cmd.hsetex(key, CompositeArgumentUtils.hSetExArgs(argument), data))
-				.arguments(args).converter(Converters.oneStatusConverter()).run();
+				.arguments(args).converter(new OneStatusConverter()).run();
 	}
 
 	@Override
@@ -551,7 +554,7 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
 		return LettuceCommandBuilder.<Boolean, Status>newBuilder(client, Command.HSETNX)
 				.executor((cmd)->cmd.hsetnx(key, field, value))
-				.arguments(args).converter(Converters.booleanStatusConverter()).run();
+				.arguments(args).converter(new BooleanStatusConverter()).run();
 	}
 
 	@Override

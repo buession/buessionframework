@@ -36,6 +36,8 @@ import com.buession.redis.core.command.args.HSetExArgument;
 import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.jedis.params.ExpireOptionConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ScanResultConverter;
+import com.buession.redis.core.internal.convert.response.OkStatusConverter;
+import com.buession.redis.core.internal.convert.response.OneStatusConverter;
 import com.buession.redis.core.internal.jedis.IParamsUtils;
 import com.buession.redis.core.internal.jedis.JedisScanParams;
 import redis.clients.jedis.UnifiedJedis;
@@ -320,14 +322,14 @@ public final class JedisHashOperations extends AbstractJedisRedisOperations impl
 	public Status hMSet(final String key, final Map<String, String> data) {
 		final CommandArguments args = CommandArguments.create(key).add(data);
 		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.HMSET)
-				.executor((cmd)->cmd.hmset(key, data)).arguments(args).converter(Converters.okStatusConverter()).run();
+				.executor((cmd)->cmd.hmset(key, data)).arguments(args).converter(new OkStatusConverter()).run();
 	}
 
 	@Override
 	public Status hMSet(final byte[] key, final Map<byte[], byte[]> data) {
 		final CommandArguments args = CommandArguments.create(key).add(data);
 		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.HMSET)
-				.executor((cmd)->cmd.hmset(key, data)).arguments(args).converter(Converters.okStatusConverter()).run();
+				.executor((cmd)->cmd.hmset(key, data)).arguments(args).converter(new OkStatusConverter()).run();
 	}
 
 	@Override
@@ -559,7 +561,7 @@ public final class JedisHashOperations extends AbstractJedisRedisOperations impl
 		final CommandArguments args = CommandArguments.create(key).add(data);
 		return JedisCommandBuilder.<Long, Status>newBuilder(client, Command.HSETEX)
 				.executor((cmd)->cmd.hsetex(key, new HSetExParams(), data)).arguments(args)
-				.converter(Converters.oneStatusConverter()).run();
+				.converter(new OneStatusConverter()).run();
 	}
 
 	@Override
@@ -567,7 +569,7 @@ public final class JedisHashOperations extends AbstractJedisRedisOperations impl
 		final CommandArguments args = CommandArguments.create(key).add(data);
 		return JedisCommandBuilder.<Long, Status>newBuilder(client, Command.HSETEX)
 				.executor((cmd)->cmd.hsetex(key, new HSetExParams(), data)).arguments(args)
-				.converter(Converters.oneStatusConverter()).run();
+				.converter(new OneStatusConverter()).run();
 	}
 
 	@Override
@@ -575,7 +577,7 @@ public final class JedisHashOperations extends AbstractJedisRedisOperations impl
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(data);
 		return JedisCommandBuilder.<Long, Status>newBuilder(client, Command.HSETEX)
 				.executor((cmd)->cmd.hsetex(key, IParamsUtils.hSetExParams(argument), data)).arguments(args)
-				.converter(Converters.oneStatusConverter()).run();
+				.converter(new OneStatusConverter()).run();
 	}
 
 	@Override
@@ -583,7 +585,7 @@ public final class JedisHashOperations extends AbstractJedisRedisOperations impl
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(data);
 		return JedisCommandBuilder.<Long, Status>newBuilder(client, Command.HSETEX)
 				.executor((cmd)->cmd.hsetex(key, IParamsUtils.hSetExParams(argument), data)).arguments(args)
-				.converter(Converters.oneStatusConverter()).run();
+				.converter(new OneStatusConverter()).run();
 	}
 
 	@Override
@@ -591,7 +593,7 @@ public final class JedisHashOperations extends AbstractJedisRedisOperations impl
 		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
 		return JedisCommandBuilder.<Long, Status>newBuilder(client, Command.HSETNX)
 				.executor((cmd)->cmd.hsetnx(key, field, value)).arguments(args)
-				.converter(Converters.oneStatusConverter()).run();
+				.converter(new OneStatusConverter()).run();
 	}
 
 	@Override
@@ -599,7 +601,7 @@ public final class JedisHashOperations extends AbstractJedisRedisOperations impl
 		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
 		return JedisCommandBuilder.<Long, Status>newBuilder(client, Command.HSETNX)
 				.executor((cmd)->cmd.hsetnx(key, field, value)).arguments(args)
-				.converter(Converters.oneStatusConverter()).run();
+				.converter(new OneStatusConverter()).run();
 	}
 
 	@Override

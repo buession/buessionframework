@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.params;
@@ -37,14 +37,14 @@ public final class FlushModeConverter implements Converter<FlushMode, redis.clie
 
 	@Override
 	public redis.clients.jedis.args.FlushMode convert(final FlushMode source) {
-		switch(source){
-			case ASYNC:
-				return redis.clients.jedis.args.FlushMode.ASYNC;
-			case SYNC:
-				return redis.clients.jedis.args.FlushMode.SYNC;
-			default:
-				return null;
+		if(source == null){
+			return null;
 		}
+
+		return switch(source){
+			case ASYNC -> redis.clients.jedis.args.FlushMode.ASYNC;
+			case SYNC -> redis.clients.jedis.args.FlushMode.SYNC;
+		};
 	}
 
 }

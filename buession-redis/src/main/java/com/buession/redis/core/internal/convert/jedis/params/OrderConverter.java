@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.params;
@@ -38,18 +38,15 @@ public final class OrderConverter implements Converter<Order, SortingOrder> {
 
 	@Override
 	public SortingOrder convert(final Order source) {
-		if(source != null){
-			switch(source){
-				case ASC:
-					return SortingOrder.ASC;
-				case DESC:
-					return SortingOrder.DESC;
-				default:
-					break;
-			}
+		if(source == null){
+			return null;
 		}
 
-		return null;
+		return switch(source){
+			case ASC -> SortingOrder.ASC;
+			case DESC -> SortingOrder.DESC;
+		};
+
 	}
 
 }

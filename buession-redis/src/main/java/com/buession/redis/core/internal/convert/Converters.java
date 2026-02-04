@@ -24,16 +24,12 @@
  */
 package com.buession.redis.core.internal.convert;
 
-import com.buession.core.converter.BooleanStatusConverter;
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.core.converter.ListMapEntryMapConverter;
 import com.buession.core.converter.ListSetConverter;
 import com.buession.core.converter.MapConverter;
 import com.buession.core.converter.SetConverter;
-import com.buession.redis.core.internal.convert.response.OkStatusConverter;
-import com.buession.redis.core.internal.convert.response.OneBooleanConverter;
-import com.buession.redis.core.internal.convert.response.OneStatusConverter;
 import com.buession.redis.utils.SafeEncoder;
 
 /**
@@ -76,22 +72,6 @@ public interface Converters {
 
 	static ListMapEntryMapConverter<byte[], byte[], byte[], byte[]> binaryListMapEntryMapConverter() {
 		return new ListMapEntryMapConverter<>((k)->k, (v)->v);
-	}
-
-	static OkStatusConverter okStatusConverter() {
-		return new OkStatusConverter();
-	}
-
-	static BooleanStatusConverter booleanStatusConverter() {
-		return new BooleanStatusConverter();
-	}
-
-	static OneStatusConverter oneStatusConverter() {
-		return new OneStatusConverter();
-	}
-
-	static OneBooleanConverter oneBooleanConverter() {
-		return new OneBooleanConverter();
 	}
 
 	/****/

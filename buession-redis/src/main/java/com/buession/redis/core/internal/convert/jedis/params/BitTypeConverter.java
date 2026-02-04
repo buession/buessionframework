@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.params;
@@ -38,18 +38,14 @@ public final class BitTypeConverter implements Converter<BitType, BitCountOption
 
 	@Override
 	public BitCountOption convert(final BitType source) {
-		if(source != null){
-			switch(source){
-				case BYTE:
-					return BitCountOption.BYTE;
-				case BIT:
-					return BitCountOption.BIT;
-				default:
-					break;
-			}
+		if(source == null){
+			return null;
 		}
 
-		return null;
+		return switch(source){
+			case BYTE -> BitCountOption.BYTE;
+			case BIT -> BitCountOption.BIT;
+		};
 	}
 
 }
