@@ -138,6 +138,15 @@ public enum SubCommand implements ProtocolCommand {
 	/**
 	 * connection command end
 	 */
+
+	/**
+	 * json command start
+	 **/
+
+	JSON_DEBUG_MEMORY("MEMORY", "r"),
+	/**
+	 * json command end
+	 **/
 	;
 
 	/**

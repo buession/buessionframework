@@ -50,6 +50,10 @@ public interface Converters {
 		return new ListConverter<>(SafeEncoder::encode);
 	}
 
+	static ListConverter<String, byte[]> stringListToBinaryListConverter() {
+		return new ListConverter<>(SafeEncoder::encode);
+	}
+
 	static ListSetConverter<byte[], byte[]> binaryListToBinarySetConverter() {
 		return new ListSetConverter<>((v)->v);
 	}

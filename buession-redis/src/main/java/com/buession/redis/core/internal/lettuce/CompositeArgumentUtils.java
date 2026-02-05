@@ -32,6 +32,7 @@ import com.buession.redis.core.command.args.GeoRadiusArgument;
 import com.buession.redis.core.command.args.GeoSearchArgument;
 import com.buession.redis.core.command.args.GetExArgument;
 import com.buession.redis.core.command.args.HSetExArgument;
+import com.buession.redis.core.command.args.JsonGetArgument;
 import com.buession.redis.core.command.args.TrackingArgument;
 import io.lettuce.core.BitFieldArgs;
 import io.lettuce.core.ExpireArgs;
@@ -40,6 +41,7 @@ import io.lettuce.core.GeoArgs;
 import io.lettuce.core.HGetExArgs;
 import io.lettuce.core.HSetExArgs;
 import io.lettuce.core.TrackingArgs;
+import io.lettuce.core.json.arguments.JsonGetArgs;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -281,6 +283,20 @@ public class CompositeArgumentUtils {
 		}
 
 		return hSetExArgs;
+	}
+
+	public static JsonGetArgs jsonGetArgs(final JsonGetArgument jsonGetArgument) {
+		if(jsonGetArgument == null){
+			return null;
+		}
+
+		final JsonGetArgs jsonGetArgs = new JsonGetArgs();
+
+		Optional.ofNullable(jsonGetArgument.getIndent()).map(jsonGetArgs::indent);
+		Optional.ofNullable(jsonGetArgument.getNewline()).map(jsonGetArgs::newline);
+		Optional.ofNullable(jsonGetArgument.getSpace()).map(jsonGetArgs::space);
+
+		return jsonGetArgs;
 	}
 
 }

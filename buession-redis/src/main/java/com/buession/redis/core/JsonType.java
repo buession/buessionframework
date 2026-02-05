@@ -22,144 +22,44 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command;
+package com.buession.redis.core;
 
 /**
- * Redis 协议命令分组
+ * JSON 文档值的数据类型
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public enum CommandGroup {
+public enum JsonType implements Keyword {
 
-	/**
-	 * 布隆过滤器
-	 */
-	BLOOM_FILTER("Bloom filter"),
+	ARRAY("array"),
 
-	/**
-	 * 位图命令
-	 */
-	BITMAP("BitMap"),
+	BOOLEAN("boolean"),
 
-	/**
-	 * 布谷鸟过滤器
-	 */
-	CUCKOO_FILTER("Cuckoo filter"),
+	INTEGER("integer"),
 
-	/**
-	 * 集群命令
-	 */
-	CLUSTER("Cluster"),
+	OBJECT("object"),
 
-	/**
-	 * 计数最小草图
-	 */
-	COUNT_MIN_SKETCH("Count-min sketch"),
+	STRING("string"),
 
-	/**
-	 * 权限命令
-	 */
-	ACL("Acl"),
+	NUMBER("number"),
 
-	/**
-	 * 连接命令
-	 */
-	CONNECTION("Connection"),
+	UNKNOWN("unknown");
 
-	/**
-	 * 常规命令
-	 */
-	GENERIC("Generic"),
+	private final String value;
 
-	/**
-	 * 地理位置命令
-	 */
-	GEO("Geo"),
-
-	/**
-	 * 哈希命令
-	 */
-	HASH("Hash"),
-
-	/**
-	 * HyperLogLog 命令
-	 */
-	HYPERLOGLOG("HyperLogLog"),
-
-	/**
-	 * JSON 命令
-	 */
-	JSON("JSON"),
-
-	/**
-	 * 键命令
-	 */
-	KEY("Key"),
-
-	/**
-	 * 列表命令
-	 */
-	LIST("List"),
-
-	/**
-	 * 发布订阅命令
-	 */
-	PUBSUB("PubSub"),
-
-	/**
-	 * 脚本命令
-	 */
-	SCRIPTING("Scripting"),
-
-	/**
-	 * 服务器命令
-	 */
-	SERVER("Server"),
-
-	/**
-	 * 集合命令
-	 */
-	SET("Set"),
-
-	/**
-	 * 有序集合命令
-	 */
-	SORTEDSET("Sorted Set"),
-
-	/**
-	 * 流命令
-	 */
-	STREAM("Stream"),
-
-	/**
-	 * 字符串命令
-	 */
-	STRING("String"),
-
-	/**
-	 * 事务命令
-	 */
-	TRANSACTION("Transaction");
-
-	private final String name;
-
-	CommandGroup(final String name) {
-		this.name = name;
+	JsonType(final String value) {
+		this.value = value;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	@Deprecated
+	@Override
 	public String getValue() {
-		return getName();
+		return value;
 	}
 
 	@Override
 	public String toString() {
-		return getName();
+		return getValue();
 	}
 
 }

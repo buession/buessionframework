@@ -27,6 +27,8 @@ package com.buession.redis.core.operations;
 import com.buession.redis.core.BitCountOption;
 import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.command.BitMapCommands;
+import com.buession.redis.core.command.args.BitFieldArgument;
+import com.buession.redis.core.command.args.BitFieldRoArgument;
 
 import java.util.List;
 

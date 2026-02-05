@@ -38,6 +38,7 @@ import com.buession.redis.core.NxXx;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.args.GetExArgument;
 import com.buession.redis.core.command.args.HSetExArgument;
+import com.buession.redis.core.command.args.JsonGetArgument;
 import com.buession.redis.core.operations.*;
 
 import java.util.LinkedHashMap;
@@ -53,10 +54,11 @@ import java.util.stream.Collectors;
  * @author Yong.Teng
  * @see AbstractRedisTemplate
  */
-public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterOperations, BitMapOperations,
-		CuckooFilterOperations, ClusterOperations, CountMinSketchOperations, ConnectionOperations, GenericOperations,
-		GeoOperations, HashOperations, HyperLogLogOperations, KeyOperations, ListOperations, PubSubOperations,
-		ScriptingOperations, ServerOperations, SetOperations, SortedSetOperations, StreamOperations, StringOperations,
+public class RedisTemplate extends AbstractRedisTemplate
+		implements BloomFilterOperations, BitMapOperations, CuckooFilterOperations, ClusterOperations,
+		CountMinSketchOperations, ConnectionOperations, GenericOperations, GeoOperations, HashOperations,
+		HyperLogLogOperations, JsonOperations, KeyOperations, ListOperations, PubSubOperations, ScriptingOperations,
+		ServerOperations, SetOperations, SortedSetOperations, StreamOperations, StringOperations,
 		TransactionOperations {
 
 	/**
@@ -298,20 +300,12 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 
 	@Override
 	public <V> Status hMSet(final String key, final List<KeyValue<String, V>> data) {
-		Map<String, String> temp = data.stream().collect(
-				Collectors.toMap(KeyValue::getKey, (e)->serializer.serialize(e.getValue()), (key1, key2)->key2,
-						LinkedHashMap::new));
-
-		return hMSet(key, temp);
+		return hMSet(key, listKeyValue2StringMap(data));
 	}
 
 	@Override
 	public <V> Status hMSet(final byte[] key, final List<KeyValue<byte[], V>> data) {
-		Map<byte[], byte[]> temp = data.stream().collect(
-				Collectors.toMap(KeyValue::getKey, (e)->serializer.serializeAsBytes(e.getValue()), (key1, key2)->key2,
-						LinkedHashMap::new));
-
-		return hMSet(key, temp);
+		return hMSet(key, listKeyValue2BinaryMap(data));
 	}
 
 	@Override
@@ -514,56 +508,32 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 
 	@Override
 	public <V> Long hSet(final String key, final List<KeyValue<String, V>> data) {
-		Map<String, String> temp = data.stream().collect(
-				Collectors.toMap(KeyValue::getKey, (e)->serializer.serialize(e.getValue()), (key1, key2)->key2,
-						LinkedHashMap::new));
-
-		return hSet(key, temp);
+		return hSet(key, listKeyValue2StringMap(data));
 	}
 
 	@Override
 	public <V> Long hSet(final byte[] key, final List<KeyValue<byte[], V>> data) {
-		Map<byte[], byte[]> temp = data.stream().collect(
-				Collectors.toMap(KeyValue::getKey, (e)->serializer.serializeAsBytes(e.getValue()), (key1, key2)->key2,
-						LinkedHashMap::new));
-
-		return hSet(key, temp);
+		return hSet(key, listKeyValue2BinaryMap(data));
 	}
 
 	@Override
 	public <V> Status hSetEx(final String key, final List<KeyValue<String, V>> data) {
-		Map<String, String> temp = data.stream().collect(
-				Collectors.toMap(KeyValue::getKey, (e)->serializer.serialize(e.getValue()), (key1, key2)->key2,
-						LinkedHashMap::new));
-
-		return hSetEx(key, temp);
+		return hSetEx(key, listKeyValue2StringMap(data));
 	}
 
 	@Override
 	public <V> Status hSetEx(final byte[] key, final List<KeyValue<byte[], V>> data) {
-		Map<byte[], byte[]> temp = data.stream().collect(
-				Collectors.toMap(KeyValue::getKey, (e)->serializer.serializeAsBytes(e.getValue()), (key1, key2)->key2,
-						LinkedHashMap::new));
-
-		return hSetEx(key, temp);
+		return hSetEx(key, listKeyValue2BinaryMap(data));
 	}
 
 	@Override
 	public <V> Status hSetEx(final String key, final List<KeyValue<String, V>> data, final HSetExArgument argument) {
-		Map<String, String> temp = data.stream().collect(
-				Collectors.toMap(KeyValue::getKey, (e)->serializer.serialize(e.getValue()), (key1, key2)->key2,
-						LinkedHashMap::new));
-
-		return hSetEx(key, temp, argument);
+		return hSetEx(key, listKeyValue2StringMap(data), argument);
 	}
 
 	@Override
 	public <V> Status hSetEx(final byte[] key, final List<KeyValue<byte[], V>> data, final HSetExArgument argument) {
-		Map<byte[], byte[]> temp = data.stream().collect(
-				Collectors.toMap(KeyValue::getKey, (e)->serializer.serializeAsBytes(e.getValue()), (key1, key2)->key2,
-						LinkedHashMap::new));
-
-		return hSetEx(key, temp, argument);
+		return hSetEx(key, listKeyValue2BinaryMap(data), argument);
 	}
 
 	@Override
@@ -610,6 +580,210 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 	public <V> List<V> hValsObject(final byte[] key, final TypeReference<V> type) {
 		return execute((client)->client.hashOperations().hVals(rawKey(key)),
 				new Converter.TypeListBinaryConverter<>(this, type));
+	}
+
+	@Override
+	public <V> V jsonGetObject(final String key) {
+		return execute((client)->client.jsonOperations().jsonGet(rawKey(key)),
+				new Converter.SimpleStringConverter<>(this));
+	}
+
+	@Override
+	public <V> V jsonGetObject(final byte[] key) {
+		return execute((client)->client.jsonOperations().jsonGet(rawKey(key)),
+				new Converter.SimpleBinaryConverter<>(this));
+	}
+
+	@Override
+	public <V> V jsonGetObject(final String key, final Class<V> clazz) {
+		return execute((client)->client.jsonOperations().jsonGet(rawKey(key)),
+				new Converter.ClazzStringConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> V jsonGetObject(final byte[] key, final Class<V> clazz) {
+		return execute((client)->client.jsonOperations().jsonGet(rawKey(key)),
+				new Converter.ClazzBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> V jsonGetObject(final String key, final TypeReference<V> type) {
+		return execute((client)->client.jsonOperations().jsonGet(rawKey(key)),
+				new Converter.TypeStringConverter<>(this, type));
+	}
+
+	@Override
+	public <V> V jsonGetObject(final byte[] key, final TypeReference<V> type) {
+		return execute((client)->client.jsonOperations().jsonGet(rawKey(key)),
+				new Converter.TypeBinaryConverter<>(this, type));
+	}
+
+	@Override
+	public <V> V jsonGetObject(final String key, final JsonGetArgument argument) {
+		return execute((client)->client.jsonOperations().jsonGet(rawKey(key), argument),
+				new Converter.SimpleStringConverter<>(this));
+	}
+
+	@Override
+	public <V> V jsonGetObject(final byte[] key, final JsonGetArgument argument) {
+		return execute((client)->client.jsonOperations().jsonGet(rawKey(key), argument),
+				new Converter.SimpleBinaryConverter<>(this));
+	}
+
+	@Override
+	public <V> V jsonGetObject(final String key, final JsonGetArgument argument, final Class<V> clazz) {
+		return execute((client)->client.jsonOperations().jsonGet(rawKey(key), argument),
+				new Converter.ClazzStringConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> V jsonGetObject(final byte[] key, final JsonGetArgument argument, final Class<V> clazz) {
+		return execute((client)->client.jsonOperations().jsonGet(rawKey(key), argument),
+				new Converter.ClazzBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> V jsonGetObject(final String key, final JsonGetArgument argument, final TypeReference<V> type) {
+		return execute((client)->client.jsonOperations().jsonGet(rawKey(key)),
+				new Converter.TypeStringConverter<>(this, type));
+	}
+
+	@Override
+	public <V> V jsonGetObject(final byte[] key, final JsonGetArgument argument, final TypeReference<V> type) {
+		return execute((client)->client.jsonOperations().jsonGet(rawKey(key)),
+				new Converter.TypeBinaryConverter<>(this, type));
+	}
+
+	@Override
+	public <V> List<V> jsonGetObject(final String key, final String... path) {
+		return execute((client)->client.jsonOperations().jsonGet(rawKey(key), path),
+				new Converter.SimpleListStringConverter<>(this));
+	}
+
+	@Override
+	public <V> List<V> jsonGetObject(final byte[] key, final byte[]... path) {
+		return execute((client)->client.jsonOperations().jsonGet(rawKey(key), path),
+				new Converter.SimpleListBinaryConverter<>(this));
+	}
+
+	@Override
+	public <V> List<V> jsonGetObject(final String key, final String[] path, final Class<V> clazz) {
+		return execute((client)->client.jsonOperations().jsonGet(rawKey(key), path),
+				new Converter.ClazzListStringConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> List<V> jsonGetObject(final byte[] key, final byte[][] path, final Class<V> clazz) {
+		return execute((client)->client.jsonOperations().jsonGet(rawKey(key), path),
+				new Converter.ClazzListBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> List<V> jsonGetObject(final String key, final String[] path, final TypeReference<V> type) {
+		return execute((client)->client.jsonOperations().jsonGet(rawKey(key), path),
+				new Converter.TypeListStringConverter<>(this, type));
+	}
+
+	@Override
+	public <V> List<V> jsonGetObject(final byte[] key, final byte[][] path, final TypeReference<V> type) {
+		return execute((client)->client.jsonOperations().jsonGet(rawKey(key), path),
+				new Converter.TypeListBinaryConverter<>(this, type));
+	}
+
+	@Override
+	public <V> List<V> jsonGetObject(final String key, final JsonGetArgument argument, final String... path) {
+		return execute((client)->client.jsonOperations().jsonGet(rawKey(key), argument, path),
+				new Converter.SimpleListStringConverter<>(this));
+	}
+
+	@Override
+	public <V> List<V> jsonGetObject(final byte[] key, final JsonGetArgument argument, final byte[]... path) {
+		return execute((client)->client.jsonOperations().jsonGet(rawKey(key), argument, path),
+				new Converter.SimpleListBinaryConverter<>(this));
+	}
+
+	@Override
+	public <V> List<V> jsonGetObject(final String key, final JsonGetArgument argument, final String[] path,
+									 final Class<V> clazz) {
+		return execute((client)->client.jsonOperations().jsonGet(rawKey(key), argument, path),
+				new Converter.ClazzListStringConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> List<V> jsonGetObject(final byte[] key, final JsonGetArgument argument, final byte[][] path,
+									 final Class<V> clazz) {
+		return execute((client)->client.jsonOperations().jsonGet(rawKey(key), argument, path),
+				new Converter.ClazzListBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> List<V> jsonGetObject(final String key, final JsonGetArgument argument, final String[] path,
+									 final TypeReference<V> type) {
+		return execute((client)->client.jsonOperations().jsonGet(rawKey(key), argument, path),
+				new Converter.TypeListStringConverter<>(this, type));
+	}
+
+	@Override
+	public <V> List<V> jsonGetObject(final byte[] key, final JsonGetArgument argument, final byte[][] path,
+									 final TypeReference<V> type) {
+		return execute((client)->client.jsonOperations().jsonGet(rawKey(key), argument, path),
+				new Converter.TypeListBinaryConverter<>(this, type));
+	}
+
+	@Override
+	public <V> List<V> jsonMGetObject(final String[] keys, final String path) {
+		return execute((client)->client.jsonOperations().jsonMGet(keys, path),
+				new Converter.SimpleListStringConverter<>(this));
+	}
+
+	@Override
+	public <V> List<V> jsonMGetObject(final byte[][] keys, final byte[] path) {
+		return execute((client)->client.jsonOperations().jsonMGet(keys, path),
+				new Converter.SimpleListBinaryConverter<>(this));
+	}
+
+	@Override
+	public <V> List<V> jsonMGetObject(final String[] keys, final String path, final Class<V> clazz) {
+		return execute((client)->client.jsonOperations().jsonMGet(keys, path),
+				new Converter.ClazzListStringConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> List<V> jsonMGetObject(final byte[][] keys, final byte[] path, final Class<V> clazz) {
+		return execute((client)->client.jsonOperations().jsonMGet(keys, path),
+				new Converter.ClazzListBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> List<V> jsonMGetObject(final String[] keys, final String path, final TypeReference<V> type) {
+		return execute((client)->client.jsonOperations().jsonMGet(keys, path),
+				new Converter.TypeListStringConverter<>(this, type));
+	}
+
+	@Override
+	public <V> List<V> jsonMGetObject(final byte[][] keys, final byte[] path, final TypeReference<V> type) {
+		return execute((client)->client.jsonOperations().jsonMGet(keys, path),
+				new Converter.TypeListBinaryConverter<>(this, type));
+	}
+
+	@Override
+	public <V> Status jsonSet(final String key, final String path, final V value) {
+		return jsonSet(key, path, serializer.serialize(value));
+	}
+
+	@Override
+	public <V> Status jsonSet(final byte[] key, final byte[] path, final V value) {
+		return jsonSet(key, path, serializer.serializeAsBytes(value));
+	}
+
+	@Override
+	public <V> Status jsonSet(final String key, final String path, final V value, final NxXx nxXx) {
+		return jsonSet(key, path, serializer.serialize(value), nxXx);
+	}
+
+	@Override
+	public <V> Status jsonSet(final byte[] key, final byte[] path, final V value, final NxXx nxXx) {
+		return jsonSet(key, path, serializer.serializeAsBytes(value), nxXx);
 	}
 
 	@Override
@@ -1256,7 +1430,6 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 	public <V> Set<V> sPopObject(final byte[] key, final long count) {
 		return execute((client)->client.setOperations().sPop(rawKey(key), count),
 				new Converter.SimpleSetBinaryConverter<>(this));
-
 	}
 
 	@Override
@@ -2845,6 +3018,18 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 		resetTransactionOrPipeline();
 
 		return result;
+	}
+
+	protected <V> Map<String, String> listKeyValue2StringMap(final List<KeyValue<String, V>> data) {
+		return data.stream().collect(
+				Collectors.toMap(KeyValue::getKey, (e)->serializer.serialize(e.getValue()), (key1, key2)->key2,
+						LinkedHashMap::new));
+	}
+
+	protected <V> Map<byte[], byte[]> listKeyValue2BinaryMap(final List<KeyValue<byte[], V>> data) {
+		return data.stream().collect(
+				Collectors.toMap(KeyValue::getKey, (e)->serializer.serializeAsBytes(e.getValue()), (key1, key2)->key2,
+						LinkedHashMap::new));
 	}
 
 }

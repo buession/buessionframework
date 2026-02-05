@@ -35,6 +35,7 @@ import com.buession.redis.client.operations.GenericOperations;
 import com.buession.redis.client.operations.GeoOperations;
 import com.buession.redis.client.operations.HashOperations;
 import com.buession.redis.client.operations.HyperLogLogOperations;
+import com.buession.redis.client.operations.JsonOperations;
 import com.buession.redis.client.operations.KeyOperations;
 import com.buession.redis.client.operations.ListOperations;
 import com.buession.redis.client.operations.PubSubOperations;
@@ -146,6 +147,13 @@ public interface RedisClient {
 	 * @return HyperLogLog 命令操作实例
 	 */
 	HyperLogLogOperations hyperLogLogOperations();
+
+	/**
+	 * 返回 JSON 命令操作实例
+	 *
+	 * @return JSON 命令操作实例
+	 */
+	JsonOperations jsonOperations();
 
 	/**
 	 * 返回 KEY 命令操作实例

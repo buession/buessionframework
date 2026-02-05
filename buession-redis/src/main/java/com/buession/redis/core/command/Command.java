@@ -287,9 +287,64 @@ public enum Command implements ProtocolCommand {
 
 	PFMERGE(CommandGroup.HYPERLOGLOG, "w"),
 
-	PFSELFTEST(CommandGroup.HYPERLOGLOG, "w")
+	PFSELFTEST(CommandGroup.HYPERLOGLOG, "w"),
 	/**
 	 * hyperloglog command end
+	 **/
+
+	/**
+	 * json command start
+	 **/
+	JSON_ARRAPPEND(CommandGroup.JSON, "JSON.ARRAPPEND", "w"),
+
+	JSON_ARRINDEX(CommandGroup.JSON, "JSON.ARRINDEX", "r"),
+
+	JSON_ARRINSERT(CommandGroup.JSON, "JSON.ARRINSERT", "w"),
+
+	JSON_ARRLEN(CommandGroup.JSON, "JSON.ARRLEN", "r"),
+
+	JSON_ARRPOP(CommandGroup.JSON, "JSON.ARRPOP", "r"),
+
+	JSON_ARRTRIM(CommandGroup.JSON, "JSON.ARRTRIM", "w"),
+
+	JSON_CLEAR(CommandGroup.JSON, "JSON.CLEAR", "w"),
+
+	JSON_DEBUG(CommandGroup.JSON, "JSON.DEBUG", "r", new SubCommand[]{SubCommand.JSON_DEBUG_MEMORY}),
+
+	JSON_DEL(CommandGroup.JSON, "JSON.DEL", "w"),
+
+	JSON_FORGET(CommandGroup.JSON, "JSON.FORGET", "w"),
+
+	JSON_GET(CommandGroup.JSON, "JSON.GET", "r"),
+
+	JSON_MERGE(CommandGroup.JSON, "JSON.MERGE", "w"),
+
+	JSON_MGET(CommandGroup.JSON, "JSON.MGET", "r"),
+
+	JSON_MSET(CommandGroup.JSON, "JSON.MSET", "w"),
+
+	JSON_NUMINCRBY(CommandGroup.JSON, "JSON.NUMINCRBY", "w"),
+
+	JSON_NUMMULTBY(CommandGroup.JSON, "JSON.NUMMULTBY", "w"),
+
+	JSON_OBJKEYS(CommandGroup.JSON, "JSON.OBJKEYS", "r"),
+
+	JSON_OBJLEN(CommandGroup.JSON, "JSON.OBJLEN", "r"),
+
+	JSON_RESP(CommandGroup.JSON, "JSON.RESP", "r"),
+
+	JSON_SET(CommandGroup.JSON, "JSON.SET", "w"),
+
+	JSON_STRAPPEND(CommandGroup.JSON, "JSON.STRAPPEND", "w"),
+
+	JSON_STRLEN(CommandGroup.JSON, "JSON.STRLEN", "r"),
+
+	JSON_TOGGLE(CommandGroup.JSON, "JSON.TOGGLE", "w"),
+
+	JSON_TYPE(CommandGroup.JSON, "JSON.TYPE", "r"),
+
+	/**
+	 * json command end
 	 **/
 	;
 

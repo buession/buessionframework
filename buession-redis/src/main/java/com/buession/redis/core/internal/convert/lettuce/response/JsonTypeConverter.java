@@ -22,144 +22,37 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command;
+package com.buession.redis.core.internal.convert.lettuce.response;
+
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.JsonType;
+import org.springframework.lang.Nullable;
 
 /**
- * Redis 协议命令分组
+ * Lettuce {@link io.lettuce.core.json.JsonType} 转换为 {@link com.buession.redis.core.JsonType}
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public enum CommandGroup {
+public final class JsonTypeConverter
+		implements Converter<io.lettuce.core.json.JsonType, com.buession.redis.core.JsonType> {
 
-	/**
-	 * 布隆过滤器
-	 */
-	BLOOM_FILTER("Bloom filter"),
-
-	/**
-	 * 位图命令
-	 */
-	BITMAP("BitMap"),
-
-	/**
-	 * 布谷鸟过滤器
-	 */
-	CUCKOO_FILTER("Cuckoo filter"),
-
-	/**
-	 * 集群命令
-	 */
-	CLUSTER("Cluster"),
-
-	/**
-	 * 计数最小草图
-	 */
-	COUNT_MIN_SKETCH("Count-min sketch"),
-
-	/**
-	 * 权限命令
-	 */
-	ACL("Acl"),
-
-	/**
-	 * 连接命令
-	 */
-	CONNECTION("Connection"),
-
-	/**
-	 * 常规命令
-	 */
-	GENERIC("Generic"),
-
-	/**
-	 * 地理位置命令
-	 */
-	GEO("Geo"),
-
-	/**
-	 * 哈希命令
-	 */
-	HASH("Hash"),
-
-	/**
-	 * HyperLogLog 命令
-	 */
-	HYPERLOGLOG("HyperLogLog"),
-
-	/**
-	 * JSON 命令
-	 */
-	JSON("JSON"),
-
-	/**
-	 * 键命令
-	 */
-	KEY("Key"),
-
-	/**
-	 * 列表命令
-	 */
-	LIST("List"),
-
-	/**
-	 * 发布订阅命令
-	 */
-	PUBSUB("PubSub"),
-
-	/**
-	 * 脚本命令
-	 */
-	SCRIPTING("Scripting"),
-
-	/**
-	 * 服务器命令
-	 */
-	SERVER("Server"),
-
-	/**
-	 * 集合命令
-	 */
-	SET("Set"),
-
-	/**
-	 * 有序集合命令
-	 */
-	SORTEDSET("Sorted Set"),
-
-	/**
-	 * 流命令
-	 */
-	STREAM("Stream"),
-
-	/**
-	 * 字符串命令
-	 */
-	STRING("String"),
-
-	/**
-	 * 事务命令
-	 */
-	TRANSACTION("Transaction");
-
-	private final String name;
-
-	CommandGroup(final String name) {
-		this.name = name;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	@Deprecated
-	public String getValue() {
-		return getName();
-	}
-
+	@Nullable
 	@Override
-	public String toString() {
-		return getName();
+	public JsonType convert(final io.lettuce.core.json.JsonType source) {
+		if(source == null){
+			return null;
+		}
+
+		return switch(source){
+			case ARRAY -> JsonType.ARRAY;
+			case BOOLEAN -> JsonType.BOOLEAN;
+			case INTEGER -> JsonType.INTEGER;
+			case OBJECT -> JsonType.OBJECT;
+			case STRING -> JsonType.STRING;
+			case NUMBER -> JsonType.NUMBER;
+			case UNKNOWN -> JsonType.UNKNOWN;
+		};
 	}
 
 }

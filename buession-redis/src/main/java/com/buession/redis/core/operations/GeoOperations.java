@@ -28,6 +28,9 @@ import com.buession.lang.Geo;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.command.GeoCommands;
+import com.buession.redis.core.command.args.GeoAddArgument;
+import com.buession.redis.core.command.args.GeoRadiusArgument;
+import com.buession.redis.core.command.args.GeoSearchArgument;
 
 import java.util.List;
 import java.util.Map;

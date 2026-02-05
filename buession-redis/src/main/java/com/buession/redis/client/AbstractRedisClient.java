@@ -104,6 +104,11 @@ public abstract class AbstractRedisClient<CONN extends RedisConnection> implemen
 	protected HyperLogLogOperations hyperLogLogOperations;
 
 	/**
+	 * JSON 命令操作
+	 */
+	protected JsonOperations jsonOperations;
+
+	/**
 	 * KEY 命令操作
 	 */
 	protected KeyOperations keyOperations;

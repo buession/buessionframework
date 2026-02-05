@@ -22,144 +22,83 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command;
+package com.buession.redis.core.command.args;
+
+import com.buession.redis.utils.ArgStringBuilder;
 
 /**
- * Redis 协议命令分组
+ * JSON.GET 命令参数
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public enum CommandGroup {
+public class JsonGetArgument {
+
+	private String indent;
+
+	private String newline;
+
+	private String space;
 
 	/**
-	 * 布隆过滤器
+	 * 构造函数
 	 */
-	BLOOM_FILTER("Bloom filter"),
+	public JsonGetArgument() {
 
-	/**
-	 * 位图命令
-	 */
-	BITMAP("BitMap"),
-
-	/**
-	 * 布谷鸟过滤器
-	 */
-	CUCKOO_FILTER("Cuckoo filter"),
-
-	/**
-	 * 集群命令
-	 */
-	CLUSTER("Cluster"),
-
-	/**
-	 * 计数最小草图
-	 */
-	COUNT_MIN_SKETCH("Count-min sketch"),
-
-	/**
-	 * 权限命令
-	 */
-	ACL("Acl"),
-
-	/**
-	 * 连接命令
-	 */
-	CONNECTION("Connection"),
-
-	/**
-	 * 常规命令
-	 */
-	GENERIC("Generic"),
-
-	/**
-	 * 地理位置命令
-	 */
-	GEO("Geo"),
-
-	/**
-	 * 哈希命令
-	 */
-	HASH("Hash"),
-
-	/**
-	 * HyperLogLog 命令
-	 */
-	HYPERLOGLOG("HyperLogLog"),
-
-	/**
-	 * JSON 命令
-	 */
-	JSON("JSON"),
-
-	/**
-	 * 键命令
-	 */
-	KEY("Key"),
-
-	/**
-	 * 列表命令
-	 */
-	LIST("List"),
-
-	/**
-	 * 发布订阅命令
-	 */
-	PUBSUB("PubSub"),
-
-	/**
-	 * 脚本命令
-	 */
-	SCRIPTING("Scripting"),
-
-	/**
-	 * 服务器命令
-	 */
-	SERVER("Server"),
-
-	/**
-	 * 集合命令
-	 */
-	SET("Set"),
-
-	/**
-	 * 有序集合命令
-	 */
-	SORTEDSET("Sorted Set"),
-
-	/**
-	 * 流命令
-	 */
-	STREAM("Stream"),
-
-	/**
-	 * 字符串命令
-	 */
-	STRING("String"),
-
-	/**
-	 * 事务命令
-	 */
-	TRANSACTION("Transaction");
-
-	private final String name;
-
-	CommandGroup(final String name) {
-		this.name = name;
 	}
 
-	public String getName() {
-		return name;
+	/**
+	 * 构造函数
+	 *
+	 * @param indent
+	 * 		-
+	 * @param newline
+	 * 		-
+	 * @param space
+	 * 		-
+	 */
+	public JsonGetArgument(String indent, String newline, String space) {
+		this.indent = indent;
+		this.newline = newline;
+		this.space = space;
 	}
 
-	@Deprecated
-	public String getValue() {
-		return getName();
+	public String getIndent() {
+		return indent;
+	}
+
+	public JsonGetArgument setIndent(String indent) {
+		this.indent = indent;
+		return this;
+	}
+
+	public String getNewline() {
+		return newline;
+	}
+
+	public JsonGetArgument setNewline(String newline) {
+		this.newline = newline;
+		return this;
+	}
+
+	public String getSpace() {
+		return space;
+	}
+
+	public JsonGetArgument setSpace(String space) {
+		this.space = space;
+		return this;
 	}
 
 	@Override
 	public String toString() {
-		return getName();
+		final ArgStringBuilder builder = ArgStringBuilder.create();
+
+		builder.add("INDENT", indent);
+		builder.add("NEWLINE", newline);
+		builder.add("SPACE", space);
+
+		return builder.toString();
 	}
 
 }

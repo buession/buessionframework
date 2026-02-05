@@ -35,6 +35,7 @@ import com.buession.redis.core.Hello;
 import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.TrackingInfo;
 import com.buession.redis.core.command.ConnectionCommands;
+import com.buession.redis.core.command.args.TrackingArgument;
 
 import java.util.List;
 

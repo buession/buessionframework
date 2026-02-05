@@ -19,147 +19,52 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2026 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command;
+package com.buession.core.converter;
+
+import com.buession.core.collect.Arrays;
+import com.buession.core.utils.Assert;
 
 /**
- * Redis 协议命令分组
+ * 数组转换器
+ *
+ * @param <S>
+ * 		原类型
+ * @param <T>
+ * 		目标类型
  *
  * @author Yong.Teng
- * @since 4.0.0
+ * @since 2.0.0
  */
-public enum CommandGroup {
+public class ArrayConverter<S, T> implements Converter<S[], T[]> {
 
 	/**
-	 * 布隆过滤器
+	 * 数组 item 转换器
 	 */
-	BLOOM_FILTER("Bloom filter"),
+	private final Converter<S, T> itemConverter;
+
+	private final Class<T> clazz;
 
 	/**
-	 * 位图命令
+	 * 构造函数
+	 *
+	 * @param itemConverter
+	 * 		List item 转换器
+	 * @param clazz
+	 * 		目标数组类型
 	 */
-	BITMAP("BitMap"),
-
-	/**
-	 * 布谷鸟过滤器
-	 */
-	CUCKOO_FILTER("Cuckoo filter"),
-
-	/**
-	 * 集群命令
-	 */
-	CLUSTER("Cluster"),
-
-	/**
-	 * 计数最小草图
-	 */
-	COUNT_MIN_SKETCH("Count-min sketch"),
-
-	/**
-	 * 权限命令
-	 */
-	ACL("Acl"),
-
-	/**
-	 * 连接命令
-	 */
-	CONNECTION("Connection"),
-
-	/**
-	 * 常规命令
-	 */
-	GENERIC("Generic"),
-
-	/**
-	 * 地理位置命令
-	 */
-	GEO("Geo"),
-
-	/**
-	 * 哈希命令
-	 */
-	HASH("Hash"),
-
-	/**
-	 * HyperLogLog 命令
-	 */
-	HYPERLOGLOG("HyperLogLog"),
-
-	/**
-	 * JSON 命令
-	 */
-	JSON("JSON"),
-
-	/**
-	 * 键命令
-	 */
-	KEY("Key"),
-
-	/**
-	 * 列表命令
-	 */
-	LIST("List"),
-
-	/**
-	 * 发布订阅命令
-	 */
-	PUBSUB("PubSub"),
-
-	/**
-	 * 脚本命令
-	 */
-	SCRIPTING("Scripting"),
-
-	/**
-	 * 服务器命令
-	 */
-	SERVER("Server"),
-
-	/**
-	 * 集合命令
-	 */
-	SET("Set"),
-
-	/**
-	 * 有序集合命令
-	 */
-	SORTEDSET("Sorted Set"),
-
-	/**
-	 * 流命令
-	 */
-	STREAM("Stream"),
-
-	/**
-	 * 字符串命令
-	 */
-	STRING("String"),
-
-	/**
-	 * 事务命令
-	 */
-	TRANSACTION("Transaction");
-
-	private final String name;
-
-	CommandGroup(final String name) {
-		this.name = name;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	@Deprecated
-	public String getValue() {
-		return getName();
+	public ArrayConverter(final Converter<S, T> itemConverter, final Class<T> clazz){
+		Assert.isNull(itemConverter, "ItemConverter cloud not be null.");
+		Assert.isNull(clazz, "Target clazz cloud not be null.");
+		this.itemConverter = itemConverter;
+		this.clazz = clazz;
 	}
 
 	@Override
-	public String toString() {
-		return getName();
+	public T[] convert(final S[] source){
+		return Arrays.map(source, clazz, itemConverter::convert);
 	}
 
 }
