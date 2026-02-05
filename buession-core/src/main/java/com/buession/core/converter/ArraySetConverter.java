@@ -26,12 +26,11 @@ package com.buession.core.converter;
 
 import com.buession.core.utils.Assert;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
- * {@link List} 转换至数组
+ * 数组转换至 {@link Set}
  *
  * @param <S>
  * 		原类型
@@ -41,41 +40,33 @@ import java.util.List;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class ListArrayConverter<S, T> implements Converter<List<S>, T[]> {
+public class ArraySetConverter<S, T> implements Converter<S[], Set<T>> {
 
 	/**
 	 * 数组 item 转换器
 	 */
 	private final Converter<S, T> itemConverter;
 
-	private final Class<T> clazz;
-
 	/**
 	 * 构造函数
 	 *
 	 * @param itemConverter
 	 * 		List item 转换器
-	 * @param clazz
-	 * 		目标数组类型
 	 */
-	public ListArrayConverter(final Converter<S, T> itemConverter, final Class<T> clazz) {
+	public ArraySetConverter(final Converter<S, T> itemConverter) {
 		Assert.isNull(itemConverter, "ItemConverter cloud not be null.");
-		Assert.isNull(clazz, "Target clazz cloud not be null.");
 		this.itemConverter = itemConverter;
-		this.clazz = clazz;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public T[] convert(final List<S> source) {
+	public Set<T> convert(final S[] source) {
 		if(source == null){
 			return null;
 		}else{
-			T[] result = (T[]) Array.newInstance(clazz, source.size());
-			int i = 0;
+			final Set<T> result = new LinkedHashSet<>();
 
-			for(S v : source){
-				result[i++] = itemConverter.convert(v);
+			for(S s : source){
+				result.add(itemConverter.convert(s));
 			}
 
 			return result;

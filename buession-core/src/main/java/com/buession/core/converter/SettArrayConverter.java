@@ -27,11 +27,10 @@ package com.buession.core.converter;
 import com.buession.core.utils.Assert;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 /**
- * {@link List} 转换至数组
+ * {@link Set} 转换至数组
  *
  * @param <S>
  * 		原类型
@@ -41,7 +40,7 @@ import java.util.List;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class ListArrayConverter<S, T> implements Converter<List<S>, T[]> {
+public class SettArrayConverter<S, T> implements Converter<Set<S>, T[]> {
 
 	/**
 	 * 数组 item 转换器
@@ -58,7 +57,7 @@ public class ListArrayConverter<S, T> implements Converter<List<S>, T[]> {
 	 * @param clazz
 	 * 		目标数组类型
 	 */
-	public ListArrayConverter(final Converter<S, T> itemConverter, final Class<T> clazz) {
+	public SettArrayConverter(final Converter<S, T> itemConverter, final Class<T> clazz) {
 		Assert.isNull(itemConverter, "ItemConverter cloud not be null.");
 		Assert.isNull(clazz, "Target clazz cloud not be null.");
 		this.itemConverter = itemConverter;
@@ -67,7 +66,7 @@ public class ListArrayConverter<S, T> implements Converter<List<S>, T[]> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public T[] convert(final List<S> source) {
+	public T[] convert(final Set<S> source) {
 		if(source == null){
 			return null;
 		}else{
