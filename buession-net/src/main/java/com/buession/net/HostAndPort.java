@@ -111,6 +111,21 @@ public class HostAndPort implements Serializable {
 		this.port = port;
 	}
 
+	/**
+	 * 从字符串主机端口中创建 {@link HostAndPort}
+	 *
+	 * @param addr
+	 * 		字符串主机端口
+	 *
+	 * @return {@link HostAndPort}
+	 *
+	 * @since 4.0.0
+	 */
+	public static HostAndPort create(final String addr) {
+		int ci = addr.indexOf(':');
+		return new HostAndPort(addr.substring(0, ci), Integer.parseInt(addr.substring(ci + 1)));
+	}
+
 	@Override
 	public String toString() {
 		return host + ':' + port;

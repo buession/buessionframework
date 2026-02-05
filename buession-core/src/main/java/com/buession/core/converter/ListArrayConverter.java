@@ -24,14 +24,14 @@
  */
 package com.buession.core.converter;
 
-import com.buession.core.collect.Arrays;
 import com.buession.core.utils.Assert;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 数组转换至 {@link List}
+ * {@link List} 转换至数组
  *
  * @param <S>
  * 		原类型
@@ -41,33 +41,40 @@ import java.util.List;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class ArrayListConverter<S, T> implements Converter<S[], List<T>> {
+public class ListArrayConverter<S, T> implements Converter<List<S>, T[]> {
 
 	/**
 	 * 数组 item 转换器
 	 */
 	private final Converter<S, T> itemConverter;
 
+	private final Class<T> clazz;
+
 	/**
 	 * 构造函数
 	 *
 	 * @param itemConverter
 	 * 		List item 转换器
+	 * @param clazz
+	 * 		目标数组类型
 	 */
-	public ArrayListConverter(final Converter<S, T> itemConverter) {
+	public ListArrayConverter(final Converter<S, T> itemConverter, final Class<T> clazz) {
 		Assert.isNull(itemConverter, "ItemConverter cloud not be null.");
+		Assert.isNull(clazz, "Target clazz cloud not be null.");
 		this.itemConverter = itemConverter;
+		this.clazz = clazz;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<T> convert(final S[] source) {
+	public T[] convert(final List<S> source) {
 		if(source == null){
 			return null;
 		}else{
-			final List<T> result = new ArrayList<>();
+			T[] result = (T[]) Array.newInstance(clazz, source.size());
 
-			for(S s : source){
-				result.add(itemConverter.convert(s));
+			for(int i = 0, l = source.size(); i < l; i++){
+				result[i] = itemConverter.convert(source.get(i));
 			}
 
 			return result;
