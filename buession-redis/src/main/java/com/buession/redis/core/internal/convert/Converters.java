@@ -30,7 +30,10 @@ import com.buession.core.converter.ListMapEntryMapConverter;
 import com.buession.core.converter.ListSetConverter;
 import com.buession.core.converter.MapConverter;
 import com.buession.core.converter.SetConverter;
+import com.buession.core.validator.Validate;
 import com.buession.redis.utils.SafeEncoder;
+
+import java.util.List;
 
 /**
  * @author Yong.Teng
@@ -78,6 +81,15 @@ public interface Converters {
 		return new ListMapEntryMapConverter<>((k)->k, (v)->v);
 	}
 
+	static <T> Converter<List<T>, T> list0Converter() {
+		return (value)->Validate.isEmpty(value) ? null : value.get(0);
+	}
+
+	@SuppressWarnings({"unchecked"})
+	static <S, T> Converter<S, T> always() {
+		return (value)->(T) value;
+	}
+
 	/****/
 
 	static ListConverter<String, byte[]> listStringToBinary() {
@@ -98,11 +110,6 @@ public interface Converters {
 
 	static MapConverter<byte[], byte[], String, String> mapBinaryToString() {
 		return new MapConverter<>(SafeEncoder::encode, SafeEncoder::encode);
-	}
-
-	@SuppressWarnings({"unchecked"})
-	static <S, T> Converter<S, T> always() {
-		return (value)->(T) value;
 	}
 
 }

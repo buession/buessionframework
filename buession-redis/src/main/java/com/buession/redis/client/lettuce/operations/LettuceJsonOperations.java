@@ -184,10 +184,9 @@ public final class LettuceJsonOperations extends AbstractLettuceRedisOperations 
 	@Override
 	public Object jsonArrPop(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return LettuceCommandBuilder.<List<String>, Object>newBuilder(client, Command.JSON_ARRPOP).executor((cmd)->{
-			final List<String> result = cmd.jsonArrpopRaw(key);
-			return Validate.isNotEmpty(result) ? result : null;
-		}).arguments(args).converter((v)->v).run();
+		return LettuceCommandBuilder.<List<String>, Object>newBuilder(client, Command.JSON_ARRPOP)
+				.executor((cmd)->cmd.jsonArrpopRaw(key)).arguments(args)
+				.converter((v)->Validate.isEmpty(v) ? null : v.get(0)).run();
 	}
 
 	@Override
@@ -222,28 +221,28 @@ public final class LettuceJsonOperations extends AbstractLettuceRedisOperations 
 	@Override
 	public Long jsonArrClear(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.JSON_ARRTRIM).arguments(args)
+		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.JSON_CLEAR).arguments(args)
 				.converter((v)->v).run();
 	}
 
 	@Override
 	public Long jsonArrClear(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.JSON_ARRTRIM).arguments(args)
+		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.JSON_CLEAR).arguments(args)
 				.converter((v)->v).run();
 	}
 
 	@Override
 	public List<Long> jsonArrClear(final String key, final String path) {
 		final CommandArguments args = CommandArguments.create(key).add(path);
-		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.JSON_ARRTRIM).arguments(args)
+		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.JSON_CLEAR).arguments(args)
 				.converter((v)->v).run();
 	}
 
 	@Override
 	public List<Long> jsonArrClear(final byte[] key, final byte[] path) {
 		final CommandArguments args = CommandArguments.create(key).add(path);
-		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.JSON_ARRTRIM).arguments(args)
+		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.JSON_CLEAR).arguments(args)
 				.converter((v)->v).run();
 	}
 
@@ -278,59 +277,49 @@ public final class LettuceJsonOperations extends AbstractLettuceRedisOperations 
 	@Override
 	public Long jsonDel(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.JSON_DEL)
-				.executor((cmd)->cmd.jsonDel(SafeEncoder.encode(key))).arguments(args).converter((v)->v).run();
+		return jsonDel((cmd)->cmd.jsonDel(SafeEncoder.encode(key)), args);
 	}
 
 	@Override
 	public Long jsonDel(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.JSON_DEL).executor((cmd)->cmd.jsonDel(key))
-				.arguments(args).converter((v)->v).run();
+		return jsonDel((cmd)->cmd.jsonDel(key), args);
 	}
 
 	@Override
 	public Long jsonDel(final String key, final String path) {
 		final CommandArguments args = CommandArguments.create(key).add(path);
-		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.JSON_DEL)
-				.executor((cmd)->cmd.jsonDel(SafeEncoder.encode(key), new LettuceJsonPath(path))).arguments(args)
-				.converter((v)->v).run();
+		return jsonDel((cmd)->cmd.jsonDel(SafeEncoder.encode(key), new LettuceJsonPath(path)), args);
 	}
 
 	@Override
 	public Long jsonDel(final byte[] key, final byte[] path) {
 		final CommandArguments args = CommandArguments.create(key).add(path);
-		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.JSON_DEL)
-				.executor((cmd)->cmd.jsonDel(key, new LettuceJsonPath(path))).arguments(args).converter((v)->v).run();
+		return jsonDel((cmd)->cmd.jsonDel(key, new LettuceJsonPath(path)), args);
 	}
 
 	@Override
 	public Long jsonForget(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.JSON_FORGET)
-				.executor((cmd)->cmd.jsonDel(SafeEncoder.encode(key))).arguments(args).converter((v)->v).run();
+		return jsonForget((cmd)->cmd.jsonDel(SafeEncoder.encode(key)), args);
 	}
 
 	@Override
 	public Long jsonForget(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.JSON_FORGET)
-				.executor((cmd)->cmd.jsonDel(key)).arguments(args).converter((v)->v).run();
+		return jsonForget((cmd)->cmd.jsonDel(key), args);
 	}
 
 	@Override
 	public Long jsonForget(final String key, final String path) {
 		final CommandArguments args = CommandArguments.create(key).add(path);
-		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.JSON_FORGET)
-				.executor((cmd)->cmd.jsonDel(SafeEncoder.encode(key), new LettuceJsonPath(path))).arguments(args)
-				.converter((v)->v).run();
+		return jsonForget((cmd)->cmd.jsonDel(SafeEncoder.encode(key), new LettuceJsonPath(path)), args);
 	}
 
 	@Override
 	public Long jsonForget(final byte[] key, final byte[] path) {
 		final CommandArguments args = CommandArguments.create(key).add(path);
-		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.JSON_FORGET)
-				.executor((cmd)->cmd.jsonDel(key, new LettuceJsonPath(path))).arguments(args).converter((v)->v).run();
+		return jsonForget((cmd)->cmd.jsonDel(key, new LettuceJsonPath(path)), args);
 	}
 
 	@Override
@@ -583,65 +572,51 @@ public final class LettuceJsonOperations extends AbstractLettuceRedisOperations 
 	@Override
 	public Status jsonSet(final String key, final String path, final String value) {
 		final CommandArguments args = CommandArguments.create(key).add(path);
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.JSON_SET)
-				.executor((cmd)->cmd.jsonSet(SafeEncoder.encode(key), new LettuceJsonPath(path), value)).arguments(args)
-				.converter(new OkStatusConverter()).run();
+		return jsonSet((cmd)->cmd.jsonSet(SafeEncoder.encode(key), new LettuceJsonPath(path), value), args);
 	}
 
 	@Override
 	public Status jsonSet(final byte[] key, final byte[] path, final byte[] value) {
 		final CommandArguments args = CommandArguments.create(key).add(path);
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.JSON_SET)
-				.executor((cmd)->cmd.jsonSet(key, new LettuceJsonPath(path), SafeEncoder.encode(value))).arguments(args)
-				.converter(new OkStatusConverter()).run();
+		return jsonSet((cmd)->cmd.jsonSet(key, new LettuceJsonPath(path), SafeEncoder.encode(value)), args);
 	}
 
 	@Override
 	public Status jsonSet(final String key, final String path, final String value, final NxXx nxXx) {
 		final CommandArguments args = CommandArguments.create(key).add(path).add(nxXx);
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.JSON_SET).executor(
-				(cmd)->cmd.jsonSet(SafeEncoder.encode(key), new LettuceJsonPath(path), value,
-						new LettuceJsonSetArgs(nxXx))).arguments(args).converter(new OkStatusConverter()).run();
+		return jsonSet((cmd)->cmd.jsonSet(SafeEncoder.encode(key), new LettuceJsonPath(path), value,
+				new LettuceJsonSetArgs(nxXx)), args);
 	}
 
 	@Override
 	public Status jsonSet(final byte[] key, final byte[] path, final byte[] value, final NxXx nxXx) {
 		final CommandArguments args = CommandArguments.create(key).add(path).add(nxXx);
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.JSON_SET).executor(
-				(cmd)->cmd.jsonSet(key, new LettuceJsonPath(path), SafeEncoder.encode(value),
-						new LettuceJsonSetArgs(nxXx))).arguments(args).converter(new OkStatusConverter()).run();
+		return jsonSet((cmd)->cmd.jsonSet(key, new LettuceJsonPath(path), SafeEncoder.encode(value),
+				new LettuceJsonSetArgs(nxXx)), args);
 	}
 
 	@Override
 	public List<Long> jsonStrAppend(final String key, final String value) {
 		final CommandArguments args = CommandArguments.create(key).add(value);
-		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.JSON_STRAPPEND)
-				.executor((cmd)->cmd.jsonStrappend(SafeEncoder.encode(key), value)).arguments(args).converter((v)->v)
-				.run();
+		return jsonStrAppend((cmd)->cmd.jsonStrappend(SafeEncoder.encode(key), value), args);
 	}
 
 	@Override
 	public List<Long> jsonStrAppend(final byte[] key, final byte[] value) {
 		final CommandArguments args = CommandArguments.create(key).add(value);
-		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.JSON_STRAPPEND)
-				.executor((cmd)->cmd.jsonStrappend(key, SafeEncoder.encode(value))).arguments(args).converter((v)->v)
-				.run();
+		return jsonStrAppend((cmd)->cmd.jsonStrappend(key, SafeEncoder.encode(value)), args);
 	}
 
 	@Override
 	public List<Long> jsonStrAppend(final String key, final String path, final String value) {
 		final CommandArguments args = CommandArguments.create(key).add(path).add(value);
-		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.JSON_STRAPPEND)
-				.executor((cmd)->cmd.jsonStrappend(SafeEncoder.encode(key), new LettuceJsonPath(path), value))
-				.arguments(args).converter((v)->v).run();
+		return jsonStrAppend((cmd)->cmd.jsonStrappend(SafeEncoder.encode(key), new LettuceJsonPath(path), value), args);
 	}
 
 	@Override
 	public List<Long> jsonStrAppend(final byte[] key, final byte[] path, final byte[] value) {
 		final CommandArguments args = CommandArguments.create(key).add(path).add(value);
-		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.JSON_STRAPPEND)
-				.executor((cmd)->cmd.jsonStrappend(key, new LettuceJsonPath(path), SafeEncoder.encode(value)))
-				.arguments(args).converter((v)->v).run();
+		return jsonStrAppend((cmd)->cmd.jsonStrappend(key, new LettuceJsonPath(path), SafeEncoder.encode(value)), args);
 	}
 
 	@Override
@@ -679,16 +654,16 @@ public final class LettuceJsonOperations extends AbstractLettuceRedisOperations 
 	public List<Status> jsonToggle(final String key, final String path) {
 		final CommandArguments args = CommandArguments.create(key).add(path);
 		return LettuceCommandBuilder.<List<Long>, List<Status>>newBuilder(client, Command.JSON_TOGGLE)
-				.executor((cmd)->cmd.jsonToggle(SafeEncoder.encode(key), new LettuceJsonPath(path)))
-				.arguments(args).converter(new ListConverter<>(new OneStatusConverter())).run();
+				.executor((cmd)->cmd.jsonToggle(SafeEncoder.encode(key), new LettuceJsonPath(path))).arguments(args)
+				.converter(new ListConverter<>(new OneStatusConverter())).run();
 	}
 
 	@Override
 	public List<Status> jsonToggle(final byte[] key, final byte[] path) {
 		final CommandArguments args = CommandArguments.create(key).add(path);
 		return LettuceCommandBuilder.<List<Long>, List<Status>>newBuilder(client, Command.JSON_TOGGLE)
-				.executor((cmd)->cmd.jsonToggle(key, new LettuceJsonPath(path)))
-				.arguments(args).converter(new ListConverter<>(new OneStatusConverter())).run();
+				.executor((cmd)->cmd.jsonToggle(key, new LettuceJsonPath(path))).arguments(args)
+				.converter(new ListConverter<>(new OneStatusConverter())).run();
 	}
 
 	@Override
@@ -699,21 +674,18 @@ public final class LettuceJsonOperations extends AbstractLettuceRedisOperations 
 	@Override
 	public JsonType jsonType(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return LettuceCommandBuilder.<io.lettuce.core.json.JsonType, JsonType>newBuilder(client,
-						Command.JSON_TYPE)
+		return LettuceCommandBuilder.<io.lettuce.core.json.JsonType, JsonType>newBuilder(client, Command.JSON_TYPE)
 				.executor((cmd)->{
 					final List<io.lettuce.core.json.JsonType> result = cmd.jsonType(key);
 					return Validate.isEmpty(result) ? null : result.get(0);
-				})
-				.arguments(args).converter(new JsonTypeConverter()).run();
+				}).arguments(args).converter(new JsonTypeConverter()).run();
 	}
 
 	@Override
 	public List<JsonType> jsonType(final String key, final String path) {
 		final CommandArguments args = CommandArguments.create(key).add(path);
 		return LettuceCommandBuilder.<List<io.lettuce.core.json.JsonType>, List<JsonType>>newBuilder(client,
-						Command.JSON_TYPE)
-				.executor((cmd)->cmd.jsonType(SafeEncoder.encode(key), new LettuceJsonPath(path)))
+						Command.JSON_TYPE).executor((cmd)->cmd.jsonType(SafeEncoder.encode(key), new LettuceJsonPath(path)))
 				.arguments(args).converter(new ListConverter<>(new JsonTypeConverter())).run();
 	}
 
@@ -721,15 +693,26 @@ public final class LettuceJsonOperations extends AbstractLettuceRedisOperations 
 	public List<JsonType> jsonType(final byte[] key, final byte[] path) {
 		final CommandArguments args = CommandArguments.create(key).add(path);
 		return LettuceCommandBuilder.<List<io.lettuce.core.json.JsonType>, List<JsonType>>newBuilder(client,
-						Command.JSON_TYPE)
-				.executor((cmd)->cmd.jsonType(key, new LettuceJsonPath(path)))
-				.arguments(args).converter(new ListConverter<>(new JsonTypeConverter())).run();
+						Command.JSON_TYPE).executor((cmd)->cmd.jsonType(key, new LettuceJsonPath(path))).arguments(args)
+				.converter(new ListConverter<>(new JsonTypeConverter())).run();
 	}
 
 	private List<Long> jsonArrAppend(
 			final com.buession.redis.core.Command.Executor<RedisCommands<byte[], byte[]>, List<Long>> executor,
 			final CommandArguments args) {
 		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.JSON_ARRAPPEND)
+				.executor(executor).arguments(args).converter((v)->v).run();
+	}
+
+	private Long jsonDel(final com.buession.redis.core.Command.Executor<RedisCommands<byte[], byte[]>, Long> executor,
+						 final CommandArguments args) {
+		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.JSON_DEL).executor(executor).arguments(args)
+				.converter((v)->v).run();
+	}
+
+	public Long jsonForget(final com.buession.redis.core.Command.Executor<RedisCommands<byte[], byte[]>, Long> executor,
+						   final CommandArguments args) {
+		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.JSON_FORGET)
 				.executor(executor).arguments(args).converter((v)->v).run();
 	}
 
@@ -773,6 +756,22 @@ public final class LettuceJsonOperations extends AbstractLettuceRedisOperations 
 			final CommandArguments args) {
 		return LettuceCommandBuilder.<List<String>, List<byte[]>>newBuilder(client, Command.JSON_GET).executor(executor)
 				.arguments(args).converter(Converters.stringListToBinaryListConverter()).run();
+	}
+
+	private Status jsonSet(
+			final com.buession.redis.core.Command.Executor<RedisCommands<byte[], byte[]>, String> executor,
+			final CommandArguments args) {
+		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.JSON_SET)
+				.executor(executor).arguments(args)
+				.converter(new OkStatusConverter()).run();
+	}
+
+	private List<Long> jsonStrAppend(
+			final com.buession.redis.core.Command.Executor<RedisCommands<byte[], byte[]>, List<Long>> executor,
+			final CommandArguments args) {
+		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.JSON_STRAPPEND)
+				.executor(executor).arguments(args).converter((v)->v)
+				.run();
 	}
 
 }

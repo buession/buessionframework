@@ -342,7 +342,6 @@ public enum Command implements ProtocolCommand {
 	JSON_TOGGLE(CommandGroup.JSON, "JSON.TOGGLE", "w"),
 
 	JSON_TYPE(CommandGroup.JSON, "JSON.TYPE", "r"),
-
 	/**
 	 * json command end
 	 **/

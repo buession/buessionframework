@@ -19,58 +19,39 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.converter;
+package com.buession.redis.core.internal.convert.response;
 
-import com.buession.core.utils.Assert;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.buession.core.converter.Converter;
+import com.buession.redis.utils.SafeEncoder;
+import org.json.JSONArray;
 
 /**
- * 数组转换至 {@link List}
  *
- * @param <S>
- * 		原类型
- * @param <T>
- * 		目标类型
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class ArrayListConverter<S, T> implements Converter<S[], List<T>> {
+public interface OrgJSONArrayConverter<T> extends Converter<JSONArray, T> {
 
-	/**
-	 * 数组 item 转换器
-	 */
-	private final Converter<S, T> itemConverter;
+	final class OrgJSONArrayStringConverter implements Converter<JSONArray, String> {
 
-	/**
-	 * 构造函数
-	 *
-	 * @param itemConverter
-	 * 		List item 转换器
-	 */
-	public ArrayListConverter(final Converter<S, T> itemConverter) {
-		Assert.isNull(itemConverter, "ItemConverter cloud not be null.");
-		this.itemConverter = itemConverter;
+		@Override
+		public String convert(final JSONArray source) {
+			return source == null ? null : source.toString();
+		}
+
 	}
 
-	@Override
-	public List<T> convert(final S[] source) {
-		if(source == null){
-			return null;
-		}else{
-			final List<T> result = new ArrayList<>();
+	final class OrgJSONArrayBinaryConverter implements Converter<JSONArray, byte[]> {
 
-			for(S s : source){
-				result.add(itemConverter.convert(s));
-			}
-
-			return result;
+		@Override
+		public byte[] convert(final JSONArray source) {
+			return source == null ? null : SafeEncoder.encode(source.toString());
 		}
+
 	}
 
 }
