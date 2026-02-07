@@ -870,138 +870,6 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 	}
 
 	@Override
-	public <V> V lIndexObject(final String key, final long index) {
-		return execute((client)->client.listOperations().lIndex(rawKey(key), index),
-				new Converter.SimpleStringConverter<>(this));
-	}
-
-	@Override
-	public <V> V lIndexObject(final byte[] key, final long index) {
-		return execute((client)->client.listOperations().lIndex(rawKey(key), index),
-				new Converter.SimpleBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> V lIndexObject(final String key, final long index, final Class<V> clazz) {
-		return execute((client)->client.listOperations().lIndex(rawKey(key), index),
-				new Converter.ClazzStringConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> V lIndexObject(final byte[] key, final long index, final Class<V> clazz) {
-		return execute((client)->client.listOperations().lIndex(rawKey(key), index),
-				new Converter.ClazzBinaryConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> V lIndexObject(final String key, final long index, final TypeReference<V> type) {
-		return execute((client)->client.listOperations().lIndex(rawKey(key), index),
-				new Converter.TypeStringConverter<>(this, type));
-	}
-
-	@Override
-	public <V> V lIndexObject(final byte[] key, final long index, final TypeReference<V> type) {
-		return execute((client)->client.listOperations().lIndex(rawKey(key), index),
-				new Converter.TypeBinaryConverter<>(this, type));
-	}
-
-	@Override
-	public <V> Long lInsert(final String key, final ListPosition position, final V pivot, final V value) {
-		return lInsert(key, position, serializer.serialize(pivot), serializer.serialize(value));
-	}
-
-	@Override
-	public <V> Long lInsert(final byte[] key, final ListPosition position, final V pivot, final V value) {
-		return lInsert(key, position, serializer.serializeAsBytes(pivot), serializer.serializeAsBytes(value));
-	}
-
-	@Override
-	public <V> Status lSet(final String key, final long index, final V value) {
-		return lSet(key, index, serializer.serialize(value));
-	}
-
-	@Override
-	public <V> Status lSet(final byte[] key, final long index, final V value) {
-		return lSet(key, index, serializer.serializeAsBytes(value));
-	}
-
-	@Override
-	public <V> List<V> lRangeObject(final String key, final long start, final long end) {
-		return execute((client)->client.listOperations().lRange(rawKey(key), start, end),
-				new Converter.SimpleListStringConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> lRangeObject(final byte[] key, final long start, final long end) {
-		return execute((client)->client.listOperations().lRange(rawKey(key), start, end),
-				new Converter.SimpleListBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> lRangeObject(final String key, final long start, final long end, final Class<V> clazz) {
-		return execute((client)->client.listOperations().lRange(rawKey(key), start, end),
-				new Converter.ClazzListStringConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> lRangeObject(final byte[] key, final long start, final long end, final Class<V> clazz) {
-		return execute((client)->client.listOperations().lRange(rawKey(key), start, end),
-				new Converter.ClazzListBinaryConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> lRangeObject(final String key, final long start, final long end, final TypeReference<V> type) {
-		return execute((client)->client.listOperations().lRange(rawKey(key), start, end),
-				new Converter.TypeListStringConverter<>(this, type));
-	}
-
-	@Override
-	public <V> List<V> lRangeObject(final byte[] key, final long start, final long end, final TypeReference<V> type) {
-		return execute((client)->client.listOperations().lRange(rawKey(key), start, end),
-				new Converter.TypeListBinaryConverter<>(this, type));
-	}
-
-	@Override
-	public <V> V lMoveObject(final String key, final String destKey, final Direction from, final Direction to) {
-		return execute((client)->client.listOperations().lMove(rawKey(destKey), rawKey(destKey), from, to),
-				new Converter.SimpleStringConverter<>(this));
-	}
-
-	@Override
-	public <V> V lMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to) {
-		return execute((client)->client.listOperations().lMove(rawKey(destKey), rawKey(destKey), from, to),
-				new Converter.SimpleBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> V lMoveObject(final String key, final String destKey, final Direction from, final Direction to,
-							 final Class<V> clazz) {
-		return execute((client)->client.listOperations().lMove(rawKey(destKey), rawKey(destKey), from, to),
-				new Converter.ClazzStringConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> V lMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
-							 final Class<V> clazz) {
-		return execute((client)->client.listOperations().lMove(rawKey(destKey), rawKey(destKey), from, to),
-				new Converter.ClazzBinaryConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> V lMoveObject(final String key, final String destKey, final Direction from, final Direction to,
-							 final TypeReference<V> type) {
-		return execute((client)->client.listOperations().lMove(rawKey(destKey), rawKey(destKey), from, to),
-				new Converter.TypeStringConverter<>(this, type));
-	}
-
-	@Override
-	public <V> V lMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
-							 final TypeReference<V> type) {
-		return execute((client)->client.listOperations().lMove(rawKey(destKey), rawKey(destKey), from, to),
-				new Converter.TypeBinaryConverter<>(this, type));
-	}
-
-	@Override
 	public <V> List<V> blPopObject(final String[] keys, final int timeout) {
 		return execute((client)->client.listOperations().blPop(rawKeys(keys), timeout),
 				new Converter.SimpleListStringConverter<>(this));
@@ -1112,6 +980,134 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 	}
 
 	@Override
+	public <V> V lIndexObject(final String key, final long index) {
+		return execute((client)->client.listOperations().lIndex(rawKey(key), index),
+				new Converter.SimpleStringConverter<>(this));
+	}
+
+	@Override
+	public <V> V lIndexObject(final byte[] key, final long index) {
+		return execute((client)->client.listOperations().lIndex(rawKey(key), index),
+				new Converter.SimpleBinaryConverter<>(this));
+	}
+
+	@Override
+	public <V> V lIndexObject(final String key, final long index, final Class<V> clazz) {
+		return execute((client)->client.listOperations().lIndex(rawKey(key), index),
+				new Converter.ClazzStringConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> V lIndexObject(final byte[] key, final long index, final Class<V> clazz) {
+		return execute((client)->client.listOperations().lIndex(rawKey(key), index),
+				new Converter.ClazzBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> V lIndexObject(final String key, final long index, final TypeReference<V> type) {
+		return execute((client)->client.listOperations().lIndex(rawKey(key), index),
+				new Converter.TypeStringConverter<>(this, type));
+	}
+
+	@Override
+	public <V> V lIndexObject(final byte[] key, final long index, final TypeReference<V> type) {
+		return execute((client)->client.listOperations().lIndex(rawKey(key), index),
+				new Converter.TypeBinaryConverter<>(this, type));
+	}
+
+	@Override
+	public <V> Long lInsert(final String key, final ListPosition position, final V pivot, final V value) {
+		return lInsert(key, position, serializer.serialize(pivot), serializer.serialize(value));
+	}
+
+	@Override
+	public <V> Long lInsert(final byte[] key, final ListPosition position, final V pivot, final V value) {
+		return lInsert(key, position, serializer.serializeAsBytes(pivot), serializer.serializeAsBytes(value));
+	}
+
+	@Override
+	public <V> V lMoveObject(final String key, final String destKey, final Direction from, final Direction to) {
+		return execute((client)->client.listOperations().lMove(rawKey(destKey), rawKey(destKey), from, to),
+				new Converter.SimpleStringConverter<>(this));
+	}
+
+	@Override
+	public <V> V lMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to) {
+		return execute((client)->client.listOperations().lMove(rawKey(destKey), rawKey(destKey), from, to),
+				new Converter.SimpleBinaryConverter<>(this));
+	}
+
+	@Override
+	public <V> V lMoveObject(final String key, final String destKey, final Direction from, final Direction to,
+							 final Class<V> clazz) {
+		return execute((client)->client.listOperations().lMove(rawKey(destKey), rawKey(destKey), from, to),
+				new Converter.ClazzStringConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> V lMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
+							 final Class<V> clazz) {
+		return execute((client)->client.listOperations().lMove(rawKey(destKey), rawKey(destKey), from, to),
+				new Converter.ClazzBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> V lMoveObject(final String key, final String destKey, final Direction from, final Direction to,
+							 final TypeReference<V> type) {
+		return execute((client)->client.listOperations().lMove(rawKey(destKey), rawKey(destKey), from, to),
+				new Converter.TypeStringConverter<>(this, type));
+	}
+
+	@Override
+	public <V> V lMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
+							 final TypeReference<V> type) {
+		return execute((client)->client.listOperations().lMove(rawKey(destKey), rawKey(destKey), from, to),
+				new Converter.TypeBinaryConverter<>(this, type));
+	}
+
+	@Override
+	public <V> KeyValue<String, List<V>> lMPopObject(final int timeout, final String[] keys,
+													 final Direction direction) {
+		return execute((client)->client.listOperations().lMPop(timeout, keys),
+				new Converter.TypeListBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> KeyValue<byte[], List<V>> lMPopObject(final int timeout, final byte[][] keys,
+													 final Direction direction) {
+		return execute((client)->client.listOperations().lMPop(timeout, keys),
+				new Converter.TypeListBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> KeyValue<String, List<V>> lMPopObject(final int timeout, final String[] keys, final Direction direction,
+													 final Class<V> clazz) {
+		return execute((client)->client.listOperations().lMPop(timeout, keys, direction),
+				new Converter.TypeListBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> KeyValue<byte[], List<V>> lMPopObject(final int timeout, final byte[][] keys, final Direction direction,
+													 final Class<V> clazz) {
+		return execute((client)->client.listOperations().lMPop(timeout, keys, direction),
+				new Converter.TypeListBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> KeyValue<String, List<V>> lMPopObject(final int timeout, final String[] keys, final Direction direction,
+													 final TypeReference<V> type) {
+		return execute((client)->client.listOperations().lMPop(timeout, keys, direction),
+				new Converter.TypeListBinaryConverter<>(this, type));
+	}
+
+	@Override
+	public <V> KeyValue<byte[], List<V>> lMPopObject(final int timeout, final byte[][] keys, final Direction direction,
+													 final TypeReference<V> type) {
+		return execute((client)->client.listOperations().lMPop(timeout, keys, direction),
+				new Converter.TypeListBinaryConverter<>(this, type));
+	}
+
+	@Override
 	public <V> V lPopObject(final String key) {
 		return execute((client)->client.listOperations().lPop(rawKey(key)),
 				new Converter.SimpleStringConverter<>(this));
@@ -1148,13 +1144,39 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 	}
 
 	@Override
-	public <V> Long lPush(final String key, final V value) {
-		return lPush(key, serializer.serialize(value));
+	public <V> List<V> lPopObject(final String key, final int count) {
+		return execute((client)->client.listOperations().lPop(rawKey(key), count),
+				new Converter.SimpleListStringConverter<>(this));
 	}
 
 	@Override
-	public <V> Long lPush(final byte[] key, final V value) {
-		return lPush(key, serializer.serializeAsBytes(value));
+	public <V> List<V> lPopObject(final byte[] key, final int count) {
+		return execute((client)->client.listOperations().lPop(rawKey(key), count),
+				new Converter.SimpleListBinaryConverter<>(this));
+	}
+
+	@Override
+	public <V> List<V> lPopObject(final String key, final int count, final Class<V> clazz) {
+		return execute((client)->client.listOperations().lPop(rawKey(key), count),
+				new Converter.ClazzListStringConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> List<V> lPopObject(final byte[] key, final int count, final Class<V> clazz) {
+		return execute((client)->client.listOperations().lPop(rawKey(key), count),
+				new Converter.ClazzListBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> List<V> lPopObject(final String key, final int count, final TypeReference<V> type) {
+		return execute((client)->client.listOperations().lPop(rawKey(key), count),
+				new Converter.TypeListStringConverter<>(this, type));
+	}
+
+	@Override
+	public <V> List<V> lPopObject(final byte[] key, final int count, final TypeReference<V> type) {
+		return execute((client)->client.listOperations().lPop(rawKey(key), count),
+				new Converter.TypeListBinaryConverter<>(this, type));
 	}
 
 	@SuppressWarnings({"unchecked"})
@@ -1169,16 +1191,6 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 		return lPush(key, serializer.serializeAsBytes(values));
 	}
 
-	@Override
-	public <V> Long lPushX(final String key, final V value) {
-		return lPushX(key, serializer.serialize(value));
-	}
-
-	@Override
-	public <V> Long lPushX(final byte[] key, final V value) {
-		return lPushX(key, serializer.serializeAsBytes(value));
-	}
-
 	@SuppressWarnings({"unchecked"})
 	@Override
 	public <V> Long lPushX(final String key, final V... values) {
@@ -1189,6 +1201,52 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 	@Override
 	public <V> Long lPushX(final byte[] key, final V... values) {
 		return lPushX(key, serializer.serializeAsBytes(values));
+	}
+
+	@Override
+	public <V> List<V> lRangeObject(final String key, final long start, final long end) {
+		return execute((client)->client.listOperations().lRange(rawKey(key), start, end),
+				new Converter.SimpleListStringConverter<>(this));
+	}
+
+	@Override
+	public <V> List<V> lRangeObject(final byte[] key, final long start, final long end) {
+		return execute((client)->client.listOperations().lRange(rawKey(key), start, end),
+				new Converter.SimpleListBinaryConverter<>(this));
+	}
+
+	@Override
+	public <V> List<V> lRangeObject(final String key, final long start, final long end, final Class<V> clazz) {
+		return execute((client)->client.listOperations().lRange(rawKey(key), start, end),
+				new Converter.ClazzListStringConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> List<V> lRangeObject(final byte[] key, final long start, final long end, final Class<V> clazz) {
+		return execute((client)->client.listOperations().lRange(rawKey(key), start, end),
+				new Converter.ClazzListBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> List<V> lRangeObject(final String key, final long start, final long end, final TypeReference<V> type) {
+		return execute((client)->client.listOperations().lRange(rawKey(key), start, end),
+				new Converter.TypeListStringConverter<>(this, type));
+	}
+
+	@Override
+	public <V> List<V> lRangeObject(final byte[] key, final long start, final long end, final TypeReference<V> type) {
+		return execute((client)->client.listOperations().lRange(rawKey(key), start, end),
+				new Converter.TypeListBinaryConverter<>(this, type));
+	}
+
+	@Override
+	public <V> Status lSet(final String key, final long index, final V value) {
+		return lSet(key, index, serializer.serialize(value));
+	}
+
+	@Override
+	public <V> Status lSet(final byte[] key, final long index, final V value) {
+		return lSet(key, index, serializer.serializeAsBytes(value));
 	}
 
 	@Override
@@ -1263,16 +1321,6 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 				new Converter.TypeBinaryConverter<>(this, type));
 	}
 
-	@Override
-	public <V> Long rPush(final String key, final V value) {
-		return rPush(key, serializer.serialize(value));
-	}
-
-	@Override
-	public <V> Long rPush(final byte[] key, final V value) {
-		return rPush(key, serializer.serializeAsBytes(value));
-	}
-
 	@SuppressWarnings({"unchecked"})
 	@Override
 	public <V> Long rPush(final String key, final V... values) {
@@ -1283,16 +1331,6 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 	@Override
 	public <V> Long rPush(final byte[] key, final V... values) {
 		return rPush(key, serializer.serializeAsBytes(values));
-	}
-
-	@Override
-	public <V> Long rPushX(final String key, final V value) {
-		return rPushX(key, serializer.serialize(value));
-	}
-
-	@Override
-	public <V> Long rPushX(final byte[] key, final V value) {
-		return rPushX(key, serializer.serializeAsBytes(value));
 	}
 
 	@SuppressWarnings({"unchecked"})

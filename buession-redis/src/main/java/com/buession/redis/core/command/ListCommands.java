@@ -28,6 +28,7 @@ import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.core.Direction;
 import com.buession.redis.core.ListPosition;
+import com.buession.redis.core.command.args.LPosArgument;
 import com.buession.redis.utils.ObjectStringBuilder;
 
 import java.util.List;
@@ -147,366 +148,6 @@ public interface ListCommands extends RedisCommands {
 	List<byte[]> blPop(final byte[][] keys, final int timeout);
 
 	/**
-	 * 获取列表 key 中，下标为 index 的元素
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/lindex.html" target="_blank">http://redisdoc.com/list/lindex.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param index
-	 * 		下标
-	 *
-	 * @return 下标为 index 的元素；如果 index 参数的值不在列表的区间范围内，返回 null
-	 */
-	String lIndex(final String key, final long index);
-
-	/**
-	 * 获取列表 key 中，下标为 index 的元素
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/lindex.html" target="_blank">http://redisdoc.com/list/lindex.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param index
-	 * 		下标
-	 *
-	 * @return 下标为 index 的元素；如果 index 参数的值不在列表的区间范围内，返回 null
-	 */
-	byte[] lIndex(final byte[] key, final long index);
-
-	/**
-	 * 将值 value 插入到列表 key 当中，位于值 pivot 之前或之后
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/linsert.html" target="_blank">http://redisdoc.com/list/linsert.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param position
-	 * 		位置
-	 * @param pivot
-	 * 		pivot
-	 * @param value
-	 * 		值
-	 *
-	 * @return 执行成功，返回插入操作完成之后，列表的长度；
-	 * 如果没有找到 pivot ，返回 -1 ；如果 key 不存在或为空列表，返回 0 。
-	 */
-	Long lInsert(final String key, final ListPosition position, final String pivot, final String value);
-
-	/**
-	 * 将值 value 插入到列表 key 当中，位于值 pivot 之前或之后
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/linsert.html" target="_blank">http://redisdoc.com/list/linsert.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param position
-	 * 		位置
-	 * @param pivot
-	 * 		pivot
-	 * @param value
-	 * 		值
-	 *
-	 * @return 执行成功，返回插入操作完成之后，列表的长度；
-	 * 如果没有找到 pivot ，返回 -1 ；如果 key 不存在或为空列表，返回 0 。
-	 */
-	Long lInsert(final byte[] key, final ListPosition position, final byte[] pivot, final byte[] value);
-
-	/**
-	 * 将列表 key 下标为 index 的元素的值设置为 value
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/lset.html" target="_blank">http://redisdoc.com/list/lset.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param index
-	 * 		下标
-	 * @param value
-	 * 		值
-	 *
-	 * @return 操作结果；设置成功时返回 Status.Success，否则返回 Status.FAILURE
-	 */
-	Status lSet(final String key, final long index, final String value);
-
-	/**
-	 * 将列表 key 下标为 index 的元素的值设置为 value
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/lset.html" target="_blank">http://redisdoc.com/list/lset.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param index
-	 * 		下标
-	 * @param value
-	 * 		值
-	 *
-	 * @return 操作结果；设置成功时返回 Status.Success，否则返回 Status.FAILURE
-	 */
-	Status lSet(final byte[] key, final long index, final byte[] value);
-
-	/**
-	 * 获取列表 key 的长度
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/llen.html" target="_blank">http://redisdoc.com/list/llen.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 列表 key 的长度，如果 key 不是列表类型，则返回 -1
-	 */
-	Long lLen(final String key);
-
-	/**
-	 * 获取列表 key 的长度
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/llen.html" target="_blank">http://redisdoc.com/list/llen.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 列表 key 的长度，如果 key 不是列表类型，则返回 -1
-	 */
-	Long lLen(final byte[] key);
-
-	/**
-	 * 获取列表 key 中指定区间内的元素，区间以偏移量 start 和 stop 之间的元素（包含 start 和 stop）；
-	 * 也可以使用负数下标，以 -1 表示列表的最后一个元素， -2 表示列表的倒数第二个元素，以此类推
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/lrange.html" target="_blank">http://redisdoc.com/list/lrange.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param start
-	 * 		开始位置
-	 * @param end
-	 * 		结束位置
-	 *
-	 * @return 指定区间内的元素；
-	 * 如果 start 下标比列表的最大下标 ( LLEN list 减去 1 )还要大，那么返回一个空列表；
-	 * 如果 end 下标比最大下标还要大，那么最多返回到 end 个下标
-	 */
-	List<String> lRange(final String key, final long start, final long end);
-
-	/**
-	 * 获取列表 key 中指定区间内的元素，区间以偏移量 start 和 stop 之间的元素（包含 start 和 stop）；
-	 * 也可以使用负数下标，以 -1 表示列表的最后一个元素， -2 表示列表的倒数第二个元素，以此类推
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/lrange.html" target="_blank">http://redisdoc.com/list/lrange.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param start
-	 * 		开始位置
-	 * @param end
-	 * 		结束位置
-	 *
-	 * @return 指定区间内的元素；
-	 * 如果 start 下标比列表的最大下标 ( LLEN list 减去 1 )还要大，那么返回一个空列表；
-	 * 如果 end 下标比最大下标还要大，那么最多返回到 end 个下标
-	 */
-	List<byte[]> lRange(final byte[] key, final long start, final long end);
-
-	/**
-	 * 返回列表 key 中匹配给定 element 成员的索引
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/lpos.html" target="_blank">https://www.redis.com.cn/commands/lpos.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param element
-	 * 		成员
-	 *
-	 * @return 整数表示匹配元素的位置，返回 null 表示没有找到匹配元素
-	 */
-	Long lPos(final String key, final String element);
-
-	/**
-	 * 返回列表 key 中匹配给定 element 成员的索引
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/lpos.html" target="_blank">https://www.redis.com.cn/commands/lpos.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param element
-	 * 		成员
-	 *
-	 * @return 整数表示匹配元素的位置，返回null表示没有找到匹配元素
-	 */
-	Long lPos(final byte[] key, final byte[] element);
-
-	/**
-	 * 返回列表 key 中匹配给定 element 成员的索引
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/lpos.html" target="_blank">https://www.redis.com.cn/commands/lpos.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param element
-	 * 		成员
-	 * @param lPosArgument
-	 *        {@link LPosArgument}
-	 *
-	 * @return 整数表示匹配元素的位置，返回 null 表示没有找到匹配元素
-	 */
-	Long lPos(final String key, final String element, final LPosArgument lPosArgument);
-
-	/**
-	 * 返回列表 key 中匹配给定 element 成员的索引
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/lpos.html" target="_blank">https://www.redis.com.cn/commands/lpos.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param element
-	 * 		成员
-	 * @param lPosArgument
-	 *        {@link LPosArgument}
-	 *
-	 * @return 整数表示匹配元素的位置，返回null表示没有找到匹配元素
-	 */
-	Long lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument);
-
-	/**
-	 * 返回列表 key 中匹配给定 element 成员的索引
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/lpos.html" target="_blank">https://www.redis.com.cn/commands/lpos.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param element
-	 * 		成员
-	 * @param lPosArgument
-	 *        {@link LPosArgument}
-	 * @param count
-	 * 		返回数量
-	 *
-	 * @return 返回数据
-	 */
-	List<Long> lPos(final String key, final String element, final LPosArgument lPosArgument, final long count);
-
-	/**
-	 * 返回列表 key 中匹配给定 element 成员的索引
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/lpos.html" target="_blank">https://www.redis.com.cn/commands/lpos.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param element
-	 * 		成员
-	 * @param lPosArgument
-	 *        {@link LPosArgument}
-	 * @param count
-	 * 		返回数量
-	 *
-	 * @return 返回数据
-	 */
-	List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument, final long count);
-
-	/**
-	 * 移除列表中与参数 value 相等的 count 个元素元素
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/lrem.html" target="_blank">http://redisdoc.com/list/lrem.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param value
-	 * 		值
-	 * @param count
-	 * 		移除个数
-	 *
-	 * @return 被移除元素的数量
-	 */
-	Long lRem(final String key, final String value, final long count);
-
-	/**
-	 * 移除列表中与参数 value 相等的 count 个元素元素
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/lrem.html" target="_blank">http://redisdoc.com/list/lrem.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param value
-	 * 		值
-	 * @param count
-	 * 		移除个数
-	 *
-	 * @return 被移除元素的数量
-	 */
-	Long lRem(final byte[] key, final byte[] value, final long count);
-
-	/**
-	 * 移除列表指定区间外的元素；
-	 * 如果 start 下标比列表的最大下标 end ( LLEN list 减去 1 )还要大，或者 start &gt; stop ，则移除整个列表；
-	 * 如果 stop 下标比 end 下标还要大，Redis将 stop 的值设置为 end
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/ltrim.html" target="_blank">http://redisdoc.com/list/ltrim.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param start
-	 * 		开始位置
-	 * @param end
-	 * 		结束位置
-	 *
-	 * @return 操作结果，成功返回 Status.Success，否则返回 Status.FAILURE
-	 */
-	Status lTrim(final String key, final long start, final long end);
-
-	/**
-	 * 移除列表指定区间外的元素；
-	 * 如果 start 下标比列表的最大下标 end ( LLEN list 减去 1 )还要大，或者 start &gt; stop ，则移除整个列表；
-	 * 如果 stop 下标比 end 下标还要大，Redis将 stop 的值设置为 end
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/ltrim.html" target="_blank">http://redisdoc.com/list/ltrim.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param start
-	 * 		开始位置
-	 * @param end
-	 * 		结束位置
-	 *
-	 * @return 操作结果，成功返回 Status.Success，否则返回 Status.FAILURE
-	 */
-	Status lTrim(final byte[] key, final long start, final long end);
-
-	/**
-	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/lmove.html" target="_blank">https://www.redis.com.cn/commands/lmove.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param destKey
-	 * 		目标 Key
-	 * @param from
-	 * 		第一个或最后一个元素
-	 * @param to
-	 * 		第一个或最后一个元素
-	 *
-	 * @return 被移除并再次插入的元素
-	 */
-	String lMove(final String key, final String destKey, final Direction from, final Direction to);
-
-	/**
-	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/lmove.html" target="_blank">https://www.redis.com.cn/commands/lmove.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param destKey
-	 * 		目标 Key
-	 * @param from
-	 * 		第一个或最后一个元素
-	 * @param to
-	 * 		第一个或最后一个元素
-	 *
-	 * @return 被移除并再次插入的元素
-	 */
-	byte[] lMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to);
-
-	/**
 	 * 移除并返回列表中一个或多个 key 的尾元素，BRPOP 是列表的阻塞式(blocking)弹出原语；
 	 * 当给定列表内没有任何元素可供弹出的时候，连接将被阻塞，直到等待超时或发现可弹出元素为止
 	 *
@@ -575,6 +216,164 @@ public interface ListCommands extends RedisCommands {
 	byte[] brPoplPush(final byte[] key, final byte[] destKey, final int timeout);
 
 	/**
+	 * 获取列表 key 中，下标为 index 的元素
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/list/lindex.html" target="_blank">http://redisdoc.com/list/lindex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param index
+	 * 		下标
+	 *
+	 * @return 下标为 index 的元素；如果 index 参数的值不在列表的区间范围内，返回 null
+	 */
+	String lIndex(final String key, final long index);
+
+	/**
+	 * 获取列表 key 中，下标为 index 的元素
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/list/lindex.html" target="_blank">http://redisdoc.com/list/lindex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param index
+	 * 		下标
+	 *
+	 * @return 下标为 index 的元素；如果 index 参数的值不在列表的区间范围内，返回 null
+	 */
+	byte[] lIndex(final byte[] key, final long index);
+
+	/**
+	 * 将值 value 插入到列表 key 当中，位于值 pivot 之前或之后
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/list/linsert.html" target="_blank">http://redisdoc.com/list/linsert.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param position
+	 * 		位置
+	 * @param pivot
+	 * 		pivot
+	 * @param value
+	 * 		值
+	 *
+	 * @return 执行成功，返回插入操作完成之后，列表的长度；
+	 * 如果没有找到 pivot ，返回 -1 ；如果 key 不存在或为空列表，返回 0 。
+	 */
+	Long lInsert(final String key, final ListPosition position, final String pivot, final String value);
+
+	/**
+	 * 将值 value 插入到列表 key 当中，位于值 pivot 之前或之后
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/list/linsert.html" target="_blank">http://redisdoc.com/list/linsert.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param position
+	 * 		位置
+	 * @param pivot
+	 * 		pivot
+	 * @param value
+	 * 		值
+	 *
+	 * @return 执行成功，返回插入操作完成之后，列表的长度；
+	 * 如果没有找到 pivot ，返回 -1 ；如果 key 不存在或为空列表，返回 0 。
+	 */
+	Long lInsert(final byte[] key, final ListPosition position, final byte[] pivot, final byte[] value);
+
+	/**
+	 * 获取列表 key 的长度
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/list/llen.html" target="_blank">http://redisdoc.com/list/llen.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 列表 key 的长度，如果 key 不是列表类型，则返回 -1
+	 */
+	Long lLen(final String key);
+
+	/**
+	 * 获取列表 key 的长度
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/list/llen.html" target="_blank">http://redisdoc.com/list/llen.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 列表 key 的长度，如果 key 不是列表类型，则返回 -1
+	 */
+	Long lLen(final byte[] key);
+
+	/**
+	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/lmove.html" target="_blank">https://www.redis.com.cn/commands/lmove.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param from
+	 * 		第一个或最后一个元素
+	 * @param to
+	 * 		第一个或最后一个元素
+	 *
+	 * @return 被移除并再次插入的元素
+	 */
+	String lMove(final String key, final String destKey, final Direction from, final Direction to);
+
+	/**
+	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/lmove.html" target="_blank">https://www.redis.com.cn/commands/lmove.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param from
+	 * 		第一个或最后一个元素
+	 * @param to
+	 * 		第一个或最后一个元素
+	 *
+	 * @return 被移除并再次插入的元素
+	 */
+	byte[] lMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to);
+
+	/**
+	 * 从多个列表（lists）中以原子方式弹出一个或多个元素，非阻塞版
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lmpop/" target="_blank">https://redis.io/docs/latest/commands/lmpop/</a></p>
+	 *
+	 * @param timeout
+	 * 		超时时间
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param direction
+	 * 		方位
+	 *
+	 * @return 被弹出的元素 key 及其值
+	 */
+	KeyValue<String, List<String>> lMPop(final int timeout, final String[] keys, final Direction direction);
+
+	/**
+	 * 从多个列表（lists）中以原子方式弹出一个或多个元素，非阻塞版
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lmpop/" target="_blank">https://redis.io/docs/latest/commands/lmpop/</a></p>
+	 *
+	 * @param timeout
+	 * 		超时时间
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param direction
+	 * 		方位
+	 *
+	 * @return 被弹出的元素 key 及其值
+	 */
+	KeyValue<byte[], List<byte[]>> lMPop(final int timeout, final byte[][] keys, final Direction direction);
+
+	/**
 	 * 移除并返回列表 key 的头元素
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/list/lpop.html" target="_blank">http://redisdoc.com/list/lpop.html</a></p>
@@ -597,6 +396,94 @@ public interface ListCommands extends RedisCommands {
 	 * @return 列表的头元素；当 key 不存在时，返回 null
 	 */
 	byte[] lPop(final byte[] key);
+
+	/**
+	 * 移除并返回列表 key 的头元素
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/list/lpop.html" target="_blank">http://redisdoc.com/list/lpop.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		移除数量
+	 *
+	 * @return 列表的头元素；当 key 不存在时，返回 null
+	 */
+	List<String> lPop(final String key, final int count);
+
+	/**
+	 * 移除并返回列表 key 的头元素
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/list/lpop.html" target="_blank">http://redisdoc.com/list/lpop.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		移除数量
+	 *
+	 * @return 列表的头元素；当 key 不存在时，返回 null
+	 */
+	List<byte[]> lPop(final byte[] key, final int count);
+
+	/**
+	 * 返回列表 key 中匹配给定 element 成员的索引
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/lpos.html" target="_blank">https://www.redis.com.cn/commands/lpos.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param element
+	 * 		成员
+	 *
+	 * @return 整数表示匹配元素的位置，返回 null 表示没有找到匹配元素
+	 */
+	Long lPos(final String key, final String element);
+
+	/**
+	 * 返回列表 key 中匹配给定 element 成员的索引
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/lpos.html" target="_blank">https://www.redis.com.cn/commands/lpos.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param element
+	 * 		成员
+	 *
+	 * @return 整数表示匹配元素的位置，返回null表示没有找到匹配元素
+	 */
+	Long lPos(final byte[] key, final byte[] element);
+
+	/**
+	 * 返回列表 key 中匹配给定 element 成员的索引
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/lpos.html" target="_blank">https://www.redis.com.cn/commands/lpos.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param element
+	 * 		成员
+	 * @param lPosArgument
+	 *        {@link LPosArgument}
+	 *
+	 * @return 整数表示匹配元素的位置，返回 null 表示没有找到匹配元素
+	 */
+	List<Long> lPos(final String key, final String element, final LPosArgument lPosArgument);
+
+	/**
+	 * 返回列表 key 中匹配给定 element 成员的索引
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/lpos.html" target="_blank">https://www.redis.com.cn/commands/lpos.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param element
+	 * 		成员
+	 * @param lPosArgument
+	 *        {@link LPosArgument}
+	 *
+	 * @return 整数表示匹配元素的位置，返回null表示没有找到匹配元素
+	 */
+	List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument);
 
 	/**
 	 * 将一个或多个值 value 插入到列表 key 的表头
@@ -653,6 +540,144 @@ public interface ListCommands extends RedisCommands {
 	 * @return 执行 LPUSHX 命令后，列表的长度
 	 */
 	Long lPushX(final byte[] key, final byte[]... values);
+
+	/**
+	 * 获取列表 key 中指定区间内的元素，区间以偏移量 start 和 stop 之间的元素（包含 start 和 stop）；
+	 * 也可以使用负数下标，以 -1 表示列表的最后一个元素， -2 表示列表的倒数第二个元素，以此类推
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/list/lrange.html" target="_blank">http://redisdoc.com/list/lrange.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 *
+	 * @return 指定区间内的元素；
+	 * 如果 start 下标比列表的最大下标 ( LLEN list 减去 1 )还要大，那么返回一个空列表；
+	 * 如果 end 下标比最大下标还要大，那么最多返回到 end 个下标
+	 */
+	List<String> lRange(final String key, final long start, final long end);
+
+	/**
+	 * 获取列表 key 中指定区间内的元素，区间以偏移量 start 和 stop 之间的元素（包含 start 和 stop）；
+	 * 也可以使用负数下标，以 -1 表示列表的最后一个元素， -2 表示列表的倒数第二个元素，以此类推
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/list/lrange.html" target="_blank">http://redisdoc.com/list/lrange.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 *
+	 * @return 指定区间内的元素；
+	 * 如果 start 下标比列表的最大下标 ( LLEN list 减去 1 )还要大，那么返回一个空列表；
+	 * 如果 end 下标比最大下标还要大，那么最多返回到 end 个下标
+	 */
+	List<byte[]> lRange(final byte[] key, final long start, final long end);
+
+	/**
+	 * 移除列表中与参数 value 相等的 count 个元素元素
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/list/lrem.html" target="_blank">http://redisdoc.com/list/lrem.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		值
+	 * @param count
+	 * 		移除个数
+	 *
+	 * @return 被移除元素的数量
+	 */
+	Long lRem(final String key, final String value, final long count);
+
+	/**
+	 * 移除列表中与参数 value 相等的 count 个元素元素
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/list/lrem.html" target="_blank">http://redisdoc.com/list/lrem.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		值
+	 * @param count
+	 * 		移除个数
+	 *
+	 * @return 被移除元素的数量
+	 */
+	Long lRem(final byte[] key, final byte[] value, final long count);
+
+	/**
+	 * 将列表 key 下标为 index 的元素的值设置为 value
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/list/lset.html" target="_blank">http://redisdoc.com/list/lset.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param index
+	 * 		下标
+	 * @param value
+	 * 		值
+	 *
+	 * @return 操作结果；设置成功时返回 Status.Success，否则返回 Status.FAILURE
+	 */
+	Status lSet(final String key, final long index, final String value);
+
+	/**
+	 * 将列表 key 下标为 index 的元素的值设置为 value
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/list/lset.html" target="_blank">http://redisdoc.com/list/lset.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param index
+	 * 		下标
+	 * @param value
+	 * 		值
+	 *
+	 * @return 操作结果；设置成功时返回 Status.Success，否则返回 Status.FAILURE
+	 */
+	Status lSet(final byte[] key, final long index, final byte[] value);
+
+	/**
+	 * 移除列表指定区间外的元素；
+	 * 如果 start 下标比列表的最大下标 end ( LLEN list 减去 1 )还要大，或者 start &gt; stop ，则移除整个列表；
+	 * 如果 stop 下标比 end 下标还要大，Redis将 stop 的值设置为 end
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/list/ltrim.html" target="_blank">http://redisdoc.com/list/ltrim.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 *
+	 * @return 操作结果，成功返回 Status.Success，否则返回 Status.FAILURE
+	 */
+	Status lTrim(final String key, final long start, final long end);
+
+	/**
+	 * 移除列表指定区间外的元素；
+	 * 如果 start 下标比列表的最大下标 end ( LLEN list 减去 1 )还要大，或者 start &gt; stop ，则移除整个列表；
+	 * 如果 stop 下标比 end 下标还要大，Redis将 stop 的值设置为 end
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/list/ltrim.html" target="_blank">http://redisdoc.com/list/ltrim.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 *
+	 * @return 操作结果，成功返回 Status.Success，否则返回 Status.FAILURE
+	 */
+	Status lTrim(final byte[] key, final long start, final long end);
 
 	/**
 	 * 移除并返回列表 key 的尾元素
@@ -765,56 +790,5 @@ public interface ListCommands extends RedisCommands {
 	 * @return 执行 RPUSHX 之后，表的长度
 	 */
 	Long rPushX(final byte[] key, final byte[]... values);
-
-	final class LPosArgument {
-
-		private Integer rank;
-
-		private Integer maxLen;
-
-		private LPosArgument() {
-		}
-
-		public Integer getRank() {
-			return rank;
-		}
-
-		public Integer getMaxLen() {
-			return maxLen;
-		}
-
-		@Override
-		public String toString() {
-			return ObjectStringBuilder.create().add("rank", rank).add("maxLen", maxLen).build();
-		}
-
-		public static class Builder {
-
-			private final LPosArgument lPosArgument = new LPosArgument();
-
-			private Builder() {
-			}
-
-			public static Builder create() {
-				return new Builder();
-			}
-
-			public Builder rank(int rank) {
-				lPosArgument.rank = rank;
-				return this;
-			}
-
-			public Builder maxLen(int maxLen) {
-				lPosArgument.maxLen = maxLen;
-				return this;
-			}
-
-			public LPosArgument build() {
-				return lPosArgument;
-			}
-
-		}
-
-	}
 
 }

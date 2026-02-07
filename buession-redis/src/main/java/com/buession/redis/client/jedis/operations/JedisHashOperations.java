@@ -479,105 +479,85 @@ public final class JedisHashOperations extends AbstractJedisRedisOperations impl
 	@Override
 	public Long hSet(final String key, final Map<String, String> data) {
 		final CommandArguments args = CommandArguments.create(key).add(data);
-		return JedisCommandBuilder.<Long, Long>newBuilder(client, Command.HSET).executor((cmd)->cmd.hset(key, data))
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HSET, args, (cmd)->cmd.hset(key, data), (v)->v);
 	}
 
 	@Override
 	public Long hSet(final byte[] key, final Map<byte[], byte[]> data) {
 		final CommandArguments args = CommandArguments.create(key).add(data);
-		return JedisCommandBuilder.<Long, Long>newBuilder(client, Command.HSET).executor((cmd)->cmd.hset(key, data))
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HSET, args, (cmd)->cmd.hset(key, data), (v)->v);
 	}
 
 	@Override
 	public Status hSetEx(final String key, final Map<String, String> data) {
 		final CommandArguments args = CommandArguments.create(key).add(data);
-		return JedisCommandBuilder.<Long, Status>newBuilder(client, Command.HSETEX)
-				.executor((cmd)->cmd.hsetex(key, new HSetExParams(), data)).arguments(args)
-				.converter(new OneStatusConverter()).run();
+		return hSetEx(args, (cmd)->cmd.hsetex(key, new HSetExParams(), data));
 	}
 
 	@Override
 	public Status hSetEx(final byte[] key, final Map<byte[], byte[]> data) {
 		final CommandArguments args = CommandArguments.create(key).add(data);
-		return JedisCommandBuilder.<Long, Status>newBuilder(client, Command.HSETEX)
-				.executor((cmd)->cmd.hsetex(key, new HSetExParams(), data)).arguments(args)
-				.converter(new OneStatusConverter()).run();
+		return hSetEx(args, (cmd)->cmd.hsetex(key, new HSetExParams(), data));
 	}
 
 	@Override
 	public Status hSetEx(final String key, final Map<String, String> data, final HSetExArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(data);
-		return JedisCommandBuilder.<Long, Status>newBuilder(client, Command.HSETEX)
-				.executor((cmd)->cmd.hsetex(key, IParamsUtils.hSetExParams(argument), data)).arguments(args)
-				.converter(new OneStatusConverter()).run();
+		return hSetEx(args, (cmd)->cmd.hsetex(key, IParamsUtils.hSetExParams(argument), data));
 	}
 
 	@Override
 	public Status hSetEx(final byte[] key, final Map<byte[], byte[]> data, final HSetExArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(data);
-		return JedisCommandBuilder.<Long, Status>newBuilder(client, Command.HSETEX)
-				.executor((cmd)->cmd.hsetex(key, IParamsUtils.hSetExParams(argument), data)).arguments(args)
-				.converter(new OneStatusConverter()).run();
+		return hSetEx(args, (cmd)->cmd.hsetex(key, IParamsUtils.hSetExParams(argument), data));
 	}
 
 	@Override
 	public Status hSetNx(final String key, final String field, final String value) {
 		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
-		return JedisCommandBuilder.<Long, Status>newBuilder(client, Command.HSETNX)
-				.executor((cmd)->cmd.hsetnx(key, field, value)).arguments(args).converter(new OneStatusConverter())
-				.run();
+		return executeCommand(Command.HSETNX, args, (cmd)->cmd.hsetnx(key, field, value), new OneStatusConverter());
 	}
 
 	@Override
 	public Status hSetNx(final byte[] key, final byte[] field, final byte[] value) {
 		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
-		return JedisCommandBuilder.<Long, Status>newBuilder(client, Command.HSETNX)
-				.executor((cmd)->cmd.hsetnx(key, field, value)).arguments(args).converter(new OneStatusConverter())
-				.run();
+		return executeCommand(Command.HSETNX, args, (cmd)->cmd.hsetnx(key, field, value), new OneStatusConverter());
 	}
 
 	@Override
 	public Long hStrLen(final String key, final String field) {
 		final CommandArguments args = CommandArguments.create(key).add(field);
-		return JedisCommandBuilder.<Long, Long>newBuilder(client, Command.HSTRLEN)
-				.executor((cmd)->cmd.hstrlen(key, field)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HSTRLEN, args, (cmd)->cmd.hstrlen(key, field), (v)->v);
 	}
 
 	@Override
 	public Long hStrLen(final byte[] key, final byte[] field) {
 		final CommandArguments args = CommandArguments.create(key).add(field);
-		return JedisCommandBuilder.<Long, Long>newBuilder(client, Command.HSTRLEN)
-				.executor((cmd)->cmd.hstrlen(key, field)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HSTRLEN, args, (cmd)->cmd.hstrlen(key, field), (v)->v);
 	}
 
 	@Override
 	public List<Long> hTtl(final String key, final String... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(fields);
-		return JedisCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.HTTL)
-				.executor((cmd)->cmd.httl(key, fields)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HTTL, args, (cmd)->cmd.httl(key, fields), (v)->v);
 	}
 
 	@Override
 	public List<Long> hTtl(final byte[] key, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(fields);
-		return JedisCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.HTTL)
-				.executor((cmd)->cmd.httl(key, fields)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HTTL, args, (cmd)->cmd.httl(key, fields), (v)->v);
 	}
 
 	@Override
 	public List<String> hVals(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return JedisCommandBuilder.<List<String>, List<String>>newBuilder(client, Command.HVALS)
-				.executor((cmd)->cmd.hvals(key)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HVALS, args, (cmd)->cmd.hvals(key), (v)->v);
 	}
 
 	@Override
 	public List<byte[]> hVals(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return JedisCommandBuilder.<List<byte[]>, List<byte[]>>newBuilder(client, Command.HVALS)
-				.executor((cmd)->cmd.hvals(key)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HVALS, args, (cmd)->cmd.hvals(key), (v)->v);
 	}
 
 	private List<Long> hExpire(final CommandArguments args,
@@ -603,6 +583,11 @@ public final class JedisHashOperations extends AbstractJedisRedisOperations impl
 	private List<Long> hPExpireAt(final CommandArguments args,
 								  final com.buession.redis.core.Command.Executor<UnifiedJedis, List<Long>> executor) {
 		return executeCommand(Command.HPEXPIREAT, args, executor, (v)->v);
+	}
+
+	private Status hSetEx(final CommandArguments args,
+						  final com.buession.redis.core.Command.Executor<UnifiedJedis, Long> executor) {
+		return executeCommand(Command.HSETEX, args, executor, new OneStatusConverter());
 	}
 
 	private <R> R hRandField(final CommandArguments args,

@@ -25,7 +25,7 @@
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.builder.ListBuilder;
-import com.buession.core.converter.Converter;
+import com.buession.core.validator.Validate;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
@@ -34,13 +34,12 @@ import com.buession.redis.core.Direction;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.args.LPosArgument;
 import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.response.KeyValueConverter;
+import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.lettuce.CompositeArgumentUtils;
-import com.buession.redis.core.internal.lettuce.LettuceLPosArgs;
 import com.buession.redis.utils.SafeEncoder;
-import io.lettuce.core.LPosArgs;
 
 import java.util.List;
 
@@ -60,482 +59,313 @@ public final class LettuceListOperations extends AbstractLettuceRedisOperations 
 	public String blMove(final String key, final String destKey, final Direction from, final Direction to,
 						 final int timeout) {
 		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from).add(to);
-		return LettuceCommandBuilder.<byte[], String>newBuilder(client, Command.BLMOVE).executor(
-						(cmd)->cmd.blmove(SafeEncoder.encode(key), SafeEncoder.encode(destKey),
-								CompositeArgumentUtils.lMoveArgs(from, to), timeout)).arguments(args)
-				.converter(Converters.binaryToStringConverter()).run();
+		return executeCommand(Command.BLMOVE, args,
+				(cmd)->cmd.blmove(SafeEncoder.encode(key), SafeEncoder.encode(destKey),
+						CompositeArgumentUtils.lMoveArgs(from, to), timeout), Converters.binaryToStringConverter());
 	}
 
 	@Override
 	public byte[] blMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
 						 final int timeout) {
 		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from).add(to).add(timeout);
-		return LettuceCommandBuilder.<byte[], byte[]>newBuilder(client, Command.BLMOVE)
-				.executor((cmd)->cmd.blmove(key, destKey, CompositeArgumentUtils.lMoveArgs(from, to), timeout))
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.BLMOVE, args,
+				(cmd)->cmd.blmove(key, destKey, CompositeArgumentUtils.lMoveArgs(from, to), timeout), (v)->v);
 	}
 
 	@Override
 	public KeyValue<String, List<String>> blMPop(final int timeout, final String[] keys, final Direction direction) {
 		final CommandArguments args = CommandArguments.create(timeout).add(keys);
-		return LettuceCommandBuilder.<io.lettuce.core.KeyValue<byte[], List<byte[]>>, KeyValue<String, List<String>>>newBuilder(
-						client, Command.BLMPOP).executor(
-						(cmd)->cmd.blmpop(timeout, CompositeArgumentUtils.lMPopArgs(direction), SafeEncoder.encode(keys)))
-				.arguments(args).converter(new KeyValueConverter<>(Converters.binaryToStringConverter(),
-						Converters.binaryListToStringListConverter())).run();
+		return executeCommand(Command.BLMPOP, args,
+				(cmd)->cmd.blmpop(timeout, CompositeArgumentUtils.lMPopArgs(direction), SafeEncoder.encode(keys)),
+				new KeyValueConverter<>(Converters.binaryToStringConverter(),
+						Converters.binaryListToStringListConverter()));
 	}
 
 	@Override
 	public KeyValue<byte[], List<byte[]>> blMPop(final int timeout, final byte[][] keys, final Direction direction) {
 		final CommandArguments args = CommandArguments.create(timeout).add(keys.length).add(keys);
-		return LettuceCommandBuilder.<io.lettuce.core.KeyValue<byte[], List<byte[]>>, KeyValue<byte[], List<byte[]>>>newBuilder(
-						client, Command.BLMPOP)
-				.executor((cmd)->cmd.blmpop(timeout, CompositeArgumentUtils.lMPopArgs(direction), keys)).arguments(args)
-				.converter(new KeyValueConverter<>((k)->k, (v)->v)).run();
-	}
-
-	@Override
-	public String lIndex(final String key, final long index) {
-		final CommandArguments args = CommandArguments.create(key).add(index);
-		final byte[] bKey = SafeEncoder.encode(key);
-
-		return lIndex(bKey, index, SafeEncoder::encode, args);
-	}
-
-	@Override
-	public byte[] lIndex(final byte[] key, final long index) {
-		final CommandArguments args = CommandArguments.create(key).add(index);
-		return lIndex(key, index, (v)->v, args);
-	}
-
-	@Override
-	public Long lInsert(final byte[] key, final ListPosition position, final byte[] pivot, final byte[] value) {
-		final CommandArguments args = CommandArguments.create(key).add(position).add(pivot).add(value);
-		final boolean before = ListPosition.BEFORE == position;
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.LINSERT,
-					(cmd)->cmd.linsert(key, before, pivot, value), (v)->v).run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.LINSERT,
-					(cmd)->cmd.linsert(key, before, pivot, value), (v)->v).run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.LINSERT, (cmd)->cmd.linsert(key, before, pivot, value),
-					(v)->v).run(args);
-		}
-	}
-
-	@Override
-	public Status lSet(final byte[] key, final long index, final byte[] value) {
-		final CommandArguments args = CommandArguments.create(key).add(index).add(value);
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.LSET, (cmd)->cmd.lset(key, index, value),
-					okStatusConverter).run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.LSET, (cmd)->cmd.lset(key, index, value),
-					okStatusConverter).run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.LSET, (cmd)->cmd.lset(key, index, value),
-					okStatusConverter).run(args);
-		}
-	}
-
-	@Override
-	public Long lLen(final byte[] key) {
-		final CommandArguments args = CommandArguments.create(key);
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.LLEN, (cmd)->cmd.llen(key), (v)->v).run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.LLEN, (cmd)->cmd.llen(key), (v)->v).run(
-					args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.LLEN, (cmd)->cmd.llen(key), (v)->v).run(args);
-		}
-	}
-
-	@Override
-	public List<String> lRange(final String key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
-		final byte[] bKey = SafeEncoder.encode(key);
-
-		return lRange(bKey, start, end, binaryToStringListConverter, args);
-	}
-
-	@Override
-	public List<byte[]> lRange(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
-		return lRange(key, start, end, (v)->v, args);
-	}
-
-	@Override
-	public Long lPos(final byte[] key, final byte[] element) {
-		final CommandArguments args = CommandArguments.create(key);
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element),
-					(v)->v).run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element),
-					(v)->v).run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element), (v)->v).run(args);
-		}
-	}
-
-	@Override
-	public Long lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument) {
-		final CommandArguments args = CommandArguments.create(key).add(lPosArgument);
-		final LPosArgs lPosArgs = LettuceLPosArgs.from(lPosArgument);
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element, lPosArgs),
-					(v)->v).run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.LPOS,
-					(cmd)->cmd.lpos(key, element, lPosArgs), (v)->v).run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element, lPosArgs),
-					(v)->v).run(args);
-		}
-	}
-
-	@Override
-	public List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument, final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(lPosArgument).add(count);
-		final LPosArgs lPosArgs = LettuceLPosArgs.from(lPosArgument);
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.LPOS,
-					(cmd)->cmd.lpos(key, element, (int) count, lPosArgs), (v)->v).run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.LPOS,
-					(cmd)->cmd.lpos(key, element, (int) count, lPosArgs), (v)->v).run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.LPOS,
-					(cmd)->cmd.lpos(key, element, (int) count, lPosArgs), (v)->v).run(args);
-		}
-	}
-
-	@Override
-	public Long lRem(final byte[] key, final byte[] value, final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(value).add(count);
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.LREM, (cmd)->cmd.lrem(key, count, value),
-					(v)->v).run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.LREM, (cmd)->cmd.lrem(key, count, value),
-					(v)->v).run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.LREM, (cmd)->cmd.lrem(key, count, value), (v)->v).run(
-					args);
-		}
-	}
-
-	@Override
-	public Status lTrim(final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.LTRIM, (cmd)->cmd.ltrim(key, start, end),
-					okStatusConverter).run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.LTRIM, (cmd)->cmd.ltrim(key, start, end),
-					okStatusConverter).run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.LTRIM, (cmd)->cmd.ltrim(key, start, end),
-					okStatusConverter).run(args);
-		}
-	}
-
-	@Override
-	public String lMove(final String key, final String destKey, final Direction from, final Direction to) {
-		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from).add(to);
-		return lMove(args);
-	}
-
-	@Override
-	public byte[] lMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to) {
-		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from).add(to);
-		return lMove(args);
+		return executeCommand(Command.BLMPOP, args,
+				(cmd)->cmd.blmpop(timeout, CompositeArgumentUtils.lMPopArgs(direction), keys),
+				new KeyValueConverter<>((k)->k, (v)->v));
 	}
 
 	@Override
 	public List<String> blPop(final String[] keys, final int timeout) {
 		final CommandArguments args = CommandArguments.create(keys).add(timeout);
-		final byte[][] bKeys = SafeEncoder.encode(keys);
-		final Converter<KeyValue<byte[], byte[]>, List<String>> converter = (v)->ListBuilder.of(
-				SafeEncoder.encode(v.getValue()));
-
-		return blPop(bKeys, timeout, converter, args);
+		return executeCommand(Command.BLPOP, args, (cmd)->cmd.blpop(timeout, SafeEncoder.encode(keys)),
+				(v)->ListBuilder.of(SafeEncoder.encode(v.getValue())));
 	}
 
 	@Override
 	public List<byte[]> blPop(final byte[][] keys, final int timeout) {
 		final CommandArguments args = CommandArguments.create(keys).add(timeout);
-		final Converter<KeyValue<byte[], byte[]>, List<byte[]>> converter = (v)->ListBuilder.of(v.getValue());
-
-		return blPop(keys, timeout, converter, args);
+		return executeCommand(Command.BLPOP, args, (cmd)->cmd.blpop(timeout, keys), (v)->ListBuilder.of(v.getValue()));
 	}
 
 	@Override
 	public List<String> brPop(final String[] keys, final int timeout) {
 		final CommandArguments args = CommandArguments.create(keys).add(timeout);
-		final byte[][] bKeys = SafeEncoder.encode(keys);
-		final Converter<KeyValue<byte[], byte[]>, List<String>> converter = (v)->ListBuilder.of(
-				SafeEncoder.encode(v.getValue()));
-
-		return brPop(bKeys, timeout, converter, args);
+		return executeCommand(Command.BRPOP, args, (cmd)->cmd.brpop(timeout, SafeEncoder.encode(keys)),
+				(v)->ListBuilder.of(SafeEncoder.encode(v.getValue())));
 	}
 
 	@Override
 	public List<byte[]> brPop(final byte[][] keys, final int timeout) {
 		final CommandArguments args = CommandArguments.create(keys).add(timeout);
-		final Converter<KeyValue<byte[], byte[]>, List<byte[]>> converter = (v)->ListBuilder.of(v.getValue());
-
-		return brPop(keys, timeout, converter, args);
+		return executeCommand(Command.BRPOP, args, (cmd)->cmd.brpop(timeout, keys), (v)->ListBuilder.of(v.getValue()));
 	}
 
 	@Override
 	public String brPoplPush(final String key, final String destKey, final int timeout) {
 		final CommandArguments args = CommandArguments.create(key).add(destKey).add(timeout);
-		final byte[] bKey = SafeEncoder.encode(key);
-		final byte[] bDestKey = SafeEncoder.encode(destKey);
-
-		return brPoplPush(bKey, bDestKey, timeout, SafeEncoder::encode, args);
+		return executeCommand(Command.BRPOPLPUSH, args, (cmd)->cmd.brpoplpush(timeout, SafeEncoder.encode(key),
+				SafeEncoder.encode(destKey)), Converters.binaryToStringConverter());
 	}
 
 	@Override
 	public byte[] brPoplPush(final byte[] key, final byte[] destKey, final int timeout) {
 		final CommandArguments args = CommandArguments.create(key).add(destKey).add(timeout);
-		return brPoplPush(key, destKey, timeout, (v)->v, args);
+		return executeCommand(Command.BRPOPLPUSH, args, (cmd)->cmd.brpoplpush(timeout, key, destKey), (v)->v);
+	}
+
+	@Override
+	public String lIndex(final String key, final long index) {
+		final CommandArguments args = CommandArguments.create(key).add(index);
+		return executeCommand(Command.LINDEX, args, (cmd)->cmd.lindex(SafeEncoder.encode(key), index),
+				Converters.binaryToStringConverter());
+	}
+
+	@Override
+	public byte[] lIndex(final byte[] key, final long index) {
+		final CommandArguments args = CommandArguments.create(key).add(index);
+		return executeCommand(Command.LINDEX, args, (cmd)->cmd.lindex(key, index), (v)->v);
+	}
+
+	@Override
+	public Long lInsert(final String key, final ListPosition position, final String pivot, final String value) {
+		return lInsert(SafeEncoder.encode(key), position, SafeEncoder.encode(pivot), SafeEncoder.encode(value));
+	}
+
+	@Override
+	public Long lInsert(final byte[] key, final ListPosition position, final byte[] pivot, final byte[] value) {
+		final CommandArguments args = CommandArguments.create(key).add(position).add(pivot).add(value);
+		return executeCommand(Command.LINSERT, args,
+				(cmd)->cmd.linsert(key, ListPosition.BEFORE == position, pivot, value), (v)->v);
+	}
+
+	@Override
+	public Long lLen(final String key) {
+		return lLen(SafeEncoder.encode(key));
+	}
+
+	@Override
+	public Long lLen(final byte[] key) {
+		final CommandArguments args = CommandArguments.create(key);
+		return executeCommand(Command.LLEN, args, (cmd)->cmd.llen(key), (v)->v);
+	}
+
+	@Override
+	public String lMove(final String key, final String destKey, final Direction from, final Direction to) {
+		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from).add(to);
+		return executeCommand(Command.LMOVE, args,
+				(cmd)->cmd.lmove(SafeEncoder.encode(key), SafeEncoder.encode(destKey),
+						CompositeArgumentUtils.lMoveArgs(from, to)), Converters.binaryToStringConverter());
+	}
+
+	@Override
+	public byte[] lMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to) {
+		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from).add(to);
+		return executeCommand(Command.LMOVE, args, (cmd)->cmd.lmove(key, destKey,
+				CompositeArgumentUtils.lMoveArgs(from, to)), (v)->v);
+	}
+
+	@Override
+	public KeyValue<String, List<String>> lMPop(final int timeout, final String[] keys, final Direction direction) {
+		final CommandArguments args = CommandArguments.create(timeout).add(keys).add(direction);
+		return executeCommand(Command.LMPOP, args, (cmd)->cmd.lmpop(CompositeArgumentUtils.lMPopArgs(direction),
+				SafeEncoder.encode(keys)), new KeyValueConverter<>(Converters.binaryToStringConverter(),
+				Converters.binaryListToStringListConverter()));
+	}
+
+	@Override
+	public KeyValue<byte[], List<byte[]>> lMPop(final int timeout, final byte[][] keys, final Direction direction) {
+		final CommandArguments args = CommandArguments.create(timeout).add(keys).add(direction);
+		return executeCommand(Command.LMPOP, args,
+				(cmd)->cmd.lmpop(CompositeArgumentUtils.lMPopArgs(direction), keys),
+				new KeyValueConverter<>((k)->k, (v)->v));
 	}
 
 	@Override
 	public String lPop(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		final byte[] bKey = SafeEncoder.encode(key);
-
-		return lPop(bKey, SafeEncoder::encode, args);
+		return executeCommand(Command.LPOP, args, (cmd)->cmd.lpop(SafeEncoder.encode(key), 1),
+				(value)->Validate.isEmpty(value) ? null : SafeEncoder.encode(value.get(0)));
 	}
 
 	@Override
 	public byte[] lPop(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return lPop(key, (v)->v, args);
+		return executeCommand(Command.LPOP, args, (cmd)->cmd.lpop(key, 1), Converters.list0Converter());
+	}
+
+	@Override
+	public List<String> lPop(final String key, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(count);
+		return executeCommand(Command.LPOP, args, (cmd)->cmd.lpop(SafeEncoder.encode(key), 1),
+				Converters.binaryListToStringListConverter());
+	}
+
+	@Override
+	public List<byte[]> lPop(final byte[] key, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(count);
+		return executeCommand(Command.LPOP, args, (cmd)->cmd.lpop(key, 1), (v)->v);
+	}
+
+	@Override
+	public Long lPos(final String key, final String element) {
+		return lPos(SafeEncoder.encode(key), SafeEncoder.encode(element));
+	}
+
+	@Override
+	public Long lPos(final byte[] key, final byte[] element) {
+		final CommandArguments args = CommandArguments.create(key);
+		return executeCommand(Command.LPOS, args, (cmd)->cmd.lpos(key, element), (v)->v);
+	}
+
+	@Override
+	public List<Long> lPos(final String key, final String element, final LPosArgument lPosArgument) {
+		return lPos(SafeEncoder.encode(key), SafeEncoder.encode(element), lPosArgument);
+	}
+
+	@Override
+	public List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument) {
+		final CommandArguments args = CommandArguments.create(key).add(lPosArgument);
+		return executeCommand(Command.LPOS, args,
+				(cmd)->cmd.lpos(key, element,
+						lPosArgument == null || lPosArgument.getCount() == null ? 0 : lPosArgument.getCount(),
+						CompositeArgumentUtils.lPosArgs(lPosArgument)),
+				(v)->v);
+	}
+
+	@Override
+	public Long lPush(final String key, final String... values) {
+		return lPush(SafeEncoder.encode(key), SafeEncoder.encode(values));
 	}
 
 	@Override
 	public Long lPush(final byte[] key, final byte[]... values) {
 		final CommandArguments args = CommandArguments.create(key).add(values);
+		return executeCommand(Command.LPUSH, args, (cmd)->cmd.lpush(key, values), (v)->v);
+	}
 
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.LPUSH, (cmd)->cmd.lpush(key, values),
-					(v)->v).run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.LPUSH, (cmd)->cmd.lpush(key, values),
-					(v)->v).run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.LPUSH, (cmd)->cmd.lpush(key, values), (v)->v).run(args);
-		}
+	@Override
+	public Long lPushX(final String key, final String... values) {
+		return lPushX(SafeEncoder.encode(key), SafeEncoder.encode(values));
 	}
 
 	@Override
 	public Long lPushX(final byte[] key, final byte[]... values) {
 		final CommandArguments args = CommandArguments.create(key).add(values);
+		return executeCommand(Command.LPUSHX, args, (cmd)->cmd.lpushx(key, values), (v)->v);
+	}
 
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.LPUSHX, (cmd)->cmd.lpushx(key, values),
-					(v)->v).run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.LPUSHX, (cmd)->cmd.lpushx(key, values),
-					(v)->v).run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.LPUSHX, (cmd)->cmd.lpushx(key, values), (v)->v).run(
-					args);
-		}
+	@Override
+	public List<String> lRange(final String key, final long start, final long end) {
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
+		return executeCommand(Command.LRANGE, args, (cmd)->cmd.lrange(SafeEncoder.encode(key), start, end),
+				Converters.binaryListToStringListConverter());
+	}
+
+	@Override
+	public List<byte[]> lRange(final byte[] key, final long start, final long end) {
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
+		return executeCommand(Command.LRANGE, args, (cmd)->cmd.lrange(key, start, end),
+				(v)->v);
+	}
+
+	@Override
+	public Long lRem(final String key, final String value, final long count) {
+		return lRem(SafeEncoder.encode(key), SafeEncoder.encode(value), count);
+	}
+
+	@Override
+	public Long lRem(final byte[] key, final byte[] value, final long count) {
+		final CommandArguments args = CommandArguments.create(key).add(value).add(count);
+		return executeCommand(Command.LREM, args, (cmd)->cmd.lrem(key, count, value),
+				(v)->v);
+	}
+
+	@Override
+	public Status lSet(final String key, final long index, final String value) {
+		return lSet(SafeEncoder.encode(key), index, SafeEncoder.encode(value));
+	}
+
+	@Override
+	public Status lSet(final byte[] key, final long index, final byte[] value) {
+		final CommandArguments args = CommandArguments.create(key).add(index).add(value);
+		return executeCommand(Command.LSET, args, (cmd)->cmd.lset(key, index, value),
+				new OkStatusConverter());
+	}
+
+	@Override
+	public Status lTrim(final String key, final long start, final long end) {
+		return lTrim(SafeEncoder.encode(key), start, end);
+	}
+
+	@Override
+	public Status lTrim(final byte[] key, final long start, final long end) {
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
+		return executeCommand(Command.LTRIM, args, (cmd)->cmd.ltrim(key, start, end),
+				new OkStatusConverter());
 	}
 
 	@Override
 	public String rPop(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		final byte[] bKey = SafeEncoder.encode(key);
-
-		return rPop(bKey, SafeEncoder::encode, args);
+		return executeCommand(Command.RPOP, args, (cmd)->cmd.rpop(SafeEncoder.encode(key)),
+				Converters.binaryToStringConverter());
 	}
 
 	@Override
 	public byte[] rPop(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return rPop(key, (v)->v, args);
+		return executeCommand(Command.RPOP, args, (cmd)->cmd.rpop(key), (v)->v);
 	}
 
 	@Override
 	public String rPoplPush(final String key, final String destKey) {
 		final CommandArguments args = CommandArguments.create(key).add(destKey);
-		final byte[] bKey = SafeEncoder.encode(key);
-		final byte[] bDestKey = SafeEncoder.encode(destKey);
-
-		return rPoplPush(bKey, bDestKey, SafeEncoder::encode, args);
+		return executeCommand(Command.RPOPLPUSH, args,
+				(cmd)->cmd.rpoplpush(SafeEncoder.encode(key), SafeEncoder.encode(destKey)),
+				Converters.binaryToStringConverter());
 	}
 
 	@Override
 	public byte[] rPoplPush(final byte[] key, final byte[] destKey) {
 		final CommandArguments args = CommandArguments.create(key).add(destKey);
-		return rPoplPush(key, destKey, (v)->v, args);
+		return executeCommand(Command.RPOPLPUSH, args, (cmd)->cmd.rpoplpush(key, destKey), (v)->v);
+	}
+
+	@Override
+	public Long rPush(final String key, final String... values) {
+		return rPush(SafeEncoder.encode(key), SafeEncoder.encode(values));
 	}
 
 	@Override
 	public Long rPush(final byte[] key, final byte[]... values) {
 		final CommandArguments args = CommandArguments.create(key).add(values);
+		return executeCommand(Command.RPUSH, args, (cmd)->cmd.rpush(key, values), (v)->v);
+	}
 
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.RPUSH, (cmd)->cmd.rpush(key, values),
-					(v)->v).run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.RPUSH, (cmd)->cmd.rpush(key, values),
-					(v)->v).run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.RPUSH, (cmd)->cmd.rpush(key, values), (v)->v).run(args);
-		}
+	@Override
+	public Long rPushX(final String key, final String... values) {
+		return rPushX(SafeEncoder.encode(key), SafeEncoder.encode(values));
 	}
 
 	@Override
 	public Long rPushX(final byte[] key, final byte[]... values) {
 		final CommandArguments args = CommandArguments.create(key).add(values);
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.RPUSHX, (cmd)->cmd.rpushx(key, values),
-					(v)->v).run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.RPUSHX, (cmd)->cmd.rpushx(key, values),
-					(v)->v).run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.RPUSHX, (cmd)->cmd.rpushx(key, values), (v)->v).run(
-					args);
-		}
-	}
-
-	private <V> V lIndex(final byte[] key, final long index, final Converter<byte[], V> converter,
-						 final CommandArguments args) {
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.LINDEX, (cmd)->cmd.lindex(key, index),
-					converter).run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.LINDEX, (cmd)->cmd.lindex(key, index),
-					converter).run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.LINDEX, (cmd)->cmd.lindex(key, index), converter).run(
-					args);
-		}
-	}
-
-	private <V> List<V> lRange(final byte[] key, final long start, final long end,
-							   final Converter<List<byte[]>, List<V>> converter, final CommandArguments args) {
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.LRANGE, (cmd)->cmd.lrange(key, start, end),
-					converter).run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.LRANGE, (cmd)->cmd.lrange(key, start, end),
-					converter).run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.LRANGE, (cmd)->cmd.lrange(key, start, end),
-					converter).run(args);
-		}
-	}
-
-	private <V> V lMove(final CommandArguments args) {
-		if(isPipeline()){
-			return new LettucePipelineCommand<V, V>(client, ProtocolCommand.LMOVE).run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<V, V>(client, ProtocolCommand.LMOVE).run(args);
-		}else{
-			return new LettuceCommand<V, V>(client, ProtocolCommand.LMOVE).run(args);
-		}
-	}
-
-	private <V> List<V> blPop(final byte[][] keys, final int timeout,
-							  final Converter<KeyValue<byte[], byte[]>, List<V>> converter,
-							  final CommandArguments args) {
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.BLPOP, (cmd)->cmd.blpop(timeout, keys),
-					converter).run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.BLPOP, (cmd)->cmd.blpop(timeout, keys),
-					converter).run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.BLPOP, (cmd)->cmd.blpop(timeout, keys), converter).run(
-					args);
-		}
-	}
-
-	private <V> List<V> brPop(final byte[][] keys, final int timeout,
-							  final Converter<KeyValue<byte[], byte[]>, List<V>> converter,
-							  final CommandArguments args) {
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.BRPOP, (cmd)->cmd.brpop(timeout, keys),
-					converter).run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.BRPOP, (cmd)->cmd.brpop(timeout, keys),
-					converter).run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.BRPOP, (cmd)->cmd.brpop(timeout, keys), converter).run(
-					args);
-		}
-	}
-
-	private <V> V brPoplPush(final byte[] key, final byte[] destKey, final int timeout,
-							 final Converter<byte[], V> converter, final CommandArguments args) {
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.BRPOPLPUSH,
-					(cmd)->cmd.brpoplpush(timeout, key, destKey), converter).run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.BRPOPLPUSH,
-					(cmd)->cmd.brpoplpush(timeout, key, destKey), converter).run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.BRPOPLPUSH,
-					(cmd)->cmd.brpoplpush(timeout, key, destKey), converter).run(args);
-		}
-	}
-
-	private <V> V lPop(final byte[] key, final Converter<byte[], V> converter, final CommandArguments args) {
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.LPOP, (cmd)->cmd.lpop(key), converter).run(
-					args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.LPOP, (cmd)->cmd.lpop(key), converter).run(
-					args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.LPOP, (cmd)->cmd.lpop(key), converter).run(args);
-		}
-	}
-
-	private <V> V rPop(final byte[] key, final Converter<byte[], V> converter, final CommandArguments args) {
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.RPOP, (cmd)->cmd.rpop(key), converter).run(
-					args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.RPOP, (cmd)->cmd.rpop(key), converter).run(
-					args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.RPOP, (cmd)->cmd.rpop(key), converter).run(args);
-		}
-	}
-
-	private <V> V rPoplPush(final byte[] key, final byte[] destKey, final Converter<byte[], V> converter,
-							final CommandArguments args) {
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.RPOPLPUSH, (cmd)->cmd.rpoplpush(key, destKey),
-					converter).run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.RPOPLPUSH,
-					(cmd)->cmd.rpoplpush(key, destKey), converter).run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.RPOPLPUSH, (cmd)->cmd.rpoplpush(key, destKey),
-					converter).run(args);
-		}
+		return executeCommand(Command.RPUSHX, args, (cmd)->cmd.rpushx(key, values), (v)->v);
 	}
 
 }

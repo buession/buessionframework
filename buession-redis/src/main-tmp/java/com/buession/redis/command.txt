@@ -63,53 +63,6 @@
 	 * key command end
 	 **/
 
-
-
-	/**
-	 * list command start
-	 **/
-	BLPOP(CommandGroup.LIST, "rw"),
-
-	BRPOP(CommandGroup.LIST, "rw"),
-
-	BRPOPLPUSH(CommandGroup.LIST, "rw"),
-
-	LINDEX(CommandGroup.LIST, "r"),
-
-	LINSERT(CommandGroup.LIST, "w"),
-
-	LLEN(CommandGroup.LIST, "r"),
-
-	LPOP(CommandGroup.LIST, "rw"),
-
-	LPOS(CommandGroup.LIST, "r"),
-
-	LPUSH(CommandGroup.LIST, "w"),
-
-	LPUSHX(CommandGroup.LIST, "w"),
-
-	LRANGE(CommandGroup.LIST, "r"),
-
-	LREM(CommandGroup.LIST, "rw"),
-
-	LSET(CommandGroup.LIST, "w"),
-
-	LTRIM(CommandGroup.LIST, "rw"),
-
-	RPOP(CommandGroup.LIST, "rw"),
-
-	RPOPLPUSH(CommandGroup.LIST, "rw"),
-
-	RPUSH(CommandGroup.LIST, "rw"),
-
-	RPUSHX(CommandGroup.LIST, "rw"),
-
-	LMOVE(CommandGroup.LIST, "w"),
-
-	/**
-	 * list command end
-	 **/
-
 	/**
 	 * pubsub command start
 	 **/

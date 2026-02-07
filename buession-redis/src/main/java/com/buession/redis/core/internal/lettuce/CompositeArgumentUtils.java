@@ -34,6 +34,7 @@ import com.buession.redis.core.command.args.GeoSearchArgument;
 import com.buession.redis.core.command.args.GetExArgument;
 import com.buession.redis.core.command.args.HSetExArgument;
 import com.buession.redis.core.command.args.JsonGetArgument;
+import com.buession.redis.core.command.args.LPosArgument;
 import com.buession.redis.core.command.args.TrackingArgument;
 import io.lettuce.core.BitFieldArgs;
 import io.lettuce.core.ExpireArgs;
@@ -43,6 +44,7 @@ import io.lettuce.core.HGetExArgs;
 import io.lettuce.core.HSetExArgs;
 import io.lettuce.core.LMPopArgs;
 import io.lettuce.core.LMoveArgs;
+import io.lettuce.core.LPosArgs;
 import io.lettuce.core.TrackingArgs;
 import io.lettuce.core.json.arguments.JsonGetArgs;
 
@@ -331,6 +333,19 @@ public class CompositeArgumentUtils {
 		}
 
 		return lmPopArgs;
+	}
+
+	public static LPosArgs lPosArgs(final LPosArgument lPosArgument) {
+		if(lPosArgument == null){
+			return null;
+		}
+
+		final LPosArgs lPosArgs = new LPosArgs();
+
+		Optional.ofNullable(lPosArgument.getRank()).ifPresent(lPosArgs::rank);
+		Optional.ofNullable(lPosArgument.getMaxLen()).ifPresent(lPosArgs::maxlen);
+
+		return lPosArgs;
 	}
 
 }

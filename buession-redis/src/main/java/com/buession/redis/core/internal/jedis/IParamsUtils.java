@@ -34,6 +34,7 @@ import com.buession.redis.core.command.args.GeoRadiusArgument;
 import com.buession.redis.core.command.args.GeoSearchArgument;
 import com.buession.redis.core.command.args.GetExArgument;
 import com.buession.redis.core.command.args.HSetExArgument;
+import com.buession.redis.core.command.args.LPosArgument;
 import redis.clients.jedis.bloom.BFInsertParams;
 import redis.clients.jedis.bloom.BFReserveParams;
 import redis.clients.jedis.bloom.CFInsertParams;
@@ -43,6 +44,7 @@ import redis.clients.jedis.params.GeoRadiusParam;
 import redis.clients.jedis.params.GeoSearchParam;
 import redis.clients.jedis.params.HGetExParams;
 import redis.clients.jedis.params.HSetExParams;
+import redis.clients.jedis.params.LPosParams;
 
 import java.util.Optional;
 
@@ -254,6 +256,19 @@ public class IParamsUtils {
 		}
 
 		return hSetExParams;
+	}
+
+	public static LPosParams lPosParams(final LPosArgument lPosArgument) {
+		if(lPosArgument == null){
+			return null;
+		}
+
+		final LPosParams lPosParams = new LPosParams();
+
+		Optional.ofNullable(lPosArgument.getRank()).ifPresent(lPosParams::rank);
+		Optional.ofNullable(lPosArgument.getMaxLen()).ifPresent(lPosParams::maxlen);
+
+		return lPosParams;
 	}
 
 }

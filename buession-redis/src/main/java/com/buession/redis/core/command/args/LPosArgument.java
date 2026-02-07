@@ -24,11 +24,13 @@
  */
 package com.buession.redis.core.command.args;
 
+import com.buession.redis.utils.ArgStringBuilder;
+
 /**
  * {@code LPOS} 命令参数
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
 public class LPosArgument {
 
@@ -36,6 +38,11 @@ public class LPosArgument {
 	 * 返回第几个匹配的元素
 	 */
 	private Integer rank;
+
+	/**
+	 * 最多个匹配位置
+	 */
+	private Integer count;
 
 	/**
 	 * 查找成员个数
@@ -55,7 +62,6 @@ public class LPosArgument {
 	 * 		返回第几个匹配的元素
 	 */
 	public LPosArgument(final Integer rank) {
-		this.rank = rank;
 	}
 
 	/**
@@ -63,11 +69,14 @@ public class LPosArgument {
 	 *
 	 * @param rank
 	 * 		返回第几个匹配的元素
+	 * @param count
+	 * 		最多个匹配位置
 	 * @param maxLen
 	 * 		查找成员个数
 	 */
-	public LPosArgument(final Integer rank, final Integer maxLen) {
-		this(rank);
+	public LPosArgument(final int rank, final int count, final int maxLen) {
+		this.rank = rank;
+		this.count = count;
 		this.maxLen = maxLen;
 	}
 
@@ -81,13 +90,38 @@ public class LPosArgument {
 	}
 
 	/**
-	 * 设置 返回第几个匹配的元素
+	 * 设置返回第几个匹配的元素
 	 *
 	 * @param rank
 	 * 		返回第几个匹配的元素
+	 *
+	 * @return {@link LPosArgument}
 	 */
-	public void setRank(final Integer rank) {
+	public LPosArgument setRank(final int rank) {
 		this.rank = rank;
+		return this;
+	}
+
+	/**
+	 * 返回第几个匹配的元素
+	 *
+	 * @return 第几个匹配的元素
+	 */
+	public Integer getCount() {
+		return count;
+	}
+
+	/**
+	 * 设置最多个匹配位置
+	 *
+	 * @param count
+	 * 		最多个匹配位置
+	 *
+	 * @return {@link LPosArgument}
+	 */
+	public LPosArgument setCount(final int count) {
+		this.count = count;
+		return this;
 	}
 
 	/**
@@ -104,15 +138,19 @@ public class LPosArgument {
 	 *
 	 * @param maxLen
 	 * 		查找成员个数
+	 *
+	 * @return {@link LPosArgument}
 	 */
-	public void setMaxLen(final Integer maxLen) {
+	public LPosArgument setMaxLen(final int maxLen) {
 		this.maxLen = maxLen;
+		return this;
 	}
 
 	@Override
 	public String toString() {
-		return ArgumentStringBuilder.create()
+		return ArgStringBuilder.create()
 				.add("RANK", rank)
+				.add("COUNT", count)
 				.add("MAXLEN", maxLen)
 				.build();
 	}

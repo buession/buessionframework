@@ -351,9 +351,47 @@ public enum Command implements ProtocolCommand {
 	 **/
 	BLMOVE(CommandGroup.LIST, "w"),
 
-	BLMPOP(CommandGroup.LIST, "r"),
+	BLMPOP(CommandGroup.LIST, "rw"),
 
-	BLPOP(CommandGroup.LIST, "r"),
+	BLPOP(CommandGroup.LIST, "rw"),
+
+	BRPOP(CommandGroup.LIST, "rw"),
+
+	BRPOPLPUSH(CommandGroup.LIST, "rw"),
+
+	LINDEX(CommandGroup.LIST, "r"),
+
+	LINSERT(CommandGroup.LIST, "w"),
+
+	LLEN(CommandGroup.LIST, "r"),
+
+	LMOVE(CommandGroup.LIST, "w"),
+
+	LMPOP(CommandGroup.LIST, "rw"),
+
+	LPOP(CommandGroup.LIST, "rw"),
+
+	LPOS(CommandGroup.LIST, "r"),
+
+	LPUSH(CommandGroup.LIST, "w"),
+
+	LPUSHX(CommandGroup.LIST, "w"),
+
+	LRANGE(CommandGroup.LIST, "r"),
+
+	LREM(CommandGroup.LIST, "rw"),
+
+	LSET(CommandGroup.LIST, "w"),
+
+	LTRIM(CommandGroup.LIST, "rw"),
+
+	RPOP(CommandGroup.LIST, "rw"),
+
+	RPOPLPUSH(CommandGroup.LIST, "rw"),
+
+	RPUSH(CommandGroup.LIST, "rw"),
+
+	RPUSHX(CommandGroup.LIST, "rw")
 	/**
 	 * list command end
 	 **/
