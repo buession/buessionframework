@@ -19,26 +19,132 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
 
+import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.core.Direction;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.utils.ObjectStringBuilder;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 列表命令
  *
- * <p>详情说明 <a href="http://redisdoc.com/list/index.html" target="_blank">http://redisdoc.com/list/index.html</a></p>
+ * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=list" target="_blank">https://redis.io/docs/latest/commands/?group=list</a></p>
  *
  * @author Yong.Teng
  */
 public interface ListCommands extends RedisCommands {
+
+	/**
+	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
+	 * 是 lmove 的阻塞版
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/blmove/" target="_blank">https://redis.io/docs/latest/commands/blmove/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param from
+	 * 		第一个或最后一个元素
+	 * @param to
+	 * 		第一个或最后一个元素
+	 * @param timeout
+	 * 		超时时间
+	 *
+	 * @return 被移除并再次插入的元素
+	 */
+	String blMove(final String key, final String destKey, final Direction from, final Direction to, final int timeout);
+
+	/**
+	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
+	 * 是 lmove 的阻塞版
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/blmove/" target="_blank">https://redis.io/docs/latest/commands/blmove/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param from
+	 * 		第一个或最后一个元素
+	 * @param to
+	 * 		第一个或最后一个元素
+	 * @param timeout
+	 * 		超时时间
+	 *
+	 * @return 被移除并再次插入的元素
+	 */
+	byte[] blMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to, final int timeout);
+
+	/**
+	 * 从多个列表（lists）中安全、原子地弹出元素，并在列表为空时阻塞等待直到有元素可用或超时
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/blmpop/" target="_blank">https://redis.io/docs/latest/commands/blmpop/</a></p>
+	 *
+	 * @param timeout
+	 * 		超时时间
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param direction
+	 * 		方位
+	 *
+	 * @return 被弹出的元素 key 及其值
+	 */
+	KeyValue<String, List<String>> blMPop(final int timeout, final String[] keys, final Direction direction);
+
+	/**
+	 * 从多个列表（lists）中安全、原子地弹出元素，并在列表为空时阻塞等待直到有元素可用或超时
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/blmpop/" target="_blank">https://redis.io/docs/latest/commands/blmpop/</a></p>
+	 *
+	 * @param timeout
+	 * 		超时时间
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param direction
+	 * 		方位
+	 *
+	 * @return 被弹出的元素 key 及其值
+	 */
+	KeyValue<byte[], List<byte[]>> blMPop(final int timeout, final byte[][] keys, final Direction direction);
+
+	/**
+	 * 移除并返回列表中一个或多个 key 的头元素，BLPOP 是列表的阻塞式(blocking)弹出原语；
+	 * 当给定列表内没有任何元素可供弹出的时候，连接将被阻塞，直到等待超时或发现可弹出元素为止
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/list/blpop.html" target="_blank">http://redisdoc.com/list/blpop.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 key
+	 * @param timeout
+	 * 		超时时间
+	 *
+	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值
+	 */
+	List<String> blPop(final String[] keys, final int timeout);
+
+	/**
+	 * 移除并返回列表中一个或多个 key 的头元素，BLPOP 是列表的阻塞式(blocking)弹出原语；
+	 * 当给定列表内没有任何元素可供弹出的时候，连接将被阻塞，直到等待超时或发现可弹出元素为止
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/list/blpop.html" target="_blank">http://redisdoc.com/list/blpop.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 key
+	 * @param timeout
+	 * 		超时时间
+	 *
+	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值
+	 */
+	List<byte[]> blPop(final byte[][] keys, final int timeout);
 
 	/**
 	 * 获取列表 key 中，下标为 index 的元素
@@ -399,78 +505,6 @@ public interface ListCommands extends RedisCommands {
 	 * @return 被移除并再次插入的元素
 	 */
 	byte[] lMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to);
-
-	/**
-	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
-	 * 是 lmove 的阻塞版
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/lmove.html" target="_blank">https://www.redis.com.cn/commands/lmove.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param destKey
-	 * 		目标 Key
-	 * @param from
-	 * 		第一个或最后一个元素
-	 * @param to
-	 * 		第一个或最后一个元素
-	 * @param timeout
-	 * 		超时时间
-	 *
-	 * @return 被移除并再次插入的元素
-	 */
-	String blMove(final String key, final String destKey, final Direction from, final Direction to, final int timeout);
-
-	/**
-	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
-	 * 是 lmove 的阻塞版
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/lmove.html" target="_blank">https://www.redis.com.cn/commands/lmove.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param destKey
-	 * 		目标 Key
-	 * @param from
-	 * 		第一个或最后一个元素
-	 * @param to
-	 * 		第一个或最后一个元素
-	 * @param timeout
-	 * 		超时时间
-	 *
-	 * @return 被移除并再次插入的元素
-	 */
-	byte[] blMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to, final int timeout);
-
-	/**
-	 * 移除并返回列表中一个或多个 key 的头元素，BLPOP 是列表的阻塞式(blocking)弹出原语；
-	 * 当给定列表内没有任何元素可供弹出的时候，连接将被阻塞，直到等待超时或发现可弹出元素为止
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/blpop.html" target="_blank">http://redisdoc.com/list/blpop.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 key
-	 * @param timeout
-	 * 		超时时间
-	 *
-	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值
-	 */
-	List<String> blPop(final String[] keys, final int timeout);
-
-	/**
-	 * 移除并返回列表中一个或多个 key 的头元素，BLPOP 是列表的阻塞式(blocking)弹出原语；
-	 * 当给定列表内没有任何元素可供弹出的时候，连接将被阻塞，直到等待超时或发现可弹出元素为止
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/blpop.html" target="_blank">http://redisdoc.com/list/blpop.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 key
-	 * @param timeout
-	 * 		超时时间
-	 *
-	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值
-	 */
-	List<byte[]> blPop(final byte[][] keys, final int timeout);
 
 	/**
 	 * 移除并返回列表中一个或多个 key 的尾元素，BRPOP 是列表的阻塞式(blocking)弹出原语；

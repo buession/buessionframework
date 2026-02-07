@@ -25,6 +25,7 @@
 package com.buession.redis.core.internal.lettuce;
 
 import com.buession.lang.Order;
+import com.buession.redis.core.Direction;
 import com.buession.redis.core.ExpireOption;
 import com.buession.redis.core.command.args.BitFieldArgument;
 import com.buession.redis.core.command.args.GeoAddArgument;
@@ -40,6 +41,8 @@ import io.lettuce.core.GeoAddArgs;
 import io.lettuce.core.GeoArgs;
 import io.lettuce.core.HGetExArgs;
 import io.lettuce.core.HSetExArgs;
+import io.lettuce.core.LMPopArgs;
+import io.lettuce.core.LMoveArgs;
 import io.lettuce.core.TrackingArgs;
 import io.lettuce.core.json.arguments.JsonGetArgs;
 
@@ -297,6 +300,37 @@ public class CompositeArgumentUtils {
 		Optional.ofNullable(jsonGetArgument.getSpace()).map(jsonGetArgs::space);
 
 		return jsonGetArgs;
+	}
+
+	public static LMoveArgs lMoveArgs(final Direction source, final Direction destination) {
+		if(source == null || destination == null){
+			return null;
+		}
+
+		if(Direction.LEFT.equals(source)){
+			return Direction.LEFT.equals(destination) ? LMoveArgs.Builder.leftLeft() : LMoveArgs.Builder.leftRight();
+		}else{
+			return Direction.LEFT.equals(destination) ? LMoveArgs.Builder.rightLeft() : LMoveArgs.Builder.rightRight();
+		}
+	}
+
+	public static LMPopArgs lMPopArgs(final Direction direction) {
+		return lMPopArgs(direction, null);
+	}
+
+	public static LMPopArgs lMPopArgs(final Direction direction, final Long count) {
+		if(direction == null){
+			return null;
+		}
+
+		final LMPopArgs lmPopArgs = Direction.LEFT.equals(
+				direction) ? LMPopArgs.Builder.left() : LMPopArgs.Builder.right();
+
+		if(count != null){
+			lmPopArgs.count(count);
+		}
+
+		return lmPopArgs;
 	}
 
 }

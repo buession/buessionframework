@@ -51,109 +51,73 @@ public final class LettuceCountMinSketchOperations extends AbstractLettuceRedisO
 	@Override
 	public List<Long> cmsIncrby(final String key, final List<KeyValue<String, Long>> items) {
 		final CommandArguments args = CommandArguments.create(key).add(items);
-		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.CMS_INCRBY)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.CMS_INCRBY, args);
 	}
 
 	@Override
 	public List<Long> cmsIncrby(final byte[] key, final List<KeyValue<byte[], Long>> items) {
 		final CommandArguments args = CommandArguments.create(key).add(items);
-		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.CMS_INCRBY)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.CMS_INCRBY, args);
 	}
 
 	@Override
 	public CmsInfo cmsInfo(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return LettuceCommandBuilder.<CmsInfo, CmsInfo>newBuilder(client, Command.CMS_INFO)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.CMS_INFO, args);
 	}
 
 	@Override
 	public CmsInfo cmsInfo(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return LettuceCommandBuilder.<CmsInfo, CmsInfo>newBuilder(client, Command.CMS_INFO)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.CMS_INFO, args);
 	}
 
 	@Override
 	public Status cmsInitByDim(final String key, final int width, final int depth) {
 		final CommandArguments args = CommandArguments.create(key).add(width).add(depth);
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.CMS_INITBYDIM)
-				.arguments(args)
-				.converter(okStatusConverter)
-				.run();
+		return executeCommand(Command.CMS_INITBYDIM, args);
 	}
 
 	@Override
 	public Status cmsInitByDim(final byte[] key, final int width, final int depth) {
 		final CommandArguments args = CommandArguments.create(key).add(width).add(depth);
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.CMS_INITBYDIM)
-				.arguments(args)
-				.converter(okStatusConverter)
-				.run();
+		return executeCommand(Command.CMS_INITBYDIM, args);
 	}
 
 	@Override
 	public Status cmsInitByProb(final String key, final double error, final double probability) {
 		final CommandArguments args = CommandArguments.create(key).add(error).add(probability);
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.CMS_INITBYPROB)
-				.arguments(args)
-				.converter(okStatusConverter)
-				.run();
+		return executeCommand(Command.CMS_INITBYPROB, args);
 	}
 
 	@Override
 	public Status cmsInitByProb(final byte[] key, final double error, final double probability) {
 		final CommandArguments args = CommandArguments.create(key).add(error).add(probability);
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.CMS_INITBYPROB)
-				.arguments(args)
-				.converter(okStatusConverter)
-				.run();
+		return executeCommand(Command.CMS_INITBYPROB, args);
 	}
 
 	@Override
 	public Status cmsMerge(final String key, final Map<String, Long> keysAndWeights) {
 		final CommandArguments args = CommandArguments.create(key).add(keysAndWeights);
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.CMS_MERGE)
-				.arguments(args)
-				.converter(okStatusConverter)
-				.run();
+		return executeCommand(Command.CMS_MERGE, args);
 	}
 
 	@Override
 	public Status cmsMerge(final byte[] key, final Map<byte[], Long> keysAndWeights) {
 		final CommandArguments args = CommandArguments.create(key).add(keysAndWeights);
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.CMS_MERGE)
-				.arguments(args)
-				.converter(okStatusConverter)
-				.run();
+		return executeCommand(Command.CMS_MERGE, args);
 	}
 
 	@Override
 	public List<Long> cmsQuery(final String key, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(items);
-		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.CMS_QUERY)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.CMS_QUERY, args);
 	}
 
 	@Override
 	public List<Long> cmsQuery(byte[] key, byte[]... items) {
 		final CommandArguments args = CommandArguments.create(key).add(items);
-		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.CMS_QUERY)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.CMS_QUERY, args);
 	}
 
 }

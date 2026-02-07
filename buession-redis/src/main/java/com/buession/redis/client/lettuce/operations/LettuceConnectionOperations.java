@@ -38,10 +38,13 @@ import com.buession.redis.core.TrackingInfo;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.SubCommand;
+import com.buession.redis.core.command.args.TrackingArgument;
 import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.params.ClientUnblockTypeConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.TrackingInfoTrackingInfoConverter;
 import com.buession.redis.core.internal.convert.response.ClientConverter;
+import com.buession.redis.core.internal.convert.response.OkStatusConverter;
+import com.buession.redis.core.internal.convert.response.OneStatusConverter;
 import com.buession.redis.core.internal.convert.response.PingResultConverter;
 import com.buession.redis.core.internal.lettuce.CompositeArgumentUtils;
 import com.buession.redis.utils.SafeEncoder;
@@ -65,11 +68,7 @@ public final class LettuceConnectionOperations extends AbstractLettuceRedisOpera
 	@Override
 	public Status auth(final String user, final String password) {
 		final CommandArguments args = CommandArguments.create(user).add(password);
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.AUTH)
-				.executor((cmd)->cmd.auth(user, password))
-				.arguments(args)
-				.converter(okStatusConverter)
-				.run();
+		return executeCommand(Command.AUTH, args, (cmd)->cmd.auth(user, password), new OkStatusConverter());
 	}
 
 	@Override
@@ -80,11 +79,7 @@ public final class LettuceConnectionOperations extends AbstractLettuceRedisOpera
 	@Override
 	public Status auth(final String password) {
 		final CommandArguments args = CommandArguments.create(password);
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.AUTH)
-				.executor((cmd)->cmd.auth(password))
-				.arguments(args)
-				.converter(okStatusConverter)
-				.run();
+		return executeCommand(Command.AUTH, args, (cmd)->cmd.auth(password), new OkStatusConverter());
 	}
 
 	@Override
@@ -95,41 +90,36 @@ public final class LettuceConnectionOperations extends AbstractLettuceRedisOpera
 	@Override
 	public Status clientCaching(final boolean isYes) {
 		final CommandArguments args = CommandArguments.create(isYes);
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_CACHING)
-				.executor((cmd)->cmd.clientCaching(isYes)).arguments(args).converter(okStatusConverter).run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_CACHING, args, (cmd)->cmd.clientCaching(isYes),
+				new OkStatusConverter());
 	}
 
 	@Override
 	public String clientGetName() {
-		return LettuceCommandBuilder.<byte[], String>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_GETNAME)
-				.executor((cmd)->cmd.clientGetname())
-				.converter(Converters.binaryToStringConverter())
-				.run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_GETNAME, (cmd)->cmd.clientGetname(),
+				Converters.binaryToStringConverter());
 	}
 
 	@Override
 	public Integer clientGetRedir() {
-		return LettuceCommandBuilder.<Long, Integer>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_GETREDIR)
-				.executor((cmd)->cmd.clientGetredir()).converter(Long::intValue).run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_GETREDIR, (cmd)->cmd.clientGetredir(), Long::intValue);
 	}
 
 	@Override
 	public Long clientId() {
-		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_ID)
-				.executor((cmd)->cmd.clientId()).converter((v)->v).run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_ID, (cmd)->cmd.clientId(), (v)->v);
 	}
 
 	@Override
 	public Client clientInfo() {
-		return LettuceCommandBuilder.<String, Client>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_INFO)
-				.executor((cmd)->cmd.clientInfo()).converter(new ClientConverter()).run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_INFO, (cmd)->cmd.clientInfo(), new ClientConverter());
 	}
 
 	@Override
 	public Status clientKill(final String host, final int port) {
 		final CommandArguments args = CommandArguments.create(host).add(port);
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_KILL)
-				.executor((cmd)->cmd.clientKill(host + ':' + port)).arguments(args).converter(okStatusConverter).run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_KILL, args, (cmd)->cmd.clientKill(host + ':' + port),
+				new OkStatusConverter());
 	}
 
 	@Override
@@ -139,80 +129,59 @@ public final class LettuceConnectionOperations extends AbstractLettuceRedisOpera
 
 	@Override
 	public List<Client> clientList() {
-		return LettuceCommandBuilder.<String, List<Client>>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_LIST)
-				.executor((cmd)->cmd.clientList()).converter(new ClientConverter.ClientListConverter()).run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_LIST, (cmd)->cmd.clientList(),
+				new ClientConverter.ClientListConverter());
 	}
 
 	@Override
 	public List<Client> clientList(final ClientType clientType) {
 		final CommandArguments args = CommandArguments.create("TYPE").add(clientType);
-		ClientListArgs listArgs = null;
-		switch(clientType){
-			case NORMAL:
-				listArgs = ClientListArgs.Builder.typeNormal();
-				break;
-			case MASTER:
-				listArgs = ClientListArgs.Builder.typeMaster();
-				break;
-			case SLAVE:
-			case REPLICA:
-				listArgs = ClientListArgs.Builder.typeReplica();
-				break;
-			case PUBSUB:
-				listArgs = ClientListArgs.Builder.typePubsub();
-				break;
-			default:
-				break;
-		}
-
-		final ClientListArgs finalListArgs = listArgs;
-		return LettuceCommandBuilder.<String, List<Client>>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_LIST)
-				.executor((cmd)->cmd.clientList(finalListArgs)).arguments(args)
-				.converter(new ClientConverter.ClientListConverter()).run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_LIST, args, (cmd)->switch(clientType){
+			case NORMAL -> cmd.clientList(ClientListArgs.Builder.typeNormal());
+			case MASTER -> cmd.clientList(ClientListArgs.Builder.typeMaster());
+			case SLAVE, REPLICA -> cmd.clientList(ClientListArgs.Builder.typeReplica());
+			case PUBSUB -> cmd.clientList(ClientListArgs.Builder.typePubsub());
+		}, new ClientConverter.ClientListConverter());
 	}
 
 	@Override
 	public List<Client> clientList(final long... ids) {
 		final CommandArguments args = CommandArguments.create("ID").add(ids);
-		return LettuceCommandBuilder.<String, List<Client>>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_LIST)
-				.executor((cmd)->cmd.clientList(ClientListArgs.Builder.ids(ids))).arguments(args)
-				.converter(new ClientConverter.ClientListConverter()).run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_LIST, args,
+				(cmd)->cmd.clientList(ClientListArgs.Builder.ids(ids)), new ClientConverter.ClientListConverter());
 	}
 
 	@Override
 	public Status clientNoEvict(final boolean on) {
 		final CommandArguments args = CommandArguments.create(on ? Keyword.Common.ON : Keyword.Common.OFF);
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_NO_EVICT)
-				.executor((cmd)->cmd.clientNoEvict(on)).arguments(args).converter(okStatusConverter).run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_NO_EVICT, args, (cmd)->cmd.clientNoEvict(on),
+				new OkStatusConverter());
 	}
 
 	@Override
 	public Status clientNoTouch(final boolean on) {
 		final CommandArguments args = CommandArguments.create(on ? Keyword.Common.ON : Keyword.Common.OFF);
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_NO_TOUCH)
-				.arguments(args).converter(okStatusConverter).run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_NO_TOUCH, args);
 	}
 
 	@Override
 	public Status clientPause(final int timeout) {
 		final CommandArguments args = CommandArguments.create(timeout);
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_PAUSE)
-				.executor((cmd)->cmd.clientPause(timeout)).arguments(args).converter(okStatusConverter).run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_PAUSE, args, (cmd)->cmd.clientPause(timeout),
+				new OkStatusConverter());
 	}
 
 	@Override
 	public Status clientReply(final ClientReply option) {
 		final CommandArguments args = CommandArguments.create(option);
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_REPLY)
-				.arguments(args).converter(okStatusConverter).run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_REPLY, args);
 	}
 
 	@Override
 	public Status clientSetInfo(final ClientInfoOption option, final String value) {
 		final CommandArguments args = CommandArguments.create(option).add(value);
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_SETINFO)
-				.executor((cmd)->cmd.clientSetinfo(option.getValue(), value)).arguments(args)
-				.converter(okStatusConverter).run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_SETINFO, args,
+				(cmd)->cmd.clientSetinfo(option.getValue(), value), new OkStatusConverter());
 	}
 
 	@Override
@@ -223,156 +192,126 @@ public final class LettuceConnectionOperations extends AbstractLettuceRedisOpera
 	@Override
 	public Status clientSetName(final byte[] name) {
 		final CommandArguments args = CommandArguments.create(name);
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_SETNAME)
-				.executor((cmd)->cmd.clientSetname(name)).arguments(args).converter(okStatusConverter).run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_SETNAME, args, (cmd)->cmd.clientSetname(name),
+				new OkStatusConverter());
 	}
 
 	@Override
 	public Status clientTracking(final boolean on, final TrackingArgument argument) {
 		final CommandArguments args = CommandArguments.create(on ? Keyword.Common.ON : Keyword.Common.OFF)
 				.add(argument);
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_TRACKING)
-				.executor((cmd)->cmd.clientTracking(
-						CompositeArgumentUtils.trackingArgs(argument).enabled(on))).arguments(args)
-				.converter(okStatusConverter)
-				.run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_TRACKING, args,
+				(cmd)->cmd.clientTracking(CompositeArgumentUtils.trackingArgs(argument).enabled(on)),
+				new OkStatusConverter());
 	}
 
 	@Override
 	public TrackingInfo clientTrackingInfo() {
-		return LettuceCommandBuilder.<io.lettuce.core.TrackingInfo, TrackingInfo>newBuilder(client, Command.CLIENT,
-						SubCommand.CLIENT_TRACKINGINFO).executor((cmd)->cmd.clientTrackinginfo())
-				.converter(new TrackingInfoTrackingInfoConverter()).run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_TRACKINGINFO, (cmd)->cmd.clientTrackinginfo(),
+				new TrackingInfoTrackingInfoConverter());
 	}
 
 	@Override
 	public Status clientUnblock(final int clientId) {
 		final CommandArguments args = CommandArguments.create(clientId);
-		return LettuceCommandBuilder.<Long, Status>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_TRACKINGINFO)
-				.executor((cmd)->cmd.clientUnblock(clientId, UnblockType.ERROR))
-				.arguments(args)
-				.converter(oneStatusConverter).run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_TRACKINGINFO, args,
+				(cmd)->cmd.clientUnblock(clientId, UnblockType.ERROR), new OneStatusConverter());
 	}
 
 	@Override
 	public Status clientUnblock(final int clientId, final ClientUnblockType type) {
 		final CommandArguments args = CommandArguments.create(clientId).add(type);
 		final UnblockType unblockType = (new ClientUnblockTypeConverter()).convert(type);
-		return LettuceCommandBuilder.<Long, Status>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_UNBLOCK)
-				.executor((cmd)->cmd.clientUnblock(clientId, unblockType))
-				.arguments(args)
-				.converter(oneStatusConverter).run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_UNBLOCK, args,
+				(cmd)->cmd.clientUnblock(clientId, unblockType), new OneStatusConverter());
 	}
 
 	@Override
 	public Status clientUnpause() {
-		return LettuceCommandBuilder.<Long, Status>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_UNPAUSE)
-				.converter(oneStatusConverter).run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_UNPAUSE);
 	}
 
 	@Override
 	public String echo(final String str) {
 		final CommandArguments args = CommandArguments.create(str);
-		return LettuceCommandBuilder.<byte[], String>newBuilder(client, Command.ECHO)
-				.executor((cmd)->cmd.echo(SafeEncoder.encode(str)))
-				.arguments(args)
-				.converter(Converters.binaryToStringConverter()).run();
+		return executeCommand(Command.ECHO, args, (cmd)->cmd.echo(SafeEncoder.encode(str)),
+				Converters.binaryToStringConverter());
 	}
 
 	@Override
 	public byte[] echo(final byte[] str) {
 		final CommandArguments args = CommandArguments.create(str);
-		return LettuceCommandBuilder.<byte[], byte[]>newBuilder(client, Command.ECHO)
-				.executor((cmd)->cmd.echo(str))
-				.arguments(args)
-				.converter((v)->v).run();
+		return executeCommand(Command.ECHO, args, (cmd)->cmd.echo(str), (v)->v);
 	}
 
 	@Override
 	public Hello hello() {
-		return hello(null);
+		return executeCommand(Command.HELLO);
 	}
 
 	@Override
 	public Hello hello(int protover) {
 		final CommandArguments args = CommandArguments.create(protover);
-		return hello(args);
+		return executeCommand(Command.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, String password) {
 		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(password);
-		return hello(args);
+		return executeCommand(Command.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, byte[] password) {
 		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(password);
-		return hello(args);
+		return executeCommand(Command.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, String username, String password) {
 		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(username).add(password);
-		return hello(args);
+		return executeCommand(Command.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, byte[] username, byte[] password) {
 		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(username).add(password);
-		return hello(args);
+		return executeCommand(Command.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, String username, String password, String clientName) {
-		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(username).add(password).add(
-				"SETNAME").add(clientName);
-		return hello(args);
+		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(username).add(password)
+				.add("SETNAME").add(clientName);
+		return executeCommand(Command.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, byte[] username, byte[] password, byte[] clientName) {
-		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(username).add(password).add(
-				"SETNAME").add(clientName);
-		return hello(args);
+		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(username).add(password)
+				.add("SETNAME").add(clientName);
+		return executeCommand(Command.HELLO, args);
 	}
 
 	@Override
 	public Status ping() {
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.PING)
-				.executor((cmd)->cmd.ping())
-				.converter(new PingResultConverter())
-				.run();
+		return executeCommand(Command.PING, (cmd)->cmd.ping(), new PingResultConverter());
 	}
 
 	@Override
 	public Status quit() {
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.QUIT)
-				.executor((cmd)->cmd.quit())
-				.converter(okStatusConverter)
-				.run();
+		return executeCommand(Command.QUIT, (cmd)->cmd.quit(), new OkStatusConverter());
 	}
 
 	@Override
 	public Status reset() {
-		return LettuceCommandBuilder.<Status, Status>newBuilder(client, Command.RESET)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.RESET);
 	}
 
 	@Override
 	public Status select(final int db) {
 		final CommandArguments args = CommandArguments.create(db);
-		return LettuceCommandBuilder.<Status, Status>newBuilder(client, Command.SELECT)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
-	}
-
-	private Hello hello(final CommandArguments args) {
-		return LettuceCommandBuilder.<Hello, Hello>newBuilder(client, Command.HELLO)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.SELECT, args);
 	}
 
 }

@@ -24,8 +24,13 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.converter.Converter;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.AbstractRedisOperations;
+import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.SubCommand;
+import redis.clients.jedis.UnifiedJedis;
 
 /**
  * Jedis Redis 命令操作抽象类
@@ -38,6 +43,47 @@ public abstract class AbstractJedisRedisOperations extends AbstractRedisOperatio
 
 	public AbstractJedisRedisOperations(final JedisRedisClient client) {
 		super(client);
+	}
+
+	protected <SR, R> R executeCommand(final Command command) {
+		return executeCommand(JedisCommandBuilder.<SR, R>newBuilder(client, command));
+	}
+
+	protected <SR, R> R executeCommand(final Command command,
+									   final com.buession.redis.core.Command.Executor<UnifiedJedis, SR> executor,
+									   final Converter<SR, R> converter) {
+		return executeCommand(JedisCommandBuilder.newBuilder(client, command), executor, converter);
+	}
+
+	protected <SR, R> R executeCommand(final Command command, final CommandArguments args) {
+		return executeCommand(JedisCommandBuilder.<SR, R>newBuilder(client, command), args);
+	}
+
+	protected <SR, R> R executeCommand(final Command command, final CommandArguments args,
+									   final com.buession.redis.core.Command.Executor<UnifiedJedis, SR> executor,
+									   final Converter<SR, R> converter) {
+		return executeCommand(JedisCommandBuilder.newBuilder(client, command), args, executor, converter);
+	}
+
+	protected <SR, R> R executeCommand(final Command command, final SubCommand subCommand) {
+		return executeCommand(JedisCommandBuilder.<SR, R>newBuilder(client, command, subCommand));
+	}
+
+	protected <SR, R> R executeCommand(final Command command, final SubCommand subCommand,
+									   final com.buession.redis.core.Command.Executor<UnifiedJedis, SR> executor,
+									   final Converter<SR, R> converter) {
+		return executeCommand(JedisCommandBuilder.newBuilder(client, command, subCommand), executor, converter);
+	}
+
+	protected <SR, R> R executeCommand(final Command command, final SubCommand subCommand,
+									   final CommandArguments args) {
+		return executeCommand(JedisCommandBuilder.<SR, R>newBuilder(client, command, subCommand), args);
+	}
+
+	protected <SR, R> R executeCommand(final Command command, final SubCommand subCommand, final CommandArguments args,
+									   final com.buession.redis.core.Command.Executor<UnifiedJedis, SR> executor,
+									   final Converter<SR, R> converter) {
+		return executeCommand(JedisCommandBuilder.newBuilder(client, command, subCommand), args, executor, converter);
 	}
 
 }

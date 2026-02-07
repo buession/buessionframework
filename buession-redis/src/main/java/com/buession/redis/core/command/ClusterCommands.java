@@ -311,6 +311,20 @@ public interface ClusterCommands extends RedisCommands {
 	Object clusterMigration(final ClusterMigrationOp option, final String id);
 
 	/**
+	 * 执行原子化的哈希槽迁移操作
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cluster-migration/" target="_blank">https://redis.io/docs/latest/commands/cluster-migration/</a></p>
+	 *
+	 * @param option
+	 * 		迁移操作类型
+	 * @param id
+	 * 		ID
+	 *
+	 * @return -
+	 */
+	Object clusterMigration(final ClusterMigrationOp option, final byte[] id);
+
+	/**
 	 * 返回当前节点 Id
 	 *
 	 * <p>详情说明 <a href="https://redis.io/commands/cluster-myid/" target="_blank">https://redis.io/commands/cluster-myid/</a></p>

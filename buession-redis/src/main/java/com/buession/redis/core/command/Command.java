@@ -345,6 +345,18 @@ public enum Command implements ProtocolCommand {
 	/**
 	 * json command end
 	 **/
+
+	/**
+	 * list command start
+	 **/
+	BLMOVE(CommandGroup.LIST, "w"),
+
+	BLMPOP(CommandGroup.LIST, "r"),
+
+	BLPOP(CommandGroup.LIST, "r"),
+	/**
+	 * list command end
+	 **/
 	;
 
 	/**

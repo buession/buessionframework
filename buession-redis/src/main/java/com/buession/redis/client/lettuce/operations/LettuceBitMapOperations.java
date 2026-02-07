@@ -44,8 +44,7 @@ import java.util.List;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class LettuceBitMapOperations extends AbstractLettuceRedisOperations implements
-		BitMapOperations {
+public final class LettuceBitMapOperations extends AbstractLettuceRedisOperations implements BitMapOperations {
 
 	public LettuceBitMapOperations(final LettuceRedisClient client) {
 		super(client);
@@ -59,11 +58,7 @@ public final class LettuceBitMapOperations extends AbstractLettuceRedisOperation
 	@Override
 	public Long bitCount(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.BITCOUNT)
-				.executor((cmd)->cmd.bitcount(key))
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.BITCOUNT, args, (cmd)->cmd.bitcount(key), (v)->v);
 	}
 
 	@Override
@@ -74,11 +69,7 @@ public final class LettuceBitMapOperations extends AbstractLettuceRedisOperation
 	@Override
 	public Long bitCount(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
-		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.BITCOUNT)
-				.executor((cmd)->cmd.bitcount(key, start, end))
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.BITCOUNT, args, (cmd)->cmd.bitcount(key, start, end), (v)->v);
 	}
 
 	@Override
@@ -89,11 +80,7 @@ public final class LettuceBitMapOperations extends AbstractLettuceRedisOperation
 	@Override
 	public Long bitCount(final byte[] key, final long start, final long end, final BitCountOption option) {
 		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(option);
-		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.BITCOUNT)
-				.executor((cmd)->cmd.bitcount(key, start, end))
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.BITCOUNT, args, (cmd)->cmd.bitcount(key, start, end), (v)->v);
 	}
 
 	@Override
@@ -104,29 +91,20 @@ public final class LettuceBitMapOperations extends AbstractLettuceRedisOperation
 	@Override
 	public List<Long> bitField(final byte[] key, final BitFieldArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument);
-		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.BITFIELD)
-				.executor((cmd)->cmd.bitfield(key, CompositeArgumentUtils.bitFieldArgs(argument)))
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.BITFIELD, args,
+				(cmd)->cmd.bitfield(key, CompositeArgumentUtils.bitFieldArgs(argument)), (v)->v);
 	}
 
 	@Override
 	public List<Long> bitFieldRo(final String key, final BitFieldRoArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument);
-		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.BITFIELD_RO)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.BITFIELD_RO, args);
 	}
 
 	@Override
 	public List<Long> bitFieldRo(final byte[] key, final BitFieldRoArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument);
-		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.BITFIELD_RO)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.BITFIELD_RO, args);
 	}
 
 	@Override
@@ -136,25 +114,20 @@ public final class LettuceBitMapOperations extends AbstractLettuceRedisOperation
 
 	@Override
 	public Long bitOp(final BitOperation operation, final byte[] destKey, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create(operation).add(destKey)
-				.add(keys);
-		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.BITOP)
-				.executor((cmd)->{
-					if(operation == BitOperation.AND){
-						return cmd.bitopAnd(destKey, keys);
-					}else if(operation == BitOperation.OR){
-						return cmd.bitopOr(destKey, keys);
-					}else if(operation == BitOperation.NOT){
-						return cmd.bitopNot(destKey, keys[0]);
-					}else if(operation == BitOperation.XOR){
-						return cmd.bitopXor(destKey, keys);
-					}else{
-						return null;
-					}
-				})
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		final CommandArguments args = CommandArguments.create(operation).add(destKey).add(keys);
+		return executeCommand(Command.BITOP, args, (cmd)->{
+			if(operation == BitOperation.AND){
+				return cmd.bitopAnd(destKey, keys);
+			}else if(operation == BitOperation.OR){
+				return cmd.bitopOr(destKey, keys);
+			}else if(operation == BitOperation.NOT){
+				return cmd.bitopNot(destKey, keys[0]);
+			}else if(operation == BitOperation.XOR){
+				return cmd.bitopXor(destKey, keys);
+			}else{
+				return null;
+			}
+		}, (v)->v);
 	}
 
 	@Override
@@ -165,11 +138,7 @@ public final class LettuceBitMapOperations extends AbstractLettuceRedisOperation
 	@Override
 	public Long bitPos(final byte[] key, final boolean value) {
 		final CommandArguments args = CommandArguments.create(key).add(value);
-		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.BITPOS)
-				.executor((cmd)->cmd.bitpos(key, value))
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(key, value), (v)->v);
 	}
 
 	@Override
@@ -179,13 +148,8 @@ public final class LettuceBitMapOperations extends AbstractLettuceRedisOperation
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(value).add(start)
-				.add(end);
-		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.BITPOS)
-				.executor((cmd)->cmd.bitpos(key, value, start, end))
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		final CommandArguments args = CommandArguments.create(key).add(value).add(start).add(end);
+		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(key, value, start, end), (v)->v);
 	}
 
 	@Override
@@ -196,11 +160,7 @@ public final class LettuceBitMapOperations extends AbstractLettuceRedisOperation
 	@Override
 	public Boolean getBit(final byte[] key, final long offset) {
 		final CommandArguments args = CommandArguments.create(key).add(offset);
-		return LettuceCommandBuilder.<Long, Boolean>newBuilder(client, Command.GETBIT)
-				.executor((cmd)->cmd.getbit(key, offset))
-				.arguments(args)
-				.converter(new OneBooleanConverter())
-				.run();
+		return executeCommand(Command.GETBIT, args, (cmd)->cmd.getbit(key, offset), new OneBooleanConverter());
 	}
 
 	@Override
@@ -211,11 +171,8 @@ public final class LettuceBitMapOperations extends AbstractLettuceRedisOperation
 	@Override
 	public Boolean setBit(final byte[] key, final long offset, final boolean value) {
 		final CommandArguments args = CommandArguments.create(key).add(offset).add(value);
-		return LettuceCommandBuilder.<Long, Boolean>newBuilder(client, Command.SETBIT)
-				.executor((cmd)->cmd.setbit(key, offset, value ? 1 : 0))
-				.arguments(args)
-				.converter(new OneBooleanConverter())
-				.run();
+		return executeCommand(Command.GETBIT, args, (cmd)->cmd.setbit(key, offset, value ? 1 : 0),
+				new OneBooleanConverter());
 	}
 
 }

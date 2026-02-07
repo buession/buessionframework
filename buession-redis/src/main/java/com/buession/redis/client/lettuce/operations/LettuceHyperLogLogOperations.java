@@ -54,10 +54,7 @@ public final class LettuceHyperLogLogOperations extends AbstractLettuceRedisOper
 	@Override
 	public Status pfAdd(final byte[] key, final byte[]... elements) {
 		final CommandArguments args = CommandArguments.create(key).add(elements);
-		return LettuceCommandBuilder.<Long, Status>newBuilder(client, Command.PFADD)
-				.executor((cmd)->cmd.pfadd(key, elements)).arguments(args)
-				.converter(new OneStatusConverter())
-				.run();
+		return executeCommand(Command.PFADD, args, (cmd)->cmd.pfadd(key, elements), new OneStatusConverter());
 	}
 
 	@Override
@@ -68,10 +65,7 @@ public final class LettuceHyperLogLogOperations extends AbstractLettuceRedisOper
 	@Override
 	public Long pfCount(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.PFCOUNT)
-				.executor((cmd)->cmd.pfcount(keys)).arguments(args)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.PFCOUNT, args, (cmd)->cmd.pfcount(keys), (v)->v);
 	}
 
 	@Override
@@ -82,17 +76,12 @@ public final class LettuceHyperLogLogOperations extends AbstractLettuceRedisOper
 	@Override
 	public Status pfMerge(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.PFMERGE)
-				.executor((cmd)->cmd.pfmerge(destKey, keys)).arguments(args)
-				.converter(new OkStatusConverter())
-				.run();
+		return executeCommand(Command.PFMERGE, args, (cmd)->cmd.pfmerge(destKey, keys), new OkStatusConverter());
 	}
 
 	@Override
 	public Status pfSelftest() {
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.PFSELFTEST)
-				.converter(new OkStatusConverter())
-				.run();
+		return executeCommand(Command.PFSELFTEST, new OkStatusConverter());
 	}
 
 }

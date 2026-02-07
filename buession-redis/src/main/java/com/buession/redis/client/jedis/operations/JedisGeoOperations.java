@@ -66,13 +66,13 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 	@Override
 	public Long geoAdd(final String key, final String member, final double longitude, final double latitude) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude).add(latitude).add(member);
-		return geoAdd((cmd)->cmd.geoadd(key, longitude, latitude, member), args);
+		return geoAdd(args, (cmd)->cmd.geoadd(key, longitude, latitude, member));
 	}
 
 	@Override
 	public Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude).add(latitude).add(member);
-		return geoAdd((cmd)->cmd.geoadd(key, longitude, latitude, member), args);
+		return geoAdd(args, (cmd)->cmd.geoadd(key, longitude, latitude, member));
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final CommandArguments args = CommandArguments.create(key).add(memberCoordinates);
 		final MapConverter<String, Geo, String, GeoCoordinate> geoCoordinateConverter = new MapConverter<>((k)->k,
 				new GeoConverter());
-		return geoAdd((cmd)->cmd.geoadd(key, geoCoordinateConverter.convert(memberCoordinates)), args);
+		return geoAdd(args, (cmd)->cmd.geoadd(key, geoCoordinateConverter.convert(memberCoordinates)));
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final CommandArguments args = CommandArguments.create(key).add(memberCoordinates);
 		final MapConverter<byte[], Geo, byte[], GeoCoordinate> geoCoordinateConverter = new MapConverter<>((k)->k,
 				new GeoConverter());
-		return geoAdd((cmd)->cmd.geoadd(key, geoCoordinateConverter.convert(memberCoordinates)), args);
+		return geoAdd(args, (cmd)->cmd.geoadd(key, geoCoordinateConverter.convert(memberCoordinates)));
 	}
 
 	@Override
@@ -108,8 +108,8 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(memberCoordinates);
 		final MapConverter<String, Geo, String, GeoCoordinate> geoCoordinateConverter = new MapConverter<>((k)->k,
 				new GeoConverter());
-		return geoAdd((cmd)->cmd.geoadd(key, IParamsUtils.geoAddParams(argument),
-				geoCoordinateConverter.convert(memberCoordinates)), args);
+		return geoAdd(args, (cmd)->cmd.geoadd(key, IParamsUtils.geoAddParams(argument),
+				geoCoordinateConverter.convert(memberCoordinates)));
 	}
 
 	@Override
@@ -117,64 +117,60 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(memberCoordinates);
 		final MapConverter<byte[], Geo, byte[], GeoCoordinate> geoCoordinateConverter = new MapConverter<>((k)->k,
 				new GeoConverter());
-		return geoAdd((cmd)->cmd.geoadd(key, IParamsUtils.geoAddParams(argument),
-				geoCoordinateConverter.convert(memberCoordinates)), args);
+		return geoAdd(args, (cmd)->cmd.geoadd(key, IParamsUtils.geoAddParams(argument),
+				geoCoordinateConverter.convert(memberCoordinates)));
 	}
 
 	@Override
 	public Double geoDist(final String key, final String member1, final String member2) {
 		final CommandArguments args = CommandArguments.create(key).add(member1).add(member2);
-		return geoDist((cmd)->cmd.geodist(key, member1, member2), args);
+		return geoDist(args, (cmd)->cmd.geodist(key, member1, member2));
 	}
 
 	@Override
 	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2) {
 		final CommandArguments args = CommandArguments.create(key).add(member1).add(member2);
-		return geoDist((cmd)->cmd.geodist(key, member1, member2), args);
+		return geoDist(args, (cmd)->cmd.geodist(key, member1, member2));
 	}
 
 	@Override
 	public Double geoDist(final String key, final String member1, final String member2, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(key).add(member1).add(member2).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoDist((cmd)->cmd.geodist(key, member1, member2, geoUnitConverter.convert(unit)), args);
+		return geoDist(args, (cmd)->cmd.geodist(key, member1, member2, geoUnitConverter.convert(unit)));
 	}
 
 	@Override
 	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(key).add(member1).add(member2).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoDist((cmd)->cmd.geodist(key, member1, member2, geoUnitConverter.convert(unit)), args);
+		return geoDist(args, (cmd)->cmd.geodist(key, member1, member2, geoUnitConverter.convert(unit)));
 	}
 
 	@Override
 	public List<String> geoHash(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		return JedisCommandBuilder.<List<String>, List<String>>newBuilder(client, Command.GEOHASH)
-				.executor((cmd)->cmd.geohash(key, members)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.GEOHASH, args, (cmd)->cmd.geohash(key, members), (v)->v);
 	}
 
 	@Override
 	public List<byte[]> geoHash(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		return JedisCommandBuilder.<List<byte[]>, List<byte[]>>newBuilder(client, Command.GEOHASH)
-				.executor((cmd)->cmd.geohash(key, members)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.GEOHASH, args, (cmd)->cmd.geohash(key, members), (v)->v);
 	}
 
 	@Override
 	public List<Geo> geoPos(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		return JedisCommandBuilder.<List<GeoCoordinate>, List<Geo>>newBuilder(client, Command.GEOPOS)
-				.executor((cmd)->cmd.geopos(key, members)).arguments(args)
-				.converter(new ListConverter<>(new GeoCoordinateConverter())).run();
+		return executeCommand(Command.GEOPOS, args, (cmd)->cmd.geopos(key, members),
+				new ListConverter<>(new GeoCoordinateConverter()));
 	}
 
 	@Override
 	public List<Geo> geoPos(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		return JedisCommandBuilder.<List<GeoCoordinate>, List<Geo>>newBuilder(client, Command.GEOPOS)
-				.executor((cmd)->cmd.geopos(key, members)).arguments(args)
-				.converter(new ListConverter<>(new GeoCoordinateConverter())).run();
+		return executeCommand(Command.GEOPOS, args, (cmd)->cmd.geopos(key, members),
+				new ListConverter<>(new GeoCoordinateConverter()));
 	}
 
 	@Override
@@ -182,7 +178,7 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 									 final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude).add(latitude).add(radius).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoRadius((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnitConverter.convert(unit)), args);
+		return geoRadius(args, (cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnitConverter.convert(unit)));
 	}
 
 	@Override
@@ -190,7 +186,7 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 									 final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude).add(latitude).add(radius).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoRadius((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnitConverter.convert(unit)), args);
+		return geoRadius(args, (cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnitConverter.convert(unit)));
 	}
 
 	@Override
@@ -199,8 +195,7 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final CommandArguments args = CommandArguments.create(key).add(longitude).add(latitude).add(radius).add(unit)
 				.add(argument);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoRadius((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnitConverter.convert(unit),
-				IParamsUtils.geoRadiusParam(argument)), args);
+		return geoRadius(args, (cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnitConverter.convert(unit)));
 	}
 
 	@Override
@@ -209,8 +204,7 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final CommandArguments args = CommandArguments.create(key).add(longitude).add(latitude).add(radius).add(unit)
 				.add(argument);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoRadius((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnitConverter.convert(unit),
-				IParamsUtils.geoRadiusParam(argument)), args);
+		return geoRadius(args, (cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnitConverter.convert(unit)));
 	}
 
 	@Override
@@ -218,8 +212,8 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 									   final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude).add(latitude).add(radius).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoRadiusRo(
-				(cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnitConverter.convert(unit)), args);
+		return geoRadiusRo(args,
+				(cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnitConverter.convert(unit)));
 	}
 
 	@Override
@@ -227,8 +221,8 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 									   final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude).add(latitude).add(radius).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoRadiusRo(
-				(cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnitConverter.convert(unit)), args);
+		return geoRadiusRo(args,
+				(cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnitConverter.convert(unit)));
 	}
 
 	@Override
@@ -237,8 +231,9 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final CommandArguments args = CommandArguments.create(key).add(longitude).add(latitude).add(radius).add(unit)
 				.add(argument);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoRadiusRo(
-				(cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnitConverter.convert(unit)), args);
+		return geoRadiusRo(args,
+				(cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnitConverter.convert(unit),
+						IParamsUtils.geoRadiusParam(argument)));
 	}
 
 	@Override
@@ -247,8 +242,9 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final CommandArguments args = CommandArguments.create(key).add(longitude).add(latitude).add(radius).add(unit)
 				.add(argument);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoRadiusRo(
-				(cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnitConverter.convert(unit)), args);
+		return geoRadiusRo(args,
+				(cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnitConverter.convert(unit),
+						IParamsUtils.geoRadiusParam(argument)));
 	}
 
 	@Override
@@ -256,8 +252,8 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 											 final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(key).add(member).add(radius).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoRadiusByMember((cmd)->cmd.georadiusByMember(key, member, radius, geoUnitConverter.convert(unit)),
-				args);
+		return geoRadiusByMember(args,
+				(cmd)->cmd.georadiusByMember(key, member, radius, geoUnitConverter.convert(unit)));
 	}
 
 	@Override
@@ -265,8 +261,8 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 											 final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(key).add(member).add(radius).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoRadiusByMember((cmd)->cmd.georadiusByMember(key, member, radius, geoUnitConverter.convert(unit)),
-				args);
+		return geoRadiusByMember(args,
+				(cmd)->cmd.georadiusByMember(key, member, radius, geoUnitConverter.convert(unit)));
 	}
 
 	@Override
@@ -274,8 +270,8 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 											 final GeoUnit unit, final GeoRadiusArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(member).add(radius).add(unit).add(argument);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoRadiusByMember((cmd)->cmd.georadiusByMember(key, member, radius, geoUnitConverter.convert(unit),
-				IParamsUtils.geoRadiusParam(argument)), args);
+		return geoRadiusByMember(args,
+				(cmd)->cmd.georadiusByMember(key, member, radius, geoUnitConverter.convert(unit)));
 	}
 
 	@Override
@@ -283,8 +279,8 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 											 final GeoUnit unit, final GeoRadiusArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(member).add(radius).add(unit).add(argument);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoRadiusByMember((cmd)->cmd.georadiusByMember(key, member, radius, geoUnitConverter.convert(unit),
-				IParamsUtils.geoRadiusParam(argument)), args);
+		return geoRadiusByMember(args, (cmd)->cmd.georadiusByMember(key, member, radius, geoUnitConverter.convert(unit),
+				IParamsUtils.geoRadiusParam(argument)));
 	}
 
 	@Override
@@ -292,8 +288,8 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 											   final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(key).add(member).add(radius).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoRadiusByMemberRo(
-				(cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnitConverter.convert(unit)), args);
+		return geoRadiusByMemberRo(args,
+				(cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnitConverter.convert(unit)));
 	}
 
 	@Override
@@ -301,8 +297,8 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 											   final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(key).add(member).add(radius).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoRadiusByMemberRo(
-				(cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnitConverter.convert(unit)), args);
+		return geoRadiusByMemberRo(args,
+				(cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnitConverter.convert(unit)));
 	}
 
 	@Override
@@ -310,9 +306,9 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 											   final GeoUnit unit, final GeoRadiusArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(member).add(radius).add(unit).add(argument);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoRadiusByMemberRo(
+		return geoRadiusByMemberRo(args,
 				(cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnitConverter.convert(unit),
-						IParamsUtils.geoRadiusParam(argument)), args);
+						IParamsUtils.geoRadiusParam(argument)));
 	}
 
 	@Override
@@ -320,9 +316,9 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 											   final GeoUnit unit, final GeoRadiusArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(member).add(radius).add(unit).add(argument);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoRadiusByMemberRo(
+		return geoRadiusByMemberRo(args,
 				(cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnitConverter.convert(unit),
-						IParamsUtils.geoRadiusParam(argument)), args);
+						IParamsUtils.geoRadiusParam(argument)));
 	}
 
 	@Override
@@ -330,7 +326,7 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER").add(member).add("BYRADIUS")
 				.add(radius).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoSearch((cmd)->cmd.geosearch(key, member, radius, geoUnitConverter.convert(unit)), args);
+		return geoSearch(args, (cmd)->cmd.geosearch(key, member, radius, geoUnitConverter.convert(unit)));
 	}
 
 	@Override
@@ -338,7 +334,7 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER").add(member).add("BYRADIUS")
 				.add(radius).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoSearch((cmd)->cmd.geosearch(key, member, radius, geoUnitConverter.convert(unit)), args);
+		return geoSearch(args, (cmd)->cmd.geosearch(key, member, radius, geoUnitConverter.convert(unit)));
 	}
 
 	@Override
@@ -347,8 +343,8 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude).add(latitude)
 				.add("BYRADIUS").add(radius).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoSearch((cmd)->cmd.geosearch(key, new GeoCoordinate(longitude, latitude), radius,
-				geoUnitConverter.convert(unit)), args);
+		return geoSearch(args, (cmd)->cmd.geosearch(key, new GeoCoordinate(longitude, latitude), radius,
+				geoUnitConverter.convert(unit)));
 	}
 
 	@Override
@@ -357,8 +353,8 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude).add(latitude)
 				.add("BYRADIUS").add(radius).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoSearch((cmd)->cmd.geosearch(key, new GeoCoordinate(longitude, latitude), radius,
-				geoUnitConverter.convert(unit)), args);
+		return geoSearch(args, (cmd)->cmd.geosearch(key, new GeoCoordinate(longitude, latitude), radius,
+				geoUnitConverter.convert(unit)));
 	}
 
 	@Override
@@ -367,7 +363,7 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER").add(member).add("BYBOX").add(width)
 				.add(height).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoSearch((cmd)->cmd.geosearch(key, member, width, height, geoUnitConverter.convert(unit)), args);
+		return geoSearch(args, (cmd)->cmd.geosearch(key, member, width, height, geoUnitConverter.convert(unit)));
 	}
 
 	@Override
@@ -376,7 +372,7 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER").add(member).add("BYBOX").add(width)
 				.add(height).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoSearch((cmd)->cmd.geosearch(key, member, width, height, geoUnitConverter.convert(unit)), args);
+		return geoSearch(args, (cmd)->cmd.geosearch(key, member, width, height, geoUnitConverter.convert(unit)));
 	}
 
 	@Override
@@ -385,8 +381,8 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude).add(latitude)
 				.add("BYBOX").add(width).add(height).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoSearch((cmd)->cmd.geosearch(key, new GeoCoordinate(longitude, latitude), width, height,
-				geoUnitConverter.convert(unit)), args);
+		return geoSearch(args, (cmd)->cmd.geosearch(key, new GeoCoordinate(longitude, latitude), width, height,
+				geoUnitConverter.convert(unit)));
 	}
 
 	@Override
@@ -395,8 +391,8 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude).add(latitude)
 				.add("BYBOX").add(width).add(height).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoSearch((cmd)->cmd.geosearch(key, new GeoCoordinate(longitude, latitude), width, height,
-				geoUnitConverter.convert(unit)), args);
+		return geoSearch(args, (cmd)->cmd.geosearch(key, new GeoCoordinate(longitude, latitude), width, height,
+				geoUnitConverter.convert(unit)));
 	}
 
 	@Override
@@ -408,8 +404,7 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final GeoSearchParam geoSearchParam = IParamsUtils.geoSearchParam(argument);
 
 		geoSearchParam.fromMember(member).byRadius(radius, geoUnitConverter.convert(unit));
-
-		return geoSearch(key, geoSearchParam, args);
+		return geoSearch(args, (cmd)->cmd.geosearch(key, geoSearchParam));
 	}
 
 	@Override
@@ -421,8 +416,7 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final GeoSearchParam geoSearchParam = IParamsUtils.geoSearchParam(argument);
 
 		geoSearchParam.fromMember(SafeEncoder.encode(member)).byRadius(radius, geoUnitConverter.convert(unit));
-
-		return geoSearch(key, geoSearchParam, args);
+		return geoSearch(args, (cmd)->cmd.geosearch(key, geoSearchParam));
 	}
 
 	@Override
@@ -434,8 +428,7 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final GeoSearchParam geoSearchParam = IParamsUtils.geoSearchParam(argument);
 
 		geoSearchParam.fromLonLat(longitude, latitude).byRadius(radius, geoUnitConverter.convert(unit));
-
-		return geoSearch(key, geoSearchParam, args);
+		return geoSearch(args, (cmd)->cmd.geosearch(key, geoSearchParam));
 	}
 
 	@Override
@@ -447,8 +440,7 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final GeoSearchParam geoSearchParam = IParamsUtils.geoSearchParam(argument);
 
 		geoSearchParam.fromLonLat(longitude, latitude).byRadius(radius, geoUnitConverter.convert(unit));
-
-		return geoSearch(key, geoSearchParam, args);
+		return geoSearch(args, (cmd)->cmd.geosearch(key, geoSearchParam));
 	}
 
 	@Override
@@ -460,8 +452,7 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final GeoSearchParam geoSearchParam = IParamsUtils.geoSearchParam(argument);
 
 		geoSearchParam.fromMember(member).byBox(width, height, geoUnitConverter.convert(unit));
-
-		return geoSearch(key, geoSearchParam, args);
+		return geoSearch(args, (cmd)->cmd.geosearch(key, geoSearchParam));
 	}
 
 	@Override
@@ -473,8 +464,7 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final GeoSearchParam geoSearchParam = IParamsUtils.geoSearchParam(argument);
 
 		geoSearchParam.fromMember(SafeEncoder.encode(member)).byBox(width, height, geoUnitConverter.convert(unit));
-
-		return geoSearch(key, geoSearchParam, args);
+		return geoSearch(args, (cmd)->cmd.geosearch(key, geoSearchParam));
 	}
 
 	@Override
@@ -487,8 +477,7 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final GeoSearchParam geoSearchParam = IParamsUtils.geoSearchParam(argument);
 
 		geoSearchParam.fromLonLat(longitude, latitude).byBox(width, height, geoUnitConverter.convert(unit));
-
-		return geoSearch(key, geoSearchParam, args);
+		return geoSearch(args, (cmd)->cmd.geosearch(key, geoSearchParam));
 	}
 
 	@Override
@@ -501,8 +490,7 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final GeoSearchParam geoSearchParam = IParamsUtils.geoSearchParam(argument);
 
 		geoSearchParam.fromLonLat(longitude, latitude).byBox(width, height, geoUnitConverter.convert(unit));
-
-		return geoSearch(key, geoSearchParam, args);
+		return geoSearch(args, (cmd)->cmd.geosearch(key, geoSearchParam));
 	}
 
 	@Override
@@ -511,8 +499,8 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final CommandArguments args = CommandArguments.create(destKey).add(key).add("FROMMEMBER").add(member)
 				.add("BYRADIUS").add(radius).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoSearchStore((cmd)->cmd.geosearchStore(destKey, key, member, radius, geoUnitConverter.convert(unit)),
-				args);
+		return geoSearchStore(args, (cmd)->cmd.geosearchStore(destKey, key, member, radius,
+				geoUnitConverter.convert(unit)));
 	}
 
 	@Override
@@ -521,8 +509,8 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final CommandArguments args = CommandArguments.create(destKey).add(key).add("FROMMEMBER").add(member)
 				.add("BYRADIUS").add(radius).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoSearchStore((cmd)->cmd.geosearchStore(destKey, key, member, radius, geoUnitConverter.convert(unit)),
-				args);
+		return geoSearchStore(args,
+				(cmd)->cmd.geosearchStore(destKey, key, member, radius, geoUnitConverter.convert(unit)));
 	}
 
 	@Override
@@ -531,8 +519,8 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final CommandArguments args = CommandArguments.create(destKey).add(key).add("FROMLONLAT").add(longitude)
 				.add(latitude).add("BYRADIUS").add(radius).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoSearchStore((cmd)->cmd.geosearchStore(destKey, key, new GeoCoordinate(longitude, latitude), radius,
-				geoUnitConverter.convert(unit)), args);
+		return geoSearchStore(args, (cmd)->cmd.geosearchStore(destKey, key, new GeoCoordinate(longitude, latitude),
+				radius, geoUnitConverter.convert(unit)));
 	}
 
 	@Override
@@ -541,8 +529,8 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final CommandArguments args = CommandArguments.create(destKey).add(key).add("FROMLONLAT").add(longitude)
 				.add(latitude).add("BYRADIUS").add(radius).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoSearchStore((cmd)->cmd.geosearchStore(destKey, key, new GeoCoordinate(longitude, latitude), radius,
-				geoUnitConverter.convert(unit)), args);
+		return geoSearchStore(args, (cmd)->cmd.geosearchStore(destKey, key, new GeoCoordinate(longitude, latitude),
+				radius, geoUnitConverter.convert(unit)));
 	}
 
 	@Override
@@ -551,8 +539,8 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final CommandArguments args = CommandArguments.create(destKey).add(key).add("FROMMEMBER").add(member)
 				.add("BYBOX").add(width).add(height).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoSearchStore(
-				(cmd)->cmd.geosearchStore(destKey, key, member, width, height, geoUnitConverter.convert(unit)), args);
+		return geoSearchStore(args,
+				(cmd)->cmd.geosearchStore(destKey, key, member, width, height, geoUnitConverter.convert(unit)));
 	}
 
 	@Override
@@ -561,8 +549,8 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final CommandArguments args = CommandArguments.create(destKey).add(key).add("FROMMEMBER").add(member)
 				.add("BYBOX").add(width).add(height).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoSearchStore(
-				(cmd)->cmd.geosearchStore(destKey, key, member, width, height, geoUnitConverter.convert(unit)), args);
+		return geoSearchStore(args,
+				(cmd)->cmd.geosearchStore(destKey, key, member, width, height, geoUnitConverter.convert(unit)));
 	}
 
 	@Override
@@ -571,9 +559,9 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final CommandArguments args = CommandArguments.create(destKey).add(key).add("FROMLONLAT").add(longitude)
 				.add(latitude).add("BYBOX").add(width).add(height).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoSearchStore(
+		return geoSearchStore(args,
 				(cmd)->cmd.geosearchStore(destKey, key, new GeoCoordinate(longitude, latitude), width, height,
-						geoUnitConverter.convert(unit)), args);
+						geoUnitConverter.convert(unit)));
 	}
 
 	@Override
@@ -582,9 +570,9 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final CommandArguments args = CommandArguments.create(destKey).add(key).add("FROMLONLAT").add(longitude)
 				.add(latitude).add("BYBOX").add(width).add(height).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoSearchStore(
+		return geoSearchStore(args,
 				(cmd)->cmd.geosearchStore(destKey, key, new GeoCoordinate(longitude, latitude), width, height,
-						geoUnitConverter.convert(unit)), args);
+						geoUnitConverter.convert(unit)));
 	}
 
 	@Override
@@ -596,8 +584,7 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final GeoSearchParam geoSearchParam = IParamsUtils.geoSearchParam(argument);
 
 		geoSearchParam.fromMember(member).byRadius(radius, geoUnitConverter.convert(unit));
-
-		return geoSearchStore(destKey, key, geoSearchParam, args);
+		return geoSearchStore(args, (cmd)->cmd.geosearchStore(destKey, key, geoSearchParam));
 	}
 
 	@Override
@@ -609,8 +596,7 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final GeoSearchParam geoSearchParam = IParamsUtils.geoSearchParam(argument);
 
 		geoSearchParam.fromMember(SafeEncoder.encode(member)).byRadius(radius, geoUnitConverter.convert(unit));
-
-		return geoSearchStore(destKey, key, geoSearchParam, args);
+		return geoSearchStore(args, (cmd)->cmd.geosearchStore(destKey, key, geoSearchParam));
 	}
 
 	@Override
@@ -622,8 +608,7 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final GeoSearchParam geoSearchParam = IParamsUtils.geoSearchParam(argument);
 
 		geoSearchParam.fromLonLat(longitude, latitude).byRadius(radius, geoUnitConverter.convert(unit));
-
-		return geoSearchStore(destKey, key, geoSearchParam, args);
+		return geoSearchStore(args, (cmd)->cmd.geosearchStore(destKey, key, geoSearchParam));
 	}
 
 	@Override
@@ -635,8 +620,7 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final GeoSearchParam geoSearchParam = IParamsUtils.geoSearchParam(argument);
 
 		geoSearchParam.fromLonLat(longitude, latitude).byRadius(radius, geoUnitConverter.convert(unit));
-
-		return geoSearchStore(destKey, key, geoSearchParam, args);
+		return geoSearchStore(args, (cmd)->cmd.geosearchStore(destKey, key, geoSearchParam));
 	}
 
 	@Override
@@ -648,8 +632,7 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final GeoSearchParam geoSearchParam = IParamsUtils.geoSearchParam(argument);
 
 		geoSearchParam.fromMember(member).byBox(width, height, geoUnitConverter.convert(unit));
-
-		return geoSearchStore(destKey, key, geoSearchParam, args);
+		return geoSearchStore(args, (cmd)->cmd.geosearchStore(destKey, key, geoSearchParam));
 	}
 
 	@Override
@@ -661,8 +644,7 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final GeoSearchParam geoSearchParam = IParamsUtils.geoSearchParam(argument);
 
 		geoSearchParam.fromMember(SafeEncoder.encode(member)).byBox(width, height, geoUnitConverter.convert(unit));
-
-		return geoSearchStore(destKey, key, geoSearchParam, args);
+		return geoSearchStore(args, (cmd)->cmd.geosearchStore(destKey, key, geoSearchParam));
 	}
 
 	@Override
@@ -675,8 +657,7 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final GeoSearchParam geoSearchParam = IParamsUtils.geoSearchParam(argument);
 
 		geoSearchParam.fromLonLat(longitude, latitude).byBox(width, height, geoUnitConverter.convert(unit));
-
-		return geoSearchStore(destKey, key, geoSearchParam, args);
+		return geoSearchStore(args, (cmd)->cmd.geosearchStore(destKey, key, geoSearchParam));
 	}
 
 	@Override
@@ -689,94 +670,50 @@ public final class JedisGeoOperations extends AbstractJedisRedisOperations imple
 		final GeoSearchParam geoSearchParam = IParamsUtils.geoSearchParam(argument);
 
 		geoSearchParam.fromLonLat(longitude, latitude).byBox(width, height, geoUnitConverter.convert(unit));
-
-		return geoSearchStore(destKey, key, geoSearchParam, args);
+		return geoSearchStore(args, (cmd)->cmd.geosearchStore(destKey, key, geoSearchParam));
 	}
 
-	private Long geoAdd(final com.buession.redis.core.Command.Executor<UnifiedJedis, Long> executor,
-						final CommandArguments args) {
-		return JedisCommandBuilder.<Long, Long>newBuilder(client, Command.GEOADD).executor(executor).arguments(args)
-				.converter((v)->v).run();
+	private Long geoAdd(final CommandArguments args,
+						final com.buession.redis.core.Command.Executor<UnifiedJedis, Long> executor) {
+		return executeCommand(Command.GEOADD, args, executor, (v)->v);
 	}
 
-	private Double geoDist(final com.buession.redis.core.Command.Executor<UnifiedJedis, Double> executor,
-						   final CommandArguments args) {
-		return JedisCommandBuilder.<Double, Double>newBuilder(client, Command.GEODIST).executor(executor)
-				.arguments(args).converter((v)->v).run();
+	private Double geoDist(final CommandArguments args,
+						   final com.buession.redis.core.Command.Executor<UnifiedJedis, Double> executor) {
+		return executeCommand(Command.GEODIST, args, executor, (v)->v);
 	}
 
-	private List<GeoRadius> geoRadius(
-			final com.buession.redis.core.Command.Executor<UnifiedJedis, List<GeoRadiusResponse>> executor,
-			final CommandArguments args) {
-		return JedisCommandBuilder.<List<GeoRadiusResponse>, List<GeoRadius>>newBuilder(client, Command.GEORADIUS)
-				.executor(executor).arguments(args).converter(new ListConverter<>(new GeoRadiusResponseConverter()))
-				.run();
+	private List<GeoRadius> geoRadius(final CommandArguments args,
+									  final com.buession.redis.core.Command.Executor<UnifiedJedis, List<GeoRadiusResponse>> executor) {
+		return executeCommand(Command.GEORADIUS, args, executor, new ListConverter<>(new GeoRadiusResponseConverter()));
 	}
 
-	private List<GeoRadius> geoRadiusRo(
-			final com.buession.redis.core.Command.Executor<UnifiedJedis, List<GeoRadiusResponse>> executor,
-			final CommandArguments args) {
-		return JedisCommandBuilder.<List<GeoRadiusResponse>, List<GeoRadius>>newBuilder(client, Command.GEORADIUS_RO)
-				.executor(executor).arguments(args).converter(new ListConverter<>(new GeoRadiusResponseConverter()))
-				.run();
+	private List<GeoRadius> geoRadiusRo(final CommandArguments args,
+										final com.buession.redis.core.Command.Executor<UnifiedJedis, List<GeoRadiusResponse>> executor) {
+		return executeCommand(Command.GEORADIUS_RO, args, executor,
+				new ListConverter<>(new GeoRadiusResponseConverter()));
 	}
 
-	private List<GeoRadius> geoRadiusByMember(
-			final com.buession.redis.core.Command.Executor<UnifiedJedis, List<GeoRadiusResponse>> executor,
-			final CommandArguments args) {
-		return JedisCommandBuilder.<List<GeoRadiusResponse>, List<GeoRadius>>newBuilder(client,
-						Command.GEORADIUSBYMEMBER).executor(executor).arguments(args)
-				.converter(new ListConverter<>(new GeoRadiusResponseConverter())).run();
+	private List<GeoRadius> geoRadiusByMember(final CommandArguments args,
+											  final com.buession.redis.core.Command.Executor<UnifiedJedis, List<GeoRadiusResponse>> executor) {
+		return executeCommand(Command.GEORADIUSBYMEMBER, args, executor,
+				new ListConverter<>(new GeoRadiusResponseConverter()));
 	}
 
-	private List<GeoRadius> geoRadiusByMemberRo(
-			final com.buession.redis.core.Command.Executor<UnifiedJedis, List<GeoRadiusResponse>> executor,
-			final CommandArguments args) {
-		return JedisCommandBuilder.<List<GeoRadiusResponse>, List<GeoRadius>>newBuilder(client,
-						Command.GEORADIUSBYMEMBER).executor(executor).arguments(args)
-				.converter(new ListConverter<>(new GeoRadiusResponseConverter())).run();
+	private List<GeoRadius> geoRadiusByMemberRo(final CommandArguments args,
+												final com.buession.redis.core.Command.Executor<UnifiedJedis, List<GeoRadiusResponse>> executor) {
+		return executeCommand(Command.GEORADIUSBYMEMBER_RO, args, executor,
+				new ListConverter<>(new GeoRadiusResponseConverter()));
 	}
 
-	private List<GeoRadius> geoSearch(
-			final com.buession.redis.core.Command.Executor<UnifiedJedis, List<GeoRadiusResponse>> executor,
-			final CommandArguments args) {
-		return JedisCommandBuilder.<List<GeoRadiusResponse>, List<GeoRadius>>newBuilder(client, Command.GEOSEARCH)
-				.executor(executor).arguments(args).converter(new ListConverter<>(new GeoRadiusResponseConverter()))
-				.run();
+	private List<GeoRadius> geoSearch(final CommandArguments args,
+									  final com.buession.redis.core.Command.Executor<UnifiedJedis, List<GeoRadiusResponse>> executor) {
+		return executeCommand(Command.GEOSEARCH, args, executor, new ListConverter<>(new GeoRadiusResponseConverter()));
 	}
 
-	private List<GeoRadius> geoSearch(final String key, final GeoSearchParam geoSearchParam,
-									  final CommandArguments args) {
-		return JedisCommandBuilder.<List<GeoRadiusResponse>, List<GeoRadius>>newBuilder(client, Command.GEOSEARCH)
-				.executor((cmd)->cmd.geosearch(key, geoSearchParam)).arguments(args)
-				.converter(new ListConverter<>(new GeoRadiusResponseConverter())).run();
-	}
-
-	private List<GeoRadius> geoSearch(final byte[] key, final GeoSearchParam geoSearchParam,
-									  final CommandArguments args) {
-		return JedisCommandBuilder.<List<GeoRadiusResponse>, List<GeoRadius>>newBuilder(client, Command.GEOSEARCH)
-				.executor((cmd)->cmd.geosearch(key, geoSearchParam)).arguments(args)
-				.converter(new ListConverter<>(new GeoRadiusResponseConverter())).run();
-	}
-
-	private Long geoSearchStore(final com.buession.redis.core.Command.Executor<UnifiedJedis, Long> executor,
-								final CommandArguments args) {
-		return JedisCommandBuilder.<Long, Long>newBuilder(client, Command.GEOSEARCHSTORE).executor(executor)
-				.arguments(args).converter((v)->v).run();
-	}
-
-	private Long geoSearchStore(final String destKey, final String key, final GeoSearchParam geoSearchParam,
-								final CommandArguments args) {
-		return JedisCommandBuilder.<Long, Long>newBuilder(client, Command.GEOSEARCHSTORE)
-				.executor((cmd)->cmd.geosearchStore(destKey, key, geoSearchParam)).arguments(args).converter((v)->v)
-				.run();
-	}
-
-	private Long geoSearchStore(final byte[] destKey, final byte[] key, final GeoSearchParam geoSearchParam,
-								final CommandArguments args) {
-		return JedisCommandBuilder.<Long, Long>newBuilder(client, Command.GEOSEARCHSTORE)
-				.executor((cmd)->cmd.geosearchStore(destKey, key, geoSearchParam)).arguments(args).converter((v)->v)
-				.run();
+	private Long geoSearchStore(final CommandArguments args,
+								final com.buession.redis.core.Command.Executor<UnifiedJedis, Long> executor) {
+		return executeCommand(Command.GEOSEARCHSTORE, args, executor, (v)->v);
 	}
 
 }

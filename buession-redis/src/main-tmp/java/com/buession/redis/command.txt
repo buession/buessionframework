@@ -106,7 +106,6 @@
 
 	LMOVE(CommandGroup.LIST, "w"),
 
-	BLMOVE(CommandGroup.LIST, "w"),
 	/**
 	 * list command end
 	 **/

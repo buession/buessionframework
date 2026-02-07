@@ -19,24 +19,31 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisStandaloneClient;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.lettuce.operations.LettuceRedisOperations;
+import com.buession.redis.client.operations.ListOperations;
 import com.buession.redis.core.Direction;
 import com.buession.redis.core.ListPosition;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.jedis.params.DirectionConverter;
 import com.buession.redis.core.internal.convert.jedis.params.ListPositionConverter;
+import com.buession.redis.core.internal.convert.jedis.response.KeyValueConverter;
 import com.buession.redis.core.internal.jedis.JedisLPosParams;
+import com.buession.redis.core.internal.lettuce.CompositeArgumentUtils;
 import redis.clients.jedis.args.ListDirection;
 import redis.clients.jedis.params.LPosParams;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Jedis 单机模式列表命令操作
@@ -44,10 +51,64 @@ import java.util.List;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class JedisListOperations extends AbstractListOperations<JedisStandaloneClient> {
+public final class JedisListOperations extends AbstractJedisRedisOperations implements ListOperations {
 
-	public JedisListOperations(final JedisStandaloneClient client) {
+	public JedisListOperations(final JedisRedisClient client) {
 		super(client);
+	}
+
+	@Override
+	public String blMove(final String key, final String destKey, final Direction from, final Direction to,
+						 final int timeout) {
+		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from).add(to).add(timeout);
+		final DirectionConverter directionConverter = new DirectionConverter();
+		return executeCommand(Command.BLMOVE, args,
+				(cmd)->cmd.blmove(key, destKey, directionConverter.convert(from), directionConverter.convert(to),
+						timeout), (v)->v);
+	}
+
+	@Override
+	public byte[] blMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
+						 final int timeout) {
+		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from).add(to).add(timeout);
+		final DirectionConverter directionConverter = new DirectionConverter();
+		return JedisCommandBuilder.<byte[], byte[]>newBuilder(client, Command.BLMOVE).executor(
+				(cmd)->cmd.blmove(key, destKey, directionConverter.convert(from), directionConverter.convert(to),
+						timeout)).arguments(args).converter((v)->v).run();
+	}
+
+	@Override
+	public KeyValue<String, List<String>> blMPop(final int timeout, final String[] keys, final Direction direction) {
+		final CommandArguments args = CommandArguments.create(timeout).add(keys.length).add(keys);
+		final DirectionConverter directionConverter = new DirectionConverter();
+		return JedisCommandBuilder.<redis.clients.jedis.util.KeyValue<String, List<String>>, KeyValue<String, List<String>>>newBuilder(
+						client, Command.BLMPOP)
+				.executor((cmd)->cmd.blmpop(timeout, directionConverter.convert(direction), keys)).arguments(args)
+				.converter(new KeyValueConverter<>((k)->k, (v)->v)).run();
+	}
+
+	@Override
+	public KeyValue<byte[], List<byte[]>> blMPop(final int timeout, final byte[][] keys, final Direction direction) {
+		final CommandArguments args = CommandArguments.create(timeout).add(keys.length).add(keys);
+		final DirectionConverter directionConverter = new DirectionConverter();
+		return JedisCommandBuilder.<redis.clients.jedis.util.KeyValue<byte[], List<byte[]>>, KeyValue<byte[], List<byte[]>>>newBuilder(
+						client, Command.BLMPOP)
+				.executor((cmd)->cmd.blmpop(timeout, directionConverter.convert(direction), keys)).arguments(args)
+				.converter(new KeyValueConverter<>((k)->k, (v)->v)).run();
+	}
+
+	@Override
+	public List<String> blPop(final String[] keys, final int timeout) {
+		final CommandArguments args = CommandArguments.create(keys).add(timeout);
+		return JedisCommandBuilder.<List<String>, List<String>>newBuilder(client, Command.BLPOP)
+				.executor((cmd)->cmd.blpop(timeout, keys)).arguments(args).converter((v)->v).run();
+	}
+
+	@Override
+	public List<byte[]> blPop(final byte[][] keys, final int timeout) {
+		final CommandArguments args = CommandArguments.create(keys).add(timeout);
+		return JedisCommandBuilder.<List<byte[]>, List<byte[]>>newBuilder(client, Command.BLPOP)
+				.executor((cmd)->cmd.blpop(timeout, keys)).arguments(args).converter((v)->v).run();
 	}
 
 	@Override
@@ -55,14 +116,13 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 		final CommandArguments args = CommandArguments.create(key).add(index);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.LINDEX, (cmd)->cmd.lindex(key, index), (v)->v)
-					.run(args);
+			return new JedisPipelineCommand<>(client, ProtocolCommand.LINDEX, (cmd)->cmd.lindex(key, index),
+					(v)->v).run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.LINDEX, (cmd)->cmd.lindex(key, index), (v)->v)
-					.run(args);
+			return new JedisTransactionCommand<>(client, ProtocolCommand.LINDEX, (cmd)->cmd.lindex(key, index),
+					(v)->v).run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.LINDEX, (cmd)->cmd.lindex(key, index), (v)->v)
-					.run(args);
+			return new JedisCommand<>(client, ProtocolCommand.LINDEX, (cmd)->cmd.lindex(key, index), (v)->v).run(args);
 		}
 	}
 
@@ -71,57 +131,47 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 		final CommandArguments args = CommandArguments.create(key).add(index);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.LINDEX, (cmd)->cmd.lindex(key, index), (v)->v)
-					.run(args);
+			return new JedisPipelineCommand<>(client, ProtocolCommand.LINDEX, (cmd)->cmd.lindex(key, index),
+					(v)->v).run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.LINDEX, (cmd)->cmd.lindex(key, index), (v)->v)
-					.run(args);
+			return new JedisTransactionCommand<>(client, ProtocolCommand.LINDEX, (cmd)->cmd.lindex(key, index),
+					(v)->v).run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.LINDEX, (cmd)->cmd.lindex(key, index), (v)->v)
-					.run(args);
+			return new JedisCommand<>(client, ProtocolCommand.LINDEX, (cmd)->cmd.lindex(key, index), (v)->v).run(args);
 		}
 	}
 
 	@Override
 	public Long lInsert(final String key, final ListPosition position, final String pivot, final String value) {
-		final CommandArguments args = CommandArguments.create(key).add(position).add(pivot)
-				.add(value);
+		final CommandArguments args = CommandArguments.create(key).add(position).add(pivot).add(value);
 		final redis.clients.jedis.args.ListPosition listPosition = (new ListPositionConverter()).convert(position);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.LINSERT,
-					(cmd)->cmd.linsert(key, listPosition, pivot, value), (v)->v)
-					.run(args);
+					(cmd)->cmd.linsert(key, listPosition, pivot, value), (v)->v).run(args);
 		}else if(isTransaction()){
 			return new JedisTransactionCommand<>(client, ProtocolCommand.LINSERT,
-					(cmd)->cmd.linsert(key, listPosition, pivot, value), (v)->v)
-					.run(args);
+					(cmd)->cmd.linsert(key, listPosition, pivot, value), (v)->v).run(args);
 		}else{
 			return new JedisCommand<>(client, ProtocolCommand.LINSERT,
-					(cmd)->cmd.linsert(key, listPosition, pivot, value), (v)->v)
-					.run(args);
+					(cmd)->cmd.linsert(key, listPosition, pivot, value), (v)->v).run(args);
 		}
 	}
 
 	@Override
 	public Long lInsert(final byte[] key, final ListPosition position, final byte[] pivot, final byte[] value) {
-		final CommandArguments args = CommandArguments.create(key).add(position).add(pivot)
-				.add(value);
+		final CommandArguments args = CommandArguments.create(key).add(position).add(pivot).add(value);
 		final redis.clients.jedis.args.ListPosition listPosition = (new ListPositionConverter()).convert(position);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.LINSERT,
-					(cmd)->cmd.linsert(key, listPosition, pivot, value), (v)->v)
-					.run(args);
+					(cmd)->cmd.linsert(key, listPosition, pivot, value), (v)->v).run(args);
 		}else if(isTransaction()){
 			return new JedisTransactionCommand<>(client, ProtocolCommand.LINSERT,
-					(cmd)->cmd.linsert(key, listPosition, pivot, value), (v)->v)
-					.run(args);
+					(cmd)->cmd.linsert(key, listPosition, pivot, value), (v)->v).run(args);
 		}else{
 			return new JedisCommand<>(client, ProtocolCommand.LINSERT,
-					(cmd)->cmd.linsert(key, listPosition, pivot, value),
-					(v)->v)
-					.run(args);
+					(cmd)->cmd.linsert(key, listPosition, pivot, value), (v)->v).run(args);
 		}
 	}
 
@@ -131,16 +181,13 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.LINSERT, (cmd)->cmd.lset(key, index, value),
-					okStatusConverter)
-					.run(args);
+					okStatusConverter).run(args);
 		}else if(isTransaction()){
 			return new JedisTransactionCommand<>(client, ProtocolCommand.LINSERT, (cmd)->cmd.lset(key, index, value),
-					okStatusConverter)
-					.run(args);
+					okStatusConverter).run(args);
 		}else{
 			return new JedisCommand<>(client, ProtocolCommand.LINSERT, (cmd)->cmd.lset(key, index, value),
-					okStatusConverter)
-					.run(args);
+					okStatusConverter).run(args);
 		}
 	}
 
@@ -150,16 +197,13 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.LINSERT, (cmd)->cmd.lset(key, index, value),
-					okStatusConverter)
-					.run(args);
+					okStatusConverter).run(args);
 		}else if(isTransaction()){
 			return new JedisTransactionCommand<>(client, ProtocolCommand.LINSERT, (cmd)->cmd.lset(key, index, value),
-					okStatusConverter)
-					.run(args);
+					okStatusConverter).run(args);
 		}else{
 			return new JedisCommand<>(client, ProtocolCommand.LINSERT, (cmd)->cmd.lset(key, index, value),
-					okStatusConverter)
-					.run(args);
+					okStatusConverter).run(args);
 		}
 	}
 
@@ -168,14 +212,11 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.LLEN, (cmd)->cmd.llen(key), (v)->v)
-					.run(args);
+			return new JedisPipelineCommand<>(client, ProtocolCommand.LLEN, (cmd)->cmd.llen(key), (v)->v).run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.LLEN, (cmd)->cmd.llen(key), (v)->v)
-					.run(args);
+			return new JedisTransactionCommand<>(client, ProtocolCommand.LLEN, (cmd)->cmd.llen(key), (v)->v).run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.LLEN, (cmd)->cmd.llen(key), (v)->v)
-					.run(args);
+			return new JedisCommand<>(client, ProtocolCommand.LLEN, (cmd)->cmd.llen(key), (v)->v).run(args);
 		}
 	}
 
@@ -184,14 +225,11 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.LLEN, (cmd)->cmd.llen(key), (v)->v)
-					.run(args);
+			return new JedisPipelineCommand<>(client, ProtocolCommand.LLEN, (cmd)->cmd.llen(key), (v)->v).run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.LLEN, (cmd)->cmd.llen(key), (v)->v)
-					.run(args);
+			return new JedisTransactionCommand<>(client, ProtocolCommand.LLEN, (cmd)->cmd.llen(key), (v)->v).run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.LLEN, (cmd)->cmd.llen(key), (v)->v)
-					.run(args);
+			return new JedisCommand<>(client, ProtocolCommand.LLEN, (cmd)->cmd.llen(key), (v)->v).run(args);
 		}
 	}
 
@@ -201,15 +239,13 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.LRANGE, (cmd)->cmd.lrange(key, start, end),
-					(v)->v)
-					.run(args);
+					(v)->v).run(args);
 		}else if(isTransaction()){
 			return new JedisTransactionCommand<>(client, ProtocolCommand.LRANGE, (cmd)->cmd.lrange(key, start, end),
-					(v)->v)
-					.run(args);
+					(v)->v).run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.LRANGE, (cmd)->cmd.lrange(key, start, end), (v)->v)
-					.run(args);
+			return new JedisCommand<>(client, ProtocolCommand.LRANGE, (cmd)->cmd.lrange(key, start, end), (v)->v).run(
+					args);
 		}
 	}
 
@@ -219,15 +255,13 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.LRANGE, (cmd)->cmd.lrange(key, start, end),
-					(v)->v)
-					.run(args);
+					(v)->v).run(args);
 		}else if(isTransaction()){
 			return new JedisTransactionCommand<>(client, ProtocolCommand.LRANGE, (cmd)->cmd.lrange(key, start, end),
-					(v)->v)
-					.run(args);
+					(v)->v).run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.LRANGE, (cmd)->cmd.lrange(key, start, end), (v)->v)
-					.run(args);
+			return new JedisCommand<>(client, ProtocolCommand.LRANGE, (cmd)->cmd.lrange(key, start, end), (v)->v).run(
+					args);
 		}
 	}
 
@@ -236,14 +270,13 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element), (v)->v)
-					.run(args);
+			return new JedisPipelineCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element), (v)->v).run(
+					args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element), (v)->v)
-					.run(args);
+			return new JedisTransactionCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element),
+					(v)->v).run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element), (v)->v)
-					.run(args);
+			return new JedisCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element), (v)->v).run(args);
 		}
 	}
 
@@ -252,14 +285,13 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element), (v)->v)
-					.run(args);
+			return new JedisPipelineCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element), (v)->v).run(
+					args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element), (v)->v)
-					.run(args);
+			return new JedisTransactionCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element),
+					(v)->v).run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element), (v)->v)
-					.run(args);
+			return new JedisCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element), (v)->v).run(args);
 		}
 	}
 
@@ -270,15 +302,13 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element, lPosParams),
-					(v)->v)
-					.run(args);
+					(v)->v).run(args);
 		}else if(isTransaction()){
 			return new JedisTransactionCommand<>(client, ProtocolCommand.LPOS,
-					(cmd)->cmd.lpos(key, element, lPosParams), (v)->v)
-					.run(args);
+					(cmd)->cmd.lpos(key, element, lPosParams), (v)->v).run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element, lPosParams), (v)->v)
-					.run(args);
+			return new JedisCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element, lPosParams),
+					(v)->v).run(args);
 		}
 	}
 
@@ -289,57 +319,47 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element, lPosParams),
-					(v)->v)
-					.run(args);
+					(v)->v).run(args);
 		}else if(isTransaction()){
 			return new JedisTransactionCommand<>(client, ProtocolCommand.LPOS,
-					(cmd)->cmd.lpos(key, element, lPosParams), (v)->v)
-					.run(args);
+					(cmd)->cmd.lpos(key, element, lPosParams), (v)->v).run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element, lPosParams), (v)->v)
-					.run(args);
+			return new JedisCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element, lPosParams),
+					(v)->v).run(args);
 		}
 	}
 
 	@Override
 	public List<Long> lPos(final String key, final String element, final LPosArgument lPosArgument, final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(lPosArgument)
-				.add(count);
+		final CommandArguments args = CommandArguments.create(key).add(lPosArgument).add(count);
 		final LPosParams lPosParams = JedisLPosParams.from(lPosArgument);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.LPOS,
-					(cmd)->cmd.lpos(key, element, lPosParams, count), (v)->v)
-					.run(args);
+					(cmd)->cmd.lpos(key, element, lPosParams, count), (v)->v).run(args);
 		}else if(isTransaction()){
 			return new JedisTransactionCommand<>(client, ProtocolCommand.LPOS,
-					(cmd)->cmd.lpos(key, element, lPosParams, count), (v)->v)
-					.run(args);
+					(cmd)->cmd.lpos(key, element, lPosParams, count), (v)->v).run(args);
 		}else{
 			return new JedisCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element, lPosParams, count),
-					(v)->v)
-					.run(args);
+					(v)->v).run(args);
 		}
 	}
 
 	@Override
 	public List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument, final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(lPosArgument)
-				.add(count);
+		final CommandArguments args = CommandArguments.create(key).add(lPosArgument).add(count);
 		final LPosParams lPosParams = JedisLPosParams.from(lPosArgument);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.LPOS,
-					(cmd)->cmd.lpos(key, element, lPosParams, count), (v)->v)
-					.run(args);
+					(cmd)->cmd.lpos(key, element, lPosParams, count), (v)->v).run(args);
 		}else if(isTransaction()){
 			return new JedisTransactionCommand<>(client, ProtocolCommand.LPOS,
-					(cmd)->cmd.lpos(key, element, lPosParams, count), (v)->v)
-					.run(args);
+					(cmd)->cmd.lpos(key, element, lPosParams, count), (v)->v).run(args);
 		}else{
 			return new JedisCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element, lPosParams, count),
-					(v)->v)
-					.run(args);
+					(v)->v).run(args);
 		}
 	}
 
@@ -348,15 +368,14 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 		final CommandArguments args = CommandArguments.create(key).add(value).add(count);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.LREM, (cmd)->cmd.lrem(key, count, value), (v)->v)
-					.run(args);
+			return new JedisPipelineCommand<>(client, ProtocolCommand.LREM, (cmd)->cmd.lrem(key, count, value),
+					(v)->v).run(args);
 		}else if(isTransaction()){
 			return new JedisTransactionCommand<>(client, ProtocolCommand.LREM, (cmd)->cmd.lrem(key, count, value),
-					(v)->v)
-					.run(args);
+					(v)->v).run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.LREM, (cmd)->cmd.lrem(key, count, value), (v)->v)
-					.run(args);
+			return new JedisCommand<>(client, ProtocolCommand.LREM, (cmd)->cmd.lrem(key, count, value), (v)->v).run(
+					args);
 		}
 	}
 
@@ -365,15 +384,14 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 		final CommandArguments args = CommandArguments.create(key).add(value).add(count);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.LREM, (cmd)->cmd.lrem(key, count, value), (v)->v)
-					.run(args);
+			return new JedisPipelineCommand<>(client, ProtocolCommand.LREM, (cmd)->cmd.lrem(key, count, value),
+					(v)->v).run(args);
 		}else if(isTransaction()){
 			return new JedisTransactionCommand<>(client, ProtocolCommand.LREM, (cmd)->cmd.lrem(key, count, value),
-					(v)->v)
-					.run(args);
+					(v)->v).run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.LREM, (cmd)->cmd.lrem(key, count, value), (v)->v)
-					.run(args);
+			return new JedisCommand<>(client, ProtocolCommand.LREM, (cmd)->cmd.lrem(key, count, value), (v)->v).run(
+					args);
 		}
 	}
 
@@ -383,16 +401,13 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.LTRIM, (cmd)->cmd.ltrim(key, start, end),
-					okStatusConverter)
-					.run(args);
+					okStatusConverter).run(args);
 		}else if(isTransaction()){
 			return new JedisTransactionCommand<>(client, ProtocolCommand.LTRIM, (cmd)->cmd.ltrim(key, start, end),
-					okStatusConverter)
-					.run(args);
+					okStatusConverter).run(args);
 		}else{
 			return new JedisCommand<>(client, ProtocolCommand.LTRIM, (cmd)->cmd.ltrim(key, start, end),
-					okStatusConverter)
-					.run(args);
+					okStatusConverter).run(args);
 		}
 	}
 
@@ -402,142 +417,51 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.LTRIM, (cmd)->cmd.ltrim(key, start, end),
-					okStatusConverter)
-					.run(args);
+					okStatusConverter).run(args);
 		}else if(isTransaction()){
 			return new JedisTransactionCommand<>(client, ProtocolCommand.LTRIM, (cmd)->cmd.ltrim(key, start, end),
-					okStatusConverter)
-					.run(args);
+					okStatusConverter).run(args);
 		}else{
 			return new JedisCommand<>(client, ProtocolCommand.LTRIM, (cmd)->cmd.ltrim(key, start, end),
-					okStatusConverter)
-					.run(args);
+					okStatusConverter).run(args);
 		}
 	}
 
 	@Override
 	public String lMove(final String key, final String destKey, final Direction from, final Direction to) {
-		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from)
-				.add(to);
+		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from).add(to);
 		final DirectionConverter directionConverter = new DirectionConverter();
 		final ListDirection fromDirection = directionConverter.convert(from);
 		final ListDirection toDirection = directionConverter.convert(to);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.LMOVE,
-					(cmd)->cmd.lmove(key, destKey, fromDirection, toDirection), (v)->v)
-					.run(args);
+					(cmd)->cmd.lmove(key, destKey, fromDirection, toDirection), (v)->v).run(args);
 		}else if(isTransaction()){
 			return new JedisTransactionCommand<>(client, ProtocolCommand.LMOVE,
-					(cmd)->cmd.lmove(key, destKey, fromDirection, toDirection), (v)->v)
-					.run(args);
+					(cmd)->cmd.lmove(key, destKey, fromDirection, toDirection), (v)->v).run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.LMOVE, (cmd)->cmd.lmove(key, destKey, fromDirection,
-					toDirection), (v)->v)
-					.run(args);
+			return new JedisCommand<>(client, ProtocolCommand.LMOVE,
+					(cmd)->cmd.lmove(key, destKey, fromDirection, toDirection), (v)->v).run(args);
 		}
 	}
 
 	@Override
 	public byte[] lMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to) {
-		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from)
-				.add(to);
+		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from).add(to);
 		final DirectionConverter directionConverter = new DirectionConverter();
 		final ListDirection fromDirection = directionConverter.convert(from);
 		final ListDirection toDirection = directionConverter.convert(to);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.LMOVE,
-					(cmd)->cmd.lmove(key, destKey, fromDirection, toDirection), (v)->v)
-					.run(args);
+					(cmd)->cmd.lmove(key, destKey, fromDirection, toDirection), (v)->v).run(args);
 		}else if(isTransaction()){
 			return new JedisTransactionCommand<>(client, ProtocolCommand.LMOVE,
-					(cmd)->cmd.lmove(key, destKey, fromDirection, toDirection), (v)->v)
-					.run(args);
+					(cmd)->cmd.lmove(key, destKey, fromDirection, toDirection), (v)->v).run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.LMOVE, (cmd)->cmd.lmove(key, destKey, fromDirection,
-					toDirection), (v)->v)
-					.run(args);
-		}
-	}
-
-	@Override
-	public String blMove(final String key, final String destKey, final Direction from, final Direction to,
-						 final int timeout) {
-		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from)
-				.add(to).add(timeout);
-		final DirectionConverter directionConverter = new DirectionConverter();
-		final ListDirection fromDirection = directionConverter.convert(from);
-		final ListDirection toDirection = directionConverter.convert(to);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.BLMOVE,
-					(cmd)->cmd.blmove(key, destKey, fromDirection, toDirection, timeout), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.BLMOVE,
-					(cmd)->cmd.blmove(key, destKey, fromDirection, toDirection, timeout), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.BLMOVE,
-					(cmd)->cmd.blmove(key, destKey, fromDirection, toDirection, timeout), (v)->v)
-					.run(args);
-		}
-	}
-
-	@Override
-	public byte[] blMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
-						 final int timeout) {
-		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from)
-				.add(to).add(timeout);
-		final DirectionConverter directionConverter = new DirectionConverter();
-		final ListDirection fromDirection = directionConverter.convert(from);
-		final ListDirection toDirection = directionConverter.convert(to);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.BLMOVE,
-					(cmd)->cmd.blmove(key, destKey, fromDirection, toDirection, timeout), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.BLMOVE,
-					(cmd)->cmd.blmove(key, destKey, fromDirection, toDirection, timeout), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.BLMOVE,
-					(cmd)->cmd.blmove(key, destKey, fromDirection, toDirection, timeout), (v)->v)
-					.run(args);
-		}
-	}
-
-	@Override
-	public List<String> blPop(final String[] keys, final int timeout) {
-		final CommandArguments args = CommandArguments.create(keys).add(timeout);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.BLPOP, (cmd)->cmd.blpop(timeout, keys), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.BLPOP, (cmd)->cmd.blpop(timeout, keys), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.BLPOP, (cmd)->cmd.blpop(timeout, keys), (v)->v)
-					.run(args);
-		}
-	}
-
-	@Override
-	public List<byte[]> blPop(final byte[][] keys, final int timeout) {
-		final CommandArguments args = CommandArguments.create(keys).add(timeout);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.BLPOP, (cmd)->cmd.blpop(timeout, keys), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.BLPOP, (cmd)->cmd.blpop(timeout, keys), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.BLPOP, (cmd)->cmd.blpop(timeout, keys), (v)->v)
-					.run(args);
+			return new JedisCommand<>(client, ProtocolCommand.LMOVE,
+					(cmd)->cmd.lmove(key, destKey, fromDirection, toDirection), (v)->v).run(args);
 		}
 	}
 
@@ -546,14 +470,13 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 		final CommandArguments args = CommandArguments.create(keys).add(timeout);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.BRPOP, (cmd)->cmd.brpop(timeout, keys), (v)->v)
-					.run(args);
+			return new JedisPipelineCommand<>(client, ProtocolCommand.BRPOP, (cmd)->cmd.brpop(timeout, keys),
+					(v)->v).run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.BRPOP, (cmd)->cmd.brpop(timeout, keys), (v)->v)
-					.run(args);
+			return new JedisTransactionCommand<>(client, ProtocolCommand.BRPOP, (cmd)->cmd.brpop(timeout, keys),
+					(v)->v).run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.BRPOP, (cmd)->cmd.brpop(timeout, keys), (v)->v)
-					.run(args);
+			return new JedisCommand<>(client, ProtocolCommand.BRPOP, (cmd)->cmd.brpop(timeout, keys), (v)->v).run(args);
 		}
 	}
 
@@ -562,54 +485,45 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 		final CommandArguments args = CommandArguments.create(keys).add(timeout);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.BRPOP, (cmd)->cmd.brpop(timeout, keys), (v)->v)
-					.run(args);
+			return new JedisPipelineCommand<>(client, ProtocolCommand.BRPOP, (cmd)->cmd.brpop(timeout, keys),
+					(v)->v).run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.BRPOP, (cmd)->cmd.brpop(timeout, keys), (v)->v)
-					.run(args);
+			return new JedisTransactionCommand<>(client, ProtocolCommand.BRPOP, (cmd)->cmd.brpop(timeout, keys),
+					(v)->v).run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.BRPOP, (cmd)->cmd.brpop(timeout, keys), (v)->v)
-					.run(args);
+			return new JedisCommand<>(client, ProtocolCommand.BRPOP, (cmd)->cmd.brpop(timeout, keys), (v)->v).run(args);
 		}
 	}
 
 	@Override
 	public String brPoplPush(final String key, final String destKey, final int timeout) {
-		final CommandArguments args = CommandArguments.create(key).add(destKey)
-				.add(timeout);
+		final CommandArguments args = CommandArguments.create(key).add(destKey).add(timeout);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.BRPOPLPUSH,
-					(cmd)->cmd.brpoplpush(key, destKey, timeout), (v)->v)
-					.run(args);
+					(cmd)->cmd.brpoplpush(key, destKey, timeout), (v)->v).run(args);
 		}else if(isTransaction()){
 			return new JedisTransactionCommand<>(client, ProtocolCommand.BRPOPLPUSH,
-					(cmd)->cmd.brpoplpush(key, destKey, timeout), (v)->v)
-					.run(args);
+					(cmd)->cmd.brpoplpush(key, destKey, timeout), (v)->v).run(args);
 		}else{
 			return new JedisCommand<>(client, ProtocolCommand.BRPOPLPUSH, (cmd)->cmd.brpoplpush(key, destKey, timeout),
-					(v)->v)
-					.run(args);
+					(v)->v).run(args);
 		}
 	}
 
 	@Override
 	public byte[] brPoplPush(final byte[] key, final byte[] destKey, final int timeout) {
-		final CommandArguments args = CommandArguments.create(key).add(destKey)
-				.add(timeout);
+		final CommandArguments args = CommandArguments.create(key).add(destKey).add(timeout);
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.BRPOPLPUSH,
-					(cmd)->cmd.brpoplpush(key, destKey, timeout), (v)->v)
-					.run(args);
+					(cmd)->cmd.brpoplpush(key, destKey, timeout), (v)->v).run(args);
 		}else if(isTransaction()){
 			return new JedisTransactionCommand<>(client, ProtocolCommand.BRPOPLPUSH,
-					(cmd)->cmd.brpoplpush(key, destKey, timeout), (v)->v)
-					.run(args);
+					(cmd)->cmd.brpoplpush(key, destKey, timeout), (v)->v).run(args);
 		}else{
 			return new JedisCommand<>(client, ProtocolCommand.BRPOPLPUSH, (cmd)->cmd.brpoplpush(key, destKey, timeout),
-					(v)->v)
-					.run(args);
+					(v)->v).run(args);
 		}
 	}
 
@@ -618,14 +532,11 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.LPOP, (cmd)->cmd.lpop(key), (v)->v)
-					.run(args);
+			return new JedisPipelineCommand<>(client, ProtocolCommand.LPOP, (cmd)->cmd.lpop(key), (v)->v).run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.LPOP, (cmd)->cmd.lpop(key), (v)->v)
-					.run(args);
+			return new JedisTransactionCommand<>(client, ProtocolCommand.LPOP, (cmd)->cmd.lpop(key), (v)->v).run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.LPOP, (cmd)->cmd.lpop(key), (v)->v)
-					.run(args);
+			return new JedisCommand<>(client, ProtocolCommand.LPOP, (cmd)->cmd.lpop(key), (v)->v).run(args);
 		}
 	}
 
@@ -634,14 +545,11 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.LPOP, (cmd)->cmd.lpop(key), (v)->v)
-					.run(args);
+			return new JedisPipelineCommand<>(client, ProtocolCommand.LPOP, (cmd)->cmd.lpop(key), (v)->v).run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.LPOP, (cmd)->cmd.lpop(key), (v)->v)
-					.run(args);
+			return new JedisTransactionCommand<>(client, ProtocolCommand.LPOP, (cmd)->cmd.lpop(key), (v)->v).run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.LPOP, (cmd)->cmd.lpop(key), (v)->v)
-					.run(args);
+			return new JedisCommand<>(client, ProtocolCommand.LPOP, (cmd)->cmd.lpop(key), (v)->v).run(args);
 		}
 	}
 
@@ -650,14 +558,13 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 		final CommandArguments args = CommandArguments.create(key).add(values);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.LPUSH, (cmd)->cmd.lpush(key, values), (v)->v)
-					.run(args);
+			return new JedisPipelineCommand<>(client, ProtocolCommand.LPUSH, (cmd)->cmd.lpush(key, values), (v)->v).run(
+					args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.LPUSH, (cmd)->cmd.lpush(key, values), (v)->v)
-					.run(args);
+			return new JedisTransactionCommand<>(client, ProtocolCommand.LPUSH, (cmd)->cmd.lpush(key, values),
+					(v)->v).run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.LPUSH, (cmd)->cmd.lpush(key, values), (v)->v)
-					.run(args);
+			return new JedisCommand<>(client, ProtocolCommand.LPUSH, (cmd)->cmd.lpush(key, values), (v)->v).run(args);
 		}
 	}
 
@@ -666,14 +573,13 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 		final CommandArguments args = CommandArguments.create(key).add(values);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.LPUSH, (cmd)->cmd.lpush(key, values), (v)->v)
-					.run(args);
+			return new JedisPipelineCommand<>(client, ProtocolCommand.LPUSH, (cmd)->cmd.lpush(key, values), (v)->v).run(
+					args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.LPUSH, (cmd)->cmd.lpush(key, values), (v)->v)
-					.run(args);
+			return new JedisTransactionCommand<>(client, ProtocolCommand.LPUSH, (cmd)->cmd.lpush(key, values),
+					(v)->v).run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.LPUSH, (cmd)->cmd.lpush(key, values), (v)->v)
-					.run(args);
+			return new JedisCommand<>(client, ProtocolCommand.LPUSH, (cmd)->cmd.lpush(key, values), (v)->v).run(args);
 		}
 	}
 
@@ -682,14 +588,13 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 		final CommandArguments args = CommandArguments.create(key).add(values);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.LPUSHX, (cmd)->cmd.lpushx(key, values), (v)->v)
-					.run(args);
+			return new JedisPipelineCommand<>(client, ProtocolCommand.LPUSHX, (cmd)->cmd.lpushx(key, values),
+					(v)->v).run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.LPUSHX, (cmd)->cmd.lpushx(key, values), (v)->v)
-					.run(args);
+			return new JedisTransactionCommand<>(client, ProtocolCommand.LPUSHX, (cmd)->cmd.lpushx(key, values),
+					(v)->v).run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.LPUSHX, (cmd)->cmd.lpushx(key, values), (v)->v)
-					.run(args);
+			return new JedisCommand<>(client, ProtocolCommand.LPUSHX, (cmd)->cmd.lpushx(key, values), (v)->v).run(args);
 		}
 	}
 
@@ -698,14 +603,13 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 		final CommandArguments args = CommandArguments.create(key).add(values);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.LPUSHX, (cmd)->cmd.lpushx(key, values), (v)->v)
-					.run(args);
+			return new JedisPipelineCommand<>(client, ProtocolCommand.LPUSHX, (cmd)->cmd.lpushx(key, values),
+					(v)->v).run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.LPUSHX, (cmd)->cmd.lpushx(key, values), (v)->v)
-					.run(args);
+			return new JedisTransactionCommand<>(client, ProtocolCommand.LPUSHX, (cmd)->cmd.lpushx(key, values),
+					(v)->v).run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.LPUSHX, (cmd)->cmd.lpushx(key, values), (v)->v)
-					.run(args);
+			return new JedisCommand<>(client, ProtocolCommand.LPUSHX, (cmd)->cmd.lpushx(key, values), (v)->v).run(args);
 		}
 	}
 
@@ -714,14 +618,11 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.RPOP, (cmd)->cmd.rpop(key), (v)->v)
-					.run(args);
+			return new JedisPipelineCommand<>(client, ProtocolCommand.RPOP, (cmd)->cmd.rpop(key), (v)->v).run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.RPOP, (cmd)->cmd.rpop(key), (v)->v)
-					.run(args);
+			return new JedisTransactionCommand<>(client, ProtocolCommand.RPOP, (cmd)->cmd.rpop(key), (v)->v).run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.RPOP, (cmd)->cmd.rpop(key), (v)->v)
-					.run(args);
+			return new JedisCommand<>(client, ProtocolCommand.RPOP, (cmd)->cmd.rpop(key), (v)->v).run(args);
 		}
 	}
 
@@ -730,14 +631,11 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.RPOP, (cmd)->cmd.rpop(key), (v)->v)
-					.run(args);
+			return new JedisPipelineCommand<>(client, ProtocolCommand.RPOP, (cmd)->cmd.rpop(key), (v)->v).run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.RPOP, (cmd)->cmd.rpop(key), (v)->v)
-					.run(args);
+			return new JedisTransactionCommand<>(client, ProtocolCommand.RPOP, (cmd)->cmd.rpop(key), (v)->v).run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.RPOP, (cmd)->cmd.rpop(key), (v)->v)
-					.run(args);
+			return new JedisCommand<>(client, ProtocolCommand.RPOP, (cmd)->cmd.rpop(key), (v)->v).run(args);
 		}
 	}
 
@@ -747,15 +645,13 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.RPOPLPUSH, (cmd)->cmd.rpoplpush(key, destKey),
-					(v)->v)
-					.run(args);
+					(v)->v).run(args);
 		}else if(isTransaction()){
 			return new JedisTransactionCommand<>(client, ProtocolCommand.RPOPLPUSH, (cmd)->cmd.rpoplpush(key, destKey),
-					(v)->v)
-					.run(args);
+					(v)->v).run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.RPOPLPUSH, (cmd)->cmd.rpoplpush(key, destKey), (v)->v)
-					.run(args);
+			return new JedisCommand<>(client, ProtocolCommand.RPOPLPUSH, (cmd)->cmd.rpoplpush(key, destKey),
+					(v)->v).run(args);
 		}
 	}
 
@@ -765,15 +661,13 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.RPOPLPUSH, (cmd)->cmd.rpoplpush(key, destKey),
-					(v)->v)
-					.run(args);
+					(v)->v).run(args);
 		}else if(isTransaction()){
 			return new JedisTransactionCommand<>(client, ProtocolCommand.RPOPLPUSH, (cmd)->cmd.rpoplpush(key, destKey),
-					(v)->v)
-					.run(args);
+					(v)->v).run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.RPOPLPUSH, (cmd)->cmd.rpoplpush(key, destKey), (v)->v)
-					.run(args);
+			return new JedisCommand<>(client, ProtocolCommand.RPOPLPUSH, (cmd)->cmd.rpoplpush(key, destKey),
+					(v)->v).run(args);
 		}
 	}
 
@@ -782,14 +676,13 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 		final CommandArguments args = CommandArguments.create(key).add(values);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.RPUSH, (cmd)->cmd.rpush(key, values), (v)->v)
-					.run(args);
+			return new JedisPipelineCommand<>(client, ProtocolCommand.RPUSH, (cmd)->cmd.rpush(key, values), (v)->v).run(
+					args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.RPUSH, (cmd)->cmd.rpush(key, values), (v)->v)
-					.run(args);
+			return new JedisTransactionCommand<>(client, ProtocolCommand.RPUSH, (cmd)->cmd.rpush(key, values),
+					(v)->v).run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.RPUSH, (cmd)->cmd.rpush(key, values), (v)->v)
-					.run(args);
+			return new JedisCommand<>(client, ProtocolCommand.RPUSH, (cmd)->cmd.rpush(key, values), (v)->v).run(args);
 		}
 	}
 
@@ -798,14 +691,13 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 		final CommandArguments args = CommandArguments.create(key).add(values);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.RPUSH, (cmd)->cmd.rpush(key, values), (v)->v)
-					.run(args);
+			return new JedisPipelineCommand<>(client, ProtocolCommand.RPUSH, (cmd)->cmd.rpush(key, values), (v)->v).run(
+					args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.RPUSH, (cmd)->cmd.rpush(key, values), (v)->v)
-					.run(args);
+			return new JedisTransactionCommand<>(client, ProtocolCommand.RPUSH, (cmd)->cmd.rpush(key, values),
+					(v)->v).run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.RPUSH, (cmd)->cmd.rpush(key, values), (v)->v)
-					.run(args);
+			return new JedisCommand<>(client, ProtocolCommand.RPUSH, (cmd)->cmd.rpush(key, values), (v)->v).run(args);
 		}
 	}
 
@@ -814,14 +706,13 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 		final CommandArguments args = CommandArguments.create(key).add(values);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.RPUSHX, (cmd)->cmd.rpushx(key, values), (v)->v)
-					.run(args);
+			return new JedisPipelineCommand<>(client, ProtocolCommand.RPUSHX, (cmd)->cmd.rpushx(key, values),
+					(v)->v).run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.RPUSHX, (cmd)->cmd.rpushx(key, values), (v)->v)
-					.run(args);
+			return new JedisTransactionCommand<>(client, ProtocolCommand.RPUSHX, (cmd)->cmd.rpushx(key, values),
+					(v)->v).run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.RPUSHX, (cmd)->cmd.rpushx(key, values), (v)->v)
-					.run(args);
+			return new JedisCommand<>(client, ProtocolCommand.RPUSHX, (cmd)->cmd.rpushx(key, values), (v)->v).run(args);
 		}
 	}
 
@@ -830,14 +721,13 @@ public final class JedisListOperations extends AbstractListOperations<JedisStand
 		final CommandArguments args = CommandArguments.create(key).add(values);
 
 		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.RPUSHX, (cmd)->cmd.rpushx(key, values), (v)->v)
-					.run(args);
+			return new JedisPipelineCommand<>(client, ProtocolCommand.RPUSHX, (cmd)->cmd.rpushx(key, values),
+					(v)->v).run(args);
 		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.RPUSHX, (cmd)->cmd.rpushx(key, values), (v)->v)
-					.run(args);
+			return new JedisTransactionCommand<>(client, ProtocolCommand.RPUSHX, (cmd)->cmd.rpushx(key, values),
+					(v)->v).run(args);
 		}else{
-			return new JedisCommand<>(client, ProtocolCommand.RPUSHX, (cmd)->cmd.rpushx(key, values), (v)->v)
-					.run(args);
+			return new JedisCommand<>(client, ProtocolCommand.RPUSHX, (cmd)->cmd.rpushx(key, values), (v)->v).run(args);
 		}
 	}
 

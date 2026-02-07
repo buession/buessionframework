@@ -22,27 +22,69 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.lettuce.operations;
+package com.buession.redis.core.internal.convert.lettuce.response;
 
-import com.buession.lang.Status;
-import com.buession.redis.client.lettuce.LettuceRedisClient;
-import com.buession.redis.client.operations.HyperLogLogOperations;
-import com.buession.redis.utils.SafeEncoder;
+import com.buession.core.converter.Converter;
+import com.buession.lang.KeyValue;
+import org.springframework.lang.Nullable;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
- * Lettuce HyperLogLog 命令操作抽象类
+ * Lettuce {@link io.lettuce.core.KeyValue} 转换为 {@link KeyValue}
  *
- * @param <C>
- * 		Redis Client {@link LettuceRedisClient}
+ * @param <SK>
+ * 		原始 Key 类型
+ * @param <SV>
+ * 		原始值类型
+ * @param <TK>
+ * 		目标 Key 类型
+ * @param <TV>
+ * 		目标值类型
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public abstract class AbstractHyperLogLogOperations<C extends LettuceRedisClient>
-		extends AbstractLettuceRedisOperations<C> implements HyperLogLogOperations {
+public class ListKeyValueMapConverter<SK, SV, TK, TV> implements Converter<List<io.lettuce.core.KeyValue<SK, SV>>,
+		Map<TK, TV>> {
 
-	public AbstractHyperLogLogOperations(final C client) {
-		super(client);
+	/**
+	 * Key 转换器
+	 */
+	private final Converter<SK, TK> keyConverter;
+
+	/**
+	 * 值转换器
+	 */
+	private final Converter<SV, TV> valueConverter;
+
+	/**
+	 * 构造函数
+	 *
+	 * @param keyConverter
+	 * 		Key 转换器
+	 * @param valueConverter
+	 * 		值转换器
+	 */
+	public ListKeyValueMapConverter(final Converter<SK, TK> keyConverter, final Converter<SV, TV> valueConverter) {
+		this.keyConverter = keyConverter;
+		this.valueConverter = valueConverter;
+	}
+
+	@Nullable
+	@Override
+	public Map<TK, TV> convert(final List<io.lettuce.core.KeyValue<SK, SV>> source) {
+		if(source == null){
+			return null;
+		}else if(source.isEmpty()){
+			return new LinkedHashMap<>();
+		}else{
+			return source.stream().collect(Collectors.toMap((item)->keyConverter.convert(item.getKey()),
+					(item)->valueConverter.convert(item.getValue()), (oldVal, newVal)->oldVal, LinkedHashMap::new));
+		}
 	}
 
 }

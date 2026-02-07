@@ -36,6 +36,7 @@ import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.args.GetExArgument;
 import com.buession.redis.core.command.args.HSetExArgument;
 import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.core.internal.convert.lettuce.response.ListKeyValueMapConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.response.OneStatusConverter;
@@ -43,8 +44,8 @@ import com.buession.redis.core.internal.lettuce.CompositeArgumentUtils;
 import com.buession.redis.core.internal.lettuce.LettuceScanArgs;
 import com.buession.redis.core.internal.lettuce.LettuceScanCursor;
 import com.buession.redis.utils.SafeEncoder;
-import io.lettuce.core.KeyValue;
 import io.lettuce.core.MapScanCursor;
+import io.lettuce.core.Value;
 
 import java.util.List;
 import java.util.Map;
@@ -70,8 +71,7 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	@Override
 	public Long hDel(final byte[] key, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(fields);
-		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.HDEL).executor((cmd)->cmd.hdel(key, fields))
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HDEL, args, (cmd)->cmd.hdel(key, fields), (v)->v);
 	}
 
 	@Override
@@ -82,8 +82,7 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	@Override
 	public Boolean hExists(final byte[] key, final byte[] field) {
 		final CommandArguments args = CommandArguments.create(key).add(field);
-		return LettuceCommandBuilder.<Boolean, Boolean>newBuilder(client, Command.HEXISTS)
-				.executor((cmd)->cmd.hexists(key, field)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HEXISTS, args, (cmd)->cmd.hexists(key, field), (v)->v);
 	}
 
 	@Override
@@ -95,8 +94,7 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	public List<Long> hExpire(final byte[] key, final long ttl, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(ttl).add("FIELDS").add(fields.length)
 				.add(fields);
-		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.HEXPIRE)
-				.executor((cmd)->cmd.hexpire(key, ttl, fields)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HEXPIRE, args, (cmd)->cmd.hexpire(key, ttl, fields), (v)->v);
 	}
 
 	@Override
@@ -108,9 +106,8 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	public List<Long> hExpire(final byte[] key, final long ttl, final ExpireOption option, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(ttl).add(option).add("FIELDS").add(fields.length)
 				.add(fields);
-		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.HEXPIRE)
-				.executor((cmd)->cmd.hexpire(key, ttl, CompositeArgumentUtils.expireArgs(option), fields))
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HEXPIRE, args,
+				(cmd)->cmd.hexpire(key, ttl, CompositeArgumentUtils.expireArgs(option), fields), (v)->v);
 	}
 
 	@Override
@@ -122,8 +119,7 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	public List<Long> hExpireAt(final byte[] key, final long unixTimestamp, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add("FIELDS").add(fields.length)
 				.add(fields);
-		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.HEXPIREAT)
-				.executor((cmd)->cmd.hexpireat(key, unixTimestamp, fields)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HEXPIREAT, args, (cmd)->cmd.hexpireat(key, unixTimestamp, fields), (v)->v);
 	}
 
 	@Override
@@ -137,9 +133,8 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 								final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(option).add("FIELDS")
 				.add(fields.length).add(fields);
-		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.HEXPIREAT)
-				.executor((cmd)->cmd.hexpireat(key, unixTimestamp, CompositeArgumentUtils.expireArgs(option), fields))
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HEXPIREAT, args,
+				(cmd)->cmd.hexpireat(key, unixTimestamp, CompositeArgumentUtils.expireArgs(option), fields), (v)->v);
 	}
 
 	@Override
@@ -150,87 +145,76 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	@Override
 	public List<Long> hExpireTime(final byte[] key, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add("FIELDS").add(fields.length).add(fields);
-		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.HEXPIRETIME)
-				.executor((cmd)->cmd.hexpiretime(key, fields)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HEXPIRETIME, args, (cmd)->cmd.hexpiretime(key, fields), (v)->v);
 	}
 
 	@Override
 	public String hGet(final String key, final String field) {
 		final CommandArguments args = CommandArguments.create(key).add(field);
-		return LettuceCommandBuilder.<byte[], String>newBuilder(client, Command.HGET)
-				.executor((cmd)->cmd.hget(SafeEncoder.encode(key), SafeEncoder.encode(field))).arguments(args)
-				.converter(Converters.binaryToStringConverter()).run();
+		return executeCommand(Command.HGET, args, (cmd)->cmd.hget(SafeEncoder.encode(key), SafeEncoder.encode(field)),
+				Converters.binaryToStringConverter());
 	}
 
 	@Override
 	public byte[] hGet(final byte[] key, final byte[] field) {
 		final CommandArguments args = CommandArguments.create(key).add(field);
-		return LettuceCommandBuilder.<byte[], byte[]>newBuilder(client, Command.HGET)
-				.executor((cmd)->cmd.hget(key, field)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HGET, args, (cmd)->cmd.hget(key, field), (v)->v);
 	}
 
 	@Override
 	public Map<String, String> hGetAll(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return LettuceCommandBuilder.<Map<byte[], byte[]>, Map<String, String>>newBuilder(client, Command.HGETALL)
-				.executor((cmd)->cmd.hgetall(SafeEncoder.encode(key))).arguments(args)
-				.converter(Converters.binaryMapToStringMapConverter()).run();
+		return executeCommand(Command.HGETALL, args, (cmd)->cmd.hgetall(SafeEncoder.encode(key)),
+				Converters.binaryMapToStringMapConverter());
 	}
 
 	@Override
 	public Map<byte[], byte[]> hGetAll(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return LettuceCommandBuilder.<Map<byte[], byte[]>, Map<byte[], byte[]>>newBuilder(client, Command.HGETALL)
-				.executor((cmd)->cmd.hgetall(key)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HGETALL, args, (cmd)->cmd.hgetall(key), (v)->v);
 	}
 
 	@Override
 	public List<String> hGetDel(final String key, final String... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(fields);
-		return LettuceCommandBuilder.<List<KeyValue<byte[], byte[]>>, List<String>>newBuilder(client, Command.HGETDEL)
-				.executor((cmd)->cmd.hgetdel(SafeEncoder.encode(key), SafeEncoder.encode(fields))).arguments(args)
-				.converter(new ListConverter<>(binaryKeyValueToStringValueConverter)).run();
+		return executeCommand(Command.HGETDEL, args, (cmd)->cmd.hgetdel(SafeEncoder.encode(key),
+				SafeEncoder.encode(fields)), new ListConverter<>((kv)->SafeEncoder.encode(kv.getValue())));
 	}
 
 	@Override
 	public List<byte[]> hGetDel(final byte[] key, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(fields);
-		return LettuceCommandBuilder.<List<KeyValue<byte[], byte[]>>, List<byte[]>>newBuilder(client, Command.HGETDEL)
-				.executor((cmd)->cmd.hgetdel(key, fields)).arguments(args)
-				.converter(new ListConverter<>(binaryKeyValueToBinaryValueConverter)).run();
+		return executeCommand(Command.HGETDEL, args, (cmd)->cmd.hgetdel(key, fields),
+				new ListConverter<>(Value::getValue));
 	}
 
 	@Override
 	public List<String> hGetEx(final String key, final String... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(fields);
-		return LettuceCommandBuilder.<List<KeyValue<byte[], byte[]>>, List<String>>newBuilder(client, Command.HGETEX)
-				.executor((cmd)->cmd.hgetex(SafeEncoder.encode(key), SafeEncoder.encode(fields))).arguments(args)
-				.converter(new ListConverter<>(binaryKeyValueToStringValueConverter)).run();
+		return executeCommand(Command.HGETEX, args, (cmd)->cmd.hgetex(SafeEncoder.encode(key),
+				SafeEncoder.encode(fields)), new ListConverter<>((kv)->SafeEncoder.encode(kv.getValue())));
 	}
 
 	@Override
 	public List<byte[]> hGetEx(final byte[] key, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(fields);
-		return LettuceCommandBuilder.<List<KeyValue<byte[], byte[]>>, List<byte[]>>newBuilder(client, Command.HGETEX)
-				.executor((cmd)->cmd.hgetex(key, fields)).arguments(args)
-				.converter(new ListConverter<>(binaryKeyValueToBinaryValueConverter)).run();
+		return executeCommand(Command.HGETEX, args, (cmd)->cmd.hgetex(key, fields),
+				new ListConverter<>(Value::getValue));
 	}
 
 	@Override
 	public List<String> hGetEx(final String key, final GetExArgument argument, final String... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(fields);
-		return LettuceCommandBuilder.<List<KeyValue<byte[], byte[]>>, List<String>>newBuilder(client, Command.HGETEX)
-				.executor((cmd)->cmd.hgetex(SafeEncoder.encode(key), CompositeArgumentUtils.hGetExArgs(argument),
-						SafeEncoder.encode(fields))).arguments(args)
-				.converter(new ListConverter<>(binaryKeyValueToStringValueConverter)).run();
+		return executeCommand(Command.HGETEX, args, (cmd)->cmd.hgetex(SafeEncoder.encode(key),
+						CompositeArgumentUtils.hGetExArgs(argument), SafeEncoder.encode(fields)),
+				new ListConverter<>((kv)->SafeEncoder.encode(kv.getValue())));
 	}
 
 	@Override
 	public List<byte[]> hGetEx(final byte[] key, final GetExArgument argument, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(fields);
-		return LettuceCommandBuilder.<List<KeyValue<byte[], byte[]>>, List<byte[]>>newBuilder(client, Command.HGETEX)
-				.executor((cmd)->cmd.hgetex(key, CompositeArgumentUtils.hGetExArgs(argument), fields)).arguments(args)
-				.converter(new ListConverter<>(binaryKeyValueToBinaryValueConverter)).run();
+		return executeCommand(Command.HGETEX, args, (cmd)->cmd.hgetex(key,
+				CompositeArgumentUtils.hGetExArgs(argument), fields), new ListConverter<>(Value::getValue));
 	}
 
 	@Override
@@ -241,8 +225,7 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	@Override
 	public Long hIncrBy(final byte[] key, final byte[] field, final long value) {
 		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
-		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.HINCRBY)
-				.executor((cmd)->cmd.hincrby(key, field, value)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HINCRBY, args, (cmd)->cmd.hincrby(key, field, value), (v)->v);
 	}
 
 	@Override
@@ -253,24 +236,20 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	@Override
 	public Double hIncrByFloat(final byte[] key, final byte[] field, final double value) {
 		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
-		return LettuceCommandBuilder.<Double, Double>newBuilder(client, Command.HINCRBYFLOAT)
-				.executor((cmd)->cmd.hincrbyfloat(key, field, value)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HINCRBYFLOAT, args, (cmd)->cmd.hincrbyfloat(key, field, value), (v)->v);
 	}
 
 	@Override
 	public Set<String> hKeys(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return LettuceCommandBuilder.<List<byte[]>, Set<String>>newBuilder(client, Command.HKEYS)
-				.executor((cmd)->cmd.hkeys(SafeEncoder.encode(key))).arguments(args)
-				.converter(Converters.binaryListToStringSetConverter()).run();
+		return executeCommand(Command.HKEYS, args, (cmd)->cmd.hkeys(SafeEncoder.encode(key)),
+				Converters.binaryListToStringSetConverter());
 	}
 
 	@Override
 	public Set<byte[]> hKeys(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return LettuceCommandBuilder.<List<byte[]>, Set<byte[]>>newBuilder(client, Command.HKEYS)
-				.executor((cmd)->cmd.hkeys(key)).arguments(args).converter(Converters.binaryListToBinarySetConverter())
-				.run();
+		return executeCommand(Command.HKEYS, args, (cmd)->cmd.hkeys(key), Converters.binaryListToBinarySetConverter());
 	}
 
 	@Override
@@ -281,24 +260,21 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	@Override
 	public Long hLen(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.HLEN).executor((cmd)->cmd.hlen(key))
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HLEN, args, (cmd)->cmd.hlen(key), (v)->v);
 	}
 
 	@Override
 	public List<String> hMGet(final String key, final String... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(fields);
-		return LettuceCommandBuilder.<List<KeyValue<byte[], byte[]>>, List<String>>newBuilder(client, Command.HMGET)
-				.executor((cmd)->cmd.hmget(SafeEncoder.encode(key), SafeEncoder.encode(fields))).arguments(args)
-				.converter(new ListConverter<>(binaryKeyValueToStringValueConverter)).run();
+		return executeCommand(Command.HMGET, args, (cmd)->cmd.hmget(SafeEncoder.encode(key),
+				SafeEncoder.encode(fields)), new ListConverter<>((kv)->SafeEncoder.encode(kv.getValue())));
 	}
 
 	@Override
 	public List<byte[]> hMGet(final byte[] key, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(fields);
-		return LettuceCommandBuilder.<List<KeyValue<byte[], byte[]>>, List<byte[]>>newBuilder(client, Command.HMGET)
-				.executor((cmd)->cmd.hmget(key, fields)).arguments(args)
-				.converter(new ListConverter<>(binaryKeyValueToBinaryValueConverter)).run();
+		return executeCommand(Command.HMGET, args, (cmd)->cmd.hmget(key, fields),
+				new ListConverter<>(Value::getValue));
 	}
 
 	@Override
@@ -309,8 +285,7 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	@Override
 	public Status hMSet(final byte[] key, final Map<byte[], byte[]> data) {
 		final CommandArguments args = CommandArguments.create(key).add(data);
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.HMSET)
-				.executor((cmd)->cmd.hmset(key, data)).arguments(args).converter(new OkStatusConverter()).run();
+		return executeCommand(Command.HMSET, args, (cmd)->cmd.hmset(key, data), new OkStatusConverter());
 	}
 
 	@Override
@@ -321,8 +296,7 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	@Override
 	public List<Long> hPersist(final byte[] key, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(fields);
-		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.HPERSIST)
-				.executor((cmd)->cmd.hpersist(key, fields)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HPERSIST, args, (cmd)->cmd.hpersist(key, fields), (v)->v);
 	}
 
 	@Override
@@ -334,8 +308,7 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	public List<Long> hPExpire(final byte[] key, final long ttl, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(ttl).add("FIELDS").add(fields.length)
 				.add(fields);
-		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.HPEXPIRE)
-				.executor((cmd)->cmd.hpexpire(key, ttl, fields)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HPEXPIRE, args, (cmd)->cmd.hpexpire(key, ttl, fields), (v)->v);
 	}
 
 	@Override
@@ -347,9 +320,8 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	public List<Long> hPExpire(final byte[] key, final long ttl, final ExpireOption option, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(ttl).add(option).add("FIELDS").add(fields.length)
 				.add(fields);
-		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.HPEXPIRE)
-				.executor((cmd)->cmd.hpexpire(key, ttl, CompositeArgumentUtils.expireArgs(option), fields))
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HPEXPIRE, args, (cmd)->cmd.hpexpire(key, ttl,
+				CompositeArgumentUtils.expireArgs(option), fields), (v)->v);
 	}
 
 	@Override
@@ -361,8 +333,7 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	public List<Long> hPExpireAt(final byte[] key, final long unixTimestamp, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add("FIELDS").add(fields.length)
 				.add(fields);
-		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.HPEXPIREAT)
-				.executor((cmd)->cmd.hpexpireat(key, unixTimestamp, fields)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HPEXPIREAT, args, (cmd)->cmd.hpexpireat(key, unixTimestamp, fields), (v)->v);
 	}
 
 	@Override
@@ -376,9 +347,8 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 								 final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(option).add("FIELDS")
 				.add(fields.length).add(fields);
-		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.HPEXPIREAT)
-				.executor((cmd)->cmd.hpexpireat(key, unixTimestamp, CompositeArgumentUtils.expireArgs(option), fields))
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HPEXPIREAT, args, (cmd)->cmd.hpexpireat(key, unixTimestamp,
+				CompositeArgumentUtils.expireArgs(option), fields), (v)->v);
 	}
 
 	@Override
@@ -389,8 +359,7 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	@Override
 	public List<Long> hPExpireTime(final byte[] key, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add("FIELDS").add(fields.length).add(fields);
-		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.HPEXPIRETIME)
-				.executor((cmd)->cmd.hpexpiretime(key, fields)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HPEXPIRETIME, args, (cmd)->cmd.hpexpiretime(key, fields), (v)->v);
 	}
 
 	@Override
@@ -401,54 +370,47 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	@Override
 	public List<Long> hPTtl(final byte[] key, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add("FIELDS").add(fields.length).add(fields);
-		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.HPTTL)
-				.executor((cmd)->cmd.hpttl(key, fields)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HPTTL, args, (cmd)->cmd.hpttl(key, fields), (v)->v);
 	}
 
 	@Override
 	public String hRandField(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return LettuceCommandBuilder.<byte[], String>newBuilder(client, Command.HRANDFIELD)
-				.executor((cmd)->cmd.hrandfield(SafeEncoder.encode(key))).arguments(args)
-				.converter(Converters.binaryToStringConverter()).run();
+		return executeCommand(Command.HRANDFIELD, args, (cmd)->cmd.hrandfield(SafeEncoder.encode(key)),
+				Converters.binaryToStringConverter());
 	}
 
 	@Override
 	public byte[] hRandField(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return LettuceCommandBuilder.<byte[], byte[]>newBuilder(client, Command.HRANDFIELD)
-				.executor((cmd)->cmd.hrandfield(key)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HRANDFIELD, args, (cmd)->cmd.hrandfield(key), (v)->v);
 	}
 
 	@Override
 	public List<String> hRandField(final String key, final long count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
-		return LettuceCommandBuilder.<List<byte[]>, List<String>>newBuilder(client, Command.HRANDFIELD)
-				.executor((cmd)->cmd.hrandfield(SafeEncoder.encode(key), count)).arguments(args)
-				.converter(Converters.binaryListToStringListConverter()).run();
+		return executeCommand(Command.HRANDFIELD, args, (cmd)->cmd.hrandfield(SafeEncoder.encode(key), count),
+				Converters.binaryListToStringListConverter());
 	}
 
 	@Override
 	public List<byte[]> hRandField(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
-		return LettuceCommandBuilder.<List<byte[]>, List<byte[]>>newBuilder(client, Command.HRANDFIELD)
-				.executor((cmd)->cmd.hrandfield(key, count)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HRANDFIELD, args, (cmd)->cmd.hrandfield(key, count), (v)->v);
 	}
 
 	@Override
 	public Map<String, String> hRandFieldWithValues(final String key, final long count) {
 		final CommandArguments args = CommandArguments.create(key).add(count).add("WITHVALUES");
-		return LettuceCommandBuilder.<List<KeyValue<byte[], byte[]>>, Map<String, String>>newBuilder(client,
-						Command.HRANDFIELD).executor((cmd)->cmd.hrandfieldWithvalues(SafeEncoder.encode(key), count))
-				.arguments(args).converter(binaryListKeyValueToStringMapConverter).run();
+		return executeCommand(Command.HRANDFIELD, args, (cmd)->cmd.hrandfieldWithvalues(SafeEncoder.encode(key),
+				count), new ListKeyValueMapConverter<>(SafeEncoder::encode, SafeEncoder::encode));
 	}
 
 	@Override
 	public Map<byte[], byte[]> hRandFieldWithValues(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create(key).add(count).add("WITHVALUES");
-		return LettuceCommandBuilder.<List<KeyValue<byte[], byte[]>>, Map<byte[], byte[]>>newBuilder(client,
-						Command.HRANDFIELD).executor((cmd)->cmd.hrandfieldWithvalues(key, count)).arguments(args)
-				.converter(binaryListKeyValueToBinaryMapConverter).run();
+		return executeCommand(Command.HRANDFIELD, args, (cmd)->cmd.hrandfieldWithvalues(key, count),
+				new ListKeyValueMapConverter<>((k)->k, (v)->v));
 	}
 
 	@Override
@@ -514,8 +476,7 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	@Override
 	public Long hSet(final byte[] key, final Map<byte[], byte[]> data) {
 		final CommandArguments args = CommandArguments.create(key).add(data);
-		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.HSET).executor((cmd)->cmd.hset(key, data))
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HSET, args, (cmd)->cmd.hset(key, data), (v)->v);
 	}
 
 	@Override
@@ -526,9 +487,7 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	@Override
 	public Status hSetEx(final byte[] key, final Map<byte[], byte[]> data) {
 		final CommandArguments args = CommandArguments.create(key).add(data);
-		return LettuceCommandBuilder.<Long, Status>newBuilder(client, Command.HSET)
-				.executor((cmd)->cmd.hsetex(key, data))
-				.arguments(args).converter(new OneStatusConverter()).run();
+		return executeCommand(Command.HSET, args, (cmd)->cmd.hsetex(key, data), new OneStatusConverter());
 	}
 
 	@Override
@@ -539,9 +498,8 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	@Override
 	public Status hSetEx(final byte[] key, final Map<byte[], byte[]> data, final HSetExArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(data);
-		return LettuceCommandBuilder.<Long, Status>newBuilder(client, Command.HSET)
-				.executor((cmd)->cmd.hsetex(key, CompositeArgumentUtils.hSetExArgs(argument), data))
-				.arguments(args).converter(new OneStatusConverter()).run();
+		return executeCommand(Command.HSETEX, args, (cmd)->cmd.hsetex(key,
+				CompositeArgumentUtils.hSetExArgs(argument), data), new OneStatusConverter());
 	}
 
 	@Override
@@ -552,9 +510,7 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	@Override
 	public Status hSetNx(final byte[] key, final byte[] field, final byte[] value) {
 		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
-		return LettuceCommandBuilder.<Boolean, Status>newBuilder(client, Command.HSETNX)
-				.executor((cmd)->cmd.hsetnx(key, field, value))
-				.arguments(args).converter(new BooleanStatusConverter()).run();
+		return executeCommand(Command.HSETNX, args, (cmd)->cmd.hsetnx(key, field, value), new BooleanStatusConverter());
 	}
 
 	@Override
@@ -565,8 +521,7 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	@Override
 	public Long hStrLen(final byte[] key, final byte[] field) {
 		final CommandArguments args = CommandArguments.create(key).add(field);
-		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.HSTRLEN)
-				.executor((cmd)->cmd.hstrlen(key, field)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HSTRLEN, args, (cmd)->cmd.hstrlen(key, field), (v)->v);
 	}
 
 	@Override
@@ -577,39 +532,33 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	@Override
 	public List<Long> hTtl(final byte[] key, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(fields);
-		return LettuceCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.HTTL)
-				.executor((cmd)->cmd.httl(key, fields)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HTTL, args, (cmd)->cmd.httl(key, fields), (v)->v);
 	}
 
 	@Override
 	public List<String> hVals(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return LettuceCommandBuilder.<List<byte[]>, List<String>>newBuilder(client, Command.HVALS)
-				.executor((cmd)->cmd.hvals(SafeEncoder.encode(key))).arguments(args)
-				.converter(Converters.binaryListToStringListConverter()).run();
+		return executeCommand(Command.HVALS, args, (cmd)->cmd.hvals(SafeEncoder.encode(key)),
+				Converters.binaryListToStringListConverter());
 	}
 
 	@Override
 	public List<byte[]> hVals(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return LettuceCommandBuilder.<List<byte[]>, List<byte[]>>newBuilder(client, Command.HVALS)
-				.executor((cmd)->cmd.hvals(key)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.HVALS, args, (cmd)->cmd.hvals(key), (v)->v);
 	}
 
 	private ScanResult<Map<String, String>> hStringScan(
 			final com.buession.redis.core.Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, MapScanCursor<byte[], byte[]>> executor,
 			final CommandArguments args) {
-		return LettuceCommandBuilder.<MapScanCursor<byte[], byte[]>, ScanResult<Map<String, String>>>newBuilder(client,
-						Command.HRANDFIELD).executor(executor).arguments(args)
-				.converter(new ScanCursorConverter.MapScanCursorConverter.BvSvMapScanCursorConverter()).run();
+		return executeCommand(Command.HRANDFIELD, args, executor,
+				new ScanCursorConverter.MapScanCursorConverter.BvSvMapScanCursorConverter());
 	}
 
 	private ScanResult<Map<byte[], byte[]>> hBinaryScan(
 			final com.buession.redis.core.Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, MapScanCursor<byte[], byte[]>> executor,
 			final CommandArguments args) {
-		return LettuceCommandBuilder.<MapScanCursor<byte[], byte[]>, ScanResult<Map<byte[], byte[]>>>newBuilder(client,
-						Command.HRANDFIELD).executor(executor).arguments(args)
-				.converter(new ScanCursorConverter.MapScanCursorConverter<>()).run();
+		return executeCommand(Command.HRANDFIELD, args, executor, new ScanCursorConverter.MapScanCursorConverter<>());
 	}
 
 }

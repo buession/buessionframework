@@ -43,7 +43,6 @@ import com.buession.redis.core.internal.convert.lettuce.response.GeoRadiusRespon
 import com.buession.redis.core.internal.lettuce.CompositeArgumentUtils;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.GeoArgs;
-import io.lettuce.core.GeoCoordinates;
 import io.lettuce.core.GeoSearch;
 import io.lettuce.core.GeoValue;
 import io.lettuce.core.GeoWithin;
@@ -126,9 +125,7 @@ public final class LettuceGeoOperations extends AbstractLettuceRedisOperations i
 	@Override
 	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2) {
 		final CommandArguments args = CommandArguments.create(key).add(member1).add(member2);
-		return LettuceCommandBuilder.<Double, Double>newBuilder(client, Command.GEODIST)
-				.executor((cmd)->cmd.geodist(key, member1, member2, GeoArgs.Unit.m)).arguments(args).converter((v)->v)
-				.run();
+		return executeCommand(Command.GEODIST, args, (cmd)->cmd.geodist(key, member1, member2, GeoArgs.Unit.m), (v)->v);
 	}
 
 	@Override
@@ -141,25 +138,22 @@ public final class LettuceGeoOperations extends AbstractLettuceRedisOperations i
 		final CommandArguments args = CommandArguments.create(key).add(member1).add(member2).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
 
-		return LettuceCommandBuilder.<Double, Double>newBuilder(client, Command.GEODIST)
-				.executor((cmd)->cmd.geodist(key, member1, member2, geoUnitConverter.convert(unit))).arguments(args)
-				.converter((v)->v).run();
+		return executeCommand(Command.GEODIST, args,
+				(cmd)->cmd.geodist(key, member1, member2, geoUnitConverter.convert(unit)), (v)->v);
 	}
 
 	@Override
 	public List<String> geoHash(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		return LettuceCommandBuilder.<List<Value<String>>, List<String>>newBuilder(client, Command.GEOHASH)
-				.executor((cmd)->cmd.geohash(SafeEncoder.encode(key), SafeEncoder.encode(members))).arguments(args)
-				.converter(new ListConverter<>(Value::getValue)).run();
+		return executeCommand(Command.GEOHASH, args, (cmd)->cmd.geohash(SafeEncoder.encode(key),
+				SafeEncoder.encode(members)), new ListConverter<>(Value::getValue));
 	}
 
 	@Override
 	public List<byte[]> geoHash(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		return LettuceCommandBuilder.<List<Value<String>>, List<byte[]>>newBuilder(client, Command.GEOHASH)
-				.executor((cmd)->cmd.geohash(key, members)).arguments(args)
-				.converter(new ListConverter<>((v)->SafeEncoder.encode(v.getValue()))).run();
+		return executeCommand(Command.GEOHASH, args, (cmd)->cmd.geohash(key, members),
+				new ListConverter<>((v)->SafeEncoder.encode(v.getValue())));
 	}
 
 	@Override
@@ -170,9 +164,8 @@ public final class LettuceGeoOperations extends AbstractLettuceRedisOperations i
 	@Override
 	public List<Geo> geoPos(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		return LettuceCommandBuilder.<List<GeoCoordinates>, List<Geo>>newBuilder(client, Command.GEOPOS)
-				.executor((cmd)->cmd.geopos(key, members)).arguments(args)
-				.converter(new ListConverter<>(new GeoCoordinateConverter())).run();
+		return executeCommand(Command.GEOPOS, args, (cmd)->cmd.geopos(key, members),
+				new ListConverter<>(new GeoCoordinateConverter()));
 	}
 
 	@Override
@@ -186,9 +179,8 @@ public final class LettuceGeoOperations extends AbstractLettuceRedisOperations i
 									 final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude).add(latitude).add(radius).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return LettuceCommandBuilder.<Set<byte[]>, List<GeoRadius>>newBuilder(client, Command.GEORADIUS)
-				.executor((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnitConverter.convert(unit)))
-				.arguments(args).converter(new SetListConverter<>(new GeoRadiusGeneralResultConverter())).run();
+		return executeCommand(Command.GEORADIUS, args, (cmd)->cmd.georadius(key, longitude, latitude, radius,
+				geoUnitConverter.convert(unit)), new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
 	}
 
 	@Override
@@ -203,26 +195,23 @@ public final class LettuceGeoOperations extends AbstractLettuceRedisOperations i
 		final CommandArguments args = CommandArguments.create(key).add(longitude).add(latitude).add(radius).add(unit)
 				.add(argument);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return LettuceCommandBuilder.<List<GeoWithin<byte[]>>, List<GeoRadius>>newBuilder(client, Command.GEORADIUS)
-				.executor((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnitConverter.convert(unit),
-						CompositeArgumentUtils.geoArgs(argument))).arguments(args)
-				.converter(new ListConverter<>(new GeoRadiusResponseConverter())).run();
+		return executeCommand(Command.GEORADIUS, args, (cmd)->cmd.georadius(key, longitude, latitude, radius,
+						geoUnitConverter.convert(unit), CompositeArgumentUtils.geoArgs(argument)),
+				new ListConverter<>(new GeoRadiusResponseConverter()));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
 									   final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude).add(latitude).add(radius).add(unit);
-		return LettuceCommandBuilder.<List<GeoRadius>, List<GeoRadius>>newBuilder(client, Command.GEORADIUS_RO)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.GEORADIUS_RO, args);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
 									   final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude).add(latitude).add(radius).add(unit);
-		return LettuceCommandBuilder.<List<GeoRadius>, List<GeoRadius>>newBuilder(client, Command.GEORADIUS_RO)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.GEORADIUS_RO, args);
 	}
 
 	@Override
@@ -230,8 +219,7 @@ public final class LettuceGeoOperations extends AbstractLettuceRedisOperations i
 									   final double radius, final GeoUnit unit, final GeoRadiusArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude).add(latitude).add(radius).add(unit)
 				.add(argument);
-		return LettuceCommandBuilder.<List<GeoRadius>, List<GeoRadius>>newBuilder(client, Command.GEORADIUS_RO)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.GEORADIUS_RO, args);
 	}
 
 	@Override
@@ -239,8 +227,7 @@ public final class LettuceGeoOperations extends AbstractLettuceRedisOperations i
 									   final double radius, final GeoUnit unit, final GeoRadiusArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude).add(latitude).add(radius).add(unit)
 				.add(argument);
-		return LettuceCommandBuilder.<List<GeoRadius>, List<GeoRadius>>newBuilder(client, Command.GEORADIUS_RO)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.GEORADIUS_RO, args);
 	}
 
 	@Override
@@ -254,9 +241,8 @@ public final class LettuceGeoOperations extends AbstractLettuceRedisOperations i
 											 final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(key).add(member).add(radius).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return LettuceCommandBuilder.<Set<byte[]>, List<GeoRadius>>newBuilder(client, Command.GEORADIUSBYMEMBER)
-				.executor((cmd)->cmd.georadiusbymember(key, member, radius, geoUnitConverter.convert(unit)))
-				.arguments(args).converter(new SetListConverter<>(new GeoRadiusGeneralResultConverter())).run();
+		return executeCommand(Command.GEORADIUSBYMEMBER, args, (cmd)->cmd.georadiusbymember(key, member, radius,
+				geoUnitConverter.convert(unit)), new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
 	}
 
 	@Override
@@ -270,11 +256,9 @@ public final class LettuceGeoOperations extends AbstractLettuceRedisOperations i
 											 final GeoUnit unit, final GeoRadiusArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(member).add(radius).add(unit).add(argument);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return LettuceCommandBuilder.<List<GeoWithin<byte[]>>, List<GeoRadius>>newBuilder(client,
-						Command.GEORADIUSBYMEMBER).executor(
-						(cmd)->cmd.georadiusbymember(key, member, radius, geoUnitConverter.convert(unit),
-								CompositeArgumentUtils.geoArgs(argument))).arguments(args)
-				.converter(new ListConverter<>(new GeoRadiusResponseConverter())).run();
+		return executeCommand(Command.GEORADIUSBYMEMBER, args, (cmd)->cmd.georadiusbymember(key, member, radius,
+						geoUnitConverter.convert(unit), CompositeArgumentUtils.geoArgs(argument)),
+				new ListConverter<>(new GeoRadiusResponseConverter()));
 	}
 
 	@Override
@@ -289,24 +273,21 @@ public final class LettuceGeoOperations extends AbstractLettuceRedisOperations i
 	public List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
 											   final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(key).add(member).add(radius).add(unit);
-		return LettuceCommandBuilder.<List<GeoRadius>, List<GeoRadius>>newBuilder(client, Command.GEORADIUSBYMEMBER_RO)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.GEORADIUSBYMEMBER_RO, args);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
 											   final GeoUnit unit, final GeoRadiusArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(member).add(radius).add(unit).add(argument);
-		return LettuceCommandBuilder.<List<GeoRadius>, List<GeoRadius>>newBuilder(client, Command.GEORADIUSBYMEMBER_RO)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.GEORADIUSBYMEMBER_RO, args);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
 											   final GeoUnit unit, final GeoRadiusArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(member).add(radius).add(unit).add(argument);
-		return LettuceCommandBuilder.<List<GeoRadius>, List<GeoRadius>>newBuilder(client, Command.GEORADIUSBYMEMBER_RO)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.GEORADIUSBYMEMBER_RO, args);
 	}
 
 	@Override
@@ -585,31 +566,26 @@ public final class LettuceGeoOperations extends AbstractLettuceRedisOperations i
 	private List<GeoRadius> geoSearch(
 			final com.buession.redis.core.Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, Set<byte[]>> executor,
 			final CommandArguments args) {
-		return LettuceCommandBuilder.<Set<byte[]>, List<GeoRadius>>newBuilder(client, Command.GEOSEARCH)
-				.executor(executor).arguments(args)
-				.converter(new SetListConverter<>(new GeoRadiusGeneralResultConverter())).run();
+		return executeCommand(Command.GEOSEARCH, args, executor,
+				new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
 	}
 
 	private List<GeoRadius> geoSearchWithin(
 			final com.buession.redis.core.Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, List<GeoWithin<byte[]>>> executor,
 			final CommandArguments args) {
-		return LettuceCommandBuilder.<List<GeoWithin<byte[]>>, List<GeoRadius>>newBuilder(client, Command.GEOSEARCH)
-				.executor(executor).arguments(args)
-				.converter(new ListConverter<>(new GeoRadiusResponseConverter())).run();
+		return executeCommand(Command.GEOSEARCH, args, executor, new ListConverter<>(new GeoRadiusResponseConverter()));
 	}
 
 	private Long geoAdd(
 			final com.buession.redis.core.Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, Long> executor,
 			final CommandArguments args) {
-		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.GEOADD).executor(executor).arguments(args)
-				.converter((v)->v).run();
+		return executeCommand(Command.GEOADD, args, executor, (v)->v);
 	}
 
 	private Long geoSearchStore(
 			final com.buession.redis.core.Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, Long> executor,
 			final CommandArguments args) {
-		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.GEOSEARCHSTORE).executor(executor)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.GEOSEARCHSTORE, args, executor, (v)->v);
 	}
 
 	@SuppressWarnings("unchecked")

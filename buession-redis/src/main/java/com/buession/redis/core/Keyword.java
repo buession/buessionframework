@@ -44,7 +44,11 @@ public interface Keyword extends Value<String>, Rawable {
 	enum Common {
 		ON,
 
-		OFF
+		OFF,
+
+		YES,
+
+		NO,
 	}
 
 }

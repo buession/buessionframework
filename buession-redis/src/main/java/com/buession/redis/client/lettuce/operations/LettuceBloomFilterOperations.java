@@ -24,13 +24,13 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
-import com.buession.core.converter.MapEntryMapConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.BloomFilterOperations;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.utils.SafeEncoder;
+import com.buession.redis.core.command.args.BFInsertArgument;
+import com.buession.redis.core.command.args.BFReserveArgument;
 
 import java.util.List;
 import java.util.Map;
@@ -51,137 +51,134 @@ public final class LettuceBloomFilterOperations extends AbstractLettuceRedisOper
 	@Override
 	public Status bfAdd(final String key, final String item) {
 		final CommandArguments args = CommandArguments.create(key).add(item);
-		return LettuceCommandBuilder.<Long, Status>newBuilder(client, Command.BF_ADD).arguments(args)
-				.converter(oneStatusConverter).run();
+		return executeCommand(Command.BF_ADD, args);
 	}
 
 	@Override
 	public Status bfAdd(final byte[] key, final byte[] item) {
-		return bfAdd(SafeEncoder.encode(key), SafeEncoder.encode(item));
+		final CommandArguments args = CommandArguments.create(key).add(item);
+		return executeCommand(Command.BF_ADD, args);
 	}
 
 	@Override
 	public Long bfCard(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.BF_CARD).arguments(args).converter((v)->v)
-				.run();
+		return executeCommand(Command.BF_CARD, args);
 	}
 
 	@Override
 	public Long bfCard(final byte[] key) {
-		return bfCard(SafeEncoder.encode(key));
+		final CommandArguments args = CommandArguments.create(key);
+		return executeCommand(Command.BF_CARD, args);
 	}
 
 	@Override
 	public Boolean bfExists(final String key, final String item) {
 		final CommandArguments args = CommandArguments.create(key).add(item);
-		return LettuceCommandBuilder.<Boolean, Boolean>newBuilder(client, Command.BF_EXISTS).arguments(args)
-				.converter((v)->v).run();
+		return executeCommand(Command.BF_EXISTS, args);
 	}
 
 	@Override
 	public Boolean bfExists(final byte[] key, final byte[] item) {
-		return bfExists(SafeEncoder.encode(key), SafeEncoder.encode(item));
+		final CommandArguments args = CommandArguments.create(key).add(item);
+		return executeCommand(Command.BF_EXISTS, args);
 	}
 
 	@Override
 	public Map<String, Object> bfInfo(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return LettuceCommandBuilder.<Map<String, Object>, Map<String, Object>>newBuilder(client, Command.BF_INFO)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.BF_INFO, args);
 	}
 
 	@Override
 	public Map<String, Object> bfInfo(final byte[] key) {
-		return bfInfo(SafeEncoder.encode(key));
+		final CommandArguments args = CommandArguments.create(key);
+		return executeCommand(Command.BF_INFO, args);
 	}
 
 	@Override
 	public List<Boolean> bfInsert(final String key, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add("ITEMS").add(items);
-		return LettuceCommandBuilder.<List<Boolean>, List<Boolean>>newBuilder(client, Command.BF_INSERT).arguments(args)
-				.converter((v)->v).run();
+		return executeCommand(Command.BF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> bfInsert(final byte[] key, final byte[]... items) {
-		return bfInsert(SafeEncoder.encode(key), SafeEncoder.encode(items));
+		final CommandArguments args = CommandArguments.create(key).add("ITEMS").add(items);
+		return executeCommand(Command.BF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> bfInsert(final String key, final BFInsertArgument argument, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS").add(items);
-		return LettuceCommandBuilder.<List<Boolean>, List<Boolean>>newBuilder(client, Command.BF_INSERT).arguments(args)
-				.converter((v)->v).run();
+		return executeCommand(Command.BF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> bfInsert(final byte[] key, final BFInsertArgument argument, final byte[]... items) {
-		return bfInsert(SafeEncoder.encode(key), argument, SafeEncoder.encode(items));
+		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS").add(items);
+		return executeCommand(Command.BF_INSERT, args);
 	}
 
 	@Override
 	public Status bfLoadchunk(final String key, final long iterator, final byte[] data) {
-		final CommandArguments args = CommandArguments.create(key).add(iterator).add(SafeEncoder.encode(data));
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.BF_LOADCHUNK).arguments(args)
-				.converter(okStatusConverter).run();
+		final CommandArguments args = CommandArguments.create(key).add(iterator).add(data);
+		return executeCommand(Command.BF_LOADCHUNK, args);
 	}
 
 	@Override
 	public Status bfLoadchunk(final byte[] key, final long iterator, final byte[] data) {
-		return bfLoadchunk(SafeEncoder.encode(key), iterator, data);
+		final CommandArguments args = CommandArguments.create(key).add(iterator).add(data);
+		return executeCommand(Command.BF_LOADCHUNK, args);
 	}
 
 	@Override
 	public List<Boolean> bfMAdd(final String key, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(items);
-		return LettuceCommandBuilder.<List<Boolean>, List<Boolean>>newBuilder(client, Command.BF_MADD)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.BF_MADD, args);
 	}
 
 	@Override
 	public List<Boolean> bfMAdd(final byte[] key, final byte[]... items) {
-		return bfMAdd(SafeEncoder.encode(key), SafeEncoder.encode(items));
+		final CommandArguments args = CommandArguments.create(key).add(items);
+		return executeCommand(Command.BF_MADD, args);
 	}
 
 	@Override
 	public List<Boolean> bfMExists(final String key, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(items);
-		return LettuceCommandBuilder.<List<Boolean>, List<Boolean>>newBuilder(client, Command.BF_MEXISTS)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.BF_MEXISTS, args);
 	}
 
 	@Override
 	public List<Boolean> bfMExists(final byte[] key, final byte[]... items) {
-		return bfMExists(SafeEncoder.encode(key), SafeEncoder.encode(items));
+		final CommandArguments args = CommandArguments.create(key).add(items);
+		return executeCommand(Command.BF_MEXISTS, args);
 	}
 
 	@Override
 	public Status bfReserve(final String key, final BFReserveArgument bfInsertArgument) {
 		final CommandArguments args = CommandArguments.create(key).add(bfInsertArgument);
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.BF_RESERVE)
-				.arguments(args).converter(okStatusConverter)
-				.run();
+		return executeCommand(Command.BF_RESERVE, args);
 	}
 
 	@Override
 	public Status bfReserve(final byte[] key, final BFReserveArgument bfInsertArgument) {
-		return bfReserve(SafeEncoder.encode(key), bfInsertArgument);
+		final CommandArguments args = CommandArguments.create(key).add(bfInsertArgument);
+		return executeCommand(Command.BF_RESERVE, args);
 	}
 
 
 	@Override
 	public Map<Long, byte[]> bfScandump(final String key, final long iterator) {
 		final CommandArguments args = CommandArguments.create(key).add(iterator);
-		return LettuceCommandBuilder.<Map.Entry<Long, byte[]>, Map<Long, byte[]>>newBuilder(client, Command.BF_SCANDUMP)
-				.arguments(args)
-				.converter(new MapEntryMapConverter<>((k)->k, (v)->v))
-				.run();
+		return executeCommand(Command.BF_SCANDUMP, args);
 	}
 
 	@Override
 	public Map<Long, byte[]> bfScandump(final byte[] key, final long iterator) {
-		return bfScandump(SafeEncoder.encode(key), iterator);
+		final CommandArguments args = CommandArguments.create(key).add(iterator);
+		return executeCommand(Command.BF_SCANDUMP, args);
 	}
 
 }

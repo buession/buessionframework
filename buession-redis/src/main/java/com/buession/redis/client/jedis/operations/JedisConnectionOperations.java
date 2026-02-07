@@ -42,7 +42,6 @@ import com.buession.redis.core.command.args.TrackingArgument;
 import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.jedis.params.ClientTypeConverter;
 import com.buession.redis.core.internal.convert.jedis.params.ClientUnblockTypeConverter;
-import com.buession.redis.core.internal.convert.response.ClientConverter;
 import com.buession.redis.core.internal.convert.response.PingResultConverter;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.args.UnblockType;
@@ -64,327 +63,236 @@ public final class JedisConnectionOperations extends AbstractJedisRedisOperation
 	@Override
 	public Status auth(final String user, final String password) {
 		final CommandArguments args = CommandArguments.create(user).add(password);
-		return auth(args);
+		return executeCommand(Command.AUTH, args);
 	}
 
 	@Override
 	public Status auth(final byte[] user, final byte[] password) {
 		final CommandArguments args = CommandArguments.create(user).add(password);
-		return auth(args);
+		return executeCommand(Command.AUTH, args);
 	}
 
 	@Override
 	public Status auth(final String password) {
 		final CommandArguments args = CommandArguments.create(password);
-		return auth(args);
+		return executeCommand(Command.AUTH, args);
 	}
 
 	@Override
 	public Status auth(final byte[] password) {
 		final CommandArguments args = CommandArguments.create(password);
-		return auth(args);
+		return executeCommand(Command.AUTH, args);
 	}
 
 	@Override
 	public Status clientCaching(final boolean isYes) {
-		final CommandArguments args = CommandArguments.create(isYes);
-		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_CACHING)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		final CommandArguments args = CommandArguments.create(isYes ? Keyword.Common.YES : Keyword.Common.NO);
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_CACHING, args);
 	}
 
 	@Override
 	public String clientGetName() {
-		return JedisCommandBuilder.<String, String>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_GETNAME)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_GETNAME);
 	}
 
 	@Override
 	public Integer clientGetRedir() {
-		return JedisCommandBuilder.<Integer, Integer>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_GETREDIR)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_GETREDIR);
 	}
 
 	@Override
 	public Long clientId() {
-		return JedisCommandBuilder.<Long, Long>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_ID)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_ID);
 	}
 
 	@Override
 	public Client clientInfo() {
-		return JedisCommandBuilder.<String, Client>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_INFO)
-				.converter(new ClientConverter())
-				.run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_INFO);
 	}
 
 	@Override
 	public Status clientKill(final String host, final int port) {
 		final CommandArguments args = CommandArguments.create(host).add(port);
-		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_KILL)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_KILL, args);
 	}
 
 	@Override
 	public Status clientKill(final byte[] host, final int port) {
 		final CommandArguments args = CommandArguments.create(host).add(port);
-		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_KILL)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_KILL, args);
 	}
 
 	@Override
 	public List<Client> clientList() {
-		return clientList((CommandArguments) null);
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_LIST);
 	}
 
 	@Override
 	public List<Client> clientList(final ClientType clientType) {
 		final CommandArguments args = CommandArguments.create("TYPE").add(clientType);
 		final redis.clients.jedis.args.ClientType jClientType = (new ClientTypeConverter()).convert(clientType);
-		return clientList(args);
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_LIST, args);
 	}
 
 	@Override
 	public List<Client> clientList(final long... ids) {
 		final CommandArguments args = CommandArguments.create("ID").add(ids);
-		return clientList(args);
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_LIST, args);
 	}
 
 	@Override
 	public Status clientNoEvict(final boolean on) {
 		final CommandArguments args = CommandArguments.create(on ? Keyword.Common.ON : Keyword.Common.OFF);
-		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_NO_EVICT)
-				.arguments(args)
-				.converter(okStatusConverter)
-				.run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_NO_EVICT, args);
 	}
 
 	@Override
 	public Status clientNoTouch(final boolean on) {
 		final CommandArguments args = CommandArguments.create(on ? Keyword.Common.ON : Keyword.Common.OFF);
-		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_NO_TOUCH)
-				.arguments(args)
-				.converter(okStatusConverter)
-				.run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_NO_TOUCH, args);
 	}
 
 	@Override
 	public Status clientPause(final int timeout) {
 		final CommandArguments args = CommandArguments.create(timeout);
-		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_PAUSE)
-				.arguments(args)
-				.converter(okStatusConverter)
-				.run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_PAUSE, args);
 	}
 
 	@Override
 	public Status clientReply(final ClientReply option) {
 		final CommandArguments args = CommandArguments.create(option);
-		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_REPLY)
-				.arguments(args)
-				.converter(okStatusConverter)
-				.run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_REPLY, args);
 	}
 
 	@Override
 	public Status clientSetInfo(final ClientInfoOption option, final String value) {
 		final CommandArguments args = CommandArguments.create(option).add(value);
-		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_SETINFO)
-				.arguments(args)
-				.converter(okStatusConverter)
-				.run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_SETINFO, args);
 	}
 
 	@Override
 	public Status clientSetName(final String name) {
 		final CommandArguments args = CommandArguments.create(name);
-		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_SETNAME)
-				.arguments(args)
-				.converter(okStatusConverter)
-				.run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_SETNAME, args);
 	}
 
 	@Override
 	public Status clientSetName(final byte[] name) {
 		final CommandArguments args = CommandArguments.create(name);
-		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_SETNAME)
-				.arguments(args)
-				.converter(okStatusConverter)
-				.run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_SETNAME, args);
 	}
 
 	@Override
 	public Status clientTracking(final boolean on, final TrackingArgument argument) {
 		final CommandArguments args =
 				CommandArguments.create(on ? Keyword.Common.ON : Keyword.Common.OFF).add(argument);
-		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_TRACKING)
-				.arguments(args)
-				.converter(okStatusConverter)
-				.run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_TRACKING, args);
 	}
 
 	@Override
 	public TrackingInfo clientTrackingInfo() {
-		return JedisCommandBuilder.<TrackingInfo, TrackingInfo>newBuilder(client, Command.CLIENT,
-						SubCommand.CLIENT_TRACKINGINFO)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_TRACKINGINFO);
 	}
 
 	@Override
 	public Status clientUnblock(final int clientId) {
 		final CommandArguments args = CommandArguments.create(clientId);
-		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_UNBLOCK)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_UNBLOCK, args);
 	}
 
 	@Override
 	public Status clientUnblock(final int clientId, final ClientUnblockType type) {
 		final CommandArguments args = CommandArguments.create(clientId).add(type);
 		final UnblockType unblockType = (new ClientUnblockTypeConverter()).convert(type);
-		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_UNBLOCK)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_UNBLOCK, args);
 	}
 
 	@Override
 	public Status clientUnpause() {
-		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_UNPAUSE)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_UNPAUSE);
 	}
 
 	@Override
 	public String echo(final String str) {
 		final CommandArguments args = CommandArguments.create(str);
-		return JedisCommandBuilder.<String, String>newBuilder(client, Command.ECHO)
-				.executor((cmd)->cmd.echo(str))
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.ECHO, args, (cmd)->cmd.echo(str), (v)->v);
 	}
 
 	@Override
 	public byte[] echo(final byte[] str) {
 		final String s = SafeEncoder.encode(str);
 		final CommandArguments args = CommandArguments.create(s);
-		return JedisCommandBuilder.<String, byte[]>newBuilder(client, Command.ECHO)
-				.executor((cmd)->cmd.echo(s))
-				.arguments(args)
-				.converter(Converters.stringToBinaryConverter())
-				.run();
+		return executeCommand(Command.ECHO, args, (cmd)->cmd.echo(s), Converters.stringToBinaryConverter());
 	}
 
 	@Override
 	public Hello hello() {
-		return hello(null);
+		return executeCommand(Command.HELLO);
 	}
 
 	@Override
 	public Hello hello(int protover) {
 		final CommandArguments args = CommandArguments.create(protover);
-		return hello(args);
+		return executeCommand(Command.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, String password) {
 		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(password);
-		return hello(args);
+		return executeCommand(Command.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, byte[] password) {
 		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(password);
-		return hello(args);
+		return executeCommand(Command.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, String username, String password) {
 		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(username).add(password);
-		return hello(args);
+		return executeCommand(Command.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, byte[] username, byte[] password) {
 		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(username).add(password);
-		return hello(args);
+		return executeCommand(Command.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, String username, String password, String clientName) {
 		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(username).add(password).add(
 				"SETNAME").add(clientName);
-		return hello(args);
+		return executeCommand(Command.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, byte[] username, byte[] password, byte[] clientName) {
 		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(username).add(password).add(
 				"SETNAME").add(clientName);
-		return hello(args);
+		return executeCommand(Command.HELLO, args);
 	}
 
 	@Override
 	public Status ping() {
-		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.HELLO)
-				.executor((cmd)->cmd.ping())
-				.converter(new PingResultConverter())
-				.run();
+		return executeCommand(Command.PING, (cmd)->cmd.ping(), new PingResultConverter());
 	}
 
 	@Override
 	public Status quit() {
-		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.QUIT)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.QUIT);
 	}
 
 	@Override
 	public Status reset() {
-		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.RESET)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.RESET);
 	}
 
 	@Override
 	public Status select(final int db) {
 		final CommandArguments args = CommandArguments.create(db);
-		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.SELECT)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
-	}
-
-	private Status auth(final CommandArguments args) {
-		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.AUTH)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
-	}
-
-	private List<Client> clientList(final CommandArguments args) {
-		return JedisCommandBuilder.<String, List<Client>>newBuilder(client, Command.CLIENT, SubCommand.CLIENT_LIST)
-				.arguments(args)
-				.converter(new ClientConverter.ClientListConverter())
-				.run();
-	}
-
-	private Hello hello(final CommandArguments args) {
-		return JedisCommandBuilder.<Hello, Hello>newBuilder(client, Command.HELLO)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.SELECT, args);
 	}
 
 }

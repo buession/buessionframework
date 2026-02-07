@@ -25,8 +25,12 @@
 package com.buession.redis.client.operations;
 
 import com.buession.core.converter.BooleanStatusConverter;
+import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.redis.client.RedisClient;
+import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.response.OneStatusConverter;
 import com.buession.redis.utils.SafeEncoder;
@@ -62,6 +66,33 @@ public abstract class AbstractRedisOperations<C extends RedisClient> implements 
 
 	protected boolean isTransaction() {
 		return client.getConnection().isTransaction();
+	}
+
+	protected <B extends BaseCommandBuilder<C, O, SR, R>, O, SR, R> R executeCommand(final B builder) {
+		return builder.converter(Converters.always()).run();
+	}
+
+	protected <B extends BaseCommandBuilder<C, O, SR, R>, O, SR, R> R executeCommand(final B builder, final
+	com.buession.redis.core.Command.Executor<O, SR> executor, final Converter<SR, R> converter) {
+		return builder.executor(executor).converter(converter).run();
+	}
+
+	protected <B extends BaseCommandBuilder<C, O, SR, R>, O, SR, R> R executeCommand(final B builder,
+																					 final CommandArguments args) {
+		return executeCommand(builder, args, Converters.always());
+	}
+
+	protected <B extends BaseCommandBuilder<C, O, SR, R>, O, SR, R> R executeCommand(final B builder,
+																					 final CommandArguments args,
+																					 final Converter<SR, R> converter) {
+		return builder.arguments(args).converter(converter).run();
+	}
+
+	protected <B extends BaseCommandBuilder<C, O, SR, R>, O, SR, R> R executeCommand(final B builder,
+																					 final CommandArguments args,
+																					 final com.buession.redis.core.Command.Executor<O, SR> executor,
+																					 final Converter<SR, R> converter) {
+		return builder.arguments(args).executor(executor).converter(converter).run();
 	}
 
 }

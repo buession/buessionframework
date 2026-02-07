@@ -85,10 +85,6 @@ public interface Keyword extends Value<String>, Rawable {
 
 		KEEPTTL,
 
-		YES,
-
-		NO,
-
 
 	}
 

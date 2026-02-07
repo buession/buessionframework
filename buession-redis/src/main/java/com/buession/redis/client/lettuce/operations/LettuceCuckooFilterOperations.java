@@ -24,7 +24,6 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
-import com.buession.core.converter.MapEntryMapConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.CuckooFilterOperations;
@@ -32,7 +31,6 @@ import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.args.CFInsertArgument;
 import com.buession.redis.core.command.args.CFReserveArgument;
-import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
 import java.util.Map;
@@ -53,203 +51,169 @@ public final class LettuceCuckooFilterOperations extends AbstractLettuceRedisOpe
 	@Override
 	public Status cfAdd(final String key, final String item) {
 		final CommandArguments args = CommandArguments.create(key).add(item);
-		return LettuceCommandBuilder.<Long, Status>newBuilder(client, Command.CF_ADD).arguments(args)
-				.converter(oneStatusConverter).run();
+		return executeCommand(Command.CF_ADD, args);
 	}
 
 	@Override
 	public Status cfAdd(final byte[] key, final byte[] item) {
 		final CommandArguments args = CommandArguments.create(key).add(item);
-		return LettuceCommandBuilder.<Long, Status>newBuilder(client, Command.CF_ADD).arguments(args)
-				.converter(oneStatusConverter).run();
+		return executeCommand(Command.CF_ADD, args);
 	}
 
 	@Override
 	public Status cfAddNx(final String key, final String item) {
 		final CommandArguments args = CommandArguments.create(key).add(item);
-		return LettuceCommandBuilder.<Long, Status>newBuilder(client, Command.CF_ADDNX).arguments(args)
-				.converter(oneStatusConverter).run();
+		return executeCommand(Command.CF_ADDNX, args);
 	}
 
 	@Override
 	public Status cfAddNx(final byte[] key, final byte[] item) {
 		final CommandArguments args = CommandArguments.create(key).add(item);
-		return LettuceCommandBuilder.<Long, Status>newBuilder(client, Command.CF_ADDNX).arguments(args)
-				.converter(oneStatusConverter).run();
+		return executeCommand(Command.CF_ADDNX, args);
 	}
 
 	@Override
 	public Long cfCount(final String key, final String item) {
 		final CommandArguments args = CommandArguments.create(key).add(item);
-		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.CF_COUNT).arguments(args)
-				.converter((v)->v).run();
+		return executeCommand(Command.CF_COUNT, args);
 	}
 
 	@Override
 	public Long cfCount(final byte[] key, final byte[] item) {
 		final CommandArguments args = CommandArguments.create(key).add(item);
-		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.CF_COUNT).arguments(args)
-				.converter((v)->v).run();
+		return executeCommand(Command.CF_COUNT, args);
 	}
 
 	@Override
 	public Status cfDel(final String key, final String item) {
 		final CommandArguments args = CommandArguments.create(key);
-		return LettuceCommandBuilder.<Boolean, Status>newBuilder(client, Command.CF_DEL)
-				.arguments(args).converter(booleanStatusConverter).run();
+		return executeCommand(Command.CF_DEL, args);
 	}
 
 	@Override
 	public Status cfDel(final byte[] key, final byte[] item) {
 		final CommandArguments args = CommandArguments.create(key);
-		return LettuceCommandBuilder.<Boolean, Status>newBuilder(client, Command.CF_DEL)
-				.arguments(args).converter(booleanStatusConverter).run();
+		return executeCommand(Command.CF_DEL, args);
 	}
 
 	@Override
 	public Boolean cfExists(final String key, final String item) {
 		final CommandArguments args = CommandArguments.create(key).add(item);
-		return LettuceCommandBuilder.<Boolean, Boolean>newBuilder(client, Command.CF_EXISTS).arguments(args)
-				.converter((v)->v).run();
+		return executeCommand(Command.CF_EXISTS, args);
 	}
 
 	@Override
 	public Boolean cfExists(final byte[] key, final byte[] item) {
 		final CommandArguments args = CommandArguments.create(key).add(item);
-		return LettuceCommandBuilder.<Boolean, Boolean>newBuilder(client, Command.CF_EXISTS).arguments(args)
-				.converter((v)->v).run();
+		return executeCommand(Command.CF_EXISTS, args);
 	}
 
 	@Override
 	public Map<String, Object> cfInfo(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return LettuceCommandBuilder.<Map<String, Object>, Map<String, Object>>newBuilder(client, Command.CF_INFO)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.CF_INFO, args);
 	}
 
 	@Override
 	public Map<String, Object> cfInfo(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return LettuceCommandBuilder.<Map<String, Object>, Map<String, Object>>newBuilder(client, Command.CF_INFO)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.CF_INFO, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsert(final String key, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add("ITEMS").add(items);
-		return LettuceCommandBuilder.<List<Boolean>, List<Boolean>>newBuilder(client, Command.CF_INSERT).arguments(args)
-				.converter((v)->v).run();
+		return executeCommand(Command.CF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsert(final byte[] key, final byte[]... items) {
 		final CommandArguments args = CommandArguments.create(key).add("ITEMS").add(items);
-		return LettuceCommandBuilder.<List<Boolean>, List<Boolean>>newBuilder(client, Command.CF_INSERT).arguments(args)
-				.converter((v)->v).run();
+		return executeCommand(Command.CF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsert(final String key, final CFInsertArgument argument, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS").add(items);
-		return LettuceCommandBuilder.<List<Boolean>, List<Boolean>>newBuilder(client, Command.BF_INSERT).arguments(args)
-				.converter((v)->v).run();
+		return executeCommand(Command.CF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsert(final byte[] key, final CFInsertArgument argument, final byte[]... items) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS").add(items);
-		return LettuceCommandBuilder.<List<Boolean>, List<Boolean>>newBuilder(client, Command.BF_INSERT).arguments(args)
-				.converter((v)->v).run();
+		return executeCommand(Command.CF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsertNx(final String key, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add("ITEMS").add(items);
-		return LettuceCommandBuilder.<List<Boolean>, List<Boolean>>newBuilder(client, Command.CF_INSERTNX)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.CF_INSERTNX, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsertNx(final byte[] key, final byte[]... items) {
 		final CommandArguments args = CommandArguments.create(key).add("ITEMS").add(items);
-		return LettuceCommandBuilder.<List<Boolean>, List<Boolean>>newBuilder(client, Command.CF_INSERTNX)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.CF_INSERTNX, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsertNx(final String key, final CFInsertArgument argument, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS").add(items);
-		return LettuceCommandBuilder.<List<Boolean>, List<Boolean>>newBuilder(client, Command.CF_INSERTNX)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.CF_INSERTNX, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsertNx(final byte[] key, final CFInsertArgument argument, final byte[]... items) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS").add(items);
-		return LettuceCommandBuilder.<List<Boolean>, List<Boolean>>newBuilder(client, Command.CF_INSERTNX)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.CF_INSERTNX, args);
 	}
 
 	@Override
 	public Status cfLoadchunk(final String key, final long iterator, final byte[] data) {
 		final CommandArguments args = CommandArguments.create(key).add(iterator).add(data);
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.CF_LOADCHUNK).arguments(args)
-				.converter(okStatusConverter).run();
+		return executeCommand(Command.CF_LOADCHUNK, args);
 	}
 
 	@Override
 	public Status cfLoadchunk(final byte[] key, final long iterator, final byte[] data) {
 		final CommandArguments args = CommandArguments.create(key).add(iterator).add(data);
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.CF_LOADCHUNK).arguments(args)
-				.converter(okStatusConverter).run();
+		return executeCommand(Command.CF_LOADCHUNK, args);
 	}
 
 	@Override
 	public List<Boolean> cfMExists(final String key, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(items);
-		return LettuceCommandBuilder.<List<Boolean>, List<Boolean>>newBuilder(client, Command.CF_MEXISTS)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.CF_MEXISTS, args);
 	}
 
 	@Override
 	public List<Boolean> cfMExists(final byte[] key, final byte[]... items) {
 		final CommandArguments args = CommandArguments.create(key).add(items);
-		return LettuceCommandBuilder.<List<Boolean>, List<Boolean>>newBuilder(client, Command.CF_MEXISTS)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.CF_MEXISTS, args);
 	}
 
 	@Override
 	public Status cfReserve(final String key, final CFReserveArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument);
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.CF_RESERVE).arguments(args)
-				.converter(okStatusConverter)
-				.run();
+		return executeCommand(Command.CF_RESERVE, args);
 	}
 
 	@Override
 	public Status cfReserve(final byte[] key, final CFReserveArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument);
-		return LettuceCommandBuilder.<String, Status>newBuilder(client, Command.CF_RESERVE).arguments(args)
-				.converter(okStatusConverter)
-				.run();
+		return executeCommand(Command.CF_RESERVE, args);
 	}
 
 	@Override
 	public Map<Long, byte[]> cfScandump(final String key, final long iterator) {
 		final CommandArguments args = CommandArguments.create(key).add(iterator);
-		return LettuceCommandBuilder.<Map.Entry<Long, byte[]>, Map<Long, byte[]>>newBuilder(client, Command.CF_SCANDUMP)
-				.arguments(args)
-				.converter(new MapEntryMapConverter<>((k)->k, (v)->v))
-				.run();
+		return executeCommand(Command.CF_SCANDUMP, args);
 	}
 
 	@Override
 	public Map<Long, byte[]> cfScandump(final byte[] key, final long iterator) {
 		final CommandArguments args = CommandArguments.create(key).add(iterator);
-		return LettuceCommandBuilder.<Map.Entry<Long, byte[]>, Map<Long, byte[]>>newBuilder(client, Command.CF_SCANDUMP)
-				.arguments(args)
-				.converter(new MapEntryMapConverter<>((k)->k, (v)->v))
-				.run();
+		return executeCommand(Command.CF_SCANDUMP, args);
 	}
 
 }

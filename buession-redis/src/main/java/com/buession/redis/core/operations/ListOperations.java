@@ -25,6 +25,7 @@
 package com.buession.redis.core.operations;
 
 import com.buession.core.type.TypeReference;
+import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.core.Direction;
 import com.buession.redis.core.ListPosition;
@@ -35,11 +36,309 @@ import java.util.List;
 /**
  * 列表运算
  *
- * <p>详情说明 <a href="http://redisdoc.com/list/index.html" target="_blank">http://redisdoc.com/list/index.html</a></p>
+ * <p>详情说明 <a href="hhttps://redis.io/docs/latest/commands/?group=list" target="_blank">https://redis.io/docs/latest/commands/?group=list</a></p>
  *
  * @author Yong.Teng
  */
 public interface ListOperations extends ListCommands, RedisOperations {
+
+	@Override
+	default String blMove(final String key, final String destKey, final Direction from, final Direction to,
+						  final int timeout) {
+		return execute((client)->client.listOperations().blMove(key, destKey, from, to, timeout));
+	}
+
+	@Override
+	default byte[] blMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
+						  final int timeout) {
+		return execute((client)->client.listOperations().blMove(key, destKey, from, to, timeout));
+	}
+
+	/**
+	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化后的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
+	 * 是 lmove 的阻塞版
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/blmove/" target="_blank">https://redis.io/docs/latest/commands/blmove/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param from
+	 * 		第一个或最后一个元素
+	 * @param to
+	 * 		第一个或最后一个元素
+	 * @param timeout
+	 * 		超时时间
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被移除并再次插入的元素
+	 */
+	<V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
+					   final int timeout);
+
+	/**
+	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化后的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
+	 * 是 lmove 的阻塞版
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/blmove/" target="_blank">https://redis.io/docs/latest/commands/blmove/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param from
+	 * 		第一个或最后一个元素
+	 * @param to
+	 * 		第一个或最后一个元素
+	 * @param timeout
+	 * 		超时时间
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被移除并再次插入的元素
+	 */
+	<V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
+					   final int timeout);
+
+	/**
+	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化为 clazz 的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
+	 * 是 lmove 的阻塞版
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/blmove/" target="_blank">https://redis.io/docs/latest/commands/blmove/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param from
+	 * 		第一个或最后一个元素
+	 * @param to
+	 * 		第一个或最后一个元素
+	 * @param timeout
+	 * 		超时时间
+	 * @param clazz
+	 * 		元素值对象类
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被移除并再次插入的元素
+	 */
+	<V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
+					   final int timeout, final Class<V> clazz);
+
+	/**
+	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化为 clazz 的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
+	 * 是 lmove 的阻塞版
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/blmove/" target="_blank">https://redis.io/docs/latest/commands/blmove/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param from
+	 * 		第一个或最后一个元素
+	 * @param to
+	 * 		第一个或最后一个元素
+	 * @param timeout
+	 * 		超时时间
+	 * @param clazz
+	 * 		元素值对象类
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被移除并再次插入的元素
+	 */
+	<V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
+					   final int timeout, final Class<V> clazz);
+
+	/**
+	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化为 type 指定的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
+	 * 是 lmove 的阻塞版
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/blmove/" target="_blank">https://redis.io/docs/latest/commands/blmove/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param from
+	 * 		第一个或最后一个元素
+	 * @param to
+	 * 		第一个或最后一个元素
+	 * @param timeout
+	 * 		超时时间
+	 * @param type
+	 * 		元素值类型引用
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被移除并再次插入的元素
+	 *
+	 * @see TypeReference
+	 */
+	<V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
+					   final int timeout, final TypeReference<V> type);
+
+	/**
+	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化为 type 指定的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
+	 * 是 lmove 的阻塞版
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/blmove/" target="_blank">https://redis.io/docs/latest/commands/blmove/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param from
+	 * 		第一个或最后一个元素
+	 * @param to
+	 * 		第一个或最后一个元素
+	 * @param timeout
+	 * 		超时时间
+	 * @param type
+	 * 		元素值类型引用
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被移除并再次插入的元素
+	 *
+	 * @see TypeReference
+	 */
+	<V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
+					   final int timeout, final TypeReference<V> type);
+
+	@Override
+	default KeyValue<String, List<String>> blMPop(final int timeout, final String[] keys, final Direction direction) {
+		return execute((client)->client.listOperations().blMPop(timeout, keys, direction));
+	}
+
+	@Override
+	default KeyValue<byte[], List<byte[]>> blMPop(final int timeout, final byte[][] keys, final Direction direction) {
+		return execute((client)->client.listOperations().blMPop(timeout, keys, direction));
+	}
+
+	/**
+	 * 从多个列表（lists）中安全、原子地弹出元素，并在列表为空时阻塞等待直到有元素可用或超时
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/blmpop/" target="_blank">https://redis.io/docs/latest/commands/blmpop/</a></p>
+	 *
+	 * @param timeout
+	 * 		超时时间
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param direction
+	 * 		方位
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 被弹出的元素 key 及其值
+	 */
+	<V> KeyValue<String, List<V>> blMPopObject(final int timeout, final String[] keys, final Direction direction);
+
+	/**
+	 * 从多个列表（lists）中安全、原子地弹出元素，并在列表为空时阻塞等待直到有元素可用或超时
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/blmpop/" target="_blank">https://redis.io/docs/latest/commands/blmpop/</a></p>
+	 *
+	 * @param timeout
+	 * 		超时时间
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param direction
+	 * 		方位
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 被弹出的元素 key 及其值
+	 */
+	<V> KeyValue<byte[], List<V>> blMPopObject(final int timeout, final byte[][] keys, final Direction direction);
+
+	/**
+	 * 从多个列表（lists）中安全、原子地弹出元素，并在列表为空时阻塞等待直到有元素可用或超时
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/blmpop/" target="_blank">https://redis.io/docs/latest/commands/blmpop/</a></p>
+	 *
+	 * @param timeout
+	 * 		超时时间
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param direction
+	 * 		方位
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 被弹出的元素 key 及其值
+	 */
+	<V> KeyValue<String, List<V>> blMPopObject(final int timeout, final String[] keys, final Direction direction,
+											   final Class<V> clazz);
+
+	/**
+	 * 从多个列表（lists）中安全、原子地弹出元素，并在列表为空时阻塞等待直到有元素可用或超时
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/blmpop/" target="_blank">https://redis.io/docs/latest/commands/blmpop/</a></p>
+	 *
+	 * @param timeout
+	 * 		超时时间
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param direction
+	 * 		方位
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 被弹出的元素 key 及其值
+	 */
+	<V> KeyValue<byte[], List<V>> blMPopObject(final int timeout, final byte[][] keys, final Direction direction,
+											   final Class<V> clazz);
+
+	/**
+	 * 从多个列表（lists）中安全、原子地弹出元素，并在列表为空时阻塞等待直到有元素可用或超时
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/blmpop/" target="_blank">https://redis.io/docs/latest/commands/blmpop/</a></p>
+	 *
+	 * @param timeout
+	 * 		超时时间
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param direction
+	 * 		方位
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 被弹出的元素 key 及其值
+	 */
+	<V> KeyValue<String, List<V>> blMPopObject(final int timeout, final String[] keys, final Direction direction,
+											   final TypeReference<V> type);
+
+	/**
+	 * 从多个列表（lists）中安全、原子地弹出元素，并在列表为空时阻塞等待直到有元素可用或超时
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/blmpop/" target="_blank">https://redis.io/docs/latest/commands/blmpop/</a></p>
+	 *
+	 * @param timeout
+	 * 		超时时间
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param direction
+	 * 		方位
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 被弹出的元素 key 及其值
+	 */
+	<V> KeyValue<byte[], List<V>> blMPopObject(final int timeout, final byte[][] keys, final Direction direction,
+											   final TypeReference<V> type);
 
 	@Override
 	default String lIndex(final String key, final long index) {
@@ -602,162 +901,6 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 */
 	<V> V lMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
 					  final TypeReference<V> type);
-
-	@Override
-	default String blMove(final String key, final String destKey, final Direction from, final Direction to,
-						  final int timeout) {
-		return execute((client)->client.listOperations().blMove(key, destKey, from, to, timeout));
-	}
-
-	@Override
-	default byte[] blMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
-						  final int timeout) {
-		return execute((client)->client.listOperations().blMove(key, destKey, from, to, timeout));
-	}
-
-	/**
-	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化后的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
-	 * 是 lmove 的阻塞版
-	 *
-	 * @param key
-	 * 		Key
-	 * @param destKey
-	 * 		目标 Key
-	 * @param from
-	 * 		第一个或最后一个元素
-	 * @param to
-	 * 		第一个或最后一个元素
-	 * @param timeout
-	 * 		超时时间
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 被移除并再次插入的元素
-	 */
-	<V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
-					   final int timeout);
-
-	/**
-	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化后的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
-	 * 是 lmove 的阻塞版
-	 *
-	 * @param key
-	 * 		Key
-	 * @param destKey
-	 * 		目标 Key
-	 * @param from
-	 * 		第一个或最后一个元素
-	 * @param to
-	 * 		第一个或最后一个元素
-	 * @param timeout
-	 * 		超时时间
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 被移除并再次插入的元素
-	 */
-	<V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
-					   final int timeout);
-
-	/**
-	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化为 clazz 的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
-	 * 是 lmove 的阻塞版
-	 *
-	 * @param key
-	 * 		Key
-	 * @param destKey
-	 * 		目标 Key
-	 * @param from
-	 * 		第一个或最后一个元素
-	 * @param to
-	 * 		第一个或最后一个元素
-	 * @param timeout
-	 * 		超时时间
-	 * @param clazz
-	 * 		元素值对象类
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 被移除并再次插入的元素
-	 */
-	<V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
-					   final int timeout, final Class<V> clazz);
-
-	/**
-	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化为 clazz 的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
-	 * 是 lmove 的阻塞版
-	 *
-	 * @param key
-	 * 		Key
-	 * @param destKey
-	 * 		目标 Key
-	 * @param from
-	 * 		第一个或最后一个元素
-	 * @param to
-	 * 		第一个或最后一个元素
-	 * @param timeout
-	 * 		超时时间
-	 * @param clazz
-	 * 		元素值对象类
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 被移除并再次插入的元素
-	 */
-	<V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
-					   final int timeout, final Class<V> clazz);
-
-	/**
-	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化为 type 指定的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
-	 * 是 lmove 的阻塞版
-	 *
-	 * @param key
-	 * 		Key
-	 * @param destKey
-	 * 		目标 Key
-	 * @param from
-	 * 		第一个或最后一个元素
-	 * @param to
-	 * 		第一个或最后一个元素
-	 * @param timeout
-	 * 		超时时间
-	 * @param type
-	 * 		元素值类型引用
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 被移除并再次插入的元素
-	 *
-	 * @see TypeReference
-	 */
-	<V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
-					   final int timeout, final TypeReference<V> type);
-
-	/**
-	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化为 type 指定的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
-	 * 是 lmove 的阻塞版
-	 *
-	 * @param key
-	 * 		Key
-	 * @param destKey
-	 * 		目标 Key
-	 * @param from
-	 * 		第一个或最后一个元素
-	 * @param to
-	 * 		第一个或最后一个元素
-	 * @param timeout
-	 * 		超时时间
-	 * @param type
-	 * 		元素值类型引用
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 被移除并再次插入的元素
-	 *
-	 * @see TypeReference
-	 */
-	<V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
-					   final int timeout, final TypeReference<V> type);
 
 	@Override
 	default List<String> blPop(final String[] keys, final int timeout) {

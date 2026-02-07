@@ -54,12 +54,11 @@ import java.util.stream.Collectors;
  * @author Yong.Teng
  * @see AbstractRedisTemplate
  */
-public class RedisTemplate extends AbstractRedisTemplate
-		implements BloomFilterOperations, BitMapOperations, CuckooFilterOperations, ClusterOperations,
-		CountMinSketchOperations, ConnectionOperations, GenericOperations, GeoOperations, HashOperations,
-		HyperLogLogOperations, JsonOperations, KeyOperations, ListOperations, PubSubOperations, ScriptingOperations,
-		ServerOperations, SetOperations, SortedSetOperations, StreamOperations, StringOperations,
-		TransactionOperations {
+public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterOperations, BitMapOperations,
+		CuckooFilterOperations, ClusterOperations, CountMinSketchOperations, ConnectionOperations, GenericOperations,
+		GeoOperations, HashOperations, HyperLogLogOperations, JsonOperations, ListOperations, KeyOperations,
+		PubSubOperations, ScriptingOperations, ServerOperations, SetOperations, SortedSetOperations, StreamOperations,
+		StringOperations, TransactionOperations {
 
 	/**
 	 * 构造函数
@@ -787,6 +786,90 @@ public class RedisTemplate extends AbstractRedisTemplate
 	}
 
 	@Override
+	public <V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
+							  final int timeout) {
+		return execute((client)->client.listOperations().blMove(rawKey(destKey), rawKey(destKey), from, to, timeout),
+				new Converter.SimpleStringConverter<>(this));
+	}
+
+	@Override
+	public <V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
+							  final int timeout) {
+		return execute((client)->client.listOperations().blMove(rawKey(destKey), rawKey(destKey), from, to, timeout),
+				new Converter.SimpleBinaryConverter<>(this));
+	}
+
+	@Override
+	public <V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
+							  final int timeout, final Class<V> clazz) {
+		return execute((client)->client.listOperations().blMove(rawKey(destKey), rawKey(destKey), from, to, timeout),
+				new Converter.ClazzStringConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
+							  final int timeout, final Class<V> clazz) {
+		return execute((client)->client.listOperations().blMove(rawKey(destKey), rawKey(destKey), from, to, timeout),
+				new Converter.ClazzBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
+							  final int timeout, final TypeReference<V> type) {
+		return execute((client)->client.listOperations().blMove(rawKey(destKey), rawKey(destKey), from, to, timeout),
+				new Converter.TypeStringConverter<>(this, type));
+	}
+
+	@Override
+	public <V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
+							  final int timeout, final TypeReference<V> type) {
+		return execute((client)->client.listOperations().blMove(rawKey(destKey), rawKey(destKey), from, to, timeout),
+				new Converter.TypeBinaryConverter<>(this, type));
+	}
+
+	@Override
+	public <V> KeyValue<String, List<V>> blMPopObject(final int timeout, final String[] keys,
+													  final Direction direction) {
+		return execute((client)->client.listOperations().blMPop(timeout, keys),
+				new Converter.TypeListBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> KeyValue<byte[], List<V>> blMPopObject(final int timeout, final byte[][] keys,
+													  final Direction direction) {
+		return execute((client)->client.listOperations().blMPop(timeout, keys),
+				new Converter.TypeListBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> KeyValue<String, List<V>> blMPopObject(final int timeout, final String[] keys, final Direction direction,
+													  final Class<V> clazz) {
+		return execute((client)->client.listOperations().blMPop(timeout, keys, direction),
+				new Converter.TypeListBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> KeyValue<byte[], List<V>> blMPopObject(final int timeout, final byte[][] keys, final Direction direction,
+													  final Class<V> clazz) {
+		return execute((client)->client.listOperations().blMPop(timeout, keys, direction),
+				new Converter.TypeListBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> KeyValue<String, List<V>> blMPopObject(final int timeout, final String[] keys, final Direction direction,
+													  final TypeReference<V> type) {
+		return execute((client)->client.listOperations().blMPop(timeout, keys, direction),
+				new Converter.TypeListBinaryConverter<>(this, type));
+	}
+
+	@Override
+	public <V> KeyValue<byte[], List<V>> blMPopObject(final int timeout, final byte[][] keys, final Direction direction,
+													  final TypeReference<V> type) {
+		return execute((client)->client.listOperations().blMPop(timeout, keys, direction),
+				new Converter.TypeListBinaryConverter<>(this, type));
+	}
+
+	@Override
 	public <V> V lIndexObject(final String key, final long index) {
 		return execute((client)->client.listOperations().lIndex(rawKey(key), index),
 				new Converter.SimpleStringConverter<>(this));
@@ -915,48 +998,6 @@ public class RedisTemplate extends AbstractRedisTemplate
 	public <V> V lMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
 							 final TypeReference<V> type) {
 		return execute((client)->client.listOperations().lMove(rawKey(destKey), rawKey(destKey), from, to),
-				new Converter.TypeBinaryConverter<>(this, type));
-	}
-
-	@Override
-	public <V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
-							  final int timeout) {
-		return execute((client)->client.listOperations().blMove(rawKey(destKey), rawKey(destKey), from, to, timeout),
-				new Converter.SimpleStringConverter<>(this));
-	}
-
-	@Override
-	public <V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
-							  final int timeout) {
-		return execute((client)->client.listOperations().blMove(rawKey(destKey), rawKey(destKey), from, to, timeout),
-				new Converter.SimpleBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
-							  final int timeout, final Class<V> clazz) {
-		return execute((client)->client.listOperations().blMove(rawKey(destKey), rawKey(destKey), from, to, timeout),
-				new Converter.ClazzStringConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
-							  final int timeout, final Class<V> clazz) {
-		return execute((client)->client.listOperations().blMove(rawKey(destKey), rawKey(destKey), from, to, timeout),
-				new Converter.ClazzBinaryConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
-							  final int timeout, final TypeReference<V> type) {
-		return execute((client)->client.listOperations().blMove(rawKey(destKey), rawKey(destKey), from, to, timeout),
-				new Converter.TypeStringConverter<>(this, type));
-	}
-
-	@Override
-	public <V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
-							  final int timeout, final TypeReference<V> type) {
-		return execute((client)->client.listOperations().blMove(rawKey(destKey), rawKey(destKey), from, to, timeout),
 				new Converter.TypeBinaryConverter<>(this, type));
 	}
 

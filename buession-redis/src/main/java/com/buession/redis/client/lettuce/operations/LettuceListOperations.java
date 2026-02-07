@@ -19,22 +19,27 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.builder.ListBuilder;
 import com.buession.core.converter.Converter;
+import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
-import com.buession.redis.client.lettuce.LettuceStandaloneClient;
+import com.buession.redis.client.lettuce.LettuceRedisClient;
+import com.buession.redis.client.operations.ListOperations;
 import com.buession.redis.core.Direction;
 import com.buession.redis.core.ListPosition;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.core.internal.convert.lettuce.response.KeyValueConverter;
+import com.buession.redis.core.internal.lettuce.CompositeArgumentUtils;
 import com.buession.redis.core.internal.lettuce.LettuceLPosArgs;
 import com.buession.redis.utils.SafeEncoder;
-import io.lettuce.core.KeyValue;
 import io.lettuce.core.LPosArgs;
 
 import java.util.List;
@@ -45,10 +50,48 @@ import java.util.List;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class LettuceListOperations extends AbstractListOperations<LettuceStandaloneClient> {
+public final class LettuceListOperations extends AbstractLettuceRedisOperations implements ListOperations {
 
-	public LettuceListOperations(final LettuceStandaloneClient client) {
+	public LettuceListOperations(final LettuceRedisClient client) {
 		super(client);
+	}
+
+	@Override
+	public String blMove(final String key, final String destKey, final Direction from, final Direction to,
+						 final int timeout) {
+		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from).add(to);
+		return LettuceCommandBuilder.<byte[], String>newBuilder(client, Command.BLMOVE).executor(
+						(cmd)->cmd.blmove(SafeEncoder.encode(key), SafeEncoder.encode(destKey),
+								CompositeArgumentUtils.lMoveArgs(from, to), timeout)).arguments(args)
+				.converter(Converters.binaryToStringConverter()).run();
+	}
+
+	@Override
+	public byte[] blMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
+						 final int timeout) {
+		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from).add(to).add(timeout);
+		return LettuceCommandBuilder.<byte[], byte[]>newBuilder(client, Command.BLMOVE)
+				.executor((cmd)->cmd.blmove(key, destKey, CompositeArgumentUtils.lMoveArgs(from, to), timeout))
+				.arguments(args).converter((v)->v).run();
+	}
+
+	@Override
+	public KeyValue<String, List<String>> blMPop(final int timeout, final String[] keys, final Direction direction) {
+		final CommandArguments args = CommandArguments.create(timeout).add(keys);
+		return LettuceCommandBuilder.<io.lettuce.core.KeyValue<byte[], List<byte[]>>, KeyValue<String, List<String>>>newBuilder(
+						client, Command.BLMPOP).executor(
+						(cmd)->cmd.blmpop(timeout, CompositeArgumentUtils.lMPopArgs(direction), SafeEncoder.encode(keys)))
+				.arguments(args).converter(new KeyValueConverter<>(Converters.binaryToStringConverter(),
+						Converters.binaryListToStringListConverter())).run();
+	}
+
+	@Override
+	public KeyValue<byte[], List<byte[]>> blMPop(final int timeout, final byte[][] keys, final Direction direction) {
+		final CommandArguments args = CommandArguments.create(timeout).add(keys.length).add(keys);
+		return LettuceCommandBuilder.<io.lettuce.core.KeyValue<byte[], List<byte[]>>, KeyValue<byte[], List<byte[]>>>newBuilder(
+						client, Command.BLMPOP)
+				.executor((cmd)->cmd.blmpop(timeout, CompositeArgumentUtils.lMPopArgs(direction), keys)).arguments(args)
+				.converter(new KeyValueConverter<>((k)->k, (v)->v)).run();
 	}
 
 	@Override
@@ -72,16 +115,13 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.LINSERT,
-					(cmd)->cmd.linsert(key, before, pivot, value), (v)->v)
-					.run(args);
+					(cmd)->cmd.linsert(key, before, pivot, value), (v)->v).run(args);
 		}else if(isTransaction()){
 			return new LettuceTransactionCommand<>(client, ProtocolCommand.LINSERT,
-					(cmd)->cmd.linsert(key, before, pivot, value), (v)->v)
-					.run(args);
+					(cmd)->cmd.linsert(key, before, pivot, value), (v)->v).run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.LINSERT, (cmd)->cmd.linsert(key, before, pivot, value),
-					(v)->v)
-					.run(args);
+					(v)->v).run(args);
 		}
 	}
 
@@ -91,16 +131,13 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.LSET, (cmd)->cmd.lset(key, index, value),
-					okStatusConverter)
-					.run(args);
+					okStatusConverter).run(args);
 		}else if(isTransaction()){
 			return new LettuceTransactionCommand<>(client, ProtocolCommand.LSET, (cmd)->cmd.lset(key, index, value),
-					okStatusConverter)
-					.run(args);
+					okStatusConverter).run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.LSET, (cmd)->cmd.lset(key, index, value),
-					okStatusConverter)
-					.run(args);
+					okStatusConverter).run(args);
 		}
 	}
 
@@ -109,14 +146,12 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.LLEN, (cmd)->cmd.llen(key), (v)->v)
-					.run(args);
+			return new LettucePipelineCommand<>(client, ProtocolCommand.LLEN, (cmd)->cmd.llen(key), (v)->v).run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.LLEN, (cmd)->cmd.llen(key), (v)->v)
-					.run(args);
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.LLEN, (cmd)->cmd.llen(key), (v)->v).run(
+					args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.LLEN, (cmd)->cmd.llen(key), (v)->v)
-					.run(args);
+			return new LettuceCommand<>(client, ProtocolCommand.LLEN, (cmd)->cmd.llen(key), (v)->v).run(args);
 		}
 	}
 
@@ -139,14 +174,13 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 		final CommandArguments args = CommandArguments.create(key);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element), (v)->v)
-					.run(args);
+			return new LettucePipelineCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element),
+					(v)->v).run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element), (v)->v)
-					.run(args);
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element),
+					(v)->v).run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element), (v)->v)
-					.run(args);
+			return new LettuceCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element), (v)->v).run(args);
 		}
 	}
 
@@ -156,37 +190,31 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 		final LPosArgs lPosArgs = LettuceLPosArgs.from(lPosArgument);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.LPOS,
-					(cmd)->cmd.lpos(key, element, lPosArgs), (v)->v)
-					.run(args);
+			return new LettucePipelineCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element, lPosArgs),
+					(v)->v).run(args);
 		}else if(isTransaction()){
 			return new LettuceTransactionCommand<>(client, ProtocolCommand.LPOS,
-					(cmd)->cmd.lpos(key, element, lPosArgs), (v)->v)
-					.run(args);
+					(cmd)->cmd.lpos(key, element, lPosArgs), (v)->v).run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element, lPosArgs), (v)->v)
-					.run(args);
+			return new LettuceCommand<>(client, ProtocolCommand.LPOS, (cmd)->cmd.lpos(key, element, lPosArgs),
+					(v)->v).run(args);
 		}
 	}
 
 	@Override
 	public List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument, final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(lPosArgument)
-				.add(count);
+		final CommandArguments args = CommandArguments.create(key).add(lPosArgument).add(count);
 		final LPosArgs lPosArgs = LettuceLPosArgs.from(lPosArgument);
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.LPOS,
-					(cmd)->cmd.lpos(key, element, (int) count, lPosArgs), (v)->v)
-					.run(args);
+					(cmd)->cmd.lpos(key, element, (int) count, lPosArgs), (v)->v).run(args);
 		}else if(isTransaction()){
 			return new LettuceTransactionCommand<>(client, ProtocolCommand.LPOS,
-					(cmd)->cmd.lpos(key, element, (int) count, lPosArgs), (v)->v)
-					.run(args);
+					(cmd)->cmd.lpos(key, element, (int) count, lPosArgs), (v)->v).run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.LPOS,
-					(cmd)->cmd.lpos(key, element, (int) count, lPosArgs), (v)->v)
-					.run(args);
+					(cmd)->cmd.lpos(key, element, (int) count, lPosArgs), (v)->v).run(args);
 		}
 	}
 
@@ -196,15 +224,13 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.LREM, (cmd)->cmd.lrem(key, count, value),
-					(v)->v)
-					.run(args);
+					(v)->v).run(args);
 		}else if(isTransaction()){
 			return new LettuceTransactionCommand<>(client, ProtocolCommand.LREM, (cmd)->cmd.lrem(key, count, value),
-					(v)->v)
-					.run(args);
+					(v)->v).run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.LREM, (cmd)->cmd.lrem(key, count, value), (v)->v)
-					.run(args);
+			return new LettuceCommand<>(client, ProtocolCommand.LREM, (cmd)->cmd.lrem(key, count, value), (v)->v).run(
+					args);
 		}
 	}
 
@@ -214,55 +240,34 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.LTRIM, (cmd)->cmd.ltrim(key, start, end),
-					okStatusConverter)
-					.run(args);
+					okStatusConverter).run(args);
 		}else if(isTransaction()){
 			return new LettuceTransactionCommand<>(client, ProtocolCommand.LTRIM, (cmd)->cmd.ltrim(key, start, end),
-					okStatusConverter)
-					.run(args);
+					okStatusConverter).run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.LTRIM, (cmd)->cmd.ltrim(key, start, end),
-					okStatusConverter)
-					.run(args);
+					okStatusConverter).run(args);
 		}
 	}
 
 	@Override
 	public String lMove(final String key, final String destKey, final Direction from, final Direction to) {
-		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from)
-				.add(to);
+		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from).add(to);
 		return lMove(args);
 	}
 
 	@Override
 	public byte[] lMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to) {
-		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from)
-				.add(to);
+		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from).add(to);
 		return lMove(args);
-	}
-
-	@Override
-	public String blMove(final String key, final String destKey, final Direction from, final Direction to,
-						 final int timeout) {
-		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from)
-				.add(to);
-		return blMove(args);
-	}
-
-	@Override
-	public byte[] blMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
-						 final int timeout) {
-		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from)
-				.add(to).add(timeout);
-		return blMove(args);
 	}
 
 	@Override
 	public List<String> blPop(final String[] keys, final int timeout) {
 		final CommandArguments args = CommandArguments.create(keys).add(timeout);
 		final byte[][] bKeys = SafeEncoder.encode(keys);
-		final Converter<KeyValue<byte[], byte[]>, List<String>> converter =
-				(v)->ListBuilder.of(SafeEncoder.encode(v.getValue()));
+		final Converter<KeyValue<byte[], byte[]>, List<String>> converter = (v)->ListBuilder.of(
+				SafeEncoder.encode(v.getValue()));
 
 		return blPop(bKeys, timeout, converter, args);
 	}
@@ -279,8 +284,8 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 	public List<String> brPop(final String[] keys, final int timeout) {
 		final CommandArguments args = CommandArguments.create(keys).add(timeout);
 		final byte[][] bKeys = SafeEncoder.encode(keys);
-		final Converter<KeyValue<byte[], byte[]>, List<String>> converter =
-				(v)->ListBuilder.of(SafeEncoder.encode(v.getValue()));
+		final Converter<KeyValue<byte[], byte[]>, List<String>> converter = (v)->ListBuilder.of(
+				SafeEncoder.encode(v.getValue()));
 
 		return brPop(bKeys, timeout, converter, args);
 	}
@@ -295,8 +300,7 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 
 	@Override
 	public String brPoplPush(final String key, final String destKey, final int timeout) {
-		final CommandArguments args = CommandArguments.create(key).add(destKey)
-				.add(timeout);
+		final CommandArguments args = CommandArguments.create(key).add(destKey).add(timeout);
 		final byte[] bKey = SafeEncoder.encode(key);
 		final byte[] bDestKey = SafeEncoder.encode(destKey);
 
@@ -305,8 +309,7 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 
 	@Override
 	public byte[] brPoplPush(final byte[] key, final byte[] destKey, final int timeout) {
-		final CommandArguments args = CommandArguments.create(key).add(destKey)
-				.add(timeout);
+		final CommandArguments args = CommandArguments.create(key).add(destKey).add(timeout);
 		return brPoplPush(key, destKey, timeout, (v)->v, args);
 	}
 
@@ -329,14 +332,13 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 		final CommandArguments args = CommandArguments.create(key).add(values);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.LPUSH, (cmd)->cmd.lpush(key, values), (v)->v)
-					.run(args);
+			return new LettucePipelineCommand<>(client, ProtocolCommand.LPUSH, (cmd)->cmd.lpush(key, values),
+					(v)->v).run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.LPUSH, (cmd)->cmd.lpush(key, values), (v)->v)
-					.run(args);
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.LPUSH, (cmd)->cmd.lpush(key, values),
+					(v)->v).run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.LPUSH, (cmd)->cmd.lpush(key, values), (v)->v)
-					.run(args);
+			return new LettuceCommand<>(client, ProtocolCommand.LPUSH, (cmd)->cmd.lpush(key, values), (v)->v).run(args);
 		}
 	}
 
@@ -345,15 +347,14 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 		final CommandArguments args = CommandArguments.create(key).add(values);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.LPUSHX, (cmd)->cmd.lpushx(key, values), (v)->v)
-					.run(args);
+			return new LettucePipelineCommand<>(client, ProtocolCommand.LPUSHX, (cmd)->cmd.lpushx(key, values),
+					(v)->v).run(args);
 		}else if(isTransaction()){
 			return new LettuceTransactionCommand<>(client, ProtocolCommand.LPUSHX, (cmd)->cmd.lpushx(key, values),
-					(v)->v)
-					.run(args);
+					(v)->v).run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.LPUSHX, (cmd)->cmd.lpushx(key, values), (v)->v)
-					.run(args);
+			return new LettuceCommand<>(client, ProtocolCommand.LPUSHX, (cmd)->cmd.lpushx(key, values), (v)->v).run(
+					args);
 		}
 	}
 
@@ -391,14 +392,13 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 		final CommandArguments args = CommandArguments.create(key).add(values);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.RPUSH, (cmd)->cmd.rpush(key, values), (v)->v)
-					.run(args);
+			return new LettucePipelineCommand<>(client, ProtocolCommand.RPUSH, (cmd)->cmd.rpush(key, values),
+					(v)->v).run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.RPUSH, (cmd)->cmd.rpush(key, values), (v)->v)
-					.run(args);
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.RPUSH, (cmd)->cmd.rpush(key, values),
+					(v)->v).run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.RPUSH, (cmd)->cmd.rpush(key, values), (v)->v)
-					.run(args);
+			return new LettuceCommand<>(client, ProtocolCommand.RPUSH, (cmd)->cmd.rpush(key, values), (v)->v).run(args);
 		}
 	}
 
@@ -407,15 +407,14 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 		final CommandArguments args = CommandArguments.create(key).add(values);
 
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.RPUSHX, (cmd)->cmd.rpushx(key, values), (v)->v)
-					.run(args);
+			return new LettucePipelineCommand<>(client, ProtocolCommand.RPUSHX, (cmd)->cmd.rpushx(key, values),
+					(v)->v).run(args);
 		}else if(isTransaction()){
 			return new LettuceTransactionCommand<>(client, ProtocolCommand.RPUSHX, (cmd)->cmd.rpushx(key, values),
-					(v)->v)
-					.run(args);
+					(v)->v).run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.RPUSHX, (cmd)->cmd.rpushx(key, values), (v)->v)
-					.run(args);
+			return new LettuceCommand<>(client, ProtocolCommand.RPUSHX, (cmd)->cmd.rpushx(key, values), (v)->v).run(
+					args);
 		}
 	}
 
@@ -423,15 +422,13 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 						 final CommandArguments args) {
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.LINDEX, (cmd)->cmd.lindex(key, index),
-					converter)
-					.run(args);
+					converter).run(args);
 		}else if(isTransaction()){
 			return new LettuceTransactionCommand<>(client, ProtocolCommand.LINDEX, (cmd)->cmd.lindex(key, index),
-					converter)
-					.run(args);
+					converter).run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.LINDEX, (cmd)->cmd.lindex(key, index), converter)
-					.run(args);
+			return new LettuceCommand<>(client, ProtocolCommand.LINDEX, (cmd)->cmd.lindex(key, index), converter).run(
+					args);
 		}
 	}
 
@@ -439,74 +436,53 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 							   final Converter<List<byte[]>, List<V>> converter, final CommandArguments args) {
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.LRANGE, (cmd)->cmd.lrange(key, start, end),
-					converter)
-					.run(args);
+					converter).run(args);
 		}else if(isTransaction()){
 			return new LettuceTransactionCommand<>(client, ProtocolCommand.LRANGE, (cmd)->cmd.lrange(key, start, end),
-					converter)
-					.run(args);
+					converter).run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.LRANGE, (cmd)->cmd.lrange(key, start, end),
-					converter)
-					.run(args);
+					converter).run(args);
 		}
 	}
 
 	private <V> V lMove(final CommandArguments args) {
 		if(isPipeline()){
-			return new LettucePipelineCommand<V, V>(client, ProtocolCommand.LMOVE)
-					.run(args);
+			return new LettucePipelineCommand<V, V>(client, ProtocolCommand.LMOVE).run(args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<V, V>(client, ProtocolCommand.LMOVE)
-					.run(args);
+			return new LettuceTransactionCommand<V, V>(client, ProtocolCommand.LMOVE).run(args);
 		}else{
-			return new LettuceCommand<V, V>(client, ProtocolCommand.LMOVE)
-					.run(args);
+			return new LettuceCommand<V, V>(client, ProtocolCommand.LMOVE).run(args);
 		}
 	}
 
-	private <V> V blMove(final CommandArguments args) {
-		if(isPipeline()){
-			return new LettucePipelineCommand<V, V>(client, ProtocolCommand.BLMOVE)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<V, V>(client, ProtocolCommand.BLMOVE)
-					.run(args);
-		}else{
-			return new LettuceCommand<V, V>(client, ProtocolCommand.BLMOVE)
-					.run(args);
-		}
-	}
-
-	private <V> List<V> blPop(final byte[][] keys, final int timeout, final Converter<KeyValue<byte[], byte[]>,
-			List<V>> converter, final CommandArguments args) {
+	private <V> List<V> blPop(final byte[][] keys, final int timeout,
+							  final Converter<KeyValue<byte[], byte[]>, List<V>> converter,
+							  final CommandArguments args) {
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.BLPOP, (cmd)->cmd.blpop(timeout, keys),
-					converter)
-					.run(args);
+					converter).run(args);
 		}else if(isTransaction()){
 			return new LettuceTransactionCommand<>(client, ProtocolCommand.BLPOP, (cmd)->cmd.blpop(timeout, keys),
-					converter)
-					.run(args);
+					converter).run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.BLPOP, (cmd)->cmd.blpop(timeout, keys), converter)
-					.run(args);
+			return new LettuceCommand<>(client, ProtocolCommand.BLPOP, (cmd)->cmd.blpop(timeout, keys), converter).run(
+					args);
 		}
 	}
 
-	private <V> List<V> brPop(final byte[][] keys, final int timeout, final Converter<KeyValue<byte[], byte[]>,
-			List<V>> converter, final CommandArguments args) {
+	private <V> List<V> brPop(final byte[][] keys, final int timeout,
+							  final Converter<KeyValue<byte[], byte[]>, List<V>> converter,
+							  final CommandArguments args) {
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.BRPOP, (cmd)->cmd.brpop(timeout, keys),
-					converter)
-					.run(args);
+					converter).run(args);
 		}else if(isTransaction()){
 			return new LettuceTransactionCommand<>(client, ProtocolCommand.BRPOP, (cmd)->cmd.brpop(timeout, keys),
-					converter)
-					.run(args);
+					converter).run(args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.BRPOP, (cmd)->cmd.brpop(timeout, keys), converter)
-					.run(args);
+			return new LettuceCommand<>(client, ProtocolCommand.BRPOP, (cmd)->cmd.brpop(timeout, keys), converter).run(
+					args);
 		}
 	}
 
@@ -514,42 +490,37 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 							 final Converter<byte[], V> converter, final CommandArguments args) {
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.BRPOPLPUSH,
-					(cmd)->cmd.brpoplpush(timeout, key, destKey), converter)
-					.run(args);
+					(cmd)->cmd.brpoplpush(timeout, key, destKey), converter).run(args);
 		}else if(isTransaction()){
 			return new LettuceTransactionCommand<>(client, ProtocolCommand.BRPOPLPUSH,
-					(cmd)->cmd.brpoplpush(timeout, key, destKey), converter)
-					.run(args);
+					(cmd)->cmd.brpoplpush(timeout, key, destKey), converter).run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.BRPOPLPUSH,
-					(cmd)->cmd.brpoplpush(timeout, key, destKey), converter)
-					.run(args);
+					(cmd)->cmd.brpoplpush(timeout, key, destKey), converter).run(args);
 		}
 	}
 
 	private <V> V lPop(final byte[] key, final Converter<byte[], V> converter, final CommandArguments args) {
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.LPOP, (cmd)->cmd.lpop(key), converter)
-					.run(args);
+			return new LettucePipelineCommand<>(client, ProtocolCommand.LPOP, (cmd)->cmd.lpop(key), converter).run(
+					args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.LPOP, (cmd)->cmd.lpop(key), converter)
-					.run(args);
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.LPOP, (cmd)->cmd.lpop(key), converter).run(
+					args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.LPOP, (cmd)->cmd.lpop(key), converter)
-					.run(args);
+			return new LettuceCommand<>(client, ProtocolCommand.LPOP, (cmd)->cmd.lpop(key), converter).run(args);
 		}
 	}
 
 	private <V> V rPop(final byte[] key, final Converter<byte[], V> converter, final CommandArguments args) {
 		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.RPOP, (cmd)->cmd.rpop(key), converter)
-					.run(args);
+			return new LettucePipelineCommand<>(client, ProtocolCommand.RPOP, (cmd)->cmd.rpop(key), converter).run(
+					args);
 		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.RPOP, (cmd)->cmd.rpop(key), converter)
-					.run(args);
+			return new LettuceTransactionCommand<>(client, ProtocolCommand.RPOP, (cmd)->cmd.rpop(key), converter).run(
+					args);
 		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.RPOP, (cmd)->cmd.rpop(key), converter)
-					.run(args);
+			return new LettuceCommand<>(client, ProtocolCommand.RPOP, (cmd)->cmd.rpop(key), converter).run(args);
 		}
 	}
 
@@ -557,16 +528,13 @@ public final class LettuceListOperations extends AbstractListOperations<LettuceS
 							final CommandArguments args) {
 		if(isPipeline()){
 			return new LettucePipelineCommand<>(client, ProtocolCommand.RPOPLPUSH, (cmd)->cmd.rpoplpush(key, destKey),
-					converter)
-					.run(args);
+					converter).run(args);
 		}else if(isTransaction()){
 			return new LettuceTransactionCommand<>(client, ProtocolCommand.RPOPLPUSH,
-					(cmd)->cmd.rpoplpush(key, destKey), converter)
-					.run(args);
+					(cmd)->cmd.rpoplpush(key, destKey), converter).run(args);
 		}else{
 			return new LettuceCommand<>(client, ProtocolCommand.RPOPLPUSH, (cmd)->cmd.rpoplpush(key, destKey),
-					converter)
-					.run(args);
+					converter).run(args);
 		}
 	}
 

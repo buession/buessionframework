@@ -43,8 +43,6 @@ import com.buession.redis.core.ClusterSlotStat;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.SubCommand;
-import com.buession.redis.core.internal.convert.response.BumpEpochConverter;
-import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
 
@@ -63,316 +61,245 @@ public final class JedisClusterOperations extends AbstractJedisRedisOperations i
 
 	@Override
 	public Status asking() {
-		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.ASKING)
-				.converter(okStatusConverter).run();
+		return executeCommand(Command.ASKING);
 	}
 
 	@Override
 	public Status clusterAddSlots(final int... slots) {
 		final CommandArguments args = CommandArguments.create(slots);
-		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.CLUSTER, SubCommand.CLUSTER_ADDSLOTS)
-				.arguments(args)
-				.converter(okStatusConverter).run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_ADDSLOTS, args);
 	}
 
 	@Override
 	public Status clusterAddSlotsRange(final IntegerRange slots) {
 		final CommandArguments args = CommandArguments.create(slots);
-		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.CLUSTER, SubCommand.CLUSTER_ADDSLOTSRANGE)
-				.arguments(args).converter(okStatusConverter).run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_ADDSLOTSRANGE, args);
 	}
 
 	@Override
 	public KeyValue<BumpEpoch, Integer> clusterBumpEpoch() {
-		return JedisCommandBuilder.<String, KeyValue<BumpEpoch, Integer>>newBuilder(client, Command.CLUSTER,
-						SubCommand.CLUSTER_BUMPEPOCH)
-				.converter(new BumpEpochConverter()).run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_BUMPEPOCH);
 	}
 
 	@Override
 	public Integer clusterCountFailureReports(final String nodeId) {
 		final CommandArguments args = CommandArguments.create(nodeId);
-		return JedisCommandBuilder.<Integer, Integer>newBuilder(client, Command.CLUSTER,
-						SubCommand.CLUSTER_COUNTFAILUREREPORTS)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_COUNTFAILUREREPORTS, args);
 	}
 
 	@Override
 	public Integer clusterCountFailureReports(final byte[] nodeId) {
-		return clusterCountFailureReports(SafeEncoder.encode(nodeId));
+		final CommandArguments args = CommandArguments.create(nodeId);
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_COUNTFAILUREREPORTS, args);
 	}
 
 	@Override
 	public Long clusterCountKeysInSlot(final int slot) {
 		final CommandArguments args = CommandArguments.create(slot);
-		return JedisCommandBuilder.<Long, Long>newBuilder(client, Command.CLUSTER, SubCommand.CLUSTER_COUNTKEYSINSLOT)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_COUNTKEYSINSLOT, args);
 	}
 
 	@Override
 	public Status clusterDelSlots(final int... slots) {
 		final CommandArguments args = CommandArguments.create(slots);
-		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.CLUSTER, SubCommand.CLUSTER_DELSLOTS)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_DELSLOTS, args);
 	}
 
 	@Override
 	public Status clusterDelSlotsRange(final IntegerRange slots) {
 		final CommandArguments args = CommandArguments.create(slots);
-		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.CLUSTER, SubCommand.CLUSTER_DELSLOTSRANGE)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_DELSLOTSRANGE, args);
 	}
 
 	@Override
 	public Status clusterFailover(final ClusterFailoverOption option) {
 		final CommandArguments args = CommandArguments.create(option);
-		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.CLUSTER, SubCommand.CLUSTER_FAILOVER)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_FAILOVER, args);
 	}
 
 	@Override
 	public Status clusterFlushSlots() {
-		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.CLUSTER, SubCommand.CLUSTER_FLUSHSLOTS)
-				.converter((v)->v).run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_FLUSHSLOTS);
 	}
 
 	@Override
 	public Status clusterForget(final String nodeId) {
 		final CommandArguments args = CommandArguments.create(nodeId);
-		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.CLUSTER, SubCommand.CLUSTER_FORGET)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_FORGET, args);
 	}
 
 	@Override
 	public Status clusterForget(final byte[] nodeId) {
 		final CommandArguments args = CommandArguments.create(nodeId);
-		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.CLUSTER, SubCommand.CLUSTER_FORGET)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_FORGET, args);
 	}
 
 	@Override
 	public List<String> clusterGetKeysInSlot(final int slot, final long count) {
 		final CommandArguments args = CommandArguments.create(slot).add(count);
-		return JedisCommandBuilder.<List<String>, List<String>>newBuilder(client, Command.CLUSTER,
-						SubCommand.CLUSTER_GETKEYSINSLOT)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_GETKEYSINSLOT, args);
 	}
 
 	@Override
 	public ClusterInfo clusterInfo() {
-		return JedisCommandBuilder.<ClusterInfo, ClusterInfo>newBuilder(client, Command.CLUSTER,
-						SubCommand.CLUSTER_INFO)
-				.converter((v)->v).run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_INFO);
 	}
 
 	@Override
 	public Long clusterKeySlot(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return JedisCommandBuilder.<Long, Long>newBuilder(client, Command.CLUSTER, SubCommand.CLUSTER_KEYSLOT)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_KEYSLOT, args);
 	}
 
 	@Override
 	public Long clusterKeySlot(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return JedisCommandBuilder.<Long, Long>newBuilder(client, Command.CLUSTER, SubCommand.CLUSTER_KEYSLOT)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_KEYSLOT, args);
 	}
 
 	@Override
 	public List<ClusterLink> clusterLinks() {
-		return JedisCommandBuilder.<List<ClusterLink>, List<ClusterLink>>newBuilder(client, Command.CLUSTER,
-						SubCommand.CLUSTER_LINKS)
-				.converter((v)->v).run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_LINKS);
 	}
 
 	@Override
 	public Status clusterMeet(final String ip, final int port) {
 		final CommandArguments args = CommandArguments.create(ip).add(port);
-		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.CLUSTER,
-						SubCommand.CLUSTER_MEET)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_MEET, args);
 	}
 
 	@Override
 	public Status clusterMigration(final IntegerRange slots) {
 		final CommandArguments args = CommandArguments.create("IMPORT").add(slots);
-		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.CLUSTER,
-						SubCommand.CLUSTER_MIGRATION)
-				.arguments(args).converter((v)->v)
-				.run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_MIGRATION, args);
 	}
 
 	@Override
 	public Object clusterMigration(final ClusterMigrationOp migrationOp) {
 		final CommandArguments args = CommandArguments.create(migrationOp).add("ALL");
-		return JedisCommandBuilder.newBuilder(client, Command.CLUSTER,
-						SubCommand.CLUSTER_MIGRATION)
-				.arguments(args).converter((v)->v)
-				.run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_MIGRATION, args);
 	}
 
 	@Override
 	public Object clusterMigration(final ClusterMigrationOp migrationOp, final String id) {
 		final CommandArguments args = CommandArguments.create(migrationOp).add("ID").add(id);
-		return JedisCommandBuilder.newBuilder(client, Command.CLUSTER,
-						SubCommand.CLUSTER_MIGRATION)
-				.arguments(args).converter((v)->v)
-				.run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_MIGRATION, args);
+	}
+
+	@Override
+	public Object clusterMigration(final ClusterMigrationOp migrationOp, final byte[] id) {
+		final CommandArguments args = CommandArguments.create(migrationOp).add("ID").add(id);
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_MIGRATION, args);
 	}
 
 	@Override
 	public String clusterMyId() {
-		return JedisCommandBuilder.<String, String>newBuilder(client, Command.CLUSTER, SubCommand.CLUSTER_MYID)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_MYID);
 	}
 
 	@Override
 	public String clusterMyShardId() {
-		return JedisCommandBuilder.<String, String>newBuilder(client, Command.CLUSTER, SubCommand.CLUSTER_MYSHARDID)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_MYSHARDID);
 	}
 
 	@Override
 	public List<ClusterRedisNode> clusterNodes() {
-		return JedisCommandBuilder.<List<ClusterRedisNode>, List<ClusterRedisNode>>newBuilder(client, Command.CLUSTER,
-						SubCommand.CLUSTER_NODES)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_NODES);
 	}
 
 	@Override
 	public List<ClusterRedisNode> clusterReplicas(final String nodeId) {
 		final CommandArguments args = CommandArguments.create(nodeId);
-		return JedisCommandBuilder.<List<ClusterRedisNode>, List<ClusterRedisNode>>newBuilder(client, Command.CLUSTER,
-						SubCommand.CLUSTER_REPLICAS)
-				.arguments(args).converter((v)->v)
-				.run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_REPLICAS, args);
 	}
 
 	@Override
 	public List<ClusterRedisNode> clusterReplicas(final byte[] nodeId) {
 		final CommandArguments args = CommandArguments.create(nodeId);
-		return JedisCommandBuilder.<List<ClusterRedisNode>, List<ClusterRedisNode>>newBuilder(client, Command.CLUSTER,
-						SubCommand.CLUSTER_REPLICAS)
-				.arguments(args).converter((v)->v)
-				.run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_REPLICAS, args);
 	}
 
 	@Override
 	public Status clusterReplicate(final String nodeId) {
 		final CommandArguments args = CommandArguments.create(nodeId);
-		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.CLUSTER,
-						SubCommand.CLUSTER_REPLICATE)
-				.arguments(args).converter((v)->v)
-				.run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_REPLICATE, args);
 	}
 
 	@Override
 	public Status clusterReplicate(final byte[] nodeId) {
 		final CommandArguments args = CommandArguments.create(nodeId);
-		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.CLUSTER,
-						SubCommand.CLUSTER_REPLICATE)
-				.arguments(args).converter((v)->v)
-				.run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_REPLICATE, args);
 	}
 
 	@Override
 	public Status clusterReset() {
-		return clusterReset(ClusterResetOption.SOFT);
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_RESET);
 	}
 
 	@Override
 	public Status clusterReset(final ClusterResetOption option) {
 		final CommandArguments args = CommandArguments.create(option);
-		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.CLUSTER, SubCommand.CLUSTER_RESET)
-				.arguments(args).converter((v)->v)
-				.run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_RESET, args);
 	}
 
 	@Override
 	public Status clusterSaveConfig() {
-		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.CLUSTER, SubCommand.CLUSTER_SAVECONFIG)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SAVECONFIG);
 	}
 
 	@Override
 	public Status clusterSetConfigEpoch(final long configEpoch) {
 		final CommandArguments args = CommandArguments.create(configEpoch);
-		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.CLUSTER,
-						SubCommand.CLUSTER_SETCONFIGEPOCH)
-				.arguments(args).converter((v)->v)
-				.run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SETCONFIGEPOCH, args);
 	}
 
 	@Override
 	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption option, final String nodeId) {
 		final CommandArguments args = CommandArguments.create(slot).add(option).add(nodeId);
-		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.CLUSTER,
-						SubCommand.CLUSTER_SETSLOT)
-				.arguments(args).converter((v)->v)
-				.run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SETSLOT, args);
 	}
 
 	@Override
 	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption option, final byte[] nodeId) {
 		final CommandArguments args = CommandArguments.create(slot).add(option).add(nodeId);
-		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.CLUSTER,
-						SubCommand.CLUSTER_SETSLOT)
-				.arguments(args).converter((v)->v)
-				.run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SETSLOT, args);
 	}
 
 	@Override
 	public List<ClusterShardInfo> clusterShards() {
-		return JedisCommandBuilder.<List<ClusterShardInfo>, List<ClusterShardInfo>>newBuilder(client, Command.CLUSTER,
-						SubCommand.CLUSTER_SHARDS)
-				.converter((v)->v).run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SHARDS);
 	}
 
 	@Override
 	public List<ClusterRedisNode> clusterSlaves(final String nodeId) {
 		final CommandArguments args = CommandArguments.create(nodeId);
-		return JedisCommandBuilder.<List<ClusterRedisNode>, List<ClusterRedisNode>>newBuilder(client, Command.CLUSTER,
-						SubCommand.CLUSTER_SLAVES)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLAVES, args);
 	}
 
 	@Override
 	public List<ClusterRedisNode> clusterSlaves(final byte[] nodeId) {
 		final CommandArguments args = CommandArguments.create(nodeId);
-		return JedisCommandBuilder.<List<ClusterRedisNode>, List<ClusterRedisNode>>newBuilder(client, Command.CLUSTER,
-						SubCommand.CLUSTER_SLAVES)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLAVES, args);
 	}
 
 	@Override
 	public ClusterSlotStat clusterSlotStats() {
-		return JedisCommandBuilder.<ClusterSlotStat, ClusterSlotStat>newBuilder(client, Command.CLUSTER,
-						SubCommand.CLUSTER_SLOT_STATS)
-				.converter((v)->v).run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLOT_STATS);
 	}
 
 	@Override
 	public List<ClusterSlot> clusterSlots() {
-		return JedisCommandBuilder.<List<ClusterSlot>, List<ClusterSlot>>newBuilder(client, Command.CLUSTER,
-						SubCommand.CLUSTER_SLOTS)
-				.converter((v)->v).run();
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLOTS);
 	}
 
 	@Override
 	public Status readOnly() {
-		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.READONLY)
-				.converter((v)->v).run();
+		return executeCommand(Command.READONLY);
 	}
 
 	@Override
 	public Status readWrite() {
-		return JedisCommandBuilder.<Status, Status>newBuilder(client, Command.READWRITE)
-				.converter((v)->v).run();
+		return executeCommand(Command.READWRITE);
 	}
 
 }

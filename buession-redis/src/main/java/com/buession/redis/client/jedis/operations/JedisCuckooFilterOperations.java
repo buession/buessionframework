@@ -24,12 +24,16 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.converter.BooleanStatusConverter;
 import com.buession.core.converter.MapEntryMapConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.CuckooFilterOperations;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.args.CFInsertArgument;
+import com.buession.redis.core.command.args.CFReserveArgument;
+import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.jedis.IParamsUtils;
 import com.buession.redis.utils.SafeEncoder;
 
@@ -51,8 +55,7 @@ public final class JedisCuckooFilterOperations extends AbstractJedisRedisOperati
 	@Override
 	public Status cfAdd(final String key, final String item) {
 		final CommandArguments args = CommandArguments.create(key).add(item);
-		return JedisCommandBuilder.<Boolean, Status>newBuilder(client, Command.CF_ADD)
-				.executor((cmd)->cmd.cfAdd(key, item)).arguments(args).converter(booleanStatusConverter).run();
+		return executeCommand(Command.CF_ADD, args, (cmd)->cmd.cfAdd(key, item), new BooleanStatusConverter());
 	}
 
 	@Override
@@ -63,8 +66,7 @@ public final class JedisCuckooFilterOperations extends AbstractJedisRedisOperati
 	@Override
 	public Status cfAddNx(final String key, final String item) {
 		final CommandArguments args = CommandArguments.create(key).add(item);
-		return JedisCommandBuilder.<Boolean, Status>newBuilder(client, Command.CF_ADDNX)
-				.executor((cmd)->cmd.cfAddNx(key, item)).arguments(args).converter(booleanStatusConverter).run();
+		return executeCommand(Command.CF_ADDNX, args, (cmd)->cmd.cfAddNx(key, item), new BooleanStatusConverter());
 	}
 
 	@Override
@@ -75,8 +77,7 @@ public final class JedisCuckooFilterOperations extends AbstractJedisRedisOperati
 	@Override
 	public Long cfCount(final String key, final String item) {
 		final CommandArguments args = CommandArguments.create(key).add(item);
-		return JedisCommandBuilder.<Long, Long>newBuilder(client, Command.CF_COUNT)
-				.executor((cmd)->cmd.cfCount(key, item)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.CF_COUNT, args, (cmd)->cmd.cfCount(key, item), (v)->v);
 	}
 
 	@Override
@@ -87,9 +88,7 @@ public final class JedisCuckooFilterOperations extends AbstractJedisRedisOperati
 	@Override
 	public Status cfDel(final String key, final String item) {
 		final CommandArguments args = CommandArguments.create(key);
-		return JedisCommandBuilder.<Boolean, Status>newBuilder(client, Command.CF_DEL)
-				.executor((cmd)->cmd.cfDel(key, item))
-				.arguments(args).converter(booleanStatusConverter).run();
+		return executeCommand(Command.CF_DEL, args, (cmd)->cmd.cfDel(key, item), new BooleanStatusConverter());
 	}
 
 	@Override
@@ -100,8 +99,7 @@ public final class JedisCuckooFilterOperations extends AbstractJedisRedisOperati
 	@Override
 	public Boolean cfExists(final String key, final String item) {
 		final CommandArguments args = CommandArguments.create(key).add(item);
-		return JedisCommandBuilder.<Boolean, Boolean>newBuilder(client, Command.CF_EXISTS)
-				.executor((cmd)->cmd.cfExists(key, item)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.CF_EXISTS, args, (cmd)->cmd.cfExists(key, item), (v)->v);
 	}
 
 	@Override
@@ -112,8 +110,7 @@ public final class JedisCuckooFilterOperations extends AbstractJedisRedisOperati
 	@Override
 	public Map<String, Object> cfInfo(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return JedisCommandBuilder.<Map<String, Object>, Map<String, Object>>newBuilder(client, Command.CF_INFO)
-				.executor((cmd)->cmd.cfInfo(key)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.CF_INFO, args, (cmd)->cmd.cfInfo(key), (v)->v);
 	}
 
 	@Override
@@ -124,8 +121,7 @@ public final class JedisCuckooFilterOperations extends AbstractJedisRedisOperati
 	@Override
 	public List<Boolean> cfInsert(final String key, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add("ITEMS").add(items);
-		return JedisCommandBuilder.<List<Boolean>, List<Boolean>>newBuilder(client, Command.CF_INSERT)
-				.executor((cmd)->cmd.cfInsert(key, items)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.CF_INSERT, args, (cmd)->cmd.cfInsert(key, items), (v)->v);
 	}
 
 	@Override
@@ -136,9 +132,8 @@ public final class JedisCuckooFilterOperations extends AbstractJedisRedisOperati
 	@Override
 	public List<Boolean> cfInsert(final String key, final CFInsertArgument argument, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS").add(items);
-		return JedisCommandBuilder.<List<Boolean>, List<Boolean>>newBuilder(client, Command.CF_INSERT)
-				.executor((cmd)->cmd.cfInsert(key, IParamsUtils.cfInsertParams(argument), items))
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.CF_INSERT, args,
+				(cmd)->cmd.cfInsert(key, IParamsUtils.cfInsertParams(argument), items), (v)->v);
 	}
 
 	@Override
@@ -149,8 +144,7 @@ public final class JedisCuckooFilterOperations extends AbstractJedisRedisOperati
 	@Override
 	public List<Boolean> cfInsertNx(final String key, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add("ITEMS").add(items);
-		return JedisCommandBuilder.<List<Boolean>, List<Boolean>>newBuilder(client, Command.CF_INSERTNX)
-				.executor((cmd)->cmd.cfInsertNx(key, items)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.CF_INSERTNX, args, (cmd)->cmd.cfInsertNx(key, items), (v)->v);
 	}
 
 	@Override
@@ -161,9 +155,8 @@ public final class JedisCuckooFilterOperations extends AbstractJedisRedisOperati
 	@Override
 	public List<Boolean> cfInsertNx(final String key, final CFInsertArgument argument, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS").add(items);
-		return JedisCommandBuilder.<List<Boolean>, List<Boolean>>newBuilder(client, Command.CF_INSERTNX)
-				.executor((cmd)->cmd.cfInsertNx(key, IParamsUtils.cfInsertParams(argument), items))
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.CF_INSERTNX, args,
+				(cmd)->cmd.cfInsertNx(key, IParamsUtils.cfInsertParams(argument), items), (v)->v);
 	}
 
 	@Override
@@ -174,9 +167,8 @@ public final class JedisCuckooFilterOperations extends AbstractJedisRedisOperati
 	@Override
 	public Status cfLoadchunk(final String key, final long iterator, final byte[] data) {
 		final CommandArguments args = CommandArguments.create(key).add(iterator).add(SafeEncoder.encode(data));
-		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.CF_LOADCHUNK)
-				.executor((cmd)->cmd.cfLoadChunk(key, iterator, data)).arguments(args).converter(okStatusConverter)
-				.run();
+		return executeCommand(Command.CF_LOADCHUNK, args, (cmd)->cmd.cfLoadChunk(key, iterator, data),
+				new OkStatusConverter());
 	}
 
 	@Override
@@ -187,8 +179,7 @@ public final class JedisCuckooFilterOperations extends AbstractJedisRedisOperati
 	@Override
 	public List<Boolean> cfMExists(final String key, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(items);
-		return JedisCommandBuilder.<List<Boolean>, List<Boolean>>newBuilder(client, Command.CF_MEXISTS)
-				.executor((cmd)->cmd.cfMExists(key, items)).arguments(args).converter((v)->v).run();
+		return executeCommand(Command.CF_MEXISTS, args, (cmd)->cmd.cfMExists(key, items), (v)->v);
 	}
 
 	@Override
@@ -199,16 +190,14 @@ public final class JedisCuckooFilterOperations extends AbstractJedisRedisOperati
 	@Override
 	public Status cfReserve(final String key, final CFReserveArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument);
-		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.CF_RESERVE)
-				.executor((cmd)->{
-					if(argument.getBucketSize() == null && argument.getMaxIterations() == null &&
-							argument.getExpansion() == null){
-						return cmd.cfReserve(key, argument.getCapacity());
-					}else{
-						return cmd.cfReserve(key, argument.getCapacity(), IParamsUtils.cfReserveParams(argument));
-					}
-				}).arguments(args).converter(okStatusConverter)
-				.run();
+		return executeCommand(Command.CF_RESERVE, args, (cmd)->{
+			if(argument.getBucketSize() == null && argument.getMaxIterations() == null &&
+					argument.getExpansion() == null){
+				return cmd.cfReserve(key, argument.getCapacity());
+			}else{
+				return cmd.cfReserve(key, argument.getCapacity(), IParamsUtils.cfReserveParams(argument));
+			}
+		}, new OkStatusConverter());
 	}
 
 	@Override
@@ -219,9 +208,8 @@ public final class JedisCuckooFilterOperations extends AbstractJedisRedisOperati
 	@Override
 	public Map<Long, byte[]> cfScandump(final String key, final long iterator) {
 		final CommandArguments args = CommandArguments.create(key).add(iterator);
-		return JedisCommandBuilder.<Map.Entry<Long, byte[]>, Map<Long, byte[]>>newBuilder(client, Command.CF_SCANDUMP)
-				.executor((cmd)->cmd.cfScanDump(key, iterator)).arguments(args)
-				.converter(new MapEntryMapConverter<>((k)->k, (v)->v)).run();
+		return executeCommand(Command.CF_SCANDUMP, args, (cmd)->cmd.cfScanDump(key, iterator),
+				new MapEntryMapConverter<>((k)->k, (v)->v));
 	}
 
 	@Override

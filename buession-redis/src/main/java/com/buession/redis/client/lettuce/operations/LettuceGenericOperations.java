@@ -45,21 +45,14 @@ public final class LettuceGenericOperations extends AbstractLettuceRedisOperatio
 	@Override
 	public Long wait(final int replicas, final int timeout) {
 		final CommandArguments args = CommandArguments.create(replicas).add(timeout);
-		return LettuceCommandBuilder.<Long, Long>newBuilder(client, Command.WAIT)
-				.executor((cmd)->cmd.waitForReplication(replicas, timeout))
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.WAIT, args, (cmd)->cmd.waitForReplication(replicas, timeout), (v)->v);
 
 	}
 
 	@Override
 	public KeyValue<Long, Long> waitOf(final int locals, final int replicas, final int timeout) {
 		final CommandArguments args = CommandArguments.create(locals).add(replicas).add(timeout);
-		return LettuceCommandBuilder.<KeyValue<Long, Long>, KeyValue<Long, Long>>newBuilder(client, Command.WAITOF)
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.WAITOF, args);
 	}
 
 }

@@ -33,11 +33,13 @@ import com.buession.redis.core.CmsInfo;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.internal.convert.response.CmsInfoConverter;
+import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Jedis 计数最小草图命令操作抽象类
@@ -55,35 +57,25 @@ public final class JedisCountMinSketchOperations extends AbstractJedisRedisOpera
 	@Override
 	public List<Long> cmsIncrby(final String key, final List<KeyValue<String, Long>> items) {
 		final CommandArguments args = CommandArguments.create(key).add(items);
-		final Map<String, Long> itemIncrements = new LinkedHashMap<>(items.size());
-
-		for(final KeyValue<String, Long> item : items){
-			itemIncrements.put(item.getKey(), item.getValue());
-		}
-
-		return cmsIncrby(key, itemIncrements, args);
+		final Map<String, Long> itemIncrements = items.stream().collect(Collectors.toMap(KeyValue::getKey,
+				KeyValue::getValue, (oldVal, newVal)->oldVal, LinkedHashMap::new));
+		return executeCommand(Command.CMS_INCRBY, args, (cmd)->cmd.cmsIncrBy(key, itemIncrements), (v)->v);
 	}
 
 	@Override
 	public List<Long> cmsIncrby(final byte[] key, final List<KeyValue<byte[], Long>> items) {
 		final CommandArguments args = CommandArguments.create(key).add(items);
-		final Map<String, Long> itemIncrements = new LinkedHashMap<>(items.size());
-
-		for(final KeyValue<byte[], Long> item : items){
-			itemIncrements.put(SafeEncoder.encode(item.getKey()), item.getValue());
-		}
-
-		return cmsIncrby(SafeEncoder.encode(key), itemIncrements, args);
+		final Map<String, Long> itemIncrements = items.stream()
+				.collect(Collectors.toMap((item)->SafeEncoder.encode(item.getKey()), KeyValue::getValue,
+						(oldVal, newVal)->oldVal, LinkedHashMap::new));
+		return executeCommand(Command.CMS_INCRBY, args, (cmd)->cmd.cmsIncrBy(SafeEncoder.encode(key), itemIncrements),
+				(v)->v);
 	}
 
 	@Override
 	public CmsInfo cmsInfo(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return JedisCommandBuilder.<Map<String, Object>, CmsInfo>newBuilder(client, Command.CMS_INFO)
-				.executor((cmd)->cmd.cmsInfo(key))
-				.arguments(args)
-				.converter(new CmsInfoConverter())
-				.run();
+		return executeCommand(Command.CMS_INFO, args, (cmd)->cmd.cmsInfo(key), new CmsInfoConverter());
 	}
 
 	@Override
@@ -94,11 +86,8 @@ public final class JedisCountMinSketchOperations extends AbstractJedisRedisOpera
 	@Override
 	public Status cmsInitByDim(final String key, final int width, final int depth) {
 		final CommandArguments args = CommandArguments.create(key).add(width).add(depth);
-		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.CMS_INITBYDIM)
-				.executor((cmd)->cmd.cmsInitByDim(key, width, depth))
-				.arguments(args)
-				.converter(okStatusConverter)
-				.run();
+		return executeCommand(Command.CMS_INITBYDIM, args, (cmd)->cmd.cmsInitByDim(key, width, depth),
+				new OkStatusConverter());
 	}
 
 	@Override
@@ -109,11 +98,8 @@ public final class JedisCountMinSketchOperations extends AbstractJedisRedisOpera
 	@Override
 	public Status cmsInitByProb(final String key, final double error, final double probability) {
 		final CommandArguments args = CommandArguments.create(key).add(error).add(probability);
-		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.CMS_INITBYPROB)
-				.executor((cmd)->cmd.cmsInitByProb(key, error, probability))
-				.arguments(args)
-				.converter(okStatusConverter)
-				.run();
+		return executeCommand(Command.CMS_INITBYPROB, args, (cmd)->cmd.cmsInitByProb(key, error, probability),
+				new OkStatusConverter());
 	}
 
 	@Override
@@ -124,11 +110,8 @@ public final class JedisCountMinSketchOperations extends AbstractJedisRedisOpera
 	@Override
 	public Status cmsMerge(final String key, final Map<String, Long> keysAndWeights) {
 		final CommandArguments args = CommandArguments.create(key).add(keysAndWeights);
-		return JedisCommandBuilder.<String, Status>newBuilder(client, Command.CMS_MERGE)
-				.executor((cmd)->cmd.cmsMerge(key, keysAndWeights))
-				.arguments(args)
-				.converter(okStatusConverter)
-				.run();
+		return executeCommand(Command.CMS_MERGE, args, (cmd)->cmd.cmsMerge(key, keysAndWeights),
+				new OkStatusConverter());
 	}
 
 	@Override
@@ -141,25 +124,12 @@ public final class JedisCountMinSketchOperations extends AbstractJedisRedisOpera
 	@Override
 	public List<Long> cmsQuery(final String key, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(items);
-		return JedisCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.CMS_QUERY)
-				.executor((cmd)->cmd.cmsQuery(key, items))
-				.arguments(args)
-				.converter((v)->v)
-				.run();
+		return executeCommand(Command.CMS_QUERY, args, (cmd)->cmd.cmsQuery(key, items), (v)->v);
 	}
 
 	@Override
 	public List<Long> cmsQuery(byte[] key, byte[]... items) {
 		return cmsQuery(SafeEncoder.encode(key), SafeEncoder.encode(items));
-	}
-
-	private List<Long> cmsIncrby(final String key, final Map<String, Long> itemIncrements,
-								 final CommandArguments args) {
-		return JedisCommandBuilder.<List<Long>, List<Long>>newBuilder(client, Command.CMS_INCRBY)
-				.executor((cmd)->cmd.cmsIncrBy(key, itemIncrements))
-				.arguments(args)
-				.converter((v)->v)
-				.run();
 	}
 
 }
