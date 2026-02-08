@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  * 发布与订阅命运算
  *
- * <p>详情说明 <a href="http://redisdoc.com/pubsub/index.html" target="_blank">http://redisdoc.com/pubsub/index.html</a></p>
+ * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=pubsub" target="_blank">https://redis.io/docs/latest/commands/?group=pubsub</a></p>
  *
  * @author Yong.Teng
  */
@@ -86,6 +86,11 @@ public interface PubSubOperations extends PubSubCommands, RedisOperations {
 	}
 
 	@Override
+	default Map<String, Long> pubsubNumSub() {
+		return execute((client)->client.pubSubOperations().pubsubNumSub());
+	}
+
+	@Override
 	default Map<String, Long> pubsubNumSub(final String... channels) {
 		return execute((client)->client.pubSubOperations().pubsubNumSub(channels));
 	}
@@ -93,6 +98,36 @@ public interface PubSubOperations extends PubSubCommands, RedisOperations {
 	@Override
 	default Map<byte[], Long> pubsubNumSub(final byte[]... channels) {
 		return execute((client)->client.pubSubOperations().pubsubNumSub(channels));
+	}
+
+	@Override
+	default List<String> pubsubShardChannels() {
+		return execute((client)->client.pubSubOperations().pubsubShardChannels());
+	}
+
+	@Override
+	default List<String> pubsubShardChannels(final String pattern) {
+		return execute((client)->client.pubSubOperations().pubsubShardChannels(pattern));
+	}
+
+	@Override
+	default List<byte[]> pubsubShardChannels(final byte[] pattern) {
+		return execute((client)->client.pubSubOperations().pubsubShardChannels(pattern));
+	}
+
+	@Override
+	default Map<String, Long> pubsubShardNumSub() {
+		return execute((client)->client.pubSubOperations().pubsubShardNumSub());
+	}
+
+	@Override
+	default Map<String, Long> pubsubShardNumSub(final String... shardChannels) {
+		return execute((client)->client.pubSubOperations().pubsubShardNumSub(shardChannels));
+	}
+
+	@Override
+	default Map<byte[], Long> pubsubShardNumSub(final byte[]... shardChannels) {
+		return execute((client)->client.pubSubOperations().pubsubShardNumSub(shardChannels));
 	}
 
 	@Override
@@ -111,6 +146,32 @@ public interface PubSubOperations extends PubSubCommands, RedisOperations {
 	}
 
 	@Override
+	default Long sPublish(final String shardchannel, final String message) {
+		return execute((client)->client.pubSubOperations().sPublish(shardchannel, message));
+	}
+
+	@Override
+	default Long sPublish(final byte[] shardchannel, final byte[] message) {
+		return execute((client)->client.pubSubOperations().sPublish(shardchannel, message));
+	}
+
+	@Override
+	default void sSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener) {
+		execute((client)->{
+			client.pubSubOperations().sSubscribe(patterns, pubSubListener);
+			return null;
+		});
+	}
+
+	@Override
+	default void sSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener) {
+		execute((client)->{
+			client.pubSubOperations().sSubscribe(patterns, pubSubListener);
+			return null;
+		});
+	}
+
+	@Override
 	default void subscribe(final String[] channels, final PubSubListener<String> pubSubListener) {
 		execute((client)->{
 			client.pubSubOperations().subscribe(channels, pubSubListener);
@@ -124,6 +185,21 @@ public interface PubSubOperations extends PubSubCommands, RedisOperations {
 			client.pubSubOperations().subscribe(channels, pubSubListener);
 			return null;
 		});
+	}
+
+	@Override
+	default Object sUnSubscribe() {
+		return execute((client)->client.pubSubOperations().unSubscribe());
+	}
+
+	@Override
+	default Object sUnSubscribe(final String... shardchannel) {
+		return execute((client)->client.pubSubOperations().unSubscribe(shardchannel));
+	}
+
+	@Override
+	default Object sUnSubscribe(final byte[]... shardchannel) {
+		return execute((client)->client.pubSubOperations().unSubscribe(shardchannel));
 	}
 
 	@Override

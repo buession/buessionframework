@@ -63,27 +63,6 @@
 	 * key command end
 	 **/
 
-	/**
-	 * pubsub command start
-	 **/
-	PSUBSCRIBE(CommandGroup.PUBSUB, "w"),
-
-	PUBSUB_CHANNELS(CommandGroup.PUBSUB, "r"),
-
-	PUBSUB_NUMPAT(CommandGroup.PUBSUB, "r"),
-
-	PUBSUB_NUMSUB(CommandGroup.PUBSUB, "r"),
-
-	PUBLISH(CommandGroup.PUBSUB, "w"),
-
-	PUNSUBSCRIBE(CommandGroup.PUBSUB, "w"),
-
-	SUBSCRIBE(CommandGroup.PUBSUB, "w"),
-
-	UNSUBSCRIBE(CommandGroup.PUBSUB, "w"),
-	/**
-	 * pubsub command end
-	 **/
 
 	/**
 	 * scripting command start

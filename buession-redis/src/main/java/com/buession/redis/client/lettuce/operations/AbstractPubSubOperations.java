@@ -44,9 +44,4 @@ public abstract class AbstractPubSubOperations<C extends LettuceRedisClient> ext
 		super(client);
 	}
 
-	@Override
-	public Long publish(final String channel, final String message) {
-		return publish(SafeEncoder.encode(channel), SafeEncoder.encode(message));
-	}
-
 }

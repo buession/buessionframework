@@ -142,10 +142,25 @@ public enum SubCommand implements ProtocolCommand {
 	/**
 	 * json command start
 	 **/
-
 	JSON_DEBUG_MEMORY("MEMORY", "r"),
 	/**
 	 * json command end
+	 **/
+
+	/**
+	 * pubsub command start
+	 **/
+	PUBSUB_CHANNELS("r"),
+
+	PUBSUB_NUMPAT("r"),
+
+	PUBSUB_NUMSUB("r"),
+
+	PUBSUB_SHARDCHANNELS("r"),
+
+	PUBSUB_SHARDNUMSUB("r"),
+	/**
+	 * pubsub command end
 	 **/
 	;
 

@@ -391,9 +391,35 @@ public enum Command implements ProtocolCommand {
 
 	RPUSH(CommandGroup.LIST, "rw"),
 
-	RPUSHX(CommandGroup.LIST, "rw")
+	RPUSHX(CommandGroup.LIST, "rw"),
 	/**
 	 * list command end
+	 **/
+
+	/**
+	 * pubsub command start
+	 **/
+	PSUBSCRIBE(CommandGroup.PUBSUB, "w"),
+
+	PUBLISH(CommandGroup.PUBSUB, "w"),
+
+	PUBSUB(CommandGroup.PUBSUB, "rw",
+			new SubCommand[]{SubCommand.PUBSUB_CHANNELS, SubCommand.PUBSUB_NUMPAT, SubCommand.PUBSUB_NUMSUB,
+					SubCommand.PUBSUB_SHARDCHANNELS}),
+
+	PUNSUBSCRIBE(CommandGroup.PUBSUB, "w"),
+
+	SPUBLISH(CommandGroup.PUBSUB, "w"),
+
+	SSUBSCRIBE(CommandGroup.PUBSUB, "w"),
+
+	SUBSCRIBE(CommandGroup.PUBSUB, "w"),
+
+	SUNSUBSCRIBE(CommandGroup.PUBSUB, "w"),
+
+	UNSUBSCRIBE(CommandGroup.PUBSUB, "w"),
+	/**
+	 * pubsub command end
 	 **/
 	;
 
