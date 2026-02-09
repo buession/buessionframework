@@ -19,14 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
 import com.buession.redis.utils.ObjectStringBuilder;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -35,9 +34,7 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class AclLog implements Serializable {
-
-	private final static long serialVersionUID = -1362912160889551004L;
+public class AclLog {
 
 	// Redis 7.2
 	public final static String ENTRY_ID = "entry-id";

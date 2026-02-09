@@ -26,27 +26,35 @@ package com.buession.redis.core;
 
 import com.buession.redis.utils.ObjectStringBuilder;
 
-import java.util.List;
+import java.util.Map;
 
 /**
- * 哈希槽和 Redis 实例映射关系,详细信息请看 <a href="http://www.redis.cn/commands/cluster-slots.html" target="_blank">http://www.redis.cn/commands/cluster-slots.html</a>
- *
- * @param range
- * 		哈希槽起止编号
- * @param masterNodes
- * 		master 节点副本列表
+ * FUNCTION STATS 命令结果
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 4.0.0
  */
-public record ClusterSlot(SlotRange range, List<RedisServer> masterNodes) {
+public record FunctionStats(RunningScript runningscript, Map<String, Map<String, Object>> engines) {
 
 	@Override
 	public String toString() {
 		return ObjectStringBuilder.create()
-				.add("range", range)
-				.add("masterNodes", masterNodes)
+				.add("running_script", runningscript)
+				.add("engines", engines)
 				.build();
+	}
+
+	public record RunningScript(String name, String command, long durationMs) {
+
+		@Override
+		public String toString() {
+			return ObjectStringBuilder.create()
+					.add("name", name)
+					.add("command", command)
+					.add("duration_ms", durationMs)
+					.build();
+		}
+
 	}
 
 }

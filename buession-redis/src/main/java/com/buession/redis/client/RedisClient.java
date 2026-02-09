@@ -156,13 +156,6 @@ public interface RedisClient {
 	JsonOperations jsonOperations();
 
 	/**
-	 * 返回 KEY 命令操作实例
-	 *
-	 * @return KEY 命令操作实例
-	 */
-	KeyOperations keyOperations();
-
-	/**
 	 * 返回列表命令操作实例
 	 *
 	 * @return 列表命令操作实例
@@ -182,6 +175,13 @@ public interface RedisClient {
 	 * @return Script 命令操作实例
 	 */
 	ScriptingOperations scriptingOperations();
+
+	/**
+	 * 返回 KEY 命令操作实例
+	 *
+	 * @return KEY 命令操作实例
+	 */
+	KeyOperations keyOperations();
 
 	/**
 	 * 返回服务端操作命令操作实例

@@ -26,35 +26,22 @@ package com.buession.redis.core;
 
 import com.buession.redis.utils.ObjectStringBuilder;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
  * Stream 消费者
  *
+ * @param name
+ * 		消费者名称
+ * @param idle
+ * 		自上次活跃以来的空闲时间（单位：毫秒）
+ * @param pending
+ * 		未 ACK（确认）的消息数量
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public record StreamConsumer(
-		/*
-		  消费者名称
-		 */
-		String name,
-
-		/*
-		  自上次活跃以来的空闲时间（单位：毫秒）
-		 */
-		long idle,
-
-		/*
-		  未 ACK（确认）的消息数量
-		 */
-		long pending,
-
-		Map<String, Object> infos
-) implements Serializable {
-
-	private final static long serialVersionUID = 1432302411997199283L;
+public record StreamConsumer(String name, long idle, long pending, Map<String, Object> infos) {
 
 	@Override
 	public String toString() {

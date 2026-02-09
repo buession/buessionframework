@@ -22,21 +22,34 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.lettuce.operations;
+package com.buession.redis.core.internal.convert.jedis.params;
 
-import com.buession.redis.client.lettuce.LettuceSentinelClient;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.FunctionRestoreMode;
+import org.springframework.lang.Nullable;
+import redis.clients.jedis.args.FunctionRestorePolicy;
 
 /**
- * Lettuce 哨兵模式计数最小草图命令操作抽象类
+ * {@link FunctionRestoreMode} 转换为 {@link FunctionRestorePolicy}
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class LettuceSentinelCountMinSketchOperations
-		extends AbstractCountMinSketchOperations<LettuceSentinelClient> {
+public final class FunctionRestoreModeFunctionRestorePolicyConverter
+		implements Converter<FunctionRestoreMode, FunctionRestorePolicy> {
 
-	public LettuceSentinelCountMinSketchOperations(final LettuceSentinelClient client) {
-		super(client);
+	@Nullable
+	@Override
+	public FunctionRestorePolicy convert(final FunctionRestoreMode source) {
+		if(source == null){
+			return null;
+		}
+
+		return switch(source){
+			case APPEND -> FunctionRestorePolicy.APPEND;
+			case FLUSH -> FunctionRestorePolicy.FLUSH;
+			case REPLACE -> FunctionRestorePolicy.REPLACE;
+		};
 	}
 
 }

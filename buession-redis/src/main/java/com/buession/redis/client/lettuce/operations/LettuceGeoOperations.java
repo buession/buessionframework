@@ -265,8 +265,7 @@ public final class LettuceGeoOperations extends AbstractLettuceRedisOperations i
 	public List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
 											   final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(key).add(member).add(radius).add(unit);
-		return LettuceCommandBuilder.<List<GeoRadius>, List<GeoRadius>>newBuilder(client, Command.GEORADIUSBYMEMBER_RO)
-				.arguments(args).converter((v)->v).run();
+		return executeCommand(Command.GEORADIUSBYMEMBER_RO, args);
 	}
 
 	@Override

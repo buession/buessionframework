@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core;
 
-import java.io.Serializable;
+import com.buession.redis.utils.ObjectStringBuilder;
 
 /**
  * 集群中节点与其他集群节点之间建立的所有 TCP 连接（即 cluster bus 链路）的详细信息
@@ -62,9 +62,19 @@ public record ClusterLink(
 		  Size of the portion of the link's send buffer that is currently holding data.
 		 */
 		Integer sendBufferUsed
-) implements Serializable {
+) {
 
-	private static final long serialVersionUID = -1140855693744878434L;
+	@Override
+	public String toString() {
+		return ObjectStringBuilder.create()
+				.add("direction", direction)
+				.add("node", node)
+				.add("create_time", createTime)
+				.add("events", events)
+				.add("send_buffer_allocated", sendBufferAllocated)
+				.add("send_buffer_used", sendBufferUsed)
+				.build();
+	}
 
 	public enum Direction {
 		FROM,

@@ -26,99 +26,78 @@ package com.buession.redis.core;
 
 import com.buession.redis.utils.ObjectStringBuilder;
 
-import java.io.Serializable;
-
 /**
  * 集群信息，更多信息 <a href="http://www.redis.cn/commands/cluster-info.html" target="_blank">http://www.redis.cn/commands/cluster-info.html</a>
+ *
+ * @param state
+ * 		集群状态，Status.SUCCESS 表示集群可以正常接受查询请求；Status.FAILURE 表示，至少有一个哈希槽没有被绑定（说明有哈希槽没有被绑定到任意一个节点），或者在错误的状态（节点可以提供服务但是带有FAIL 标记），或者该节点无法联系到多数master节点
+ * @param slotsAssigned
+ * 		已分配到集群节点的哈希槽数量
+ * @param slotsOk
+ * 		哈希槽状态不是 FAIL 和 PFAIL 的数量
+ * @param slotsPfail
+ * 		哈希槽状态是 PFAIL 的数量；只要哈希槽状态没有被升级到 FAIL 状态，这些哈希槽仍然可以被正常处理；PFAIL 状态表示我们当前不能和节点进行交互，但这种状态只是临时的错误状态
+ * @param slotsFail
+ * 		哈希槽状态是 FAIL 的数量，如果值不是 0，那么集群节点将无法提供查询服务，除非 cluster-require-full-coverage 被设置为 no
+ * @param knownNodes
+ * 		集群中节点数量，包括处于握手状态还没有成为集群正式成员的节点
+ * @param size
+ * 		至少包含一个哈希槽且能够提供服务的 master 节点数量
+ * @param currentEpoch
+ * 		集群本地 Current Epoch 变量的值；这个值在节点故障转移过程时有用，它总是递增和唯一的
+ * @param myEpoch
+ * 		当前正在使用的节点的 Config Epoch 值，这个是关联在本节点的版本值
+ * @param messagesPingSent
+ * 		-
+ * @param messagesPongSent
+ * 		-
+ * @param messagesSent
+ * 		通过 node-to-node 二进制总线发送的消息数量
+ * @param messagesPingReceived
+ * 		-
+ * @param messagesPongReceived
+ * 		-
+ * @param messagesMeetReceived
+ * 		-
+ * @param messagesReceived
+ * 		通过 node-to-node 二进制总线接收的消息数量
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
 public record ClusterInfo(
-		/*
-		  集群状态，Status.SUCCESS 表示集群可以正常接受查询请求；Status.FAILURE 表示，至少有一个哈希槽没有被绑定（说明有哈希槽没有被绑定到任意一个节点），或者在错误的状态（节点可以提供服务但是带有FAIL 标记），或者该节点无法联系到多数master节点
-		 */
 		State state,
 
-		/*
-		  已分配到集群节点的哈希槽数量
-		 */
 		int slotsAssigned,
 
-		/*
-		  哈希槽状态不是 FAIL 和 PFAIL 的数量
-		 */
 		int slotsOk,
 
-		/*
-		  哈希槽状态是 PFAIL 的数量；
-		  只要哈希槽状态没有被升级到 FAIL 状态，这些哈希槽仍然可以被正常处理；
-		  PFAIL 状态表示我们当前不能和节点进行交互，但这种状态只是临时的错误状态
-		 */
 		int slotsPfail,
 
-		/*
-		  哈希槽状态是 FAIL 的数量，如果值不是 0，那么集群节点将无法提供查询服务，除非 cluster-require-full-coverage 被设置为 no
-		 */
 		int slotsFail,
 
-		/*
-		  集群中节点数量，包括处于握手状态还没有成为集群正式成员的节点
-		 */
 		int knownNodes,
 
-		/*
-		  至少包含一个哈希槽且能够提供服务的 master 节点数量
-		 */
 		int size,
 
-		/*
-		  集群本地 Current Epoch 变量的值；这个值在节点故障转移过程时有用，它总是递增和唯一的
-		 */
 		int currentEpoch,
 
-		/*
-		  当前正在使用的节点的 Config Epoch 值，这个是关联在本节点的版本值
-		 */
 		int myEpoch,
 
-		/*
-		  -
-		 */
 		long messagesPingSent,
 
-		/*
-		  -
-		 */
 		long messagesPongSent,
 
-		/*
-		  通过 node-to-node 二进制总线发送的消息数量
-		 */
 		long messagesSent,
 
-		/*
-		  -
-		 */
 		long messagesPingReceived,
 
-		/*
-		  -
-		 */
 		long messagesPongReceived,
 
-		/*
-		  -
-		 */
 		long messagesMeetReceived,
 
-		/*
-		  通过 node-to-node 二进制总线接收的消息数量
-		 */
 		long messagesReceived
-) implements Serializable {
-
-	private final static long serialVersionUID = 5975395725518673096L;
+) {
 
 	@Override
 	public String toString() {
@@ -148,7 +127,7 @@ public record ClusterInfo(
 
 		FAIL("fail");
 
-		private String value;
+		private final String value;
 
 		State(final String value) {
 			this.value = value;

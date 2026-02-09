@@ -26,40 +26,25 @@ package com.buession.redis.core;
 
 import com.buession.redis.utils.ObjectStringBuilder;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
  * Stream 消费者组
  *
+ * @param name
+ * 		消费者组名称
+ * @param consumers
+ * 		消费者的数量
+ * @param pending
+ * 		已投递但未被 ACK（确认）的消息数量
+ * @param lastDeliveredId
+ * 		最后投递给消费者的消息 ID
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public record StreamGroup(
-		/*
-		  消费者组名称
-		 */
-		String name,
-
-		/*
-		  消费者的数量
-		 */
-		long consumers,
-
-		/*
-		  已投递但未被 ACK（确认）的消息数量
-		 */
-		long pending,
-
-		/*
-		  最后投递给消费者的消息 ID
-		 */
-		StreamEntryId lastDeliveredId,
-
-		Map<String, Object> infos
-) implements Serializable {
-
-	private final static long serialVersionUID = -3992031318445262909L;
+public record StreamGroup(String name, long consumers, long pending, StreamEntryId lastDeliveredId,
+						  Map<String, Object> infos) {
 
 	@Override
 	public String toString() {

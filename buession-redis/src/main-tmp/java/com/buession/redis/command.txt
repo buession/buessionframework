@@ -67,17 +67,6 @@
 	/**
 	 * scripting command start
 	 **/
-	EVAL(CommandGroup.SCRIPTING, "w"),
-
-	EVALSHA(CommandGroup.SCRIPTING, "w"),
-
-	SCRIPT_EXISTS(CommandGroup.SCRIPTING, "r"),
-
-	SCRIPT_FLUSH(CommandGroup.SCRIPTING, "w"),
-
-	SCRIPT_KILL(CommandGroup.SCRIPTING, "w"),
-
-	SCRIPT_LOAD(CommandGroup.SCRIPTING, "r"),
 	/**
 	 * scripting command end
 	 **/

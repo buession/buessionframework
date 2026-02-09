@@ -27,7 +27,6 @@ package com.buession.redis.core;
 import com.buession.core.IntegerRange;
 import com.buession.redis.utils.ObjectStringBuilder;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -36,51 +35,31 @@ import java.util.List;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public record ClusterShardInfo(
-		IntegerRange slots,
-
-		List<ClusterShardNode> nodes
-) implements Serializable {
-
-	private final static long serialVersionUID = -6906496894720683515L;
+public record ClusterShardInfo(IntegerRange slots, List<ClusterShardNode> nodes) {
 
 	@Override
 	public String toString() {
-		return ObjectStringBuilder.create()
-				.add("slots", slots)
-				.add("nodes", nodes)
-				.build();
+		return ObjectStringBuilder.create().add("slots", slots).add("nodes", nodes).build();
 	}
 
-	public record ClusterShardNode(
-			String id,
+	public record ClusterShardNode(String id,
 
-			int port,
+								   int port,
 
-			String ip,
+								   String ip,
 
-			String endpoint,
+								   String endpoint,
 
-			ClusterRole role,
+								   ClusterRole role,
 
-			int replicationOffset,
+								   int replicationOffset,
 
-			ClusterHealth health
-	) implements Serializable {
-
-		private final static long serialVersionUID = -3226058616174727906L;
+								   ClusterHealth health) {
 
 		@Override
 		public String toString() {
-			return ObjectStringBuilder.create()
-					.add("id", id)
-					.add("port", port)
-					.add("ip", ip)
-					.add("endpoint", endpoint)
-					.add("role", role)
-					.add("replicationOffset", replicationOffset)
-					.add("health", health)
-					.build();
+			return ObjectStringBuilder.create().add("id", id).add("port", port).add("ip", ip).add("endpoint", endpoint)
+					.add("role", role).add("replicationOffset", replicationOffset).add("health", health).build();
 		}
 
 	}

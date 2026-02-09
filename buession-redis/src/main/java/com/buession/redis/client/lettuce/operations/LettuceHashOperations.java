@@ -416,56 +416,56 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor);
-		return hStringScan((cmd)->cmd.hscan(SafeEncoder.encode(key), new LettuceScanCursor(SafeEncoder.encode(cursor))),
-				args);
+		return hStringScan(args, (cmd)->cmd.hscan(SafeEncoder.encode(key),
+				new LettuceScanCursor(SafeEncoder.encode(cursor))));
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor);
-		return hBinaryScan((cmd)->cmd.hscan(key, new LettuceScanCursor(cursor)), args);
+		return hBinaryScan(args, (cmd)->cmd.hscan(key, new LettuceScanCursor(cursor)));
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern);
-		return hStringScan((cmd)->cmd.hscan(SafeEncoder.encode(key), new LettuceScanCursor(SafeEncoder.encode(cursor)),
-				new LettuceScanArgs(pattern)), args);
+		return hStringScan(args, (cmd)->cmd.hscan(SafeEncoder.encode(key),
+				new LettuceScanCursor(SafeEncoder.encode(cursor)), new LettuceScanArgs(pattern)));
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern);
-		return hBinaryScan((cmd)->cmd.hscan(key, new LettuceScanCursor(cursor), new LettuceScanArgs(pattern)), args);
+		return hBinaryScan(args, (cmd)->cmd.hscan(key, new LettuceScanCursor(cursor), new LettuceScanArgs(pattern)));
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final long count) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor).add(count);
-		return hStringScan((cmd)->cmd.hscan(SafeEncoder.encode(key), new LettuceScanCursor(SafeEncoder.encode(cursor)),
-				new LettuceScanArgs(count)), args);
+		return hStringScan(args, (cmd)->cmd.hscan(SafeEncoder.encode(key),
+				new LettuceScanCursor(SafeEncoder.encode(cursor)), new LettuceScanArgs(count)));
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final long count) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor).add(count);
-		return hBinaryScan((cmd)->cmd.hscan(key, new LettuceScanCursor(cursor), new LettuceScanArgs(count)), args);
+		return hBinaryScan(args, (cmd)->cmd.hscan(key, new LettuceScanCursor(cursor), new LettuceScanArgs(count)));
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
 												 final long count) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern);
-		return hStringScan((cmd)->cmd.hscan(SafeEncoder.encode(key), new LettuceScanCursor(SafeEncoder.encode(cursor)),
-				new LettuceScanArgs(pattern, count)), args);
+		return hStringScan(args, (cmd)->cmd.hscan(SafeEncoder.encode(key),
+				new LettuceScanCursor(SafeEncoder.encode(cursor)), new LettuceScanArgs(pattern, count)));
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
 												 final long count) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern).add(count);
-		return hBinaryScan((cmd)->cmd.hscan(key, new LettuceScanCursor(cursor), new LettuceScanArgs(pattern, count)),
-				args);
+		return hBinaryScan(args, (cmd)->cmd.hscan(key, new LettuceScanCursor(cursor), new LettuceScanArgs(pattern,
+				count)));
 	}
 
 	@Override
@@ -548,16 +548,14 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 		return executeCommand(Command.HVALS, args, (cmd)->cmd.hvals(key), (v)->v);
 	}
 
-	private ScanResult<Map<String, String>> hStringScan(
-			final com.buession.redis.core.Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, MapScanCursor<byte[], byte[]>> executor,
-			final CommandArguments args) {
+	private ScanResult<Map<String, String>> hStringScan(final CommandArguments args,
+														final com.buession.redis.core.Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, MapScanCursor<byte[], byte[]>> executor) {
 		return executeCommand(Command.HRANDFIELD, args, executor,
 				new ScanCursorConverter.MapScanCursorConverter.BvSvMapScanCursorConverter());
 	}
 
-	private ScanResult<Map<byte[], byte[]>> hBinaryScan(
-			final com.buession.redis.core.Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, MapScanCursor<byte[], byte[]>> executor,
-			final CommandArguments args) {
+	private ScanResult<Map<byte[], byte[]>> hBinaryScan(final CommandArguments args,
+														final com.buession.redis.core.Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, MapScanCursor<byte[], byte[]>> executor) {
 		return executeCommand(Command.HRANDFIELD, args, executor, new ScanCursorConverter.MapScanCursorConverter<>());
 	}
 

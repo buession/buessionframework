@@ -26,16 +26,13 @@ package com.buession.redis.core;
 
 import com.buession.redis.utils.ObjectStringBuilder;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
 /**
  * @author Yong.Teng
  */
-public record RedisServerTime(Date date, long usec) implements Serializable {
-
-	private final static long serialVersionUID = 7818271427941747714L;
+public record RedisServerTime(Date date, long usec) {
 
 	@Override
 	public boolean equals(Object obj) {

@@ -22,31 +22,32 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
+package com.buession.redis.core.internal.convert.jedis.response;
 
-import com.buession.redis.utils.ObjectStringBuilder;
-
-import java.util.List;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.FunctionStats;
+import org.springframework.lang.Nullable;
 
 /**
- * 哈希槽和 Redis 实例映射关系,详细信息请看 <a href="http://www.redis.cn/commands/cluster-slots.html" target="_blank">http://www.redis.cn/commands/cluster-slots.html</a>
- *
- * @param range
- * 		哈希槽起止编号
- * @param masterNodes
- * 		master 节点副本列表
+ * Jedis {@link redis.clients.jedis.resps.FunctionStats} 转换为 {@link com.buession.redis.core.FunctionStats}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 4.0.0
  */
-public record ClusterSlot(SlotRange range, List<RedisServer> masterNodes) {
+public final class FunctionStatsConverter
+		implements Converter<redis.clients.jedis.resps.FunctionStats, com.buession.redis.core.FunctionStats> {
 
+	@Nullable
 	@Override
-	public String toString() {
-		return ObjectStringBuilder.create()
-				.add("range", range)
-				.add("masterNodes", masterNodes)
-				.build();
+	public com.buession.redis.core.FunctionStats convert(final redis.clients.jedis.resps.FunctionStats source) {
+		if(source == null){
+			return null;
+		}
+
+		final FunctionStats.RunningScript runningscript = new FunctionStats.RunningScript(
+				source.getRunningScript().get("name").toString(), source.getRunningScript().get("command").toString(),
+				(Long) source.getRunningScript().get("duration_ms"));
+		return new com.buession.redis.core.FunctionStats(runningscript, source.getEngines());
 	}
 
 }

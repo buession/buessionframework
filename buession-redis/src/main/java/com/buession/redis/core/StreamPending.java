@@ -26,8 +26,6 @@ package com.buession.redis.core;
 
 import com.buession.redis.utils.ObjectStringBuilder;
 
-import java.io.Serializable;
-
 /**
  * Pending 消息的摘要信息
  *
@@ -42,9 +40,7 @@ public record StreamPending(
 		long idleTime,
 
 		long deliveredTimes
-) implements Serializable {
-
-	private static final long serialVersionUID = -9058837565507153831L;
+) {
 
 	@Override
 	public String toString() {

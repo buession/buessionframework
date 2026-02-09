@@ -162,6 +162,28 @@ public enum SubCommand implements ProtocolCommand {
 	/**
 	 * pubsub command end
 	 **/
+
+	/**
+	 * scripting command start
+	 **/
+	FUNCTION_DELETE("w"),
+
+	FUNCTION_DUMP("r"),
+
+	FUNCTION_FLUSH("w"),
+
+	FUNCTION_KILL("w"),
+
+	FUNCTION_LIST("r"),
+
+	FUNCTION_LOAD("r"),
+
+	FUNCTION_RESTORE("w"),
+
+	FUNCTION_STATS("r"),
+	/**
+	 * scripting command end
+	 **/
 	;
 
 	/**

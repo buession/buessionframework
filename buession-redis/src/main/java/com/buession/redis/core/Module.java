@@ -32,22 +32,15 @@ import java.util.Objects;
 /**
  * 模块信息
  *
+ * @param name
+ * 		模块名称
+ * @param version
+ * 		模块版本号
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public record Module(
-		/**
-		 * 模块名称
-		 */
-		String name,
-
-		/**
-		 * 模块版本号
-		 */
-		int version
-) implements Serializable {
-
-	private final static long serialVersionUID = 8584149197825340590L;
+public record Module(String name, int version) {
 
 	@Override
 	public int hashCode() {

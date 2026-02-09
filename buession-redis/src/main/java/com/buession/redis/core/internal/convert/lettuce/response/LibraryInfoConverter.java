@@ -19,28 +19,35 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.core.internal.convert.lettuce.response;
 
-import com.buession.redis.client.jedis.JedisRedisClient;
-import com.buession.redis.client.operations.ListOperations;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.LibraryInfo;
+import org.springframework.lang.Nullable;
+
+import java.util.List;
+import java.util.Map;
 
 /**
- * Jedis 列表命令操作抽象类
- *
- * @param <C>
- * 		Redis Client {@link JedisRedisClient}
+ * Lettuce LibraryInfo 转换器
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 4.0.0
  */
-public abstract class AbstractListOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
-		implements ListOperations {
+public final class LibraryInfoConverter implements Converter<Map<String, Object>, LibraryInfo> {
 
-	public AbstractListOperations(final C client){
-		super(client);
+	@Nullable
+	@Override
+	public LibraryInfo convert(final Map<String, Object> source) {
+		if(source == null){
+			return null;
+		}
+
+		return new LibraryInfo(source.get("name").toString(), source.get("engine").toString(),
+				source.get("code").toString(), (List<Map<String, Object>>) source.get("functions"));
 	}
 
 }

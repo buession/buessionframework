@@ -26,23 +26,13 @@ package com.buession.redis.core;
 
 import com.buession.redis.utils.ObjectStringBuilder;
 
-import java.io.Serializable;
-
 /**
  * Count-Min Sketch（CMS） 数据结构的元信息
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public record CmsInfo(
-		int width,
-
-		int depth,
-
-		int count
-) implements Serializable {
-
-	private final static long serialVersionUID = -6573543380823907661L;
+public record CmsInfo(int width, int depth, int count) {
 
 	@Override
 	public String toString() {

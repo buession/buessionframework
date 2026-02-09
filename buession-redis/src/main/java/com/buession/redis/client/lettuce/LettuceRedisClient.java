@@ -149,19 +149,10 @@ public class LettuceRedisClient
 	@Override
 	public JsonOperations jsonOperations() {
 		if(jsonOperations == null){
-			hyperLogLogOperations = new LettuceJsonOperations(this);
+			jsonOperations = new LettuceJsonOperations(this);
 		}
 
 		return jsonOperations;
-	}
-
-	@Override
-	public KeyOperations keyOperations() {
-		if(keyOperations == null){
-			keyOperations = new LettuceKeyOperations(this);
-		}
-
-		return keyOperations;
 	}
 
 	@Override
@@ -189,6 +180,15 @@ public class LettuceRedisClient
 		}
 
 		return scriptingOperations;
+	}
+
+	@Override
+	public KeyOperations keyOperations() {
+		if(keyOperations == null){
+			keyOperations = new LettuceKeyOperations(this);
+		}
+
+		return keyOperations;
 	}
 
 	@Override

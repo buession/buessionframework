@@ -19,29 +19,33 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.lettuce.operations;
+package com.buession.redis.core.internal.convert.jedis.response;
 
-import com.buession.redis.client.lettuce.LettuceRedisClient;
-import com.buession.redis.client.operations.PubSubOperations;
-import com.buession.redis.utils.SafeEncoder;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.LibraryInfo;
+import org.springframework.lang.Nullable;
 
 /**
- * Lettuce Pub/Sub 命令操作抽象类
- *
- * @param <C>
- * 		Redis Client {@link LettuceRedisClient}
+ * Jedis {@link redis.clients.jedis.resps.LibraryInfo} 转换为 {@link com.buession.redis.core.LibraryInfo}
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public abstract class AbstractPubSubOperations<C extends LettuceRedisClient> extends AbstractLettuceRedisOperations<C>
-		implements PubSubOperations {
+public final class LibraryInfoConverter implements Converter<redis.clients.jedis.resps.LibraryInfo,
+		com.buession.redis.core.LibraryInfo> {
 
-	public AbstractPubSubOperations(final C client) {
-		super(client);
+	@Nullable
+	@Override
+	public LibraryInfo convert(final redis.clients.jedis.resps.LibraryInfo source) {
+		if(source == null){
+			return null;
+		}
+
+		return new com.buession.redis.core.LibraryInfo(source.getLibraryName(), source.getEngine(),
+				source.getLibraryCode(), source.getFunctions());
 	}
 
 }

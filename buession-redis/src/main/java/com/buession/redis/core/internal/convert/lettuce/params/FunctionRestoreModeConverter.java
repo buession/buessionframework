@@ -22,31 +22,33 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
+package com.buession.redis.core.internal.convert.lettuce.params;
 
-import com.buession.redis.utils.ObjectStringBuilder;
-
-import java.util.List;
+import com.buession.core.converter.Converter;
+import io.lettuce.core.FunctionRestoreMode;
+import org.springframework.lang.Nullable;
 
 /**
- * 哈希槽和 Redis 实例映射关系,详细信息请看 <a href="http://www.redis.cn/commands/cluster-slots.html" target="_blank">http://www.redis.cn/commands/cluster-slots.html</a>
- *
- * @param range
- * 		哈希槽起止编号
- * @param masterNodes
- * 		master 节点副本列表
+ * {@link com.buession.redis.core.FunctionRestoreMode} 转换为 {@link io.lettuce.core.FunctionRestoreMode}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 4.0.0
  */
-public record ClusterSlot(SlotRange range, List<RedisServer> masterNodes) {
+public final class FunctionRestoreModeConverter implements Converter<com.buession.redis.core.FunctionRestoreMode,
+		io.lettuce.core.FunctionRestoreMode> {
 
+	@Nullable
 	@Override
-	public String toString() {
-		return ObjectStringBuilder.create()
-				.add("range", range)
-				.add("masterNodes", masterNodes)
-				.build();
+	public FunctionRestoreMode convert(final com.buession.redis.core.FunctionRestoreMode source) {
+		if(source == null){
+			return null;
+		}
+
+		return switch(source){
+			case APPEND -> FunctionRestoreMode.APPEND;
+			case FLUSH -> FunctionRestoreMode.FLUSH;
+			case REPLACE -> FunctionRestoreMode.REPLACE;
+		};
 	}
 
 }

@@ -24,29 +24,38 @@
  */
 package com.buession.redis.core;
 
-import com.buession.redis.utils.ObjectStringBuilder;
-
-import java.util.List;
-
 /**
- * 哈希槽和 Redis 实例映射关系,详细信息请看 <a href="http://www.redis.cn/commands/cluster-slots.html" target="_blank">http://www.redis.cn/commands/cluster-slots.html</a>
- *
- * @param range
- * 		哈希槽起止编号
- * @param masterNodes
- * 		master 节点副本列表
+ * Restore mode for {@code FUNCTION RESTORE}.
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 4.0.0
  */
-public record ClusterSlot(SlotRange range, List<RedisServer> masterNodes) {
+public enum FunctionRestoreMode implements Keyword {
+
+	/**
+	 * Appends the restored libraries to the existing libraries and aborts on collision. This is the default policy.
+	 */
+	APPEND,
+
+	/**
+	 * Deletes all existing libraries before restoring the payload.
+	 */
+	FLUSH,
+
+	/**
+	 * Appends the restored libraries to the existing libraries, replacing any existing ones in case of name collisions. Note
+	 * that this policy doesn't prevent function name collisions, only libraries.
+	 */
+	REPLACE;
+
+	@Override
+	public String getValue() {
+		return name();
+	}
 
 	@Override
 	public String toString() {
-		return ObjectStringBuilder.create()
-				.add("range", range)
-				.add("masterNodes", masterNodes)
-				.build();
+		return getValue();
 	}
 
 }

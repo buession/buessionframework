@@ -26,38 +26,32 @@ package com.buession.redis.core;
 
 import com.buession.redis.utils.ObjectStringBuilder;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
  * Pending 消息的摘要信息
  *
+ * @param total
+ * 		Pending 消息总数
+ * @param minId
+ * 		最小消息 ID
+ * @param maxId
+ * 		最大消息 ID
+ * @param consumerMessageCount
+ * 		各消费者的 pending 消息数统计
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
 public record StreamPendingSummary(
-		/*
-		  Pending 消息总数
-		 */
 		long total,
 
-		/*
-		  最小消息 ID
-		 */
 		StreamEntryId minId,
 
-		/*
-		  最大消息 ID
-		 */
 		StreamEntryId maxId,
 
-		/*
-		  各消费者的 pending 消息数统计
-		 */
 		Map<String, Long> consumerMessageCount
-) implements Serializable {
-
-	private final static long serialVersionUID = 4352578196582945851L;
+) {
 
 	@Override
 	public String toString() {

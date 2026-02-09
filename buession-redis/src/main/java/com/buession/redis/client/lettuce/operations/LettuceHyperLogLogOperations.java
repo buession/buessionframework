@@ -81,7 +81,7 @@ public final class LettuceHyperLogLogOperations extends AbstractLettuceRedisOper
 
 	@Override
 	public Status pfSelftest() {
-		return executeCommand(Command.PFSELFTEST, new OkStatusConverter());
+		return executeCommand(Command.PFSELFTEST);
 	}
 
 }

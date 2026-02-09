@@ -421,6 +421,38 @@ public enum Command implements ProtocolCommand {
 	/**
 	 * pubsub command end
 	 **/
+
+	/**
+	 * scripting command start
+	 **/
+	EVAL(CommandGroup.SCRIPTING, "rw"),
+
+	EVAL_RO(CommandGroup.SCRIPTING, "r"),
+
+	EVALSHA(CommandGroup.SCRIPTING, "rw"),
+
+	EVALSHA_RO(CommandGroup.SCRIPTING, "r"),
+
+	FCALL(CommandGroup.SCRIPTING, "rw"),
+
+	FCALL_RO(CommandGroup.SCRIPTING, "r"),
+
+	FUNCTION(CommandGroup.SCRIPTING, "rw",
+			new SubCommand[]{SubCommand.FUNCTION_DELETE, SubCommand.FUNCTION_DUMP, SubCommand.FUNCTION_FLUSH,
+					SubCommand.FUNCTION_KILL, SubCommand.FUNCTION_LIST, SubCommand.FUNCTION_LOAD}),
+
+	SCRIPT_DEBUG(CommandGroup.SCRIPTING, "rw"),
+
+	SCRIPT_EXISTS(CommandGroup.SCRIPTING, "r"),
+
+	SCRIPT_FLUSH(CommandGroup.SCRIPTING, "w"),
+
+	SCRIPT_KILL(CommandGroup.SCRIPTING, "w"),
+
+	SCRIPT_LOAD(CommandGroup.SCRIPTING, "r"),
+	/**
+	 * scripting command end
+	 **/
 	;
 
 	/**

@@ -27,7 +27,6 @@ package com.buession.redis.core;
 import com.buession.lang.Geo;
 import com.buession.redis.utils.ObjectStringBuilder;
 
-import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Objects;
@@ -35,26 +34,16 @@ import java.util.Objects;
 /**
  * 地理位置半径
  *
+ * @param member
+ * 		成员名
+ * @param distance
+ * 		搜索半径
+ * @param geo
+ * 		经纬度
+ *
  * @author Yong.Teng
  */
-public class GeoRadius implements Serializable {
-
-	private final static long serialVersionUID = 8391863034011700419L;
-
-	/**
-	 * 成员名
-	 */
-	private final byte[] member;
-
-	/**
-	 * 搜索半径
-	 */
-	private final Double distance;
-
-	/**
-	 * 经纬度
-	 */
-	private final Geo geo;
+public record GeoRadius(byte[] member, Double distance, Geo geo) {
 
 	/**
 	 * 构造函数
@@ -78,33 +67,16 @@ public class GeoRadius implements Serializable {
 		this(member, distance, null);
 	}
 
-	public GeoRadius(final byte[] member, final Geo geo) {
-		this(member, null, geo);
-	}
-
 	/**
 	 * 构造函数
 	 *
 	 * @param member
 	 * 		成员名
-	 * @param distance
-	 * 		搜索半径
 	 * @param geo
 	 * 		经纬度
 	 */
-	public GeoRadius(final byte[] member, final Double distance, final Geo geo) {
-		this.member = member;
-		this.distance = distance;
-		this.geo = geo;
-	}
-
-	/**
-	 * 返回成员名
-	 *
-	 * @return 成员名
-	 */
-	public byte[] getMember() {
-		return member;
+	public GeoRadius(final byte[] member, final Geo geo) {
+		this(member, null, geo);
 	}
 
 	/**
@@ -114,24 +86,6 @@ public class GeoRadius implements Serializable {
 	 */
 	public String getMemberAsString() {
 		return new String(member, StandardCharsets.UTF_8);
-	}
-
-	/**
-	 * 返回搜索半径
-	 *
-	 * @return 搜索半径
-	 */
-	public Double getDistance() {
-		return distance;
-	}
-
-	/**
-	 * 返回经纬度
-	 *
-	 * @return 经纬度
-	 */
-	public Geo getGeo() {
-		return geo;
 	}
 
 	@Override

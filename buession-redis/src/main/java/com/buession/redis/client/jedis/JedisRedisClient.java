@@ -148,19 +148,10 @@ public class JedisRedisClient extends AbstractRedisClient<JedisRedisConnection<?
 	@Override
 	public JsonOperations jsonOperations() {
 		if(jsonOperations == null){
-			hyperLogLogOperations = new JedisJsonOperations(this);
+			jsonOperations = new JedisJsonOperations(this);
 		}
 
 		return jsonOperations;
-	}
-
-	@Override
-	public KeyOperations keyOperations() {
-		if(keyOperations == null){
-			keyOperations = new JedisKeyOperations(this);
-		}
-
-		return keyOperations;
 	}
 
 	@Override
@@ -188,6 +179,15 @@ public class JedisRedisClient extends AbstractRedisClient<JedisRedisConnection<?
 		}
 
 		return scriptingOperations;
+	}
+
+	@Override
+	public KeyOperations keyOperations() {
+		if(keyOperations == null){
+			keyOperations = new JedisKeyOperations(this);
+		}
+
+		return keyOperations;
 	}
 
 	@Override

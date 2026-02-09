@@ -26,8 +26,6 @@ package com.buession.redis.core;
 
 import com.buession.redis.utils.ObjectStringBuilder;
 
-import java.io.Serializable;
-
 /**
  * 哈希槽的详细统计信息
  *
@@ -44,9 +42,7 @@ public record ClusterSlotStat(
 		long networkBytesIn,
 
 		long networkBytesOut
-) implements Serializable {
-
-	private final static long serialVersionUID = 8893587588409047546L;
+) {
 
 	@Override
 	public String toString() {

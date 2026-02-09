@@ -24,7 +24,6 @@
  */
 package com.buession.redis.core;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -37,9 +36,7 @@ public record StreamEntry(
 		StreamEntryId id,
 
 		Map<String, String> fields
-) implements Serializable {
-
-	private final static long serialVersionUID = 6763043914884686198L;
+) {
 
 	@Override
 	public String toString() {
