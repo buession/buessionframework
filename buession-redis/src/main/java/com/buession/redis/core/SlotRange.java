@@ -24,7 +24,6 @@
  */
 package com.buession.redis.core;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -35,9 +34,7 @@ import java.util.Set;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class SlotRange implements Serializable {
-
-	private final static long serialVersionUID = -185528503728995147L;
+public class SlotRange {
 
 	private final int lowerBound;
 

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -40,8 +40,6 @@ import java.util.Set;
  */
 public class RedisServer extends RedisNode {
 
-	private final static long serialVersionUID = 4843502163987630437L;
-
 	/**
 	 * Redis 服务器主机 IP 地址
 	 */
@@ -58,7 +56,7 @@ public class RedisServer extends RedisNode {
 	 * @param host
 	 * 		Redis 节点地址
 	 */
-	public RedisServer(final String host){
+	public RedisServer(final String host) {
 		super(host);
 		this.ip = host;
 	}
@@ -71,7 +69,7 @@ public class RedisServer extends RedisNode {
 	 * @param port
 	 * 		Redis 端口
 	 */
-	public RedisServer(final String host, final int port){
+	public RedisServer(final String host, final int port) {
 		super(host, port);
 		this.ip = host;
 	}
@@ -84,7 +82,7 @@ public class RedisServer extends RedisNode {
 	 * @param role
 	 * 		节点角色
 	 */
-	public RedisServer(final String host, final Role role){
+	public RedisServer(final String host, final Role role) {
 		super(host, role);
 		this.ip = host;
 	}
@@ -99,7 +97,7 @@ public class RedisServer extends RedisNode {
 	 * @param role
 	 * 		节点角色
 	 */
-	public RedisServer(final String host, final int port, final Role role){
+	public RedisServer(final String host, final int port, final Role role) {
 		super(host, port, role);
 		this.ip = host;
 	}
@@ -112,7 +110,7 @@ public class RedisServer extends RedisNode {
 	 * @param properties
 	 * 		Redis 服务器信息
 	 */
-	public RedisServer(final String host, final Properties properties){
+	public RedisServer(final String host, final Properties properties) {
 		this(host);
 		this.properties = properties;
 	}
@@ -127,7 +125,7 @@ public class RedisServer extends RedisNode {
 	 * @param properties
 	 * 		Redis 服务器信息
 	 */
-	public RedisServer(final String host, final int port, final Properties properties){
+	public RedisServer(final String host, final int port, final Properties properties) {
 		this(host, port);
 		this.properties = properties;
 	}
@@ -142,7 +140,7 @@ public class RedisServer extends RedisNode {
 	 * @param properties
 	 * 		Redis 服务器信息
 	 */
-	public RedisServer(final String host, final Role role, final Properties properties){
+	public RedisServer(final String host, final Role role, final Properties properties) {
 		this(host, role);
 		this.properties = properties;
 	}
@@ -159,7 +157,7 @@ public class RedisServer extends RedisNode {
 	 * @param properties
 	 * 		Redis 服务器信息
 	 */
-	public RedisServer(final String host, final int port, final Role role, final Properties properties){
+	public RedisServer(final String host, final int port, final Role role, final Properties properties) {
 		this(host, port, role);
 		this.properties = properties;
 	}
@@ -169,7 +167,7 @@ public class RedisServer extends RedisNode {
 	 *
 	 * @return Redis 服务器主机 IP 地址
 	 */
-	public String getIp(){
+	public String getIp() {
 		return ip;
 	}
 
@@ -178,84 +176,84 @@ public class RedisServer extends RedisNode {
 	 *
 	 * @return Redis 服务器信息
 	 */
-	public Properties getProperties(){
+	public Properties getProperties() {
 		return properties;
 	}
 
-	public Long getQuorum(){
+	public Long getQuorum() {
 		return getLongValueOf(Key.QUORUM);
 	}
 
-	public String getRunId(){
+	public String getRunId() {
 		return get(Key.RUNID);
 	}
 
-	public Long getNumSlaves(){
+	public Long getNumSlaves() {
 		return getLongValueOf(Key.NUMBER_SLAVES);
 	}
 
-	public Long getNumOtherSentinels(){
+	public Long getNumOtherSentinels() {
 		return getLongValueOf(Key.NUMBER_OTHER_SENTINELS);
 	}
 
-	public Long getParallelSyncs(){
+	public Long getParallelSyncs() {
 		return getLongValueOf(Key.PARALLEL_SYNCS);
 	}
 
-	public Long getConfigEpoch(){
+	public Long getConfigEpoch() {
 		return getLongValueOf(Key.CONFIG_EPOCH);
 	}
 
-	public Long getInfoRefresh(){
+	public Long getInfoRefresh() {
 		return getLongValueOf(Key.INFO_REFRESH);
 	}
 
-	public Role getRoleReported(){
+	public Role getRoleReported() {
 		String roleName = get(Key.ROLE_REPORTED);
 		return Validate.hasText(roleName) ? EnumUtils.getEnum(Role.class, roleName) : null;
 	}
 
-	public Long getRoleReportedTime(){
+	public Long getRoleReportedTime() {
 		return getLongValueOf(Key.ROLE_REPORTED_TIME);
 	}
 
-	public Long getLastPingSent(){
+	public Long getLastPingSent() {
 		return getLongValueOf(Key.LAST_PING_SENT);
 	}
 
-	public Long getLastPingReply(){
+	public Long getLastPingReply() {
 		return getLongValueOf(Key.LAST_PING_REPLY);
 	}
 
-	public Long getLastOkPingReply(){
+	public Long getLastOkPingReply() {
 		return getLongValueOf(Key.LAST_OK_PING_REPLY);
 	}
 
-	public Long getLinkPendingCommands(){
+	public Long getLinkPendingCommands() {
 		return getLongValueOf(Key.LINK_PENDING_COMMANDS);
 	}
 
-	public Long getFailoverTimeout(){
+	public Long getFailoverTimeout() {
 		return getLongValueOf(Key.FAILOVER_TIMEOUT);
 	}
 
-	public Long getLinkRefcount(){
+	public Long getLinkRefcount() {
 		return getLongValueOf(Key.LINK_REFCOUNT);
 	}
 
-	public Long getODownTime(){
+	public Long getODownTime() {
 		return getLongValueOf(Key.O_DOWN_TIME);
 	}
 
-	public Long getSDownTime(){
+	public Long getSDownTime() {
 		return getLongValueOf(Key.S_DOWN_TIME);
 	}
 
-	public Long getDownAfterMilliseconds(){
+	public Long getDownAfterMilliseconds() {
 		return getLongValueOf(Key.DOWN_AFTER_MILLISECONDS);
 	}
 
-	public Set<String> getFlags(){
+	public Set<String> getFlags() {
 		String value = get(Key.FLAGS);
 
 		if(value == null){
@@ -268,7 +266,7 @@ public class RedisServer extends RedisNode {
 	}
 
 	@Override
-	public String asString(){
+	public String asString() {
 		final StringBuilder sb = new StringBuilder();
 
 		if(getId() != null){
@@ -280,12 +278,12 @@ public class RedisServer extends RedisNode {
 		return sb.toString();
 	}
 
-	public String get(final Key key){
+	public String get(final Key key) {
 		Assert.isNull(key, "Cannot retrieve client information for 'null'.");
 		return properties.getProperty(key.getKey());
 	}
 
-	private Long getLongValueOf(final Key key){
+	private Long getLongValueOf(final Key key) {
 		String value = get(key);
 		return value == null ? null : Long.valueOf(value);
 	}
@@ -348,11 +346,11 @@ public class RedisServer extends RedisNode {
 
 		private final String key;
 
-		Key(final String key){
+		Key(final String key) {
 			this.key = key;
 		}
 
-		public String getKey(){
+		public String getKey() {
 			return key;
 		}
 

@@ -45,62 +45,50 @@ import java.util.Properties;
 /**
  * Redis 服务器的各种信息和统计数值
  *
+ * @param server
+ * 		Redis 服务器的信息
+ * @param clients
+ * 		已连接客户端的信息
+ * @param memory
+ * 		Redis 服务器的内存信息
+ * @param persistence
+ * 		RDB 持久化和 AOF 持久化有关的信息
+ * @param stats
+ * 		一般统计信息
+ * @param replication
+ * 		主从复制信息
+ * @param sentinel
+ * 		Sentinel 信息
+ * @param cluster
+ * 		集群有关的信息
+ * @param cpu
+ * 		CPU 的计算量统计信息
+ * @param keyspace
+ * 		数据库相关的统计信息
+ *
  * @author Yong.Teng
  */
 public record Info(
-
-		/*
-		  Redis 服务器的信息
-		 */
 		Server server,
 
-		/*
-		  已连接客户端的信息
-		 */
 		Clients clients,
 
-		/*
-		  Redis 服务器的内存信息
-		 */
 		Memory memory,
 
-		/*
-		 * RDB 持久化和 AOF 持久化有关的信息
-		 */
 		Persistence persistence,
 
-		/*
-		 * 一般统计信息
-		 */
 		Stats stats,
 
-		/*
-		 * 主从复制信息
-		 */
 		Replication replication,
 
-		/*
-		 * Sentinel 信息
-		 */
 		Sentinel sentinel,
 
-		/*
-		 * CPU 的计算量统计信息
-		 */
-		Cpu cpu,
-
-		/*
-		 * 集群有关的信息
-		 */
 		Cluster cluster,
 
-		/*
-		 * 数据库相关的统计信息
-		 */
-		List<Keyspace> keyspace
-) implements Serializable {
+		Cpu cpu,
 
-	static long serialVersionUID = -2772690110674245981L;
+		List<Keyspace> keyspace
+) {
 
 	public String toPrettyString() {
 		final StringBuilder sb = new StringBuilder();
@@ -400,19 +388,40 @@ public record Info(
 
 	}
 
+	private static abstract class BaseInfo {
+
+		protected final Properties properties;
+
+		/**
+		 * 构造函数
+		 *
+		 * @param properties
+		 * 		属性
+		 */
+		public BaseInfo(final Properties properties) {
+			this.properties = properties;
+		}
+
+		public String toPrettyString() {
+			return Info.toPrettyString(properties);
+		}
+
+		@Override
+		public String toString() {
+			return Info.toString(properties);
+		}
+
+	}
+
 	/**
 	 * Redis 服务器的信息
 	 *
 	 * @author Yong.Teng
 	 */
-	public final static class Server implements Serializable {
-
-		private final static long serialVersionUID = 2729543496870054983L;
-
-		private final Properties properties;
+	public final static class Server extends BaseInfo {
 
 		public Server(final Properties properties) {
-			this.properties = properties;
+			super(properties);
 		}
 
 		/**
@@ -581,15 +590,6 @@ public record Info(
 			return PropertiesUtils.get(properties, Key.VERSION.value);
 		}
 
-		public String toPrettyString() {
-			return Info.toPrettyString(properties);
-		}
-
-		@Override
-		public String toString() {
-			return Info.toString(properties);
-		}
-
 		public enum Key implements Keyword {
 
 			ARCH("arch_bits"),
@@ -655,14 +655,10 @@ public record Info(
 	 *
 	 * @author Yong.Teng
 	 */
-	public final static class Clients implements Serializable {
-
-		private final static long serialVersionUID = 7746131798680346372L;
-
-		private final Properties properties;
+	public final static class Clients extends BaseInfo {
 
 		public Clients(final Properties properties) {
-			this.properties = properties;
+			super(properties);
 		}
 
 		/**
@@ -719,15 +715,6 @@ public record Info(
 			return PropertiesUtils.getInt(properties, Key.LONGEST_OUTPUT_LIST.value);
 		}
 
-		public String toPrettyString() {
-			return Info.toPrettyString(properties);
-		}
-
-		@Override
-		public String toString() {
-			return Info.toString(properties);
-		}
-
 		public enum Key implements Keyword {
 
 			BIGGES_TINPUT_BUFFER("client_biggest_input_buf"),
@@ -767,14 +754,10 @@ public record Info(
 	 *
 	 * @author Yong.Teng
 	 */
-	public final static class Memory implements Serializable {
-
-		private final static long serialVersionUID = 1058962019266560745L;
-
-		private final Properties properties;
+	public final static class Memory extends BaseInfo {
 
 		public Memory(final Properties properties) {
-			this.properties = properties;
+			super(properties);
 		}
 
 		/**
@@ -1124,15 +1107,6 @@ public record Info(
 			return PropertiesUtils.getLong(properties, Key.USED_MEMORY_STARTUP.value);
 		}
 
-		public String toPrettyString() {
-			return Info.toPrettyString(properties);
-		}
-
-		@Override
-		public String toString() {
-			return Info.toString(properties);
-		}
-
 		public enum Key implements Keyword {
 
 			ACTIVE_DEFRAG_RUNNING("active_defrag_running"),
@@ -1240,14 +1214,10 @@ public record Info(
 	 *
 	 * @author Yong.Teng
 	 */
-	public final static class Persistence implements Serializable {
-
-		private final static long serialVersionUID = 643244503594125194L;
-
-		private final Properties properties;
+	public final static class Persistence extends BaseInfo {
 
 		public Persistence(final Properties properties) {
-			this.properties = properties;
+			super(properties);
 		}
 
 		/**
@@ -1511,15 +1481,6 @@ public record Info(
 			return getDate(properties, Key.RDB_LAST_SAVE_TIME.getValue(), true);
 		}
 
-		public String toPrettyString() {
-			return Info.toPrettyString(properties);
-		}
-
-		@Override
-		public String toString() {
-			return Info.toString(properties);
-		}
-
 		public enum Key implements Keyword {
 
 			AOF_BASE_SIZE("aof_base_size"),
@@ -1593,14 +1554,10 @@ public record Info(
 	 *
 	 * @author Yong.Teng
 	 */
-	public final static class Stats implements Serializable {
-
-		private final static long serialVersionUID = 668423701291623945L;
-
-		private final Properties properties;
+	public final static class Stats extends BaseInfo {
 
 		public Stats(final Properties properties) {
-			this.properties = properties;
+			super(properties);
 		}
 
 		/**
@@ -1832,15 +1789,6 @@ public record Info(
 			return PropertiesUtils.getInt(properties, Key.TOTAL_NET_OUTPUT.value);
 		}
 
-		public String toPrettyString() {
-			return Info.toPrettyString(properties);
-		}
-
-		@Override
-		public String toString() {
-			return Info.toString(properties);
-		}
-
 		public enum Key implements Keyword {
 
 			ACTIVE_DEFRAG_HITS("active_defrag_hits"),
@@ -1920,14 +1868,10 @@ public record Info(
 	 *
 	 * @author Yong.Teng
 	 */
-	public final static class Replication implements Serializable {
-
-		private final static long serialVersionUID = 5728324218040813770L;
-
-		private final Properties properties;
+	public final static class Replication extends BaseInfo {
 
 		public Replication(final Properties properties) {
-			this.properties = properties;
+			super(properties);
 		}
 
 		/**
@@ -2075,15 +2019,6 @@ public record Info(
 			return PropertiesUtils.getInt(properties, Key.REPL_BACKLOG_FIRST_BYTE_OFFSET.value);
 		}
 
-		public String toPrettyString() {
-			return Info.toPrettyString(properties);
-		}
-
-		@Override
-		public String toString() {
-			return Info.toString(properties);
-		}
-
 		public enum Key implements Keyword {
 
 			CONNECTED_SLAVES("connected_slaves"),
@@ -2166,9 +2101,7 @@ public record Info(
 
 		}
 
-		public final static class Slave extends RedisServer implements Serializable {
-
-			private final static long serialVersionUID = 2989042827385297339L;
+		public final static class Slave extends RedisServer {
 
 			private final Properties properties;
 
@@ -2265,14 +2198,10 @@ public record Info(
 
 		}
 
-		public final static class ReplBacklog implements Serializable {
-
-			private final static long serialVersionUID = 1468810894033878876L;
-
-			private final Properties properties;
+		public final static class ReplBacklog extends BaseInfo {
 
 			public ReplBacklog(final Properties properties) {
-				this.properties = properties;
+				super(properties);
 			}
 
 			public Integer getActive() {
@@ -2289,15 +2218,6 @@ public record Info(
 
 			public Integer getHistlen() {
 				return PropertiesUtils.getInt(properties, Key.HISTLEN.value);
-			}
-
-			public String toPrettyString() {
-				return Info.toPrettyString(properties);
-			}
-
-			@Override
-			public String toString() {
-				return Info.toString(properties);
 			}
 
 			public enum Key implements Keyword {
@@ -2337,14 +2257,10 @@ public record Info(
 	 *
 	 * @author Yong.Teng
 	 */
-	public final static class Sentinel implements Serializable {
-
-		private final static long serialVersionUID = 1740259200282640149L;
-
-		private final Properties properties;
+	public final static class Sentinel extends BaseInfo {
 
 		public Sentinel(final Properties properties) {
-			this.properties = properties;
+			super(properties);
 		}
 
 		/**
@@ -2405,15 +2321,6 @@ public record Info(
 			return PropertiesUtils.getInt(properties, Key.SIMULATE_FAILURE_FLAGS.value);
 		}
 
-		public String toPrettyString() {
-			return Info.toPrettyString(properties);
-		}
-
-		@Override
-		public String toString() {
-			return Info.toString(properties);
-		}
-
 		public enum Key implements Keyword {
 
 			MASTERS("masters"),
@@ -2446,9 +2353,7 @@ public record Info(
 
 		}
 
-		public final static class Master extends RedisNode implements Serializable {
-
-			private final static long serialVersionUID = 5058163948650311361L;
+		public final static class Master extends RedisNode {
 
 			private final Properties properties;
 
@@ -2571,14 +2476,10 @@ public record Info(
 	 *
 	 * @author Yong.Teng
 	 */
-	public final static class Cpu implements Serializable {
-
-		private final static long serialVersionUID = 7374909500664048450L;
-
-		private final Properties properties;
+	public final static class Cpu extends BaseInfo {
 
 		public Cpu(final Properties properties) {
-			this.properties = properties;
+			super(properties);
 		}
 
 		/**
@@ -2617,15 +2518,6 @@ public record Info(
 			return PropertiesUtils.getDouble(properties, Key.USED_USER_CHILDREN.value);
 		}
 
-		public String toPrettyString() {
-			return Info.toPrettyString(properties);
-		}
-
-		@Override
-		public String toString() {
-			return Info.toString(properties);
-		}
-
 		public enum Key implements Keyword {
 
 			USED_SYS("used_cpu_sys"),
@@ -2661,14 +2553,10 @@ public record Info(
 	 *
 	 * @author Yong.Teng
 	 */
-	public final static class Cluster implements Serializable {
-
-		private final static long serialVersionUID = 1616257693468570678L;
-
-		private final Properties properties;
+	public final static class Cluster extends BaseInfo {
 
 		public Cluster(final Properties properties) {
-			this.properties = properties;
+			super(properties);
 		}
 
 		/**
@@ -2687,15 +2575,6 @@ public record Info(
 		 */
 		public Boolean getEnabled() {
 			return getBoolean(properties, Key.ENABLED.value);
-		}
-
-		public String toPrettyString() {
-			return Info.toPrettyString(properties);
-		}
-
-		@Override
-		public String toString() {
-			return Info.toString(properties);
 		}
 
 		public enum Key implements Keyword {
@@ -2727,14 +2606,10 @@ public record Info(
 	 *
 	 * @author Yong.Teng
 	 */
-	public final static class Keyspace implements Serializable {
-
-		private final static long serialVersionUID = -5023410132423250601L;
-
-		private final Properties properties;
+	public final static class Keyspace extends BaseInfo {
 
 		public Keyspace(final Properties properties) {
-			this.properties = properties;
+			super(properties);
 		}
 
 		public Long getAvgTtl() {

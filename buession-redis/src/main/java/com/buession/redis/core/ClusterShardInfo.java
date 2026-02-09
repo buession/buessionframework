@@ -42,19 +42,21 @@ public record ClusterShardInfo(IntegerRange slots, List<ClusterShardNode> nodes)
 		return ObjectStringBuilder.create().add("slots", slots).add("nodes", nodes).build();
 	}
 
-	public record ClusterShardNode(String id,
+	public record ClusterShardNode(
+			String id,
 
-								   int port,
+			int port,
 
-								   String ip,
+			String ip,
 
-								   String endpoint,
+			String endpoint,
 
-								   ClusterRole role,
+			ClusterRole role,
 
-								   int replicationOffset,
+			int replicationOffset,
 
-								   ClusterHealth health) {
+			ClusterHealth health
+	) {
 
 		@Override
 		public String toString() {

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -30,15 +30,13 @@ package com.buession.redis.core;
  */
 public class RedisClusterServer extends RedisServer {
 
-	private final static long serialVersionUID = 4843502163987630437L;
-
 	/**
 	 * 构造函数
 	 *
 	 * @param host
 	 * 		Redis 节点地址
 	 */
-	public RedisClusterServer(final String host){
+	public RedisClusterServer(final String host) {
 		super(host);
 	}
 
@@ -50,7 +48,7 @@ public class RedisClusterServer extends RedisServer {
 	 * @param port
 	 * 		Redis 端口
 	 */
-	public RedisClusterServer(final String host, final int port){
+	public RedisClusterServer(final String host, final int port) {
 		super(host, port);
 	}
 
@@ -62,7 +60,7 @@ public class RedisClusterServer extends RedisServer {
 	 * @param role
 	 * 		节点角色
 	 */
-	public RedisClusterServer(final String host, final Role role){
+	public RedisClusterServer(final String host, final Role role) {
 		super(host, role);
 	}
 
@@ -76,7 +74,7 @@ public class RedisClusterServer extends RedisServer {
 	 * @param role
 	 * 		节点角色
 	 */
-	public RedisClusterServer(final String host, final int port, final Role role){
+	public RedisClusterServer(final String host, final int port, final Role role) {
 		super(host, port, role);
 	}
 

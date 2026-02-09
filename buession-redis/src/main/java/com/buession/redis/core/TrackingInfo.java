@@ -33,13 +33,7 @@ import java.util.Set;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public record TrackingInfo(
-		Set<TrackingFlag> flags,
-
-		long redirect,
-
-		List<String> prefixes
-) {
+public record TrackingInfo(Set<TrackingFlag> flags, long redirect, List<String> prefixes) {
 
 	public enum TrackingFlag implements Keyword {
 

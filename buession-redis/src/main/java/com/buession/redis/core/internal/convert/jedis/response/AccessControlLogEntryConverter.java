@@ -43,7 +43,7 @@ public final class AccessControlLogEntryConverter implements Converter<AccessCon
 
 	@Override
 	public AclLog convert(final AccessControlLogEntry source) {
-		final Client client = clientConverter.convert((String) source.getlogEntry().get(AclLog.CLIENT_INFO));
+		final Client client = clientConverter.convert((String) source.getlogEntry().get("client-info"));
 
 		return new AclLog(source.getEntryId(), source.getCount(), source.getReason(), source.getContext(),
 				source.getObject(), source.getUsername(), source.getAgeSeconds(), client, source.getTimestampCreated(),

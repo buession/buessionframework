@@ -34,124 +34,44 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class AclLog {
+public record AclLog(
+		long entryId,
 
-	// Redis 7.2
-	public final static String ENTRY_ID = "entry-id";
+		long count,
 
-	public final static String COUNT = "count";
+		String reason,
 
-	public final static String REASON = "reason";
+		String context,
 
-	public final static String CONTEXT = "context";
+		String object,
 
-	public final static String OBJECT = "object";
+		String username,
 
-	public final static String USERNAME = "username";
+		Double ageSeconds,
 
-	public final static String AGE_SECONDS = "age-seconds";
+		Client clientInfo,
 
-	public final static String CLIENT_INFO = "client-info";
+		long timestampCreated,
 
-	public final static String TIMESTAMP_CREATED = "timestamp-created";
+		long timestampLastUpdated,
 
-	public final static String TIMESTAMP_LAST_UPDATED = "timestamp-last-updated";
-
-	private final long entryId;
-
-	private final long count;
-
-	private final String reason;
-
-	private final String context;
-
-	private final String object;
-
-	private final String username;
-
-	private final Double ageSeconds;
-
-	private final Client clientInfo;
-
-	private final long timestampCreated;
-
-	private final long timestampLastUpdated;
-
-	private final Map<String, Object> logEntry;
-
-	public AclLog(final long entryId, final long count, final String reason, final String context, final String object,
-				  final String username, final Double ageSeconds, final Client clientInfo, final long timestampCreated,
-				  final long timestampLastUpdated, final Map<String, Object> logEntry) {
-		this.entryId = entryId;
-		this.count = count;
-		this.reason = reason;
-		this.context = context;
-		this.object = object;
-		this.username = username;
-		this.ageSeconds = ageSeconds;
-		this.clientInfo = clientInfo;
-		this.timestampCreated = timestampCreated;
-		this.timestampLastUpdated = timestampLastUpdated;
-		this.logEntry = logEntry;
-	}
-
-	public long getEntryId() {
-		return entryId;
-	}
-
-	public long getCount() {
-		return count;
-	}
-
-	public String getReason() {
-		return reason;
-	}
-
-	public String getContext() {
-		return context;
-	}
-
-	public String getObject() {
-		return object;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public Double getAgeSeconds() {
-		return ageSeconds;
-	}
-
-	public Client getClientInfo() {
-		return clientInfo;
-	}
-
-	public long getTimestampCreated() {
-		return timestampCreated;
-	}
-
-	public long getTimestampLastUpdated() {
-		return timestampLastUpdated;
-	}
-
-	public Map<String, Object> getLogEntry() {
-		return logEntry;
-	}
+		Map<String, Object> logEntry
+) {
 
 	@Override
 	public String toString() {
 		return ObjectStringBuilder.create()
-				.add(ENTRY_ID, entryId)
-				.add(COUNT, count)
-				.add(REASON, reason)
-				.add(CONTEXT, context)
-				.add(OBJECT, object)
-				.add(USERNAME, username)
-				.add(AGE_SECONDS, ageSeconds)
-				.add(CLIENT_INFO, clientInfo)
-				.add(TIMESTAMP_CREATED, timestampCreated)
-				.add(TIMESTAMP_LAST_UPDATED, timestampLastUpdated)
+				.add("entry-id", entryId)
+				.add("count", count)
+				.add("reason", reason)
+				.add("context", context)
+				.add("object", object)
+				.add("username", username)
+				.add("age-seconds", ageSeconds)
+				.add("client-info", clientInfo)
+				.add("timestamp-created", timestampCreated)
+				.add("timestamp-last-updated", timestampLastUpdated)
+				.add("log-entry", logEntry)
 				.build();
 	}
 

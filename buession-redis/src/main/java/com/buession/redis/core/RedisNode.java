@@ -24,8 +24,6 @@
  */
 package com.buession.redis.core;
 
-import org.springframework.lang.Nullable;
-
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -49,19 +47,16 @@ public class RedisNode implements RedisNamedNode, Serializable {
 	/**
 	 * 主机 ID
 	 */
-	@Nullable
 	private String id;
 
 	/**
 	 * 主机名称
 	 */
-	@Nullable
 	private String name;
 
 	/**
 	 * 主机地址
 	 */
-	@Nullable
 	private String host;
 
 	/**
@@ -72,13 +67,11 @@ public class RedisNode implements RedisNamedNode, Serializable {
 	/**
 	 * 主机角色
 	 */
-	@Nullable
 	private Role role;
 
 	/**
 	 * Master 主机 ID
 	 */
-	@Nullable
 	private String masterId;
 
 	/**
@@ -87,7 +80,7 @@ public class RedisNode implements RedisNamedNode, Serializable {
 	 * @param host
 	 * 		主机地址
 	 */
-	public RedisNode(@Nullable final String host) {
+	public RedisNode(final String host) {
 		this.host = host;
 	}
 
@@ -99,7 +92,7 @@ public class RedisNode implements RedisNamedNode, Serializable {
 	 * @param port
 	 * 		端口
 	 */
-	public RedisNode(@Nullable final String host, final int port) {
+	public RedisNode(final String host, final int port) {
 		this.host = host;
 		this.port = port;
 	}
@@ -112,7 +105,7 @@ public class RedisNode implements RedisNamedNode, Serializable {
 	 * @param role
 	 * 		主机角色
 	 */
-	public RedisNode(@Nullable final String host, @Nullable final Role role) {
+	public RedisNode(final String host, final Role role) {
 		this(host);
 		this.role = role;
 	}
@@ -127,7 +120,7 @@ public class RedisNode implements RedisNamedNode, Serializable {
 	 * @param role
 	 * 		主机角色
 	 */
-	public RedisNode(@Nullable final String host, final int port, @Nullable final Role role) {
+	public RedisNode(final String host, final int port, final Role role) {
 		this(host, port);
 		this.role = role;
 	}
@@ -137,7 +130,6 @@ public class RedisNode implements RedisNamedNode, Serializable {
 	 *
 	 * @return 主机 ID
 	 */
-	@Nullable
 	public String getId() {
 		return id;
 	}
@@ -148,7 +140,7 @@ public class RedisNode implements RedisNamedNode, Serializable {
 	 * @param id
 	 * 		主机 ID
 	 */
-	public void setId(@Nullable String id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -158,7 +150,6 @@ public class RedisNode implements RedisNamedNode, Serializable {
 	 * @return 主机名称
 	 */
 	@Override
-	@Nullable
 	public String getName() {
 		return name;
 	}
@@ -169,7 +160,7 @@ public class RedisNode implements RedisNamedNode, Serializable {
 	 * @param name
 	 * 		主机名称
 	 */
-	public void setName(@Nullable String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 
@@ -178,7 +169,6 @@ public class RedisNode implements RedisNamedNode, Serializable {
 	 *
 	 * @return 主机地址
 	 */
-	@Nullable
 	public String getHost() {
 		return host;
 	}
@@ -189,7 +179,7 @@ public class RedisNode implements RedisNamedNode, Serializable {
 	 * @param host
 	 * 		主机地址
 	 */
-	public void setHost(@Nullable String host) {
+	public void setHost(String host) {
 		this.host = host;
 	}
 
@@ -217,7 +207,6 @@ public class RedisNode implements RedisNamedNode, Serializable {
 	 *
 	 * @return 主机角色
 	 */
-	@Nullable
 	public Role getRole() {
 		return role;
 	}
@@ -228,7 +217,7 @@ public class RedisNode implements RedisNamedNode, Serializable {
 	 * @param role
 	 * 		主机角色
 	 */
-	public void setRole(@Nullable Role role) {
+	public void setRole(Role role) {
 		this.role = role;
 	}
 
@@ -237,7 +226,6 @@ public class RedisNode implements RedisNamedNode, Serializable {
 	 *
 	 * @return 主机 Master Id
 	 */
-	@Nullable
 	public String getMasterId() {
 		return masterId;
 	}
@@ -248,7 +236,7 @@ public class RedisNode implements RedisNamedNode, Serializable {
 	 * @param masterId
 	 * 		主机 Master Id
 	 */
-	public void setMasterId(@Nullable String masterId) {
+	public void setMasterId(String masterId) {
 		this.masterId = masterId;
 	}
 

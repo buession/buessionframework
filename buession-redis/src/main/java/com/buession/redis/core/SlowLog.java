@@ -26,59 +26,35 @@ package com.buession.redis.core;
 
 import com.buession.redis.utils.ObjectStringBuilder;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
  * 慢日志信息，更多信息 <a href="http://www.redis.cn/commands/slowlog.html" target="_blank">http://www.redis.cn/commands/slowlog.html</a>
  *
+ * @param id
+ * 		每个慢查询条目的唯一的递增标识符
+ * @param timestamp
+ * 		处理记录命令的unix时间戳
+ * @param executionTime
+ * 		命令执行所需的总时间（单位：毫秒）
+ * @param args
+ * 		组成该命令的参数的数组
+ * @param client
+ * 		客户端信息
+ * @param clientName
+ * 		客户端名称
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public record SlowLog(
-		/**
-		 * 每个慢查询条目的唯一的递增标识符
-		 */
-		long id,
-
-		/**
-		 * 处理记录命令的unix时间戳
-		 */
-		long timestamp,
-
-		/**
-		 * 命令执行所需的总时间（单位：毫秒）
-		 */
-		long executionTime,
-
-		/**
-		 * 组成该命令的参数的数组
-		 */
-		List<String> args,
-
-		/**
-		 * 客户端信息
-		 */
-		Client client,
-
-		/**
-		 * 客户端名称
-		 */
-		String clientName
-) implements Serializable {
-
-	private final static long serialVersionUID = 4948377124212583969L;
+public record SlowLog(long id, long timestamp, long executionTime, List<String> args, Client client,
+					  String clientName) {
 
 	@Override
 	public String toString() {
-		return ObjectStringBuilder.create()
-				.add("id", id)
-				.add("timestamp", timestamp)
-				.add("executionTime", executionTime)
-				.add("args", args)
-				.add("client", client)
-				.add("clientName", clientName)
-				.build();
+		return ObjectStringBuilder.create().add("id", id).add("timestamp", timestamp)
+				.add("executionTime", executionTime).add("args", args).add("client", client)
+				.add("clientName", clientName).build();
 	}
 
 }

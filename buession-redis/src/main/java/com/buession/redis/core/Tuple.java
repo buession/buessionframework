@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -27,7 +27,6 @@ package com.buession.redis.core;
 import com.buession.core.utils.comparator.ByteArrayComparable;
 import com.buession.redis.utils.SafeEncoder;
 
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.StringJoiner;
@@ -35,22 +34,10 @@ import java.util.StringJoiner;
 /**
  * @author Yong.Teng
  */
-public class Tuple implements Comparable<Tuple>, Serializable {
-
-	private final static long serialVersionUID = -6469375940111456577L;
-
-	private final byte[] element;
-
-	private final Double score;
+public record Tuple(byte[] element, Double score) implements Comparable<Tuple> {
 
 	public Tuple(final String element, final Double score) {
 		this(SafeEncoder.encode(element), score);
-	}
-
-	public Tuple(final byte[] element, final Double score) {
-		super();
-		this.element = element;
-		this.score = score;
 	}
 
 	public String getElement() {

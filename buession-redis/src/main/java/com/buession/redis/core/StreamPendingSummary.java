@@ -43,15 +43,8 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public record StreamPendingSummary(
-		long total,
-
-		StreamEntryId minId,
-
-		StreamEntryId maxId,
-
-		Map<String, Long> consumerMessageCount
-) {
+public record StreamPendingSummary(long total, StreamEntryId minId, StreamEntryId maxId,
+								   Map<String, Long> consumerMessageCount) {
 
 	@Override
 	public String toString() {

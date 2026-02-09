@@ -26,35 +26,37 @@ package com.buession.redis.core;
 
 import com.buession.redis.utils.ObjectStringBuilder;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Stream 完整元数据
  *
+ * @param length
+ * 		Stream 中消息的总条数
+ * @param groups
+ * 		关联的消费者组数量
+ * @param radixTreeKeys
+ * 		Stream 内部 Radix Tree 结构信息
+ * @param radixTreeNodes
+ * 		Stream 内部 Radix Tree 结构信息
+ * @param lastGeneratedId
+ * 		-
+ * @param infos
+ * 		-
+ * @param entries
+ * 		-
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
 public record StreamFull(
-		/*
-		  Stream 中消息的总条数
-		 */
 		long length,
 
-		/*
-		  关联的消费者组数量
-		 */
 		List<StreamFull.Group> groups,
 
-		/*
-		  Stream 内部 Radix Tree 结构信息
-		 */
 		long radixTreeKeys,
 
-		/*
-		  Stream 内部 Radix Tree 结构信息
-		 */
 		long radixTreeNodes,
 
 		StreamEntryId lastGeneratedId,
@@ -62,9 +64,7 @@ public record StreamFull(
 		Map<String, Object> infos,
 
 		List<StreamEntry> entries
-) implements Serializable {
-
-	private final static long serialVersionUID = -4336316668706617743L;
+) {
 
 	@Override
 	public String toString() {
@@ -94,9 +94,7 @@ public record StreamFull(
 			StreamEntryId lastDeliveredId,
 
 			Map<String, Object> infos
-	) implements Serializable {
-
-		private static final long serialVersionUID = 560117056010590768L;
+	) {
 
 		@Override
 		public String toString() {

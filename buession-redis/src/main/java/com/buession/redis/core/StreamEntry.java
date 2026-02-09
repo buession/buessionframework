@@ -32,11 +32,7 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public record StreamEntry(
-		StreamEntryId id,
-
-		Map<String, String> fields
-) {
+public record StreamEntry(StreamEntryId id, Map<String, String> fields) {
 
 	@Override
 	public String toString() {
