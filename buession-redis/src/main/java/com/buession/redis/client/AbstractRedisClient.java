@@ -109,11 +109,6 @@ public abstract class AbstractRedisClient<CONN extends RedisConnection> implemen
 	protected JsonOperations jsonOperations;
 
 	/**
-	 * KEY 命令操作
-	 */
-	protected KeyOperations keyOperations;
-
-	/**
 	 * 列表命令操作
 	 */
 	protected ListOperations listOperations;
@@ -129,9 +124,19 @@ public abstract class AbstractRedisClient<CONN extends RedisConnection> implemen
 	protected ScriptingOperations scriptingOperations;
 
 	/**
+	 * 搜索命令操作
+	 */
+	//protected SearchOperations searchOperations;
+
+	/**
 	 * 服务端操作命令
 	 */
 	protected ServerOperations serverOperations;
+
+	/**
+	 * KEY 命令操作
+	 */
+	protected KeyOperations keyOperations;
 
 	/**
 	 * 集合命令操作

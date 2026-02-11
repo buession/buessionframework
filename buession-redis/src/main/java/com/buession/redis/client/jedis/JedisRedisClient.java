@@ -181,14 +181,17 @@ public class JedisRedisClient extends AbstractRedisClient<JedisRedisConnection<?
 		return scriptingOperations;
 	}
 
+	/*
 	@Override
-	public KeyOperations keyOperations() {
-		if(keyOperations == null){
-			keyOperations = new JedisKeyOperations(this);
+	public SearchOperations searchOperations() {
+		if(searchOperations == null){
+			searchOperations = new JedisSearchOperations(this);
 		}
 
-		return keyOperations;
+		return searchOperations;
 	}
+
+	 */
 
 	@Override
 	public ServerOperations serverOperations() {
@@ -197,6 +200,15 @@ public class JedisRedisClient extends AbstractRedisClient<JedisRedisConnection<?
 		}
 
 		return serverOperations;
+	}
+
+	@Override
+	public KeyOperations keyOperations() {
+		if(keyOperations == null){
+			keyOperations = new JedisKeyOperations(this);
+		}
+
+		return keyOperations;
 	}
 
 	@Override

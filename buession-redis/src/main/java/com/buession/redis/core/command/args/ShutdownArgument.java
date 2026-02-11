@@ -22,66 +22,78 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.response;
+package com.buession.redis.core.command.args;
 
-import com.buession.core.converter.Converter;
-import com.buession.core.utils.StringUtils;
-import com.buession.redis.core.Client;
-import com.buession.redis.core.SlowLog;
-
-import java.util.List;
-import java.util.stream.Collectors;
+import com.buession.redis.utils.ArgStringBuilder;
 
 /**
- * Lettuce 慢日志对象转换为 {@link SlowLog}
+ * SHUTDOWN 命令参数
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public final class SlowlogConverter implements Converter<Object, SlowLog> {
+public class ShutdownArgument {
 
-	@SuppressWarnings({"unchecked"})
+	private Boolean save;
+
+	private Boolean now;
+
+	private Boolean force;
+
+	private Boolean abort;
+
+	public ShutdownArgument() {
+	}
+
+	public ShutdownArgument(Boolean save, Boolean now, Boolean force, Boolean abort) {
+		this.save = save;
+		this.now = now;
+		this.force = force;
+		this.abort = abort;
+	}
+
+	public Boolean getSave() {
+		return save;
+	}
+
+	public ShutdownArgument setSave(Boolean save) {
+		this.save = save;
+		return this;
+	}
+
+	public Boolean getNow() {
+		return now;
+	}
+
+	public ShutdownArgument setNow(Boolean now) {
+		this.now = now;
+		return this;
+	}
+
+	public Boolean getForce() {
+		return force;
+	}
+
+	public ShutdownArgument setForce(Boolean force) {
+		this.force = force;
+		return this;
+	}
+
+	public Boolean getAbort() {
+		return abort;
+	}
+
+	public ShutdownArgument setAbort(Boolean abort) {
+		this.abort = abort;
+		return this;
+	}
+
 	@Override
-	public SlowLog convert(final Object source) {
-		if(source instanceof List){
-			final List<Object> tmp = (List<Object>) source;
-
-			if(tmp.size() == 6){
-				final Client client = parseHostAndPort(tmp.get(4));
-				final String clientName = parseClientName(tmp.get(5));
-
-				return new SlowLog((long) tmp.get(0), (long) tmp.get(1), (long) tmp.get(2), parseArgs(tmp.get(3)),
-						client, clientName);
-			}
-		}
-
-		return null;
+	public String toString() {
+		return ArgStringBuilder.create().append(save == null ? null : (Boolean.TRUE.equals(save) ? "SAVE" : "NOSAVE"))
+				.append(Boolean.TRUE.equals(now) ? "NOW" : null)
+				.append(Boolean.TRUE.equals(force) ? "FORCE" : null)
+				.append(Boolean.TRUE.equals(abort) ? "ABORT" : null)
+				.build();
 	}
-
-	private static Client parseHostAndPort(final Object value) {
-		final Client client = new Client();
-
-		if(value != null){
-			String[] hostAndPort = StringUtils.split(new String((byte[]) value), ':');
-			client.setHost(hostAndPort[0]);
-			client.setPort(Integer.parseInt(hostAndPort[1]));
-		}
-
-		return client;
-	}
-
-	private static String parseClientName(final Object value) {
-		return value == null ? null : new String((byte[]) value);
-	}
-
-	@SuppressWarnings({"unchecked"})
-	private static List<String> parseArgs(final Object value) {
-		if(value == null){
-			return null;
-		}
-
-		final List<byte[]> tmp = (List<byte[]>) value;
-		return tmp.stream().map((v)->v == null ? null : new String(v)).collect(Collectors.toList());
-	}
-
 }

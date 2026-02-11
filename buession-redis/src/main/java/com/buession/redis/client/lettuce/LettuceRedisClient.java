@@ -182,14 +182,17 @@ public class LettuceRedisClient
 		return scriptingOperations;
 	}
 
+	/*
 	@Override
-	public KeyOperations keyOperations() {
-		if(keyOperations == null){
-			keyOperations = new LettuceKeyOperations(this);
+	public SearchOperations searchOperations() {
+		if(searchOperations == null){
+			searchOperations = new LettuceSearchOperations(this);
 		}
 
-		return keyOperations;
+		return searchOperations;
 	}
+
+	 */
 
 	@Override
 	public ServerOperations serverOperations() {
@@ -198,6 +201,15 @@ public class LettuceRedisClient
 		}
 
 		return serverOperations;
+	}
+
+	@Override
+	public KeyOperations keyOperations() {
+		if(keyOperations == null){
+			keyOperations = new LettuceKeyOperations(this);
+		}
+
+		return keyOperations;
 	}
 
 	@Override

@@ -40,6 +40,7 @@ import com.buession.redis.client.operations.KeyOperations;
 import com.buession.redis.client.operations.ListOperations;
 import com.buession.redis.client.operations.PubSubOperations;
 import com.buession.redis.client.operations.ScriptingOperations;
+import com.buession.redis.client.operations.SearchOperations;
 import com.buession.redis.client.operations.ServerOperations;
 import com.buession.redis.client.operations.SetOperations;
 import com.buession.redis.client.operations.SortedSetOperations;
@@ -177,11 +178,11 @@ public interface RedisClient {
 	ScriptingOperations scriptingOperations();
 
 	/**
-	 * 返回 KEY 命令操作实例
+	 * 返回搜索命令操作实例
 	 *
-	 * @return KEY 命令操作实例
+	 * @return 搜索命令操作实例
 	 */
-	KeyOperations keyOperations();
+	//SearchOperations searchOperations();
 
 	/**
 	 * 返回服务端操作命令操作实例
@@ -189,6 +190,13 @@ public interface RedisClient {
 	 * @return 服务端操作命令操作实例
 	 */
 	ServerOperations serverOperations();
+
+	/**
+	 * 返回 KEY 命令操作实例
+	 *
+	 * @return KEY 命令操作实例
+	 */
+	KeyOperations keyOperations();
 
 	/**
 	 * 返回集合命令操作实例

@@ -71,103 +71,6 @@
 	 * scripting command end
 	 **/
 
-	/**
-	 * server command start
-	 **/
-	ACL_CAT(CommandGroup.SERVER, "r"),
-
-	ACL_SETUSER(CommandGroup.SERVER, "w"),
-
-	ACL_GETUSER(CommandGroup.SERVER, "r"),
-
-	ACL_USERS(CommandGroup.SERVER, "r"),
-
-	ACL_WHOAMI(CommandGroup.SERVER, "r"),
-
-	ACL_DELUSER(CommandGroup.SERVER, "w"),
-
-	ACL_GENPASS(CommandGroup.SERVER, "r"),
-
-	ACL_LIST(CommandGroup.SERVER, "r"),
-
-	ACL_LOAD(CommandGroup.SERVER, "r"),
-
-	ACL_LOG(CommandGroup.SERVER, "r"),
-
-	ACL_LOGREST(CommandGroup.SERVER, "w"),
-
-	ACL_LOGSAVE(CommandGroup.SERVER, "w"),
-
-	BGREWRITEAOF(CommandGroup.SERVER, "w"),
-
-	BGSAVE(CommandGroup.SERVER, "w"),
-
-	CONFIG_GET(CommandGroup.SERVER, "r"),
-
-	CONFIG_RESETSTAT(CommandGroup.SERVER, "w"),
-
-	CONFIG_REWRITE(CommandGroup.SERVER, "w"),
-
-	CONFIG_SET(CommandGroup.SERVER, "w"),
-
-	DBSIZE(CommandGroup.SERVER, "r"),
-
-	DEBUG(CommandGroup.SERVER, "w"),
-
-	FLUSHALL(CommandGroup.SERVER, "w"),
-
-	FLUSHDB(CommandGroup.SERVER, "w"),
-
-	INFO(CommandGroup.SERVER, "r"),
-
-	LASTSAVE(CommandGroup.SERVER, "w"),
-
-	MEMORY_DOCTOR(CommandGroup.SERVER, "w"),
-
-	MEMORY_MALLOCSTATS(CommandGroup.SERVER, "r"),
-
-	MEMORY_PURGE(CommandGroup.SERVER, "w"),
-
-	MEMORY_STATS(CommandGroup.SERVER, "r"),
-
-	MEMORY_USAGE(CommandGroup.SERVER, "r"),
-
-	MONITOR(CommandGroup.SERVER, "w"),
-
-	REPLICAOF(CommandGroup.SERVER, "w"),
-
-	ROLE(CommandGroup.SERVER, "r"),
-
-	SAVE(CommandGroup.SERVER, "w"),
-
-	SHUTDOWN(CommandGroup.SERVER, "w"),
-
-	SLAVEOF(CommandGroup.SERVER, "w"),
-
-	SLOWLOG_GET(CommandGroup.SERVER, "r"),
-
-	SLOWLOG_LEN(CommandGroup.SERVER, "r"),
-
-	SLOWLOG_RESET(CommandGroup.SERVER, "w"),
-
-	SYNC(CommandGroup.SERVER, "w"),
-
-	PSYNC(CommandGroup.SERVER, "w"),
-
-	TIME(CommandGroup.SERVER, "r"),
-
-	FAILOVER(CommandGroup.SERVER, "w"),
-
-	MODULE_LIST(CommandGroup.SERVER, "r"),
-
-	MODULE_LOAD(CommandGroup.SERVER, "r"),
-
-	MODULE_UNLOAD(CommandGroup.SERVER, "w"),
-
-	SWAPDB(CommandGroup.SERVER, "w"),
-	/**
-	 * server command end
-	 **/
 
 	/**
 	 * set command start
@@ -428,9 +331,9 @@
 	/**
 	 * ACL command start
 	 **/
-	ACL("rw", CommandGroup.ACL, SubCommand.ACL_CAT, SubCommand.ACL_DELUSER, SubCommand.ACL_DRYRUN,
-			SubCommand.ACL_GENPASS, SubCommand.ACL_GETUSER, SubCommand.LIST, SubCommand.LOAD, SubCommand.ACL_LOG,
-			SubCommand.SAVE, SubCommand.ACL_SETUSER, SubCommand.ACL_USERS, SubCommand.ACL_WHOAMI),
+	ACL("rw", CommandGroup.ACL, SubCommand.ACL_CAT,
+			SubCommand.LIST, SubCommand.LOAD,
+			SubCommand.SAVE),
 
 			public enum SubCommand implements ProtocolCommand {
             	/**
@@ -468,30 +371,3 @@
             	/**
             	 * Key command end
             	 **/
-
-            	/**
-            	 * ACL command start
-            	 **/
-            	ACL_CAT("r"),
-
-            	ACL_DELUSER("w"),
-
-            	ACL_DRYRUN("w"),
-
-            	ACL_GENPASS("r"),
-
-            	ACL_GETUSER("r"),
-
-            	ACL_LOG("rw"),
-
-            	ACL_SETUSER("w"),
-
-            	ACL_USERS("r"),
-
-            	ACL_WHOAMI("r"),
-            	/**
-            	 * ACL command end
-            	 **/
-            	;
-
-            }

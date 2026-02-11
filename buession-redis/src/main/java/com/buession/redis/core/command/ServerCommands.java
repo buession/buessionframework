@@ -19,15 +19,23 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
 
 import com.buession.lang.Status;
+import com.buession.redis.core.AclCategory;
 import com.buession.redis.core.AclLog;
+import com.buession.redis.core.CommandDoc;
+import com.buession.redis.core.CommandInfo;
+import com.buession.redis.core.CommandKeyAndFlag;
 import com.buession.redis.core.FlushMode;
+import com.buession.redis.core.HotKey;
 import com.buession.redis.core.Info;
+import com.buession.redis.core.LatencyHistogram;
+import com.buession.redis.core.LatencyHistory;
+import com.buession.redis.core.LatencyLatest;
 import com.buession.redis.core.MemoryStats;
 import com.buession.redis.core.Module;
 import com.buession.redis.core.RedisMonitor;
@@ -35,14 +43,20 @@ import com.buession.redis.core.RedisServerTime;
 import com.buession.redis.core.Role;
 import com.buession.redis.core.SlowLog;
 import com.buession.redis.core.AclUser;
+import com.buession.redis.core.command.args.AclSetUserArgument;
+import com.buession.redis.core.command.args.FailoverArgument;
+import com.buession.redis.core.command.args.HotkeysStartArgument;
+import com.buession.redis.core.command.args.RestoreArgument;
+import com.buession.redis.core.command.args.ShutdownArgument;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 服务端命令
  *
- * <p>详情说明 <a href="http://www.redis.cn/commands.html#server" target="_blank">http://www.redis.cn/commands.html#server</a></p>
+ * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=server" target="_blank">https://redis.io/docs/latest/commands/?group=server</a></p>
  *
  * @author Yong.Teng
  */
@@ -55,7 +69,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return A list of ACL categories or a list of commands inside a given category
 	 */
-	List<String> aclCat();
+	Set<AclCategory> aclCat();
 
 	/**
 	 * The command shows all the Redis commands in the specified category
@@ -67,7 +81,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return A list of ACL categories or a list of commands inside a given category
 	 */
-	List<String> aclCat(final String categoryName);
+	Set<Command> aclCat(final String categoryName);
 
 	/**
 	 * The command shows all the Redis commands in the specified category
@@ -79,77 +93,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return A list of ACL categories or a list of commands inside a given category
 	 */
-	List<byte[]> aclCat(final byte[] categoryName);
-
-	/**
-	 * Create an ACL user with the specified rules or modify the rules of an existing user
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/acl-setuser/" target="_blank">https://redis.io/commands/acl-setuser/</a></p>
-	 *
-	 * @param username
-	 * 		用户名
-	 * @param rules
-	 * 		the specified rules
-	 *
-	 * @return 操作成功，返回 Status.Success；否则，返回 Status.Failure
-	 */
-	Status aclSetUser(final String username, final String... rules);
-
-	/**
-	 * Create an ACL user with the specified rules or modify the rules of an existing user
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/acl-setuser/" target="_blank">https://redis.io/commands/acl-setuser/</a></p>
-	 *
-	 * @param username
-	 * 		用户名
-	 * @param rules
-	 * 		the specified rules
-	 *
-	 * @return 操作成功，返回 Status.Success；否则，返回 Status.Failure
-	 */
-	Status aclSetUser(final byte[] username, final byte[]... rules);
-
-	/**
-	 * The command returns all the rules defined for an existing ACL user
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/acl-getuser/" target="_blank">https://redis.io/commands/acl-getuser/</a></p>
-	 *
-	 * @param username
-	 * 		用户名
-	 *
-	 * @return A list of ACL rule definitions for the user
-	 */
-	AclUser aclGetUser(final String username);
-
-	/**
-	 * The command returns all the rules defined for an existing ACL user
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/acl-getuser/" target="_blank">https://redis.io/commands/acl-getuser/</a></p>
-	 *
-	 * @param username
-	 * 		用户名
-	 *
-	 * @return A list of ACL rule definitions for the user
-	 */
-	AclUser aclGetUser(final byte[] username);
-
-	/**
-	 * The command shows a list of all the usernames of the currently configured users in the Redis ACL system
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/acl-users/" target="_blank">https://redis.io/commands/acl-users/</a></p>
-	 *
-	 * @return A list of all the usernames of the currently configured users in the Redis ACL system
-	 */
-	List<String> aclUsers();
-
-	/**
-	 * Return the username the current connection is authenticated with
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/acl-whoami/" target="_blank">https://redis.io/commands/acl-whoami/</a></p>
-	 *
-	 * @return The username of the current connection
-	 */
-	String aclWhoAmI();
+	Set<Command> aclCat(final byte[] categoryName);
 
 	/**
 	 * Delete all the specified ACL users and terminate all the connections that are authenticated with such users
@@ -176,6 +120,66 @@ public interface ServerCommands extends RedisCommands {
 	Long aclDelUser(final byte[]... usernames);
 
 	/**
+	 * 在不实际执行命令的情况下，模拟测试某个用户是否具备执行特定命令的权限
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/acl-dryrun/" target="_blank">https://redis.io/docs/latest/commands/acl-dryrun/</a></p>
+	 *
+	 * @param username
+	 * 		用户名
+	 * @param command
+	 * 		命令
+	 *
+	 * @return 测试结果
+	 */
+	Status aclDryRun(final String username, final Command command);
+
+	/**
+	 * 在不实际执行命令的情况下，模拟测试某个用户是否具备执行特定命令的权限
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/acl-dryrun/" target="_blank">https://redis.io/docs/latest/commands/acl-dryrun/</a></p>
+	 *
+	 * @param username
+	 * 		用户名
+	 * @param command
+	 * 		命令
+	 *
+	 * @return 测试结果
+	 */
+	Status aclDryRun(final byte[] username, final Command command);
+
+	/**
+	 * 在不实际执行命令的情况下，模拟测试某个用户是否具备执行特定命令的权限
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/acl-dryrun/" target="_blank">https://redis.io/docs/latest/commands/acl-dryrun/</a></p>
+	 *
+	 * @param username
+	 * 		用户名
+	 * @param command
+	 * 		命令
+	 * @param args
+	 * 		参数
+	 *
+	 * @return 测试结果
+	 */
+	Status aclDryRun(final String username, final Command command, final String... args);
+
+	/**
+	 * 在不实际执行命令的情况下，模拟测试某个用户是否具备执行特定命令的权限
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/acl-dryrun/" target="_blank">https://redis.io/docs/latest/commands/acl-dryrun/</a></p>
+	 *
+	 * @param username
+	 * 		用户名
+	 * @param command
+	 * 		命令
+	 * @param args
+	 * 		参数
+	 *
+	 * @return 测试结果
+	 */
+	Status aclDryRun(final byte[] username, final Command command, final byte[]... args);
+
+	/**
 	 * ACL users need a solid password in order to authenticate to the server without security risks
 	 *
 	 * <p>详情说明 <a href="https://redis.io/commands/acl-genpass/" target="_blank">https://redis.io/commands/acl-genpass/</a></p>
@@ -183,6 +187,42 @@ public interface ServerCommands extends RedisCommands {
 	 * @return By default 64 bytes string representing 256 bits of pseudorandom data
 	 */
 	String aclGenPass();
+
+	/**
+	 * ACL users need a solid password in order to authenticate to the server without security risks
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-genpass/" target="_blank">https://redis.io/commands/acl-genpass/</a></p>
+	 *
+	 * @param bits
+	 * 		比特长度
+	 *
+	 * @return By string representing 'bits' bits of pseudorandom data
+	 */
+	String aclGenPass(final int bits);
+
+	/**
+	 * The command returns all the rules defined for an existing ACL user
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-getuser/" target="_blank">https://redis.io/commands/acl-getuser/</a></p>
+	 *
+	 * @param username
+	 * 		用户名
+	 *
+	 * @return A list of ACL rule definitions for the user
+	 */
+	AclUser aclGetUser(final String username);
+
+	/**
+	 * The command returns all the rules defined for an existing ACL user
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-getuser/" target="_blank">https://redis.io/commands/acl-getuser/</a></p>
+	 *
+	 * @param username
+	 * 		用户名
+	 *
+	 * @return A list of ACL rule definitions for the user
+	 */
+	AclUser aclGetUser(final byte[] username);
 
 	/**
 	 * The command shows the currently active ACL rules in the Redis server
@@ -241,7 +281,53 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return 保存成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
 	 */
-	Status aclLogSave();
+	Status aclSave();
+
+	/**
+	 * Create an ACL user with the specified rules or modify the rules of an existing user
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-setuser/" target="_blank">https://redis.io/commands/acl-setuser/</a></p>
+	 *
+	 * @param username
+	 * 		用户名
+	 * @param argument
+	 * 		the specified rules
+	 *
+	 * @return 操作成功，返回 Status.Success；否则，返回 Status.Failure
+	 */
+	Status aclSetUser(final String username, final AclSetUserArgument argument);
+
+	/**
+	 * Create an ACL user with the specified rules or modify the rules of an existing user
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-setuser/" target="_blank">https://redis.io/commands/acl-setuser/</a></p>
+	 *
+	 * @param username
+	 * 		用户名
+	 * @param argument
+	 * 		the specified rules
+	 *
+	 * @return 操作成功，返回 Status.Success；否则，返回 Status.Failure
+	 */
+	Status aclSetUser(final byte[] username, final AclSetUserArgument argument);
+
+	/**
+	 * The command shows a list of all the usernames of the currently configured users in the Redis ACL system
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-users/" target="_blank">https://redis.io/commands/acl-users/</a></p>
+	 *
+	 * @return A list of all the usernames of the currently configured users in the Redis ACL system
+	 */
+	List<String> aclUsers();
+
+	/**
+	 * Return the username the current connection is authenticated with
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-whoami/" target="_blank">https://redis.io/commands/acl-whoami/</a></p>
+	 *
+	 * @return The username of the current connection
+	 */
+	String aclWhoAmI();
 
 	/**
 	 * 执行一个 AOF文件 重写操作；重写会创建一个当前 AOF 文件的体积优化版本
@@ -260,6 +346,159 @@ public interface ServerCommands extends RedisCommands {
 	 * @return 反馈信息
 	 */
 	String bgSave();
+
+	/**
+	 * 获取 Redis 当前注册的命令数量
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/command-count/" target="_blank">https://redis.io/docs/latest/commands/command-count/</a></p>
+	 *
+	 * @return Redis 当前注册的命令数量
+	 */
+	Integer commandCount();
+
+	/**
+	 * Return documentary information about commands.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/command-docs/" target="_blank">https://redis.io/docs/latest/commands/command-docs/</a></p>
+	 *
+	 * @return The documentary information about commands.
+	 */
+	List<CommandDoc> commandDocs();
+
+	/**
+	 * Return documentary information about commands.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/command-docs/" target="_blank">https://redis.io/docs/latest/commands/command-docs/</a></p>
+	 *
+	 * @param commands
+	 * 		命令列表
+	 *
+	 * @return The documentary information about commands.
+	 */
+	List<CommandDoc> commandDocs(final Command... commands);
+
+	/**
+	 * Returns Array reply of keys from a full Redis command.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/command-getkeys/" target="_blank">https://redis.io/docs/latest/commands/command-getkeys/</a></p>
+	 *
+	 * @param command
+	 * 		命令
+	 *
+	 * @return The keys from a full Redis command.
+	 */
+	List<String> commandGetKeys(final Command command);
+
+	/**
+	 * Returns Array reply of keys from a full Redis command.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/command-getkeys/" target="_blank">https://redis.io/docs/latest/commands/command-getkeys/</a></p>
+	 *
+	 * @param command
+	 * 		命令
+	 * @param args
+	 * 		参数
+	 *
+	 * @return The keys from a full Redis command.
+	 */
+	List<String> commandGetKeys(final Command command, final String... args);
+
+	/**
+	 * Returns Array reply of keys from a full Redis command and their usage flags.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/command-getkeysandflags/" target="_blank">https://redis.io/docs/latest/commands/command-getkeysandflags/</a></p>
+	 *
+	 * @param command
+	 * 		命令
+	 *
+	 * @return The keys from a full Redis command and their usage flags.
+	 */
+	List<CommandKeyAndFlag> commandGetKeysAndFlags(final Command command);
+
+	/**
+	 * Returns Array reply of keys from a full Redis command and their usage flags.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/command-getkeysandflags/" target="_blank">https://redis.io/docs/latest/commands/command-getkeysandflags/</a></p>
+	 *
+	 * @param command
+	 * 		命令
+	 * @param args
+	 * 		参数
+	 *
+	 * @return The keys from a full Redis command and their usage flags.
+	 */
+	List<CommandKeyAndFlag> commandGetKeysAndFlags(final Command command, final String... args);
+
+	/**
+	 * Returns Array reply of details about multiple Redis commands.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/command-info/" target="_blank">https://redis.io/docs/latest/commands/command-info/</a></p>
+	 *
+	 * @param commands
+	 * 		命令列表
+	 *
+	 * @return The details about multiple Redis commands.
+	 */
+	List<CommandInfo> commandInfo(final Command... commands);
+
+	/**
+	 * Return an array of the server's command names.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/command-list/" target="_blank">https://redis.io/docs/latest/commands/command-list/</a></p>
+	 *
+	 * @return The server's command names.
+	 */
+	List<Command> commandList();
+
+	/**
+	 * 获取 Redis 服务器的配置参数
+	 *
+	 * <p>详情说明 <a href="https://www.redisio.com/commands/Config-Get.html" target="_blank">https://www.redisio.com/commands/Config-Get.html</a></p>
+	 *
+	 * @param parameters
+	 * 		配置项
+	 *
+	 * @return 给定配置参数的值
+	 */
+	Map<String, String> configGet(final String... parameters);
+
+	/**
+	 * 获取 Redis 服务器的配置参数
+	 *
+	 * <p>详情说明 <a href="https://www.redisio.com/commands/Config-Get.html" target="_blank">https://www.redisio.com/commands/Config-Get.html</a></p>
+	 *
+	 * @param parameters
+	 * 		配置项
+	 *
+	 * @return 给定配置参数的值
+	 */
+	Map<byte[], byte[]> configGet(final byte[]... parameters);
+
+	/**
+	 * 重置 INFO 命令中的某些统计数据，包括：
+	 * 1）Keyspace hits (键空间命中次数)
+	 * 2）Keyspace misses (键空间不命中次数)
+	 * 3）Number of commands processed (执行命令的次数)
+	 * 4）Number of connections received (连接服务器的次数)
+	 * 5）Number of expired keys (过期key的数量)
+	 * 6）Number of rejected connections (被拒绝的连接数量)
+	 * 7）Latest fork(2) time(最后执行 fork(2) 的时间)
+	 * 8）The aof_delayed_fsync counter(aof_delayed_fsync 计数器的值)
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/configure/config_resetstat.html" target="_blank">http://redisdoc.com/configure/config_resetstat.html</a></p>
+	 *
+	 * @return 总是返回 Status.SUCCESS
+	 */
+	Status configResetStat();
+
+	/**
+	 * 对启动 Redis 服务器时所指定的 redis.conf 文件进行改写
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/configure/config_rewrite.html" target="_blank">http://redisdoc.com/configure/config_rewrite.html</a></p>
+	 *
+	 * @return 如果配置重写成功则，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status configRewrite();
 
 	/**
 	 * 动态地调整 Redis 服务器的配置
@@ -304,56 +543,6 @@ public interface ServerCommands extends RedisCommands {
 	Status configSet(final Map<String, String> configs);
 
 	/**
-	 * 获取 Redis 服务器的配置参数
-	 *
-	 * <p>详情说明 <a href="https://www.redisio.com/commands/Config-Get.html" target="_blank">https://www.redisio.com/commands/Config-Get.html</a></p>
-	 *
-	 * @param pattern
-	 * 		配置项
-	 *
-	 * @return 给定配置参数的值
-	 */
-	Map<String, String> configGet(final String pattern);
-
-	/**
-	 * 获取 Redis 服务器的配置参数
-	 *
-	 * <p>详情说明 <a href="https://www.redisio.com/commands/Config-Get.html" target="_blank">https://www.redisio.com/commands/Config-Get.html</a></p>
-	 *
-	 * @param pattern
-	 * 		配置项
-	 *
-	 * @return 给定配置参数的值
-	 */
-	Map<byte[], byte[]> configGet(final byte[] pattern);
-
-	/**
-	 * 重置 INFO 命令中的某些统计数据，包括：
-	 * 1）Keyspace hits (键空间命中次数)
-	 * 2）Keyspace misses (键空间不命中次数)
-	 * 3）Number of commands processed (执行命令的次数)
-	 * 4）Number of connections received (连接服务器的次数)
-	 * 5）Number of expired keys (过期key的数量)
-	 * 6）Number of rejected connections (被拒绝的连接数量)
-	 * 7）Latest fork(2) time(最后执行 fork(2) 的时间)
-	 * 8）The aof_delayed_fsync counter(aof_delayed_fsync 计数器的值)
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/configure/config_resetstat.html" target="_blank">http://redisdoc.com/configure/config_resetstat.html</a></p>
-	 *
-	 * @return 总是返回 Status.SUCCESS
-	 */
-	Status configResetStat();
-
-	/**
-	 * 对启动 Redis 服务器时所指定的 redis.conf 文件进行改写
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/configure/config_rewrite.html" target="_blank">http://redisdoc.com/configure/config_rewrite.html</a></p>
-	 *
-	 * @return 如果配置重写成功则，返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status configRewrite();
-
-	/**
 	 * 获取数据库的 key 的数量
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/database/dbsize.html" target="_blank">http://redisdoc.com/database/dbsize.html</a></p>
@@ -376,60 +565,12 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * <p>详情说明 <a href="https://redis.io/commands/failover/" target="_blank">https://redis.io/commands/failover/</a></p>
 	 *
-	 * @param host
-	 * 		主机地址
-	 * @param port
-	 * 		端口
+	 * @param argument
+	 * 		参数
 	 *
 	 * @return Status.SUCCESS if the command was accepted and a coordinated failover is in progress
 	 */
-	Status failover(final String host, final int port);
-
-	/**
-	 * This command will start a coordinated failover between the currently-connected-to master and one of its replicas
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/failover/" target="_blank">https://redis.io/commands/failover/</a></p>
-	 *
-	 * @param host
-	 * 		主机地址
-	 * @param port
-	 * 		端口
-	 * @param timeout
-	 * 		超时（单位：毫秒）
-	 *
-	 * @return Status.SUCCESS if the command was accepted and a coordinated failover is in progress
-	 */
-	Status failover(final String host, final int port, final int timeout);
-
-	/**
-	 * This command will start a coordinated failover between the currently-connected-to master and one of its replicas
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/failover/" target="_blank">https://redis.io/commands/failover/</a></p>
-	 *
-	 * @param host
-	 * 		主机地址
-	 * @param port
-	 * 		端口
-	 * @param isForce
-	 * 		是否强制
-	 * @param timeout
-	 * 		超时（单位：毫秒）
-	 *
-	 * @return Status.SUCCESS if the command was accepted and a coordinated failover is in progress
-	 */
-	Status failover(final String host, final int port, final boolean isForce, final int timeout);
-
-	/**
-	 * This command will start a coordinated failover between the currently-connected-to master and one of its replicas
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/failover/" target="_blank">https://redis.io/commands/failover/</a></p>
-	 *
-	 * @param timeout
-	 * 		超时（单位：毫秒）
-	 *
-	 * @return Status.SUCCESS if the command was accepted and a coordinated failover is in progress
-	 */
-	Status failover(final int timeout);
+	Status failover(final FailoverArgument argument);
 
 	/**
 	 * 清空整个 Redis 服务器的数据（删除所有数据库的所有 key ）
@@ -474,6 +615,59 @@ public interface ServerCommands extends RedisCommands {
 	Status flushDb(final FlushMode mode);
 
 	/**
+	 * 获取热点 Key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hotkeys-get/" target="_blank">https://redis.io/docs/latest/commands/hotkeys-get/</a></p>
+	 *
+	 * @return 热点 Key
+	 */
+	List<HotKey> hotkeysGet();
+
+	/**
+	 * 重置热点 Key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hotkeys-reset/" target="_blank">https://redis.io/docs/latest/commands/hotkeys-reset/</a></p>
+	 *
+	 * @return 操作结果
+	 */
+	Status hotkeysReset();
+
+	/**
+	 * Starts hotkeys tracking with specified metrics.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hotkeys-start/" target="_blank">https://redis.io/docs/latest/commands/hotkeys-start/</a></p>
+	 *
+	 * @param count
+	 * 		数量
+	 *
+	 * @return 操作结果
+	 */
+	Status hotkeysStart(final int count);
+
+	/**
+	 * Starts hotkeys tracking with specified metrics.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hotkeys-start/" target="_blank">https://redis.io/docs/latest/commands/hotkeys-start/</a></p>
+	 *
+	 * @param count
+	 * 		数量
+	 * @param argument
+	 * 		参数
+	 *
+	 * @return 操作结果
+	 */
+	Status hotkeysStart(final int count, final HotkeysStartArgument argument);
+
+	/**
+	 * Stops hotkeys tracking but preserves the collected data.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hotkeys-stop/" target="_blank">https://redis.io/docs/latest/commands/hotkeys-stop/</a></p>
+	 *
+	 * @return 操作结果
+	 */
+	Status hotkeysStop();
+
+	/**
 	 * 获取关于 Redis 服务器的各种信息和统计数值
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/client_and_server/info.html" target="_blank">http://redisdoc.com/client_and_server/info.html</a></p>
@@ -504,6 +698,112 @@ public interface ServerCommands extends RedisCommands {
 	Long lastSave();
 
 	/**
+	 * The LATENCY DOCTOR command reports about different latency-related issues and advises about possible remedies.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/latency-doctor/" target="_blank">https://redis.io/docs/latest/commands/latency-doctor/</a></p>
+	 *
+	 * @return The different latency-related issues and advises about possible remedies.
+	 */
+	String latencyDoctor();
+
+	/**
+	 * Produces an ASCII-art style graph for the specified event.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/latency-graph/" target="_blank">https://redis.io/docs/latest/commands/latency-graph/</a></p>
+	 *
+	 * @return Produces an ASCII-art style graph for the specified event.
+	 */
+	String latencyGraph();
+
+	/**
+	 * LATENCY HISTOGRAM returns a cumulative distribution of commands' latencies in histogram format.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/latency-histogram/" target="_blank">https://redis.io/docs/latest/commands/latency-histogram/</a></p>
+	 *
+	 * @return The cumulative distribution of commands' latencies in histogram format.
+	 */
+	List<LatencyHistogram> latencyHistogram();
+
+	/**
+	 * LATENCY HISTOGRAM returns a cumulative distribution of commands' latencies in histogram format.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/latency-histogram/" target="_blank">https://redis.io/docs/latest/commands/latency-histogram/</a></p>
+	 *
+	 * @param commands
+	 * 		命令
+	 *
+	 * @return The cumulative distribution of commands' latencies in histogram format.
+	 */
+	List<LatencyHistogram> latencyHistogram(final Command... commands);
+
+	/**
+	 * The LATENCY HISTORY command returns the raw data of the event's latency spikes time series.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/latency-history/" target="_blank">https://redis.io/docs/latest/commands/latency-history/</a></p>
+	 *
+	 * @param event
+	 * 		事件
+	 *
+	 * @return The raw data of the event's latency spikes time series.
+	 */
+	List<LatencyHistory> latencyHistory(final String event);
+
+	/**
+	 * The LATENCY LATEST command reports the latest latency events logged.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/latency-latest/" target="_blank">https://redis.io/docs/latest/commands/latency-latest/</a></p>
+	 *
+	 * @return The latest latency events logged.
+	 */
+	List<LatencyLatest> latencyLatest();
+
+	/**
+	 * The LATENCY RESET command resets the latency spikes time series of all, or only some, events.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/latency-reset/" target="_blank">https://redis.io/docs/latest/commands/latency-reset/</a></p>
+	 *
+	 * @return 操作结果
+	 */
+	Status latencyReset();
+
+	/**
+	 * The LATENCY RESET command resets the latency spikes time series of all, or only some, events.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/latency-reset/" target="_blank">https://redis.io/docs/latest/commands/latency-reset/</a></p>
+	 *
+	 * @param events
+	 * 		事件
+	 *
+	 * @return 操作结果
+	 */
+	Status latencyReset(final String... events);
+
+	/**
+	 * The LOLWUT command displays the Redis version: however as a side effect of doing so,
+	 * it also creates a piece of generative computer art that is different with each version of Redis.
+	 * The command was introduced in Redis 5 and announced with this blog post.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lolwut/" target="_blank">https://redis.io/docs/latest/commands/lolwut/</a></p>
+	 *
+	 * @return 操作结果
+	 */
+	String lolwut();
+
+	/**
+	 * The LOLWUT command displays the Redis version: however as a side effect of doing so,
+	 * it also creates a piece of generative computer art that is different with each version of Redis.
+	 * The command was introduced in Redis 5 and announced with this blog post.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lolwut/" target="_blank">https://redis.io/docs/latest/commands/lolwut/</a></p>
+	 *
+	 * @param version
+	 * 		版本
+	 *
+	 * @return 操作结果
+	 */
+	String lolwut(final String version);
+
+	/**
 	 * 列出 Redis 服务器遇到的不同类型的内存相关问题，并提供相应的解决建议
 	 *
 	 * <p>详情说明 <a href="https://redis.io/commands/memory-doctor/" target="_blank">https://redis.io/commands/memory-doctor/</a></p>
@@ -511,6 +811,15 @@ public interface ServerCommands extends RedisCommands {
 	 * @return Redis 服务器遇到的不同类型的内存相关问题，以及解决建议
 	 */
 	String memoryDoctor();
+
+	/**
+	 * The MEMORY MALLOC-STATS command provides an internal statistics report from the memory allocator.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/memory-malloc-stats/" target="_blank">https://redis.io/docs/latest/commands/memory-malloc-stats/</a></p>
+	 *
+	 * @return The report from the memory allocator.
+	 */
+	String memoryMallocStats();
 
 	/**
 	 * The MEMORY PURGE command attempts to purge dirty pages so these can be reclaimed by the allocator
@@ -620,6 +929,38 @@ public interface ServerCommands extends RedisCommands {
 	Status moduleLoad(final byte[] path, final byte[]... arguments);
 
 	/**
+	 * Loads a module from a dynamic library at runtime with configuration directives.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/module-loadex/" target="_blank">https://redis.io/docs/latest/commands/module-loadex/</a></p>
+	 *
+	 * @param path
+	 * 		Module Path
+	 * @param configs
+	 * 		配置
+	 * @param arguments
+	 * 		Arguments
+	 *
+	 * @return A list of loaded modules
+	 */
+	Status moduleLoadex(final String path, final Map<String, String> configs, final String... arguments);
+
+	/**
+	 * Loads a module from a dynamic library at runtime with configuration directives.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/module-loadex/" target="_blank">https://redis.io/docs/latest/commands/module-loadex/</a></p>
+	 *
+	 * @param path
+	 * 		Module Path
+	 * @param configs
+	 * 		配置
+	 * @param arguments
+	 * 		Arguments
+	 *
+	 * @return A list of loaded modules
+	 */
+	Status moduleLoadex(final byte[] path, final Map<byte[], byte[]> configs, final byte[]... arguments);
+
+	/**
 	 * This command unloads the module specified by name
 	 *
 	 * <p>详情说明 <a href="https://redis.io/commands/module-unload/" target="_blank">https://redis.io/commands/module-unload/</a></p>
@@ -682,11 +1023,13 @@ public interface ServerCommands extends RedisCommands {
 	Object pSync(final byte[] replicationId, final long offset);
 
 	/**
-	 * 用于复制功能(replication)的内部命令
+	 * 由 Redis 从节点（replica/slave）在与主节点（master）建立连接后自动发送，用于协商复制相关参数
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/internal/sync.html" target="_blank">http://redisdoc.com/internal/sync.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/replconf/" target="_blank">https://redis.io/docs/latest/commands/replconf/</a></p>
+	 *
+	 * @return 操作结果
 	 */
-	void sync();
+	Status replconf();
 
 	/**
 	 * 可以在线修改当前服务器的复制设置
@@ -705,19 +1048,72 @@ public interface ServerCommands extends RedisCommands {
 	Status replicaOf(final String host, final int port);
 
 	/**
-	 * 用于在 Redis 运行时动态地修改复制(replication)功能的行为；
-	 * 可以将当前服务器转变为指定服务器的从属服务器(slave server)
+	 * The RESTORE-ASKING command is an internal command. It is used by a Redis cluster master during slot migration.
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/replication/slaveof.html" target="_blank">http://redisdoc.com/replication/slaveof.html</a></p>
+	 * <p>详情说明 <a href="hhttps://redis.io/docs/latest/commands/restore-asking/" target="_blank">https://redis.io/docs/latest/commands/restore-asking/</a></p>
 	 *
-	 * @param host
-	 * 		Redis Slave Server 主机地址
-	 * @param port
-	 * 		Redis Slave Server 端口
+	 * @param key
+	 * 		Key
+	 * @param serializedValue
+	 * 		序列化值
+	 * @param ttl
+	 * 		生存时间（单位：毫秒）
 	 *
-	 * @return 总是返回 Status.SUCCESS
+	 * @return 操作结果
 	 */
-	Status slaveOf(final String host, final int port);
+	Status restoreAsking(final String key, final byte[] serializedValue, final int ttl);
+
+	/**
+	 * The RESTORE-ASKING command is an internal command. It is used by a Redis cluster master during slot migration.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/restore-asking/" target="_blank">https://redis.io/docs/latest/commands/restore-asking/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param serializedValue
+	 * 		序列化值
+	 * @param ttl
+	 * 		生存时间（单位：毫秒）
+	 *
+	 * @return 操作结果
+	 */
+	Status restoreAsking(final byte[] key, final byte[] serializedValue, final int ttl);
+
+	/**
+	 * The RESTORE-ASKING command is an internal command. It is used by a Redis cluster master during slot migration.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/restore-asking/" target="_blank">https://redis.io/docs/latest/commands/restore-asking/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param serializedValue
+	 * 		序列化值
+	 * @param ttl
+	 * 		生存时间（单位：毫秒）
+	 * @param argument
+	 *        {@link RestoreArgument}
+	 *
+	 * @return 操作结果
+	 */
+	Status restoreAsking(final String key, final byte[] serializedValue, final int ttl, final RestoreArgument argument);
+
+	/**
+	 * The RESTORE-ASKING command is an internal command. It is used by a Redis cluster master during slot migration.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/restore-asking/" target="_blank">https://redis.io/docs/latest/commands/restore-asking/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param serializedValue
+	 * 		序列化值
+	 * @param ttl
+	 * 		生存时间（单位：毫秒）
+	 * @param argument
+	 *        {@link RestoreArgument}
+	 *
+	 * @return 操作结果
+	 */
+	Status restoreAsking(final byte[] key, final byte[] serializedValue, final int ttl, final RestoreArgument argument);
 
 	/**
 	 * 获取实例在复制中担任的角色信息
@@ -758,10 +1154,25 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/client_and_server/shutdown.html" target="_blank">http://redisdoc.com/client_and_server/shutdown.html</a></p>
 	 *
-	 * @param save
-	 * 		是否强制让数据库执行保存操作
+	 * @param argument
+	 * 		参数
 	 */
-	void shutdown(final boolean save);
+	void shutdown(final ShutdownArgument argument);
+
+	/**
+	 * 用于在 Redis 运行时动态地修改复制(replication)功能的行为；
+	 * 可以将当前服务器转变为指定服务器的从属服务器(slave server)
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/replication/slaveof.html" target="_blank">http://redisdoc.com/replication/slaveof.html</a></p>
+	 *
+	 * @param host
+	 * 		Redis Slave Server 主机地址
+	 * @param port
+	 * 		Redis Slave Server 端口
+	 *
+	 * @return 总是返回 Status.SUCCESS
+	 */
+	Status slaveOf(final String host, final int port);
 
 	/**
 	 * The SLOWLOG GET command returns entries from the slow log in chronological order
@@ -815,6 +1226,13 @@ public interface ServerCommands extends RedisCommands {
 	 * @return 对换成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
 	 */
 	Status swapdb(final int db1, final int db2);
+
+	/**
+	 * 用于复制功能(replication)的内部命令
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/sync.html" target="_blank">http://redisdoc.com/internal/sync.html</a></p>
+	 */
+	void sync();
 
 	/**
 	 * 获取当前服务器时间

@@ -19,1106 +19,628 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.converter.ListConverter;
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisStandaloneClient;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.operations.ServerOperations;
+import com.buession.redis.core.AclCategory;
 import com.buession.redis.core.AclLog;
 import com.buession.redis.core.AclUser;
+import com.buession.redis.core.CommandDoc;
+import com.buession.redis.core.CommandInfo;
+import com.buession.redis.core.CommandKeyAndFlag;
 import com.buession.redis.core.FlushMode;
+import com.buession.redis.core.HotKey;
 import com.buession.redis.core.Info;
+import com.buession.redis.core.LatencyHistogram;
+import com.buession.redis.core.LatencyHistory;
+import com.buession.redis.core.LatencyLatest;
 import com.buession.redis.core.MemoryStats;
 import com.buession.redis.core.Module;
 import com.buession.redis.core.RedisMonitor;
 import com.buession.redis.core.RedisServerTime;
 import com.buession.redis.core.Role;
 import com.buession.redis.core.SlowLog;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.jedis.response.AccessControlLogEntryConverter;
-import com.buession.redis.core.internal.convert.jedis.response.AccessControlUserConverter;
-import com.buession.redis.core.internal.convert.jedis.params.FlushModeConverter;
-import com.buession.redis.core.internal.convert.jedis.response.MemoryStatsConverter;
+import com.buession.redis.core.command.SubCommand;
+import com.buession.redis.core.command.args.AclSetUserArgument;
+import com.buession.redis.core.command.args.FailoverArgument;
+import com.buession.redis.core.command.args.HotkeysStartArgument;
+import com.buession.redis.core.command.args.RestoreArgument;
+import com.buession.redis.core.command.args.ShutdownArgument;
 import com.buession.redis.core.internal.convert.response.InfoConverter;
-import com.buession.redis.core.internal.convert.jedis.response.ModuleConverter;
-import com.buession.redis.core.internal.convert.jedis.response.RedisServerTimeConverter;
-import com.buession.redis.core.internal.convert.jedis.response.SlowlogConverter;
-import com.buession.redis.core.internal.convert.jedis.response.RoleConverter;
-import com.buession.redis.core.internal.jedis.JedisFailoverParams;
-import redis.clients.jedis.JedisMonitor;
-import redis.clients.jedis.args.SaveMode;
-import redis.clients.jedis.params.FailoverParams;
-import redis.clients.jedis.resps.AccessControlLogEntry;
-import redis.clients.jedis.resps.Slowlog;
+import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
- * Jedis 单机模式服务端命令操作
+ * Jedis 服务端命令操作
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class JedisServerOperations extends AbstractServerOperations<JedisStandaloneClient> {
+public final class JedisServerOperations extends AbstractJedisRedisOperations implements ServerOperations {
 
-	public JedisServerOperations(final JedisStandaloneClient client) {
+	public JedisServerOperations(final JedisRedisClient client) {
 		super(client);
 	}
 
 	@Override
-	public List<String> aclCat() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_CAT)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_CAT)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ACL_CAT, (cmd)->cmd.aclCat(), (v)->v)
-					.run();
-		}
+	public Set<AclCategory> aclCat() {
+		return executeCommand(Command.ACL, SubCommand.ACL_CAT);
 	}
 
 	@Override
-	public List<String> aclCat(final String categoryName) {
+	public Set<Command> aclCat(final String categoryName) {
 		final CommandArguments args = CommandArguments.create(categoryName);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_CAT)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_CAT)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ACL_CAT, (cmd)->cmd.aclCat(categoryName), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ACL, SubCommand.ACL_CAT, args);
 	}
 
 	@Override
-	public List<byte[]> aclCat(final byte[] categoryName) {
+	public Set<Command> aclCat(final byte[] categoryName) {
 		final CommandArguments args = CommandArguments.create(categoryName);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<List<byte[]>, List<byte[]>>(client, ProtocolCommand.ACL_CAT)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<List<byte[]>, List<byte[]>>(client, ProtocolCommand.ACL_CAT)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ACL_CAT, (cmd)->cmd.aclCat(categoryName), (v)->v)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Status aclSetUser(final String username, final String... rules) {
-		final CommandArguments args = CommandArguments.create(username).add(rules);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.ACL_SETUSER)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.ACL_SETUSER)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ACL_SETUSER, (cmd)->cmd.aclSetUser(username, rules),
-					okStatusConverter)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Status aclSetUser(final byte[] username, final byte[]... rules) {
-		final CommandArguments args = CommandArguments.create(username).add(rules);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.ACL_SETUSER)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.ACL_SETUSER)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ACL_SETUSER, (cmd)->cmd.aclSetUser(username, rules),
-					okStatusConverter)
-					.run(args);
-		}
-	}
-
-	@Override
-	public AclUser aclGetUser(final String username) {
-		final CommandArguments args = CommandArguments.create(username);
-		final AccessControlUserConverter accessControlUserConverter = new AccessControlUserConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<AclUser, AclUser>(client, ProtocolCommand.ACL_GETUSER)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<AclUser, AclUser>(client, ProtocolCommand.ACL_GETUSER)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ACL_GETUSER, (cmd)->cmd.aclGetUser(username),
-					accessControlUserConverter)
-					.run(args);
-		}
-	}
-
-	@Override
-	public AclUser aclGetUser(final byte[] username) {
-		final CommandArguments args = CommandArguments.create(username);
-		final AccessControlUserConverter accessControlUserConverter = new AccessControlUserConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<AclUser, AclUser>(client, ProtocolCommand.ACL_GETUSER)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<AclUser, AclUser>(client, ProtocolCommand.ACL_GETUSER)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ACL_GETUSER, (cmd)->cmd.aclGetUser(username),
-					accessControlUserConverter)
-					.run(args);
-		}
-	}
-
-	@Override
-	public List<String> aclUsers() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_USERS)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_USERS)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ACL_USERS, (cmd)->cmd.aclUsers(), (v)->v)
-					.run();
-		}
-	}
-
-	@Override
-	public String aclWhoAmI() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<String, String>(client, ProtocolCommand.ACL_WHOAMI)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<String, String>(client, ProtocolCommand.ACL_WHOAMI)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ACL_WHOAMI, (cmd)->cmd.aclWhoAmI(), (v)->v)
-					.run();
-		}
+		return executeCommand(Command.ACL, SubCommand.ACL_CAT, args);
 	}
 
 	@Override
 	public Long aclDelUser(final String... usernames) {
 		final CommandArguments args = CommandArguments.create(usernames);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<Long, Long>(client, ProtocolCommand.ACL_DELUSER)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Long, Long>(client, ProtocolCommand.ACL_DELUSER)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ACL_DELUSER, (cmd)->cmd.aclDelUser(usernames), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ACL, SubCommand.ACL_DELUSER, args);
 	}
 
 	@Override
 	public Long aclDelUser(final byte[]... usernames) {
 		final CommandArguments args = CommandArguments.create(usernames);
+		return executeCommand(Command.ACL, SubCommand.ACL_DELUSER, args);
+	}
 
-		if(isPipeline()){
-			return new JedisPipelineCommand<Long, Long>(client, ProtocolCommand.ACL_DELUSER)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Long, Long>(client, ProtocolCommand.ACL_DELUSER)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ACL_DELUSER, (cmd)->cmd.aclDelUser(usernames), (v)->v)
-					.run(args);
-		}
+	@Override
+	public Status aclDryRun(final String username, final Command command) {
+		final CommandArguments args = CommandArguments.create(username).add(command);
+		return executeCommand(Command.ACL, SubCommand.ACL_DRYRUN, args);
+	}
+
+	@Override
+	public Status aclDryRun(final byte[] username, final Command command) {
+		final CommandArguments args = CommandArguments.create(username).add(command);
+		return executeCommand(Command.ACL, SubCommand.ACL_DRYRUN, args);
+	}
+
+	@Override
+	public Status aclDryRun(final String username, final Command command, final String... args) {
+		final CommandArguments args1 = CommandArguments.create(username).add(command).add(args);
+		return executeCommand(Command.ACL, SubCommand.ACL_DRYRUN, args1);
+	}
+
+	@Override
+	public Status aclDryRun(final byte[] username, final Command command, final byte[]... args) {
+		final CommandArguments args1 = CommandArguments.create(username).add(command).add(args);
+		return executeCommand(Command.ACL, SubCommand.ACL_DRYRUN, args1);
 	}
 
 	@Override
 	public String aclGenPass() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<String, String>(client, ProtocolCommand.ACL_GENPASS)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<String, String>(client, ProtocolCommand.ACL_GENPASS)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ACL_GENPASS, (cmd)->cmd.aclGenPass(), (v)->v)
-					.run();
-		}
+		return executeCommand(Command.ACL, SubCommand.ACL_GENPASS);
+	}
+
+	@Override
+	public String aclGenPass(final int bits) {
+		final CommandArguments args = CommandArguments.create(bits);
+		return executeCommand(Command.ACL, SubCommand.ACL_GENPASS, args);
+	}
+
+	@Override
+	public AclUser aclGetUser(final String username) {
+		final CommandArguments args = CommandArguments.create(username);
+		return executeCommand(Command.ACL, SubCommand.ACL_GETUSER, args);
+	}
+
+	@Override
+	public AclUser aclGetUser(final byte[] username) {
+		final CommandArguments args = CommandArguments.create(username);
+		return executeCommand(Command.ACL, SubCommand.ACL_GETUSER, args);
 	}
 
 	@Override
 	public List<String> aclList() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_LIST)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<List<String>, List<String>>(client, ProtocolCommand.ACL_LIST)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ACL_LIST, (cmd)->cmd.aclList(), (v)->v)
-					.run();
-		}
+		return executeCommand(Command.ACL, SubCommand.ACL_LIST);
 	}
 
 	@Override
 	public Status aclLoad() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.ACL_LOAD)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.ACL_LOAD)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ACL_LOAD, (cmd)->cmd.aclLoad(), okStatusConverter)
-					.run();
-		}
+		return executeCommand(Command.ACL, SubCommand.ACL_LOAD);
 	}
 
 	@Override
 	public List<AclLog> aclLog() {
-		final ListConverter<AccessControlLogEntry, AclLog> listAccessControlLogEntryConverter =
-				AccessControlLogEntryConverter.listConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<List<AclLog>, List<AclLog>>(client, ProtocolCommand.ACL_LOG)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<List<AclLog>, List<AclLog>>(client, ProtocolCommand.ACL_LOG)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ACL_LOG, (cmd)->cmd.aclLog(),
-					listAccessControlLogEntryConverter)
-					.run();
-		}
+		return executeCommand(Command.ACL, SubCommand.ACL_LOG);
 	}
 
 	@Override
 	public List<AclLog> aclLog(final long count) {
 		final CommandArguments args = CommandArguments.create(count);
-		final ListConverter<AccessControlLogEntry, AclLog> listAccessControlLogEntryConverter =
-				AccessControlLogEntryConverter.listConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<List<AclLog>, List<AclLog>>(client, ProtocolCommand.ACL_LOG)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<List<AclLog>, List<AclLog>>(client, ProtocolCommand.ACL_LOG)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ACL_LOG, (cmd)->cmd.aclLog((int) count),
-					listAccessControlLogEntryConverter)
-					.run(args);
-		}
+		return executeCommand(Command.ACL, SubCommand.ACL_LOG, args);
 	}
 
 	@Override
 	public Status aclLogReset() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.ACL_LOGREST)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.ACL_LOGREST)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ACL_LOGREST, (cmd)->cmd.aclLogReset(),
-					okStatusConverter)
-					.run();
-		}
+		final CommandArguments args = CommandArguments.create("RESET");
+		return executeCommand(Command.ACL, SubCommand.ACL_LOG, args);
 	}
 
 	@Override
-	public Status aclLogSave() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.ACL_LOGSAVE)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.ACL_LOGSAVE)
-					.run();
-		}else{
-			return new JedisCommand<Status, Status>(client, ProtocolCommand.ACL_LOGSAVE)
-					.run();
-		}
+	public Status aclSave() {
+		return executeCommand(Command.ACL, SubCommand.ACL_SAVE);
+	}
+
+	@Override
+	public Status aclSetUser(final String username, final AclSetUserArgument argument) {
+		final CommandArguments args = CommandArguments.create(username).add(argument);
+		return executeCommand(Command.ACL, SubCommand.ACL_SETUSER, args);
+	}
+
+	@Override
+	public Status aclSetUser(final byte[] username, final AclSetUserArgument argument) {
+		final CommandArguments args = CommandArguments.create(username).add(argument);
+		return executeCommand(Command.ACL, SubCommand.ACL_SETUSER, args);
+	}
+
+	@Override
+	public List<String> aclUsers() {
+		return executeCommand(Command.ACL, SubCommand.ACL_USERS);
+	}
+
+	@Override
+	public String aclWhoAmI() {
+		return executeCommand(Command.ACL, SubCommand.ACL_WHOAMI);
 	}
 
 	@Override
 	public String bgRewriteAof() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<String, String>(client, ProtocolCommand.BGREWRITEAOF)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<String, String>(client, ProtocolCommand.BGREWRITEAOF)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.BGREWRITEAOF, (cmd)->cmd.bgrewriteaof(), (v)->v)
-					.run();
-		}
+		return executeCommand(Command.BGREWRITEAOF);
 	}
 
 	@Override
 	public String bgSave() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<String, String>(client, ProtocolCommand.BGSAVE)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<String, String>(client, ProtocolCommand.BGSAVE)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.BGSAVE, (cmd)->cmd.bgsave(), (v)->v)
-					.run();
-		}
+		return executeCommand(Command.BGSAVE);
+	}
+
+	@Override
+	public Integer commandCount() {
+		return executeCommand(Command.COMMAND, SubCommand.COMMAND_COUNT);
+	}
+
+	@Override
+	public List<CommandDoc> commandDocs() {
+		return executeCommand(Command.COMMAND, SubCommand.COMMAND_DOCS);
+	}
+
+	@Override
+	public List<CommandDoc> commandDocs(final Command... commands) {
+		final CommandArguments args = CommandArguments.create(commands);
+		return executeCommand(Command.COMMAND, SubCommand.COMMAND_DOCS, args);
+	}
+
+	@Override
+	public List<String> commandGetKeys(final Command command) {
+		final CommandArguments args = CommandArguments.create(command);
+		return executeCommand(Command.COMMAND, SubCommand.COMMAND_GETKEYS, args);
+	}
+
+	@Override
+	public List<String> commandGetKeys(final Command command, final String... args) {
+		final CommandArguments args1 = CommandArguments.create(command).add(args);
+		return executeCommand(Command.COMMAND, SubCommand.COMMAND_GETKEYS, args1);
+	}
+
+	@Override
+	public List<CommandKeyAndFlag> commandGetKeysAndFlags(final Command command) {
+		final CommandArguments args = CommandArguments.create(command);
+		return executeCommand(Command.COMMAND, SubCommand.COMMAND_GETKEYSANDFLAGS, args);
+	}
+
+	@Override
+	public List<CommandKeyAndFlag> commandGetKeysAndFlags(final Command command, final String... args) {
+		final CommandArguments args1 = CommandArguments.create(command).add(args);
+		return executeCommand(Command.COMMAND, SubCommand.COMMAND_GETKEYSANDFLAGS, args1);
+	}
+
+	@Override
+	public List<CommandInfo> commandInfo(final Command... commands) {
+		final CommandArguments args = CommandArguments.create(commands);
+		return executeCommand(Command.COMMAND, SubCommand.COMMAND_INFO, args);
+	}
+
+	@Override
+	public List<Command> commandList() {
+		return executeCommand(Command.COMMAND, SubCommand.COMMAND_LIST);
+	}
+
+	@Override
+	public Map<String, String> configGet(final String... parameters) {
+		final CommandArguments args = CommandArguments.create(parameters);
+		return executeCommand(Command.CONFIG_GET, args);
+	}
+
+	@Override
+	public Map<byte[], byte[]> configGet(final byte[]... parameters) {
+		final CommandArguments args = CommandArguments.create(parameters);
+		return executeCommand(Command.CONFIG_GET, args);
+	}
+
+	@Override
+	public Status configResetStat() {
+		return executeCommand(Command.CONFIG_RESETSTAT);
+	}
+
+	@Override
+	public Status configRewrite() {
+		return executeCommand(Command.CONFIG_REWRITE);
 	}
 
 	@Override
 	public Status configSet(final String parameter, final String value) {
 		final CommandArguments args = CommandArguments.create(parameter).add(value);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.CONFIG_SET)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.CONFIG_SET)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CONFIG_SET, (cmd)->cmd.configSet(parameter, value),
-					okStatusConverter)
-					.run(args);
-		}
+		return executeCommand(Command.CONFIG_SET, args);
 	}
 
 	@Override
 	public Status configSet(final byte[] parameter, final byte[] value) {
 		final CommandArguments args = CommandArguments.create(parameter).add(value);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.CONFIG_SET)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.CONFIG_SET)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CONFIG_SET, (cmd)->cmd.configSet(parameter, value),
-					okStatusConverter)
-					.run(args);
-		}
+		return executeCommand(Command.CONFIG_SET, args);
 	}
 
 	@Override
 	public Status configSet(final Map<String, String> configs) {
 		final CommandArguments args = CommandArguments.create(configs);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.CONFIG_SET)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.CONFIG_SET)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CONFIG_SET, (cmd)->cmd.configSet(configs),
-					okStatusConverter)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Map<String, String> configGet(final String pattern) {
-		final CommandArguments args = CommandArguments.create(pattern);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<Map<String, String>, Map<String, String>>(client,
-					ProtocolCommand.CONFIG_GET)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Map<String, String>, Map<String, String>>(client,
-					ProtocolCommand.CONFIG_GET)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CONFIG_GET, (cmd)->cmd.configGet(pattern), (v)->v)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Map<byte[], byte[]> configGet(final byte[] pattern) {
-		final CommandArguments args = CommandArguments.create(pattern);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<Map<byte[], byte[]>, Map<byte[], byte[]>>(client,
-					ProtocolCommand.CONFIG_GET)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Map<byte[], byte[]>, Map<byte[], byte[]>>(client,
-					ProtocolCommand.CONFIG_GET)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CONFIG_GET, (cmd)->cmd.configGet(pattern), (v)->v)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Status configResetStat() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.CONFIG_RESETSTAT)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.CONFIG_RESETSTAT)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CONFIG_RESETSTAT, (cmd)->cmd.configResetStat(),
-					okStatusConverter)
-					.run();
-		}
-	}
-
-	@Override
-	public Status configRewrite() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.CONFIG_REWRITE)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.CONFIG_REWRITE)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.CONFIG_REWRITE, (cmd)->cmd.configRewrite(),
-					okStatusConverter)
-					.run();
-		}
+		return executeCommand(Command.CONFIG_SET, args);
 	}
 
 	@Override
 	public Long dbSize() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.DBSIZE, (cmd)->cmd.dbSize(), (v)->v)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Long, Long>(client, ProtocolCommand.DBSIZE)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.DBSIZE, (cmd)->cmd.dbSize(), (v)->v)
-					.run();
-		}
+		return executeCommand(Command.DBSIZE, (cmd)->cmd.dbSize(), (v)->v);
 	}
 
 	@Override
 	public Status failover() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.FAILOVER)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.FAILOVER)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.FAILOVER, (cmd)->cmd.failover(), okStatusConverter)
-					.run();
-		}
+		return executeCommand(Command.FAILOVER);
 	}
 
 	@Override
-	public Status failover(final String host, final int port) {
-		final CommandArguments args = CommandArguments.create(host).add(port);
-		final FailoverParams failoverParams = new JedisFailoverParams(host, port);
-
-		return failover(failoverParams, args);
-	}
-
-	@Override
-	public Status failover(final String host, final int port, final int timeout) {
-		final CommandArguments args = CommandArguments.create(host).add(port).add(timeout);
-		final FailoverParams failoverParams = new JedisFailoverParams(host, port, timeout);
-
-		return failover(failoverParams, args);
-	}
-
-	@Override
-	public Status failover(final String host, final int port, final boolean isForce, final int timeout) {
-		final CommandArguments args = CommandArguments.create(host).add(port).add(isForce)
-				.add(timeout);
-		final FailoverParams failoverParams = new JedisFailoverParams(host, port, timeout, isForce);
-
-		return failover(failoverParams, args);
-	}
-
-	@Override
-	public Status failover(final int timeout) {
-		final CommandArguments args = CommandArguments.create(timeout);
-		final FailoverParams failoverParams = new JedisFailoverParams(timeout);
-
-		return failover(failoverParams, args);
+	public Status failover(final FailoverArgument argument) {
+		final CommandArguments args = CommandArguments.create(argument);
+		return executeCommand(Command.FAILOVER, args);
 	}
 
 	@Override
 	public Status flushAll() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.FLUSHALL)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.FLUSHALL)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.FLUSHALL, (cmd)->cmd.flushAll(), okStatusConverter)
-					.run();
-		}
+		return executeCommand(Command.FLUSHALL, (cmd)->cmd.flushAll(), new OkStatusConverter());
 	}
 
 	@Override
 	public Status flushAll(final FlushMode mode) {
 		final CommandArguments args = CommandArguments.create(mode);
-		final redis.clients.jedis.args.FlushMode flushMode = (new FlushModeConverter()).convert(mode);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.FLUSHALL)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.FLUSHALL)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.FLUSHALL, (cmd)->cmd.flushAll(flushMode),
-					okStatusConverter)
-					.run(args);
-		}
+		return executeCommand(Command.FLUSHALL, args, (cmd)->cmd.flushAll(), new OkStatusConverter());
 	}
 
 	@Override
 	public Status flushDb() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.FLUSHDB)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.FLUSHDB)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->cmd.flushDB(), okStatusConverter)
-					.run();
-		}
+		return executeCommand(Command.FLUSHDB, (cmd)->cmd.flushDB(), new OkStatusConverter());
 	}
 
 	@Override
 	public Status flushDb(final FlushMode mode) {
 		final CommandArguments args = CommandArguments.create(mode);
-		final redis.clients.jedis.args.FlushMode flushMode = (new FlushModeConverter()).convert(mode);
+		return executeCommand(Command.FLUSHDB, args, (cmd)->cmd.flushDB(), new OkStatusConverter());
+	}
 
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.FLUSHDB)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.FLUSHDB)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.FLUSHDB, (cmd)->cmd.flushDB(flushMode), okStatusConverter)
-					.run(args);
-		}
+	@Override
+	public List<HotKey> hotkeysGet() {
+		return executeCommand(Command.HOTKEYS, SubCommand.HOTKEYS_GET);
+	}
+
+	@Override
+	public Status hotkeysReset() {
+		return executeCommand(Command.HOTKEYS, SubCommand.HOTKEYS_RESET);
+	}
+
+	@Override
+	public Status hotkeysStart(final int count) {
+		final CommandArguments args = CommandArguments.create("METRICS").add(count);
+		return executeCommand(Command.HOTKEYS, SubCommand.HOTKEYS_START, args);
+	}
+
+	@Override
+	public Status hotkeysStart(final int count, final HotkeysStartArgument argument) {
+		final CommandArguments args = CommandArguments.create("METRICS").add(count).add(argument);
+		return executeCommand(Command.HOTKEYS, SubCommand.HOTKEYS_START, args);
+	}
+
+	@Override
+	public Status hotkeysStop() {
+		return executeCommand(Command.HOTKEYS, SubCommand.HOTKEYS_STOP);
 	}
 
 	@Override
 	public Info info() {
-		final InfoConverter infoConverter = new InfoConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<Info, Info>(client, ProtocolCommand.INFO)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Info, Info>(client, ProtocolCommand.INFO)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.INFO, (cmd)->cmd.info(), infoConverter)
-					.run();
-		}
+		return executeCommand(Command.INFO, (cmd)->cmd.info(), new InfoConverter());
 	}
 
 	@Override
 	public Info info(final Info.Section section) {
 		final CommandArguments args = CommandArguments.create(section);
-		final String sectionName = section.name().toLowerCase();
-		final InfoConverter infoConverter = new InfoConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<Info, Info>(client, ProtocolCommand.INFO)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Info, Info>(client, ProtocolCommand.INFO)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.INFO, (cmd)->cmd.info(sectionName), infoConverter)
-					.run(args);
-		}
+		return executeCommand(Command.INFO, args, (cmd)->cmd.info(section.name().toLowerCase()), new InfoConverter());
 	}
 
 	@Override
 	public Long lastSave() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<Long, Long>(client, ProtocolCommand.LASTSAVE)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Long, Long>(client, ProtocolCommand.LASTSAVE)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.LASTSAVE, (cmd)->cmd.lastsave(), (v)->v)
-					.run();
-		}
+		return executeCommand(Command.LASTSAVE);
+	}
+
+	@Override
+	public String latencyDoctor() {
+		return executeCommand(Command.LATENCY, SubCommand.LATENCY_DOCTOR);
+	}
+
+	@Override
+	public String latencyGraph() {
+		return executeCommand(Command.LATENCY, SubCommand.LATENCY_GRAPH);
+	}
+
+	@Override
+	public List<LatencyHistogram> latencyHistogram() {
+		return executeCommand(Command.LATENCY, SubCommand.LATENCY_HISTOGRAM);
+	}
+
+	@Override
+	public List<LatencyHistogram> latencyHistogram(final Command... commands) {
+		final CommandArguments args = CommandArguments.create(commands);
+		return executeCommand(Command.LATENCY, SubCommand.LATENCY_HISTOGRAM, args);
+	}
+
+	@Override
+	public List<LatencyHistory> latencyHistory(final String event) {
+		final CommandArguments args = CommandArguments.create(event);
+		return executeCommand(Command.LATENCY, SubCommand.LATENCY_HISTORY, args);
+	}
+
+	@Override
+	public List<LatencyLatest> latencyLatest() {
+		return executeCommand(Command.LATENCY, SubCommand.LATENCY_LATEST);
+	}
+
+	@Override
+	public Status latencyReset() {
+		return executeCommand(Command.LATENCY, SubCommand.LATENCY_RESET);
+	}
+
+	@Override
+	public Status latencyReset(final String... events) {
+		final CommandArguments args = CommandArguments.create(events);
+		return executeCommand(Command.LATENCY, SubCommand.LATENCY_RESET, args);
+	}
+
+	@Override
+	public String lolwut() {
+		return executeCommand(Command.LOLWUT);
+	}
+
+	@Override
+	public String lolwut(final String version) {
+		final CommandArguments args = CommandArguments.create("VERSION").add(version);
+		return executeCommand(Command.LOLWUT, args);
 	}
 
 	@Override
 	public String memoryDoctor() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<String, String>(client, ProtocolCommand.MEMORY_DOCTOR)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<String, String>(client, ProtocolCommand.MEMORY_DOCTOR)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.MEMORY_DOCTOR, (cmd)->cmd.memoryDoctor(), (v)->v)
-					.run();
-		}
+		return executeCommand(Command.MEMORY, SubCommand.MEMORY_DOCTOR);
+	}
+
+	@Override
+	public String memoryMallocStats() {
+		return executeCommand(Command.MEMORY, SubCommand.MEMORY_MALLOC_STATS);
 	}
 
 	@Override
 	public Status memoryPurge() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.MEMORY_PURGE)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.MEMORY_PURGE)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.MEMORY_PURGE, (cmd)->cmd.memoryPurge(),
-					okStatusConverter)
-					.run();
-		}
+		return executeCommand(Command.MEMORY, SubCommand.MEMORY_PURGE);
 	}
 
 	@Override
 	public MemoryStats memoryStats() {
-		final MemoryStatsConverter memoryStatsConverter = new MemoryStatsConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<MemoryStats, MemoryStats>(client, ProtocolCommand.MEMORY_STATS)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<MemoryStats, MemoryStats>(client, ProtocolCommand.MEMORY_STATS)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.MEMORY_STATS, (cmd)->cmd.memoryStats(),
-					memoryStatsConverter)
-					.run();
-		}
+		return executeCommand(Command.MEMORY, SubCommand.MEMORY_STATS);
 	}
 
 	@Override
 	public Long memoryUsage(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.MEMORY_USAGE, (cmd)->cmd.memoryUsage(key), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.MEMORY_USAGE, (cmd)->cmd.memoryUsage(key),
-					(v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.MEMORY_USAGE, (cmd)->cmd.memoryUsage(key), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.MEMORY, SubCommand.MEMORY_USAGE, args, (cmd)->cmd.memoryUsage(key), (v)->v);
 	}
 
 	@Override
 	public Long memoryUsage(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.MEMORY_USAGE, (cmd)->cmd.memoryUsage(key), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.MEMORY_USAGE, (cmd)->cmd.memoryUsage(key),
-					(v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.MEMORY_USAGE, (cmd)->cmd.memoryUsage(key), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.MEMORY, SubCommand.MEMORY_USAGE, args, (cmd)->cmd.memoryUsage(key), (v)->v);
 	}
 
 	@Override
 	public Long memoryUsage(final String key, final int samples) {
-		final CommandArguments args = CommandArguments.create(key).add(samples);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.MEMORY_USAGE,
-					(cmd)->cmd.memoryUsage(key, samples), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.MEMORY_USAGE,
-					(cmd)->cmd.memoryUsage(key, samples), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.MEMORY_USAGE, (cmd)->cmd.memoryUsage(key, samples),
-					(v)->v)
-					.run(args);
-		}
+		final CommandArguments args = CommandArguments.create(key).add("SAMPLES", samples);
+		return executeCommand(Command.MEMORY, SubCommand.MEMORY_USAGE, args, (cmd)->cmd.memoryUsage(key, samples),
+				(v)->v);
 	}
 
 	@Override
 	public Long memoryUsage(final byte[] key, final int samples) {
-		final CommandArguments args = CommandArguments.create(key).add(samples);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.MEMORY_USAGE,
-					(cmd)->cmd.memoryUsage(key, samples), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.MEMORY_USAGE,
-					(cmd)->cmd.memoryUsage(key, samples), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.MEMORY_USAGE, (cmd)->cmd.memoryUsage(key, samples),
-					(v)->v)
-					.run(args);
-		}
+		final CommandArguments args = CommandArguments.create(key).add("SAMPLES", samples);
+		return executeCommand(Command.MEMORY, SubCommand.MEMORY_USAGE, args, (cmd)->cmd.memoryUsage(key, samples),
+				(v)->v);
 	}
 
 	@Override
 	public List<Module> moduleList() {
-		final ListConverter<redis.clients.jedis.Module, Module> listModuleConverter = ModuleConverter.listConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<List<Module>, List<Module>>(client, ProtocolCommand.MODULE_LIST)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<List<Module>, List<Module>>(client, ProtocolCommand.MODULE_LIST)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.MODULE_LIST, (cmd)->cmd.moduleList(),
-					listModuleConverter)
-					.run();
-		}
+		return executeCommand(Command.MODULE, SubCommand.MODULE_LIST);
 	}
 
 	@Override
 	public Status moduleLoad(final String path, final String... arguments) {
 		final CommandArguments args = CommandArguments.create(path).add(arguments);
+		return executeCommand(Command.MODULE, SubCommand.MODULE_LOAD, args);
+	}
 
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.MODULE_LOAD)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.MODULE_LOAD)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.MODULE_LOAD, (cmd)->cmd.moduleLoad(path, arguments),
-					okStatusConverter)
-					.run(args);
-		}
+	@Override
+	public Status moduleLoad(final byte[] path, final byte[]... arguments) {
+		final CommandArguments args = CommandArguments.create(path).add(arguments);
+		return executeCommand(Command.MODULE, SubCommand.MODULE_LOAD, args);
+	}
+
+	@Override
+	public Status moduleLoadex(final String path, final Map<String, String> configs, final String... arguments) {
+		final CommandArguments args = CommandArguments.create(path).add(configs).add(arguments);
+		return executeCommand(Command.MODULE, SubCommand.MODULE_LOADEX, args);
+	}
+
+	@Override
+	public Status moduleLoadex(final byte[] path, final Map<byte[], byte[]> configs, final byte[]... arguments) {
+		final CommandArguments args = CommandArguments.create(path).add(configs).add(arguments);
+		return executeCommand(Command.MODULE, SubCommand.MODULE_LOADEX, args);
 	}
 
 	@Override
 	public Status moduleUnLoad(final String name) {
 		final CommandArguments args = CommandArguments.create(name);
+		return executeCommand(Command.MODULE, SubCommand.MODULE_UNLOAD, args);
+	}
 
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.MODULE_UNLOAD)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.MODULE_UNLOAD)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.MODULE_UNLOAD, (cmd)->cmd.moduleUnload(name),
-					okStatusConverter)
-					.run(args);
-		}
+	@Override
+	public Status moduleUnLoad(final byte[] name) {
+		final CommandArguments args = CommandArguments.create(name);
+		return executeCommand(Command.MODULE, SubCommand.MODULE_UNLOAD, args);
 	}
 
 	@Override
 	public void monitor(final RedisMonitor redisMonitor) {
-		final CommandArguments args = CommandArguments.create(redisMonitor);
-
-		if(isPipeline()){
-			new JedisPipelineCommand<>(client, ProtocolCommand.MONITOR)
-					.run(args);
-		}else if(isTransaction()){
-			new JedisTransactionCommand<>(client, ProtocolCommand.MONITOR)
-					.run(args);
-		}else{
-			new JedisCommand<>(client, ProtocolCommand.MONITOR, (cmd)->{
-				cmd.monitor(new JedisMonitor() {
-
-					@Override
-					public void onCommand(final String command) {
-						redisMonitor.onCommand(command);
-					}
-
-				});
-				return null;
-			}, (v)->v)
-					.run(args);
-		}
+		executeCommand(Command.MONITOR);
 	}
 
 	@Override
 	public Object pSync(final String replicationId, final long offset) {
 		final CommandArguments args = CommandArguments.create(replicationId).add(offset);
-		return pSync(args);
+		return executeCommand(Command.PSYNC, args);
 	}
 
 	@Override
 	public Object pSync(final byte[] replicationId, final long offset) {
 		final CommandArguments args = CommandArguments.create(replicationId).add(offset);
-		return pSync(args);
+		return executeCommand(Command.PSYNC, args);
 	}
 
 	@Override
-	public void sync() {
-		if(isPipeline()){
-			new JedisPipelineCommand<>(client, ProtocolCommand.SYNC, (cmd)->{
-				cmd.sync();
-				return null;
-			}, (v)->v)
-					.run();
-		}else if(isTransaction()){
-			new JedisTransactionCommand<>(client, ProtocolCommand.SYNC)
-					.run();
-		}else{
-			new JedisCommand<>(client, ProtocolCommand.SYNC)
-					.run();
-		}
+	public Status replconf() {
+		return executeCommand(Command.REPLCONF);
 	}
 
 	@Override
 	public Status replicaOf(final String host, final int port) {
 		final CommandArguments args = CommandArguments.create(host).add(port);
+		return executeCommand(Command.REPLICAOF, args);
+	}
 
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.REPLICAOF)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.REPLICAOF)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.REPLICAOF, (cmd)->cmd.replicaof(host, port),
-					okStatusConverter)
-					.run(args);
-		}
+	@Override
+	public Status restoreAsking(final String key, final byte[] serializedValue, final int ttl) {
+		final CommandArguments args = CommandArguments.create(key).add(ttl).add(serializedValue);
+		return executeCommand(Command.RESTORE_ASKING, args);
+	}
+
+	@Override
+	public Status restoreAsking(final byte[] key, final byte[] serializedValue, final int ttl) {
+		final CommandArguments args = CommandArguments.create(key).add(ttl).add(serializedValue);
+		return executeCommand(Command.RESTORE_ASKING, args);
+	}
+
+	@Override
+	public Status restoreAsking(final String key, final byte[] serializedValue, final int ttl,
+								final RestoreArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add(ttl).add(serializedValue).add(argument);
+		return executeCommand(Command.RESTORE_ASKING, args);
+	}
+
+	@Override
+	public Status restoreAsking(final byte[] key, byte[] serializedValue, final int ttl,
+								final RestoreArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add(ttl).add(serializedValue).add(argument);
+		return executeCommand(Command.RESTORE_ASKING, args);
+	}
+
+	@Override
+	public Role role() {
+		return executeCommand(Command.ROLE);
+	}
+
+	@Override
+	public Status save() {
+		return executeCommand(Command.SAVE);
+	}
+
+	@Override
+	public void shutdown() {
+		executeCommand(Command.SHUTDOWN);
+	}
+
+	@Override
+	public void shutdown(final ShutdownArgument argument) {
+		final CommandArguments args = CommandArguments.create(argument);
+		executeCommand(Command.SHUTDOWN, args);
 	}
 
 	@Override
 	public Status slaveOf(final String host, final int port) {
 		final CommandArguments args = CommandArguments.create(host).add(port);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.SLAVEOF)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.SLAVEOF)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.SLAVEOF, (cmd)->cmd.slaveof(host, port),
-					okStatusConverter)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Role role() {
-		final RoleConverter roleConverter = new RoleConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<Role, Role>(client, ProtocolCommand.ROLE)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Role, Role>(client, ProtocolCommand.ROLE)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ROLE, (cmd)->cmd.role(), roleConverter)
-					.run();
-		}
-	}
-
-	@Override
-	public Status save() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.SAVE)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.SAVE)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.SAVE, (cmd)->cmd.save(), okStatusConverter)
-					.run();
-		}
-	}
-
-	@Override
-	public void shutdown() {
-		if(isPipeline()){
-			new JedisPipelineCommand<>(client, ProtocolCommand.SHUTDOWN)
-					.run();
-		}else if(isTransaction()){
-			new JedisTransactionCommand<>(client, ProtocolCommand.SHUTDOWN)
-					.run();
-		}else{
-			new JedisCommand<>(client, ProtocolCommand.SHUTDOWN, (cmd)->{
-				cmd.shutdown();
-				return null;
-			}, (v)->v)
-					.run();
-		}
-	}
-
-	@Override
-	public void shutdown(final boolean save) {
-		final CommandArguments args = CommandArguments.create(save);
-		final SaveMode saveMode = save ? SaveMode.SAVE : SaveMode.NOSAVE;
-
-		if(isPipeline()){
-			new JedisPipelineCommand<>(client, ProtocolCommand.SHUTDOWN)
-					.run();
-		}else if(isTransaction()){
-			new JedisTransactionCommand<>(client, ProtocolCommand.SHUTDOWN)
-					.run();
-		}else{
-			new JedisCommand<>(client, ProtocolCommand.SHUTDOWN, (cmd)->{
-				cmd.shutdown(saveMode);
-				return null;
-			}, (v)->v)
-					.run();
-		}
+		return executeCommand(Command.SLAVEOF, args);
 	}
 
 	@Override
 	public List<SlowLog> slowLogGet() {
-		final ListConverter<Slowlog, SlowLog> listSlowlogConverter = SlowlogConverter.listConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<List<SlowLog>, List<SlowLog>>(client, ProtocolCommand.SLOWLOG_GET)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<List<SlowLog>, List<SlowLog>>(client, ProtocolCommand.SLOWLOG_GET)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.SLOWLOG_GET, (cmd)->cmd.slowlogGet(),
-					listSlowlogConverter)
-					.run();
-		}
+		return executeCommand(Command.SLOWLOG, SubCommand.SLOWLOG_GET);
 	}
 
 	@Override
 	public List<SlowLog> slowLogGet(final long count) {
 		final CommandArguments args = CommandArguments.create(count);
-		final ListConverter<Slowlog, SlowLog> listSlowlogConverter = SlowlogConverter.listConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<List<SlowLog>, List<SlowLog>>(client, ProtocolCommand.SLOWLOG_GET)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<List<SlowLog>, List<SlowLog>>(client, ProtocolCommand.SLOWLOG_GET)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.SLOWLOG_GET, (cmd)->cmd.slowlogGet(count),
-					listSlowlogConverter)
-					.run(args);
-		}
+		return executeCommand(Command.SLOWLOG, SubCommand.SLOWLOG_GET, args);
 	}
 
 	@Override
 	public Long slowLogLen() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<Long, Long>(client, ProtocolCommand.SLOWLOG_LEN)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Long, Long>(client, ProtocolCommand.SLOWLOG_LEN)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.SLOWLOG_RESET, (cmd)->cmd.slowlogLen(), (v)->v)
-					.run();
-		}
+		return executeCommand(Command.SLOWLOG, SubCommand.SLOWLOG_LEN);
 	}
 
 	@Override
 	public Status slowLogReset() {
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.SLOWLOG_RESET)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.SLOWLOG_RESET)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.SLOWLOG_RESET, (cmd)->cmd.slowlogReset(),
-					okStatusConverter)
-					.run();
-		}
+		return executeCommand(Command.SLOWLOG, SubCommand.SLOWLOG_RESET);
 	}
 
 	@Override
 	public Status swapdb(final int db1, final int db2) {
 		final CommandArguments args = CommandArguments.create(db1).add(db2);
+		return executeCommand(Command.SWAPDB, args);
+	}
 
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.SWAPDB, (cmd)->cmd.swapDB(db1, db2),
-					okStatusConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.SWAPDB)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.SWAPDB, (cmd)->cmd.swapDB(db1, db2), okStatusConverter)
-					.run(args);
-		}
+	@Override
+	public void sync() {
+		executeCommand(Command.SYNC);
 	}
 
 	@Override
 	public RedisServerTime time() {
-		final RedisServerTimeConverter redisServerTimeConverter = new RedisServerTimeConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.TIME, (cmd)->cmd.time(),
-					redisServerTimeConverter)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<RedisServerTime, RedisServerTime>(client, ProtocolCommand.TIME)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.TIME, (cmd)->cmd.time(), redisServerTimeConverter)
-					.run();
-		}
-	}
-
-	private Status failover(final FailoverParams failoverParams, final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.FAILOVER)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<Status, Status>(client, ProtocolCommand.FAILOVER)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.FAILOVER, (cmd)->cmd.failover(failoverParams),
-					okStatusConverter)
-					.run(args);
-		}
-	}
-
-	private Object pSync(final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.PSYNC)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.PSYNC)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.PSYNC)
-					.run(args);
-		}
+		return executeCommand(Command.TIME);
 	}
 
 }

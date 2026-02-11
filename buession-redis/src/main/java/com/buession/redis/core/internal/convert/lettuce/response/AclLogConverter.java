@@ -19,50 +19,34 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.core.internal.convert.lettuce.response;
 
-import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisRedisClient;
-import com.buession.redis.client.operations.ServerOperations;
-import com.buession.redis.utils.SafeEncoder;
+import com.buession.core.converter.Converter;
+import com.buession.core.validator.Validate;
+import com.buession.redis.core.AclLog;
+import org.springframework.lang.Nullable;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
- * Jedis 服务端命令操作抽象类
  *
- * @param <C>
- * 		Redis Client {@link JedisRedisClient}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 4.0.0
  */
-public abstract class AbstractServerOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
-		implements ServerOperations {
+public class AclLogConverter implements Converter<String, List<AclLog>> {
 
-	public AbstractServerOperations(final C client){
-		super(client);
-	}
-
+	@Nullable
 	@Override
-	public Status moduleLoad(final byte[] path, final byte[]... arguments){
-		if(arguments == null){
-			return moduleLoad(SafeEncoder.encode(path));
-		}else{
-			final String[] args = new String[arguments.length];
-
-			for(int i = 0; i < arguments.length; i++){
-				args[i] = SafeEncoder.encode(arguments[i]);
-			}
-
-			return moduleLoad(SafeEncoder.encode(path), args);
+	public List<AclLog> convert(final String source) {
+		if(Validate.isEmpty(source)){
+			return Collections.emptyList();
 		}
-	}
-
-	@Override
-	public Status moduleUnLoad(final byte[] name){
-		return moduleUnLoad(SafeEncoder.encode(name));
+		return List.of();
 	}
 
 }

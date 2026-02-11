@@ -184,6 +184,92 @@ public enum SubCommand implements ProtocolCommand {
 	/**
 	 * scripting command end
 	 **/
+
+	/**
+	 * server command start
+	 **/
+	ACL_CAT("r"),
+
+	ACL_DELUSER("w"),
+
+	ACL_DRYRUN("w"),
+
+	ACL_GENPASS("r"),
+
+	ACL_GETUSER("r"),
+
+	ACL_LIST("r"),
+
+	ACL_LOAD("r"),
+
+	ACL_LOG("r"),
+
+	ACL_SAVE("w"),
+
+	ACL_SETUSER("w"),
+
+	ACL_USERS("r"),
+
+	ACL_WHOAMI("r"),
+
+	COMMAND_COUNT("r"),
+
+	COMMAND_DOCS("r"),
+
+	COMMAND_GETKEYS("r"),
+
+	COMMAND_GETKEYSANDFLAGS("r"),
+
+	COMMAND_INFO("r"),
+
+	COMMAND_LIST("r"),
+
+	HOTKEYS_GET("r"),
+
+	HOTKEYS_RESET("w"),
+
+	HOTKEYS_START("w"),
+
+	HOTKEYS_STOP("w"),
+
+	LATENCY_DOCTOR("r"),
+
+	LATENCY_GRAPH("r"),
+
+	LATENCY_HISTOGRAM("r"),
+
+	LATENCY_HISTORY("r"),
+
+	LATENCY_LATEST("r"),
+
+	LATENCY_RESET("w"),
+
+	MEMORY_DOCTOR("r"),
+
+	MEMORY_MALLOC_STATS("MALLOC-STATS", "r"),
+
+	MEMORY_PURGE("w"),
+
+	MEMORY_STATS("r"),
+
+	MEMORY_USAGE("r"),
+
+	MODULE_LIST("r"),
+
+	MODULE_LOAD("w"),
+
+	MODULE_LOADEX("w"),
+
+	MODULE_UNLOAD("w"),
+
+	SLOWLOG_GET("r"),
+
+	SLOWLOG_LEN("r"),
+
+	SLOWLOG_RESET("w"),
+	/**
+	 * server command end
+	 **/
 	;
 
 	/**
@@ -207,7 +293,7 @@ public enum SubCommand implements ProtocolCommand {
 	private final boolean write;
 
 	SubCommand(final String mode) {
-		this.name = StringUtils.split(name(), '_')[0];
+		this.name = StringUtils.split(name(), '_')[1];
 		this.raw = SafeEncoder.encode(name);
 		if(Validate.hasText(mode)){
 			String modeLower = mode.toLowerCase();

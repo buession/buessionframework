@@ -19,22 +19,16 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
-
-import com.buession.core.validator.Validate;
-import com.buession.redis.utils.SafeEncoder;
-
-import java.nio.charset.StandardCharsets;
-import java.util.Objects;
 
 /**
  * Redis ACL categories.
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
 public enum AclCategory implements Keyword {
 
@@ -141,13 +135,47 @@ public enum AclCategory implements Keyword {
 	/**
 	 * scripting command
 	 */
-	SCRIPTING;
+	SCRIPTING,
 
-	private final byte[] raw;
+	/**
+	 * bloom filter command
+	 */
+	BLOOM,
 
-	AclCategory() {
-		this.raw = name().getBytes(StandardCharsets.US_ASCII);
-	}
+	/**
+	 * cuckoo command
+	 */
+	CUCKOO,
+
+	/**
+	 * count-min-sketch command
+	 */
+	CMS,
+
+	/**
+	 * top-k command
+	 */
+	TOPK,
+
+	/**
+	 * t-digest command
+	 */
+	TDIGEST,
+
+	/**
+	 * search command
+	 */
+	SEARCH,
+
+	/**
+	 * timeseries command
+	 */
+	TIMESERIES,
+
+	/**
+	 * json command
+	 */
+	JSON;
 
 	@Override
 	public String getValue() {
@@ -155,34 +183,8 @@ public enum AclCategory implements Keyword {
 	}
 
 	@Override
-	public byte[] getRaw() {
-		return raw;
-	}
-
-	public static AclCategory from(final String str) {
-		if(Validate.hasText(str)){
-			String upperStr = str.toUpperCase();
-
-			for(AclCategory category : values()){
-				if(category.getValue().equals(upperStr)){
-					return category;
-				}
-			}
-		}
-
-		return null;
-	}
-
-	public static AclCategory from(final byte[] raw) {
-		if(raw != null){
-			for(AclCategory category : values()){
-				if(Objects.equals(category.getRaw(), raw)){
-					return category;
-				}
-			}
-		}
-
-		return null;
+	public String toString() {
+		return getValue();
 	}
 
 }

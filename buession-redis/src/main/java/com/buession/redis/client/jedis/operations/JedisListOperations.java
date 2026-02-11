@@ -43,7 +43,7 @@ import redis.clients.jedis.UnifiedJedis;
 import java.util.List;
 
 /**
- * Jedis 单机模式列表命令操作
+ * Jedis 列表命令操作
  *
  * @author Yong.Teng
  * @since 2.0.0

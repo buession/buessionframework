@@ -25,63 +25,23 @@
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.utils.StringUtils;
-import com.buession.redis.core.Client;
-import com.buession.redis.core.SlowLog;
+import com.buession.redis.core.AclUser;
+import org.springframework.lang.Nullable;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
- * Lettuce 慢日志对象转换为 {@link SlowLog}
+ *
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public final class SlowlogConverter implements Converter<Object, SlowLog> {
+public final class AclUserConverter implements Converter<List<Object>, AclUser> {
 
-	@SuppressWarnings({"unchecked"})
+	@Nullable
 	@Override
-	public SlowLog convert(final Object source) {
-		if(source instanceof List){
-			final List<Object> tmp = (List<Object>) source;
-
-			if(tmp.size() == 6){
-				final Client client = parseHostAndPort(tmp.get(4));
-				final String clientName = parseClientName(tmp.get(5));
-
-				return new SlowLog((long) tmp.get(0), (long) tmp.get(1), (long) tmp.get(2), parseArgs(tmp.get(3)),
-						client, clientName);
-			}
-		}
-
+	public AclUser convert(final List<Object> source) {
 		return null;
-	}
-
-	private static Client parseHostAndPort(final Object value) {
-		final Client client = new Client();
-
-		if(value != null){
-			String[] hostAndPort = StringUtils.split(new String((byte[]) value), ':');
-			client.setHost(hostAndPort[0]);
-			client.setPort(Integer.parseInt(hostAndPort[1]));
-		}
-
-		return client;
-	}
-
-	private static String parseClientName(final Object value) {
-		return value == null ? null : new String((byte[]) value);
-	}
-
-	@SuppressWarnings({"unchecked"})
-	private static List<String> parseArgs(final Object value) {
-		if(value == null){
-			return null;
-		}
-
-		final List<byte[]> tmp = (List<byte[]>) value;
-		return tmp.stream().map((v)->v == null ? null : new String(v)).collect(Collectors.toList());
 	}
 
 }

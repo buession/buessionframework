@@ -19,45 +19,17 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.lettuce.operations;
-
-import com.buession.lang.Status;
-import com.buession.redis.client.lettuce.LettuceRedisClient;
-import com.buession.redis.client.operations.ServerOperations;
-import com.buession.redis.utils.SafeEncoder;
+package com.buession.redis.core;
 
 /**
- * Lettuce 服务端命令操作抽象类
  *
- * @param <C>
- * 		Redis Client {@link LettuceRedisClient}
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public abstract class AbstractServerOperations<C extends LettuceRedisClient> extends AbstractLettuceRedisOperations<C>
-		implements ServerOperations {
-
-	public AbstractServerOperations(final C client) {
-		super(client);
-	}
-
-	@Override
-	public Status configSet(final byte[] parameter, final byte[] value) {
-		return configSet(SafeEncoder.encode(parameter), SafeEncoder.encode(value));
-	}
-
-	@Override
-	public Long memoryUsage(final String key) {
-		return memoryUsage(SafeEncoder.encode(key));
-	}
-
-	@Override
-	public Long memoryUsage(final String key, final int samples) {
-		return memoryUsage(SafeEncoder.encode(key), samples);
-	}
+public record HotKey() {
 
 }

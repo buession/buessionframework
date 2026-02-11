@@ -453,6 +453,98 @@ public enum Command implements ProtocolCommand {
 	/**
 	 * scripting command end
 	 **/
+
+	/**
+	 * Query Engine command start
+	 **/
+	FT_LIST(CommandGroup.SEARCH, "FT._LIST", "r"),
+
+	FT_AGGREGATE(CommandGroup.SEARCH, "FT.AGGREGATE", "r"),
+	/**
+	 * Query Engine command end
+	 **/
+
+	/**
+	 * server command start
+	 **/
+	ACL(CommandGroup.SERVER, "rw",
+			new SubCommand[]{SubCommand.ACL_CAT, SubCommand.ACL_DELUSER, SubCommand.ACL_DRYRUN, SubCommand.ACL_GENPASS,
+					SubCommand.ACL_GETUSER, SubCommand.ACL_LIST, SubCommand.ACL_LOAD, SubCommand.ACL_LOG,
+					SubCommand.ACL_SAVE, SubCommand.ACL_SETUSER, SubCommand.ACL_USERS, SubCommand.ACL_WHOAMI}),
+
+	BGREWRITEAOF(CommandGroup.SERVER, "w"),
+
+	BGSAVE(CommandGroup.SERVER, "w"),
+
+	COMMAND(CommandGroup.SERVER, "rw", new SubCommand[]{SubCommand.COMMAND_COUNT, SubCommand.COMMAND_DOCS,
+			SubCommand.COMMAND_GETKEYS, SubCommand.COMMAND_GETKEYSANDFLAGS, SubCommand.COMMAND_INFO,
+			SubCommand.COMMAND_LIST}),
+
+	CONFIG_GET(CommandGroup.SERVER, "r"),
+
+	CONFIG_RESETSTAT(CommandGroup.SERVER, "w"),
+
+	CONFIG_REWRITE(CommandGroup.SERVER, "w"),
+
+	CONFIG_SET(CommandGroup.SERVER, "w"),
+
+	DBSIZE(CommandGroup.SERVER, "r"),
+
+	FAILOVER(CommandGroup.SERVER, "w"),
+
+	FLUSHALL(CommandGroup.SERVER, "w"),
+
+	FLUSHDB(CommandGroup.SERVER, "w"),
+
+	HOTKEYS(CommandGroup.SERVER, "rw",
+			new SubCommand[]{SubCommand.HOTKEYS_GET, SubCommand.HOTKEYS_RESET, SubCommand.HOTKEYS_START,
+					SubCommand.HOTKEYS_STOP}),
+
+	INFO(CommandGroup.SERVER, "r"),
+
+	LASTSAVE(CommandGroup.SERVER, "r"),
+
+	LATENCY(CommandGroup.SERVER, "rw", new SubCommand[]{SubCommand.LATENCY_DOCTOR, SubCommand.LATENCY_GRAPH,
+			SubCommand.LATENCY_HISTOGRAM, SubCommand.LATENCY_HISTORY, SubCommand.LATENCY_LATEST,
+			SubCommand.LATENCY_RESET}),
+
+	LOLWUT(CommandGroup.SERVER, "w"),
+
+	MEMORY(CommandGroup.SERVER, "rw", new SubCommand[]{SubCommand.MEMORY_DOCTOR, SubCommand.MEMORY_MALLOC_STATS,
+			SubCommand.MEMORY_PURGE, SubCommand.MEMORY_STATS, SubCommand.MEMORY_USAGE}),
+
+	MODULE(CommandGroup.SERVER, "rw", new SubCommand[]{SubCommand.MODULE_LIST, SubCommand.MODULE_LOAD,
+			SubCommand.MODULE_LOADEX, SubCommand.MODULE_UNLOAD}),
+
+	MONITOR(CommandGroup.SERVER, "rw"),
+
+	PSYNC(CommandGroup.SERVER, "w"),
+
+	REPLCONF(CommandGroup.SERVER, "w"),
+
+	REPLICAOF(CommandGroup.SERVER, "w"),
+
+	RESTORE_ASKING(CommandGroup.SERVER, "RESTORE-ASKING", "w"),
+
+	ROLE(CommandGroup.SERVER, "r"),
+
+	SAVE(CommandGroup.SERVER, "w"),
+
+	SHUTDOWN(CommandGroup.SERVER, "w"),
+
+	SLAVEOF(CommandGroup.SERVER, "w"),
+
+	SLOWLOG(CommandGroup.SERVER, "rw",
+			new SubCommand[]{SubCommand.SLOWLOG_GET, SubCommand.SLOWLOG_LEN, SubCommand.SLOWLOG_RESET}),
+
+	SWAPDB(CommandGroup.SERVER, "w"),
+
+	SYNC(CommandGroup.SERVER, "w"),
+
+	TIME(CommandGroup.SERVER, "r"),
+	/**
+	 * server command end
+	 **/
 	;
 
 	/**

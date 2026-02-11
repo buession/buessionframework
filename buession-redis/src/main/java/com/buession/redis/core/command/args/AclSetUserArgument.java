@@ -388,7 +388,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 		OFF
 	}
 
-	public static abstract class StringArgument implements Argument {
+	private static abstract class StringArgument implements Argument {
 
 		private final String value;
 
@@ -407,7 +407,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	}
 
-	public static abstract class ProtocolCommandArgument implements Argument {
+	private static abstract class ProtocolCommandArgument implements Argument {
 
 		private final ProtocolCommand command;
 
@@ -426,7 +426,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	}
 
-	public static abstract class CommandArgument implements Argument {
+	private static abstract class CommandArgument implements Argument {
 
 		private final Command command;
 
@@ -456,7 +456,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	}
 
-	public static abstract class AclCategoryArgument implements Argument {
+	private static abstract class AclCategoryArgument implements Argument {
 
 		private final AclCategory aclCategory;
 
