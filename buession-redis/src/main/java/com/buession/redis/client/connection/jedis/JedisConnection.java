@@ -31,13 +31,10 @@ import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
 import com.buession.redis.core.PoolConfig;
 import com.buession.redis.core.internal.jedis.JedisClientConfigBuilder;
 import com.buession.redis.exception.RedisConnectionFailureException;
-import com.buession.redis.exception.RedisException;
 import redis.clients.jedis.DefaultJedisClientConfig;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.RedisClient;
 import redis.clients.jedis.builders.StandaloneClientBuilder;
-
-import java.util.List;
 
 /**
  * Jedis 单机模式连接器
@@ -256,37 +253,6 @@ public class JedisConnection extends AbstractJedisRedisConnection<RedisClient> i
 	public JedisConnection(JedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
 						   int infiniteSoTimeout, SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
-	}
-
-	@Override
-	public List<Object> exec() throws RedisException {
-		if(pipeline != null){
-			final List<Object> result = pipeline.syncAndReturnAll();
-
-			pipeline.close();
-			pipeline = null;
-
-			return result;
-		}else if(transaction != null){
-			final List<Object> result = transaction.exec();
-
-			transaction.close();
-			transaction = null;
-
-			return result;
-		}else{
-			throw new RedisException("ERR EXEC without MULTI. Did you forget to call multi?");
-		}
-	}
-
-	@Override
-	public void discard() throws RedisException {
-		if(transaction != null){
-			transaction.discard();
-			transaction = null;
-		}else{
-			throw new RedisException("ERR DISCARD without MULTI. Did you forget to call multi?");
-		}
 	}
 
 	@Override

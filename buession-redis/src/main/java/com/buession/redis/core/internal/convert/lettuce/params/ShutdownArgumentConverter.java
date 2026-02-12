@@ -42,27 +42,27 @@ public final class ShutdownArgumentConverter implements Converter<ShutdownArgume
 	public ShutdownArgs convert(final ShutdownArgument source) {
 		if(source == null){
 			return null;
-		}else{
-			final ShutdownArgs shutdownArgs = new ShutdownArgs();
-
-			if(source.getSave() != null){
-				shutdownArgs.save(source.getSave());
-			}
-
-			if(Boolean.TRUE.equals(source.getNow())){
-				shutdownArgs.now();
-			}
-
-			if(Boolean.TRUE.equals(source.getForce())){
-				shutdownArgs.force();
-			}
-
-			if(Boolean.TRUE.equals(source.getAbort())){
-				shutdownArgs.abort();
-			}
-
-			return shutdownArgs;
 		}
+
+		final ShutdownArgs shutdownArgs = new ShutdownArgs();
+
+		if(source.getSave() != null){
+			shutdownArgs.save(source.getSave());
+		}
+
+		if(Boolean.TRUE.equals(source.getNow())){
+			shutdownArgs.now();
+		}
+
+		if(Boolean.TRUE.equals(source.getForce())){
+			shutdownArgs.force();
+		}
+
+		if(Boolean.TRUE.equals(source.getAbort())){
+			shutdownArgs.abort();
+		}
+
+		return shutdownArgs;
 	}
 
 }

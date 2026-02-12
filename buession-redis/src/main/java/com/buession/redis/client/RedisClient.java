@@ -199,6 +199,13 @@ public interface RedisClient {
 	SetOperations setOperations();
 
 	/**
+	 * 返回事务命令操作实例
+	 *
+	 * @return 事务命令操作实例
+	 */
+	TransactionOperations transactionOperations();
+
+	/**
 	 * 返回 KEY 命令操作实例
 	 *
 	 * @return KEY 命令操作实例
@@ -225,13 +232,6 @@ public interface RedisClient {
 	 * @return 字符串命令操作实例
 	 */
 	StringOperations stringOperations();
-
-	/**
-	 * 返回事务命令操作实例
-	 *
-	 * @return 事务命令操作实例
-	 */
-	TransactionOperations transactionOperations();
 
 	/**
 	 * 执行命令

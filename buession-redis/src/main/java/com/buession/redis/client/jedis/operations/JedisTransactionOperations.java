@@ -19,61 +19,57 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.client.jedis.JedisStandaloneClient;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.operations.TransactionOperations;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
 import redis.clients.jedis.Builder;
 import redis.clients.jedis.Response;
 
 import java.util.List;
 
 /**
- * Jedis 单机模式事务命令操作
+ * Jedis 事务命令操作
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class JedisTransactionOperations extends AbstractTransactionOperations<JedisStandaloneClient> {
+public final class JedisTransactionOperations extends AbstractJedisRedisOperations implements
+		TransactionOperations {
 
-	public JedisTransactionOperations(final JedisStandaloneClient client) {
+	public JedisTransactionOperations(final JedisRedisClient client) {
 		super(client);
 	}
 
 	@Override
-	public void discard() {
-		if(isPipeline()){
-			new JedisPipelineCommand<>(client, ProtocolCommand.DISCARD, (cmd)->{
-				RedisConnection connection = client.getConnection();
-				connection.discard();
-				return null;
-			}, (v)->v)
-					.run();
-		}else if(isTransaction()){
-			new JedisTransactionCommand<>(client, ProtocolCommand.DISCARD, (cmd)->{
-				RedisConnection connection = client.getConnection();
-				connection.discard();
-				return null;
-			}, (v)->v)
-					.run();
-		}else{
-			new JedisCommand<>(client, ProtocolCommand.DISCARD, (cmd)->{
-				RedisConnection connection = client.getConnection();
-				connection.discard();
-				return null;
-			}, (v)->v)
-					.run();
-		}
+	public Status discard() {
+		return executeCommand(Command.DISCARD, (cmd)->{
+			RedisConnection connection = client.getConnection();
+			return connection.discard();
+		}, (v)->v);
 	}
 
 	@Override
 	public List<Object> exec() {
+		return executeCommand(Command.EXEC, (cmd)->{
+			RedisConnection connection = client.getConnection();
+			return new Response<>(new Builder<List<Object>>() {
+
+				@Override
+				public List<Object> build(Object data) {
+					return connection.exec();
+				}
+
+			});
+		}, (v)->v);
+		/*
 		if(isPipeline()){
 			return new JedisPipelineCommand<>(client, ProtocolCommand.EXEC, (cmd)->{
 				RedisConnection connection = client.getConnection();
@@ -106,10 +102,17 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 				return connection.exec();
 			}, (v)->v).run();
 		}
+
+		 */
 	}
 
 	@Override
 	public Status multi() {
+		return executeCommand(Command.MULTI, (cmd)->{
+			cmd.multi();
+			return Status.SUCCESS;
+		}, (v)->v);
+		/*
 		if(isPipeline()){
 			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.MULTI)
 					.run();
@@ -140,10 +143,17 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 			}, (v)->v)
 					.run();
 		}
+
+		 */
 	}
 
 	@Override
 	public Status unwatch() {
+		return executeCommand(Command.UNWATCH, (cmd)->{
+			//cmd.unwatch();
+			return Status.SUCCESS;
+		}, (v)->v);
+		/*
 		if(isPipeline()){
 			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
 					.run();
@@ -162,12 +172,18 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 			return new JedisCommand<>(client, ProtocolCommand.UNWATCH, (cmd)->cmd.unwatch(), okStatusConverter)
 					.run();
 		}
+
+		 */
 	}
 
 	@Override
 	public Status watch(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-
+		return executeCommand(Command.WATCH, args, (cmd)->{
+			//cmd.unwatch();
+			return Status.SUCCESS;
+		}, (v)->v);
+/*
 		if(isPipeline()){
 			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.WATCH)
 					.run(args);
@@ -186,30 +202,17 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 			return new JedisCommand<>(client, ProtocolCommand.WATCH, (cmd)->cmd.watch(keys), okStatusConverter)
 					.run(args);
 		}
+
+ */
 	}
 
 	@Override
 	public Status watch(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.WATCH)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.WATCH,
-					(cmd)->new Response<>(new Builder<String>() {
-
-						@Override
-						public String build(Object data) {
-							return cmd.watch(keys);
-						}
-
-					}), okStatusConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.WATCH, (cmd)->cmd.watch(keys), okStatusConverter)
-					.run(args);
-		}
+		return executeCommand(Command.WATCH, args, (cmd)->{
+			//cmd.unwatch();
+			return Status.SUCCESS;
+		}, (v)->v);
 	}
 
 }

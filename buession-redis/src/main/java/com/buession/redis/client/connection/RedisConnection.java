@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection;
@@ -217,10 +217,12 @@ public interface RedisConnection extends Destroyable, Closeable {
 	/**
 	 * 取消事务
 	 *
+	 * @return 操作结果
+	 *
 	 * @throws RedisException
 	 * 		Redis Exception
 	 */
-	void discard() throws RedisException;
+	Status discard() throws RedisException;
 
 	/**
 	 * 检测是否处于连接状态

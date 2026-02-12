@@ -139,6 +139,11 @@ public abstract class AbstractRedisClient<CONN extends RedisConnection> implemen
 	protected SetOperations setOperations;
 
 	/**
+	 * 事务命令操作
+	 */
+	protected TransactionOperations transactionOperations;
+
+	/**
 	 * KEY 命令操作
 	 */
 	protected KeyOperations keyOperations;
@@ -157,11 +162,6 @@ public abstract class AbstractRedisClient<CONN extends RedisConnection> implemen
 	 * 字符串命令操作
 	 */
 	protected StringOperations stringOperations;
-
-	/**
-	 * 事务命令操作
-	 */
-	protected TransactionOperations transactionOperations;
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 

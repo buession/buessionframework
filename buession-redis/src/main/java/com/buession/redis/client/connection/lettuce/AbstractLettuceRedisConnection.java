@@ -24,24 +24,18 @@
  */
 package com.buession.redis.client.connection.lettuce;
 
-import com.buession.core.Executor;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.AbstractRedisConnection;
-import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceRedisDataSource;
 import com.buession.redis.core.PoolConfig;
-import com.buession.redis.exception.LettuceRedisExceptionUtils;
-import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.lettuce.LettucePipeline;
 import com.buession.redis.pipeline.lettuce.LettucePipelineProxy;
-import com.buession.redis.transaction.Transaction;
 import io.lettuce.core.api.PipeliningFlushPolicy;
 import io.lettuce.core.api.PipeliningFlushState;
 import io.lettuce.core.api.StatefulConnection;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Lettuce Redis 连接对象抽象类
@@ -58,16 +52,6 @@ public abstract class AbstractLettuceRedisConnection<C extends StatefulConnectio
 	 * @since 4.0.0
 	 */
 	protected C conn;
-
-	/**
-	 * 事务
-	 */
-	protected Transaction transaction;
-
-	/**
-	 * 管道
-	 */
-	protected volatile Pipeline pipeline;
 
 	private final PipeliningFlushPolicy pipeliningFlushPolicy = PipeliningFlushPolicy.flushEachCommand();
 
@@ -283,11 +267,6 @@ public abstract class AbstractLettuceRedisConnection<C extends StatefulConnectio
 	}
 
 	@Override
-	public boolean isPipeline() {
-		return pipeline != null;
-	}
-
-	@Override
 	public Pipeline openPipeline() {
 		if(pipeline == null){
 			final PipeliningFlushState flushState = pipeliningFlushPolicy.newPipeline();
@@ -300,47 +279,6 @@ public abstract class AbstractLettuceRedisConnection<C extends StatefulConnectio
 		}
 
 		return pipeline;
-	}
-
-	@Override
-	public void closePipeline() {
-		pipeline.close();
-		pipeline = null;
-	}
-
-	@Override
-	public boolean isTransaction() {
-		return transaction != null;
-	}
-
-	@Override
-	public List<Object> exec() throws RedisException {
-		if(pipeline != null){
-			final List<Object> result = pipeline.syncAndReturnAll();
-
-			pipeline.close();
-			pipeline = null;
-
-			return result;
-		}else if(transaction != null){
-			final List<Object> result = transaction.exec();
-
-			transaction.close();
-			transaction = null;
-
-			return result;
-		}else{
-			throw new RedisException("ERR EXEC without MULTI. Did you forget to call multi?");
-		}
-	}
-
-	@Override
-	public <R> R execute(final Executor<RedisConnection, R> executor) throws RedisException {
-		try{
-			return executor.execute(this);
-		}catch(Exception e){
-			throw LettuceRedisExceptionUtils.convert(e);
-		}
 	}
 
 	@Override

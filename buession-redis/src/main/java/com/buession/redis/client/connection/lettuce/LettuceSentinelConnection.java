@@ -44,9 +44,6 @@ import com.buession.redis.core.internal.lettuce.LettuceClientConfigBuilder;
 import com.buession.redis.exception.LettuceRedisExceptionUtils;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
-import com.buession.redis.pipeline.Pipeline;
-import com.buession.redis.pipeline.lettuce.LettucePipeline;
-import com.buession.redis.pipeline.lettuce.LettucePipelineProxy;
 import com.buession.redis.transaction.Transaction;
 import com.buession.redis.transaction.lettuce.LettuceTransaction;
 import com.buession.redis.transaction.lettuce.LettuceTransactionProxy;
@@ -58,8 +55,6 @@ import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisCredentialsProvider;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.StaticCredentialsProvider;
-import io.lettuce.core.api.PipeliningFlushPolicy;
-import io.lettuce.core.api.PipeliningFlushState;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.codec.ByteArrayCodec;
@@ -621,16 +616,6 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection<St
 		}
 
 		return transaction;
-	}
-
-	@Override
-	public void discard() throws RedisException {
-		if(transaction != null){
-			transaction.discard();
-			transaction = null;
-		}else{
-			throw new RedisException("ERR DISCARD without MULTI. Did you forget to call multi?");
-		}
 	}
 
 	@Override

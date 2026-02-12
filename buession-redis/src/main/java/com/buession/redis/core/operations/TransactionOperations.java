@@ -31,7 +31,7 @@ import com.buession.redis.transaction.Transaction;
 /**
  * 事务运算
  *
- * <p>详情说明 <a href="http://redisdoc.com/transaction/index.html" target="_blank">http://redisdoc.com/transaction/index.html</a></p>
+ * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=transactions" target="_blank">https://redis.io/docs/latest/commands/?group=transactions</a></p>
  *
  * @author Yong.Teng
  */

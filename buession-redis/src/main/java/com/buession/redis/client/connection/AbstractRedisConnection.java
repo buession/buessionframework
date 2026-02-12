@@ -24,16 +24,23 @@
  */
 package com.buession.redis.client.connection;
 
+import com.buession.core.Executor;
 import com.buession.lang.Status;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.core.Constants;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.core.PoolConfig;
+import com.buession.redis.core.internal.convert.response.OkStatusConverter;
+import com.buession.redis.exception.LettuceRedisExceptionUtils;
 import com.buession.redis.exception.RedisConnectionFailureException;
+import com.buession.redis.exception.RedisException;
+import com.buession.redis.pipeline.Pipeline;
+import com.buession.redis.transaction.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Redis 连接对象抽象类
@@ -82,6 +89,16 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	private boolean usePool = false;
 
 	private volatile boolean initialized = false;
+
+	/**
+	 * 事务
+	 */
+	protected Transaction transaction;
+
+	/**
+	 * 管道
+	 */
+	protected volatile Pipeline pipeline;
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -384,6 +401,64 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 		}catch(Exception e){
 			logger.error("Connection redis server error: {}.", e.getMessage());
 			throw new RedisConnectionFailureException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public <R> R execute(final Executor<RedisConnection, R> executor) throws RedisException {
+		try{
+			return executor.execute(this);
+		}catch(Exception e){
+			throw LettuceRedisExceptionUtils.convert(e);
+		}
+	}
+
+	@Override
+	public boolean isPipeline() {
+		return pipeline != null;
+	}
+
+	@Override
+	public void closePipeline() {
+		pipeline.close();
+		pipeline = null;
+	}
+
+	@Override
+	public boolean isTransaction() {
+		return transaction != null;
+	}
+
+	@Override
+	public List<Object> exec() throws RedisException {
+		if(pipeline != null){
+			final List<Object> result = pipeline.syncAndReturnAll();
+
+			pipeline.close();
+			pipeline = null;
+
+			return result;
+		}else if(transaction != null){
+			final List<Object> result = transaction.exec();
+
+			transaction.close();
+			transaction = null;
+
+			return result;
+		}else{
+			throw new RedisException("ERR EXEC without MULTI. Did you forget to call multi?");
+		}
+	}
+
+	@Override
+	public Status discard() throws RedisException {
+		if(transaction != null){
+			final OkStatusConverter okStatusConverter = new OkStatusConverter();
+			String result = transaction.discard();
+			transaction = null;
+			return okStatusConverter.convert(result);
+		}else{
+			throw new RedisException("ERR DISCARD without MULTI. Did you forget to call multi?");
 		}
 	}
 

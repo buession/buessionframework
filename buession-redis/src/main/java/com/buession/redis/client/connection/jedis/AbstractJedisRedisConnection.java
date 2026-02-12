@@ -24,15 +24,11 @@
  */
 package com.buession.redis.client.connection.jedis;
 
-import com.buession.core.Executor;
 import com.buession.redis.client.connection.AbstractRedisConnection;
 import com.buession.net.ssl.SslConfiguration;
-import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisRedisDataSource;
 import com.buession.redis.core.PoolConfig;
-import com.buession.redis.exception.JedisRedisExceptionUtils;
-import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.jedis.JedisPipeline;
 import com.buession.redis.pipeline.jedis.JedisPipelineProxy;
@@ -69,16 +65,6 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 	 * @since 4.0.0
 	 */
 	private CacheConfig cacheConfig;
-
-	/**
-	 * 事务
-	 */
-	protected Transaction transaction;
-
-	/**
-	 * 管道
-	 */
-	protected volatile Pipeline pipeline;
 
 	/**
 	 * 构造函数
@@ -311,11 +297,6 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 	}
 
 	@Override
-	public boolean isPipeline() {
-		return pipeline != null;
-	}
-
-	@Override
 	public Pipeline openPipeline() {
 		if(this.pipeline == null){
 			final redis.clients.jedis.AbstractPipeline pipeline = client.pipelined();
@@ -326,17 +307,6 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 	}
 
 	@Override
-	public void closePipeline() {
-		pipeline.close();
-		pipeline = null;
-	}
-
-	@Override
-	public boolean isTransaction() {
-		return transaction != null;
-	}
-
-	@Override
 	public Transaction multi() {
 		if(this.transaction == null){
 			final redis.clients.jedis.AbstractTransaction transaction = client.multi();
@@ -344,15 +314,6 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 		}
 
 		return this.transaction;
-	}
-
-	@Override
-	public <R> R execute(final Executor<RedisConnection, R> executor) throws RedisException {
-		try{
-			return executor.execute(this);
-		}catch(Exception e){
-			throw JedisRedisExceptionUtils.convert(e);
-		}
 	}
 
 	protected ConnectionPoolConfig getConnectionPoolConfig() {

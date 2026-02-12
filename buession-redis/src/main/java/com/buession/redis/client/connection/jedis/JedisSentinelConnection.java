@@ -40,7 +40,6 @@ import com.buession.redis.core.RedisServer;
 import com.buession.redis.core.Role;
 import com.buession.redis.core.internal.jedis.JedisClientConfigBuilder;
 import com.buession.redis.exception.RedisConnectionFailureException;
-import com.buession.redis.exception.RedisException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.DefaultJedisClientConfig;
@@ -596,30 +595,6 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection<RedisS
 
 		Objects.requireNonNull(createSentinelJedis((JedisSentinelDataSource) dataSource))
 				.sentinelMonitor(server.getName(), server.getHost(), server.getPort(), server.getQuorum());
-	}
-
-	@Override
-	public List<Object> exec() throws RedisException {
-		if(transaction != null){
-			final List<Object> result = transaction.exec();
-
-			transaction.close();
-			transaction = null;
-
-			return result;
-		}else{
-			throw new RedisException("ERR EXEC without MULTI. Did you forget to call multi?");
-		}
-	}
-
-	@Override
-	public void discard() throws RedisException {
-		if(transaction != null){
-			transaction.discard();
-			transaction = null;
-		}else{
-			throw new RedisException("ERR DISCARD without MULTI. Did you forget to call multi?");
-		}
 	}
 
 	@Override

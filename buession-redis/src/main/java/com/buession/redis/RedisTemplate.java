@@ -57,9 +57,10 @@ import java.util.stream.Collectors;
 public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterOperations, BitMapOperations,
 		CuckooFilterOperations, ClusterOperations, CountMinSketchOperations, ConnectionOperations, GenericOperations,
 		GeoOperations, HashOperations, HyperLogLogOperations, JsonOperations, ListOperations, PubSubOperations,
-		ScriptingOperations, /*SearchOperations, */ServerOperations, SetOperations, KeyOperations,
+		ScriptingOperations, /*SearchOperations, */ServerOperations, SetOperations, TransactionOperations,
+		KeyOperations,
 		SortedSetOperations, StreamOperations,
-		StringOperations, TransactionOperations {
+		StringOperations {
 
 	/**
 	 * 构造函数
@@ -2901,12 +2902,13 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 	}
 
 	@Override
-	public void discard() {
-		execute((client)->{
+	public Status discard() {
+		Status result = execute((client)->{
 			client.getConnection().discard();
 			return null;
 		});
 		resetTransactionOrPipeline();
+		return result;
 	}
 
 	@SuppressWarnings({"unchecked"})

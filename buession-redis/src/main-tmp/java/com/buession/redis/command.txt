@@ -225,19 +225,6 @@
 	SUBSTR(CommandGroup.STRING, "r"),
 	/** string command end **/
 
-	/**
-	 * transaction command start
-	 **/
-	DISCARD(CommandGroup.TRANSACTION, "w"),
-
-	EXEC(CommandGroup.TRANSACTION, "w"),
-
-	MULTI(CommandGroup.TRANSACTION, "w"),
-
-	UNWATCH(CommandGroup.TRANSACTION, "w"),
-
-	WATCH(CommandGroup.TRANSACTION, "w");
-
 
 
 	/**

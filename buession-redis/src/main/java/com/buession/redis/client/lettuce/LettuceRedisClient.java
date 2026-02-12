@@ -213,6 +213,15 @@ public class LettuceRedisClient
 	}
 
 	@Override
+	public TransactionOperations transactionOperations() {
+		if(transactionOperations == null){
+			transactionOperations = new LettuceTransactionOperations(this);
+		}
+
+		return transactionOperations;
+	}
+
+	@Override
 	public KeyOperations keyOperations() {
 		if(keyOperations == null){
 			keyOperations = new LettuceKeyOperations(this);
@@ -246,15 +255,6 @@ public class LettuceRedisClient
 		}
 
 		return stringOperations;
-	}
-
-	@Override
-	public TransactionOperations transactionOperations() {
-		if(transactionOperations == null){
-			transactionOperations = new LettuceTransactionOperations(this);
-		}
-
-		return transactionOperations;
 	}
 
 }

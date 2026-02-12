@@ -37,9 +37,9 @@ import com.buession.redis.utils.SafeEncoder;
 public abstract class AbstractRedisTemplate extends RedisAccessor
 		implements BloomFilterCommands, BitMapCommands, CuckooFilterCommands, ClusterCommands, CountMinSketchCommands,
 		ConnectionCommands, GenericCommand, GeoCommands, HashCommands, HyperLogLogCommands, JsonCommands, ListCommands,
-		PubSubCommands, ScriptingCommands,/*SearchCommands, */ServerCommands, SetCommands, KeyCommands,
-		SortedSetCommands, StreamCommands, StringCommands,
-		TransactionCommands {
+		PubSubCommands, ScriptingCommands,/*SearchCommands, */ServerCommands, SetCommands, TransactionCommands,
+		KeyCommands,
+		SortedSetCommands, StreamCommands, StringCommands {
 
 	/**
 	 * 构造函数

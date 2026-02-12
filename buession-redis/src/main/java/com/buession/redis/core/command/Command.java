@@ -585,6 +585,22 @@ public enum Command implements ProtocolCommand {
 	/**
 	 * set command end
 	 **/
+
+	/**
+	 * transaction command start
+	 **/
+	DISCARD(CommandGroup.TRANSACTION, "w"),
+
+	EXEC(CommandGroup.TRANSACTION, "w"),
+
+	MULTI(CommandGroup.TRANSACTION, "w"),
+
+	UNWATCH(CommandGroup.TRANSACTION, "w"),
+
+	WATCH(CommandGroup.TRANSACTION, "w");
+	/**
+	 * transaction command end
+	 **/
 	;
 
 	/**

@@ -38,6 +38,10 @@ public final class GeoUnitConverter implements Converter<GeoUnit, GeoArgs.Unit> 
 
 	@Override
 	public GeoArgs.Unit convert(final GeoUnit source) {
+		if(source == null){
+			return null;
+		}
+
 		return switch(source){
 			case M -> GeoArgs.Unit.m;
 			case KM -> GeoArgs.Unit.km;

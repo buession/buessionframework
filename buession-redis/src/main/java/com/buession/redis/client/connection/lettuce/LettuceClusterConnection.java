@@ -37,20 +37,13 @@ import com.buession.redis.core.internal.lettuce.LettuceClientConfigBuilder;
 import com.buession.redis.exception.LettuceRedisExceptionUtils;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
-import com.buession.redis.pipeline.Pipeline;
-import com.buession.redis.pipeline.lettuce.LettucePipeline;
-import com.buession.redis.pipeline.lettuce.LettucePipelineProxy;
 import com.buession.redis.transaction.Transaction;
-import com.buession.redis.transaction.lettuce.LettuceTransaction;
-import com.buession.redis.transaction.lettuce.LettuceTransactionProxy;
 import io.lettuce.core.LettuceClientConfig;
 import io.lettuce.core.LettuceClusterPool;
 import io.lettuce.core.LettucePoolConfig;
 import io.lettuce.core.RedisCredentialsProvider;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.StaticCredentialsProvider;
-import io.lettuce.core.api.PipeliningFlushPolicy;
-import io.lettuce.core.api.PipeliningFlushState;
 import io.lettuce.core.cluster.RedisClusterClient;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.codec.ByteArrayCodec;
@@ -61,7 +54,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.time.Duration;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -757,16 +749,6 @@ public class LettuceClusterConnection
 	@Override
 	public Transaction multi() {
 		throw new RedisException("MULTI is currently not supported in cluster mode");
-	}
-
-	@Override
-	public void discard() throws RedisException {
-		if(transaction != null){
-			transaction.discard();
-			transaction = null;
-		}else{
-			throw new RedisException("ERR DISCARD without MULTI. Did you forget to call multi?");
-		}
 	}
 
 	@Override

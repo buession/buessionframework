@@ -31,13 +31,11 @@ import com.buession.redis.client.connection.datasource.jedis.JedisClusterDataSou
 import com.buession.redis.core.PoolConfig;
 import com.buession.redis.core.internal.jedis.JedisClientConfigBuilder;
 import com.buession.redis.exception.RedisConnectionFailureException;
-import com.buession.redis.exception.RedisException;
 import redis.clients.jedis.DefaultJedisClientConfig;
 import redis.clients.jedis.RedisClusterClient;
 import redis.clients.jedis.builders.ClusterClientBuilder;
 
 import java.time.Duration;
-import java.util.List;
 
 /**
  * Jedis 集群模式连接器
@@ -746,30 +744,6 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection<RedisCl
 	@Override
 	public void setTopologyRefreshPeriod(Duration topologyRefreshPeriod) {
 		this.topologyRefreshPeriod = topologyRefreshPeriod;
-	}
-
-	@Override
-	public List<Object> exec() throws RedisException {
-		if(transaction != null){
-			final List<Object> result = transaction.exec();
-
-			transaction.close();
-			transaction = null;
-
-			return result;
-		}else{
-			throw new RedisException("ERR EXEC without MULTI. Did you forget to call multi?");
-		}
-	}
-
-	@Override
-	public void discard() throws RedisException {
-		if(transaction != null){
-			transaction.discard();
-			transaction = null;
-		}else{
-			throw new RedisException("ERR DISCARD without MULTI. Did you forget to call multi?");
-		}
 	}
 
 	@Override
