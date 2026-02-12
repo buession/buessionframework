@@ -134,14 +134,14 @@ public abstract class AbstractRedisClient<CONN extends RedisConnection> implemen
 	protected ServerOperations serverOperations;
 
 	/**
-	 * KEY 命令操作
-	 */
-	protected KeyOperations keyOperations;
-
-	/**
 	 * 集合命令操作
 	 */
 	protected SetOperations setOperations;
+
+	/**
+	 * KEY 命令操作
+	 */
+	protected KeyOperations keyOperations;
 
 	/**
 	 * 有序集合命令操作

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
@@ -33,7 +33,7 @@ import java.util.Set;
 /**
  * 集合命令
  *
- * <p>详情说明 <a href="http://redisdoc.com/set/index.html" target="_blank">http://redisdoc.com/set/index.html</a></p>
+ * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=set" target="_blank">https://redis.io/docs/latest/commands/?group=set</a></p>
  *
  * @author Yong.Teng
  */
@@ -168,6 +168,58 @@ public interface SetCommands extends RedisCommands {
 	Set<byte[]> sInter(final byte[]... keys);
 
 	/**
+	 * Returns the cardinality of the set which would result from the intersection of all the given sets.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/sintercard/" target="_blank">https://redis.io/docs/latest/commands/sintercard/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 *
+	 * @return The cardinality of the set which would result from the intersection of all the given sets.
+	 */
+	Long sInterCard(final String... keys);
+
+	/**
+	 * Returns the cardinality of the set which would result from the intersection of all the given sets.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/sintercard/" target="_blank">https://redis.io/docs/latest/commands/sintercard/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 *
+	 * @return The cardinality of the set which would result from the intersection of all the given sets.
+	 */
+	Long sInterCard(final byte[]... keys);
+
+	/**
+	 * Returns the cardinality of the set which would result from the intersection of all the given sets.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/sintercard/" target="_blank">https://redis.io/docs/latest/commands/sintercard/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param limit
+	 * 		Limit
+	 *
+	 * @return The cardinality of the set which would result from the intersection of all the given sets.
+	 */
+	Long sInterCard(final String[] keys, final int limit);
+
+	/**
+	 * Returns the cardinality of the set which would result from the intersection of all the given sets.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/sintercard/" target="_blank">https://redis.io/docs/latest/commands/sintercard/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param limit
+	 * 		Limit
+	 *
+	 * @return The cardinality of the set which would result from the intersection of all the given sets.
+	 */
+	Long sInterCard(final byte[][] keys, final int limit);
+
+	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并保存到 destKey 中
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/sinterstore.html" target="_blank">http://redisdoc.com/set/sinterstore.html</a></p>
@@ -224,6 +276,30 @@ public interface SetCommands extends RedisCommands {
 	Boolean sIsMember(final byte[] key, final byte[] member);
 
 	/**
+	 * 获取集合 key 中的所有成员
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/smembers.html" target="_blank">http://redisdoc.com/set/smembers.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 集合中的所有成员
+	 */
+	Set<String> sMembers(final String key);
+
+	/**
+	 * 获取集合 key 中的所有成员
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/smembers.html" target="_blank">http://redisdoc.com/set/smembers.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 集合中的所有成员
+	 */
+	Set<byte[]> sMembers(final byte[] key);
+
+	/**
 	 * 检查给定的 member 是不是特定集合的成员
 	 *
 	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/smismember.html" target="_blank">https://www.redis.com.cn/commands/smismember.html</a></p>
@@ -252,30 +328,6 @@ public interface SetCommands extends RedisCommands {
 	 * 如果 member 是集合成员返回 true，如果member 不是集合成员返回 false
 	 */
 	List<Boolean> smIsMember(final byte[] key, final byte[]... members);
-
-	/**
-	 * 获取集合 key 中的所有成员
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/smembers.html" target="_blank">http://redisdoc.com/set/smembers.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 集合中的所有成员
-	 */
-	Set<String> sMembers(final String key);
-
-	/**
-	 * 获取集合 key 中的所有成员
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/smembers.html" target="_blank">http://redisdoc.com/set/smembers.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 集合中的所有成员
-	 */
-	Set<byte[]> sMembers(final byte[] key);
 
 	/**
 	 * 将 member 元素从 source 集合移动到 destKey 集合 中
@@ -453,34 +505,6 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 每个元素都是一个集合成员
 	 */
-	ScanResult<List<String>> sScan(final String key, final long cursor);
-
-	/**
-	 * 迭代集合键中的元素
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 *
-	 * @return 每个元素都是一个集合成员
-	 */
-	ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor);
-
-	/**
-	 * 迭代集合键中的元素
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 *
-	 * @return 每个元素都是一个集合成员
-	 */
 	ScanResult<List<String>> sScan(final String key, final String cursor);
 
 	/**
@@ -496,38 +520,6 @@ public interface SetCommands extends RedisCommands {
 	 * @return 每个元素都是一个集合成员
 	 */
 	ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor);
-
-	/**
-	 * 迭代集合键中的元素
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 *
-	 * @return 返回和给定模式相匹配的元素
-	 */
-	ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern);
-
-	/**
-	 * 迭代集合键中的元素
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 *
-	 * @return 返回和给定模式相匹配的元素
-	 */
-	ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern);
 
 	/**
 	 * 迭代集合键中的元素
@@ -575,38 +567,6 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 返回的指定数量的键值对
 	 */
-	ScanResult<List<String>> sScan(final String key, final long cursor, final long count);
-
-	/**
-	 * 迭代集合键中的元素
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回的指定数量的键值对
-	 */
-	ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final long count);
-
-	/**
-	 * 迭代集合键中的元素
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回的指定数量的键值对
-	 */
 	ScanResult<List<String>> sScan(final String key, final String cursor, final long count);
 
 	/**
@@ -624,42 +584,6 @@ public interface SetCommands extends RedisCommands {
 	 * @return 返回的指定数量的键值对
 	 */
 	ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final long count);
-
-	/**
-	 * 迭代集合键中的元素
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回和给定模式相匹配指定数量的元素
-	 */
-	ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern, final long count);
-
-	/**
-	 * 迭代集合键中的元素
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回和给定模式相匹配指定数量的元素
-	 */
-	ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern, final long count);
 
 	/**
 	 * 迭代集合键中的元素

@@ -19,26 +19,23 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.lettuce.operations;
 
-import com.buession.core.converter.Converter;
-import com.buession.core.converter.SetConverter;
+import com.buession.core.converter.BooleanStatusConverter;
 import com.buession.lang.Status;
-import com.buession.redis.client.lettuce.LettuceStandaloneClient;
+import com.buession.redis.client.lettuce.LettuceRedisClient;
+import com.buession.redis.client.operations.SetOperations;
 import com.buession.redis.core.ScanResult;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConverter;
 import com.buession.redis.core.internal.lettuce.LettuceScanArgs;
 import com.buession.redis.core.internal.lettuce.LettuceScanCursor;
 import com.buession.redis.utils.SafeEncoder;
-import io.lettuce.core.ScanArgs;
-import io.lettuce.core.ScanCursor;
-import io.lettuce.core.ValueScanCursor;
 
 import java.util.List;
 import java.util.Set;
@@ -49,530 +46,304 @@ import java.util.Set;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class LettuceSetOperations extends AbstractSetOperations<LettuceStandaloneClient> {
+public final class LettuceSetOperations extends AbstractLettuceRedisOperations implements SetOperations {
 
-	public LettuceSetOperations(final LettuceStandaloneClient client) {
+	public LettuceSetOperations(final LettuceRedisClient client) {
 		super(client);
+	}
+
+	@Override
+	public Long sAdd(final String key, final String... members) {
+		return sAdd(SafeEncoder.encode(key), SafeEncoder.encode(members));
 	}
 
 	@Override
 	public Long sAdd(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
+		return executeCommand(Command.SADD, args, (cmd)->cmd.sadd(key, members), (v)->v);
+	}
 
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.SADD, (cmd)->cmd.sadd(key, members), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.SADD, (cmd)->cmd.sadd(key, members), (v)->v)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.SADD, (cmd)->cmd.sadd(key, members), (v)->v)
-					.run(args);
-		}
+	@Override
+	public Long sCard(final String key) {
+		return sCard(SafeEncoder.encode(key));
 	}
 
 	@Override
 	public Long sCard(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.SCARD, (cmd)->cmd.scard(key), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.SCARD, (cmd)->cmd.scard(key), (v)->v)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.SCARD, (cmd)->cmd.scard(key), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.SCARD, args, (cmd)->cmd.scard(key), (v)->v);
 	}
 
 	@Override
 	public Set<String> sDiff(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		final byte[][] bKeys = SafeEncoder.encode(keys);
-		final SetConverter<byte[], String> binaryToStringSetConverter = Converters.setBinaryToString();
-
-		return sDiff(bKeys, binaryToStringSetConverter, args);
+		return executeCommand(Command.SDIFF, args, (cmd)->cmd.sdiff(SafeEncoder.encode(keys)),
+				Converters.binarySetToStringSetConverter());
 	}
 
 	@Override
 	public Set<byte[]> sDiff(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return sDiff(keys, (v)->v, args);
+		return executeCommand(Command.SDIFF, args, (cmd)->cmd.sdiff(keys), (v)->v);
+	}
+
+	@Override
+	public Long sDiffStore(final String destKey, final String... keys) {
+		return sDiffStore(SafeEncoder.encode(destKey), SafeEncoder.encode(keys));
 	}
 
 	@Override
 	public Long sDiffStore(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.SDIFFSTORE,
-					(cmd)->cmd.sdiffstore(destKey, keys), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.SDIFFSTORE,
-					(cmd)->cmd.sdiffstore(destKey, keys), (v)->v)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.SDIFFSTORE, (cmd)->cmd.sdiffstore(destKey, keys),
-					(v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.SDIFFSTORE, args, (cmd)->cmd.sdiffstore(destKey, keys), (v)->v);
 	}
 
 	@Override
 	public Set<String> sInter(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		final byte[][] bKeys = SafeEncoder.encode(keys);
-		final SetConverter<byte[], String> binaryToStringSetConverter = Converters.setBinaryToString();
-
-		return sInter(bKeys, binaryToStringSetConverter, args);
+		return executeCommand(Command.SINTER, args, (cmd)->cmd.sinter(SafeEncoder.encode(keys)),
+				Converters.binarySetToStringSetConverter());
 	}
 
 	@Override
 	public Set<byte[]> sInter(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return sInter(keys, (v)->v, args);
+		return executeCommand(Command.SINTER, args, (cmd)->cmd.sinter(keys), (v)->v);
+	}
+
+	@Override
+	public Long sInterCard(final String... keys) {
+		return sInterCard(SafeEncoder.encode(keys));
+	}
+
+	@Override
+	public Long sInterCard(final byte[]... keys) {
+		final CommandArguments args = CommandArguments.create(keys);
+		return executeCommand(Command.SINTERCARD, args, (cmd)->cmd.sintercard(keys), (v)->v);
+	}
+
+	@Override
+	public Long sInterCard(final String[] keys, final int limit) {
+		return sInterCard(SafeEncoder.encode(keys), limit);
+	}
+
+	@Override
+	public Long sInterCard(final byte[][] keys, final int limit) {
+		final CommandArguments args = CommandArguments.create(keys).add(limit);
+		return executeCommand(Command.SINTERCARD, args, (cmd)->cmd.sintercard(limit, keys), (v)->v);
+	}
+
+	@Override
+	public Long sInterStore(final String destKey, final String... keys) {
+		return sInterStore(SafeEncoder.encode(destKey), SafeEncoder.encode(keys));
 	}
 
 	@Override
 	public Long sInterStore(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
+		return executeCommand(Command.SINTERSTORE, args, (cmd)->cmd.sinterstore(destKey, keys), (v)->v);
+	}
 
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.SINTERSTORE,
-					(cmd)->cmd.sinterstore(destKey, keys), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.SINTERSTORE,
-					(cmd)->cmd.sinterstore(destKey, keys), (v)->v)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.SINTERSTORE, (cmd)->cmd.sinterstore(destKey, keys),
-					(v)->v)
-					.run(args);
-		}
+	@Override
+	public Boolean sIsMember(final String key, final String member) {
+		return sIsMember(SafeEncoder.encode(key), SafeEncoder.encode(member));
 	}
 
 	@Override
 	public Boolean sIsMember(final byte[] key, final byte[] member) {
 		final CommandArguments args = CommandArguments.create(key).add(member);
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.SISMEMBER, (cmd)->cmd.sismember(key, member),
-					(v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.SISMEMBER, (cmd)->cmd.sismember(key, member),
-					(v)->v)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.SISMEMBER, (cmd)->cmd.sismember(key, member), (v)->v)
-					.run(args);
-		}
-	}
-
-	@Override
-	public List<Boolean> smIsMember(final String key, final String... members) {
-		final CommandArguments args = CommandArguments.create(key).add(members);
-		return smIsMember(args);
-	}
-
-	@Override
-	public List<Boolean> smIsMember(final byte[] key, final byte[]... members) {
-		final CommandArguments args = CommandArguments.create(key).add(members);
-		return smIsMember(args);
+		return executeCommand(Command.SISMEMBER, args, (cmd)->cmd.sismember(key, member), (v)->v);
 	}
 
 	@Override
 	public Set<String> sMembers(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		final byte[] bKey = SafeEncoder.encode(key);
-		final SetConverter<byte[], String> binaryToStringSetConverter = Converters.setBinaryToString();
-
-		return sMembers(bKey, binaryToStringSetConverter, args);
+		return executeCommand(Command.SMEMBERS, args, (cmd)->cmd.smembers(SafeEncoder.encode(key)),
+				Converters.binarySetToStringSetConverter());
 	}
 
 	@Override
 	public Set<byte[]> sMembers(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return sMembers(key, (v)->v, args);
+		return executeCommand(Command.SMEMBERS, args, (cmd)->cmd.smembers(key), (v)->v);
+	}
+
+	@Override
+	public List<Boolean> smIsMember(final String key, final String... members) {
+		return smIsMember(SafeEncoder.encode(key), SafeEncoder.encode(members));
+	}
+
+	@Override
+	public List<Boolean> smIsMember(final byte[] key, final byte[]... members) {
+		final CommandArguments args = CommandArguments.create(key).add(members);
+		return executeCommand(Command.SMISMEMBER, args, (cmd)->cmd.smismember(key, members), (v)->v);
+	}
+
+	@Override
+	public Status sMove(final String key, final String destKey, final String member) {
+		return sMove(SafeEncoder.encode(key), SafeEncoder.encode(destKey), SafeEncoder.encode(member));
 	}
 
 	@Override
 	public Status sMove(final byte[] key, final byte[] destKey, final byte[] member) {
 		final CommandArguments args = CommandArguments.create(key).add(destKey).add(member);
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.SMOVE, (cmd)->cmd.smove(key, destKey, member),
-					booleanStatusConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.SMOVE,
-					(cmd)->cmd.smove(key, destKey, member), booleanStatusConverter)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.SMOVE, (cmd)->cmd.smove(key, destKey, member),
-					booleanStatusConverter)
-					.run(args);
-		}
+		return executeCommand(Command.SMOVE, args, (cmd)->cmd.smove(key, destKey, member),
+				new BooleanStatusConverter());
 	}
 
 	@Override
 	public String sPop(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		final byte[] bKey = SafeEncoder.encode(key);
-
-		return sPop(bKey, SafeEncoder::encode, args);
+		return executeCommand(Command.SPOP, args, (cmd)->cmd.spop(SafeEncoder.encode(key)),
+				Converters.binaryToStringConverter());
 	}
 
 	@Override
 	public byte[] sPop(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return sPop(key, (v)->v, args);
+		return executeCommand(Command.SPOP, args, (cmd)->cmd.spop(key), (v)->v);
 	}
 
 	@Override
 	public Set<String> sPop(final String key, final long count) {
-		final CommandArguments args = CommandArguments.create(key);
-		final byte[] bKey = SafeEncoder.encode(key);
-		final SetConverter<byte[], String> binaryToStringSetConverter = Converters.setBinaryToString();
-
-		return sPop(bKey, count, binaryToStringSetConverter, args);
+		final CommandArguments args = CommandArguments.create(key).add(count);
+		return executeCommand(Command.SPOP, args, (cmd)->cmd.spop(SafeEncoder.encode(key), count),
+				Converters.binarySetToStringSetConverter());
 	}
 
 	@Override
 	public Set<byte[]> sPop(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
-		return sPop(key, count, (v)->v, args);
+		return executeCommand(Command.SPOP, args, (cmd)->cmd.spop(key, count), (v)->v);
 	}
 
 	@Override
 	public String sRandMember(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		final byte[] bKey = SafeEncoder.encode(key);
-
-		return sRandMember(bKey, SafeEncoder::encode, args);
+		return executeCommand(Command.SRANDMEMBER, args, (cmd)->cmd.srandmember(SafeEncoder.encode(key)),
+				Converters.binaryToStringConverter());
 	}
 
 	@Override
 	public byte[] sRandMember(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return sRandMember(key, (v)->v, args);
+		return executeCommand(Command.SRANDMEMBER, args, (cmd)->cmd.srandmember(key), (v)->v);
 	}
 
 	@Override
 	public List<String> sRandMember(final String key, final long count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
-		final byte[] bKey = SafeEncoder.encode(key);
-
-		return sRandMember(bKey, count, binaryToStringListConverter, args);
+		return executeCommand(Command.SRANDMEMBER, args, (cmd)->cmd.srandmember(SafeEncoder.encode(key), count),
+				Converters.binaryListToStringListConverter());
 	}
 
 	@Override
 	public List<byte[]> sRandMember(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
-		return sRandMember(key, count, (v)->v, args);
+		return executeCommand(Command.SRANDMEMBER, args, (cmd)->cmd.srandmember(key, count), (v)->v);
+	}
+
+	@Override
+	public Long sRem(final String key, final String... members) {
+		return sRem(SafeEncoder.encode(key), SafeEncoder.encode(members));
 	}
 
 	@Override
 	public Long sRem(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.SREM, (cmd)->cmd.srem(key, members), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.SREM, (cmd)->cmd.srem(key, members), (v)->v)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.SREM, (cmd)->cmd.srem(key, members), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.SREM, args, (cmd)->cmd.srem(key, members), (v)->v);
 	}
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor);
-		final byte[] bKey = SafeEncoder.encode(key);
-		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
-		final ScanCursorConverter.ValueScanCursorConverter.BSKeyScanCursorConverter bsKeyScanCursorConverter =
-				new ScanCursorConverter.ValueScanCursorConverter.BSKeyScanCursorConverter();
-
-		return sScan(bKey, scanCursor, bsKeyScanCursorConverter, args);
+		return executeCommand(Command.SSCAN, args,
+				(cmd)->cmd.sscan(SafeEncoder.encode(key), new LettuceScanCursor(cursor)),
+				new ScanCursorConverter.ValueScanCursorConverter.BSKeyScanCursorConverter());
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor);
-		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
-		final ScanCursorConverter.ValueScanCursorConverter<byte[]> valueScanCursorConverter = new ScanCursorConverter.ValueScanCursorConverter<>();
-
-		return sScan(key, scanCursor, valueScanCursorConverter, args);
+		return executeCommand(Command.SSCAN, args, (cmd)->cmd.sscan(key, new LettuceScanCursor(cursor)),
+				new ScanCursorConverter.ValueScanCursorConverter<>());
 	}
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern);
-		final byte[] bKey = SafeEncoder.encode(key);
-		final ScanCursor scanCursor = new LettuceScanCursor(pattern);
-		final ScanCursorConverter.ValueScanCursorConverter.BSKeyScanCursorConverter bsKeyScanCursorConverter =
-				new ScanCursorConverter.ValueScanCursorConverter.BSKeyScanCursorConverter();
-
-		return sScan(bKey, scanCursor, bsKeyScanCursorConverter, args);
+		return executeCommand(Command.SSCAN, args,
+				(cmd)->cmd.sscan(SafeEncoder.encode(key), new LettuceScanCursor(cursor),
+						new LettuceScanArgs(pattern)),
+				new ScanCursorConverter.ValueScanCursorConverter.BSKeyScanCursorConverter());
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern);
-		final ScanCursor scanCursor = new LettuceScanCursor(pattern);
-		final ScanCursorConverter.ValueScanCursorConverter<byte[]> valueScanCursorConverter = new ScanCursorConverter.ValueScanCursorConverter<>();
-
-		return sScan(key, scanCursor, valueScanCursorConverter, args);
+		return executeCommand(Command.SSCAN, args,
+				(cmd)->cmd.sscan(key, new LettuceScanCursor(cursor), new LettuceScanArgs(pattern)),
+				new ScanCursorConverter.ValueScanCursorConverter<>());
 	}
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final long count) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor).add(count);
-		final byte[] bKey = SafeEncoder.encode(key);
-		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
-		final ScanArgs scanArgs = new LettuceScanArgs(count);
-		final ScanCursorConverter.ValueScanCursorConverter.BSKeyScanCursorConverter bsKeyScanCursorConverter =
-				new ScanCursorConverter.ValueScanCursorConverter.BSKeyScanCursorConverter();
-
-		return sScan(bKey, scanCursor, scanArgs, bsKeyScanCursorConverter, args);
+		return executeCommand(Command.SSCAN, args,
+				(cmd)->cmd.sscan(SafeEncoder.encode(key), new LettuceScanCursor(cursor),
+						new LettuceScanArgs(count)),
+				new ScanCursorConverter.ValueScanCursorConverter.BSKeyScanCursorConverter());
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final long count) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor).add(count);
-		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
-		final ScanArgs scanArgs = new LettuceScanArgs(count);
-		final ScanCursorConverter.ValueScanCursorConverter<byte[]> valueScanCursorConverter = new ScanCursorConverter.ValueScanCursorConverter<>();
-
-		return sScan(key, scanCursor, scanArgs, valueScanCursorConverter, args);
+		return executeCommand(Command.SSCAN, args,
+				(cmd)->cmd.sscan(key, new LettuceScanCursor(cursor), new LettuceScanArgs(count)),
+				new ScanCursorConverter.ValueScanCursorConverter<>());
 	}
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern,
 										  final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern)
-				.add(count);
-		final byte[] bKey = SafeEncoder.encode(key);
-		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
-		final ScanArgs scanArgs = new LettuceScanArgs(pattern, count);
-		final ScanCursorConverter.ValueScanCursorConverter.BSKeyScanCursorConverter bsKeyScanCursorConverter =
-				new ScanCursorConverter.ValueScanCursorConverter.BSKeyScanCursorConverter();
-
-		return sScan(bKey, scanCursor, scanArgs, bsKeyScanCursorConverter, args);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern).add(count);
+		return executeCommand(Command.SSCAN, args,
+				(cmd)->cmd.sscan(SafeEncoder.encode(key), new LettuceScanCursor(cursor),
+						new LettuceScanArgs(pattern, count)),
+				new ScanCursorConverter.ValueScanCursorConverter.BSKeyScanCursorConverter());
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern,
 										  final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern)
-				.add(count);
-		final ScanCursor scanCursor = new LettuceScanCursor(cursor);
-		final ScanArgs scanArgs = new LettuceScanArgs(pattern, count);
-		final ScanCursorConverter.ValueScanCursorConverter<byte[]> valueScanCursorConverter = new ScanCursorConverter.ValueScanCursorConverter<>();
-
-		return sScan(key, scanCursor, scanArgs, valueScanCursorConverter, args);
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern).add(count);
+		return executeCommand(Command.SSCAN, args,
+				(cmd)->cmd.sscan(key, new LettuceScanCursor(cursor), new LettuceScanArgs(pattern, count)),
+				new ScanCursorConverter.ValueScanCursorConverter<>());
 	}
 
 	@Override
 	public Set<String> sUnion(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		final byte[][] bKeys = SafeEncoder.encode(keys);
-		final SetConverter<byte[], String> binaryToStringSetConverter = Converters.setBinaryToString();
-
-		return sUnion(bKeys, binaryToStringSetConverter, args);
+		return executeCommand(Command.SUNION, args, (cmd)->cmd.sunion(SafeEncoder.encode(keys)),
+				Converters.binarySetToStringSetConverter());
 	}
 
 	@Override
 	public Set<byte[]> sUnion(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return sUnion(keys, (v)->v, args);
+		return executeCommand(Command.SUNION, args, (cmd)->cmd.sunion(keys), (v)->v);
+	}
+
+	@Override
+	public Long sUnionStore(final String destKey, final String... keys) {
+		return sUnionStore(SafeEncoder.encode(destKey), SafeEncoder.encode(keys));
 	}
 
 	@Override
 	public Long sUnionStore(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.SUNIONSTORE,
-					(cmd)->cmd.sunionstore(destKey, keys), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.SUNIONSTORE,
-					(cmd)->cmd.sunionstore(destKey, keys), (v)->v)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.SUNIONSTORE, (cmd)->cmd.sunionstore(destKey, keys),
-					(v)->v)
-					.run(args);
-		}
-	}
-
-	private <V> Set<V> sDiff(final byte[][] keys, final Converter<Set<byte[]>, Set<V>> converter,
-							 final CommandArguments args) {
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.SDIFF, (cmd)->cmd.sdiff(keys), converter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.SDIFF, (cmd)->cmd.sdiff(keys), converter)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.SDIFF, (cmd)->cmd.sdiff(keys), converter)
-					.run(args);
-		}
-	}
-
-	private <V> Set<V> sInter(final byte[][] keys, final Converter<Set<byte[]>, Set<V>> converter,
-							  final CommandArguments args) {
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.SINTER, (cmd)->cmd.sinter(keys), converter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.SINTER, (cmd)->cmd.sinter(keys), converter)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.SINTER, (cmd)->cmd.sinter(keys), converter)
-					.run(args);
-		}
-	}
-
-	private List<Boolean> smIsMember(final CommandArguments args) {
-		if(isPipeline()){
-			return new LettucePipelineCommand<List<Boolean>, List<Boolean>>(client, ProtocolCommand.SMISMEMBER)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<List<Boolean>, List<Boolean>>(client, ProtocolCommand.SMISMEMBER)
-					.run(args);
-		}else{
-			return new LettuceCommand<List<Boolean>, List<Boolean>>(client, ProtocolCommand.SMISMEMBER)
-					.run(args);
-		}
-	}
-
-	private <V> Set<V> sMembers(final byte[] key, final Converter<Set<byte[]>, Set<V>> converter,
-								final CommandArguments args) {
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.SMEMBERS, (cmd)->cmd.smembers(key), converter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.SMEMBERS, (cmd)->cmd.smembers(key),
-					converter)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.SMEMBERS, (cmd)->cmd.smembers(key), converter)
-					.run(args);
-		}
-	}
-
-	private <V> V sPop(final byte[] key, final Converter<byte[], V> converter, final CommandArguments args) {
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.SPOP, (cmd)->cmd.spop(key), converter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.SPOP, (cmd)->cmd.spop(key), converter)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.SPOP, (cmd)->cmd.spop(key), converter)
-					.run(args);
-		}
-	}
-
-	private <V> Set<V> sPop(final byte[] key, final long count, final Converter<Set<byte[]>, Set<V>> converter,
-							final CommandArguments args) {
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.SPOP, (cmd)->cmd.spop(key, count), converter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.SPOP, (cmd)->cmd.spop(key, count), converter)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.SPOP, (cmd)->cmd.spop(key, count), converter)
-					.run(args);
-		}
-	}
-
-	private <V> V sRandMember(final byte[] key, final Converter<byte[], V> converter, final CommandArguments args) {
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.SPOP, (cmd)->cmd.srandmember(key), converter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.SPOP, (cmd)->cmd.srandmember(key), converter)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.SRANDMEMBER, (cmd)->cmd.srandmember(key), converter)
-					.run(args);
-		}
-	}
-
-	private <V> List<V> sRandMember(final byte[] key, final long count,
-									final Converter<List<byte[]>, List<V>> converter, final CommandArguments args) {
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.SRANDMEMBER, (cmd)->cmd.srandmember(key, count),
-					converter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.SRANDMEMBER,
-					(cmd)->cmd.srandmember(key, count), converter)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.SRANDMEMBER, (cmd)->cmd.srandmember(key, count),
-					converter)
-					.run(args);
-		}
-	}
-
-	private <V> ScanResult<List<V>> sScan(final byte[] key, final ScanCursor cursor,
-										  final Converter<ValueScanCursor<byte[]>, ScanResult<List<V>>> converter,
-										  final CommandArguments args) {
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.SSCAN, (cmd)->cmd.sscan(key, cursor), converter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.SSCAN, (cmd)->cmd.sscan(key, cursor),
-					converter)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.SSCAN, (cmd)->cmd.sscan(key, cursor), converter)
-					.run(args);
-		}
-	}
-
-	private <V> ScanResult<List<V>> sScan(final byte[] key, final ScanCursor cursor, final ScanArgs scanArgs,
-										  final Converter<ValueScanCursor<byte[]>, ScanResult<List<V>>> converter,
-										  final CommandArguments args) {
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.SSCAN, (cmd)->cmd.sscan(key, cursor, scanArgs),
-					converter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.SSCAN,
-					(cmd)->cmd.sscan(key, cursor, scanArgs), converter)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.SSCAN, (cmd)->cmd.sscan(key, cursor, scanArgs),
-					converter)
-					.run(args);
-		}
-	}
-
-	private <V> Set<V> sUnion(final byte[][] keys, final Converter<Set<byte[]>, Set<V>> converter,
-							  final CommandArguments args) {
-		if(isPipeline()){
-			return new LettucePipelineCommand<>(client, ProtocolCommand.SUNION, (cmd)->cmd.sunion(keys), converter)
-					.run(args);
-		}else if(isTransaction()){
-			return new LettuceTransactionCommand<>(client, ProtocolCommand.SUNION, (cmd)->cmd.sunion(keys), converter)
-					.run(args);
-		}else{
-			return new LettuceCommand<>(client, ProtocolCommand.SUNION, (cmd)->cmd.sunion(keys), converter)
-					.run(args);
-		}
+		return executeCommand(Command.SUNIONSTORE, args, (cmd)->cmd.sunionstore(destKey, keys), (v)->v);
 	}
 
 }

@@ -25,6 +25,7 @@
 package com.buession.redis.core.operations;
 
 import com.buession.core.type.TypeReference;
+import com.buession.core.utils.NumberUtils;
 import com.buession.lang.Status;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.SetCommands;
@@ -35,7 +36,7 @@ import java.util.Set;
 /**
  * 集合运算
  *
- * <p>详情说明 <a href="http://redisdoc.com/set/index.html" target="_blank">http://redisdoc.com/set/index.html</a></p>
+ * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=set" target="_blank">https://redis.io/docs/latest/commands/?group=set</a></p>
  *
  * @author Yong.Teng
  */
@@ -178,8 +179,6 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 一个包含差集成员反序列化为对象的列表
-	 *
-	 * @see TypeReference
 	 */
 	<V> Set<V> sDiffObject(final String[] keys, final TypeReference<V> type);
 
@@ -196,8 +195,6 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 一个包含差集成员反序列化为对象的列表
-	 *
-	 * @see TypeReference
 	 */
 	<V> Set<V> sDiffObject(final byte[][] keys, final TypeReference<V> type);
 
@@ -294,8 +291,6 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 交集成员反序列化为对象的列表
-	 *
-	 * @see TypeReference
 	 */
 	<V> Set<V> sInterObject(final String[] keys, final TypeReference<V> type);
 
@@ -312,10 +307,28 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 交集成员反序列化为对象的列表
-	 *
-	 * @see TypeReference
 	 */
 	<V> Set<V> sInterObject(final byte[][] keys, final TypeReference<V> type);
+
+	@Override
+	default Long sInterCard(final String... keys) {
+		return execute((client)->client.setOperations().sInterCard(keys));
+	}
+
+	@Override
+	default Long sInterCard(final byte[]... keys) {
+		return execute((client)->client.setOperations().sInterCard(keys));
+	}
+
+	@Override
+	default Long sInterCard(final String[] keys, final int limit) {
+		return execute((client)->client.setOperations().sInterCard(keys, limit));
+	}
+
+	@Override
+	default Long sInterCard(final byte[][] keys, final int limit) {
+		return execute((client)->client.setOperations().sInterCard(keys, limit));
+	}
 
 	@Override
 	default Long sInterStore(final String destKey, final String... keys) {
@@ -338,16 +351,6 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	}
 
 	@Override
-	default List<Boolean> smIsMember(final String key, final String... members) {
-		return execute((client)->client.setOperations().smIsMember(key, members));
-	}
-
-	@Override
-	default List<Boolean> smIsMember(final byte[] key, final byte[]... members) {
-		return execute((client)->client.setOperations().smIsMember(key, members));
-	}
-
-	@Override
 	default Set<String> sMembers(final String key) {
 		return execute((client)->client.setOperations().sMembers(key));
 	}
@@ -355,66 +358,6 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	@Override
 	default Set<byte[]> sMembers(final byte[] key) {
 		return execute((client)->client.setOperations().sMembers(key));
-	}
-
-	@Override
-	default Status sMove(final String key, final String destKey, final String member) {
-		return execute((client)->client.setOperations().sMove(key, destKey, member));
-	}
-
-	@Override
-	default Status sMove(final byte[] key, final byte[] destKey, final byte[] member) {
-		return execute((client)->client.setOperations().sMove(key, destKey, member));
-	}
-
-	@Override
-	default String sPop(final String key) {
-		return execute((client)->client.setOperations().sPop(key));
-	}
-
-	@Override
-	default byte[] sPop(final byte[] key) {
-		return execute((client)->client.setOperations().sPop(key));
-	}
-
-	@Override
-	default Set<String> sPop(final String key, final long count) {
-		return execute((client)->client.setOperations().sPop(key, count));
-	}
-
-	@Override
-	default Set<byte[]> sPop(final byte[] key, final long count) {
-		return execute((client)->client.setOperations().sPop(key, count));
-	}
-
-	@Override
-	default String sRandMember(final String key) {
-		return execute((client)->client.setOperations().sRandMember(key));
-	}
-
-	@Override
-	default byte[] sRandMember(final byte[] key) {
-		return execute((client)->client.setOperations().sRandMember(key));
-	}
-
-	@Override
-	default List<String> sRandMember(final String key, final long count) {
-		return execute((client)->client.setOperations().sRandMember(key, count));
-	}
-
-	@Override
-	default List<byte[]> sRandMember(final byte[] key, final long count) {
-		return execute((client)->client.setOperations().sRandMember(key, count));
-	}
-
-	@Override
-	default Long sRem(final String key, final String... members) {
-		return execute((client)->client.setOperations().sRem(key, members));
-	}
-
-	@Override
-	default Long sRem(final byte[] key, final byte[]... members) {
-		return execute((client)->client.setOperations().sRem(key, members));
 	}
 
 	/**
@@ -490,8 +433,6 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * 		元素值类型
 	 *
 	 * @return 集合中的所有成员
-	 *
-	 * @see TypeReference
 	 */
 	<V> Set<V> sMembersObject(final String key, final TypeReference<V> type);
 
@@ -508,10 +449,48 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * 		元素值类型
 	 *
 	 * @return 集合中的所有成员
-	 *
-	 * @see TypeReference
 	 */
 	<V> Set<V> sMembersObject(final byte[] key, final TypeReference<V> type);
+
+	@Override
+	default List<Boolean> smIsMember(final String key, final String... members) {
+		return execute((client)->client.setOperations().smIsMember(key, members));
+	}
+
+	@Override
+	default List<Boolean> smIsMember(final byte[] key, final byte[]... members) {
+		return execute((client)->client.setOperations().smIsMember(key, members));
+	}
+
+	@Override
+	default Status sMove(final String key, final String destKey, final String member) {
+		return execute((client)->client.setOperations().sMove(key, destKey, member));
+	}
+
+	@Override
+	default Status sMove(final byte[] key, final byte[] destKey, final byte[] member) {
+		return execute((client)->client.setOperations().sMove(key, destKey, member));
+	}
+
+	@Override
+	default String sPop(final String key) {
+		return execute((client)->client.setOperations().sPop(key));
+	}
+
+	@Override
+	default byte[] sPop(final byte[] key) {
+		return execute((client)->client.setOperations().sPop(key));
+	}
+
+	@Override
+	default Set<String> sPop(final String key, final long count) {
+		return execute((client)->client.setOperations().sPop(key, count));
+	}
+
+	@Override
+	default Set<byte[]> sPop(final byte[] key, final long count) {
+		return execute((client)->client.setOperations().sPop(key, count));
+	}
 
 	/**
 	 * 移除并返回集合 key 中的一个随机元素反序列化后的对象
@@ -586,8 +565,6 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * 		元素值类型
 	 *
 	 * @return 被移除的随机元素反序列化后的对象
-	 *
-	 * @see TypeReference
 	 */
 	<V> V sPopObject(final String key, final TypeReference<V> type);
 
@@ -604,8 +581,6 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * 		元素值类型
 	 *
 	 * @return 被移除的随机元素反序列化后的对象
-	 *
-	 * @see TypeReference
 	 */
 	<V> V sPopObject(final byte[] key, final TypeReference<V> type);
 
@@ -692,8 +667,6 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * 		元素值类型
 	 *
 	 * @return 被移除的随机元素反序列化后的对象
-	 *
-	 * @see TypeReference
 	 */
 	<V> Set<V> sPopObject(final String key, final long count, final TypeReference<V> type);
 
@@ -712,10 +685,28 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * 		元素值类型
 	 *
 	 * @return 被移除的随机元素反序列化后的对象
-	 *
-	 * @see TypeReference
 	 */
 	<V> Set<V> sPopObject(final byte[] key, final long count, final TypeReference<V> type);
+
+	@Override
+	default String sRandMember(final String key) {
+		return execute((client)->client.setOperations().sRandMember(key));
+	}
+
+	@Override
+	default byte[] sRandMember(final byte[] key) {
+		return execute((client)->client.setOperations().sRandMember(key));
+	}
+
+	@Override
+	default List<String> sRandMember(final String key, final long count) {
+		return execute((client)->client.setOperations().sRandMember(key, count));
+	}
+
+	@Override
+	default List<byte[]> sRandMember(final byte[] key, final long count) {
+		return execute((client)->client.setOperations().sRandMember(key, count));
+	}
 
 	/**
 	 * 返回集合 key 中的一个随机元素，并反序列化为对象
@@ -790,8 +781,6 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * 		元素值类型
 	 *
 	 * @return 集合 key 中的一个随机元素，反序列化后的对象
-	 *
-	 * @see TypeReference
 	 */
 	<V> V sRandMemberObject(final String key, final TypeReference<V> type);
 
@@ -808,8 +797,6 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * 		元素值类型
 	 *
 	 * @return 集合 key 中的一个随机元素，反序列化后的对象
-	 *
-	 * @see TypeReference
 	 */
 	<V> V sRandMemberObject(final byte[] key, final TypeReference<V> type);
 
@@ -896,8 +883,6 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * 		元素值类型
 	 *
 	 * @return 集合 key 中的随机元素，序列化后的对象列表
-	 *
-	 * @see TypeReference
 	 */
 	<V> List<V> sRandMemberObject(final String key, final long count, final TypeReference<V> type);
 
@@ -916,42 +901,18 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * 		元素值类型
 	 *
 	 * @return 集合 key 中的随机元素，序列化后的对象列表
-	 *
-	 * @see TypeReference
 	 */
 	<V> List<V> sRandMemberObject(final byte[] key, final long count, final TypeReference<V> type);
 
-	/**
-	 * 移除集合 key 中的 member 序列化后的元素，不存在的 member 元素会被忽略
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/srem.html" target="_blank">http://redisdoc.com/set/srem.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param member
-	 * 		元素
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 被成功移除的元素的数量，不包括被忽略的元素
-	 */
-	<V> Long sRem(final String key, final V member);
+	@Override
+	default Long sRem(final String key, final String... members) {
+		return execute((client)->client.setOperations().sRem(key, members));
+	}
 
-	/**
-	 * 移除集合 key 中的 member 序列化后的元素，不存在的 member 元素会被忽略
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/srem.html" target="_blank">http://redisdoc.com/set/srem.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param member
-	 * 		元素
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 被成功移除的元素的数量，不包括被忽略的元素
-	 */
-	<V> Long sRem(final byte[] key, final V member);
+	@Override
+	default Long sRem(final byte[] key, final byte[]... members) {
+		return execute((client)->client.setOperations().sRem(key, members));
+	}
 
 	/**
 	 * 移除集合 key 中的一个或多个 member 序列化后的元素，不存在的 member 元素会被忽略
@@ -987,14 +948,36 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	@SuppressWarnings({"unchecked"})
 	<V> Long sRem(final byte[] key, final V... members);
 
-	@Override
+	/**
+	 * 迭代集合键中的元素
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 *
+	 * @return 每个元素都是一个集合成员
+	 */
 	default ScanResult<List<String>> sScan(final String key, final long cursor) {
-		return execute((client)->client.setOperations().sScan(key, cursor));
+		return sScan(key, Long.toString(cursor));
 	}
 
-	@Override
+	/**
+	 * 迭代集合键中的元素
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 *
+	 * @return 每个元素都是一个集合成员
+	 */
 	default ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor) {
-		return execute((client)->client.setOperations().sScan(key, cursor));
+		return sScan(key, NumberUtils.long2bytes(cursor));
 	}
 
 	@Override
@@ -1007,14 +990,40 @@ public interface SetOperations extends SetCommands, RedisOperations {
 		return execute((client)->client.setOperations().sScan(key, cursor));
 	}
 
-	@Override
+	/**
+	 * 迭代集合键中的元素
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 *
+	 * @return 返回和给定模式相匹配的元素
+	 */
 	default ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern) {
-		return execute((client)->client.setOperations().sScan(key, cursor, pattern));
+		return sScan(key, Long.toString(cursor), pattern);
 	}
 
-	@Override
+	/**
+	 * 迭代集合键中的元素
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 *
+	 * @return 返回和给定模式相匹配的元素
+	 */
 	default ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern) {
-		return execute((client)->client.setOperations().sScan(key, cursor, pattern));
+		return sScan(key, NumberUtils.long2bytes(cursor), pattern);
 	}
 
 	@Override
@@ -1027,14 +1036,40 @@ public interface SetOperations extends SetCommands, RedisOperations {
 		return execute((client)->client.setOperations().sScan(key, cursor, pattern));
 	}
 
-	@Override
+	/**
+	 * 迭代集合键中的元素
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回的指定数量的键值对
+	 */
 	default ScanResult<List<String>> sScan(final String key, final long cursor, final long count) {
-		return execute((client)->client.setOperations().sScan(key, cursor, count));
+		return sScan(key, Long.toString(cursor), count);
 	}
 
-	@Override
+	/**
+	 * 迭代集合键中的元素
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回的指定数量的键值对
+	 */
 	default ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final long count) {
-		return execute((client)->client.setOperations().sScan(key, cursor, count));
+		return sScan(key, NumberUtils.long2bytes(cursor), count);
 	}
 
 	@Override
@@ -1047,16 +1082,46 @@ public interface SetOperations extends SetCommands, RedisOperations {
 		return execute((client)->client.setOperations().sScan(key, cursor, count));
 	}
 
-	@Override
+	/**
+	 * 迭代集合键中的元素
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回和给定模式相匹配指定数量的元素
+	 */
 	default ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern,
 										   final long count) {
-		return execute((client)->client.setOperations().sScan(key, cursor, pattern, count));
+		return sScan(key, Long.toString(cursor), pattern, count);
 	}
 
-	@Override
+	/**
+	 * 迭代集合键中的元素
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回和给定模式相匹配指定数量的元素
+	 */
 	default ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern,
 										   final long count) {
-		return execute((client)->client.setOperations().sScan(key, cursor, pattern, count));
+		return sScan(key, NumberUtils.long2bytes(cursor), pattern, count);
 	}
 
 	@Override

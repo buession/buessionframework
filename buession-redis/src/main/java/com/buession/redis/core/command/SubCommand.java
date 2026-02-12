@@ -270,6 +270,13 @@ public enum SubCommand implements ProtocolCommand {
 	/**
 	 * server command end
 	 **/
+
+	/**
+	 * set command start
+	 **/
+	/**
+	 * set command end
+	 **/
 	;
 
 	/**

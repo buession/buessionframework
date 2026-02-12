@@ -545,6 +545,46 @@ public enum Command implements ProtocolCommand {
 	/**
 	 * server command end
 	 **/
+
+	/**
+	 * set command start
+	 **/
+	SADD(CommandGroup.SET, "w"),
+
+	SCARD(CommandGroup.SET, "r"),
+
+	SDIFF(CommandGroup.SET, "r"),
+
+	SDIFFSTORE(CommandGroup.SET, "r"),
+
+	SINTER(CommandGroup.SET, "w"),
+
+	SINTERCARD(CommandGroup.SET, "r"),
+
+	SINTERSTORE(CommandGroup.SET, "w"),
+
+	SISMEMBER(CommandGroup.SET, "r"),
+
+	SMEMBERS(CommandGroup.SET, "r"),
+
+	SMISMEMBER(CommandGroup.SET, "r"),
+
+	SMOVE(CommandGroup.SET, "w"),
+
+	SPOP(CommandGroup.SET, "rw"),
+
+	SRANDMEMBER(CommandGroup.SET, "r"),
+
+	SREM(CommandGroup.SET, "w"),
+
+	SSCAN(CommandGroup.SET, "r"),
+
+	SUNION(CommandGroup.SET, "r"),
+
+	SUNIONSTORE(CommandGroup.SET, "rw"),
+	/**
+	 * set command end
+	 **/
 	;
 
 	/**

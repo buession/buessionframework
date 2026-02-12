@@ -57,6 +57,14 @@ public interface Converters {
 		return new ListConverter<>(SafeEncoder::encode);
 	}
 
+	static SetConverter<byte[], String> binarySetToStringSetConverter() {
+		return new SetConverter<>(SafeEncoder::encode);
+	}
+
+	static SetConverter<String, byte[]> stringSetToBinarySetConverter() {
+		return new SetConverter<>(SafeEncoder::encode);
+	}
+
 	static ListSetConverter<byte[], byte[]> binaryListToBinarySetConverter() {
 		return new ListSetConverter<>((v)->v);
 	}
@@ -91,10 +99,6 @@ public interface Converters {
 	}
 
 	/****/
-
-	static ListConverter<String, byte[]> listStringToBinary() {
-		return new ListConverter<>(SafeEncoder::encode);
-	}
 
 	static SetConverter<byte[], String> setBinaryToString() {
 		return new SetConverter<>(SafeEncoder::encode);

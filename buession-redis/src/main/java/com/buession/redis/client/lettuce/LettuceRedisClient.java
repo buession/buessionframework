@@ -204,21 +204,21 @@ public class LettuceRedisClient
 	}
 
 	@Override
-	public KeyOperations keyOperations() {
-		if(keyOperations == null){
-			keyOperations = new LettuceKeyOperations(this);
-		}
-
-		return keyOperations;
-	}
-
-	@Override
 	public SetOperations setOperations() {
 		if(setOperations == null){
 			setOperations = new LettuceSetOperations(this);
 		}
 
 		return setOperations;
+	}
+
+	@Override
+	public KeyOperations keyOperations() {
+		if(keyOperations == null){
+			keyOperations = new LettuceKeyOperations(this);
+		}
+
+		return keyOperations;
 	}
 
 	@Override

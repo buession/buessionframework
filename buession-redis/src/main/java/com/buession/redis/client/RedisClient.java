@@ -192,18 +192,18 @@ public interface RedisClient {
 	ServerOperations serverOperations();
 
 	/**
-	 * 返回 KEY 命令操作实例
-	 *
-	 * @return KEY 命令操作实例
-	 */
-	KeyOperations keyOperations();
-
-	/**
 	 * 返回集合命令操作实例
 	 *
 	 * @return 集合命令操作实例
 	 */
 	SetOperations setOperations();
+
+	/**
+	 * 返回 KEY 命令操作实例
+	 *
+	 * @return KEY 命令操作实例
+	 */
+	KeyOperations keyOperations();
 
 	/**
 	 * 返回有序集合命令操作实例

@@ -203,21 +203,21 @@ public class JedisRedisClient extends AbstractRedisClient<JedisRedisConnection<?
 	}
 
 	@Override
-	public KeyOperations keyOperations() {
-		if(keyOperations == null){
-			keyOperations = new JedisKeyOperations(this);
-		}
-
-		return keyOperations;
-	}
-
-	@Override
 	public SetOperations setOperations() {
 		if(setOperations == null){
 			setOperations = new JedisSetOperations(this);
 		}
 
 		return setOperations;
+	}
+
+	@Override
+	public KeyOperations keyOperations() {
+		if(keyOperations == null){
+			keyOperations = new JedisKeyOperations(this);
+		}
+
+		return keyOperations;
 	}
 
 	@Override

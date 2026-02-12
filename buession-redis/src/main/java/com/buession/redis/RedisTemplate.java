@@ -57,8 +57,8 @@ import java.util.stream.Collectors;
 public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterOperations, BitMapOperations,
 		CuckooFilterOperations, ClusterOperations, CountMinSketchOperations, ConnectionOperations, GenericOperations,
 		GeoOperations, HashOperations, HyperLogLogOperations, JsonOperations, ListOperations, PubSubOperations,
-		ScriptingOperations, /*SearchOperations, */ServerOperations, KeyOperations,
-		SetOperations, SortedSetOperations, StreamOperations,
+		ScriptingOperations, /*SearchOperations, */ServerOperations, SetOperations, KeyOperations,
+		SortedSetOperations, StreamOperations,
 		StringOperations, TransactionOperations {
 
 	/**
@@ -1606,16 +1606,6 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 	public <V> List<V> sRandMemberObject(final byte[] key, final long count, final TypeReference<V> type) {
 		return execute((client)->client.setOperations().sRandMember(rawKey(key), count),
 				new Converter.TypeListBinaryConverter<>(this, type));
-	}
-
-	@Override
-	public <V> Long sRem(final String key, final V member) {
-		return sRem(key, serializer.serialize(member));
-	}
-
-	@Override
-	public <V> Long sRem(final byte[] key, final V member) {
-		return sRem(key, serializer.serializeAsBytes(member));
 	}
 
 	@SuppressWarnings({"unchecked"})
