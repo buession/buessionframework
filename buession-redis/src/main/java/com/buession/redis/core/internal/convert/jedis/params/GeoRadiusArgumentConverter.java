@@ -22,52 +22,56 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.lettuce;
+package com.buession.redis.core.internal.convert.jedis.params;
 
-import com.buession.redis.core.Direction;
-import io.lettuce.core.LMPopArgs;
-import io.lettuce.core.LMoveArgs;
+import com.buession.core.converter.Converter;
+import com.buession.lang.Order;
+import com.buession.redis.core.command.args.GeoRadiusArgument;
+import org.springframework.lang.Nullable;
+import redis.clients.jedis.params.GeoRadiusParam;
+
+import java.util.Optional;
 
 /**
- *
+ * {@link GeoRadiusArgument} 转换为 jedis {@link GeoRadiusParam}
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class CompositeArgumentUtils {
+public final class GeoRadiusArgumentConverter implements Converter<GeoRadiusArgument, GeoRadiusParam> {
 
-	private CompositeArgumentUtils() {
-	}
-
-	public static LMoveArgs lMoveArgs(final Direction source, final Direction destination) {
-		if(source == null || destination == null){
+	@Nullable
+	@Override
+	public GeoRadiusParam convert(final GeoRadiusArgument source) {
+		if(source == null){
 			return null;
 		}
 
-		if(Direction.LEFT.equals(source)){
-			return Direction.LEFT.equals(destination) ? LMoveArgs.Builder.leftLeft() : LMoveArgs.Builder.leftRight();
-		}else{
-			return Direction.LEFT.equals(destination) ? LMoveArgs.Builder.rightLeft() : LMoveArgs.Builder.rightRight();
+		final GeoRadiusParam geoRadiusParam = new GeoRadiusParam();
+
+		if(Boolean.TRUE.equals(source.isWithCoord())){
+			geoRadiusParam.withCoord();
 		}
-	}
-
-	public static LMPopArgs lMPopArgs(final Direction direction) {
-		return lMPopArgs(direction, null);
-	}
-
-	public static LMPopArgs lMPopArgs(final Direction direction, final Long count) {
-		if(direction == null){
-			return null;
+		if(Boolean.TRUE.equals(source.isWithDist())){
+			geoRadiusParam.withDist();
+		}
+		if(Boolean.TRUE.equals(source.isWithHash())){
+			geoRadiusParam.withHash();
 		}
 
-		final LMPopArgs lmPopArgs = Direction.LEFT.equals(
-				direction) ? LMPopArgs.Builder.left() : LMPopArgs.Builder.right();
-
-		if(count != null){
-			lmPopArgs.count(count);
+		if(source.getOrder() == Order.ASC){
+			geoRadiusParam.sortAscending();
+		}else if(source.getOrder() == Order.DESC){
+			geoRadiusParam.sortDescending();
 		}
 
-		return lmPopArgs;
+		Optional.ofNullable(source.getCount()).ifPresent(geoRadiusParam::count);
+
+		if(Boolean.TRUE.equals(source.isAny())){
+			geoRadiusParam.any();
+		}
+
+		return geoRadiusParam;
 	}
 
 }

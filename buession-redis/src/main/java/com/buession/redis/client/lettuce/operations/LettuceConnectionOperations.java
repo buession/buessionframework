@@ -39,19 +39,19 @@ import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.SubCommand;
 import com.buession.redis.core.command.args.TrackingArgument;
-import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.params.ClientUnblockTypeConverter;
+import com.buession.redis.core.internal.convert.lettuce.params.TrackingArgumentConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.TrackingInfoTrackingInfoConverter;
 import com.buession.redis.core.internal.convert.response.ClientConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.response.OneStatusConverter;
 import com.buession.redis.core.internal.convert.response.PingResultConverter;
-import com.buession.redis.core.internal.lettuce.CompositeArgumentUtils;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.ClientListArgs;
 import io.lettuce.core.UnblockType;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Lettuce 单机模式连接命令操作
@@ -97,7 +97,7 @@ public final class LettuceConnectionOperations extends AbstractLettuceRedisOpera
 	@Override
 	public String clientGetName() {
 		return executeCommand(Command.CLIENT, SubCommand.CLIENT_GETNAME, (cmd)->cmd.clientGetname(),
-				Converters.binaryToStringConverter());
+				SafeEncoder::encode);
 	}
 
 	@Override
@@ -200,8 +200,10 @@ public final class LettuceConnectionOperations extends AbstractLettuceRedisOpera
 	public Status clientTracking(final boolean on, final TrackingArgument argument) {
 		final CommandArguments args = CommandArguments.create(on ? Keyword.Common.ON : Keyword.Common.OFF)
 				.add(argument);
+		final TrackingArgumentConverter trackingArgumentConverter = new TrackingArgumentConverter();
 		return executeCommand(Command.CLIENT, SubCommand.CLIENT_TRACKING, args,
-				(cmd)->cmd.clientTracking(CompositeArgumentUtils.trackingArgs(argument).enabled(on)),
+				(cmd)->cmd.clientTracking(
+						Objects.requireNonNull(trackingArgumentConverter.convert(argument)).enabled(on)),
 				new OkStatusConverter());
 	}
 
@@ -235,7 +237,7 @@ public final class LettuceConnectionOperations extends AbstractLettuceRedisOpera
 	public String echo(final String str) {
 		final CommandArguments args = CommandArguments.create(str);
 		return executeCommand(Command.ECHO, args, (cmd)->cmd.echo(SafeEncoder.encode(str)),
-				Converters.binaryToStringConverter());
+				SafeEncoder::encode);
 	}
 
 	@Override

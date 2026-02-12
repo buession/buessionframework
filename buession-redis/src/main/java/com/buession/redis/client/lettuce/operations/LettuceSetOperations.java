@@ -25,13 +25,14 @@
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.converter.BooleanStatusConverter;
+import com.buession.core.converter.ListConverter;
+import com.buession.core.converter.SetConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.SetOperations;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConverter;
 import com.buession.redis.core.internal.lettuce.LettuceScanArgs;
 import com.buession.redis.core.internal.lettuce.LettuceScanCursor;
@@ -78,7 +79,7 @@ public final class LettuceSetOperations extends AbstractLettuceRedisOperations i
 	public Set<String> sDiff(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
 		return executeCommand(Command.SDIFF, args, (cmd)->cmd.sdiff(SafeEncoder.encode(keys)),
-				Converters.binarySetToStringSetConverter());
+				new SetConverter<>(SafeEncoder::encode));
 	}
 
 	@Override
@@ -102,7 +103,7 @@ public final class LettuceSetOperations extends AbstractLettuceRedisOperations i
 	public Set<String> sInter(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
 		return executeCommand(Command.SINTER, args, (cmd)->cmd.sinter(SafeEncoder.encode(keys)),
-				Converters.binarySetToStringSetConverter());
+				new SetConverter<>(SafeEncoder::encode));
 	}
 
 	@Override
@@ -159,7 +160,7 @@ public final class LettuceSetOperations extends AbstractLettuceRedisOperations i
 	public Set<String> sMembers(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(Command.SMEMBERS, args, (cmd)->cmd.smembers(SafeEncoder.encode(key)),
-				Converters.binarySetToStringSetConverter());
+				new SetConverter<>(SafeEncoder::encode));
 	}
 
 	@Override
@@ -195,7 +196,7 @@ public final class LettuceSetOperations extends AbstractLettuceRedisOperations i
 	public String sPop(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(Command.SPOP, args, (cmd)->cmd.spop(SafeEncoder.encode(key)),
-				Converters.binaryToStringConverter());
+				SafeEncoder::encode);
 	}
 
 	@Override
@@ -208,7 +209,7 @@ public final class LettuceSetOperations extends AbstractLettuceRedisOperations i
 	public Set<String> sPop(final String key, final long count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
 		return executeCommand(Command.SPOP, args, (cmd)->cmd.spop(SafeEncoder.encode(key), count),
-				Converters.binarySetToStringSetConverter());
+				new SetConverter<>(SafeEncoder::encode));
 	}
 
 	@Override
@@ -221,7 +222,7 @@ public final class LettuceSetOperations extends AbstractLettuceRedisOperations i
 	public String sRandMember(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(Command.SRANDMEMBER, args, (cmd)->cmd.srandmember(SafeEncoder.encode(key)),
-				Converters.binaryToStringConverter());
+				SafeEncoder::encode);
 	}
 
 	@Override
@@ -234,7 +235,7 @@ public final class LettuceSetOperations extends AbstractLettuceRedisOperations i
 	public List<String> sRandMember(final String key, final long count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
 		return executeCommand(Command.SRANDMEMBER, args, (cmd)->cmd.srandmember(SafeEncoder.encode(key), count),
-				Converters.binaryListToStringListConverter());
+				new ListConverter<>(SafeEncoder::encode));
 	}
 
 	@Override
@@ -326,7 +327,7 @@ public final class LettuceSetOperations extends AbstractLettuceRedisOperations i
 	public Set<String> sUnion(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
 		return executeCommand(Command.SUNION, args, (cmd)->cmd.sunion(SafeEncoder.encode(keys)),
-				Converters.binarySetToStringSetConverter());
+				new SetConverter<>(SafeEncoder::encode));
 	}
 
 	@Override

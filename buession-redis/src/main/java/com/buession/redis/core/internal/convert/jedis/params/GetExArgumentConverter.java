@@ -22,52 +22,39 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.lettuce;
+package com.buession.redis.core.internal.convert.jedis.params;
 
-import com.buession.redis.core.Direction;
-import io.lettuce.core.LMPopArgs;
-import io.lettuce.core.LMoveArgs;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.command.args.GetExArgument;
+import org.springframework.lang.Nullable;
+import redis.clients.jedis.params.HGetExParams;
 
 /**
- *
+ * {@link GetExArgument} 转换为 jedis {@link HGetExParams}
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class CompositeArgumentUtils {
+public final class GetExArgumentConverter implements Converter<GetExArgument, HGetExParams> {
 
-	private CompositeArgumentUtils() {
-	}
-
-	public static LMoveArgs lMoveArgs(final Direction source, final Direction destination) {
-		if(source == null || destination == null){
+	@Nullable
+	@Override
+	public HGetExParams convert(final GetExArgument source) {
+		if(source == null || source.getType() == null){
 			return null;
 		}
 
-		if(Direction.LEFT.equals(source)){
-			return Direction.LEFT.equals(destination) ? LMoveArgs.Builder.leftLeft() : LMoveArgs.Builder.leftRight();
-		}else{
-			return Direction.LEFT.equals(destination) ? LMoveArgs.Builder.rightLeft() : LMoveArgs.Builder.rightRight();
-		}
-	}
+		final HGetExParams hGetExParams = new HGetExParams();
 
-	public static LMPopArgs lMPopArgs(final Direction direction) {
-		return lMPopArgs(direction, null);
-	}
-
-	public static LMPopArgs lMPopArgs(final Direction direction, final Long count) {
-		if(direction == null){
-			return null;
+		switch(source.getType()){
+			case EX -> hGetExParams.ex(source.getValue());
+			case EXAT -> hGetExParams.exAt(source.getValue());
+			case PX -> hGetExParams.px(source.getValue());
+			case PXAT -> hGetExParams.pxAt(source.getValue());
+			case PERSIST -> hGetExParams.persist();
 		}
 
-		final LMPopArgs lmPopArgs = Direction.LEFT.equals(
-				direction) ? LMPopArgs.Builder.left() : LMPopArgs.Builder.right();
-
-		if(count != null){
-			lmPopArgs.count(count);
-		}
-
-		return lmPopArgs;
+		return hGetExParams;
 	}
 
 }

@@ -36,11 +36,13 @@ import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.args.GeoAddArgument;
 import com.buession.redis.core.command.args.GeoRadiusArgument;
 import com.buession.redis.core.command.args.GeoSearchArgument;
+import com.buession.redis.core.internal.convert.lettuce.params.GeoAddArgumentConverter;
+import com.buession.redis.core.internal.convert.lettuce.params.GeoRadiusArgumentConverter;
+import com.buession.redis.core.internal.convert.lettuce.params.GeoSearchArgumentConverter;
 import com.buession.redis.core.internal.convert.lettuce.params.GeoUnitConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.GeoCoordinateConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.GeoRadiusGeneralResultConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.GeoRadiusResponseConverter;
-import com.buession.redis.core.internal.lettuce.CompositeArgumentUtils;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.GeoArgs;
 import io.lettuce.core.GeoSearch;
@@ -99,21 +101,24 @@ public final class LettuceGeoOperations extends AbstractLettuceRedisOperations i
 					   final double latitude) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(longitude).add(latitude)
 				.add(member);
-		return geoAdd((cmd)->cmd.geoadd(key, longitude, latitude, member, CompositeArgumentUtils.geoAddArgs(argument)),
+		final GeoAddArgumentConverter geoAddArgumentConverter = new GeoAddArgumentConverter();
+		return geoAdd((cmd)->cmd.geoadd(key, longitude, latitude, member, geoAddArgumentConverter.convert(argument)),
 				args);
 	}
 
 	@Override
 	public Long geoAdd(final String key, final GeoAddArgument argument, final Map<String, Geo> memberCoordinates) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(memberCoordinates);
-		return geoAdd((cmd)->cmd.geoadd(SafeEncoder.encode(key), CompositeArgumentUtils.geoAddArgs(argument),
+		final GeoAddArgumentConverter geoAddArgumentConverter = new GeoAddArgumentConverter();
+		return geoAdd((cmd)->cmd.geoadd(SafeEncoder.encode(key), geoAddArgumentConverter.convert(argument),
 				stringMemberCoordinatesToGeoValue(memberCoordinates)), args);
 	}
 
 	@Override
 	public Long geoAdd(final byte[] key, final GeoAddArgument argument, final Map<byte[], Geo> memberCoordinates) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(memberCoordinates);
-		return geoAdd((cmd)->cmd.geoadd(key, CompositeArgumentUtils.geoAddArgs(argument),
+		final GeoAddArgumentConverter geoAddArgumentConverter = new GeoAddArgumentConverter();
+		return geoAdd((cmd)->cmd.geoadd(key, geoAddArgumentConverter.convert(argument),
 				byteMemberCoordinatesToGeoValue(memberCoordinates)), args);
 	}
 
@@ -195,8 +200,9 @@ public final class LettuceGeoOperations extends AbstractLettuceRedisOperations i
 		final CommandArguments args = CommandArguments.create(key).add(longitude).add(latitude).add(radius).add(unit)
 				.add(argument);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		final GeoRadiusArgumentConverter geoRadiusArgumentConverter = new GeoRadiusArgumentConverter();
 		return executeCommand(Command.GEORADIUS, args, (cmd)->cmd.georadius(key, longitude, latitude, radius,
-						geoUnitConverter.convert(unit), CompositeArgumentUtils.geoArgs(argument)),
+						geoUnitConverter.convert(unit), geoRadiusArgumentConverter.convert(argument)),
 				new ListConverter<>(new GeoRadiusResponseConverter()));
 	}
 
@@ -256,8 +262,9 @@ public final class LettuceGeoOperations extends AbstractLettuceRedisOperations i
 											 final GeoUnit unit, final GeoRadiusArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(member).add(radius).add(unit).add(argument);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		final GeoRadiusArgumentConverter geoRadiusArgumentConverter = new GeoRadiusArgumentConverter();
 		return executeCommand(Command.GEORADIUSBYMEMBER, args, (cmd)->cmd.georadiusbymember(key, member, radius,
-						geoUnitConverter.convert(unit), CompositeArgumentUtils.geoArgs(argument)),
+						geoUnitConverter.convert(unit), geoRadiusArgumentConverter.convert(argument)),
 				new ListConverter<>(new GeoRadiusResponseConverter()));
 	}
 
@@ -363,8 +370,10 @@ public final class LettuceGeoOperations extends AbstractLettuceRedisOperations i
 		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER").add(member).add("BYRADIUS")
 				.add(radius).add(unit).add(argument);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		final GeoSearchArgumentConverter geoSearchArgumentConverter = new GeoSearchArgumentConverter();
 		return geoSearchWithin((cmd)->cmd.geosearch(key, GeoSearch.fromMember(member),
-						GeoSearch.byRadius(radius, geoUnitConverter.convert(unit)), CompositeArgumentUtils.geoArgs(argument)),
+						GeoSearch.byRadius(radius, geoUnitConverter.convert(unit)),
+						geoSearchArgumentConverter.convert(argument)),
 				args);
 	}
 
@@ -380,9 +389,10 @@ public final class LettuceGeoOperations extends AbstractLettuceRedisOperations i
 		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude).add(latitude)
 				.add("BYRADIUS").add(radius).add(unit).add(argument);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		final GeoSearchArgumentConverter geoSearchArgumentConverter = new GeoSearchArgumentConverter();
 		return geoSearchWithin((cmd)->cmd.geosearch(key, GeoSearch.fromCoordinates(longitude, latitude),
 				GeoSearch.byRadius(radius, geoUnitConverter.convert(unit)),
-				CompositeArgumentUtils.geoArgs(argument)), args);
+				geoSearchArgumentConverter.convert(argument)), args);
 	}
 
 	@Override
@@ -397,9 +407,10 @@ public final class LettuceGeoOperations extends AbstractLettuceRedisOperations i
 		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER").add(member).add("BYBOX").add(width)
 				.add(height).add(unit).add(argument);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		final GeoSearchArgumentConverter geoSearchArgumentConverter = new GeoSearchArgumentConverter();
 		return geoSearchWithin((cmd)->cmd.geosearch(key, GeoSearch.fromMember(member),
 				GeoSearch.byBox(width, height, geoUnitConverter.convert(unit)),
-				CompositeArgumentUtils.geoArgs(argument)), args);
+				geoSearchArgumentConverter.convert(argument)), args);
 	}
 
 	@Override
@@ -416,9 +427,10 @@ public final class LettuceGeoOperations extends AbstractLettuceRedisOperations i
 		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude).add(latitude)
 				.add("BYBOX").add(width).add(height).add(unit).add(argument);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		final GeoSearchArgumentConverter geoSearchArgumentConverter = new GeoSearchArgumentConverter();
 		return geoSearchWithin((cmd)->cmd.geosearch(key, GeoSearch.fromCoordinates(longitude, latitude),
 				GeoSearch.byBox(width, height, geoUnitConverter.convert(unit)),
-				CompositeArgumentUtils.geoArgs(argument)), args);
+				geoSearchArgumentConverter.convert(argument)), args);
 	}
 
 	@Override
@@ -501,9 +513,10 @@ public final class LettuceGeoOperations extends AbstractLettuceRedisOperations i
 		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER").add(member).add("BYRADIUS")
 				.add(radius).add(unit).add(argument);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		final GeoSearchArgumentConverter geoSearchArgumentConverter = new GeoSearchArgumentConverter();
 		return geoSearchStore((cmd)->cmd.geosearchstore(destKey, key, GeoSearch.fromMember(member),
-				GeoSearch.byRadius(radius, geoUnitConverter.convert(unit)), CompositeArgumentUtils.geoArgs(argument),
-				Boolean.TRUE.equals(argument.isWithDist())), args);
+				GeoSearch.byRadius(radius, geoUnitConverter.convert(unit)),
+				geoSearchArgumentConverter.convert(argument), Boolean.TRUE.equals(argument.isWithDist())), args);
 	}
 
 	@Override
@@ -519,9 +532,10 @@ public final class LettuceGeoOperations extends AbstractLettuceRedisOperations i
 		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude).add(latitude)
 				.add("BYRADIUS").add(radius).add(unit).add(argument);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		final GeoSearchArgumentConverter geoSearchArgumentConverter = new GeoSearchArgumentConverter();
 		return geoSearchStore((cmd)->cmd.geosearchstore(destKey, key, GeoSearch.fromCoordinates(longitude, latitude),
-				GeoSearch.byRadius(radius, geoUnitConverter.convert(unit)), CompositeArgumentUtils.geoArgs(argument),
-				Boolean.TRUE.equals(argument.isWithDist())), args);
+				GeoSearch.byRadius(radius, geoUnitConverter.convert(unit)),
+				geoSearchArgumentConverter.convert(argument), Boolean.TRUE.equals(argument.isWithDist())), args);
 	}
 
 	@Override
@@ -537,9 +551,10 @@ public final class LettuceGeoOperations extends AbstractLettuceRedisOperations i
 		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER").add(member).add("BYBOX").add(width)
 				.add(height).add(unit).add(argument);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		final GeoSearchArgumentConverter geoSearchArgumentConverter = new GeoSearchArgumentConverter();
 		return geoSearchStore((cmd)->cmd.geosearchstore(destKey, key, GeoSearch.fromMember(member),
 				GeoSearch.byBox(width, height, geoUnitConverter.convert(unit)),
-				CompositeArgumentUtils.geoArgs(argument), Boolean.TRUE.equals(argument.isWithDist())), args);
+				geoSearchArgumentConverter.convert(argument), Boolean.TRUE.equals(argument.isWithDist())), args);
 	}
 
 	@Override
@@ -557,9 +572,10 @@ public final class LettuceGeoOperations extends AbstractLettuceRedisOperations i
 		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude).add(latitude)
 				.add("BYBOX").add(width).add(height).add(unit).add(argument);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		final GeoSearchArgumentConverter geoSearchArgumentConverter = new GeoSearchArgumentConverter();
 		return geoSearchStore((cmd)->cmd.geosearchstore(destKey, key, GeoSearch.fromCoordinates(longitude, latitude),
 				GeoSearch.byBox(width, height, geoUnitConverter.convert(unit)),
-				CompositeArgumentUtils.geoArgs(argument), Boolean.TRUE.equals(argument.isWithDist())), args);
+				geoSearchArgumentConverter.convert(argument), Boolean.TRUE.equals(argument.isWithDist())), args);
 	}
 
 	private List<GeoRadius> geoSearch(

@@ -22,52 +22,39 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.lettuce;
+package com.buession.redis.core.internal.convert.jedis.params;
 
-import com.buession.redis.core.Direction;
-import io.lettuce.core.LMPopArgs;
-import io.lettuce.core.LMoveArgs;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.command.args.BFReserveArgument;
+import org.springframework.lang.Nullable;
+import redis.clients.jedis.bloom.BFReserveParams;
+
+import java.util.Optional;
 
 /**
- *
+ * {@link BFReserveArgument} 转换为 jedis {@link BFReserveParams}
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class CompositeArgumentUtils {
+public final class BFReserveArgumentConverter implements Converter<BFReserveArgument, BFReserveParams> {
 
-	private CompositeArgumentUtils() {
-	}
-
-	public static LMoveArgs lMoveArgs(final Direction source, final Direction destination) {
-		if(source == null || destination == null){
+	@Nullable
+	@Override
+	public BFReserveParams convert(final BFReserveArgument source) {
+		if(source == null){
 			return null;
 		}
 
-		if(Direction.LEFT.equals(source)){
-			return Direction.LEFT.equals(destination) ? LMoveArgs.Builder.leftLeft() : LMoveArgs.Builder.leftRight();
-		}else{
-			return Direction.LEFT.equals(destination) ? LMoveArgs.Builder.rightLeft() : LMoveArgs.Builder.rightRight();
-		}
-	}
+		final BFReserveParams bfReserveParams = new BFReserveParams();
 
-	public static LMPopArgs lMPopArgs(final Direction direction) {
-		return lMPopArgs(direction, null);
-	}
+		Optional.ofNullable(source.getExpansion()).ifPresent(bfReserveParams::expansion);
 
-	public static LMPopArgs lMPopArgs(final Direction direction, final Long count) {
-		if(direction == null){
-			return null;
+		if(Boolean.TRUE.equals(source.isNonScaling())){
+			bfReserveParams.nonScaling();
 		}
 
-		final LMPopArgs lmPopArgs = Direction.LEFT.equals(
-				direction) ? LMPopArgs.Builder.left() : LMPopArgs.Builder.right();
-
-		if(count != null){
-			lmPopArgs.count(count);
-		}
-
-		return lmPopArgs;
+		return bfReserveParams;
 	}
 
 }

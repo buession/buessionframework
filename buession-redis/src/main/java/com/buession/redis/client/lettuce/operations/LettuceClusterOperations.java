@@ -44,7 +44,6 @@ import com.buession.redis.core.ClusterSlotStat;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.SubCommand;
-import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.response.ClusterShardInfoConverter;
 import com.buession.redis.core.internal.convert.response.BumpEpochConverter;
 import com.buession.redis.core.internal.convert.response.ClusterInfoConverter;
@@ -159,7 +158,7 @@ public final class LettuceClusterOperations extends AbstractLettuceRedisOperatio
 	public List<String> clusterGetKeysInSlot(final int slot, final long count) {
 		final CommandArguments args = CommandArguments.create(slot).add(count);
 		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_GETKEYSINSLOT, args,
-				(cmd)->cmd.clusterGetKeysInSlot(slot, (int) count), Converters.binaryListToStringListConverter());
+				(cmd)->cmd.clusterGetKeysInSlot(slot, (int) count), new ListConverter<>(SafeEncoder::encode));
 	}
 
 	@Override

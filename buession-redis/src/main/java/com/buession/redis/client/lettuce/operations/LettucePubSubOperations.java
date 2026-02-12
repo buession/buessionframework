@@ -24,6 +24,7 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
+import com.buession.core.converter.ListConverter;
 import com.buession.core.converter.MapConverter;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.PubSubOperations;
@@ -31,7 +32,6 @@ import com.buession.redis.core.PubSubListener;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.SubCommand;
-import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
@@ -76,7 +76,7 @@ public final class LettucePubSubOperations extends AbstractLettuceRedisOperation
 	@Override
 	public List<String> pubsubChannels() {
 		return executeCommand(Command.PUBSUB, SubCommand.PUBSUB_CHANNELS, (cmd)->cmd.pubsubChannels(),
-				Converters.binaryListToStringListConverter());
+				new ListConverter<>(SafeEncoder::encode));
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public final class LettucePubSubOperations extends AbstractLettuceRedisOperation
 		final CommandArguments args = CommandArguments.create(pattern);
 		return executeCommand(Command.PUBSUB, SubCommand.PUBSUB_CHANNELS, args,
 				(cmd)->cmd.pubsubChannels(SafeEncoder.encode(pattern)),
-				Converters.binaryListToStringListConverter());
+				new ListConverter<>(SafeEncoder::encode));
 	}
 
 	@Override
@@ -124,7 +124,7 @@ public final class LettucePubSubOperations extends AbstractLettuceRedisOperation
 	@Override
 	public List<String> pubsubShardChannels() {
 		return executeCommand(Command.PUBSUB, SubCommand.PUBSUB_SHARDCHANNELS, (cmd)->cmd.pubsubShardChannels(),
-				Converters.binaryListToStringListConverter());
+				new ListConverter<>(SafeEncoder::encode));
 	}
 
 	@Override
@@ -132,7 +132,7 @@ public final class LettucePubSubOperations extends AbstractLettuceRedisOperation
 		final CommandArguments args = CommandArguments.create(pattern);
 		return executeCommand(Command.PUBSUB, SubCommand.PUBSUB_SHARDCHANNELS, args,
 				(cmd)->cmd.pubsubShardChannels(SafeEncoder.encode(pattern)),
-				Converters.binaryListToStringListConverter());
+				new ListConverter<>(SafeEncoder::encode));
 	}
 
 	@Override

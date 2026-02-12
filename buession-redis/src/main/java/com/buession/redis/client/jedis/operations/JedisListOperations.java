@@ -34,10 +34,10 @@ import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.args.LPosArgument;
 import com.buession.redis.core.internal.convert.jedis.params.DirectionConverter;
+import com.buession.redis.core.internal.convert.jedis.params.LPosArgumentConverter;
 import com.buession.redis.core.internal.convert.jedis.params.ListPositionConverter;
 import com.buession.redis.core.internal.convert.jedis.response.KeyValueConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
-import com.buession.redis.core.internal.jedis.IParamsUtils;
 import redis.clients.jedis.UnifiedJedis;
 
 import java.util.List;
@@ -239,14 +239,16 @@ public final class JedisListOperations extends AbstractJedisRedisOperations impl
 	@Override
 	public List<Long> lPos(final String key, final String element, final LPosArgument lPosArgument) {
 		final CommandArguments args = CommandArguments.create(key).add(lPosArgument);
-		return lPos(args, (cmd)->cmd.lpos(key, element, IParamsUtils.lPosParams(lPosArgument)
+		final LPosArgumentConverter lPosArgumentConverter = new LPosArgumentConverter();
+		return lPos(args, (cmd)->cmd.lpos(key, element, lPosArgumentConverter.convert(lPosArgument)
 				, lPosArgument == null || lPosArgument.getCount() == null ? 0 : lPosArgument.getCount()));
 	}
 
 	@Override
 	public List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument) {
 		final CommandArguments args = CommandArguments.create(key).add(lPosArgument);
-		return lPos(args, (cmd)->cmd.lpos(key, element, IParamsUtils.lPosParams(lPosArgument)
+		final LPosArgumentConverter lPosArgumentConverter = new LPosArgumentConverter();
+		return lPos(args, (cmd)->cmd.lpos(key, element, lPosArgumentConverter.convert(lPosArgument)
 				, lPosArgument == null || lPosArgument.getCount() == null ? 0 : lPosArgument.getCount()));
 	}
 

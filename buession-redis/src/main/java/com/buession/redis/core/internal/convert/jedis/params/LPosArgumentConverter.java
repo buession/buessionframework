@@ -22,52 +22,36 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.lettuce;
+package com.buession.redis.core.internal.convert.jedis.params;
 
-import com.buession.redis.core.Direction;
-import io.lettuce.core.LMPopArgs;
-import io.lettuce.core.LMoveArgs;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.command.args.LPosArgument;
+import org.springframework.lang.Nullable;
+import redis.clients.jedis.params.LPosParams;
+
+import java.util.Optional;
 
 /**
- *
+ * {@link LPosArgument} 转换为 jedis {@link LPosParams}
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class CompositeArgumentUtils {
+public final class LPosArgumentConverter implements Converter<LPosArgument, LPosParams> {
 
-	private CompositeArgumentUtils() {
-	}
-
-	public static LMoveArgs lMoveArgs(final Direction source, final Direction destination) {
-		if(source == null || destination == null){
+	@Nullable
+	@Override
+	public LPosParams convert(final LPosArgument source) {
+		if(source == null){
 			return null;
 		}
 
-		if(Direction.LEFT.equals(source)){
-			return Direction.LEFT.equals(destination) ? LMoveArgs.Builder.leftLeft() : LMoveArgs.Builder.leftRight();
-		}else{
-			return Direction.LEFT.equals(destination) ? LMoveArgs.Builder.rightLeft() : LMoveArgs.Builder.rightRight();
-		}
-	}
+		final LPosParams lPosParams = new LPosParams();
 
-	public static LMPopArgs lMPopArgs(final Direction direction) {
-		return lMPopArgs(direction, null);
-	}
+		Optional.ofNullable(source.getRank()).ifPresent(lPosParams::rank);
+		Optional.ofNullable(source.getMaxLen()).ifPresent(lPosParams::maxlen);
 
-	public static LMPopArgs lMPopArgs(final Direction direction, final Long count) {
-		if(direction == null){
-			return null;
-		}
-
-		final LMPopArgs lmPopArgs = Direction.LEFT.equals(
-				direction) ? LMPopArgs.Builder.left() : LMPopArgs.Builder.right();
-
-		if(count != null){
-			lmPopArgs.count(count);
-		}
-
-		return lmPopArgs;
+		return lPosParams;
 	}
 
 }

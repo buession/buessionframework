@@ -25,6 +25,7 @@
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.builder.ListBuilder;
+import com.buession.core.converter.ListConverter;
 import com.buession.core.validator.Validate;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
@@ -36,6 +37,7 @@ import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.args.LPosArgument;
 import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.core.internal.convert.lettuce.params.LPosArgumentConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.KeyValueConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.lettuce.CompositeArgumentUtils;
@@ -61,7 +63,7 @@ public final class LettuceListOperations extends AbstractLettuceRedisOperations 
 		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from).add(to);
 		return executeCommand(Command.BLMOVE, args,
 				(cmd)->cmd.blmove(SafeEncoder.encode(key), SafeEncoder.encode(destKey),
-						CompositeArgumentUtils.lMoveArgs(from, to), timeout), Converters.binaryToStringConverter());
+						CompositeArgumentUtils.lMoveArgs(from, to), timeout), SafeEncoder::encode);
 	}
 
 	@Override
@@ -77,8 +79,7 @@ public final class LettuceListOperations extends AbstractLettuceRedisOperations 
 		final CommandArguments args = CommandArguments.create(timeout).add(keys);
 		return executeCommand(Command.BLMPOP, args,
 				(cmd)->cmd.blmpop(timeout, CompositeArgumentUtils.lMPopArgs(direction), SafeEncoder.encode(keys)),
-				new KeyValueConverter<>(Converters.binaryToStringConverter(),
-						Converters.binaryListToStringListConverter()));
+				new KeyValueConverter<>(SafeEncoder::encode, new ListConverter<>(SafeEncoder::encode)));
 	}
 
 	@Override
@@ -119,7 +120,7 @@ public final class LettuceListOperations extends AbstractLettuceRedisOperations 
 	public String brPoplPush(final String key, final String destKey, final int timeout) {
 		final CommandArguments args = CommandArguments.create(key).add(destKey).add(timeout);
 		return executeCommand(Command.BRPOPLPUSH, args, (cmd)->cmd.brpoplpush(timeout, SafeEncoder.encode(key),
-				SafeEncoder.encode(destKey)), Converters.binaryToStringConverter());
+				SafeEncoder.encode(destKey)), SafeEncoder::encode);
 	}
 
 	@Override
@@ -132,7 +133,7 @@ public final class LettuceListOperations extends AbstractLettuceRedisOperations 
 	public String lIndex(final String key, final long index) {
 		final CommandArguments args = CommandArguments.create(key).add(index);
 		return executeCommand(Command.LINDEX, args, (cmd)->cmd.lindex(SafeEncoder.encode(key), index),
-				Converters.binaryToStringConverter());
+				SafeEncoder::encode);
 	}
 
 	@Override
@@ -169,7 +170,7 @@ public final class LettuceListOperations extends AbstractLettuceRedisOperations 
 		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from).add(to);
 		return executeCommand(Command.LMOVE, args,
 				(cmd)->cmd.lmove(SafeEncoder.encode(key), SafeEncoder.encode(destKey),
-						CompositeArgumentUtils.lMoveArgs(from, to)), Converters.binaryToStringConverter());
+						CompositeArgumentUtils.lMoveArgs(from, to)), SafeEncoder::encode);
 	}
 
 	@Override
@@ -183,8 +184,8 @@ public final class LettuceListOperations extends AbstractLettuceRedisOperations 
 	public KeyValue<String, List<String>> lMPop(final int timeout, final String[] keys, final Direction direction) {
 		final CommandArguments args = CommandArguments.create(timeout).add(keys).add(direction);
 		return executeCommand(Command.LMPOP, args, (cmd)->cmd.lmpop(CompositeArgumentUtils.lMPopArgs(direction),
-				SafeEncoder.encode(keys)), new KeyValueConverter<>(Converters.binaryToStringConverter(),
-				Converters.binaryListToStringListConverter()));
+				SafeEncoder.encode(keys)), new KeyValueConverter<>(SafeEncoder::encode,
+				new ListConverter<>(SafeEncoder::encode)));
 	}
 
 	@Override
@@ -212,7 +213,7 @@ public final class LettuceListOperations extends AbstractLettuceRedisOperations 
 	public List<String> lPop(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
 		return executeCommand(Command.LPOP, args, (cmd)->cmd.lpop(SafeEncoder.encode(key), 1),
-				Converters.binaryListToStringListConverter());
+				new ListConverter<>(SafeEncoder::encode));
 	}
 
 	@Override
@@ -240,10 +241,11 @@ public final class LettuceListOperations extends AbstractLettuceRedisOperations 
 	@Override
 	public List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument) {
 		final CommandArguments args = CommandArguments.create(key).add(lPosArgument);
+		final LPosArgumentConverter lPosArgumentConverter = new LPosArgumentConverter();
 		return executeCommand(Command.LPOS, args,
 				(cmd)->cmd.lpos(key, element,
 						lPosArgument == null || lPosArgument.getCount() == null ? 0 : lPosArgument.getCount(),
-						CompositeArgumentUtils.lPosArgs(lPosArgument)),
+						lPosArgumentConverter.convert(lPosArgument)),
 				(v)->v);
 	}
 
@@ -273,7 +275,7 @@ public final class LettuceListOperations extends AbstractLettuceRedisOperations 
 	public List<String> lRange(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
 		return executeCommand(Command.LRANGE, args, (cmd)->cmd.lrange(SafeEncoder.encode(key), start, end),
-				Converters.binaryListToStringListConverter());
+				new ListConverter<>(SafeEncoder::encode));
 	}
 
 	@Override
@@ -323,7 +325,7 @@ public final class LettuceListOperations extends AbstractLettuceRedisOperations 
 	public String rPop(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(Command.RPOP, args, (cmd)->cmd.rpop(SafeEncoder.encode(key)),
-				Converters.binaryToStringConverter());
+				SafeEncoder::encode);
 	}
 
 	@Override
@@ -337,7 +339,7 @@ public final class LettuceListOperations extends AbstractLettuceRedisOperations 
 		final CommandArguments args = CommandArguments.create(key).add(destKey);
 		return executeCommand(Command.RPOPLPUSH, args,
 				(cmd)->cmd.rpoplpush(SafeEncoder.encode(key), SafeEncoder.encode(destKey)),
-				Converters.binaryToStringConverter());
+				SafeEncoder::encode);
 	}
 
 	@Override

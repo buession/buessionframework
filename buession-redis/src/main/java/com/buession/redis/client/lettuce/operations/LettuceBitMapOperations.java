@@ -32,8 +32,8 @@ import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.args.BitFieldArgument;
 import com.buession.redis.core.command.args.BitFieldRoArgument;
+import com.buession.redis.core.internal.convert.lettuce.params.BitFieldArgumentConverter;
 import com.buession.redis.core.internal.convert.response.OneBooleanConverter;
-import com.buession.redis.core.internal.lettuce.CompositeArgumentUtils;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
@@ -91,8 +91,9 @@ public final class LettuceBitMapOperations extends AbstractLettuceRedisOperation
 	@Override
 	public List<Long> bitField(final byte[] key, final BitFieldArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument);
+		final BitFieldArgumentConverter bitFieldArgumentConverter = new BitFieldArgumentConverter();
 		return executeCommand(Command.BITFIELD, args,
-				(cmd)->cmd.bitfield(key, CompositeArgumentUtils.bitFieldArgs(argument)), (v)->v);
+				(cmd)->cmd.bitfield(key, bitFieldArgumentConverter.convert(argument)), (v)->v);
 	}
 
 	@Override

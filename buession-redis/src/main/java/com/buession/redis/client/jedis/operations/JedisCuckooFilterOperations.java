@@ -33,8 +33,9 @@ import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.args.CFInsertArgument;
 import com.buession.redis.core.command.args.CFReserveArgument;
+import com.buession.redis.core.internal.convert.jedis.params.CFInsertArgumentConverter;
+import com.buession.redis.core.internal.convert.jedis.params.CFReserveArgumentConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
-import com.buession.redis.core.internal.jedis.IParamsUtils;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
@@ -132,8 +133,9 @@ public final class JedisCuckooFilterOperations extends AbstractJedisRedisOperati
 	@Override
 	public List<Boolean> cfInsert(final String key, final CFInsertArgument argument, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS").add(items);
+		final CFInsertArgumentConverter cfInsertArgumentConverter = new CFInsertArgumentConverter();
 		return executeCommand(Command.CF_INSERT, args,
-				(cmd)->cmd.cfInsert(key, IParamsUtils.cfInsertParams(argument), items), (v)->v);
+				(cmd)->cmd.cfInsert(key, cfInsertArgumentConverter.convert(argument), items), (v)->v);
 	}
 
 	@Override
@@ -155,8 +157,9 @@ public final class JedisCuckooFilterOperations extends AbstractJedisRedisOperati
 	@Override
 	public List<Boolean> cfInsertNx(final String key, final CFInsertArgument argument, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS").add(items);
+		final CFInsertArgumentConverter cfInsertArgumentConverter = new CFInsertArgumentConverter();
 		return executeCommand(Command.CF_INSERTNX, args,
-				(cmd)->cmd.cfInsertNx(key, IParamsUtils.cfInsertParams(argument), items), (v)->v);
+				(cmd)->cmd.cfInsertNx(key, cfInsertArgumentConverter.convert(argument), items), (v)->v);
 	}
 
 	@Override
@@ -195,7 +198,8 @@ public final class JedisCuckooFilterOperations extends AbstractJedisRedisOperati
 					argument.getExpansion() == null){
 				return cmd.cfReserve(key, argument.getCapacity());
 			}else{
-				return cmd.cfReserve(key, argument.getCapacity(), IParamsUtils.cfReserveParams(argument));
+				final CFReserveArgumentConverter cfReserveArgumentConverter = new CFReserveArgumentConverter();
+				return cmd.cfReserve(key, argument.getCapacity(), cfReserveArgumentConverter.convert(argument));
 			}
 		}, new OkStatusConverter());
 	}

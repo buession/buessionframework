@@ -22,52 +22,45 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.lettuce;
+package com.buession.redis.core.internal.convert.jedis.params;
 
-import com.buession.redis.core.Direction;
-import io.lettuce.core.LMPopArgs;
-import io.lettuce.core.LMoveArgs;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.command.args.BFInsertArgument;
+import org.springframework.lang.Nullable;
+import redis.clients.jedis.bloom.BFInsertParams;
+
+import java.util.Optional;
 
 /**
- *
+ * {@link BFInsertArgument} 转换为 jedis {@link BFInsertParams}
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class CompositeArgumentUtils {
+public final class BFInsertArgumentConverter implements Converter<BFInsertArgument, BFInsertParams> {
 
-	private CompositeArgumentUtils() {
-	}
-
-	public static LMoveArgs lMoveArgs(final Direction source, final Direction destination) {
-		if(source == null || destination == null){
+	@Nullable
+	@Override
+	public BFInsertParams convert(final BFInsertArgument source) {
+		if(source == null){
 			return null;
 		}
 
-		if(Direction.LEFT.equals(source)){
-			return Direction.LEFT.equals(destination) ? LMoveArgs.Builder.leftLeft() : LMoveArgs.Builder.leftRight();
-		}else{
-			return Direction.LEFT.equals(destination) ? LMoveArgs.Builder.rightLeft() : LMoveArgs.Builder.rightRight();
-		}
-	}
+		final BFInsertParams bfInsertParams = new BFInsertParams();
 
-	public static LMPopArgs lMPopArgs(final Direction direction) {
-		return lMPopArgs(direction, null);
-	}
+		Optional.ofNullable(source.getCapacity()).ifPresent(bfInsertParams::capacity);
+		Optional.ofNullable(source.getErrorRate()).ifPresent(bfInsertParams::error);
+		Optional.ofNullable(source.getExpansion()).ifPresent(bfInsertParams::expansion);
 
-	public static LMPopArgs lMPopArgs(final Direction direction, final Long count) {
-		if(direction == null){
-			return null;
+		if(Boolean.TRUE.equals(source.isNoCreate())){
+			bfInsertParams.noCreate();
 		}
 
-		final LMPopArgs lmPopArgs = Direction.LEFT.equals(
-				direction) ? LMPopArgs.Builder.left() : LMPopArgs.Builder.right();
-
-		if(count != null){
-			lmPopArgs.count(count);
+		if(Boolean.TRUE.equals(source.isNonScaling())){
+			bfInsertParams.nonScaling();
 		}
 
-		return lmPopArgs;
+		return bfInsertParams;
 	}
 
 }

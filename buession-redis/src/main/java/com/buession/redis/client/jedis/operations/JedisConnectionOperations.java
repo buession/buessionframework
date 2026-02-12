@@ -222,7 +222,7 @@ public final class JedisConnectionOperations extends AbstractJedisRedisOperation
 	public byte[] echo(final byte[] str) {
 		final String s = SafeEncoder.encode(str);
 		final CommandArguments args = CommandArguments.create(s);
-		return executeCommand(Command.ECHO, args, (cmd)->cmd.echo(s), Converters.stringToBinaryConverter());
+		return executeCommand(Command.ECHO, args, (cmd)->cmd.echo(s), SafeEncoder::encode);
 	}
 
 	@Override

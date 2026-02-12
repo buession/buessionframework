@@ -22,52 +22,48 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.lettuce;
+package com.buession.redis.core.internal.convert.lettuce.params;
 
-import com.buession.redis.core.Direction;
-import io.lettuce.core.LMPopArgs;
-import io.lettuce.core.LMoveArgs;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.command.args.TrackingArgument;
+import io.lettuce.core.TrackingArgs;
+import org.springframework.lang.Nullable;
+
+import java.util.Optional;
 
 /**
- *
+ * {@link TrackingArgument} 转换为 lettuce {@link TrackingArgs}
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class CompositeArgumentUtils {
+public final class TrackingArgumentConverter implements Converter<TrackingArgument, TrackingArgs> {
 
-	private CompositeArgumentUtils() {
-	}
-
-	public static LMoveArgs lMoveArgs(final Direction source, final Direction destination) {
-		if(source == null || destination == null){
+	@Nullable
+	@Override
+	public TrackingArgs convert(final TrackingArgument source) {
+		if(source == null){
 			return null;
 		}
 
-		if(Direction.LEFT.equals(source)){
-			return Direction.LEFT.equals(destination) ? LMoveArgs.Builder.leftLeft() : LMoveArgs.Builder.leftRight();
-		}else{
-			return Direction.LEFT.equals(destination) ? LMoveArgs.Builder.rightLeft() : LMoveArgs.Builder.rightRight();
+		final TrackingArgs trackingArgs = new TrackingArgs();
+
+		Optional.ofNullable(source.getRedirect()).ifPresent(trackingArgs::redirect);
+		Optional.ofNullable(source.getPrefixes()).ifPresent(trackingArgs::prefixes);
+		if(Boolean.TRUE.equals(source.getBcast())){
+			trackingArgs.bcast();
 		}
-	}
-
-	public static LMPopArgs lMPopArgs(final Direction direction) {
-		return lMPopArgs(direction, null);
-	}
-
-	public static LMPopArgs lMPopArgs(final Direction direction, final Long count) {
-		if(direction == null){
-			return null;
+		if(Boolean.TRUE.equals(source.getOptin())){
+			trackingArgs.optin();
 		}
-
-		final LMPopArgs lmPopArgs = Direction.LEFT.equals(
-				direction) ? LMPopArgs.Builder.left() : LMPopArgs.Builder.right();
-
-		if(count != null){
-			lmPopArgs.count(count);
+		if(Boolean.TRUE.equals(source.getOptout())){
+			trackingArgs.optout();
+		}
+		if(Boolean.TRUE.equals(source.getNoloop())){
+			trackingArgs.noloop();
 		}
 
-		return lmPopArgs;
+		return trackingArgs;
 	}
 
 }

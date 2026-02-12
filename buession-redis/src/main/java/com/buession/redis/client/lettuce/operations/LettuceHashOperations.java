@@ -26,6 +26,8 @@ package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.converter.BooleanStatusConverter;
 import com.buession.core.converter.ListConverter;
+import com.buession.core.converter.ListSetConverter;
+import com.buession.core.converter.MapConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.HashOperations;
@@ -35,12 +37,13 @@ import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.args.GetExArgument;
 import com.buession.redis.core.command.args.HSetExArgument;
-import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.core.internal.convert.lettuce.params.ExpireOptionConverter;
+import com.buession.redis.core.internal.convert.lettuce.params.GetExArgumentConverter;
+import com.buession.redis.core.internal.convert.lettuce.params.HSetExArgumentConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ListKeyValueMapConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.response.OneStatusConverter;
-import com.buession.redis.core.internal.lettuce.CompositeArgumentUtils;
 import com.buession.redis.core.internal.lettuce.LettuceScanArgs;
 import com.buession.redis.core.internal.lettuce.LettuceScanCursor;
 import com.buession.redis.utils.SafeEncoder;
@@ -106,8 +109,9 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	public List<Long> hExpire(final byte[] key, final long ttl, final ExpireOption option, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(ttl).add(option).add("FIELDS").add(fields.length)
 				.add(fields);
+		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(Command.HEXPIRE, args,
-				(cmd)->cmd.hexpire(key, ttl, CompositeArgumentUtils.expireArgs(option), fields), (v)->v);
+				(cmd)->cmd.hexpire(key, ttl, expireOptionConverter.convert(option), fields), (v)->v);
 	}
 
 	@Override
@@ -133,8 +137,9 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 								final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(option).add("FIELDS")
 				.add(fields.length).add(fields);
+		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(Command.HEXPIREAT, args,
-				(cmd)->cmd.hexpireat(key, unixTimestamp, CompositeArgumentUtils.expireArgs(option), fields), (v)->v);
+				(cmd)->cmd.hexpireat(key, unixTimestamp, expireOptionConverter.convert(option), fields), (v)->v);
 	}
 
 	@Override
@@ -152,7 +157,7 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	public String hGet(final String key, final String field) {
 		final CommandArguments args = CommandArguments.create(key).add(field);
 		return executeCommand(Command.HGET, args, (cmd)->cmd.hget(SafeEncoder.encode(key), SafeEncoder.encode(field)),
-				Converters.binaryToStringConverter());
+				SafeEncoder::encode);
 	}
 
 	@Override
@@ -165,7 +170,7 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	public Map<String, String> hGetAll(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(Command.HGETALL, args, (cmd)->cmd.hgetall(SafeEncoder.encode(key)),
-				Converters.binaryMapToStringMapConverter());
+				new MapConverter<>(SafeEncoder::encode, SafeEncoder::encode));
 	}
 
 	@Override
@@ -205,16 +210,18 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	@Override
 	public List<String> hGetEx(final String key, final GetExArgument argument, final String... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(fields);
+		final GetExArgumentConverter getExArgumentConverter = new GetExArgumentConverter();
 		return executeCommand(Command.HGETEX, args, (cmd)->cmd.hgetex(SafeEncoder.encode(key),
-						CompositeArgumentUtils.hGetExArgs(argument), SafeEncoder.encode(fields)),
+						getExArgumentConverter.convert(argument), SafeEncoder.encode(fields)),
 				new ListConverter<>((kv)->SafeEncoder.encode(kv.getValue())));
 	}
 
 	@Override
 	public List<byte[]> hGetEx(final byte[] key, final GetExArgument argument, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(fields);
+		final GetExArgumentConverter getExArgumentConverter = new GetExArgumentConverter();
 		return executeCommand(Command.HGETEX, args, (cmd)->cmd.hgetex(key,
-				CompositeArgumentUtils.hGetExArgs(argument), fields), new ListConverter<>(Value::getValue));
+				getExArgumentConverter.convert(argument), fields), new ListConverter<>(Value::getValue));
 	}
 
 	@Override
@@ -243,13 +250,13 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	public Set<String> hKeys(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(Command.HKEYS, args, (cmd)->cmd.hkeys(SafeEncoder.encode(key)),
-				Converters.binaryListToStringSetConverter());
+				new ListSetConverter<>(SafeEncoder::encode));
 	}
 
 	@Override
 	public Set<byte[]> hKeys(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.HKEYS, args, (cmd)->cmd.hkeys(key), Converters.binaryListToBinarySetConverter());
+		return executeCommand(Command.HKEYS, args, (cmd)->cmd.hkeys(key), new ListSetConverter<>((v)->v));
 	}
 
 	@Override
@@ -279,7 +286,9 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 
 	@Override
 	public Status hMSet(final String key, final Map<String, String> data) {
-		return hMSet(SafeEncoder.encode(key), Converters.stringMapToBinaryMapConverter().convert(data));
+		final MapConverter<String, String, byte[], byte[]> mapConverter = new MapConverter<>(SafeEncoder::encode,
+				SafeEncoder::encode);
+		return hMSet(SafeEncoder.encode(key), mapConverter.convert(data));
 	}
 
 	@Override
@@ -320,8 +329,9 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	public List<Long> hPExpire(final byte[] key, final long ttl, final ExpireOption option, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(ttl).add(option).add("FIELDS").add(fields.length)
 				.add(fields);
+		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(Command.HPEXPIRE, args, (cmd)->cmd.hpexpire(key, ttl,
-				CompositeArgumentUtils.expireArgs(option), fields), (v)->v);
+				expireOptionConverter.convert(option), fields), (v)->v);
 	}
 
 	@Override
@@ -347,8 +357,9 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 								 final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(option).add("FIELDS")
 				.add(fields.length).add(fields);
+		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(Command.HPEXPIREAT, args, (cmd)->cmd.hpexpireat(key, unixTimestamp,
-				CompositeArgumentUtils.expireArgs(option), fields), (v)->v);
+				expireOptionConverter.convert(option), fields), (v)->v);
 	}
 
 	@Override
@@ -377,7 +388,7 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	public String hRandField(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(Command.HRANDFIELD, args, (cmd)->cmd.hrandfield(SafeEncoder.encode(key)),
-				Converters.binaryToStringConverter());
+				SafeEncoder::encode);
 	}
 
 	@Override
@@ -390,7 +401,7 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	public List<String> hRandField(final String key, final long count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
 		return executeCommand(Command.HRANDFIELD, args, (cmd)->cmd.hrandfield(SafeEncoder.encode(key), count),
-				Converters.binaryListToStringListConverter());
+				new ListConverter<>(SafeEncoder::encode));
 	}
 
 	@Override
@@ -470,7 +481,9 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 
 	@Override
 	public Long hSet(final String key, final Map<String, String> data) {
-		return hSet(SafeEncoder.encode(key), Converters.stringMapToBinaryMapConverter().convert(data));
+		final MapConverter<String, String, byte[], byte[]> mapConverter = new MapConverter<>(SafeEncoder::encode,
+				SafeEncoder::encode);
+		return hSet(SafeEncoder.encode(key), mapConverter.convert(data));
 	}
 
 	@Override
@@ -481,7 +494,9 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 
 	@Override
 	public Status hSetEx(final String key, final Map<String, String> data) {
-		return hSetEx(SafeEncoder.encode(key), Converters.stringMapToBinaryMapConverter().convert(data));
+		final MapConverter<String, String, byte[], byte[]> mapConverter = new MapConverter<>(SafeEncoder::encode,
+				SafeEncoder::encode);
+		return hSetEx(SafeEncoder.encode(key), mapConverter.convert(data));
 	}
 
 	@Override
@@ -492,14 +507,17 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 
 	@Override
 	public Status hSetEx(final String key, final Map<String, String> data, final HSetExArgument argument) {
-		return hSetEx(SafeEncoder.encode(key), Converters.stringMapToBinaryMapConverter().convert(data), argument);
+		final MapConverter<String, String, byte[], byte[]> mapConverter = new MapConverter<>(SafeEncoder::encode,
+				SafeEncoder::encode);
+		return hSetEx(SafeEncoder.encode(key), mapConverter.convert(data), argument);
 	}
 
 	@Override
 	public Status hSetEx(final byte[] key, final Map<byte[], byte[]> data, final HSetExArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(data);
+		final HSetExArgumentConverter hSetExArgumentConverter = new HSetExArgumentConverter();
 		return executeCommand(Command.HSETEX, args, (cmd)->cmd.hsetex(key,
-				CompositeArgumentUtils.hSetExArgs(argument), data), new OneStatusConverter());
+				hSetExArgumentConverter.convert(argument), data), new OneStatusConverter());
 	}
 
 	@Override
@@ -539,7 +557,7 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	public List<String> hVals(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(Command.HVALS, args, (cmd)->cmd.hvals(SafeEncoder.encode(key)),
-				Converters.binaryListToStringListConverter());
+				new ListConverter<>(SafeEncoder::encode));
 	}
 
 	@Override

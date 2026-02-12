@@ -22,52 +22,36 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.lettuce;
+package com.buession.redis.core.internal.convert.lettuce.params;
 
-import com.buession.redis.core.Direction;
-import io.lettuce.core.LMPopArgs;
-import io.lettuce.core.LMoveArgs;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.command.args.LPosArgument;
+import io.lettuce.core.LPosArgs;
+import org.springframework.lang.Nullable;
+
+import java.util.Optional;
 
 /**
- *
+ * {@link LPosArgument} 转换为 lettuce {@link LPosArgs}
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class CompositeArgumentUtils {
+public final class LPosArgumentConverter implements Converter<LPosArgument, LPosArgs> {
 
-	private CompositeArgumentUtils() {
-	}
-
-	public static LMoveArgs lMoveArgs(final Direction source, final Direction destination) {
-		if(source == null || destination == null){
+	@Nullable
+	@Override
+	public LPosArgs convert(final LPosArgument source) {
+		if(source == null){
 			return null;
 		}
 
-		if(Direction.LEFT.equals(source)){
-			return Direction.LEFT.equals(destination) ? LMoveArgs.Builder.leftLeft() : LMoveArgs.Builder.leftRight();
-		}else{
-			return Direction.LEFT.equals(destination) ? LMoveArgs.Builder.rightLeft() : LMoveArgs.Builder.rightRight();
-		}
-	}
+		final LPosArgs lPosArgs = new LPosArgs();
 
-	public static LMPopArgs lMPopArgs(final Direction direction) {
-		return lMPopArgs(direction, null);
-	}
+		Optional.ofNullable(source.getRank()).ifPresent(lPosArgs::rank);
+		Optional.ofNullable(source.getMaxLen()).ifPresent(lPosArgs::maxlen);
 
-	public static LMPopArgs lMPopArgs(final Direction direction, final Long count) {
-		if(direction == null){
-			return null;
-		}
-
-		final LMPopArgs lmPopArgs = Direction.LEFT.equals(
-				direction) ? LMPopArgs.Builder.left() : LMPopArgs.Builder.right();
-
-		if(count != null){
-			lmPopArgs.count(count);
-		}
-
-		return lmPopArgs;
+		return lPosArgs;
 	}
 
 }

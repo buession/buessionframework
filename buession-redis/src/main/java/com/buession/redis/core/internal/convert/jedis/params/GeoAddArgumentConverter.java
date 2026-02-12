@@ -22,52 +22,41 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.lettuce;
+package com.buession.redis.core.internal.convert.jedis.params;
 
-import com.buession.redis.core.Direction;
-import io.lettuce.core.LMPopArgs;
-import io.lettuce.core.LMoveArgs;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.command.args.GeoAddArgument;
+import org.springframework.lang.Nullable;
+import redis.clients.jedis.params.GeoAddParams;
 
 /**
- *
+ * {@link GeoAddArgument} 转换为 jedis {@link GeoAddParams}
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class CompositeArgumentUtils {
+public final class GeoAddArgumentConverter implements Converter<GeoAddArgument, GeoAddParams> {
 
-	private CompositeArgumentUtils() {
-	}
-
-	public static LMoveArgs lMoveArgs(final Direction source, final Direction destination) {
-		if(source == null || destination == null){
+	@Nullable
+	@Override
+	public GeoAddParams convert(final GeoAddArgument source) {
+		if(source == null){
 			return null;
 		}
 
-		if(Direction.LEFT.equals(source)){
-			return Direction.LEFT.equals(destination) ? LMoveArgs.Builder.leftLeft() : LMoveArgs.Builder.leftRight();
-		}else{
-			return Direction.LEFT.equals(destination) ? LMoveArgs.Builder.rightLeft() : LMoveArgs.Builder.rightRight();
+		final GeoAddParams geoAddParams = new GeoAddParams();
+
+		if(Boolean.TRUE.equals(source.isNx())){
+			geoAddParams.nx();
 		}
-	}
-
-	public static LMPopArgs lMPopArgs(final Direction direction) {
-		return lMPopArgs(direction, null);
-	}
-
-	public static LMPopArgs lMPopArgs(final Direction direction, final Long count) {
-		if(direction == null){
-			return null;
+		if(Boolean.TRUE.equals(source.isXx())){
+			geoAddParams.xx();
+		}
+		if(Boolean.TRUE.equals(source.isCh())){
+			geoAddParams.ch();
 		}
 
-		final LMPopArgs lmPopArgs = Direction.LEFT.equals(
-				direction) ? LMPopArgs.Builder.left() : LMPopArgs.Builder.right();
-
-		if(count != null){
-			lmPopArgs.count(count);
-		}
-
-		return lmPopArgs;
+		return geoAddParams;
 	}
 
 }

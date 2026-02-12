@@ -26,9 +26,11 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
+import com.buession.core.converter.MapConverter;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.KeyScanCursor;
 import io.lettuce.core.MapScanCursor;
 import io.lettuce.core.ScanCursor;
@@ -77,8 +79,8 @@ public interface ScanCursorConverter<T extends ScanCursor, R> extends Converter<
 
 			@Override
 			public ScanResult<List<String>> convert(final KeyScanCursor<byte[]> source) {
-				return new ScanResult<>(source.getCursor(),
-						Converters.binaryListToStringListConverter().convert(source.getKeys()));
+				final ListConverter<byte[], String> listConverter = new ListConverter<>(SafeEncoder::encode);
+				return new ScanResult<>(source.getCursor(), listConverter.convert(source.getKeys()));
 			}
 
 		}
@@ -110,8 +112,8 @@ public interface ScanCursorConverter<T extends ScanCursor, R> extends Converter<
 
 			@Override
 			public ScanResult<List<String>> convert(final ValueScanCursor<byte[]> source) {
-				return new ScanResult<>(source.getCursor(),
-						Converters.binaryListToStringListConverter().convert(source.getValues()));
+				final ListConverter<byte[], String> listConverter = new ListConverter<>(SafeEncoder::encode);
+				return new ScanResult<>(source.getCursor(), listConverter.convert(source.getValues()));
 			}
 
 		}
@@ -163,8 +165,9 @@ public interface ScanCursorConverter<T extends ScanCursor, R> extends Converter<
 
 			@Override
 			public ScanResult<Map<String, String>> convert(final MapScanCursor<byte[], byte[]> source) {
-				return new ScanResult<>(source.getCursor(),
-						Converters.binaryMapToStringMapConverter().convert(source.getMap()));
+				final MapConverter<byte[], byte[], String, String> mapConverter =
+						new MapConverter<>(SafeEncoder::encode, SafeEncoder::encode);
+				return new ScanResult<>(source.getCursor(), mapConverter.convert(source.getMap()));
 			}
 
 		}

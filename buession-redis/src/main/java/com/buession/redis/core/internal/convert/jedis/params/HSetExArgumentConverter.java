@@ -22,52 +22,48 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.lettuce;
+package com.buession.redis.core.internal.convert.jedis.params;
 
-import com.buession.redis.core.Direction;
-import io.lettuce.core.LMPopArgs;
-import io.lettuce.core.LMoveArgs;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.command.args.HSetExArgument;
+import org.springframework.lang.Nullable;
+import redis.clients.jedis.params.HSetExParams;
 
 /**
- *
+ * {@link HSetExArgument} 转换为 jedis {@link HSetExParams}
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class CompositeArgumentUtils {
+public final class HSetExArgumentConverter implements Converter<HSetExArgument, HSetExParams> {
 
-	private CompositeArgumentUtils() {
-	}
-
-	public static LMoveArgs lMoveArgs(final Direction source, final Direction destination) {
-		if(source == null || destination == null){
+	@Nullable
+	@Override
+	public HSetExParams convert(final HSetExArgument source) {
+		if(source == null){
 			return null;
 		}
 
-		if(Direction.LEFT.equals(source)){
-			return Direction.LEFT.equals(destination) ? LMoveArgs.Builder.leftLeft() : LMoveArgs.Builder.leftRight();
-		}else{
-			return Direction.LEFT.equals(destination) ? LMoveArgs.Builder.rightLeft() : LMoveArgs.Builder.rightRight();
-		}
-	}
+		final HSetExParams hSetExParams = new HSetExParams();
 
-	public static LMPopArgs lMPopArgs(final Direction direction) {
-		return lMPopArgs(direction, null);
-	}
-
-	public static LMPopArgs lMPopArgs(final Direction direction, final Long count) {
-		if(direction == null){
-			return null;
+		if(source.getType() == null){
+			switch(source.getType()){
+				case EX -> hSetExParams.ex(source.getValue());
+				case EXAT -> hSetExParams.exAt(source.getValue());
+				case PX -> hSetExParams.px(source.getValue());
+				case PXAT -> hSetExParams.pxAt(source.getValue());
+				case KEEPTTL -> hSetExParams.keepTtl();
+			}
 		}
 
-		final LMPopArgs lmPopArgs = Direction.LEFT.equals(
-				direction) ? LMPopArgs.Builder.left() : LMPopArgs.Builder.right();
-
-		if(count != null){
-			lmPopArgs.count(count);
+		if(source.getFnxFxx() != null){
+			switch(source.getFnxFxx()){
+				case FNX -> hSetExParams.fnx();
+				case FXX -> hSetExParams.fxx();
+			}
 		}
 
-		return lmPopArgs;
+		return hSetExParams;
 	}
 
 }

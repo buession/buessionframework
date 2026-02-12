@@ -39,10 +39,10 @@ import com.buession.redis.core.command.SubCommand;
 import com.buession.redis.core.command.args.JsonGetArgument;
 import com.buession.redis.core.command.args.JsonKeyPathValueArgument;
 import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.core.internal.convert.lettuce.params.JsonGetArgumentConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.JsonTypeConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.response.OneStatusConverter;
-import com.buession.redis.core.internal.lettuce.CompositeArgumentUtils;
 import com.buession.redis.core.internal.lettuce.LettuceJsonPath;
 import com.buession.redis.core.internal.lettuce.LettuceJsonRangeArgs;
 import com.buession.redis.core.internal.lettuce.LettuceJsonSetArgs;
@@ -318,27 +318,26 @@ public final class LettuceJsonOperations extends AbstractLettuceRedisOperations 
 	@Override
 	public byte[] jsonGet(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.JSON_GET, args, (cmd)->{
-			final List<String> result = cmd.jsonGetRaw(key);
-			return Validate.isNotEmpty(result) ? SafeEncoder.encode(result.get(0)) : null;
-		}, (v)->v);
+		return executeCommand(Command.JSON_GET, args, (cmd)->cmd.jsonGetRaw(key),
+				(v)->Validate.isEmpty(v) ? null : SafeEncoder.encode(v.get(0)));
 	}
 
 	@Override
 	public String jsonGet(final String key, final JsonGetArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument);
+		final JsonGetArgumentConverter jsonGetArgumentConverter = new JsonGetArgumentConverter();
 		return executeCommand(Command.JSON_GET, args,
-				(cmd)->cmd.jsonGetRaw(SafeEncoder.encode(key), CompositeArgumentUtils.jsonGetArgs(argument)),
+				(cmd)->cmd.jsonGetRaw(SafeEncoder.encode(key), jsonGetArgumentConverter.convert(argument)),
 				Converters.list0Converter());
 	}
 
 	@Override
 	public byte[] jsonGet(final byte[] key, final JsonGetArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument);
-		return executeCommand(Command.JSON_ARRINSERT, args, (cmd)->{
-			final List<String> result = cmd.jsonGetRaw(key, CompositeArgumentUtils.jsonGetArgs(argument));
-			return Validate.isNotEmpty(result) ? SafeEncoder.encode(result.get(0)) : null;
-		}, (v)->v);
+		final JsonGetArgumentConverter jsonGetArgumentConverter = new JsonGetArgumentConverter();
+		return executeCommand(Command.JSON_ARRINSERT, args,
+				(cmd)->cmd.jsonGetRaw(key, jsonGetArgumentConverter.convert(argument)),
+				(v)->Validate.isEmpty(v) ? null : SafeEncoder.encode(v.get(0)));
 	}
 
 	@Override
@@ -356,7 +355,7 @@ public final class LettuceJsonOperations extends AbstractLettuceRedisOperations 
 		final ArrayConverter<byte[], LettuceJsonPath> arrayConverter = new ArrayConverter<>(LettuceJsonPath::new,
 				LettuceJsonPath.class);
 		return executeCommand(Command.JSON_GET, args, (cmd)->cmd.jsonGetRaw(key, arrayConverter.convert(path)),
-				Converters.stringListToBinaryListConverter());
+				new ListConverter<>(SafeEncoder::encode));
 	}
 
 	@Override
@@ -364,8 +363,9 @@ public final class LettuceJsonOperations extends AbstractLettuceRedisOperations 
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(path);
 		final ArrayConverter<String, LettuceJsonPath> arrayConverter = new ArrayConverter<>(LettuceJsonPath::new,
 				LettuceJsonPath.class);
+		final JsonGetArgumentConverter jsonGetArgumentConverter = new JsonGetArgumentConverter();
 		return executeCommand(Command.JSON_GET, args,
-				(cmd)->cmd.jsonGetRaw(SafeEncoder.encode(key), CompositeArgumentUtils.jsonGetArgs(argument),
+				(cmd)->cmd.jsonGetRaw(SafeEncoder.encode(key), jsonGetArgumentConverter.convert(argument),
 						arrayConverter.convert(path)), (v)->v);
 	}
 
@@ -374,9 +374,10 @@ public final class LettuceJsonOperations extends AbstractLettuceRedisOperations 
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(path);
 		final ArrayConverter<byte[], LettuceJsonPath> arrayConverter = new ArrayConverter<>(LettuceJsonPath::new,
 				LettuceJsonPath.class);
+		final JsonGetArgumentConverter jsonGetArgumentConverter = new JsonGetArgumentConverter();
 		return executeCommand(Command.JSON_GET, args,
-				(cmd)->cmd.jsonGetRaw(key, CompositeArgumentUtils.jsonGetArgs(argument), arrayConverter.convert(path)),
-				Converters.stringListToBinaryListConverter());
+				(cmd)->cmd.jsonGetRaw(key, jsonGetArgumentConverter.convert(argument), arrayConverter.convert(path)),
+				new ListConverter<>(SafeEncoder::encode));
 	}
 
 	@Override
@@ -406,7 +407,7 @@ public final class LettuceJsonOperations extends AbstractLettuceRedisOperations 
 	public List<byte[]> jsonMGet(final byte[][] keys, final byte[] path) {
 		final CommandArguments args = CommandArguments.create(keys).add(path);
 		return executeCommand(Command.JSON_MGET, args, (cmd)->cmd.jsonMGetRaw(new LettuceJsonPath(path), keys),
-				Converters.stringListToBinaryListConverter());
+				new ListConverter<>(SafeEncoder::encode));
 	}
 
 	@Override

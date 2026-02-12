@@ -22,52 +22,37 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.lettuce;
+package com.buession.redis.core.internal.convert.jedis.params;
 
-import com.buession.redis.core.Direction;
-import io.lettuce.core.LMPopArgs;
-import io.lettuce.core.LMoveArgs;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.command.args.CFReserveArgument;
+import org.springframework.lang.Nullable;
+import redis.clients.jedis.bloom.CFReserveParams;
+
+import java.util.Optional;
 
 /**
- *
+ * {@link CFReserveArgument} 转换为 jedis {@link CFReserveParams}
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class CompositeArgumentUtils {
+public final class CFReserveArgumentConverter implements Converter<CFReserveArgument, CFReserveParams> {
 
-	private CompositeArgumentUtils() {
-	}
-
-	public static LMoveArgs lMoveArgs(final Direction source, final Direction destination) {
-		if(source == null || destination == null){
+	@Nullable
+	@Override
+	public CFReserveParams convert(final CFReserveArgument source) {
+		if(source == null){
 			return null;
 		}
 
-		if(Direction.LEFT.equals(source)){
-			return Direction.LEFT.equals(destination) ? LMoveArgs.Builder.leftLeft() : LMoveArgs.Builder.leftRight();
-		}else{
-			return Direction.LEFT.equals(destination) ? LMoveArgs.Builder.rightLeft() : LMoveArgs.Builder.rightRight();
-		}
-	}
+		final CFReserveParams cfReserveParams = new CFReserveParams();
 
-	public static LMPopArgs lMPopArgs(final Direction direction) {
-		return lMPopArgs(direction, null);
-	}
+		Optional.ofNullable(source.getBucketSize()).ifPresent(cfReserveParams::bucketSize);
+		Optional.ofNullable(source.getMaxIterations()).ifPresent(cfReserveParams::maxIterations);
+		Optional.ofNullable(source.getExpansion()).ifPresent(cfReserveParams::expansion);
 
-	public static LMPopArgs lMPopArgs(final Direction direction, final Long count) {
-		if(direction == null){
-			return null;
-		}
-
-		final LMPopArgs lmPopArgs = Direction.LEFT.equals(
-				direction) ? LMPopArgs.Builder.left() : LMPopArgs.Builder.right();
-
-		if(count != null){
-			lmPopArgs.count(count);
-		}
-
-		return lmPopArgs;
+		return cfReserveParams;
 	}
 
 }

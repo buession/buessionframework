@@ -25,11 +25,8 @@
 package com.buession.redis.core.internal.convert;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
-import com.buession.core.converter.ListMapEntryMapConverter;
 import com.buession.core.converter.ListSetConverter;
 import com.buession.core.converter.MapConverter;
-import com.buession.core.converter.SetConverter;
 import com.buession.core.validator.Validate;
 import com.buession.redis.utils.SafeEncoder;
 
@@ -41,54 +38,6 @@ import java.util.List;
  */
 public interface Converters {
 
-	static Converter<byte[], String> binaryToStringConverter() {
-		return SafeEncoder::encode;
-	}
-
-	static Converter<String, byte[]> stringToBinaryConverter() {
-		return SafeEncoder::encode;
-	}
-
-	static ListConverter<byte[], String> binaryListToStringListConverter() {
-		return new ListConverter<>(SafeEncoder::encode);
-	}
-
-	static ListConverter<String, byte[]> stringListToBinaryListConverter() {
-		return new ListConverter<>(SafeEncoder::encode);
-	}
-
-	static SetConverter<byte[], String> binarySetToStringSetConverter() {
-		return new SetConverter<>(SafeEncoder::encode);
-	}
-
-	static SetConverter<String, byte[]> stringSetToBinarySetConverter() {
-		return new SetConverter<>(SafeEncoder::encode);
-	}
-
-	static ListSetConverter<byte[], byte[]> binaryListToBinarySetConverter() {
-		return new ListSetConverter<>((v)->v);
-	}
-
-	static ListSetConverter<byte[], String> binaryListToStringSetConverter() {
-		return new ListSetConverter<>(SafeEncoder::encode);
-	}
-
-	static MapConverter<String, String, byte[], byte[]> stringMapToBinaryMapConverter() {
-		return new MapConverter<>(SafeEncoder::encode, SafeEncoder::encode);
-	}
-
-	static MapConverter<byte[], byte[], String, String> binaryMapToStringMapConverter() {
-		return new MapConverter<>(SafeEncoder::encode, SafeEncoder::encode);
-	}
-
-	static ListMapEntryMapConverter<String, String, String, String> stringListMapEntryMapConverter() {
-		return new ListMapEntryMapConverter<>((k)->k, (v)->v);
-	}
-
-	static ListMapEntryMapConverter<byte[], byte[], byte[], byte[]> binaryListMapEntryMapConverter() {
-		return new ListMapEntryMapConverter<>((k)->k, (v)->v);
-	}
-
 	static <T> Converter<List<T>, T> list0Converter() {
 		return (value)->Validate.isEmpty(value) ? null : value.get(0);
 	}
@@ -99,10 +48,6 @@ public interface Converters {
 	}
 
 	/****/
-
-	static SetConverter<byte[], String> setBinaryToString() {
-		return new SetConverter<>(SafeEncoder::encode);
-	}
 
 	static ListSetConverter<byte[], String> listSetBinaryToString() {
 		return new ListSetConverter<>(SafeEncoder::encode);

@@ -36,7 +36,6 @@ import com.buession.redis.core.ScriptDebugMode;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.SubCommand;
-import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.params.FlushModeConverter;
 import com.buession.redis.core.internal.convert.lettuce.params.FunctionRestoreModeConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.LibraryInfoConverter;
@@ -432,7 +431,7 @@ public final class LettuceScriptingOperations extends AbstractLettuceRedisOperat
 	public byte[] scriptLoad(final byte[] script) {
 		final CommandArguments args = CommandArguments.create(script);
 		return executeCommand(Command.SCRIPT_LOAD, args, (cmd)->cmd.scriptLoad(script),
-				Converters.stringToBinaryConverter());
+				SafeEncoder::encode);
 	}
 
 	private Object eval(final CommandArguments args,

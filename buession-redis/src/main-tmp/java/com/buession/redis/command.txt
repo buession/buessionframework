@@ -1,6 +1,4 @@
 
-
-
 	/**
 	 * key command start
 	 **/
@@ -241,19 +239,6 @@
 	WATCH(CommandGroup.TRANSACTION, "w");
 
 
-	/**
-	 * Connection command start
-	 */
-
-
-
-
-	HELLO("w", CommandGroup.CONNECTION),
-
-
-	/**
-	 * Connection command end
-	 */
 
 	/**
 	 * Key command start
@@ -268,25 +253,6 @@
 	 * Key command end
 	 **/
 
-
-	/**
-	 * Hash command start
-	 **/
-
-	HTTL("r", CommandGroup.HASH),
-
-	HVALS("r", CommandGroup.HASH),
-	/**
-	 * Hash command start
-	 **/
-
-
-	/**
-	 * ACL command start
-	 **/
-	ACL("rw", CommandGroup.ACL, SubCommand.ACL_CAT,
-			SubCommand.LIST, SubCommand.LOAD,
-			SubCommand.SAVE),
 
 			public enum SubCommand implements ProtocolCommand {
             	/**

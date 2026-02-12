@@ -24,13 +24,13 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
+import com.buession.core.converter.ListSetConverter;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.client.operations.SearchOperations;
 import com.buession.redis.core.AggregationResult;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.args.FtAggregateArgument;
-import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.response.AggregationReplyConverter;
 import com.buession.redis.utils.SafeEncoder;
 
@@ -50,7 +50,7 @@ public final class LettuceSearchOperations extends AbstractLettuceRedisOperation
 
 	@Override
 	public Set<String> ftList() {
-		return executeCommand(Command.FT_LIST, (cmd)->cmd.ftList(), Converters.binaryListToStringSetConverter());
+		return executeCommand(Command.FT_LIST, (cmd)->cmd.ftList(), new ListSetConverter<>(SafeEncoder::encode));
 	}
 
 	@Override

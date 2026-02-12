@@ -1621,42 +1621,6 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor) {
-		return execute((client)->client.setOperations().sScan(rawKey(key), cursor),
-				new Converter.SimpleScanResultListStringConverter<>(this));
-	}
-
-	@Override
-	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor) {
-		return execute((client)->client.setOperations().sScan(rawKey(key), cursor),
-				new Converter.SimpleScanResultListBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final Class<V> clazz) {
-		return execute((client)->client.setOperations().sScan(rawKey(key), cursor),
-				new Converter.ClazzScanResultListStringConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final Class<V> clazz) {
-		return execute((client)->client.setOperations().sScan(rawKey(key), cursor),
-				new Converter.ClazzScanResultListBinaryConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final TypeReference<V> type) {
-		return execute((client)->client.setOperations().sScan(rawKey(key), cursor),
-				new Converter.TypeScanResultListStringConverter<>(this, type));
-	}
-
-	@Override
-	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final TypeReference<V> type) {
-		return execute((client)->client.setOperations().sScan(rawKey(key), cursor),
-				new Converter.TypeScanResultListBinaryConverter<>(this, type));
-	}
-
-	@Override
 	public <V> ScanResult<List<V>> sScanObject(final String key, final String cursor) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor),
 				new Converter.SimpleScanResultListStringConverter<>(this));
@@ -1689,46 +1653,6 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 	@Override
 	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final TypeReference<V> type) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor),
-				new Converter.TypeScanResultListBinaryConverter<>(this, type));
-	}
-
-	@Override
-	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern) {
-		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern),
-				new Converter.SimpleScanResultListStringConverter<>(this));
-	}
-
-	@Override
-	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern) {
-		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern),
-				new Converter.SimpleScanResultListBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern,
-											   final Class<V> clazz) {
-		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern),
-				new Converter.ClazzScanResultListStringConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern,
-											   final Class<V> clazz) {
-		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern),
-				new Converter.ClazzScanResultListBinaryConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern,
-											   final TypeReference<V> type) {
-		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern),
-				new Converter.TypeScanResultListStringConverter<>(this, type));
-	}
-
-	@Override
-	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern,
-											   final TypeReference<V> type) {
-		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern),
 				new Converter.TypeScanResultListBinaryConverter<>(this, type));
 	}
 
@@ -1773,45 +1697,6 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final long count) {
-		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
-				new Converter.SimpleScanResultListStringConverter<>(this));
-	}
-
-	@Override
-	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final long count) {
-		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
-				new Converter.SimpleScanResultListBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final long count,
-											   final Class<V> clazz) {
-		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
-				new Converter.ClazzScanResultListStringConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final long count,
-											   final Class<V> clazz) {
-		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
-				new Converter.ClazzScanResultListBinaryConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, long count, TypeReference<V> type) {
-		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
-				new Converter.TypeScanResultListStringConverter<>(this, type));
-	}
-
-	@Override
-	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final long count,
-											   final TypeReference<V> type) {
-		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
-				new Converter.TypeScanResultListBinaryConverter<>(this, type));
-	}
-
-	@Override
 	public <V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final long count) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
 				new Converter.SimpleScanResultListStringConverter<>(this));
@@ -1848,48 +1733,6 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final long count,
 											   final TypeReference<V> type) {
 		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, count),
-				new Converter.TypeScanResultListBinaryConverter<>(this, type));
-	}
-
-	@Override
-	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern,
-											   final long count) {
-		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count),
-				new Converter.SimpleScanResultListStringConverter<>(this));
-	}
-
-	@Override
-	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern,
-											   final long count) {
-		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count),
-				new Converter.SimpleScanResultListBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern,
-											   final long count, final Class<V> clazz) {
-		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count),
-				new Converter.ClazzScanResultListStringConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern,
-											   final long count, final Class<V> clazz) {
-		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count),
-				new Converter.ClazzScanResultListBinaryConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern,
-											   final long count, final TypeReference<V> type) {
-		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count),
-				new Converter.TypeScanResultListStringConverter<>(this, type));
-	}
-
-	@Override
-	public <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern,
-											   final long count, final TypeReference<V> type) {
-		return execute((client)->client.setOperations().sScan(rawKey(key), cursor, pattern, count),
 				new Converter.TypeScanResultListBinaryConverter<>(this, type));
 	}
 

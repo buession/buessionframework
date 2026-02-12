@@ -25,6 +25,7 @@
 package com.buession.redis.client.lettuce.operations;
 
 import com.buession.core.converter.ListConverter;
+import com.buession.core.converter.MapConverter;
 import com.buession.core.converter.SetConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
@@ -55,7 +56,6 @@ import com.buession.redis.core.command.args.FailoverArgument;
 import com.buession.redis.core.command.args.HotkeysStartArgument;
 import com.buession.redis.core.command.args.RestoreArgument;
 import com.buession.redis.core.command.args.ShutdownArgument;
-import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.params.AclSetUserArgumentConverter;
 import com.buession.redis.core.internal.convert.lettuce.params.FlushModeConverter;
 import com.buession.redis.core.internal.convert.lettuce.params.ShutdownArgumentConverter;
@@ -302,7 +302,7 @@ public final class LettuceServerOperations extends AbstractLettuceRedisOperation
 	public Map<byte[], byte[]> configGet(final byte[]... parameters) {
 		final CommandArguments args = CommandArguments.create(parameters);
 		return executeCommand(Command.CONFIG_GET, args, (cmd)->cmd.configGet(SafeEncoder.encode(parameters)),
-				Converters.stringMapToBinaryMapConverter());
+				new MapConverter<>(SafeEncoder::encode, SafeEncoder::encode));
 	}
 
 	@Override

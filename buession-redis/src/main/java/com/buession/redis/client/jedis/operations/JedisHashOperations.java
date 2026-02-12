@@ -24,6 +24,7 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.converter.ListMapEntryMapConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.HashOperations;
@@ -33,12 +34,12 @@ import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.args.GetExArgument;
 import com.buession.redis.core.command.args.HSetExArgument;
-import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.jedis.params.ExpireOptionConverter;
+import com.buession.redis.core.internal.convert.jedis.params.GetExArgumentConverter;
+import com.buession.redis.core.internal.convert.jedis.params.HSetExArgumentConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ScanResultConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.response.OneStatusConverter;
-import com.buession.redis.core.internal.jedis.IParamsUtils;
 import com.buession.redis.core.internal.jedis.JedisScanParams;
 import redis.clients.jedis.UnifiedJedis;
 import redis.clients.jedis.params.HGetExParams;
@@ -209,13 +210,15 @@ public final class JedisHashOperations extends AbstractJedisRedisOperations impl
 	@Override
 	public List<String> hGetEx(final String key, final GetExArgument argument, final String... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(fields);
-		return hGetEx(args, (cmd)->cmd.hgetex(key, IParamsUtils.hGetExParams(argument), fields));
+		final GetExArgumentConverter getExArgumentConverter = new GetExArgumentConverter();
+		return hGetEx(args, (cmd)->cmd.hgetex(key, getExArgumentConverter.convert(argument), fields));
 	}
 
 	@Override
 	public List<byte[]> hGetEx(final byte[] key, final GetExArgument argument, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(fields);
-		return hGetEx(args, (cmd)->cmd.hgetex(key, IParamsUtils.hGetExParams(argument), fields));
+		final GetExArgumentConverter getExArgumentConverter = new GetExArgumentConverter();
+		return hGetEx(args, (cmd)->cmd.hgetex(key, getExArgumentConverter.convert(argument), fields));
 	}
 
 	@Override
@@ -416,14 +419,14 @@ public final class JedisHashOperations extends AbstractJedisRedisOperations impl
 	public Map<String, String> hRandFieldWithValues(final String key, final long count) {
 		final CommandArguments args = CommandArguments.create(key).add(count).add("WITHVALUES");
 		return executeCommand(Command.HRANDFIELD, args, (cmd)->cmd.hrandfieldWithValues(key, count),
-				Converters.stringListMapEntryMapConverter());
+				new ListMapEntryMapConverter<>((k)->k, (v)->v));
 	}
 
 	@Override
 	public Map<byte[], byte[]> hRandFieldWithValues(final byte[] key, final long count) {
 		final CommandArguments args = CommandArguments.create(key).add(count).add("WITHVALUES");
 		return executeCommand(Command.HRANDFIELD, args, (cmd)->cmd.hrandfieldWithValues(key, count),
-				Converters.binaryListMapEntryMapConverter());
+				new ListMapEntryMapConverter<>((k)->k, (v)->v));
 	}
 
 	@Override
@@ -503,13 +506,15 @@ public final class JedisHashOperations extends AbstractJedisRedisOperations impl
 	@Override
 	public Status hSetEx(final String key, final Map<String, String> data, final HSetExArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(data);
-		return hSetEx(args, (cmd)->cmd.hsetex(key, IParamsUtils.hSetExParams(argument), data));
+		final HSetExArgumentConverter hSetExArgumentConverter = new HSetExArgumentConverter();
+		return hSetEx(args, (cmd)->cmd.hsetex(key, hSetExArgumentConverter.convert(argument), data));
 	}
 
 	@Override
 	public Status hSetEx(final byte[] key, final Map<byte[], byte[]> data, final HSetExArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(data);
-		return hSetEx(args, (cmd)->cmd.hsetex(key, IParamsUtils.hSetExParams(argument), data));
+		final HSetExArgumentConverter hSetExArgumentConverter = new HSetExArgumentConverter();
+		return hSetEx(args, (cmd)->cmd.hsetex(key, hSetExArgumentConverter.convert(argument), data));
 	}
 
 	@Override
