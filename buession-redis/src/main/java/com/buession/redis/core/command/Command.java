@@ -476,9 +476,9 @@ public enum Command implements ProtocolCommand {
 
 	BGSAVE(CommandGroup.SERVER, "w"),
 
-	COMMAND(CommandGroup.SERVER, "rw", new SubCommand[]{SubCommand.COMMAND_COUNT, SubCommand.COMMAND_DOCS,
-			SubCommand.COMMAND_GETKEYS, SubCommand.COMMAND_GETKEYSANDFLAGS, SubCommand.COMMAND_INFO,
-			SubCommand.COMMAND_LIST}),
+	COMMAND(CommandGroup.SERVER, "rw",
+			new SubCommand[]{SubCommand.COMMAND_COUNT, SubCommand.COMMAND_DOCS, SubCommand.COMMAND_GETKEYS,
+					SubCommand.COMMAND_GETKEYSANDFLAGS, SubCommand.COMMAND_INFO, SubCommand.COMMAND_LIST}),
 
 	CONFIG_GET(CommandGroup.SERVER, "r"),
 
@@ -504,17 +504,19 @@ public enum Command implements ProtocolCommand {
 
 	LASTSAVE(CommandGroup.SERVER, "r"),
 
-	LATENCY(CommandGroup.SERVER, "rw", new SubCommand[]{SubCommand.LATENCY_DOCTOR, SubCommand.LATENCY_GRAPH,
-			SubCommand.LATENCY_HISTOGRAM, SubCommand.LATENCY_HISTORY, SubCommand.LATENCY_LATEST,
-			SubCommand.LATENCY_RESET}),
+	LATENCY(CommandGroup.SERVER, "rw",
+			new SubCommand[]{SubCommand.LATENCY_DOCTOR, SubCommand.LATENCY_GRAPH, SubCommand.LATENCY_HISTOGRAM,
+					SubCommand.LATENCY_HISTORY, SubCommand.LATENCY_LATEST, SubCommand.LATENCY_RESET}),
 
 	LOLWUT(CommandGroup.SERVER, "w"),
 
-	MEMORY(CommandGroup.SERVER, "rw", new SubCommand[]{SubCommand.MEMORY_DOCTOR, SubCommand.MEMORY_MALLOC_STATS,
-			SubCommand.MEMORY_PURGE, SubCommand.MEMORY_STATS, SubCommand.MEMORY_USAGE}),
+	MEMORY(CommandGroup.SERVER, "rw",
+			new SubCommand[]{SubCommand.MEMORY_DOCTOR, SubCommand.MEMORY_MALLOC_STATS, SubCommand.MEMORY_PURGE,
+					SubCommand.MEMORY_STATS, SubCommand.MEMORY_USAGE}),
 
-	MODULE(CommandGroup.SERVER, "rw", new SubCommand[]{SubCommand.MODULE_LIST, SubCommand.MODULE_LOAD,
-			SubCommand.MODULE_LOADEX, SubCommand.MODULE_UNLOAD}),
+	MODULE(CommandGroup.SERVER, "rw",
+			new SubCommand[]{SubCommand.MODULE_LIST, SubCommand.MODULE_LOAD, SubCommand.MODULE_LOADEX,
+					SubCommand.MODULE_UNLOAD}),
 
 	MONITOR(CommandGroup.SERVER, "rw"),
 
@@ -584,6 +586,82 @@ public enum Command implements ProtocolCommand {
 	SUNIONSTORE(CommandGroup.SET, "rw"),
 	/**
 	 * set command end
+	 **/
+
+	/**
+	 * sorted set command start
+	 **/
+	BZMPOP(CommandGroup.SORTEDSET, "rw"),
+
+	BZPOPMAX(CommandGroup.SORTEDSET, "w"),
+
+	BZPOPMIN(CommandGroup.SORTEDSET, "w"),
+
+	ZADD(CommandGroup.SORTEDSET, "w"),
+
+	ZCARD(CommandGroup.SORTEDSET, "r"),
+
+	ZCOUNT(CommandGroup.SORTEDSET, "r"),
+
+	ZDIFF(CommandGroup.SORTEDSET, "r"),
+
+	ZDIFFSTORE(CommandGroup.SORTEDSET, "rw"),
+
+	ZINCRBY(CommandGroup.SORTEDSET, "w"),
+
+	ZINTER(CommandGroup.SORTEDSET, "r"),
+
+	ZINTERCARD(CommandGroup.SORTEDSET, "r"),
+
+	ZINTERSTORE(CommandGroup.SORTEDSET, "rw"),
+
+	ZLEXCOUNT(CommandGroup.SORTEDSET, "r"),
+
+	ZMPOP(CommandGroup.SORTEDSET, "rw"),
+
+	ZMSCORE(CommandGroup.SORTEDSET, "r"),
+
+	ZPOPMAX(CommandGroup.SORTEDSET, "rw"),
+
+	ZPOPMIN(CommandGroup.SORTEDSET, "rw"),
+
+	ZRANDMEMBER(CommandGroup.SORTEDSET, "r"),
+
+	ZRANGE(CommandGroup.SORTEDSET, "r"),
+
+	ZRANGEBYLEX(CommandGroup.SORTEDSET, "r"),
+
+	ZRANGEBYSCORE(CommandGroup.SORTEDSET, "r"),
+
+	ZRANGESTORE(CommandGroup.SORTEDSET, "w"),
+
+	ZRANK(CommandGroup.SORTEDSET, "r"),
+
+	ZREM(CommandGroup.SORTEDSET, "w"),
+
+	ZREMRANGEBYLEX(CommandGroup.SORTEDSET, "w"),
+
+	ZREMRANGEBYRANK(CommandGroup.SORTEDSET, "w"),
+
+	ZREMRANGEBYSCORE(CommandGroup.SORTEDSET, "w"),
+
+	ZREVRANGE(CommandGroup.SORTEDSET, "r"),
+
+	ZREVRANGEBYLEX(CommandGroup.SORTEDSET, "r"),
+
+	ZREVRANGEBYSCORE(CommandGroup.SORTEDSET, "r"),
+
+	ZREVRANK(CommandGroup.SORTEDSET, "r"),
+
+	ZSCAN(CommandGroup.SORTEDSET, "r"),
+
+	ZSCORE(CommandGroup.SORTEDSET, "r"),
+
+	ZUNION(CommandGroup.SORTEDSET, "w"),
+
+	ZUNIONSTORE(CommandGroup.SORTEDSET, "w"),
+	/**
+	 * sorted set command end
 	 **/
 
 	/**

@@ -22,22 +22,73 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.response;
+package com.buession.redis.core.internal.lettuce;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.Tuple;
+import io.lettuce.core.ZAggregateArgs;
 
 /**
- * jedis {@link redis.clients.jedis.resps.Tuple} 转换为 {@link Tuple}
+ * Lettuce {@link LettuceZAggregateArgs} 扩展
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 4.0.0
  */
-public final class TupleConverter implements Converter<redis.clients.jedis.resps.Tuple, Tuple> {
+public final class LettuceZAggregateArgs extends ZAggregateArgs {
 
-	@Override
-	public Tuple convert(final redis.clients.jedis.resps.Tuple source) {
-		return new Tuple(source.getBinaryElement(), source.getScore());
+	/**
+	 * 构造函数
+	 */
+	public LettuceZAggregateArgs() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param aggregate
+	 *        {@link com.buession.redis.core.Aggregate}
+	 */
+	public LettuceZAggregateArgs(final com.buession.redis.core.Aggregate aggregate) {
+		super();
+
+		if(aggregate != null){
+			switch(aggregate){
+				case MIN:
+					min();
+					break;
+				case MAX:
+					max();
+					break;
+				case SUM:
+					sum();
+					break;
+				default:
+					break;
+			}
+		}
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param weights
+	 * 		权重
+	 */
+	public LettuceZAggregateArgs(final double... weights) {
+		super();
+		weights(weights);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param aggregate
+	 *        {@link com.buession.redis.core.Aggregate}
+	 * @param weights
+	 * 		权重
+	 */
+	public LettuceZAggregateArgs(final com.buession.redis.core.Aggregate aggregate, final double... weights) {
+		this(aggregate);
+		weights(weights);
 	}
 
 }

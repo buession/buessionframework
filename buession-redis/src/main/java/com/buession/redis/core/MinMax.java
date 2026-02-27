@@ -22,22 +22,34 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.response;
-
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.Tuple;
+package com.buession.redis.core;
 
 /**
- * jedis {@link redis.clients.jedis.resps.Tuple} 转换为 {@link Tuple}
+ * <code><MIN|MAX></code>
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 4.0.0
  */
-public final class TupleConverter implements Converter<redis.clients.jedis.resps.Tuple, Tuple> {
+public enum MinMax implements Keyword {
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，不移除源实例上的 key
+	 */
+	MIN,
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，替换目标实例上已存在的 key
+	 */
+	MAX;
 
 	@Override
-	public Tuple convert(final redis.clients.jedis.resps.Tuple source) {
-		return new Tuple(source.getBinaryElement(), source.getScore());
+	public String getValue() {
+		return name();
+	}
+
+	@Override
+	public String toString() {
+		return getValue();
 	}
 
 }

@@ -37,6 +37,7 @@ import io.lettuce.core.ScanCursor;
 import io.lettuce.core.ScoredValue;
 import io.lettuce.core.ScoredValueScanCursor;
 import io.lettuce.core.ValueScanCursor;
+import org.springframework.lang.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -52,7 +53,13 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public interface ScanCursorConverter<T extends ScanCursor, R> extends Converter<T, ScanResult<R>> {
+public final class ScanCursorConverter<T extends ScanCursor, R> implements Converter<T, ScanResult<R>> {
+
+	@Nullable
+	@Override
+	public ScanResult<R> convert(final T source) {
+		return new ScanResult<>(source.getCursor(), source.getKeys());
+	}
 
 	/**
 	 * Lettuce {@link KeyScanCursor} 转换为 {@link ScanResult}
@@ -62,6 +69,7 @@ public interface ScanCursorConverter<T extends ScanCursor, R> extends Converter<
 	 *
 	 * @author Yong.Teng
 	 */
+	/*
 	final class KeyScanCursorConverter<K> implements ScanCursorConverter<KeyScanCursor<K>, List<K>> {
 
 		@Override
@@ -74,6 +82,7 @@ public interface ScanCursorConverter<T extends ScanCursor, R> extends Converter<
 		 *
 		 * @author Yong.Teng
 		 */
+		/*
 		public final static class BSKeyScanCursorConverter implements ScanCursorConverter<KeyScanCursor<byte[]>,
 				List<String>> {
 
@@ -95,6 +104,7 @@ public interface ScanCursorConverter<T extends ScanCursor, R> extends Converter<
 	 *
 	 * @author Yong.Teng
 	 */
+		/*
 	final class ValueScanCursorConverter<K> implements ScanCursorConverter<ValueScanCursor<K>, List<K>> {
 
 		@Override
@@ -107,6 +117,7 @@ public interface ScanCursorConverter<T extends ScanCursor, R> extends Converter<
 		 *
 		 * @author Yong.Teng
 		 */
+		/*
 		public final static class BSKeyScanCursorConverter implements ScanCursorConverter<ValueScanCursor<byte[]>,
 				List<String>> {
 
@@ -123,6 +134,7 @@ public interface ScanCursorConverter<T extends ScanCursor, R> extends Converter<
 		 *
 		 * @author Yong.Teng
 		 */
+		/*
 		public final static class ScoredValueScanCursorConverter
 				implements ScanCursorConverter<ScoredValueScanCursor<byte[]>, List<Tuple>> {
 
@@ -148,6 +160,7 @@ public interface ScanCursorConverter<T extends ScanCursor, R> extends Converter<
 	 *
 	 * @author Yong.Teng
 	 */
+		/*
 	final class MapScanCursorConverter<K, V> implements ScanCursorConverter<MapScanCursor<K, V>, Map<K, V>> {
 
 		@Override
@@ -160,6 +173,7 @@ public interface ScanCursorConverter<T extends ScanCursor, R> extends Converter<
 		 *
 		 * @author Yong.Teng
 		 */
+		/*
 		public final static class BvSvMapScanCursorConverter implements ScanCursorConverter<MapScanCursor<byte[],
 				byte[]>, Map<String, String>> {
 
@@ -173,5 +187,7 @@ public interface ScanCursorConverter<T extends ScanCursor, R> extends Converter<
 		}
 
 	}
+
+		 */
 
 }

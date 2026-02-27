@@ -49,6 +49,16 @@ public interface Keyword extends Value<String>, Rawable {
 		YES,
 
 		NO,
+
+		COUNT,
+
+		LIMIT,
+
+		WITHSCORE
+	}
+
+	enum Scan {
+		MATCH
 	}
 
 }

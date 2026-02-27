@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -28,6 +28,7 @@ import com.buession.redis.utils.SafeEncoder;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * 迭代结果
@@ -54,7 +55,7 @@ public class ScanResult<V> implements Serializable {
 	/**
 	 * 结果集
 	 */
-	private final V results;
+	private final List<V> results;
 
 	/**
 	 * 构造函数
@@ -64,7 +65,7 @@ public class ScanResult<V> implements Serializable {
 	 * @param results
 	 * 		结果集
 	 */
-	public ScanResult(final byte[] cursor, final V results) {
+	public ScanResult(final byte[] cursor, final List<V> results) {
 		this.cursor = cursor;
 		this.results = results;
 	}
@@ -77,7 +78,7 @@ public class ScanResult<V> implements Serializable {
 	 * @param results
 	 * 		结果集
 	 */
-	public ScanResult(final String cursor, final V results) {
+	public ScanResult(final String cursor, final List<V> results) {
 		this(SafeEncoder.encode(cursor), results);
 		this.cursorAsString = cursor;
 	}
@@ -109,7 +110,7 @@ public class ScanResult<V> implements Serializable {
 	 *
 	 * @return 结果集
 	 */
-	public V getResults() {
+	public List<V> getResults() {
 		return results;
 	}
 

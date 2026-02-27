@@ -25,6 +25,7 @@
 package com.buession.redis.client.lettuce;
 
 import com.buession.redis.client.AbstractRedisClient;
+import com.buession.redis.client.ClientOptions;
 import com.buession.redis.client.connection.lettuce.LettuceRedisConnection;
 import com.buession.redis.client.lettuce.operations.*;
 import com.buession.redis.client.operations.*;
@@ -36,14 +37,28 @@ import io.lettuce.core.api.StatefulConnection;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class LettuceRedisClient
-		extends AbstractRedisClient<LettuceRedisConnection<? extends StatefulConnection<byte[], byte[]>>> {
+public class LettuceRedisClient extends AbstractRedisClient {
 
 	/**
 	 * 构造函数
 	 */
 	public LettuceRedisClient() {
 		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param clientOptions
+	 * 		客户端选项
+	 * @param connection
+	 * 		Lettuce Redis 连接对象 {@link LettuceRedisConnection}
+	 *
+	 * @since 4.0.0
+	 */
+	public LettuceRedisClient(final ClientOptions clientOptions,
+							  final LettuceRedisConnection<? extends StatefulConnection<byte[], byte[]>> connection) {
+		super(clientOptions, connection);
 	}
 
 	/**
@@ -213,6 +228,15 @@ public class LettuceRedisClient
 	}
 
 	@Override
+	public SortedSetOperations sortedSetOperations() {
+		if(sortedSetOperations == null){
+			sortedSetOperations = new LettuceSortedSetOperations(this);
+		}
+
+		return sortedSetOperations;
+	}
+
+	@Override
 	public TransactionOperations transactionOperations() {
 		if(transactionOperations == null){
 			transactionOperations = new LettuceTransactionOperations(this);
@@ -228,15 +252,6 @@ public class LettuceRedisClient
 		}
 
 		return keyOperations;
-	}
-
-	@Override
-	public SortedSetOperations sortedSetOperations() {
-		if(sortedSetOperations == null){
-			sortedSetOperations = new LettuceSortedSetOperations(this);
-		}
-
-		return sortedSetOperations;
 	}
 
 	@Override

@@ -42,7 +42,7 @@ public class SlotRange {
 
 	private final Set<Integer> range;
 
-	public SlotRange(int lowerBound, int upperBound) {
+	public SlotRange(final int lowerBound, final int upperBound) {
 		this.range = new LinkedHashSet<>();
 		this.lowerBound = lowerBound;
 		this.upperBound = upperBound;

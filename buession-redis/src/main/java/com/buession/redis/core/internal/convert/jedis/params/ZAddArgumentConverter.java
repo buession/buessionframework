@@ -22,26 +22,52 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
+package com.buession.redis.core.internal.convert.jedis.params;
+
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.command.args.ZAddArgument;
+import org.springframework.lang.Nullable;
+import redis.clients.jedis.params.ZAddParams;
 
 /**
+ * {@link ZAddArgument} 转换为 jedis {@link ZAddParams}
+ *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 4.0.0
  */
-public enum ZRangeBy implements Keyword {
+public final class ZAddArgumentConverter implements Converter<ZAddArgument, ZAddParams> {
 
-	BYSCORE,
-
-	BYLEX;
-
+	@Nullable
 	@Override
-	public String getValue() {
-		return name();
-	}
+	public ZAddParams convert(final ZAddArgument source) {
+		if(source == null){
+			return null;
+		}
 
-	@Override
-	public String toString() {
-		return getValue();
+		final ZAddParams zAddParams = new ZAddParams();
+
+		if(source.getNxXx() != null){
+			switch(source.getNxXx()){
+				case NX -> zAddParams.nx();
+				case XX -> zAddParams.xx();
+			}
+		}
+
+		if(source.getGtLt() != null){
+			switch(source.getGtLt()){
+				case GT -> zAddParams.gt();
+				case LT -> zAddParams.lt();
+			}
+		}
+
+		if(Boolean.TRUE.equals(source.getCh())){
+			zAddParams.ch();
+		}
+
+		if(Boolean.TRUE.equals(source.getIncr())){
+		}
+
+		return zAddParams;
 	}
 
 }

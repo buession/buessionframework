@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
@@ -27,27 +27,28 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.core.converter.ListConverter;
 import com.buession.core.utils.NumberUtils;
 import com.buession.lang.KeyValue;
-import com.buession.redis.client.jedis.JedisStandaloneClient;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.operations.SortedSetOperations;
 import com.buession.redis.core.Aggregate;
-import com.buession.redis.core.GtLt;
-import com.buession.redis.core.NxXx;
+import com.buession.redis.core.Keyword;
+import com.buession.redis.core.MinMax;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
-import com.buession.redis.core.ZRangeBy;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.args.ZAddArgument;
+import com.buession.redis.core.command.args.ZRangeArgument;
+import com.buession.redis.core.internal.convert.jedis.params.MinMaxSortedSetOptionConverter;
+import com.buession.redis.core.internal.convert.jedis.params.ZAddArgumentConverter;
 import com.buession.redis.core.internal.convert.jedis.response.KeyValueConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ScanResultConverter;
 import com.buession.redis.core.internal.convert.jedis.response.TupleConverter;
 import com.buession.redis.core.internal.jedis.JedisScanParams;
-import com.buession.redis.core.internal.jedis.JedisZAddParams;
 import com.buession.redis.core.internal.jedis.JedisZParams;
 import com.buession.redis.core.internal.jedis.JedisZRangeParams;
-import redis.clients.jedis.params.ScanParams;
-import redis.clients.jedis.params.ZAddParams;
-import redis.clients.jedis.params.ZParams;
-import redis.clients.jedis.params.ZRangeParams;
+import redis.clients.jedis.UnifiedJedis;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,1438 +58,902 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class JedisSortedSetOperations extends AbstractSortedSetOperations<JedisStandaloneClient> {
+public final class JedisSortedSetOperations extends AbstractJedisRedisOperations implements SortedSetOperations {
 
-	public JedisSortedSetOperations(final JedisStandaloneClient client) {
+	public JedisSortedSetOperations(final JedisRedisClient client) {
 		super(client);
 	}
 
 	@Override
-	public Tuple zPopMin(final String key) {
-		final CommandArguments args = CommandArguments.create(key);
-		final TupleConverter tupleConverter = new TupleConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZPOPMIN, (cmd)->cmd.zpopmin(key), tupleConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZPOPMIN, (cmd)->cmd.zpopmin(key),
-					tupleConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZPOPMIN, (cmd)->cmd.zpopmin(key), tupleConverter)
-					.run(args);
-		}
+	public KeyValue<String, List<Tuple>> bzMPop(final String[] keys, final int timeout, final MinMax minMax) {
+		final CommandArguments args = CommandArguments.create(timeout).add(keys.length).add(keys).add(minMax);
+		final MinMaxSortedSetOptionConverter minMaxSortedSetOptionConverter = new MinMaxSortedSetOptionConverter();
+		return bzMPop((cmd)->cmd.bzmpop(timeout, minMaxSortedSetOptionConverter.convert(minMax), keys), args);
 	}
 
 	@Override
-	public Tuple zPopMin(final byte[] key) {
-		final CommandArguments args = CommandArguments.create(key);
-		final TupleConverter tupleConverter = new TupleConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZPOPMIN, (cmd)->cmd.zpopmin(key), tupleConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZPOPMIN, (cmd)->cmd.zpopmin(key),
-					tupleConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZPOPMIN, (cmd)->cmd.zpopmin(key), tupleConverter)
-					.run(args);
-		}
+	public KeyValue<byte[], List<Tuple>> bzMPop(final byte[][] keys, final int timeout, final MinMax minMax) {
+		final CommandArguments args = CommandArguments.create(timeout).add(keys.length).add(keys).add(minMax);
+		final MinMaxSortedSetOptionConverter minMaxSortedSetOptionConverter = new MinMaxSortedSetOptionConverter();
+		return bzMPop((cmd)->cmd.bzmpop(timeout, minMaxSortedSetOptionConverter.convert(minMax), keys), args);
 	}
 
 	@Override
-	public List<Tuple> zPopMin(final String key, final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(count);
-		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZPOPMIN, (cmd)->cmd.zpopmin(key, (int) count),
-					listTupleConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZPOPMIN, (cmd)->cmd.zpopmin(key, (int) count),
-					listTupleConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZPOPMIN, (cmd)->cmd.zpopmin(key, (int) count),
-					listTupleConverter)
-					.run(args);
-		}
+	public KeyValue<String, List<Tuple>> bzMPop(final String[] keys, final int timeout, final MinMax minMax,
+												final int count) {
+		final CommandArguments args = CommandArguments.create(timeout).add(keys.length).add(keys).add(minMax)
+				.add("COUNT", count);
+		final MinMaxSortedSetOptionConverter minMaxSortedSetOptionConverter = new MinMaxSortedSetOptionConverter();
+		return bzMPop((cmd)->cmd.bzmpop(timeout, minMaxSortedSetOptionConverter.convert(minMax), count, keys), args);
 	}
 
 	@Override
-	public List<Tuple> zPopMin(final byte[] key, final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(count);
-		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZPOPMIN, (cmd)->cmd.zpopmin(key, (int) count),
-					listTupleConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZPOPMIN, (cmd)->cmd.zpopmin(key, (int) count),
-					listTupleConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZPOPMIN, (cmd)->cmd.zpopmin(key, (int) count),
-					listTupleConverter)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Tuple zPopMax(final String key) {
-		final CommandArguments args = CommandArguments.create(key);
-		final TupleConverter tupleConverter = new TupleConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZPOPMAX, (cmd)->cmd.zpopmax(key), tupleConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZPOPMAX, (cmd)->cmd.zpopmax(key),
-					tupleConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZPOPMAX, (cmd)->cmd.zpopmax(key), tupleConverter)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Tuple zPopMax(final byte[] key) {
-		final CommandArguments args = CommandArguments.create(key);
-		final TupleConverter tupleConverter = new TupleConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZPOPMAX, (cmd)->cmd.zpopmax(key), tupleConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZPOPMAX, (cmd)->cmd.zpopmax(key),
-					tupleConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZPOPMAX, (cmd)->cmd.zpopmax(key), tupleConverter)
-					.run(args);
-		}
-	}
-
-	@Override
-	public List<Tuple> zPopMax(final String key, final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(count);
-		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZPOPMAX, (cmd)->cmd.zpopmax(key, (int) count),
-					listTupleConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZPOPMAX, (cmd)->cmd.zpopmax(key, (int) count),
-					listTupleConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZPOPMAX, (cmd)->cmd.zpopmax(key, (int) count),
-					listTupleConverter)
-					.run(args);
-		}
-	}
-
-	@Override
-	public List<Tuple> zPopMax(final byte[] key, final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(count);
-		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZPOPMAX, (cmd)->cmd.zpopmax(key, (int) count),
-					listTupleConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZPOPMAX, (cmd)->cmd.zpopmax(key, (int) count),
-					listTupleConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZPOPMAX, (cmd)->cmd.zpopmax(key, (int) count),
-					listTupleConverter)
-					.run(args);
-		}
-	}
-
-	@Override
-	public KeyValue<String, Tuple> bzPopMin(final String[] keys, final int timeout) {
-		final CommandArguments args = CommandArguments.create(keys).add(timeout);
-		final KeyValueConverter<String, redis.clients.jedis.resps.Tuple, String, Tuple> keyValueConverter =
-				new KeyValueConverter<>((k)->k, new TupleConverter());
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.BZPOPMIN, (cmd)->cmd.bzpopmin(timeout, keys),
-					keyValueConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.BZPOPMIN, (cmd)->cmd.bzpopmin(timeout, keys),
-					keyValueConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.BZPOPMIN, (cmd)->cmd.bzpopmin(timeout, keys),
-					keyValueConverter)
-					.run(args);
-		}
-	}
-
-	@Override
-	public KeyValue<byte[], Tuple> bzPopMin(final byte[][] keys, final int timeout) {
-		final CommandArguments args = CommandArguments.create(keys).add(timeout);
-		final KeyValueConverter<byte[], redis.clients.jedis.resps.Tuple, byte[], Tuple> keyValueConverter =
-				new KeyValueConverter<>((k)->k, new TupleConverter());
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.BZPOPMIN, (cmd)->cmd.bzpopmin(timeout, keys),
-					keyValueConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.BZPOPMIN, (cmd)->cmd.bzpopmin(timeout, keys),
-					keyValueConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.BZPOPMIN, (cmd)->cmd.bzpopmin(timeout, keys),
-					keyValueConverter)
-					.run(args);
-		}
+	public KeyValue<byte[], List<Tuple>> bzMPop(final byte[][] keys, final int timeout, final MinMax minMax,
+												final int count) {
+		final CommandArguments args = CommandArguments.create(timeout).add(keys.length).add(keys).add(minMax)
+				.add("COUNT", count);
+		final MinMaxSortedSetOptionConverter minMaxSortedSetOptionConverter = new MinMaxSortedSetOptionConverter();
+		return bzMPop((cmd)->cmd.bzmpop(timeout, minMaxSortedSetOptionConverter.convert(minMax), count, keys), args);
 	}
 
 	@Override
 	public KeyValue<String, Tuple> bzPopMax(final String[] keys, final int timeout) {
 		final CommandArguments args = CommandArguments.create(keys).add(timeout);
-		final KeyValueConverter<String, redis.clients.jedis.resps.Tuple, String, Tuple> keyValueConverter =
-				new KeyValueConverter<>((k)->k, new TupleConverter());
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.BZPOPMAX, (cmd)->cmd.bzpopmax(timeout, keys),
-					keyValueConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.BZPOPMAX, (cmd)->cmd.bzpopmax(timeout, keys),
-					keyValueConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.BZPOPMAX, (cmd)->cmd.bzpopmax(timeout, keys),
-					keyValueConverter)
-					.run(args);
-		}
+		return executeCommand(Command.BZPOPMAX, args, (cmd)->cmd.bzpopmax(timeout, keys),
+				new KeyValueConverter<>((k)->k, new TupleConverter()));
 	}
 
 	@Override
 	public KeyValue<byte[], Tuple> bzPopMax(final byte[][] keys, final int timeout) {
 		final CommandArguments args = CommandArguments.create(keys).add(timeout);
-		final KeyValueConverter<byte[], redis.clients.jedis.resps.Tuple, byte[], Tuple> keyValueConverter =
-				new KeyValueConverter<>((k)->k, new TupleConverter());
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.BZPOPMAX, (cmd)->cmd.bzpopmax(timeout, keys),
-					keyValueConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.BZPOPMAX, (cmd)->cmd.bzpopmax(timeout, keys),
-					keyValueConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.BZPOPMAX, (cmd)->cmd.bzpopmax(timeout, keys),
-					keyValueConverter)
-					.run(args);
-		}
+		return executeCommand(Command.BZPOPMAX, args, (cmd)->cmd.bzpopmax(timeout, keys),
+				new KeyValueConverter<>((k)->k, new TupleConverter()));
 	}
 
 	@Override
-	public Long zAdd(final String key, final Map<String, Double> members) {
+	public KeyValue<String, Tuple> bzPopMin(final String[] keys, final int timeout) {
+		final CommandArguments args = CommandArguments.create(keys).add(timeout);
+		return executeCommand(Command.BZPOPMIN, args, (cmd)->cmd.bzpopmin(timeout, keys),
+				new KeyValueConverter<>((k)->k, new TupleConverter()));
+	}
+
+	@Override
+	public KeyValue<byte[], Tuple> bzPopMin(final byte[][] keys, final int timeout) {
+		final CommandArguments args = CommandArguments.create(keys).add(timeout);
+		return executeCommand(Command.BZPOPMIN, args, (cmd)->cmd.bzpopmin(timeout, keys),
+				new KeyValueConverter<>((k)->k, new TupleConverter()));
+	}
+
+	@Override
+	public Long zAdd(final String key, final Tuple... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
+		final Map<String, Double> membersMap = new LinkedHashMap<>(members.length);
 
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZADD, (cmd)->cmd.zadd(key, members), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZADD, (cmd)->cmd.zadd(key, members), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZADD, (cmd)->cmd.zadd(key, members), (v)->v)
-					.run(args);
+		for(final Tuple element : members){
+			membersMap.put(element.getElement(), element.getScore());
 		}
+
+		return executeCommand(Command.ZADD, args, (cmd)->cmd.zadd(key, membersMap), (v)->v);
 	}
 
 	@Override
-	public Long zAdd(final byte[] key, final Map<byte[], Double> members) {
+	public Long zAdd(final byte[] key, final Tuple... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
+		final Map<byte[], Double> membersMap = new LinkedHashMap<>(members.length);
 
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZADD, (cmd)->cmd.zadd(key, members), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZADD, (cmd)->cmd.zadd(key, members), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZADD, (cmd)->cmd.zadd(key, members), (v)->v)
-					.run(args);
+		for(final Tuple element : members){
+			membersMap.put(element.getBinaryElement(), element.getScore());
 		}
+
+		return executeCommand(Command.ZADD, args, (cmd)->cmd.zadd(key, membersMap), (v)->v);
 	}
 
 	@Override
-	public Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx) {
-		final CommandArguments args = CommandArguments.create(key).add(members).add(nxXx);
-		final ZAddParams zAddParams = new JedisZAddParams(nxXx);
+	public Long zAdd(final String key, final Tuple[] members, final ZAddArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add(argument).add(members);
+		final Map<String, Double> membersMap = new LinkedHashMap<>(members.length);
+		final ZAddArgumentConverter zAddArgumentConverter = new ZAddArgumentConverter();
 
-		return zAdd(key, members, zAddParams, args);
+		for(final Tuple element : members){
+			membersMap.put(element.getElement(), element.getScore());
+		}
+
+		return executeCommand(Command.ZADD, args,
+				(cmd)->cmd.zadd(key, membersMap, zAddArgumentConverter.convert(argument)), (v)->v);
 	}
 
 	@Override
-	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx) {
-		final CommandArguments args = CommandArguments.create(key).add(members).add(nxXx);
-		final ZAddParams zAddParams = new JedisZAddParams(nxXx);
+	public Long zAdd(final byte[] key, final Tuple[] members, final ZAddArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add(argument).add(members);
+		final Map<byte[], Double> membersMap = new LinkedHashMap<>(members.length);
+		final ZAddArgumentConverter zAddArgumentConverter = new ZAddArgumentConverter();
 
-		return zAdd(key, members, zAddParams, args);
-	}
+		for(final Tuple element : members){
+			membersMap.put(element.getBinaryElement(), element.getScore());
+		}
 
-	@Override
-	public Long zAdd(final String key, final Map<String, Double> members, final GtLt gtLt) {
-		final CommandArguments args = CommandArguments.create(key).add(members).add(gtLt);
-		final ZAddParams zAddParams = new JedisZAddParams(gtLt);
-
-		return zAdd(key, members, zAddParams, args);
-	}
-
-	@Override
-	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final GtLt gtLt) {
-		final CommandArguments args = CommandArguments.create(key).add(members).add(gtLt);
-		final ZAddParams zAddParams = new JedisZAddParams(gtLt);
-
-		return zAdd(key, members, zAddParams, args);
-	}
-
-	@Override
-	public Long zAdd(final String key, final Map<String, Double> members, final boolean ch) {
-		final CommandArguments args = CommandArguments.create(key).add(members).add(ch);
-		final ZAddParams zAddParams = new JedisZAddParams(ch);
-
-		return zAdd(key, members, zAddParams, args);
-	}
-
-	@Override
-	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final boolean ch) {
-		final CommandArguments args = CommandArguments.create(key).add(members).add(ch);
-		final ZAddParams zAddParams = new JedisZAddParams(ch);
-
-		return zAdd(key, members, zAddParams, args);
-	}
-
-	@Override
-	public Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final GtLt gtLt) {
-		final CommandArguments args = CommandArguments.create(key).add(members).add(nxXx)
-				.add(gtLt);
-		final ZAddParams zAddParams = new JedisZAddParams(nxXx, gtLt);
-
-		return zAdd(key, members, zAddParams, args);
-	}
-
-	@Override
-	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final GtLt gtLt) {
-		final CommandArguments args = CommandArguments.create(key).add(members).add(nxXx)
-				.add(gtLt);
-		final ZAddParams zAddParams = new JedisZAddParams(nxXx, gtLt);
-
-		return zAdd(key, members, zAddParams, args);
-	}
-
-	@Override
-	public Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final boolean ch) {
-		final CommandArguments args = CommandArguments.create(key).add(members).add(nxXx)
-				.add(ch);
-		final ZAddParams zAddParams = new JedisZAddParams(nxXx, ch);
-
-		return zAdd(key, members, zAddParams, args);
-	}
-
-	@Override
-	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final boolean ch) {
-		final CommandArguments args = CommandArguments.create(key).add(members).add(nxXx)
-				.add(ch);
-		final ZAddParams zAddParams = new JedisZAddParams(nxXx, ch);
-
-		return zAdd(key, members, zAddParams, args);
-	}
-
-	@Override
-	public Long zAdd(final String key, final Map<String, Double> members, final GtLt gtLt, final boolean ch) {
-		final CommandArguments args = CommandArguments.create(key).add(members).add(gtLt)
-				.add(ch);
-		final ZAddParams zAddParams = new JedisZAddParams(gtLt, ch);
-
-		return zAdd(key, members, zAddParams, args);
-	}
-
-	@Override
-	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final GtLt gtLt, final boolean ch) {
-		final CommandArguments args = CommandArguments.create(key).add(members).add(gtLt)
-				.add(ch);
-		final ZAddParams zAddParams = new JedisZAddParams(gtLt, ch);
-
-		return zAdd(key, members, zAddParams, args);
-	}
-
-	@Override
-	public Long zAdd(final String key, final Map<String, Double> members, final NxXx nxXx, final GtLt gtLt,
-					 final boolean ch) {
-		final CommandArguments args = CommandArguments.create(key).add(members).add(nxXx)
-				.add(gtLt).add(ch);
-		final ZAddParams zAddParams = new JedisZAddParams(nxXx, gtLt, ch);
-
-		return zAdd(key, members, zAddParams, args);
-	}
-
-	@Override
-	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final NxXx nxXx, final GtLt gtLt,
-					 final boolean ch) {
-		final CommandArguments args = CommandArguments.create(key).add(members).add(nxXx)
-				.add(gtLt).add(ch);
-		final ZAddParams zAddParams = new JedisZAddParams(nxXx, gtLt, ch);
-
-		return zAdd(key, members, zAddParams, args);
+		return executeCommand(Command.ZADD, args,
+				(cmd)->cmd.zadd(key, membersMap, zAddArgumentConverter.convert(argument)), (v)->v);
 	}
 
 	@Override
 	public Long zCard(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZCARD, (cmd)->cmd.zcard(key), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZCARD, (cmd)->cmd.zcard(key), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZCARD, (cmd)->cmd.zcard(key), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZCARD, args, (cmd)->cmd.zcard(key), (v)->v);
 	}
 
 	@Override
 	public Long zCard(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZCARD, (cmd)->cmd.zcard(key), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZCARD, (cmd)->cmd.zcard(key), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZCARD, (cmd)->cmd.zcard(key), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZCARD, args, (cmd)->cmd.zcard(key), (v)->v);
 	}
 
 	@Override
 	public Long zCount(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZCOUNT, (cmd)->cmd.zcount(key, min, max), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZCOUNT, (cmd)->cmd.zcount(key, min, max),
-					(v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZCOUNT, (cmd)->cmd.zcount(key, min, max), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZCOUNT, args, (cmd)->cmd.zcount(key, min, max), (v)->v);
 	}
 
 	@Override
 	public Long zCount(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZCOUNT, (cmd)->cmd.zcount(key, min, max), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZCOUNT, (cmd)->cmd.zcount(key, min, max),
-					(v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZCOUNT, (cmd)->cmd.zcount(key, min, max), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZCOUNT, args, (cmd)->cmd.zcount(key, min, max), (v)->v);
 	}
 
 	@Override
 	public List<String> zDiff(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZDIFF, (cmd)->cmd.zdiff(keys), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZDIFF, (cmd)->cmd.zdiff(keys), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZDIFF, (cmd)->cmd.zdiff(keys), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZDIFF, args, (cmd)->cmd.zdiff(keys), (v)->v);
 	}
 
 	@Override
 	public List<byte[]> zDiff(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZDIFF, (cmd)->cmd.zdiff(keys), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZDIFF, (cmd)->cmd.zdiff(keys), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZDIFF, (cmd)->cmd.zdiff(keys), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZDIFF, args, (cmd)->cmd.zdiff(keys), (v)->v);
 	}
 
 	@Override
 	public List<Tuple> zDiffWithScores(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listConverter = TupleConverter.listConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZDIFF, (cmd)->cmd.zdiffWithScores(keys),
-					listConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZDIFF, (cmd)->cmd.zdiffWithScores(keys),
-					listConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZDIFF, (cmd)->cmd.zdiffWithScores(keys),
-					listConverter)
-					.run(args);
-		}
+		return executeCommand(Command.ZDIFF, args, (cmd)->cmd.zdiffWithScores(keys),
+				new ListConverter<>(new TupleConverter()));
 	}
 
 	@Override
 	public List<Tuple> zDiffWithScores(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listConverter = TupleConverter.listConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZDIFF, (cmd)->cmd.zdiffWithScores(keys),
-					listConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZDIFF, (cmd)->cmd.zdiffWithScores(keys),
-					listConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZDIFF, (cmd)->cmd.zdiffWithScores(keys),
-					listConverter)
-					.run(args);
-		}
+		return executeCommand(Command.ZDIFF, args, (cmd)->cmd.zdiffWithScores(keys),
+				new ListConverter<>(new TupleConverter()));
 	}
 
 	@Override
 	public Long zDiffStore(final String destKey, final String... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZDIFFSTORE, (cmd)->cmd.zdiffStore(destKey, keys),
-					(v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZDIFFSTORE,
-					(cmd)->cmd.zdiffStore(destKey, keys), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZDIFFSTORE, (cmd)->cmd.zdiffStore(destKey, keys), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZDIFFSTORE, args, (cmd)->cmd.zdiffStore(destKey, keys), (v)->v);
 	}
 
 	@Override
 	public Long zDiffStore(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZDIFFSTORE, (cmd)->cmd.zdiffStore(destKey, keys),
-					(v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZDIFFSTORE,
-					(cmd)->cmd.zdiffStore(destKey, keys), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZDIFFSTORE, (cmd)->cmd.zdiffStore(destKey, keys), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZDIFFSTORE, args, (cmd)->cmd.zdiffStore(destKey, keys), (v)->v);
 	}
 
 	@Override
 	public Double zIncrBy(final String key, final double increment, final String member) {
-		final CommandArguments args = CommandArguments.create(key).add(increment)
-				.add(member);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZINCRBY,
-					(cmd)->cmd.zincrby(key, increment, member), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZINCRBY,
-					(cmd)->cmd.zincrby(key, increment, member), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZINCRBY, (cmd)->cmd.zincrby(key, increment, member),
-					(v)->v)
-					.run(args);
-		}
+		final CommandArguments args = CommandArguments.create(key).add(increment).add(member);
+		return executeCommand(Command.ZINCRBY, args, (cmd)->cmd.zincrby(key, increment, member), (v)->v);
 	}
 
 	@Override
 	public Double zIncrBy(final byte[] key, final double increment, final byte[] member) {
-		final CommandArguments args = CommandArguments.create(key).add(increment)
-				.add(member);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZINCRBY,
-					(cmd)->cmd.zincrby(key, increment, member), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZINCRBY,
-					(cmd)->cmd.zincrby(key, increment, member), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZINCRBY, (cmd)->cmd.zincrby(key, increment, member),
-					(v)->v)
-					.run(args);
-		}
+		final CommandArguments args = CommandArguments.create(key).add(increment).add(member);
+		return executeCommand(Command.ZINCRBY, args, (cmd)->cmd.zincrby(key, increment, member), (v)->v);
 	}
 
 	@Override
 	public List<String> zInter(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		final ZParams zParams = new JedisZParams();
-
-		return zInter(keys, zParams, args);
+		return zInter(keys, new JedisZParams(), args);
 	}
 
 	@Override
 	public List<byte[]> zInter(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		final ZParams zParams = new JedisZParams();
-
-		return zInter(keys, zParams, args);
+		return zInter(keys, new JedisZParams(), args);
 	}
 
 	@Override
 	public List<String> zInter(final String[] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(keys).add(aggregate);
-		final ZParams zParams = new JedisZParams(aggregate);
-
-		return zInter(keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate);
+		return zInter(keys, new JedisZParams(aggregate), args);
 	}
 
 	@Override
 	public List<byte[]> zInter(final byte[][] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(keys).add(aggregate);
-		final ZParams zParams = new JedisZParams(aggregate);
-
-		return zInter(keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate);
+		return zInter(keys, new JedisZParams(aggregate), args);
 	}
 
 	@Override
 	public List<String> zInter(final String[] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add(weights);
-		final ZParams zParams = new JedisZParams(weights);
-
-		return zInter(keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS", weights);
+		return zInter(keys, new JedisZParams(weights), args);
 	}
 
 	@Override
 	public List<byte[]> zInter(final byte[][] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add(weights);
-		final ZParams zParams = new JedisZParams(weights);
-
-		return zInter(keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS", weights);
+		return zInter(keys, new JedisZParams(weights), args);
 	}
 
 	@Override
 	public List<String> zInter(final String[] keys, final Aggregate aggregate, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add(aggregate)
-				.add(weights);
-		final ZParams zParams = new JedisZParams(aggregate, weights);
-
-		return zInter(keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate).add("WEIGHTS", weights);
+		return zInter(keys, new JedisZParams(aggregate, weights), args);
 	}
 
 	@Override
 	public List<byte[]> zInter(final byte[][] keys, final Aggregate aggregate, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add(aggregate)
-				.add(weights);
-		final ZParams zParams = new JedisZParams(aggregate, weights);
-
-		return zInter(keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate).add("WEIGHTS", weights);
+		return zInter(keys, new JedisZParams(aggregate, weights), args);
 	}
 
 	@Override
 	public List<Tuple> zInterWithScores(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		final ZParams zParams = new JedisZParams();
-
-		return zInterWithScores(keys, zParams, args);
+		return zInterWithScores(keys, new JedisZParams(), args);
 	}
 
 	@Override
 	public List<Tuple> zInterWithScores(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		final ZParams zParams = new JedisZParams();
-
-		return zInterWithScores(keys, zParams, args);
+		return zInterWithScores(keys, new JedisZParams(), args);
 	}
 
 	@Override
 	public List<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(keys).add(aggregate);
-		final ZParams zParams = new JedisZParams(aggregate);
-
-		return zInterWithScores(keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate);
+		return zInterWithScores(keys, new JedisZParams(aggregate), args);
 	}
 
 	@Override
 	public List<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(keys).add(aggregate);
-		final ZParams zParams = new JedisZParams(aggregate);
-
-		return zInterWithScores(keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate);
+		return zInterWithScores(keys, new JedisZParams(aggregate), args);
 	}
 
 	@Override
 	public List<Tuple> zInterWithScores(final String[] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add(weights);
-		final ZParams zParams = new JedisZParams(weights);
-
-		return zInterWithScores(keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS", weights);
+		return zInterWithScores(keys, new JedisZParams(weights), args);
 	}
 
 	@Override
 	public List<Tuple> zInterWithScores(final byte[][] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add(weights);
-		final ZParams zParams = new JedisZParams(weights);
-
-		return zInterWithScores(keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS", weights);
+		return zInterWithScores(keys, new JedisZParams(weights), args);
 	}
 
 	@Override
 	public List<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add(aggregate)
-				.add(weights);
-		final ZParams zParams = new JedisZParams(aggregate, weights);
-
-		return zInterWithScores(keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate).add("WEIGHTS", weights);
+		return zInterWithScores(keys, new JedisZParams(aggregate), args);
 	}
 
 	@Override
 	public List<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add(aggregate)
-				.add(weights);
-		final ZParams zParams = new JedisZParams(aggregate, weights);
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate).add("WEIGHTS", weights);
+		return zInterWithScores(keys, new JedisZParams(aggregate), args);
+	}
 
-		return zInterWithScores(keys, zParams, args);
+	@Override
+	public long zInterCard(final String... keys) {
+		final CommandArguments args = CommandArguments.create(keys);
+		return executeCommand(Command.ZINTERCARD, args, (cmd)->cmd.zintercard(keys), (v)->v);
+	}
+
+	@Override
+	public long zInterCard(final byte[]... keys) {
+		final CommandArguments args = CommandArguments.create(keys);
+		return executeCommand(Command.ZINTERCARD, args, (cmd)->cmd.zintercard(keys), (v)->v);
+	}
+
+	@Override
+	public long zInterCard(final String[] keys, final int limit) {
+		final CommandArguments args = CommandArguments.create(keys).add(Keyword.Common.LIMIT, limit);
+		return executeCommand(Command.ZINTERCARD, args, (cmd)->cmd.zintercard(limit, keys), (v)->v);
+	}
+
+	@Override
+	public long zInterCard(final byte[][] keys, final int limit) {
+		final CommandArguments args = CommandArguments.create(keys).add(Keyword.Common.LIMIT, limit);
+		return executeCommand(Command.ZINTERCARD, args, (cmd)->cmd.zintercard(limit, keys), (v)->v);
 	}
 
 	@Override
 	public Long zInterStore(final String destKey, final String... keys) {
-		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZINTERSTORE,
-					(cmd)->cmd.zinterstore(destKey, keys), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZINTERSTORE,
-					(cmd)->cmd.zinterstore(destKey, keys), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZINTERSTORE, (cmd)->cmd.zinterstore(destKey, keys),
-					(v)->v)
-					.run(args);
-		}
+		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys);
+		return executeCommand(Command.ZINTERSTORE, args, (cmd)->cmd.zinterstore(destKey, keys), (v)->v);
 	}
 
 	@Override
 	public Long zInterStore(final byte[] destKey, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZINTERSTORE,
-					(cmd)->cmd.zinterstore(destKey, keys), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZINTERSTORE,
-					(cmd)->cmd.zinterstore(destKey, keys), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZINTERSTORE, (cmd)->cmd.zinterstore(destKey, keys),
-					(v)->v)
-					.run(args);
-		}
+		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys);
+		return executeCommand(Command.ZINTERSTORE, args, (cmd)->cmd.zinterstore(destKey, keys), (v)->v);
 	}
 
 	@Override
 	public Long zInterStore(final String destKey, final String[] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(destKey).add(keys)
-				.add(aggregate);
-		final ZParams zParams = new JedisZParams(aggregate);
-
-		return zInterStore(destKey, keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
+				.add("AGGREGATE", aggregate);
+		return zInterStore(destKey, keys, new JedisZParams(aggregate), args);
 	}
 
 	@Override
 	public Long zInterStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(destKey).add(keys)
-				.add(aggregate);
-		final ZParams zParams = new JedisZParams(aggregate);
-
-		return zInterStore(destKey, keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
+				.add("AGGREGATE", aggregate);
+		return zInterStore(destKey, keys, new JedisZParams(aggregate), args);
 	}
 
 	@Override
 	public Long zInterStore(final String destKey, final String[] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(destKey).add(keys)
-				.add(weights);
-		final ZParams zParams = new JedisZParams(weights);
-
-		return zInterStore(destKey, keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
+				.add("WEIGHTS", weights);
+		return zInterStore(destKey, keys, new JedisZParams(weights), args);
 	}
 
 	@Override
 	public Long zInterStore(final byte[] destKey, final byte[][] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(destKey).add(keys)
-				.add(weights);
-		final ZParams zParams = new JedisZParams(weights);
-
-		return zInterStore(destKey, keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
+				.add("WEIGHTS", weights);
+		return zInterStore(destKey, keys, new JedisZParams(weights), args);
 	}
 
 	@Override
 	public Long zInterStore(final String destKey, final String[] keys, final Aggregate aggregate,
 							final double... weights) {
-		final CommandArguments args = CommandArguments.create(destKey).add(keys)
-				.add(aggregate).add(weights);
-		final ZParams zParams = new JedisZParams(aggregate, weights);
-
-		return zInterStore(destKey, keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
+				.add("AGGREGATE", aggregate).add("WEIGHTS", weights);
+		return zInterStore(destKey, keys, new JedisZParams(aggregate, weights), args);
 	}
 
 	@Override
 	public Long zInterStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate,
 							final double... weights) {
-		final CommandArguments args = CommandArguments.create(destKey).add(keys)
-				.add(aggregate).add(weights);
-		final ZParams zParams = new JedisZParams(aggregate, weights);
-
-		return zInterStore(destKey, keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
+				.add("AGGREGATE", aggregate).add("WEIGHTS", weights);
+		return zInterStore(destKey, keys, new JedisZParams(aggregate, weights), args);
 	}
 
 	@Override
 	public Long zLexCount(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
-		final String sMin = Double.toString(min);
-		final String sMax = Double.toString(max);
-
-		return zLexCount(key, sMin, sMax, args);
+		return executeCommand(Command.ZLEXCOUNT, args,
+				(cmd)->cmd.zlexcount(key, Double.toString(min), Double.toString(max)), (v)->v);
 	}
 
 	@Override
 	public Long zLexCount(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
-		final byte[] bMin = NumberUtils.double2bytes(min);
-		final byte[] bMax = NumberUtils.double2bytes(max);
+		return executeCommand(Command.ZLEXCOUNT, args,
+				(cmd)->cmd.zlexcount(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)), (v)->v);
+	}
 
-		return zLexCount(key, bMin, bMax, args);
+	@Override
+	public KeyValue<String, List<Tuple>> zMPop(final String[] keys, final MinMax minMax) {
+		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(minMax);
+		final MinMaxSortedSetOptionConverter minMaxSortedSetOptionConverter = new MinMaxSortedSetOptionConverter();
+		return zMPop((cmd)->cmd.zmpop(minMaxSortedSetOptionConverter.convert(minMax), keys), args);
+	}
+
+	@Override
+	public KeyValue<byte[], List<Tuple>> zMPop(final byte[][] keys, final MinMax minMax) {
+		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(minMax);
+		final MinMaxSortedSetOptionConverter minMaxSortedSetOptionConverter = new MinMaxSortedSetOptionConverter();
+		return zMPop((cmd)->cmd.zmpop(minMaxSortedSetOptionConverter.convert(minMax), keys), args);
+	}
+
+	@Override
+	public KeyValue<String, List<Tuple>> zMPop(final String[] keys, final MinMax minMax, final int count) {
+		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(minMax).add("COUNT", count);
+		final MinMaxSortedSetOptionConverter minMaxSortedSetOptionConverter = new MinMaxSortedSetOptionConverter();
+		return zMPop((cmd)->cmd.zmpop(minMaxSortedSetOptionConverter.convert(minMax), count, keys), args);
+	}
+
+	@Override
+	public KeyValue<byte[], List<Tuple>> zMPop(final byte[][] keys, final MinMax minMax, final int count) {
+		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(minMax).add("COUNT", count);
+		final MinMaxSortedSetOptionConverter minMaxSortedSetOptionConverter = new MinMaxSortedSetOptionConverter();
+		return zMPop((cmd)->cmd.zmpop(minMaxSortedSetOptionConverter.convert(minMax), count, keys), args);
 	}
 
 	@Override
 	public List<Double> zMScore(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZMSCORE, (cmd)->cmd.zmscore(key, members), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZMSCORE, (cmd)->cmd.zmscore(key, members),
-					(v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZMSCORE, (cmd)->cmd.zmscore(key, members), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZMSCORE, args, (cmd)->cmd.zmscore(key, members), (v)->v);
 	}
 
 	@Override
 	public List<Double> zMScore(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
+		return executeCommand(Command.ZMSCORE, args, (cmd)->cmd.zmscore(key, members), (v)->v);
+	}
 
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZMSCORE, (cmd)->cmd.zmscore(key, members), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZMSCORE, (cmd)->cmd.zmscore(key, members),
-					(v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZMSCORE, (cmd)->cmd.zmscore(key, members), (v)->v)
-					.run(args);
-		}
+	@Override
+	public Tuple zPopMax(final String key) {
+		final CommandArguments args = CommandArguments.create(key);
+		return executeCommand(Command.ZPOPMAX, args, (cmd)->cmd.zpopmax(key), new TupleConverter());
+	}
+
+	@Override
+	public Tuple zPopMax(final byte[] key) {
+		final CommandArguments args = CommandArguments.create(key);
+		return executeCommand(Command.ZPOPMAX, args, (cmd)->cmd.zpopmax(key), new TupleConverter());
+	}
+
+	@Override
+	public List<Tuple> zPopMax(final String key, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(count);
+		return executeCommand(Command.ZPOPMAX, args, (cmd)->cmd.zpopmax(key, count),
+				new ListConverter<>(new TupleConverter()));
+	}
+
+	@Override
+	public List<Tuple> zPopMax(final byte[] key, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(count);
+		return executeCommand(Command.ZPOPMAX, args, (cmd)->cmd.zpopmax(key, count),
+				new ListConverter<>(new TupleConverter()));
+	}
+
+	@Override
+	public Tuple zPopMin(final String key) {
+		final CommandArguments args = CommandArguments.create(key);
+		return executeCommand(Command.ZPOPMIN, args, (cmd)->cmd.zpopmin(key), new TupleConverter());
+	}
+
+	@Override
+	public Tuple zPopMin(final byte[] key) {
+		final CommandArguments args = CommandArguments.create(key);
+		return executeCommand(Command.ZPOPMIN, args, (cmd)->cmd.zpopmin(key), new TupleConverter());
+	}
+
+	@Override
+	public List<Tuple> zPopMin(final String key, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(count);
+		return executeCommand(Command.ZPOPMIN, args, (cmd)->cmd.zpopmin(key, count),
+				new ListConverter<>(new TupleConverter()));
+	}
+
+	@Override
+	public List<Tuple> zPopMin(final byte[] key, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(count);
+		return executeCommand(Command.ZPOPMIN, args, (cmd)->cmd.zpopmin(key, count),
+				new ListConverter<>(new TupleConverter()));
 	}
 
 	@Override
 	public String zRandMember(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANDMEMBER, (cmd)->cmd.zrandmember(key), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZRANDMEMBER, (cmd)->cmd.zrandmember(key),
-					(v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZRANDMEMBER, (cmd)->cmd.zrandmember(key), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZRANDMEMBER, args, (cmd)->cmd.zrandmember(key), (v)->v);
 	}
 
 	@Override
 	public byte[] zRandMember(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANDMEMBER, (cmd)->cmd.zrandmember(key), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZRANDMEMBER, (cmd)->cmd.zrandmember(key),
-					(v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZRANDMEMBER, (cmd)->cmd.zrandmember(key), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZRANDMEMBER, args, (cmd)->cmd.zrandmember(key), (v)->v);
 	}
 
 	@Override
-	public List<String> zRandMember(final String key, final long count) {
+	public List<String> zRandMember(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANDMEMBER, (cmd)->cmd.zrandmember(key, count),
-					(v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZRANDMEMBER,
-					(cmd)->cmd.zrandmember(key, count), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZRANDMEMBER, (cmd)->cmd.zrandmember(key, count), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZRANDMEMBER, args, (cmd)->cmd.zrandmember(key, count), (v)->v);
 	}
 
 	@Override
-	public List<byte[]> zRandMember(final byte[] key, final long count) {
+	public List<byte[]> zRandMember(final byte[] key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANDMEMBER, (cmd)->cmd.zrandmember(key, count),
-					(v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZRANDMEMBER,
-					(cmd)->cmd.zrandmember(key, count), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZRANDMEMBER, (cmd)->cmd.zrandmember(key, count), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZRANDMEMBER, args, (cmd)->cmd.zrandmember(key, count), (v)->v);
 	}
 
 	@Override
-	public List<Tuple> zRandMemberWithScores(final String key, final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(count);
-		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANDMEMBER,
-					(cmd)->cmd.zrandmemberWithScores(key, count), listTupleConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZRANDMEMBER,
-					(cmd)->cmd.zrandmemberWithScores(key, count), listTupleConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZRANDMEMBER, (cmd)->cmd.zrandmemberWithScores(key, count),
-					listTupleConverter)
-					.run(args);
-		}
+	public Tuple zRandMemberWithScores(final String key) {
+		final CommandArguments args = CommandArguments.create(key);
+		return executeCommand(Command.ZRANDMEMBER, args, (cmd)->cmd.zrandmemberWithScores(key, 1), (v)->{
+			final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listConverter = new ListConverter<>(
+					new TupleConverter());
+			final List<Tuple> result = listConverter.convert(v);
+			return result == null ? null : result.get(0);
+		});
 	}
 
 	@Override
-	public List<Tuple> zRandMemberWithScores(final byte[] key, final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(count);
-		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
+	public Tuple zRandMemberWithScores(final byte[] key) {
+		final CommandArguments args = CommandArguments.create(key);
+		return executeCommand(Command.ZRANDMEMBER, args, (cmd)->cmd.zrandmemberWithScores(key, 1), (v)->{
+			final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listConverter = new ListConverter<>(
+					new TupleConverter());
+			final List<Tuple> result = listConverter.convert(v);
+			return result == null ? null : result.get(0);
+		});
+	}
 
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANDMEMBER,
-					(cmd)->cmd.zrandmemberWithScores(key, count), listTupleConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZRANDMEMBER,
-					(cmd)->cmd.zrandmemberWithScores(key, count), listTupleConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZRANDMEMBER, (cmd)->cmd.zrandmemberWithScores(key, count),
-					listTupleConverter)
-					.run(args);
-		}
+	@Override
+	public List<Tuple> zRandMemberWithScores(final String key, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(count);
+		return executeCommand(Command.ZRANDMEMBER, args, (cmd)->cmd.zrandmemberWithScores(key, count),
+				new ListConverter<>(new TupleConverter()));
+	}
+
+	@Override
+	public List<Tuple> zRandMemberWithScores(final byte[] key, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(count);
+		return executeCommand(Command.ZRANDMEMBER, args, (cmd)->cmd.zrandmemberWithScores(key, count),
+				new ListConverter<>(new TupleConverter()));
 	}
 
 	@Override
 	public List<String> zRange(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANGE, (cmd)->cmd.zrange(key, start, end),
-					(v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZRANGE, (cmd)->cmd.zrange(key, start, end),
-					(v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZRANGE, (cmd)->cmd.zrange(key, start, end), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrange(key, start, end), (v)->v);
 	}
 
 	@Override
 	public List<byte[]> zRange(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
+		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrange(key, start, end), (v)->v);
+	}
 
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANGE, (cmd)->cmd.zrange(key, start, end),
-					(v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZRANGE, (cmd)->cmd.zrange(key, start, end),
-					(v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZRANGE, (cmd)->cmd.zrange(key, start, end), (v)->v)
-					.run(args);
+	@Override
+	public List<String> zRange(final String key, final long start, final long end, final ZRangeArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(argument);
+		final JedisZRangeParams zRangeParams = new JedisZRangeParams(argument == null ? null : argument.getBy(), start,
+				end);
+
+		if(argument != null && Boolean.TRUE.equals(argument.getRev())){
+			zRangeParams.rev();
 		}
+
+		return zRange(key, zRangeParams, args);
+	}
+
+	@Override
+	public List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(argument);
+		final JedisZRangeParams zRangeParams = new JedisZRangeParams(argument == null ? null : argument.getBy(), start,
+				end);
+
+		if(argument != null && Boolean.TRUE.equals(argument.getRev())){
+			zRangeParams.rev();
+		}
+
+		return zRange(key, zRangeParams, args);
+	}
+
+	@Override
+	public List<String> zRange(final String key, final long start, final long end, final int offset, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(Keyword.Common.LIMIT)
+				.add(offset).add(count);
+		return zRange(key, new JedisZRangeParams(start, end, offset, count), args);
+	}
+
+	@Override
+	public List<byte[]> zRange(final byte[] key, final long start, final long end, final int offset, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(Keyword.Common.LIMIT)
+				.add(offset).add(count);
+		return zRange(key, new JedisZRangeParams(start, end, offset, count), args);
+	}
+
+	@Override
+	public List<String> zRange(final String key, final long start, final long end, final ZRangeArgument argument,
+							   final int offset, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(argument)
+				.add(Keyword.Common.LIMIT).add(offset).add(count);
+		final JedisZRangeParams zRangeParams = new JedisZRangeParams(argument == null ? null : argument.getBy(), start,
+				end, offset, count);
+
+		if(argument != null && Boolean.TRUE.equals(argument.getRev())){
+			zRangeParams.rev();
+		}
+
+		return zRange(key, zRangeParams, args);
+	}
+
+	@Override
+	public List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeArgument argument,
+							   final int offset, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(argument)
+				.add(Keyword.Common.LIMIT).add(offset).add(count);
+		final JedisZRangeParams zRangeParams = new JedisZRangeParams(argument == null ? null : argument.getBy(), start,
+				end, offset, count);
+
+		if(argument != null && Boolean.TRUE.equals(argument.getRev())){
+			zRangeParams.rev();
+		}
+
+		return zRange(key, zRangeParams, args);
 	}
 
 	@Override
 	public List<Tuple> zRangeWithScores(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
-		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANGE,
-					(cmd)->cmd.zrangeWithScores(key, start, end), listTupleConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZRANGE,
-					(cmd)->cmd.zrangeWithScores(key, start, end), listTupleConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZRANGE, (cmd)->cmd.zrangeWithScores(key, start, end),
-					listTupleConverter)
-					.run(args);
-		}
+		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrangeWithScores(key, start, end),
+				new ListConverter<>(new TupleConverter()));
 	}
 
 	@Override
 	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
-		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
+		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrangeWithScores(key, start, end),
+				new ListConverter<>(new TupleConverter()));
+	}
 
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANGE,
-					(cmd)->cmd.zrangeWithScores(key, start, end), listTupleConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZRANGE,
-					(cmd)->cmd.zrangeWithScores(key, start, end), listTupleConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZRANGE, (cmd)->cmd.zrangeWithScores(key, start, end),
-					listTupleConverter)
-					.run(args);
+	@Override
+	public List<Tuple> zRangeWithScores(final String key, final long start, final long end,
+										final ZRangeArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(argument);
+		final JedisZRangeParams zRangeParams = new JedisZRangeParams(argument == null ? null : argument.getBy(), start,
+				end);
+
+		if(argument != null && Boolean.TRUE.equals(argument.getRev())){
+			zRangeParams.rev();
 		}
+
+		return zRangeWithScores(key, zRangeParams, args);
+	}
+
+	@Override
+	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end,
+										final ZRangeArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(argument);
+		final JedisZRangeParams zRangeParams = new JedisZRangeParams(argument == null ? null : argument.getBy(), start,
+				end);
+
+		if(argument != null && Boolean.TRUE.equals(argument.getRev())){
+			zRangeParams.rev();
+		}
+
+		return zRangeWithScores(key, zRangeParams, args);
+	}
+
+	@Override
+	public List<Tuple> zRangeWithScores(final String key, final long start, final long end, final int offset,
+										final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(Keyword.Common.LIMIT)
+				.add(offset).add(count);
+		return zRangeWithScores(key, new JedisZRangeParams(start, end), args);
+	}
+
+	@Override
+	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final int offset,
+										final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(Keyword.Common.LIMIT)
+				.add(offset).add(count);
+		return zRangeWithScores(key, new JedisZRangeParams(start, end), args);
+	}
+
+	@Override
+	public List<Tuple> zRangeWithScores(final String key, final long start, final long end,
+										final ZRangeArgument argument, final int offset, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(argument)
+				.add(Keyword.Common.LIMIT).add(offset).add(count);
+		final JedisZRangeParams zRangeParams = new JedisZRangeParams(argument == null ? null : argument.getBy(), start,
+				end, offset, count);
+
+		if(argument != null && Boolean.TRUE.equals(argument.getRev())){
+			zRangeParams.rev();
+		}
+
+		return zRangeWithScores(key, zRangeParams, args);
+	}
+
+	@Override
+	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end,
+										final ZRangeArgument argument, final int offset, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(argument)
+				.add(Keyword.Common.LIMIT).add(offset).add(count);
+		final JedisZRangeParams zRangeParams = new JedisZRangeParams(argument == null ? null : argument.getBy(), start,
+				end, offset, count);
+
+		if(argument != null && Boolean.TRUE.equals(argument.getRev())){
+			zRangeParams.rev();
+		}
+
+		return zRangeWithScores(key, zRangeParams, args);
 	}
 
 	@Override
 	public List<String> zRangeByLex(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
-		final String sMin = Double.toString(min);
-		final String sMax = Double.toString(max);
-
-		return zRangeByLex(key, sMin, sMax, args);
+		return executeCommand(Command.ZRANGEBYLEX, args,
+				(cmd)->cmd.zrangeByLex(key, Double.toString(min), Double.toString(max)), (v)->v);
 	}
 
 	@Override
 	public List<byte[]> zRangeByLex(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
-		final byte[] bMin = NumberUtils.double2bytes(min);
-		final byte[] bMax = NumberUtils.double2bytes(max);
-
-		return zRangeByLex(key, bMin, bMax, args);
+		return executeCommand(Command.ZRANGEBYLEX, args,
+				(cmd)->cmd.zrangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)), (v)->v);
 	}
 
 	@Override
-	public List<String> zRangeByLex(final String key, final double min, final double max, final long offset,
-									final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(min).add(max)
+	public List<String> zRangeByLex(final String key, final double min, final double max, final int offset,
+									final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(Keyword.Common.LIMIT)
 				.add(offset).add(count);
-		final String sMin = Double.toString(min);
-		final String sMax = Double.toString(max);
-
-		return zRangeByLex(key, sMin, sMax, offset, count, args);
+		return executeCommand(Command.ZRANGEBYLEX, args,
+				(cmd)->cmd.zrangeByLex(key, Double.toString(min), Double.toString(max), offset, count), (v)->v);
 	}
 
 	@Override
-	public List<byte[]> zRangeByLex(final byte[] key, final double min, final double max, final long offset,
-									final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(min).add(max)
+	public List<byte[]> zRangeByLex(final byte[] key, final double min, final double max, final int offset,
+									final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(Keyword.Common.LIMIT)
 				.add(offset).add(count);
-		final byte[] bMin = NumberUtils.double2bytes(min);
-		final byte[] bMax = NumberUtils.double2bytes(max);
-
-		return zRangeByLex(key, bMin, bMax, offset, count, args);
+		return executeCommand(Command.ZRANGEBYLEX, args,
+				(cmd)->cmd.zrangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max), offset,
+						count), (v)->v);
 	}
 
 	@Override
 	public List<String> zRangeByScore(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
-					(cmd)->cmd.zrangeByScore(key, min, max), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
-					(cmd)->cmd.zrangeByScore(key, min, max), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
-					(cmd)->cmd.zrangeByScore(key, min, max), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZRANGEBYSCORE, args,
+				(cmd)->cmd.zrangeByScore(key, Double.toString(min), Double.toString(max)), (v)->v);
 	}
 
 	@Override
 	public List<byte[]> zRangeByScore(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
-					(cmd)->cmd.zrangeByScore(key, min, max), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
-					(cmd)->cmd.zrangeByScore(key, min, max), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
-					(cmd)->cmd.zrangeByScore(key, min, max), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZRANGEBYSCORE, args, (cmd)->cmd.zrangeByScore(key, min, max), (v)->v);
 	}
 
 	@Override
-	public List<String> zRangeByScore(final String key, final double min, final double max, final long offset,
-									  final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(min).add(max)
+	public List<String> zRangeByScore(final String key, final double min, final double max, final int offset,
+									  final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(Keyword.Common.LIMIT)
 				.add(offset).add(count);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
-					(cmd)->cmd.zrangeByScore(key, min, max, (int) offset, (int) count), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
-					(cmd)->cmd.zrangeByScore(key, min, max, (int) offset, (int) count), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
-					(cmd)->cmd.zrangeByScore(key, min, max, (int) offset, (int) count), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZRANGEBYSCORE, args,
+				(cmd)->cmd.zrangeByScore(key, Double.toString(min), Double.toString(max), offset, count), (v)->v);
 	}
 
 	@Override
-	public List<byte[]> zRangeByScore(final byte[] key, final double min, final double max, final long offset,
-									  final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(min).add(max)
+	public List<byte[]> zRangeByScore(final byte[] key, final double min, final double max, final int offset,
+									  final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(Keyword.Common.LIMIT)
 				.add(offset).add(count);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
-					(cmd)->cmd.zrangeByScore(key, min, max, (int) offset, (int) count), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
-					(cmd)->cmd.zrangeByScore(key, min, max, (int) offset, (int) count), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
-					(cmd)->cmd.zrangeByScore(key, min, max, (int) offset, (int) count), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZRANGEBYSCORE, args, (cmd)->cmd.zrangeByScore(key, min, max, offset, count),
+				(v)->v);
 	}
 
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
-		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
-					(cmd)->cmd.zrangeByScoreWithScores(key, min, max), listTupleConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
-					(cmd)->cmd.zrangeByScoreWithScores(key, min, max), listTupleConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
-					(cmd)->cmd.zrangeByScoreWithScores(key, min, max), listTupleConverter)
-					.run(args);
-		}
+		return executeCommand(Command.ZRANGEBYSCORE, args,
+				(cmd)->cmd.zrangeByScoreWithScores(key, Double.toString(min), Double.toString(max)),
+				new ListConverter<>(new TupleConverter()));
 	}
 
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
-		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
-					(cmd)->cmd.zrangeByScoreWithScores(key, min, max), listTupleConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
-					(cmd)->cmd.zrangeByScoreWithScores(key, min, max), listTupleConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
-					(cmd)->cmd.zrangeByScoreWithScores(key, min, max), listTupleConverter)
-					.run(args);
-		}
+		return executeCommand(Command.ZRANGEBYSCORE, args, (cmd)->cmd.zrangeByScoreWithScores(key, min, max),
+				new ListConverter<>(new TupleConverter()));
 	}
 
 	@Override
-	public List<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max, final long offset,
-											   final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(min).add(max)
+	public List<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max, final int offset,
+											   final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(Keyword.Common.LIMIT)
 				.add(offset).add(count);
-		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
-					(cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count), listTupleConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
-					(cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count), listTupleConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
-					(cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count), listTupleConverter)
-					.run(args);
-		}
+		return executeCommand(Command.ZRANGEBYSCORE, args,
+				(cmd)->cmd.zrangeByScoreWithScores(key, Double.toString(min), Double.toString(max), offset, count),
+				new ListConverter<>(new TupleConverter()));
 	}
 
 	@Override
-	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max, final long offset,
-											   final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(min).add(max)
+	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max, final int offset,
+											   final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(Keyword.Common.LIMIT)
 				.add(offset).add(count);
-		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
-					(cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count), listTupleConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
-					(cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count), listTupleConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZRANGEBYSCORE,
-					(cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count), listTupleConverter)
-					.run(args);
-		}
+		return executeCommand(Command.ZRANGEBYSCORE, args,
+				(cmd)->cmd.zrangeByScoreWithScores(key, min, max, offset, count),
+				new ListConverter<>(new TupleConverter()));
 	}
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
-				.add(end);
-		final ZRangeParams zRangeParams = new JedisZRangeParams(start, end);
-
-		return zRangeStore(destKey, key, zRangeParams, args);
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start).add(end);
+		return zRangeStore(destKey, key, new JedisZRangeParams(start, end), args);
 	}
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
-				.add(end);
-		final ZRangeParams zRangeParams = new JedisZRangeParams(start, end);
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start).add(end);
+		return zRangeStore(destKey, key, new JedisZRangeParams(start, end), args);
+	}
+
+	@Override
+	public Long zRangeStore(final String destKey, final String key, final long start, final long end,
+							final ZRangeArgument argument) {
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start).add(end).add(argument);
+		final JedisZRangeParams zRangeParams = new JedisZRangeParams(argument == null ? null : argument.getBy(), start,
+				end);
+
+		if(argument != null){
+			if(Boolean.TRUE.equals(argument.getRev())){
+				zRangeParams.rev();
+			}
+		}
+		return zRangeStore(destKey, key, zRangeParams, args);
+	}
+
+	@Override
+	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
+							final ZRangeArgument argument) {
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start).add(end).add(argument);
+		final JedisZRangeParams zRangeParams = new JedisZRangeParams(argument == null ? null : argument.getBy(), start,
+				end);
+
+		if(argument != null){
+			if(Boolean.TRUE.equals(argument.getRev())){
+				zRangeParams.rev();
+			}
+		}
+
+		return zRangeStore(destKey, key, zRangeParams, args);
+	}
+
+	@Override
+	public Long zRangeStore(final String destKey, final String key, final long start, final long end, final int offset,
+							final int count) {
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start).add(end)
+				.add(Keyword.Common.LIMIT).add(offset).add(count);
+		final JedisZRangeParams zRangeParams = new JedisZRangeParams(start, end, offset, count);
+
+		return zRangeStore(destKey, key, zRangeParams, args);
+	}
+
+	@Override
+	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final int offset,
+							final int count) {
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start).add(end)
+				.add(Keyword.Common.LIMIT).add(offset).add(count);
+		final JedisZRangeParams zRangeParams = new JedisZRangeParams(start, end, offset, count);
 
 		return zRangeStore(destKey, key, zRangeParams, args);
 	}
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end,
-							final ZRangeBy by) {
-		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
-				.add(end).add(by);
-		final ZRangeParams zRangeParams = new JedisZRangeParams(by, start, end);
+							final ZRangeArgument argument, final int offset, final int count) {
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start).add(end).add(argument)
+				.add(Keyword.Common.LIMIT).add(offset).add(count);
+		final JedisZRangeParams zRangeParams = new JedisZRangeParams(argument == null ? null : argument.getBy(), start,
+				end, offset, count);
+
+		if(argument != null){
+			if(Boolean.TRUE.equals(argument.getRev())){
+				zRangeParams.rev();
+			}
+		}
 
 		return zRangeStore(destKey, key, zRangeParams, args);
 	}
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
-							final ZRangeBy by) {
-		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
-				.add(end).add(by);
-		final ZRangeParams zRangeParams = new JedisZRangeParams(by, start, end);
+							final ZRangeArgument argument, final int offset, final int count) {
+		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start).add(end).add(argument)
+				.add(Keyword.Common.LIMIT).add(offset).add(count);
+		final JedisZRangeParams zRangeParams = new JedisZRangeParams(argument == null ? null : argument.getBy(), start,
+				end, offset, count);
 
-		return zRangeStore(destKey, key, zRangeParams, args);
-	}
-
-	@Override
-	public Long zRangeStore(final String destKey, final String key, final long start, final long end,
-							final boolean rev) {
-		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
-				.add(end).add(rev);
-		final ZRangeParams zRangeParams = new JedisZRangeParams(start, end, rev);
-
-		return zRangeStore(destKey, key, zRangeParams, args);
-	}
-
-	@Override
-	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
-							final boolean rev) {
-		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
-				.add(end).add(rev);
-		final ZRangeParams zRangeParams = new JedisZRangeParams(start, end, rev);
-
-		return zRangeStore(destKey, key, zRangeParams, args);
-	}
-
-	@Override
-	public Long zRangeStore(final String destKey, final String key, final long start, final long end, final long offset,
-							final long count) {
-		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
-				.add(end).add(offset).add(count);
-		final ZRangeParams zRangeParams = new JedisZRangeParams(start, end, offset, count);
-
-		return zRangeStore(destKey, key, zRangeParams, args);
-	}
-
-	@Override
-	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final long offset,
-							final long count) {
-		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
-				.add(end).add(offset).add(count);
-		final ZRangeParams zRangeParams = new JedisZRangeParams(start, end, offset, count);
-
-		return zRangeStore(destKey, key, zRangeParams, args);
-	}
-
-	@Override
-	public Long zRangeStore(final String destKey, final String key, final long start, final long end,
-							final ZRangeBy by, final boolean rev) {
-		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
-				.add(end).add(by).add(rev);
-		final ZRangeParams zRangeParams = new JedisZRangeParams(by, start, end, rev);
-
-		return zRangeStore(destKey, key, zRangeParams, args);
-	}
-
-	@Override
-	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
-							final ZRangeBy by, final boolean rev) {
-		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
-				.add(end).add(by).add(rev);
-		final ZRangeParams zRangeParams = new JedisZRangeParams(by, start, end, rev);
-
-		return zRangeStore(destKey, key, zRangeParams, args);
-	}
-
-	@Override
-	public Long zRangeStore(final String destKey, final String key, final long start, final long end,
-							final ZRangeBy by, final long offset, final long count) {
-		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
-				.add(end).add(by).add(offset).add(count);
-		final ZRangeParams zRangeParams = new JedisZRangeParams(by, start, end, offset, count);
-
-		return zRangeStore(destKey, key, zRangeParams, args);
-	}
-
-	@Override
-	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
-							final ZRangeBy by, final long offset, final long count) {
-		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
-				.add(end).add(by).add(offset).add(count);
-		final ZRangeParams zRangeParams = new JedisZRangeParams(by, start, end, offset, count);
-
-		return zRangeStore(destKey, key, zRangeParams, args);
-	}
-
-	@Override
-	public Long zRangeStore(final String destKey, final String key, final long start, final long end, final boolean rev,
-							final long offset, final long count) {
-		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
-				.add(end).add(rev).add(offset).add(count);
-		final ZRangeParams zRangeParams = new JedisZRangeParams(start, end, rev, offset, count);
-
-		return zRangeStore(destKey, key, zRangeParams, args);
-	}
-
-	@Override
-	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final boolean rev,
-							final long offset, final long count) {
-		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
-				.add(end).add(rev).add(offset).add(count);
-		final ZRangeParams zRangeParams = new JedisZRangeParams(start, end, rev, offset, count);
-
-		return zRangeStore(destKey, key, zRangeParams, args);
-	}
-
-	@Override
-	public Long zRangeStore(final String destKey, final String key, final long start, final long end, final ZRangeBy by,
-							final boolean rev, final long offset, final long count) {
-		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
-				.add(end).add(by).add(rev).add(offset).add(count);
-		final ZRangeParams zRangeParams = new JedisZRangeParams(by, start, end, rev, offset, count);
-
-		return zRangeStore(destKey, key, zRangeParams, args);
-	}
-
-	@Override
-	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final ZRangeBy by,
-							final boolean rev, final long offset, final long count) {
-		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start)
-				.add(end).add(by).add(rev).add(offset).add(count);
-		final ZRangeParams zRangeParams = new JedisZRangeParams(by, start, end, rev, offset, count);
+		if(argument != null){
+			if(Boolean.TRUE.equals(argument.getRev())){
+				zRangeParams.rev();
+			}
+		}
 
 		return zRangeStore(destKey, key, zRangeParams, args);
 	}
@@ -1496,1297 +961,553 @@ public final class JedisSortedSetOperations extends AbstractSortedSetOperations<
 	@Override
 	public Long zRank(final String key, final String member) {
 		final CommandArguments args = CommandArguments.create(key).add(member);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANK, (cmd)->cmd.zrank(key, member), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZRANK, (cmd)->cmd.zrank(key, member), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZRANK, (cmd)->cmd.zrank(key, member), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZRANK, args, (cmd)->cmd.zrank(key, member), (v)->v);
 	}
 
 	@Override
 	public Long zRank(final byte[] key, final byte[] member) {
 		final CommandArguments args = CommandArguments.create(key).add(member);
+		return executeCommand(Command.ZRANK, args, (cmd)->cmd.zrank(key, member), (v)->v);
+	}
 
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANK, (cmd)->cmd.zrank(key, member), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZRANK, (cmd)->cmd.zrank(key, member), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZRANK, (cmd)->cmd.zrank(key, member), (v)->v)
-					.run(args);
-		}
+	@Override
+	public Tuple zRankWithScores(final String key, final String member) {
+		final CommandArguments args = CommandArguments.create(key).add(member).add(Keyword.Common.WITHSCORE);
+		return executeCommand(Command.ZRANK, args, (cmd)->cmd.zrankWithScore(key, member),
+				new KeyValueConverter<>((k)->k, (v)->v));
+	}
+
+	@Override
+	public Tuple zRankWithScores(final byte[] key, final byte[] member) {
+		final CommandArguments args = CommandArguments.create(key).add(member).add(Keyword.Common.WITHSCORE);
+		return executeCommand(Command.ZRANK, args, (cmd)->cmd.zrankWithScore(key, member), new KeyValueConverter<>());
 	}
 
 	@Override
 	public Long zRem(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREM, (cmd)->cmd.zrem(key, members), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZREM, (cmd)->cmd.zrem(key, members), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZREM, (cmd)->cmd.zrem(key, members), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZREM, args, (cmd)->cmd.zrem(key, members), (v)->v);
 	}
 
 	@Override
 	public Long zRem(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREM, (cmd)->cmd.zrem(key, members), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZREM, (cmd)->cmd.zrem(key, members), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZREM, (cmd)->cmd.zrem(key, members), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZREM, args, (cmd)->cmd.zrem(key, members), (v)->v);
 	}
 
 	@Override
 	public Long zRemRangeByLex(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
-		final String sMin = Double.toString(min);
-		final String sMax = Double.toString(max);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREMRANGEBYLEX,
-					(cmd)->cmd.zremrangeByLex(key, sMin, sMax), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZREMRANGEBYLEX,
-					(cmd)->cmd.zremrangeByLex(key, sMin, sMax), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZREMRANGEBYLEX,
-					(cmd)->cmd.zremrangeByLex(key, sMin, sMax), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZREMRANGEBYLEX, args,
+				(cmd)->cmd.zremrangeByLex(key, Double.toString(min), Double.toString(max)), (v)->v);
 	}
 
 	@Override
 	public Long zRemRangeByLex(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
-		final byte[] sMin = NumberUtils.double2bytes(min);
-		final byte[] sMax = NumberUtils.double2bytes(max);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREMRANGEBYLEX,
-					(cmd)->cmd.zremrangeByLex(key, sMin, sMax), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZREMRANGEBYLEX,
-					(cmd)->cmd.zremrangeByLex(key, sMin, sMax), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZREMRANGEBYLEX,
-					(cmd)->cmd.zremrangeByLex(key, sMin, sMax), (v)->v)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Long zRemRangeByScore(final String key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREMRANGEBYSCORE,
-					(cmd)->cmd.zremrangeByScore(key, min, max), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZREMRANGEBYSCORE,
-					(cmd)->cmd.zremrangeByScore(key, min, max), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZREMRANGEBYSCORE,
-					(cmd)->cmd.zremrangeByScore(key, min, max), (v)->v)
-					.run(args);
-		}
-	}
-
-	@Override
-	public Long zRemRangeByScore(final byte[] key, final double min, final double max) {
-		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREMRANGEBYSCORE,
-					(cmd)->cmd.zremrangeByScore(key, min, max), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZREMRANGEBYSCORE,
-					(cmd)->cmd.zremrangeByScore(key, min, max), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZREMRANGEBYSCORE,
-					(cmd)->cmd.zremrangeByScore(key, min, max), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZREMRANGEBYLEX, args,
+				(cmd)->cmd.zremrangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)), (v)->v);
 	}
 
 	@Override
 	public Long zRemRangeByRank(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREMRANGEBYRANK,
-					(cmd)->cmd.zremrangeByRank(key, start, end), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZREMRANGEBYRANK,
-					(cmd)->cmd.zremrangeByRank(key, start, end), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZREMRANGEBYRANK,
-					(cmd)->cmd.zremrangeByRank(key, start, end), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZREMRANGEBYRANK, args, (cmd)->cmd.zremrangeByRank(key, start, end), (v)->v);
 	}
 
 	@Override
 	public Long zRemRangeByRank(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
+		return executeCommand(Command.ZREMRANGEBYRANK, args, (cmd)->cmd.zremrangeByRank(key, start, end), (v)->v);
+	}
 
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREMRANGEBYRANK,
-					(cmd)->cmd.zremrangeByRank(key, start, end), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZREMRANGEBYRANK,
-					(cmd)->cmd.zremrangeByRank(key, start, end), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZREMRANGEBYRANK,
-					(cmd)->cmd.zremrangeByRank(key, start, end), (v)->v)
-					.run(args);
-		}
+	@Override
+	public Long zRemRangeByScore(final String key, final double min, final double max) {
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
+		return executeCommand(Command.ZREMRANGEBYSCORE, args,
+				(cmd)->cmd.zremrangeByScore(key, Double.toString(min), Double.toString(max)), (v)->v);
+	}
+
+	@Override
+	public Long zRemRangeByScore(final byte[] key, final double min, final double max) {
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
+		return executeCommand(Command.ZREMRANGEBYSCORE, args,
+				(cmd)->cmd.zremrangeByScore(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)), (v)->v);
 	}
 
 	@Override
 	public List<String> zRevRange(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREVRANGE,
-					(cmd)->cmd.zrevrange(key, start, end), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZREVRANGE,
-					(cmd)->cmd.zrevrange(key, start, end), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZREVRANGE, (cmd)->cmd.zrevrange(key, start, end), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZREVRANGE, args, (cmd)->cmd.zrevrange(key, start, end), (v)->v);
 	}
 
 	@Override
 	public List<byte[]> zRevRange(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREVRANGE,
-					(cmd)->cmd.zrevrange(key, start, end), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZREVRANGE,
-					(cmd)->cmd.zrevrange(key, start, end), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZREVRANGE, (cmd)->cmd.zrevrange(key, start, end), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZREVRANGE, args, (cmd)->cmd.zrevrange(key, start, end), (v)->v);
 	}
 
 	@Override
 	public List<Tuple> zRevRangeWithScores(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
-		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREVRANGE,
-					(cmd)->cmd.zrevrangeWithScores(key, start, end), listTupleConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZREVRANGE,
-					(cmd)->cmd.zrevrangeWithScores(key, start, end), listTupleConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZREVRANGE,
-					(cmd)->cmd.zrevrangeWithScores(key, start, end), listTupleConverter)
-					.run(args);
-		}
+		return executeCommand(Command.ZREVRANGE, args, (cmd)->cmd.zrevrangeWithScores(key, start, end),
+				new ListConverter<>(new TupleConverter()));
 	}
 
 	@Override
 	public List<Tuple> zRevRangeWithScores(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
-		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREVRANGE,
-					(cmd)->cmd.zrevrangeWithScores(key, start, end), listTupleConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZREVRANGE,
-					(cmd)->cmd.zrevrangeWithScores(key, start, end), listTupleConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZREVRANGE,
-					(cmd)->cmd.zrevrangeWithScores(key, start, end), listTupleConverter)
-					.run(args);
-		}
+		return executeCommand(Command.ZREVRANGE, args, (cmd)->cmd.zrevrangeWithScores(key, start, end),
+				new ListConverter<>(new TupleConverter()));
 	}
 
 	@Override
 	public List<String> zRevRangeByLex(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
-		final String sMin = Double.toString(min);
-		final String sMax = Double.toString(max);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYLEX,
-					(cmd)->cmd.zrevrangeByLex(key, sMin, sMax), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZREVRANGEBYLEX,
-					(cmd)->cmd.zrevrangeByLex(key, sMin, sMax), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZREVRANGEBYLEX,
-					(cmd)->cmd.zrevrangeByLex(key, sMin, sMax), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZREVRANGEBYLEX, args,
+				(cmd)->cmd.zrevrangeByLex(key, Double.toString(min), Double.toString(max)), (v)->v);
 	}
 
 	@Override
 	public List<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
-		final byte[] sMin = NumberUtils.double2bytes(min);
-		final byte[] sMax = NumberUtils.double2bytes(max);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYLEX,
-					(cmd)->cmd.zrevrangeByLex(key, sMin, sMax), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZREVRANGEBYLEX,
-					(cmd)->cmd.zrevrangeByLex(key, sMin, sMax), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZREVRANGEBYLEX,
-					(cmd)->cmd.zrevrangeByLex(key, sMin, sMax), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZREVRANGEBYLEX, args,
+				(cmd)->cmd.zrevrangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)), (v)->v);
 	}
 
 	@Override
-	public List<String> zRevRangeByLex(final String key, final double min, final double max, final long offset,
-									   final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(offset).add(count);
-		final String sMin = Double.toString(min);
-		final String sMax = Double.toString(max);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYLEX,
-					(cmd)->cmd.zrevrangeByLex(key, sMin, sMax, (int) offset, (int) count), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZREVRANGEBYLEX,
-					(cmd)->cmd.zrevrangeByLex(key, sMin, sMax, (int) offset, (int) count), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZREVRANGEBYLEX,
-					(cmd)->cmd.zrevrangeByLex(key, sMin, sMax, (int) offset, (int) count), (v)->v)
-					.run(args);
-		}
+	public List<String> zRevRangeByLex(final String key, final double min, final double max, final int offset,
+									   final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(Keyword.Common.LIMIT)
+				.add(offset).add(count);
+		return executeCommand(Command.ZREVRANGEBYLEX, args,
+				(cmd)->cmd.zrevrangeByLex(key, Double.toString(min), Double.toString(max), offset, count), (v)->v);
 	}
 
 	@Override
-	public List<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max, final long offset,
-									   final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(offset).add(count);
-		final byte[] sMin = NumberUtils.double2bytes(min);
-		final byte[] sMax = NumberUtils.double2bytes(max);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYLEX,
-					(cmd)->cmd.zrevrangeByLex(key, sMin, sMax, (int) offset, (int) count), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZREVRANGEBYLEX,
-					(cmd)->cmd.zrevrangeByLex(key, sMin, sMax, (int) offset, (int) count), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZREVRANGEBYLEX,
-					(cmd)->cmd.zrevrangeByLex(key, sMin, sMax, (int) offset, (int) count), (v)->v)
-					.run(args);
-		}
+	public List<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max, final int offset,
+									   final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(Keyword.Common.LIMIT)
+				.add(offset).add(count);
+		return executeCommand(Command.ZREVRANGEBYLEX, args,
+				(cmd)->cmd.zrevrangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max), offset,
+						count), (v)->v);
 	}
 
 	@Override
 	public List<String> zRevRangeByScore(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
-					(cmd)->cmd.zrevrangeByScore(key, min, max), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
-					(cmd)->cmd.zrevrangeByScore(key, min, max), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
-					(cmd)->cmd.zrevrangeByScore(key, min, max), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZREVRANGEBYSCORE, args,
+				(cmd)->cmd.zrevrangeByScore(key, Double.toString(min), Double.toString(max)), (v)->v);
 	}
 
 	@Override
 	public List<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
-					(cmd)->cmd.zrevrangeByScore(key, min, max), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
-					(cmd)->cmd.zrevrangeByScore(key, min, max), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
-					(cmd)->cmd.zrevrangeByScore(key, min, max), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZREVRANGEBYSCORE, args,
+				(cmd)->cmd.zrevrangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)), (v)->v);
 	}
 
 	@Override
-	public List<String> zRevRangeByScore(final String key, final double min, final double max, final long offset,
-										 final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(min).add(max)
-				.add(offset).add(count);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
-					(cmd)->cmd.zrevrangeByScore(key, min, max, (int) offset, (int) count), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
-					(cmd)->cmd.zrevrangeByScore(key, min, max, (int) offset, (int) count), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
-					(cmd)->cmd.zrevrangeByScore(key, min, max, (int) offset, (int) count), (v)->v)
-					.run(args);
-		}
+	public List<String> zRevRangeByScore(final String key, final double min, final double max, final int offset,
+										 final int count) {
+		final CommandArguments args =
+				CommandArguments.create(key).add(min).add(max).add(Keyword.Common.LIMIT).add(offset).add(count);
+		return executeCommand(Command.ZREVRANGEBYSCORE, args,
+				(cmd)->cmd.zrevrangeByScore(key, Double.toString(min), Double.toString(max), offset, count), (v)->v);
 	}
 
 	@Override
-	public List<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max, final long offset,
-										 final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(min).add(max)
+	public List<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max, final int offset,
+										 final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(Keyword.Common.LIMIT)
 				.add(offset).add(count);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
-					(cmd)->cmd.zrevrangeByScore(key, min, max, (int) offset, (int) count), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
-					(cmd)->cmd.zrevrangeByScore(key, min, max, (int) offset, (int) count), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
-					(cmd)->cmd.zrevrangeByScore(key, min, max, (int) offset, (int) count), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZREVRANGEBYSCORE, args,
+				(cmd)->cmd.zrevrangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max), offset,
+						count), (v)->v);
 	}
 
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
-		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
-					(cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), listTupleConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
-					(cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), listTupleConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
-					(cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), listTupleConverter)
-					.run(args);
-		}
+		return executeCommand(Command.ZREVRANGEBYSCORE, args,
+				(cmd)->cmd.zrangeByScoreWithScores(key, Double.toString(min), Double.toString(max)),
+				new ListConverter<>(new TupleConverter()));
 	}
 
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min).add(max);
-		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
-					(cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), listTupleConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
-					(cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), listTupleConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
-					(cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), listTupleConverter)
-					.run(args);
-		}
+		return executeCommand(Command.ZREVRANGEBYSCORE, args, (cmd)->cmd.zrangeByScoreWithScores(key, min, max),
+				new ListConverter<>(new TupleConverter()));
 	}
 
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max,
-												  final long offset, final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(min).add(max)
+												  final int offset, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(Keyword.Common.LIMIT)
 				.add(offset).add(count);
-		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
-					(cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count), listTupleConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
-					(cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count), listTupleConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
-					(cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count), listTupleConverter)
-					.run(args);
-		}
+		return executeCommand(Command.ZREVRANGEBYSCORE, args,
+				(cmd)->cmd.zrangeByScoreWithScores(key, Double.toString(min), Double.toString(max), offset, count),
+				new ListConverter<>(new TupleConverter()));
 	}
 
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max,
-												  final long offset, final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(min).add(max)
+												  final int offset, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(min).add(max).add(Keyword.Common.LIMIT)
 				.add(offset).add(count);
-		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter = TupleConverter.listConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
-					(cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count), listTupleConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
-					(cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count), listTupleConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZREVRANGEBYSCORE,
-					(cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count), listTupleConverter)
-					.run(args);
-		}
+		return executeCommand(Command.ZREVRANGEBYSCORE, args,
+				(cmd)->cmd.zrangeByScoreWithScores(key, min, max, offset, count),
+				new ListConverter<>(new TupleConverter()));
 	}
 
 	@Override
 	public Long zRevRank(final String key, final String member) {
 		final CommandArguments args = CommandArguments.create(key).add(member);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREVRANK, (cmd)->cmd.zrevrank(key, member),
-					(v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZREVRANK, (cmd)->cmd.zrevrank(key, member),
-					(v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZREVRANK, (cmd)->cmd.zrevrank(key, member), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZREVRANK, args, (cmd)->cmd.zrevrank(key, member), (v)->v);
 	}
 
 	@Override
 	public Long zRevRank(final byte[] key, final byte[] member) {
 		final CommandArguments args = CommandArguments.create(key).add(member);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZREVRANK, (cmd)->cmd.zrevrank(key, member),
-					(v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZREVRANK, (cmd)->cmd.zrevrank(key, member),
-					(v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZREVRANK, (cmd)->cmd.zrevrank(key, member), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZREVRANK, args, (cmd)->cmd.zrevrank(key, member), (v)->v);
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final String cursor) {
+	public Tuple zRevRankWithScore(final String key, final String member) {
+		final CommandArguments args = CommandArguments.create(key).add(member).add(Keyword.Common.WITHSCORE);
+		return executeCommand(Command.ZREVRANK, args, (cmd)->cmd.zrankWithScore(key, member), (v)->v);
+	}
+
+	@Override
+	public Tuple zRevRankWithScore(final byte[] key, final byte[] member) {
+		final CommandArguments args = CommandArguments.create(key).add(member).add(Keyword.Common.WITHSCORE);
+		return executeCommand(Command.ZREVRANK, args, (cmd)->cmd.zrankWithScore(key, member), (v)->v);
+	}
+
+	@Override
+	public ScanResult<Tuple> zScan(final String key, final String cursor) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor);
-		final ScanResultConverter.ListTupleScanResultConverter listTupleScanResultConverter =
-				new ScanResultConverter.ListTupleScanResultConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZSCAN, (cmd)->cmd.zscan(key, cursor),
-					listTupleScanResultConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZSCAN, (cmd)->cmd.zscan(key, cursor),
-					listTupleScanResultConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZSCAN, (cmd)->cmd.zscan(key, cursor),
-					listTupleScanResultConverter)
-					.run(args);
-		}
+		return executeCommand(Command.ZSCAN, args, (cmd)->cmd.zscan(key, cursor),
+				new ScanResultConverter<>(new TupleConverter()));
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor) {
+	public ScanResult<Tuple> zScan(final byte[] key, final byte[] cursor) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor);
-		final ScanResultConverter.ListTupleScanResultConverter listTupleScanResultConverter =
-				new ScanResultConverter.ListTupleScanResultConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZSCAN, (cmd)->cmd.zscan(key, cursor),
-					listTupleScanResultConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZSCAN, (cmd)->cmd.zscan(key, cursor),
-					listTupleScanResultConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZSCAN, (cmd)->cmd.zscan(key, cursor),
-					listTupleScanResultConverter)
-					.run(args);
-		}
+		return executeCommand(Command.ZSCAN, args, (cmd)->cmd.zscan(key, cursor),
+				new ScanResultConverter<>(new TupleConverter()));
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern);
-		final ScanParams scanParams = new JedisScanParams(pattern);
-
-		return zScan(key, cursor, scanParams, args);
+	public ScanResult<Tuple> zScan(final String key, final String cursor, final String pattern) {
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern);
+		return zScan(key, cursor, new JedisScanParams(pattern), args);
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern);
-		final ScanParams scanParams = new JedisScanParams(pattern);
-
-		return zScan(key, cursor, scanParams, args);
+	public ScanResult<Tuple> zScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern);
+		return zScan(key, cursor, new JedisScanParams(pattern), args);
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(count);
-		final ScanParams scanParams = new JedisScanParams(count);
-
-		return zScan(key, cursor, scanParams, args);
+	public ScanResult<Tuple> zScan(final String key, final String cursor, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT, count);
+		return zScan(key, cursor, new JedisScanParams(count), args);
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(count);
-		final ScanParams scanParams = new JedisScanParams(count);
-
-		return zScan(key, cursor, scanParams, args);
+	public ScanResult<Tuple> zScan(final byte[] key, final byte[] cursor, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT, count);
+		return zScan(key, cursor, new JedisScanParams(count), args);
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern,
-										 final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern)
-				.add(count);
-		final ScanParams scanParams = new JedisScanParams(pattern, count);
-
-		return zScan(key, cursor, scanParams, args);
+	public ScanResult<Tuple> zScan(final String key, final String cursor, final String pattern, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern)
+				.add(Keyword.Common.COUNT, count);
+		return zScan(key, cursor, new JedisScanParams(pattern, count), args);
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-										 final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern)
-				.add(count);
-		final ScanParams scanParams = new JedisScanParams(pattern, count);
-
-		return zScan(key, cursor, scanParams, args);
+	public ScanResult<Tuple> zScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern)
+				.add(Keyword.Common.COUNT, count);
+		return zScan(key, cursor, new JedisScanParams(pattern, count), args);
 	}
 
 	@Override
 	public Double zScore(final String key, final String member) {
 		final CommandArguments args = CommandArguments.create(key).add(member);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZSCORE, (cmd)->cmd.zscore(key, member), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZSCORE, (cmd)->cmd.zscore(key, member), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZSCORE, (cmd)->cmd.zscore(key, member), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZSCORE, args, (cmd)->cmd.zscore(key, member), (v)->v);
 	}
 
 	@Override
 	public Double zScore(final byte[] key, final byte[] member) {
 		final CommandArguments args = CommandArguments.create(key).add(member);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZSCORE, (cmd)->cmd.zscore(key, member), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZSCORE, (cmd)->cmd.zscore(key, member), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZSCORE, (cmd)->cmd.zscore(key, member), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZSCORE, args, (cmd)->cmd.zscore(key, member), (v)->v);
 	}
 
 	@Override
 	public List<String> zUnion(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		final ZParams zParams = new JedisZParams();
-
-		return zUnion(keys, zParams, args);
+		return zUnion(keys, new JedisZParams(), args);
 	}
 
 	@Override
 	public List<byte[]> zUnion(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		final ZParams zParams = new JedisZParams();
-
-		return zUnion(keys, zParams, args);
+		return zUnion(keys, new JedisZParams(), args);
 	}
 
 	@Override
 	public List<String> zUnion(final String[] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(keys).add(aggregate);
-		final ZParams zParams = new JedisZParams(aggregate);
-
-		return zUnion(keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate);
+		return zUnion(keys, new JedisZParams(aggregate), args);
 	}
 
 	@Override
 	public List<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(keys).add(aggregate);
-		final ZParams zParams = new JedisZParams(aggregate);
-
-		return zUnion(keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate);
+		return zUnion(keys, new JedisZParams(aggregate), args);
 	}
 
 	@Override
 	public List<String> zUnion(final String[] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add(weights);
-		final ZParams zParams = new JedisZParams(weights);
-
-		return zUnion(keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS", weights);
+		return zUnion(keys, new JedisZParams(weights), args);
 	}
 
 	@Override
 	public List<byte[]> zUnion(final byte[][] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add(weights);
-		final ZParams zParams = new JedisZParams(weights);
-
-		return zUnion(keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS", weights);
+		return zUnion(keys, new JedisZParams(weights), args);
 	}
 
 	@Override
 	public List<String> zUnion(final String[] keys, final Aggregate aggregate, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add(aggregate)
-				.add(weights);
-		final ZParams zParams = new JedisZParams(aggregate, weights);
-
-		return zUnion(keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate).add("WEIGHTS", weights);
+		return zUnion(keys, new JedisZParams(aggregate, weights), args);
 	}
 
 	@Override
 	public List<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add(aggregate)
-				.add(weights);
-		final ZParams zParams = new JedisZParams(aggregate, weights);
-
-		return zUnion(keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate).add("WEIGHTS", weights);
+		return zUnion(keys, new JedisZParams(aggregate, weights), args);
 	}
 
 	@Override
 	public List<Tuple> zUnionWithScores(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		final ZParams zParams = new JedisZParams();
-
-		return zUnionWithScores(keys, zParams, args);
+		return zUnionWithScores(keys, new JedisZParams(), args);
 	}
 
 	@Override
 	public List<Tuple> zUnionWithScores(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		final ZParams zParams = new JedisZParams();
-
-		return zUnionWithScores(keys, zParams, args);
+		return zUnionWithScores(keys, new JedisZParams(), args);
 	}
 
 	@Override
 	public List<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(keys).add(aggregate);
-		final ZParams zParams = new JedisZParams(aggregate);
-
-		return zUnionWithScores(keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate);
+		return zUnionWithScores(keys, new JedisZParams(aggregate), args);
 	}
 
 	@Override
 	public List<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(keys).add(aggregate);
-		final ZParams zParams = new JedisZParams(aggregate);
-
-		return zUnionWithScores(keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate);
+		return zUnionWithScores(keys, new JedisZParams(aggregate), args);
 	}
 
 	@Override
 	public List<Tuple> zUnionWithScores(final String[] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add(weights);
-		final ZParams zParams = new JedisZParams(weights);
-
-		return zUnionWithScores(keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS", weights);
+		return zUnionWithScores(keys, new JedisZParams(weights), args);
 	}
 
 	@Override
 	public List<Tuple> zUnionWithScores(final byte[][] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add(weights);
-		final ZParams zParams = new JedisZParams(weights);
-
-		return zUnionWithScores(keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS", weights);
+		return zUnionWithScores(keys, new JedisZParams(weights), args);
 	}
 
 	@Override
 	public List<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add(aggregate)
-				.add(weights);
-		final ZParams zParams = new JedisZParams(aggregate, weights);
-
-		return zUnionWithScores(keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate).add("WEIGHTS", weights);
+		return zUnionWithScores(keys, new JedisZParams(aggregate, weights), args);
 	}
 
 	@Override
 	public List<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights) {
-		final CommandArguments args = CommandArguments.create(keys).add(aggregate)
-				.add(weights);
-		final ZParams zParams = new JedisZParams(aggregate, weights);
-
-		return zUnionWithScores(keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate).add("WEIGHTS", weights);
+		return zUnionWithScores(keys, new JedisZParams(aggregate, weights), args);
 	}
 
 	@Override
 	public Long zUnionStore(final String destKey, final String... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZUNIONSTORE,
-					(cmd)->cmd.zunionstore(destKey, keys), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZUNIONSTORE,
-					(cmd)->cmd.zunionstore(destKey, keys), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZUNIONSTORE, (cmd)->cmd.zunionstore(destKey, keys),
-					(v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZUNIONSTORE, args, (cmd)->cmd.zunionstore(destKey, keys), (v)->v);
 	}
 
 	@Override
 	public Long zUnionStore(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZUNIONSTORE,
-					(cmd)->cmd.zunionstore(destKey, keys), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZUNIONSTORE,
-					(cmd)->cmd.zunionstore(destKey, keys), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZUNIONSTORE, (cmd)->cmd.zunionstore(destKey, keys),
-					(v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZUNIONSTORE, args, (cmd)->cmd.zunionstore(destKey, keys), (v)->v);
 	}
 
 	@Override
 	public Long zUnionStore(final String destKey, final String[] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(destKey).add(keys)
-				.add(aggregate);
-		final ZParams zParams = new JedisZParams(aggregate);
-
-		return zUnionStore(destKey, keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys).add("AGGREGATE", aggregate);
+		return zUnionStore(destKey, keys, new JedisZParams(aggregate), args);
 	}
 
 	@Override
 	public Long zUnionStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate) {
-		final CommandArguments args = CommandArguments.create(destKey).add(keys)
-				.add(aggregate);
-		final ZParams zParams = new JedisZParams(aggregate);
-
-		return zUnionStore(destKey, keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys).add("AGGREGATE", aggregate);
+		return zUnionStore(destKey, keys, new JedisZParams(aggregate), args);
 	}
 
 	@Override
 	public Long zUnionStore(final String destKey, final String[] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(destKey).add(keys)
-				.add(weights);
-		final ZParams zParams = new JedisZParams(weights);
-
-		return zUnionStore(destKey, keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys).add("WEIGHTS", weights);
+		return zUnionStore(destKey, keys, new JedisZParams(weights), args);
 	}
 
 	@Override
 	public Long zUnionStore(final byte[] destKey, final byte[][] keys, final double... weights) {
-		final CommandArguments args = CommandArguments.create(destKey).add(keys)
-				.add(weights);
-		final ZParams zParams = new JedisZParams(weights);
-
-		return zUnionStore(destKey, keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys).add("WEIGHTS", weights);
+		return zUnionStore(destKey, keys, new JedisZParams(weights), args);
 	}
 
 	@Override
 	public Long zUnionStore(final String destKey, final String[] keys, final Aggregate aggregate,
 							final double... weights) {
-		final CommandArguments args = CommandArguments.create(destKey).add(keys)
-				.add(aggregate).add(weights);
-		final ZParams zParams = new JedisZParams(aggregate, weights);
-
-		return zUnionStore(destKey, keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys).add("AGGREGATE", aggregate)
+				.add("WEIGHTS", weights);
+		return zUnionStore(destKey, keys, new JedisZParams(aggregate, weights), args);
 	}
 
 	@Override
 	public Long zUnionStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate,
 							final double... weights) {
-		final CommandArguments args = CommandArguments.create(destKey).add(keys)
-				.add(aggregate).add(weights);
-		final ZParams zParams = new JedisZParams(aggregate, weights);
-
-		return zUnionStore(destKey, keys, zParams, args);
+		final CommandArguments args = CommandArguments.create(destKey).add(keys).add("AGGREGATE", aggregate)
+				.add("WEIGHTS", weights);
+		return zUnionStore(destKey, keys, new JedisZParams(aggregate, weights), args);
 	}
 
-	private Long zAdd(final String key, final Map<String, Double> members, final ZAddParams zAddParams,
-					  final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZADD, (cmd)->cmd.zadd(key, members, zAddParams),
-					(v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZADD,
-					(cmd)->cmd.zadd(key, members, zAddParams), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZADD, (cmd)->cmd.zadd(key, members, zAddParams), (v)->v)
-					.run(args);
-		}
+	private <K> KeyValue<K, List<Tuple>> bzMPop(
+			final com.buession.redis.core.Command.Executor<UnifiedJedis, redis.clients.jedis.util.KeyValue<K, List<redis.clients.jedis.resps.Tuple>>> executor,
+			final CommandArguments args) {
+		return executeCommand(Command.BZMPOP, args, executor,
+				new KeyValueConverter<>((k)->k, new ListConverter<>(new TupleConverter())));
 	}
 
-	private Long zAdd(final byte[] key, final Map<byte[], Double> members, final ZAddParams zAddParams,
-					  final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZADD, (cmd)->cmd.zadd(key, members, zAddParams),
-					(v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZADD,
-					(cmd)->cmd.zadd(key, members, zAddParams), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZADD, (cmd)->cmd.zadd(key, members, zAddParams), (v)->v)
-					.run(args);
-		}
+	private List<String> zInter(final String[] keys, final JedisZParams zParams, final CommandArguments args) {
+		return executeCommand(Command.ZINTER, args, (cmd)->cmd.zinter(zParams, keys), (v)->v);
 	}
 
-	private List<String> zInter(final String[] keys, final ZParams zParams, final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZINTER, (cmd)->cmd.zinter(zParams, keys), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZINTER, (cmd)->cmd.zinter(zParams, keys),
-					(v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZINTER, (cmd)->cmd.zinter(zParams, keys), (v)->v)
-					.run(args);
-		}
+	private List<byte[]> zInter(final byte[][] keys, final JedisZParams zParams, final CommandArguments args) {
+		return executeCommand(Command.ZINTER, args, (cmd)->cmd.zinter(zParams, keys), (v)->v);
 	}
 
-	private List<byte[]> zInter(final byte[][] keys, final ZParams zParams, final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZINTER, (cmd)->cmd.zinter(zParams, keys), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZINTER, (cmd)->cmd.zinter(zParams, keys),
-					(v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZINTER, (cmd)->cmd.zinter(zParams, keys), (v)->v)
-					.run(args);
-		}
+	private List<Tuple> zInterWithScores(final String[] keys, final JedisZParams zParams, final CommandArguments args) {
+		return executeCommand(Command.ZINTER, args, (cmd)->cmd.zinterWithScores(zParams, keys),
+				new ListConverter<>(new TupleConverter()));
 	}
 
-	private List<Tuple> zInterWithScores(final String[] keys, final ZParams zParams, final CommandArguments args) {
-		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listConverter = TupleConverter.listConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZINTER,
-					(cmd)->cmd.zinterWithScores(zParams, keys), listConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZINTER,
-					(cmd)->cmd.zinterWithScores(zParams, keys), listConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZINTER, (cmd)->cmd.zinterWithScores(zParams, keys),
-					listConverter)
-					.run(args);
-		}
+	private List<Tuple> zInterWithScores(final byte[][] keys, final JedisZParams zParams, final CommandArguments args) {
+		return executeCommand(Command.ZINTER, args, (cmd)->cmd.zinterWithScores(zParams, keys),
+				new ListConverter<>(new TupleConverter()));
 	}
 
-	private List<Tuple> zInterWithScores(final byte[][] keys, final ZParams zParams, final CommandArguments args) {
-		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listConverter = TupleConverter.listConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZINTER,
-					(cmd)->cmd.zinterWithScores(zParams, keys), listConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZINTER,
-					(cmd)->cmd.zinterWithScores(zParams, keys), listConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZINTER, (cmd)->cmd.zinterWithScores(zParams, keys),
-					listConverter)
-					.run(args);
-		}
-	}
-
-	private Long zInterStore(final String destKey, final String[] keys, final ZParams zParams,
+	private Long zInterStore(final String destKey, final String[] keys, final JedisZParams zParams,
 							 final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZINTERSTORE,
-					(cmd)->cmd.zinterstore(destKey, zParams, keys), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZINTERSTORE,
-					(cmd)->cmd.zinterstore(destKey, zParams, keys), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZINTERSTORE,
-					(cmd)->cmd.zinterstore(destKey, zParams, keys), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZINTERSTORE, args, (cmd)->cmd.zinterstore(destKey, zParams, keys), (v)->v);
 	}
 
-	private Long zInterStore(final byte[] destKey, final byte[][] keys, final ZParams zParams,
+	private Long zInterStore(final byte[] destKey, final byte[][] keys, final JedisZParams zParams,
 							 final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZINTERSTORE,
-					(cmd)->cmd.zinterstore(destKey, zParams, keys), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZINTERSTORE,
-					(cmd)->cmd.zinterstore(destKey, zParams, keys), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZINTERSTORE,
-					(cmd)->cmd.zinterstore(destKey, zParams, keys), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZINTERSTORE, args, (cmd)->cmd.zinterstore(destKey, zParams, keys), (v)->v);
 	}
 
-	private Long zLexCount(final String key, final String min, final String max, final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZLEXCOUNT, (cmd)->cmd.zlexcount(key, min, max),
-					(v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZLEXCOUNT, (cmd)->cmd.zlexcount(key, min, max),
-					(v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZLEXCOUNT, (cmd)->cmd.zlexcount(key, min, max), (v)->v)
-					.run(args);
-		}
+	private <K> KeyValue<K, List<Tuple>> zMPop(
+			final com.buession.redis.core.Command.Executor<UnifiedJedis, redis.clients.jedis.util.KeyValue<K, List<redis.clients.jedis.resps.Tuple>>> executor,
+			final CommandArguments args) {
+		return executeCommand(Command.ZMPOP, args, executor,
+				new KeyValueConverter<>((k)->k, new ListConverter<>(new TupleConverter())));
 	}
 
-	private Long zLexCount(final byte[] key, final byte[] min, final byte[] max, final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZLEXCOUNT, (cmd)->cmd.zlexcount(key, min, max),
-					(v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZLEXCOUNT, (cmd)->cmd.zlexcount(key, min, max),
-					(v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZLEXCOUNT, (cmd)->cmd.zlexcount(key, min, max), (v)->v)
-					.run(args);
-		}
+	private List<String> zRange(final String key, final JedisZRangeParams zRangeParams, final CommandArguments args) {
+		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrange(key, zRangeParams), (v)->v);
 	}
 
-	private List<String> zRangeByLex(final String key, final String min, final String max,
-									 final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANGEBYLEX,
-					(cmd)->cmd.zrangeByLex(key, min, max), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZRANGEBYLEX,
-					(cmd)->cmd.zrangeByLex(key, min, max), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZRANGEBYLEX, (cmd)->cmd.zrangeByLex(key, min, max),
-					(v)->v)
-					.run(args);
-		}
+	private List<byte[]> zRange(final byte[] key, final JedisZRangeParams zRangeParams, final CommandArguments args) {
+		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrange(key, zRangeParams), (v)->v);
 	}
 
-	private List<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max,
-									 final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANGEBYLEX,
-					(cmd)->cmd.zrangeByLex(key, min, max), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZRANGEBYLEX,
-					(cmd)->cmd.zrangeByLex(key, min, max), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZRANGEBYLEX, (cmd)->cmd.zrangeByLex(key, min, max),
-					(v)->v)
-					.run(args);
-		}
+	private List<Tuple> zRangeWithScores(final String key, final JedisZRangeParams zRangeParams,
+										 final CommandArguments args) {
+		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrangeWithScores(key, zRangeParams),
+				new ListConverter<>(new TupleConverter()));
 	}
 
-	private List<String> zRangeByLex(final String key, final String min, final String max, final long offset,
-									 final long count, final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANGEBYLEX,
-					(cmd)->cmd.zrangeByLex(key, min, max, (int) offset, (int) count), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZRANGEBYLEX,
-					(cmd)->cmd.zrangeByLex(key, min, max, (int) offset, (int) count), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZRANGEBYLEX,
-					(cmd)->cmd.zrangeByLex(key, min, max, (int) offset, (int) count), (v)->v)
-					.run(args);
-		}
+	private List<Tuple> zRangeWithScores(final byte[] key, final JedisZRangeParams zRangeParams,
+										 final CommandArguments args) {
+		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrangeWithScores(key, zRangeParams),
+				new ListConverter<>(new TupleConverter()));
 	}
 
-	private List<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max, final long offset,
-									 final long count, final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANGEBYLEX,
-					(cmd)->cmd.zrangeByLex(key, min, max, (int) offset, (int) count), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZRANGEBYLEX,
-					(cmd)->cmd.zrangeByLex(key, min, max, (int) offset, (int) count), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZRANGEBYLEX,
-					(cmd)->cmd.zrangeByLex(key, min, max, (int) offset, (int) count), (v)->v)
-					.run(args);
-		}
-	}
-
-	private Long zRangeStore(final String destKey, final String key, final ZRangeParams zRangeParams,
+	private Long zRangeStore(final String destKey, final String key, final JedisZRangeParams zRangeParams,
 							 final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANGESTORE,
-					(cmd)->cmd.zrangestore(destKey, key, zRangeParams), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZRANGESTORE,
-					(cmd)->cmd.zrangestore(destKey, key, zRangeParams), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZRANGESTORE,
-					(cmd)->cmd.zrangestore(destKey, key, zRangeParams), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZRANGESTORE, args, (cmd)->cmd.zrangestore(destKey, key, zRangeParams), (v)->v);
 	}
 
-	private Long zRangeStore(final byte[] destKey, final byte[] key, final ZRangeParams zRangeParams,
+	private Long zRangeStore(final byte[] destKey, final byte[] key, final JedisZRangeParams zRangeParams,
 							 final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZRANGESTORE,
-					(cmd)->cmd.zrangestore(destKey, key, zRangeParams), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZRANGESTORE,
-					(cmd)->cmd.zrangestore(destKey, key, zRangeParams), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZRANGESTORE,
-					(cmd)->cmd.zrangestore(destKey, key, zRangeParams), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZRANGESTORE, args, (cmd)->cmd.zrangestore(destKey, key, zRangeParams), (v)->v);
 	}
 
-	private ScanResult<List<Tuple>> zScan(final String key, final String cursor, final ScanParams scanParams,
-										  final CommandArguments args) {
-		final ScanResultConverter.ListTupleScanResultConverter listTupleScanResultConverter =
-				new ScanResultConverter.ListTupleScanResultConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZSCAN, (cmd)->cmd.zscan(key, cursor, scanParams),
-					listTupleScanResultConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZSCAN,
-					(cmd)->cmd.zscan(key, cursor, scanParams), listTupleScanResultConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZSCAN, (cmd)->cmd.zscan(key, cursor, scanParams),
-					listTupleScanResultConverter)
-					.run(args);
-		}
+	private ScanResult<Tuple> zScan(final String key, final String cursor, final JedisScanParams scanParams,
+									final CommandArguments args) {
+		return executeCommand(Command.ZSCAN, args, (cmd)->cmd.zscan(key, cursor, scanParams),
+				new ScanResultConverter<>(new TupleConverter()));
 	}
 
-	private ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final ScanParams scanParams,
-										  final CommandArguments args) {
-		final ScanResultConverter.ListTupleScanResultConverter listTupleScanResultConverter =
-				new ScanResultConverter.ListTupleScanResultConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZSCAN, (cmd)->cmd.zscan(key, cursor, scanParams),
-					listTupleScanResultConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZSCAN,
-					(cmd)->cmd.zscan(key, cursor, scanParams), listTupleScanResultConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZSCAN, (cmd)->cmd.zscan(key, cursor, scanParams),
-					listTupleScanResultConverter)
-					.run(args);
-		}
+	private ScanResult<Tuple> zScan(final byte[] key, final byte[] cursor, final JedisScanParams scanParams,
+									final CommandArguments args) {
+		return executeCommand(Command.ZSCAN, args, (cmd)->cmd.zscan(key, cursor, scanParams),
+				new ScanResultConverter<>(new TupleConverter()));
 	}
 
-	private List<String> zUnion(final String[] keys, final ZParams zParams, final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZUNION, (cmd)->cmd.zunion(zParams, keys), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZUNION, (cmd)->cmd.zunion(zParams, keys),
-					(v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZUNION, (cmd)->cmd.zunion(zParams, keys), (v)->v)
-					.run(args);
-		}
+	private List<String> zUnion(final String[] keys, final JedisZParams zParams, final CommandArguments args) {
+		return executeCommand(Command.ZUNION, args, (cmd)->cmd.zunion(zParams, keys), (v)->v);
 	}
 
-	private List<byte[]> zUnion(final byte[][] keys, final ZParams zParams, final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZUNION, (cmd)->cmd.zunion(zParams, keys), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZUNION, (cmd)->cmd.zunion(zParams, keys),
-					(v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZUNION, (cmd)->cmd.zunion(zParams, keys), (v)->v)
-					.run(args);
-		}
+	private List<byte[]> zUnion(final byte[][] keys, final JedisZParams zParams, final CommandArguments args) {
+		return executeCommand(Command.ZUNION, args, (cmd)->cmd.zunion(zParams, keys), (v)->v);
 	}
 
-	private List<Tuple> zUnionWithScores(final String[] keys, final ZParams zParams, final CommandArguments args) {
-		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listConverter = TupleConverter.listConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZUNION,
-					(cmd)->cmd.zunionWithScores(zParams, keys), listConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZUNION,
-					(cmd)->cmd.zunionWithScores(zParams, keys), listConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZUNION, (cmd)->cmd.zunionWithScores(zParams, keys),
-					listConverter)
-					.run(args);
-		}
+	private List<Tuple> zUnionWithScores(final String[] keys, final JedisZParams zParams, final CommandArguments args) {
+		return executeCommand(Command.ZUNION, args, (cmd)->cmd.zunionWithScores(zParams, keys),
+				new ListConverter<>(new TupleConverter()));
 	}
 
-	private List<Tuple> zUnionWithScores(final byte[][] keys, final ZParams zParams, final CommandArguments args) {
-		final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listConverter = TupleConverter.listConverter();
-
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZUNION,
-					(cmd)->cmd.zunionWithScores(zParams, keys), listConverter)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZUNION,
-					(cmd)->cmd.zunionWithScores(zParams, keys), listConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZUNION, (cmd)->cmd.zunionWithScores(zParams, keys),
-					listConverter)
-					.run(args);
-		}
+	private List<Tuple> zUnionWithScores(final byte[][] keys, final JedisZParams zParams, final CommandArguments args) {
+		return executeCommand(Command.ZUNION, args, (cmd)->cmd.zunionWithScores(zParams, keys),
+				new ListConverter<>(new TupleConverter()));
 	}
 
-	private Long zUnionStore(final String destKey, final String[] keys, final ZParams zParams,
+	private Long zUnionStore(final String dstkey, final String[] keys, final JedisZParams zParams,
 							 final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZUNIONSTORE,
-					(cmd)->cmd.zunionstore(destKey, zParams, keys), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZUNIONSTORE,
-					(cmd)->cmd.zunionstore(destKey, zParams, keys), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZUNIONSTORE,
-					(cmd)->cmd.zunionstore(destKey, zParams, keys), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZUNIONSTORE, args, (cmd)->cmd.zunionstore(dstkey, zParams, keys), (v)->v);
 	}
 
-	private Long zUnionStore(final byte[] destKey, final byte[][] keys, final ZParams zParams,
+	private Long zUnionStore(final byte[] dstkey, final byte[][] keys, final JedisZParams zParams,
 							 final CommandArguments args) {
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.ZUNIONSTORE,
-					(cmd)->cmd.zunionstore(destKey, zParams, keys), (v)->v)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.ZUNIONSTORE,
-					(cmd)->cmd.zunionstore(destKey, zParams, keys), (v)->v)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.ZUNIONSTORE,
-					(cmd)->cmd.zunionstore(destKey, zParams, keys), (v)->v)
-					.run(args);
-		}
+		return executeCommand(Command.ZUNIONSTORE, args, (cmd)->cmd.zunionstore(dstkey, zParams, keys), (v)->v);
 	}
 
 }

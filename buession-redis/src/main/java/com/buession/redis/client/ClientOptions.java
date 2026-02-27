@@ -22,22 +22,38 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.response;
-
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.Tuple;
+package com.buession.redis.client;
 
 /**
- * jedis {@link redis.clients.jedis.resps.Tuple} 转换为 {@link Tuple}
+ * 客户端配置选项
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 4.0.0
  */
-public final class TupleConverter implements Converter<redis.clients.jedis.resps.Tuple, Tuple> {
+public class ClientOptions {
 
-	@Override
-	public Tuple convert(final redis.clients.jedis.resps.Tuple source) {
-		return new Tuple(source.getBinaryElement(), source.getScore());
+	/**
+	 * Key 前缀
+	 */
+	private String prefix;
+
+	/**
+	 * 返回 Key 前缀
+	 *
+	 * @return Key 前缀
+	 */
+	public String getPrefix() {
+		return prefix;
+	}
+
+	/**
+	 * 设置 Key 前缀
+	 *
+	 * @param prefix
+	 * 		Key 前缀
+	 */
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
 	}
 
 }

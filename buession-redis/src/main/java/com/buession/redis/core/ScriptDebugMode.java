@@ -38,7 +38,6 @@ public enum ScriptDebugMode implements Keyword {
 
 	SYNC;
 
-
 	@Override
 	public String getValue() {
 		return name();

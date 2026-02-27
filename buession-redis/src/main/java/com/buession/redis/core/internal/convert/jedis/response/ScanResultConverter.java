@@ -28,6 +28,7 @@ import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
+import org.springframework.lang.Nullable;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -35,20 +36,31 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * {@link ScanResult} 和 jedis {@link redis.clients.jedis.resps.ScanResult} 互转
+ * jedis {@link redis.clients.jedis.resps.ScanResult} 转换为 {@link ScanResult}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-@FunctionalInterface
-public interface ScanResultConverter<S, T> extends Converter<redis.clients.jedis.resps.ScanResult<S>, ScanResult<T>> {
+public final class ScanResultConverter<S, T>
+		implements Converter<redis.clients.jedis.resps.ScanResult<S>, ScanResult<T>> {
 
+	private final ListConverter<S, T> converter;
+
+	public ScanResultConverter(final Converter<S, T> converter) {
+		this.converter = new ListConverter<>(converter);
+	}
+
+	@Override
+	public ScanResult<T> convert(final redis.clients.jedis.resps.ScanResult<S> source) {
+		return new ScanResult<>(source.getCursor(), converter.convert(source.getResult()));
+	}
 	/**
 	 * jedis {@link redis.clients.jedis.resps.ScanResult} 转换为 {@link java.util.List}&lt;ScanResult&gt;
 	 *
 	 * @author Yong.Teng
 	 * @since 2.0.0
 	 */
+	/*
 	final class ListScanResultConverter<S> implements ScanResultConverter<S, List<S>> {
 
 		@Override
@@ -58,12 +70,15 @@ public interface ScanResultConverter<S, T> extends Converter<redis.clients.jedis
 
 	}
 
+	 */
+
 	/**
 	 * jedis {@link redis.clients.jedis.resps.Tuple} 转换为 {@link java.util.List}&lt;T&gt;
 	 *
 	 * @author Yong.Teng
 	 * @since 2.0.0
 	 */
+	/*
 	final class ListTupleScanResultConverter
 			implements ScanResultConverter<redis.clients.jedis.resps.Tuple, List<Tuple>> {
 
@@ -79,6 +94,8 @@ public interface ScanResultConverter<S, T> extends Converter<redis.clients.jedis
 
 	}
 
+	 */
+
 	/**
 	 * jedis {@link redis.clients.jedis.resps.ScanResult}&lt;Map.Entry&lt;K&gt;, &lt;K&gt;&gt; 转换为 {@link ScanResult}
 	 * &lt;Map&lt;K&gt;, &lt;K&gt;&gt;
@@ -91,6 +108,7 @@ public interface ScanResultConverter<S, T> extends Converter<redis.clients.jedis
 	 * @author Yong.Teng
 	 * @since 2.0.0
 	 */
+	/*
 	final class MapScanResultConverter<K, V> implements ScanResultConverter<Map.Entry<K, V>, Map<K, V>> {
 
 		@Override
@@ -101,5 +119,7 @@ public interface ScanResultConverter<S, T> extends Converter<redis.clients.jedis
 		}
 
 	}
+
+	 */
 
 }

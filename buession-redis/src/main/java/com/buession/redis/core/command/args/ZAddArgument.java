@@ -1,0 +1,148 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements.
+ * See the NOTICE file distributed with this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
+ * =========================================================================================================
+ *
+ * This software consists of voluntary contributions made by many individuals on behalf of the
+ * Apache Software Foundation. For more information on the Apache Software Foundation, please see
+ * <http://www.apache.org/>.
+ *
+ * +-------------------------------------------------------------------------------------------------------+
+ * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
+ * | Author: Yong.Teng <webmaster@buession.com> 													       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
+ * +-------------------------------------------------------------------------------------------------------+
+ */
+package com.buession.redis.core.command.args;
+
+import com.buession.redis.core.GtLt;
+import com.buession.redis.core.NxXx;
+import com.buession.redis.utils.ArgStringBuilder;
+
+/**
+ * ZADD 参数
+ *
+ * @author Yong.Teng
+ * @since 4.0.0
+ */
+public class ZAddArgument {
+
+	private NxXx nxXx;
+
+	private GtLt gtLt;
+
+	private Boolean ch;
+
+	private Boolean incr;
+
+	/**
+	 * 构造函数
+	 */
+	public ZAddArgument() {
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param nxXx
+	 *        {@link NxXx}
+	 */
+	public ZAddArgument(final NxXx nxXx) {
+		this.nxXx = nxXx;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param gtLt
+	 *        {@link GtLt}
+	 */
+	public ZAddArgument(final GtLt gtLt) {
+		this.gtLt = gtLt;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param nxXx
+	 *        {@link NxXx}
+	 * @param gtLt
+	 *        {@link GtLt}
+	 */
+	public ZAddArgument(final NxXx nxXx, final GtLt gtLt) {
+		this.nxXx = nxXx;
+		this.gtLt = gtLt;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param nxXx
+	 *        {@link NxXx}
+	 * @param gtLt
+	 *        {@link GtLt}
+	 * @param ch
+	 * 		-
+	 * @param incr
+	 * 		-
+	 */
+	public ZAddArgument(final NxXx nxXx, final GtLt gtLt, final Boolean ch, final Boolean incr) {
+		this(nxXx, gtLt);
+		this.ch = ch;
+		this.incr = incr;
+	}
+
+	public NxXx getNxXx() {
+		return nxXx;
+	}
+
+	public void setNxXx(NxXx nxXx) {
+		this.nxXx = nxXx;
+	}
+
+	public GtLt getGtLt() {
+		return gtLt;
+	}
+
+	public void setGtLt(GtLt gtLt) {
+		this.gtLt = gtLt;
+	}
+
+	public Boolean getCh() {
+		return ch;
+	}
+
+	public void setCh(Boolean ch) {
+		this.ch = ch;
+	}
+
+	public Boolean getIncr() {
+		return incr;
+	}
+
+	public void setIncr(Boolean incr) {
+		this.incr = incr;
+	}
+
+	@Override
+	public String toString() {
+		final ArgStringBuilder builder = ArgStringBuilder.create();
+
+		builder.append(getNxXx());
+		builder.append(getGtLt());
+		builder.append(Boolean.TRUE.equals(getCh()) ? "CH" : null);
+		builder.append(Boolean.TRUE.equals(getIncr()) ? "INCR" : null);
+
+		return builder.toString();
+	}
+
+}

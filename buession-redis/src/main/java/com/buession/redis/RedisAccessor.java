@@ -25,17 +25,18 @@
 package com.buession.redis;
 
 import com.buession.core.utils.Assert;
+import com.buession.redis.client.ClientOptions;
 import com.buession.redis.client.RedisClient;
 import com.buession.redis.client.connection.datasource.jedis.JedisRedisDataSource;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceRedisDataSource;
 import com.buession.redis.client.connection.jedis.JedisConnectionFactory;
+import com.buession.redis.client.connection.jedis.JedisRedisConnection;
 import com.buession.redis.client.connection.lettuce.LettuceConnectionFactory;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.RedisConnectionFactory;
 import com.buession.redis.client.connection.RedisConnectionUtils;
 import com.buession.redis.client.connection.datasource.DataSource;
-import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
-import com.buession.redis.client.connection.datasource.lettuce.LettuceDataSource;
+import com.buession.redis.client.connection.lettuce.LettuceRedisConnection;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.core.Command;
@@ -171,7 +172,7 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 
 	@Override
 	public void afterPropertiesSet() throws RedisException {
-		Assert.isNull(getDataSource(), "DataSource is required");
+		Assert.isNull(getDataSource(), "dataSource is required");
 
 		Options options = getOptions();
 		if(options != null){
@@ -185,14 +186,15 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 		if(connectionFactory == null){
 			DataSource dataSource = getDataSource();
 
-			if(dataSource instanceof LettuceDataSource){
-				connectionFactory = new LettuceConnectionFactory((LettuceDataSource) dataSource);
-			}else if(dataSource instanceof JedisDataSource){
-				connectionFactory = new JedisConnectionFactory((JedisDataSource) dataSource);
+			if(dataSource instanceof LettuceRedisDataSource){
+				connectionFactory = new LettuceConnectionFactory((LettuceRedisDataSource) dataSource);
+			}else if(dataSource instanceof JedisRedisDataSource){
+				connectionFactory = new JedisConnectionFactory((JedisRedisDataSource) dataSource);
 			}else{
-				throw new RedisException("dataSource must be an instance of " + JedisDataSource.class.getName() +
-						" or " + JedisDataSource.class.getName() + ", but an instance of " +
-						dataSource.getClass().getName() + ".");
+				throw new RedisException(
+						"dataSource must be an instance of " + JedisRedisDataSource.class.getName() + " or " +
+								LettuceRedisDataSource.class.getName() + ", but an instance of " +
+								dataSource.getClass().getName() + ".");
 			}
 		}
 	}
@@ -276,15 +278,22 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 	}
 
 	protected RedisClient fetchRedisClient(final RedisConnection connection) throws RedisException {
-		DataSource dataSource = getDataSource();
-
-		if(dataSource instanceof JedisRedisDataSource){
-			return new JedisRedisClient();
-		}else if(dataSource instanceof LettuceRedisDataSource){
-			return new LettuceRedisClient();
+		RedisClient redisClient;
+		if(connection instanceof JedisRedisConnection){
+			redisClient = new JedisRedisClient();
+		}else if(connection instanceof LettuceRedisConnection){
+			redisClient = new LettuceRedisClient();
 		}else{
-			throw new RedisException("Cloud not initialize RedisClient for: " + dataSource);
+			throw new RedisException("Cloud not initialize RedisClient for: " + connection);
 		}
+
+		final ClientOptions clientOptions = new ClientOptions();
+
+		clientOptions.setPrefix(getOptions().getPrefix());
+
+		redisClient.setClientOptions(clientOptions);
+
+		return redisClient;
 	}
 
 	protected RedisClient fetchRequiredRedisClient(final RedisConnection connection) throws RedisException {

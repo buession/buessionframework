@@ -22,22 +22,32 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.response;
+package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.Tuple;
+import com.buession.redis.core.MinMax;
+import org.springframework.lang.Nullable;
+import redis.clients.jedis.args.SortedSetOption;
 
 /**
- * jedis {@link redis.clients.jedis.resps.Tuple} 转换为 {@link Tuple}
+ * {@link MinMax} 转换为 jedis {@link SortedSetOption}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 4.0.0
  */
-public final class TupleConverter implements Converter<redis.clients.jedis.resps.Tuple, Tuple> {
+public final class MinMaxSortedSetOptionConverter implements Converter<MinMax, SortedSetOption> {
 
+	@Nullable
 	@Override
-	public Tuple convert(final redis.clients.jedis.resps.Tuple source) {
-		return new Tuple(source.getBinaryElement(), source.getScore());
+	public SortedSetOption convert(final MinMax source) {
+		if(source == null){
+			return null;
+		}
+
+		return switch(source){
+			case MIN -> SortedSetOption.MIN;
+			case MAX -> SortedSetOption.MAX;
+		};
 	}
 
 }

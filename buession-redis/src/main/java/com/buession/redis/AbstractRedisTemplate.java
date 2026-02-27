@@ -24,12 +24,14 @@
  */
 package com.buession.redis;
 
-import com.buession.core.collect.Arrays;
-import com.buession.core.utils.ByteUtils;
 import com.buession.core.validator.Validate;
+import com.buession.lang.Status;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.core.command.*;
-import com.buession.redis.utils.SafeEncoder;
+
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 /**
  * @author Yong.Teng
@@ -37,9 +39,8 @@ import com.buession.redis.utils.SafeEncoder;
 public abstract class AbstractRedisTemplate extends RedisAccessor
 		implements BloomFilterCommands, BitMapCommands, CuckooFilterCommands, ClusterCommands, CountMinSketchCommands,
 		ConnectionCommands, GenericCommand, GeoCommands, HashCommands, HyperLogLogCommands, JsonCommands, ListCommands,
-		PubSubCommands, ScriptingCommands,/*SearchCommands, */ServerCommands, SetCommands, TransactionCommands,
-		KeyCommands,
-		SortedSetCommands, StreamCommands, StringCommands {
+		PubSubCommands, ScriptingCommands,/*SearchCommands, */ServerCommands, SetCommands, SortedSetCommands,
+		TransactionCommands, KeyCommands, StreamCommands, StringCommands {
 
 	/**
 	 * 构造函数
@@ -58,30 +59,38 @@ public abstract class AbstractRedisTemplate extends RedisAccessor
 		super(dataSource);
 	}
 
-	protected final String rawKey(final String key) {
-		String prefix = getOptions().getPrefix();
-		return Validate.isEmpty(prefix) ? key : prefix.concat(key);
+	@Override
+	public Status discard() {
+		Status result = execute((client)->{
+			client.getConnection().discard();
+			return null;
+		});
+		resetTransactionOrPipeline();
+		return result;
 	}
 
-	protected final byte[] rawKey(byte[] key) {
-		String prefix = getOptions().getPrefix();
-		return Validate.isEmpty(prefix) ? key : ByteUtils.concat(SafeEncoder.encode(prefix), key);
-	}
+	@SuppressWarnings({"unchecked"})
+	@Override
+	public List<Object> exec() {
+		List<Object> result = execute((client)->client.getConnection().exec());
 
-	protected final String[] rawKeys(final String[] keys) {
-		String prefix = getOptions().getPrefix();
-		return Validate.isEmpty(prefix) || Validate.isEmpty(keys) ? keys : Arrays.map(keys, String.class, this::rawKey);
-	}
+		if(result != null){
+			Map<Integer, Function<?, ?>> map = txConverters.get();
 
-	protected final byte[][] rawKeys(final byte[][] keys) {
-		String prefix = getOptions().getPrefix();
+			if(Validate.isNotEmpty(map)){
+				for(int i = 0, j = result.size(); i < j; i++){
+					Function<Object, Object> fun = (Function<Object, Object>) map.get(i);
 
-		if(Validate.isEmpty(prefix) || Validate.isEmpty(keys)){
-			return keys;
+					if(fun != null){
+						result.set(i, fun.apply(result.get(i)));
+					}
+				}
+			}
 		}
 
-		byte[] prefixByte = SafeEncoder.encode(prefix);
-		return Arrays.map(keys, byte[].class, (value)->ByteUtils.concat(prefixByte, value));
+		resetTransactionOrPipeline();
+
+		return result;
 	}
 
 }

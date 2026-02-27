@@ -19,14 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.lang.KeyValue;
-import org.springframework.lang.Nullable;
 
 /**
  * Jedis {@link redis.clients.jedis.util.KeyValue} 转换为 {@link com.buession.lang.KeyValue}
@@ -43,7 +42,7 @@ import org.springframework.lang.Nullable;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class KeyValueConverter<SK, SV, TK, TV> implements Converter<redis.clients.jedis.util.KeyValue<SK, SV>,
+public final class KeyValueConverter<SK, SV, TK, TV> implements Converter<redis.clients.jedis.util.KeyValue<SK, SV>,
 		com.buession.lang.KeyValue<TK, TV>> {
 
 	/**
@@ -69,7 +68,6 @@ public class KeyValueConverter<SK, SV, TK, TV> implements Converter<redis.client
 		this.valueConverter = valueConverter;
 	}
 
-	@Nullable
 	@Override
 	public KeyValue<TK, TV> convert(final redis.clients.jedis.util.KeyValue<SK, SV> source) {
 		return new com.buession.lang.KeyValue<>(keyConverter.convert(source.getKey()), valueConverter.convert(

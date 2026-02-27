@@ -19,13 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.exception;
 
 import com.buession.redis.core.RedisMode;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.SubCommand;
 
 /**
  * 命令不支持异常
@@ -42,20 +43,36 @@ public class NotSupportedCommandException extends RedisException {
 		super();
 	}
 
-	public NotSupportedCommandException(ProtocolCommand command) {
+	public NotSupportedCommandException(Command command) {
 		super("Not supported command: " + command);
 	}
 
-	public NotSupportedCommandException(Type type, ProtocolCommand command) {
+	public NotSupportedCommandException(Type type, Command command) {
 		super("Not supported command: " + command + " in " + type);
 	}
 
-	public NotSupportedCommandException(RedisMode mode, ProtocolCommand command) {
+	public NotSupportedCommandException(RedisMode mode, Command command) {
 		super("Not supported command: " + command + " with " + mode + " mode");
 	}
 
-	public NotSupportedCommandException(RedisMode mode, Type type, ProtocolCommand command) {
+	public NotSupportedCommandException(RedisMode mode, Type type, Command command) {
 		super("Not supported command: " + command + " in " + type + " with " + mode + " mode");
+	}
+
+	public NotSupportedCommandException(Command command, SubCommand subCommand) {
+		super("Not supported command: " + command + " " + subCommand);
+	}
+
+	public NotSupportedCommandException(Type type, Command command, SubCommand subCommand) {
+		super("Not supported command: " + command + " " + subCommand + " in " + type);
+	}
+
+	public NotSupportedCommandException(RedisMode mode, Command command, SubCommand subCommand) {
+		super("Not supported command: " + command + " " + subCommand + " with " + mode + " mode");
+	}
+
+	public NotSupportedCommandException(RedisMode mode, Type type, Command command, SubCommand subCommand) {
+		super("Not supported command: " + command + " " + subCommand + " in " + type + " with " + mode + " mode");
 	}
 
 	public NotSupportedCommandException(String message) {

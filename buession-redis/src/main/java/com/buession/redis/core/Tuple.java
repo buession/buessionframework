@@ -65,8 +65,7 @@ public record Tuple(byte[] element, Double score) implements Comparable<Tuple> {
 			}
 		}
 
-		long temp = Double.doubleToLongBits(score);
-		return prime * result + (int) (temp ^ (temp >>> 32));
+		return prime * result + score.hashCode();
 	}
 
 	@Override

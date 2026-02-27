@@ -22,22 +22,52 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.response;
+package com.buession.redis.core.internal.convert.lettuce.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.Tuple;
+import com.buession.redis.core.command.args.ZAddArgument;
+import io.lettuce.core.ZAddArgs;
+import org.springframework.lang.Nullable;
 
 /**
- * jedis {@link redis.clients.jedis.resps.Tuple} 转换为 {@link Tuple}
+ * {@link ZAddArgument} 转换为 lettuce {@link ZAddArgs}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 4.0.0
  */
-public final class TupleConverter implements Converter<redis.clients.jedis.resps.Tuple, Tuple> {
+public final class ZAddArgumentConverter implements Converter<ZAddArgument, ZAddArgs> {
 
+	@Nullable
 	@Override
-	public Tuple convert(final redis.clients.jedis.resps.Tuple source) {
-		return new Tuple(source.getBinaryElement(), source.getScore());
+	public ZAddArgs convert(final ZAddArgument source) {
+		if(source == null){
+			return null;
+		}
+
+		final ZAddArgs addArgs = new ZAddArgs();
+
+		if(source.getNxXx() != null){
+			switch(source.getNxXx()){
+				case NX -> addArgs.nx();
+				case XX -> addArgs.xx();
+			}
+		}
+
+		if(source.getGtLt() != null){
+			switch(source.getGtLt()){
+				case GT -> addArgs.gt();
+				case LT -> addArgs.lt();
+			}
+		}
+
+		if(Boolean.TRUE.equals(source.getCh())){
+			addArgs.ch();
+		}
+
+		if(Boolean.TRUE.equals(source.getIncr())){
+		}
+
+		return addArgs;
 	}
 
 }

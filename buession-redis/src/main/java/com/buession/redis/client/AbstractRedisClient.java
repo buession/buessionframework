@@ -35,17 +35,19 @@ import org.slf4j.LoggerFactory;
 /**
  * Redis 客户端抽象类
  *
- * @param <CONN>
- * 		Redis 连接对象类型 {@link RedisConnection}
- *
  * @author Yong.Teng
  */
-public abstract class AbstractRedisClient<CONN extends RedisConnection> implements RedisClient {
+public abstract class AbstractRedisClient implements RedisClient {
+
+	/**
+	 * 客户端选项
+	 */
+	protected ClientOptions clientOptions = new ClientOptions();
 
 	/**
 	 * Redis 连接对象
 	 */
-	protected CONN connection;
+	protected RedisConnection connection;
 
 	/**
 	 * 布隆过滤器命令操作
@@ -139,6 +141,11 @@ public abstract class AbstractRedisClient<CONN extends RedisConnection> implemen
 	protected SetOperations setOperations;
 
 	/**
+	 * 有序集合命令操作
+	 */
+	protected SortedSetOperations sortedSetOperations;
+
+	/**
 	 * 事务命令操作
 	 */
 	protected TransactionOperations transactionOperations;
@@ -147,11 +154,6 @@ public abstract class AbstractRedisClient<CONN extends RedisConnection> implemen
 	 * KEY 命令操作
 	 */
 	protected KeyOperations keyOperations;
-
-	/**
-	 * 有序集合命令操作
-	 */
-	protected SortedSetOperations sortedSetOperations;
 
 	/**
 	 * Stream 命令操作
@@ -175,22 +177,46 @@ public abstract class AbstractRedisClient<CONN extends RedisConnection> implemen
 	/**
 	 * 构造函数
 	 *
+	 * @param clientOptions
+	 * 		客户端选项
+	 * @param connection
+	 * 		Redis 连接对象 {@link RedisConnection}
+	 *
+	 * @since 4.0.0
+	 */
+	public AbstractRedisClient(final ClientOptions clientOptions, final RedisConnection connection) {
+		setClientOptions(clientOptions);
+		setConnection(connection);
+	}
+
+	/**
+	 * 构造函数
+	 *
 	 * @param connection
 	 * 		Redis 连接对象 {@link RedisConnection}
 	 */
-	public AbstractRedisClient(final CONN connection) {
+	public AbstractRedisClient(final RedisConnection connection) {
 		setConnection(connection);
 	}
 
 	@Override
-	public CONN getConnection() {
+	public ClientOptions getClientOptions() {
+		return clientOptions;
+	}
+
+	@Override
+	public void setClientOptions(ClientOptions clientOptions) {
+		this.clientOptions = clientOptions;
+	}
+
+	@Override
+	public RedisConnection getConnection() {
 		return connection;
 	}
 
-	@SuppressWarnings({"unchecked"})
 	@Override
 	public void setConnection(RedisConnection connection) {
-		this.connection = (CONN) connection;
+		this.connection = connection;
 	}
 
 	@Override
@@ -201,23 +227,15 @@ public abstract class AbstractRedisClient<CONN extends RedisConnection> implemen
 		}
 
 		if(logger.isDebugEnabled()){
-			if(arguments != null){
-				logger.debug("Execute command: {} {}", command.getCommand(), arguments);
-			}else{
-				logger.debug("Execute command: {}", command.getCommand());
-			}
+			logger.debug("Execute command: {}", runCommand(command.getCommand(), arguments));
 		}
 
 		try{
 			return getConnection().execute((conn)->command.execute());
 		}catch(RedisException e){
 			if(logger.isErrorEnabled()){
-				if(arguments != null){
-					logger.error("Execute command: {} {}, failure: {}", command.getCommand(), arguments,
-							e.getMessage(), e);
-				}else{
-					logger.error("Execute command: {}, failure: {}", command.getCommand(), e.getMessage(), e);
-				}
+				logger.error("Execute command: {}, failure: {}", runCommand(command.getCommand(), arguments),
+						e.getMessage(), e);
 			}
 			throw e;
 		}finally{
@@ -226,6 +244,17 @@ public abstract class AbstractRedisClient<CONN extends RedisConnection> implemen
 				logger.debug("Command execution time: {}ns", finishTime - startTime);
 			}
 		}
+	}
+
+	private static String runCommand(final com.buession.redis.core.command.Command command,
+									 final CommandArguments arguments) {
+		final StringBuilder sb = new StringBuilder(command.name());
+
+		if(arguments != null){
+			sb.append(" ").append(arguments);
+		}
+
+		return sb.toString();
 	}
 
 }

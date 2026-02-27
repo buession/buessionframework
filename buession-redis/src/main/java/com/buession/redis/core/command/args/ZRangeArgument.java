@@ -22,22 +22,78 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.response;
+package com.buession.redis.core.command.args;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.Tuple;
+import com.buession.redis.core.Keyword;
+import com.buession.redis.utils.ArgStringBuilder;
+
+import java.util.Objects;
 
 /**
- * jedis {@link redis.clients.jedis.resps.Tuple} 转换为 {@link Tuple}
+ *
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 4.0.0
  */
-public final class TupleConverter implements Converter<redis.clients.jedis.resps.Tuple, Tuple> {
+public class ZRangeArgument {
+
+	private By by;
+
+	private Boolean rev;
+
+	public ZRangeArgument() {
+	}
+
+	public ZRangeArgument(final By by) {
+		this.by = by;
+	}
+
+	public ZRangeArgument(final Boolean rev) {
+		this.rev = rev;
+	}
+
+	public ZRangeArgument(final By by, final Boolean rev) {
+		this.by = by;
+		this.rev = rev;
+	}
+
+	public By getBy() {
+		return by;
+	}
+
+	public void setBy(By by) {
+		this.by = by;
+	}
+
+	public Boolean getRev() {
+		return rev;
+	}
+
+	public void setRev(Boolean rev) {
+		this.rev = rev;
+	}
 
 	@Override
-	public Tuple convert(final redis.clients.jedis.resps.Tuple source) {
-		return new Tuple(source.getBinaryElement(), source.getScore());
+	public String toString() {
+		return ArgStringBuilder.create().append(by).append(Objects.equals(rev, true) ? "REV" : null).build();
+	}
+
+	public enum By implements Keyword {
+		BYSCORE,
+
+		BYLEX;
+
+
+		@Override
+		public String getValue() {
+			return name();
+		}
+
+		@Override
+		public String toString() {
+			return getValue();
+		}
+
 	}
 
 }

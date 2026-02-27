@@ -59,6 +59,25 @@ import com.buession.redis.exception.RedisException;
 public interface RedisClient {
 
 	/**
+	 * 返回客户端选项
+	 *
+	 * @return 客户端选项
+	 *
+	 * @since 4.0.0
+	 */
+	ClientOptions getClientOptions();
+
+	/**
+	 * 设置客户端选项
+	 *
+	 * @param clientOptions
+	 * 		客户端选项
+	 *
+	 * @since 4.0.0
+	 */
+	void setClientOptions(ClientOptions clientOptions);
+
+	/**
 	 * 返回 Redis 连接对象 {@link RedisConnection}
 	 *
 	 * @return Redis 连接对象 {@link RedisConnection}
@@ -199,6 +218,13 @@ public interface RedisClient {
 	SetOperations setOperations();
 
 	/**
+	 * 返回有序集合命令操作实例
+	 *
+	 * @return 有序集合命令操作实例
+	 */
+	SortedSetOperations sortedSetOperations();
+
+	/**
 	 * 返回事务命令操作实例
 	 *
 	 * @return 事务命令操作实例
@@ -211,13 +237,6 @@ public interface RedisClient {
 	 * @return KEY 命令操作实例
 	 */
 	KeyOperations keyOperations();
-
-	/**
-	 * 返回有序集合命令操作实例
-	 *
-	 * @return 有序集合命令操作实例
-	 */
-	SortedSetOperations sortedSetOperations();
 
 	/**
 	 * 返回 Stream 命令操作实例

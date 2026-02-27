@@ -19,13 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.lettuce;
 
 import io.lettuce.core.ZStoreArgs;
-import redis.clients.jedis.params.ZParams;
 
 /**
  * Lettuce {@link ZStoreArgs} 扩展
@@ -46,7 +45,7 @@ public final class LettuceZStoreArgs extends ZStoreArgs {
 	 * 构造函数
 	 *
 	 * @param aggregate
-	 *        {@link ZParams.Aggregate}
+	 *        {@link com.buession.redis.core.Aggregate}
 	 */
 	public LettuceZStoreArgs(final com.buession.redis.core.Aggregate aggregate) {
 		super();
@@ -83,7 +82,7 @@ public final class LettuceZStoreArgs extends ZStoreArgs {
 	 * 构造函数
 	 *
 	 * @param aggregate
-	 *        {@link ZParams.Aggregate}
+	 *        {@link com.buession.redis.core.Aggregate}
 	 * @param weights
 	 * 		权重
 	 */

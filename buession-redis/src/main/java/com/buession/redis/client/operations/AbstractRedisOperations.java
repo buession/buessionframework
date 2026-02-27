@@ -24,11 +24,13 @@
  */
 package com.buession.redis.client.operations;
 
+import com.buession.core.collect.Arrays;
 import com.buession.core.converter.BooleanStatusConverter;
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
+import com.buession.core.utils.ByteUtils;
+import com.buession.core.validator.Validate;
 import com.buession.redis.client.RedisClient;
-import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
@@ -93,6 +95,32 @@ public abstract class AbstractRedisOperations<C extends RedisClient> implements 
 																					 final com.buession.redis.core.Command.Executor<O, SR> executor,
 																					 final Converter<SR, R> converter) {
 		return builder.arguments(args).executor(executor).converter(converter).run();
+	}
+
+	protected final String rawKey(final String key) {
+		String prefix = client.getClientOptions().getPrefix();
+		return Validate.isEmpty(prefix) ? key : prefix.concat(key);
+	}
+
+	protected final byte[] rawKey(byte[] key) {
+		String prefix = client.getClientOptions().getPrefix();
+		return Validate.isEmpty(prefix) ? key : ByteUtils.concat(SafeEncoder.encode(prefix), key);
+	}
+
+	protected final String[] rawKeys(final String[] keys) {
+		String prefix = client.getClientOptions().getPrefix();
+		return Validate.isEmpty(prefix) || Validate.isEmpty(keys) ? keys : Arrays.map(keys, String.class, this::rawKey);
+	}
+
+	protected final byte[][] rawKeys(final byte[][] keys) {
+		String prefix = client.getClientOptions().getPrefix();
+
+		if(Validate.isEmpty(prefix) || Validate.isEmpty(keys)){
+			return keys;
+		}
+
+		byte[] prefixByte = SafeEncoder.encode(prefix);
+		return Arrays.map(keys, byte[].class, (value)->ByteUtils.concat(prefixByte, value));
 	}
 
 }

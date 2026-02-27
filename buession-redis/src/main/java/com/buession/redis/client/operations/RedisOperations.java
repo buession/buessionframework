@@ -28,7 +28,6 @@ import com.buession.core.converter.Converter;
 import com.buession.redis.client.RedisClient;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.RedisConnectionUtils;
-import com.buession.redis.core.AbstractRedisCommand;
 import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
@@ -37,6 +36,8 @@ import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.NotSupportedPipelineCommandException;
 import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import com.buession.redis.exception.RedisException;
+import com.buession.redis.pipeline.Pipeline;
+import com.buession.redis.transaction.Transaction;
 
 /**
  * Redis 命令操作接口
@@ -53,10 +54,14 @@ public interface RedisOperations {
 	 * * @param <CONN>
 	 * * 		Redis 连接对象 {@link RedisConnection}
 	 *
+	 * @param <R>
+	 * 		返回值类型
+	 *
 	 * @author Yong.Teng
 	 * @since 4.0.0
 	 */
-	interface RedisOperationsCommand<CLIENT extends RedisClient, CONN extends RedisConnection> {
+	interface RedisOperationsCommand<CLIENT extends RedisClient, CONN extends RedisConnection, R> extends
+			com.buession.redis.core.Command<R> {
 
 	}
 
@@ -81,12 +86,29 @@ public interface RedisOperations {
 	 * @since 4.0.0
 	 */
 	abstract class AbstractRedisOperationsCommand<CLIENT extends RedisClient, CONN extends RedisConnection, CXT,
-			OSR, SR, R> extends AbstractRedisCommand<CLIENT, R> implements RedisOperationsCommand<CLIENT, CONN> {
+			OSR, SR, R> implements RedisOperationsCommand<CLIENT, CONN, R> {
 
 		/**
 		 * Redis 连接对象 {@link RedisConnection} 实例
 		 */
 		protected final CONN connection;
+
+		/**
+		 * {@link RedisClient} 实例
+		 */
+		protected final CLIENT client;
+
+		/**
+		 * Redis 协议命令
+		 */
+		protected final com.buession.redis.core.command.Command command;
+
+		/**
+		 * Redis 协议子命令
+		 *
+		 * @since 4.0.0
+		 */
+		protected final SubCommand subCommand;
 
 		/**
 		 * Redis 命令执行器
@@ -164,10 +186,27 @@ public interface RedisOperations {
 		@SuppressWarnings({"unchecked"})
 		public AbstractRedisOperationsCommand(final CLIENT client, final Command command, final SubCommand subCommand,
 											  final Executor<CXT, OSR> executor, final Converter<SR, R> converter) {
-			super(client, command, subCommand);
-			connection = (CONN) client.getConnection();
+			this.client = client;
+			this.command = command;
+			this.subCommand = subCommand;
+			this.connection = (CONN) client.getConnection();
 			this.executor = executor;
 			this.converter = converter;
+		}
+
+		@Override
+		public com.buession.redis.core.command.Command getCommand() {
+			return command;
+		}
+
+		@Override
+		public SubCommand getSubCommand() {
+			return subCommand;
+		}
+
+		@Override
+		public R run(final CommandArguments arguments) throws RedisException {
+			return client.execute(this, arguments);
 		}
 
 		@Override
@@ -186,6 +225,14 @@ public interface RedisOperations {
 			}else{
 				return doExecute();
 			}
+		}
+
+		protected Pipeline pipeline() {
+			return connection.openPipeline();
+		}
+
+		protected Transaction transaction() {
+			return connection.multi();
 		}
 
 		protected abstract R doExecute() throws RedisException;

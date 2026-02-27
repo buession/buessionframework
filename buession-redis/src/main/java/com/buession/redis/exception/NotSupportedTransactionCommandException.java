@@ -19,13 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.exception;
 
 import com.buession.redis.core.RedisMode;
-import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.SubCommand;
 
 /**
  * 不支持事务异常
@@ -40,12 +41,20 @@ public class NotSupportedTransactionCommandException extends NotSupportedCommand
 		super();
 	}
 
-	public NotSupportedTransactionCommandException(ProtocolCommand command) {
+	public NotSupportedTransactionCommandException(Command command) {
 		super(Type.TRANSACTION, command);
 	}
 
-	public NotSupportedTransactionCommandException(RedisMode mode, ProtocolCommand command) {
+	public NotSupportedTransactionCommandException(RedisMode mode, Command command) {
 		super(mode, command);
+	}
+
+	public NotSupportedTransactionCommandException(Command command, SubCommand subCommand) {
+		super(Type.TRANSACTION, command, subCommand);
+	}
+
+	public NotSupportedTransactionCommandException(RedisMode mode, Command command, SubCommand subCommand) {
+		super(mode, command, subCommand);
 	}
 
 	public NotSupportedTransactionCommandException(String message) {

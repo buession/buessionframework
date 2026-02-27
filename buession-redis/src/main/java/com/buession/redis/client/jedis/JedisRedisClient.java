@@ -25,6 +25,7 @@
 package com.buession.redis.client.jedis;
 
 import com.buession.redis.client.AbstractRedisClient;
+import com.buession.redis.client.ClientOptions;
 import com.buession.redis.client.connection.jedis.JedisRedisConnection;
 import com.buession.redis.client.jedis.operations.*;
 import com.buession.redis.client.operations.*;
@@ -36,13 +37,28 @@ import redis.clients.jedis.UnifiedJedis;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class JedisRedisClient extends AbstractRedisClient<JedisRedisConnection<? extends UnifiedJedis>> {
+public class JedisRedisClient extends AbstractRedisClient {
 
 	/**
 	 * 构造函数
 	 */
 	public JedisRedisClient() {
 		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param clientOptions
+	 * 		客户端选项
+	 * @param connection
+	 * 		Jedis Redis 连接对象 {@link JedisRedisConnection}
+	 *
+	 * @since 4.0.0
+	 */
+	public JedisRedisClient(final ClientOptions clientOptions,
+							final JedisRedisConnection<? extends UnifiedJedis> connection) {
+		super(clientOptions, connection);
 	}
 
 	/**
@@ -212,6 +228,15 @@ public class JedisRedisClient extends AbstractRedisClient<JedisRedisConnection<?
 	}
 
 	@Override
+	public SortedSetOperations sortedSetOperations() {
+		if(sortedSetOperations == null){
+			sortedSetOperations = new JedisSortedSetOperations(this);
+		}
+
+		return sortedSetOperations;
+	}
+
+	@Override
 	public TransactionOperations transactionOperations() {
 		if(transactionOperations == null){
 			transactionOperations = new JedisTransactionOperations(this);
@@ -227,15 +252,6 @@ public class JedisRedisClient extends AbstractRedisClient<JedisRedisConnection<?
 		}
 
 		return keyOperations;
-	}
-
-	@Override
-	public SortedSetOperations sortedSetOperations() {
-		if(sortedSetOperations == null){
-			sortedSetOperations = new JedisSortedSetOperations(this);
-		}
-
-		return sortedSetOperations;
 	}
 
 	@Override
