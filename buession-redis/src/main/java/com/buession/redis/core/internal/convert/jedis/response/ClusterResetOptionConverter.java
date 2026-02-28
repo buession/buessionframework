@@ -38,6 +38,10 @@ public final class ClusterResetOptionConverter implements Converter<ClusterReset
 
 	@Override
 	public ClusterResetType convert(final ClusterResetOption source) {
+		if(source == null){
+			return null;
+		}
+
 		return switch(source){
 			case SOFT -> ClusterResetType.SOFT;
 			case HARD -> ClusterResetType.HARD;

@@ -25,11 +25,9 @@
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.lang.KeyValue;
-import org.springframework.lang.Nullable;
 
 /**
- * Lettuce {@link io.lettuce.core.KeyValue} 转换为 {@link KeyValue}
+ * Lettuce {@link io.lettuce.core.KeyValue} 转换为 {@link com.buession.lang.KeyValue}
  *
  * @param <SK>
  * 		原始 Key 类型
@@ -44,7 +42,7 @@ import org.springframework.lang.Nullable;
  * @since 3.0.0
  */
 public class KeyValueConverter<SK, SV, TK, TV> implements Converter<io.lettuce.core.KeyValue<SK, SV>,
-		KeyValue<TK, TV>> {
+		com.buession.lang.KeyValue<TK, TV>> {
 
 	/**
 	 * Key 转换器
@@ -69,10 +67,10 @@ public class KeyValueConverter<SK, SV, TK, TV> implements Converter<io.lettuce.c
 		this.valueConverter = valueConverter;
 	}
 
-	@Nullable
 	@Override
-	public KeyValue<TK, TV> convert(final io.lettuce.core.KeyValue<SK, SV> source) {
-		return new KeyValue<>(keyConverter.convert(source.getKey()), valueConverter.convert(source.getValue()));
+	public com.buession.lang.KeyValue<TK, TV> convert(final io.lettuce.core.KeyValue<SK, SV> source) {
+		return source == null ? null : new com.buession.lang.KeyValue<>(keyConverter.convert(source.getKey()),
+				valueConverter.convert(source.getValue()));
 	}
 
 }

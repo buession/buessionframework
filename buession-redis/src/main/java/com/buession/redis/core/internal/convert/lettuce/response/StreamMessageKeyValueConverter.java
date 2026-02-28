@@ -28,7 +28,6 @@ import com.buession.core.converter.Converter;
 import com.buession.lang.KeyValue;
 import com.buession.redis.core.StreamEntry;
 import io.lettuce.core.StreamMessage;
-import org.springframework.lang.Nullable;
 
 import java.util.List;
 
@@ -41,7 +40,6 @@ import java.util.List;
 public final class StreamMessageKeyValueConverter<SK, SV, TK, TV>
 		implements Converter<StreamMessage<SK, SV>, KeyValue<TK, List<StreamEntry<TK, TV>>>> {
 
-	@Nullable
 	@Override
 	public KeyValue<TK, List<StreamEntry<TK, TV>>> convert(final StreamMessage<SK, SV> source) {
 		if(source == null){

@@ -59,6 +59,10 @@ public final class StreamMessageConverter<SK, SV, TK, TV>
 
 	@Override
 	public StreamEntry<TK, TV> convert(final StreamMessage<SK, SV> source) {
+		if(source == null){
+			return null;
+		}
+
 		final MapConverter<SK, SV, TK, TV> mapConverter = new MapConverter<>(keyConverter, valueConverter);
 		return new StreamEntry<>(new StreamEntryId(source.getId()), mapConverter.convert(source.getBody()));
 	}
@@ -74,7 +78,7 @@ public final class StreamMessageConverter<SK, SV, TK, TV>
 
 		@Override
 		public StreamEntryId convert(final StreamMessage<byte[], byte[]> source) {
-			return new StreamEntryId(source.getId());
+			return source == null ? null : new StreamEntryId(source.getId());
 		}
 
 	}

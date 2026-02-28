@@ -26,7 +26,6 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.LibraryInfo;
-import org.springframework.lang.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -39,7 +38,6 @@ import java.util.Map;
  */
 public final class LibraryInfoConverter implements Converter<Map<String, Object>, LibraryInfo> {
 
-	@Nullable
 	@Override
 	public LibraryInfo convert(final Map<String, Object> source) {
 		if(source == null){

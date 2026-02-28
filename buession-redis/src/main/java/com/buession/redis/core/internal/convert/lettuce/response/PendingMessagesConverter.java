@@ -29,7 +29,6 @@ import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.StreamPendingSummary;
 import io.lettuce.core.Range;
 import io.lettuce.core.models.stream.PendingMessages;
-import org.springframework.lang.Nullable;
 
 /**
  * Lettuce {@link PendingMessages} 转换为 {@link StreamPendingSummary}
@@ -37,20 +36,19 @@ import org.springframework.lang.Nullable;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class PendingMessagesConverter implements Converter<PendingMessages, StreamPendingSummary> {
+public final class PendingMessagesConverter implements Converter<PendingMessages, StreamPendingSummary> {
 
-	@Nullable
 	@Override
 	public StreamPendingSummary convert(final PendingMessages source) {
 		if(source == null){
 			return null;
-		}else{
-			final Range<String> messageIds = source.getMessageIds();
-
-			return new StreamPendingSummary(source.getCount(),
-					new StreamEntryId(messageIds.getLower().getValue()),
-					new StreamEntryId(messageIds.getUpper().getValue()), source.getConsumerMessageCount());
 		}
+
+		final Range<String> messageIds = source.getMessageIds();
+
+		return new StreamPendingSummary(source.getCount(),
+				new StreamEntryId(messageIds.getLower().getValue()),
+				new StreamEntryId(messageIds.getUpper().getValue()), source.getConsumerMessageCount());
 	}
 
 }

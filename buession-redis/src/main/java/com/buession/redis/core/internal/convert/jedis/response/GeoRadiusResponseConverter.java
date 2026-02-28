@@ -25,11 +25,8 @@
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.GeoRadius;
 import redis.clients.jedis.resps.GeoRadiusResponse;
-
-import java.util.List;
 
 /**
  * Jedis {@link GeoRadiusResponse} 转换为 {@link GeoRadius}
@@ -43,7 +40,7 @@ public class GeoRadiusResponseConverter implements Converter<GeoRadiusResponse, 
 
 	@Override
 	public GeoRadius convert(final GeoRadiusResponse source) {
-		return new GeoRadius(source.getMember(), source.getDistance(),
+		return source == null ? null : new GeoRadius(source.getMember(), source.getDistance(),
 				source.getCoordinate() == null ? null : geoCoordinateConverter.convert(source.getCoordinate()));
 	}
 

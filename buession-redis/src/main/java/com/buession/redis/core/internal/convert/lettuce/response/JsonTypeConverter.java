@@ -26,7 +26,6 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.JsonType;
-import org.springframework.lang.Nullable;
 
 /**
  * Lettuce {@link io.lettuce.core.json.JsonType} 转换为 {@link com.buession.redis.core.JsonType}
@@ -37,7 +36,6 @@ import org.springframework.lang.Nullable;
 public final class JsonTypeConverter
 		implements Converter<io.lettuce.core.json.JsonType, com.buession.redis.core.JsonType> {
 
-	@Nullable
 	@Override
 	public JsonType convert(final io.lettuce.core.json.JsonType source) {
 		if(source == null){

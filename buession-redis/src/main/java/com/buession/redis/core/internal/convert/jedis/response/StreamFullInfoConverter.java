@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
@@ -42,16 +42,18 @@ import java.util.List;
  */
 public final class StreamFullInfoConverter implements Converter<StreamFullInfo, StreamFull> {
 
-	private final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
-
-	private final ListConverter<StreamGroupFullInfo, StreamFull.Group> listStreamFullInfoGroupConverter =
-			StreamFullInfoGroupConverter.listConverter();
-
-	private final ListConverter<redis.clients.jedis.resps.StreamEntry, StreamEntry> listStreamEntryConverter =
-			StreamEntryConverter.listConverter();
-
 	@Override
 	public StreamFull convert(final StreamFullInfo source) {
+		if(source == null){
+			return null;
+		}
+
+		final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
+		final ListConverter<StreamGroupFullInfo, StreamFull.Group> listStreamFullInfoGroupConverter =
+				new ListConverter<>(new StreamFullInfoGroupConverter());
+		final ListConverter<redis.clients.jedis.resps.StreamEntry, StreamEntry> listStreamEntryConverter =
+				new ListConverter<>(new StreamEntryConverter<>());
+
 		final List<StreamFull.Group> groups = listStreamFullInfoGroupConverter.convert(source.getGroups());
 		final StreamEntryId lastGeneratedId = streamEntryIDConverter.convert(source.getLastGeneratedId());
 		final List<StreamEntry> entries = listStreamEntryConverter.convert(source.getEntries());

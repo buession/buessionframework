@@ -25,19 +25,18 @@
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.Tuple;
 
 /**
- * jedis {@link redis.clients.jedis.resps.Tuple} 转换为 {@link Tuple}
+ * jedis {@link redis.clients.jedis.resps.Tuple} 转换为 {@link com.buession.redis.core.Tuple}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class TupleConverter implements Converter<redis.clients.jedis.resps.Tuple, Tuple> {
+public final class TupleConverter implements Converter<redis.clients.jedis.resps.Tuple, com.buession.redis.core.Tuple> {
 
 	@Override
-	public Tuple convert(final redis.clients.jedis.resps.Tuple source) {
-		return new Tuple(source.getBinaryElement(), source.getScore());
+	public com.buession.redis.core.Tuple convert(final redis.clients.jedis.resps.Tuple source) {
+		return source == null ? null : new com.buession.redis.core.Tuple(source.getBinaryElement(), source.getScore());
 	}
 
 }

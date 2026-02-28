@@ -19,16 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.StreamPending;
 import io.lettuce.core.models.stream.PendingMessage;
-import org.springframework.lang.Nullable;
 
 /**
  * 'xpending' 命令结果转换为 {@link StreamPending}
@@ -38,14 +36,9 @@ import org.springframework.lang.Nullable;
  */
 public final class StreamPendingConverter implements Converter<PendingMessage, StreamPending> {
 
-	@Nullable
 	@Override
 	public StreamPending convert(final PendingMessage source) {
 		return null;
-	}
-
-	public static ListConverter<PendingMessage, StreamPending> listConverter() {
-		return new ListConverter<>(new StreamPendingConverter());
 	}
 
 }

@@ -38,7 +38,7 @@ public final class StreamEntryIDConverter implements Converter<StreamEntryID, St
 
 	@Override
 	public StreamEntryId convert(final StreamEntryID source) {
-		return new StreamEntryId(source.getTime(), source.getSequence());
+		return source == null ? null : new StreamEntryId(source.getTime(), source.getSequence());
 	}
 
 }

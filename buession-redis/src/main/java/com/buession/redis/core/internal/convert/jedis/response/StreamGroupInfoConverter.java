@@ -37,10 +37,13 @@ import redis.clients.jedis.resps.StreamGroupInfo;
  */
 public final class StreamGroupInfoConverter implements Converter<StreamGroupInfo, StreamGroup> {
 
-	private final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
-
 	@Override
 	public StreamGroup convert(final StreamGroupInfo source) {
+		if(source == null){
+			return null;
+		}
+
+		final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
 		final StreamEntryId lastDeliveredId = streamEntryIDConverter.convert(source.getLastDeliveredId());
 		return new StreamGroup(source.getName(), source.getConsumers(), source.getPending(), lastDeliveredId,
 				source.getGroupInfo());

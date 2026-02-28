@@ -27,13 +27,6 @@ package com.buession.redis.core.internal.convert.jedis.response;
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.ScanResult;
-import com.buession.redis.core.Tuple;
-import org.springframework.lang.Nullable;
-
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * jedis {@link redis.clients.jedis.resps.ScanResult} 转换为 {@link ScanResult}
@@ -52,7 +45,7 @@ public final class ScanResultConverter<S, T>
 
 	@Override
 	public ScanResult<T> convert(final redis.clients.jedis.resps.ScanResult<S> source) {
-		return new ScanResult<>(source.getCursor(), converter.convert(source.getResult()));
+		return source == null ? null : new ScanResult<>(source.getCursor(), converter.convert(source.getResult()));
 	}
 	/**
 	 * jedis {@link redis.clients.jedis.resps.ScanResult} 转换为 {@link java.util.List}&lt;ScanResult&gt;

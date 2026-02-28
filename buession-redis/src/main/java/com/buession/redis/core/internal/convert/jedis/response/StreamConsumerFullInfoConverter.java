@@ -19,13 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.StreamConsumerFull;
 import redis.clients.jedis.resps.StreamConsumerFullInfo;
 
@@ -42,6 +41,10 @@ public final class StreamConsumerFullInfoConverter implements Converter<StreamCo
 
 	@Override
 	public StreamConsumerFull convert(final StreamConsumerFullInfo source) {
+		if(source == null){
+			return null;
+		}
+
 		final List<Long> pendings = new ArrayList<>();
 
 		if(source.getPending() != null){
@@ -54,10 +57,6 @@ public final class StreamConsumerFullInfoConverter implements Converter<StreamCo
 
 		return new StreamConsumerFull(source.getName(), source.getSeenTime(), source.getPelCount(), pendings,
 				source.getConsumerInfo());
-	}
-
-	public static ListConverter<StreamConsumerFullInfo, StreamConsumerFull> listConverter() {
-		return new ListConverter<>(new StreamConsumerFullInfoConverter());
 	}
 
 }

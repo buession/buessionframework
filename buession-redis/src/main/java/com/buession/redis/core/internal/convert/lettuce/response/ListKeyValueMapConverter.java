@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class ListKeyValueMapConverter<SK, SV, TK, TV> implements Converter<List<io.lettuce.core.KeyValue<SK, SV>>,
+public final class ListKeyValueMapConverter<SK, SV, TK, TV> implements Converter<List<io.lettuce.core.KeyValue<SK, SV>>,
 		Map<TK, TV>> {
 
 	/**

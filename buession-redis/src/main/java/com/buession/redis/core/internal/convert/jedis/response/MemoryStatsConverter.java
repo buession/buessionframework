@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
@@ -42,6 +42,10 @@ public final class MemoryStatsConverter implements Converter<Map<String, Object>
 
 	@Override
 	public MemoryStats convert(final Map<String, Object> source) {
+		if(source == null){
+			return null;
+		}
+
 		Long dataset = null;
 		Double datasetPercentage = null;
 		Long rssOverhead = null;

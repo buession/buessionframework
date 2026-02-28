@@ -26,7 +26,6 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.AclCategory;
-import org.springframework.lang.Nullable;
 
 /**
  * Lettuce {@link io.lettuce.core.AclCategory} 转换为 {@link com.buession.redis.core.AclCategory}
@@ -37,7 +36,6 @@ import org.springframework.lang.Nullable;
 public final class AclCategoryConverter
 		implements Converter<io.lettuce.core.AclCategory, com.buession.redis.core.AclCategory> {
 
-	@Nullable
 	@Override
 	public AclCategory convert(final io.lettuce.core.AclCategory source) {
 		return source == null ? null : Enum.valueOf(AclCategory.class, source.name());

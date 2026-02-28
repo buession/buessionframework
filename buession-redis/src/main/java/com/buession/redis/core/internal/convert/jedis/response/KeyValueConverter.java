@@ -70,8 +70,8 @@ public final class KeyValueConverter<SK, SV, TK, TV> implements Converter<redis.
 
 	@Override
 	public KeyValue<TK, TV> convert(final redis.clients.jedis.util.KeyValue<SK, SV> source) {
-		return new com.buession.lang.KeyValue<>(keyConverter.convert(source.getKey()), valueConverter.convert(
-				source.getValue()));
+		return source == null ? null : new com.buession.lang.KeyValue<>(keyConverter.convert(source.getKey()),
+				valueConverter.convert(source.getValue()));
 	}
 
 }

@@ -30,7 +30,6 @@ import com.buession.lang.KeyValue;
 import com.buession.redis.core.StreamEntryId;
 import io.lettuce.core.StreamMessage;
 import io.lettuce.core.models.stream.ClaimedMessages;
-import org.springframework.lang.Nullable;
 
 import java.util.List;
 
@@ -58,7 +57,6 @@ public final class ClaimedMessagesKeyValueConverter<SK, SV, TK, TV> implements C
 		this.converter = converter;
 	}
 
-	@Nullable
 	@Override
 	public KeyValue<StreamEntryId, List<TV>> convert(final ClaimedMessages<SK, SV> source) {
 		if(source == null){

@@ -19,28 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
-import com.buession.core.converter.MapConverter;
 import com.buession.redis.core.ScanResult;
-import com.buession.redis.core.Tuple;
-import com.buession.redis.core.internal.convert.Converters;
-import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.KeyScanCursor;
-import io.lettuce.core.MapScanCursor;
 import io.lettuce.core.ScanCursor;
-import io.lettuce.core.ScoredValue;
-import io.lettuce.core.ScoredValueScanCursor;
-import io.lettuce.core.ValueScanCursor;
-import org.springframework.lang.Nullable;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * Lettuce {@link ScanCursor} 转换为 {@link ScanResult}
@@ -55,7 +42,6 @@ import java.util.Map;
  */
 public final class ScanCursorConverter<T extends ScanCursor, R> implements Converter<T, ScanResult<R>> {
 
-	@Nullable
 	@Override
 	public ScanResult<R> convert(final T source) {
 		return new ScanResult<>(source.getCursor(), source.getKeys());

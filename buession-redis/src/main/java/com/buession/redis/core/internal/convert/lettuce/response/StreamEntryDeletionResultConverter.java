@@ -25,7 +25,6 @@
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
-import org.springframework.lang.Nullable;
 
 /**
  * lettuce {@link io.lettuce.core.models.stream.StreamEntryDeletionResult} 转换为 {@link com.buession.redis.core.StreamEntryDeletionResult}
@@ -36,7 +35,6 @@ import org.springframework.lang.Nullable;
 public final class StreamEntryDeletionResultConverter implements
 		Converter<io.lettuce.core.models.stream.StreamEntryDeletionResult, com.buession.redis.core.StreamEntryDeletionResult> {
 
-	@Nullable
 	@Override
 	public com.buession.redis.core.StreamEntryDeletionResult convert(
 			final io.lettuce.core.models.stream.StreamEntryDeletionResult source) {

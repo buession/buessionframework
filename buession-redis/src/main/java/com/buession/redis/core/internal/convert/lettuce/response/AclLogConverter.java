@@ -27,7 +27,6 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 import com.buession.core.converter.Converter;
 import com.buession.core.validator.Validate;
 import com.buession.redis.core.AclLog;
-import org.springframework.lang.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -38,11 +37,14 @@ import java.util.List;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class AclLogConverter implements Converter<String, List<AclLog>> {
+public final class AclLogConverter implements Converter<String, List<AclLog>> {
 
-	@Nullable
 	@Override
 	public List<AclLog> convert(final String source) {
+		if(source == null){
+			return null;
+		}
+
 		if(Validate.isEmpty(source)){
 			return Collections.emptyList();
 		}

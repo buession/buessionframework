@@ -27,24 +27,18 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.AggregationResult;
 import io.lettuce.core.search.AggregationReply;
-import org.springframework.lang.Nullable;
 
 /**
- *
+ * Lettuce {@link AggregationReply} 转换为 {@link AggregationResult}
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
 public final class AggregationReplyConverter implements Converter<AggregationReply<byte[], byte[]>, AggregationResult> {
 
-	@Nullable
 	@Override
 	public AggregationResult convert(final AggregationReply<byte[], byte[]> source) {
-		if(source == null){
-			return null;
-		}
-
-		return new AggregationResult();
+		return source == null ? null : new AggregationResult();
 	}
 
 }

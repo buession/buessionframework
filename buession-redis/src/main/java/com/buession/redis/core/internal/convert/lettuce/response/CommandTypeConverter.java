@@ -27,7 +27,6 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.command.Command;
 import io.lettuce.core.protocol.CommandType;
-import org.springframework.lang.Nullable;
 
 /**
  * Lettuce {@link CommandType} 转换为 {@link Command}
@@ -37,7 +36,6 @@ import org.springframework.lang.Nullable;
  */
 public final class CommandTypeConverter implements Converter<CommandType, Command> {
 
-	@Nullable
 	@Override
 	public Command convert(final CommandType source) {
 		return source == null ? null : Enum.valueOf(Command.class, source.name());

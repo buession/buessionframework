@@ -36,10 +36,13 @@ import io.lettuce.core.GeoWithin;
  */
 public final class GeoRadiusResponseConverter implements Converter<GeoWithin<byte[]>, GeoRadius> {
 
-	private final GeoCoordinateConverter geoCoordinateConverter = new GeoCoordinateConverter();
-
 	@Override
 	public GeoRadius convert(final GeoWithin<byte[]> source) {
+		if(source == null){
+			return null;
+		}
+
+		final GeoCoordinateConverter geoCoordinateConverter = new GeoCoordinateConverter();
 		return new GeoRadius(source.getMember(), source.getDistance(),
 				source.getCoordinates() == null ? null : geoCoordinateConverter.convert(source.getCoordinates()));
 	}

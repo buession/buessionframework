@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
@@ -40,25 +40,23 @@ import java.util.List;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class StreamFullInfoGroupConverter implements Converter<StreamGroupFullInfo, StreamFull.Group> {
-
-	private final ListConverter<StreamConsumerFullInfo, StreamConsumerFull> listStreamConsumerFullInfoConverter =
-			StreamConsumerFullInfoConverter.listConverter();
-
-	private final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
+public final class StreamFullInfoGroupConverter implements Converter<StreamGroupFullInfo, StreamFull.Group> {
 
 	@Override
 	public StreamFull.Group convert(final StreamGroupFullInfo source) {
+		if(source == null){
+			return null;
+		}
+
+		final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
+		final ListConverter<StreamConsumerFullInfo, StreamConsumerFull> listStreamConsumerFullInfoConverter =
+				new ListConverter<>(new StreamConsumerFullInfoConverter());
 		final List<StreamConsumerFull> consumers = listStreamConsumerFullInfoConverter.convert(
 				source.getConsumers());
 		final StreamEntryId lastDeliveredId = streamEntryIDConverter.convert(source.getLastDeliveredId());
 
 		return new StreamFull.Group(source.getName(), consumers, source.getPending(), source.getPelCount(),
 				lastDeliveredId, source.getGroupFullInfo());
-	}
-
-	public static ListConverter<StreamGroupFullInfo, StreamFull.Group> listConverter() {
-		return new ListConverter<>(new StreamFullInfoGroupConverter());
 	}
 
 }

@@ -26,7 +26,6 @@ package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.FunctionStats;
-import org.springframework.lang.Nullable;
 
 /**
  * Jedis {@link redis.clients.jedis.resps.FunctionStats} 转换为 {@link com.buession.redis.core.FunctionStats}
@@ -37,7 +36,6 @@ import org.springframework.lang.Nullable;
 public final class FunctionStatsConverter
 		implements Converter<redis.clients.jedis.resps.FunctionStats, com.buession.redis.core.FunctionStats> {
 
-	@Nullable
 	@Override
 	public com.buession.redis.core.FunctionStats convert(final redis.clients.jedis.resps.FunctionStats source) {
 		if(source == null){

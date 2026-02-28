@@ -25,7 +25,6 @@
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
-import org.springframework.lang.Nullable;
 
 /**
  * Jedis {@link redis.clients.jedis.search.aggr.AggregationResult} 转换为 {@link com.buession.redis.core.AggregationResult}
@@ -37,10 +36,13 @@ public final class AggregationResultConverter
 		implements Converter<redis.clients.jedis.search.aggr.AggregationResult,
 		com.buession.redis.core.AggregationResult> {
 
-	@Nullable
 	@Override
 	public com.buession.redis.core.AggregationResult convert(
 			final redis.clients.jedis.search.aggr.AggregationResult source) {
+		if(source == null){
+			return null;
+		}
+
 		return null;
 	}
 

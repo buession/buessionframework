@@ -25,7 +25,6 @@
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
-import org.springframework.lang.Nullable;
 
 /**
  * jedis {@link redis.clients.jedis.resps.StreamEntryDeletionResult} 转换为
@@ -37,7 +36,6 @@ import org.springframework.lang.Nullable;
 public final class StreamEntryDeletionResultConverter implements
 		Converter<redis.clients.jedis.resps.StreamEntryDeletionResult, com.buession.redis.core.StreamEntryDeletionResult> {
 
-	@Nullable
 	@Override
 	public com.buession.redis.core.StreamEntryDeletionResult convert(
 			final redis.clients.jedis.resps.StreamEntryDeletionResult source) {

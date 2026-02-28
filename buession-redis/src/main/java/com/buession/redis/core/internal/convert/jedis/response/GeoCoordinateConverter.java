@@ -38,7 +38,7 @@ public final class GeoCoordinateConverter implements Converter<GeoCoordinate, Ge
 
 	@Override
 	public Geo convert(final GeoCoordinate source) {
-		return new Geo(source.getLongitude(), source.getLatitude());
+		return source == null ? null : new Geo(source.getLongitude(), source.getLatitude());
 	}
 
 }

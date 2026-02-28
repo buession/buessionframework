@@ -26,7 +26,6 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.StreamGroup;
-import org.springframework.lang.Nullable;
 
 /**
  * Lettuce 'xinfo-groups' 命令结果转换为 {@link StreamGroup}
@@ -36,7 +35,6 @@ import org.springframework.lang.Nullable;
  */
 public final class StreamGroupInfoConverter implements Converter<Object, StreamGroup> {
 
-	@Nullable
 	@Override
 	public StreamGroup convert(final Object source) {
 		return null;

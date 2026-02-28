@@ -27,7 +27,6 @@ package com.buession.redis.core.internal.convert.jedis.response;
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.XReadGroupInfo;
-import org.springframework.lang.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -81,7 +80,6 @@ public final class MapEntryStreamEntryXReadGroupInfoConverter<SK, TK, TV>
 		this.entryValueConverter = entryValueConverter;
 	}
 
-	@Nullable
 	@Override
 	public XReadGroupInfo<TK, TV> convert(final Map.Entry<SK, List<redis.clients.jedis.resps.StreamEntry>> source) {
 		if(source == null){

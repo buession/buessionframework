@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
@@ -40,6 +40,10 @@ public final class RedisServerTimeConverter implements Converter<List<String>, R
 
 	@Override
 	public RedisServerTime convert(final List<String> source) {
+		if(source == null){
+			return null;
+		}
+
 		Date date = new Date(Long.parseLong(source.get(0)) * 1000L);
 		return new RedisServerTime(date, Long.parseLong(source.get(1)));
 	}

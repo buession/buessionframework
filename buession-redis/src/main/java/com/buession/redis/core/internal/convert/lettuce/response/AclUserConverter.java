@@ -26,7 +26,6 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.AclUser;
-import org.springframework.lang.Nullable;
 
 import java.util.List;
 
@@ -38,7 +37,6 @@ import java.util.List;
  */
 public final class AclUserConverter implements Converter<List<Object>, AclUser> {
 
-	@Nullable
 	@Override
 	public AclUser convert(final List<Object> source) {
 		return null;

@@ -26,12 +26,9 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
-import com.buession.lang.KeyValue;
 import com.buession.redis.core.XReadInfo;
 import com.buession.redis.core.internal.convert.jedis.response.StreamEntryConverter;
 import io.lettuce.core.StreamMessage;
-import org.springframework.lang.Nullable;
-import redis.clients.jedis.resps.StreamEntry;
 
 /**
  * Lettuce {@link StreamMessage} 转换为 {@link XReadInfo}
@@ -75,7 +72,6 @@ public final class StreamMessageStreamEntryXReadInfoConverter<SK, SV, TK, TV>
 		this.entryValueConverter = entryValueConverter;
 	}
 
-	@Nullable
 	@Override
 	public XReadInfo<TK, TV> convert(final StreamMessage<SK, SV> source) {
 		if(source == null){

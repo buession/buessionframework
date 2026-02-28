@@ -37,7 +37,7 @@ public final class GeoRadiusGeneralResultConverter implements Converter<byte[], 
 
 	@Override
 	public GeoRadius convert(final byte[] source) {
-		return new GeoRadius(source);
+		return source == null ? null : new GeoRadius(source);
 	}
 
 }

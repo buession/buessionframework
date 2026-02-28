@@ -37,10 +37,13 @@ import redis.clients.jedis.resps.StreamPendingEntry;
  */
 public final class StreamPendingEntryConverter implements Converter<StreamPendingEntry, StreamPending> {
 
-	private final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
-
 	@Override
 	public StreamPending convert(final StreamPendingEntry source) {
+		if(source == null){
+			return null;
+		}
+
+		final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
 		final StreamEntryId id = streamEntryIDConverter.convert(source.getID());
 		return new StreamPending(id, source.getConsumerName(), source.getIdleTime(), source.getDeliveredTimes());
 	}

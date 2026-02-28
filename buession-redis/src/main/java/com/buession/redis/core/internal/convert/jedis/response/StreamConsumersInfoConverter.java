@@ -38,7 +38,8 @@ public final class StreamConsumersInfoConverter implements Converter<StreamConsu
 
 	@Override
 	public StreamConsumer convert(final StreamConsumerInfo source) {
-		return new StreamConsumer(source.getName(), source.getIdle(), source.getPending(), source.getConsumerInfo());
+		return source == null ? null : new StreamConsumer(source.getName(), source.getIdle(), source.getPending(),
+				source.getConsumerInfo());
 	}
 
 }

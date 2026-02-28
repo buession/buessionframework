@@ -25,7 +25,6 @@
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.Module;
 
 /**
  * jedis {@link redis.clients.jedis.Module} 转换为 {@link Module}
@@ -33,11 +32,11 @@ import com.buession.redis.core.Module;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class ModuleConverter implements Converter<redis.clients.jedis.Module, Module> {
+public final class ModuleConverter implements Converter<redis.clients.jedis.Module, com.buession.redis.core.Module> {
 
 	@Override
-	public Module convert(final redis.clients.jedis.Module source) {
-		return new Module(source.getName(), source.getVersion());
+	public com.buession.redis.core.Module convert(final redis.clients.jedis.Module source) {
+		return source == null ? null : new com.buession.redis.core.Module(source.getName(), source.getVersion());
 	}
 
 }

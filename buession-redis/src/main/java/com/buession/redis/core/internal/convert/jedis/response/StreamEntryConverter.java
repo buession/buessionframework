@@ -53,6 +53,10 @@ public final class StreamEntryConverter<K, V>
 
 	@Override
 	public StreamEntry<K, V> convert(final redis.clients.jedis.resps.StreamEntry source) {
+		if(source == null){
+			return null;
+		}
+
 		final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
 		final MapConverter<String, String, K, V> mapConverter = new MapConverter<>(keyConverter, valueConverter);
 		return new StreamEntry<>(streamEntryIDConverter.convert(source.getID()),

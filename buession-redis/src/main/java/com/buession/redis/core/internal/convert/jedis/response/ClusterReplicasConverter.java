@@ -19,13 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
 import com.buession.core.utils.EnumUtils;
 import com.buession.core.utils.StringUtils;
 import com.buession.redis.core.ClusterRedisNode;
@@ -46,6 +45,10 @@ public final class ClusterReplicasConverter implements Converter<String, Cluster
 
 	@Override
 	public ClusterRedisNode convert(final String source) {
+		if(source == null){
+			return null;
+		}
+
 		String[] values = StringUtils.split(source, " ");
 		String[] hostAndPort = StringUtils.split(values[1], ':');
 		String host = hostAndPort[0];

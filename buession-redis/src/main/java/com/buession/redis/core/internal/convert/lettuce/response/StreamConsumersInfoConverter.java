@@ -26,7 +26,6 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.StreamConsumer;
-import org.springframework.lang.Nullable;
 
 /**
  * Lettuce 'xinfo-consumers' 命令结果转换为 {@link StreamConsumer}
@@ -36,7 +35,6 @@ import org.springframework.lang.Nullable;
  */
 public final class StreamConsumersInfoConverter implements Converter<Object, StreamConsumer> {
 
-	@Nullable
 	@Override
 	public StreamConsumer convert(final Object source) {
 		return null;

@@ -26,7 +26,6 @@ package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.LibraryInfo;
-import org.springframework.lang.Nullable;
 
 /**
  * Jedis {@link redis.clients.jedis.resps.LibraryInfo} 转换为 {@link com.buession.redis.core.LibraryInfo}
@@ -37,15 +36,10 @@ import org.springframework.lang.Nullable;
 public final class LibraryInfoConverter implements Converter<redis.clients.jedis.resps.LibraryInfo,
 		com.buession.redis.core.LibraryInfo> {
 
-	@Nullable
 	@Override
 	public LibraryInfo convert(final redis.clients.jedis.resps.LibraryInfo source) {
-		if(source == null){
-			return null;
-		}
-
-		return new com.buession.redis.core.LibraryInfo(source.getLibraryName(), source.getEngine(),
-				source.getLibraryCode(), source.getFunctions());
+		return source == null ? null : new com.buession.redis.core.LibraryInfo(source.getLibraryName(),
+				source.getEngine(), source.getLibraryCode(), source.getFunctions());
 	}
 
 }

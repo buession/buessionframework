@@ -19,13 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.AclLog;
 import com.buession.redis.core.Client;
 import com.buession.redis.core.internal.convert.response.ClientConverter;
@@ -43,15 +42,15 @@ public final class AccessControlLogEntryConverter implements Converter<AccessCon
 
 	@Override
 	public AclLog convert(final AccessControlLogEntry source) {
+		if(source == null){
+			return null;
+		}
+
 		final Client client = clientConverter.convert((String) source.getlogEntry().get("client-info"));
 
 		return new AclLog(source.getEntryId(), source.getCount(), source.getReason(), source.getContext(),
 				source.getObject(), source.getUsername(), source.getAgeSeconds(), client, source.getTimestampCreated(),
 				source.getTimestampLastUpdated(), source.getlogEntry());
-	}
-
-	public static ListConverter<AccessControlLogEntry, AclLog> listConverter() {
-		return new ListConverter<>(new AccessControlLogEntryConverter());
 	}
 
 }

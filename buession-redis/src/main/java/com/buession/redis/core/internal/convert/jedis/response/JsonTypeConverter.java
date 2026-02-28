@@ -26,7 +26,6 @@ package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.JsonType;
-import org.springframework.lang.Nullable;
 
 import java.math.BigDecimal;
 
@@ -38,7 +37,6 @@ import java.math.BigDecimal;
  */
 public final class JsonTypeConverter implements Converter<Class<?>, JsonType> {
 
-	@Nullable
 	@Override
 	public JsonType convert(final Class<?> source) {
 		if(source == null){
