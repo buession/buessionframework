@@ -665,6 +665,51 @@ public enum Command implements ProtocolCommand {
 	 **/
 
 	/**
+	 * stream command start
+	 **/
+	XACK(CommandGroup.STREAM, "w"),
+
+	XACKDEL(CommandGroup.STREAM, "rw"),
+
+	XADD(CommandGroup.STREAM, "w"),
+
+	XAUTOCLAIM(CommandGroup.STREAM, "w"),
+
+	XCFGSET(CommandGroup.STREAM, "w"),
+
+	XCLAIM(CommandGroup.STREAM, "w"),
+
+	XDEL(CommandGroup.STREAM, "w"),
+
+	XDELEX(CommandGroup.STREAM, "w"),
+
+	XGROUP(CommandGroup.STREAM, "rw",
+			new SubCommand[]{SubCommand.XGROUP_CREATE, SubCommand.XGROUP_CREATECONSUMER, SubCommand.XGROUP_DELCONSUMER,
+					SubCommand.XGROUP_DESTROY, SubCommand.XGROUP_SETID}),
+
+	XINFO(CommandGroup.STREAM, "rw",
+			new SubCommand[]{SubCommand.XINFO_CONSUMERS, SubCommand.XINFO_GROUPS, SubCommand.XINFO_STREAM}),
+
+	XLEN(CommandGroup.STREAM, "r"),
+
+	XPENDING(CommandGroup.STREAM, "w"),
+
+	XRANGE(CommandGroup.STREAM, "w"),
+
+	XREAD(CommandGroup.STREAM, "r"),
+
+	XREADGROUP(CommandGroup.STREAM, "r"),
+
+	XREVRANGE(CommandGroup.STREAM, "w"),
+
+	XSETID(CommandGroup.STREAM, "w"),
+
+	XTRIM(CommandGroup.STREAM, "w"),
+	/**
+	 * stream command end
+	 **/
+
+	/**
 	 * transaction command start
 	 **/
 	DISCARD(CommandGroup.TRANSACTION, "w"),

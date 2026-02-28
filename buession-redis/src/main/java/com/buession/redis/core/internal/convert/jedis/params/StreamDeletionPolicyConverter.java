@@ -22,24 +22,33 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.response;
+package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.StreamGroup;
 import org.springframework.lang.Nullable;
 
 /**
- * Lettuce 'xinfo-groups' 命令结果转换为 {@link StreamGroup}
+ * {@link com.buession.redis.core.StreamDeletionPolicy} 转换为 jedis {@link redis.clients.jedis.args.StreamDeletionPolicy}
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public final class StreamGroupInfoConverter implements Converter<Object, StreamGroup> {
+public final class StreamDeletionPolicyConverter implements Converter<com.buession.redis.core.StreamDeletionPolicy,
+		redis.clients.jedis.args.StreamDeletionPolicy> {
 
 	@Nullable
 	@Override
-	public StreamGroup convert(final Object source) {
-		return null;
+	public redis.clients.jedis.args.StreamDeletionPolicy convert(
+			final com.buession.redis.core.StreamDeletionPolicy source) {
+		if(source == null){
+			return null;
+		}
+
+		return switch(source){
+			case ACKED -> redis.clients.jedis.args.StreamDeletionPolicy.ACKNOWLEDGED;
+			case KEEPREF -> redis.clients.jedis.args.StreamDeletionPolicy.KEEP_REFERENCES;
+			case DELREF -> redis.clients.jedis.args.StreamDeletionPolicy.DELETE_REFERENCES;
+		};
 	}
 
 }

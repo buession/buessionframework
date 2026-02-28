@@ -19,44 +19,38 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.response;
+package com.buession.redis.core.internal.convert.lettuce.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
-import com.buession.core.converter.MapConverter;
-import com.buession.redis.core.StreamEntry;
-import com.buession.redis.core.internal.convert.Converters;
-import io.lettuce.core.StreamMessage;
+import com.buession.redis.core.command.args.XReadArgument;
+import io.lettuce.core.XReadArgs;
 import org.springframework.lang.Nullable;
 
-import java.util.List;
-import java.util.Map;
-
 /**
- * Lettuce {@link StreamMessage} 转换为 {@link StreamEntry}
+ * {@link XReadArgument} 转换为 lettuce {@link XReadArgs}
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public class StreamMessageMapConverter<K>
-		implements Converter<StreamMessage<byte[], byte[]>, Map<K, List<StreamEntry>>> {
-
-	private final MapConverter<byte[], byte[], String, String> binaryToStringMapConverter =
-			Converters.mapBinaryToString();
+public final class XReadArgumentConverter implements Converter<XReadArgument, XReadArgs> {
 
 	@Nullable
 	@Override
-	public Map<K, List<StreamEntry>> convert(final StreamMessage<byte[], byte[]> source) {
-		//return new StreamEntry(new StreamEntryId(source.getId()),
-		//binaryToStringMapConverter.convert(source.getBody()));
-		return null;
-	}
+	public XReadArgs convert(final XReadArgument source) {
+		if(source == null){
+			return null;
+		}
 
-	public static <K> ListConverter<StreamMessage<byte[], byte[]>, Map<K, List<StreamEntry>>> listConverter() {
-		return new ListConverter<>(new StreamMessageMapConverter<>());
+		final XReadArgs xReadParams = new XReadArgs();
+
+		if(source.getBlock() != null){
+			xReadParams.block(source.getBlock().intValue());
+		}
+
+		return xReadParams;
 	}
 
 }

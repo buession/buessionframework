@@ -19,18 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.StreamGroup;
 import redis.clients.jedis.resps.StreamGroupInfo;
-
-import java.util.List;
 
 /**
  * jedis {@link StreamGroupInfo} 转换为 {@link StreamGroup}
@@ -47,10 +44,6 @@ public final class StreamGroupInfoConverter implements Converter<StreamGroupInfo
 		final StreamEntryId lastDeliveredId = streamEntryIDConverter.convert(source.getLastDeliveredId());
 		return new StreamGroup(source.getName(), source.getConsumers(), source.getPending(), lastDeliveredId,
 				source.getGroupInfo());
-	}
-
-	public static ListConverter<StreamGroupInfo, StreamGroup> listConverter() {
-		return new ListConverter<>(new StreamGroupInfoConverter());
 	}
 
 }

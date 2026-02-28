@@ -19,12 +19,11 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.lettuce.params;
 
-import com.buession.core.converter.ArrayConverter;
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.StreamEntryId;
 
@@ -39,10 +38,6 @@ public final class StreamEntryIdConverter implements Converter<StreamEntryId, St
 	@Override
 	public String convert(final StreamEntryId source) {
 		return source == null ? null : source.toString();
-	}
-
-	public static ArrayConverter<StreamEntryId, String> arrayConverter() {
-		return new ArrayConverter<>(new StreamEntryIdConverter(), String.class);
 	}
 
 }

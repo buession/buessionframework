@@ -22,24 +22,46 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.response;
+package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.StreamGroup;
+import com.buession.redis.core.command.args.XClaimArgument;
 import org.springframework.lang.Nullable;
+import redis.clients.jedis.params.XClaimParams;
+
+import java.util.Optional;
 
 /**
- * Lettuce 'xinfo-groups' 命令结果转换为 {@link StreamGroup}
+ * {@link XClaimArgument} 转换为 jedis {@link XClaimParams}
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public final class StreamGroupInfoConverter implements Converter<Object, StreamGroup> {
+public final class XClaimArgumentConverter implements Converter<XClaimArgument, XClaimParams> {
 
 	@Nullable
 	@Override
-	public StreamGroup convert(final Object source) {
-		return null;
+	public XClaimParams convert(final XClaimArgument source) {
+		if(source == null){
+			return null;
+		}
+
+		final XClaimParams xClaimParams = new XClaimParams();
+
+		if(source.getIdleType() != null && source.getIdleTime() != null){
+			switch(source.getIdleType()){
+				case IDLE -> xClaimParams.idle(source.getIdleTime());
+				case UNIX_TIME -> xClaimParams.time(source.getIdleTime());
+			}
+		}
+
+		Optional.ofNullable(source.getRetryCount()).ifPresent(xClaimParams::retryCount);
+
+		if(Boolean.TRUE.equals(source.getForce())){
+			xClaimParams.force();
+		}
+
+		return xClaimParams;
 	}
 
 }

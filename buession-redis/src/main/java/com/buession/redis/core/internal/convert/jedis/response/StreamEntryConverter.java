@@ -19,78 +19,44 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
-import com.buession.core.converter.MapEntryMapConverter;
+import com.buession.core.converter.MapConverter;
 import com.buession.redis.core.StreamEntry;
-import com.buession.redis.core.StreamEntryId;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * Jedis {@link redis.clients.jedis.resps.StreamEntry} 转换为 {@link StreamEntry}
  *
+ * @param <K>
+ * 		Key 类型
+ * @param <V>
+ * 		值类型
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class StreamEntryConverter implements Converter<redis.clients.jedis.resps.StreamEntry, StreamEntry> {
+public final class StreamEntryConverter<K, V>
+		implements Converter<redis.clients.jedis.resps.StreamEntry, StreamEntry<K, V>> {
 
-	private final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
+	private final Converter<String, K> keyConverter;
+
+	private final Converter<String, V> valueConverter;
+
+	public StreamEntryConverter(final Converter<String, K> keyConverter, final Converter<String, V> valueConverter) {
+		this.keyConverter = keyConverter;
+		this.valueConverter = valueConverter;
+	}
 
 	@Override
-	public StreamEntry convert(final redis.clients.jedis.resps.StreamEntry source) {
-		final StreamEntryId id = streamEntryIDConverter.convert(source.getID());
-		return new StreamEntry(id, source.getFields());
-	}
-
-	public static ListConverter<redis.clients.jedis.resps.StreamEntry, StreamEntry> listConverter() {
-		return new ListConverter<>(new StreamEntryConverter());
-	}
-
-	/**
-	 * Jedis {@link redis.clients.jedis.resps.StreamEntry} 转换为 {@link StreamEntry}
-	 *
-	 * @param <SK>
-	 * 		转换器 key 类型
-	 * @param <TK>
-	 * 		目标 key 类型
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class MapEntryStreamEntryConverter<SK, TK> extends
-			MapEntryMapConverter<SK, List<redis.clients.jedis.resps.StreamEntry>, TK, List<StreamEntry>> {
-
-		public MapEntryStreamEntryConverter(final Converter<SK, TK> keyConverter) {
-			super(keyConverter, StreamEntryConverter.listConverter());
-		}
-
-	}
-
-	/**
-	 * Jedis {@link redis.clients.jedis.resps.StreamEntry} 转换为 {@link StreamEntry}
-	 *
-	 * @param <SK>
-	 * 		转换器 key 类型
-	 * @param <TK>
-	 * 		目标 key 类型
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class ListMapEntryStreamEntryConverter<SK, TK> extends
-			ListConverter<Map.Entry<SK, List<redis.clients.jedis.resps.StreamEntry>>, Map<TK, List<StreamEntry>>> {
-
-		public ListMapEntryStreamEntryConverter(final Converter<SK, TK> keyConverter) {
-			super(new MapEntryStreamEntryConverter<>(keyConverter));
-		}
-
+	public StreamEntry<K, V> convert(final redis.clients.jedis.resps.StreamEntry source) {
+		final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
+		final MapConverter<String, String, K, V> mapConverter = new MapConverter<>(keyConverter, valueConverter);
+		return new StreamEntry<>(streamEntryIDConverter.convert(source.getID()),
+				mapConverter.convert(source.getFields()));
 	}
 
 }

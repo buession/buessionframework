@@ -22,24 +22,24 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.response;
+package com.buession.redis.core;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.StreamGroup;
-import org.springframework.lang.Nullable;
+import com.buession.lang.KeyValue;
+
+import java.util.List;
 
 /**
- * Lettuce 'xinfo-groups' 命令结果转换为 {@link StreamGroup}
+ * <code>XAUTOCLAIM</code> 命令结果
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public final class StreamGroupInfoConverter implements Converter<Object, StreamGroup> {
+public final class AutoClaimInfo<K, V> extends KeyValue<StreamEntryId, List<StreamEntry<K, V>>> {
 
-	@Nullable
-	@Override
-	public StreamGroup convert(final Object source) {
-		return null;
+	private final static long serialVersionUID = -1798757615545687602L;
+
+	public AutoClaimInfo(final StreamEntryId key, final List<StreamEntry<K, V>> value) {
+		super(key, value);
 	}
 
 }

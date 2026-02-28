@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.lettuce;
@@ -38,16 +38,22 @@ public final class LettuceXReadArgs extends XReadArgs {
 		super();
 	}
 
-	public LettuceXReadArgs(final long count) {
+	public LettuceXReadArgs(final int count) {
 		super();
 		count(count);
 	}
 
-	public LettuceXReadArgs(final long block, final long count) {
+	public LettuceXReadArgs(final int count, final long block) {
 		this(count);
 		block(block);
 	}
 
+	public LettuceXReadArgs(final long block) {
+		super();
+		block(block);
+	}
+
+	/*
 	public LettuceXReadArgs(final boolean noack, final long count) {
 		this(count);
 		noack(noack);
@@ -57,5 +63,7 @@ public final class LettuceXReadArgs extends XReadArgs {
 		this(block, count);
 		noack(noack);
 	}
+
+	 */
 
 }

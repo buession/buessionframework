@@ -29,10 +29,15 @@ import java.util.Map;
 /**
  * Stream 消息内容
  *
+ * @param <K>
+ * 		Key 类型
+ * @param <V>
+ * 		值类型
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public record StreamEntry(StreamEntryId id, Map<String, String> fields) {
+public record StreamEntry<K, V>(StreamEntryId id, Map<K, V> fields) {
 
 	@Override
 	public String toString() {

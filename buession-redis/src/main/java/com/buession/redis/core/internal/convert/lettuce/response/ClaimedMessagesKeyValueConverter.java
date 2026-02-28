@@ -25,21 +25,49 @@
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.StreamGroup;
+import com.buession.core.converter.ListConverter;
+import com.buession.lang.KeyValue;
+import com.buession.redis.core.StreamEntryId;
+import io.lettuce.core.StreamMessage;
+import io.lettuce.core.models.stream.ClaimedMessages;
 import org.springframework.lang.Nullable;
 
+import java.util.List;
+
 /**
- * Lettuce 'xinfo-groups' 命令结果转换为 {@link StreamGroup}
+ * Lettuce {@link ClaimedMessages} 转换为 {@link KeyValue}
+ *
+ * @param <SK>
+ * 		原始 Key 类型
+ * @param <SV>
+ * 		原始值类型
+ * @param <TK>
+ * 		目标 Key 类型
+ * @param <TV>
+ * 		目标值类型
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public final class StreamGroupInfoConverter implements Converter<Object, StreamGroup> {
+public final class ClaimedMessagesKeyValueConverter<SK, SV, TK, TV> implements Converter<ClaimedMessages<SK, SV>,
+		KeyValue<StreamEntryId, List<TV>>> {
+
+	private final Converter<StreamMessage<SK, SV>, TV> converter;
+
+	public ClaimedMessagesKeyValueConverter(final Converter<StreamMessage<SK, SV>, TV> converter) {
+		this.converter = converter;
+	}
 
 	@Nullable
 	@Override
-	public StreamGroup convert(final Object source) {
-		return null;
+	public KeyValue<StreamEntryId, List<TV>> convert(final ClaimedMessages<SK, SV> source) {
+		if(source == null){
+			return null;
+		}
+
+		final ListConverter<StreamMessage<SK, SV>, TV> listConverter = new ListConverter<>(converter);
+		return new KeyValue<>(new StreamEntryId(source.getId()), listConverter.convert(source.getMessages()));
 	}
+
 
 }

@@ -25,11 +25,8 @@
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.StreamConsumer;
 import org.springframework.lang.Nullable;
-
-import java.util.List;
 
 /**
  * Lettuce 'xinfo-consumers' 命令结果转换为 {@link StreamConsumer}
@@ -43,10 +40,6 @@ public final class StreamConsumersInfoConverter implements Converter<Object, Str
 	@Override
 	public StreamConsumer convert(final Object source) {
 		return null;
-	}
-
-	public static ListConverter<Object, StreamConsumer> listConverter() {
-		return new ListConverter<>(new StreamConsumersInfoConverter());
 	}
 
 }

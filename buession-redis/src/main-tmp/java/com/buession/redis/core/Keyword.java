@@ -43,8 +43,6 @@ public interface Keyword extends Value<String>, Rawable {
 
 		ID,
 
-		COUNT,
-
 		ANY,
 
 		IDLETIME,

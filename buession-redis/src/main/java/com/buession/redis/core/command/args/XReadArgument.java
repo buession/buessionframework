@@ -22,24 +22,61 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.response;
+package com.buession.redis.core.command.args;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.StreamGroup;
-import org.springframework.lang.Nullable;
+import com.buession.redis.utils.ArgStringBuilder;
 
 /**
- * Lettuce 'xinfo-groups' 命令结果转换为 {@link StreamGroup}
+ * {@code XREAD} 命令参数
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class StreamGroupInfoConverter implements Converter<Object, StreamGroup> {
+public class XReadArgument {
 
-	@Nullable
+	/**
+	 * 阻塞时间（单位：毫秒）
+	 */
+	private Long block;
+
+	/**
+	 * 构造函数
+	 */
+	public XReadArgument() {
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param block
+	 * 		阻塞时间（单位：毫秒）
+	 */
+	public XReadArgument(final Long block) {
+		setBlock(block);
+	}
+
+	/**
+	 * 返回阻塞时间（单位：毫秒）
+	 *
+	 * @return 阻塞时间
+	 */
+	public Long getBlock() {
+		return block;
+	}
+
+	/**
+	 * 设置阻塞时间
+	 *
+	 * @param block
+	 * 		阻塞时间（单位：毫秒）
+	 */
+	public void setBlock(Long block) {
+		this.block = block;
+	}
+
 	@Override
-	public StreamGroup convert(final Object source) {
-		return null;
+	public String toString() {
+		return ArgStringBuilder.create().add("BLOCK", block).build();
 	}
 
 }

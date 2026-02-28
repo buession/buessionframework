@@ -22,61 +22,75 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.response;
+package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.MapConverter;
-import com.buession.redis.core.StreamEntry;
-import com.buession.redis.core.StreamEntryId;
-import io.lettuce.core.StreamMessage;
+import com.buession.core.converter.ListConverter;
+import com.buession.redis.core.XReadGroupInfo;
+import org.springframework.lang.Nullable;
+
+import java.util.List;
+import java.util.Map;
 
 /**
- * Lettuce {@link StreamMessage} 转换为 {@link StreamEntry}
+ * {@link Map.Entry} 转换为 {@link XReadGroupInfo}
  *
  * @param <SK>
  * 		原始 Key 类型
- * @param <SV>
- * 		原始值类型
  * @param <TK>
  * 		目标 Key 类型
  * @param <TV>
  * 		目标值类型
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public final class StreamMessageConverter<SK, SV, TK, TV>
-		implements Converter<StreamMessage<SK, SV>, StreamEntry<TK, TV>> {
-
-	private final Converter<SK, TK> keyConverter;
-
-	private final Converter<SV, TV> valueConverter;
-
-	public StreamMessageConverter(final Converter<SK, TK> keyConverter, final Converter<SV, TV> valueConverter) {
-		this.keyConverter = keyConverter;
-		this.valueConverter = valueConverter;
-	}
-
-	@Override
-	public StreamEntry<TK, TV> convert(final StreamMessage<SK, SV> source) {
-		final MapConverter<SK, SV, TK, TV> mapConverter = new MapConverter<>(keyConverter, valueConverter);
-		return new StreamEntry<>(new StreamEntryId(source.getId()), mapConverter.convert(source.getBody()));
-	}
+public final class MapEntryStreamEntryXReadGroupInfoConverter<SK, TK, TV>
+		implements Converter<Map.Entry<SK, List<redis.clients.jedis.resps.StreamEntry>>, XReadGroupInfo<TK, TV>> {
 
 	/**
-	 * Lettuce  {@link StreamMessage} 转换为 {@link StreamEntryId}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
+	 * key 转换器
 	 */
-	public final static class StreamMessageStreamEntryIdConverter implements Converter<StreamMessage<byte[], byte[]>,
-			StreamEntryId> {
+	private final Converter<SK, TK> keyConverter;
 
-		@Override
-		public StreamEntryId convert(final StreamMessage<byte[], byte[]> source) {
-			return new StreamEntryId(source.getId());
+	/**
+	 * Entry key 转换器
+	 */
+	private final Converter<String, TK> entryKeyConverter;
+
+	/**
+	 * Entry value 转换器
+	 */
+	private final Converter<String, TV> entryValueConverter;
+
+	/**
+	 * 构造函数
+	 *
+	 * @param keyConverter
+	 * 		key 转换器
+	 * @param entryKeyConverter
+	 * 		Entry key 转换器
+	 * @param entryValueConverter
+	 * 		Entry value 转换器
+	 */
+	public MapEntryStreamEntryXReadGroupInfoConverter(final Converter<SK, TK> keyConverter,
+													  final Converter<String, TK> entryKeyConverter,
+													  final Converter<String, TV> entryValueConverter) {
+		this.keyConverter = keyConverter;
+		this.entryKeyConverter = entryKeyConverter;
+		this.entryValueConverter = entryValueConverter;
+	}
+
+	@Nullable
+	@Override
+	public XReadGroupInfo<TK, TV> convert(final Map.Entry<SK, List<redis.clients.jedis.resps.StreamEntry>> source) {
+		if(source == null){
+			return null;
 		}
 
+		final ListConverter<redis.clients.jedis.resps.StreamEntry, com.buession.redis.core.StreamEntry<TK, TV>> listConverter =
+				new ListConverter<>(new StreamEntryConverter<>(entryKeyConverter, entryValueConverter));
+		return new XReadGroupInfo<>(keyConverter.convert(source.getKey()), listConverter.convert(source.getValue()));
 	}
 
 }

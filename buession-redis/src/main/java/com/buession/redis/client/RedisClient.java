@@ -225,6 +225,13 @@ public interface RedisClient {
 	SortedSetOperations sortedSetOperations();
 
 	/**
+	 * 返回 Stream 命令操作实例
+	 *
+	 * @return Stream 命令操作实例
+	 */
+	StreamOperations streamOperations();
+
+	/**
 	 * 返回事务命令操作实例
 	 *
 	 * @return 事务命令操作实例
@@ -237,13 +244,6 @@ public interface RedisClient {
 	 * @return KEY 命令操作实例
 	 */
 	KeyOperations keyOperations();
-
-	/**
-	 * 返回 Stream 命令操作实例
-	 *
-	 * @return Stream 命令操作实例
-	 */
-	StreamOperations streamOperations();
 
 	/**
 	 * 返回字符串命令操作实例

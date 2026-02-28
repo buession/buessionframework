@@ -55,9 +55,9 @@ import java.util.stream.Collectors;
 public class RedisTemplate extends AbstractRedisTemplate
 		implements BloomFilterOperations, BitMapOperations, CuckooFilterOperations, ClusterOperations,
 		CountMinSketchOperations, ConnectionOperations, GenericOperations, GeoOperations, HashOperations,
-		HyperLogLogOperations, JsonOperations, ListOperations, PubSubOperations,
-		ScriptingOperations, /*SearchOperations, */ServerOperations, SetOperations, SortedSetOperations,
-		TransactionOperations, KeyOperations, StreamOperations, StringOperations {
+		HyperLogLogOperations, JsonOperations, ListOperations, PubSubOperations, ScriptingOperations,
+		/*SearchOperations, */ServerOperations, SetOperations, SortedSetOperations, StreamOperations,
+		TransactionOperations, KeyOperations, StringOperations {
 
 	/**
 	 * 构造函数

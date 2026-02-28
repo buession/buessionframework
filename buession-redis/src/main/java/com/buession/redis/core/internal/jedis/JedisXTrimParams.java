@@ -19,15 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.jedis;
 
-import com.buession.redis.core.command.StreamCommands;
 import redis.clients.jedis.params.XTrimParams;
-
-import java.util.Optional;
 
 /**
  * Jedis {@link XTrimParams} 扩展
@@ -73,21 +70,6 @@ public final class JedisXTrimParams extends XTrimParams {
 		maxLen(maxLen);
 		minId(minId);
 		limit(limit);
-	}
-
-	public static JedisXTrimParams from(final StreamCommands.XTrimArgument xTrimArgument) {
-		final JedisXTrimParams xTrimParams = new JedisXTrimParams();
-
-		if(xTrimArgument != null){
-			Optional.ofNullable(xTrimArgument.getMaxLen()).ifPresent(xTrimParams::maxLen);
-			Optional.ofNullable(xTrimArgument.getMinId()).ifPresent(xTrimParams::minId);
-			Optional.ofNullable(xTrimArgument.getLimit()).ifPresent(xTrimParams::limit);
-
-			approximateTrimming(xTrimParams, xTrimArgument.isApproximateTrimming());
-			exactTrimming(xTrimParams, xTrimArgument.isExactTrimming());
-		}
-
-		return xTrimParams;
 	}
 
 	private static void approximateTrimming(final JedisXTrimParams xTrimParams, final Boolean approximateTrimming) {

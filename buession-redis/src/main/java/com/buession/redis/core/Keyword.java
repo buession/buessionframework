@@ -54,11 +54,17 @@ public interface Keyword extends Value<String>, Rawable {
 
 		LIMIT,
 
-		WITHSCORE
+		WITHSCORE,
+
+		FORCE
 	}
 
 	enum Scan {
 		MATCH
+	}
+
+	enum Time {
+		IDLE
 	}
 
 }

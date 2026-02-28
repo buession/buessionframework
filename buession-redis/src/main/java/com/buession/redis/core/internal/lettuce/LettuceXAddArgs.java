@@ -19,114 +19,36 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.lettuce;
 
 import com.buession.redis.core.StreamEntryId;
-import com.buession.redis.core.command.StreamCommands;
-import com.buession.redis.core.internal.convert.lettuce.params.StreamEntryIdConverter;
-import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.XAddArgs;
-
-import java.util.Optional;
 
 /**
  * Lettuce {@link XAddArgs} 扩展
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public final class LettuceXAddArgs extends XAddArgs {
+public class LettuceXAddArgs extends XAddArgs {
 
+	/**
+	 * 构造函数
+	 */
 	public LettuceXAddArgs() {
-		super();
 	}
 
-	public LettuceXAddArgs(final String id) {
-		super();
-		id(id);
-	}
-
-	public LettuceXAddArgs(final byte[] id) {
-		this(SafeEncoder.encode(id));
-	}
-
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 *        {@link StreamEntryId}
+	 */
 	public LettuceXAddArgs(final StreamEntryId id) {
-		this((new StreamEntryIdConverter()).convert(id));
-	}
-
-	public LettuceXAddArgs(final long maxLen) {
-		super();
-		maxlen(maxLen);
-	}
-
-	public LettuceXAddArgs(final String id, final long maxLen) {
-		this(id);
-		maxlen(maxLen);
-	}
-
-	public LettuceXAddArgs(final byte[] id, final long maxLen) {
-		this(id);
-		maxlen(maxLen);
-	}
-
-	public LettuceXAddArgs(final StreamEntryId id, final long maxLen) {
-		this(id);
-		maxlen(maxLen);
-	}
-
-	public LettuceXAddArgs(final boolean approximateTrimming) {
-		super();
-		approximateTrimming(this, approximateTrimming);
-	}
-
-	public LettuceXAddArgs(final String id, final boolean approximateTrimming) {
-		this(id);
-		approximateTrimming(this, approximateTrimming);
-	}
-
-	public LettuceXAddArgs(final byte[] id, final boolean approximateTrimming) {
-		this(id);
-		approximateTrimming(this, approximateTrimming);
-	}
-
-	public LettuceXAddArgs(final StreamEntryId id, final boolean approximateTrimming) {
-		this(id);
-		approximateTrimming(this, approximateTrimming);
-	}
-
-	public LettuceXAddArgs(final String id, final long maxLen, final boolean approximateTrimming) {
-		this(id, approximateTrimming);
-		maxlen(maxLen);
-	}
-
-	public LettuceXAddArgs(final byte[] id, final long maxLen, final boolean approximateTrimming) {
-		this(id, approximateTrimming);
-		maxlen(maxLen);
-	}
-
-	public LettuceXAddArgs(final StreamEntryId id, final long maxLen, final boolean approximateTrimming) {
-		this(id, approximateTrimming);
-		maxlen(maxLen);
-	}
-
-	public static LettuceXAddArgs from(final StreamCommands.XAddArgument xAddArgument) {
-		final LettuceXAddArgs xAddArgs = new LettuceXAddArgs();
-
-		if(xAddArgument != null){
-			Optional.ofNullable(xAddArgument.getMaxLen()).ifPresent(xAddArgs::maxlen);
-			approximateTrimming(xAddArgs, xAddArgument.isApproximateTrimming());
-		}
-
-		return xAddArgs;
-	}
-
-	private static void approximateTrimming(final LettuceXAddArgs xAddArgs, final Boolean approximateTrimming) {
-		if(Boolean.TRUE.equals(approximateTrimming)){
-			xAddArgs.approximateTrimming();
-		}
+		id(id.toString());
 	}
 
 }

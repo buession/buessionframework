@@ -19,102 +19,39 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command.args;
+package com.buession.redis.core.internal.convert.jedis.response;
+
+import com.buession.core.converter.Converter;
+import org.springframework.lang.Nullable;
 
 /**
- * {@code XREADGROUP} 命令参数
+ * jedis {@link redis.clients.jedis.resps.StreamEntryDeletionResult} 转换为
+ * {@link com.buession.redis.core.StreamEntryDeletionResult}
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public class XReadGroupArgument {
+public final class StreamEntryDeletionResultConverter implements
+		Converter<redis.clients.jedis.resps.StreamEntryDeletionResult, com.buession.redis.core.StreamEntryDeletionResult> {
 
-	/**
-	 * 返回数量
-	 */
-	private Integer count;
-
-	/**
-	 * 阻塞时间（单位：毫秒）
-	 */
-	private Integer block;
-
-	private Boolean noAck;
-
-	/**
-	 * 返回数量
-	 *
-	 * @return 返回数量
-	 */
-	public Integer getCount() {
-		return count;
-	}
-
-	/**
-	 * 设置返回数量
-	 *
-	 * @param count
-	 * 		返回数量
-	 */
-	public void setCount(Integer count) {
-		this.count = count;
-	}
-
-	/**
-	 * 返回阻塞时间（单位：毫秒）
-	 *
-	 * @return 阻塞时间
-	 */
-	public Integer getBlock() {
-		return block;
-	}
-
-	/**
-	 * 设置阻塞时间
-	 *
-	 * @param block
-	 * 		阻塞时间（单位：毫秒）
-	 */
-	public void setBlock(Integer block) {
-		this.block = block;
-	}
-
-	public Boolean isNoAck() {
-		return getNoAck();
-	}
-
-	public Boolean getNoAck() {
-		return noAck;
-	}
-
-	public void noAck() {
-		this.noAck = true;
-	}
-
-	public void setNoAck(Boolean noAck) {
-		this.noAck = noAck;
-	}
-
+	@Nullable
 	@Override
-	public String toString() {
-		final ArgumentStringBuilder builder = ArgumentStringBuilder.create();
-
-		if(count != null){
-			builder.add("COUNT", count);
+	public com.buession.redis.core.StreamEntryDeletionResult convert(
+			final redis.clients.jedis.resps.StreamEntryDeletionResult source) {
+		if(source == null){
+			return null;
 		}
 
-		if(block != null){
-			builder.add("BLOCK", block);
-		}
-
-		if(noAck != null){
-			builder.append("NOACK");
-		}
-
-		return builder.build();
+		return switch(source){
+			case DELETED -> com.buession.redis.core.StreamEntryDeletionResult.DELETED;
+			case NOT_FOUND -> com.buession.redis.core.StreamEntryDeletionResult.NOT_FOUND;
+			case NOT_DELETED_UNACKNOWLEDGED_OR_STILL_REFERENCED ->
+					com.buession.redis.core.StreamEntryDeletionResult.NOT_DELETED_UNACKNOWLEDGED_OR_STILL_REFERENCED;
+			default -> com.buession.redis.core.StreamEntryDeletionResult.UNKNOWN;
+		};
 	}
 
 }

@@ -22,24 +22,68 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.response;
+package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.StreamGroup;
+import com.buession.redis.core.command.args.MaxLenMinId;
+import com.buession.redis.core.command.args.XAddArgument;
 import org.springframework.lang.Nullable;
+import redis.clients.jedis.params.XAddParams;
+
+import static com.buession.redis.core.ApproximateExactTrimming.APPROXIMATE;
 
 /**
- * Lettuce 'xinfo-groups' 命令结果转换为 {@link StreamGroup}
+ * {@link XAddArgument} 转换为 jedis {@link XAddParams}
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public final class StreamGroupInfoConverter implements Converter<Object, StreamGroup> {
+public final class XAddArgumentConverter implements Converter<XAddArgument, XAddParams> {
 
 	@Nullable
 	@Override
-	public StreamGroup convert(final Object source) {
-		return null;
+	public XAddParams convert(final XAddArgument source) {
+		if(source == null){
+			return null;
+		}
+
+		final XAddParams xAddParams = new XAddParams();
+
+		if(Boolean.TRUE.equals(source.getNoMkStream())){
+			xAddParams.noMkStream();
+		}
+
+		if(source.getDeletionPolicy() != null){
+			final StreamDeletionPolicyConverter xDeletionPolicyConverter = new StreamDeletionPolicyConverter();
+			xAddParams.trimmingMode(xDeletionPolicyConverter.convert(source.getDeletionPolicy()));
+		}
+
+		if(source.getIdmp() != null){
+
+		}
+
+		if(source.getMaxLenMinId() != null){
+			MaxLenMinId<?> maxLenMinId = source.getMaxLenMinId();
+
+			if(maxLenMinId instanceof MaxLenMinId.MaxLen){
+				xAddParams.maxLen(((MaxLenMinId.MaxLen) maxLenMinId).getThreshold());
+			}else if(maxLenMinId instanceof MaxLenMinId.MinId){
+				xAddParams.minId(((MaxLenMinId.MinId) maxLenMinId).getThreshold().toString());
+			}
+
+			if(maxLenMinId.getApproximateExactTrimming() != null){
+				switch(maxLenMinId.getApproximateExactTrimming()){
+					case APPROXIMATE -> xAddParams.approximateTrimming();
+					case EXACT -> xAddParams.exactTrimming();
+				}
+			}
+
+			if(maxLenMinId.getCount() != null){
+				xAddParams.limit(maxLenMinId.getCount());
+			}
+		}
+
+		return xAddParams;
 	}
 
 }

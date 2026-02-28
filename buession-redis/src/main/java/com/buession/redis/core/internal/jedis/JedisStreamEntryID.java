@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.jedis;
@@ -34,6 +34,8 @@ import redis.clients.jedis.StreamEntryID;
  * @since 3.0.0
  */
 public final class JedisStreamEntryID extends StreamEntryID {
+
+	private final static long serialVersionUID = -6518565121689271401L;
 
 	public JedisStreamEntryID() {
 		super();
@@ -55,12 +57,9 @@ public final class JedisStreamEntryID extends StreamEntryID {
 		super(time, sequence);
 	}
 
-	public static JedisStreamEntryID from(final StreamEntryId streamEntryId) {
-		if(streamEntryId == null){
-			return new JedisStreamEntryID();
-		}else{
-			return new JedisStreamEntryID(streamEntryId.getTime(), streamEntryId.getSequence());
-		}
+	public JedisStreamEntryID(final StreamEntryId streamEntryId) {
+		super(streamEntryId == null ? 0 : streamEntryId.getTime(),
+				streamEntryId == null ? 0L : streamEntryId.getSequence());
 	}
 
 }

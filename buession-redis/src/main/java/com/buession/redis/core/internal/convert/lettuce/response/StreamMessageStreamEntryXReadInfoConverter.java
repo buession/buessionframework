@@ -25,21 +25,66 @@
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.StreamGroup;
+import com.buession.core.converter.ListConverter;
+import com.buession.lang.KeyValue;
+import com.buession.redis.core.XReadInfo;
+import com.buession.redis.core.internal.convert.jedis.response.StreamEntryConverter;
+import io.lettuce.core.StreamMessage;
 import org.springframework.lang.Nullable;
+import redis.clients.jedis.resps.StreamEntry;
 
 /**
- * Lettuce 'xinfo-groups' 命令结果转换为 {@link StreamGroup}
+ * Lettuce {@link StreamMessage} 转换为 {@link XReadInfo}
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class StreamGroupInfoConverter implements Converter<Object, StreamGroup> {
+public final class StreamMessageStreamEntryXReadInfoConverter<SK, SV, TK, TV>
+		implements Converter<StreamMessage<SK, SV>, XReadInfo<TK, TV>> {
+
+	/**
+	 * key 转换器
+	 */
+	private final Converter<SK, TK> keyConverter;
+
+	/**
+	 * Entry key 转换器
+	 */
+	private final Converter<String, TK> entryKeyConverter;
+
+	/**
+	 * Entry value 转换器
+	 */
+	private final Converter<String, TV> entryValueConverter;
+
+	/**
+	 * 构造函数
+	 *
+	 * @param keyConverter
+	 * 		key 转换器
+	 * @param entryKeyConverter
+	 * 		Entry key 转换器
+	 * @param entryValueConverter
+	 * 		Entry value 转换器
+	 */
+	public StreamMessageStreamEntryXReadInfoConverter(final Converter<SK, TK> keyConverter,
+													  final Converter<String, TK> entryKeyConverter,
+													  final Converter<String, TV> entryValueConverter) {
+		this.keyConverter = keyConverter;
+		this.entryKeyConverter = entryKeyConverter;
+		this.entryValueConverter = entryValueConverter;
+	}
 
 	@Nullable
 	@Override
-	public StreamGroup convert(final Object source) {
-		return null;
+	public XReadInfo<TK, TV> convert(final StreamMessage<SK, SV> source) {
+		if(source == null){
+			return null;
+		}
+
+		final ListConverter<StreamMessage<SK, SV>, com.buession.redis.core.StreamEntry<TK, TV>> listConverter =
+				new ListConverter<>(new StreamEntryConverter<>(entryKeyConverter, entryValueConverter));
+		return new XReadInfo<>(keyConverter.convert(source.getId()), listConverter.convert(source.getBody()));
 	}
 
 }

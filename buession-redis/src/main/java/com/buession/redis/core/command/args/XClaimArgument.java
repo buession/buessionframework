@@ -24,6 +24,9 @@
  */
 package com.buession.redis.core.command.args;
 
+import com.buession.redis.core.Keyword;
+import com.buession.redis.utils.ArgStringBuilder;
+
 /**
  * {@code XCLAIM} 命令参数
  *
@@ -45,14 +48,6 @@ public class XClaimArgument {
 		this.idleTime = idleTime;
 	}
 
-	public XClaimArgument(final Integer retryCount) {
-		this.retryCount = retryCount;
-	}
-
-	public XClaimArgument(final Boolean force) {
-		this.force = force;
-	}
-
 	public XClaimArgument(final IdleType idleType, final Long idleTime, final Integer retryCount) {
 		this(idleType, idleTime);
 		this.retryCount = retryCount;
@@ -65,6 +60,14 @@ public class XClaimArgument {
 
 	public XClaimArgument(final IdleType idleType, final Long idleTime, final Integer retryCount, final Boolean force) {
 		this(idleType, idleTime, retryCount);
+		this.force = force;
+	}
+
+	public XClaimArgument(final Integer retryCount) {
+		this.retryCount = retryCount;
+	}
+
+	public XClaimArgument(final Boolean force) {
 		this.force = force;
 	}
 
@@ -120,7 +123,7 @@ public class XClaimArgument {
 
 	@Override
 	public String toString() {
-		final ArgumentStringBuilder builder = ArgumentStringBuilder.create();
+		final ArgStringBuilder builder = ArgStringBuilder.create();
 
 		if(idleType != null){
 			if(idleType == IdleType.IDLE){
@@ -135,7 +138,7 @@ public class XClaimArgument {
 		}
 
 		if(Boolean.TRUE.equals(force)){
-			builder.append("FORCE");
+			builder.append(Keyword.Common.FORCE);
 		}
 
 		return builder.build();

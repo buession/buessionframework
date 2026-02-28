@@ -19,66 +19,71 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command.args;
-
-import com.buession.redis.core.StreamEntryId;
+package com.buession.redis.core;
 
 /**
+ * Represents the result of a stream entry deletion operation for XDELEX and XACKDEL commands.
+ * <p>
+ * Represents the outcome of attempting to delete a specific stream entry:
+ * <ul>
+ * <li>NOT_FOUND (-1): ID doesn't exist in stream</li>
+ * <li>DELETED (1): Entry was deleted/acknowledged and deleted</li>
+ * <li>NOT_DELETED_UNACKNOWLEDGED_OR_STILL_REFERENCED (2): Entry wasn't deleted.</li>
+ * </ul>
+ *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public interface MaxLenMinId<T> {
+public enum StreamEntryDeletionResult {
 
-	SubCommand getSubCommand();
+	UNKNOWN(-2),
 
-	T getValue();
+	/**
+	 * The stream entry ID doesn't exist in the stream.
+	 * <p>
+	 * Returned when trying to delete/acknowledge a non-existent entry.
+	 * </p>
+	 */
+	NOT_FOUND(-1),
 
-	abstract class BaseMaxLenMinId<T> implements MaxLenMinId<T> {
+	/**
+	 * The entry was successfully deleted/acknowledged and deleted.
+	 * <p>
+	 * This is the typical successful case.
+	 * </p>
+	 */
+	DELETED(1),
 
-		private final SubCommand subCommand;
+	/**
+	 * The entry was not deleted due to one of the following reasons:
+	 * <ul>
+	 * <li>For XDELEX: The entry was not acknowledged by any consumer group</li>
+	 * <li>For XACKDEL: The entry still has pending references in other consumer groups</li>
+	 * </ul>
+	 */
+	NOT_DELETED_UNACKNOWLEDGED_OR_STILL_REFERENCED(2);
 
-		private final T value;
+	private final int code;
 
-		public BaseMaxLenMinId(final SubCommand subCommand, final T value) {
-			this.subCommand = subCommand;
-			this.value = value;
-		}
-
-		@Override
-		public SubCommand getSubCommand() {
-			return subCommand;
-		}
-
-		@Override
-		public T getValue() {
-			return value;
-		}
-
+	StreamEntryDeletionResult(int code) {
+		this.code = code;
 	}
 
-	final class MaxLen extends BaseMaxLenMinId<Long> {
-
-		public MaxLen(final Long value) {
-			super(SubCommand.MAXLEN, value);
-		}
-
+	/**
+	 * Gets the numeric code returned by Redis for this result.
+	 *
+	 * @return the numeric code (-1, 1, or 2)
+	 */
+	public int getCode() {
+		return code;
 	}
 
-	final class MinId extends BaseMaxLenMinId<StreamEntryId> {
-
-		public MinId(final StreamEntryId value) {
-			super(SubCommand.MINID, value);
-		}
-
-	}
-
-	enum SubCommand {
-		MAXLEN,
-
-		MINID
+	@Override
+	public String toString() {
+		return name() + "(" + code + ")";
 	}
 
 }

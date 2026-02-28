@@ -22,24 +22,24 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.response;
+package com.buession.redis.core.internal.convert;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.StreamGroup;
-import org.springframework.lang.Nullable;
+import com.buession.core.converter.MapConverter;
+import com.buession.redis.utils.SafeEncoder;
 
 /**
- * Lettuce 'xinfo-groups' 命令结果转换为 {@link StreamGroup}
+ * 二进制 {@link java.util.Map} 转换为 {@link String} {@link java.util.Map}
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public final class StreamGroupInfoConverter implements Converter<Object, StreamGroup> {
+public final class BinaryMapStringMapConverter extends MapConverter<byte[], byte[], String, String> {
 
-	@Nullable
-	@Override
-	public StreamGroup convert(final Object source) {
-		return null;
+	/**
+	 * 构造函数
+	 */
+	public BinaryMapStringMapConverter() {
+		super(SafeEncoder::encode, SafeEncoder::encode);
 	}
 
 }

@@ -19,33 +19,35 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command.args;
+package com.buession.redis.core.internal.convert.lettuce.params;
+
+import com.buession.core.converter.Converter;
+import org.springframework.lang.Nullable;
 
 /**
+ * {@link com.buession.redis.core.StreamDeletionPolicy} 转换为 Lettuce {@link io.lettuce.core.StreamDeletionPolicy}
+ *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public enum ApproximateExactTrimming {
-	APPROXIMATE("~"),
+public final class StreamDeletionPolicyConverter implements Converter<com.buession.redis.core.StreamDeletionPolicy,
+		io.lettuce.core.StreamDeletionPolicy> {
 
-	EXACT("=");
-
-	private final String value;
-
-	ApproximateExactTrimming(final String value) {
-		this.value = value;
-	}
-
-	public String getValue() {
-		return value;
-	}
-
+	@Nullable
 	@Override
-	public String toString() {
-		return getValue();
+	public io.lettuce.core.StreamDeletionPolicy convert(final com.buession.redis.core.StreamDeletionPolicy source) {
+		if(source == null){
+			return null;
+		}
+
+		return switch(source){
+			case ACKED -> io.lettuce.core.StreamDeletionPolicy.ACKNOWLEDGED;
+			case KEEPREF -> io.lettuce.core.StreamDeletionPolicy.KEEP_REFERENCES;
+			case DELREF -> io.lettuce.core.StreamDeletionPolicy.DELETE_REFERENCES;
+		};
 	}
-	
+
 }

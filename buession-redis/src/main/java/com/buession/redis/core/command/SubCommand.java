@@ -272,10 +272,25 @@ public enum SubCommand implements ProtocolCommand {
 	 **/
 
 	/**
-	 * set command start
+	 * stream command start
 	 **/
+	XGROUP_CREATE("w"),
+
+	XGROUP_CREATECONSUMER("w"),
+
+	XGROUP_DELCONSUMER("w"),
+
+	XGROUP_DESTROY("w"),
+
+	XGROUP_SETID("w"),
+
+	XINFO_CONSUMERS("r"),
+
+	XINFO_GROUPS("r"),
+
+	XINFO_STREAM("r"),
 	/**
-	 * set command end
+	 * stream command end
 	 **/
 	;
 

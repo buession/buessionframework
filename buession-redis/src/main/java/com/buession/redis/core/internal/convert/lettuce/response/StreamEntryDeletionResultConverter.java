@@ -25,21 +25,32 @@
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.StreamGroup;
 import org.springframework.lang.Nullable;
 
 /**
- * Lettuce 'xinfo-groups' 命令结果转换为 {@link StreamGroup}
+ * lettuce {@link io.lettuce.core.models.stream.StreamEntryDeletionResult} 转换为 {@link com.buession.redis.core.StreamEntryDeletionResult}
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public final class StreamGroupInfoConverter implements Converter<Object, StreamGroup> {
+public final class StreamEntryDeletionResultConverter implements
+		Converter<io.lettuce.core.models.stream.StreamEntryDeletionResult, com.buession.redis.core.StreamEntryDeletionResult> {
 
 	@Nullable
 	@Override
-	public StreamGroup convert(final Object source) {
-		return null;
+	public com.buession.redis.core.StreamEntryDeletionResult convert(
+			final io.lettuce.core.models.stream.StreamEntryDeletionResult source) {
+		if(source == null){
+			return null;
+		}
+
+		return switch(source){
+			case DELETED -> com.buession.redis.core.StreamEntryDeletionResult.DELETED;
+			case NOT_FOUND -> com.buession.redis.core.StreamEntryDeletionResult.NOT_FOUND;
+			case NOT_DELETED_UNACKNOWLEDGED_OR_STILL_REFERENCED ->
+					com.buession.redis.core.StreamEntryDeletionResult.NOT_DELETED_UNACKNOWLEDGED_OR_STILL_REFERENCED;
+			case UNKNOWN -> com.buession.redis.core.StreamEntryDeletionResult.UNKNOWN;
+		};
 	}
 
 }

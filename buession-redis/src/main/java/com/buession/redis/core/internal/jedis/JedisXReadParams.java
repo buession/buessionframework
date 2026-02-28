@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.jedis;
@@ -36,19 +36,19 @@ public final class JedisXReadParams extends XReadParams {
 		super();
 	}
 
-	public JedisXReadParams(final long count) {
+	public JedisXReadParams(final int count) {
 		super();
-		count((int) count);
+		count(count);
 	}
 
-	public JedisXReadParams(final long count, final int block) {
+	public JedisXReadParams(final int count, final long block) {
 		this(count);
-		block(block);
+		block((int) block);
 	}
 
-	public JedisXReadParams(final int block) {
+	public JedisXReadParams(final long block) {
 		super();
-		block(block);
+		block((int) block);
 	}
 
 }

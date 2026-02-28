@@ -19,27 +19,34 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2026 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.response;
-
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.StreamGroup;
-import org.springframework.lang.Nullable;
+package com.buession.redis.core;
 
 /**
- * Lettuce 'xinfo-groups' 命令结果转换为 {@link StreamGroup}
- *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class StreamGroupInfoConverter implements Converter<Object, StreamGroup> {
+public enum ApproximateExactTrimming implements Keyword {
+	APPROXIMATE("~"),
 
-	@Nullable
+	EXACT("=");
+
+	private final String value;
+
+	ApproximateExactTrimming(final String value) {
+		this.value = value;
+	}
+
 	@Override
-	public StreamGroup convert(final Object source) {
-		return null;
+	public String getValue() {
+		return value;
+	}
+
+	@Override
+	public String toString() {
+		return getValue();
 	}
 
 }

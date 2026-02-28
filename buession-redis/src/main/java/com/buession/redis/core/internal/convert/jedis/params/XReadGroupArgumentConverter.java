@@ -22,24 +22,42 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.response;
+package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.StreamGroup;
+import com.buession.redis.core.command.args.XReadGroupArgument;
 import org.springframework.lang.Nullable;
+import redis.clients.jedis.params.XReadGroupParams;
+
+import java.util.Optional;
 
 /**
- * Lettuce 'xinfo-groups' 命令结果转换为 {@link StreamGroup}
+ * {@link XReadGroupArgument} 转换为 jedis {@link XReadGroupParams}
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public final class StreamGroupInfoConverter implements Converter<Object, StreamGroup> {
+public final class XReadGroupArgumentConverter implements Converter<XReadGroupArgument, XReadGroupParams> {
 
 	@Nullable
 	@Override
-	public StreamGroup convert(final Object source) {
-		return null;
+	public XReadGroupParams convert(final XReadGroupArgument source) {
+		if(source == null){
+			return null;
+		}
+
+		final XReadGroupParams xReadGroupParams = new XReadGroupParams();
+
+		Optional.ofNullable(source.getClaim()).ifPresent(xReadGroupParams::claim);
+		if(source.getBlock() != null){
+			xReadGroupParams.block(source.getBlock().intValue());
+		}
+
+		if(Boolean.TRUE.equals(source.getNoAck())){
+			xReadGroupParams.noAck();
+		}
+
+		return xReadGroupParams;
 	}
 
 }

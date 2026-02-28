@@ -19,80 +19,119 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2025 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command.args;
 
+import com.buession.redis.utils.ArgStringBuilder;
+
 /**
- * {@code XREAD} 命令参数
+ * {@code XREADGROUP} 命令参数
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class XReadArgument {
+public class XReadGroupArgument extends XReadArgument {
+
+	private Long claim;
+
+	private Boolean noAck;
 
 	/**
-	 * 返回数量
+	 * 构造函数
 	 */
-	private Integer count;
-
-	/**
-	 * 阻塞时间（单位：毫秒）
-	 */
-	private Integer block;
-
-	/**
-	 * 返回数量
-	 *
-	 * @return 返回数量
-	 */
-	public Integer getCount() {
-		return count;
+	public XReadGroupArgument() {
+		super();
 	}
 
 	/**
-	 * 设置返回数量
-	 *
-	 * @param count
-	 * 		返回数量
-	 */
-	public void setCount(Integer count) {
-		this.count = count;
-	}
-
-	/**
-	 * 返回阻塞时间（单位：毫秒）
-	 *
-	 * @return 阻塞时间
-	 */
-	public Integer getBlock() {
-		return block;
-	}
-
-	/**
-	 * 设置阻塞时间
+	 * 构造函数
 	 *
 	 * @param block
 	 * 		阻塞时间（单位：毫秒）
 	 */
-	public void setBlock(Integer block) {
-		this.block = block;
+	public XReadGroupArgument(final Long block) {
+		super(block);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param block
+	 * 		阻塞时间（单位：毫秒）
+	 * @param noAck
+	 * 		-
+	 */
+	public XReadGroupArgument(final Long block, final Boolean noAck) {
+		super(block);
+		setNoAck(noAck);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param block
+	 * 		阻塞时间（单位：毫秒）
+	 * @param claim
+	 * 		-
+	 */
+	public XReadGroupArgument(final Long block, final Long claim) {
+		super(block);
+		this.claim = claim;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param block
+	 * 		阻塞时间（单位：毫秒）
+	 * @param noAck
+	 * 		-
+	 */
+	public XReadGroupArgument(final Long block, final Long claim, final Boolean noAck) {
+		this(block, claim);
+		setNoAck(noAck);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param noAck
+	 * 		-
+	 */
+	public XReadGroupArgument(final Boolean noAck) {
+		setNoAck(noAck);
+	}
+
+	public Long getClaim() {
+		return claim;
+	}
+
+	public void setClaim(Long claim) {
+		this.claim = claim;
+	}
+
+	public Boolean isNoAck() {
+		return getNoAck();
+	}
+
+	public Boolean getNoAck() {
+		return noAck;
+	}
+
+	public void noAck() {
+		this.noAck = true;
+	}
+
+	public void setNoAck(Boolean noAck) {
+		this.noAck = noAck;
 	}
 
 	@Override
 	public String toString() {
-		final ArgumentStringBuilder builder = ArgumentStringBuilder.create();
-
-		if(count != null){
-			builder.add("COUNT", count);
-		}
-
-		if(block != null){
-			builder.add("BLOCK", block);
-		}
-
-		return builder.build();
+		return ArgStringBuilder.create().add("BLOCK", getBlock()).add("CLAIM", getClaim())
+				.append(Boolean.TRUE.equals(getNoAck()) ? "NOACK" : null).build();
 	}
 
 }

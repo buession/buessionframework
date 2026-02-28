@@ -61,53 +61,7 @@
 	 * key command end
 	 **/
 
-	/**
-	 * stream command start
-	 **/
-	XACK(CommandGroup.STREAM, "w"),
 
-	XADD(CommandGroup.STREAM, "w"),
-
-	XAUTOCLAIM(CommandGroup.STREAM, "w"),
-
-	XCLAIM(CommandGroup.STREAM, "w"),
-
-	XDEL(CommandGroup.STREAM, "w"),
-
-	XGROUP_CREATE(CommandGroup.STREAM, "w"),
-
-	XGROUP_CREATECONSUMER(CommandGroup.STREAM, "w"),
-
-	XGROUP_DELCONSUMER(CommandGroup.STREAM, "w"),
-
-	XGROUP_DESTROY(CommandGroup.STREAM, "w"),
-
-	XGROUP_SETID(CommandGroup.STREAM, "w"),
-
-	XINFO_CONSUMERS(CommandGroup.STREAM, "r"),
-
-	XINFO_GROUPS(CommandGroup.STREAM, "r"),
-
-	XINFO_STREAM(CommandGroup.STREAM, "w"),
-
-	XLEN(CommandGroup.STREAM, "r"),
-
-	XPENDING(CommandGroup.STREAM, "w"),
-
-	XRANGE(CommandGroup.STREAM, "w"),
-
-	XREAD(CommandGroup.STREAM, "r"),
-
-	XREADGROUP(CommandGroup.STREAM, "r"),
-
-	XREVRANGE(CommandGroup.STREAM, "w"),
-
-	XSETID(CommandGroup.STREAM, "w"),
-
-	XTRIM(CommandGroup.STREAM, "w"),
-	/**
-	 * stream command end
-	 **/
 
 	/**
 	 * string command start

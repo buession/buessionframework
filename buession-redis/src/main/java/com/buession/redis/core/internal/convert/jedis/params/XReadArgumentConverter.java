@@ -19,30 +19,38 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis;
+package com.buession.redis.core.internal.convert.jedis.params;
 
-import com.buession.redis.core.command.StreamCommands;
-import redis.clients.jedis.params.XClaimParams;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.command.args.XReadArgument;
+import org.springframework.lang.Nullable;
+import redis.clients.jedis.params.XReadParams;
 
 /**
- * Jedis {@link XClaimParams} 扩展类
+ * {@link XReadArgument} 转换为 jedis {@link XReadParams}
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public class JedisXClaimParams extends XClaimParams {
+public final class XReadArgumentConverter implements Converter<XReadArgument, XReadParams> {
 
-	public JedisXClaimParams() {
-		super();
-	}
+	@Nullable
+	@Override
+	public XReadParams convert(final XReadArgument source) {
+		if(source == null){
+			return null;
+		}
 
-	public static JedisXClaimParams from(final StreamCommands.XClaimArgument xClaimArgument) {
-		final JedisXClaimParams xClaimParams = new JedisXClaimParams();
+		final XReadParams xReadParams = new XReadParams();
 
-		return xClaimParams;
+		if(source.getBlock() != null){
+			xReadParams.block(source.getBlock().intValue());
+		}
+
+		return xReadParams;
 	}
 
 }

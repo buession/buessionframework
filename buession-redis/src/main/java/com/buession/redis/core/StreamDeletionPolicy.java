@@ -22,24 +22,42 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.response;
-
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.StreamGroup;
-import org.springframework.lang.Nullable;
+package com.buession.redis.core;
 
 /**
- * Lettuce 'xinfo-groups' 命令结果转换为 {@link StreamGroup}
+ * Deletion policy for stream commands that handle consumer group references. Used with XDELEX,
+ * XACKDEL, and enhanced XADD/XTRIM commands.
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public final class StreamGroupInfoConverter implements Converter<Object, StreamGroup> {
+public enum StreamDeletionPolicy implements Keyword {
 
-	@Nullable
+	/**
+	 * Preserves existing references to entries in all consumer groups' PEL. This is the default
+	 * behavior similar to XDEL.
+	 */
+	KEEPREF,
+
+	/**
+	 * Removes all references to entries from all consumer groups' pending entry lists, effectively
+	 * cleaning up all traces of the messages.
+	 */
+	DELREF,
+
+	/**
+	 * Only operates on entries that were read and acknowledged by all consumer groups.
+	 */
+	ACKED;
+
 	@Override
-	public StreamGroup convert(final Object source) {
-		return null;
+	public String getValue() {
+		return name();
+	}
+
+	@Override
+	public String toString() {
+		return getValue();
 	}
 
 }

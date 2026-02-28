@@ -22,24 +22,65 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.response;
+package com.buession.redis.core.internal.convert.lettuce.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.StreamGroup;
+import com.buession.redis.core.command.args.XAddArgument;
+import io.lettuce.core.XAddArgs;
 import org.springframework.lang.Nullable;
 
 /**
- * Lettuce 'xinfo-groups' 命令结果转换为 {@link StreamGroup}
+ * {@link XAddArgument} 转换为 lettuce {@link XAddArgs}
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public final class StreamGroupInfoConverter implements Converter<Object, StreamGroup> {
+public final class XAddArgumentConverter implements Converter<XAddArgument, XAddArgs> {
 
 	@Nullable
 	@Override
-	public StreamGroup convert(final Object source) {
-		return null;
+	public XAddArgs convert(final XAddArgument source) {
+		if(source == null){
+			return null;
+		}
+
+		final XAddArgs xAddArgs = new XAddArgs();
+
+		if(Boolean.TRUE.equals(source.getNoMkStream())){
+			xAddArgs.nomkstream();
+		}
+
+		if(source.getDeletionPolicy() != null){
+			final StreamDeletionPolicyConverter xDeletionPolicyConverter = new StreamDeletionPolicyConverter();
+			xAddArgs.trimmingMode(xDeletionPolicyConverter.convert(source.getDeletionPolicy()));
+		}
+
+		if(source.getIdmp() != null){
+
+		}
+
+		if(source.getMaxLenMinId() != null){
+			XAddArgument.MaxLenMinId<?> maxLenMinId = source.getMaxLenMinId();
+
+			if(maxLenMinId instanceof XAddArgument.MaxLenMinId.MaxLen){
+				xAddArgs.maxlen(((XAddArgument.MaxLenMinId.MaxLen) maxLenMinId).getThreshold());
+			}else if(maxLenMinId instanceof XAddArgument.MaxLenMinId.MinId){
+				xAddArgs.minId(((XAddArgument.MaxLenMinId.MinId) maxLenMinId).getThreshold().toString());
+			}
+
+			if(maxLenMinId.getApproximateExactTrimming() != null){
+				switch(maxLenMinId.getApproximateExactTrimming()){
+					case APPROXIMATE -> xAddArgs.approximateTrimming();
+					case EXACT -> xAddArgs.exactTrimming();
+				}
+			}
+
+			if(maxLenMinId.getCount() != null){
+				xAddArgs.limit(maxLenMinId.getCount());
+			}
+		}
+
+		return xAddArgs;
 	}
 
 }

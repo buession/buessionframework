@@ -22,24 +22,50 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.response;
+package com.buession.redis.core.internal.lettuce;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.StreamGroup;
-import org.springframework.lang.Nullable;
+import com.buession.redis.core.StreamEntryId;
+import io.lettuce.core.Consumer;
+import io.lettuce.core.XAutoClaimArgs;
 
 /**
- * Lettuce 'xinfo-groups' 命令结果转换为 {@link StreamGroup}
+ * Lettuce {@link XAutoClaimArgs} 扩展
+ *
+ * @param <V>
+ * 		值类型
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public final class StreamGroupInfoConverter implements Converter<Object, StreamGroup> {
+public class LettuceXAutoClaimArgs<V> extends XAutoClaimArgs<V> {
 
-	@Nullable
-	@Override
-	public StreamGroup convert(final Object source) {
-		return null;
+	public LettuceXAutoClaimArgs() {
+	}
+
+	public LettuceXAutoClaimArgs(final V groupName, final V consumerName, final int minIdleTime,
+								 final String startId) {
+		consumer(Consumer.from(groupName, consumerName));
+		minIdleTime(minIdleTime);
+		startId(startId);
+	}
+
+	public LettuceXAutoClaimArgs(final V groupName, final V consumerName, final int minIdleTime,
+								 final String startId, final int count) {
+		this(groupName, consumerName, minIdleTime, startId);
+		count(count);
+	}
+
+	public LettuceXAutoClaimArgs(final V groupName, final V consumerName, final int minIdleTime,
+								 final StreamEntryId startId) {
+		consumer(Consumer.from(groupName, consumerName));
+		minIdleTime(minIdleTime);
+		startId(startId.toString());
+	}
+
+	public LettuceXAutoClaimArgs(final V groupName, final V consumerName, final int minIdleTime,
+								 final StreamEntryId startId, final int count) {
+		this(groupName, consumerName, minIdleTime, startId);
+		count(count);
 	}
 
 }

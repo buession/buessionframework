@@ -25,21 +25,30 @@
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.StreamGroup;
+import com.buession.lang.KeyValue;
+import com.buession.redis.core.StreamEntry;
+import io.lettuce.core.StreamMessage;
 import org.springframework.lang.Nullable;
 
+import java.util.List;
+
 /**
- * Lettuce 'xinfo-groups' 命令结果转换为 {@link StreamGroup}
+ * Lettuce {@link StreamMessage} 转换为 {@link StreamEntry}
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class StreamGroupInfoConverter implements Converter<Object, StreamGroup> {
+public final class StreamMessageKeyValueConverter<SK, SV, TK, TV>
+		implements Converter<StreamMessage<SK, SV>, KeyValue<TK, List<StreamEntry<TK, TV>>>> {
 
 	@Nullable
 	@Override
-	public StreamGroup convert(final Object source) {
-		return null;
+	public KeyValue<TK, List<StreamEntry<TK, TV>>> convert(final StreamMessage<SK, SV> source) {
+		if(source == null){
+			return null;
+		}
+
+		return new KeyValue<>();
 	}
 
 }

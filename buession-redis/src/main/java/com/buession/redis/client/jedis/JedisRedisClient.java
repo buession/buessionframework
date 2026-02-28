@@ -237,6 +237,15 @@ public class JedisRedisClient extends AbstractRedisClient {
 	}
 
 	@Override
+	public StreamOperations streamOperations() {
+		if(streamOperations == null){
+			streamOperations = new JedisStreamOperations(this);
+		}
+
+		return streamOperations;
+	}
+
+	@Override
 	public TransactionOperations transactionOperations() {
 		if(transactionOperations == null){
 			transactionOperations = new JedisTransactionOperations(this);
@@ -252,15 +261,6 @@ public class JedisRedisClient extends AbstractRedisClient {
 		}
 
 		return keyOperations;
-	}
-
-	@Override
-	public StreamOperations streamOperations() {
-		if(streamOperations == null){
-			streamOperations = new JedisStreamOperations(this);
-		}
-
-		return streamOperations;
 	}
 
 	@Override

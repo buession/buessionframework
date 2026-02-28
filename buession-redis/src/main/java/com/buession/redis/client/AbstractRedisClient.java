@@ -146,6 +146,11 @@ public abstract class AbstractRedisClient implements RedisClient {
 	protected SortedSetOperations sortedSetOperations;
 
 	/**
+	 * Stream 命令操作
+	 */
+	protected StreamOperations streamOperations;
+
+	/**
 	 * 事务命令操作
 	 */
 	protected TransactionOperations transactionOperations;
@@ -154,11 +159,6 @@ public abstract class AbstractRedisClient implements RedisClient {
 	 * KEY 命令操作
 	 */
 	protected KeyOperations keyOperations;
-
-	/**
-	 * Stream 命令操作
-	 */
-	protected StreamOperations streamOperations;
 
 	/**
 	 * 字符串命令操作
