@@ -25,7 +25,6 @@
 package com.buession.redis.core.internal.convert.lettuce.params;
 
 import com.buession.core.converter.Converter;
-import org.springframework.lang.Nullable;
 
 /**
  * {@link com.buession.redis.core.FlushMode} 转换为 Lettuce {@link io.lettuce.core.FlushMode}
@@ -36,7 +35,6 @@ import org.springframework.lang.Nullable;
 public final class FlushModeConverter
 		implements Converter<com.buession.redis.core.FlushMode, io.lettuce.core.FlushMode> {
 
-	@Nullable
 	@Override
 	public io.lettuce.core.FlushMode convert(final com.buession.redis.core.FlushMode source) {
 		if(source == null){

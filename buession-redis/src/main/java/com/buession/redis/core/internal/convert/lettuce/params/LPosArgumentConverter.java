@@ -27,7 +27,6 @@ package com.buession.redis.core.internal.convert.lettuce.params;
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.command.args.LPosArgument;
 import io.lettuce.core.LPosArgs;
-import org.springframework.lang.Nullable;
 
 import java.util.Optional;
 
@@ -39,7 +38,6 @@ import java.util.Optional;
  */
 public final class LPosArgumentConverter implements Converter<LPosArgument, LPosArgs> {
 
-	@Nullable
 	@Override
 	public LPosArgs convert(final LPosArgument source) {
 		if(source == null){

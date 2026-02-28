@@ -27,7 +27,6 @@ package com.buession.redis.core.internal.convert.jedis.params;
 import com.buession.core.converter.Converter;
 import com.buession.lang.Order;
 import com.buession.redis.core.command.args.GeoRadiusArgument;
-import org.springframework.lang.Nullable;
 import redis.clients.jedis.params.GeoRadiusParam;
 
 import java.util.Optional;
@@ -40,7 +39,6 @@ import java.util.Optional;
  */
 public final class GeoRadiusArgumentConverter implements Converter<GeoRadiusArgument, GeoRadiusParam> {
 
-	@Nullable
 	@Override
 	public GeoRadiusParam convert(final GeoRadiusArgument source) {
 		if(source == null){

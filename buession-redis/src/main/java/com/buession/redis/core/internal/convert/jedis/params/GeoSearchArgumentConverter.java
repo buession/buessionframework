@@ -27,7 +27,6 @@ package com.buession.redis.core.internal.convert.jedis.params;
 import com.buession.core.converter.Converter;
 import com.buession.lang.Order;
 import com.buession.redis.core.command.args.GeoSearchArgument;
-import org.springframework.lang.Nullable;
 import redis.clients.jedis.params.GeoSearchParam;
 
 import java.util.Optional;
@@ -40,7 +39,6 @@ import java.util.Optional;
  */
 public final class GeoSearchArgumentConverter implements Converter<GeoSearchArgument, GeoSearchParam> {
 
-	@Nullable
 	@Override
 	public GeoSearchParam convert(GeoSearchArgument source) {
 		if(source == null){

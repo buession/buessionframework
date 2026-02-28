@@ -27,7 +27,6 @@ package com.buession.redis.core.internal.convert.lettuce.params;
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.command.args.ShutdownArgument;
 import io.lettuce.core.ShutdownArgs;
-import org.springframework.lang.Nullable;
 
 /**
  * {@link ShutdownArgument} 转换为 lettuce {@link ShutdownArgs}
@@ -37,7 +36,6 @@ import org.springframework.lang.Nullable;
  */
 public final class ShutdownArgumentConverter implements Converter<ShutdownArgument, ShutdownArgs> {
 
-	@Nullable
 	@Override
 	public ShutdownArgs convert(final ShutdownArgument source) {
 		if(source == null){

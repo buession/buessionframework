@@ -25,18 +25,18 @@
 package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.FlushMode;
 
 /**
- * {@link FlushMode} 转换为 jedis {@link redis.clients.jedis.args.FlushMode}
+ * {@link com.buession.redis.core.FlushMode} 转换为 jedis {@link redis.clients.jedis.args.FlushMode}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class FlushModeConverter implements Converter<FlushMode, redis.clients.jedis.args.FlushMode> {
+public final class FlushModeConverter
+		implements Converter<com.buession.redis.core.FlushMode, redis.clients.jedis.args.FlushMode> {
 
 	@Override
-	public redis.clients.jedis.args.FlushMode convert(final FlushMode source) {
+	public redis.clients.jedis.args.FlushMode convert(final com.buession.redis.core.FlushMode source) {
 		if(source == null){
 			return null;
 		}

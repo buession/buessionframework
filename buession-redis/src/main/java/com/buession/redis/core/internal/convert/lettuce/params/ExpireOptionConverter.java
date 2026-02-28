@@ -27,7 +27,6 @@ package com.buession.redis.core.internal.convert.lettuce.params;
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.ExpireOption;
 import io.lettuce.core.ExpireArgs;
-import org.springframework.lang.Nullable;
 
 /**
  * {@link ExpireOption} 转换为 lettuce {@link ExpireArgs}
@@ -37,7 +36,6 @@ import org.springframework.lang.Nullable;
  */
 public final class ExpireOptionConverter implements Converter<ExpireOption, ExpireArgs> {
 
-	@Nullable
 	@Override
 	public ExpireArgs convert(final ExpireOption source) {
 		if(source == null){

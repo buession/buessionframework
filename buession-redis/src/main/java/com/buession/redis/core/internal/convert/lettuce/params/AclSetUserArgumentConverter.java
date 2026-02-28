@@ -39,7 +39,6 @@ import io.lettuce.core.protocol.CommandKeyword;
 import io.lettuce.core.protocol.CommandType;
 import io.lettuce.core.protocol.ProtocolKeyword;
 import io.lettuce.core.search.arguments.PostProcessingArgs;
-import org.springframework.lang.Nullable;
 
 /**
  * {@link AclSetUserArgument} 转换为 lettuce {@link AclSetuserArgs}
@@ -49,7 +48,6 @@ import org.springframework.lang.Nullable;
  */
 public final class AclSetUserArgumentConverter implements Converter<AclSetUserArgument, AclSetuserArgs> {
 
-	@Nullable
 	@Override
 	public AclSetuserArgs convert(final AclSetUserArgument source) {
 		if(source == null){

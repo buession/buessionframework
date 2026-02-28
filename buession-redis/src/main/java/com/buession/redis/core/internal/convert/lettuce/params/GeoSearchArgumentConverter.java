@@ -28,7 +28,6 @@ import com.buession.core.converter.Converter;
 import com.buession.lang.Order;
 import com.buession.redis.core.command.args.GeoSearchArgument;
 import io.lettuce.core.GeoArgs;
-import org.springframework.lang.Nullable;
 
 import java.util.Optional;
 
@@ -40,7 +39,6 @@ import java.util.Optional;
  */
 public final class GeoSearchArgumentConverter implements Converter<GeoSearchArgument, GeoArgs> {
 
-	@Nullable
 	@Override
 	public GeoArgs convert(final GeoSearchArgument source) {
 		if(source == null){

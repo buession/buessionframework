@@ -26,7 +26,6 @@ package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.command.args.GeoAddArgument;
-import org.springframework.lang.Nullable;
 import redis.clients.jedis.params.GeoAddParams;
 
 /**
@@ -37,7 +36,6 @@ import redis.clients.jedis.params.GeoAddParams;
  */
 public final class GeoAddArgumentConverter implements Converter<GeoAddArgument, GeoAddParams> {
 
-	@Nullable
 	@Override
 	public GeoAddParams convert(final GeoAddArgument source) {
 		if(source == null){

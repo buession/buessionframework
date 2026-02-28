@@ -26,7 +26,6 @@ package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.command.args.LPosArgument;
-import org.springframework.lang.Nullable;
 import redis.clients.jedis.params.LPosParams;
 
 import java.util.Optional;
@@ -39,7 +38,6 @@ import java.util.Optional;
  */
 public final class LPosArgumentConverter implements Converter<LPosArgument, LPosParams> {
 
-	@Nullable
 	@Override
 	public LPosParams convert(final LPosArgument source) {
 		if(source == null){

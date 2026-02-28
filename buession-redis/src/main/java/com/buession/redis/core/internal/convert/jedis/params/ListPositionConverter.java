@@ -25,18 +25,18 @@
 package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.ListPosition;
 
 /**
- * {@link ListPosition} 转换为 jedis {@link redis.clients.jedis.args.ListPosition}
+ * {@link com.buession.redis.core.ListPosition} 转换为 jedis {@link redis.clients.jedis.args.ListPosition}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class ListPositionConverter implements Converter<ListPosition, redis.clients.jedis.args.ListPosition> {
+public final class ListPositionConverter
+		implements Converter<com.buession.redis.core.ListPosition, redis.clients.jedis.args.ListPosition> {
 
 	@Override
-	public redis.clients.jedis.args.ListPosition convert(final ListPosition source) {
+	public redis.clients.jedis.args.ListPosition convert(final com.buession.redis.core.ListPosition source) {
 		if(source == null){
 			return null;
 		}

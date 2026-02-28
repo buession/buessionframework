@@ -25,18 +25,18 @@
 package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.ClientType;
 
 /**
- * {@link ClientType} 转换为 jedis {@link redis.clients.jedis.args.ClientType}
+ * {@link com.buession.redis.core.ClientType} 转换为 jedis {@link redis.clients.jedis.args.ClientType}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class ClientTypeConverter implements Converter<ClientType, redis.clients.jedis.args.ClientType> {
+public final class ClientTypeConverter
+		implements Converter<com.buession.redis.core.ClientType, redis.clients.jedis.args.ClientType> {
 
 	@Override
-	public redis.clients.jedis.args.ClientType convert(final ClientType source) {
+	public redis.clients.jedis.args.ClientType convert(final com.buession.redis.core.ClientType source) {
 		if(source == null){
 			return null;
 		}

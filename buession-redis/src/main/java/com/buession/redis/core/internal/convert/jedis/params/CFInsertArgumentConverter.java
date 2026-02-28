@@ -26,7 +26,6 @@ package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.command.args.CFInsertArgument;
-import org.springframework.lang.Nullable;
 import redis.clients.jedis.bloom.CFInsertParams;
 
 import java.util.Optional;
@@ -39,7 +38,6 @@ import java.util.Optional;
  */
 public final class CFInsertArgumentConverter implements Converter<CFInsertArgument, CFInsertParams> {
 
-	@Nullable
 	@Override
 	public CFInsertParams convert(final CFInsertArgument source) {
 		if(source == null){

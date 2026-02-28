@@ -24,6 +24,8 @@
  */
 package com.buession.redis.client.lettuce.operations;
 
+import com.buession.core.collect.Arrays;
+import com.buession.core.collect.Maps;
 import com.buession.core.converter.ArrayConverter;
 import com.buession.core.converter.BooleanStatusConverter;
 import com.buession.core.converter.Converter;
@@ -56,7 +58,6 @@ import com.buession.redis.core.command.args.XReadArgument;
 import com.buession.redis.core.command.args.XReadGroupArgument;
 import com.buession.redis.core.internal.convert.jedis.params.XReadGroupArgumentConverter;
 import com.buession.redis.core.internal.convert.lettuce.params.StreamDeletionPolicyConverter;
-import com.buession.redis.core.internal.convert.lettuce.params.StreamEntryIdConverter;
 import com.buession.redis.core.internal.convert.lettuce.params.XAddArgumentConverter;
 import com.buession.redis.core.internal.convert.lettuce.params.XClaimArgumentConverter;
 import com.buession.redis.core.internal.convert.lettuce.params.XReadArgumentConverter;
@@ -74,9 +75,9 @@ import com.buession.redis.core.internal.convert.lettuce.response.StreamMessageKe
 import com.buession.redis.core.internal.convert.lettuce.response.StreamMessageStreamEntryXReadInfoConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.jedis.JedisXReadGroupParams;
+import com.buession.redis.core.internal.lettuce.CompositeArgumentUtils;
 import com.buession.redis.core.internal.lettuce.LettuceXAddArgs;
 import com.buession.redis.core.internal.lettuce.LettuceXAutoClaimArgs;
-import com.buession.redis.core.internal.lettuce.LettuceXClaimArgs;
 import com.buession.redis.core.internal.lettuce.LettuceXGroupCreateArgs;
 import com.buession.redis.core.internal.lettuce.LettuceXReadArgs;
 import com.buession.redis.utils.SafeEncoder;
@@ -113,9 +114,8 @@ public final class LettuceStreamOperations extends AbstractLettuceRedisOperation
 	@Override
 	public Long xAck(final byte[] key, final byte[] groupName, final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName).add(ids);
-		final ArrayConverter<StreamEntryId, String> arrayConverter = new ArrayConverter<>(new StreamEntryIdConverter(),
-				String.class);
-		return executeCommand(Command.XACK, args, (cmd)->cmd.xack(key, groupName, arrayConverter.convert(ids)), (v)->v);
+		return executeCommand(Command.XACK, args, (cmd)->cmd.xack(key, groupName,
+				CompositeArgumentUtils.messageIds(ids)), (v)->v);
 	}
 
 	@Override
@@ -128,9 +128,8 @@ public final class LettuceStreamOperations extends AbstractLettuceRedisOperation
 	public List<StreamEntryDeletionResult> xAckDel(final byte[] key, final byte[] groupName,
 												   final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName).add("IDS", ids.length).add(ids);
-		final ArrayConverter<StreamEntryId, String> arrayConverter = new ArrayConverter<>(new StreamEntryIdConverter(),
-				String.class);
-		return executeCommand(Command.XACKDEL, args, (cmd)->cmd.xackdel(key, groupName, arrayConverter.convert(ids)),
+		return executeCommand(Command.XACKDEL, args,
+				(cmd)->cmd.xackdel(key, groupName, CompositeArgumentUtils.messageIds(ids)),
 				new ListConverter<>(new StreamEntryDeletionResultConverter()));
 	}
 
@@ -147,12 +146,11 @@ public final class LettuceStreamOperations extends AbstractLettuceRedisOperation
 												   final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName).add(deletionPolicy)
 				.add("IDS", ids.length).add(ids);
-		final ArrayConverter<StreamEntryId, String> arrayConverter = new ArrayConverter<>(new StreamEntryIdConverter(),
-				String.class);
 		final StreamDeletionPolicyConverter streamDeletionPolicyConverter = new StreamDeletionPolicyConverter();
 		return executeCommand(Command.XACKDEL, args,
 				(cmd)->cmd.xackdel(key, groupName, streamDeletionPolicyConverter.convert(deletionPolicy),
-						arrayConverter.convert(ids)), new ListConverter<>(new StreamEntryDeletionResultConverter()));
+						CompositeArgumentUtils.messageIds(ids)),
+				new ListConverter<>(new StreamEntryDeletionResultConverter()));
 	}
 
 	@Override
@@ -417,9 +415,7 @@ public final class LettuceStreamOperations extends AbstractLettuceRedisOperation
 	@Override
 	public Long xDel(final byte[] key, final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key).add(ids);
-		final ArrayConverter<StreamEntryId, String> arrayConverter = new ArrayConverter<>(new StreamEntryIdConverter(),
-				String.class);
-		return executeCommand(Command.XDEL, args, (cmd)->cmd.xdel(key, arrayConverter.convert(ids)), (v)->v);
+		return executeCommand(Command.XDEL, args, (cmd)->cmd.xdel(key, CompositeArgumentUtils.messageIds(ids)), (v)->v);
 	}
 
 	@Override
@@ -433,11 +429,10 @@ public final class LettuceStreamOperations extends AbstractLettuceRedisOperation
 												  final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key).add(deletionPolicy).add("IDS", ids.length).add(ids);
 		final StreamDeletionPolicyConverter streamDeletionPolicyConverter = new StreamDeletionPolicyConverter();
-		final ArrayConverter<StreamEntryId, String> arrayConverter = new ArrayConverter<>(new StreamEntryIdConverter(),
-				String.class);
 		return executeCommand(Command.XDELEX, args,
 				(cmd)->cmd.xdelex(key, streamDeletionPolicyConverter.convert(deletionPolicy),
-						arrayConverter.convert(ids)), new ListConverter<>(new StreamEntryDeletionResultConverter()));
+						CompositeArgumentUtils.messageIds(ids)),
+				new ListConverter<>(new StreamEntryDeletionResultConverter()));
 	}
 
 	@Override

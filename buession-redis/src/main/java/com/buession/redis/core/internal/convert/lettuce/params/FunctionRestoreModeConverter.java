@@ -26,7 +26,6 @@ package com.buession.redis.core.internal.convert.lettuce.params;
 
 import com.buession.core.converter.Converter;
 import io.lettuce.core.FunctionRestoreMode;
-import org.springframework.lang.Nullable;
 
 /**
  * {@link com.buession.redis.core.FunctionRestoreMode} 转换为 {@link io.lettuce.core.FunctionRestoreMode}
@@ -37,7 +36,6 @@ import org.springframework.lang.Nullable;
 public final class FunctionRestoreModeConverter implements Converter<com.buession.redis.core.FunctionRestoreMode,
 		io.lettuce.core.FunctionRestoreMode> {
 
-	@Nullable
 	@Override
 	public FunctionRestoreMode convert(final com.buession.redis.core.FunctionRestoreMode source) {
 		if(source == null){

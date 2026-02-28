@@ -27,7 +27,6 @@ package com.buession.redis.core.internal.convert.lettuce.params;
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.command.args.BitFieldArgument;
 import io.lettuce.core.BitFieldArgs;
-import org.springframework.lang.Nullable;
 
 /**
  * {@link BitFieldArgument} 转换为 lettuce {@link BitFieldArgs}
@@ -37,7 +36,6 @@ import org.springframework.lang.Nullable;
  */
 public final class BitFieldArgumentConverter implements Converter<BitFieldArgument, BitFieldArgs> {
 
-	@Nullable
 	@Override
 	public BitFieldArgs convert(final BitFieldArgument source) {
 		if(source == null){

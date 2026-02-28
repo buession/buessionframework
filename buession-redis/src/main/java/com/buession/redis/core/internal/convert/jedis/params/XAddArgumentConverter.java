@@ -27,10 +27,7 @@ package com.buession.redis.core.internal.convert.jedis.params;
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.command.args.MaxLenMinId;
 import com.buession.redis.core.command.args.XAddArgument;
-import org.springframework.lang.Nullable;
 import redis.clients.jedis.params.XAddParams;
-
-import static com.buession.redis.core.ApproximateExactTrimming.APPROXIMATE;
 
 /**
  * {@link XAddArgument} 转换为 jedis {@link XAddParams}
@@ -40,7 +37,6 @@ import static com.buession.redis.core.ApproximateExactTrimming.APPROXIMATE;
  */
 public final class XAddArgumentConverter implements Converter<XAddArgument, XAddParams> {
 
-	@Nullable
 	@Override
 	public XAddParams convert(final XAddArgument source) {
 		if(source == null){

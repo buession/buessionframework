@@ -25,7 +25,6 @@
 package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
-import org.springframework.lang.Nullable;
 
 /**
  * {@link com.buession.redis.core.StreamDeletionPolicy} 转换为 jedis {@link redis.clients.jedis.args.StreamDeletionPolicy}
@@ -36,7 +35,6 @@ import org.springframework.lang.Nullable;
 public final class StreamDeletionPolicyConverter implements Converter<com.buession.redis.core.StreamDeletionPolicy,
 		redis.clients.jedis.args.StreamDeletionPolicy> {
 
-	@Nullable
 	@Override
 	public redis.clients.jedis.args.StreamDeletionPolicy convert(
 			final com.buession.redis.core.StreamDeletionPolicy source) {

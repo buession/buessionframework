@@ -24,7 +24,9 @@
  */
 package com.buession.redis.core.internal.lettuce;
 
+import com.buession.core.collect.Arrays;
 import com.buession.redis.core.Direction;
+import com.buession.redis.core.StreamEntryId;
 import io.lettuce.core.LMPopArgs;
 import io.lettuce.core.LMoveArgs;
 
@@ -68,6 +70,10 @@ public class CompositeArgumentUtils {
 		}
 
 		return lmPopArgs;
+	}
+
+	public static String[] messageIds(final StreamEntryId... ids) {
+		return Arrays.map(ids, String.class, StreamEntryId::toString);
 	}
 
 }

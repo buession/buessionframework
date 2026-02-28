@@ -26,7 +26,6 @@ package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.MinMax;
-import org.springframework.lang.Nullable;
 import redis.clients.jedis.args.SortedSetOption;
 
 /**
@@ -37,7 +36,6 @@ import redis.clients.jedis.args.SortedSetOption;
  */
 public final class MinMaxSortedSetOptionConverter implements Converter<MinMax, SortedSetOption> {
 
-	@Nullable
 	@Override
 	public SortedSetOption convert(final MinMax source) {
 		if(source == null){

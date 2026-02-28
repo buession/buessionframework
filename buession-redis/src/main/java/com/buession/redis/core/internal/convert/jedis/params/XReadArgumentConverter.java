@@ -26,7 +26,6 @@ package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.command.args.XReadArgument;
-import org.springframework.lang.Nullable;
 import redis.clients.jedis.params.XReadParams;
 
 /**
@@ -37,7 +36,6 @@ import redis.clients.jedis.params.XReadParams;
  */
 public final class XReadArgumentConverter implements Converter<XReadArgument, XReadParams> {
 
-	@Nullable
 	@Override
 	public XReadParams convert(final XReadArgument source) {
 		if(source == null){

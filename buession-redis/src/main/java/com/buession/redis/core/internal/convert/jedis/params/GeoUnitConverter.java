@@ -25,18 +25,18 @@
 package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.GeoUnit;
 
 /**
- * {@link GeoUnit} 转换为 jedis {@link redis.clients.jedis.args.GeoUnit}
+ * {@link com.buession.redis.core.GeoUnit} 转换为 jedis {@link redis.clients.jedis.args.GeoUnit}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class GeoUnitConverter implements Converter<GeoUnit, redis.clients.jedis.args.GeoUnit> {
+public final class GeoUnitConverter
+		implements Converter<com.buession.redis.core.GeoUnit, redis.clients.jedis.args.GeoUnit> {
 
 	@Override
-	public redis.clients.jedis.args.GeoUnit convert(final GeoUnit source) {
+	public redis.clients.jedis.args.GeoUnit convert(final com.buession.redis.core.GeoUnit source) {
 		if(source == null){
 			return null;
 		}

@@ -27,7 +27,6 @@ package com.buession.redis.core.internal.convert.lettuce.params;
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.command.args.JsonGetArgument;
 import io.lettuce.core.json.arguments.JsonGetArgs;
-import org.springframework.lang.Nullable;
 
 import java.util.Optional;
 
@@ -39,7 +38,6 @@ import java.util.Optional;
  */
 public final class JsonGetArgumentConverter implements Converter<JsonGetArgument, JsonGetArgs> {
 
-	@Nullable
 	@Override
 	public JsonGetArgs convert(final JsonGetArgument source) {
 		if(source == null){

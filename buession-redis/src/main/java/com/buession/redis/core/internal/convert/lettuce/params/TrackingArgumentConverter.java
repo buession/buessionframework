@@ -27,7 +27,6 @@ package com.buession.redis.core.internal.convert.lettuce.params;
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.command.args.TrackingArgument;
 import io.lettuce.core.TrackingArgs;
-import org.springframework.lang.Nullable;
 
 import java.util.Optional;
 
@@ -39,7 +38,6 @@ import java.util.Optional;
  */
 public final class TrackingArgumentConverter implements Converter<TrackingArgument, TrackingArgs> {
 
-	@Nullable
 	@Override
 	public TrackingArgs convert(final TrackingArgument source) {
 		if(source == null){

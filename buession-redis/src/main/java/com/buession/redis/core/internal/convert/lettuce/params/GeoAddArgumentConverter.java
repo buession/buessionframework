@@ -27,7 +27,6 @@ package com.buession.redis.core.internal.convert.lettuce.params;
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.command.args.GeoAddArgument;
 import io.lettuce.core.GeoAddArgs;
-import org.springframework.lang.Nullable;
 
 /**
  * {@link GeoAddArgument} 转换为 lettuce {@link GeoAddArgs}
@@ -37,7 +36,6 @@ import org.springframework.lang.Nullable;
  */
 public final class GeoAddArgumentConverter implements Converter<GeoAddArgument, GeoAddArgs> {
 
-	@Nullable
 	@Override
 	public GeoAddArgs convert(final GeoAddArgument source) {
 		if(source == null){

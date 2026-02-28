@@ -27,7 +27,6 @@ package com.buession.redis.core.internal.convert.lettuce.params;
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.command.args.XReadArgument;
 import io.lettuce.core.XReadArgs;
-import org.springframework.lang.Nullable;
 
 /**
  * {@link XReadArgument} 转换为 lettuce {@link XReadArgs}
@@ -37,7 +36,6 @@ import org.springframework.lang.Nullable;
  */
 public final class XReadArgumentConverter implements Converter<XReadArgument, XReadArgs> {
 
-	@Nullable
 	@Override
 	public XReadArgs convert(final XReadArgument source) {
 		if(source == null){

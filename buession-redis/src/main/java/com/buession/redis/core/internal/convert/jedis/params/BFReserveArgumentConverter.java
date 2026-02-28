@@ -26,7 +26,6 @@ package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.command.args.BFReserveArgument;
-import org.springframework.lang.Nullable;
 import redis.clients.jedis.bloom.BFReserveParams;
 
 import java.util.Optional;
@@ -39,7 +38,6 @@ import java.util.Optional;
  */
 public final class BFReserveArgumentConverter implements Converter<BFReserveArgument, BFReserveParams> {
 
-	@Nullable
 	@Override
 	public BFReserveParams convert(final BFReserveArgument source) {
 		if(source == null){

@@ -27,8 +27,6 @@ package com.buession.redis.core.internal.convert.lettuce.params;
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.command.args.XClaimArgument;
 import io.lettuce.core.XClaimArgs;
-import org.springframework.lang.Nullable;
-import redis.clients.jedis.params.XClaimParams;
 
 import java.util.Optional;
 
@@ -40,7 +38,6 @@ import java.util.Optional;
  */
 public final class XClaimArgumentConverter implements Converter<XClaimArgument, XClaimArgs> {
 
-	@Nullable
 	@Override
 	public XClaimArgs convert(final XClaimArgument source) {
 		if(source == null){

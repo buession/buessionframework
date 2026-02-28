@@ -27,7 +27,6 @@ package com.buession.redis.core.internal.convert.lettuce.params;
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.command.args.HSetExArgument;
 import io.lettuce.core.HSetExArgs;
-import org.springframework.lang.Nullable;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -40,7 +39,6 @@ import java.time.Instant;
  */
 public final class HSetExArgumentConverter implements Converter<HSetExArgument, HSetExArgs> {
 
-	@Nullable
 	@Override
 	public HSetExArgs convert(final HSetExArgument source) {
 		if(source == null){

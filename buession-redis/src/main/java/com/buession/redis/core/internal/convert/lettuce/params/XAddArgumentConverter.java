@@ -27,7 +27,6 @@ package com.buession.redis.core.internal.convert.lettuce.params;
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.command.args.XAddArgument;
 import io.lettuce.core.XAddArgs;
-import org.springframework.lang.Nullable;
 
 /**
  * {@link XAddArgument} 转换为 lettuce {@link XAddArgs}
@@ -37,7 +36,6 @@ import org.springframework.lang.Nullable;
  */
 public final class XAddArgumentConverter implements Converter<XAddArgument, XAddArgs> {
 
-	@Nullable
 	@Override
 	public XAddArgs convert(final XAddArgument source) {
 		if(source == null){

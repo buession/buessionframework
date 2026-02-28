@@ -27,7 +27,6 @@ package com.buession.redis.core.internal.convert.lettuce.params;
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.command.args.GetExArgument;
 import io.lettuce.core.HGetExArgs;
-import org.springframework.lang.Nullable;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -40,23 +39,20 @@ import java.time.Instant;
  */
 public final class GetExArgumentConverter implements Converter<GetExArgument, HGetExArgs> {
 
-	@Nullable
 	@Override
 	public HGetExArgs convert(final GetExArgument source) {
 		if(source == null || source.getType() == null){
 			return null;
 		}
 
-		switch(source.getType()){
+		return switch(source.getType()){
 			case EX -> HGetExArgs.Builder.ex(Duration.ofSeconds(source.getValue()));
 			case EXAT -> HGetExArgs.Builder.exAt(Instant.ofEpochSecond(source.getValue()));
 			case PX -> HGetExArgs.Builder.px(Duration.ofMillis(source.getValue()));
 			case PXAT -> HGetExArgs.Builder.pxAt(Instant.ofEpochMilli(source.getValue()));
 			case PERSIST -> HGetExArgs.Builder.persist();
 			default -> new HGetExArgs();
-		}
-
-		return new HGetExArgs();
+		};
 	}
 
 }

@@ -26,7 +26,6 @@ package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.command.args.BFInsertArgument;
-import org.springframework.lang.Nullable;
 import redis.clients.jedis.bloom.BFInsertParams;
 
 import java.util.Optional;
@@ -39,7 +38,6 @@ import java.util.Optional;
  */
 public final class BFInsertArgumentConverter implements Converter<BFInsertArgument, BFInsertParams> {
 
-	@Nullable
 	@Override
 	public BFInsertParams convert(final BFInsertArgument source) {
 		if(source == null){

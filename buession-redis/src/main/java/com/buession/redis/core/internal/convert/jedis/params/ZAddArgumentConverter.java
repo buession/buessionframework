@@ -26,7 +26,6 @@ package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.command.args.ZAddArgument;
-import org.springframework.lang.Nullable;
 import redis.clients.jedis.params.ZAddParams;
 
 /**
@@ -37,7 +36,6 @@ import redis.clients.jedis.params.ZAddParams;
  */
 public final class ZAddArgumentConverter implements Converter<ZAddArgument, ZAddParams> {
 
-	@Nullable
 	@Override
 	public ZAddParams convert(final ZAddArgument source) {
 		if(source == null){
