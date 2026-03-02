@@ -22,39 +22,37 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core.internal.convert.lettuce.params;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.command.args.GetExArgument;
-import org.springframework.lang.Nullable;
-import redis.clients.jedis.params.HGetExParams;
+import io.lettuce.core.GetExArgs;
+
+import java.time.Duration;
+import java.time.Instant;
 
 /**
- * {@link GetExArgument} 转换为 jedis {@link HGetExParams}
+ * {@link GetExArgument} 转换为 lettuce {@link GetExArgs}
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class GetExArgumentConverter implements Converter<GetExArgument, HGetExParams> {
+public final class GetExArgumentHGetExArgsConverter implements Converter<GetExArgument, GetExArgs> {
 
-	@Nullable
 	@Override
-	public HGetExParams convert(final GetExArgument source) {
+	public GetExArgs convert(final GetExArgument source) {
 		if(source == null || source.getType() == null){
 			return null;
 		}
 
-		final HGetExParams hGetExParams = new HGetExParams();
-
-		switch(source.getType()){
-			case EX -> hGetExParams.ex(source.getValue());
-			case EXAT -> hGetExParams.exAt(source.getValue());
-			case PX -> hGetExParams.px(source.getValue());
-			case PXAT -> hGetExParams.pxAt(source.getValue());
-			case PERSIST -> hGetExParams.persist();
-		}
-
-		return hGetExParams;
+		return switch(source.getType()){
+			case EX -> GetExArgs.Builder.ex(Duration.ofSeconds(source.getValue()));
+			case EXAT -> GetExArgs.Builder.exAt(Instant.ofEpochSecond(source.getValue()));
+			case PX -> GetExArgs.Builder.px(Duration.ofMillis(source.getValue()));
+			case PXAT -> GetExArgs.Builder.pxAt(Instant.ofEpochMilli(source.getValue()));
+			case PERSIST -> GetExArgs.Builder.persist();
+			default -> new GetExArgs();
+		};
 	}
 
 }

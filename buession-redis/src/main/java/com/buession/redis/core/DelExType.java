@@ -19,99 +19,35 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
-import com.buession.core.Value;
-
 /**
- * 关键字
+ *
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public interface Keyword extends Value<String>, Rawable {
+public enum DelExType implements Keyword {
 
-	enum Common {
-		ABSTTL,
+	IFEQ,
 
-		BCAST,
+	IFNE,
 
-		CH,
+	IFDEQ,
 
-		ID,
+	IFDNE;
 
-		ANY,
-
-		IDLETIME,
-
-		FREQ,
-
-		USER,
-
-		TYPE,
-
-		ADDR,
-
-		LADDR,
-
-		SKIPME,
-
-		MAXAGE,
-
-		REPLACE,
-
-		REDIRECT,
-
-		PREFIX,
-
-		OPTIN,
-
-		OPTOUT,
-
-		NOLOOP,
-
-		AUTH,
-
-		AUTH2,
-
-		SETNAME,
-
-		KEYS,
-
-
+	@Override
+	public String getValue() {
+		return name();
 	}
 
-	enum Key {
-		MATCH,
-
-		NOVALUES
-	}
-
-	enum Geo {
-		FROMMEMBER,
-
-		FROMLONLAT,
-
-		BYRADIUS,
-
-		BYBOX,
-
-		WITHCOORD,
-
-		WITHDIST,
-
-		WITHHASH,
-
-		STOREDIST
-	}
-
-	enum Hash {
-		FIELDS,
-
-		WITHVALUES
+	@Override
+	public String toString() {
+		return getValue();
 	}
 
 }

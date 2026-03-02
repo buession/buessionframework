@@ -35,7 +35,7 @@ import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.args.GetExArgument;
 import com.buession.redis.core.command.args.HSetExArgument;
 import com.buession.redis.core.internal.convert.jedis.params.ExpireOptionConverter;
-import com.buession.redis.core.internal.convert.jedis.params.GetExArgumentConverter;
+import com.buession.redis.core.internal.convert.jedis.params.GetExArgumentHGetExParamsConverter;
 import com.buession.redis.core.internal.convert.jedis.params.HSetExArgumentConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ScanResultConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
@@ -210,15 +210,15 @@ public final class JedisHashOperations extends AbstractJedisRedisOperations impl
 	@Override
 	public List<String> hGetEx(final String key, final GetExArgument argument, final String... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(fields);
-		final GetExArgumentConverter getExArgumentConverter = new GetExArgumentConverter();
-		return hGetEx(args, (cmd)->cmd.hgetex(key, getExArgumentConverter.convert(argument), fields));
+		final GetExArgumentHGetExParamsConverter getExArgumentGetExParamsConverter = new GetExArgumentHGetExParamsConverter();
+		return hGetEx(args, (cmd)->cmd.hgetex(key, getExArgumentGetExParamsConverter.convert(argument), fields));
 	}
 
 	@Override
 	public List<byte[]> hGetEx(final byte[] key, final GetExArgument argument, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(fields);
-		final GetExArgumentConverter getExArgumentConverter = new GetExArgumentConverter();
-		return hGetEx(args, (cmd)->cmd.hgetex(key, getExArgumentConverter.convert(argument), fields));
+		final GetExArgumentHGetExParamsConverter getExArgumentGetExParamsConverter = new GetExArgumentHGetExParamsConverter();
+		return hGetEx(args, (cmd)->cmd.hgetex(key, getExArgumentGetExParamsConverter.convert(argument), fields));
 	}
 
 	@Override

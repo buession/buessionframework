@@ -19,23 +19,26 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
 
 import com.buession.lang.Status;
-import com.buession.redis.core.NxXx;
-import com.buession.redis.utils.ObjectStringBuilder;
+import com.buession.redis.core.DelExType;
+import com.buession.redis.core.LcsResult;
+import com.buession.redis.core.command.args.GetExArgument;
+import com.buession.redis.core.command.args.LcsArgument;
+import com.buession.redis.core.command.args.MSetExArgument;
+import com.buession.redis.core.command.args.SetArgument;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 /**
  * 字符串命令
  *
- * <p>详情说明 <a href="http://redisdoc.com/string/index.html" target="_blank">http://redisdoc.com/string/index.html</a></p>
+ * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=string" target="_blank">https://redis.io/docs/latest/commands/?group=string</a></p>
  *
  * @author Yong.Teng
  */
@@ -68,6 +71,254 @@ public interface StringCommands extends RedisCommands {
 	 * @return 追加 value 之后 键 key 的值的长度
 	 */
 	Long append(final byte[] key, final byte[] value);
+
+	/**
+	 * 键 key 储存的数字值减去一
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/string/decr.html" target="_blank">http://redisdoc.com/string/decr.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 键 key 在执行减一操作之后的值
+	 */
+	Long decr(final String key);
+
+	/**
+	 * 键 key 储存的数字值减去一
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/string/decr.html" target="_blank">http://redisdoc.com/string/decr.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 键 key 在执行减一操作之后的值
+	 */
+	Long decr(final byte[] key);
+
+	/**
+	 * 将键 key 储存的整数值减去减量 decrement
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/string/decrby.html" target="_blank">http://redisdoc.com/string/decrby.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		值
+	 *
+	 * @return 键 key 减量 increment 之后的值
+	 */
+	Long decrBy(final String key, final long value);
+
+	/**
+	 * 将键 key 储存的整数值减去减量 decrement
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/string/decrby.html" target="_blank">http://redisdoc.com/string/decrby.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		值
+	 *
+	 * @return 键 key 减量 increment 之后的值
+	 */
+	Long decrBy(final byte[] key, final long value);
+
+	/**
+	 * Conditionally removes the specified key based on value or hash digest comparison.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/delex/" target="_blank">https://redis.io/docs/latest/commands/delex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param type
+	 * 		类型
+	 * @param value
+	 * 		值
+	 *
+	 * @return 操作结果
+	 */
+	Status delEx(final String key, final DelExType type, final String value);
+
+	/**
+	 * Conditionally removes the specified key based on value or hash digest comparison.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/delex/" target="_blank">https://redis.io/docs/latest/commands/delex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param type
+	 * 		类型
+	 * @param value
+	 * 		值
+	 *
+	 * @return 操作结果
+	 */
+	Status delEx(final byte[] key, final DelExType type, final byte[] value);
+
+	/**
+	 * Get the hash digest for the value stored in the specified key as a hexadecimal string.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/digest/" target="_blank">https://redis.io/docs/latest/commands/digest/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 操作结果
+	 */
+	String digest(final String key);
+
+	/**
+	 * Get the hash digest for the value stored in the specified key as a hexadecimal string.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/digest/" target="_blank">https://redis.io/docs/latest/commands/digest/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 操作结果
+	 */
+	byte[] digest(final byte[] key);
+
+	/**
+	 * 获取键 key 相关联的字符串值
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/string/get.html" target="_blank">http://redisdoc.com/string/get.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
+	 * 如果键 key 的值并非字符串类型，那么抛出异常
+	 */
+	String get(final String key);
+
+	/**
+	 * 获取键 key 相关联的字符串值
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/string/get.html" target="_blank">http://redisdoc.com/string/get.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
+	 * 如果键 key 的值并非字符串类型，那么抛出异常
+	 */
+	byte[] get(final byte[] key);
+
+	/**
+	 * 获取键 key 的值，并删除 key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/getdel/" target="_blank">https://redis.io/commands/getdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 键 key 的值
+	 */
+	String getDel(final String key);
+
+	/**
+	 * 获取键 key 的值，并重置 key 的过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/getdel/" target="_blank">https://redis.io/commands/getdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 键 key 的值
+	 */
+	byte[] getDel(final byte[] key);
+
+	/**
+	 * 获取键 key 的值，并重置 key 的过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/getex/" target="_blank">https://redis.io/commands/getex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param argument
+	 * 		Key 过期时间参数
+	 *
+	 * @return 键 key 的值
+	 */
+	String getEx(final String key, final GetExArgument argument);
+
+	/**
+	 * 获取键 key 的值，并重置 key 的过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/getex/" target="_blank">https://redis.io/commands/getex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param argument
+	 * 		Key 过期时间参数
+	 *
+	 * @return 键 key 的值
+	 */
+	byte[] getEx(final byte[] key, final GetExArgument argument);
+
+	/**
+	 * 获取键 key 储存的字符串值的指定部分，字符串的截取范围由 start 和 end 两个偏移量决定 (包括 start 和 end 在内)；
+	 * 负数偏移量表示从字符串的末尾开始计数 -1 表示最后一个字符，-2 表示倒数第二个字符，以此类推
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/string/getrange.html" target="_blank">http://redisdoc.com/string/getrange.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 *
+	 * @return 符串值的指定部分，通过保证子字符串的值域(range)不超过实际字符串的值域来处理超出范围的值域请求
+	 */
+	String getRange(final String key, final long start, final long end);
+
+	/**
+	 * 获取键 key 储存的字符串值的指定部分，字符串的截取范围由 start 和 end 两个偏移量决定 (包括 start 和 end 在内)；
+	 * 负数偏移量表示从字符串的末尾开始计数 -1 表示最后一个字符，-2 表示倒数第二个字符，以此类推
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/string/getrange.html" target="_blank">http://redisdoc.com/string/getrange.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 *
+	 * @return 符串值的指定部分，通过保证子字符串的值域(range)不超过实际字符串的值域来处理超出范围的值域请求
+	 */
+	byte[] getRange(final byte[] key, final long start, final long end);
+
+	/**
+	 * 将键 key 的值设为 value ，并返回键 key 在被设置之前的旧值
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/string/getset.html" target="_blank">http://redisdoc.com/string/getset.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		新值
+	 *
+	 * @return 键 key 的旧值
+	 */
+	String getSet(final String key, final String value);
+
+	/**
+	 * 将键 key 的值设为 value ，并返回键 key 在被设置之前的旧值
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/string/getset.html" target="_blank">http://redisdoc.com/string/getset.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		新值
+	 *
+	 * @return 键 key 的旧值
+	 */
+	byte[] getSet(final byte[] key, final byte[] value);
 
 	/**
 	 * 为键 key 储存的数字值加上一
@@ -151,162 +402,64 @@ public interface StringCommands extends RedisCommands {
 	Double incrByFloat(final byte[] key, final double value);
 
 	/**
-	 * 键 key 储存的数字值减去一
+	 * 比较两个字符串并找出它们最长公共子序列
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/decr.html" target="_blank">http://redisdoc.com/string/decr.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lcs/" target="_blank">https://redis.io/docs/latest/commands/lcs/</a></p>
 	 *
-	 * @param key
-	 * 		Key
+	 * @param key1
+	 * 		Key 1
+	 * @param key2
+	 * 		Key 2
 	 *
-	 * @return 键 key 在执行减一操作之后的值
+	 * @return 两个字符串的最长公共子序列内容
 	 */
-	Long decr(final String key);
+	LcsResult lcs(final String key1, final String key2);
 
 	/**
-	 * 键 key 储存的数字值减去一
+	 * 比较两个字符串并找出它们最长公共子序列
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/decr.html" target="_blank">http://redisdoc.com/string/decr.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lcs/" target="_blank">https://redis.io/docs/latest/commands/lcs/</a></p>
 	 *
-	 * @param key
-	 * 		Key
+	 * @param key1
+	 * 		Key 1
+	 * @param key2
+	 * 		Key 2
 	 *
-	 * @return 键 key 在执行减一操作之后的值
+	 * @return 两个字符串的最长公共子序列内容
 	 */
-	Long decr(final byte[] key);
+	LcsResult lcs(final byte[] key1, final byte[] key2);
 
 	/**
-	 * 将键 key 储存的整数值减去减量 decrement
+	 * 比较两个字符串并找出它们最长公共子序列
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/decrby.html" target="_blank">http://redisdoc.com/string/decrby.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lcs/" target="_blank">https://redis.io/docs/latest/commands/lcs/</a></p>
 	 *
-	 * @param key
-	 * 		Key
-	 * @param value
-	 * 		值
+	 * @param key1
+	 * 		Key 1
+	 * @param key2
+	 * 		Key 2
+	 * @param argument
+	 * 		参数
 	 *
-	 * @return 键 key 减量 increment 之后的值
+	 * @return 两个字符串的最长公共子序列内容
 	 */
-	Long decrBy(final String key, final long value);
+	LcsResult lcs(final String key1, final String key2, final LcsArgument argument);
 
 	/**
-	 * 将键 key 储存的整数值减去减量 decrement
+	 * 比较两个字符串并找出它们最长公共子序列
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/decrby.html" target="_blank">http://redisdoc.com/string/decrby.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lcs/" target="_blank">https://redis.io/docs/latest/commands/lcs/</a></p>
 	 *
-	 * @param key
-	 * 		Key
-	 * @param value
-	 * 		值
+	 * @param key1
+	 * 		Key 1
+	 * @param key2
+	 * 		Key 2
+	 * @param argument
+	 * 		参数
 	 *
-	 * @return 键 key 减量 increment 之后的值
+	 * @return 两个字符串的最长公共子序列内容
 	 */
-	Long decrBy(final byte[] key, final long value);
-
-	/**
-	 * 获取键 key 相关联的字符串值
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/get.html" target="_blank">http://redisdoc.com/string/get.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
-	 * 如果键 key 的值并非字符串类型，那么抛出异常
-	 */
-	String get(final String key);
-
-	/**
-	 * 获取键 key 相关联的字符串值
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/get.html" target="_blank">http://redisdoc.com/string/get.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
-	 * 如果键 key 的值并非字符串类型，那么抛出异常
-	 */
-	byte[] get(final byte[] key);
-
-	/**
-	 * 获取键 key 的值，并重置 key 的过期时间
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/getex/" target="_blank">https://redis.io/commands/getex/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param getExArgument
-	 * 		Key 过期时间参数
-	 *
-	 * @return 键 key 的值
-	 */
-	String getEx(final String key, final GetExArgument getExArgument);
-
-	/**
-	 * 获取键 key 的值，并重置 key 的过期时间
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/getex/" target="_blank">https://redis.io/commands/getex/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param getExArgument
-	 * 		Key 过期时间参数
-	 *
-	 * @return 键 key 的值
-	 */
-	byte[] getEx(final byte[] key, final GetExArgument getExArgument);
-
-	/**
-	 * 将键 key 的值设为 value ，并返回键 key 在被设置之前的旧值
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/getset.html" target="_blank">http://redisdoc.com/string/getset.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param value
-	 * 		新值
-	 *
-	 * @return 键 key 的旧值
-	 */
-	String getSet(final String key, final String value);
-
-	/**
-	 * 将键 key 的值设为 value ，并返回键 key 在被设置之前的旧值
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/getset.html" target="_blank">http://redisdoc.com/string/getset.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param value
-	 * 		新值
-	 *
-	 * @return 键 key 的旧值
-	 */
-	byte[] getSet(final byte[] key, final byte[] value);
-
-	/**
-	 * 获取键 key 的值，并删除 key
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/getdel/" target="_blank">https://redis.io/commands/getdel/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 键 key 的值
-	 */
-	String getDel(final String key);
-
-	/**
-	 * 获取键 key 的值，并重置 key 的过期时间
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/getdel/" target="_blank">https://redis.io/commands/getdel/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 键 key 的值
-	 */
-	byte[] getDel(final byte[] key);
+	LcsResult lcs(final byte[] key1, final byte[] key2, final LcsArgument argument);
 
 	/**
 	 * 获取给定的一个或多个字符串键的值
@@ -335,7 +488,7 @@ public interface StringCommands extends RedisCommands {
 	/**
 	 * 同时为多个键设置值，如果某个给定键已经存在 那么将使用新值去覆盖旧值
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/mset.html" target="_blank">http://redisdoc.com/string/mset.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/mset/" target="_blank">https://redis.io/docs/latest/commands/mset/</a></p>
 	 *
 	 * @param values
 	 * 		键值对
@@ -345,9 +498,23 @@ public interface StringCommands extends RedisCommands {
 	Status mSet(final Map<String, String> values);
 
 	/**
+	 * Atomically sets multiple string keys with an optional shared expiration in a single operation.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/msetnx/" target="_blank">https://redis.io/docs/latest/commands/msetnx/</a></p>
+	 *
+	 * @param values
+	 * 		键值对
+	 * @param argument
+	 * 		参数
+	 *
+	 * @return 当所有给定键都设置成功时，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	Status mSetEx(final Map<String, String> values, final MSetExArgument argument);
+
+	/**
 	 * 当且仅当所有给定键都不存在时，为所有给定键设置值
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/msetnx.html" target="_blank">http://redisdoc.com/string/msetnx.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/msetnx/" target="_blank">https://redis.io/docs/latest/commands/msetnx/</a></p>
 	 *
 	 * @param values
 	 * 		键值对
@@ -430,12 +597,12 @@ public interface StringCommands extends RedisCommands {
 	 * 		Key
 	 * @param value
 	 * 		值
-	 * @param setArgument
+	 * @param argument
 	 * 		参数
 	 *
 	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	Status set(final String key, final String value, final SetArgument setArgument);
+	Status set(final String key, final String value, final SetArgument argument);
 
 	/**
 	 * 将字符串值 value 关联到 key；
@@ -447,12 +614,12 @@ public interface StringCommands extends RedisCommands {
 	 * 		Key
 	 * @param value
 	 * 		值
-	 * @param setArgument
+	 * @param argument
 	 * 		参数
 	 *
 	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	Status set(final byte[] key, final byte[] value, final SetArgument setArgument);
+	Status set(final byte[] key, final byte[] value, final SetArgument argument);
 
 	/**
 	 * 将键 key 的值设置为 value ，并将键 key 的生存时间设置为 lifetime；
@@ -547,40 +714,6 @@ public interface StringCommands extends RedisCommands {
 	 * @return 被修改之后，字符串值的长度
 	 */
 	Long setRange(final byte[] key, final long offset, final byte[] value);
-
-	/**
-	 * 获取键 key 储存的字符串值的指定部分，字符串的截取范围由 start 和 end 两个偏移量决定 (包括 start 和 end 在内)；
-	 * 负数偏移量表示从字符串的末尾开始计数 -1 表示最后一个字符，-2 表示倒数第二个字符，以此类推
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/getrange.html" target="_blank">http://redisdoc.com/string/getrange.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param start
-	 * 		开始位置
-	 * @param end
-	 * 		结束位置
-	 *
-	 * @return 符串值的指定部分，通过保证子字符串的值域(range)不超过实际字符串的值域来处理超出范围的值域请求
-	 */
-	String getRange(final String key, final long start, final long end);
-
-	/**
-	 * 获取键 key 储存的字符串值的指定部分，字符串的截取范围由 start 和 end 两个偏移量决定 (包括 start 和 end 在内)；
-	 * 负数偏移量表示从字符串的末尾开始计数 -1 表示最后一个字符，-2 表示倒数第二个字符，以此类推
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/getrange.html" target="_blank">http://redisdoc.com/string/getrange.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param start
-	 * 		开始位置
-	 * @param end
-	 * 		结束位置
-	 *
-	 * @return 符串值的指定部分，通过保证子字符串的值域(range)不超过实际字符串的值域来处理超出范围的值域请求
-	 */
-	byte[] getRange(final byte[] key, final long start, final long end);
 
 	/**
 	 * 获取键 key 储存的字符串值的长度

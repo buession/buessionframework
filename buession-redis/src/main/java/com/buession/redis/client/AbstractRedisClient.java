@@ -151,6 +151,11 @@ public abstract class AbstractRedisClient implements RedisClient {
 	protected StreamOperations streamOperations;
 
 	/**
+	 * 字符串命令操作
+	 */
+	protected StringOperations stringOperations;
+
+	/**
 	 * 事务命令操作
 	 */
 	protected TransactionOperations transactionOperations;
@@ -159,11 +164,6 @@ public abstract class AbstractRedisClient implements RedisClient {
 	 * KEY 命令操作
 	 */
 	protected KeyOperations keyOperations;
-
-	/**
-	 * 字符串命令操作
-	 */
-	protected StringOperations stringOperations;
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 

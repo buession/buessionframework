@@ -19,99 +19,40 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
+package com.buession.redis.core.internal.convert.jedis.params;
 
-import com.buession.core.Value;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.command.args.GetExArgument;
+import redis.clients.jedis.params.GetExParams;
 
 /**
- * 关键字
+ * {@link GetExArgument} 转换为 jedis {@link GetExParams}
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public interface Keyword extends Value<String>, Rawable {
+public final class GetExArgumentGetExParamsConverter implements Converter<GetExArgument, GetExParams> {
 
-	enum Common {
-		ABSTTL,
+	@Override
+	public GetExParams convert(final GetExArgument source) {
+		if(source == null || source.getType() == null){
+			return null;
+		}
 
-		BCAST,
+		final GetExParams getExParams = new GetExParams();
 
-		CH,
+		switch(source.getType()){
+			case EX -> getExParams.ex(source.getValue());
+			case EXAT -> getExParams.exAt(source.getValue());
+			case PX -> getExParams.px(source.getValue());
+			case PXAT -> getExParams.pxAt(source.getValue());
+			case PERSIST -> getExParams.persist();
+		}
 
-		ID,
-
-		ANY,
-
-		IDLETIME,
-
-		FREQ,
-
-		USER,
-
-		TYPE,
-
-		ADDR,
-
-		LADDR,
-
-		SKIPME,
-
-		MAXAGE,
-
-		REPLACE,
-
-		REDIRECT,
-
-		PREFIX,
-
-		OPTIN,
-
-		OPTOUT,
-
-		NOLOOP,
-
-		AUTH,
-
-		AUTH2,
-
-		SETNAME,
-
-		KEYS,
-
-
-	}
-
-	enum Key {
-		MATCH,
-
-		NOVALUES
-	}
-
-	enum Geo {
-		FROMMEMBER,
-
-		FROMLONLAT,
-
-		BYRADIUS,
-
-		BYBOX,
-
-		WITHCOORD,
-
-		WITHDIST,
-
-		WITHHASH,
-
-		STOREDIST
-	}
-
-	enum Hash {
-		FIELDS,
-
-		WITHVALUES
+		return getExParams;
 	}
 
 }

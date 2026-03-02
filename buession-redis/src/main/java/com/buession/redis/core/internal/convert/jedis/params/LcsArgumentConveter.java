@@ -19,99 +19,45 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
+package com.buession.redis.core.internal.convert.jedis.params;
 
-import com.buession.core.Value;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.command.args.LcsArgument;
+import redis.clients.jedis.params.LCSParams;
+
+import java.util.Optional;
 
 /**
- * 关键字
+ * {@link LcsArgument} 转换为 jedis {@link LCSParams}
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public interface Keyword extends Value<String>, Rawable {
+public final class LcsArgumentConveter implements Converter<LcsArgument, LCSParams> {
 
-	enum Common {
-		ABSTTL,
+	@Override
+	public LCSParams convert(final LcsArgument source) {
+		if(source == null){
+			return null;
+		}
 
-		BCAST,
+		final LCSParams lcsParams = new LCSParams();
 
-		CH,
+		if(Boolean.TRUE.equals(source.getLen())){
+			lcsParams.len();
+		}
+		if(Boolean.TRUE.equals(source.getIdx())){
+			lcsParams.idx();
+		}
+		Optional.ofNullable(source.getMinMatchLen()).ifPresent(lcsParams::minMatchLen);
+		if(Boolean.TRUE.equals(source.getWithMatchLen())){
+			lcsParams.withMatchLen();
+		}
 
-		ID,
-
-		ANY,
-
-		IDLETIME,
-
-		FREQ,
-
-		USER,
-
-		TYPE,
-
-		ADDR,
-
-		LADDR,
-
-		SKIPME,
-
-		MAXAGE,
-
-		REPLACE,
-
-		REDIRECT,
-
-		PREFIX,
-
-		OPTIN,
-
-		OPTOUT,
-
-		NOLOOP,
-
-		AUTH,
-
-		AUTH2,
-
-		SETNAME,
-
-		KEYS,
-
-
-	}
-
-	enum Key {
-		MATCH,
-
-		NOVALUES
-	}
-
-	enum Geo {
-		FROMMEMBER,
-
-		FROMLONLAT,
-
-		BYRADIUS,
-
-		BYBOX,
-
-		WITHCOORD,
-
-		WITHDIST,
-
-		WITHHASH,
-
-		STOREDIST
-	}
-
-	enum Hash {
-		FIELDS,
-
-		WITHVALUES
+		return lcsParams;
 	}
 
 }

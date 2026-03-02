@@ -19,64 +19,40 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis;
+package com.buession.redis.core.internal.convert.jedis.params;
 
-import com.buession.redis.core.command.StringCommands;
-import redis.clients.jedis.params.GetExParams;
-
-import java.util.Optional;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.command.args.GetExArgument;
+import redis.clients.jedis.params.HGetExParams;
 
 /**
- * Jedis {@link GetExParams} 扩展
+ * {@link GetExArgument} 转换为 jedis {@link HGetExParams}
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public final class JedisGetExParams extends GetExParams {
+public final class GetExArgumentHGetExParamsConverter implements Converter<GetExArgument, HGetExParams> {
 
-	public JedisGetExParams() {
-		super();
-	}
-
-	public JedisGetExParams(final boolean persist) {
-		super();
-		persist(this, persist);
-	}
-
-	public JedisGetExParams(final long ex, final long exAt, final long px, final long pxAt) {
-		super();
-		ex(ex);
-		exAt(exAt);
-		px(px);
-		pxAt(pxAt);
-	}
-
-	public JedisGetExParams(final long ex, final long exAt, final long px, final long pxAt, final boolean persist) {
-		this(ex, exAt, px, pxAt);
-		persist(this, persist);
-	}
-
-	public static JedisGetExParams from(final StringCommands.GetExArgument getExArgument) {
-		final JedisGetExParams getExParams = new JedisGetExParams();
-
-		if(getExArgument != null){
-			Optional.ofNullable(getExArgument.getEx()).ifPresent(getExParams::ex);
-			Optional.ofNullable(getExArgument.getExAt()).ifPresent(getExParams::exAt);
-			Optional.ofNullable(getExArgument.getPx()).ifPresent(getExParams::px);
-			Optional.ofNullable(getExArgument.getPxAt()).ifPresent(getExParams::pxAt);
-			persist(getExParams, getExArgument.isPersist());
+	@Override
+	public HGetExParams convert(final GetExArgument source) {
+		if(source == null || source.getType() == null){
+			return null;
 		}
 
-		return getExParams;
-	}
+		final HGetExParams hGetExParams = new HGetExParams();
 
-	private static void persist(final JedisGetExParams getExParams, final Boolean persist) {
-		if(Boolean.TRUE.equals(persist)){
-			getExParams.persist();
+		switch(source.getType()){
+			case EX -> hGetExParams.ex(source.getValue());
+			case EXAT -> hGetExParams.exAt(source.getValue());
+			case PX -> hGetExParams.px(source.getValue());
+			case PXAT -> hGetExParams.pxAt(source.getValue());
+			case PERSIST -> hGetExParams.persist();
 		}
+
+		return hGetExParams;
 	}
 
 }

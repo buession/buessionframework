@@ -19,99 +19,79 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
+package com.buession.redis.core.command.args;
 
-import com.buession.core.Value;
+import com.buession.redis.utils.ArgStringBuilder;
 
 /**
- * 关键字
+ * <code>LCS</code> 命令参数
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public interface Keyword extends Value<String>, Rawable {
+public class LcsArgument {
 
-	enum Common {
-		ABSTTL,
+	private Boolean len;
 
-		BCAST,
+	private Boolean idx;
 
-		CH,
+	private Long minMatchLen;
 
-		ID,
+	private Boolean withMatchLen;
 
-		ANY,
-
-		IDLETIME,
-
-		FREQ,
-
-		USER,
-
-		TYPE,
-
-		ADDR,
-
-		LADDR,
-
-		SKIPME,
-
-		MAXAGE,
-
-		REPLACE,
-
-		REDIRECT,
-
-		PREFIX,
-
-		OPTIN,
-
-		OPTOUT,
-
-		NOLOOP,
-
-		AUTH,
-
-		AUTH2,
-
-		SETNAME,
-
-		KEYS,
-
-
+	public LcsArgument() {
 	}
 
-	enum Key {
-		MATCH,
-
-		NOVALUES
+	public LcsArgument(final Boolean len, final Boolean idx, final Long minMatchLen, final Boolean withMatchLen) {
+		this.len = len;
+		this.idx = idx;
+		this.minMatchLen = minMatchLen;
+		this.withMatchLen = withMatchLen;
 	}
 
-	enum Geo {
-		FROMMEMBER,
-
-		FROMLONLAT,
-
-		BYRADIUS,
-
-		BYBOX,
-
-		WITHCOORD,
-
-		WITHDIST,
-
-		WITHHASH,
-
-		STOREDIST
+	public Boolean getLen() {
+		return len;
 	}
 
-	enum Hash {
-		FIELDS,
+	public void setLen(Boolean len) {
+		this.len = len;
+	}
 
-		WITHVALUES
+	public Boolean getIdx() {
+		return idx;
+	}
+
+	public void setIdx(Boolean idx) {
+		this.idx = idx;
+	}
+
+	public Long getMinMatchLen() {
+		return minMatchLen;
+	}
+
+	public void setMinMatchLen(Long minMatchLen) {
+		this.minMatchLen = minMatchLen;
+	}
+
+	public Boolean getWithMatchLen() {
+		return withMatchLen;
+	}
+
+	public void setWithMatchLen(Boolean withMatchLen) {
+		this.withMatchLen = withMatchLen;
+	}
+
+	@Override
+	public String toString() {
+		return ArgStringBuilder.create()
+				.append(Boolean.TRUE.equals(len) ? "LEN" : null)
+				.append(Boolean.TRUE.equals(idx) ? "IDX" : null)
+				.add("MINMATCHLEN", minMatchLen)
+				.append(Boolean.TRUE.equals(withMatchLen) ? "WITHMATCHLEN" : null)
+				.build();
 	}
 
 }

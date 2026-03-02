@@ -24,11 +24,16 @@
  */
 package com.buession.redis.core.operations;
 
-import com.buession.core.collect.Maps;
 import com.buession.core.type.TypeReference;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
+import com.buession.redis.core.DelExType;
+import com.buession.redis.core.LcsResult;
 import com.buession.redis.core.command.StringCommands;
+import com.buession.redis.core.command.args.GetExArgument;
+import com.buession.redis.core.command.args.LcsArgument;
+import com.buession.redis.core.command.args.MSetExArgument;
+import com.buession.redis.core.command.args.SetArgument;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -37,7 +42,7 @@ import java.util.Map;
 /**
  * STRING 运算
  *
- * <p>详情说明 <a href="http://redisdoc.com/string/index.html" target="_blank">http://redisdoc.com/string/index.html</a></p>
+ * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=string" target="_blank">https://redis.io/docs/latest/commands/?group=string</a></p>
  *
  * @author Yong.Teng
  */
@@ -51,36 +56,6 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	@Override
 	default Long append(final byte[] key, final byte[] value) {
 		return execute((client)->client.stringOperations().append(key, value));
-	}
-
-	@Override
-	default Long incr(final String key) {
-		return execute((client)->client.stringOperations().incr(key));
-	}
-
-	@Override
-	default Long incr(final byte[] key) {
-		return execute((client)->client.stringOperations().incr(key));
-	}
-
-	@Override
-	default Long incrBy(final String key, final long value) {
-		return execute((client)->client.stringOperations().incrBy(key, value));
-	}
-
-	@Override
-	default Long incrBy(final byte[] key, final long value) {
-		return execute((client)->client.stringOperations().incrBy(key, value));
-	}
-
-	@Override
-	default Double incrByFloat(final String key, final double value) {
-		return execute((client)->client.stringOperations().incrByFloat(key, value));
-	}
-
-	@Override
-	default Double incrByFloat(final byte[] key, final double value) {
-		return execute((client)->client.stringOperations().incrByFloat(key, value));
 	}
 
 	@Override
@@ -101,6 +76,34 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	@Override
 	default Long decrBy(final byte[] key, final long value) {
 		return execute((client)->client.stringOperations().decrBy(key, value));
+	}
+
+	default Double decrByFloat(final String key, final double value) {
+		return execute((client)->client.stringOperations().incrByFloat(key, value * -1));
+	}
+
+	default Double decrByFloat(final byte[] key, final double value) {
+		return execute((client)->client.stringOperations().incrByFloat(key, value * -1));
+	}
+
+	@Override
+	default Status delEx(final String key, final DelExType type, final String value) {
+		return execute((client)->client.stringOperations().delEx(key, type, value));
+	}
+
+	@Override
+	default Status delEx(final byte[] key, final DelExType type, final byte[] value) {
+		return execute((client)->client.stringOperations().delEx(key, type, value));
+	}
+
+	@Override
+	default String digest(final String key) {
+		return execute((client)->client.stringOperations().digest(key));
+	}
+
+	@Override
+	default byte[] digest(final byte[] key) {
+		return execute((client)->client.stringOperations().digest(key));
 	}
 
 	@Override
@@ -191,8 +194,6 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 *
 	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
 	 * 如果键 key 的值并非字符串类型，那么抛出异常
-	 *
-	 * @see TypeReference
 	 */
 	<V> V getObject(final String key, final TypeReference<V> type);
 
@@ -210,10 +211,116 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 *
 	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
 	 * 如果键 key 的值并非字符串类型，那么抛出异常
-	 *
-	 * @see TypeReference
 	 */
 	<V> V getObject(final byte[] key, final TypeReference<V> type);
+
+	@Override
+	default String getDel(final String key) {
+		return execute((client)->client.stringOperations().getDel(key));
+	}
+
+	@Override
+	default byte[] getDel(final byte[] key) {
+		return execute((client)->client.stringOperations().getDel(key));
+	}
+
+	/**
+	 * 获取键 key 相关联的字符串值，并将值反序列化为对象；并删除该 key
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/string/get.html" target="_blank">http://redisdoc.com/string/get.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
+	 * 如果键 key 的值并非字符串类型，那么抛出异常
+	 */
+	<V> V getDelObject(final String key);
+
+	/**
+	 * 获取键 key 相关联的字符串值，并将值反序列化为对象；并删除该 key
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/string/get.html" target="_blank">http://redisdoc.com/string/get.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
+	 * 如果键 key 的值并非字符串类型，那么抛出异常
+	 */
+	<V> V getDelObject(final byte[] key);
+
+	/**
+	 * 获取键 key 相关联的字符串值，并将值反序列化为 clazz 指定的对象；并删除该 key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/getdel/" target="_blank">https://redis.io/commands/getdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
+	 * 如果键 key 的值并非字符串类型，那么抛出异常
+	 */
+	<V> V getDelObject(final String key, final Class<V> clazz);
+
+	/**
+	 * 获取键 key 相关联的字符串值，并将值反序列化为 clazz 指定的对象；并删除该 key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/getdel/" target="_blank">https://redis.io/commands/getdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
+	 * 如果键 key 的值并非字符串类型，那么抛出异常
+	 */
+	<V> V getDelObject(final byte[] key, final Class<V> clazz);
+
+	/**
+	 * 获取键 key 相关联的字符串值，并将值反序列化为 type 指定的对象；并删除该 key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/getdel/" target="_blank">https://redis.io/commands/getdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
+	 * 如果键 key 的值并非字符串类型，那么抛出异常
+	 */
+	<V> V getDelObject(final String key, final TypeReference<V> type);
+
+	/**
+	 * 获取键 key 相关联的字符串值，并将值反序列化为 type 指定的对象；并删除该 key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/getdel/" target="_blank">https://redis.io/commands/getdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
+	 * 如果键 key 的值并非字符串类型，那么抛出异常
+	 */
+	<V> V getDelObject(final byte[] key, final TypeReference<V> type);
 
 	@Override
 	default String getEx(final String key, final GetExArgument getExArgument) {
@@ -308,8 +415,6 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 键 key 的值反序列化后对象
-	 *
-	 * @see TypeReference
 	 */
 	<V> V getExObject(final String key, final GetExArgument getExArgument, final TypeReference<V> type);
 
@@ -328,10 +433,18 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 键 key 的值反序列化后对象
-	 *
-	 * @see TypeReference
 	 */
 	<V> V getExObject(final byte[] key, final GetExArgument getExArgument, final TypeReference<V> type);
+
+	@Override
+	default String getRange(final String key, final long start, final long end) {
+		return execute((client)->client.stringOperations().getRange(key, start, end));
+	}
+
+	@Override
+	default byte[] getRange(final byte[] key, final long start, final long end) {
+		return execute((client)->client.stringOperations().getRange(key, start, end));
+	}
 
 	@Override
 	default String getSet(final String key, final String value) {
@@ -426,8 +539,6 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 键 key 的旧值反序列化后对象
-	 *
-	 * @see TypeReference
 	 */
 	<V> V getSet(final String key, final V value, final TypeReference<V> type);
 
@@ -446,122 +557,58 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 键 key 的旧值反序列化后对象
-	 *
-	 * @see TypeReference
 	 */
 	<V> V getSet(final byte[] key, final V value, final TypeReference<V> type);
 
 	@Override
-	default String getDel(final String key) {
-		return execute((client)->client.stringOperations().getDel(key));
+	default Long incr(final String key) {
+		return execute((client)->client.stringOperations().incr(key));
 	}
 
 	@Override
-	default byte[] getDel(final byte[] key) {
-		return execute((client)->client.stringOperations().getDel(key));
+	default Long incr(final byte[] key) {
+		return execute((client)->client.stringOperations().incr(key));
 	}
 
-	/**
-	 * 获取键 key 相关联的字符串值，并将值反序列化为对象；并删除该 key
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/get.html" target="_blank">http://redisdoc.com/string/get.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
-	 * 如果键 key 的值并非字符串类型，那么抛出异常
-	 */
-	<V> V getDelObject(final String key);
+	@Override
+	default Long incrBy(final String key, final long value) {
+		return execute((client)->client.stringOperations().incrBy(key, value));
+	}
 
-	/**
-	 * 获取键 key 相关联的字符串值，并将值反序列化为对象；并删除该 key
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/get.html" target="_blank">http://redisdoc.com/string/get.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
-	 * 如果键 key 的值并非字符串类型，那么抛出异常
-	 */
-	<V> V getDelObject(final byte[] key);
+	@Override
+	default Long incrBy(final byte[] key, final long value) {
+		return execute((client)->client.stringOperations().incrBy(key, value));
+	}
 
-	/**
-	 * 获取键 key 相关联的字符串值，并将值反序列化为 clazz 指定的对象；并删除该 key
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/getdel/" target="_blank">https://redis.io/commands/getdel/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
-	 * 如果键 key 的值并非字符串类型，那么抛出异常
-	 */
-	<V> V getDelObject(final String key, final Class<V> clazz);
+	@Override
+	default Double incrByFloat(final String key, final double value) {
+		return execute((client)->client.stringOperations().incrByFloat(key, value));
+	}
 
-	/**
-	 * 获取键 key 相关联的字符串值，并将值反序列化为 clazz 指定的对象；并删除该 key
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/getdel/" target="_blank">https://redis.io/commands/getdel/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
-	 * 如果键 key 的值并非字符串类型，那么抛出异常
-	 */
-	<V> V getDelObject(final byte[] key, final Class<V> clazz);
+	@Override
+	default Double incrByFloat(final byte[] key, final double value) {
+		return execute((client)->client.stringOperations().incrByFloat(key, value));
+	}
 
-	/**
-	 * 获取键 key 相关联的字符串值，并将值反序列化为 type 指定的对象；并删除该 key
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/getdel/" target="_blank">https://redis.io/commands/getdel/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param type
-	 * 		值类型引用
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
-	 * 如果键 key 的值并非字符串类型，那么抛出异常
-	 *
-	 * @see TypeReference
-	 */
-	<V> V getDelObject(final String key, final TypeReference<V> type);
+	@Override
+	default LcsResult lcs(final String key1, final String key2) {
+		return execute((client)->client.stringOperations().lcs(key1, key2));
+	}
 
-	/**
-	 * 获取键 key 相关联的字符串值，并将值反序列化为 type 指定的对象；并删除该 key
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/getdel/" target="_blank">https://redis.io/commands/getdel/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param type
-	 * 		值类型引用
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
-	 * 如果键 key 的值并非字符串类型，那么抛出异常
-	 *
-	 * @see TypeReference
-	 */
-	<V> V getDelObject(final byte[] key, final TypeReference<V> type);
+	@Override
+	default LcsResult lcs(final byte[] key1, final byte[] key2) {
+		return execute((client)->client.stringOperations().lcs(key1, key2));
+	}
+
+	@Override
+	default LcsResult lcs(final String key1, final String key2, final LcsArgument argument) {
+		return execute((client)->client.stringOperations().lcs(key1, key2, argument));
+	}
+
+	@Override
+	default LcsResult lcs(final byte[] key1, final byte[] key2, final LcsArgument argument) {
+		return execute((client)->client.stringOperations().lcs(key1, key2, argument));
+	}
 
 	@Override
 	default List<String> mGet(final String... keys) {
@@ -651,8 +698,6 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 *
 	 * @return 返回一个列表，列表中包含了所有给定键的值的反序列化对象；
 	 * 如果给定键不存在 那么这个键的值将以特殊值 null 表示
-	 *
-	 * @see TypeReference
 	 */
 	<V> List<V> mGetObject(final String[] keys, final TypeReference<V> type);
 
@@ -670,15 +715,18 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 *
 	 * @return 返回一个列表，列表中包含了所有给定键的值的反序列化对象；
 	 * 如果给定键不存在 那么这个键的值将以特殊值 null 表示
-	 *
-	 * @see TypeReference
 	 */
 	<V> List<V> mGetObject(final byte[][] keys, final TypeReference<V> type);
+
+	@Override
+	default Status mSet(final Map<String, String> values) {
+		return execute((client)->client.stringOperations().mSet(values));
+	}
 
 	/**
 	 * 同时为多个键设置值，如果某个给定键已经存在 那么将使用新值去覆盖旧值
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/mset.html" target="_blank">http://redisdoc.com/string/mset.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/mset/" target="_blank">https://redis.io/docs/latest/commands/mset/</a></p>
 	 *
 	 * @param values
 	 * 		键值对
@@ -700,9 +748,95 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	}
 
 	/**
+	 * 同时为多个键设置值，如果某个给定键已经存在 那么将使用新值去覆盖旧值
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/mset/" target="_blank">https://redis.io/docs/latest/commands/mset/</a></p>
+	 *
+	 * @param values
+	 * 		键值对
+	 *
+	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	default Status mSet(final KeyValue<String, String>... values) {
+		if(values == null){
+			return Status.FAILURE;
+		}else{
+			Map<String, String> data = new LinkedHashMap<>(values.length);
+
+			for(KeyValue<String, String> v : values){
+				data.put(v.getKey(), v.getValue());
+			}
+
+			return mSet(data);
+		}
+	}
+
+	@Override
+	default Status mSetEx(final Map<String, String> values, final MSetExArgument argument) {
+		return execute((client)->client.stringOperations().mSetEx(values, argument));
+	}
+
+	/**
+	 * Atomically sets multiple string keys with an optional shared expiration in a single operation.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/msetnx/" target="_blank">https://redis.io/docs/latest/commands/msetnx/</a></p>
+	 *
+	 * @param values
+	 * 		键值对
+	 * @param argument
+	 * 		参数
+	 *
+	 * @return 当所有给定键都设置成功时，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	default Status mSetEx(final List<KeyValue<String, String>> values, final MSetExArgument argument) {
+		if(values == null){
+			return Status.FAILURE;
+		}else{
+			Map<String, String> data = new LinkedHashMap<>(values.size());
+
+			for(KeyValue<String, String> v : values){
+				data.put(v.getKey(), v.getValue());
+			}
+
+			return mSetEx(data, argument);
+		}
+	}
+
+	/**
+	 * Atomically sets multiple string keys with an optional shared expiration in a single operation.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/msetnx/" target="_blank">https://redis.io/docs/latest/commands/msetnx/</a></p>
+	 *
+	 * @param values
+	 * 		键值对
+	 * @param argument
+	 * 		参数
+	 *
+	 * @return 当所有给定键都设置成功时，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	default Status mSetEx(final KeyValue<String, String>[] values, final MSetExArgument argument) {
+		if(values == null){
+			return Status.FAILURE;
+		}else{
+			Map<String, String> data = new LinkedHashMap<>(values.length);
+
+			for(KeyValue<String, String> v : values){
+				data.put(v.getKey(), v.getValue());
+			}
+
+			return mSetEx(data, argument);
+		}
+	}
+
+	@Override
+	default Status mSetNx(final Map<String, String> values) {
+		return execute((client)->client.stringOperations().mSetNx(values));
+	}
+
+	/**
 	 * 当且仅当所有给定键都不存在时， 为所有给定键设置值
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/msetnx.html" target="_blank">http://redisdoc.com/string/msetnx.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/msetnx/" target="_blank">https://redis.io/docs/latest/commands/msetnx/</a></p>
 	 *
 	 * @param values
 	 * 		键值对
@@ -714,6 +848,30 @@ public interface StringOperations extends StringCommands, RedisOperations {
 			return Status.FAILURE;
 		}else{
 			Map<String, String> data = new LinkedHashMap<>(values.size());
+
+			for(KeyValue<String, String> v : values){
+				data.put(v.getKey(), v.getValue());
+			}
+
+			return mSetNx(data);
+		}
+	}
+
+	/**
+	 * 当且仅当所有给定键都不存在时， 为所有给定键设置值
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/msetnx/" target="_blank">https://redis.io/docs/latest/commands/msetnx/</a></p>
+	 *
+	 * @param values
+	 * 		键值对
+	 *
+	 * @return 当所有给定键都设置成功时，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	default Status mSetNx(final KeyValue<String, String>... values) {
+		if(values == null){
+			return Status.FAILURE;
+		}else{
+			Map<String, String> data = new LinkedHashMap<>(values.length);
 
 			for(KeyValue<String, String> v : values){
 				data.put(v.getKey(), v.getValue());
@@ -782,13 +940,13 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	}
 
 	@Override
-	default Status set(final String key, final String value, final SetArgument setArgument) {
-		return execute((client)->client.stringOperations().set(key, value, setArgument));
+	default Status set(final String key, final String value, final SetArgument argument) {
+		return execute((client)->client.stringOperations().set(key, value, argument));
 	}
 
 	@Override
-	default Status set(final byte[] key, final byte[] value, final SetArgument setArgument) {
-		return execute((client)->client.stringOperations().set(key, value, setArgument));
+	default Status set(final byte[] key, final byte[] value, final SetArgument argument) {
+		return execute((client)->client.stringOperations().set(key, value, argument));
 	}
 
 	/**
@@ -835,14 +993,14 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 * 		Key
 	 * @param value
 	 * 		值
-	 * @param setArgument
+	 * @param argument
 	 * 		参数
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	<V> Status set(final String key, final V value, final SetArgument setArgument);
+	<V> Status set(final String key, final V value, final SetArgument argument);
 
 	/**
 	 * 将字符串值 value 关联到 key；
@@ -854,14 +1012,14 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 * 		Key
 	 * @param value
 	 * 		值
-	 * @param setArgument
+	 * @param argument
 	 * 		参数
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	<V> Status set(final byte[] key, final V value, final SetArgument setArgument);
+	<V> Status set(final byte[] key, final V value, final SetArgument argument);
 
 	@Override
 	default Status setEx(final String key, final String value, final int lifetime) {
@@ -871,16 +1029,6 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	@Override
 	default Status setEx(final byte[] key, final byte[] value, final int lifetime) {
 		return execute((client)->client.stringOperations().setEx(key, value, lifetime));
-	}
-
-	@Override
-	default Status setNx(final String key, final String value) {
-		return execute((client)->client.stringOperations().setNx(key, value));
-	}
-
-	@Override
-	default Status setNx(final byte[] key, final byte[] value) {
-		return execute((client)->client.stringOperations().setNx(key, value));
 	}
 
 	/**
@@ -920,6 +1068,16 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
 	<V> Status setEx(final byte[] key, final V value, final int lifetime);
+
+	@Override
+	default Status setNx(final String key, final String value) {
+		return execute((client)->client.stringOperations().setNx(key, value));
+	}
+
+	@Override
+	default Status setNx(final byte[] key, final byte[] value) {
+		return execute((client)->client.stringOperations().setNx(key, value));
+	}
 
 	/**
 	 * 当键 key 不存在的情况下，将键 key 的值设置为 value
@@ -961,16 +1119,6 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	@Override
 	default Long setRange(final byte[] key, final long offset, final byte[] value) {
 		return execute((client)->client.stringOperations().setRange(key, offset, value));
-	}
-
-	@Override
-	default String getRange(final String key, final long start, final long end) {
-		return execute((client)->client.stringOperations().getRange(key, start, end));
-	}
-
-	@Override
-	default byte[] getRange(final byte[] key, final long start, final long end) {
-		return execute((client)->client.stringOperations().getRange(key, start, end));
 	}
 
 	@Override

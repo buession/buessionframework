@@ -26,7 +26,6 @@ package com.buession.redis.core.internal.convert;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListSetConverter;
-import com.buession.core.converter.MapConverter;
 import com.buession.core.validator.Validate;
 import com.buession.redis.utils.SafeEncoder;
 
@@ -51,10 +50,6 @@ public interface Converters {
 
 	static ListSetConverter<byte[], String> listSetBinaryToString() {
 		return new ListSetConverter<>(SafeEncoder::encode);
-	}
-
-	static MapConverter<String, String, byte[], byte[]> mapStringToBinary() {
-		return new MapConverter<>(SafeEncoder::encode, SafeEncoder::encode);
 	}
 
 }

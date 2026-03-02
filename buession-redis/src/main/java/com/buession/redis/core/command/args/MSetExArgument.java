@@ -22,76 +22,56 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis;
+package com.buession.redis.core.command.args;
 
-import com.buession.core.validator.Validate;
-import com.buession.lang.Status;
-import com.buession.redis.client.connection.datasource.DataSource;
-import com.buession.redis.core.command.*;
-
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
+import com.buession.redis.core.NxXx;
+import com.buession.redis.utils.ArgStringBuilder;
 
 /**
+ * <code>MSETEX</code> 命令参数
+ *
  * @author Yong.Teng
+ * @since 4.0.0
  */
-public abstract class AbstractRedisTemplate extends RedisAccessor
-		implements BloomFilterCommands, BitMapCommands, CuckooFilterCommands, ClusterCommands, CountMinSketchCommands,
-		ConnectionCommands, GenericCommand, GeoCommands, HashCommands, HyperLogLogCommands, JsonCommands, ListCommands,
-		PubSubCommands, ScriptingCommands,/*SearchCommands, */ServerCommands, SetCommands, SortedSetCommands,
-		StreamCommands, StringCommands,
-		TransactionCommands, KeyCommands {
+public class MSetExArgument extends BaseSetExArgument {
+
+	private final NxXx nxXx;
 
 	/**
 	 * 构造函数
+	 *
+	 * @param nxXx
+	 *        {@link NxXx}
 	 */
-	public AbstractRedisTemplate() {
-		super();
+	public MSetExArgument(final NxXx nxXx) {
+		this.nxXx = nxXx;
 	}
 
 	/**
 	 * 构造函数
 	 *
-	 * @param dataSource
-	 * 		数据源
+	 * @param nxXx
+	 *        {@link NxXx}
+	 * @param type
+	 *        {@link SetExType}
+	 * @param value
+	 * 		值
 	 */
-	public AbstractRedisTemplate(DataSource dataSource) {
-		super(dataSource);
+	public MSetExArgument(final NxXx nxXx, final SetExType type, final long value) {
+		super(type, value);
+		this.nxXx = nxXx;
+	}
+
+	public NxXx getNxXx() {
+		return nxXx;
 	}
 
 	@Override
-	public Status discard() {
-		Status result = execute((client)->{
-			client.getConnection().discard();
-			return null;
-		});
-		resetTransactionOrPipeline();
-		return result;
-	}
-
-	@SuppressWarnings({"unchecked"})
-	@Override
-	public List<Object> exec() {
-		List<Object> result = execute((client)->client.getConnection().exec());
-
-		if(result != null){
-			Map<Integer, Function<?, ?>> map = txConverters.get();
-
-			if(Validate.isNotEmpty(map)){
-				for(int i = 0, j = result.size(); i < j; i++){
-					Function<Object, Object> fun = (Function<Object, Object>) map.get(i);
-
-					if(fun != null){
-						result.set(i, fun.apply(result.get(i)));
-					}
-				}
-			}
-		}
-
-		resetTransactionOrPipeline();
-
-		return result;
+	public String toString() {
+		return ArgStringBuilder.create()
+				.append(getNxXx())
+				.add(getType().name(), getType() == SetExType.KEEPTTL ? null : getValue())
+				.build();
 	}
 
 }

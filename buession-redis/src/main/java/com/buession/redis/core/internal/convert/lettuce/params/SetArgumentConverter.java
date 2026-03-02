@@ -19,99 +19,52 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
+package com.buession.redis.core.internal.convert.lettuce.params;
 
-import com.buession.core.Value;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.command.args.SetArgument;
+import io.lettuce.core.SetArgs;
 
 /**
- * 关键字
+ * {@link SetArgument} 转换为 lettuce {@link SetArgs}
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public interface Keyword extends Value<String>, Rawable {
+public final class SetArgumentConverter implements Converter<SetArgument, SetArgs> {
 
-	enum Common {
-		ABSTTL,
+	@Override
+	public SetArgs convert(final SetArgument source) {
+		if(source == null){
+			return null;
+		}
 
-		BCAST,
+		final SetArgs setParams = new SetArgs();
 
-		CH,
+		if(source.getNxXx() != null){
+			switch(source.getNxXx()){
+				case NX -> setParams.nx();
+				case XX -> setParams.xx();
+			}
+		}
 
-		ID,
+		if(source.getType() != null && source.getExpires() != null){
+			switch(source.getType()){
+				case EX -> setParams.ex(source.getExpires());
+				case PX -> setParams.px(source.getExpires());
+				case EXAT -> setParams.exAt(source.getExpires());
+				case PXAT -> setParams.pxAt(source.getExpires());
+			}
+		}
 
-		ANY,
+		if(Boolean.TRUE.equals(source.getKeepTtl())){
+			setParams.keepttl();
+		}
 
-		IDLETIME,
-
-		FREQ,
-
-		USER,
-
-		TYPE,
-
-		ADDR,
-
-		LADDR,
-
-		SKIPME,
-
-		MAXAGE,
-
-		REPLACE,
-
-		REDIRECT,
-
-		PREFIX,
-
-		OPTIN,
-
-		OPTOUT,
-
-		NOLOOP,
-
-		AUTH,
-
-		AUTH2,
-
-		SETNAME,
-
-		KEYS,
-
-
-	}
-
-	enum Key {
-		MATCH,
-
-		NOVALUES
-	}
-
-	enum Geo {
-		FROMMEMBER,
-
-		FROMLONLAT,
-
-		BYRADIUS,
-
-		BYBOX,
-
-		WITHCOORD,
-
-		WITHDIST,
-
-		WITHHASH,
-
-		STOREDIST
-	}
-
-	enum Hash {
-		FIELDS,
-
-		WITHVALUES
+		return setParams;
 	}
 
 }

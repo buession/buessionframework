@@ -38,7 +38,8 @@ import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.args.GetExArgument;
 import com.buession.redis.core.command.args.HSetExArgument;
 import com.buession.redis.core.internal.convert.lettuce.params.ExpireOptionConverter;
-import com.buession.redis.core.internal.convert.lettuce.params.GetExArgumentConverter;
+import com.buession.redis.core.internal.convert.lettuce.params.GetExArgumentGetExArgsConverter;
+import com.buession.redis.core.internal.convert.lettuce.params.GetExArgumentHGetExArgsConverter;
 import com.buession.redis.core.internal.convert.lettuce.params.HSetExArgumentConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ListKeyValueMapConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConverter;
@@ -210,18 +211,18 @@ public final class LettuceHashOperations extends AbstractLettuceRedisOperations 
 	@Override
 	public List<String> hGetEx(final String key, final GetExArgument argument, final String... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(fields);
-		final GetExArgumentConverter getExArgumentConverter = new GetExArgumentConverter();
+		final GetExArgumentHGetExArgsConverter getExArgumentHGetExArgsConverter = new GetExArgumentHGetExArgsConverter();
 		return executeCommand(Command.HGETEX, args, (cmd)->cmd.hgetex(SafeEncoder.encode(key),
-						getExArgumentConverter.convert(argument), SafeEncoder.encode(fields)),
+						getExArgumentHGetExArgsConverter.convert(argument), SafeEncoder.encode(fields)),
 				new ListConverter<>((kv)->SafeEncoder.encode(kv.getValue())));
 	}
 
 	@Override
 	public List<byte[]> hGetEx(final byte[] key, final GetExArgument argument, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(fields);
-		final GetExArgumentConverter getExArgumentConverter = new GetExArgumentConverter();
+		final GetExArgumentHGetExArgsConverter getExArgumentHGetExArgsConverter = new GetExArgumentHGetExArgsConverter();
 		return executeCommand(Command.HGETEX, args, (cmd)->cmd.hgetex(key,
-				getExArgumentConverter.convert(argument), fields), new ListConverter<>(Value::getValue));
+				getExArgumentHGetExArgsConverter.convert(argument), fields), new ListConverter<>(Value::getValue));
 	}
 
 	@Override

@@ -66,47 +66,6 @@
 	/**
 	 * string command start
 	 **/
-	APPEND(CommandGroup.STRING, "w"),
-
-	DECR(CommandGroup.STRING, "w"),
-
-	DECRBY(CommandGroup.STRING, "w"),
-
-	GET(CommandGroup.STRING, "r"),
-
-	GETRANGE(CommandGroup.STRING, "r"),
-
-	GETSET(CommandGroup.STRING, "rw"),
-
-	GETEX(CommandGroup.STRING, "r"),
-
-	GETDEL(CommandGroup.STRING, "rw"),
-
-	INCR(CommandGroup.STRING, "w"),
-
-	INCRBY(CommandGroup.STRING, "w"),
-
-	INCRBYFLOAT(CommandGroup.STRING, "w"),
-
-	MGET(CommandGroup.STRING, "r"),
-
-	MSET(CommandGroup.STRING, "w"),
-
-	MSETNX(CommandGroup.STRING, "w"),
-
-	PSETEX(CommandGroup.STRING, "w"),
-
-	SET(CommandGroup.STRING, "w"),
-
-	SETEX(CommandGroup.STRING, "w"),
-
-	SETNX(CommandGroup.STRING, "w"),
-
-	SETRANGE(CommandGroup.STRING, "w"),
-
-	STRLEN(CommandGroup.STRING, "r"),
-
-	SUBSTR(CommandGroup.STRING, "r"),
 	/** string command end **/
 
 

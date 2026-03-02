@@ -19,99 +19,45 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
+package com.buession.redis.core.internal.convert.lettuce.params;
 
-import com.buession.core.Value;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.command.args.LcsArgument;
+import io.lettuce.core.LcsArgs;
 
 /**
- * 关键字
+ * {@link LcsArgument} 转换为 lettuce {@link LcsArgs}
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public interface Keyword extends Value<String>, Rawable {
+public final class LcsArgumentConveter implements Converter<LcsArgument, LcsArgs> {
 
-	enum Common {
-		ABSTTL,
+	@Override
+	public LcsArgs convert(final LcsArgument source) {
+		if(source == null){
+			return null;
+		}
 
-		BCAST,
+		final LcsArgs lcsArgs = new LcsArgs();
 
-		CH,
+		if(Boolean.TRUE.equals(source.getLen())){
+			lcsArgs.justLen();
+		}
+		if(Boolean.TRUE.equals(source.getIdx())){
+			lcsArgs.withIdx();
+		}
+		if(source.getMinMatchLen() != null){
+			lcsArgs.minMatchLen(source.getMinMatchLen().intValue());
+		}
+		if(Boolean.TRUE.equals(source.getWithMatchLen())){
+			lcsArgs.withMatchLen();
+		}
 
-		ID,
-
-		ANY,
-
-		IDLETIME,
-
-		FREQ,
-
-		USER,
-
-		TYPE,
-
-		ADDR,
-
-		LADDR,
-
-		SKIPME,
-
-		MAXAGE,
-
-		REPLACE,
-
-		REDIRECT,
-
-		PREFIX,
-
-		OPTIN,
-
-		OPTOUT,
-
-		NOLOOP,
-
-		AUTH,
-
-		AUTH2,
-
-		SETNAME,
-
-		KEYS,
-
-
-	}
-
-	enum Key {
-		MATCH,
-
-		NOVALUES
-	}
-
-	enum Geo {
-		FROMMEMBER,
-
-		FROMLONLAT,
-
-		BYRADIUS,
-
-		BYBOX,
-
-		WITHCOORD,
-
-		WITHDIST,
-
-		WITHHASH,
-
-		STOREDIST
-	}
-
-	enum Hash {
-		FIELDS,
-
-		WITHVALUES
+		return lcsArgs;
 	}
 
 }

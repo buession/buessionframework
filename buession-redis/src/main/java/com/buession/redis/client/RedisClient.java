@@ -232,6 +232,13 @@ public interface RedisClient {
 	StreamOperations streamOperations();
 
 	/**
+	 * 返回字符串命令操作实例
+	 *
+	 * @return 字符串命令操作实例
+	 */
+	StringOperations stringOperations();
+
+	/**
 	 * 返回事务命令操作实例
 	 *
 	 * @return 事务命令操作实例
@@ -244,13 +251,6 @@ public interface RedisClient {
 	 * @return KEY 命令操作实例
 	 */
 	KeyOperations keyOperations();
-
-	/**
-	 * 返回字符串命令操作实例
-	 *
-	 * @return 字符串命令操作实例
-	 */
-	StringOperations stringOperations();
 
 	/**
 	 * 执行命令

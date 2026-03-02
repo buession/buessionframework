@@ -710,6 +710,62 @@ public enum Command implements ProtocolCommand {
 	 **/
 
 	/**
+	 * string command start
+	 **/
+	APPEND(CommandGroup.STRING, "w"),
+
+	DECR(CommandGroup.STRING, "w"),
+
+	DECRBY(CommandGroup.STRING, "w"),
+
+	DELEX(CommandGroup.STRING, "w"),
+
+	DIGEST(CommandGroup.STRING, "w"),
+
+	GET(CommandGroup.STRING, "r"),
+
+	GETDEL(CommandGroup.STRING, "rw"),
+
+	GETEX(CommandGroup.STRING, "r"),
+
+	GETRANGE(CommandGroup.STRING, "r"),
+
+	GETSET(CommandGroup.STRING, "rw"),
+
+	INCR(CommandGroup.STRING, "w"),
+
+	INCRBY(CommandGroup.STRING, "w"),
+
+	INCRBYFLOAT(CommandGroup.STRING, "w"),
+
+	LCS(CommandGroup.STRING, "r"),
+
+	MGET(CommandGroup.STRING, "r"),
+
+	MSET(CommandGroup.STRING, "w"),
+
+	MSETEX(CommandGroup.STRING, "w"),
+
+	MSETNX(CommandGroup.STRING, "w"),
+
+	PSETEX(CommandGroup.STRING, "w"),
+
+	SET(CommandGroup.STRING, "w"),
+
+	SETEX(CommandGroup.STRING, "w"),
+
+	SETNX(CommandGroup.STRING, "w"),
+
+	SETRANGE(CommandGroup.STRING, "w"),
+
+	STRLEN(CommandGroup.STRING, "r"),
+
+	SUBSTR(CommandGroup.STRING, "r"),
+	/**
+	 * string command end
+	 **/
+
+	/**
 	 * transaction command start
 	 **/
 	DISCARD(CommandGroup.TRANSACTION, "w"),

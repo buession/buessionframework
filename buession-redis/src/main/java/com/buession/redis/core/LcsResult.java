@@ -19,99 +19,78 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
-import com.buession.core.Value;
+import java.util.Collections;
+import java.util.List;
 
 /**
- * 关键字
+ * <code>LCS</code> 命令结果
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public interface Keyword extends Value<String>, Rawable {
+public final class LcsResult {
 
-	enum Common {
-		ABSTTL,
+	private String matchString;
 
-		BCAST,
+	private List<MatchedPosition> matches;
 
-		CH,
+	private long len;
 
-		ID,
+	public LcsResult(String matchString) {
+		this.matchString = matchString;
+	}
 
-		ANY,
+	public LcsResult(long len) {
+		this.len = len;
+	}
 
-		IDLETIME,
+	public LcsResult(List<MatchedPosition> matches, long len) {
+		this.matches = matches;
+		this.len = len;
+	}
 
-		FREQ,
+	/**
+	 * Creates new {@link LcsResult}.
+	 *
+	 * @param matchString
+	 * @param matches
+	 * @param len
+	 */
+	public LcsResult(String matchString, List<MatchedPosition> matches, long len) {
+		this.matchString = matchString;
+		this.matches = Collections.unmodifiableList(matches);
+		this.len = len;
+	}
 
-		USER,
+	public String getMatchString() {
+		return matchString;
+	}
 
-		TYPE,
+	public List<MatchedPosition> getMatches() {
+		return matches;
+	}
 
-		ADDR,
+	public long getLen() {
+		return len;
+	}
 
-		LADDR,
-
-		SKIPME,
-
-		MAXAGE,
-
-		REPLACE,
-
-		REDIRECT,
-
-		PREFIX,
-
-		OPTIN,
-
-		OPTOUT,
-
-		NOLOOP,
-
-		AUTH,
-
-		AUTH2,
-
-		SETNAME,
-
-		KEYS,
-
+	/**
+	 * Match position in each string.
+	 */
+	public record MatchedPosition(Position a, Position b, long matchLen) {
 
 	}
 
-	enum Key {
-		MATCH,
+	/**
+	 * Position range.
+	 */
+	public record Position(long start, long end) {
 
-		NOVALUES
-	}
-
-	enum Geo {
-		FROMMEMBER,
-
-		FROMLONLAT,
-
-		BYRADIUS,
-
-		BYBOX,
-
-		WITHCOORD,
-
-		WITHDIST,
-
-		WITHHASH,
-
-		STOREDIST
-	}
-
-	enum Hash {
-		FIELDS,
-
-		WITHVALUES
 	}
 
 }

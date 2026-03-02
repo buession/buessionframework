@@ -62,6 +62,7 @@ import com.buession.redis.core.internal.convert.jedis.params.XAddArgumentConvert
 import com.buession.redis.core.internal.convert.jedis.params.XClaimArgumentConverter;
 import com.buession.redis.core.internal.convert.jedis.params.XReadArgumentConverter;
 import com.buession.redis.core.internal.convert.jedis.params.XReadGroupArgumentConverter;
+import com.buession.redis.core.internal.convert.jedis.response.MapEntryStreamEntryAutoClaimInfoConverter;
 import com.buession.redis.core.internal.convert.jedis.response.MapEntryStreamEntryXReadGroupInfoConverter;
 import com.buession.redis.core.internal.convert.jedis.response.MapEntryStreamEntryXReadInfoConverter;
 import com.buession.redis.core.internal.convert.jedis.response.StreamConsumersInfoConverter;
@@ -83,6 +84,7 @@ import com.buession.redis.core.internal.jedis.JedisXReadParams;
 import com.buession.redis.core.internal.jedis.JedisXTrimParams;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.StreamEntryID;
+import redis.clients.jedis.UnifiedJedis;
 import redis.clients.jedis.params.XAddParams;
 import redis.clients.jedis.params.XAutoClaimParams;
 import redis.clients.jedis.params.XClaimParams;
@@ -126,8 +128,7 @@ public final class JedisStreamOperations extends AbstractJedisRedisOperations im
 		final CommandArguments args = CommandArguments.create(key).add(groupName).add("IDS", ids.length).add(ids);
 		final ArrayConverter<StreamEntryId, StreamEntryID> arrayConverter = new ArrayConverter<>(
 				new StreamEntryIdConverter(), StreamEntryID.class);
-		return executeCommand(Command.XACKDEL, args, (cmd)->cmd.xackdel(key, groupName, arrayConverter.convert(ids)),
-				new ListConverter<>(new StreamEntryDeletionResultConverter()));
+		return xAckDel((cmd)->cmd.xackdel(key, groupName, arrayConverter.convert(ids)), args);
 	}
 
 	@Override
@@ -145,9 +146,8 @@ public final class JedisStreamOperations extends AbstractJedisRedisOperations im
 		final ArrayConverter<StreamEntryId, StreamEntryID> arrayConverter = new ArrayConverter<>(
 				new StreamEntryIdConverter(), StreamEntryID.class);
 		final StreamDeletionPolicyConverter streamDeletionPolicyConverter = new StreamDeletionPolicyConverter();
-		return executeCommand(Command.XACKDEL, args,
-				(cmd)->cmd.xackdel(key, groupName, streamDeletionPolicyConverter.convert(deletionPolicy),
-						arrayConverter.convert(ids)), new ListConverter<>(new StreamEntryDeletionResultConverter()));
+		return xAckDel((cmd)->cmd.xackdel(key, groupName, streamDeletionPolicyConverter.convert(deletionPolicy),
+				arrayConverter.convert(ids)), args);
 	}
 
 	@Override
@@ -995,14 +995,20 @@ public final class JedisStreamOperations extends AbstractJedisRedisOperations im
 		return xTrim(key, xTrimParams, args);
 	}
 
+	private List<StreamEntryDeletionResult> xAckDel(
+			final com.buession.redis.core.Command.Executor<UnifiedJedis, List<redis.clients.jedis.resps.StreamEntryDeletionResult>> executor,
+			final CommandArguments args) {
+		return executeCommand(Command.XACKDEL, args, executor,
+				new ListConverter<>(new StreamEntryDeletionResultConverter()));
+	}
+
 	private AutoClaimInfo<String, String> xAutoClaim(final String key, final String groupName,
 													 final String consumerName, final int minIdleTime,
 													 final StreamEntryId start, final XAutoClaimParams xAutoClaimParams,
 													 final CommandArguments args) {
 		return executeCommand(Command.XAUTOCLAIM, args,
 				(cmd)->cmd.xautoclaim(key, groupName, consumerName, minIdleTime, new JedisStreamEntryID(start),
-						xAutoClaimParams), new MapEntryKeyValueConverter<>(new StreamEntryIDConverter(),
-						new ListConverter<>(new StreamEntryConverter<>((k)->k, (v)->v))));
+						xAutoClaimParams), new MapEntryStreamEntryAutoClaimInfoConverter<>((k)->k, (v)->v));
 	}
 
 	private AutoClaimInfo<byte[], byte[]> xAutoClaim(final byte[] key, final byte[] groupName,
@@ -1012,8 +1018,7 @@ public final class JedisStreamOperations extends AbstractJedisRedisOperations im
 		return executeCommand(Command.XAUTOCLAIM, args,
 				(cmd)->cmd.xautoclaim(SafeEncoder.encode(key), SafeEncoder.encode(groupName),
 						SafeEncoder.encode(consumerName), minIdleTime, new JedisStreamEntryID(start), xAutoClaimParams),
-				new MapEntryKeyValueConverter<>(new StreamEntryIDConverter(),
-						new ListConverter<>(new StreamEntryConverter<>(SafeEncoder::encode, SafeEncoder::encode))));
+				new MapEntryStreamEntryAutoClaimInfoConverter<>(SafeEncoder::encode, SafeEncoder::encode));
 	}
 
 	private KeyValue<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final String key, final String groupName,

@@ -19,99 +19,52 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
+package com.buession.redis.core.internal.convert.lettuce.params;
 
-import com.buession.core.Value;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.command.args.MSetExArgument;
+import io.lettuce.core.MSetExArgs;
+
+import java.time.Duration;
+import java.time.Instant;
 
 /**
- * 关键字
+ * {@link MSetExArgument} 转换为 lettuce {@link MSetExArgs}
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public interface Keyword extends Value<String>, Rawable {
+public final class MSetExArgumentConverter implements Converter<MSetExArgument, MSetExArgs> {
 
-	enum Common {
-		ABSTTL,
+	@Override
+	public MSetExArgs convert(final MSetExArgument source) {
+		if(source == null){
+			return null;
+		}
 
-		BCAST,
+		final MSetExArgs mSetExArgs = new MSetExArgs();
 
-		CH,
+		if(source.getType() == null){
+			switch(source.getType()){
+				case EX -> mSetExArgs.ex(Duration.ofSeconds(source.getValue()));
+				case EXAT -> mSetExArgs.exAt(Instant.ofEpochSecond(source.getValue()));
+				case PX -> mSetExArgs.px(Duration.ofMillis(source.getValue()));
+				case PXAT -> mSetExArgs.pxAt(Instant.ofEpochMilli(source.getValue()));
+				case KEEPTTL -> mSetExArgs.keepttl();
+			}
+		}
 
-		ID,
+		if(source.getNxXx() != null){
+			switch(source.getNxXx()){
+				case NX -> mSetExArgs.nx();
+				case XX -> mSetExArgs.xx();
+			}
+		}
 
-		ANY,
-
-		IDLETIME,
-
-		FREQ,
-
-		USER,
-
-		TYPE,
-
-		ADDR,
-
-		LADDR,
-
-		SKIPME,
-
-		MAXAGE,
-
-		REPLACE,
-
-		REDIRECT,
-
-		PREFIX,
-
-		OPTIN,
-
-		OPTOUT,
-
-		NOLOOP,
-
-		AUTH,
-
-		AUTH2,
-
-		SETNAME,
-
-		KEYS,
-
-
-	}
-
-	enum Key {
-		MATCH,
-
-		NOVALUES
-	}
-
-	enum Geo {
-		FROMMEMBER,
-
-		FROMLONLAT,
-
-		BYRADIUS,
-
-		BYBOX,
-
-		WITHCOORD,
-
-		WITHDIST,
-
-		WITHHASH,
-
-		STOREDIST
-	}
-
-	enum Hash {
-		FIELDS,
-
-		WITHVALUES
+		return mSetExArgs;
 	}
 
 }

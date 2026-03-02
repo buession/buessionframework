@@ -64,7 +64,9 @@ public interface Keyword extends Value<String>, Rawable {
 	}
 
 	enum Time {
-		IDLE
+		IDLE,
+
+		KEEPTTL,
 	}
 
 }

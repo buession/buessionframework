@@ -38,73 +38,37 @@ public class StreamEntryId implements Comparable<StreamEntryId>, Serializable {
 
 	private final static long serialVersionUID = -4487927281373256508L;
 
-	public final static StreamEntryId NOW = new StreamEntryId() {
+	public final static StreamEntryId NOW = new StreamEntryId("*");
 
-		private final static long serialVersionUID = -960096159128674552L;
+	public final static StreamEntryId LAST = new StreamEntryId("$");
 
-		@Override
-		public String toString() {
-			return "*";
-		}
+	public final static StreamEntryId UNDELIVERED = new StreamEntryId(">");
 
-	};
+	public final static StreamEntryId MINIMUM_ID = new StreamEntryId("-");
 
-	public final static StreamEntryId LAST = new StreamEntryId() {
-
-		private final static long serialVersionUID = -3768698237964777728L;
-
-		@Override
-		public String toString() {
-			return "$";
-		}
-
-	};
-
-	public final static StreamEntryId UNDELIVERED = new StreamEntryId() {
-
-		private final static long serialVersionUID = 1611197918147148523L;
-
-		@Override
-		public String toString() {
-			return ">";
-		}
-
-	};
-
-	public final static StreamEntryId MINIMUM_ID = new StreamEntryId() {
-
-		private final static long serialVersionUID = -1645569920931890056L;
-
-		@Override
-		public String toString() {
-			return "-";
-		}
-
-	};
-
-	public final static StreamEntryId MAXIMUM_ID = new StreamEntryId() {
-
-		private final static long serialVersionUID = 283570953016819975L;
-
-		@Override
-		public String toString() {
-			return "+";
-		}
-
-	};
+	public final static StreamEntryId MAXIMUM_ID = new StreamEntryId("+");
 
 	private final long time;
 
 	private final long sequence;
+
+	private final String value;
 
 	public StreamEntryId() {
 		this(0L, 0L);
 	}
 
 	public StreamEntryId(final String id) {
-		String[] split = StringUtils.split(id, '-');
-		this.time = Long.parseLong(split[0]);
-		this.sequence = Long.parseLong(split[1]);
+		if("*".equals(id) || "$".equals(id) || ">".equals(id) || "-".equals(id) || "+".equals(id)){
+			this.time = 0L;
+			this.sequence = 0L;
+			this.value = id;
+		}else{
+			String[] split = StringUtils.split(id, '-');
+			this.time = Long.parseLong(split[0]);
+			this.sequence = Long.parseLong(split[1]);
+			this.value = time + "-" + sequence;
+		}
 	}
 
 	public StreamEntryId(final byte[] id) {
@@ -118,6 +82,7 @@ public class StreamEntryId implements Comparable<StreamEntryId>, Serializable {
 	public StreamEntryId(final long time, final long sequence) {
 		this.time = time;
 		this.sequence = sequence;
+		this.value = time + "-" + sequence;
 	}
 
 	public long getTime() {
@@ -154,7 +119,7 @@ public class StreamEntryId implements Comparable<StreamEntryId>, Serializable {
 
 	@Override
 	public String toString() {
-		return time + "-" + sequence;
+		return value;
 	}
 
 }

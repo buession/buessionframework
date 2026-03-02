@@ -26,62 +26,43 @@ package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
-import com.buession.redis.core.AutoClaimInfo;
-import redis.clients.jedis.StreamEntryID;
-
-import java.util.List;
-import java.util.Map;
+import com.buession.redis.core.LcsResult;
+import redis.clients.jedis.resps.LCSMatchResult;
 
 /**
- * {@link Map.Entry} 转换为 {@link AutoClaimInfo}
- *
- * @param <K>
- * 		Key 类型
- * @param <V>
- * 		值类型
+ * Jedis {@link LCSMatchResult} 转换为 {@link LcsResult}
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class MapEntryStreamEntryAutoClaimInfoConverter<K, V> implements
-		Converter<Map.Entry<StreamEntryID, List<redis.clients.jedis.resps.StreamEntry>>, AutoClaimInfo<K, V>> {
-
-	/**
-	 * Entry key 转换器
-	 */
-	private final Converter<String, K> keyConverter;
-
-	/**
-	 * Entry value 转换器
-	 */
-	private final Converter<String, V> valueConverter;
-
-	/**
-	 * 构造函数
-	 *
-	 * @param keyConverter
-	 * 		Entry key 转换器
-	 * @param valueConverter
-	 * 		Entry value 转换器
-	 */
-	public MapEntryStreamEntryAutoClaimInfoConverter(final Converter<String, K> keyConverter,
-													 final Converter<String, V> valueConverter) {
-		this.keyConverter = keyConverter;
-		this.valueConverter = valueConverter;
-	}
+public final class LCSMatchResultConveter implements Converter<LCSMatchResult, LcsResult> {
 
 	@Override
-	public AutoClaimInfo<K, V> convert(
-			final Map.Entry<StreamEntryID, List<redis.clients.jedis.resps.StreamEntry>> source) {
+	public LcsResult convert(final LCSMatchResult source) {
 		if(source == null){
 			return null;
 		}
 
-		final StreamEntryIDConverter streamEntryIdConverter = new StreamEntryIDConverter();
-		final ListConverter<redis.clients.jedis.resps.StreamEntry, com.buession.redis.core.StreamEntry<K, V>> listConverter =
-				new ListConverter<>(new StreamEntryConverter<>(keyConverter, valueConverter));
-		return new AutoClaimInfo<>(streamEntryIdConverter.convert(source.getKey()),
-				listConverter.convert(source.getValue()));
+		final ListConverter<LCSMatchResult.MatchedPosition, LcsResult.MatchedPosition> lcsMatchResultMatchedPositionConveter = new ListConverter<>(
+				new LCSMatchResultMatchedPositionConveter());
+		return new LcsResult(source.getMatchString(),
+				source.getMatches() == null ? null : lcsMatchResultMatchedPositionConveter.convert(source.getMatches()),
+				source.getLen());
+	}
+
+	private final static class LCSMatchResultMatchedPositionConveter
+			implements Converter<LCSMatchResult.MatchedPosition, LcsResult.MatchedPosition> {
+
+		@Override
+		public LcsResult.MatchedPosition convert(final LCSMatchResult.MatchedPosition source) {
+			return source == null ? null : new LcsResult.MatchedPosition(positionConvert(source.getA()),
+					positionConvert(source.getB()), source.getMatchLen());
+		}
+
+		private LcsResult.Position positionConvert(final LCSMatchResult.Position source) {
+			return source == null ? null : new LcsResult.Position(source.getStart(), source.getEnd());
+		}
+
 	}
 
 }

@@ -246,6 +246,15 @@ public class LettuceRedisClient extends AbstractRedisClient {
 	}
 
 	@Override
+	public StringOperations stringOperations() {
+		if(stringOperations == null){
+			stringOperations = new LettuceStringOperations(this);
+		}
+
+		return stringOperations;
+	}
+
+	@Override
 	public TransactionOperations transactionOperations() {
 		if(transactionOperations == null){
 			transactionOperations = new LettuceTransactionOperations(this);
@@ -261,15 +270,6 @@ public class LettuceRedisClient extends AbstractRedisClient {
 		}
 
 		return keyOperations;
-	}
-
-	@Override
-	public StringOperations stringOperations() {
-		if(stringOperations == null){
-			stringOperations = new LettuceStringOperations(this);
-		}
-
-		return stringOperations;
 	}
 
 }

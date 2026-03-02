@@ -22,37 +22,24 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.params;
+package com.buession.redis.core.internal.convert;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.args.GetExArgument;
-import io.lettuce.core.HGetExArgs;
-
-import java.time.Duration;
-import java.time.Instant;
+import com.buession.core.converter.MapConverter;
+import com.buession.redis.utils.SafeEncoder;
 
 /**
- * {@link GetExArgument} 转换为 lettuce {@link HGetExArgs}
+ * {@link String} {@link java.util.Map} 转换为 二进制 {@link java.util.Map}
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class GetExArgumentConverter implements Converter<GetExArgument, HGetExArgs> {
+public final class StringMapBinaryMapConverter extends MapConverter<String, String, byte[], byte[]> {
 
-	@Override
-	public HGetExArgs convert(final GetExArgument source) {
-		if(source == null || source.getType() == null){
-			return null;
-		}
-
-		return switch(source.getType()){
-			case EX -> HGetExArgs.Builder.ex(Duration.ofSeconds(source.getValue()));
-			case EXAT -> HGetExArgs.Builder.exAt(Instant.ofEpochSecond(source.getValue()));
-			case PX -> HGetExArgs.Builder.px(Duration.ofMillis(source.getValue()));
-			case PXAT -> HGetExArgs.Builder.pxAt(Instant.ofEpochMilli(source.getValue()));
-			case PERSIST -> HGetExArgs.Builder.persist();
-			default -> new HGetExArgs();
-		};
+	/**
+	 * 构造函数
+	 */
+	public StringMapBinaryMapConverter() {
+		super(SafeEncoder::encode, SafeEncoder::encode);
 	}
 
 }

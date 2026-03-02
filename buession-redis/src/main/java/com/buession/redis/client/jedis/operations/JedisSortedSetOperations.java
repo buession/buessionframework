@@ -41,6 +41,7 @@ import com.buession.redis.core.command.args.ZRangeArgument;
 import com.buession.redis.core.internal.convert.jedis.params.MinMaxSortedSetOptionConverter;
 import com.buession.redis.core.internal.convert.jedis.params.ZAddArgumentConverter;
 import com.buession.redis.core.internal.convert.jedis.response.KeyValueConverter;
+import com.buession.redis.core.internal.convert.jedis.response.KeyValueTupleConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ScanResultConverter;
 import com.buession.redis.core.internal.convert.jedis.response.TupleConverter;
 import com.buession.redis.core.internal.jedis.JedisScanParams;
@@ -974,13 +975,14 @@ public final class JedisSortedSetOperations extends AbstractJedisRedisOperations
 	public Tuple zRankWithScores(final String key, final String member) {
 		final CommandArguments args = CommandArguments.create(key).add(member).add(Keyword.Common.WITHSCORE);
 		return executeCommand(Command.ZRANK, args, (cmd)->cmd.zrankWithScore(key, member),
-				new KeyValueConverter<>((k)->k, (v)->v));
+				new KeyValueTupleConverter<>((k)->k, (v)->v));
 	}
 
 	@Override
 	public Tuple zRankWithScores(final byte[] key, final byte[] member) {
 		final CommandArguments args = CommandArguments.create(key).add(member).add(Keyword.Common.WITHSCORE);
-		return executeCommand(Command.ZRANK, args, (cmd)->cmd.zrankWithScore(key, member), new KeyValueConverter<>());
+		return executeCommand(Command.ZRANK, args, (cmd)->cmd.zrankWithScore(key, member),
+				new KeyValueTupleConverter<>());
 	}
 
 	@Override

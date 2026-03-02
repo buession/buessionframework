@@ -19,99 +19,49 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
+package com.buession.redis.core.internal.convert.jedis.params;
 
-import com.buession.core.Value;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.command.args.MSetExArgument;
+import redis.clients.jedis.params.MSetExParams;
 
 /**
- * 关键字
+ * {@link MSetExArgument} 转换为 jedis {@link MSetExParams}
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public interface Keyword extends Value<String>, Rawable {
+public final class MSetExArgumentConverter implements Converter<MSetExArgument, MSetExParams> {
 
-	enum Common {
-		ABSTTL,
+	@Override
+	public MSetExParams convert(final MSetExArgument source) {
+		if(source == null){
+			return null;
+		}
 
-		BCAST,
+		final MSetExParams mSetExParams = new MSetExParams();
 
-		CH,
+		if(source.getType() == null){
+			switch(source.getType()){
+				case EX -> mSetExParams.ex(source.getValue());
+				case EXAT -> mSetExParams.exAt(source.getValue());
+				case PX -> mSetExParams.px(source.getValue());
+				case PXAT -> mSetExParams.pxAt(source.getValue());
+				case KEEPTTL -> mSetExParams.keepTtl();
+			}
+		}
 
-		ID,
+		if(source.getNxXx() != null){
+			switch(source.getNxXx()){
+				case NX -> mSetExParams.nx();
+				case XX -> mSetExParams.xx();
+			}
+		}
 
-		ANY,
-
-		IDLETIME,
-
-		FREQ,
-
-		USER,
-
-		TYPE,
-
-		ADDR,
-
-		LADDR,
-
-		SKIPME,
-
-		MAXAGE,
-
-		REPLACE,
-
-		REDIRECT,
-
-		PREFIX,
-
-		OPTIN,
-
-		OPTOUT,
-
-		NOLOOP,
-
-		AUTH,
-
-		AUTH2,
-
-		SETNAME,
-
-		KEYS,
-
-
-	}
-
-	enum Key {
-		MATCH,
-
-		NOVALUES
-	}
-
-	enum Geo {
-		FROMMEMBER,
-
-		FROMLONLAT,
-
-		BYRADIUS,
-
-		BYBOX,
-
-		WITHCOORD,
-
-		WITHDIST,
-
-		WITHHASH,
-
-		STOREDIST
-	}
-
-	enum Hash {
-		FIELDS,
-
-		WITHVALUES
+		return mSetExParams;
 	}
 
 }

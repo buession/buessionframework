@@ -37,6 +37,7 @@ import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.args.GetExArgument;
 import com.buession.redis.core.command.args.HSetExArgument;
 import com.buession.redis.core.command.args.JsonGetArgument;
+import com.buession.redis.core.command.args.SetArgument;
 import com.buession.redis.core.command.args.ZRangeArgument;
 import com.buession.redis.core.operations.*;
 
@@ -56,8 +57,8 @@ public class RedisTemplate extends AbstractRedisTemplate
 		implements BloomFilterOperations, BitMapOperations, CuckooFilterOperations, ClusterOperations,
 		CountMinSketchOperations, ConnectionOperations, GenericOperations, GeoOperations, HashOperations,
 		HyperLogLogOperations, JsonOperations, ListOperations, PubSubOperations, ScriptingOperations,
-		/*SearchOperations, */ServerOperations, SetOperations, SortedSetOperations, StreamOperations,
-		TransactionOperations, KeyOperations, StringOperations {
+		/*SearchOperations, */ServerOperations, SetOperations, SortedSetOperations, StreamOperations, StringOperations,
+		TransactionOperations, KeyOperations {
 
 	/**
 	 * 构造函数
@@ -2731,6 +2732,40 @@ public class RedisTemplate extends AbstractRedisTemplate
 	}
 
 	@Override
+	public <V> V getDelObject(final String key) {
+		return execute((client)->client.stringOperations().getDel(key), new Converter.SimpleStringConverter<>(this));
+	}
+
+	@Override
+	public <V> V getDelObject(final byte[] key) {
+		return execute((client)->client.stringOperations().getDel(key), new Converter.SimpleBinaryConverter<>(this));
+	}
+
+	@Override
+	public <V> V getDelObject(final String key, final Class<V> clazz) {
+		return execute((client)->client.stringOperations().getDel(key),
+				new Converter.ClazzStringConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> V getDelObject(final byte[] key, final Class<V> clazz) {
+		return execute((client)->client.stringOperations().getDel(key),
+				new Converter.ClazzBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> V getDelObject(final String key, final TypeReference<V> type) {
+		return execute((client)->client.stringOperations().getDel(key),
+				new Converter.TypeStringConverter<>(this, type));
+	}
+
+	@Override
+	public <V> V getDelObject(final byte[] key, final TypeReference<V> type) {
+		return execute((client)->client.stringOperations().getDel(key),
+				new Converter.TypeBinaryConverter<>(this, type));
+	}
+
+	@Override
 	public <V> V getExObject(final String key, final GetExArgument getExArgument) {
 		return execute((client)->client.stringOperations().getEx(key, getExArgument),
 				new Converter.SimpleStringConverter<>(this));
@@ -2803,54 +2838,6 @@ public class RedisTemplate extends AbstractRedisTemplate
 	}
 
 	@Override
-	public <V> V getDelObject(final String key) {
-		return execute((client)->client.stringOperations().getDel(key), new Converter.SimpleStringConverter<>(this));
-	}
-
-	@Override
-	public <V> V getDelObject(final byte[] key) {
-		return execute((client)->client.stringOperations().getDel(key), new Converter.SimpleBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> V getDelObject(final String key, final Class<V> clazz) {
-		return execute((client)->client.stringOperations().getDel(key),
-				new Converter.ClazzStringConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> V getDelObject(final byte[] key, final Class<V> clazz) {
-		return execute((client)->client.stringOperations().getDel(key),
-				new Converter.ClazzBinaryConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> V getDelObject(final String key, final TypeReference<V> type) {
-		return execute((client)->client.stringOperations().getDel(key),
-				new Converter.TypeStringConverter<>(this, type));
-	}
-
-	@Override
-	public <V> V getDelObject(final byte[] key, final TypeReference<V> type) {
-		return execute((client)->client.stringOperations().getDel(key),
-				new Converter.TypeBinaryConverter<>(this, type));
-	}
-
-	@Override
-	public Status mSet(final Map<String, String> values) {
-		final Map<String, String> newValues = Maps.map(values, this::rawKey, (value)->value,
-				new LinkedHashMap<>(values.size()));
-		return execute((client)->client.stringOperations().mSet(newValues));
-	}
-
-	@Override
-	public Status mSetNx(final Map<String, String> values) {
-		final Map<String, String> newValues = Maps.map(values, this::rawKey, (value)->value,
-				new LinkedHashMap<>(values.size()));
-		return execute((client)->client.stringOperations().mSetNx(newValues));
-	}
-
-	@Override
 	public <V> List<V> mGetObject(final String... keys) {
 		return execute((client)->client.stringOperations().mGet(keys), new Converter.SimpleListStringConverter<>(this));
 	}
@@ -2905,13 +2892,13 @@ public class RedisTemplate extends AbstractRedisTemplate
 	}
 
 	@Override
-	public <V> Status set(final String key, final V value, final SetArgument setArgument) {
-		return set(key, serializer.serialize(value), setArgument);
+	public <V> Status set(final String key, final V value, final SetArgument argument) {
+		return set(key, serializer.serialize(value), argument);
 	}
 
 	@Override
-	public <V> Status set(final byte[] key, final V value, final SetArgument setArgument) {
-		return set(key, serializer.serializeAsBytes(value), setArgument);
+	public <V> Status set(final byte[] key, final V value, final SetArgument argument) {
+		return set(key, serializer.serializeAsBytes(value), argument);
 	}
 
 	@Override
