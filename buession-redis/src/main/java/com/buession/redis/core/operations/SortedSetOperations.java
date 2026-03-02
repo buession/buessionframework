@@ -48,94 +48,94 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 
 	@Override
 	default KeyValue<String, List<Tuple>> bzMPop(final String[] keys, final int timeout, final MinMax minMax) {
-		return execute((client)->client.sortedSetOperations().bzMPop(keys, timeout, minMax));
+		return execute((client)->client.sortedSetCommands().bzMPop(keys, timeout, minMax));
 	}
 
 	@Override
 	default KeyValue<byte[], List<Tuple>> bzMPop(final byte[][] keys, final int timeout, final MinMax minMax) {
-		return execute((client)->client.sortedSetOperations().bzMPop(keys, timeout, minMax));
+		return execute((client)->client.sortedSetCommands().bzMPop(keys, timeout, minMax));
 	}
 
 	@Override
 	default KeyValue<String, List<Tuple>> bzMPop(final String[] keys, final int timeout, final MinMax minMax,
 												 final int count) {
-		return execute((client)->client.sortedSetOperations().bzMPop(keys, timeout, minMax, count));
+		return execute((client)->client.sortedSetCommands().bzMPop(keys, timeout, minMax, count));
 	}
 
 	@Override
 	default KeyValue<byte[], List<Tuple>> bzMPop(final byte[][] keys, final int timeout, final MinMax minMax,
 												 final int count) {
-		return execute((client)->client.sortedSetOperations().bzMPop(keys, timeout, minMax, count));
+		return execute((client)->client.sortedSetCommands().bzMPop(keys, timeout, minMax, count));
 	}
 
 	@Override
 	default KeyValue<String, Tuple> bzPopMax(final String[] keys, final int timeout) {
-		return execute((client)->client.sortedSetOperations().bzPopMax(keys, timeout));
+		return execute((client)->client.sortedSetCommands().bzPopMax(keys, timeout));
 	}
 
 	@Override
 	default KeyValue<byte[], Tuple> bzPopMax(final byte[][] keys, final int timeout) {
-		return execute((client)->client.sortedSetOperations().bzPopMax(keys, timeout));
+		return execute((client)->client.sortedSetCommands().bzPopMax(keys, timeout));
 	}
 
 	@Override
 	default KeyValue<String, Tuple> bzPopMin(final String[] keys, final int timeout) {
-		return execute((client)->client.sortedSetOperations().bzPopMin(keys, timeout));
+		return execute((client)->client.sortedSetCommands().bzPopMin(keys, timeout));
 	}
 
 	@Override
 	default KeyValue<byte[], Tuple> bzPopMin(final byte[][] keys, final int timeout) {
-		return execute((client)->client.sortedSetOperations().bzPopMin(keys, timeout));
+		return execute((client)->client.sortedSetCommands().bzPopMin(keys, timeout));
 	}
 
 	@Override
 	default Long zAdd(final String key, final Tuple... members) {
-		return execute((client)->client.sortedSetOperations().zAdd(key, members));
+		return execute((client)->client.sortedSetCommands().zAdd(key, members));
 	}
 
 	@Override
 	default Long zAdd(final byte[] key, final Tuple... members) {
-		return execute((client)->client.sortedSetOperations().zAdd(key, members));
+		return execute((client)->client.sortedSetCommands().zAdd(key, members));
 	}
 
 	@Override
 	default Long zAdd(final String key, final Tuple[] members, final ZAddArgument argument) {
-		return execute((client)->client.sortedSetOperations().zAdd(key, members, argument));
+		return execute((client)->client.sortedSetCommands().zAdd(key, members, argument));
 	}
 
 	@Override
 	default Long zAdd(final byte[] key, final Tuple[] members, final ZAddArgument argument) {
-		return execute((client)->client.sortedSetOperations().zAdd(key, members, argument));
+		return execute((client)->client.sortedSetCommands().zAdd(key, members, argument));
 	}
 
 	@Override
 	default Long zCard(final String key) {
-		return execute((client)->client.sortedSetOperations().zCard(key));
+		return execute((client)->client.sortedSetCommands().zCard(key));
 	}
 
 	@Override
 	default Long zCount(final String key, final double min, final double max) {
-		return execute((client)->client.sortedSetOperations().zCount(key, min, max));
+		return execute((client)->client.sortedSetCommands().zCount(key, min, max));
 	}
 
 	@Override
 	default Long zCount(final byte[] key, final double min, final double max) {
-		return execute((client)->client.sortedSetOperations().zCount(key, min, max));
+		return execute((client)->client.sortedSetCommands().zCount(key, min, max));
 	}
 
 	@Override
 	default Long zCard(final byte[] key) {
-		return execute((client)->client.sortedSetOperations().zCard(key));
+		return execute((client)->client.sortedSetCommands().zCard(key));
 	}
 
 	@Override
 	default List<String> zDiff(final String... keys) {
-		return execute((client)->client.sortedSetOperations().zDiff(keys));
+		return execute((client)->client.sortedSetCommands().zDiff(keys));
 	}
 
 	@Override
 	default List<byte[]> zDiff(final byte[]... keys) {
-		return execute((client)->client.sortedSetOperations().zDiff(keys));
+		return execute((client)->client.sortedSetCommands().zDiff(keys));
 	}
 
 	/**
@@ -236,32 +236,32 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 
 	@Override
 	default List<Tuple> zDiffWithScores(final String... keys) {
-		return execute((client)->client.sortedSetOperations().zDiffWithScores(keys));
+		return execute((client)->client.sortedSetCommands().zDiffWithScores(keys));
 	}
 
 	@Override
 	default List<Tuple> zDiffWithScores(final byte[]... keys) {
-		return execute((client)->client.sortedSetOperations().zDiffWithScores(keys));
+		return execute((client)->client.sortedSetCommands().zDiffWithScores(keys));
 	}
 
 	@Override
 	default Long zDiffStore(final String destKey, final String... keys) {
-		return execute((client)->client.sortedSetOperations().zDiffStore(destKey, keys));
+		return execute((client)->client.sortedSetCommands().zDiffStore(destKey, keys));
 	}
 
 	@Override
 	default Long zDiffStore(final byte[] destKey, final byte[]... keys) {
-		return execute((client)->client.sortedSetOperations().zDiffStore(destKey, keys));
+		return execute((client)->client.sortedSetCommands().zDiffStore(destKey, keys));
 	}
 
 	@Override
 	default Double zIncrBy(final String key, final double increment, final String member) {
-		return execute((client)->client.sortedSetOperations().zIncrBy(key, increment, member));
+		return execute((client)->client.sortedSetCommands().zIncrBy(key, increment, member));
 	}
 
 	@Override
 	default Double zIncrBy(final byte[] key, final double increment, final byte[] member) {
-		return execute((client)->client.sortedSetOperations().zIncrBy(key, increment, member));
+		return execute((client)->client.sortedSetCommands().zIncrBy(key, increment, member));
 	}
 
 	/**
@@ -358,42 +358,42 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 
 	@Override
 	default List<String> zInter(final String... keys) {
-		return execute((client)->client.sortedSetOperations().zInter(keys));
+		return execute((client)->client.sortedSetCommands().zInter(keys));
 	}
 
 	@Override
 	default List<byte[]> zInter(final byte[]... keys) {
-		return execute((client)->client.sortedSetOperations().zInter(keys));
+		return execute((client)->client.sortedSetCommands().zInter(keys));
 	}
 
 	@Override
 	default List<String> zInter(final String[] keys, final Aggregate aggregate) {
-		return execute((client)->client.sortedSetOperations().zInter(keys, aggregate));
+		return execute((client)->client.sortedSetCommands().zInter(keys, aggregate));
 	}
 
 	@Override
 	default List<byte[]> zInter(final byte[][] keys, final Aggregate aggregate) {
-		return execute((client)->client.sortedSetOperations().zInter(keys, aggregate));
+		return execute((client)->client.sortedSetCommands().zInter(keys, aggregate));
 	}
 
 	@Override
 	default List<String> zInter(final String[] keys, final double... weights) {
-		return execute((client)->client.sortedSetOperations().zInter(keys, weights));
+		return execute((client)->client.sortedSetCommands().zInter(keys, weights));
 	}
 
 	@Override
 	default List<byte[]> zInter(final byte[][] keys, final double... weights) {
-		return execute((client)->client.sortedSetOperations().zInter(keys, weights));
+		return execute((client)->client.sortedSetCommands().zInter(keys, weights));
 	}
 
 	@Override
 	default List<String> zInter(final String[] keys, final Aggregate aggregate, final double... weights) {
-		return execute((client)->client.sortedSetOperations().zInter(keys, aggregate, weights));
+		return execute((client)->client.sortedSetCommands().zInter(keys, aggregate, weights));
 	}
 
 	@Override
 	default List<byte[]> zInter(final byte[][] keys, final Aggregate aggregate, final double... weights) {
-		return execute((client)->client.sortedSetOperations().zInter(keys, aggregate, weights));
+		return execute((client)->client.sortedSetCommands().zInter(keys, aggregate, weights));
 	}
 
 	/**
@@ -818,204 +818,204 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 
 	@Override
 	default List<Tuple> zInterWithScores(final String... keys) {
-		return execute((client)->client.sortedSetOperations().zInterWithScores(keys));
+		return execute((client)->client.sortedSetCommands().zInterWithScores(keys));
 	}
 
 	@Override
 	default List<Tuple> zInterWithScores(final byte[]... keys) {
-		return execute((client)->client.sortedSetOperations().zInterWithScores(keys));
+		return execute((client)->client.sortedSetCommands().zInterWithScores(keys));
 	}
 
 	@Override
 	default List<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate) {
-		return execute((client)->client.sortedSetOperations().zInterWithScores(keys, aggregate));
+		return execute((client)->client.sortedSetCommands().zInterWithScores(keys, aggregate));
 	}
 
 	@Override
 	default List<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate) {
-		return execute((client)->client.sortedSetOperations().zInterWithScores(keys, aggregate));
+		return execute((client)->client.sortedSetCommands().zInterWithScores(keys, aggregate));
 	}
 
 	@Override
 	default List<Tuple> zInterWithScores(final String[] keys, final double... weights) {
-		return execute((client)->client.sortedSetOperations().zInterWithScores(keys, weights));
+		return execute((client)->client.sortedSetCommands().zInterWithScores(keys, weights));
 	}
 
 	@Override
 	default List<Tuple> zInterWithScores(final byte[][] keys, final double... weights) {
-		return execute((client)->client.sortedSetOperations().zInterWithScores(keys, weights));
+		return execute((client)->client.sortedSetCommands().zInterWithScores(keys, weights));
 	}
 
 	@Override
 	default List<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate, final double... weights) {
-		return execute((client)->client.sortedSetOperations().zInterWithScores(keys, aggregate, weights));
+		return execute((client)->client.sortedSetCommands().zInterWithScores(keys, aggregate, weights));
 	}
 
 	@Override
 	default List<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights) {
-		return execute((client)->client.sortedSetOperations().zInterWithScores(keys, aggregate, weights));
+		return execute((client)->client.sortedSetCommands().zInterWithScores(keys, aggregate, weights));
 	}
 
 	@Override
 	default long zInterCard(final String... keys) {
-		return execute((client)->client.sortedSetOperations().zInterCard(keys));
+		return execute((client)->client.sortedSetCommands().zInterCard(keys));
 	}
 
 	@Override
 	default long zInterCard(final byte[]... keys) {
-		return execute((client)->client.sortedSetOperations().zInterCard(keys));
+		return execute((client)->client.sortedSetCommands().zInterCard(keys));
 	}
 
 	@Override
 	default long zInterCard(final String[] keys, final int limit) {
-		return execute((client)->client.sortedSetOperations().zInterCard(keys, limit));
+		return execute((client)->client.sortedSetCommands().zInterCard(keys, limit));
 	}
 
 	@Override
 	default long zInterCard(final byte[][] keys, final int limit) {
-		return execute((client)->client.sortedSetOperations().zInterCard(keys, limit));
+		return execute((client)->client.sortedSetCommands().zInterCard(keys, limit));
 	}
 
 	@Override
 	default Long zInterStore(final String destKey, final String... keys) {
-		return execute((client)->client.sortedSetOperations().zInterStore(destKey, keys));
+		return execute((client)->client.sortedSetCommands().zInterStore(destKey, keys));
 	}
 
 	@Override
 	default Long zInterStore(final byte[] destKey, final byte[]... keys) {
-		return execute((client)->client.sortedSetOperations().zInterStore(destKey, keys));
+		return execute((client)->client.sortedSetCommands().zInterStore(destKey, keys));
 	}
 
 	@Override
 	default Long zInterStore(final String destKey, final String[] keys, final Aggregate aggregate) {
-		return execute((client)->client.sortedSetOperations().zInterStore(destKey, keys, aggregate));
+		return execute((client)->client.sortedSetCommands().zInterStore(destKey, keys, aggregate));
 	}
 
 	@Override
 	default Long zInterStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate) {
-		return execute((client)->client.sortedSetOperations().zInterStore(destKey, keys, aggregate));
+		return execute((client)->client.sortedSetCommands().zInterStore(destKey, keys, aggregate));
 	}
 
 	@Override
 	default Long zInterStore(final String destKey, final String[] keys, final double... weights) {
-		return execute((client)->client.sortedSetOperations().zInterStore(destKey, keys, weights));
+		return execute((client)->client.sortedSetCommands().zInterStore(destKey, keys, weights));
 	}
 
 	@Override
 	default Long zInterStore(final byte[] destKey, final byte[][] keys, final double... weights) {
-		return execute((client)->client.sortedSetOperations().zInterStore(destKey, keys, weights));
+		return execute((client)->client.sortedSetCommands().zInterStore(destKey, keys, weights));
 	}
 
 	@Override
 	default Long zInterStore(final String destKey, final String[] keys, final Aggregate aggregate,
 							 final double... weights) {
-		return execute((client)->client.sortedSetOperations().zInterStore(destKey, keys, aggregate, weights));
+		return execute((client)->client.sortedSetCommands().zInterStore(destKey, keys, aggregate, weights));
 	}
 
 	@Override
 	default Long zInterStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate,
 							 final double... weights) {
-		return execute((client)->client.sortedSetOperations().zInterStore(destKey, keys, aggregate, weights));
+		return execute((client)->client.sortedSetCommands().zInterStore(destKey, keys, aggregate, weights));
 	}
 
 	@Override
 	default Long zLexCount(final String key, final double min, final double max) {
-		return execute((client)->client.sortedSetOperations().zLexCount(key, min, max));
+		return execute((client)->client.sortedSetCommands().zLexCount(key, min, max));
 	}
 
 	@Override
 	default Long zLexCount(final byte[] key, final double min, final double max) {
-		return execute((client)->client.sortedSetOperations().zLexCount(key, min, max));
+		return execute((client)->client.sortedSetCommands().zLexCount(key, min, max));
 	}
 
 	@Override
 	default KeyValue<String, List<Tuple>> zMPop(final String[] keys, final MinMax minMax) {
-		return execute((client)->client.sortedSetOperations().zMPop(keys, minMax));
+		return execute((client)->client.sortedSetCommands().zMPop(keys, minMax));
 	}
 
 	@Override
 	default KeyValue<byte[], List<Tuple>> zMPop(final byte[][] keys, final MinMax minMax) {
-		return execute((client)->client.sortedSetOperations().zMPop(keys, minMax));
+		return execute((client)->client.sortedSetCommands().zMPop(keys, minMax));
 	}
 
 	@Override
 	default KeyValue<String, List<Tuple>> zMPop(final String[] keys, final MinMax minMax, final int count) {
-		return execute((client)->client.sortedSetOperations().zMPop(keys, minMax, count));
+		return execute((client)->client.sortedSetCommands().zMPop(keys, minMax, count));
 	}
 
 	@Override
 	default KeyValue<byte[], List<Tuple>> zMPop(final byte[][] keys, final MinMax minMax, final int count) {
-		return execute((client)->client.sortedSetOperations().zMPop(keys, minMax, count));
+		return execute((client)->client.sortedSetCommands().zMPop(keys, minMax, count));
 	}
 
 	@Override
 	default List<Double> zMScore(final String key, final String... members) {
-		return execute((client)->client.sortedSetOperations().zMScore(key, members));
+		return execute((client)->client.sortedSetCommands().zMScore(key, members));
 	}
 
 	@Override
 	default List<Double> zMScore(final byte[] key, final byte[]... members) {
-		return execute((client)->client.sortedSetOperations().zMScore(key, members));
+		return execute((client)->client.sortedSetCommands().zMScore(key, members));
 	}
 
 	@Override
 	default Tuple zPopMax(final String key) {
-		return execute((client)->client.sortedSetOperations().zPopMax(key));
+		return execute((client)->client.sortedSetCommands().zPopMax(key));
 	}
 
 	@Override
 	default Tuple zPopMax(final byte[] key) {
-		return execute((client)->client.sortedSetOperations().zPopMax(key));
+		return execute((client)->client.sortedSetCommands().zPopMax(key));
 	}
 
 	@Override
 	default List<Tuple> zPopMax(final String key, final int count) {
-		return execute((client)->client.sortedSetOperations().zPopMax(key, count));
+		return execute((client)->client.sortedSetCommands().zPopMax(key, count));
 	}
 
 	@Override
 	default List<Tuple> zPopMax(final byte[] key, final int count) {
-		return execute((client)->client.sortedSetOperations().zPopMax(key, count));
+		return execute((client)->client.sortedSetCommands().zPopMax(key, count));
 	}
 
 	@Override
 	default Tuple zPopMin(final String key) {
-		return execute((client)->client.sortedSetOperations().zPopMin(key));
+		return execute((client)->client.sortedSetCommands().zPopMin(key));
 	}
 
 	@Override
 	default Tuple zPopMin(final byte[] key) {
-		return execute((client)->client.sortedSetOperations().zPopMin(key));
+		return execute((client)->client.sortedSetCommands().zPopMin(key));
 	}
 
 	@Override
 	default List<Tuple> zPopMin(final String key, int count) {
-		return execute((client)->client.sortedSetOperations().zPopMin(key, count));
+		return execute((client)->client.sortedSetCommands().zPopMin(key, count));
 	}
 
 	@Override
 	default List<Tuple> zPopMin(final byte[] key, int count) {
-		return execute((client)->client.sortedSetOperations().zPopMin(key, count));
+		return execute((client)->client.sortedSetCommands().zPopMin(key, count));
 	}
 
 	@Override
 	default String zRandMember(final String key) {
-		return execute((client)->client.sortedSetOperations().zRandMember(key));
+		return execute((client)->client.sortedSetCommands().zRandMember(key));
 	}
 
 	@Override
 	default byte[] zRandMember(final byte[] key) {
-		return execute((client)->client.sortedSetOperations().zRandMember(key));
+		return execute((client)->client.sortedSetCommands().zRandMember(key));
 	}
 
 	@Override
 	default List<String> zRandMember(final String key, final int count) {
-		return execute((client)->client.sortedSetOperations().zRandMember(key, count));
+		return execute((client)->client.sortedSetCommands().zRandMember(key, count));
 	}
 
 	@Override
 	default List<byte[]> zRandMember(final byte[] key, final int count) {
-		return execute((client)->client.sortedSetOperations().zRandMember(key, count));
+		return execute((client)->client.sortedSetCommands().zRandMember(key, count));
 	}
 
 	/**
@@ -1216,32 +1216,32 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 
 	@Override
 	default Tuple zRandMemberWithScores(final String key) {
-		return execute((client)->client.sortedSetOperations().zRandMemberWithScores(key));
+		return execute((client)->client.sortedSetCommands().zRandMemberWithScores(key));
 	}
 
 	@Override
 	default Tuple zRandMemberWithScores(final byte[] key) {
-		return execute((client)->client.sortedSetOperations().zRandMemberWithScores(key));
+		return execute((client)->client.sortedSetCommands().zRandMemberWithScores(key));
 	}
 
 	@Override
 	default List<Tuple> zRandMemberWithScores(final String key, final int count) {
-		return execute((client)->client.sortedSetOperations().zRandMemberWithScores(key, count));
+		return execute((client)->client.sortedSetCommands().zRandMemberWithScores(key, count));
 	}
 
 	@Override
 	default List<Tuple> zRandMemberWithScores(final byte[] key, final int count) {
-		return execute((client)->client.sortedSetOperations().zRandMemberWithScores(key, count));
+		return execute((client)->client.sortedSetCommands().zRandMemberWithScores(key, count));
 	}
 
 	@Override
 	default List<String> zRange(final String key, final long start, final long end) {
-		return execute((client)->client.sortedSetOperations().zRange(key, start, end));
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end));
 	}
 
 	@Override
 	default List<byte[]> zRange(final byte[] key, final long start, final long end) {
-		return execute((client)->client.sortedSetOperations().zRange(key, start, end));
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end));
 	}
 
 	/**
@@ -1386,12 +1386,12 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 
 	@Override
 	default List<String> zRange(final String key, final long start, final long end, final ZRangeArgument argument) {
-		return execute((client)->client.sortedSetOperations().zRange(key, start, end, argument));
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, argument));
 	}
 
 	@Override
 	default List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeArgument argument) {
-		return execute((client)->client.sortedSetOperations().zRange(key, start, end, argument));
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, argument));
 	}
 
 	/**
@@ -1552,12 +1552,12 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 
 	@Override
 	default List<String> zRange(final String key, final long start, final long end, final int offset, final int count) {
-		return execute((client)->client.sortedSetOperations().zRange(key, start, end, offset, count));
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, offset, count));
 	}
 
 	@Override
 	default List<byte[]> zRange(final byte[] key, final long start, final long end, final int offset, final int count) {
-		return execute((client)->client.sortedSetOperations().zRange(key, start, end, offset, count));
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, offset, count));
 	}
 
 	/**
@@ -1731,13 +1731,13 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	@Override
 	default List<String> zRange(final String key, final long start, final long end, final ZRangeArgument argument,
 								final int offset, final int count) {
-		return execute((client)->client.sortedSetOperations().zRange(key, start, end, argument, offset, count));
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, argument, offset, count));
 	}
 
 	@Override
 	default List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeArgument argument,
 								final int offset, final int count) {
-		return execute((client)->client.sortedSetOperations().zRange(key, start, end, argument, offset, count));
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, argument, offset, count));
 	}
 
 	/**
@@ -1922,72 +1922,72 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 
 	@Override
 	default List<Tuple> zRangeWithScores(final String key, final long start, final long end) {
-		return execute((client)->client.sortedSetOperations().zRangeWithScores(key, start, end));
+		return execute((client)->client.sortedSetCommands().zRangeWithScores(key, start, end));
 	}
 
 	@Override
 	default List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end) {
-		return execute((client)->client.sortedSetOperations().zRangeWithScores(key, start, end));
+		return execute((client)->client.sortedSetCommands().zRangeWithScores(key, start, end));
 	}
 
 	@Override
 	default List<Tuple> zRangeWithScores(final String key, final long start, final long end,
 										 final ZRangeArgument argument) {
-		return execute((client)->client.sortedSetOperations().zRangeWithScores(key, start, end, argument));
+		return execute((client)->client.sortedSetCommands().zRangeWithScores(key, start, end, argument));
 	}
 
 	@Override
 	default List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end,
 										 final ZRangeArgument argument) {
-		return execute((client)->client.sortedSetOperations().zRangeWithScores(key, start, end, argument));
+		return execute((client)->client.sortedSetCommands().zRangeWithScores(key, start, end, argument));
 	}
 
 	@Override
 	default List<Tuple> zRangeWithScores(final String key, final long start, final long end, final int offset,
 										 final int count) {
-		return execute((client)->client.sortedSetOperations().zRangeWithScores(key, start, end, offset, count));
+		return execute((client)->client.sortedSetCommands().zRangeWithScores(key, start, end, offset, count));
 	}
 
 	@Override
 	default List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final int offset,
 										 final int count) {
-		return execute((client)->client.sortedSetOperations().zRangeWithScores(key, start, end, offset, count));
+		return execute((client)->client.sortedSetCommands().zRangeWithScores(key, start, end, offset, count));
 	}
 
 	@Override
 	default List<Tuple> zRangeWithScores(final String key, final long start, final long end,
 										 final ZRangeArgument argument, final int offset, final int count) {
 		return execute(
-				(client)->client.sortedSetOperations().zRangeWithScores(key, start, end, argument, offset, count));
+				(client)->client.sortedSetCommands().zRangeWithScores(key, start, end, argument, offset, count));
 	}
 
 	@Override
 	default List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end,
 										 final ZRangeArgument argument, final int offset, final int count) {
 		return execute(
-				(client)->client.sortedSetOperations().zRangeWithScores(key, start, end, argument, offset, count));
+				(client)->client.sortedSetCommands().zRangeWithScores(key, start, end, argument, offset, count));
 	}
 
 	@Override
 	default List<String> zRangeByLex(final String key, final double min, final double max) {
-		return execute((client)->client.sortedSetOperations().zRangeByLex(key, min, max));
+		return execute((client)->client.sortedSetCommands().zRangeByLex(key, min, max));
 	}
 
 	@Override
 	default List<byte[]> zRangeByLex(final byte[] key, final double min, final double max) {
-		return execute((client)->client.sortedSetOperations().zRangeByLex(key, min, max));
+		return execute((client)->client.sortedSetCommands().zRangeByLex(key, min, max));
 	}
 
 	@Override
 	default List<String> zRangeByLex(final String key, final double min, final double max, final int offset,
 									 final int count) {
-		return execute((client)->client.sortedSetOperations().zRangeByLex(key, min, max, offset, count));
+		return execute((client)->client.sortedSetCommands().zRangeByLex(key, min, max, offset, count));
 	}
 
 	@Override
 	default List<byte[]> zRangeByLex(final byte[] key, final double min, final double max, final int offset,
 									 final int count) {
-		return execute((client)->client.sortedSetOperations().zRangeByLex(key, min, max, offset, count));
+		return execute((client)->client.sortedSetCommands().zRangeByLex(key, min, max, offset, count));
 	}
 
 	/**
@@ -2266,24 +2266,24 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 
 	@Override
 	default List<String> zRangeByScore(final String key, final double min, final double max) {
-		return execute((client)->client.sortedSetOperations().zRangeByLex(key, min, max));
+		return execute((client)->client.sortedSetCommands().zRangeByLex(key, min, max));
 	}
 
 	@Override
 	default List<byte[]> zRangeByScore(final byte[] key, final double min, final double max) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max));
+		return execute((client)->client.sortedSetCommands().zRangeByScore(key, min, max));
 	}
 
 	@Override
 	default List<String> zRangeByScore(final String key, final double min, final double max, final int offset,
 									   final int count) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count));
+		return execute((client)->client.sortedSetCommands().zRangeByScore(key, min, max, offset, count));
 	}
 
 	@Override
 	default List<byte[]> zRangeByScore(final byte[] key, final double min, final double max, final int offset,
 									   final int count) {
-		return execute((client)->client.sortedSetOperations().zRangeByScore(key, min, max, offset, count));
+		return execute((client)->client.sortedSetCommands().zRangeByScore(key, min, max, offset, count));
 	}
 
 	/**
@@ -2562,142 +2562,142 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 
 	@Override
 	default List<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max) {
-		return execute((client)->client.sortedSetOperations().zRangeByScoreWithScores(key, min, max));
+		return execute((client)->client.sortedSetCommands().zRangeByScoreWithScores(key, min, max));
 	}
 
 	@Override
 	default List<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max) {
-		return execute((client)->client.sortedSetOperations().zRangeByScoreWithScores(key, min, max));
+		return execute((client)->client.sortedSetCommands().zRangeByScoreWithScores(key, min, max));
 	}
 
 	@Override
 	default List<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max, final int offset,
 												final int count) {
-		return execute((client)->client.sortedSetOperations().zRangeByScoreWithScores(key, min, max, offset, count));
+		return execute((client)->client.sortedSetCommands().zRangeByScoreWithScores(key, min, max, offset, count));
 	}
 
 	@Override
 	default List<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max, final int offset,
 												final int count) {
-		return execute((client)->client.sortedSetOperations().zRangeByScoreWithScores(key, min, max, offset, count));
+		return execute((client)->client.sortedSetCommands().zRangeByScoreWithScores(key, min, max, offset, count));
 	}
 
 	@Override
 	default Long zRangeStore(final String destKey, final String key, final long start, final long end) {
-		return execute((client)->client.sortedSetOperations().zRangeStore(destKey, key, start, end));
+		return execute((client)->client.sortedSetCommands().zRangeStore(destKey, key, start, end));
 	}
 
 	@Override
 	default Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end) {
-		return execute((client)->client.sortedSetOperations().zRangeStore(destKey, key, start, end));
+		return execute((client)->client.sortedSetCommands().zRangeStore(destKey, key, start, end));
 	}
 
 	@Override
 	default Long zRangeStore(final String destKey, final String key, final long start, final long end,
 							 final ZRangeArgument argument) {
-		return execute((client)->client.sortedSetOperations().zRangeStore(destKey, key, start, end, argument));
+		return execute((client)->client.sortedSetCommands().zRangeStore(destKey, key, start, end, argument));
 	}
 
 	@Override
 	default Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
 							 final ZRangeArgument argument) {
-		return execute((client)->client.sortedSetOperations().zRangeStore(destKey, key, start, end, argument));
+		return execute((client)->client.sortedSetCommands().zRangeStore(destKey, key, start, end, argument));
 	}
 
 	@Override
 	default Long zRangeStore(final String destKey, final String key, final long start, final long end,
 							 final int offset, final int count) {
-		return execute((client)->client.sortedSetOperations().zRangeStore(destKey, key, start, end, offset, count));
+		return execute((client)->client.sortedSetCommands().zRangeStore(destKey, key, start, end, offset, count));
 	}
 
 	@Override
 	default Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
 							 final int offset, final int count) {
-		return execute((client)->client.sortedSetOperations().zRangeStore(destKey, key, start, end, offset, count));
+		return execute((client)->client.sortedSetCommands().zRangeStore(destKey, key, start, end, offset, count));
 	}
 
 	@Override
 	default Long zRangeStore(final String destKey, final String key, final long start, final long end,
 							 final ZRangeArgument argument, final int offset, final int count) {
 		return execute(
-				(client)->client.sortedSetOperations().zRangeStore(destKey, key, start, end, argument, offset, count));
+				(client)->client.sortedSetCommands().zRangeStore(destKey, key, start, end, argument, offset, count));
 	}
 
 	@Override
 	default Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
 							 final ZRangeArgument argument, final int offset, final int count) {
 		return execute(
-				(client)->client.sortedSetOperations().zRangeStore(destKey, key, start, end, argument, offset, count));
+				(client)->client.sortedSetCommands().zRangeStore(destKey, key, start, end, argument, offset, count));
 	}
 
 	@Override
 	default Long zRank(final String key, final String member) {
-		return execute((client)->client.sortedSetOperations().zRank(key, member));
+		return execute((client)->client.sortedSetCommands().zRank(key, member));
 	}
 
 	@Override
 	default Long zRank(final byte[] key, final byte[] member) {
-		return execute((client)->client.sortedSetOperations().zRank(key, member));
+		return execute((client)->client.sortedSetCommands().zRank(key, member));
 	}
 
 	@Override
 	default Tuple zRankWithScores(final String key, final String member) {
-		return execute((client)->client.sortedSetOperations().zRankWithScores(key, member));
+		return execute((client)->client.sortedSetCommands().zRankWithScores(key, member));
 	}
 
 	@Override
 	default Tuple zRankWithScores(final byte[] key, final byte[] member) {
-		return execute((client)->client.sortedSetOperations().zRankWithScores(key, member));
+		return execute((client)->client.sortedSetCommands().zRankWithScores(key, member));
 	}
 
 	@Override
 	default Long zRem(final String key, final String... members) {
-		return execute((client)->client.sortedSetOperations().zRem(key, members));
+		return execute((client)->client.sortedSetCommands().zRem(key, members));
 	}
 
 	@Override
 	default Long zRem(final byte[] key, final byte[]... members) {
-		return execute((client)->client.sortedSetOperations().zRem(key, members));
+		return execute((client)->client.sortedSetCommands().zRem(key, members));
 	}
 
 	@Override
 	default Long zRemRangeByLex(final String key, final double min, final double max) {
-		return execute((client)->client.sortedSetOperations().zRemRangeByLex(key, min, max));
+		return execute((client)->client.sortedSetCommands().zRemRangeByLex(key, min, max));
 	}
 
 	@Override
 	default Long zRemRangeByLex(final byte[] key, final double min, final double max) {
-		return execute((client)->client.sortedSetOperations().zRemRangeByLex(key, min, max));
+		return execute((client)->client.sortedSetCommands().zRemRangeByLex(key, min, max));
 	}
 
 	@Override
 	default Long zRemRangeByRank(final String key, final long start, final long end) {
-		return execute((client)->client.sortedSetOperations().zRemRangeByRank(key, start, end));
+		return execute((client)->client.sortedSetCommands().zRemRangeByRank(key, start, end));
 	}
 
 	@Override
 	default Long zRemRangeByRank(final byte[] key, final long start, final long end) {
-		return execute((client)->client.sortedSetOperations().zRemRangeByRank(key, start, end));
+		return execute((client)->client.sortedSetCommands().zRemRangeByRank(key, start, end));
 	}
 
 	@Override
 	default Long zRemRangeByScore(final String key, final double min, final double max) {
-		return execute((client)->client.sortedSetOperations().zRemRangeByScore(key, min, max));
+		return execute((client)->client.sortedSetCommands().zRemRangeByScore(key, min, max));
 	}
 
 	@Override
 	default Long zRemRangeByScore(final byte[] key, final double min, final double max) {
-		return execute((client)->client.sortedSetOperations().zRemRangeByScore(key, min, max));
+		return execute((client)->client.sortedSetCommands().zRemRangeByScore(key, min, max));
 	}
 
 	@Override
 	default List<String> zRevRange(final String key, final long start, final long end) {
-		return execute((client)->client.sortedSetOperations().zRevRange(key, start, end));
+		return execute((client)->client.sortedSetCommands().zRevRange(key, start, end));
 	}
 
 	@Override
 	default List<byte[]> zRevRange(final byte[] key, final long start, final long end) {
-		return execute((client)->client.sortedSetOperations().zRevRange(key, start, end));
+		return execute((client)->client.sortedSetCommands().zRevRange(key, start, end));
 	}
 
 	/**
@@ -2842,34 +2842,34 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 
 	@Override
 	default List<Tuple> zRevRangeWithScores(final String key, final long start, final long end) {
-		return execute((client)->client.sortedSetOperations().zRevRangeWithScores(key, start, end));
+		return execute((client)->client.sortedSetCommands().zRevRangeWithScores(key, start, end));
 	}
 
 	@Override
 	default List<Tuple> zRevRangeWithScores(final byte[] key, final long start, final long end) {
-		return execute((client)->client.sortedSetOperations().zRevRangeWithScores(key, start, end));
+		return execute((client)->client.sortedSetCommands().zRevRangeWithScores(key, start, end));
 	}
 
 	@Override
 	default List<String> zRevRangeByLex(final String key, final double min, final double max) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max));
+		return execute((client)->client.sortedSetCommands().zRevRangeByLex(key, min, max));
 	}
 
 	@Override
 	default List<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max));
+		return execute((client)->client.sortedSetCommands().zRevRangeByLex(key, min, max));
 	}
 
 	@Override
 	default List<String> zRevRangeByLex(final String key, final double min, final double max, final int offset,
 										final int count) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count));
+		return execute((client)->client.sortedSetCommands().zRevRangeByLex(key, min, max, offset, count));
 	}
 
 	@Override
 	default List<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max, final int offset,
 										final int count) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByLex(key, min, max, offset, count));
+		return execute((client)->client.sortedSetCommands().zRevRangeByLex(key, min, max, offset, count));
 	}
 
 	/**
@@ -3152,22 +3152,22 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 
 	@Override
 	default List<String> zRevRangeByScore(final String key, final double min, final double max) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max));
+		return execute((client)->client.sortedSetCommands().zRevRangeByScore(key, min, max));
 	}
 
 	@Override
 	default List<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max));
+		return execute((client)->client.sortedSetCommands().zRevRangeByScore(key, min, max));
 	}
 
 	default List<String> zRevRangeByScore(final String key, final double min, final double max, final int offset,
 										  final int count) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count));
+		return execute((client)->client.sortedSetCommands().zRevRangeByScore(key, min, max, offset, count));
 	}
 
 	default List<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max, final int offset,
 										  final int count) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScore(key, min, max, offset, count));
+		return execute((client)->client.sortedSetCommands().zRevRangeByScore(key, min, max, offset, count));
 	}
 
 	/**
@@ -3460,54 +3460,54 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 
 	@Override
 	default List<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScoreWithScores(key, min, max));
+		return execute((client)->client.sortedSetCommands().zRevRangeByScoreWithScores(key, min, max));
 	}
 
 	@Override
 	default List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScoreWithScores(key, min, max));
+		return execute((client)->client.sortedSetCommands().zRevRangeByScoreWithScores(key, min, max));
 	}
 
 	@Override
 	default List<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max,
 												   final int offset, final int count) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScoreWithScores(key, min, max, offset, count));
+		return execute((client)->client.sortedSetCommands().zRevRangeByScoreWithScores(key, min, max, offset, count));
 	}
 
 	@Override
 	default List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max,
 												   final int offset, final int count) {
-		return execute((client)->client.sortedSetOperations().zRevRangeByScoreWithScores(key, min, max, offset, count));
+		return execute((client)->client.sortedSetCommands().zRevRangeByScoreWithScores(key, min, max, offset, count));
 	}
 
 	@Override
 	default Long zRevRank(final String key, final String member) {
-		return execute((client)->client.sortedSetOperations().zRevRank(key, member));
+		return execute((client)->client.sortedSetCommands().zRevRank(key, member));
 	}
 
 	@Override
 	default Long zRevRank(final byte[] key, final byte[] member) {
-		return execute((client)->client.sortedSetOperations().zRevRank(key, member));
+		return execute((client)->client.sortedSetCommands().zRevRank(key, member));
 	}
 
 	@Override
 	default Tuple zRevRankWithScore(final String key, final String member) {
-		return execute((client)->client.sortedSetOperations().zRevRankWithScore(key, member));
+		return execute((client)->client.sortedSetCommands().zRevRankWithScore(key, member));
 	}
 
 	@Override
 	default Tuple zRevRankWithScore(final byte[] key, final byte[] member) {
-		return execute((client)->client.sortedSetOperations().zRevRankWithScore(key, member));
+		return execute((client)->client.sortedSetCommands().zRevRankWithScore(key, member));
 	}
 
 	@Override
 	default ScanResult<Tuple> zScan(final String key, final String cursor) {
-		return execute((client)->client.sortedSetOperations().zScan(key, cursor));
+		return execute((client)->client.sortedSetCommands().zScan(key, cursor));
 	}
 
 	@Override
 	default ScanResult<Tuple> zScan(final byte[] key, final byte[] cursor) {
-		return execute((client)->client.sortedSetOperations().zScan(key, cursor));
+		return execute((client)->client.sortedSetCommands().zScan(key, cursor));
 	}
 
 	default ScanResult<Tuple> zScan(final String key, final long cursor) {
@@ -3520,12 +3520,12 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 
 	@Override
 	default ScanResult<Tuple> zScan(final String key, final String cursor, final String pattern) {
-		return execute((client)->client.sortedSetOperations().zScan(key, cursor, pattern));
+		return execute((client)->client.sortedSetCommands().zScan(key, cursor, pattern));
 	}
 
 	@Override
 	default ScanResult<Tuple> zScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
-		return execute((client)->client.sortedSetOperations().zScan(key, cursor, pattern));
+		return execute((client)->client.sortedSetCommands().zScan(key, cursor, pattern));
 	}
 
 	default ScanResult<Tuple> zScan(final String key, final long cursor, final String pattern) {
@@ -3538,12 +3538,12 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 
 	@Override
 	default ScanResult<Tuple> zScan(final String key, final String cursor, final int count) {
-		return execute((client)->client.sortedSetOperations().zScan(key, cursor, count));
+		return execute((client)->client.sortedSetCommands().zScan(key, cursor, count));
 	}
 
 	@Override
 	default ScanResult<Tuple> zScan(final byte[] key, final byte[] cursor, final int count) {
-		return execute((client)->client.sortedSetOperations().zScan(key, cursor, count));
+		return execute((client)->client.sortedSetCommands().zScan(key, cursor, count));
 	}
 
 	default ScanResult<Tuple> zScan(final String key, final long cursor, final int count) {
@@ -3556,12 +3556,12 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 
 	@Override
 	default ScanResult<Tuple> zScan(final String key, final String cursor, final String pattern, final int count) {
-		return execute((client)->client.sortedSetOperations().zScan(key, cursor, pattern, count));
+		return execute((client)->client.sortedSetCommands().zScan(key, cursor, pattern, count));
 	}
 
 	@Override
 	default ScanResult<Tuple> zScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count) {
-		return execute((client)->client.sortedSetOperations().zScan(key, cursor, pattern, count));
+		return execute((client)->client.sortedSetCommands().zScan(key, cursor, pattern, count));
 	}
 
 	default ScanResult<Tuple> zScan(final String key, final long cursor, final String pattern, final int count) {
@@ -3574,52 +3574,52 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 
 	@Override
 	default Double zScore(final String key, final String member) {
-		return execute((client)->client.sortedSetOperations().zScore(key, member));
+		return execute((client)->client.sortedSetCommands().zScore(key, member));
 	}
 
 	@Override
 	default Double zScore(final byte[] key, final byte[] member) {
-		return execute((client)->client.sortedSetOperations().zScore(key, member));
+		return execute((client)->client.sortedSetCommands().zScore(key, member));
 	}
 
 	@Override
 	default List<String> zUnion(final String... keys) {
-		return execute((client)->client.sortedSetOperations().zUnion(keys));
+		return execute((client)->client.sortedSetCommands().zUnion(keys));
 	}
 
 	@Override
 	default List<byte[]> zUnion(final byte[]... keys) {
-		return execute((client)->client.sortedSetOperations().zUnion(keys));
+		return execute((client)->client.sortedSetCommands().zUnion(keys));
 	}
 
 	@Override
 	default List<String> zUnion(final String[] keys, final Aggregate aggregate) {
-		return execute((client)->client.sortedSetOperations().zUnion(keys, aggregate));
+		return execute((client)->client.sortedSetCommands().zUnion(keys, aggregate));
 	}
 
 	@Override
 	default List<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate) {
-		return execute((client)->client.sortedSetOperations().zUnion(keys, aggregate));
+		return execute((client)->client.sortedSetCommands().zUnion(keys, aggregate));
 	}
 
 	@Override
 	default List<String> zUnion(final String[] keys, final double... weights) {
-		return execute((client)->client.sortedSetOperations().zUnion(keys, weights));
+		return execute((client)->client.sortedSetCommands().zUnion(keys, weights));
 	}
 
 	@Override
 	default List<byte[]> zUnion(final byte[][] keys, final double... weights) {
-		return execute((client)->client.sortedSetOperations().zUnion(keys, weights));
+		return execute((client)->client.sortedSetCommands().zUnion(keys, weights));
 	}
 
 	@Override
 	default List<String> zUnion(final String[] keys, final Aggregate aggregate, final double... weights) {
-		return execute((client)->client.sortedSetOperations().zUnion(keys, aggregate, weights));
+		return execute((client)->client.sortedSetCommands().zUnion(keys, aggregate, weights));
 	}
 
 	@Override
 	default List<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate, final double... weights) {
-		return execute((client)->client.sortedSetOperations().zUnion(keys, aggregate, weights));
+		return execute((client)->client.sortedSetCommands().zUnion(keys, aggregate, weights));
 	}
 
 	/**
@@ -4044,84 +4044,84 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 
 	@Override
 	default List<Tuple> zUnionWithScores(final String... keys) {
-		return execute((client)->client.sortedSetOperations().zUnionWithScores(keys));
+		return execute((client)->client.sortedSetCommands().zUnionWithScores(keys));
 	}
 
 	@Override
 	default List<Tuple> zUnionWithScores(final byte[]... keys) {
-		return execute((client)->client.sortedSetOperations().zUnionWithScores(keys));
+		return execute((client)->client.sortedSetCommands().zUnionWithScores(keys));
 	}
 
 	@Override
 	default List<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate) {
-		return execute((client)->client.sortedSetOperations().zUnionWithScores(keys, aggregate));
+		return execute((client)->client.sortedSetCommands().zUnionWithScores(keys, aggregate));
 	}
 
 	@Override
 	default List<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate) {
-		return execute((client)->client.sortedSetOperations().zUnionWithScores(keys, aggregate));
+		return execute((client)->client.sortedSetCommands().zUnionWithScores(keys, aggregate));
 	}
 
 	@Override
 	default List<Tuple> zUnionWithScores(final String[] keys, final double... weights) {
-		return execute((client)->client.sortedSetOperations().zUnionWithScores(keys, weights));
+		return execute((client)->client.sortedSetCommands().zUnionWithScores(keys, weights));
 	}
 
 	@Override
 	default List<Tuple> zUnionWithScores(final byte[][] keys, final double... weights) {
-		return execute((client)->client.sortedSetOperations().zUnionWithScores(keys, weights));
+		return execute((client)->client.sortedSetCommands().zUnionWithScores(keys, weights));
 	}
 
 	@Override
 	default List<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate, final double... weights) {
-		return execute((client)->client.sortedSetOperations().zUnionWithScores(keys, aggregate, weights));
+		return execute((client)->client.sortedSetCommands().zUnionWithScores(keys, aggregate, weights));
 	}
 
 	@Override
 	default List<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights) {
-		return execute((client)->client.sortedSetOperations().zUnionWithScores(keys, aggregate, weights));
+		return execute((client)->client.sortedSetCommands().zUnionWithScores(keys, aggregate, weights));
 	}
 
 	@Override
 	default Long zUnionStore(final String destKey, final String... keys) {
-		return execute((client)->client.sortedSetOperations().zUnionStore(destKey, keys));
+		return execute((client)->client.sortedSetCommands().zUnionStore(destKey, keys));
 	}
 
 	@Override
 	default Long zUnionStore(final byte[] destKey, final byte[]... keys) {
-		return execute((client)->client.sortedSetOperations().zUnionStore(destKey, keys));
+		return execute((client)->client.sortedSetCommands().zUnionStore(destKey, keys));
 	}
 
 	@Override
 	default Long zUnionStore(final String destKey, final String[] keys, final Aggregate aggregate) {
-		return execute((client)->client.sortedSetOperations().zUnionStore(destKey, keys, aggregate));
+		return execute((client)->client.sortedSetCommands().zUnionStore(destKey, keys, aggregate));
 	}
 
 	@Override
 	default Long zUnionStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate) {
-		return execute((client)->client.sortedSetOperations().zUnionStore(destKey, keys, aggregate));
+		return execute((client)->client.sortedSetCommands().zUnionStore(destKey, keys, aggregate));
 	}
 
 	@Override
 	default Long zUnionStore(final String destKey, final String[] keys, final double... weights) {
-		return execute((client)->client.sortedSetOperations().zUnionStore(destKey, keys, weights));
+		return execute((client)->client.sortedSetCommands().zUnionStore(destKey, keys, weights));
 	}
 
 	@Override
 	default Long zUnionStore(final byte[] destKey, final byte[][] keys, final double... weights) {
-		return execute((client)->client.sortedSetOperations().zUnionStore(destKey, keys, weights));
+		return execute((client)->client.sortedSetCommands().zUnionStore(destKey, keys, weights));
 	}
 
 	@Override
 	default Long zUnionStore(final String destKey, final String[] keys, final Aggregate aggregate,
 							 final double... weights) {
-		return execute((client)->client.sortedSetOperations().zUnionStore(destKey, keys, aggregate, weights));
+		return execute((client)->client.sortedSetCommands().zUnionStore(destKey, keys, aggregate, weights));
 	}
 
 	@Override
 	default Long zUnionStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate,
 							 final double... weights) {
-		return execute((client)->client.sortedSetOperations().zUnionStore(destKey, keys, aggregate, weights));
+		return execute((client)->client.sortedSetCommands().zUnionStore(destKey, keys, aggregate, weights));
 	}
 
 }

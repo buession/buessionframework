@@ -38,37 +38,37 @@ public interface HyperLogLogOperations extends HyperLogLogCommands, RedisOperati
 
 	@Override
 	default Status pfAdd(final String key, final String... elements) {
-		return execute((client)->client.hyperLogLogOperations().pfAdd(key, elements));
+		return execute((client)->client.hyperLogLogCommands().pfAdd(key, elements));
 	}
 
 	@Override
 	default Status pfAdd(final byte[] key, final byte[]... elements) {
-		return execute((client)->client.hyperLogLogOperations().pfAdd(key, elements));
+		return execute((client)->client.hyperLogLogCommands().pfAdd(key, elements));
 	}
 
 	@Override
 	default Long pfCount(final String... keys) {
-		return execute((client)->client.hyperLogLogOperations().pfCount(keys));
+		return execute((client)->client.hyperLogLogCommands().pfCount(keys));
 	}
 
 	@Override
 	default Long pfCount(final byte[]... keys) {
-		return execute((client)->client.hyperLogLogOperations().pfCount(keys));
+		return execute((client)->client.hyperLogLogCommands().pfCount(keys));
 	}
 
 	@Override
 	default Status pfMerge(final String destKey, final String... keys) {
-		return execute((client)->client.hyperLogLogOperations().pfMerge(destKey, keys));
+		return execute((client)->client.hyperLogLogCommands().pfMerge(destKey, keys));
 	}
 
 	@Override
 	default Status pfMerge(final byte[] destKey, final byte[]... keys) {
-		return execute((client)->client.hyperLogLogOperations().pfMerge(destKey, keys));
+		return execute((client)->client.hyperLogLogCommands().pfMerge(destKey, keys));
 	}
 
 	@Override
 	default Status pfSelftest() {
-		return execute((client)->client.hyperLogLogOperations().pfSelftest());
+		return execute((client)->client.hyperLogLogCommands().pfSelftest());
 	}
 
 }

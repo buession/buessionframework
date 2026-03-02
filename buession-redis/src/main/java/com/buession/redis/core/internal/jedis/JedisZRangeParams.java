@@ -30,6 +30,8 @@ import redis.clients.jedis.Protocol;
 import redis.clients.jedis.params.ZRangeParams;
 
 /**
+ * Jedis {@link ZRangeParams} 扩展
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
@@ -58,18 +60,6 @@ public final class JedisZRangeParams extends ZRangeParams {
 
 	public JedisZRangeParams(final ZRangeArgument.By by, final long min, final long max, final boolean rev) {
 		this(by, (int) min, (int) max, rev);
-	}
-
-	public JedisZRangeParams(final ZRangeArgument.By by, final int min, final int max, final long offset,
-							 final long count) {
-		this(by, min, max);
-		limit((int) offset, (int) count);
-	}
-
-	public JedisZRangeParams(final ZRangeArgument.By by, final long min, final long max, final long offset,
-							 final long count) {
-		this(by, min, max);
-		limit((int) offset, (int) count);
 	}
 
 	public JedisZRangeParams(final int min, final int max, final boolean rev) {

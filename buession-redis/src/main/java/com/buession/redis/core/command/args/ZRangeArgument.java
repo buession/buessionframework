@@ -83,7 +83,6 @@ public class ZRangeArgument {
 
 		BYLEX;
 
-
 		@Override
 		public String getValue() {
 			return name();

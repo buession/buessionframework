@@ -40,6 +40,7 @@ import io.lettuce.core.XAutoClaimArgs;
 public class LettuceXAutoClaimArgs<V> extends XAutoClaimArgs<V> {
 
 	public LettuceXAutoClaimArgs() {
+		super();
 	}
 
 	public LettuceXAutoClaimArgs(final V groupName, final V consumerName, final int minIdleTime,

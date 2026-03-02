@@ -27,8 +27,8 @@ package com.buession.redis.client.lettuce;
 import com.buession.redis.client.AbstractRedisClient;
 import com.buession.redis.client.ClientOptions;
 import com.buession.redis.client.connection.lettuce.LettuceRedisConnection;
-import com.buession.redis.client.lettuce.operations.*;
-import com.buession.redis.client.operations.*;
+import com.buession.redis.client.lettuce.command.*;
+import com.buession.redis.core.command.*;
 import io.lettuce.core.api.StatefulConnection;
 
 /**
@@ -72,204 +72,204 @@ public class LettuceRedisClient extends AbstractRedisClient {
 	}
 
 	@Override
-	public BloomFilterOperations bloomFilterOperations() {
-		if(bloomFilterOperations == null){
-			bloomFilterOperations = new LettuceBloomFilterOperations(this);
+	public BloomFilterCommands bloomFilterCommands() {
+		if(bloomFilterCommands == null){
+			bloomFilterCommands = new LettuceBloomFilterCommands(this);
 		}
 
-		return bloomFilterOperations;
+		return bloomFilterCommands;
 	}
 
 	@Override
-	public BitMapOperations bitMapOperations() {
-		if(bitMapOperations == null){
-			bitMapOperations = new LettuceBitMapOperations(this);
+	public BitMapCommands bitMapCommands() {
+		if(bitMapCommands == null){
+			bitMapCommands = new LettuceBitMapCommands(this);
 		}
 
-		return bitMapOperations;
+		return bitMapCommands;
 	}
 
 	@Override
-	public CuckooFilterOperations cuckooFilterOperations() {
-		if(cuckooFilterOperations == null){
-			cuckooFilterOperations = new LettuceCuckooFilterOperations(this);
+	public CuckooFilterCommands cuckooFilterCommands() {
+		if(cuckooFilterCommands == null){
+			cuckooFilterCommands = new LettuceCuckooFilterCommands(this);
 		}
 
-		return cuckooFilterOperations;
+		return cuckooFilterCommands;
 	}
 
 	@Override
-	public CountMinSketchOperations countMinSketchOperations() {
-		if(countMinSketchOperations == null){
-			countMinSketchOperations = new LettuceCountMinSketchOperations(this);
+	public CountMinSketchCommands countMinSketchCommands() {
+		if(countMinSketchCommands == null){
+			countMinSketchCommands = new LettuceCountMinSketchCommands(this);
 		}
 
-		return countMinSketchOperations;
+		return countMinSketchCommands;
 	}
 
 	@Override
-	public ClusterOperations clusterOperations() {
-		if(clusterOperations == null){
-			clusterOperations = new LettuceClusterOperations(this);
+	public ClusterCommands clusterCommands() {
+		if(clusterCommands == null){
+			clusterCommands = new LettuceClusterCommands(this);
 		}
 
-		return clusterOperations;
+		return clusterCommands;
 	}
 
 	@Override
-	public ConnectionOperations connectionOperations() {
-		if(connectionOperations == null){
-			connectionOperations = new LettuceConnectionOperations(this);
+	public ConnectionCommands connectionCommands() {
+		if(connectionCommands == null){
+			connectionCommands = new LettuceConnectionCommands(this);
 		}
 
-		return connectionOperations;
+		return connectionCommands;
 	}
 
 	@Override
-	public GenericOperations genericOperations() {
-		if(genericOperations == null){
-			genericOperations = new LettuceGenericOperations(this);
+	public GenericCommands genericCommands() {
+		if(genericCommands == null){
+			genericCommands = new LettuceGenericCommands(this);
 		}
 
-		return genericOperations;
+		return genericCommands;
 	}
 
 	@Override
-	public GeoOperations geoOperations() {
-		if(geoOperations == null){
-			geoOperations = new LettuceGeoOperations(this);
+	public GeoCommands geoCommands() {
+		if(geoCommands == null){
+			geoCommands = new LettuceGeoCommands(this);
 		}
 
-		return geoOperations;
+		return geoCommands;
 	}
 
 	@Override
-	public HashOperations hashOperations() {
-		if(hashOperations == null){
-			hashOperations = new LettuceHashOperations(this);
+	public HashCommands hashCommands() {
+		if(hashCommands == null){
+			hashCommands = new LettuceHashCommands(this);
 		}
 
-		return hashOperations;
+		return hashCommands;
 	}
 
 	@Override
-	public HyperLogLogOperations hyperLogLogOperations() {
-		if(hyperLogLogOperations == null){
-			hyperLogLogOperations = new LettuceHyperLogLogOperations(this);
+	public HyperLogLogCommands hyperLogLogCommands() {
+		if(hyperLogLogCommands == null){
+			hyperLogLogCommands = new LettuceHyperLogLoCommands(this);
 		}
 
-		return hyperLogLogOperations;
+		return hyperLogLogCommands;
 	}
 
 	@Override
-	public JsonOperations jsonOperations() {
-		if(jsonOperations == null){
-			jsonOperations = new LettuceJsonOperations(this);
+	public JsonCommands jsonCommands() {
+		if(jsonCommands == null){
+			jsonCommands = new LettuceJsonCommands(this);
 		}
 
-		return jsonOperations;
+		return jsonCommands;
 	}
 
 	@Override
-	public KeyOperations keyOperations() {
-		if(keyOperations == null){
-			keyOperations = new LettuceKeyOperations(this);
+	public KeyCommands keyCommands() {
+		if(keyCommands == null){
+			keyCommands = new LettuceKeyCommands(this);
 		}
 
-		return keyOperations;
+		return keyCommands;
 	}
 
 	@Override
-	public ListOperations listOperations() {
-		if(listOperations == null){
-			listOperations = new LettuceListOperations(this);
+	public ListCommands listCommands() {
+		if(listCommands == null){
+			listCommands = new LettuceListCommands(this);
 		}
 
-		return listOperations;
+		return listCommands;
 	}
 
 	@Override
-	public PubSubOperations pubSubOperations() {
-		if(pubSubOperations == null){
-			pubSubOperations = new LettucePubSubOperations(this);
+	public PubSubCommands pubSubCommands() {
+		if(pubSubCommands == null){
+			pubSubCommands = new LettucePubSubCommands(this);
 		}
 
-		return pubSubOperations;
+		return pubSubCommands;
 	}
 
 	@Override
-	public ScriptingOperations scriptingOperations() {
-		if(scriptingOperations == null){
-			scriptingOperations = new LettuceScriptingOperations(this);
+	public ScriptingCommands scriptingCommands() {
+		if(scriptingCommands == null){
+			scriptingCommands = new LettuceScriptingCommands(this);
 		}
 
-		return scriptingOperations;
+		return scriptingCommands;
 	}
 
 	/*
 	@Override
-	public SearchOperations searchOperations() {
-		if(searchOperations == null){
-			searchOperations = new LettuceSearchOperations(this);
+	public SearchCommands searchCommands() {
+		if(searchCommands == null){
+			searchCommands = new LettuceSearchCommands(this);
 		}
 
-		return searchOperations;
+		return searchCommands;
 	}
 
 	 */
 
 	@Override
-	public ServerOperations serverOperations() {
-		if(serverOperations == null){
-			serverOperations = new LettuceServerOperations(this);
+	public ServerCommands serverCommands() {
+		if(serverCommands == null){
+			serverCommands = new LettuceServerCommands(this);
 		}
 
-		return serverOperations;
+		return serverCommands;
 	}
 
 	@Override
-	public SetOperations setOperations() {
-		if(setOperations == null){
-			setOperations = new LettuceSetOperations(this);
+	public SetCommands setCommands() {
+		if(setCommands == null){
+			setCommands = new LettuceSetCommands(this);
 		}
 
-		return setOperations;
+		return setCommands;
 	}
 
 	@Override
-	public SortedSetOperations sortedSetOperations() {
-		if(sortedSetOperations == null){
-			sortedSetOperations = new LettuceSortedSetOperations(this);
+	public SortedSetCommands sortedSetCommands() {
+		if(sortedSetCommands == null){
+			sortedSetCommands = new LettuceSortedSetCommands(this);
 		}
 
-		return sortedSetOperations;
+		return sortedSetCommands;
 	}
 
 	@Override
-	public StreamOperations streamOperations() {
-		if(streamOperations == null){
-			streamOperations = new LettuceStreamOperations(this);
+	public StreamCommands streamCommands() {
+		if(streamCommands == null){
+			streamCommands = new LettuceStreamCommands(this);
 		}
 
-		return streamOperations;
+		return streamCommands;
 	}
 
 	@Override
-	public StringOperations stringOperations() {
-		if(stringOperations == null){
-			stringOperations = new LettuceStringOperations(this);
+	public StringCommands stringCommands() {
+		if(stringCommands == null){
+			stringCommands = new LettuceStringCommands(this);
 		}
 
-		return stringOperations;
+		return stringCommands;
 	}
 
 	@Override
-	public TransactionOperations transactionOperations() {
-		if(transactionOperations == null){
-			transactionOperations = new LettuceTransactionOperations(this);
+	public TransactionCommands transactionCommands() {
+		if(transactionCommands == null){
+			transactionCommands = new LettuceTransactionCommands(this);
 		}
 
-		return transactionOperations;
+		return transactionCommands;
 	}
 
 }

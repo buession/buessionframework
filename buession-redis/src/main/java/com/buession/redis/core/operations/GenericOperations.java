@@ -25,7 +25,7 @@
 package com.buession.redis.core.operations;
 
 import com.buession.lang.KeyValue;
-import com.buession.redis.core.command.GenericCommand;
+import com.buession.redis.core.command.GenericCommands;
 
 /**
  * 常规命令运算
@@ -35,16 +35,16 @@ import com.buession.redis.core.command.GenericCommand;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public interface GenericOperations extends GenericCommand, RedisOperations {
+public interface GenericOperations extends GenericCommands, RedisOperations {
 
 	@Override
 	default Long wait(final int replicas, final int timeout) {
-		return execute((client)->client.genericOperations().wait(replicas, timeout));
+		return execute((client)->client.genericCommands().wait(replicas, timeout));
 	}
 
 	@Override
 	default KeyValue<Long, Long> waitOf(final int locals, final int replicas, final int timeout) {
-		return execute((client)->client.genericOperations().waitOf(locals, replicas, timeout));
+		return execute((client)->client.genericCommands().waitOf(locals, replicas, timeout));
 	}
 
 }

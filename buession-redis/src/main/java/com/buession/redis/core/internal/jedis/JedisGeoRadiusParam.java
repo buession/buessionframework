@@ -25,7 +25,7 @@
 package com.buession.redis.core.internal.jedis;
 
 import com.buession.lang.Order;
-import com.buession.redis.core.command.GeoCommands;
+import com.buession.redis.core.command.args.GeoRadiusArgument;
 import redis.clients.jedis.params.GeoRadiusParam;
 
 import java.util.Optional;
@@ -154,16 +154,16 @@ public final class JedisGeoRadiusParam extends GeoRadiusParam {
 	}
 
 	/**
-	 * 从 {@link GeoCommands.GeoRadiusArgument} 创建 {@link JedisGeoRadiusParam} 实例
+	 * 从 {@link GeoRadiusArgument} 创建 {@link JedisGeoRadiusParam} 实例
 	 *
 	 * @param geoRadiusArgument
-	 *        {@link GeoCommands.GeoRadiusArgument}
+	 *        {@link GeoRadiusArgument}
 	 *
 	 * @return {@link JedisGeoRadiusParam} 实例
 	 *
 	 * @since 3.0.0
 	 */
-	public static JedisGeoRadiusParam from(final GeoCommands.GeoRadiusArgument geoRadiusArgument) {
+	public static JedisGeoRadiusParam from(final GeoRadiusArgument geoRadiusArgument) {
 		final JedisGeoRadiusParam geoRadiusParam = new JedisGeoRadiusParam();
 
 		if(geoRadiusArgument != null){

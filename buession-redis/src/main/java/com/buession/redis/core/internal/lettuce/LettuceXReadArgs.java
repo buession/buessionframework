@@ -53,17 +53,4 @@ public final class LettuceXReadArgs extends XReadArgs {
 		block(block);
 	}
 
-	/*
-	public LettuceXReadArgs(final boolean noack, final long count) {
-		this(count);
-		noack(noack);
-	}
-
-	public LettuceXReadArgs(final long block, final boolean noack, final long count) {
-		this(block, count);
-		noack(noack);
-	}
-
-	 */
-
 }

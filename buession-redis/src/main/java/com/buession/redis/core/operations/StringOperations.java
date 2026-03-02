@@ -50,70 +50,70 @@ public interface StringOperations extends StringCommands, RedisOperations {
 
 	@Override
 	default Long append(final String key, final String value) {
-		return execute((client)->client.stringOperations().append(key, value));
+		return execute((client)->client.stringCommands().append(key, value));
 	}
 
 	@Override
 	default Long append(final byte[] key, final byte[] value) {
-		return execute((client)->client.stringOperations().append(key, value));
+		return execute((client)->client.stringCommands().append(key, value));
 	}
 
 	@Override
 	default Long decr(final String key) {
-		return execute((client)->client.stringOperations().decr(key));
+		return execute((client)->client.stringCommands().decr(key));
 	}
 
 	@Override
 	default Long decr(final byte[] key) {
-		return execute((client)->client.stringOperations().decr(key));
+		return execute((client)->client.stringCommands().decr(key));
 	}
 
 	@Override
 	default Long decrBy(final String key, final long value) {
-		return execute((client)->client.stringOperations().decrBy(key, value));
+		return execute((client)->client.stringCommands().decrBy(key, value));
 	}
 
 	@Override
 	default Long decrBy(final byte[] key, final long value) {
-		return execute((client)->client.stringOperations().decrBy(key, value));
+		return execute((client)->client.stringCommands().decrBy(key, value));
 	}
 
 	default Double decrByFloat(final String key, final double value) {
-		return execute((client)->client.stringOperations().incrByFloat(key, value * -1));
+		return execute((client)->client.stringCommands().incrByFloat(key, value * -1));
 	}
 
 	default Double decrByFloat(final byte[] key, final double value) {
-		return execute((client)->client.stringOperations().incrByFloat(key, value * -1));
+		return execute((client)->client.stringCommands().incrByFloat(key, value * -1));
 	}
 
 	@Override
 	default Status delEx(final String key, final DelExType type, final String value) {
-		return execute((client)->client.stringOperations().delEx(key, type, value));
+		return execute((client)->client.stringCommands().delEx(key, type, value));
 	}
 
 	@Override
 	default Status delEx(final byte[] key, final DelExType type, final byte[] value) {
-		return execute((client)->client.stringOperations().delEx(key, type, value));
+		return execute((client)->client.stringCommands().delEx(key, type, value));
 	}
 
 	@Override
 	default String digest(final String key) {
-		return execute((client)->client.stringOperations().digest(key));
+		return execute((client)->client.stringCommands().digest(key));
 	}
 
 	@Override
 	default byte[] digest(final byte[] key) {
-		return execute((client)->client.stringOperations().digest(key));
+		return execute((client)->client.stringCommands().digest(key));
 	}
 
 	@Override
 	default String get(final String key) {
-		return execute((client)->client.stringOperations().get(key));
+		return execute((client)->client.stringCommands().get(key));
 	}
 
 	@Override
 	default byte[] get(final byte[] key) {
-		return execute((client)->client.stringOperations().get(key));
+		return execute((client)->client.stringCommands().get(key));
 	}
 
 	/**
@@ -216,12 +216,12 @@ public interface StringOperations extends StringCommands, RedisOperations {
 
 	@Override
 	default String getDel(final String key) {
-		return execute((client)->client.stringOperations().getDel(key));
+		return execute((client)->client.stringCommands().getDel(key));
 	}
 
 	@Override
 	default byte[] getDel(final byte[] key) {
-		return execute((client)->client.stringOperations().getDel(key));
+		return execute((client)->client.stringCommands().getDel(key));
 	}
 
 	/**
@@ -324,12 +324,12 @@ public interface StringOperations extends StringCommands, RedisOperations {
 
 	@Override
 	default String getEx(final String key, final GetExArgument getExArgument) {
-		return execute((client)->client.stringOperations().getEx(key, getExArgument));
+		return execute((client)->client.stringCommands().getEx(key, getExArgument));
 	}
 
 	@Override
 	default byte[] getEx(final byte[] key, final GetExArgument getExArgument) {
-		return execute((client)->client.stringOperations().getEx(key, getExArgument));
+		return execute((client)->client.stringCommands().getEx(key, getExArgument));
 	}
 
 	/**
@@ -438,22 +438,22 @@ public interface StringOperations extends StringCommands, RedisOperations {
 
 	@Override
 	default String getRange(final String key, final long start, final long end) {
-		return execute((client)->client.stringOperations().getRange(key, start, end));
+		return execute((client)->client.stringCommands().getRange(key, start, end));
 	}
 
 	@Override
 	default byte[] getRange(final byte[] key, final long start, final long end) {
-		return execute((client)->client.stringOperations().getRange(key, start, end));
+		return execute((client)->client.stringCommands().getRange(key, start, end));
 	}
 
 	@Override
 	default String getSet(final String key, final String value) {
-		return execute((client)->client.stringOperations().getSet(key, value));
+		return execute((client)->client.stringCommands().getSet(key, value));
 	}
 
 	@Override
 	default byte[] getSet(final byte[] key, final byte[] value) {
-		return execute((client)->client.stringOperations().getSet(key, value));
+		return execute((client)->client.stringCommands().getSet(key, value));
 	}
 
 	/**
@@ -562,62 +562,62 @@ public interface StringOperations extends StringCommands, RedisOperations {
 
 	@Override
 	default Long incr(final String key) {
-		return execute((client)->client.stringOperations().incr(key));
+		return execute((client)->client.stringCommands().incr(key));
 	}
 
 	@Override
 	default Long incr(final byte[] key) {
-		return execute((client)->client.stringOperations().incr(key));
+		return execute((client)->client.stringCommands().incr(key));
 	}
 
 	@Override
 	default Long incrBy(final String key, final long value) {
-		return execute((client)->client.stringOperations().incrBy(key, value));
+		return execute((client)->client.stringCommands().incrBy(key, value));
 	}
 
 	@Override
 	default Long incrBy(final byte[] key, final long value) {
-		return execute((client)->client.stringOperations().incrBy(key, value));
+		return execute((client)->client.stringCommands().incrBy(key, value));
 	}
 
 	@Override
 	default Double incrByFloat(final String key, final double value) {
-		return execute((client)->client.stringOperations().incrByFloat(key, value));
+		return execute((client)->client.stringCommands().incrByFloat(key, value));
 	}
 
 	@Override
 	default Double incrByFloat(final byte[] key, final double value) {
-		return execute((client)->client.stringOperations().incrByFloat(key, value));
+		return execute((client)->client.stringCommands().incrByFloat(key, value));
 	}
 
 	@Override
 	default LcsResult lcs(final String key1, final String key2) {
-		return execute((client)->client.stringOperations().lcs(key1, key2));
+		return execute((client)->client.stringCommands().lcs(key1, key2));
 	}
 
 	@Override
 	default LcsResult lcs(final byte[] key1, final byte[] key2) {
-		return execute((client)->client.stringOperations().lcs(key1, key2));
+		return execute((client)->client.stringCommands().lcs(key1, key2));
 	}
 
 	@Override
 	default LcsResult lcs(final String key1, final String key2, final LcsArgument argument) {
-		return execute((client)->client.stringOperations().lcs(key1, key2, argument));
+		return execute((client)->client.stringCommands().lcs(key1, key2, argument));
 	}
 
 	@Override
 	default LcsResult lcs(final byte[] key1, final byte[] key2, final LcsArgument argument) {
-		return execute((client)->client.stringOperations().lcs(key1, key2, argument));
+		return execute((client)->client.stringCommands().lcs(key1, key2, argument));
 	}
 
 	@Override
 	default List<String> mGet(final String... keys) {
-		return execute((client)->client.stringOperations().mGet(keys));
+		return execute((client)->client.stringCommands().mGet(keys));
 	}
 
 	@Override
 	default List<byte[]> mGet(final byte[]... keys) {
-		return execute((client)->client.stringOperations().mGet(keys));
+		return execute((client)->client.stringCommands().mGet(keys));
 	}
 
 	/**
@@ -720,7 +720,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 
 	@Override
 	default Status mSet(final Map<String, String> values) {
-		return execute((client)->client.stringOperations().mSet(values));
+		return execute((client)->client.stringCommands().mSet(values));
 	}
 
 	/**
@@ -773,7 +773,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 
 	@Override
 	default Status mSetEx(final Map<String, String> values, final MSetExArgument argument) {
-		return execute((client)->client.stringOperations().mSetEx(values, argument));
+		return execute((client)->client.stringCommands().mSetEx(values, argument));
 	}
 
 	/**
@@ -830,7 +830,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 
 	@Override
 	default Status mSetNx(final Map<String, String> values) {
-		return execute((client)->client.stringOperations().mSetNx(values));
+		return execute((client)->client.stringCommands().mSetNx(values));
 	}
 
 	/**
@@ -883,12 +883,12 @@ public interface StringOperations extends StringCommands, RedisOperations {
 
 	@Override
 	default Status pSetEx(final String key, String value, int lifetime) {
-		return execute((client)->client.stringOperations().pSetEx(key, value, lifetime));
+		return execute((client)->client.stringCommands().pSetEx(key, value, lifetime));
 	}
 
 	@Override
 	default Status pSetEx(final byte[] key, final byte[] value, final int lifetime) {
-		return execute((client)->client.stringOperations().pSetEx(key, value, lifetime));
+		return execute((client)->client.stringCommands().pSetEx(key, value, lifetime));
 	}
 
 	/**
@@ -931,22 +931,22 @@ public interface StringOperations extends StringCommands, RedisOperations {
 
 	@Override
 	default Status set(final String key, final String value) {
-		return execute((client)->client.stringOperations().set(key, value));
+		return execute((client)->client.stringCommands().set(key, value));
 	}
 
 	@Override
 	default Status set(final byte[] key, final byte[] value) {
-		return execute((client)->client.stringOperations().set(key, value));
+		return execute((client)->client.stringCommands().set(key, value));
 	}
 
 	@Override
 	default Status set(final String key, final String value, final SetArgument argument) {
-		return execute((client)->client.stringOperations().set(key, value, argument));
+		return execute((client)->client.stringCommands().set(key, value, argument));
 	}
 
 	@Override
 	default Status set(final byte[] key, final byte[] value, final SetArgument argument) {
-		return execute((client)->client.stringOperations().set(key, value, argument));
+		return execute((client)->client.stringCommands().set(key, value, argument));
 	}
 
 	/**
@@ -1023,12 +1023,12 @@ public interface StringOperations extends StringCommands, RedisOperations {
 
 	@Override
 	default Status setEx(final String key, final String value, final int lifetime) {
-		return execute((client)->client.stringOperations().setEx(key, value, lifetime));
+		return execute((client)->client.stringCommands().setEx(key, value, lifetime));
 	}
 
 	@Override
 	default Status setEx(final byte[] key, final byte[] value, final int lifetime) {
-		return execute((client)->client.stringOperations().setEx(key, value, lifetime));
+		return execute((client)->client.stringCommands().setEx(key, value, lifetime));
 	}
 
 	/**
@@ -1071,12 +1071,12 @@ public interface StringOperations extends StringCommands, RedisOperations {
 
 	@Override
 	default Status setNx(final String key, final String value) {
-		return execute((client)->client.stringOperations().setNx(key, value));
+		return execute((client)->client.stringCommands().setNx(key, value));
 	}
 
 	@Override
 	default Status setNx(final byte[] key, final byte[] value) {
-		return execute((client)->client.stringOperations().setNx(key, value));
+		return execute((client)->client.stringCommands().setNx(key, value));
 	}
 
 	/**
@@ -1113,32 +1113,32 @@ public interface StringOperations extends StringCommands, RedisOperations {
 
 	@Override
 	default Long setRange(final String key, final long offset, final String value) {
-		return execute((client)->client.stringOperations().setRange(key, offset, value));
+		return execute((client)->client.stringCommands().setRange(key, offset, value));
 	}
 
 	@Override
 	default Long setRange(final byte[] key, final long offset, final byte[] value) {
-		return execute((client)->client.stringOperations().setRange(key, offset, value));
+		return execute((client)->client.stringCommands().setRange(key, offset, value));
 	}
 
 	@Override
 	default Long strlen(final String key) {
-		return execute((client)->client.stringOperations().strlen(key));
+		return execute((client)->client.stringCommands().strlen(key));
 	}
 
 	@Override
 	default Long strlen(final byte[] key) {
-		return execute((client)->client.stringOperations().strlen(key));
+		return execute((client)->client.stringCommands().strlen(key));
 	}
 
 	@Override
 	default String substr(final String key, final long start, final long end) {
-		return execute((client)->client.stringOperations().substr(key, start, end));
+		return execute((client)->client.stringCommands().substr(key, start, end));
 	}
 
 	@Override
 	default byte[] substr(final byte[] key, final long start, final long end) {
-		return execute((client)->client.stringOperations().substr(key, start, end));
+		return execute((client)->client.stringCommands().substr(key, start, end));
 	}
 
 }

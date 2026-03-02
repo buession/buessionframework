@@ -42,7 +42,7 @@ public interface PubSubOperations extends PubSubCommands, RedisOperations {
 	@Override
 	default void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener) {
 		execute((client)->{
-			client.pubSubOperations().pSubscribe(patterns, pubSubListener);
+			client.pubSubCommands().pSubscribe(patterns, pubSubListener);
 			return null;
 		});
 	}
@@ -50,115 +50,115 @@ public interface PubSubOperations extends PubSubCommands, RedisOperations {
 	@Override
 	default void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener) {
 		execute((client)->{
-			client.pubSubOperations().pSubscribe(patterns, pubSubListener);
+			client.pubSubCommands().pSubscribe(patterns, pubSubListener);
 			return null;
 		});
 	}
 
 	@Override
 	default Long publish(final String channel, final String message) {
-		return execute((client)->client.pubSubOperations().publish(channel, message));
+		return execute((client)->client.pubSubCommands().publish(channel, message));
 	}
 
 	@Override
 	default Long publish(final byte[] channel, final byte[] message) {
-		return execute((client)->client.pubSubOperations().publish(channel, message));
+		return execute((client)->client.pubSubCommands().publish(channel, message));
 	}
 
 	@Override
 	default List<String> pubsubChannels() {
-		return execute((client)->client.pubSubOperations().pubsubChannels());
+		return execute((client)->client.pubSubCommands().pubsubChannels());
 	}
 
 	@Override
 	default List<String> pubsubChannels(final String pattern) {
-		return execute((client)->client.pubSubOperations().pubsubChannels(pattern));
+		return execute((client)->client.pubSubCommands().pubsubChannels(pattern));
 	}
 
 	@Override
 	default List<byte[]> pubsubChannels(final byte[] pattern) {
-		return execute((client)->client.pubSubOperations().pubsubChannels(pattern));
+		return execute((client)->client.pubSubCommands().pubsubChannels(pattern));
 	}
 
 	@Override
 	default Long pubsubNumPat() {
-		return execute((client)->client.pubSubOperations().pubsubNumPat());
+		return execute((client)->client.pubSubCommands().pubsubNumPat());
 	}
 
 	@Override
 	default Map<String, Long> pubsubNumSub() {
-		return execute((client)->client.pubSubOperations().pubsubNumSub());
+		return execute((client)->client.pubSubCommands().pubsubNumSub());
 	}
 
 	@Override
 	default Map<String, Long> pubsubNumSub(final String... channels) {
-		return execute((client)->client.pubSubOperations().pubsubNumSub(channels));
+		return execute((client)->client.pubSubCommands().pubsubNumSub(channels));
 	}
 
 	@Override
 	default Map<byte[], Long> pubsubNumSub(final byte[]... channels) {
-		return execute((client)->client.pubSubOperations().pubsubNumSub(channels));
+		return execute((client)->client.pubSubCommands().pubsubNumSub(channels));
 	}
 
 	@Override
 	default List<String> pubsubShardChannels() {
-		return execute((client)->client.pubSubOperations().pubsubShardChannels());
+		return execute((client)->client.pubSubCommands().pubsubShardChannels());
 	}
 
 	@Override
 	default List<String> pubsubShardChannels(final String pattern) {
-		return execute((client)->client.pubSubOperations().pubsubShardChannels(pattern));
+		return execute((client)->client.pubSubCommands().pubsubShardChannels(pattern));
 	}
 
 	@Override
 	default List<byte[]> pubsubShardChannels(final byte[] pattern) {
-		return execute((client)->client.pubSubOperations().pubsubShardChannels(pattern));
+		return execute((client)->client.pubSubCommands().pubsubShardChannels(pattern));
 	}
 
 	@Override
 	default Map<String, Long> pubsubShardNumSub() {
-		return execute((client)->client.pubSubOperations().pubsubShardNumSub());
+		return execute((client)->client.pubSubCommands().pubsubShardNumSub());
 	}
 
 	@Override
 	default Map<String, Long> pubsubShardNumSub(final String... shardChannels) {
-		return execute((client)->client.pubSubOperations().pubsubShardNumSub(shardChannels));
+		return execute((client)->client.pubSubCommands().pubsubShardNumSub(shardChannels));
 	}
 
 	@Override
 	default Map<byte[], Long> pubsubShardNumSub(final byte[]... shardChannels) {
-		return execute((client)->client.pubSubOperations().pubsubShardNumSub(shardChannels));
+		return execute((client)->client.pubSubCommands().pubsubShardNumSub(shardChannels));
 	}
 
 	@Override
 	default Object pUnSubscribe() {
-		return execute((client)->client.pubSubOperations().pUnSubscribe());
+		return execute((client)->client.pubSubCommands().pUnSubscribe());
 	}
 
 	@Override
 	default Object pUnSubscribe(final String... patterns) {
-		return execute((client)->client.pubSubOperations().pUnSubscribe(patterns));
+		return execute((client)->client.pubSubCommands().pUnSubscribe(patterns));
 	}
 
 	@Override
 	default Object pUnSubscribe(final byte[]... patterns) {
-		return execute((client)->client.pubSubOperations().pUnSubscribe(patterns));
+		return execute((client)->client.pubSubCommands().pUnSubscribe(patterns));
 	}
 
 	@Override
 	default Long sPublish(final String shardchannel, final String message) {
-		return execute((client)->client.pubSubOperations().sPublish(shardchannel, message));
+		return execute((client)->client.pubSubCommands().sPublish(shardchannel, message));
 	}
 
 	@Override
 	default Long sPublish(final byte[] shardchannel, final byte[] message) {
-		return execute((client)->client.pubSubOperations().sPublish(shardchannel, message));
+		return execute((client)->client.pubSubCommands().sPublish(shardchannel, message));
 	}
 
 	@Override
 	default void sSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener) {
 		execute((client)->{
-			client.pubSubOperations().sSubscribe(patterns, pubSubListener);
+			client.pubSubCommands().sSubscribe(patterns, pubSubListener);
 			return null;
 		});
 	}
@@ -166,7 +166,7 @@ public interface PubSubOperations extends PubSubCommands, RedisOperations {
 	@Override
 	default void sSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener) {
 		execute((client)->{
-			client.pubSubOperations().sSubscribe(patterns, pubSubListener);
+			client.pubSubCommands().sSubscribe(patterns, pubSubListener);
 			return null;
 		});
 	}
@@ -174,7 +174,7 @@ public interface PubSubOperations extends PubSubCommands, RedisOperations {
 	@Override
 	default void subscribe(final String[] channels, final PubSubListener<String> pubSubListener) {
 		execute((client)->{
-			client.pubSubOperations().subscribe(channels, pubSubListener);
+			client.pubSubCommands().subscribe(channels, pubSubListener);
 			return null;
 		});
 	}
@@ -182,39 +182,39 @@ public interface PubSubOperations extends PubSubCommands, RedisOperations {
 	@Override
 	default void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener) {
 		execute((client)->{
-			client.pubSubOperations().subscribe(channels, pubSubListener);
+			client.pubSubCommands().subscribe(channels, pubSubListener);
 			return null;
 		});
 	}
 
 	@Override
 	default Object sUnSubscribe() {
-		return execute((client)->client.pubSubOperations().unSubscribe());
+		return execute((client)->client.pubSubCommands().unSubscribe());
 	}
 
 	@Override
 	default Object sUnSubscribe(final String... shardchannel) {
-		return execute((client)->client.pubSubOperations().unSubscribe(shardchannel));
+		return execute((client)->client.pubSubCommands().unSubscribe(shardchannel));
 	}
 
 	@Override
 	default Object sUnSubscribe(final byte[]... shardchannel) {
-		return execute((client)->client.pubSubOperations().unSubscribe(shardchannel));
+		return execute((client)->client.pubSubCommands().unSubscribe(shardchannel));
 	}
 
 	@Override
 	default Object unSubscribe() {
-		return execute((client)->client.pubSubOperations().unSubscribe());
+		return execute((client)->client.pubSubCommands().unSubscribe());
 	}
 
 	@Override
 	default Object unSubscribe(final String... channels) {
-		return execute((client)->client.pubSubOperations().unSubscribe(channels));
+		return execute((client)->client.pubSubCommands().unSubscribe(channels));
 	}
 
 	@Override
 	default Object unSubscribe(final byte[]... channels) {
-		return execute((client)->client.pubSubOperations().unSubscribe(channels));
+		return execute((client)->client.pubSubCommands().unSubscribe(channels));
 	}
 
 }

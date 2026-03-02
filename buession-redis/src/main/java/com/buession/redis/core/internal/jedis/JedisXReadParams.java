@@ -27,6 +27,8 @@ package com.buession.redis.core.internal.jedis;
 import redis.clients.jedis.params.XReadParams;
 
 /**
+ * Jedis {@link XReadParams} 扩展
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */

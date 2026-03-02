@@ -27,6 +27,8 @@ package com.buession.redis.core.internal.jedis;
 import redis.clients.jedis.params.XReadGroupParams;
 
 /**
+ * Jedis {@link XReadGroupParams} 扩展
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
@@ -36,34 +38,34 @@ public final class JedisXReadGroupParams extends XReadGroupParams {
 		super();
 	}
 
-	public JedisXReadGroupParams(final long count) {
+	public JedisXReadGroupParams(final int count) {
 		super();
-		count((int) count);
+		count(count);
 	}
 
-	public JedisXReadGroupParams(final long count, final int block) {
+	public JedisXReadGroupParams(final int count, final long block) {
 		this(count);
-		block(block);
+		block((int) block);
 	}
 
-	public JedisXReadGroupParams(final long count, final boolean noAck) {
+	public JedisXReadGroupParams(final int count, final boolean noAck) {
 		this(noAck);
-		count((int) count);
+		count(count);
 	}
 
-	public JedisXReadGroupParams(final long count, final int block, final boolean noAck) {
+	public JedisXReadGroupParams(final int count, final long block, final boolean noAck) {
 		this(count, noAck);
-		block(block);
+		block((int) block);
 	}
 
-	public JedisXReadGroupParams(final int block) {
+	public JedisXReadGroupParams(final long block) {
 		super();
-		block(block);
+		block((int) block);
 	}
 
-	public JedisXReadGroupParams(final int block, final boolean noAck) {
+	public JedisXReadGroupParams(final long block, final boolean noAck) {
 		this(noAck);
-		block(block);
+		block((int) block);
 	}
 
 	public JedisXReadGroupParams(final boolean noAck) {

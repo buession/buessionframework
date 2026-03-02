@@ -46,13 +46,13 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	@Override
 	default String blMove(final String key, final String destKey, final Direction from, final Direction to,
 						  final int timeout) {
-		return execute((client)->client.listOperations().blMove(key, destKey, from, to, timeout));
+		return execute((client)->client.listCommands().blMove(key, destKey, from, to, timeout));
 	}
 
 	@Override
 	default byte[] blMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
 						  final int timeout) {
-		return execute((client)->client.listOperations().blMove(key, destKey, from, to, timeout));
+		return execute((client)->client.listCommands().blMove(key, destKey, from, to, timeout));
 	}
 
 	/**
@@ -213,12 +213,12 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default KeyValue<String, List<String>> blMPop(final int timeout, final String[] keys, final Direction direction) {
-		return execute((client)->client.listOperations().blMPop(timeout, keys, direction));
+		return execute((client)->client.listCommands().blMPop(timeout, keys, direction));
 	}
 
 	@Override
 	default KeyValue<byte[], List<byte[]>> blMPop(final int timeout, final byte[][] keys, final Direction direction) {
-		return execute((client)->client.listOperations().blMPop(timeout, keys, direction));
+		return execute((client)->client.listCommands().blMPop(timeout, keys, direction));
 	}
 
 	/**
@@ -343,12 +343,12 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default List<String> blPop(final String[] keys, final int timeout) {
-		return execute((client)->client.listOperations().blPop(keys, timeout));
+		return execute((client)->client.listCommands().blPop(keys, timeout));
 	}
 
 	@Override
 	default List<byte[]> blPop(final byte[][] keys, final int timeout) {
-		return execute((client)->client.listOperations().blPop(keys, timeout));
+		return execute((client)->client.listCommands().blPop(keys, timeout));
 	}
 
 	/**
@@ -469,12 +469,12 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default List<String> brPop(final String[] keys, final int timeout) {
-		return execute((client)->client.listOperations().brPop(keys, timeout));
+		return execute((client)->client.listCommands().brPop(keys, timeout));
 	}
 
 	@Override
 	default List<byte[]> brPop(final byte[][] keys, final int timeout) {
-		return execute((client)->client.listOperations().brPop(keys, timeout));
+		return execute((client)->client.listCommands().brPop(keys, timeout));
 	}
 
 	/**
@@ -593,12 +593,12 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default String brPoplPush(final String key, final String destKey, final int timeout) {
-		return execute((client)->client.listOperations().brPoplPush(key, destKey, timeout));
+		return execute((client)->client.listCommands().brPoplPush(key, destKey, timeout));
 	}
 
 	@Override
 	default byte[] brPoplPush(final byte[] key, final byte[] destKey, final int timeout) {
-		return execute((client)->client.listOperations().brPoplPush(key, destKey, timeout));
+		return execute((client)->client.listCommands().brPoplPush(key, destKey, timeout));
 	}
 
 	/**
@@ -741,12 +741,12 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default String lIndex(final String key, final long index) {
-		return execute((client)->client.listOperations().lIndex(key, index));
+		return execute((client)->client.listCommands().lIndex(key, index));
 	}
 
 	@Override
 	default byte[] lIndex(final byte[] key, final long index) {
-		return execute((client)->client.listOperations().lIndex(key, index));
+		return execute((client)->client.listCommands().lIndex(key, index));
 	}
 
 	/**
@@ -863,12 +863,12 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default Long lInsert(final String key, final ListPosition position, final String pivot, final String value) {
-		return execute((client)->client.listOperations().lInsert(key, position, pivot, value));
+		return execute((client)->client.listCommands().lInsert(key, position, pivot, value));
 	}
 
 	@Override
 	default Long lInsert(final byte[] key, final ListPosition position, final byte[] pivot, final byte[] value) {
-		return execute((client)->client.listOperations().lInsert(key, position, pivot, value));
+		return execute((client)->client.listCommands().lInsert(key, position, pivot, value));
 	}
 
 	/**
@@ -915,22 +915,22 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default Long lLen(final String key) {
-		return execute((client)->client.listOperations().lLen(key));
+		return execute((client)->client.listCommands().lLen(key));
 	}
 
 	@Override
 	default Long lLen(final byte[] key) {
-		return execute((client)->client.listOperations().lLen(key));
+		return execute((client)->client.listCommands().lLen(key));
 	}
 
 	@Override
 	default String lMove(final String key, final String destKey, final Direction from, final Direction to) {
-		return execute((client)->client.listOperations().lMove(key, destKey, from, to));
+		return execute((client)->client.listCommands().lMove(key, destKey, from, to));
 	}
 
 	@Override
 	default byte[] lMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to) {
-		return execute((client)->client.listOperations().lMove(key, destKey, from, to));
+		return execute((client)->client.listCommands().lMove(key, destKey, from, to));
 	}
 
 	/**
@@ -1059,12 +1059,12 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default KeyValue<String, List<String>> lMPop(final int timeout, final String[] keys, final Direction direction) {
-		return execute((client)->client.listOperations().lMPop(timeout, keys, direction));
+		return execute((client)->client.listCommands().lMPop(timeout, keys, direction));
 	}
 
 	@Override
 	default KeyValue<byte[], List<byte[]>> lMPop(final int timeout, final byte[][] keys, final Direction direction) {
-		return execute((client)->client.listOperations().lMPop(timeout, keys, direction));
+		return execute((client)->client.listCommands().lMPop(timeout, keys, direction));
 	}
 
 	/**
@@ -1189,22 +1189,22 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default String lPop(final String key) {
-		return execute((client)->client.listOperations().lPop(key));
+		return execute((client)->client.listCommands().lPop(key));
 	}
 
 	@Override
 	default byte[] lPop(final byte[] key) {
-		return execute((client)->client.listOperations().lPop(key));
+		return execute((client)->client.listCommands().lPop(key));
 	}
 
 	@Override
 	default List<String> lPop(final String key, final int count) {
-		return execute((client)->client.listOperations().lPop(key, count));
+		return execute((client)->client.listCommands().lPop(key, count));
 	}
 
 	@Override
 	default List<byte[]> lPop(final byte[] key, final int count) {
-		return execute((client)->client.listOperations().lPop(key, count));
+		return execute((client)->client.listCommands().lPop(key, count));
 	}
 
 	/**
@@ -1405,32 +1405,32 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default Long lPos(final String key, final String element) {
-		return execute((client)->client.listOperations().lPos(key, element));
+		return execute((client)->client.listCommands().lPos(key, element));
 	}
 
 	@Override
 	default Long lPos(final byte[] key, final byte[] element) {
-		return execute((client)->client.listOperations().lPos(key, element));
+		return execute((client)->client.listCommands().lPos(key, element));
 	}
 
 	@Override
 	default List<Long> lPos(final String key, final String element, final LPosArgument lPosArgument) {
-		return execute((client)->client.listOperations().lPos(key, element, lPosArgument));
+		return execute((client)->client.listCommands().lPos(key, element, lPosArgument));
 	}
 
 	@Override
 	default List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument) {
-		return execute((client)->client.listOperations().lPos(key, element, lPosArgument));
+		return execute((client)->client.listCommands().lPos(key, element, lPosArgument));
 	}
 
 	@Override
 	default Long lPush(final String key, final String... values) {
-		return execute((client)->client.listOperations().lPush(key, values));
+		return execute((client)->client.listCommands().lPush(key, values));
 	}
 
 	@Override
 	default Long lPush(final byte[] key, final byte[]... values) {
-		return execute((client)->client.listOperations().lPush(key, values));
+		return execute((client)->client.listCommands().lPush(key, values));
 	}
 
 	/**
@@ -1469,12 +1469,12 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default Long lPushX(final String key, final String... values) {
-		return execute((client)->client.listOperations().lPushX(key, values));
+		return execute((client)->client.listCommands().lPushX(key, values));
 	}
 
 	@Override
 	default Long lPushX(final byte[] key, final byte[]... values) {
-		return execute((client)->client.listOperations().lPushX(key, values));
+		return execute((client)->client.listCommands().lPushX(key, values));
 	}
 
 	/**
@@ -1513,12 +1513,12 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default List<String> lRange(final String key, final long start, final long end) {
-		return execute((client)->client.listOperations().lRange(key, start, end));
+		return execute((client)->client.listCommands().lRange(key, start, end));
 	}
 
 	@Override
 	default List<byte[]> lRange(final byte[] key, final long start, final long end) {
-		return execute((client)->client.listOperations().lRange(key, start, end));
+		return execute((client)->client.listCommands().lRange(key, start, end));
 	}
 
 	/**
@@ -1657,22 +1657,22 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default Long lRem(final String key, final String value, final long count) {
-		return execute((client)->client.listOperations().lRem(key, value, count));
+		return execute((client)->client.listCommands().lRem(key, value, count));
 	}
 
 	@Override
 	default Long lRem(final byte[] key, final byte[] value, final long count) {
-		return execute((client)->client.listOperations().lRem(key, value, count));
+		return execute((client)->client.listCommands().lRem(key, value, count));
 	}
 
 	@Override
 	default Status lSet(final String key, final long index, final String value) {
-		return execute((client)->client.listOperations().lSet(key, index, value));
+		return execute((client)->client.listCommands().lSet(key, index, value));
 	}
 
 	@Override
 	default Status lSet(final byte[] key, final long index, final byte[] value) {
-		return execute((client)->client.listOperations().lSet(key, index, value));
+		return execute((client)->client.listCommands().lSet(key, index, value));
 	}
 
 	/**
@@ -1713,22 +1713,22 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default Status lTrim(final String key, final long start, final long end) {
-		return execute((client)->client.listOperations().lTrim(key, start, end));
+		return execute((client)->client.listCommands().lTrim(key, start, end));
 	}
 
 	@Override
 	default Status lTrim(final byte[] key, final long start, final long end) {
-		return execute((client)->client.listOperations().lTrim(key, start, end));
+		return execute((client)->client.listCommands().lTrim(key, start, end));
 	}
 
 	@Override
 	default String rPop(final String key) {
-		return execute((client)->client.listOperations().rPop(key));
+		return execute((client)->client.listCommands().rPop(key));
 	}
 
 	@Override
 	default byte[] rPop(final byte[] key) {
-		return execute((client)->client.listOperations().rPop(key));
+		return execute((client)->client.listCommands().rPop(key));
 	}
 
 	/**
@@ -1825,12 +1825,12 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default String rPoplPush(final String key, final String destKey) {
-		return execute((client)->client.listOperations().rPoplPush(key, destKey));
+		return execute((client)->client.listCommands().rPoplPush(key, destKey));
 	}
 
 	@Override
 	default byte[] rPoplPush(final byte[] key, final byte[] destKey) {
-		return execute((client)->client.listOperations().rPoplPush(key, destKey));
+		return execute((client)->client.listCommands().rPoplPush(key, destKey));
 	}
 
 	/**
@@ -1955,12 +1955,12 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default Long rPush(final String key, final String... values) {
-		return execute((client)->client.listOperations().rPush(key, values));
+		return execute((client)->client.listCommands().rPush(key, values));
 	}
 
 	@Override
 	default Long rPush(final byte[] key, final byte[]... values) {
-		return execute((client)->client.listOperations().rPush(key, values));
+		return execute((client)->client.listCommands().rPush(key, values));
 	}
 
 	/**
@@ -2031,12 +2031,12 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default Long rPushX(final String key, final String... values) {
-		return execute((client)->client.listOperations().rPushX(key, values));
+		return execute((client)->client.listCommands().rPushX(key, values));
 	}
 
 	@Override
 	default Long rPushX(final byte[] key, final byte[]... values) {
-		return execute((client)->client.listOperations().rPushX(key, values));
+		return execute((client)->client.listCommands().rPushX(key, values));
 	}
 
 	/**

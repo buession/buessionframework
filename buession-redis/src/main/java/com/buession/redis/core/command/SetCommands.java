@@ -505,7 +505,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 每个元素都是一个集合成员
 	 */
-	ScanResult<List<String>> sScan(final String key, final String cursor);
+	ScanResult<String> sScan(final String key, final String cursor);
 
 	/**
 	 * 迭代集合键中的元素
@@ -519,7 +519,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 每个元素都是一个集合成员
 	 */
-	ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor);
+	ScanResult<byte[]> sScan(final byte[] key, final byte[] cursor);
 
 	/**
 	 * 迭代集合键中的元素
@@ -535,7 +535,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 返回和给定模式相匹配的元素
 	 */
-	ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern);
+	ScanResult<String> sScan(final String key, final String cursor, final String pattern);
 
 	/**
 	 * 迭代集合键中的元素
@@ -551,7 +551,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 返回和给定模式相匹配的元素
 	 */
-	ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern);
+	ScanResult<byte[]> sScan(final byte[] key, final byte[] cursor, final byte[] pattern);
 
 	/**
 	 * 迭代集合键中的元素
@@ -567,7 +567,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 返回的指定数量的键值对
 	 */
-	ScanResult<List<String>> sScan(final String key, final String cursor, final long count);
+	ScanResult<String> sScan(final String key, final String cursor, final int count);
 
 	/**
 	 * 迭代集合键中的元素
@@ -583,7 +583,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 返回的指定数量的键值对
 	 */
-	ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final long count);
+	ScanResult<byte[]> sScan(final byte[] key, final byte[] cursor, final int count);
 
 	/**
 	 * 迭代集合键中的元素
@@ -601,7 +601,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
-	ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern, final long count);
+	ScanResult<String> sScan(final String key, final String cursor, final String pattern, final int count);
 
 	/**
 	 * 迭代集合键中的元素
@@ -619,7 +619,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
-	ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern, final long count);
+	ScanResult<byte[]> sScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的并集

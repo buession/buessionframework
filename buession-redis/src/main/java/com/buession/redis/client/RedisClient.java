@@ -25,30 +25,8 @@
 package com.buession.redis.client;
 
 import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.client.operations.BitMapOperations;
-import com.buession.redis.client.operations.BloomFilterOperations;
-import com.buession.redis.client.operations.ClusterOperations;
-import com.buession.redis.client.operations.ConnectionOperations;
-import com.buession.redis.client.operations.CountMinSketchOperations;
-import com.buession.redis.client.operations.CuckooFilterOperations;
-import com.buession.redis.client.operations.GenericOperations;
-import com.buession.redis.client.operations.GeoOperations;
-import com.buession.redis.client.operations.HashOperations;
-import com.buession.redis.client.operations.HyperLogLogOperations;
-import com.buession.redis.client.operations.JsonOperations;
-import com.buession.redis.client.operations.KeyOperations;
-import com.buession.redis.client.operations.ListOperations;
-import com.buession.redis.client.operations.PubSubOperations;
-import com.buession.redis.client.operations.ScriptingOperations;
-import com.buession.redis.client.operations.SearchOperations;
-import com.buession.redis.client.operations.ServerOperations;
-import com.buession.redis.client.operations.SetOperations;
-import com.buession.redis.client.operations.SortedSetOperations;
-import com.buession.redis.client.operations.StreamOperations;
-import com.buession.redis.client.operations.StringOperations;
-import com.buession.redis.client.operations.TransactionOperations;
 import com.buession.redis.core.Command;
-import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.*;
 import com.buession.redis.exception.RedisException;
 
 /**
@@ -96,161 +74,155 @@ public interface RedisClient {
 	 * 返回布隆过滤器命令操作实例
 	 *
 	 * @return 布隆过滤器命令操作实例
-	 *
-	 * @since 4.0.0
 	 */
-	BloomFilterOperations bloomFilterOperations();
+	BloomFilterCommands bloomFilterCommands();
 
 	/**
 	 * 返回 BitMap 命令操作实例
 	 *
 	 * @return BitMap 命令操作实例
 	 */
-	BitMapOperations bitMapOperations();
+	BitMapCommands bitMapCommands();
 
 	/**
 	 * 返回布谷鸟过滤器命令操作实例
 	 *
 	 * @return 布谷鸟过滤器命令操作实例
-	 *
-	 * @since 4.0.0
 	 */
-	CuckooFilterOperations cuckooFilterOperations();
+	CuckooFilterCommands cuckooFilterCommands();
 
 	/**
 	 * 返回集群命令操作实例
 	 *
 	 * @return 集群命令操作实例
 	 */
-	ClusterOperations clusterOperations();
+	ClusterCommands clusterCommands();
 
 	/**
 	 * 返回计数最小草图命令操作实例
 	 *
 	 * @return 计数最小草图命令操作实例
 	 */
-	CountMinSketchOperations countMinSketchOperations();
+	CountMinSketchCommands countMinSketchCommands();
 
 	/**
 	 * 返回连接命令操作实例
 	 *
 	 * @return 连接命令操作实例
 	 */
-	ConnectionOperations connectionOperations();
+	ConnectionCommands connectionCommands();
 
 	/**
 	 * 返回一般命令操作实例
 	 *
 	 * @return 一般命令操作实例
-	 *
-	 * @since 3.0.0
 	 */
-	GenericOperations genericOperations();
+	GenericCommands genericCommands();
 
 	/**
 	 * 返回地理位置命令操作实例
 	 *
 	 * @return 地理位置命令操作实例
 	 */
-	GeoOperations geoOperations();
+	GeoCommands geoCommands();
 
 	/**
 	 * 返回哈希表命令操作实例
 	 *
 	 * @return 哈希表命令操作实例
 	 */
-	HashOperations hashOperations();
+	HashCommands hashCommands();
 
 	/**
 	 * 返回 HyperLogLog 命令操作实例
 	 *
 	 * @return HyperLogLog 命令操作实例
 	 */
-	HyperLogLogOperations hyperLogLogOperations();
+	HyperLogLogCommands hyperLogLogCommands();
 
 	/**
 	 * 返回 JSON 命令操作实例
 	 *
 	 * @return JSON 命令操作实例
 	 */
-	JsonOperations jsonOperations();
+	JsonCommands jsonCommands();
 
 	/**
 	 * 返回 KEY 命令操作实例
 	 *
 	 * @return KEY 命令操作实例
 	 */
-	KeyOperations keyOperations();
+	KeyCommands keyCommands();
 
 	/**
 	 * 返回列表命令操作实例
 	 *
 	 * @return 列表命令操作实例
 	 */
-	ListOperations listOperations();
+	ListCommands listCommands();
 
 	/**
 	 * 返回发布订阅命令操作实例
 	 *
 	 * @return 发布订阅命令操作实例
 	 */
-	PubSubOperations pubSubOperations();
+	PubSubCommands pubSubCommands();
 
 	/**
 	 * 返回 Script 命令操作实例
 	 *
 	 * @return Script 命令操作实例
 	 */
-	ScriptingOperations scriptingOperations();
+	ScriptingCommands scriptingCommands();
 
 	/**
 	 * 返回搜索命令操作实例
 	 *
 	 * @return 搜索命令操作实例
 	 */
-	//SearchOperations searchOperations();
+	//SearchCommands searchCommands();
 
 	/**
 	 * 返回服务端操作命令操作实例
 	 *
 	 * @return 服务端操作命令操作实例
 	 */
-	ServerOperations serverOperations();
+	ServerCommands serverCommands();
 
 	/**
 	 * 返回集合命令操作实例
 	 *
 	 * @return 集合命令操作实例
 	 */
-	SetOperations setOperations();
+	SetCommands setCommands();
 
 	/**
 	 * 返回有序集合命令操作实例
 	 *
 	 * @return 有序集合命令操作实例
 	 */
-	SortedSetOperations sortedSetOperations();
+	SortedSetCommands sortedSetCommands();
 
 	/**
 	 * 返回 Stream 命令操作实例
 	 *
 	 * @return Stream 命令操作实例
 	 */
-	StreamOperations streamOperations();
+	StreamCommands streamCommands();
 
 	/**
 	 * 返回字符串命令操作实例
 	 *
 	 * @return 字符串命令操作实例
 	 */
-	StringOperations stringOperations();
+	StringCommands stringCommands();
 
 	/**
 	 * 返回事务命令操作实例
 	 *
 	 * @return 事务命令操作实例
 	 */
-	TransactionOperations transactionOperations();
+	TransactionCommands transactionCommands();
 
 	/**
 	 * 执行命令

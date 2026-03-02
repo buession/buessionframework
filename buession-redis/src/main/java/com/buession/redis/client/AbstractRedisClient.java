@@ -25,9 +25,8 @@
 package com.buession.redis.client;
 
 import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.client.operations.*;
 import com.buession.redis.core.Command;
-import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.*;
 import com.buession.redis.exception.RedisException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,119 +50,113 @@ public abstract class AbstractRedisClient implements RedisClient {
 
 	/**
 	 * 布隆过滤器命令操作
-	 *
-	 * @since 4.0.0
 	 */
-	protected BloomFilterOperations bloomFilterOperations;
+	protected BloomFilterCommands bloomFilterCommands;
 
 	/**
 	 * BitMap 命令操作
 	 */
-	protected BitMapOperations bitMapOperations;
+	protected BitMapCommands bitMapCommands;
 
 	/**
 	 * 布谷鸟过滤器命令操作
-	 *
-	 * @since 4.0.0
 	 */
-	protected CuckooFilterOperations cuckooFilterOperations;
+	protected CuckooFilterCommands cuckooFilterCommands;
 
 	/**
 	 * 集群命令操作
 	 */
-	protected ClusterOperations clusterOperations;
+	protected ClusterCommands clusterCommands;
 
 	/**
 	 * 计数最小草图命令操作
 	 */
-	protected CountMinSketchOperations countMinSketchOperations;
+	protected CountMinSketchCommands countMinSketchCommands;
 
 	/**
 	 * 连接命令操作
 	 */
-	protected ConnectionOperations connectionOperations;
+	protected ConnectionCommands connectionCommands;
 
 	/**
 	 * 一般命令
-	 *
-	 * @since 3.0.0
 	 */
-	protected GenericOperations genericOperations;
+	protected GenericCommands genericCommands;
 
 	/**
 	 * 地理位置操作命令
 	 */
-	protected GeoOperations geoOperations;
+	protected GeoCommands geoCommands;
 
 	/**
 	 * 哈希表命令操作
 	 */
-	protected HashOperations hashOperations;
+	protected HashCommands hashCommands;
 
 	/**
 	 * HyperLogLog 命令操作
 	 */
-	protected HyperLogLogOperations hyperLogLogOperations;
+	protected HyperLogLogCommands hyperLogLogCommands;
 
 	/**
 	 * JSON 命令操作
 	 */
-	protected JsonOperations jsonOperations;
+	protected JsonCommands jsonCommands;
 
 	/**
 	 * KEY 命令操作
 	 */
-	protected KeyOperations keyOperations;
+	protected KeyCommands keyCommands;
 
 	/**
 	 * 列表命令操作
 	 */
-	protected ListOperations listOperations;
+	protected ListCommands listCommands;
 
 	/**
 	 * 发布订阅命令操作
 	 */
-	protected PubSubOperations pubSubOperations;
+	protected PubSubCommands pubSubCommands;
 
 	/**
 	 * Script 命令操作
 	 */
-	protected ScriptingOperations scriptingOperations;
+	protected ScriptingCommands scriptingCommands;
 
 	/**
 	 * 搜索命令操作
 	 */
-	//protected SearchOperations searchOperations;
+	//protected SearchCommands searchCommands;
 
 	/**
 	 * 服务端操作命令
 	 */
-	protected ServerOperations serverOperations;
+	protected ServerCommands serverCommands;
 
 	/**
 	 * 集合命令操作
 	 */
-	protected SetOperations setOperations;
+	protected SetCommands setCommands;
 
 	/**
 	 * 有序集合命令操作
 	 */
-	protected SortedSetOperations sortedSetOperations;
+	protected SortedSetCommands sortedSetCommands;
 
 	/**
 	 * Stream 命令操作
 	 */
-	protected StreamOperations streamOperations;
+	protected StreamCommands streamCommands;
 
 	/**
 	 * 字符串命令操作
 	 */
-	protected StringOperations stringOperations;
+	protected StringCommands stringCommands;
 
 	/**
 	 * 事务命令操作
 	 */
-	protected TransactionOperations transactionOperations;
+	protected TransactionCommands transactionCommands;
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 

@@ -27,8 +27,8 @@ package com.buession.redis.client.jedis;
 import com.buession.redis.client.AbstractRedisClient;
 import com.buession.redis.client.ClientOptions;
 import com.buession.redis.client.connection.jedis.JedisRedisConnection;
-import com.buession.redis.client.jedis.operations.*;
-import com.buession.redis.client.operations.*;
+import com.buession.redis.client.jedis.command.*;
+import com.buession.redis.core.command.*;
 import redis.clients.jedis.UnifiedJedis;
 
 /**
@@ -72,204 +72,204 @@ public class JedisRedisClient extends AbstractRedisClient {
 	}
 
 	@Override
-	public BloomFilterOperations bloomFilterOperations() {
-		if(bloomFilterOperations == null){
-			bloomFilterOperations = new JedisBloomFilterOperations(this);
+	public BloomFilterCommands bloomFilterCommands() {
+		if(bloomFilterCommands == null){
+			bloomFilterCommands = new JedisBloomFilterCommands(this);
 		}
 
-		return bloomFilterOperations;
+		return bloomFilterCommands;
 	}
 
 	@Override
-	public BitMapOperations bitMapOperations() {
-		if(bitMapOperations == null){
-			bitMapOperations = new JedisBitMapOperations(this);
+	public BitMapCommands bitMapCommands() {
+		if(bitMapCommands == null){
+			bitMapCommands = new JedisBitMapCommands(this);
 		}
 
-		return bitMapOperations;
+		return bitMapCommands;
 	}
 
 	@Override
-	public CuckooFilterOperations cuckooFilterOperations() {
-		if(cuckooFilterOperations == null){
-			cuckooFilterOperations = new JedisCuckooFilterOperations(this);
+	public CuckooFilterCommands cuckooFilterCommands() {
+		if(cuckooFilterCommands == null){
+			cuckooFilterCommands = new JedisCuckooFilterCommands(this);
 		}
 
-		return cuckooFilterOperations;
+		return cuckooFilterCommands;
 	}
 
 	@Override
-	public ClusterOperations clusterOperations() {
-		if(clusterOperations == null){
-			clusterOperations = new JedisClusterOperations(this);
+	public ClusterCommands clusterCommands() {
+		if(clusterCommands == null){
+			clusterCommands = new JedisClusterCommands(this);
 		}
 
-		return clusterOperations;
+		return clusterCommands;
 	}
 
 	@Override
-	public CountMinSketchOperations countMinSketchOperations() {
-		if(countMinSketchOperations == null){
-			countMinSketchOperations = new JedisCountMinSketchOperations(this);
+	public CountMinSketchCommands countMinSketchCommands() {
+		if(countMinSketchCommands == null){
+			countMinSketchCommands = new JedisCountMinSketchCommands(this);
 		}
 
-		return countMinSketchOperations;
+		return countMinSketchCommands;
 	}
 
 	@Override
-	public ConnectionOperations connectionOperations() {
-		if(connectionOperations == null){
-			connectionOperations = new JedisConnectionOperations(this);
+	public ConnectionCommands connectionCommands() {
+		if(connectionCommands == null){
+			connectionCommands = new JedisConnectionCommands(this);
 		}
 
-		return connectionOperations;
+		return connectionCommands;
 	}
 
 	@Override
-	public GenericOperations genericOperations() {
-		if(genericOperations == null){
-			genericOperations = new JedisGenericOperations(this);
+	public GenericCommands genericCommands() {
+		if(genericCommands == null){
+			genericCommands = new JedisGenericCommands(this);
 		}
 
-		return genericOperations;
+		return genericCommands;
 	}
 
 	@Override
-	public GeoOperations geoOperations() {
-		if(geoOperations == null){
-			geoOperations = new JedisGeoOperations(this);
+	public GeoCommands geoCommands() {
+		if(geoCommands == null){
+			geoCommands = new JedisGeoCommands(this);
 		}
 
-		return geoOperations;
+		return geoCommands;
 	}
 
 	@Override
-	public HashOperations hashOperations() {
-		if(hashOperations == null){
-			hashOperations = new JedisHashOperations(this);
+	public HashCommands hashCommands() {
+		if(hashCommands == null){
+			hashCommands = new JedisHashCommands(this);
 		}
 
-		return hashOperations;
+		return hashCommands;
 	}
 
 	@Override
-	public HyperLogLogOperations hyperLogLogOperations() {
-		if(hyperLogLogOperations == null){
-			hyperLogLogOperations = new JedisHyperLogLogOperations(this);
+	public HyperLogLogCommands hyperLogLogCommands() {
+		if(hyperLogLogCommands == null){
+			hyperLogLogCommands = new JedisHyperLogLogCommands(this);
 		}
 
-		return hyperLogLogOperations;
+		return hyperLogLogCommands;
 	}
 
 	@Override
-	public JsonOperations jsonOperations() {
-		if(jsonOperations == null){
-			jsonOperations = new JedisJsonOperations(this);
+	public JsonCommands jsonCommands() {
+		if(jsonCommands == null){
+			jsonCommands = new JedisJsonCommands(this);
 		}
 
-		return jsonOperations;
+		return jsonCommands;
 	}
 
 	@Override
-	public KeyOperations keyOperations() {
-		if(keyOperations == null){
-			keyOperations = new JedisKeyOperations(this);
+	public KeyCommands keyCommands() {
+		if(keyCommands == null){
+			keyCommands = new JedisKeyCommands(this);
 		}
 
-		return keyOperations;
+		return keyCommands;
 	}
 
 	@Override
-	public ListOperations listOperations() {
-		if(listOperations == null){
-			listOperations = new JedisListOperations(this);
+	public ListCommands listCommands() {
+		if(listCommands == null){
+			listCommands = new JedisListCommands(this);
 		}
 
-		return listOperations;
+		return listCommands;
 	}
 
 	@Override
-	public PubSubOperations pubSubOperations() {
-		if(pubSubOperations == null){
-			pubSubOperations = new JedisPubSubOperations(this);
+	public PubSubCommands pubSubCommands() {
+		if(pubSubCommands == null){
+			pubSubCommands = new JedisPubSubCommands(this);
 		}
 
-		return pubSubOperations;
+		return pubSubCommands;
 	}
 
 	@Override
-	public ScriptingOperations scriptingOperations() {
-		if(scriptingOperations == null){
-			scriptingOperations = new JedisScriptingOperations(this);
+	public ScriptingCommands scriptingCommands() {
+		if(scriptingCommands == null){
+			scriptingCommands = new JedisScriptingCommands(this);
 		}
 
-		return scriptingOperations;
+		return scriptingCommands;
 	}
 
 	/*
 	@Override
-	public SearchOperations searchOperations() {
-		if(searchOperations == null){
-			searchOperations = new JedisSearchOperations(this);
+	public SearchCommands searchCommands() {
+		if(searchCommands == null){
+			searchCommands = new JedisSearchCommands(this);
 		}
 
-		return searchOperations;
+		return searchCommands;
 	}
 
 	 */
 
 	@Override
-	public ServerOperations serverOperations() {
-		if(serverOperations == null){
-			serverOperations = new JedisServerOperations(this);
+	public ServerCommands serverCommands() {
+		if(serverCommands == null){
+			serverCommands = new JedisServerCommands(this);
 		}
 
-		return serverOperations;
+		return serverCommands;
 	}
 
 	@Override
-	public SetOperations setOperations() {
-		if(setOperations == null){
-			setOperations = new JedisSetOperations(this);
+	public SetCommands setCommands() {
+		if(setCommands == null){
+			setCommands = new JedisSetCommands(this);
 		}
 
-		return setOperations;
+		return setCommands;
 	}
 
 	@Override
-	public SortedSetOperations sortedSetOperations() {
-		if(sortedSetOperations == null){
-			sortedSetOperations = new JedisSortedSetOperations(this);
+	public SortedSetCommands sortedSetCommands() {
+		if(sortedSetCommands == null){
+			sortedSetCommands = new JedisSortedSetCommands(this);
 		}
 
-		return sortedSetOperations;
+		return sortedSetCommands;
 	}
 
 	@Override
-	public StreamOperations streamOperations() {
-		if(streamOperations == null){
-			streamOperations = new JedisStreamOperations(this);
+	public StreamCommands streamCommands() {
+		if(streamCommands == null){
+			streamCommands = new JedisStreamCommands(this);
 		}
 
-		return streamOperations;
+		return streamCommands;
 	}
 
 	@Override
-	public StringOperations stringOperations() {
-		if(stringOperations == null){
-			stringOperations = new JedisStringOperations(this);
+	public StringCommands stringCommands() {
+		if(stringCommands == null){
+			stringCommands = new JedisStringCommands(this);
 		}
 
-		return stringOperations;
+		return stringCommands;
 	}
 
 	@Override
-	public TransactionOperations transactionOperations() {
-		if(transactionOperations == null){
-			transactionOperations = new JedisTransactionOperations(this);
+	public TransactionCommands transactionCommands() {
+		if(transactionCommands == null){
+			transactionCommands = new JedisTransactionCommands(this);
 		}
 
-		return transactionOperations;
+		return transactionCommands;
 	}
 
 }

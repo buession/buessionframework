@@ -51,17 +51,17 @@ public interface TransactionOperations extends TransactionCommands, RedisOperati
 
 	@Override
 	default Status unwatch() {
-		return execute((client)->client.transactionOperations().unwatch());
+		return execute((client)->client.transactionCommands().unwatch());
 	}
 
 	@Override
 	default Status watch(final String... keys) {
-		return execute((client)->client.transactionOperations().watch(keys));
+		return execute((client)->client.transactionCommands().watch(keys));
 	}
 
 	@Override
 	default Status watch(final byte[]... keys) {
-		return execute((client)->client.transactionOperations().watch(keys));
+		return execute((client)->client.transactionCommands().watch(keys));
 	}
 
 }

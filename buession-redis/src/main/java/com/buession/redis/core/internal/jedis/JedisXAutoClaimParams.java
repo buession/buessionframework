@@ -32,17 +32,13 @@ import redis.clients.jedis.params.XAutoClaimParams;
  */
 public final class JedisXAutoClaimParams extends XAutoClaimParams {
 
-	public JedisXAutoClaimParams(){
+	public JedisXAutoClaimParams() {
 		super();
 	}
 
-	public JedisXAutoClaimParams(final int count){
+	public JedisXAutoClaimParams(final int count) {
 		super();
 		count(count);
 	}
 
-	public JedisXAutoClaimParams(final long count){
-		this((int) count);
-	}
-	
 }

@@ -26,7 +26,10 @@ package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
+import com.buession.core.converter.MapEntryMapConverter;
 import com.buession.redis.core.ScanResult;
+
+import java.util.Map;
 
 /**
  * jedis {@link redis.clients.jedis.resps.ScanResult} 转换为 {@link ScanResult}
@@ -34,7 +37,7 @@ import com.buession.redis.core.ScanResult;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class ScanResultConverter<S, T>
+public class ScanResultConverter<S, T>
 		implements Converter<redis.clients.jedis.resps.ScanResult<S>, ScanResult<T>> {
 
 	private final ListConverter<S, T> converter;
@@ -47,23 +50,27 @@ public final class ScanResultConverter<S, T>
 	public ScanResult<T> convert(final redis.clients.jedis.resps.ScanResult<S> source) {
 		return source == null ? null : new ScanResult<>(source.getCursor(), converter.convert(source.getResult()));
 	}
+
 	/**
-	 * jedis {@link redis.clients.jedis.resps.ScanResult} 转换为 {@link java.util.List}&lt;ScanResult&gt;
+	 * jedis {@link redis.clients.jedis.resps.ScanResult}&lt;Map.Entry&lt;K&gt;, &lt;K&gt;&gt; 转换为 {@link ScanResult}
+	 * &lt;Map&lt;K&gt;, &lt;K&gt;&gt;
+	 *
+	 * @param <K>
+	 * 		Map Key 类型
+	 * @param <V>
+	 * 		Map 值类型
 	 *
 	 * @author Yong.Teng
-	 * @since 2.0.0
+	 * @since 4.0.0
 	 */
-	/*
-	final class ListScanResultConverter<S> implements ScanResultConverter<S, List<S>> {
+	public final static class MapEntryScanResultConverter<K, V>
+			extends ScanResultConverter<Map.Entry<K, V>, Map<K, V>> {
 
-		@Override
-		public ScanResult<List<S>> convert(final redis.clients.jedis.resps.ScanResult<S> source) {
-			return new ScanResult<>(source.getCursor(), source.getResult());
+		public MapEntryScanResultConverter() {
+			super(new MapEntryMapConverter<>((k)->k, (v)->v));
 		}
 
 	}
-
-	 */
 
 	/**
 	 * jedis {@link redis.clients.jedis.resps.Tuple} 转换为 {@link java.util.List}&lt;T&gt;
@@ -83,32 +90,6 @@ public final class ScanResultConverter<S, T>
 				final redis.clients.jedis.resps.ScanResult<redis.clients.jedis.resps.Tuple> source) {
 			return new com.buession.redis.core.ScanResult<>(source.getCursor(),
 					listTupleConverter.convert(source.getResult()));
-		}
-
-	}
-
-	 */
-
-	/**
-	 * jedis {@link redis.clients.jedis.resps.ScanResult}&lt;Map.Entry&lt;K&gt;, &lt;K&gt;&gt; 转换为 {@link ScanResult}
-	 * &lt;Map&lt;K&gt;, &lt;K&gt;&gt;
-	 *
-	 * @param <K>
-	 * 		Map Key 类型
-	 * @param <V>
-	 * 		Map 值类型
-	 *
-	 * @author Yong.Teng
-	 * @since 2.0.0
-	 */
-	/*
-	final class MapScanResultConverter<K, V> implements ScanResultConverter<Map.Entry<K, V>, Map<K, V>> {
-
-		@Override
-		public ScanResult<Map<K, V>> convert(final redis.clients.jedis.resps.ScanResult<Map.Entry<K, V>> source) {
-			final Map<K, V> data = source.getResult().stream().collect(Collectors.toMap(Map.Entry::getKey,
-					Map.Entry::getValue, (a, b)->a, LinkedHashMap::new));
-			return new ScanResult<>(source.getCursorAsBytes(), data);
 		}
 
 	}

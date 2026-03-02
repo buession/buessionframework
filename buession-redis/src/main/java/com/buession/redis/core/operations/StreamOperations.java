@@ -55,12 +55,12 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 
 	@Override
 	default Long xAck(final String key, final String groupName, final StreamEntryId... ids) {
-		return execute((client)->client.streamOperations().xAck(key, groupName, ids));
+		return execute((client)->client.streamCommands().xAck(key, groupName, ids));
 	}
 
 	@Override
 	default Long xAck(final byte[] key, final byte[] groupName, final StreamEntryId... ids) {
-		return execute((client)->client.streamOperations().xAck(key, groupName, ids));
+		return execute((client)->client.streamCommands().xAck(key, groupName, ids));
 	}
 
 	/**
@@ -104,27 +104,27 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	@Override
 	default List<StreamEntryDeletionResult> xAckDel(final String key, final String groupName,
 													final StreamEntryId... ids) {
-		return execute((client)->client.streamOperations().xAckDel(key, groupName, ids));
+		return execute((client)->client.streamCommands().xAckDel(key, groupName, ids));
 	}
 
 	@Override
 	default List<StreamEntryDeletionResult> xAckDel(final byte[] key, final byte[] groupName,
 													final StreamEntryId... ids) {
-		return execute((client)->client.streamOperations().xAckDel(key, groupName, ids));
+		return execute((client)->client.streamCommands().xAckDel(key, groupName, ids));
 	}
 
 	@Override
 	default List<StreamEntryDeletionResult> xAckDel(final String key, final String groupName,
 													final StreamDeletionPolicy deletionPolicy,
 													final StreamEntryId... ids) {
-		return execute((client)->client.streamOperations().xAckDel(key, groupName, deletionPolicy, ids));
+		return execute((client)->client.streamCommands().xAckDel(key, groupName, deletionPolicy, ids));
 	}
 
 	@Override
 	default List<StreamEntryDeletionResult> xAckDel(final byte[] key, final byte[] groupName,
 													final StreamDeletionPolicy deletionPolicy,
 													final StreamEntryId... ids) {
-		return execute((client)->client.streamOperations().xAckDel(key, groupName, deletionPolicy, ids));
+		return execute((client)->client.streamCommands().xAckDel(key, groupName, deletionPolicy, ids));
 	}
 
 	/**
@@ -143,7 +143,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 */
 	default List<StreamEntryDeletionResult> xAckDel(final String key, final String groupName, final String... ids) {
 		final StreamEntryId[] streamEntryIds = Arrays.map(ids, StreamEntryId.class, StreamEntryId::new);
-		return execute((client)->client.streamOperations().xAckDel(key, groupName, streamEntryIds));
+		return execute((client)->client.streamCommands().xAckDel(key, groupName, streamEntryIds));
 	}
 
 	/**
@@ -162,7 +162,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 */
 	default List<StreamEntryDeletionResult> xAckDel(final byte[] key, final byte[] groupName, final byte[]... ids) {
 		final StreamEntryId[] streamEntryIds = Arrays.map(ids, StreamEntryId.class, StreamEntryId::new);
-		return execute((client)->client.streamOperations().xAckDel(key, groupName, streamEntryIds));
+		return execute((client)->client.streamCommands().xAckDel(key, groupName, streamEntryIds));
 	}
 
 	/**
@@ -184,7 +184,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	default List<StreamEntryDeletionResult> xAckDel(final String key, final String groupName,
 													final StreamDeletionPolicy deletionPolicy, final String... ids) {
 		final StreamEntryId[] streamEntryIds = Arrays.map(ids, StreamEntryId.class, StreamEntryId::new);
-		return execute((client)->client.streamOperations().xAckDel(key, groupName, deletionPolicy, streamEntryIds));
+		return execute((client)->client.streamCommands().xAckDel(key, groupName, deletionPolicy, streamEntryIds));
 	}
 
 	/**
@@ -206,29 +206,29 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	default List<StreamEntryDeletionResult> xAckDel(final byte[] key, final byte[] groupName,
 													final StreamDeletionPolicy deletionPolicy, final byte[]... ids) {
 		final StreamEntryId[] streamEntryIds = Arrays.map(ids, StreamEntryId.class, StreamEntryId::new);
-		return execute((client)->client.streamOperations().xAckDel(key, groupName, deletionPolicy, streamEntryIds));
+		return execute((client)->client.streamCommands().xAckDel(key, groupName, deletionPolicy, streamEntryIds));
 	}
 
 	@Override
 	default StreamEntryId xAdd(final String key, final StreamEntryId id, final Map<String, String> hash) {
-		return execute((client)->client.streamOperations().xAdd(key, id, hash));
+		return execute((client)->client.streamCommands().xAdd(key, id, hash));
 	}
 
 	@Override
 	default StreamEntryId xAdd(final byte[] key, final StreamEntryId id, Map<byte[], byte[]> hash) {
-		return execute((client)->client.streamOperations().xAdd(key, id, hash));
+		return execute((client)->client.streamCommands().xAdd(key, id, hash));
 	}
 
 	@Override
 	default StreamEntryId xAdd(final String key, final StreamEntryId id, final Map<String, String> hash,
 							   final XAddArgument xAddArgument) {
-		return execute((client)->client.streamOperations().xAdd(key, id, hash, xAddArgument));
+		return execute((client)->client.streamCommands().xAdd(key, id, hash, xAddArgument));
 	}
 
 	@Override
 	default StreamEntryId xAdd(final byte[] key, final StreamEntryId id, final Map<byte[], byte[]> hash,
 							   final XAddArgument xAddArgument) {
-		return execute((client)->client.streamOperations().xAdd(key, id, hash, xAddArgument));
+		return execute((client)->client.streamCommands().xAdd(key, id, hash, xAddArgument));
 	}
 
 	/**
@@ -317,7 +317,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	default Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final String key, final String groupName,
 															 final String consumerName, final int minIdleTime,
 															 final StreamEntryId start) {
-		return execute((client)->client.streamOperations()
+		return execute((client)->client.streamCommands()
 				.xAutoClaim(key, groupName, consumerName, minIdleTime, start));
 	}
 
@@ -325,7 +325,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	default Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final byte[] key, final byte[] groupName,
 															 final byte[] consumerName, final int minIdleTime,
 															 final StreamEntryId start) {
-		return execute((client)->client.streamOperations()
+		return execute((client)->client.streamCommands()
 				.xAutoClaim(key, groupName, consumerName, minIdleTime, start));
 	}
 
@@ -333,7 +333,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	default Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final String key, final String groupName,
 															 final String consumerName, final int minIdleTime,
 															 final StreamEntryId start, final int count) {
-		return execute((client)->client.streamOperations()
+		return execute((client)->client.streamCommands()
 				.xAutoClaim(key, groupName, consumerName, minIdleTime, start, count));
 	}
 
@@ -341,7 +341,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	default Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final byte[] key, final byte[] groupName,
 															 final byte[] consumerName, final int minIdleTime,
 															 final StreamEntryId start, final int count) {
-		return execute((client)->client.streamOperations()
+		return execute((client)->client.streamCommands()
 				.xAutoClaim(key, groupName, consumerName, minIdleTime, start, count));
 	}
 
@@ -349,7 +349,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	default Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final String key, final String groupName,
 																	 final String consumerName, final int minIdleTime,
 																	 final StreamEntryId start) {
-		return execute((client)->client.streamOperations()
+		return execute((client)->client.streamCommands()
 				.xAutoClaimJustId(key, groupName, consumerName, minIdleTime, start));
 	}
 
@@ -357,7 +357,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	default Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final byte[] key, final byte[] groupName,
 																	 final byte[] consumerName, final int minIdleTime,
 																	 final StreamEntryId start) {
-		return execute((client)->client.streamOperations()
+		return execute((client)->client.streamCommands()
 				.xAutoClaimJustId(key, groupName, consumerName, minIdleTime, start));
 	}
 
@@ -365,7 +365,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	default Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final String key, final String groupName,
 																	 final String consumerName, final int minIdleTime,
 																	 final StreamEntryId start, final int count) {
-		return execute((client)->client.streamOperations()
+		return execute((client)->client.streamCommands()
 				.xAutoClaimJustId(key, groupName, consumerName, minIdleTime, start, count));
 	}
 
@@ -373,7 +373,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	default Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final byte[] key, final byte[] groupName,
 																	 final byte[] consumerName, final int minIdleTime,
 																	 final StreamEntryId start, final int count) {
-		return execute((client)->client.streamOperations()
+		return execute((client)->client.streamCommands()
 				.xAutoClaimJustId(key, groupName, consumerName, minIdleTime, start, count));
 	}
 
@@ -579,63 +579,63 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 
 	@Override
 	default Status xCfgSet(final String key) {
-		return execute((client)->client.streamOperations().xCfgSet(key));
+		return execute((client)->client.streamCommands().xCfgSet(key));
 	}
 
 	@Override
 	default Status xCfgSet(final byte[] key) {
-		return execute((client)->client.streamOperations().xCfgSet(key));
+		return execute((client)->client.streamCommands().xCfgSet(key));
 	}
 
 	@Override
 	default Status xCfgSet(final String key, final long duration) {
-		return execute((client)->client.streamOperations().xCfgSet(key, duration));
+		return execute((client)->client.streamCommands().xCfgSet(key, duration));
 	}
 
 	@Override
 	default Status xCfgSet(final byte[] key, final long duration) {
-		return execute((client)->client.streamOperations().xCfgSet(key, duration));
+		return execute((client)->client.streamCommands().xCfgSet(key, duration));
 	}
 
 	@Override
 	default Status xCfgSet(final String key, final int maxsize) {
-		return execute((client)->client.streamOperations().xCfgSet(key, maxsize));
+		return execute((client)->client.streamCommands().xCfgSet(key, maxsize));
 	}
 
 	@Override
 	default Status xCfgSet(final byte[] key, final int maxsize) {
-		return execute((client)->client.streamOperations().xCfgSet(key, maxsize));
+		return execute((client)->client.streamCommands().xCfgSet(key, maxsize));
 	}
 
 	@Override
 	default Status xCfgSet(final String key, final long duration, final int maxsize) {
-		return execute((client)->client.streamOperations().xCfgSet(key, duration, maxsize));
+		return execute((client)->client.streamCommands().xCfgSet(key, duration, maxsize));
 	}
 
 	@Override
 	default Status xCfgSet(final byte[] key, final long duration, final int maxsize) {
-		return execute((client)->client.streamOperations().xCfgSet(key, duration, maxsize));
+		return execute((client)->client.streamCommands().xCfgSet(key, duration, maxsize));
 	}
 
 	@Override
 	default List<StreamEntry> xClaim(final String key, final String groupName, final String consumerName,
 									 final int minIdleTime, final StreamEntryId... ids) {
 		return execute(
-				(client)->client.streamOperations().xClaim(key, groupName, consumerName, minIdleTime, ids));
+				(client)->client.streamCommands().xClaim(key, groupName, consumerName, minIdleTime, ids));
 	}
 
 	@Override
 	default List<StreamEntry> xClaim(final byte[] key, final byte[] groupName, final byte[] consumerName,
 									 final int minIdleTime, final StreamEntryId... ids) {
 		return execute(
-				(client)->client.streamOperations().xClaim(key, groupName, consumerName, minIdleTime, ids));
+				(client)->client.streamCommands().xClaim(key, groupName, consumerName, minIdleTime, ids));
 	}
 
 	@Override
 	default List<StreamEntry> xClaim(final String key, final String groupName, final String consumerName,
 									 final int minIdleTime, final StreamEntryId[] ids,
 									 final XClaimArgument xClaimArgument) {
-		return execute((client)->client.streamOperations()
+		return execute((client)->client.streamCommands()
 				.xClaim(key, groupName, consumerName, minIdleTime, ids, xClaimArgument));
 	}
 
@@ -643,7 +643,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	default List<StreamEntry> xClaim(final byte[] key, final byte[] groupName, final byte[] consumerName,
 									 final int minIdleTime, final StreamEntryId[] ids,
 									 final XClaimArgument xClaimArgument) {
-		return execute((client)->client.streamOperations()
+		return execute((client)->client.streamCommands()
 				.xClaim(key, groupName, consumerName, minIdleTime, ids, xClaimArgument));
 	}
 
@@ -755,14 +755,14 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	@Override
 	default List<StreamEntryId> xClaimJustId(final String key, final String groupName, final String consumerName,
 											 final int minIdleTime, final StreamEntryId... ids) {
-		return execute((client)->client.streamOperations()
+		return execute((client)->client.streamCommands()
 				.xClaimJustId(key, groupName, consumerName, minIdleTime, ids));
 	}
 
 	@Override
 	default List<StreamEntryId> xClaimJustId(final byte[] key, final byte[] groupName, final byte[] consumerName,
 											 final int minIdleTime, final StreamEntryId... ids) {
-		return execute((client)->client.streamOperations()
+		return execute((client)->client.streamCommands()
 				.xClaimJustId(key, groupName, consumerName, minIdleTime, ids));
 	}
 
@@ -770,7 +770,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	default List<StreamEntryId> xClaimJustId(final String key, final String groupName, final String consumerName,
 											 final int minIdleTime, final StreamEntryId[] ids,
 											 final XClaimArgument xClaimArgument) {
-		return execute((client)->client.streamOperations()
+		return execute((client)->client.streamCommands()
 				.xClaimJustId(key, groupName, consumerName, minIdleTime, ids, xClaimArgument));
 	}
 
@@ -778,7 +778,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	default List<StreamEntryId> xClaimJustId(final byte[] key, final byte[] groupName, final byte[] consumerName,
 											 final int minIdleTime, final StreamEntryId[] ids,
 											 final XClaimArgument xClaimArgument) {
-		return execute((client)->client.streamOperations()
+		return execute((client)->client.streamCommands()
 				.xClaimJustId(key, groupName, consumerName, minIdleTime, ids, xClaimArgument));
 	}
 
@@ -834,12 +834,12 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 
 	@Override
 	default Long xDel(final String key, final StreamEntryId... ids) {
-		return execute((client)->client.streamOperations().xDel(key, ids));
+		return execute((client)->client.streamCommands().xDel(key, ids));
 	}
 
 	@Override
 	default Long xDel(final byte[] key, final StreamEntryId... ids) {
-		return execute((client)->client.streamOperations().xDel(key, ids));
+		return execute((client)->client.streamCommands().xDel(key, ids));
 	}
 
 	/**
@@ -879,59 +879,59 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	@Override
 	default List<StreamEntryDeletionResult> xDelEx(final String key, final StreamDeletionPolicy deletionPolicy,
 												   final StreamEntryId... ids) {
-		return execute((client)->client.streamOperations().xDelEx(key, deletionPolicy, ids));
+		return execute((client)->client.streamCommands().xDelEx(key, deletionPolicy, ids));
 	}
 
 	@Override
 	default List<StreamEntryDeletionResult> xDelEx(final byte[] key, final StreamDeletionPolicy deletionPolicy,
 												   final StreamEntryId... ids) {
-		return execute((client)->client.streamOperations().xDelEx(key, deletionPolicy, ids));
+		return execute((client)->client.streamCommands().xDelEx(key, deletionPolicy, ids));
 	}
 
 	@Override
 	default Status xGroupCreate(final String key, final String groupName, final StreamEntryId id) {
-		return execute((client)->client.streamOperations().xGroupCreate(key, groupName, id));
+		return execute((client)->client.streamCommands().xGroupCreate(key, groupName, id));
 	}
 
 	@Override
 	default Status xGroupCreate(final byte[] key, final byte[] groupName, final StreamEntryId id) {
-		return execute((client)->client.streamOperations().xGroupCreate(key, groupName, id));
+		return execute((client)->client.streamCommands().xGroupCreate(key, groupName, id));
 	}
 
 	@Override
 	default Status xGroupCreate(final String key, final String groupName, final StreamEntryId id,
 								final boolean makeStream) {
-		return execute((client)->client.streamOperations().xGroupCreate(key, groupName, id, makeStream));
+		return execute((client)->client.streamCommands().xGroupCreate(key, groupName, id, makeStream));
 	}
 
 	@Override
 	default Status xGroupCreate(final byte[] key, final byte[] groupName, final StreamEntryId id,
 								final boolean makeStream) {
-		return execute((client)->client.streamOperations().xGroupCreate(key, groupName, id, makeStream));
+		return execute((client)->client.streamCommands().xGroupCreate(key, groupName, id, makeStream));
 	}
 
 	@Override
 	default Status xGroupCreate(final String key, final String groupName, final StreamEntryId id,
 								final long entriesRead) {
-		return execute((client)->client.streamOperations().xGroupCreate(key, groupName, id, entriesRead));
+		return execute((client)->client.streamCommands().xGroupCreate(key, groupName, id, entriesRead));
 	}
 
 	@Override
 	default Status xGroupCreate(final byte[] key, final byte[] groupName, final StreamEntryId id,
 								final long entriesRead) {
-		return execute((client)->client.streamOperations().xGroupCreate(key, groupName, id, entriesRead));
+		return execute((client)->client.streamCommands().xGroupCreate(key, groupName, id, entriesRead));
 	}
 
 	@Override
 	default Status xGroupCreate(final String key, final String groupName, final StreamEntryId id,
 								final boolean makeStream, final long entriesRead) {
-		return execute((client)->client.streamOperations().xGroupCreate(key, groupName, id, makeStream, entriesRead));
+		return execute((client)->client.streamCommands().xGroupCreate(key, groupName, id, makeStream, entriesRead));
 	}
 
 	@Override
 	default Status xGroupCreate(final byte[] key, final byte[] groupName, final StreamEntryId id,
 								final boolean makeStream, final long entriesRead) {
-		return execute((client)->client.streamOperations().xGroupCreate(key, groupName, id, makeStream, entriesRead));
+		return execute((client)->client.streamCommands().xGroupCreate(key, groupName, id, makeStream, entriesRead));
 	}
 
 	/**
@@ -1098,54 +1098,54 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 
 	@Override
 	default Status xGroupCreateConsumer(final String key, final String groupName, final String consumerName) {
-		return execute((client)->client.streamOperations().xGroupCreateConsumer(key, groupName, consumerName));
+		return execute((client)->client.streamCommands().xGroupCreateConsumer(key, groupName, consumerName));
 	}
 
 	@Override
 	default Status xGroupCreateConsumer(final byte[] key, final byte[] groupName, final byte[] consumerName) {
-		return execute((client)->client.streamOperations().xGroupCreateConsumer(key, groupName, consumerName));
+		return execute((client)->client.streamCommands().xGroupCreateConsumer(key, groupName, consumerName));
 	}
 
 	@Override
 	default Long xGroupDelConsumer(final String key, final String groupName, final String consumerName) {
-		return execute((client)->client.streamOperations().xGroupDelConsumer(key, groupName, consumerName));
+		return execute((client)->client.streamCommands().xGroupDelConsumer(key, groupName, consumerName));
 	}
 
 	@Override
 	default Long xGroupDelConsumer(final byte[] key, final byte[] groupName, final byte[] consumerName) {
-		return execute((client)->client.streamOperations().xGroupDelConsumer(key, groupName, consumerName));
+		return execute((client)->client.streamCommands().xGroupDelConsumer(key, groupName, consumerName));
 	}
 
 	@Override
 	default Status xGroupDestroy(final String key, final String groupName) {
-		return execute((client)->client.streamOperations().xGroupDestroy(key, groupName));
+		return execute((client)->client.streamCommands().xGroupDestroy(key, groupName));
 	}
 
 	@Override
 	default Status xGroupDestroy(final byte[] key, final byte[] groupName) {
-		return execute((client)->client.streamOperations().xGroupDestroy(key, groupName));
+		return execute((client)->client.streamCommands().xGroupDestroy(key, groupName));
 	}
 
 	@Override
 	default Status xGroupSetId(final String key, final String groupName, final StreamEntryId id) {
-		return execute((client)->client.streamOperations().xGroupSetId(key, groupName, id));
+		return execute((client)->client.streamCommands().xGroupSetId(key, groupName, id));
 	}
 
 	@Override
 	default Status xGroupSetId(final byte[] key, final byte[] groupName, final StreamEntryId id) {
-		return execute((client)->client.streamOperations().xGroupSetId(key, groupName, id));
+		return execute((client)->client.streamCommands().xGroupSetId(key, groupName, id));
 	}
 
 	@Override
 	default Status xGroupSetId(final String key, final String groupName, final StreamEntryId id,
 							   final long entriesRead) {
-		return execute((client)->client.streamOperations().xGroupSetId(key, groupName, id, entriesRead));
+		return execute((client)->client.streamCommands().xGroupSetId(key, groupName, id, entriesRead));
 	}
 
 	@Override
 	default Status xGroupSetId(final byte[] key, final byte[] groupName, final StreamEntryId id,
 							   final long entriesRead) {
-		return execute((client)->client.streamOperations().xGroupSetId(key, groupName, id, entriesRead));
+		return execute((client)->client.streamCommands().xGroupSetId(key, groupName, id, entriesRead));
 	}
 
 	/**
@@ -1226,119 +1226,119 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 
 	@Override
 	default List<StreamConsumer> xInfoConsumers(final String key, final String groupName) {
-		return execute((client)->client.streamOperations().xInfoConsumers(key, groupName));
+		return execute((client)->client.streamCommands().xInfoConsumers(key, groupName));
 	}
 
 	@Override
 	default List<StreamConsumer> xInfoConsumers(final byte[] key, final byte[] groupName) {
-		return execute((client)->client.streamOperations().xInfoConsumers(key, groupName));
+		return execute((client)->client.streamCommands().xInfoConsumers(key, groupName));
 	}
 
 	@Override
 	default List<StreamGroup> xInfoGroups(final String key) {
-		return execute((client)->client.streamOperations().xInfoGroups(key));
+		return execute((client)->client.streamCommands().xInfoGroups(key));
 	}
 
 	@Override
 	default List<StreamGroup> xInfoGroups(final byte[] key) {
-		return execute((client)->client.streamOperations().xInfoGroups(key));
+		return execute((client)->client.streamCommands().xInfoGroups(key));
 	}
 
 	@Override
 	default Stream xInfoStream(final String key) {
-		return execute((client)->client.streamOperations().xInfoStream(key));
+		return execute((client)->client.streamCommands().xInfoStream(key));
 	}
 
 	@Override
 	default Stream xInfoStream(final byte[] key) {
-		return execute((client)->client.streamOperations().xInfoStream(key));
+		return execute((client)->client.streamCommands().xInfoStream(key));
 	}
 
 	@Override
 	default StreamFull xInfoStream(final String key, final boolean full) {
-		return execute((client)->client.streamOperations().xInfoStream(key, full));
+		return execute((client)->client.streamCommands().xInfoStream(key, full));
 	}
 
 	@Override
 	default StreamFull xInfoStream(final byte[] key, final boolean full) {
-		return execute((client)->client.streamOperations().xInfoStream(key, full));
+		return execute((client)->client.streamCommands().xInfoStream(key, full));
 	}
 
 	@Override
 	default StreamFull xInfoStream(final String key, final boolean full, final int count) {
-		return execute((client)->client.streamOperations().xInfoStream(key, full, count));
+		return execute((client)->client.streamCommands().xInfoStream(key, full, count));
 	}
 
 	@Override
 	default StreamFull xInfoStream(final byte[] key, final boolean full, final int count) {
-		return execute((client)->client.streamOperations().xInfoStream(key, full, count));
+		return execute((client)->client.streamCommands().xInfoStream(key, full, count));
 	}
 
 	@Override
 	default Long xLen(final String key) {
-		return execute((client)->client.streamOperations().xLen(key));
+		return execute((client)->client.streamCommands().xLen(key));
 	}
 
 	@Override
 	default Long xLen(final byte[] key) {
-		return execute((client)->client.streamOperations().xLen(key));
+		return execute((client)->client.streamCommands().xLen(key));
 	}
 
 	@Override
 	default StreamPendingSummary xPending(final String key, final String groupName) {
-		return execute((client)->client.streamOperations().xPending(key, groupName));
+		return execute((client)->client.streamCommands().xPending(key, groupName));
 	}
 
 	@Override
 	default StreamPendingSummary xPending(final byte[] key, final byte[] groupName) {
-		return execute((client)->client.streamOperations().xPending(key, groupName));
+		return execute((client)->client.streamCommands().xPending(key, groupName));
 	}
 
 	@Override
 	default List<StreamPending> xPending(final String key, final String groupName, final StreamEntryId start,
 										 final StreamEntryId end, final int count) {
-		return execute((client)->client.streamOperations().xPending(key, groupName, start, end, count));
+		return execute((client)->client.streamCommands().xPending(key, groupName, start, end, count));
 	}
 
 	@Override
 	default List<StreamPending> xPending(final byte[] key, final byte[] groupName, final StreamEntryId start,
 										 final StreamEntryId end, final int count) {
-		return execute((client)->client.streamOperations().xPending(key, groupName, start, end, count));
+		return execute((client)->client.streamCommands().xPending(key, groupName, start, end, count));
 	}
 
 	@Override
 	default List<StreamPending> xPending(final String key, final String groupName, final long minIdleTime,
 										 final StreamEntryId start, final StreamEntryId end, final int count) {
 		return execute(
-				(client)->client.streamOperations().xPending(key, groupName, minIdleTime, start, end, count));
+				(client)->client.streamCommands().xPending(key, groupName, minIdleTime, start, end, count));
 	}
 
 	@Override
 	default List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime,
 										 final StreamEntryId start, final StreamEntryId end, final int count) {
 		return execute(
-				(client)->client.streamOperations().xPending(key, groupName, minIdleTime, start, end, count));
+				(client)->client.streamCommands().xPending(key, groupName, minIdleTime, start, end, count));
 	}
 
 	@Override
 	default List<StreamPending> xPending(final String key, final String groupName, final StreamEntryId start,
 										 final StreamEntryId end, final int count, final String consumerName) {
 		return execute(
-				(client)->client.streamOperations().xPending(key, groupName, start, end, count, consumerName));
+				(client)->client.streamCommands().xPending(key, groupName, start, end, count, consumerName));
 	}
 
 	@Override
 	default List<StreamPending> xPending(final byte[] key, final byte[] groupName, final StreamEntryId start,
 										 final StreamEntryId end, final int count, final byte[] consumerName) {
 		return execute(
-				(client)->client.streamOperations().xPending(key, groupName, start, end, count, consumerName));
+				(client)->client.streamCommands().xPending(key, groupName, start, end, count, consumerName));
 	}
 
 	@Override
 	default List<StreamPending> xPending(final String key, final String groupName, final long minIdleTime,
 										 final StreamEntryId start, final StreamEntryId end, final int count,
 										 final String consumerName) {
-		return execute((client)->client.streamOperations()
+		return execute((client)->client.streamCommands()
 				.xPending(key, groupName, minIdleTime, start, end, count, consumerName));
 	}
 
@@ -1346,7 +1346,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	default List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime,
 										 final StreamEntryId start, final StreamEntryId end, final int count,
 										 final byte[] consumerName) {
-		return execute((client)->client.streamOperations()
+		return execute((client)->client.streamCommands()
 				.xPending(key, groupName, minIdleTime, start, end, count, consumerName));
 	}
 
@@ -1556,24 +1556,24 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 
 	@Override
 	default List<StreamEntry> xRange(final String key, final StreamEntryId start, final StreamEntryId end) {
-		return execute((client)->client.streamOperations().xRange(key, start, end));
+		return execute((client)->client.streamCommands().xRange(key, start, end));
 	}
 
 	@Override
 	default List<StreamEntry> xRange(final byte[] key, final StreamEntryId start, final StreamEntryId end) {
-		return execute((client)->client.streamOperations().xRange(key, start, end));
+		return execute((client)->client.streamCommands().xRange(key, start, end));
 	}
 
 	@Override
 	default List<StreamEntry> xRange(final String key, final StreamEntryId start, final StreamEntryId end,
 									 final int count) {
-		return execute((client)->client.streamOperations().xRange(key, start, end));
+		return execute((client)->client.streamCommands().xRange(key, start, end));
 	}
 
 	@Override
 	default List<StreamEntry> xRange(final byte[] key, final StreamEntryId start, final StreamEntryId end,
 									 final int count) {
-		return execute((client)->client.streamOperations().xRange(key, start, end));
+		return execute((client)->client.streamCommands().xRange(key, start, end));
 	}
 
 	/**
@@ -1654,75 +1654,75 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 
 	@Override
 	default List<Map<String, List<StreamEntry>>> xRead(final Map<String, StreamEntryId> streams) {
-		return execute((client)->client.streamOperations().xRead(streams));
+		return execute((client)->client.streamCommands().xRead(streams));
 	}
 
 	@Override
 	default List<Map<String, List<StreamEntry>>> xRead(final long count, final Map<String, StreamEntryId> streams) {
-		return execute((client)->client.streamOperations().xRead(count, streams));
+		return execute((client)->client.streamCommands().xRead(count, streams));
 	}
 
 	@Override
 	default List<Map<String, List<StreamEntry>>> xRead(final int block, final Map<String, StreamEntryId> streams) {
-		return execute((client)->client.streamOperations().xRead(block, streams));
+		return execute((client)->client.streamCommands().xRead(block, streams));
 	}
 
 	@Override
 	default List<Map<String, List<StreamEntry>>> xRead(final long count, final int block,
 													   final Map<String, StreamEntryId> streams) {
-		return execute((client)->client.streamOperations().xRead(count, block, streams));
+		return execute((client)->client.streamCommands().xRead(count, block, streams));
 	}
 
 	@Override
 	default List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
 															final Map<String, StreamEntryId> streams) {
-		return execute((client)->client.streamOperations().xReadGroup(groupName, consumerName, streams));
+		return execute((client)->client.streamCommands().xReadGroup(groupName, consumerName, streams));
 	}
 
 	@Override
 	default List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
 															final Map<byte[], StreamEntryId> streams) {
-		return execute((client)->client.streamOperations().xReadGroup(groupName, consumerName, streams));
+		return execute((client)->client.streamCommands().xReadGroup(groupName, consumerName, streams));
 	}
 
 	@Override
 	default List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
 															final int block, final Map<String, StreamEntryId> streams) {
-		return execute((client)->client.streamOperations().xReadGroup(groupName, consumerName, block, streams));
+		return execute((client)->client.streamCommands().xReadGroup(groupName, consumerName, block, streams));
 	}
 
 	@Override
 	default List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
 															final int block, final Map<byte[], StreamEntryId> streams) {
-		return execute((client)->client.streamOperations().xReadGroup(groupName, consumerName, block, streams));
+		return execute((client)->client.streamCommands().xReadGroup(groupName, consumerName, block, streams));
 	}
 
 	@Override
 	default List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
 															final boolean isNoAck,
 															final Map<String, StreamEntryId> streams) {
-		return execute((client)->client.streamOperations().xReadGroup(groupName, consumerName, isNoAck, streams));
+		return execute((client)->client.streamCommands().xReadGroup(groupName, consumerName, isNoAck, streams));
 	}
 
 	@Override
 	default List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
 															final boolean isNoAck,
 															final Map<byte[], StreamEntryId> streams) {
-		return execute((client)->client.streamOperations().xReadGroup(groupName, consumerName, isNoAck, streams));
+		return execute((client)->client.streamCommands().xReadGroup(groupName, consumerName, isNoAck, streams));
 	}
 
 	@Override
 	default List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
 															final long count, final int block,
 															final Map<String, StreamEntryId> streams) {
-		return execute((client)->client.streamOperations().xReadGroup(groupName, consumerName, count, block, streams));
+		return execute((client)->client.streamCommands().xReadGroup(groupName, consumerName, count, block, streams));
 	}
 
 	@Override
 	default List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
 															final long count, final int block,
 															final Map<byte[], StreamEntryId> streams) {
-		return execute((client)->client.streamOperations().xReadGroup(groupName, consumerName, count, block, streams));
+		return execute((client)->client.streamCommands().xReadGroup(groupName, consumerName, count, block, streams));
 	}
 
 	@Override
@@ -1730,7 +1730,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 															final int block, final boolean isNoAck,
 															final Map<String, StreamEntryId> streams) {
 		return execute(
-				(client)->client.streamOperations().xReadGroup(groupName, consumerName, block, isNoAck, streams));
+				(client)->client.streamCommands().xReadGroup(groupName, consumerName, block, isNoAck, streams));
 	}
 
 	@Override
@@ -1738,14 +1738,14 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 															final int block, final boolean isNoAck,
 															final Map<byte[], StreamEntryId> streams) {
 		return execute(
-				(client)->client.streamOperations().xReadGroup(groupName, consumerName, block, isNoAck, streams));
+				(client)->client.streamCommands().xReadGroup(groupName, consumerName, block, isNoAck, streams));
 	}
 
 	@Override
 	default List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
 															final long count, final int block, final boolean isNoAck,
 															final Map<String, StreamEntryId> streams) {
-		return execute((client)->client.streamOperations()
+		return execute((client)->client.streamCommands()
 				.xReadGroup(groupName, consumerName, count, block, isNoAck, streams));
 	}
 
@@ -1753,30 +1753,30 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	default List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
 															final long count, final int block, final boolean isNoAck,
 															final Map<byte[], StreamEntryId> streams) {
-		return execute((client)->client.streamOperations()
+		return execute((client)->client.streamCommands()
 				.xReadGroup(groupName, consumerName, count, block, isNoAck, streams));
 	}
 
 	@Override
 	default List<StreamEntry> xRevRange(final String key, final StreamEntryId end, final StreamEntryId start) {
-		return execute((client)->client.streamOperations().xRevRange(key, end, start));
+		return execute((client)->client.streamCommands().xRevRange(key, end, start));
 	}
 
 	@Override
 	default List<StreamEntry> xRevRange(final byte[] key, final StreamEntryId end, final StreamEntryId start) {
-		return execute((client)->client.streamOperations().xRevRange(key, end, start));
+		return execute((client)->client.streamCommands().xRevRange(key, end, start));
 	}
 
 	@Override
 	default List<StreamEntry> xRevRange(final String key, final StreamEntryId end, final StreamEntryId start,
 										final long count) {
-		return execute((client)->client.streamOperations().xRevRange(key, end, start, count));
+		return execute((client)->client.streamCommands().xRevRange(key, end, start, count));
 	}
 
 	@Override
 	default List<StreamEntry> xRevRange(final byte[] key, final StreamEntryId end, final StreamEntryId start,
 										final long count) {
-		return execute((client)->client.streamOperations().xRevRange(key, end, start, count));
+		return execute((client)->client.streamCommands().xRevRange(key, end, start, count));
 	}
 
 	/**
@@ -1865,22 +1865,22 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 
 	@Override
 	default Long xTrim(final String key, final XTrimArgument xTrimArgument) {
-		return execute((client)->client.streamOperations().xTrim(key, xTrimArgument));
+		return execute((client)->client.streamCommands().xTrim(key, xTrimArgument));
 	}
 
 	@Override
 	default Long xTrim(final byte[] key, final XTrimArgument xTrimArgument) {
-		return execute((client)->client.streamOperations().xTrim(key, xTrimArgument));
+		return execute((client)->client.streamCommands().xTrim(key, xTrimArgument));
 	}
 
 	@Override
 	default Long xTrim(final String key, final XTrimArgument xTrimArgument, final long limit) {
-		return execute((client)->client.streamOperations().xTrim(key, xTrimArgument, limit));
+		return execute((client)->client.streamCommands().xTrim(key, xTrimArgument, limit));
 	}
 
 	@Override
 	default Long xTrim(final byte[] key, final XTrimArgument xTrimArgument, final long limit) {
-		return execute((client)->client.streamOperations().xTrim(key, xTrimArgument, limit));
+		return execute((client)->client.streamCommands().xTrim(key, xTrimArgument, limit));
 	}
 
 }

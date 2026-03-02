@@ -50,57 +50,57 @@ public interface ConnectionOperations extends ConnectionCommands, RedisOperation
 
 	@Override
 	default Status auth(final String user, final String password) {
-		return execute((client)->client.connectionOperations().auth(user, password));
+		return execute((client)->client.connectionCommands().auth(user, password));
 	}
 
 	@Override
 	default Status auth(final byte[] user, final byte[] password) {
-		return execute((client)->client.connectionOperations().auth(user, password));
+		return execute((client)->client.connectionCommands().auth(user, password));
 	}
 
 	@Override
 	default Status auth(final String password) {
-		return execute((client)->client.connectionOperations().auth(password));
+		return execute((client)->client.connectionCommands().auth(password));
 	}
 
 	@Override
 	default Status auth(final byte[] password) {
-		return execute((client)->client.connectionOperations().auth(password));
+		return execute((client)->client.connectionCommands().auth(password));
 	}
 
 	@Override
 	default Status clientCaching(final boolean isYes) {
-		return execute((client)->client.connectionOperations().clientCaching(isYes));
+		return execute((client)->client.connectionCommands().clientCaching(isYes));
 	}
 
 	@Override
 	default String clientGetName() {
-		return execute((client)->client.connectionOperations().clientGetName());
+		return execute((client)->client.connectionCommands().clientGetName());
 	}
 
 	@Override
 	default Integer clientGetRedir() {
-		return execute((client)->client.connectionOperations().clientGetRedir());
+		return execute((client)->client.connectionCommands().clientGetRedir());
 	}
 
 	@Override
 	default Long clientId() {
-		return execute((client)->client.connectionOperations().clientId());
+		return execute((client)->client.connectionCommands().clientId());
 	}
 
 	@Override
 	default Client clientInfo() {
-		return execute((client)->client.connectionOperations().clientInfo());
+		return execute((client)->client.connectionCommands().clientInfo());
 	}
 
 	@Override
 	default Status clientKill(final String host, final int port) {
-		return execute((client)->client.connectionOperations().clientKill(host, port));
+		return execute((client)->client.connectionCommands().clientKill(host, port));
 	}
 
 	@Override
 	default Status clientKill(final byte[] host, final int port) {
-		return execute((client)->client.connectionOperations().clientKill(host, port));
+		return execute((client)->client.connectionCommands().clientKill(host, port));
 	}
 
 	/**
@@ -120,147 +120,147 @@ public interface ConnectionOperations extends ConnectionCommands, RedisOperation
 
 	@Override
 	default List<Client> clientList() {
-		return execute((client)->client.connectionOperations().clientList());
+		return execute((client)->client.connectionCommands().clientList());
 	}
 
 	@Override
 	default List<Client> clientList(final ClientType clientType) {
-		return execute((client)->client.connectionOperations().clientList(clientType));
+		return execute((client)->client.connectionCommands().clientList(clientType));
 	}
 
 	@Override
 	default List<Client> clientList(final long... clientIds) {
-		return execute((client)->client.connectionOperations().clientList(clientIds));
+		return execute((client)->client.connectionCommands().clientList(clientIds));
 	}
 
 	@Override
 	default Status clientNoEvict(final boolean on) {
-		return execute((client)->client.connectionOperations().clientNoEvict(on));
+		return execute((client)->client.connectionCommands().clientNoEvict(on));
 	}
 
 	@Override
 	default Status clientNoTouch(final boolean on) {
-		return execute((client)->client.connectionOperations().clientNoTouch(on));
+		return execute((client)->client.connectionCommands().clientNoTouch(on));
 	}
 
 	@Override
 	default Status clientPause(final int timeout) {
-		return execute((client)->client.connectionOperations().clientPause(timeout));
+		return execute((client)->client.connectionCommands().clientPause(timeout));
 	}
 
 	@Override
 	default Status clientReply(final ClientReply option) {
-		return execute((client)->client.connectionOperations().clientReply(option));
+		return execute((client)->client.connectionCommands().clientReply(option));
 	}
 
 	@Override
 	default Status clientSetInfo(final ClientInfoOption option, final String value) {
-		return execute((client)->client.connectionOperations().clientSetInfo(option, value));
+		return execute((client)->client.connectionCommands().clientSetInfo(option, value));
 	}
 
 	@Override
 	default Status clientSetName(final String name) {
-		return execute((client)->client.connectionOperations().clientSetName(name));
+		return execute((client)->client.connectionCommands().clientSetName(name));
 	}
 
 	@Override
 	default Status clientSetName(final byte[] name) {
-		return execute((client)->client.connectionOperations().clientSetName(name));
+		return execute((client)->client.connectionCommands().clientSetName(name));
 	}
 
 	@Override
 	default Status clientTracking(final boolean on, final TrackingArgument argument) {
-		return execute((client)->client.connectionOperations().clientTracking(on, argument));
+		return execute((client)->client.connectionCommands().clientTracking(on, argument));
 	}
 
 	@Override
 	default TrackingInfo clientTrackingInfo() {
-		return execute((client)->client.connectionOperations().clientTrackingInfo());
+		return execute((client)->client.connectionCommands().clientTrackingInfo());
 	}
 
 	@Override
 	default Status clientUnblock(final int clientId) {
-		return execute((client)->client.connectionOperations().clientUnblock(clientId));
+		return execute((client)->client.connectionCommands().clientUnblock(clientId));
 	}
 
 	@Override
 	default Status clientUnblock(final int clientId, final ClientUnblockType type) {
-		return execute((client)->client.connectionOperations().clientUnblock(clientId, type));
+		return execute((client)->client.connectionCommands().clientUnblock(clientId, type));
 	}
 
 	@Override
 	default Status clientUnpause() {
-		return execute((client)->client.connectionOperations().clientUnpause());
+		return execute((client)->client.connectionCommands().clientUnpause());
 	}
 
 	@Override
 	default String echo(final String str) {
-		return execute((client)->client.connectionOperations().echo(str));
+		return execute((client)->client.connectionCommands().echo(str));
 	}
 
 	@Override
 	default byte[] echo(final byte[] str) {
-		return execute((client)->client.connectionOperations().echo(str));
+		return execute((client)->client.connectionCommands().echo(str));
 	}
 
 	@Override
 	default Hello hello() {
-		return execute((client)->client.connectionOperations().hello());
+		return execute((client)->client.connectionCommands().hello());
 	}
 
 	@Override
 	default Hello hello(final int protover) {
-		return execute((client)->client.connectionOperations().hello(protover));
+		return execute((client)->client.connectionCommands().hello(protover));
 	}
 
 	@Override
 	default Hello hello(final int protover, final String password) {
-		return execute((client)->client.connectionOperations().hello(protover, password));
+		return execute((client)->client.connectionCommands().hello(protover, password));
 	}
 
 	@Override
 	default Hello hello(final int protover, final byte[] password) {
-		return execute((client)->client.connectionOperations().hello(protover, password));
+		return execute((client)->client.connectionCommands().hello(protover, password));
 	}
 
 	@Override
 	default Hello hello(final int protover, final String username, final String password) {
-		return execute((client)->client.connectionOperations().hello(protover, username, password));
+		return execute((client)->client.connectionCommands().hello(protover, username, password));
 	}
 
 	@Override
 	default Hello hello(final int protover, final byte[] username, final byte[] password) {
-		return execute((client)->client.connectionOperations().hello(protover, username, password));
+		return execute((client)->client.connectionCommands().hello(protover, username, password));
 	}
 
 	@Override
 	default Hello hello(final int protover, final String username, final String password, final String clientName) {
-		return execute((client)->client.connectionOperations().hello(protover, username, password, clientName));
+		return execute((client)->client.connectionCommands().hello(protover, username, password, clientName));
 	}
 
 	@Override
 	default Hello hello(final int protover, final byte[] username, final byte[] password, final byte[] clientName) {
-		return execute((client)->client.connectionOperations().hello(protover, username, password, clientName));
+		return execute((client)->client.connectionCommands().hello(protover, username, password, clientName));
 	}
 
 	@Override
 	default Status ping() {
-		return execute((client)->client.connectionOperations().ping());
+		return execute((client)->client.connectionCommands().ping());
 	}
 
 	@Override
 	default Status quit() {
-		return execute((client)->client.connectionOperations().quit());
+		return execute((client)->client.connectionCommands().quit());
 	}
 
 	@Override
 	default Status reset() {
-		return execute((client)->client.connectionOperations().reset());
+		return execute((client)->client.connectionCommands().reset());
 	}
 
 	@Override
 	default Status select(final int db) {
-		return execute((client)->client.connectionOperations().select(db));
+		return execute((client)->client.connectionCommands().select(db));
 	}
 
 	/**

@@ -45,12 +45,12 @@ public interface CountMinSketchOperations extends CountMinSketchCommands, RedisO
 
 	@Override
 	default List<Long> cmsIncrby(final String key, final List<KeyValue<String, Long>> items) {
-		return execute((client)->client.countMinSketchOperations().cmsIncrby(key, items));
+		return execute((client)->client.countMinSketchCommands().cmsIncrby(key, items));
 	}
 
 	@Override
 	default List<Long> cmsIncrby(final byte[] key, final List<KeyValue<byte[], Long>> items) {
-		return execute((client)->client.countMinSketchOperations().cmsIncrby(key, items));
+		return execute((client)->client.countMinSketchCommands().cmsIncrby(key, items));
 	}
 
 	/**
@@ -87,42 +87,42 @@ public interface CountMinSketchOperations extends CountMinSketchCommands, RedisO
 
 	@Override
 	default CmsInfo cmsInfo(final String key) {
-		return execute((client)->client.countMinSketchOperations().cmsInfo(key));
+		return execute((client)->client.countMinSketchCommands().cmsInfo(key));
 	}
 
 	@Override
 	default CmsInfo cmsInfo(final byte[] key) {
-		return execute((client)->client.countMinSketchOperations().cmsInfo(key));
+		return execute((client)->client.countMinSketchCommands().cmsInfo(key));
 	}
 
 	@Override
 	default Status cmsInitByDim(final String key, final int width, final int depth) {
-		return execute((client)->client.countMinSketchOperations().cmsInitByDim(key, width, depth));
+		return execute((client)->client.countMinSketchCommands().cmsInitByDim(key, width, depth));
 	}
 
 	@Override
 	default Status cmsInitByDim(final byte[] key, final int width, final int depth) {
-		return execute((client)->client.countMinSketchOperations().cmsInitByDim(key, width, depth));
+		return execute((client)->client.countMinSketchCommands().cmsInitByDim(key, width, depth));
 	}
 
 	@Override
 	default Status cmsInitByProb(final String key, final double error, final double probability) {
-		return execute((client)->client.countMinSketchOperations().cmsInitByProb(key, error, probability));
+		return execute((client)->client.countMinSketchCommands().cmsInitByProb(key, error, probability));
 	}
 
 	@Override
 	default Status cmsInitByProb(final byte[] key, final double error, final double probability) {
-		return execute((client)->client.countMinSketchOperations().cmsInitByProb(key, error, probability));
+		return execute((client)->client.countMinSketchCommands().cmsInitByProb(key, error, probability));
 	}
 
 	@Override
 	default Status cmsMerge(final String destKey, final Map<String, Long> keysAndWeights) {
-		return execute((client)->client.countMinSketchOperations().cmsMerge(destKey, keysAndWeights));
+		return execute((client)->client.countMinSketchCommands().cmsMerge(destKey, keysAndWeights));
 	}
 
 	@Override
 	default Status cmsMerge(final byte[] destKey, final Map<byte[], Long> keysAndWeights) {
-		return execute((client)->client.countMinSketchOperations().cmsMerge(destKey, keysAndWeights));
+		return execute((client)->client.countMinSketchCommands().cmsMerge(destKey, keysAndWeights));
 	}
 
 	/**
@@ -163,12 +163,12 @@ public interface CountMinSketchOperations extends CountMinSketchCommands, RedisO
 
 	@Override
 	default List<Long> cmsQuery(final String key, final String... items) {
-		return execute((client)->client.countMinSketchOperations().cmsQuery(key, items));
+		return execute((client)->client.countMinSketchCommands().cmsQuery(key, items));
 	}
 
 	@Override
 	default List<Long> cmsQuery(final byte[] key, final byte[]... items) {
-		return execute((client)->client.countMinSketchOperations().cmsQuery(key, items));
+		return execute((client)->client.countMinSketchCommands().cmsQuery(key, items));
 	}
 
 }

@@ -48,7 +48,7 @@ public class LettuceZPopArgs extends ZPopArgs {
 	 * @param minMax
 	 *        {@link MinMax}
 	 */
-	public LettuceZPopArgs(MinMax minMax) {
+	public LettuceZPopArgs(final MinMax minMax) {
 		if(minMax != null){
 			switch(minMax){
 				case MIN:

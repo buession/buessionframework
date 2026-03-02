@@ -45,7 +45,7 @@ public final class JedisXPendingParams extends XPendingParams {
 	}
 
 	public JedisXPendingParams(final long idle, final StreamEntryId start, final StreamEntryId end,
-							   final long count) {
+							   final int count) {
 		this(start, end, count);
 		idle(idle);
 	}
@@ -55,18 +55,18 @@ public final class JedisXPendingParams extends XPendingParams {
 		consumer(consumer);
 	}
 
-	public JedisXPendingParams(final StreamEntryId start, final StreamEntryId end, final long count) {
-		super(JedisStreamEntryID.from(start), JedisStreamEntryID.from(end), (int) count);
+	public JedisXPendingParams(final StreamEntryId start, final StreamEntryId end, final int count) {
+		super(new JedisStreamEntryID(start), new JedisStreamEntryID(end), (int) count);
 	}
 
-	public JedisXPendingParams(final StreamEntryId start, final StreamEntryId end, final long count,
+	public JedisXPendingParams(final StreamEntryId start, final StreamEntryId end, final int count,
 							   final String consumer) {
 		this(start, end, count);
 		consumer(consumer);
 	}
 
 	public JedisXPendingParams(final long idle, final StreamEntryId start, final StreamEntryId end,
-							   final long count, final String consumer) {
+							   final int count, final String consumer) {
 		this(idle, start, end, count);
 		consumer(consumer);
 	}
