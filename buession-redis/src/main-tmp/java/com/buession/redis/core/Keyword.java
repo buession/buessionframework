@@ -73,13 +73,7 @@ public interface Keyword extends Value<String>, Rawable {
 
 		NOLOOP,
 
-		AUTH,
-
-		AUTH2,
-
 		SETNAME,
-
-		KEYS,
 
 
 	}

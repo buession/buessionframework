@@ -19,67 +19,55 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis;
+package com.buession.redis.core.internal.convert.lettuce.params;
 
-import com.buession.redis.core.command.KeyCommands;
-import redis.clients.jedis.params.RestoreParams;
+import com.buession.core.converter.Converter;
+import com.buession.lang.Order;
+import com.buession.redis.core.command.args.SortArgument;
+import io.lettuce.core.SortArgs;
 
 import java.util.Optional;
 
 /**
- * Jedis {@link RestoreParams} 扩展
+ * {@link SortArgument} 转换为 lettuce {@link SortArgs}
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public final class JedisRestoreParams extends RestoreParams {
+public final class SortArgumentConverter implements Converter<SortArgument, SortArgs> {
 
-	public JedisRestoreParams() {
-		super();
-	}
-
-	public JedisRestoreParams(final boolean replace) {
-		super();
-		replace(this, replace);
-	}
-
-	public JedisRestoreParams(final boolean replace, final boolean absTtl) {
-		this(replace);
-		absTtl(this, absTtl);
-	}
-
-	public JedisRestoreParams(final boolean replace, final boolean absTtl, final long idleTime, final long frequency) {
-		this(replace, absTtl);
-		idleTime(idleTime);
-		frequency(frequency);
-	}
-
-	public static JedisRestoreParams from(final KeyCommands.RestoreArgument argument) {
-		final JedisRestoreParams restoreParams = new JedisRestoreParams();
-
-		if(argument != null){
-			replace(restoreParams, argument.isReplace());
-			absTtl(restoreParams, argument.isAbsTtl());
-			Optional.ofNullable(argument.getIdleTime()).ifPresent(restoreParams::idleTime);
-			Optional.ofNullable(argument.getFrequency()).ifPresent(restoreParams::frequency);
+	@Override
+	public SortArgs convert(final SortArgument source) {
+		if(source == null){
+			return null;
 		}
 
-		return restoreParams;
-	}
+		final SortArgs sortArgs = new SortArgs();
 
-	private static void replace(final JedisRestoreParams restoreParams, final Boolean replace) {
-		if(Boolean.TRUE.equals(replace)){
-			restoreParams.replace();
+		Optional.ofNullable(source.getBy()).ifPresent(sortArgs::by);
+		if(source.getOrder() == Order.ASC){
+			sortArgs.asc();
+		}else if(source.getOrder() == Order.DESC){
+			sortArgs.desc();
 		}
-	}
+		if(source.getLimit() == null){
+			sortArgs.limit((int) source.getLimit().getOffset(), (int) source.getLimit().getCount());
+		}
 
-	private static void absTtl(final JedisRestoreParams restoreParams, final Boolean absTtl) {
-		if(Boolean.TRUE.equals(absTtl)){
-			restoreParams.absTtl();
+		if(source.getGetPatterns() != null){
+			for(String pattern : source.getGetPatterns()){
+				sortArgs.get(pattern);
+			}
 		}
+
+		if(Boolean.TRUE.equals(source.getAlpha())){
+			sortArgs.alpha();
+		}
+
+		return sortArgs;
 	}
 
 }

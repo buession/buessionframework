@@ -22,26 +22,40 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert;
+package com.buession.redis.core.internal.convert.lettuce.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.validator.Validate;
+import com.buession.redis.core.command.args.RestoreArgument;
+import io.lettuce.core.RestoreArgs;
 
-import java.util.List;
+import java.util.Optional;
 
 /**
+ * {@link RestoreArgument} 转换为 jedis {@link RestoreArgs}
+ *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public interface Converters {
+public final class RestoreArgumentConverter implements Converter<RestoreArgument, RestoreArgs> {
 
-	static <T> Converter<List<T>, T> list0Converter() {
-		return (value)->Validate.isEmpty(value) ? null : value.get(0);
-	}
+	@Override
+	public RestoreArgs convert(final RestoreArgument source) {
+		if(source == null){
+			return null;
+		}
 
-	@SuppressWarnings({"unchecked"})
-	static <S, T> Converter<S, T> always() {
-		return (value)->(T) value;
+		final RestoreArgs restoreArgs = new RestoreArgs();
+
+		if(Boolean.TRUE.equals(source.getReplace())){
+			restoreArgs.replace();
+		}
+		if(Boolean.TRUE.equals(source.getAbsTtl())){
+			restoreArgs.absttl();
+		}
+		Optional.ofNullable(source.getIdleTime()).ifPresent(restoreArgs::idleTime);
+		Optional.ofNullable(source.getFrequency()).ifPresent(restoreArgs::frequency);
+
+		return restoreArgs;
 	}
 
 }

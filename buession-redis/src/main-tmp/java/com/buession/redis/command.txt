@@ -1,74 +1,4 @@
 
-	/**
-	 * key command start
-	 **/
-	COPY(CommandGroup.KEY, "w"),
-
-	DEL(CommandGroup.KEY, "w"),
-
-	DUMP(CommandGroup.KEY, "w"),
-
-	EXISTS(CommandGroup.KEY, "r"),
-
-	EXPIRE(CommandGroup.KEY, "w"),
-
-	EXPIREAT(CommandGroup.KEY, "w"),
-
-	MIGRATE(CommandGroup.KEY, "w"),
-
-	MOVE(CommandGroup.KEY, "w"),
-
-	KEYS(CommandGroup.KEY, "r"),
-
-	PERSIST(CommandGroup.KEY, "w"),
-
-	PEXPIRE(CommandGroup.KEY, "w"),
-
-	PEXPIREAT(CommandGroup.KEY, "w"),
-
-	PTTL(CommandGroup.KEY, "r"),
-
-	RANDOMKEY(CommandGroup.KEY, "r"),
-
-	RENAME(CommandGroup.KEY, "w"),
-
-	RENAMENX(CommandGroup.KEY, "w"),
-
-	RESTORE(CommandGroup.KEY, "w"),
-
-	SCAN(CommandGroup.KEY, "r"),
-
-	SORT(CommandGroup.KEY, "rw"),
-
-	SORT_RO(CommandGroup.KEY, "r"),
-
-	TTL(CommandGroup.KEY, "r"),
-
-	TYPE(CommandGroup.KEY, "r"),
-
-	TOUCH(CommandGroup.KEY, "w"),
-
-	UNLINK(CommandGroup.KEY, "w"),
-
-	OBJECT_ENCODING(CommandGroup.KEY, "r"),
-
-	OBJECT_REFQ(CommandGroup.KEY, "r"),
-
-	OBJECT_IDLETIME(CommandGroup.KEY, "r"),
-
-	OBJECT_REFCOUNT(CommandGroup.KEY, "r"),
-	/**
-	 * key command end
-	 **/
-
-
-
-	/**
-	 * string command start
-	 **/
-	/** string command end **/
-
-
 
 	/**
 	 * Key command start
@@ -105,18 +35,4 @@
             	SLAVES("r"),
             	/**
             	 * Common command end
-            	 **/
-
-            	/**
-            	 * Key command start
-            	 **/
-            	OBJECT_ENCODING("r"),
-
-            	OBJECT_REFQ("r"),
-
-            	OBJECT_IDLETIME("r"),
-
-            	OBJECT_REFCOUNT("r"),
-            	/**
-            	 * Key command end
             	 **/

@@ -19,30 +19,49 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.lettuce.operations;
+package com.buession.redis.core.internal.convert.jedis.params;
 
-import com.buession.lang.Status;
-import com.buession.redis.client.lettuce.LettuceRedisClient;
-import com.buession.redis.client.operations.StringOperations;
-import com.buession.redis.utils.SafeEncoder;
+import com.buession.core.converter.Converter;
+import com.buession.lang.Order;
+import com.buession.redis.core.command.args.SortArgument;
+import redis.clients.jedis.params.SortingParams;
+
+import java.util.Optional;
 
 /**
- * Lettuce 字符串命令操作抽象类
- *
- * @param <C>
- * 		Redis Client {@link LettuceRedisClient}
+ * {@link SortArgument} 转换为 jedis {@link SortingParams}
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public abstract class AbstractStringOperations<C extends LettuceRedisClient> extends AbstractLettuceRedisOperations<C>
-		implements StringOperations {
+public final class SortArgumentConverter implements Converter<SortArgument, SortingParams> {
 
-	public AbstractStringOperations(final C client) {
-		super(client);
+	@Override
+	public SortingParams convert(final SortArgument source) {
+		if(source == null){
+			return null;
+		}
+
+		final SortingParams sortingParams = new SortingParams();
+
+		Optional.ofNullable(source.getBy()).ifPresent(sortingParams::by);
+		if(source.getOrder() == Order.ASC){
+			sortingParams.asc();
+		}else if(source.getOrder() == Order.DESC){
+			sortingParams.desc();
+		}
+		if(source.getLimit() == null){
+			sortingParams.limit((int) source.getLimit().getOffset(), (int) source.getLimit().getCount());
+		}
+		Optional.ofNullable(source.getGetPatterns()).ifPresent(sortingParams::get);
+		if(Boolean.TRUE.equals(source.getAlpha())){
+			sortingParams.alpha();
+		}
+
+		return sortingParams;
 	}
 
 }

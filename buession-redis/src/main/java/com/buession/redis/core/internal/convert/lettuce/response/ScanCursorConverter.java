@@ -25,6 +25,7 @@
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.ScanResult;
 import io.lettuce.core.KeyScanCursor;
 import io.lettuce.core.ScanCursor;
@@ -40,44 +41,31 @@ import io.lettuce.core.ScanCursor;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class ScanCursorConverter<T extends ScanCursor, R> implements Converter<T, ScanResult<R>> {
-
-	@Override
-	public ScanResult<R> convert(final T source) {
-		return new ScanResult<>(source.getCursor(), source.getKeys());
-	}
+@FunctionalInterface
+public interface ScanCursorConverter<T extends ScanCursor, R> extends Converter<T, ScanResult<R>> {
 
 	/**
 	 * Lettuce {@link KeyScanCursor} 转换为 {@link ScanResult}
 	 *
-	 * @param <K>
-	 * 		Key 类型
+	 * @param <SV>
+	 * 		原始 Key 类型
+	 * @param <TV>
+	 * 		目标 Key 类型
 	 *
 	 * @author Yong.Teng
 	 */
-	/*
-	final class KeyScanCursorConverter<K> implements ScanCursorConverter<KeyScanCursor<K>, List<K>> {
+	final class KeyScanCursorConverter<SV, TV> implements ScanCursorConverter<KeyScanCursor<SV>, TV> {
 
-		@Override
-		public ScanResult<List<K>> convert(final KeyScanCursor<K> source) {
-			return new ScanResult<>(source.getCursor(), source.getKeys());
+		private final Converter<SV, TV> converter;
+
+		public KeyScanCursorConverter(final Converter<SV, TV> converter) {
+			this.converter = converter;
 		}
 
-		/**
-		 * Lettuce {@link KeyScanCursor} 转换为 {@link ScanResult}
-		 *
-		 * @author Yong.Teng
-		 */
-		/*
-		public final static class BSKeyScanCursorConverter implements ScanCursorConverter<KeyScanCursor<byte[]>,
-				List<String>> {
-
-			@Override
-			public ScanResult<List<String>> convert(final KeyScanCursor<byte[]> source) {
-				final ListConverter<byte[], String> listConverter = new ListConverter<>(SafeEncoder::encode);
-				return new ScanResult<>(source.getCursor(), listConverter.convert(source.getKeys()));
-			}
-
+		@Override
+		public ScanResult<TV> convert(final KeyScanCursor<SV> source) {
+			final ListConverter<SV, TV> listConverter = new ListConverter<>(converter);
+			return new ScanResult<>(source.getCursor(), listConverter.convert(source.getKeys()));
 		}
 
 	}

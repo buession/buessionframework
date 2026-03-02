@@ -56,7 +56,23 @@ public interface Keyword extends Value<String>, Rawable {
 
 		WITHSCORE,
 
-		FORCE
+		FORCE,
+
+		REPLACE
+	}
+
+	enum Conn {
+		AUTH,
+
+		AUTH2
+	}
+
+	enum Key {
+		KEYS,
+	}
+
+	enum Database {
+		DB
 	}
 
 	enum Scan {

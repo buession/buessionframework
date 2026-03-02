@@ -24,18 +24,26 @@
  */
 package com.buession.redis.core.command.args;
 
+import com.buession.redis.core.Keyword;
 import com.buession.redis.utils.ArgStringBuilder;
 
 /**
- *
+ * {@code RESTORE} 命令参数
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
 public class RestoreArgument {
 
+	/**
+	 * 是否替换已存在 key
+	 */
 	private Boolean replace;
 
+	/**
+	 * If the ABSTTL modifier was used,
+	 * ttl should represent an absolute Unix timestamp (in milliseconds) in which the key will expire
+	 */
 	private Boolean absTtl;
 
 	private Long idleTime;
@@ -48,52 +56,153 @@ public class RestoreArgument {
 	public RestoreArgument() {
 	}
 
-	public RestoreArgument(Boolean replace, Boolean absTtl, Long idleTime, Long frequency) {
+	/**
+	 * 构造函数
+	 *
+	 * @param replace
+	 * 		是否替换已存在 key
+	 */
+	public RestoreArgument(final Boolean replace) {
 		this.replace = replace;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param replace
+	 * 		是否替换已存在 key
+	 * @param absTtl
+	 * 		-
+	 */
+	public RestoreArgument(final Boolean replace, final Boolean absTtl) {
+		this(replace);
 		this.absTtl = absTtl;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param replace
+	 * 		是否替换已存在 key
+	 * @param idleTime
+	 * 		-
+	 * @param frequency
+	 * 		-
+	 */
+	public RestoreArgument(final Boolean replace, final Long idleTime, final Long frequency) {
+		this(replace);
 		this.idleTime = idleTime;
 		this.frequency = frequency;
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param replace
+	 * 		是否替换已存在 key
+	 * @param absTtl
+	 * 		-
+	 * @param idleTime
+	 * 		-
+	 * @param frequency
+	 * 		-
+	 */
+	public RestoreArgument(final Boolean replace, final Boolean absTtl, final Long idleTime, final Long frequency) {
+		this(replace, idleTime, frequency);
+		this.absTtl = absTtl;
+	}
+
+	/**
+	 * 获取是否替换已存在 key
+	 *
+	 * @return 是否替换已存在 key
+	 */
+	public Boolean isReplace() {
+		return getReplace();
+	}
+
+	/**
+	 * 获取是否替换已存在 key
+	 *
+	 * @return 是否替换已存在 key
+	 */
 	public Boolean getReplace() {
 		return replace;
 	}
 
-	public RestoreArgument setReplace(Boolean replace) {
-		this.replace = replace;
-		return this;
+	/**
+	 * 替换已存在 key
+	 */
+	public void replace() {
+		this.replace = true;
 	}
 
+	/**
+	 * 设置是否替换已存在 key
+	 *
+	 * @param replace
+	 * 		true / false
+	 */
+	public void setReplace(final Boolean replace) {
+		this.replace = replace;
+	}
+
+	/**
+	 * If the ABSTTL modifier was used,
+	 * ttl should represent an absolute Unix timestamp (in milliseconds) in which the key will expire
+	 *
+	 * @return If the ABSTTL modifier was used,
+	 * ttl should represent an absolute Unix timestamp (in milliseconds) in which the key will expire
+	 */
+	public Boolean isAbsTtl() {
+		return getAbsTtl();
+	}
+
+	/**
+	 * If the ABSTTL modifier was used,
+	 * ttl should represent an absolute Unix timestamp (in milliseconds) in which the key will expire
+	 *
+	 * @return If the ABSTTL modifier was used,
+	 * ttl should represent an absolute Unix timestamp (in milliseconds) in which the key will expire
+	 */
 	public Boolean getAbsTtl() {
 		return absTtl;
 	}
 
-	public RestoreArgument setAbsTtl(Boolean absTtl) {
+	public void absTtl() {
+		this.absTtl = true;
+	}
+
+	/**
+	 * f the ABSTTL modifier was used,
+	 * ttl should represent an absolute Unix timestamp (in milliseconds) in which the key will expire
+	 *
+	 * @param absTtl
+	 * 		true / false
+	 */
+	public void setAbsTtl(final Boolean absTtl) {
 		this.absTtl = absTtl;
-		return this;
 	}
 
 	public Long getIdleTime() {
 		return idleTime;
 	}
 
-	public RestoreArgument setIdleTime(Long idleTime) {
+	public void setIdleTime(final Long idleTime) {
 		this.idleTime = idleTime;
-		return this;
 	}
 
 	public Long getFrequency() {
 		return frequency;
 	}
 
-	public RestoreArgument setFrequency(Long frequency) {
+	public void setFrequency(final Long frequency) {
 		this.frequency = frequency;
-		return this;
 	}
 
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create().append(replace ? "REPLACE" : null)
+		return ArgStringBuilder.create().append(replace ? Keyword.Common.REPLACE : null)
 				.append(absTtl ? "ABSTTL" : null)
 				.add("IDLETIME", idleTime)
 				.add("FREQ", frequency)

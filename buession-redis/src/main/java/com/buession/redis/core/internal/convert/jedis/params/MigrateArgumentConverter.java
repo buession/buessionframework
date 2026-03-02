@@ -22,31 +22,45 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
+package com.buession.redis.core.internal.convert.jedis.params;
+
+import com.buession.core.converter.Converter;
+import com.buession.core.validator.Validate;
+import com.buession.redis.core.command.args.MigrateArgument;
+import redis.clients.jedis.params.MigrateParams;
 
 /**
+ * {@link MigrateArgument} 转换为 jedis {@link MigrateParams}
+ *
  * @author Yong.Teng
+ * @since 4.0.0
  */
-public enum MigrateOperation implements Keyword {
-
-	/**
-	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，不移除源实例上的 key
-	 */
-	COPY,
-
-	/**
-	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，替换目标实例上已存在的 key
-	 */
-	REPLACE;
+public final class MigrateArgumentConverter implements Converter<MigrateArgument, MigrateParams> {
 
 	@Override
-	public String getValue() {
-		return name();
-	}
+	public MigrateParams convert(final MigrateArgument source) {
+		if(source == null){
+			return null;
+		}
 
-	@Override
-	public String toString() {
-		return getValue();
+		final MigrateParams migrateParams = new MigrateParams();
+
+		if(source.getMode() != null){
+			switch(source.getMode()){
+				case COPY -> migrateParams.copy();
+				case REPLACE -> migrateParams.replace();
+			}
+		}
+
+		if(Validate.isNotEmpty(source.getPassword())){
+			if(Validate.isNotEmpty(source.getUsername())){
+				migrateParams.auth2(source.getUsername(), source.getPassword());
+			}else{
+				migrateParams.auth(source.getPassword());
+			}
+		}
+
+		return migrateParams;
 	}
 
 }

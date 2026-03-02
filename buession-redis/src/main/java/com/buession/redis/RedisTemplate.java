@@ -24,7 +24,6 @@
  */
 package com.buession.redis;
 
-import com.buession.core.collect.Maps;
 import com.buession.core.type.TypeReference;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
@@ -56,9 +55,9 @@ import java.util.stream.Collectors;
 public class RedisTemplate extends AbstractRedisTemplate
 		implements BloomFilterOperations, BitMapOperations, CuckooFilterOperations, ClusterOperations,
 		CountMinSketchOperations, ConnectionOperations, GenericOperations, GeoOperations, HashOperations,
-		HyperLogLogOperations, JsonOperations, ListOperations, PubSubOperations, ScriptingOperations,
+		HyperLogLogOperations, JsonOperations, KeyOperations, ListOperations, PubSubOperations, ScriptingOperations,
 		/*SearchOperations, */ServerOperations, SetOperations, SortedSetOperations, StreamOperations, StringOperations,
-		TransactionOperations, KeyOperations {
+		TransactionOperations {
 
 	/**
 	 * 构造函数

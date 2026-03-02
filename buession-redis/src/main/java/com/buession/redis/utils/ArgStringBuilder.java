@@ -25,6 +25,7 @@
 package com.buession.redis.utils;
 
 import com.buession.core.utils.StringJoiner;
+import com.buession.redis.core.Keyword;
 
 /**
  * 参数构建器
@@ -130,6 +131,22 @@ public final class ArgStringBuilder {
 	public ArgStringBuilder append(final CharSequence seq) {
 		if(seq != null){
 			joiner.add(seq);
+		}
+
+		return this;
+	}
+
+	public ArgStringBuilder append(final Keyword keyword) {
+		if(keyword != null){
+			joiner.add(keyword.toString());
+		}
+
+		return this;
+	}
+
+	public ArgStringBuilder append(final Enum<?> value) {
+		if(value != null){
+			joiner.add(value);
 		}
 
 		return this;

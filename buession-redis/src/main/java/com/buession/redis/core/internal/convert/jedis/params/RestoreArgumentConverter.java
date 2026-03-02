@@ -19,28 +19,43 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.core.internal.convert.jedis.params;
 
-import com.buession.redis.client.jedis.JedisRedisClient;
-import com.buession.redis.client.operations.StringOperations;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.command.args.RestoreArgument;
+import redis.clients.jedis.params.RestoreParams;
+
+import java.util.Optional;
 
 /**
- * Jedis 字符串命令操作抽象类
- *
- * @param <C>
- * 		Redis Client {@link JedisRedisClient}
+ * {@link RestoreArgument} 转换为 jedis {@link RestoreParams}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 4.0.0
  */
-public abstract class AbstractStringOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
-		implements StringOperations {
+public final class RestoreArgumentConverter implements Converter<RestoreArgument, RestoreParams> {
 
-	public AbstractStringOperations(final C client){
-		super(client);
+	@Override
+	public RestoreParams convert(final RestoreArgument source) {
+		if(source == null){
+			return null;
+		}
+
+		final RestoreParams restoreParams = new RestoreParams();
+
+		if(Boolean.TRUE.equals(source.getReplace())){
+			restoreParams.replace();
+		}
+		if(Boolean.TRUE.equals(source.getAbsTtl())){
+			restoreParams.absTtl();
+		}
+		Optional.ofNullable(source.getIdleTime()).ifPresent(restoreParams::idleTime);
+		Optional.ofNullable(source.getFrequency()).ifPresent(restoreParams::frequency);
+
+		return restoreParams;
 	}
 
 }

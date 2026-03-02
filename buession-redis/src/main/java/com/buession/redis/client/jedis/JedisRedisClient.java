@@ -171,6 +171,15 @@ public class JedisRedisClient extends AbstractRedisClient {
 	}
 
 	@Override
+	public KeyOperations keyOperations() {
+		if(keyOperations == null){
+			keyOperations = new JedisKeyOperations(this);
+		}
+
+		return keyOperations;
+	}
+
+	@Override
 	public ListOperations listOperations() {
 		if(listOperations == null){
 			listOperations = new JedisListOperations(this);
@@ -261,15 +270,6 @@ public class JedisRedisClient extends AbstractRedisClient {
 		}
 
 		return transactionOperations;
-	}
-
-	@Override
-	public KeyOperations keyOperations() {
-		if(keyOperations == null){
-			keyOperations = new JedisKeyOperations(this);
-		}
-
-		return keyOperations;
 	}
 
 }

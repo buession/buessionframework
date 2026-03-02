@@ -19,62 +19,51 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.core.internal.convert.lettuce.params;
 
-import com.buession.core.utils.NumberUtils;
-import com.buession.redis.client.jedis.JedisRedisClient;
-import com.buession.redis.client.operations.KeyOperations;
-import com.buession.redis.core.ScanResult;
-
-import java.util.List;
+import com.buession.core.converter.Converter;
+import com.buession.core.validator.Validate;
+import com.buession.redis.core.command.args.MigrateArgument;
+import io.lettuce.core.MigrateArgs;
 
 /**
- * Jedis Key 命令操作抽象类
+ * {@link MigrateArgument} 转换为 jedis {@link MigrateArgs}
  *
- * @param <C>
- * 		Redis Client {@link JedisRedisClient}
+ * @param <V>
+ * 		值类型
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 4.0.0
  */
-public abstract class AbstractKeyOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
-		implements KeyOperations {
-
-	public AbstractKeyOperations(final C client){
-		super(client);
-	}
+public final class MigrateArgumentConverter<V> implements Converter<MigrateArgument, MigrateArgs<V>> {
 
 	@Override
-	public ScanResult<List<String>> scan(final long cursor){
-		return scan(Long.toString(cursor));
-	}
+	public MigrateArgs<V> convert(final MigrateArgument source) {
+		if(source == null){
+			return null;
+		}
 
-	@Override
-	public ScanResult<List<String>> scan(final long cursor, final String pattern){
-		return scan(Long.toString(cursor), pattern);
-	}
+		final MigrateArgs<V> migrateParams = new MigrateArgs<>();
 
-	@Override
-	public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern){
-		return scan(NumberUtils.long2bytes(cursor), pattern);
-	}
+		if(source.getMode() != null){
+			switch(source.getMode()){
+				case COPY -> migrateParams.copy();
+				case REPLACE -> migrateParams.replace();
+			}
+		}
 
-	@Override
-	public ScanResult<List<String>> scan(final long cursor, final long count){
-		return scan(Long.toString(cursor), count);
-	}
+		if(Validate.isNotEmpty(source.getPassword())){
+			if(Validate.isNotEmpty(source.getUsername())){
+				migrateParams.auth2(source.getUsername(), source.getPassword());
+			}else{
+				migrateParams.auth(source.getPassword());
+			}
+		}
 
-	@Override
-	public ScanResult<List<String>> scan(final long cursor, final String pattern, final long count){
-		return scan(Long.toString(cursor), pattern, count);
-	}
-
-	@Override
-	public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern, final long count){
-		return scan(NumberUtils.long2bytes(cursor), pattern, count);
+		return migrateParams;
 	}
 
 }

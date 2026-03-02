@@ -148,6 +148,20 @@ public enum SubCommand implements ProtocolCommand {
 	 **/
 
 	/**
+	 * key command start
+	 **/
+	OBJECT_ENCODING("r"),
+
+	OBJECT_FREQ("r"),
+
+	OBJECT_IDLETIME("r"),
+
+	OBJECT_REFCOUNT("r"),
+	/**
+	 * key command end
+	 **/
+
+	/**
 	 * pubsub command start
 	 **/
 	PUBSUB_CHANNELS("r"),

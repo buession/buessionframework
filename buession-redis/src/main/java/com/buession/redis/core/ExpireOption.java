@@ -25,6 +25,8 @@
 package com.buession.redis.core;
 
 /**
+ * 过期选项
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */

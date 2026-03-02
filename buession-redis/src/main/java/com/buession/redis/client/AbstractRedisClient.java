@@ -111,6 +111,11 @@ public abstract class AbstractRedisClient implements RedisClient {
 	protected JsonOperations jsonOperations;
 
 	/**
+	 * KEY 命令操作
+	 */
+	protected KeyOperations keyOperations;
+
+	/**
 	 * 列表命令操作
 	 */
 	protected ListOperations listOperations;
@@ -159,11 +164,6 @@ public abstract class AbstractRedisClient implements RedisClient {
 	 * 事务命令操作
 	 */
 	protected TransactionOperations transactionOperations;
-
-	/**
-	 * KEY 命令操作
-	 */
-	protected KeyOperations keyOperations;
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 

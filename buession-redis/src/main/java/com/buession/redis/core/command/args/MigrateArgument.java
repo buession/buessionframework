@@ -19,13 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command.args;
 
 import com.buession.core.validator.Validate;
 import com.buession.redis.core.Keyword;
+import com.buession.redis.utils.ArgStringBuilder;
 
 /**
  * {@code MIGRATE} 命令参数
@@ -49,6 +50,73 @@ public class MigrateArgument {
 	 * 密码
 	 */
 	private String password;
+
+	/**
+	 * 构造函数
+	 */
+	public MigrateArgument() {
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param mode
+	 * 		迁移模式
+	 */
+	public MigrateArgument(final Mode mode) {
+		this.mode = mode;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param mode
+	 * 		迁移模式
+	 * @param password
+	 * 		密码
+	 */
+	public MigrateArgument(final Mode mode, final String password) {
+		this.mode = mode;
+		this.password = password;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param mode
+	 * 		迁移模式
+	 * @param username
+	 * 		用户名
+	 * @param password
+	 * 		密码
+	 */
+	public MigrateArgument(final Mode mode, final String username, final String password) {
+		this(mode, password);
+		this.username = username;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param password
+	 * 		密码
+	 */
+	public MigrateArgument(final String password) {
+		this.password = password;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param username
+	 * 		用户名
+	 * @param password
+	 * 		密码
+	 */
+	public MigrateArgument(final String username, final String password) {
+		this.username = username;
+		this.password = password;
+	}
 
 	/**
 	 * 返回迁移模式
@@ -109,19 +177,15 @@ public class MigrateArgument {
 
 	@Override
 	public String toString() {
-		final ArgumentStringBuilder builder = ArgumentStringBuilder.create();
-
-		if(mode != null){
-			builder.append(mode);
-		}
+		final ArgStringBuilder builder = ArgStringBuilder.create().append(mode);
 
 		if(Validate.hasText(password)){
 			if(Validate.hasText(username)){
-				builder.add(Keyword.Common.AUTH2, username);
+				builder.append(Keyword.Conn.AUTH2.name());
+				builder.add(username, password);
 			}else{
-				builder.append(Keyword.Common.AUTH);
+				builder.add(Keyword.Conn.AUTH.name(), password);
 			}
-			builder.append(password);
 		}
 
 		return builder.build();

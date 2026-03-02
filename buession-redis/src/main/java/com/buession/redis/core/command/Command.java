@@ -347,6 +347,67 @@ public enum Command implements ProtocolCommand {
 	 **/
 
 	/**
+	 * key command start
+	 **/
+	COPY(CommandGroup.KEY, "w"),
+
+	DEL(CommandGroup.KEY, "w"),
+
+	DUMP(CommandGroup.KEY, "r"),
+
+	EXISTS(CommandGroup.KEY, "r"),
+
+	EXPIRE(CommandGroup.KEY, "w"),
+
+	EXPIREAT(CommandGroup.KEY, "w"),
+
+	EXPIRETIME(CommandGroup.KEY, "r"),
+
+	KEYS(CommandGroup.KEY, "r"),
+
+	MIGRATE(CommandGroup.KEY, "w"),
+
+	MOVE(CommandGroup.KEY, "w"),
+
+	OBJECT(CommandGroup.KEY, "rw", new SubCommand[]{SubCommand.OBJECT_ENCODING, SubCommand.OBJECT_FREQ,
+			SubCommand.OBJECT_IDLETIME, SubCommand.OBJECT_REFCOUNT}),
+
+	PERSIST(CommandGroup.KEY, "w"),
+
+	PEXPIRE(CommandGroup.KEY, "w"),
+
+	PEXPIREAT(CommandGroup.KEY, "w"),
+
+	PEXPIRETIME(CommandGroup.KEY, "r"),
+
+	PTTL(CommandGroup.KEY, "r"),
+
+	RANDOMKEY(CommandGroup.KEY, "r"),
+
+	RENAME(CommandGroup.KEY, "w"),
+
+	RENAMENX(CommandGroup.KEY, "w"),
+
+	RESTORE(CommandGroup.KEY, "w"),
+
+	SCAN(CommandGroup.KEY, "r"),
+
+	SORT(CommandGroup.KEY, "rw"),
+
+	SORT_RO(CommandGroup.KEY, "SORT_RO", "r"),
+
+	TOUCH(CommandGroup.KEY, "w"),
+
+	TTL(CommandGroup.KEY, "r"),
+
+	TYPE(CommandGroup.KEY, "r"),
+
+	UNLINK(CommandGroup.KEY, "w"),
+	/**
+	 * key command end
+	 **/
+
+	/**
 	 * list command start
 	 **/
 	BLMOVE(CommandGroup.LIST, "w"),
