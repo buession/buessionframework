@@ -58,7 +58,7 @@ public class BitFieldArgument extends BaseBitFieldArgument {
 	 * @param set
 	 * 		写操作
 	 */
-	public BitFieldArgument(SetOp set) {
+	public BitFieldArgument(final SetOp set) {
 		super(set);
 	}
 
@@ -70,7 +70,7 @@ public class BitFieldArgument extends BaseBitFieldArgument {
 	 * @param get
 	 * 		获取操作
 	 */
-	public BitFieldArgument(SetOp set, GetOp get) {
+	public BitFieldArgument(final SetOp set, final GetOp get) {
 		super(set, get);
 	}
 
@@ -84,7 +84,7 @@ public class BitFieldArgument extends BaseBitFieldArgument {
 	 * @param incrBy
 	 * 		加操作
 	 */
-	public BitFieldArgument(SetOp set, GetOp get, IncrbyOp incrBy) {
+	public BitFieldArgument(final SetOp set, final GetOp get, final IncrbyOp incrBy) {
 		this(set, get);
 		this.incrBy = incrBy;
 	}
@@ -101,7 +101,7 @@ public class BitFieldArgument extends BaseBitFieldArgument {
 	 * @param overflow
 	 * 		数值溢出行为
 	 */
-	public BitFieldArgument(SetOp set, GetOp get, IncrbyOp incrBy, Overflow overflow) {
+	public BitFieldArgument(final SetOp set, final GetOp get, final IncrbyOp incrBy, final Overflow overflow) {
 		this(set, get, incrBy);
 		this.overflow = overflow;
 	}
@@ -114,7 +114,7 @@ public class BitFieldArgument extends BaseBitFieldArgument {
 	 * @param incrBy
 	 * 		加操作
 	 */
-	public BitFieldArgument(SetOp set, IncrbyOp incrBy) {
+	public BitFieldArgument(final SetOp set, final IncrbyOp incrBy) {
 		this(set);
 		this.incrBy = incrBy;
 	}
@@ -129,7 +129,7 @@ public class BitFieldArgument extends BaseBitFieldArgument {
 	 * @param overflow
 	 * 		数值溢出行为
 	 */
-	public BitFieldArgument(SetOp set, IncrbyOp incrBy, Overflow overflow) {
+	public BitFieldArgument(final SetOp set, final IncrbyOp incrBy, final Overflow overflow) {
 		this(set, incrBy);
 		this.overflow = overflow;
 	}
@@ -142,7 +142,7 @@ public class BitFieldArgument extends BaseBitFieldArgument {
 	 * @param overflow
 	 * 		数值溢出行为
 	 */
-	public BitFieldArgument(SetOp set, Overflow overflow) {
+	public BitFieldArgument(final SetOp set, final Overflow overflow) {
 		this(set);
 		this.overflow = overflow;
 	}
@@ -153,7 +153,7 @@ public class BitFieldArgument extends BaseBitFieldArgument {
 	 * @param get
 	 * 		获取操作
 	 */
-	public BitFieldArgument(GetOp get) {
+	public BitFieldArgument(final GetOp get) {
 		super(get);
 	}
 
@@ -165,7 +165,7 @@ public class BitFieldArgument extends BaseBitFieldArgument {
 	 * @param incrBy
 	 * 		加操作
 	 */
-	public BitFieldArgument(GetOp get, IncrbyOp incrBy) {
+	public BitFieldArgument(final GetOp get, final IncrbyOp incrBy) {
 		this(get);
 		this.incrBy = incrBy;
 	}
@@ -180,7 +180,7 @@ public class BitFieldArgument extends BaseBitFieldArgument {
 	 * @param overflow
 	 * 		数值溢出行为
 	 */
-	public BitFieldArgument(GetOp get, IncrbyOp incrBy, Overflow overflow) {
+	public BitFieldArgument(final GetOp get, final IncrbyOp incrBy, final Overflow overflow) {
 		this(get, incrBy);
 		this.overflow = overflow;
 	}
@@ -191,7 +191,7 @@ public class BitFieldArgument extends BaseBitFieldArgument {
 	 * @param incrBy
 	 * 		加操作
 	 */
-	public BitFieldArgument(IncrbyOp incrBy) {
+	public BitFieldArgument(final IncrbyOp incrBy) {
 		this.incrBy = incrBy;
 	}
 
@@ -203,7 +203,7 @@ public class BitFieldArgument extends BaseBitFieldArgument {
 	 * @param overflow
 	 * 		数值溢出行为
 	 */
-	public BitFieldArgument(IncrbyOp incrBy, Overflow overflow) {
+	public BitFieldArgument(final IncrbyOp incrBy, final Overflow overflow) {
 		this(incrBy);
 		this.overflow = overflow;
 	}
@@ -214,7 +214,7 @@ public class BitFieldArgument extends BaseBitFieldArgument {
 	 * @param overflow
 	 * 		数值溢出行为
 	 */
-	public BitFieldArgument(Overflow overflow) {
+	public BitFieldArgument(final Overflow overflow) {
 		this.overflow = overflow;
 	}
 
@@ -312,14 +312,7 @@ public class BitFieldArgument extends BaseBitFieldArgument {
 
 	@Override
 	public String toString() {
-		final ArgStringBuilder builder = ArgStringBuilder.create();
-
-		builder.append(getSet());
-		builder.append(getGet());
-		builder.append(incrBy);
-		builder.append(overflow);
-
-		return builder.toString();
+		return ArgStringBuilder.create().append(getSet()).append(getGet()).append(incrBy).append(overflow).build();
 	}
 
 	public enum Overflow implements Keyword {

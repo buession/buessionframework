@@ -64,7 +64,9 @@ public interface Keyword extends Value<String>, Rawable {
 	enum Conn {
 		AUTH,
 
-		AUTH2
+		AUTH2,
+
+		RESET
 	}
 
 	enum Key {

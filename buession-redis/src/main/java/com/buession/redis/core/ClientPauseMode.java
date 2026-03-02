@@ -28,10 +28,22 @@ package com.buession.redis.core;
  * 客户端暂停模式
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public enum ClientPauseMode {
+public enum ClientPauseMode implements Keyword {
 	ALL,
 
 	WRITE;
+
+
+	@Override
+	public String getValue() {
+		return name();
+	}
+
+	@Override
+	public String toString() {
+		return getValue();
+	}
+
 }

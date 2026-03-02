@@ -136,14 +136,6 @@ public final class ArgStringBuilder {
 		return this;
 	}
 
-	public ArgStringBuilder append(final Keyword keyword) {
-		if(keyword != null){
-			joiner.add(keyword.toString());
-		}
-
-		return this;
-	}
-
 	public ArgStringBuilder append(final Enum<?> value) {
 		if(value != null){
 			joiner.add(value);

@@ -33,9 +33,17 @@ public enum BitOperation implements Keyword {
 
 	OR,
 
+	XOR,
+
 	NOT,
 
-	XOR;
+	DIFF,
+
+	DIFF1,
+
+	ANDOR,
+
+	ONE;
 
 	@Override
 	public String getValue() {

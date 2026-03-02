@@ -55,7 +55,7 @@ abstract class BaseBitFieldArgument {
 	 * @param set
 	 * 		写操作
 	 */
-	protected BaseBitFieldArgument(SetOp set) {
+	protected BaseBitFieldArgument(final SetOp set) {
 		this.set = set;
 	}
 
@@ -67,7 +67,7 @@ abstract class BaseBitFieldArgument {
 	 * @param get
 	 * 		获取操作
 	 */
-	protected BaseBitFieldArgument(SetOp set, GetOp get) {
+	protected BaseBitFieldArgument(final SetOp set, final GetOp get) {
 		this(set);
 		this.get = get;
 	}
@@ -78,7 +78,7 @@ abstract class BaseBitFieldArgument {
 	 * @param get
 	 * 		获取操作
 	 */
-	protected BaseBitFieldArgument(GetOp get) {
+	protected BaseBitFieldArgument(final GetOp get) {
 		this.get = get;
 	}
 
@@ -228,7 +228,7 @@ abstract class BaseBitFieldArgument {
 
 		private final int bits;
 
-		private BitFieldType(final boolean signed, final int bits) {
+		public BitFieldType(final boolean signed, final int bits) {
 			this.signed = signed;
 			this.bits = bits;
 		}

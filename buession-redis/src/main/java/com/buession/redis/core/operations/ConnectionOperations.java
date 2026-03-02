@@ -28,6 +28,7 @@ import com.buession.core.utils.Assert;
 import com.buession.lang.Status;
 import com.buession.redis.core.Client;
 import com.buession.redis.core.ClientInfoOption;
+import com.buession.redis.core.ClientPauseMode;
 import com.buession.redis.core.ClientReply;
 import com.buession.redis.core.ClientType;
 import com.buession.redis.core.ClientUnblockType;
@@ -146,6 +147,11 @@ public interface ConnectionOperations extends ConnectionCommands, RedisOperation
 	@Override
 	default Status clientPause(final int timeout) {
 		return execute((client)->client.connectionCommands().clientPause(timeout));
+	}
+
+	@Override
+	default Status clientPause(final int timeout, final ClientPauseMode pauseMode) {
+		return execute((client)->client.connectionCommands().clientPause(timeout, pauseMode));
 	}
 
 	@Override

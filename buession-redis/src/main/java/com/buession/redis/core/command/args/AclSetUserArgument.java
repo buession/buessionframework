@@ -26,6 +26,7 @@ package com.buession.redis.core.command.args;
 
 import com.buession.core.utils.StringUtils;
 import com.buession.redis.core.AclCategory;
+import com.buession.redis.core.Keyword;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.command.SubCommand;
@@ -680,7 +681,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	public final static class Reset extends ProtocolCommandArgument {
 
 		Reset() {
-			super(SubCommand.RESET);
+			super(Keyword.Conn.RESET);
 		}
 
 	}

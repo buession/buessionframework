@@ -47,7 +47,7 @@ public class BitFieldRoArgument extends BaseBitFieldArgument {
 	 * @param set
 	 * 		写操作
 	 */
-	public BitFieldRoArgument(SetOp set) {
+	public BitFieldRoArgument(final SetOp set) {
 		super(set);
 	}
 
@@ -59,7 +59,7 @@ public class BitFieldRoArgument extends BaseBitFieldArgument {
 	 * @param get
 	 * 		获取操作
 	 */
-	public BitFieldRoArgument(SetOp set, GetOp get) {
+	public BitFieldRoArgument(final SetOp set, final GetOp get) {
 		super(set, get);
 	}
 
@@ -69,18 +69,13 @@ public class BitFieldRoArgument extends BaseBitFieldArgument {
 	 * @param get
 	 * 		获取操作
 	 */
-	public BitFieldRoArgument(GetOp get) {
+	public BitFieldRoArgument(final GetOp get) {
 		super(get);
 	}
 
 	@Override
 	public String toString() {
-		final ArgStringBuilder builder = ArgStringBuilder.create();
-
-		builder.append(getSet());
-		builder.append(getGet());
-
-		return builder.toString();
+		return ArgStringBuilder.create().append(getSet()).append(getGet()).build();
 	}
 
 }

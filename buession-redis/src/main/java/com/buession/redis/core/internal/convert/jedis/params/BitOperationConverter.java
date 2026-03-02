@@ -38,16 +38,7 @@ public final class BitOperationConverter implements Converter<BitOperation, BitO
 
 	@Override
 	public BitOP convert(final BitOperation source) {
-		if(source == null){
-			return null;
-		}
-
-		return switch(source){
-			case AND -> BitOP.AND;
-			case OR -> BitOP.OR;
-			case NOT -> BitOP.NOT;
-			case XOR -> BitOP.XOR;
-		};
+		return source == null ? null : Enum.valueOf(BitOP.class, source.name());
 	}
 
 }

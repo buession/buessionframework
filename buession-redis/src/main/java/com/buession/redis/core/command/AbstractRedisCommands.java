@@ -29,7 +29,6 @@ import com.buession.core.converter.Converter;
 import com.buession.core.utils.ByteUtils;
 import com.buession.core.validator.Validate;
 import com.buession.redis.client.RedisClient;
-import com.buession.redis.client.operations.RedisOperations;
 import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.utils.SafeEncoder;
 
@@ -41,7 +40,7 @@ import com.buession.redis.utils.SafeEncoder;
  *
  * @author Yong.Teng
  */
-public abstract class AbstractRedisCommands<C extends RedisClient> implements RedisOperations, RedisCommands {
+public abstract class AbstractRedisCommands<C extends RedisClient> implements RedisCommands {
 
 	protected C client;
 

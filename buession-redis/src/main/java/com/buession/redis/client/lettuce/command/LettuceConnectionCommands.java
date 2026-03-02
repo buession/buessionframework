@@ -28,6 +28,7 @@ import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.core.Client;
 import com.buession.redis.core.ClientInfoOption;
+import com.buession.redis.core.ClientPauseMode;
 import com.buession.redis.core.ClientReply;
 import com.buession.redis.core.ClientType;
 import com.buession.redis.core.ClientUnblockType;
@@ -167,6 +168,13 @@ public final class LettuceConnectionCommands extends AbstractLettuceRedisCommand
 	@Override
 	public Status clientPause(final int timeout) {
 		final CommandArguments args = CommandArguments.create(timeout);
+		return executeCommand(Command.CLIENT, SubCommand.CLIENT_PAUSE, args, (cmd)->cmd.clientPause(timeout),
+				new OkStatusConverter());
+	}
+
+	@Override
+	public Status clientPause(final int timeout, final ClientPauseMode pauseMode) {
+		final CommandArguments args = CommandArguments.create(timeout).add(pauseMode);
 		return executeCommand(Command.CLIENT, SubCommand.CLIENT_PAUSE, args, (cmd)->cmd.clientPause(timeout),
 				new OkStatusConverter());
 	}

@@ -27,6 +27,7 @@ package com.buession.redis.core.command;
 import com.buession.lang.Status;
 import com.buession.redis.core.Client;
 import com.buession.redis.core.ClientInfoOption;
+import com.buession.redis.core.ClientPauseMode;
 import com.buession.redis.core.ClientReply;
 import com.buession.redis.core.ClientType;
 import com.buession.redis.core.ClientUnblockType;
@@ -238,7 +239,7 @@ public interface ConnectionCommands extends RedisCommands {
 	/**
 	 * 将所有客户端的访问暂停给定的毫秒数
 	 *
-	 * <p>详情说明 <a href="http://www.redis.cn/commands/client-pause.html" target="_blank">http://www.redis.cn/commands/client-pause.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/client-pause/" target="_blank">https://redis.io/docs/latest/commands/client-pause/</a></p>
 	 *
 	 * @param timeout
 	 * 		暂停时间（单位：毫秒）
@@ -246,6 +247,20 @@ public interface ConnectionCommands extends RedisCommands {
 	 * @return 操作结果
 	 */
 	Status clientPause(final int timeout);
+
+	/**
+	 * 将所有客户端的访问暂停给定的毫秒数
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/client-pause/" target="_blank">https://redis.io/docs/latest/commands/client-pause/</a></p>
+	 *
+	 * @param timeout
+	 * 		暂停时间（单位：毫秒）
+	 * @param pauseMode
+	 * 		暂停模式
+	 *
+	 * @return 操作结果
+	 */
+	Status clientPause(final int timeout, final ClientPauseMode pauseMode);
 
 	/**
 	 * 当需要完全禁用redis服务器对当前客户端的回复时可使用该命令
