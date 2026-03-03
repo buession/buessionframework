@@ -122,49 +122,49 @@ public final class LettuceCuckooFilterCommands extends AbstractLettuceRedisComma
 
 	@Override
 	public List<Boolean> cfInsert(final String key, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add("ITEMS").add(items);
+		final CommandArguments args = CommandArguments.create(key).add("ITEMS", items);
 		return executeCommand(Command.CF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsert(final byte[] key, final byte[]... items) {
-		final CommandArguments args = CommandArguments.create(key).add("ITEMS").add(items);
+		final CommandArguments args = CommandArguments.create(key).add("ITEMS", items);
 		return executeCommand(Command.CF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsert(final String key, final CFInsertArgument argument, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS").add(items);
+		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS", items);
 		return executeCommand(Command.CF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsert(final byte[] key, final CFInsertArgument argument, final byte[]... items) {
-		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS").add(items);
+		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS", items);
 		return executeCommand(Command.CF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsertNx(final String key, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add("ITEMS").add(items);
+		final CommandArguments args = CommandArguments.create(key).add("ITEMS", items);
 		return executeCommand(Command.CF_INSERTNX, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsertNx(final byte[] key, final byte[]... items) {
-		final CommandArguments args = CommandArguments.create(key).add("ITEMS").add(items);
+		final CommandArguments args = CommandArguments.create(key).add("ITEMS", items);
 		return executeCommand(Command.CF_INSERTNX, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsertNx(final String key, final CFInsertArgument argument, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS").add(items);
+		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS", items);
 		return executeCommand(Command.CF_INSERTNX, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsertNx(final byte[] key, final CFInsertArgument argument, final byte[]... items) {
-		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS").add(items);
+		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS", items);
 		return executeCommand(Command.CF_INSERTNX, args);
 	}
 

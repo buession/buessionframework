@@ -110,4 +110,32 @@ public abstract class AbstractRedisCommands<C extends RedisClient> implements Re
 		return Arrays.map(keys, byte[].class, (value)->ByteUtils.concat(prefixByte, value));
 	}
 
+	protected final byte[] rawBinaryKey(final String key) {
+		return SafeEncoder.encode(rawKey(key));
+	}
+
+	protected final byte[][] rawBinaryKeys(final String[] keys) {
+		final byte[][] result = new byte[keys.length][];
+
+		for(int i = 0; i < keys.length; i++){
+			result[i] = SafeEncoder.encode(rawKey(keys[i]));
+		}
+
+		return result;
+	}
+
+	protected final String rawStringKey(final byte[] key) {
+		return SafeEncoder.encode(rawKey(key));
+	}
+
+	protected final String[] rawStringKeys(final byte[][] keys) {
+		final String[] result = new String[keys.length];
+
+		for(int i = 0; i < keys.length; i++){
+			result[i] = SafeEncoder.encode(rawKey(keys[i]));
+		}
+
+		return result;
+	}
+
 }

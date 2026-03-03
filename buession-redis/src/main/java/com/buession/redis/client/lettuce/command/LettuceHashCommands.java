@@ -398,27 +398,27 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 	}
 
 	@Override
-	public List<String> hRandField(final String key, final long count) {
+	public List<String> hRandField(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
 		return executeCommand(Command.HRANDFIELD, args, (cmd)->cmd.hrandfield(SafeEncoder.encode(key), count),
 				new ListConverter<>(SafeEncoder::encode));
 	}
 
 	@Override
-	public List<byte[]> hRandField(final byte[] key, final long count) {
+	public List<byte[]> hRandField(final byte[] key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
 		return executeCommand(Command.HRANDFIELD, args, (cmd)->cmd.hrandfield(key, count), (v)->v);
 	}
 
 	@Override
-	public Map<String, String> hRandFieldWithValues(final String key, final long count) {
+	public Map<String, String> hRandFieldWithValues(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count).add("WITHVALUES");
 		return executeCommand(Command.HRANDFIELD, args, (cmd)->cmd.hrandfieldWithvalues(SafeEncoder.encode(key),
 				count), new ListKeyValueMapConverter<>(SafeEncoder::encode, SafeEncoder::encode));
 	}
 
 	@Override
-	public Map<byte[], byte[]> hRandFieldWithValues(final byte[] key, final long count) {
+	public Map<byte[], byte[]> hRandFieldWithValues(final byte[] key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count).add("WITHVALUES");
 		return executeCommand(Command.HRANDFIELD, args, (cmd)->cmd.hrandfieldWithvalues(key, count),
 				new ListKeyValueMapConverter<>((k)->k, (v)->v));

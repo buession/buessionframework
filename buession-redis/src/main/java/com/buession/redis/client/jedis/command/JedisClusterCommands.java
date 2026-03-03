@@ -39,6 +39,7 @@ import com.buession.redis.core.ClusterSetSlotOption;
 import com.buession.redis.core.ClusterShardInfo;
 import com.buession.redis.core.ClusterSlot;
 import com.buession.redis.core.ClusterSlotStat;
+import com.buession.redis.core.Keyword;
 import com.buession.redis.core.command.ClusterCommands;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
@@ -164,31 +165,37 @@ public final class JedisClusterCommands extends AbstractJedisRedisCommands imple
 
 	@Override
 	public Status clusterMeet(final String ip, final int port) {
-		final CommandArguments args = CommandArguments.create(ip).add(port);
+		final CommandArguments args = CommandArguments.create().add(ip, port);
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_MEET, args);
+	}
+
+	@Override
+	public Status clusterMeet(final byte[] ip, final int port) {
+		final CommandArguments args = CommandArguments.create().add(ip, port);
 		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_MEET, args);
 	}
 
 	@Override
 	public Status clusterMigration(final IntegerRange slots) {
-		final CommandArguments args = CommandArguments.create("IMPORT").add(slots);
+		final CommandArguments args = CommandArguments.create().add("IMPORT", slots);
 		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_MIGRATION, args);
 	}
 
 	@Override
 	public Object clusterMigration(final ClusterMigrationOp migrationOp) {
-		final CommandArguments args = CommandArguments.create(migrationOp).add("ALL");
+		final CommandArguments args = CommandArguments.create(migrationOp).add(Keyword.Common.ALL);
 		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_MIGRATION, args);
 	}
 
 	@Override
 	public Object clusterMigration(final ClusterMigrationOp migrationOp, final String id) {
-		final CommandArguments args = CommandArguments.create(migrationOp).add("ID").add(id);
+		final CommandArguments args = CommandArguments.create(migrationOp).add("ID", id);
 		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_MIGRATION, args);
 	}
 
 	@Override
 	public Object clusterMigration(final ClusterMigrationOp migrationOp, final byte[] id) {
-		final CommandArguments args = CommandArguments.create(migrationOp).add("ID").add(id);
+		final CommandArguments args = CommandArguments.create(migrationOp).add("ID", id);
 		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_MIGRATION, args);
 	}
 

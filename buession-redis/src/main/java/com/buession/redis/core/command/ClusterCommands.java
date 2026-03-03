@@ -214,7 +214,7 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @return count 个储在连接节点的指定 hash slot 里面的 key 的列表
 	 */
-	List<String> clusterGetKeysInSlot(final int slot, final long count);
+	List<String> clusterGetKeysInSlot(final int slot, final int count);
 
 	/**
 	 * 返回 Redis 集群信息
@@ -271,6 +271,20 @@ public interface ClusterCommands extends RedisCommands {
 	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
 	Status clusterMeet(final String ip, final int port);
+
+	/**
+	 * 用来连接不同的开启集群支持的 Redis 节点，以进入工作集群
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cluster-meet/" target="_blank">https://redis.io/docs/latest/commands/cluster-meet/</a></p>
+	 *
+	 * @param ip
+	 * 		Redis 集群节点 IP
+	 * @param port
+	 * 		Redis 集群节点端口
+	 *
+	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	Status clusterMeet(final byte[] ip, final int port);
 
 	/**
 	 * 执行原子化的哈希槽迁移操作

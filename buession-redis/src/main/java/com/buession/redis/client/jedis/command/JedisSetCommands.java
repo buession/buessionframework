@@ -52,285 +52,291 @@ public final class JedisSetCommands extends AbstractJedisRedisCommands implement
 	@Override
 	public Long sAdd(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		return executeCommand(Command.SADD, args, (cmd)->cmd.sadd(key, members), (v)->v);
+		return executeCommand(Command.SADD, args, (cmd)->cmd.sadd(rawKey(key), members), (v)->v);
 	}
 
 	@Override
 	public Long sAdd(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		return executeCommand(Command.SADD, args, (cmd)->cmd.sadd(key, members), (v)->v);
+		return executeCommand(Command.SADD, args, (cmd)->cmd.sadd(rawKey(key), members), (v)->v);
 	}
 
 	@Override
 	public Long sCard(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.SCARD, args, (cmd)->cmd.scard(key), (v)->v);
+		return executeCommand(Command.SCARD, args, (cmd)->cmd.scard(rawKey(key)), (v)->v);
 	}
 
 	@Override
 	public Long sCard(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.SCARD, args, (cmd)->cmd.scard(key), (v)->v);
+		return executeCommand(Command.SCARD, args, (cmd)->cmd.scard(rawKey(key)), (v)->v);
 	}
 
 	@Override
 	public Set<String> sDiff(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.SDIFF, args, (cmd)->cmd.sdiff(keys), (v)->v);
+		return executeCommand(Command.SDIFF, args, (cmd)->cmd.sdiff(rawKeys(keys)), (v)->v);
 	}
 
 	@Override
 	public Set<byte[]> sDiff(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.SDIFF, args, (cmd)->cmd.sdiff(keys), (v)->v);
+		return executeCommand(Command.SDIFF, args, (cmd)->cmd.sdiff(rawKeys(keys)), (v)->v);
 	}
 
 	@Override
 	public Long sDiffStore(final String destKey, final String... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-		return executeCommand(Command.SDIFFSTORE, args, (cmd)->cmd.sdiffstore(destKey, keys), (v)->v);
+		return executeCommand(Command.SDIFFSTORE, args, (cmd)->cmd.sdiffstore(rawKey(destKey), rawKeys(keys)), (v)->v);
 	}
 
 	@Override
 	public Long sDiffStore(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-		return executeCommand(Command.SDIFFSTORE, args, (cmd)->cmd.sdiffstore(destKey, keys), (v)->v);
+		return executeCommand(Command.SDIFFSTORE, args, (cmd)->cmd.sdiffstore(rawKey(destKey), rawKeys(keys)), (v)->v);
 	}
 
 	@Override
 	public Set<String> sInter(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.SINTER, args, (cmd)->cmd.sinter(keys), (v)->v);
+		return executeCommand(Command.SINTER, args, (cmd)->cmd.sinter(rawKeys(keys)), (v)->v);
 	}
 
 	@Override
 	public Set<byte[]> sInter(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.SINTER, args, (cmd)->cmd.sinter(keys), (v)->v);
+		return executeCommand(Command.SINTER, args, (cmd)->cmd.sinter(rawKeys(keys)), (v)->v);
 	}
 
 	@Override
 	public Long sInterCard(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.SINTERCARD, args, (cmd)->cmd.sintercard(keys), (v)->v);
+		return executeCommand(Command.SINTERCARD, args, (cmd)->cmd.sintercard(rawKeys(keys)), (v)->v);
 	}
 
 	@Override
 	public Long sInterCard(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.SINTERCARD, args, (cmd)->cmd.sintercard(keys), (v)->v);
+		return executeCommand(Command.SINTERCARD, args, (cmd)->cmd.sintercard(rawKeys(keys)), (v)->v);
 	}
 
 	@Override
 	public Long sInterCard(final String[] keys, final int limit) {
 		final CommandArguments args = CommandArguments.create(keys).add(limit);
-		return executeCommand(Command.SINTERCARD, args, (cmd)->cmd.sintercard(limit, keys), (v)->v);
+		return executeCommand(Command.SINTERCARD, args, (cmd)->cmd.sintercard(limit, rawKeys(keys)), (v)->v);
 	}
 
 	@Override
 	public Long sInterCard(final byte[][] keys, final int limit) {
 		final CommandArguments args = CommandArguments.create(keys).add(limit);
-		return executeCommand(Command.SINTERCARD, args, (cmd)->cmd.sintercard(limit, keys), (v)->v);
+		return executeCommand(Command.SINTERCARD, args, (cmd)->cmd.sintercard(limit, rawKeys(keys)), (v)->v);
 	}
 
 	@Override
 	public Long sInterStore(final String destKey, final String... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-		return executeCommand(Command.SINTERSTORE, args, (cmd)->cmd.sinterstore(destKey, keys), (v)->v);
+		return executeCommand(Command.SINTERSTORE, args, (cmd)->cmd.sinterstore(destKey, rawKeys(keys)), (v)->v);
 	}
 
 	@Override
 	public Long sInterStore(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-		return executeCommand(Command.SINTERSTORE, args, (cmd)->cmd.sinterstore(destKey, keys), (v)->v);
+		return executeCommand(Command.SINTERSTORE, args, (cmd)->cmd.sinterstore(destKey, rawKeys(keys)), (v)->v);
 	}
 
 	@Override
 	public Boolean sIsMember(final String key, final String member) {
 		final CommandArguments args = CommandArguments.create(key).add(member);
-		return executeCommand(Command.SISMEMBER, args, (cmd)->cmd.sismember(key, member), (v)->v);
+		return executeCommand(Command.SISMEMBER, args, (cmd)->cmd.sismember(rawKey(key), member), (v)->v);
 	}
 
 	@Override
 	public Boolean sIsMember(final byte[] key, final byte[] member) {
 		final CommandArguments args = CommandArguments.create(key).add(member);
-		return executeCommand(Command.SISMEMBER, args, (cmd)->cmd.sismember(key, member), (v)->v);
+		return executeCommand(Command.SISMEMBER, args, (cmd)->cmd.sismember(rawKey(key), member), (v)->v);
 	}
 
 	@Override
 	public Set<String> sMembers(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.SMEMBERS, args, (cmd)->cmd.smembers(key), (v)->v);
+		return executeCommand(Command.SMEMBERS, args, (cmd)->cmd.smembers(rawKey(key)), (v)->v);
 	}
 
 	@Override
 	public Set<byte[]> sMembers(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.SMEMBERS, args, (cmd)->cmd.smembers(key), (v)->v);
+		return executeCommand(Command.SMEMBERS, args, (cmd)->cmd.smembers(rawKey(key)), (v)->v);
 	}
 
 	@Override
 	public List<Boolean> smIsMember(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		return executeCommand(Command.SMISMEMBER, args, (cmd)->cmd.smismember(key, members), (v)->v);
+		return executeCommand(Command.SMISMEMBER, args, (cmd)->cmd.smismember(rawKey(key), members), (v)->v);
 	}
 
 	@Override
 	public List<Boolean> smIsMember(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		return executeCommand(Command.SMISMEMBER, args, (cmd)->cmd.smismember(key, members), (v)->v);
+		return executeCommand(Command.SMISMEMBER, args, (cmd)->cmd.smismember(rawKey(key), members), (v)->v);
 	}
 
 	@Override
 	public Status sMove(final String key, final String destKey, final String member) {
 		final CommandArguments args = CommandArguments.create(key).add(destKey).add(member);
-		return executeCommand(Command.SMOVE, args, (cmd)->cmd.smove(key, destKey, member), new OneStatusConverter());
+		return executeCommand(Command.SMOVE, args, (cmd)->cmd.smove(rawKey(key), destKey, member),
+				new OneStatusConverter());
 	}
 
 	@Override
 	public Status sMove(final byte[] key, final byte[] destKey, final byte[] member) {
 		final CommandArguments args = CommandArguments.create(key).add(destKey).add(member);
-		return executeCommand(Command.SMOVE, args, (cmd)->cmd.smove(key, destKey, member), new OneStatusConverter());
+		return executeCommand(Command.SMOVE, args, (cmd)->cmd.smove(rawKey(key), destKey, member),
+				new OneStatusConverter());
 	}
 
 	@Override
 	public String sPop(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.SPOP, args, (cmd)->cmd.spop(key), (v)->v);
+		return executeCommand(Command.SPOP, args, (cmd)->cmd.spop(rawKey(key)), (v)->v);
 	}
 
 	@Override
 	public byte[] sPop(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.SPOP, args, (cmd)->cmd.spop(key), (v)->v);
+		return executeCommand(Command.SPOP, args, (cmd)->cmd.spop(rawKey(key)), (v)->v);
 	}
 
 	@Override
-	public Set<String> sPop(final String key, final long count) {
+	public Set<String> sPop(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
-		return executeCommand(Command.SPOP, args, (cmd)->cmd.spop(key, count), (v)->v);
+		return executeCommand(Command.SPOP, args, (cmd)->cmd.spop(rawKey(key), count), (v)->v);
 	}
 
 	@Override
-	public Set<byte[]> sPop(final byte[] key, final long count) {
+	public Set<byte[]> sPop(final byte[] key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
-		return executeCommand(Command.SPOP, args, (cmd)->cmd.spop(key, count), (v)->v);
+		return executeCommand(Command.SPOP, args, (cmd)->cmd.spop(rawKey(key), count), (v)->v);
 	}
 
 	@Override
 	public String sRandMember(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.SRANDMEMBER, args, (cmd)->cmd.srandmember(key), (v)->v);
+		return executeCommand(Command.SRANDMEMBER, args, (cmd)->cmd.srandmember(rawKey(key)), (v)->v);
 	}
 
 	@Override
 	public byte[] sRandMember(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.SRANDMEMBER, args, (cmd)->cmd.srandmember(key), (v)->v);
+		return executeCommand(Command.SRANDMEMBER, args, (cmd)->cmd.srandmember(rawKey(key)), (v)->v);
 	}
 
 	@Override
-	public List<String> sRandMember(final String key, final long count) {
+	public List<String> sRandMember(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
-		return executeCommand(Command.SRANDMEMBER, args, (cmd)->cmd.srandmember(key, (int) count), (v)->v);
+		return executeCommand(Command.SRANDMEMBER, args, (cmd)->cmd.srandmember(rawKey(key), count), (v)->v);
 	}
 
 	@Override
-	public List<byte[]> sRandMember(final byte[] key, final long count) {
+	public List<byte[]> sRandMember(final byte[] key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
-		return executeCommand(Command.SRANDMEMBER, args, (cmd)->cmd.srandmember(key, (int) count), (v)->v);
+		return executeCommand(Command.SRANDMEMBER, args, (cmd)->cmd.srandmember(rawKey(key), count), (v)->v);
 	}
 
 	@Override
 	public Long sRem(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		return executeCommand(Command.SREM, args, (cmd)->cmd.srem(key, members), (v)->v);
+		return executeCommand(Command.SREM, args, (cmd)->cmd.srem(rawKey(key), members), (v)->v);
 	}
 
 	@Override
 	public Long sRem(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		return executeCommand(Command.SREM, args, (cmd)->cmd.srem(key, members), (v)->v);
+		return executeCommand(Command.SREM, args, (cmd)->cmd.srem(rawKey(key), members), (v)->v);
 	}
 
 	@Override
 	public ScanResult<String> sScan(final String key, final String cursor) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor);
-		return executeCommand(Command.SSCAN, args, (cmd)->cmd.sscan(key, cursor),
+		return executeCommand(Command.SSCAN, args, (cmd)->cmd.sscan(rawKey(key), cursor),
 				new ScanResultConverter<>((v)->v));
 	}
 
 	@Override
 	public ScanResult<byte[]> sScan(final byte[] key, final byte[] cursor) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor);
-		return executeCommand(Command.SSCAN, args, (cmd)->cmd.sscan(key, cursor),
+		return executeCommand(Command.SSCAN, args, (cmd)->cmd.sscan(rawKey(key), cursor),
 				new ScanResultConverter<>((v)->v));
 	}
 
 	@Override
 	public ScanResult<String> sScan(final String key, final String cursor, final String pattern) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern);
-		return executeCommand(Command.SSCAN, args, (cmd)->cmd.sscan(key, cursor, new JedisScanParams(pattern)),
+		return executeCommand(Command.SSCAN, args, (cmd)->cmd.sscan(rawKey(key), cursor, new JedisScanParams(pattern)),
 				new ScanResultConverter<>((v)->v));
 	}
 
 	@Override
 	public ScanResult<byte[]> sScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern);
-		return executeCommand(Command.SSCAN, args, (cmd)->cmd.sscan(key, cursor, new JedisScanParams(pattern)),
+		return executeCommand(Command.SSCAN, args, (cmd)->cmd.sscan(rawKey(key), cursor, new JedisScanParams(pattern)),
 				new ScanResultConverter<>((v)->v));
 	}
 
 	@Override
 	public ScanResult<String> sScan(final String key, final String cursor, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor).add(count);
-		return executeCommand(Command.SSCAN, args, (cmd)->cmd.sscan(key, cursor, new JedisScanParams(count)),
+		return executeCommand(Command.SSCAN, args, (cmd)->cmd.sscan(rawKey(key), cursor, new JedisScanParams(count)),
 				new ScanResultConverter<>((v)->v));
 	}
 
 	@Override
 	public ScanResult<byte[]> sScan(final byte[] key, final byte[] cursor, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor).add(count);
-		return executeCommand(Command.SSCAN, args, (cmd)->cmd.sscan(key, cursor, new JedisScanParams(count)),
+		return executeCommand(Command.SSCAN, args, (cmd)->cmd.sscan(rawKey(key), cursor, new JedisScanParams(count)),
 				new ScanResultConverter<>((v)->v));
 	}
 
 	@Override
 	public ScanResult<String> sScan(final String key, final String cursor, final String pattern, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern).add(count);
-		return executeCommand(Command.SSCAN, args, (cmd)->cmd.sscan(key, cursor, new JedisScanParams(pattern, count)),
+		return executeCommand(Command.SSCAN, args,
+				(cmd)->cmd.sscan(rawKey(key), cursor, new JedisScanParams(pattern, count)),
 				new ScanResultConverter<>((v)->v));
 	}
 
 	@Override
 	public ScanResult<byte[]> sScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern).add(count);
-		return executeCommand(Command.SSCAN, args, (cmd)->cmd.sscan(key, cursor, new JedisScanParams(pattern, count)),
+		return executeCommand(Command.SSCAN, args,
+				(cmd)->cmd.sscan(rawKey(key), cursor, new JedisScanParams(pattern, count)),
 				new ScanResultConverter<>((v)->v));
 	}
 
 	@Override
 	public Set<String> sUnion(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.SUNION, args, (cmd)->cmd.sunion(keys), (v)->v);
+		return executeCommand(Command.SUNION, args, (cmd)->cmd.sunion(rawKeys(keys)), (v)->v);
 	}
 
 	@Override
 	public Set<byte[]> sUnion(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.SUNION, args, (cmd)->cmd.sunion(keys), (v)->v);
+		return executeCommand(Command.SUNION, args, (cmd)->cmd.sunion(rawKeys(keys)), (v)->v);
 	}
 
 	@Override
 	public Long sUnionStore(final String destKey, final String... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-		return executeCommand(Command.SUNIONSTORE, args, (cmd)->cmd.sunionstore(destKey, keys), (v)->v);
+		return executeCommand(Command.SUNIONSTORE, args, (cmd)->cmd.sunionstore(rawKey(destKey), rawKeys(keys)),
+				(v)->v);
 	}
 
 	@Override
 	public Long sUnionStore(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-		return executeCommand(Command.SUNIONSTORE, args, (cmd)->cmd.sunionstore(destKey, keys), (v)->v);
+		return executeCommand(Command.SUNIONSTORE, args, (cmd)->cmd.sunionstore(rawKey(destKey), rawKeys(keys)),
+				(v)->v);
 	}
 
 }

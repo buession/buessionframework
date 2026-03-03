@@ -38,11 +38,11 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 哈希表运算
@@ -499,6 +499,46 @@ public interface HashOperations extends HashCommands, RedisOperations {
 		return execute((client)->client.hashCommands().hExpireTime(key, fields));
 	}
 
+	/**
+	 * 获取哈希中的一个或多个字段的过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpiretime/" target="_blank">https://redis.io/docs/latest/commands/hexpiretime/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;-1 if the field exists but has no associated expiration set;
+	 * the expiration (Unix timestamp) in seconds.
+	 */
+	default List<Date> hExpireTimeDate(final String key, final String... fields) {
+		final List<Long> result = hExpireTime(key, fields);
+		return result == null ? null :
+				result.stream().map((v)->v != null && v != -1 && v != -2 ? new Date(v * 1000) : null)
+						.collect(Collectors.toList());
+	}
+
+	/**
+	 * 获取哈希中的一个或多个字段的过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpiretime/" target="_blank">https://redis.io/docs/latest/commands/hexpiretime/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;-1 if the field exists but has no associated expiration set;
+	 * the expiration (Unix timestamp) in seconds.
+	 */
+	default List<Date> hExpireTimeDate(final byte[] key, final byte[]... fields) {
+		final List<Long> result = hExpireTime(key, fields);
+		return result == null ? null :
+				result.stream().map((v)->v != null && v != -1 && v != -2 ? new Date(v * 1000) : null)
+						.collect(Collectors.toList());
+	}
+
 	@Override
 	default String hGet(final String key, final String field) {
 		return execute((client)->client.hashCommands().hGet(key, field));
@@ -510,7 +550,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	}
 
 	/**
-	 * 获取哈希表中给定域的值，并将值反序列化为对象
+	 * 获取哈希表中给定域的值，并将值反序列化为 clazz 指定的对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/hash/hget.html" target="_blank">http://redisdoc.com/hash/hget.html</a></p>
 	 *
@@ -518,28 +558,14 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		Key
 	 * @param field
 	 * 		域
+	 * @param clazz
+	 * 		值对象类
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return 哈希表中给定域的值反序列化后的对象，如果给定域不存在于哈希表中，又或者给定的哈希表并不存在，则返回 null
 	 */
-	<V> V hGetObject(final String key, final String field);
-
-	/**
-	 * 获取哈希表中给定域的值，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hget.html" target="_blank">http://redisdoc.com/hash/hget.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param field
-	 * 		域
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 哈希表中给定域的值反序列化后的对象，如果给定域不存在于哈希表中，又或者给定的哈希表并不存在，则返回 null
-	 */
-	<V> V hGetObject(final byte[] key, final byte[] field);
+	<V> V hGet(final String key, final String field, final Class<V> clazz);
 
 	/**
 	 * 获取哈希表中给定域的值，并将值反序列化为 clazz 指定的对象
@@ -557,25 +583,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表中给定域的值反序列化后的对象，如果给定域不存在于哈希表中，又或者给定的哈希表并不存在，则返回 null
 	 */
-	<V> V hGetObject(final String key, final String field, final Class<V> clazz);
-
-	/**
-	 * 获取哈希表中给定域的值，并将值反序列化为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hget.html" target="_blank">http://redisdoc.com/hash/hget.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param field
-	 * 		域
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 哈希表中给定域的值反序列化后的对象，如果给定域不存在于哈希表中，又或者给定的哈希表并不存在，则返回 null
-	 */
-	<V> V hGetObject(final byte[] key, final byte[] field, final Class<V> clazz);
+	<V> V hGet(final byte[] key, final byte[] field, final Class<V> clazz);
 
 	/**
 	 * 获取哈希表中给定域的值，并将值反序列化为 type 指定的对象
@@ -593,7 +601,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表中给定域的值反序列化后的对象，如果给定域不存在于哈希表中，又或者给定的哈希表并不存在，则返回 null
 	 */
-	<V> V hGetObject(final String key, final String field, final TypeReference<V> type);
+	<V> V hGet(final String key, final String field, final TypeReference<V> type);
 
 	/**
 	 * 获取哈希表中给定域的值，并将值反序列化为 type 指定的对象
@@ -611,7 +619,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表中给定域的值反序列化后的对象，如果给定域不存在于哈希表中，又或者给定的哈希表并不存在，则返回 null
 	 */
-	<V> V hGetObject(final byte[] key, final byte[] field, final TypeReference<V> type);
+	<V> V hGet(final byte[] key, final byte[] field, final TypeReference<V> type);
 
 	@Override
 	default Map<String, String> hGetAll(final String key) {
@@ -624,32 +632,20 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	}
 
 	/**
-	 * 获取哈希表 key 中，所有的域和值，并将值反序列化为对象
+	 * 获取哈希表 key 中，所有的域和值，并将值反序列化为 clazz 指定的对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/hash/hgetall.html" target="_blank">http://redisdoc.com/hash/hgetall.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
+	 * @param clazz
+	 * 		值对象类
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return 哈希表 key 中，所有的域和值
 	 */
-	<V> Map<String, V> hGetAllObject(final String key);
-
-	/**
-	 * 获取哈希表 key 中，所有的域和值，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hgetall.html" target="_blank">http://redisdoc.com/hash/hgetall.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 哈希表 key 中，所有的域和值
-	 */
-	<V> Map<byte[], V> hGetAllObject(final byte[] key);
+	<V> Map<String, V> hGetAll(final String key, final Class<V> clazz);
 
 	/**
 	 * 获取哈希表 key 中，所有的域和值，并将值反序列化为 clazz 指定的对象
@@ -665,23 +661,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中，所有的域和值
 	 */
-	<V> Map<String, V> hGetAllObject(final String key, final Class<V> clazz);
-
-	/**
-	 * 获取哈希表 key 中，所有的域和值，并将值反序列化为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hgetall.html" target="_blank">http://redisdoc.com/hash/hgetall.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 哈希表 key 中，所有的域和值
-	 */
-	<V> Map<byte[], V> hGetAllObject(final byte[] key, final Class<V> clazz);
+	<V> Map<byte[], V> hGetAll(final byte[] key, final Class<V> clazz);
 
 	/**
 	 * 获取哈希表 key 中，所有的域和值，并将值反序列化为 type 指定的对象
@@ -697,7 +677,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中，所有的域和值
 	 */
-	<V> Map<String, V> hGetAllObject(final String key, final TypeReference<V> type);
+	<V> Map<String, V> hGetAll(final String key, final TypeReference<V> type);
 
 	/**
 	 * 获取哈希表 key 中，所有的域和值，并将值反序列化为 type 指定的对象
@@ -713,7 +693,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中，所有的域和值
 	 */
-	<V> Map<byte[], V> hGetAllObject(final byte[] key, final TypeReference<V> type);
+	<V> Map<byte[], V> hGetAll(final byte[] key, final TypeReference<V> type);
 
 	@Override
 	default List<String> hGetDel(final String key, final String... fields) {
@@ -726,22 +706,6 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	}
 
 	/**
-	 * 从哈希（Hash）中获取一个字段的值，并同时删除该字段
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hgetdel/" target="_blank">https://redis.io/docs/latest/commands/hgetdel/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param fields
-	 * 		一个或多个域
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 哈希表 key 中获取并删除域的值
-	 */
-	<V> List<V> hGetDelObject(final String key, final String... fields);
-
-	/**
 	 * 获取哈希表 key 中，所有的域和值，并将值反序列化为对象
 	 *
 	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hgetdel/" target="_blank">https://redis.io/docs/latest/commands/hgetdel/</a></p>
@@ -750,12 +714,14 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		Key
 	 * @param fields
 	 * 		一个或多个域
+	 * @param clazz
+	 * 		值对象类
 	 * @param <V>
 	 * 		值类型
 	 *
-	 * @return 哈希表 key 中获取并删除域的值
+	 * @return 哈希表 key 中，所有的域和值
 	 */
-	<V> List<V> hGetDelObject(final byte[] key, final byte[]... fields);
+	<V> List<V> hGetDel(final String key, final String[] fields, final Class<V> clazz);
 
 	/**
 	 * 获取哈希表 key 中，所有的域和值，并将值反序列化为对象
@@ -773,25 +739,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中，所有的域和值
 	 */
-	<V> List<V> hGetDelObject(final String key, final String[] fields, final Class<V> clazz);
-
-	/**
-	 * 获取哈希表 key 中，所有的域和值，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hgetdel/" target="_blank">https://redis.io/docs/latest/commands/hgetdel/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param fields
-	 * 		一个或多个域
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 哈希表 key 中，所有的域和值
-	 */
-	<V> List<V> hGetDelObject(final byte[] key, final byte[][] fields, final Class<V> clazz);
+	<V> List<V> hGetDel(final byte[] key, final byte[][] fields, final Class<V> clazz);
 
 	/**
 	 * 获取哈希表 key 中，所有的域和值，并将值反序列化为对象
@@ -809,7 +757,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中，所有的域和值
 	 */
-	<V> List<V> hGetDelObject(final String key, final String[] fields, final TypeReference<V> type);
+	<V> List<V> hGetDel(final String key, final String[] fields, final TypeReference<V> type);
 
 	/**
 	 * 获取哈希表 key 中，所有的域和值，并将值反序列化为对象
@@ -827,7 +775,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中，所有的域和值
 	 */
-	<V> List<V> hGetDelObject(final byte[] key, final byte[][] fields, final TypeReference<V> type);
+	<V> List<V> hGetDel(final byte[] key, final byte[][] fields, final TypeReference<V> type);
 
 	@Override
 	default List<String> hGetEx(final String key, final String... fields) {
@@ -858,28 +806,14 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		Key
 	 * @param fields
 	 * 		一个或多个域
+	 * @param clazz
+	 * 		值对象类
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return 哈希表 key 中获取并删除域的值
 	 */
-	<V> List<V> hGetExObject(final String key, final String... fields);
-
-	/**
-	 * 从哈希（Hash）中获取一个字段的值，并将值反序列化为对象，并同时删除该字段
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hgetdel/" target="_blank">https://redis.io/docs/latest/commands/hgetdel/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param fields
-	 * 		一个或多个域
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 哈希表 key 中获取并删除域的值
-	 */
-	<V> List<V> hGetExObject(final byte[] key, final byte[]... fields);
+	<V> List<V> hGetEx(final String key, final String[] fields, final Class<V> clazz);
 
 	/**
 	 * 从哈希（Hash）中获取一个字段的值，并将值反序列化为对象，并同时删除该字段
@@ -897,25 +831,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中获取并删除域的值
 	 */
-	<V> List<V> hGetExObject(final String key, final String[] fields, final Class<V> clazz);
-
-	/**
-	 * 从哈希（Hash）中获取一个字段的值，并将值反序列化为对象，并同时删除该字段
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hgetdel/" target="_blank">https://redis.io/docs/latest/commands/hgetdel/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param fields
-	 * 		一个或多个域
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 哈希表 key 中获取并删除域的值
-	 */
-	<V> List<V> hGetExObject(final byte[] key, final byte[][] fields, final Class<V> clazz);
+	<V> List<V> hGetEx(final byte[] key, final byte[][] fields, final Class<V> clazz);
 
 	/**
 	 * 从哈希（Hash）中获取一个字段的值，并将值反序列化为对象，并同时删除该字段
@@ -933,7 +849,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中获取并删除域的值
 	 */
-	<V> List<V> hGetExObject(final String key, final String[] fields, final TypeReference<V> type);
+	<V> List<V> hGetEx(final String key, final String[] fields, final TypeReference<V> type);
 
 	/**
 	 * 从哈希（Hash）中获取一个字段的值，并将值反序列化为对象，并同时删除该字段
@@ -951,43 +867,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中获取并删除域的值
 	 */
-	<V> List<V> hGetExObject(final byte[] key, final byte[][] fields, final TypeReference<V> type);
-
-	/**
-	 * 从哈希（Hash）中获取一个字段的值，并将值反序列化为对象，并同时删除该字段
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hgetdel/" target="_blank">https://redis.io/docs/latest/commands/hgetdel/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param argument
-	 * 		参数
-	 * @param fields
-	 * 		一个或多个域
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 哈希表 key 中获取并删除域的值
-	 */
-	<V> List<V> hGetExObject(final String key, final GetExArgument argument, final String... fields);
-
-	/**
-	 * 从哈希（Hash）中获取一个字段的值，并将值反序列化为对象，并同时删除该字段
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hgetdel/" target="_blank">https://redis.io/docs/latest/commands/hgetdel/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param argument
-	 * 		参数
-	 * @param fields
-	 * 		一个或多个域
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 哈希表 key 中获取并删除域的值
-	 */
-	<V> List<V> hGetExObject(final byte[] key, final GetExArgument argument, final byte[]... fields);
+	<V> List<V> hGetEx(final byte[] key, final byte[][] fields, final TypeReference<V> type);
 
 	/**
 	 * 从哈希（Hash）中获取一个字段的值，并将值反序列化为对象，并同时删除该字段
@@ -1005,8 +885,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中获取并删除域的值
 	 */
-	<V> List<V> hGetExObject(final String key, final GetExArgument argument, final String[] fields,
-							 final Class<V> clazz);
+	<V> List<V> hGetEx(final String key, final GetExArgument argument, final String[] fields, final Class<V> clazz);
 
 	/**
 	 * 从哈希（Hash）中获取一个字段的值，并将值反序列化为对象，并同时删除该字段
@@ -1026,8 +905,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中获取并删除域的值
 	 */
-	<V> List<V> hGetExObject(final byte[] key, final GetExArgument argument, final byte[][] fields,
-							 final Class<V> clazz);
+	<V> List<V> hGetEx(final byte[] key, final GetExArgument argument, final byte[][] fields, final Class<V> clazz);
 
 	/**
 	 * 从哈希（Hash）中获取一个字段的值，并将值反序列化为对象，并同时删除该字段
@@ -1047,8 +925,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中获取并删除域的值
 	 */
-	<V> List<V> hGetExObject(final String key, final GetExArgument argument, final String[] fields,
-							 final TypeReference<V> type);
+	<V> List<V> hGetEx(final String key, final GetExArgument argument, final String[] fields,
+					   final TypeReference<V> type);
 
 	/**
 	 * 从哈希（Hash）中获取一个字段的值，并将值反序列化为对象，并同时删除该字段
@@ -1068,8 +946,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中获取并删除域的值
 	 */
-	<V> List<V> hGetExObject(final byte[] key, final GetExArgument argument, final byte[][] fields,
-							 final TypeReference<V> type);
+	<V> List<V> hGetEx(final byte[] key, final GetExArgument argument, final byte[][] fields,
+					   final TypeReference<V> type);
 
 	@Override
 	default Long hIncrBy(final String key, final String field, final long value) {
@@ -1194,7 +1072,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	}
 
 	/**
-	 * 获取哈希表 key 中，一个或多个给定域的值，并将值反序列化为对象
+	 * 获取哈希表 key 中，一个或多个给定域的值，并将值反序列化为 clazz 指定的对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/hash/hmget.html" target="_blank">http://redisdoc.com/hash/hmget.html</a></p>
 	 *
@@ -1202,28 +1080,14 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		Key
 	 * @param fields
 	 * 		一个或多个域
+	 * @param clazz
+	 * 		值对象类
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return 一个包含多个给定域的关联值的表，值的排列顺序和给定域参数的请求顺序一样
 	 */
-	<V> List<V> hMGetObject(final String key, final String... fields);
-
-	/**
-	 * 获取哈希表 key 中，一个或多个给定域的值，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hmget.html" target="_blank">http://redisdoc.com/hash/hmget.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param fields
-	 * 		一个或多个域
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 一个包含多个给定域的关联值的表，值的排列顺序和给定域参数的请求顺序一样
-	 */
-	<V> List<V> hMGetObject(final byte[] key, final byte[]... fields);
+	<V> List<V> hMGet(final String key, final String[] fields, final Class<V> clazz);
 
 	/**
 	 * 获取哈希表 key 中，一个或多个给定域的值，并将值反序列化为 clazz 指定的对象
@@ -1241,25 +1105,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 一个包含多个给定域的关联值的表，值的排列顺序和给定域参数的请求顺序一样
 	 */
-	<V> List<V> hMGetObject(final String key, final String[] fields, final Class<V> clazz);
-
-	/**
-	 * 获取哈希表 key 中，一个或多个给定域的值，并将值反序列化为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hmget.html" target="_blank">http://redisdoc.com/hash/hmget.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param fields
-	 * 		一个或多个域
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 一个包含多个给定域的关联值的表，值的排列顺序和给定域参数的请求顺序一样
-	 */
-	<V> List<V> hMGetObject(final byte[] key, final byte[][] fields, final Class<V> clazz);
+	<V> List<V> hMGet(final byte[] key, final byte[][] fields, final Class<V> clazz);
 
 	/**
 	 * 获取哈希表 key 中，一个或多个给定域的值，并将值反序列化为 type 指定的对象
@@ -1277,7 +1123,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 一个包含多个给定域的关联值的表，值的排列顺序和给定域参数的请求顺序一样
 	 */
-	<V> List<V> hMGetObject(final String key, final String[] fields, final TypeReference<V> type);
+	<V> List<V> hMGet(final String key, final String[] fields, final TypeReference<V> type);
 
 	/**
 	 * 获取哈希表 key 中，一个或多个给定域的值，并将值反序列化为 type 指定的对象
@@ -1295,90 +1141,16 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 一个包含多个给定域的关联值的表，值的排列顺序和给定域参数的请求顺序一样
 	 */
-	<V> List<V> hMGetObject(final byte[] key, final byte[][] fields, final TypeReference<V> type);
+	<V> List<V> hMGet(final byte[] key, final byte[][] fields, final TypeReference<V> type);
 
 	@Override
-	default Status hMSet(final String key, final Map<String, String> data) {
+	default Status hMSet(final String key, final KeyValue<String, String>... data) {
 		return execute((client)->client.hashCommands().hMSet(key, data));
 	}
 
 	@Override
-	default Status hMSet(final byte[] key, final Map<byte[], byte[]> data) {
+	default Status hMSet(final byte[] key, final KeyValue<byte[], byte[]>... data) {
 		return execute((client)->client.hashCommands().hMSet(key, data));
-	}
-
-	/**
-	 * 批量将多个 field =&gt; value (域-值)对设置到哈希表 key 中
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hmset.html" target="_blank">http://redisdoc.com/hash/hmset.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param data
-	 * 		field =&gt; value (域-值)对
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
-	 */
-	<V> Status hMSet(final String key, final List<KeyValue<String, V>> data);
-
-	/**
-	 * 批量将多个 field =&gt; value (域-值)对设置到哈希表 key 中
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hmset.html" target="_blank">http://redisdoc.com/hash/hmset.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param data
-	 * 		field =&gt; value (域-值)对
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
-	 */
-	<V> Status hMSet(final byte[] key, final List<KeyValue<byte[], V>> data);
-
-	/**
-	 * 批量将多个 field =&gt; value (域-值)对设置到哈希表 key 中
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hmset.html" target="_blank">http://redisdoc.com/hash/hmset.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param data
-	 * 		field =&gt; value (域-值)对
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
-	 *
-	 * @since 3.0.0
-	 */
-	@SuppressWarnings({"unchecked"})
-	default <V> Status hMSet(final String key, final KeyValue<String, V>... data) {
-		return hMSet(key, Arrays.asList(data));
-	}
-
-	/**
-	 * 批量将多个 field =&gt; value (域-值)对设置到哈希表 key 中
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hmset.html" target="_blank">http://redisdoc.com/hash/hmset.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param data
-	 * 		field =&gt; value (域-值)对
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
-	 *
-	 * @since 3.0.0
-	 */
-	@SuppressWarnings({"unchecked"})
-	default <V> Status hMSet(final byte[] key, final KeyValue<byte[], V>... data) {
-		return hMSet(key, Arrays.asList(data));
 	}
 
 	@Override
@@ -1787,6 +1559,46 @@ public interface HashOperations extends HashCommands, RedisOperations {
 		return execute((client)->client.hashCommands().hPExpireTime(key, fields));
 	}
 
+	/**
+	 * 获取哈希中的一个或多个字段的过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hpexpiretime/" target="_blank">https://redis.io/docs/latest/commands/hpexpiretime/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;-1 if the field exists but has no associated expiration set;
+	 * the expiration (Unix timestamp) in milliseconds.
+	 */
+	default List<Date> hPExpireTimeDate(final String key, final String... fields) {
+		final List<Long> result = hPExpireTime(key, fields);
+		return result == null ? null :
+				result.stream().map((v)->v != null && v != -1 && v != -2 ? new Date(v) : null)
+						.collect(Collectors.toList());
+	}
+
+	/**
+	 * 获取哈希中的一个或多个字段的过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hpexpiretime/" target="_blank">https://redis.io/docs/latest/commands/hpexpiretime/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;-1 if the field exists but has no associated expiration set;
+	 * the expiration (Unix timestamp) in milliseconds.
+	 */
+	default List<Date> hPExpireTimeDate(final byte[] key, final byte[]... fields) {
+		final List<Long> result = hPExpireTime(key, fields);
+		return result == null ? null :
+				result.stream().map((v)->v != null && v != -1 && v != -2 ? new Date(v) : null)
+						.collect(Collectors.toList());
+	}
+
 	@Override
 	default String hRandField(final String key) {
 		return execute((client)->client.hashCommands().hRandField(key));
@@ -1798,60 +1610,24 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	}
 
 	@Override
-	default List<String> hRandField(final String key, final long count) {
+	default List<String> hRandField(final String key, final int count) {
 		return execute((client)->client.hashCommands().hRandField(key, count));
 	}
 
 	@Override
-	default List<byte[]> hRandField(final byte[] key, final long count) {
+	default List<byte[]> hRandField(final byte[] key, final int count) {
 		return execute((client)->client.hashCommands().hRandField(key, count));
 	}
 
 	@Override
-	default Map<String, String> hRandFieldWithValues(final String key, final long count) {
+	default Map<String, String> hRandFieldWithValues(final String key, final int count) {
 		return execute((client)->client.hashCommands().hRandFieldWithValues(key, count));
 	}
 
 	@Override
-	default Map<byte[], byte[]> hRandFieldWithValues(final byte[] key, final long count) {
+	default Map<byte[], byte[]> hRandFieldWithValues(final byte[] key, final int count) {
 		return execute((client)->client.hashCommands().hRandFieldWithValues(key, count));
 	}
-
-	/**
-	 * When called with just the key argument, return a random field from the hash value stored at key.
-	 * If the provided count argument is positive, return an array of distinct fields.
-	 * The array’s length is either count or the hash’s number of fields (HLEN), whichever is lower.
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/hrandfield/" target="_blank">https://redis.io/commands/hrandfield/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param count
-	 * 		返回数量
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return A list fields and their values from the hash
-	 */
-	<V> Map<String, V> hRandFieldWithValuesObject(final String key, final long count);
-
-	/**
-	 * When called with just the key argument, return a random field from the hash value stored at key.
-	 * If the provided count argument is positive, return an array of distinct fields.
-	 * The array’s length is either count or the hash’s number of fields (HLEN), whichever is lower.
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/hrandfield/" target="_blank">https://redis.io/commands/hrandfield/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param count
-	 * 		返回数量
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return A list fields and their values from the hash
-	 */
-	<V> Map<byte[], V> hRandFieldWithValuesObject(final byte[] key, final long count);
 
 	/**
 	 * When called with just the key argument, return a random field from the hash value stored at key.
@@ -1871,7 +1647,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return A list fields and their values from the hash
 	 */
-	<V> Map<String, V> hRandFieldWithValuesObject(final String key, final long count, final Class<V> clazz);
+	<V> Map<String, V> hRandFieldWithValues(final String key, final int count, final Class<V> clazz);
 
 	/**
 	 * When called with just the key argument, return a random field from the hash value stored at key.
@@ -1891,7 +1667,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return A list fields and their values from the hash
 	 */
-	<V> Map<byte[], V> hRandFieldWithValuesObject(final byte[] key, final long count, final Class<V> clazz);
+	<V> Map<byte[], V> hRandFieldWithValues(final byte[] key, final int count, final Class<V> clazz);
 
 	/**
 	 * When called with just the key argument, return a random field from the hash value stored at key.
@@ -1911,7 +1687,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return A list fields and their values from the hash
 	 */
-	<V> Map<String, V> hRandFieldWithValuesObject(final String key, final long count, final TypeReference<V> type);
+	<V> Map<String, V> hRandFieldWithValues(final String key, final int count, final TypeReference<V> type);
 
 	/**
 	 * When called with just the key argument, return a random field from the hash value stored at key.
@@ -1931,7 +1707,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return A list fields and their values from the hash
 	 */
-	<V> Map<byte[], V> hRandFieldWithValuesObject(final byte[] key, final long count, final TypeReference<V> type);
+	<V> Map<byte[], V> hRandFieldWithValues(final byte[] key, final int count, final TypeReference<V> type);
 
 	@Override
 	default ScanResult<Map<String, String>> hScan(final String key, final String cursor) {
@@ -1954,24 +1730,24 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	}
 
 	@Override
-	default ScanResult<Map<String, String>> hScan(final String key, final String cursor, final long count) {
+	default ScanResult<Map<String, String>> hScan(final String key, final String cursor, final int count) {
 		return execute((client)->client.hashCommands().hScan(key, cursor, count));
 	}
 
 	@Override
-	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final long count) {
+	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final int count) {
 		return execute((client)->client.hashCommands().hScan(key, cursor, count));
 	}
 
 	@Override
 	default ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
-												  final long count) {
+												  final int count) {
 		return execute((client)->client.hashCommands().hScan(key, cursor, pattern, count));
 	}
 
 	@Override
 	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-												  final long count) {
+												  final int count) {
 		return execute((client)->client.hashCommands().hScan(key, cursor, pattern, count));
 	}
 
@@ -2057,7 +1833,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的指定数量的键值对
 	 */
-	default ScanResult<Map<String, String>> hScan(final String key, final long cursor, final long count) {
+	default ScanResult<Map<String, String>> hScan(final String key, final long cursor, final int count) {
 		return hScan(key, Long.toString(cursor), count);
 	}
 
@@ -2075,7 +1851,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的指定数量的键值对
 	 */
-	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final long count) {
+	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final int count) {
 		return hScan(key, NumberUtils.long2bytes(cursor), count);
 	}
 
@@ -2096,7 +1872,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
 	default ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern,
-												  final long count) {
+												  final int count) {
 		return hScan(key, Long.toString(cursor), pattern, count);
 	}
 
@@ -2117,49 +1893,11 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
 	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern,
-												  final long count) {
+												  final int count) {
 		return hScan(key, NumberUtils.long2bytes(cursor), pattern, count);
 	}
 
 	/**
-	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	default <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor) {
-		return hScanObject(key, Long.toString(cursor));
-	}
-
-	/**
-	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	default <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor) {
-		return hScanObject(key, NumberUtils.long2bytes(cursor));
-	}
-
-	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
@@ -2176,8 +1914,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final Class<V> clazz) {
-		return hScanObject(key, Long.toString(cursor), clazz);
+	default <V> ScanResult<Map<String, V>> hScan(final String key, final long cursor, final Class<V> clazz) {
+		return hScan(key, Long.toString(cursor), clazz);
 	}
 
 	/**
@@ -2196,8 +1934,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final Class<V> clazz) {
-		return hScanObject(key, NumberUtils.long2bytes(cursor), clazz);
+	default <V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final long cursor, final Class<V> clazz) {
+		return hScan(key, NumberUtils.long2bytes(cursor), clazz);
 	}
 
 	/**
@@ -2216,9 +1954,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor,
-													   final TypeReference<V> type) {
-		return hScanObject(key, Long.toString(cursor), type);
+	default <V> ScanResult<Map<String, V>> hScan(final String key, final long cursor, final TypeReference<V> type) {
+		return hScan(key, Long.toString(cursor), type);
 	}
 
 	/**
@@ -2237,42 +1974,9 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor,
-													   final TypeReference<V> type) {
-		return hScanObject(key, NumberUtils.long2bytes(cursor), type);
+	default <V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final long cursor, final TypeReference<V> type) {
+		return hScan(key, NumberUtils.long2bytes(cursor), type);
 	}
-
-	/**
-	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor);
-
-	/**
-	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
@@ -2290,7 +1994,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final Class<V> clazz);
+	<V> ScanResult<Map<String, V>> hScan(final String key, final String cursor, final Class<V> clazz);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
@@ -2308,7 +2012,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final Class<V> clazz);
+	<V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final byte[] cursor, final Class<V> clazz);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -2326,7 +2030,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final TypeReference<V> type);
+	<V> ScanResult<Map<String, V>> hScan(final String key, final String cursor, final TypeReference<V> type);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -2344,10 +2048,10 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final TypeReference<V> type);
+	<V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final byte[] cursor, final TypeReference<V> type);
 
 	/**
-	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
+	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
 	 *
@@ -2357,33 +2061,16 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		游标
 	 * @param pattern
 	 * 		glob 风格的模式参数
+	 * @param clazz
+	 * 		值对象类
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern) {
-		return hScanObject(key, Long.toString(cursor), pattern);
-	}
-
-	/**
-	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	default <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern) {
-		return hScanObject(key, NumberUtils.long2bytes(cursor), pattern);
+	default <V> ScanResult<Map<String, V>> hScan(final String key, final long cursor, final String pattern,
+												 final Class<V> clazz) {
+		return hScan(key, Long.toString(cursor), pattern, clazz);
 	}
 
 	/**
@@ -2404,32 +2091,9 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern,
-													   final Class<V> clazz) {
-		return hScanObject(key, Long.toString(cursor), pattern, clazz);
-	}
-
-	/**
-	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	default <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern,
-													   final Class<V> clazz) {
-		return hScanObject(key, NumberUtils.long2bytes(cursor), pattern, clazz);
+	default <V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final long cursor, final byte[] pattern,
+												 final Class<V> clazz) {
+		return hScan(key, NumberUtils.long2bytes(cursor), pattern, clazz);
 	}
 
 	/**
@@ -2450,9 +2114,9 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final String pattern,
-													   final TypeReference<V> type) {
-		return hScanObject(key, Long.toString(cursor), pattern, type);
+	default <V> ScanResult<Map<String, V>> hScan(final String key, final long cursor, final String pattern,
+												 final TypeReference<V> type) {
+		return hScan(key, Long.toString(cursor), pattern, type);
 	}
 
 	/**
@@ -2473,13 +2137,13 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final byte[] pattern,
-													   final TypeReference<V> type) {
-		return hScanObject(key, NumberUtils.long2bytes(cursor), pattern, type);
+	default <V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final long cursor, final byte[] pattern,
+												 final TypeReference<V> type) {
+		return hScan(key, NumberUtils.long2bytes(cursor), pattern, type);
 	}
 
 	/**
-	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
+	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
 	 *
@@ -2489,30 +2153,15 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		游标
 	 * @param pattern
 	 * 		glob 风格的模式参数
+	 * @param clazz
+	 * 		值对象类
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final String pattern);
-
-	/**
-	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern);
+	<V> ScanResult<Map<String, V>> hScan(final String key, final String cursor, final String pattern,
+										 final Class<V> clazz);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
@@ -2532,29 +2181,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final String pattern,
-											   final Class<V> clazz);
-
-	/**
-	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
-											   final Class<V> clazz);
+	<V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+										 final Class<V> clazz);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -2574,8 +2202,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final String pattern,
-											   final TypeReference<V> type);
+	<V> ScanResult<Map<String, V>> hScan(final String key, final String cursor, final String pattern,
+										 final TypeReference<V> type);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -2595,11 +2223,11 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
-											   final TypeReference<V> type);
+	<V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+										 final TypeReference<V> type);
 
 	/**
-	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
+	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
 	 *
@@ -2609,33 +2237,16 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 		游标
 	 * @param count
 	 * 		返回元素数量
+	 * @param clazz
+	 * 		值对象类
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final long count) {
-		return hScanObject(key, Long.toString(cursor), count);
-	}
-
-	/**
-	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	default <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final long count) {
-		return hScanObject(key, NumberUtils.long2bytes(cursor), count);
+	default <V> ScanResult<Map<String, V>> hScan(final String key, final long cursor, final int count,
+												 final Class<V> clazz) {
+		return hScan(key, Long.toString(cursor), count, clazz);
 	}
 
 	/**
@@ -2656,9 +2267,55 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final long count,
-													   final Class<V> clazz) {
-		return hScanObject(key, Long.toString(cursor), count, clazz);
+	default <V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final long cursor, final int count,
+												 final Class<V> clazz) {
+		return hScan(key, NumberUtils.long2bytes(cursor), count, clazz);
+	}
+
+	/**
+	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	default <V> ScanResult<Map<String, V>> hScan(final String key, final long cursor, final int count,
+												 final TypeReference<V> type) {
+		return hScan(key, Long.toString(cursor), count, type);
+	}
+
+	/**
+	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	default <V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final long cursor, final int count,
+												 final TypeReference<V> type) {
+		return hScan(key, NumberUtils.long2bytes(cursor), count, type);
 	}
 
 	/**
@@ -2679,96 +2336,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final long count,
-													   final Class<V> clazz) {
-		return hScanObject(key, NumberUtils.long2bytes(cursor), count, clazz);
-	}
-
-	/**
-	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 * @param type
-	 * 		值类型引用
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 *
-	 * @see TypeReference
-	 */
-	default <V> ScanResult<Map<String, V>> hScanObject(final String key, final long cursor, final long count,
-													   final TypeReference<V> type) {
-		return hScanObject(key, Long.toString(cursor), count, type);
-	}
-
-	/**
-	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 * @param type
-	 * 		值类型引用
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 *
-	 * @see TypeReference
-	 */
-	default <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final long cursor, final long count,
-													   final TypeReference<V> type) {
-		return hScanObject(key, NumberUtils.long2bytes(cursor), count, type);
-	}
-
-	/**
-	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final long count);
-
-	/**
-	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final long count);
+	<V> ScanResult<Map<String, V>> hScan(final String key, final String cursor, final int count, final Class<V> clazz);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
@@ -2788,29 +2356,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final long count,
-											   final Class<V> clazz);
-
-	/**
-	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final long count,
-											   final Class<V> clazz);
+	<V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final byte[] cursor, final int count, final Class<V> clazz);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -2830,8 +2376,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final long count,
-											   final TypeReference<V> type);
+	<V> ScanResult<Map<String, V>> hScan(final String key, final String cursor, final int count,
+										 final TypeReference<V> type);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -2851,50 +2397,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final long count,
-											   final TypeReference<V> type);
-
-	/**
-	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param count
-	 * 		返回元素数量
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final String pattern,
-											   final long count);
-
-	/**
-	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param count
-	 * 		返回元素数量
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
-											   final long count);
+	<V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final byte[] cursor, final int count,
+										 final TypeReference<V> type);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
@@ -2916,8 +2420,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final String pattern,
-											   final long count, final Class<V> clazz);
+	<V> ScanResult<Map<String, V>> hScan(final String key, final String cursor, final String pattern, final int count,
+										 final Class<V> clazz);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
@@ -2939,8 +2443,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
-											   final long count, final Class<V> clazz);
+	<V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count,
+										 final Class<V> clazz);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -2963,7 +2467,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	<V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final String pattern,
-											   final long count, final TypeReference<V> type);
+											   final int count, final TypeReference<V> type);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -2986,252 +2490,36 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
-											   final long count, final TypeReference<V> type);
+											   final int count, final TypeReference<V> type);
 
 	@Override
-	default Long hSet(final String key, final Map<String, String> data) {
+	default Long hSet(final String key, final KeyValue<String, String>... data) {
 		return execute((client)->client.hashCommands().hSet(key, data));
 	}
 
 	@Override
-	default Long hSet(final byte[] key, final Map<byte[], byte[]> data) {
+	default Long hSet(final byte[] key, final KeyValue<byte[], byte[]>... data) {
 		return execute((client)->client.hashCommands().hSet(key, data));
 	}
 
-	/**
-	 * 批量将多个 field =&gt; value (域-值)对设置到哈希表 key 中
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hset/" target="_blank">https://redis.io/docs/latest/commands/hset/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param data
-	 * 		field =&gt; value (域-值)对
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 被修改或增加的 field 个数
-	 */
-	<V> Long hSet(final String key, final List<KeyValue<String, V>> data);
-
-	/**
-	 * 批量将多个 field =&gt; value (域-值)对设置到哈希表 key 中
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hset/" target="_blank">https://redis.io/docs/latest/commands/hset/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param data
-	 * 		field =&gt; value (域-值)对
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 被修改或增加的 field 个数
-	 */
-	<V> Long hSet(final byte[] key, final List<KeyValue<byte[], V>> data);
-
-	/**
-	 * 批量将多个 field =&gt; value (域-值)对设置到哈希表 key 中
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hset/" target="_blank">https://redis.io/docs/latest/commands/hset/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param data
-	 * 		field =&gt; value (域-值)对
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 被修改或增加的 field 个数
-	 */
-	@SuppressWarnings({"unchecked"})
-	default <V> Long hSet(final String key, final KeyValue<String, V>... data) {
-		return hSet(key, Arrays.asList(data));
-	}
-
-	/**
-	 * 批量将多个 field =&gt; value (域-值)对设置到哈希表 key 中
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hset/" target="_blank">https://redis.io/docs/latest/commands/hset/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param data
-	 * 		field =&gt; value (域-值)对
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 被修改或增加的 field 个数
-	 */
-	@SuppressWarnings({"unchecked"})
-	default <V> Long hSet(final byte[] key, final KeyValue<byte[], V>... data) {
-		return hSet(key, Arrays.asList(data));
-	}
-
 	@Override
-	default Status hSetEx(final String key, final Map<String, String> data) {
+	default Status hSetEx(final String key, final KeyValue<String, String>... data) {
 		return execute((client)->client.hashCommands().hSetEx(key, data));
 	}
 
 	@Override
-	default Status hSetEx(final byte[] key, final Map<byte[], byte[]> data) {
+	default Status hSetEx(final byte[] key, final KeyValue<byte[], byte[]>... data) {
 		return execute((client)->client.hashCommands().hSetEx(key, data));
 	}
 
 	@Override
-	default Status hSetEx(final String key, final Map<String, String> data, final HSetExArgument argument) {
+	default Status hSetEx(final String key, final KeyValue<String, String>[] data, final HSetExArgument argument) {
 		return execute((client)->client.hashCommands().hSetEx(key, data, argument));
 	}
 
 	@Override
-	default Status hSetEx(final byte[] key, final Map<byte[], byte[]> data, final HSetExArgument argument) {
+	default Status hSetEx(final byte[] key, final KeyValue<byte[], byte[]>[] data, final HSetExArgument argument) {
 		return execute((client)->client.hashCommands().hSetEx(key, data, argument));
-	}
-
-	/**
-	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param data
-	 * 		field =&gt; value (域-值)对
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
-	 */
-	<V> Status hSetEx(final String key, final List<KeyValue<String, V>> data);
-
-	/**
-	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param data
-	 * 		field =&gt; value (域-值)对
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
-	 */
-	<V> Status hSetEx(final byte[] key, final List<KeyValue<byte[], V>> data);
-
-	/**
-	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param data
-	 * 		field =&gt; value (域-值)对
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
-	 */
-	@SuppressWarnings({"unchecked"})
-	default <V> Status hSetEx(final String key, final KeyValue<String, V>... data) {
-		return hSetEx(key, Arrays.asList(data));
-	}
-
-	/**
-	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param data
-	 * 		field =&gt; value (域-值)对
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
-	 */
-	@SuppressWarnings({"unchecked"})
-	default <V> Status hSetEx(final byte[] key, final KeyValue<byte[], V>... data) {
-		return hSetEx(key, Arrays.asList(data));
-	}
-
-	/**
-	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param data
-	 * 		field =&gt; value (域-值)对
-	 * @param argument
-	 * 		参数
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
-	 */
-	<V> Status hSetEx(final String key, final List<KeyValue<String, V>> data, final HSetExArgument argument);
-
-	/**
-	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param data
-	 * 		field =&gt; value (域-值)对
-	 * @param argument
-	 * 		参数
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
-	 */
-	<V> Status hSetEx(final byte[] key, final List<KeyValue<byte[], V>> data, final HSetExArgument argument);
-
-	/**
-	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param data
-	 * 		field =&gt; value (域-值)对
-	 * @param argument
-	 * 		参数
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
-	 */
-	default <V> Status hSetEx(final String key, final KeyValue<String, V>[] data, final HSetExArgument argument) {
-		return hSetEx(key, Arrays.asList(data), argument);
-	}
-
-	/**
-	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param data
-	 * 		field =&gt; value (域-值)对
-	 * @param argument
-	 * 		参数
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
-	 */
-	default <V> Status hSetEx(final byte[] key, final KeyValue<byte[], V>[] data, final HSetExArgument argument) {
-		return hSetEx(key, Arrays.asList(data), argument);
 	}
 
 	@Override
@@ -3307,28 +2595,18 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	}
 
 	/**
-	 * 获取哈希表 key 中所有域的值，并将值反序列化为对象
+	 * 获取哈希表 key 中所有域的值，并将值反序列化为 clazz 指定的对象
 	 *
 	 * @param key
 	 * 		Key
+	 * @param clazz
+	 * 		值对象类
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return 哈希表 key 中所有域的值反序列化后的对象
 	 */
-	<V> List<V> hValsObject(final String key);
-
-	/**
-	 * 获取哈希表 key 中所有域的值，并将值反序列化为对象
-	 *
-	 * @param key
-	 * 		Key
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 哈希表 key 中所有域的值反序列化后的对象
-	 */
-	<V> List<V> hValsObject(final byte[] key);
+	<V> List<V> hVals(final String key, final Class<V> clazz);
 
 	/**
 	 * 获取哈希表 key 中所有域的值，并将值反序列化为 clazz 指定的对象
@@ -3342,21 +2620,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中所有域的值反序列化后的对象
 	 */
-	<V> List<V> hValsObject(final String key, final Class<V> clazz);
-
-	/**
-	 * 获取哈希表 key 中所有域的值，并将值反序列化为 clazz 指定的对象
-	 *
-	 * @param key
-	 * 		Key
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 哈希表 key 中所有域的值反序列化后的对象
-	 */
-	<V> List<V> hValsObject(final byte[] key, final Class<V> clazz);
+	<V> List<V> hVals(final byte[] key, final Class<V> clazz);
 
 	/**
 	 * 获取哈希表 key 中所有域的值，并将值反序列化为 type 指定的对象
@@ -3370,7 +2634,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中所有域的值反序列化后的对象
 	 */
-	<V> List<V> hValsObject(final String key, final TypeReference<V> type);
+	<V> List<V> hVals(final String key, final TypeReference<V> type);
 
 	/**
 	 * 获取哈希表 key 中所有域的值，并将值反序列化为 type 指定的对象
@@ -3384,6 +2648,6 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中所有域的值反序列化后的对象
 	 */
-	<V> List<V> hValsObject(final byte[] key, final TypeReference<V> type);
+	<V> List<V> hVals(final byte[] key, final TypeReference<V> type);
 
 }

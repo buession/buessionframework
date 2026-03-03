@@ -25,6 +25,7 @@
 package com.buession.redis.core.command;
 
 import com.buession.lang.Geo;
+import com.buession.lang.KeyValue;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.command.args.GeoAddArgument;
@@ -91,7 +92,7 @@ public interface GeoCommands extends RedisCommands {
 	 *
 	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
 	 */
-	Long geoAdd(final String key, final Map<String, Geo> memberCoordinates);
+	Long geoAdd(final String key, final KeyValue<String, Geo>... memberCoordinates);
 
 	/**
 	 * 批量将给定的空间元素（经度、纬度、名字）添加到指定的键里面
@@ -105,7 +106,7 @@ public interface GeoCommands extends RedisCommands {
 	 *
 	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
 	 */
-	Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates);
+	Long geoAdd(final byte[] key, final KeyValue<byte[], Geo>... memberCoordinates);
 
 	/**
 	 * 将给定的空间元素（经度、纬度、名字）添加到指定的键里面
@@ -163,7 +164,7 @@ public interface GeoCommands extends RedisCommands {
 	 *
 	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
 	 */
-	Long geoAdd(final String key, final GeoAddArgument argument, final Map<String, Geo> memberCoordinates);
+	Long geoAdd(final String key, final GeoAddArgument argument, final KeyValue<String, Geo>... memberCoordinates);
 
 	/**
 	 * 批量将给定的空间元素（经度、纬度、名字）添加到指定的键里面
@@ -179,7 +180,7 @@ public interface GeoCommands extends RedisCommands {
 	 *
 	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
 	 */
-	Long geoAdd(final byte[] key, final GeoAddArgument argument, final Map<byte[], Geo> memberCoordinates);
+	Long geoAdd(final byte[] key, final GeoAddArgument argument, final KeyValue<byte[], Geo>... memberCoordinates);
 
 	/**
 	 * 计算两个给定位置之间的距离

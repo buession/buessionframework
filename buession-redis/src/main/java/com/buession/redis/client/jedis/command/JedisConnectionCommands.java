@@ -24,6 +24,7 @@
  */
 package com.buession.redis.client.jedis.command;
 
+import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.Client;
@@ -62,13 +63,13 @@ public final class JedisConnectionCommands extends AbstractJedisRedisCommands im
 
 	@Override
 	public Status auth(final String user, final String password) {
-		final CommandArguments args = CommandArguments.create(user).add(password);
+		final CommandArguments args = CommandArguments.create().add(user, password);
 		return executeCommand(Command.AUTH, args);
 	}
 
 	@Override
 	public Status auth(final byte[] user, final byte[] password) {
-		final CommandArguments args = CommandArguments.create(user).add(password);
+		final CommandArguments args = CommandArguments.create().add(user, password);
 		return executeCommand(Command.AUTH, args);
 	}
 
@@ -112,13 +113,13 @@ public final class JedisConnectionCommands extends AbstractJedisRedisCommands im
 
 	@Override
 	public Status clientKill(final String host, final int port) {
-		final CommandArguments args = CommandArguments.create(host).add(port);
+		final CommandArguments args = CommandArguments.create().add(host, port);
 		return executeCommand(Command.CLIENT, SubCommand.CLIENT_KILL, args);
 	}
 
 	@Override
 	public Status clientKill(final byte[] host, final int port) {
-		final CommandArguments args = CommandArguments.create(host).add(port);
+		final CommandArguments args = CommandArguments.create().add(host, port);
 		return executeCommand(Command.CLIENT, SubCommand.CLIENT_KILL, args);
 	}
 
@@ -190,8 +191,8 @@ public final class JedisConnectionCommands extends AbstractJedisRedisCommands im
 
 	@Override
 	public Status clientTracking(final boolean on, final TrackingArgument argument) {
-		final CommandArguments args =
-				CommandArguments.create(on ? Keyword.Common.ON : Keyword.Common.OFF).add(argument);
+		final CommandArguments args = CommandArguments.create(on ? Keyword.Common.ON : Keyword.Common.OFF)
+				.add(argument);
 		return executeCommand(Command.CLIENT, SubCommand.CLIENT_TRACKING, args);
 	}
 
@@ -244,39 +245,45 @@ public final class JedisConnectionCommands extends AbstractJedisRedisCommands im
 
 	@Override
 	public Hello hello(int protover, String password) {
-		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(password);
+		final CommandArguments args = CommandArguments.create(protover).add(Keyword.Conn.AUTH).add(password);
 		return executeCommand(Command.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, byte[] password) {
-		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(password);
+		final CommandArguments args = CommandArguments.create(protover).add(Keyword.Conn.AUTH).add(password);
 		return executeCommand(Command.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, String username, String password) {
-		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(username).add(password);
+		final CommandArguments args =
+				CommandArguments.create(protover).add(Validate.isEmpty(username) ? Keyword.Conn.AUTH :
+						Keyword.Conn.AUTH2).add(username, password);
 		return executeCommand(Command.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, byte[] username, byte[] password) {
-		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(username).add(password);
+		final CommandArguments args =
+				CommandArguments.create(protover).add(Validate.isEmpty(username) ? Keyword.Conn.AUTH :
+						Keyword.Conn.AUTH2).add(username, password);
 		return executeCommand(Command.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, String username, String password, String clientName) {
-		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(username).add(password).add(
-				"SETNAME").add(clientName);
+		final CommandArguments args =
+				CommandArguments.create(protover).add(Validate.isEmpty(username) ? Keyword.Conn.AUTH :
+						Keyword.Conn.AUTH2).add(username, password).add("SETNAME", clientName);
 		return executeCommand(Command.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, byte[] username, byte[] password, byte[] clientName) {
-		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(username).add(password).add(
-				"SETNAME").add(clientName);
+		final CommandArguments args =
+				CommandArguments.create(protover).add(Validate.isEmpty(username) ? Keyword.Conn.AUTH :
+						Keyword.Conn.AUTH2).add(username, password).add("SETNAME", clientName);
 		return executeCommand(Command.HELLO, args);
 	}
 

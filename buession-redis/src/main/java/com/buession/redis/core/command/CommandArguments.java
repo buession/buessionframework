@@ -28,7 +28,9 @@ import com.buession.core.Range;
 import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
 import com.buession.lang.Constants;
+import com.buession.lang.KeyValue;
 import com.buession.redis.core.Keyword;
+import com.buession.redis.utils.SafeEncoder;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -74,6 +76,10 @@ public final class CommandArguments {
 	}
 
 	private CommandArguments(final Enum<?> value) {
+		add(value);
+	}
+
+	private CommandArguments(final KeyValue<?, ?> value) {
 		add(value);
 	}
 
@@ -133,6 +139,10 @@ public final class CommandArguments {
 		add(values);
 	}
 
+	private CommandArguments(final KeyValue<?, ?>... values) {
+		add(values);
+	}
+
 	private CommandArguments(final Object... values) {
 		add(values);
 	}
@@ -174,6 +184,10 @@ public final class CommandArguments {
 	}
 
 	public static CommandArguments create(final Enum<?> value) {
+		return new CommandArguments(value);
+	}
+
+	public static CommandArguments create(final KeyValue<?, ?> value) {
 		return new CommandArguments(value);
 	}
 
@@ -233,13 +247,17 @@ public final class CommandArguments {
 		return new CommandArguments(values);
 	}
 
+	public static CommandArguments create(final KeyValue<?, ?>... values) {
+		return new CommandArguments(values);
+	}
+
 	public static CommandArguments create(final Object... values) {
 		return new CommandArguments(values);
 	}
 
 	public CommandArguments add(final byte[] value) {
 		if(value != null){
-			parameters.add(value);
+			parameters.add(SafeEncoder.encode(value));
 		}
 
 		return this;
@@ -298,7 +316,11 @@ public final class CommandArguments {
 
 	public CommandArguments add(final Map<?, ?> value) {
 		if(value != null){
-			value.forEach(this::add);
+			for(Map.Entry<?, ?> e : value.entrySet()){
+				if(e.getValue() != null){
+					add(e.getKey(), e.getValue());
+				}
+			}
 		}
 
 		return this;
@@ -306,8 +328,10 @@ public final class CommandArguments {
 
 	public CommandArguments add(final Range<?> value) {
 		if(value != null){
-			parameters.add(value.getStart());
-			parameters.add(value.getEnd());
+			if(value.getStart() != null && value.getEnd() != null){
+				parameters.add(value.getStart());
+				parameters.add(value.getEnd());
+			}
 		}
 
 		return this;
@@ -319,6 +343,17 @@ public final class CommandArguments {
 				parameters.add(((Keyword) value).getValue());
 			}else{
 				parameters.add(value.name());
+			}
+		}
+
+		return this;
+	}
+
+	public CommandArguments add(final KeyValue<?, ?> value) {
+		if(value != null){
+			if(value.getKey() != null && value.getValue() != null){
+				parameters.add(value.getKey());
+				parameters.add(value.getValue());
 			}
 		}
 
@@ -378,6 +413,10 @@ public final class CommandArguments {
 	}
 
 	public CommandArguments add(final Enum<?>... values) {
+		return doBatchAdd(values);
+	}
+
+	public CommandArguments add(final KeyValue<?, ?>... values) {
 		return doBatchAdd(values);
 	}
 

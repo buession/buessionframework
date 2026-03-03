@@ -49,13 +49,13 @@ public final class LettuceCountMinSketchCommands extends AbstractLettuceRedisCom
 	}
 
 	@Override
-	public List<Long> cmsIncrby(final String key, final List<KeyValue<String, Long>> items) {
+	public List<Long> cmsIncrby(final String key, final KeyValue<String, Long>... items) {
 		final CommandArguments args = CommandArguments.create(key).add(items);
 		return executeCommand(Command.CMS_INCRBY, args);
 	}
 
 	@Override
-	public List<Long> cmsIncrby(final byte[] key, final List<KeyValue<byte[], Long>> items) {
+	public List<Long> cmsIncrby(final byte[] key, final KeyValue<byte[], Long>... items) {
 		final CommandArguments args = CommandArguments.create(key).add(items);
 		return executeCommand(Command.CMS_INCRBY, args);
 	}

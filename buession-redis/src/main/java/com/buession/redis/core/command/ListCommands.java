@@ -428,7 +428,7 @@ public interface ListCommands extends RedisCommands {
 	/**
 	 * 返回列表 key 中匹配给定 element 成员的索引
 	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/lpos.html" target="_blank">https://www.redis.com.cn/commands/lpos.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lpos/" target="_blank">https://redis.io/docs/latest/commands/lpos/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -442,7 +442,7 @@ public interface ListCommands extends RedisCommands {
 	/**
 	 * 返回列表 key 中匹配给定 element 成员的索引
 	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/lpos.html" target="_blank">https://www.redis.com.cn/commands/lpos.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lpos/" target="_blank">https://redis.io/docs/latest/commands/lpos/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -456,34 +456,102 @@ public interface ListCommands extends RedisCommands {
 	/**
 	 * 返回列表 key 中匹配给定 element 成员的索引
 	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/lpos.html" target="_blank">https://www.redis.com.cn/commands/lpos.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lpos/" target="_blank">https://redis.io/docs/latest/commands/lpos/</a></p>
 	 *
 	 * @param key
 	 * 		Key
 	 * @param element
 	 * 		成员
-	 * @param lPosArgument
+	 * @param argument
 	 *        {@link LPosArgument}
 	 *
 	 * @return 整数表示匹配元素的位置，返回 null 表示没有找到匹配元素
 	 */
-	List<Long> lPos(final String key, final String element, final LPosArgument lPosArgument);
+	List<Long> lPos(final String key, final String element, final LPosArgument argument);
 
 	/**
 	 * 返回列表 key 中匹配给定 element 成员的索引
 	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/lpos.html" target="_blank">https://www.redis.com.cn/commands/lpos.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lpos/" target="_blank">https://redis.io/docs/latest/commands/lpos/</a></p>
 	 *
 	 * @param key
 	 * 		Key
 	 * @param element
 	 * 		成员
-	 * @param lPosArgument
+	 * @param argument
 	 *        {@link LPosArgument}
 	 *
 	 * @return 整数表示匹配元素的位置，返回null表示没有找到匹配元素
 	 */
-	List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument);
+	List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument argument);
+
+	/**
+	 * 返回列表 key 中匹配给定 element 成员的索引
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lpos/" target="_blank">https://redis.io/docs/latest/commands/lpos/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param element
+	 * 		成员
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 整数表示匹配元素的位置，返回 null 表示没有找到匹配元素
+	 */
+	List<Long> lPos(final String key, final String element, final int count);
+
+	/**
+	 * 返回列表 key 中匹配给定 element 成员的索引
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lpos/" target="_blank">https://redis.io/docs/latest/commands/lpos/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param element
+	 * 		成员
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 整数表示匹配元素的位置，返回null表示没有找到匹配元素
+	 */
+	List<Long> lPos(final byte[] key, final byte[] element, final int count);
+
+	/**
+	 * 返回列表 key 中匹配给定 element 成员的索引
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lpos/" target="_blank">https://redis.io/docs/latest/commands/lpos/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param element
+	 * 		成员
+	 * @param argument
+	 *        {@link LPosArgument}
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 整数表示匹配元素的位置，返回 null 表示没有找到匹配元素
+	 */
+	List<Long> lPos(final String key, final String element, final LPosArgument argument, final int count);
+
+	/**
+	 * 返回列表 key 中匹配给定 element 成员的索引
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lpos/" target="_blank">https://redis.io/docs/latest/commands/lpos/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param element
+	 * 		成员
+	 * @param argument
+	 *        {@link LPosArgument}
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 整数表示匹配元素的位置，返回null表示没有找到匹配元素
+	 */
+	List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument argument, final int count);
 
 	/**
 	 * 将一个或多个值 value 插入到列表 key 的表头
@@ -593,7 +661,7 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * @return 被移除元素的数量
 	 */
-	Long lRem(final String key, final String value, final long count);
+	Long lRem(final String key, final String value, final int count);
 
 	/**
 	 * 移除列表中与参数 value 相等的 count 个元素元素
@@ -609,7 +677,7 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * @return 被移除元素的数量
 	 */
-	Long lRem(final byte[] key, final byte[] value, final long count);
+	Long lRem(final byte[] key, final byte[] value, final int count);
 
 	/**
 	 * 将列表 key 下标为 index 的元素的值设置为 value

@@ -58,7 +58,11 @@ public interface Keyword extends Value<String>, Rawable {
 
 		FORCE,
 
-		REPLACE
+		REPLACE,
+
+		ALL,
+
+		ANY
 	}
 
 	enum Conn {
@@ -75,6 +79,12 @@ public interface Keyword extends Value<String>, Rawable {
 
 	enum Database {
 		DB
+	}
+
+	enum Hash {
+		FIELDS,
+
+		WITHVALUES
 	}
 
 	enum Scan {

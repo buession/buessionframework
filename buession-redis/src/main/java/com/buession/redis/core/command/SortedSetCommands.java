@@ -1938,7 +1938,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 * @return 如果 member 是有序集 key 的成员，返回 member 的排名；
 	 * 如果 member 不是有序集 key 的成员，返回 null
 	 */
-	Tuple zRankWithScores(final String key, final String member);
+	KeyValue<Long, Double> zRankWithScores(final String key, final String member);
 
 	/**
 	 * 获取有序集 key 中成员 member 的排名；其中有序集成员按 score 值递增（从小到大）顺序排列
@@ -1953,7 +1953,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 * @return 如果 member 是有序集 key 的成员，返回 member 的排名；
 	 * 如果 member 不是有序集 key 的成员，返回 null
 	 */
-	Tuple zRankWithScores(final byte[] key, final byte[] member);
+	KeyValue<Long, Double> zRankWithScores(final byte[] key, final byte[] member);
 
 	/**
 	 * 移除有序集 key 中的一个或多个成员，不存在的成员将被忽略
@@ -2446,7 +2446,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 * @return 如果 member 是有序集 key 的成员，返回 member 的排名；
 	 * 如果 member 不是有序集 key 的成员，返回 null
 	 */
-	Tuple zRevRankWithScore(final String key, final String member);
+	KeyValue<Long, Double> zRevRankWithScore(final String key, final String member);
 
 	/**
 	 * 获取有序集 key 中成员 member 的排名。其中有序集成员按 score 值递减（从大到小）排序
@@ -2461,7 +2461,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 * @return 如果 member 是有序集 key 的成员，返回 member 的排名；
 	 * 如果 member 不是有序集 key 的成员，返回 null
 	 */
-	Tuple zRevRankWithScore(final byte[] key, final byte[] member);
+	KeyValue<Long, Double> zRevRankWithScore(final byte[] key, final byte[] member);
 
 	/**
 	 * 迭代有序集 key 中的键值对

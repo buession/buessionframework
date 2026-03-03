@@ -25,31 +25,26 @@
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.validator.Validate;
-import com.buession.redis.core.AclLog;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import com.buession.lang.KeyValue;
+import io.lettuce.core.ScoredValue;
 
 /**
- *
+ * Lettuce {@link ScoredValue} 转换为 {@link KeyValue}
  *
  * @author Yong.Teng
- * @since 4.0.0
+ * @since 3.0.0
  */
-public final class AclLogConverter implements Converter<Map<String, Object>, AclLog> {
+public final class ScoredValueKeyValueConverter<SK, TK> implements Converter<ScoredValue<SK>, KeyValue<TK, Double>> {
+
+	private final Converter<SK, TK> converter;
+
+	public ScoredValueKeyValueConverter(final Converter<SK, TK> converter) {
+		this.converter = converter;
+	}
 
 	@Override
-	public AclLog convert(final Map<String, Object> source) {
-		if(source == null){
-			return null;
-		}
-
-		if(Validate.isEmpty(source)){
-			return Collections.emptyList();
-		}
-		return List.of();
+	public KeyValue<TK, Double> convert(final ScoredValue<SK> source) {
+		return source == null ? null : new KeyValue<>(converter.convert(source.getValue()), source.getScore());
 	}
 
 }

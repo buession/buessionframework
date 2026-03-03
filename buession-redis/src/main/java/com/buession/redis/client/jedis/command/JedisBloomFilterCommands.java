@@ -99,7 +99,7 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 
 	@Override
 	public List<Boolean> bfInsert(final String key, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add("ITEMS").add(items);
+		final CommandArguments args = CommandArguments.create(key).add("ITEMS", items);
 		return executeCommand(Command.BF_INSERT, args, (cmd)->cmd.bfInsert(rawKey(key), items), (v)->v);
 	}
 
@@ -110,7 +110,7 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 
 	@Override
 	public List<Boolean> bfInsert(final String key, final BFInsertArgument argument, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS").add(items);
+		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS", items);
 		final BFInsertArgumentConverter bfInsertArgumentConverter = new BFInsertArgumentConverter();
 		return executeCommand(Command.BF_INSERT, args,
 				(cmd)->cmd.bfInsert(rawKey(key), bfInsertArgumentConverter.convert(argument), items), (v)->v);
@@ -123,7 +123,7 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 
 	@Override
 	public Status bfLoadchunk(final String key, final long iterator, final byte[] data) {
-		final CommandArguments args = CommandArguments.create(key).add(iterator).add(SafeEncoder.encode(data));
+		final CommandArguments args = CommandArguments.create(key).add(iterator).add(data);
 		return executeCommand(Command.BF_LOADCHUNK, args, (cmd)->cmd.bfLoadChunk(rawKey(key), iterator, data),
 				new OkStatusConverter());
 	}

@@ -30,6 +30,7 @@ import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.core.FlushMode;
 import com.buession.redis.core.FunctionRestoreMode;
 import com.buession.redis.core.FunctionStats;
+import com.buession.redis.core.Keyword;
 import com.buession.redis.core.LibraryInfo;
 import com.buession.redis.core.ScriptDebugMode;
 import com.buession.redis.core.command.Command;
@@ -74,26 +75,26 @@ public final class LettuceScriptingCommands extends AbstractLettuceRedisCommands
 
 	@Override
 	public Object eval(final String script, final String... keys) {
-		final CommandArguments args = CommandArguments.create(script).add(keys.length).add(keys);
+		final CommandArguments args = CommandArguments.create(script).add(keys.length, keys);
 		return eval(args, (cmd)->cmd.eval(script, ScriptOutputType.OBJECT, SafeEncoder.encode(keys)));
 	}
 
 	@Override
 	public Object eval(final byte[] script, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create(script).add(keys.length).add(keys);
+		final CommandArguments args = CommandArguments.create(script).add(keys.length, keys);
 		return eval(args, (cmd)->cmd.eval(script, ScriptOutputType.OBJECT, keys));
 	}
 
 	@Override
 	public Object eval(final String script, final String[] keys, final String[] arguments) {
-		final CommandArguments args = CommandArguments.create(script).add(keys).add(keys.length).add(arguments);
+		final CommandArguments args = CommandArguments.create(script).add(keys.length, keys).add(arguments);
 		return eval(args, (cmd)->cmd.eval(script, ScriptOutputType.OBJECT, SafeEncoder.encode(keys),
 				SafeEncoder.encode(arguments)));
 	}
 
 	@Override
 	public Object eval(final byte[] script, final byte[][] keys, final byte[][] arguments) {
-		final CommandArguments args = CommandArguments.create(script).add(keys).add(keys.length).add(arguments);
+		final CommandArguments args = CommandArguments.create(script).add(keys.length, keys).add(arguments);
 		return eval(args, (cmd)->cmd.eval(script, ScriptOutputType.OBJECT, keys, arguments));
 	}
 
@@ -111,25 +112,25 @@ public final class LettuceScriptingCommands extends AbstractLettuceRedisCommands
 
 	@Override
 	public Object evalRo(final String script, final String... keys) {
-		final CommandArguments args = CommandArguments.create(script).add(keys.length).add(keys);
+		final CommandArguments args = CommandArguments.create(script).add(keys.length, keys);
 		return evalRo(script, keys, new String[]{}, args);
 	}
 
 	@Override
 	public Object evalRo(final byte[] script, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create(script).add(keys.length).add(keys);
+		final CommandArguments args = CommandArguments.create(script).add(keys.length, keys);
 		return evalRo(script, keys, new byte[][]{}, args);
 	}
 
 	@Override
 	public Object evalRo(final String script, final String[] keys, final String[] arguments) {
-		final CommandArguments args = CommandArguments.create(script).add(keys.length).add(keys).add(arguments);
+		final CommandArguments args = CommandArguments.create(script).add(keys.length, keys).add(arguments);
 		return evalRo(script, keys, arguments, args);
 	}
 
 	@Override
 	public Object evalRo(final byte[] script, final byte[][] keys, final byte[][] arguments) {
-		final CommandArguments args = CommandArguments.create(script).add(keys.length).add(keys).add(arguments);
+		final CommandArguments args = CommandArguments.create(script).add(keys.length, keys).add(arguments);
 		return evalRo(script, keys, arguments, args);
 	}
 
@@ -147,26 +148,26 @@ public final class LettuceScriptingCommands extends AbstractLettuceRedisCommands
 
 	@Override
 	public Object evalSha(final String digest, final String... keys) {
-		final CommandArguments args = CommandArguments.create(digest).add(keys.length).add(keys);
+		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys);
 		return evalSha(args, (cmd)->cmd.evalsha(digest, ScriptOutputType.OBJECT, SafeEncoder.encode(keys)));
 	}
 
 	@Override
 	public Object evalSha(final byte[] digest, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create(digest).add(keys.length).add(keys);
+		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys);
 		return evalSha(args, (cmd)->cmd.evalsha(SafeEncoder.encode(digest), ScriptOutputType.OBJECT, keys));
 	}
 
 	@Override
 	public Object evalSha(final String digest, final String[] keys, final String[] arguments) {
-		final CommandArguments args = CommandArguments.create(digest).add(keys.length).add(keys);
+		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys);
 		return evalSha(args, (cmd)->cmd.evalsha(digest, ScriptOutputType.OBJECT, SafeEncoder.encode(keys),
 				SafeEncoder.encode(arguments)));
 	}
 
 	@Override
 	public Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] arguments) {
-		final CommandArguments args = CommandArguments.create(digest).add(keys.length).add(keys);
+		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys);
 		return evalSha(args, (cmd)->cmd.evalsha(SafeEncoder.encode(digest), ScriptOutputType.OBJECT, keys,
 				arguments));
 	}
@@ -185,25 +186,25 @@ public final class LettuceScriptingCommands extends AbstractLettuceRedisCommands
 
 	@Override
 	public Object evalShaRo(final String digest, final String... keys) {
-		final CommandArguments args = CommandArguments.create(digest).add(keys.length).add(keys);
+		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys);
 		return executeCommand(Command.EVALSHA_RO, args);
 	}
 
 	@Override
 	public Object evalShaRo(final byte[] digest, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create(digest).add(keys.length).add(keys);
+		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys);
 		return executeCommand(Command.EVALSHA_RO, args);
 	}
 
 	@Override
 	public Object evalShaRo(final String digest, final String[] keys, final String[] arguments) {
-		final CommandArguments args = CommandArguments.create(digest).add(keys.length).add(keys).add(arguments);
+		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys).add(arguments);
 		return executeCommand(Command.EVALSHA_RO, args);
 	}
 
 	@Override
 	public Object evalShaRo(final byte[] digest, final byte[][] keys, final byte[][] arguments) {
-		final CommandArguments args = CommandArguments.create(digest).add(keys.length).add(keys).add(arguments);
+		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys).add(arguments);
 		return executeCommand(Command.EVALSHA_RO, args);
 	}
 
@@ -220,26 +221,26 @@ public final class LettuceScriptingCommands extends AbstractLettuceRedisCommands
 
 	@Override
 	public Object fCall(final String function, final String... keys) {
-		final CommandArguments args = CommandArguments.create(function).add(keys.length).add(keys);
+		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys);
 		return fCall(args, (cmd)->cmd.fcall(function, ScriptOutputType.OBJECT, SafeEncoder.encode(keys)));
 	}
 
 	@Override
 	public Object fCall(final byte[] function, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create(function).add(keys.length).add(keys);
+		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys);
 		return fCall(args, (cmd)->cmd.fcall(SafeEncoder.encode(function), ScriptOutputType.OBJECT, keys));
 	}
 
 	@Override
 	public Object fCall(final String function, final String[] keys, final String[] arguments) {
-		final CommandArguments args = CommandArguments.create(function).add(keys.length).add(keys);
+		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys);
 		return fCall(args, (cmd)->cmd.fcall(function, ScriptOutputType.OBJECT, SafeEncoder.encode(keys),
 				SafeEncoder.encode(arguments)));
 	}
 
 	@Override
 	public Object fCall(final byte[] function, final byte[][] keys, final byte[][] arguments) {
-		final CommandArguments args = CommandArguments.create(function).add(keys.length).add(keys);
+		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys);
 		return fCall(args, (cmd)->cmd.fcall(SafeEncoder.encode(function), ScriptOutputType.OBJECT, keys,
 				arguments));
 	}
@@ -257,26 +258,26 @@ public final class LettuceScriptingCommands extends AbstractLettuceRedisCommands
 
 	@Override
 	public Object fCallRo(final String function, final String... keys) {
-		final CommandArguments args = CommandArguments.create(function).add(keys.length).add(keys);
+		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys);
 		return fCallRo(args, (cmd)->cmd.fcall(function, ScriptOutputType.OBJECT, SafeEncoder.encode(keys)));
 	}
 
 	@Override
 	public Object fCallRo(final byte[] function, final byte[]... keys) {
-		final CommandArguments args = CommandArguments.create(function).add(keys.length).add(keys);
+		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys);
 		return fCallRo(args, (cmd)->cmd.fcall(SafeEncoder.encode(function), ScriptOutputType.OBJECT, keys));
 	}
 
 	@Override
 	public Object fCallRo(final String function, final String[] keys, final String[] arguments) {
-		final CommandArguments args = CommandArguments.create(function).add(keys.length).add(keys);
+		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys);
 		return fCallRo(args, (cmd)->cmd.fcall(function, ScriptOutputType.OBJECT, SafeEncoder.encode(keys),
 				SafeEncoder.encode(arguments)));
 	}
 
 	@Override
 	public Object fCallRo(final byte[] function, final byte[][] keys, final byte[][] arguments) {
-		final CommandArguments args = CommandArguments.create(function).add(keys.length).add(keys);
+		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys);
 		return fCallRo(args, (cmd)->cmd.fcallReadOnly(SafeEncoder.encode(function), ScriptOutputType.OBJECT, keys,
 				arguments));
 	}
@@ -355,7 +356,8 @@ public final class LettuceScriptingCommands extends AbstractLettuceRedisCommands
 
 	@Override
 	public String functionLoad(final String functionCode, final boolean replace) {
-		final CommandArguments args = CommandArguments.create(functionCode).add(replace ? "REPLACE" : null);
+		final CommandArguments args = CommandArguments.create(functionCode)
+				.add(replace ? Keyword.Common.REPLACE : null);
 		return executeCommand(Command.FUNCTION, SubCommand.FUNCTION_LOAD, args,
 				(cmd)->cmd.functionLoad(functionCode, replace), (v)->v);
 	}

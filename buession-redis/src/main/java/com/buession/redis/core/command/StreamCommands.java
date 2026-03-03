@@ -2026,13 +2026,13 @@ public interface StreamCommands extends RedisCommands {
 	 *        {@link MaxLenMinId}
 	 * @param deletionPolicy
 	 * 		删除策略
-	 * @param count
+	 * @param limit
 	 * 		数量
 	 *
 	 * @return The number of entries deleted from the stream.
 	 */
 	Long xTrim(final String key, final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy,
-			   final int count);
+			   final int limit);
 
 	/**
 	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed
@@ -2045,13 +2045,13 @@ public interface StreamCommands extends RedisCommands {
 	 *        {@link MaxLenMinId}
 	 * @param deletionPolicy
 	 * 		删除策略
-	 * @param count
+	 * @param limit
 	 * 		数量
 	 *
 	 * @return The number of entries deleted from the stream.
 	 */
 	Long xTrim(final byte[] key, final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy,
-			   final int count);
+			   final int limit);
 
 	/**
 	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed
@@ -2062,12 +2062,12 @@ public interface StreamCommands extends RedisCommands {
 	 * 		Key
 	 * @param maxLenMinId
 	 *        {@link MaxLenMinId}
-	 * @param count
+	 * @param limit
 	 * 		数量
 	 *
 	 * @return The number of entries deleted from the stream.
 	 */
-	Long xTrim(final String key, final MaxLenMinId<?> maxLenMinId, final int count);
+	Long xTrim(final String key, final MaxLenMinId<?> maxLenMinId, final int limit);
 
 	/**
 	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed
@@ -2078,11 +2078,11 @@ public interface StreamCommands extends RedisCommands {
 	 * 		Key
 	 * @param maxLenMinId
 	 *        {@link MaxLenMinId}
-	 * @param count
+	 * @param limit
 	 * 		数量
 	 *
 	 * @return The number of entries deleted from the stream.
 	 */
-	Long xTrim(final byte[] key, final MaxLenMinId<?> maxLenMinId, final int count);
+	Long xTrim(final byte[] key, final MaxLenMinId<?> maxLenMinId, final int limit);
 
 }

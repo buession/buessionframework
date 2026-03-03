@@ -484,6 +484,38 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 		return execute((client)->client.keyCommands().expireTime(key));
 	}
 
+	/**
+	 * 获取 Key 的过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/expiretime/" target="_blank">https://redis.io/docs/latest/commands/expiretime/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;-1 if the field exists but has no associated expiration set;
+	 * the expiration (Unix timestamp) in seconds.
+	 */
+	default Date expireTimeDate(final String key) {
+		final Long result = expireTime(key);
+		return result != null && result != -1 && result != -2 ? new Date(result * 1000) : null;
+	}
+
+	/**
+	 * 获取 Key 的过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/expiretime/" target="_blank">https://redis.io/docs/latest/commands/expiretime/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;-1 if the field exists but has no associated expiration set;
+	 * the expiration (Unix timestamp) in seconds.
+	 */
+	default Date expireTimeDate(final byte[] key) {
+		final Long result = expireTime(key);
+		return result != null && result != -1 && result != -2 ? new Date(result * 1000) : null;
+	}
+
 	@Override
 	default Set<String> keys(final String pattern) {
 		return execute((client)->client.keyCommands().keys(pattern));
@@ -1090,6 +1122,36 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 		return execute((client)->client.keyCommands().pExpireTime(key));
 	}
 
+	/**
+	 * 获取 Key 的过期时间戳(单位：毫秒)
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/pexpiretime/" target="_blank">https://redis.io/docs/latest/commands/pexpiretime/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return Key 的过期时间戳
+	 */
+	default Date pExpireTimeDate(final String key) {
+		final Long value = pExpireTime(key);
+		return value != null && value != -1 && value != -2 ? new Date(value) : null;
+	}
+
+	/**
+	 * 获取 Key 的过期时间戳(单位：毫秒)
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/pexpiretime/" target="_blank">https://redis.io/docs/latest/commands/pexpiretime/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return Key 的过期时间戳
+	 */
+	default Date pExpireTimeDate(final byte[] key) {
+		final Long value = pExpireTime(key);
+		return value != null && value != -1 && value != -2 ? new Date(value) : null;
+	}
+
 	@Override
 	default Long pTtl(final String key) {
 		return execute((client)->client.keyCommands().pTtl(key));
@@ -1098,36 +1160,6 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	@Override
 	default Long pTtl(final byte[] key) {
 		return execute((client)->client.keyCommands().pTtl(key));
-	}
-
-	/**
-	 * 获取给定 key 的过期时间
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/expire/pttl.html" target="_blank">http://redisdoc.com/expire/pttl.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 当 key 不存在时，或没有设置剩余生存时间时，返回 null；否则返回过期时间
-	 */
-	default Date pTtlAt(final String key) {
-		Long ttl = pTtl(key);
-		return ttl != null && ttl >= 0 ? new Date(System.currentTimeMillis() + pTtl(key)) : null;
-	}
-
-	/**
-	 * 获取给定 key 的过期时间
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/expire/pttl.html" target="_blank">http://redisdoc.com/expire/pttl.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 当 key 不存在时，或没有设置剩余生存时间时，返回 null；否则返回过期时间
-	 */
-	default Date pTtlAt(final byte[] key) {
-		Long ttl = pTtl(key);
-		return ttl != null && ttl >= 0 ? new Date(System.currentTimeMillis() + pTtl(key)) : null;
 	}
 
 	@Override

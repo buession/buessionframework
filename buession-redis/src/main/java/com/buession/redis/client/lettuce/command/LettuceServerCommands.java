@@ -38,6 +38,7 @@ import com.buession.redis.core.CommandKeyAndFlag;
 import com.buession.redis.core.FlushMode;
 import com.buession.redis.core.HotKey;
 import com.buession.redis.core.Info;
+import com.buession.redis.core.Keyword;
 import com.buession.redis.core.LatencyHistogram;
 import com.buession.redis.core.LatencyHistory;
 import com.buession.redis.core.LatencyLatest;
@@ -62,6 +63,7 @@ import com.buession.redis.core.internal.convert.lettuce.params.ShutdownArgumentC
 import com.buession.redis.core.internal.convert.lettuce.response.AclCategoryConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.AclLogConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.AclUserConverter;
+import com.buession.redis.core.internal.convert.lettuce.response.CommandInfoConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.CommandTypeConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.RedisServerTimeConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.RoleConverter;
@@ -70,7 +72,6 @@ import com.buession.redis.core.internal.convert.response.InfoConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.utils.SafeEncoder;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -132,7 +133,7 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public Status aclDryRun(final String username, final Command command, final String... args) {
-		final CommandArguments args1 = CommandArguments.create(username).add(command).add(args);
+		final CommandArguments args1 = CommandArguments.create(username).add(command, args);
 		return executeCommand(Command.ACL, SubCommand.ACL_DRYRUN, args1,
 				(cmd)->cmd.aclDryRun(username, command.getName(), args), new OkStatusConverter());
 	}
@@ -177,18 +178,20 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public List<AclLog> aclLog() {
-		return executeCommand(Command.ACL, SubCommand.ACL_LOG, (cmd)->cmd.aclLoad(), new AclLogConverter());
+		return executeCommand(Command.ACL, SubCommand.ACL_LOG, (cmd)->cmd.aclLog(),
+				new ListConverter<>(new AclLogConverter()));
 	}
 
 	@Override
-	public List<AclLog> aclLog(final long count) {
+	public List<AclLog> aclLog(final int count) {
 		final CommandArguments args = CommandArguments.create(count);
-		return executeCommand(Command.ACL, SubCommand.ACL_LOG, args, (cmd)->cmd.aclLoad(), new AclLogConverter());
+		return executeCommand(Command.ACL, SubCommand.ACL_LOG, args, (cmd)->cmd.aclLog(count),
+				new ListConverter<>(new AclLogConverter()));
 	}
 
 	@Override
 	public Status aclLogReset() {
-		final CommandArguments args = CommandArguments.create("RESET");
+		final CommandArguments args = CommandArguments.create(Keyword.Conn.RESET);
 		return executeCommand(Command.ACL, SubCommand.ACL_LOG, args, (cmd)->cmd.aclLogReset(), new OkStatusConverter());
 	}
 
@@ -281,10 +284,7 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 		}
 
 		return executeCommand(Command.COMMAND, SubCommand.COMMAND_INFO, args, (cmd)->cmd.commandInfo(commandInfoArgs),
-				(v)->{
-					final List<CommandInfo> commandInfos = new ArrayList<>();
-					return commandInfos;
-				});
+				new ListConverter<>(new CommandInfoConverter()));
 	}
 
 	@Override
@@ -468,7 +468,7 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public String lolwut(final String version) {
-		final CommandArguments args = CommandArguments.create("VERSION").add(version);
+		final CommandArguments args = CommandArguments.create("VERSION", version);
 		return executeCommand(Command.LOLWUT, args);
 	}
 
@@ -639,7 +639,7 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public Status slaveOf(final String host, final int port) {
-		final CommandArguments args = CommandArguments.create(host).add(port);
+		final CommandArguments args = CommandArguments.create(host, port);
 		return executeCommand(Command.SAVE, args, (cmd)->cmd.slaveof(host, port), new OkStatusConverter());
 	}
 
@@ -650,7 +650,7 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 	}
 
 	@Override
-	public List<SlowLog> slowLogGet(final long count) {
+	public List<SlowLog> slowLogGet(final int count) {
 		final CommandArguments args = CommandArguments.create(count);
 		return executeCommand(Command.SLOWLOG, SubCommand.SLOWLOG_GET, args, (cmd)->cmd.slowlogGet(),
 				new ListConverter<>(new SlowlogConverter()));
@@ -658,13 +658,13 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public Long slowLogLen() {
-		return executeCommand(Command.SLOWLOG, SubCommand.SLOWLOG_GET, (cmd)->cmd.slowlogLen(),
+		return executeCommand(Command.SLOWLOG, SubCommand.SLOWLOG_LEN, (cmd)->cmd.slowlogLen(),
 				(v)->v);
 	}
 
 	@Override
 	public Status slowLogReset() {
-		return executeCommand(Command.SLOWLOG, SubCommand.SLOWLOG_GET, (cmd)->cmd.slowlogReset(),
+		return executeCommand(Command.SLOWLOG, SubCommand.SLOWLOG_RESET, (cmd)->cmd.slowlogReset(),
 				new OkStatusConverter());
 	}
 

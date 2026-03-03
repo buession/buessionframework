@@ -26,10 +26,7 @@ package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
-import com.buession.core.converter.MapEntryMapConverter;
 import com.buession.redis.core.ScanResult;
-
-import java.util.Map;
 
 /**
  * jedis {@link redis.clients.jedis.resps.ScanResult} 转换为 {@link ScanResult}
@@ -49,27 +46,6 @@ public class ScanResultConverter<S, T>
 	@Override
 	public ScanResult<T> convert(final redis.clients.jedis.resps.ScanResult<S> source) {
 		return source == null ? null : new ScanResult<>(source.getCursor(), converter.convert(source.getResult()));
-	}
-
-	/**
-	 * jedis {@link redis.clients.jedis.resps.ScanResult}&lt;Map.Entry&lt;K&gt;, &lt;K&gt;&gt; 转换为 {@link ScanResult}
-	 * &lt;Map&lt;K&gt;, &lt;K&gt;&gt;
-	 *
-	 * @param <K>
-	 * 		Map Key 类型
-	 * @param <V>
-	 * 		Map 值类型
-	 *
-	 * @author Yong.Teng
-	 * @since 4.0.0
-	 */
-	public final static class MapEntryScanResultConverter<K, V>
-			extends ScanResultConverter<Map.Entry<K, V>, Map<K, V>> {
-
-		public MapEntryScanResultConverter() {
-			super(new MapEntryMapConverter<>((k)->k, (v)->v));
-		}
-
 	}
 
 	/**

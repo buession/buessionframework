@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.command;
 
+import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.core.DelExType;
 import com.buession.redis.core.LcsResult;
@@ -495,7 +496,7 @@ public interface StringCommands extends RedisCommands {
 	 *
 	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	Status mSet(final Map<String, String> values);
+	Status mSet(final KeyValue<String, String>... values);
 
 	/**
 	 * Atomically sets multiple string keys with an optional shared expiration in a single operation.
@@ -509,7 +510,7 @@ public interface StringCommands extends RedisCommands {
 	 *
 	 * @return 当所有给定键都设置成功时，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	Status mSetEx(final Map<String, String> values, final MSetExArgument argument);
+	Status mSetEx(final KeyValue<String, String>[] values, final MSetExArgument argument);
 
 	/**
 	 * 当且仅当所有给定键都不存在时，为所有给定键设置值
@@ -521,7 +522,7 @@ public interface StringCommands extends RedisCommands {
 	 *
 	 * @return 当所有给定键都设置成功时，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	Status mSetNx(final Map<String, String> values);
+	Status mSetNx(final KeyValue<String, String>... values);
 
 	/**
 	 * 将键 key 的值设置为 value ，并将键 key 的生存时间设置为 lifetime；

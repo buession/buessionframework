@@ -25,31 +25,19 @@
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.validator.Validate;
-import com.buession.redis.core.AclLog;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import com.buession.redis.core.CommandInfo;
 
 /**
- *
+ * <code>COMMAND INFO</code> 命令结果转换
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class AclLogConverter implements Converter<Map<String, Object>, AclLog> {
+public final class CommandInfoConverter implements Converter<Object, CommandInfo> {
 
 	@Override
-	public AclLog convert(final Map<String, Object> source) {
-		if(source == null){
-			return null;
-		}
-
-		if(Validate.isEmpty(source)){
-			return Collections.emptyList();
-		}
-		return List.of();
+	public CommandInfo convert(final Object source) {
+		return null;
 	}
 
 }

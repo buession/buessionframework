@@ -30,8 +30,6 @@ import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.TransactionCommands;
-import redis.clients.jedis.Builder;
-import redis.clients.jedis.Response;
 
 import java.util.List;
 
@@ -60,6 +58,8 @@ public final class JedisTransactionCommands extends AbstractJedisRedisCommands i
 	public List<Object> exec() {
 		return executeCommand(Command.EXEC, (cmd)->{
 			RedisConnection connection = client.getConnection();
+			return connection.exec();
+			/*
 			return new Response<>(new Builder<List<Object>>() {
 
 				@Override
@@ -68,42 +68,9 @@ public final class JedisTransactionCommands extends AbstractJedisRedisCommands i
 				}
 
 			});
+
+			 */
 		}, (v)->v);
-		/*
-		if(isPipeline()){
-			return new JedisPipelineCommand<>(client, ProtocolCommand.EXEC, (cmd)->{
-				RedisConnection connection = client.getConnection();
-
-				return new Response<>(new Builder<List<Object>>() {
-
-					@Override
-					public List<Object> build(Object data) {
-						return connection.exec();
-					}
-
-				});
-			}, (v)->v).run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.EXEC, (cmd)->{
-				RedisConnection connection = client.getConnection();
-
-				return new Response<>(new Builder<List<Object>>() {
-
-					@Override
-					public List<Object> build(Object data) {
-						return connection.exec();
-					}
-
-				});
-			}, (v)->v).run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.EXEC, (cmd)->{
-				RedisConnection connection = client.getConnection();
-				return connection.exec();
-			}, (v)->v).run();
-		}
-
-		 */
 	}
 
 	@Override
@@ -112,39 +79,6 @@ public final class JedisTransactionCommands extends AbstractJedisRedisCommands i
 			cmd.multi();
 			return Status.SUCCESS;
 		}, (v)->v);
-		/*
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.MULTI)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.MULTI,
-					(cmd)->new Response<>(new Builder<Status>() {
-
-						@Override
-						public Status build(Object data) {
-							try{
-								cmd.multi();
-								return Status.SUCCESS;
-							}catch(Exception e){
-								return Status.FAILURE;
-							}
-						}
-
-					}), (v)->v)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.MULTI, (cmd)->{
-				try{
-					cmd.multi();
-					return Status.SUCCESS;
-				}catch(Exception e){
-					return Status.FAILURE;
-				}
-			}, (v)->v)
-					.run();
-		}
-
-		 */
 	}
 
 	@Override
@@ -153,27 +87,6 @@ public final class JedisTransactionCommands extends AbstractJedisRedisCommands i
 			//cmd.unwatch();
 			return Status.SUCCESS;
 		}, (v)->v);
-		/*
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.UNWATCH)
-					.run();
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.UNWATCH,
-					(cmd)->new Response<>(new Builder<String>() {
-
-						@Override
-						public String build(Object data) {
-							return cmd.unwatch();
-						}
-
-					}), okStatusConverter)
-					.run();
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.UNWATCH, (cmd)->cmd.unwatch(), okStatusConverter)
-					.run();
-		}
-
-		 */
 	}
 
 	@Override
@@ -183,27 +96,6 @@ public final class JedisTransactionCommands extends AbstractJedisRedisCommands i
 			//cmd.unwatch();
 			return Status.SUCCESS;
 		}, (v)->v);
-/*
-		if(isPipeline()){
-			return new JedisPipelineCommand<Status, Status>(client, ProtocolCommand.WATCH)
-					.run(args);
-		}else if(isTransaction()){
-			return new JedisTransactionCommand<>(client, ProtocolCommand.WATCH,
-					(cmd)->new Response<>(new Builder<String>() {
-
-						@Override
-						public String build(Object data) {
-							return cmd.watch(keys);
-						}
-
-					}), okStatusConverter)
-					.run(args);
-		}else{
-			return new JedisCommand<>(client, ProtocolCommand.WATCH, (cmd)->cmd.watch(keys), okStatusConverter)
-					.run(args);
-		}
-
- */
 	}
 
 	@Override

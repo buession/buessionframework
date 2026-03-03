@@ -48,35 +48,41 @@ public final class LettuceHyperLogLoCommands extends AbstractLettuceRedisCommand
 
 	@Override
 	public Status pfAdd(final String key, final String... elements) {
-		return pfAdd(SafeEncoder.encode(key), SafeEncoder.encode(elements));
+		final CommandArguments args = CommandArguments.create(key).add(elements);
+		return executeCommand(Command.PFADD, args, (cmd)->cmd.pfadd(rawBinaryKey(key), SafeEncoder.encode(elements)),
+				new OneStatusConverter());
 	}
 
 	@Override
 	public Status pfAdd(final byte[] key, final byte[]... elements) {
 		final CommandArguments args = CommandArguments.create(key).add(elements);
-		return executeCommand(Command.PFADD, args, (cmd)->cmd.pfadd(key, elements), new OneStatusConverter());
+		return executeCommand(Command.PFADD, args, (cmd)->cmd.pfadd(rawKey(key), elements), new OneStatusConverter());
 	}
 
 	@Override
 	public Long pfCount(final String... keys) {
-		return pfCount(SafeEncoder.encode(keys));
+		final CommandArguments args = CommandArguments.create(keys);
+		return executeCommand(Command.PFCOUNT, args, (cmd)->cmd.pfcount(rawBinaryKeys(keys)), (v)->v);
 	}
 
 	@Override
 	public Long pfCount(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.PFCOUNT, args, (cmd)->cmd.pfcount(keys), (v)->v);
+		return executeCommand(Command.PFCOUNT, args, (cmd)->cmd.pfcount(rawKeys(keys)), (v)->v);
 	}
 
 	@Override
 	public Status pfMerge(final String destKey, final String... keys) {
-		return pfMerge(SafeEncoder.encode(destKey), SafeEncoder.encode(keys));
+		final CommandArguments args = CommandArguments.create(destKey).add(keys);
+		return executeCommand(Command.PFMERGE, args, (cmd)->cmd.pfmerge(rawBinaryKey(destKey), rawBinaryKeys(keys)),
+				new OkStatusConverter());
 	}
 
 	@Override
 	public Status pfMerge(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-		return executeCommand(Command.PFMERGE, args, (cmd)->cmd.pfmerge(destKey, keys), new OkStatusConverter());
+		return executeCommand(Command.PFMERGE, args, (cmd)->cmd.pfmerge(rawKey(destKey), rawKeys(keys)),
+				new OkStatusConverter());
 	}
 
 	@Override

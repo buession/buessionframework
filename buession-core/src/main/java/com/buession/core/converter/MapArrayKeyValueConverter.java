@@ -22,34 +22,69 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.response;
+package com.buession.core.converter;
 
-import com.buession.core.converter.Converter;
-import com.buession.core.validator.Validate;
-import com.buession.redis.core.AclLog;
+import com.buession.core.utils.Assert;
+import com.buession.lang.KeyValue;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * {@link KeyValue} 数组转换为 {@link Map}
  *
+ * @param <SK>
+ * 		原始 Key 类型
+ * @param <SV>
+ * 		原始值类型
+ * @param <TK>
+ * 		目标 Key 类型
+ * @param <TV>
+ * 		目标值类型
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class AclLogConverter implements Converter<Map<String, Object>, AclLog> {
+public class ArrayKeyValueMapConverter<SK, SV, TK, TV> implements Converter<KeyValue<SK, SV>[], Map<TK, TV>> {
+
+	/**
+	 * Key 转换器
+	 */
+	private final Converter<SK, TK> keyConverter;
+
+	/**
+	 * 值转换器
+	 */
+	private final Converter<SV, TV> valueConverter;
+
+	/**
+	 * 构造函数
+	 *
+	 * @param keyConverter
+	 * 		Key 转换器
+	 * @param valueConverter
+	 * 		值转换器
+	 */
+	public ArrayKeyValueMapConverter(final Converter<SK, TK> keyConverter, final Converter<SV, TV> valueConverter) {
+		Assert.isNull(keyConverter, "keyConverter can not be null");
+		Assert.isNull(valueConverter, "valueConverter can not be null");
+		this.keyConverter = keyConverter;
+		this.valueConverter = valueConverter;
+	}
 
 	@Override
-	public AclLog convert(final Map<String, Object> source) {
+	public Map<TK, TV> convert(final KeyValue<SK, SV>[] source) {
 		if(source == null){
 			return null;
-		}
+		}else{
+			final Map<TK, TV> map = new LinkedHashMap<>(source.length);
 
-		if(Validate.isEmpty(source)){
-			return Collections.emptyList();
+			for(KeyValue<SK, SV> kv : source){
+				map.put(keyConverter.convert(kv.getKey()), valueConverter.convert(kv.getValue()));
+			}
+
+			return map;
 		}
-		return List.of();
 	}
 
 }

@@ -397,7 +397,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 被移除的随机元素
 	 */
-	Set<String> sPop(final String key, final long count);
+	Set<String> sPop(final String key, final int count);
 
 	/**
 	 * 移除并返回集合 key 中的 count 个随机元素
@@ -411,7 +411,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 被移除的随机元素
 	 */
-	Set<byte[]> sPop(final byte[] key, final long count);
+	Set<byte[]> sPop(final byte[] key, final int count);
 
 	/**
 	 * 返回集合 key 中的一个随机元素
@@ -449,7 +449,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 集合 key 中的随机元素
 	 */
-	List<String> sRandMember(final String key, final long count);
+	List<String> sRandMember(final String key, final int count);
 
 	/**
 	 * 返回集合 key 中的 count 个随机元素
@@ -463,7 +463,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 集合 key 中的随机元素
 	 */
-	List<byte[]> sRandMember(final byte[] key, final long count);
+	List<byte[]> sRandMember(final byte[] key, final int count);
 
 	/**
 	 * 移除集合 key 中的一个或多个 member 元素，不存在的 member 元素会被忽略

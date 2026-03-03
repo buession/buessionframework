@@ -98,25 +98,25 @@ public final class LettuceBloomFilterCommands extends AbstractLettuceRedisComman
 
 	@Override
 	public List<Boolean> bfInsert(final String key, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add("ITEMS").add(items);
+		final CommandArguments args = CommandArguments.create(key).add("ITEMS", items);
 		return executeCommand(Command.BF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> bfInsert(final byte[] key, final byte[]... items) {
-		final CommandArguments args = CommandArguments.create(key).add("ITEMS").add(items);
+		final CommandArguments args = CommandArguments.create(key).add("ITEMS", items);
 		return executeCommand(Command.BF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> bfInsert(final String key, final BFInsertArgument argument, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS").add(items);
+		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS", items);
 		return executeCommand(Command.BF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> bfInsert(final byte[] key, final BFInsertArgument argument, final byte[]... items) {
-		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS").add(items);
+		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS", items);
 		return executeCommand(Command.BF_INSERT, args);
 	}
 

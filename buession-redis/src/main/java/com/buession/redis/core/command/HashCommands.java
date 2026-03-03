@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.command;
 
+import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.core.ExpireOption;
 import com.buession.redis.core.ScanResult;
@@ -573,7 +574,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
 	 */
-	Status hMSet(final String key, final Map<String, String> data);
+	Status hMSet(final String key, final KeyValue<String, String>... data);
 
 	/**
 	 * 批量将多个 field =&gt; value (域-值)对设置到哈希表 key 中
@@ -587,7 +588,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
 	 */
-	Status hMSet(final byte[] key, final Map<byte[], byte[]> data);
+	Status hMSet(final byte[] key, final KeyValue<byte[], byte[]>... data);
 
 	/**
 	 * 移除哈希（Hash）中一个或多个字段（field）的过期时间（TTL），使其变为永不过期
@@ -871,7 +872,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 随机获取指定数量的哈希表中存在的域
 	 */
-	List<String> hRandField(final String key, final long count);
+	List<String> hRandField(final String key, final int count);
 
 	/**
 	 * 随机返回一个哈希表中指定数量的存在的域
@@ -885,7 +886,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 随机获取指定数量的哈希表中存在的域
 	 */
-	List<byte[]> hRandField(final byte[] key, final long count);
+	List<byte[]> hRandField(final byte[] key, final int count);
 
 	/**
 	 * When called with just the key argument, return a random field from the hash value stored at key.
@@ -901,7 +902,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return A list fields and their values from the hash
 	 */
-	Map<String, String> hRandFieldWithValues(final String key, final long count);
+	Map<String, String> hRandFieldWithValues(final String key, final int count);
 
 	/**
 	 * When called with just the key argument, return a random field from the hash value stored at key.
@@ -917,7 +918,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return A list fields and their values from the hash
 	 */
-	Map<byte[], byte[]> hRandFieldWithValues(final byte[] key, final long count);
+	Map<byte[], byte[]> hRandFieldWithValues(final byte[] key, final int count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对
@@ -993,7 +994,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 返回的指定数量的键值对
 	 */
-	ScanResult<Map<String, String>> hScan(final String key, final String cursor, final long count);
+	ScanResult<Map<String, String>> hScan(final String key, final String cursor, final int count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对
@@ -1009,7 +1010,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 返回的指定数量的键值对
 	 */
-	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final long count);
+	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final int count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对
@@ -1027,8 +1028,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
-	ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
-										  final long count);
+	ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern, final int count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对
@@ -1046,8 +1046,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
-	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-										  final long count);
+	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count);
 
 	/**
 	 * 批量将多个 field =&gt; value (域-值)对设置到哈希表 key 中
@@ -1061,7 +1060,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 被修改或增加的 field 个数
 	 */
-	Long hSet(final String key, final Map<String, String> data);
+	Long hSet(final String key, final KeyValue<String, String>... data);
 
 	/**
 	 * 批量将多个 field =&gt; value (域-值)对设置到哈希表 key 中
@@ -1075,7 +1074,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 被修改或增加的 field 个数
 	 */
-	Long hSet(final byte[] key, final Map<byte[], byte[]> data);
+	Long hSet(final byte[] key, final KeyValue<byte[], byte[]>... data);
 
 	/**
 	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
@@ -1089,7 +1088,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
 	 */
-	Status hSetEx(final String key, final Map<String, String> data);
+	Status hSetEx(final String key, final KeyValue<String, String>... data);
 
 	/**
 	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
@@ -1103,7 +1102,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
 	 */
-	Status hSetEx(final byte[] key, final Map<byte[], byte[]> data);
+	Status hSetEx(final byte[] key, final KeyValue<byte[], byte[]>... data);
 
 	/**
 	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
@@ -1119,7 +1118,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
 	 */
-	Status hSetEx(final String key, final Map<String, String> data, final HSetExArgument argument);
+	Status hSetEx(final String key, final KeyValue<String, String>[] data, final HSetExArgument argument);
 
 	/**
 	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
@@ -1135,7 +1134,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
 	 */
-	Status hSetEx(final byte[] key, final Map<byte[], byte[]> data, final HSetExArgument argument);
+	Status hSetEx(final byte[] key, final KeyValue<byte[], byte[]>[] data, final HSetExArgument argument);
 
 	/**
 	 * 当且仅当域 field 尚未存在于哈希表 key 中的情况下，将它的值设置为 value

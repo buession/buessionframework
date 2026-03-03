@@ -27,6 +27,7 @@ package com.buession.redis.client.lettuce.command;
 import com.buession.core.converter.ListConverter;
 import com.buession.core.converter.SetListConverter;
 import com.buession.lang.Geo;
+import com.buession.lang.KeyValue;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
@@ -78,14 +79,14 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	}
 
 	@Override
-	public Long geoAdd(final String key, final Map<String, Geo> memberCoordinates) {
+	public Long geoAdd(final String key, final KeyValue<String, Geo>... memberCoordinates) {
 		final CommandArguments args = CommandArguments.create(key).add(memberCoordinates);
 		return geoAdd((cmd)->cmd.geoadd(SafeEncoder.encode(key), stringMemberCoordinatesToGeoValue(memberCoordinates)),
 				args);
 	}
 
 	@Override
-	public Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates) {
+	public Long geoAdd(final byte[] key, final KeyValue<byte[], Geo>... memberCoordinates) {
 		final CommandArguments args = CommandArguments.create(key).add(memberCoordinates);
 		return geoAdd((cmd)->cmd.geoadd(key, byteMemberCoordinatesToGeoValue(memberCoordinates)), args);
 	}

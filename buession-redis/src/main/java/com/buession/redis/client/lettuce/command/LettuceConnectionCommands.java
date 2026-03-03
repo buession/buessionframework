@@ -24,6 +24,7 @@
  */
 package com.buession.redis.client.lettuce.command;
 
+import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.core.Client;
@@ -68,7 +69,7 @@ public final class LettuceConnectionCommands extends AbstractLettuceRedisCommand
 
 	@Override
 	public Status auth(final String user, final String password) {
-		final CommandArguments args = CommandArguments.create(user).add(password);
+		final CommandArguments args = CommandArguments.create(user, password);
 		return executeCommand(Command.AUTH, args, (cmd)->cmd.auth(user, password), new OkStatusConverter());
 	}
 
@@ -118,7 +119,7 @@ public final class LettuceConnectionCommands extends AbstractLettuceRedisCommand
 
 	@Override
 	public Status clientKill(final String host, final int port) {
-		final CommandArguments args = CommandArguments.create(host).add(port);
+		final CommandArguments args = CommandArguments.create(host, port);
 		return executeCommand(Command.CLIENT, SubCommand.CLIENT_KILL, args, (cmd)->cmd.clientKill(host + ':' + port),
 				new OkStatusConverter());
 	}
@@ -136,7 +137,7 @@ public final class LettuceConnectionCommands extends AbstractLettuceRedisCommand
 
 	@Override
 	public List<Client> clientList(final ClientType clientType) {
-		final CommandArguments args = CommandArguments.create("TYPE").add(clientType);
+		final CommandArguments args = CommandArguments.create("TYPE", clientType);
 		return executeCommand(Command.CLIENT, SubCommand.CLIENT_LIST, args, (cmd)->switch(clientType){
 			case NORMAL -> cmd.clientList(ClientListArgs.Builder.typeNormal());
 			case MASTER -> cmd.clientList(ClientListArgs.Builder.typeMaster());
@@ -147,7 +148,7 @@ public final class LettuceConnectionCommands extends AbstractLettuceRedisCommand
 
 	@Override
 	public List<Client> clientList(final long... ids) {
-		final CommandArguments args = CommandArguments.create("ID").add(ids);
+		final CommandArguments args = CommandArguments.create("ID", ids);
 		return executeCommand(Command.CLIENT, SubCommand.CLIENT_LIST, args,
 				(cmd)->cmd.clientList(ClientListArgs.Builder.ids(ids)), new ClientConverter.ClientListConverter());
 	}
@@ -267,39 +268,45 @@ public final class LettuceConnectionCommands extends AbstractLettuceRedisCommand
 
 	@Override
 	public Hello hello(int protover, String password) {
-		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(password);
+		final CommandArguments args = CommandArguments.create(protover).add(Keyword.Conn.AUTH).add(password);
 		return executeCommand(Command.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, byte[] password) {
-		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(password);
+		final CommandArguments args = CommandArguments.create(protover).add(Keyword.Conn.AUTH).add(password);
 		return executeCommand(Command.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, String username, String password) {
-		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(username).add(password);
+		final CommandArguments args =
+				CommandArguments.create(protover).add(Validate.isEmpty(username) ? Keyword.Conn.AUTH :
+						Keyword.Conn.AUTH2).add(username, password);
 		return executeCommand(Command.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, byte[] username, byte[] password) {
-		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(username).add(password);
+		final CommandArguments args =
+				CommandArguments.create(protover).add(Validate.isEmpty(username) ? Keyword.Conn.AUTH :
+						Keyword.Conn.AUTH2).add(username, password);
 		return executeCommand(Command.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, String username, String password, String clientName) {
-		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(username).add(password)
-				.add("SETNAME").add(clientName);
+		final CommandArguments args =
+				CommandArguments.create(protover).add(Validate.isEmpty(username) ? Keyword.Conn.AUTH :
+						Keyword.Conn.AUTH2).add(username, password).add("SETNAME", clientName);
 		return executeCommand(Command.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, byte[] username, byte[] password, byte[] clientName) {
-		final CommandArguments args = CommandArguments.create(protover).add("AUTH").add(username).add(password)
-				.add("SETNAME").add(clientName);
+		final CommandArguments args =
+				CommandArguments.create(protover).add(Validate.isEmpty(username) ? Keyword.Conn.AUTH :
+						Keyword.Conn.AUTH2).add(username, password).add("SETNAME", clientName);
 		return executeCommand(Command.HELLO, args);
 	}
 

@@ -22,34 +22,26 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.response;
+package com.buession.redis.core.internal.jedis;
 
-import com.buession.core.converter.Converter;
-import com.buession.core.validator.Validate;
-import com.buession.redis.core.AclLog;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import redis.clients.jedis.params.LPosParams;
 
 /**
- *
+ * Jedis {@link LPosParams} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class AclLogConverter implements Converter<Map<String, Object>, AclLog> {
+public final class JedisLPosParams extends LPosParams {
 
-	@Override
-	public AclLog convert(final Map<String, Object> source) {
-		if(source == null){
-			return null;
-		}
+	public JedisLPosParams() {
 
-		if(Validate.isEmpty(source)){
-			return Collections.emptyList();
-		}
-		return List.of();
+	}
+
+	public JedisLPosParams(final int rank, final int maxlen) {
+		super();
+		rank(rank);
+		maxlen(maxlen);
 	}
 
 }

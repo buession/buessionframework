@@ -31,7 +31,6 @@ import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.RedisCommands;
 import com.buession.redis.core.command.SubCommand;
-import com.buession.redis.utils.SafeEncoder;
 
 /**
  * Lettuce Redis 命令抽象类
@@ -44,20 +43,6 @@ public abstract class AbstractLettuceRedisCommands extends AbstractRedisCommands
 
 	public AbstractLettuceRedisCommands(final LettuceRedisClient client) {
 		super(client);
-	}
-
-	protected final byte[] rawBinaryKey(final String key) {
-		return SafeEncoder.encode(rawKey(key));
-	}
-
-	protected final byte[][] rawBinaryKeys(final String[] keys) {
-		final byte[][] result = new byte[keys.length][];
-
-		for(int i = 0; i < keys.length; i++){
-			result[i] = SafeEncoder.encode(rawKey(keys[i]));
-		}
-
-		return result;
 	}
 
 	protected <SR, R> R executeCommand(final Command command) {

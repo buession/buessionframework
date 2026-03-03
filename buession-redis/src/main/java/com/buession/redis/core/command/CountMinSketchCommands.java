@@ -53,7 +53,7 @@ public interface CountMinSketchCommands extends RedisCommands {
 	 *
 	 * @return 返回结果列表
 	 */
-	List<Long> cmsIncrby(final String key, final List<KeyValue<String, Long>> items);
+	List<Long> cmsIncrby(final String key, final KeyValue<String, Long>... items);
 
 	/**
 	 * 对 Count-Min Sketch（CMS） 一个或多个元素执行频次增量更新
@@ -67,7 +67,7 @@ public interface CountMinSketchCommands extends RedisCommands {
 	 *
 	 * @return 返回结果列表
 	 */
-	List<Long> cmsIncrby(final byte[] key, final List<KeyValue<byte[], Long>> items);
+	List<Long> cmsIncrby(final byte[] key, final KeyValue<byte[], Long>... items);
 
 	/**
 	 * 获取指定 Count-Min Sketch（CMS）数据结构的元信息

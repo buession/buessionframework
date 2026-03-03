@@ -35,6 +35,7 @@ import com.buession.redis.core.CommandKeyAndFlag;
 import com.buession.redis.core.FlushMode;
 import com.buession.redis.core.HotKey;
 import com.buession.redis.core.Info;
+import com.buession.redis.core.Keyword;
 import com.buession.redis.core.LatencyHistogram;
 import com.buession.redis.core.LatencyHistory;
 import com.buession.redis.core.LatencyLatest;
@@ -115,13 +116,13 @@ public final class JedisServerCommands extends AbstractJedisRedisCommands implem
 
 	@Override
 	public Status aclDryRun(final String username, final Command command, final String... args) {
-		final CommandArguments args1 = CommandArguments.create(username).add(command).add(args);
+		final CommandArguments args1 = CommandArguments.create(username).add(command, args);
 		return executeCommand(Command.ACL, SubCommand.ACL_DRYRUN, args1);
 	}
 
 	@Override
 	public Status aclDryRun(final byte[] username, final Command command, final byte[]... args) {
-		final CommandArguments args1 = CommandArguments.create(username).add(command).add(args);
+		final CommandArguments args1 = CommandArguments.create(username).add(command, args);
 		return executeCommand(Command.ACL, SubCommand.ACL_DRYRUN, args1);
 	}
 
@@ -164,14 +165,14 @@ public final class JedisServerCommands extends AbstractJedisRedisCommands implem
 	}
 
 	@Override
-	public List<AclLog> aclLog(final long count) {
+	public List<AclLog> aclLog(final int count) {
 		final CommandArguments args = CommandArguments.create(count);
 		return executeCommand(Command.ACL, SubCommand.ACL_LOG, args);
 	}
 
 	@Override
 	public Status aclLogReset() {
-		final CommandArguments args = CommandArguments.create("RESET");
+		final CommandArguments args = CommandArguments.create(Keyword.Conn.RESET);
 		return executeCommand(Command.ACL, SubCommand.ACL_LOG, args);
 	}
 
@@ -236,7 +237,7 @@ public final class JedisServerCommands extends AbstractJedisRedisCommands implem
 
 	@Override
 	public List<String> commandGetKeys(final Command command, final String... args) {
-		final CommandArguments args1 = CommandArguments.create(command).add(args);
+		final CommandArguments args1 = CommandArguments.create(command, args);
 		return executeCommand(Command.COMMAND, SubCommand.COMMAND_GETKEYS, args1);
 	}
 
@@ -248,7 +249,7 @@ public final class JedisServerCommands extends AbstractJedisRedisCommands implem
 
 	@Override
 	public List<CommandKeyAndFlag> commandGetKeysAndFlags(final Command command, final String... args) {
-		final CommandArguments args1 = CommandArguments.create(command).add(args);
+		final CommandArguments args1 = CommandArguments.create(command, args);
 		return executeCommand(Command.COMMAND, SubCommand.COMMAND_GETKEYSANDFLAGS, args1);
 	}
 
@@ -602,7 +603,7 @@ public final class JedisServerCommands extends AbstractJedisRedisCommands implem
 
 	@Override
 	public Status slaveOf(final String host, final int port) {
-		final CommandArguments args = CommandArguments.create(host).add(port);
+		final CommandArguments args = CommandArguments.create(host, port);
 		return executeCommand(Command.SLAVEOF, args);
 	}
 
@@ -612,7 +613,7 @@ public final class JedisServerCommands extends AbstractJedisRedisCommands implem
 	}
 
 	@Override
-	public List<SlowLog> slowLogGet(final long count) {
+	public List<SlowLog> slowLogGet(final int count) {
 		final CommandArguments args = CommandArguments.create(count);
 		return executeCommand(Command.SLOWLOG, SubCommand.SLOWLOG_GET, args);
 	}

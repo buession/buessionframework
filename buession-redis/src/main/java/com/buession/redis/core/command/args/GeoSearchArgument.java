@@ -25,6 +25,7 @@
 package com.buession.redis.core.command.args;
 
 import com.buession.lang.Order;
+import com.buession.redis.core.Keyword;
 import com.buession.redis.utils.ArgStringBuilder;
 
 import java.util.Objects;
@@ -54,7 +55,7 @@ public class GeoSearchArgument extends BaseGeoDistanceArgument {
 	 * @param withHash
 	 * 		是否返回位置元素经过原始 geohash 编码的有序集合分值
 	 */
-	public GeoSearchArgument(boolean withCoord, boolean withDist, boolean withHash) {
+	public GeoSearchArgument(final boolean withCoord, final boolean withDist, final boolean withHash) {
 		super(withCoord, withDist, withHash);
 	}
 
@@ -70,7 +71,8 @@ public class GeoSearchArgument extends BaseGeoDistanceArgument {
 	 * @param order
 	 * 		排序方式
 	 */
-	public GeoSearchArgument(boolean withCoord, boolean withDist, boolean withHash, Order order) {
+	public GeoSearchArgument(final boolean withCoord, final boolean withDist, final boolean withHash,
+							 final Order order) {
 		super(withCoord, withDist, withHash, order);
 	}
 
@@ -88,7 +90,8 @@ public class GeoSearchArgument extends BaseGeoDistanceArgument {
 	 * @param any
 	 * 		-
 	 */
-	public GeoSearchArgument(boolean withCoord, boolean withDist, boolean withHash, int count, boolean any) {
+	public GeoSearchArgument(final boolean withCoord, final boolean withDist, final boolean withHash, final int count,
+							 final boolean any) {
 		super(withCoord, withDist, withHash, count, any);
 	}
 
@@ -108,8 +111,8 @@ public class GeoSearchArgument extends BaseGeoDistanceArgument {
 	 * @param any
 	 * 		-
 	 */
-	public GeoSearchArgument(boolean withCoord, boolean withDist, boolean withHash, Order order, int count,
-							 boolean any) {
+	public GeoSearchArgument(final boolean withCoord, final boolean withDist, final boolean withHash, final Order order,
+							 final int count, final boolean any) {
 		super(withCoord, withDist, withHash, order, count, any);
 	}
 
@@ -119,7 +122,7 @@ public class GeoSearchArgument extends BaseGeoDistanceArgument {
 	 * @param order
 	 * 		排序方式
 	 */
-	public GeoSearchArgument(Order order) {
+	public GeoSearchArgument(final Order order) {
 		super(order);
 	}
 
@@ -131,7 +134,7 @@ public class GeoSearchArgument extends BaseGeoDistanceArgument {
 	 * @param any
 	 * 		-
 	 */
-	public GeoSearchArgument(int count, boolean any) {
+	public GeoSearchArgument(final int count, final boolean any) {
 		super(count, any);
 	}
 
@@ -145,7 +148,7 @@ public class GeoSearchArgument extends BaseGeoDistanceArgument {
 	 * @param any
 	 * 		-
 	 */
-	public GeoSearchArgument(Order order, int count, boolean any) {
+	public GeoSearchArgument(final Order order, final int count, final boolean any) {
 		super(order, count, any);
 	}
 
@@ -154,7 +157,8 @@ public class GeoSearchArgument extends BaseGeoDistanceArgument {
 		return ArgStringBuilder.create().append(Objects.equals(withCoord, true) ? "WITHCOORD" : null)
 				.append(Objects.equals(withDist, true) ? "WITHDIST" : null)
 				.append(Objects.equals(withHash, true) ? "WITHHASH" : null)
-				.add("COUNT", count == null ? null : count + " ANY").append(order).build();
+				.add(Keyword.Common.COUNT.name(), count == null ? null : count + Keyword.Common.ANY.name())
+				.append(order).build();
 	}
 
 }

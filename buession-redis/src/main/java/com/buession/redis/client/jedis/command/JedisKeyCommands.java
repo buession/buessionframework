@@ -72,52 +72,52 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 
 	@Override
 	public Status copy(final String key, final String destKey) {
-		final CommandArguments args = CommandArguments.create(key).add(destKey);
+		final CommandArguments args = CommandArguments.create(key, destKey);
 		return copy(key, destKey, false, args);
 	}
 
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey) {
-		final CommandArguments args = CommandArguments.create(key).add(destKey);
+		final CommandArguments args = CommandArguments.create(key, destKey);
 		return copy(key, destKey, false, args);
 	}
 
 	@Override
 	public Status copy(final String key, final String destKey, final int db) {
-		final CommandArguments args = CommandArguments.create(key).add(destKey).add(Keyword.Database.DB, db);
+		final CommandArguments args = CommandArguments.create(key, destKey).add(Keyword.Database.DB, db);
 		return copy(key, destKey, false, args);
 	}
 
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey, final int db) {
-		final CommandArguments args = CommandArguments.create(key).add(destKey).add(Keyword.Database.DB, db);
+		final CommandArguments args = CommandArguments.create(key, destKey).add(Keyword.Database.DB, db);
 		return copy(key, destKey, false, args);
 	}
 
 	@Override
 	public Status copy(final String key, final String destKey, final boolean replace) {
-		final CommandArguments args = CommandArguments.create(key).add(destKey)
+		final CommandArguments args = CommandArguments.create(key, destKey)
 				.add(replace ? Keyword.Common.REPLACE : null);
 		return copy(key, destKey, replace, args);
 	}
 
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey, final boolean replace) {
-		final CommandArguments args = CommandArguments.create(key).add(destKey)
+		final CommandArguments args = CommandArguments.create(key, destKey)
 				.add(replace ? Keyword.Common.REPLACE : null);
 		return copy(key, destKey, replace, args);
 	}
 
 	@Override
 	public Status copy(final String key, final String destKey, final int db, final boolean replace) {
-		final CommandArguments args = CommandArguments.create(key).add(destKey).add(Keyword.Database.DB, db)
+		final CommandArguments args = CommandArguments.create(key, destKey).add(Keyword.Database.DB, db)
 				.add(replace ? Keyword.Common.REPLACE : null);
 		return copy(key, destKey, replace, args);
 	}
 
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey, final int db, final boolean replace) {
-		final CommandArguments args = CommandArguments.create(key).add(destKey).add(Keyword.Database.DB, db)
+		final CommandArguments args = CommandArguments.create(key, destKey).add(Keyword.Database.DB, db)
 				.add(replace ? Keyword.Common.REPLACE : null);
 		return copy(key, destKey, replace, args);
 	}
@@ -125,61 +125,61 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 	@Override
 	public Long del(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.DEL, args, (cmd)->cmd.del(keys), (v)->v);
+		return executeCommand(Command.DEL, args, (cmd)->cmd.del(rawKeys(keys)), (v)->v);
 	}
 
 	@Override
 	public Long del(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.DEL, args, (cmd)->cmd.del(keys), (v)->v);
+		return executeCommand(Command.DEL, args, (cmd)->cmd.del(rawKeys(keys)), (v)->v);
 	}
 
 	@Override
 	public String dump(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.DUMP, args, (cmd)->cmd.dump(key), SafeEncoder::encode);
+		return executeCommand(Command.DUMP, args, (cmd)->cmd.dump(rawKey(key)), SafeEncoder::encode);
 	}
 
 	@Override
 	public byte[] dump(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.DUMP, args, (cmd)->cmd.dump(key), (v)->v);
+		return executeCommand(Command.DUMP, args, (cmd)->cmd.dump(rawKey(key)), (v)->v);
 	}
 
 	@Override
 	public Boolean exists(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.EXISTS, args, (cmd)->cmd.exists(key), (v)->v);
+		return executeCommand(Command.EXISTS, args, (cmd)->cmd.exists(rawKey(key)), (v)->v);
 	}
 
 	@Override
 	public Boolean exists(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.EXISTS, args, (cmd)->cmd.exists(key), (v)->v);
+		return executeCommand(Command.EXISTS, args, (cmd)->cmd.exists(rawKey(key)), (v)->v);
 	}
 
 	@Override
 	public Long exists(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.EXISTS, args, (cmd)->cmd.exists(keys), (v)->v);
+		return executeCommand(Command.EXISTS, args, (cmd)->cmd.exists(rawKeys(keys)), (v)->v);
 	}
 
 	@Override
 	public Long exists(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.EXISTS, args, (cmd)->cmd.exists(keys), (v)->v);
+		return executeCommand(Command.EXISTS, args, (cmd)->cmd.exists(rawKeys(keys)), (v)->v);
 	}
 
 	@Override
 	public Status expire(final String key, final int lifetime) {
 		final CommandArguments args = CommandArguments.create(key).add(lifetime);
-		return executeCommand(Command.EXPIRE, args, (cmd)->cmd.expire(key, lifetime), new OneStatusConverter());
+		return executeCommand(Command.EXPIRE, args, (cmd)->cmd.expire(rawKey(key), lifetime), new OneStatusConverter());
 	}
 
 	@Override
 	public Status expire(final byte[] key, final int lifetime) {
 		final CommandArguments args = CommandArguments.create(key).add(lifetime);
-		return executeCommand(Command.EXPIRE, args, (cmd)->cmd.expire(key, lifetime), new OneStatusConverter());
+		return executeCommand(Command.EXPIRE, args, (cmd)->cmd.expire(rawKey(key), lifetime), new OneStatusConverter());
 	}
 
 	@Override
@@ -187,7 +187,7 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 		final CommandArguments args = CommandArguments.create(key).add(lifetime).add(expireOption);
 		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(Command.EXPIRE, args,
-				(cmd)->cmd.expire(key, lifetime, expireOptionConverter.convert(expireOption)),
+				(cmd)->cmd.expire(rawKey(key), lifetime, expireOptionConverter.convert(expireOption)),
 				new OneStatusConverter());
 	}
 
@@ -196,21 +196,21 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 		final CommandArguments args = CommandArguments.create(key).add(lifetime).add(expireOption);
 		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(Command.EXPIRE, args,
-				(cmd)->cmd.expire(key, lifetime, expireOptionConverter.convert(expireOption)),
+				(cmd)->cmd.expire(rawKey(key), lifetime, expireOptionConverter.convert(expireOption)),
 				new OneStatusConverter());
 	}
 
 	@Override
 	public Status expireAt(final String key, final long unixTimestamp) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp);
-		return executeCommand(Command.EXPIREAT, args, (cmd)->cmd.expireAt(key, unixTimestamp),
+		return executeCommand(Command.EXPIREAT, args, (cmd)->cmd.expireAt(rawKey(key), unixTimestamp),
 				new OneStatusConverter());
 	}
 
 	@Override
 	public Status expireAt(final byte[] key, final long unixTimestamp) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp);
-		return executeCommand(Command.EXPIREAT, args, (cmd)->cmd.expireAt(key, unixTimestamp),
+		return executeCommand(Command.EXPIREAT, args, (cmd)->cmd.expireAt(rawKey(key), unixTimestamp),
 				new OneStatusConverter());
 	}
 
@@ -219,7 +219,7 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(expireOption);
 		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(Command.EXPIREAT, args,
-				(cmd)->cmd.expireAt(key, unixTimestamp, expireOptionConverter.convert(expireOption)),
+				(cmd)->cmd.expireAt(rawKey(key), unixTimestamp, expireOptionConverter.convert(expireOption)),
 				new OneStatusConverter());
 	}
 
@@ -228,20 +228,20 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(expireOption);
 		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(Command.EXPIREAT, args,
-				(cmd)->cmd.expireAt(key, unixTimestamp, expireOptionConverter.convert(expireOption)),
+				(cmd)->cmd.expireAt(rawKey(key), unixTimestamp, expireOptionConverter.convert(expireOption)),
 				new OneStatusConverter());
 	}
 
 	@Override
 	public Long expireTime(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.EXPIRETIME, args, (cmd)->cmd.expireTime(key), (v)->v);
+		return executeCommand(Command.EXPIRETIME, args, (cmd)->cmd.expireTime(rawKey(key)), (v)->v);
 	}
 
 	@Override
 	public Long expireTime(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.EXPIRETIME, args, (cmd)->cmd.expireTime(key), (v)->v);
+		return executeCommand(Command.EXPIRETIME, args, (cmd)->cmd.expireTime(rawKey(key)), (v)->v);
 	}
 
 	@Override
@@ -303,75 +303,81 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 	@Override
 	public ObjectEncoding objectEncoding(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.OBJECT, SubCommand.OBJECT_ENCODING, args, (cmd)->cmd.objectEncoding(key),
+		return executeCommand(Command.OBJECT, SubCommand.OBJECT_ENCODING, args, (cmd)->cmd.objectEncoding(rawKey(key)),
 				new ObjectEncodingConverter());
 	}
 
 	@Override
 	public ObjectEncoding objectEncoding(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.OBJECT, SubCommand.OBJECT_ENCODING, args, (cmd)->cmd.objectEncoding(key),
+		return executeCommand(Command.OBJECT, SubCommand.OBJECT_ENCODING, args, (cmd)->cmd.objectEncoding(rawKey(key)),
 				new BinaryObjectEncodingConverter());
 	}
 
 	@Override
 	public Long objectFreq(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.OBJECT, SubCommand.OBJECT_FREQ, args, (cmd)->cmd.objectFreq(key), (v)->v);
+		return executeCommand(Command.OBJECT, SubCommand.OBJECT_FREQ, args, (cmd)->cmd.objectFreq(rawKey(key)), (v)->v);
 	}
 
 	@Override
 	public Long objectFreq(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.OBJECT, SubCommand.OBJECT_FREQ, args, (cmd)->cmd.objectFreq(key), (v)->v);
+		return executeCommand(Command.OBJECT, SubCommand.OBJECT_FREQ, args, (cmd)->cmd.objectFreq(rawKey(key)), (v)->v);
 	}
 
 	@Override
 	public Long objectIdleTime(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.OBJECT, SubCommand.OBJECT_IDLETIME, args, (cmd)->cmd.objectFreq(key), (v)->v);
+		return executeCommand(Command.OBJECT, SubCommand.OBJECT_IDLETIME, args, (cmd)->cmd.objectFreq(rawKey(key)),
+				(v)->v);
 	}
 
 	@Override
 	public Long objectIdleTime(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.OBJECT, SubCommand.OBJECT_IDLETIME, args, (cmd)->cmd.objectFreq(key), (v)->v);
+		return executeCommand(Command.OBJECT, SubCommand.OBJECT_IDLETIME, args, (cmd)->cmd.objectFreq(rawKey(key)),
+				(v)->v);
 	}
 
 	@Override
 	public Long objectRefcount(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.OBJECT, SubCommand.OBJECT_REFCOUNT, args, (cmd)->cmd.objectRefcount(key), (v)->v);
+		return executeCommand(Command.OBJECT, SubCommand.OBJECT_REFCOUNT, args, (cmd)->cmd.objectRefcount(rawKey(key)),
+				(v)->v);
 	}
 
 	@Override
 	public Long objectRefcount(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.OBJECT, SubCommand.OBJECT_REFCOUNT, args, (cmd)->cmd.objectRefcount(key), (v)->v);
+		return executeCommand(Command.OBJECT, SubCommand.OBJECT_REFCOUNT, args, (cmd)->cmd.objectRefcount(rawKey(key)),
+				(v)->v);
 	}
 
 	@Override
 	public Status persist(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.PERSIST, args, (cmd)->cmd.persist(key), new OneStatusConverter());
+		return executeCommand(Command.PERSIST, args, (cmd)->cmd.persist(rawKey(key)), new OneStatusConverter());
 	}
 
 	@Override
 	public Status persist(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.PERSIST, args, (cmd)->cmd.persist(key), new OneStatusConverter());
+		return executeCommand(Command.PERSIST, args, (cmd)->cmd.persist(rawKey(key)), new OneStatusConverter());
 	}
 
 	@Override
 	public Status pExpire(final String key, final int lifetime) {
 		final CommandArguments args = CommandArguments.create(key).add(lifetime);
-		return executeCommand(Command.PEXPIRE, args, (cmd)->cmd.pexpire(key, lifetime), new OneStatusConverter());
+		return executeCommand(Command.PEXPIRE, args, (cmd)->cmd.pexpire(rawKey(key), lifetime),
+				new OneStatusConverter());
 	}
 
 	@Override
 	public Status pExpire(final byte[] key, final int lifetime) {
 		final CommandArguments args = CommandArguments.create(key).add(lifetime);
-		return executeCommand(Command.PEXPIRE, args, (cmd)->cmd.pexpire(key, lifetime), new OneStatusConverter());
+		return executeCommand(Command.PEXPIRE, args, (cmd)->cmd.pexpire(rawKey(key), lifetime),
+				new OneStatusConverter());
 	}
 
 	@Override
@@ -379,7 +385,7 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 		final CommandArguments args = CommandArguments.create(key).add(lifetime).add(expireOption);
 		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(Command.PEXPIRE, args,
-				(cmd)->cmd.pexpire(key, lifetime, expireOptionConverter.convert(expireOption)),
+				(cmd)->cmd.pexpire(rawKey(key), lifetime, expireOptionConverter.convert(expireOption)),
 				new OneStatusConverter());
 	}
 
@@ -388,21 +394,21 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 		final CommandArguments args = CommandArguments.create(key).add(lifetime).add(expireOption);
 		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(Command.PEXPIRE, args,
-				(cmd)->cmd.pexpire(key, lifetime, expireOptionConverter.convert(expireOption)),
+				(cmd)->cmd.pexpire(rawKey(key), lifetime, expireOptionConverter.convert(expireOption)),
 				new OneStatusConverter());
 	}
 
 	@Override
 	public Status pExpireAt(final String key, final long unixTimestamp) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp);
-		return executeCommand(Command.PEXPIREAT, args, (cmd)->cmd.pexpireAt(key, unixTimestamp),
+		return executeCommand(Command.PEXPIREAT, args, (cmd)->cmd.pexpireAt(rawKey(key), unixTimestamp),
 				new OneStatusConverter());
 	}
 
 	@Override
 	public Status pExpireAt(final byte[] key, final long unixTimestamp) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp);
-		return executeCommand(Command.PEXPIREAT, args, (cmd)->cmd.pexpireAt(key, unixTimestamp),
+		return executeCommand(Command.PEXPIREAT, args, (cmd)->cmd.pexpireAt(rawKey(key), unixTimestamp),
 				new OneStatusConverter());
 	}
 
@@ -411,7 +417,7 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(expireOption);
 		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(Command.PEXPIREAT, args,
-				(cmd)->cmd.pexpireAt(key, unixTimestamp, expireOptionConverter.convert(expireOption)),
+				(cmd)->cmd.pexpireAt(rawKey(key), unixTimestamp, expireOptionConverter.convert(expireOption)),
 				new OneStatusConverter());
 	}
 
@@ -420,32 +426,32 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(expireOption);
 		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(Command.PEXPIREAT, args,
-				(cmd)->cmd.pexpireAt(key, unixTimestamp, expireOptionConverter.convert(expireOption)),
+				(cmd)->cmd.pexpireAt(rawKey(key), unixTimestamp, expireOptionConverter.convert(expireOption)),
 				new OneStatusConverter());
 	}
 
 	@Override
 	public Long pExpireTime(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.PEXPIRETIME, args, (cmd)->cmd.pexpireTime(key), (v)->v);
+		return executeCommand(Command.PEXPIRETIME, args, (cmd)->cmd.pexpireTime(rawKey(key)), (v)->v);
 	}
 
 	@Override
 	public Long pExpireTime(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.PEXPIRETIME, args, (cmd)->cmd.pexpireTime(key), (v)->v);
+		return executeCommand(Command.PEXPIRETIME, args, (cmd)->cmd.pexpireTime(rawKey(key)), (v)->v);
 	}
 
 	@Override
 	public Long pTtl(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.PTTL, args, (cmd)->cmd.pttl(key), (v)->v);
+		return executeCommand(Command.PTTL, args, (cmd)->cmd.pttl(rawKey(key)), (v)->v);
 	}
 
 	@Override
 	public Long pTtl(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.PTTL, args, (cmd)->cmd.pttl(key), (v)->v);
+		return executeCommand(Command.PTTL, args, (cmd)->cmd.pttl(rawKey(key)), (v)->v);
 	}
 
 	@Override
@@ -456,38 +462,40 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 	@Override
 	public Status rename(final String key, final String newKey) {
 		final CommandArguments args = CommandArguments.create(key).add(newKey);
-		return executeCommand(Command.RENAME, args, (cmd)->cmd.rename(key, newKey), new OkStatusConverter());
+		return executeCommand(Command.RENAME, args, (cmd)->cmd.rename(rawKey(key), newKey), new OkStatusConverter());
 	}
 
 	@Override
 	public Status rename(final byte[] key, final byte[] newKey) {
 		final CommandArguments args = CommandArguments.create(key).add(newKey);
-		return executeCommand(Command.RENAME, args, (cmd)->cmd.rename(key, newKey), new OkStatusConverter());
+		return executeCommand(Command.RENAME, args, (cmd)->cmd.rename(rawKey(key), newKey), new OkStatusConverter());
 	}
 
 	@Override
 	public Status renameNx(final String key, final String newKey) {
 		final CommandArguments args = CommandArguments.create(key).add(newKey);
-		return executeCommand(Command.RENAMENX, args, (cmd)->cmd.renamenx(key, newKey), new OneStatusConverter());
+		return executeCommand(Command.RENAMENX, args, (cmd)->cmd.renamenx(rawKey(key), newKey),
+				new OneStatusConverter());
 	}
 
 	@Override
 	public Status renameNx(final byte[] key, final byte[] newKey) {
 		final CommandArguments args = CommandArguments.create(key).add(newKey);
-		return executeCommand(Command.RENAMENX, args, (cmd)->cmd.renamenx(key, newKey), new OneStatusConverter());
+		return executeCommand(Command.RENAMENX, args, (cmd)->cmd.renamenx(rawKey(key), newKey),
+				new OneStatusConverter());
 	}
 
 	@Override
 	public Status restore(final String key, final byte[] serializedValue, final int ttl) {
 		final CommandArguments args = CommandArguments.create(key).add(serializedValue).add(ttl);
-		return executeCommand(Command.RESTORE, args, (cmd)->cmd.restore(key, ttl, serializedValue),
+		return executeCommand(Command.RESTORE, args, (cmd)->cmd.restore(rawKey(key), ttl, serializedValue),
 				new OkStatusConverter());
 	}
 
 	@Override
 	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl) {
 		final CommandArguments args = CommandArguments.create(key).add(serializedValue).add(ttl);
-		return executeCommand(Command.RESTORE, args, (cmd)->cmd.restore(key, ttl, serializedValue),
+		return executeCommand(Command.RESTORE, args, (cmd)->cmd.restore(rawKey(key), ttl, serializedValue),
 				new OkStatusConverter());
 	}
 
@@ -497,7 +505,7 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 		final CommandArguments args = CommandArguments.create(key).add(serializedValue).add(ttl).add(argument);
 		final RestoreArgumentConverter restoreArgumentConverter = new RestoreArgumentConverter();
 		return executeCommand(Command.RESTORE, args,
-				(cmd)->cmd.restore(key, ttl, serializedValue, restoreArgumentConverter.convert(argument)),
+				(cmd)->cmd.restore(rawKey(key), ttl, serializedValue, restoreArgumentConverter.convert(argument)),
 				new OkStatusConverter());
 	}
 
@@ -507,7 +515,7 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 		final CommandArguments args = CommandArguments.create(key).add(serializedValue).add(ttl).add(argument);
 		final RestoreArgumentConverter restoreArgumentConverter = new RestoreArgumentConverter();
 		return executeCommand(Command.RESTORE, args,
-				(cmd)->cmd.restore(key, ttl, serializedValue, restoreArgumentConverter.convert(argument)),
+				(cmd)->cmd.restore(rawKey(key), ttl, serializedValue, restoreArgumentConverter.convert(argument)),
 				new OkStatusConverter());
 	}
 
@@ -564,20 +572,20 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 	@Override
 	public List<String> sort(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.SORT, args, (cmd)->cmd.sort(key), (v)->v);
+		return executeCommand(Command.SORT, args, (cmd)->cmd.sort(rawKey(key)), (v)->v);
 	}
 
 	@Override
 	public List<byte[]> sort(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.SORT, args, (cmd)->cmd.sort(key), (v)->v);
+		return executeCommand(Command.SORT, args, (cmd)->cmd.sort(rawKey(key)), (v)->v);
 	}
 
 	@Override
 	public List<String> sort(final String key, final SortArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument);
 		final SortArgumentConverter sortArgumentConverter = new SortArgumentConverter();
-		return executeCommand(Command.SORT, args, (cmd)->cmd.sort(key, sortArgumentConverter.convert(argument)),
+		return executeCommand(Command.SORT, args, (cmd)->cmd.sort(rawKey(key), sortArgumentConverter.convert(argument)),
 				(v)->v);
 	}
 
@@ -585,20 +593,20 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 	public List<byte[]> sort(final byte[] key, final SortArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument);
 		final SortArgumentConverter sortArgumentConverter = new SortArgumentConverter();
-		return executeCommand(Command.SORT, args, (cmd)->cmd.sort(key, sortArgumentConverter.convert(argument)),
+		return executeCommand(Command.SORT, args, (cmd)->cmd.sort(rawKey(key), sortArgumentConverter.convert(argument)),
 				(v)->v);
 	}
 
 	@Override
 	public Long sort(final String key, final String destKey) {
 		final CommandArguments args = CommandArguments.create(key).add("STORE", destKey);
-		return executeCommand(Command.SORT, args, (cmd)->cmd.sort(key, destKey), (v)->v);
+		return executeCommand(Command.SORT, args, (cmd)->cmd.sort(rawKey(key), rawKey(destKey)), (v)->v);
 	}
 
 	@Override
 	public Long sort(final byte[] key, final byte[] destKey) {
 		final CommandArguments args = CommandArguments.create(key).add("STORE", destKey);
-		return executeCommand(Command.SORT, args, (cmd)->cmd.sort(key, destKey), (v)->v);
+		return executeCommand(Command.SORT, args, (cmd)->cmd.sort(rawKey(key), rawKey(destKey)), (v)->v);
 	}
 
 	@Override
@@ -606,7 +614,7 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 		final CommandArguments args = CommandArguments.create(key).add(argument).add("STORE", destKey);
 		final SortArgumentConverter sortArgumentConverter = new SortArgumentConverter();
 		return executeCommand(Command.SORT, args,
-				(cmd)->cmd.sort(key, sortArgumentConverter.convert(argument), destKey), (v)->v);
+				(cmd)->cmd.sort(rawKey(key), sortArgumentConverter.convert(argument), rawKey(destKey)), (v)->v);
 	}
 
 	@Override
@@ -614,19 +622,19 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 		final CommandArguments args = CommandArguments.create(key).add(argument).add("STORE", destKey);
 		final SortArgumentConverter sortArgumentConverter = new SortArgumentConverter();
 		return executeCommand(Command.SORT, args,
-				(cmd)->cmd.sort(key, sortArgumentConverter.convert(argument), destKey), (v)->v);
+				(cmd)->cmd.sort(rawKey(key), sortArgumentConverter.convert(argument), rawKey(destKey)), (v)->v);
 	}
 
 	@Override
 	public List<String> sortRo(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.SORT_RO, args, (cmd)->cmd.sortReadonly(key, new SortingParams()), (v)->v);
+		return executeCommand(Command.SORT_RO, args, (cmd)->cmd.sortReadonly(rawKey(key), new SortingParams()), (v)->v);
 	}
 
 	@Override
 	public List<byte[]> sortRo(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.SORT_RO, args, (cmd)->cmd.sortReadonly(key, new SortingParams()), (v)->v);
+		return executeCommand(Command.SORT_RO, args, (cmd)->cmd.sortReadonly(rawKey(key), new SortingParams()), (v)->v);
 	}
 
 	@Override
@@ -634,82 +642,86 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 		final CommandArguments args = CommandArguments.create(key).add(argument);
 		final SortArgumentConverter sortArgumentConverter = new SortArgumentConverter();
 		return executeCommand(Command.SORT_RO, args,
-				(cmd)->cmd.sortReadonly(key, sortArgumentConverter.convert(argument)), (v)->v);
+				(cmd)->cmd.sortReadonly(rawKey(key), sortArgumentConverter.convert(argument)), (v)->v);
 	}
 
 	@Override
 	public List<byte[]> sortRo(final byte[] key, final SortArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument);
 		final SortArgumentConverter sortArgumentConverter = new SortArgumentConverter();
-		return executeCommand(Command.SORT_RO, args, (cmd)->cmd.sortReadonly(key,
+		return executeCommand(Command.SORT_RO, args, (cmd)->cmd.sortReadonly(rawKey(key),
 				sortArgumentConverter.convert(argument)), (v)->v);
 	}
 
 	@Override
 	public Long touch(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.TOUCH, args, (cmd)->cmd.touch(keys), (v)->v);
+		return executeCommand(Command.TOUCH, args, (cmd)->cmd.touch(rawKeys(keys)), (v)->v);
 	}
 
 	@Override
 	public Long touch(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.TOUCH, args, (cmd)->cmd.touch(keys), (v)->v);
+		return executeCommand(Command.TOUCH, args, (cmd)->cmd.touch(rawKeys(keys)), (v)->v);
 	}
 
 	@Override
 	public Long ttl(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.TTL, args, (cmd)->cmd.ttl(key), (v)->v);
+		return executeCommand(Command.TTL, args, (cmd)->cmd.ttl(rawKey(key)), (v)->v);
 	}
 
 	@Override
 	public Long ttl(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.TTL, args, (cmd)->cmd.ttl(key), (v)->v);
+		return executeCommand(Command.TTL, args, (cmd)->cmd.ttl(rawKey(key)), (v)->v);
 	}
 
 	@Override
 	public Type type(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.TYPE, args, (cmd)->cmd.type(key), new TypeConverter());
+		return executeCommand(Command.TYPE, args, (cmd)->cmd.type(rawKey(key)), new TypeConverter());
 	}
 
 	@Override
 	public Type type(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.TYPE, args, (cmd)->cmd.type(key), new TypeConverter());
+		return executeCommand(Command.TYPE, args, (cmd)->cmd.type(rawKey(key)), new TypeConverter());
 	}
 
 	@Override
 	public Long unlink(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.UNLINK, args, (cmd)->cmd.unlink(keys), (v)->v);
+		return executeCommand(Command.UNLINK, args, (cmd)->cmd.unlink(rawKeys(keys)), (v)->v);
 	}
 
 	@Override
 	public Long unlink(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.UNLINK, args, (cmd)->cmd.unlink(keys), (v)->v);
+		return executeCommand(Command.UNLINK, args, (cmd)->cmd.unlink(rawKeys(keys)), (v)->v);
 	}
 
 	private Status copy(final String key, final String destKey, final boolean replace, final CommandArguments args) {
-		return executeCommand(Command.COPY, args, (cmd)->cmd.copy(key, destKey, replace), new BooleanStatusConverter());
+		return executeCommand(Command.COPY, args, (cmd)->cmd.copy(rawKey(key), rawKey(destKey), replace),
+				new BooleanStatusConverter());
 	}
 
 	private Status copy(final byte[] key, final byte[] destKey, final boolean replace, final CommandArguments args) {
-		return executeCommand(Command.COPY, args, (cmd)->cmd.copy(key, destKey, replace), new BooleanStatusConverter());
+		return executeCommand(Command.COPY, args, (cmd)->cmd.copy(rawKey(key), rawKey(destKey), replace),
+				new BooleanStatusConverter());
 	}
 
 	private Status migrate(final String host, final int port, final int db, final int timeout, final String[] keys,
 						   final MigrateParams migrateParams, final CommandArguments args) {
-		return executeCommand(Command.MIGRATE, args, (cmd)->cmd.migrate(host, port, timeout, migrateParams, keys),
+		return executeCommand(Command.MIGRATE, args,
+				(cmd)->cmd.migrate(host, port, timeout, migrateParams, rawKeys(keys)),
 				new OkStatusConverter());
 	}
 
 	private Status migrate(final String host, final int port, final int db, final int timeout, final byte[][] keys,
 						   final MigrateParams migrateParams, final CommandArguments args) {
-		return executeCommand(Command.MIGRATE, args, (cmd)->cmd.migrate(host, port, timeout, migrateParams, keys),
+		return executeCommand(Command.MIGRATE, args,
+				(cmd)->cmd.migrate(host, port, timeout, migrateParams, rawKeys(keys)),
 				new OkStatusConverter());
 	}
 

@@ -40,6 +40,7 @@ import com.buession.redis.core.ClusterSetSlotOption;
 import com.buession.redis.core.ClusterShardInfo;
 import com.buession.redis.core.ClusterSlot;
 import com.buession.redis.core.ClusterSlotStat;
+import com.buession.redis.core.Keyword;
 import com.buession.redis.core.command.ClusterCommands;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
@@ -155,10 +156,10 @@ public final class LettuceClusterCommands extends AbstractLettuceRedisCommands i
 	}
 
 	@Override
-	public List<String> clusterGetKeysInSlot(final int slot, final long count) {
+	public List<String> clusterGetKeysInSlot(final int slot, final int count) {
 		final CommandArguments args = CommandArguments.create(slot).add(count);
 		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_GETKEYSINSLOT, args,
-				(cmd)->cmd.clusterGetKeysInSlot(slot, (int) count), new ListConverter<>(SafeEncoder::encode));
+				(cmd)->cmd.clusterGetKeysInSlot(slot, count), new ListConverter<>(SafeEncoder::encode));
 	}
 
 	@Override
@@ -187,32 +188,37 @@ public final class LettuceClusterCommands extends AbstractLettuceRedisCommands i
 
 	@Override
 	public Status clusterMeet(final String ip, final int port) {
-		final CommandArguments args = CommandArguments.create(ip).add(port);
+		final CommandArguments args = CommandArguments.create().add(ip, port);
 		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_MEET, args,
 				(cmd)->cmd.clusterMeet(ip, port), new OkStatusConverter());
 	}
 
 	@Override
+	public Status clusterMeet(final byte[] ip, final int port) {
+		return clusterMeet(SafeEncoder.encode(ip), port);
+	}
+
+	@Override
 	public Status clusterMigration(final IntegerRange slots) {
-		final CommandArguments args = CommandArguments.create("IMPORT").add(slots);
+		final CommandArguments args = CommandArguments.create().add("IMPORT", slots);
 		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_MIGRATION, args);
 	}
 
 	@Override
 	public Object clusterMigration(final ClusterMigrationOp option) {
-		final CommandArguments args = CommandArguments.create(option).add("ALL");
+		final CommandArguments args = CommandArguments.create(option).add(Keyword.Common.ALL);
 		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_MIGRATION, args);
 	}
 
 	@Override
 	public Object clusterMigration(final ClusterMigrationOp option, final String id) {
-		final CommandArguments args = CommandArguments.create(option).add("ID").add(id);
+		final CommandArguments args = CommandArguments.create(option).add("ID", id);
 		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_MIGRATION, args);
 	}
 
 	@Override
 	public Object clusterMigration(final ClusterMigrationOp option, final byte[] id) {
-		final CommandArguments args = CommandArguments.create(option).add("ID").add(id);
+		final CommandArguments args = CommandArguments.create(option).add("ID", id);
 		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_MIGRATION, args);
 	}
 

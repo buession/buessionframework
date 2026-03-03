@@ -76,457 +76,269 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 	}
 
 	@Override
-	public <V> V hGetObject(final String key, final String field) {
-		return execute((client)->client.hashCommands().hGet(key, field), new Converter.SimpleStringConverter<>(this));
-	}
-
-	@Override
-	public <V> V hGetObject(final byte[] key, final byte[] field) {
-		return execute((client)->client.hashCommands().hGet(key, field), new Converter.SimpleBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> V hGetObject(final String key, final String field, final Class<V> clazz) {
+	public <V> V hGet(final String key, final String field, final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hGet(key, field),
 				new Converter.ClazzStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> V hGetObject(final byte[] key, final byte[] field, final Class<V> clazz) {
+	public <V> V hGet(final byte[] key, final byte[] field, final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hGet(key, field),
 				new Converter.ClazzBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> V hGetObject(final String key, final String field, final TypeReference<V> type) {
+	public <V> V hGet(final String key, final String field, final TypeReference<V> type) {
 		return execute((client)->client.hashCommands().hGet(key, field),
 				new Converter.TypeStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> V hGetObject(final byte[] key, final byte[] field, final TypeReference<V> type) {
+	public <V> V hGet(final byte[] key, final byte[] field, final TypeReference<V> type) {
 		return execute((client)->client.hashCommands().hGet(key, field),
 				new Converter.TypeBinaryConverter<>(this, type));
 	}
 
 	@Override
-	public <V> Map<String, V> hGetAllObject(final String key) {
-		return execute((client)->client.hashCommands().hGetAll(key), new Converter.SimpleMapStringConverter<>(this));
-	}
-
-	@Override
-	public <V> Map<byte[], V> hGetAllObject(final byte[] key) {
-		return execute((client)->client.hashCommands().hGetAll(key), new Converter.SimpleMapBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> Map<String, V> hGetAllObject(final String key, final Class<V> clazz) {
+	public <V> Map<String, V> hGetAll(final String key, final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hGetAll(key),
 				new Converter.ClazzMapStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> Map<byte[], V> hGetAllObject(final byte[] key, final Class<V> clazz) {
+	public <V> Map<byte[], V> hGetAll(final byte[] key, final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hGetAll(key),
 				new Converter.ClazzMapBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> Map<String, V> hGetAllObject(final String key, final TypeReference<V> type) {
+	public <V> Map<String, V> hGetAll(final String key, final TypeReference<V> type) {
 		return execute((client)->client.hashCommands().hGetAll(key),
 				new Converter.TypeMapStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> Map<byte[], V> hGetAllObject(final byte[] key, final TypeReference<V> type) {
+	public <V> Map<byte[], V> hGetAll(final byte[] key, final TypeReference<V> type) {
 		return execute((client)->client.hashCommands().hGetAll(key),
 				new Converter.TypeMapBinaryConverter<>(this, type));
 	}
 
 	@Override
-	public <V> List<V> hGetDelObject(final String key, final String... fields) {
-		return execute((client)->client.hashCommands().hGetDel(key, fields),
-				new Converter.SimpleListStringConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> hGetDelObject(final byte[] key, final byte[]... fields) {
-		return execute((client)->client.hashCommands().hGetDel(key, fields),
-				new Converter.SimpleListBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> hGetDelObject(final String key, final String[] fields, final Class<V> clazz) {
+	public <V> List<V> hGetDel(final String key, final String[] fields, final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hGetDel(key, fields),
 				new Converter.ClazzListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> List<V> hGetDelObject(final byte[] key, final byte[][] fields, final Class<V> clazz) {
+	public <V> List<V> hGetDel(final byte[] key, final byte[][] fields, final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hGetDel(key, fields),
 				new Converter.ClazzListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> List<V> hGetDelObject(final String key, final String[] fields, final TypeReference<V> type) {
+	public <V> List<V> hGetDel(final String key, final String[] fields, final TypeReference<V> type) {
 		return execute((client)->client.hashCommands().hGetDel(key, fields),
 				new Converter.TypeListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> List<V> hGetDelObject(final byte[] key, final byte[][] fields, final TypeReference<V> type) {
+	public <V> List<V> hGetDel(final byte[] key, final byte[][] fields, final TypeReference<V> type) {
 		return execute((client)->client.hashCommands().hGetDel(key, fields),
 				new Converter.TypeListBinaryConverter<>(this, type));
 	}
 
 	@Override
-	public <V> List<V> hGetExObject(final String key, final String... fields) {
-		return execute((client)->client.hashCommands().hGetEx(key, fields),
-				new Converter.SimpleListStringConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> hGetExObject(final byte[] key, final byte[]... fields) {
-		return execute((client)->client.hashCommands().hGetEx(key, fields),
-				new Converter.SimpleListBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> hGetExObject(final String key, final String[] fields, final Class<V> clazz) {
+	public <V> List<V> hGetEx(final String key, final String[] fields, final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hGetEx(key, fields),
 				new Converter.ClazzListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> List<V> hGetExObject(final byte[] key, final byte[][] fields, final Class<V> clazz) {
+	public <V> List<V> hGetEx(final byte[] key, final byte[][] fields, final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hGetEx(key, fields),
 				new Converter.ClazzListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> List<V> hGetExObject(final String key, final String[] fields, final TypeReference<V> type) {
+	public <V> List<V> hGetEx(final String key, final String[] fields, final TypeReference<V> type) {
 		return execute((client)->client.hashCommands().hGetEx(key, fields),
 				new Converter.TypeListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> List<V> hGetExObject(final byte[] key, final byte[][] fields, TypeReference<V> type) {
+	public <V> List<V> hGetEx(final byte[] key, final byte[][] fields, TypeReference<V> type) {
 		return execute((client)->client.hashCommands().hGetEx(key, fields),
 				new Converter.TypeListBinaryConverter<>(this, type));
 	}
 
 	@Override
-	public <V> List<V> hGetExObject(final String key, final GetExArgument argument, final String... fields) {
-		return execute((client)->client.hashCommands().hGetEx(key, argument, fields),
-				new Converter.SimpleListStringConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> hGetExObject(final byte[] key, final GetExArgument argument, final byte[]... fields) {
-		return execute((client)->client.hashCommands().hGetEx(key, argument, fields),
-				new Converter.SimpleListBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> hGetExObject(final String key, final GetExArgument argument, final String[] fields,
-									final Class<V> clazz) {
+	public <V> List<V> hGetEx(final String key, final GetExArgument argument, final String[] fields,
+							  final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hGetEx(key, argument, fields),
 				new Converter.ClazzListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> List<V> hGetExObject(final byte[] key, final GetExArgument argument, final byte[][] fields,
-									final Class<V> clazz) {
+	public <V> List<V> hGetEx(final byte[] key, final GetExArgument argument, final byte[][] fields,
+							  final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hGetEx(key, argument, fields),
 				new Converter.ClazzListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> List<V> hGetExObject(final String key, final GetExArgument argument, final String[] fields,
-									final TypeReference<V> type) {
+	public <V> List<V> hGetEx(final String key, final GetExArgument argument, final String[] fields,
+							  final TypeReference<V> type) {
 		return execute((client)->client.hashCommands().hGetEx(key, argument, fields),
 				new Converter.TypeListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> List<V> hGetExObject(final byte[] key, final GetExArgument argument, final byte[][] fields,
-									final TypeReference<V> type) {
+	public <V> List<V> hGetEx(final byte[] key, final GetExArgument argument, final byte[][] fields,
+							  final TypeReference<V> type) {
 		return execute((client)->client.hashCommands().hGetEx(key, argument, fields),
 				new Converter.TypeListBinaryConverter<>(this, type));
 	}
 
 	@Override
-	public <V> List<V> hMGetObject(final String key, final String... fields) {
-		return execute((client)->client.hashCommands().hMGet(key, fields),
-				new Converter.SimpleListStringConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> hMGetObject(final byte[] key, final byte[]... fields) {
-		return execute((client)->client.hashCommands().hMGet(key, fields),
-				new Converter.SimpleListBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> hMGetObject(final String key, final String[] fields, final Class<V> clazz) {
+	public <V> List<V> hMGet(final String key, final String[] fields, final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hMGet(key, fields),
 				new Converter.ClazzListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> List<V> hMGetObject(final byte[] key, final byte[][] fields, final Class<V> clazz) {
+	public <V> List<V> hMGet(final byte[] key, final byte[][] fields, final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hMGet(key, fields),
 				new Converter.ClazzListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> List<V> hMGetObject(final String key, final String[] fields, final TypeReference<V> type) {
+	public <V> List<V> hMGet(final String key, final String[] fields, final TypeReference<V> type) {
 		return execute((client)->client.hashCommands().hMGet(key, fields),
 				new Converter.TypeListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> List<V> hMGetObject(final byte[] key, final byte[][] fields, final TypeReference<V> type) {
+	public <V> List<V> hMGet(final byte[] key, final byte[][] fields, final TypeReference<V> type) {
 		return execute((client)->client.hashCommands().hMGet(key, fields),
 				new Converter.TypeListBinaryConverter<>(this, type));
 	}
 
 	@Override
-	public <V> Status hMSet(final String key, final List<KeyValue<String, V>> data) {
-		return hMSet(key, listKeyValue2StringMap(data));
-	}
-
-	@Override
-	public <V> Status hMSet(final byte[] key, final List<KeyValue<byte[], V>> data) {
-		return hMSet(key, listKeyValue2BinaryMap(data));
-	}
-
-	@Override
-	public <V> Map<String, V> hRandFieldWithValuesObject(final String key, final long count) {
-		return execute((client)->client.hashCommands().hRandFieldWithValues(key, count),
-				new Converter.SimpleMapStringConverter<>(this));
-	}
-
-	@Override
-	public <V> Map<byte[], V> hRandFieldWithValuesObject(final byte[] key, final long count) {
-		return execute((client)->client.hashCommands().hRandFieldWithValues(key, count),
-				new Converter.SimpleMapBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> Map<String, V> hRandFieldWithValuesObject(final String key, long count, final Class<V> clazz) {
+	public <V> Map<String, V> hRandFieldWithValues(final String key, final int count, final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hRandFieldWithValues(key, count),
 				new Converter.ClazzMapStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> Map<byte[], V> hRandFieldWithValuesObject(final byte[] key, final long count, final Class<V> clazz) {
+	public <V> Map<byte[], V> hRandFieldWithValues(final byte[] key, final int count, final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hRandFieldWithValues(key, count),
 				new Converter.ClazzMapBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> Map<String, V> hRandFieldWithValuesObject(final String key, final long count,
-														 final TypeReference<V> type) {
+	public <V> Map<String, V> hRandFieldWithValues(final String key, final int count, final TypeReference<V> type) {
 		return execute((client)->client.hashCommands().hRandFieldWithValues(key, count),
 				new Converter.TypeMapStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> Map<byte[], V> hRandFieldWithValuesObject(final byte[] key, final long count,
-														 final TypeReference<V> type) {
+	public <V> Map<byte[], V> hRandFieldWithValues(final byte[] key, final int count, final TypeReference<V> type) {
 		return execute((client)->client.hashCommands().hRandFieldWithValues(key, count),
 				new Converter.TypeMapBinaryConverter<>(this, type));
 	}
 
 	@Override
-	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor) {
-		return execute((client)->client.hashCommands().hScan(key, cursor),
-				new Converter.SimpleScanResultMapStringConverter<>(this));
-	}
-
-	@Override
-	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor) {
-		return execute((client)->client.hashCommands().hScan(key, cursor),
-				new Converter.SimpleScanResultMapBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final Class<V> clazz) {
+	public <V> ScanResult<Map<String, V>> hScan(final String key, final String cursor, final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hScan(key, cursor),
 				new Converter.ClazzScanResultMapStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final Class<V> clazz) {
+	public <V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final byte[] cursor, final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hScan(key, cursor),
 				new Converter.ClazzScanResultMapBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor,
-													  final TypeReference<V> type) {
+	public <V> ScanResult<Map<String, V>> hScan(final String key, final String cursor, final TypeReference<V> type) {
 		return execute((client)->client.hashCommands().hScan(key, cursor),
 				new Converter.TypeScanResultMapStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor,
-													  final TypeReference<V> type) {
+	public <V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final byte[] cursor, final TypeReference<V> type) {
 		return execute((client)->client.hashCommands().hScan(key, cursor),
 				new Converter.TypeScanResultMapBinaryConverter<>(this, type));
 	}
 
 	@Override
-	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final String pattern) {
-		return execute((client)->client.hashCommands().hScan(key, cursor, pattern),
-				new Converter.SimpleScanResultMapStringConverter<>(this));
-	}
-
-	@Override
-	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern) {
-		return execute((client)->client.hashCommands().hScan(key, cursor, pattern),
-				new Converter.SimpleScanResultMapBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final String pattern,
-													  final Class<V> clazz) {
+	public <V> ScanResult<Map<String, V>> hScan(final String key, final String cursor, final String pattern,
+												final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hScan(key, cursor, pattern),
 				new Converter.ClazzScanResultMapStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
-													  final Class<V> clazz) {
+	public <V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+												final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hScan(key, cursor, pattern),
 				new Converter.ClazzScanResultMapBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final String pattern,
-													  final TypeReference<V> type) {
+	public <V> ScanResult<Map<String, V>> hScan(final String key, final String cursor, final String pattern,
+												final TypeReference<V> type) {
 		return execute((client)->client.hashCommands().hScan(key, cursor, pattern),
 				new Converter.TypeScanResultMapStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
-													  final TypeReference<V> type) {
+	public <V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+												final TypeReference<V> type) {
 		return execute((client)->client.hashCommands().hScan(key, cursor, pattern),
 				new Converter.TypeScanResultMapBinaryConverter<>(this, type));
 	}
 
 	@Override
-	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final long count) {
-		return execute((client)->client.hashCommands().hScan(key, cursor, count),
-				new Converter.SimpleScanResultMapStringConverter<>(this));
-	}
-
-	@Override
-	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final long count) {
-		return execute((client)->client.hashCommands().hScan(key, cursor, count),
-				new Converter.SimpleScanResultMapBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final long count,
-													  final Class<V> clazz) {
+	public <V> ScanResult<Map<String, V>> hScan(final String key, final String cursor, final int count,
+												final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hScan(key, cursor, count),
 				new Converter.ClazzScanResultMapStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final long count,
-													  final Class<V> clazz) {
+	public <V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final byte[] cursor, final int count,
+												final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hScan(key, cursor, count),
 				new Converter.ClazzScanResultMapBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final long count,
-													  final TypeReference<V> type) {
+	public <V> ScanResult<Map<String, V>> hScan(final String key, final String cursor, final int count,
+												final TypeReference<V> type) {
 		return execute((client)->client.hashCommands().hScan(key, cursor, count),
 				new Converter.TypeScanResultMapStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final long count,
-													  final TypeReference<V> type) {
+	public <V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final byte[] cursor, final int count,
+												final TypeReference<V> type) {
 		return execute((client)->client.hashCommands().hScan(key, cursor, count),
 				new Converter.TypeScanResultMapBinaryConverter<>(this, type));
 	}
 
 	@Override
-	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final String pattern,
-													  final long count) {
-		return execute((client)->client.hashCommands().hScan(key, cursor, pattern, count),
-				new Converter.SimpleScanResultMapStringConverter<>(this));
-	}
-
-	@Override
-	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
-													  final long count) {
-		return execute((client)->client.hashCommands().hScan(key, cursor, pattern, count),
-				new Converter.SimpleScanResultMapBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final String pattern,
-													  final long count, final Class<V> clazz) {
+	public <V> ScanResult<Map<String, V>> hScan(final String key, final String cursor, final String pattern,
+												final int count, final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hScan(key, cursor, pattern, count),
 				new Converter.ClazzScanResultMapStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
-													  final long count, final Class<V> clazz) {
+	public <V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+												final int count, final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hScan(key, cursor, pattern, count),
 				new Converter.ClazzScanResultMapBinaryConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final String pattern,
-													  final long count, final TypeReference<V> type) {
-		return execute((client)->client.hashCommands().hScan(key, cursor, pattern, count),
-				new Converter.TypeScanResultMapStringConverter<>(this, type));
-	}
-
-	@Override
-	public <V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
-													  final long count, final TypeReference<V> type) {
-		return execute((client)->client.hashCommands().hScan(key, cursor, pattern, count),
-				new Converter.TypeScanResultMapBinaryConverter<>(this, type));
-	}
-
-	@Override
-	public <V> Long hSet(final String key, final List<KeyValue<String, V>> data) {
-		return hSet(key, listKeyValue2StringMap(data));
-	}
-
-	@Override
-	public <V> Long hSet(final byte[] key, final List<KeyValue<byte[], V>> data) {
-		return hSet(key, listKeyValue2BinaryMap(data));
-	}
-
-	@Override
-	public <V> Status hSetEx(final String key, final List<KeyValue<String, V>> data) {
-		return hSetEx(key, listKeyValue2StringMap(data));
-	}
-
-	@Override
-	public <V> Status hSetEx(final byte[] key, final List<KeyValue<byte[], V>> data) {
-		return hSetEx(key, listKeyValue2BinaryMap(data));
-	}
-
-	@Override
-	public <V> Status hSetEx(final String key, final List<KeyValue<String, V>> data, final HSetExArgument argument) {
-		return hSetEx(key, listKeyValue2StringMap(data), argument);
-	}
-
-	@Override
-	public <V> Status hSetEx(final byte[] key, final List<KeyValue<byte[], V>> data, final HSetExArgument argument) {
-		return hSetEx(key, listKeyValue2BinaryMap(data), argument);
 	}
 
 	@Override
@@ -540,35 +352,25 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 	}
 
 	@Override
-	public <V> List<V> hValsObject(final String key) {
-		return execute((client)->client.hashCommands().hVals(key), new Converter.SimpleListStringConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> hValsObject(final byte[] key) {
-		return execute((client)->client.hashCommands().hVals(key), new Converter.SimpleListBinaryConverter<>(this));
-	}
-
-	@Override
-	public <V> List<V> hValsObject(final String key, final Class<V> clazz) {
+	public <V> List<V> hVals(final String key, final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hVals(key),
 				new Converter.ClazzListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> List<V> hValsObject(final byte[] key, final Class<V> clazz) {
+	public <V> List<V> hVals(final byte[] key, final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hVals(key),
 				new Converter.ClazzListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> List<V> hValsObject(final String key, final TypeReference<V> type) {
+	public <V> List<V> hVals(final String key, final TypeReference<V> type) {
 		return execute((client)->client.hashCommands().hVals(key),
 				new Converter.TypeListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> List<V> hValsObject(final byte[] key, final TypeReference<V> type) {
+	public <V> List<V> hVals(final byte[] key, final TypeReference<V> type) {
 		return execute((client)->client.hashCommands().hVals(key),
 				new Converter.TypeListBinaryConverter<>(this, type));
 	}
@@ -774,50 +576,50 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 	@Override
 	public <V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
 							  final int timeout) {
-		return execute((client)->client.listCommands().blMove(rawKey(destKey), rawKey(destKey), from, to, timeout),
+		return execute((client)->client.listCommands().blMove(key, destKey, from, to, timeout),
 				new Converter.SimpleStringConverter<>(this));
 	}
 
 	@Override
 	public <V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
 							  final int timeout) {
-		return execute((client)->client.listCommands().blMove(rawKey(destKey), rawKey(destKey), from, to, timeout),
+		return execute((client)->client.listCommands().blMove(key, destKey, from, to, timeout),
 				new Converter.SimpleBinaryConverter<>(this));
 	}
 
 	@Override
 	public <V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
 							  final int timeout, final Class<V> clazz) {
-		return execute((client)->client.listCommands().blMove(rawKey(destKey), rawKey(destKey), from, to, timeout),
+		return execute((client)->client.listCommands().blMove(key, destKey, from, to, timeout),
 				new Converter.ClazzStringConverter<>(this, clazz));
 	}
 
 	@Override
 	public <V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
 							  final int timeout, final Class<V> clazz) {
-		return execute((client)->client.listCommands().blMove(rawKey(destKey), rawKey(destKey), from, to, timeout),
+		return execute((client)->client.listCommands().blMove(key, destKey, from, to, timeout),
 				new Converter.ClazzBinaryConverter<>(this, clazz));
 	}
 
 	@Override
 	public <V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
 							  final int timeout, final TypeReference<V> type) {
-		return execute((client)->client.listCommands().blMove(rawKey(destKey), rawKey(destKey), from, to, timeout),
+		return execute((client)->client.listCommands().blMove(key, destKey, from, to, timeout),
 				new Converter.TypeStringConverter<>(this, type));
 	}
 
 	@Override
 	public <V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
 							  final int timeout, final TypeReference<V> type) {
-		return execute((client)->client.listCommands().blMove(rawKey(destKey), rawKey(destKey), from, to, timeout),
+		return execute((client)->client.listCommands().blMove(key, destKey, from, to, timeout),
 				new Converter.TypeBinaryConverter<>(this, type));
 	}
 
 	@Override
 	public <V> KeyValue<String, List<V>> blMPopObject(final int timeout, final String[] keys,
 													  final Direction direction) {
-		return execute((client)->client.listCommands().blMPop(timeout, keys),
-				new Converter.TypeListBinaryConverter<>(this, clazz));
+		return execute((client)->client.listCommands().blMPop(timeout, keys, direction),
+				new Converter.SimpleListStringConverter<>(this));
 	}
 
 	@Override
@@ -929,39 +731,39 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 
 	@Override
 	public <V> V brPoplPushObject(final String key, final String destKey, final int timeout) {
-		return execute((client)->client.listCommands().brPoplPush(key, rawKey(destKey), timeout),
+		return execute((client)->client.listCommands().brPoplPush(key, destKey, timeout),
 				new Converter.SimpleStringConverter<>(this));
 	}
 
 	@Override
 	public <V> V brPoplPushObject(final byte[] key, final byte[] destKey, final int timeout) {
-		return execute((client)->client.listCommands().brPoplPush(key, rawKey(destKey), timeout),
+		return execute((client)->client.listCommands().brPoplPush(key, destKey, timeout),
 				new Converter.SimpleBinaryConverter<>(this));
 	}
 
 	@Override
 	public <V> V brPoplPushObject(final String key, final String destKey, final int timeout, final Class<V> clazz) {
-		return execute((client)->client.listCommands().brPoplPush(key, rawKey(destKey), timeout),
+		return execute((client)->client.listCommands().brPoplPush(key, destKey, timeout),
 				new Converter.ClazzStringConverter<>(this, clazz));
 	}
 
 	@Override
 	public <V> V brPoplPushObject(final byte[] key, final byte[] destKey, final int timeout, final Class<V> clazz) {
-		return execute((client)->client.listCommands().brPoplPush(key, rawKey(destKey), timeout),
+		return execute((client)->client.listCommands().brPoplPush(key, destKey, timeout),
 				new Converter.ClazzBinaryConverter<>(this, clazz));
 	}
 
 	@Override
 	public <V> V brPoplPushObject(final String key, final String destKey, final int timeout,
 								  final TypeReference<V> type) {
-		return execute((client)->client.listCommands().brPoplPush(key, rawKey(destKey), timeout),
+		return execute((client)->client.listCommands().brPoplPush(key, destKey, timeout),
 				new Converter.TypeStringConverter<>(this, type));
 	}
 
 	@Override
 	public <V> V brPoplPushObject(final byte[] key, final byte[] destKey, final int timeout,
 								  final TypeReference<V> type) {
-		return execute((client)->client.listCommands().brPoplPush(key, rawKey(destKey), timeout),
+		return execute((client)->client.listCommands().brPoplPush(key, destKey, timeout),
 				new Converter.TypeBinaryConverter<>(this, type));
 	}
 
@@ -1013,41 +815,41 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 
 	@Override
 	public <V> V lMoveObject(final String key, final String destKey, final Direction from, final Direction to) {
-		return execute((client)->client.listCommands().lMove(rawKey(destKey), rawKey(destKey), from, to),
+		return execute((client)->client.listCommands().lMove(key, destKey, from, to),
 				new Converter.SimpleStringConverter<>(this));
 	}
 
 	@Override
 	public <V> V lMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to) {
-		return execute((client)->client.listCommands().lMove(rawKey(destKey), rawKey(destKey), from, to),
+		return execute((client)->client.listCommands().lMove(key, destKey, from, to),
 				new Converter.SimpleBinaryConverter<>(this));
 	}
 
 	@Override
 	public <V> V lMoveObject(final String key, final String destKey, final Direction from, final Direction to,
 							 final Class<V> clazz) {
-		return execute((client)->client.listCommands().lMove(rawKey(destKey), rawKey(destKey), from, to),
+		return execute((client)->client.listCommands().lMove(key, destKey, from, to),
 				new Converter.ClazzStringConverter<>(this, clazz));
 	}
 
 	@Override
 	public <V> V lMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
 							 final Class<V> clazz) {
-		return execute((client)->client.listCommands().lMove(rawKey(destKey), rawKey(destKey), from, to),
+		return execute((client)->client.listCommands().lMove(key, destKey, from, to),
 				new Converter.ClazzBinaryConverter<>(this, clazz));
 	}
 
 	@Override
 	public <V> V lMoveObject(final String key, final String destKey, final Direction from, final Direction to,
 							 final TypeReference<V> type) {
-		return execute((client)->client.listCommands().lMove(rawKey(destKey), rawKey(destKey), from, to),
+		return execute((client)->client.listCommands().lMove(key, destKey, from, to),
 				new Converter.TypeStringConverter<>(this, type));
 	}
 
 	@Override
 	public <V> V lMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
 							 final TypeReference<V> type) {
-		return execute((client)->client.listCommands().lMove(rawKey(destKey), rawKey(destKey), from, to),
+		return execute((client)->client.listCommands().lMove(key, destKey, from, to),
 				new Converter.TypeBinaryConverter<>(this, type));
 	}
 
@@ -1261,37 +1063,37 @@ public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterO
 
 	@Override
 	public <V> V rPoplPushObject(final String key, final String destKey) {
-		return execute((client)->client.listCommands().rPoplPush(key, rawKey(destKey)),
+		return execute((client)->client.listCommands().rPoplPush(key, destKey),
 				new Converter.SimpleStringConverter<>(this));
 	}
 
 	@Override
 	public <V> V rPoplPushObject(final byte[] key, final byte[] destKey) {
-		return execute((client)->client.listCommands().rPoplPush(key, rawKey(destKey)),
+		return execute((client)->client.listCommands().rPoplPush(key, destKey),
 				new Converter.SimpleBinaryConverter<>(this));
 	}
 
 	@Override
 	public <V> V rPoplPushObject(final String key, final String destKey, final Class<V> clazz) {
-		return execute((client)->client.listCommands().rPoplPush(key, rawKey(destKey)),
+		return execute((client)->client.listCommands().rPoplPush(key, destKey),
 				new Converter.ClazzStringConverter<>(this, clazz));
 	}
 
 	@Override
 	public <V> V rPoplPushObject(final byte[] key, final byte[] destKey, final Class<V> clazz) {
-		return execute((client)->client.listCommands().rPoplPush(key, rawKey(destKey)),
+		return execute((client)->client.listCommands().rPoplPush(key, destKey),
 				new Converter.ClazzBinaryConverter<>(this, clazz));
 	}
 
 	@Override
 	public <V> V rPoplPushObject(final String key, final String destKey, final TypeReference<V> type) {
-		return execute((client)->client.listCommands().rPoplPush(key, rawKey(destKey)),
+		return execute((client)->client.listCommands().rPoplPush(key, destKey),
 				new Converter.TypeStringConverter<>(this, type));
 	}
 
 	@Override
 	public <V> V rPoplPushObject(final byte[] key, final byte[] destKey, final TypeReference<V> type) {
-		return execute((client)->client.listCommands().rPoplPush(key, rawKey(destKey)),
+		return execute((client)->client.listCommands().rPoplPush(key, destKey),
 				new Converter.TypeBinaryConverter<>(this, type));
 	}
 

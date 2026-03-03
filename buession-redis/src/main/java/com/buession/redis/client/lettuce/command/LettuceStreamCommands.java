@@ -106,13 +106,15 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public Long xAck(final String key, final String groupName, final StreamEntryId... ids) {
-		return xAck(SafeEncoder.encode(key), SafeEncoder.encode(groupName), ids);
+		final CommandArguments args = CommandArguments.create(key).add(groupName).add(ids);
+		return executeCommand(Command.XACK, args, (cmd)->cmd.xack(rawBinaryKey(key), SafeEncoder.encode(groupName),
+				CompositeArgumentUtils.messageIds(ids)), (v)->v);
 	}
 
 	@Override
 	public Long xAck(final byte[] key, final byte[] groupName, final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName).add(ids);
-		return executeCommand(Command.XACK, args, (cmd)->cmd.xack(key, groupName,
+		return executeCommand(Command.XACK, args, (cmd)->cmd.xack(rawKey(key), groupName,
 				CompositeArgumentUtils.messageIds(ids)), (v)->v);
 	}
 
@@ -127,7 +129,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 												   final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName).add("IDS", ids.length).add(ids);
 		return executeCommand(Command.XACKDEL, args,
-				(cmd)->cmd.xackdel(key, groupName, CompositeArgumentUtils.messageIds(ids)),
+				(cmd)->cmd.xackdel(rawKey(key), groupName, CompositeArgumentUtils.messageIds(ids)),
 				new ListConverter<>(new StreamEntryDeletionResultConverter()));
 	}
 

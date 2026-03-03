@@ -27,8 +27,11 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.ScanResult;
+import com.buession.redis.core.Tuple;
 import io.lettuce.core.KeyScanCursor;
 import io.lettuce.core.ScanCursor;
+import io.lettuce.core.ScoredValue;
+import io.lettuce.core.ScoredValueScanCursor;
 
 /**
  * Lettuce {@link ScanCursor} 转换为 {@link ScanResult}
@@ -71,6 +74,22 @@ public interface ScanCursorConverter<T extends ScanCursor, R> extends Converter<
 	}
 
 	/**
+	 * Lettuce {@link ScoredValueScanCursor} 转换为 {@link ScanResult}
+	 *
+	 * @author Yong.Teng
+	 */
+	final class ScoredValueScanCursorConverter implements ScanCursorConverter<ScoredValueScanCursor<byte[]>, Tuple> {
+
+		@Override
+		public ScanResult<Tuple> convert(final ScoredValueScanCursor<byte[]> source) {
+			ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = new ListConverter<>(
+					new ScoredValueTupleConverter());
+			return new ScanResult<>(source.getCursor(), listScoredValueConverter.convert(source.getValues()));
+		}
+
+	}
+
+	/**
 	 * Lettuce {@link ValueScanCursor} 转换为 {@link ScanResult}
 	 *
 	 * @param <K>
@@ -103,24 +122,7 @@ public interface ScanCursorConverter<T extends ScanCursor, R> extends Converter<
 
 		}
 
-		/**
-		 * Lettuce {@link ScoredValueScanCursor} 转换为 {@link ScanResult}
-		 *
-		 * @author Yong.Teng
-		 */
-		/*
-		public final static class ScoredValueScanCursorConverter
-				implements ScanCursorConverter<ScoredValueScanCursor<byte[]>, List<Tuple>> {
 
-			private final ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter
-					= ScoredValueTupleConverter.BinaryScoredValueTupleConverter.listConverter();
-
-			@Override
-			public ScanResult<List<Tuple>> convert(final ScoredValueScanCursor<byte[]> source) {
-				return new ScanResult<>(source.getCursor(), listScoredValueConverter.convert(source.getValues()));
-			}
-
-		}
 
 	}
 

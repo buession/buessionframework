@@ -24,6 +24,8 @@
  */
 package com.buession.redis.core.internal.jedis;
 
+import com.buession.redis.core.StreamDeletionPolicy;
+import com.buession.redis.core.StreamEntryId;
 import redis.clients.jedis.params.XTrimParams;
 
 /**
@@ -38,50 +40,28 @@ public final class JedisXTrimParams extends XTrimParams {
 		super();
 	}
 
-	public JedisXTrimParams(final long maxLen) {
-		super();
-		maxLen(maxLen);
+	public static JedisXTrimParams xTrimParams() {
+		return new JedisXTrimParams();
 	}
 
-	public JedisXTrimParams(final long maxLen, final String minId) {
-		this(maxLen);
-		minId(minId);
-	}
-
-	public JedisXTrimParams(final long maxLen, final long limit) {
-		this(maxLen);
-		limit(limit);
-	}
-
-	public JedisXTrimParams(final long maxLen, final String minId, final long limit) {
-		this(maxLen, minId);
-		limit(limit);
-	}
-
-	public JedisXTrimParams(final long maxLen, final boolean approximateTrimming, final boolean exactTrimming) {
-		this(maxLen);
-		approximateTrimming(this, approximateTrimming);
-		exactTrimming(this, exactTrimming);
-	}
-
-	public JedisXTrimParams(final long maxLen, final String minId, final long limit, final boolean approximateTrimming,
-							final boolean exactTrimming) {
-		this(maxLen, approximateTrimming, exactTrimming);
-		maxLen(maxLen);
-		minId(minId);
-		limit(limit);
-	}
-
-	private static void approximateTrimming(final JedisXTrimParams xTrimParams, final Boolean approximateTrimming) {
-		if(Boolean.TRUE.equals(approximateTrimming)){
-			xTrimParams.approximateTrimming();
+	public JedisXTrimParams deletionPolicy(StreamDeletionPolicy deletionPolicy) {
+		if(deletionPolicy != null){
+			switch(deletionPolicy){
+				case ACKED -> trimmingMode(redis.clients.jedis.args.StreamDeletionPolicy.ACKNOWLEDGED);
+				case DELREF -> trimmingMode(redis.clients.jedis.args.StreamDeletionPolicy.DELETE_REFERENCES);
+				case KEEPREF -> trimmingMode(redis.clients.jedis.args.StreamDeletionPolicy.KEEP_REFERENCES);
+			}
 		}
+
+		return this;
 	}
 
-	private static void exactTrimming(final JedisXTrimParams xTrimParams, final Boolean exactTrimming) {
-		if(Boolean.TRUE.equals(exactTrimming)){
-			xTrimParams.exactTrimming();
+	public JedisXTrimParams minId(StreamEntryId id) {
+		if(id != null){
+			minId(id.toString());
 		}
+
+		return this;
 	}
 
 }

@@ -335,7 +335,7 @@ public interface JsonCommands extends RedisCommands {
 	 *
 	 * @return 返回一个数组，每个元素对应 path 匹配到的每个数组中被弹出的值；如果数组为空或索引越界，返回 null 对应项；如果 path 不指向数组，返回 null
 	 */
-	List<Object> jsonArrPop(final String key, final String path);
+	List<String> jsonArrPop(final String key, final String path);
 
 	/**
 	 * 从 JSON 文档的数组末尾（或指定位置）弹出并返回一个元素
@@ -349,7 +349,7 @@ public interface JsonCommands extends RedisCommands {
 	 *
 	 * @return 返回一个数组，每个元素对应 path 匹配到的每个数组中被弹出的值；如果数组为空或索引越界，返回 null 对应项；如果 path 不指向数组，返回 null
 	 */
-	List<Object> jsonArrPop(final byte[] key, final byte[] path);
+	List<byte[]> jsonArrPop(final byte[] key, final byte[] path);
 
 	/**
 	 * 裁剪 JSON 数组，仅保留指定索引范围内的元素
@@ -773,19 +773,7 @@ public interface JsonCommands extends RedisCommands {
 	 *
 	 * @return 操作结果
 	 */
-	Status jsonMSet(final JsonKeyPathValueArgument.StringJsonKeyPathValueArgument... data);
-
-	/**
-	 * Set or update one or more JSON values according to the specified key-path-value triplets
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/json.mset/" target="_blank">https://redis.io/docs/latest/commands/json.mset/</a></p>
-	 *
-	 * @param data
-	 * 		JSON 数据
-	 *
-	 * @return 操作结果
-	 */
-	Status jsonMSet(final JsonKeyPathValueArgument.BinaryJsonKeyPathValueArgument... data);
+	Status jsonMSet(final JsonKeyPathValueArgument... data);
 
 	/**
 	 * 对 JSON 文档中的数值字段执行原子递增

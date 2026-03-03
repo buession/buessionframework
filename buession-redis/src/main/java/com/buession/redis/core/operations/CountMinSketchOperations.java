@@ -29,7 +29,6 @@ import com.buession.lang.Status;
 import com.buession.redis.core.CmsInfo;
 import com.buession.redis.core.command.CountMinSketchCommands;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -44,45 +43,13 @@ import java.util.Map;
 public interface CountMinSketchOperations extends CountMinSketchCommands, RedisOperations {
 
 	@Override
-	default List<Long> cmsIncrby(final String key, final List<KeyValue<String, Long>> items) {
+	default List<Long> cmsIncrby(final String key, final KeyValue<String, Long>... items) {
 		return execute((client)->client.countMinSketchCommands().cmsIncrby(key, items));
 	}
 
 	@Override
-	default List<Long> cmsIncrby(final byte[] key, final List<KeyValue<byte[], Long>> items) {
-		return execute((client)->client.countMinSketchCommands().cmsIncrby(key, items));
-	}
-
-	/**
-	 * 对 Count-Min Sketch（CMS）一个或多个元素执行频次增量更新
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cms.incrby/" target="_blank">https://redis.io/docs/latest/commands/cms.incrby/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param items
-	 * 		要增加的元素及其增加值
-	 *
-	 * @return 返回结果列表
-	 */
-	default List<Long> cmsIncrby(final String key, final KeyValue<String, Long>... items) {
-		return cmsIncrby(key, Arrays.asList(items));
-	}
-
-	/**
-	 * 对 Count-Min Sketch（CMS）一个或多个元素执行频次增量更新
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cms.incrby/" target="_blank">https://redis.io/docs/latest/commands/cms.incrby/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param items
-	 * 		要增加的元素及其增加值
-	 *
-	 * @return 返回结果列表
-	 */
 	default List<Long> cmsIncrby(final byte[] key, final KeyValue<byte[], Long>... items) {
-		return cmsIncrby(key, Arrays.asList(items));
+		return execute((client)->client.countMinSketchCommands().cmsIncrby(key, items));
 	}
 
 	@Override

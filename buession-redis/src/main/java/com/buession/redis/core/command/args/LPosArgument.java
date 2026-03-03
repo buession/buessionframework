@@ -40,11 +40,6 @@ public class LPosArgument {
 	private Integer rank;
 
 	/**
-	 * 最多个匹配位置
-	 */
-	private Integer count;
-
-	/**
 	 * 查找成员个数
 	 */
 	private Integer maxLen;
@@ -69,14 +64,11 @@ public class LPosArgument {
 	 *
 	 * @param rank
 	 * 		返回第几个匹配的元素
-	 * @param count
-	 * 		最多个匹配位置
 	 * @param maxLen
 	 * 		查找成员个数
 	 */
-	public LPosArgument(final int rank, final int count, final int maxLen) {
+	public LPosArgument(final int rank, final int maxLen) {
 		this.rank = rank;
-		this.count = count;
 		this.maxLen = maxLen;
 	}
 
@@ -97,30 +89,8 @@ public class LPosArgument {
 	 *
 	 * @return {@link LPosArgument}
 	 */
-	public LPosArgument setRank(final int rank) {
+	public LPosArgument setRank(int rank) {
 		this.rank = rank;
-		return this;
-	}
-
-	/**
-	 * 返回第几个匹配的元素
-	 *
-	 * @return 第几个匹配的元素
-	 */
-	public Integer getCount() {
-		return count;
-	}
-
-	/**
-	 * 设置最多个匹配位置
-	 *
-	 * @param count
-	 * 		最多个匹配位置
-	 *
-	 * @return {@link LPosArgument}
-	 */
-	public LPosArgument setCount(final int count) {
-		this.count = count;
 		return this;
 	}
 
@@ -150,7 +120,6 @@ public class LPosArgument {
 	public String toString() {
 		return ArgStringBuilder.create()
 				.add("RANK", rank)
-				.add("COUNT", count)
 				.add("MAXLEN", maxLen)
 				.build();
 	}

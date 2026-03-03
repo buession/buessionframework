@@ -25,9 +25,6 @@
 package com.buession.redis.core.command.args;
 
 import com.buession.redis.utils.ArgStringBuilder;
-import com.buession.redis.utils.SafeEncoder;
-
-import java.util.Objects;
 
 /**
  * JSON.MSET 参数
@@ -35,22 +32,22 @@ import java.util.Objects;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public abstract class JsonKeyPathValueArgument<T> {
+public class JsonKeyPathValueArgument {
 
 	/**
 	 * Key
 	 */
-	private T key;
+	private String key;
 
 	/**
 	 * JSONPath 表达式
 	 */
-	private T path;
+	private String path;
 
 	/**
 	 * 值
 	 */
-	private T value;
+	private String value;
 
 	/**
 	 * 构造函数
@@ -68,7 +65,7 @@ public abstract class JsonKeyPathValueArgument<T> {
 	 * @param value
 	 * 		值
 	 */
-	public JsonKeyPathValueArgument(T key, T path, T value) {
+	public JsonKeyPathValueArgument(final String key, final String path, final String value) {
 		this.key = key;
 		this.path = path;
 		this.value = value;
@@ -79,7 +76,7 @@ public abstract class JsonKeyPathValueArgument<T> {
 	 *
 	 * @return Key
 	 */
-	public T getKey() {
+	public String getKey() {
 		return key;
 	}
 
@@ -91,7 +88,7 @@ public abstract class JsonKeyPathValueArgument<T> {
 	 *
 	 * @return {@link JsonKeyPathValueArgument}
 	 */
-	public JsonKeyPathValueArgument<T> setKey(T key) {
+	public JsonKeyPathValueArgument setKey(String key) {
 		this.key = key;
 		return this;
 	}
@@ -101,7 +98,7 @@ public abstract class JsonKeyPathValueArgument<T> {
 	 *
 	 * @return JSONPath 表达式
 	 */
-	public T getPath() {
+	public String getPath() {
 		return path;
 	}
 
@@ -113,7 +110,7 @@ public abstract class JsonKeyPathValueArgument<T> {
 	 *
 	 * @return {@link JsonKeyPathValueArgument}
 	 */
-	public JsonKeyPathValueArgument<T> setPath(T path) {
+	public JsonKeyPathValueArgument setPath(String path) {
 		this.path = path;
 		return this;
 	}
@@ -123,7 +120,7 @@ public abstract class JsonKeyPathValueArgument<T> {
 	 *
 	 * @return 值
 	 */
-	public T getValue() {
+	public String getValue() {
 		return value;
 	}
 
@@ -135,77 +132,18 @@ public abstract class JsonKeyPathValueArgument<T> {
 	 *
 	 * @return {@link JsonKeyPathValueArgument}
 	 */
-	public JsonKeyPathValueArgument<T> setValue(T value) {
+	public JsonKeyPathValueArgument setValue(String value) {
 		this.value = value;
 		return this;
 	}
 
-	public static class StringJsonKeyPathValueArgument extends JsonKeyPathValueArgument<String> {
-
-		/**
-		 * 构造函数
-		 */
-		public StringJsonKeyPathValueArgument() {
-			super();
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param key
-		 * 		Key
-		 * @param path
-		 * 		JSONPath 表达式
-		 * @param value
-		 * 		值
-		 */
-		public StringJsonKeyPathValueArgument(String key, String path, String value) {
-			super(key, path, value);
-		}
-
-		@Override
-		public String toString() {
-			return ArgStringBuilder.create()
-					.append(getKey())
-					.append(getPath())
-					.append(getValue())
-					.build();
-		}
-
-	}
-
-	public static class BinaryJsonKeyPathValueArgument extends JsonKeyPathValueArgument<byte[]> {
-
-		/**
-		 * 构造函数
-		 */
-		public BinaryJsonKeyPathValueArgument() {
-			super();
-		}
-
-		/**
-		 * 构造函数
-		 *
-		 * @param key
-		 * 		Key
-		 * @param path
-		 * 		JSONPath 表达式
-		 * @param value
-		 * 		值
-		 */
-		public BinaryJsonKeyPathValueArgument(byte[] key, byte[] path, byte[] value) {
-			super(key, path, value);
-		}
-
-		@Override
-		public String toString() {
-			return ArgStringBuilder.create()
-					.append(SafeEncoder.encode(getKey()))
-					.append(SafeEncoder.encode(getPath()))
-					.append(SafeEncoder.encode(getValue()))
-					.build();
-		}
-
+	@Override
+	public String toString() {
+		return ArgStringBuilder.create()
+				.append(getKey())
+				.append(getPath())
+				.append(getValue())
+				.build();
 	}
 
 }

@@ -149,6 +149,11 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 		return execute((client)->client.clusterCommands().clusterMeet(ip, port));
 	}
 
+	@Override
+	default Status clusterMeet(final byte[] ip, final int port) {
+		return execute((client)->client.clusterCommands().clusterMeet(ip, port));
+	}
+
 	/**
 	 * 用来连接不同的开启集群支持的 Redis 节点，以进入工作集群
 	 *
@@ -160,6 +165,20 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
 	default Status clusterMeet(final String ip) {
+		return clusterMeet(ip, RedisNode.DEFAULT_PORT);
+	}
+
+	/**
+	 * 用来连接不同的开启集群支持的 Redis 节点，以进入工作集群
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cluster-meet/" target="_blank">https://redis.io/docs/latest/commands/cluster-meet/</a></p>
+	 *
+	 * @param ip
+	 * 		Redis 集群节点 IP
+	 *
+	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	default Status clusterMeet(final byte[] ip) {
 		return clusterMeet(ip, RedisNode.DEFAULT_PORT);
 	}
 

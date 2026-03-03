@@ -823,12 +823,7 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 	<V> List<V> jsonMGetObject(final byte[][] keys, final byte[] path, final TypeReference<V> type);
 
 	@Override
-	default Status jsonMSet(final JsonKeyPathValueArgument.StringJsonKeyPathValueArgument... data) {
-		return execute((client)->client.jsonCommands().jsonMSet(data));
-	}
-
-	@Override
-	default Status jsonMSet(final JsonKeyPathValueArgument.BinaryJsonKeyPathValueArgument... data) {
+	default Status jsonMSet(final JsonKeyPathValueArgument... data) {
 		return execute((client)->client.jsonCommands().jsonMSet(data));
 	}
 

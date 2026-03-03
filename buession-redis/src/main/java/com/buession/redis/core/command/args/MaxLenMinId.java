@@ -43,19 +43,11 @@ public abstract class MaxLenMinId<T> {
 
 	private final T threshold;
 
-	private Integer count;
-
 	public MaxLenMinId(final Type type, final ApproximateExactTrimming approximateExactTrimming,
 					   final T threshold) {
 		this.type = type;
 		this.approximateExactTrimming = approximateExactTrimming;
 		this.threshold = threshold;
-	}
-
-	public MaxLenMinId(final Type type, final ApproximateExactTrimming approximateExactTrimming, final T threshold,
-					   final Integer count) {
-		this(type, approximateExactTrimming, threshold);
-		this.count = count;
 	}
 
 	public Type getType() {
@@ -70,19 +62,10 @@ public abstract class MaxLenMinId<T> {
 		return threshold;
 	}
 
-	public Integer getCount() {
-		return count;
-	}
-
-	public void setCount(Integer count) {
-		this.count = count;
-	}
-
 	@Override
 	public String toString() {
 		return ArgStringBuilder.create().append(getType()).append(getApproximateExactTrimming())
 				.append(getThreshold())
-				.add(Keyword.Common.LIMIT.name(), getCount())
 				.build();
 	}
 
@@ -92,22 +75,12 @@ public abstract class MaxLenMinId<T> {
 			super(Type.MAXLEN, approximateExactTrimming, value);
 		}
 
-		public MaxLen(final ApproximateExactTrimming approximateExactTrimming, final Long value,
-					  final Integer count) {
-			super(Type.MAXLEN, approximateExactTrimming, value, count);
-		}
-
 	}
 
 	public final static class MinId extends MaxLenMinId<StreamEntryId> {
 
 		public MinId(final ApproximateExactTrimming approximateExactTrimming, final StreamEntryId value) {
 			super(Type.MINID, approximateExactTrimming, value);
-		}
-
-		public MinId(final ApproximateExactTrimming approximateExactTrimming, final StreamEntryId value,
-					 final Integer count) {
-			super(Type.MINID, approximateExactTrimming, value, count);
 		}
 
 	}

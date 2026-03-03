@@ -102,10 +102,4 @@ public interface Keyword extends Value<String>, Rawable {
 		STOREDIST
 	}
 
-	enum Hash {
-		FIELDS,
-
-		WITHVALUES
-	}
-
 }

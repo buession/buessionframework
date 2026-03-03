@@ -1414,13 +1414,33 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	}
 
 	@Override
-	default List<Long> lPos(final String key, final String element, final LPosArgument lPosArgument) {
-		return execute((client)->client.listCommands().lPos(key, element, lPosArgument));
+	default List<Long> lPos(final String key, final String element, final LPosArgument argument) {
+		return execute((client)->client.listCommands().lPos(key, element, argument));
 	}
 
 	@Override
-	default List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument) {
-		return execute((client)->client.listCommands().lPos(key, element, lPosArgument));
+	default List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument argument) {
+		return execute((client)->client.listCommands().lPos(key, element, argument));
+	}
+
+	@Override
+	default List<Long> lPos(final String key, final String element, final int count) {
+		return execute((client)->client.listCommands().lPos(key, element, count));
+	}
+
+	@Override
+	default List<Long> lPos(final byte[] key, final byte[] element, final int count) {
+		return execute((client)->client.listCommands().lPos(key, element, count));
+	}
+
+	@Override
+	default List<Long> lPos(final String key, final String element, final LPosArgument argument, final int count) {
+		return execute((client)->client.listCommands().lPos(key, element, argument, count));
+	}
+
+	@Override
+	default List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument argument, final int count) {
+		return execute((client)->client.listCommands().lPos(key, element, argument, count));
 	}
 
 	@Override
