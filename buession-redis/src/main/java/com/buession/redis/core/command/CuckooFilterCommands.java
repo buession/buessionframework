@@ -156,7 +156,7 @@ public interface CuckooFilterCommands extends RedisCommands {
 	/**
 	 * 检测元素 item 是否存在布谷鸟过滤器 key 中
 	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cf.exists/" target="_blank"https://redis.io/docs/latest/commands/cf.exists/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cf.exists/" target="_blank">https://redis.io/docs/latest/commands/cf.exists/</a></p>
 	 *
 	 * @param key
 	 * 		布谷鸟过滤器的名称
@@ -425,7 +425,7 @@ public interface CuckooFilterCommands extends RedisCommands {
 	 *
 	 * @return 二进制数据块
 	 */
-	Map<Long, byte[]> cfScandump(final String key, final long iterator);
+	Map<Long, byte[]> cfScanDump(final String key, final long iterator);
 
 	/**
 	 * 采用分块迭代方式导出布谷鸟过滤器 key 的数据
@@ -439,6 +439,6 @@ public interface CuckooFilterCommands extends RedisCommands {
 	 *
 	 * @return 二进制数据块
 	 */
-	Map<Long, byte[]> cfScandump(final byte[] key, final long iterator);
+	Map<Long, byte[]> cfScanDump(final byte[] key, final long iterator);
 
 }

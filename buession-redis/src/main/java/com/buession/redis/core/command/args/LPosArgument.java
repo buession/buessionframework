@@ -57,6 +57,7 @@ public class LPosArgument {
 	 * 		返回第几个匹配的元素
 	 */
 	public LPosArgument(final Integer rank) {
+		this.rank = rank;
 	}
 
 	/**
@@ -67,7 +68,7 @@ public class LPosArgument {
 	 * @param maxLen
 	 * 		查找成员个数
 	 */
-	public LPosArgument(final int rank, final int maxLen) {
+	public LPosArgument(final Integer rank, final Integer maxLen) {
 		this.rank = rank;
 		this.maxLen = maxLen;
 	}
@@ -89,7 +90,7 @@ public class LPosArgument {
 	 *
 	 * @return {@link LPosArgument}
 	 */
-	public LPosArgument setRank(int rank) {
+	public LPosArgument setRank(Integer rank) {
 		this.rank = rank;
 		return this;
 	}
@@ -111,7 +112,7 @@ public class LPosArgument {
 	 *
 	 * @return {@link LPosArgument}
 	 */
-	public LPosArgument setMaxLen(final int maxLen) {
+	public LPosArgument setMaxLen(final Integer maxLen) {
 		this.maxLen = maxLen;
 		return this;
 	}
@@ -119,8 +120,8 @@ public class LPosArgument {
 	@Override
 	public String toString() {
 		return ArgStringBuilder.create()
-				.add("RANK", rank)
-				.add("MAXLEN", maxLen)
+				.add("RANK", getRank())
+				.add("MAXLEN", getMaxLen())
 				.build();
 	}
 

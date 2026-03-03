@@ -19,38 +19,79 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2026 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.lettuce;
+package com.buession.redis.core.internal.jedis.args;
 
-import io.lettuce.core.XGroupCreateArgs;
+import redis.clients.jedis.params.ZParams;
 
 /**
- * Lettuce {@link XGroupCreateArgs} 扩展
+ * Jedis {@link ZParams} 扩展
  *
  * @author Yong.Teng
- * @since 3.0.0
  */
-public final class LettuceXGroupCreateArgs extends XGroupCreateArgs {
+public final class JedisZParams extends ZParams {
 
-	public LettuceXGroupCreateArgs() {
+	/**
+	 * 构造函数
+	 */
+	public JedisZParams() {
 		super();
 	}
 
-	public LettuceXGroupCreateArgs(final boolean mkstream) {
+	/**
+	 * 构造函数
+	 *
+	 * @param aggregate
+	 *        {@link com.buession.redis.core.Aggregate}
+	 */
+	public JedisZParams(final com.buession.redis.core.Aggregate aggregate) {
 		super();
-		mkstream(mkstream);
+		aggregate(aggregate);
 	}
 
-	public LettuceXGroupCreateArgs(final Long entriesRead) {
+	/**
+	 * 构造函数
+	 *
+	 * @param weights
+	 * 		权重
+	 */
+	public JedisZParams(final double... weights) {
 		super();
-		entriesRead(entriesRead);
+		weights(weights);
 	}
 
-	public LettuceXGroupCreateArgs(final boolean mkstream, final Long entriesRead) {
-		this(mkstream);
-		entriesRead(entriesRead);
+	/**
+	 * 构造函数
+	 *
+	 * @param aggregate
+	 *        {@link com.buession.redis.core.Aggregate}
+	 * @param weights
+	 * 		权重
+	 */
+	public JedisZParams(final com.buession.redis.core.Aggregate aggregate, final double... weights) {
+		super();
+		aggregate(aggregate);
+		weights(weights);
+	}
+
+	private void aggregate(final com.buession.redis.core.Aggregate aggregate) {
+		if(aggregate != null){
+			switch(aggregate){
+				case MIN:
+					aggregate(Aggregate.MIN);
+					break;
+				case MAX:
+					aggregate(Aggregate.MAX);
+					break;
+				case SUM:
+					aggregate(Aggregate.SUM);
+					break;
+				default:
+					break;
+			}
+		}
 	}
 
 }

@@ -44,7 +44,7 @@ import com.buession.redis.core.internal.convert.jedis.params.HSetExArgumentConve
 import com.buession.redis.core.internal.convert.jedis.response.ScanResultConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.response.OneStatusConverter;
-import com.buession.redis.core.internal.jedis.JedisScanParams;
+import com.buession.redis.core.internal.jedis.args.JedisScanParams;
 import redis.clients.jedis.UnifiedJedis;
 import redis.clients.jedis.params.HGetExParams;
 import redis.clients.jedis.params.HSetExParams;

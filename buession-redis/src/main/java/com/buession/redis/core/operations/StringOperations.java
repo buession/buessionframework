@@ -35,9 +35,7 @@ import com.buession.redis.core.command.args.LcsArgument;
 import com.buession.redis.core.command.args.MSetExArgument;
 import com.buession.redis.core.command.args.SetArgument;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * STRING 运算
@@ -117,34 +115,21 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	}
 
 	/**
-	 * 获取键 key 相关联的字符串值，并将值反序列化为对象
+	 * 获取键 key 相关联的字符串值，并将值反序列化为 clazz 指定的对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/string/get.html" target="_blank">http://redisdoc.com/string/get.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
+	 * @param clazz
+	 * 		值对象类
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
 	 * 如果键 key 的值并非字符串类型，那么抛出异常
 	 */
-	<V> V getObject(final String key);
-
-	/**
-	 * 获取键 key 相关联的字符串值，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/get.html" target="_blank">http://redisdoc.com/string/get.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
-	 * 如果键 key 的值并非字符串类型，那么抛出异常
-	 */
-	<V> V getObject(final byte[] key);
+	<V> V get(final String key, final Class<V> clazz);
 
 	/**
 	 * 获取键 key 相关联的字符串值，并将值反序列化为 clazz 指定的对象
@@ -161,24 +146,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
 	 * 如果键 key 的值并非字符串类型，那么抛出异常
 	 */
-	<V> V getObject(final String key, final Class<V> clazz);
-
-	/**
-	 * 获取键 key 相关联的字符串值，并将值反序列化为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/get.html" target="_blank">http://redisdoc.com/string/get.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
-	 * 如果键 key 的值并非字符串类型，那么抛出异常
-	 */
-	<V> V getObject(final byte[] key, final Class<V> clazz);
+	<V> V get(final byte[] key, final Class<V> clazz);
 
 	/**
 	 * 获取键 key 相关联的字符串值，并将值反序列化为 type 指定的对象
@@ -195,7 +163,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
 	 * 如果键 key 的值并非字符串类型，那么抛出异常
 	 */
-	<V> V getObject(final String key, final TypeReference<V> type);
+	<V> V get(final String key, final TypeReference<V> type);
 
 	/**
 	 * 获取键 key 相关联的字符串值，并将值反序列化为 type 指定的对象
@@ -212,7 +180,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
 	 * 如果键 key 的值并非字符串类型，那么抛出异常
 	 */
-	<V> V getObject(final byte[] key, final TypeReference<V> type);
+	<V> V get(final byte[] key, final TypeReference<V> type);
 
 	@Override
 	default String getDel(final String key) {
@@ -225,34 +193,21 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	}
 
 	/**
-	 * 获取键 key 相关联的字符串值，并将值反序列化为对象；并删除该 key
+	 * 获取键 key 相关联的字符串值，并将值反序列化为 clazz 指定的对象；并删除该 key
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/get.html" target="_blank">http://redisdoc.com/string/get.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/commands/getdel/" target="_blank">https://redis.io/commands/getdel/</a></p>
 	 *
 	 * @param key
 	 * 		Key
+	 * @param clazz
+	 * 		值对象类
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
 	 * 如果键 key 的值并非字符串类型，那么抛出异常
 	 */
-	<V> V getDelObject(final String key);
-
-	/**
-	 * 获取键 key 相关联的字符串值，并将值反序列化为对象；并删除该 key
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/get.html" target="_blank">http://redisdoc.com/string/get.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
-	 * 如果键 key 的值并非字符串类型，那么抛出异常
-	 */
-	<V> V getDelObject(final byte[] key);
+	<V> V getDel(final String key, final Class<V> clazz);
 
 	/**
 	 * 获取键 key 相关联的字符串值，并将值反序列化为 clazz 指定的对象；并删除该 key
@@ -269,24 +224,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
 	 * 如果键 key 的值并非字符串类型，那么抛出异常
 	 */
-	<V> V getDelObject(final String key, final Class<V> clazz);
-
-	/**
-	 * 获取键 key 相关联的字符串值，并将值反序列化为 clazz 指定的对象；并删除该 key
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/getdel/" target="_blank">https://redis.io/commands/getdel/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
-	 * 如果键 key 的值并非字符串类型，那么抛出异常
-	 */
-	<V> V getDelObject(final byte[] key, final Class<V> clazz);
+	<V> V getDel(final byte[] key, final Class<V> clazz);
 
 	/**
 	 * 获取键 key 相关联的字符串值，并将值反序列化为 type 指定的对象；并删除该 key
@@ -303,7 +241,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
 	 * 如果键 key 的值并非字符串类型，那么抛出异常
 	 */
-	<V> V getDelObject(final String key, final TypeReference<V> type);
+	<V> V getDel(final String key, final TypeReference<V> type);
 
 	/**
 	 * 获取键 key 相关联的字符串值，并将值反序列化为 type 指定的对象；并删除该 key
@@ -320,49 +258,17 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 * @return 如果键 key 不存在，那么返回特殊值 null ；否则，返回键 key 的值；
 	 * 如果键 key 的值并非字符串类型，那么抛出异常
 	 */
-	<V> V getDelObject(final byte[] key, final TypeReference<V> type);
+	<V> V getDel(final byte[] key, final TypeReference<V> type);
 
 	@Override
-	default String getEx(final String key, final GetExArgument getExArgument) {
-		return execute((client)->client.stringCommands().getEx(key, getExArgument));
+	default String getEx(final String key, final GetExArgument argument) {
+		return execute((client)->client.stringCommands().getEx(key, argument));
 	}
 
 	@Override
-	default byte[] getEx(final byte[] key, final GetExArgument getExArgument) {
-		return execute((client)->client.stringCommands().getEx(key, getExArgument));
+	default byte[] getEx(final byte[] key, final GetExArgument argument) {
+		return execute((client)->client.stringCommands().getEx(key, argument));
 	}
-
-	/**
-	 * 获取键 key 的值反序列化后对象，并重置 key 的过期时间
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/getex/" target="_blank">https://redis.io/commands/getex/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param getExArgument
-	 * 		Key 过期时间参数
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 键 key 的值反序列化后对象
-	 */
-	<V> V getExObject(final String key, final GetExArgument getExArgument);
-
-	/**
-	 * 获取键 key 的值反序列化后对象，并重置 key 的过期时间
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/getex/" target="_blank">https://redis.io/commands/getex/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param getExArgument
-	 * 		Key 过期时间参数
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 键 key 的值反序列化后对象
-	 */
-	<V> V getExObject(final byte[] key, final GetExArgument getExArgument);
 
 	/**
 	 * 获取键 key 的值反序列化为 clazz 指定类型后的对象，并重置 key 的过期时间
@@ -371,7 +277,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param getExArgument
+	 * @param argument
 	 * 		Key 过期时间参数
 	 * @param clazz
 	 * 		值对象类
@@ -380,7 +286,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 *
 	 * @return 键 key 的值反序列化后对象
 	 */
-	<V> V getExObject(final String key, final GetExArgument getExArgument, final Class<V> clazz);
+	<V> V getEx(final String key, final GetExArgument argument, final Class<V> clazz);
 
 	/**
 	 * 获取键 key 的值反序列化为 clazz 指定类型后的对象，并重置 key 的过期时间
@@ -389,7 +295,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param getExArgument
+	 * @param argument
 	 * 		Key 过期时间参数
 	 * @param clazz
 	 * 		值对象类
@@ -398,7 +304,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 *
 	 * @return 键 key 的值反序列化后对象
 	 */
-	<V> V getExObject(final byte[] key, final GetExArgument getExArgument, final Class<V> clazz);
+	<V> V getEx(final byte[] key, final GetExArgument argument, final Class<V> clazz);
 
 	/**
 	 * 获取键 key 的值反序列化为 type 指定类型后的对象，并重置 key 的过期时间
@@ -407,7 +313,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param getExArgument
+	 * @param argument
 	 * 		Key 过期时间参数
 	 * @param type
 	 * 		值类型引用
@@ -416,7 +322,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 *
 	 * @return 键 key 的值反序列化后对象
 	 */
-	<V> V getExObject(final String key, final GetExArgument getExArgument, final TypeReference<V> type);
+	<V> V getEx(final String key, final GetExArgument argument, final TypeReference<V> type);
 
 	/**
 	 * 获取键 key 的值反序列化为 type 指定类型后的对象，并重置 key 的过期时间
@@ -425,7 +331,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param getExArgument
+	 * @param argument
 	 * 		Key 过期时间参数
 	 * @param type
 	 * 		值类型引用
@@ -434,7 +340,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 *
 	 * @return 键 key 的值反序列化后对象
 	 */
-	<V> V getExObject(final byte[] key, final GetExArgument getExArgument, final TypeReference<V> type);
+	<V> V getEx(final byte[] key, final GetExArgument argument, final TypeReference<V> type);
 
 	@Override
 	default String getRange(final String key, final long start, final long end) {
@@ -621,34 +527,21 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	}
 
 	/**
-	 * 获取给定的一个或多个字符串键的值，并反序列化为对象
+	 * 获取给定的一个或多个字符串键的值，并反序列化为 clazz 指定的对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/string/mget.html" target="_blank">http://redisdoc.com/string/mget.html</a></p>
 	 *
 	 * @param keys
 	 * 		一个或多个 key
+	 * @param clazz
+	 * 		值对象类
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return 返回一个列表，列表中包含了所有给定键的值的反序列化对象；
 	 * 如果给定键不存在 那么这个键的值将以特殊值 null 表示
 	 */
-	<V> List<V> mGetObject(final String... keys);
-
-	/**
-	 * 获取给定的一个或多个字符串键的值，并反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/mget.html" target="_blank">http://redisdoc.com/string/mget.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 key
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回一个列表，列表中包含了所有给定键的值的反序列化对象；
-	 * 如果给定键不存在 那么这个键的值将以特殊值 null 表示
-	 */
-	<V> List<V> mGetObject(final byte[]... keys);
+	<V> List<V> mGet(final String[] keys, final Class<V> clazz);
 
 	/**
 	 * 获取给定的一个或多个字符串键的值，并反序列化为 clazz 指定的对象
@@ -665,24 +558,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 * @return 返回一个列表，列表中包含了所有给定键的值的反序列化对象；
 	 * 如果给定键不存在 那么这个键的值将以特殊值 null 表示
 	 */
-	<V> List<V> mGetObject(final String[] keys, final Class<V> clazz);
-
-	/**
-	 * 获取给定的一个或多个字符串键的值，并反序列化为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/mget.html" target="_blank">http://redisdoc.com/string/mget.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 key
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回一个列表，列表中包含了所有给定键的值的反序列化对象；
-	 * 如果给定键不存在 那么这个键的值将以特殊值 null 表示
-	 */
-	<V> List<V> mGetObject(final byte[][] keys, final Class<V> clazz);
+	<V> List<V> mGet(final byte[][] keys, final Class<V> clazz);
 
 	/**
 	 * 获取给定的一个或多个字符串键的值，并反序列化为 type 指定的对象
@@ -699,7 +575,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 * @return 返回一个列表，列表中包含了所有给定键的值的反序列化对象；
 	 * 如果给定键不存在 那么这个键的值将以特殊值 null 表示
 	 */
-	<V> List<V> mGetObject(final String[] keys, final TypeReference<V> type);
+	<V> List<V> mGet(final String[] keys, final TypeReference<V> type);
 
 	/**
 	 * 获取给定的一个或多个字符串键的值，并反序列化为 type 指定的对象
@@ -716,169 +592,21 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 * @return 返回一个列表，列表中包含了所有给定键的值的反序列化对象；
 	 * 如果给定键不存在 那么这个键的值将以特殊值 null 表示
 	 */
-	<V> List<V> mGetObject(final byte[][] keys, final TypeReference<V> type);
+	<V> List<V> mGet(final byte[][] keys, final TypeReference<V> type);
 
 	@Override
-	default Status mSet(final Map<String, String> values) {
+	default Status mSet(final KeyValue<String, String>... values) {
 		return execute((client)->client.stringCommands().mSet(values));
 	}
 
-	/**
-	 * 同时为多个键设置值，如果某个给定键已经存在 那么将使用新值去覆盖旧值
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/mset/" target="_blank">https://redis.io/docs/latest/commands/mset/</a></p>
-	 *
-	 * @param values
-	 * 		键值对
-	 *
-	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
-	 */
-	default Status mSet(final List<KeyValue<String, String>> values) {
-		if(values == null){
-			return Status.FAILURE;
-		}else{
-			Map<String, String> data = new LinkedHashMap<>(values.size());
-
-			for(KeyValue<String, String> v : values){
-				data.put(v.getKey(), v.getValue());
-			}
-
-			return mSet(data);
-		}
-	}
-
-	/**
-	 * 同时为多个键设置值，如果某个给定键已经存在 那么将使用新值去覆盖旧值
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/mset/" target="_blank">https://redis.io/docs/latest/commands/mset/</a></p>
-	 *
-	 * @param values
-	 * 		键值对
-	 *
-	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
-	 */
-	default Status mSet(final KeyValue<String, String>... values) {
-		if(values == null){
-			return Status.FAILURE;
-		}else{
-			Map<String, String> data = new LinkedHashMap<>(values.length);
-
-			for(KeyValue<String, String> v : values){
-				data.put(v.getKey(), v.getValue());
-			}
-
-			return mSet(data);
-		}
-	}
-
 	@Override
-	default Status mSetEx(final Map<String, String> values, final MSetExArgument argument) {
+	default Status mSetEx(final KeyValue<String, String>[] values, final MSetExArgument argument) {
 		return execute((client)->client.stringCommands().mSetEx(values, argument));
 	}
 
-	/**
-	 * Atomically sets multiple string keys with an optional shared expiration in a single operation.
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/msetnx/" target="_blank">https://redis.io/docs/latest/commands/msetnx/</a></p>
-	 *
-	 * @param values
-	 * 		键值对
-	 * @param argument
-	 * 		参数
-	 *
-	 * @return 当所有给定键都设置成功时，返回 Status.SUCCESS；否则返回 Status.FAILURE
-	 */
-	default Status mSetEx(final List<KeyValue<String, String>> values, final MSetExArgument argument) {
-		if(values == null){
-			return Status.FAILURE;
-		}else{
-			Map<String, String> data = new LinkedHashMap<>(values.size());
-
-			for(KeyValue<String, String> v : values){
-				data.put(v.getKey(), v.getValue());
-			}
-
-			return mSetEx(data, argument);
-		}
-	}
-
-	/**
-	 * Atomically sets multiple string keys with an optional shared expiration in a single operation.
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/msetnx/" target="_blank">https://redis.io/docs/latest/commands/msetnx/</a></p>
-	 *
-	 * @param values
-	 * 		键值对
-	 * @param argument
-	 * 		参数
-	 *
-	 * @return 当所有给定键都设置成功时，返回 Status.SUCCESS；否则返回 Status.FAILURE
-	 */
-	default Status mSetEx(final KeyValue<String, String>[] values, final MSetExArgument argument) {
-		if(values == null){
-			return Status.FAILURE;
-		}else{
-			Map<String, String> data = new LinkedHashMap<>(values.length);
-
-			for(KeyValue<String, String> v : values){
-				data.put(v.getKey(), v.getValue());
-			}
-
-			return mSetEx(data, argument);
-		}
-	}
-
 	@Override
-	default Status mSetNx(final Map<String, String> values) {
-		return execute((client)->client.stringCommands().mSetNx(values));
-	}
-
-	/**
-	 * 当且仅当所有给定键都不存在时， 为所有给定键设置值
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/msetnx/" target="_blank">https://redis.io/docs/latest/commands/msetnx/</a></p>
-	 *
-	 * @param values
-	 * 		键值对
-	 *
-	 * @return 当所有给定键都设置成功时，返回 Status.SUCCESS；否则返回 Status.FAILURE
-	 */
-	default Status mSetNx(final List<KeyValue<String, String>> values) {
-		if(values == null){
-			return Status.FAILURE;
-		}else{
-			Map<String, String> data = new LinkedHashMap<>(values.size());
-
-			for(KeyValue<String, String> v : values){
-				data.put(v.getKey(), v.getValue());
-			}
-
-			return mSetNx(data);
-		}
-	}
-
-	/**
-	 * 当且仅当所有给定键都不存在时， 为所有给定键设置值
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/msetnx/" target="_blank">https://redis.io/docs/latest/commands/msetnx/</a></p>
-	 *
-	 * @param values
-	 * 		键值对
-	 *
-	 * @return 当所有给定键都设置成功时，返回 Status.SUCCESS；否则返回 Status.FAILURE
-	 */
 	default Status mSetNx(final KeyValue<String, String>... values) {
-		if(values == null){
-			return Status.FAILURE;
-		}else{
-			Map<String, String> data = new LinkedHashMap<>(values.length);
-
-			for(KeyValue<String, String> v : values){
-				data.put(v.getKey(), v.getValue());
-			}
-
-			return mSetNx(data);
-		}
+		return execute((client)->client.stringCommands().mSetNx(values));
 	}
 
 	@Override

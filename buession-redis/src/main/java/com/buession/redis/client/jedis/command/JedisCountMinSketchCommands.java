@@ -24,7 +24,7 @@
  */
 package com.buession.redis.client.jedis.command;
 
-import com.buession.core.converter.MapConverter;
+import com.buession.core.converter.ArrayKeyValueMapConverter;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
@@ -115,17 +115,23 @@ public final class JedisCountMinSketchCommands extends AbstractJedisRedisCommand
 	}
 
 	@Override
-	public Status cmsMerge(final String key, final Map<String, Long> keysAndWeights) {
+	public Status cmsMerge(final String key, final KeyValue<String, Long>... keysAndWeights) {
 		final CommandArguments args = CommandArguments.create(key).add(keysAndWeights);
-		return executeCommand(Command.CMS_MERGE, args, (cmd)->cmd.cmsMerge(rawKey(key), keysAndWeights),
+		final ArrayKeyValueMapConverter<String, Long, String, Long> arrayKeyValueMapConverter =
+				new ArrayKeyValueMapConverter<>((k)->k, (v)->v);
+		return executeCommand(Command.CMS_MERGE, args,
+				(cmd)->cmd.cmsMerge(rawKey(key), arrayKeyValueMapConverter.convert(keysAndWeights)),
 				new OkStatusConverter());
 	}
 
 	@Override
-	public Status cmsMerge(final byte[] key, final Map<byte[], Long> keysAndWeights) {
-		final MapConverter<byte[], Long, String, Long> keysAndWeightsConverter =
-				new MapConverter<>(SafeEncoder::encode, (v)->v);
-		return cmsMerge(SafeEncoder.encode(key), keysAndWeightsConverter.convert(keysAndWeights));
+	public Status cmsMerge(final byte[] key, final KeyValue<byte[], Long>... keysAndWeights) {
+		final CommandArguments args = CommandArguments.create(key).add(keysAndWeights);
+		final ArrayKeyValueMapConverter<byte[], Long, String, Long> arrayKeyValueMapConverter =
+				new ArrayKeyValueMapConverter<>(SafeEncoder::encode, (v)->v);
+		return executeCommand(Command.CMS_MERGE, args,
+				(cmd)->cmd.cmsMerge(rawKey(SafeEncoder.encode(key)), arrayKeyValueMapConverter.convert(keysAndWeights)),
+				new OkStatusConverter());
 	}
 
 	@Override

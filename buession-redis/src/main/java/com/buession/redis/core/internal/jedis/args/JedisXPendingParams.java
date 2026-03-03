@@ -22,82 +22,56 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.lettuce;
+package com.buession.redis.core.internal.jedis.args;
 
 import com.buession.redis.core.StreamEntryId;
-import io.lettuce.core.Consumer;
-import io.lettuce.core.Limit;
-import io.lettuce.core.Range;
-import io.lettuce.core.XPendingArgs;
+import redis.clients.jedis.params.XPendingParams;
 
 /**
- * Lettuce {@link XPendingArgs} 扩展
- *
- * @param <T>
- * 		类型
+ * Jedis {@link XPendingParams} 扩展
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 2.0.0
  */
-public class LettuceXPendingArgs<T> extends XPendingArgs<T> {
+public final class JedisXPendingParams extends XPendingParams {
 
-	public LettuceXPendingArgs() {
+	public JedisXPendingParams() {
 		super();
 	}
 
-	public LettuceXPendingArgs(final long idle) {
+	public JedisXPendingParams(final long idle) {
 		this();
 		idle(idle);
 	}
 
-	public LettuceXPendingArgs(final long idle, final StreamEntryId start, final StreamEntryId end,
-							   final long count) {
+	public JedisXPendingParams(final long idle, final StreamEntryId start, final StreamEntryId end,
+							   final int count) {
 		this(start, end, count);
 		idle(idle);
 	}
 
-	public LettuceXPendingArgs(final long idle, final T groupName, final T consumerName) {
-		this(idle);
-		consumer(Consumer.from(groupName, consumerName));
-	}
-
-	public LettuceXPendingArgs(final long idle, final Consumer<T> consumer) {
+	public JedisXPendingParams(final long idle, final String consumer) {
 		this(idle);
 		consumer(consumer);
 	}
 
-	public LettuceXPendingArgs(final StreamEntryId start, final StreamEntryId end, final long count) {
-		range(Range.create(start.toString(), end.toString()));
-		limit(Limit.from(count));
+	public JedisXPendingParams(final StreamEntryId start, final StreamEntryId end, final int count) {
+		super(new JedisStreamEntryID(start), new JedisStreamEntryID(end), (int) count);
 	}
 
-	public LettuceXPendingArgs(final StreamEntryId start, final StreamEntryId end, final long count,
-							   final T groupName, final T consumerName) {
-		this(start, end, count, Consumer.from(groupName, consumerName));
-	}
-
-	public LettuceXPendingArgs(final StreamEntryId start, final StreamEntryId end, final long count,
-							   final Consumer<T> consumer) {
+	public JedisXPendingParams(final StreamEntryId start, final StreamEntryId end, final int count,
+							   final String consumer) {
 		this(start, end, count);
 		consumer(consumer);
 	}
 
-	public LettuceXPendingArgs(final long idle, final StreamEntryId start, final StreamEntryId end,
-							   final long count, final T groupName, final T consumerName) {
-		this(idle, start, end, count, Consumer.from(groupName, consumerName));
-	}
-
-	public LettuceXPendingArgs(final long idle, final StreamEntryId start, final StreamEntryId end,
-							   final long count, final Consumer<T> consumer) {
+	public JedisXPendingParams(final long idle, final StreamEntryId start, final StreamEntryId end,
+							   final int count, final String consumer) {
 		this(idle, start, end, count);
 		consumer(consumer);
 	}
 
-	public LettuceXPendingArgs(final T groupName, final T consumerName) {
-		this(Consumer.from(groupName, consumerName));
-	}
-
-	public LettuceXPendingArgs(final Consumer<T> consumer) {
+	public JedisXPendingParams(final String consumer) {
 		this();
 		consumer(consumer);
 	}

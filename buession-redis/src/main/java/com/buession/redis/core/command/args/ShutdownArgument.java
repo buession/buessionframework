@@ -45,15 +45,23 @@ public class ShutdownArgument {
 	public ShutdownArgument() {
 	}
 
-	public ShutdownArgument(Boolean save, Boolean now, Boolean force, Boolean abort) {
+	public ShutdownArgument(final Boolean save, final Boolean now, final Boolean force, final Boolean abort) {
 		this.save = save;
 		this.now = now;
 		this.force = force;
 		this.abort = abort;
 	}
 
+	public Boolean isSave() {
+		return getSave();
+	}
+
 	public Boolean getSave() {
 		return save;
+	}
+
+	public ShutdownArgument save() {
+		return setSave(true);
 	}
 
 	public ShutdownArgument setSave(Boolean save) {
@@ -61,8 +69,16 @@ public class ShutdownArgument {
 		return this;
 	}
 
+	public Boolean isNow() {
+		return getNow();
+	}
+
 	public Boolean getNow() {
 		return now;
+	}
+
+	public ShutdownArgument now() {
+		return setNow(true);
 	}
 
 	public ShutdownArgument setNow(Boolean now) {
@@ -70,8 +86,16 @@ public class ShutdownArgument {
 		return this;
 	}
 
+	public Boolean isForce() {
+		return getForce();
+	}
+
 	public Boolean getForce() {
 		return force;
+	}
+
+	public ShutdownArgument force() {
+		return setForce(true);
 	}
 
 	public ShutdownArgument setForce(Boolean force) {
@@ -79,8 +103,16 @@ public class ShutdownArgument {
 		return this;
 	}
 
+	public Boolean isAbort() {
+		return getAbort();
+	}
+
 	public Boolean getAbort() {
 		return abort;
+	}
+
+	public ShutdownArgument abort() {
+		return setAbort(true);
 	}
 
 	public ShutdownArgument setAbort(Boolean abort) {
@@ -90,10 +122,12 @@ public class ShutdownArgument {
 
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create().append(save == null ? null : (Boolean.TRUE.equals(save) ? "SAVE" : "NOSAVE"))
-				.append(Boolean.TRUE.equals(now) ? "NOW" : null)
-				.append(Boolean.TRUE.equals(force) ? "FORCE" : null)
-				.append(Boolean.TRUE.equals(abort) ? "ABORT" : null)
+		return ArgStringBuilder.create()
+				.append(getSave() == null ? null : (Boolean.TRUE.equals(getSave()) ? "SAVE" : "NOSAVE"))
+				.append(Boolean.TRUE.equals(getNow()) ? "NOW" : null)
+				.append(Boolean.TRUE.equals(getForce()) ? "FORCE" : null)
+				.append(Boolean.TRUE.equals(getAbort()) ? "ABORT" : null)
 				.build();
 	}
+
 }

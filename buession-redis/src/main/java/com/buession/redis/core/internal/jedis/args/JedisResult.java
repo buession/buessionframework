@@ -22,51 +22,46 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.lettuce;
+package com.buession.redis.core.internal.jedis.args;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.FutureResult;
 import com.buession.redis.core.internal.convert.Converters;
-import io.lettuce.core.RedisFuture;
-import io.lettuce.core.protocol.RedisCommand;
+import redis.clients.jedis.Response;
 
 /**
- * Lettuce 事务、管道异步结果
+ * Jedis 事务、管道异步结果
  *
  * @author Yong.Teng
- * @since 3.0.0
  */
-public class LettuceResult<SV, TV> extends FutureResult<RedisCommand<?, SV, ?>> {
+public class JedisResult<SV, TV> extends FutureResult<Response<SV>> {
 
-	@SuppressWarnings({"unchecked"})
-	public LettuceResult(final RedisFuture<SV> resultHolder) {
-		super((RedisCommand<?, SV, ?>) resultHolder);
+	public JedisResult(final Response<SV> resultHolder) {
+		super(resultHolder);
 	}
 
-	@SuppressWarnings({"unchecked"})
-	public LettuceResult(final RedisFuture<SV> resultHolder, final Converter<SV, TV> converter) {
-		super((RedisCommand<?, SV, ?>) resultHolder, converter);
+	public JedisResult(final Response<SV> resultHolder, final Converter<SV, ?> converter) {
+		super(resultHolder, converter);
 	}
 
-	@SuppressWarnings({"unchecked"})
 	@Override
 	public SV get() {
-		return (SV) getHolder().getOutput().get();
+		return getHolder().get();
 	}
 
 	public final static class Builder<SV, TV> {
 
-		private final RedisFuture<SV> response;
+		private final Response<SV> response;
 
 		private Converter<SV, TV> converter;
 
-		private Builder(final RedisFuture<SV> response, final Converter<SV, TV> converter) {
+		private Builder(final Response<SV> response, final Converter<SV, TV> converter) {
 			this.response = response;
 			this.converter = converter;
 		}
 
-		public static <SV, TV> Builder<SV, TV> fromRedisFuture(RedisFuture<SV> redisFuture) {
-			return new LettuceResult.Builder<>(redisFuture, Converters.always());
+		public static <SV, TV> Builder<SV, TV> fromResponse(Response<SV> response) {
+			return new Builder<>(response, Converters.always());
 		}
 
 		public Builder<SV, TV> mappedWith(Converter<SV, TV> converter) {
@@ -74,8 +69,8 @@ public class LettuceResult<SV, TV> extends FutureResult<RedisCommand<?, SV, ?>> 
 			return this;
 		}
 
-		public LettuceResult<SV, TV> build() {
-			return new LettuceResult<>(response, converter);
+		public JedisResult<SV, TV> build() {
+			return new JedisResult<>(response, converter);
 		}
 
 	}

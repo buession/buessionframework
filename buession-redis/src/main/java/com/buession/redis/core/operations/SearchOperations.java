@@ -40,7 +40,7 @@ public interface SearchOperations extends SearchCommands, RedisOperations {
 
 	@Override
 	default Set<String> ftList() {
-		return execute((client)->client.searchCommands().ftList());
+		return null;//return execute((client)->client.searchCommands().ftList());
 	}
 
 }

@@ -22,51 +22,29 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.lettuce;
+package com.buession.redis.core.internal;
 
-import com.buession.redis.core.StreamEntryId;
-import io.lettuce.core.Consumer;
-import io.lettuce.core.XAutoClaimArgs;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * Lettuce {@link XAutoClaimArgs} 扩展
  *
- * @param <V>
- * 		值类型
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class LettuceXAutoClaimArgs<V> extends XAutoClaimArgs<V> {
+public class ResultUtils {
 
-	public LettuceXAutoClaimArgs() {
-		super();
+	protected ResultUtils() {
 	}
 
-	public LettuceXAutoClaimArgs(final V groupName, final V consumerName, final int minIdleTime,
-								 final String startId) {
-		consumer(Consumer.from(groupName, consumerName));
-		minIdleTime(minIdleTime);
-		startId(startId);
+	public static Date createDate(final Long value, final boolean unixTimestamp) {
+		return value != null && value != -1 && value != -2 ? new Date(unixTimestamp ? value * 1000 : value) : null;
 	}
 
-	public LettuceXAutoClaimArgs(final V groupName, final V consumerName, final int minIdleTime,
-								 final String startId, final int count) {
-		this(groupName, consumerName, minIdleTime, startId);
-		count(count);
-	}
-
-	public LettuceXAutoClaimArgs(final V groupName, final V consumerName, final int minIdleTime,
-								 final StreamEntryId startId) {
-		consumer(Consumer.from(groupName, consumerName));
-		minIdleTime(minIdleTime);
-		startId(startId.toString());
-	}
-
-	public LettuceXAutoClaimArgs(final V groupName, final V consumerName, final int minIdleTime,
-								 final StreamEntryId startId, final int count) {
-		this(groupName, consumerName, minIdleTime, startId);
-		count(count);
+	public static List<Date> createDateList(final List<Long> data, final boolean unixTimestamp) {
+		return data == null ? null : data.stream().map((v)->createDate(v, unixTimestamp)).collect(Collectors.toList());
 	}
 
 }

@@ -165,7 +165,7 @@ public interface CountMinSketchCommands extends RedisCommands {
 	 *
 	 * @return 操作结果
 	 */
-	Status cmsMerge(final String destKey, final Map<String, Long> keysAndWeights);
+	Status cmsMerge(final String destKey, final KeyValue<String, Long>... keysAndWeights);
 
 	/**
 	 * 将多个 Count-Min Sketch（CMS）对象合并成一个新的 CMS
@@ -179,7 +179,7 @@ public interface CountMinSketchCommands extends RedisCommands {
 	 *
 	 * @return 操作结果
 	 */
-	Status cmsMerge(final byte[] destKey, final Map<byte[], Long> keysAndWeights);
+	Status cmsMerge(final byte[] destKey, final KeyValue<byte[], Long>... keysAndWeights);
 
 	/**
 	 * 从 Count-Min Sketch（CMS） 数据结构中查询一个或多个元素的频次估计值

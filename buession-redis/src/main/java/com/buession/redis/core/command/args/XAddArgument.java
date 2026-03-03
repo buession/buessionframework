@@ -251,36 +251,48 @@ public class XAddArgument {
 		this.maxLenMinId = maxLenMinId;
 	}
 
+	public Boolean isNoMkStream() {
+		return getNoMkStream();
+	}
+
 	public Boolean getNoMkStream() {
 		return noMkStream;
 	}
 
-	public void setNoMkStream(Boolean noMkStream) {
+	public XAddArgument noMkStream() {
+		return setNoMkStream(true);
+	}
+
+	public XAddArgument setNoMkStream(Boolean noMkStream) {
 		this.noMkStream = noMkStream;
+		return this;
 	}
 
 	public StreamDeletionPolicy getDeletionPolicy() {
 		return deletionPolicy;
 	}
 
-	public void setDeletionPolicy(StreamDeletionPolicy deletionPolicy) {
+	public XAddArgument setDeletionPolicy(StreamDeletionPolicy deletionPolicy) {
 		this.deletionPolicy = deletionPolicy;
+		return this;
 	}
 
 	public BaseIdmp getIdmp() {
 		return idmp;
 	}
 
-	public void setIdmp(BaseIdmp idmp) {
+	public XAddArgument setIdmp(BaseIdmp idmp) {
 		this.idmp = idmp;
+		return this;
 	}
 
 	public MaxLenMinId<?> getMaxLenMinId() {
 		return maxLenMinId;
 	}
 
-	public void setMaxLenMinId(MaxLenMinId<?> maxLenMinId) {
+	public XAddArgument setMaxLenMinId(MaxLenMinId<?> maxLenMinId) {
 		this.maxLenMinId = maxLenMinId;
+		return this;
 	}
 
 	@Override

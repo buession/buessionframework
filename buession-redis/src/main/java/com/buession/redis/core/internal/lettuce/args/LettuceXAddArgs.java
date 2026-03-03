@@ -22,37 +22,33 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis;
+package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.redis.utils.SafeEncoder;
-import redis.clients.jedis.json.Path2;
+import com.buession.redis.core.StreamEntryId;
+import io.lettuce.core.XAddArgs;
 
 /**
- * Jedis {@link Path2} 扩展
+ * Lettuce {@link XAddArgs} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class JedisPath extends Path2 {
+public class LettuceXAddArgs extends XAddArgs {
 
 	/**
 	 * 构造函数
-	 *
-	 * @param str
-	 * 		-
 	 */
-	public JedisPath(final String str) {
-		super(str);
+	public LettuceXAddArgs() {
 	}
 
 	/**
 	 * 构造函数
 	 *
-	 * @param str
-	 * 		-
+	 * @param id
+	 *        {@link StreamEntryId}
 	 */
-	public JedisPath(final byte[] str) {
-		super(SafeEncoder.encode(str));
+	public LettuceXAddArgs(final StreamEntryId id) {
+		id(id.toString());
 	}
 
 }

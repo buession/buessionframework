@@ -211,14 +211,14 @@ public final class JedisCuckooFilterCommands extends AbstractJedisRedisCommands 
 	}
 
 	@Override
-	public Map<Long, byte[]> cfScandump(final String key, final long iterator) {
+	public Map<Long, byte[]> cfScanDump(final String key, final long iterator) {
 		final CommandArguments args = CommandArguments.create(key).add(iterator);
 		return executeCommand(Command.CF_SCANDUMP, args, (cmd)->cmd.cfScanDump(rawKey(key), iterator),
 				new MapEntryMapConverter<>((k)->k, (v)->v));
 	}
 
 	@Override
-	public Map<Long, byte[]> cfScandump(final byte[] key, final long iterator) {
+	public Map<Long, byte[]> cfScanDump(final byte[] key, final long iterator) {
 		return cfScandump(SafeEncoder.encode(key), iterator);
 	}
 

@@ -136,7 +136,7 @@ public final class JedisClusterCommands extends AbstractJedisRedisCommands imple
 	}
 
 	@Override
-	public List<String> clusterGetKeysInSlot(final int slot, final long count) {
+	public List<String> clusterGetKeysInSlot(final int slot, final int count) {
 		final CommandArguments args = CommandArguments.create(slot).add(count);
 		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_GETKEYSINSLOT, args);
 	}

@@ -72,12 +72,12 @@ import com.buession.redis.core.internal.convert.lettuce.response.StreamMessageCo
 import com.buession.redis.core.internal.convert.lettuce.response.StreamMessageKeyValueConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.StreamMessageStreamEntryXReadInfoConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
-import com.buession.redis.core.internal.jedis.JedisXReadGroupParams;
+import com.buession.redis.core.internal.jedis.args.JedisXReadGroupParams;
 import com.buession.redis.core.internal.lettuce.CompositeArgumentUtils;
-import com.buession.redis.core.internal.lettuce.LettuceXAddArgs;
-import com.buession.redis.core.internal.lettuce.LettuceXAutoClaimArgs;
-import com.buession.redis.core.internal.lettuce.LettuceXGroupCreateArgs;
-import com.buession.redis.core.internal.lettuce.LettuceXReadArgs;
+import com.buession.redis.core.internal.lettuce.args.LettuceXAddArgs;
+import com.buession.redis.core.internal.lettuce.args.LettuceXAutoClaimArgs;
+import com.buession.redis.core.internal.lettuce.args.LettuceXGroupCreateArgs;
+import com.buession.redis.core.internal.lettuce.args.LettuceXReadArgs;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.Consumer;
 import io.lettuce.core.Limit;

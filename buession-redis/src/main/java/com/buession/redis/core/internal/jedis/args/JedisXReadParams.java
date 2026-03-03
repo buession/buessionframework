@@ -19,26 +19,38 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis;
+package com.buession.redis.core.internal.jedis.args;
 
-import redis.clients.jedis.params.XAutoClaimParams;
+import redis.clients.jedis.params.XReadParams;
 
 /**
+ * Jedis {@link XReadParams} 扩展
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class JedisXAutoClaimParams extends XAutoClaimParams {
+public final class JedisXReadParams extends XReadParams {
 
-	public JedisXAutoClaimParams() {
+	public JedisXReadParams() {
 		super();
 	}
 
-	public JedisXAutoClaimParams(final int count) {
+	public JedisXReadParams(final int count) {
 		super();
 		count(count);
+	}
+
+	public JedisXReadParams(final int count, final long block) {
+		this(count);
+		block((int) block);
+	}
+
+	public JedisXReadParams(final long block) {
+		super();
+		block((int) block);
 	}
 
 }

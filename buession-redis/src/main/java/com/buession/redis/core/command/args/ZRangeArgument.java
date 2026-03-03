@@ -61,21 +61,31 @@ public class ZRangeArgument {
 		return by;
 	}
 
-	public void setBy(By by) {
+	public ZRangeArgument setBy(By by) {
 		this.by = by;
+		return this;
+	}
+
+	public Boolean isRev() {
+		return getRev();
 	}
 
 	public Boolean getRev() {
 		return rev;
 	}
 
-	public void setRev(Boolean rev) {
+	public ZRangeArgument rev() {
+		return setRev(true);
+	}
+
+	public ZRangeArgument setRev(Boolean rev) {
 		this.rev = rev;
+		return this;
 	}
 
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create().append(by).append(Objects.equals(rev, true) ? "REV" : null).build();
+		return ArgStringBuilder.create().append(getBy()).append(Boolean.TRUE.equals(getRev()) ? "REV" : null).build();
 	}
 
 	public enum By implements Keyword {

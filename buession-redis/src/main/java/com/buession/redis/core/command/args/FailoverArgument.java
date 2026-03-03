@@ -25,6 +25,7 @@
 package com.buession.redis.core.command.args;
 
 import com.buession.core.validator.Validate;
+import com.buession.redis.core.Keyword;
 import com.buession.redis.core.RedisNode;
 import com.buession.redis.utils.ArgStringBuilder;
 
@@ -398,8 +399,26 @@ public class FailoverArgument {
 	 *
 	 * @return 是否强制
 	 */
+	public Boolean isForce() {
+		return getForce();
+	}
+
+	/**
+	 * 返回是否强制
+	 *
+	 * @return 是否强制
+	 */
 	public Boolean getForce() {
 		return force;
+	}
+
+	/**
+	 * 设置是否强制
+	 *
+	 * @return {@link FailoverArgument}
+	 */
+	public FailoverArgument force() {
+		return setForce(true);
 	}
 
 	/**
@@ -420,8 +439,26 @@ public class FailoverArgument {
 	 *
 	 * @return 是否终止
 	 */
+	public Boolean isAbort() {
+		return getAbort();
+	}
+
+	/**
+	 * 返回是否终止
+	 *
+	 * @return 是否终止
+	 */
 	public Boolean getAbort() {
 		return abort;
+	}
+
+	/**
+	 * 设置是否终止
+	 *
+	 * @return {@link FailoverArgument}
+	 */
+	public FailoverArgument abort() {
+		return setAbort(true);
 	}
 
 	/**
@@ -461,17 +498,14 @@ public class FailoverArgument {
 	public String toString() {
 		final ArgStringBuilder builder = ArgStringBuilder.create();
 
-		if(Validate.isNotEmpty(host)){
-			builder.append("TO").append(host).append(port);
-			builder.append(Boolean.TRUE.equals(force) ? "FORCE" : null);
+		if(Validate.isNotEmpty(getHost())){
+			builder.append("TO").append(getHost()).append(getPort());
 		}
+		builder.append(Boolean.TRUE.equals(getForce()) ? Keyword.Common.FORCE : null);
+		builder.append(Boolean.TRUE.equals(getAbort()) ? "ABORT" : null);
+		builder.add("TIMEOUT", getTimeout());
 
-		builder.append(Boolean.TRUE.equals(abort) ? "ABORT" : null);
-		if(timeout != null){
-			builder.append("TIMEOUT").append(timeout);
-		}
-
-		return builder.toString();
+		return builder.build();
 	}
 
 }

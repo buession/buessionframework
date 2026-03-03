@@ -22,81 +22,35 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command.args;
+package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.redis.utils.ArgStringBuilder;
+import io.lettuce.core.XReadArgs;
 
 /**
- * JSON.GET 命令参数
+ * Lettuce {@link XReadArgs} 扩展
  *
  * @author Yong.Teng
- * @since 4.0.0
+ * @since 3.0.0
  */
-public class JsonGetArgument {
+public final class LettuceXReadArgs extends XReadArgs {
 
-	private String indent;
-
-	private String newline;
-
-	private String space;
-
-	/**
-	 * 构造函数
-	 */
-	public JsonGetArgument() {
-
+	public LettuceXReadArgs() {
+		super();
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param indent
-	 * 		-
-	 * @param newline
-	 * 		-
-	 * @param space
-	 * 		-
-	 */
-	public JsonGetArgument(String indent, String newline, String space) {
-		this.indent = indent;
-		this.newline = newline;
-		this.space = space;
+	public LettuceXReadArgs(final int count) {
+		super();
+		count(count);
 	}
 
-	public String getIndent() {
-		return indent;
+	public LettuceXReadArgs(final int count, final long block) {
+		this(count);
+		block(block);
 	}
 
-	public JsonGetArgument setIndent(String indent) {
-		this.indent = indent;
-		return this;
-	}
-
-	public String getNewline() {
-		return newline;
-	}
-
-	public JsonGetArgument setNewline(String newline) {
-		this.newline = newline;
-		return this;
-	}
-
-	public String getSpace() {
-		return space;
-	}
-
-	public JsonGetArgument setSpace(String space) {
-		this.space = space;
-		return this;
-	}
-
-	@Override
-	public String toString() {
-		return ArgStringBuilder.create()
-				.add("INDENT", getIndent())
-				.add("NEWLINE", getNewline())
-				.add("SPACE", getSpace())
-				.build();
+	public LettuceXReadArgs(final long block) {
+		super();
+		block(block);
 	}
 
 }

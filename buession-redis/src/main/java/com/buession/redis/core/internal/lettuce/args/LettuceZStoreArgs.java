@@ -22,46 +22,73 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis;
+package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.redis.core.StreamDeletionPolicy;
-import com.buession.redis.core.StreamEntryId;
-import redis.clients.jedis.params.XTrimParams;
+import io.lettuce.core.ZStoreArgs;
 
 /**
- * Jedis {@link XTrimParams} 扩展
+ * Lettuce {@link ZStoreArgs} 扩展
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class JedisXTrimParams extends XTrimParams {
+public final class LettuceZStoreArgs extends ZStoreArgs {
 
-	public JedisXTrimParams() {
+	/**
+	 * 构造函数
+	 */
+	public LettuceZStoreArgs() {
 		super();
 	}
 
-	public static JedisXTrimParams xTrimParams() {
-		return new JedisXTrimParams();
-	}
+	/**
+	 * 构造函数
+	 *
+	 * @param aggregate
+	 *        {@link com.buession.redis.core.Aggregate}
+	 */
+	public LettuceZStoreArgs(final com.buession.redis.core.Aggregate aggregate) {
+		super();
 
-	public JedisXTrimParams deletionPolicy(StreamDeletionPolicy deletionPolicy) {
-		if(deletionPolicy != null){
-			switch(deletionPolicy){
-				case ACKED -> trimmingMode(redis.clients.jedis.args.StreamDeletionPolicy.ACKNOWLEDGED);
-				case DELREF -> trimmingMode(redis.clients.jedis.args.StreamDeletionPolicy.DELETE_REFERENCES);
-				case KEEPREF -> trimmingMode(redis.clients.jedis.args.StreamDeletionPolicy.KEEP_REFERENCES);
+		if(aggregate != null){
+			switch(aggregate){
+				case MIN:
+					min();
+					break;
+				case MAX:
+					max();
+					break;
+				case SUM:
+					sum();
+					break;
+				default:
+					break;
 			}
 		}
-
-		return this;
 	}
 
-	public JedisXTrimParams minId(StreamEntryId id) {
-		if(id != null){
-			minId(id.toString());
-		}
+	/**
+	 * 构造函数
+	 *
+	 * @param weights
+	 * 		权重
+	 */
+	public LettuceZStoreArgs(final double... weights) {
+		super();
+		weights(weights);
+	}
 
-		return this;
+	/**
+	 * 构造函数
+	 *
+	 * @param aggregate
+	 *        {@link com.buession.redis.core.Aggregate}
+	 * @param weights
+	 * 		权重
+	 */
+	public LettuceZStoreArgs(final com.buession.redis.core.Aggregate aggregate, final double... weights) {
+		this(aggregate);
+		weights(weights);
 	}
 
 }

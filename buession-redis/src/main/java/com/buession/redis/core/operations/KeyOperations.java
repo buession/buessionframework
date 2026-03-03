@@ -24,7 +24,6 @@
  */
 package com.buession.redis.core.operations;
 
-import com.buession.core.utils.Assert;
 import com.buession.core.utils.NumberUtils;
 import com.buession.lang.Status;
 import com.buession.redis.core.ExpireOption;
@@ -36,6 +35,7 @@ import com.buession.redis.core.command.KeyCommands;
 import com.buession.redis.core.command.args.MigrateArgument;
 import com.buession.redis.core.command.args.RestoreArgument;
 import com.buession.redis.core.command.args.SortArgument;
+import com.buession.redis.core.internal.ResultUtils;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -496,8 +496,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * the expiration (Unix timestamp) in seconds.
 	 */
 	default Date expireTimeDate(final String key) {
-		final Long result = expireTime(key);
-		return result != null && result != -1 && result != -2 ? new Date(result * 1000) : null;
+		return ResultUtils.createDate(expireTime(key), true);
 	}
 
 	/**
@@ -512,8 +511,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * the expiration (Unix timestamp) in seconds.
 	 */
 	default Date expireTimeDate(final byte[] key) {
-		final Long result = expireTime(key);
-		return result != null && result != -1 && result != -2 ? new Date(result * 1000) : null;
+		return ResultUtils.createDate(expireTime(key), true);
 	}
 
 	@Override
@@ -596,9 +594,6 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status migrate(final RedisNode server, final int db, final int timeout, final String... keys) {
-		Assert.isNull(server, "Destination redis node cloud not be null");
-		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
-
 		return migrate(server.getHost(), server.getPort(), db, timeout, keys);
 	}
 
@@ -620,9 +615,6 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status migrate(final RedisNode server, final int db, final int timeout, final byte[]... keys) {
-		Assert.isNull(server, "Destination redis node cloud not be null");
-		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
-
 		return migrate(server.getHost(), server.getPort(), db, timeout, keys);
 	}
 
@@ -707,9 +699,6 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 */
 	default Status migrate(final RedisNode server, final int db, final int timeout, final MigrateArgument argument,
 						   final String... keys) {
-		Assert.isNull(server, "Destination redis node cloud not be null");
-		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
-
 		return migrate(server.getHost(), server.getPort(), db, timeout, argument, keys);
 	}
 
@@ -734,9 +723,6 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 */
 	default Status migrate(final RedisNode server, final int db, final int timeout, final MigrateArgument argument,
 						   final byte[]... keys) {
-		Assert.isNull(server, "Destination redis node cloud not be null");
-		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
-
 		return migrate(server.getHost(), server.getPort(), db, timeout, argument, keys);
 	}
 
@@ -1133,8 +1119,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return Key 的过期时间戳
 	 */
 	default Date pExpireTimeDate(final String key) {
-		final Long value = pExpireTime(key);
-		return value != null && value != -1 && value != -2 ? new Date(value) : null;
+		return ResultUtils.createDate(pExpireTime(key), false);
 	}
 
 	/**
@@ -1148,8 +1133,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return Key 的过期时间戳
 	 */
 	default Date pExpireTimeDate(final byte[] key) {
-		final Long value = pExpireTime(key);
-		return value != null && value != -1 && value != -2 ? new Date(value) : null;
+		return ResultUtils.createDate(pExpireTime(key), false);
 	}
 
 	@Override
@@ -1222,7 +1206,6 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status restore(final String key, final byte[] serializedValue, final Date ttl) {
-		Assert.isNull(ttl, "Ttl date could not be null");
 		return restore(key, serializedValue, (int) (ttl.getTime() - System.currentTimeMillis()));
 	}
 
@@ -1239,7 +1222,6 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status restore(final byte[] key, final byte[] serializedValue, final Date ttl) {
-		Assert.isNull(ttl, "Ttl date could not be null");
 		return restore(key, serializedValue, (int) (ttl.getTime() - System.currentTimeMillis()));
 	}
 
@@ -1256,7 +1238,6 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status restore(final String key, final byte[] serializedValue, final LocalDateTime dateTime) {
-		Assert.isNull(dateTime, "Ttl date could not be null");
 		return restore(key, serializedValue, dateTime.atZone(ZoneId.systemDefault()).toInstant());
 	}
 
@@ -1273,7 +1254,6 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status restore(final byte[] key, final byte[] serializedValue, final LocalDateTime dateTime) {
-		Assert.isNull(dateTime, "Ttl date could not be null");
 		return restore(key, serializedValue, dateTime.atZone(ZoneId.systemDefault()).toInstant());
 	}
 
@@ -1290,7 +1270,6 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status restore(final String key, final byte[] serializedValue, final ZonedDateTime dateTime) {
-		Assert.isNull(dateTime, "Ttl date could not be null");
 		return restore(key, serializedValue, dateTime.toInstant());
 	}
 
@@ -1307,7 +1286,6 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status restore(final byte[] key, final byte[] serializedValue, final ZonedDateTime dateTime) {
-		Assert.isNull(dateTime, "Ttl date could not be null");
 		return restore(key, serializedValue, dateTime.toInstant());
 	}
 
@@ -1324,7 +1302,6 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status restore(final String key, final byte[] serializedValue, final Instant instant) {
-		Assert.isNull(instant, "Ttl date could not be null");
 		return restore(key, serializedValue, (int) (instant.toEpochMilli() - System.currentTimeMillis()));
 	}
 
@@ -1341,7 +1318,6 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status restore(final byte[] key, final byte[] serializedValue, final Instant instant) {
-		Assert.isNull(instant, "Ttl date could not be null");
 		return restore(key, serializedValue, (int) (instant.toEpochMilli() - System.currentTimeMillis()));
 	}
 
@@ -1487,36 +1463,6 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	@Override
 	default Long ttl(final byte[] key) {
 		return execute((client)->client.keyCommands().ttl(key));
-	}
-
-	/**
-	 * 获取给定 key 的过期时间
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/expire/ttl.html" target="_blank">http://redisdoc.com/expire/ttl.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 当 key 不存在时，或没有设置剩余生存时间时，返回 null；否则返回过期时间
-	 */
-	default Date ttlAt(final String key) {
-		Long ttl = ttl(key);
-		return ttl != null && ttl >= 0 ? new Date(System.currentTimeMillis() + ttl * 1000L) : null;
-	}
-
-	/**
-	 * 获取给定 key 的过期时间
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/expire/ttl.html" target="_blank">http://redisdoc.com/expire/ttl.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 当 key 不存在时，或没有设置剩余生存时间时，返回 null；否则返回过期时间
-	 */
-	default Date ttlAt(final byte[] key) {
-		Long ttl = ttl(key);
-		return ttl != null && ttl >= 0 ? new Date(System.currentTimeMillis() + ttl * 1000L) : null;
 	}
 
 	@Override

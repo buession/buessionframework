@@ -30,7 +30,6 @@ import com.buession.redis.core.CmsInfo;
 import com.buession.redis.core.command.CountMinSketchCommands;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 计数最小草图命令
@@ -83,12 +82,12 @@ public interface CountMinSketchOperations extends CountMinSketchCommands, RedisO
 	}
 
 	@Override
-	default Status cmsMerge(final String destKey, final Map<String, Long> keysAndWeights) {
+	default Status cmsMerge(final String destKey, final KeyValue<String, Long>... keysAndWeights) {
 		return execute((client)->client.countMinSketchCommands().cmsMerge(destKey, keysAndWeights));
 	}
 
 	@Override
-	default Status cmsMerge(final byte[] destKey, final Map<byte[], Long> keysAndWeights) {
+	default Status cmsMerge(final byte[] destKey, final KeyValue<byte[], Long>... keysAndWeights) {
 		return execute((client)->client.countMinSketchCommands().cmsMerge(destKey, keysAndWeights));
 	}
 
@@ -107,7 +106,7 @@ public interface CountMinSketchOperations extends CountMinSketchCommands, RedisO
 	 * @return 操作结果
 	 */
 	default Status cmsMerge(final String destKey, final String sourceKey, final Long weight) {
-		return cmsMerge(destKey, Map.of(sourceKey, weight));
+		return cmsMerge(destKey, new KeyValue<>(sourceKey, weight));
 	}
 
 	/**
@@ -125,7 +124,7 @@ public interface CountMinSketchOperations extends CountMinSketchCommands, RedisO
 	 * @return 操作结果
 	 */
 	default Status cmsMerge(final byte[] destKey, final byte[] sourceKey, final Long weight) {
-		return cmsMerge(destKey, Map.of(sourceKey, weight));
+		return cmsMerge(destKey, new KeyValue<>(sourceKey, weight));
 	}
 
 	@Override

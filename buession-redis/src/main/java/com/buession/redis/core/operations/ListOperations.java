@@ -56,7 +56,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	}
 
 	/**
-	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化后的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
+	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化为 clazz 的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
 	 * 是 lmove 的阻塞版
 	 *
 	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/blmove/" target="_blank">https://redis.io/docs/latest/commands/blmove/</a></p>
@@ -71,37 +71,15 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		第一个或最后一个元素
 	 * @param timeout
 	 * 		超时时间
+	 * @param clazz
+	 * 		元素值对象类
 	 * @param <V>
 	 * 		元素值类型
 	 *
 	 * @return 被移除并再次插入的元素
 	 */
-	<V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
-					   final int timeout);
-
-	/**
-	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化后的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
-	 * 是 lmove 的阻塞版
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/blmove/" target="_blank">https://redis.io/docs/latest/commands/blmove/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param destKey
-	 * 		目标 Key
-	 * @param from
-	 * 		第一个或最后一个元素
-	 * @param to
-	 * 		第一个或最后一个元素
-	 * @param timeout
-	 * 		超时时间
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 被移除并再次插入的元素
-	 */
-	<V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
-					   final int timeout);
+	<V> V blMove(final String key, final String destKey, final Direction from, final Direction to, final int timeout,
+				 final Class<V> clazz);
 
 	/**
 	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化为 clazz 的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
@@ -126,34 +104,8 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 被移除并再次插入的元素
 	 */
-	<V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
-					   final int timeout, final Class<V> clazz);
-
-	/**
-	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化为 clazz 的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
-	 * 是 lmove 的阻塞版
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/blmove/" target="_blank">https://redis.io/docs/latest/commands/blmove/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param destKey
-	 * 		目标 Key
-	 * @param from
-	 * 		第一个或最后一个元素
-	 * @param to
-	 * 		第一个或最后一个元素
-	 * @param timeout
-	 * 		超时时间
-	 * @param clazz
-	 * 		元素值对象类
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 被移除并再次插入的元素
-	 */
-	<V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
-					   final int timeout, final Class<V> clazz);
+	<V> V blMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to, final int timeout,
+				 final Class<V> clazz);
 
 	/**
 	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化为 type 指定的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
@@ -177,11 +129,9 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		元素值类型
 	 *
 	 * @return 被移除并再次插入的元素
-	 *
-	 * @see TypeReference
 	 */
-	<V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
-					   final int timeout, final TypeReference<V> type);
+	<V> V blMove(final String key, final String destKey, final Direction from, final Direction to, final int timeout,
+				 final TypeReference<V> type);
 
 	/**
 	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化为 type 指定的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
@@ -205,11 +155,9 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		元素值类型
 	 *
 	 * @return 被移除并再次插入的元素
-	 *
-	 * @see TypeReference
 	 */
-	<V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
-					   final int timeout, final TypeReference<V> type);
+	<V> V blMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
+				 final int timeout, final TypeReference<V> type);
 
 	@Override
 	default KeyValue<String, List<String>> blMPop(final int timeout, final String[] keys, final Direction direction) {
@@ -232,30 +180,15 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		一个或多个 Key
 	 * @param direction
 	 * 		方位
+	 * @param clazz
+	 * 		值对象类
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return 被弹出的元素 key 及其值
 	 */
-	<V> KeyValue<String, List<V>> blMPopObject(final int timeout, final String[] keys, final Direction direction);
-
-	/**
-	 * 从多个列表（lists）中安全、原子地弹出元素，并在列表为空时阻塞等待直到有元素可用或超时
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/blmpop/" target="_blank">https://redis.io/docs/latest/commands/blmpop/</a></p>
-	 *
-	 * @param timeout
-	 * 		超时时间
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param direction
-	 * 		方位
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 被弹出的元素 key 及其值
-	 */
-	<V> KeyValue<byte[], List<V>> blMPopObject(final int timeout, final byte[][] keys, final Direction direction);
+	<V> KeyValue<String, List<V>> blMPop(final int timeout, final String[] keys, final Direction direction,
+										 final Class<V> clazz);
 
 	/**
 	 * 从多个列表（lists）中安全、原子地弹出元素，并在列表为空时阻塞等待直到有元素可用或超时
@@ -275,29 +208,8 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 被弹出的元素 key 及其值
 	 */
-	<V> KeyValue<String, List<V>> blMPopObject(final int timeout, final String[] keys, final Direction direction,
-											   final Class<V> clazz);
-
-	/**
-	 * 从多个列表（lists）中安全、原子地弹出元素，并在列表为空时阻塞等待直到有元素可用或超时
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/blmpop/" target="_blank">https://redis.io/docs/latest/commands/blmpop/</a></p>
-	 *
-	 * @param timeout
-	 * 		超时时间
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param direction
-	 * 		方位
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 被弹出的元素 key 及其值
-	 */
-	<V> KeyValue<byte[], List<V>> blMPopObject(final int timeout, final byte[][] keys, final Direction direction,
-											   final Class<V> clazz);
+	<V> KeyValue<byte[], List<V>> blMPop(final int timeout, final byte[][] keys, final Direction direction,
+										 final Class<V> clazz);
 
 	/**
 	 * 从多个列表（lists）中安全、原子地弹出元素，并在列表为空时阻塞等待直到有元素可用或超时
@@ -317,8 +229,8 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 被弹出的元素 key 及其值
 	 */
-	<V> KeyValue<String, List<V>> blMPopObject(final int timeout, final String[] keys, final Direction direction,
-											   final TypeReference<V> type);
+	<V> KeyValue<String, List<V>> blMPop(final int timeout, final String[] keys, final Direction direction,
+										 final TypeReference<V> type);
 
 	/**
 	 * 从多个列表（lists）中安全、原子地弹出元素，并在列表为空时阻塞等待直到有元素可用或超时
@@ -338,8 +250,8 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 被弹出的元素 key 及其值
 	 */
-	<V> KeyValue<byte[], List<V>> blMPopObject(final int timeout, final byte[][] keys, final Direction direction,
-											   final TypeReference<V> type);
+	<V> KeyValue<byte[], List<V>> blMPop(final int timeout, final byte[][] keys, final Direction direction,
+										 final TypeReference<V> type);
 
 	@Override
 	default List<String> blPop(final String[] keys, final int timeout) {
@@ -352,40 +264,6 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	}
 
 	/**
-	 * 移除并返回 key 的头元素反序列化后的对象，BLPOP 是列表的阻塞式(blocking)弹出原语；
-	 * 当给定列表内没有任何元素可供弹出的时候，连接将被阻塞，直到等待超时或发现可弹出元素为止
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/blpop.html" target="_blank">http://redisdoc.com/list/blpop.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 key
-	 * @param timeout
-	 * 		超时时间
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值反序列化后的对象。
-	 */
-	<V> List<V> blPopObject(final String[] keys, final int timeout);
-
-	/**
-	 * 移除并返回 key 的头元素反序列化后的对象，BLPOP 是列表的阻塞式(blocking)弹出原语；
-	 * 当给定列表内没有任何元素可供弹出的时候，连接将被阻塞，直到等待超时或发现可弹出元素为止
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/blpop.html" target="_blank">http://redisdoc.com/list/blpop.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 key
-	 * @param timeout
-	 * 		超时时间
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值反序列化后的对象。
-	 */
-	<V> List<V> blPopObject(final byte[][] keys, final int timeout);
-
-	/**
 	 * 移除并返回 key 的头元素反序列化为 clazz 指定的对象，BLPOP 是列表的阻塞式(blocking)弹出原语；
 	 * 当给定列表内没有任何元素可供弹出的时候，连接将被阻塞，直到等待超时或发现可弹出元素为止
 	 *
@@ -401,10 +279,8 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值反序列化为 clazz 指定的对象。
-	 *
-	 * @see java.lang.Class
 	 */
-	<V> List<V> blPopObject(final String[] keys, final int timeout, final Class<V> clazz);
+	<V> List<V> blPop(final String[] keys, final int timeout, final Class<V> clazz);
 
 	/**
 	 * 移除并返回 key 的头元素反序列化为 clazz 指定的对象，BLPOP 是列表的阻塞式(blocking)弹出原语；
@@ -423,7 +299,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值反序列化为 clazz 指定的对象。
 	 */
-	<V> List<V> blPopObject(final byte[][] keys, final int timeout, final Class<V> clazz);
+	<V> List<V> blPop(final byte[][] keys, final int timeout, final Class<V> clazz);
 
 	/**
 	 * 移除并返回 key 的头元素反序列化为 type 指定的对象，BLPOP 是列表的阻塞式(blocking)弹出原语；
@@ -441,10 +317,8 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值反序列化为 type 指定的对象。
-	 *
-	 * @see TypeReference
 	 */
-	<V> List<V> blPopObject(final String[] keys, final int timeout, final TypeReference<V> type);
+	<V> List<V> blPop(final String[] keys, final int timeout, final TypeReference<V> type);
 
 	/**
 	 * 移除并返回 key 的头元素反序列化为 type 指定的对象，BLPOP 是列表的阻塞式(blocking)弹出原语；
@@ -462,10 +336,8 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值反序列化为 type 指定的对象。
-	 *
-	 * @see TypeReference
 	 */
-	<V> List<V> blPopObject(final byte[][] keys, final int timeout, final TypeReference<V> type);
+	<V> List<V> blPop(final byte[][] keys, final int timeout, final TypeReference<V> type);
 
 	@Override
 	default List<String> brPop(final String[] keys, final int timeout) {
@@ -478,7 +350,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	}
 
 	/**
-	 * 移除并返回列表中 key 的尾元素反序列化后的对象，BRPOP 是列表的阻塞式(blocking)弹出原语；
+	 * 移除并返回列表中 key 的尾元素反序列化为 clazz 指定的对象，BRPOP 是列表的阻塞式(blocking)弹出原语；
 	 * 当给定列表内没有任何元素可供弹出的时候，连接将被阻塞，直到等待超时或发现可弹出元素为止
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/list/brpop.html" target="_blank">http://redisdoc.com/list/brpop.html</a></p>
@@ -487,29 +359,14 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		一个或多个 key
 	 * @param timeout
 	 * 		超时时间
+	 * @param clazz
+	 * 		值对象类
 	 * @param <V>
 	 * 		值类型
 	 *
-	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值反序列化后的对象。
+	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值序列化为 clazz 指定的对象。
 	 */
-	<V> List<V> brPopObject(final String[] keys, final int timeout);
-
-	/**
-	 * 移除并返回列表中 key 的尾元素反序列化后的对象，BRPOP 是列表的阻塞式(blocking)弹出原语；
-	 * 当给定列表内没有任何元素可供弹出的时候，连接将被阻塞，直到等待超时或发现可弹出元素为止
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/brpop.html" target="_blank">http://redisdoc.com/list/brpop.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 key
-	 * @param timeout
-	 * 		超时时间
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值反序列化后的对象。
-	 */
-	<V> List<V> brPopObject(final byte[][] keys, final int timeout);
+	<V> List<V> brPop(final String[] keys, final int timeout, final Class<V> clazz);
 
 	/**
 	 * 移除并返回列表中 key 的尾元素反序列化为 clazz 指定的对象，BRPOP 是列表的阻塞式(blocking)弹出原语；
@@ -528,26 +385,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值序列化为 clazz 指定的对象。
 	 */
-	<V> List<V> brPopObject(final String[] keys, final int timeout, final Class<V> clazz);
-
-	/**
-	 * 移除并返回列表中 key 的尾元素反序列化为 clazz 指定的对象，BRPOP 是列表的阻塞式(blocking)弹出原语；
-	 * 当给定列表内没有任何元素可供弹出的时候，连接将被阻塞，直到等待超时或发现可弹出元素为止
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/brpop.html" target="_blank">http://redisdoc.com/list/brpop.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 key
-	 * @param timeout
-	 * 		超时时间
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值序列化为 clazz 指定的对象。
-	 */
-	<V> List<V> brPopObject(final byte[][] keys, final int timeout, final Class<V> clazz);
+	<V> List<V> brPop(final byte[][] keys, final int timeout, final Class<V> clazz);
 
 	/**
 	 * 移除并返回列表中 key 的尾元素反序列化为 type 指定的对象，BRPOP 是列表的阻塞式(blocking)弹出原语；
@@ -565,10 +403,8 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值序列化为 type 指定的对象。
-	 *
-	 * @see TypeReference
 	 */
-	<V> List<V> brPopObject(final String[] keys, final int timeout, final TypeReference<V> type);
+	<V> List<V> brPop(final String[] keys, final int timeout, final TypeReference<V> type);
 
 	/**
 	 * 移除并返回列表中 key 的尾元素反序列化为 type 指定的对象，BRPOP 是列表的阻塞式(blocking)弹出原语；
@@ -586,10 +422,8 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值序列化为 type 指定的对象。
-	 *
-	 * @see TypeReference
 	 */
-	<V> List<V> brPopObject(final byte[][] keys, final int timeout, final TypeReference<V> type);
+	<V> List<V> brPop(final byte[][] keys, final int timeout, final TypeReference<V> type);
 
 	@Override
 	default String brPoplPush(final String key, final String destKey, final int timeout) {
@@ -602,7 +436,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	}
 
 	/**
-	 * 将列表 key 中的最后尾元素弹出，并返回反序列化后的对象；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
+	 * 将列表 key 中的最后尾元素弹出，并返回反序列化为 clazz 指定的对象；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
 	 * 如果 key 不存在，值 null 被返回，并且不执行其他动作；
 	 * 如果 key 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
 	 * RPOPLPUSH 是列表的阻塞式(blocking)弹出原语
@@ -615,33 +449,14 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		目标 Key
 	 * @param timeout
 	 * 		超时时间（单位：秒）
+	 * @param clazz
+	 * 		值对象类
 	 * @param <V>
 	 * 		值类型
 	 *
-	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素的值反序列化后的对象 ，第二个等待时长
+	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素的值反序列化为 clazz 指定的对象 ，第二个等待时长
 	 */
-	<V> V brPoplPushObject(final String key, final String destKey, final int timeout);
-
-	/**
-	 * 将列表 key 中的最后尾元素弹出，并返回反序列化后的对象；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
-	 * 如果 key 不存在，值 null 被返回，并且不执行其他动作；
-	 * 如果 key 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
-	 * RPOPLPUSH 是列表的阻塞式(blocking)弹出原语
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/rpoplpush.html" target="_blank">http://redisdoc.com/list/rpoplpush.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param destKey
-	 * 		目标 Key
-	 * @param timeout
-	 * 		超时时间（单位：秒）
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素的值反序列化后的对象 ，第二个等待时长
-	 */
-	<V> V brPoplPushObject(final byte[] key, final byte[] destKey, final int timeout);
+	<V> V brPoplPush(final String key, final String destKey, final int timeout, final Class<V> clazz);
 
 	/**
 	 * 将列表 key 中的最后尾元素弹出，并返回反序列化为 clazz 指定的对象；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
@@ -664,30 +479,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素的值反序列化为 clazz 指定的对象 ，第二个等待时长
 	 */
-	<V> V brPoplPushObject(final String key, final String destKey, final int timeout, final Class<V> clazz);
-
-	/**
-	 * 将列表 key 中的最后尾元素弹出，并返回反序列化为 clazz 指定的对象；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
-	 * 如果 key 不存在，值 null 被返回，并且不执行其他动作；
-	 * 如果 key 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
-	 * RPOPLPUSH 是列表的阻塞式(blocking)弹出原语
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/rpoplpush.html" target="_blank">http://redisdoc.com/list/rpoplpush.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param destKey
-	 * 		目标 Key
-	 * @param timeout
-	 * 		超时时间（单位：秒）
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素的值反序列化为 clazz 指定的对象 ，第二个等待时长
-	 */
-	<V> V brPoplPushObject(final byte[] key, final byte[] destKey, final int timeout, final Class<V> clazz);
+	<V> V brPoplPush(final byte[] key, final byte[] destKey, final int timeout, final Class<V> clazz);
 
 	/**
 	 * 将列表 key 中的最后尾元素弹出，并返回反序列化为 type 指定的对象；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
@@ -709,10 +501,8 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素的值反序列化为 type 指定的对象 ，第二个等待时长
-	 *
-	 * @see TypeReference
 	 */
-	<V> V brPoplPushObject(final String key, final String destKey, final int timeout, final TypeReference<V> type);
+	<V> V brPoplPush(final String key, final String destKey, final int timeout, final TypeReference<V> type);
 
 	/**
 	 * 将列表 key 中的最后尾元素弹出，并返回反序列化为 type 指定的对象；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
@@ -734,10 +524,8 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素的值反序列化为 type 指定的对象 ，第二个等待时长
-	 *
-	 * @see TypeReference
 	 */
-	<V> V brPoplPushObject(final byte[] key, final byte[] destKey, final int timeout, final TypeReference<V> type);
+	<V> V brPoplPush(final byte[] key, final byte[] destKey, final int timeout, final TypeReference<V> type);
 
 	@Override
 	default String lIndex(final String key, final long index) {
@@ -750,7 +538,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	}
 
 	/**
-	 * 获取列表 key 中，下标为 index 的元素，并反序列为对象
+	 * 获取列表 key 中，下标为 index 的元素，并反序列为 clazz 指定的对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/list/lindex.html" target="_blank">http://redisdoc.com/list/lindex.html</a></p>
 	 *
@@ -758,28 +546,14 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		Key
 	 * @param index
 	 * 		下标
+	 * @param clazz
+	 * 		值对象类
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return 下标为 index 的元素反序列化后的值；如果 index 参数的值不在列表的区间范围内，返回 null
 	 */
-	<V> V lIndexObject(final String key, final long index);
-
-	/**
-	 * 获取列表 key 中，下标为 index 的元素，并反序列为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/lindex.html" target="_blank">http://redisdoc.com/list/lindex.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param index
-	 * 		下标
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 下标为 index 的元素反序列化后的值；如果 index 参数的值不在列表的区间范围内，返回 null
-	 */
-	<V> V lIndexObject(final byte[] key, final long index);
+	<V> V lIndex(final String key, final long index, final Class<V> clazz);
 
 	/**
 	 * 获取列表 key 中，下标为 index 的元素，并反序列为 clazz 指定的对象
@@ -796,30 +570,8 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 下标为 index 的元素反序列化后的值；如果 index 参数的值不在列表的区间范围内，返回 null
-	 *
-	 * @see java.lang.Class
 	 */
-	<V> V lIndexObject(final String key, final long index, final Class<V> clazz);
-
-	/**
-	 * 获取列表 key 中，下标为 index 的元素，并反序列为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/lindex.html" target="_blank">http://redisdoc.com/list/lindex.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param index
-	 * 		下标
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 下标为 index 的元素反序列化后的值；如果 index 参数的值不在列表的区间范围内，返回 null
-	 *
-	 * @see java.lang.Class
-	 */
-	<V> V lIndexObject(final byte[] key, final long index, final Class<V> clazz);
+	<V> V lIndex(final byte[] key, final long index, final Class<V> clazz);
 
 	/**
 	 * 获取列表 key 中，下标为 index 的元素，并反序列为 type 指定的对象
@@ -836,10 +588,8 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 下标为 index 的元素反序列化后的值；如果 index 参数的值不在列表的区间范围内，返回 null
-	 *
-	 * @see TypeReference
 	 */
-	<V> V lIndexObject(final String key, final long index, final TypeReference<V> type);
+	<V> V lIndex(final String key, final long index, final TypeReference<V> type);
 
 	/**
 	 * 获取列表 key 中，下标为 index 的元素，并反序列为 type 指定的对象
@@ -856,10 +606,8 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 下标为 index 的元素反序列化后的值；如果 index 参数的值不在列表的区间范围内，返回 null
-	 *
-	 * @see TypeReference
 	 */
-	<V> V lIndexObject(final byte[] key, final long index, final TypeReference<V> type);
+	<V> V lIndex(final byte[] key, final long index, final TypeReference<V> type);
 
 	@Override
 	default Long lInsert(final String key, final ListPosition position, final String pivot, final String value) {
@@ -934,7 +682,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	}
 
 	/**
-	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化后的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)
+	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化为 clazz 的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)
 	 *
 	 * @param key
 	 * 		Key
@@ -944,30 +692,14 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		第一个或最后一个元素
 	 * @param to
 	 * 		第一个或最后一个元素
+	 * @param clazz
+	 * 		元素值对象类
 	 * @param <V>
 	 * 		元素值类型
 	 *
 	 * @return 被移除并再次插入的元素
 	 */
-	<V> V lMoveObject(final String key, final String destKey, final Direction from, final Direction to);
-
-	/**
-	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化后的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)
-	 *
-	 * @param key
-	 * 		Key
-	 * @param destKey
-	 * 		目标 Key
-	 * @param from
-	 * 		第一个或最后一个元素
-	 * @param to
-	 * 		第一个或最后一个元素
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 被移除并再次插入的元素
-	 */
-	<V> V lMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to);
+	<V> V lMove(final String key, final String destKey, final Direction from, final Direction to, final Class<V> clazz);
 
 	/**
 	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化为 clazz 的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)
@@ -987,29 +719,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 被移除并再次插入的元素
 	 */
-	<V> V lMoveObject(final String key, final String destKey, final Direction from, final Direction to,
-					  final Class<V> clazz);
-
-	/**
-	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化为 clazz 的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)
-	 *
-	 * @param key
-	 * 		Key
-	 * @param destKey
-	 * 		目标 Key
-	 * @param from
-	 * 		第一个或最后一个元素
-	 * @param to
-	 * 		第一个或最后一个元素
-	 * @param clazz
-	 * 		元素值对象类
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 被移除并再次插入的元素
-	 */
-	<V> V lMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
-					  final Class<V> clazz);
+	<V> V lMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to, final Class<V> clazz);
 
 	/**
 	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化为 type 指定的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)
@@ -1028,11 +738,9 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		元素值类型
 	 *
 	 * @return 被移除并再次插入的元素
-	 *
-	 * @see TypeReference
 	 */
-	<V> V lMoveObject(final String key, final String destKey, final Direction from, final Direction to,
-					  final TypeReference<V> type);
+	<V> V lMove(final String key, final String destKey, final Direction from, final Direction to,
+				final TypeReference<V> type);
 
 	/**
 	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化为 type 指定的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)
@@ -1051,11 +759,9 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		元素值类型
 	 *
 	 * @return 被移除并再次插入的元素
-	 *
-	 * @see TypeReference
 	 */
-	<V> V lMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
-					  final TypeReference<V> type);
+	<V> V lMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
+				final TypeReference<V> type);
 
 	@Override
 	default KeyValue<String, List<String>> lMPop(final int timeout, final String[] keys, final Direction direction) {
@@ -1078,30 +784,15 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		一个或多个 Key
 	 * @param direction
 	 * 		方位
+	 * @param clazz
+	 * 		值对象类
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return 被弹出的元素 key 及其值
 	 */
-	<V> KeyValue<String, List<V>> lMPopObject(final int timeout, final String[] keys, final Direction direction);
-
-	/**
-	 * 从多个列表（lists）中以原子方式弹出一个或多个元素，非阻塞版
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lmpop/" target="_blank">https://redis.io/docs/latest/commands/lmpop/</a></p>
-	 *
-	 * @param timeout
-	 * 		超时时间
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param direction
-	 * 		方位
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 被弹出的元素 key 及其值
-	 */
-	<V> KeyValue<byte[], List<V>> lMPopObject(final int timeout, final byte[][] keys, final Direction direction);
+	<V> KeyValue<String, List<V>> lMPop(final int timeout, final String[] keys, final Direction direction,
+										final Class<V> clazz);
 
 	/**
 	 * 从多个列表（lists）中以原子方式弹出一个或多个元素，非阻塞版
@@ -1121,29 +812,8 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 被弹出的元素 key 及其值
 	 */
-	<V> KeyValue<String, List<V>> lMPopObject(final int timeout, final String[] keys, final Direction direction,
-											  final Class<V> clazz);
-
-	/**
-	 * 从多个列表（lists）中以原子方式弹出一个或多个元素，非阻塞版
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lmpop/" target="_blank">https://redis.io/docs/latest/commands/lmpop/</a></p>
-	 *
-	 * @param timeout
-	 * 		超时时间
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param direction
-	 * 		方位
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 被弹出的元素 key 及其值
-	 */
-	<V> KeyValue<byte[], List<V>> lMPopObject(final int timeout, final byte[][] keys, final Direction direction,
-											  final Class<V> clazz);
+	<V> KeyValue<byte[], List<V>> lMPop(final int timeout, final byte[][] keys, final Direction direction,
+										final Class<V> clazz);
 
 	/**
 	 * 从多个列表（lists）中以原子方式弹出一个或多个元素，非阻塞版
@@ -1163,8 +833,8 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 被弹出的元素 key 及其值
 	 */
-	<V> KeyValue<String, List<V>> lMPopObject(final int timeout, final String[] keys, final Direction direction,
-											  final TypeReference<V> type);
+	<V> KeyValue<String, List<V>> lMPop(final int timeout, final String[] keys, final Direction direction,
+										final TypeReference<V> type);
 
 	/**
 	 * 从多个列表（lists）中以原子方式弹出一个或多个元素，非阻塞版
@@ -1184,8 +854,8 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 被弹出的元素 key 及其值
 	 */
-	<V> KeyValue<byte[], List<V>> lMPopObject(final int timeout, final byte[][] keys, final Direction direction,
-											  final TypeReference<V> type);
+	<V> KeyValue<byte[], List<V>> lMPop(final int timeout, final byte[][] keys, final Direction direction,
+										final TypeReference<V> type);
 
 	@Override
 	default String lPop(final String key) {
@@ -1208,32 +878,20 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	}
 
 	/**
-	 * 移除并返回列表 key 的头元素，并反序列为对象
+	 * 移除并返回列表 key 的头元素，并反序列为 clazz 指定的对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/list/lpop.html" target="_blank">http://redisdoc.com/list/lpop.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
+	 * @param clazz
+	 * 		值对象类
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return 列表的头元素反序列化后的值；当 key 不存在时，返回 null
 	 */
-	<V> V lPopObject(final String key);
-
-	/**
-	 * 移除并返回列表 key 的头元素，并反序列为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/lpop.html" target="_blank">http://redisdoc.com/list/lpop.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 列表的头元素反序列化后的值；当 key 不存在时，返回 null
-	 */
-	<V> V lPopObject(final byte[] key);
+	<V> V lPop(final String key, final Class<V> clazz);
 
 	/**
 	 * 移除并返回列表 key 的头元素，并反序列为 clazz 指定的对象
@@ -1249,23 +907,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 列表的头元素反序列化后的值；当 key 不存在时，返回 null
 	 */
-	<V> V lPopObject(final String key, final Class<V> clazz);
-
-	/**
-	 * 移除并返回列表 key 的头元素，并反序列为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/lpop.html" target="_blank">http://redisdoc.com/list/lpop.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 列表的头元素反序列化后的值；当 key 不存在时，返回 null
-	 */
-	<V> V lPopObject(final byte[] key, final Class<V> clazz);
+	<V> V lPop(final byte[] key, final Class<V> clazz);
 
 	/**
 	 * 移除并返回列表 key 的头元素，并反序列为 clazz 指定的对象
@@ -1281,7 +923,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 列表的头元素反序列化后的值；当 key 不存在时，返回 null
 	 */
-	<V> V lPopObject(final String key, final TypeReference<V> type);
+	<V> V lPop(final String key, final TypeReference<V> type);
 
 	/**
 	 * 移除并返回列表 key 的头元素，并反序列为 clazz 指定的对象
@@ -1297,39 +939,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 列表的头元素反序列化后的值；当 key 不存在时，返回 null
 	 */
-	<V> V lPopObject(final byte[] key, final TypeReference<V> type);
-
-	/**
-	 * 移除并返回列表 key 的头元素，并反序列为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/lpop.html" target="_blank">http://redisdoc.com/list/lpop.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param count
-	 * 		移除数量
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 列表的头元素反序列化后的值；当 key 不存在时，返回 null
-	 */
-	<V> List<V> lPopObject(final String key, final int count);
-
-	/**
-	 * 移除并返回列表 key 的头元素，并反序列为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/lpop.html" target="_blank">http://redisdoc.com/list/lpop.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param count
-	 * 		移除数量
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 列表的头元素反序列化后的值；当 key 不存在时，返回 null
-	 */
-	<V> List<V> lPopObject(final byte[] key, final int count);
+	<V> V lPop(final byte[] key, final TypeReference<V> type);
 
 	/**
 	 * 移除并返回列表 key 的头元素，并反序列为 clazz 指定的对象
@@ -1347,7 +957,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 列表的头元素反序列化后的值；当 key 不存在时，返回 null
 	 */
-	<V> List<V> lPopObject(final String key, final int count, final Class<V> clazz);
+	<V> List<V> lPop(final String key, final int count, final Class<V> clazz);
 
 	/**
 	 * 移除并返回列表 key 的头元素，并反序列为 clazz 指定的对象
@@ -1365,7 +975,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 列表的头元素反序列化后的值；当 key 不存在时，返回 null
 	 */
-	<V> List<V> lPopObject(final byte[] key, final int count, final Class<V> clazz);
+	<V> List<V> lPop(final byte[] key, final int count, final Class<V> clazz);
 
 	/**
 	 * 移除并返回列表 key 的头元素，并反序列为 clazz 指定的对象
@@ -1383,7 +993,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 列表的头元素反序列化后的值；当 key 不存在时，返回 null
 	 */
-	<V> List<V> lPopObject(final String key, final int count, final TypeReference<V> type);
+	<V> List<V> lPop(final String key, final int count, final TypeReference<V> type);
 
 	/**
 	 * 移除并返回列表 key 的头元素，并反序列为 clazz 指定的对象
@@ -1401,7 +1011,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 列表的头元素反序列化后的值；当 key 不存在时，返回 null
 	 */
-	<V> List<V> lPopObject(final byte[] key, final int count, final TypeReference<V> type);
+	<V> List<V> lPop(final byte[] key, final int count, final TypeReference<V> type);
 
 	@Override
 	default Long lPos(final String key, final String element) {
@@ -1542,7 +1152,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	}
 
 	/**
-	 * 获取列表 key 中指定区间内的元素，区间以偏移量 start 和 stop 之间的元素（包含 start 和 stop）并反序列化为对象；
+	 * 获取列表 key 中指定区间内的元素，区间以偏移量 start 和 stop 之间的元素（包含 start 和 stop）并反序列化为 clazz 指定的对象；
 	 * 也可以使用负数下标，以 -1 表示列表的最后一个元素， -2 表示列表的倒数第二个元素，以此类推
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/list/lrange.html" target="_blank">http://redisdoc.com/list/lrange.html</a></p>
@@ -1553,6 +1163,8 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		开始位置
 	 * @param end
 	 * 		结束位置
+	 * @param clazz
+	 * 		值对象类
 	 * @param <V>
 	 * 		值类型
 	 *
@@ -1560,28 +1172,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 如果 start 下标比列表的最大下标 ( LLEN list 减去 1 )还要大，那么返回一个空列表；
 	 * 如果 end 下标比最大下标还要大，那么最多返回到 end 个下标
 	 */
-	<V> List<V> lRangeObject(final String key, final long start, final long end);
-
-	/**
-	 * 获取列表 key 中指定区间内的元素，区间以偏移量 start 和 stop 之间的元素（包含 start 和 stop）并反序列化为对象；
-	 * 也可以使用负数下标，以 -1 表示列表的最后一个元素， -2 表示列表的倒数第二个元素，以此类推
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/lrange.html" target="_blank">http://redisdoc.com/list/lrange.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param start
-	 * 		开始位置
-	 * @param end
-	 * 		结束位置
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 指定区间内的元素反序列化后的对象；
-	 * 如果 start 下标比列表的最大下标 ( LLEN list 减去 1 )还要大，那么返回一个空列表；
-	 * 如果 end 下标比最大下标还要大，那么最多返回到 end 个下标
-	 */
-	<V> List<V> lRangeObject(final byte[] key, final long start, final long end);
+	<V> List<V> lRange(final String key, final long start, final long end, final Class<V> clazz);
 
 	/**
 	 * 获取列表 key 中指定区间内的元素，区间以偏移量 start 和 stop 之间的元素（包含 start 和 stop）并反序列化为 clazz 指定的对象；
@@ -1604,30 +1195,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 如果 start 下标比列表的最大下标 ( LLEN list 减去 1 )还要大，那么返回一个空列表；
 	 * 如果 end 下标比最大下标还要大，那么最多返回到 end 个下标
 	 */
-	<V> List<V> lRangeObject(final String key, final long start, final long end, final Class<V> clazz);
-
-	/**
-	 * 获取列表 key 中指定区间内的元素，区间以偏移量 start 和 stop 之间的元素（包含 start 和 stop）并反序列化为 clazz 指定的对象；
-	 * 也可以使用负数下标，以 -1 表示列表的最后一个元素， -2 表示列表的倒数第二个元素，以此类推
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/lrange.html" target="_blank">http://redisdoc.com/list/lrange.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param start
-	 * 		开始位置
-	 * @param end
-	 * 		结束位置
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 指定区间内的元素反序列化后的对象；
-	 * 如果 start 下标比列表的最大下标 ( LLEN list 减去 1 )还要大，那么返回一个空列表；
-	 * 如果 end 下标比最大下标还要大，那么最多返回到 end 个下标
-	 */
-	<V> List<V> lRangeObject(final byte[] key, final long start, final long end, final Class<V> clazz);
+	<V> List<V> lRange(final byte[] key, final long start, final long end, final Class<V> clazz);
 
 	/**
 	 * 获取列表 key 中指定区间内的元素，区间以偏移量 start 和 stop 之间的元素（包含 start 和 stop）并反序列化为 type 指定的对象；
@@ -1650,7 +1218,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 如果 start 下标比列表的最大下标 ( LLEN list 减去 1 )还要大，那么返回一个空列表；
 	 * 如果 end 下标比最大下标还要大，那么最多返回到 end 个下标
 	 */
-	<V> List<V> lRangeObject(final String key, final long start, final long end, final TypeReference<V> type);
+	<V> List<V> lRange(final String key, final long start, final long end, final TypeReference<V> type);
 
 	/**
 	 * 获取列表 key 中指定区间内的元素，区间以偏移量 start 和 stop 之间的元素（包含 start 和 stop）并反序列化为 type 指定的对象；
@@ -1673,15 +1241,15 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 如果 start 下标比列表的最大下标 ( LLEN list 减去 1 )还要大，那么返回一个空列表；
 	 * 如果 end 下标比最大下标还要大，那么最多返回到 end 个下标
 	 */
-	<V> List<V> lRangeObject(final byte[] key, final long start, final long end, final TypeReference<V> type);
+	<V> List<V> lRange(final byte[] key, final long start, final long end, final TypeReference<V> type);
 
 	@Override
-	default Long lRem(final String key, final String value, final long count) {
+	default Long lRem(final String key, final String value, final int count) {
 		return execute((client)->client.listCommands().lRem(key, value, count));
 	}
 
 	@Override
-	default Long lRem(final byte[] key, final byte[] value, final long count) {
+	default Long lRem(final byte[] key, final byte[] value, final int count) {
 		return execute((client)->client.listCommands().lRem(key, value, count));
 	}
 
@@ -1752,28 +1320,20 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	}
 
 	/**
-	 * 移除并返回列表 key 的尾元素，并反序列化为对象
+	 * 移除并返回列表 key 的尾元素，并反序列化为 clazz 指定的对象对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/list/rpop.html" target="_blank">http://redisdoc.com/list/rpop.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
+	 * @param clazz
+	 * 		值对象类
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return 列表的尾元素反序列化后的值；当 key 不存在时，返回 null
 	 */
-	<V> V rPopObject(final String key);
-
-	/**
-	 * 移除并返回列表 key 的尾元素，并反序列化为对象
-	 *
-	 * @param key
-	 * 		Key
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 列表的尾元素反序列化后的值；当 key 不存在时，返回 null
-	 */
-	<V> V rPopObject(final byte[] key);
+	<V> V rPop(final String key, final Class<V> clazz);
 
 	/**
 	 * 移除并返回列表 key 的尾元素，并反序列化为 clazz 指定的对象对象
@@ -1789,23 +1349,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 列表的尾元素反序列化后的值；当 key 不存在时，返回 null
 	 */
-	<V> V rPopObject(final String key, final Class<V> clazz);
-
-	/**
-	 * 移除并返回列表 key 的尾元素，并反序列化为 clazz 指定的对象对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/rpop.html" target="_blank">http://redisdoc.com/list/rpop.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 列表的尾元素反序列化后的值；当 key 不存在时，返回 null
-	 */
-	<V> V rPopObject(final byte[] key, final Class<V> clazz);
+	<V> V rPop(final byte[] key, final Class<V> clazz);
 
 	/**
 	 * 移除并返回列表 key 的尾元素，并反序列化为 type 指定的对象对象
@@ -1820,10 +1364,8 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 列表的尾元素反序列化后的值；当 key 不存在时，返回 null
-	 *
-	 * @see TypeReference
 	 */
-	<V> V rPopObject(final String key, final TypeReference<V> type);
+	<V> V rPop(final String key, final TypeReference<V> type);
 
 	/**
 	 * 移除并返回列表 key 的尾元素，并反序列化为 type 指定的对象对象
@@ -1838,10 +1380,8 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 列表的尾元素反序列化后的值；当 key 不存在时，返回 null
-	 *
-	 * @see TypeReference
 	 */
-	<V> V rPopObject(final byte[] key, final TypeReference<V> type);
+	<V> V rPop(final byte[] key, final TypeReference<V> type);
 
 	@Override
 	default String rPoplPush(final String key, final String destKey) {
@@ -1854,7 +1394,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	}
 
 	/**
-	 * 将列表 key 中的最后尾元素弹出，并反序列化为对象后返回；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
+	 * 将列表 key 中的最后尾元素弹出，并反序列化为 clazz 指定的对象后返回；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
 	 * 如果 key 不存在，值 null 被返回，并且不执行其他动作；
 	 * 如果 key 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
 	 *
@@ -1864,30 +1404,14 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		Key
 	 * @param destKey
 	 * 		目标 Key
+	 * @param clazz
+	 * 		值对象类
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return 被弹出的元素反序列化后的对象
 	 */
-	<V> V rPoplPushObject(final String key, final String destKey);
-
-	/**
-	 * 将列表 key 中的最后尾元素弹出，并反序列化为对象后返回；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
-	 * 如果 key 不存在，值 null 被返回，并且不执行其他动作；
-	 * 如果 key 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/rpoplpush.html" target="_blank">http://redisdoc.com/list/rpoplpush.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param destKey
-	 * 		目标 Key
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 被弹出的元素反序列化后的对象
-	 */
-	<V> V rPoplPushObject(final byte[] key, final byte[] destKey);
+	<V> V rPoplPush(final String key, final String destKey, final Class<V> clazz);
 
 	/**
 	 * 将列表 key 中的最后尾元素弹出，并反序列化为 clazz 指定的对象后返回；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
@@ -1907,27 +1431,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 被弹出的元素反序列化后的对象
 	 */
-	<V> V rPoplPushObject(final String key, final String destKey, final Class<V> clazz);
-
-	/**
-	 * 将列表 key 中的最后尾元素弹出，并反序列化为 clazz 指定的对象后返回；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
-	 * 如果 key 不存在，值 null 被返回，并且不执行其他动作；
-	 * 如果 key 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/rpoplpush.html" target="_blank">http://redisdoc.com/list/rpoplpush.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param destKey
-	 * 		目标 Key
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 被弹出的元素反序列化后的对象
-	 */
-	<V> V rPoplPushObject(final byte[] key, final byte[] destKey, final Class<V> clazz);
+	<V> V rPoplPush(final byte[] key, final byte[] destKey, final Class<V> clazz);
 
 	/**
 	 * 将列表 key 中的最后尾元素弹出，并反序列化为 type 指定的对象后返回；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
@@ -1946,10 +1450,8 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 被弹出的元素反序列化后的对象
-	 *
-	 * @see TypeReference
 	 */
-	<V> V rPoplPushObject(final String key, final String destKey, final TypeReference<V> type);
+	<V> V rPoplPush(final String key, final String destKey, final TypeReference<V> type);
 
 	/**
 	 * 将列表 key 中的最后尾元素弹出，并反序列化为 type 指定的对象后返回；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
@@ -1968,10 +1470,8 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 被弹出的元素反序列化后的对象
-	 *
-	 * @see TypeReference
 	 */
-	<V> V rPoplPushObject(final byte[] key, final byte[] destKey, final TypeReference<V> type);
+	<V> V rPoplPush(final byte[] key, final byte[] destKey, final TypeReference<V> type);
 
 	@Override
 	default Long rPush(final String key, final String... values) {
@@ -1982,38 +1482,6 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	default Long rPush(final byte[] key, final byte[]... values) {
 		return execute((client)->client.listCommands().rPush(key, values));
 	}
-
-	/**
-	 * 将值 value 序列化后，插入到列表 key 的表尾
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/rpush.html" target="_blank">http://redisdoc.com/list/rpush.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param value
-	 * 		值
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 执行 RPUSH 操作后，表的长度
-	 */
-	<V> Long rPush(final String key, final V value);
-
-	/**
-	 * 将值 value 序列化后，插入到列表 key 的表尾
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/rpush.html" target="_blank">http://redisdoc.com/list/rpush.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param value
-	 * 		值
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 执行 RPUSH 操作后，表的长度
-	 */
-	<V> Long rPush(final byte[] key, final V value);
 
 	/**
 	 * 将一个或多个值 value 序列化后，插入到列表 key 的表尾
@@ -2058,38 +1526,6 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	default Long rPushX(final byte[] key, final byte[]... values) {
 		return execute((client)->client.listCommands().rPushX(key, values));
 	}
-
-	/**
-	 * 将值 value 序列化后，插入到列表 key 的表尾，当且仅当 key 存在并且是一个列表
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/rpushx.html" target="_blank">http://redisdoc.com/list/rpushx.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param value
-	 * 		值
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 执行 RPUSHX 之后，表的长度
-	 */
-	<V> Long rPushX(final String key, final V value);
-
-	/**
-	 * 将值 value 序列化后，插入到列表 key 的表尾，当且仅当 key 存在并且是一个列表
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/rpushx.html" target="_blank">http://redisdoc.com/list/rpushx.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param value
-	 * 		值
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 执行 RPUSHX 之后，表的长度
-	 */
-	<V> Long rPushX(final byte[] key, final V value);
 
 	/**
 	 * 将一个或多个值 value 序列化后，插入到列表 key 的表尾，当且仅当 key 存在并且是一个列表

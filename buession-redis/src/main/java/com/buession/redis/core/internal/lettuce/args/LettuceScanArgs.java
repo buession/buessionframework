@@ -22,44 +22,45 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis;
+package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.redis.core.StreamEntryId;
-import redis.clients.jedis.StreamEntryID;
+import com.buession.redis.utils.SafeEncoder;
+import io.lettuce.core.ScanArgs;
 
 /**
- * Jedis {@link StreamEntryID} 扩展
+ * Lettuce {@link ScanArgs} 扩展
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class JedisStreamEntryID extends StreamEntryID {
+public final class LettuceScanArgs extends ScanArgs {
 
-	private final static long serialVersionUID = -6518565121689271401L;
-
-	public JedisStreamEntryID() {
+	public LettuceScanArgs() {
 		super();
 	}
 
-	public JedisStreamEntryID(final String id) {
-		super(id);
+	public LettuceScanArgs(final String pattern) {
+		super();
+		match(pattern);
 	}
 
-	public JedisStreamEntryID(final byte[] id) {
-		super(id);
+	public LettuceScanArgs(final byte[] pattern) {
+		this(SafeEncoder.encode(pattern));
 	}
 
-	public JedisStreamEntryID(final long time) {
-		super(time);
+	public LettuceScanArgs(final int count) {
+		super();
+		limit(count);
 	}
 
-	public JedisStreamEntryID(final long time, final long sequence) {
-		super(time, sequence);
+	public LettuceScanArgs(final String pattern, final int count) {
+		this(pattern);
+		limit(count);
 	}
 
-	public JedisStreamEntryID(final StreamEntryId streamEntryId) {
-		super(streamEntryId == null ? 0 : streamEntryId.getTime(),
-				streamEntryId == null ? 0L : streamEntryId.getSequence());
+	public LettuceScanArgs(final byte[] pattern, final int count) {
+		this(pattern);
+		limit(count);
 	}
 
 }

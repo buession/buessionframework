@@ -22,46 +22,45 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis;
+package com.buession.redis.core.internal.lettuce.args;
 
-import redis.clients.jedis.params.ScanParams;
+import com.buession.redis.core.NxXx;
+import io.lettuce.core.json.arguments.JsonSetArgs;
 
 /**
- * Jedis {@link ScanParams} 扩展
+ * Lettuce {@link JsonSetArgs} 扩展
  *
  * @author Yong.Teng
+ * @since 4.0.0
  */
-public final class JedisScanParams extends ScanParams {
+public final class LettuceJsonSetArgs extends JsonSetArgs {
 
-	public JedisScanParams() {
+	/**
+	 * 构造函数
+	 */
+	public LettuceJsonSetArgs() {
 		super();
 	}
 
-	public JedisScanParams(final String pattern) {
-		super();
-		match(pattern);
-	}
-
-	public JedisScanParams(final byte[] pattern) {
-		super();
-		match(pattern);
-	}
-
-	public JedisScanParams(final int count) {
-		super();
-		count(count);
-	}
-
-	public JedisScanParams(final String pattern, final int count) {
-		super();
-		match(pattern);
-		count(count);
-	}
-
-	public JedisScanParams(final byte[] pattern, final int count) {
-		super();
-		match(pattern);
-		count(count);
+	/**
+	 * 构造函数
+	 *
+	 * @param nxXx
+	 *        {@link NxXx}
+	 */
+	public LettuceJsonSetArgs(final NxXx nxXx) {
+		if(nxXx != null){
+			switch(nxXx){
+				case XX:
+					xx();
+					break;
+				case NX:
+					nx();
+					break;
+				default:
+					break;
+			}
+		}
 	}
 
 }

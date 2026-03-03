@@ -120,10 +120,15 @@ public class HotkeysStartArgument {
 
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create().append(Boolean.TRUE.equals(cpu) ? "CPU" : null)
-				.append(Boolean.TRUE.equals(net) ? "NET" : null).add("COUNT", count).add("DURATION", duration)
-				.add("SAMPLE", sample)
-				.add("SLOTS", Validate.isEmpty(slots) ? null : slots.size() + " " + Arrays.toString(slots)).build();
+		return ArgStringBuilder.create()
+				.append(Boolean.TRUE.equals(getCpu()) ? "CPU" : null)
+				.append(Boolean.TRUE.equals(getNet()) ? "NET" : null)
+				.add("COUNT", getCount())
+				.add("DURATION", getDuration())
+				.add("SAMPLE", getSample())
+				.add("SLOTS",
+						Validate.isEmpty(getSlots()) ? null : getSlots().size() + " " + Arrays.toString(getSlots()))
+				.build();
 	}
 
 }

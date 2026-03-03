@@ -19,60 +19,49 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis;
+package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.FutureResult;
-import com.buession.redis.core.internal.convert.Converters;
-import redis.clients.jedis.Response;
+import redis.clients.jedis.params.ScanParams;
 
 /**
- * Jedis 事务、管道异步结果
+ * Jedis {@link ScanParams} 扩展
  *
  * @author Yong.Teng
  */
-public class JedisResult<SV, TV> extends FutureResult<Response<SV>> {
+public final class JedisScanParams extends ScanParams {
 
-	public JedisResult(final Response<SV> resultHolder) {
-		super(resultHolder);
+	public JedisScanParams() {
+		super();
 	}
 
-	public JedisResult(final Response<SV> resultHolder, final Converter<SV, ?> converter) {
-		super(resultHolder, converter);
+	public JedisScanParams(final String pattern) {
+		super();
+		match(pattern);
 	}
 
-	@Override
-	public SV get() {
-		return getHolder().get();
+	public JedisScanParams(final byte[] pattern) {
+		super();
+		match(pattern);
 	}
 
-	public final static class Builder<SV, TV> {
+	public JedisScanParams(final int count) {
+		super();
+		count(count);
+	}
 
-		private final Response<SV> response;
+	public JedisScanParams(final String pattern, final int count) {
+		super();
+		match(pattern);
+		count(count);
+	}
 
-		private Converter<SV, TV> converter;
-
-		private Builder(final Response<SV> response, final Converter<SV, TV> converter) {
-			this.response = response;
-			this.converter = converter;
-		}
-
-		public static <SV, TV> Builder<SV, TV> fromResponse(Response<SV> response) {
-			return new Builder<>(response, Converters.always());
-		}
-
-		public Builder<SV, TV> mappedWith(Converter<SV, TV> converter) {
-			this.converter = converter;
-			return this;
-		}
-
-		public JedisResult<SV, TV> build() {
-			return new JedisResult<>(response, converter);
-		}
-
+	public JedisScanParams(final byte[] pattern, final int count) {
+		super();
+		match(pattern);
+		count(count);
 	}
 
 }

@@ -22,37 +22,51 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.lettuce;
+package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.redis.utils.SafeEncoder;
-import io.lettuce.core.json.JsonPath;
+import com.buession.redis.core.StreamEntryId;
+import io.lettuce.core.Consumer;
+import io.lettuce.core.XAutoClaimArgs;
 
 /**
- * Lettuce {@link JsonPath} 扩展
+ * Lettuce {@link XAutoClaimArgs} 扩展
+ *
+ * @param <V>
+ * 		值类型
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class LettuceJsonPath extends JsonPath {
+public class LettuceXAutoClaimArgs<V> extends XAutoClaimArgs<V> {
 
-	/**
-	 * 构造函数
-	 *
-	 * @param path
-	 * 		路径
-	 */
-	public LettuceJsonPath(final String path) {
-		super(path);
+	public LettuceXAutoClaimArgs() {
+		super();
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param path
-	 * 		路径
-	 */
-	public LettuceJsonPath(final byte[] path) {
-		super(SafeEncoder.encode(path));
+	public LettuceXAutoClaimArgs(final V groupName, final V consumerName, final int minIdleTime,
+								 final String startId) {
+		consumer(Consumer.from(groupName, consumerName));
+		minIdleTime(minIdleTime);
+		startId(startId);
+	}
+
+	public LettuceXAutoClaimArgs(final V groupName, final V consumerName, final int minIdleTime,
+								 final String startId, final int count) {
+		this(groupName, consumerName, minIdleTime, startId);
+		count(count);
+	}
+
+	public LettuceXAutoClaimArgs(final V groupName, final V consumerName, final int minIdleTime,
+								 final StreamEntryId startId) {
+		consumer(Consumer.from(groupName, consumerName));
+		minIdleTime(minIdleTime);
+		startId(startId.toString());
+	}
+
+	public LettuceXAutoClaimArgs(final V groupName, final V consumerName, final int minIdleTime,
+								 final StreamEntryId startId, final int count) {
+		this(groupName, consumerName, minIdleTime, startId);
+		count(count);
 	}
 
 }

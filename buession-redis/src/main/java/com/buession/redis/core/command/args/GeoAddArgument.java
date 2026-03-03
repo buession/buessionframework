@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.command.args;
 
+import com.buession.redis.core.NxXx;
 import com.buession.redis.utils.ArgStringBuilder;
 
 import java.util.Objects;
@@ -36,9 +37,7 @@ import java.util.Objects;
  */
 public class GeoAddArgument {
 
-	private Boolean nx;
-
-	private Boolean xx;
+	private NxXx nxXx;
 
 	private Boolean ch;
 
@@ -52,43 +51,64 @@ public class GeoAddArgument {
 	/**
 	 * 构造函数
 	 */
-	public GeoAddArgument(boolean nx, boolean xx, boolean ch) {
-		this.nx = nx;
-		this.xx = xx;
+	public GeoAddArgument(final NxXx nxXx) {
+		this.nxXx = nxXx;
+	}
+
+	/**
+	 * 构造函数
+	 */
+	public GeoAddArgument(final NxXx nxXx, final Boolean ch) {
+		this.nxXx = nxXx;
 		this.ch = ch;
 	}
 
-	public Boolean isNx() {
-		return nx;
+	/**
+	 * 构造函数
+	 */
+	public GeoAddArgument(final Boolean ch) {
+		this.ch = ch;
 	}
 
-	public GeoAddArgument setNx() {
-		this.nx = true;
+	public NxXx getNxXx() {
+		return nxXx;
+	}
+
+	public GeoAddArgument setNxXx(NxXx nxXx) {
+		this.nxXx = nxXx;
 		return this;
 	}
 
-	public Boolean isXx() {
-		return xx;
+	public GeoAddArgument nx() {
+		return setNxXx(NxXx.NX);
 	}
 
-	public GeoAddArgument setXx() {
-		this.xx = true;
-		return this;
+	public GeoAddArgument xx() {
+		return setNxXx(NxXx.XX);
 	}
 
 	public Boolean isCh() {
+		return getCh();
+	}
+
+	public Boolean getCh() {
 		return ch;
 	}
 
-	public GeoAddArgument setCh() {
-		this.ch = true;
+	public GeoAddArgument ch() {
+		return setCh(true);
+	}
+
+	public GeoAddArgument setCh(Boolean ch) {
+		this.ch = ch;
 		return this;
 	}
 
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create().append(Objects.equals(nx, true) ? "NX" : null)
-				.append(Objects.equals(xx, true) ? "XX" : null).append(Objects.equals(ch, true) ? "CH" : null)
+		return ArgStringBuilder.create()
+				.append(getNxXx())
+				.append(Boolean.TRUE.equals(getCh()) ? "CH" : null)
 				.build();
 	}
 

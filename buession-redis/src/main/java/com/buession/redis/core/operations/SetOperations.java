@@ -107,32 +107,20 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	}
 
 	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为对象
+	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列化为 clazz 指定的对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiff.html" target="_blank">http://redisdoc.com/set/sdiff.html</a></p>
 	 *
 	 * @param keys
 	 * 		一个或多个 Key
+	 * @param clazz
+	 * 		值对象类
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return 一个包含差集成员反序列化为对象的列表
 	 */
-	<V> Set<V> sDiffObject(final String[] keys);
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiff.html" target="_blank">http://redisdoc.com/set/sdiff.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 一个包含差集成员反序列化为对象的列表
-	 */
-	<V> Set<V> sDiffObject(final byte[][] keys);
+	<V> Set<V> sDiff(final String[] keys, final Class<V> clazz);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列化为 clazz 指定的对象
@@ -148,23 +136,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 一个包含差集成员反序列化为对象的列表
 	 */
-	<V> Set<V> sDiffObject(final String[] keys, final Class<V> clazz);
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列化为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiff.html" target="_blank">http://redisdoc.com/set/sdiff.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 一个包含差集成员反序列化为对象的列表
-	 */
-	<V> Set<V> sDiffObject(final byte[][] keys, final Class<V> clazz);
+	<V> Set<V> sDiff(final byte[][] keys, final Class<V> clazz);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列化为 type 指定的对象
@@ -180,7 +152,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 一个包含差集成员反序列化为对象的列表
 	 */
-	<V> Set<V> sDiffObject(final String[] keys, final TypeReference<V> type);
+	<V> Set<V> sDiff(final String[] keys, final TypeReference<V> type);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列化为 type 指定的对象
@@ -196,7 +168,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 一个包含差集成员反序列化为对象的列表
 	 */
-	<V> Set<V> sDiffObject(final byte[][] keys, final TypeReference<V> type);
+	<V> Set<V> sDiff(final byte[][] keys, final TypeReference<V> type);
 
 	@Override
 	default Long sDiffStore(final String destKey, final String... keys) {
@@ -219,32 +191,20 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	}
 
 	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并反序列为对象
+	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并反序列化为 clazz 指定的对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/sinter.html" target="_blank">http://redisdoc.com/set/sinter.html</a></p>
 	 *
 	 * @param keys
 	 * 		一个或多个 Key
+	 * @param clazz
+	 * 		值对象类
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return 交集成员反序列化为对象的列表
 	 */
-	<V> Set<V> sInterObject(final String[] keys);
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并反序列为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sinter.html" target="_blank">http://redisdoc.com/set/sinter.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 交集成员反序列化为对象的列表
-	 */
-	<V> Set<V> sInterObject(final byte[][] keys);
+	<V> Set<V> sInter(final String[] keys, final Class<V> clazz);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并反序列化为 clazz 指定的对象
@@ -260,23 +220,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 交集成员反序列化为对象的列表
 	 */
-	<V> Set<V> sInterObject(final String[] keys, final Class<V> clazz);
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并反序列化为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sinter.html" target="_blank">http://redisdoc.com/set/sinter.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 交集成员反序列化为对象的列表
-	 */
-	<V> Set<V> sInterObject(final byte[][] keys, final Class<V> clazz);
+	<V> Set<V> sInter(final byte[][] keys, final Class<V> clazz);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并反序列化为 type 指定的对象
@@ -292,7 +236,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 交集成员反序列化为对象的列表
 	 */
-	<V> Set<V> sInterObject(final String[] keys, final TypeReference<V> type);
+	<V> Set<V> sInter(final String[] keys, final TypeReference<V> type);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并反序列化为 type 指定的对象
@@ -308,7 +252,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 交集成员反序列化为对象的列表
 	 */
-	<V> Set<V> sInterObject(final byte[][] keys, final TypeReference<V> type);
+	<V> Set<V> sInter(final byte[][] keys, final TypeReference<V> type);
 
 	@Override
 	default Long sInterCard(final String... keys) {
@@ -361,32 +305,20 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	}
 
 	/**
-	 * 获取集合 key 中的所有成员反序列化后的对象
+	 * 获取集合 key 中的所有成员反序列化 clazz 指定的对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/smembers.html" target="_blank">http://redisdoc.com/set/smembers.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
+	 * @param clazz
+	 * 		元素值对象类
 	 * @param <V>
 	 * 		元素值类型
 	 *
 	 * @return 集合中的所有成员
 	 */
-	<V> Set<V> sMembersObject(final String key);
-
-	/**
-	 * 获取集合 key 中的所有成员反序列化后的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/smembers.html" target="_blank">http://redisdoc.com/set/smembers.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 集合中的所有成员
-	 */
-	<V> Set<V> sMembersObject(final byte[] key);
+	<V> Set<V> sMembers(final String key, final Class<V> clazz);
 
 	/**
 	 * 获取集合 key 中的所有成员反序列化 clazz 指定的对象
@@ -402,23 +334,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 集合中的所有成员
 	 */
-	<V> Set<V> sMembersObject(final String key, final Class<V> clazz);
-
-	/**
-	 * 获取集合 key 中的所有成员反序列化 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/smembers.html" target="_blank">http://redisdoc.com/set/smembers.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param clazz
-	 * 		元素值对象类
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 集合中的所有成员
-	 */
-	<V> Set<V> sMembersObject(final byte[] key, final Class<V> clazz);
+	<V> Set<V> sMembers(final byte[] key, final Class<V> clazz);
 
 	/**
 	 * 获取集合 key 中的所有成员反序列化 type 指定的对象
@@ -434,7 +350,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 集合中的所有成员
 	 */
-	<V> Set<V> sMembersObject(final String key, final TypeReference<V> type);
+	<V> Set<V> sMembers(final String key, final TypeReference<V> type);
 
 	/**
 	 * 获取集合 key 中的所有成员反序列化 type 指定的对象
@@ -450,7 +366,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 集合中的所有成员
 	 */
-	<V> Set<V> sMembersObject(final byte[] key, final TypeReference<V> type);
+	<V> Set<V> sMembers(final byte[] key, final TypeReference<V> type);
 
 	@Override
 	default List<Boolean> smIsMember(final String key, final String... members) {
@@ -483,42 +399,30 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	}
 
 	@Override
-	default Set<String> sPop(final String key, final long count) {
+	default Set<String> sPop(final String key, final int count) {
 		return execute((client)->client.setCommands().sPop(key, count));
 	}
 
 	@Override
-	default Set<byte[]> sPop(final byte[] key, final long count) {
+	default Set<byte[]> sPop(final byte[] key, final int count) {
 		return execute((client)->client.setCommands().sPop(key, count));
 	}
 
 	/**
-	 * 移除并返回集合 key 中的一个随机元素反序列化后的对象
+	 * 移除并返回集合 key 中的一个随机元素反序列化 clazz 指定的对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/spop.html" target="_blank">http://redisdoc.com/set/spop.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
+	 * @param clazz
+	 * 		元素值对象类
 	 * @param <V>
 	 * 		元素值类型
 	 *
 	 * @return 被移除的随机元素反序列化后的对象
 	 */
-	<V> V sPopObject(final String key);
-
-	/**
-	 * 移除并返回集合 key 中的一个随机元素反序列化后的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/spop.html" target="_blank">http://redisdoc.com/set/spop.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 被移除的随机元素反序列化后的对象
-	 */
-	<V> V sPopObject(final byte[] key);
+	<V> V sPop(final String key, final Class<V> clazz);
 
 	/**
 	 * 移除并返回集合 key 中的一个随机元素反序列化 clazz 指定的对象
@@ -534,23 +438,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 被移除的随机元素反序列化后的对象
 	 */
-	<V> V sPopObject(final String key, final Class<V> clazz);
-
-	/**
-	 * 移除并返回集合 key 中的一个随机元素反序列化 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/spop.html" target="_blank">http://redisdoc.com/set/spop.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param clazz
-	 * 		元素值对象类
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 被移除的随机元素反序列化后的对象
-	 */
-	<V> V sPopObject(final byte[] key, final Class<V> clazz);
+	<V> V sPop(final byte[] key, final Class<V> clazz);
 
 	/**
 	 * 移除并返回集合 key 中的一个随机元素反序列化 type 指定的对象
@@ -566,7 +454,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 被移除的随机元素反序列化后的对象
 	 */
-	<V> V sPopObject(final String key, final TypeReference<V> type);
+	<V> V sPop(final String key, final TypeReference<V> type);
 
 	/**
 	 * 移除并返回集合 key 中的一个随机元素反序列化 type 指定的对象
@@ -582,39 +470,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 被移除的随机元素反序列化后的对象
 	 */
-	<V> V sPopObject(final byte[] key, final TypeReference<V> type);
-
-	/**
-	 * 移除并返回集合 key 中的 count 个随机元素反序列化后的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/spop.html" target="_blank">http://redisdoc.com/set/spop.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param count
-	 * 		返回删除元素个数
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 被移除的随机元素反序列化后的对象
-	 */
-	<V> Set<V> sPopObject(final String key, final long count);
-
-	/**
-	 * 移除并返回集合 key 中的 count 个随机元素反序列化后的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/spop.html" target="_blank">http://redisdoc.com/set/spop.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param count
-	 * 		返回删除元素个数
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 被移除的随机元素反序列化后的对象
-	 */
-	<V> Set<V> sPopObject(final byte[] key, final long count);
+	<V> V sPop(final byte[] key, final TypeReference<V> type);
 
 	/**
 	 * 移除并返回集合 key 中的 count 个随机元素反序列化 clazz 指定的对象
@@ -632,7 +488,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 被移除的随机元素反序列化后的对象
 	 */
-	<V> Set<V> sPopObject(final String key, final long count, final Class<V> clazz);
+	<V> Set<V> sPop(final String key, final int count, final Class<V> clazz);
 
 	/**
 	 * 移除并返回集合 key 中的 count 个随机元素反序列化 clazz 指定的对象
@@ -650,7 +506,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 被移除的随机元素反序列化后的对象
 	 */
-	<V> Set<V> sPopObject(final byte[] key, final long count, final Class<V> clazz);
+	<V> Set<V> sPop(final byte[] key, final int count, final Class<V> clazz);
 
 	/**
 	 * 移除并返回集合 key 中的 count 个随机元素反序列化 type 指定的对象
@@ -668,7 +524,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 被移除的随机元素反序列化后的对象
 	 */
-	<V> Set<V> sPopObject(final String key, final long count, final TypeReference<V> type);
+	<V> Set<V> sPop(final String key, final int count, final TypeReference<V> type);
 
 	/**
 	 * 移除并返回集合 key 中的 count 个随机元素反序列化 type 指定的对象
@@ -686,7 +542,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 被移除的随机元素反序列化后的对象
 	 */
-	<V> Set<V> sPopObject(final byte[] key, final long count, final TypeReference<V> type);
+	<V> Set<V> sPop(final byte[] key, final int count, final TypeReference<V> type);
 
 	@Override
 	default String sRandMember(final String key) {
@@ -699,42 +555,30 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	}
 
 	@Override
-	default List<String> sRandMember(final String key, final long count) {
+	default List<String> sRandMember(final String key, final int count) {
 		return execute((client)->client.setCommands().sRandMember(key, count));
 	}
 
 	@Override
-	default List<byte[]> sRandMember(final byte[] key, final long count) {
+	default List<byte[]> sRandMember(final byte[] key, final int count) {
 		return execute((client)->client.setCommands().sRandMember(key, count));
 	}
 
 	/**
-	 * 返回集合 key 中的一个随机元素，并反序列化为对象
+	 * 返回集合 key 中的一个随机元素，并反序列化为 clazz 指定的对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/srandmember.html" target="_blank">http://redisdoc.com/set/srandmember.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
+	 * @param clazz
+	 * 		元素值对象类
 	 * @param <V>
 	 * 		元素值类型
 	 *
 	 * @return 集合 key 中的一个随机元素，反序列化后的对象
 	 */
-	<V> V sRandMemberObject(final String key);
-
-	/**
-	 * 返回集合 key 中的一个随机元素，并反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/srandmember.html" target="_blank">http://redisdoc.com/set/srandmember.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 集合 key 中的一个随机元素，反序列化后的对象
-	 */
-	<V> V sRandMemberObject(final byte[] key);
+	<V> V sRandMember(final String key, final Class<V> clazz);
 
 	/**
 	 * 返回集合 key 中的一个随机元素，并反序列化为 clazz 指定的对象
@@ -750,23 +594,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 集合 key 中的一个随机元素，反序列化后的对象
 	 */
-	<V> V sRandMemberObject(final String key, final Class<V> clazz);
-
-	/**
-	 * 返回集合 key 中的一个随机元素，并反序列化为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/srandmember.html" target="_blank">http://redisdoc.com/set/srandmember.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param clazz
-	 * 		元素值对象类
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 集合 key 中的一个随机元素，反序列化后的对象
-	 */
-	<V> V sRandMemberObject(final byte[] key, final Class<V> clazz);
+	<V> V sRandMember(final byte[] key, final Class<V> clazz);
 
 	/**
 	 * 返回集合 key 中的一个随机元素，并反序列化为 type 指定的对象
@@ -782,7 +610,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 集合 key 中的一个随机元素，反序列化后的对象
 	 */
-	<V> V sRandMemberObject(final String key, final TypeReference<V> type);
+	<V> V sRandMember(final String key, final TypeReference<V> type);
 
 	/**
 	 * 返回集合 key 中的一个随机元素，并反序列化为 type 指定的对象
@@ -798,39 +626,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 集合 key 中的一个随机元素，反序列化后的对象
 	 */
-	<V> V sRandMemberObject(final byte[] key, final TypeReference<V> type);
-
-	/**
-	 * 返回集合 key 中的 count 个随机元素，并反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/srandmember.html" target="_blank">http://redisdoc.com/set/srandmember.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param count
-	 * 		需要返回的元素数量
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 集合 key 中的随机元素，反序列化后的对象列表
-	 */
-	<V> List<V> sRandMemberObject(final String key, final long count);
-
-	/**
-	 * 返回集合 key 中的 count 个随机元素，并反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/srandmember.html" target="_blank">http://redisdoc.com/set/srandmember.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param count
-	 * 		需要返回的元素数量
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 集合 key 中的随机元素，反序列化后的对象列表
-	 */
-	<V> List<V> sRandMemberObject(final byte[] key, final long count);
+	<V> V sRandMember(final byte[] key, final TypeReference<V> type);
 
 	/**
 	 * 返回集合 key 中的 count 个随机元素，并反序列化为 clazz 指定的对象
@@ -848,7 +644,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 集合 key 中的随机元素，反序列化后的对象列表
 	 */
-	<V> List<V> sRandMemberObject(final String key, final long count, final Class<V> clazz);
+	<V> List<V> sRandMember(final String key, final int count, final Class<V> clazz);
 
 	/**
 	 * 返回集合 key 中的 count 个随机元素，并反序列化为 clazz 指定的对象
@@ -866,7 +662,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 集合 key 中的随机元素，反序列化后的对象列表
 	 */
-	<V> List<V> sRandMemberObject(final byte[] key, final long count, final Class<V> clazz);
+	<V> List<V> sRandMember(final byte[] key, final int count, final Class<V> clazz);
 
 	/**
 	 * 返回集合 key 中的 count 个随机元素，并反序列化为 type 指定的对象
@@ -884,7 +680,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 集合 key 中的随机元素，序列化后的对象列表
 	 */
-	<V> List<V> sRandMemberObject(final String key, final long count, final TypeReference<V> type);
+	<V> List<V> sRandMember(final String key, final int count, final TypeReference<V> type);
 
 	/**
 	 * 返回集合 key 中的 count 个随机元素，并反序列化为 type 指定的对象
@@ -902,7 +698,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 集合 key 中的随机元素，序列化后的对象列表
 	 */
-	<V> List<V> sRandMemberObject(final byte[] key, final long count, final TypeReference<V> type);
+	<V> List<V> sRandMember(final byte[] key, final int count, final TypeReference<V> type);
 
 	@Override
 	default Long sRem(final String key, final String... members) {
@@ -948,6 +744,16 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	@SuppressWarnings({"unchecked"})
 	<V> Long sRem(final byte[] key, final V... members);
 
+	@Override
+	default ScanResult<String> sScan(final String key, final String cursor) {
+		return execute((client)->client.setCommands().sScan(key, cursor));
+	}
+
+	@Override
+	default ScanResult<byte[]> sScan(final byte[] key, final byte[] cursor) {
+		return execute((client)->client.setCommands().sScan(key, cursor));
+	}
+
 	/**
 	 * 迭代集合键中的元素
 	 *
@@ -960,7 +766,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 每个元素都是一个集合成员
 	 */
-	default ScanResult<List<String>> sScan(final String key, final long cursor) {
+	default ScanResult<String> sScan(final String key, final long cursor) {
 		return sScan(key, Long.toString(cursor));
 	}
 
@@ -976,18 +782,18 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 每个元素都是一个集合成员
 	 */
-	default ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor) {
+	default ScanResult<byte[]> sScan(final byte[] key, final long cursor) {
 		return sScan(key, NumberUtils.long2bytes(cursor));
 	}
 
 	@Override
-	default ScanResult<List<String>> sScan(final String key, final String cursor) {
-		return execute((client)->client.setCommands().sScan(key, cursor));
+	default ScanResult<String> sScan(final String key, final String cursor, final String pattern) {
+		return execute((client)->client.setCommands().sScan(key, cursor, pattern));
 	}
 
 	@Override
-	default ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor) {
-		return execute((client)->client.setCommands().sScan(key, cursor));
+	default ScanResult<byte[]> sScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
+		return execute((client)->client.setCommands().sScan(key, cursor, pattern));
 	}
 
 	/**
@@ -1004,7 +810,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回和给定模式相匹配的元素
 	 */
-	default ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern) {
+	default ScanResult<String> sScan(final String key, final long cursor, final String pattern) {
 		return sScan(key, Long.toString(cursor), pattern);
 	}
 
@@ -1022,18 +828,18 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回和给定模式相匹配的元素
 	 */
-	default ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern) {
+	default ScanResult<byte[]> sScan(final byte[] key, final long cursor, final byte[] pattern) {
 		return sScan(key, NumberUtils.long2bytes(cursor), pattern);
 	}
 
 	@Override
-	default ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern) {
-		return execute((client)->client.setCommands().sScan(key, cursor, pattern));
+	default ScanResult<String> sScan(final String key, final String cursor, final int count) {
+		return execute((client)->client.setCommands().sScan(key, cursor, count));
 	}
 
 	@Override
-	default ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
-		return execute((client)->client.setCommands().sScan(key, cursor, pattern));
+	default ScanResult<byte[]> sScan(final byte[] key, final byte[] cursor, final int count) {
+		return execute((client)->client.setCommands().sScan(key, cursor, count));
 	}
 
 	/**
@@ -1050,7 +856,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的指定数量的键值对
 	 */
-	default ScanResult<List<String>> sScan(final String key, final long cursor, final long count) {
+	default ScanResult<String> sScan(final String key, final long cursor, final int count) {
 		return sScan(key, Long.toString(cursor), count);
 	}
 
@@ -1068,18 +874,18 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的指定数量的键值对
 	 */
-	default ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final long count) {
+	default ScanResult<byte[]> sScan(final byte[] key, final long cursor, final int count) {
 		return sScan(key, NumberUtils.long2bytes(cursor), count);
 	}
 
 	@Override
-	default ScanResult<List<String>> sScan(final String key, final String cursor, final long count) {
-		return execute((client)->client.setCommands().sScan(key, cursor, count));
+	default ScanResult<String> sScan(final String key, final String cursor, final String pattern, final int count) {
+		return execute((client)->client.setCommands().sScan(key, cursor, pattern, count));
 	}
 
 	@Override
-	default ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final long count) {
-		return execute((client)->client.setCommands().sScan(key, cursor, count));
+	default ScanResult<byte[]> sScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count) {
+		return execute((client)->client.setCommands().sScan(key, cursor, pattern, count));
 	}
 
 	/**
@@ -1098,8 +904,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
-	default ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern,
-										   final long count) {
+	default ScanResult<String> sScan(final String key, final long cursor, final String pattern, final int count) {
 		return sScan(key, Long.toString(cursor), pattern, count);
 	}
 
@@ -1119,25 +924,12 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
-	default ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern,
-										   final long count) {
+	default ScanResult<byte[]> sScan(final byte[] key, final long cursor, final byte[] pattern, final int count) {
 		return sScan(key, NumberUtils.long2bytes(cursor), pattern, count);
 	}
 
-	@Override
-	default ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern,
-										   final long count) {
-		return execute((client)->client.setCommands().sScan(key, cursor, pattern, count));
-	}
-
-	@Override
-	default ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-										   final long count) {
-		return execute((client)->client.setCommands().sScan(key, cursor, pattern, count));
-	}
-
 	/**
-	 * 迭代集合键中的元素，并将值反序列化为对象
+	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
 	 *
@@ -1145,17 +937,17 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * 		Key
 	 * @param cursor
 	 * 		游标
+	 * @param clazz
+	 * 		值对象类
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<List<V>> sScanObject(final String key, final long cursor) {
-		return sScanObject(key, Long.toString(cursor));
-	}
+	<V> ScanResult<V> sScan(final String key, final String cursor, final Class<V> clazz);
 
 	/**
-	 * 迭代集合键中的元素，并将值反序列化为对象
+	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
 	 *
@@ -1163,13 +955,69 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * 		Key
 	 * @param cursor
 	 * 		游标
+	 * @param clazz
+	 * 		值对象类
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor) {
-		return sScanObject(key, NumberUtils.long2bytes(cursor));
+	<V> ScanResult<V> sScan(final byte[] key, final byte[] cursor, final Class<V> clazz);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<V> sScan(final String key, final String cursor, final TypeReference<V> type);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<V> sScan(final byte[] key, final byte[] cursor, final TypeReference<V> type);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	default <V> ScanResult<V> sScan(final String key, final long cursor, final Class<V> clazz) {
+		return sScan(key, Long.toString(cursor), clazz);
 	}
 
 	/**
@@ -1188,28 +1036,8 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final Class<V> clazz) {
-		return sScanObject(key, Long.toString(cursor), clazz);
-	}
-
-	/**
-	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	default <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final Class<V> clazz) {
-		return sScanObject(key, NumberUtils.long2bytes(cursor), clazz);
+	default <V> ScanResult<V> sScan(final byte[] key, final long cursor, final Class<V> clazz) {
+		return sScan(key, NumberUtils.long2bytes(cursor), clazz);
 	}
 
 	/**
@@ -1228,8 +1056,8 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final TypeReference<V> type) {
-		return sScanObject(key, Long.toString(cursor), type);
+	default <V> ScanResult<V> sScan(final String key, final long cursor, final TypeReference<V> type) {
+		return sScan(key, Long.toString(cursor), type);
 	}
 
 	/**
@@ -1248,152 +1076,8 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final TypeReference<V> type) {
-		return sScanObject(key, NumberUtils.long2bytes(cursor), type);
-	}
-
-	/**
-	 * 迭代集合键中的元素，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor);
-
-	/**
-	 * 迭代集合键中的元素，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor);
-
-	/**
-	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final Class<V> clazz);
-
-	/**
-	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final Class<V> clazz);
-
-	/**
-	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param type
-	 * 		值类型引用
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final TypeReference<V> type);
-
-	/**
-	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param type
-	 * 		值类型引用
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final TypeReference<V> type);
-
-	/**
-	 * 迭代集合键中的元素，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	default <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern) {
-		return sScanObject(key, Long.toString(cursor), pattern);
-	}
-
-	/**
-	 * 迭代集合键中的元素，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	default <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern) {
-		return sScanObject(key, NumberUtils.long2bytes(cursor), pattern);
+	default <V> ScanResult<V> sScan(final byte[] key, final long cursor, final TypeReference<V> type) {
+		return sScan(key, NumberUtils.long2bytes(cursor), type);
 	}
 
 	/**
@@ -1414,9 +1098,88 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern,
-												final Class<V> clazz) {
-		return sScanObject(key, Long.toString(cursor), pattern, clazz);
+	<V> ScanResult<V> sScan(final String key, final String cursor, final String pattern, final Class<V> clazz);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<V> sScan(final byte[] key, final byte[] cursor, final byte[] pattern, final Class<V> clazz);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<V> sScan(final String key, final String cursor, final String pattern, final TypeReference<V> type);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<V> sScan(final byte[] key, final byte[] cursor, final byte[] pattern, final TypeReference<V> type);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	default <V> ScanResult<V> sScan(final String key, final long cursor, final String pattern, final Class<V> clazz) {
+		return sScan(key, Long.toString(cursor), pattern, clazz);
 	}
 
 	/**
@@ -1437,9 +1200,8 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern,
-												final Class<V> clazz) {
-		return sScanObject(key, NumberUtils.long2bytes(cursor), pattern, clazz);
+	default <V> ScanResult<V> sScan(final byte[] key, final long cursor, final byte[] pattern, final Class<V> clazz) {
+		return sScan(key, NumberUtils.long2bytes(cursor), pattern, clazz);
 	}
 
 	/**
@@ -1460,9 +1222,9 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern,
-												final TypeReference<V> type) {
-		return sScanObject(key, Long.toString(cursor), pattern, type);
+	default <V> ScanResult<V> sScan(final String key, final long cursor, final String pattern,
+									final TypeReference<V> type) {
+		return sScan(key, Long.toString(cursor), pattern, type);
 	}
 
 	/**
@@ -1483,169 +1245,9 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern,
-												final TypeReference<V> type) {
-		return sScanObject(key, NumberUtils.long2bytes(cursor), pattern, type);
-	}
-
-	/**
-	 * 迭代集合键中的元素，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final String pattern);
-
-	/**
-	 * 迭代集合键中的元素，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final byte[] pattern);
-
-	/**
-	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final String pattern,
-										final Class<V> clazz);
-
-	/**
-	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
-										final Class<V> clazz);
-
-	/**
-	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param type
-	 * 		值类型引用
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final String pattern,
-										final TypeReference<V> type);
-
-	/**
-	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param type
-	 * 		值类型引用
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
-										final TypeReference<V> type);
-
-	/**
-	 * 迭代集合键中的元素，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	default <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final long count) {
-		return sScanObject(key, Long.toString(cursor), count);
-	}
-
-	/**
-	 * 迭代集合键中的元素，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	default <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final long count) {
-		return sScanObject(key, NumberUtils.long2bytes(cursor), count);
+	default <V> ScanResult<List<V>> sScan(final byte[] key, final long cursor, final byte[] pattern,
+										  final TypeReference<V> type) {
+		return sScan(key, NumberUtils.long2bytes(cursor), pattern, type);
 	}
 
 	/**
@@ -1666,9 +1268,88 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final long count,
-												final Class<V> clazz) {
-		return sScanObject(key, Long.toString(cursor), count, clazz);
+	<V> ScanResult<V> sScan(final String key, final String cursor, final int count, final Class<V> clazz);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<V> sScan(final byte[] key, final byte[] cursor, final int count, final Class<V> clazz);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<V> sScan(final String key, final String cursor, final int count, final TypeReference<V> type);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<V> sScan(final byte[] key, final byte[] cursor, final int count, final TypeReference<V> type);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	default <V> ScanResult<V> sScan(final String key, final long cursor, final int count, final Class<V> clazz) {
+		return sScan(key, Long.toString(cursor), count, clazz);
 	}
 
 	/**
@@ -1689,34 +1370,8 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final long count,
-												final Class<V> clazz) {
-		return sScanObject(key, NumberUtils.long2bytes(cursor), count, clazz);
-	}
-
-	/**
-	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 * @param type
-	 * 		值类型引用
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 *
-	 * @see TypeReference
-	 */
-	default <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final long count,
-												final TypeReference<V> type) {
-		return sScanObject(key, Long.toString(cursor), count, type);
+	default <V> ScanResult<V> sScan(final byte[] key, final long cursor, final int count, final Class<V> clazz) {
+		return sScan(key, NumberUtils.long2bytes(cursor), count, clazz);
 	}
 
 	/**
@@ -1737,86 +1392,9 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final long count,
-												final TypeReference<V> type) {
-		return sScanObject(key, NumberUtils.long2bytes(cursor), count, type);
+	default <V> ScanResult<V> sScan(final String key, final long cursor, final int count, final TypeReference<V> type) {
+		return sScan(key, Long.toString(cursor), count, type);
 	}
-
-	/**
-	 * 迭代集合键中的元素，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final long count);
-
-	/**
-	 * 迭代集合键中的元素，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final long count);
-
-	/**
-	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final long count, final Class<V> clazz);
-
-	/**
-	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final long count, final Class<V> clazz);
 
 	/**
 	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
@@ -1836,74 +1414,8 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final long count,
-										final TypeReference<V> type);
-
-	/**
-	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 * @param type
-	 * 		值类型引用
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final long count,
-										final TypeReference<V> type);
-
-	/**
-	 * 迭代集合键中的元素，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param count
-	 * 		返回元素数量
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	default <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern,
-												final long count) {
-		return sScanObject(key, Long.toString(cursor), pattern, count);
-	}
-
-	/**
-	 * 迭代集合键中的元素，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param count
-	 * 		返回元素数量
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	default <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern,
-												final long count) {
-		return sScanObject(key, NumberUtils.long2bytes(cursor), pattern, count);
+	default <V> ScanResult<V> sScan(final byte[] key, final long cursor, final int count, final TypeReference<V> type) {
+		return sScan(key, NumberUtils.long2bytes(cursor), count, type);
 	}
 
 	/**
@@ -1926,9 +1438,101 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern,
-												final long count, final Class<V> clazz) {
-		return sScanObject(key, Long.toString(cursor), pattern, count, clazz);
+	<V> ScanResult<V> sScan(final String key, final String cursor, final String pattern, final int count,
+							final Class<V> clazz);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param count
+	 * 		返回元素数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<V> sScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count,
+							final Class<V> clazz);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<V> sScan(final String key, final String cursor, final String pattern, final int count,
+							final TypeReference<V> type);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param count
+	 * 		返回元素数量
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<V> sScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count,
+							final TypeReference<V> type);
+
+	/**
+	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param count
+	 * 		返回元素数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	default <V> ScanResult<V> sScan(final String key, final long cursor, final String pattern, final int count,
+									final Class<V> clazz) {
+		return sScan(key, Long.toString(cursor), pattern, count, clazz);
 	}
 
 	/**
@@ -1951,9 +1555,9 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern,
-												final long count, final Class<V> clazz) {
-		return sScanObject(key, NumberUtils.long2bytes(cursor), pattern, count, clazz);
+	default <V> ScanResult<V> sScan(final byte[] key, final long cursor, final byte[] pattern, final int count,
+									final Class<V> clazz) {
+		return sScan(key, NumberUtils.long2bytes(cursor), pattern, count, clazz);
 	}
 
 	/**
@@ -1976,9 +1580,9 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<List<V>> sScanObject(final String key, final long cursor, final String pattern,
-												final long count, final TypeReference<V> type) {
-		return sScanObject(key, Long.toString(cursor), pattern, count, type);
+	default <V> ScanResult<V> sScan(final String key, final long cursor, final String pattern, final int count,
+									final TypeReference<V> type) {
+		return sScan(key, Long.toString(cursor), pattern, count, type);
 	}
 
 	/**
@@ -2000,145 +1604,11 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * 		值类型
 	 *
 	 * @return 返回的每个元素都是一个键值对
-	 *
-	 * @see TypeReference
 	 */
-	default <V> ScanResult<List<V>> sScanObject(final byte[] key, final long cursor, final byte[] pattern,
-												final long count, final TypeReference<V> type) {
-		return sScanObject(key, NumberUtils.long2bytes(cursor), pattern, count, type);
+	default <V> ScanResult<V> sScan(final byte[] key, final long cursor, final byte[] pattern, final int count,
+									final TypeReference<V> type) {
+		return sScan(key, NumberUtils.long2bytes(cursor), pattern, count, type);
 	}
-
-	/**
-	 * 迭代集合键中的元素，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param count
-	 * 		返回元素数量
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final String pattern, final long count);
-
-	/**
-	 * 迭代集合键中的元素，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param count
-	 * 		返回元素数量
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final byte[] pattern, final long count);
-
-	/**
-	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param count
-	 * 		返回元素数量
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final String pattern, final long count,
-										final Class<V> clazz);
-
-	/**
-	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param count
-	 * 		返回元素数量
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final byte[] pattern, final long count,
-										final Class<V> clazz);
-
-	/**
-	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param type
-	 * 		值类型引用
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<List<V>> sScanObject(final String key, final String cursor, final String pattern, final long count,
-										final TypeReference<V> type);
-
-	/**
-	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param count
-	 * 		返回元素数量
-	 * @param type
-	 * 		值类型引用
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<List<V>> sScanObject(final byte[] key, final byte[] cursor, final byte[] pattern, final long count,
-										final TypeReference<V> type);
 
 	@Override
 	default Set<String> sUnion(final String... keys) {
@@ -2151,32 +1621,20 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	}
 
 	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合的并集，并反序列为对象
+	 * 获取一个集合的全部成员，该集合是所有给定集合的并集，并反序列化为 clazz 指定的对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/sunion.html" target="_blank">http://redisdoc.com/set/sunion.html</a></p>
 	 *
 	 * @param keys
 	 * 		一个或多个 Key
+	 * @param clazz
+	 * 		值对象类
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return 并集成员反序列化为对象的列表
 	 */
-	<V> Set<V> sUnionObject(final String[] keys);
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合的并集，并反序列为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sunion.html" target="_blank">http://redisdoc.com/set/sunion.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 并集成员反序列化为对象的列表
-	 */
-	<V> Set<V> sUnionObject(final byte[][] keys);
+	<V> Set<V> sUnion(final String[] keys, final Class<V> clazz);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的并集，并反序列化为 clazz 指定的对象
@@ -2192,23 +1650,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 并集成员反序列化为对象的列表
 	 */
-	<V> Set<V> sUnionObject(final String[] keys, final Class<V> clazz);
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合的并集，并反序列化为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sunion.html" target="_blank">http://redisdoc.com/set/sunion.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 并集成员反序列化为对象的列表
-	 */
-	<V> Set<V> sUnionObject(final byte[][] keys, final Class<V> clazz);
+	<V> Set<V> sUnion(final byte[][] keys, final Class<V> clazz);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的并集，并反序列化为 type 指定的对象
@@ -2224,7 +1666,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 并集成员反序列化为对象的列表
 	 */
-	<V> Set<V> sUnionObject(final String[] keys, final TypeReference<V> type);
+	<V> Set<V> sUnion(final String[] keys, final TypeReference<V> type);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的并集，并反序列化为 type 指定的对象
@@ -2240,7 +1682,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 并集成员反序列化为对象的列表
 	 */
-	<V> Set<V> sUnionObject(final byte[][] keys, final TypeReference<V> type);
+	<V> Set<V> sUnion(final byte[][] keys, final TypeReference<V> type);
 
 	@Override
 	default Long sUnionStore(final String destKey, final String... keys) {

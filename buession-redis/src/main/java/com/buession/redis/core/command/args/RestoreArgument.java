@@ -133,8 +133,8 @@ public class RestoreArgument {
 	/**
 	 * 替换已存在 key
 	 */
-	public void replace() {
-		this.replace = true;
+	public RestoreArgument replace() {
+		return setReplace(true);
 	}
 
 	/**
@@ -143,8 +143,9 @@ public class RestoreArgument {
 	 * @param replace
 	 * 		true / false
 	 */
-	public void setReplace(final Boolean replace) {
+	public RestoreArgument setReplace(final Boolean replace) {
 		this.replace = replace;
+		return this;
 	}
 
 	/**
@@ -169,8 +170,8 @@ public class RestoreArgument {
 		return absTtl;
 	}
 
-	public void absTtl() {
-		this.absTtl = true;
+	public RestoreArgument absTtl() {
+		return setAbsTtl(true);
 	}
 
 	/**
@@ -180,32 +181,36 @@ public class RestoreArgument {
 	 * @param absTtl
 	 * 		true / false
 	 */
-	public void setAbsTtl(final Boolean absTtl) {
+	public RestoreArgument setAbsTtl(final Boolean absTtl) {
 		this.absTtl = absTtl;
+		return this;
 	}
 
 	public Long getIdleTime() {
 		return idleTime;
 	}
 
-	public void setIdleTime(final Long idleTime) {
+	public RestoreArgument setIdleTime(final Long idleTime) {
 		this.idleTime = idleTime;
+		return this;
 	}
 
 	public Long getFrequency() {
 		return frequency;
 	}
 
-	public void setFrequency(final Long frequency) {
+	public RestoreArgument setFrequency(final Long frequency) {
 		this.frequency = frequency;
+		return this;
 	}
 
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create().append(replace ? Keyword.Common.REPLACE : null)
-				.append(absTtl ? "ABSTTL" : null)
-				.add("IDLETIME", idleTime)
-				.add("FREQ", frequency)
+		return ArgStringBuilder.create()
+				.append(getReplace() ? Keyword.Common.REPLACE : null)
+				.append(getAbsTtl() ? "ABSTTL" : null)
+				.add("IDLETIME", getIdleTime())
+				.add("FREQ", getFrequency())
 				.build();
 	}
 

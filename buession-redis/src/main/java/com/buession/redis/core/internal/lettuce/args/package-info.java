@@ -22,73 +22,10 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.lettuce;
-
-import io.lettuce.core.ZAggregateArgs;
-
 /**
- * Lettuce {@link LettuceZAggregateArgs} 扩展
+ *
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class LettuceZAggregateArgs extends ZAggregateArgs {
-
-	/**
-	 * 构造函数
-	 */
-	public LettuceZAggregateArgs() {
-		super();
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param aggregate
-	 *        {@link com.buession.redis.core.Aggregate}
-	 */
-	public LettuceZAggregateArgs(final com.buession.redis.core.Aggregate aggregate) {
-		super();
-
-		if(aggregate != null){
-			switch(aggregate){
-				case MIN:
-					min();
-					break;
-				case MAX:
-					max();
-					break;
-				case SUM:
-					sum();
-					break;
-				default:
-					break;
-			}
-		}
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param weights
-	 * 		权重
-	 */
-	public LettuceZAggregateArgs(final double... weights) {
-		super();
-		weights(weights);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param aggregate
-	 *        {@link com.buession.redis.core.Aggregate}
-	 * @param weights
-	 * 		权重
-	 */
-	public LettuceZAggregateArgs(final com.buession.redis.core.Aggregate aggregate, final double... weights) {
-		this(aggregate);
-		weights(weights);
-	}
-
-}
+package com.buession.redis.core.internal.lettuce.args;

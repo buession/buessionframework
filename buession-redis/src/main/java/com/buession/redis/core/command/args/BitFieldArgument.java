@@ -312,7 +312,12 @@ public class BitFieldArgument extends BaseBitFieldArgument {
 
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create().append(getSet()).append(getGet()).append(incrBy).append(overflow).build();
+		return ArgStringBuilder.create()
+				.append(getSet())
+				.append(getGet())
+				.append(getIncrBy())
+				.append(getOverflow())
+				.build();
 	}
 
 	public enum Overflow implements Keyword {

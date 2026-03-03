@@ -22,26 +22,35 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis;
+package com.buession.redis.core.internal.lettuce.args;
 
-import redis.clients.jedis.params.LPosParams;
+import io.lettuce.core.XGroupCreateArgs;
 
 /**
- * Jedis {@link LPosParams} 扩展
+ * Lettuce {@link XGroupCreateArgs} 扩展
  *
  * @author Yong.Teng
- * @since 4.0.0
+ * @since 3.0.0
  */
-public final class JedisLPosParams extends LPosParams {
+public final class LettuceXGroupCreateArgs extends XGroupCreateArgs {
 
-	public JedisLPosParams() {
-
+	public LettuceXGroupCreateArgs() {
+		super();
 	}
 
-	public JedisLPosParams(final int rank, final int maxlen) {
+	public LettuceXGroupCreateArgs(final boolean mkstream) {
 		super();
-		rank(rank);
-		maxlen(maxlen);
+		mkstream(mkstream);
+	}
+
+	public LettuceXGroupCreateArgs(final Long entriesRead) {
+		super();
+		entriesRead(entriesRead);
+	}
+
+	public LettuceXGroupCreateArgs(final boolean mkstream, final Long entriesRead) {
+		this(mkstream);
+		entriesRead(entriesRead);
 	}
 
 }

@@ -24,10 +24,7 @@
  */
 package com.buession.redis.core.command.args;
 
-import com.buession.redis.core.command.ConnectionCommands;
 import com.buession.redis.utils.ArgStringBuilder;
-
-import java.util.Objects;
 
 /**
  * CLIENT TRACKING 参数
@@ -79,7 +76,7 @@ public class TrackingArgument {
 	 * @param redirect
 	 * 		将失效消息转发给另一个客户端
 	 */
-	public TrackingArgument(final long redirect) {
+	public TrackingArgument(final Long redirect) {
 		this.redirect = redirect;
 	}
 
@@ -101,7 +98,7 @@ public class TrackingArgument {
 	 * @param prefixes
 	 * 		仅跟踪以该前缀开头的 key
 	 */
-	public TrackingArgument(final long redirect, final String[] prefixes) {
+	public TrackingArgument(final Long redirect, final String[] prefixes) {
 		this(redirect);
 		this.prefixes = prefixes;
 	}
@@ -120,8 +117,8 @@ public class TrackingArgument {
 	 * @param noloop
 	 * 		是否不向自己发送失效通知
 	 */
-	public TrackingArgument(final long redirect, final boolean bcast, final boolean optin, final boolean optout,
-							final boolean noloop) {
+	public TrackingArgument(final Long redirect, final Boolean bcast, final Boolean optin, final Boolean optout,
+							final Boolean noloop) {
 		this(redirect);
 		this.bcast = bcast;
 		this.optin = optin;
@@ -143,8 +140,8 @@ public class TrackingArgument {
 	 * @param noloop
 	 * 		是否不向自己发送失效通知
 	 */
-	public TrackingArgument(final String[] prefixes, final boolean bcast, final boolean optin,
-							final boolean optout, final boolean noloop) {
+	public TrackingArgument(final String[] prefixes, final Boolean bcast, final Boolean optin,
+							final Boolean optout, final Boolean noloop) {
 		this(prefixes);
 		this.bcast = bcast;
 		this.optin = optin;
@@ -168,8 +165,8 @@ public class TrackingArgument {
 	 * @param noloop
 	 * 		是否不向自己发送失效通知
 	 */
-	public TrackingArgument(final long redirect, final String[] prefixes, final boolean bcast, final boolean optin,
-							final boolean optout, final boolean noloop) {
+	public TrackingArgument(final Long redirect, final String[] prefixes, final Boolean bcast, final Boolean optin,
+							final Boolean optout, final Boolean noloop) {
 		this(redirect, bcast, optin, optout, noloop);
 		this.prefixes = prefixes;
 	}
@@ -191,7 +188,7 @@ public class TrackingArgument {
 	 *
 	 * @return {@link TrackingArgument}
 	 */
-	public TrackingArgument setRedirect(final long redirect) {
+	public TrackingArgument setRedirect(Long redirect) {
 		this.redirect = redirect;
 		return this;
 	}
@@ -223,6 +220,15 @@ public class TrackingArgument {
 	 *
 	 * @return 是否为广播模式
 	 */
+	public Boolean isBcast() {
+		return getBcast();
+	}
+
+	/**
+	 * 返回是否为广播模式
+	 *
+	 * @return 是否为广播模式
+	 */
 	public Boolean getBcast() {
 		return bcast;
 	}
@@ -232,9 +238,30 @@ public class TrackingArgument {
 	 *
 	 * @return {@link TrackingArgument}
 	 */
-	public TrackingArgument setBcast() {
-		this.bcast = true;
+	public TrackingArgument bcast() {
+		return setBcast(true);
+	}
+
+	/**
+	 * 设置为广播模式
+	 *
+	 * @param bcast
+	 * 		是否为广播模式
+	 *
+	 * @return {@link TrackingArgument}
+	 */
+	public TrackingArgument setBcast(Boolean bcast) {
+		this.bcast = bcast;
 		return this;
+	}
+
+	/**
+	 * 返回是否为选择性跟踪
+	 *
+	 * @return 是否为选择性跟踪
+	 */
+	public Boolean isOptin() {
+		return getOptin();
 	}
 
 	/**
@@ -251,9 +278,30 @@ public class TrackingArgument {
 	 *
 	 * @return {@link TrackingArgument}
 	 */
-	public TrackingArgument setOptin() {
+	public TrackingArgument optin() {
+		return setOptin(true);
+	}
+
+	/**
+	 * 设置为选择性跟踪
+	 *
+	 * @param optin
+	 * 		是否为选择性跟踪
+	 *
+	 * @return {@link TrackingArgument}
+	 */
+	public TrackingArgument setOptin(Boolean optin) {
 		this.optin = true;
 		return this;
+	}
+
+	/**
+	 * 返回是否排除跟踪
+	 *
+	 * @return 是否排除跟踪
+	 */
+	public Boolean isOptout() {
+		return getOptout();
 	}
 
 	/**
@@ -270,9 +318,30 @@ public class TrackingArgument {
 	 *
 	 * @return {@link TrackingArgument}
 	 */
-	public TrackingArgument setOptout() {
-		this.optout = true;
+	public TrackingArgument optout() {
+		return setOptout(true);
+	}
+
+	/**
+	 * 设置为排除跟踪
+	 *
+	 * @param optout
+	 * 		是否为排除跟踪
+	 *
+	 * @return {@link TrackingArgument}
+	 */
+	public TrackingArgument setOptout(Boolean optout) {
+		this.optout = optout;
 		return this;
+	}
+
+	/**
+	 * 返回是否不向自己发送失效通知
+	 *
+	 * @return 是否不向自己发送失效通知
+	 */
+	public Boolean isNoloop() {
+		return getNoloop();
 	}
 
 	/**
@@ -289,31 +358,43 @@ public class TrackingArgument {
 	 *
 	 * @return {@link TrackingArgument}
 	 */
-	public TrackingArgument setNoloop() {
-		this.noloop = true;
+	public TrackingArgument noloop() {
+		return setNoloop(true);
+	}
+
+	/**
+	 * 设置为不向自己发送失效通知
+	 *
+	 * @param noloop
+	 * 		是否为不向自己发送失效通知
+	 *
+	 * @return {@link TrackingArgument}
+	 */
+	public TrackingArgument setNoloop(Boolean noloop) {
+		this.noloop = noloop;
 		return this;
 	}
 
 	@Override
 	public String toString() {
-		final ArgStringBuilder builder = ArgStringBuilder.create().add("REDIRECT", redirect);
+		final ArgStringBuilder builder = ArgStringBuilder.create().add("REDIRECT", getRedirect());
 
-		if(prefixes != null){
-			for(String prefix : prefixes){
+		if(getPrefixes() != null){
+			for(String prefix : getPrefixes()){
 				builder.add("PREFIX", prefix);
 			}
 		}
 
-		if(Objects.equals(bcast, true)){
+		if(Boolean.TRUE.equals(getBcast())){
 			builder.append("BCAST");
 		}
-		if(Objects.equals(optin, true)){
+		if(Boolean.TRUE.equals(getOptin())){
 			builder.append("OPTIN");
 		}
-		if(Objects.equals(optout, true)){
+		if(Boolean.TRUE.equals(getOptout())){
 			builder.append("OPTOUT");
 		}
-		if(Objects.equals(noloop, true)){
+		if(Boolean.TRUE.equals(getNoloop())){
 			builder.append("NOLOOP");
 		}
 

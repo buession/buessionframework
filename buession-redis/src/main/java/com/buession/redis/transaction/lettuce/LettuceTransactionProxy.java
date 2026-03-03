@@ -24,7 +24,7 @@
  */
 package com.buession.redis.transaction.lettuce;
 
-import com.buession.redis.core.internal.lettuce.LettuceResult;
+import com.buession.redis.core.internal.lettuce.args.LettuceResult;
 import com.buession.redis.transaction.AbstractTransactionProxy;
 import com.buession.redis.transaction.Transaction;
 import io.lettuce.core.api.sync.RedisCommands;

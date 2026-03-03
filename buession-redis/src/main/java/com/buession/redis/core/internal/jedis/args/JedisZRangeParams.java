@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis;
+package com.buession.redis.core.internal.jedis.args;
 
 import com.buession.core.utils.NumberUtils;
 import com.buession.redis.core.command.args.ZRangeArgument;

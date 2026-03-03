@@ -34,7 +34,6 @@ import com.buession.redis.core.command.args.GeoRadiusArgument;
 import com.buession.redis.core.command.args.GeoSearchArgument;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 地理位置运算
@@ -78,12 +77,14 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	}
 
 	@Override
-	default Long geoAdd(final String key, final GeoAddArgument argument, final Map<String, Geo> memberCoordinates) {
+	default Long geoAdd(final String key, final GeoAddArgument argument,
+						final KeyValue<String, Geo>... memberCoordinates) {
 		return execute((client)->client.geoCommands().geoAdd(key, argument, memberCoordinates));
 	}
 
 	@Override
-	default Long geoAdd(final byte[] key, final GeoAddArgument argument, final Map<byte[], Geo> memberCoordinates) {
+	default Long geoAdd(final byte[] key, final GeoAddArgument argument,
+						final KeyValue<byte[], Geo>... memberCoordinates) {
 		return execute((client)->client.geoCommands().geoAdd(key, argument, memberCoordinates));
 	}
 
@@ -1796,17 +1797,15 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	@Override
 	default Long geoSearchStore(final String destKey, final String key, final double longitude, final double latitude,
 								final double width, final double height, final GeoUnit unit) {
-		return execute(
-				(client)->client.geoCommands()
-						.geoSearchStore(destKey, key, longitude, latitude, width, height, unit));
+		return execute((client)->client.geoCommands()
+				.geoSearchStore(destKey, key, longitude, latitude, width, height, unit));
 	}
 
 	@Override
 	default Long geoSearchStore(final byte[] destKey, final byte[] key, final double longitude, final double latitude,
 								final double width, final double height, final GeoUnit unit) {
-		return execute(
-				(client)->client.geoCommands()
-						.geoSearchStore(destKey, key, longitude, latitude, width, height, unit));
+		return execute((client)->client.geoCommands()
+				.geoSearchStore(destKey, key, longitude, latitude, width, height, unit));
 	}
 
 	@Override
@@ -1854,18 +1853,16 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	default Long geoSearchStore(final String destKey, final String key, final double longitude, final double latitude,
 								final double width, final double height, final GeoUnit unit,
 								final GeoSearchArgument argument) {
-		return execute(
-				(client)->client.geoCommands()
-						.geoSearchStore(destKey, key, longitude, latitude, width, height, unit, argument));
+		return execute((client)->client.geoCommands()
+				.geoSearchStore(destKey, key, longitude, latitude, width, height, unit, argument));
 	}
 
 	@Override
 	default Long geoSearchStore(final byte[] destKey, final byte[] key, final double longitude, final double latitude,
 								final double width, final double height, final GeoUnit unit,
 								final GeoSearchArgument argument) {
-		return execute(
-				(client)->client.geoCommands()
-						.geoSearchStore(destKey, key, longitude, latitude, width, height, unit, argument));
+		return execute((client)->client.geoCommands()
+				.geoSearchStore(destKey, key, longitude, latitude, width, height, unit, argument));
 	}
 
 	/**
@@ -2349,8 +2346,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 存储的元素数量
 	 */
 	default Long geoSearchStore(final String destKey, final String key, final Geo geo, final double radius,
-								final GeoUnit unit,
-								final GeoSearchArgument argument) {
+								final GeoUnit unit, final GeoSearchArgument argument) {
 		return geoSearchStore(destKey, key, geo.getLongitude(), geo.getLatitude(), radius, unit, argument);
 	}
 
@@ -2375,8 +2371,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 存储的元素数量
 	 */
 	default Long geoSearchStore(final byte[] destKey, final byte[] key, final Geo geo, final double radius,
-								final GeoUnit unit,
-								final GeoSearchArgument argument) {
+								final GeoUnit unit, final GeoSearchArgument argument) {
 		return geoSearchStore(destKey, key, geo.getLongitude(), geo.getLatitude(), radius, unit, argument);
 	}
 
@@ -2443,8 +2438,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 存储的元素数量
 	 */
 	default Long geoSearchStore(final String destKey, final String key, final String member, final double width,
-								final double height,
-								final GeoSearchArgument argument) {
+								final double height, final GeoSearchArgument argument) {
 		return geoSearchStore(destKey, key, member, width, height, GeoUnit.M, argument);
 	}
 
@@ -2465,8 +2459,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 存储的元素数量
 	 */
 	default Long geoSearchStore(final byte[] destKey, final byte[] key, final byte[] member, final double width,
-								final double height,
-								final GeoSearchArgument argument) {
+								final double height, final GeoSearchArgument argument) {
 		return geoSearchStore(destKey, key, member, width, height, GeoUnit.M, argument);
 	}
 

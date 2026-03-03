@@ -19,76 +19,26 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2026 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.lettuce;
+package com.buession.redis.core.internal.jedis.args;
 
-import io.lettuce.core.ZStoreArgs;
+import redis.clients.jedis.params.XAutoClaimParams;
 
 /**
- * Lettuce {@link ZStoreArgs} 扩展
- *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 2.0.0
  */
-public final class LettuceZStoreArgs extends ZStoreArgs {
+public final class JedisXAutoClaimParams extends XAutoClaimParams {
 
-	/**
-	 * 构造函数
-	 */
-	public LettuceZStoreArgs() {
+	public JedisXAutoClaimParams() {
 		super();
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param aggregate
-	 *        {@link com.buession.redis.core.Aggregate}
-	 */
-	public LettuceZStoreArgs(final com.buession.redis.core.Aggregate aggregate) {
+	public JedisXAutoClaimParams(final int count) {
 		super();
-
-		if(aggregate != null){
-			switch(aggregate){
-				case MIN:
-					min();
-					break;
-				case MAX:
-					max();
-					break;
-				case SUM:
-					sum();
-					break;
-				default:
-					break;
-			}
-		}
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param weights
-	 * 		权重
-	 */
-	public LettuceZStoreArgs(final double... weights) {
-		super();
-		weights(weights);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param aggregate
-	 *        {@link com.buession.redis.core.Aggregate}
-	 * @param weights
-	 * 		权重
-	 */
-	public LettuceZStoreArgs(final com.buession.redis.core.Aggregate aggregate, final double... weights) {
-		this(aggregate);
-		weights(weights);
+		count(count);
 	}
 
 }

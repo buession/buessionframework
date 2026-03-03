@@ -26,8 +26,6 @@ package com.buession.redis.core.command.args;
 
 import com.buession.redis.utils.ArgStringBuilder;
 
-import java.util.Objects;
-
 /**
  * CF.INSERT 参数
  *
@@ -58,7 +56,7 @@ public class CFInsertArgument {
 	 * @param capacity
 	 * 		初始容量
 	 */
-	public CFInsertArgument(long capacity) {
+	public CFInsertArgument(final Long capacity) {
 		this.capacity = capacity;
 	}
 
@@ -68,7 +66,7 @@ public class CFInsertArgument {
 	 * @param noCreate
 	 * 		是否当 key 不存在时不自动创建
 	 */
-	public CFInsertArgument(boolean noCreate) {
+	public CFInsertArgument(final Boolean noCreate) {
 		this.noCreate = noCreate;
 	}
 
@@ -80,7 +78,7 @@ public class CFInsertArgument {
 	 * @param noCreate
 	 * 		是否当 key 不存在时不自动创建
 	 */
-	public CFInsertArgument(long capacity, boolean noCreate) {
+	public CFInsertArgument(final Long capacity, final Boolean noCreate) {
 		this(capacity);
 		this.noCreate = noCreate;
 	}
@@ -102,7 +100,7 @@ public class CFInsertArgument {
 	 *
 	 * @return {@link CFInsertArgument}
 	 */
-	public CFInsertArgument capacity(final long capacity) {
+	public CFInsertArgument capacity(Long capacity) {
 		this.capacity = capacity;
 		return this;
 	}
@@ -113,6 +111,15 @@ public class CFInsertArgument {
 	 * @return 是否当 key 不存在时不自动创建
 	 */
 	public Boolean isNoCreate() {
+		return getNoCreate();
+	}
+
+	/**
+	 * 获取是否当 key 不存在时不自动创建
+	 *
+	 * @return 是否当 key 不存在时不自动创建
+	 */
+	public Boolean getNoCreate() {
 		return noCreate;
 	}
 
@@ -122,14 +129,28 @@ public class CFInsertArgument {
 	 * @return {@link CFInsertArgument}
 	 */
 	public CFInsertArgument noCreate() {
-		this.noCreate = true;
+		return setNoCreate(true);
+	}
+
+	/**
+	 * 设置当 key 不存在时不自动创建
+	 *
+	 * @param noCreate
+	 * 		是否当 key 不存在时不自动创建
+	 *
+	 * @return {@link CFInsertArgument}
+	 */
+	public CFInsertArgument setNoCreate(Boolean noCreate) {
+		this.noCreate = noCreate;
 		return this;
 	}
 
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create().add("CAPACITY", capacity)
-				.append(Objects.equals(noCreate, true) ? "NOCREATE" : null).build();
+		return ArgStringBuilder.create()
+				.add("CAPACITY", getCapacity())
+				.append(Boolean.TRUE.equals(getNoCreate()) ? "NOCREATE" : null)
+				.build();
 	}
 
 }

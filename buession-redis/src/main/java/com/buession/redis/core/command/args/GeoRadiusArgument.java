@@ -25,9 +25,8 @@
 package com.buession.redis.core.command.args;
 
 import com.buession.lang.Order;
+import com.buession.redis.core.Keyword;
 import com.buession.redis.utils.ArgStringBuilder;
-
-import java.util.Objects;
 
 /**
  * GEO RADIUS 参数
@@ -151,10 +150,13 @@ public class GeoRadiusArgument extends BaseGeoDistanceArgument {
 
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create().append(Objects.equals(withCoord, true) ? "WITHCOORD" : null)
-				.append(Objects.equals(withDist, true) ? "WITHDIST" : null)
-				.append(Objects.equals(withHash, true) ? "WITHHASH" : null)
-				.add("COUNT", count == null ? null : count + " ANY").append(order).build();
+		return ArgStringBuilder.create()
+				.append(Boolean.TRUE.equals(getWithCoord()) ? "WITHCOORD" : null)
+				.append(Boolean.TRUE.equals(getWithDist()) ? "WITHDIST" : null)
+				.append(Boolean.TRUE.equals(getWithHash()) ? "WITHHASH" : null)
+				.add(Keyword.Common.COUNT.name(), getCount() == null ? null : getCount() + " " + Keyword.Common.ANY)
+				.append(getOrder())
+				.build();
 	}
 
 }

@@ -19,48 +19,32 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2026 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.lettuce;
+package com.buession.redis.core.internal.lettuce.args;
 
 import com.buession.redis.utils.SafeEncoder;
-import io.lettuce.core.ScanArgs;
+import io.lettuce.core.ScanCursor;
 
 /**
- * Lettuce {@link ScanArgs} 扩展
+ * Lettuce {@link ScanCursor} 扩展
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class LettuceScanArgs extends ScanArgs {
+public class LettuceScanCursor extends ScanCursor {
 
-	public LettuceScanArgs() {
+	public LettuceScanCursor() {
 		super();
 	}
 
-	public LettuceScanArgs(final String pattern) {
-		super();
-		match(pattern);
+	public LettuceScanCursor(final String pattern) {
+		super(pattern, false);
 	}
 
-	public LettuceScanArgs(final byte[] pattern) {
+	public LettuceScanCursor(final byte[] pattern) {
 		this(SafeEncoder.encode(pattern));
-	}
-
-	public LettuceScanArgs(final int count) {
-		super();
-		limit(count);
-	}
-
-	public LettuceScanArgs(final String pattern, final int count) {
-		this(pattern);
-		limit(count);
-	}
-
-	public LettuceScanArgs(final byte[] pattern, final int count) {
-		this(pattern);
-		limit(count);
 	}
 
 }

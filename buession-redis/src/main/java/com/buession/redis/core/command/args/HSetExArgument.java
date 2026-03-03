@@ -87,8 +87,9 @@ public class HSetExArgument extends BaseSetExArgument {
 		return fnxFxx;
 	}
 
-	public void setFnxFxx(FnxFxx fnxFxx) {
+	public HSetExArgument setFnxFxx(FnxFxx fnxFxx) {
 		this.fnxFxx = fnxFxx;
+		return this;
 	}
 
 	/**
@@ -186,8 +187,10 @@ public class HSetExArgument extends BaseSetExArgument {
 
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create().append(fnxFxx)
-				.add(getType().name(), getType() == SetExType.KEEPTTL ? null : getValue()).build();
+		return ArgStringBuilder.create()
+				.append(getFnxFxx())
+				.add(getType().name(), getType() == SetExType.KEEPTTL ? null : getValue())
+				.build();
 	}
 
 	public enum FnxFxx implements Keyword {

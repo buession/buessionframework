@@ -49,7 +49,7 @@ import com.buession.redis.core.internal.convert.jedis.response.ScanResultConvert
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.response.OneStatusConverter;
 import com.buession.redis.core.internal.convert.response.TypeConverter;
-import com.buession.redis.core.internal.jedis.JedisScanParams;
+import com.buession.redis.core.internal.jedis.args.JedisScanParams;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.params.MigrateParams;
 import redis.clients.jedis.params.ScanParams;

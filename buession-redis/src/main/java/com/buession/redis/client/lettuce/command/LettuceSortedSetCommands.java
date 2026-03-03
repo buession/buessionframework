@@ -44,11 +44,11 @@ import com.buession.redis.core.internal.convert.lettuce.response.KeyValueConvert
 import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ScoredValueKeyValueConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ScoredValueTupleConverter;
-import com.buession.redis.core.internal.lettuce.LettuceScanArgs;
-import com.buession.redis.core.internal.lettuce.LettuceScanCursor;
-import com.buession.redis.core.internal.lettuce.LettuceZAggregateArgs;
-import com.buession.redis.core.internal.lettuce.LettuceZPopArgs;
-import com.buession.redis.core.internal.lettuce.LettuceZStoreArgs;
+import com.buession.redis.core.internal.lettuce.args.LettuceScanArgs;
+import com.buession.redis.core.internal.lettuce.args.LettuceScanCursor;
+import com.buession.redis.core.internal.lettuce.args.LettuceZAggregateArgs;
+import com.buession.redis.core.internal.lettuce.args.LettuceZPopArgs;
+import com.buession.redis.core.internal.lettuce.args.LettuceZStoreArgs;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.Limit;
 import io.lettuce.core.Range;

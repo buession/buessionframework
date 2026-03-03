@@ -24,7 +24,7 @@
  */
 package com.buession.redis.pipeline.lettuce;
 
-import com.buession.redis.core.internal.lettuce.LettuceResult;
+import com.buession.redis.core.internal.lettuce.args.LettuceResult;
 import com.buession.redis.pipeline.AbstractPipelineProxy;
 import com.buession.redis.pipeline.Pipeline;
 

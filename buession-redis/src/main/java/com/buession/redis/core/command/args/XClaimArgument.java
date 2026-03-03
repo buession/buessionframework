@@ -71,38 +71,43 @@ public class XClaimArgument {
 		this.force = force;
 	}
 
-	public void idelTime(final Long idleTime) {
+	public XClaimArgument idelTime(final Long idleTime) {
 		this.idleType = IdleType.IDLE;
 		this.idleTime = idleTime;
+		return this;
 	}
 
-	public void unixTime(final Long unixTime) {
+	public XClaimArgument unixTime(final Long unixTime) {
 		this.idleType = IdleType.UNIX_TIME;
 		this.idleTime = unixTime;
+		return this;
 	}
 
 	public IdleType getIdleType() {
 		return idleType;
 	}
 
-	public void setIdleType(final IdleType idleType) {
+	public XClaimArgument setIdleType(final IdleType idleType) {
 		this.idleType = idleType;
+		return this;
 	}
 
 	public Long getIdleTime() {
 		return idleTime;
 	}
 
-	public void setIdleTime(final Long idleTime) {
+	public XClaimArgument setIdleTime(final Long idleTime) {
 		this.idleTime = idleTime;
+		return this;
 	}
 
 	public Integer getRetryCount() {
 		return retryCount;
 	}
 
-	public void setRetryCount(final Integer retryCount) {
+	public XClaimArgument setRetryCount(final Integer retryCount) {
 		this.retryCount = retryCount;
+		return this;
 	}
 
 	public Boolean isForce() {
@@ -113,31 +118,28 @@ public class XClaimArgument {
 		return force;
 	}
 
-	public void force() {
-		this.force = true;
+	public XClaimArgument force() {
+		return setForce(true);
 	}
 
-	public void setForce(final Boolean force) {
+	public XClaimArgument setForce(final Boolean force) {
 		this.force = force;
+		return this;
 	}
 
 	@Override
 	public String toString() {
 		final ArgStringBuilder builder = ArgStringBuilder.create();
 
-		if(idleType != null){
-			if(idleType == IdleType.IDLE){
-				builder.add("IDLE", idleTime);
-			}else if(idleType == IdleType.UNIX_TIME){
-				builder.add("TIME", idleTime);
-			}
+		if(getIdleType() == IdleType.IDLE){
+			builder.add("IDLE", getIdleTime());
+		}else if(getIdleType() == IdleType.UNIX_TIME){
+			builder.add("TIME", getIdleTime());
 		}
 
-		if(retryCount != null){
-			builder.add("RETRYCOUNT", retryCount);
-		}
+		builder.add("RETRYCOUNT", getRetryCount());
 
-		if(Boolean.TRUE.equals(force)){
+		if(Boolean.TRUE.equals(getForce())){
 			builder.append(Keyword.Common.FORCE);
 		}
 

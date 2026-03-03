@@ -22,45 +22,44 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.lettuce;
+package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.redis.core.NxXx;
-import io.lettuce.core.json.arguments.JsonSetArgs;
+import com.buession.redis.core.StreamEntryId;
+import redis.clients.jedis.StreamEntryID;
 
 /**
- * Lettuce {@link JsonSetArgs} 扩展
+ * Jedis {@link StreamEntryID} 扩展
  *
  * @author Yong.Teng
- * @since 4.0.0
+ * @since 3.0.0
  */
-public final class LettuceJsonSetArgs extends JsonSetArgs {
+public final class JedisStreamEntryID extends StreamEntryID {
 
-	/**
-	 * 构造函数
-	 */
-	public LettuceJsonSetArgs() {
+	private final static long serialVersionUID = -6518565121689271401L;
+
+	public JedisStreamEntryID() {
 		super();
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param nxXx
-	 *        {@link NxXx}
-	 */
-	public LettuceJsonSetArgs(final NxXx nxXx) {
-		if(nxXx != null){
-			switch(nxXx){
-				case XX:
-					xx();
-					break;
-				case NX:
-					nx();
-					break;
-				default:
-					break;
-			}
-		}
+	public JedisStreamEntryID(final String id) {
+		super(id);
+	}
+
+	public JedisStreamEntryID(final byte[] id) {
+		super(id);
+	}
+
+	public JedisStreamEntryID(final long time) {
+		super(time);
+	}
+
+	public JedisStreamEntryID(final long time, final long sequence) {
+		super(time, sequence);
+	}
+
+	public JedisStreamEntryID(final StreamEntryId streamEntryId) {
+		super(streamEntryId == null ? 0 : streamEntryId.getTime(),
+				streamEntryId == null ? 0L : streamEntryId.getSequence());
 	}
 
 }

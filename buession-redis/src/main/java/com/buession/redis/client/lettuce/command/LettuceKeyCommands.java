@@ -49,8 +49,8 @@ import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConve
 import com.buession.redis.core.internal.convert.response.ObjectEncodingConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.response.TypeConverter;
-import com.buession.redis.core.internal.lettuce.LettuceScanArgs;
-import com.buession.redis.core.internal.lettuce.LettuceScanCursor;
+import com.buession.redis.core.internal.lettuce.args.LettuceScanArgs;
+import com.buession.redis.core.internal.lettuce.args.LettuceScanCursor;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.CopyArgs;
 import io.lettuce.core.MigrateArgs;

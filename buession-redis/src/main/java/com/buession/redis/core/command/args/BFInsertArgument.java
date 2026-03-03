@@ -26,8 +26,6 @@ package com.buession.redis.core.command.args;
 
 import com.buession.redis.utils.ArgStringBuilder;
 
-import java.util.Objects;
-
 /**
  * BF.INSERT 参数
  *
@@ -357,16 +355,40 @@ public class BFInsertArgument {
 	 * @return 是否当 key 不存在时不自动创建
 	 */
 	public Boolean isNoCreate() {
+		return getNoCreate();
+	}
+
+	/**
+	 * 获取是否当 key 不存在时不自动创建
+	 *
+	 * @return 是否当 key 不存在时不自动创建
+	 */
+	public Boolean getNoCreate() {
 		return noCreate;
 	}
 
 	/**
 	 * 设置当 key 不存在时不自动创建
 	 *
+	 * @param noCreate
+	 * 		当 key 不存在时不自动创建
+	 *
 	 * @return {@link BFInsertArgument}
 	 */
-	public BFInsertArgument setNoCreate() {
-		this.noCreate = true;
+	public BFInsertArgument noCreate(Boolean noCreate) {
+		return setNoCreate(noCreate);
+	}
+
+	/**
+	 * 设置当 key 不存在时不自动创建
+	 *
+	 * @param noCreate
+	 * 		当 key 不存在时不自动创建
+	 *
+	 * @return {@link BFInsertArgument}
+	 */
+	public BFInsertArgument setNoCreate(Boolean noCreate) {
+		this.noCreate = noCreate;
 		return this;
 	}
 
@@ -376,6 +398,15 @@ public class BFInsertArgument {
 	 * @return 是否是否禁用自动扩容
 	 */
 	public Boolean isNonScaling() {
+		return getNonScaling();
+	}
+
+	/**
+	 * 获取是否禁用自动扩容
+	 *
+	 * @return 是否是否禁用自动扩容
+	 */
+	public Boolean getNonScaling() {
 		return nonScaling;
 	}
 
@@ -384,16 +415,31 @@ public class BFInsertArgument {
 	 *
 	 * @return {@link BFInsertArgument}
 	 */
-	public BFInsertArgument setNonScaling() {
-		this.nonScaling = true;
+	public BFInsertArgument nonScaling() {
+		return setNonScaling(true);
+	}
+
+	/**
+	 * 设置禁用自动扩容
+	 *
+	 * @param nonScaling
+	 * 		是否禁用自动扩容
+	 *
+	 * @return {@link BFInsertArgument}
+	 */
+	public BFInsertArgument setNonScaling(Boolean nonScaling) {
+		this.nonScaling = nonScaling;
 		return this;
 	}
 
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create().add("CAPACITY", capacity).add("ERROR", errorRate)
-				.append(Objects.equals(noCreate, true) ? "NOCREATE" : null)
-				.append(Objects.equals(nonScaling, true) ? "NONSCALING" : null).build();
+		return ArgStringBuilder.create()
+				.add("CAPACITY", getCapacity())
+				.add("ERROR", getErrorRate())
+				.append(Boolean.TRUE.equals(getNoCreate()) ? "NOCREATE" : null)
+				.append(Boolean.TRUE.equals(getNonScaling()) ? "NONSCALING" : null)
+				.build();
 	}
 
 }

@@ -26,6 +26,7 @@ package com.buession.redis.core.command.args;
 
 import com.buession.redis.core.Keyword;
 import com.buession.redis.core.NxXx;
+import com.buession.redis.utils.ArgStringBuilder;
 
 /**
  * {@code SET} 命令参数
@@ -154,8 +155,9 @@ public class SetArgument {
 	 * @param type
 	 * 		过期时间方式
 	 */
-	public void setType(final SetType type) {
+	public SetArgument setType(final SetType type) {
 		this.type = type;
+		return this;
 	}
 
 	/**
@@ -173,8 +175,9 @@ public class SetArgument {
 	 * @param expires
 	 * 		过期时间
 	 */
-	public void setExpires(final Long expires) {
+	public SetArgument setExpires(final Long expires) {
 		this.expires = expires;
+		return this;
 	}
 
 	/**
@@ -192,8 +195,9 @@ public class SetArgument {
 	 * @param nxXx
 	 * 		只有键 key 不存在/存在的时候才会设置 key 的值
 	 */
-	public void setNxXx(final NxXx nxXx) {
+	public SetArgument setNxXx(final NxXx nxXx) {
 		this.nxXx = nxXx;
+		return this;
 	}
 
 	/**
@@ -217,8 +221,8 @@ public class SetArgument {
 	/**
 	 * 设置获取 key 的过期时间
 	 */
-	public void keepTtl() {
-		this.keepTtl = true;
+	public SetArgument keepTtl() {
+		return setKeepTtl(true);
 	}
 
 	/**
@@ -227,21 +231,20 @@ public class SetArgument {
 	 * @param keepTtl
 	 * 		是否获取 key 的过期时间
 	 */
-	public void setKeepTtl(final Boolean keepTtl) {
+	public SetArgument setKeepTtl(final Boolean keepTtl) {
 		this.keepTtl = keepTtl;
+		return this;
 	}
 
 	@Override
 	public String toString() {
-		final ArgumentStringBuilder builder = ArgumentStringBuilder.create();
+		final ArgStringBuilder builder = ArgStringBuilder.create()
+				.append(getType())
+				.append(getExpires())
+				.append(getNxXx());
 
-		if(type != null){
-			builder.append(type);
-		}
-		builder.append(expires).append(nxXx);
-
-		if(Boolean.TRUE.equals(keepTtl)){
-			builder.append(Keyword.Common.KEEPTTL);
+		if(Boolean.TRUE.equals(getKeepTtl())){
+			builder.append(Keyword.Time.KEEPTTL);
 		}
 
 		return builder.build();

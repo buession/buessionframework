@@ -22,35 +22,45 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.lettuce;
+package com.buession.redis.core.internal.jedis.args;
 
-import io.lettuce.core.XReadArgs;
+import com.buession.redis.core.NxXx;
+import redis.clients.jedis.json.JsonSetParams;
 
 /**
- * Lettuce {@link XReadArgs} 扩展
+ * Jedis {@link JsonSetParams} 扩展
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public final class LettuceXReadArgs extends XReadArgs {
+public final class JedisJsonSetParams extends JsonSetParams {
 
-	public LettuceXReadArgs() {
+	/**
+	 * 构造函数
+	 */
+	public JedisJsonSetParams() {
 		super();
 	}
 
-	public LettuceXReadArgs(final int count) {
-		super();
-		count(count);
-	}
-
-	public LettuceXReadArgs(final int count, final long block) {
-		this(count);
-		block(block);
-	}
-
-	public LettuceXReadArgs(final long block) {
-		super();
-		block(block);
+	/**
+	 * 构造函数
+	 *
+	 * @param nxXx
+	 *        {@link NxXx}
+	 */
+	public JedisJsonSetParams(final NxXx nxXx) {
+		if(nxXx != null){
+			switch(nxXx){
+				case XX:
+					xx();
+					break;
+				case NX:
+					nx();
+					break;
+				default:
+					break;
+			}
+		}
 	}
 
 }

@@ -173,13 +173,13 @@ public interface CuckooFilterOperations extends CuckooFilterCommands, RedisOpera
 	}
 
 	@Override
-	default Map<Long, byte[]> cfScandump(final String key, final long iterator) {
-		return execute((client)->client.cuckooFilterCommands().cfScandump(key, iterator));
+	default Map<Long, byte[]> cfScanDump(final String key, final long iterator) {
+		return execute((client)->client.cuckooFilterCommands().cfScanDump(key, iterator));
 	}
 
 	@Override
-	default Map<Long, byte[]> cfScandump(final byte[] key, final long iterator) {
-		return execute((client)->client.cuckooFilterCommands().cfScandump(key, iterator));
+	default Map<Long, byte[]> cfScanDump(final byte[] key, final long iterator) {
+		return execute((client)->client.cuckooFilterCommands().cfScanDump(key, iterator));
 	}
 
 }

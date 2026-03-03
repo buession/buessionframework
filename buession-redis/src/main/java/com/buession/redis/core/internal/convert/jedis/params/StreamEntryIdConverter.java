@@ -26,7 +26,7 @@ package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.StreamEntryId;
-import com.buession.redis.core.internal.jedis.JedisStreamEntryID;
+import com.buession.redis.core.internal.jedis.args.JedisStreamEntryID;
 import redis.clients.jedis.StreamEntryID;
 
 /**

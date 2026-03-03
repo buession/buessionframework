@@ -633,7 +633,7 @@ public interface ServerOperations extends ServerCommands, RedisOperations {
 	}
 
 	@Override
-	default List<SlowLog> slowLogGet(final long count) {
+	default List<SlowLog> slowLogGet(final int count) {
 		return execute((client)->client.serverCommands().slowLogGet(count));
 	}
 

@@ -205,13 +205,13 @@ public final class LettuceCuckooFilterCommands extends AbstractLettuceRedisComma
 	}
 
 	@Override
-	public Map<Long, byte[]> cfScandump(final String key, final long iterator) {
+	public Map<Long, byte[]> cfScanDump(final String key, final long iterator) {
 		final CommandArguments args = CommandArguments.create(key).add(iterator);
 		return executeCommand(Command.CF_SCANDUMP, args);
 	}
 
 	@Override
-	public Map<Long, byte[]> cfScandump(final byte[] key, final long iterator) {
+	public Map<Long, byte[]> cfScanDump(final byte[] key, final long iterator) {
 		final CommandArguments args = CommandArguments.create(key).add(iterator);
 		return executeCommand(Command.CF_SCANDUMP, args);
 	}

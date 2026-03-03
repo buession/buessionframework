@@ -43,9 +43,9 @@ import com.buession.redis.core.internal.convert.jedis.params.ZAddArgumentConvert
 import com.buession.redis.core.internal.convert.jedis.response.KeyValueConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ScanResultConverter;
 import com.buession.redis.core.internal.convert.jedis.response.TupleConverter;
-import com.buession.redis.core.internal.jedis.JedisScanParams;
-import com.buession.redis.core.internal.jedis.JedisZParams;
-import com.buession.redis.core.internal.jedis.JedisZRangeParams;
+import com.buession.redis.core.internal.jedis.args.JedisScanParams;
+import com.buession.redis.core.internal.jedis.args.JedisZParams;
+import com.buession.redis.core.internal.jedis.args.JedisZRangeParams;
 import redis.clients.jedis.UnifiedJedis;
 
 import java.util.LinkedHashMap;

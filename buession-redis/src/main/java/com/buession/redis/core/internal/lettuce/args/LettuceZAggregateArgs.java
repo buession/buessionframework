@@ -19,24 +19,25 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis;
+package com.buession.redis.core.internal.lettuce.args;
 
-import redis.clients.jedis.params.ZParams;
+import io.lettuce.core.ZAggregateArgs;
 
 /**
- * Jedis {@link ZParams} 扩展
+ * Lettuce {@link LettuceZAggregateArgs} 扩展
  *
  * @author Yong.Teng
+ * @since 4.0.0
  */
-public final class JedisZParams extends ZParams {
+public final class LettuceZAggregateArgs extends ZAggregateArgs {
 
 	/**
 	 * 构造函数
 	 */
-	public JedisZParams() {
+	public LettuceZAggregateArgs() {
 		super();
 	}
 
@@ -46,52 +47,48 @@ public final class JedisZParams extends ZParams {
 	 * @param aggregate
 	 *        {@link com.buession.redis.core.Aggregate}
 	 */
-	public JedisZParams(final com.buession.redis.core.Aggregate aggregate) {
+	public LettuceZAggregateArgs(final com.buession.redis.core.Aggregate aggregate) {
 		super();
-		aggregate(aggregate);
-	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param weights
-	 * 		权重
-	 */
-	public JedisZParams(final double... weights) {
-		super();
-		weights(weights);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param aggregate
-	 *        {@link com.buession.redis.core.Aggregate}
-	 * @param weights
-	 * 		权重
-	 */
-	public JedisZParams(final com.buession.redis.core.Aggregate aggregate, final double... weights) {
-		super();
-		aggregate(aggregate);
-		weights(weights);
-	}
-
-	private void aggregate(final com.buession.redis.core.Aggregate aggregate) {
 		if(aggregate != null){
 			switch(aggregate){
 				case MIN:
-					aggregate(Aggregate.MIN);
+					min();
 					break;
 				case MAX:
-					aggregate(Aggregate.MAX);
+					max();
 					break;
 				case SUM:
-					aggregate(Aggregate.SUM);
+					sum();
 					break;
 				default:
 					break;
 			}
 		}
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param weights
+	 * 		权重
+	 */
+	public LettuceZAggregateArgs(final double... weights) {
+		super();
+		weights(weights);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param aggregate
+	 *        {@link com.buession.redis.core.Aggregate}
+	 * @param weights
+	 * 		权重
+	 */
+	public LettuceZAggregateArgs(final com.buession.redis.core.Aggregate aggregate, final double... weights) {
+		this(aggregate);
+		weights(weights);
 	}
 
 }

@@ -19,32 +19,40 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.lettuce;
+package com.buession.redis.core.internal.lettuce.args;
 
 import com.buession.redis.utils.SafeEncoder;
-import io.lettuce.core.ScanCursor;
+import io.lettuce.core.json.JsonPath;
 
 /**
- * Lettuce {@link ScanCursor} 扩展
+ * Lettuce {@link JsonPath} 扩展
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public class LettuceScanCursor extends ScanCursor {
+public final class LettuceJsonPath extends JsonPath {
 
-	public LettuceScanCursor() {
-		super();
+	/**
+	 * 构造函数
+	 *
+	 * @param path
+	 * 		路径
+	 */
+	public LettuceJsonPath(final String path) {
+		super(path);
 	}
 
-	public LettuceScanCursor(final String pattern) {
-		super(pattern, false);
-	}
-
-	public LettuceScanCursor(final byte[] pattern) {
-		this(SafeEncoder.encode(pattern));
+	/**
+	 * 构造函数
+	 *
+	 * @param path
+	 * 		路径
+	 */
+	public LettuceJsonPath(final byte[] path) {
+		super(SafeEncoder.encode(path));
 	}
 
 }

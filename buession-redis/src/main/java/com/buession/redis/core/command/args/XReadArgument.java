@@ -70,13 +70,14 @@ public class XReadArgument {
 	 * @param block
 	 * 		阻塞时间（单位：毫秒）
 	 */
-	public void setBlock(Long block) {
+	public XReadArgument setBlock(Long block) {
 		this.block = block;
+		return this;
 	}
 
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create().add("BLOCK", block).build();
+		return ArgStringBuilder.create().add("BLOCK", getBlock()).build();
 	}
 
 }

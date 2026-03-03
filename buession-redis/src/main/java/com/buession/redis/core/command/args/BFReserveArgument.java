@@ -26,8 +26,6 @@ package com.buession.redis.core.command.args;
 
 import com.buession.redis.utils.ArgStringBuilder;
 
-import java.util.Objects;
-
 /**
  * BF.RESERVE 参数
  *
@@ -39,12 +37,12 @@ public class BFReserveArgument {
 	/**
 	 * 期望的误判率
 	 */
-	private final double errorRate;
+	private final Double errorRate;
 
 	/**
 	 * 初始容量
 	 */
-	private final long capacity;
+	private final Long capacity;
 
 	/**
 	 * 扩容倍数
@@ -64,7 +62,7 @@ public class BFReserveArgument {
 	 * @param capacity
 	 * 		预计要插入的元素数量上限
 	 */
-	public BFReserveArgument(double errorRate, long capacity) {
+	public BFReserveArgument(final Double errorRate, final Long capacity) {
 		this.errorRate = errorRate;
 		this.capacity = capacity;
 	}
@@ -79,7 +77,7 @@ public class BFReserveArgument {
 	 * @param expansion
 	 * 		扩容倍数
 	 */
-	public BFReserveArgument(double errorRate, long capacity, int expansion) {
+	public BFReserveArgument(final Double errorRate, final Long capacity, final Integer expansion) {
 		this(errorRate, capacity);
 		this.expansion = expansion;
 	}
@@ -96,7 +94,8 @@ public class BFReserveArgument {
 	 * @param nonScaling
 	 * 		是否禁用自动扩容
 	 */
-	public BFReserveArgument(double errorRate, long capacity, final int expansion, boolean nonScaling) {
+	public BFReserveArgument(final Double errorRate, final Long capacity, final Integer expansion,
+							 final Boolean nonScaling) {
 		this(errorRate, capacity, expansion);
 		this.nonScaling = nonScaling;
 	}
@@ -111,7 +110,7 @@ public class BFReserveArgument {
 	 * @param nonScaling
 	 * 		是否禁用自动扩容
 	 */
-	public BFReserveArgument(double errorRate, long capacity, final boolean nonScaling) {
+	public BFReserveArgument(final Double errorRate, final Long capacity, final Boolean nonScaling) {
 		this(errorRate, capacity);
 		this.nonScaling = nonScaling;
 	}
@@ -151,7 +150,7 @@ public class BFReserveArgument {
 	 *
 	 * @return {@link BFReserveArgument}
 	 */
-	public BFReserveArgument setExpansion(final int expansion) {
+	public BFReserveArgument setExpansion(Integer expansion) {
 		this.expansion = expansion;
 		return this;
 	}
@@ -162,6 +161,15 @@ public class BFReserveArgument {
 	 * @return 是否是否禁用自动扩容
 	 */
 	public Boolean isNonScaling() {
+		return getNonScaling();
+	}
+
+	/**
+	 * 获取是否禁用自动扩容
+	 *
+	 * @return 是否是否禁用自动扩容
+	 */
+	public Boolean getNonScaling() {
 		return nonScaling;
 	}
 
@@ -170,15 +178,31 @@ public class BFReserveArgument {
 	 *
 	 * @return {@link BFReserveArgument}
 	 */
-	public BFReserveArgument setNonScaling() {
+	public BFReserveArgument nonScaling() {
 		this.nonScaling = true;
+		return this;
+	}
+
+	/**
+	 * 设置禁用自动扩容
+	 *
+	 * @param nonScaling
+	 * 		是否禁用自动扩容
+	 *
+	 * @return {@link BFReserveArgument}
+	 */
+	public BFReserveArgument setNonScaling(Boolean nonScaling) {
+		this.nonScaling = nonScaling;
 		return this;
 	}
 
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create().append(errorRate).append(capacity)
-				.append(Objects.equals(nonScaling, true) ? "NONSCALING" : null).build();
+		return ArgStringBuilder.create()
+				.append(getErrorRate())
+				.append(getCapacity())
+				.append(Boolean.TRUE.equals(getNonScaling()) ? "NONSCALING" : null)
+				.build();
 	}
 
 }

@@ -22,45 +22,46 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis;
+package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.redis.core.NxXx;
-import redis.clients.jedis.json.JsonSetParams;
+import com.buession.redis.core.StreamDeletionPolicy;
+import com.buession.redis.core.StreamEntryId;
+import redis.clients.jedis.params.XTrimParams;
 
 /**
- * Jedis {@link JsonSetParams} 扩展
+ * Jedis {@link XTrimParams} 扩展
  *
  * @author Yong.Teng
- * @since 4.0.0
+ * @since 3.0.0
  */
-public final class JedisJsonSetParams extends JsonSetParams {
+public final class JedisXTrimParams extends XTrimParams {
 
-	/**
-	 * 构造函数
-	 */
-	public JedisJsonSetParams() {
+	public JedisXTrimParams() {
 		super();
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param nxXx
-	 *        {@link NxXx}
-	 */
-	public JedisJsonSetParams(final NxXx nxXx) {
-		if(nxXx != null){
-			switch(nxXx){
-				case XX:
-					xx();
-					break;
-				case NX:
-					nx();
-					break;
-				default:
-					break;
+	public static JedisXTrimParams xTrimParams() {
+		return new JedisXTrimParams();
+	}
+
+	public JedisXTrimParams deletionPolicy(StreamDeletionPolicy deletionPolicy) {
+		if(deletionPolicy != null){
+			switch(deletionPolicy){
+				case ACKED -> trimmingMode(redis.clients.jedis.args.StreamDeletionPolicy.ACKNOWLEDGED);
+				case DELREF -> trimmingMode(redis.clients.jedis.args.StreamDeletionPolicy.DELETE_REFERENCES);
+				case KEEPREF -> trimmingMode(redis.clients.jedis.args.StreamDeletionPolicy.KEEP_REFERENCES);
 			}
 		}
+
+		return this;
+	}
+
+	public JedisXTrimParams minId(StreamEntryId id) {
+		if(id != null){
+			minId(id.toString());
+		}
+
+		return this;
 	}
 
 }

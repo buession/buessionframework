@@ -193,7 +193,8 @@ public class GetExArgument {
 
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create().add(type.name(), type == GetExType.PERSIST ? null : value).build();
+		return ArgStringBuilder.create().add(getType().name(), getType() == GetExType.PERSIST ? null : getValue())
+				.build();
 	}
 
 	/**

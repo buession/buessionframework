@@ -108,8 +108,9 @@ public class XReadGroupArgument extends XReadArgument {
 		return claim;
 	}
 
-	public void setClaim(Long claim) {
+	public XReadGroupArgument setClaim(Long claim) {
 		this.claim = claim;
+		return this;
 	}
 
 	public Boolean isNoAck() {
@@ -120,18 +121,23 @@ public class XReadGroupArgument extends XReadArgument {
 		return noAck;
 	}
 
-	public void noAck() {
+	public XReadGroupArgument noAck() {
 		this.noAck = true;
+		return this;
 	}
 
-	public void setNoAck(Boolean noAck) {
+	public XReadGroupArgument setNoAck(Boolean noAck) {
 		this.noAck = noAck;
+		return this;
 	}
 
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create().add("BLOCK", getBlock()).add("CLAIM", getClaim())
-				.append(Boolean.TRUE.equals(getNoAck()) ? "NOACK" : null).build();
+		return ArgStringBuilder.create()
+				.add("BLOCK", getBlock())
+				.add("CLAIM", getClaim())
+				.append(Boolean.TRUE.equals(getNoAck()) ? "NOACK" : null)
+				.build();
 	}
 
 }

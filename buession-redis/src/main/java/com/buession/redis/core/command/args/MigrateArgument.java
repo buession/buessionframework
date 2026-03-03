@@ -133,8 +133,9 @@ public class MigrateArgument {
 	 * @param mode
 	 * 		迁移模式
 	 */
-	public void setMode(Mode mode) {
+	public MigrateArgument setMode(Mode mode) {
 		this.mode = mode;
+		return this;
 	}
 
 	/**
@@ -152,8 +153,9 @@ public class MigrateArgument {
 	 * @param username
 	 * 		用户名
 	 */
-	public void setUsername(String username) {
+	public MigrateArgument setUsername(String username) {
 		this.username = username;
+		return this;
 	}
 
 	/**
@@ -171,20 +173,21 @@ public class MigrateArgument {
 	 * @param password
 	 * 		密码
 	 */
-	public void setPassword(String password) {
+	public MigrateArgument setPassword(String password) {
 		this.password = password;
+		return this;
 	}
 
 	@Override
 	public String toString() {
-		final ArgStringBuilder builder = ArgStringBuilder.create().append(mode);
+		final ArgStringBuilder builder = ArgStringBuilder.create().append(getMode());
 
-		if(Validate.hasText(password)){
-			if(Validate.hasText(username)){
+		if(Validate.hasText(getPassword())){
+			if(Validate.hasText(getUsername())){
 				builder.append(Keyword.Conn.AUTH2.name());
-				builder.add(username, password);
+				builder.add(getUsername(), getPassword());
 			}else{
-				builder.add(Keyword.Conn.AUTH.name(), password);
+				builder.add(Keyword.Conn.AUTH.name(), getPassword());
 			}
 		}
 

@@ -29,7 +29,7 @@ import com.buession.redis.client.connection.lettuce.LettuceRedisConnection;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.SubCommand;
-import com.buession.redis.core.internal.lettuce.LettuceResult;
+import com.buession.redis.core.internal.lettuce.args.LettuceResult;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.PipelineProxy;
 import com.buession.redis.transaction.TransactionProxy;

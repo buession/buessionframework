@@ -25,6 +25,7 @@
 package com.buession.redis.core.command.args;
 
 import com.buession.lang.Order;
+import com.buession.redis.core.Keyword;
 import com.buession.redis.core.Limit;
 import com.buession.redis.utils.ArgStringBuilder;
 import com.buession.redis.utils.SafeEncoder;
@@ -76,7 +77,7 @@ public class SortArgument {
 	 * 		-
 	 */
 	public SortArgument(final byte[] by) {
-		this.by = SafeEncoder.encode(by);
+		setBy(by);
 	}
 
 	/**
@@ -102,7 +103,7 @@ public class SortArgument {
 	 */
 	public SortArgument(final byte[] by, final byte[][] gets) {
 		this(by);
-		this.getPatterns = SafeEncoder.encode(gets);
+		setGetPatterns(gets);
 	}
 
 	/**
@@ -273,12 +274,14 @@ public class SortArgument {
 		return SafeEncoder.encode(by);
 	}
 
-	public void setBy(final String by) {
+	public SortArgument setBy(final String by) {
 		this.by = by;
+		return this;
 	}
 
-	public void setBy(final byte[] by) {
+	public SortArgument setBy(final byte[] by) {
 		this.by = SafeEncoder.encode(by);
+		return this;
 	}
 
 	/**
@@ -296,8 +299,9 @@ public class SortArgument {
 	 * @param order
 	 * 		排序方式
 	 */
-	public void setOrder(final Order order) {
+	public SortArgument setOrder(final Order order) {
 		this.order = order;
+		return this;
 	}
 
 	/**
@@ -315,8 +319,9 @@ public class SortArgument {
 	 * @param limit
 	 * 		结果限制
 	 */
-	public void setLimit(final Limit limit) {
+	public SortArgument setLimit(final Limit limit) {
 		this.limit = limit;
+		return this;
 	}
 
 	public String[] getGetPatterns() {
@@ -327,12 +332,14 @@ public class SortArgument {
 		return SafeEncoder.encode(getPatterns);
 	}
 
-	public void setGetPatterns(final String[] getPatterns) {
+	public SortArgument setGetPatterns(final String[] getPatterns) {
 		this.getPatterns = getPatterns;
+		return this;
 	}
 
-	public void setGetPatterns(final byte[][] getPatterns) {
+	public SortArgument setGetPatterns(final byte[][] getPatterns) {
 		this.getPatterns = SafeEncoder.encode(getPatterns);
+		return this;
 	}
 
 	public Boolean isAlpha() {
@@ -343,37 +350,32 @@ public class SortArgument {
 		return alpha;
 	}
 
-	public void alpha() {
-		this.alpha = true;
+	public SortArgument alpha() {
+		return setAlpha(true);
 	}
 
-	public void setAlpha(final Boolean alpha) {
+	public SortArgument setAlpha(final Boolean alpha) {
 		this.alpha = alpha;
+		return this;
 	}
 
 	@Override
 	public String toString() {
-		final ArgStringBuilder builder = ArgStringBuilder.create();
+		final ArgStringBuilder builder = ArgStringBuilder.create().add("BY", getBy());
 
-		if(by != null){
-			builder.add("BY", by);
+		if(getLimit() != null){
+			builder.add(Keyword.Common.LIMIT.name(), getLimit().getOffset() + ' ' + getLimit().getCount());
 		}
 
-		if(limit != null){
-			builder.add("LIMIT", limit.getOffset() + ' ' + limit.getCount());
-		}
-
-		if(getPatterns != null){
-			for(final String pattern : getPatterns){
+		if(getGetPatterns() != null){
+			for(final String pattern : getGetPatterns()){
 				builder.add("GET", pattern);
 			}
 		}
 
-		if(order != null){
-			builder.append(order);
-		}
+		builder.append(getOrder());
 
-		if(Boolean.TRUE.equals(alpha)){
+		if(Boolean.TRUE.equals(getAlpha())){
 			builder.append("ALPHA");
 		}
 

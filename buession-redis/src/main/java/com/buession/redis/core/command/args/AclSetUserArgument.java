@@ -26,7 +26,6 @@ package com.buession.redis.core.command.args;
 
 import com.buession.core.utils.StringUtils;
 import com.buession.redis.core.AclCategory;
-import com.buession.redis.core.Keyword;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.command.SubCommand;
@@ -77,7 +76,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 *
 	 * @return {@code this}
 	 */
-	public AclSetUserArgument state(final State state) {
+	public AclSetUserArgument state(State state) {
 		if(state != null){
 			this.arguments.add(state);
 		}
@@ -93,8 +92,25 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 *
 	 * @return {@code this}
 	 */
-	public AclSetUserArgument keyPattern(final String keyPattern) {
-		this.arguments.add(new KeyPattern(keyPattern));
+	public AclSetUserArgument keyPattern(String keyPattern) {
+		if(keyPattern != null){
+			this.arguments.add(new KeyPattern(keyPattern));
+		}
+		return this;
+	}
+
+	/**
+	 * Adds accessible key pattern.
+	 *
+	 * @param keyPattern
+	 * 		accessible key pattern
+	 *
+	 * @return {@code this}
+	 */
+	public AclSetUserArgument keyPattern(byte[] keyPattern) {
+		if(keyPattern != null){
+			this.arguments.add(new KeyPattern(keyPattern));
+		}
 		return this;
 	}
 
@@ -126,8 +142,25 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 *
 	 * @return {@code this}
 	 */
-	public AclSetUserArgument channelPattern(final String channelPattern) {
-		this.arguments.add(new ChannelPattern(channelPattern));
+	public AclSetUserArgument channelPattern(String channelPattern) {
+		if(channelPattern != null){
+			this.arguments.add(new ChannelPattern(channelPattern));
+		}
+		return this;
+	}
+
+	/**
+	 * Adds accessible channel pattern.
+	 *
+	 * @param channelPattern
+	 * 		accessible channel pattern
+	 *
+	 * @return {@code this}
+	 */
+	public AclSetUserArgument channelPattern(byte[] channelPattern) {
+		if(channelPattern != null){
+			this.arguments.add(new ChannelPattern(channelPattern));
+		}
 		return this;
 	}
 
@@ -159,8 +192,11 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 *
 	 * @return {@code this}
 	 */
-	public AclSetUserArgument addCommand(final Command command) {
-		return addCommand(command, null);
+	public AclSetUserArgument addCommand(Command command) {
+		if(command != null){
+			this.arguments.add(new AddCommand(command));
+		}
+		return this;
 	}
 
 	/**
@@ -173,8 +209,10 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 *
 	 * @return {@code this}
 	 */
-	public AclSetUserArgument addCommand(final Command command, final SubCommand subCommand) {
-		this.arguments.add(new AddCommand(command, subCommand));
+	public AclSetUserArgument addCommand(Command command, SubCommand subCommand) {
+		if(command != null){
+			this.arguments.add(new AddCommand(command, subCommand));
+		}
 		return this;
 	}
 
@@ -196,8 +234,11 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 *
 	 * @return {@code this}
 	 */
-	public AclSetUserArgument removeCommand(final Command command) {
-		return removeCommand(command, null);
+	public AclSetUserArgument removeCommand(Command command) {
+		if(command != null){
+			this.arguments.add(new RemoveCommand(command));
+		}
+		return this;
 	}
 
 	/**
@@ -210,8 +251,10 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 *
 	 * @return {@code this}
 	 */
-	public AclSetUserArgument removeCommand(final Command command, final SubCommand subCommand) {
-		this.arguments.add(new RemoveCommand(command, subCommand));
+	public AclSetUserArgument removeCommand(Command command, SubCommand subCommand) {
+		if(command != null){
+			this.arguments.add(new RemoveCommand(command, subCommand));
+		}
 		return this;
 	}
 
@@ -233,8 +276,10 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 *
 	 * @return {@code this}
 	 */
-	public AclSetUserArgument addCategory(final AclCategory category) {
-		this.arguments.add(new AddCategory(category));
+	public AclSetUserArgument addCategory(AclCategory category) {
+		if(category != null){
+			this.arguments.add(new AddCategory(category));
+		}
 		return this;
 	}
 
@@ -246,8 +291,10 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 *
 	 * @return {@code this}
 	 */
-	public AclSetUserArgument removeCategory(final AclCategory category) {
-		this.arguments.add(new RemoveCategory(category));
+	public AclSetUserArgument removeCategory(AclCategory category) {
+		if(category != null){
+			this.arguments.add(new RemoveCategory(category));
+		}
 		return this;
 	}
 
@@ -280,8 +327,25 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 *
 	 * @return {@code this}
 	 */
-	public AclSetUserArgument addPassword(final String password) {
-		this.arguments.add(new AddPassword(password));
+	public AclSetUserArgument addPassword(String password) {
+		if(password != null){
+			this.arguments.add(new AddPassword(password));
+		}
+		return this;
+	}
+
+	/**
+	 * Adds the specified clear text password as an hashed password in the list of the users passwords.
+	 *
+	 * @param password
+	 * 		clear text password
+	 *
+	 * @return {@code this}
+	 */
+	public AclSetUserArgument addPassword(byte[] password) {
+		if(password != null){
+			this.arguments.add(new AddPassword(password));
+		}
 		return this;
 	}
 
@@ -293,8 +357,25 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 *
 	 * @return {@code this}
 	 */
-	public AclSetUserArgument removePassword(final String password) {
-		this.arguments.add(new RemovePassword(password));
+	public AclSetUserArgument removePassword(String password) {
+		if(password != null){
+			this.arguments.add(new RemovePassword(password));
+		}
+		return this;
+	}
+
+	/**
+	 * Removes the specified clear text password as an hashed password in the list of the users passwords.
+	 *
+	 * @param password
+	 * 		clear text password
+	 *
+	 * @return {@code this}
+	 */
+	public AclSetUserArgument removePassword(byte[] password) {
+		if(password != null){
+			this.arguments.add(new RemovePassword(password));
+		}
 		return this;
 	}
 
@@ -306,8 +387,25 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 *
 	 * @return {@code this}
 	 */
-	public AclSetUserArgument addHashedPassword(final String hashedPassword) {
-		this.arguments.add(new AddHashedPassword(hashedPassword));
+	public AclSetUserArgument addHashedPassword(String hashedPassword) {
+		if(hashedPassword != null){
+			this.arguments.add(new AddHashedPassword(hashedPassword));
+		}
+		return this;
+	}
+
+	/**
+	 * Adds the specified hashed password to the list of user passwords.
+	 *
+	 * @param hashedPassword
+	 * 		hashed password
+	 *
+	 * @return {@code this}
+	 */
+	public AclSetUserArgument addHashedPassword(byte[] hashedPassword) {
+		if(hashedPassword != null){
+			this.arguments.add(new AddHashedPassword(hashedPassword));
+		}
 		return this;
 	}
 
@@ -319,8 +417,25 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 *
 	 * @return {@code this}
 	 */
-	public AclSetUserArgument removeHashedPassword(final String hashedPassword) {
-		this.arguments.add(new RemoveHashedPassword(hashedPassword));
+	public AclSetUserArgument removeHashedPassword(String hashedPassword) {
+		if(hashedPassword != null){
+			this.arguments.add(new RemoveHashedPassword(hashedPassword));
+		}
+		return this;
+	}
+
+	/**
+	 * Removes the specified hashed password to the list of user passwords.
+	 *
+	 * @param hashedPassword
+	 * 		hashed password
+	 *
+	 * @return {@code this}
+	 */
+	public AclSetUserArgument removeHashedPassword(byte[] hashedPassword) {
+		if(hashedPassword != null){
+			this.arguments.add(new RemoveHashedPassword(hashedPassword));
+		}
 		return this;
 	}
 
@@ -340,38 +455,16 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	@Override
 	public String[] toArray() {
-		final String[] result = new String[arguments.size()];
-		Argument argument;
-
-		for(int i = 0, l = arguments.size(); i < l; i++){
-			argument = arguments.get(i);
-
-			if(argument instanceof State){
-				result[i] = ((State) argument).name();
-			}else{
-				result[i] = argument.toString();
-			}
-		}
-
-		return result;
+		return arguments.stream()
+				.map((v)->v instanceof State ? ((State) v).name() : v.toString())
+				.toArray(String[]::new);
 	}
 
 	@Override
 	public byte[][] toBinaryArray() {
-		final byte[][] result = new byte[arguments.size()][];
-		Argument argument;
-
-		for(int i = 0, l = arguments.size(); i < l; i++){
-			argument = arguments.get(i);
-
-			if(argument instanceof State){
-				result[i] = SafeEncoder.encode(((State) argument).name());
-			}else{
-				result[i] = SafeEncoder.encode(argument.toString());
-			}
-		}
-
-		return result;
+		return arguments.stream()
+				.map((v)->SafeEncoder.encode(v instanceof State ? ((State) v).name() : v.toString()))
+				.toArray(byte[][]::new);
 	}
 
 	@Override
@@ -395,6 +488,10 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 		public StringArgument(final String value) {
 			this.value = value;
+		}
+
+		public StringArgument(final byte[] value) {
+			this.value = value == null ? null : SafeEncoder.encode(value);
 		}
 
 		public String getValue() {
@@ -461,7 +558,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 		private final AclCategory aclCategory;
 
-		AclCategoryArgument(final AclCategory aclCategory) {
+		public AclCategoryArgument(final AclCategory aclCategory) {
 			this.aclCategory = aclCategory;
 		}
 
@@ -478,7 +575,11 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	public final static class KeyPattern extends StringArgument {
 
-		KeyPattern(final String keyPattern) {
+		public KeyPattern(final String keyPattern) {
+			super(keyPattern);
+		}
+
+		public KeyPattern(final byte[] keyPattern) {
 			super(keyPattern);
 		}
 
@@ -491,7 +592,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	public final static class ResetKeys extends StringArgument {
 
-		ResetKeys() {
+		public ResetKeys() {
 			super("resetkeys");
 		}
 
@@ -499,7 +600,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	public final static class AllKeys extends StringArgument {
 
-		AllKeys() {
+		public AllKeys() {
 			super("allkeys");
 		}
 
@@ -507,7 +608,11 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	public final static class ChannelPattern extends StringArgument {
 
-		ChannelPattern(final String channelPattern) {
+		public ChannelPattern(final String channelPattern) {
+			super(channelPattern);
+		}
+
+		public ChannelPattern(final byte[] channelPattern) {
 			super(channelPattern);
 		}
 
@@ -520,7 +625,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	public final static class AllChannels extends StringArgument {
 
-		AllChannels() {
+		public AllChannels() {
 			super("allchannels");
 		}
 
@@ -528,7 +633,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	public final static class ResetChannels extends StringArgument {
 
-		ResetChannels() {
+		public ResetChannels() {
 			super("resetchannels");
 		}
 
@@ -536,11 +641,11 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	public final static class AddCommand extends CommandArgument {
 
-		AddCommand(final Command command) {
+		public AddCommand(final Command command) {
 			super(command);
 		}
 
-		AddCommand(final Command command, final SubCommand subCommand) {
+		public AddCommand(final Command command, final SubCommand subCommand) {
 			super(command, subCommand);
 		}
 
@@ -553,7 +658,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	public final static class AllCommands extends StringArgument {
 
-		AllCommands() {
+		public AllCommands() {
 			super("allcommands");
 		}
 
@@ -561,11 +666,11 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	public final static class RemoveCommand extends CommandArgument {
 
-		RemoveCommand(final Command command) {
+		public RemoveCommand(final Command command) {
 			super(command);
 		}
 
-		RemoveCommand(final Command command, final SubCommand subCommand) {
+		public RemoveCommand(final Command command, final SubCommand subCommand) {
 			super(command, subCommand);
 		}
 
@@ -578,7 +683,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	public final static class NoCommands extends StringArgument {
 
-		NoCommands() {
+		public NoCommands() {
 			super("nocommands");
 		}
 
@@ -586,7 +691,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	public final static class AddCategory extends AclCategoryArgument {
 
-		AddCategory(final AclCategory category) {
+		public AddCategory(final AclCategory category) {
 			super(category);
 		}
 
@@ -599,7 +704,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	public final static class RemoveCategory extends AclCategoryArgument {
 
-		RemoveCategory(final AclCategory category) {
+		public RemoveCategory(final AclCategory category) {
 			super(category);
 		}
 
@@ -612,7 +717,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	public final static class NoPass extends StringArgument {
 
-		NoPass() {
+		public NoPass() {
 			super("nopass");
 		}
 
@@ -620,7 +725,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	public final static class ResetPass extends StringArgument {
 
-		ResetPass() {
+		public ResetPass() {
 			super("resetpass");
 		}
 
@@ -628,7 +733,11 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	public final static class AddPassword extends StringArgument {
 
-		AddPassword(String password) {
+		public AddPassword(final String password) {
+			super(password);
+		}
+
+		public AddPassword(final byte[] password) {
 			super(password);
 		}
 
@@ -641,7 +750,11 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	public final static class RemovePassword extends StringArgument {
 
-		RemovePassword(String password) {
+		public RemovePassword(final String password) {
+			super(password);
+		}
+
+		public RemovePassword(final byte[] password) {
 			super(password);
 		}
 
@@ -654,7 +767,11 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	public final static class AddHashedPassword extends StringArgument {
 
-		AddHashedPassword(String password) {
+		public AddHashedPassword(final String password) {
+			super(password);
+		}
+
+		public AddHashedPassword(final byte[] password) {
 			super(password);
 		}
 
@@ -667,7 +784,11 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	public final static class RemoveHashedPassword extends StringArgument {
 
-		RemoveHashedPassword(String password) {
+		public RemoveHashedPassword(final String password) {
+			super(password);
+		}
+
+		public RemoveHashedPassword(final byte[] password) {
 			super(password);
 		}
 
@@ -680,8 +801,8 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	public final static class Reset extends ProtocolCommandArgument {
 
-		Reset() {
-			super(Keyword.Conn.RESET);
+		public Reset() {
+			super(Command.RESET);
 		}
 
 	}

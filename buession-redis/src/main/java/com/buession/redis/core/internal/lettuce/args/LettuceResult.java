@@ -22,58 +22,62 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis;
+package com.buession.redis.core.internal.lettuce.args;
 
-import redis.clients.jedis.params.XReadGroupParams;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.FutureResult;
+import com.buession.redis.core.internal.convert.Converters;
+import io.lettuce.core.RedisFuture;
+import io.lettuce.core.protocol.RedisCommand;
 
 /**
- * Jedis {@link XReadGroupParams} 扩展
+ * Lettuce 事务、管道异步结果
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 3.0.0
  */
-public final class JedisXReadGroupParams extends XReadGroupParams {
+public class LettuceResult<SV, TV> extends FutureResult<RedisCommand<?, SV, ?>> {
 
-	public JedisXReadGroupParams() {
-		super();
+	@SuppressWarnings({"unchecked"})
+	public LettuceResult(final RedisFuture<SV> resultHolder) {
+		super((RedisCommand<?, SV, ?>) resultHolder);
 	}
 
-	public JedisXReadGroupParams(final int count) {
-		super();
-		count(count);
+	@SuppressWarnings({"unchecked"})
+	public LettuceResult(final RedisFuture<SV> resultHolder, final Converter<SV, TV> converter) {
+		super((RedisCommand<?, SV, ?>) resultHolder, converter);
 	}
 
-	public JedisXReadGroupParams(final int count, final long block) {
-		this(count);
-		block((int) block);
+	@SuppressWarnings({"unchecked"})
+	@Override
+	public SV get() {
+		return (SV) getHolder().getOutput().get();
 	}
 
-	public JedisXReadGroupParams(final int count, final boolean noAck) {
-		this(noAck);
-		count(count);
-	}
+	public final static class Builder<SV, TV> {
 
-	public JedisXReadGroupParams(final int count, final long block, final boolean noAck) {
-		this(count, noAck);
-		block((int) block);
-	}
+		private final RedisFuture<SV> response;
 
-	public JedisXReadGroupParams(final long block) {
-		super();
-		block((int) block);
-	}
+		private Converter<SV, TV> converter;
 
-	public JedisXReadGroupParams(final long block, final boolean noAck) {
-		this(noAck);
-		block((int) block);
-	}
-
-	public JedisXReadGroupParams(final boolean noAck) {
-		super();
-
-		if(noAck){
-			noAck();
+		private Builder(final RedisFuture<SV> response, final Converter<SV, TV> converter) {
+			this.response = response;
+			this.converter = converter;
 		}
+
+		public static <SV, TV> Builder<SV, TV> fromRedisFuture(RedisFuture<SV> redisFuture) {
+			return new LettuceResult.Builder<>(redisFuture, Converters.always());
+		}
+
+		public Builder<SV, TV> mappedWith(Converter<SV, TV> converter) {
+			this.converter = converter;
+			return this;
+		}
+
+		public LettuceResult<SV, TV> build() {
+			return new LettuceResult<>(response, converter);
+		}
+
 	}
 
 }

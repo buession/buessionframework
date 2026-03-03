@@ -33,6 +33,7 @@ import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.HashCommands;
 import com.buession.redis.core.command.args.GetExArgument;
 import com.buession.redis.core.command.args.HSetExArgument;
+import com.buession.redis.core.internal.ResultUtils;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -42,7 +43,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * 哈希表运算
@@ -513,10 +513,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * the expiration (Unix timestamp) in seconds.
 	 */
 	default List<Date> hExpireTimeDate(final String key, final String... fields) {
-		final List<Long> result = hExpireTime(key, fields);
-		return result == null ? null :
-				result.stream().map((v)->v != null && v != -1 && v != -2 ? new Date(v * 1000) : null)
-						.collect(Collectors.toList());
+		return ResultUtils.createDateList(hExpireTime(key, fields), true);
 	}
 
 	/**
@@ -533,10 +530,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * the expiration (Unix timestamp) in seconds.
 	 */
 	default List<Date> hExpireTimeDate(final byte[] key, final byte[]... fields) {
-		final List<Long> result = hExpireTime(key, fields);
-		return result == null ? null :
-				result.stream().map((v)->v != null && v != -1 && v != -2 ? new Date(v * 1000) : null)
-						.collect(Collectors.toList());
+		return ResultUtils.createDateList(hExpireTime(key, fields), true);
 	}
 
 	@Override
@@ -1573,10 +1567,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * the expiration (Unix timestamp) in milliseconds.
 	 */
 	default List<Date> hPExpireTimeDate(final String key, final String... fields) {
-		final List<Long> result = hPExpireTime(key, fields);
-		return result == null ? null :
-				result.stream().map((v)->v != null && v != -1 && v != -2 ? new Date(v) : null)
-						.collect(Collectors.toList());
+		return ResultUtils.createDateList(hPExpireTime(key, fields), false);
 	}
 
 	/**
@@ -1593,10 +1584,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * the expiration (Unix timestamp) in milliseconds.
 	 */
 	default List<Date> hPExpireTimeDate(final byte[] key, final byte[]... fields) {
-		final List<Long> result = hPExpireTime(key, fields);
-		return result == null ? null :
-				result.stream().map((v)->v != null && v != -1 && v != -2 ? new Date(v) : null)
-						.collect(Collectors.toList());
+		return ResultUtils.createDateList(hPExpireTime(key, fields), false);
 	}
 
 	@Override

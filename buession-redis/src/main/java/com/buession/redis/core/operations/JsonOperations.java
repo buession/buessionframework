@@ -138,12 +138,12 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 	}
 
 	@Override
-	default List<Object> jsonArrPop(final String key, final String path) {
+	default List<String> jsonArrPop(final String key, final String path) {
 		return execute((client)->client.jsonCommands().jsonArrPop(key, path));
 	}
 
 	@Override
-	default List<Object> jsonArrPop(final byte[] key, final byte[] path) {
+	default List<byte[]> jsonArrPop(final byte[] key, final byte[] path) {
 		return execute((client)->client.jsonCommands().jsonArrPop(key, path));
 	}
 
@@ -284,26 +284,14 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 	 *
 	 * @param key
 	 * 		Key
+	 * @param clazz
+	 * 		值对象类
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return 文档指定路径的值
 	 */
-	<V> V jsonGetObject(final String key);
-
-	/**
-	 * 从 JSON 文档获取指定路径的值，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/json.get/" target="_blank">https://redis.io/docs/latest/commands/json.get/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 文档指定路径的值
-	 */
-	<V> V jsonGetObject(final byte[] key);
+	<V> V jsonGet(final String key, final Class<V> clazz);
 
 	/**
 	 * 从 JSON 文档获取指定路径的值，并将值反序列化为对象
@@ -319,23 +307,7 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 	 *
 	 * @return 文档指定路径的值
 	 */
-	<V> V jsonGetObject(final String key, final Class<V> clazz);
-
-	/**
-	 * 从 JSON 文档获取指定路径的值，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/json.get/" target="_blank">https://redis.io/docs/latest/commands/json.get/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 文档指定路径的值
-	 */
-	<V> V jsonGetObject(final byte[] key, final Class<V> clazz);
+	<V> V jsonGet(final byte[] key, final Class<V> clazz);
 
 	/**
 	 * 从 JSON 文档获取指定路径的值，并将值反序列化为对象
@@ -351,7 +323,7 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 	 *
 	 * @return 文档指定路径的值
 	 */
-	<V> V jsonGetObject(final String key, final TypeReference<V> type);
+	<V> V jsonGet(final String key, final TypeReference<V> type);
 
 	/**
 	 * 从 JSON 文档获取指定路径的值，并将值反序列化为对象
@@ -367,39 +339,7 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 	 *
 	 * @return 文档指定路径的值
 	 */
-	<V> V jsonGetObject(final byte[] key, final TypeReference<V> type);
-
-	/**
-	 * 从 JSON 文档获取指定路径的值，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/json.get/" target="_blank">https://redis.io/docs/latest/commands/json.get/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param argument
-	 * 		参数
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 文档指定路径的值
-	 */
-	<V> V jsonGetObject(final String key, final JsonGetArgument argument);
-
-	/**
-	 * 从 JSON 文档获取指定路径的值，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/json.get/" target="_blank">https://redis.io/docs/latest/commands/json.get/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param argument
-	 * 		参数
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 文档指定路径的值
-	 */
-	<V> V jsonGetObject(final byte[] key, final JsonGetArgument argument);
+	<V> V jsonGet(final byte[] key, final TypeReference<V> type);
 
 	/**
 	 * 从 JSON 文档获取指定路径的值，并将值反序列化为对象
@@ -417,7 +357,7 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 	 *
 	 * @return 文档指定路径的值
 	 */
-	<V> V jsonGetObject(final String key, final JsonGetArgument argument, final Class<V> clazz);
+	<V> V jsonGet(final String key, final JsonGetArgument argument, final Class<V> clazz);
 
 	/**
 	 * 从 JSON 文档获取指定路径的值，并将值反序列化为对象
@@ -435,7 +375,7 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 	 *
 	 * @return 文档指定路径的值
 	 */
-	<V> V jsonGetObject(final byte[] key, final JsonGetArgument argument, final Class<V> clazz);
+	<V> V jsonGet(final byte[] key, final JsonGetArgument argument, final Class<V> clazz);
 
 	/**
 	 * 从 JSON 文档获取指定路径的值，并将值反序列化为对象
@@ -453,7 +393,7 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 	 *
 	 * @return 文档指定路径的值
 	 */
-	<V> V jsonGetObject(final String key, final JsonGetArgument argument, final TypeReference<V> type);
+	<V> V jsonGet(final String key, final JsonGetArgument argument, final TypeReference<V> type);
 
 	/**
 	 * 从 JSON 文档获取指定路径的值，并将值反序列化为对象
@@ -471,39 +411,7 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 	 *
 	 * @return 文档指定路径的值
 	 */
-	<V> V jsonGetObject(final byte[] key, final JsonGetArgument argument, final TypeReference<V> type);
-
-	/**
-	 * 从 JSON 文档获取指定路径的值，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/json.get/" target="_blank">https://redis.io/docs/latest/commands/json.get/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param path
-	 * 		JSONPath 表达式
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 文档指定路径的值
-	 */
-	<V> List<V> jsonGetObject(final String key, final String... path);
-
-	/**
-	 * 从 JSON 文档获取指定路径的值，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/json.get/" target="_blank">https://redis.io/docs/latest/commands/json.get/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param path
-	 * 		JSONPath 表达式
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 文档指定路径的值
-	 */
-	<V> List<V> jsonGetObject(final byte[] key, final byte[]... path);
+	<V> V jsonGet(final byte[] key, final JsonGetArgument argument, final TypeReference<V> type);
 
 	/**
 	 * 从 JSON 文档获取指定路径的值，并将值反序列化为对象
@@ -521,7 +429,7 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 	 *
 	 * @return 文档指定路径的值
 	 */
-	<V> List<V> jsonGetObject(final String key, final String[] path, final Class<V> clazz);
+	<V> List<V> jsonGet(final String key, final String[] path, final Class<V> clazz);
 
 	/**
 	 * 从 JSON 文档获取指定路径的值，并将值反序列化为对象
@@ -539,7 +447,7 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 	 *
 	 * @return 文档指定路径的值
 	 */
-	<V> List<V> jsonGetObject(final byte[] key, final byte[][] path, final Class<V> clazz);
+	<V> List<V> jsonGet(final byte[] key, final byte[][] path, final Class<V> clazz);
 
 	/**
 	 * 从 JSON 文档获取指定路径的值，并将值反序列化为对象
@@ -557,7 +465,7 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 	 *
 	 * @return 文档指定路径的值
 	 */
-	<V> List<V> jsonGetObject(final String key, final String[] path, final TypeReference<V> type);
+	<V> List<V> jsonGet(final String key, final String[] path, final TypeReference<V> type);
 
 	/**
 	 * 从 JSON 文档获取指定路径的值，并将值反序列化为对象
@@ -575,43 +483,7 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 	 *
 	 * @return 文档指定路径的值
 	 */
-	<V> List<V> jsonGetObject(final byte[] key, final byte[][] path, final TypeReference<V> type);
-
-	/**
-	 * 从 JSON 文档获取指定路径的值，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/json.get/" target="_blank">https://redis.io/docs/latest/commands/json.get/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param argument
-	 * 		参数
-	 * @param path
-	 * 		JSONPath 表达式
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 文档指定路径的值
-	 */
-	<V> List<V> jsonGetObject(final String key, final JsonGetArgument argument, final String... path);
-
-	/**
-	 * 从 JSON 文档获取指定路径的值，并将值反序列化为对象
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/json.get/" target="_blank">https://redis.io/docs/latest/commands/json.get/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param argument
-	 * 		参数
-	 * @param path
-	 * 		JSONPath 表达式
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 文档指定路径的值
-	 */
-	<V> List<V> jsonGetObject(final byte[] key, final JsonGetArgument argument, final byte[]... path);
+	<V> List<V> jsonGet(final byte[] key, final byte[][] path, final TypeReference<V> type);
 
 	/**
 	 * 从 JSON 文档获取指定路径的值，并将值反序列化为对象
@@ -631,8 +503,7 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 	 *
 	 * @return 文档指定路径的值
 	 */
-	<V> List<V> jsonGetObject(final String key, final JsonGetArgument argument, final String[] path,
-							  final Class<V> clazz);
+	<V> List<V> jsonGet(final String key, final JsonGetArgument argument, final String[] path, final Class<V> clazz);
 
 	/**
 	 * 从 JSON 文档获取指定路径的值，并将值反序列化为对象
@@ -652,8 +523,7 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 	 *
 	 * @return 文档指定路径的值
 	 */
-	<V> List<V> jsonGetObject(final byte[] key, final JsonGetArgument argument, final byte[][] path,
-							  final Class<V> clazz);
+	<V> List<V> jsonGet(final byte[] key, final JsonGetArgument argument, final byte[][] path, final Class<V> clazz);
 
 	/**
 	 * 从 JSON 文档获取指定路径的值，并将值反序列化为对象
@@ -673,8 +543,8 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 	 *
 	 * @return 文档指定路径的值
 	 */
-	<V> List<V> jsonGetObject(final String key, final JsonGetArgument argument, final String[] path,
-							  final TypeReference<V> type);
+	<V> List<V> jsonGet(final String key, final JsonGetArgument argument, final String[] path,
+						final TypeReference<V> type);
 
 	/**
 	 * 从 JSON 文档获取指定路径的值，并将值反序列化为对象
@@ -694,8 +564,8 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 	 *
 	 * @return 文档指定路径的值
 	 */
-	<V> List<V> jsonGetObject(final byte[] key, final JsonGetArgument argument, final byte[][] path,
-							  final TypeReference<V> type);
+	<V> List<V> jsonGet(final byte[] key, final JsonGetArgument argument, final byte[][] path,
+						final TypeReference<V> type);
 
 	@Override
 	default Status jsonMerge(final String key, final String path, final String value) {
@@ -726,29 +596,14 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 	 * 		一个或多个 Key
 	 * @param path
 	 * 		JSONPath 表达式
+	 * @param clazz
+	 * 		值对象类
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return 文档指定路径的值
 	 */
-	<V> List<V> jsonMGetObject(final String[] keys, final String path);
-
-	/**
-	 * 从多个 Redis key 中获取相同 JSON 路径的值
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/json.mget/" target="_blank">https://redis.io/docs/latest/commands/json.mget/</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param path
-	 * 		JSONPath 表达式
-	 * 		JSONPath 表达式
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 文档指定路径的值
-	 */
-	<V> List<V> jsonMGetObject(final byte[][] keys, final byte[] path);
+	<V> List<V> jsonMGet(final String[] keys, final String path, final Class<V> clazz);
 
 	/**
 	 * 从多个 Redis key 中获取相同 JSON 路径的值
@@ -766,25 +621,7 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 	 *
 	 * @return 文档指定路径的值
 	 */
-	<V> List<V> jsonMGetObject(final String[] keys, final String path, final Class<V> clazz);
-
-	/**
-	 * 从多个 Redis key 中获取相同 JSON 路径的值
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/json.mget/" target="_blank">https://redis.io/docs/latest/commands/json.mget/</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param path
-	 * 		JSONPath 表达式
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 文档指定路径的值
-	 */
-	<V> List<V> jsonMGetObject(final byte[][] keys, final byte[] path, final Class<V> clazz);
+	<V> List<V> jsonMGet(final byte[][] keys, final byte[] path, final Class<V> clazz);
 
 	/**
 	 * 从多个 Redis key 中获取相同 JSON 路径的值
@@ -802,7 +639,7 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 	 *
 	 * @return 文档指定路径的值
 	 */
-	<V> List<V> jsonMGetObject(final String[] keys, final String path, final TypeReference<V> type);
+	<V> List<V> jsonMGet(final String[] keys, final String path, final TypeReference<V> type);
 
 	/**
 	 * 从多个 Redis key 中获取相同 JSON 路径的值
@@ -820,7 +657,7 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 	 *
 	 * @return 文档指定路径的值
 	 */
-	<V> List<V> jsonMGetObject(final byte[][] keys, final byte[] path, final TypeReference<V> type);
+	<V> List<V> jsonMGet(final byte[][] keys, final byte[] path, final TypeReference<V> type);
 
 	@Override
 	default Status jsonMSet(final JsonKeyPathValueArgument... data) {

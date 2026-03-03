@@ -22,99 +22,57 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis;
+package com.buession.redis.core.internal.jedis.args;
 
-import redis.clients.jedis.params.FailoverParams;
+import redis.clients.jedis.params.XReadGroupParams;
 
 /**
- * Jedis {@link FailoverParams} 扩展
+ * Jedis {@link XReadGroupParams} 扩展
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class JedisFailoverParams extends FailoverParams {
+public final class JedisXReadGroupParams extends XReadGroupParams {
 
-	/**
-	 * 构造函数
-	 */
-	public JedisFailoverParams() {
+	public JedisXReadGroupParams() {
 		super();
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param host
-	 * 		主机地址
-	 * @param port
-	 * 		端口
-	 */
-	public JedisFailoverParams(final String host, final int port) {
+	public JedisXReadGroupParams(final int count) {
 		super();
-		to(host, port);
+		count(count);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param host
-	 * 		主机地址
-	 * @param port
-	 * 		端口
-	 * @param timeout
-	 * 		超时
-	 */
-	public JedisFailoverParams(final String host, final int port, final int timeout) {
-		this(host, port);
-		timeout(timeout);
+	public JedisXReadGroupParams(final int count, final long block) {
+		this(count);
+		block((int) block);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param host
-	 * 		主机地址
-	 * @param port
-	 * 		端口
-	 * @param force
-	 * 		是否强制
-	 */
-	public JedisFailoverParams(final String host, final int port, final boolean force) {
-		this(host, port);
-		force(force);
+	public JedisXReadGroupParams(final int count, final boolean noAck) {
+		this(noAck);
+		count(count);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param host
-	 * 		主机地址
-	 * @param port
-	 * 		端口
-	 * @param timeout
-	 * 		超时
-	 * @param force
-	 * 		是否强制
-	 */
-	public JedisFailoverParams(final String host, final int port, final int timeout, final boolean force) {
-		this(host, port, timeout);
-		force(force);
+	public JedisXReadGroupParams(final int count, final long block, final boolean noAck) {
+		this(count, noAck);
+		block((int) block);
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param timeout
-	 * 		超时
-	 */
-	public JedisFailoverParams(final int timeout) {
+	public JedisXReadGroupParams(final long block) {
 		super();
-		timeout(timeout);
+		block((int) block);
 	}
 
-	private void force(boolean force) {
-		if(force){
-			force();
+	public JedisXReadGroupParams(final long block, final boolean noAck) {
+		this(noAck);
+		block((int) block);
+	}
+
+	public JedisXReadGroupParams(final boolean noAck) {
+		super();
+
+		if(noAck){
+			noAck();
 		}
 	}
 

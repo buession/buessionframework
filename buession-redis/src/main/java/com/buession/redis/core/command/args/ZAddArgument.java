@@ -105,44 +105,57 @@ public class ZAddArgument {
 		return nxXx;
 	}
 
-	public void setNxXx(NxXx nxXx) {
+	public ZAddArgument setNxXx(NxXx nxXx) {
 		this.nxXx = nxXx;
+		return this;
 	}
 
 	public GtLt getGtLt() {
 		return gtLt;
 	}
 
-	public void setGtLt(GtLt gtLt) {
+	public ZAddArgument setGtLt(GtLt gtLt) {
 		this.gtLt = gtLt;
+		return this;
 	}
 
 	public Boolean getCh() {
 		return ch;
 	}
 
-	public void setCh(Boolean ch) {
+	public ZAddArgument ch() {
+		return setCh(true);
+	}
+
+	public ZAddArgument setCh(Boolean ch) {
 		this.ch = ch;
+		return this;
+	}
+
+	public Boolean isIncr() {
+		return incr;
 	}
 
 	public Boolean getIncr() {
 		return incr;
 	}
 
-	public void setIncr(Boolean incr) {
+	public ZAddArgument incr() {
+		return setIncr(true);
+	}
+
+	public ZAddArgument setIncr(Boolean incr) {
 		this.incr = incr;
+		return this;
 	}
 
 	@Override
 	public String toString() {
-		final ArgStringBuilder builder = ArgStringBuilder.create();
-
-		builder.append(getNxXx());
-		builder.append(getGtLt());
-		builder.append(Boolean.TRUE.equals(getCh()) ? "CH" : null);
-		builder.append(Boolean.TRUE.equals(getIncr()) ? "INCR" : null);
-
-		return builder.toString();
+		return ArgStringBuilder.create()
+				.append(getNxXx())
+				.append(getGtLt())
+				.append(Boolean.TRUE.equals(getCh()) ? "CH" : null)
+				.append(Boolean.TRUE.equals(getIncr()) ? "INCR" : null).build();
 	}
 
 }

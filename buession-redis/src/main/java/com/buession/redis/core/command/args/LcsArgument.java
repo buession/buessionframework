@@ -56,41 +56,61 @@ public class LcsArgument {
 		return len;
 	}
 
-	public void setLen(Boolean len) {
+	public LcsArgument setLen(Boolean len) {
 		this.len = len;
+		return this;
+	}
+
+	public Boolean isIdx() {
+		return getIdx();
 	}
 
 	public Boolean getIdx() {
 		return idx;
 	}
 
-	public void setIdx(Boolean idx) {
+	public LcsArgument idx() {
+		return setIdx(true);
+	}
+
+	public LcsArgument setIdx(Boolean idx) {
 		this.idx = idx;
+		return this;
 	}
 
 	public Long getMinMatchLen() {
 		return minMatchLen;
 	}
 
-	public void setMinMatchLen(Long minMatchLen) {
+	public LcsArgument setMinMatchLen(Long minMatchLen) {
 		this.minMatchLen = minMatchLen;
+		return this;
+	}
+
+	public Boolean isWithMatchLen() {
+		return getWithMatchLen();
 	}
 
 	public Boolean getWithMatchLen() {
 		return withMatchLen;
 	}
 
-	public void setWithMatchLen(Boolean withMatchLen) {
+	public LcsArgument withMatchLen() {
+		return setWithMatchLen(true);
+	}
+
+	public LcsArgument setWithMatchLen(Boolean withMatchLen) {
 		this.withMatchLen = withMatchLen;
+		return this;
 	}
 
 	@Override
 	public String toString() {
 		return ArgStringBuilder.create()
-				.append(Boolean.TRUE.equals(len) ? "LEN" : null)
-				.append(Boolean.TRUE.equals(idx) ? "IDX" : null)
-				.add("MINMATCHLEN", minMatchLen)
-				.append(Boolean.TRUE.equals(withMatchLen) ? "WITHMATCHLEN" : null)
+				.append(Boolean.TRUE.equals(getLen()) ? "LEN" : null)
+				.append(Boolean.TRUE.equals(getIdx()) ? "IDX" : null)
+				.add("MINMATCHLEN", getMinMatchLen())
+				.append(Boolean.TRUE.equals(getWithMatchLen()) ? "WITHMATCHLEN" : null)
 				.build();
 	}
 

@@ -79,7 +79,7 @@ abstract class BaseGeoDistanceArgument {
 	 * @param withHash
 	 * 		是否返回位置元素经过原始 geohash 编码的有序集合分值
 	 */
-	protected BaseGeoDistanceArgument(boolean withCoord, boolean withDist, boolean withHash) {
+	protected BaseGeoDistanceArgument(final Boolean withCoord, final Boolean withDist, final Boolean withHash) {
 		this.withCoord = withCoord;
 		this.withDist = withDist;
 		this.withHash = withHash;
@@ -97,7 +97,8 @@ abstract class BaseGeoDistanceArgument {
 	 * @param order
 	 * 		排序方式
 	 */
-	protected BaseGeoDistanceArgument(boolean withCoord, boolean withDist, boolean withHash, Order order) {
+	protected BaseGeoDistanceArgument(final Boolean withCoord, final Boolean withDist, final Boolean withHash,
+									  final Order order) {
 		this(withCoord, withDist, withHash);
 		this.order = order;
 	}
@@ -116,7 +117,8 @@ abstract class BaseGeoDistanceArgument {
 	 * @param any
 	 * 		-
 	 */
-	protected BaseGeoDistanceArgument(boolean withCoord, boolean withDist, boolean withHash, int count, boolean any) {
+	protected BaseGeoDistanceArgument(final Boolean withCoord, final Boolean withDist, final Boolean withHash,
+									  final Integer count, final Boolean any) {
 		this(withCoord, withDist, withHash);
 		this.count = count;
 		this.any = any;
@@ -138,8 +140,8 @@ abstract class BaseGeoDistanceArgument {
 	 * @param any
 	 * 		-
 	 */
-	protected BaseGeoDistanceArgument(boolean withCoord, boolean withDist, boolean withHash, Order order, int count,
-									  boolean any) {
+	protected BaseGeoDistanceArgument(final Boolean withCoord, final Boolean withDist, final Boolean withHash,
+									  final Order order, final Integer count, final Boolean any) {
 		this(withCoord, withDist, withHash, count, any);
 		this.order = order;
 	}
@@ -162,7 +164,7 @@ abstract class BaseGeoDistanceArgument {
 	 * @param any
 	 * 		-
 	 */
-	protected BaseGeoDistanceArgument(int count, boolean any) {
+	protected BaseGeoDistanceArgument(final Integer count, final Boolean any) {
 		this.count = count;
 		this.any = any;
 	}
@@ -177,7 +179,7 @@ abstract class BaseGeoDistanceArgument {
 	 * @param any
 	 * 		-
 	 */
-	protected BaseGeoDistanceArgument(Order order, int count, boolean any) {
+	protected BaseGeoDistanceArgument(final Order order, final Integer count, final Boolean any) {
 		this(count, any);
 		this.order = order;
 	}
@@ -188,6 +190,15 @@ abstract class BaseGeoDistanceArgument {
 	 * @return 是否将位置元素的经度和维度也一并返回
 	 */
 	public Boolean isWithCoord() {
+		return getWithCoord();
+	}
+
+	/**
+	 * 获取是否将位置元素的经度和维度也一并返回
+	 *
+	 * @return 是否将位置元素的经度和维度也一并返回
+	 */
+	public Boolean getWithCoord() {
 		return withCoord;
 	}
 
@@ -196,8 +207,20 @@ abstract class BaseGeoDistanceArgument {
 	 *
 	 * @return {@link BaseGeoDistanceArgument}
 	 */
-	public BaseGeoDistanceArgument setWithCoord() {
-		this.withCoord = true;
+	public BaseGeoDistanceArgument withCoord() {
+		return setWithCoord(true);
+	}
+
+	/**
+	 * 设置将位置元素的经度和维度也一并返回
+	 *
+	 * @param withCoord
+	 * 		是否将位置元素的经度和维度也一并返回
+	 *
+	 * @return {@link BaseGeoDistanceArgument}
+	 */
+	public BaseGeoDistanceArgument setWithCoord(Boolean withCoord) {
+		this.withCoord = withCoord;
 		return this;
 	}
 
@@ -207,6 +230,15 @@ abstract class BaseGeoDistanceArgument {
 	 * @return 是否在返回位置元素的同时，将位置元素与中心之间的距离也一并返回
 	 */
 	public Boolean isWithDist() {
+		return getWithDist();
+	}
+
+	/**
+	 * 获取是否在返回位置元素的同时，将位置元素与中心之间的距离也一并返回
+	 *
+	 * @return 是否在返回位置元素的同时，将位置元素与中心之间的距离也一并返回
+	 */
+	public Boolean getWithDist() {
 		return withDist;
 	}
 
@@ -215,7 +247,19 @@ abstract class BaseGeoDistanceArgument {
 	 *
 	 * @return {@link BaseGeoDistanceArgument}
 	 */
-	public BaseGeoDistanceArgument setWithDist() {
+	public BaseGeoDistanceArgument withDist() {
+		return setWithDist(true);
+	}
+
+	/**
+	 * 设置在返回位置元素的同时，将位置元素与中心之间的距离也一并返回
+	 *
+	 * @param withDist
+	 * 		是否在返回位置元素的同时，将位置元素与中心之间的距离也一并返回
+	 *
+	 * @return {@link BaseGeoDistanceArgument}
+	 */
+	public BaseGeoDistanceArgument setWithDist(Boolean withDist) {
 		this.withDist = true;
 		return this;
 	}
@@ -226,6 +270,15 @@ abstract class BaseGeoDistanceArgument {
 	 * @return 是否返回位置元素经过原始 geohash 编码的有序集合分值
 	 */
 	public Boolean isWithHash() {
+		return getWithHash();
+	}
+
+	/**
+	 * 获取是否返回位置元素经过原始 geohash 编码的有序集合分值
+	 *
+	 * @return 是否返回位置元素经过原始 geohash 编码的有序集合分值
+	 */
+	public Boolean getWithHash() {
 		return withHash;
 	}
 
@@ -234,8 +287,20 @@ abstract class BaseGeoDistanceArgument {
 	 *
 	 * @return {@link BaseGeoDistanceArgument}
 	 */
-	public BaseGeoDistanceArgument setWithHash() {
-		this.withHash = true;
+	public BaseGeoDistanceArgument withHash() {
+		return setWithHash(true);
+	}
+
+	/**
+	 * 设置返回位置元素经过原始 geohash 编码的有序集合分值
+	 *
+	 * @param withHash
+	 * 		是否返回位置元素经过原始 geohash 编码的有序集合分值
+	 *
+	 * @return {@link BaseGeoDistanceArgument}
+	 */
+	public BaseGeoDistanceArgument setWithHash(Boolean withHash) {
+		this.withHash = withHash;
 		return this;
 	}
 
@@ -278,7 +343,20 @@ abstract class BaseGeoDistanceArgument {
 	 *
 	 * @return {@link BaseGeoDistanceArgument}
 	 */
-	public BaseGeoDistanceArgument setCount(Integer count, boolean any) {
+	public BaseGeoDistanceArgument setCount(Integer count) {
+		this.count = count;
+		return this;
+	}
+
+	/**
+	 * 设置返回数量
+	 *
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return {@link BaseGeoDistanceArgument}
+	 */
+	public BaseGeoDistanceArgument setCount(Integer count, Boolean any) {
 		this.count = count;
 		this.any = any;
 		return this;
@@ -290,6 +368,10 @@ abstract class BaseGeoDistanceArgument {
 	 * @return -
 	 */
 	public Boolean isAny() {
+		return getAny();
+	}
+
+	public Boolean getAny() {
 		return any;
 	}
 

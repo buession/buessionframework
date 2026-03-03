@@ -32,7 +32,7 @@ import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.SetCommands;
 import com.buession.redis.core.internal.convert.jedis.response.ScanResultConverter;
 import com.buession.redis.core.internal.convert.response.OneStatusConverter;
-import com.buession.redis.core.internal.jedis.JedisScanParams;
+import com.buession.redis.core.internal.jedis.args.JedisScanParams;
 
 import java.util.List;
 import java.util.Set;

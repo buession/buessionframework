@@ -22,35 +22,37 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis;
+package com.buession.redis.core.internal.jedis.args;
 
-import redis.clients.jedis.params.XReadParams;
+import com.buession.redis.utils.SafeEncoder;
+import redis.clients.jedis.json.Path2;
 
 /**
- * Jedis {@link XReadParams} 扩展
+ * Jedis {@link Path2} 扩展
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 4.0.0
  */
-public final class JedisXReadParams extends XReadParams {
+public final class JedisPath extends Path2 {
 
-	public JedisXReadParams() {
-		super();
+	/**
+	 * 构造函数
+	 *
+	 * @param str
+	 * 		-
+	 */
+	public JedisPath(final String str) {
+		super(str);
 	}
 
-	public JedisXReadParams(final int count) {
-		super();
-		count(count);
-	}
-
-	public JedisXReadParams(final int count, final long block) {
-		this(count);
-		block((int) block);
-	}
-
-	public JedisXReadParams(final long block) {
-		super();
-		block((int) block);
+	/**
+	 * 构造函数
+	 *
+	 * @param str
+	 * 		-
+	 */
+	public JedisPath(final byte[] str) {
+		super(SafeEncoder.encode(str));
 	}
 
 }

@@ -22,45 +22,10 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.lettuce;
-
-import com.buession.redis.core.MinMax;
-import io.lettuce.core.ZPopArgs;
-
 /**
- * Lettuce {@link ZPopArgs} 扩展
+ *
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class LettuceZPopArgs extends ZPopArgs {
-
-	/**
-	 * 构造函数
-	 */
-	public LettuceZPopArgs() {
-		super();
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param minMax
-	 *        {@link MinMax}
-	 */
-	public LettuceZPopArgs(final MinMax minMax) {
-		if(minMax != null){
-			switch(minMax){
-				case MIN:
-					min();
-					break;
-				case MAX:
-					max();
-					break;
-				default:
-					break;
-			}
-		}
-	}
-
-}
+package com.buession.redis.core.internal.jedis.args;

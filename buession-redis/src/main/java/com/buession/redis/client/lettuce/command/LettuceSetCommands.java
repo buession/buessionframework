@@ -34,8 +34,8 @@ import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.SetCommands;
 import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConverter;
-import com.buession.redis.core.internal.lettuce.LettuceScanArgs;
-import com.buession.redis.core.internal.lettuce.LettuceScanCursor;
+import com.buession.redis.core.internal.lettuce.args.LettuceScanArgs;
+import com.buession.redis.core.internal.lettuce.args.LettuceScanCursor;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;

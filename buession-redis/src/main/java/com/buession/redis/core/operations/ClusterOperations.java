@@ -120,7 +120,7 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	}
 
 	@Override
-	default List<String> clusterGetKeysInSlot(final int slot, final long count) {
+	default List<String> clusterGetKeysInSlot(final int slot, final int count) {
 		return execute((client)->client.clusterCommands().clusterGetKeysInSlot(slot, count));
 	}
 

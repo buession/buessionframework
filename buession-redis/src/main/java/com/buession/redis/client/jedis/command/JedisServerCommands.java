@@ -550,7 +550,7 @@ public final class JedisServerCommands extends AbstractJedisRedisCommands implem
 
 	@Override
 	public Status replicaOf(final String host, final int port) {
-		final CommandArguments args = CommandArguments.create(host).add(port);
+		final CommandArguments args = CommandArguments.create(host, port);
 		return executeCommand(Command.REPLICAOF, args);
 	}
 

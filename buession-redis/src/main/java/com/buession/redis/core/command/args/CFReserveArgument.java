@@ -187,8 +187,12 @@ public class CFReserveArgument {
 
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create().append(capacity).add("BUCKETSIZE", bucketSize)
-				.add("MAXITERATIONS", maxIterations).add("EXPANSION", expansion).build();
+		return ArgStringBuilder.create()
+				.append(getCapacity())
+				.add("BUCKETSIZE", getBucketSize())
+				.add("MAXITERATIONS", getMaxIterations())
+				.add("EXPANSION", getExpansion())
+				.build();
 	}
 
 }

@@ -25,7 +25,6 @@
 package com.buession.redis.utils;
 
 import com.buession.core.utils.StringJoiner;
-import com.buession.redis.core.Keyword;
 
 /**
  * 参数构建器
@@ -154,6 +153,11 @@ public final class ArgStringBuilder {
 
 	public String build() {
 		return joiner.toString();
+	}
+
+	@Override
+	public String toString() {
+		return build();
 	}
 
 }
