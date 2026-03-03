@@ -1756,7 +1756,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 
 	@Override
 	default List<String> zRangeByScore(final String key, final double min, final double max) {
-		return execute((client)->client.sortedSetCommands().zRangeByLex(key, min, max));
+		return execute((client)->client.sortedSetCommands().zRangeByScore(key, min, max));
 	}
 
 	@Override

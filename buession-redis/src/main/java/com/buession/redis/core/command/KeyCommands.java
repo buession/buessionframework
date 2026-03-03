@@ -1152,6 +1152,74 @@ public interface KeyCommands extends RedisCommands {
 	List<byte[]> sort(final byte[] key, final SortArgument argument);
 
 	/**
+	 * 返回给定列表、集合、有序集合 key 中经过排序的元素
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/sort.html" target="_blank">http://redisdoc.com/database/sort.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 *
+	 * @return 列表形式的排序结果
+	 */
+	List<String> sort(final String key, final int offset, final int count);
+
+	/**
+	 * 返回给定列表、集合、有序集合 key 中经过排序的元素
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/sort.html" target="_blank">http://redisdoc.com/database/sort.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 *
+	 * @return 列表形式的排序结果
+	 */
+	List<byte[]> sort(final byte[] key, final int offset, final int count);
+
+	/**
+	 * 返回给定列表、集合、有序集合 key 中经过排序的元素
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/sort.html" target="_blank">http://redisdoc.com/database/sort.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param argument
+	 * 		排序参数
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 *
+	 * @return 列表形式的排序结果
+	 */
+	List<String> sort(final String key, final SortArgument argument, final int offset, final int count);
+
+	/**
+	 * 返回给定列表、集合、有序集合 key 中经过排序的元素
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/sort.html" target="_blank">http://redisdoc.com/database/sort.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param argument
+	 * 		排序参数
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 *
+	 * @return 列表形式的排序结果
+	 */
+	List<byte[]> sort(final byte[] key, final SortArgument argument, final int offset, final int count);
+
+	/**
 	 * 保存给定列表、集合、有序集合 key 中经过排序的元素到 destKey；
 	 * 如果被指定的 key 已存在，那么原有的值将被排序结果覆盖
 	 *
@@ -1214,6 +1282,86 @@ public interface KeyCommands extends RedisCommands {
 	 * @return 排序结果的元素数量
 	 */
 	Long sort(final byte[] key, final byte[] destKey, final SortArgument argument);
+
+	/**
+	 * 保存给定列表、集合、有序集合 key 中经过排序的元素到 destKey；
+	 * 如果被指定的 key 已存在，那么原有的值将被排序结果覆盖
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/sort.html" target="_blank">http://redisdoc.com/database/sort.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 key
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 *
+	 * @return 排序结果的元素数量
+	 */
+	Long sort(final String key, final String destKey, final int offset, final int count);
+
+	/**
+	 * 保存给定列表、集合、有序集合 key 中经过排序的元素到 destKey；
+	 * 如果被指定的 key 已存在，那么原有的值将被排序结果覆盖
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/sort.html" target="_blank">http://redisdoc.com/database/sort.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 key
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 *
+	 * @return 排序结果的元素数量
+	 */
+	Long sort(final byte[] key, final byte[] destKey, final int offset, final int count);
+
+	/**
+	 * 保存给定列表、集合、有序集合 key 中经过排序的元素到 destKey；
+	 * 如果被指定的 key 已存在，那么原有的值将被排序结果覆盖
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/sort.html" target="_blank">http://redisdoc.com/database/sort.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 key
+	 * @param argument
+	 * 		排序参数
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 *
+	 * @return 排序结果的元素数量
+	 */
+	Long sort(final String key, final String destKey, final SortArgument argument, final int offset, final int count);
+
+	/**
+	 * 保存给定列表、集合、有序集合 key 中经过排序的元素到 destKey；
+	 * 如果被指定的 key 已存在，那么原有的值将被排序结果覆盖
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/sort.html" target="_blank">http://redisdoc.com/database/sort.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 key
+	 * @param argument
+	 * 		排序参数
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 *
+	 * @return 排序结果的元素数量
+	 */
+	Long sort(final byte[] key, final byte[] destKey, final SortArgument argument, final int offset, final int count);
 
 	/**
 	 * <code>SORT</code> 命令的只读版本

@@ -25,8 +25,6 @@
 package com.buession.redis.core.command.args;
 
 import com.buession.lang.Order;
-import com.buession.redis.core.Keyword;
-import com.buession.redis.core.Limit;
 import com.buession.redis.utils.ArgStringBuilder;
 import com.buession.redis.utils.SafeEncoder;
 
@@ -44,11 +42,6 @@ public class SortArgument {
 	 * 排序方式
 	 */
 	private Order order;
-
-	/**
-	 * 结果限制
-	 */
-	private Limit limit;
 
 	private String[] getPatterns;
 
@@ -162,110 +155,6 @@ public class SortArgument {
 		this.order = order;
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param by
-	 * 		-
-	 * @param gets
-	 * 		-
-	 * @param limit
-	 * 		结果限制
-	 */
-	public SortArgument(final String by, final String[] gets, final Limit limit) {
-		this(by, gets);
-		this.limit = limit;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param by
-	 * 		-
-	 * @param gets
-	 * 		-
-	 * @param limit
-	 * 		结果限制
-	 */
-	public SortArgument(final byte[] by, final byte[][] gets, final Limit limit) {
-		this(by, gets);
-		this.limit = limit;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param by
-	 * 		-
-	 * @param gets
-	 * 		-
-	 * @param order
-	 * 		排序方式
-	 * @param limit
-	 * 		结果限制
-	 */
-	public SortArgument(final String by, final String[] gets, final Order order, final Limit limit) {
-		this(by, gets, order);
-		this.limit = limit;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param by
-	 * 		-
-	 * @param gets
-	 * 		-
-	 * @param order
-	 * 		排序方式
-	 * @param limit
-	 * 		结果限制
-	 */
-	public SortArgument(final byte[] by, final byte[][] gets, final Order order, final Limit limit) {
-		this(by, gets, order);
-		this.limit = limit;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param by
-	 * 		-
-	 * @param gets
-	 * 		-
-	 * @param order
-	 * 		排序方式
-	 * @param limit
-	 * 		结果限制
-	 * @param alpha
-	 * 		-
-	 */
-	public SortArgument(final String by, final String[] gets, final Order order, final Limit limit,
-						final Boolean alpha) {
-		this(by, gets, order, limit);
-		this.alpha = alpha;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param by
-	 * 		-
-	 * @param gets
-	 * 		-
-	 * @param order
-	 * 		排序方式
-	 * @param limit
-	 * 		结果限制
-	 * @param alpha
-	 * 		-
-	 */
-	public SortArgument(final byte[] by, final byte[][] gets, final Order order, final Limit limit,
-						final Boolean alpha) {
-		this(by, gets, order, limit);
-		this.alpha = alpha;
-	}
-
 	public String getBy() {
 		return by;
 	}
@@ -301,26 +190,6 @@ public class SortArgument {
 	 */
 	public SortArgument setOrder(final Order order) {
 		this.order = order;
-		return this;
-	}
-
-	/**
-	 * 获取返回结果限制
-	 *
-	 * @return 返回结果限制
-	 */
-	public Limit getLimit() {
-		return limit;
-	}
-
-	/**
-	 * 设置结果限制
-	 *
-	 * @param limit
-	 * 		结果限制
-	 */
-	public SortArgument setLimit(final Limit limit) {
-		this.limit = limit;
 		return this;
 	}
 
@@ -362,10 +231,6 @@ public class SortArgument {
 	@Override
 	public String toString() {
 		final ArgStringBuilder builder = ArgStringBuilder.create().add("BY", getBy());
-
-		if(getLimit() != null){
-			builder.add(Keyword.Common.LIMIT.name(), getLimit().getOffset() + ' ' + getLimit().getCount());
-		}
 
 		if(getGetPatterns() != null){
 			for(final String pattern : getGetPatterns()){

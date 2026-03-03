@@ -1406,6 +1406,26 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	}
 
 	@Override
+	default List<String> sort(final String key, final int offset, final int count) {
+		return execute((client)->client.keyCommands().sort(key, offset, count));
+	}
+
+	@Override
+	default List<byte[]> sort(final byte[] key, final int offset, final int count) {
+		return execute((client)->client.keyCommands().sort(key, offset, count));
+	}
+
+	@Override
+	default List<String> sort(final String key, final SortArgument argument, final int offset, final int count) {
+		return execute((client)->client.keyCommands().sort(key, argument, offset, count));
+	}
+
+	@Override
+	default List<byte[]> sort(final byte[] key, final SortArgument argument, final int offset, final int count) {
+		return execute((client)->client.keyCommands().sort(key, argument, offset, count));
+	}
+
+	@Override
 	default Long sort(final String key, final String destKey) {
 		return execute((client)->client.keyCommands().sort(key, destKey));
 	}
@@ -1423,6 +1443,28 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	@Override
 	default Long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument) {
 		return execute((client)->client.keyCommands().sort(key, destKey, sortArgument));
+	}
+
+	@Override
+	default Long sort(final String key, final String destKey, final int offset, final int count) {
+		return execute((client)->client.keyCommands().sort(key, destKey, offset, count));
+	}
+
+	@Override
+	default Long sort(final byte[] key, final byte[] destKey, final int offset, final int count) {
+		return execute((client)->client.keyCommands().sort(key, destKey, offset, count));
+	}
+
+	@Override
+	default Long sort(final String key, final String destKey, final SortArgument argument, final int offset,
+					  final int count) {
+		return execute((client)->client.keyCommands().sort(key, destKey, argument, offset, count));
+	}
+
+	@Override
+	default Long sort(final byte[] key, final byte[] destKey, final SortArgument argument, final int offset,
+					  final int count) {
+		return execute((client)->client.keyCommands().sort(key, destKey, argument, offset, count));
 	}
 
 	@Override
