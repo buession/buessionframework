@@ -66,7 +66,9 @@ public interface Keyword extends Value<String>, Rawable {
 
 		GET,
 
-		SET
+		SET,
+
+		ITEMS
 	}
 
 	enum Conn {

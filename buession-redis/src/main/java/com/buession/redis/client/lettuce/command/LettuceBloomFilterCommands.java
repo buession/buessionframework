@@ -26,11 +26,12 @@ package com.buession.redis.client.lettuce.command;
 
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
+import com.buession.redis.core.BfInfoOption;
+import com.buession.redis.core.Keyword;
 import com.buession.redis.core.command.BloomFilterCommands;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.args.BFInsertArgument;
-import com.buession.redis.core.command.args.BFReserveArgument;
 
 import java.util.List;
 import java.util.Map;
@@ -85,38 +86,50 @@ public final class LettuceBloomFilterCommands extends AbstractLettuceRedisComman
 	}
 
 	@Override
-	public Map<String, Object> bfInfo(final String key) {
+	public Map<String, Number> bfInfo(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(Command.BF_INFO, args);
 	}
 
 	@Override
-	public Map<String, Object> bfInfo(final byte[] key) {
+	public Map<String, Number> bfInfo(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
+		return executeCommand(Command.BF_INFO, args);
+	}
+
+	@Override
+	public Number bfInfo(final String key, final BfInfoOption option) {
+		final CommandArguments args = CommandArguments.create(key).add(option);
+		return executeCommand(Command.BF_INFO, args);
+	}
+
+	@Override
+	public Number bfInfo(final byte[] key, final BfInfoOption option) {
+		final CommandArguments args = CommandArguments.create(key).add(option);
 		return executeCommand(Command.BF_INFO, args);
 	}
 
 	@Override
 	public List<Boolean> bfInsert(final String key, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add("ITEMS", items);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS, items);
 		return executeCommand(Command.BF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> bfInsert(final byte[] key, final byte[]... items) {
-		final CommandArguments args = CommandArguments.create(key).add("ITEMS", items);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS, items);
 		return executeCommand(Command.BF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> bfInsert(final String key, final BFInsertArgument argument, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS", items);
+		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.ITEMS, items);
 		return executeCommand(Command.BF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> bfInsert(final byte[] key, final BFInsertArgument argument, final byte[]... items) {
-		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS", items);
+		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.ITEMS, items);
 		return executeCommand(Command.BF_INSERT, args);
 	}
 
@@ -157,17 +170,58 @@ public final class LettuceBloomFilterCommands extends AbstractLettuceRedisComman
 	}
 
 	@Override
-	public Status bfReserve(final String key, final BFReserveArgument bfInsertArgument) {
-		final CommandArguments args = CommandArguments.create(key).add(bfInsertArgument);
+	public Status bfReserve(final String key, final double errorRate, final long capacity) {
+		final CommandArguments args = CommandArguments.create(key).add(errorRate).add(capacity);
 		return executeCommand(Command.BF_RESERVE, args);
 	}
 
 	@Override
-	public Status bfReserve(final byte[] key, final BFReserveArgument bfInsertArgument) {
-		final CommandArguments args = CommandArguments.create(key).add(bfInsertArgument);
+	public Status bfReserve(final byte[] key, final double errorRate, final long capacity) {
+		final CommandArguments args = CommandArguments.create(key).add(errorRate).add(capacity);
 		return executeCommand(Command.BF_RESERVE, args);
 	}
 
+	@Override
+	public Status bfReserve(final String key, final double errorRate, final long capacity, final int expansion) {
+		final CommandArguments args = CommandArguments.create(key).add(errorRate).add(capacity)
+				.add("EXPANSION", expansion);
+		return executeCommand(Command.BF_RESERVE, args);
+	}
+
+	@Override
+	public Status bfReserve(final byte[] key, final double errorRate, final long capacity, final int expansion) {
+		final CommandArguments args = CommandArguments.create(key).add(errorRate).add(capacity)
+				.add("EXPANSION", expansion);
+		return executeCommand(Command.BF_RESERVE, args);
+	}
+
+	@Override
+	public Status bfReserve(final String key, final double errorRate, final long capacity, final int expansion,
+							final boolean nonScaling) {
+		final CommandArguments args = CommandArguments.create(key).add(errorRate).add(capacity)
+				.add("EXPANSION", expansion).add("NONSCALING");
+		return executeCommand(Command.BF_RESERVE, args);
+	}
+
+	@Override
+	public Status bfReserve(final byte[] key, final double errorRate, final long capacity, final int expansion,
+							final boolean nonScaling) {
+		final CommandArguments args = CommandArguments.create(key).add(errorRate).add(capacity)
+				.add("EXPANSION", expansion).add("NONSCALING");
+		return executeCommand(Command.BF_RESERVE, args);
+	}
+
+	@Override
+	public Status bfReserve(final String key, final double errorRate, final long capacity, final boolean nonScaling) {
+		final CommandArguments args = CommandArguments.create(key).add(errorRate).add(capacity).add("NONSCALING");
+		return executeCommand(Command.BF_RESERVE, args);
+	}
+
+	@Override
+	public Status bfReserve(final byte[] key, final double errorRate, final long capacity, final boolean nonScaling) {
+		final CommandArguments args = CommandArguments.create(key).add(errorRate).add(capacity).add("NONSCALING");
+		return executeCommand(Command.BF_RESERVE, args);
+	}
 
 	@Override
 	public Map<Long, byte[]> bfScandump(final String key, final long iterator) {

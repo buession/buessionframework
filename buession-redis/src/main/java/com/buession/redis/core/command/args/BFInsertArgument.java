@@ -71,7 +71,7 @@ public class BFInsertArgument {
 	 * @param capacity
 	 * 		初始容量
 	 */
-	public BFInsertArgument(long capacity) {
+	public BFInsertArgument(final Long capacity) {
 		this.capacity = capacity;
 	}
 
@@ -83,7 +83,7 @@ public class BFInsertArgument {
 	 * @param errorRate
 	 * 		期望的误判率
 	 */
-	public BFInsertArgument(long capacity, double errorRate) {
+	public BFInsertArgument(final Long capacity, final Double errorRate) {
 		this(capacity);
 		this.errorRate = errorRate;
 	}
@@ -98,7 +98,7 @@ public class BFInsertArgument {
 	 * @param expansion
 	 * 		扩容倍数
 	 */
-	public BFInsertArgument(long capacity, double errorRate, int expansion) {
+	public BFInsertArgument(final Long capacity, final Double errorRate, final Integer expansion) {
 		this(capacity, errorRate);
 		this.expansion = expansion;
 	}
@@ -115,7 +115,8 @@ public class BFInsertArgument {
 	 * @param nonScaling
 	 * 		是否禁用自动扩容
 	 */
-	public BFInsertArgument(long capacity, double errorRate, boolean noCreate, final boolean nonScaling) {
+	public BFInsertArgument(final Long capacity, final Double errorRate, final Boolean noCreate,
+							final Boolean nonScaling) {
 		this(capacity, errorRate);
 		this.noCreate = noCreate;
 		this.nonScaling = nonScaling;
@@ -135,8 +136,8 @@ public class BFInsertArgument {
 	 * @param nonScaling
 	 * 		是否禁用自动扩容
 	 */
-	public BFInsertArgument(long capacity, double errorRate, int expansion, boolean noCreate,
-							final boolean nonScaling) {
+	public BFInsertArgument(final Long capacity, final Double errorRate, final Integer expansion,
+							final Boolean noCreate, final Boolean nonScaling) {
 		this(capacity, errorRate, expansion);
 		this.noCreate = noCreate;
 		this.nonScaling = nonScaling;
@@ -150,7 +151,7 @@ public class BFInsertArgument {
 	 * @param expansion
 	 * 		扩容倍数
 	 */
-	public BFInsertArgument(long capacity, int expansion) {
+	public BFInsertArgument(final Long capacity, final Integer expansion) {
 		this(capacity);
 		this.expansion = expansion;
 	}
@@ -167,7 +168,8 @@ public class BFInsertArgument {
 	 * @param nonScaling
 	 * 		是否禁用自动扩容
 	 */
-	public BFInsertArgument(long capacity, int expansion, boolean noCreate, final boolean nonScaling) {
+	public BFInsertArgument(final Long capacity, final Integer expansion, final Boolean noCreate,
+							final Boolean nonScaling) {
 		this(capacity, expansion);
 		this.noCreate = noCreate;
 		this.nonScaling = nonScaling;
@@ -183,7 +185,7 @@ public class BFInsertArgument {
 	 * @param nonScaling
 	 * 		是否禁用自动扩容
 	 */
-	public BFInsertArgument(long capacity, boolean noCreate, final boolean nonScaling) {
+	public BFInsertArgument(final Long capacity, final Boolean noCreate, final Boolean nonScaling) {
 		this(noCreate, nonScaling);
 		this.capacity = capacity;
 	}
@@ -194,7 +196,7 @@ public class BFInsertArgument {
 	 * @param errorRate
 	 * 		期望的误判率
 	 */
-	public BFInsertArgument(double errorRate) {
+	public BFInsertArgument(final Double errorRate) {
 		this.errorRate = errorRate;
 	}
 
@@ -206,7 +208,7 @@ public class BFInsertArgument {
 	 * @param expansion
 	 * 		扩容倍数
 	 */
-	public BFInsertArgument(double errorRate, int expansion) {
+	public BFInsertArgument(final Double errorRate, final Integer expansion) {
 		this(errorRate);
 		this.expansion = expansion;
 	}
@@ -221,7 +223,7 @@ public class BFInsertArgument {
 	 * @param nonScaling
 	 * 		是否禁用自动扩容
 	 */
-	public BFInsertArgument(double errorRate, boolean noCreate, final boolean nonScaling) {
+	public BFInsertArgument(final Double errorRate, final Boolean noCreate, final Boolean nonScaling) {
 		this(errorRate);
 		this.noCreate = noCreate;
 		this.nonScaling = nonScaling;
@@ -239,7 +241,8 @@ public class BFInsertArgument {
 	 * @param nonScaling
 	 * 		是否禁用自动扩容
 	 */
-	public BFInsertArgument(double errorRate, int expansion, boolean noCreate, final boolean nonScaling) {
+	public BFInsertArgument(final Double errorRate, final Integer expansion, final Boolean noCreate,
+							final Boolean nonScaling) {
 		this(errorRate, expansion);
 		this.noCreate = noCreate;
 		this.nonScaling = nonScaling;
@@ -251,7 +254,7 @@ public class BFInsertArgument {
 	 * @param expansion
 	 * 		扩容倍数
 	 */
-	public BFInsertArgument(int expansion) {
+	public BFInsertArgument(final Integer expansion) {
 		this.expansion = expansion;
 	}
 
@@ -265,7 +268,7 @@ public class BFInsertArgument {
 	 * @param nonScaling
 	 * 		是否禁用自动扩容
 	 */
-	public BFInsertArgument(int expansion, boolean noCreate, final boolean nonScaling) {
+	public BFInsertArgument(final Integer expansion, final Boolean noCreate, final Boolean nonScaling) {
 		this(noCreate, nonScaling);
 		this.expansion = expansion;
 	}
@@ -278,7 +281,7 @@ public class BFInsertArgument {
 	 * @param nonScaling
 	 * 		是否禁用自动扩容
 	 */
-	public BFInsertArgument(boolean noCreate, final boolean nonScaling) {
+	public BFInsertArgument(final Boolean noCreate, final Boolean nonScaling) {
 		this.noCreate = noCreate;
 		this.nonScaling = nonScaling;
 	}
@@ -370,13 +373,10 @@ public class BFInsertArgument {
 	/**
 	 * 设置当 key 不存在时不自动创建
 	 *
-	 * @param noCreate
-	 * 		当 key 不存在时不自动创建
-	 *
 	 * @return {@link BFInsertArgument}
 	 */
-	public BFInsertArgument noCreate(Boolean noCreate) {
-		return setNoCreate(noCreate);
+	public BFInsertArgument noCreate() {
+		return setNoCreate(true);
 	}
 
 	/**

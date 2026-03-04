@@ -25,8 +25,8 @@
 package com.buession.redis.core.command;
 
 import com.buession.lang.Status;
+import com.buession.redis.core.BfInfoOption;
 import com.buession.redis.core.command.args.BFInsertArgument;
-import com.buession.redis.core.command.args.BFReserveArgument;
 
 import java.util.List;
 import java.util.Map;
@@ -131,7 +131,7 @@ public interface BloomFilterCommands extends RedisCommands {
 	 *
 	 * @return 布隆过滤器 key 的详细元信息
 	 */
-	Map<String, Object> bfInfo(final String key);
+	Map<String, Number> bfInfo(final String key);
 
 	/**
 	 * 获取指定布隆过滤器 key 的详细元信息
@@ -143,7 +143,33 @@ public interface BloomFilterCommands extends RedisCommands {
 	 *
 	 * @return 布隆过滤器 key 的详细元信息
 	 */
-	Map<String, Object> bfInfo(final byte[] key);
+	Map<String, Number> bfInfo(final byte[] key);
+
+	/**
+	 * 获取指定布隆过滤器 key 的详细元信息
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/bf.info/" target="_blank">https://redis.io/docs/latest/commands/bf.info/</a></p>
+	 *
+	 * @param key
+	 * 		布隆过滤器的名称
+	 * @param option
+	 * 		选项
+	 *
+	 * @return 布隆过滤器 key 的详细元信息
+	 */
+	Number bfInfo(final String key, final BfInfoOption option);
+
+	/**
+	 * 获取指定布隆过滤器 key 的详细元信息
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/bf.info/" target="_blank">https://redis.io/docs/latest/commands/bf.info/</a></p>
+	 *
+	 * @param key
+	 * 		布隆过滤器的名称
+	 *
+	 * @return 布隆过滤器 key 的详细元信息
+	 */
+	Number bfInfo(final byte[] key, final BfInfoOption option);
 
 	/**
 	 * 向布隆过滤器 key 中批量添加元素
@@ -300,12 +326,14 @@ public interface BloomFilterCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		布隆过滤器的名称
-	 * @param argument
-	 * 		BF.RESERVE 参数
+	 * @param errorRate
+	 * 		期望的误判率
+	 * @param capacity
+	 * 		初始容量
 	 *
 	 * @return 操作结果
 	 */
-	Status bfReserve(final String key, final BFReserveArgument argument);
+	Status bfReserve(final String key, final double errorRate, final long capacity);
 
 	/**
 	 * 控制布隆过滤器的关键参数：预期容量（capacity） 和 可接受的误判率（error rate）
@@ -314,12 +342,131 @@ public interface BloomFilterCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		布隆过滤器的名称
-	 * @param argument
-	 * 		BF.RESERVE 参数
+	 * @param errorRate
+	 * 		期望的误判率
+	 * @param capacity
+	 * 		初始容量
 	 *
 	 * @return 操作结果
 	 */
-	Status bfReserve(final byte[] key, final BFReserveArgument argument);
+	Status bfReserve(final byte[] key, final double errorRate, final long capacity);
+
+	/**
+	 * 控制布隆过滤器的关键参数：预期容量（capacity） 和 可接受的误判率（error rate）
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/bf.reserve/" target="_blank">https://redis.io/docs/latest/commands/bf.reserve/</a></p>
+	 *
+	 * @param key
+	 * 		布隆过滤器的名称
+	 * @param errorRate
+	 * 		期望的误判率
+	 * @param capacity
+	 * 		初始容量
+	 * @param expansion
+	 * 		扩容倍数
+	 *
+	 * @return 操作结果
+	 */
+	Status bfReserve(final String key, final double errorRate, final long capacity, final int expansion);
+
+	/**
+	 * 控制布隆过滤器的关键参数：预期容量（capacity） 和 可接受的误判率（error rate）
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/bf.reserve/" target="_blank">https://redis.io/docs/latest/commands/bf.reserve/</a></p>
+	 *
+	 * @param key
+	 * 		布隆过滤器的名称
+	 * @param errorRate
+	 * 		期望的误判率
+	 * @param capacity
+	 * 		初始容量
+	 * 		初始容量
+	 * @param expansion
+	 * 		扩容倍数
+	 *
+	 * @return 操作结果
+	 */
+	Status bfReserve(final byte[] key, final double errorRate, final long capacity, final int expansion);
+
+	/**
+	 * 控制布隆过滤器的关键参数：预期容量（capacity） 和 可接受的误判率（error rate）
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/bf.reserve/" target="_blank">https://redis.io/docs/latest/commands/bf.reserve/</a></p>
+	 *
+	 * @param key
+	 * 		布隆过滤器的名称
+	 * @param errorRate
+	 * 		期望的误判率
+	 * @param capacity
+	 * 		初始容量
+	 * @param expansion
+	 * 		扩容倍数
+	 * @param nonScaling
+	 * 		是否禁用自动扩容
+	 *
+	 * @return 操作结果
+	 */
+	Status bfReserve(final String key, final double errorRate, final long capacity, final int expansion,
+					 final boolean nonScaling);
+
+	/**
+	 * 控制布隆过滤器的关键参数：预期容量（capacity） 和 可接受的误判率（error rate）
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/bf.reserve/" target="_blank">https://redis.io/docs/latest/commands/bf.reserve/</a></p>
+	 *
+	 * @param key
+	 * 		布隆过滤器的名称
+	 * @param errorRate
+	 * 		期望的误判率
+	 * @param capacity
+	 * 		初始容量
+	 * 		初始容量
+	 * @param expansion
+	 * 		扩容倍数
+	 * @param nonScaling
+	 * 		是否禁用自动扩容
+	 *
+	 * @return 操作结果
+	 */
+	Status bfReserve(final byte[] key, final double errorRate, final long capacity, final int expansion,
+					 final boolean nonScaling);
+
+	/**
+	 * 控制布隆过滤器的关键参数：预期容量（capacity） 和 可接受的误判率（error rate）
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/bf.reserve/" target="_blank">https://redis.io/docs/latest/commands/bf.reserve/</a></p>
+	 *
+	 * @param key
+	 * 		布隆过滤器的名称
+	 * @param errorRate
+	 * 		期望的误判率
+	 * @param capacity
+	 * 		初始容量
+	 * @param nonScaling
+	 * 		是否禁用自动扩容
+	 *
+	 * @return 操作结果
+	 */
+	Status bfReserve(final String key, final double errorRate, final long capacity, final boolean nonScaling);
+
+	/**
+	 * 控制布隆过滤器的关键参数：预期容量（capacity） 和 可接受的误判率（error rate）
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/bf.reserve/" target="_blank">https://redis.io/docs/latest/commands/bf.reserve/</a></p>
+	 *
+	 * @param key
+	 * 		布隆过滤器的名称
+	 * @param errorRate
+	 * 		期望的误判率
+	 * @param capacity
+	 * 		初始容量
+	 * 		初始容量
+	 * @param nonScaling
+	 * 		是否禁用自动扩容
+	 *
+	 * @return 操作结果
+	 */
+	Status bfReserve(final byte[] key, final double errorRate, final long capacity, final boolean nonScaling);
 
 	/**
 	 * 采用分块迭代方式导出布隆过滤器 key 的数据

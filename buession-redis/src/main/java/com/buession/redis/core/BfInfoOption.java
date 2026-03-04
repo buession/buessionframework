@@ -22,44 +22,33 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis.args;
-
-import com.buession.redis.core.command.args.BFReserveArgument;
-import redis.clients.jedis.bloom.BFReserveParams;
-
-import java.util.Optional;
+package com.buession.redis.core;
 
 /**
- * Jedis {@link BFReserveParams} 扩展
+ *
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class JedisBFReserveParams extends BFReserveParams {
+public enum BfInfoOption implements Keyword {
+	CAPACITY,
 
-	/**
-	 * 构造函数
-	 */
-	public JedisBFReserveParams() {
-		super();
+	SIZE,
+
+	FILTERS,
+
+	ITEMS,
+
+	EXPANSION;
+
+	@Override
+	public String getValue() {
+		return name();
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param bfReserveArgument
-	 *        {@link BFReserveArgument}
-	 */
-	public JedisBFReserveParams(final BFReserveArgument bfReserveArgument) {
-		super();
-
-		if(bfReserveArgument != null){
-			Optional.ofNullable(bfReserveArgument.getExpansion()).ifPresent(this::expansion);
-
-			if(Boolean.TRUE.equals(bfReserveArgument.isNonScaling())){
-				nonScaling();
-			}
-		}
+	@Override
+	public String toString() {
+		return getValue();
 	}
 
 }

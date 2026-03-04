@@ -25,9 +25,9 @@
 package com.buession.redis.core.operations;
 
 import com.buession.lang.Status;
+import com.buession.redis.core.BfInfoOption;
 import com.buession.redis.core.command.BloomFilterCommands;
 import com.buession.redis.core.command.args.BFInsertArgument;
-import com.buession.redis.core.command.args.BFReserveArgument;
 
 import java.util.List;
 import java.util.Map;
@@ -73,13 +73,23 @@ public interface BloomFilterOperations extends BloomFilterCommands, RedisOperati
 	}
 
 	@Override
-	default Map<String, Object> bfInfo(final String key) {
+	default Map<String, Number> bfInfo(final String key) {
 		return execute((client)->client.bloomFilterCommands().bfInfo(key));
 	}
 
 	@Override
-	default Map<String, Object> bfInfo(final byte[] key) {
+	default Map<String, Number> bfInfo(final byte[] key) {
 		return execute((client)->client.bloomFilterCommands().bfInfo(key));
+	}
+
+	@Override
+	default Number bfInfo(final String key, final BfInfoOption option) {
+		return execute((client)->client.bloomFilterCommands().bfInfo(key, option));
+	}
+
+	@Override
+	default Number bfInfo(final byte[] key, final BfInfoOption option) {
+		return execute((client)->client.bloomFilterCommands().bfInfo(key, option));
 	}
 
 	@Override
@@ -133,13 +143,47 @@ public interface BloomFilterOperations extends BloomFilterCommands, RedisOperati
 	}
 
 	@Override
-	default Status bfReserve(final String key, final BFReserveArgument argument) {
-		return execute((client)->client.bloomFilterCommands().bfReserve(key, argument));
+	default Status bfReserve(final String key, final double errorRate, final long capacity) {
+		return execute((client)->client.bloomFilterCommands().bfReserve(key, errorRate, capacity));
 	}
 
 	@Override
-	default Status bfReserve(final byte[] key, final BFReserveArgument argument) {
-		return execute((client)->client.bloomFilterCommands().bfReserve(key, argument));
+	default Status bfReserve(final byte[] key, final double errorRate, final long capacity) {
+		return execute((client)->client.bloomFilterCommands().bfReserve(key, errorRate, capacity));
+	}
+
+	@Override
+	default Status bfReserve(final String key, final double errorRate, final long capacity, final int expansion) {
+		return execute((client)->client.bloomFilterCommands().bfReserve(key, errorRate, capacity, expansion));
+	}
+
+	@Override
+	default Status bfReserve(final byte[] key, final double errorRate, final long capacity, final int expansion) {
+		return execute((client)->client.bloomFilterCommands().bfReserve(key, errorRate, capacity, expansion));
+	}
+
+	@Override
+	default Status bfReserve(final String key, final double errorRate, final long capacity, final int expansion,
+							 final boolean nonScaling) {
+		return execute(
+				(client)->client.bloomFilterCommands().bfReserve(key, errorRate, capacity, expansion, nonScaling));
+	}
+
+	@Override
+	default Status bfReserve(final byte[] key, final double errorRate, final long capacity, final int expansion,
+							 final boolean nonScaling) {
+		return execute(
+				(client)->client.bloomFilterCommands().bfReserve(key, errorRate, capacity, expansion, nonScaling));
+	}
+
+	@Override
+	default Status bfReserve(final String key, final double errorRate, final long capacity, final boolean nonScaling) {
+		return execute((client)->client.bloomFilterCommands().bfReserve(key, errorRate, capacity, nonScaling));
+	}
+
+	@Override
+	default Status bfReserve(final byte[] key, final double errorRate, final long capacity, final boolean nonScaling) {
+		return execute((client)->client.bloomFilterCommands().bfReserve(key, errorRate, capacity, nonScaling));
 	}
 
 	@Override
