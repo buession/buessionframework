@@ -43,7 +43,7 @@ import com.buession.redis.core.internal.convert.lettuce.params.JsonGetArgumentCo
 import com.buession.redis.core.internal.convert.lettuce.response.JsonTypeConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.response.OneStatusConverter;
-import com.buession.redis.core.internal.lettuce.args.LettuceJsonPath;
+import com.buession.redis.core.internal.lettuce.LettuceJsonPath;
 import com.buession.redis.core.internal.lettuce.args.LettuceJsonRangeArgs;
 import com.buession.redis.core.internal.lettuce.args.LettuceJsonSetArgs;
 import com.buession.redis.utils.SafeEncoder;

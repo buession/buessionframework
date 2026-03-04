@@ -41,11 +41,8 @@ import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ConnectionCommands;
 import com.buession.redis.core.command.SubCommand;
 import com.buession.redis.core.command.args.TrackingArgument;
-import com.buession.redis.core.internal.convert.jedis.params.ClientTypeConverter;
-import com.buession.redis.core.internal.convert.jedis.params.ClientUnblockTypeConverter;
 import com.buession.redis.core.internal.convert.response.PingResultConverter;
 import com.buession.redis.utils.SafeEncoder;
-import redis.clients.jedis.args.UnblockType;
 
 import java.util.List;
 
@@ -130,8 +127,7 @@ public final class JedisConnectionCommands extends AbstractJedisRedisCommands im
 
 	@Override
 	public List<Client> clientList(final ClientType clientType) {
-		final CommandArguments args = CommandArguments.create("TYPE").add(clientType);
-		final redis.clients.jedis.args.ClientType jClientType = (new ClientTypeConverter()).convert(clientType);
+		final CommandArguments args = CommandArguments.create("TYPE", clientType);
 		return executeCommand(Command.CLIENT, SubCommand.CLIENT_LIST, args);
 	}
 
@@ -210,7 +206,6 @@ public final class JedisConnectionCommands extends AbstractJedisRedisCommands im
 	@Override
 	public Status clientUnblock(final int clientId, final ClientUnblockType type) {
 		final CommandArguments args = CommandArguments.create(clientId).add(type);
-		final UnblockType unblockType = (new ClientUnblockTypeConverter()).convert(type);
 		return executeCommand(Command.CLIENT, SubCommand.CLIENT_UNBLOCK, args);
 	}
 
@@ -257,33 +252,29 @@ public final class JedisConnectionCommands extends AbstractJedisRedisCommands im
 
 	@Override
 	public Hello hello(int protover, String username, String password) {
-		final CommandArguments args =
-				CommandArguments.create(protover).add(Validate.isEmpty(username) ? Keyword.Conn.AUTH :
-						Keyword.Conn.AUTH2).add(username, password);
+		final CommandArguments args = CommandArguments.create(protover).add(Validate.isEmpty(username) ?
+				Keyword.Conn.AUTH : Keyword.Conn.AUTH2).add(username, password);
 		return executeCommand(Command.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, byte[] username, byte[] password) {
-		final CommandArguments args =
-				CommandArguments.create(protover).add(Validate.isEmpty(username) ? Keyword.Conn.AUTH :
-						Keyword.Conn.AUTH2).add(username, password);
+		final CommandArguments args = CommandArguments.create(protover).add(Validate.isEmpty(username) ?
+				Keyword.Conn.AUTH : Keyword.Conn.AUTH2).add(username, password);
 		return executeCommand(Command.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, String username, String password, String clientName) {
-		final CommandArguments args =
-				CommandArguments.create(protover).add(Validate.isEmpty(username) ? Keyword.Conn.AUTH :
-						Keyword.Conn.AUTH2).add(username, password).add("SETNAME", clientName);
+		final CommandArguments args = CommandArguments.create(protover).add(Validate.isEmpty(username) ?
+				Keyword.Conn.AUTH : Keyword.Conn.AUTH2).add(username, password).add("SETNAME", clientName);
 		return executeCommand(Command.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, byte[] username, byte[] password, byte[] clientName) {
-		final CommandArguments args =
-				CommandArguments.create(protover).add(Validate.isEmpty(username) ? Keyword.Conn.AUTH :
-						Keyword.Conn.AUTH2).add(username, password).add("SETNAME", clientName);
+		final CommandArguments args = CommandArguments.create(protover).add(Validate.isEmpty(username) ?
+				Keyword.Conn.AUTH : Keyword.Conn.AUTH2).add(username, password).add("SETNAME", clientName);
 		return executeCommand(Command.HELLO, args);
 	}
 

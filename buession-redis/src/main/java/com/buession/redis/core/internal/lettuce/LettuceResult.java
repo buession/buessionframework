@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.lettuce.args;
+package com.buession.redis.core.internal.lettuce;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.FutureResult;

@@ -25,7 +25,7 @@
 package com.buession.redis.pipeline.lettuce;
 
 import com.buession.core.utils.Assert;
-import com.buession.redis.core.internal.lettuce.args.LettuceResult;
+import com.buession.redis.core.internal.lettuce.LettuceResult;
 import com.buession.redis.exception.RedisPipelineException;
 import com.buession.redis.pipeline.Pipeline;
 import io.lettuce.core.LettuceFutures;

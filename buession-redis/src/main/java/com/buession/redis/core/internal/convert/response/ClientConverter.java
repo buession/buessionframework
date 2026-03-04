@@ -164,10 +164,9 @@ public final class ClientConverter implements Converter<String, Client> {
 	 */
 	public final static class ClientListConverter implements Converter<String, List<Client>> {
 
-		private final ClientConverter clientConverter = new ClientConverter();
-
 		@Override
 		public List<Client> convert(final String source) {
+			final ClientConverter clientConverter = new ClientConverter();
 			return Arrays.stream(StringUtils.split(source, "\r\n")).map(clientConverter::convert)
 					.collect(Collectors.toList());
 		}

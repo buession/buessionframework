@@ -42,18 +42,17 @@ import com.buession.redis.core.command.ConnectionCommands;
 import com.buession.redis.core.command.SubCommand;
 import com.buession.redis.core.command.args.TrackingArgument;
 import com.buession.redis.core.internal.convert.lettuce.params.ClientUnblockTypeConverter;
-import com.buession.redis.core.internal.convert.lettuce.params.TrackingArgumentConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.TrackingInfoTrackingInfoConverter;
 import com.buession.redis.core.internal.convert.response.ClientConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.response.OneStatusConverter;
 import com.buession.redis.core.internal.convert.response.PingResultConverter;
+import com.buession.redis.core.internal.lettuce.args.LettuceTrackingArgs;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.ClientListArgs;
 import io.lettuce.core.UnblockType;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Lettuce 连接命令
@@ -91,7 +90,7 @@ public final class LettuceConnectionCommands extends AbstractLettuceRedisCommand
 
 	@Override
 	public Status clientCaching(final boolean isYes) {
-		final CommandArguments args = CommandArguments.create(isYes);
+		final CommandArguments args = CommandArguments.create(isYes ? Keyword.Common.YES : Keyword.Common.NO);
 		return executeCommand(Command.CLIENT, SubCommand.CLIENT_CACHING, args, (cmd)->cmd.clientCaching(isYes),
 				new OkStatusConverter());
 	}
@@ -148,7 +147,7 @@ public final class LettuceConnectionCommands extends AbstractLettuceRedisCommand
 
 	@Override
 	public List<Client> clientList(final long... ids) {
-		final CommandArguments args = CommandArguments.create("ID", ids);
+		final CommandArguments args = CommandArguments.create().add("ID", ids);
 		return executeCommand(Command.CLIENT, SubCommand.CLIENT_LIST, args,
 				(cmd)->cmd.clientList(ClientListArgs.Builder.ids(ids)), new ClientConverter.ClientListConverter());
 	}
@@ -209,11 +208,11 @@ public final class LettuceConnectionCommands extends AbstractLettuceRedisCommand
 	public Status clientTracking(final boolean on, final TrackingArgument argument) {
 		final CommandArguments args = CommandArguments.create(on ? Keyword.Common.ON : Keyword.Common.OFF)
 				.add(argument);
-		final TrackingArgumentConverter trackingArgumentConverter = new TrackingArgumentConverter();
+		final LettuceTrackingArgs lettuceTrackingArgs = new LettuceTrackingArgs(argument);
+
+		lettuceTrackingArgs.enabled(on);
 		return executeCommand(Command.CLIENT, SubCommand.CLIENT_TRACKING, args,
-				(cmd)->cmd.clientTracking(
-						Objects.requireNonNull(trackingArgumentConverter.convert(argument)).enabled(on)),
-				new OkStatusConverter());
+				(cmd)->cmd.clientTracking(lettuceTrackingArgs), new OkStatusConverter());
 	}
 
 	@Override
@@ -232,9 +231,9 @@ public final class LettuceConnectionCommands extends AbstractLettuceRedisCommand
 	@Override
 	public Status clientUnblock(final int clientId, final ClientUnblockType type) {
 		final CommandArguments args = CommandArguments.create(clientId).add(type);
-		final UnblockType unblockType = (new ClientUnblockTypeConverter()).convert(type);
+		final ClientUnblockTypeConverter clientUnblockTypeConverter = new ClientUnblockTypeConverter();
 		return executeCommand(Command.CLIENT, SubCommand.CLIENT_UNBLOCK, args,
-				(cmd)->cmd.clientUnblock(clientId, unblockType), new OneStatusConverter());
+				(cmd)->cmd.clientUnblock(clientId, clientUnblockTypeConverter.convert(type)), new OneStatusConverter());
 	}
 
 	@Override
@@ -252,7 +251,7 @@ public final class LettuceConnectionCommands extends AbstractLettuceRedisCommand
 	@Override
 	public byte[] echo(final byte[] str) {
 		final CommandArguments args = CommandArguments.create(str);
-		return executeCommand(Command.ECHO, args, (cmd)->cmd.echo(str), (v)->v);
+		return executeCommand(Command.ECHO, args, (cmd)->cmd.echo(str));
 	}
 
 	@Override
@@ -280,33 +279,29 @@ public final class LettuceConnectionCommands extends AbstractLettuceRedisCommand
 
 	@Override
 	public Hello hello(int protover, String username, String password) {
-		final CommandArguments args =
-				CommandArguments.create(protover).add(Validate.isEmpty(username) ? Keyword.Conn.AUTH :
-						Keyword.Conn.AUTH2).add(username, password);
+		final CommandArguments args = CommandArguments.create(protover).add(Validate.isEmpty(username) ?
+				Keyword.Conn.AUTH : Keyword.Conn.AUTH2).add(username, password);
 		return executeCommand(Command.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, byte[] username, byte[] password) {
-		final CommandArguments args =
-				CommandArguments.create(protover).add(Validate.isEmpty(username) ? Keyword.Conn.AUTH :
-						Keyword.Conn.AUTH2).add(username, password);
+		final CommandArguments args = CommandArguments.create(protover).add(Validate.isEmpty(username) ?
+				Keyword.Conn.AUTH : Keyword.Conn.AUTH2).add(username, password);
 		return executeCommand(Command.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, String username, String password, String clientName) {
-		final CommandArguments args =
-				CommandArguments.create(protover).add(Validate.isEmpty(username) ? Keyword.Conn.AUTH :
-						Keyword.Conn.AUTH2).add(username, password).add("SETNAME", clientName);
+		final CommandArguments args = CommandArguments.create(protover).add(Validate.isEmpty(username) ?
+				Keyword.Conn.AUTH : Keyword.Conn.AUTH2).add(username, password).add("SETNAME", clientName);
 		return executeCommand(Command.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, byte[] username, byte[] password, byte[] clientName) {
-		final CommandArguments args =
-				CommandArguments.create(protover).add(Validate.isEmpty(username) ? Keyword.Conn.AUTH :
-						Keyword.Conn.AUTH2).add(username, password).add("SETNAME", clientName);
+		final CommandArguments args = CommandArguments.create(protover).add(Validate.isEmpty(username) ?
+				Keyword.Conn.AUTH : Keyword.Conn.AUTH2).add(username, password).add("SETNAME", clientName);
 		return executeCommand(Command.HELLO, args);
 	}
 

@@ -24,35 +24,50 @@
  */
 package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.redis.utils.SafeEncoder;
-import io.lettuce.core.json.JsonPath;
+import com.buession.redis.core.command.args.TrackingArgument;
+import io.lettuce.core.TrackingArgs;
+
+import java.util.Optional;
 
 /**
- * Lettuce {@link JsonPath} 扩展
+ * Lettuce {@link TrackingArgs} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class LettuceJsonPath extends JsonPath {
+public final class LettuceTrackingArgs extends TrackingArgs {
 
 	/**
 	 * 构造函数
-	 *
-	 * @param path
-	 * 		路径
 	 */
-	public LettuceJsonPath(final String path) {
-		super(path);
+	public LettuceTrackingArgs() {
+		super();
 	}
 
 	/**
 	 * 构造函数
 	 *
-	 * @param path
-	 * 		路径
+	 * @param trackingArgument
+	 *        {@link TrackingArgument}
 	 */
-	public LettuceJsonPath(final byte[] path) {
-		super(SafeEncoder.encode(path));
+	public LettuceTrackingArgs(final TrackingArgument trackingArgument) {
+		super();
+		if(trackingArgument != null){
+			Optional.ofNullable(trackingArgument.getRedirect()).ifPresent(this::redirect);
+			Optional.ofNullable(trackingArgument.getPrefixes()).ifPresent(this::prefixes);
+			if(Boolean.TRUE.equals(trackingArgument.getBcast())){
+				bcast();
+			}
+			if(Boolean.TRUE.equals(trackingArgument.getOptin())){
+				optin();
+			}
+			if(Boolean.TRUE.equals(trackingArgument.getOptout())){
+				optout();
+			}
+			if(Boolean.TRUE.equals(trackingArgument.getNoloop())){
+				noloop();
+			}
+		}
 	}
 
 }
