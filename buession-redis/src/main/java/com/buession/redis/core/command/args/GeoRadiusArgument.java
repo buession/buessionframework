@@ -25,7 +25,6 @@
 package com.buession.redis.core.command.args;
 
 import com.buession.lang.Order;
-import com.buession.redis.core.Keyword;
 import com.buession.redis.utils.ArgStringBuilder;
 
 /**
@@ -76,76 +75,11 @@ public class GeoRadiusArgument extends BaseGeoDistanceArgument {
 	/**
 	 * 构造函数
 	 *
-	 * @param withCoord
-	 * 		是否将位置元素的经度和维度也一并返回
-	 * @param withDist
-	 * 		是否在返回位置元素的同时，将位置元素与中心之间的距离也一并返回
-	 * @param withHash
-	 * 		是否返回位置元素经过原始 geohash 编码的有序集合分值
-	 * @param count
-	 * 		数量
-	 * @param any
-	 * 		-
-	 */
-	public GeoRadiusArgument(boolean withCoord, boolean withDist, boolean withHash, int count, boolean any) {
-		super(withCoord, withDist, withHash, count, any);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param withCoord
-	 * 		是否将位置元素的经度和维度也一并返回
-	 * @param withDist
-	 * 		是否在返回位置元素的同时，将位置元素与中心之间的距离也一并返回
-	 * @param withHash
-	 * 		是否返回位置元素经过原始 geohash 编码的有序集合分值
-	 * @param order
-	 * 		排序方式
-	 * @param count
-	 * 		数量
-	 * @param any
-	 * 		-
-	 */
-	public GeoRadiusArgument(boolean withCoord, boolean withDist, boolean withHash, Order order, int count,
-							 boolean any) {
-		super(withCoord, withDist, withHash, order, count, any);
-	}
-
-	/**
-	 * 构造函数
-	 *
 	 * @param order
 	 * 		排序方式
 	 */
 	public GeoRadiusArgument(Order order) {
 		super(order);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param count
-	 * 		数量
-	 * @param any
-	 * 		-
-	 */
-	public GeoRadiusArgument(int count, boolean any) {
-		super(count, any);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param order
-	 * 		排序方式
-	 * @param count
-	 * 		数量
-	 * @param any
-	 * 		-
-	 */
-	public GeoRadiusArgument(Order order, int count, boolean any) {
-		super(order, count, any);
 	}
 
 	@Override
@@ -154,7 +88,6 @@ public class GeoRadiusArgument extends BaseGeoDistanceArgument {
 				.append(Boolean.TRUE.equals(getWithCoord()) ? "WITHCOORD" : null)
 				.append(Boolean.TRUE.equals(getWithDist()) ? "WITHDIST" : null)
 				.append(Boolean.TRUE.equals(getWithHash()) ? "WITHHASH" : null)
-				.add(Keyword.Common.COUNT.name(), getCount() == null ? null : getCount() + " " + Keyword.Common.ANY)
 				.append(getOrder())
 				.build();
 	}

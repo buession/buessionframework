@@ -25,7 +25,6 @@
 package com.buession.redis.core.command.args;
 
 import com.buession.lang.Order;
-import com.buession.redis.core.command.GeoCommands;
 
 /**
  *
@@ -54,13 +53,6 @@ abstract class BaseGeoDistanceArgument {
 	 * 排序方式
 	 */
 	protected Order order;
-
-	/**
-	 * 数量
-	 */
-	protected Integer count;
-
-	protected Boolean any;
 
 	/**
 	 * 构造函数
@@ -106,81 +98,10 @@ abstract class BaseGeoDistanceArgument {
 	/**
 	 * 构造函数
 	 *
-	 * @param withCoord
-	 * 		是否将位置元素的经度和维度也一并返回
-	 * @param withDist
-	 * 		是否在返回位置元素的同时，将位置元素与中心之间的距离也一并返回
-	 * @param withHash
-	 * 		是否返回位置元素经过原始 geohash 编码的有序集合分值
-	 * @param count
-	 * 		数量
-	 * @param any
-	 * 		-
-	 */
-	protected BaseGeoDistanceArgument(final Boolean withCoord, final Boolean withDist, final Boolean withHash,
-									  final Integer count, final Boolean any) {
-		this(withCoord, withDist, withHash);
-		this.count = count;
-		this.any = any;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param withCoord
-	 * 		是否将位置元素的经度和维度也一并返回
-	 * @param withDist
-	 * 		是否在返回位置元素的同时，将位置元素与中心之间的距离也一并返回
-	 * @param withHash
-	 * 		是否返回位置元素经过原始 geohash 编码的有序集合分值
-	 * @param order
-	 * 		排序方式
-	 * @param count
-	 * 		数量
-	 * @param any
-	 * 		-
-	 */
-	protected BaseGeoDistanceArgument(final Boolean withCoord, final Boolean withDist, final Boolean withHash,
-									  final Order order, final Integer count, final Boolean any) {
-		this(withCoord, withDist, withHash, count, any);
-		this.order = order;
-	}
-
-	/**
-	 * 构造函数
-	 *
 	 * @param order
 	 * 		排序方式
 	 */
 	protected BaseGeoDistanceArgument(Order order) {
-		this.order = order;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param count
-	 * 		数量
-	 * @param any
-	 * 		-
-	 */
-	protected BaseGeoDistanceArgument(final Integer count, final Boolean any) {
-		this.count = count;
-		this.any = any;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param order
-	 * 		排序方式
-	 * @param count
-	 * 		数量
-	 * @param any
-	 * 		-
-	 */
-	protected BaseGeoDistanceArgument(final Order order, final Integer count, final Boolean any) {
-		this(count, any);
 		this.order = order;
 	}
 
@@ -260,7 +181,7 @@ abstract class BaseGeoDistanceArgument {
 	 * @return {@link BaseGeoDistanceArgument}
 	 */
 	public BaseGeoDistanceArgument setWithDist(Boolean withDist) {
-		this.withDist = true;
+		this.withDist = withDist;
 		return this;
 	}
 
@@ -324,55 +245,6 @@ abstract class BaseGeoDistanceArgument {
 	public BaseGeoDistanceArgument setOrder(Order order) {
 		this.order = order;
 		return this;
-	}
-
-	/**
-	 * 获取返回数量
-	 *
-	 * @return 返回数量
-	 */
-	public Integer getCount() {
-		return count;
-	}
-
-	/**
-	 * 设置返回数量
-	 *
-	 * @param count
-	 * 		返回数量
-	 *
-	 * @return {@link BaseGeoDistanceArgument}
-	 */
-	public BaseGeoDistanceArgument setCount(Integer count) {
-		this.count = count;
-		return this;
-	}
-
-	/**
-	 * 设置返回数量
-	 *
-	 * @param count
-	 * 		返回数量
-	 *
-	 * @return {@link BaseGeoDistanceArgument}
-	 */
-	public BaseGeoDistanceArgument setCount(Integer count, Boolean any) {
-		this.count = count;
-		this.any = any;
-		return this;
-	}
-
-	/**
-	 * 获取 -
-	 *
-	 * @return -
-	 */
-	public Boolean isAny() {
-		return getAny();
-	}
-
-	public Boolean getAny() {
-		return any;
 	}
 
 }

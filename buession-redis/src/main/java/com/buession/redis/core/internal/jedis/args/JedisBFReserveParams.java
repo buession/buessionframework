@@ -22,37 +22,44 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.core.converter.Converter;
 import com.buession.redis.core.command.args.BFReserveArgument;
 import redis.clients.jedis.bloom.BFReserveParams;
 
 import java.util.Optional;
 
 /**
- * {@link BFReserveArgument} 转换为 jedis {@link BFReserveParams}
+ * Jedis {@link BFReserveParams} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class BFReserveArgumentConverter implements Converter<BFReserveArgument, BFReserveParams> {
+public final class JedisBFReserveParams extends BFReserveParams {
 
-	@Override
-	public BFReserveParams convert(final BFReserveArgument source) {
-		if(source == null){
-			return null;
+	/**
+	 * 构造函数
+	 */
+	public JedisBFReserveParams() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param bfReserveArgument
+	 *        {@link BFReserveArgument}
+	 */
+	public JedisBFReserveParams(final BFReserveArgument bfReserveArgument) {
+		super();
+
+		if(bfReserveArgument != null){
+			Optional.ofNullable(bfReserveArgument.getExpansion()).ifPresent(this::expansion);
+
+			if(Boolean.TRUE.equals(bfReserveArgument.isNonScaling())){
+				nonScaling();
+			}
 		}
-
-		final BFReserveParams bfReserveParams = new BFReserveParams();
-
-		Optional.ofNullable(source.getExpansion()).ifPresent(bfReserveParams::expansion);
-
-		if(Boolean.TRUE.equals(source.isNonScaling())){
-			bfReserveParams.nonScaling();
-		}
-
-		return bfReserveParams;
 	}
 
 }

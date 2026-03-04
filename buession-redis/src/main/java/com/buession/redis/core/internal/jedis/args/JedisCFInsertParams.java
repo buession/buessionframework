@@ -22,34 +22,44 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.args.LPosArgument;
-import redis.clients.jedis.params.LPosParams;
+import com.buession.redis.core.command.args.CFInsertArgument;
+import redis.clients.jedis.bloom.CFInsertParams;
 
 import java.util.Optional;
 
 /**
- * {@link LPosArgument} 转换为 jedis {@link LPosParams}
+ * Jedis {@link CFInsertParams}
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class LPosArgumentConverter implements Converter<LPosArgument, LPosParams> {
+public final class JedisCFInsertParams extends CFInsertParams {
 
-	@Override
-	public LPosParams convert(final LPosArgument source) {
-		if(source == null){
-			return null;
+	/**
+	 * 构造函数
+	 */
+	public JedisCFInsertParams() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param cfInsertArgument
+	 *        {@link CFInsertArgument}
+	 */
+	public JedisCFInsertParams(final CFInsertArgument cfInsertArgument) {
+		super();
+
+		if(cfInsertArgument != null){
+			Optional.ofNullable(cfInsertArgument.getCapacity()).ifPresent(this::capacity);
+
+			if(Boolean.TRUE.equals(cfInsertArgument.isNoCreate())){
+				noCreate();
+			}
 		}
-
-		final LPosParams lPosParams = new LPosParams();
-
-		Optional.ofNullable(source.getRank()).ifPresent(lPosParams::rank);
-		Optional.ofNullable(source.getMaxLen()).ifPresent(lPosParams::maxlen);
-
-		return lPosParams;
 	}
 
 }

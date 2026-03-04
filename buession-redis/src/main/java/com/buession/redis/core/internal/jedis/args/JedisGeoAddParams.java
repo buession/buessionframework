@@ -22,35 +22,43 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.args.CFReserveArgument;
-import redis.clients.jedis.bloom.CFReserveParams;
-
-import java.util.Optional;
+import com.buession.redis.core.NxXx;
+import com.buession.redis.core.command.args.GeoAddArgument;
+import redis.clients.jedis.params.GeoAddParams;
 
 /**
- * {@link CFReserveArgument} 转换为 jedis {@link CFReserveParams}
+ * Jedis {@link GeoAddParams} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class CFReserveArgumentConverter implements Converter<CFReserveArgument, CFReserveParams> {
+public final class JedisGeoAddParams extends GeoAddParams {
 
-	@Override
-	public CFReserveParams convert(final CFReserveArgument source) {
-		if(source == null){
-			return null;
+	/**
+	 * 构造函数
+	 */
+	public JedisGeoAddParams() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param geoAddArgument
+	 *        {@link GeoAddArgument}
+	 */
+	public JedisGeoAddParams(final GeoAddArgument geoAddArgument) {
+		super();
+		if(geoAddArgument.getNxXx() == NxXx.NX){
+			nx();
+		}else if(geoAddArgument.getNxXx() == NxXx.XX){
+			xx();
 		}
-
-		final CFReserveParams cfReserveParams = new CFReserveParams();
-
-		Optional.ofNullable(source.getBucketSize()).ifPresent(cfReserveParams::bucketSize);
-		Optional.ofNullable(source.getMaxIterations()).ifPresent(cfReserveParams::maxIterations);
-		Optional.ofNullable(source.getExpansion()).ifPresent(cfReserveParams::expansion);
-
-		return cfReserveParams;
+		if(Boolean.TRUE.equals(geoAddArgument.isCh())){
+			ch();
+		}
 	}
 
 }

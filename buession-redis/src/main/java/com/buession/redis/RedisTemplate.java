@@ -49,9 +49,8 @@ import java.util.stream.Collectors;
  * Redis 命令操作封装扩展，可序列化对象和反序列化为对象
  *
  * @author Yong.Teng
- * @see AbstractRedisTemplate
  */
-public class RedisTemplate extends AbstractRedisTemplate implements BloomFilterOperations, BitMapOperations,
+public class RedisTemplate extends AbstractRedisTemplate implements BitMapOperations, BloomFilterOperations,
 		CuckooFilterOperations, ClusterOperations, CountMinSketchOperations, ConnectionOperations, GenericOperations,
 		GeoOperations, HashOperations, HyperLogLogOperations, JsonOperations, KeyOperations, ListOperations,
 		PubSubOperations, ScriptingOperations, /*SearchOperations, */ServerOperations, SetOperations,

@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.command.args;
 
+import com.buession.redis.core.BitFieldEncoding;
 import com.buession.redis.core.Keyword;
 import com.buession.redis.utils.ArgStringBuilder;
 
@@ -33,294 +34,61 @@ import com.buession.redis.utils.ArgStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class BitFieldArgument extends BaseBitFieldArgument {
+public interface BitFieldArgument {
 
-	/**
-	 * 加操作
-	 */
-	private IncrbyOp incrBy;
-
-	/**
-	 * 数值溢出行为
-	 */
-	private Overflow overflow;
-
-	/**
-	 * 构造函数
-	 */
-	public BitFieldArgument() {
+	interface Op extends BitFieldArgument {
 
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param set
-	 * 		写操作
-	 */
-	public BitFieldArgument(final SetOp set) {
-		super(set);
+	interface GetOp extends Op {
+
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param set
-	 * 		写操作
-	 * @param get
-	 * 		获取操作
-	 */
-	public BitFieldArgument(final SetOp set, final GetOp get) {
-		super(set, get);
+	class DefaultGet implements GetOp {
+
+		private final String commandType;
+
+		private final BitFieldEncoding encoding;
+
+		private final boolean bitOffset;
+
+		private final int offset;
+
+		private DefaultGet(final BitFieldEncoding encoding, final boolean bitOffset, final int offset) {
+			this.commandType = Keyword.Common.GET.name();
+			this.encoding = encoding;
+			this.bitOffset = bitOffset;
+			this.offset = offset;
+		}
+
+		public BitFieldEncoding getEncoding() {
+			return encoding;
+		}
+
+		public boolean isBitOffset() {
+			return bitOffset;
+		}
+
+		public int getOffset() {
+			return offset;
+		}
+
+		@Override
+		public String toString() {
+			final ArgStringBuilder builder = ArgStringBuilder.create().add(commandType, getEncoding());
+
+			if(isBitOffset()){
+				builder.append(" #" + getOffset());
+			}else{
+				builder.append(" " + getOffset());
+			}
+
+			return builder.build();
+		}
+
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param set
-	 * 		写操作
-	 * @param get
-	 * 		获取操作
-	 * @param incrBy
-	 * 		加操作
-	 */
-	public BitFieldArgument(final SetOp set, final GetOp get, final IncrbyOp incrBy) {
-		this(set, get);
-		this.incrBy = incrBy;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param set
-	 * 		写操作
-	 * @param get
-	 * 		获取操作
-	 * @param incrBy
-	 * 		加操作
-	 * @param overflow
-	 * 		数值溢出行为
-	 */
-	public BitFieldArgument(final SetOp set, final GetOp get, final IncrbyOp incrBy, final Overflow overflow) {
-		this(set, get, incrBy);
-		this.overflow = overflow;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param set
-	 * 		写操作
-	 * @param incrBy
-	 * 		加操作
-	 */
-	public BitFieldArgument(final SetOp set, final IncrbyOp incrBy) {
-		this(set);
-		this.incrBy = incrBy;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param set
-	 * 		写操作
-	 * @param incrBy
-	 * 		加操作
-	 * @param overflow
-	 * 		数值溢出行为
-	 */
-	public BitFieldArgument(final SetOp set, final IncrbyOp incrBy, final Overflow overflow) {
-		this(set, incrBy);
-		this.overflow = overflow;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param set
-	 * 		写操作
-	 * @param overflow
-	 * 		数值溢出行为
-	 */
-	public BitFieldArgument(final SetOp set, final Overflow overflow) {
-		this(set);
-		this.overflow = overflow;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param get
-	 * 		获取操作
-	 */
-	public BitFieldArgument(final GetOp get) {
-		super(get);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param get
-	 * 		获取操作
-	 * @param incrBy
-	 * 		加操作
-	 */
-	public BitFieldArgument(final GetOp get, final IncrbyOp incrBy) {
-		this(get);
-		this.incrBy = incrBy;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param get
-	 * 		获取操作
-	 * @param incrBy
-	 * 		加操作
-	 * @param overflow
-	 * 		数值溢出行为
-	 */
-	public BitFieldArgument(final GetOp get, final IncrbyOp incrBy, final Overflow overflow) {
-		this(get, incrBy);
-		this.overflow = overflow;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param incrBy
-	 * 		加操作
-	 */
-	public BitFieldArgument(final IncrbyOp incrBy) {
-		this.incrBy = incrBy;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param incrBy
-	 * 		加操作
-	 * @param overflow
-	 * 		数值溢出行为
-	 */
-	public BitFieldArgument(final IncrbyOp incrBy, final Overflow overflow) {
-		this(incrBy);
-		this.overflow = overflow;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param overflow
-	 * 		数值溢出行为
-	 */
-	public BitFieldArgument(final Overflow overflow) {
-		this.overflow = overflow;
-	}
-
-	/**
-	 * 返回加操作
-	 *
-	 * @return 加操作
-	 */
-	public IncrbyOp getIncrBy() {
-		return incrBy;
-	}
-
-	/**
-	 * 设置加操作
-	 *
-	 * @param incrBy
-	 * 		加操作
-	 *
-	 * @return {@link BitFieldArgument}
-	 */
-	public BitFieldArgument setIncrBy(IncrbyOp incrBy) {
-		this.incrBy = incrBy;
-		return this;
-	}
-
-	/**
-	 * 设置加操作
-	 *
-	 * @param bitFieldType
-	 * 		操作类型
-	 * @param value
-	 * 		值
-	 *
-	 * @return {@link BitFieldArgument}
-	 */
-	public BitFieldArgument setIncrBy(BitFieldType bitFieldType, long value) {
-		return setIncrBy(bitFieldType, 0, value);
-	}
-
-	/**
-	 * 设置加操作
-	 *
-	 * @param bitFieldType
-	 * 		操作类型
-	 * @param offset
-	 * 		偏移量
-	 * @param value
-	 * 		值
-	 *
-	 * @return {@link BitFieldArgument}
-	 */
-	public BitFieldArgument setIncrBy(BitFieldType bitFieldType, int offset, long value) {
-		return setIncrBy(bitFieldType, false, offset, value);
-	}
-
-	/**
-	 * 设置加操作
-	 *
-	 * @param bitFieldType
-	 * 		操作类型
-	 * @param bitOffset
-	 * 		-
-	 * @param offset
-	 * 		偏移量
-	 * @param value
-	 * 		值
-	 *
-	 * @return {@link BitFieldArgument}
-	 */
-	public BitFieldArgument setIncrBy(BitFieldType bitFieldType, boolean bitOffset, int offset, long value) {
-		return setIncrBy(new IncrbyOp(bitFieldType, bitOffset, offset, value));
-	}
-
-	/**
-	 * 返回数值溢出行为
-	 *
-	 * @return 数值溢出行为
-	 */
-	public Overflow getOverflow() {
-		return overflow;
-	}
-
-	/**
-	 * 设置数值溢出行为
-	 *
-	 * @param overflow
-	 * 		数值溢出行为
-	 *
-	 * @return {@link BitFieldArgument}
-	 */
-	public BitFieldArgument setOverflow(Overflow overflow) {
-		this.overflow = overflow;
-		return this;
-	}
-
-	@Override
-	public String toString() {
-		return ArgStringBuilder.create()
-				.append(getSet())
-				.append(getGet())
-				.append(getIncrBy())
-				.append(getOverflow())
-				.build();
-	}
-
-	public enum Overflow implements Keyword {
+	enum Overflow implements GetOp, Keyword {
 		WRAP,
 
 		SAT,
@@ -333,7 +101,82 @@ public class BitFieldArgument extends BaseBitFieldArgument {
 
 		@Override
 		public String toString() {
-			return getValue();
+			return "OVERFLOW " + getValue();
+		}
+
+	}
+
+	abstract class BaseSetOp implements SetOp {
+
+		private final String commandType;
+
+		private final BitFieldEncoding encoding;
+
+		private final boolean bitOffset;
+
+		private final int offset;
+
+		private final long value;
+
+		private BaseSetOp(final String commandType, final BitFieldEncoding encoding, final boolean bitOffset,
+						  final int offset, final long value) {
+			this.commandType = commandType;
+			this.encoding = encoding;
+			this.bitOffset = bitOffset;
+			this.offset = offset;
+			this.value = value;
+		}
+
+		public BitFieldEncoding getEncoding() {
+			return encoding;
+		}
+
+		public boolean isBitOffset() {
+			return bitOffset;
+		}
+
+		public int getOffset() {
+			return offset;
+		}
+
+		public long getValue() {
+			return value;
+		}
+
+		@Override
+		public String toString() {
+			final ArgStringBuilder builder = ArgStringBuilder.create().add(commandType, getEncoding());
+
+			if(isBitOffset()){
+				builder.append(" #" + getOffset());
+			}else{
+				builder.append(" " + getOffset());
+			}
+
+			builder.append(getValue());
+
+			return builder.build();
+		}
+
+	}
+
+	interface SetOp extends Op {
+
+	}
+
+	class DefaultSet extends BaseSetOp {
+
+		public DefaultSet(final BitFieldEncoding encoding, final boolean bitOffset, final int offset,
+						  final long value) {
+			super(Keyword.Common.SET.name(), encoding, bitOffset, offset, value);
+		}
+
+	}
+
+	class IncrBy extends BaseSetOp {
+
+		public IncrBy(final BitFieldEncoding encoding, final boolean bitOffset, final int offset, final long value) {
+			super("INCRBY", encoding, bitOffset, offset, value);
 		}
 
 	}

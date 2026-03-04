@@ -72,21 +72,21 @@ public class JedisRedisClient extends AbstractRedisClient {
 	}
 
 	@Override
-	public BloomFilterCommands bloomFilterCommands() {
-		if(bloomFilterCommands == null){
-			bloomFilterCommands = new JedisBloomFilterCommands(this);
-		}
-
-		return bloomFilterCommands;
-	}
-
-	@Override
 	public BitMapCommands bitMapCommands() {
 		if(bitMapCommands == null){
 			bitMapCommands = new JedisBitMapCommands(this);
 		}
 
 		return bitMapCommands;
+	}
+
+	@Override
+	public BloomFilterCommands bloomFilterCommands() {
+		if(bloomFilterCommands == null){
+			bloomFilterCommands = new JedisBloomFilterCommands(this);
+		}
+
+		return bloomFilterCommands;
 	}
 
 	@Override

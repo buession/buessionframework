@@ -48,159 +48,57 @@ public final class JedisGeoRadiusParam extends GeoRadiusParam {
 	/**
 	 * 构造函数
 	 *
-	 * @param withCoord
-	 * 		是否将位置元素的经度和纬度也一并返回
-	 * @param withDist
-	 * 		在返回位置元素的同时， 将位置元素与中心之间的距离也一并返回
-	 * @param withHash
-	 * 		是否以 52 位有符号整数的形式， 返回位置元素经过原始 geohash 编码的有序集合分值
+	 * @param geoRadiusArgument
+	 *        {@link GeoRadiusArgument}
 	 */
-	public JedisGeoRadiusParam(final boolean withCoord, final boolean withDist, final boolean withHash) {
+	public JedisGeoRadiusParam(final GeoRadiusArgument geoRadiusArgument) {
 		super();
-		withCoord(this, withCoord);
-		withDist(this, withDist);
-		withHash(this, withHash);
+
+		if(geoRadiusArgument != null){
+			if(Boolean.TRUE.equals(geoRadiusArgument.isWithCoord())){
+				withCoord();
+			}
+			if(Boolean.TRUE.equals(geoRadiusArgument.isWithDist())){
+				withDist();
+			}
+			if(Boolean.TRUE.equals(geoRadiusArgument.isWithHash())){
+				withHash();
+			}
+
+			if(geoRadiusArgument.getOrder() == Order.ASC){
+				sortAscending();
+			}else if(geoRadiusArgument.getOrder() == Order.DESC){
+				sortDescending();
+			}
+		}
 	}
 
 	/**
 	 * 构造函数
-	 *
-	 * @param order
-	 * 		排序
-	 */
-	public JedisGeoRadiusParam(final Order order) {
-		super();
-		sort(this, order);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param count
-	 * 		返回数量
-	 */
-	public JedisGeoRadiusParam(final int count) {
-		super();
-		count(count);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param order
-	 * 		排序
-	 * @param count
-	 * 		返回数量
-	 */
-	public JedisGeoRadiusParam(final Order order, final int count) {
-		this(order);
-		count(count);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param withCoord
-	 * 		是否将位置元素的经度和纬度也一并返回
-	 * @param withDist
-	 * 		在返回位置元素的同时， 将位置元素与中心之间的距离也一并返回
-	 * @param withHash
-	 * 		是否以 52 位有符号整数的形式， 返回位置元素经过原始 geohash 编码的有序集合分值
-	 * @param order
-	 * 		排序
-	 */
-	public JedisGeoRadiusParam(final boolean withCoord, final boolean withDist, final boolean withHash,
-							   final Order order) {
-		this(withCoord, withDist, withHash);
-		sort(this, order);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param withCoord
-	 * 		是否将位置元素的经度和纬度也一并返回
-	 * @param withDist
-	 * 		在返回位置元素的同时， 将位置元素与中心之间的距离也一并返回
-	 * @param withHash
-	 * 		是否以 52 位有符号整数的形式， 返回位置元素经过原始 geohash 编码的有序集合分值
-	 * @param count
-	 * 		返回数量
-	 */
-	public JedisGeoRadiusParam(final boolean withCoord, final boolean withDist, final boolean withHash,
-							   final int count) {
-		this(withCoord, withDist, withHash);
-		count(count);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param withCoord
-	 * 		是否将位置元素的经度和纬度也一并返回
-	 * @param withDist
-	 * 		在返回位置元素的同时， 将位置元素与中心之间的距离也一并返回
-	 * @param withHash
-	 * 		是否以 52 位有符号整数的形式， 返回位置元素经过原始 geohash 编码的有序集合分值
-	 * @param order
-	 * 		排序
-	 * @param count
-	 * 		返回数量
-	 */
-	public JedisGeoRadiusParam(final boolean withCoord, final boolean withDist, final boolean withHash,
-							   final Order order, final int count) {
-		this(withCoord, withDist, withHash, order);
-		count(count);
-	}
-
-	/**
-	 * 从 {@link GeoRadiusArgument} 创建 {@link JedisGeoRadiusParam} 实例
 	 *
 	 * @param geoRadiusArgument
 	 *        {@link GeoRadiusArgument}
-	 *
-	 * @return {@link JedisGeoRadiusParam} 实例
-	 *
-	 * @since 3.0.0
+	 * @param count
+	 * 		返回数量
 	 */
-	public static JedisGeoRadiusParam from(final GeoRadiusArgument geoRadiusArgument) {
-		final JedisGeoRadiusParam geoRadiusParam = new JedisGeoRadiusParam();
-
-		if(geoRadiusArgument != null){
-			withCoord(geoRadiusParam, geoRadiusArgument.isWithCoord());
-			withDist(geoRadiusParam, geoRadiusArgument.isWithDist());
-			withHash(geoRadiusParam, geoRadiusArgument.isWithHash());
-			sort(geoRadiusParam, geoRadiusArgument.getOrder());
-			Optional.ofNullable(geoRadiusArgument.getCount()).ifPresent(geoRadiusParam::count);
-		}
-
-		return geoRadiusParam;
+	public JedisGeoRadiusParam(final GeoRadiusArgument geoRadiusArgument, final int count) {
+		this(geoRadiusArgument);
+		count(count);
 	}
 
-	private static void withCoord(final JedisGeoRadiusParam geoRadiusParam, final Boolean withCoord) {
-		if(Boolean.TRUE.equals(withCoord)){
-			geoRadiusParam.withCoord();
-		}
-	}
-
-	private static void withDist(final JedisGeoRadiusParam geoRadiusParam, final Boolean withDist) {
-		if(Boolean.TRUE.equals(withDist)){
-			geoRadiusParam.withDist();
-		}
-	}
-
-	private static void withHash(final JedisGeoRadiusParam geoRadiusParam, final Boolean withHash) {
-		if(Boolean.TRUE.equals(withHash)){
-			geoRadiusParam.withHash();
-		}
-	}
-
-	private static void sort(final JedisGeoRadiusParam geoRadiusParam, final Order order) {
-		if(order == Order.ASC){
-			geoRadiusParam.sortAscending();
-		}else if(order == Order.DESC){
-			geoRadiusParam.sortDescending();
-		}
+	/**
+	 * 构造函数
+	 *
+	 * @param geoRadiusArgument
+	 *        {@link GeoRadiusArgument}
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 */
+	public JedisGeoRadiusParam(final GeoRadiusArgument geoRadiusArgument, final int count, final boolean any) {
+		this(geoRadiusArgument);
+		count(count, any);
 	}
 
 }

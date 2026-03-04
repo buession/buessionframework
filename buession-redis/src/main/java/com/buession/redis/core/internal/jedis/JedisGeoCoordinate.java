@@ -22,43 +22,39 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core.internal.jedis;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.args.BFInsertArgument;
-import redis.clients.jedis.bloom.BFInsertParams;
-
-import java.util.Optional;
+import com.buession.lang.Geo;
+import redis.clients.jedis.GeoCoordinate;
 
 /**
- * {@link BFInsertArgument} 转换为 jedis {@link BFInsertParams}
+ * Jedis {@link GeoCoordinate} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class BFInsertArgumentConverter implements Converter<BFInsertArgument, BFInsertParams> {
+public final class JedisGeoCoordinate extends GeoCoordinate {
 
-	@Override
-	public BFInsertParams convert(final BFInsertArgument source) {
-		if(source == null){
-			return null;
-		}
+	/**
+	 * 构造函数
+	 *
+	 * @param longitude
+	 * 		精度
+	 * @param latitude
+	 * 		纬度
+	 */
+	public JedisGeoCoordinate(final double longitude, final double latitude) {
+		super(longitude, latitude);
+	}
 
-		final BFInsertParams bfInsertParams = new BFInsertParams();
-
-		Optional.ofNullable(source.getCapacity()).ifPresent(bfInsertParams::capacity);
-		Optional.ofNullable(source.getErrorRate()).ifPresent(bfInsertParams::error);
-		Optional.ofNullable(source.getExpansion()).ifPresent(bfInsertParams::expansion);
-
-		if(Boolean.TRUE.equals(source.isNoCreate())){
-			bfInsertParams.noCreate();
-		}
-
-		if(Boolean.TRUE.equals(source.isNonScaling())){
-			bfInsertParams.nonScaling();
-		}
-
-		return bfInsertParams;
+	/**
+	 * 构造函数
+	 *
+	 * @param geo
+	 * 		经纬度
+	 */
+	public JedisGeoCoordinate(final Geo geo) {
+		super(geo.getLongitude(), geo.getLatitude());
 	}
 
 }

@@ -26,6 +26,7 @@ package com.buession.redis.core.operations;
 
 import com.buession.redis.core.BitCountOption;
 import com.buession.redis.core.BitOperation;
+import com.buession.redis.core.BitType;
 import com.buession.redis.core.command.BitMapCommands;
 import com.buession.redis.core.command.args.BitFieldArgument;
 import com.buession.redis.core.command.args.BitFieldRoArgument;
@@ -73,23 +74,23 @@ public interface BitMapOperations extends BitMapCommands, RedisOperations {
 	}
 
 	@Override
-	default List<Long> bitField(final String key, final BitFieldArgument argument) {
-		return execute((client)->client.bitMapCommands().bitField(key, argument));
+	default List<Long> bitField(final String key, final BitFieldArgument... arguments) {
+		return execute((client)->client.bitMapCommands().bitField(key, arguments));
 	}
 
 	@Override
-	default List<Long> bitField(final byte[] key, final BitFieldArgument argument) {
-		return execute((client)->client.bitMapCommands().bitField(key, argument));
+	default List<Long> bitField(final byte[] key, final BitFieldArgument... arguments) {
+		return execute((client)->client.bitMapCommands().bitField(key, arguments));
 	}
 
 	@Override
-	default List<Long> bitFieldRo(final String key, final BitFieldRoArgument argument) {
-		return execute((client)->client.bitMapCommands().bitFieldRo(key, argument));
+	default List<Long> bitFieldRo(final String key, final BitFieldRoArgument... arguments) {
+		return execute((client)->client.bitMapCommands().bitFieldRo(key, arguments));
 	}
 
 	@Override
-	default List<Long> bitFieldRo(final byte[] key, final BitFieldRoArgument argument) {
-		return execute((client)->client.bitMapCommands().bitFieldRo(key, argument));
+	default List<Long> bitFieldRo(final byte[] key, final BitFieldRoArgument... arguments) {
+		return execute((client)->client.bitMapCommands().bitFieldRo(key, arguments));
 	}
 
 	@Override
@@ -113,6 +114,16 @@ public interface BitMapOperations extends BitMapCommands, RedisOperations {
 	}
 
 	@Override
+	default Long bitPos(final String key, final boolean value, final long start) {
+		return execute((client)->client.bitMapCommands().bitPos(key, value, start));
+	}
+
+	@Override
+	default Long bitPos(final byte[] key, final boolean value, final long start) {
+		return execute((client)->client.bitMapCommands().bitPos(key, value, start));
+	}
+
+	@Override
 	default Long bitPos(final String key, final boolean value, final long start, final long end) {
 		return execute((client)->client.bitMapCommands().bitPos(key, value, start, end));
 	}
@@ -120,6 +131,16 @@ public interface BitMapOperations extends BitMapCommands, RedisOperations {
 	@Override
 	default Long bitPos(final byte[] key, final boolean value, final long start, final long end) {
 		return execute((client)->client.bitMapCommands().bitPos(key, value, start, end));
+	}
+
+	@Override
+	default Long bitPos(final String key, final boolean value, final long start, final long end, final BitType type) {
+		return execute((client)->client.bitMapCommands().bitPos(key, value, start, end, type));
+	}
+
+	@Override
+	default Long bitPos(final byte[] key, final boolean value, final long start, final long end, final BitType type) {
+		return execute((client)->client.bitMapCommands().bitPos(key, value, start, end, type));
 	}
 
 	@Override

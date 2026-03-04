@@ -72,21 +72,21 @@ public class LettuceRedisClient extends AbstractRedisClient {
 	}
 
 	@Override
-	public BloomFilterCommands bloomFilterCommands() {
-		if(bloomFilterCommands == null){
-			bloomFilterCommands = new LettuceBloomFilterCommands(this);
-		}
-
-		return bloomFilterCommands;
-	}
-
-	@Override
 	public BitMapCommands bitMapCommands() {
 		if(bitMapCommands == null){
 			bitMapCommands = new LettuceBitMapCommands(this);
 		}
 
 		return bitMapCommands;
+	}
+
+	@Override
+	public BloomFilterCommands bloomFilterCommands() {
+		if(bloomFilterCommands == null){
+			bloomFilterCommands = new LettuceBloomFilterCommands(this);
+		}
+
+		return bloomFilterCommands;
 	}
 
 	@Override

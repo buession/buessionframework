@@ -29,6 +29,7 @@ import com.buession.core.utils.StringUtils;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.BitCountOption;
 import com.buession.redis.core.BitOperation;
+import com.buession.redis.core.BitType;
 import com.buession.redis.core.command.BitMapCommands;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
@@ -36,8 +37,8 @@ import com.buession.redis.core.command.args.BitFieldArgument;
 import com.buession.redis.core.command.args.BitFieldRoArgument;
 import com.buession.redis.core.internal.convert.jedis.params.BitCountOptionConverter;
 import com.buession.redis.core.internal.convert.jedis.params.BitOperationConverter;
+import com.buession.redis.core.internal.convert.jedis.params.BitTypeConverter;
 import com.buession.redis.utils.SafeEncoder;
-import redis.clients.jedis.UnifiedJedis;
 import redis.clients.jedis.params.BitPosParams;
 
 import java.util.List;
@@ -57,67 +58,69 @@ public final class JedisBitMapCommands extends AbstractJedisRedisCommands implem
 	@Override
 	public Long bitCount(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return bitCount((cmd)->cmd.bitcount(rawKey(key)), args);
+		return executeCommand(Command.BITCOUNT, args, (cmd)->cmd.bitcount(rawKey(key)), (v)->v);
 	}
 
 	@Override
 	public Long bitCount(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return bitCount((cmd)->cmd.bitcount(rawKey(key)), args);
+		return executeCommand(Command.BITCOUNT, args, (cmd)->cmd.bitcount(rawKey(key)), (v)->v);
 	}
 
 	@Override
 	public Long bitCount(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
-		return bitCount((cmd)->cmd.bitcount(rawKey(key), start, end), args);
+		return executeCommand(Command.BITCOUNT, args, (cmd)->cmd.bitcount(rawKey(key), start, end), (v)->v);
 	}
 
 	@Override
 	public Long bitCount(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
-		return bitCount((cmd)->cmd.bitcount(rawKey(key), start, end), args);
+		return executeCommand(Command.BITCOUNT, args, (cmd)->cmd.bitcount(rawKey(key), start, end), (v)->v);
 	}
 
 	@Override
 	public Long bitCount(final String key, final long start, final long end, final BitCountOption option) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(option);
 		final BitCountOptionConverter optionConverter = new BitCountOptionConverter();
-		return bitCount((cmd)->cmd.bitcount(rawKey(key), start, end, optionConverter.convert(option)), args);
+		return executeCommand(Command.BITCOUNT, args,
+				(cmd)->cmd.bitcount(rawKey(key), start, end, optionConverter.convert(option)), (v)->v);
 	}
 
 	@Override
 	public Long bitCount(final byte[] key, final long start, final long end, final BitCountOption option) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(option);
 		final BitCountOptionConverter optionConverter = new BitCountOptionConverter();
-		return bitCount((cmd)->cmd.bitcount(rawKey(key), start, end, optionConverter.convert(option)), args);
+		return executeCommand(Command.BITCOUNT, args,
+				(cmd)->cmd.bitcount(rawKey(key), start, end, optionConverter.convert(option)), (v)->v);
 	}
 
 	@Override
-	public List<Long> bitField(final String key, final BitFieldArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(argument);
-		final String[] temp = StringUtils.split(argument.toString(), " ");
+	public List<Long> bitField(final String key, final BitFieldArgument... arguments) {
+		final CommandArguments args = CommandArguments.create(key).add(arguments);
+		final String[] temp = StringUtils.split(StringUtils.join(arguments, " "), " ");
 		return executeCommand(Command.BITFIELD, args, (cmd)->cmd.bitfield(rawKey(key), temp), (v)->v);
 	}
 
 	@Override
-	public List<Long> bitField(final byte[] key, final BitFieldArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(argument);
-		final byte[][] temp = Arrays.map(StringUtils.split(argument.toString(), " "), byte[].class,
+	public List<Long> bitField(final byte[] key, final BitFieldArgument... arguments) {
+		final CommandArguments args = CommandArguments.create(key).add(arguments);
+		final byte[][] temp = Arrays.map(StringUtils.split(StringUtils.join(arguments, " "), " "), byte[].class,
 				SafeEncoder::encode);
 		return executeCommand(Command.BITFIELD, args, (cmd)->cmd.bitfield(rawKey(key), temp), (v)->v);
 	}
 
 	@Override
-	public List<Long> bitFieldRo(final String key, final BitFieldRoArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(argument);
-		final String[] temp = StringUtils.split(argument.toString(), " ");
+	public List<Long> bitFieldRo(final String key, final BitFieldRoArgument... arguments) {
+		final CommandArguments args = CommandArguments.create(key).add(arguments);
+		final String[] temp = StringUtils.split(StringUtils.join(arguments, " "), " ");
 		return executeCommand(Command.BITFIELD_RO, args, (cmd)->cmd.bitfieldReadonly(rawKey(key), temp), (v)->v);
 	}
 
 	@Override
-	public List<Long> bitFieldRo(final byte[] key, final BitFieldRoArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(argument);
-		final byte[][] temp = Arrays.map(StringUtils.split(argument.toString(), " "), byte[].class,
+	public List<Long> bitFieldRo(final byte[] key, final BitFieldRoArgument... arguments) {
+		final CommandArguments args = CommandArguments.create(key).add(arguments);
+		final byte[][] temp = Arrays.map(StringUtils.split(StringUtils.join(arguments, " "), " "), byte[].class,
 				SafeEncoder::encode);
 		return executeCommand(Command.BITFIELD_RO, args, (cmd)->cmd.bitfieldReadonly(rawKey(key), temp), (v)->v);
 	}
@@ -141,27 +144,63 @@ public final class JedisBitMapCommands extends AbstractJedisRedisCommands implem
 	@Override
 	public Long bitPos(final String key, final boolean value) {
 		final CommandArguments args = CommandArguments.create(key).add(value);
-		return executeCommand(Command.BITOP, args, (cmd)->cmd.bitpos(rawKey(key), value), (v)->v);
+		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawKey(key), value), (v)->v);
 	}
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value) {
 		final CommandArguments args = CommandArguments.create(key).add(value);
-		return executeCommand(Command.BITOP, args, (cmd)->cmd.bitpos(rawKey(key), value), (v)->v);
+		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawKey(key), value), (v)->v);
+	}
+
+	@Override
+	public Long bitPos(final String key, final boolean value, final long start) {
+		final CommandArguments args = CommandArguments.create(key).add(value).add(start);
+		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawKey(key), value, new BitPosParams(start)),
+				(v)->v);
+	}
+
+	@Override
+	public Long bitPos(final byte[] key, final boolean value, final long start) {
+		final CommandArguments args = CommandArguments.create(key).add(value).add(start);
+		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawKey(key), value, new BitPosParams(start)),
+				(v)->v);
 	}
 
 	@Override
 	public Long bitPos(final String key, final boolean value, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(value).add(start, end);
-		return executeCommand(Command.BITOP, args, (cmd)->cmd.bitpos(rawKey(key), value, new BitPosParams(start, end)),
+		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawKey(key), value, new BitPosParams(start, end)),
 				(v)->v);
 	}
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(value).add(start, end);
-		return executeCommand(Command.BITOP, args, (cmd)->cmd.bitpos(rawKey(key), value, new BitPosParams(start, end)),
+		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawKey(key), value, new BitPosParams(start, end)),
 				(v)->v);
+	}
+
+	@Override
+	public Long bitPos(final String key, final boolean value, final long start, final long end, final BitType type) {
+		final CommandArguments args = CommandArguments.create(key).add(value).add(start, end).add(type);
+		final BitTypeConverter bitTypeConverter = new BitTypeConverter();
+		final BitPosParams bitPosParams = new BitPosParams(start, end);
+
+		bitPosParams.modifier(bitTypeConverter.convert(type));
+
+		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawKey(key), value, bitPosParams), (v)->v);
+	}
+
+	@Override
+	public Long bitPos(final byte[] key, final boolean value, final long start, final long end, final BitType type) {
+		final CommandArguments args = CommandArguments.create(key).add(value).add(start, end).add(type);
+		final BitTypeConverter bitTypeConverter = new BitTypeConverter();
+		final BitPosParams bitPosParams = new BitPosParams(start, end);
+
+		bitPosParams.modifier(bitTypeConverter.convert(type));
+
+		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawKey(key), value, bitPosParams), (v)->v);
 	}
 
 	@Override
@@ -186,11 +225,6 @@ public final class JedisBitMapCommands extends AbstractJedisRedisCommands implem
 	public Boolean setBit(final byte[] key, final long offset, final boolean value) {
 		final CommandArguments args = CommandArguments.create(key).add(offset).add(value);
 		return executeCommand(Command.SETBIT, args, (cmd)->cmd.setbit(rawKey(key), offset, value), (v)->v);
-	}
-
-	private Long bitCount(final com.buession.redis.core.Command.Executor<UnifiedJedis, Long> executor,
-						  final CommandArguments args) {
-		return executeCommand(Command.BITCOUNT, args, executor, (v)->v);
 	}
 
 }

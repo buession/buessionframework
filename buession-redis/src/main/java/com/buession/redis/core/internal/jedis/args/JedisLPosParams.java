@@ -24,7 +24,10 @@
  */
 package com.buession.redis.core.internal.jedis.args;
 
+import com.buession.redis.core.command.args.LPosArgument;
 import redis.clients.jedis.params.LPosParams;
+
+import java.util.Optional;
 
 /**
  * Jedis {@link LPosParams} 扩展
@@ -34,14 +37,25 @@ import redis.clients.jedis.params.LPosParams;
  */
 public final class JedisLPosParams extends LPosParams {
 
+	/**
+	 * 构造函数
+	 */
 	public JedisLPosParams() {
-
+		super();
 	}
 
-	public JedisLPosParams(final int rank, final int maxlen) {
+	/**
+	 * 构造函数
+	 *
+	 * @param lPosArgument
+	 *        {@link LPosArgument}
+	 */
+	public JedisLPosParams(final LPosArgument lPosArgument) {
 		super();
-		rank(rank);
-		maxlen(maxlen);
+		if(lPosArgument != null){
+			Optional.ofNullable(lPosArgument.getRank()).ifPresent(this::rank);
+			Optional.ofNullable(lPosArgument.getMaxLen()).ifPresent(this::maxlen);
+		}
 	}
 
 }

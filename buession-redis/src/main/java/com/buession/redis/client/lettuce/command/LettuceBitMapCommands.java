@@ -26,14 +26,16 @@ package com.buession.redis.client.lettuce.command;
 
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.core.BitCountOption;
+import com.buession.redis.core.BitFieldEncoding;
 import com.buession.redis.core.BitOperation;
+import com.buession.redis.core.BitType;
 import com.buession.redis.core.command.BitMapCommands;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.args.BitFieldArgument;
 import com.buession.redis.core.command.args.BitFieldRoArgument;
-import com.buession.redis.core.internal.convert.lettuce.params.BitFieldArgumentConverter;
 import com.buession.redis.core.internal.convert.response.OneBooleanConverter;
+import io.lettuce.core.BitFieldArgs;
 
 import java.util.Arrays;
 import java.util.List;
@@ -87,26 +89,26 @@ public final class LettuceBitMapCommands extends AbstractLettuceRedisCommands im
 	}
 
 	@Override
-	public List<Long> bitField(final String key, final BitFieldArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(argument);
-		return bitField(rawBinaryKey(key), argument, args);
+	public List<Long> bitField(final String key, final BitFieldArgument... arguments) {
+		final CommandArguments args = CommandArguments.create(key).add(arguments);
+		return bitField(rawBinaryKey(key), arguments, args);
 	}
 
 	@Override
-	public List<Long> bitField(final byte[] key, final BitFieldArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(argument);
-		return bitField(rawKey(key), argument, args);
+	public List<Long> bitField(final byte[] key, final BitFieldArgument... arguments) {
+		final CommandArguments args = CommandArguments.create(key).add(arguments);
+		return bitField(rawKey(key), arguments, args);
 	}
 
 	@Override
-	public List<Long> bitFieldRo(final String key, final BitFieldRoArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(argument);
+	public List<Long> bitFieldRo(final String key, final BitFieldRoArgument... arguments) {
+		final CommandArguments args = CommandArguments.create(key).add(arguments);
 		return executeCommand(Command.BITFIELD_RO, args);
 	}
 
 	@Override
-	public List<Long> bitFieldRo(final byte[] key, final BitFieldRoArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(argument);
+	public List<Long> bitFieldRo(final byte[] key, final BitFieldRoArgument... arguments) {
+		final CommandArguments args = CommandArguments.create(key).add(arguments);
 		return executeCommand(Command.BITFIELD_RO, args);
 	}
 
@@ -135,14 +137,38 @@ public final class LettuceBitMapCommands extends AbstractLettuceRedisCommands im
 	}
 
 	@Override
+	public Long bitPos(final String key, final boolean value, final long start) {
+		final CommandArguments args = CommandArguments.create(key).add(value).add(start);
+		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawBinaryKey(key), value, start), (v)->v);
+	}
+
+	@Override
+	public Long bitPos(final byte[] key, final boolean value, final long start) {
+		final CommandArguments args = CommandArguments.create(key).add(value).add(start);
+		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawKey(key), value, start), (v)->v);
+	}
+
+	@Override
 	public Long bitPos(final String key, final boolean value, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(value).add(start).add(end);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(start, end);
 		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawBinaryKey(key), value, start, end), (v)->v);
 	}
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value, final long start, final long end) {
-		final CommandArguments args = CommandArguments.create(key).add(value).add(start).add(end);
+		final CommandArguments args = CommandArguments.create(key).add(value).add(start, end);
+		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawKey(key), value, start, end), (v)->v);
+	}
+
+	@Override
+	public Long bitPos(final String key, final boolean value, final long start, final long end, final BitType type) {
+		final CommandArguments args = CommandArguments.create(key).add(value).add(start, end).add(type);
+		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawBinaryKey(key), value, start, end), (v)->v);
+	}
+
+	@Override
+	public Long bitPos(final byte[] key, final boolean value, final long start, final long end, final BitType type) {
+		final CommandArguments args = CommandArguments.create(key).add(value).add(start, end).add(type);
 		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawKey(key), value, start, end), (v)->v);
 	}
 
@@ -173,10 +199,52 @@ public final class LettuceBitMapCommands extends AbstractLettuceRedisCommands im
 				new OneBooleanConverter());
 	}
 
-	private List<Long> bitField(final byte[] key, final BitFieldArgument argument, final CommandArguments args) {
-		final BitFieldArgumentConverter bitFieldArgumentConverter = new BitFieldArgumentConverter();
-		return executeCommand(Command.BITFIELD, args,
-				(cmd)->cmd.bitfield(key, bitFieldArgumentConverter.convert(argument)), (v)->v);
+	private List<Long> bitField(final byte[] key, final BitFieldArgument[] arguments, final CommandArguments args) {
+		final BitFieldArgs bitFieldArgs = new BitFieldArgs();
+
+		if(arguments != null){
+			for(BitFieldArgument argument : arguments){
+				if(argument instanceof BitFieldArgument.DefaultGet defaultGet){
+					final BitFieldEncoding encoding = defaultGet.getEncoding();
+
+					if(encoding.isSigned()){
+						bitFieldArgs.get(BitFieldArgs.signed(encoding.getBits()));
+					}else{
+						bitFieldArgs.get(BitFieldArgs.unsigned(encoding.getBits()));
+					}
+				}else if(argument instanceof BitFieldArgument.Overflow overflow){
+					if(overflow == BitFieldArgument.Overflow.FAIL){
+						bitFieldArgs.overflow(BitFieldArgs.OverflowType.FAIL);
+					}else if(overflow == BitFieldArgument.Overflow.SAT){
+						bitFieldArgs.overflow(BitFieldArgs.OverflowType.SAT);
+					}else if(overflow == BitFieldArgument.Overflow.WRAP){
+						bitFieldArgs.overflow(BitFieldArgs.OverflowType.WRAP);
+					}
+				}else if(argument instanceof BitFieldArgument.DefaultSet defaultSet){
+					final BitFieldEncoding encoding = defaultSet.getEncoding();
+
+					if(encoding.isSigned()){
+						bitFieldArgs.set(BitFieldArgs.signed(encoding.getBits()), defaultSet.getOffset(),
+								defaultSet.getValue());
+					}else{
+						bitFieldArgs.set(BitFieldArgs.unsigned(encoding.getBits()), defaultSet.getOffset(),
+								defaultSet.getValue());
+					}
+				}else if(argument instanceof BitFieldArgument.IncrBy incrBy){
+					final BitFieldEncoding encoding = incrBy.getEncoding();
+
+					if(encoding.isSigned()){
+						bitFieldArgs.incrBy(BitFieldArgs.signed(encoding.getBits()), incrBy.getOffset(),
+								incrBy.getValue());
+					}else{
+						bitFieldArgs.incrBy(BitFieldArgs.unsigned(encoding.getBits()), incrBy.getOffset(),
+								incrBy.getValue());
+					}
+				}
+			}
+		}
+
+		return executeCommand(Command.BITFIELD, args, (cmd)->cmd.bitfield(key, bitFieldArgs), (v)->v);
 	}
 
 	private Long bitOp(final BitOperation operation, final byte[] destKey, final byte[][] keys,

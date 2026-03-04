@@ -22,50 +22,54 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.core.converter.Converter;
 import com.buession.redis.core.command.args.ZAddArgument;
 import redis.clients.jedis.params.ZAddParams;
 
 /**
- * {@link ZAddArgument} 转换为 jedis {@link ZAddParams}
+ * Jedis {@link ZAddParams} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class ZAddArgumentConverter implements Converter<ZAddArgument, ZAddParams> {
+public final class JedisZAddParams extends ZAddParams {
 
-	@Override
-	public ZAddParams convert(final ZAddArgument source) {
-		if(source == null){
-			return null;
-		}
+	/**
+	 * 构造函数
+	 */
+	public JedisZAddParams() {
+		super();
+	}
 
-		final ZAddParams zAddParams = new ZAddParams();
+	/**
+	 * 构造函数
+	 */
+	public JedisZAddParams(final ZAddArgument zAddArgument) {
+		super();
 
-		if(source.getNxXx() != null){
-			switch(source.getNxXx()){
-				case NX -> zAddParams.nx();
-				case XX -> zAddParams.xx();
+		if(zAddArgument != null){
+			if(zAddArgument.getNxXx() != null){
+				switch(zAddArgument.getNxXx()){
+					case NX -> nx();
+					case XX -> xx();
+				}
+			}
+
+			if(zAddArgument.getGtLt() != null){
+				switch(zAddArgument.getGtLt()){
+					case GT -> gt();
+					case LT -> lt();
+				}
+			}
+
+			if(Boolean.TRUE.equals(zAddArgument.getCh())){
+				ch();
+			}
+
+			if(Boolean.TRUE.equals(zAddArgument.getIncr())){
 			}
 		}
-
-		if(source.getGtLt() != null){
-			switch(source.getGtLt()){
-				case GT -> zAddParams.gt();
-				case LT -> zAddParams.lt();
-			}
-		}
-
-		if(Boolean.TRUE.equals(source.getCh())){
-			zAddParams.ch();
-		}
-
-		if(Boolean.TRUE.equals(source.getIncr())){
-		}
-
-		return zAddParams;
 	}
 
 }

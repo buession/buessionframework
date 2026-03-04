@@ -22,23 +22,46 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.core.converter.Converter;
-import com.buession.lang.Geo;
-import redis.clients.jedis.GeoCoordinate;
+import com.buession.redis.core.command.args.BFInsertArgument;
+import redis.clients.jedis.bloom.BFInsertParams;
+
+import java.util.Optional;
 
 /**
- * {@link Geo} 转换为 jedis {@link GeoCoordinate}
+ * Jedis {@link BFInsertParams} 扩展
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 4.0.0
  */
-public final class GeoConverter implements Converter<Geo, GeoCoordinate> {
+public final class JedisBFInsertParams extends BFInsertParams {
 
-	@Override
-	public GeoCoordinate convert(final Geo source) {
-		return source == null ? null : new GeoCoordinate(source.getLongitude(), source.getLatitude());
+	public JedisBFInsertParams() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param bfInsertArgument
+	 *        {@link BFInsertArgument}
+	 */
+	public JedisBFInsertParams(final BFInsertArgument bfInsertArgument) {
+		super();
+		if(bfInsertArgument != null){
+			Optional.ofNullable(bfInsertArgument.getCapacity()).ifPresent(this::capacity);
+			Optional.ofNullable(bfInsertArgument.getErrorRate()).ifPresent(this::error);
+			Optional.ofNullable(bfInsertArgument.getExpansion()).ifPresent(this::expansion);
+
+			if(Boolean.TRUE.equals(bfInsertArgument.isNoCreate())){
+				this.noCreate();
+			}
+
+			if(Boolean.TRUE.equals(bfInsertArgument.isNonScaling())){
+				this.nonScaling();
+			}
+		}
 	}
 
 }

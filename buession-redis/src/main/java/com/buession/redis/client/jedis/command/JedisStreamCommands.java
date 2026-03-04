@@ -53,14 +53,12 @@ import com.buession.redis.core.command.SubCommand;
 import com.buession.redis.core.command.args.MaxLenMinId;
 import com.buession.redis.core.command.args.XAddArgument;
 import com.buession.redis.core.command.args.XClaimArgument;
-import com.buession.redis.core.command.args.XReadArgument;
 import com.buession.redis.core.command.args.XReadGroupArgument;
 import com.buession.redis.core.internal.convert.BinaryMapStringMapConverter;
 import com.buession.redis.core.internal.convert.jedis.params.StreamDeletionPolicyConverter;
 import com.buession.redis.core.internal.convert.jedis.params.StreamEntryIdConverter;
 import com.buession.redis.core.internal.convert.jedis.params.XAddArgumentConverter;
 import com.buession.redis.core.internal.convert.jedis.params.XClaimArgumentConverter;
-import com.buession.redis.core.internal.convert.jedis.params.XReadArgumentConverter;
 import com.buession.redis.core.internal.convert.jedis.params.XReadGroupArgumentConverter;
 import com.buession.redis.core.internal.convert.jedis.response.MapEntryStreamEntryAutoClaimInfoConverter;
 import com.buession.redis.core.internal.convert.jedis.response.MapEntryStreamEntryXReadGroupInfoConverter;
@@ -733,25 +731,17 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	}
 
 	@Override
-	public List<XReadInfo<String, String>> xRead(final Map<String, StreamEntryId> streams,
-												 final XReadArgument xReadArgument) {
-		final CommandArguments args = CommandArguments.create(xReadArgument).add("STREAMS", streams);
-		final XReadArgumentConverter xReadArgumentConverter = new XReadArgumentConverter();
-		return xRead(streams, xReadArgumentConverter.convert(xReadArgument), args);
+	public List<XReadInfo<String, String>> xRead(final Map<String, StreamEntryId> streams, final long block) {
+		final CommandArguments args = CommandArguments.create("BLOCK", block).add("STREAMS", streams);
+		return xRead(streams, new JedisXReadParams((int) block), args);
 	}
 
 	@Override
-	public List<XReadInfo<String, String>> xRead(final Map<String, StreamEntryId> streams,
-												 final XReadArgument xReadArgument, final int count) {
-		final CommandArguments args = CommandArguments.create(Keyword.Common.COUNT, count).add(xReadArgument)
+	public List<XReadInfo<String, String>> xRead(final Map<String, StreamEntryId> streams, final long block,
+												 final int count) {
+		final CommandArguments args = CommandArguments.create(Keyword.Common.COUNT, count).add("BLOCK", block)
 				.add("STREAMS", streams);
-		final XReadArgumentConverter xReadArgumentConverter = new XReadArgumentConverter();
-		final XReadParams xReadParams = Optional.ofNullable(xReadArgumentConverter.convert(xReadArgument))
-				.orElse(new XReadParams());
-
-		xReadParams.count(count);
-
-		return xRead(streams, xReadParams, args);
+		return xRead(streams, new JedisXReadParams((int) block, count), args);
 	}
 
 	@Override

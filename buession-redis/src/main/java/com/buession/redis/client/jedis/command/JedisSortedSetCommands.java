@@ -39,11 +39,11 @@ import com.buession.redis.core.command.SortedSetCommands;
 import com.buession.redis.core.command.args.ZAddArgument;
 import com.buession.redis.core.command.args.ZRangeArgument;
 import com.buession.redis.core.internal.convert.jedis.params.MinMaxSortedSetOptionConverter;
-import com.buession.redis.core.internal.convert.jedis.params.ZAddArgumentConverter;
 import com.buession.redis.core.internal.convert.jedis.response.KeyValueConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ScanResultConverter;
 import com.buession.redis.core.internal.convert.jedis.response.TupleConverter;
 import com.buession.redis.core.internal.jedis.args.JedisScanParams;
+import com.buession.redis.core.internal.jedis.args.JedisZAddParams;
 import com.buession.redis.core.internal.jedis.args.JedisZParams;
 import com.buession.redis.core.internal.jedis.args.JedisZRangeParams;
 import redis.clients.jedis.UnifiedJedis;
@@ -152,28 +152,26 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 	public Long zAdd(final String key, final Tuple[] members, final ZAddArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(members);
 		final Map<String, Double> membersMap = new LinkedHashMap<>(members.length);
-		final ZAddArgumentConverter zAddArgumentConverter = new ZAddArgumentConverter();
 
 		for(final Tuple element : members){
 			membersMap.put(element.getElement(), element.getScore());
 		}
 
 		return executeCommand(Command.ZADD, args,
-				(cmd)->cmd.zadd(key, membersMap, zAddArgumentConverter.convert(argument)), (v)->v);
+				(cmd)->cmd.zadd(key, membersMap, new JedisZAddParams(argument)), (v)->v);
 	}
 
 	@Override
 	public Long zAdd(final byte[] key, final Tuple[] members, final ZAddArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(members);
 		final Map<byte[], Double> membersMap = new LinkedHashMap<>(members.length);
-		final ZAddArgumentConverter zAddArgumentConverter = new ZAddArgumentConverter();
 
 		for(final Tuple element : members){
 			membersMap.put(element.getBinaryElement(), element.getScore());
 		}
 
 		return executeCommand(Command.ZADD, args,
-				(cmd)->cmd.zadd(key, membersMap, zAddArgumentConverter.convert(argument)), (v)->v);
+				(cmd)->cmd.zadd(key, membersMap, new JedisZAddParams(argument)), (v)->v);
 	}
 
 	@Override

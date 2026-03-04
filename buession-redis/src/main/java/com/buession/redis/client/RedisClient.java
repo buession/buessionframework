@@ -71,18 +71,18 @@ public interface RedisClient {
 	void setConnection(RedisConnection connection);
 
 	/**
-	 * 返回布隆过滤器命令操作实例
-	 *
-	 * @return 布隆过滤器命令操作实例
-	 */
-	BloomFilterCommands bloomFilterCommands();
-
-	/**
 	 * 返回 BitMap 命令操作实例
 	 *
 	 * @return BitMap 命令操作实例
 	 */
 	BitMapCommands bitMapCommands();
+
+	/**
+	 * 返回布隆过滤器命令操作实例
+	 *
+	 * @return 布隆过滤器命令操作实例
+	 */
+	BloomFilterCommands bloomFilterCommands();
 
 	/**
 	 * 返回布谷鸟过滤器命令操作实例

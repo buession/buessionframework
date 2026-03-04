@@ -26,7 +26,6 @@ package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.FunctionRestoreMode;
-import org.springframework.lang.Nullable;
 import redis.clients.jedis.args.FunctionRestorePolicy;
 
 /**
@@ -38,7 +37,6 @@ import redis.clients.jedis.args.FunctionRestorePolicy;
 public final class FunctionRestoreModeFunctionRestorePolicyConverter
 		implements Converter<FunctionRestoreMode, FunctionRestorePolicy> {
 
-	@Nullable
 	@Override
 	public FunctionRestorePolicy convert(final FunctionRestoreMode source) {
 		if(source == null){

@@ -22,39 +22,60 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
-
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.args.GeoAddArgument;
-import redis.clients.jedis.params.GeoAddParams;
+package com.buession.redis.core;
 
 /**
- * {@link GeoAddArgument} 转换为 jedis {@link GeoAddParams}
+ *
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class GeoAddArgumentConverter implements Converter<GeoAddArgument, GeoAddParams> {
+public class BitFieldEncoding {
+
+	/**
+	 * 是否有符号
+	 */
+	private final boolean signed;
+
+	/**
+	 * 位数
+	 */
+	private final int bits;
+
+	/**
+	 * 构造函数
+	 *
+	 * @param signed
+	 * 		是否有符号
+	 * @param bits
+	 * 		位数
+	 */
+	public BitFieldEncoding(final boolean signed, final int bits) {
+		this.signed = signed;
+		this.bits = bits;
+	}
+
+	/**
+	 * 返回是否有符号
+	 *
+	 * @return 是否有符号
+	 */
+	public boolean isSigned() {
+		return signed;
+	}
+
+	/**
+	 * 返回位数
+	 *
+	 * @return 位数
+	 */
+	public int getBits() {
+		return bits;
+	}
 
 	@Override
-	public GeoAddParams convert(final GeoAddArgument source) {
-		if(source == null){
-			return null;
-		}
-
-		final GeoAddParams geoAddParams = new GeoAddParams();
-
-		if(Boolean.TRUE.equals(source.isNx())){
-			geoAddParams.nx();
-		}
-		if(Boolean.TRUE.equals(source.isXx())){
-			geoAddParams.xx();
-		}
-		if(Boolean.TRUE.equals(source.isCh())){
-			geoAddParams.ch();
-		}
-
-		return geoAddParams;
+	public String toString() {
+		return (signed ? "i" : "u") + bits;
 	}
 
 }

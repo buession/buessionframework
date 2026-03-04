@@ -24,6 +24,8 @@
  */
 package com.buession.redis.core.command.args;
 
+import com.buession.redis.core.BitFieldEncoding;
+import com.buession.redis.core.Keyword;
 import com.buession.redis.utils.ArgStringBuilder;
 
 /**
@@ -32,50 +34,36 @@ import com.buession.redis.utils.ArgStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class BitFieldRoArgument extends BaseBitFieldArgument {
+public final class BitFieldRoArgument {
 
-	/**
-	 * 构造函数
-	 */
-	public BitFieldRoArgument() {
-		super();
-	}
+	private final BitFieldEncoding encoding;
 
-	/**
-	 * 构造函数
-	 *
-	 * @param set
-	 * 		写操作
-	 */
-	public BitFieldRoArgument(final SetOp set) {
-		super(set);
-	}
+	private final Integer offset;
 
 	/**
 	 * 构造函数
 	 *
-	 * @param set
-	 * 		写操作
-	 * @param get
-	 * 		获取操作
+	 * @param encoding
+	 *        {@link BitFieldEncoding}
+	 * @param offset
+	 * 		偏移
 	 */
-	public BitFieldRoArgument(final SetOp set, final GetOp get) {
-		super(set, get);
+	public BitFieldRoArgument(final BitFieldEncoding encoding, final Integer offset) {
+		this.encoding = encoding;
+		this.offset = offset;
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param get
-	 * 		获取操作
-	 */
-	public BitFieldRoArgument(final GetOp get) {
-		super(get);
+	public BitFieldEncoding getEncoding() {
+		return encoding;
+	}
+
+	public Integer getOffset() {
+		return offset;
 	}
 
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create().append(getSet()).append(getGet()).build();
+		return ArgStringBuilder.create().add(Keyword.Common.GET.name(), getEncoding()).append(getOffset()).build();
 	}
 
 }

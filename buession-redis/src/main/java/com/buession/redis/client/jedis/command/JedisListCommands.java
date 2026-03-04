@@ -35,12 +35,11 @@ import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ListCommands;
 import com.buession.redis.core.command.args.LPosArgument;
 import com.buession.redis.core.internal.convert.jedis.params.DirectionConverter;
-import com.buession.redis.core.internal.convert.jedis.params.LPosArgumentConverter;
 import com.buession.redis.core.internal.convert.jedis.params.ListPositionConverter;
 import com.buession.redis.core.internal.convert.jedis.response.KeyValueConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
+import com.buession.redis.core.internal.jedis.args.JedisLPosParams;
 import redis.clients.jedis.UnifiedJedis;
-import redis.clients.jedis.params.LPosParams;
 
 import java.util.List;
 
@@ -247,43 +246,39 @@ public final class JedisListCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public List<Long> lPos(final String key, final String element, final LPosArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(element).add(argument);
-		final LPosArgumentConverter lPosArgumentConverter = new LPosArgumentConverter();
-		return lPos(key, element, lPosArgumentConverter.convert(argument), Long.MAX_VALUE, args);
+		return lPos(key, element, new JedisLPosParams(argument), Integer.MAX_VALUE, args);
 	}
 
 	@Override
 	public List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(element).add(argument);
-		final LPosArgumentConverter lPosArgumentConverter = new LPosArgumentConverter();
-		return lPos(key, element, lPosArgumentConverter.convert(argument), Long.MAX_VALUE, args);
+		return lPos(key, element, new JedisLPosParams(argument), Integer.MAX_VALUE, args);
 	}
 
 	@Override
 	public List<Long> lPos(final String key, final String element, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(element).add(Keyword.Common.COUNT, count);
-		return lPos(key, element, new LPosParams(), count, args);
+		return lPos(key, element, new JedisLPosParams(), count, args);
 	}
 
 	@Override
 	public List<Long> lPos(final byte[] key, final byte[] element, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(element).add(Keyword.Common.COUNT, count);
-		return lPos(key, element, new LPosParams(), count, args);
+		return lPos(key, element, new JedisLPosParams(), count, args);
 	}
 
 	@Override
 	public List<Long> lPos(final String key, final String element, final LPosArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(element).add(argument)
 				.add(Keyword.Common.COUNT, count);
-		final LPosArgumentConverter lPosArgumentConverter = new LPosArgumentConverter();
-		return lPos(key, element, lPosArgumentConverter.convert(argument), count, args);
+		return lPos(key, element, new JedisLPosParams(argument), count, args);
 	}
 
 	@Override
 	public List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(element).add(argument)
 				.add(Keyword.Common.COUNT, count);
-		final LPosArgumentConverter lPosArgumentConverter = new LPosArgumentConverter();
-		return lPos(key, element, lPosArgumentConverter.convert(argument), count, args);
+		return lPos(key, element, new JedisLPosParams(argument), count, args);
 	}
 
 	@Override
@@ -411,13 +406,13 @@ public final class JedisListCommands extends AbstractJedisRedisCommands implemen
 		return executeCommand(Command.LPOP, args, executor, (v)->v);
 	}
 
-	private List<Long> lPos(final String key, final String element, final LPosParams lPosParams, final long count,
+	private List<Long> lPos(final String key, final String element, final JedisLPosParams lPosParams, final int count,
 							final CommandArguments args) {
 		return executeCommand(Command.LPOS, args,
 				(cmd)->cmd.lpos(rawKey(key), element, lPosParams, count), (v)->v);
 	}
 
-	private List<Long> lPos(final byte[] key, final byte[] element, final LPosParams lPosParams, final long count,
+	private List<Long> lPos(final byte[] key, final byte[] element, final JedisLPosParams lPosParams, final int count,
 							final CommandArguments args) {
 		return executeCommand(Command.LPOS, args,
 				(cmd)->cmd.lpos(rawKey(key), element, lPosParams, count), (v)->v);

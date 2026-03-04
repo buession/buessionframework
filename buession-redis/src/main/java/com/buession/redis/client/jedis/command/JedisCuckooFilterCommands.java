@@ -33,9 +33,9 @@ import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.CuckooFilterCommands;
 import com.buession.redis.core.command.args.CFInsertArgument;
 import com.buession.redis.core.command.args.CFReserveArgument;
-import com.buession.redis.core.internal.convert.jedis.params.CFInsertArgumentConverter;
-import com.buession.redis.core.internal.convert.jedis.params.CFReserveArgumentConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
+import com.buession.redis.core.internal.jedis.args.JedisCFInsertParams;
+import com.buession.redis.core.internal.jedis.args.JedisCFReserveParams;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
@@ -134,9 +134,8 @@ public final class JedisCuckooFilterCommands extends AbstractJedisRedisCommands 
 	@Override
 	public List<Boolean> cfInsert(final String key, final CFInsertArgument argument, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS", items);
-		final CFInsertArgumentConverter cfInsertArgumentConverter = new CFInsertArgumentConverter();
 		return executeCommand(Command.CF_INSERT, args,
-				(cmd)->cmd.cfInsert(rawKey(key), cfInsertArgumentConverter.convert(argument), items), (v)->v);
+				(cmd)->cmd.cfInsert(rawKey(key), new JedisCFInsertParams(argument), items), (v)->v);
 	}
 
 	@Override
@@ -158,9 +157,8 @@ public final class JedisCuckooFilterCommands extends AbstractJedisRedisCommands 
 	@Override
 	public List<Boolean> cfInsertNx(final String key, final CFInsertArgument argument, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS", items);
-		final CFInsertArgumentConverter cfInsertArgumentConverter = new CFInsertArgumentConverter();
 		return executeCommand(Command.CF_INSERTNX, args,
-				(cmd)->cmd.cfInsertNx(rawKey(key), cfInsertArgumentConverter.convert(argument), items), (v)->v);
+				(cmd)->cmd.cfInsertNx(rawKey(key), new JedisCFInsertParams(argument), items), (v)->v);
 	}
 
 	@Override
@@ -199,8 +197,7 @@ public final class JedisCuckooFilterCommands extends AbstractJedisRedisCommands 
 					argument.getExpansion() == null){
 				return cmd.cfReserve(rawKey(key), argument.getCapacity());
 			}else{
-				final CFReserveArgumentConverter cfReserveArgumentConverter = new CFReserveArgumentConverter();
-				return cmd.cfReserve(rawKey(key), argument.getCapacity(), cfReserveArgumentConverter.convert(argument));
+				return cmd.cfReserve(rawKey(key), argument.getCapacity(), new JedisCFReserveParams(argument));
 			}
 		}, new OkStatusConverter());
 	}
@@ -219,7 +216,7 @@ public final class JedisCuckooFilterCommands extends AbstractJedisRedisCommands 
 
 	@Override
 	public Map<Long, byte[]> cfScanDump(final byte[] key, final long iterator) {
-		return cfScandump(SafeEncoder.encode(key), iterator);
+		return cfScanDump(SafeEncoder.encode(key), iterator);
 	}
 
 }

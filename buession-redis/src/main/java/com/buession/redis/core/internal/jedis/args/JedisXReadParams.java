@@ -34,23 +34,36 @@ import redis.clients.jedis.params.XReadParams;
  */
 public final class JedisXReadParams extends XReadParams {
 
+	/**
+	 * 构造函数
+	 */
 	public JedisXReadParams() {
 		super();
 	}
 
-	public JedisXReadParams(final int count) {
+	/**
+	 * 构造函数
+	 *
+	 * @param block
+	 * 		阻塞时间（单位：毫秒）
+	 */
+	public JedisXReadParams(final int block) {
 		super();
+		block(block);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param block
+	 * 		阻塞时间（单位：毫秒）
+	 * @param count
+	 * 		返回数量
+	 *
+	 */
+	public JedisXReadParams(final int block, final int count) {
+		this(block);
 		count(count);
-	}
-
-	public JedisXReadParams(final int count, final long block) {
-		this(count);
-		block((int) block);
-	}
-
-	public JedisXReadParams(final long block) {
-		super();
-		block((int) block);
 	}
 
 }

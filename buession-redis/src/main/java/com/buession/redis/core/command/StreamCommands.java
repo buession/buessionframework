@@ -1567,12 +1567,12 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @param streams
 	 * 		key =&gt; StreamEntryId Streams
-	 * @param xReadArgument
-	 * 		参数
+	 * @param block
+	 * 		阻塞时间（单位：毫秒）
 	 *
 	 * @return {@link StreamEntry} 列表
 	 */
-	List<XReadInfo<String, String>> xRead(final Map<String, StreamEntryId> streams, final XReadArgument xReadArgument);
+	List<XReadInfo<String, String>> xRead(final Map<String, StreamEntryId> streams, final long block);
 
 	/**
 	 * Read data from one or multiple streams, only returning entries with an ID greater than the last received ID reported by the caller
@@ -1581,15 +1581,14 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @param streams
 	 * 		key =&gt; StreamEntryId Streams
-	 * @param xReadArgument
-	 * 		参数
+	 * @param block
+	 * 		阻塞时间（单位：毫秒）
 	 * @param count
 	 * 		返回数量
 	 *
 	 * @return {@link StreamEntry} 列表
 	 */
-	List<XReadInfo<String, String>> xRead(final Map<String, StreamEntryId> streams, final XReadArgument xReadArgument,
-										  final int count);
+	List<XReadInfo<String, String>> xRead(final Map<String, StreamEntryId> streams, final long block, final int count);
 
 	/**
 	 * The XREADGROUP command is a special version of the XREAD command with support for consumer groups

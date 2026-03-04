@@ -33,9 +33,9 @@ import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.args.BFInsertArgument;
 import com.buession.redis.core.command.args.BFReserveArgument;
-import com.buession.redis.core.internal.convert.jedis.params.BFInsertArgumentConverter;
-import com.buession.redis.core.internal.convert.jedis.params.BFReserveArgumentConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
+import com.buession.redis.core.internal.jedis.args.JedisBFInsertParams;
+import com.buession.redis.core.internal.jedis.args.JedisBFReserveParams;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
@@ -111,9 +111,8 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 	@Override
 	public List<Boolean> bfInsert(final String key, final BFInsertArgument argument, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS", items);
-		final BFInsertArgumentConverter bfInsertArgumentConverter = new BFInsertArgumentConverter();
 		return executeCommand(Command.BF_INSERT, args,
-				(cmd)->cmd.bfInsert(rawKey(key), bfInsertArgumentConverter.convert(argument), items), (v)->v);
+				(cmd)->cmd.bfInsert(rawKey(key), new JedisBFInsertParams(argument), items), (v)->v);
 	}
 
 	@Override
@@ -162,9 +161,8 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 			if(argument.getExpansion() == null && argument.isNonScaling() == null){
 				return cmd.bfReserve(rawKey(key), argument.getErrorRate(), argument.getCapacity());
 			}else{
-				final BFReserveArgumentConverter bfReserveArgumentConverter = new BFReserveArgumentConverter();
 				return cmd.bfReserve(rawKey(key), argument.getErrorRate(), argument.getCapacity(),
-						bfReserveArgumentConverter.convert(argument));
+						new JedisBFReserveParams(argument));
 			}
 		}, new OkStatusConverter());
 	}

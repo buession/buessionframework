@@ -22,38 +22,40 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.params;
+package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.args.GeoAddArgument;
-import io.lettuce.core.GeoAddArgs;
+import com.buession.redis.core.command.args.CFReserveArgument;
+import redis.clients.jedis.bloom.CFReserveParams;
+
+import java.util.Optional;
 
 /**
- * {@link GeoAddArgument} 转换为 lettuce {@link GeoAddArgs}
+ * Jedis {@link CFReserveParams} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class GeoAddArgumentConverter implements Converter<GeoAddArgument, GeoAddArgs> {
+public final class JedisCFReserveParams extends CFReserveParams {
 
-	@Override
-	public GeoAddArgs convert(final GeoAddArgument source) {
-		if(source == null){
-			return null;
-		}
+	/**
+	 * 构造函数
+	 */
+	public JedisCFReserveParams() {
+		super();
+	}
 
-		final GeoAddArgs geoAddArgs = new GeoAddArgs();
-		if(Boolean.TRUE.equals(source.isNx())){
-			geoAddArgs.nx();
-		}
-		if(Boolean.TRUE.equals(source.isXx())){
-			geoAddArgs.xx();
-		}
-		if(Boolean.TRUE.equals(source.isCh())){
-			geoAddArgs.ch();
-		}
+	/**
+	 * 构造函数
+	 *
+	 * @param cfReserveArgument
+	 *        {@link CFReserveArgument}
+	 */
+	public JedisCFReserveParams(final CFReserveArgument cfReserveArgument) {
+		super();
 
-		return geoAddArgs;
+		Optional.ofNullable(cfReserveArgument.getBucketSize()).ifPresent(this::bucketSize);
+		Optional.ofNullable(cfReserveArgument.getMaxIterations()).ifPresent(this::maxIterations);
+		Optional.ofNullable(cfReserveArgument.getExpansion()).ifPresent(this::expansion);
 	}
 
 }
