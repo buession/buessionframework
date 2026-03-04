@@ -56,8 +56,8 @@ public abstract class AbstractRedisCommands<C extends RedisClient> implements Re
 		return client.getConnection().isTransaction();
 	}
 
-	protected <B extends BaseCommandBuilder<C, O, SR, R>, O, SR, R> R executeCommand(final B builder) {
-		return builder.converter(Converters.always()).run();
+	protected <B extends BaseCommandBuilder<C, O, R, R>, O, R> R executeCommand(final B builder) {
+		return builder.run();
 	}
 
 	protected <B extends BaseCommandBuilder<C, O, SR, R>, O, SR, R> R executeCommand(final B builder,
@@ -66,8 +66,8 @@ public abstract class AbstractRedisCommands<C extends RedisClient> implements Re
 		return builder.executor(executor).converter(converter).run();
 	}
 
-	protected <B extends BaseCommandBuilder<C, O, SR, R>, O, SR, R> R executeCommand(final B builder,
-																					 final CommandArguments args) {
+	protected <B extends BaseCommandBuilder<C, O, R, R>, O, R> R executeCommand(final B builder,
+																				final CommandArguments args) {
 		return executeCommand(builder, args, Converters.always());
 	}
 

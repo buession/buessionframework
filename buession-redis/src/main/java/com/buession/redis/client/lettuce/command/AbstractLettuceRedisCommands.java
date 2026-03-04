@@ -45,8 +45,13 @@ public abstract class AbstractLettuceRedisCommands extends AbstractRedisCommands
 		super(client);
 	}
 
-	protected <SR, R> R executeCommand(final Command command) {
-		return executeCommand(LettuceCommandBuilder.<SR, R>newBuilder(client, command));
+	protected <R> R executeCommand(final Command command) {
+		return executeCommand(LettuceCommandBuilder.newBuilder(client, command));
+	}
+
+	protected <R> R executeCommand(final Command command,
+								   final com.buession.redis.core.Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, R> executor) {
+		return executeCommand(LettuceCommandBuilder.newBuilder(client, command), executor, (v)->v);
 	}
 
 	protected <SR, R> R executeCommand(final Command command,
@@ -55,8 +60,13 @@ public abstract class AbstractLettuceRedisCommands extends AbstractRedisCommands
 		return executeCommand(LettuceCommandBuilder.newBuilder(client, command), executor, converter);
 	}
 
-	protected <SR, R> R executeCommand(final Command command, final CommandArguments args) {
-		return executeCommand(LettuceCommandBuilder.<SR, R>newBuilder(client, command), args);
+	protected <R> R executeCommand(final Command command, final CommandArguments args) {
+		return executeCommand(LettuceCommandBuilder.newBuilder(client, command), args);
+	}
+
+	protected <R> R executeCommand(final Command command, final CommandArguments args,
+								   final com.buession.redis.core.Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, R> executor) {
+		return executeCommand(LettuceCommandBuilder.newBuilder(client, command), args, executor, (v)->v);
 	}
 
 	protected <SR, R> R executeCommand(final Command command, final CommandArguments args,
@@ -65,8 +75,13 @@ public abstract class AbstractLettuceRedisCommands extends AbstractRedisCommands
 		return executeCommand(LettuceCommandBuilder.newBuilder(client, command), args, executor, converter);
 	}
 
-	protected <SR, R> R executeCommand(final Command command, final SubCommand subCommand) {
-		return executeCommand(LettuceCommandBuilder.<SR, R>newBuilder(client, command, subCommand));
+	protected <R> R executeCommand(final Command command, final SubCommand subCommand) {
+		return executeCommand(LettuceCommandBuilder.newBuilder(client, command, subCommand));
+	}
+
+	protected <R> R executeCommand(final Command command, final SubCommand subCommand,
+								   final com.buession.redis.core.Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, R> executor) {
+		return executeCommand(LettuceCommandBuilder.newBuilder(client, command, subCommand), executor, (v)->v);
 	}
 
 	protected <SR, R> R executeCommand(final Command command, final SubCommand subCommand,
@@ -75,9 +90,13 @@ public abstract class AbstractLettuceRedisCommands extends AbstractRedisCommands
 		return executeCommand(LettuceCommandBuilder.newBuilder(client, command, subCommand), executor, converter);
 	}
 
-	protected <SR, R> R executeCommand(final Command command, final SubCommand subCommand,
-									   final CommandArguments args) {
-		return executeCommand(LettuceCommandBuilder.<SR, R>newBuilder(client, command, subCommand), args);
+	protected <R> R executeCommand(final Command command, final SubCommand subCommand, final CommandArguments args) {
+		return executeCommand(LettuceCommandBuilder.<R, R>newBuilder(client, command, subCommand), args);
+	}
+
+	protected <R> R executeCommand(final Command command, final SubCommand subCommand, final CommandArguments args,
+								   final com.buession.redis.core.Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, R> executor) {
+		return executeCommand(LettuceCommandBuilder.newBuilder(client, command, subCommand), args, executor, (v)->v);
 	}
 
 	protected <SR, R> R executeCommand(final Command command, final SubCommand subCommand, final CommandArguments args,

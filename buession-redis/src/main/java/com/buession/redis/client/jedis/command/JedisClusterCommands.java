@@ -26,6 +26,7 @@ package com.buession.redis.client.jedis.command;
 
 import com.buession.core.IntegerRange;
 import com.buession.lang.KeyValue;
+import com.buession.lang.Order;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.BumpEpoch;
@@ -53,8 +54,7 @@ import java.util.List;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class JedisClusterCommands extends AbstractJedisRedisCommands implements
-		ClusterCommands {
+public final class JedisClusterCommands extends AbstractJedisRedisCommands implements ClusterCommands {
 
 	public JedisClusterCommands(final JedisRedisClient client) {
 		super(client);
@@ -72,7 +72,7 @@ public final class JedisClusterCommands extends AbstractJedisRedisCommands imple
 	}
 
 	@Override
-	public Status clusterAddSlotsRange(final IntegerRange slots) {
+	public Status clusterAddSlotsRange(final IntegerRange... slots) {
 		final CommandArguments args = CommandArguments.create(slots);
 		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_ADDSLOTSRANGE, args);
 	}
@@ -107,7 +107,7 @@ public final class JedisClusterCommands extends AbstractJedisRedisCommands imple
 	}
 
 	@Override
-	public Status clusterDelSlotsRange(final IntegerRange slots) {
+	public Status clusterDelSlotsRange(final IntegerRange... slots) {
 		final CommandArguments args = CommandArguments.create(slots);
 		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_DELSLOTSRANGE, args);
 	}
@@ -176,7 +176,7 @@ public final class JedisClusterCommands extends AbstractJedisRedisCommands imple
 	}
 
 	@Override
-	public Status clusterMigration(final IntegerRange slots) {
+	public Status clusterMigration(final IntegerRange... slots) {
 		final CommandArguments args = CommandArguments.create().add("IMPORT", slots);
 		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_MIGRATION, args);
 	}
@@ -290,8 +290,84 @@ public final class JedisClusterCommands extends AbstractJedisRedisCommands imple
 	}
 
 	@Override
-	public ClusterSlotStat clusterSlotStats() {
+	public List<ClusterSlotStat> clusterSlotStats() {
 		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLOT_STATS);
+	}
+
+	@Override
+	public List<ClusterSlotStat> clusterSlotStats(final IntegerRange slot) {
+		final CommandArguments args = CommandArguments.create().add("SLOTSRANGE", slot);
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLOT_STATS, args);
+	}
+
+	@Override
+	public List<ClusterSlotStat> clusterSlotStats(final IntegerRange slot, final int limit) {
+		final CommandArguments args = CommandArguments.create().add("SLOTSRANGE", slot)
+				.add(Keyword.Common.LIMIT, limit);
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLOT_STATS, args);
+	}
+
+	@Override
+	public List<ClusterSlotStat> clusterSlotStats(final IntegerRange slot, final int limit, final Order order) {
+		final CommandArguments args = CommandArguments.create().add("SLOTSRANGE", slot)
+				.add(Keyword.Common.LIMIT, limit).add(order);
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLOT_STATS, args);
+	}
+
+	@Override
+	public List<ClusterSlotStat> clusterSlotStats(final String metric) {
+		final CommandArguments args = CommandArguments.create().add("ORDERBY", metric);
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLOT_STATS, args);
+	}
+
+	@Override
+	public List<ClusterSlotStat> clusterSlotStats(final byte[] metric) {
+		final CommandArguments args = CommandArguments.create().add("ORDERBY", metric);
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLOT_STATS, args);
+	}
+
+	@Override
+	public List<ClusterSlotStat> clusterSlotStats(final String metric, final int limit) {
+		final CommandArguments args = CommandArguments.create().add("ORDERBY", metric).add(Keyword.Common.LIMIT, limit);
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLOT_STATS, args);
+	}
+
+	@Override
+	public List<ClusterSlotStat> clusterSlotStats(final byte[] metric, final int limit) {
+		final CommandArguments args = CommandArguments.create().add("ORDERBY", metric).add(Keyword.Common.LIMIT, limit);
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLOT_STATS, args);
+	}
+
+	@Override
+	public List<ClusterSlotStat> clusterSlotStats(final String metric, final int limit, final Order order) {
+		final CommandArguments args = CommandArguments.create().add("ORDERBY", metric).add(Keyword.Common.LIMIT, limit)
+				.add(order);
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLOT_STATS, args);
+	}
+
+	@Override
+	public List<ClusterSlotStat> clusterSlotStats(final byte[] metric, final int limit, final Order order) {
+		final CommandArguments args = CommandArguments.create().add("ORDERBY", metric).add(Keyword.Common.LIMIT, limit)
+				.add(order);
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLOT_STATS, args);
+	}
+
+	@Override
+	public List<ClusterSlotStat> clusterSlotStats(final int limit) {
+		final CommandArguments args = CommandArguments.create().add(Keyword.Common.LIMIT, limit);
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLOT_STATS, args);
+	}
+
+	@Override
+	public List<ClusterSlotStat> clusterSlotStats(final int limit, final Order order) {
+		final CommandArguments args = CommandArguments.create().add(Keyword.Common.LIMIT, limit).add(order);
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLOT_STATS, args);
+	}
+
+	@Override
+	public List<ClusterSlotStat> clusterSlotStats(final Order order) {
+		final CommandArguments args = CommandArguments.create(order);
+		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLOT_STATS, args);
 	}
 
 	@Override

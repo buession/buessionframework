@@ -69,7 +69,7 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 	@Override
 	public Long bfCard(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.BF_CARD, args, (cmd)->cmd.bfCard(rawKey(key)), (v)->v);
+		return executeCommand(Command.BF_CARD, args, (cmd)->cmd.bfCard(rawKey(key)));
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 	@Override
 	public Boolean bfExists(final String key, final String item) {
 		final CommandArguments args = CommandArguments.create(key).add(item);
-		return executeCommand(Command.BF_EXISTS, args, (cmd)->cmd.bfExists(rawKey(key), item), (v)->v);
+		return executeCommand(Command.BF_EXISTS, args, (cmd)->cmd.bfExists(rawKey(key), item));
 	}
 
 	@Override
@@ -130,7 +130,7 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 	@Override
 	public List<Boolean> bfInsert(final String key, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS, items);
-		return executeCommand(Command.BF_INSERT, args, (cmd)->cmd.bfInsert(rawKey(key), items), (v)->v);
+		return executeCommand(Command.BF_INSERT, args, (cmd)->cmd.bfInsert(rawKey(key), items));
 	}
 
 	@Override
@@ -142,7 +142,7 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 	public List<Boolean> bfInsert(final String key, final BFInsertArgument argument, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS, items);
 		return executeCommand(Command.BF_INSERT, args,
-				(cmd)->cmd.bfInsert(rawKey(key), new JedisBFInsertParams(argument), items), (v)->v);
+				(cmd)->cmd.bfInsert(rawKey(key), new JedisBFInsertParams(argument), items));
 	}
 
 	@Override
@@ -165,7 +165,7 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 	@Override
 	public List<Boolean> bfMAdd(final String key, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(items);
-		return executeCommand(Command.BF_MADD, args, (cmd)->cmd.bfMAdd(rawKey(key), items), (v)->v);
+		return executeCommand(Command.BF_MADD, args, (cmd)->cmd.bfMAdd(rawKey(key), items));
 	}
 
 	@Override
@@ -176,7 +176,7 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 	@Override
 	public List<Boolean> bfMExists(final String key, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(items);
-		return executeCommand(Command.BF_MEXISTS, args, (cmd)->cmd.bfMExists(rawKey(key), items), (v)->v);
+		return executeCommand(Command.BF_MEXISTS, args, (cmd)->cmd.bfMExists(rawKey(key), items));
 	}
 
 	@Override

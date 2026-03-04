@@ -55,37 +55,37 @@ public final class LettuceBitMapCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public Long bitCount(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.BITCOUNT, args, (cmd)->cmd.bitcount(rawBinaryKey(key)), (v)->v);
+		return executeCommand(Command.BITCOUNT, args, (cmd)->cmd.bitcount(rawBinaryKey(key)));
 	}
 
 	@Override
 	public Long bitCount(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.BITCOUNT, args, (cmd)->cmd.bitcount(rawKey(key)), (v)->v);
+		return executeCommand(Command.BITCOUNT, args, (cmd)->cmd.bitcount(rawKey(key)));
 	}
 
 	@Override
 	public Long bitCount(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
-		return executeCommand(Command.BITCOUNT, args, (cmd)->cmd.bitcount(rawBinaryKey(key), start, end), (v)->v);
+		return executeCommand(Command.BITCOUNT, args, (cmd)->cmd.bitcount(rawBinaryKey(key), start, end));
 	}
 
 	@Override
 	public Long bitCount(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
-		return executeCommand(Command.BITCOUNT, args, (cmd)->cmd.bitcount(rawKey(key), start, end), (v)->v);
+		return executeCommand(Command.BITCOUNT, args, (cmd)->cmd.bitcount(rawKey(key), start, end));
 	}
 
 	@Override
 	public Long bitCount(final String key, final long start, final long end, final BitCountOption option) {
 		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(option);
-		return executeCommand(Command.BITCOUNT, args, (cmd)->cmd.bitcount(rawBinaryKey(key), start, end), (v)->v);
+		return executeCommand(Command.BITCOUNT, args, (cmd)->cmd.bitcount(rawBinaryKey(key), start, end));
 	}
 
 	@Override
 	public Long bitCount(final byte[] key, final long start, final long end, final BitCountOption option) {
 		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(option);
-		return executeCommand(Command.BITCOUNT, args, (cmd)->cmd.bitcount(rawKey(key), start, end), (v)->v);
+		return executeCommand(Command.BITCOUNT, args, (cmd)->cmd.bitcount(rawKey(key), start, end));
 	}
 
 	@Override
@@ -127,49 +127,49 @@ public final class LettuceBitMapCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public Long bitPos(final String key, final boolean value) {
 		final CommandArguments args = CommandArguments.create(key).add(value);
-		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawBinaryKey(key), value), (v)->v);
+		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawBinaryKey(key), value));
 	}
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value) {
 		final CommandArguments args = CommandArguments.create(key).add(value);
-		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawKey(key), value), (v)->v);
+		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawKey(key), value));
 	}
 
 	@Override
 	public Long bitPos(final String key, final boolean value, final long start) {
 		final CommandArguments args = CommandArguments.create(key).add(value).add(start);
-		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawBinaryKey(key), value, start), (v)->v);
+		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawBinaryKey(key), value, start));
 	}
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value, final long start) {
 		final CommandArguments args = CommandArguments.create(key).add(value).add(start);
-		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawKey(key), value, start), (v)->v);
+		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawKey(key), value, start));
 	}
 
 	@Override
 	public Long bitPos(final String key, final boolean value, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(value).add(start, end);
-		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawBinaryKey(key), value, start, end), (v)->v);
+		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawBinaryKey(key), value, start, end));
 	}
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(value).add(start, end);
-		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawKey(key), value, start, end), (v)->v);
+		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawKey(key), value, start, end));
 	}
 
 	@Override
 	public Long bitPos(final String key, final boolean value, final long start, final long end, final BitType type) {
 		final CommandArguments args = CommandArguments.create(key).add(value).add(start, end).add(type);
-		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawBinaryKey(key), value, start, end), (v)->v);
+		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawBinaryKey(key), value, start, end));
 	}
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value, final long start, final long end, final BitType type) {
 		final CommandArguments args = CommandArguments.create(key).add(value).add(start, end).add(type);
-		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawKey(key), value, start, end), (v)->v);
+		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawKey(key), value, start, end));
 	}
 
 	@Override
@@ -244,7 +244,7 @@ public final class LettuceBitMapCommands extends AbstractLettuceRedisCommands im
 			}
 		}
 
-		return executeCommand(Command.BITFIELD, args, (cmd)->cmd.bitfield(key, bitFieldArgs), (v)->v);
+		return executeCommand(Command.BITFIELD, args, (cmd)->cmd.bitfield(key, bitFieldArgs));
 	}
 
 	private Long bitOp(final BitOperation operation, final byte[] destKey, final byte[][] keys,
@@ -269,7 +269,7 @@ public final class LettuceBitMapCommands extends AbstractLettuceRedisCommands im
 			}else{
 				return null;
 			}
-		}, (v)->v);
+		});
 	}
 
 }

@@ -46,8 +46,13 @@ public abstract class AbstractJedisRedisCommands extends AbstractRedisCommands<J
 		super(client);
 	}
 
-	protected <SR, R> R executeCommand(final Command command) {
-		return executeCommand(JedisCommandBuilder.<SR, R>newBuilder(client, command));
+	protected <R> R executeCommand(final Command command) {
+		return executeCommand(JedisCommandBuilder.newBuilder(client, command));
+	}
+
+	protected <R> R executeCommand(final Command command,
+								   final com.buession.redis.core.Command.Executor<UnifiedJedis, R> executor) {
+		return executeCommand(JedisCommandBuilder.newBuilder(client, command), executor, (v)->v);
 	}
 
 	protected <SR, R> R executeCommand(final Command command,
@@ -56,8 +61,13 @@ public abstract class AbstractJedisRedisCommands extends AbstractRedisCommands<J
 		return executeCommand(JedisCommandBuilder.newBuilder(client, command), executor, converter);
 	}
 
-	protected <SR, R> R executeCommand(final Command command, final CommandArguments args) {
-		return executeCommand(JedisCommandBuilder.<SR, R>newBuilder(client, command), args);
+	protected <R> R executeCommand(final Command command, final CommandArguments args) {
+		return executeCommand(JedisCommandBuilder.newBuilder(client, command), args);
+	}
+
+	protected <R> R executeCommand(final Command command, final CommandArguments args,
+								   final com.buession.redis.core.Command.Executor<UnifiedJedis, R> executor) {
+		return executeCommand(JedisCommandBuilder.newBuilder(client, command), args, executor, (v)->v);
 	}
 
 	protected <SR, R> R executeCommand(final Command command, final CommandArguments args,
@@ -66,8 +76,13 @@ public abstract class AbstractJedisRedisCommands extends AbstractRedisCommands<J
 		return executeCommand(JedisCommandBuilder.newBuilder(client, command), args, executor, converter);
 	}
 
-	protected <SR, R> R executeCommand(final Command command, final SubCommand subCommand) {
-		return executeCommand(JedisCommandBuilder.<SR, R>newBuilder(client, command, subCommand));
+	protected <R> R executeCommand(final Command command, final SubCommand subCommand) {
+		return executeCommand(JedisCommandBuilder.newBuilder(client, command, subCommand));
+	}
+
+	protected <R> R executeCommand(final Command command, final SubCommand subCommand,
+								   final com.buession.redis.core.Command.Executor<UnifiedJedis, R> executor) {
+		return executeCommand(JedisCommandBuilder.newBuilder(client, command, subCommand), executor, (v)->v);
 	}
 
 	protected <SR, R> R executeCommand(final Command command, final SubCommand subCommand,
@@ -76,9 +91,14 @@ public abstract class AbstractJedisRedisCommands extends AbstractRedisCommands<J
 		return executeCommand(JedisCommandBuilder.newBuilder(client, command, subCommand), executor, converter);
 	}
 
-	protected <SR, R> R executeCommand(final Command command, final SubCommand subCommand,
-									   final CommandArguments args) {
-		return executeCommand(JedisCommandBuilder.<SR, R>newBuilder(client, command, subCommand), args);
+	protected <R> R executeCommand(final Command command, final SubCommand subCommand,
+								   final CommandArguments args) {
+		return executeCommand(JedisCommandBuilder.<R, R>newBuilder(client, command, subCommand), args);
+	}
+
+	protected <R> R executeCommand(final Command command, final SubCommand subCommand, final CommandArguments args,
+								   final com.buession.redis.core.Command.Executor<UnifiedJedis, R> executor) {
+		return executeCommand(JedisCommandBuilder.newBuilder(client, command, subCommand), args, executor, (v)->v);
 	}
 
 	protected <SR, R> R executeCommand(final Command command, final SubCommand subCommand, final CommandArguments args,

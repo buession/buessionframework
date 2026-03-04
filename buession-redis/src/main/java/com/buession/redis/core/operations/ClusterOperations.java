@@ -25,8 +25,8 @@
 package com.buession.redis.core.operations;
 
 import com.buession.core.IntegerRange;
-import com.buession.core.utils.Assert;
 import com.buession.lang.KeyValue;
+import com.buession.lang.Order;
 import com.buession.lang.Status;
 import com.buession.redis.core.BumpEpoch;
 import com.buession.redis.core.ClusterFailoverOption;
@@ -65,7 +65,7 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	}
 
 	@Override
-	default Status clusterAddSlotsRange(final IntegerRange slots) {
+	default Status clusterAddSlotsRange(final IntegerRange... slots) {
 		return execute((client)->client.clusterCommands().clusterAddSlotsRange(slots));
 	}
 
@@ -95,7 +95,7 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	}
 
 	@Override
-	default Status clusterDelSlotsRange(final IntegerRange slots) {
+	default Status clusterDelSlotsRange(final IntegerRange... slots) {
 		return execute((client)->client.clusterCommands().clusterDelSlotsRange(slots));
 	}
 
@@ -193,21 +193,26 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
 	default Status clusterMeet(final RedisNode node) {
-		Assert.isNull(node, "Redis cluster node cloud not be null");
-		Assert.isBlank(node.getHost(), "Redis cluster host cloud not be null or empty");
-
 		return clusterMeet(node.getHost(), node.getPort());
 	}
 
-	default Status clusterMigration(final IntegerRange slots) {
+	@Override
+	default Status clusterMigration(final IntegerRange... slots) {
 		return execute((client)->client.clusterCommands().clusterMigration(slots));
 	}
 
+	@Override
 	default Object clusterMigration(final ClusterMigrationOp option) {
 		return execute((client)->client.clusterCommands().clusterMigration(option));
 	}
 
+	@Override
 	default Object clusterMigration(final ClusterMigrationOp option, final String id) {
+		return execute((client)->client.clusterCommands().clusterMigration(option, id));
+	}
+
+	@Override
+	default Object clusterMigration(final ClusterMigrationOp option, final byte[] id) {
 		return execute((client)->client.clusterCommands().clusterMigration(option, id));
 	}
 
@@ -292,9 +297,45 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	}
 
 	@Override
-	default ClusterSlotStat clusterSlotStats() {
+	default List<ClusterSlotStat> clusterSlotStats() {
 		return execute((client)->client.clusterCommands().clusterSlotStats());
 	}
+
+	@Override
+	List<ClusterSlotStat> clusterSlotStats(final IntegerRange slot);
+
+	@Override
+	List<ClusterSlotStat> clusterSlotStats(final IntegerRange slot, final int limit);
+
+	@Override
+	List<ClusterSlotStat> clusterSlotStats(final IntegerRange slot, final int limit, final Order order);
+
+	@Override
+	List<ClusterSlotStat> clusterSlotStats(final String metric);
+
+	@Override
+	List<ClusterSlotStat> clusterSlotStats(final byte[] metric);
+
+	@Override
+	List<ClusterSlotStat> clusterSlotStats(final String metric, final int limit);
+
+	@Override
+	List<ClusterSlotStat> clusterSlotStats(final byte[] metric, final int limit);
+
+	@Override
+	List<ClusterSlotStat> clusterSlotStats(final String metric, final int limit, final Order order);
+
+	@Override
+	List<ClusterSlotStat> clusterSlotStats(final byte[] metric, final int limit, final Order order);
+
+	@Override
+	List<ClusterSlotStat> clusterSlotStats(final int limit);
+
+	@Override
+	List<ClusterSlotStat> clusterSlotStats(final int limit, final Order order);
+
+	@Override
+	List<ClusterSlotStat> clusterSlotStats(final Order order);
 
 	@Override
 	default List<ClusterSlot> clusterSlots() {

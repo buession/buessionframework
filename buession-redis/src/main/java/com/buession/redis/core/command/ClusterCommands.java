@@ -26,6 +26,7 @@ package com.buession.redis.core.command;
 
 import com.buession.core.IntegerRange;
 import com.buession.lang.KeyValue;
+import com.buession.lang.Order;
 import com.buession.lang.Status;
 import com.buession.redis.core.BumpEpoch;
 import com.buession.redis.core.ClusterFailoverOption;
@@ -84,7 +85,7 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	Status clusterAddSlotsRange(final IntegerRange slots);
+	Status clusterAddSlotsRange(final IntegerRange... slots);
 
 	/**
 	 * The CLUSTER BUMPEPOCH command triggers an increment to the cluster’s config epoch from the connected node.
@@ -155,7 +156,7 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	Status clusterDelSlotsRange(final IntegerRange slots);
+	Status clusterDelSlotsRange(final IntegerRange... slots);
 
 	/**
 	 * 让 slave 节点进行一次人工故障切换
@@ -296,7 +297,7 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	Status clusterMigration(final IntegerRange slots);
+	Status clusterMigration(final IntegerRange... slots);
 
 	/**
 	 * 执行原子化的哈希槽迁移操作
@@ -529,7 +530,171 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @return 指定 master 节点所有 slave 节点
 	 */
-	ClusterSlotStat clusterSlotStats();
+	List<ClusterSlotStat> clusterSlotStats();
+
+	/**
+	 * 哈希槽的详细统计信息
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cluster-slot-stats/" target="_blank">https://redis.io/docs/latest/commands/cluster-slot-stats/</a></p>
+	 *
+	 * @param slot
+	 * 		HASH 槽范围
+	 *
+	 * @return 指定 master 节点所有 slave 节点
+	 */
+	List<ClusterSlotStat> clusterSlotStats(final IntegerRange slot);
+
+	/**
+	 * 哈希槽的详细统计信息
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cluster-slot-stats/" target="_blank">https://redis.io/docs/latest/commands/cluster-slot-stats/</a></p>
+	 *
+	 * @param slot
+	 * 		HASH 槽范围
+	 * @param limit
+	 * 		偏移量
+	 *
+	 * @return 指定 master 节点所有 slave 节点
+	 */
+	List<ClusterSlotStat> clusterSlotStats(final IntegerRange slot, final int limit);
+
+	/**
+	 * 哈希槽的详细统计信息
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cluster-slot-stats/" target="_blank">https://redis.io/docs/latest/commands/cluster-slot-stats/</a></p>
+	 *
+	 * @param slot
+	 * 		HASH 槽范围
+	 * @param limit
+	 * 		偏移量
+	 * @param order
+	 * 		排序方式
+	 *
+	 * @return 指定 master 节点所有 slave 节点
+	 */
+	List<ClusterSlotStat> clusterSlotStats(final IntegerRange slot, final int limit, final Order order);
+
+	/**
+	 * 哈希槽的详细统计信息
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cluster-slot-stats/" target="_blank">https://redis.io/docs/latest/commands/cluster-slot-stats/</a></p>
+	 *
+	 * @param metric
+	 * 		Metric
+	 *
+	 * @return 指定 master 节点所有 slave 节点
+	 */
+	List<ClusterSlotStat> clusterSlotStats(final String metric);
+
+	/**
+	 * 哈希槽的详细统计信息
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cluster-slot-stats/" target="_blank">https://redis.io/docs/latest/commands/cluster-slot-stats/</a></p>
+	 *
+	 * @param metric
+	 * 		Metric
+	 *
+	 * @return 指定 master 节点所有 slave 节点
+	 */
+	List<ClusterSlotStat> clusterSlotStats(final byte[] metric);
+
+	/**
+	 * 哈希槽的详细统计信息
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cluster-slot-stats/" target="_blank">https://redis.io/docs/latest/commands/cluster-slot-stats/</a></p>
+	 *
+	 * @param metric
+	 * 		Metric
+	 * @param limit
+	 * 		偏移量
+	 *
+	 * @return 指定 master 节点所有 slave 节点
+	 */
+	List<ClusterSlotStat> clusterSlotStats(final String metric, final int limit);
+
+	/**
+	 * 哈希槽的详细统计信息
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cluster-slot-stats/" target="_blank">https://redis.io/docs/latest/commands/cluster-slot-stats/</a></p>
+	 *
+	 * @param metric
+	 * 		Metric
+	 * @param limit
+	 * 		偏移量
+	 *
+	 * @return 指定 master 节点所有 slave 节点
+	 */
+	List<ClusterSlotStat> clusterSlotStats(final byte[] metric, final int limit);
+
+	/**
+	 * 哈希槽的详细统计信息
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cluster-slot-stats/" target="_blank">https://redis.io/docs/latest/commands/cluster-slot-stats/</a></p>
+	 *
+	 * @param metric
+	 * 		Metric
+	 * @param limit
+	 * 		偏移量
+	 * @param order
+	 * 		排序方式
+	 *
+	 * @return 指定 master 节点所有 slave 节点
+	 */
+	List<ClusterSlotStat> clusterSlotStats(final String metric, final int limit, final Order order);
+
+	/**
+	 * 哈希槽的详细统计信息
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cluster-slot-stats/" target="_blank">https://redis.io/docs/latest/commands/cluster-slot-stats/</a></p>
+	 *
+	 * @param metric
+	 * 		Metric
+	 * @param limit
+	 * 		偏移量
+	 * @param order
+	 * 		排序方式
+	 *
+	 * @return 指定 master 节点所有 slave 节点
+	 */
+	List<ClusterSlotStat> clusterSlotStats(final byte[] metric, final int limit, final Order order);
+
+	/**
+	 * 哈希槽的详细统计信息
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cluster-slot-stats/" target="_blank">https://redis.io/docs/latest/commands/cluster-slot-stats/</a></p>
+	 *
+	 * @param limit
+	 * 		偏移量
+	 *
+	 * @return 指定 master 节点所有 slave 节点
+	 */
+	List<ClusterSlotStat> clusterSlotStats(final int limit);
+
+	/**
+	 * 哈希槽的详细统计信息
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cluster-slot-stats/" target="_blank">https://redis.io/docs/latest/commands/cluster-slot-stats/</a></p>
+	 *
+	 * @param limit
+	 * 		偏移量
+	 * @param order
+	 * 		排序方式
+	 *
+	 * @return 指定 master 节点所有 slave 节点
+	 */
+	List<ClusterSlotStat> clusterSlotStats(final int limit, final Order order);
+
+	/**
+	 * 哈希槽的详细统计信息
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cluster-slot-stats/" target="_blank">https://redis.io/docs/latest/commands/cluster-slot-stats/</a></p>
+	 *
+	 * @param order
+	 * 		排序方式
+	 *
+	 * @return 指定 master 节点所有 slave 节点
+	 */
+	List<ClusterSlotStat> clusterSlotStats(final Order order);
 
 	/**
 	 * 返回哈希槽和 Redis 实例映射关系

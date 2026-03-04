@@ -19,35 +19,25 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.response;
+package com.buession.redis.core.internal.convert.lettuce;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.utils.EnumUtils;
-import com.buession.core.utils.KeyValueParser;
-import com.buession.core.validator.Validate;
-import com.buession.lang.KeyValue;
-import com.buession.redis.core.BumpEpoch;
+import io.lettuce.core.Range;
 
 /**
- * Cluster BumpEpoch 命令结果转换为 {@link BumpEpoch}
+ *
  *
  * @author Yong.Teng
- * @since 2.3.0
+ * @since 4.0.0
  */
-public final class BumpEpochConverter implements Converter<String, KeyValue<BumpEpoch, Integer>> {
+public final class RangeRangeConverter<T> implements Converter<com.buession.core.Range<T>, io.lettuce.core.Range<T>> {
 
 	@Override
-	public KeyValue<BumpEpoch, Integer> convert(final String source) {
-		if(Validate.isEmpty(source)){
-			return null;
-		}
-
-		final KeyValueParser keyValueParser = new KeyValueParser(source, " ");
-		return new KeyValue<>(EnumUtils.getEnum(BumpEpoch.class, keyValueParser.getKey()),
-				keyValueParser.getIntValue());
+	public Range<T> convert(final com.buession.core.Range<T> source) {
+		return source == null ? null : io.lettuce.core.Range.create(source.getStart(), source.getEnd());
 	}
 
 }
