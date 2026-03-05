@@ -49,32 +49,37 @@ public abstract class AbstractRedisClient implements RedisClient {
 	protected RedisConnection connection;
 
 	/**
-	 * 布隆过滤器命令操作
+	 * 自动提示命令
 	 */
-	protected BloomFilterCommands bloomFilterCommands;
+	protected AutoSuggestCommands autoSuggestCommands;
 
 	/**
-	 * BitMap 命令操作
+	 * BitMap 命令
 	 */
 	protected BitMapCommands bitMapCommands;
 
 	/**
-	 * 布谷鸟过滤器命令操作
+	 * 布隆过滤器命令
+	 */
+	protected BloomFilterCommands bloomFilterCommands;
+
+	/**
+	 * 布谷鸟过滤器命令
 	 */
 	protected CuckooFilterCommands cuckooFilterCommands;
 
 	/**
-	 * 集群命令操作
+	 * 集群命令
 	 */
 	protected ClusterCommands clusterCommands;
 
 	/**
-	 * 计数最小草图命令操作
+	 * 计数最小草图命令
 	 */
 	protected CountMinSketchCommands countMinSketchCommands;
 
 	/**
-	 * 连接命令操作
+	 * 连接命令
 	 */
 	protected ConnectionCommands connectionCommands;
 
@@ -89,44 +94,44 @@ public abstract class AbstractRedisClient implements RedisClient {
 	protected GeoCommands geoCommands;
 
 	/**
-	 * 哈希表命令操作
+	 * 哈希表命令
 	 */
 	protected HashCommands hashCommands;
 
 	/**
-	 * HyperLogLog 命令操作
+	 * HyperLogLog 命令
 	 */
 	protected HyperLogLogCommands hyperLogLogCommands;
 
 	/**
-	 * JSON 命令操作
+	 * JSON 命令
 	 */
 	protected JsonCommands jsonCommands;
 
 	/**
-	 * KEY 命令操作
+	 * KEY 命令
 	 */
 	protected KeyCommands keyCommands;
 
 	/**
-	 * 列表命令操作
+	 * 列表命令
 	 */
 	protected ListCommands listCommands;
 
 	/**
-	 * 发布订阅命令操作
+	 * 发布订阅命令
 	 */
 	protected PubSubCommands pubSubCommands;
 
 	/**
-	 * Script 命令操作
+	 * Script 命令
 	 */
 	protected ScriptingCommands scriptingCommands;
 
 	/**
-	 * 搜索命令操作
+	 * 搜索命令
 	 */
-	//protected SearchCommands searchCommands;
+	protected SearchCommands searchCommands;
 
 	/**
 	 * 服务端操作命令
@@ -134,29 +139,49 @@ public abstract class AbstractRedisClient implements RedisClient {
 	protected ServerCommands serverCommands;
 
 	/**
-	 * 集合命令操作
+	 * 集合命令
 	 */
 	protected SetCommands setCommands;
 
 	/**
-	 * 有序集合命令操作
+	 * 有序集合命令
 	 */
 	protected SortedSetCommands sortedSetCommands;
 
 	/**
-	 * Stream 命令操作
+	 * Stream 命令
 	 */
 	protected StreamCommands streamCommands;
 
 	/**
-	 * 字符串命令操作
+	 * 字符串命令
 	 */
 	protected StringCommands stringCommands;
 
 	/**
-	 * 事务命令操作
+	 * T-Digest 命令
+	 */
+	protected TDigestCommands tDigestCommands;
+
+	/**
+	 * TimeSeries 命令
+	 */
+	protected TimeSeriesCommands timeSeriesCommands;
+
+	/**
+	 * TOP K 命令
+	 */
+	protected TopKCommands topKCommands;
+
+	/**
+	 * 事务命令
 	 */
 	protected TransactionCommands transactionCommands;
+
+	/**
+	 * Vector Set 命令
+	 */
+	protected VectorSetCommands vectorSetCommands;
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 

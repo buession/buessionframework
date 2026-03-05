@@ -72,6 +72,15 @@ public class LettuceRedisClient extends AbstractRedisClient {
 	}
 
 	@Override
+	public AutoSuggestCommands autoSuggestCommands() {
+		if(autoSuggestCommands == null){
+			autoSuggestCommands = new LettuceAutoSuggestCommands(this);
+		}
+
+		return autoSuggestCommands;
+	}
+
+	@Override
 	public BitMapCommands bitMapCommands() {
 		if(bitMapCommands == null){
 			bitMapCommands = new LettuceBitMapCommands(this);
@@ -206,7 +215,6 @@ public class LettuceRedisClient extends AbstractRedisClient {
 		return scriptingCommands;
 	}
 
-	/*
 	@Override
 	public SearchCommands searchCommands() {
 		if(searchCommands == null){
@@ -215,8 +223,6 @@ public class LettuceRedisClient extends AbstractRedisClient {
 
 		return searchCommands;
 	}
-
-	 */
 
 	@Override
 	public ServerCommands serverCommands() {
@@ -264,12 +270,48 @@ public class LettuceRedisClient extends AbstractRedisClient {
 	}
 
 	@Override
+	public TDigestCommands tDigestCommands() {
+		if(tDigestCommands == null){
+			tDigestCommands = new LettuceTDigestCommands(this);
+		}
+
+		return tDigestCommands;
+	}
+
+	@Override
+	public TimeSeriesCommands timeSeriesCommands() {
+		if(timeSeriesCommands == null){
+			timeSeriesCommands = new LettuceTimeSeriesCommands(this);
+		}
+
+		return timeSeriesCommands;
+	}
+
+	@Override
+	public TopKCommands topKCommands() {
+		if(topKCommands == null){
+			topKCommands = new LettuceTopKCommands(this);
+		}
+
+		return topKCommands;
+	}
+
+	@Override
 	public TransactionCommands transactionCommands() {
 		if(transactionCommands == null){
 			transactionCommands = new LettuceTransactionCommands(this);
 		}
 
 		return transactionCommands;
+	}
+
+	@Override
+	public VectorSetCommands vectorSetCommands() {
+		if(vectorSetCommands == null){
+			vectorSetCommands = new LettuceVectorSetCommands(this);
+		}
+
+		return vectorSetCommands;
 	}
 
 }
