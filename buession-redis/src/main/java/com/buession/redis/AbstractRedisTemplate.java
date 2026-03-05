@@ -37,10 +37,10 @@ import java.util.function.Function;
  * @author Yong.Teng
  */
 public abstract class AbstractRedisTemplate extends RedisAccessor implements BitMapCommands, BloomFilterCommands,
-		ClusterCommands, CuckooFilterCommands, CountMinSketchCommands,
-		ConnectionCommands, GenericCommands, GeoCommands, HashCommands, HyperLogLogCommands, JsonCommands, KeyCommands,
-		ListCommands, PubSubCommands, ScriptingCommands,/*SearchCommands, */ServerCommands, SetCommands,
-		SortedSetCommands, StreamCommands, StringCommands, TransactionCommands {
+		ClusterCommands, ConnectionCommands, CountMinSketchCommands, CuckooFilterCommands, GenericCommands, GeoCommands,
+		HashCommands, HyperLogLogCommands, JsonCommands, KeyCommands, ListCommands, PubSubCommands, ScriptingCommands
+		,/*SearchCommands, */ServerCommands, SetCommands, SortedSetCommands, StreamCommands, StringCommands,
+		TransactionCommands {
 
 	/**
 	 * 构造函数

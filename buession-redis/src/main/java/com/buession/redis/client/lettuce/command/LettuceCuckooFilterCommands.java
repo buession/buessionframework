@@ -26,6 +26,7 @@ package com.buession.redis.client.lettuce.command;
 
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
+import com.buession.redis.core.Keyword;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.CuckooFilterCommands;
@@ -50,37 +51,37 @@ public final class LettuceCuckooFilterCommands extends AbstractLettuceRedisComma
 
 	@Override
 	public Status cfAdd(final String key, final String item) {
-		final CommandArguments args = CommandArguments.create(key).add(item);
+		final CommandArguments args = CommandArguments.create(key, item);
 		return executeCommand(Command.CF_ADD, args);
 	}
 
 	@Override
 	public Status cfAdd(final byte[] key, final byte[] item) {
-		final CommandArguments args = CommandArguments.create(key).add(item);
+		final CommandArguments args = CommandArguments.create(key, item);
 		return executeCommand(Command.CF_ADD, args);
 	}
 
 	@Override
 	public Status cfAddNx(final String key, final String item) {
-		final CommandArguments args = CommandArguments.create(key).add(item);
+		final CommandArguments args = CommandArguments.create(key, item);
 		return executeCommand(Command.CF_ADDNX, args);
 	}
 
 	@Override
 	public Status cfAddNx(final byte[] key, final byte[] item) {
-		final CommandArguments args = CommandArguments.create(key).add(item);
+		final CommandArguments args = CommandArguments.create(key, item);
 		return executeCommand(Command.CF_ADDNX, args);
 	}
 
 	@Override
 	public Long cfCount(final String key, final String item) {
-		final CommandArguments args = CommandArguments.create(key).add(item);
+		final CommandArguments args = CommandArguments.create(key, item);
 		return executeCommand(Command.CF_COUNT, args);
 	}
 
 	@Override
 	public Long cfCount(final byte[] key, final byte[] item) {
-		final CommandArguments args = CommandArguments.create(key).add(item);
+		final CommandArguments args = CommandArguments.create(key, item);
 		return executeCommand(Command.CF_COUNT, args);
 	}
 
@@ -98,13 +99,13 @@ public final class LettuceCuckooFilterCommands extends AbstractLettuceRedisComma
 
 	@Override
 	public Boolean cfExists(final String key, final String item) {
-		final CommandArguments args = CommandArguments.create(key).add(item);
+		final CommandArguments args = CommandArguments.create(key, item);
 		return executeCommand(Command.CF_EXISTS, args);
 	}
 
 	@Override
 	public Boolean cfExists(final byte[] key, final byte[] item) {
-		final CommandArguments args = CommandArguments.create(key).add(item);
+		final CommandArguments args = CommandArguments.create(key, item);
 		return executeCommand(Command.CF_EXISTS, args);
 	}
 
@@ -122,49 +123,49 @@ public final class LettuceCuckooFilterCommands extends AbstractLettuceRedisComma
 
 	@Override
 	public List<Boolean> cfInsert(final String key, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add("ITEMS", items);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS, items);
 		return executeCommand(Command.CF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsert(final byte[] key, final byte[]... items) {
-		final CommandArguments args = CommandArguments.create(key).add("ITEMS", items);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS, items);
 		return executeCommand(Command.CF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsert(final String key, final CFInsertArgument argument, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS", items);
+		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.ITEMS, items);
 		return executeCommand(Command.CF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsert(final byte[] key, final CFInsertArgument argument, final byte[]... items) {
-		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS", items);
+		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.ITEMS, items);
 		return executeCommand(Command.CF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsertNx(final String key, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add("ITEMS", items);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS, items);
 		return executeCommand(Command.CF_INSERTNX, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsertNx(final byte[] key, final byte[]... items) {
-		final CommandArguments args = CommandArguments.create(key).add("ITEMS", items);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS, items);
 		return executeCommand(Command.CF_INSERTNX, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsertNx(final String key, final CFInsertArgument argument, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS", items);
+		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.ITEMS, items);
 		return executeCommand(Command.CF_INSERTNX, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsertNx(final byte[] key, final CFInsertArgument argument, final byte[]... items) {
-		final CommandArguments args = CommandArguments.create(key).add(argument).add("ITEMS", items);
+		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.ITEMS, items);
 		return executeCommand(Command.CF_INSERTNX, args);
 	}
 
@@ -193,14 +194,26 @@ public final class LettuceCuckooFilterCommands extends AbstractLettuceRedisComma
 	}
 
 	@Override
-	public Status cfReserve(final String key, final CFReserveArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(argument);
+	public Status cfReserve(final String key, final long capacity) {
+		final CommandArguments args = CommandArguments.create(key, capacity);
 		return executeCommand(Command.CF_RESERVE, args);
 	}
 
 	@Override
-	public Status cfReserve(final byte[] key, final CFReserveArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(argument);
+	public Status cfReserve(final byte[] key, final long capacity) {
+		final CommandArguments args = CommandArguments.create(key, capacity);
+		return executeCommand(Command.CF_RESERVE, args);
+	}
+
+	@Override
+	public Status cfReserve(final String key, final long capacity, final CFReserveArgument argument) {
+		final CommandArguments args = CommandArguments.create(key, capacity).add(argument);
+		return executeCommand(Command.CF_RESERVE, args);
+	}
+
+	@Override
+	public Status cfReserve(final byte[] key, final long capacity, final CFReserveArgument argument) {
+		final CommandArguments args = CommandArguments.create(key, capacity).add(argument);
 		return executeCommand(Command.CF_RESERVE, args);
 	}
 

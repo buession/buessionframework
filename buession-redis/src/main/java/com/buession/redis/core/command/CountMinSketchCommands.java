@@ -29,7 +29,6 @@ import com.buession.lang.Status;
 import com.buession.redis.core.CmsInfo;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 计数最小草图命令
@@ -53,6 +52,7 @@ public interface CountMinSketchCommands extends RedisCommands {
 	 *
 	 * @return 返回结果列表
 	 */
+	@SuppressWarnings({"unchecked"})
 	List<Long> cmsIncrby(final String key, final KeyValue<String, Long>... items);
 
 	/**
@@ -67,6 +67,7 @@ public interface CountMinSketchCommands extends RedisCommands {
 	 *
 	 * @return 返回结果列表
 	 */
+	@SuppressWarnings({"unchecked"})
 	List<Long> cmsIncrby(final byte[] key, final KeyValue<byte[], Long>... items);
 
 	/**
@@ -160,12 +161,13 @@ public interface CountMinSketchCommands extends RedisCommands {
 	 *
 	 * @param destKey
 	 * 		目标 Key
-	 * @param keysAndWeights
+	 * @param data
 	 * 		原始 Key 及其权重
 	 *
 	 * @return 操作结果
 	 */
-	Status cmsMerge(final String destKey, final KeyValue<String, Long>... keysAndWeights);
+	@SuppressWarnings({"unchecked"})
+	Status cmsMerge(final String destKey, final KeyValue<String, Long>... data);
 
 	/**
 	 * 将多个 Count-Min Sketch（CMS）对象合并成一个新的 CMS
@@ -174,12 +176,13 @@ public interface CountMinSketchCommands extends RedisCommands {
 	 *
 	 * @param destKey
 	 * 		目标 Key
-	 * @param keysAndWeights
+	 * @param data
 	 * 		原始 Key 及其权重
 	 *
 	 * @return 操作结果
 	 */
-	Status cmsMerge(final byte[] destKey, final KeyValue<byte[], Long>... keysAndWeights);
+	@SuppressWarnings({"unchecked"})
+	Status cmsMerge(final byte[] destKey, final KeyValue<byte[], Long>... data);
 
 	/**
 	 * 从 Count-Min Sketch（CMS） 数据结构中查询一个或多个元素的频次估计值

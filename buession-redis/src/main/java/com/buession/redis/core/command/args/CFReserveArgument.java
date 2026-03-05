@@ -35,11 +35,6 @@ import com.buession.redis.utils.ArgStringBuilder;
 public class CFReserveArgument {
 
 	/**
-	 * 初始容量
-	 */
-	private final long capacity;
-
-	/**
 	 * 每个桶能存储的指纹数量
 	 */
 	private Long bucketSize;
@@ -56,32 +51,23 @@ public class CFReserveArgument {
 
 	/**
 	 * 构造函数
-	 *
-	 * @param capacity
-	 * 		预计要插入的元素数量上限
 	 */
-	public CFReserveArgument(long capacity) {
-		this.capacity = capacity;
+	public CFReserveArgument() {
 	}
 
 	/**
 	 * 构造函数
 	 *
-	 * @param capacity
-	 * 		预计要插入的元素数量上限
 	 * @param bucketSize
 	 * 		每个桶能存储的指纹数量
 	 */
-	public CFReserveArgument(long capacity, long bucketSize) {
-		this(capacity);
+	public CFReserveArgument(final Long bucketSize) {
 		this.bucketSize = bucketSize;
 	}
 
 	/**
 	 * 构造函数
 	 *
-	 * @param capacity
-	 * 		预计要插入的元素数量上限
 	 * @param bucketSize
 	 * 		每个桶能存储的指纹数量
 	 * @param maxIterations
@@ -89,34 +75,22 @@ public class CFReserveArgument {
 	 * @param expansion
 	 * 		扩容倍数
 	 */
-	public CFReserveArgument(long capacity, long bucketSize, int maxIterations, int expansion) {
-		this(capacity, maxIterations, expansion);
+	public CFReserveArgument(final Long bucketSize, final Integer maxIterations, final Integer expansion) {
+		this(maxIterations, expansion);
 		this.bucketSize = bucketSize;
 	}
 
 	/**
 	 * 构造函数
 	 *
-	 * @param capacity
-	 * 		预计要插入的元素数量上限
 	 * @param maxIterations
 	 * 		插入时最大“踢出”尝试次数
 	 * @param expansion
 	 * 		扩容倍数
 	 */
-	public CFReserveArgument(long capacity, int maxIterations, int expansion) {
-		this(capacity);
+	public CFReserveArgument(final Integer maxIterations, final Integer expansion) {
 		this.maxIterations = maxIterations;
 		this.expansion = expansion;
-	}
-
-	/**
-	 * 获取初始容量
-	 *
-	 * @return 初始容量
-	 */
-	public Long getCapacity() {
-		return capacity;
 	}
 
 	/**
@@ -188,7 +162,6 @@ public class CFReserveArgument {
 	@Override
 	public String toString() {
 		return ArgStringBuilder.create()
-				.append(getCapacity())
 				.add("BUCKETSIZE", getBucketSize())
 				.add("MAXITERATIONS", getMaxIterations())
 				.add("EXPANSION", getExpansion())

@@ -392,12 +392,12 @@ public interface CuckooFilterCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		布谷鸟过滤器的名称
-	 * @param argument
-	 * 		CF.RESERVE 参数
+	 * @param capacity
+	 * 		初始容量
 	 *
 	 * @return 操作结果
 	 */
-	Status cfReserve(final String key, final CFReserveArgument argument);
+	Status cfReserve(final String key, final long capacity);
 
 	/**
 	 * 控制布谷鸟过滤器的关键参数：预期容量（capacity）
@@ -406,12 +406,44 @@ public interface CuckooFilterCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		布谷鸟过滤器的名称
+	 * @param capacity
+	 * 		初始容量
+	 *
+	 * @return 操作结果
+	 */
+	Status cfReserve(final byte[] key, final long capacity);
+
+	/**
+	 * 控制布谷鸟过滤器的关键参数：预期容量（capacity）
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cf.reserve/" target="_blank">https://redis.io/docs/latest/commands/cf.reserve/</a></p>
+	 *
+	 * @param key
+	 * 		布谷鸟过滤器的名称
+	 * @param capacity
+	 * 		初始容量
 	 * @param argument
 	 * 		CF.RESERVE 参数
 	 *
 	 * @return 操作结果
 	 */
-	Status cfReserve(final byte[] key, final CFReserveArgument argument);
+	Status cfReserve(final String key, final long capacity, final CFReserveArgument argument);
+
+	/**
+	 * 控制布谷鸟过滤器的关键参数：预期容量（capacity）
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cf.reserve/" target="_blank">https://redis.io/docs/latest/commands/cf.reserve/</a></p>
+	 *
+	 * @param key
+	 * 		布谷鸟过滤器的名称
+	 * @param capacity
+	 * 		初始容量
+	 * @param argument
+	 * 		CF.RESERVE 参数
+	 *
+	 * @return 操作结果
+	 */
+	Status cfReserve(final byte[] key, final long capacity, final CFReserveArgument argument);
 
 	/**
 	 * 采用分块迭代方式导出布谷鸟过滤器 key 的数据

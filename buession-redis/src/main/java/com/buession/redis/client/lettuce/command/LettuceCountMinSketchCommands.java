@@ -24,6 +24,7 @@
  */
 package com.buession.redis.client.lettuce.command;
 
+import com.buession.core.converter.ArrayKeyValueMapConverter;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
@@ -31,6 +32,7 @@ import com.buession.redis.core.CmsInfo;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.CountMinSketchCommands;
+import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
 import java.util.Map;
@@ -48,12 +50,14 @@ public final class LettuceCountMinSketchCommands extends AbstractLettuceRedisCom
 		super(client);
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public List<Long> cmsIncrby(final String key, final KeyValue<String, Long>... items) {
 		final CommandArguments args = CommandArguments.create(key).add(items);
 		return executeCommand(Command.CMS_INCRBY, args);
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public List<Long> cmsIncrby(final byte[] key, final KeyValue<byte[], Long>... items) {
 		final CommandArguments args = CommandArguments.create(key).add(items);
@@ -96,15 +100,25 @@ public final class LettuceCountMinSketchCommands extends AbstractLettuceRedisCom
 		return executeCommand(Command.CMS_INITBYPROB, args);
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
-	public Status cmsMerge(final String key, final Map<String, Long> keysAndWeights) {
-		final CommandArguments args = CommandArguments.create(key).add(keysAndWeights);
+	public Status cmsMerge(final String key, final KeyValue<String, Long>... data) {
+		final ArrayKeyValueMapConverter<String, Long, String, Long> arrayKeyValueMapConverter = new ArrayKeyValueMapConverter<>(
+				(k)->k, (v)->v);
+		final Map<String, Long> keysAndWeights = arrayKeyValueMapConverter.convert(data);
+		final CommandArguments args = CommandArguments.create(key).add(data.length).add(keysAndWeights.keySet())
+				.add("WEIGHTS").add(keysAndWeights.values());
 		return executeCommand(Command.CMS_MERGE, args);
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
-	public Status cmsMerge(final byte[] key, final Map<byte[], Long> keysAndWeights) {
-		final CommandArguments args = CommandArguments.create(key).add(keysAndWeights);
+	public Status cmsMerge(final byte[] key, final KeyValue<byte[], Long>... data) {
+		final ArrayKeyValueMapConverter<byte[], Long, String, Long> arrayKeyValueMapConverter = new ArrayKeyValueMapConverter<>(
+				SafeEncoder::encode, (v)->v);
+		final Map<String, Long> keysAndWeights = arrayKeyValueMapConverter.convert(data);
+		final CommandArguments args = CommandArguments.create(key).add(data.length).add(keysAndWeights.keySet())
+				.add("WEIGHTS").add(keysAndWeights.values());
 		return executeCommand(Command.CMS_MERGE, args);
 	}
 

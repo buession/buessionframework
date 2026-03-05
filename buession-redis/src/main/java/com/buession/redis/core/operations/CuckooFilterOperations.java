@@ -163,13 +163,23 @@ public interface CuckooFilterOperations extends CuckooFilterCommands, RedisOpera
 	}
 
 	@Override
-	default Status cfReserve(final String key, final CFReserveArgument argument) {
-		return execute((client)->client.cuckooFilterCommands().cfReserve(key, argument));
+	default Status cfReserve(final String key, final long capacity) {
+		return execute((client)->client.cuckooFilterCommands().cfReserve(key, capacity));
 	}
 
 	@Override
-	default Status cfReserve(final byte[] key, final CFReserveArgument argument) {
-		return execute((client)->client.cuckooFilterCommands().cfReserve(key, argument));
+	default Status cfReserve(final byte[] key, final long capacity) {
+		return execute((client)->client.cuckooFilterCommands().cfReserve(key, capacity));
+	}
+
+	@Override
+	default Status cfReserve(final String key, final long capacity, final CFReserveArgument argument) {
+		return execute((client)->client.cuckooFilterCommands().cfReserve(key, capacity, argument));
+	}
+
+	@Override
+	default Status cfReserve(final byte[] key, final long capacity, final CFReserveArgument argument) {
+		return execute((client)->client.cuckooFilterCommands().cfReserve(key, capacity, argument));
 	}
 
 	@Override

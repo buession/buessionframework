@@ -25,6 +25,7 @@
 package com.buession.redis.client.jedis.command;
 
 import com.buession.core.converter.Converter;
+import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.command.AbstractRedisCommands;
 import com.buession.redis.core.command.Command;

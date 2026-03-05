@@ -36,7 +36,6 @@ import com.buession.redis.core.internal.convert.response.CmsInfoConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.utils.SafeEncoder;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,37 +45,30 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class JedisCountMinSketchCommands extends AbstractJedisRedisCommands
-		implements CountMinSketchCommands {
+public final class JedisCountMinSketchCommands extends AbstractJedisRedisCommands implements CountMinSketchCommands {
 
 	public JedisCountMinSketchCommands(final JedisRedisClient client) {
 		super(client);
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public List<Long> cmsIncrby(final String key, final KeyValue<String, Long>... items) {
 		final CommandArguments args = CommandArguments.create(key).add(items);
-		final Map<String, Long> itemIncrements = new LinkedHashMap<>(items.length);
-
-		for(final KeyValue<String, Long> item : items){
-			itemIncrements.put(item.getKey(), item.getValue());
-		}
-
-		return executeCommand(Command.CMS_INCRBY, args, (cmd)->cmd.cmsIncrBy(rawKey(key), itemIncrements), (v)->v);
+		final ArrayKeyValueMapConverter<String, Long, String, Long> arrayKeyValueMapConverter = new ArrayKeyValueMapConverter<>(
+				(k)->k, (v)->v);
+		return executeCommand(Command.CMS_INCRBY, args,
+				(cmd)->cmd.cmsIncrBy(rawKey(key), arrayKeyValueMapConverter.convert(items)));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public List<Long> cmsIncrby(final byte[] key, final KeyValue<byte[], Long>... items) {
 		final CommandArguments args = CommandArguments.create(key).add(items);
-		final Map<String, Long> itemIncrements = new LinkedHashMap<>(items.length);
-
-		for(final KeyValue<byte[], Long> item : items){
-			itemIncrements.put(SafeEncoder.encode(item.getKey()), item.getValue());
-		}
-
+		final ArrayKeyValueMapConverter<byte[], Long, String, Long> arrayKeyValueMapConverter = new ArrayKeyValueMapConverter<>(
+				SafeEncoder::encode, (v)->v);
 		return executeCommand(Command.CMS_INCRBY, args,
-				(cmd)->cmd.cmsIncrBy(SafeEncoder.encode(rawKey(key)), itemIncrements),
-				(v)->v);
+				(cmd)->cmd.cmsIncrBy(SafeEncoder.encode(rawKey(key)), arrayKeyValueMapConverter.convert(items)));
 	}
 
 	@Override
@@ -114,24 +106,30 @@ public final class JedisCountMinSketchCommands extends AbstractJedisRedisCommand
 		return cmsInitByProb(SafeEncoder.encode(key), error, probability);
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
-	public Status cmsMerge(final String key, final KeyValue<String, Long>... keysAndWeights) {
-		final CommandArguments args = CommandArguments.create(key).add(keysAndWeights);
-		final ArrayKeyValueMapConverter<String, Long, String, Long> arrayKeyValueMapConverter =
-				new ArrayKeyValueMapConverter<>((k)->k, (v)->v);
-		return executeCommand(Command.CMS_MERGE, args,
-				(cmd)->cmd.cmsMerge(rawKey(key), arrayKeyValueMapConverter.convert(keysAndWeights)),
+	public Status cmsMerge(final String key, final KeyValue<String, Long>... data) {
+		final ArrayKeyValueMapConverter<String, Long, String, Long> arrayKeyValueMapConverter = new ArrayKeyValueMapConverter<>(
+				(k)->k, (v)->v);
+		final Map<String, Long> keysAndWeights = arrayKeyValueMapConverter.convert(data);
+		final CommandArguments args = CommandArguments.create(key).add(data.length).add(keysAndWeights.keySet())
+				.add("WEIGHTS").add(keysAndWeights.values());
+
+		return executeCommand(Command.CMS_MERGE, args, (cmd)->cmd.cmsMerge(rawKey(key), keysAndWeights),
 				new OkStatusConverter());
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
-	public Status cmsMerge(final byte[] key, final KeyValue<byte[], Long>... keysAndWeights) {
-		final CommandArguments args = CommandArguments.create(key).add(keysAndWeights);
-		final ArrayKeyValueMapConverter<byte[], Long, String, Long> arrayKeyValueMapConverter =
-				new ArrayKeyValueMapConverter<>(SafeEncoder::encode, (v)->v);
+	public Status cmsMerge(final byte[] key, final KeyValue<byte[], Long>... data) {
+		final ArrayKeyValueMapConverter<byte[], Long, String, Long> arrayKeyValueMapConverter = new ArrayKeyValueMapConverter<>(
+				SafeEncoder::encode, (v)->v);
+		final Map<String, Long> keysAndWeights = arrayKeyValueMapConverter.convert(data);
+		final CommandArguments args = CommandArguments.create(key).add(data.length).add(keysAndWeights.keySet())
+				.add("WEIGHTS").add(keysAndWeights.values());
+
 		return executeCommand(Command.CMS_MERGE, args,
-				(cmd)->cmd.cmsMerge(rawKey(SafeEncoder.encode(key)), arrayKeyValueMapConverter.convert(keysAndWeights)),
-				new OkStatusConverter());
+				(cmd)->cmd.cmsMerge(rawKey(SafeEncoder.encode(key)), keysAndWeights), new OkStatusConverter());
 	}
 
 	@Override

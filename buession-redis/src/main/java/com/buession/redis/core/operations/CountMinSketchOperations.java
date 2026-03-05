@@ -41,11 +41,13 @@ import java.util.List;
  */
 public interface CountMinSketchOperations extends CountMinSketchCommands, RedisOperations {
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	default List<Long> cmsIncrby(final String key, final KeyValue<String, Long>... items) {
 		return execute((client)->client.countMinSketchCommands().cmsIncrby(key, items));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	default List<Long> cmsIncrby(final byte[] key, final KeyValue<byte[], Long>... items) {
 		return execute((client)->client.countMinSketchCommands().cmsIncrby(key, items));
@@ -81,50 +83,16 @@ public interface CountMinSketchOperations extends CountMinSketchCommands, RedisO
 		return execute((client)->client.countMinSketchCommands().cmsInitByProb(key, error, probability));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	default Status cmsMerge(final String destKey, final KeyValue<String, Long>... keysAndWeights) {
 		return execute((client)->client.countMinSketchCommands().cmsMerge(destKey, keysAndWeights));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	default Status cmsMerge(final byte[] destKey, final KeyValue<byte[], Long>... keysAndWeights) {
 		return execute((client)->client.countMinSketchCommands().cmsMerge(destKey, keysAndWeights));
-	}
-
-	/**
-	 * 将多个 Count-Min Sketch（CMS）对象合并成一个新的 CMS
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cms.merge/" target="_blank">https://redis.io/docs/latest/commands/cms.merge/</a></p>
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param sourceKey
-	 * 		原始 Key
-	 * @param weight
-	 * 		权重
-	 *
-	 * @return 操作结果
-	 */
-	default Status cmsMerge(final String destKey, final String sourceKey, final Long weight) {
-		return cmsMerge(destKey, new KeyValue<>(sourceKey, weight));
-	}
-
-	/**
-	 * 将多个 Count-Min Sketch（CMS）对象合并成一个新的 CMS
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cms.merge/" target="_blank">https://redis.io/docs/latest/commands/cms.merge/</a></p>
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param sourceKey
-	 * 		原始 Key
-	 * @param weight
-	 * 		权重
-	 *
-	 * @return 操作结果
-	 */
-	default Status cmsMerge(final byte[] destKey, final byte[] sourceKey, final Long weight) {
-		return cmsMerge(destKey, new KeyValue<>(sourceKey, weight));
 	}
 
 	@Override
