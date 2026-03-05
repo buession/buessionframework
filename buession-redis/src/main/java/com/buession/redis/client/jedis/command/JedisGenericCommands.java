@@ -46,7 +46,7 @@ public final class JedisGenericCommands extends AbstractJedisRedisCommands imple
 	@Override
 	public Long wait(final int replicas, final int timeout) {
 		final CommandArguments args = CommandArguments.create(replicas).add(timeout);
-		return executeCommand(Command.WAIT, args, (cmd)->cmd.waitReplicas((String) null, replicas, timeout), (v)->v);
+		return executeCommand(Command.WAIT, args, (cmd)->cmd.waitReplicas((String) null, replicas, timeout));
 	}
 
 	@Override

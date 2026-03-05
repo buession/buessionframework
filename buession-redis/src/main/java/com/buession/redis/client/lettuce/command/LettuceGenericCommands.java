@@ -45,7 +45,7 @@ public final class LettuceGenericCommands extends AbstractLettuceRedisCommands i
 	@Override
 	public Long wait(final int replicas, final int timeout) {
 		final CommandArguments args = CommandArguments.create(replicas).add(timeout);
-		return executeCommand(Command.WAIT, args, (cmd)->cmd.waitForReplication(replicas, timeout), (v)->v);
+		return executeCommand(Command.WAIT, args, (cmd)->cmd.waitForReplication(replicas, timeout));
 
 	}
 
