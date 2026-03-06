@@ -19,56 +19,52 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis.args;
+package com.buession.redis.core.internal.lettuce.args;
 
 import com.buession.lang.Order;
+import com.buession.redis.core.GeoStoreOption;
 import com.buession.redis.core.command.args.GeoRadiusArgument;
-import redis.clients.jedis.params.GeoRadiusParam;
-
-import java.util.Optional;
+import io.lettuce.core.GeoRadiusStoreArgs;
 
 /**
- * Jedis {@link GeoRadiusParam} 扩展
+ * Lettuce {@link GeoRadiusStoreArgs} 扩展
+ *
+ * @param <K>
+ * 		值类型
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public final class JedisGeoRadiusParam extends GeoRadiusParam {
+public final class LettuceGeoRadiusStoreArgs<K> extends GeoRadiusStoreArgs<K> {
 
 	/**
 	 * 构造函数
 	 */
-	public JedisGeoRadiusParam() {
+	public LettuceGeoRadiusStoreArgs() {
 		super();
 	}
 
 	/**
 	 * 构造函数
 	 *
+	 * @param key
+	 * 		存储 Key
+	 * @param storeOption
+	 * 		存储方式
 	 * @param geoRadiusArgument
 	 *        {@link GeoRadiusArgument}
 	 */
-	public JedisGeoRadiusParam(final GeoRadiusArgument geoRadiusArgument) {
-		super();
-
+	public LettuceGeoRadiusStoreArgs(final K key, final GeoStoreOption storeOption,
+									 final GeoRadiusArgument geoRadiusArgument) {
+		this(key, storeOption);
 		if(geoRadiusArgument != null){
-			if(Boolean.TRUE.equals(geoRadiusArgument.isWithCoord())){
-				withCoord();
-			}
-			if(Boolean.TRUE.equals(geoRadiusArgument.isWithDist())){
-				withDist();
-			}
-			if(Boolean.TRUE.equals(geoRadiusArgument.isWithHash())){
-				withHash();
-			}
-
 			if(geoRadiusArgument.getOrder() == Order.ASC){
-				sortAscending();
+				asc();
 			}else if(geoRadiusArgument.getOrder() == Order.DESC){
-				sortDescending();
+				desc();
 			}
 		}
 	}
@@ -76,19 +72,28 @@ public final class JedisGeoRadiusParam extends GeoRadiusParam {
 	/**
 	 * 构造函数
 	 *
+	 * @param key
+	 * 		存储 Key
+	 * @param storeOption
+	 * 		存储方式
 	 * @param geoRadiusArgument
 	 *        {@link GeoRadiusArgument}
 	 * @param count
 	 * 		返回数量
 	 */
-	public JedisGeoRadiusParam(final GeoRadiusArgument geoRadiusArgument, final Integer count) {
-		this(geoRadiusArgument);
-		count(count);
+	public LettuceGeoRadiusStoreArgs(final K key, final GeoStoreOption storeOption,
+									 final GeoRadiusArgument geoRadiusArgument, final Integer count) {
+		this(key, storeOption, geoRadiusArgument);
+		withCount(count);
 	}
 
 	/**
 	 * 构造函数
 	 *
+	 * @param key
+	 * 		存储 Key
+	 * @param storeOption
+	 * 		存储方式
 	 * @param geoRadiusArgument
 	 *        {@link GeoRadiusArgument}
 	 * @param count
@@ -96,33 +101,61 @@ public final class JedisGeoRadiusParam extends GeoRadiusParam {
 	 * @param any
 	 * 		ANY
 	 */
-	public JedisGeoRadiusParam(final GeoRadiusArgument geoRadiusArgument, final Integer count, final Boolean any) {
-		this(geoRadiusArgument);
-		count(count, any);
+	public LettuceGeoRadiusStoreArgs(final K key, final GeoStoreOption storeOption,
+									 final GeoRadiusArgument geoRadiusArgument, final Integer count,
+									 final Boolean any) {
+		this(key, storeOption, geoRadiusArgument);
+		withCount(count);
 	}
 
 	/**
 	 * 构造函数
 	 *
+	 * @param key
+	 * 		存储 Key
+	 * @param storeOption
+	 * 		存储方式
 	 * @param count
 	 * 		返回数量
 	 */
-	public JedisGeoRadiusParam(final Integer count) {
-		super();
-		count(count);
+	public LettuceGeoRadiusStoreArgs(final K key, final GeoStoreOption storeOption, final Integer count) {
+		this(key, storeOption);
+		withCount(count);
 	}
 
 	/**
 	 * 构造函数
 	 *
+	 * @param key
+	 * 		存储 Key
+	 * @param storeOption
+	 * 		存储方式
 	 * @param count
 	 * 		返回数量
 	 * @param any
 	 * 		ANY
 	 */
-	public JedisGeoRadiusParam(final Integer count, final Boolean any) {
+	public LettuceGeoRadiusStoreArgs(final K key, final GeoStoreOption storeOption, final Integer count,
+									 final Boolean any) {
+		this(key, storeOption);
+		withCount(count);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param key
+	 * 		存储 Key
+	 * @param storeOption
+	 * 		存储方式
+	 */
+	public LettuceGeoRadiusStoreArgs(final K key, final GeoStoreOption storeOption) {
 		super();
-		count(count, any);
+		if(storeOption == GeoStoreOption.STOREDIST){
+			withStoreDist(key);
+		}else if(storeOption == GeoStoreOption.STORE){
+			withStore(key);
+		}
 	}
 
 }

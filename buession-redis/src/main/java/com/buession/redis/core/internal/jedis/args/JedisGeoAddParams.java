@@ -25,7 +25,6 @@
 package com.buession.redis.core.internal.jedis.args;
 
 import com.buession.redis.core.NxXx;
-import com.buession.redis.core.command.args.GeoAddArgument;
 import redis.clients.jedis.params.GeoAddParams;
 
 /**
@@ -46,17 +45,42 @@ public final class JedisGeoAddParams extends GeoAddParams {
 	/**
 	 * 构造函数
 	 *
-	 * @param geoAddArgument
-	 *        {@link GeoAddArgument}
+	 * @param nxXx
+	 *        {@link NxXx}
 	 */
-	public JedisGeoAddParams(final GeoAddArgument geoAddArgument) {
+	public JedisGeoAddParams(final NxXx nxXx) {
 		super();
-		if(geoAddArgument.getNxXx() == NxXx.NX){
+		if(nxXx == NxXx.NX){
 			nx();
-		}else if(geoAddArgument.getNxXx() == NxXx.XX){
+		}else if(nxXx == NxXx.XX){
 			xx();
 		}
-		if(Boolean.TRUE.equals(geoAddArgument.isCh())){
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param nxXx
+	 *        {@link NxXx}
+	 * @param ch
+	 * 		CH
+	 */
+	public JedisGeoAddParams(final NxXx nxXx, final Boolean ch) {
+		this(nxXx);
+		if(Boolean.TRUE.equals(ch)){
+			ch();
+		}
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param ch
+	 * 		CH
+	 */
+	public JedisGeoAddParams(final Boolean ch) {
+		super();
+		if(Boolean.TRUE.equals(ch)){
 			ch();
 		}
 	}

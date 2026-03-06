@@ -159,22 +159,6 @@ public interface Converter<SV, TV> {
 
 	}
 
-	final class SimpleStringConverter<V> extends AbstractStringConverter<V> {
-
-		public SimpleStringConverter(final RedisAccessor accessor) {
-			super(accessor.serializer::deserialize);
-		}
-
-	}
-
-	final class SimpleBinaryConverter<V> extends AbstractBinaryConverter<V> {
-
-		public SimpleBinaryConverter(final RedisAccessor accessor) {
-			super(accessor.serializer::deserializeBytes);
-		}
-
-	}
-
 	final class ClazzStringConverter<V> extends AbstractStringConverter<V> {
 
 		public ClazzStringConverter(final RedisAccessor accessor, final Class<V> clazz) {

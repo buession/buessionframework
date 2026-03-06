@@ -25,6 +25,7 @@
 package com.buession.redis.core.command.args;
 
 import com.buession.lang.Order;
+import com.buession.redis.utils.ArgStringBuilder;
 
 /**
  *
@@ -32,7 +33,7 @@ import com.buession.lang.Order;
  * @author Yong.Teng
  * @since 4.0.0
  */
-abstract class BaseGeoDistanceArgument {
+public abstract class BaseGeoDistanceArgument {
 
 	/**
 	 * 是否将位置元素的经度和维度也一并返回
@@ -245,6 +246,16 @@ abstract class BaseGeoDistanceArgument {
 	public BaseGeoDistanceArgument setOrder(Order order) {
 		this.order = order;
 		return this;
+	}
+
+	@Override
+	public String toString() {
+		return ArgStringBuilder.create()
+				.append(Boolean.TRUE.equals(getWithCoord()) ? "WITHCOORD" : null)
+				.append(Boolean.TRUE.equals(getWithDist()) ? "WITHDIST" : null)
+				.append(Boolean.TRUE.equals(getWithHash()) ? "WITHHASH" : null)
+				.append(getOrder())
+				.build();
 	}
 
 }

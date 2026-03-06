@@ -27,13 +27,13 @@ package com.buession.redis.core.command;
 import com.buession.lang.Geo;
 import com.buession.lang.KeyValue;
 import com.buession.redis.core.GeoRadius;
+import com.buession.redis.core.GeoStoreOption;
 import com.buession.redis.core.GeoUnit;
-import com.buession.redis.core.command.args.GeoAddArgument;
+import com.buession.redis.core.NxXx;
 import com.buession.redis.core.command.args.GeoRadiusArgument;
 import com.buession.redis.core.command.args.GeoSearchArgument;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 地理位置命令
@@ -45,45 +45,9 @@ import java.util.Map;
 public interface GeoCommands extends RedisCommands {
 
 	/**
-	 * 将给定的空间元素（经度、纬度、名字）添加到指定的键里面
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/geoadd.html" target="_blank">http://redisdoc.com/geo/geoadd.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param member
-	 * 		名字
-	 * @param longitude
-	 * 		经度
-	 * @param latitude
-	 * 		纬度
-	 *
-	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
-	 */
-	Long geoAdd(final String key, final String member, final double longitude, final double latitude);
-
-	/**
-	 * 将给定的空间元素（经度、纬度、名字）添加到指定的键里面
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/geoadd.html" target="_blank">http://redisdoc.com/geo/geoadd.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param member
-	 * 		名字
-	 * @param longitude
-	 * 		经度
-	 * @param latitude
-	 * 		纬度
-	 *
-	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
-	 */
-	Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude);
-
-	/**
 	 * 批量将给定的空间元素（经度、纬度、名字）添加到指定的键里面
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/geoadd.html" target="_blank">http://redisdoc.com/geo/geoadd.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geoadd/" target="_blank">https://redis.io/docs/latest/commands/geoadd/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -92,12 +56,13 @@ public interface GeoCommands extends RedisCommands {
 	 *
 	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
 	 */
+	@SuppressWarnings({"unchecked"})
 	Long geoAdd(final String key, final KeyValue<String, Geo>... memberCoordinates);
 
 	/**
 	 * 批量将给定的空间元素（经度、纬度、名字）添加到指定的键里面
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/geoadd.html" target="_blank">http://redisdoc.com/geo/geoadd.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geoadd/" target="_blank">https://redis.io/docs/latest/commands/geoadd/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -106,49 +71,25 @@ public interface GeoCommands extends RedisCommands {
 	 *
 	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
 	 */
+	@SuppressWarnings({"unchecked"})
 	Long geoAdd(final byte[] key, final KeyValue<byte[], Geo>... memberCoordinates);
 
 	/**
-	 * 将给定的空间元素（经度、纬度、名字）添加到指定的键里面
+	 * 批量将给定的空间元素（经度、纬度、名字）添加到指定的键里面
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/geo/geoadd.html" target="_blank">http://redisdoc.com/geo/geoadd.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
-	 * @param argument
-	 * 		参数
-	 * @param member
-	 * 		名字
-	 * @param longitude
-	 * 		经度
-	 * @param latitude
-	 * 		纬度
+	 * @param nxXx
+	 *        {@link NxXx}
+	 * @param memberCoordinates
+	 * 		空间元素（纬度、经度、名字）集合
 	 *
 	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
 	 */
-	Long geoAdd(final String key, final GeoAddArgument argument, final String member, final double longitude,
-				final double latitude);
-
-	/**
-	 * 将给定的空间元素（经度、纬度、名字）添加到指定的键里面
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/geoadd.html" target="_blank">http://redisdoc.com/geo/geoadd.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param argument
-	 * 		参数
-	 * @param member
-	 * 		名字
-	 * @param longitude
-	 * 		经度
-	 * @param latitude
-	 * 		纬度
-	 *
-	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
-	 */
-	Long geoAdd(final byte[] key, final GeoAddArgument argument, final byte[] member, final double longitude,
-				final double latitude);
+	@SuppressWarnings({"unchecked"})
+	Long geoAdd(final String key, final NxXx nxXx, final KeyValue<String, Geo>... memberCoordinates);
 
 	/**
 	 * 批量将给定的空间元素（经度、纬度、名字）添加到指定的键里面
@@ -157,14 +98,15 @@ public interface GeoCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param argument
-	 * 		参数
+	 * @param nxXx
+	 *        {@link NxXx}
 	 * @param memberCoordinates
 	 * 		空间元素（纬度、经度、名字）集合
 	 *
 	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
 	 */
-	Long geoAdd(final String key, final GeoAddArgument argument, final KeyValue<String, Geo>... memberCoordinates);
+	@SuppressWarnings({"unchecked"})
+	Long geoAdd(final byte[] key, final NxXx nxXx, final KeyValue<byte[], Geo>... memberCoordinates);
 
 	/**
 	 * 批量将给定的空间元素（经度、纬度、名字）添加到指定的键里面
@@ -173,14 +115,70 @@ public interface GeoCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param argument
-	 * 		参数
+	 * @param nxXx
+	 *        {@link NxXx}
+	 * @param ch
+	 * 		CH
 	 * @param memberCoordinates
 	 * 		空间元素（纬度、经度、名字）集合
 	 *
 	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
 	 */
-	Long geoAdd(final byte[] key, final GeoAddArgument argument, final KeyValue<byte[], Geo>... memberCoordinates);
+	@SuppressWarnings({"unchecked"})
+	Long geoAdd(final String key, final NxXx nxXx, final boolean ch, final KeyValue<String, Geo>... memberCoordinates);
+
+	/**
+	 * 批量将给定的空间元素（经度、纬度、名字）添加到指定的键里面
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/geoadd.html" target="_blank">http://redisdoc.com/geo/geoadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param nxXx
+	 *        {@link NxXx}
+	 * @param ch
+	 * 		CH
+	 * @param memberCoordinates
+	 * 		空间元素（纬度、经度、名字）集合
+	 *
+	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
+	 */
+	@SuppressWarnings({"unchecked"})
+	Long geoAdd(final byte[] key, final NxXx nxXx, final boolean ch, final KeyValue<byte[], Geo>... memberCoordinates);
+
+	/**
+	 * 批量将给定的空间元素（经度、纬度、名字）添加到指定的键里面
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/geoadd.html" target="_blank">http://redisdoc.com/geo/geoadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param ch
+	 * 		CH
+	 * @param memberCoordinates
+	 * 		空间元素（纬度、经度、名字）集合
+	 *
+	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
+	 */
+	@SuppressWarnings({"unchecked"})
+	Long geoAdd(final String key, final boolean ch, final KeyValue<String, Geo>... memberCoordinates);
+
+	/**
+	 * 批量将给定的空间元素（经度、纬度、名字）添加到指定的键里面
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/geoadd.html" target="_blank">http://redisdoc.com/geo/geoadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param ch
+	 * 		CH
+	 * @param memberCoordinates
+	 * 		空间元素（纬度、经度、名字）集合
+	 *
+	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
+	 */
+	@SuppressWarnings({"unchecked"})
+	Long geoAdd(final byte[] key, final boolean ch, final KeyValue<byte[], Geo>... memberCoordinates);
 
 	/**
 	 * 计算两个给定位置之间的距离
@@ -309,7 +307,7 @@ public interface GeoCommands extends RedisCommands {
 	/**
 	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius/" target="_blank">https://redis.io/docs/latest/commands/georadius/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -330,7 +328,7 @@ public interface GeoCommands extends RedisCommands {
 	/**
 	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius/" target="_blank">https://redis.io/docs/latest/commands/georadius/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -351,7 +349,7 @@ public interface GeoCommands extends RedisCommands {
 	/**
 	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius/" target="_blank">https://redis.io/docs/latest/commands/georadius/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -374,7 +372,7 @@ public interface GeoCommands extends RedisCommands {
 	/**
 	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius/" target="_blank">https://redis.io/docs/latest/commands/georadius/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -386,21 +384,329 @@ public interface GeoCommands extends RedisCommands {
 	 * 		范围
 	 * @param unit
 	 * 		距离单位
-	 * @param Radius
+	 * @param argument
+	 * 		参数
+	 *
+	 * @return 位置元素
+	 */
+	List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude, final double radius,
+							  final GeoUnit unit, final GeoRadiusArgument argument);
+
+	/**
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius/" target="_blank">https://redis.io/docs/latest/commands/georadius/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		参数
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 位置元素
+	 */
+	List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude, final double radius,
+							  final GeoUnit unit, final GeoRadiusArgument argument, final int count);
+
+	/**
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius/" target="_blank">https://redis.io/docs/latest/commands/georadius/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		参数
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 位置元素
+	 */
+	List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude, final double radius,
+							  final GeoUnit unit, final GeoRadiusArgument argument, final int count);
+
+	/**
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius/" target="_blank">https://redis.io/docs/latest/commands/georadius/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		参数
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 *
+	 * @return 位置元素
+	 */
+	List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude, final double radius,
+							  final GeoUnit unit, final GeoRadiusArgument argument, final int count, final boolean any);
+
+	/**
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius/" target="_blank">https://redis.io/docs/latest/commands/georadius/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		参数
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 *
+	 * @return 位置元素
+	 */
+	List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude, final double radius,
+							  final GeoUnit unit, final GeoRadiusArgument argument, final int count, final boolean any);
+
+	/**
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius/" target="_blank">https://redis.io/docs/latest/commands/georadius/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 位置元素
+	 */
+	List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude, final double radius,
+							  final GeoUnit unit, final int count);
+
+	/**
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius/" target="_blank">https://redis.io/docs/latest/commands/georadius/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 位置元素
+	 */
+	List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude, final double radius,
+							  final GeoUnit unit, final int count);
+
+	/**
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius/" target="_blank">https://redis.io/docs/latest/commands/georadius/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 *
+	 * @return 位置元素
+	 */
+	List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude, final double radius,
+							  final GeoUnit unit, final int count, final boolean any);
+
+	/**
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius/" target="_blank">https://redis.io/docs/latest/commands/georadius/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 *
+	 * @return 位置元素
+	 */
+	List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude, final double radius,
+							  final GeoUnit unit, final int count, final boolean any);
+
+	/**
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素，并存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius/" target="_blank">https://redis.io/docs/latest/commands/georadius/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param storeOption
+	 * 		存储方式
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 *
+	 * @return 位置元素
+	 */
+	Long geoRadius(final String key, final String destKey, final GeoStoreOption storeOption, final double longitude,
+				   final double latitude, final double radius, final GeoUnit unit);
+
+	/**
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素，并存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius/" target="_blank">https://redis.io/docs/latest/commands/georadius/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param storeOption
+	 * 		存储方式
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 *
+	 * @return 位置元素
+	 */
+	Long geoRadius(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption, final double longitude,
+				   final double latitude, final double radius, final GeoUnit unit);
+
+	/**
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素，并存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius/" target="_blank">https://redis.io/docs/latest/commands/georadius/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param storeOption
+	 * 		存储方式
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
 	 * 		GEO Radius 参数
 	 *
 	 * @return 位置元素
 	 */
-	List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude, final double radius,
-							  final GeoUnit unit, final GeoRadiusArgument Radius);
+	Long geoRadius(final String key, final String destKey, final GeoStoreOption storeOption, final double longitude,
+				   final double latitude, final double radius, final GeoUnit unit, final GeoRadiusArgument argument);
 
 	/**
-	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素，并存储到目标 destKey 中
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius/" target="_blank">https://redis.io/docs/latest/commands/georadius/</a></p>
 	 *
 	 * @param key
 	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param storeOption
+	 * 		存储方式
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		参数
+	 *
+	 * @return 位置元素
+	 */
+	Long geoRadius(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption, final double longitude,
+				   final double latitude, final double radius, final GeoUnit unit, final GeoRadiusArgument argument);
+
+	/**
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素，并存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius/" target="_blank">https://redis.io/docs/latest/commands/georadius/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param storeOption
+	 * 		存储方式
 	 * @param longitude
 	 * 		经度
 	 * @param latitude
@@ -416,16 +722,21 @@ public interface GeoCommands extends RedisCommands {
 	 *
 	 * @return 位置元素
 	 */
-	List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude, final double radius,
-							  final GeoUnit unit, final GeoRadiusArgument argument, final int count);
+	Long geoRadius(final String key, final String destKey, final GeoStoreOption storeOption, final double longitude,
+				   final double latitude, final double radius, final GeoUnit unit, final GeoRadiusArgument argument,
+				   final int count);
 
 	/**
-	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素，并存储到目标 destKey 中
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius/" target="_blank">https://redis.io/docs/latest/commands/georadius/</a></p>
 	 *
 	 * @param key
 	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param storeOption
+	 * 		存储方式
 	 * @param longitude
 	 * 		经度
 	 * @param latitude
@@ -441,16 +752,21 @@ public interface GeoCommands extends RedisCommands {
 	 *
 	 * @return 位置元素
 	 */
-	List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude, final double radius,
-							  final GeoUnit unit, final GeoRadiusArgument argument, final int count);
+	Long geoRadius(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption, final double longitude,
+				   final double latitude, final double radius, final GeoUnit unit, final GeoRadiusArgument argument,
+				   final int count);
 
 	/**
-	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素，并存储到目标 destKey 中
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius/" target="_blank">https://redis.io/docs/latest/commands/georadius/</a></p>
 	 *
 	 * @param key
 	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param storeOption
+	 * 		存储方式
 	 * @param longitude
 	 * 		经度
 	 * @param latitude
@@ -468,16 +784,21 @@ public interface GeoCommands extends RedisCommands {
 	 *
 	 * @return 位置元素
 	 */
-	List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude, final double radius,
-							  final GeoUnit unit, final GeoRadiusArgument argument, final int count, final boolean any);
+	Long geoRadius(final String key, final String destKey, final GeoStoreOption storeOption, final double longitude,
+				   final double latitude, final double radius, final GeoUnit unit, final GeoRadiusArgument argument,
+				   final int count, final boolean any);
 
 	/**
-	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素，并存储到目标 destKey 中
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius/" target="_blank">https://redis.io/docs/latest/commands/georadius/</a></p>
 	 *
 	 * @param key
 	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param storeOption
+	 * 		存储方式
 	 * @param longitude
 	 * 		经度
 	 * @param latitude
@@ -495,16 +816,21 @@ public interface GeoCommands extends RedisCommands {
 	 *
 	 * @return 位置元素
 	 */
-	List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude, final double radius,
-							  final GeoUnit unit, final GeoRadiusArgument argument, final int count, final boolean any);
+	Long geoRadius(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption, final double longitude,
+				   final double latitude, final double radius, final GeoUnit unit, final GeoRadiusArgument argument,
+				   final int count, final boolean any);
 
 	/**
-	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素，并存储到目标 destKey 中
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius/" target="_blank">https://redis.io/docs/latest/commands/georadius/</a></p>
 	 *
 	 * @param key
 	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param storeOption
+	 * 		存储方式
 	 * @param longitude
 	 * 		经度
 	 * @param latitude
@@ -518,16 +844,20 @@ public interface GeoCommands extends RedisCommands {
 	 *
 	 * @return 位置元素
 	 */
-	List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude, final double radius,
-							  final GeoUnit unit, final int count);
+	Long geoRadius(final String key, final String destKey, final GeoStoreOption storeOption, final double longitude,
+				   final double latitude, final double radius, final GeoUnit unit, final int count);
 
 	/**
-	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素，并存储到目标 destKey 中
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius/" target="_blank">https://redis.io/docs/latest/commands/georadius/</a></p>
 	 *
 	 * @param key
 	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param storeOption
+	 * 		存储方式
 	 * @param longitude
 	 * 		经度
 	 * @param latitude
@@ -541,41 +871,20 @@ public interface GeoCommands extends RedisCommands {
 	 *
 	 * @return 位置元素
 	 */
-	List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude, final double radius,
-							  final GeoUnit unit, final int count);
+	Long geoRadius(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption, final double longitude,
+				   final double latitude, final double radius, final GeoUnit unit, final int count);
 
 	/**
-	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素，并存储到目标 destKey 中
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius/" target="_blank">https://redis.io/docs/latest/commands/georadius/</a></p>
 	 *
 	 * @param key
 	 * 		Key
-	 * @param longitude
-	 * 		经度
-	 * @param latitude
-	 * 		纬度
-	 * @param radius
-	 * 		范围
-	 * @param unit
-	 * 		距离单位
-	 * @param count
-	 * 		返回数量
-	 * @param any
-	 * 		ANY
-	 *
-	 * @return 位置元素
-	 */
-	List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude, final double radius,
-							  final GeoUnit unit, final int count, final boolean any);
-
-	/**
-	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param storeOption
+	 * 		存储方式
 	 * @param longitude
 	 * 		经度
 	 * @param latitude
@@ -591,13 +900,42 @@ public interface GeoCommands extends RedisCommands {
 	 *
 	 * @return 位置元素
 	 */
-	List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude, final double radius,
-							  final GeoUnit unit, final int count, final boolean any);
+	Long geoRadius(final String key, final String destKey, final GeoStoreOption storeOption, final double longitude,
+				   final double latitude, final double radius, final GeoUnit unit, final int count, final boolean any);
 
 	/**
-	 * Read-only variant of the GEORADIUS command
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素，并存储到目标 destKey 中
 	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius/" target="_blank">https://redis.io/docs/latest/commands/georadius/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param storeOption
+	 * 		存储方式
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 *
+	 * @return 位置元素
+	 */
+	Long geoRadius(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption, final double longitude,
+				   final double latitude, final double radius, final GeoUnit unit, final int count, final boolean any);
+
+	/**
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius_ro/" target="_blank">https://redis.io/docs/latest/commands/georadius_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -616,9 +954,9 @@ public interface GeoCommands extends RedisCommands {
 								final GeoUnit unit);
 
 	/**
-	 * Read-only variant of the GEORADIUS command
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius_ro/" target="_blank">https://redis.io/docs/latest/commands/georadius_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -637,9 +975,9 @@ public interface GeoCommands extends RedisCommands {
 								final GeoUnit unit);
 
 	/**
-	 * Read-only variant of the GEORADIUS command
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius_ro/" target="_blank">https://redis.io/docs/latest/commands/georadius_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -652,7 +990,7 @@ public interface GeoCommands extends RedisCommands {
 	 * @param unit
 	 * 		距离单位
 	 * @param argument
-	 * 		GEO 参数
+	 * 		GEO Radius 参数
 	 *
 	 * @return 位置元素
 	 */
@@ -660,9 +998,9 @@ public interface GeoCommands extends RedisCommands {
 								final GeoUnit unit, final GeoRadiusArgument argument);
 
 	/**
-	 * Read-only variant of the GEORADIUS command
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius_ro/" target="_blank">https://redis.io/docs/latest/commands/georadius_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -675,7 +1013,7 @@ public interface GeoCommands extends RedisCommands {
 	 * @param unit
 	 * 		距离单位
 	 * @param argument
-	 * 		GEO 参数
+	 * 		参数
 	 *
 	 * @return 位置元素
 	 */
@@ -683,9 +1021,9 @@ public interface GeoCommands extends RedisCommands {
 								final GeoUnit unit, final GeoRadiusArgument argument);
 
 	/**
-	 * Read-only variant of the GEORADIUS command
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius_ro/" target="_blank">https://redis.io/docs/latest/commands/georadius_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -698,7 +1036,7 @@ public interface GeoCommands extends RedisCommands {
 	 * @param unit
 	 * 		距离单位
 	 * @param argument
-	 * 		GEO 参数
+	 * 		参数
 	 * @param count
 	 * 		返回数量
 	 *
@@ -708,9 +1046,9 @@ public interface GeoCommands extends RedisCommands {
 								final GeoUnit unit, final GeoRadiusArgument argument, final int count);
 
 	/**
-	 * Read-only variant of the GEORADIUS command
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius_ro/" target="_blank">https://redis.io/docs/latest/commands/georadius_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -723,7 +1061,7 @@ public interface GeoCommands extends RedisCommands {
 	 * @param unit
 	 * 		距离单位
 	 * @param argument
-	 * 		GEO 参数
+	 * 		参数
 	 * @param count
 	 * 		返回数量
 	 *
@@ -733,9 +1071,9 @@ public interface GeoCommands extends RedisCommands {
 								final GeoUnit unit, final GeoRadiusArgument argument, final int count);
 
 	/**
-	 * Read-only variant of the GEORADIUS command
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius_ro/" target="_blank">https://redis.io/docs/latest/commands/georadius_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -748,7 +1086,7 @@ public interface GeoCommands extends RedisCommands {
 	 * @param unit
 	 * 		距离单位
 	 * @param argument
-	 * 		GEO 参数
+	 * 		参数
 	 * @param count
 	 * 		返回数量
 	 * @param any
@@ -761,9 +1099,9 @@ public interface GeoCommands extends RedisCommands {
 								final boolean any);
 
 	/**
-	 * Read-only variant of the GEORADIUS command
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius_ro/" target="_blank">https://redis.io/docs/latest/commands/georadius_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -776,7 +1114,7 @@ public interface GeoCommands extends RedisCommands {
 	 * @param unit
 	 * 		距离单位
 	 * @param argument
-	 * 		GEO 参数
+	 * 		参数
 	 * @param count
 	 * 		返回数量
 	 * @param any
@@ -789,9 +1127,9 @@ public interface GeoCommands extends RedisCommands {
 								final boolean any);
 
 	/**
-	 * Read-only variant of the GEORADIUS command
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius_ro/" target="_blank">https://redis.io/docs/latest/commands/georadius_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -812,9 +1150,9 @@ public interface GeoCommands extends RedisCommands {
 								final GeoUnit unit, final int count);
 
 	/**
-	 * Read-only variant of the GEORADIUS command
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius_ro/" target="_blank">https://redis.io/docs/latest/commands/georadius_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -835,9 +1173,9 @@ public interface GeoCommands extends RedisCommands {
 								final GeoUnit unit, final int count);
 
 	/**
-	 * Read-only variant of the GEORADIUS command
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius_ro/" target="_blank">https://redis.io/docs/latest/commands/georadius_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -860,9 +1198,9 @@ public interface GeoCommands extends RedisCommands {
 								final GeoUnit unit, final int count, final boolean any);
 
 	/**
-	 * Read-only variant of the GEORADIUS command
+	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadius_ro/" target="_blank">https://redis.io/docs/latest/commands/georadius_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -885,15 +1223,14 @@ public interface GeoCommands extends RedisCommands {
 								final GeoUnit unit, final int count, final boolean any);
 
 	/**
-	 * 找出位于指定范围内的元素，
-	 * 但是 GEORADIUSBYMEMBER 的中心点是由给定的位置元素决定的，而不是像 GEORADIUS 那样，使用输入的经度和纬度来决定中心点
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadiusbymember.html" target="_blank">http://redisdoc.com/geo/georadiusbymember.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember/</a></p>
 	 *
 	 * @param key
 	 * 		Key
 	 * @param member
-	 * 		位置元素
+	 * 		成员
 	 * @param radius
 	 * 		范围
 	 * @param unit
@@ -904,15 +1241,14 @@ public interface GeoCommands extends RedisCommands {
 	List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius, final GeoUnit unit);
 
 	/**
-	 * 找出位于指定范围内的元素，
-	 * 但是 GEORADIUSBYMEMBER 的中心点是由给定的位置元素决定的，而不是像 GEORADIUS 那样，使用输入的经度和纬度来决定中心点
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadiusbymember.html" target="_blank">http://redisdoc.com/geo/georadiusbymember.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember/</a></p>
 	 *
 	 * @param key
 	 * 		Key
 	 * @param member
-	 * 		位置元素
+	 * 		成员
 	 * @param radius
 	 * 		范围
 	 * @param unit
@@ -923,21 +1259,20 @@ public interface GeoCommands extends RedisCommands {
 	List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius, final GeoUnit unit);
 
 	/**
-	 * 找出位于指定范围内的元素，
-	 * 但是 GEORADIUSBYMEMBER 的中心点是由给定的位置元素决定的，而不是像 GEORADIUS 那样，使用输入的经度和纬度来决定中心点
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadiusbymember.html" target="_blank">http://redisdoc.com/geo/georadiusbymember.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember/</a></p>
 	 *
 	 * @param key
 	 * 		Key
 	 * @param member
-	 * 		位置元素
+	 * 		成员
 	 * @param radius
 	 * 		范围
 	 * @param unit
 	 * 		距离单位
 	 * @param argument
-	 * 		GEO 参数
+	 * 		GEO Radius 参数
 	 *
 	 * @return 位置元素
 	 */
@@ -945,21 +1280,20 @@ public interface GeoCommands extends RedisCommands {
 									  final GeoRadiusArgument argument);
 
 	/**
-	 * 找出位于指定范围内的元素，
-	 * 但是 GEORADIUSBYMEMBER 的中心点是由给定的位置元素决定的，而不是像 GEORADIUS 那样，使用输入的经度和纬度来决定中心点
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadiusbymember.html" target="_blank">http://redisdoc.com/geo/georadiusbymember.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember/</a></p>
 	 *
 	 * @param key
 	 * 		Key
 	 * @param member
-	 * 		位置元素
+	 * 		成员
 	 * @param radius
 	 * 		范围
 	 * @param unit
 	 * 		距离单位
 	 * @param argument
-	 * 		GEO 参数
+	 * 		参数
 	 *
 	 * @return 位置元素
 	 */
@@ -967,14 +1301,518 @@ public interface GeoCommands extends RedisCommands {
 									  final GeoRadiusArgument argument);
 
 	/**
-	 * Read-only variant of the GEORADIUSBYMEMBER command
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/georadiusbymember_ro/" target="_blank">https://redis.io/commands/georadiusbymember_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember/</a></p>
 	 *
 	 * @param key
 	 * 		Key
 	 * @param member
-	 * 		位置元素
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		参数
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 位置元素
+	 */
+	List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius, final GeoUnit unit,
+									  final GeoRadiusArgument argument, final int count);
+
+	/**
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		参数
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 位置元素
+	 */
+	List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius, final GeoUnit unit,
+									  final GeoRadiusArgument argument, final int count);
+
+	/**
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		参数
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 *
+	 * @return 位置元素
+	 */
+	List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius, final GeoUnit unit,
+									  final GeoRadiusArgument argument, final int count, final boolean any);
+
+	/**
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		参数
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 *
+	 * @return 位置元素
+	 */
+	List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius, final GeoUnit unit,
+									  final GeoRadiusArgument argument, final int count, final boolean any);
+
+	/**
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 位置元素
+	 */
+	List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius, final GeoUnit unit,
+									  final int count);
+
+	/**
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 位置元素
+	 */
+	List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius, final GeoUnit unit,
+									  final int count);
+
+	/**
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 *
+	 * @return 位置元素
+	 */
+	List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius, final GeoUnit unit,
+									  final int count, final boolean any);
+
+	/**
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 *
+	 * @return 位置元素
+	 */
+	List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius, final GeoUnit unit,
+									  final int count, final boolean any);
+
+	/**
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素，并存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param storeOption
+	 * 		存储方式
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 *
+	 * @return 位置元素
+	 */
+	Long geoRadiusByMember(final String key, final String destKey, final GeoStoreOption storeOption,
+						   final String member, final double radius, final GeoUnit unit);
+
+	/**
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素，并存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param storeOption
+	 * 		存储方式
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 *
+	 * @return 位置元素
+	 */
+	Long geoRadiusByMember(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
+						   final byte[] member, final double radius, final GeoUnit unit);
+
+	/**
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素，并存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param storeOption
+	 * 		存储方式
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		GEO Radius 参数
+	 *
+	 * @return 位置元素
+	 */
+	Long geoRadiusByMember(final String key, final String destKey, final GeoStoreOption storeOption,
+						   final String member, final double radius, final GeoUnit unit,
+						   final GeoRadiusArgument argument);
+
+	/**
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素，并存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param storeOption
+	 * 		存储方式
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		参数
+	 *
+	 * @return 位置元素
+	 */
+	Long geoRadiusByMember(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
+						   final byte[] member, final double radius, final GeoUnit unit,
+						   final GeoRadiusArgument argument);
+
+	/**
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素，并存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param storeOption
+	 * 		存储方式
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		参数
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 位置元素
+	 */
+	Long geoRadiusByMember(final String key, final String destKey, final GeoStoreOption storeOption,
+						   final String member, final double radius, final GeoUnit unit,
+						   final GeoRadiusArgument argument, final int count);
+
+	/**
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素，并存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param storeOption
+	 * 		存储方式
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		参数
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 位置元素
+	 */
+	Long geoRadiusByMember(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
+						   final byte[] member, final double radius, final GeoUnit unit,
+						   final GeoRadiusArgument argument, final int count);
+
+	/**
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素，并存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param storeOption
+	 * 		存储方式
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		参数
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 *
+	 * @return 位置元素
+	 */
+	Long geoRadiusByMember(final String key, final String destKey, final GeoStoreOption storeOption,
+						   final String member, final double radius, final GeoUnit unit,
+						   final GeoRadiusArgument argument, final int count, final boolean any);
+
+	/**
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素，并存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param storeOption
+	 * 		存储方式
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		参数
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 *
+	 * @return 位置元素
+	 */
+	Long geoRadiusByMember(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
+						   final byte[] member, final double radius, final GeoUnit unit,
+						   final GeoRadiusArgument argument, final int count, final boolean any);
+
+	/**
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素，并存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param storeOption
+	 * 		存储方式
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 位置元素
+	 */
+	Long geoRadiusByMember(final String key, final String destKey, final GeoStoreOption storeOption,
+						   final String member, final double radius, final GeoUnit unit, final int count);
+
+	/**
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素，并存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param storeOption
+	 * 		存储方式
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 位置元素
+	 */
+	Long geoRadiusByMember(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
+						   final byte[] member, final double radius, final GeoUnit unit, final int count);
+
+	/**
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素，并存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param storeOption
+	 * 		存储方式
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 *
+	 * @return 位置元素
+	 */
+	Long geoRadiusByMember(final String key, final String destKey, final GeoStoreOption storeOption,
+						   final String member, final double radius, final GeoUnit unit, final int count,
+						   final boolean any);
+
+	/**
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素，并存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param storeOption
+	 * 		存储方式
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 *
+	 * @return 位置元素
+	 */
+	Long geoRadiusByMember(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
+						   final byte[] member, final double radius, final GeoUnit unit, final int count,
+						   final boolean any);
+
+	/**
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember_ro/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember_ro/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		成员
 	 * @param radius
 	 * 		范围
 	 * @param unit
@@ -985,14 +1823,14 @@ public interface GeoCommands extends RedisCommands {
 	List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius, final GeoUnit unit);
 
 	/**
-	 * Read-only variant of the GEORADIUSBYMEMBER command
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/georadiusbymember_ro/" target="_blank">https://redis.io/commands/georadiusbymember_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember_ro/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
 	 * @param member
-	 * 		位置元素
+	 * 		成员
 	 * @param radius
 	 * 		范围
 	 * @param unit
@@ -1003,20 +1841,20 @@ public interface GeoCommands extends RedisCommands {
 	List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius, final GeoUnit unit);
 
 	/**
-	 * Read-only variant of the GEORADIUSBYMEMBER command
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/georadiusbymember_ro/" target="_blank">https://redis.io/commands/georadiusbymember_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember_ro/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
 	 * @param member
-	 * 		位置元素
+	 * 		成员
 	 * @param radius
 	 * 		范围
 	 * @param unit
 	 * 		距离单位
 	 * @param argument
-	 * 		GEO 参数
+	 * 		GEO Radius 参数
 	 *
 	 * @return 位置元素
 	 */
@@ -1024,20 +1862,20 @@ public interface GeoCommands extends RedisCommands {
 										final GeoRadiusArgument argument);
 
 	/**
-	 * Read-only variant of the GEORADIUSBYMEMBER command
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/georadiusbymember_ro/" target="_blank">https://redis.io/commands/georadiusbymember_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember_ro/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
 	 * @param member
-	 * 		位置元素
+	 * 		成员
 	 * @param radius
 	 * 		范围
 	 * @param unit
 	 * 		距离单位
 	 * @param argument
-	 * 		GEO 参数
+	 * 		参数
 	 *
 	 * @return 位置元素
 	 */
@@ -1045,40 +1883,188 @@ public interface GeoCommands extends RedisCommands {
 										final GeoRadiusArgument argument);
 
 	/**
-	 * 地理位置搜索
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember_ro/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
 	 * @param member
-	 * 		位置元素
+	 * 		成员
 	 * @param radius
 	 * 		范围
 	 * @param unit
 	 * 		距离单位
+	 * @param argument
+	 * 		参数
+	 * @param count
+	 * 		返回数量
 	 *
-	 * @return 地理位置搜索结果
+	 * @return 位置元素
 	 */
-	List<GeoRadius> geoSearch(final String key, final String member, final double radius, final GeoUnit unit);
+	List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius, final GeoUnit unit,
+										final GeoRadiusArgument argument, final int count);
 
 	/**
-	 * 地理位置搜索
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember_ro/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
 	 * @param member
-	 * 		位置元素
+	 * 		成员
 	 * @param radius
 	 * 		范围
 	 * @param unit
 	 * 		距离单位
+	 * @param argument
+	 * 		参数
+	 * @param count
+	 * 		返回数量
 	 *
-	 * @return 地理位置搜索结果
+	 * @return 位置元素
 	 */
-	List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double radius, final GeoUnit unit);
+	List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius, final GeoUnit unit,
+										final GeoRadiusArgument argument, final int count);
+
+	/**
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember_ro/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember_ro/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		参数
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 *
+	 * @return 位置元素
+	 */
+	List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius, final GeoUnit unit,
+										final GeoRadiusArgument argument, final int count, final boolean any);
+
+	/**
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember_ro/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember_ro/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		参数
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 *
+	 * @return 位置元素
+	 */
+	List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius, final GeoUnit unit,
+										final GeoRadiusArgument argument, final int count, final boolean any);
+
+	/**
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember_ro/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember_ro/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 位置元素
+	 */
+	List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius, final GeoUnit unit,
+										final int count);
+
+	/**
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember_ro/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember_ro/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 位置元素
+	 */
+	List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius, final GeoUnit unit,
+										final int count);
+
+	/**
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember_ro/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember_ro/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 *
+	 * @return 位置元素
+	 */
+	List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius, final GeoUnit unit,
+										final int count, final boolean any);
+
+	/**
+	 * 基于指定成员，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/georadiusbymember_ro/" target="_blank">https://redis.io/docs/latest/commands/georadiusbymember_ro/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 *
+	 * @return 位置元素
+	 */
+	List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius, final GeoUnit unit,
+										final int count, final boolean any);
 
 	/**
 	 * 地理位置搜索
@@ -1129,19 +2115,21 @@ public interface GeoCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param member
-	 * 		位置元素
-	 * @param width
-	 * 		宽度
-	 * @param height
-	 * 		高度
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
 	 * @param unit
 	 * 		距离单位
+	 * @param argument
+	 * 		搜索参数
 	 *
 	 * @return 地理位置搜索结果
 	 */
-	List<GeoRadius> geoSearch(final String key, final String member, final double width, final double height,
-							  final GeoUnit unit);
+	List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude, final double radius,
+							  final GeoUnit unit, final GeoSearchArgument argument);
 
 	/**
 	 * 地理位置搜索
@@ -1150,19 +2138,125 @@ public interface GeoCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param member
-	 * 		位置元素
-	 * @param width
-	 * 		宽度
-	 * @param height
-	 * 		高度
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
 	 * @param unit
 	 * 		距离单位
+	 * @param argument
+	 * 		搜索参数
 	 *
 	 * @return 地理位置搜索结果
 	 */
-	List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double width, final double height,
-							  final GeoUnit unit);
+	List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude, final double radius,
+							  final GeoUnit unit, final GeoSearchArgument argument);
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		搜索参数
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude, final double radius,
+							  final GeoUnit unit, final GeoSearchArgument argument, final int count);
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		搜索参数
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude, final double radius,
+							  final GeoUnit unit, final GeoSearchArgument argument, final int count);
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		搜索参数
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude, final double radius,
+							  final GeoUnit unit, final GeoSearchArgument argument, final int count, final boolean any);
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		搜索参数
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude, final double radius,
+							  final GeoUnit unit, final GeoSearchArgument argument, final int count, final boolean any);
 
 	/**
 	 * 地理位置搜索
@@ -1217,8 +2311,210 @@ public interface GeoCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude, final double width,
+							  final double height, final GeoUnit unit, final GeoSearchArgument argument);
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		搜索参数
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude, final double width,
+							  final double height, final GeoUnit unit, final GeoSearchArgument argument);
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		搜索参数
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude, final double width,
+							  final double height, final GeoUnit unit, final GeoSearchArgument argument,
+							  final int count);
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		搜索参数
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude, final double width,
+							  final double height, final GeoUnit unit, final GeoSearchArgument argument,
+							  final int count);
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		搜索参数
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude, final double width,
+							  final double height, final GeoUnit unit, final GeoSearchArgument argument,
+							  final int count, final boolean any);
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		搜索参数
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude, final double width,
+							  final double height, final GeoUnit unit, final GeoSearchArgument argument,
+							  final int count, final boolean any);
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
 	 * @param member
-	 * 		位置元素
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	List<GeoRadius> geoSearch(final String key, final String member, final double radius, final GeoUnit unit);
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double radius, final GeoUnit unit);
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		成员
 	 * @param radius
 	 * 		范围
 	 * @param unit
@@ -1239,7 +2535,7 @@ public interface GeoCommands extends RedisCommands {
 	 * @param key
 	 * 		Key
 	 * @param member
-	 * 		位置元素
+	 * 		成员
 	 * @param radius
 	 * 		范围
 	 * @param unit
@@ -1259,44 +2555,21 @@ public interface GeoCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param longitude
-	 * 		经度
-	 * @param latitude
-	 * 		纬度
+	 * @param member
+	 * 		成员
 	 * @param radius
 	 * 		范围
 	 * @param unit
 	 * 		距离单位
 	 * @param argument
 	 * 		搜索参数
+	 * @param count
+	 * 		返回数量
 	 *
 	 * @return 地理位置搜索结果
 	 */
-	List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude, final double radius,
-							  final GeoUnit unit, final GeoSearchArgument argument);
-
-	/**
-	 * 地理位置搜索
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param longitude
-	 * 		经度
-	 * @param latitude
-	 * 		纬度
-	 * @param radius
-	 * 		范围
-	 * @param unit
-	 * 		距离单位
-	 * @param argument
-	 * 		搜索参数
-	 *
-	 * @return 地理位置搜索结果
-	 */
-	List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude, final double radius,
-							  final GeoUnit unit, final GeoSearchArgument argument);
+	List<GeoRadius> geoSearch(final String key, final String member, final double radius, final GeoUnit unit,
+							  final GeoSearchArgument argument, final int count);
 
 	/**
 	 * 地理位置搜索
@@ -1306,7 +2579,122 @@ public interface GeoCommands extends RedisCommands {
 	 * @param key
 	 * 		Key
 	 * @param member
-	 * 		位置元素
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		搜索参数
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double radius, final GeoUnit unit,
+							  final GeoSearchArgument argument, final int count);
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		搜索参数
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	List<GeoRadius> geoSearch(final String key, final String member, final double radius, final GeoUnit unit,
+							  final GeoSearchArgument argument, final int count, final boolean any);
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param argument
+	 * 		搜索参数
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double radius, final GeoUnit unit,
+							  final GeoSearchArgument argument, final int count, final boolean any);
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		成员
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param unit
+	 * 		距离单位
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	List<GeoRadius> geoSearch(final String key, final String member, final double width, final double height,
+							  final GeoUnit unit);
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		成员
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param unit
+	 * 		距离单位
+	 *
+	 * @return 地理位置搜索结果
+	 */
+	List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double width, final double height,
+							  final GeoUnit unit);
+
+	/**
+	 * 地理位置搜索
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		成员
 	 * @param width
 	 * 		宽度
 	 * @param height
@@ -1329,7 +2717,7 @@ public interface GeoCommands extends RedisCommands {
 	 * @param key
 	 * 		Key
 	 * @param member
-	 * 		位置元素
+	 * 		成员
 	 * @param width
 	 * 		宽度
 	 * @param height
@@ -1351,10 +2739,8 @@ public interface GeoCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param longitude
-	 * 		经度
-	 * @param latitude
-	 * 		纬度
+	 * @param member
+	 * 		成员
 	 * @param width
 	 * 		宽度
 	 * @param height
@@ -1363,11 +2749,13 @@ public interface GeoCommands extends RedisCommands {
 	 * 		距离单位
 	 * @param argument
 	 * 		搜索参数
+	 * @param count
+	 * 		返回数量
 	 *
 	 * @return 地理位置搜索结果
 	 */
-	List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude, final double width,
-							  final double height, final GeoUnit unit, final GeoSearchArgument argument);
+	List<GeoRadius> geoSearch(final String key, final String member, final double width, final double height,
+							  final GeoUnit unit, final GeoSearchArgument argument, final int count);
 
 	/**
 	 * 地理位置搜索
@@ -1376,10 +2764,8 @@ public interface GeoCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param longitude
-	 * 		经度
-	 * @param latitude
-	 * 		纬度
+	 * @param member
+	 * 		成员
 	 * @param width
 	 * 		宽度
 	 * @param height
@@ -1388,63 +2774,77 @@ public interface GeoCommands extends RedisCommands {
 	 * 		距离单位
 	 * @param argument
 	 * 		搜索参数
+	 * @param count
+	 * 		返回数量
 	 *
 	 * @return 地理位置搜索结果
 	 */
-	List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude, final double width,
-							  final double height, final GeoUnit unit, final GeoSearchArgument argument);
+	List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double width, final double height,
+							  final GeoUnit unit, final GeoSearchArgument argument, final int count);
 
 	/**
-	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 * 地理位置搜索
 	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
 	 *
-	 * @param destKey
-	 * 		目标 Key
 	 * @param key
 	 * 		Key
 	 * @param member
-	 * 		位置元素
-	 * @param radius
-	 * 		范围
+	 * 		成员
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
 	 * @param unit
 	 * 		距离单位
+	 * @param argument
+	 * 		搜索参数
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
 	 *
-	 * @return 存储的元素数量
+	 * @return 地理位置搜索结果
 	 */
-	Long geoSearchStore(final String destKey, final String key, final String member, final double radius,
-						final GeoUnit unit);
+	List<GeoRadius> geoSearch(final String key, final String member, final double width, final double height,
+							  final GeoUnit unit, final GeoSearchArgument argument, final int count, final boolean any);
 
 	/**
-	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 * 地理位置搜索
 	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearch/" target="_blank">https://redis.io/docs/latest/commands/geosearch/</a></p>
 	 *
-	 * @param destKey
-	 * 		目标 Key
 	 * @param key
 	 * 		Key
 	 * @param member
-	 * 		位置元素
-	 * @param radius
-	 * 		范围
+	 * 		成员
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
 	 * @param unit
 	 * 		距离单位
+	 * @param argument
+	 * 		搜索参数
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
 	 *
-	 * @return 存储的元素数量
+	 * @return 地理位置搜索结果
 	 */
-	Long geoSearchStore(final byte[] destKey, final byte[] key, final byte[] member, final double radius,
-						final GeoUnit unit);
+	List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double width, final double height,
+							  final GeoUnit unit, final GeoSearchArgument argument, final int count, final boolean any);
 
 	/**
-	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 * 将地理位置搜索结果存储到目标 destKey 中
 	 *
 	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
 	 *
-	 * @param destKey
-	 * 		目标 Key
 	 * @param key
 	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
 	 * @param longitude
 	 * 		经度
 	 * @param latitude
@@ -1454,20 +2854,20 @@ public interface GeoCommands extends RedisCommands {
 	 * @param unit
 	 * 		距离单位
 	 *
-	 * @return 存储的元素数量
+	 * @return 结果数量
 	 */
-	Long geoSearchStore(final String destKey, final String key, final double longitude, final double latitude,
+	Long geoSearchStore(final String key, final String destKey, final double longitude, final double latitude,
 						final double radius, final GeoUnit unit);
 
 	/**
-	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 * 将地理位置搜索结果存储到目标 destKey 中
 	 *
 	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
 	 *
-	 * @param destKey
-	 * 		目标 Key
 	 * @param key
 	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
 	 * @param longitude
 	 * 		经度
 	 * @param latitude
@@ -1477,66 +2877,184 @@ public interface GeoCommands extends RedisCommands {
 	 * @param unit
 	 * 		距离单位
 	 *
-	 * @return 存储的元素数量
+	 * @return 结果数量
 	 */
-	Long geoSearchStore(final byte[] destKey, final byte[] key, final double longitude, final double latitude,
+	Long geoSearchStore(final byte[] key, final byte[] destKey, final double longitude, final double latitude,
 						final double radius, final GeoUnit unit);
 
 	/**
-	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 * 将地理位置搜索结果存储到目标 destKey 中
 	 *
 	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
 	 *
-	 * @param destKey
-	 * 		目标 Key
 	 * @param key
 	 * 		Key
-	 * @param member
-	 * 		位置元素
-	 * @param width
-	 * 		宽度
-	 * @param height
-	 * 		高度
+	 * @param destKey
+	 * 		目标 Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
 	 * @param unit
 	 * 		距离单位
+	 * @param storeDist
+	 * 		STOREDIST
 	 *
-	 * @return 存储的元素数量
+	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
 	 */
-	Long geoSearchStore(final String destKey, final String key, final String member, final double width,
-						final double height, final GeoUnit unit);
+	Long geoSearchStore(final String key, final String destKey, final double longitude, final double latitude,
+						final double radius, final GeoUnit unit, final boolean storeDist);
 
 	/**
-	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 * 将地理位置搜索结果存储到目标 destKey 中
 	 *
 	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
 	 *
-	 * @param destKey
-	 * 		目标 Key
 	 * @param key
 	 * 		Key
-	 * @param member
-	 * 		位置元素
-	 * @param width
-	 * 		宽度
-	 * @param height
-	 * 		高度
+	 * @param destKey
+	 * 		目标 Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
 	 * @param unit
 	 * 		距离单位
+	 * @param storeDist
+	 * 		STOREDIST
 	 *
-	 * @return 存储的元素数量
+	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
 	 */
-	Long geoSearchStore(final byte[] destKey, final byte[] key, final byte[] member, final double width,
-						final double height, final GeoUnit unit);
+	Long geoSearchStore(final byte[] key, final byte[] destKey, final double longitude, final double latitude,
+						final double radius, final GeoUnit unit, final boolean storeDist);
 
 	/**
-	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 * 将地理位置搜索结果存储到目标 destKey 中
 	 *
 	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
 	 *
-	 * @param destKey
-	 * 		目标 Key
 	 * @param key
 	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param storeDist
+	 * 		STOREDIST
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
+	 */
+	Long geoSearchStore(final String key, final String destKey, final double longitude, final double latitude,
+						final double radius, final GeoUnit unit, final boolean storeDist, final int count);
+
+	/**
+	 * 将地理位置搜索结果存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param storeDist
+	 * 		STOREDIST
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
+	 */
+	Long geoSearchStore(final byte[] key, final byte[] destKey, final double longitude, final double latitude,
+						final double radius, final GeoUnit unit, final boolean storeDist, final int count);
+
+	/**
+	 * 将地理位置搜索结果存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param storeDist
+	 * 		STOREDIST
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 *
+	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
+	 */
+	Long geoSearchStore(final String key, final String destKey, final double longitude, final double latitude,
+						final double radius, final GeoUnit unit, final boolean storeDist, final int count,
+						final boolean any);
+
+	/**
+	 * 将地理位置搜索结果存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param storeDist
+	 * 		STOREDIST
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 *
+	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
+	 */
+	Long geoSearchStore(final byte[] key, final byte[] destKey, final double longitude, final double latitude,
+						final double radius, final GeoUnit unit, final boolean storeDist, final int count,
+						final boolean any);
+
+	/**
+	 * 将地理位置搜索结果存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
 	 * @param longitude
 	 * 		经度
 	 * @param latitude
@@ -1548,20 +3066,20 @@ public interface GeoCommands extends RedisCommands {
 	 * @param unit
 	 * 		距离单位
 	 *
-	 * @return 存储的元素数量
+	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
 	 */
-	Long geoSearchStore(final String destKey, final String key, final double longitude, final double latitude,
+	Long geoSearchStore(final String key, final String destKey, final double longitude, final double latitude,
 						final double width, final double height, final GeoUnit unit);
 
 	/**
-	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 * 将地理位置搜索结果存储到目标 destKey 中
 	 *
 	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
 	 *
-	 * @param destKey
-	 * 		目标 Key
 	 * @param key
 	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
 	 * @param longitude
 	 * 		经度
 	 * @param latitude
@@ -1573,166 +3091,20 @@ public interface GeoCommands extends RedisCommands {
 	 * @param unit
 	 * 		距离单位
 	 *
-	 * @return 存储的元素数量
+	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
 	 */
-	Long geoSearchStore(final byte[] destKey, final byte[] key, final double longitude, final double latitude,
+	Long geoSearchStore(final byte[] key, final byte[] destKey, final double longitude, final double latitude,
 						final double width, final double height, final GeoUnit unit);
 
 	/**
-	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 * 将地理位置搜索结果存储到目标 destKey 中
 	 *
 	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
 	 *
-	 * @param destKey
-	 * 		目标 Key
 	 * @param key
 	 * 		Key
-	 * @param member
-	 * 		位置元素
-	 * @param radius
-	 * 		范围
-	 * @param unit
-	 * 		距离单位
-	 * @param argument
-	 * 		搜索参数
-	 *
-	 * @return 存储的元素数量
-	 */
-	Long geoSearchStore(final String destKey, final String key, final String member, final double radius,
-						final GeoUnit unit, final GeoSearchArgument argument);
-
-	/**
-	 * GEOSEARCH 的结果存储到一个指定的有序集合中
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
-	 *
 	 * @param destKey
 	 * 		目标 Key
-	 * @param key
-	 * 		Key
-	 * @param member
-	 * 		位置元素
-	 * @param radius
-	 * 		范围
-	 * @param unit
-	 * 		距离单位
-	 * @param argument
-	 * 		搜索参数
-	 *
-	 * @return 存储的元素数量
-	 */
-	Long geoSearchStore(final byte[] destKey, final byte[] key, final byte[] member, final double radius,
-						final GeoUnit unit, final GeoSearchArgument argument);
-
-	/**
-	 * GEOSEARCH 的结果存储到一个指定的有序集合中
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param key
-	 * 		Key
-	 * @param longitude
-	 * 		经度
-	 * @param latitude
-	 * 		纬度
-	 * @param radius
-	 * 		范围
-	 * @param unit
-	 * 		距离单位
-	 * @param argument
-	 * 		搜索参数
-	 *
-	 * @return 存储的元素数量
-	 */
-	Long geoSearchStore(final String destKey, final String key, final double longitude, final double latitude,
-						final double radius, final GeoUnit unit, final GeoSearchArgument argument);
-
-	/**
-	 * GEOSEARCH 的结果存储到一个指定的有序集合中
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param key
-	 * 		Key
-	 * @param longitude
-	 * 		经度
-	 * @param latitude
-	 * 		纬度
-	 * @param radius
-	 * 		范围
-	 * @param unit
-	 * 		距离单位
-	 * @param argument
-	 * 		搜索参数
-	 *
-	 * @return 存储的元素数量
-	 */
-	Long geoSearchStore(final byte[] destKey, final byte[] key, final double longitude, final double latitude,
-						final double radius, final GeoUnit unit, final GeoSearchArgument argument);
-
-	/**
-	 * GEOSEARCH 的结果存储到一个指定的有序集合中
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param key
-	 * 		Key
-	 * @param member
-	 * 		位置元素
-	 * @param width
-	 * 		宽度
-	 * @param height
-	 * 		高度
-	 * @param unit
-	 * 		距离单位
-	 * @param argument
-	 * 		搜索参数
-	 *
-	 * @return 存储的元素数量
-	 */
-	Long geoSearchStore(final String destKey, final String key, final String member, final double width,
-						final double height, final GeoUnit unit, final GeoSearchArgument argument);
-
-	/**
-	 * GEOSEARCH 的结果存储到一个指定的有序集合中
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param key
-	 * 		Key
-	 * @param member
-	 * 		位置元素
-	 * @param width
-	 * 		宽度
-	 * @param height
-	 * 		高度
-	 * @param unit
-	 * 		距离单位
-	 * @param argument
-	 * 		搜索参数
-	 *
-	 * @return 存储的元素数量
-	 */
-	Long geoSearchStore(final byte[] destKey, final byte[] key, final byte[] member, final double width,
-						final double height, final GeoUnit unit, final GeoSearchArgument argument);
-
-	/**
-	 * GEOSEARCH 的结果存储到一个指定的有序集合中
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param key
-	 * 		Key
 	 * @param longitude
 	 * 		经度
 	 * @param latitude
@@ -1743,23 +3115,23 @@ public interface GeoCommands extends RedisCommands {
 	 * 		高度
 	 * @param unit
 	 * 		距离单位
-	 * @param argument
-	 * 		搜索参数
+	 * @param storeDist
+	 * 		STOREDIST
 	 *
-	 * @return 存储的元素数量
+	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
 	 */
-	Long geoSearchStore(final String destKey, final String key, final double longitude, final double latitude,
-						final double width, final double height, final GeoUnit unit, final GeoSearchArgument argument);
+	Long geoSearchStore(final String key, final String destKey, final double longitude, final double latitude,
+						final double width, final double height, final GeoUnit unit, final boolean storeDist);
 
 	/**
-	 * GEOSEARCH 的结果存储到一个指定的有序集合中
+	 * 将地理位置搜索结果存储到目标 destKey 中
 	 *
 	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
 	 *
-	 * @param destKey
-	 * 		目标 Key
 	 * @param key
 	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
 	 * @param longitude
 	 * 		经度
 	 * @param latitude
@@ -1770,12 +3142,538 @@ public interface GeoCommands extends RedisCommands {
 	 * 		高度
 	 * @param unit
 	 * 		距离单位
-	 * @param argument
-	 * 		搜索参数
+	 * @param storeDist
+	 * 		STOREDIST
 	 *
-	 * @return 存储的元素数量
+	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
 	 */
-	Long geoSearchStore(final byte[] destKey, final byte[] key, final double longitude, final double latitude,
-						final double width, final double height, final GeoUnit unit, final GeoSearchArgument argument);
+	Long geoSearchStore(final byte[] key, final byte[] destKey, final double longitude, final double latitude,
+						final double width, final double height, final GeoUnit unit, final boolean storeDist);
+
+	/**
+	 * 将地理位置搜索结果存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param unit
+	 * 		距离单位
+	 * @param storeDist
+	 * 		STOREDIST
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
+	 */
+	Long geoSearchStore(final String key, final String destKey, final double longitude, final double latitude,
+						final double width, final double height, final GeoUnit unit, final boolean storeDist,
+						final int count);
+
+	/**
+	 * 将地理位置搜索结果存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param unit
+	 * 		距离单位
+	 * @param storeDist
+	 * 		STOREDIST
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
+	 */
+	Long geoSearchStore(final byte[] key, final byte[] destKey, final double longitude, final double latitude,
+						final double width, final double height, final GeoUnit unit, final boolean storeDist,
+						final int count);
+
+	/**
+	 * 将地理位置搜索结果存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param unit
+	 * 		距离单位
+	 * @param storeDist
+	 * 		STOREDIST
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 *
+	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
+	 */
+	Long geoSearchStore(final String key, final String destKey, final double longitude, final double latitude,
+						final double width, final double height, final GeoUnit unit, final boolean storeDist,
+						final int count, final boolean any);
+
+	/**
+	 * 将地理位置搜索结果存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param unit
+	 * 		距离单位
+	 * @param storeDist
+	 * 		STOREDIST
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 *
+	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
+	 */
+	Long geoSearchStore(final byte[] key, final byte[] destKey, final double longitude, final double latitude,
+						final double width, final double height, final GeoUnit unit, final boolean storeDist,
+						final int count, final boolean any);
+
+	/**
+	 * 将地理位置搜索结果存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 *
+	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
+	 */
+	Long geoSearchStore(final String key, final String destKey, final String member, final double radius,
+						final GeoUnit unit);
+
+	/**
+	 * 将地理位置搜索结果存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 *
+	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
+	 */
+	Long geoSearchStore(final byte[] key, final byte[] destKey, final byte[] member, final double radius,
+						final GeoUnit unit);
+
+	/**
+	 * 将地理位置搜索结果存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param storeDist
+	 * 		STOREDIST
+	 *
+	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
+	 */
+	Long geoSearchStore(final String key, final String destKey, final String member, final double radius,
+						final GeoUnit unit, final boolean storeDist);
+
+	/**
+	 * 将地理位置搜索结果存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param storeDist
+	 * 		STOREDIST
+	 *
+	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
+	 */
+	Long geoSearchStore(final byte[] key, final byte[] destKey, final byte[] member, final double radius,
+						final GeoUnit unit, final boolean storeDist);
+
+	/**
+	 * 将地理位置搜索结果存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param storeDist
+	 * 		STOREDIST
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
+	 */
+	Long geoSearchStore(final String key, final String destKey, final String member, final double radius,
+						final GeoUnit unit, final boolean storeDist, final int count);
+
+	/**
+	 * 将地理位置搜索结果存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param storeDist
+	 * 		STOREDIST
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
+	 */
+	Long geoSearchStore(final byte[] key, final byte[] destKey, final byte[] member, final double radius,
+						final GeoUnit unit, final boolean storeDist, final int count);
+
+	/**
+	 * 将地理位置搜索结果存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param storeDist
+	 * 		STOREDIST
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 *
+	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
+	 */
+	Long geoSearchStore(final String key, final String destKey, final String member, final double radius,
+						final GeoUnit unit, final boolean storeDist, final int count, final boolean any);
+
+	/**
+	 * 将地理位置搜索结果存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param member
+	 * 		成员
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param storeDist
+	 * 		STOREDIST
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 *
+	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
+	 */
+	Long geoSearchStore(final byte[] key, final byte[] destKey, final byte[] member, final double radius,
+						final GeoUnit unit, final boolean storeDist, final int count, final boolean any);
+
+	/**
+	 * 将地理位置搜索结果存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param member
+	 * 		成员
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param unit
+	 * 		距离单位
+	 *
+	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
+	 */
+	Long geoSearchStore(final String key, final String destKey, final String member, final double width,
+						final double height, final GeoUnit unit);
+
+	/**
+	 * 将地理位置搜索结果存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param member
+	 * 		成员
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param unit
+	 * 		距离单位
+	 *
+	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
+	 */
+	Long geoSearchStore(final byte[] key, final byte[] destKey, final byte[] member, final double width,
+						final double height, final GeoUnit unit);
+
+	/**
+	 * 将地理位置搜索结果存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param member
+	 * 		成员
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param unit
+	 * 		距离单位
+	 * @param storeDist
+	 * 		STOREDIST
+	 *
+	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
+	 */
+	Long geoSearchStore(final String key, final String destKey, final String member, final double width,
+						final double height, final GeoUnit unit, final boolean storeDist);
+
+	/**
+	 * 将地理位置搜索结果存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param member
+	 * 		成员
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param unit
+	 * 		距离单位
+	 * @param storeDist
+	 * 		STOREDIST
+	 *
+	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
+	 */
+	Long geoSearchStore(final byte[] key, final byte[] destKey, final byte[] member, final double width,
+						final double height, final GeoUnit unit, final boolean storeDist);
+
+	/**
+	 * 将地理位置搜索结果存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param member
+	 * 		成员
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param unit
+	 * 		距离单位
+	 * @param storeDist
+	 * 		STOREDIST
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
+	 */
+	Long geoSearchStore(final String key, final String destKey, final String member, final double width,
+						final double height, final GeoUnit unit, final boolean storeDist, final int count);
+
+	/**
+	 * 将地理位置搜索结果存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param member
+	 * 		成员
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param unit
+	 * 		距离单位
+	 * @param storeDist
+	 * 		STOREDIST
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
+	 */
+	Long geoSearchStore(final byte[] key, final byte[] destKey, final byte[] member, final double width,
+						final double height, final GeoUnit unit, final boolean storeDist, final int count);
+
+	/**
+	 * 将地理位置搜索结果存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param member
+	 * 		成员
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param unit
+	 * 		距离单位
+	 * @param storeDist
+	 * 		STOREDIST
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 *
+	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
+	 */
+	Long geoSearchStore(final String key, final String destKey, final String member, final double width,
+						final double height, final GeoUnit unit, final boolean storeDist, final int count,
+						final boolean any);
+
+	/**
+	 * 将地理位置搜索结果存储到目标 destKey 中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/geosearchstore/" target="_blank">https://redis.io/docs/latest/commands/geosearchstore/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param member
+	 * 		成员
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param unit
+	 * 		距离单位
+	 * @param storeDist
+	 * 		STOREDIST
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 *
+	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
+	 */
+	Long geoSearchStore(final byte[] key, final byte[] destKey, final byte[] member, final double width,
+						final double height, final GeoUnit unit, final boolean storeDist, final int count,
+						final boolean any);
 
 }

@@ -22,94 +22,54 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command.args;
+package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.redis.core.NxXx;
-import com.buession.redis.utils.ArgStringBuilder;
-
-import java.util.Objects;
+import com.buession.redis.core.GeoStoreOption;
+import com.buession.redis.utils.SafeEncoder;
+import redis.clients.jedis.params.GeoRadiusStoreParam;
 
 /**
- * GEO ADD 参数
+ * Jedis {@link GeoRadiusStoreParam} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class GeoAddArgument {
-
-	private NxXx nxXx;
-
-	private Boolean ch;
+public final class JedisGeoRadiusStoreParam extends GeoRadiusStoreParam {
 
 	/**
 	 * 构造函数
 	 */
-	public GeoAddArgument() {
-
+	public JedisGeoRadiusStoreParam() {
+		super();
 	}
 
 	/**
 	 * 构造函数
+	 *
+	 * @param key
+	 * 		存储 Key
+	 * @param storeOption
+	 * 		存储方式
 	 */
-	public GeoAddArgument(final NxXx nxXx) {
-		this.nxXx = nxXx;
+	public JedisGeoRadiusStoreParam(final String key, final GeoStoreOption storeOption) {
+		super();
+		if(storeOption == GeoStoreOption.STOREDIST){
+			storeDist(key);
+		}else if(storeOption == GeoStoreOption.STORE){
+			store(key);
+		}
 	}
 
 	/**
 	 * 构造函数
+	 *
+	 * @param key
+	 * 		存储 Key
+	 * @param storeOption
+	 * 		存储方式
 	 */
-	public GeoAddArgument(final NxXx nxXx, final Boolean ch) {
-		this.nxXx = nxXx;
-		this.ch = ch;
-	}
-
-	/**
-	 * 构造函数
-	 */
-	public GeoAddArgument(final Boolean ch) {
-		this.ch = ch;
-	}
-
-	public NxXx getNxXx() {
-		return nxXx;
-	}
-
-	public GeoAddArgument setNxXx(NxXx nxXx) {
-		this.nxXx = nxXx;
-		return this;
-	}
-
-	public GeoAddArgument nx() {
-		return setNxXx(NxXx.NX);
-	}
-
-	public GeoAddArgument xx() {
-		return setNxXx(NxXx.XX);
-	}
-
-	public Boolean isCh() {
-		return getCh();
-	}
-
-	public Boolean getCh() {
-		return ch;
-	}
-
-	public GeoAddArgument ch() {
-		return setCh(true);
-	}
-
-	public GeoAddArgument setCh(Boolean ch) {
-		this.ch = ch;
-		return this;
-	}
-
-	@Override
-	public String toString() {
-		return ArgStringBuilder.create()
-				.append(getNxXx())
-				.append(Boolean.TRUE.equals(getCh()) ? "CH" : null)
-				.build();
+	public JedisGeoRadiusStoreParam(final byte[] key, final GeoStoreOption storeOption) {
+		this(SafeEncoder.encode(key), storeOption);
 	}
 
 }

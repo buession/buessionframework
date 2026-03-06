@@ -110,7 +110,7 @@ public class CFReserveArgument {
 	 *
 	 * @return {@link CFReserveArgument}
 	 */
-	public CFReserveArgument setBucketSize(final long bucketSize) {
+	public CFReserveArgument setBucketSize(final Long bucketSize) {
 		this.bucketSize = bucketSize;
 		return this;
 	}
@@ -132,7 +132,7 @@ public class CFReserveArgument {
 	 *
 	 * @return {@link CFReserveArgument}
 	 */
-	public CFReserveArgument setMaxIterations(final int maxIterations) {
+	public CFReserveArgument setMaxIterations(final Integer maxIterations) {
 		this.maxIterations = maxIterations;
 		return this;
 	}
@@ -154,7 +154,7 @@ public class CFReserveArgument {
 	 *
 	 * @return {@link CFReserveArgument}
 	 */
-	public CFReserveArgument setExpansion(final int expansion) {
+	public CFReserveArgument setExpansion(final Integer expansion) {
 		this.expansion = expansion;
 		return this;
 	}

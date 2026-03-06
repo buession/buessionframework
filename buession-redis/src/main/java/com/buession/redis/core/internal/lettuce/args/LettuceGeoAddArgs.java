@@ -22,54 +22,67 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.params;
+package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.core.converter.Converter;
-import com.buession.lang.Order;
-import com.buession.redis.core.command.args.GeoRadiusArgument;
-import io.lettuce.core.GeoArgs;
-
-import java.util.Optional;
+import com.buession.redis.core.NxXx;
+import io.lettuce.core.GeoAddArgs;
 
 /**
- * {@link GeoRadiusArgument} 转换为 lettuce {@link GeoArgs}
+ * Lettuce {@link GeoAddArgs} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class GeoRadiusArgumentConverter implements Converter<GeoRadiusArgument, GeoArgs> {
+public final class LettuceGeoAddArgs extends GeoAddArgs {
 
-	@Override
-	public GeoArgs convert(final GeoRadiusArgument source) {
-		if(source == null){
-			return null;
+	/**
+	 * 构造函数
+	 */
+	public LettuceGeoAddArgs() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param nxXx
+	 *        {@link NxXx}
+	 */
+	public LettuceGeoAddArgs(final NxXx nxXx) {
+		super();
+		if(nxXx == NxXx.NX){
+			nx();
+		}else if(nxXx == NxXx.XX){
+			xx();
 		}
+	}
 
-		final GeoArgs geoArgs = new GeoArgs();
-
-		if(Boolean.TRUE.equals(source.isWithCoord())){
-			geoArgs.withCoordinates();
+	/**
+	 * 构造函数
+	 *
+	 * @param nxXx
+	 *        {@link NxXx}
+	 * @param ch
+	 * 		CH
+	 */
+	public LettuceGeoAddArgs(final NxXx nxXx, final Boolean ch) {
+		this(nxXx);
+		if(Boolean.TRUE.equals(ch)){
+			ch();
 		}
-		if(Boolean.TRUE.equals(source.isWithDist())){
-			geoArgs.withDistance();
-		}
-		if(Boolean.TRUE.equals(source.isWithHash())){
-			geoArgs.withHash();
-		}
+	}
 
-		if(source.getOrder() == Order.ASC){
-			geoArgs.sort(GeoArgs.Sort.asc);
-		}else if(source.getOrder() == Order.DESC){
-			geoArgs.sort(GeoArgs.Sort.desc);
+	/**
+	 * 构造函数
+	 *
+	 * @param ch
+	 * 		CH
+	 */
+	public LettuceGeoAddArgs(final Boolean ch) {
+		super();
+		if(Boolean.TRUE.equals(ch)){
+			ch();
 		}
-
-		Optional.ofNullable(source.getCount()).ifPresent(geoArgs::withCount);
-
-		if(source.getCount() != null){
-			geoArgs.withCount(source.getCount(), Boolean.TRUE.equals(source.isAny()));
-		}
-
-		return geoArgs;
 	}
 
 }

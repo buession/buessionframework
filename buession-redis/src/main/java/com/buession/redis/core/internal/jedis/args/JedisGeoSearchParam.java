@@ -22,64 +22,105 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command.args;
+package com.buession.redis.core.internal.jedis.args;
 
 import com.buession.lang.Order;
+import com.buession.redis.core.command.args.GeoSearchArgument;
+import redis.clients.jedis.params.GeoSearchParam;
 
 /**
- * GEO SEARCH 参数
+ * Jedis {@link GeoSearchParam} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class GeoSearchArgument extends BaseGeoDistanceArgument {
+public class JedisGeoSearchParam extends GeoSearchParam {
 
 	/**
 	 * 构造函数
 	 */
-	public GeoSearchArgument() {
+	public JedisGeoSearchParam() {
 		super();
 	}
 
 	/**
 	 * 构造函数
 	 *
-	 * @param withCoord
-	 * 		是否将位置元素的经度和维度也一并返回
-	 * @param withDist
-	 * 		是否在返回位置元素的同时，将位置元素与中心之间的距离也一并返回
-	 * @param withHash
-	 * 		是否返回位置元素经过原始 geohash 编码的有序集合分值
+	 * @param geoSearchArgument
+	 *        {@link GeoSearchArgument}
 	 */
-	public GeoSearchArgument(final Boolean withCoord, final Boolean withDist, final Boolean withHash) {
-		super(withCoord, withDist, withHash);
+	public JedisGeoSearchParam(final GeoSearchArgument geoSearchArgument) {
+		super();
+
+		if(geoSearchArgument != null){
+			if(Boolean.TRUE.equals(geoSearchArgument.isWithCoord())){
+				withCoord();
+			}
+			if(Boolean.TRUE.equals(geoSearchArgument.isWithDist())){
+				withDist();
+			}
+			if(Boolean.TRUE.equals(geoSearchArgument.isWithHash())){
+				withHash();
+			}
+
+			if(geoSearchArgument.getOrder() == Order.ASC){
+				asc();
+			}else if(geoSearchArgument.getOrder() == Order.DESC){
+				desc();
+			}
+		}
 	}
 
 	/**
 	 * 构造函数
 	 *
-	 * @param withCoord
-	 * 		是否将位置元素的经度和维度也一并返回
-	 * @param withDist
-	 * 		是否在返回位置元素的同时，将位置元素与中心之间的距离也一并返回
-	 * @param withHash
-	 * 		是否返回位置元素经过原始 geohash 编码的有序集合分值
-	 * @param order
-	 * 		排序方式
+	 * @param geoSearchArgument
+	 *        {@link GeoSearchArgument}
+	 * @param count
+	 * 		返回数量
 	 */
-	public GeoSearchArgument(final Boolean withCoord, final Boolean withDist, final Boolean withHash,
-							 final Order order) {
-		super(withCoord, withDist, withHash, order);
+	public JedisGeoSearchParam(final GeoSearchArgument geoSearchArgument, final Integer count) {
+		this(geoSearchArgument);
+		count(count);
 	}
 
 	/**
 	 * 构造函数
 	 *
-	 * @param order
-	 * 		排序方式
+	 * @param geoSearchArgument
+	 *        {@link GeoSearchArgument}
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
 	 */
-	public GeoSearchArgument(final Order order) {
-		super(order);
+	public JedisGeoSearchParam(final GeoSearchArgument geoSearchArgument, final Integer count, final Boolean any) {
+		this(geoSearchArgument);
+		count(count, any);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param count
+	 * 		返回数量
+	 */
+	public JedisGeoSearchParam(final Integer count) {
+		super();
+		count(count);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 */
+	public JedisGeoSearchParam(final Integer count, final Boolean any) {
+		super();
+		count(count, any);
 	}
 
 }

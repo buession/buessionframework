@@ -25,7 +25,6 @@
 package com.buession.redis.core.command.args;
 
 import com.buession.lang.Order;
-import com.buession.redis.utils.ArgStringBuilder;
 
 /**
  * GEO RADIUS 参数
@@ -52,7 +51,7 @@ public class GeoRadiusArgument extends BaseGeoDistanceArgument {
 	 * @param withHash
 	 * 		是否返回位置元素经过原始 geohash 编码的有序集合分值
 	 */
-	public GeoRadiusArgument(boolean withCoord, boolean withDist, boolean withHash) {
+	public GeoRadiusArgument(final Boolean withCoord, final Boolean withDist, final Boolean withHash) {
 		super(withCoord, withDist, withHash);
 	}
 
@@ -68,7 +67,8 @@ public class GeoRadiusArgument extends BaseGeoDistanceArgument {
 	 * @param order
 	 * 		排序方式
 	 */
-	public GeoRadiusArgument(boolean withCoord, boolean withDist, boolean withHash, Order order) {
+	public GeoRadiusArgument(final Boolean withCoord, final Boolean withDist, final Boolean withHash,
+							 final Order order) {
 		super(withCoord, withDist, withHash, order);
 	}
 
@@ -78,18 +78,8 @@ public class GeoRadiusArgument extends BaseGeoDistanceArgument {
 	 * @param order
 	 * 		排序方式
 	 */
-	public GeoRadiusArgument(Order order) {
+	public GeoRadiusArgument(final Order order) {
 		super(order);
-	}
-
-	@Override
-	public String toString() {
-		return ArgStringBuilder.create()
-				.append(Boolean.TRUE.equals(getWithCoord()) ? "WITHCOORD" : null)
-				.append(Boolean.TRUE.equals(getWithDist()) ? "WITHDIST" : null)
-				.append(Boolean.TRUE.equals(getWithHash()) ? "WITHHASH" : null)
-				.append(getOrder())
-				.build();
 	}
 
 }

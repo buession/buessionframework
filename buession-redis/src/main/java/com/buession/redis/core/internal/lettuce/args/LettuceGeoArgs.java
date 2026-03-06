@@ -22,64 +22,105 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command.args;
+package com.buession.redis.core.internal.lettuce.args;
 
 import com.buession.lang.Order;
+import com.buession.redis.core.command.args.BaseGeoDistanceArgument;
+import io.lettuce.core.GeoArgs;
 
 /**
- * GEO SEARCH 参数
+ * Lettuce {@link GeoArgs} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class GeoSearchArgument extends BaseGeoDistanceArgument {
+public final class LettuceGeoArgs extends GeoArgs {
 
 	/**
 	 * 构造函数
 	 */
-	public GeoSearchArgument() {
+	public LettuceGeoArgs() {
 		super();
 	}
 
 	/**
 	 * 构造函数
 	 *
-	 * @param withCoord
-	 * 		是否将位置元素的经度和维度也一并返回
-	 * @param withDist
-	 * 		是否在返回位置元素的同时，将位置元素与中心之间的距离也一并返回
-	 * @param withHash
-	 * 		是否返回位置元素经过原始 geohash 编码的有序集合分值
+	 * @param distanceArgument
+	 *        {@link BaseGeoDistanceArgument}
 	 */
-	public GeoSearchArgument(final Boolean withCoord, final Boolean withDist, final Boolean withHash) {
-		super(withCoord, withDist, withHash);
+	public LettuceGeoArgs(final BaseGeoDistanceArgument distanceArgument) {
+		super();
+
+		if(distanceArgument != null){
+			if(Boolean.TRUE.equals(distanceArgument.isWithCoord())){
+				withCoordinates();
+			}
+			if(Boolean.TRUE.equals(distanceArgument.isWithDist())){
+				withDistance();
+			}
+			if(Boolean.TRUE.equals(distanceArgument.isWithHash())){
+				withHash();
+			}
+
+			if(distanceArgument.getOrder() == Order.ASC){
+				asc();
+			}else if(distanceArgument.getOrder() == Order.DESC){
+				desc();
+			}
+		}
 	}
 
 	/**
 	 * 构造函数
 	 *
-	 * @param withCoord
-	 * 		是否将位置元素的经度和维度也一并返回
-	 * @param withDist
-	 * 		是否在返回位置元素的同时，将位置元素与中心之间的距离也一并返回
-	 * @param withHash
-	 * 		是否返回位置元素经过原始 geohash 编码的有序集合分值
-	 * @param order
-	 * 		排序方式
+	 * @param distanceArgument
+	 *        {@link BaseGeoDistanceArgument}
+	 * @param count
+	 * 		返回数量
 	 */
-	public GeoSearchArgument(final Boolean withCoord, final Boolean withDist, final Boolean withHash,
-							 final Order order) {
-		super(withCoord, withDist, withHash, order);
+	public LettuceGeoArgs(final BaseGeoDistanceArgument distanceArgument, final Integer count) {
+		this(distanceArgument);
+		withCount(count);
 	}
 
 	/**
 	 * 构造函数
 	 *
-	 * @param order
-	 * 		排序方式
+	 * @param distanceArgument
+	 *        {@link BaseGeoDistanceArgument}
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
 	 */
-	public GeoSearchArgument(final Order order) {
-		super(order);
+	public LettuceGeoArgs(final BaseGeoDistanceArgument distanceArgument, final Integer count, final Boolean any) {
+		this(distanceArgument);
+		withCount(count, any);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param count
+	 * 		返回数量
+	 */
+	public LettuceGeoArgs(final Integer count) {
+		super();
+		withCount(count);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param count
+	 * 		返回数量
+	 * @param any
+	 * 		ANY
+	 */
+	public LettuceGeoArgs(final Integer count, final Boolean any) {
+		super();
+		withCount(count, any);
 	}
 
 }

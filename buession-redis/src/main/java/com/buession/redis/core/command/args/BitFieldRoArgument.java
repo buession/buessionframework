@@ -36,9 +36,15 @@ import com.buession.redis.utils.ArgStringBuilder;
  */
 public final class BitFieldRoArgument {
 
-	private final BitFieldEncoding encoding;
+	private BitFieldEncoding encoding;
 
-	private final Integer offset;
+	private Integer offset;
+
+	/**
+	 * 构造函数
+	 */
+	public BitFieldRoArgument() {
+	}
 
 	/**
 	 * 构造函数

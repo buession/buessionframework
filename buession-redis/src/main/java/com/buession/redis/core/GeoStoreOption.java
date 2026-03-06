@@ -22,54 +22,27 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
-
-import com.buession.core.converter.Converter;
-import com.buession.lang.Order;
-import com.buession.redis.core.command.args.GeoSearchArgument;
-import redis.clients.jedis.params.GeoSearchParam;
-
-import java.util.Optional;
+package com.buession.redis.core;
 
 /**
- * {@link GeoSearchArgument} 转换为 jedis {@link GeoSearchParam}
+ *
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class GeoSearchArgumentConverter implements Converter<GeoSearchArgument, GeoSearchParam> {
+public enum GeoStoreOption implements Keyword {
+	STORE,
+
+	STOREDIST;
 
 	@Override
-	public GeoSearchParam convert(GeoSearchArgument source) {
-		if(source == null){
-			return null;
-		}
+	public String getValue() {
+		return name();
+	}
 
-		final GeoSearchParam geoSearchParam = new GeoSearchParam();
-
-		if(Boolean.TRUE.equals(source.isWithCoord())){
-			geoSearchParam.withCoord();
-		}
-		if(Boolean.TRUE.equals(source.isWithDist())){
-			geoSearchParam.withDist();
-		}
-		if(Boolean.TRUE.equals(source.isWithHash())){
-			geoSearchParam.withHash();
-		}
-
-		if(source.getOrder() == Order.ASC){
-			geoSearchParam.asc();
-		}else if(source.getOrder() == Order.DESC){
-			geoSearchParam.desc();
-		}
-
-		Optional.ofNullable(source.getCount()).ifPresent(geoSearchParam::count);
-
-		if(Boolean.TRUE.equals(source.isAny())){
-			geoSearchParam.any();
-		}
-
-		return geoSearchParam;
+	@Override
+	public String toString() {
+		return getValue();
 	}
 
 }

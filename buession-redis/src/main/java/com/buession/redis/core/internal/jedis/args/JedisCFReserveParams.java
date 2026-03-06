@@ -53,9 +53,11 @@ public final class JedisCFReserveParams extends CFReserveParams {
 	public JedisCFReserveParams(final CFReserveArgument cfReserveArgument) {
 		super();
 
-		Optional.ofNullable(cfReserveArgument.getBucketSize()).ifPresent(this::bucketSize);
-		Optional.ofNullable(cfReserveArgument.getMaxIterations()).ifPresent(this::maxIterations);
-		Optional.ofNullable(cfReserveArgument.getExpansion()).ifPresent(this::expansion);
+		if(cfReserveArgument != null){
+			Optional.ofNullable(cfReserveArgument.getBucketSize()).ifPresent(this::bucketSize);
+			Optional.ofNullable(cfReserveArgument.getMaxIterations()).ifPresent(this::maxIterations);
+			Optional.ofNullable(cfReserveArgument.getExpansion()).ifPresent(this::expansion);
+		}
 	}
 
 }

@@ -30,30 +30,31 @@ import com.buession.lang.Geo;
 import com.buession.lang.KeyValue;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.core.GeoRadius;
+import com.buession.redis.core.GeoStoreOption;
 import com.buession.redis.core.GeoUnit;
+import com.buession.redis.core.Keyword;
+import com.buession.redis.core.NxXx;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.GeoCommands;
-import com.buession.redis.core.command.args.GeoAddArgument;
 import com.buession.redis.core.command.args.GeoRadiusArgument;
 import com.buession.redis.core.command.args.GeoSearchArgument;
-import com.buession.redis.core.internal.convert.lettuce.params.GeoAddArgumentConverter;
-import com.buession.redis.core.internal.convert.lettuce.params.GeoRadiusArgumentConverter;
-import com.buession.redis.core.internal.convert.lettuce.params.GeoSearchArgumentConverter;
 import com.buession.redis.core.internal.convert.lettuce.params.GeoUnitConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.GeoCoordinateConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.GeoRadiusGeneralResultConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.GeoRadiusResponseConverter;
+import com.buession.redis.core.internal.lettuce.args.LettuceGeoAddArgs;
+import com.buession.redis.core.internal.lettuce.args.LettuceGeoArgs;
+import com.buession.redis.core.internal.lettuce.args.LettuceGeoRadiusStoreArgs;
 import com.buession.redis.utils.SafeEncoder;
+import io.lettuce.core.GeoAddArgs;
 import io.lettuce.core.GeoArgs;
+import io.lettuce.core.GeoRadiusStoreArgs;
 import io.lettuce.core.GeoSearch;
 import io.lettuce.core.GeoValue;
-import io.lettuce.core.GeoWithin;
 import io.lettuce.core.Value;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Lettuce 地理位置命令
@@ -67,555 +68,1623 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		super(client);
 	}
 
-	@Override
-	public Long geoAdd(final String key, final String member, final double longitude, final double latitude) {
-		return geoAdd(SafeEncoder.encode(key), SafeEncoder.encode(member), longitude, latitude);
-	}
-
-	@Override
-	public Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude) {
-		final CommandArguments args = CommandArguments.create(key).add(longitude).add(latitude).add(member);
-		return geoAdd((cmd)->cmd.geoadd(key, longitude, latitude, member), args);
-	}
-
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public Long geoAdd(final String key, final KeyValue<String, Geo>... memberCoordinates) {
 		final CommandArguments args = CommandArguments.create(key).add(memberCoordinates);
-		return geoAdd((cmd)->cmd.geoadd(SafeEncoder.encode(key), stringMemberCoordinatesToGeoValue(memberCoordinates)),
-				args);
+		return executeCommand(Command.GEOADD, args,
+				(cmd)->cmd.geoadd(SafeEncoder.encode(key), stringMemberCoordinatesToGeoValue(memberCoordinates)));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public Long geoAdd(final byte[] key, final KeyValue<byte[], Geo>... memberCoordinates) {
 		final CommandArguments args = CommandArguments.create(key).add(memberCoordinates);
-		return geoAdd((cmd)->cmd.geoadd(key, byteMemberCoordinatesToGeoValue(memberCoordinates)), args);
+		return executeCommand(Command.GEOADD, args,
+				(cmd)->cmd.geoadd(key, byteMemberCoordinatesToGeoValue(memberCoordinates)));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
-	public Long geoAdd(final String key, final GeoAddArgument argument, final String member, final double longitude,
-					   final double latitude) {
-		return geoAdd(SafeEncoder.encode(key), argument, SafeEncoder.encode(member), longitude, latitude);
+	public Long geoAdd(final String key, final NxXx nxXx, final KeyValue<String, Geo>... memberCoordinates) {
+		final CommandArguments args = CommandArguments.create(key).add(nxXx).add(memberCoordinates);
+		return geoAdd(rawKey(key), new LettuceGeoAddArgs(nxXx), memberCoordinates, args);
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
-	public Long geoAdd(final byte[] key, final GeoAddArgument argument, final byte[] member, final double longitude,
-					   final double latitude) {
-		final CommandArguments args = CommandArguments.create(key).add(argument).add(longitude).add(latitude)
-				.add(member);
-		final GeoAddArgumentConverter geoAddArgumentConverter = new GeoAddArgumentConverter();
-		return geoAdd((cmd)->cmd.geoadd(key, longitude, latitude, member, geoAddArgumentConverter.convert(argument)),
-				args);
+	public Long geoAdd(final byte[] key, final NxXx nxXx, final KeyValue<byte[], Geo>... memberCoordinates) {
+		final CommandArguments args = CommandArguments.create(key).add(nxXx).add(memberCoordinates);
+		return geoAdd(rawKey(key), new LettuceGeoAddArgs(nxXx), memberCoordinates, args);
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
-	public Long geoAdd(final String key, final GeoAddArgument argument, final Map<String, Geo> memberCoordinates) {
-		final CommandArguments args = CommandArguments.create(key).add(argument).add(memberCoordinates);
-		final GeoAddArgumentConverter geoAddArgumentConverter = new GeoAddArgumentConverter();
-		return geoAdd((cmd)->cmd.geoadd(SafeEncoder.encode(key), geoAddArgumentConverter.convert(argument),
-				stringMemberCoordinatesToGeoValue(memberCoordinates)), args);
+	public Long geoAdd(final String key, final NxXx nxXx, final boolean ch,
+					   final KeyValue<String, Geo>... memberCoordinates) {
+		final CommandArguments args = CommandArguments.create(key).add(nxXx).add(ch ? "CH" : null)
+				.add(memberCoordinates);
+		return geoAdd(rawKey(key), new LettuceGeoAddArgs(nxXx, ch), memberCoordinates, args);
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
-	public Long geoAdd(final byte[] key, final GeoAddArgument argument, final Map<byte[], Geo> memberCoordinates) {
-		final CommandArguments args = CommandArguments.create(key).add(argument).add(memberCoordinates);
-		final GeoAddArgumentConverter geoAddArgumentConverter = new GeoAddArgumentConverter();
-		return geoAdd((cmd)->cmd.geoadd(key, geoAddArgumentConverter.convert(argument),
-				byteMemberCoordinatesToGeoValue(memberCoordinates)), args);
+	public Long geoAdd(final byte[] key, final NxXx nxXx, final boolean ch,
+					   final KeyValue<byte[], Geo>... memberCoordinates) {
+		final CommandArguments args = CommandArguments.create(key).add(nxXx).add(ch ? "CH" : null)
+				.add(memberCoordinates);
+		return geoAdd(rawKey(key), new LettuceGeoAddArgs(nxXx, ch), memberCoordinates, args);
+	}
+
+	@SuppressWarnings({"unchecked"})
+	@Override
+	public Long geoAdd(final String key, final boolean ch, final KeyValue<String, Geo>... memberCoordinates) {
+		final CommandArguments args = CommandArguments.create(key).add(ch ? "CH" : null).add(memberCoordinates);
+		return geoAdd(rawKey(key), new LettuceGeoAddArgs(ch), memberCoordinates, args);
+	}
+
+	@SuppressWarnings({"unchecked"})
+	@Override
+	public Long geoAdd(final byte[] key, final boolean ch, final KeyValue<byte[], Geo>... memberCoordinates) {
+		final CommandArguments args = CommandArguments.create(key).add(ch ? "CH" : null).add(memberCoordinates);
+		return geoAdd(rawKey(key), new LettuceGeoAddArgs(ch), memberCoordinates, args);
 	}
 
 	@Override
 	public Double geoDist(final String key, final String member1, final String member2) {
-		return geoDist(SafeEncoder.encode(key), SafeEncoder.encode(member1), SafeEncoder.encode(member2));
+		final CommandArguments args = CommandArguments.create(key).add(member1, member2);
+		return executeCommand(Command.GEODIST, args,
+				(cmd)->cmd.geodist(rawBinaryKey(key), SafeEncoder.encode(member1), SafeEncoder.encode(member2),
+						GeoArgs.Unit.m));
 	}
 
 	@Override
 	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2) {
-		final CommandArguments args = CommandArguments.create(key).add(member1).add(member2);
-		return executeCommand(Command.GEODIST, args, (cmd)->cmd.geodist(key, member1, member2, GeoArgs.Unit.m), (v)->v);
+		final CommandArguments args = CommandArguments.create(key).add(member1, member2);
+		return executeCommand(Command.GEODIST, args, (cmd)->cmd.geodist(rawKey(key), member1, member2, GeoArgs.Unit.m));
 	}
 
 	@Override
 	public Double geoDist(final String key, final String member1, final String member2, final GeoUnit unit) {
-		return geoDist(SafeEncoder.encode(key), SafeEncoder.encode(member1), SafeEncoder.encode(member2), unit);
+		final CommandArguments args = CommandArguments.create(key).add(member1, member2).add(unit);
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return executeCommand(Command.GEODIST, args,
+				(cmd)->cmd.geodist(rawBinaryKey(key), SafeEncoder.encode(member1), SafeEncoder.encode(member2),
+						geoUnitConverter.convert(unit)));
 	}
 
 	@Override
 	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit) {
-		final CommandArguments args = CommandArguments.create(key).add(member1).add(member2).add(unit);
+		final CommandArguments args = CommandArguments.create(key).add(member1, member2).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-
 		return executeCommand(Command.GEODIST, args,
-				(cmd)->cmd.geodist(key, member1, member2, geoUnitConverter.convert(unit)), (v)->v);
+				(cmd)->cmd.geodist(rawKey(key), member1, member2, geoUnitConverter.convert(unit)));
 	}
 
 	@Override
 	public List<String> geoHash(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		return executeCommand(Command.GEOHASH, args, (cmd)->cmd.geohash(SafeEncoder.encode(key),
-				SafeEncoder.encode(members)), new ListConverter<>(Value::getValue));
+		return executeCommand(Command.GEOHASH, args, (cmd)->cmd.geohash(rawBinaryKey(key), SafeEncoder.encode(members)),
+				new ListConverter<>(Value::getValue));
 	}
 
 	@Override
 	public List<byte[]> geoHash(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		return executeCommand(Command.GEOHASH, args, (cmd)->cmd.geohash(key, members),
+		return executeCommand(Command.GEOHASH, args, (cmd)->cmd.geohash(rawKey(key), members),
 				new ListConverter<>((v)->SafeEncoder.encode(v.getValue())));
 	}
 
 	@Override
 	public List<Geo> geoPos(final String key, final String... members) {
-		return geoPos(SafeEncoder.encode(key), SafeEncoder.encode(members));
+		final CommandArguments args = CommandArguments.create(key).add(SafeEncoder.encode(members));
+		return executeCommand(Command.GEOPOS, args, (cmd)->cmd.geopos(rawBinaryKey(key), SafeEncoder.encode(members)),
+				new ListConverter<>(new GeoCoordinateConverter()));
 	}
 
 	@Override
 	public List<Geo> geoPos(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		return executeCommand(Command.GEOPOS, args, (cmd)->cmd.geopos(key, members),
+		return executeCommand(Command.GEOPOS, args, (cmd)->cmd.geopos(rawKey(key), members),
 				new ListConverter<>(new GeoCoordinateConverter()));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
 									 final double radius, final GeoUnit unit) {
-		return geoRadius(SafeEncoder.encode(key), longitude, latitude, radius, unit);
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit);
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return executeCommand(Command.GEORADIUS, args,
+				(cmd)->cmd.georadius(rawBinaryKey(key), longitude, latitude, radius, geoUnitConverter.convert(unit)),
+				new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
 									 final double radius, final GeoUnit unit) {
-		final CommandArguments args = CommandArguments.create(key).add(longitude).add(latitude).add(radius).add(unit);
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return executeCommand(Command.GEORADIUS, args, (cmd)->cmd.georadius(key, longitude, latitude, radius,
-				geoUnitConverter.convert(unit)), new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
+		return executeCommand(Command.GEORADIUS, args,
+				(cmd)->cmd.georadius(rawKey(key), longitude, latitude, radius, geoUnitConverter.convert(unit)),
+				new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
 									 final double radius, final GeoUnit unit, final GeoRadiusArgument argument) {
-		return geoRadius(SafeEncoder.encode(key), longitude, latitude, radius, unit, argument);
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
+				.add(argument);
+		return geoRadius(rawBinaryKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument), args);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
 									 final double radius, final GeoUnit unit, final GeoRadiusArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(longitude).add(latitude).add(radius).add(unit)
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(argument);
-		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		final GeoRadiusArgumentConverter geoRadiusArgumentConverter = new GeoRadiusArgumentConverter();
-		return executeCommand(Command.GEORADIUS, args, (cmd)->cmd.georadius(key, longitude, latitude, radius,
-						geoUnitConverter.convert(unit), geoRadiusArgumentConverter.convert(argument)),
-				new ListConverter<>(new GeoRadiusResponseConverter()));
+		return geoRadius(rawKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
+									 final double radius, final GeoUnit unit, final GeoRadiusArgument argument,
+									 final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
+				.add(argument).add(Keyword.Common.COUNT, count);
+		return geoRadius(rawBinaryKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count),
+				args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
+									 final double radius, final GeoUnit unit, final GeoRadiusArgument argument,
+									 final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
+				.add(argument).add(Keyword.Common.COUNT, count);
+		return geoRadius(rawKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
+									 final double radius, final GeoUnit unit, final GeoRadiusArgument argument,
+									 final int count, final boolean any) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
+				.add(argument).add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
+		return geoRadius(rawBinaryKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count, any),
+				args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
+									 final double radius, final GeoUnit unit, final GeoRadiusArgument argument,
+									 final int count, final boolean any) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
+				.add(argument).add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
+		return geoRadius(rawKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count, any),
+				args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
+									 final double radius, final GeoUnit unit, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
+				.add(Keyword.Common.COUNT, count);
+		return geoRadius(rawBinaryKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(count), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
+									 final double radius, final GeoUnit unit, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
+				.add(Keyword.Common.COUNT, count);
+		return geoRadius(rawKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(count), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
+									 final double radius, final GeoUnit unit, final int count, final boolean any) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
+				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
+		return geoRadius(rawBinaryKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(count, any), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
+									 final double radius, final GeoUnit unit, final int count, final boolean any) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
+				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
+		return geoRadius(rawKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(count, any), args);
+	}
+
+	@Override
+	public Long geoRadius(final String key, final String destKey, final GeoStoreOption storeOption,
+						  final double longitude, final double latitude, final double radius, final GeoUnit unit) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
+				.add(storeOption, destKey);
+		return geoRadius(rawBinaryKey(key), longitude, latitude, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(rawBinaryKey(key), storeOption), args);
+	}
+
+	@Override
+	public Long geoRadius(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
+						  final double longitude, final double latitude, final double radius, final GeoUnit unit) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
+				.add(storeOption, destKey);
+		return geoRadius(rawKey(key), longitude, latitude, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(rawKey(key), storeOption), args);
+	}
+
+	@Override
+	public Long geoRadius(final String key, final String destKey, final GeoStoreOption storeOption,
+						  final double longitude, final double latitude, final double radius, final GeoUnit unit,
+						  final GeoRadiusArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
+				.add(argument).add(storeOption, destKey);
+		return geoRadius(rawBinaryKey(key), longitude, latitude, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(rawBinaryKey(key), storeOption, argument), args);
+	}
+
+	@Override
+	public Long geoRadius(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
+						  final double longitude, final double latitude, final double radius, final GeoUnit unit,
+						  final GeoRadiusArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
+				.add(argument).add(storeOption, destKey);
+		return geoRadius(rawKey(key), longitude, latitude, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(rawKey(key), storeOption, argument), args);
+	}
+
+	@Override
+	public Long geoRadius(final String key, final String destKey, final GeoStoreOption storeOption,
+						  final double longitude, final double latitude, final double radius, final GeoUnit unit,
+						  final GeoRadiusArgument argument, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
+				.add(argument).add(Keyword.Common.COUNT, count).add(storeOption, destKey);
+		return geoRadius(rawBinaryKey(key), longitude, latitude, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(rawBinaryKey(key), storeOption, argument, count), args);
+	}
+
+	@Override
+	public Long geoRadius(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
+						  final double longitude, final double latitude, final double radius, final GeoUnit unit,
+						  final GeoRadiusArgument argument, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
+				.add(argument).add(Keyword.Common.COUNT, count).add(storeOption, destKey);
+		return geoRadius(rawKey(key), longitude, latitude, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(rawKey(key), storeOption, argument, count), args);
+	}
+
+	@Override
+	public Long geoRadius(final String key, final String destKey, final GeoStoreOption storeOption,
+						  final double longitude, final double latitude, final double radius, final GeoUnit unit,
+						  final GeoRadiusArgument argument, final int count, final boolean any) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
+				.add(argument).add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null)
+				.add(storeOption, destKey);
+		return geoRadius(rawBinaryKey(key), longitude, latitude, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(rawBinaryKey(key), storeOption, argument, count), args);
+	}
+
+	@Override
+	public Long geoRadius(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
+						  final double longitude, final double latitude, final double radius, final GeoUnit unit,
+						  final GeoRadiusArgument argument, final int count, final boolean any) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
+				.add(argument).add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null)
+				.add(storeOption, destKey);
+		return geoRadius(rawKey(key), longitude, latitude, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(rawKey(key), storeOption, argument, count), args);
+	}
+
+	@Override
+	public Long geoRadius(final String key, final String destKey, final GeoStoreOption storeOption,
+						  final double longitude, final double latitude, final double radius, final GeoUnit unit,
+						  final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
+				.add(Keyword.Common.COUNT, count).add(storeOption, destKey);
+		return geoRadius(rawBinaryKey(key), longitude, latitude, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(rawBinaryKey(key), storeOption, count), args);
+	}
+
+	@Override
+	public Long geoRadius(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
+						  final double longitude, final double latitude, final double radius, final GeoUnit unit,
+						  final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
+				.add(Keyword.Common.COUNT, count).add(storeOption, destKey);
+		return geoRadius(rawKey(key), longitude, latitude, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(rawKey(key), storeOption, count), args);
+	}
+
+	@Override
+	public Long geoRadius(final String key, final String destKey, final GeoStoreOption storeOption,
+						  final double longitude, final double latitude, final double radius, final GeoUnit unit,
+						  final int count, final boolean any) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
+				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null).add(storeOption, destKey);
+		return geoRadius(rawBinaryKey(key), longitude, latitude, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(rawBinaryKey(key), storeOption, count, any), args);
+	}
+
+	@Override
+	public Long geoRadius(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
+						  final double longitude, final double latitude, final double radius, final GeoUnit unit,
+						  final int count, final boolean any) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
+				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null).add(storeOption, destKey);
+		return geoRadius(rawKey(key), longitude, latitude, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(rawKey(key), storeOption, count, any), args);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
 									   final double radius, final GeoUnit unit) {
-		final CommandArguments args = CommandArguments.create(key).add(longitude).add(latitude).add(radius).add(unit);
-		return executeCommand(Command.GEORADIUS_RO, args);
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit);
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return executeCommand(Command.GEORADIUS_RO, args,
+				(cmd)->cmd.georadius(rawBinaryKey(key), longitude, latitude, radius, geoUnitConverter.convert(unit)),
+				new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
 									   final double radius, final GeoUnit unit) {
-		final CommandArguments args = CommandArguments.create(key).add(longitude).add(latitude).add(radius).add(unit);
-		return executeCommand(Command.GEORADIUS_RO, args);
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit);
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return executeCommand(Command.GEORADIUS_RO, args,
+				(cmd)->cmd.georadius(rawKey(key), longitude, latitude, radius, geoUnitConverter.convert(unit)),
+				new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
 									   final double radius, final GeoUnit unit, final GeoRadiusArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(longitude).add(latitude).add(radius).add(unit)
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(argument);
-		return executeCommand(Command.GEORADIUS_RO, args);
+		return geoRadiusRo(rawBinaryKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument), args);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
 									   final double radius, final GeoUnit unit, final GeoRadiusArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(longitude).add(latitude).add(radius).add(unit)
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(argument);
-		return executeCommand(Command.GEORADIUS_RO, args);
+		return geoRadiusRo(rawKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
+									   final double radius, final GeoUnit unit, final GeoRadiusArgument argument,
+									   final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
+				.add(argument).add(Keyword.Common.COUNT, count);
+		return geoRadiusRo(rawBinaryKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count),
+				args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
+									   final double radius, final GeoUnit unit, final GeoRadiusArgument argument,
+									   final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
+				.add(argument).add(Keyword.Common.COUNT, count);
+		return geoRadiusRo(rawKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
+									   final double radius, final GeoUnit unit, final GeoRadiusArgument argument,
+									   final int count, final boolean any) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
+				.add(argument).add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
+		return geoRadiusRo(rawBinaryKey(key), longitude, latitude, radius, unit,
+				new LettuceGeoArgs(argument, count, any), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
+									   final double radius, final GeoUnit unit, final GeoRadiusArgument argument,
+									   final int count, final boolean any) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
+				.add(argument).add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
+		return geoRadiusRo(rawKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count, any),
+				args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
+									   final double radius, final GeoUnit unit, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
+				.add(Keyword.Common.COUNT, count);
+		return geoRadiusRo(rawBinaryKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(count), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
+									   final double radius, final GeoUnit unit, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
+				.add(Keyword.Common.COUNT, count);
+		return geoRadiusRo(rawKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(count), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
+									   final double radius, final GeoUnit unit, final int count, final boolean any) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
+				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
+		return geoRadiusRo(rawBinaryKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(count, any), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
+									   final double radius, final GeoUnit unit, final int count, final boolean any) {
+		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
+				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
+		return geoRadiusRo(rawKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(count, any), args);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
 											 final GeoUnit unit) {
-		return geoRadiusByMember(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit);
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit);
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return executeCommand(Command.GEORADIUS, args,
+				(cmd)->cmd.georadiusbymember(rawBinaryKey(key), SafeEncoder.encode(member), radius,
+						geoUnitConverter.convert(unit)), new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
 											 final GeoUnit unit) {
-		final CommandArguments args = CommandArguments.create(key).add(member).add(radius).add(unit);
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return executeCommand(Command.GEORADIUSBYMEMBER, args, (cmd)->cmd.georadiusbymember(key, member, radius,
-				geoUnitConverter.convert(unit)), new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
+		return executeCommand(Command.GEORADIUS, args,
+				(cmd)->cmd.georadiusbymember(rawKey(key), member, radius, geoUnitConverter.convert(unit)),
+				new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
 											 final GeoUnit unit, final GeoRadiusArgument argument) {
-		return geoRadiusByMember(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit, argument);
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument);
+		return geoRadiusByMember(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
+				new LettuceGeoArgs(argument), args);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
 											 final GeoUnit unit, final GeoRadiusArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(member).add(radius).add(unit).add(argument);
-		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		final GeoRadiusArgumentConverter geoRadiusArgumentConverter = new GeoRadiusArgumentConverter();
-		return executeCommand(Command.GEORADIUSBYMEMBER, args, (cmd)->cmd.georadiusbymember(key, member, radius,
-						geoUnitConverter.convert(unit), geoRadiusArgumentConverter.convert(argument)),
-				new ListConverter<>(new GeoRadiusResponseConverter()));
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument);
+		return geoRadiusByMember(rawKey(key), member, radius, unit, new LettuceGeoArgs(argument), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
+											 final GeoUnit unit, final GeoRadiusArgument argument, final int count) {
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument)
+				.add(Keyword.Common.COUNT, count);
+		return geoRadiusByMember(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
+				new LettuceGeoArgs(argument, count), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
+											 final GeoUnit unit, final GeoRadiusArgument argument, final int count) {
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument)
+				.add(Keyword.Common.COUNT, count);
+		return geoRadiusByMember(rawKey(key), member, radius, unit, new LettuceGeoArgs(argument, count), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
+											 final GeoUnit unit, final GeoRadiusArgument argument, final int count,
+											 final boolean any) {
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument)
+				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
+		return geoRadiusByMember(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
+				new LettuceGeoArgs(argument, count, any), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
+											 final GeoUnit unit, final GeoRadiusArgument argument, final int count,
+											 final boolean any) {
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument)
+				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
+		return geoRadiusByMember(rawKey(key), member, radius, unit, new LettuceGeoArgs(argument, count, any), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
+											 final GeoUnit unit, final int count) {
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit)
+				.add(Keyword.Common.COUNT, count);
+		return geoRadiusByMember(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit, new LettuceGeoArgs(count),
+				args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
+											 final GeoUnit unit, final int count) {
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit)
+				.add(Keyword.Common.COUNT, count);
+		return geoRadiusByMember(rawKey(key), member, radius, unit, new LettuceGeoArgs(count), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
+											 final GeoUnit unit, final int count, final boolean any) {
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit)
+				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
+		return geoRadiusByMember(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
+				new LettuceGeoArgs(count, any), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
+											 final GeoUnit unit, final int count, final boolean any) {
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit)
+				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
+		return geoRadiusByMember(rawKey(key), member, radius, unit, new LettuceGeoArgs(count, any), args);
+	}
+
+	@Override
+	public Long geoRadiusByMember(final String key, final String destKey, final GeoStoreOption storeOption,
+								  final String member, final double radius, final GeoUnit unit) {
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit)
+				.add(storeOption, destKey);
+		return geoRadiusByMember(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(rawBinaryKey(destKey), storeOption), args);
+	}
+
+	@Override
+	public Long geoRadiusByMember(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
+								  final byte[] member, final double radius, final GeoUnit unit) {
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit)
+				.add(storeOption, destKey);
+		return geoRadiusByMember(rawKey(key), member, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(rawKey(destKey), storeOption), args);
+	}
+
+	@Override
+	public Long geoRadiusByMember(final String key, final String destKey, final GeoStoreOption storeOption,
+								  final String member, final double radius, final GeoUnit unit,
+								  final GeoRadiusArgument argument) {
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument)
+				.add(storeOption, destKey);
+		return geoRadiusByMember(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(rawBinaryKey(destKey), storeOption, argument), args);
+	}
+
+	@Override
+	public Long geoRadiusByMember(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
+								  final byte[] member, final double radius, final GeoUnit unit,
+								  final GeoRadiusArgument argument) {
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument)
+				.add(storeOption, destKey);
+		return geoRadiusByMember(rawKey(key), member, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(rawKey(destKey), storeOption, argument), args);
+	}
+
+	@Override
+	public Long geoRadiusByMember(final String key, final String destKey, final GeoStoreOption storeOption,
+								  final String member, final double radius, final GeoUnit unit,
+								  final GeoRadiusArgument argument, final int count) {
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument)
+				.add(Keyword.Common.COUNT, count).add(storeOption, destKey);
+		return geoRadiusByMember(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(rawBinaryKey(destKey), storeOption, argument, count), args);
+	}
+
+	@Override
+	public Long geoRadiusByMember(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
+								  final byte[] member, final double radius, final GeoUnit unit,
+								  final GeoRadiusArgument argument, final int count) {
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument)
+				.add(Keyword.Common.COUNT, count).add(storeOption, destKey);
+		return geoRadiusByMember(rawKey(key), member, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(rawKey(destKey), storeOption, argument, count), args);
+	}
+
+	@Override
+	public Long geoRadiusByMember(final String key, final String destKey, final GeoStoreOption storeOption,
+								  final String member, final double radius, final GeoUnit unit,
+								  final GeoRadiusArgument argument, final int count, final boolean any) {
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument)
+				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null).add(storeOption, destKey);
+		return geoRadiusByMember(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(rawBinaryKey(destKey), storeOption, argument, count, any), args);
+	}
+
+	@Override
+	public Long geoRadiusByMember(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
+								  final byte[] member, final double radius, final GeoUnit unit,
+								  final GeoRadiusArgument argument, final int count, final boolean any) {
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument)
+				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null).add(storeOption, destKey);
+		return geoRadiusByMember(rawKey(key), member, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(rawKey(destKey), storeOption, argument, count, any), args);
+	}
+
+	@Override
+	public Long geoRadiusByMember(final String key, final String destKey, final GeoStoreOption storeOption,
+								  final String member, final double radius, final GeoUnit unit, final int count) {
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit)
+				.add(Keyword.Common.COUNT, count).add(storeOption, destKey);
+		return geoRadiusByMember(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(rawBinaryKey(destKey), storeOption, count), args);
+	}
+
+	@Override
+	public Long geoRadiusByMember(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
+								  final byte[] member, final double radius, final GeoUnit unit, final int count) {
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit)
+				.add(Keyword.Common.COUNT, count).add(storeOption, destKey);
+		return geoRadiusByMember(rawKey(key), member, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(rawKey(destKey), storeOption, count), args);
+	}
+
+	@Override
+	public Long geoRadiusByMember(final String key, final String destKey, final GeoStoreOption storeOption,
+								  final String member, final double radius, final GeoUnit unit, final int count,
+								  final boolean any) {
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit)
+				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null).add(storeOption, destKey);
+		return geoRadiusByMember(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(rawBinaryKey(destKey), storeOption, count, any), args);
+	}
+
+	@Override
+	public Long geoRadiusByMember(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
+								  final byte[] member, final double radius, final GeoUnit unit, final int count,
+								  final boolean any) {
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit)
+				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null).add(storeOption, destKey);
+		return geoRadiusByMember(rawKey(key), member, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(rawKey(destKey), storeOption, count, any), args);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
 											   final GeoUnit unit) {
-		final CommandArguments args = CommandArguments.create(key).add(member).add(radius).add(unit);
-		return executeCommand(Command.GEORADIUSBYMEMBER_RO, args);
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit);
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return executeCommand(Command.GEORADIUS_RO, args,
+				(cmd)->cmd.georadiusbymember(rawBinaryKey(key), SafeEncoder.encode(member), radius,
+						geoUnitConverter.convert(unit)), new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
 											   final GeoUnit unit) {
-		final CommandArguments args = CommandArguments.create(key).add(member).add(radius).add(unit);
-		return executeCommand(Command.GEORADIUSBYMEMBER_RO, args);
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit);
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return executeCommand(Command.GEORADIUS_RO, args,
+				(cmd)->cmd.georadiusbymember(rawKey(key), member, radius, geoUnitConverter.convert(unit)),
+				new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
 											   final GeoUnit unit, final GeoRadiusArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(member).add(radius).add(unit).add(argument);
-		return executeCommand(Command.GEORADIUSBYMEMBER_RO, args);
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument);
+		return geoRadiusByMemberRo(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
+				new LettuceGeoArgs(argument), args);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
 											   final GeoUnit unit, final GeoRadiusArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(member).add(radius).add(unit).add(argument);
-		return executeCommand(Command.GEORADIUSBYMEMBER_RO, args);
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument);
+		return geoRadiusByMemberRo(rawKey(key), member, radius, unit, new LettuceGeoArgs(argument), args);
 	}
 
 	@Override
-	public List<GeoRadius> geoSearch(final String key, final String member, final double radius, final GeoUnit unit) {
-		return geoSearch(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit);
+	public List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
+											   final GeoUnit unit, final GeoRadiusArgument argument, final int count) {
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument)
+				.add(Keyword.Common.COUNT, count);
+		return geoRadiusByMemberRo(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
+				new LettuceGeoArgs(argument, count), args);
 	}
 
 	@Override
-	public List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double radius, final GeoUnit unit) {
-		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER").add(member).add("BYRADIUS")
-				.add(radius).add(unit);
-		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoSearch((cmd)->cmd.geosearch(key, GeoSearch.fromMember(member),
-				GeoSearch.byRadius(radius, geoUnitConverter.convert(unit))), args);
+	public List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
+											   final GeoUnit unit, final GeoRadiusArgument argument, final int count) {
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument)
+				.add(Keyword.Common.COUNT, count);
+		return geoRadiusByMemberRo(rawKey(key), member, radius, unit, new LettuceGeoArgs(argument, count), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
+											   final GeoUnit unit, final GeoRadiusArgument argument, final int count,
+											   final boolean any) {
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument)
+				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
+		return geoRadiusByMemberRo(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
+				new LettuceGeoArgs(argument, count, any), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
+											   final GeoUnit unit, final GeoRadiusArgument argument, final int count,
+											   final boolean any) {
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument)
+				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
+		return geoRadiusByMemberRo(rawKey(key), member, radius, unit, new LettuceGeoArgs(argument, count, any), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
+											   final GeoUnit unit, final int count) {
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit)
+				.add(Keyword.Common.COUNT, count);
+		return geoRadiusByMemberRo(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
+				new LettuceGeoArgs(count), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
+											   final GeoUnit unit, final int count) {
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit)
+				.add(Keyword.Common.COUNT, count);
+		return geoRadiusByMemberRo(rawKey(key), member, radius, unit, new LettuceGeoArgs(count), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
+											   final GeoUnit unit, final int count, final boolean any) {
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit)
+				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
+		return geoRadiusByMemberRo(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
+				new LettuceGeoArgs(count, any), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
+											   final GeoUnit unit, final int count, final boolean any) {
+		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit)
+				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
+		return geoRadiusByMemberRo(rawKey(key), member, radius, unit, new LettuceGeoArgs(count, any), args);
 	}
 
 	@Override
 	public List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude,
 									 final double radius, final GeoUnit unit) {
-		return geoSearch(SafeEncoder.encode(key), longitude, latitude, radius, unit);
+		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYRADIUS").add(radius, unit);
+		return geoSearch(rawBinaryKey(key), longitude, latitude, radius, unit, args);
 	}
 
 	@Override
 	public List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
 									 final double radius, final GeoUnit unit) {
-		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude).add(latitude)
-				.add("BYRADIUS").add(radius).add(unit);
-		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoSearch((cmd)->cmd.geosearch(key, GeoSearch.fromCoordinates(longitude, latitude),
-				GeoSearch.byRadius(radius, geoUnitConverter.convert(unit))), args);
-	}
-
-	@Override
-	public List<GeoRadius> geoSearch(final String key, final String member, final double width, final double height,
-									 final GeoUnit unit) {
-		return geoSearch(SafeEncoder.encode(key), SafeEncoder.encode(member), width, height, unit);
-	}
-
-	@Override
-	public List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double width, final double height,
-									 final GeoUnit unit) {
-		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER").add(member).add("BYBOX").add(width)
-				.add(height).add(unit);
-		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoSearch((cmd)->cmd.geosearch(key, GeoSearch.fromMember(member),
-				GeoSearch.byBox(width, height, geoUnitConverter.convert(unit))), args);
+		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYRADIUS").add(radius, unit);
+		return geoSearch(rawKey(key), longitude, latitude, radius, unit, args);
 	}
 
 	@Override
 	public List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude,
-									 final double width, final double height, final GeoUnit unit) {
-		return geoSearch(SafeEncoder.encode(key), longitude, latitude, width, height, unit);
+									 final double radius, final GeoUnit unit, final GeoSearchArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYRADIUS").add(radius, unit).add(argument);
+		return geoSearch(rawBinaryKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument), args);
 	}
 
 	@Override
 	public List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
-									 final double width, final double height, final GeoUnit unit) {
-		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude).add(latitude)
-				.add("BYBOX").add(width).add(height).add(unit);
-		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoSearch((cmd)->cmd.geosearch(key, GeoSearch.fromCoordinates(longitude, latitude),
-				GeoSearch.byBox(width, height, geoUnitConverter.convert(unit))), args);
+									 final double radius, final GeoUnit unit, final GeoSearchArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYRADIUS").add(radius, unit).add(argument);
+		return geoSearch(rawKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument), args);
 	}
 
 	@Override
-	public List<GeoRadius> geoSearch(final String key, final String member, final double radius, final GeoUnit unit,
-									 final GeoSearchArgument argument) {
-		return geoSearch(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit, argument);
+	public List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude,
+									 final double radius, final GeoUnit unit, final GeoSearchArgument argument,
+									 final int count) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYRADIUS").add(radius, unit).add(argument).add(Keyword.Common.COUNT, count);
+		return geoSearch(rawBinaryKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count),
+				args);
 	}
 
 	@Override
-	public List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double radius, final GeoUnit unit,
-									 final GeoSearchArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER").add(member).add("BYRADIUS")
-				.add(radius).add(unit).add(argument);
-		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		final GeoSearchArgumentConverter geoSearchArgumentConverter = new GeoSearchArgumentConverter();
-		return geoSearchWithin((cmd)->cmd.geosearch(key, GeoSearch.fromMember(member),
-						GeoSearch.byRadius(radius, geoUnitConverter.convert(unit)),
-						geoSearchArgumentConverter.convert(argument)),
+	public List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
+									 final double radius, final GeoUnit unit, final GeoSearchArgument argument,
+									 final int count) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYRADIUS").add(radius, unit).add(argument).add(Keyword.Common.COUNT, count);
+		return geoSearch(rawKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude,
+									 final double radius, final GeoUnit unit, final GeoSearchArgument argument,
+									 final int count, final boolean any) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYRADIUS").add(radius, unit).add(argument).add(Keyword.Common.COUNT, count)
+				.add(any ? Keyword.Common.ANY : null);
+		return geoSearch(rawBinaryKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count, any),
+				args);
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
+									 final double radius, final GeoUnit unit, final GeoSearchArgument argument,
+									 final int count, final boolean any) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYRADIUS").add(radius, unit).add(argument).add(Keyword.Common.COUNT, count)
+				.add(any ? Keyword.Common.ANY : null);
+		return geoSearch(rawKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count, any),
 				args);
 	}
 
 	@Override
 	public List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude,
-									 final double radius, final GeoUnit unit, final GeoSearchArgument argument) {
-		return geoSearch(SafeEncoder.encode(key), longitude, latitude, radius, unit, argument);
+									 final double width, final double height, final GeoUnit unit) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYBOX").add(width, height).add(unit);
+		return geoSearch(rawBinaryKey(key), longitude, latitude, width, height, unit, args);
 	}
 
 	@Override
 	public List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
-									 final double radius, final GeoUnit unit, final GeoSearchArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude).add(latitude)
-				.add("BYRADIUS").add(radius).add(unit).add(argument);
-		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		final GeoSearchArgumentConverter geoSearchArgumentConverter = new GeoSearchArgumentConverter();
-		return geoSearchWithin((cmd)->cmd.geosearch(key, GeoSearch.fromCoordinates(longitude, latitude),
-				GeoSearch.byRadius(radius, geoUnitConverter.convert(unit)),
-				geoSearchArgumentConverter.convert(argument)), args);
-	}
-
-	@Override
-	public List<GeoRadius> geoSearch(final String key, final String member, final double width, final double height,
-									 final GeoUnit unit, final GeoSearchArgument argument) {
-		return geoSearch(SafeEncoder.encode(key), SafeEncoder.encode(member), width, height, unit, argument);
-	}
-
-	@Override
-	public List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double width, final double height,
-									 final GeoUnit unit, final GeoSearchArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER").add(member).add("BYBOX").add(width)
-				.add(height).add(unit).add(argument);
-		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		final GeoSearchArgumentConverter geoSearchArgumentConverter = new GeoSearchArgumentConverter();
-		return geoSearchWithin((cmd)->cmd.geosearch(key, GeoSearch.fromMember(member),
-				GeoSearch.byBox(width, height, geoUnitConverter.convert(unit)),
-				geoSearchArgumentConverter.convert(argument)), args);
+									 final double width, final double height, final GeoUnit unit) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYBOX").add(width, height).add(unit);
+		return geoSearch(rawKey(key), longitude, latitude, width, height, unit, args);
 	}
 
 	@Override
 	public List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude,
 									 final double width, final double height, final GeoUnit unit,
 									 final GeoSearchArgument argument) {
-		return geoSearch(SafeEncoder.encode(key), longitude, latitude, width, height, unit, argument);
+		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYBOX").add(width, height).add(unit).add(argument);
+		return geoSearch(rawBinaryKey(key), longitude, latitude, width, height, unit, new LettuceGeoArgs(argument),
+				args);
 	}
 
 	@Override
 	public List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
 									 final double width, final double height, final GeoUnit unit,
 									 final GeoSearchArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude).add(latitude)
-				.add("BYBOX").add(width).add(height).add(unit).add(argument);
-		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		final GeoSearchArgumentConverter geoSearchArgumentConverter = new GeoSearchArgumentConverter();
-		return geoSearchWithin((cmd)->cmd.geosearch(key, GeoSearch.fromCoordinates(longitude, latitude),
-				GeoSearch.byBox(width, height, geoUnitConverter.convert(unit)),
-				geoSearchArgumentConverter.convert(argument)), args);
+		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYBOX").add(width, height).add(unit).add(argument);
+		return geoSearch(rawKey(key), longitude, latitude, width, height, unit, new LettuceGeoArgs(argument), args);
 	}
 
 	@Override
-	public Long geoSearchStore(final String destKey, final String key, final String member, final double radius,
-							   final GeoUnit unit) {
-		return geoSearchStore(SafeEncoder.encode(destKey), SafeEncoder.encode(key), SafeEncoder.encode(member), radius,
-				unit);
+	public List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude,
+									 final double width, final double height, final GeoUnit unit,
+									 final GeoSearchArgument argument, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYBOX").add(width, height).add(unit).add(argument).add(Keyword.Common.COUNT, count);
+		return geoSearch(rawBinaryKey(key), longitude, latitude, width, height, unit,
+				new LettuceGeoArgs(argument, count), args);
 	}
 
 	@Override
-	public Long geoSearchStore(final byte[] destKey, final byte[] key, final byte[] member, final double radius,
-							   final GeoUnit unit) {
-		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER").add(member).add("BYRADIUS")
-				.add(radius).add(unit);
-		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoSearchStore((cmd)->cmd.geosearchstore(destKey, key, GeoSearch.fromMember(member),
-				GeoSearch.byRadius(radius, geoUnitConverter.convert(unit)), new GeoArgs(), false), args);
+	public List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
+									 final double width, final double height, final GeoUnit unit,
+									 final GeoSearchArgument argument, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYBOX").add(width, height).add(unit).add(argument).add(Keyword.Common.COUNT, count);
+		return geoSearch(rawKey(key), longitude, latitude, width, height, unit, new LettuceGeoArgs(argument, count),
+				args);
 	}
 
 	@Override
-	public Long geoSearchStore(final String destKey, final String key, final double longitude, final double latitude,
+	public List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude,
+									 final double width, final double height, final GeoUnit unit,
+									 final GeoSearchArgument argument, final int count, final boolean any) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYBOX").add(width, height).add(unit).add(argument).add(Keyword.Common.COUNT, count)
+				.add(any ? Keyword.Common.ANY : null);
+		return geoSearch(rawBinaryKey(key), longitude, latitude, width, height, unit,
+				new LettuceGeoArgs(argument, count, any), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
+									 final double width, final double height, final GeoUnit unit,
+									 final GeoSearchArgument argument, final int count, final boolean any) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYBOX").add(width, height).add(unit).add(argument).add(Keyword.Common.COUNT, count)
+				.add(any ? Keyword.Common.ANY : null);
+		return geoSearch(rawKey(key), longitude, latitude, width, height, unit,
+				new LettuceGeoArgs(argument, count, any), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final String key, final String member, final double radius, final GeoUnit unit) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYRADIUS")
+				.add(radius, unit);
+		return geoSearch(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit, args);
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double radius, final GeoUnit unit) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYRADIUS")
+				.add(radius, unit);
+		return geoSearch(rawKey(key), member, radius, unit, args);
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final String key, final String member, final double radius, final GeoUnit unit,
+									 final GeoSearchArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYRADIUS")
+				.add(radius, unit).add(argument);
+		return geoSearch(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit, new LettuceGeoArgs(argument),
+				args);
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double radius, final GeoUnit unit,
+									 final GeoSearchArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYRADIUS")
+				.add(radius, unit).add(argument);
+		return geoSearch(rawKey(key), member, radius, unit, new LettuceGeoArgs(argument), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final String key, final String member, final double radius, final GeoUnit unit,
+									 final GeoSearchArgument argument, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYRADIUS")
+				.add(radius, unit).add(argument).add(Keyword.Common.COUNT, count);
+		return geoSearch(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
+				new LettuceGeoArgs(argument, count), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double radius, final GeoUnit unit,
+									 final GeoSearchArgument argument, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYRADIUS")
+				.add(radius, unit).add(argument).add(Keyword.Common.COUNT, count);
+		return geoSearch(rawKey(key), member, radius, unit, new LettuceGeoArgs(argument, count), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final String key, final String member, final double radius, final GeoUnit unit,
+									 final GeoSearchArgument argument, final int count, final boolean any) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYRADIUS", radius)
+				.add(unit).add(argument).add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
+		return geoSearch(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
+				new LettuceGeoArgs(argument, count, any), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double radius, final GeoUnit unit,
+									 final GeoSearchArgument argument, final int count, final boolean any) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYRADIUS")
+				.add(radius, unit).add(argument).add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
+		return geoSearch(rawKey(key), member, radius, unit, new LettuceGeoArgs(argument, count, any), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final String key, final String member, final double width, final double height,
+									 final GeoUnit unit) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYBOX")
+				.add(width, height).add(unit);
+		return geoSearch(rawBinaryKey(key), SafeEncoder.encode(member), width, height, unit, args);
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double width, final double height,
+									 final GeoUnit unit) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYBOX")
+				.add(width, height).add(unit);
+		return geoSearch(rawKey(key), member, width, height, unit, args);
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final String key, final String member, final double width, final double height,
+									 final GeoUnit unit, final GeoSearchArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYBOX")
+				.add(width, height).add(unit).add(argument);
+		return geoSearch(rawBinaryKey(key), SafeEncoder.encode(member), width, height, unit,
+				new LettuceGeoArgs(argument), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double width, final double height,
+									 final GeoUnit unit, final GeoSearchArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYBOX")
+				.add(width, height).add(unit).add(argument);
+		return geoSearch(rawKey(key), member, width, height, unit, new LettuceGeoArgs(argument), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final String key, final String member, final double width, final double height,
+									 final GeoUnit unit, final GeoSearchArgument argument, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYBOX")
+				.add(width, height).add(unit).add(argument).add(Keyword.Common.COUNT, count);
+		return geoSearch(rawBinaryKey(key), SafeEncoder.encode(member), width, height, unit,
+				new LettuceGeoArgs(argument, count), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double width, final double height,
+									 final GeoUnit unit, final GeoSearchArgument argument, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYBOX")
+				.add(width, height).add(unit).add(argument).add(Keyword.Common.COUNT, count);
+		return geoSearch(rawKey(key), member, width, height, unit, new LettuceGeoArgs(argument, count), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final String key, final String member, final double width, final double height,
+									 final GeoUnit unit, final GeoSearchArgument argument, final int count,
+									 final boolean any) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYBOX")
+				.add(width, height).add(unit).add(argument).add(Keyword.Common.COUNT, count)
+				.add(any ? Keyword.Common.ANY : null);
+		return geoSearch(rawBinaryKey(key), SafeEncoder.encode(member), width, height, unit,
+				new LettuceGeoArgs(argument, count, any), args);
+	}
+
+	@Override
+	public List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double width, final double height,
+									 final GeoUnit unit, final GeoSearchArgument argument, final int count,
+									 final boolean any) {
+		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYBOX")
+				.add(width, height).add(unit).add(argument).add(Keyword.Common.COUNT, count)
+				.add(any ? Keyword.Common.ANY : null);
+		return geoSearch(rawKey(key), member, width, height, unit, new LettuceGeoArgs(argument, count, any), args);
+	}
+
+	@Override
+	public Long geoSearchStore(final String key, final String destKey, final double longitude, final double latitude,
 							   final double radius, final GeoUnit unit) {
-		return geoSearchStore(SafeEncoder.encode(destKey), SafeEncoder.encode(key), longitude, latitude, radius, unit);
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYRADIUS").add(radius, unit);
+		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), longitude, latitude, radius, unit, false, args);
 	}
 
 	@Override
-	public Long geoSearchStore(final byte[] destKey, final byte[] key, final double longitude, final double latitude,
+	public Long geoSearchStore(final byte[] key, final byte[] destKey, final double longitude, final double latitude,
 							   final double radius, final GeoUnit unit) {
-		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude).add(latitude)
-				.add("BYRADIUS").add(radius).add(unit);
-		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoSearchStore((cmd)->cmd.geosearchstore(destKey, key, GeoSearch.fromCoordinates(longitude, latitude),
-				GeoSearch.byRadius(radius, geoUnitConverter.convert(unit)), new GeoArgs(), false), args);
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYRADIUS").add(radius, unit);
+		return geoSearchStore(rawKey(key), rawKey(destKey), longitude, latitude, radius, unit, false, args);
 	}
 
 	@Override
-	public Long geoSearchStore(final String destKey, final String key, final String member, final double width,
-							   final double height, final GeoUnit unit) {
-		return geoSearchStore(SafeEncoder.encode(destKey), SafeEncoder.encode(key), SafeEncoder.encode(member), width,
-				height, unit);
+	public Long geoSearchStore(final String key, final String destKey, final double longitude, final double latitude,
+							   final double radius, final GeoUnit unit, final boolean storeDist) {
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYRADIUS").add(radius, unit).add(storeDist ? "STOREDIST" : null);
+		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), longitude, latitude, radius, unit, storeDist,
+				args);
 	}
 
 	@Override
-	public Long geoSearchStore(final byte[] destKey, final byte[] key, final byte[] member, final double width,
-							   final double height, final GeoUnit unit) {
-		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER").add(member).add("BYBOX").add(width)
-				.add(height).add(unit);
-		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoSearchStore((cmd)->cmd.geosearchstore(destKey, key, GeoSearch.fromMember(member),
-				GeoSearch.byBox(width, height, geoUnitConverter.convert(unit)), new GeoArgs(), false), args);
+	public Long geoSearchStore(final byte[] key, final byte[] destKey, final double longitude, final double latitude,
+							   final double radius, final GeoUnit unit, final boolean storeDist) {
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYRADIUS").add(radius, unit).add(storeDist ? "STOREDIST" : null);
+		return geoSearchStore(rawKey(key), rawKey(destKey), longitude, latitude, radius, unit, storeDist, args);
 	}
 
 	@Override
-	public Long geoSearchStore(final String destKey, final String key, final double longitude, final double latitude,
+	public Long geoSearchStore(final String key, final String destKey, final double longitude, final double latitude,
+							   final double radius, final GeoUnit unit, final boolean storeDist, final int count) {
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYRADIUS").add(radius, unit).add(Keyword.Common.COUNT, count)
+				.add(storeDist ? "STOREDIST" : null);
+		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), longitude, latitude, radius, unit,
+				new LettuceGeoArgs(count), storeDist, args);
+	}
+
+	@Override
+	public Long geoSearchStore(final byte[] key, final byte[] destKey, final double longitude, final double latitude,
+							   final double radius, final GeoUnit unit, final boolean storeDist, final int count) {
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYRADIUS").add(radius, unit).add(Keyword.Common.COUNT, count)
+				.add(storeDist ? "STOREDIST" : null);
+		return geoSearchStore(rawKey(key), rawKey(destKey), longitude, latitude, radius, unit,
+				new LettuceGeoArgs(count), storeDist, args);
+	}
+
+	@Override
+	public Long geoSearchStore(final String key, final String destKey, final double longitude, final double latitude,
+							   final double radius, final GeoUnit unit, final boolean storeDist, final int count,
+							   final boolean any) {
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYRADIUS").add(radius, unit).add(Keyword.Common.COUNT, count)
+				.add(any ? Keyword.Common.ANY : null).add(storeDist ? "STOREDIST" : null);
+		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), longitude, latitude, radius, unit,
+				new LettuceGeoArgs(count, any), storeDist, args);
+	}
+
+	@Override
+	public Long geoSearchStore(final byte[] key, final byte[] destKey, final double longitude, final double latitude,
+							   final double radius, final GeoUnit unit, final boolean storeDist, final int count,
+							   final boolean any) {
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYRADIUS").add(radius, unit).add(Keyword.Common.COUNT, count)
+				.add(any ? Keyword.Common.ANY : null).add(storeDist ? "STOREDIST" : null);
+		return geoSearchStore(rawKey(key), rawKey(destKey), longitude, latitude, radius, unit,
+				new LettuceGeoArgs(count, any), storeDist, args);
+	}
+
+	@Override
+	public Long geoSearchStore(final String key, final String destKey, final double longitude, final double latitude,
 							   final double width, final double height, final GeoUnit unit) {
-		return geoSearchStore(SafeEncoder.encode(destKey), SafeEncoder.encode(key), longitude, latitude, width, height,
-				unit);
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYBOX").add(width, height);
+		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), longitude, latitude, width, height, unit, false,
+				args);
 	}
 
 	@Override
-	public Long geoSearchStore(final byte[] destKey, final byte[] key, final double longitude, final double latitude,
+	public Long geoSearchStore(final byte[] key, final byte[] destKey, final double longitude, final double latitude,
 							   final double width, final double height, final GeoUnit unit) {
-		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude).add(latitude)
-				.add("BYBOX").add(width).add(height).add(unit);
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYBOX").add(width, height);
+		return geoSearchStore(rawKey(key), rawKey(destKey), longitude, latitude, width, height, unit, false, args);
+	}
+
+	@Override
+	public Long geoSearchStore(final String key, final String destKey, final double longitude, final double latitude,
+							   final double width, final double height, final GeoUnit unit, final boolean storeDist) {
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYBOX").add(width, height).add(storeDist ? "STOREDIST" : null);
+		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), longitude, latitude, width, height, unit,
+				storeDist, args);
+	}
+
+	@Override
+	public Long geoSearchStore(final byte[] key, final byte[] destKey, final double longitude, final double latitude,
+							   final double width, final double height, final GeoUnit unit, final boolean storeDist) {
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYBOX").add(width, height).add(storeDist ? "STOREDIST" : null);
+		return geoSearchStore(rawKey(key), rawKey(destKey), longitude, latitude, width, height, unit, false, args);
+	}
+
+	@Override
+	public Long geoSearchStore(final String key, final String destKey, final double longitude, final double latitude,
+							   final double width, final double height, final GeoUnit unit, final boolean storeDist,
+							   final int count) {
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYBOX").add(width, height).add(Keyword.Common.COUNT, count).add(storeDist ? "STOREDIST" : null);
+		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), longitude, latitude, width, unit,
+				new LettuceGeoArgs(count), storeDist, args);
+	}
+
+	@Override
+	public Long geoSearchStore(final byte[] key, final byte[] destKey, final double longitude, final double latitude,
+							   final double width, final double height, final GeoUnit unit, final boolean storeDist,
+							   final int count) {
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYBOX").add(width, height).add(Keyword.Common.COUNT, count).add(storeDist ? "STOREDIST" : null);
+		return geoSearchStore(rawKey(key), rawKey(destKey), longitude, latitude, width, height, unit,
+				new LettuceGeoArgs(count), storeDist, args);
+	}
+
+	@Override
+	public Long geoSearchStore(final String key, final String destKey, final double longitude, final double latitude,
+							   final double width, final double height, final GeoUnit unit, final boolean storeDist,
+							   final int count, final boolean any) {
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYBOX").add(width, height).add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null)
+				.add(storeDist ? "STOREDIST" : null);
+		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), longitude, latitude, width, unit,
+				new LettuceGeoArgs(count, any), storeDist, args);
+	}
+
+	@Override
+	public Long geoSearchStore(final byte[] key, final byte[] destKey, final double longitude, final double latitude,
+							   final double width, final double height, final GeoUnit unit, final boolean storeDist,
+							   final int count, final boolean any) {
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
+				.add("BYBOX").add(width, height).add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null)
+				.add(storeDist ? "STOREDIST" : null);
+		return geoSearchStore(rawKey(key), rawKey(destKey), longitude, latitude, width, height, unit,
+				new LettuceGeoArgs(count, any), storeDist, args);
+	}
+
+	@Override
+	public Long geoSearchStore(final String key, final String destKey, final String member, final double radius,
+							   final GeoUnit unit) {
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member)
+				.add("BYRADIUS").add(radius, unit);
+		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), SafeEncoder.encode(member), radius, unit, false,
+				args);
+	}
+
+	@Override
+	public Long geoSearchStore(final byte[] key, final byte[] destKey, final byte[] member, final double radius,
+							   final GeoUnit unit) {
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member)
+				.add("BYRADIUS").add(radius, unit);
+		return geoSearchStore(rawKey(key), rawKey(destKey), member, radius, unit, false, args);
+	}
+
+	@Override
+	public Long geoSearchStore(final String key, final String destKey, final String member, final double radius,
+							   final GeoUnit unit, final boolean storeDist) {
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member)
+				.add("BYRADIUS").add(radius, unit).add(storeDist ? "STOREDIST" : null);
+		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), SafeEncoder.encode(member), radius, unit,
+				storeDist, args);
+	}
+
+	@Override
+	public Long geoSearchStore(final byte[] key, final byte[] destKey, final byte[] member, final double radius,
+							   final GeoUnit unit, final boolean storeDist) {
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member)
+				.add("BYRADIUS").add(radius, unit).add(storeDist ? "STOREDIST" : null);
+		return geoSearchStore(rawKey(key), rawKey(destKey), member, radius, unit, storeDist, args);
+	}
+
+	@Override
+	public Long geoSearchStore(final String key, final String destKey, final String member, final double radius,
+							   final GeoUnit unit, final boolean storeDist, final int count) {
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member)
+				.add("BYRADIUS").add(radius, unit).add(Keyword.Common.COUNT, count)
+				.add(storeDist ? "STOREDIST" : null);
+		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), SafeEncoder.encode(member), radius, unit,
+				new LettuceGeoArgs(count), storeDist, args);
+	}
+
+	@Override
+	public Long geoSearchStore(final byte[] key, final byte[] destKey, final byte[] member, final double radius,
+							   final GeoUnit unit, final boolean storeDist, final int count) {
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member)
+				.add("BYRADIUS").add(radius, unit).add(Keyword.Common.COUNT, count)
+				.add(storeDist ? "STOREDIST" : null);
+		return geoSearchStore(rawKey(key), rawKey(destKey), member, radius, unit, new LettuceGeoArgs(count),
+				storeDist, args);
+	}
+
+	@Override
+	public Long geoSearchStore(final String key, final String destKey, final String member, final double radius,
+							   final GeoUnit unit, final boolean storeDist, final int count, final boolean any) {
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member)
+				.add("BYRADIUS").add(radius, unit).add(Keyword.Common.COUNT, count)
+				.add(any ? Keyword.Common.ANY : null).add(storeDist ? "STOREDIST" : null);
+		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), SafeEncoder.encode(member), radius, unit,
+				new LettuceGeoArgs(count, any), storeDist, args);
+	}
+
+	@Override
+	public Long geoSearchStore(final byte[] key, final byte[] destKey, final byte[] member, final double radius,
+							   final GeoUnit unit, final boolean storeDist, final int count, final boolean any) {
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member)
+				.add("BYRADIUS").add(radius, unit).add(Keyword.Common.COUNT, count)
+				.add(any ? Keyword.Common.ANY : null).add(storeDist ? "STOREDIST" : null);
+		return geoSearchStore(rawKey(key), rawKey(destKey), member, radius, unit, new LettuceGeoArgs(count, any),
+				storeDist, args);
+	}
+
+	@Override
+	public Long geoSearchStore(final String key, final String destKey, final String member, final double width,
+							   final double height, final GeoUnit unit) {
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member).add("BYBOX")
+				.add(width, height).add(unit);
+		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), SafeEncoder.encode(member), width, height, unit,
+				false, args);
+	}
+
+	@Override
+	public Long geoSearchStore(final byte[] key, final byte[] destKey, final byte[] member, final double width,
+							   final double height, final GeoUnit unit) {
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member).add("BYBOX")
+				.add(width, height).add(unit);
+		return geoSearchStore(rawKey(key), rawKey(destKey), member, width, height, unit, false, args);
+	}
+
+	@Override
+	public Long geoSearchStore(final String key, final String destKey, final String member, final double width,
+							   final double height, final GeoUnit unit, final boolean storeDist) {
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member).add("BYBOX")
+				.add(width, height).add(unit).add(storeDist ? "STOREDIST" : null);
+		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), SafeEncoder.encode(member), width, height, unit,
+				storeDist, args);
+	}
+
+	@Override
+	public Long geoSearchStore(final byte[] key, final byte[] destKey, final byte[] member, final double width,
+							   final double height, final GeoUnit unit, final boolean storeDist) {
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member).add("BYBOX")
+				.add(width, height).add(unit).add(storeDist ? "STOREDIST" : null);
+		return geoSearchStore(rawKey(key), rawKey(destKey), member, width, height, unit, storeDist, args);
+	}
+
+	@Override
+	public Long geoSearchStore(final String key, final String destKey, final String member, final double width,
+							   final double height, final GeoUnit unit, final boolean storeDist, final int count) {
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member).add("BYBOX")
+				.add(width, height).add(unit).add(Keyword.Common.COUNT, count).add(storeDist ? "STOREDIST" : null);
+		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), SafeEncoder.encode(member), width, height, unit,
+				new LettuceGeoArgs(count), storeDist, args);
+	}
+
+	@Override
+	public Long geoSearchStore(final byte[] key, final byte[] destKey, final byte[] member, final double width,
+							   final double height, final GeoUnit unit, final boolean storeDist, final int count) {
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member).add("BYBOX")
+				.add(width, height).add(unit).add(Keyword.Common.COUNT, count).add(storeDist ? "STOREDIST" : null);
+		return geoSearchStore(rawKey(key), rawKey(destKey), member, width, height, unit, new LettuceGeoArgs(count),
+				storeDist, args);
+	}
+
+	@Override
+	public Long geoSearchStore(final String key, final String destKey, final String member, final double width,
+							   final double height, final GeoUnit unit, final boolean storeDist, final int count,
+							   final boolean any) {
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member).add("BYBOX")
+				.add(width, height).add(unit).add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null)
+				.add(storeDist ? "STOREDIST" : null);
+		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), SafeEncoder.encode(member), width, height, unit,
+				new LettuceGeoArgs(count, any), storeDist, args);
+	}
+
+	@Override
+	public Long geoSearchStore(final byte[] key, final byte[] destKey, final byte[] member, final double width,
+							   final double height, final GeoUnit unit, final boolean storeDist, final int count,
+							   final boolean any) {
+		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member).add("BYBOX")
+				.add(width, height).add(unit).add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null)
+				.add(storeDist ? "STOREDIST" : null);
+		return geoSearchStore(rawKey(key), rawKey(destKey), member, width, height, unit, new LettuceGeoArgs(count, any),
+				storeDist, args);
+	}
+
+	private Long geoAdd(final String key, final GeoAddArgs geoAddArgs, final KeyValue<String, Geo>[] memberCoordinates,
+						final CommandArguments args) {
+		return executeCommand(Command.GEOADD, args, (cmd)->cmd.geoadd(SafeEncoder.encode(key), geoAddArgs,
+				stringMemberCoordinatesToGeoValue(memberCoordinates)));
+	}
+
+	private Long geoAdd(final byte[] key, final GeoAddArgs geoAddArgs, final KeyValue<byte[], Geo>[] memberCoordinates,
+						final CommandArguments args) {
+		return executeCommand(Command.GEOADD, args,
+				(cmd)->cmd.geoadd(key, geoAddArgs, byteMemberCoordinatesToGeoValue(memberCoordinates)));
+	}
+
+	private List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
+									  final double radius, final GeoUnit unit, final GeoArgs geoArgs,
+									  final CommandArguments args) {
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return geoSearchStore((cmd)->cmd.geosearchstore(destKey, key, GeoSearch.fromCoordinates(longitude, latitude),
-				GeoSearch.byBox(width, height, geoUnitConverter.convert(unit)), new GeoArgs(), false), args);
+		return executeCommand(Command.GEORADIUS, args,
+				(cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnitConverter.convert(unit), geoArgs),
+				new ListConverter<>(new GeoRadiusResponseConverter()));
 	}
 
-	@Override
-	public Long geoSearchStore(final String destKey, final String key, final String member, final double radius,
-							   final GeoUnit unit, final GeoSearchArgument argument) {
-		return geoSearchStore(SafeEncoder.encode(destKey), SafeEncoder.encode(key), SafeEncoder.encode(member), radius,
-				unit, argument);
-	}
-
-	@Override
-	public Long geoSearchStore(final byte[] destKey, final byte[] key, final byte[] member, final double radius,
-							   final GeoUnit unit, final GeoSearchArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER").add(member).add("BYRADIUS")
-				.add(radius).add(unit).add(argument);
+	private Long geoRadius(final byte[] key, final double longitude, final double latitude, final double radius,
+						   final GeoUnit unit, final GeoRadiusStoreArgs<byte[]> geoRadiusStoreArgs,
+						   final CommandArguments args) {
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		final GeoSearchArgumentConverter geoSearchArgumentConverter = new GeoSearchArgumentConverter();
-		return geoSearchStore((cmd)->cmd.geosearchstore(destKey, key, GeoSearch.fromMember(member),
-				GeoSearch.byRadius(radius, geoUnitConverter.convert(unit)),
-				geoSearchArgumentConverter.convert(argument), Boolean.TRUE.equals(argument.isWithDist())), args);
+		return executeCommand(Command.GEORADIUS, args,
+				(cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnitConverter.convert(unit),
+						geoRadiusStoreArgs));
 	}
 
-	@Override
-	public Long geoSearchStore(final String destKey, final String key, final double longitude, final double latitude,
-							   final double radius, final GeoUnit unit, final GeoSearchArgument argument) {
-		return geoSearchStore(SafeEncoder.encode(destKey), SafeEncoder.encode(key), longitude, latitude, radius, unit,
-				argument);
-	}
-
-	@Override
-	public Long geoSearchStore(final byte[] destKey, final byte[] key, final double longitude, final double latitude,
-							   final double radius, final GeoUnit unit, final GeoSearchArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude).add(latitude)
-				.add("BYRADIUS").add(radius).add(unit).add(argument);
+	private List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
+										final double radius, final GeoUnit unit, final GeoArgs geoArgs,
+										final CommandArguments args) {
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		final GeoSearchArgumentConverter geoSearchArgumentConverter = new GeoSearchArgumentConverter();
-		return geoSearchStore((cmd)->cmd.geosearchstore(destKey, key, GeoSearch.fromCoordinates(longitude, latitude),
-				GeoSearch.byRadius(radius, geoUnitConverter.convert(unit)),
-				geoSearchArgumentConverter.convert(argument), Boolean.TRUE.equals(argument.isWithDist())), args);
+		return executeCommand(Command.GEORADIUS_RO, args,
+				(cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnitConverter.convert(unit), geoArgs),
+				new ListConverter<>(new GeoRadiusResponseConverter()));
 	}
 
-	@Override
-	public Long geoSearchStore(final String destKey, final String key, final String member, final double width,
-							   final double height, final GeoUnit unit, final GeoSearchArgument argument) {
-		return geoSearchStore(SafeEncoder.encode(destKey), SafeEncoder.encode(key), SafeEncoder.encode(member), width,
-				height, unit, argument);
-	}
-
-	@Override
-	public Long geoSearchStore(final byte[] destKey, final byte[] key, final byte[] member, final double width,
-							   final double height, final GeoUnit unit, final GeoSearchArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER").add(member).add("BYBOX").add(width)
-				.add(height).add(unit).add(argument);
+	private List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
+											  final GeoUnit unit, final GeoArgs geoArgs, final CommandArguments args) {
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		final GeoSearchArgumentConverter geoSearchArgumentConverter = new GeoSearchArgumentConverter();
-		return geoSearchStore((cmd)->cmd.geosearchstore(destKey, key, GeoSearch.fromMember(member),
-				GeoSearch.byBox(width, height, geoUnitConverter.convert(unit)),
-				geoSearchArgumentConverter.convert(argument), Boolean.TRUE.equals(argument.isWithDist())), args);
+		return executeCommand(Command.GEORADIUSBYMEMBER, args,
+				(cmd)->cmd.georadiusbymember(key, member, radius, geoUnitConverter.convert(unit), geoArgs),
+				new ListConverter<>(new GeoRadiusResponseConverter()));
 	}
 
-	@Override
-	public Long geoSearchStore(final String destKey, final String key, final double longitude, final double latitude,
-							   final double width, final double height, final GeoUnit unit,
-							   final GeoSearchArgument argument) {
-		return geoSearchStore(SafeEncoder.encode(destKey), SafeEncoder.encode(key), longitude, latitude, width, height,
-				unit, argument);
-	}
-
-	@Override
-	public Long geoSearchStore(final byte[] destKey, final byte[] key, final double longitude, final double latitude,
-							   final double width, final double height, final GeoUnit unit,
-							   final GeoSearchArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude).add(latitude)
-				.add("BYBOX").add(width).add(height).add(unit).add(argument);
+	private Long geoRadiusByMember(final byte[] key, final byte[] member, final double radius, final GeoUnit unit,
+								   final GeoRadiusStoreArgs<byte[]> geoRadiusStoreArgs, final CommandArguments args) {
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		final GeoSearchArgumentConverter geoSearchArgumentConverter = new GeoSearchArgumentConverter();
-		return geoSearchStore((cmd)->cmd.geosearchstore(destKey, key, GeoSearch.fromCoordinates(longitude, latitude),
-				GeoSearch.byBox(width, height, geoUnitConverter.convert(unit)),
-				geoSearchArgumentConverter.convert(argument), Boolean.TRUE.equals(argument.isWithDist())), args);
+		return executeCommand(Command.GEORADIUSBYMEMBER, args,
+				(cmd)->cmd.georadiusbymember(key, member, radius, geoUnitConverter.convert(unit), geoRadiusStoreArgs));
 	}
 
-	private List<GeoRadius> geoSearch(
-			final com.buession.redis.core.Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, Set<byte[]>> executor,
-			final CommandArguments args) {
-		return executeCommand(Command.GEOSEARCH, args, executor,
+	private List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
+												final GeoUnit unit, final GeoArgs geoArgs,
+												final CommandArguments args) {
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return executeCommand(Command.GEORADIUSBYMEMBER_RO, args,
+				(cmd)->cmd.georadiusbymember(key, member, radius, geoUnitConverter.convert(unit), geoArgs),
+				new ListConverter<>(new GeoRadiusResponseConverter()));
+	}
+
+	private List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
+									  final double radius, final GeoUnit unit, final CommandArguments args) {
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return geoSearch(key, longitude, latitude, GeoSearch.byRadius(radius, geoUnitConverter.convert(unit)), args);
+	}
+
+	private List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
+									  final double radius, final GeoUnit unit, final GeoArgs geoArgs,
+									  final CommandArguments args) {
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return geoSearch(key, longitude, latitude, GeoSearch.byRadius(radius, geoUnitConverter.convert(unit)), geoArgs,
+				args);
+	}
+
+	private List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
+									  final double width, final double height, final GeoUnit unit,
+									  final CommandArguments args) {
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return geoSearch(key, longitude, latitude, GeoSearch.byBox(width, height, geoUnitConverter.convert(unit)),
+				args);
+	}
+
+	private List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
+									  final double width, final double height, final GeoUnit unit,
+									  final GeoArgs geoArgs, final CommandArguments args) {
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return geoSearch(key, longitude, latitude, GeoSearch.byBox(width, height, geoUnitConverter.convert(unit)),
+				geoArgs, args);
+	}
+
+	private List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
+									  final GeoSearch.GeoPredicate predicate, final CommandArguments args) {
+		return executeCommand(Command.GEOSEARCH, args,
+				(cmd)->cmd.geosearch(key, GeoSearch.fromCoordinates(longitude, latitude), predicate),
 				new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
 	}
 
-	private List<GeoRadius> geoSearchWithin(
-			final com.buession.redis.core.Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, List<GeoWithin<byte[]>>> executor,
-			final CommandArguments args) {
-		return executeCommand(Command.GEOSEARCH, args, executor, new ListConverter<>(new GeoRadiusResponseConverter()));
+	private List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
+									  final GeoSearch.GeoPredicate predicate, final GeoArgs geoArgs,
+									  final CommandArguments args) {
+		return executeCommand(Command.GEOSEARCH, args,
+				(cmd)->cmd.geosearch(key, GeoSearch.fromCoordinates(longitude, latitude), predicate, geoArgs),
+				new ListConverter<>(new GeoRadiusResponseConverter()));
 	}
 
-	private Long geoAdd(
-			final com.buession.redis.core.Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, Long> executor,
-			final CommandArguments args) {
-		return executeCommand(Command.GEOADD, args, executor, (v)->v);
+	private List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double radius, final GeoUnit unit,
+									  final CommandArguments args) {
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return geoSearch(key, member, GeoSearch.byRadius(radius, geoUnitConverter.convert(unit)), args);
 	}
 
-	private Long geoSearchStore(
-			final com.buession.redis.core.Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, Long> executor,
-			final CommandArguments args) {
-		return executeCommand(Command.GEOSEARCHSTORE, args, executor, (v)->v);
+	private List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double radius, final GeoUnit unit,
+									  final GeoArgs geoArgs, final CommandArguments args) {
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return geoSearch(key, member, GeoSearch.byRadius(radius, geoUnitConverter.convert(unit)), geoArgs, args);
+	}
+
+	private List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double width, final double height,
+									  final GeoUnit unit, final CommandArguments args) {
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return geoSearch(key, member, GeoSearch.byBox(width, height, geoUnitConverter.convert(unit)), args);
+	}
+
+	private List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double width, final double height,
+									  final GeoUnit unit, final GeoArgs geoArgs, final CommandArguments args) {
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return geoSearch(key, member, GeoSearch.byBox(width, height, geoUnitConverter.convert(unit)), geoArgs, args);
+	}
+
+	private List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final GeoSearch.GeoPredicate predicate,
+									  final CommandArguments args) {
+		return executeCommand(Command.GEOSEARCH, args,
+				(cmd)->cmd.geosearch(key, GeoSearch.fromMember(member), predicate),
+				new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
+	}
+
+	private List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final GeoSearch.GeoPredicate predicate,
+									  final GeoArgs geoArgs, final CommandArguments args) {
+		return executeCommand(Command.GEOSEARCH, args,
+				(cmd)->cmd.geosearch(key, GeoSearch.fromMember(member), predicate, geoArgs),
+				new ListConverter<>(new GeoRadiusResponseConverter()));
+	}
+
+	private Long geoSearchStore(final byte[] key, final byte[] destKey, final double longitude, final double latitude,
+								final double radius, final GeoUnit unit, final boolean storeDist,
+								final CommandArguments args) {
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return geoSearchStore(key, destKey, longitude, latitude,
+				GeoSearch.byRadius(radius, geoUnitConverter.convert(unit)), new LettuceGeoArgs(), storeDist, args);
+	}
+
+	private Long geoSearchStore(final byte[] key, final byte[] destKey, final double longitude, final double latitude,
+								final double radius, final GeoUnit unit, final GeoArgs geoArgs, final boolean storeDist,
+								final CommandArguments args) {
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return geoSearchStore(key, destKey, longitude, latitude,
+				GeoSearch.byRadius(radius, geoUnitConverter.convert(unit)), geoArgs, storeDist, args);
+	}
+
+	private Long geoSearchStore(final byte[] key, final byte[] destKey, final double longitude, final double latitude,
+								final double width, final double height, final GeoUnit unit, final boolean storeDist,
+								final CommandArguments args) {
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return geoSearchStore(key, destKey, longitude, latitude,
+				GeoSearch.byBox(width, height, geoUnitConverter.convert(unit)), new LettuceGeoArgs(), storeDist, args);
+	}
+
+	private Long geoSearchStore(final byte[] key, final byte[] destKey, final double longitude, final double latitude,
+								final double width, final double height, final GeoUnit unit, final GeoArgs geoArgs,
+								final boolean storeDist, final CommandArguments args) {
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return geoSearchStore(key, destKey, longitude, latitude,
+				GeoSearch.byBox(width, height, geoUnitConverter.convert(unit)), geoArgs, storeDist, args);
+	}
+
+	private Long geoSearchStore(final byte[] key, final byte[] destKey, final double longitude, final double latitude,
+								final GeoSearch.GeoPredicate predicate, final GeoArgs geoArgs, final boolean storeDist,
+								final CommandArguments args) {
+		return executeCommand(Command.GEOSEARCHSTORE, args,
+				(cmd)->cmd.geosearchstore(key, destKey, GeoSearch.fromCoordinates(longitude, latitude), predicate,
+						geoArgs, storeDist));
+	}
+
+	private Long geoSearchStore(final byte[] key, final byte[] destKey, final byte[] member, final double radius,
+								final GeoUnit unit, final boolean storeDist, final CommandArguments args) {
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return geoSearchStore(key, destKey, member, GeoSearch.byRadius(radius, geoUnitConverter.convert(unit)),
+				new LettuceGeoArgs(), storeDist, args);
+	}
+
+	private Long geoSearchStore(final byte[] key, final byte[] destKey, final byte[] member, final double radius,
+								final GeoUnit unit, final GeoArgs geoArgs, final boolean storeDist,
+								final CommandArguments args) {
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return geoSearchStore(key, destKey, member, GeoSearch.byRadius(radius, geoUnitConverter.convert(unit)), geoArgs,
+				storeDist, args);
+	}
+
+	private Long geoSearchStore(final byte[] key, final byte[] destKey, byte[] member, final double width,
+								final double height, final GeoUnit unit, final boolean storeDist,
+								final CommandArguments args) {
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return geoSearchStore(key, destKey, member, GeoSearch.byBox(width, height, geoUnitConverter.convert(unit)),
+				new LettuceGeoArgs(), storeDist, args);
+	}
+
+	private Long geoSearchStore(final byte[] key, final byte[] destKey, final byte[] member, final double width,
+								final double height, final GeoUnit unit, final GeoArgs geoArgs, final boolean storeDist,
+								final CommandArguments args) {
+		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
+		return geoSearchStore(key, destKey, member, GeoSearch.byBox(width, height, geoUnitConverter.convert(unit)),
+				geoArgs, storeDist, args);
+	}
+
+	private Long geoSearchStore(final byte[] key, final byte[] destKey, final byte[] member,
+								final GeoSearch.GeoPredicate predicate, final GeoArgs geoArgs, final boolean storeDist,
+								final CommandArguments args) {
+		return executeCommand(Command.GEOSEARCHSTORE, args,
+				(cmd)->cmd.geosearchstore(key, destKey, GeoSearch.fromMember(member), predicate, geoArgs, storeDist));
 	}
 
 	@SuppressWarnings("unchecked")
-	private static GeoValue<String>[] stringMemberCoordinatesToGeoValue(final Map<String, Geo> memberCoordinates) {
-		return memberCoordinates.entrySet().stream()
-				.map((e)->GeoValue.just(e.getValue().getLongitude(), e.getValue().getLatitude(),
-						SafeEncoder.encode(e.getKey()))).toArray(GeoValue[]::new);
+	private static GeoValue<byte[]>[] stringMemberCoordinatesToGeoValue(
+			final KeyValue<String, Geo>... memberCoordinates) {
+		final GeoValue<byte[]>[] result = new GeoValue[memberCoordinates.length];
+		Geo geo;
+
+		for(int i = 0; i < memberCoordinates.length; i++){
+			geo = memberCoordinates[i].getValue();
+			result[i++] = GeoValue.just(geo.getLongitude(), geo.getLatitude(),
+					SafeEncoder.encode(memberCoordinates[i].getKey()));
+		}
+
+		return result;
 	}
 
 	@SuppressWarnings("unchecked")
-	private static GeoValue<byte[]>[] byteMemberCoordinatesToGeoValue(final Map<byte[], Geo> memberCoordinates) {
-		return memberCoordinates.entrySet().stream()
-				.map((e)->GeoValue.just(e.getValue().getLongitude(), e.getValue().getLatitude(), e.getKey()))
-				.toArray(GeoValue[]::new);
+	private static GeoValue<byte[]>[] byteMemberCoordinatesToGeoValue(
+			final KeyValue<byte[], Geo>... memberCoordinates) {
+		final GeoValue<byte[]>[] result = new GeoValue[memberCoordinates.length];
+		Geo geo;
+
+		for(int i = 0; i < memberCoordinates.length; i++){
+			geo = memberCoordinates[i].getValue();
+			result[i++] = GeoValue.just(geo.getLongitude(), geo.getLatitude(), memberCoordinates[i].getKey());
+		}
+
+		return result;
 	}
 
 }

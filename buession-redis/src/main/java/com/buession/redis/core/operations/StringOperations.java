@@ -363,38 +363,6 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	}
 
 	/**
-	 * 将键 key 的值设为 value ，并返回键 key 在被设置之前的旧值反序列化后对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/getset.html" target="_blank">http://redisdoc.com/string/getset.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param value
-	 * 		新值
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 键 key 的旧值反序列化后对象
-	 */
-	<V> V getSet(final String key, final V value);
-
-	/**
-	 * 将键 key 的值设为 value ，并返回键 key 在被设置之前的旧值反序列化后对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/getset.html" target="_blank">http://redisdoc.com/string/getset.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param value
-	 * 		新值
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 键 key 的旧值反序列化后对象
-	 */
-	<V> V getSet(final byte[] key, final V value);
-
-	/**
 	 * 将键 key 的值设为 value ，并返回键 key 在被设置之前的旧值反序列化为 clazz 指定类型后的对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/string/getset.html" target="_blank">http://redisdoc.com/string/getset.html</a></p>

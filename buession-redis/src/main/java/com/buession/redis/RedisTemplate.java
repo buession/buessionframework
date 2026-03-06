@@ -1914,18 +1914,6 @@ public class RedisTemplate extends AbstractRedisTemplate implements AutoSuggestO
 	}
 
 	@Override
-	public <V> V getSet(final String key, final V value) {
-		return execute((client)->client.stringCommands().getSet(key, serializer.serialize(value)),
-				new Converter.SimpleStringConverter<>(this));
-	}
-
-	@Override
-	public <V> V getSet(final byte[] key, final V value) {
-		return execute((client)->client.stringCommands().getSet(key, serializer.serializeAsBytes(value)),
-				new Converter.SimpleBinaryConverter<>(this));
-	}
-
-	@Override
 	public <V> V getSet(final String key, final V value, final Class<V> clazz) {
 		return execute((client)->client.stringCommands().getSet(key, serializer.serialize(value)),
 				new Converter.ClazzStringConverter<>(this, clazz));
@@ -2021,18 +2009,6 @@ public class RedisTemplate extends AbstractRedisTemplate implements AutoSuggestO
 	@Override
 	public <V> Status setNx(final byte[] key, final V value) {
 		return setNx(key, serializer.serializeAsBytes(value));
-	}
-
-	protected <V> Map<String, String> listKeyValue2StringMap(final List<KeyValue<String, V>> data) {
-		return data.stream().collect(
-				Collectors.toMap(KeyValue::getKey, (e)->serializer.serialize(e.getValue()), (key1, key2)->key2,
-						LinkedHashMap::new));
-	}
-
-	protected <V> Map<byte[], byte[]> listKeyValue2BinaryMap(final List<KeyValue<byte[], V>> data) {
-		return data.stream().collect(
-				Collectors.toMap(KeyValue::getKey, (e)->serializer.serializeAsBytes(e.getValue()), (key1, key2)->key2,
-						LinkedHashMap::new));
 	}
 
 }
