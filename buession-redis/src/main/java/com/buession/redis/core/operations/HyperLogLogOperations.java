@@ -66,9 +66,4 @@ public interface HyperLogLogOperations extends HyperLogLogCommands, RedisOperati
 		return execute((client)->client.hyperLogLogCommands().pfMerge(destKey, keys));
 	}
 
-	@Override
-	default Status pfSelftest() {
-		return execute((client)->client.hyperLogLogCommands().pfSelftest());
-	}
-
 }

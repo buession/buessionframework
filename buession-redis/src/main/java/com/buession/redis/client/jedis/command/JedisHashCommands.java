@@ -466,13 +466,13 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public ScanResult<KeyValue<String, String>> hScan(final String key, final String cursor, final String pattern) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern);
-		return hScan(key, cursor, new JedisScanParams(pattern), args);
+		return hScan(rawKey(key), cursor, new JedisScanParams(pattern), args);
 	}
 
 	@Override
 	public ScanResult<KeyValue<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern);
-		return hScan(key, cursor, new JedisScanParams(pattern), args);
+		return hScan(rawKey(key), cursor, new JedisScanParams(pattern), args);
 	}
 
 	@Override
@@ -480,7 +480,7 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 													  final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern)
 				.add(Keyword.Common.COUNT, count);
-		return hScan(key, cursor, new JedisScanParams(pattern, count), args);
+		return hScan(rawKey(key), cursor, new JedisScanParams(pattern, count), args);
 	}
 
 	@Override
@@ -488,19 +488,19 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 													  final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern)
 				.add(Keyword.Common.COUNT, count);
-		return hScan(key, cursor, new JedisScanParams(pattern, count), args);
+		return hScan(rawKey(key), cursor, new JedisScanParams(pattern, count), args);
 	}
 
 	@Override
 	public ScanResult<KeyValue<String, String>> hScan(final String key, final String cursor, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT, count);
-		return hScan(key, cursor, new JedisScanParams(count), args);
+		return hScan(rawKey(key), cursor, new JedisScanParams(count), args);
 	}
 
 	@Override
 	public ScanResult<KeyValue<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT, count);
-		return hScan(key, cursor, new JedisScanParams(count), args);
+		return hScan(rawKey(key), cursor, new JedisScanParams(count), args);
 	}
 
 	@Override
@@ -585,28 +585,28 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public Status hSetEx(final String key, final KeyValue<String, String>... data) {
 		final CommandArguments args = CommandArguments.create(key).add(data);
-		return hSetEx(key, data, new HSetExParams(), args);
+		return hSetEx(rawKey(key), data, new HSetExParams(), args);
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	public Status hSetEx(final byte[] key, final KeyValue<byte[], byte[]>... data) {
 		final CommandArguments args = CommandArguments.create(key).add(data);
-		return hSetEx(key, data, new HSetExParams(), args);
+		return hSetEx(rawKey(key), data, new HSetExParams(), args);
 	}
 
 	@Override
 	public Status hSetEx(final String key, final KeyValue<String, String>[] data, final HSetExArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(data);
 		final HSetExArgumentConverter hSetExArgumentConverter = new HSetExArgumentConverter();
-		return hSetEx(key, data, hSetExArgumentConverter.convert(argument), args);
+		return hSetEx(rawKey(key), data, hSetExArgumentConverter.convert(argument), args);
 	}
 
 	@Override
 	public Status hSetEx(final byte[] key, final KeyValue<byte[], byte[]>[] data, final HSetExArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(data);
 		final HSetExArgumentConverter hSetExArgumentConverter = new HSetExArgumentConverter();
-		return hSetEx(key, data, hSetExArgumentConverter.convert(argument), args);
+		return hSetEx(rawKey(key), data, hSetExArgumentConverter.convert(argument), args);
 	}
 
 	@Override
@@ -661,12 +661,12 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 
 	private List<String> hGetEx(final String key, final HGetExParams hGetExParams, final String[] fields,
 								final CommandArguments args) {
-		return executeCommand(Command.HGETEX, args, (cmd)->cmd.hgetex(rawKey(key), hGetExParams, fields));
+		return executeCommand(Command.HGETEX, args, (cmd)->cmd.hgetex(key, hGetExParams, fields));
 	}
 
 	private List<byte[]> hGetEx(final byte[] key, final HGetExParams hGetExParams, final byte[][] fields,
 								final CommandArguments args) {
-		return executeCommand(Command.HGETEX, args, (cmd)->cmd.hgetex(rawKey(key), hGetExParams, fields));
+		return executeCommand(Command.HGETEX, args, (cmd)->cmd.hgetex(key, hGetExParams, fields));
 	}
 
 	private ScanResult<KeyValue<String, String>> hScan(final String key, final String cursor,
@@ -698,7 +698,7 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 		final ArrayKeyValueMapConverter<String, String, String, String> arrayKeyValueMapConverter = new ArrayKeyValueMapConverter<>(
 				(k)->k, (v)->v);
 		return executeCommand(Command.HSETEX, args,
-				(cmd)->cmd.hsetex(rawKey(key), hSetExParams, arrayKeyValueMapConverter.convert(data)),
+				(cmd)->cmd.hsetex(key, hSetExParams, arrayKeyValueMapConverter.convert(data)),
 				new OneStatusConverter());
 	}
 
@@ -707,7 +707,7 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 		final ArrayKeyValueMapConverter<byte[], byte[], byte[], byte[]> arrayKeyValueMapConverter = new ArrayKeyValueMapConverter<>(
 				(k)->k, (v)->v);
 		return executeCommand(Command.HSETEX, args,
-				(cmd)->cmd.hsetex(rawKey(key), hSetExParams, arrayKeyValueMapConverter.convert(data)),
+				(cmd)->cmd.hsetex(key, hSetExParams, arrayKeyValueMapConverter.convert(data)),
 				new OneStatusConverter());
 	}
 

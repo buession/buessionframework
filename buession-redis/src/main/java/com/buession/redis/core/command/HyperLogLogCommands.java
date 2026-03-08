@@ -115,13 +115,4 @@ public interface HyperLogLogCommands extends RedisCommands {
 	 */
 	Status pfMerge(final byte[] destKey, final byte[]... keys);
 
-	/**
-	 * 验证 HyperLogLog 内部实现正确性
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/pfselftest/" target="_blank">https://redis.io/docs/latest/commands/pfselftest/</a></p>
-	 *
-	 * @return 操作结果
-	 */
-	Status pfSelftest();
-
 }

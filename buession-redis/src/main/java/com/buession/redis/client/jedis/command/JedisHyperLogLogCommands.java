@@ -59,13 +59,13 @@ public final class JedisHyperLogLogCommands extends AbstractJedisRedisCommands i
 	@Override
 	public Long pfCount(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.PFCOUNT, args, (cmd)->cmd.pfcount(rawKeys(keys)), (v)->v);
+		return executeCommand(Command.PFCOUNT, args, (cmd)->cmd.pfcount(rawKeys(keys)));
 	}
 
 	@Override
 	public Long pfCount(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.PFCOUNT, args, (cmd)->cmd.pfcount(rawKeys(keys)), (v)->v);
+		return executeCommand(Command.PFCOUNT, args, (cmd)->cmd.pfcount(rawKeys(keys)));
 	}
 
 	@Override
@@ -80,11 +80,6 @@ public final class JedisHyperLogLogCommands extends AbstractJedisRedisCommands i
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
 		return executeCommand(Command.PFADD, args, (cmd)->cmd.pfmerge(rawKey(destKey), rawKeys(keys)),
 				new OkStatusConverter());
-	}
-
-	@Override
-	public Status pfSelftest() {
-		return executeCommand(Command.PFSELFTEST);
 	}
 
 }

@@ -62,13 +62,13 @@ public final class LettuceHyperLogLoCommands extends AbstractLettuceRedisCommand
 	@Override
 	public Long pfCount(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.PFCOUNT, args, (cmd)->cmd.pfcount(rawBinaryKeys(keys)), (v)->v);
+		return executeCommand(Command.PFCOUNT, args, (cmd)->cmd.pfcount(rawBinaryKeys(keys)));
 	}
 
 	@Override
 	public Long pfCount(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.PFCOUNT, args, (cmd)->cmd.pfcount(rawKeys(keys)), (v)->v);
+		return executeCommand(Command.PFCOUNT, args, (cmd)->cmd.pfcount(rawKeys(keys)));
 	}
 
 	@Override
@@ -83,11 +83,6 @@ public final class LettuceHyperLogLoCommands extends AbstractLettuceRedisCommand
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
 		return executeCommand(Command.PFMERGE, args, (cmd)->cmd.pfmerge(rawKey(destKey), rawKeys(keys)),
 				new OkStatusConverter());
-	}
-
-	@Override
-	public Status pfSelftest() {
-		return executeCommand(Command.PFSELFTEST);
 	}
 
 }
