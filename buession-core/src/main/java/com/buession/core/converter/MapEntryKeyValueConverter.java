@@ -24,6 +24,7 @@
  */
 package com.buession.core.converter;
 
+import com.buession.core.utils.Assert;
 import com.buession.lang.KeyValue;
 import org.springframework.lang.Nullable;
 
@@ -56,6 +57,8 @@ public class MapEntryKeyValueConverter<SK, SV, TK, TV> implements Converter<Map.
 	 * 		Map value 转换器
 	 */
 	public MapEntryKeyValueConverter(final Converter<SK, TK> keyConverter, final Converter<SV, TV> valueConverter) {
+		Assert.isNull(keyConverter, "keyConverter can not be null");
+		Assert.isNull(valueConverter, "valueConverter can not be null");
 		this.keyConverter = keyConverter;
 		this.valueConverter = valueConverter;
 	}

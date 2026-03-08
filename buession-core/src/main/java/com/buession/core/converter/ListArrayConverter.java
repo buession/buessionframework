@@ -24,10 +24,6 @@
  */
 package com.buession.core.converter;
 
-import com.buession.core.utils.Assert;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,14 +37,7 @@ import java.util.List;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class ListArrayConverter<S, T> implements Converter<List<S>, T[]> {
-
-	/**
-	 * 数组 item 转换器
-	 */
-	private final Converter<S, T> itemConverter;
-
-	private final Class<T> clazz;
+public class ListArrayConverter<S, T> extends AbstractCollectionArrayConverter<S, T, List<S>> {
 
 	/**
 	 * 构造函数
@@ -59,27 +48,7 @@ public class ListArrayConverter<S, T> implements Converter<List<S>, T[]> {
 	 * 		目标数组类型
 	 */
 	public ListArrayConverter(final Converter<S, T> itemConverter, final Class<T> clazz) {
-		Assert.isNull(itemConverter, "ItemConverter cloud not be null.");
-		Assert.isNull(clazz, "Target clazz cloud not be null.");
-		this.itemConverter = itemConverter;
-		this.clazz = clazz;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public T[] convert(final List<S> source) {
-		if(source == null){
-			return null;
-		}else{
-			T[] result = (T[]) Array.newInstance(clazz, source.size());
-			int i = 0;
-
-			for(S v : source){
-				result[i++] = itemConverter.convert(v);
-			}
-
-			return result;
-		}
+		super(itemConverter, clazz);
 	}
 
 }

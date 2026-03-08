@@ -24,6 +24,7 @@
  */
 package com.buession.core.converter;
 
+import com.buession.core.utils.Assert;
 import org.springframework.beans.BeanUtils;
 
 import java.util.Collection;
@@ -71,6 +72,8 @@ public class MapConverter<SK, SV, TK, TV> implements Converter<Map<SK, SV>, Map<
 	 * 		Map value 转换器
 	 */
 	public MapConverter(final Converter<SK, TK> keyConverter, final Converter<SV, TV> valueConverter) {
+		Assert.isNull(keyConverter, "keyConverter can not be null");
+		Assert.isNull(valueConverter, "valueConverter can not be null");
 		this.keyConverter = keyConverter;
 		this.valueConverter = valueConverter;
 	}

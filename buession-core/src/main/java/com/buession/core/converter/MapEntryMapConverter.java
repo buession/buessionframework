@@ -25,7 +25,6 @@
 package com.buession.core.converter;
 
 import com.buession.core.builder.MapBuilder;
-import org.springframework.lang.Nullable;
 
 import java.util.Map;
 
@@ -69,7 +68,6 @@ public class MapEntryMapConverter<SK, SV, TK, TV> implements Converter<Map.Entry
 		this.valueConverter = valueConverter;
 	}
 
-	@Nullable
 	@Override
 	public Map<TK, TV> convert(final Map.Entry<SK, SV> source) {
 		if(source == null){

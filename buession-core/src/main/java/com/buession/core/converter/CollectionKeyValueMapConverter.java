@@ -46,8 +46,8 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class CollectionKeyValueMapConverter<SK, SV, TK, TV> implements Converter<Collection<KeyValue<SK, SV>>,
-		Map<TK, TV>> {
+public class CollectionKeyValueMapConverter<SK, SV, TK, TV>
+		implements CollectionMapConverter<KeyValue<SK, SV>, TK, TV, Collection<KeyValue<SK, SV>>> {
 
 	/**
 	 * Key 转换器

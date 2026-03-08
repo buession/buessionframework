@@ -19,36 +19,55 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.converter;
 
-import java.util.Set;
+import com.buession.core.utils.Assert;
+
+import java.util.Collection;
+import java.util.stream.Collector;
 
 /**
- * {@link Set} 转换至数组
+ * {@link Collection} 转换器抽象类
  *
- * @param <S>
- * 		原类型
- * @param <T>
- * 		目标类型
+ * @param <SV>
+ * 		原元素类型
+ * @param <TV>
+ * 		目标元素类型
+ * @param <ST>
+ * 		原 {@link Collection} 类型
+ * @param <TT>
+ * 		目标 {@link Collection} 类型
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class SettArrayConverter<S, T> extends AbstractCollectionArrayConverter<S, T, Set<S>> {
+public abstract class AbstractCollectionConverter<SV, TV, ST extends Collection<SV>, TT extends Collection<TV>>
+		implements CollectionConverter<SV, TV, ST, TT> {
+
+	/**
+	 * item 转换器
+	 */
+	protected final Converter<SV, TV> itemConverter;
 
 	/**
 	 * 构造函数
 	 *
 	 * @param itemConverter
-	 * 		List item 转换器
-	 * @param clazz
-	 * 		目标数组类型
+	 * 		item 转换器
 	 */
-	public SettArrayConverter(final Converter<S, T> itemConverter, final Class<T> clazz) {
-		super(itemConverter, clazz);
+	public AbstractCollectionConverter(final Converter<SV, TV> itemConverter) {
+		Assert.isNull(itemConverter, "itemConverter can not be null");
+		this.itemConverter = itemConverter;
 	}
+
+	@Override
+	public TT convert(final ST source) {
+		return source == null ? null : source.stream().map(itemConverter::convert).collect(collect(source));
+	}
+
+	protected abstract Collector<TV, ?, TT> collect(final ST source);
 
 }

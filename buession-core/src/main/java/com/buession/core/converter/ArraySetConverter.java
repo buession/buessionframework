@@ -24,8 +24,6 @@
  */
 package com.buession.core.converter;
 
-import com.buession.core.utils.Assert;
-
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -40,12 +38,7 @@ import java.util.Set;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class ArraySetConverter<S, T> implements Converter<S[], Set<T>> {
-
-	/**
-	 * 数组 item 转换器
-	 */
-	private final Converter<S, T> itemConverter;
+public class ArraySetConverter<S, T> extends AbstractArrayCollectionConverter<S, T, Set<T>> {
 
 	/**
 	 * 构造函数
@@ -54,23 +47,12 @@ public class ArraySetConverter<S, T> implements Converter<S[], Set<T>> {
 	 * 		List item 转换器
 	 */
 	public ArraySetConverter(final Converter<S, T> itemConverter) {
-		Assert.isNull(itemConverter, "ItemConverter cloud not be null.");
-		this.itemConverter = itemConverter;
+		super(itemConverter);
 	}
 
 	@Override
-	public Set<T> convert(final S[] source) {
-		if(source == null){
-			return null;
-		}else{
-			final Set<T> result = new LinkedHashSet<>();
-
-			for(S s : source){
-				result.add(itemConverter.convert(s));
-			}
-
-			return result;
-		}
+	protected Set<T> createCollection() {
+		return new LinkedHashSet<>();
 	}
 
 }

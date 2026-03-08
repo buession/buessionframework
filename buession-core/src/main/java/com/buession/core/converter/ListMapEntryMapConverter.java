@@ -24,8 +24,6 @@
  */
 package com.buession.core.converter;
 
-import org.springframework.lang.Nullable;
-
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,7 +68,6 @@ public class ListMapEntryMapConverter<SK, SV, TK, TV> implements Converter<List<
 		this.valueConverter = valueConverter;
 	}
 
-	@Nullable
 	@Override
 	public Map<TK, TV> convert(final List<Map.Entry<SK, SV>> source) {
 		if(source == null){

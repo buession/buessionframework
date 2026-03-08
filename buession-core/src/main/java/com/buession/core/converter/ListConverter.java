@@ -27,8 +27,8 @@ package com.buession.core.converter;
 import org.springframework.beans.BeanUtils;
 
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * List 转换器
@@ -41,12 +41,7 @@ import java.util.stream.Stream;
  * @author Yong.Teng
  * @since 1.2.0
  */
-public class ListConverter<S, T> implements Converter<List<S>, List<T>> {
-
-	/**
-	 * List item 转换器
-	 */
-	private final Converter<S, T> itemConverter;
+public class ListConverter<S, T> extends AbstractCollectionConverter<S, T, List<S>, List<T>> {
 
 	/**
 	 * 构造函数
@@ -55,21 +50,16 @@ public class ListConverter<S, T> implements Converter<List<S>, List<T>> {
 	 * 		List item 转换器
 	 */
 	public ListConverter(final Converter<S, T> itemConverter) {
-		this.itemConverter = itemConverter;
+		super(itemConverter);
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
-	public List<T> convert(final List<S> source) {
-		if(source == null){
-			return null;
-		}else{
-			try{
-				return source.stream().map(itemConverter::convert).collect(
-						Collectors.toCollection(()->(List<T>) BeanUtils.instantiateClass(source.getClass())));
-			}catch(Exception e){
-				return source.stream().map(itemConverter::convert).collect(Collectors.toList());
-			}
+	protected Collector<T, ?, List<T>> collect(final List<S> source) {
+		try{
+			return Collectors.toCollection(()->BeanUtils.instantiateClass(source.getClass()));
+		}catch(Exception e){
+			return Collectors.toList();
 		}
 	}
 

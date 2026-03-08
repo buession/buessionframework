@@ -19,36 +19,32 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.converter;
 
-import java.util.Set;
+import com.buession.lang.KeyValue;
+
+import java.util.Collection;
+import java.util.Map;
 
 /**
- * {@link Set} 转换至数组
+ * {@link KeyValue} {@link Collection} 转换为 {@link Map}
  *
- * @param <S>
- * 		原类型
- * @param <T>
- * 		目标类型
+ * @param <E>
+ * 		原始 {@link Collection} 元素利息类型
+ * @param <C>
+ *        {@link Collection} 类型
+ * @param <TK>
+ * 		目标 Key 类型
+ * @param <TV>
+ * 		目标值类型
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class SettArrayConverter<S, T> extends AbstractCollectionArrayConverter<S, T, Set<S>> {
-
-	/**
-	 * 构造函数
-	 *
-	 * @param itemConverter
-	 * 		List item 转换器
-	 * @param clazz
-	 * 		目标数组类型
-	 */
-	public SettArrayConverter(final Converter<S, T> itemConverter, final Class<T> clazz) {
-		super(itemConverter, clazz);
-	}
+@FunctionalInterface
+public interface CollectionMapConverter<E, TK, TV, C extends Collection<E>> extends Converter<C, Map<TK, TV>> {
 
 }

@@ -19,58 +19,30 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.converter;
 
-import org.springframework.beans.BeanUtils;
-
 import java.util.Collection;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * {@link Collection} 转换器
  *
- * @param <S>
- * 		原类型
- * @param <T>
- * 		目标类型
+ * @param <SV>
+ * 		原元素类型
+ * @param <TV>
+ * 		目标元素类型
+ * @param <ST>
+ * 		原 {@link Collection} 类型
+ * @param <TT>
+ * 		目标 {@link Collection} 类型
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class CollectionConverter<S, T> implements Converter<Collection<S>, Collection<T>> {
-
-	/**
-	 * List item 转换器
-	 */
-	private final Converter<S, T> itemConverter;
-
-	/**
-	 * 构造函数
-	 *
-	 * @param itemConverter
-	 * 		Collection item 转换器
-	 */
-	public CollectionConverter(final Converter<S, T> itemConverter) {
-		this.itemConverter = itemConverter;
-	}
-
-	@SuppressWarnings({"unchecked"})
-	@Override
-	public Collection<T> convert(final Collection<S> source) {
-		if(source == null){
-			return null;
-		}else{
-			try{
-				Collection<T> instance = BeanUtils.instantiateClass(source.getClass());
-				return source.stream().map(itemConverter::convert).collect(Collectors.toCollection(()->instance));
-			}catch(Exception e){
-				return source.stream().map(itemConverter::convert).collect(Collectors.toList());
-			}
-		}
-	}
+@FunctionalInterface
+public interface CollectionConverter<SV, TV, ST extends Collection<SV>, TT extends Collection<TV>>
+		extends Converter<ST, TT> {
 
 }

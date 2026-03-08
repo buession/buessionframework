@@ -19,15 +19,18 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.converter;
 
-import java.util.Set;
+import com.buession.core.utils.Assert;
+
+import java.util.Collection;
 
 /**
- * {@link Set} 转换至数组
+ *
+ * 数组转换至 {@link Collection}
  *
  * @param <S>
  * 		原类型
@@ -37,18 +40,39 @@ import java.util.Set;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class SettArrayConverter<S, T> extends AbstractCollectionArrayConverter<S, T, Set<S>> {
+public abstract class AbstractArrayCollectionConverter<S, T, C extends Collection<T>> implements Converter<S[], C> {
+
+	/**
+	 * 数组 item 转换器
+	 */
+	private final Converter<S, T> itemConverter;
 
 	/**
 	 * 构造函数
 	 *
 	 * @param itemConverter
-	 * 		List item 转换器
-	 * @param clazz
-	 * 		目标数组类型
+	 * 		Collection item 转换器
 	 */
-	public SettArrayConverter(final Converter<S, T> itemConverter, final Class<T> clazz) {
-		super(itemConverter, clazz);
+	public AbstractArrayCollectionConverter(final Converter<S, T> itemConverter) {
+		Assert.isNull(itemConverter, "itemConverter cloud not be null.");
+		this.itemConverter = itemConverter;
 	}
+
+	@Override
+	public C convert(final S[] source) {
+		if(source == null){
+			return null;
+		}else{
+			final C result = createCollection();
+
+			for(S s : source){
+				result.add(itemConverter.convert(s));
+			}
+
+			return result;
+		}
+	}
+
+	protected abstract C createCollection();
 
 }

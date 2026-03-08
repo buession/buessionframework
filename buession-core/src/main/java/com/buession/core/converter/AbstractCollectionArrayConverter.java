@@ -22,37 +22,62 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.core.converter;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.args.GetExArgument;
-import redis.clients.jedis.params.HGetExParams;
+import com.buession.core.utils.Assert;
+
+import java.lang.reflect.Array;
+import java.util.Collection;
 
 /**
- * {@link GetExArgument} 转换为 jedis {@link HGetExParams}
+ *
+ * {@link Collection} 转换至数组
+ *
+ * @param <S>
+ * 		原类型
+ * @param <T>
+ * 		目标类型
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class GetExArgumentHGetExParamsConverter implements Converter<GetExArgument, HGetExParams> {
+public abstract class AbstractCollectionArrayConverter<S, T, C extends Collection<S>> implements Converter<C, T[]> {
 
+	/**
+	 * 数组 item 转换器
+	 */
+	private final Converter<S, T> itemConverter;
+
+	private final Class<T> clazz;
+
+	/**
+	 * 构造函数
+	 *
+	 * @param itemConverter
+	 * 		Collection item 转换器
+	 */
+	public AbstractCollectionArrayConverter(final Converter<S, T> itemConverter, final Class<T> clazz) {
+		Assert.isNull(itemConverter, "itemConverter cloud not be null.");
+		Assert.isNull(clazz, "target clazz cloud not be null.");
+		this.itemConverter = itemConverter;
+		this.clazz = clazz;
+	}
+
+	@SuppressWarnings("unchecked")
 	@Override
-	public HGetExParams convert(final GetExArgument source) {
-		if(source == null || source.getType() == null){
+	public T[] convert(final C source) {
+		if(source == null){
 			return null;
+		}else{
+			T[] result = (T[]) Array.newInstance(clazz, source.size());
+			int i = 0;
+
+			for(S v : source){
+				result[i++] = itemConverter.convert(v);
+			}
+
+			return result;
 		}
-
-		final HGetExParams hGetExParams = new HGetExParams();
-
-		switch(source.getType()){
-			case EX -> hGetExParams.ex(source.getValue());
-			case EXAT -> hGetExParams.exAt(source.getValue());
-			case PX -> hGetExParams.px(source.getValue());
-			case PXAT -> hGetExParams.pxAt(source.getValue());
-			case PERSIST -> hGetExParams.persist();
-		}
-
-		return hGetExParams;
 	}
 
 }

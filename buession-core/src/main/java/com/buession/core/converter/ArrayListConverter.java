@@ -24,8 +24,6 @@
  */
 package com.buession.core.converter;
 
-import com.buession.core.utils.Assert;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,12 +38,7 @@ import java.util.List;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class ArrayListConverter<S, T> implements Converter<S[], List<T>> {
-
-	/**
-	 * 数组 item 转换器
-	 */
-	private final Converter<S, T> itemConverter;
+public class ArrayListConverter<S, T> extends AbstractArrayCollectionConverter<S, T, List<T>> {
 
 	/**
 	 * 构造函数
@@ -54,23 +47,12 @@ public class ArrayListConverter<S, T> implements Converter<S[], List<T>> {
 	 * 		List item 转换器
 	 */
 	public ArrayListConverter(final Converter<S, T> itemConverter) {
-		Assert.isNull(itemConverter, "ItemConverter cloud not be null.");
-		this.itemConverter = itemConverter;
+		super(itemConverter);
 	}
 
 	@Override
-	public List<T> convert(final S[] source) {
-		if(source == null){
-			return null;
-		}else{
-			final List<T> result = new ArrayList<>();
-
-			for(S s : source){
-				result.add(itemConverter.convert(s));
-			}
-
-			return result;
-		}
+	protected List<T> createCollection() {
+		return new ArrayList<>();
 	}
 
 }

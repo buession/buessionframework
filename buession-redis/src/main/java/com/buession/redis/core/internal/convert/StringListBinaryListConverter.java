@@ -19,36 +19,27 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.converter;
+package com.buession.redis.core.internal.convert;
 
-import java.util.Set;
+import com.buession.core.converter.MapConverter;
+import com.buession.redis.utils.SafeEncoder;
 
 /**
- * {@link Set} 转换至数组
- *
- * @param <S>
- * 		原类型
- * @param <T>
- * 		目标类型
+ * {@link String} {@link java.util.Map} 转换为 二进制 {@link java.util.Map}
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class SettArrayConverter<S, T> extends AbstractCollectionArrayConverter<S, T, Set<S>> {
+public final class StringMapBinaryMapConverter extends MapConverter<String, String, byte[], byte[]> {
 
 	/**
 	 * 构造函数
-	 *
-	 * @param itemConverter
-	 * 		List item 转换器
-	 * @param clazz
-	 * 		目标数组类型
 	 */
-	public SettArrayConverter(final Converter<S, T> itemConverter, final Class<T> clazz) {
-		super(itemConverter, clazz);
+	public StringMapBinaryMapConverter() {
+		super(SafeEncoder::encode, SafeEncoder::encode);
 	}
 
 }

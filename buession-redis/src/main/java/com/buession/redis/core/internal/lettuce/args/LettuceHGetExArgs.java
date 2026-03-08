@@ -19,36 +19,50 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.converter;
+package com.buession.redis.core.internal.lettuce.args;
 
-import java.util.Set;
+import com.buession.redis.core.command.args.GetExArgument;
+import io.lettuce.core.GetExArgs;
+
+import java.time.Duration;
+import java.time.Instant;
 
 /**
- * {@link Set} 转换至数组
- *
- * @param <S>
- * 		原类型
- * @param <T>
- * 		目标类型
+ * Lettuce {@link GetExArgs} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class SettArrayConverter<S, T> extends AbstractCollectionArrayConverter<S, T, Set<S>> {
+public final class LettuceGetExArgs extends GetExArgs {
+
+	/**
+	 * 构造函数
+	 */
+	public LettuceGetExArgs() {
+		super();
+	}
 
 	/**
 	 * 构造函数
 	 *
-	 * @param itemConverter
-	 * 		List item 转换器
-	 * @param clazz
-	 * 		目标数组类型
+	 * @param getExArgument
+	 *        {@link GetExArgument}
 	 */
-	public SettArrayConverter(final Converter<S, T> itemConverter, final Class<T> clazz) {
-		super(itemConverter, clazz);
+	public LettuceGetExArgs(final GetExArgument getExArgument) {
+		super();
+
+		if(getExArgument != null){
+			switch(getExArgument.getType()){
+				case EX -> ex(Duration.ofSeconds(getExArgument.getValue()));
+				case EXAT -> exAt(Instant.ofEpochSecond(getExArgument.getValue()));
+				case PX -> px(Duration.ofMillis(getExArgument.getValue()));
+				case PXAT -> pxAt(Instant.ofEpochMilli(getExArgument.getValue()));
+				case PERSIST -> persist();
+			}
+		}
 	}
 
 }
