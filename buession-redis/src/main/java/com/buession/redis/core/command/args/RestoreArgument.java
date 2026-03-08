@@ -62,7 +62,7 @@ public class RestoreArgument {
 	 * @param replace
 	 * 		是否替换已存在 key
 	 */
-	public RestoreArgument(final Boolean replace) {
+	public RestoreArgument(final boolean replace) {
 		this.replace = replace;
 	}
 
@@ -74,7 +74,7 @@ public class RestoreArgument {
 	 * @param absTtl
 	 * 		-
 	 */
-	public RestoreArgument(final Boolean replace, final Boolean absTtl) {
+	public RestoreArgument(final boolean replace, final boolean absTtl) {
 		this(replace);
 		this.absTtl = absTtl;
 	}
@@ -89,7 +89,7 @@ public class RestoreArgument {
 	 * @param frequency
 	 * 		-
 	 */
-	public RestoreArgument(final Boolean replace, final Long idleTime, final Long frequency) {
+	public RestoreArgument(final boolean replace, final long idleTime, final long frequency) {
 		this(replace);
 		this.idleTime = idleTime;
 		this.frequency = frequency;
@@ -107,7 +107,7 @@ public class RestoreArgument {
 	 * @param frequency
 	 * 		-
 	 */
-	public RestoreArgument(final Boolean replace, final Boolean absTtl, final Long idleTime, final Long frequency) {
+	public RestoreArgument(final boolean replace, final boolean absTtl, final long idleTime, final long frequency) {
 		this(replace, idleTime, frequency);
 		this.absTtl = absTtl;
 	}
@@ -143,7 +143,7 @@ public class RestoreArgument {
 	 * @param replace
 	 * 		true / false
 	 */
-	public RestoreArgument setReplace(final Boolean replace) {
+	public RestoreArgument setReplace(boolean replace) {
 		this.replace = replace;
 		return this;
 	}
@@ -181,7 +181,7 @@ public class RestoreArgument {
 	 * @param absTtl
 	 * 		true / false
 	 */
-	public RestoreArgument setAbsTtl(final Boolean absTtl) {
+	public RestoreArgument setAbsTtl(boolean absTtl) {
 		this.absTtl = absTtl;
 		return this;
 	}
@@ -190,7 +190,7 @@ public class RestoreArgument {
 		return idleTime;
 	}
 
-	public RestoreArgument setIdleTime(final Long idleTime) {
+	public RestoreArgument setIdleTime(long idleTime) {
 		this.idleTime = idleTime;
 		return this;
 	}
@@ -199,7 +199,7 @@ public class RestoreArgument {
 		return frequency;
 	}
 
-	public RestoreArgument setFrequency(final Long frequency) {
+	public RestoreArgument setFrequency(long frequency) {
 		this.frequency = frequency;
 		return this;
 	}

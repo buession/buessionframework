@@ -51,7 +51,7 @@ public class XReadGroupArgument extends XReadArgument {
 	 * @param block
 	 * 		阻塞时间（单位：毫秒）
 	 */
-	public XReadGroupArgument(final Long block) {
+	public XReadGroupArgument(final long block) {
 		super(block);
 	}
 
@@ -63,7 +63,7 @@ public class XReadGroupArgument extends XReadArgument {
 	 * @param noAck
 	 * 		-
 	 */
-	public XReadGroupArgument(final Long block, final Boolean noAck) {
+	public XReadGroupArgument(final long block, final boolean noAck) {
 		super(block);
 		setNoAck(noAck);
 	}
@@ -76,7 +76,7 @@ public class XReadGroupArgument extends XReadArgument {
 	 * @param claim
 	 * 		-
 	 */
-	public XReadGroupArgument(final Long block, final Long claim) {
+	public XReadGroupArgument(final long block, final long claim) {
 		super(block);
 		this.claim = claim;
 	}
@@ -89,7 +89,7 @@ public class XReadGroupArgument extends XReadArgument {
 	 * @param noAck
 	 * 		-
 	 */
-	public XReadGroupArgument(final Long block, final Long claim, final Boolean noAck) {
+	public XReadGroupArgument(final long block, final long claim, final boolean noAck) {
 		this(block, claim);
 		setNoAck(noAck);
 	}
@@ -100,7 +100,7 @@ public class XReadGroupArgument extends XReadArgument {
 	 * @param noAck
 	 * 		-
 	 */
-	public XReadGroupArgument(final Boolean noAck) {
+	public XReadGroupArgument(final boolean noAck) {
 		setNoAck(noAck);
 	}
 
@@ -108,7 +108,7 @@ public class XReadGroupArgument extends XReadArgument {
 		return claim;
 	}
 
-	public XReadGroupArgument setClaim(Long claim) {
+	public XReadGroupArgument setClaim(long claim) {
 		this.claim = claim;
 		return this;
 	}
@@ -122,11 +122,10 @@ public class XReadGroupArgument extends XReadArgument {
 	}
 
 	public XReadGroupArgument noAck() {
-		this.noAck = true;
-		return this;
+		return setNoAck(true);
 	}
 
-	public XReadGroupArgument setNoAck(Boolean noAck) {
+	public XReadGroupArgument setNoAck(boolean noAck) {
 		this.noAck = noAck;
 		return this;
 	}

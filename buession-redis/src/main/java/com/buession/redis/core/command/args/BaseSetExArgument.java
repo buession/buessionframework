@@ -59,7 +59,7 @@ abstract class BaseSetExArgument {
 	 * @param value
 	 * 		过期时间戳
 	 */
-	public BaseSetExArgument(SetExType type, long value) {
+	public BaseSetExArgument(final SetExType type, final long value) {
 		this.type = type;
 		this.value = value;
 	}

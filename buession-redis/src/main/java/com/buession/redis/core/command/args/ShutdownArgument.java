@@ -45,7 +45,7 @@ public class ShutdownArgument {
 	public ShutdownArgument() {
 	}
 
-	public ShutdownArgument(final Boolean save, final Boolean now, final Boolean force, final Boolean abort) {
+	public ShutdownArgument(final boolean save, final boolean now, final boolean force, final boolean abort) {
 		this.save = save;
 		this.now = now;
 		this.force = force;
@@ -64,7 +64,7 @@ public class ShutdownArgument {
 		return setSave(true);
 	}
 
-	public ShutdownArgument setSave(Boolean save) {
+	public ShutdownArgument setSave(boolean save) {
 		this.save = save;
 		return this;
 	}
@@ -81,7 +81,7 @@ public class ShutdownArgument {
 		return setNow(true);
 	}
 
-	public ShutdownArgument setNow(Boolean now) {
+	public ShutdownArgument setNow(boolean now) {
 		this.now = now;
 		return this;
 	}
@@ -98,7 +98,7 @@ public class ShutdownArgument {
 		return setForce(true);
 	}
 
-	public ShutdownArgument setForce(Boolean force) {
+	public ShutdownArgument setForce(boolean force) {
 		this.force = force;
 		return this;
 	}
@@ -115,7 +115,7 @@ public class ShutdownArgument {
 		return setAbort(true);
 	}
 
-	public ShutdownArgument setAbort(Boolean abort) {
+	public ShutdownArgument setAbort(boolean abort) {
 		this.abort = abort;
 		return this;
 	}

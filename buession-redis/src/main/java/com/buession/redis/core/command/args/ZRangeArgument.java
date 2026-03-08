@@ -48,11 +48,11 @@ public class ZRangeArgument {
 		this.by = by;
 	}
 
-	public ZRangeArgument(final Boolean rev) {
+	public ZRangeArgument(final boolean rev) {
 		this.rev = rev;
 	}
 
-	public ZRangeArgument(final By by, final Boolean rev) {
+	public ZRangeArgument(final By by, final boolean rev) {
 		this.by = by;
 		this.rev = rev;
 	}

@@ -56,7 +56,7 @@ public class CFInsertArgument {
 	 * @param capacity
 	 * 		初始容量
 	 */
-	public CFInsertArgument(final Long capacity) {
+	public CFInsertArgument(final long capacity) {
 		this.capacity = capacity;
 	}
 
@@ -66,7 +66,7 @@ public class CFInsertArgument {
 	 * @param noCreate
 	 * 		是否当 key 不存在时不自动创建
 	 */
-	public CFInsertArgument(final Boolean noCreate) {
+	public CFInsertArgument(final boolean noCreate) {
 		this.noCreate = noCreate;
 	}
 
@@ -78,7 +78,7 @@ public class CFInsertArgument {
 	 * @param noCreate
 	 * 		是否当 key 不存在时不自动创建
 	 */
-	public CFInsertArgument(final Long capacity, final Boolean noCreate) {
+	public CFInsertArgument(final long capacity, final boolean noCreate) {
 		this(capacity);
 		this.noCreate = noCreate;
 	}
@@ -100,7 +100,7 @@ public class CFInsertArgument {
 	 *
 	 * @return {@link CFInsertArgument}
 	 */
-	public CFInsertArgument capacity(Long capacity) {
+	public CFInsertArgument capacity(long capacity) {
 		this.capacity = capacity;
 		return this;
 	}
@@ -140,7 +140,7 @@ public class CFInsertArgument {
 	 *
 	 * @return {@link CFInsertArgument}
 	 */
-	public CFInsertArgument setNoCreate(Boolean noCreate) {
+	public CFInsertArgument setNoCreate(boolean noCreate) {
 		this.noCreate = noCreate;
 		return this;
 	}

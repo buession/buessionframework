@@ -57,7 +57,7 @@ public class JsonGetArgument {
 	 * @param space
 	 * 		-
 	 */
-	public JsonGetArgument(String indent, String newline, String space) {
+	public JsonGetArgument(final String indent, final String newline, final String space) {
 		this.indent = indent;
 		this.newline = newline;
 		this.space = space;

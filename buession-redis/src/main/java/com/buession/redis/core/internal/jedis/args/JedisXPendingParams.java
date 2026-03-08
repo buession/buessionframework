@@ -56,7 +56,7 @@ public final class JedisXPendingParams extends XPendingParams {
 	}
 
 	public JedisXPendingParams(final StreamEntryId start, final StreamEntryId end, final int count) {
-		super(new JedisStreamEntryID(start), new JedisStreamEntryID(end), (int) count);
+		super(new JedisStreamEntryID(start), new JedisStreamEntryID(end), count);
 	}
 
 	public JedisXPendingParams(final StreamEntryId start, final StreamEntryId end, final int count,

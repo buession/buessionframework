@@ -54,7 +54,7 @@ public final class BitFieldRoArgument {
 	 * @param offset
 	 * 		偏移
 	 */
-	public BitFieldRoArgument(final BitFieldEncoding encoding, final Integer offset) {
+	public BitFieldRoArgument(final BitFieldEncoding encoding, final int offset) {
 		this.encoding = encoding;
 		this.offset = offset;
 	}

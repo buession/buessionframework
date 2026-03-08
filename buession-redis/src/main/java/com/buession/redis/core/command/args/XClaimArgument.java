@@ -43,41 +43,41 @@ public class XClaimArgument {
 
 	private Boolean force;
 
-	public XClaimArgument(final IdleType idleType, final Long idleTime) {
+	public XClaimArgument(final IdleType idleType, final long idleTime) {
 		this.idleType = idleType;
 		this.idleTime = idleTime;
 	}
 
-	public XClaimArgument(final IdleType idleType, final Long idleTime, final Integer retryCount) {
+	public XClaimArgument(final IdleType idleType, final long idleTime, final int retryCount) {
 		this(idleType, idleTime);
 		this.retryCount = retryCount;
 	}
 
-	public XClaimArgument(final IdleType idleType, final Long idleTime, final Boolean force) {
+	public XClaimArgument(final IdleType idleType, final long idleTime, final boolean force) {
 		this(idleType, idleTime);
 		this.force = force;
 	}
 
-	public XClaimArgument(final IdleType idleType, final Long idleTime, final Integer retryCount, final Boolean force) {
+	public XClaimArgument(final IdleType idleType, final long idleTime, final int retryCount, final boolean force) {
 		this(idleType, idleTime, retryCount);
 		this.force = force;
 	}
 
-	public XClaimArgument(final Integer retryCount) {
+	public XClaimArgument(final int retryCount) {
 		this.retryCount = retryCount;
 	}
 
-	public XClaimArgument(final Boolean force) {
+	public XClaimArgument(final boolean force) {
 		this.force = force;
 	}
 
-	public XClaimArgument idelTime(final Long idleTime) {
+	public XClaimArgument idelTime(final long idleTime) {
 		this.idleType = IdleType.IDLE;
 		this.idleTime = idleTime;
 		return this;
 	}
 
-	public XClaimArgument unixTime(final Long unixTime) {
+	public XClaimArgument unixTime(final long unixTime) {
 		this.idleType = IdleType.UNIX_TIME;
 		this.idleTime = unixTime;
 		return this;
@@ -96,7 +96,7 @@ public class XClaimArgument {
 		return idleTime;
 	}
 
-	public XClaimArgument setIdleTime(final Long idleTime) {
+	public XClaimArgument setIdleTime(final long idleTime) {
 		this.idleTime = idleTime;
 		return this;
 	}
@@ -122,7 +122,7 @@ public class XClaimArgument {
 		return setForce(true);
 	}
 
-	public XClaimArgument setForce(final Boolean force) {
+	public XClaimArgument setForce(final boolean force) {
 		this.force = force;
 		return this;
 	}

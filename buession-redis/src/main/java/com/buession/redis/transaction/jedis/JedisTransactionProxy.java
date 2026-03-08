@@ -24,7 +24,7 @@
  */
 package com.buession.redis.transaction.jedis;
 
-import com.buession.redis.core.internal.jedis.args.JedisResult;
+import com.buession.redis.core.internal.jedis.JedisResult;
 import com.buession.redis.transaction.AbstractTransactionProxy;
 import com.buession.redis.transaction.Transaction;
 

@@ -45,7 +45,7 @@ import com.buession.redis.core.internal.convert.jedis.response.JsonTypeConverter
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.response.OrgJSONArrayConverter;
 import com.buession.redis.core.internal.jedis.args.JedisJsonSetParams;
-import com.buession.redis.core.internal.jedis.args.JedisPath;
+import com.buession.redis.core.internal.jedis.JedisPath;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.UnifiedJedis;
 

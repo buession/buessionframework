@@ -65,9 +65,9 @@ public final class LettuceGeoAddArgs extends GeoAddArgs {
 	 * @param ch
 	 * 		CH
 	 */
-	public LettuceGeoAddArgs(final NxXx nxXx, final Boolean ch) {
+	public LettuceGeoAddArgs(final NxXx nxXx, final boolean ch) {
 		this(nxXx);
-		if(Boolean.TRUE.equals(ch)){
+		if(ch){
 			ch();
 		}
 	}
@@ -78,9 +78,9 @@ public final class LettuceGeoAddArgs extends GeoAddArgs {
 	 * @param ch
 	 * 		CH
 	 */
-	public LettuceGeoAddArgs(final Boolean ch) {
+	public LettuceGeoAddArgs(final boolean ch) {
 		super();
-		if(Boolean.TRUE.equals(ch)){
+		if(ch){
 			ch();
 		}
 	}

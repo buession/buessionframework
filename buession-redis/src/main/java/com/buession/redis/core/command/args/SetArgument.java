@@ -70,7 +70,7 @@ public class SetArgument {
 	 * @param expires
 	 * 		过期时间
 	 */
-	public SetArgument(final SetType type, final Long expires) {
+	public SetArgument(final SetType type, final long expires) {
 		this.type = type;
 		this.expires = expires;
 	}
@@ -85,7 +85,7 @@ public class SetArgument {
 	 * @param nxXx
 	 * 		只有键 key 不存在/存在的时候才会设置 key 的值
 	 */
-	public SetArgument(final SetType type, final Long expires, final NxXx nxXx) {
+	public SetArgument(final SetType type, final long expires, final NxXx nxXx) {
 		this(type, expires);
 		this.nxXx = nxXx;
 	}
@@ -106,7 +106,7 @@ public class SetArgument {
 	 * @param keepTtl
 	 * 		是否获取 key 的过期时间
 	 */
-	public SetArgument(final Boolean keepTtl) {
+	public SetArgument(final boolean keepTtl) {
 		this.keepTtl = keepTtl;
 	}
 
@@ -118,7 +118,7 @@ public class SetArgument {
 	 * @param keepTtl
 	 * 		是否获取 key 的过期时间
 	 */
-	public SetArgument(final NxXx nxXx, final Boolean keepTtl) {
+	public SetArgument(final NxXx nxXx, final boolean keepTtl) {
 		this.nxXx = nxXx;
 		this.keepTtl = keepTtl;
 	}
@@ -135,7 +135,7 @@ public class SetArgument {
 	 * @param keepTtl
 	 * 		是否获取 key 的过期时间
 	 */
-	public SetArgument(final SetType type, final long expires, final NxXx nxXx, final Boolean keepTtl) {
+	public SetArgument(final SetType type, final long expires, final NxXx nxXx, final boolean keepTtl) {
 		this(type, expires, nxXx);
 		this.keepTtl = keepTtl;
 	}
@@ -175,7 +175,7 @@ public class SetArgument {
 	 * @param expires
 	 * 		过期时间
 	 */
-	public SetArgument setExpires(final Long expires) {
+	public SetArgument setExpires(long expires) {
 		this.expires = expires;
 		return this;
 	}
@@ -195,7 +195,7 @@ public class SetArgument {
 	 * @param nxXx
 	 * 		只有键 key 不存在/存在的时候才会设置 key 的值
 	 */
-	public SetArgument setNxXx(final NxXx nxXx) {
+	public SetArgument setNxXx(NxXx nxXx) {
 		this.nxXx = nxXx;
 		return this;
 	}
@@ -231,7 +231,7 @@ public class SetArgument {
 	 * @param keepTtl
 	 * 		是否获取 key 的过期时间
 	 */
-	public SetArgument setKeepTtl(final Boolean keepTtl) {
+	public SetArgument setKeepTtl(boolean keepTtl) {
 		this.keepTtl = keepTtl;
 		return this;
 	}

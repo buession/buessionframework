@@ -61,7 +61,7 @@ public class CFReserveArgument {
 	 * @param bucketSize
 	 * 		每个桶能存储的指纹数量
 	 */
-	public CFReserveArgument(final Long bucketSize) {
+	public CFReserveArgument(final long bucketSize) {
 		this.bucketSize = bucketSize;
 	}
 
@@ -75,7 +75,7 @@ public class CFReserveArgument {
 	 * @param expansion
 	 * 		扩容倍数
 	 */
-	public CFReserveArgument(final Long bucketSize, final Integer maxIterations, final Integer expansion) {
+	public CFReserveArgument(final long bucketSize, final int maxIterations, final int expansion) {
 		this(maxIterations, expansion);
 		this.bucketSize = bucketSize;
 	}
@@ -88,7 +88,7 @@ public class CFReserveArgument {
 	 * @param expansion
 	 * 		扩容倍数
 	 */
-	public CFReserveArgument(final Integer maxIterations, final Integer expansion) {
+	public CFReserveArgument(final int maxIterations, final int expansion) {
 		this.maxIterations = maxIterations;
 		this.expansion = expansion;
 	}
@@ -110,7 +110,7 @@ public class CFReserveArgument {
 	 *
 	 * @return {@link CFReserveArgument}
 	 */
-	public CFReserveArgument setBucketSize(final Long bucketSize) {
+	public CFReserveArgument setBucketSize(long bucketSize) {
 		this.bucketSize = bucketSize;
 		return this;
 	}
@@ -132,7 +132,7 @@ public class CFReserveArgument {
 	 *
 	 * @return {@link CFReserveArgument}
 	 */
-	public CFReserveArgument setMaxIterations(final Integer maxIterations) {
+	public CFReserveArgument setMaxIterations(int maxIterations) {
 		this.maxIterations = maxIterations;
 		return this;
 	}
@@ -154,7 +154,7 @@ public class CFReserveArgument {
 	 *
 	 * @return {@link CFReserveArgument}
 	 */
-	public CFReserveArgument setExpansion(final Integer expansion) {
+	public CFReserveArgument setExpansion(int expansion) {
 		this.expansion = expansion;
 		return this;
 	}

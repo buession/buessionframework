@@ -51,7 +51,7 @@ public class GeoRadiusArgument extends BaseGeoDistanceArgument {
 	 * @param withHash
 	 * 		是否返回位置元素经过原始 geohash 编码的有序集合分值
 	 */
-	public GeoRadiusArgument(final Boolean withCoord, final Boolean withDist, final Boolean withHash) {
+	public GeoRadiusArgument(final boolean withCoord, final boolean withDist, final boolean withHash) {
 		super(withCoord, withDist, withHash);
 	}
 
@@ -67,7 +67,7 @@ public class GeoRadiusArgument extends BaseGeoDistanceArgument {
 	 * @param order
 	 * 		排序方式
 	 */
-	public GeoRadiusArgument(final Boolean withCoord, final Boolean withDist, final Boolean withHash,
+	public GeoRadiusArgument(final boolean withCoord, final boolean withDist, final boolean withHash,
 							 final Order order) {
 		super(withCoord, withDist, withHash, order);
 	}

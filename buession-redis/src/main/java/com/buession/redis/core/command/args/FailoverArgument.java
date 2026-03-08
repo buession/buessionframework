@@ -86,7 +86,7 @@ public class FailoverArgument {
 	 * @param port
 	 * 		目标端口
 	 */
-	public FailoverArgument(final String host, final Integer port) {
+	public FailoverArgument(final String host, final int port) {
 		this(host);
 		this.port = port;
 	}
@@ -101,7 +101,7 @@ public class FailoverArgument {
 	 * @param force
 	 * 		是否强制
 	 */
-	public FailoverArgument(final String host, final Integer port, final Boolean force) {
+	public FailoverArgument(final String host, final int port, final boolean force) {
 		this(host, port);
 		this.force = force;
 	}
@@ -118,7 +118,7 @@ public class FailoverArgument {
 	 * @param abort
 	 * 		是否终止
 	 */
-	public FailoverArgument(final String host, final Integer port, final Boolean force, final Boolean abort) {
+	public FailoverArgument(final String host, final int port, final boolean force, final boolean abort) {
 		this(host, port, force);
 		this.abort = abort;
 	}
@@ -135,7 +135,7 @@ public class FailoverArgument {
 	 * @param timeout
 	 * 		超时（单位：毫秒）
 	 */
-	public FailoverArgument(final String host, final Integer port, final Boolean force, final Long timeout) {
+	public FailoverArgument(final String host, final int port, final boolean force, final long timeout) {
 		this(host, port, force);
 		this.timeout = timeout;
 	}
@@ -150,7 +150,7 @@ public class FailoverArgument {
 	 * @param timeout
 	 * 		超时（单位：毫秒）
 	 */
-	public FailoverArgument(final String host, final Integer port, final Long timeout) {
+	public FailoverArgument(final String host, final int port, final long timeout) {
 		this(host, port);
 		this.timeout = timeout;
 	}
@@ -169,8 +169,8 @@ public class FailoverArgument {
 	 * @param timeout
 	 * 		超时（单位：毫秒）
 	 */
-	public FailoverArgument(final String host, final Integer port, final Boolean force, final Boolean abort,
-							final Long timeout) {
+	public FailoverArgument(final String host, final int port, final boolean force, final boolean abort,
+							final long timeout) {
 		this(host, port, force, abort);
 		this.timeout = timeout;
 	}
@@ -183,7 +183,7 @@ public class FailoverArgument {
 	 * @param force
 	 * 		是否强制
 	 */
-	public FailoverArgument(final String host, final Boolean force) {
+	public FailoverArgument(final String host, final boolean force) {
 		this(host);
 		this.force = force;
 	}
@@ -198,7 +198,7 @@ public class FailoverArgument {
 	 * @param abort
 	 * 		是否终止
 	 */
-	public FailoverArgument(final String host, final Boolean force, final Boolean abort) {
+	public FailoverArgument(final String host, final boolean force, final boolean abort) {
 		this(host, force);
 		this.abort = abort;
 	}
@@ -213,7 +213,7 @@ public class FailoverArgument {
 	 * @param timeout
 	 * 		超时（单位：毫秒）
 	 */
-	public FailoverArgument(final String host, final Boolean force, final Long timeout) {
+	public FailoverArgument(final String host, final boolean force, final long timeout) {
 		this(host, force);
 		this.timeout = timeout;
 	}
@@ -226,7 +226,7 @@ public class FailoverArgument {
 	 * @param timeout
 	 * 		超时（单位：毫秒）
 	 */
-	public FailoverArgument(final String host, final Long timeout) {
+	public FailoverArgument(final String host, final long timeout) {
 		this(host);
 		this.timeout = timeout;
 	}
@@ -243,7 +243,7 @@ public class FailoverArgument {
 	 * @param timeout
 	 * 		超时（单位：毫秒）
 	 */
-	public FailoverArgument(final String host, final Boolean force, final Boolean abort, final Long timeout) {
+	public FailoverArgument(final String host, final boolean force, final boolean abort, final long timeout) {
 		this(host, force, abort);
 		this.timeout = timeout;
 	}
@@ -256,7 +256,7 @@ public class FailoverArgument {
 	 * @param force
 	 * 		是否强制
 	 */
-	public FailoverArgument(final RedisNode redisNode, final Boolean force) {
+	public FailoverArgument(final RedisNode redisNode, final boolean force) {
 		this(redisNode.getHost(), redisNode.getPort(), force);
 	}
 
@@ -270,7 +270,7 @@ public class FailoverArgument {
 	 * @param abort
 	 * 		是否终止
 	 */
-	public FailoverArgument(final RedisNode redisNode, final Boolean force, final Boolean abort) {
+	public FailoverArgument(final RedisNode redisNode, final boolean force, final boolean abort) {
 		this(redisNode.getHost(), redisNode.getPort(), force, abort);
 	}
 
@@ -284,7 +284,7 @@ public class FailoverArgument {
 	 * @param timeout
 	 * 		超时（单位：毫秒）
 	 */
-	public FailoverArgument(final RedisNode redisNode, final Boolean force, final Long timeout) {
+	public FailoverArgument(final RedisNode redisNode, final boolean force, final long timeout) {
 		this(redisNode.getHost(), redisNode.getPort(), force, timeout);
 	}
 
@@ -296,7 +296,7 @@ public class FailoverArgument {
 	 * @param timeout
 	 * 		超时（单位：毫秒）
 	 */
-	public FailoverArgument(final RedisNode redisNode, final Long timeout) {
+	public FailoverArgument(final RedisNode redisNode, final long timeout) {
 		this(redisNode.getHost(), redisNode.getPort(), timeout);
 	}
 
@@ -312,8 +312,7 @@ public class FailoverArgument {
 	 * @param timeout
 	 * 		超时（单位：毫秒）
 	 */
-	public FailoverArgument(final RedisNode redisNode, final Boolean force, final Boolean abort,
-							final Long timeout) {
+	public FailoverArgument(final RedisNode redisNode, final boolean force, final boolean abort, final long timeout) {
 		this(redisNode.getHost(), redisNode.getPort(), force, abort, timeout);
 	}
 
@@ -323,7 +322,7 @@ public class FailoverArgument {
 	 * @param abort
 	 * 		是否终止
 	 */
-	public FailoverArgument(final Boolean abort) {
+	public FailoverArgument(final boolean abort) {
 		this.abort = abort;
 	}
 
@@ -335,7 +334,7 @@ public class FailoverArgument {
 	 * @param timeout
 	 * 		超时（单位：毫秒）
 	 */
-	public FailoverArgument(final Boolean abort, final Long timeout) {
+	public FailoverArgument(final boolean abort, final long timeout) {
 		this(abort);
 		this.timeout = timeout;
 	}
@@ -346,7 +345,7 @@ public class FailoverArgument {
 	 * @param timeout
 	 * 		超时（单位：毫秒）
 	 */
-	public FailoverArgument(final Long timeout) {
+	public FailoverArgument(final long timeout) {
 		this.timeout = timeout;
 	}
 
@@ -389,7 +388,7 @@ public class FailoverArgument {
 	 *
 	 * @return {@link FailoverArgument}
 	 */
-	public FailoverArgument setPort(Integer port) {
+	public FailoverArgument setPort(int port) {
 		this.port = port;
 		return this;
 	}
@@ -429,7 +428,7 @@ public class FailoverArgument {
 	 *
 	 * @return {@link FailoverArgument}
 	 */
-	public FailoverArgument setForce(Boolean force) {
+	public FailoverArgument setForce(boolean force) {
 		this.force = force;
 		return this;
 	}
@@ -469,7 +468,7 @@ public class FailoverArgument {
 	 *
 	 * @return {@link FailoverArgument}
 	 */
-	public FailoverArgument setAbort(Boolean abort) {
+	public FailoverArgument setAbort(boolean abort) {
 		this.abort = abort;
 		return this;
 	}
@@ -489,7 +488,7 @@ public class FailoverArgument {
 	 * @param timeout
 	 * 		超时（单位：毫秒）
 	 */
-	public FailoverArgument setTimeout(Long timeout) {
+	public FailoverArgument setTimeout(long timeout) {
 		this.timeout = timeout;
 		return this;
 	}

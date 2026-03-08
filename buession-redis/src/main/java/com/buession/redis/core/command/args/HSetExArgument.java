@@ -52,7 +52,7 @@ public class HSetExArgument extends BaseSetExArgument {
 	 * @param fnxFxx
 	 * 		-
 	 */
-	public HSetExArgument(FnxFxx fnxFxx) {
+	public HSetExArgument(final FnxFxx fnxFxx) {
 		this.fnxFxx = fnxFxx;
 	}
 
@@ -64,7 +64,7 @@ public class HSetExArgument extends BaseSetExArgument {
 	 * @param value
 	 * 		过期时间戳
 	 */
-	public HSetExArgument(SetExType type, long value) {
+	public HSetExArgument(final SetExType type, final long value) {
 		super(type, value);
 	}
 
@@ -78,7 +78,7 @@ public class HSetExArgument extends BaseSetExArgument {
 	 * @param fnxFxx
 	 * 		-
 	 */
-	public HSetExArgument(SetExType type, long value, FnxFxx fnxFxx) {
+	public HSetExArgument(final SetExType type, final long value, final FnxFxx fnxFxx) {
 		super(type, value);
 		this.fnxFxx = fnxFxx;
 	}

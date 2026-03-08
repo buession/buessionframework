@@ -19,60 +19,40 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis.args;
+package com.buession.redis.core.internal.jedis;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.FutureResult;
-import com.buession.redis.core.internal.convert.Converters;
-import redis.clients.jedis.Response;
+import com.buession.redis.utils.SafeEncoder;
+import redis.clients.jedis.json.Path2;
 
 /**
- * Jedis 事务、管道异步结果
+ * Jedis {@link Path2} 扩展
  *
  * @author Yong.Teng
+ * @since 4.0.0
  */
-public class JedisResult<SV, TV> extends FutureResult<Response<SV>> {
+public final class JedisPath extends Path2 {
 
-	public JedisResult(final Response<SV> resultHolder) {
-		super(resultHolder);
+	/**
+	 * 构造函数
+	 *
+	 * @param str
+	 * 		-
+	 */
+	public JedisPath(final String str) {
+		super(str);
 	}
 
-	public JedisResult(final Response<SV> resultHolder, final Converter<SV, ?> converter) {
-		super(resultHolder, converter);
-	}
-
-	@Override
-	public SV get() {
-		return getHolder().get();
-	}
-
-	public final static class Builder<SV, TV> {
-
-		private final Response<SV> response;
-
-		private Converter<SV, TV> converter;
-
-		private Builder(final Response<SV> response, final Converter<SV, TV> converter) {
-			this.response = response;
-			this.converter = converter;
-		}
-
-		public static <SV, TV> Builder<SV, TV> fromResponse(Response<SV> response) {
-			return new Builder<>(response, Converters.always());
-		}
-
-		public Builder<SV, TV> mappedWith(Converter<SV, TV> converter) {
-			this.converter = converter;
-			return this;
-		}
-
-		public JedisResult<SV, TV> build() {
-			return new JedisResult<>(response, converter);
-		}
-
+	/**
+	 * 构造函数
+	 *
+	 * @param str
+	 * 		-
+	 */
+	public JedisPath(final byte[] str) {
+		super(SafeEncoder.encode(str));
 	}
 
 }

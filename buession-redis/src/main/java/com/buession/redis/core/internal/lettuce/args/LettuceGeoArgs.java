@@ -79,7 +79,7 @@ public final class LettuceGeoArgs extends GeoArgs {
 	 * @param count
 	 * 		返回数量
 	 */
-	public LettuceGeoArgs(final BaseGeoDistanceArgument distanceArgument, final Integer count) {
+	public LettuceGeoArgs(final BaseGeoDistanceArgument distanceArgument, final int count) {
 		this(distanceArgument);
 		withCount(count);
 	}
@@ -94,7 +94,7 @@ public final class LettuceGeoArgs extends GeoArgs {
 	 * @param any
 	 * 		ANY
 	 */
-	public LettuceGeoArgs(final BaseGeoDistanceArgument distanceArgument, final Integer count, final Boolean any) {
+	public LettuceGeoArgs(final BaseGeoDistanceArgument distanceArgument, final int count, final boolean any) {
 		this(distanceArgument);
 		withCount(count, any);
 	}
@@ -105,7 +105,7 @@ public final class LettuceGeoArgs extends GeoArgs {
 	 * @param count
 	 * 		返回数量
 	 */
-	public LettuceGeoArgs(final Integer count) {
+	public LettuceGeoArgs(final int count) {
 		super();
 		withCount(count);
 	}
@@ -118,7 +118,7 @@ public final class LettuceGeoArgs extends GeoArgs {
 	 * @param any
 	 * 		ANY
 	 */
-	public LettuceGeoArgs(final Integer count, final Boolean any) {
+	public LettuceGeoArgs(final int count, final boolean any) {
 		super();
 		withCount(count, any);
 	}

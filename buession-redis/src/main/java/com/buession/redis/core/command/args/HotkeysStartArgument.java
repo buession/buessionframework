@@ -54,8 +54,8 @@ public class HotkeysStartArgument {
 
 	}
 
-	public HotkeysStartArgument(Boolean cpu, Boolean net, Integer count, Integer duration, Integer sample,
-								List<String> slots) {
+	public HotkeysStartArgument(final boolean cpu, final boolean net, final int count, final int duration,
+								final int sample, List<String> slots) {
 		this.cpu = cpu;
 		this.net = net;
 		this.count = count;
@@ -68,7 +68,7 @@ public class HotkeysStartArgument {
 		return cpu;
 	}
 
-	public HotkeysStartArgument setCpu(Boolean cpu) {
+	public HotkeysStartArgument setCpu(boolean cpu) {
 		this.cpu = cpu;
 		return this;
 	}
@@ -77,7 +77,7 @@ public class HotkeysStartArgument {
 		return net;
 	}
 
-	public HotkeysStartArgument setNet(Boolean net) {
+	public HotkeysStartArgument setNet(boolean net) {
 		this.net = net;
 		return this;
 	}
@@ -86,7 +86,7 @@ public class HotkeysStartArgument {
 		return count;
 	}
 
-	public HotkeysStartArgument setCount(Integer count) {
+	public HotkeysStartArgument setCount(int count) {
 		this.count = count;
 		return this;
 	}
@@ -95,7 +95,7 @@ public class HotkeysStartArgument {
 		return duration;
 	}
 
-	public HotkeysStartArgument setDuration(Integer duration) {
+	public HotkeysStartArgument setDuration(int duration) {
 		this.duration = duration;
 		return this;
 	}
@@ -104,7 +104,7 @@ public class HotkeysStartArgument {
 		return sample;
 	}
 
-	public HotkeysStartArgument setSample(Integer sample) {
+	public HotkeysStartArgument setSample(int sample) {
 		this.sample = sample;
 		return this;
 	}

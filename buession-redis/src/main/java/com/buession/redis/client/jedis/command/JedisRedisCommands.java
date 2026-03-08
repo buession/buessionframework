@@ -30,7 +30,7 @@ import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.RedisCommands;
 import com.buession.redis.core.command.SubCommand;
-import com.buession.redis.core.internal.jedis.args.JedisResult;
+import com.buession.redis.core.internal.jedis.JedisResult;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.PipelineProxy;
 import com.buession.redis.transaction.TransactionProxy;

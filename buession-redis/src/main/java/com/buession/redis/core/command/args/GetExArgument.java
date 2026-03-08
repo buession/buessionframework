@@ -61,7 +61,7 @@ public class GetExArgument {
 	 * @param value
 	 * 		过期时间戳
 	 */
-	public GetExArgument(GetExType type, long value) {
+	public GetExArgument(final GetExType type, final long value) {
 		this.type = type;
 		this.value = value;
 	}
@@ -188,7 +188,7 @@ public class GetExArgument {
 	 * @return {@link GetExArgument}
 	 */
 	public static GetExArgument persist() {
-		return new GetExArgument(GetExType.PERSIST, 0);
+		return new GetExArgument(GetExType.PERSIST, 0L);
 	}
 
 	@Override

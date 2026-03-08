@@ -71,7 +71,7 @@ public abstract class MaxLenMinId<T> {
 
 	public final static class MaxLen extends MaxLenMinId<Long> {
 
-		public MaxLen(final ApproximateExactTrimming approximateExactTrimming, final Long value) {
+		public MaxLen(final ApproximateExactTrimming approximateExactTrimming, final long value) {
 			super(Type.MAXLEN, approximateExactTrimming, value);
 		}
 

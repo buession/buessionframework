@@ -188,7 +188,7 @@ public class SortArgument {
 	 * @param order
 	 * 		排序方式
 	 */
-	public SortArgument setOrder(final Order order) {
+	public SortArgument setOrder(Order order) {
 		this.order = order;
 		return this;
 	}
@@ -201,12 +201,12 @@ public class SortArgument {
 		return SafeEncoder.encode(getPatterns);
 	}
 
-	public SortArgument setGetPatterns(final String[] getPatterns) {
+	public SortArgument setGetPatterns(String[] getPatterns) {
 		this.getPatterns = getPatterns;
 		return this;
 	}
 
-	public SortArgument setGetPatterns(final byte[][] getPatterns) {
+	public SortArgument setGetPatterns(byte[][] getPatterns) {
 		this.getPatterns = SafeEncoder.encode(getPatterns);
 		return this;
 	}
@@ -223,7 +223,7 @@ public class SortArgument {
 		return setAlpha(true);
 	}
 
-	public SortArgument setAlpha(final Boolean alpha) {
+	public SortArgument setAlpha(boolean alpha) {
 		this.alpha = alpha;
 		return this;
 	}

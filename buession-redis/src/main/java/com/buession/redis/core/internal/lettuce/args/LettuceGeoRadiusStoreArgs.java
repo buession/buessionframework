@@ -82,7 +82,7 @@ public final class LettuceGeoRadiusStoreArgs<K> extends GeoRadiusStoreArgs<K> {
 	 * 		返回数量
 	 */
 	public LettuceGeoRadiusStoreArgs(final K key, final GeoStoreOption storeOption,
-									 final GeoRadiusArgument geoRadiusArgument, final Integer count) {
+									 final GeoRadiusArgument geoRadiusArgument, final int count) {
 		this(key, storeOption, geoRadiusArgument);
 		withCount(count);
 	}
@@ -102,8 +102,8 @@ public final class LettuceGeoRadiusStoreArgs<K> extends GeoRadiusStoreArgs<K> {
 	 * 		ANY
 	 */
 	public LettuceGeoRadiusStoreArgs(final K key, final GeoStoreOption storeOption,
-									 final GeoRadiusArgument geoRadiusArgument, final Integer count,
-									 final Boolean any) {
+									 final GeoRadiusArgument geoRadiusArgument, final int count,
+									 final boolean any) {
 		this(key, storeOption, geoRadiusArgument);
 		withCount(count);
 	}
@@ -118,7 +118,7 @@ public final class LettuceGeoRadiusStoreArgs<K> extends GeoRadiusStoreArgs<K> {
 	 * @param count
 	 * 		返回数量
 	 */
-	public LettuceGeoRadiusStoreArgs(final K key, final GeoStoreOption storeOption, final Integer count) {
+	public LettuceGeoRadiusStoreArgs(final K key, final GeoStoreOption storeOption, final int count) {
 		this(key, storeOption);
 		withCount(count);
 	}
@@ -135,8 +135,8 @@ public final class LettuceGeoRadiusStoreArgs<K> extends GeoRadiusStoreArgs<K> {
 	 * @param any
 	 * 		ANY
 	 */
-	public LettuceGeoRadiusStoreArgs(final K key, final GeoStoreOption storeOption, final Integer count,
-									 final Boolean any) {
+	public LettuceGeoRadiusStoreArgs(final K key, final GeoStoreOption storeOption, final int count,
+									 final boolean any) {
 		this(key, storeOption);
 		withCount(count);
 	}

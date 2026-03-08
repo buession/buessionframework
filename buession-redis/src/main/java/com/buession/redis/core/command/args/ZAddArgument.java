@@ -95,7 +95,7 @@ public class ZAddArgument {
 	 * @param incr
 	 * 		-
 	 */
-	public ZAddArgument(final NxXx nxXx, final GtLt gtLt, final Boolean ch, final Boolean incr) {
+	public ZAddArgument(final NxXx nxXx, final GtLt gtLt, final boolean ch, final boolean incr) {
 		this(nxXx, gtLt);
 		this.ch = ch;
 		this.incr = incr;
@@ -127,7 +127,7 @@ public class ZAddArgument {
 		return setCh(true);
 	}
 
-	public ZAddArgument setCh(Boolean ch) {
+	public ZAddArgument setCh(boolean ch) {
 		this.ch = ch;
 		return this;
 	}
@@ -144,7 +144,7 @@ public class ZAddArgument {
 		return setIncr(true);
 	}
 
-	public ZAddArgument setIncr(Boolean incr) {
+	public ZAddArgument setIncr(boolean incr) {
 		this.incr = incr;
 		return this;
 	}

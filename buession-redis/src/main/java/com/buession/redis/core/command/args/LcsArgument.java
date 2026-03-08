@@ -45,7 +45,7 @@ public class LcsArgument {
 	public LcsArgument() {
 	}
 
-	public LcsArgument(final Boolean len, final Boolean idx, final Long minMatchLen, final Boolean withMatchLen) {
+	public LcsArgument(final boolean len, final boolean idx, final long minMatchLen, final boolean withMatchLen) {
 		this.len = len;
 		this.idx = idx;
 		this.minMatchLen = minMatchLen;
@@ -82,7 +82,7 @@ public class LcsArgument {
 		return minMatchLen;
 	}
 
-	public LcsArgument setMinMatchLen(Long minMatchLen) {
+	public LcsArgument setMinMatchLen(long minMatchLen) {
 		this.minMatchLen = minMatchLen;
 		return this;
 	}
@@ -99,7 +99,7 @@ public class LcsArgument {
 		return setWithMatchLen(true);
 	}
 
-	public LcsArgument setWithMatchLen(Boolean withMatchLen) {
+	public LcsArgument setWithMatchLen(boolean withMatchLen) {
 		this.withMatchLen = withMatchLen;
 		return this;
 	}

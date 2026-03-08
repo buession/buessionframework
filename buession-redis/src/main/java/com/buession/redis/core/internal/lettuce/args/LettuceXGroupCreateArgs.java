@@ -43,12 +43,12 @@ public final class LettuceXGroupCreateArgs extends XGroupCreateArgs {
 		mkstream(mkstream);
 	}
 
-	public LettuceXGroupCreateArgs(final Long entriesRead) {
+	public LettuceXGroupCreateArgs(final long entriesRead) {
 		super();
 		entriesRead(entriesRead);
 	}
 
-	public LettuceXGroupCreateArgs(final boolean mkstream, final Long entriesRead) {
+	public LettuceXGroupCreateArgs(final boolean mkstream, final long entriesRead) {
 		this(mkstream);
 		entriesRead(entriesRead);
 	}

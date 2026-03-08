@@ -76,7 +76,7 @@ public class TrackingArgument {
 	 * @param redirect
 	 * 		将失效消息转发给另一个客户端
 	 */
-	public TrackingArgument(final Long redirect) {
+	public TrackingArgument(final long redirect) {
 		this.redirect = redirect;
 	}
 
@@ -98,7 +98,7 @@ public class TrackingArgument {
 	 * @param prefixes
 	 * 		仅跟踪以该前缀开头的 key
 	 */
-	public TrackingArgument(final Long redirect, final String[] prefixes) {
+	public TrackingArgument(final long redirect, final String[] prefixes) {
 		this(redirect);
 		this.prefixes = prefixes;
 	}
@@ -117,8 +117,8 @@ public class TrackingArgument {
 	 * @param noloop
 	 * 		是否不向自己发送失效通知
 	 */
-	public TrackingArgument(final Long redirect, final Boolean bcast, final Boolean optin, final Boolean optout,
-							final Boolean noloop) {
+	public TrackingArgument(final long redirect, final boolean bcast, final boolean optin, final boolean optout,
+							final boolean noloop) {
 		this(redirect);
 		this.bcast = bcast;
 		this.optin = optin;
@@ -140,8 +140,8 @@ public class TrackingArgument {
 	 * @param noloop
 	 * 		是否不向自己发送失效通知
 	 */
-	public TrackingArgument(final String[] prefixes, final Boolean bcast, final Boolean optin,
-							final Boolean optout, final Boolean noloop) {
+	public TrackingArgument(final String[] prefixes, final boolean bcast, final boolean optin,
+							final boolean optout, final boolean noloop) {
 		this(prefixes);
 		this.bcast = bcast;
 		this.optin = optin;
@@ -165,8 +165,8 @@ public class TrackingArgument {
 	 * @param noloop
 	 * 		是否不向自己发送失效通知
 	 */
-	public TrackingArgument(final Long redirect, final String[] prefixes, final Boolean bcast, final Boolean optin,
-							final Boolean optout, final Boolean noloop) {
+	public TrackingArgument(final long redirect, final String[] prefixes, final boolean bcast, final boolean optin,
+							final boolean optout, final boolean noloop) {
 		this(redirect, bcast, optin, optout, noloop);
 		this.prefixes = prefixes;
 	}
@@ -188,7 +188,7 @@ public class TrackingArgument {
 	 *
 	 * @return {@link TrackingArgument}
 	 */
-	public TrackingArgument setRedirect(Long redirect) {
+	public TrackingArgument setRedirect(long redirect) {
 		this.redirect = redirect;
 		return this;
 	}
@@ -250,7 +250,7 @@ public class TrackingArgument {
 	 *
 	 * @return {@link TrackingArgument}
 	 */
-	public TrackingArgument setBcast(Boolean bcast) {
+	public TrackingArgument setBcast(boolean bcast) {
 		this.bcast = bcast;
 		return this;
 	}
@@ -290,8 +290,8 @@ public class TrackingArgument {
 	 *
 	 * @return {@link TrackingArgument}
 	 */
-	public TrackingArgument setOptin(Boolean optin) {
-		this.optin = true;
+	public TrackingArgument setOptin(boolean optin) {
+		this.optin = optin;
 		return this;
 	}
 
@@ -330,7 +330,7 @@ public class TrackingArgument {
 	 *
 	 * @return {@link TrackingArgument}
 	 */
-	public TrackingArgument setOptout(Boolean optout) {
+	public TrackingArgument setOptout(boolean optout) {
 		this.optout = optout;
 		return this;
 	}
@@ -370,7 +370,7 @@ public class TrackingArgument {
 	 *
 	 * @return {@link TrackingArgument}
 	 */
-	public TrackingArgument setNoloop(Boolean noloop) {
+	public TrackingArgument setNoloop(boolean noloop) {
 		this.noloop = noloop;
 		return this;
 	}

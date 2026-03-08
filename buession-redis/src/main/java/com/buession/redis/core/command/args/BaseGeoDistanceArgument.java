@@ -72,7 +72,7 @@ public abstract class BaseGeoDistanceArgument {
 	 * @param withHash
 	 * 		是否返回位置元素经过原始 geohash 编码的有序集合分值
 	 */
-	protected BaseGeoDistanceArgument(final Boolean withCoord, final Boolean withDist, final Boolean withHash) {
+	protected BaseGeoDistanceArgument(final boolean withCoord, final boolean withDist, final boolean withHash) {
 		this.withCoord = withCoord;
 		this.withDist = withDist;
 		this.withHash = withHash;
@@ -90,7 +90,7 @@ public abstract class BaseGeoDistanceArgument {
 	 * @param order
 	 * 		排序方式
 	 */
-	protected BaseGeoDistanceArgument(final Boolean withCoord, final Boolean withDist, final Boolean withHash,
+	protected BaseGeoDistanceArgument(final boolean withCoord, final boolean withDist, final boolean withHash,
 									  final Order order) {
 		this(withCoord, withDist, withHash);
 		this.order = order;
@@ -102,7 +102,7 @@ public abstract class BaseGeoDistanceArgument {
 	 * @param order
 	 * 		排序方式
 	 */
-	protected BaseGeoDistanceArgument(Order order) {
+	protected BaseGeoDistanceArgument(final Order order) {
 		this.order = order;
 	}
 
@@ -141,7 +141,7 @@ public abstract class BaseGeoDistanceArgument {
 	 *
 	 * @return {@link BaseGeoDistanceArgument}
 	 */
-	public BaseGeoDistanceArgument setWithCoord(Boolean withCoord) {
+	public BaseGeoDistanceArgument setWithCoord(boolean withCoord) {
 		this.withCoord = withCoord;
 		return this;
 	}
@@ -181,7 +181,7 @@ public abstract class BaseGeoDistanceArgument {
 	 *
 	 * @return {@link BaseGeoDistanceArgument}
 	 */
-	public BaseGeoDistanceArgument setWithDist(Boolean withDist) {
+	public BaseGeoDistanceArgument setWithDist(boolean withDist) {
 		this.withDist = withDist;
 		return this;
 	}
@@ -221,7 +221,7 @@ public abstract class BaseGeoDistanceArgument {
 	 *
 	 * @return {@link BaseGeoDistanceArgument}
 	 */
-	public BaseGeoDistanceArgument setWithHash(Boolean withHash) {
+	public BaseGeoDistanceArgument setWithHash(boolean withHash) {
 		this.withHash = withHash;
 		return this;
 	}

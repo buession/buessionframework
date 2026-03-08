@@ -69,7 +69,7 @@ public class XAddArgument {
 	 * 		如果流不存在，不自动创建它
 	 * 		-
 	 */
-	public XAddArgument(final Boolean noMkStream) {
+	public XAddArgument(final boolean noMkStream) {
 		this.noMkStream = noMkStream;
 	}
 
@@ -81,7 +81,7 @@ public class XAddArgument {
 	 * @param deletionPolicy
 	 * 		删除策略
 	 */
-	public XAddArgument(final Boolean noMkStream, final StreamDeletionPolicy deletionPolicy) {
+	public XAddArgument(final boolean noMkStream, final StreamDeletionPolicy deletionPolicy) {
 		this.noMkStream = noMkStream;
 		this.deletionPolicy = deletionPolicy;
 	}
@@ -96,7 +96,7 @@ public class XAddArgument {
 	 * @param idmp
 	 *        {@link BaseIdmp}
 	 */
-	public XAddArgument(final Boolean noMkStream, final StreamDeletionPolicy deletionPolicy, final BaseIdmp idmp) {
+	public XAddArgument(final boolean noMkStream, final StreamDeletionPolicy deletionPolicy, final BaseIdmp idmp) {
 		this(noMkStream, deletionPolicy);
 		this.idmp = idmp;
 	}
@@ -111,7 +111,7 @@ public class XAddArgument {
 	 * @param maxLenMinId
 	 *        {@link MaxLenMinId}
 	 */
-	public XAddArgument(final Boolean noMkStream, final StreamDeletionPolicy deletionPolicy,
+	public XAddArgument(final boolean noMkStream, final StreamDeletionPolicy deletionPolicy,
 						final MaxLenMinId<?> maxLenMinId) {
 		this(noMkStream, deletionPolicy);
 		this.maxLenMinId = maxLenMinId;
@@ -129,7 +129,7 @@ public class XAddArgument {
 	 * @param maxLenMinId
 	 *        {@link MaxLenMinId}
 	 */
-	public XAddArgument(final Boolean noMkStream, final StreamDeletionPolicy deletionPolicy, final BaseIdmp idmp,
+	public XAddArgument(final boolean noMkStream, final StreamDeletionPolicy deletionPolicy, final BaseIdmp idmp,
 						final MaxLenMinId<?> maxLenMinId) {
 		this(noMkStream, deletionPolicy, idmp);
 		this.maxLenMinId = maxLenMinId;
@@ -143,7 +143,7 @@ public class XAddArgument {
 	 * @param idmp
 	 *        {@link BaseIdmp}
 	 */
-	public XAddArgument(final Boolean noMkStream, final BaseIdmp idmp) {
+	public XAddArgument(final boolean noMkStream, final BaseIdmp idmp) {
 		this(noMkStream);
 		this.idmp = idmp;
 	}
@@ -158,7 +158,7 @@ public class XAddArgument {
 	 * @param maxLenMinId
 	 *        {@link MaxLenMinId}
 	 */
-	public XAddArgument(final Boolean noMkStream, final BaseIdmp idmp, final MaxLenMinId<?> maxLenMinId) {
+	public XAddArgument(final boolean noMkStream, final BaseIdmp idmp, final MaxLenMinId<?> maxLenMinId) {
 		this(noMkStream, idmp);
 		this.maxLenMinId = maxLenMinId;
 	}
@@ -171,7 +171,7 @@ public class XAddArgument {
 	 * @param maxLenMinId
 	 *        {@link MaxLenMinId}
 	 */
-	public XAddArgument(final Boolean noMkStream, final MaxLenMinId<?> maxLenMinId) {
+	public XAddArgument(final boolean noMkStream, final MaxLenMinId<?> maxLenMinId) {
 		this.noMkStream = noMkStream;
 		this.maxLenMinId = maxLenMinId;
 	}
@@ -263,7 +263,7 @@ public class XAddArgument {
 		return setNoMkStream(true);
 	}
 
-	public XAddArgument setNoMkStream(Boolean noMkStream) {
+	public XAddArgument setNoMkStream(boolean noMkStream) {
 		this.noMkStream = noMkStream;
 		return this;
 	}

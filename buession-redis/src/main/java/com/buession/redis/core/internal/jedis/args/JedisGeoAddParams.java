@@ -65,9 +65,9 @@ public final class JedisGeoAddParams extends GeoAddParams {
 	 * @param ch
 	 * 		CH
 	 */
-	public JedisGeoAddParams(final NxXx nxXx, final Boolean ch) {
+	public JedisGeoAddParams(final NxXx nxXx, final boolean ch) {
 		this(nxXx);
-		if(Boolean.TRUE.equals(ch)){
+		if(ch){
 			ch();
 		}
 	}
@@ -78,9 +78,9 @@ public final class JedisGeoAddParams extends GeoAddParams {
 	 * @param ch
 	 * 		CH
 	 */
-	public JedisGeoAddParams(final Boolean ch) {
+	public JedisGeoAddParams(final boolean ch) {
 		super();
-		if(Boolean.TRUE.equals(ch)){
+		if(ch){
 			ch();
 		}
 	}

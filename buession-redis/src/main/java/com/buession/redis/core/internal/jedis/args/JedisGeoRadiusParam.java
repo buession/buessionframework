@@ -81,7 +81,7 @@ public final class JedisGeoRadiusParam extends GeoRadiusParam {
 	 * @param count
 	 * 		返回数量
 	 */
-	public JedisGeoRadiusParam(final GeoRadiusArgument geoRadiusArgument, final Integer count) {
+	public JedisGeoRadiusParam(final GeoRadiusArgument geoRadiusArgument, final int count) {
 		this(geoRadiusArgument);
 		count(count);
 	}
@@ -96,7 +96,7 @@ public final class JedisGeoRadiusParam extends GeoRadiusParam {
 	 * @param any
 	 * 		ANY
 	 */
-	public JedisGeoRadiusParam(final GeoRadiusArgument geoRadiusArgument, final Integer count, final Boolean any) {
+	public JedisGeoRadiusParam(final GeoRadiusArgument geoRadiusArgument, final int count, final boolean any) {
 		this(geoRadiusArgument);
 		count(count, any);
 	}
@@ -107,7 +107,7 @@ public final class JedisGeoRadiusParam extends GeoRadiusParam {
 	 * @param count
 	 * 		返回数量
 	 */
-	public JedisGeoRadiusParam(final Integer count) {
+	public JedisGeoRadiusParam(final int count) {
 		super();
 		count(count);
 	}
@@ -120,7 +120,7 @@ public final class JedisGeoRadiusParam extends GeoRadiusParam {
 	 * @param any
 	 * 		ANY
 	 */
-	public JedisGeoRadiusParam(final Integer count, final Boolean any) {
+	public JedisGeoRadiusParam(final int count, final boolean any) {
 		super();
 		count(count, any);
 	}

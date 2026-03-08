@@ -24,7 +24,7 @@
  */
 package com.buession.redis.pipeline.jedis;
 
-import com.buession.redis.core.internal.jedis.args.JedisResult;
+import com.buession.redis.core.internal.jedis.JedisResult;
 import com.buession.redis.pipeline.AbstractPipelineProxy;
 import com.buession.redis.pipeline.Pipeline;
 

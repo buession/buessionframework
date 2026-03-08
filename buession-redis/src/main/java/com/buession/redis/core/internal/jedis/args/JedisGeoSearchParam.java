@@ -79,7 +79,7 @@ public class JedisGeoSearchParam extends GeoSearchParam {
 	 * @param count
 	 * 		返回数量
 	 */
-	public JedisGeoSearchParam(final GeoSearchArgument geoSearchArgument, final Integer count) {
+	public JedisGeoSearchParam(final GeoSearchArgument geoSearchArgument, final int count) {
 		this(geoSearchArgument);
 		count(count);
 	}
@@ -94,7 +94,7 @@ public class JedisGeoSearchParam extends GeoSearchParam {
 	 * @param any
 	 * 		ANY
 	 */
-	public JedisGeoSearchParam(final GeoSearchArgument geoSearchArgument, final Integer count, final Boolean any) {
+	public JedisGeoSearchParam(final GeoSearchArgument geoSearchArgument, final int count, final boolean any) {
 		this(geoSearchArgument);
 		count(count, any);
 	}
@@ -105,7 +105,7 @@ public class JedisGeoSearchParam extends GeoSearchParam {
 	 * @param count
 	 * 		返回数量
 	 */
-	public JedisGeoSearchParam(final Integer count) {
+	public JedisGeoSearchParam(final int count) {
 		super();
 		count(count);
 	}
@@ -118,7 +118,7 @@ public class JedisGeoSearchParam extends GeoSearchParam {
 	 * @param any
 	 * 		ANY
 	 */
-	public JedisGeoSearchParam(final Integer count, final Boolean any) {
+	public JedisGeoSearchParam(final int count, final boolean any) {
 		super();
 		count(count, any);
 	}
