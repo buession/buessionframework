@@ -21,10 +21,47 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.jedis.args;/**
- * 
+ */
+package com.buession.redis.core.internal.jedis.args;
+
+import com.buession.redis.core.command.args.GetExArgument;
+import redis.clients.jedis.params.HGetExParams;
+
+/**
+ * Jedis {@link HGetExParams} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
- */public class JedisHGetExParams {
+ */
+public final class JedisHGetExParams extends HGetExParams {
+
+	/**
+	 * 构造函数
+	 */
+	public JedisHGetExParams() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param getExArgument
+	 *        {@link GetExArgument}
+	 */
+	public JedisHGetExParams(final GetExArgument getExArgument) {
+		super();
+
+		if(getExArgument != null){
+			if(getExArgument.getType() != null){
+				switch(getExArgument.getType()){
+					case EX -> ex(getExArgument.getValue());
+					case EXAT -> exAt(getExArgument.getValue());
+					case PX -> px(getExArgument.getValue());
+					case PXAT -> pxAt(getExArgument.getValue());
+					case PERSIST -> persist();
+				}
+			}
+		}
+	}
+
 }

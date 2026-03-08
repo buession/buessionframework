@@ -25,23 +25,23 @@
 package com.buession.redis.core.internal.lettuce.args;
 
 import com.buession.redis.core.command.args.GetExArgument;
-import io.lettuce.core.GetExArgs;
+import io.lettuce.core.HGetExArgs;
 
 import java.time.Duration;
 import java.time.Instant;
 
 /**
- * Lettuce {@link GetExArgs} 扩展
+ * Lettuce {@link HGetExArgs} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class LettuceGetExArgs extends GetExArgs {
+public final class LettuceHGetExArgs extends HGetExArgs {
 
 	/**
 	 * 构造函数
 	 */
-	public LettuceGetExArgs() {
+	public LettuceHGetExArgs() {
 		super();
 	}
 
@@ -51,7 +51,7 @@ public final class LettuceGetExArgs extends GetExArgs {
 	 * @param getExArgument
 	 *        {@link GetExArgument}
 	 */
-	public LettuceGetExArgs(final GetExArgument getExArgument) {
+	public LettuceHGetExArgs(final GetExArgument getExArgument) {
 		super();
 
 		if(getExArgument != null){

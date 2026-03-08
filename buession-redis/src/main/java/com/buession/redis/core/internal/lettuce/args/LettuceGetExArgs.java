@@ -21,10 +21,48 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.lettuce.args;/**
- * 
+ */
+package com.buession.redis.core.internal.lettuce.args;
+
+import com.buession.redis.core.command.args.GetExArgument;
+import io.lettuce.core.GetExArgs;
+
+import java.time.Duration;
+import java.time.Instant;
+
+/**
+ * Lettuce {@link GetExArgs} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
- */public class LettuceGetExArgs {
+ */
+public final class LettuceGetExArgs extends GetExArgs {
+
+	/**
+	 * 构造函数
+	 */
+	public LettuceGetExArgs() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param getExArgument
+	 *        {@link GetExArgument}
+	 */
+	public LettuceGetExArgs(final GetExArgument getExArgument) {
+		super();
+
+		if(getExArgument != null){
+			switch(getExArgument.getType()){
+				case EX -> ex(Duration.ofSeconds(getExArgument.getValue()));
+				case EXAT -> exAt(Instant.ofEpochSecond(getExArgument.getValue()));
+				case PX -> px(Duration.ofMillis(getExArgument.getValue()));
+				case PXAT -> pxAt(Instant.ofEpochMilli(getExArgument.getValue()));
+				case PERSIST -> persist();
+			}
+		}
+	}
+
 }

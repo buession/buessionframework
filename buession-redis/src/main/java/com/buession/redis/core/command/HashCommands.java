@@ -574,6 +574,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
 	 */
+	@SuppressWarnings({"unchecked"})
 	Status hMSet(final String key, final KeyValue<String, String>... data);
 
 	/**
@@ -588,6 +589,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 执行成功返回 Status.Success，否则返回 Status.FAILURE
 	 */
+	@SuppressWarnings({"unchecked"})
 	Status hMSet(final byte[] key, final KeyValue<byte[], byte[]>... data);
 
 	/**
@@ -932,7 +934,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	ScanResult<Map<String, String>> hScan(final String key, final String cursor);
+	ScanResult<KeyValue<String, String>> hScan(final String key, final String cursor);
 
 	/**
 	 * 迭代哈希键 key 中的键值对
@@ -946,7 +948,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor);
+	ScanResult<KeyValue<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor);
 
 	/**
 	 * 迭代哈希键 key 中的键值对
@@ -962,7 +964,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 返回和给定模式相匹配的元素
 	 */
-	ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern);
+	ScanResult<KeyValue<String, String>> hScan(final String key, final String cursor, final String pattern);
 
 	/**
 	 * 迭代哈希键 key 中的键值对
@@ -978,39 +980,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 返回和给定模式相匹配的元素
 	 */
-	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern);
-
-	/**
-	 * 迭代哈希键 key 中的键值对
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回的指定数量的键值对
-	 */
-	ScanResult<Map<String, String>> hScan(final String key, final String cursor, final int count);
-
-	/**
-	 * 迭代哈希键 key 中的键值对
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回的指定数量的键值对
-	 */
-	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final int count);
+	ScanResult<KeyValue<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern);
 
 	/**
 	 * 迭代哈希键 key 中的键值对
@@ -1028,7 +998,8 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
-	ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern, final int count);
+	ScanResult<KeyValue<String, String>> hScan(final String key, final String cursor, final String pattern,
+											   final int count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对
@@ -1046,7 +1017,168 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
-	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count);
+	ScanResult<KeyValue<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+											   final int count);
+
+	/**
+	 * 迭代哈希键 key 中的键值对
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回的指定数量的键值对
+	 */
+	ScanResult<KeyValue<String, String>> hScan(final String key, final String cursor, final int count);
+
+	/**
+	 * 迭代哈希键 key 中的键值对
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回的指定数量的键值对
+	 */
+	ScanResult<KeyValue<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final int count);
+
+	/**
+	 * 迭代哈希键 key 中的键值对
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	ScanResult<String> hScanNoValues(final String key, final String cursor);
+
+	/**
+	 * 迭代哈希键 key 中的键值对
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	ScanResult<byte[]> hScanNoValues(final byte[] key, final byte[] cursor);
+
+	/**
+	 * 迭代哈希键 key 中的键值对
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 *
+	 * @return 返回和给定模式相匹配的元素
+	 */
+	ScanResult<String> hScanNoValues(final String key, final String cursor, final String pattern);
+
+	/**
+	 * 迭代哈希键 key 中的键值对
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 *
+	 * @return 返回和给定模式相匹配的元素
+	 */
+	ScanResult<byte[]> hScanNoValues(final byte[] key, final byte[] cursor, final byte[] pattern);
+
+	/**
+	 * 迭代哈希键 key 中的键值对
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回和给定模式相匹配指定数量的元素
+	 */
+	ScanResult<String> hScanNoValues(final String key, final String cursor, final String pattern, final int count);
+
+	/**
+	 * 迭代哈希键 key 中的键值对
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回和给定模式相匹配指定数量的元素
+	 */
+	ScanResult<byte[]> hScanNoValues(final byte[] key, final byte[] cursor, final byte[] pattern, final int count);
+
+	/**
+	 * 迭代哈希键 key 中的键值对
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回的指定数量的键值对
+	 */
+	ScanResult<String> hScanNoValues(final String key, final String cursor, final int count);
+
+	/**
+	 * 迭代哈希键 key 中的键值对
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回的指定数量的键值对
+	 */
+	ScanResult<byte[]> hScanNoValues(final byte[] key, final byte[] cursor, final int count);
 
 	/**
 	 * 批量将多个 field =&gt; value (域-值)对设置到哈希表 key 中
@@ -1060,6 +1192,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 被修改或增加的 field 个数
 	 */
+	@SuppressWarnings({"unchecked"})
 	Long hSet(final String key, final KeyValue<String, String>... data);
 
 	/**
@@ -1074,6 +1207,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 被修改或增加的 field 个数
 	 */
+	@SuppressWarnings({"unchecked"})
 	Long hSet(final byte[] key, final KeyValue<byte[], byte[]>... data);
 
 	/**
@@ -1088,6 +1222,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
 	 */
+	@SuppressWarnings({"unchecked"})
 	Status hSetEx(final String key, final KeyValue<String, String>... data);
 
 	/**
@@ -1102,6 +1237,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
 	 */
+	@SuppressWarnings({"unchecked"})
 	Status hSetEx(final byte[] key, final KeyValue<byte[], byte[]>... data);
 
 	/**

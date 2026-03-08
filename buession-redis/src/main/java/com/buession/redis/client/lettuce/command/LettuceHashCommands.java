@@ -24,30 +24,34 @@
  */
 package com.buession.redis.client.lettuce.command;
 
+import com.buession.core.converter.ArrayKeyValueMapConverter;
 import com.buession.core.converter.BooleanStatusConverter;
 import com.buession.core.converter.ListConverter;
 import com.buession.core.converter.ListSetConverter;
-import com.buession.core.converter.MapConverter;
+import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.core.ExpireOption;
+import com.buession.redis.core.Keyword;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.HashCommands;
 import com.buession.redis.core.command.args.GetExArgument;
 import com.buession.redis.core.command.args.HSetExArgument;
+import com.buession.redis.core.internal.convert.BinaryListStringListConverter;
+import com.buession.redis.core.internal.convert.BinaryMapStringMapConverter;
 import com.buession.redis.core.internal.convert.lettuce.params.ExpireOptionConverter;
-import com.buession.redis.core.internal.convert.lettuce.params.GetExArgumentHGetExArgsConverter;
 import com.buession.redis.core.internal.convert.lettuce.params.HSetExArgumentConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ListKeyValueMapConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.response.OneStatusConverter;
+import com.buession.redis.core.internal.lettuce.args.LettuceHGetExArgs;
 import com.buession.redis.core.internal.lettuce.args.LettuceScanArgs;
 import com.buession.redis.core.internal.lettuce.args.LettuceScanCursor;
 import com.buession.redis.utils.SafeEncoder;
-import io.lettuce.core.MapScanCursor;
+import io.lettuce.core.ScanArgs;
 import io.lettuce.core.Value;
 
 import java.util.List;
@@ -68,188 +72,213 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public Long hDel(final String key, final String... fields) {
-		return hDel(SafeEncoder.encode(key), SafeEncoder.encode(fields));
+		final CommandArguments args = CommandArguments.create(key).add(fields);
+		return executeCommand(Command.HDEL, args, (cmd)->cmd.hdel(rawBinaryKey(key), SafeEncoder.encode(fields)));
 	}
 
 	@Override
 	public Long hDel(final byte[] key, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(fields);
-		return executeCommand(Command.HDEL, args, (cmd)->cmd.hdel(key, fields), (v)->v);
+		return executeCommand(Command.HDEL, args, (cmd)->cmd.hdel(rawKey(key), fields));
 	}
 
 	@Override
 	public Boolean hExists(final String key, final String field) {
-		return hExists(SafeEncoder.encode(key), SafeEncoder.encode(field));
+		final CommandArguments args = CommandArguments.create(key, field);
+		return executeCommand(Command.HEXISTS, args, (cmd)->cmd.hexists(rawBinaryKey(key), SafeEncoder.encode(field)));
 	}
 
 	@Override
 	public Boolean hExists(final byte[] key, final byte[] field) {
-		final CommandArguments args = CommandArguments.create(key).add(field);
-		return executeCommand(Command.HEXISTS, args, (cmd)->cmd.hexists(key, field), (v)->v);
+		final CommandArguments args = CommandArguments.create(key, field);
+		return executeCommand(Command.HEXISTS, args, (cmd)->cmd.hexists(rawKey(key), field));
 	}
 
 	@Override
 	public List<Long> hExpire(final String key, final long ttl, final String... fields) {
-		return hExpire(SafeEncoder.encode(key), ttl, SafeEncoder.encode(fields));
+		final CommandArguments args = CommandArguments.create(key).add(ttl).add(Keyword.Hash.FIELDS, fields.length)
+				.add(fields);
+		return executeCommand(Command.HEXPIRE, args,
+				(cmd)->cmd.hexpire(rawBinaryKey(key), ttl, SafeEncoder.encode(fields)));
 	}
 
 	@Override
 	public List<Long> hExpire(final byte[] key, final long ttl, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(ttl).add("FIELDS").add(fields.length)
+		final CommandArguments args = CommandArguments.create(key).add(ttl).add(Keyword.Hash.FIELDS, fields.length)
 				.add(fields);
-		return executeCommand(Command.HEXPIRE, args, (cmd)->cmd.hexpire(key, ttl, fields), (v)->v);
+		return executeCommand(Command.HEXPIRE, args, (cmd)->cmd.hexpire(rawKey(key), ttl, fields));
 	}
 
 	@Override
 	public List<Long> hExpire(final String key, final long ttl, final ExpireOption option, final String... fields) {
-		return hExpire(SafeEncoder.encode(key), ttl, option, SafeEncoder.encode(fields));
+		final CommandArguments args = CommandArguments.create(key).add(ttl).add(option)
+				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
+		return executeCommand(Command.HEXPIRE, args,
+				(cmd)->cmd.hexpire(rawBinaryKey(key), ttl, expireOptionConverter.convert(option),
+						SafeEncoder.encode(fields)));
 	}
 
 	@Override
 	public List<Long> hExpire(final byte[] key, final long ttl, final ExpireOption option, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(ttl).add(option).add("FIELDS").add(fields.length)
-				.add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(ttl).add(option)
+				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
 		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(Command.HEXPIRE, args,
-				(cmd)->cmd.hexpire(key, ttl, expireOptionConverter.convert(option), fields), (v)->v);
+				(cmd)->cmd.hexpire(rawKey(key), ttl, expireOptionConverter.convert(option), fields));
 	}
 
 	@Override
 	public List<Long> hExpireAt(final String key, final long unixTimestamp, final String... fields) {
-		return hExpireAt(SafeEncoder.encode(key), unixTimestamp, SafeEncoder.encode(fields));
+		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp)
+				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		return executeCommand(Command.HEXPIREAT, args,
+				(cmd)->cmd.hexpireat(rawBinaryKey(key), unixTimestamp, SafeEncoder.encode(fields)));
 	}
 
 	@Override
 	public List<Long> hExpireAt(final byte[] key, final long unixTimestamp, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add("FIELDS").add(fields.length)
-				.add(fields);
-		return executeCommand(Command.HEXPIREAT, args, (cmd)->cmd.hexpireat(key, unixTimestamp, fields), (v)->v);
+		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp)
+				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		return executeCommand(Command.HEXPIREAT, args, (cmd)->cmd.hexpireat(rawKey(key), unixTimestamp, fields));
 	}
 
 	@Override
 	public List<Long> hExpireAt(final String key, final long unixTimestamp, final ExpireOption option,
 								final String... fields) {
-		return hExpireAt(SafeEncoder.encode(key), unixTimestamp, option, SafeEncoder.encode(fields));
+		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(option)
+				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
+		return executeCommand(Command.HEXPIREAT, args,
+				(cmd)->cmd.hexpireat(rawBinaryKey(key), unixTimestamp, expireOptionConverter.convert(option),
+						SafeEncoder.encode(fields)));
 	}
 
 	@Override
 	public List<Long> hExpireAt(final byte[] key, final long unixTimestamp, final ExpireOption option,
 								final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(option).add("FIELDS")
-				.add(fields.length).add(fields);
+		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(option)
+				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
 		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(Command.HEXPIREAT, args,
-				(cmd)->cmd.hexpireat(key, unixTimestamp, expireOptionConverter.convert(option), fields), (v)->v);
+				(cmd)->cmd.hexpireat(rawKey(key), unixTimestamp, expireOptionConverter.convert(option), fields));
 	}
 
 	@Override
 	public List<Long> hExpireTime(final String key, final String... fields) {
-		return hExpireTime(SafeEncoder.encode(key), SafeEncoder.encode(fields));
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		return executeCommand(Command.HEXPIRETIME, args,
+				(cmd)->cmd.hexpiretime(rawBinaryKey(key), SafeEncoder.encode(fields)));
 	}
 
 	@Override
 	public List<Long> hExpireTime(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add("FIELDS").add(fields.length).add(fields);
-		return executeCommand(Command.HEXPIRETIME, args, (cmd)->cmd.hexpiretime(key, fields), (v)->v);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		return executeCommand(Command.HEXPIRETIME, args, (cmd)->cmd.hexpiretime(rawKey(key), fields));
 	}
 
 	@Override
 	public String hGet(final String key, final String field) {
 		final CommandArguments args = CommandArguments.create(key).add(field);
-		return executeCommand(Command.HGET, args, (cmd)->cmd.hget(SafeEncoder.encode(key), SafeEncoder.encode(field)),
+		return executeCommand(Command.HGET, args, (cmd)->cmd.hget(rawBinaryKey(key), SafeEncoder.encode(field)),
 				SafeEncoder::encode);
 	}
 
 	@Override
 	public byte[] hGet(final byte[] key, final byte[] field) {
 		final CommandArguments args = CommandArguments.create(key).add(field);
-		return executeCommand(Command.HGET, args, (cmd)->cmd.hget(key, field), (v)->v);
+		return executeCommand(Command.HGET, args, (cmd)->cmd.hget(rawKey(key), field));
 	}
 
 	@Override
 	public Map<String, String> hGetAll(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.HGETALL, args, (cmd)->cmd.hgetall(SafeEncoder.encode(key)),
-				new MapConverter<>(SafeEncoder::encode, SafeEncoder::encode));
+		return executeCommand(Command.HGETALL, args, (cmd)->cmd.hgetall(rawBinaryKey(key)),
+				new BinaryMapStringMapConverter());
 	}
 
 	@Override
 	public Map<byte[], byte[]> hGetAll(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.HGETALL, args, (cmd)->cmd.hgetall(key), (v)->v);
+		return executeCommand(Command.HGETALL, args, (cmd)->cmd.hgetall(rawKey(key)));
 	}
 
 	@Override
 	public List<String> hGetDel(final String key, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(fields);
-		return executeCommand(Command.HGETDEL, args, (cmd)->cmd.hgetdel(SafeEncoder.encode(key),
-				SafeEncoder.encode(fields)), new ListConverter<>((kv)->SafeEncoder.encode(kv.getValue())));
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		return executeCommand(Command.HGETDEL, args, (cmd)->cmd.hgetdel(rawBinaryKey(key), SafeEncoder.encode(fields)),
+				new ListConverter<>((kv)->SafeEncoder.encode(kv.getValue())));
 	}
 
 	@Override
 	public List<byte[]> hGetDel(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(fields);
-		return executeCommand(Command.HGETDEL, args, (cmd)->cmd.hgetdel(key, fields),
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		return executeCommand(Command.HGETDEL, args, (cmd)->cmd.hgetdel(rawKey(key), fields),
 				new ListConverter<>(Value::getValue));
 	}
 
 	@Override
 	public List<String> hGetEx(final String key, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(fields);
-		return executeCommand(Command.HGETEX, args, (cmd)->cmd.hgetex(SafeEncoder.encode(key),
-				SafeEncoder.encode(fields)), new ListConverter<>((kv)->SafeEncoder.encode(kv.getValue())));
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		return executeCommand(Command.HGETEX, args, (cmd)->cmd.hgetex(rawBinaryKey(key), SafeEncoder.encode(fields)),
+				new ListConverter<>((kv)->SafeEncoder.encode(kv.getValue())));
 	}
 
 	@Override
 	public List<byte[]> hGetEx(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(fields);
-		return executeCommand(Command.HGETEX, args, (cmd)->cmd.hgetex(key, fields),
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		return executeCommand(Command.HGETEX, args, (cmd)->cmd.hgetex(rawKey(key), fields),
 				new ListConverter<>(Value::getValue));
 	}
 
 	@Override
 	public List<String> hGetEx(final String key, final GetExArgument argument, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(argument).add(fields);
-		final GetExArgumentHGetExArgsConverter getExArgumentHGetExArgsConverter = new GetExArgumentHGetExArgsConverter();
-		return executeCommand(Command.HGETEX, args, (cmd)->cmd.hgetex(SafeEncoder.encode(key),
-						getExArgumentHGetExArgsConverter.convert(argument), SafeEncoder.encode(fields)),
+		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Hash.FIELDS, fields.length)
+				.add(fields);
+		return executeCommand(Command.HGETEX, args,
+				(cmd)->cmd.hgetex(rawBinaryKey(key), new LettuceHGetExArgs(argument), SafeEncoder.encode(fields)),
 				new ListConverter<>((kv)->SafeEncoder.encode(kv.getValue())));
 	}
 
 	@Override
 	public List<byte[]> hGetEx(final byte[] key, final GetExArgument argument, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(argument).add(fields);
-		final GetExArgumentHGetExArgsConverter getExArgumentHGetExArgsConverter = new GetExArgumentHGetExArgsConverter();
-		return executeCommand(Command.HGETEX, args, (cmd)->cmd.hgetex(key,
-				getExArgumentHGetExArgsConverter.convert(argument), fields), new ListConverter<>(Value::getValue));
+		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Hash.FIELDS, fields.length)
+				.add(fields);
+		return executeCommand(Command.HGETEX, args,
+				(cmd)->cmd.hgetex(rawKey(key), new LettuceHGetExArgs(argument), fields),
+				new ListConverter<>(Value::getValue));
 	}
 
 	@Override
 	public Long hIncrBy(final String key, final String field, final long value) {
-		return hIncrBy(SafeEncoder.encode(key), SafeEncoder.encode(field), value);
+		final CommandArguments args = CommandArguments.create(key).add(field, value);
+		return executeCommand(Command.HINCRBY, args,
+				(cmd)->cmd.hincrby(rawBinaryKey(key), SafeEncoder.encode(field), value));
 	}
 
 	@Override
 	public Long hIncrBy(final byte[] key, final byte[] field, final long value) {
-		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
-		return executeCommand(Command.HINCRBY, args, (cmd)->cmd.hincrby(key, field, value), (v)->v);
+		final CommandArguments args = CommandArguments.create(key).add(field, value);
+		return executeCommand(Command.HINCRBY, args, (cmd)->cmd.hincrby(rawKey(key), field, value));
 	}
 
 	@Override
 	public Double hIncrByFloat(final String key, final String field, final double value) {
-		return hIncrByFloat(SafeEncoder.encode(key), SafeEncoder.encode(field), value);
+		final CommandArguments args = CommandArguments.create(key).add(field, value);
+		return executeCommand(Command.HINCRBYFLOAT, args,
+				(cmd)->cmd.hincrbyfloat(rawBinaryKey(key), SafeEncoder.encode(field), value));
 	}
 
 	@Override
 	public Double hIncrByFloat(final byte[] key, final byte[] field, final double value) {
-		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
-		return executeCommand(Command.HINCRBYFLOAT, args, (cmd)->cmd.hincrbyfloat(key, field, value), (v)->v);
+		final CommandArguments args = CommandArguments.create(key).add(field, value);
+		return executeCommand(Command.HINCRBYFLOAT, args, (cmd)->cmd.hincrbyfloat(rawKey(key), field, value));
 	}
 
 	@Override
 	public Set<String> hKeys(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.HKEYS, args, (cmd)->cmd.hkeys(SafeEncoder.encode(key)),
+		return executeCommand(Command.HKEYS, args, (cmd)->cmd.hkeys(rawBinaryKey(key)),
 				new ListSetConverter<>(SafeEncoder::encode));
 	}
 
@@ -261,320 +290,455 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public Long hLen(final String key) {
-		return hLen(SafeEncoder.encode(key));
+		final CommandArguments args = CommandArguments.create(key);
+		return executeCommand(Command.HLEN, args, (cmd)->cmd.hlen(rawBinaryKey(key)));
 	}
 
 	@Override
 	public Long hLen(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.HLEN, args, (cmd)->cmd.hlen(key), (v)->v);
+		return executeCommand(Command.HLEN, args, (cmd)->cmd.hlen(rawKey(key)));
 	}
 
 	@Override
 	public List<String> hMGet(final String key, final String... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(fields);
-		return executeCommand(Command.HMGET, args, (cmd)->cmd.hmget(SafeEncoder.encode(key),
-				SafeEncoder.encode(fields)), new ListConverter<>((kv)->SafeEncoder.encode(kv.getValue())));
+		return executeCommand(Command.HMGET, args, (cmd)->cmd.hmget(rawBinaryKey(key), SafeEncoder.encode(fields)),
+				new ListConverter<>((kv)->SafeEncoder.encode(kv.getValue())));
 	}
 
 	@Override
 	public List<byte[]> hMGet(final byte[] key, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(fields);
-		return executeCommand(Command.HMGET, args, (cmd)->cmd.hmget(key, fields),
+		return executeCommand(Command.HMGET, args, (cmd)->cmd.hmget(rawKey(key), fields),
 				new ListConverter<>(Value::getValue));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
-	public Status hMSet(final String key, final Map<String, String> data) {
-		final MapConverter<String, String, byte[], byte[]> mapConverter = new MapConverter<>(SafeEncoder::encode,
-				SafeEncoder::encode);
-		return hMSet(SafeEncoder.encode(key), mapConverter.convert(data));
+	public Status hMSet(final String key, final KeyValue<String, String>... data) {
+		final CommandArguments args = CommandArguments.create(key).add(data);
+		final ArrayKeyValueMapConverter<String, String, byte[], byte[]> arrayKeyValueMapConverter = new ArrayKeyValueMapConverter<>(
+				SafeEncoder::encode, SafeEncoder::encode);
+		return executeCommand(Command.HMSET, args,
+				(cmd)->cmd.hmset(rawBinaryKey(key), arrayKeyValueMapConverter.convert(data)), new OkStatusConverter());
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
-	public Status hMSet(final byte[] key, final Map<byte[], byte[]> data) {
+	public Status hMSet(final byte[] key, final KeyValue<byte[], byte[]>... data) {
 		final CommandArguments args = CommandArguments.create(key).add(data);
-		return executeCommand(Command.HMSET, args, (cmd)->cmd.hmset(key, data), new OkStatusConverter());
+		final ArrayKeyValueMapConverter<byte[], byte[], byte[], byte[]> arrayKeyValueMapConverter = new ArrayKeyValueMapConverter<>(
+				(k)->k, (v)->v);
+		return executeCommand(Command.HMSET, args,
+				(cmd)->cmd.hmset(rawKey(key), arrayKeyValueMapConverter.convert(data)), new OkStatusConverter());
 	}
 
 	@Override
 	public List<Long> hPersist(final String key, final String... fields) {
-		return hPersist(SafeEncoder.encode(key), SafeEncoder.encode(fields));
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		return executeCommand(Command.HPERSIST, args,
+				(cmd)->cmd.hpersist(rawBinaryKey(key), SafeEncoder.encode(fields)));
 	}
 
 	@Override
 	public List<Long> hPersist(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(fields);
-		return executeCommand(Command.HPERSIST, args, (cmd)->cmd.hpersist(key, fields), (v)->v);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		return executeCommand(Command.HPERSIST, args, (cmd)->cmd.hpersist(rawKey(key), fields));
 	}
 
 	@Override
 	public List<Long> hPExpire(final String key, final long ttl, final String... fields) {
-		return hPExpire(SafeEncoder.encode(key), ttl, SafeEncoder.encode(fields));
+		final CommandArguments args = CommandArguments.create(key).add(ttl).add(Keyword.Hash.FIELDS, fields.length)
+				.add(fields);
+		return executeCommand(Command.HPEXPIRE, args,
+				(cmd)->cmd.hpexpire(rawBinaryKey(key), ttl, SafeEncoder.encode(fields)));
 	}
 
 	@Override
 	public List<Long> hPExpire(final byte[] key, final long ttl, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(ttl).add("FIELDS").add(fields.length)
+		final CommandArguments args = CommandArguments.create(key).add(ttl).add(Keyword.Hash.FIELDS, fields.length)
 				.add(fields);
-		return executeCommand(Command.HPEXPIRE, args, (cmd)->cmd.hpexpire(key, ttl, fields), (v)->v);
+		return executeCommand(Command.HPEXPIRE, args, (cmd)->cmd.hpexpire(rawKey(key), ttl, fields));
 	}
 
 	@Override
 	public List<Long> hPExpire(final String key, final long ttl, final ExpireOption option, final String... fields) {
-		return hPExpire(SafeEncoder.encode(key), ttl, option, SafeEncoder.encode(fields));
+		final CommandArguments args = CommandArguments.create(key).add(ttl).add(option)
+				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		return hPExpire(rawBinaryKey(key), ttl, option, SafeEncoder.encode(fields), args);
 	}
 
 	@Override
 	public List<Long> hPExpire(final byte[] key, final long ttl, final ExpireOption option, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(ttl).add(option).add("FIELDS").add(fields.length)
-				.add(fields);
-		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
-		return executeCommand(Command.HPEXPIRE, args, (cmd)->cmd.hpexpire(key, ttl,
-				expireOptionConverter.convert(option), fields), (v)->v);
+		final CommandArguments args = CommandArguments.create(key).add(ttl).add(option)
+				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		return hPExpire(rawKey(key), ttl, option, fields, args);
 	}
 
 	@Override
 	public List<Long> hPExpireAt(final String key, final long unixTimestamp, final String... fields) {
-		return hPExpireAt(SafeEncoder.encode(key), unixTimestamp, SafeEncoder.encode(fields));
+		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp)
+				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		return executeCommand(Command.HPEXPIREAT, args,
+				(cmd)->cmd.hpexpireat(rawBinaryKey(key), unixTimestamp, SafeEncoder.encode(fields)));
 	}
 
 	@Override
 	public List<Long> hPExpireAt(final byte[] key, final long unixTimestamp, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add("FIELDS").add(fields.length)
-				.add(fields);
-		return executeCommand(Command.HPEXPIREAT, args, (cmd)->cmd.hpexpireat(key, unixTimestamp, fields), (v)->v);
+		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp)
+				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		return executeCommand(Command.HPEXPIREAT, args, (cmd)->cmd.hpexpireat(rawKey(key), unixTimestamp, fields));
 	}
 
 	@Override
 	public List<Long> hPExpireAt(final String key, final long unixTimestamp, final ExpireOption option,
 								 final String... fields) {
-		return hPExpireAt(SafeEncoder.encode(key), unixTimestamp, option, SafeEncoder.encode(fields));
+		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(option)
+				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		return hPExpireAt(rawBinaryKey(key), unixTimestamp, option, SafeEncoder.encode(fields), args);
 	}
 
 	@Override
 	public List<Long> hPExpireAt(final byte[] key, final long unixTimestamp, final ExpireOption option,
 								 final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(option).add("FIELDS")
-				.add(fields.length).add(fields);
-		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
-		return executeCommand(Command.HPEXPIREAT, args, (cmd)->cmd.hpexpireat(key, unixTimestamp,
-				expireOptionConverter.convert(option), fields), (v)->v);
+		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(option)
+				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		return hPExpireAt(rawKey(key), unixTimestamp, option, fields, args);
 	}
 
 	@Override
 	public List<Long> hPExpireTime(final String key, final String... fields) {
-		return hPExpireTime(SafeEncoder.encode(key), SafeEncoder.encode(fields));
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		return executeCommand(Command.HPEXPIRETIME, args,
+				(cmd)->cmd.hpexpiretime(rawBinaryKey(key), SafeEncoder.encode(fields)));
 	}
 
 	@Override
 	public List<Long> hPExpireTime(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add("FIELDS").add(fields.length).add(fields);
-		return executeCommand(Command.HPEXPIRETIME, args, (cmd)->cmd.hpexpiretime(key, fields), (v)->v);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		return executeCommand(Command.HPEXPIRETIME, args, (cmd)->cmd.hpexpiretime(rawKey(key), fields));
 	}
 
 	@Override
 	public List<Long> hPTtl(final String key, final String... fields) {
-		return hPTtl(SafeEncoder.encode(key), SafeEncoder.encode(fields));
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		return executeCommand(Command.HPTTL, args, (cmd)->cmd.hpttl(rawBinaryKey(key), SafeEncoder.encode(fields)));
 	}
 
 	@Override
 	public List<Long> hPTtl(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add("FIELDS").add(fields.length).add(fields);
-		return executeCommand(Command.HPTTL, args, (cmd)->cmd.hpttl(key, fields), (v)->v);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		return executeCommand(Command.HPTTL, args, (cmd)->cmd.hpttl(rawKey(key), fields));
 	}
 
 	@Override
 	public String hRandField(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.HRANDFIELD, args, (cmd)->cmd.hrandfield(SafeEncoder.encode(key)),
+		return executeCommand(Command.HRANDFIELD, args, (cmd)->cmd.hrandfield(rawBinaryKey(key)),
 				SafeEncoder::encode);
 	}
 
 	@Override
 	public byte[] hRandField(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.HRANDFIELD, args, (cmd)->cmd.hrandfield(key), (v)->v);
+		return executeCommand(Command.HRANDFIELD, args, (cmd)->cmd.hrandfield(rawKey(key)));
 	}
 
 	@Override
 	public List<String> hRandField(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
-		return executeCommand(Command.HRANDFIELD, args, (cmd)->cmd.hrandfield(SafeEncoder.encode(key), count),
-				new ListConverter<>(SafeEncoder::encode));
+		return executeCommand(Command.HRANDFIELD, args, (cmd)->cmd.hrandfield(rawBinaryKey(key), count),
+				new BinaryListStringListConverter());
 	}
 
 	@Override
 	public List<byte[]> hRandField(final byte[] key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
-		return executeCommand(Command.HRANDFIELD, args, (cmd)->cmd.hrandfield(key, count), (v)->v);
+		return executeCommand(Command.HRANDFIELD, args, (cmd)->cmd.hrandfield(rawKey(key), count));
 	}
 
 	@Override
 	public Map<String, String> hRandFieldWithValues(final String key, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(count).add("WITHVALUES");
-		return executeCommand(Command.HRANDFIELD, args, (cmd)->cmd.hrandfieldWithvalues(SafeEncoder.encode(key),
-				count), new ListKeyValueMapConverter<>(SafeEncoder::encode, SafeEncoder::encode));
+		final CommandArguments args = CommandArguments.create(key).add(count).add(Keyword.Hash.WITHVALUES);
+		return executeCommand(Command.HRANDFIELD, args, (cmd)->cmd.hrandfieldWithvalues(rawBinaryKey(key), count),
+				new ListKeyValueMapConverter<>(SafeEncoder::encode, SafeEncoder::encode));
 	}
 
 	@Override
 	public Map<byte[], byte[]> hRandFieldWithValues(final byte[] key, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(count).add("WITHVALUES");
-		return executeCommand(Command.HRANDFIELD, args, (cmd)->cmd.hrandfieldWithvalues(key, count),
+		final CommandArguments args = CommandArguments.create(key).add(count).add(Keyword.Hash.WITHVALUES);
+		return executeCommand(Command.HRANDFIELD, args, (cmd)->cmd.hrandfieldWithvalues(rawKey(key), count),
 				new ListKeyValueMapConverter<>((k)->k, (v)->v));
 	}
 
 	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final String cursor) {
+	public ScanResult<KeyValue<String, String>> hScan(final String key, final String cursor) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor);
-		return hStringScan(args, (cmd)->cmd.hscan(SafeEncoder.encode(key),
-				new LettuceScanCursor(SafeEncoder.encode(cursor))));
+		return executeCommand(Command.SCAN, args, (cmd)->cmd.hscan(rawBinaryKey(key), new LettuceScanCursor(cursor)),
+				new ScanCursorConverter.MapScanCursorConverter<>(SafeEncoder::encode, SafeEncoder::encode));
 	}
 
 	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor) {
+	public ScanResult<KeyValue<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor);
-		return hBinaryScan(args, (cmd)->cmd.hscan(key, new LettuceScanCursor(cursor)));
+		return executeCommand(Command.SCAN, args, (cmd)->cmd.hscan(rawKey(key), new LettuceScanCursor(cursor)),
+				new ScanCursorConverter.MapScanCursorConverter<>((k)->k, (v)->v));
 	}
 
 	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern);
-		return hStringScan(args, (cmd)->cmd.hscan(SafeEncoder.encode(key),
-				new LettuceScanCursor(SafeEncoder.encode(cursor)), new LettuceScanArgs(pattern)));
+	public ScanResult<KeyValue<String, String>> hScan(final String key, final String cursor, final String pattern) {
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern);
+		return hStringScan(rawBinaryKey(key), cursor, new LettuceScanArgs(pattern), args);
 	}
 
 	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern);
-		return hBinaryScan(args, (cmd)->cmd.hscan(key, new LettuceScanCursor(cursor), new LettuceScanArgs(pattern)));
+	public ScanResult<KeyValue<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern);
+		return hBinaryScan(rawKey(key), cursor, new LettuceScanArgs(pattern), args);
 	}
 
 	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(count);
-		return hStringScan(args, (cmd)->cmd.hscan(SafeEncoder.encode(key),
-				new LettuceScanCursor(SafeEncoder.encode(cursor)), new LettuceScanArgs(count)));
+	public ScanResult<KeyValue<String, String>> hScan(final String key, final String cursor, final String pattern,
+													  final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern)
+				.add(Keyword.Common.COUNT, count);
+		return hStringScan(rawBinaryKey(key), cursor, new LettuceScanArgs(pattern, count), args);
 	}
 
 	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(count);
-		return hBinaryScan(args, (cmd)->cmd.hscan(key, new LettuceScanCursor(cursor), new LettuceScanArgs(count)));
+	public ScanResult<KeyValue<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+													  final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern)
+				.add(Keyword.Common.COUNT, count);
+		return hBinaryScan(rawKey(key), cursor, new LettuceScanArgs(pattern, count), args);
 	}
 
 	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
-												 final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern);
-		return hStringScan(args, (cmd)->cmd.hscan(SafeEncoder.encode(key),
-				new LettuceScanCursor(SafeEncoder.encode(cursor)), new LettuceScanArgs(pattern, count)));
+	public ScanResult<KeyValue<String, String>> hScan(final String key, final String cursor, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT, count);
+		return hStringScan(rawBinaryKey(key), cursor, new LettuceScanArgs(count), args);
 	}
 
 	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-												 final long count) {
-		final CommandArguments args = CommandArguments.create(key).add(cursor).add(pattern).add(count);
-		return hBinaryScan(args, (cmd)->cmd.hscan(key, new LettuceScanCursor(cursor), new LettuceScanArgs(pattern,
-				count)));
+	public ScanResult<KeyValue<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT, count);
+		return hBinaryScan(rawKey(key), cursor, new LettuceScanArgs(count), args);
 	}
 
 	@Override
-	public Long hSet(final String key, final Map<String, String> data) {
-		final MapConverter<String, String, byte[], byte[]> mapConverter = new MapConverter<>(SafeEncoder::encode,
-				SafeEncoder::encode);
-		return hSet(SafeEncoder.encode(key), mapConverter.convert(data));
+	public ScanResult<String> hScanNoValues(final String key, final String cursor) {
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add("NOVALUES");
+		return executeCommand(Command.SCAN, args,
+				(cmd)->cmd.hscanNovalues(rawBinaryKey(key), new LettuceScanCursor(cursor)),
+				new ScanCursorConverter.KeyScanCursorConverter<>(SafeEncoder::encode));
 	}
 
 	@Override
-	public Long hSet(final byte[] key, final Map<byte[], byte[]> data) {
+	public ScanResult<byte[]> hScanNoValues(final byte[] key, final byte[] cursor) {
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add("NOVALUES");
+		return executeCommand(Command.SCAN, args,
+				(cmd)->cmd.hscanNovalues(rawKey(key), new LettuceScanCursor(cursor)),
+				new ScanCursorConverter.KeyScanCursorConverter<>((v)->v));
+	}
+
+	@Override
+	public ScanResult<String> hScanNoValues(final String key, final String cursor, final String pattern) {
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern)
+				.add("NOVALUES");
+		return hStringScanNoValues(rawBinaryKey(key), cursor, new LettuceScanArgs(pattern), args);
+	}
+
+	@Override
+	public ScanResult<byte[]> hScanNoValues(final byte[] key, final byte[] cursor, final byte[] pattern) {
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern)
+				.add("NOVALUES");
+		return hBinaryScanNoValues(rawKey(key), cursor, new LettuceScanArgs(pattern), args);
+	}
+
+	@Override
+	public ScanResult<String> hScanNoValues(final String key, final String cursor, final String pattern,
+											final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern)
+				.add(Keyword.Common.COUNT, count).add("NOVALUES");
+		return hStringScanNoValues(rawBinaryKey(key), cursor, new LettuceScanArgs(pattern, count), args);
+	}
+
+	@Override
+	public ScanResult<byte[]> hScanNoValues(final byte[] key, final byte[] cursor, final byte[] pattern,
+											final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern)
+				.add(Keyword.Common.COUNT, count).add("NOVALUES");
+		return hBinaryScanNoValues(rawKey(key), cursor, new LettuceScanArgs(pattern, count), args);
+	}
+
+	@Override
+	public ScanResult<String> hScanNoValues(final String key, final String cursor, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT, count)
+				.add("NOVALUES");
+		return hStringScanNoValues(rawBinaryKey(key), cursor, new LettuceScanArgs(count), args);
+	}
+
+	@Override
+	public ScanResult<byte[]> hScanNoValues(final byte[] key, final byte[] cursor, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT, count)
+				.add("NOVALUES");
+		return hBinaryScanNoValues(rawKey(key), cursor, new LettuceScanArgs(count), args);
+	}
+
+	@SuppressWarnings({"unchecked"})
+	@Override
+	public Long hSet(final String key, final KeyValue<String, String>... data) {
 		final CommandArguments args = CommandArguments.create(key).add(data);
-		return executeCommand(Command.HSET, args, (cmd)->cmd.hset(key, data), (v)->v);
+		final ArrayKeyValueMapConverter<String, String, byte[], byte[]> arrayKeyValueMapConverter =
+				new ArrayKeyValueMapConverter<>(SafeEncoder::encode, SafeEncoder::encode);
+		return executeCommand(Command.HSET, args,
+				(cmd)->cmd.hset(rawBinaryKey(key), arrayKeyValueMapConverter.convert(data)));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
-	public Status hSetEx(final String key, final Map<String, String> data) {
-		final MapConverter<String, String, byte[], byte[]> mapConverter = new MapConverter<>(SafeEncoder::encode,
-				SafeEncoder::encode);
-		return hSetEx(SafeEncoder.encode(key), mapConverter.convert(data));
-	}
-
-	@Override
-	public Status hSetEx(final byte[] key, final Map<byte[], byte[]> data) {
+	public Long hSet(final byte[] key, final KeyValue<byte[], byte[]>... data) {
 		final CommandArguments args = CommandArguments.create(key).add(data);
-		return executeCommand(Command.HSET, args, (cmd)->cmd.hsetex(key, data), new OneStatusConverter());
+		final ArrayKeyValueMapConverter<byte[], byte[], byte[], byte[]> arrayKeyValueMapConverter = new ArrayKeyValueMapConverter<>(
+				(k)->k, (v)->v);
+		return executeCommand(Command.HSET, args,
+				(cmd)->cmd.hset(rawKey(key), arrayKeyValueMapConverter.convert(data)));
+	}
+
+	@SuppressWarnings({"unchecked"})
+	@Override
+	public Status hSetEx(final String key, final KeyValue<String, String>... data) {
+		final CommandArguments args = CommandArguments.create(key).add(data);
+		final ArrayKeyValueMapConverter<String, String, byte[], byte[]> arrayKeyValueMapConverter =
+				new ArrayKeyValueMapConverter<>(SafeEncoder::encode, SafeEncoder::encode);
+		return executeCommand(Command.HSET, args,
+				(cmd)->cmd.hsetex(rawBinaryKey(key), arrayKeyValueMapConverter.convert(data)),
+				new OneStatusConverter());
+	}
+
+	@SuppressWarnings({"unchecked"})
+	@Override
+	public Status hSetEx(final byte[] key, final KeyValue<byte[], byte[]>... data) {
+		final CommandArguments args = CommandArguments.create(key).add(data);
+		final ArrayKeyValueMapConverter<byte[], byte[], byte[], byte[]> arrayKeyValueMapConverter = new ArrayKeyValueMapConverter<>(
+				(k)->k, (v)->v);
+		return executeCommand(Command.HSET, args,
+				(cmd)->cmd.hsetex(rawKey(key), arrayKeyValueMapConverter.convert(data)),
+				new OneStatusConverter());
 	}
 
 	@Override
-	public Status hSetEx(final String key, final Map<String, String> data, final HSetExArgument argument) {
-		final MapConverter<String, String, byte[], byte[]> mapConverter = new MapConverter<>(SafeEncoder::encode,
-				SafeEncoder::encode);
-		return hSetEx(SafeEncoder.encode(key), mapConverter.convert(data), argument);
-	}
-
-	@Override
-	public Status hSetEx(final byte[] key, final Map<byte[], byte[]> data, final HSetExArgument argument) {
+	public Status hSetEx(final String key, final KeyValue<String, String>[] data, final HSetExArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(data);
 		final HSetExArgumentConverter hSetExArgumentConverter = new HSetExArgumentConverter();
-		return executeCommand(Command.HSETEX, args, (cmd)->cmd.hsetex(key,
-				hSetExArgumentConverter.convert(argument), data), new OneStatusConverter());
+		final ArrayKeyValueMapConverter<String, String, byte[], byte[]> arrayKeyValueMapConverter =
+				new ArrayKeyValueMapConverter<>(SafeEncoder::encode, SafeEncoder::encode);
+		return executeCommand(Command.HSETEX, args,
+				(cmd)->cmd.hsetex(rawBinaryKey(key), hSetExArgumentConverter.convert(argument),
+						arrayKeyValueMapConverter.convert(data)), new OneStatusConverter());
+	}
+
+	@Override
+	public Status hSetEx(final byte[] key, final KeyValue<byte[], byte[]>[] data, final HSetExArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add(argument).add(data);
+		final HSetExArgumentConverter hSetExArgumentConverter = new HSetExArgumentConverter();
+		final ArrayKeyValueMapConverter<byte[], byte[], byte[], byte[]> arrayKeyValueMapConverter = new ArrayKeyValueMapConverter<>(
+				(k)->k, (v)->v);
+		return executeCommand(Command.HSETEX, args,
+				(cmd)->cmd.hsetex(rawKey(key), hSetExArgumentConverter.convert(argument),
+						arrayKeyValueMapConverter.convert(data)), new OneStatusConverter());
 	}
 
 	@Override
 	public Status hSetNx(final String key, final String field, final String value) {
-		return hSetNx(SafeEncoder.encode(key), SafeEncoder.encode(field), SafeEncoder.encode(value));
+		final CommandArguments args = CommandArguments.create(key).add(field, value);
+		return executeCommand(Command.HSETNX, args,
+				(cmd)->cmd.hsetnx(rawBinaryKey(key), SafeEncoder.encode(field), SafeEncoder.encode(value)),
+				new BooleanStatusConverter());
 	}
 
 	@Override
 	public Status hSetNx(final byte[] key, final byte[] field, final byte[] value) {
-		final CommandArguments args = CommandArguments.create(key).add(field).add(value);
-		return executeCommand(Command.HSETNX, args, (cmd)->cmd.hsetnx(key, field, value), new BooleanStatusConverter());
+		final CommandArguments args = CommandArguments.create(key).add(field, value);
+		return executeCommand(Command.HSETNX, args, (cmd)->cmd.hsetnx(rawKey(key), field, value),
+				new BooleanStatusConverter());
 	}
 
 	@Override
 	public Long hStrLen(final String key, final String field) {
-		return hStrLen(SafeEncoder.encode(key), SafeEncoder.encode(field));
+		final CommandArguments args = CommandArguments.create(key).add(field);
+		return executeCommand(Command.HSTRLEN, args, (cmd)->cmd.hstrlen(rawBinaryKey(key), SafeEncoder.encode(field)));
 	}
 
 	@Override
 	public Long hStrLen(final byte[] key, final byte[] field) {
 		final CommandArguments args = CommandArguments.create(key).add(field);
-		return executeCommand(Command.HSTRLEN, args, (cmd)->cmd.hstrlen(key, field), (v)->v);
+		return executeCommand(Command.HSTRLEN, args, (cmd)->cmd.hstrlen(rawKey(key), field));
 	}
 
 	@Override
 	public List<Long> hTtl(final String key, final String... fields) {
-		return hTtl(SafeEncoder.encode(key), SafeEncoder.encode(fields));
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		return executeCommand(Command.HTTL, args, (cmd)->cmd.httl(rawBinaryKey(key), SafeEncoder.encode(fields)));
 	}
 
 	@Override
 	public List<Long> hTtl(final byte[] key, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(fields);
-		return executeCommand(Command.HTTL, args, (cmd)->cmd.httl(key, fields), (v)->v);
+		final CommandArguments args = CommandArguments.create(key).add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		return executeCommand(Command.HTTL, args, (cmd)->cmd.httl(rawKey(key), fields));
 	}
 
 	@Override
 	public List<String> hVals(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.HVALS, args, (cmd)->cmd.hvals(SafeEncoder.encode(key)),
-				new ListConverter<>(SafeEncoder::encode));
+		return executeCommand(Command.HVALS, args, (cmd)->cmd.hvals(rawBinaryKey(key)),
+				new BinaryListStringListConverter());
 	}
 
 	@Override
 	public List<byte[]> hVals(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.HVALS, args, (cmd)->cmd.hvals(key), (v)->v);
+		return executeCommand(Command.HVALS, args, (cmd)->cmd.hvals(rawKey(key)), (v)->v);
 	}
 
-	private ScanResult<Map<String, String>> hStringScan(final CommandArguments args,
-														final com.buession.redis.core.Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, MapScanCursor<byte[], byte[]>> executor) {
-		return executeCommand(Command.HRANDFIELD, args, executor,
-				new ScanCursorConverter.MapScanCursorConverter.BvSvMapScanCursorConverter());
+	private List<Long> hPExpire(final byte[] key, final long ttl, final ExpireOption option, final byte[][] fields,
+								final CommandArguments args) {
+		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
+		return executeCommand(Command.HPEXPIRE, args,
+				(cmd)->cmd.hpexpire(key, ttl, expireOptionConverter.convert(option), fields));
 	}
 
-	private ScanResult<Map<byte[], byte[]>> hBinaryScan(final CommandArguments args,
-														final com.buession.redis.core.Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, MapScanCursor<byte[], byte[]>> executor) {
-		return executeCommand(Command.HRANDFIELD, args, executor, new ScanCursorConverter.MapScanCursorConverter<>());
+	private List<Long> hPExpireAt(final byte[] key, final long unixTimestamp, final ExpireOption option,
+								  final byte[][] fields, final CommandArguments args) {
+		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
+		return executeCommand(Command.HPEXPIREAT, args,
+				(cmd)->cmd.hpexpireat(key, unixTimestamp, expireOptionConverter.convert(option), fields));
+	}
+
+	private ScanResult<KeyValue<String, String>> hStringScan(final byte[] key, final String cursor,
+															 final ScanArgs scanArgs, final CommandArguments args) {
+		return executeCommand(Command.SCAN, args, (cmd)->cmd.hscan(key, new LettuceScanCursor(cursor), scanArgs),
+				new ScanCursorConverter.MapScanCursorConverter<>(SafeEncoder::encode, SafeEncoder::encode));
+	}
+
+	private <V> ScanResult<KeyValue<byte[], byte[]>> hBinaryScan(final byte[] key, final byte[] cursor,
+																 final ScanArgs scanArgs, final CommandArguments args) {
+		return executeCommand(Command.SCAN, args, (cmd)->cmd.hscan(key, new LettuceScanCursor(cursor), scanArgs),
+				new ScanCursorConverter.MapScanCursorConverter<>((k)->k, (v)->v));
+	}
+
+	private ScanResult<String> hStringScanNoValues(final byte[] key, final String cursor,
+												   final ScanArgs scanArgs, final CommandArguments args) {
+		return executeCommand(Command.SCAN, args, (cmd)->cmd.hscanNovalues(key,
+						new LettuceScanCursor(cursor), scanArgs),
+				new ScanCursorConverter.KeyScanCursorConverter<>(SafeEncoder::encode));
+	}
+
+	private ScanResult<byte[]> hBinaryScanNoValues(final byte[] key, final byte[] cursor, final ScanArgs scanArgs,
+												   final CommandArguments args) {
+		return executeCommand(Command.SCAN, args, (cmd)->cmd.hscanNovalues(rawKey(key), new LettuceScanCursor(cursor),
+				scanArgs), new ScanCursorConverter.KeyScanCursorConverter<>((v)->v));
 	}
 
 }

@@ -250,95 +250,97 @@ public class RedisTemplate extends AbstractRedisTemplate implements AutoSuggestO
 	}
 
 	@Override
-	public <V> ScanResult<Map<String, V>> hScan(final String key, final String cursor, final Class<V> clazz) {
+	public <V> ScanResult<KeyValue<String, V>> hScan(final String key, final String cursor, final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hScan(key, cursor),
 				new Converter.ClazzScanResultMapStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final byte[] cursor, final Class<V> clazz) {
+	public <V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final byte[] cursor, final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hScan(key, cursor),
 				new Converter.ClazzScanResultMapBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<Map<String, V>> hScan(final String key, final String cursor, final TypeReference<V> type) {
+	public <V> ScanResult<KeyValue<String, V>> hScan(final String key, final String cursor,
+													 final TypeReference<V> type) {
 		return execute((client)->client.hashCommands().hScan(key, cursor),
 				new Converter.TypeScanResultMapStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final byte[] cursor, final TypeReference<V> type) {
+	public <V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final byte[] cursor,
+													 final TypeReference<V> type) {
 		return execute((client)->client.hashCommands().hScan(key, cursor),
 				new Converter.TypeScanResultMapBinaryConverter<>(this, type));
 	}
 
 	@Override
-	public <V> ScanResult<Map<String, V>> hScan(final String key, final String cursor, final String pattern,
-												final Class<V> clazz) {
+	public <V> ScanResult<KeyValue<String, V>> hScan(final String key, final String cursor, final String pattern,
+													 final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hScan(key, cursor, pattern),
 				new Converter.ClazzScanResultMapStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-												final Class<V> clazz) {
+	public <V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+													 final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hScan(key, cursor, pattern),
 				new Converter.ClazzScanResultMapBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<Map<String, V>> hScan(final String key, final String cursor, final String pattern,
-												final TypeReference<V> type) {
+	public <V> ScanResult<KeyValue<String, V>> hScan(final String key, final String cursor, final String pattern,
+													 final TypeReference<V> type) {
 		return execute((client)->client.hashCommands().hScan(key, cursor, pattern),
 				new Converter.TypeScanResultMapStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-												final TypeReference<V> type) {
+	public <V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+													 final TypeReference<V> type) {
 		return execute((client)->client.hashCommands().hScan(key, cursor, pattern),
 				new Converter.TypeScanResultMapBinaryConverter<>(this, type));
 	}
 
 	@Override
-	public <V> ScanResult<Map<String, V>> hScan(final String key, final String cursor, final int count,
-												final Class<V> clazz) {
+	public <V> ScanResult<KeyValue<String, V>> hScan(final String key, final String cursor, final int count,
+													 final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hScan(key, cursor, count),
 				new Converter.ClazzScanResultMapStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final byte[] cursor, final int count,
-												final Class<V> clazz) {
+	public <V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final byte[] cursor, final int count,
+													 final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hScan(key, cursor, count),
 				new Converter.ClazzScanResultMapBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<Map<String, V>> hScan(final String key, final String cursor, final int count,
-												final TypeReference<V> type) {
+	public <V> ScanResult<KeyValue<String, V>> hScan(final String key, final String cursor, final int count,
+													 final TypeReference<V> type) {
 		return execute((client)->client.hashCommands().hScan(key, cursor, count),
 				new Converter.TypeScanResultMapStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final byte[] cursor, final int count,
-												final TypeReference<V> type) {
+	public <V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final byte[] cursor, final int count,
+													 final TypeReference<V> type) {
 		return execute((client)->client.hashCommands().hScan(key, cursor, count),
 				new Converter.TypeScanResultMapBinaryConverter<>(this, type));
 	}
 
 	@Override
-	public <V> ScanResult<Map<String, V>> hScan(final String key, final String cursor, final String pattern,
-												final int count, final Class<V> clazz) {
+	public <V> ScanResult<KeyValue<String, V>> hScan(final String key, final String cursor, final String pattern,
+													 final int count, final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hScan(key, cursor, pattern, count),
 				new Converter.ClazzScanResultMapStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-												final int count, final Class<V> clazz) {
+	public <V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+													 final int count, final Class<V> clazz) {
 		return execute((client)->client.hashCommands().hScan(key, cursor, pattern, count),
 				new Converter.ClazzScanResultMapBinaryConverter<>(this, clazz));
 	}

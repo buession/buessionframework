@@ -24,17 +24,16 @@
  */
 package com.buession.redis.core.internal.convert.lettuce.response;
 
+import com.buession.core.converter.CollectionMapConverter;
 import com.buession.core.converter.Converter;
-import com.buession.lang.KeyValue;
-import org.springframework.lang.Nullable;
+import io.lettuce.core.KeyValue;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
- * Lettuce {@link io.lettuce.core.KeyValue} 转换为 {@link KeyValue}
+ * Lettuce {@link KeyValue} 转换为 {@link KeyValue}
  *
  * @param <SK>
  * 		原始 Key 类型
@@ -48,8 +47,8 @@ import java.util.stream.Collectors;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class ListKeyValueMapConverter<SK, SV, TK, TV> implements Converter<List<io.lettuce.core.KeyValue<SK, SV>>,
-		Map<TK, TV>> {
+public final class ListKeyValueMapConverter<SK, SV, TK, TV>
+		implements CollectionMapConverter<KeyValue<SK, SV>, TK, TV, List<KeyValue<SK, SV>>> {
 
 	/**
 	 * Key 转换器
@@ -74,16 +73,18 @@ public final class ListKeyValueMapConverter<SK, SV, TK, TV> implements Converter
 		this.valueConverter = valueConverter;
 	}
 
-	@Nullable
 	@Override
-	public Map<TK, TV> convert(final List<io.lettuce.core.KeyValue<SK, SV>> source) {
+	public Map<TK, TV> convert(final List<KeyValue<SK, SV>> source) {
 		if(source == null){
 			return null;
-		}else if(source.isEmpty()){
-			return new LinkedHashMap<>();
 		}else{
-			return source.stream().collect(Collectors.toMap((item)->keyConverter.convert(item.getKey()),
-					(item)->valueConverter.convert(item.getValue()), (oldVal, newVal)->oldVal, LinkedHashMap::new));
+			final Map<TK, TV> map = new LinkedHashMap<>(source.size());
+
+			for(KeyValue<SK, SV> kv : source){
+				map.put(keyConverter.convert(kv.getKey()), valueConverter.convert(kv.getValue()));
+			}
+
+			return map;
 		}
 	}
 

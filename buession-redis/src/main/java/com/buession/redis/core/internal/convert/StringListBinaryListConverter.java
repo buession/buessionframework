@@ -24,22 +24,22 @@
  */
 package com.buession.redis.core.internal.convert;
 
-import com.buession.core.converter.MapConverter;
+import com.buession.core.converter.ListConverter;
 import com.buession.redis.utils.SafeEncoder;
 
 /**
- * {@link String} {@link java.util.Map} 转换为 二进制 {@link java.util.Map}
+ * {@link String} {@link java.util.List} 转换为 二进制 {@link java.util.List}
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class StringMapBinaryMapConverter extends MapConverter<String, String, byte[], byte[]> {
+public final class StringListBinaryListConverter extends ListConverter<String, byte[]> {
 
 	/**
 	 * 构造函数
 	 */
-	public StringMapBinaryMapConverter() {
-		super(SafeEncoder::encode, SafeEncoder::encode);
+	public StringListBinaryListConverter() {
+		super(SafeEncoder::encode);
 	}
 
 }

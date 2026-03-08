@@ -26,12 +26,18 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
+import com.buession.lang.KeyValue;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 import io.lettuce.core.KeyScanCursor;
+import io.lettuce.core.MapScanCursor;
 import io.lettuce.core.ScanCursor;
 import io.lettuce.core.ScoredValue;
 import io.lettuce.core.ScoredValueScanCursor;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Lettuce {@link ScanCursor} 转换为 {@link ScanResult}
@@ -90,6 +96,47 @@ public interface ScanCursorConverter<T extends ScanCursor, R> extends Converter<
 	}
 
 	/**
+	 * Lettuce {@link MapScanCursor} 转换为 {@link ScanResult}
+	 *
+	 * @param <SV>
+	 * 		原始 Key 类型
+	 * @param <SV>
+	 * 		原始值类型
+	 * @param <TK>
+	 * 		目标 Key 类型
+	 * @param <TV>
+	 * 		目标 Key 类型
+	 *
+	 * @author Yong.Teng
+	 */
+	final class MapScanCursorConverter<SK, SV, TK, TV>
+			implements ScanCursorConverter<MapScanCursor<SK, SV>, KeyValue<TK, TV>> {
+
+		private final Converter<SK, TK> keyConverter;
+
+		private final Converter<SV, TV> valueConverter;
+
+		public MapScanCursorConverter(final Converter<SK, TK> keyConverter, final Converter<SV, TV> valueConverter) {
+			this.keyConverter = keyConverter;
+			this.valueConverter = valueConverter;
+		}
+
+		@Override
+		public ScanResult<KeyValue<TK, TV>> convert(final MapScanCursor<SK, SV> source) {
+			final Map<SK, SV> map = source.getMap();
+			final List<KeyValue<TK, TV>> results = new ArrayList<>(map.size());
+
+			for(Map.Entry<SK, SV> entry : map.entrySet()){
+				results.add(
+						new KeyValue<>(keyConverter.convert(entry.getKey()), valueConverter.convert(entry.getValue())));
+			}
+
+			return new ScanResult<>(source.getCursor(), results);
+		}
+
+	}
+
+	/**
 	 * Lettuce {@link ValueScanCursor} 转换为 {@link ScanResult}
 	 *
 	 * @param <K>
@@ -126,44 +173,7 @@ public interface ScanCursorConverter<T extends ScanCursor, R> extends Converter<
 
 	}
 
-	/**
-	 * Lettuce {@link MapScanCursor} 转换为 {@link ScanResult}
-	 *
-	 * @param <K>
-	 * 		Key 类型
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @author Yong.Teng
-	 */
-		/*
-	final class MapScanCursorConverter<K, V> implements ScanCursorConverter<MapScanCursor<K, V>, Map<K, V>> {
-
-		@Override
-		public ScanResult<Map<K, V>> convert(final MapScanCursor<K, V> source) {
-			return new ScanResult<>(source.getCursor(), source.getMap());
-		}
-
-		/**
-		 * Lettuce {@link MapScanCursor} 转换为 {@link ScanResult}
-		 *
-		 * @author Yong.Teng
 		 */
-		/*
-		public final static class BvSvMapScanCursorConverter implements ScanCursorConverter<MapScanCursor<byte[],
-				byte[]>, Map<String, String>> {
 
-			@Override
-			public ScanResult<Map<String, String>> convert(final MapScanCursor<byte[], byte[]> source) {
-				final MapConverter<byte[], byte[], String, String> mapConverter =
-						new MapConverter<>(SafeEncoder::encode, SafeEncoder::encode);
-				return new ScanResult<>(source.getCursor(), mapConverter.convert(source.getMap()));
-			}
-
-		}
-
-	}
-
-		 */
 
 }

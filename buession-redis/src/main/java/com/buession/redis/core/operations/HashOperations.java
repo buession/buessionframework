@@ -968,7 +968,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 哈希表 key 中域 field 减量 increment 后的值
 	 */
 	default Long hDecrBy(final String key, final String field, final long value) {
-		return hIncrBy(key, field, value > 0 ? value * -1 : value);
+		return hIncrBy(key, field, value * -1);
 	}
 
 	/**
@@ -986,7 +986,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 哈希表 key 中域 field 减量 increment 后的值
 	 */
 	default Long hDecrBy(final byte[] key, final byte[] field, final long value) {
-		return hIncrBy(key, field, value > 0 ? value * -1 : value);
+		return hIncrBy(key, field, value * -1);
 	}
 
 	@Override
@@ -1014,7 +1014,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 哈希表 key 中域 field 减量 increment 后的值
 	 */
 	default Double hDecrByFloat(final String key, final String field, final double value) {
-		return hIncrByFloat(key, field, value > 0 ? value * -1 : value);
+		return hIncrByFloat(key, field, value * -1);
 	}
 
 	/**
@@ -1032,7 +1032,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 哈希表 key 中域 field 减量 increment 后的值
 	 */
 	default Double hDecrByFloat(final byte[] key, final byte[] field, final double value) {
-		return hIncrByFloat(key, field, value > 0 ? value * -1 : value);
+		return hIncrByFloat(key, field, value * -1);
 	}
 
 	@Override
@@ -1137,11 +1137,13 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 */
 	<V> List<V> hMGet(final byte[] key, final byte[][] fields, final TypeReference<V> type);
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	default Status hMSet(final String key, final KeyValue<String, String>... data) {
 		return execute((client)->client.hashCommands().hMSet(key, data));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	default Status hMSet(final byte[] key, final KeyValue<byte[], byte[]>... data) {
 		return execute((client)->client.hashCommands().hMSet(key, data));
@@ -1553,6 +1555,16 @@ public interface HashOperations extends HashCommands, RedisOperations {
 		return execute((client)->client.hashCommands().hPExpireTime(key, fields));
 	}
 
+	@Override
+	default List<Long> hPTtl(final String key, final String... fields) {
+		return execute((client)->client.hashCommands().hPTtl(key, fields));
+	}
+
+	@Override
+	default List<Long> hPTtl(final byte[] key, final byte[]... fields) {
+		return execute((client)->client.hashCommands().hPTtl(key, fields));
+	}
+
 	/**
 	 * 获取哈希中的一个或多个字段的过期时间
 	 *
@@ -1698,45 +1710,87 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	<V> Map<byte[], V> hRandFieldWithValues(final byte[] key, final int count, final TypeReference<V> type);
 
 	@Override
-	default ScanResult<Map<String, String>> hScan(final String key, final String cursor) {
+	default ScanResult<KeyValue<String, String>> hScan(final String key, final String cursor) {
 		return execute((client)->client.hashCommands().hScan(key, cursor));
 	}
 
 	@Override
-	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor) {
+	default ScanResult<KeyValue<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor) {
 		return execute((client)->client.hashCommands().hScan(key, cursor));
 	}
 
 	@Override
-	default ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern) {
+	default ScanResult<KeyValue<String, String>> hScan(final String key, final String cursor, final String pattern) {
 		return execute((client)->client.hashCommands().hScan(key, cursor, pattern));
 	}
 
 	@Override
-	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
+	default ScanResult<KeyValue<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
 		return execute((client)->client.hashCommands().hScan(key, cursor, pattern));
 	}
 
 	@Override
-	default ScanResult<Map<String, String>> hScan(final String key, final String cursor, final int count) {
-		return execute((client)->client.hashCommands().hScan(key, cursor, count));
-	}
-
-	@Override
-	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final int count) {
-		return execute((client)->client.hashCommands().hScan(key, cursor, count));
-	}
-
-	@Override
-	default ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
-												  final int count) {
+	default ScanResult<KeyValue<String, String>> hScan(final String key, final String cursor, final String pattern,
+													   final int count) {
 		return execute((client)->client.hashCommands().hScan(key, cursor, pattern, count));
 	}
 
 	@Override
-	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-												  final int count) {
+	default ScanResult<KeyValue<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+													   final int count) {
 		return execute((client)->client.hashCommands().hScan(key, cursor, pattern, count));
+	}
+
+	@Override
+	default ScanResult<KeyValue<String, String>> hScan(final String key, final String cursor, final int count) {
+		return execute((client)->client.hashCommands().hScan(key, cursor, count));
+	}
+
+	@Override
+	default ScanResult<KeyValue<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final int count) {
+		return execute((client)->client.hashCommands().hScan(key, cursor, count));
+	}
+
+	@Override
+	default ScanResult<String> hScanNoValues(final String key, final String cursor) {
+		return execute((client)->client.hashCommands().hScanNoValues(key, cursor));
+	}
+
+	@Override
+	default ScanResult<byte[]> hScanNoValues(final byte[] key, final byte[] cursor) {
+		return execute((client)->client.hashCommands().hScanNoValues(key, cursor));
+	}
+
+	@Override
+	default ScanResult<String> hScanNoValues(final String key, final String cursor, final String pattern) {
+		return execute((client)->client.hashCommands().hScanNoValues(key, cursor, pattern));
+	}
+
+	@Override
+	default ScanResult<byte[]> hScanNoValues(final byte[] key, final byte[] cursor, final byte[] pattern) {
+		return execute((client)->client.hashCommands().hScanNoValues(key, cursor, pattern));
+	}
+
+	@Override
+	default ScanResult<String> hScanNoValues(final String key, final String cursor, final String pattern,
+											 final int count) {
+		return execute((client)->client.hashCommands().hScanNoValues(key, cursor, pattern, count));
+	}
+
+	@Override
+	default ScanResult<byte[]> hScanNoValues(final byte[] key, final byte[] cursor, final byte[] pattern,
+											 final int count) {
+		return execute((client)->client.hashCommands().hScanNoValues(key, cursor, pattern, count));
+	}
+
+	@Override
+	default ScanResult<String> hScanNoValues(final String key, final String cursor, final int count) {
+		return execute((client)->client.hashCommands().hScanNoValues(key, cursor, count));
+	}
+
+	@Override
+	default ScanResult<byte[]> hScanNoValues(final byte[] key, final byte[] cursor, final int count) {
+		return execute((client)->client.hashCommands().hScanNoValues(key, cursor, count));
 	}
 
 	/**
@@ -1751,7 +1805,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default ScanResult<Map<String, String>> hScan(final String key, final long cursor) {
+	default ScanResult<KeyValue<String, String>> hScan(final String key, final long cursor) {
 		return hScan(key, Long.toString(cursor));
 	}
 
@@ -1767,7 +1821,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor) {
+	default ScanResult<KeyValue<byte[], byte[]>> hScan(final byte[] key, final long cursor) {
 		return hScan(key, NumberUtils.long2bytes(cursor));
 	}
 
@@ -1785,7 +1839,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回和给定模式相匹配的元素
 	 */
-	default ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern) {
+	default ScanResult<KeyValue<String, String>> hScan(final String key, final long cursor, final String pattern) {
 		return hScan(key, Long.toString(cursor), pattern);
 	}
 
@@ -1803,7 +1857,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回和给定模式相匹配的元素
 	 */
-	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern) {
+	default ScanResult<KeyValue<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern) {
 		return hScan(key, NumberUtils.long2bytes(cursor), pattern);
 	}
 
@@ -1821,7 +1875,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的指定数量的键值对
 	 */
-	default ScanResult<Map<String, String>> hScan(final String key, final long cursor, final int count) {
+	default ScanResult<KeyValue<String, String>> hScan(final String key, final long cursor, final int count) {
 		return hScan(key, Long.toString(cursor), count);
 	}
 
@@ -1839,7 +1893,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的指定数量的键值对
 	 */
-	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final int count) {
+	default ScanResult<KeyValue<byte[], byte[]>> hScan(final byte[] key, final long cursor, final int count) {
 		return hScan(key, NumberUtils.long2bytes(cursor), count);
 	}
 
@@ -1859,8 +1913,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
-	default ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern,
-												  final int count) {
+	default ScanResult<KeyValue<String, String>> hScan(final String key, final long cursor, final String pattern,
+													   final int count) {
 		return hScan(key, Long.toString(cursor), pattern, count);
 	}
 
@@ -1880,8 +1934,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
-	default ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern,
-												  final int count) {
+	default ScanResult<KeyValue<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern,
+													   final int count) {
 		return hScan(key, NumberUtils.long2bytes(cursor), pattern, count);
 	}
 
@@ -1902,7 +1956,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<Map<String, V>> hScan(final String key, final long cursor, final Class<V> clazz) {
+	default <V> ScanResult<KeyValue<String, V>> hScan(final String key, final long cursor, final Class<V> clazz) {
 		return hScan(key, Long.toString(cursor), clazz);
 	}
 
@@ -1922,7 +1976,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final long cursor, final Class<V> clazz) {
+	default <V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final long cursor, final Class<V> clazz) {
 		return hScan(key, NumberUtils.long2bytes(cursor), clazz);
 	}
 
@@ -1942,7 +1996,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<Map<String, V>> hScan(final String key, final long cursor, final TypeReference<V> type) {
+	default <V> ScanResult<KeyValue<String, V>> hScan(final String key, final long cursor,
+													  final TypeReference<V> type) {
 		return hScan(key, Long.toString(cursor), type);
 	}
 
@@ -1962,7 +2017,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final long cursor, final TypeReference<V> type) {
+	default <V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final long cursor,
+													  final TypeReference<V> type) {
 		return hScan(key, NumberUtils.long2bytes(cursor), type);
 	}
 
@@ -1982,7 +2038,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<String, V>> hScan(final String key, final String cursor, final Class<V> clazz);
+	<V> ScanResult<KeyValue<String, V>> hScan(final String key, final String cursor, final Class<V> clazz);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
@@ -2000,7 +2056,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final byte[] cursor, final Class<V> clazz);
+	<V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final byte[] cursor, final Class<V> clazz);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -2018,7 +2074,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<String, V>> hScan(final String key, final String cursor, final TypeReference<V> type);
+	<V> ScanResult<KeyValue<String, V>> hScan(final String key, final String cursor, final TypeReference<V> type);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -2036,7 +2092,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final byte[] cursor, final TypeReference<V> type);
+	<V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final byte[] cursor, final TypeReference<V> type);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
@@ -2056,8 +2112,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<Map<String, V>> hScan(final String key, final long cursor, final String pattern,
-												 final Class<V> clazz) {
+	default <V> ScanResult<KeyValue<String, V>> hScan(final String key, final long cursor, final String pattern,
+													  final Class<V> clazz) {
 		return hScan(key, Long.toString(cursor), pattern, clazz);
 	}
 
@@ -2079,8 +2135,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final long cursor, final byte[] pattern,
-												 final Class<V> clazz) {
+	default <V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final long cursor, final byte[] pattern,
+													  final Class<V> clazz) {
 		return hScan(key, NumberUtils.long2bytes(cursor), pattern, clazz);
 	}
 
@@ -2102,8 +2158,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<Map<String, V>> hScan(final String key, final long cursor, final String pattern,
-												 final TypeReference<V> type) {
+	default <V> ScanResult<KeyValue<String, V>> hScan(final String key, final long cursor, final String pattern,
+													  final TypeReference<V> type) {
 		return hScan(key, Long.toString(cursor), pattern, type);
 	}
 
@@ -2125,8 +2181,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final long cursor, final byte[] pattern,
-												 final TypeReference<V> type) {
+	default <V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final long cursor, final byte[] pattern,
+													  final TypeReference<V> type) {
 		return hScan(key, NumberUtils.long2bytes(cursor), pattern, type);
 	}
 
@@ -2148,8 +2204,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<String, V>> hScan(final String key, final String cursor, final String pattern,
-										 final Class<V> clazz);
+	<V> ScanResult<KeyValue<String, V>> hScan(final String key, final String cursor, final String pattern,
+											  final Class<V> clazz);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
@@ -2169,8 +2225,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-										 final Class<V> clazz);
+	<V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+											  final Class<V> clazz);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -2190,8 +2246,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<String, V>> hScan(final String key, final String cursor, final String pattern,
-										 final TypeReference<V> type);
+	<V> ScanResult<KeyValue<String, V>> hScan(final String key, final String cursor, final String pattern,
+											  final TypeReference<V> type);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -2211,8 +2267,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-										 final TypeReference<V> type);
+	<V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+											  final TypeReference<V> type);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
@@ -2232,8 +2288,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<Map<String, V>> hScan(final String key, final long cursor, final int count,
-												 final Class<V> clazz) {
+	default <V> ScanResult<KeyValue<String, V>> hScan(final String key, final long cursor, final int count,
+													  final Class<V> clazz) {
 		return hScan(key, Long.toString(cursor), count, clazz);
 	}
 
@@ -2255,8 +2311,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final long cursor, final int count,
-												 final Class<V> clazz) {
+	default <V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final long cursor, final int count,
+													  final Class<V> clazz) {
 		return hScan(key, NumberUtils.long2bytes(cursor), count, clazz);
 	}
 
@@ -2278,8 +2334,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<Map<String, V>> hScan(final String key, final long cursor, final int count,
-												 final TypeReference<V> type) {
+	default <V> ScanResult<KeyValue<String, V>> hScan(final String key, final long cursor, final int count,
+													  final TypeReference<V> type) {
 		return hScan(key, Long.toString(cursor), count, type);
 	}
 
@@ -2301,8 +2357,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	default <V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final long cursor, final int count,
-												 final TypeReference<V> type) {
+	default <V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final long cursor, final int count,
+													  final TypeReference<V> type) {
 		return hScan(key, NumberUtils.long2bytes(cursor), count, type);
 	}
 
@@ -2324,7 +2380,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<String, V>> hScan(final String key, final String cursor, final int count, final Class<V> clazz);
+	<V> ScanResult<KeyValue<String, V>> hScan(final String key, final String cursor, final int count,
+											  final Class<V> clazz);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
@@ -2344,7 +2401,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final byte[] cursor, final int count, final Class<V> clazz);
+	<V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final byte[] cursor, final int count,
+											  final Class<V> clazz);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -2364,8 +2422,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<String, V>> hScan(final String key, final String cursor, final int count,
-										 final TypeReference<V> type);
+	<V> ScanResult<KeyValue<String, V>> hScan(final String key, final String cursor, final int count,
+											  final TypeReference<V> type);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -2385,31 +2443,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final byte[] cursor, final int count,
-										 final TypeReference<V> type);
-
-	/**
-	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param count
-	 * 		返回元素数量
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 返回的每个元素都是一个键值对
-	 */
-	<V> ScanResult<Map<String, V>> hScan(final String key, final String cursor, final String pattern, final int count,
-										 final Class<V> clazz);
+	<V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final byte[] cursor, final int count,
+											  final TypeReference<V> type);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
@@ -2431,8 +2466,33 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<byte[], V>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count,
-										 final Class<V> clazz);
+	<V> ScanResult<KeyValue<String, V>> hScan(final String key, final String cursor, final String pattern,
+											  final int count,
+											  final Class<V> clazz);
+
+	/**
+	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param count
+	 * 		返回元素数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	<V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+											  final int count,
+											  final Class<V> clazz);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -2454,8 +2514,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<String, V>> hScanObject(final String key, final String cursor, final String pattern,
-											   final int count, final TypeReference<V> type);
+	<V> ScanResult<KeyValue<String, V>> hScanObject(final String key, final String cursor, final String pattern,
+													final int count, final TypeReference<V> type);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -2477,24 +2537,28 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<Map<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
-											   final int count, final TypeReference<V> type);
+	<V> ScanResult<KeyValue<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
+													final int count, final TypeReference<V> type);
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	default Long hSet(final String key, final KeyValue<String, String>... data) {
 		return execute((client)->client.hashCommands().hSet(key, data));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	default Long hSet(final byte[] key, final KeyValue<byte[], byte[]>... data) {
 		return execute((client)->client.hashCommands().hSet(key, data));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	default Status hSetEx(final String key, final KeyValue<String, String>... data) {
 		return execute((client)->client.hashCommands().hSetEx(key, data));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	default Status hSetEx(final byte[] key, final KeyValue<byte[], byte[]>... data) {
 		return execute((client)->client.hashCommands().hSetEx(key, data));
