@@ -30,6 +30,8 @@ package com.buession.redis.core;
  */
 public class RedisClusterServer extends RedisServer {
 
+	private final static long serialVersionUID = -7258418154795222406L;
+
 	/**
 	 * 构造函数
 	 *

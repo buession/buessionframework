@@ -24,7 +24,6 @@
  */
 package com.buession.redis.core;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -33,51 +32,7 @@ import java.util.List;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class LcsResult {
-
-	private String matchString;
-
-	private List<MatchedPosition> matches;
-
-	private long len;
-
-	public LcsResult(String matchString) {
-		this.matchString = matchString;
-	}
-
-	public LcsResult(long len) {
-		this.len = len;
-	}
-
-	public LcsResult(List<MatchedPosition> matches, long len) {
-		this.matches = matches;
-		this.len = len;
-	}
-
-	/**
-	 * Creates new {@link LcsResult}.
-	 *
-	 * @param matchString
-	 * @param matches
-	 * @param len
-	 */
-	public LcsResult(String matchString, List<MatchedPosition> matches, long len) {
-		this.matchString = matchString;
-		this.matches = Collections.unmodifiableList(matches);
-		this.len = len;
-	}
-
-	public String getMatchString() {
-		return matchString;
-	}
-
-	public List<MatchedPosition> getMatches() {
-		return matches;
-	}
-
-	public long getLen() {
-		return len;
-	}
+public record LcsResult(String matchString, List<MatchedPosition> matches, long len) {
 
 	/**
 	 * Match position in each string.

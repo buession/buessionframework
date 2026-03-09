@@ -35,10 +35,10 @@ import java.util.List;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class StreamInfoConverter implements Converter<List<Object>, Stream> {
+public final class StreamInfoConverter<K, V> implements Converter<List<Object>, Stream<K, V>> {
 
 	@Override
-	public Stream convert(final List<Object> source) {
+	public Stream<K, V> convert(final List<Object> source) {
 		return null;
 	}
 

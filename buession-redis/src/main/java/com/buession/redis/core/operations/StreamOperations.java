@@ -1245,12 +1245,12 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	}
 
 	@Override
-	default Stream xInfoStream(final String key) {
+	default Stream<String, String> xInfoStream(final String key) {
 		return execute((client)->client.streamCommands().xInfoStream(key));
 	}
 
 	@Override
-	default Stream xInfoStream(final byte[] key) {
+	default Stream<byte[], byte[]> xInfoStream(final byte[] key) {
 		return execute((client)->client.streamCommands().xInfoStream(key));
 	}
 

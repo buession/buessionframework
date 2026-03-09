@@ -47,11 +47,15 @@ import java.util.Map;
  * 		-
  * @param infos
  * 		-
+ * @param <K>
+ * 		-
+ * @param <V>
+ * 		-
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public record Stream(
+public record Stream<K, V>(
 		long length,
 
 		long groups,
@@ -62,9 +66,9 @@ public record Stream(
 
 		StreamEntryId lastGeneratedId,
 
-		StreamEntry firstEntry,
+		StreamEntry<K, V> firstEntry,
 
-		StreamEntry lastEntry,
+		StreamEntry<K, V> lastEntry,
 
 		Map<String, Object> infos
 ) {

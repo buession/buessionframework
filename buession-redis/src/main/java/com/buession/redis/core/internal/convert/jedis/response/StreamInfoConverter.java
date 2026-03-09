@@ -37,20 +37,20 @@ import redis.clients.jedis.resps.StreamInfo;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class StreamInfoConverter implements Converter<StreamInfo, Stream> {
+public final class StreamInfoConverter<K, V> implements Converter<StreamInfo, Stream<K, V>> {
 
 	@Override
-	public Stream convert(final StreamInfo source) {
+	public Stream<K, V> convert(final StreamInfo source) {
 		if(source == null){
 			return null;
 		}
 
 		final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
-		final StreamEntryConverter streamEntryConverter = new StreamEntryConverter();
+		final StreamEntryConverter<K, V> streamEntryConverter = new StreamEntryConverter<>((k)->k, (v)->v);
 		final StreamEntryId lastGeneratedId = streamEntryIDConverter.convert(source.getLastGeneratedId());
-		final StreamEntry firstEntry = streamEntryConverter.convert(source.getFirstEntry());
-		final StreamEntry lastEntry = streamEntryConverter.convert(source.getLastEntry());
-		return new Stream(source.getLength(), source.getRadixTreeKeys(), source.getRadixTreeNodes(),
+		final StreamEntry<K, V> firstEntry = streamEntryConverter.convert(source.getFirstEntry());
+		final StreamEntry<K, V> lastEntry = streamEntryConverter.convert(source.getLastEntry());
+		return new Stream<>(source.getLength(), source.getRadixTreeKeys(), source.getRadixTreeNodes(),
 				source.getGroups(), lastGeneratedId, firstEntry, lastEntry, source.getStreamInfo());
 	}
 

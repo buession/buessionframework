@@ -1152,7 +1152,7 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @return {@link Stream}
 	 */
-	Stream xInfoStream(final String key);
+	Stream<String, String> xInfoStream(final String key);
 
 	/**
 	 * This command returns information about the stream stored at key
@@ -1164,7 +1164,7 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @return {@link Stream}
 	 */
-	Stream xInfoStream(final byte[] key);
+	Stream<byte[], byte[]> xInfoStream(final byte[] key);
 
 	/**
 	 * This command returns information about the stream stored at key

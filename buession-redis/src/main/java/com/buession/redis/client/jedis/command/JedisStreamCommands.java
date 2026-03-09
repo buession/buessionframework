@@ -562,15 +562,18 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	}
 
 	@Override
-	public Stream xInfoStream(final String key) {
+	public Stream<String, String> xInfoStream(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(Command.XINFO, SubCommand.XINFO_STREAM, args, (cmd)->cmd.xinfoStream(key),
-				new StreamInfoConverter());
+				new StreamInfoConverter<>());
 	}
 
 	@Override
-	public Stream xInfoStream(final byte[] key) {
-		return xInfoStream(SafeEncoder.encode(key));
+	public Stream<byte[], byte[]> xInfoStream(final byte[] key) {
+		final CommandArguments args = CommandArguments.create(key);
+		return executeCommand(Command.XINFO, SubCommand.XINFO_STREAM, args,
+				(cmd)->cmd.xinfoStream(SafeEncoder.encode(key)),
+				new StreamInfoConverter<>());
 	}
 
 	@Override

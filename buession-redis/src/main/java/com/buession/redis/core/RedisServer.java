@@ -40,6 +40,8 @@ import java.util.Set;
  */
 public class RedisServer extends RedisNode {
 
+	private final static long serialVersionUID = 5743488459995739733L;
+
 	/**
 	 * Redis 服务器主机 IP 地址
 	 */
