@@ -47,12 +47,7 @@ public class ArraySetConverter<S, T> extends AbstractArrayCollectionConverter<S,
 	 * 		List item 转换器
 	 */
 	public ArraySetConverter(final Converter<S, T> itemConverter) {
-		super(itemConverter);
-	}
-
-	@Override
-	protected Set<T> createCollection() {
-		return new LinkedHashSet<>();
+		super(new LinkedHashSet<>(), itemConverter);
 	}
 
 }

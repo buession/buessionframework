@@ -47,12 +47,7 @@ public class ArrayListConverter<S, T> extends AbstractArrayCollectionConverter<S
 	 * 		List item 转换器
 	 */
 	public ArrayListConverter(final Converter<S, T> itemConverter) {
-		super(itemConverter);
-	}
-
-	@Override
-	protected List<T> createCollection() {
-		return new ArrayList<>();
+		super(new ArrayList<>(), itemConverter);
 	}
 
 }

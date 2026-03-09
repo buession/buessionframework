@@ -25,6 +25,7 @@
 package com.buession.redis.core.command.args;
 
 import com.buession.redis.utils.ArgStringBuilder;
+import com.buession.redis.utils.SafeEncoder;
 
 /**
  * JSON.MSET 参数
@@ -32,7 +33,7 @@ import com.buession.redis.utils.ArgStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class JsonKeyPathValueArgument {
+public class JsonKeyPathValue {
 
 	/**
 	 * Key
@@ -52,7 +53,7 @@ public class JsonKeyPathValueArgument {
 	/**
 	 * 构造函数
 	 */
-	public JsonKeyPathValueArgument() {
+	public JsonKeyPathValue() {
 	}
 
 	/**
@@ -65,10 +66,24 @@ public class JsonKeyPathValueArgument {
 	 * @param value
 	 * 		值
 	 */
-	public JsonKeyPathValueArgument(final String key, final String path, final String value) {
+	public JsonKeyPathValue(final String key, final String path, final String value) {
 		this.key = key;
 		this.path = path;
 		this.value = value;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param key
+	 * 		Key
+	 * @param path
+	 * 		JSONPath 表达式
+	 * @param value
+	 * 		值
+	 */
+	public JsonKeyPathValue(final byte[] key, final byte[] path, final byte[] value) {
+		this(SafeEncoder.encode(key), SafeEncoder.encode(path), SafeEncoder.encode(value));
 	}
 
 	/**
@@ -86,9 +101,9 @@ public class JsonKeyPathValueArgument {
 	 * @param key
 	 * 		Key
 	 *
-	 * @return {@link JsonKeyPathValueArgument}
+	 * @return {@link JsonKeyPathValue}
 	 */
-	public JsonKeyPathValueArgument setKey(String key) {
+	public JsonKeyPathValue setKey(String key) {
 		this.key = key;
 		return this;
 	}
@@ -108,9 +123,9 @@ public class JsonKeyPathValueArgument {
 	 * @param path
 	 * 		JSONPath 表达式
 	 *
-	 * @return {@link JsonKeyPathValueArgument}
+	 * @return {@link JsonKeyPathValue}
 	 */
-	public JsonKeyPathValueArgument setPath(String path) {
+	public JsonKeyPathValue setPath(String path) {
 		this.path = path;
 		return this;
 	}
@@ -130,9 +145,9 @@ public class JsonKeyPathValueArgument {
 	 * @param value
 	 * 		值
 	 *
-	 * @return {@link JsonKeyPathValueArgument}
+	 * @return {@link JsonKeyPathValue}
 	 */
-	public JsonKeyPathValueArgument setValue(String value) {
+	public JsonKeyPathValue setValue(String value) {
 		this.value = value;
 		return this;
 	}

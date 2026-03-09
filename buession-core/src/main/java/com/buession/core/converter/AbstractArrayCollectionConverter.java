@@ -47,14 +47,18 @@ public abstract class AbstractArrayCollectionConverter<S, T, C extends Collectio
 	 */
 	private final Converter<S, T> itemConverter;
 
+	private final C result;
+
 	/**
 	 * 构造函数
 	 *
 	 * @param itemConverter
 	 * 		Collection item 转换器
 	 */
-	public AbstractArrayCollectionConverter(final Converter<S, T> itemConverter) {
+	public AbstractArrayCollectionConverter(final C result, final Converter<S, T> itemConverter) {
+		Assert.isNull(result, "result can not be null");
 		Assert.isNull(itemConverter, "itemConverter cloud not be null.");
+		this.result = result;
 		this.itemConverter = itemConverter;
 	}
 
@@ -63,8 +67,6 @@ public abstract class AbstractArrayCollectionConverter<S, T, C extends Collectio
 		if(source == null){
 			return null;
 		}else{
-			final C result = createCollection();
-
 			for(S s : source){
 				result.add(itemConverter.convert(s));
 			}
@@ -72,7 +74,5 @@ public abstract class AbstractArrayCollectionConverter<S, T, C extends Collectio
 			return result;
 		}
 	}
-
-	protected abstract C createCollection();
 
 }

@@ -68,7 +68,7 @@ public abstract class AbstractRedisCommands<C extends RedisClient> implements Re
 
 	protected <B extends BaseCommandBuilder<C, O, R, R>, O, R> R executeCommand(final B builder,
 																				final CommandArguments args) {
-		return executeCommand(builder, args, Converters.always());
+		return executeCommand(builder, args, (v)->v);
 	}
 
 	protected <B extends BaseCommandBuilder<C, O, SR, R>, O, SR, R> R executeCommand(final B builder,

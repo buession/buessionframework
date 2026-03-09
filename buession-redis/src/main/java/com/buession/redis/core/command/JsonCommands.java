@@ -28,7 +28,7 @@ import com.buession.lang.Status;
 import com.buession.redis.core.JsonType;
 import com.buession.redis.core.NxXx;
 import com.buession.redis.core.command.args.JsonGetArgument;
-import com.buession.redis.core.command.args.JsonKeyPathValueArgument;
+import com.buession.redis.core.command.args.JsonKeyPathValue;
 
 import java.util.List;
 
@@ -352,6 +352,38 @@ public interface JsonCommands extends RedisCommands {
 	List<byte[]> jsonArrPop(final byte[] key, final byte[] path);
 
 	/**
+	 * 从 JSON 文档的数组末尾（或指定位置）弹出并返回一个元素
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/json.arrpop/" target="_blank">https://redis.io/docs/latest/commands/json.arrpop/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param path
+	 * 		JSONPath 表达式
+	 * @param index
+	 * 		起始索引
+	 *
+	 * @return 返回一个数组，每个元素对应 path 匹配到的每个数组中被弹出的值；如果数组为空或索引越界，返回 null 对应项；如果 path 不指向数组，返回 null
+	 */
+	List<String> jsonArrPop(final String key, final String path, final int index);
+
+	/**
+	 * 从 JSON 文档的数组末尾（或指定位置）弹出并返回一个元素
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/json.arrpop/" target="_blank">https://redis.io/docs/latest/commands/json.arrpop/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param path
+	 * 		JSONPath 表达式
+	 * @param index
+	 * 		起始索引
+	 *
+	 * @return 返回一个数组，每个元素对应 path 匹配到的每个数组中被弹出的值；如果数组为空或索引越界，返回 null 对应项；如果 path 不指向数组，返回 null
+	 */
+	List<byte[]> jsonArrPop(final byte[] key, final byte[] path, final int index);
+
+	/**
 	 * 裁剪 JSON 数组，仅保留指定索引范围内的元素
 	 *
 	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/json.arrtrim/" target="_blank">https://redis.io/docs/latest/commands/json.arrtrim/</a></p>
@@ -397,7 +429,7 @@ public interface JsonCommands extends RedisCommands {
 	 *
 	 * @return 被成功清除的字段数量；路径不匹配任何可清除类型，返回 0；如果 key 不存在，返回 0
 	 */
-	Long jsonArrClear(final String key);
+	Long jsonClear(final String key);
 
 	/**
 	 * 将 JSON 文档中指定路径的数值（number）或布尔（boolean）字段重置为零值，或将数组/对象清空
@@ -409,21 +441,7 @@ public interface JsonCommands extends RedisCommands {
 	 *
 	 * @return 被成功清除的字段数量；路径不匹配任何可清除类型，返回 0；如果 key 不存在，返回 0
 	 */
-	Long jsonArrClear(final byte[] key);
-
-	/**
-	 * 将 JSON 文档中指定路径的数值（number）或布尔（boolean）字段重置为零值，或将数组/对象清空
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/json.clear/" target="_blank">https://redis.io/docs/latest/commands/json.clear/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param path
-	 * 		JSONPath 表达式
-	 *
-	 * @return 被成功清除的字段数量；路径不匹配任何可清除类型，返回 0；如果 key 不存在，返回 0
-	 */
-	List<Long> jsonArrClear(final String key, final String path);
+	Long jsonClear(final byte[] key);
 
 	/**
 	 * 将 JSON 文档中指定路径的数值（number）或布尔（boolean）字段重置为零值，或将数组/对象清空
@@ -437,7 +455,21 @@ public interface JsonCommands extends RedisCommands {
 	 *
 	 * @return 被成功清除的字段数量；路径不匹配任何可清除类型，返回 0；如果 key 不存在，返回 0
 	 */
-	List<Long> jsonArrClear(final byte[] key, final byte[] path);
+	Long jsonClear(final String key, final String path);
+
+	/**
+	 * 将 JSON 文档中指定路径的数值（number）或布尔（boolean）字段重置为零值，或将数组/对象清空
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/json.clear/" target="_blank">https://redis.io/docs/latest/commands/json.clear/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param path
+	 * 		JSONPath 表达式
+	 *
+	 * @return 被成功清除的字段数量；路径不匹配任何可清除类型，返回 0；如果 key 不存在，返回 0
+	 */
+	Long jsonClear(final byte[] key, final byte[] path);
 
 	/**
 	 * 获取 JSON 数据在 Redis 内部的内存使用情况或内部表示信息
@@ -773,7 +805,7 @@ public interface JsonCommands extends RedisCommands {
 	 *
 	 * @return 操作结果
 	 */
-	Status jsonMSet(final JsonKeyPathValueArgument... data);
+	Status jsonMSet(final JsonKeyPathValue... data);
 
 	/**
 	 * 对 JSON 文档中的数值字段执行原子递增
@@ -953,7 +985,7 @@ public interface JsonCommands extends RedisCommands {
 	 *
 	 * @return RESP（REdis Serialization Protocol）格式 JSON 数据
 	 */
-	List<String> jsonResp(final String key);
+	List<Object> jsonResp(final String key);
 
 	/**
 	 * 获取 JSON 对象在指定路径下的字段数量
@@ -965,21 +997,7 @@ public interface JsonCommands extends RedisCommands {
 	 *
 	 * @return RESP（REdis Serialization Protocol）格式 JSON 数据
 	 */
-	List<byte[]> jsonResp(final byte[] key);
-
-	/**
-	 * 获取 JSON 对象在指定路径下的字段数量
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/json.resp/" target="_blank">https://redis.io/docs/latest/commands/json.resp/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param path
-	 * 		JSONPath 表达式
-	 *
-	 * @return RESP（REdis Serialization Protocol）格式 JSON 数据
-	 */
-	List<String> jsonResp(final String key, final String path);
+	List<Object> jsonResp(final byte[] key);
 
 	/**
 	 * 获取 JSON 对象在指定路径下的字段数量
@@ -993,7 +1011,21 @@ public interface JsonCommands extends RedisCommands {
 	 *
 	 * @return RESP（REdis Serialization Protocol）格式 JSON 数据
 	 */
-	List<byte[]> jsonResp(final byte[] key, final byte[] path);
+	List<Object> jsonResp(final String key, final String path);
+
+	/**
+	 * 获取 JSON 对象在指定路径下的字段数量
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/json.resp/" target="_blank">https://redis.io/docs/latest/commands/json.resp/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param path
+	 * 		JSONPath 表达式
+	 *
+	 * @return RESP（REdis Serialization Protocol）格式 JSON 数据
+	 */
+	List<Object> jsonResp(final byte[] key, final byte[] path);
 
 	/**
 	 * 创建或更新 JSON 文档

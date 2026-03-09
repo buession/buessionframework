@@ -30,7 +30,7 @@ import com.buession.redis.core.JsonType;
 import com.buession.redis.core.NxXx;
 import com.buession.redis.core.command.JsonCommands;
 import com.buession.redis.core.command.args.JsonGetArgument;
-import com.buession.redis.core.command.args.JsonKeyPathValueArgument;
+import com.buession.redis.core.command.args.JsonKeyPathValue;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -148,6 +148,16 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 	}
 
 	@Override
+	default List<String> jsonArrPop(final String key, final String path, final int index) {
+		return execute((client)->client.jsonCommands().jsonArrPop(key, path, index));
+	}
+
+	@Override
+	default List<byte[]> jsonArrPop(final byte[] key, final byte[] path, final int index) {
+		return execute((client)->client.jsonCommands().jsonArrPop(key, path, index));
+	}
+
+	@Override
 	default List<Long> jsonArrTrim(final String key, final String path, final int start, final int stop) {
 		return execute((client)->client.jsonCommands().jsonArrTrim(key, path, start, stop));
 	}
@@ -158,23 +168,23 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 	}
 
 	@Override
-	default Long jsonArrClear(final String key) {
-		return execute((client)->client.jsonCommands().jsonArrClear(key));
+	default Long jsonClear(final String key) {
+		return execute((client)->client.jsonCommands().jsonClear(key));
 	}
 
 	@Override
-	default Long jsonArrClear(final byte[] key) {
-		return execute((client)->client.jsonCommands().jsonArrClear(key));
+	default Long jsonClear(final byte[] key) {
+		return execute((client)->client.jsonCommands().jsonClear(key));
 	}
 
 	@Override
-	default List<Long> jsonArrClear(final String key, final String path) {
-		return execute((client)->client.jsonCommands().jsonArrClear(key, path));
+	default Long jsonClear(final String key, final String path) {
+		return execute((client)->client.jsonCommands().jsonClear(key, path));
 	}
 
 	@Override
-	default List<Long> jsonArrClear(final byte[] key, final byte[] path) {
-		return execute((client)->client.jsonCommands().jsonArrClear(key, path));
+	default Long jsonClear(final byte[] key, final byte[] path) {
+		return execute((client)->client.jsonCommands().jsonClear(key, path));
 	}
 
 	@Override
@@ -660,7 +670,7 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 	<V> List<V> jsonMGet(final byte[][] keys, final byte[] path, final TypeReference<V> type);
 
 	@Override
-	default Status jsonMSet(final JsonKeyPathValueArgument... data) {
+	default Status jsonMSet(final JsonKeyPathValue... data) {
 		return execute((client)->client.jsonCommands().jsonMSet(data));
 	}
 
