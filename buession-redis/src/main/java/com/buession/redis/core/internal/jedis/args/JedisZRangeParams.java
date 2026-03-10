@@ -103,16 +103,11 @@ public final class JedisZRangeParams extends ZRangeParams {
 		limit(offset, count);
 	}
 
-	private static Protocol.Keyword byKeyword(ZRangeArgument.By by) {
-		if(by != null){
-			switch(by){
-				case BYLEX:
-					return Protocol.Keyword.BYLEX;
-				case BYSCORE:
-					return Protocol.Keyword.BYSCORE;
-				default:
-					break;
-			}
+	private static Protocol.Keyword byKeyword(final ZRangeArgument.By by) {
+		if(by == ZRangeArgument.By.BYLEX){
+			return Protocol.Keyword.BYLEX;
+		}else if(by == ZRangeArgument.By.BYSCORE){
+			return Protocol.Keyword.BYSCORE;
 		}
 
 		return null;

@@ -39,13 +39,13 @@ import com.buession.redis.core.command.args.GetExArgument;
 import com.buession.redis.core.command.args.LcsArgument;
 import com.buession.redis.core.command.args.MSetExArgument;
 import com.buession.redis.core.command.args.SetArgument;
-import com.buession.redis.core.internal.convert.lettuce.params.GetExArgumentHGetExArgsConverter;
 import com.buession.redis.core.internal.convert.lettuce.params.LcsArgumentConveter;
 import com.buession.redis.core.internal.convert.lettuce.params.MSetExArgumentConverter;
 import com.buession.redis.core.internal.convert.lettuce.params.SetArgumentConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.StringMatchResultConveter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.response.OneStatusConverter;
+import com.buession.redis.core.internal.lettuce.args.LettuceGetExArgs;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.CompareCondition;
 import io.lettuce.core.LcsArgs;
@@ -177,18 +177,16 @@ public final class LettuceStringCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public String getEx(final String key, final GetExArgument getExArgument) {
 		final CommandArguments args = CommandArguments.create(key).add(getExArgument);
-		final GetExArgumentHGetExArgsConverter getExArgumentHGetExArgsConverter = new GetExArgumentHGetExArgsConverter();
 		return executeCommand(Command.GETEX, args,
-				(cmd)->cmd.getex(rawBinaryKey(key), getExArgumentHGetExArgsConverter.convert(getExArgument)),
+				(cmd)->cmd.getex(rawBinaryKey(key), new LettuceGetExArgs(getExArgument)),
 				SafeEncoder::encode);
 	}
 
 	@Override
 	public byte[] getEx(final byte[] key, final GetExArgument getExArgument) {
 		final CommandArguments args = CommandArguments.create(key).add(getExArgument);
-		final GetExArgumentHGetExArgsConverter getExArgumentHGetExArgsConverter = new GetExArgumentHGetExArgsConverter();
 		return executeCommand(Command.GETEX, args,
-				(cmd)->cmd.getex(rawKey(key), getExArgumentHGetExArgsConverter.convert(getExArgument)), (v)->v);
+				(cmd)->cmd.getex(rawKey(key), new LettuceGetExArgs(getExArgument)), (v)->v);
 	}
 
 	@Override

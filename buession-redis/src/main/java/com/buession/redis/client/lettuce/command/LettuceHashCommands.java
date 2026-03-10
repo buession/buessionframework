@@ -41,13 +41,13 @@ import com.buession.redis.core.command.args.GetExArgument;
 import com.buession.redis.core.command.args.HSetExArgument;
 import com.buession.redis.core.internal.convert.BinaryListStringListConverter;
 import com.buession.redis.core.internal.convert.BinaryMapStringMapConverter;
-import com.buession.redis.core.internal.convert.lettuce.params.ExpireOptionConverter;
-import com.buession.redis.core.internal.convert.lettuce.params.HSetExArgumentConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ListKeyValueMapConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.response.OneStatusConverter;
+import com.buession.redis.core.internal.lettuce.args.LettuceExpireArgs;
 import com.buession.redis.core.internal.lettuce.args.LettuceHGetExArgs;
+import com.buession.redis.core.internal.lettuce.args.LettuceHSetExArgs;
 import com.buession.redis.core.internal.lettuce.args.LettuceScanArgs;
 import com.buession.redis.core.internal.lettuce.args.LettuceScanCursor;
 import com.buession.redis.utils.SafeEncoder;
@@ -113,9 +113,8 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 	public List<Long> hExpire(final String key, final long ttl, final ExpireOption option, final String... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(ttl).add(option)
 				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
-		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(Command.HEXPIRE, args,
-				(cmd)->cmd.hexpire(rawBinaryKey(key), ttl, expireOptionConverter.convert(option),
+				(cmd)->cmd.hexpire(rawBinaryKey(key), ttl, new LettuceExpireArgs(option),
 						SafeEncoder.encode(fields)));
 	}
 
@@ -123,9 +122,8 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 	public List<Long> hExpire(final byte[] key, final long ttl, final ExpireOption option, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(ttl).add(option)
 				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
-		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(Command.HEXPIRE, args,
-				(cmd)->cmd.hexpire(rawKey(key), ttl, expireOptionConverter.convert(option), fields));
+				(cmd)->cmd.hexpire(rawKey(key), ttl, new LettuceExpireArgs(option), fields));
 	}
 
 	@Override
@@ -148,9 +146,8 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 								final String... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(option)
 				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
-		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(Command.HEXPIREAT, args,
-				(cmd)->cmd.hexpireat(rawBinaryKey(key), unixTimestamp, expireOptionConverter.convert(option),
+				(cmd)->cmd.hexpireat(rawBinaryKey(key), unixTimestamp, new LettuceExpireArgs(option),
 						SafeEncoder.encode(fields)));
 	}
 
@@ -159,9 +156,8 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 								final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(option)
 				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
-		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(Command.HEXPIREAT, args,
-				(cmd)->cmd.hexpireat(rawKey(key), unixTimestamp, expireOptionConverter.convert(option), fields));
+				(cmd)->cmd.hexpireat(rawKey(key), unixTimestamp, new LettuceExpireArgs(option), fields));
 	}
 
 	@Override
@@ -366,14 +362,16 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 	public List<Long> hPExpire(final String key, final long ttl, final ExpireOption option, final String... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(ttl).add(option)
 				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
-		return hPExpire(rawBinaryKey(key), ttl, option, SafeEncoder.encode(fields), args);
+		return executeCommand(Command.HPEXPIRE, args,
+				(cmd)->cmd.hpexpire(rawBinaryKey(key), ttl, new LettuceExpireArgs(option), SafeEncoder.encode(fields)));
 	}
 
 	@Override
 	public List<Long> hPExpire(final byte[] key, final long ttl, final ExpireOption option, final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(ttl).add(option)
 				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
-		return hPExpire(rawKey(key), ttl, option, fields, args);
+		return executeCommand(Command.HPEXPIRE, args,
+				(cmd)->cmd.hpexpire(rawKey(key), ttl, new LettuceExpireArgs(option), fields));
 	}
 
 	@Override
@@ -396,7 +394,9 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 								 final String... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(option)
 				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
-		return hPExpireAt(rawBinaryKey(key), unixTimestamp, option, SafeEncoder.encode(fields), args);
+		return executeCommand(Command.HPEXPIREAT, args,
+				(cmd)->cmd.hpexpireat(rawBinaryKey(key), unixTimestamp, new LettuceExpireArgs(option),
+						SafeEncoder.encode(fields)));
 	}
 
 	@Override
@@ -404,7 +404,8 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 								 final byte[]... fields) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(option)
 				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
-		return hPExpireAt(rawKey(key), unixTimestamp, option, fields, args);
+		return executeCommand(Command.HPEXPIREAT, args,
+				(cmd)->cmd.hpexpireat(rawKey(key), unixTimestamp, new LettuceExpireArgs(option), fields));
 	}
 
 	@Override
@@ -631,22 +632,20 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public Status hSetEx(final String key, final KeyValue<String, String>[] data, final HSetExArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(data);
-		final HSetExArgumentConverter hSetExArgumentConverter = new HSetExArgumentConverter();
 		final ArrayKeyValueMapConverter<String, String, byte[], byte[]> arrayKeyValueMapConverter =
 				new ArrayKeyValueMapConverter<>(SafeEncoder::encode, SafeEncoder::encode);
 		return executeCommand(Command.HSETEX, args,
-				(cmd)->cmd.hsetex(rawBinaryKey(key), hSetExArgumentConverter.convert(argument),
+				(cmd)->cmd.hsetex(rawBinaryKey(key), new LettuceHSetExArgs(argument),
 						arrayKeyValueMapConverter.convert(data)), new OneStatusConverter());
 	}
 
 	@Override
 	public Status hSetEx(final byte[] key, final KeyValue<byte[], byte[]>[] data, final HSetExArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(data);
-		final HSetExArgumentConverter hSetExArgumentConverter = new HSetExArgumentConverter();
 		final ArrayKeyValueMapConverter<byte[], byte[], byte[], byte[]> arrayKeyValueMapConverter = new ArrayKeyValueMapConverter<>(
 				(k)->k, (v)->v);
 		return executeCommand(Command.HSETEX, args,
-				(cmd)->cmd.hsetex(rawKey(key), hSetExArgumentConverter.convert(argument),
+				(cmd)->cmd.hsetex(rawKey(key), new LettuceHSetExArgs(argument),
 						arrayKeyValueMapConverter.convert(data)), new OneStatusConverter());
 	}
 
@@ -700,20 +699,6 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 	public List<byte[]> hVals(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(Command.HVALS, args, (cmd)->cmd.hvals(rawKey(key)), (v)->v);
-	}
-
-	private List<Long> hPExpire(final byte[] key, final long ttl, final ExpireOption option, final byte[][] fields,
-								final CommandArguments args) {
-		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
-		return executeCommand(Command.HPEXPIRE, args,
-				(cmd)->cmd.hpexpire(key, ttl, expireOptionConverter.convert(option), fields));
-	}
-
-	private List<Long> hPExpireAt(final byte[] key, final long unixTimestamp, final ExpireOption option,
-								  final byte[][] fields, final CommandArguments args) {
-		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
-		return executeCommand(Command.HPEXPIREAT, args,
-				(cmd)->cmd.hpexpireat(key, unixTimestamp, expireOptionConverter.convert(option), fields));
 	}
 
 	private ScanResult<KeyValue<String, String>> hStringScan(final byte[] key, final String cursor,

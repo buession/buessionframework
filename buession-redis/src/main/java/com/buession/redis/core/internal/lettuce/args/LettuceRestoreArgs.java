@@ -22,33 +22,47 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.params;
+package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.ExpireOption;
-import io.lettuce.core.ExpireArgs;
+import com.buession.redis.core.command.args.RestoreArgument;
+import io.lettuce.core.RestoreArgs;
+
+import java.util.Optional;
 
 /**
- * {@link ExpireOption} 转换为 lettuce {@link ExpireArgs}
+ * Lettuce {@link RestoreArgs} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class ExpireOptionConverter implements Converter<ExpireOption, ExpireArgs> {
+public final class LettuceRestoreArgs extends RestoreArgs {
 
-	@Override
-	public ExpireArgs convert(final ExpireOption source) {
-		if(source == null){
-			return null;
+	/**
+	 * 构造函数
+	 */
+	public LettuceRestoreArgs() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param restoreArgument
+	 *        {@link RestoreArgument}
+	 */
+	public LettuceRestoreArgs(final RestoreArgument restoreArgument) {
+		super();
+
+		if(restoreArgument != null){
+			if(Boolean.TRUE.equals(restoreArgument.getReplace())){
+				replace();
+			}
+			if(Boolean.TRUE.equals(restoreArgument.getAbsTtl())){
+				absttl();
+			}
+			Optional.ofNullable(restoreArgument.getIdleTime()).ifPresent(this::idleTime);
+			Optional.ofNullable(restoreArgument.getFrequency()).ifPresent(this::frequency);
 		}
-
-		return switch(source){
-			case NX -> ExpireArgs.Builder.nx();
-			case XX -> ExpireArgs.Builder.xx();
-			case GT -> ExpireArgs.Builder.gt();
-			case LT -> ExpireArgs.Builder.lt();
-			default -> new ExpireArgs();
-		};
 	}
 
 }

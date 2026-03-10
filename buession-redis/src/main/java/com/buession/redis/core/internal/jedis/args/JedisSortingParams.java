@@ -22,45 +22,50 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.core.converter.Converter;
-import com.buession.core.validator.Validate;
-import com.buession.redis.core.command.args.MigrateArgument;
-import redis.clients.jedis.params.MigrateParams;
+import com.buession.lang.Order;
+import com.buession.redis.core.command.args.SortArgument;
+import redis.clients.jedis.params.SortingParams;
+
+import java.util.Optional;
 
 /**
- * {@link MigrateArgument} 转换为 jedis {@link MigrateParams}
+ * Jedis {@link SortingParams} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class MigrateArgumentConverter implements Converter<MigrateArgument, MigrateParams> {
+public final class JedisSortingParams extends SortingParams {
 
-	@Override
-	public MigrateParams convert(final MigrateArgument source) {
-		if(source == null){
-			return null;
-		}
+	/**
+	 * 构造函数
+	 */
+	public JedisSortingParams() {
+		super();
+	}
 
-		final MigrateParams migrateParams = new MigrateParams();
+	/**
+	 * 构造函数
+	 *
+	 * @param sortArgument
+	 *        {@link SortArgument}
+	 */
+	public JedisSortingParams(final SortArgument sortArgument) {
+		super();
 
-		if(source.getMode() != null){
-			switch(source.getMode()){
-				case COPY -> migrateParams.copy();
-				case REPLACE -> migrateParams.replace();
+		if(sortArgument != null){
+			Optional.ofNullable(sortArgument.getBy()).ifPresent(this::by);
+			if(sortArgument.getOrder() == Order.ASC){
+				asc();
+			}else if(sortArgument.getOrder() == Order.DESC){
+				desc();
+			}
+			Optional.ofNullable(sortArgument.getGetPatterns()).ifPresent(this::get);
+			if(Boolean.TRUE.equals(sortArgument.getAlpha())){
+				alpha();
 			}
 		}
-
-		if(Validate.isNotEmpty(source.getPassword())){
-			if(Validate.isNotEmpty(source.getUsername())){
-				migrateParams.auth2(source.getUsername(), source.getPassword());
-			}else{
-				migrateParams.auth(source.getPassword());
-			}
-		}
-
-		return migrateParams;
 	}
 
 }

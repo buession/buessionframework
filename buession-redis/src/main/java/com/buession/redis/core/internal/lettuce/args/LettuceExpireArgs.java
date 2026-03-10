@@ -22,52 +22,44 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.params;
+package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.core.converter.Converter;
-import com.buession.lang.Order;
-import com.buession.redis.core.command.args.SortArgument;
-import io.lettuce.core.SortArgs;
-
-import java.util.Optional;
+import com.buession.redis.core.ExpireOption;
+import io.lettuce.core.ExpireArgs;
 
 /**
- * {@link SortArgument} 转换为 lettuce {@link SortArgs}
+ * Lettuce {@link ExpireArgs}
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class SortArgumentConverter implements Converter<SortArgument, SortArgs> {
+public final class LettuceExpireArgs extends ExpireArgs {
 
-	@Override
-	public SortArgs convert(final SortArgument source) {
-		if(source == null){
-			return null;
+	/**
+	 * 构造函数
+	 */
+	public LettuceExpireArgs() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param expireOption
+	 *        {@link ExpireOption}
+	 */
+	public LettuceExpireArgs(final ExpireOption expireOption) {
+		super();
+
+		if(expireOption == ExpireOption.NX){
+			nx();
+		}else if(expireOption == ExpireOption.XX){
+			xx();
+		}else if(expireOption == ExpireOption.GT){
+			gt();
+		}else if(expireOption == ExpireOption.LT){
+			lt();
 		}
-
-		final SortArgs sortArgs = new SortArgs();
-
-		Optional.ofNullable(source.getBy()).ifPresent(sortArgs::by);
-		if(source.getOrder() == Order.ASC){
-			sortArgs.asc();
-		}else if(source.getOrder() == Order.DESC){
-			sortArgs.desc();
-		}
-		if(source.getLimit() == null){
-			sortArgs.limit((int) source.getLimit().getOffset(), (int) source.getLimit().getCount());
-		}
-
-		if(source.getGetPatterns() != null){
-			for(String pattern : source.getGetPatterns()){
-				sortArgs.get(pattern);
-			}
-		}
-
-		if(Boolean.TRUE.equals(source.getAlpha())){
-			sortArgs.alpha();
-		}
-
-		return sortArgs;
 	}
 
 }

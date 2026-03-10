@@ -989,7 +989,7 @@ public interface KeyCommands extends RedisCommands {
 	/**
 	 * 迭代当前数据库中的数据库键
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/scan/" target="_blank">https://redis.io/docs/latest/commands/scan/</a></p>
 	 *
 	 * @param cursor
 	 * 		游标
@@ -1001,7 +1001,7 @@ public interface KeyCommands extends RedisCommands {
 	/**
 	 * 迭代当前数据库中的数据库键
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/scan/" target="_blank">https://redis.io/docs/latest/commands/scan/</a></p>
 	 *
 	 * @param cursor
 	 * 		游标
@@ -1013,7 +1013,7 @@ public interface KeyCommands extends RedisCommands {
 	/**
 	 * 迭代当前数据库中的数据库键
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/scan/" target="_blank">https://redis.io/docs/latest/commands/scan/</a></p>
 	 *
 	 * @param cursor
 	 * 		游标
@@ -1027,7 +1027,7 @@ public interface KeyCommands extends RedisCommands {
 	/**
 	 * 迭代当前数据库中的数据库键
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/scan/" target="_blank">https://redis.io/docs/latest/commands/scan/</a></p>
 	 *
 	 * @param cursor
 	 * 		游标
@@ -1041,36 +1041,7 @@ public interface KeyCommands extends RedisCommands {
 	/**
 	 * 迭代当前数据库中的数据库键
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
-	 *
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回指定数量的数据库键
-	 */
-	ScanResult<String> scan(final String cursor, final int count);
-
-	/**
-	 * 迭代当前数据库中的数据库键
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
-	 *
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回指定数量的数据库键
-	 */
-	ScanResult<byte[]> scan(final byte[] cursor, final int count);
-
-	/**
-	 * 迭代当前数据库中的数据库键
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/scan/" target="_blank">https://redis.io/docs/latest/commands/scan/</a></p>
 	 *
 	 * @param cursor
 	 * 		游标
@@ -1086,7 +1057,7 @@ public interface KeyCommands extends RedisCommands {
 	/**
 	 * 迭代当前数据库中的数据库键
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/scan/" target="_blank">https://redis.io/docs/latest/commands/scan/</a></p>
 	 *
 	 * @param cursor
 	 * 		游标
@@ -1098,6 +1069,35 @@ public interface KeyCommands extends RedisCommands {
 	 * @return 返回和给定模式相匹配指定数量的键
 	 */
 	ScanResult<byte[]> scan(final byte[] cursor, final byte[] pattern, final int count);
+
+	/**
+	 * 迭代当前数据库中的数据库键
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/scan/" target="_blank">https://redis.io/docs/latest/commands/scan/</a></p>
+	 *
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回指定数量的数据库键
+	 */
+	ScanResult<String> scan(final String cursor, final int count);
+
+	/**
+	 * 迭代当前数据库中的数据库键
+	 *
+	 * <p>详情说明
+	 * <a href="https://redis.io/docs/latest/commands/scan/" target="_blank">https://redis.io/docs/latest/commands/scan/</a></p>
+	 *
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回指定数量的数据库键
+	 */
+	ScanResult<byte[]> scan(final byte[] cursor, final int count);
 
 	/**
 	 * 返回给定列表、集合、有序集合 key 中经过排序的元素
@@ -1158,38 +1158,6 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param offset
-	 * 		偏移量
-	 * @param count
-	 * 		返回个数
-	 *
-	 * @return 列表形式的排序结果
-	 */
-	List<String> sort(final String key, final int offset, final int count);
-
-	/**
-	 * 返回给定列表、集合、有序集合 key 中经过排序的元素
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/database/sort.html" target="_blank">http://redisdoc.com/database/sort.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param offset
-	 * 		偏移量
-	 * @param count
-	 * 		返回个数
-	 *
-	 * @return 列表形式的排序结果
-	 */
-	List<byte[]> sort(final byte[] key, final int offset, final int count);
-
-	/**
-	 * 返回给定列表、集合、有序集合 key 中经过排序的元素
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/database/sort.html" target="_blank">http://redisdoc.com/database/sort.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
 	 * @param argument
 	 * 		排序参数
 	 * @param offset
@@ -1218,6 +1186,38 @@ public interface KeyCommands extends RedisCommands {
 	 * @return 列表形式的排序结果
 	 */
 	List<byte[]> sort(final byte[] key, final SortArgument argument, final int offset, final int count);
+
+	/**
+	 * 返回给定列表、集合、有序集合 key 中经过排序的元素
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/sort.html" target="_blank">http://redisdoc.com/database/sort.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 *
+	 * @return 列表形式的排序结果
+	 */
+	List<String> sort(final String key, final int offset, final int count);
+
+	/**
+	 * 返回给定列表、集合、有序集合 key 中经过排序的元素
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/sort.html" target="_blank">http://redisdoc.com/database/sort.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 *
+	 * @return 列表形式的排序结果
+	 */
+	List<byte[]> sort(final byte[] key, final int offset, final int count);
 
 	/**
 	 * 保存给定列表、集合、有序集合 key 中经过排序的元素到 destKey；
@@ -1293,44 +1293,6 @@ public interface KeyCommands extends RedisCommands {
 	 * 		Key
 	 * @param destKey
 	 * 		目标 key
-	 * @param offset
-	 * 		偏移量
-	 * @param count
-	 * 		返回个数
-	 *
-	 * @return 排序结果的元素数量
-	 */
-	Long sort(final String key, final String destKey, final int offset, final int count);
-
-	/**
-	 * 保存给定列表、集合、有序集合 key 中经过排序的元素到 destKey；
-	 * 如果被指定的 key 已存在，那么原有的值将被排序结果覆盖
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/database/sort.html" target="_blank">http://redisdoc.com/database/sort.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param destKey
-	 * 		目标 key
-	 * @param offset
-	 * 		偏移量
-	 * @param count
-	 * 		返回个数
-	 *
-	 * @return 排序结果的元素数量
-	 */
-	Long sort(final byte[] key, final byte[] destKey, final int offset, final int count);
-
-	/**
-	 * 保存给定列表、集合、有序集合 key 中经过排序的元素到 destKey；
-	 * 如果被指定的 key 已存在，那么原有的值将被排序结果覆盖
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/database/sort.html" target="_blank">http://redisdoc.com/database/sort.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param destKey
-	 * 		目标 key
 	 * @param argument
 	 * 		排序参数
 	 * @param offset
@@ -1362,6 +1324,44 @@ public interface KeyCommands extends RedisCommands {
 	 * @return 排序结果的元素数量
 	 */
 	Long sort(final byte[] key, final byte[] destKey, final SortArgument argument, final int offset, final int count);
+
+	/**
+	 * 保存给定列表、集合、有序集合 key 中经过排序的元素到 destKey；
+	 * 如果被指定的 key 已存在，那么原有的值将被排序结果覆盖
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/sort.html" target="_blank">http://redisdoc.com/database/sort.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 key
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 *
+	 * @return 排序结果的元素数量
+	 */
+	Long sort(final String key, final String destKey, final int offset, final int count);
+
+	/**
+	 * 保存给定列表、集合、有序集合 key 中经过排序的元素到 destKey；
+	 * 如果被指定的 key 已存在，那么原有的值将被排序结果覆盖
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/sort.html" target="_blank">http://redisdoc.com/database/sort.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 key
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 *
+	 * @return 排序结果的元素数量
+	 */
+	Long sort(final byte[] key, final byte[] destKey, final int offset, final int count);
 
 	/**
 	 * <code>SORT</code> 命令的只读版本
@@ -1414,6 +1414,74 @@ public interface KeyCommands extends RedisCommands {
 	 * @return 列表形式的排序结果
 	 */
 	List<byte[]> sortRo(final byte[] key, final SortArgument argument);
+
+	/**
+	 * <code>SORT</code> 命令的只读版本
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/sort_ro/" target="_blank">https://redis.io/docs/latest/commands/sort_ro/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param argument
+	 * 		排序参数
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 *
+	 * @return 列表形式的排序结果
+	 */
+	List<String> sortRo(final String key, final SortArgument argument, final int offset, final int count);
+
+	/**
+	 * <code>SORT</code> 命令的只读版本
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/sort_ro/" target="_blank">https://redis.io/docs/latest/commands/sort_ro/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param argument
+	 * 		排序参数
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 *
+	 * @return 列表形式的排序结果
+	 */
+	List<byte[]> sortRo(final byte[] key, final SortArgument argument, final int offset, final int count);
+
+	/**
+	 * <code>SORT</code> 命令的只读版本
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/sort_ro/" target="_blank">https://redis.io/docs/latest/commands/sort_ro/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 *
+	 * @return 列表形式的排序结果
+	 */
+	List<String> sortRo(final String key, final int offset, final int count);
+
+	/**
+	 * <code>SORT</code> 命令的只读版本
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/sort_ro/" target="_blank">https://redis.io/docs/latest/commands/sort_ro/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 *
+	 * @return 列表形式的排序结果
+	 */
+	List<byte[]> sortRo(final byte[] key, final int offset, final int count);
 
 	/**
 	 * 修改指定一个或多个 key 最后访问时间

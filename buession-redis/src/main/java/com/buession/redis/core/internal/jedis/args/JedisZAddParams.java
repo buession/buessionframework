@@ -24,6 +24,8 @@
  */
 package com.buession.redis.core.internal.jedis.args;
 
+import com.buession.redis.core.GtLt;
+import com.buession.redis.core.NxXx;
 import com.buession.redis.core.command.args.ZAddArgument;
 import redis.clients.jedis.params.ZAddParams;
 
@@ -50,25 +52,27 @@ public final class JedisZAddParams extends ZAddParams {
 
 		if(zAddArgument != null){
 			if(zAddArgument.getNxXx() != null){
-				switch(zAddArgument.getNxXx()){
-					case NX -> nx();
-					case XX -> xx();
+				if(zAddArgument.getNxXx() == NxXx.NX){
+					nx();
+				}else if(zAddArgument.getNxXx() == NxXx.NX){
+					xx();
 				}
 			}
 
 			if(zAddArgument.getGtLt() != null){
-				switch(zAddArgument.getGtLt()){
-					case GT -> gt();
-					case LT -> lt();
+				if(zAddArgument.getGtLt() == GtLt.GT){
+					gt();
+				}else if(zAddArgument.getGtLt() == GtLt.LT){
+					lt();
 				}
 			}
+		}
 
-			if(Boolean.TRUE.equals(zAddArgument.getCh())){
-				ch();
-			}
+		if(Boolean.TRUE.equals(zAddArgument.getCh())){
+			ch();
+		}
 
-			if(Boolean.TRUE.equals(zAddArgument.getIncr())){
-			}
+		if(Boolean.TRUE.equals(zAddArgument.getIncr())){
 		}
 	}
 

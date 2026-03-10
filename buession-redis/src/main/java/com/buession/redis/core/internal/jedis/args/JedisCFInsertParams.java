@@ -52,6 +52,7 @@ public final class JedisCFInsertParams extends CFInsertParams {
 	 */
 	public JedisCFInsertParams(final CFInsertArgument cfInsertArgument) {
 		super();
+
 		if(cfInsertArgument != null){
 			Optional.ofNullable(cfInsertArgument.getCapacity()).ifPresent(this::capacity);
 

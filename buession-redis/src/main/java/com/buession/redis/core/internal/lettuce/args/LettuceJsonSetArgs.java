@@ -49,17 +49,11 @@ public final class LettuceJsonSetArgs extends JsonSetArgs {
 	 *        {@link NxXx}
 	 */
 	public LettuceJsonSetArgs(final NxXx nxXx) {
-		if(nxXx != null){
-			switch(nxXx){
-				case XX:
-					xx();
-					break;
-				case NX:
-					nx();
-					break;
-				default:
-					break;
-			}
+		super();
+		if(nxXx == NxXx.XX){
+			xx();
+		}else if(nxXx == NxXx.NX){
+			nx();
 		}
 	}
 

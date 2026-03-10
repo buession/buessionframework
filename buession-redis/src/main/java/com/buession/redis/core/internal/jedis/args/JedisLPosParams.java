@@ -52,6 +52,7 @@ public final class JedisLPosParams extends LPosParams {
 	 */
 	public JedisLPosParams(final LPosArgument lPosArgument) {
 		super();
+
 		if(lPosArgument != null){
 			Optional.ofNullable(lPosArgument.getRank()).ifPresent(this::rank);
 			Optional.ofNullable(lPosArgument.getMaxLen()).ifPresent(this::maxlen);

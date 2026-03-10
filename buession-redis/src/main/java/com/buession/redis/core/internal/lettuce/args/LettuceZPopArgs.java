@@ -49,17 +49,12 @@ public class LettuceZPopArgs extends ZPopArgs {
 	 *        {@link MinMax}
 	 */
 	public LettuceZPopArgs(final MinMax minMax) {
-		if(minMax != null){
-			switch(minMax){
-				case MIN:
-					min();
-					break;
-				case MAX:
-					max();
-					break;
-				default:
-					break;
-			}
+		super();
+
+		if(minMax == MinMax.MIN){
+			min();
+		}else if(minMax == MinMax.MAX){
+			max();
 		}
 	}
 

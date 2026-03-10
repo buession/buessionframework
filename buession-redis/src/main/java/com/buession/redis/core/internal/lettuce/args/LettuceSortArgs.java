@@ -22,37 +22,56 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.params;
+package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.args.GetExArgument;
-import io.lettuce.core.HGetExArgs;
+import com.buession.lang.Order;
+import com.buession.redis.core.command.args.SortArgument;
+import io.lettuce.core.SortArgs;
 
-import java.time.Duration;
-import java.time.Instant;
+import java.util.Optional;
 
 /**
- * {@link GetExArgument} 转换为 lettuce {@link HGetExArgs}
+ * Lettuce {@link SortArgs} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class GetExArgumentGetExArgsConverter implements Converter<GetExArgument, HGetExArgs> {
+public final class LettuceSortArgs extends SortArgs {
 
-	@Override
-	public HGetExArgs convert(final GetExArgument source) {
-		if(source == null || source.getType() == null){
-			return null;
+	/**
+	 * 构造函数
+	 */
+	public LettuceSortArgs() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param sortArgument
+	 *        {@link SortArgument}
+	 */
+	public LettuceSortArgs(final SortArgument sortArgument) {
+		super();
+
+		if(sortArgument != null){
+			Optional.ofNullable(sortArgument.getBy()).ifPresent(this::by);
+			if(sortArgument.getOrder() == Order.ASC){
+				asc();
+			}else if(sortArgument.getOrder() == Order.DESC){
+				desc();
+			}
+
+			if(sortArgument.getGetPatterns() != null){
+				for(String pattern : sortArgument.getGetPatterns()){
+					get(pattern);
+				}
+			}
+
+			if(Boolean.TRUE.equals(sortArgument.getAlpha())){
+				sortArgument.alpha();
+			}
 		}
-
-		return switch(source.getType()){
-			case EX -> HGetExArgs.Builder.ex(Duration.ofSeconds(source.getValue()));
-			case EXAT -> HGetExArgs.Builder.exAt(Instant.ofEpochSecond(source.getValue()));
-			case PX -> HGetExArgs.Builder.px(Duration.ofMillis(source.getValue()));
-			case PXAT -> HGetExArgs.Builder.pxAt(Instant.ofEpochMilli(source.getValue()));
-			case PERSIST -> HGetExArgs.Builder.persist();
-			default -> new HGetExArgs();
-		};
 	}
 
 }

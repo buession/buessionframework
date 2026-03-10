@@ -49,6 +49,7 @@ public final class JedisBFInsertParams extends BFInsertParams {
 	 */
 	public JedisBFInsertParams(final BFInsertArgument bfInsertArgument) {
 		super();
+
 		if(bfInsertArgument != null){
 			Optional.ofNullable(bfInsertArgument.getCapacity()).ifPresent(this::capacity);
 			Optional.ofNullable(bfInsertArgument.getErrorRate()).ifPresent(this::error);

@@ -49,17 +49,12 @@ public final class JedisJsonSetParams extends JsonSetParams {
 	 *        {@link NxXx}
 	 */
 	public JedisJsonSetParams(final NxXx nxXx) {
-		if(nxXx != null){
-			switch(nxXx){
-				case XX:
-					xx();
-					break;
-				case NX:
-					nx();
-					break;
-				default:
-					break;
-			}
+		super();
+
+		if(nxXx == NxXx.XX){
+			xx();
+		}else if(nxXx == NxXx.NX){
+			nx();
 		}
 	}
 

@@ -50,20 +50,12 @@ public final class LettuceZAggregateArgs extends ZAggregateArgs {
 	public LettuceZAggregateArgs(final com.buession.redis.core.Aggregate aggregate) {
 		super();
 
-		if(aggregate != null){
-			switch(aggregate){
-				case MIN:
-					min();
-					break;
-				case MAX:
-					max();
-					break;
-				case SUM:
-					sum();
-					break;
-				default:
-					break;
-			}
+		if(aggregate == com.buession.redis.core.Aggregate.MIN){
+			min();
+		}else if(aggregate == com.buession.redis.core.Aggregate.MAX){
+			max();
+		}else if(aggregate == com.buession.redis.core.Aggregate.SUM){
+			sum();
 		}
 	}
 

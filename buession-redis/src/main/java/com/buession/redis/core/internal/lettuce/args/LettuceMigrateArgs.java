@@ -22,48 +22,97 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.params;
+package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.core.converter.Converter;
 import com.buession.core.validator.Validate;
 import com.buession.redis.core.command.args.MigrateArgument;
 import io.lettuce.core.MigrateArgs;
 
+import java.util.List;
+
 /**
- * {@link MigrateArgument} 转换为 jedis {@link MigrateArgs}
- *
- * @param <V>
- * 		值类型
+ * Lettuce {@link MigrateArgs} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class MigrateArgumentConverter<V> implements Converter<MigrateArgument, MigrateArgs<V>> {
+public final class LettuceMigrateArgs<K> extends MigrateArgs<K> {
 
-	@Override
-	public MigrateArgs<V> convert(final MigrateArgument source) {
-		if(source == null){
-			return null;
-		}
+	/**
+	 * 构造函数
+	 */
+	public LettuceMigrateArgs() {
+		super();
+	}
 
-		final MigrateArgs<V> migrateParams = new MigrateArgs<>();
+	/**
+	 * 构造函数
+	 *
+	 * @param keys
+	 * 		Key
+	 */
+	@SuppressWarnings({"unchecked"})
+	public LettuceMigrateArgs(final K... keys) {
+		super();
+		keys(keys);
+	}
 
-		if(source.getMode() != null){
-			switch(source.getMode()){
-				case COPY -> migrateParams.copy();
-				case REPLACE -> migrateParams.replace();
+	/**
+	 * 构造函数
+	 *
+	 * @param keys
+	 * 		Key
+	 */
+	public LettuceMigrateArgs(final List<K> keys) {
+		super();
+		keys(keys);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param argument
+	 *        {@link MigrateArgument}
+	 * @param keys
+	 * 		Key
+	 */
+	@SuppressWarnings({"unchecked"})
+	public LettuceMigrateArgs(final MigrateArgument argument, final K... keys) {
+		super();
+		applyArgument(argument);
+		keys(keys);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param argument
+	 *        {@link MigrateArgument}
+	 * @param keys
+	 * 		Key
+	 */
+	public LettuceMigrateArgs(final MigrateArgument argument, final List<K> keys) {
+		super();
+		applyArgument(argument);
+		keys(keys);
+	}
+
+	private void applyArgument(final MigrateArgument argument) {
+		if(argument != null){
+			if(argument.getMode() == MigrateArgument.Mode.COPY){
+				copy();
+			}else if(argument.getMode() == MigrateArgument.Mode.REPLACE){
+				replace();
+			}
+
+			if(Validate.isNotEmpty(argument.getPassword())){
+				if(Validate.isNotEmpty(argument.getUsername())){
+					auth2(argument.getUsername(), argument.getPassword());
+				}else{
+					auth(argument.getPassword());
+				}
 			}
 		}
-
-		if(Validate.isNotEmpty(source.getPassword())){
-			if(Validate.isNotEmpty(source.getUsername())){
-				migrateParams.auth2(source.getUsername(), source.getPassword());
-			}else{
-				migrateParams.auth(source.getPassword());
-			}
-		}
-
-		return migrateParams;
 	}
 
 }

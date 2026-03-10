@@ -72,7 +72,7 @@ public final class JedisXPendingParams extends XPendingParams {
 	}
 
 	public JedisXPendingParams(final String consumer) {
-		this();
+		super();
 		consumer(consumer);
 	}
 

@@ -22,40 +22,51 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.args.RestoreArgument;
-import redis.clients.jedis.params.RestoreParams;
-
-import java.util.Optional;
+import com.buession.core.validator.Validate;
+import com.buession.redis.core.command.args.MigrateArgument;
+import redis.clients.jedis.params.MigrateParams;
 
 /**
- * {@link RestoreArgument} 转换为 jedis {@link RestoreParams}
+ * Jedis {@link MigrateParams} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class RestoreArgumentConverter implements Converter<RestoreArgument, RestoreParams> {
+public final class JedisMigrateParams extends MigrateParams {
 
-	@Override
-	public RestoreParams convert(final RestoreArgument source) {
-		if(source == null){
-			return null;
+	/**
+	 * 构造函数
+	 */
+	public JedisMigrateParams() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param migrateArgument
+	 *        {@link MigrateArgument}
+	 */
+	public JedisMigrateParams(final MigrateArgument migrateArgument) {
+		super();
+
+		if(migrateArgument != null){
+			if(migrateArgument.getMode() == MigrateArgument.Mode.COPY){
+				copy();
+			}else if(migrateArgument.getMode() == MigrateArgument.Mode.REPLACE){
+				replace();
+			}
+
+			if(Validate.isNotEmpty(migrateArgument.getPassword())){
+				if(Validate.isNotEmpty(migrateArgument.getUsername())){
+					auth2(migrateArgument.getUsername(), migrateArgument.getPassword());
+				}else{
+					auth(migrateArgument.getPassword());
+				}
+			}
 		}
-
-		final RestoreParams restoreParams = new RestoreParams();
-
-		if(Boolean.TRUE.equals(source.getReplace())){
-			restoreParams.replace();
-		}
-		if(Boolean.TRUE.equals(source.getAbsTtl())){
-			restoreParams.absTtl();
-		}
-		Optional.ofNullable(source.getIdleTime()).ifPresent(restoreParams::idleTime);
-		Optional.ofNullable(source.getFrequency()).ifPresent(restoreParams::frequency);
-
-		return restoreParams;
 	}
 
 }

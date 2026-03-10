@@ -22,46 +22,47 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.core.converter.Converter;
-import com.buession.lang.Order;
-import com.buession.redis.core.command.args.SortArgument;
-import redis.clients.jedis.params.SortingParams;
+import com.buession.redis.core.command.args.RestoreArgument;
+import redis.clients.jedis.params.RestoreParams;
 
 import java.util.Optional;
 
 /**
- * {@link SortArgument} 转换为 jedis {@link SortingParams}
+ * Jedis {@link RestoreParams} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class SortArgumentConverter implements Converter<SortArgument, SortingParams> {
+public final class JedisRestoreParams extends RestoreParams {
 
-	@Override
-	public SortingParams convert(final SortArgument source) {
-		if(source == null){
-			return null;
-		}
+	/**
+	 * 构造函数
+	 */
+	public JedisRestoreParams() {
+		super();
+	}
 
-		final SortingParams sortingParams = new SortingParams();
+	/**
+	 * 构造函数
+	 *
+	 * @param restoreArgument
+	 *        {@link RestoreArgument}
+	 */
+	public JedisRestoreParams(final RestoreArgument restoreArgument) {
+		super();
 
-		Optional.ofNullable(source.getBy()).ifPresent(sortingParams::by);
-		if(source.getOrder() == Order.ASC){
-			sortingParams.asc();
-		}else if(source.getOrder() == Order.DESC){
-			sortingParams.desc();
+		if(restoreArgument != null){
+			if(Boolean.TRUE.equals(restoreArgument.getReplace())){
+				replace();
+			}
+			if(Boolean.TRUE.equals(restoreArgument.getAbsTtl())){
+				absTtl();
+			}
+			Optional.ofNullable(restoreArgument.getIdleTime()).ifPresent(this::idleTime);
+			Optional.ofNullable(restoreArgument.getFrequency()).ifPresent(this::frequency);
 		}
-		if(source.getLimit() == null){
-			sortingParams.limit((int) source.getLimit().getOffset(), (int) source.getLimit().getCount());
-		}
-		Optional.ofNullable(source.getGetPatterns()).ifPresent(sortingParams::get);
-		if(Boolean.TRUE.equals(source.getAlpha())){
-			sortingParams.alpha();
-		}
-
-		return sortingParams;
 	}
 
 }

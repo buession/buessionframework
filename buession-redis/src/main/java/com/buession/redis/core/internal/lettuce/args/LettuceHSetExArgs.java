@@ -22,37 +22,55 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.params;
+package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.args.GetExArgument;
-import io.lettuce.core.GetExArgs;
+import com.buession.redis.core.command.args.HSetExArgument;
+import io.lettuce.core.HSetExArgs;
 
 import java.time.Duration;
 import java.time.Instant;
 
 /**
- * {@link GetExArgument} 转换为 lettuce {@link GetExArgs}
+ * Lettuce {@link HSetExArgs} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class GetExArgumentHGetExArgsConverter implements Converter<GetExArgument, GetExArgs> {
+public final class LettuceHSetExArgs extends HSetExArgs {
 
-	@Override
-	public GetExArgs convert(final GetExArgument source) {
-		if(source == null || source.getType() == null){
-			return null;
+	/**
+	 * 构造函数
+	 */
+	public LettuceHSetExArgs() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param hSetExArgument
+	 *        {@link HSetExArgument}
+	 */
+	public LettuceHSetExArgs(final HSetExArgument hSetExArgument) {
+		super();
+
+		if(hSetExArgument != null){
+			if(hSetExArgument.getType() == null){
+				switch(hSetExArgument.getType()){
+					case EX -> ex(Duration.ofSeconds(hSetExArgument.getValue()));
+					case EXAT -> exAt(Instant.ofEpochSecond(hSetExArgument.getValue()));
+					case PX -> px(Duration.ofMillis(hSetExArgument.getValue()));
+					case PXAT -> pxAt(Instant.ofEpochMilli(hSetExArgument.getValue()));
+					case KEEPTTL -> keepttl();
+				}
+			}
+
+			if(hSetExArgument.getFnxFxx() == HSetExArgument.FnxFxx.FNX){
+				fnx();
+			}else if(hSetExArgument.getFnxFxx() == HSetExArgument.FnxFxx.FXX){
+				fxx();
+			}
 		}
-
-		return switch(source.getType()){
-			case EX -> GetExArgs.Builder.ex(Duration.ofSeconds(source.getValue()));
-			case EXAT -> GetExArgs.Builder.exAt(Instant.ofEpochSecond(source.getValue()));
-			case PX -> GetExArgs.Builder.px(Duration.ofMillis(source.getValue()));
-			case PXAT -> GetExArgs.Builder.pxAt(Instant.ofEpochMilli(source.getValue()));
-			case PERSIST -> GetExArgs.Builder.persist();
-			default -> new GetExArgs();
-		};
 	}
 
 }

@@ -52,6 +52,7 @@ public final class LettuceTrackingArgs extends TrackingArgs {
 	 */
 	public LettuceTrackingArgs(final TrackingArgument trackingArgument) {
 		super();
+
 		if(trackingArgument != null){
 			Optional.ofNullable(trackingArgument.getRedirect()).ifPresent(this::redirect);
 			Optional.ofNullable(trackingArgument.getPrefixes()).ifPresent(this::prefixes);

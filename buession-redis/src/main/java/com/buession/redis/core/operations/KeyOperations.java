@@ -192,6 +192,16 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 		return execute((client)->client.keyCommands().expireAt(key, unixTimestamp));
 	}
 
+	@Override
+	default Status expireAt(final String key, final long unixTimestamp, final ExpireOption expireOption) {
+		return execute((client)->client.keyCommands().expireAt(key, unixTimestamp, expireOption));
+	}
+
+	@Override
+	default Status expireAt(final byte[] key, final long unixTimestamp, final ExpireOption expireOption) {
+		return execute((client)->client.keyCommands().expireAt(key, unixTimestamp, expireOption));
+	}
+
 	/**
 	 * 为给定 key 设置过期时间
 	 *
@@ -318,16 +328,6 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 */
 	default Status expireAt(final byte[] key, final Instant instant) {
 		return expireAt(key, instant.toEpochMilli() / 1000);
-	}
-
-	@Override
-	default Status expireAt(final String key, final long unixTimestamp, final ExpireOption expireOption) {
-		return execute((client)->client.keyCommands().expireAt(key, unixTimestamp, expireOption));
-	}
-
-	@Override
-	default Status expireAt(final byte[] key, final long unixTimestamp, final ExpireOption expireOption) {
-		return execute((client)->client.keyCommands().expireAt(key, unixTimestamp, expireOption));
 	}
 
 	/**
@@ -534,6 +534,18 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 		return execute((client)->client.keyCommands().migrate(host, port, db, timeout, keys));
 	}
 
+	@Override
+	default Status migrate(final String host, final int port, final int db, final int timeout,
+						   final MigrateArgument argument, final String... keys) {
+		return execute((client)->client.keyCommands().migrate(host, port, db, timeout, argument, keys));
+	}
+
+	@Override
+	default Status migrate(final String host, final int port, final int db, final int timeout,
+						   final MigrateArgument argument, final byte[]... keys) {
+		return execute((client)->client.keyCommands().migrate(host, port, db, timeout, argument, keys));
+	}
+
 	/**
 	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
 	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
@@ -616,18 +628,6 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 */
 	default Status migrate(final RedisNode server, final int db, final int timeout, final byte[]... keys) {
 		return migrate(server.getHost(), server.getPort(), db, timeout, keys);
-	}
-
-	@Override
-	default Status migrate(final String host, final int port, final int db, final int timeout,
-						   final MigrateArgument argument, final String... keys) {
-		return execute((client)->client.keyCommands().migrate(host, port, db, timeout, argument, keys));
-	}
-
-	@Override
-	default Status migrate(final String host, final int port, final int db, final int timeout,
-						   final MigrateArgument argument, final byte[]... keys) {
-		return execute((client)->client.keyCommands().migrate(host, port, db, timeout, argument, keys));
 	}
 
 	/**
@@ -1331,10 +1331,6 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 		return execute((client)->client.keyCommands().scan(cursor));
 	}
 
-	default ScanResult<String> scan(final long cursor) {
-		return scan(Long.toString(cursor));
-	}
-
 	@Override
 	default ScanResult<String> scan(final String cursor, final String pattern) {
 		return execute((client)->client.keyCommands().scan(cursor, pattern));
@@ -1343,28 +1339,6 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	@Override
 	default ScanResult<byte[]> scan(final byte[] cursor, final byte[] pattern) {
 		return execute((client)->client.keyCommands().scan(cursor, pattern));
-	}
-
-	default ScanResult<String> scan(final long cursor, final String pattern) {
-		return scan(Long.toString(cursor), pattern);
-	}
-
-	default ScanResult<byte[]> scan(final long cursor, final byte[] pattern) {
-		return scan(NumberUtils.long2bytes(cursor), pattern);
-	}
-
-	@Override
-	default ScanResult<String> scan(final String cursor, final int count) {
-		return execute((client)->client.keyCommands().scan(cursor, count));
-	}
-
-	@Override
-	default ScanResult<byte[]> scan(final byte[] cursor, final int count) {
-		return execute((client)->client.keyCommands().scan(cursor, count));
-	}
-
-	default ScanResult<String> scan(final long cursor, final int count) {
-		return scan(Long.toString(cursor), count);
 	}
 
 	@Override
@@ -1377,12 +1351,112 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 		return execute((client)->client.keyCommands().scan(cursor, pattern, count));
 	}
 
+	@Override
+	default ScanResult<String> scan(final String cursor, final int count) {
+		return execute((client)->client.keyCommands().scan(cursor, count));
+	}
+
+	@Override
+	default ScanResult<byte[]> scan(final byte[] cursor, final int count) {
+		return execute((client)->client.keyCommands().scan(cursor, count));
+	}
+
+	/**
+	 * 迭代当前数据库中的数据库键
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/scan/" target="_blank">https://redis.io/docs/latest/commands/scan/</a></p>
+	 *
+	 * @param cursor
+	 * 		游标
+	 *
+	 * @return 返回每个元素都是一个数据库键
+	 */
+	default ScanResult<String> scan(final long cursor) {
+		return scan(Long.toString(cursor));
+	}
+
+	/**
+	 * 迭代当前数据库中的数据库键
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/scan/" target="_blank">https://redis.io/docs/latest/commands/scan/</a></p>
+	 *
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 *
+	 * @return 返回和给定模式相匹配的数据库键
+	 */
+	default ScanResult<String> scan(final long cursor, final String pattern) {
+		return scan(Long.toString(cursor), pattern);
+	}
+
+	/**
+	 * 迭代当前数据库中的数据库键
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/scan/" target="_blank">https://redis.io/docs/latest/commands/scan/</a></p>
+	 *
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 *
+	 * @return 返回和给定模式相匹配的数据库键
+	 */
+	default ScanResult<byte[]> scan(final long cursor, final byte[] pattern) {
+		return scan(NumberUtils.long2bytes(cursor), pattern);
+	}
+
+	/**
+	 * 迭代当前数据库中的数据库键
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/scan/" target="_blank">https://redis.io/docs/latest/commands/scan/</a></p>
+	 *
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回和给定模式相匹配指定数量的键
+	 */
 	default ScanResult<String> scan(final long cursor, final String pattern, final int count) {
 		return scan(Long.toString(cursor), pattern, count);
 	}
 
+	/**
+	 * 迭代当前数据库中的数据库键
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/scan/" target="_blank">https://redis.io/docs/latest/commands/scan/</a></p>
+	 *
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回和给定模式相匹配指定数量的键
+	 */
 	default ScanResult<byte[]> scan(final long cursor, final byte[] pattern, final int count) {
 		return scan(NumberUtils.long2bytes(cursor), pattern, count);
+	}
+
+	/**
+	 * 迭代当前数据库中的数据库键
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/scan/" target="_blank">https://redis.io/docs/latest/commands/scan/</a></p>
+	 *
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回指定数量的数据库键
+	 */
+	default ScanResult<String> scan(final long cursor, final int count) {
+		return scan(Long.toString(cursor), count);
 	}
 
 	@Override
@@ -1406,16 +1480,6 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	}
 
 	@Override
-	default List<String> sort(final String key, final int offset, final int count) {
-		return execute((client)->client.keyCommands().sort(key, offset, count));
-	}
-
-	@Override
-	default List<byte[]> sort(final byte[] key, final int offset, final int count) {
-		return execute((client)->client.keyCommands().sort(key, offset, count));
-	}
-
-	@Override
 	default List<String> sort(final String key, final SortArgument argument, final int offset, final int count) {
 		return execute((client)->client.keyCommands().sort(key, argument, offset, count));
 	}
@@ -1423,6 +1487,16 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	@Override
 	default List<byte[]> sort(final byte[] key, final SortArgument argument, final int offset, final int count) {
 		return execute((client)->client.keyCommands().sort(key, argument, offset, count));
+	}
+
+	@Override
+	default List<String> sort(final String key, final int offset, final int count) {
+		return execute((client)->client.keyCommands().sort(key, offset, count));
+	}
+
+	@Override
+	default List<byte[]> sort(final byte[] key, final int offset, final int count) {
+		return execute((client)->client.keyCommands().sort(key, offset, count));
 	}
 
 	@Override
@@ -1446,16 +1520,6 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	}
 
 	@Override
-	default Long sort(final String key, final String destKey, final int offset, final int count) {
-		return execute((client)->client.keyCommands().sort(key, destKey, offset, count));
-	}
-
-	@Override
-	default Long sort(final byte[] key, final byte[] destKey, final int offset, final int count) {
-		return execute((client)->client.keyCommands().sort(key, destKey, offset, count));
-	}
-
-	@Override
 	default Long sort(final String key, final String destKey, final SortArgument argument, final int offset,
 					  final int count) {
 		return execute((client)->client.keyCommands().sort(key, destKey, argument, offset, count));
@@ -1465,6 +1529,16 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	default Long sort(final byte[] key, final byte[] destKey, final SortArgument argument, final int offset,
 					  final int count) {
 		return execute((client)->client.keyCommands().sort(key, destKey, argument, offset, count));
+	}
+
+	@Override
+	default Long sort(final String key, final String destKey, final int offset, final int count) {
+		return execute((client)->client.keyCommands().sort(key, destKey, offset, count));
+	}
+
+	@Override
+	default Long sort(final byte[] key, final byte[] destKey, final int offset, final int count) {
+		return execute((client)->client.keyCommands().sort(key, destKey, offset, count));
 	}
 
 	@Override
@@ -1485,6 +1559,26 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	@Override
 	default List<byte[]> sortRo(final byte[] key, final SortArgument argument) {
 		return execute((client)->client.keyCommands().sortRo(key, argument));
+	}
+
+	@Override
+	default List<String> sortRo(final String key, final SortArgument argument, final int offset, final int count) {
+		return execute((client)->client.keyCommands().sortRo(key, argument, offset, count));
+	}
+
+	@Override
+	default List<byte[]> sortRo(final byte[] key, final SortArgument argument, final int offset, final int count) {
+		return execute((client)->client.keyCommands().sortRo(key, argument, offset, count));
+	}
+
+	@Override
+	default List<String> sortRo(final String key, final int offset, final int count) {
+		return execute((client)->client.keyCommands().sortRo(key, offset, count));
+	}
+
+	@Override
+	default List<byte[]> sortRo(final byte[] key, final int offset, final int count) {
+		return execute((client)->client.keyCommands().sortRo(key, offset, count));
 	}
 
 	@Override

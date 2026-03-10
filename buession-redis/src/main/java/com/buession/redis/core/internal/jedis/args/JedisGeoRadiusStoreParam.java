@@ -53,6 +53,7 @@ public final class JedisGeoRadiusStoreParam extends GeoRadiusStoreParam {
 	 */
 	public JedisGeoRadiusStoreParam(final String key, final GeoStoreOption storeOption) {
 		super();
+
 		if(storeOption == GeoStoreOption.STOREDIST){
 			storeDist(key);
 		}else if(storeOption == GeoStoreOption.STORE){

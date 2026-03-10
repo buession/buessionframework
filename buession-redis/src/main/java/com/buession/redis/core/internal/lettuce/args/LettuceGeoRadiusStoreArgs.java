@@ -60,12 +60,10 @@ public final class LettuceGeoRadiusStoreArgs<K> extends GeoRadiusStoreArgs<K> {
 	public LettuceGeoRadiusStoreArgs(final K key, final GeoStoreOption storeOption,
 									 final GeoRadiusArgument geoRadiusArgument) {
 		this(key, storeOption);
-		if(geoRadiusArgument != null){
-			if(geoRadiusArgument.getOrder() == Order.ASC){
-				asc();
-			}else if(geoRadiusArgument.getOrder() == Order.DESC){
-				desc();
-			}
+		if(geoRadiusArgument.getOrder() == Order.ASC){
+			asc();
+		}else if(geoRadiusArgument.getOrder() == Order.DESC){
+			desc();
 		}
 	}
 
