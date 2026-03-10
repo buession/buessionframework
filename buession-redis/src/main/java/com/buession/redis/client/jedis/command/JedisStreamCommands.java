@@ -57,8 +57,6 @@ import com.buession.redis.core.command.args.XReadGroupArgument;
 import com.buession.redis.core.internal.convert.BinaryMapStringMapConverter;
 import com.buession.redis.core.internal.convert.jedis.params.StreamDeletionPolicyConverter;
 import com.buession.redis.core.internal.convert.jedis.params.StreamEntryIdConverter;
-import com.buession.redis.core.internal.convert.jedis.params.XAddArgumentConverter;
-import com.buession.redis.core.internal.convert.jedis.params.XClaimArgumentConverter;
 import com.buession.redis.core.internal.convert.jedis.params.XReadGroupArgumentConverter;
 import com.buession.redis.core.internal.convert.jedis.response.MapEntryStreamEntryAutoClaimInfoConverter;
 import com.buession.redis.core.internal.convert.jedis.response.MapEntryStreamEntryXReadGroupInfoConverter;
@@ -75,7 +73,9 @@ import com.buession.redis.core.internal.convert.jedis.response.StreamPendingSumm
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.response.OneStatusConverter;
 import com.buession.redis.core.internal.jedis.args.JedisStreamEntryID;
+import com.buession.redis.core.internal.jedis.args.JedisXAddParams;
 import com.buession.redis.core.internal.jedis.args.JedisXAutoClaimParams;
+import com.buession.redis.core.internal.jedis.args.JedisXClaimParams;
 import com.buession.redis.core.internal.jedis.args.JedisXPendingParams;
 import com.buession.redis.core.internal.jedis.args.JedisXReadGroupParams;
 import com.buession.redis.core.internal.jedis.args.JedisXReadParams;
@@ -173,13 +173,8 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	public StreamEntryId xAdd(final String key, final StreamEntryId id, final Map<String, String> hash,
 							  final XAddArgument xAddArgument) {
 		final CommandArguments args = CommandArguments.create(key).add(xAddArgument).add(id).add(hash);
-		final XAddArgumentConverter xAddArgumentConverter = new XAddArgumentConverter();
-		final XAddParams xAddParams = Optional.ofNullable(xAddArgumentConverter.convert(xAddArgument))
-				.orElse(new XAddParams());
-
-		xAddParams.id(new JedisStreamEntryID(id));
-
-		return executeCommand(Command.XADD, args, (cmd)->cmd.xadd(key, xAddParams, hash), new StreamEntryIDConverter());
+		return executeCommand(Command.XADD, args, (cmd)->cmd.xadd(key, new JedisXAddParams(xAddArgument, id), hash),
+				new StreamEntryIDConverter());
 	}
 
 	@Override
@@ -332,10 +327,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 													final XClaimArgument xClaimArgument) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName, consumerName).add(minIdleTime)
 				.add(ids).add(xClaimArgument);
-		final XClaimArgumentConverter xClaimArgumentConverter = new XClaimArgumentConverter();
-
-		return xClaim(key, groupName, consumerName, minIdleTime, ids, xClaimArgumentConverter.convert(xClaimArgument),
-				args);
+		return xClaim(key, groupName, consumerName, minIdleTime, ids, new JedisXClaimParams(xClaimArgument), args);
 	}
 
 	@Override
@@ -344,10 +336,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 													final XClaimArgument xClaimArgument) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName, consumerName).add(minIdleTime)
 				.add(ids).add(xClaimArgument);
-		final XClaimArgumentConverter xClaimArgumentConverter = new XClaimArgumentConverter();
-
-		return xClaim(key, groupName, consumerName, minIdleTime, ids, xClaimArgumentConverter.convert(xClaimArgument),
-				args);
+		return xClaim(key, groupName, consumerName, minIdleTime, ids, new JedisXClaimParams(xClaimArgument), args);
 	}
 
 	@Override
@@ -371,9 +360,8 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 											final XClaimArgument xClaimArgument) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName, consumerName).add(minIdleTime)
 				.add(ids).add(xClaimArgument).add("JUSTID");
-		final XClaimArgumentConverter xClaimArgumentConverter = new XClaimArgumentConverter();
-		return xClaimJustId(key, groupName, consumerName, minIdleTime, ids,
-				xClaimArgumentConverter.convert(xClaimArgument), args);
+		return xClaimJustId(key, groupName, consumerName, minIdleTime, ids, new JedisXClaimParams(xClaimArgument),
+				args);
 	}
 
 	@Override
@@ -783,9 +771,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 														   final Map<String, StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create(groupName, consumerName).add(xReadGroupArgument)
 				.add("STREAMS", streams);
-		final XReadGroupArgumentConverter xReadGroupArgumentConverter = new XReadGroupArgumentConverter();
-		return xReadGroup(groupName, consumerName, streams, xReadGroupArgumentConverter.convert(xReadGroupArgument),
-				args);
+		return xReadGroup(groupName, consumerName, streams, new JedisXReadGroupParams(xReadGroupArgument), args);
 	}
 
 	@Override
@@ -794,9 +780,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 														   final Map<byte[], StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create(groupName, consumerName).add(xReadGroupArgument)
 				.add("STREAMS", streams);
-		final XReadGroupArgumentConverter xReadGroupArgumentConverter = new XReadGroupArgumentConverter();
-		return xReadGroup(groupName, consumerName, streams, xReadGroupArgumentConverter.convert(xReadGroupArgument),
-				args);
+		return xReadGroup(groupName, consumerName, streams, new JedisXReadGroupParams(xReadGroupArgument), args);
 	}
 
 	@Override

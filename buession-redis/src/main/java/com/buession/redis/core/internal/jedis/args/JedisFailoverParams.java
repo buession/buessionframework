@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.internal.jedis.args;
 
+import com.buession.redis.core.RedisNode;
 import redis.clients.jedis.params.FailoverParams;
 
 /**
@@ -98,6 +99,60 @@ public final class JedisFailoverParams extends FailoverParams {
 	 */
 	public JedisFailoverParams(final String host, final int port, final int timeout, final boolean force) {
 		this(host, port, timeout);
+		force(force);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param redisNode
+	 * 		主机地址
+	 */
+	public JedisFailoverParams(final RedisNode redisNode) {
+		super();
+		if(redisNode != null){
+			to(redisNode.getHost(), redisNode.getPort());
+		}
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param redisNode
+	 * 		主机地址
+	 * @param timeout
+	 * 		超时
+	 */
+	public JedisFailoverParams(final RedisNode redisNode, final int timeout) {
+		this(redisNode);
+		timeout(timeout);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param redisNode
+	 * 		主机地址
+	 * @param force
+	 * 		是否强制
+	 */
+	public JedisFailoverParams(final RedisNode redisNode, final boolean force) {
+		this(redisNode);
+		force(force);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param redisNode
+	 * 		主机地址
+	 * @param timeout
+	 * 		超时
+	 * @param force
+	 * 		是否强制
+	 */
+	public JedisFailoverParams(final RedisNode redisNode, final int timeout, final boolean force) {
+		this(redisNode, timeout);
 		force(force);
 	}
 

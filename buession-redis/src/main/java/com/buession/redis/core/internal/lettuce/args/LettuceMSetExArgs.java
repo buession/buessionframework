@@ -22,48 +22,56 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.args.HSetExArgument;
-import org.springframework.lang.Nullable;
-import redis.clients.jedis.params.HSetExParams;
+import com.buession.redis.core.NxXx;
+import com.buession.redis.core.command.args.MSetExArgument;
+import io.lettuce.core.MSetExArgs;
+
+import java.time.Duration;
+import java.time.Instant;
 
 /**
- * {@link HSetExArgument} 转换为 jedis {@link HSetExParams}
+ * Lettuce {@link MSetExArgs} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class HSetExArgumentConverter implements Converter<HSetExArgument, HSetExParams> {
+public final class LettuceMSetExArgs extends MSetExArgs {
 
-	@Nullable
-	@Override
-	public HSetExParams convert(final HSetExArgument source) {
-		if(source == null){
-			return null;
-		}
+	/**
+	 * 构造函数
+	 */
+	public LettuceMSetExArgs() {
+		super();
+	}
 
-		final HSetExParams hSetExParams = new HSetExParams();
+	/**
+	 * 构造函数
+	 *
+	 * @param mSetExArgument
+	 *        {@link MSetExArgument}
+	 */
+	public LettuceMSetExArgs(final MSetExArgument mSetExArgument) {
+		super();
 
-		if(source.getType() == null){
-			switch(source.getType()){
-				case EX -> hSetExParams.ex(source.getValue());
-				case EXAT -> hSetExParams.exAt(source.getValue());
-				case PX -> hSetExParams.px(source.getValue());
-				case PXAT -> hSetExParams.pxAt(source.getValue());
-				case KEEPTTL -> hSetExParams.keepTtl();
+		if(mSetExArgument != null){
+			if(mSetExArgument.getType() == null && mSetExArgument.getValue() != null){
+				switch(mSetExArgument.getType()){
+					case EX -> ex(Duration.ofSeconds(mSetExArgument.getValue()));
+					case EXAT -> exAt(Instant.ofEpochSecond(mSetExArgument.getValue()));
+					case PX -> px(Duration.ofMillis(mSetExArgument.getValue()));
+					case PXAT -> pxAt(Instant.ofEpochMilli(mSetExArgument.getValue()));
+					case KEEPTTL -> keepttl();
+				}
+			}
+
+			if(mSetExArgument.getNxXx() == NxXx.NX){
+				nx();
+			}else if(mSetExArgument.getNxXx() == NxXx.XX){
+				xx();
 			}
 		}
-
-		if(source.getFnxFxx() != null){
-			switch(source.getFnxFxx()){
-				case FNX -> hSetExParams.fnx();
-				case FXX -> hSetExParams.fxx();
-			}
-		}
-
-		return hSetExParams;
 	}
 
 }

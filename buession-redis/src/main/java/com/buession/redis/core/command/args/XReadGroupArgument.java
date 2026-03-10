@@ -32,7 +32,12 @@ import com.buession.redis.utils.ArgStringBuilder;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class XReadGroupArgument extends XReadArgument {
+public class XReadGroupArgument {
+
+	/**
+	 * 阻塞时间（单位：毫秒）
+	 */
+	private Long block;
 
 	private Long claim;
 
@@ -52,7 +57,8 @@ public class XReadGroupArgument extends XReadArgument {
 	 * 		阻塞时间（单位：毫秒）
 	 */
 	public XReadGroupArgument(final long block) {
-		super(block);
+		super();
+		this.block = block;
 	}
 
 	/**
@@ -64,7 +70,7 @@ public class XReadGroupArgument extends XReadArgument {
 	 * 		-
 	 */
 	public XReadGroupArgument(final long block, final boolean noAck) {
-		super(block);
+		this(block);
 		setNoAck(noAck);
 	}
 
@@ -77,7 +83,7 @@ public class XReadGroupArgument extends XReadArgument {
 	 * 		-
 	 */
 	public XReadGroupArgument(final long block, final long claim) {
-		super(block);
+		this(block);
 		this.claim = claim;
 	}
 
@@ -102,6 +108,26 @@ public class XReadGroupArgument extends XReadArgument {
 	 */
 	public XReadGroupArgument(final boolean noAck) {
 		setNoAck(noAck);
+	}
+
+	/**
+	 * 返回阻塞时间（单位：毫秒）
+	 *
+	 * @return 阻塞时间
+	 */
+	public Long getBlock() {
+		return block;
+	}
+
+	/**
+	 * 设置阻塞时间
+	 *
+	 * @param block
+	 * 		阻塞时间（单位：毫秒）
+	 */
+	public XReadGroupArgument setBlock(long block) {
+		this.block = block;
+		return this;
 	}
 
 	public Long getClaim() {

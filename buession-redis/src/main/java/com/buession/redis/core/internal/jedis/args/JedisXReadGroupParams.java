@@ -24,7 +24,10 @@
  */
 package com.buession.redis.core.internal.jedis.args;
 
+import com.buession.redis.core.command.args.XReadGroupArgument;
 import redis.clients.jedis.params.XReadGroupParams;
+
+import java.util.Optional;
 
 /**
  * Jedis {@link XReadGroupParams} 扩展
@@ -34,46 +37,85 @@ import redis.clients.jedis.params.XReadGroupParams;
  */
 public final class JedisXReadGroupParams extends XReadGroupParams {
 
+	/**
+	 * 构造函数
+	 */
 	public JedisXReadGroupParams() {
 		super();
 	}
 
-	public JedisXReadGroupParams(final int count) {
-		super();
-		count(count);
-	}
-
-	public JedisXReadGroupParams(final int count, final long block) {
-		this(count);
-		block((int) block);
-	}
-
-	public JedisXReadGroupParams(final int count, final boolean noAck) {
-		this(noAck);
-		count(count);
-	}
-
-	public JedisXReadGroupParams(final int count, final long block, final boolean noAck) {
-		this(count, noAck);
-		block((int) block);
-	}
-
-	public JedisXReadGroupParams(final long block) {
-		super();
-		block((int) block);
-	}
-
-	public JedisXReadGroupParams(final long block, final boolean noAck) {
-		this(noAck);
-		block((int) block);
-	}
-
-	public JedisXReadGroupParams(final boolean noAck) {
+	/**
+	 * 构造函数
+	 *
+	 * @param xReadGroupArgument
+	 *        {@link XReadGroupArgument}
+	 */
+	public JedisXReadGroupParams(final XReadGroupArgument xReadGroupArgument) {
 		super();
 
-		if(noAck){
-			noAck();
+		if(xReadGroupArgument != null){
+			Optional.ofNullable(xReadGroupArgument.getClaim()).ifPresent(this::claim);
+			if(xReadGroupArgument.getBlock() != null){
+				block(xReadGroupArgument.getBlock().intValue());
+			}
+
+			if(Boolean.TRUE.equals(xReadGroupArgument.getNoAck())){
+				noAck();
+			}
 		}
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param block
+	 * 		阻塞时间（单位：毫秒）
+	 */
+	public JedisXReadGroupParams(final int block) {
+		super();
+		block(block);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param block
+	 * 		阻塞时间（单位：毫秒）
+	 * @param count
+	 * 		返回数量
+	 */
+	public JedisXReadGroupParams(final int block, final int count) {
+		this(block);
+		count(count);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param xReadGroupArgument
+	 *        {@link XReadGroupArgument}
+	 * @param block
+	 * 		阻塞时间（单位：毫秒）
+	 */
+	public JedisXReadGroupParams(final XReadGroupArgument xReadGroupArgument, final int block) {
+		this(xReadGroupArgument);
+		block(block);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param xReadGroupArgument
+	 *        {@link XReadGroupArgument}
+	 * @param block
+	 * 		阻塞时间（单位：毫秒）
+	 * @param count
+	 * 		返回数量
+	 */
+	public JedisXReadGroupParams(final XReadGroupArgument xReadGroupArgument, final int block, final int count) {
+		this(xReadGroupArgument);
+		block(block);
+		count(count);
 	}
 
 }

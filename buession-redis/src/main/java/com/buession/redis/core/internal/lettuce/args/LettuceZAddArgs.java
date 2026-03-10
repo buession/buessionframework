@@ -22,34 +22,57 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.params;
+package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.args.LPosArgument;
-import io.lettuce.core.LPosArgs;
-
-import java.util.Optional;
+import com.buession.redis.core.GtLt;
+import com.buession.redis.core.NxXx;
+import com.buession.redis.core.command.args.ZAddArgument;
+import io.lettuce.core.ZAddArgs;
 
 /**
- * {@link LPosArgument} 转换为 lettuce {@link LPosArgs}
+ * Lettuce {@link ZAddArgs} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class LPosArgumentConverter implements Converter<LPosArgument, LPosArgs> {
+public final class LettuceZAddArgs extends ZAddArgs {
 
-	@Override
-	public LPosArgs convert(final LPosArgument source) {
-		if(source == null){
-			return null;
+	/**
+	 * 构造函数
+	 */
+	public LettuceZAddArgs() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param zAddArgument
+	 *        {@link  ZAddArgument}
+	 */
+	public LettuceZAddArgs(final ZAddArgument zAddArgument) {
+		super();
+
+		if(zAddArgument != null){
+			if(zAddArgument.getNxXx() == NxXx.NX){
+				nx();
+			}else if(zAddArgument.getNxXx() == NxXx.XX){
+				xx();
+			}
+
+			if(zAddArgument.getGtLt() == GtLt.GT){
+				gt();
+			}else if(zAddArgument.getGtLt() == GtLt.LT){
+				lt();
+			}
+
+			if(Boolean.TRUE.equals(zAddArgument.getCh())){
+				zAddArgument.ch();
+			}
+
+			if(Boolean.TRUE.equals(zAddArgument.getIncr())){
+			}
 		}
-
-		final LPosArgs lPosArgs = new LPosArgs();
-
-		Optional.ofNullable(source.getRank()).ifPresent(lPosArgs::rank);
-		Optional.ofNullable(source.getMaxLen()).ifPresent(lPosArgs::maxlen);
-
-		return lPosArgs;
 	}
 
 }

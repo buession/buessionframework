@@ -56,9 +56,6 @@ import com.buession.redis.core.command.args.XReadArgument;
 import com.buession.redis.core.command.args.XReadGroupArgument;
 import com.buession.redis.core.internal.convert.jedis.params.XReadGroupArgumentConverter;
 import com.buession.redis.core.internal.convert.lettuce.params.StreamDeletionPolicyConverter;
-import com.buession.redis.core.internal.convert.lettuce.params.XAddArgumentConverter;
-import com.buession.redis.core.internal.convert.lettuce.params.XClaimArgumentConverter;
-import com.buession.redis.core.internal.convert.lettuce.params.XReadArgumentConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ClaimedMessagesKeyValueConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.PendingMessageConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.PendingMessagesConverter;
@@ -76,6 +73,7 @@ import com.buession.redis.core.internal.jedis.args.JedisXReadGroupParams;
 import com.buession.redis.core.internal.lettuce.CompositeArgumentUtils;
 import com.buession.redis.core.internal.lettuce.args.LettuceXAddArgs;
 import com.buession.redis.core.internal.lettuce.args.LettuceXAutoClaimArgs;
+import com.buession.redis.core.internal.lettuce.args.LettuceXClaimArgs;
 import com.buession.redis.core.internal.lettuce.args.LettuceXGroupCreateArgs;
 import com.buession.redis.core.internal.lettuce.args.LettuceXReadArgs;
 import com.buession.redis.utils.SafeEncoder;
@@ -177,13 +175,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	public StreamEntryId xAdd(final byte[] key, final StreamEntryId id, final Map<byte[], byte[]> hash,
 							  final XAddArgument xAddArgument) {
 		final CommandArguments args = CommandArguments.create(key).add(id).add(hash).add(xAddArgument);
-		final XAddArgumentConverter xAddArgumentConverter = new XAddArgumentConverter();
-		final XAddArgs xAddArgs = Optional.ofNullable(xAddArgumentConverter.convert(xAddArgument))
-				.orElse(new XAddArgs());
-
-		xAddArgs.id(id.toString());
-
-		return xAdd(key, hash, xAddArgs, args);
+		return xAdd(key, hash, new LettuceXAddArgs(xAddArgument, id), args);
 	}
 
 	@Override
@@ -354,10 +346,8 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 													final XClaimArgument xClaimArgument) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName).add(consumerName).add(minIdleTime)
 				.add(ids).add(xClaimArgument);
-		final XClaimArgumentConverter xClaimArgumentConverter = new XClaimArgumentConverter();
-
 		return xClaim(key, ids, Consumer.from(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName)),
-				minIdleTime, xClaimArgumentConverter.convert(xClaimArgument), args);
+				minIdleTime, new LettuceXClaimArgs(xClaimArgument), args);
 	}
 
 	@Override
@@ -366,10 +356,8 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 													final XClaimArgument xClaimArgument) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName).add(consumerName).add(minIdleTime)
 				.add(ids).add(xClaimArgument);
-		final XClaimArgumentConverter xClaimArgumentConverter = new XClaimArgumentConverter();
-
 		return xClaim(key, ids, Consumer.from(groupName, consumerName), minIdleTime,
-				xClaimArgumentConverter.convert(xClaimArgument), args);
+				new LettuceXClaimArgs(xClaimArgument), args);
 	}
 
 	@Override
@@ -401,10 +389,8 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 											final XClaimArgument xClaimArgument) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName).add(consumerName).add(minIdleTime)
 				.add(ids).add(xClaimArgument).add("JUSTID");
-		final XClaimArgumentConverter xClaimArgumentConverter = new XClaimArgumentConverter();
-
 		return xClaimJustId(key, ids, Consumer.from(groupName, consumerName), minIdleTime,
-				xClaimArgumentConverter.convert(xClaimArgument), args);
+				new LettuceXClaimArgs(xClaimArgument), args);
 	}
 
 	@Override
@@ -795,8 +781,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	public List<XReadInfo<String, String>> xRead(final Map<String, StreamEntryId> streams,
 												 final XReadArgument xReadArgument) {
 		final CommandArguments args = CommandArguments.create(xReadArgument).add("STREAMS", streams);
-		final XReadArgumentConverter xReadArgumentConverter = new XReadArgumentConverter();
-		return xRead(streams, xReadArgumentConverter.convert(xReadArgument), args);
+		return xRead(streams, new LettuceXReadArgs(xReadArgument), args);
 	}
 
 	@Override
@@ -804,13 +789,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 												 final XReadArgument xReadArgument, final int count) {
 		final CommandArguments args = CommandArguments.create(Keyword.Common.COUNT, count).add(xReadArgument)
 				.add("STREAMS", streams);
-		final XReadArgumentConverter xReadArgumentConverter = new XReadArgumentConverter();
-		final XReadArgs xReadArgs = Optional.ofNullable(xReadArgumentConverter.convert(xReadArgument))
-				.orElse(new XReadArgs());
-
-		xReadArgs.count(count);
-
-		return xRead(streams, xReadArgs, args);
+		return xRead(streams, new LettuceXReadArgs(xReadArgument).count(count), args);
 	}
 
 	@Override

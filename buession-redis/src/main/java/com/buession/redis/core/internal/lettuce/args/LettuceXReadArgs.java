@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.internal.lettuce.args;
 
+import com.buession.redis.core.command.args.XReadArgument;
 import io.lettuce.core.XReadArgs;
 
 /**
@@ -34,23 +35,27 @@ import io.lettuce.core.XReadArgs;
  */
 public final class LettuceXReadArgs extends XReadArgs {
 
+	/**
+	 * 构造函数
+	 */
 	public LettuceXReadArgs() {
 		super();
 	}
 
-	public LettuceXReadArgs(final int count) {
+	/**
+	 * 构造函数
+	 *
+	 * @param xReadArgument
+	 *        {@link XReadArgument}
+	 */
+	public LettuceXReadArgs(final XReadArgument xReadArgument) {
 		super();
-		count(count);
-	}
 
-	public LettuceXReadArgs(final int count, final long block) {
-		this(count);
-		block(block);
-	}
-
-	public LettuceXReadArgs(final long block) {
-		super();
-		block(block);
+		if(xReadArgument != null){
+			if(xReadArgument.getBlock() != null){
+				block(xReadArgument.getBlock().intValue());
+			}
+		}
 	}
 
 }

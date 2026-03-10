@@ -22,35 +22,42 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.params;
+package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.core.converter.Converter;
 import com.buession.redis.core.command.args.JsonGetArgument;
 import io.lettuce.core.json.arguments.JsonGetArgs;
 
 import java.util.Optional;
 
 /**
- * {@link JsonGetArgument} 转换为 lettuce {@link JsonGetArgs}
+ * Lettuce {@link JsonGetArgs} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class JsonGetArgumentConverter implements Converter<JsonGetArgument, JsonGetArgs> {
+public final class LettuceJsonGetArgs extends JsonGetArgs {
 
-	@Override
-	public JsonGetArgs convert(final JsonGetArgument source) {
-		if(source == null){
-			return null;
+	/**
+	 * 构造函数
+	 */
+	public LettuceJsonGetArgs() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param jsonGetArgument
+	 *        {@link JsonGetArgument}
+	 */
+	public LettuceJsonGetArgs(final JsonGetArgument jsonGetArgument) {
+		super();
+
+		if(jsonGetArgument != null){
+			Optional.ofNullable(jsonGetArgument.getIndent()).map(this::indent);
+			Optional.ofNullable(jsonGetArgument.getNewline()).map(this::newline);
+			Optional.ofNullable(jsonGetArgument.getSpace()).map(this::space);
 		}
-
-		final JsonGetArgs jsonGetArgs = new JsonGetArgs();
-
-		Optional.ofNullable(source.getIndent()).map(jsonGetArgs::indent);
-		Optional.ofNullable(source.getNewline()).map(jsonGetArgs::newline);
-		Optional.ofNullable(source.getSpace()).map(jsonGetArgs::space);
-
-		return jsonGetArgs;
 	}
 
 }

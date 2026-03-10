@@ -253,11 +253,25 @@ public class FailoverArgument {
 	 *
 	 * @param redisNode
 	 * 		目标主机地址和端口
+	 */
+	public FailoverArgument(final RedisNode redisNode) {
+		if(redisNode != null){
+			this.host = redisNode.getHost();
+			this.port = redisNode.getPort();
+		}
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param redisNode
+	 * 		目标主机地址和端口
 	 * @param force
 	 * 		是否强制
 	 */
 	public FailoverArgument(final RedisNode redisNode, final boolean force) {
-		this(redisNode.getHost(), redisNode.getPort(), force);
+		this(redisNode);
+		this.force = force;
 	}
 
 	/**
@@ -271,7 +285,8 @@ public class FailoverArgument {
 	 * 		是否终止
 	 */
 	public FailoverArgument(final RedisNode redisNode, final boolean force, final boolean abort) {
-		this(redisNode.getHost(), redisNode.getPort(), force, abort);
+		this(redisNode, force);
+		this.abort = abort;
 	}
 
 	/**
@@ -285,7 +300,8 @@ public class FailoverArgument {
 	 * 		超时（单位：毫秒）
 	 */
 	public FailoverArgument(final RedisNode redisNode, final boolean force, final long timeout) {
-		this(redisNode.getHost(), redisNode.getPort(), force, timeout);
+		this(redisNode, force);
+		this.timeout = timeout;
 	}
 
 	/**
@@ -297,7 +313,8 @@ public class FailoverArgument {
 	 * 		超时（单位：毫秒）
 	 */
 	public FailoverArgument(final RedisNode redisNode, final long timeout) {
-		this(redisNode.getHost(), redisNode.getPort(), timeout);
+		this(redisNode);
+		this.timeout = timeout;
 	}
 
 	/**
@@ -313,7 +330,8 @@ public class FailoverArgument {
 	 * 		超时（单位：毫秒）
 	 */
 	public FailoverArgument(final RedisNode redisNode, final boolean force, final boolean abort, final long timeout) {
-		this(redisNode.getHost(), redisNode.getPort(), force, abort, timeout);
+		this(redisNode.getHost(), force, abort);
+		this.timeout = timeout;
 	}
 
 	/**

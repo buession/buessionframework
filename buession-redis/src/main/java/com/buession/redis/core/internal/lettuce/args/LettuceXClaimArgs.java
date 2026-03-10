@@ -22,49 +22,51 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.params;
+package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.args.MSetExArgument;
-import io.lettuce.core.MSetExArgs;
+import com.buession.redis.core.command.args.XClaimArgument;
+import io.lettuce.core.XClaimArgs;
 
-import java.time.Duration;
-import java.time.Instant;
+import java.util.Optional;
 
 /**
- * {@link MSetExArgument} 转换为 lettuce {@link MSetExArgs}
+ * Lettuce {@link XClaimArgs} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class MSetExArgumentConverter implements Converter<MSetExArgument, MSetExArgs> {
+public final class LettuceXClaimArgs extends XClaimArgs {
 
-	@Override
-	public MSetExArgs convert(final MSetExArgument source) {
-		if(source == null){
-			return null;
-		}
+	/**
+	 * 构造函数
+	 */
+	public LettuceXClaimArgs() {
+		super();
+	}
 
-		final MSetExArgs mSetExArgs = new MSetExArgs();
+	/**
+	 * 构造函数
+	 *
+	 * @param xClaimArgument
+	 *        {@link XClaimArgument}
+	 */
+	public LettuceXClaimArgs(final XClaimArgument xClaimArgument) {
+		super();
 
-		if(source.getType() == null){
-			switch(source.getType()){
-				case EX -> mSetExArgs.ex(Duration.ofSeconds(source.getValue()));
-				case EXAT -> mSetExArgs.exAt(Instant.ofEpochSecond(source.getValue()));
-				case PX -> mSetExArgs.px(Duration.ofMillis(source.getValue()));
-				case PXAT -> mSetExArgs.pxAt(Instant.ofEpochMilli(source.getValue()));
-				case KEEPTTL -> mSetExArgs.keepttl();
+		if(xClaimArgument != null){
+			if(xClaimArgument.getIdleType() != null && xClaimArgument.getIdleTime() != null){
+				switch(xClaimArgument.getIdleType()){
+					case IDLE -> idle(xClaimArgument.getIdleTime());
+					case UNIX_TIME -> time(xClaimArgument.getIdleTime());
+				}
+			}
+
+			Optional.ofNullable(xClaimArgument.getRetryCount()).ifPresent(this::retryCount);
+
+			if(Boolean.TRUE.equals(xClaimArgument.getForce())){
+				force();
 			}
 		}
-
-		if(source.getNxXx() != null){
-			switch(source.getNxXx()){
-				case NX -> mSetExArgs.nx();
-				case XX -> mSetExArgs.xx();
-			}
-		}
-
-		return mSetExArgs;
 	}
 
 }

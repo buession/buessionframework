@@ -22,27 +22,26 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.lettuce.args;
+package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.redis.core.ApproximateExactTrimming;
 import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.command.args.MaxLenMinId;
 import com.buession.redis.core.command.args.XAddArgument;
-import com.buession.redis.core.internal.convert.lettuce.params.StreamDeletionPolicyConverter;
-import io.lettuce.core.XAddArgs;
+import com.buession.redis.core.internal.convert.jedis.params.StreamDeletionPolicyConverter;
+import redis.clients.jedis.params.XAddParams;
 
 /**
- * Lettuce {@link XAddArgs} 扩展
+ * Jedis {@link XAddParams} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class LettuceXAddArgs extends XAddArgs {
+public final class JedisXAddParams extends XAddParams {
 
 	/**
 	 * 构造函数
 	 */
-	public LettuceXAddArgs() {
+	public JedisXAddParams() {
 		super();
 	}
 
@@ -52,12 +51,12 @@ public final class LettuceXAddArgs extends XAddArgs {
 	 * @param xAddArgument
 	 *        {@link XAddArgument}
 	 */
-	public LettuceXAddArgs(final XAddArgument xAddArgument) {
+	public JedisXAddParams(final XAddArgument xAddArgument) {
 		super();
 
 		if(xAddArgument != null){
 			if(Boolean.TRUE.equals(xAddArgument.getNoMkStream())){
-				nomkstream();
+				noMkStream();
 			}
 
 			if(xAddArgument.getDeletionPolicy() != null){
@@ -73,15 +72,16 @@ public final class LettuceXAddArgs extends XAddArgs {
 				MaxLenMinId<?> maxLenMinId = xAddArgument.getMaxLenMinId();
 
 				if(maxLenMinId instanceof MaxLenMinId.MaxLen){
-					maxlen(((MaxLenMinId.MaxLen) maxLenMinId).getThreshold());
+					maxLen(((MaxLenMinId.MaxLen) maxLenMinId).getThreshold());
 				}else if(maxLenMinId instanceof MaxLenMinId.MinId){
 					minId(((MaxLenMinId.MinId) maxLenMinId).getThreshold().toString());
 				}
 
-				if(maxLenMinId.getApproximateExactTrimming() == ApproximateExactTrimming.APPROXIMATE){
-					approximateTrimming();
-				}else if(maxLenMinId.getApproximateExactTrimming() == ApproximateExactTrimming.EXACT){
-					exactTrimming();
+				if(maxLenMinId.getApproximateExactTrimming() != null){
+					switch(maxLenMinId.getApproximateExactTrimming()){
+						case APPROXIMATE -> approximateTrimming();
+						case EXACT -> exactTrimming();
+					}
 				}
 			}
 		}
@@ -95,7 +95,7 @@ public final class LettuceXAddArgs extends XAddArgs {
 	 * @param id
 	 *        {@link StreamEntryId}
 	 */
-	public LettuceXAddArgs(final XAddArgument xAddArgument, final StreamEntryId id) {
+	public JedisXAddParams(final XAddArgument xAddArgument, final StreamEntryId id) {
 		this(xAddArgument);
 
 		if(id != null){
@@ -109,7 +109,7 @@ public final class LettuceXAddArgs extends XAddArgs {
 	 * @param id
 	 *        {@link StreamEntryId}
 	 */
-	public LettuceXAddArgs(final StreamEntryId id) {
+	public JedisXAddParams(final StreamEntryId id) {
 		super();
 		if(id != null){
 			id(id.toString());

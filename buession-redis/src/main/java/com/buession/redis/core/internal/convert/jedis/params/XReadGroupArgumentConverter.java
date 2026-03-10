@@ -46,14 +46,6 @@ public final class XReadGroupArgumentConverter implements Converter<XReadGroupAr
 
 		final XReadGroupParams xReadGroupParams = new XReadGroupParams();
 
-		Optional.ofNullable(source.getClaim()).ifPresent(xReadGroupParams::claim);
-		if(source.getBlock() != null){
-			xReadGroupParams.block(source.getBlock().intValue());
-		}
-
-		if(Boolean.TRUE.equals(source.getNoAck())){
-			xReadGroupParams.noAck();
-		}
 
 		return xReadGroupParams;
 	}

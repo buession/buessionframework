@@ -22,44 +22,46 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.params;
+package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.args.XClaimArgument;
-import io.lettuce.core.XClaimArgs;
-
-import java.util.Optional;
+import com.buession.redis.core.command.args.LcsArgument;
+import io.lettuce.core.LcsArgs;
 
 /**
- * {@link XClaimArgument} 转换为 lettuce {@link XClaimArgs}
+ * Lettuce {@link LcsArgs} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class XClaimArgumentConverter implements Converter<XClaimArgument, XClaimArgs> {
+public final class LettuceLcsArgs extends LcsArgs {
 
-	@Override
-	public XClaimArgs convert(final XClaimArgument source) {
-		if(source == null){
-			return null;
-		}
+	/**
+	 * 构造函数
+	 */
+	public LettuceLcsArgs() {
+		super();
+	}
 
-		final XClaimArgs xClaimArgs = new XClaimArgs();
+	/**
+	 * 构造函数
+	 */
+	public LettuceLcsArgs(final LcsArgument lcsArgument) {
+		super();
 
-		if(source.getIdleType() != null && source.getIdleTime() != null){
-			switch(source.getIdleType()){
-				case IDLE -> xClaimArgs.idle(source.getIdleTime());
-				case UNIX_TIME -> xClaimArgs.time(source.getIdleTime());
+		if(lcsArgument != null){
+			if(Boolean.TRUE.equals(lcsArgument.getLen())){
+				justLen();
+			}
+			if(Boolean.TRUE.equals(lcsArgument.getIdx())){
+				withIdx();
+			}
+			if(lcsArgument.getMinMatchLen() != null){
+				minMatchLen(lcsArgument.getMinMatchLen().intValue());
+			}
+			if(Boolean.TRUE.equals(lcsArgument.getWithMatchLen())){
+				withMatchLen();
 			}
 		}
-
-		Optional.ofNullable(source.getRetryCount()).ifPresent(xClaimArgs::retryCount);
-
-		if(Boolean.TRUE.equals(source.getForce())){
-			xClaimArgs.force();
-		}
-
-		return xClaimArgs;
 	}
 
 }

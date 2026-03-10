@@ -37,6 +37,9 @@ import java.util.Optional;
  */
 public final class JedisBFInsertParams extends BFInsertParams {
 
+	/**
+	 * 构造函数
+	 */
 	public JedisBFInsertParams() {
 		super();
 	}

@@ -22,37 +22,49 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.args.GetExArgument;
-import redis.clients.jedis.params.GetExParams;
+import com.buession.redis.core.command.args.LcsArgument;
+import redis.clients.jedis.params.LCSParams;
+
+import java.util.Optional;
 
 /**
- * {@link GetExArgument} 转换为 jedis {@link GetExParams}
+ * Jedis {@link LCSParams} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class GetExArgumentGetExParamsConverter implements Converter<GetExArgument, GetExParams> {
+public final class JedisLCSParams extends LCSParams {
 
-	@Override
-	public GetExParams convert(final GetExArgument source) {
-		if(source == null || source.getType() == null){
-			return null;
+	/**
+	 * 构造函数
+	 */
+	public JedisLCSParams() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param lcsArgument
+	 *        {@link LcsArgument}
+	 */
+	public JedisLCSParams(final LcsArgument lcsArgument) {
+		super();
+
+		if(lcsArgument != null){
+			if(Boolean.TRUE.equals(lcsArgument.getLen())){
+				len();
+			}
+			if(Boolean.TRUE.equals(lcsArgument.getIdx())){
+				idx();
+			}
+			Optional.ofNullable(lcsArgument.getMinMatchLen()).ifPresent(this::minMatchLen);
+			if(Boolean.TRUE.equals(lcsArgument.getWithMatchLen())){
+				withMatchLen();
+			}
 		}
-
-		final GetExParams getExParams = new GetExParams();
-
-		switch(source.getType()){
-			case EX -> getExParams.ex(source.getValue());
-			case EXAT -> getExParams.exAt(source.getValue());
-			case PX -> getExParams.px(source.getValue());
-			case PXAT -> getExParams.pxAt(source.getValue());
-			case PERSIST -> getExParams.persist();
-		}
-
-		return getExParams;
 	}
 
 }

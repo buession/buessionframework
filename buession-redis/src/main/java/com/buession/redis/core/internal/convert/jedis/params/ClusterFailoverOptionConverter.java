@@ -32,8 +32,7 @@ import com.buession.core.converter.Converter;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class ClusterFailoverOptionConverter
-		implements
+public final class ClusterFailoverOptionConverter implements
 		Converter<com.buession.redis.core.ClusterFailoverOption, redis.clients.jedis.args.ClusterFailoverOption> {
 
 	@Override

@@ -22,49 +22,51 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.params;
+package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.args.SetArgument;
-import io.lettuce.core.SetArgs;
+import com.buession.redis.core.command.args.XClaimArgument;
+import redis.clients.jedis.params.XClaimParams;
+
+import java.util.Optional;
 
 /**
- * {@link SetArgument} 转换为 lettuce {@link SetArgs}
+ * Jedis {@link XClaimParams} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class SetArgumentConverter implements Converter<SetArgument, SetArgs> {
+public final class JedisXClaimParams extends XClaimParams {
 
-	@Override
-	public SetArgs convert(final SetArgument source) {
-		if(source == null){
-			return null;
-		}
+	/**
+	 * 构造函数
+	 */
+	public JedisXClaimParams() {
+		super();
+	}
 
-		final SetArgs setParams = new SetArgs();
+	/**
+	 * 构造函数
+	 *
+	 * @param xClaimArgument
+	 *        {@link XClaimArgument}
+	 */
+	public JedisXClaimParams(final XClaimArgument xClaimArgument) {
+		super();
 
-		if(source.getNxXx() != null){
-			switch(source.getNxXx()){
-				case NX -> setParams.nx();
-				case XX -> setParams.xx();
+		if(xClaimArgument != null){
+			if(xClaimArgument.getIdleType() != null && xClaimArgument.getIdleTime() != null){
+				switch(xClaimArgument.getIdleType()){
+					case IDLE -> idle(xClaimArgument.getIdleTime());
+					case UNIX_TIME -> time(xClaimArgument.getIdleTime());
+				}
+			}
+
+			Optional.ofNullable(xClaimArgument.getRetryCount()).ifPresent(this::retryCount);
+
+			if(Boolean.TRUE.equals(xClaimArgument.getForce())){
+				force();
 			}
 		}
-
-		if(source.getType() != null && source.getExpires() != null){
-			switch(source.getType()){
-				case EX -> setParams.ex(source.getExpires());
-				case PX -> setParams.px(source.getExpires());
-				case EXAT -> setParams.exAt(source.getExpires());
-				case PXAT -> setParams.pxAt(source.getExpires());
-			}
-		}
-
-		if(Boolean.TRUE.equals(source.getKeepTtl())){
-			setParams.keepttl();
-		}
-
-		return setParams;
 	}
 
 }

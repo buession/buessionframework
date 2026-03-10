@@ -22,42 +22,52 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.args.LcsArgument;
-import redis.clients.jedis.params.LCSParams;
-
-import java.util.Optional;
+import com.buession.redis.core.command.args.HSetExArgument;
+import redis.clients.jedis.params.HSetExParams;
 
 /**
- * {@link LcsArgument} 转换为 jedis {@link LCSParams}
+ * Jedis {@link HSetExParams} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class LcsArgumentConveter implements Converter<LcsArgument, LCSParams> {
+public final class JedisHSetExParams extends HSetExParams {
 
-	@Override
-	public LCSParams convert(final LcsArgument source) {
-		if(source == null){
-			return null;
-		}
+	/**
+	 * 构造函数
+	 */
+	public JedisHSetExParams() {
+		super();
+	}
 
-		final LCSParams lcsParams = new LCSParams();
+	/**
+	 * 构造函数
+	 *
+	 * @param hSetExArgument
+	 *        {@link HSetExArgument}
+	 */
+	public JedisHSetExParams(final HSetExArgument hSetExArgument) {
+		super();
 
-		if(Boolean.TRUE.equals(source.getLen())){
-			lcsParams.len();
-		}
-		if(Boolean.TRUE.equals(source.getIdx())){
-			lcsParams.idx();
-		}
-		Optional.ofNullable(source.getMinMatchLen()).ifPresent(lcsParams::minMatchLen);
-		if(Boolean.TRUE.equals(source.getWithMatchLen())){
-			lcsParams.withMatchLen();
-		}
+		if(hSetExArgument != null){
+			if(hSetExArgument.getType() == null){
+				switch(hSetExArgument.getType()){
+					case EX -> ex(hSetExArgument.getValue());
+					case EXAT -> exAt(hSetExArgument.getValue());
+					case PX -> px(hSetExArgument.getValue());
+					case PXAT -> pxAt(hSetExArgument.getValue());
+					case KEEPTTL -> keepTtl();
+				}
+			}
 
-		return lcsParams;
+			if(hSetExArgument.getFnxFxx() == HSetExArgument.FnxFxx.FNX){
+				fnx();
+			}else if(hSetExArgument.getFnxFxx() == HSetExArgument.FnxFxx.FXX){
+				fnx();
+			}
+		}
 	}
 
 }

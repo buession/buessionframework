@@ -133,7 +133,7 @@ public class ZAddArgument {
 	}
 
 	public Boolean isIncr() {
-		return incr;
+		return getIncr();
 	}
 
 	public Boolean getIncr() {

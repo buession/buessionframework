@@ -39,20 +39,19 @@ import com.buession.redis.core.command.args.GetExArgument;
 import com.buession.redis.core.command.args.LcsArgument;
 import com.buession.redis.core.command.args.MSetExArgument;
 import com.buession.redis.core.command.args.SetArgument;
-import com.buession.redis.core.internal.convert.lettuce.params.LcsArgumentConveter;
-import com.buession.redis.core.internal.convert.lettuce.params.MSetExArgumentConverter;
-import com.buession.redis.core.internal.convert.lettuce.params.SetArgumentConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.StringMatchResultConveter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.response.OneStatusConverter;
 import com.buession.redis.core.internal.lettuce.args.LettuceGetExArgs;
+import com.buession.redis.core.internal.lettuce.args.LettuceLcsArgs;
+import com.buession.redis.core.internal.lettuce.args.LettuceMSetExArgs;
+import com.buession.redis.core.internal.lettuce.args.LettuceSetArgs;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.CompareCondition;
 import io.lettuce.core.LcsArgs;
 import io.lettuce.core.Value;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Lettuce 字符串命令
@@ -266,11 +265,9 @@ public final class LettuceStringCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public LcsResult lcs(final String key1, final String key2, final LcsArgument argument) {
 		final CommandArguments args = CommandArguments.create(key1).add(key2).add(argument);
-		final LcsArgumentConveter lcsArgumentConveter = new LcsArgumentConveter();
-		final LcsArgs lcsArgs = Optional.ofNullable(lcsArgumentConveter.convert(argument)).orElse(new LcsArgs());
-
-		lcsArgs.by(rawKey(key1), rawKey(key2));
-		return executeCommand(Command.LCS, args, (cmd)->cmd.lcs(lcsArgs), new StringMatchResultConveter());
+		return executeCommand(Command.LCS, args,
+				(cmd)->cmd.lcs(new LettuceLcsArgs(argument).by(rawKey(key1), rawKey(key2))),
+				new StringMatchResultConveter());
 	}
 
 	@Override
@@ -305,10 +302,9 @@ public final class LettuceStringCommands extends AbstractLettuceRedisCommands im
 		final CommandArguments args = CommandArguments.create(values).add(argument);
 		final ArrayKeyValueMapConverter<String, String, byte[], byte[]> arrayKeyValueMapConverter =
 				new ArrayKeyValueMapConverter<>(this::rawBinaryKey, SafeEncoder::encode);
-		final MSetExArgumentConverter mSetExArgumentConverter = new MSetExArgumentConverter();
 
 		return executeCommand(Command.MSETNX, args, (cmd)->cmd.msetex(arrayKeyValueMapConverter.convert(values),
-				mSetExArgumentConverter.convert(argument)), new BooleanStatusConverter());
+				new LettuceMSetExArgs(argument)), new BooleanStatusConverter());
 	}
 
 	@Override
@@ -351,18 +347,16 @@ public final class LettuceStringCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public Status set(final String key, final String value, final SetArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(value).add(argument);
-		final SetArgumentConverter setArgumentConverter = new SetArgumentConverter();
 		return executeCommand(Command.SET, args,
-				(cmd)->cmd.set(rawBinaryKey(key), SafeEncoder.encode(value), setArgumentConverter.convert(argument)),
+				(cmd)->cmd.set(rawBinaryKey(key), SafeEncoder.encode(value), new LettuceSetArgs(argument)),
 				new OkStatusConverter());
 	}
 
 	@Override
 	public Status set(final byte[] key, final byte[] value, final SetArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(value).add(argument);
-		final SetArgumentConverter setArgumentConverter = new SetArgumentConverter();
 		return executeCommand(Command.SET, args,
-				(cmd)->cmd.set(rawKey(key), value, setArgumentConverter.convert(argument)), new OkStatusConverter());
+				(cmd)->cmd.set(rawKey(key), value, new LettuceSetArgs(argument)), new OkStatusConverter());
 	}
 
 	@Override

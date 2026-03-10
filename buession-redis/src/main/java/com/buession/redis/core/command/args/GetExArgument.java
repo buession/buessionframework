@@ -24,9 +24,15 @@
  */
 package com.buession.redis.core.command.args;
 
+import com.buession.core.utils.Assert;
 import com.buession.redis.core.Keyword;
 import com.buession.redis.utils.ArgStringBuilder;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 /**
@@ -111,15 +117,28 @@ public class GetExArgument {
 	}
 
 	/**
-	 * 设置时间
+	 * 设置过期时间
 	 *
 	 * @param liftime
-	 * 		时间
+	 * 		过期时间（单位：秒）
 	 *
 	 * @return Builder
 	 */
 	public static GetExArgument ex(long liftime) {
 		return new GetExArgument(GetExType.EX, liftime);
+	}
+
+	/**
+	 * 设置过期时间
+	 *
+	 * @param liftime
+	 * 		过期时间
+	 *
+	 * @return Builder
+	 */
+	public static GetExArgument ex(Duration liftime) {
+		Assert.isNull(liftime, "Liftime must not be null");
+		return new GetExArgument(GetExType.EX, liftime.toSeconds());
 	}
 
 	/**
@@ -143,19 +162,72 @@ public class GetExArgument {
 	 * @return Builder
 	 */
 	public static GetExArgument exAt(Date date) {
+		Assert.isNull(date, "Timestamp must not be null");
 		return exAt(date.getTime() / 1000);
 	}
 
 	/**
 	 * 设置时间
 	 *
+	 * @param dateTime
+	 * 		时间，具体过期时间
+	 *
+	 * @return Builder
+	 */
+	public static GetExArgument exAt(LocalDateTime dateTime) {
+		Assert.isNull(dateTime, "Timestamp must not be null");
+		return exAt(dateTime.atZone(ZoneId.systemDefault()).toInstant());
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param dateTime
+	 * 		时间，具体过期时间
+	 *
+	 * @return Builder
+	 */
+	public static GetExArgument exAt(ZonedDateTime dateTime) {
+		Assert.isNull(dateTime, "Timestamp must not be null");
+		return exAt(dateTime.toEpochSecond());
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param instant
+	 * 		时间，具体过期时间
+	 *
+	 * @return Builder
+	 */
+	public static GetExArgument exAt(Instant instant) {
+		Assert.isNull(instant, "Timestamp must not be null");
+		return exAt(instant.toEpochMilli() / 1000);
+	}
+
+	/**
+	 * 设置时间
+	 *
 	 * @param liftime
-	 * 		时间
+	 * 		过期时间（单位：毫秒）
 	 *
 	 * @return Builder
 	 */
 	public static GetExArgument px(long liftime) {
 		return new GetExArgument(GetExType.PX, liftime);
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param liftime
+	 * 		过期时间（单位：毫秒）
+	 *
+	 * @return Builder
+	 */
+	public static GetExArgument px(Duration liftime) {
+		Assert.isNull(liftime, "Liftime must not be null");
+		return new GetExArgument(GetExType.PX, liftime.toMillis());
 	}
 
 	/**
@@ -180,6 +252,45 @@ public class GetExArgument {
 	 */
 	public static GetExArgument pxAt(Date date) {
 		return pxAt(date.getTime());
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param dateTime
+	 * 		时间，具体过期时间
+	 *
+	 * @return Builder
+	 */
+	public static GetExArgument pxAt(LocalDateTime dateTime) {
+		Assert.isNull(dateTime, "Timestamp must not be null");
+		return pxAt(dateTime.atZone(ZoneId.systemDefault()).toInstant());
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param dateTime
+	 * 		时间，具体过期时间
+	 *
+	 * @return Builder
+	 */
+	public static GetExArgument pxAt(ZonedDateTime dateTime) {
+		Assert.isNull(dateTime, "Timestamp must not be null");
+		return pxAt(dateTime.toInstant().toEpochMilli());
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param instant
+	 * 		时间，具体过期时间
+	 *
+	 * @return Builder
+	 */
+	public static GetExArgument pxAt(Instant instant) {
+		Assert.isNull(instant, "Timestamp must not be null");
+		return pxAt(instant.toEpochMilli());
 	}
 
 	/**

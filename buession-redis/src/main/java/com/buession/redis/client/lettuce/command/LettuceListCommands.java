@@ -38,10 +38,10 @@ import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ListCommands;
 import com.buession.redis.core.command.args.LPosArgument;
 import com.buession.redis.core.internal.convert.Converters;
-import com.buession.redis.core.internal.convert.lettuce.params.LPosArgumentConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.KeyValueConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.lettuce.CompositeArgumentUtils;
+import com.buession.redis.core.internal.lettuce.args.LettuceLPosArgs;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
@@ -247,20 +247,17 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public List<Long> lPos(final String key, final String element, final LPosArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument);
-		final LPosArgumentConverter lPosArgumentConverter = new LPosArgumentConverter();
 		return executeCommand(Command.LPOS, args,
 				(cmd)->cmd.lpos(rawBinaryKey(key), SafeEncoder.encode(element),
-						Integer.MAX_VALUE, lPosArgumentConverter.convert(argument)),
-				(v)->v);
+						Integer.MAX_VALUE, new LettuceLPosArgs(argument)));
 	}
 
 	@Override
 	public List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument);
-		final LPosArgumentConverter lPosArgumentConverter = new LPosArgumentConverter();
 		return executeCommand(Command.LPOS, args,
 				(cmd)->cmd.lpos(rawKey(key), element, Integer.MAX_VALUE,
-						lPosArgumentConverter.convert(argument)), (v)->v);
+						new LettuceLPosArgs(argument)), (v)->v);
 	}
 
 	@Override
@@ -281,18 +278,16 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public List<Long> lPos(final String key, final String element, final LPosArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.COUNT, count);
-		final LPosArgumentConverter lPosArgumentConverter = new LPosArgumentConverter();
 		return executeCommand(Command.LPOS, args,
 				(cmd)->cmd.lpos(rawBinaryKey(key), SafeEncoder.encode(element),
-						count, lPosArgumentConverter.convert(argument)), (v)->v);
+						count, new LettuceLPosArgs(argument)), (v)->v);
 	}
 
 	@Override
 	public List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.COUNT, count);
-		final LPosArgumentConverter lPosArgumentConverter = new LPosArgumentConverter();
 		return executeCommand(Command.LPOS, args,
-				(cmd)->cmd.lpos(rawKey(key), element, count, lPosArgumentConverter.convert(argument)),
+				(cmd)->cmd.lpos(rawKey(key), element, count, new LettuceLPosArgs(argument)),
 				(v)->v);
 	}
 

@@ -22,63 +22,59 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.params;
+package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.args.XAddArgument;
-import io.lettuce.core.XAddArgs;
+import com.buession.redis.core.NxXx;
+import com.buession.redis.core.command.args.SetArgument;
+import io.lettuce.core.SetArgs;
+
+import java.time.Duration;
+import java.time.Instant;
 
 /**
- * {@link XAddArgument} 转换为 lettuce {@link XAddArgs}
+ * Lettuce {@link SetArgs} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class XAddArgumentConverter implements Converter<XAddArgument, XAddArgs> {
+public final class LettuceSetArgs extends SetArgs {
 
-	@Override
-	public XAddArgs convert(final XAddArgument source) {
-		if(source == null){
-			return null;
-		}
+	/**
+	 * 构造函数
+	 */
+	public LettuceSetArgs() {
+		super();
+	}
 
-		final XAddArgs xAddArgs = new XAddArgs();
+	/**
+	 * 构造函数
+	 *
+	 * @param setArgument
+	 *        {@link SetArgument}
+	 */
+	public LettuceSetArgs(final SetArgument setArgument) {
+		super();
 
-		if(Boolean.TRUE.equals(source.getNoMkStream())){
-			xAddArgs.nomkstream();
-		}
-
-		if(source.getDeletionPolicy() != null){
-			final StreamDeletionPolicyConverter xDeletionPolicyConverter = new StreamDeletionPolicyConverter();
-			xAddArgs.trimmingMode(xDeletionPolicyConverter.convert(source.getDeletionPolicy()));
-		}
-
-		if(source.getIdmp() != null){
-
-		}
-
-		if(source.getMaxLenMinId() != null){
-			XAddArgument.MaxLenMinId<?> maxLenMinId = source.getMaxLenMinId();
-
-			if(maxLenMinId instanceof XAddArgument.MaxLenMinId.MaxLen){
-				xAddArgs.maxlen(((XAddArgument.MaxLenMinId.MaxLen) maxLenMinId).getThreshold());
-			}else if(maxLenMinId instanceof XAddArgument.MaxLenMinId.MinId){
-				xAddArgs.minId(((XAddArgument.MaxLenMinId.MinId) maxLenMinId).getThreshold().toString());
-			}
-
-			if(maxLenMinId.getApproximateExactTrimming() != null){
-				switch(maxLenMinId.getApproximateExactTrimming()){
-					case APPROXIMATE -> xAddArgs.approximateTrimming();
-					case EXACT -> xAddArgs.exactTrimming();
+		if(setArgument != null){
+			if(setArgument.getType() == null && setArgument.getValue() != null){
+				switch(setArgument.getType()){
+					case EX -> ex(Duration.ofSeconds(setArgument.getValue()));
+					case EXAT -> exAt(Instant.ofEpochSecond(mSetExArgument.getValue()));
+					case PX -> px(Duration.ofMillis(mSetExArgument.getValue()));
+					case PXAT -> pxAt(Instant.ofEpochMilli(mSetExArgument.getValue()));
 				}
 			}
 
-			if(maxLenMinId.getCount() != null){
-				xAddArgs.limit(maxLenMinId.getCount());
+			if(setArgument.getNxXx() == NxXx.NX){
+				nx();
+			}else if(setArgument.getNxXx() == NxXx.XX){
+				xx();
+			}
+
+			if(Boolean.TRUE.equals(setArgument.getKeepTtl())){
+				keepttl();
 			}
 		}
-
-		return xAddArgs;
 	}
 
 }

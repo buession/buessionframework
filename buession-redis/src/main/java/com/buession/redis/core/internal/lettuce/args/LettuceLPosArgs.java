@@ -22,49 +22,41 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.args.SetArgument;
-import redis.clients.jedis.params.SetParams;
+import com.buession.redis.core.command.args.LPosArgument;
+import io.lettuce.core.LPosArgs;
+
+import java.util.Optional;
 
 /**
- * {@link SetArgument} 转换为 jedis {@link SetParams}
+ * Lettuce {@link LPosArgs} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class SetArgumentConverter implements Converter<SetArgument, SetParams> {
+public final class LettuceLPosArgs extends LPosArgs {
 
-	@Override
-	public SetParams convert(final SetArgument source) {
-		if(source == null){
-			return null;
+	/**
+	 * 构造函数
+	 */
+	public LettuceLPosArgs() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param lPosArgument
+	 *        {@link LPosArgument}
+	 */
+	public LettuceLPosArgs(final LPosArgument lPosArgument) {
+		super();
+
+		if(lPosArgument != null){
+			Optional.ofNullable(lPosArgument.getRank()).ifPresent(this::rank);
+			Optional.ofNullable(lPosArgument.getMaxLen()).ifPresent(this::maxlen);
 		}
-
-		final SetParams setParams = new SetParams();
-
-		if(source.getNxXx() != null){
-			switch(source.getNxXx()){
-				case NX -> setParams.nx();
-				case XX -> setParams.xx();
-			}
-		}
-
-		if(source.getType() != null && source.getExpires() != null){
-			switch(source.getType()){
-				case EX -> setParams.ex(source.getExpires());
-				case PX -> setParams.px(source.getExpires());
-				case EXAT -> setParams.exAt(source.getExpires());
-				case PXAT -> setParams.pxAt(source.getExpires());
-			}
-		}
-
-		if(Boolean.TRUE.equals(source.getKeepTtl())){
-			setParams.keepTtl();
-		}
-
-		return setParams;
 	}
 
 }

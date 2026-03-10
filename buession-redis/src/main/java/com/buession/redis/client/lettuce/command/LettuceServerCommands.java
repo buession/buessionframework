@@ -57,9 +57,7 @@ import com.buession.redis.core.command.args.FailoverArgument;
 import com.buession.redis.core.command.args.HotkeysStartArgument;
 import com.buession.redis.core.command.args.RestoreArgument;
 import com.buession.redis.core.command.args.ShutdownArgument;
-import com.buession.redis.core.internal.convert.lettuce.params.AclSetUserArgumentConverter;
 import com.buession.redis.core.internal.convert.lettuce.params.FlushModeConverter;
-import com.buession.redis.core.internal.convert.lettuce.params.ShutdownArgumentConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.AclCategoryConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.AclLogConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.AclUserConverter;
@@ -70,6 +68,8 @@ import com.buession.redis.core.internal.convert.lettuce.response.RoleConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.SlowlogConverter;
 import com.buession.redis.core.internal.convert.response.InfoConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
+import com.buession.redis.core.internal.lettuce.args.LettuceAclSetuserArgs;
+import com.buession.redis.core.internal.lettuce.args.LettuceShutdownArgs;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.Date;
@@ -203,9 +203,8 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public Status aclSetUser(final String username, final AclSetUserArgument argument) {
 		final CommandArguments args = CommandArguments.create(username).add(argument);
-		final AclSetUserArgumentConverter aclSetUserArgumentConverter = new AclSetUserArgumentConverter();
 		return executeCommand(Command.ACL, SubCommand.ACL_SETUSER, args,
-				(cmd)->cmd.aclSetuser(username, aclSetUserArgumentConverter.convert(argument)),
+				(cmd)->cmd.aclSetuser(username, new LettuceAclSetuserArgs(argument)),
 				new OkStatusConverter());
 	}
 
@@ -630,9 +629,8 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public void shutdown(final ShutdownArgument argument) {
 		final CommandArguments args = CommandArguments.create(argument);
-		final ShutdownArgumentConverter shutdownArgumentConverter = new ShutdownArgumentConverter();
 		executeCommand(Command.SHUTDOWN, args, (cmd)->{
-			cmd.shutdown(shutdownArgumentConverter.convert(argument));
+			cmd.shutdown(new LettuceShutdownArgs(argument));
 			return null;
 		}, (v)->v);
 	}

@@ -22,46 +22,52 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.args.MSetExArgument;
-import redis.clients.jedis.params.MSetExParams;
+import com.buession.redis.core.command.args.ShutdownArgument;
+import io.lettuce.core.ShutdownArgs;
+
+import java.util.Optional;
 
 /**
- * {@link MSetExArgument} 转换为 jedis {@link MSetExParams}
+ * Lettuce {@link ShutdownArgs} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class MSetExArgumentConverter implements Converter<MSetExArgument, MSetExParams> {
+public final class LettuceShutdownArgs extends ShutdownArgs {
 
-	@Override
-	public MSetExParams convert(final MSetExArgument source) {
-		if(source == null){
-			return null;
-		}
+	/**
+	 * 构造函数
+	 */
+	public LettuceShutdownArgs() {
+		super();
+	}
 
-		final MSetExParams mSetExParams = new MSetExParams();
+	/**
+	 * 构造函数
+	 *
+	 * @param shutdownArgument
+	 *        {@link ShutdownArgument}
+	 */
+	public LettuceShutdownArgs(final ShutdownArgument shutdownArgument) {
+		super();
 
-		if(source.getType() == null){
-			switch(source.getType()){
-				case EX -> mSetExParams.ex(source.getValue());
-				case EXAT -> mSetExParams.exAt(source.getValue());
-				case PX -> mSetExParams.px(source.getValue());
-				case PXAT -> mSetExParams.pxAt(source.getValue());
-				case KEEPTTL -> mSetExParams.keepTtl();
+		if(shutdownArgument != null){
+			Optional.ofNullable(shutdownArgument.getSave()).ifPresent(this::save);
+
+			if(Boolean.TRUE.equals(shutdownArgument.getNow())){
+				now();
+			}
+
+			if(Boolean.TRUE.equals(shutdownArgument.getForce())){
+				force();
+			}
+
+			if(Boolean.TRUE.equals(shutdownArgument.getAbort())){
+				abort();
 			}
 		}
-
-		if(source.getNxXx() != null){
-			switch(source.getNxXx()){
-				case NX -> mSetExParams.nx();
-				case XX -> mSetExParams.xx();
-			}
-		}
-
-		return mSetExParams;
 	}
 
 }

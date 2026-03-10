@@ -272,7 +272,9 @@ public class SetArgument {
 		/**
 		 * 设置指定的过期 Unix 时间戳，以毫秒为单位
 		 */
-		PXAT
+		PXAT,
+
+		KEEPTTL
 	}
 
 }

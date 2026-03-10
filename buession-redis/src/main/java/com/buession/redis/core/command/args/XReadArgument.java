@@ -52,7 +52,7 @@ public class XReadArgument {
 	 * 		阻塞时间（单位：毫秒）
 	 */
 	public XReadArgument(final long block) {
-		setBlock(block);
+		this.block = block;
 	}
 
 	/**

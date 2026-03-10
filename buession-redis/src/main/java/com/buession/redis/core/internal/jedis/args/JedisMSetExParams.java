@@ -22,50 +22,53 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.params;
+package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.args.ZAddArgument;
-import io.lettuce.core.ZAddArgs;
+import com.buession.redis.core.command.args.MSetExArgument;
+import redis.clients.jedis.params.MSetExParams;
 
 /**
- * {@link ZAddArgument} 转换为 lettuce {@link ZAddArgs}
+ * Jedis {@link MSetExParams} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class ZAddArgumentConverter implements Converter<ZAddArgument, ZAddArgs> {
+public final class JedisMSetExParams extends MSetExParams {
 
-	@Override
-	public ZAddArgs convert(final ZAddArgument source) {
-		if(source == null){
-			return null;
-		}
+	/**
+	 * 构造函数
+	 */
+	public JedisMSetExParams() {
+		super();
+	}
 
-		final ZAddArgs addArgs = new ZAddArgs();
+	/**
+	 * 构造函数
+	 *
+	 * @param mSetExArgument
+	 *        {@link MSetExArgument}
+	 */
+	public JedisMSetExParams(final MSetExArgument mSetExArgument) {
+		super();
 
-		if(source.getNxXx() != null){
-			switch(source.getNxXx()){
-				case NX -> addArgs.nx();
-				case XX -> addArgs.xx();
+		if(mSetExArgument != null){
+			if(mSetExArgument.getType() == null){
+				switch(mSetExArgument.getType()){
+					case EX -> ex(mSetExArgument.getValue());
+					case EXAT -> exAt(mSetExArgument.getValue());
+					case PX -> px(mSetExArgument.getValue());
+					case PXAT -> pxAt(mSetExArgument.getValue());
+					case KEEPTTL -> keepTtl();
+				}
+			}
+
+			if(mSetExArgument.getNxXx() != null){
+				switch(mSetExArgument.getNxXx()){
+					case NX -> nx();
+					case XX -> xx();
+				}
 			}
 		}
-
-		if(source.getGtLt() != null){
-			switch(source.getGtLt()){
-				case GT -> addArgs.gt();
-				case LT -> addArgs.lt();
-			}
-		}
-
-		if(Boolean.TRUE.equals(source.getCh())){
-			addArgs.ch();
-		}
-
-		if(Boolean.TRUE.equals(source.getIncr())){
-		}
-
-		return addArgs;
 	}
 
 }

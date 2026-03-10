@@ -22,45 +22,56 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.params;
+package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.args.ShutdownArgument;
-import io.lettuce.core.ShutdownArgs;
+import com.buession.redis.core.command.args.SetArgument;
+import redis.clients.jedis.params.SetParams;
 
 /**
- * {@link ShutdownArgument} 转换为 lettuce {@link ShutdownArgs}
+ * Jedis {@link SetParams} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class ShutdownArgumentConverter implements Converter<ShutdownArgument, ShutdownArgs> {
+public final class JedisSetParams extends SetParams {
 
-	@Override
-	public ShutdownArgs convert(final ShutdownArgument source) {
-		if(source == null){
-			return null;
+	/**
+	 * 构造函数
+	 */
+	public JedisSetParams() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param setArgument
+	 *        {@link SetArgument}
+	 */
+	public JedisSetParams(final SetArgument setArgument) {
+		super();
+
+		if(setArgument != null){
+			if(setArgument.getNxXx() != null){
+				switch(setArgument.getNxXx()){
+					case NX -> nx();
+					case XX -> xx();
+				}
+			}
+
+			if(setArgument.getType() != null && setArgument.getExpires() != null){
+				switch(setArgument.getType()){
+					case EX -> ex(setArgument.getExpires());
+					case PX -> px(setArgument.getExpires());
+					case EXAT -> exAt(setArgument.getExpires());
+					case PXAT -> pxAt(setArgument.getExpires());
+				}
+			}
+
+			if(Boolean.TRUE.equals(setArgument.getKeepTtl())){
+				keepTtl();
+			}
 		}
-
-		final ShutdownArgs shutdownArgs = new ShutdownArgs();
-
-		if(source.getSave() != null){
-			shutdownArgs.save(source.getSave());
-		}
-
-		if(Boolean.TRUE.equals(source.getNow())){
-			shutdownArgs.now();
-		}
-
-		if(Boolean.TRUE.equals(source.getForce())){
-			shutdownArgs.force();
-		}
-
-		if(Boolean.TRUE.equals(source.getAbort())){
-			shutdownArgs.abort();
-		}
-
-		return shutdownArgs;
 	}
 
 }

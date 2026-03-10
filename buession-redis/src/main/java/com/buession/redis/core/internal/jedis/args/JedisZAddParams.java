@@ -51,20 +51,16 @@ public final class JedisZAddParams extends ZAddParams {
 		super();
 
 		if(zAddArgument != null){
-			if(zAddArgument.getNxXx() != null){
-				if(zAddArgument.getNxXx() == NxXx.NX){
-					nx();
-				}else if(zAddArgument.getNxXx() == NxXx.NX){
-					xx();
-				}
+			if(zAddArgument.getNxXx() == NxXx.NX){
+				nx();
+			}else if(zAddArgument.getNxXx() == NxXx.NX){
+				xx();
 			}
 
-			if(zAddArgument.getGtLt() != null){
-				if(zAddArgument.getGtLt() == GtLt.GT){
-					gt();
-				}else if(zAddArgument.getGtLt() == GtLt.LT){
-					lt();
-				}
+			if(zAddArgument.getGtLt() == GtLt.GT){
+				gt();
+			}else if(zAddArgument.getGtLt() == GtLt.LT){
+				lt();
 			}
 		}
 

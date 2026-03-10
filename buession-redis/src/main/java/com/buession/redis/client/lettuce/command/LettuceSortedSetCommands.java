@@ -39,13 +39,13 @@ import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.SortedSetCommands;
 import com.buession.redis.core.command.args.ZAddArgument;
 import com.buession.redis.core.command.args.ZRangeArgument;
-import com.buession.redis.core.internal.convert.lettuce.params.ZAddArgumentConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.KeyValueConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ScoredValueKeyValueConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ScoredValueTupleConverter;
 import com.buession.redis.core.internal.lettuce.args.LettuceScanArgs;
 import com.buession.redis.core.internal.lettuce.args.LettuceScanCursor;
+import com.buession.redis.core.internal.lettuce.args.LettuceZAddArgs;
 import com.buession.redis.core.internal.lettuce.args.LettuceZAggregateArgs;
 import com.buession.redis.core.internal.lettuce.args.LettuceZPopArgs;
 import com.buession.redis.core.internal.lettuce.args.LettuceZStoreArgs;
@@ -1337,14 +1337,13 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	private Long zAdd(final byte[] key, final Tuple[] members, final ZAddArgument argument,
 					  final CommandArguments args) {
 		final ScoredValue<byte[]>[] scoredValues = new ScoredValue[members.length];
-		final ZAddArgumentConverter zAddArgumentConverter = new ZAddArgumentConverter();
 
 		for(int i = 0; i < members.length; i++){
 			scoredValues[i] = ScoredValue.just(members[i].getScore(), members[i].getBinaryElement());
 		}
 
 		return executeCommand(Command.ZADD, args,
-				(cmd)->cmd.zadd(rawKey(key), zAddArgumentConverter.convert(argument), scoredValues), (v)->v);
+				(cmd)->cmd.zadd(rawKey(key), new LettuceZAddArgs(argument), scoredValues), (v)->v);
 	}
 
 	private Long zRangeStore(final String destKey, final String key, final long start, final long end,

@@ -24,8 +24,16 @@
  */
 package com.buession.redis.core.command.args;
 
+import com.buession.core.utils.Assert;
 import com.buession.redis.core.Keyword;
 import com.buession.redis.utils.ArgStringBuilder;
+
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
 
 /**
  * {@code XCLAIM} 命令参数
@@ -71,16 +79,41 @@ public class XClaimArgument {
 		this.force = force;
 	}
 
-	public XClaimArgument idelTime(final long idleTime) {
+	public XClaimArgument idelTime(long idleTime) {
 		this.idleType = IdleType.IDLE;
 		this.idleTime = idleTime;
 		return this;
 	}
 
-	public XClaimArgument unixTime(final long unixTime) {
+	public XClaimArgument idelTime(Duration idleTime) {
+		Assert.isNull(idleTime, "Liftime must not be null");
+		return idelTime(idleTime.toMillis());
+	}
+
+	public XClaimArgument unixTime(long unixTime) {
 		this.idleType = IdleType.UNIX_TIME;
 		this.idleTime = unixTime;
 		return this;
+	}
+
+	public XClaimArgument unixTime(Date date) {
+		Assert.isNull(date, "Timestamp must not be null");
+		return unixTime(date.getTime());
+	}
+
+	public XClaimArgument unixTime(LocalDateTime dateTime) {
+		Assert.isNull(dateTime, "Timestamp must not be null");
+		return unixTime(dateTime.atZone(ZoneId.systemDefault()).toInstant());
+	}
+
+	public XClaimArgument unixTime(ZonedDateTime dateTime) {
+		Assert.isNull(dateTime, "Timestamp must not be null");
+		return unixTime(dateTime.toInstant());
+	}
+
+	public XClaimArgument unixTime(Instant instant) {
+		Assert.isNull(instant, "Timestamp must not be null");
+		return unixTime(instant.toEpochMilli());
 	}
 
 	public IdleType getIdleType() {

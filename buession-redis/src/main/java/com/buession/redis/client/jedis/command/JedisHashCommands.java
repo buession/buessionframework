@@ -39,11 +39,11 @@ import com.buession.redis.core.command.HashCommands;
 import com.buession.redis.core.command.args.GetExArgument;
 import com.buession.redis.core.command.args.HSetExArgument;
 import com.buession.redis.core.internal.convert.jedis.params.ExpireOptionConverter;
-import com.buession.redis.core.internal.convert.jedis.params.HSetExArgumentConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ScanResultConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.response.OneStatusConverter;
 import com.buession.redis.core.internal.jedis.args.JedisHGetExParams;
+import com.buession.redis.core.internal.jedis.args.JedisHSetExParams;
 import com.buession.redis.core.internal.jedis.args.JedisScanParams;
 import redis.clients.jedis.params.HGetExParams;
 import redis.clients.jedis.params.HSetExParams;
@@ -598,15 +598,13 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public Status hSetEx(final String key, final KeyValue<String, String>[] data, final HSetExArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(data);
-		final HSetExArgumentConverter hSetExArgumentConverter = new HSetExArgumentConverter();
-		return hSetEx(rawKey(key), data, hSetExArgumentConverter.convert(argument), args);
+		return hSetEx(rawKey(key), data, new JedisHSetExParams(argument), args);
 	}
 
 	@Override
 	public Status hSetEx(final byte[] key, final KeyValue<byte[], byte[]>[] data, final HSetExArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(data);
-		final HSetExArgumentConverter hSetExArgumentConverter = new HSetExArgumentConverter();
-		return hSetEx(rawKey(key), data, hSetExArgumentConverter.convert(argument), args);
+		return hSetEx(rawKey(key), data, new JedisHSetExParams(argument), args);
 	}
 
 	@Override

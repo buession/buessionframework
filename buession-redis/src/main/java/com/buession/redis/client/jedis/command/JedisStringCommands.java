@@ -37,13 +37,13 @@ import com.buession.redis.core.command.args.GetExArgument;
 import com.buession.redis.core.command.args.LcsArgument;
 import com.buession.redis.core.command.args.MSetExArgument;
 import com.buession.redis.core.command.args.SetArgument;
-import com.buession.redis.core.internal.convert.jedis.params.GetExArgumentGetExParamsConverter;
-import com.buession.redis.core.internal.convert.jedis.params.LcsArgumentConveter;
-import com.buession.redis.core.internal.convert.jedis.params.MSetExArgumentConverter;
-import com.buession.redis.core.internal.convert.jedis.params.SetArgumentConverter;
 import com.buession.redis.core.internal.convert.jedis.response.LCSMatchResultConveter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.response.OneStatusConverter;
+import com.buession.redis.core.internal.jedis.args.JedisGetExParams;
+import com.buession.redis.core.internal.jedis.args.JedisLCSParams;
+import com.buession.redis.core.internal.jedis.args.JedisMSetExParams;
+import com.buession.redis.core.internal.jedis.args.JedisSetParams;
 import redis.clients.jedis.params.LCSParams;
 import redis.clients.jedis.util.CompareCondition;
 
@@ -170,17 +170,13 @@ public final class JedisStringCommands extends AbstractJedisRedisCommands implem
 	@Override
 	public String getEx(final String key, final GetExArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument);
-		final GetExArgumentGetExParamsConverter getExArgumentGetExParamsConverter = new GetExArgumentGetExParamsConverter();
-		return executeCommand(Command.GETEX, args,
-				(cmd)->cmd.getEx(rawKey(key), getExArgumentGetExParamsConverter.convert(argument)), (v)->v);
+		return executeCommand(Command.GETEX, args, (cmd)->cmd.getEx(rawKey(key), new JedisGetExParams(argument)));
 	}
 
 	@Override
 	public byte[] getEx(final byte[] key, final GetExArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument);
-		final GetExArgumentGetExParamsConverter getExArgumentGetExParamsConverter = new GetExArgumentGetExParamsConverter();
-		return executeCommand(Command.GETEX, args,
-				(cmd)->cmd.getEx(rawKey(key), getExArgumentGetExParamsConverter.convert(argument)), (v)->v);
+		return executeCommand(Command.GETEX, args, (cmd)->cmd.getEx(rawKey(key), new JedisGetExParams(argument)));
 	}
 
 	@Override
@@ -246,27 +242,25 @@ public final class JedisStringCommands extends AbstractJedisRedisCommands implem
 	@Override
 	public LcsResult lcs(final String key1, final String key2) {
 		final CommandArguments args = CommandArguments.create(key1).add(key2);
-		return lcs(key1, key2, new LCSParams(), args);
+		return lcs(key1, key2, new JedisLCSParams(), args);
 	}
 
 	@Override
 	public LcsResult lcs(final byte[] key1, final byte[] key2) {
 		final CommandArguments args = CommandArguments.create(key1).add(key2);
-		return lcs(key1, key2, new LCSParams(), args);
+		return lcs(key1, key2, new JedisLCSParams(), args);
 	}
 
 	@Override
 	public LcsResult lcs(final String key1, final String key2, final LcsArgument argument) {
 		final CommandArguments args = CommandArguments.create(key1).add(key2).add(argument);
-		final LcsArgumentConveter lcsArgumentConveter = new LcsArgumentConveter();
-		return lcs(key1, key2, lcsArgumentConveter.convert(argument), args);
+		return lcs(key1, key2, new JedisLCSParams(argument), args);
 	}
 
 	@Override
 	public LcsResult lcs(final byte[] key1, final byte[] key2, final LcsArgument argument) {
 		final CommandArguments args = CommandArguments.create(key1).add(key2).add(argument);
-		final LcsArgumentConveter lcsArgumentConveter = new LcsArgumentConveter();
-		return lcs(key1, key2, lcsArgumentConveter.convert(argument), args);
+		return lcs(key1, key2, new JedisLCSParams(argument), args);
 	}
 
 	@Override
@@ -290,10 +284,8 @@ public final class JedisStringCommands extends AbstractJedisRedisCommands implem
 	@Override
 	public Status mSetEx(final KeyValue<String, String>[] values, final MSetExArgument argument) {
 		final CommandArguments args = CommandArguments.create(values).add(argument);
-		final MSetExArgumentConverter mSetExArgumentConverter = new MSetExArgumentConverter();
-
 		return executeCommand(Command.MSETEX, args,
-				(cmd)->cmd.msetex(mSetExArgumentConverter.convert(argument), buildSetValues(values)),
+				(cmd)->cmd.msetex(new JedisMSetExParams(argument), buildSetValues(values)),
 				new BooleanStatusConverter());
 	}
 
@@ -333,19 +325,15 @@ public final class JedisStringCommands extends AbstractJedisRedisCommands implem
 	@Override
 	public Status set(final String key, final String value, final SetArgument argument) {
 		final CommandArguments args = CommandArguments.create().add(key, value).add(argument);
-		final SetArgumentConverter setArgumentConverter = new SetArgumentConverter();
 		return executeCommand(Command.SET, args,
-				(cmd)->cmd.set(rawKey(key), value, setArgumentConverter.convert(argument)),
-				new OkStatusConverter());
+				(cmd)->cmd.set(rawKey(key), value, new JedisSetParams(argument)), new OkStatusConverter());
 	}
 
 	@Override
 	public Status set(final byte[] key, final byte[] value, final SetArgument argument) {
 		final CommandArguments args = CommandArguments.create().add(key, value).add(argument);
-		final SetArgumentConverter setArgumentConverter = new SetArgumentConverter();
 		return executeCommand(Command.SET, args,
-				(cmd)->cmd.set(rawKey(key), value, setArgumentConverter.convert(argument)),
-				new OkStatusConverter());
+				(cmd)->cmd.set(rawKey(key), value, new JedisSetParams(argument)), new OkStatusConverter());
 	}
 
 	@Override
