@@ -573,6 +573,34 @@ public class RedisTemplate extends AbstractRedisTemplate
 	}
 
 	@Override
+	public <V> KeyValue<String, List<V>> blMPop(final int timeout, final String[] keys, final Direction direction,
+												final int count, final Class<V> clazz) {
+		return execute((client)->client.listCommands().blMPop(timeout, keys, direction, count),
+				new Converter.TypeListBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> KeyValue<byte[], List<V>> blMPop(final int timeout, final byte[][] keys, final Direction direction,
+												final int count, final Class<V> clazz) {
+		return execute((client)->client.listCommands().blMPop(timeout, keys, direction, count),
+				new Converter.TypeListBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> KeyValue<String, List<V>> blMPop(final int timeout, final String[] keys, final Direction direction,
+												final int count, final TypeReference<V> type) {
+		return execute((client)->client.listCommands().blMPop(timeout, keys, direction, count),
+				new Converter.TypeListBinaryConverter<>(this, type));
+	}
+
+	@Override
+	public <V> KeyValue<byte[], List<V>> blMPop(final int timeout, final byte[][] keys, final Direction direction,
+												final int count, final TypeReference<V> type) {
+		return execute((client)->client.listCommands().blMPop(timeout, keys, direction, count),
+				new Converter.TypeListBinaryConverter<>(this, type));
+	}
+
+	@Override
 	public <V> List<V> blPop(final String[] keys, final int timeout, final Class<V> clazz) {
 		return execute((client)->client.listCommands().blPop(keys, timeout),
 				new Converter.ClazzListStringConverter<>(this, clazz));
@@ -707,30 +735,56 @@ public class RedisTemplate extends AbstractRedisTemplate
 	}
 
 	@Override
-	public <V> KeyValue<String, List<V>> lMPop(final int timeout, final String[] keys, final Direction direction,
-											   final Class<V> clazz) {
-		return execute((client)->client.listCommands().lMPop(timeout, keys, direction),
+	public <V> KeyValue<String, List<V>> lMPop(final String[] keys, final Direction direction, final Class<V> clazz) {
+		return execute((client)->client.listCommands().lMPop(keys, direction),
 				new Converter.TypeListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> KeyValue<byte[], List<V>> lMPop(final int timeout, final byte[][] keys, final Direction direction,
-											   final Class<V> clazz) {
-		return execute((client)->client.listCommands().lMPop(timeout, keys, direction),
+	public <V> KeyValue<byte[], List<V>> lMPop(final byte[][] keys, final Direction direction, final Class<V> clazz) {
+		return execute((client)->client.listCommands().lMPop(keys, direction),
 				new Converter.TypeListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> KeyValue<String, List<V>> lMPop(final int timeout, final String[] keys, final Direction direction,
+	public <V> KeyValue<String, List<V>> lMPop(final String[] keys, final Direction direction,
 											   final TypeReference<V> type) {
-		return execute((client)->client.listCommands().lMPop(timeout, keys, direction),
+		return execute((client)->client.listCommands().lMPop(keys, direction),
 				new Converter.TypeListBinaryConverter<>(this, type));
 	}
 
 	@Override
-	public <V> KeyValue<byte[], List<V>> lMPop(final int timeout, final byte[][] keys, final Direction direction,
+	public <V> KeyValue<byte[], List<V>> lMPop(final byte[][] keys, final Direction direction,
 											   final TypeReference<V> type) {
-		return execute((client)->client.listCommands().lMPop(timeout, keys, direction),
+		return execute((client)->client.listCommands().lMPop(keys, direction),
+				new Converter.TypeListBinaryConverter<>(this, type));
+	}
+
+	@Override
+	public <V> KeyValue<String, List<V>> lMPop(final String[] keys, final Direction direction, final int count,
+											   final Class<V> clazz) {
+		return execute((client)->client.listCommands().lMPop(keys, direction, count),
+				new Converter.TypeListBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> KeyValue<byte[], List<V>> lMPop(final byte[][] keys, final Direction direction, final int count,
+											   final Class<V> clazz) {
+		return execute((client)->client.listCommands().lMPop(keys, direction, count),
+				new Converter.TypeListBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> KeyValue<String, List<V>> lMPop(final String[] keys, final Direction direction, final int count,
+											   final TypeReference<V> type) {
+		return execute((client)->client.listCommands().lMPop(keys, direction, count),
+				new Converter.TypeListBinaryConverter<>(this, type));
+	}
+
+	@Override
+	public <V> KeyValue<byte[], List<V>> lMPop(final byte[][] keys, final Direction direction, final int count,
+											   final TypeReference<V> type) {
+		return execute((client)->client.listCommands().lMPop(keys, direction, count),
 				new Converter.TypeListBinaryConverter<>(this, type));
 	}
 
@@ -857,6 +911,30 @@ public class RedisTemplate extends AbstractRedisTemplate
 	}
 
 	@Override
+	public <V> List<V> rPop(final String key, final int count, final Class<V> clazz) {
+		return execute((client)->client.listCommands().rPop(key, count),
+				new Converter.ClazzListStringConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> List<V> rPop(final byte[] key, final int count, final Class<V> clazz) {
+		return execute((client)->client.listCommands().rPop(key, count),
+				new Converter.ClazzListBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> List<V> rPop(final String key, final int count, final TypeReference<V> type) {
+		return execute((client)->client.listCommands().rPop(key, count),
+				new Converter.TypeListStringConverter<>(this, type));
+	}
+
+	@Override
+	public <V> List<V> rPop(final byte[] key, final int count, final TypeReference<V> type) {
+		return execute((client)->client.listCommands().rPop(key, count),
+				new Converter.TypeListBinaryConverter<>(this, type));
+	}
+
+	@Override
 	public <V> V rPoplPush(final String key, final String destKey, final Class<V> clazz) {
 		return execute((client)->client.listCommands().rPoplPush(key, destKey),
 				new Converter.ClazzStringConverter<>(this, clazz));
@@ -875,7 +953,7 @@ public class RedisTemplate extends AbstractRedisTemplate
 	}
 
 	@Override
-	public <V> V(final byte[] key, final byte[] destKey, final TypeReference<V> type) {
+	public <V> V rPoplPush(final byte[] key, final byte[] destKey, final TypeReference<V> type) {
 		return execute((client)->client.listCommands().rPoplPush(key, destKey),
 				new Converter.TypeBinaryConverter<>(this, type));
 	}

@@ -57,7 +57,7 @@ public class CompositeArgumentUtils {
 		return lMPopArgs(direction, null);
 	}
 
-	public static LMPopArgs lMPopArgs(final Direction direction, final Long count) {
+	public static LMPopArgs lMPopArgs(final Direction direction, final Integer count) {
 		if(direction == null){
 			return null;
 		}

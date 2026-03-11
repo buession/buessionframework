@@ -68,4 +68,32 @@ public final class JedisSortingParams extends SortingParams {
 		}
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param sortArgument
+	 *        {@link SortArgument}
+	 * @param limit
+	 * 		偏移量
+	 * @param count
+	 * 		返回数量
+	 */
+	public JedisSortingParams(final SortArgument sortArgument, final int limit, final int count) {
+		this(sortArgument);
+		limit(limit, count);
+	}
+
+	/**
+	 * 构造函数
+	 * <p>
+	 * 偏移量
+	 *
+	 * @param count
+	 * 		返回数量
+	 */
+	public JedisSortingParams(final int limit, final int count) {
+		super();
+		limit(limit, count);
+	}
+
 }

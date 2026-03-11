@@ -169,6 +169,18 @@ public interface ListOperations extends ListCommands, RedisOperations {
 		return execute((client)->client.listCommands().blMPop(timeout, keys, direction));
 	}
 
+	@Override
+	default KeyValue<String, List<String>> blMPop(final int timeout, final String[] keys, final Direction direction,
+												  final int count) {
+		return execute((client)->client.listCommands().blMPop(timeout, keys, direction, count));
+	}
+
+	@Override
+	default KeyValue<byte[], List<byte[]>> blMPop(final int timeout, final byte[][] keys, final Direction direction,
+												  final int count) {
+		return execute((client)->client.listCommands().blMPop(timeout, keys, direction, count));
+	}
+
 	/**
 	 * 从多个列表（lists）中安全、原子地弹出元素，并在列表为空时阻塞等待直到有元素可用或超时
 	 *
@@ -252,6 +264,98 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 */
 	<V> KeyValue<byte[], List<V>> blMPop(final int timeout, final byte[][] keys, final Direction direction,
 										 final TypeReference<V> type);
+
+	/**
+	 * 从多个列表（lists）中安全、原子地弹出元素，并在列表为空时阻塞等待直到有元素可用或超时
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/blmpop/" target="_blank">https://redis.io/docs/latest/commands/blmpop/</a></p>
+	 *
+	 * @param timeout
+	 * 		超时时间
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param direction
+	 * 		方位
+	 * @param count
+	 * 		返回数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 被弹出的元素 key 及其值
+	 */
+	<V> KeyValue<String, List<V>> blMPop(final int timeout, final String[] keys, final Direction direction,
+										 final int count, final Class<V> clazz);
+
+	/**
+	 * 从多个列表（lists）中安全、原子地弹出元素，并在列表为空时阻塞等待直到有元素可用或超时
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/blmpop/" target="_blank">https://redis.io/docs/latest/commands/blmpop/</a></p>
+	 *
+	 * @param timeout
+	 * 		超时时间
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param direction
+	 * 		方位
+	 * @param count
+	 * 		返回数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 被弹出的元素 key 及其值
+	 */
+	<V> KeyValue<byte[], List<V>> blMPop(final int timeout, final byte[][] keys, final Direction direction,
+										 final int count, final Class<V> clazz);
+
+	/**
+	 * 从多个列表（lists）中安全、原子地弹出元素，并在列表为空时阻塞等待直到有元素可用或超时
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/blmpop/" target="_blank">https://redis.io/docs/latest/commands/blmpop/</a></p>
+	 *
+	 * @param timeout
+	 * 		超时时间
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param direction
+	 * 		方位
+	 * @param count
+	 * 		返回数量
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 被弹出的元素 key 及其值
+	 */
+	<V> KeyValue<String, List<V>> blMPop(final int timeout, final String[] keys, final Direction direction,
+										 final int count, final TypeReference<V> type);
+
+	/**
+	 * 从多个列表（lists）中安全、原子地弹出元素，并在列表为空时阻塞等待直到有元素可用或超时
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/blmpop/" target="_blank">https://redis.io/docs/latest/commands/blmpop/</a></p>
+	 *
+	 * @param timeout
+	 * 		超时时间
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param direction
+	 * 		方位
+	 * @param count
+	 * 		返回数量
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 被弹出的元素 key 及其值
+	 */
+	<V> KeyValue<byte[], List<V>> blMPop(final int timeout, final byte[][] keys, final Direction direction,
+										 final int count, final TypeReference<V> type);
 
 	@Override
 	default List<String> blPop(final String[] keys, final int timeout) {
@@ -764,13 +868,23 @@ public interface ListOperations extends ListCommands, RedisOperations {
 				final TypeReference<V> type);
 
 	@Override
-	default KeyValue<String, List<String>> lMPop(final int timeout, final String[] keys, final Direction direction) {
-		return execute((client)->client.listCommands().lMPop(timeout, keys, direction));
+	default KeyValue<String, List<String>> lMPop(final String[] keys, final Direction direction) {
+		return execute((client)->client.listCommands().lMPop(keys, direction));
 	}
 
 	@Override
-	default KeyValue<byte[], List<byte[]>> lMPop(final int timeout, final byte[][] keys, final Direction direction) {
-		return execute((client)->client.listCommands().lMPop(timeout, keys, direction));
+	default KeyValue<byte[], List<byte[]>> lMPop(final byte[][] keys, final Direction direction) {
+		return execute((client)->client.listCommands().lMPop(keys, direction));
+	}
+
+	@Override
+	default KeyValue<String, List<String>> lMPop(final String[] keys, final Direction direction, final int count) {
+		return execute((client)->client.listCommands().lMPop(keys, direction, count));
+	}
+
+	@Override
+	default KeyValue<byte[], List<byte[]>> lMPop(final byte[][] keys, final Direction direction, final int count) {
+		return execute((client)->client.listCommands().lMPop(keys, direction, count));
 	}
 
 	/**
@@ -778,8 +892,6 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lmpop/" target="_blank">https://redis.io/docs/latest/commands/lmpop/</a></p>
 	 *
-	 * @param timeout
-	 * 		超时时间
 	 * @param keys
 	 * 		一个或多个 Key
 	 * @param direction
@@ -791,16 +903,13 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 被弹出的元素 key 及其值
 	 */
-	<V> KeyValue<String, List<V>> lMPop(final int timeout, final String[] keys, final Direction direction,
-										final Class<V> clazz);
+	<V> KeyValue<String, List<V>> lMPop(final String[] keys, final Direction direction, final Class<V> clazz);
 
 	/**
 	 * 从多个列表（lists）中以原子方式弹出一个或多个元素，非阻塞版
 	 *
 	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lmpop/" target="_blank">https://redis.io/docs/latest/commands/lmpop/</a></p>
 	 *
-	 * @param timeout
-	 * 		超时时间
 	 * @param keys
 	 * 		一个或多个 Key
 	 * @param direction
@@ -812,16 +921,13 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 被弹出的元素 key 及其值
 	 */
-	<V> KeyValue<byte[], List<V>> lMPop(final int timeout, final byte[][] keys, final Direction direction,
-										final Class<V> clazz);
+	<V> KeyValue<byte[], List<V>> lMPop(final byte[][] keys, final Direction direction, final Class<V> clazz);
 
 	/**
 	 * 从多个列表（lists）中以原子方式弹出一个或多个元素，非阻塞版
 	 *
 	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lmpop/" target="_blank">https://redis.io/docs/latest/commands/lmpop/</a></p>
 	 *
-	 * @param timeout
-	 * 		超时时间
 	 * @param keys
 	 * 		一个或多个 Key
 	 * @param direction
@@ -833,7 +939,87 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 被弹出的元素 key 及其值
 	 */
-	<V> KeyValue<String, List<V>> lMPop(final int timeout, final String[] keys, final Direction direction,
+	<V> KeyValue<String, List<V>> lMPop(final String[] keys, final Direction direction, final TypeReference<V> type);
+
+	/**
+	 * 从多个列表（lists）中以原子方式弹出一个或多个元素，非阻塞版
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lmpop/" target="_blank">https://redis.io/docs/latest/commands/lmpop/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param direction
+	 * 		方位
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 被弹出的元素 key 及其值
+	 */
+	<V> KeyValue<byte[], List<V>> lMPop(final byte[][] keys, final Direction direction, final TypeReference<V> type);
+
+	/**
+	 * 从多个列表（lists）中以原子方式弹出一个或多个元素，非阻塞版
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lmpop/" target="_blank">https://redis.io/docs/latest/commands/lmpop/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param direction
+	 * 		方位
+	 * @param count
+	 * 		弹出数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 被弹出的元素 key 及其值
+	 */
+	<V> KeyValue<String, List<V>> lMPop(final String[] keys, final Direction direction, final int count,
+										final Class<V> clazz);
+
+	/**
+	 * 从多个列表（lists）中以原子方式弹出一个或多个元素，非阻塞版
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lmpop/" target="_blank">https://redis.io/docs/latest/commands/lmpop/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param direction
+	 * 		方位
+	 * @param count
+	 * 		弹出数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 被弹出的元素 key 及其值
+	 */
+	<V> KeyValue<byte[], List<V>> lMPop(final byte[][] keys, final Direction direction, final int count,
+										final Class<V> clazz);
+
+	/**
+	 * 从多个列表（lists）中以原子方式弹出一个或多个元素，非阻塞版
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lmpop/" target="_blank">https://redis.io/docs/latest/commands/lmpop/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param direction
+	 * 		方位
+	 * @param count
+	 * 		弹出数量
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 被弹出的元素 key 及其值
+	 */
+	<V> KeyValue<String, List<V>> lMPop(final String[] keys, final Direction direction, final int count,
 										final TypeReference<V> type);
 
 	/**
@@ -841,12 +1027,12 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lmpop/" target="_blank">https://redis.io/docs/latest/commands/lmpop/</a></p>
 	 *
-	 * @param timeout
-	 * 		超时时间
 	 * @param keys
 	 * 		一个或多个 Key
 	 * @param direction
 	 * 		方位
+	 * @param count
+	 * 		弹出数量
 	 * @param type
 	 * 		值类型引用
 	 * @param <V>
@@ -854,7 +1040,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 被弹出的元素 key 及其值
 	 */
-	<V> KeyValue<byte[], List<V>> lMPop(final int timeout, final byte[][] keys, final Direction direction,
+	<V> KeyValue<byte[], List<V>> lMPop(final byte[][] keys, final Direction direction, final int count,
 										final TypeReference<V> type);
 
 	@Override
@@ -1024,23 +1210,13 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	}
 
 	@Override
-	default List<Long> lPos(final String key, final String element, final long rank) {
-		return execute((client)->client.listCommands().lPos(key, element, rank));
+	default Long lPos(final String key, final String element, final LPosArgument argument) {
+		return execute((client)->client.listCommands().lPos(key, element, argument));
 	}
 
 	@Override
-	default List<Long> lPos(final byte[] key, final byte[] element, final long rank) {
-		return execute((client)->client.listCommands().lPos(key, element, rank));
-	}
-
-	@Override
-	default List<Long> lPos(final String key, final String element, final int count) {
-		return execute((client)->client.listCommands().lPos(key, element, count));
-	}
-
-	@Override
-	default List<Long> lPos(final byte[] key, final byte[] element, final int count) {
-		return execute((client)->client.listCommands().lPos(key, element, count));
+	default Long lPos(final byte[] key, final byte[] element, final LPosArgument argument) {
+		return execute((client)->client.listCommands().lPos(key, element, argument));
 	}
 
 	@Override
@@ -1051,6 +1227,16 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	@Override
 	default List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument argument, final int count) {
 		return execute((client)->client.listCommands().lPos(key, element, argument, count));
+	}
+
+	@Override
+	default List<Long> lPos(final String key, final String element, final int count) {
+		return execute((client)->client.listCommands().lPos(key, element, count));
+	}
+
+	@Override
+	default List<Long> lPos(final byte[] key, final byte[] element, final int count) {
+		return execute((client)->client.listCommands().lPos(key, element, count));
 	}
 
 	@Override
@@ -1382,6 +1568,78 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * @return 列表的尾元素反序列化后的值；当 key 不存在时，返回 null
 	 */
 	<V> V rPop(final byte[] key, final TypeReference<V> type);
+
+	/**
+	 * 移除并返回列表 key 的尾元素，并反序列化为 clazz 指定的对象对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/list/rpop.html" target="_blank">http://redisdoc.com/list/rpop.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		移除数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 列表的尾元素反序列化后的值；当 key 不存在时，返回 null
+	 */
+	<V> List<V> rPop(final String key, final int count, final Class<V> clazz);
+
+	/**
+	 * 移除并返回列表 key 的尾元素，并反序列化为 clazz 指定的对象对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/list/rpop.html" target="_blank">http://redisdoc.com/list/rpop.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		移除数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 列表的尾元素反序列化后的值；当 key 不存在时，返回 null
+	 */
+	<V> List<V> rPop(final byte[] key, final int count, final Class<V> clazz);
+
+	/**
+	 * 移除并返回列表 key 的尾元素，并反序列化为 type 指定的对象对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/list/rpop.html" target="_blank">http://redisdoc.com/list/rpop.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		移除数量
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 列表的尾元素反序列化后的值；当 key 不存在时，返回 null
+	 */
+	<V> List<V> rPop(final String key, final int count, final TypeReference<V> type);
+
+	/**
+	 * 移除并返回列表 key 的尾元素，并反序列化为 type 指定的对象对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/list/rpop.html" target="_blank">http://redisdoc.com/list/rpop.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		移除数量
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 列表的尾元素反序列化后的值；当 key 不存在时，返回 null
+	 */
+	<V> List<V> rPop(final byte[] key, final int count, final TypeReference<V> type);
 
 	@Override
 	default String rPoplPush(final String key, final String destKey) {

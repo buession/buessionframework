@@ -74,4 +74,32 @@ public final class LettuceSortArgs extends SortArgs {
 		}
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param sortArgument
+	 *        {@link SortArgument}
+	 * @param limit
+	 * 		偏移量
+	 * @param count
+	 * 		返回数量
+	 */
+	public LettuceSortArgs(final SortArgument sortArgument, final int limit, final int count) {
+		this(sortArgument);
+		limit(limit, count);
+	}
+
+	/**
+	 * 构造函数
+	 * <p>
+	 * 偏移量
+	 *
+	 * @param count
+	 * 		返回数量
+	 */
+	public LettuceSortArgs(final int limit, final int count) {
+		super();
+		limit(limit, count);
+	}
+
 }

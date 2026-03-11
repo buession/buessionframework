@@ -29,10 +29,8 @@ import com.buession.lang.Status;
 import com.buession.redis.core.Direction;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.command.args.LPosArgument;
-import com.buession.redis.utils.ObjectStringBuilder;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 列表命令
@@ -116,6 +114,44 @@ public interface ListCommands extends RedisCommands {
 	 * @return 被弹出的元素 key 及其值
 	 */
 	KeyValue<byte[], List<byte[]>> blMPop(final int timeout, final byte[][] keys, final Direction direction);
+
+	/**
+	 * 从多个列表（lists）中安全、原子地弹出元素，并在列表为空时阻塞等待直到有元素可用或超时
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/blmpop/" target="_blank">https://redis.io/docs/latest/commands/blmpop/</a></p>
+	 *
+	 * @param timeout
+	 * 		超时时间
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param direction
+	 * 		方位
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 被弹出的元素 key 及其值
+	 */
+	KeyValue<String, List<String>> blMPop(final int timeout, final String[] keys, final Direction direction,
+										  final int count);
+
+	/**
+	 * 从多个列表（lists）中安全、原子地弹出元素，并在列表为空时阻塞等待直到有元素可用或超时
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/blmpop/" target="_blank">https://redis.io/docs/latest/commands/blmpop/</a></p>
+	 *
+	 * @param timeout
+	 * 		超时时间
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param direction
+	 * 		方位
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 被弹出的元素 key 及其值
+	 */
+	KeyValue<byte[], List<byte[]>> blMPop(final int timeout, final byte[][] keys, final Direction direction,
+										  final int count);
 
 	/**
 	 * 移除并返回列表中一个或多个 key 的头元素，BLPOP 是列表的阻塞式(blocking)弹出原语；
@@ -346,8 +382,6 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lmpop/" target="_blank">https://redis.io/docs/latest/commands/lmpop/</a></p>
 	 *
-	 * @param timeout
-	 * 		超时时间
 	 * @param keys
 	 * 		一个或多个 Key
 	 * @param direction
@@ -355,15 +389,13 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * @return 被弹出的元素 key 及其值
 	 */
-	KeyValue<String, List<String>> lMPop(final int timeout, final String[] keys, final Direction direction);
+	KeyValue<String, List<String>> lMPop(final String[] keys, final Direction direction);
 
 	/**
 	 * 从多个列表（lists）中以原子方式弹出一个或多个元素，非阻塞版
 	 *
 	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lmpop/" target="_blank">https://redis.io/docs/latest/commands/lmpop/</a></p>
 	 *
-	 * @param timeout
-	 * 		超时时间
 	 * @param keys
 	 * 		一个或多个 Key
 	 * @param direction
@@ -371,7 +403,39 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * @return 被弹出的元素 key 及其值
 	 */
-	KeyValue<byte[], List<byte[]>> lMPop(final int timeout, final byte[][] keys, final Direction direction);
+	KeyValue<byte[], List<byte[]>> lMPop(final byte[][] keys, final Direction direction);
+
+	/**
+	 * 从多个列表（lists）中以原子方式弹出一个或多个元素，非阻塞版
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lmpop/" target="_blank">https://redis.io/docs/latest/commands/lmpop/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param direction
+	 * 		方位
+	 * @param count
+	 * 		弹出数量
+	 *
+	 * @return 被弹出的元素 key 及其值
+	 */
+	KeyValue<String, List<String>> lMPop(final String[] keys, final Direction direction, final int count);
+
+	/**
+	 * 从多个列表（lists）中以原子方式弹出一个或多个元素，非阻塞版
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lmpop/" target="_blank">https://redis.io/docs/latest/commands/lmpop/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param direction
+	 * 		方位
+	 * @param count
+	 * 		弹出数量
+	 *
+	 * @return 被弹出的元素 key 及其值
+	 */
+	KeyValue<byte[], List<byte[]>> lMPop(final byte[][] keys, final Direction direction, final int count);
 
 	/**
 	 * 移除并返回列表 key 的头元素
@@ -467,7 +531,7 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * @return 整数表示匹配元素的位置，返回 null 表示没有找到匹配元素
 	 */
-	List<Long> lPos(final String key, final String element, final LPosArgument argument);
+	Long lPos(final String key, final String element, final LPosArgument argument);
 
 	/**
 	 * 返回列表 key 中匹配给定 element 成员的索引
@@ -483,39 +547,7 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * @return 整数表示匹配元素的位置，返回null表示没有找到匹配元素
 	 */
-	List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument argument);
-
-	/**
-	 * 返回列表 key 中匹配给定 element 成员的索引
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lpos/" target="_blank">https://redis.io/docs/latest/commands/lpos/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param element
-	 * 		成员
-	 * @param count
-	 * 		返回数量
-	 *
-	 * @return 整数表示匹配元素的位置，返回 null 表示没有找到匹配元素
-	 */
-	List<Long> lPos(final String key, final String element, final int count);
-
-	/**
-	 * 返回列表 key 中匹配给定 element 成员的索引
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lpos/" target="_blank">https://redis.io/docs/latest/commands/lpos/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param element
-	 * 		成员
-	 * @param count
-	 * 		返回数量
-	 *
-	 * @return 整数表示匹配元素的位置，返回null表示没有找到匹配元素
-	 */
-	List<Long> lPos(final byte[] key, final byte[] element, final int count);
+	Long lPos(final byte[] key, final byte[] element, final LPosArgument argument);
 
 	/**
 	 * 返回列表 key 中匹配给定 element 成员的索引
@@ -552,6 +584,38 @@ public interface ListCommands extends RedisCommands {
 	 * @return 整数表示匹配元素的位置，返回null表示没有找到匹配元素
 	 */
 	List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument argument, final int count);
+
+	/**
+	 * 返回列表 key 中匹配给定 element 成员的索引
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lpos/" target="_blank">https://redis.io/docs/latest/commands/lpos/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param element
+	 * 		成员
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 整数表示匹配元素的位置，返回 null 表示没有找到匹配元素
+	 */
+	List<Long> lPos(final String key, final String element, final int count);
+
+	/**
+	 * 返回列表 key 中匹配给定 element 成员的索引
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/lpos/" target="_blank">https://redis.io/docs/latest/commands/lpos/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param element
+	 * 		成员
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return 整数表示匹配元素的位置，返回null表示没有找到匹配元素
+	 */
+	List<Long> lPos(final byte[] key, final byte[] element, final int count);
 
 	/**
 	 * 将一个或多个值 value 插入到列表 key 的表头
@@ -770,6 +834,34 @@ public interface ListCommands extends RedisCommands {
 	 * @return 列表的尾元素；当 key 不存在时，返回 null
 	 */
 	byte[] rPop(final byte[] key);
+
+	/**
+	 * 移除并返回列表 key 的尾元素
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/list/rpop.html" target="_blank">http://redisdoc.com/list/rpop.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		移除数量
+	 *
+	 * @return 列表的尾元素；当 key 不存在时，返回 null
+	 */
+	List<String> rPop(final String key, final int count);
+
+	/**
+	 * 移除并返回列表 key 的尾元素
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/list/rpop.html" target="_blank">http://redisdoc.com/list/rpop.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		移除数量
+	 *
+	 * @return 列表的尾元素；当 key 不存在时，返回 null
+	 */
+	List<byte[]> rPop(final byte[] key, final int count);
 
 	/**
 	 * 将列表 source 中的最后尾元素弹出，并返回；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；

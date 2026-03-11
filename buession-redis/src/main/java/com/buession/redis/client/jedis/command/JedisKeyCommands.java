@@ -589,26 +589,26 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 	public List<String> sort(final String key, final SortArgument argument, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.LIMIT)
 				.add(offset, count);
-		return sort(rawKey(key), new JedisSortingParams(argument).limit(offset, count), args);
+		return sort(rawKey(key), new JedisSortingParams(argument, offset, count), args);
 	}
 
 	@Override
 	public List<byte[]> sort(final byte[] key, final SortArgument argument, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.LIMIT)
 				.add(offset, count);
-		return sort(rawKey(key), new JedisSortingParams(argument).limit(offset, count), args);
+		return sort(rawKey(key), new JedisSortingParams(argument, offset, count), args);
 	}
 
 	@Override
 	public List<String> sort(final String key, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.LIMIT).add(offset, count);
-		return sort(rawKey(key), new JedisSortingParams().limit(offset, count), args);
+		return sort(rawKey(key), new JedisSortingParams(offset, count), args);
 	}
 
 	@Override
 	public List<byte[]> sort(final byte[] key, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.LIMIT).add(offset, count);
-		return sort(rawKey(key), new JedisSortingParams().limit(offset, count), args);
+		return sort(rawKey(key), new JedisSortingParams(offset, count), args);
 	}
 
 	@Override
@@ -640,7 +640,7 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 					 final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.LIMIT)
 				.add(offset, count).add("STORE", destKey);
-		return sort(rawKey(key), rawKey(destKey), new JedisSortingParams(argument).limit(offset, count), args);
+		return sort(rawKey(key), rawKey(destKey), new JedisSortingParams(argument, offset, count), args);
 	}
 
 	@Override
@@ -648,21 +648,21 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 					 final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.LIMIT)
 				.add(offset, count).add("STORE", destKey);
-		return sort(rawKey(key), rawKey(destKey), new JedisSortingParams(argument).limit(offset, count), args);
+		return sort(rawKey(key), rawKey(destKey), new JedisSortingParams(argument, offset, count), args);
 	}
 
 	@Override
 	public Long sort(final String key, final String destKey, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.LIMIT).add(offset, count)
 				.add("STORE", destKey);
-		return sort(rawKey(key), rawKey(destKey), new JedisSortingParams().limit(offset, count), args);
+		return sort(rawKey(key), rawKey(destKey), new JedisSortingParams(offset, count), args);
 	}
 
 	@Override
 	public Long sort(final byte[] key, final byte[] destKey, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.LIMIT).add(offset, count)
 				.add("STORE", destKey);
-		return sort(rawKey(key), rawKey(destKey), new JedisSortingParams().limit(offset, count), args);
+		return sort(rawKey(key), rawKey(destKey), new JedisSortingParams(offset, count), args);
 	}
 
 	@Override
@@ -693,26 +693,26 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 	public List<String> sortRo(final String key, final SortArgument argument, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.LIMIT)
 				.add(offset, count);
-		return sortRo(rawKey(key), new JedisSortingParams(argument).limit(offset, count), args);
+		return sortRo(rawKey(key), new JedisSortingParams(argument, offset, count), args);
 	}
 
 	@Override
 	public List<byte[]> sortRo(final byte[] key, final SortArgument argument, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.LIMIT)
 				.add(offset, count);
-		return sortRo(rawKey(key), new JedisSortingParams(argument).limit(offset, count), args);
+		return sortRo(rawKey(key), new JedisSortingParams(argument, offset, count), args);
 	}
 
 	@Override
 	public List<String> sortRo(final String key, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.LIMIT).add(offset, count);
-		return sortRo(rawKey(key), new JedisSortingParams().limit(offset, count), args);
+		return sortRo(rawKey(key), new JedisSortingParams(offset, count), args);
 	}
 
 	@Override
 	public List<byte[]> sortRo(final byte[] key, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.LIMIT).add(offset, count);
-		return sortRo(rawKey(key), new JedisSortingParams().limit(offset, count), args);
+		return sortRo(rawKey(key), new JedisSortingParams(offset, count), args);
 	}
 
 	@Override

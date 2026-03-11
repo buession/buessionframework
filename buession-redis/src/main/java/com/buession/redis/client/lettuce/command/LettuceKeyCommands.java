@@ -41,7 +41,7 @@ import com.buession.redis.core.command.args.MigrateArgument;
 import com.buession.redis.core.command.args.RestoreArgument;
 import com.buession.redis.core.command.args.SortArgument;
 import com.buession.redis.core.internal.convert.BinaryListStringListConverter;
-import com.buession.redis.core.internal.convert.lettuce.params.ExpireOptionConverter;
+import com.buession.redis.core.internal.lettuce.args.LettuceExpireArgs;
 import com.buession.redis.core.internal.lettuce.args.LettuceRestoreArgs;
 import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConverter;
 import com.buession.redis.core.internal.convert.response.ObjectEncodingConverter;
@@ -191,18 +191,16 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 	@Override
 	public Status expire(final String key, final int lifetime, final ExpireOption expireOption) {
 		final CommandArguments args = CommandArguments.create(key).add(lifetime).add(expireOption);
-		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(Command.EXPIRE, args,
-				(cmd)->cmd.expire(rawBinaryKey(key), lifetime, expireOptionConverter.convert(expireOption)),
+				(cmd)->cmd.expire(rawBinaryKey(key), lifetime, new LettuceExpireArgs(expireOption)),
 				new BooleanStatusConverter());
 	}
 
 	@Override
 	public Status expire(final byte[] key, final int lifetime, final ExpireOption expireOption) {
 		final CommandArguments args = CommandArguments.create(key).add(lifetime).add(expireOption);
-		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(Command.EXPIRE, args,
-				(cmd)->cmd.expire(rawKey(key), lifetime, expireOptionConverter.convert(expireOption)),
+				(cmd)->cmd.expire(rawKey(key), lifetime, new LettuceExpireArgs(expireOption)),
 				new BooleanStatusConverter());
 	}
 
@@ -223,18 +221,16 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 	@Override
 	public Status expireAt(final String key, final long unixTimestamp, final ExpireOption expireOption) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp);
-		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(Command.EXPIREAT, args,
-				(cmd)->cmd.expireat(rawBinaryKey(key), unixTimestamp, expireOptionConverter.convert(expireOption)),
+				(cmd)->cmd.expireat(rawBinaryKey(key), unixTimestamp, new LettuceExpireArgs(expireOption)),
 				new BooleanStatusConverter());
 	}
 
 	@Override
 	public Status expireAt(final byte[] key, final long unixTimestamp, final ExpireOption expireOption) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp);
-		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(Command.EXPIREAT, args,
-				(cmd)->cmd.expireat(rawKey(key), unixTimestamp, expireOptionConverter.convert(expireOption)),
+				(cmd)->cmd.expireat(rawKey(key), unixTimestamp, new LettuceExpireArgs(expireOption)),
 				new BooleanStatusConverter());
 	}
 
@@ -388,18 +384,16 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 	@Override
 	public Status pExpire(final String key, final int lifetime, final ExpireOption expireOption) {
 		final CommandArguments args = CommandArguments.create(key).add(lifetime).add(expireOption);
-		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(Command.PEXPIRE, args,
-				(cmd)->cmd.pexpire(rawBinaryKey(key), lifetime, expireOptionConverter.convert(expireOption)),
+				(cmd)->cmd.pexpire(rawBinaryKey(key), lifetime, new LettuceExpireArgs(expireOption)),
 				new BooleanStatusConverter());
 	}
 
 	@Override
 	public Status pExpire(final byte[] key, final int lifetime, final ExpireOption expireOption) {
 		final CommandArguments args = CommandArguments.create(key).add(lifetime).add(expireOption);
-		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(Command.PEXPIRE, args,
-				(cmd)->cmd.pexpire(rawKey(key), lifetime, expireOptionConverter.convert(expireOption)),
+				(cmd)->cmd.pexpire(rawKey(key), lifetime, new LettuceExpireArgs(expireOption)),
 				new BooleanStatusConverter());
 	}
 
@@ -420,18 +414,16 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 	@Override
 	public Status pExpireAt(final String key, final long unixTimestamp, final ExpireOption expireOption) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(expireOption);
-		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(Command.EXPIREAT, args,
-				(cmd)->cmd.pexpireat(rawBinaryKey(key), unixTimestamp, expireOptionConverter.convert(expireOption)),
+				(cmd)->cmd.pexpireat(rawBinaryKey(key), unixTimestamp, new LettuceExpireArgs(expireOption)),
 				new BooleanStatusConverter());
 	}
 
 	@Override
 	public Status pExpireAt(final byte[] key, final long unixTimestamp, final ExpireOption expireOption) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(expireOption);
-		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(Command.EXPIREAT, args,
-				(cmd)->cmd.pexpireat(rawKey(key), unixTimestamp, expireOptionConverter.convert(expireOption)),
+				(cmd)->cmd.pexpireat(rawKey(key), unixTimestamp, new LettuceExpireArgs(expireOption)),
 				new BooleanStatusConverter());
 	}
 
@@ -600,26 +592,26 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 	public List<String> sort(final String key, final SortArgument argument, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.LIMIT)
 				.add(offset, count);
-		return stringSort(rawBinaryKey(key), new LettuceSortArgs(argument).limit(offset, count), args);
+		return stringSort(rawBinaryKey(key), new LettuceSortArgs(argument, offset, count), args);
 	}
 
 	@Override
 	public List<byte[]> sort(final byte[] key, final SortArgument argument, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.LIMIT)
 				.add(offset, count);
-		return binarySort(rawKey(key), new LettuceSortArgs(argument).limit(offset, count), args);
+		return binarySort(rawKey(key), new LettuceSortArgs(argument, offset, count), args);
 	}
 
 	@Override
 	public List<String> sort(final String key, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.LIMIT).add(offset, count);
-		return stringSort(rawBinaryKey(key), new LettuceSortArgs().limit(offset, count), args);
+		return stringSort(rawBinaryKey(key), new LettuceSortArgs(offset, count), args);
 	}
 
 	@Override
 	public List<byte[]> sort(final byte[] key, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.LIMIT).add(offset, count);
-		return binarySort(rawKey(key), new LettuceSortArgs().limit(offset, count), args);
+		return binarySort(rawKey(key), new LettuceSortArgs(offset, count), args);
 	}
 
 	@Override
@@ -651,8 +643,8 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 					 final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.LIMIT)
 				.add(offset, count).add("STORE", destKey);
-		return sortStore(SafeEncoder.encode(key), rawBinaryKey(destKey),
-				new LettuceSortArgs(argument).limit(offset, count), args);
+		return sortStore(SafeEncoder.encode(key), rawBinaryKey(destKey), new LettuceSortArgs(argument, offset, count),
+				args);
 	}
 
 	@Override
@@ -660,22 +652,21 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 					 final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.LIMIT)
 				.add(offset, count).add("STORE", destKey);
-		return sortStore(rawKey(key), rawKey(destKey), new LettuceSortArgs(argument).limit(offset, count), args);
+		return sortStore(rawKey(key), rawKey(destKey), new LettuceSortArgs(argument, offset, count), args);
 	}
 
 	@Override
 	public Long sort(final String key, final String destKey, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.LIMIT).add(offset, count)
 				.add("STORE", destKey);
-		return sortStore(SafeEncoder.encode(key), rawBinaryKey(destKey), new LettuceSortArgs().limit(offset, count),
-				args);
+		return sortStore(SafeEncoder.encode(key), rawBinaryKey(destKey), new LettuceSortArgs(offset, count), args);
 	}
 
 	@Override
 	public Long sort(final byte[] key, final byte[] destKey, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.LIMIT).add(offset, count)
 				.add("STORE", destKey);
-		return sortStore(rawKey(key), rawKey(destKey), new LettuceSortArgs().limit(offset, count), args);
+		return sortStore(rawKey(key), rawKey(destKey), new LettuceSortArgs(offset, count), args);
 	}
 
 	@Override
