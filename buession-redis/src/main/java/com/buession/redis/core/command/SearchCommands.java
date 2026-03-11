@@ -47,7 +47,7 @@ public interface SearchCommands extends RedisCommands {
 	 *
 	 * @return The list of all existing indexes
 	 */
-	Set<String> ftList();
+	//Set<String> ftList();
 
 	/**
 	 * Run a search query on an index and perform aggregate transformations on the results.
@@ -61,7 +61,7 @@ public interface SearchCommands extends RedisCommands {
 	 *
 	 * @return A search query on an index and perform aggregate transformations on the results.
 	 */
-	AggregationResult ftAggregate(final String index, final String query);
+	//AggregationResult ftAggregate(final String index, final String query);
 
 	/**
 	 * Run a search query on an index and perform aggregate transformations on the results.
@@ -75,23 +75,7 @@ public interface SearchCommands extends RedisCommands {
 	 *
 	 * @return A search query on an index and perform aggregate transformations on the results.
 	 */
-	AggregationResult ftAggregate(final byte[] index, final byte[] query);
-
-	/**
-	 * Run a search query on an index and perform aggregate transformations on the results.
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/ft.aggregate/ target="_blank">https://redis.io/docs/latest/commands/ft.aggregate/</a></p>
-	 *
-	 * @param index
-	 * 		索引
-	 * @param query
-	 * 		查询
-	 * @param argument
-	 * 		参数
-	 *
-	 * @return A search query on an index and perform aggregate transformations on the results.
-	 */
-	AggregationResult ftAggregate(final String index, final String query, final FtAggregateArgument argument);
+	//AggregationResult ftAggregate(final byte[] index, final byte[] query);
 
 	/**
 	 * Run a search query on an index and perform aggregate transformations on the results.
@@ -107,6 +91,22 @@ public interface SearchCommands extends RedisCommands {
 	 *
 	 * @return A search query on an index and perform aggregate transformations on the results.
 	 */
-	AggregationResult ftAggregate(final byte[] index, final byte[] query, final FtAggregateArgument argument);
+	//AggregationResult ftAggregate(final String index, final String query, final FtAggregateArgument argument);
+
+	/**
+	 * Run a search query on an index and perform aggregate transformations on the results.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/ft.aggregate/ target="_blank">https://redis.io/docs/latest/commands/ft.aggregate/</a></p>
+	 *
+	 * @param index
+	 * 		索引
+	 * @param query
+	 * 		查询
+	 * @param argument
+	 * 		参数
+	 *
+	 * @return A search query on an index and perform aggregate transformations on the results.
+	 */
+	//AggregationResult ftAggregate(final byte[] index, final byte[] query, final FtAggregateArgument argument);
 
 }

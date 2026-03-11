@@ -38,9 +38,12 @@ import java.util.Set;
  */
 public interface SearchOperations extends SearchCommands, RedisOperations {
 
+	/*
 	@Override
 	default Set<String> ftList() {
 		return null;//return execute((client)->client.searchCommands().ftList());
 	}
+
+	 */
 
 }

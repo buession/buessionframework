@@ -49,6 +49,7 @@ public final class JedisSearchCommands extends AbstractJedisRedisCommands implem
 		super(client);
 	}
 
+	/*
 	@Override
 	public Set<String> ftList() {
 		return executeCommand(Command.FT_LIST, (cmd)->cmd.ftList(), (v)->v);
@@ -83,5 +84,7 @@ public final class JedisSearchCommands extends AbstractJedisRedisCommands implem
 		return executeCommand(Command.FT_AGGREGATE, args, (cmd)->cmd.ftAggregate(index, builder),
 				new AggregationResultConverter());
 	}
+
+	 */
 
 }

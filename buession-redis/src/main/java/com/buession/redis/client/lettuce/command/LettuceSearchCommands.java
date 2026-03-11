@@ -48,6 +48,7 @@ public final class LettuceSearchCommands extends AbstractLettuceRedisCommands im
 		super(client);
 	}
 
+	/*
 	@Override
 	public Set<String> ftList() {
 		return executeCommand(Command.FT_LIST, (cmd)->cmd.ftList(), new ListSetConverter<>(SafeEncoder::encode));
@@ -78,5 +79,7 @@ public final class LettuceSearchCommands extends AbstractLettuceRedisCommands im
 		//return executeCommand(Command.FT_AGGREGATE, (cmd)->cmd.ftAggregate(), (v)->v);
 		return executeCommand(Command.FT_AGGREGATE);
 	}
+
+	 */
 
 }
