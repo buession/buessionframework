@@ -264,11 +264,6 @@ public interface ScriptingOperations extends ScriptingCommands, RedisOperations 
 	}
 
 	@Override
-	default List<LibraryInfo> functionList(final boolean withCode) {
-		return execute((client)->client.scriptingCommands().functionList(withCode));
-	}
-
-	@Override
 	default List<LibraryInfo> functionList(final String pattern, final boolean withCode) {
 		return execute((client)->client.scriptingCommands().functionList(pattern, withCode));
 	}
@@ -279,12 +274,27 @@ public interface ScriptingOperations extends ScriptingCommands, RedisOperations 
 	}
 
 	@Override
+	default List<LibraryInfo> functionList(final boolean withCode) {
+		return execute((client)->client.scriptingCommands().functionList(withCode));
+	}
+
+	@Override
 	default String functionLoad(final String functionCode) {
 		return execute((client)->client.scriptingCommands().functionLoad(functionCode));
 	}
 
 	@Override
+	default byte[] functionLoad(final byte[] functionCode) {
+		return execute((client)->client.scriptingCommands().functionLoad(functionCode));
+	}
+
+	@Override
 	default String functionLoad(final String functionCode, final boolean replace) {
+		return execute((client)->client.scriptingCommands().functionLoad(functionCode, replace));
+	}
+
+	@Override
+	default byte[] functionLoad(final byte[] functionCode, final boolean replace) {
 		return execute((client)->client.scriptingCommands().functionLoad(functionCode, replace));
 	}
 

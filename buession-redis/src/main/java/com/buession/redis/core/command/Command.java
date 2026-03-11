@@ -502,15 +502,9 @@ public enum Command implements ProtocolCommand {
 			new SubCommand[]{SubCommand.FUNCTION_DELETE, SubCommand.FUNCTION_DUMP, SubCommand.FUNCTION_FLUSH,
 					SubCommand.FUNCTION_KILL, SubCommand.FUNCTION_LIST, SubCommand.FUNCTION_LOAD}),
 
-	SCRIPT_DEBUG(CommandGroup.SCRIPTING, "rw"),
-
-	SCRIPT_EXISTS(CommandGroup.SCRIPTING, "r"),
-
-	SCRIPT_FLUSH(CommandGroup.SCRIPTING, "w"),
-
-	SCRIPT_KILL(CommandGroup.SCRIPTING, "w"),
-
-	SCRIPT_LOAD(CommandGroup.SCRIPTING, "r"),
+	SCRIPT(CommandGroup.SCRIPTING, "rw",
+			new SubCommand[]{SubCommand.SCRIPT_DEBUG, SubCommand.SCRIPT_EXISTS, SubCommand.SCRIPT_FLUSH,
+					SubCommand.SCRIPT_KILL, SubCommand.SCRIPT_LOAD}),
 	/**
 	 * scripting command end
 	 **/

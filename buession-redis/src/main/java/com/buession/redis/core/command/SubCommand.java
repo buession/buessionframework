@@ -195,6 +195,16 @@ public enum SubCommand implements ProtocolCommand {
 	FUNCTION_RESTORE("w"),
 
 	FUNCTION_STATS("r"),
+
+	SCRIPT_DEBUG("rw"),
+
+	SCRIPT_EXISTS("r"),
+
+	SCRIPT_FLUSH("w"),
+
+	SCRIPT_KILL("w"),
+
+	SCRIPT_LOAD("r"),
 	/**
 	 * scripting command end
 	 **/

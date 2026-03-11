@@ -24,7 +24,6 @@
  */
 package com.buession.redis.client.jedis.command;
 
-import com.buession.core.builder.ListBuilder;
 import com.buession.core.converter.ListConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
@@ -44,7 +43,6 @@ import com.buession.redis.core.internal.convert.jedis.response.FunctionStatsConv
 import com.buession.redis.core.internal.convert.jedis.response.LibraryInfoConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.utils.SafeEncoder;
-import redis.clients.jedis.UnifiedJedis;
 
 import java.util.Arrays;
 import java.util.List;
@@ -64,217 +62,217 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public Object eval(final String script) {
 		final CommandArguments args = CommandArguments.create(script);
-		return eval(args, (cmd)->cmd.eval(script));
+		return executeCommand(Command.EVAL, args, (cmd)->cmd.eval(script));
 	}
 
 	@Override
 	public Object eval(final byte[] script) {
 		final CommandArguments args = CommandArguments.create(script);
-		return eval(args, (cmd)->cmd.eval(script));
+		return executeCommand(Command.EVAL, args, (cmd)->cmd.eval(script));
 	}
 
 	@Override
 	public Object eval(final String script, final String... keys) {
 		final CommandArguments args = CommandArguments.create(script).add(keys.length, keys);
-		return eval(args, (cmd)->cmd.eval(script, keys.length, keys));
+		return eval(script, rawKeys(keys), new String[]{}, args);
 	}
 
 	@Override
 	public Object eval(final byte[] script, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(script).add(keys.length, keys);
-		return eval(args, (cmd)->cmd.eval(script, keys.length, keys));
+		return eval(script, rawKeys(keys), new byte[][]{}, args);
 	}
 
 	@Override
 	public Object eval(final String script, final String[] keys, final String[] arguments) {
 		final CommandArguments args = CommandArguments.create(script).add(keys.length, keys).add(arguments);
-		return eval(args, (cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)));
+		return eval(script, rawKeys(keys), arguments, args);
 	}
 
 	@Override
 	public Object eval(final byte[] script, final byte[][] keys, final byte[][] arguments) {
 		final CommandArguments args = CommandArguments.create(script).add(keys.length, keys).add(arguments);
-		return eval(args, (cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)));
+		return eval(script, rawKeys(keys), arguments, args);
 	}
 
 	@Override
 	public Object evalRo(final String script) {
 		final CommandArguments args = CommandArguments.create(script);
-		return evalRo(args, (cmd)->cmd.evalReadonly(script, ListBuilder.of(), ListBuilder.of()));
+		return evalRo(script, new String[]{}, new String[]{}, args);
 	}
 
 	@Override
 	public Object evalRo(final byte[] script) {
 		final CommandArguments args = CommandArguments.create(script);
-		return evalRo(args, (cmd)->cmd.evalReadonly(script, ListBuilder.of(), ListBuilder.of()));
+		return evalRo(script, new byte[][]{}, new byte[][]{}, args);
 	}
 
 	@Override
 	public Object evalRo(final String script, final String... keys) {
 		final CommandArguments args = CommandArguments.create(script).add(keys.length, keys);
-		return evalRo(args, (cmd)->cmd.evalReadonly(script, Arrays.asList(keys), ListBuilder.of()));
+		return evalRo(script, rawKeys(keys), new String[]{}, args);
 	}
 
 	@Override
 	public Object evalRo(final byte[] script, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(script).add(keys.length, keys);
-		return evalRo(args, (cmd)->cmd.evalReadonly(script, Arrays.asList(keys), ListBuilder.of()));
+		return evalRo(script, rawKeys(keys), new byte[][]{}, args);
 	}
 
 	@Override
 	public Object evalRo(final String script, final String[] keys, final String[] arguments) {
 		final CommandArguments args = CommandArguments.create(script).add(keys).add(arguments);
-		return evalRo(args, (cmd)->cmd.evalReadonly(script, Arrays.asList(keys), Arrays.asList(arguments)));
+		return evalRo(script, rawKeys(keys), arguments, args);
 	}
 
 	@Override
 	public Object evalRo(final byte[] script, final byte[][] keys, final byte[][] arguments) {
 		final CommandArguments args = CommandArguments.create(script).add(keys).add(arguments);
-		return evalRo(args, (cmd)->cmd.evalReadonly(script, Arrays.asList(keys), Arrays.asList(arguments)));
+		return evalRo(script, rawKeys(keys), arguments, args);
 	}
 
 	@Override
 	public Object evalSha(final String digest) {
 		final CommandArguments args = CommandArguments.create(digest);
-		return evalSha(args, (cmd)->cmd.evalsha(digest));
+		return executeCommand(Command.EVALSHA, args, (cmd)->cmd.evalsha(digest));
 	}
 
 	@Override
 	public Object evalSha(final byte[] digest) {
 		final CommandArguments args = CommandArguments.create(digest);
-		return evalSha(args, (cmd)->cmd.evalsha(digest));
+		return executeCommand(Command.EVALSHA, args, (cmd)->cmd.evalsha(digest));
 	}
 
 	@Override
 	public Object evalSha(final String digest, final String... keys) {
 		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys);
-		return evalSha(args, (cmd)->cmd.evalsha(digest, keys.length, keys));
+		return evalSha(digest, rawKeys(keys), new String[]{}, args);
 	}
 
 	@Override
 	public Object evalSha(final byte[] digest, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys);
-		return evalSha(args, (cmd)->cmd.evalsha(digest, keys.length, keys));
+		return evalSha(digest, rawKeys(keys), new byte[][]{}, args);
 	}
 
 	@Override
 	public Object evalSha(final String digest, final String[] keys, final String[] arguments) {
 		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys).add(arguments);
-		return evalSha(args, (cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)));
+		return evalSha(digest, rawKeys(keys), arguments, args);
 	}
 
 	@Override
 	public Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] arguments) {
 		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys).add(arguments);
-		return evalSha(args, (cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)));
+		return evalSha(digest, rawKeys(keys), arguments, args);
 	}
 
 	@Override
 	public Object evalShaRo(final String digest) {
 		final CommandArguments args = CommandArguments.create(digest);
-		return evalShaRo(digest, ListBuilder.of(), ListBuilder.of(), args);
+		return evalShaRo(digest, new String[]{}, new String[]{}, args);
 	}
 
 	@Override
 	public Object evalShaRo(final byte[] digest) {
 		final CommandArguments args = CommandArguments.create(digest);
-		return evalShaRo(digest, ListBuilder.of(), ListBuilder.of(), args);
+		return evalShaRo(digest, new byte[][]{}, new byte[][]{}, args);
 	}
 
 	@Override
 	public Object evalShaRo(final String digest, final String... keys) {
 		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys);
-		return evalShaRo(digest, Arrays.asList(keys), ListBuilder.of(), args);
+		return evalShaRo(digest, rawKeys(keys), new String[]{}, args);
 	}
 
 	@Override
 	public Object evalShaRo(final byte[] digest, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys);
-		return evalShaRo(digest, Arrays.asList(keys), ListBuilder.of(), args);
+		return evalShaRo(digest, rawKeys(keys), new byte[][]{}, args);
 	}
 
 	@Override
 	public Object evalShaRo(final String digest, final String[] keys, final String[] arguments) {
 		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys).add(arguments);
-		return evalShaRo(digest, Arrays.asList(keys), Arrays.asList(arguments), args);
+		return evalShaRo(digest, rawKeys(keys), arguments, args);
 	}
 
 	@Override
 	public Object evalShaRo(final byte[] digest, final byte[][] keys, final byte[][] arguments) {
 		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys).add(arguments);
-		return evalShaRo(digest, Arrays.asList(keys), Arrays.asList(arguments), args);
+		return evalShaRo(digest, rawKeys(keys), arguments, args);
 	}
 
 	@Override
 	public Object fCall(final String function) {
 		final CommandArguments args = CommandArguments.create(function);
-		return fCall(function, ListBuilder.of(), ListBuilder.of(), args);
+		return fCall(function, new String[]{}, new String[]{}, args);
 	}
 
 	@Override
 	public Object fCall(final byte[] function) {
 		final CommandArguments args = CommandArguments.create(function);
-		return fCall(function, ListBuilder.of(), ListBuilder.of(), args);
+		return fCall(function, new byte[][]{}, new byte[][]{}, args);
 	}
 
 	@Override
 	public Object fCall(final String function, final String... keys) {
 		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys);
-		return fCall(function, Arrays.asList(keys), ListBuilder.of(), args);
+		return fCall(function, rawKeys(keys), new String[]{}, args);
 	}
 
 	@Override
 	public Object fCall(final byte[] function, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys);
-		return fCall(function, Arrays.asList(keys), ListBuilder.of(), args);
+		return fCall(function, rawKeys(keys), new byte[][]{}, args);
 	}
 
 	@Override
 	public Object fCall(final String function, final String[] keys, final String[] arguments) {
 		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys).add(arguments);
-		return fCall(function, Arrays.asList(keys), Arrays.asList(arguments), args);
+		return fCall(function, rawKeys(keys), arguments, args);
 	}
 
 	@Override
 	public Object fCall(final byte[] function, final byte[][] keys, final byte[][] arguments) {
 		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys).add(arguments);
-		return fCall(function, Arrays.asList(keys), Arrays.asList(arguments), args);
+		return fCall(function, rawKeys(keys), arguments, args);
 	}
 
 	@Override
 	public Object fCallRo(final String function) {
 		final CommandArguments args = CommandArguments.create(function);
-		return fCallRo(function, ListBuilder.of(), ListBuilder.of(), args);
+		return fCallRo(function, new String[]{}, new String[]{}, args);
 	}
 
 	@Override
 	public Object fCallRo(final byte[] function) {
 		final CommandArguments args = CommandArguments.create(function);
-		return fCallRo(function, ListBuilder.of(), ListBuilder.of(), args);
+		return fCallRo(function, new byte[][]{}, new byte[][]{}, args);
 	}
 
 	@Override
 	public Object fCallRo(final String function, final String... keys) {
 		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys);
-		return fCallRo(function, Arrays.asList(keys), ListBuilder.of(), args);
+		return fCallRo(function, rawKeys(keys), new String[]{}, args);
 	}
 
 	@Override
 	public Object fCallRo(final byte[] function, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys);
-		return fCallRo(function, Arrays.asList(keys), ListBuilder.of(), args);
+		return fCallRo(function, rawKeys(keys), new byte[][]{}, args);
 	}
 
 	@Override
 	public Object fCallRo(final String function, final String[] keys, final String[] arguments) {
 		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys).add(arguments);
-		return fCallRo(function, Arrays.asList(keys), Arrays.asList(arguments), args);
+		return fCallRo(function, rawKeys(keys), arguments, args);
 	}
 
 	@Override
 	public Object fCallRo(final byte[] function, final byte[][] keys, final byte[][] arguments) {
 		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys).add(arguments);
-		return fCallRo(function, Arrays.asList(keys), Arrays.asList(arguments), args);
+		return fCallRo(function, rawKeys(keys), arguments, args);
 	}
 
 	@Override
@@ -286,7 +284,7 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public byte[] functionDump() {
-		return executeCommand(Command.FUNCTION, SubCommand.FUNCTION_DUMP, (cmd)->cmd.functionDump(), (v)->v);
+		return executeCommand(Command.FUNCTION, SubCommand.FUNCTION_DUMP, (cmd)->cmd.functionDump());
 	}
 
 	@Override
@@ -317,8 +315,9 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public List<LibraryInfo> functionList(final String pattern) {
-		final CommandArguments args = CommandArguments.create(pattern);
-		return functionList(args, (cmd)->cmd.functionList(pattern));
+		final CommandArguments args = CommandArguments.create("LIBRARYNAME", pattern);
+		return executeCommand(Command.FUNCTION, SubCommand.FUNCTION_LIST, args, (cmd)->cmd.functionList(pattern),
+				new ListConverter<>(new LibraryInfoConverter()));
 	}
 
 	@Override
@@ -327,15 +326,11 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 	}
 
 	@Override
-	public List<LibraryInfo> functionList(final boolean withCode) {
-		final CommandArguments args = CommandArguments.create(withCode ? "WITHCODE" : null);
-		return functionList(args, (cmd)->withCode ? cmd.functionListWithCode() : cmd.functionList());
-	}
-
-	@Override
 	public List<LibraryInfo> functionList(final String pattern, final boolean withCode) {
-		final CommandArguments args = CommandArguments.create(pattern).add(withCode ? "WITHCODE" : null);
-		return functionList(args, (cmd)->withCode ? cmd.functionListWithCode(pattern) : cmd.functionList(pattern));
+		final CommandArguments args = CommandArguments.create("LIBRARYNAME", pattern).add(withCode ? "WITHCODE" : null);
+		return executeCommand(Command.FUNCTION, SubCommand.FUNCTION_LIST, args,
+				(cmd)->withCode ? cmd.functionListWithCode(pattern) : cmd.functionList(pattern),
+				new ListConverter<>(new LibraryInfoConverter()));
 	}
 
 	@Override
@@ -344,18 +339,40 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 	}
 
 	@Override
+	public List<LibraryInfo> functionList(final boolean withCode) {
+		final CommandArguments args = CommandArguments.create(withCode ? "WITHCODE" : null);
+		return executeCommand(Command.FUNCTION, SubCommand.FUNCTION_LIST, args,
+				(cmd)->withCode ? cmd.functionListWithCode() : cmd.functionList(),
+				new ListConverter<>(new LibraryInfoConverter()));
+	}
+
+	@Override
 	public String functionLoad(final String functionCode) {
 		final CommandArguments args = CommandArguments.create(functionCode);
-		return executeCommand(Command.FUNCTION, SubCommand.FUNCTION_LOAD, args, (cmd)->cmd.functionLoad(functionCode),
-				(v)->v);
+		return executeCommand(Command.FUNCTION, SubCommand.FUNCTION_LOAD, args, (cmd)->cmd.functionLoad(functionCode));
+	}
+
+	@Override
+	public byte[] functionLoad(final byte[] functionCode) {
+		final CommandArguments args = CommandArguments.create(functionCode);
+		return executeCommand(Command.FUNCTION, SubCommand.FUNCTION_LOAD, args,
+				(cmd)->cmd.functionLoad(SafeEncoder.encode(functionCode)), SafeEncoder::encode);
 	}
 
 	@Override
 	public String functionLoad(final String functionCode, final boolean replace) {
-		final CommandArguments args = CommandArguments.create(functionCode)
-				.add(replace ? Keyword.Common.REPLACE : null);
+		final CommandArguments args = CommandArguments.create(replace ? Keyword.Common.REPLACE : null)
+				.add(functionCode);
 		return executeCommand(Command.FUNCTION, SubCommand.FUNCTION_LOAD, args,
-				(cmd)->cmd.functionLoadReplace(functionCode), (v)->v);
+				(cmd)->cmd.functionLoadReplace(functionCode));
+	}
+
+	@Override
+	public byte[] functionLoad(final byte[] functionCode, final boolean replace) {
+		final CommandArguments args = CommandArguments.create(replace ? Keyword.Common.REPLACE : null)
+				.add(functionCode);
+		return executeCommand(Command.FUNCTION, SubCommand.FUNCTION_LOAD, args,
+				(cmd)->cmd.functionLoadReplace(SafeEncoder.encode(functionCode)), SafeEncoder::encode);
 	}
 
 	@Override
@@ -382,106 +399,129 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public Object scriptDebug() {
-		return executeCommand(Command.SCRIPT_DEBUG);
+		return executeCommand(Command.SCRIPT, SubCommand.SCRIPT_DEBUG);
 	}
 
 	@Override
 	public Object scriptDebug(final ScriptDebugMode mode) {
 		final CommandArguments args = CommandArguments.create(mode);
-		return executeCommand(Command.SCRIPT_DEBUG, args);
+		return executeCommand(Command.SCRIPT, SubCommand.SCRIPT_DEBUG, args);
 	}
 
 	@Override
 	public List<Boolean> scriptExists(final String... sha1) {
 		final CommandArguments args = CommandArguments.create(sha1);
-		return executeCommand(Command.SCRIPT_EXISTS, args, (cmd)->cmd.scriptExists(null, sha1), (v)->v);
+		return executeCommand(Command.SCRIPT, SubCommand.SCRIPT_EXISTS, args, (cmd)->cmd.scriptExists(null, sha1));
 	}
 
 	@Override
 	public List<Boolean> scriptExists(final byte[]... sha1) {
 		final CommandArguments args = CommandArguments.create(sha1);
-		return executeCommand(Command.SCRIPT_EXISTS, args, (cmd)->cmd.scriptExists(null, sha1), (v)->v);
+		return executeCommand(Command.SCRIPT, SubCommand.SCRIPT_EXISTS, args, (cmd)->cmd.scriptExists(null, sha1));
 	}
 
 	@Override
 	public Status scriptFlush() {
-		return executeCommand(Command.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(), new OkStatusConverter());
+		return executeCommand(Command.SCRIPT, SubCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
+				new OkStatusConverter());
 	}
 
 	@Override
 	public Status scriptFlush(final FlushMode mode) {
 		final CommandArguments args = CommandArguments.create(mode);
 		final FlushModeConverter flushModeConverter = new FlushModeConverter();
-		return executeCommand(Command.SCRIPT_FLUSH, args, (cmd)->cmd.scriptFlush((String) null,
-				flushModeConverter.convert(mode)), new OkStatusConverter());
+		return executeCommand(Command.SCRIPT, SubCommand.SCRIPT_FLUSH, args,
+				(cmd)->cmd.scriptFlush((String) null, flushModeConverter.convert(mode)), new OkStatusConverter());
 	}
 
 	@Override
 	public Status scriptKill() {
-		return executeCommand(Command.SCRIPT_KILL, (cmd)->cmd.scriptKill(), new OkStatusConverter());
+		return executeCommand(Command.SCRIPT, SubCommand.SCRIPT_KILL, (cmd)->cmd.scriptKill(), new OkStatusConverter());
 	}
 
 	@Override
 	public String scriptLoad(final String script) {
 		final CommandArguments args = CommandArguments.create(script);
-		return executeCommand(Command.SCRIPT_LOAD, args, (cmd)->cmd.scriptLoad(script), (v)->v);
+		return executeCommand(Command.SCRIPT, SubCommand.SCRIPT_LOAD, args, (cmd)->cmd.scriptLoad(script), (v)->v);
 	}
 
 	@Override
 	public byte[] scriptLoad(final byte[] script) {
 		final CommandArguments args = CommandArguments.create(script);
-		return executeCommand(Command.SCRIPT_LOAD, args, (cmd)->cmd.scriptLoad(script, null), (v)->v);
+		return executeCommand(Command.SCRIPT, SubCommand.SCRIPT_LOAD, args, (cmd)->cmd.scriptLoad(script, null),
+				(v)->v);
 	}
 
-	private Object eval(final CommandArguments args,
-						final com.buession.redis.core.Command.Executor<UnifiedJedis, Object> executor) {
-		return executeCommand(Command.EVAL, args, executor, (v)->v);
+	private Object eval(final String script, final String[] keys, final String[] arguments,
+						final CommandArguments args) {
+		return executeCommand(Command.EVAL, args,
+				(cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)));
 	}
 
-	private Object evalRo(final CommandArguments args,
-						  final com.buession.redis.core.Command.Executor<UnifiedJedis, Object> executor) {
-		return executeCommand(Command.EVAL_RO, args, executor, (v)->v);
+	private Object eval(final byte[] script, final byte[][] keys, final byte[][] arguments,
+						final CommandArguments args) {
+		return executeCommand(Command.EVAL, args,
+				(cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)));
 	}
 
-	private Object evalSha(final CommandArguments args,
-						   final com.buession.redis.core.Command.Executor<UnifiedJedis, Object> executor) {
-		return executeCommand(Command.EVALSHA, args, executor, (v)->v);
+	private Object evalRo(final String script, final String[] keys, final String[] arguments,
+						  final CommandArguments args) {
+		return executeCommand(Command.EVAL_RO, args,
+				(cmd)->cmd.evalReadonly(script, Arrays.asList(keys), Arrays.asList(arguments)));
 	}
 
-	private Object evalShaRo(final String digest, final List<String> keys, final List<String> arguments,
-							 final CommandArguments args) {
-		return executeCommand(Command.EVALSHA_RO, args, (cmd)->cmd.evalshaReadonly(digest, keys, arguments), (v)->v);
+	private Object evalRo(final byte[] script, final byte[][] keys, final byte[][] arguments,
+						  final CommandArguments args) {
+		return executeCommand(Command.EVAL_RO, args,
+				(cmd)->cmd.evalReadonly(script, Arrays.asList(keys), Arrays.asList(arguments)));
 	}
 
-	private Object evalShaRo(final byte[] digest, final List<byte[]> keys, final List<byte[]> arguments,
-							 final CommandArguments args) {
-		return executeCommand(Command.EVALSHA_RO, args, (cmd)->cmd.evalshaReadonly(digest, keys, arguments), (v)->v);
-	}
-
-	private Object fCall(final String function, final List<String> keys, final List<String> arguments,
-						 final CommandArguments args) {
-		return executeCommand(Command.FCALL, args, (cmd)->cmd.fcall(function, keys, arguments), (v)->v);
-	}
-
-	private Object fCall(final byte[] function, final List<byte[]> keys, final List<byte[]> arguments,
-						 final CommandArguments args) {
-		return executeCommand(Command.FCALL, args, (cmd)->cmd.fcall(function, keys, arguments), (v)->v);
-	}
-
-	private Object fCallRo(final String function, final List<String> keys, final List<String> arguments,
+	private Object evalSha(final String digest, final String[] keys, final String[] arguments,
 						   final CommandArguments args) {
-		return executeCommand(Command.FCALL_RO, args, (cmd)->cmd.fcallReadonly(function, keys, arguments), (v)->v);
+		return executeCommand(Command.EVALSHA, args,
+				(cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)));
 	}
 
-	private Object fCallRo(final byte[] function, final List<byte[]> keys, final List<byte[]> arguments,
+	private Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] arguments,
 						   final CommandArguments args) {
-		return executeCommand(Command.FCALL_RO, args, (cmd)->cmd.fcallReadonly(function, keys, arguments), (v)->v);
+		return executeCommand(Command.EVALSHA, args,
+				(cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)));
 	}
 
-	private List<LibraryInfo> functionList(final CommandArguments args,
-										   final com.buession.redis.core.Command.Executor<UnifiedJedis, List<redis.clients.jedis.resps.LibraryInfo>> executor) {
-		return executeCommand(Command.FUNCTION, SubCommand.FUNCTION_LIST, executor,
-				new ListConverter<>(new LibraryInfoConverter()));
+	private Object evalShaRo(final String digest, final String[] keys, final String[] arguments,
+							 final CommandArguments args) {
+		return executeCommand(Command.EVALSHA_RO, args,
+				(cmd)->cmd.evalshaReadonly(digest, Arrays.asList(keys), Arrays.asList(arguments)));
+	}
+
+	private Object evalShaRo(final byte[] digest, final byte[][] keys, final byte[][] arguments,
+							 final CommandArguments args) {
+		return executeCommand(Command.EVALSHA_RO, args,
+				(cmd)->cmd.evalshaReadonly(digest, Arrays.asList(keys), Arrays.asList(arguments)));
+	}
+
+	private Object fCall(final String function, final String[] keys, final String[] arguments,
+						 final CommandArguments args) {
+		return executeCommand(Command.FCALL, args,
+				(cmd)->cmd.fcall(function, Arrays.asList(keys), Arrays.asList(arguments)));
+	}
+
+	private Object fCall(final byte[] function, final byte[][] keys, final byte[][] arguments,
+						 final CommandArguments args) {
+		return executeCommand(Command.FCALL, args,
+				(cmd)->cmd.fcall(function, Arrays.asList(keys), Arrays.asList(arguments)));
+	}
+
+	private Object fCallRo(final String function, final String[] keys, final String[] arguments,
+						   final CommandArguments args) {
+		return executeCommand(Command.FCALL_RO, args,
+				(cmd)->cmd.fcallReadonly(function, Arrays.asList(keys), Arrays.asList(arguments)));
+	}
+
+	private Object fCallRo(final byte[] function, final byte[][] keys, final byte[][] arguments,
+						   final CommandArguments args) {
+		return executeCommand(Command.FCALL_RO, args,
+				(cmd)->cmd.fcallReadonly(function, Arrays.asList(keys), Arrays.asList(arguments)));
 	}
 
 }

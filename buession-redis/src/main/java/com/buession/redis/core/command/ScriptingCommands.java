@@ -635,18 +635,6 @@ public interface ScriptingCommands extends RedisCommands {
 	 *
 	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/function-list/" target="_blank">https://redis.io/docs/latest/commands/function-list/</a></p>
 	 *
-	 * @param withCode
-	 * 		WITHCODE
-	 *
-	 * @return 已加载的 Functions（函数库）及其元信息
-	 */
-	List<LibraryInfo> functionList(final boolean withCode);
-
-	/**
-	 * 列出当前 Redis 实例中所有已加载的 Functions（函数库）及其元信息
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/function-list/" target="_blank">https://redis.io/docs/latest/commands/function-list/</a></p>
-	 *
 	 * @param pattern
 	 * 		匹配模式
 	 * @param withCode
@@ -671,6 +659,18 @@ public interface ScriptingCommands extends RedisCommands {
 	List<LibraryInfo> functionList(final byte[] pattern, final boolean withCode);
 
 	/**
+	 * 列出当前 Redis 实例中所有已加载的 Functions（函数库）及其元信息
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/function-list/" target="_blank">https://redis.io/docs/latest/commands/function-list/</a></p>
+	 *
+	 * @param withCode
+	 * 		WITHCODE
+	 *
+	 * @return 已加载的 Functions（函数库）及其元信息
+	 */
+	List<LibraryInfo> functionList(final boolean withCode);
+
+	/**
 	 * 向 Redis 实例加载一个 Functions（函数库）
 	 *
 	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/function-load/" target="_blank">https://redis.io/docs/latest/commands/function-load/</a></p>
@@ -689,12 +689,38 @@ public interface ScriptingCommands extends RedisCommands {
 	 *
 	 * @param functionCode
 	 * 		函数库名
+	 *
+	 * @return 成功加载后返回库名
+	 */
+	byte[] functionLoad(final byte[] functionCode);
+
+	/**
+	 * 向 Redis 实例加载一个 Functions（函数库）
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/function-load/" target="_blank">https://redis.io/docs/latest/commands/function-load/</a></p>
+	 *
+	 * @param functionCode
+	 * 		函数库名
 	 * @param replace
 	 * 		是否替换同名库
 	 *
 	 * @return 成功加载后返回库名
 	 */
 	String functionLoad(final String functionCode, final boolean replace);
+
+	/**
+	 * 向 Redis 实例加载一个 Functions（函数库）
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/function-load/" target="_blank">https://redis.io/docs/latest/commands/function-load/</a></p>
+	 *
+	 * @param functionCode
+	 * 		函数库名
+	 * @param replace
+	 * 		是否替换同名库
+	 *
+	 * @return 成功加载后返回库名
+	 */
+	byte[] functionLoad(final byte[] functionCode, final boolean replace);
 
 	/**
 	 * Restore libraries from the serialized payload.
