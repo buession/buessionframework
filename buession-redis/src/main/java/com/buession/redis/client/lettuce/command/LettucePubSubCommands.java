@@ -24,7 +24,6 @@
  */
 package com.buession.redis.client.lettuce.command;
 
-import com.buession.core.converter.ListConverter;
 import com.buession.core.converter.MapConverter;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.core.PubSubListener;
@@ -32,6 +31,7 @@ import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.PubSubCommands;
 import com.buession.redis.core.command.SubCommand;
+import com.buession.redis.core.internal.convert.BinaryListStringListConverter;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
@@ -43,8 +43,7 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class LettucePubSubCommands extends AbstractLettuceRedisCommands implements
-		PubSubCommands {
+public final class LettucePubSubCommands extends AbstractLettuceRedisCommands implements PubSubCommands {
 
 	public LettucePubSubCommands(final LettuceRedisClient client) {
 		super(client);
@@ -76,7 +75,7 @@ public final class LettucePubSubCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public List<String> pubsubChannels() {
 		return executeCommand(Command.PUBSUB, SubCommand.PUBSUB_CHANNELS, (cmd)->cmd.pubsubChannels(),
-				new ListConverter<>(SafeEncoder::encode));
+				new BinaryListStringListConverter());
 	}
 
 	@Override
@@ -84,20 +83,18 @@ public final class LettucePubSubCommands extends AbstractLettuceRedisCommands im
 		final CommandArguments args = CommandArguments.create(pattern);
 		return executeCommand(Command.PUBSUB, SubCommand.PUBSUB_CHANNELS, args,
 				(cmd)->cmd.pubsubChannels(SafeEncoder.encode(pattern)),
-				new ListConverter<>(SafeEncoder::encode));
+				new BinaryListStringListConverter());
 	}
 
 	@Override
 	public List<byte[]> pubsubChannels(final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create(pattern);
-		return executeCommand(Command.PUBSUB, SubCommand.PUBSUB_CHANNELS, args, (cmd)->cmd.pubsubChannels(pattern),
-				(v)->v);
+		return executeCommand(Command.PUBSUB, SubCommand.PUBSUB_CHANNELS, args, (cmd)->cmd.pubsubChannels(pattern));
 	}
 
 	@Override
 	public Long pubsubNumPat() {
-		return executeCommand(Command.PUBSUB, SubCommand.PUBSUB_NUMPAT, (cmd)->cmd.pubsubNumpat(),
-				(v)->v);
+		return executeCommand(Command.PUBSUB, SubCommand.PUBSUB_NUMPAT, (cmd)->cmd.pubsubNumpat());
 	}
 
 	@Override
@@ -117,14 +114,13 @@ public final class LettucePubSubCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public Map<byte[], Long> pubsubNumSub(final byte[]... channels) {
 		final CommandArguments args = CommandArguments.create(channels);
-		return executeCommand(Command.PUBSUB, SubCommand.PUBSUB_NUMSUB, args, (cmd)->cmd.pubsubNumsub(channels),
-				(v)->v);
+		return executeCommand(Command.PUBSUB, SubCommand.PUBSUB_NUMSUB, args, (cmd)->cmd.pubsubNumsub(channels));
 	}
 
 	@Override
 	public List<String> pubsubShardChannels() {
 		return executeCommand(Command.PUBSUB, SubCommand.PUBSUB_SHARDCHANNELS, (cmd)->cmd.pubsubShardChannels(),
-				new ListConverter<>(SafeEncoder::encode));
+				new BinaryListStringListConverter());
 	}
 
 	@Override
@@ -132,14 +128,14 @@ public final class LettucePubSubCommands extends AbstractLettuceRedisCommands im
 		final CommandArguments args = CommandArguments.create(pattern);
 		return executeCommand(Command.PUBSUB, SubCommand.PUBSUB_SHARDCHANNELS, args,
 				(cmd)->cmd.pubsubShardChannels(SafeEncoder.encode(pattern)),
-				new ListConverter<>(SafeEncoder::encode));
+				new BinaryListStringListConverter());
 	}
 
 	@Override
 	public List<byte[]> pubsubShardChannels(final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create(pattern);
 		return executeCommand(Command.PUBSUB, SubCommand.PUBSUB_SHARDCHANNELS, args,
-				(cmd)->cmd.pubsubShardChannels(pattern), (v)->v);
+				(cmd)->cmd.pubsubShardChannels(pattern));
 	}
 
 	@Override
@@ -160,7 +156,7 @@ public final class LettucePubSubCommands extends AbstractLettuceRedisCommands im
 	public Map<byte[], Long> pubsubShardNumSub(final byte[]... shardChannels) {
 		final CommandArguments args = CommandArguments.create(shardChannels);
 		return executeCommand(Command.PUBSUB, SubCommand.PUBSUB_SHARDNUMSUB, args,
-				(cmd)->cmd.pubsubShardNumsub(shardChannels), (v)->v);
+				(cmd)->cmd.pubsubShardNumsub(shardChannels));
 	}
 
 	@Override
@@ -188,7 +184,7 @@ public final class LettucePubSubCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public Long sPublish(final byte[] shardchannel, final byte[] message) {
 		final CommandArguments args = CommandArguments.create(shardchannel).add(message);
-		return executeCommand(Command.SPUBLISH, args, (cmd)->cmd.spublish(shardchannel, message), (v)->v);
+		return executeCommand(Command.SPUBLISH, args, (cmd)->cmd.spublish(shardchannel, message));
 	}
 
 	@Override

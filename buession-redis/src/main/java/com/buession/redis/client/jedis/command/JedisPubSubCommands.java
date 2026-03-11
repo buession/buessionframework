@@ -54,7 +54,7 @@ public final class JedisPubSubCommands extends AbstractJedisRedisCommands implem
 		executeCommand(Command.PSUBSCRIBE, args, (cmd)->{
 			cmd.psubscribe(new DefaultJedisPubSub(pubSubListener), patterns);
 			return null;
-		}, (v)->v);
+		});
 	}
 
 	@Override
@@ -63,19 +63,19 @@ public final class JedisPubSubCommands extends AbstractJedisRedisCommands implem
 		executeCommand(Command.PSUBSCRIBE, args, (cmd)->{
 			cmd.psubscribe(new DefaultBinaryJedisPubSub(pubSubListener), patterns);
 			return null;
-		}, (v)->v);
+		});
 	}
 
 	@Override
 	public Long publish(final String channel, final String message) {
 		final CommandArguments args = CommandArguments.create(channel).add(message);
-		return executeCommand(Command.PUBLISH, args, (cmd)->cmd.publish(channel, message), (v)->v);
+		return executeCommand(Command.PUBLISH, args, (cmd)->cmd.publish(channel, message));
 	}
 
 	@Override
 	public Long publish(final byte[] channel, final byte[] message) {
 		final CommandArguments args = CommandArguments.create(channel).add(message);
-		return executeCommand(Command.PUBLISH, args, (cmd)->cmd.publish(channel, message), (v)->v);
+		return executeCommand(Command.PUBLISH, args, (cmd)->cmd.publish(channel, message));
 	}
 
 	@Override
@@ -198,7 +198,7 @@ public final class JedisPubSubCommands extends AbstractJedisRedisCommands implem
 		executeCommand(Command.SUBSCRIBE, args, (cmd)->{
 			cmd.subscribe(new DefaultJedisPubSub(pubSubListener), channels);
 			return null;
-		}, (v)->v);
+		});
 	}
 
 	@Override
@@ -207,7 +207,7 @@ public final class JedisPubSubCommands extends AbstractJedisRedisCommands implem
 		executeCommand(Command.SUBSCRIBE, args, (cmd)->{
 			cmd.subscribe(new DefaultBinaryJedisPubSub(pubSubListener), channels);
 			return null;
-		}, (v)->v);
+		});
 	}
 
 	@Override
