@@ -33,6 +33,7 @@ import com.buession.redis.core.Keyword;
 import com.buession.redis.core.MinMax;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
+import com.buession.redis.core.ZRangeType;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.SortedSetCommands;
@@ -603,79 +604,155 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 	}
 
 	@Override
-	public List<String> zRange(final String key, final long start, final long end, final ZRangeArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(argument);
-		return zRange(key, new JedisZRangeParams(argument == null ? null : argument.getBy(), start,
-				end, Boolean.TRUE.equals(argument.getRev())), args);
+	public List<String> zRange(final String key, final long start, final long end, final ZRangeType type) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type);
+		return zRange(rawKey(key), new JedisZRangeParams(type, start, end), args);
 	}
 
 	@Override
-	public List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(argument);
-		return zRange(key, new JedisZRangeParams(argument == null ? null : argument.getBy(), start,
-				end, Boolean.TRUE.equals(argument.getRev())), args);
+	public List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeType type) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type);
+		return zRange(rawKey(key), new JedisZRangeParams(type, start, end), args);
+	}
+
+	@Override
+	public List<String> zRange(final String key, final long start, final long end, final ZRangeType type,
+							   final boolean rev) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(rev ? "REV" : null);
+		return zRange(rawKey(key), new JedisZRangeParams(type, start, end, rev), args);
+	}
+
+	@Override
+	public List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeType type,
+							   final boolean rev) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(rev ? "REV" : null);
+		return zRange(rawKey(key), new JedisZRangeParams(type, start, end, rev), args);
+	}
+
+	@Override
+	public List<String> zRange(final String key, final long start, final long end, final boolean rev) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(rev ? "REV" : null);
+		return zRange(rawKey(key), new JedisZRangeParams(start, end, rev), args);
+	}
+
+	@Override
+	public List<byte[]> zRange(final byte[] key, final long start, final long end, final boolean rev) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(rev ? "REV" : null);
+		return zRange(rawKey(key), new JedisZRangeParams(start, end, rev), args);
 	}
 
 	@Override
 	public List<String> zRange(final String key, final long start, final long end, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(Keyword.Common.LIMIT)
 				.add(offset, count);
-		return zRange(key, new JedisZRangeParams(start, end, offset, count), args);
+		return zRange(rawKey(key), new JedisZRangeParams(start, end, offset, count), args);
 	}
 
 	@Override
 	public List<byte[]> zRange(final byte[] key, final long start, final long end, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(Keyword.Common.LIMIT)
 				.add(offset, count);
-		return zRange(key, new JedisZRangeParams(start, end, offset, count), args);
+		return zRange(rawKey(key), new JedisZRangeParams(start, end, offset, count), args);
 	}
 
 	@Override
-	public List<String> zRange(final String key, final long start, final long end, final ZRangeArgument argument,
+	public List<String> zRange(final String key, final long start, final long end, final ZRangeType type,
 							   final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(argument)
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type)
 				.add(Keyword.Common.LIMIT).add(offset, count);
-		return zRange(key, new JedisZRangeParams(argument == null ? null : argument.getBy(), start,
-				end, Boolean.TRUE.equals(argument.getRev()), offset, count), args);
+		return zRange(rawKey(key), new JedisZRangeParams(type, start, end, offset, count), args);
 	}
 
 	@Override
-	public List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeArgument argument,
+	public List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeType type,
 							   final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(argument)
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type)
 				.add(Keyword.Common.LIMIT).add(offset, count);
-		return zRange(key, new JedisZRangeParams(argument == null ? null : argument.getBy(), start,
-				end, Boolean.TRUE.equals(argument.getRev()), offset, count), args);
+		return zRange(rawKey(key), new JedisZRangeParams(type, start, end, offset, count), args);
+	}
+
+	@Override
+	public List<String> zRange(final String key, final long start, final long end, final ZRangeType type,
+							   final boolean rev, final int offset, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(rev ? "REV" : null)
+				.add(Keyword.Common.LIMIT).add(offset, count);
+		return zRange(rawKey(key), new JedisZRangeParams(type, start, end, rev, offset, count), args);
+	}
+
+	@Override
+	public List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeType type,
+							   final boolean rev, final int offset, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(rev ? "REV" : null)
+				.add(Keyword.Common.LIMIT).add(offset, count);
+		return zRange(rawKey(key), new JedisZRangeParams(type, start, end, rev, offset, count), args);
+	}
+
+	@Override
+	public List<String> zRange(final String key, final long start, final long end, final boolean rev, final int offset,
+							   final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(rev ? "REV" : null)
+				.add(Keyword.Common.LIMIT).add(offset, count);
+		return zRange(rawKey(key), new JedisZRangeParams(start, end, rev, offset, count), args);
+	}
+
+	@Override
+	public List<byte[]> zRange(final byte[] key, final long start, final long end, final boolean rev, final int offset,
+							   final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(rev ? "REV" : null)
+				.add(Keyword.Common.LIMIT).add(offset, count);
+		return zRange(rawKey(key), new JedisZRangeParams(start, end, rev, offset, count), args);
 	}
 
 	@Override
 	public List<Tuple> zRangeWithScores(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
-		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrangeWithScores(key, start, end),
+		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrangeWithScores(rawKey(key), start, end),
 				new ListConverter<>(new TupleConverter()));
 	}
 
 	@Override
 	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
-		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrangeWithScores(key, start, end),
+		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrangeWithScores(rawKey(key), start, end),
 				new ListConverter<>(new TupleConverter()));
 	}
 
 	@Override
-	public List<Tuple> zRangeWithScores(final String key, final long start, final long end,
-										final ZRangeArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(argument);
-		return zRangeWithScores(key, new JedisZRangeParams(argument == null ? null : argument.getBy(), start,
-				end, Boolean.TRUE.equals(argument.getRev())), args);
+	public List<Tuple> zRangeWithScores(final String key, final long start, final long end, final ZRangeType type) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type);
+		return zRangeWithScores(rawKey(key), new JedisZRangeParams(type, start, end), args);
 	}
 
 	@Override
-	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end,
-										final ZRangeArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(argument);
-		return zRangeWithScores(key, new JedisZRangeParams(argument == null ? null : argument.getBy(), start,
-				end, Boolean.TRUE.equals(argument.getRev())), args);
+	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final ZRangeType type) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type);
+		return zRangeWithScores(rawKey(key), new JedisZRangeParams(type, start, end), args);
+	}
+
+	@Override
+	public List<Tuple> zRangeWithScores(final String key, final long start, final long end, final ZRangeType type,
+										final boolean rev) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(rev ? "REV" : null);
+		return zRangeWithScores(rawKey(key), new JedisZRangeParams(type, start, end), args);
+	}
+
+	@Override
+	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final ZRangeType type,
+										final boolean rev) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(rev ? "REV" : null);
+		return zRangeWithScores(rawKey(key), new JedisZRangeParams(type, start, end), args);
+	}
+
+	@Override
+	public List<Tuple> zRangeWithScores(final String key, final long start, final long end, final boolean rev) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(rev ? "REV" : null);
+		return zRangeWithScores(rawKey(key), new JedisZRangeParams(start, end), args);
+	}
+
+	@Override
+	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final boolean rev) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(rev ? "REV" : null);
+		return zRangeWithScores(rawKey(key), new JedisZRangeParams(start, end), args);
 	}
 
 	@Override
@@ -683,7 +760,7 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 										final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(Keyword.Common.LIMIT)
 				.add(offset, count);
-		return zRangeWithScores(key, new JedisZRangeParams(start, end), args);
+		return zRangeWithScores(rawKey(key), new JedisZRangeParams(start, end), args);
 	}
 
 	@Override
@@ -691,25 +768,55 @@ public final class JedisSortedSetCommands extends AbstractJedisRedisCommands imp
 										final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(Keyword.Common.LIMIT)
 				.add(offset, count);
-		return zRangeWithScores(key, new JedisZRangeParams(start, end), args);
+		return zRangeWithScores(rawKey(key), new JedisZRangeParams(start, end), args);
 	}
 
 	@Override
-	public List<Tuple> zRangeWithScores(final String key, final long start, final long end,
-										final ZRangeArgument argument, final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(argument)
-				.add(Keyword.Common.LIMIT).add(offset, count);
-		return zRangeWithScores(key, new JedisZRangeParams(argument == null ? null : argument.getBy(), start,
-				end, Boolean.TRUE.equals(argument.getRev()), offset, count), args);
+	public List<Tuple> zRangeWithScores(final String key, final long start, final long end, final ZRangeType type,
+										final int offset, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(Keyword.Common.LIMIT)
+				.add(offset, count);
+		return zRangeWithScores(rawKey(key), new JedisZRangeParams(type, start, end, offset, count), args);
 	}
 
 	@Override
-	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end,
-										final ZRangeArgument argument, final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(argument)
+	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final ZRangeType type,
+										final int offset, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(Keyword.Common.LIMIT)
+				.add(offset, count);
+		return zRangeWithScores(rawKey(key), new JedisZRangeParams(type, start, end, offset, count), args);
+	}
+
+	@Override
+	public List<Tuple> zRangeWithScores(final String key, final long start, final long end, final ZRangeType type,
+										final boolean rev, final int offset, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(rev ? "REV" : null)
 				.add(Keyword.Common.LIMIT).add(offset, count);
-		return zRangeWithScores(key, new JedisZRangeParams(argument == null ? null : argument.getBy(), start,
-				end, Boolean.TRUE.equals(argument.getRev()), offset, count), args);
+		return zRangeWithScores(rawKey(key), new JedisZRangeParams(type, start, end, offset, count), args);
+	}
+
+	@Override
+	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final ZRangeType type,
+										final boolean rev, final int offset, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(rev ? "REV" : null)
+				.add(Keyword.Common.LIMIT).add(offset, count);
+		return zRangeWithScores(rawKey(key), new JedisZRangeParams(type, start, end, offset, count), args);
+	}
+
+	@Override
+	public List<Tuple> zRangeWithScores(final String key, final long start, final long end, final boolean rev,
+										final int offset, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(rev ? "REV" : null)
+				.add(Keyword.Common.LIMIT).add(offset, count);
+		return zRangeWithScores(rawKey(key), new JedisZRangeParams(start, end, offset, count), args);
+	}
+
+	@Override
+	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final boolean rev,
+										final int offset, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(rev ? "REV" : null)
+				.add(Keyword.Common.LIMIT).add(offset, count);
+		return zRangeWithScores(rawKey(key), new JedisZRangeParams(start, end, offset, count), args);
 	}
 
 	@Override

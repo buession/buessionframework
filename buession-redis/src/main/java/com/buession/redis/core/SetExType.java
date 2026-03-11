@@ -22,56 +22,45 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.lettuce.args;
-
-import com.buession.redis.core.NxXx;
-import com.buession.redis.core.command.args.SetArgument;
-import io.lettuce.core.SetArgs;
-
-import java.time.Duration;
-import java.time.Instant;
+package com.buession.redis.core;
 
 /**
- * Lettuce {@link SetArgs} 扩展
+ * 设置过期时间方式
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class LettuceSetArgs extends SetArgs {
+public enum SetExType implements Keyword {
+	/**
+	 * 设置指定的过期时间，以秒为单位
+	 */
+	EX,
 
 	/**
-	 * 构造函数
+	 * 设置指定的过期 Unix 时间戳，以秒为单位
 	 */
-	public LettuceSetArgs() {
-		super();
+	EXAT,
+
+	/**
+	 * 设置指定的过期时间，以毫秒为单位
+	 */
+	PX,
+
+	/**
+	 * 设置指定的过期 Unix 时间戳，以毫秒为单位
+	 */
+	PXAT,
+
+	KEEPTTL;
+
+	@Override
+	public String getValue() {
+		return name();
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param setArgument
-	 *        {@link SetArgument}
-	 */
-	public LettuceSetArgs(final SetArgument setArgument) {
-		super();
-
-		if(setArgument != null){
-			if(setArgument.getType() == null && setArgument.getExpires() != null){
-				switch(setArgument.getType()){
-					case EX -> ex(Duration.ofSeconds(setArgument.getExpires()));
-					case EXAT -> exAt(Instant.ofEpochSecond(setArgument.getExpires()));
-					case PX -> px(Duration.ofMillis(setArgument.getExpires()));
-					case PXAT -> pxAt(Instant.ofEpochMilli(setArgument.getExpires()));
-					case KEEPTTL -> keepttl();
-				}
-			}
-
-			if(setArgument.getNxXx() == NxXx.NX){
-				nx();
-			}else if(setArgument.getNxXx() == NxXx.XX){
-				xx();
-			}
-		}
+	@Override
+	public String toString() {
+		return getValue();
 	}
 
 }

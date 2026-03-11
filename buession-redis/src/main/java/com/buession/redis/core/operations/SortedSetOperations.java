@@ -31,6 +31,7 @@ import com.buession.redis.core.Aggregate;
 import com.buession.redis.core.MinMax;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
+import com.buession.redis.core.ZRangeType;
 import com.buession.redis.core.command.SortedSetCommands;
 import com.buession.redis.core.command.args.ZAddArgument;
 import com.buession.redis.core.command.args.ZRangeArgument;
@@ -1022,6 +1023,84 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 		return execute((client)->client.sortedSetCommands().zRange(key, start, end));
 	}
 
+	@Override
+	default List<String> zRange(final String key, final long start, final long end, final ZRangeType type) {
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, type));
+	}
+
+	@Override
+	default List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeType type) {
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, type));
+	}
+
+	@Override
+	default List<String> zRange(final String key, final long start, final long end, final ZRangeType type,
+								final boolean rev) {
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, type, rev));
+	}
+
+	@Override
+	default List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeType type,
+								final boolean rev) {
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, type, rev));
+	}
+
+	@Override
+	default List<String> zRange(final String key, final long start, final long end, final boolean rev) {
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, rev));
+	}
+
+	@Override
+	default List<byte[]> zRange(final byte[] key, final long start, final long end, final boolean rev) {
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, rev));
+	}
+
+	@Override
+	default List<String> zRange(final String key, final long start, final long end, final int offset, final int count) {
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, offset, count));
+	}
+
+	@Override
+	default List<byte[]> zRange(final byte[] key, final long start, final long end, final int offset, final int count) {
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, offset, count));
+	}
+
+	@Override
+	default List<String> zRange(final String key, final long start, final long end, final ZRangeType type,
+								final int offset, final int count) {
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, type, offset, count));
+	}
+
+	@Override
+	default List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeType type,
+								final int offset, final int count) {
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, type, offset, count));
+	}
+
+	@Override
+	default List<String> zRange(final String key, final long start, final long end, final ZRangeType type,
+								final boolean rev, final int offset, final int count) {
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, type, rev, offset, count));
+	}
+
+	@Override
+	default List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeType type,
+								final boolean rev, final int offset, final int count) {
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, type, rev, offset, count));
+	}
+
+	@Override
+	default List<String> zRange(final String key, final long start, final long end, final boolean rev, final int offset,
+								final int count) {
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, rev, offset, count));
+	}
+
+	@Override
+	default List<byte[]> zRange(final byte[] key, final long start, final long end, final boolean rev, final int offset,
+								final int count) {
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, rev, offset, count));
+	}
+
 	/**
 	 * 获取有序集 key 中，指定区间内的成员，并反序列化为 clazz 指定的对象；其中成员的位置按 score 值递增(从小到大)来排序；
 	 * 具有相同 score 值的成员按字典序来排列；
@@ -1118,15 +1197,31 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 */
 	<V> List<V> zRange(final byte[] key, final long start, final long end, final TypeReference<V> type);
 
-	@Override
-	default List<String> zRange(final String key, final long start, final long end, final ZRangeArgument argument) {
-		return execute((client)->client.sortedSetCommands().zRange(key, start, end, argument));
-	}
-
-	@Override
-	default List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeArgument argument) {
-		return execute((client)->client.sortedSetCommands().zRange(key, start, end, argument));
-	}
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并反序列化为 clazz 指定的对象；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrange.html" target="_blank">http://redisdoc.com/sorted_set/zrange.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param type
+	 *        {@link ZRangeType}
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，反序列化为对象的有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	<V> List<V> zRange(final String key, final long start, final long end, final ZRangeType type, final Class<V> clazz);
 
 	/**
 	 * 获取有序集 key 中，指定区间内的成员，并反序列化为 clazz 指定的对象；其中成员的位置按 score 值递增(从小到大)来排序；
@@ -1141,8 +1236,8 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 * 		开始位置
 	 * @param end
 	 * 		结束位置
-	 * @param argument
-	 * 		参数
+	 * @param type
+	 *        {@link ZRangeType}
 	 * @param clazz
 	 * 		值对象类
 	 * @param <V>
@@ -1152,35 +1247,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
 	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
 	 */
-	<V> List<V> zRange(final String key, final long start, final long end, final ZRangeArgument argument,
-					   final Class<V> clazz);
-
-	/**
-	 * 获取有序集 key 中，指定区间内的成员，并反序列化为 clazz 指定的对象；其中成员的位置按 score 值递增(从小到大)来排序；
-	 * 具有相同 score 值的成员按字典序来排列；
-	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrange.html" target="_blank">http://redisdoc.com/sorted_set/zrange.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param start
-	 * 		开始位置
-	 * @param end
-	 * 		结束位置
-	 * @param argument
-	 * 		参数
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 指定区间内，反序列化为对象的有序集成员的列表；
-	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
-	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
-	 */
-	<V> List<V> zRange(final byte[] key, final long start, final long end, final ZRangeArgument argument,
-					   final Class<V> clazz);
+	<V> List<V> zRange(final byte[] key, final long start, final long end, final ZRangeType type, final Class<V> clazz);
 
 	/**
 	 * 获取有序集 key 中，指定区间内的成员，并反序列化为 type 指定的对象；其中成员的位置按 score 值递增(从小到大)来排序；
@@ -1195,8 +1262,8 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 * 		开始位置
 	 * @param end
 	 * 		结束位置
-	 * @param argument
-	 * 		参数
+	 * @param zRangeType
+	 *        {@link ZRangeType}
 	 * @param type
 	 * 		值类型引用
 	 * @param <V>
@@ -1206,7 +1273,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
 	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
 	 */
-	<V> List<V> zRange(final String key, final long start, final long end, final ZRangeArgument argument,
+	<V> List<V> zRange(final String key, final long start, final long end, final ZRangeType zRangeType,
 					   final TypeReference<V> type);
 
 	/**
@@ -1222,8 +1289,8 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 * 		开始位置
 	 * @param end
 	 * 		结束位置
-	 * @param argument
-	 * 		参数
+	 * @param zRangeType
+	 *        {@link ZRangeType}
 	 * @param type
 	 * 		值类型引用
 	 * @param <V>
@@ -1233,18 +1300,124 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
 	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
 	 */
-	<V> List<V> zRange(final byte[] key, final long start, final long end, final ZRangeArgument argument,
+	<V> List<V> zRange(final byte[] key, final long start, final long end, final ZRangeType zRangeType,
 					   final TypeReference<V> type);
 
-	@Override
-	default List<String> zRange(final String key, final long start, final long end, final int offset, final int count) {
-		return execute((client)->client.sortedSetCommands().zRange(key, start, end, offset, count));
-	}
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并反序列化为 clazz 指定的对象；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrange.html" target="_blank">http://redisdoc.com/sorted_set/zrange.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param type
+	 *        {@link ZRangeType}
+	 * @param rev
+	 * 		REV
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，反序列化为对象的有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	<V> List<V> zRange(final String key, final long start, final long end, final ZRangeType type, final boolean rev,
+					   final Class<V> clazz);
 
-	@Override
-	default List<byte[]> zRange(final byte[] key, final long start, final long end, final int offset, final int count) {
-		return execute((client)->client.sortedSetCommands().zRange(key, start, end, offset, count));
-	}
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并反序列化为 clazz 指定的对象；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrange.html" target="_blank">http://redisdoc.com/sorted_set/zrange.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param type
+	 *        {@link ZRangeType}
+	 * @param rev
+	 * 		REV
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，反序列化为对象的有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	<V> List<V> zRange(final byte[] key, final long start, final long end, final ZRangeType type, final boolean rev,
+					   final Class<V> clazz);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并反序列化为 type 指定的对象；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrange.html" target="_blank">http://redisdoc.com/sorted_set/zrange.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param zRangeType
+	 *        {@link ZRangeType}
+	 * @param rev
+	 * 		REV
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，反序列化为对象的有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	<V> List<V> zRange(final String key, final long start, final long end, final ZRangeType zRangeType,
+					   final boolean rev, final TypeReference<V> type);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并反序列化为 type 指定的对象；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrange.html" target="_blank">http://redisdoc.com/sorted_set/zrange.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param zRangeType
+	 *        {@link ZRangeType}
+	 * @param rev
+	 * 		REV
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，反序列化为对象的有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	<V> List<V> zRange(final byte[] key, final long start, final long end, final ZRangeType zRangeType,
+					   final boolean rev, final TypeReference<V> type);
 
 	/**
 	 * 获取有序集 key 中，指定区间内的成员，并反序列化为 clazz 指定的对象；其中成员的位置按 score 值递增(从小到大)来排序；
@@ -1362,17 +1535,36 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	<V> List<V> zRange(final byte[] key, final long start, final long end, final int offset, final int count,
 					   final TypeReference<V> type);
 
-	@Override
-	default List<String> zRange(final String key, final long start, final long end, final ZRangeArgument argument,
-								final int offset, final int count) {
-		return execute((client)->client.sortedSetCommands().zRange(key, start, end, argument, offset, count));
-	}
-
-	@Override
-	default List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeArgument argument,
-								final int offset, final int count) {
-		return execute((client)->client.sortedSetCommands().zRange(key, start, end, argument, offset, count));
-	}
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并反序列化为 clazz 指定的对象；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrange.html" target="_blank">http://redisdoc.com/sorted_set/zrange.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param type
+	 *        {@link ZRangeType}
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，反序列化为对象的有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	<V> List<V> zRange(final String key, final long start, final long end, final ZRangeType type, final int offset,
+					   final int count, final Class<V> clazz);
 
 	/**
 	 * 获取有序集 key 中，指定区间内的成员，并反序列化为 clazz 指定的对象；其中成员的位置按 score 值递增(从小到大)来排序；
@@ -1387,8 +1579,8 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 * 		开始位置
 	 * @param end
 	 * 		结束位置
-	 * @param argument
-	 * 		参数
+	 * @param type
+	 *        {@link ZRangeType}
 	 * @param offset
 	 * 		偏移量
 	 * @param count
@@ -1402,39 +1594,8 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
 	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
 	 */
-	<V> List<V> zRange(final String key, final long start, final long end, final ZRangeArgument argument,
-					   final int offset, final int count, final Class<V> clazz);
-
-	/**
-	 * 获取有序集 key 中，指定区间内的成员，并反序列化为 clazz 指定的对象；其中成员的位置按 score 值递增(从小到大)来排序；
-	 * 具有相同 score 值的成员按字典序来排列；
-	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrange.html" target="_blank">http://redisdoc.com/sorted_set/zrange.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param start
-	 * 		开始位置
-	 * @param end
-	 * 		结束位置
-	 * @param argument
-	 * 		参数
-	 * @param offset
-	 * 		偏移量
-	 * @param count
-	 * 		数量
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 指定区间内，反序列化为对象的有序集成员的列表；
-	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
-	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
-	 */
-	<V> List<V> zRange(final byte[] key, final long start, final long end, final ZRangeArgument argument,
-					   final int offset, final int count, final Class<V> clazz);
+	<V> List<V> zRange(final byte[] key, final long start, final long end, final ZRangeType type, final int offset,
+					   final int count, final Class<V> clazz);
 
 	/**
 	 * 获取有序集 key 中，指定区间内的成员，并反序列化为 type 指定的对象；其中成员的位置按 score 值递增(从小到大)来排序；
@@ -1449,8 +1610,8 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 * 		开始位置
 	 * @param end
 	 * 		结束位置
-	 * @param argument
-	 * 		参数
+	 * @param zRangeType
+	 *        {@link ZRangeType}
 	 * @param offset
 	 * 		偏移量
 	 * @param count
@@ -1464,7 +1625,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
 	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
 	 */
-	<V> List<V> zRange(final String key, final long start, final long end, final ZRangeArgument argument,
+	<V> List<V> zRange(final String key, final long start, final long end, final ZRangeType zRangeType,
 					   final int offset, final int count, final TypeReference<V> type);
 
 	/**
@@ -1480,6 +1641,8 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 * 		开始位置
 	 * @param end
 	 * 		结束位置
+	 * @param zRangeType
+	 *        {@link ZRangeType}
 	 * @param offset
 	 * 		偏移量
 	 * @param count
@@ -1493,8 +1656,264 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
 	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
 	 */
-	<V> List<V> zRange(final byte[] key, final long start, final long end, final ZRangeArgument argument,
+	<V> List<V> zRange(final byte[] key, final long start, final long end, final ZRangeType zRangeType,
 					   final int offset, final int count, final TypeReference<V> type);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并反序列化为 clazz 指定的对象；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrange.html" target="_blank">http://redisdoc.com/sorted_set/zrange.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param type
+	 *        {@link ZRangeType}
+	 * @param rev
+	 * 		REV
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，反序列化为对象的有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	<V> List<V> zRange(final String key, final long start, final long end, final ZRangeType type, final boolean rev,
+					   final int offset, final int count, final Class<V> clazz);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并反序列化为 clazz 指定的对象；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrange.html" target="_blank">http://redisdoc.com/sorted_set/zrange.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param type
+	 *        {@link ZRangeType}
+	 * @param rev
+	 * 		REV
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，反序列化为对象的有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	<V> List<V> zRange(final byte[] key, final long start, final long end, final ZRangeType type, final boolean rev,
+					   final int offset, final int count, final Class<V> clazz);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并反序列化为 type 指定的对象；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrange.html" target="_blank">http://redisdoc.com/sorted_set/zrange.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param zRangeType
+	 *        {@link ZRangeType}
+	 * @param rev
+	 * 		REV
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		数量
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，反序列化为对象的有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	<V> List<V> zRange(final String key, final long start, final long end, final ZRangeType zRangeType,
+					   final boolean rev, final int offset, final int count, final TypeReference<V> type);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并反序列化为 type 指定的对象；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrange.html" target="_blank">http://redisdoc.com/sorted_set/zrange.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param zRangeType
+	 *        {@link ZRangeType}
+	 * @param rev
+	 * 		REV
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		数量
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，反序列化为对象的有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	<V> List<V> zRange(final byte[] key, final long start, final long end, final ZRangeType zRangeType,
+					   final boolean rev, final int offset, final int count, final TypeReference<V> type);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并反序列化为 clazz 指定的对象；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrange.html" target="_blank">http://redisdoc.com/sorted_set/zrange.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param rev
+	 * 		REV
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，反序列化为对象的有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	<V> List<V> zRange(final String key, final long start, final long end, final boolean rev, final int offset,
+					   final int count, final Class<V> clazz);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并反序列化为 clazz 指定的对象；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrange.html" target="_blank">http://redisdoc.com/sorted_set/zrange.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param rev
+	 * 		REV
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，反序列化为对象的有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	<V> List<V> zRange(final byte[] key, final long start, final long end, final boolean rev, final int offset,
+					   final int count, final Class<V> clazz);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并反序列化为 type 指定的对象；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrange.html" target="_blank">http://redisdoc.com/sorted_set/zrange.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param rev
+	 * 		REV
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		数量
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，反序列化为对象的有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	<V> List<V> zRange(final String key, final long start, final long end, final boolean rev, final int offset,
+					   final int count, final TypeReference<V> type);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并反序列化为 type 指定的对象；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrange.html" target="_blank">http://redisdoc.com/sorted_set/zrange.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param rev
+	 * 		REV
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		数量
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，反序列化为对象的有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	<V> List<V> zRange(final byte[] key, final long start, final long end, final boolean rev, final int offset,
+					   final int count, final TypeReference<V> type);
 
 	@Override
 	default List<Tuple> zRangeWithScores(final String key, final long start, final long end) {
@@ -1507,15 +1926,35 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	}
 
 	@Override
-	default List<Tuple> zRangeWithScores(final String key, final long start, final long end,
-										 final ZRangeArgument argument) {
-		return execute((client)->client.sortedSetCommands().zRangeWithScores(key, start, end, argument));
+	default List<Tuple> zRangeWithScores(final String key, final long start, final long end, final ZRangeType type) {
+		return execute((client)->client.sortedSetCommands().zRangeWithScores(key, start, end, type));
 	}
 
 	@Override
-	default List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end,
-										 final ZRangeArgument argument) {
-		return execute((client)->client.sortedSetCommands().zRangeWithScores(key, start, end, argument));
+	default List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final ZRangeType type) {
+		return execute((client)->client.sortedSetCommands().zRangeWithScores(key, start, end, type));
+	}
+
+	@Override
+	default List<Tuple> zRangeWithScores(final String key, final long start, final long end, final ZRangeType type,
+										 final boolean rev) {
+		return execute((client)->client.sortedSetCommands().zRangeWithScores(key, start, end, type, rev));
+	}
+
+	@Override
+	default List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final ZRangeType type,
+										 final boolean rev) {
+		return execute((client)->client.sortedSetCommands().zRangeWithScores(key, start, end, type, rev));
+	}
+
+	@Override
+	default List<Tuple> zRangeWithScores(final String key, final long start, final long end, final boolean rev) {
+		return execute((client)->client.sortedSetCommands().zRangeWithScores(key, start, end, rev));
+	}
+
+	@Override
+	default List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final boolean rev) {
+		return execute((client)->client.sortedSetCommands().zRangeWithScores(key, start, end, rev));
 	}
 
 	@Override
@@ -1531,17 +1970,41 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	}
 
 	@Override
-	default List<Tuple> zRangeWithScores(final String key, final long start, final long end,
-										 final ZRangeArgument argument, final int offset, final int count) {
-		return execute(
-				(client)->client.sortedSetCommands().zRangeWithScores(key, start, end, argument, offset, count));
+	default List<Tuple> zRangeWithScores(final String key, final long start, final long end, final ZRangeType type,
+										 final int offset, final int count) {
+		return execute((client)->client.sortedSetCommands().zRangeWithScores(key, start, end, type, offset, count));
 	}
 
 	@Override
-	default List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end,
-										 final ZRangeArgument argument, final int offset, final int count) {
+	default List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final ZRangeType type,
+										 final int offset, final int count) {
+		return execute((client)->client.sortedSetCommands().zRangeWithScores(key, start, end, type, offset, count));
+	}
+
+	@Override
+	default List<Tuple> zRangeWithScores(final String key, final long start, final long end, final ZRangeType type,
+										 final boolean rev, final int offset, final int count) {
 		return execute(
-				(client)->client.sortedSetCommands().zRangeWithScores(key, start, end, argument, offset, count));
+				(client)->client.sortedSetCommands().zRangeWithScores(key, start, end, type, rev, offset, count));
+	}
+
+	@Override
+	default List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final ZRangeType type,
+										 final boolean rev, final int offset, final int count) {
+		return execute(
+				(client)->client.sortedSetCommands().zRangeWithScores(key, start, end, type, rev, offset, count));
+	}
+
+	@Override
+	default List<Tuple> zRangeWithScores(final String key, final long start, final long end, final boolean rev,
+										 final int offset, final int count) {
+		return execute((client)->client.sortedSetCommands().zRangeWithScores(key, start, end, rev, offset, count));
+	}
+
+	@Override
+	default List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final boolean rev,
+										 final int offset, final int count) {
+		return execute((client)->client.sortedSetCommands().zRangeWithScores(key, start, end, rev, offset, count));
 	}
 
 	@Override
@@ -1883,8 +2346,8 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 指定区间内，有序集成员反序列化为对象的列表
 	 */
-	<V> List<V> zRangeByScore(final String key, final double min, final double max, final int offset, final int count
-			, final Class<V> clazz);
+	<V> List<V> zRangeByScore(final String key, final double min, final double max, final int offset, final int count,
+							  final Class<V> clazz);
 
 	/**
 	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员，并反序列化为 clazz 指定的对象；
@@ -1935,8 +2398,8 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 指定区间内，有序集成员反序列化为对象的列表
 	 */
-	<V> List<V> zRangeByScore(final String key, final double min, final double max, final int offset, final int count
-			, final TypeReference<V> type);
+	<V> List<V> zRangeByScore(final String key, final double min, final double max, final int offset, final int count,
+							  final TypeReference<V> type);
 
 	/**
 	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员，并反序列化为 type 指定的对象；
@@ -1961,8 +2424,8 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 指定区间内，有序集成员反序列化为对象的列表
 	 */
-	<V> List<V> zRangeByScore(final byte[] key, final double min, final double max, final int offset, final int count
-			, final TypeReference<V> type);
+	<V> List<V> zRangeByScore(final byte[] key, final double min, final double max, final int offset, final int count,
+							  final TypeReference<V> type);
 
 	@Override
 	default List<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max) {
@@ -2009,14 +2472,14 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	}
 
 	@Override
-	default Long zRangeStore(final String destKey, final String key, final long start, final long end,
-							 final int offset, final int count) {
+	default Long zRangeStore(final String destKey, final String key, final long start, final long end, final int offset,
+							 final int count) {
 		return execute((client)->client.sortedSetCommands().zRangeStore(destKey, key, start, end, offset, count));
 	}
 
 	@Override
-	default Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
-							 final int offset, final int count) {
+	default Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final int offset,
+							 final int count) {
 		return execute((client)->client.sortedSetCommands().zRangeStore(destKey, key, start, end, offset, count));
 	}
 
@@ -2385,8 +2848,8 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
 	 */
-	<V> List<V> zRevRangeByLex(final String key, final double min, final double max, final int offset,
-							   final int count, final Class<V> clazz);
+	<V> List<V> zRevRangeByLex(final String key, final double min, final double max, final int offset, final int count,
+							   final Class<V> clazz);
 
 	/**
 	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
@@ -2411,8 +2874,8 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
 	 */
-	<V> List<V> zRevRangeByLex(final byte[] key, final double min, final double max, final int offset,
-							   final int count, final Class<V> clazz);
+	<V> List<V> zRevRangeByLex(final byte[] key, final double min, final double max, final int offset, final int count,
+							   final Class<V> clazz);
 
 	/**
 	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
@@ -2437,8 +2900,8 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
 	 */
-	<V> List<V> zRevRangeByLex(final String key, final double min, final double max, final int offset,
-							   final int count, final TypeReference<V> type);
+	<V> List<V> zRevRangeByLex(final String key, final double min, final double max, final int offset, final int count,
+							   final TypeReference<V> type);
 
 	/**
 	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
@@ -2463,8 +2926,8 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
 	 */
-	<V> List<V> zRevRangeByLex(final byte[] key, final double min, final double max, final int offset,
-							   final int count, final TypeReference<V> type);
+	<V> List<V> zRevRangeByLex(final byte[] key, final double min, final double max, final int offset, final int count,
+							   final TypeReference<V> type);
 
 	@Override
 	default List<String> zRevRangeByScore(final String key, final double min, final double max) {

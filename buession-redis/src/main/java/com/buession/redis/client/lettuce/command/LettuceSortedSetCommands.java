@@ -34,11 +34,13 @@ import com.buession.redis.core.Keyword;
 import com.buession.redis.core.MinMax;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
+import com.buession.redis.core.ZRangeType;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.SortedSetCommands;
 import com.buession.redis.core.command.args.ZAddArgument;
 import com.buession.redis.core.command.args.ZRangeArgument;
+import com.buession.redis.core.internal.convert.BinaryListStringListConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.KeyValueConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ScoredValueKeyValueConverter;
@@ -572,26 +574,52 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	public List<String> zRange(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
 		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrange(rawBinaryKey(key), start, end),
-				new ListConverter<>(SafeEncoder::encode));
+				new BinaryListStringListConverter());
 	}
 
 	@Override
 	public List<byte[]> zRange(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
-		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrange(rawKey(key), start, end), (v)->v);
+		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrange(rawKey(key), start, end));
 	}
 
 	@Override
-	public List<String> zRange(final String key, final long start, final long end, final ZRangeArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(argument);
+	public List<String> zRange(final String key, final long start, final long end, final ZRangeType type) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type);
+		return zRange(rawBinaryKey(key), start, end, type, new BinaryListStringListConverter(), args);
+	}
+
+	@Override
+	public List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeType type) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type);
+		return zRange(rawKey(key), start, end, type, (v)->v, args);
+	}
+
+	@Override
+	public List<String> zRange(final String key, final long start, final long end, final ZRangeType type,
+							   final boolean rev) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(rev ? "REV" : null);
+		return zRange(rawBinaryKey(key), start, end, type, new BinaryListStringListConverter(), args);
+	}
+
+	@Override
+	public List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeType type,
+							   final boolean rev) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(rev ? "REV" : null);
+		return zRange(rawKey(key), start, end, type, (v)->v, args);
+	}
+
+	@Override
+	public List<String> zRange(final String key, final long start, final long end, final boolean rev) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(rev ? "REV" : null);
 		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrange(rawBinaryKey(key), start, end),
-				new ListConverter<>(SafeEncoder::encode));
+				new BinaryListStringListConverter());
 	}
 
 	@Override
-	public List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(argument);
-		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrange(rawKey(key), start, end), (v)->v);
+	public List<byte[]> zRange(final byte[] key, final long start, final long end, final boolean rev) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(rev ? "REV" : null);
+		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrange(rawKey(key), start, end));
 	}
 
 	@Override
@@ -599,31 +627,63 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(Keyword.Common.LIMIT)
 				.add(offset, count);
 		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrange(rawBinaryKey(key), start, end),
-				new ListConverter<>(SafeEncoder::encode));
+				new BinaryListStringListConverter());
 	}
 
 	@Override
 	public List<byte[]> zRange(final byte[] key, final long start, final long end, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(Keyword.Common.LIMIT)
 				.add(offset, count);
-		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrange(rawKey(key), start, end), (v)->v);
+		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrange(rawKey(key), start, end));
 	}
 
 	@Override
-	public List<String> zRange(final String key, final long start, final long end, final ZRangeArgument argument,
+	public List<String> zRange(final String key, final long start, final long end, final ZRangeType type,
 							   final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(argument)
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(Keyword.Common.LIMIT)
+				.add(offset, count);
+		return zRange(rawBinaryKey(key), start, end, type, offset, count, new BinaryListStringListConverter(), args);
+	}
+
+	@Override
+	public List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeType type,
+							   final int offset, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(Keyword.Common.LIMIT)
+				.add(offset, count);
+		return zRange(rawKey(key), start, end, type, offset, count, (v)->v, args);
+	}
+
+	@Override
+	public List<String> zRange(final String key, final long start, final long end, final ZRangeType type,
+							   final boolean rev, final int offset, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(rev ? "REV" : null)
+				.add(Keyword.Common.LIMIT).add(offset, count);
+		return zRange(rawBinaryKey(key), start, end, type, offset, count, new BinaryListStringListConverter(), args);
+	}
+
+	@Override
+	public List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeType type,
+							   final boolean rev, final int offset, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(rev ? "REV" : null)
+				.add(Keyword.Common.LIMIT).add(offset, count);
+		return zRange(rawKey(key), start, end, type, offset, count, (v)->v, args);
+	}
+
+	@Override
+	public List<String> zRange(final String key, final long start, final long end, final boolean rev, final int offset,
+							   final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(rev ? "REV" : null)
 				.add(Keyword.Common.LIMIT).add(offset, count);
 		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrange(rawBinaryKey(key), start, end),
-				new ListConverter<>(SafeEncoder::encode));
+				new BinaryListStringListConverter());
 	}
 
 	@Override
-	public List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeArgument argument,
-							   final int offset, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(argument)
+	public List<byte[]> zRange(final byte[] key, final long start, final long end, final boolean rev, final int offset,
+							   final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(rev ? "REV" : null)
 				.add(Keyword.Common.LIMIT).add(offset, count);
-		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrange(rawKey(key), start, end), (v)->v);
+		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrange(rawKey(key), start, end));
 	}
 
 	@Override
@@ -641,16 +701,44 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	}
 
 	@Override
-	public List<Tuple> zRangeWithScores(final String key, final long start, final long end,
-										final ZRangeArgument argument) {
+	public List<Tuple> zRangeWithScores(final String key, final long start, final long end, final ZRangeType type) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(argument);
 		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrangeWithScores(rawBinaryKey(key), start, end),
 				new ListConverter<>(new ScoredValueTupleConverter()));
 	}
 
 	@Override
-	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end,
-										final ZRangeArgument argument) {
+	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final ZRangeType type) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(argument);
+		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrangeWithScores(rawKey(key), start, end),
+				new ListConverter<>(new ScoredValueTupleConverter()));
+	}
+
+	@Override
+	public List<Tuple> zRangeWithScores(final String key, final long start, final long end, final ZRangeType type,
+										final boolean rev) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(argument);
+		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrangeWithScores(rawBinaryKey(key), start, end),
+				new ListConverter<>(new ScoredValueTupleConverter()));
+	}
+
+	@Override
+	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final ZRangeType type,
+										final boolean rev) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(argument);
+		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrangeWithScores(rawKey(key), start, end),
+				new ListConverter<>(new ScoredValueTupleConverter()));
+	}
+
+	@Override
+	public List<Tuple> zRangeWithScores(final String key, final long start, final long end, final boolean rev) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(argument);
+		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrangeWithScores(rawBinaryKey(key), start, end),
+				new ListConverter<>(new ScoredValueTupleConverter()));
+	}
+
+	@Override
+	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final boolean rev) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(argument);
 		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrangeWithScores(rawKey(key), start, end),
 				new ListConverter<>(new ScoredValueTupleConverter()));
@@ -675,8 +763,8 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	}
 
 	@Override
-	public List<Tuple> zRangeWithScores(final String key, final long start, final long end,
-										final ZRangeArgument argument, final int offset, final int count) {
+	public List<Tuple> zRangeWithScores(final String key, final long start, final long end, final ZRangeType type,
+										final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(argument)
 				.add(Keyword.Common.LIMIT).add(offset, count);
 		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrangeWithScores(rawBinaryKey(key), start, end),
@@ -684,8 +772,44 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	}
 
 	@Override
-	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end,
-										final ZRangeArgument argument, final int offset, final int count) {
+	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final ZRangeType type,
+										final int offset, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(argument)
+				.add(Keyword.Common.LIMIT).add(offset, count);
+		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrangeWithScores(rawKey(key), start, end),
+				new ListConverter<>(new ScoredValueTupleConverter()));
+	}
+
+	@Override
+	public List<Tuple> zRangeWithScores(final String key, final long start, final long end, final ZRangeType type,
+										final boolean rev, final int offset, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(argument)
+				.add(Keyword.Common.LIMIT).add(offset, count);
+		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrangeWithScores(rawBinaryKey(key), start, end),
+				new ListConverter<>(new ScoredValueTupleConverter()));
+	}
+
+	@Override
+	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final ZRangeType type,
+										final boolean rev, final int offset, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(argument)
+				.add(Keyword.Common.LIMIT).add(offset, count);
+		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrangeWithScores(rawKey(key), start, end),
+				new ListConverter<>(new ScoredValueTupleConverter()));
+	}
+
+	@Override
+	public List<Tuple> zRangeWithScores(final String key, final long start, final long end, final boolean rev,
+										final int offset, final int count) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(argument)
+				.add(Keyword.Common.LIMIT).add(offset, count);
+		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrangeWithScores(rawBinaryKey(key), start, end),
+				new ListConverter<>(new ScoredValueTupleConverter()));
+	}
+
+	@Override
+	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final boolean rev,
+										final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(argument)
 				.add(Keyword.Common.LIMIT).add(offset, count);
 		return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrangeWithScores(rawKey(key), start, end),
@@ -1344,6 +1468,35 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 
 		return executeCommand(Command.ZADD, args,
 				(cmd)->cmd.zadd(rawKey(key), new LettuceZAddArgs(argument), scoredValues), (v)->v);
+	}
+
+	private <V> List<V> zRange(final byte[] key, final long start, final long end, final ZRangeType type,
+							   final Converter<List<byte[]>, List<V>> converter, final CommandArguments args) {
+		if(type == ZRangeType.BYLEX){
+			return executeCommand(Command.ZRANGE, args,
+					(cmd)->cmd.zrangebylex(key,
+							Range.create(NumberUtils.long2bytes(start), NumberUtils.long2bytes(end))), converter);
+		}else if(type == ZRangeType.BYSCORE){
+			return executeCommand(Command.ZRANGE, args,
+					(cmd)->cmd.zrangebyscore(key, Range.create(start, end)), converter);
+		}else{
+			return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrange(key, start, end), converter);
+		}
+	}
+
+	private <V> List<V> zRange(final byte[] key, final long start, final long end, final ZRangeType type,
+							   final int offset, final int count, final Converter<List<byte[]>, List<V>> converter,
+							   final CommandArguments args) {
+		if(type == ZRangeType.BYLEX){
+			return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrangebylex(key,
+					Range.create(NumberUtils.long2bytes(start), NumberUtils.long2bytes(end)),
+					Limit.create(offset, count)), converter);
+		}else if(type == ZRangeType.BYSCORE){
+			return executeCommand(Command.ZRANGE, args,
+					(cmd)->cmd.zrangebyscore(key, Range.create(start, end), Limit.create(offset, count)), converter);
+		}else{
+			return executeCommand(Command.ZRANGE, args, (cmd)->cmd.zrange(key, start, end), converter);
+		}
 	}
 
 	private Long zRangeStore(final String destKey, final String key, final long start, final long end,

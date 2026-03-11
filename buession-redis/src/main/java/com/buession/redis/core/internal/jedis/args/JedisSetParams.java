@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.internal.jedis.args;
 
+import com.buession.redis.core.NxXx;
 import com.buession.redis.core.command.args.SetArgument;
 import redis.clients.jedis.params.SetParams;
 
@@ -52,24 +53,20 @@ public final class JedisSetParams extends SetParams {
 		super();
 
 		if(setArgument != null){
-			if(setArgument.getNxXx() != null){
-				switch(setArgument.getNxXx()){
-					case NX -> nx();
-					case XX -> xx();
-				}
-			}
-
 			if(setArgument.getType() != null && setArgument.getExpires() != null){
 				switch(setArgument.getType()){
 					case EX -> ex(setArgument.getExpires());
 					case PX -> px(setArgument.getExpires());
 					case EXAT -> exAt(setArgument.getExpires());
 					case PXAT -> pxAt(setArgument.getExpires());
+					case KEEPTTL -> keepTtl();
 				}
 			}
 
-			if(Boolean.TRUE.equals(setArgument.getKeepTtl())){
-				keepTtl();
+			if(setArgument.getNxXx() == NxXx.NX){
+				nx();
+			}else if(setArgument.getNxXx() == NxXx.XX){
+				xx();
 			}
 		}
 	}

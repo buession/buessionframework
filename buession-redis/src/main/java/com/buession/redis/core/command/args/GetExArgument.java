@@ -41,7 +41,7 @@ import java.util.Date;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class GetExArgument {
+public class GetExArgument implements ExArgument<GetExArgument> {
 
 	/**
 	 * 过期时间类型
@@ -49,9 +49,9 @@ public class GetExArgument {
 	private GetExType type;
 
 	/**
-	 * 过期时间戳
+	 * 过期时间(戳)
 	 */
-	private Long value;
+	private Long expires;
 
 	/**
 	 * 构造函数
@@ -64,12 +64,12 @@ public class GetExArgument {
 	 *
 	 * @param type
 	 * 		过期时间类型
-	 * @param value
-	 * 		过期时间戳
+	 * @param expires
+	 * 		过期时间(戳)
 	 */
-	public GetExArgument(final GetExType type, final long value) {
+	public GetExArgument(final GetExType type, final long expires) {
 		this.type = type;
-		this.value = value;
+		this.expires = expires;
 	}
 
 	/**
@@ -95,24 +95,24 @@ public class GetExArgument {
 	}
 
 	/**
-	 * 获取设置的键过期时间戳
+	 * 获取设置的键过期时间(戳)
 	 *
-	 * @return 设置的键过期时间戳
+	 * @return 设置的键过期时间(戳)
 	 */
-	public Long getValue() {
-		return value;
+	public Long getExpires() {
+		return expires;
 	}
 
 	/**
 	 * 设置过期时间戳
 	 *
-	 * @param value
-	 * 		过期时间戳
+	 * @param expires
+	 * 		过期时间(戳)
 	 *
-	 * @return {@link GetExArgument}
+	 * @return {@link BaseSetExArgument}
 	 */
-	public GetExArgument setValue(long value) {
-		this.value = value;
+	public GetExArgument setExpires(long expires) {
+		this.expires = expires;
 		return this;
 	}
 
@@ -122,7 +122,7 @@ public class GetExArgument {
 	 * @param liftime
 	 * 		过期时间（单位：秒）
 	 *
-	 * @return Builder
+	 * @return {@link GetExArgument}
 	 */
 	public static GetExArgument ex(long liftime) {
 		return new GetExArgument(GetExType.EX, liftime);
@@ -132,22 +132,22 @@ public class GetExArgument {
 	 * 设置过期时间
 	 *
 	 * @param liftime
-	 * 		过期时间
+	 * 		过期时间（单位：秒）
 	 *
-	 * @return Builder
+	 * @return {@link GetExArgument}
 	 */
 	public static GetExArgument ex(Duration liftime) {
 		Assert.isNull(liftime, "Liftime must not be null");
-		return new GetExArgument(GetExType.EX, liftime.toSeconds());
+		return ex(liftime.toSeconds());
 	}
 
 	/**
 	 * 设置时间
 	 *
 	 * @param unixTime
-	 * 		时间，具体过期时间
+	 * 		时间，具体过期时间，秒时间戳
 	 *
-	 * @return Builder
+	 * @return {@link GetExArgument}
 	 */
 	public static GetExArgument exAt(long unixTime) {
 		return new GetExArgument(GetExType.EX, unixTime);
@@ -157,9 +157,9 @@ public class GetExArgument {
 	 * 设置时间
 	 *
 	 * @param date
-	 * 		时间，具体过期时间
+	 * 		时间，具体过期时间，秒时间戳
 	 *
-	 * @return Builder
+	 * @return {@link GetExArgument}
 	 */
 	public static GetExArgument exAt(Date date) {
 		Assert.isNull(date, "Timestamp must not be null");
@@ -170,9 +170,9 @@ public class GetExArgument {
 	 * 设置时间
 	 *
 	 * @param dateTime
-	 * 		时间，具体过期时间
+	 * 		时间，具体过期时间，秒时间戳
 	 *
-	 * @return Builder
+	 * @return {@link GetExArgument}
 	 */
 	public static GetExArgument exAt(LocalDateTime dateTime) {
 		Assert.isNull(dateTime, "Timestamp must not be null");
@@ -183,9 +183,9 @@ public class GetExArgument {
 	 * 设置时间
 	 *
 	 * @param dateTime
-	 * 		时间，具体过期时间
+	 * 		时间，具体过期时间，秒时间戳
 	 *
-	 * @return Builder
+	 * @return {@link GetExArgument}
 	 */
 	public static GetExArgument exAt(ZonedDateTime dateTime) {
 		Assert.isNull(dateTime, "Timestamp must not be null");
@@ -196,9 +196,9 @@ public class GetExArgument {
 	 * 设置时间
 	 *
 	 * @param instant
-	 * 		时间，具体过期时间
+	 * 		时间，具体过期时间，秒时间戳
 	 *
-	 * @return Builder
+	 * @return {@link GetExArgument}
 	 */
 	public static GetExArgument exAt(Instant instant) {
 		Assert.isNull(instant, "Timestamp must not be null");
@@ -211,7 +211,7 @@ public class GetExArgument {
 	 * @param liftime
 	 * 		过期时间（单位：毫秒）
 	 *
-	 * @return Builder
+	 * @return {@link GetExArgument}
 	 */
 	public static GetExArgument px(long liftime) {
 		return new GetExArgument(GetExType.PX, liftime);
@@ -223,7 +223,7 @@ public class GetExArgument {
 	 * @param liftime
 	 * 		过期时间（单位：毫秒）
 	 *
-	 * @return Builder
+	 * @return {@link GetExArgument}
 	 */
 	public static GetExArgument px(Duration liftime) {
 		Assert.isNull(liftime, "Liftime must not be null");
@@ -234,9 +234,9 @@ public class GetExArgument {
 	 * 设置时间
 	 *
 	 * @param unixTime
-	 * 		时间，具体过期时间
+	 * 		时间，具体过期时间，毫秒时间戳
 	 *
-	 * @return Builder
+	 * @return {@link GetExArgument}
 	 */
 	public static GetExArgument pxAt(long unixTime) {
 		return new GetExArgument(GetExType.PXAT, unixTime);
@@ -248,7 +248,7 @@ public class GetExArgument {
 	 * @param date
 	 * 		时间，具体过期时间，毫秒时间戳
 	 *
-	 * @return Builder
+	 * @return {@link GetExArgument}
 	 */
 	public static GetExArgument pxAt(Date date) {
 		return pxAt(date.getTime());
@@ -258,9 +258,9 @@ public class GetExArgument {
 	 * 设置时间
 	 *
 	 * @param dateTime
-	 * 		时间，具体过期时间
+	 * 		时间，具体过期时间，毫秒时间戳
 	 *
-	 * @return Builder
+	 * @return {@link GetExArgument}
 	 */
 	public static GetExArgument pxAt(LocalDateTime dateTime) {
 		Assert.isNull(dateTime, "Timestamp must not be null");
@@ -271,9 +271,9 @@ public class GetExArgument {
 	 * 设置时间
 	 *
 	 * @param dateTime
-	 * 		时间，具体过期时间
+	 * 		时间，具体过期时间，毫秒时间戳
 	 *
-	 * @return Builder
+	 * @return {@link GetExArgument}
 	 */
 	public static GetExArgument pxAt(ZonedDateTime dateTime) {
 		Assert.isNull(dateTime, "Timestamp must not be null");
@@ -284,9 +284,9 @@ public class GetExArgument {
 	 * 设置时间
 	 *
 	 * @param instant
-	 * 		时间，具体过期时间
+	 * 		时间，具体过期时间，毫秒时间戳
 	 *
-	 * @return Builder
+	 * @return {@link GetExArgument}
 	 */
 	public static GetExArgument pxAt(Instant instant) {
 		Assert.isNull(instant, "Timestamp must not be null");
@@ -304,7 +304,7 @@ public class GetExArgument {
 
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create().add(getType().name(), getType() == GetExType.PERSIST ? null : getValue())
+		return ArgStringBuilder.create().add(getType().name(), getType() == GetExType.PERSIST ? null : getExpires())
 				.build();
 	}
 

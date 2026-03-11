@@ -33,29 +33,28 @@ import com.buession.redis.core.Direction;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.NxXx;
 import com.buession.redis.core.ScanResult;
+import com.buession.redis.core.ZRangeType;
 import com.buession.redis.core.command.args.GetExArgument;
 import com.buession.redis.core.command.args.JsonGetArgument;
 import com.buession.redis.core.command.args.SetArgument;
-import com.buession.redis.core.command.args.ZRangeArgument;
 import com.buession.redis.core.operations.*;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Redis 命令操作封装扩展，可序列化对象和反序列化为对象
  *
  * @author Yong.Teng
  */
-public class RedisTemplate extends AbstractRedisTemplate implements AutoSuggestOperations, BitMapOperations,
-		BloomFilterOperations, ClusterOperations, ConnectionOperations, CountMinSketchOperations,
-		CuckooFilterOperations, GenericOperations, GeoOperations, HashOperations, HyperLogLogOperations,
-		JsonOperations, KeyOperations, ListOperations, PubSubOperations, ScriptingOperations, SearchOperations,
-		ServerOperations, SetOperations, SortedSetOperations, StreamOperations, StringOperations,
-		TDigestOperations, TimeSeriesOperations, TopKOperations, TransactionOperations, VectorSetOperations {
+public class RedisTemplate extends AbstractRedisTemplate
+		implements AutoSuggestOperations, BitMapOperations, BloomFilterOperations, ClusterOperations,
+		ConnectionOperations, CountMinSketchOperations, CuckooFilterOperations, GenericOperations, GeoOperations,
+		HashOperations, HyperLogLogOperations, JsonOperations, KeyOperations, ListOperations, PubSubOperations,
+		ScriptingOperations, SearchOperations, ServerOperations, SetOperations, SortedSetOperations, StreamOperations,
+		StringOperations, TDigestOperations, TimeSeriesOperations, TopKOperations, TransactionOperations,
+		VectorSetOperations {
 
 	/**
 	 * 构造函数
@@ -369,26 +368,22 @@ public class RedisTemplate extends AbstractRedisTemplate implements AutoSuggestO
 
 	@Override
 	public <V> List<V> hVals(final String key, final TypeReference<V> type) {
-		return execute((client)->client.hashCommands().hVals(key),
-				new Converter.TypeListStringConverter<>(this, type));
+		return execute((client)->client.hashCommands().hVals(key), new Converter.TypeListStringConverter<>(this, type));
 	}
 
 	@Override
 	public <V> List<V> hVals(final byte[] key, final TypeReference<V> type) {
-		return execute((client)->client.hashCommands().hVals(key),
-				new Converter.TypeListBinaryConverter<>(this, type));
+		return execute((client)->client.hashCommands().hVals(key), new Converter.TypeListBinaryConverter<>(this, type));
 	}
 
 	@Override
 	public <V> V jsonGet(final String key, final Class<V> clazz) {
-		return execute((client)->client.jsonCommands().jsonGet(key),
-				new Converter.ClazzStringConverter<>(this, clazz));
+		return execute((client)->client.jsonCommands().jsonGet(key), new Converter.ClazzStringConverter<>(this, clazz));
 	}
 
 	@Override
 	public <V> V jsonGet(final byte[] key, final Class<V> clazz) {
-		return execute((client)->client.jsonCommands().jsonGet(key),
-				new Converter.ClazzBinaryConverter<>(this, clazz));
+		return execute((client)->client.jsonCommands().jsonGet(key), new Converter.ClazzBinaryConverter<>(this, clazz));
 	}
 
 	@Override
@@ -415,14 +410,14 @@ public class RedisTemplate extends AbstractRedisTemplate implements AutoSuggestO
 
 	@Override
 	public <V> V jsonGet(final String key, final JsonGetArgument argument, final TypeReference<V> type) {
-		return execute((client)->client.jsonCommands().jsonGet(key, argument), new Converter.TypeStringConverter<>(this,
-				type));
+		return execute((client)->client.jsonCommands().jsonGet(key, argument),
+				new Converter.TypeStringConverter<>(this, type));
 	}
 
 	@Override
 	public <V> V jsonGet(final byte[] key, final JsonGetArgument argument, final TypeReference<V> type) {
-		return execute((client)->client.jsonCommands().jsonGet(key, argument), new Converter.TypeBinaryConverter<>(this,
-				type));
+		return execute((client)->client.jsonCommands().jsonGet(key, argument),
+				new Converter.TypeBinaryConverter<>(this, type));
 	}
 
 	@Override
@@ -935,14 +930,12 @@ public class RedisTemplate extends AbstractRedisTemplate implements AutoSuggestO
 
 	@Override
 	public <V> Set<V> sDiff(final String[] keys, final TypeReference<V> type) {
-		return execute((client)->client.setCommands().sDiff(keys),
-				new Converter.TypeSetStringConverter<>(this, type));
+		return execute((client)->client.setCommands().sDiff(keys), new Converter.TypeSetStringConverter<>(this, type));
 	}
 
 	@Override
 	public <V> Set<V> sDiff(final byte[][] keys, final TypeReference<V> type) {
-		return execute((client)->client.setCommands().sDiff(keys),
-				new Converter.TypeSetBinaryConverter<>(this, type));
+		return execute((client)->client.setCommands().sDiff(keys), new Converter.TypeSetBinaryConverter<>(this, type));
 	}
 
 	@Override
@@ -959,14 +952,12 @@ public class RedisTemplate extends AbstractRedisTemplate implements AutoSuggestO
 
 	@Override
 	public <V> Set<V> sInter(final String[] keys, final TypeReference<V> type) {
-		return execute((client)->client.setCommands().sInter(keys),
-				new Converter.TypeSetStringConverter<>(this, type));
+		return execute((client)->client.setCommands().sInter(keys), new Converter.TypeSetStringConverter<>(this, type));
 	}
 
 	@Override
 	public <V> Set<V> sInter(final byte[][] keys, final TypeReference<V> type) {
-		return execute((client)->client.setCommands().sInter(keys),
-				new Converter.TypeSetBinaryConverter<>(this, type));
+		return execute((client)->client.setCommands().sInter(keys), new Converter.TypeSetBinaryConverter<>(this, type));
 	}
 
 	@Override
@@ -1176,29 +1167,29 @@ public class RedisTemplate extends AbstractRedisTemplate implements AutoSuggestO
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScan(final String key, final String cursor, final String pattern,
-										 final int count, final Class<V> clazz) {
+	public <V> ScanResult<List<V>> sScan(final String key, final String cursor, final String pattern, final int count,
+										 final Class<V> clazz) {
 		return execute((client)->client.setCommands().sScan(key, cursor, pattern, count),
 				new Converter.ClazzScanResultListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-										 final int count, final Class<V> clazz) {
+	public <V> ScanResult<List<V>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count,
+										 final Class<V> clazz) {
 		return execute((client)->client.setCommands().sScan(key, cursor, pattern, count),
 				new Converter.ClazzScanResultListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScan(final String key, final String cursor, final String pattern,
-										 final int count, final TypeReference<V> type) {
+	public <V> ScanResult<List<V>> sScan(final String key, final String cursor, final String pattern, final int count,
+										 final TypeReference<V> type) {
 		return execute((client)->client.setCommands().sScan(key, cursor, pattern, count),
 				new Converter.TypeScanResultListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-										 final int count, final TypeReference<V> type) {
+	public <V> ScanResult<List<V>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count,
+										 final TypeReference<V> type) {
 		return execute((client)->client.setCommands().sScan(key, cursor, pattern, count),
 				new Converter.TypeScanResultListBinaryConverter<>(this, type));
 	}
@@ -1217,14 +1208,12 @@ public class RedisTemplate extends AbstractRedisTemplate implements AutoSuggestO
 
 	@Override
 	public <V> Set<V> sUnion(final String[] keys, final TypeReference<V> type) {
-		return execute((client)->client.setCommands().sUnion(keys),
-				new Converter.TypeSetStringConverter<>(this, type));
+		return execute((client)->client.setCommands().sUnion(keys), new Converter.TypeSetStringConverter<>(this, type));
 	}
 
 	@Override
 	public <V> Set<V> sUnion(final byte[][] keys, final TypeReference<V> type) {
-		return execute((client)->client.setCommands().sUnion(keys),
-				new Converter.TypeSetBinaryConverter<>(this, type));
+		return execute((client)->client.setCommands().sUnion(keys), new Converter.TypeSetBinaryConverter<>(this, type));
 	}
 
 	@Override
@@ -1424,86 +1413,170 @@ public class RedisTemplate extends AbstractRedisTemplate implements AutoSuggestO
 	}
 
 	@Override
-	public <V> List<V> zRange(final String key, final long start, final long end, final ZRangeArgument argument,
+	public <V> List<V> zRange(final String key, final long start, final long end, final ZRangeType type,
 							  final Class<V> clazz) {
-		return execute((client)->client.sortedSetCommands().zRange(key, start, end, argument),
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, type),
 				new Converter.ClazzListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> List<V> zRange(final byte[] key, final long start, final long end, final ZRangeArgument argument,
+	public <V> List<V> zRange(final byte[] key, final long start, final long end, final ZRangeType type,
 							  final Class<V> clazz) {
-		return execute((client)->client.sortedSetCommands().zRange(key, start, end, argument),
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, type),
 				new Converter.ClazzListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> List<V> zRange(final String key, final long start, final long end, final ZRangeArgument argument,
+	public <V> List<V> zRange(final String key, final long start, final long end, final ZRangeType zRangeType,
 							  final TypeReference<V> type) {
-		return execute((client)->client.sortedSetCommands().zRange(key, start, end, argument),
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, zRangeType),
 				new Converter.TypeListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> List<V> zRange(final byte[] key, final long start, final long end, final ZRangeArgument argument,
+	public <V> List<V> zRange(final byte[] key, final long start, final long end, final ZRangeType zRangeType,
 							  final TypeReference<V> type) {
-		return execute((client)->client.sortedSetCommands().zRange(key, start, end, argument),
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, zRangeType),
 				new Converter.TypeListBinaryConverter<>(this, type));
 	}
 
 	@Override
-	public <V> List<V> zRange(final String key, final long start, final long end, final int offset,
-							  final int count, final Class<V> clazz) {
+	public <V> List<V> zRange(final String key, final long start, final long end, final ZRangeType type,
+							  final boolean rev, final Class<V> clazz) {
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, type, rev),
+				new Converter.ClazzListStringConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> List<V> zRange(final byte[] key, final long start, final long end, final ZRangeType type,
+							  final boolean rev, final Class<V> clazz) {
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, type, rev),
+				new Converter.ClazzListBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> List<V> zRange(final String key, final long start, final long end, final ZRangeType zRangeType,
+							  final boolean rev, final TypeReference<V> type) {
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, zRangeType, rev),
+				new Converter.TypeListStringConverter<>(this, type));
+	}
+
+	@Override
+	public <V> List<V> zRange(final byte[] key, final long start, final long end, final ZRangeType zRangeType,
+							  final boolean rev, final TypeReference<V> type) {
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, zRangeType, rev),
+				new Converter.TypeListBinaryConverter<>(this, type));
+	}
+
+	@Override
+	public <V> List<V> zRange(final String key, final long start, final long end, final int offset, final int count,
+							  final Class<V> clazz) {
 		return execute((client)->client.sortedSetCommands().zRange(key, start, end, offset, count),
 				new Converter.ClazzListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> List<V> zRange(final byte[] key, final long start, final long end, final int offset,
-							  final int count, final Class<V> clazz) {
+	public <V> List<V> zRange(final byte[] key, final long start, final long end, final int offset, final int count,
+							  final Class<V> clazz) {
 		return execute((client)->client.sortedSetCommands().zRange(key, start, end, offset, count),
 				new Converter.ClazzListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> List<V> zRange(final String key, final long start, final long end, final int offset,
-							  final int count, final TypeReference<V> type) {
+	public <V> List<V> zRange(final String key, final long start, final long end, final int offset, final int count,
+							  final TypeReference<V> type) {
 		return execute((client)->client.sortedSetCommands().zRange(key, start, end, offset, count),
 				new Converter.TypeListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> List<V> zRange(final byte[] key, final long start, final long end, final int offset,
-							  final int count, final TypeReference<V> type) {
+	public <V> List<V> zRange(final byte[] key, final long start, final long end, final int offset, final int count,
+							  final TypeReference<V> type) {
 		return execute((client)->client.sortedSetCommands().zRange(key, start, end, offset, count),
 				new Converter.TypeListBinaryConverter<>(this, type));
 	}
 
 	@Override
-	public <V> List<V> zRange(final String key, final long start, final long end, final ZRangeArgument argument,
+	public <V> List<V> zRange(final String key, final long start, final long end, final ZRangeType type,
 							  final int offset, final int count, final Class<V> clazz) {
-		return execute((client)->client.sortedSetCommands().zRange(key, start, end, argument, offset, count),
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, type, offset, count),
 				new Converter.ClazzListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> List<V> zRange(final byte[] key, final long start, final long end, final ZRangeArgument argument,
+	public <V> List<V> zRange(final byte[] key, final long start, final long end, final ZRangeType type,
 							  final int offset, final int count, final Class<V> clazz) {
-		return execute((client)->client.sortedSetCommands().zRange(key, start, end, argument, offset, count),
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, type, offset, count),
 				new Converter.ClazzListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> List<V> zRange(final String key, final long start, final long end, final ZRangeArgument argument,
+	public <V> List<V> zRange(final String key, final long start, final long end, final ZRangeType zRangeType,
 							  final int offset, final int count, final TypeReference<V> type) {
-		return execute((client)->client.sortedSetCommands().zRange(key, start, end, argument, offset, count),
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, zRangeType, offset, count),
 				new Converter.TypeListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> List<V> zRange(final byte[] key, final long start, final long end, final ZRangeArgument argument,
+	public <V> List<V> zRange(final byte[] key, final long start, final long end, final ZRangeType zRangeType,
 							  final int offset, final int count, final TypeReference<V> type) {
-		return execute((client)->client.sortedSetCommands().zRange(key, start, end, argument, offset, count),
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, zRangeType, offset, count),
+				new Converter.TypeListBinaryConverter<>(this, type));
+	}
+
+	@Override
+	public <V> List<V> zRange(final String key, final long start, final long end, final ZRangeType type,
+							  final boolean rev, final int offset, final int count, final Class<V> clazz) {
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, type, rev, offset, count),
+				new Converter.ClazzListStringConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> List<V> zRange(final byte[] key, final long start, final long end, final ZRangeType type,
+							  final boolean rev, final int offset, final int count, final Class<V> clazz) {
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, type, rev, offset, count),
+				new Converter.ClazzListBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> List<V> zRange(final String key, final long start, final long end, final ZRangeType zRangeType,
+							  final boolean rev, final int offset, final int count, final TypeReference<V> type) {
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, zRangeType, rev, offset, count),
+				new Converter.TypeListStringConverter<>(this, type));
+	}
+
+	@Override
+	public <V> List<V> zRange(final byte[] key, final long start, final long end, final ZRangeType zRangeType,
+							  final boolean rev, final int offset, final int count, final TypeReference<V> type) {
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, zRangeType, rev, offset, count),
+				new Converter.TypeListBinaryConverter<>(this, type));
+	}
+
+	@Override
+	public <V> List<V> zRange(final String key, final long start, final long end, final boolean rev, final int offset,
+							  final int count, final Class<V> clazz) {
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, rev, offset, count),
+				new Converter.ClazzListStringConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> List<V> zRange(final byte[] key, final long start, final long end, final boolean rev, final int offset,
+							  final int count, final Class<V> clazz) {
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, rev, offset, count),
+				new Converter.ClazzListBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> List<V> zRange(final String key, final long start, final long end, final boolean rev, final int offset,
+							  final int count, final TypeReference<V> type) {
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, rev, offset, count),
+				new Converter.TypeListStringConverter<>(this, type));
+	}
+
+	@Override
+	public <V> List<V> zRange(final byte[] key, final long start, final long end, final boolean rev, final int offset,
+							  final int count, final TypeReference<V> type) {
+		return execute((client)->client.sortedSetCommands().zRange(key, start, end, rev, offset, count),
 				new Converter.TypeListBinaryConverter<>(this, type));
 	}
 
@@ -1638,15 +1711,13 @@ public class RedisTemplate extends AbstractRedisTemplate implements AutoSuggestO
 	}
 
 	@Override
-	public <V> List<V> zRevRangeByLex(final String key, final double min, final double max,
-									  final Class<V> clazz) {
+	public <V> List<V> zRevRangeByLex(final String key, final double min, final double max, final Class<V> clazz) {
 		return execute((client)->client.sortedSetCommands().zRevRangeByLex(key, min, max),
 				new Converter.ClazzListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> List<V> zRevRangeByLex(final byte[] key, final double min, final double max,
-									  final Class<V> clazz) {
+	public <V> List<V> zRevRangeByLex(final byte[] key, final double min, final double max, final Class<V> clazz) {
 		return execute((client)->client.sortedSetCommands().zRevRangeByLex(key, min, max),
 				new Converter.ClazzListBinaryConverter<>(this, clazz));
 	}
@@ -1881,14 +1952,12 @@ public class RedisTemplate extends AbstractRedisTemplate implements AutoSuggestO
 
 	@Override
 	public <V> V getDel(final String key, final TypeReference<V> type) {
-		return execute((client)->client.stringCommands().getDel(key),
-				new Converter.TypeStringConverter<>(this, type));
+		return execute((client)->client.stringCommands().getDel(key), new Converter.TypeStringConverter<>(this, type));
 	}
 
 	@Override
 	public <V> V getDel(final byte[] key, final TypeReference<V> type) {
-		return execute((client)->client.stringCommands().getDel(key),
-				new Converter.TypeBinaryConverter<>(this, type));
+		return execute((client)->client.stringCommands().getDel(key), new Converter.TypeBinaryConverter<>(this, type));
 	}
 
 	@Override

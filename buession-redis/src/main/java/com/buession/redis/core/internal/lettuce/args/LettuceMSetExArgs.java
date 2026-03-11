@@ -56,12 +56,12 @@ public final class LettuceMSetExArgs extends MSetExArgs {
 		super();
 
 		if(mSetExArgument != null){
-			if(mSetExArgument.getType() == null && mSetExArgument.getValue() != null){
+			if(mSetExArgument.getType() == null && mSetExArgument.getExpires() != null){
 				switch(mSetExArgument.getType()){
-					case EX -> ex(Duration.ofSeconds(mSetExArgument.getValue()));
-					case EXAT -> exAt(Instant.ofEpochSecond(mSetExArgument.getValue()));
-					case PX -> px(Duration.ofMillis(mSetExArgument.getValue()));
-					case PXAT -> pxAt(Instant.ofEpochMilli(mSetExArgument.getValue()));
+					case EX -> ex(Duration.ofSeconds(mSetExArgument.getExpires()));
+					case EXAT -> exAt(Instant.ofEpochSecond(mSetExArgument.getExpires()));
+					case PX -> px(Duration.ofMillis(mSetExArgument.getExpires()));
+					case PXAT -> pxAt(Instant.ofEpochMilli(mSetExArgument.getExpires()));
 					case KEEPTTL -> keepttl();
 				}
 			}

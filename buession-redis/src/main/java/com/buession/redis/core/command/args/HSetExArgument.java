@@ -24,9 +24,16 @@
  */
 package com.buession.redis.core.command.args;
 
+import com.buession.core.utils.Assert;
 import com.buession.redis.core.Keyword;
+import com.buession.redis.core.SetExType;
 import com.buession.redis.utils.ArgStringBuilder;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 /**
@@ -35,7 +42,7 @@ import java.util.Date;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class HSetExArgument extends BaseSetExArgument {
+public class HSetExArgument extends BaseSetExArgument<HSetExArgument> {
 
 	private FnxFxx fnxFxx;
 
@@ -62,7 +69,7 @@ public class HSetExArgument extends BaseSetExArgument {
 	 * @param type
 	 * 		过期时间类型
 	 * @param value
-	 * 		过期时间戳
+	 * 		过期时间(戳)
 	 */
 	public HSetExArgument(final SetExType type, final long value) {
 		super(type, value);
@@ -71,14 +78,14 @@ public class HSetExArgument extends BaseSetExArgument {
 	/**
 	 * 构造函数
 	 *
+	 * @param fnxFxx
+	 * 		-
 	 * @param type
 	 * 		过期时间类型
 	 * @param value
-	 * 		过期时间戳
-	 * @param fnxFxx
-	 * 		-
+	 * 		过期时间(戳)
 	 */
-	public HSetExArgument(final SetExType type, final long value, final FnxFxx fnxFxx) {
+	public HSetExArgument(final FnxFxx fnxFxx, final SetExType type, final long value) {
 		super(type, value);
 		this.fnxFxx = fnxFxx;
 	}
@@ -93,22 +100,10 @@ public class HSetExArgument extends BaseSetExArgument {
 	}
 
 	/**
-	 * -
-	 *
-	 * @param fnxFxx
-	 * 		时间
-	 *
-	 * @return {@link HSetExArgument}
-	 */
-	public static HSetExArgument fnxFxx(FnxFxx fnxFxx) {
-		return new HSetExArgument(fnxFxx);
-	}
-
-	/**
 	 * 设置时间
 	 *
 	 * @param liftime
-	 * 		时间
+	 * 		过期时间（单位：秒）
 	 *
 	 * @return {@link HSetExArgument}
 	 */
@@ -119,8 +114,21 @@ public class HSetExArgument extends BaseSetExArgument {
 	/**
 	 * 设置时间
 	 *
+	 * @param liftime
+	 * 		过期时间（单位：秒）
+	 *
+	 * @return {@link HSetExArgument}
+	 */
+	public static HSetExArgument ex(Duration liftime) {
+		Assert.isNull(liftime, "Liftime argument can't be null.");
+		return ex(liftime.toSeconds());
+	}
+
+	/**
+	 * 设置时间
+	 *
 	 * @param unixTime
-	 * 		时间，具体过期时间
+	 * 		时间，具体过期时间，秒时间戳
 	 *
 	 * @return {@link HSetExArgument}
 	 */
@@ -132,19 +140,59 @@ public class HSetExArgument extends BaseSetExArgument {
 	 * 设置时间
 	 *
 	 * @param date
-	 * 		时间，具体过期时间
+	 * 		时间，具体过期时间，秒时间戳
 	 *
 	 * @return {@link HSetExArgument}
 	 */
 	public static HSetExArgument exAt(Date date) {
+		Assert.isNull(date, "Timestamp must not be null");
 		return exAt(date.getTime() / 1000);
 	}
 
 	/**
 	 * 设置时间
 	 *
+	 * @param dateTime
+	 * 		时间，具体过期时间，秒时间戳
+	 *
+	 * @return {@link HSetExArgument}
+	 */
+	public static HSetExArgument exAt(LocalDateTime dateTime) {
+		Assert.isNull(dateTime, "Timestamp must not be null");
+		return exAt(dateTime.atZone(ZoneId.systemDefault()).toInstant());
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param dateTime
+	 * 		时间，具体过期时间，秒时间戳
+	 *
+	 * @return {@link HSetExArgument}
+	 */
+	public static HSetExArgument exAt(ZonedDateTime dateTime) {
+		Assert.isNull(dateTime, "Timestamp must not be null");
+		return exAt(dateTime.toEpochSecond());
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param instant
+	 * 		时间，具体过期时间，秒时间戳
+	 *
+	 * @return {@link HSetExArgument}
+	 */
+	public static HSetExArgument exAt(Instant instant) {
+		Assert.isNull(instant, "Timestamp must not be null");
+		return exAt(instant.toEpochMilli() / 1000);
+	}
+
+	/**
+	 * 设置时间
+	 *
 	 * @param liftime
-	 * 		时间
+	 * 		过期时间（单位：毫秒）
 	 *
 	 * @return {@link HSetExArgument}
 	 */
@@ -155,8 +203,21 @@ public class HSetExArgument extends BaseSetExArgument {
 	/**
 	 * 设置时间
 	 *
+	 * @param liftime
+	 * 		过期时间（单位：毫秒）
+	 *
+	 * @return {@link HSetExArgument}
+	 */
+	public static HSetExArgument px(Duration liftime) {
+		Assert.isNull(liftime, "Liftime argument can't be null.");
+		return px(liftime.toMillis());
+	}
+
+	/**
+	 * 设置时间
+	 *
 	 * @param unixTime
-	 * 		时间，具体过期时间
+	 * 		时间，具体过期时间，毫秒时间戳
 	 *
 	 * @return {@link HSetExArgument}
 	 */
@@ -173,7 +234,47 @@ public class HSetExArgument extends BaseSetExArgument {
 	 * @return {@link HSetExArgument}
 	 */
 	public static HSetExArgument pxAt(Date date) {
+		Assert.isNull(date, "Timestamp must not be null");
 		return pxAt(date.getTime());
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param dateTime
+	 * 		时间，具体过期时间，毫秒时间戳
+	 *
+	 * @return {@link HSetExArgument}
+	 */
+	public static HSetExArgument pxAt(LocalDateTime dateTime) {
+		Assert.isNull(dateTime, "Timestamp must not be null");
+		return pxAt(dateTime.atZone(ZoneId.systemDefault()).toInstant());
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param dateTime
+	 * 		时间，具体过期时间，毫秒时间戳
+	 *
+	 * @return {@link HSetExArgument}
+	 */
+	public static HSetExArgument pxAt(ZonedDateTime dateTime) {
+		Assert.isNull(dateTime, "Timestamp must not be null");
+		return pxAt(dateTime.toEpochSecond());
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param instant
+	 * 		时间，具体过期时间，毫秒时间戳
+	 *
+	 * @return {@link HSetExArgument}
+	 */
+	public static HSetExArgument pxAt(Instant instant) {
+		Assert.isNull(instant, "Timestamp must not be null");
+		return exAt(instant.toEpochMilli());
 	}
 
 	/**
@@ -185,12 +286,228 @@ public class HSetExArgument extends BaseSetExArgument {
 		return new HSetExArgument(SetExType.KEEPTTL, 0);
 	}
 
+	/**
+	 * 设置时间
+	 *
+	 * @param fnxFxx
+	 *        {@link FnxFxx}
+	 * @param liftime
+	 * 		过期时间（单位：秒）
+	 *
+	 * @return {@link HSetExArgument}
+	 */
+	public static HSetExArgument ex(FnxFxx fnxFxx, long liftime) {
+		return new HSetExArgument(fnxFxx, SetExType.EX, liftime);
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param fnxFxx
+	 *        {@link FnxFxx}
+	 * @param liftime
+	 * 		过期时间（单位：秒）
+	 *
+	 * @return {@link HSetExArgument}
+	 */
+	public static HSetExArgument ex(FnxFxx fnxFxx, Duration liftime) {
+		Assert.isNull(liftime, "Liftime argument can't be null.");
+		return ex(fnxFxx, liftime.toSeconds());
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param fnxFxx
+	 *        {@link FnxFxx}
+	 * @param unixTime
+	 * 		时间，具体过期时间，秒时间戳
+	 *
+	 * @return {@link HSetExArgument}
+	 */
+	public static HSetExArgument exAt(FnxFxx fnxFxx, long unixTime) {
+		return new HSetExArgument(fnxFxx, SetExType.EX, unixTime);
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param fnxFxx
+	 *        {@link FnxFxx}
+	 * @param date
+	 * 		时间，具体过期时间，秒时间戳
+	 *
+	 * @return {@link HSetExArgument}
+	 */
+	public static HSetExArgument exAt(FnxFxx fnxFxx, Date date) {
+		Assert.isNull(date, "Timestamp must not be null");
+		return exAt(fnxFxx, date.getTime() / 1000);
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param fnxFxx
+	 *        {@link FnxFxx}
+	 * @param dateTime
+	 * 		时间，具体过期时间，秒时间戳
+	 *
+	 * @return {@link HSetExArgument}
+	 */
+	public static HSetExArgument exAt(FnxFxx fnxFxx, LocalDateTime dateTime) {
+		Assert.isNull(dateTime, "Timestamp must not be null");
+		return exAt(fnxFxx, dateTime.atZone(ZoneId.systemDefault()).toInstant());
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param fnxFxx
+	 *        {@link FnxFxx}
+	 * @param dateTime
+	 * 		时间，具体过期时间，秒时间戳
+	 *
+	 * @return {@link HSetExArgument}
+	 */
+	public static HSetExArgument exAt(FnxFxx fnxFxx, ZonedDateTime dateTime) {
+		Assert.isNull(dateTime, "Timestamp must not be null");
+		return exAt(fnxFxx, dateTime.toEpochSecond());
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param fnxFxx
+	 *        {@link FnxFxx}
+	 * @param instant
+	 * 		时间，具体过期时间，秒时间戳
+	 *
+	 * @return {@link HSetExArgument}
+	 */
+	public static HSetExArgument exAt(FnxFxx fnxFxx, Instant instant) {
+		Assert.isNull(instant, "Timestamp must not be null");
+		return exAt(fnxFxx, instant.toEpochMilli() / 1000);
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param fnxFxx
+	 *        {@link FnxFxx}
+	 * @param liftime
+	 * 		过期时间（单位：毫秒）
+	 *
+	 * @return {@link HSetExArgument}
+	 */
+	public static HSetExArgument px(FnxFxx fnxFxx, long liftime) {
+		return new HSetExArgument(fnxFxx, SetExType.PX, liftime);
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param fnxFxx
+	 *        {@link FnxFxx}
+	 * @param liftime
+	 * 		过期时间（单位：毫秒）
+	 *
+	 * @return {@link HSetExArgument}
+	 */
+	public static HSetExArgument px(FnxFxx fnxFxx, Duration liftime) {
+		Assert.isNull(liftime, "Liftime argument can't be null.");
+		return px(fnxFxx, liftime.toMillis());
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param fnxFxx
+	 *        {@link FnxFxx}
+	 * @param unixTime
+	 * 		时间，具体过期时间，毫秒时间戳
+	 *
+	 * @return {@link HSetExArgument}
+	 */
+	public static HSetExArgument pxAt(FnxFxx fnxFxx, long unixTime) {
+		return new HSetExArgument(fnxFxx, SetExType.PXAT, unixTime);
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param fnxFxx
+	 *        {@link FnxFxx}
+	 * @param date
+	 * 		时间，具体过期时间，毫秒时间戳
+	 *
+	 * @return {@link HSetExArgument}
+	 */
+	public static HSetExArgument pxAt(FnxFxx fnxFxx, Date date) {
+		Assert.isNull(date, "Timestamp must not be null");
+		return pxAt(fnxFxx, date.getTime());
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param fnxFxx
+	 *        {@link FnxFxx}
+	 * @param dateTime
+	 * 		时间，具体过期时间，毫秒时间戳
+	 *
+	 * @return {@link HSetExArgument}
+	 */
+	public static HSetExArgument pxAt(FnxFxx fnxFxx, LocalDateTime dateTime) {
+		Assert.isNull(dateTime, "Timestamp must not be null");
+		return pxAt(fnxFxx, dateTime.atZone(ZoneId.systemDefault()).toInstant());
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param fnxFxx
+	 *        {@link FnxFxx}
+	 * @param dateTime
+	 * 		时间，具体过期时间，毫秒时间戳
+	 *
+	 * @return {@link HSetExArgument}
+	 */
+	public static HSetExArgument pxAt(FnxFxx fnxFxx, ZonedDateTime dateTime) {
+		Assert.isNull(dateTime, "Timestamp must not be null");
+		return pxAt(fnxFxx, dateTime.toEpochSecond());
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param fnxFxx
+	 *        {@link FnxFxx}
+	 * @param instant
+	 * 		时间，具体过期时间，毫秒时间戳
+	 *
+	 * @return {@link HSetExArgument}
+	 */
+	public static HSetExArgument pxAt(FnxFxx fnxFxx, Instant instant) {
+		Assert.isNull(instant, "Timestamp must not be null");
+		return exAt(fnxFxx, instant.toEpochMilli());
+	}
+
+	/**
+	 * 设置键是否持久化
+	 *
+	 * @param fnxFxx
+	 *        {@link FnxFxx}
+	 *
+	 * @return {@link HSetExArgument}
+	 */
+	public static HSetExArgument keepttl(FnxFxx fnxFxx) {
+		return new HSetExArgument(fnxFxx, SetExType.KEEPTTL, 0);
+	}
+
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create()
-				.append(getFnxFxx())
-				.add(getType().name(), getType() == SetExType.KEEPTTL ? null : getValue())
-				.build();
+		return ArgStringBuilder.create().append(getFnxFxx())
+				.add(getType().name(), getType() == SetExType.KEEPTTL ? null : getExpires()).build();
 	}
 
 	public enum FnxFxx implements Keyword {

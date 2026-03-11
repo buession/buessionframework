@@ -74,7 +74,6 @@ public record TrackingInfo(Set<TrackingFlag> flags, long redirect, List<String> 
 		 */
 		BROKEN_REDIRECT;
 
-
 		@Override
 		public String getValue() {
 			return name();

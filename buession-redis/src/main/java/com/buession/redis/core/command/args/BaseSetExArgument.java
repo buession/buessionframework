@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.command.args;
 
-import com.buession.redis.core.Keyword;
+import com.buession.redis.core.SetExType;
 import com.buession.redis.utils.ObjectStringBuilder;
 
 /**
@@ -33,7 +33,7 @@ import com.buession.redis.utils.ObjectStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-abstract class BaseSetExArgument {
+abstract class BaseSetExArgument<T> implements ExArgument<T> {
 
 	/**
 	 * 过期时间类型
@@ -41,9 +41,9 @@ abstract class BaseSetExArgument {
 	private SetExType type;
 
 	/**
-	 * 过期时间戳
+	 * 过期时间(戳)
 	 */
-	private Long value;
+	private Long expires;
 
 	/**
 	 * 构造函数
@@ -56,12 +56,12 @@ abstract class BaseSetExArgument {
 	 *
 	 * @param type
 	 * 		过期时间类型
-	 * @param value
-	 * 		过期时间戳
+	 * @param expires
+	 * 		过期时间(戳)
 	 */
-	public BaseSetExArgument(final SetExType type, final long value) {
+	public BaseSetExArgument(final SetExType type, final long expires) {
 		this.type = type;
-		this.value = value;
+		this.expires = expires;
 	}
 
 	/**
@@ -81,63 +81,37 @@ abstract class BaseSetExArgument {
 	 *
 	 * @return {@link BaseSetExArgument}
 	 */
-	public BaseSetExArgument setType(SetExType type) {
+	public BaseSetExArgument<T> setType(SetExType type) {
 		this.type = type;
 		return this;
 	}
 
 	/**
-	 * 获取设置的键过期时间戳
+	 * 获取设置的键过期时间(戳)
 	 *
-	 * @return 设置的键过期时间戳
+	 * @return 设置的键过期时间(戳)
 	 */
-	public Long getValue() {
-		return value;
+	public Long getExpires() {
+		return expires;
 	}
 
 	/**
 	 * 设置过期时间戳
 	 *
-	 * @param value
-	 * 		过期时间戳
+	 * @param expires
+	 * 		过期时间(戳)
 	 *
 	 * @return {@link BaseSetExArgument}
 	 */
-	public BaseSetExArgument setValue(long value) {
-		this.value = value;
+	public BaseSetExArgument<T> setExpires(long expires) {
+		this.expires = expires;
 		return this;
 	}
 
 	@Override
 	public String toString() {
-		return ObjectStringBuilder.create().add(type.name(), type == SetExType.KEEPTTL ? null : value)
+		return ObjectStringBuilder.create().add(getType().name(), getType() == SetExType.KEEPTTL ? null : getExpires())
 				.build();
-	}
-
-	/**
-	 * 过期时间类型
-	 */
-	public enum SetExType implements Keyword {
-		EX,
-
-		EXAT,
-
-		PX,
-
-		PXAT,
-
-		KEEPTTL;
-
-		@Override
-		public String getValue() {
-			return name();
-		}
-
-		@Override
-		public String toString() {
-			return getValue();
-		}
-
 	}
 
 }

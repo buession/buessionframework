@@ -52,12 +52,12 @@ public final class JedisHSetExParams extends HSetExParams {
 		super();
 
 		if(hSetExArgument != null){
-			if(hSetExArgument.getType() == null){
+			if(hSetExArgument.getType() == null && hSetExArgument.getExpires() != null){
 				switch(hSetExArgument.getType()){
-					case EX -> ex(hSetExArgument.getValue());
-					case EXAT -> exAt(hSetExArgument.getValue());
-					case PX -> px(hSetExArgument.getValue());
-					case PXAT -> pxAt(hSetExArgument.getValue());
+					case EX -> ex(hSetExArgument.getExpires());
+					case EXAT -> exAt(hSetExArgument.getExpires());
+					case PX -> px(hSetExArgument.getExpires());
+					case PXAT -> pxAt(hSetExArgument.getExpires());
 					case KEEPTTL -> keepTtl();
 				}
 			}

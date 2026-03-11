@@ -22,56 +22,14 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.lettuce.args;
-
-import com.buession.redis.core.NxXx;
-import com.buession.redis.core.command.args.SetArgument;
-import io.lettuce.core.SetArgs;
-
-import java.time.Duration;
-import java.time.Instant;
+package com.buession.redis.core.command.args;
 
 /**
- * Lettuce {@link SetArgs} 扩展
+ *
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class LettuceSetArgs extends SetArgs {
-
-	/**
-	 * 构造函数
-	 */
-	public LettuceSetArgs() {
-		super();
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param setArgument
-	 *        {@link SetArgument}
-	 */
-	public LettuceSetArgs(final SetArgument setArgument) {
-		super();
-
-		if(setArgument != null){
-			if(setArgument.getType() == null && setArgument.getExpires() != null){
-				switch(setArgument.getType()){
-					case EX -> ex(Duration.ofSeconds(setArgument.getExpires()));
-					case EXAT -> exAt(Instant.ofEpochSecond(setArgument.getExpires()));
-					case PX -> px(Duration.ofMillis(setArgument.getExpires()));
-					case PXAT -> pxAt(Instant.ofEpochMilli(setArgument.getExpires()));
-					case KEEPTTL -> keepttl();
-				}
-			}
-
-			if(setArgument.getNxXx() == NxXx.NX){
-				nx();
-			}else if(setArgument.getNxXx() == NxXx.XX){
-				xx();
-			}
-		}
-	}
+interface ExArgument<T> {
 
 }

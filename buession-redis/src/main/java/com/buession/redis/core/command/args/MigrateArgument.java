@@ -91,8 +91,8 @@ public class MigrateArgument {
 	 * 		密码
 	 */
 	public MigrateArgument(final Mode mode, final String username, final String password) {
-		this(mode, password);
-		this.username = username;
+		this(username, password);
+		this.mode = mode;
 	}
 
 	/**

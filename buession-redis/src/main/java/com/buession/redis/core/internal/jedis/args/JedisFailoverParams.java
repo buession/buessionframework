@@ -167,7 +167,7 @@ public final class JedisFailoverParams extends FailoverParams {
 		timeout(timeout);
 	}
 
-	private void force(boolean force) {
+	private void force(final boolean force) {
 		if(force){
 			force();
 		}

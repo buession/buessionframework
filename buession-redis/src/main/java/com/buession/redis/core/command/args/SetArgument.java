@@ -19,14 +19,22 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command.args;
 
-import com.buession.redis.core.Keyword;
+import com.buession.core.utils.Assert;
 import com.buession.redis.core.NxXx;
+import com.buession.redis.core.SetExType;
 import com.buession.redis.utils.ArgStringBuilder;
+
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
 
 /**
  * {@code SET} 命令参数
@@ -34,17 +42,7 @@ import com.buession.redis.utils.ArgStringBuilder;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class SetArgument {
-
-	/**
-	 * 过期时间方式
-	 */
-	private SetType type;
-
-	/**
-	 * 过期时间
-	 */
-	private Long expires;
+public class SetArgument extends BaseSetExArgument<SetArgument> {
 
 	/**
 	 * 只有键 key 不存在/存在的时候才会设置 key 的值
@@ -52,14 +50,10 @@ public class SetArgument {
 	private NxXx nxXx;
 
 	/**
-	 * 是否获取 key 的过期时间
-	 */
-	private Boolean keepTtl;
-
-	/**
 	 * 构造函数
 	 */
 	public SetArgument() {
+		super();
 	}
 
 	/**
@@ -70,22 +64,21 @@ public class SetArgument {
 	 * @param expires
 	 * 		过期时间
 	 */
-	public SetArgument(final SetType type, final long expires) {
-		this.type = type;
-		this.expires = expires;
+	public SetArgument(final SetExType type, final long expires) {
+		super(type, expires);
 	}
 
 	/**
 	 * 构造函数
 	 *
-	 * @param type
-	 * 		过期时间方式
-	 * @param expires
-	 * 		过期时间
 	 * @param nxXx
 	 * 		只有键 key 不存在/存在的时候才会设置 key 的值
+	 * @param type
+	 * 		过期时间方式
+	 * @param expires
+	 * 		过期时间
 	 */
-	public SetArgument(final SetType type, final long expires, final NxXx nxXx) {
+	public SetArgument(final NxXx nxXx, final SetExType type, final long expires) {
 		this(type, expires);
 		this.nxXx = nxXx;
 	}
@@ -98,86 +91,6 @@ public class SetArgument {
 	 */
 	public SetArgument(final NxXx nxXx) {
 		this.nxXx = nxXx;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param keepTtl
-	 * 		是否获取 key 的过期时间
-	 */
-	public SetArgument(final boolean keepTtl) {
-		this.keepTtl = keepTtl;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param nxXx
-	 * 		只有键 key 不存在/存在的时候才会设置 key 的值
-	 * @param keepTtl
-	 * 		是否获取 key 的过期时间
-	 */
-	public SetArgument(final NxXx nxXx, final boolean keepTtl) {
-		this.nxXx = nxXx;
-		this.keepTtl = keepTtl;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param type
-	 * 		过期时间方式
-	 * @param expires
-	 * 		过期时间
-	 * @param nxXx
-	 * 		只有键 key 不存在/存在的时候才会设置 key 的值
-	 * @param keepTtl
-	 * 		是否获取 key 的过期时间
-	 */
-	public SetArgument(final SetType type, final long expires, final NxXx nxXx, final boolean keepTtl) {
-		this(type, expires, nxXx);
-		this.keepTtl = keepTtl;
-	}
-
-	/**
-	 * 返回过期时间方式
-	 *
-	 * @return 过期时间方式
-	 */
-	public SetType getType() {
-		return type;
-	}
-
-	/**
-	 * 设置过期时间方式
-	 *
-	 * @param type
-	 * 		过期时间方式
-	 */
-	public SetArgument setType(final SetType type) {
-		this.type = type;
-		return this;
-	}
-
-	/**
-	 * 返回过期时间
-	 *
-	 * @return 过期时间
-	 */
-	public Long getExpires() {
-		return expires;
-	}
-
-	/**
-	 * 设置过期时间
-	 *
-	 * @param expires
-	 * 		过期时间
-	 */
-	public SetArgument setExpires(long expires) {
-		this.expires = expires;
-		return this;
 	}
 
 	/**
@@ -201,80 +114,416 @@ public class SetArgument {
 	}
 
 	/**
-	 * 返回是否获取 key 的过期时间
+	 * 设置时间
 	 *
-	 * @return 是否获取 key 的过期时间
+	 * @param liftime
+	 * 		过期时间（单位：秒）
+	 *
+	 * @return {@link SetArgument}
 	 */
-	public Boolean isKeepTtl() {
-		return getKeepTtl();
+	public static SetArgument ex(long liftime) {
+		return new SetArgument(SetExType.EX, liftime);
 	}
 
 	/**
-	 * 返回是否获取 key 的过期时间
+	 * 设置时间
 	 *
-	 * @return 是否获取 key 的过期时间
+	 * @param liftime
+	 * 		过期时间（单位：秒）
+	 *
+	 * @return {@link SetArgument}
 	 */
-	public Boolean getKeepTtl() {
-		return keepTtl;
+	public static SetArgument ex(Duration liftime) {
+		Assert.isNull(liftime, "Liftime argument can't be null.");
+		return ex(liftime.toSeconds());
 	}
 
 	/**
-	 * 设置获取 key 的过期时间
+	 * 设置时间
+	 *
+	 * @param unixTime
+	 * 		时间，具体过期时间，秒时间戳
+	 *
+	 * @return {@link HSetExArgument}
 	 */
-	public SetArgument keepTtl() {
-		return setKeepTtl(true);
+	public static SetArgument exAt(long unixTime) {
+		return new SetArgument(SetExType.EX, unixTime);
 	}
 
 	/**
-	 * 设置是否获取 key 的过期时间
+	 * 设置时间
 	 *
-	 * @param keepTtl
-	 * 		是否获取 key 的过期时间
+	 * @param date
+	 * 		时间，具体过期时间，秒时间戳
+	 *
+	 * @return {@link SetArgument}
 	 */
-	public SetArgument setKeepTtl(boolean keepTtl) {
-		this.keepTtl = keepTtl;
-		return this;
+	public static SetArgument exAt(Date date) {
+		Assert.isNull(date, "Timestamp must not be null");
+		return exAt(date.getTime() / 1000);
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param dateTime
+	 * 		时间，具体过期时间，秒时间戳
+	 *
+	 * @return {@link SetArgument}
+	 */
+	public static SetArgument exAt(LocalDateTime dateTime) {
+		Assert.isNull(dateTime, "Timestamp must not be null");
+		return exAt(dateTime.atZone(ZoneId.systemDefault()).toInstant());
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param dateTime
+	 * 		时间，具体过期时间，秒时间戳
+	 *
+	 * @return {@link SetArgument}
+	 */
+	public static SetArgument exAt(ZonedDateTime dateTime) {
+		Assert.isNull(dateTime, "Timestamp must not be null");
+		return exAt(dateTime.toEpochSecond());
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param instant
+	 * 		时间，具体过期时间，秒时间戳
+	 *
+	 * @return {@link SetArgument}
+	 */
+	public static SetArgument exAt(Instant instant) {
+		Assert.isNull(instant, "Timestamp must not be null");
+		return exAt(instant.toEpochMilli() / 1000);
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param liftime
+	 * 		过期时间（单位：毫秒）
+	 *
+	 * @return {@link SetArgument}
+	 */
+	public static SetArgument px(long liftime) {
+		return new SetArgument(SetExType.PX, liftime);
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param liftime
+	 * 		过期时间（单位：毫秒）
+	 *
+	 * @return {@link SetArgument}
+	 */
+	public static SetArgument px(Duration liftime) {
+		Assert.isNull(liftime, "Liftime argument can't be null.");
+		return px(liftime.toMillis());
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param unixTime
+	 * 		时间，具体过期时间，毫秒时间戳
+	 *
+	 * @return {@link SetArgument}
+	 */
+	public static SetArgument pxAt(long unixTime) {
+		return new SetArgument(SetExType.PXAT, unixTime);
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param date
+	 * 		时间，具体过期时间，毫秒时间戳
+	 *
+	 * @return {@link SetArgument}
+	 */
+	public static SetArgument pxAt(Date date) {
+		Assert.isNull(date, "Timestamp must not be null");
+		return pxAt(date.getTime());
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param dateTime
+	 * 		时间，具体过期时间，毫秒时间戳
+	 *
+	 * @return {@link SetArgument}
+	 */
+	public static SetArgument pxAt(LocalDateTime dateTime) {
+		Assert.isNull(dateTime, "Timestamp must not be null");
+		return pxAt(dateTime.atZone(ZoneId.systemDefault()).toInstant());
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param dateTime
+	 * 		时间，具体过期时间，毫秒时间戳
+	 *
+	 * @return {@link SetArgument}
+	 */
+	public static SetArgument pxAt(ZonedDateTime dateTime) {
+		Assert.isNull(dateTime, "Timestamp must not be null");
+		return pxAt(dateTime.toEpochSecond());
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param instant
+	 * 		时间，具体过期时间，毫秒时间戳
+	 *
+	 * @return {@link SetArgument}
+	 */
+	public static SetArgument pxAt(Instant instant) {
+		Assert.isNull(instant, "Timestamp must not be null");
+		return exAt(instant.toEpochMilli());
+	}
+
+	/**
+	 * 设置键是否持久化
+	 *
+	 * @return {@link SetArgument}
+	 */
+	public static SetArgument keepttl() {
+		return new SetArgument(SetExType.KEEPTTL, 0);
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param nxXx
+	 *        {@link NxXx}
+	 * @param liftime
+	 * 		过期时间（单位：秒）
+	 *
+	 * @return {@link SetArgument}
+	 */
+	public static SetArgument ex(NxXx nxXx, long liftime) {
+		return new SetArgument(nxXx, SetExType.EX, liftime);
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param nxXx
+	 *        {@link NxXx}
+	 * @param liftime
+	 * 		过期时间（单位：秒）
+	 *
+	 * @return {@link SetArgument}
+	 */
+	public static SetArgument ex(NxXx nxXx, Duration liftime) {
+		Assert.isNull(liftime, "Liftime argument can't be null.");
+		return ex(nxXx, liftime.toSeconds());
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param nxXx
+	 *        {@link NxXx}
+	 * @param unixTime
+	 * 		时间，具体过期时间，秒时间戳
+	 *
+	 * @return {@link HSetExArgument}
+	 */
+	public static SetArgument exAt(NxXx nxXx, long unixTime) {
+		return new SetArgument(nxXx, SetExType.EX, unixTime);
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param nxXx
+	 *        {@link NxXx}
+	 * @param date
+	 * 		时间，具体过期时间，秒时间戳
+	 *
+	 * @return {@link SetArgument}
+	 */
+	public static SetArgument exAt(NxXx nxXx, Date date) {
+		Assert.isNull(nxXx, "Timestamp must not be null");
+		return exAt(nxXx, date.getTime() / 1000);
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param nxXx
+	 *        {@link NxXx}
+	 * @param dateTime
+	 * 		时间，具体过期时间，秒时间戳
+	 *
+	 * @return {@link SetArgument}
+	 */
+	public static SetArgument exAt(NxXx nxXx, LocalDateTime dateTime) {
+		Assert.isNull(dateTime, "Timestamp must not be null");
+		return exAt(nxXx, dateTime.atZone(ZoneId.systemDefault()).toInstant());
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param nxXx
+	 *        {@link NxXx}
+	 * @param dateTime
+	 * 		时间，具体过期时间，秒时间戳
+	 *
+	 * @return {@link HSetExArgument}
+	 */
+	public static SetArgument exAt(NxXx nxXx, ZonedDateTime dateTime) {
+		Assert.isNull(dateTime, "Timestamp must not be null");
+		return exAt(nxXx, dateTime.toEpochSecond());
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param nxXx
+	 *        {@link NxXx}
+	 * @param instant
+	 * 		时间，具体过期时间，秒时间戳
+	 *
+	 * @return {@link SetArgument}
+	 */
+	public static SetArgument exAt(NxXx nxXx, Instant instant) {
+		Assert.isNull(instant, "Timestamp must not be null");
+		return exAt(nxXx, instant.toEpochMilli() / 1000);
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param nxXx
+	 *        {@link NxXx}
+	 * @param liftime
+	 * 		过期时间（单位：毫秒）
+	 *
+	 * @return {@link SetArgument}
+	 */
+	public static SetArgument px(NxXx nxXx, long liftime) {
+		return new SetArgument(nxXx, SetExType.PX, liftime);
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param nxXx
+	 *        {@link NxXx}
+	 * @param liftime
+	 * 		过期时间（单位：毫秒）
+	 *
+	 * @return {@link SetArgument}
+	 */
+	public static SetArgument px(NxXx nxXx, Duration liftime) {
+		Assert.isNull(liftime, "Liftime argument can't be null.");
+		return px(nxXx, liftime.toMillis());
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param nxXx
+	 *        {@link NxXx}
+	 * @param unixTime
+	 * 		时间，具体过期时间，毫秒时间戳
+	 *
+	 * @return {@link SetArgument}
+	 */
+	public static SetArgument pxAt(NxXx nxXx, long unixTime) {
+		return new SetArgument(nxXx, SetExType.PXAT, unixTime);
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param nxXx
+	 *        {@link NxXx}
+	 * @param date
+	 * 		时间，具体过期时间，毫秒时间戳
+	 *
+	 * @return {@link SetArgument}
+	 */
+	public static SetArgument pxAt(NxXx nxXx, Date date) {
+		Assert.isNull(date, "Timestamp must not be null");
+		return pxAt(nxXx, date.getTime());
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param nxXx
+	 *        {@link NxXx}
+	 * @param dateTime
+	 * 		时间，具体过期时间，毫秒时间戳
+	 *
+	 * @return {@link SetArgument}
+	 */
+	public static SetArgument pxAt(NxXx nxXx, LocalDateTime dateTime) {
+		Assert.isNull(dateTime, "Timestamp must not be null");
+		return pxAt(nxXx, dateTime.atZone(ZoneId.systemDefault()).toInstant());
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param nxXx
+	 *        {@link NxXx}
+	 * @param dateTime
+	 * 		时间，具体过期时间，毫秒时间戳
+	 *
+	 * @return {@link SetArgument}
+	 */
+	public static SetArgument pxAt(NxXx nxXx, ZonedDateTime dateTime) {
+		Assert.isNull(dateTime, "Timestamp must not be null");
+		return pxAt(nxXx, dateTime.toEpochSecond());
+	}
+
+	/**
+	 * 设置时间
+	 *
+	 * @param nxXx
+	 *        {@link NxXx}
+	 * @param instant
+	 * 		时间，具体过期时间，毫秒时间戳
+	 *
+	 * @return {@link SetArgument}
+	 */
+	public static SetArgument pxAt(NxXx nxXx, Instant instant) {
+		Assert.isNull(instant, "Timestamp must not be null");
+		return exAt(nxXx, instant.toEpochMilli());
+	}
+
+	/**
+	 * 设置键是否持久化
+	 *
+	 * @param nxXx
+	 *        {@link NxXx}
+	 *
+	 * @return {@link SetArgument}
+	 */
+	public static SetArgument keepttl(NxXx nxXx) {
+		return new SetArgument(nxXx, SetExType.KEEPTTL, 0);
 	}
 
 	@Override
 	public String toString() {
-		final ArgStringBuilder builder = ArgStringBuilder.create()
-				.append(getType())
-				.append(getExpires())
-				.append(getNxXx());
-
-		if(Boolean.TRUE.equals(getKeepTtl())){
-			builder.append(Keyword.Time.KEEPTTL);
-		}
-
-		return builder.build();
-	}
-
-	/**
-	 * 设置过期时间方式
-	 */
-	public enum SetType {
-		/**
-		 * 设置指定的过期时间，以秒为单位
-		 */
-		EX,
-
-		/**
-		 * 设置指定的过期 Unix 时间戳，以秒为单位
-		 */
-		EXAT,
-
-		/**
-		 * 设置指定的过期时间，以毫秒为单位
-		 */
-		PX,
-
-		/**
-		 * 设置指定的过期 Unix 时间戳，以毫秒为单位
-		 */
-		PXAT,
-
-		KEEPTTL
+		return ArgStringBuilder.create()
+				.append(getNxXx())
+				.add(getType().name(), getType() == SetExType.KEEPTTL ? null : getExpires())
+				.build();
 	}
 
 }

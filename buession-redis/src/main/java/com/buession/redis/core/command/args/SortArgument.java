@@ -207,8 +207,7 @@ public class SortArgument {
 	}
 
 	public SortArgument setGetPatterns(byte[][] getPatterns) {
-		this.getPatterns = SafeEncoder.encode(getPatterns);
-		return this;
+		return setGetPatterns(SafeEncoder.encode(getPatterns));
 	}
 
 	public Boolean isAlpha() {

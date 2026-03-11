@@ -1024,13 +1024,13 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	}
 
 	@Override
-	default List<Long> lPos(final String key, final String element, final LPosArgument argument) {
-		return execute((client)->client.listCommands().lPos(key, element, argument));
+	default List<Long> lPos(final String key, final String element, final long rank) {
+		return execute((client)->client.listCommands().lPos(key, element, rank));
 	}
 
 	@Override
-	default List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument argument) {
-		return execute((client)->client.listCommands().lPos(key, element, argument));
+	default List<Long> lPos(final byte[] key, final byte[] element, final long rank) {
+		return execute((client)->client.listCommands().lPos(key, element, rank));
 	}
 
 	@Override

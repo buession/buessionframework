@@ -25,7 +25,7 @@
 package com.buession.redis.core.internal.jedis.args;
 
 import com.buession.core.utils.NumberUtils;
-import com.buession.redis.core.command.args.ZRangeArgument;
+import com.buession.redis.core.ZRangeType;
 import redis.clients.jedis.Protocol;
 import redis.clients.jedis.params.ZRangeParams;
 
@@ -37,86 +37,150 @@ import redis.clients.jedis.params.ZRangeParams;
  */
 public final class JedisZRangeParams extends ZRangeParams {
 
-	public JedisZRangeParams(final int min, final int max) {
-		super(min, max);
+	/**
+	 * 构造函数
+	 *
+	 * @param type
+	 *        {@link ZRangeType}
+	 * @param min
+	 * 		最小值
+	 * @param max
+	 * 		最大值
+	 */
+	public JedisZRangeParams(final ZRangeType type, final long min, final long max) {
+		super(byKeyword(type), NumberUtils.long2bytes(min), NumberUtils.long2bytes(max));
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param type
+	 *        {@link ZRangeType}
+	 * @param min
+	 * 		最小值
+	 * @param max
+	 * 		最大值
+	 * @param rev
+	 * 		REV
+	 */
+	public JedisZRangeParams(final ZRangeType type, final long min, final long max, final boolean rev) {
+		this(type, min, max);
+		if(rev){
+			rev();
+		}
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param type
+	 *        {@link ZRangeType}
+	 * @param min
+	 * 		最小值
+	 * @param max
+	 * 		最大值
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回数量
+	 */
+	public JedisZRangeParams(final ZRangeType type, final long min, final long max, final int offset, final int count) {
+		this(type, min, max);
+		limit(offset, count);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param type
+	 *        {@link ZRangeType}
+	 * @param min
+	 * 		最小值
+	 * @param max
+	 * 		最大值
+	 * @param rev
+	 * 		REV
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回数量
+	 */
+	public JedisZRangeParams(final ZRangeType type, final long min, final long max, final boolean rev, final int offset,
+							 final int count) {
+		this(type, min, max, offset, count);
+		if(rev){
+			rev();
+		}
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param min
+	 * 		最小值
+	 * @param max
+	 * 		最大值
+	 */
 	public JedisZRangeParams(final long min, final long max) {
-		super((int) min, (int) max);
+		super(null, NumberUtils.long2bytes(min), NumberUtils.long2bytes(max));
 	}
 
-	public JedisZRangeParams(final ZRangeArgument.By by, final int min, final int max) {
-		super(byKeyword(by), NumberUtils.int2bytes(min), NumberUtils.int2bytes(max));
-	}
-
-	public JedisZRangeParams(final ZRangeArgument.By by, final long min, final long max) {
-		super(byKeyword(by), NumberUtils.long2bytes(min), NumberUtils.long2bytes(max));
-	}
-
-	public JedisZRangeParams(final ZRangeArgument.By by, final int min, final int max, final boolean rev) {
-		this(by, min, max);
-		rev(rev);
-	}
-
-	public JedisZRangeParams(final ZRangeArgument.By by, final long min, final long max, final boolean rev) {
-		this(by, (int) min, (int) max, rev);
-	}
-
-	public JedisZRangeParams(final int min, final int max, final boolean rev) {
-		this(min, max);
-		rev(rev);
-	}
-
+	/**
+	 * 构造函数
+	 *
+	 * @param min
+	 * 		最小值
+	 * @param max
+	 * 		最大值
+	 * @param rev
+	 * 		REV
+	 */
 	public JedisZRangeParams(final long min, final long max, final boolean rev) {
-		this((int) min, (int) max, rev);
+		this(null, min, max, rev);
 	}
 
-	public JedisZRangeParams(final int min, final int max, final int offset, final int count) {
-		this(min, max);
-		limit(offset, count);
-	}
-
+	/**
+	 * 构造函数
+	 *
+	 * @param min
+	 * 		最小值
+	 * @param max
+	 * 		最大值
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回数量
+	 */
 	public JedisZRangeParams(final long min, final long max, final int offset, final int count) {
-		this(min, max);
-		limit(offset, count);
+		this(null, min, max, offset, count);
 	}
 
-	public JedisZRangeParams(final int min, final int max, final boolean rev, final int offset, final int count) {
-		this(min, max, rev);
-		limit(offset, count);
-	}
-
+	/**
+	 * 构造函数
+	 *
+	 * @param min
+	 * 		最小值
+	 * @param max
+	 * 		最大值
+	 * @param rev
+	 * 		REV
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回数量
+	 */
 	public JedisZRangeParams(final long min, final long max, final boolean rev, final int offset, final int count) {
-		this(min, max, rev);
-		limit(offset, count);
+		this(null, min, max, rev, offset, count);
 	}
 
-	public JedisZRangeParams(final ZRangeArgument.By by, final int min, final int max, final boolean rev,
-							 final int offset, final int count) {
-		this(by, min, max, rev);
-		limit(offset, count);
-	}
-
-	public JedisZRangeParams(final ZRangeArgument.By by, final long min, final long max, final boolean rev,
-							 final int offset, final int count) {
-		this(by, min, max, rev);
-		limit(offset, count);
-	}
-
-	private static Protocol.Keyword byKeyword(final ZRangeArgument.By by) {
-		if(by == ZRangeArgument.By.BYLEX){
+	private static Protocol.Keyword byKeyword(final ZRangeType type) {
+		if(type == ZRangeType.BYLEX){
 			return Protocol.Keyword.BYLEX;
-		}else if(by == ZRangeArgument.By.BYSCORE){
+		}else if(type == ZRangeType.BYSCORE){
 			return Protocol.Keyword.BYSCORE;
 		}
 
 		return null;
-	}
-
-	private void rev(boolean rev) {
-		if(rev){
-			rev();
-		}
 	}
 
 }

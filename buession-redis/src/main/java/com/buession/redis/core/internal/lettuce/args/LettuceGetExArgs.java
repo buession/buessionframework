@@ -55,12 +55,14 @@ public final class LettuceGetExArgs extends GetExArgs {
 		super();
 
 		if(getExArgument != null){
-			switch(getExArgument.getType()){
-				case EX -> ex(Duration.ofSeconds(getExArgument.getValue()));
-				case EXAT -> exAt(Instant.ofEpochSecond(getExArgument.getValue()));
-				case PX -> px(Duration.ofMillis(getExArgument.getValue()));
-				case PXAT -> pxAt(Instant.ofEpochMilli(getExArgument.getValue()));
-				case PERSIST -> persist();
+			if(getExArgument.getType() != null && getExArgument.getExpires() != null){
+				switch(getExArgument.getType()){
+					case EX -> ex(Duration.ofSeconds(getExArgument.getExpires()));
+					case EXAT -> exAt(Instant.ofEpochSecond(getExArgument.getExpires()));
+					case PX -> px(Duration.ofMillis(getExArgument.getExpires()));
+					case PXAT -> pxAt(Instant.ofEpochMilli(getExArgument.getExpires()));
+					case PERSIST -> persist();
+				}
 			}
 		}
 	}

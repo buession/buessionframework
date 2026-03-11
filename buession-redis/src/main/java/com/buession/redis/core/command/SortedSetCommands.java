@@ -29,8 +29,8 @@ import com.buession.redis.core.Aggregate;
 import com.buession.redis.core.MinMax;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
+import com.buession.redis.core.ZRangeType;
 import com.buession.redis.core.command.args.ZAddArgument;
-import com.buession.redis.core.command.args.ZRangeArgument;
 
 import java.util.List;
 
@@ -1172,14 +1172,14 @@ public interface SortedSetCommands extends RedisCommands {
 	 * 		开始位置
 	 * @param end
 	 * 		结束位置
-	 * @param argument
-	 * 		参数
+	 * @param type
+	 *        {@link ZRangeType}
 	 *
 	 * @return 指定区间内，有序集成员的列表；
 	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
 	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
 	 */
-	List<String> zRange(final String key, final long start, final long end, final ZRangeArgument argument);
+	List<String> zRange(final String key, final long start, final long end, final ZRangeType type);
 
 	/**
 	 * 获取有序集 key 中，指定区间内的成员；其中成员的位置按 score 值递增(从小到大)来排序；
@@ -1194,14 +1194,106 @@ public interface SortedSetCommands extends RedisCommands {
 	 * 		开始位置
 	 * @param end
 	 * 		结束位置
-	 * @param argument
-	 * 		参数
+	 * @param type
+	 *        {@link ZRangeType}
 	 *
 	 * @return 指定区间内，有序集成员的列表；
 	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
 	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
 	 */
-	List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeArgument argument);
+	List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeType type);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="hhttps://redis.io/docs/latest/commands/zrange/" target="_blank">https://redis.io/docs/latest/commands/zrange/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param type
+	 *        {@link ZRangeType}
+	 * @param rev
+	 * 		REV
+	 *
+	 * @return 指定区间内，有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	List<String> zRange(final String key, final long start, final long end, final ZRangeType type, final boolean rev);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/zrange/" target="_blank">https://redis.io/docs/latest/commands/zrange/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param type
+	 *        {@link ZRangeType}
+	 * @param rev
+	 * 		REV
+	 *
+	 * @return 指定区间内，有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeType type, final boolean rev);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="hhttps://redis.io/docs/latest/commands/zrange/" target="_blank">https://redis.io/docs/latest/commands/zrange/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param rev
+	 * 		REV
+	 *
+	 * @return 指定区间内，有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	List<String> zRange(final String key, final long start, final long end, final boolean rev);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/zrange/" target="_blank">https://redis.io/docs/latest/commands/zrange/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param rev
+	 * 		REV
+	 *
+	 * @return 指定区间内，有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	List<byte[]> zRange(final byte[] key, final long start, final long end, final boolean rev);
 
 	/**
 	 * 获取有序集 key 中，指定区间内的成员；其中成员的位置按 score 值递增(从小到大)来排序；
@@ -1264,8 +1356,8 @@ public interface SortedSetCommands extends RedisCommands {
 	 * 		开始位置
 	 * @param end
 	 * 		结束位置
-	 * @param argument
-	 * 		参数
+	 * @param type
+	 *        {@link ZRangeType}
 	 * @param offset
 	 * 		偏移量
 	 * @param count
@@ -1275,7 +1367,63 @@ public interface SortedSetCommands extends RedisCommands {
 	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
 	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
 	 */
-	List<String> zRange(final String key, final long start, final long end, final ZRangeArgument argument,
+	List<String> zRange(final String key, final long start, final long end, final ZRangeType type, final int offset,
+						final int count);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/zrange/" target="_blank">https://redis.io/docs/latest/commands/zrange/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param type
+	 *        {@link ZRangeType}
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		数量
+	 *
+	 * @return 指定区间内，有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeType type, final int offset,
+						final int count);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="hhttps://redis.io/docs/latest/commands/zrange/" target="_blank">https://redis.io/docs/latest/commands/zrange/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param type
+	 *        {@link ZRangeType}
+	 * @param rev
+	 * 		REV
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		数量
+	 *
+	 * @return 指定区间内，有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	List<String> zRange(final String key, final long start, final long end, final ZRangeType type, final boolean rev,
 						final int offset, final int count);
 
 	/**
@@ -1291,8 +1439,10 @@ public interface SortedSetCommands extends RedisCommands {
 	 * 		开始位置
 	 * @param end
 	 * 		结束位置
-	 * @param argument
-	 * 		参数
+	 * @param type
+	 *        {@link ZRangeType}
+	 * @param rev
+	 * 		REV
 	 * @param offset
 	 * 		偏移量
 	 * @param count
@@ -1302,8 +1452,62 @@ public interface SortedSetCommands extends RedisCommands {
 	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
 	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
 	 */
-	List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeArgument argument,
+	List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeType type, final boolean rev,
 						final int offset, final int count);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="hhttps://redis.io/docs/latest/commands/zrange/" target="_blank">https://redis.io/docs/latest/commands/zrange/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param rev
+	 * 		REV
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		数量
+	 *
+	 * @return 指定区间内，有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	List<String> zRange(final String key, final long start, final long end, final boolean rev, final int offset,
+						final int count);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/zrange/" target="_blank">https://redis.io/docs/latest/commands/zrange/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param rev
+	 * 		REV
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		数量
+	 *
+	 * @return 指定区间内，有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	List<byte[]> zRange(final byte[] key, final long start, final long end, final boolean rev, final int offset,
+						final int count);
 
 	/**
 	 * 获取有序集 key 中，指定区间内的带有 score 成员；其中成员的位置按 score 值递增(从小到大)来排序；
@@ -1358,14 +1562,14 @@ public interface SortedSetCommands extends RedisCommands {
 	 * 		开始位置
 	 * @param end
 	 * 		结束位置
-	 * @param argument
-	 * 		参数
+	 * @param type
+	 *        {@link ZRangeType}
 	 *
 	 * @return 指定区间内，有序集成员的列表；
 	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
 	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
 	 */
-	List<Tuple> zRangeWithScores(final String key, final long start, final long end, final ZRangeArgument argument);
+	List<Tuple> zRangeWithScores(final String key, final long start, final long end, final ZRangeType type);
 
 	/**
 	 * 获取有序集 key 中，指定区间内的成员；其中成员的位置按 score 值递增(从小到大)来排序；
@@ -1380,14 +1584,108 @@ public interface SortedSetCommands extends RedisCommands {
 	 * 		开始位置
 	 * @param end
 	 * 		结束位置
-	 * @param argument
-	 * 		参数
+	 * @param type
+	 *        {@link ZRangeType}
 	 *
 	 * @return 指定区间内，有序集成员的列表；
 	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
 	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
 	 */
-	List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final ZRangeArgument argument);
+	List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final ZRangeType type);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="hhttps://redis.io/docs/latest/commands/zrange/" target="_blank">https://redis.io/docs/latest/commands/zrange/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param type
+	 *        {@link ZRangeType}
+	 * @param rev
+	 * 		REV
+	 *
+	 * @return 指定区间内，有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	List<Tuple> zRangeWithScores(final String key, final long start, final long end, final ZRangeType type,
+								 final boolean rev);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/zrange/" target="_blank">https://redis.io/docs/latest/commands/zrange/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param type
+	 *        {@link ZRangeType}
+	 * @param rev
+	 * 		REV
+	 *
+	 * @return 指定区间内，有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final ZRangeType type,
+								 final boolean rev);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="hhttps://redis.io/docs/latest/commands/zrange/" target="_blank">https://redis.io/docs/latest/commands/zrange/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param rev
+	 * 		REV
+	 *
+	 * @return 指定区间内，有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	List<Tuple> zRangeWithScores(final String key, final long start, final long end, final boolean rev);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/zrange/" target="_blank">https://redis.io/docs/latest/commands/zrange/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param rev
+	 * 		REV
+	 *
+	 * @return 指定区间内，有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final boolean rev);
 
 	/**
 	 * 获取有序集 key 中，指定区间内的成员；其中成员的位置按 score 值递增(从小到大)来排序；
@@ -1450,8 +1748,8 @@ public interface SortedSetCommands extends RedisCommands {
 	 * 		开始位置
 	 * @param end
 	 * 		结束位置
-	 * @param argument
-	 * 		参数
+	 * @param type
+	 *        {@link ZRangeType}
 	 * @param offset
 	 * 		偏移量
 	 * @param count
@@ -1461,7 +1759,7 @@ public interface SortedSetCommands extends RedisCommands {
 	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
 	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
 	 */
-	List<Tuple> zRangeWithScores(final String key, final long start, final long end, final ZRangeArgument argument,
+	List<Tuple> zRangeWithScores(final String key, final long start, final long end, final ZRangeType type,
 								 final int offset, final int count);
 
 	/**
@@ -1477,8 +1775,8 @@ public interface SortedSetCommands extends RedisCommands {
 	 * 		开始位置
 	 * @param end
 	 * 		结束位置
-	 * @param argument
-	 * 		参数
+	 * @param type
+	 *        {@link ZRangeType}
 	 * @param offset
 	 * 		偏移量
 	 * @param count
@@ -1488,7 +1786,119 @@ public interface SortedSetCommands extends RedisCommands {
 	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
 	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
 	 */
-	List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final ZRangeArgument argument,
+	List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final ZRangeType type,
+								 final int offset, final int count);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="hhttps://redis.io/docs/latest/commands/zrange/" target="_blank">https://redis.io/docs/latest/commands/zrange/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param type
+	 *        {@link ZRangeType}
+	 * @param rev
+	 * 		REV
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		数量
+	 *
+	 * @return 指定区间内，有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	List<Tuple> zRangeWithScores(final String key, final long start, final long end, final ZRangeType type,
+								 final boolean rev, final int offset, final int count);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/zrange/" target="_blank">https://redis.io/docs/latest/commands/zrange/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param type
+	 *        {@link ZRangeType}
+	 * @param rev
+	 * 		REV
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		数量
+	 *
+	 * @return 指定区间内，有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final ZRangeType type,
+								 final boolean rev, final int offset, final int count);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="hhttps://redis.io/docs/latest/commands/zrange/" target="_blank">https://redis.io/docs/latest/commands/zrange/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param rev
+	 * 		REV
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		数量
+	 *
+	 * @return 指定区间内，有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	List<Tuple> zRangeWithScores(final String key, final long start, final long end, final boolean rev,
+								 final int offset, final int count);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/zrange/" target="_blank">https://redis.io/docs/latest/commands/zrange/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param rev
+	 * 		REV
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		数量
+	 *
+	 * @return 指定区间内，有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final boolean rev,
 								 final int offset, final int count);
 
 	/**
@@ -1770,13 +2180,12 @@ public interface SortedSetCommands extends RedisCommands {
 	 * 		开始位置
 	 * @param end
 	 * 		结束位置
-	 * @param argument
-	 * 		参数
+	 * @param type
+	 *        {@link ZRangeType}
 	 *
 	 * @return The number of elements in the resulting sorted set
 	 */
-	Long zRangeStore(final String destKey, final String key, final long start, final long end,
-					 final ZRangeArgument argument);
+	Long zRangeStore(final String destKey, final String key, final long start, final long end, final ZRangeType type);
 
 	/**
 	 * 获取有序集 key 中，指定区间内的成员，并保存到 destKey 中；其中成员的位置按 score 值递增(从小到大)来排序；
@@ -1791,13 +2200,98 @@ public interface SortedSetCommands extends RedisCommands {
 	 * 		开始位置
 	 * @param end
 	 * 		结束位置
-	 * @param argument
-	 * 		参数
+	 * @param type
+	 *        {@link ZRangeType}
 	 *
 	 * @return The number of elements in the resulting sorted set
 	 */
-	Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
-					 final ZRangeArgument argument);
+	Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final ZRangeType type);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并保存到 destKey 中；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param type
+	 *        {@link ZRangeType}
+	 * @param rev
+	 * 		REV
+	 *
+	 * @return The number of elements in the resulting sorted set
+	 */
+	Long zRangeStore(final String destKey, final String key, final long start, final long end, final ZRangeType type,
+					 final boolean rev);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并保存到 destKey 中；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param type
+	 *        {@link ZRangeType}
+	 * @param rev
+	 * 		REV
+	 *
+	 * @return The number of elements in the resulting sorted set
+	 */
+	Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final ZRangeType type,
+					 final boolean rev);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并保存到 destKey 中；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param rev
+	 * 		REV
+	 *
+	 * @return The number of elements in the resulting sorted set
+	 */
+	Long zRangeStore(final String destKey, final String key, final long start, final long end, final boolean rev);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并保存到 destKey 中；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param rev
+	 * 		REV
+	 *
+	 * @return The number of elements in the resulting sorted set
+	 */
+	Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final boolean rev);
 
 	/**
 	 * 获取有序集 key 中，指定区间内的成员，并保存到 destKey 中；其中成员的位置按 score 值递增(从小到大)来排序；
@@ -1858,8 +2352,8 @@ public interface SortedSetCommands extends RedisCommands {
 	 * 		开始位置
 	 * @param end
 	 * 		结束位置
-	 * @param argument
-	 * 		参数
+	 * @param type
+	 *        {@link ZRangeType}
 	 * @param offset
 	 * 		偏移量
 	 * @param count
@@ -1867,8 +2361,8 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return The number of elements in the resulting sorted set
 	 */
-	Long zRangeStore(final String destKey, final String key, final long start, final long end,
-					 final ZRangeArgument argument, final int offset, final int count);
+	Long zRangeStore(final String destKey, final String key, final long start, final long end, final ZRangeType type,
+					 final int offset, final int count);
 
 	/**
 	 * 获取有序集 key 中，指定区间内的成员，并保存到 destKey 中；其中成员的位置按 score 值递增(从小到大)来排序；
@@ -1883,8 +2377,8 @@ public interface SortedSetCommands extends RedisCommands {
 	 * 		开始位置
 	 * @param end
 	 * 		结束位置
-	 * @param argument
-	 * 		参数
+	 * @param type
+	 *        {@link ZRangeType}
 	 * @param offset
 	 * 		偏移量
 	 * @param count
@@ -1892,8 +2386,112 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return The number of elements in the resulting sorted set
 	 */
-	Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
-					 final ZRangeArgument argument, final int offset, final int count);
+	Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final ZRangeType type,
+					 final int offset, final int count);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并保存到 destKey 中；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param type
+	 *        {@link ZRangeType}
+	 * @param rev
+	 * 		REV
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 *
+	 * @return The number of elements in the resulting sorted set
+	 */
+	Long zRangeStore(final String destKey, final String key, final long start, final long end, final ZRangeType type,
+					 final boolean rev, final int offset, final int count);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并保存到 destKey 中；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param type
+	 *        {@link ZRangeType}
+	 * @param rev
+	 * 		REV
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 *
+	 * @return The number of elements in the resulting sorted set
+	 */
+	Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final ZRangeType type,
+					 final boolean rev, final int offset, final int count);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并保存到 destKey 中；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param rev
+	 * 		REV
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 *
+	 * @return The number of elements in the resulting sorted set
+	 */
+	Long zRangeStore(final String destKey, final String key, final long start, final long end, final boolean rev,
+					 final int offset, final int count);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并保存到 destKey 中；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param rev
+	 * 		REV
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 *
+	 * @return The number of elements in the resulting sorted set
+	 */
+	Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end, final boolean rev,
+					 final int offset, final int count);
 
 	/**
 	 * 获取有序集 key 中成员 member 的排名；其中有序集成员按 score 值递增（从小到大）顺序排列

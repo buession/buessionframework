@@ -59,12 +59,12 @@ public final class JedisGetExParams extends GetExParams {
 	public JedisGetExParams(final GetExArgument getExArgument) {
 		super();
 
-		if(getExArgument != null){
+		if(getExArgument != null && getExArgument.getExpires() != null){
 			switch(getExArgument.getType()){
-				case EX -> ex(getExArgument.getValue());
-				case EXAT -> exAt(getExArgument.getValue());
-				case PX -> px(getExArgument.getValue());
-				case PXAT -> pxAt(getExArgument.getValue());
+				case EX -> ex(getExArgument.getExpires());
+				case EXAT -> exAt(getExArgument.getExpires());
+				case PX -> px(getExArgument.getExpires());
+				case PXAT -> pxAt(getExArgument.getExpires());
 				case PERSIST -> persist();
 			}
 		}
