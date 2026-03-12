@@ -1166,108 +1166,108 @@ public class RedisTemplate extends AbstractRedisTemplate implements AutoSuggestO
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScan(final String key, final String cursor, final Class<V> clazz) {
+	public <V> ScanResult<V> sScan(final String key, final String cursor, final Class<V> clazz) {
 		return execute((client)->client.setCommands().sScan(key, cursor),
 				new Converter.ClazzScanResultListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScan(final byte[] key, final byte[] cursor, final Class<V> clazz) {
+	public <V> ScanResult<V> sScan(final byte[] key, final byte[] cursor, final Class<V> clazz) {
 		return execute((client)->client.setCommands().sScan(key, cursor),
 				new Converter.ClazzScanResultListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScan(final String key, final String cursor, final TypeReference<V> type) {
+	public <V> ScanResult<V> sScan(final String key, final String cursor, final TypeReference<V> type) {
 		return execute((client)->client.setCommands().sScan(key, cursor),
 				new Converter.TypeScanResultListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScan(final byte[] key, final byte[] cursor, final TypeReference<V> type) {
+	public <V> ScanResult<V> sScan(final byte[] key, final byte[] cursor, final TypeReference<V> type) {
 		return execute((client)->client.setCommands().sScan(key, cursor),
 				new Converter.TypeScanResultListBinaryConverter<>(this, type));
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScan(final String key, final String cursor, final String pattern,
-										 final Class<V> clazz) {
+	public <V> ScanResult<V> sScan(final String key, final String cursor, final String pattern,
+								   final Class<V> clazz) {
 		return execute((client)->client.setCommands().sScan(key, cursor, pattern),
 				new Converter.ClazzScanResultListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-										 final Class<V> clazz) {
+	public <V> ScanResult<V> sScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+								   final Class<V> clazz) {
 		return execute((client)->client.setCommands().sScan(key, cursor, pattern),
 				new Converter.ClazzScanResultListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScan(final String key, final String cursor, final String pattern,
-										 final TypeReference<V> type) {
+	public <V> ScanResult<V> sScan(final String key, final String cursor, final String pattern,
+								   final TypeReference<V> type) {
 		return execute((client)->client.setCommands().sScan(key, cursor, pattern),
 				new Converter.TypeScanResultListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-										 final TypeReference<V> type) {
+	public <V> ScanResult<V> sScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+								   final TypeReference<V> type) {
 		return execute((client)->client.setCommands().sScan(key, cursor, pattern),
 				new Converter.TypeScanResultListBinaryConverter<>(this, type));
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScan(final String key, final String cursor, final int count, final Class<V> clazz) {
-		return execute((client)->client.setCommands().sScan(key, cursor, count),
+	public <V> ScanResult<V> sScan(final String key, final String cursor, final String pattern, final int count,
+								   final Class<V> clazz) {
+		return execute((client)->client.setCommands().sScan(key, cursor, pattern, count),
 				new Converter.ClazzScanResultListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScan(final byte[] key, final byte[] cursor, final int count, final Class<V> clazz) {
-		return execute((client)->client.setCommands().sScan(key, cursor, count),
+	public <V> ScanResult<V> sScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count,
+								   final Class<V> clazz) {
+		return execute((client)->client.setCommands().sScan(key, cursor, pattern, count),
 				new Converter.ClazzScanResultListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScan(final String key, final String cursor, final int count,
-										 final TypeReference<V> type) {
-		return execute((client)->client.setCommands().sScan(key, cursor, count),
+	public <V> ScanResult<V> sScan(final String key, final String cursor, final String pattern, final int count,
+								   final TypeReference<V> type) {
+		return execute((client)->client.setCommands().sScan(key, cursor, pattern, count),
 				new Converter.TypeScanResultListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScan(final byte[] key, final byte[] cursor, final int count,
-										 final TypeReference<V> type) {
-		return execute((client)->client.setCommands().sScan(key, cursor, count),
+	public <V> ScanResult<V> sScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count,
+								   final TypeReference<V> type) {
+		return execute((client)->client.setCommands().sScan(key, cursor, pattern, count),
 				new Converter.TypeScanResultListBinaryConverter<>(this, type));
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScan(final String key, final String cursor, final String pattern, final int count,
-										 final Class<V> clazz) {
-		return execute((client)->client.setCommands().sScan(key, cursor, pattern, count),
+	public <V> ScanResult<V> sScan(final String key, final String cursor, final int count, final Class<V> clazz) {
+		return execute((client)->client.setCommands().sScan(key, cursor, count),
 				new Converter.ClazzScanResultListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count,
-										 final Class<V> clazz) {
-		return execute((client)->client.setCommands().sScan(key, cursor, pattern, count),
+	public <V> ScanResult<V> sScan(final byte[] key, final byte[] cursor, final int count, final Class<V> clazz) {
+		return execute((client)->client.setCommands().sScan(key, cursor, count),
 				new Converter.ClazzScanResultListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScan(final String key, final String cursor, final String pattern, final int count,
-										 final TypeReference<V> type) {
-		return execute((client)->client.setCommands().sScan(key, cursor, pattern, count),
+	public <V> ScanResult<V> sScan(final String key, final String cursor, final int count,
+								   final TypeReference<V> type) {
+		return execute((client)->client.setCommands().sScan(key, cursor, count),
 				new Converter.TypeScanResultListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> ScanResult<List<V>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count,
-										 final TypeReference<V> type) {
-		return execute((client)->client.setCommands().sScan(key, cursor, pattern, count),
+	public <V> ScanResult<V> sScan(final byte[] key, final byte[] cursor, final int count,
+								   final TypeReference<V> type) {
+		return execute((client)->client.setCommands().sScan(key, cursor, count),
 				new Converter.TypeScanResultListBinaryConverter<>(this, type));
 	}
 

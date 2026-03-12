@@ -562,38 +562,6 @@ public interface SetCommands extends RedisCommands {
 	 * 		Key
 	 * @param cursor
 	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回的指定数量的键值对
-	 */
-	ScanResult<String> sScan(final String key, final String cursor, final int count);
-
-	/**
-	 * 迭代集合键中的元素
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回的指定数量的键值对
-	 */
-	ScanResult<byte[]> sScan(final byte[] key, final byte[] cursor, final int count);
-
-	/**
-	 * 迭代集合键中的元素
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
 	 * @param pattern
 	 * 		glob 风格的模式参数
 	 * @param count
@@ -620,6 +588,38 @@ public interface SetCommands extends RedisCommands {
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
 	ScanResult<byte[]> sScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count);
+
+	/**
+	 * 迭代集合键中的元素
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回的指定数量的键值对
+	 */
+	ScanResult<String> sScan(final String key, final String cursor, final int count);
+
+	/**
+	 * 迭代集合键中的元素
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回的指定数量的键值对
+	 */
+	ScanResult<byte[]> sScan(final byte[] key, final byte[] cursor, final int count);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的并集
