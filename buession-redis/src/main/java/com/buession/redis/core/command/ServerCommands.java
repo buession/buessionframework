@@ -156,12 +156,12 @@ public interface ServerCommands extends RedisCommands {
 	 * 		用户名
 	 * @param command
 	 * 		命令
-	 * @param args
+	 * @param arguments
 	 * 		参数
 	 *
 	 * @return 测试结果
 	 */
-	Status aclDryRun(final String username, final Command command, final String... args);
+	Status aclDryRun(final String username, final Command command, final String... arguments);
 
 	/**
 	 * 在不实际执行命令的情况下，模拟测试某个用户是否具备执行特定命令的权限
@@ -172,12 +172,12 @@ public interface ServerCommands extends RedisCommands {
 	 * 		用户名
 	 * @param command
 	 * 		命令
-	 * @param args
+	 * @param arguments
 	 * 		参数
 	 *
 	 * @return 测试结果
 	 */
-	Status aclDryRun(final byte[] username, final Command command, final byte[]... args);
+	Status aclDryRun(final byte[] username, final Command command, final byte[]... arguments);
 
 	/**
 	 * ACL users need a solid password in order to authenticate to the server without security risks

@@ -115,15 +115,15 @@ public final class JedisServerCommands extends AbstractJedisRedisCommands implem
 	}
 
 	@Override
-	public Status aclDryRun(final String username, final Command command, final String... args) {
-		final CommandArguments args1 = CommandArguments.create(username).add(command, args);
-		return executeCommand(Command.ACL, SubCommand.ACL_DRYRUN, args1);
+	public Status aclDryRun(final String username, final Command command, final String... arguments) {
+		final CommandArguments args = CommandArguments.create(username).add(command).add(arguments);
+		return executeCommand(Command.ACL, SubCommand.ACL_DRYRUN, args);
 	}
 
 	@Override
-	public Status aclDryRun(final byte[] username, final Command command, final byte[]... args) {
-		final CommandArguments args1 = CommandArguments.create(username).add(command, args);
-		return executeCommand(Command.ACL, SubCommand.ACL_DRYRUN, args1);
+	public Status aclDryRun(final byte[] username, final Command command, final byte[]... arguments) {
+		final CommandArguments args = CommandArguments.create(username).add(command).add(arguments);
+		return executeCommand(Command.ACL, SubCommand.ACL_DRYRUN, args);
 	}
 
 	@Override
@@ -248,9 +248,9 @@ public final class JedisServerCommands extends AbstractJedisRedisCommands implem
 	}
 
 	@Override
-	public List<CommandKeyAndFlag> commandGetKeysAndFlags(final Command command, final String... args) {
-		final CommandArguments args1 = CommandArguments.create(command, args);
-		return executeCommand(Command.COMMAND, SubCommand.COMMAND_GETKEYSANDFLAGS, args1);
+	public List<CommandKeyAndFlag> commandGetKeysAndFlags(final Command command, final String... arguments) {
+		final CommandArguments args = CommandArguments.create(command).add(arguments);
+		return executeCommand(Command.COMMAND, SubCommand.COMMAND_GETKEYSANDFLAGS, args);
 	}
 
 	@Override
@@ -306,7 +306,7 @@ public final class JedisServerCommands extends AbstractJedisRedisCommands implem
 
 	@Override
 	public Long dbSize() {
-		return executeCommand(Command.DBSIZE, (cmd)->cmd.dbSize(), (v)->v);
+		return executeCommand(Command.DBSIZE, (cmd)->cmd.dbSize());
 	}
 
 	@Override
@@ -462,27 +462,27 @@ public final class JedisServerCommands extends AbstractJedisRedisCommands implem
 	@Override
 	public Long memoryUsage(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.MEMORY, SubCommand.MEMORY_USAGE, args, (cmd)->cmd.memoryUsage(key), (v)->v);
+		return executeCommand(Command.MEMORY, SubCommand.MEMORY_USAGE, args, (cmd)->cmd.memoryUsage(rawKey(key)));
 	}
 
 	@Override
 	public Long memoryUsage(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.MEMORY, SubCommand.MEMORY_USAGE, args, (cmd)->cmd.memoryUsage(key), (v)->v);
+		return executeCommand(Command.MEMORY, SubCommand.MEMORY_USAGE, args, (cmd)->cmd.memoryUsage(rawKey(key)));
 	}
 
 	@Override
 	public Long memoryUsage(final String key, final int samples) {
 		final CommandArguments args = CommandArguments.create(key).add("SAMPLES", samples);
-		return executeCommand(Command.MEMORY, SubCommand.MEMORY_USAGE, args, (cmd)->cmd.memoryUsage(key, samples),
-				(v)->v);
+		return executeCommand(Command.MEMORY, SubCommand.MEMORY_USAGE, args,
+				(cmd)->cmd.memoryUsage(rawKey(key), samples));
 	}
 
 	@Override
 	public Long memoryUsage(final byte[] key, final int samples) {
 		final CommandArguments args = CommandArguments.create(key).add("SAMPLES", samples);
-		return executeCommand(Command.MEMORY, SubCommand.MEMORY_USAGE, args, (cmd)->cmd.memoryUsage(key, samples),
-				(v)->v);
+		return executeCommand(Command.MEMORY, SubCommand.MEMORY_USAGE, args,
+				(cmd)->cmd.memoryUsage(rawKey(key), samples));
 	}
 
 	@Override

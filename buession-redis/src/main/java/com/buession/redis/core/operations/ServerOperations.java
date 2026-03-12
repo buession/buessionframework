@@ -103,13 +103,13 @@ public interface ServerOperations extends ServerCommands, RedisOperations {
 	}
 
 	@Override
-	default Status aclDryRun(final String username, final Command command, final String... args) {
-		return execute((client)->client.serverCommands().aclDryRun(username, command, args));
+	default Status aclDryRun(final String username, final Command command, final String... arguments) {
+		return execute((client)->client.serverCommands().aclDryRun(username, command, arguments));
 	}
 
 	@Override
-	default Status aclDryRun(final byte[] username, final Command command, final byte[]... args) {
-		return execute((client)->client.serverCommands().aclDryRun(username, command, args));
+	default Status aclDryRun(final byte[] username, final Command command, final byte[]... arguments) {
+		return execute((client)->client.serverCommands().aclDryRun(username, command, arguments));
 	}
 
 	@Override
@@ -148,7 +148,7 @@ public interface ServerOperations extends ServerCommands, RedisOperations {
 	}
 
 	@Override
-	default List<AclLog> aclLog(final long count) {
+	default List<AclLog> aclLog(final int count) {
 		return execute((client)->client.serverCommands().aclLog(count));
 	}
 
@@ -213,8 +213,8 @@ public interface ServerOperations extends ServerCommands, RedisOperations {
 	}
 
 	@Override
-	default List<String> commandGetKeys(final Command command, final String... args) {
-		return execute((client)->client.serverCommands().commandGetKeys(command, args));
+	default List<String> commandGetKeys(final Command command, final String... arguments) {
+		return execute((client)->client.serverCommands().commandGetKeys(command, arguments));
 	}
 
 	@Override
@@ -223,8 +223,8 @@ public interface ServerOperations extends ServerCommands, RedisOperations {
 	}
 
 	@Override
-	default List<CommandKeyAndFlag> commandGetKeysAndFlags(final Command command, final String... args) {
-		return execute((client)->client.serverCommands().commandGetKeysAndFlags(command, args));
+	default List<CommandKeyAndFlag> commandGetKeysAndFlags(final Command command, final String... arguments) {
+		return execute((client)->client.serverCommands().commandGetKeysAndFlags(command, arguments));
 	}
 
 	@Override

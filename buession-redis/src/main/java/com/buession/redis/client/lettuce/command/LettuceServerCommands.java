@@ -57,6 +57,7 @@ import com.buession.redis.core.command.args.FailoverArgument;
 import com.buession.redis.core.command.args.HotkeysStartArgument;
 import com.buession.redis.core.command.args.RestoreArgument;
 import com.buession.redis.core.command.args.ShutdownArgument;
+import com.buession.redis.core.internal.convert.StringMapBinaryMapConverter;
 import com.buession.redis.core.internal.convert.lettuce.params.FlushModeConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.AclCategoryConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.AclLogConverter;
@@ -111,7 +112,7 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public Long aclDelUser(final String... usernames) {
 		final CommandArguments args = CommandArguments.create(usernames);
-		return executeCommand(Command.ACL, SubCommand.ACL_DELUSER, args, (cmd)->cmd.aclDeluser(usernames), (v)->v);
+		return executeCommand(Command.ACL, SubCommand.ACL_DELUSER, args, (cmd)->cmd.aclDeluser(usernames));
 	}
 
 	@Override
@@ -132,10 +133,10 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 	}
 
 	@Override
-	public Status aclDryRun(final String username, final Command command, final String... args) {
-		final CommandArguments args1 = CommandArguments.create(username).add(command, args);
-		return executeCommand(Command.ACL, SubCommand.ACL_DRYRUN, args1,
-				(cmd)->cmd.aclDryRun(username, command.getName(), args), new OkStatusConverter());
+	public Status aclDryRun(final String username, final Command command, final String... arguments) {
+		final CommandArguments args = CommandArguments.create(username).add(command).add(arguments);
+		return executeCommand(Command.ACL, SubCommand.ACL_DRYRUN, args,
+				(cmd)->cmd.aclDryRun(username, command.getName(), arguments), new OkStatusConverter());
 	}
 
 	@Override
@@ -145,13 +146,13 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public String aclGenPass() {
-		return executeCommand(Command.ACL, SubCommand.ACL_GENPASS, (cmd)->cmd.aclGenpass(), (v)->v);
+		return executeCommand(Command.ACL, SubCommand.ACL_GENPASS, (cmd)->cmd.aclGenpass());
 	}
 
 	@Override
 	public String aclGenPass(final int bits) {
 		final CommandArguments args = CommandArguments.create(bits);
-		return executeCommand(Command.ACL, SubCommand.ACL_GENPASS, args, (cmd)->cmd.aclGenpass(bits), (v)->v);
+		return executeCommand(Command.ACL, SubCommand.ACL_GENPASS, args, (cmd)->cmd.aclGenpass(bits));
 	}
 
 	@Override
@@ -168,7 +169,7 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public List<String> aclList() {
-		return executeCommand(Command.ACL, SubCommand.ACL_LIST, (cmd)->cmd.aclList(), (v)->v);
+		return executeCommand(Command.ACL, SubCommand.ACL_LIST, (cmd)->cmd.aclList());
 	}
 
 	@Override
@@ -215,12 +216,12 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public List<String> aclUsers() {
-		return executeCommand(Command.ACL, SubCommand.ACL_USERS, (cmd)->cmd.aclUsers(), (v)->v);
+		return executeCommand(Command.ACL, SubCommand.ACL_USERS, (cmd)->cmd.aclUsers());
 	}
 
 	@Override
 	public String aclWhoAmI() {
-		return executeCommand(Command.ACL, SubCommand.ACL_WHOAMI, (cmd)->cmd.aclWhoami(), (v)->v);
+		return executeCommand(Command.ACL, SubCommand.ACL_WHOAMI, (cmd)->cmd.aclWhoami());
 	}
 
 	@Override
@@ -230,12 +231,12 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public String bgSave() {
-		return executeCommand(Command.BGSAVE, (cmd)->cmd.bgsave(), (v)->v);
+		return executeCommand(Command.BGSAVE, (cmd)->cmd.bgsave());
 	}
 
 	@Override
 	public Integer commandCount() {
-		return executeCommand(Command.COMMAND, SubCommand.COMMAND_COUNT, (cmd)->cmd.commandCount(), (v)->v.intValue());
+		return executeCommand(Command.COMMAND, SubCommand.COMMAND_COUNT, (cmd)->cmd.commandCount(), Long::intValue);
 	}
 
 	@Override
@@ -256,9 +257,9 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 	}
 
 	@Override
-	public List<String> commandGetKeys(final Command command, final String... args) {
-		final CommandArguments args1 = CommandArguments.create(command).add(args);
-		return executeCommand(Command.COMMAND, SubCommand.COMMAND_GETKEYS, args1);
+	public List<String> commandGetKeys(final Command command, final String... arguments) {
+		final CommandArguments args = CommandArguments.create(command).add(arguments);
+		return executeCommand(Command.COMMAND, SubCommand.COMMAND_GETKEYS, args);
 	}
 
 	@Override
@@ -268,9 +269,9 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 	}
 
 	@Override
-	public List<CommandKeyAndFlag> commandGetKeysAndFlags(final Command command, final String... args) {
-		final CommandArguments args1 = CommandArguments.create(command).add(args);
-		return executeCommand(Command.COMMAND, SubCommand.COMMAND_GETKEYSANDFLAGS, args1);
+	public List<CommandKeyAndFlag> commandGetKeysAndFlags(final Command command, final String... arguments) {
+		final CommandArguments args = CommandArguments.create(command).add(arguments);
+		return executeCommand(Command.COMMAND, SubCommand.COMMAND_GETKEYSANDFLAGS, args);
 	}
 
 	@Override
@@ -294,14 +295,14 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public Map<String, String> configGet(final String... parameters) {
 		final CommandArguments args = CommandArguments.create(parameters);
-		return executeCommand(Command.CONFIG_GET, args, (cmd)->cmd.configGet(parameters), (v)->v);
+		return executeCommand(Command.CONFIG_GET, args, (cmd)->cmd.configGet(parameters));
 	}
 
 	@Override
 	public Map<byte[], byte[]> configGet(final byte[]... parameters) {
 		final CommandArguments args = CommandArguments.create(parameters);
 		return executeCommand(Command.CONFIG_GET, args, (cmd)->cmd.configGet(SafeEncoder.encode(parameters)),
-				new MapConverter<>(SafeEncoder::encode, SafeEncoder::encode));
+				new StringMapBinaryMapConverter());
 	}
 
 	@Override
@@ -334,7 +335,7 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public Long dbSize() {
-		return executeCommand(Command.DBSIZE, (cmd)->cmd.dbsize(), (v)->v);
+		return executeCommand(Command.DBSIZE, (cmd)->cmd.dbsize());
 	}
 
 	@Override
@@ -493,24 +494,26 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public Long memoryUsage(final String key) {
-		return memoryUsage(SafeEncoder.encode(key));
+		final CommandArguments args = CommandArguments.create(key);
+		return executeCommand(Command.MEMORY, SubCommand.MEMORY_USAGE, args, (cmd)->cmd.memoryUsage(rawBinaryKey(key)));
 	}
 
 	@Override
 	public Long memoryUsage(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.MEMORY, SubCommand.MEMORY_USAGE, args, (cmd)->cmd.memoryUsage(key), (v)->v);
+		return executeCommand(Command.MEMORY, SubCommand.MEMORY_USAGE, args, (cmd)->cmd.memoryUsage(rawKey(key)));
 	}
 
 	@Override
 	public Long memoryUsage(final String key, final int samples) {
-		return memoryUsage(SafeEncoder.encode(key), samples);
+		final CommandArguments args = CommandArguments.create(key).add("SAMPLES", samples);
+		return executeCommand(Command.MEMORY, SubCommand.MEMORY_USAGE, args, (cmd)->cmd.memoryUsage(rawBinaryKey(key)));
 	}
 
 	@Override
 	public Long memoryUsage(final byte[] key, final int samples) {
 		final CommandArguments args = CommandArguments.create(key).add("SAMPLES", samples);
-		return executeCommand(Command.MEMORY, SubCommand.MEMORY_USAGE, args, (cmd)->cmd.memoryUsage(key), (v)->v);
+		return executeCommand(Command.MEMORY, SubCommand.MEMORY_USAGE, args, (cmd)->cmd.memoryUsage(rawKey(key)));
 	}
 
 	@Override
@@ -656,8 +659,7 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public Long slowLogLen() {
-		return executeCommand(Command.SLOWLOG, SubCommand.SLOWLOG_LEN, (cmd)->cmd.slowlogLen(),
-				(v)->v);
+		return executeCommand(Command.SLOWLOG, SubCommand.SLOWLOG_LEN, (cmd)->cmd.slowlogLen());
 	}
 
 	@Override
