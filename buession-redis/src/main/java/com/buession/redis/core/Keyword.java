@@ -56,6 +56,8 @@ public interface Keyword extends Value<String>, Rawable {
 
 		WITHSCORE,
 
+		WITHSCORES,
+
 		FORCE,
 
 		REPLACE,

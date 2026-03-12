@@ -1366,6 +1366,34 @@ public class RedisTemplate extends AbstractRedisTemplate implements AutoSuggestO
 	}
 
 	@Override
+	public <V> List<V> zInter(final String[] keys, final Aggregate aggregate, final double[] weights,
+							  final Class<V> clazz) {
+		return execute((client)->client.sortedSetCommands().zInter(keys, aggregate, weights),
+				new Converter.ClazzListStringConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> List<V> zInter(final byte[][] keys, final Aggregate aggregate, final double[] weights,
+							  final Class<V> clazz) {
+		return execute((client)->client.sortedSetCommands().zInter(keys, aggregate, weights),
+				new Converter.ClazzListBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> List<V> zInter(final String[] keys, final Aggregate aggregate, final double[] weights,
+							  final TypeReference<V> type) {
+		return execute((client)->client.sortedSetCommands().zInter(keys, aggregate, weights),
+				new Converter.TypeListStringConverter<>(this, type));
+	}
+
+	@Override
+	public <V> List<V> zInter(final byte[][] keys, final Aggregate aggregate, final double[] weights,
+							  final TypeReference<V> type) {
+		return execute((client)->client.sortedSetCommands().zInter(keys, aggregate, weights),
+				new Converter.TypeListBinaryConverter<>(this, type));
+	}
+
+	@Override
 	public <V> List<V> zInter(final String[] keys, final double[] weights, final Class<V> clazz) {
 		return execute((client)->client.sortedSetCommands().zInter(keys, weights),
 				new Converter.ClazzListStringConverter<>(this, clazz));
@@ -1386,34 +1414,6 @@ public class RedisTemplate extends AbstractRedisTemplate implements AutoSuggestO
 	@Override
 	public <V> List<V> zInter(final byte[][] keys, final double[] weights, final TypeReference<V> type) {
 		return execute((client)->client.sortedSetCommands().zInter(keys, weights),
-				new Converter.TypeListBinaryConverter<>(this, type));
-	}
-
-	@Override
-	public <V> List<V> zInter(final String[] keys, final Aggregate aggregate, final double[] weights,
-							  final Class<V> clazz) {
-		return execute((client)->client.sortedSetCommands().zInter(keys, aggregate, weights),
-				new Converter.ClazzListStringConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> zInter(final byte[][] keys, final Aggregate aggregate, final double[] weights,
-							  final Class<V> clazz) {
-		return execute((client)->client.sortedSetCommands().zInter(keys, aggregate, weights),
-				new Converter.ClazzListBinaryConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> zInter(final String[] keys, final Aggregate aggregate, final double[] weights,
-							  final TypeReference<V> type) {
-		return execute((client)->client.sortedSetCommands().zInter(keys, aggregate, weights),
-				new Converter.TypeListStringConverter<>(this, type));
-	}
-
-	@Override
-	public <V> List<V> zInter(final byte[][] keys, final Aggregate aggregate, final double[] weights,
-							  final TypeReference<V> type) {
-		return execute((client)->client.sortedSetCommands().zInter(keys, aggregate, weights),
 				new Converter.TypeListBinaryConverter<>(this, type));
 	}
 
@@ -1944,6 +1944,34 @@ public class RedisTemplate extends AbstractRedisTemplate implements AutoSuggestO
 	}
 
 	@Override
+	public <V> List<V> zUnion(final String[] keys, final Aggregate aggregate, final double[] weights,
+							  final Class<V> clazz) {
+		return execute((client)->client.sortedSetCommands().zUnion(keys, aggregate, weights),
+				new Converter.ClazzListStringConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> List<V> zUnion(final byte[][] keys, final Aggregate aggregate, final double[] weights,
+							  final Class<V> clazz) {
+		return execute((client)->client.sortedSetCommands().zUnion(keys, aggregate, weights),
+				new Converter.ClazzListBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> List<V> zUnion(final String[] keys, final Aggregate aggregate, final double[] weights,
+							  final TypeReference<V> type) {
+		return execute((client)->client.sortedSetCommands().zUnion(keys, aggregate, weights),
+				new Converter.TypeListStringConverter<>(this, type));
+	}
+
+	@Override
+	public <V> List<V> zUnion(final byte[][] keys, final Aggregate aggregate, final double[] weights,
+							  final TypeReference<V> type) {
+		return execute((client)->client.sortedSetCommands().zUnion(keys, aggregate, weights),
+				new Converter.TypeListBinaryConverter<>(this, type));
+	}
+
+	@Override
 	public <V> List<V> zUnion(final String[] keys, final double[] weights, final Class<V> clazz) {
 		return execute((client)->client.sortedSetCommands().zUnion(keys, weights),
 				new Converter.ClazzListStringConverter<>(this, clazz));
@@ -1964,34 +1992,6 @@ public class RedisTemplate extends AbstractRedisTemplate implements AutoSuggestO
 	@Override
 	public <V> List<V> zUnion(final byte[][] keys, final double[] weights, final TypeReference<V> type) {
 		return execute((client)->client.sortedSetCommands().zUnion(keys, weights),
-				new Converter.TypeListBinaryConverter<>(this, type));
-	}
-
-	@Override
-	public <V> List<V> zUnion(final String[] keys, final Aggregate aggregate, final double[] weights,
-							  final Class<V> clazz) {
-		return execute((client)->client.sortedSetCommands().zUnion(keys, aggregate, weights),
-				new Converter.ClazzListStringConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> zUnion(final byte[][] keys, final Aggregate aggregate, final double[] weights,
-							  final Class<V> clazz) {
-		return execute((client)->client.sortedSetCommands().zUnion(keys, aggregate, weights),
-				new Converter.ClazzListBinaryConverter<>(this, clazz));
-	}
-
-	@Override
-	public <V> List<V> zUnion(final String[] keys, final Aggregate aggregate, final double[] weights,
-							  final TypeReference<V> type) {
-		return execute((client)->client.sortedSetCommands().zUnion(keys, aggregate, weights),
-				new Converter.TypeListStringConverter<>(this, type));
-	}
-
-	@Override
-	public <V> List<V> zUnion(final byte[][] keys, final Aggregate aggregate, final double[] weights,
-							  final TypeReference<V> type) {
-		return execute((client)->client.sortedSetCommands().zUnion(keys, aggregate, weights),
 				new Converter.TypeListBinaryConverter<>(this, type));
 	}
 

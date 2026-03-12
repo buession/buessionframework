@@ -34,7 +34,6 @@ import com.buession.redis.core.Tuple;
 import com.buession.redis.core.ZRangeType;
 import com.buession.redis.core.command.SortedSetCommands;
 import com.buession.redis.core.command.args.ZAddArgument;
-import com.buession.redis.core.command.args.ZRangeArgument;
 
 import java.util.List;
 
@@ -115,6 +114,11 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	}
 
 	@Override
+	default Long zCard(final byte[] key) {
+		return execute((client)->client.sortedSetCommands().zCard(key));
+	}
+
+	@Override
 	default Long zCount(final String key, final double min, final double max) {
 		return execute((client)->client.sortedSetCommands().zCount(key, min, max));
 	}
@@ -122,11 +126,6 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	@Override
 	default Long zCount(final byte[] key, final double min, final double max) {
 		return execute((client)->client.sortedSetCommands().zCount(key, min, max));
-	}
-
-	@Override
-	default Long zCard(final byte[] key) {
-		return execute((client)->client.sortedSetCommands().zCard(key));
 	}
 
 	@Override
@@ -346,16 +345,6 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	}
 
 	@Override
-	default List<String> zInter(final String[] keys, final double... weights) {
-		return execute((client)->client.sortedSetCommands().zInter(keys, weights));
-	}
-
-	@Override
-	default List<byte[]> zInter(final byte[][] keys, final double... weights) {
-		return execute((client)->client.sortedSetCommands().zInter(keys, weights));
-	}
-
-	@Override
 	default List<String> zInter(final String[] keys, final Aggregate aggregate, final double... weights) {
 		return execute((client)->client.sortedSetCommands().zInter(keys, aggregate, weights));
 	}
@@ -363,6 +352,16 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	@Override
 	default List<byte[]> zInter(final byte[][] keys, final Aggregate aggregate, final double... weights) {
 		return execute((client)->client.sortedSetCommands().zInter(keys, aggregate, weights));
+	}
+
+	@Override
+	default List<String> zInter(final String[] keys, final double... weights) {
+		return execute((client)->client.sortedSetCommands().zInter(keys, weights));
+	}
+
+	@Override
+	default List<byte[]> zInter(final byte[][] keys, final double... weights) {
+		return execute((client)->client.sortedSetCommands().zInter(keys, weights));
 	}
 
 	/**
@@ -508,78 +507,6 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @param keys
 	 * 		一个或多个 Key
-	 * @param weights
-	 * 		每个给定有序集的乘法因子
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 有序集合的交集反序列为对象
-	 */
-	<V> List<V> zInter(final String[] keys, final double[] weights, final Class<V> clazz);
-
-	/**
-	 * 计算给定的一个或多个有序集合的交集，并反序列化为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param weights
-	 * 		每个给定有序集的乘法因子
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 有序集合的交集反序列为对象
-	 */
-	<V> List<V> zInter(final byte[][] keys, final double[] weights, final Class<V> clazz);
-
-	/**
-	 * 计算给定的一个或多个有序集合的交集，并反序列化为 type 指定的对象
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param weights
-	 * 		每个给定有序集的乘法因子
-	 * @param type
-	 * 		值类型引用
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 有序集合的交集反序列为对象
-	 */
-	<V> List<V> zInter(final String[] keys, final double[] weights, final TypeReference<V> type);
-
-	/**
-	 * 计算给定的一个或多个有序集合的交集，并反序列化为 type 指定的对象
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param weights
-	 * 		每个给定有序集的乘法因子
-	 * @param type
-	 * 		值类型引用
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 有序集合的交集反序列为对象
-	 */
-	<V> List<V> zInter(final byte[][] keys, final double[] weights, final TypeReference<V> type);
-
-	/**
-	 * 计算给定的一个或多个有序集合的交集，并反序列化为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
 	 * @param aggregate
 	 *        {@link Aggregate}
 	 * @param weights
@@ -655,6 +582,78 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	<V> List<V> zInter(final byte[][] keys, final Aggregate aggregate, final double[] weights,
 					   final TypeReference<V> type);
 
+	/**
+	 * 计算给定的一个或多个有序集合的交集，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合的交集反序列为对象
+	 */
+	<V> List<V> zInter(final String[] keys, final double[] weights, final Class<V> clazz);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合的交集反序列为对象
+	 */
+	<V> List<V> zInter(final byte[][] keys, final double[] weights, final Class<V> clazz);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合的交集反序列为对象
+	 */
+	<V> List<V> zInter(final String[] keys, final double[] weights, final TypeReference<V> type);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合的交集反序列为对象
+	 */
+	<V> List<V> zInter(final byte[][] keys, final double[] weights, final TypeReference<V> type);
+
 	@Override
 	default List<Tuple> zInterWithScores(final String... keys) {
 		return execute((client)->client.sortedSetCommands().zInterWithScores(keys));
@@ -676,16 +675,6 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	}
 
 	@Override
-	default List<Tuple> zInterWithScores(final String[] keys, final double... weights) {
-		return execute((client)->client.sortedSetCommands().zInterWithScores(keys, weights));
-	}
-
-	@Override
-	default List<Tuple> zInterWithScores(final byte[][] keys, final double... weights) {
-		return execute((client)->client.sortedSetCommands().zInterWithScores(keys, weights));
-	}
-
-	@Override
 	default List<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate, final double... weights) {
 		return execute((client)->client.sortedSetCommands().zInterWithScores(keys, aggregate, weights));
 	}
@@ -693,6 +682,16 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	@Override
 	default List<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights) {
 		return execute((client)->client.sortedSetCommands().zInterWithScores(keys, aggregate, weights));
+	}
+
+	@Override
+	default List<Tuple> zInterWithScores(final String[] keys, final double... weights) {
+		return execute((client)->client.sortedSetCommands().zInterWithScores(keys, weights));
+	}
+
+	@Override
+	default List<Tuple> zInterWithScores(final byte[][] keys, final double... weights) {
+		return execute((client)->client.sortedSetCommands().zInterWithScores(keys, weights));
 	}
 
 	@Override
@@ -736,16 +735,6 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	}
 
 	@Override
-	default Long zInterStore(final String destKey, final String[] keys, final double... weights) {
-		return execute((client)->client.sortedSetCommands().zInterStore(destKey, keys, weights));
-	}
-
-	@Override
-	default Long zInterStore(final byte[] destKey, final byte[][] keys, final double... weights) {
-		return execute((client)->client.sortedSetCommands().zInterStore(destKey, keys, weights));
-	}
-
-	@Override
 	default Long zInterStore(final String destKey, final String[] keys, final Aggregate aggregate,
 							 final double... weights) {
 		return execute((client)->client.sortedSetCommands().zInterStore(destKey, keys, aggregate, weights));
@@ -755,6 +744,16 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	default Long zInterStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate,
 							 final double... weights) {
 		return execute((client)->client.sortedSetCommands().zInterStore(destKey, keys, aggregate, weights));
+	}
+
+	@Override
+	default Long zInterStore(final String destKey, final String[] keys, final double... weights) {
+		return execute((client)->client.sortedSetCommands().zInterStore(destKey, keys, weights));
+	}
+
+	@Override
+	default Long zInterStore(final byte[] destKey, final byte[][] keys, final double... weights) {
+		return execute((client)->client.sortedSetCommands().zInterStore(destKey, keys, weights));
 	}
 
 	@Override
@@ -2461,14 +2460,38 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 
 	@Override
 	default Long zRangeStore(final String destKey, final String key, final long start, final long end,
-							 final ZRangeArgument argument) {
-		return execute((client)->client.sortedSetCommands().zRangeStore(destKey, key, start, end, argument));
+							 final ZRangeType type) {
+		return execute((client)->client.sortedSetCommands().zRangeStore(destKey, key, start, end, type));
 	}
 
 	@Override
 	default Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
-							 final ZRangeArgument argument) {
-		return execute((client)->client.sortedSetCommands().zRangeStore(destKey, key, start, end, argument));
+							 final ZRangeType type) {
+		return execute((client)->client.sortedSetCommands().zRangeStore(destKey, key, start, end, type));
+	}
+
+	@Override
+	default Long zRangeStore(final String destKey, final String key, final long start, final long end,
+							 final ZRangeType type, final boolean rev) {
+		return execute((client)->client.sortedSetCommands().zRangeStore(destKey, key, start, end, type, rev));
+	}
+
+	@Override
+	default Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
+							 final ZRangeType type, final boolean rev) {
+		return execute((client)->client.sortedSetCommands().zRangeStore(destKey, key, start, end, type, rev));
+	}
+
+	@Override
+	default Long zRangeStore(final String destKey, final String key, final long start, final long end,
+							 final boolean rev) {
+		return execute((client)->client.sortedSetCommands().zRangeStore(destKey, key, start, end, rev));
+	}
+
+	@Override
+	default Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
+							 final boolean rev) {
+		return execute((client)->client.sortedSetCommands().zRangeStore(destKey, key, start, end, rev));
 	}
 
 	@Override
@@ -2485,16 +2508,42 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 
 	@Override
 	default Long zRangeStore(final String destKey, final String key, final long start, final long end,
-							 final ZRangeArgument argument, final int offset, final int count) {
-		return execute(
-				(client)->client.sortedSetCommands().zRangeStore(destKey, key, start, end, argument, offset, count));
+							 final ZRangeType type, final int offset, final int count) {
+		return execute((client)->client.sortedSetCommands().zRangeStore(destKey, key, start, end, type, offset, count));
 	}
 
 	@Override
 	default Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
-							 final ZRangeArgument argument, final int offset, final int count) {
-		return execute(
-				(client)->client.sortedSetCommands().zRangeStore(destKey, key, start, end, argument, offset, count));
+							 final ZRangeType type, final int offset, final int count) {
+		return execute((client)->client.sortedSetCommands().zRangeStore(destKey, key, start, end, type, offset, count));
+	}
+
+	@Override
+	default Long zRangeStore(final String destKey, final String key, final long start, final long end,
+							 final ZRangeType type, final boolean rev, final int offset, final int count) {
+		return execute((client)->client.sortedSetCommands().zRangeStore(destKey, key, start, end, type, rev, offset,
+				count));
+	}
+
+	@Override
+	default Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
+							 final ZRangeType type, final boolean rev, final int offset, final int count) {
+		return execute((client)->client.sortedSetCommands().zRangeStore(destKey, key, start, end, type, rev, offset,
+				count));
+	}
+
+	@Override
+	default Long zRangeStore(final String destKey, final String key, final long start, final long end,
+							 final boolean rev, final int offset, final int count) {
+		return execute((client)->client.sortedSetCommands().zRangeStore(destKey, key, start, end, rev, offset,
+				count));
+	}
+
+	@Override
+	default Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
+							 final boolean rev, final int offset, final int count) {
+		return execute((client)->client.sortedSetCommands().zRangeStore(destKey, key, start, end, rev, offset,
+				count));
 	}
 
 	@Override
@@ -2778,52 +2827,6 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
 	 */
 	<V> List<V> zRevRangeByLex(final byte[] key, final double min, final double max, final TypeReference<V> type);
-
-	/**
-	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
-	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 * @param offset
-	 * 		偏移量
-	 * @param count
-	 * 		返回个数
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
-	 */
-	<V> List<V> zRevRangeByLex(final String key, final double min, final double max, final int offset, final int count);
-
-	/**
-	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
-	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 * @param offset
-	 * 		偏移量
-	 * @param count
-	 * 		返回个数
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
-	 */
-	<V> List<V> zRevRangeByLex(final byte[] key, final double min, final double max, final int offset, final int count);
 
 	/**
 	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
@@ -3197,14 +3200,6 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 		return execute((client)->client.sortedSetCommands().zScan(key, cursor));
 	}
 
-	default ScanResult<Tuple> zScan(final String key, final long cursor) {
-		return zScan(key, Long.toString(cursor));
-	}
-
-	default ScanResult<Tuple> zScan(final byte[] key, final long cursor) {
-		return zScan(key, NumberUtils.long2bytes(cursor));
-	}
-
 	@Override
 	default ScanResult<Tuple> zScan(final String key, final String cursor, final String pattern) {
 		return execute((client)->client.sortedSetCommands().zScan(key, cursor, pattern));
@@ -3213,14 +3208,6 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	@Override
 	default ScanResult<Tuple> zScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
 		return execute((client)->client.sortedSetCommands().zScan(key, cursor, pattern));
-	}
-
-	default ScanResult<Tuple> zScan(final String key, final long cursor, final String pattern) {
-		return zScan(key, Long.toString(cursor), pattern);
-	}
-
-	default ScanResult<Tuple> zScan(final byte[] key, final long cursor, final byte[] pattern) {
-		return zScan(key, NumberUtils.long2bytes(cursor), pattern);
 	}
 
 	@Override
@@ -3233,14 +3220,6 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 		return execute((client)->client.sortedSetCommands().zScan(key, cursor, count));
 	}
 
-	default ScanResult<Tuple> zScan(final String key, final long cursor, final int count) {
-		return zScan(key, Long.toString(cursor), Long.toString(count));
-	}
-
-	default ScanResult<Tuple> zScan(final byte[] key, final long cursor, final int count) {
-		return zScan(key, NumberUtils.long2bytes(cursor), NumberUtils.long2bytes(count));
-	}
-
 	@Override
 	default ScanResult<Tuple> zScan(final String key, final String cursor, final String pattern, final int count) {
 		return execute((client)->client.sortedSetCommands().zScan(key, cursor, pattern, count));
@@ -3251,12 +3230,148 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 		return execute((client)->client.sortedSetCommands().zScan(key, cursor, pattern, count));
 	}
 
+	/**
+	 * 迭代有序集 key 中的键值对
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/zscan/" target="_blank">https://redis.io/docs/latest/commands/zscan/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	default ScanResult<Tuple> zScan(final String key, final long cursor) {
+		return zScan(key, Long.toString(cursor));
+	}
+
+	/**
+	 * 迭代有序集 key 中的键值对
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/zscan/" target="_blank">https://redis.io/docs/latest/commands/zscan/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 *
+	 * @return 返回的每个元素都是一个键值对
+	 */
+	default ScanResult<Tuple> zScan(final byte[] key, final long cursor) {
+		return zScan(key, NumberUtils.long2bytes(cursor));
+	}
+
+	/**
+	 * 迭代有序集 key 中的键值对
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/zscan/" target="_blank">https://redis.io/docs/latest/commands/zscan/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 *
+	 * @return 返回和给定模式相匹配的元素
+	 */
+	default ScanResult<Tuple> zScan(final String key, final long cursor, final String pattern) {
+		return zScan(key, Long.toString(cursor), pattern);
+	}
+
+	/**
+	 * 迭代有序集 key 中的键值对
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/zscan/" target="_blank">https://redis.io/docs/latest/commands/zscan/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 *
+	 * @return 返回和给定模式相匹配的元素
+	 */
+	default ScanResult<Tuple> zScan(final byte[] key, final long cursor, final byte[] pattern) {
+		return zScan(key, NumberUtils.long2bytes(cursor), pattern);
+	}
+
+	/**
+	 * 迭代有序集 key 中的键值对
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/zscan/" target="_blank">https://redis.io/docs/latest/commands/zscan/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回和给定模式相匹配指定数量的元素
+	 */
 	default ScanResult<Tuple> zScan(final String key, final long cursor, final String pattern, final int count) {
 		return zScan(key, Long.toString(cursor), pattern, count);
 	}
 
+	/**
+	 * 迭代有序集 key 中的键值对
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/zscan/" target="_blank">https://redis.io/docs/latest/commands/zscan/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param pattern
+	 * 		glob 风格的模式参数
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回和给定模式相匹配指定数量的元素
+	 */
 	default ScanResult<Tuple> zScan(final byte[] key, final long cursor, final byte[] pattern, final int count) {
 		return zScan(key, NumberUtils.long2bytes(cursor), pattern, count);
+	}
+
+	/**
+	 * 迭代有序集 key 中的键值对
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/zscan/" target="_blank">https://redis.io/docs/latest/commands/zscan/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回的指定数量的键值对
+	 */
+	default ScanResult<Tuple> zScan(final String key, final long cursor, final int count) {
+		return zScan(key, Long.toString(cursor), Long.toString(count));
+	}
+
+	/**
+	 * 迭代有序集 key 中的键值对
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/zscan/" target="_blank">https://redis.io/docs/latest/commands/zscan/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param cursor
+	 * 		游标
+	 * @param count
+	 * 		返回元素数量
+	 *
+	 * @return 返回的指定数量的键值对
+	 */
+	default ScanResult<Tuple> zScan(final byte[] key, final long cursor, final int count) {
+		return zScan(key, NumberUtils.long2bytes(cursor), NumberUtils.long2bytes(count));
 	}
 
 	@Override
@@ -3290,16 +3405,6 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	}
 
 	@Override
-	default List<String> zUnion(final String[] keys, final double... weights) {
-		return execute((client)->client.sortedSetCommands().zUnion(keys, weights));
-	}
-
-	@Override
-	default List<byte[]> zUnion(final byte[][] keys, final double... weights) {
-		return execute((client)->client.sortedSetCommands().zUnion(keys, weights));
-	}
-
-	@Override
 	default List<String> zUnion(final String[] keys, final Aggregate aggregate, final double... weights) {
 		return execute((client)->client.sortedSetCommands().zUnion(keys, aggregate, weights));
 	}
@@ -3307,6 +3412,16 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	@Override
 	default List<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate, final double... weights) {
 		return execute((client)->client.sortedSetCommands().zUnion(keys, aggregate, weights));
+	}
+
+	@Override
+	default List<String> zUnion(final String[] keys, final double... weights) {
+		return execute((client)->client.sortedSetCommands().zUnion(keys, weights));
+	}
+
+	@Override
+	default List<byte[]> zUnion(final byte[][] keys, final double... weights) {
+		return execute((client)->client.sortedSetCommands().zUnion(keys, weights));
 	}
 
 	/**
@@ -3452,78 +3567,6 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @param keys
 	 * 		一个或多个 Key
-	 * @param weights
-	 * 		每个给定有序集的乘法因子
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 并集成员反序列化为对象的列表
-	 */
-	<V> List<V> zUnion(final String[] keys, final double[] weights, final Class<V> clazz);
-
-	/**
-	 * 计算给定的一个或多个有序集的并集，并反序列化为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param weights
-	 * 		每个给定有序集的乘法因子
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 并集成员反序列化为对象的列表
-	 */
-	<V> List<V> zUnion(final byte[][] keys, final double[] weights, final Class<V> clazz);
-
-	/**
-	 * 计算给定的一个或多个有序集的并集，并反序列化为 type 指定的对象
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param weights
-	 * 		每个给定有序集的乘法因子
-	 * @param type
-	 * 		值类型引用
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 并集成员反序列化为对象的列表
-	 */
-	<V> List<V> zUnion(final String[] keys, final double[] weights, final TypeReference<V> type);
-
-	/**
-	 * 计算给定的一个或多个有序集的并集，并反序列化为 type 指定的对象
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param weights
-	 * 		每个给定有序集的乘法因子
-	 * @param type
-	 * 		值类型引用
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 并集成员反序列化为对象的列表
-	 */
-	<V> List<V> zUnion(final byte[][] keys, final double[] weights, final TypeReference<V> type);
-
-	/**
-	 * 计算给定的一个或多个有序集的并集，并反序列化为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
 	 * @param aggregate
 	 * 		并集的结果集的聚合方式
 	 * @param weights
@@ -3599,6 +3642,78 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	<V> List<V> zUnion(final byte[][] keys, final Aggregate aggregate, final double[] weights,
 					   final TypeReference<V> type);
 
+	/**
+	 * 计算给定的一个或多个有序集的并集，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 并集成员反序列化为对象的列表
+	 */
+	<V> List<V> zUnion(final String[] keys, final double[] weights, final Class<V> clazz);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 并集成员反序列化为对象的列表
+	 */
+	<V> List<V> zUnion(final byte[][] keys, final double[] weights, final Class<V> clazz);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 并集成员反序列化为对象的列表
+	 */
+	<V> List<V> zUnion(final String[] keys, final double[] weights, final TypeReference<V> type);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 并集成员反序列化为对象的列表
+	 */
+	<V> List<V> zUnion(final byte[][] keys, final double[] weights, final TypeReference<V> type);
+
 	@Override
 	default List<Tuple> zUnionWithScores(final String... keys) {
 		return execute((client)->client.sortedSetCommands().zUnionWithScores(keys));
@@ -3620,16 +3735,6 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	}
 
 	@Override
-	default List<Tuple> zUnionWithScores(final String[] keys, final double... weights) {
-		return execute((client)->client.sortedSetCommands().zUnionWithScores(keys, weights));
-	}
-
-	@Override
-	default List<Tuple> zUnionWithScores(final byte[][] keys, final double... weights) {
-		return execute((client)->client.sortedSetCommands().zUnionWithScores(keys, weights));
-	}
-
-	@Override
 	default List<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate, final double... weights) {
 		return execute((client)->client.sortedSetCommands().zUnionWithScores(keys, aggregate, weights));
 	}
@@ -3637,6 +3742,16 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	@Override
 	default List<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights) {
 		return execute((client)->client.sortedSetCommands().zUnionWithScores(keys, aggregate, weights));
+	}
+
+	@Override
+	default List<Tuple> zUnionWithScores(final String[] keys, final double... weights) {
+		return execute((client)->client.sortedSetCommands().zUnionWithScores(keys, weights));
+	}
+
+	@Override
+	default List<Tuple> zUnionWithScores(final byte[][] keys, final double... weights) {
+		return execute((client)->client.sortedSetCommands().zUnionWithScores(keys, weights));
 	}
 
 	@Override
@@ -3660,16 +3775,6 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	}
 
 	@Override
-	default Long zUnionStore(final String destKey, final String[] keys, final double... weights) {
-		return execute((client)->client.sortedSetCommands().zUnionStore(destKey, keys, weights));
-	}
-
-	@Override
-	default Long zUnionStore(final byte[] destKey, final byte[][] keys, final double... weights) {
-		return execute((client)->client.sortedSetCommands().zUnionStore(destKey, keys, weights));
-	}
-
-	@Override
 	default Long zUnionStore(final String destKey, final String[] keys, final Aggregate aggregate,
 							 final double... weights) {
 		return execute((client)->client.sortedSetCommands().zUnionStore(destKey, keys, aggregate, weights));
@@ -3679,6 +3784,16 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	default Long zUnionStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate,
 							 final double... weights) {
 		return execute((client)->client.sortedSetCommands().zUnionStore(destKey, keys, aggregate, weights));
+	}
+
+	@Override
+	default Long zUnionStore(final String destKey, final String[] keys, final double... weights) {
+		return execute((client)->client.sortedSetCommands().zUnionStore(destKey, keys, weights));
+	}
+
+	@Override
+	default Long zUnionStore(final byte[] destKey, final byte[][] keys, final double... weights) {
+		return execute((client)->client.sortedSetCommands().zUnionStore(destKey, keys, weights));
 	}
 
 }
