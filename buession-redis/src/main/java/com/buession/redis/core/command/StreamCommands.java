@@ -24,8 +24,9 @@
  */
 package com.buession.redis.core.command;
 
-import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
+import com.buession.redis.core.ApproximateExactTrimming;
+import com.buession.redis.core.AutoClaimId;
 import com.buession.redis.core.AutoClaimInfo;
 import com.buession.redis.core.Stream;
 import com.buession.redis.core.StreamConsumer;
@@ -42,7 +43,6 @@ import com.buession.redis.core.XReadInfo;
 import com.buession.redis.core.command.args.MaxLenMinId;
 import com.buession.redis.core.command.args.XAddArgument;
 import com.buession.redis.core.command.args.XClaimArgument;
-import com.buession.redis.core.command.args.XReadArgument;
 import com.buession.redis.core.command.args.XReadGroupArgument;
 
 import java.util.List;
@@ -340,9 +340,8 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntryId}
 	 */
-	KeyValue<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final String key, final String groupName,
-																  final String consumerName, final int minIdleTime,
-																  final StreamEntryId start);
+	AutoClaimId xAutoClaimJustId(final String key, final String groupName, final String consumerName,
+								 final int minIdleTime, final StreamEntryId start);
 
 	/**
 	 * This command transfers ownership of pending stream entries that match the specified criteria
@@ -362,9 +361,8 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntryId}
 	 */
-	KeyValue<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final byte[] key, final byte[] groupName,
-																  final byte[] consumerName, final int minIdleTime,
-																  final StreamEntryId start);
+	AutoClaimId xAutoClaimJustId(final byte[] key, final byte[] groupName, final byte[] consumerName,
+								 final int minIdleTime, final StreamEntryId start);
 
 	/**
 	 * This command transfers ownership of pending stream entries that match the specified criteria
@@ -386,9 +384,8 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntryId}
 	 */
-	KeyValue<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final String key, final String groupName,
-																  final String consumerName, final int minIdleTime,
-																  final StreamEntryId start, final int count);
+	AutoClaimId xAutoClaimJustId(final String key, final String groupName, final String consumerName,
+								 final int minIdleTime, final StreamEntryId start, final int count);
 
 	/**
 	 * This command transfers ownership of pending stream entries that match the specified criteria
@@ -410,9 +407,8 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntryId}
 	 */
-	KeyValue<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final byte[] key, final byte[] groupName,
-																  final byte[] consumerName, final int minIdleTime,
-																  final StreamEntryId start, final int count);
+	AutoClaimId xAutoClaimJustId(final byte[] key, final byte[] groupName, final byte[] consumerName,
+								 final int minIdleTime, final StreamEntryId start, final int count);
 
 	/**
 	 * Sets the IDMP (Idempotent Message Processing) configuration parameters for a stream.
@@ -478,36 +474,6 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param maxsize
-	 * 		Sets the maximum number of most recent idempotent IDs kept for each producer in the stream's IDMP map.
-	 *
-	 * @return 操作结果
-	 */
-	Status xCfgSet(final String key, final int maxsize);
-
-	/**
-	 * Sets the IDMP (Idempotent Message Processing) configuration parameters for a stream.
-	 * This command configures how long idempotent IDs are retained and the maximum number of idempotent IDs tracked per producer.
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/xautoclaim/" target="_blank">https://redis.io/commands/xautoclaim/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param maxsize
-	 * 		Sets the maximum number of most recent idempotent IDs kept for each producer in the stream's IDMP map.
-	 *
-	 * @return 操作结果
-	 */
-	Status xCfgSet(final byte[] key, final int maxsize);
-
-	/**
-	 * Sets the IDMP (Idempotent Message Processing) configuration parameters for a stream.
-	 * This command configures how long idempotent IDs are retained and the maximum number of idempotent IDs tracked per producer.
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/xcfgset/" target="_blank">https://redis.io/docs/latest/commands/xcfgset/</a></p>
-	 *
-	 * @param key
-	 * 		Key
 	 * @param duration
 	 * 		Sets the duration in seconds that each idempotent ID (iid) is kept in the stream's IDMP map.（单位：秒）
 	 * @param maxsize
@@ -533,6 +499,36 @@ public interface StreamCommands extends RedisCommands {
 	 * @return 操作结果
 	 */
 	Status xCfgSet(final byte[] key, final long duration, final int maxsize);
+
+	/**
+	 * Sets the IDMP (Idempotent Message Processing) configuration parameters for a stream.
+	 * This command configures how long idempotent IDs are retained and the maximum number of idempotent IDs tracked per producer.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/xcfgset/" target="_blank">https://redis.io/docs/latest/commands/xcfgset/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param maxsize
+	 * 		Sets the maximum number of most recent idempotent IDs kept for each producer in the stream's IDMP map.
+	 *
+	 * @return 操作结果
+	 */
+	Status xCfgSet(final String key, final int maxsize);
+
+	/**
+	 * Sets the IDMP (Idempotent Message Processing) configuration parameters for a stream.
+	 * This command configures how long idempotent IDs are retained and the maximum number of idempotent IDs tracked per producer.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xautoclaim/" target="_blank">https://redis.io/commands/xautoclaim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param maxsize
+	 * 		Sets the maximum number of most recent idempotent IDs kept for each producer in the stream's IDMP map.
+	 *
+	 * @return 操作结果
+	 */
+	Status xCfgSet(final byte[] key, final int maxsize);
 
 	/**
 	 * In the context of a stream consumer group, this command changes the ownership of a pending message,
@@ -863,42 +859,6 @@ public interface StreamCommands extends RedisCommands {
 	 * 		Group Name
 	 * @param id
 	 * 		ID
-	 * @param entriesRead
-	 * 		To enable consumer group lag tracking, specify the optional entries_read named argument with an arbitrary ID
-	 *
-	 * @return 创建成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status xGroupCreate(final String key, final String groupName, final StreamEntryId id, final long entriesRead);
-
-	/**
-	 * This command creates a new consumer group uniquely identified by groupname for the stream stored at key
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/xgroup-create/" target="_blank">https://redis.io/commands/xgroup-create/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param groupName
-	 * 		Group Name
-	 * @param id
-	 * 		ID
-	 * @param entriesRead
-	 * 		To enable consumer group lag tracking, specify the optional entries_read named argument with an arbitrary ID
-	 *
-	 * @return 创建成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status xGroupCreate(final byte[] key, final byte[] groupName, final StreamEntryId id, final long entriesRead);
-
-	/**
-	 * This command creates a new consumer group uniquely identified by groupname for the stream stored at key
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/xgroup-create/" target="_blank">https://redis.io/commands/xgroup-create/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param groupName
-	 * 		Group Name
-	 * @param id
-	 * 		ID
 	 * @param makeStream
 	 * 		Can use the optional MKSTREAM subcommand as the last argument after the id to automatically create the stream (with length of 0)
 	 * @param entriesRead
@@ -929,6 +889,42 @@ public interface StreamCommands extends RedisCommands {
 	 */
 	Status xGroupCreate(final byte[] key, final byte[] groupName, final StreamEntryId id, final boolean makeStream,
 						final long entriesRead);
+
+	/**
+	 * This command creates a new consumer group uniquely identified by groupname for the stream stored at key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xgroup-create/" target="_blank">https://redis.io/commands/xgroup-create/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param id
+	 * 		ID
+	 * @param entriesRead
+	 * 		To enable consumer group lag tracking, specify the optional entries_read named argument with an arbitrary ID
+	 *
+	 * @return 创建成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status xGroupCreate(final String key, final String groupName, final StreamEntryId id, final long entriesRead);
+
+	/**
+	 * This command creates a new consumer group uniquely identified by groupname for the stream stored at key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xgroup-create/" target="_blank">https://redis.io/commands/xgroup-create/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param id
+	 * 		ID
+	 * @param entriesRead
+	 * 		To enable consumer group lag tracking, specify the optional entries_read named argument with an arbitrary ID
+	 *
+	 * @return 创建成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status xGroupCreate(final byte[] key, final byte[] groupName, final StreamEntryId id, final long entriesRead);
 
 	/**
 	 * Create a consumer named consumername in the consumer group groupname of the stream that's stored at key
@@ -1633,44 +1629,6 @@ public interface StreamCommands extends RedisCommands {
 	 * 		Group Name
 	 * @param consumerName
 	 * 		Consumer Name
-	 * @param streams
-	 * 		key =&gt; StreamEntryId Streams
-	 * @param count
-	 * 		返回数量
-	 *
-	 * @return {@link StreamEntry} 列表
-	 */
-	List<XReadGroupInfo<String, String>> xReadGroup(final String groupName, final String consumerName,
-													final Map<String, StreamEntryId> streams, final int count);
-
-	/**
-	 * The XREADGROUP command is a special version of the XREAD command with support for consumer groups
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/xreadgroup/" target="_blank">https://redis.io/commands/xreadgroup/</a></p>
-	 *
-	 * @param groupName
-	 * 		Group Name
-	 * @param consumerName
-	 * 		Consumer Name
-	 * @param streams
-	 * 		key =&gt; StreamEntryId Streams
-	 * @param count
-	 * 		返回数量
-	 *
-	 * @return {@link StreamEntry} 列表
-	 */
-	List<XReadGroupInfo<byte[], byte[]>> xReadGroup(final byte[] groupName, final byte[] consumerName,
-													final Map<byte[], StreamEntryId> streams, final int count);
-
-	/**
-	 * The XREADGROUP command is a special version of the XREAD command with support for consumer groups
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/xreadgroup/" target="_blank">https://redis.io/commands/xreadgroup/</a></p>
-	 *
-	 * @param groupName
-	 * 		Group Name
-	 * @param consumerName
-	 * 		Consumer Name
 	 * @param xReadGroupArgument
 	 * 		参数
 	 * @param streams
@@ -1744,6 +1702,44 @@ public interface StreamCommands extends RedisCommands {
 	 */
 	List<XReadGroupInfo<byte[], byte[]>> xReadGroup(final byte[] groupName, final byte[] consumerName,
 													final XReadGroupArgument xReadGroupArgument,
+													final Map<byte[], StreamEntryId> streams, final int count);
+
+	/**
+	 * The XREADGROUP command is a special version of the XREAD command with support for consumer groups
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xreadgroup/" target="_blank">https://redis.io/commands/xreadgroup/</a></p>
+	 *
+	 * @param groupName
+	 * 		Group Name
+	 * @param consumerName
+	 * 		Consumer Name
+	 * @param streams
+	 * 		key =&gt; StreamEntryId Streams
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return {@link StreamEntry} 列表
+	 */
+	List<XReadGroupInfo<String, String>> xReadGroup(final String groupName, final String consumerName,
+													final Map<String, StreamEntryId> streams, final int count);
+
+	/**
+	 * The XREADGROUP command is a special version of the XREAD command with support for consumer groups
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xreadgroup/" target="_blank">https://redis.io/commands/xreadgroup/</a></p>
+	 *
+	 * @param groupName
+	 * 		Group Name
+	 * @param consumerName
+	 * 		Consumer Name
+	 * @param streams
+	 * 		key =&gt; StreamEntryId Streams
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return {@link StreamEntry} 列表
+	 */
+	List<XReadGroupInfo<byte[], byte[]>> xReadGroup(final byte[] groupName, final byte[] consumerName,
 													final Map<byte[], StreamEntryId> streams, final int count);
 
 	/**
@@ -1893,38 +1889,6 @@ public interface StreamCommands extends RedisCommands {
 	 * 		Key
 	 * @param lastId
 	 *        {@link StreamEntryId}
-	 * @param maxDeletedId
-	 * 		-
-	 *
-	 * @return 操作结果
-	 */
-	Status xSetId(final String key, final StreamEntryId lastId, final StreamEntryId maxDeletedId);
-
-	/**
-	 * The XSETID command is an internal command. It is used by a Redis master to replicate the last delivered ID of streams.
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/xsetid/" target="_blank">https://redis.io/docs/latest/commands/xsetid/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param lastId
-	 *        {@link StreamEntryId}
-	 * @param maxDeletedId
-	 * 		-
-	 *
-	 * @return 操作结果
-	 */
-	Status xSetId(final byte[] key, final StreamEntryId lastId, final StreamEntryId maxDeletedId);
-
-	/**
-	 * The XSETID command is an internal command. It is used by a Redis master to replicate the last delivered ID of streams.
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/xsetid/" target="_blank">https://redis.io/docs/latest/commands/xsetid/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param lastId
-	 *        {@link StreamEntryId}
 	 * @param entriesAdded
 	 * 		-
 	 * @param maxDeletedId
@@ -1955,6 +1919,38 @@ public interface StreamCommands extends RedisCommands {
 				  final StreamEntryId maxDeletedId);
 
 	/**
+	 * The XSETID command is an internal command. It is used by a Redis master to replicate the last delivered ID of streams.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/xsetid/" target="_blank">https://redis.io/docs/latest/commands/xsetid/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param lastId
+	 *        {@link StreamEntryId}
+	 * @param maxDeletedId
+	 * 		-
+	 *
+	 * @return 操作结果
+	 */
+	Status xSetId(final String key, final StreamEntryId lastId, final StreamEntryId maxDeletedId);
+
+	/**
+	 * The XSETID command is an internal command. It is used by a Redis master to replicate the last delivered ID of streams.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/xsetid/" target="_blank">https://redis.io/docs/latest/commands/xsetid/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param lastId
+	 *        {@link StreamEntryId}
+	 * @param maxDeletedId
+	 * 		-
+	 *
+	 * @return 操作结果
+	 */
+	Status xSetId(final byte[] key, final StreamEntryId lastId, final StreamEntryId maxDeletedId);
+
+	/**
 	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed
 	 *
 	 * <p>详情说明 <a href="https://redis.io/commands/xtrim/" target="_blank">https://redis.io/commands/xtrim/</a></p>
@@ -1981,6 +1977,78 @@ public interface StreamCommands extends RedisCommands {
 	 * @return The number of entries deleted from the stream.
 	 */
 	Long xTrim(final byte[] key, final MaxLenMinId<?> maxLenMinId);
+
+	/**
+	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xtrim/" target="_blank">https://redis.io/commands/xtrim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param approximateExactTrimming
+	 * 		The trimming operator.
+	 * @param maxLenMinId
+	 *        {@link MaxLenMinId}
+	 *
+	 * @return The number of entries deleted from the stream.
+	 */
+	Long xTrim(final String key, final ApproximateExactTrimming approximateExactTrimming,
+			   final MaxLenMinId<?> maxLenMinId);
+
+	/**
+	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xtrim/" target="_blank">https://redis.io/commands/xtrim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param approximateExactTrimming
+	 * 		The trimming operator.
+	 * @param maxLenMinId
+	 *        {@link MaxLenMinId}
+	 *
+	 * @return The number of entries deleted from the stream.
+	 */
+	Long xTrim(final byte[] key, final ApproximateExactTrimming approximateExactTrimming,
+			   final MaxLenMinId<?> maxLenMinId);
+
+	/**
+	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xtrim/" target="_blank">https://redis.io/commands/xtrim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param approximateExactTrimming
+	 * 		The trimming operator.
+	 * @param maxLenMinId
+	 *        {@link MaxLenMinId}
+	 * @param deletionPolicy
+	 * 		删除策略
+	 *
+	 * @return The number of entries deleted from the stream.
+	 */
+	Long xTrim(final String key, final ApproximateExactTrimming approximateExactTrimming,
+			   final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy);
+
+	/**
+	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xtrim/" target="_blank">https://redis.io/commands/xtrim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param approximateExactTrimming
+	 * 		The trimming operator.
+	 * @param maxLenMinId
+	 *        {@link MaxLenMinId}
+	 * @param deletionPolicy
+	 * 		删除策略
+	 *
+	 * @return The number of entries deleted from the stream.
+	 */
+	Long xTrim(final byte[] key, final ApproximateExactTrimming approximateExactTrimming,
+			   final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy);
 
 	/**
 	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed
@@ -2023,15 +2091,127 @@ public interface StreamCommands extends RedisCommands {
 	 * 		Key
 	 * @param maxLenMinId
 	 *        {@link MaxLenMinId}
+	 * @param count
+	 * 		删除数量
+	 *
+	 * @return The number of entries deleted from the stream.
+	 */
+	Long xTrim(final String key, final MaxLenMinId<?> maxLenMinId, final int count);
+
+	/**
+	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xtrim/" target="_blank">https://redis.io/commands/xtrim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param maxLenMinId
+	 *        {@link MaxLenMinId}
+	 * @param count
+	 * 		删除数量
+	 *
+	 * @return The number of entries deleted from the stream.
+	 */
+	Long xTrim(final byte[] key, final MaxLenMinId<?> maxLenMinId, final int count);
+
+	/**
+	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xtrim/" target="_blank">https://redis.io/commands/xtrim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param approximateExactTrimming
+	 * 		The trimming operator.
+	 * @param maxLenMinId
+	 *        {@link MaxLenMinId}
+	 * @param count
+	 * 		删除数量
+	 *
+	 * @return The number of entries deleted from the stream.
+	 */
+	Long xTrim(final String key, final ApproximateExactTrimming approximateExactTrimming,
+			   final MaxLenMinId<?> maxLenMinId, final int count);
+
+	/**
+	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xtrim/" target="_blank">https://redis.io/commands/xtrim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param approximateExactTrimming
+	 * 		The trimming operator.
+	 * @param maxLenMinId
+	 *        {@link MaxLenMinId}
+	 * @param count
+	 * 		删除数量
+	 *
+	 * @return The number of entries deleted from the stream.
+	 */
+	Long xTrim(final byte[] key, final ApproximateExactTrimming approximateExactTrimming,
+			   final MaxLenMinId<?> maxLenMinId, final int count);
+
+	/**
+	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xtrim/" target="_blank">https://redis.io/commands/xtrim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param approximateExactTrimming
+	 * 		The trimming operator.
+	 * @param maxLenMinId
+	 *        {@link MaxLenMinId}
 	 * @param deletionPolicy
 	 * 		删除策略
-	 * @param limit
-	 * 		数量
+	 * @param count
+	 * 		删除数量
+	 *
+	 * @return The number of entries deleted from the stream.
+	 */
+	Long xTrim(final String key, final ApproximateExactTrimming approximateExactTrimming,
+			   final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy, final int count);
+
+	/**
+	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xtrim/" target="_blank">https://redis.io/commands/xtrim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param approximateExactTrimming
+	 * 		The trimming operator.
+	 * @param maxLenMinId
+	 *        {@link MaxLenMinId}
+	 * @param deletionPolicy
+	 * 		删除策略
+	 * @param count
+	 * 		删除数量
+	 *
+	 * @return The number of entries deleted from the stream.
+	 */
+	Long xTrim(final byte[] key, final ApproximateExactTrimming approximateExactTrimming,
+			   final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy, final int count);
+
+	/**
+	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xtrim/" target="_blank">https://redis.io/commands/xtrim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param maxLenMinId
+	 *        {@link MaxLenMinId}
+	 * @param deletionPolicy
+	 * 		删除策略
+	 * @param count
+	 * 		删除数量
 	 *
 	 * @return The number of entries deleted from the stream.
 	 */
 	Long xTrim(final String key, final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy,
-			   final int limit);
+			   final int count);
 
 	/**
 	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed
@@ -2044,44 +2224,12 @@ public interface StreamCommands extends RedisCommands {
 	 *        {@link MaxLenMinId}
 	 * @param deletionPolicy
 	 * 		删除策略
-	 * @param limit
-	 * 		数量
+	 * @param count
+	 * 		删除数量
 	 *
 	 * @return The number of entries deleted from the stream.
 	 */
 	Long xTrim(final byte[] key, final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy,
-			   final int limit);
-
-	/**
-	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/xtrim/" target="_blank">https://redis.io/commands/xtrim/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param maxLenMinId
-	 *        {@link MaxLenMinId}
-	 * @param limit
-	 * 		数量
-	 *
-	 * @return The number of entries deleted from the stream.
-	 */
-	Long xTrim(final String key, final MaxLenMinId<?> maxLenMinId, final int limit);
-
-	/**
-	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/xtrim/" target="_blank">https://redis.io/commands/xtrim/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param maxLenMinId
-	 *        {@link MaxLenMinId}
-	 * @param limit
-	 * 		数量
-	 *
-	 * @return The number of entries deleted from the stream.
-	 */
-	Long xTrim(final byte[] key, final MaxLenMinId<?> maxLenMinId, final int limit);
+			   final int count);
 
 }

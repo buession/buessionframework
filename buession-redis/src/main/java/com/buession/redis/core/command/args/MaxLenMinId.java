@@ -24,7 +24,6 @@
  */
 package com.buession.redis.core.command.args;
 
-import com.buession.redis.core.ApproximateExactTrimming;
 import com.buession.redis.core.Keyword;
 import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.utils.ArgStringBuilder;
@@ -39,23 +38,15 @@ public abstract class MaxLenMinId<T> {
 
 	private final Type type;
 
-	private final ApproximateExactTrimming approximateExactTrimming;
-
 	private final T threshold;
 
-	public MaxLenMinId(final Type type, final ApproximateExactTrimming approximateExactTrimming,
-					   final T threshold) {
+	public MaxLenMinId(final Type type, final T threshold) {
 		this.type = type;
-		this.approximateExactTrimming = approximateExactTrimming;
 		this.threshold = threshold;
 	}
 
 	public Type getType() {
 		return type;
-	}
-
-	public ApproximateExactTrimming getApproximateExactTrimming() {
-		return approximateExactTrimming;
 	}
 
 	public T getThreshold() {
@@ -64,23 +55,23 @@ public abstract class MaxLenMinId<T> {
 
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create().append(getType()).append(getApproximateExactTrimming())
+		return ArgStringBuilder.create().append(getType())
 				.append(getThreshold())
 				.build();
 	}
 
 	public final static class MaxLen extends MaxLenMinId<Long> {
 
-		public MaxLen(final ApproximateExactTrimming approximateExactTrimming, final long value) {
-			super(Type.MAXLEN, approximateExactTrimming, value);
+		public MaxLen(final long value) {
+			super(Type.MAXLEN, value);
 		}
 
 	}
 
 	public final static class MinId extends MaxLenMinId<StreamEntryId> {
 
-		public MinId(final ApproximateExactTrimming approximateExactTrimming, final StreamEntryId value) {
-			super(Type.MINID, approximateExactTrimming, value);
+		public MinId(final StreamEntryId value) {
+			super(Type.MINID, value);
 		}
 
 	}

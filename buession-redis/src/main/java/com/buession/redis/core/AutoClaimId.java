@@ -22,31 +22,24 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.response;
+package com.buession.redis.core;
 
-import com.buession.core.converter.Converter;
 import com.buession.lang.KeyValue;
-import com.buession.redis.core.StreamEntry;
-import io.lettuce.core.StreamMessage;
 
 import java.util.List;
 
 /**
- * Lettuce {@link StreamMessage} 转换为 {@link StreamEntry}
+ * <code>XAUTOCLAIM JUSTID</code> 命令结果
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public final class StreamMessageKeyValueConverter<SK, SV, TK, TV>
-		implements Converter<StreamMessage<SK, SV>, KeyValue<TK, List<StreamEntry<TK, TV>>>> {
+public class AutoClaimId extends KeyValue<StreamEntryId, List<StreamEntryId>> {
 
-	@Override
-	public KeyValue<TK, List<StreamEntry<TK, TV>>> convert(final StreamMessage<SK, SV> source) {
-		if(source == null){
-			return null;
-		}
+	private final static long serialVersionUID = 1202075280486044941L;
 
-		return new KeyValue<>();
+	public AutoClaimId(final StreamEntryId key, final List<StreamEntryId> value) {
+		super(key, value);
 	}
 
 }

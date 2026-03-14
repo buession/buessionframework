@@ -26,61 +26,63 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
-import com.buession.redis.core.XReadInfo;
-import com.buession.redis.core.internal.convert.jedis.response.StreamEntryConverter;
+import com.buession.redis.core.AutoClaimInfo;
+import com.buession.redis.core.StreamEntry;
+import com.buession.redis.core.StreamEntryId;
 import io.lettuce.core.StreamMessage;
+import io.lettuce.core.models.stream.ClaimedMessages;
 
 /**
- * Lettuce {@link StreamMessage} 转换为 {@link XReadInfo}
+ * Lettuce {@link ClaimedMessages} 转换为 {@link AutoClaimInfo}
+ *
+ * @param <SK>
+ * 		原始 Key 类型
+ * @param <SV>
+ * 		原始值类型
+ * @param <TK>
+ * 		目标 Key 类型
+ * @param <TV>
+ * 		目标值类型
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public final class StreamMessageStreamEntryXReadInfoConverter<SK, SV, TK, TV>
-		implements Converter<StreamMessage<SK, SV>, XReadInfo<TK, TV>> {
-
-	/**
-	 * key 转换器
-	 */
-	private final Converter<SK, TK> keyConverter;
+public final class ClaimedMessagesAutoClaimInfoConverter<SK, SV, TK, TV> implements Converter<ClaimedMessages<SK, SV>,
+		AutoClaimInfo<TK, TV>> {
 
 	/**
 	 * Entry key 转换器
 	 */
-	private final Converter<String, TK> entryKeyConverter;
+	private final Converter<SK, TK> keyConverter;
 
 	/**
 	 * Entry value 转换器
 	 */
-	private final Converter<String, TV> entryValueConverter;
+	private final Converter<SV, TV> valueConverter;
 
 	/**
 	 * 构造函数
 	 *
 	 * @param keyConverter
-	 * 		key 转换器
-	 * @param entryKeyConverter
 	 * 		Entry key 转换器
-	 * @param entryValueConverter
+	 * @param valueConverter
 	 * 		Entry value 转换器
 	 */
-	public StreamMessageStreamEntryXReadInfoConverter(final Converter<SK, TK> keyConverter,
-													  final Converter<String, TK> entryKeyConverter,
-													  final Converter<String, TV> entryValueConverter) {
+	public ClaimedMessagesAutoClaimInfoConverter(final Converter<SK, TK> keyConverter,
+												 final Converter<SV, TV> valueConverter) {
 		this.keyConverter = keyConverter;
-		this.entryKeyConverter = entryKeyConverter;
-		this.entryValueConverter = entryValueConverter;
+		this.valueConverter = valueConverter;
 	}
 
 	@Override
-	public XReadInfo<TK, TV> convert(final StreamMessage<SK, SV> source) {
+	public AutoClaimInfo<TK, TV> convert(final ClaimedMessages<SK, SV> source) {
 		if(source == null){
 			return null;
 		}
 
-		final ListConverter<StreamMessage<SK, SV>, com.buession.redis.core.StreamEntry<TK, TV>> listConverter =
-				new ListConverter<>(new StreamEntryConverter<>(entryKeyConverter, entryValueConverter));
-		return new XReadInfo<>(keyConverter.convert(source.getId()), listConverter.convert(source.getBody()));
+		final ListConverter<StreamMessage<SK, SV>, StreamEntry<TK, TV>> listConverter =
+				new ListConverter<>(new StreamMessageConverter<>(keyConverter, valueConverter));
+		return new AutoClaimInfo<>(new StreamEntryId(source.getId()), listConverter.convert(source.getMessages()));
 	}
 
 }

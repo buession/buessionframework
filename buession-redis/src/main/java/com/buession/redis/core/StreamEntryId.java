@@ -93,6 +93,10 @@ public class StreamEntryId implements Comparable<StreamEntryId>, Serializable {
 		return sequence;
 	}
 
+	public byte[] getRaw() {
+		return SafeEncoder.encode(value);
+	}
+
 	@Override
 	public int compareTo(StreamEntryId other) {
 		int timeCompare = Long.compare(this.time, other.time);

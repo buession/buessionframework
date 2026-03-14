@@ -22,48 +22,36 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis.args;
+package com.buession.redis.core.internal.convert.jedis.response;
 
-import redis.clients.jedis.params.XReadParams;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.AutoClaimId;
+import com.buession.redis.core.StreamEntryId;
+import redis.clients.jedis.StreamEntryID;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
- * Jedis {@link XReadParams} 扩展
+ * {@link Map.Entry} 转换为 {@link AutoClaimId}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 4.0.0
  */
-public final class JedisXReadParams extends XReadParams {
+public final class MapEntryStreamEntryAutoClaimIdConverter implements
+		Converter<Map.Entry<StreamEntryID, List<StreamEntryID>>, AutoClaimId> {
 
-	/**
-	 * 构造函数
-	 */
-	public JedisXReadParams() {
-		super();
-	}
+	@Override
+	public AutoClaimId convert(final Map.Entry<StreamEntryID, List<StreamEntryID>> source) {
+		if(source == null){
+			return null;
+		}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param block
-	 * 		阻塞时间（单位：毫秒）
-	 */
-	public JedisXReadParams(final long block) {
-		super();
-		block((int) block);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param block
-	 * 		阻塞时间（单位：毫秒）
-	 * @param count
-	 * 		返回数量
-	 *
-	 */
-	public JedisXReadParams(final long block, final int count) {
-		this(block);
-		count(count);
+		final StreamEntryIDConverter streamEntryIdConverter = new StreamEntryIDConverter();
+		final List<StreamEntryId> streamEntryIds = source.getValue() == null ? null :
+				source.getValue().stream().map(streamEntryIdConverter::convert).collect(Collectors.toList());
+		return new AutoClaimId(streamEntryIdConverter.convert(source.getKey()), streamEntryIds);
 	}
 
 }

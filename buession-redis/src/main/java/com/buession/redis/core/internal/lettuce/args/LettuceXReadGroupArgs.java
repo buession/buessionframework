@@ -22,27 +22,55 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command.args;
+package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.redis.utils.ArgStringBuilder;
+import com.buession.redis.core.command.args.XReadGroupArgument;
+import io.lettuce.core.XReadArgs;
+
+import java.util.Optional;
 
 /**
- * {@code XREAD} 命令参数
+ * Lettuce {@link XReadArgs} 扩展
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class XReadArgument {
-
-	/**
-	 * 阻塞时间（单位：毫秒）
-	 */
-	private Long block;
+public final class LettuceXReadGroupArgs extends XReadArgs {
 
 	/**
 	 * 构造函数
 	 */
-	public XReadArgument() {
+	public LettuceXReadGroupArgs() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param xReadGroupArgument
+	 *        {@link XReadGroupArgument}
+	 */
+	public LettuceXReadGroupArgs(final XReadGroupArgument xReadGroupArgument) {
+		super();
+
+		if(xReadGroupArgument != null){
+			Optional.ofNullable(xReadGroupArgument.getBlock()).ifPresent(this::block);
+			Optional.ofNullable(xReadGroupArgument.getClaim()).ifPresent(this::claim);
+			Optional.ofNullable(xReadGroupArgument.getNoAck()).ifPresent(this::noack);
+		}
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param xReadGroupArgument
+	 *        {@link XReadGroupArgument}
+	 * @param count
+	 * 		返回数量
+	 */
+	public LettuceXReadGroupArgs(final XReadGroupArgument xReadGroupArgument, final int count) {
+		this(xReadGroupArgument);
+		count(count);
 	}
 
 	/**
@@ -51,33 +79,22 @@ public class XReadArgument {
 	 * @param block
 	 * 		阻塞时间（单位：毫秒）
 	 */
-	public XReadArgument(final long block) {
-		this.block = block;
+	public LettuceXReadGroupArgs(final long block) {
+		super();
+		block((int) block);
 	}
 
 	/**
-	 * 返回阻塞时间（单位：毫秒）
-	 *
-	 * @return 阻塞时间
-	 */
-	public Long getBlock() {
-		return block;
-	}
-
-	/**
-	 * 设置阻塞时间
+	 * 构造函数
 	 *
 	 * @param block
 	 * 		阻塞时间（单位：毫秒）
+	 * @param count
+	 * 		返回数量
 	 */
-	public XReadArgument setBlock(long block) {
-		this.block = block;
-		return this;
-	}
-
-	@Override
-	public String toString() {
-		return ArgStringBuilder.create().add("BLOCK", getBlock()).build();
+	public LettuceXReadGroupArgs(final long block, final int count) {
+		this(block);
+		count(count);
 	}
 
 }

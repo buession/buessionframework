@@ -22,26 +22,26 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.jedis.args;
+package com.buession.redis.core.internal.lettuce.args;
 
 import com.buession.redis.core.ApproximateExactTrimming;
 import com.buession.redis.core.StreamDeletionPolicy;
 import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.command.args.MaxLenMinId;
-import redis.clients.jedis.params.XTrimParams;
+import io.lettuce.core.XTrimArgs;
 
 /**
- * Jedis {@link XTrimParams} 扩展
+ * Lettuce {@link XTrimArgs} 扩展
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public final class JedisXTrimParams extends XTrimParams {
+public class LettuceXTrimArgs extends XTrimArgs {
 
 	/**
 	 * 构造函数
 	 */
-	public JedisXTrimParams() {
+	public LettuceXTrimArgs() {
 		super();
 	}
 
@@ -51,10 +51,10 @@ public final class JedisXTrimParams extends XTrimParams {
 	 * @param maxLenMinId
 	 *        {@link MaxLenMinId}
 	 */
-	public JedisXTrimParams(final MaxLenMinId<?> maxLenMinId) {
+	public LettuceXTrimArgs(final MaxLenMinId<?> maxLenMinId) {
 		super();
 		if(maxLenMinId instanceof MaxLenMinId.MaxLen){
-			maxLen(((MaxLenMinId.MaxLen) maxLenMinId).getThreshold());
+			maxlen(((MaxLenMinId.MaxLen) maxLenMinId).getThreshold());
 		}else if(maxLenMinId instanceof MaxLenMinId.MinId){
 			final StreamEntryId id = ((MaxLenMinId.MinId) maxLenMinId).getThreshold();
 
@@ -72,7 +72,7 @@ public final class JedisXTrimParams extends XTrimParams {
 	 * @param approximateExactTrimming
 	 *        {@link ApproximateExactTrimming }
 	 */
-	public JedisXTrimParams(final MaxLenMinId<?> maxLenMinId, final ApproximateExactTrimming approximateExactTrimming) {
+	public LettuceXTrimArgs(final MaxLenMinId<?> maxLenMinId, final ApproximateExactTrimming approximateExactTrimming) {
 		this(maxLenMinId);
 		if(approximateExactTrimming == ApproximateExactTrimming.EXACT){
 			exactTrimming();
@@ -91,7 +91,7 @@ public final class JedisXTrimParams extends XTrimParams {
 	 * @param count
 	 * 		数量
 	 */
-	public JedisXTrimParams(final MaxLenMinId<?> maxLenMinId, final ApproximateExactTrimming approximateExactTrimming,
+	public LettuceXTrimArgs(final MaxLenMinId<?> maxLenMinId, final ApproximateExactTrimming approximateExactTrimming,
 							final int count) {
 		this(maxLenMinId, approximateExactTrimming);
 		limit(count);
@@ -105,7 +105,7 @@ public final class JedisXTrimParams extends XTrimParams {
 	 * @param count
 	 * 		数量
 	 */
-	public JedisXTrimParams(final MaxLenMinId<?> maxLenMinId, final int count) {
+	public LettuceXTrimArgs(final MaxLenMinId<?> maxLenMinId, final int count) {
 		this(maxLenMinId);
 		limit(count);
 	}
@@ -116,24 +116,24 @@ public final class JedisXTrimParams extends XTrimParams {
 	 * @param count
 	 * 		数量
 	 */
-	public JedisXTrimParams(final int count) {
+	public LettuceXTrimArgs(final int count) {
 		super();
 		limit(count);
 	}
 
-	public JedisXTrimParams deletionPolicy(StreamDeletionPolicy deletionPolicy) {
+	public LettuceXTrimArgs deletionPolicy(StreamDeletionPolicy deletionPolicy) {
 		if(deletionPolicy != null){
 			switch(deletionPolicy){
-				case ACKED -> trimmingMode(redis.clients.jedis.args.StreamDeletionPolicy.ACKNOWLEDGED);
-				case DELREF -> trimmingMode(redis.clients.jedis.args.StreamDeletionPolicy.DELETE_REFERENCES);
-				case KEEPREF -> trimmingMode(redis.clients.jedis.args.StreamDeletionPolicy.KEEP_REFERENCES);
+				case ACKED -> trimmingMode(io.lettuce.core.StreamDeletionPolicy.ACKNOWLEDGED);
+				case DELREF -> trimmingMode(io.lettuce.core.StreamDeletionPolicy.DELETE_REFERENCES);
+				case KEEPREF -> trimmingMode(io.lettuce.core.StreamDeletionPolicy.KEEP_REFERENCES);
 			}
 		}
 
 		return this;
 	}
 
-	public JedisXTrimParams minId(StreamEntryId id) {
+	public LettuceXTrimArgs minId(StreamEntryId id) {
 		if(id != null){
 			minId(id.toString());
 		}

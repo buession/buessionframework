@@ -302,40 +302,64 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	}
 
 	@Override
-	List<ClusterSlotStat> clusterSlotStats(final IntegerRange slot);
+	default List<ClusterSlotStat> clusterSlotStats(final IntegerRange slot) {
+		return execute((client)->client.clusterCommands().clusterSlotStats(slot));
+	}
 
 	@Override
-	List<ClusterSlotStat> clusterSlotStats(final IntegerRange slot, final int limit);
+	default List<ClusterSlotStat> clusterSlotStats(final IntegerRange slot, final int limit) {
+		return execute((client)->client.clusterCommands().clusterSlotStats(slot, limit));
+	}
 
 	@Override
-	List<ClusterSlotStat> clusterSlotStats(final IntegerRange slot, final int limit, final Order order);
+	default List<ClusterSlotStat> clusterSlotStats(final IntegerRange slot, final int limit, final Order order) {
+		return execute((client)->client.clusterCommands().clusterSlotStats(slot, limit, order));
+	}
 
 	@Override
-	List<ClusterSlotStat> clusterSlotStats(final String metric);
+	default List<ClusterSlotStat> clusterSlotStats(final String metric) {
+		return execute((client)->client.clusterCommands().clusterSlotStats(metric));
+	}
 
 	@Override
-	List<ClusterSlotStat> clusterSlotStats(final byte[] metric);
+	default List<ClusterSlotStat> clusterSlotStats(final byte[] metric) {
+		return execute((client)->client.clusterCommands().clusterSlotStats(metric));
+	}
 
 	@Override
-	List<ClusterSlotStat> clusterSlotStats(final String metric, final int limit);
+	default List<ClusterSlotStat> clusterSlotStats(final String metric, final int limit) {
+		return execute((client)->client.clusterCommands().clusterSlotStats(metric, limit));
+	}
 
 	@Override
-	List<ClusterSlotStat> clusterSlotStats(final byte[] metric, final int limit);
+	default List<ClusterSlotStat> clusterSlotStats(final byte[] metric, final int limit) {
+		return execute((client)->client.clusterCommands().clusterSlotStats(metric, limit));
+	}
 
 	@Override
-	List<ClusterSlotStat> clusterSlotStats(final String metric, final int limit, final Order order);
+	default List<ClusterSlotStat> clusterSlotStats(final String metric, final int limit, final Order order) {
+		return execute((client)->client.clusterCommands().clusterSlotStats(metric, limit, order));
+	}
 
 	@Override
-	List<ClusterSlotStat> clusterSlotStats(final byte[] metric, final int limit, final Order order);
+	default List<ClusterSlotStat> clusterSlotStats(final byte[] metric, final int limit, final Order order) {
+		return execute((client)->client.clusterCommands().clusterSlotStats(metric, limit, order));
+	}
 
 	@Override
-	List<ClusterSlotStat> clusterSlotStats(final int limit);
+	default List<ClusterSlotStat> clusterSlotStats(final int limit) {
+		return execute((client)->client.clusterCommands().clusterSlotStats(limit));
+	}
 
 	@Override
-	List<ClusterSlotStat> clusterSlotStats(final int limit, final Order order);
+	default List<ClusterSlotStat> clusterSlotStats(final int limit, final Order order) {
+		return execute((client)->client.clusterCommands().clusterSlotStats(limit, order));
+	}
 
 	@Override
-	List<ClusterSlotStat> clusterSlotStats(final Order order);
+	default List<ClusterSlotStat> clusterSlotStats(final Order order) {
+		return execute((client)->client.clusterCommands().clusterSlotStats(order));
+	}
 
 	@Override
 	default List<ClusterSlot> clusterSlots() {

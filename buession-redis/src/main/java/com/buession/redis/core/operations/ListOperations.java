@@ -1505,6 +1505,16 @@ public interface ListOperations extends ListCommands, RedisOperations {
 		return execute((client)->client.listCommands().rPop(key));
 	}
 
+	@Override
+	default List<String> rPop(final String key, final int count) {
+		return execute((client)->client.listCommands().rPop(key, count));
+	}
+
+	@Override
+	default List<byte[]> rPop(final byte[] key, final int count) {
+		return execute((client)->client.listCommands().rPop(key, count));
+	}
+
 	/**
 	 * 移除并返回列表 key 的尾元素，并反序列化为 clazz 指定的对象对象
 	 *

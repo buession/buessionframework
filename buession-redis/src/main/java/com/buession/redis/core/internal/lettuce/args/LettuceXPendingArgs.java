@@ -45,61 +45,38 @@ public class LettuceXPendingArgs<T> extends XPendingArgs<T> {
 		super();
 	}
 
-	public LettuceXPendingArgs(final long idle) {
-		this();
-		idle(idle);
-	}
-
-	public LettuceXPendingArgs(final long idle, final StreamEntryId start, final StreamEntryId end,
-							   final long count) {
-		this(start, end, count);
-		idle(idle);
-	}
-
-	public LettuceXPendingArgs(final long idle, final T groupName, final T consumerName) {
-		this(idle);
-		consumer(Consumer.from(groupName, consumerName));
-	}
-
-	public LettuceXPendingArgs(final long idle, final Consumer<T> consumer) {
-		this(idle);
-		consumer(consumer);
-	}
-
-	public LettuceXPendingArgs(final StreamEntryId start, final StreamEntryId end, final long count) {
+	public LettuceXPendingArgs(final StreamEntryId start, final StreamEntryId end, final int count) {
+		super();
 		range(Range.create(start.toString(), end.toString()));
 		limit(Limit.from(count));
 	}
 
-	public LettuceXPendingArgs(final StreamEntryId start, final StreamEntryId end, final long count,
-							   final T groupName, final T consumerName) {
-		this(start, end, count, Consumer.from(groupName, consumerName));
-	}
-
-	public LettuceXPendingArgs(final StreamEntryId start, final StreamEntryId end, final long count,
-							   final Consumer<T> consumer) {
+	public LettuceXPendingArgs(final StreamEntryId start, final StreamEntryId end, final int count, final long idle) {
 		this(start, end, count);
-		consumer(consumer);
+		idle(idle);
 	}
 
-	public LettuceXPendingArgs(final long idle, final StreamEntryId start, final StreamEntryId end,
-							   final long count, final T groupName, final T consumerName) {
-		this(idle, start, end, count, Consumer.from(groupName, consumerName));
+	public LettuceXPendingArgs(final StreamEntryId start, final StreamEntryId end, final int count, final T groupName,
+							   final T consumerName) {
+		this(start, end, count);
+		consumer(Consumer.from(groupName, consumerName));
 	}
 
-	public LettuceXPendingArgs(final long idle, final StreamEntryId start, final StreamEntryId end,
-							   final long count, final Consumer<T> consumer) {
-		this(idle, start, end, count);
-		consumer(consumer);
+	public LettuceXPendingArgs(final StreamEntryId start, final StreamEntryId end, final int count, final long idle,
+							   final T groupName, final T consumerName) {
+		this(start, end, count, groupName, consumerName);
+		idle(idle);
 	}
 
-	public LettuceXPendingArgs(final T groupName, final T consumerName) {
-		this(Consumer.from(groupName, consumerName));
+	public LettuceXPendingArgs(final StreamEntryId start, final StreamEntryId end, final int count, final T groupName) {
+		this(start, end, count);
+		group(groupName);
 	}
 
-	public LettuceXPendingArgs(final Consumer<T> consumer) {
-		this();
-		consumer(consumer);
+	public LettuceXPendingArgs(final StreamEntryId start, final StreamEntryId end, final int count, final long idle,
+							   final T groupName) {
+		this(start, end, count, groupName);
+		idle(idle);
 	}
 
 }

@@ -39,24 +39,13 @@ public final class JedisXPendingParams extends XPendingParams {
 		super();
 	}
 
-	public JedisXPendingParams(final long idle) {
-		this();
-		idle(idle);
-	}
-
-	public JedisXPendingParams(final long idle, final StreamEntryId start, final StreamEntryId end,
-							   final int count) {
-		this(start, end, count);
-		idle(idle);
-	}
-
-	public JedisXPendingParams(final long idle, final String consumer) {
-		this(idle);
-		consumer(consumer);
-	}
-
 	public JedisXPendingParams(final StreamEntryId start, final StreamEntryId end, final int count) {
 		super(new JedisStreamEntryID(start), new JedisStreamEntryID(end), count);
+	}
+
+	public JedisXPendingParams(final StreamEntryId start, final StreamEntryId end, final int count, final long idle) {
+		this(start, end, count);
+		idle(idle);
 	}
 
 	public JedisXPendingParams(final StreamEntryId start, final StreamEntryId end, final int count,
@@ -65,14 +54,21 @@ public final class JedisXPendingParams extends XPendingParams {
 		consumer(consumer);
 	}
 
-	public JedisXPendingParams(final long idle, final StreamEntryId start, final StreamEntryId end,
-							   final int count, final String consumer) {
-		this(idle, start, end, count);
+	public JedisXPendingParams(final StreamEntryId start, final StreamEntryId end, final int count,
+							   final byte[] consumer) {
+		this(start, end, count);
 		consumer(consumer);
 	}
 
-	public JedisXPendingParams(final String consumer) {
-		super();
+	public JedisXPendingParams(final StreamEntryId start, final StreamEntryId end, final int count, final long idle,
+							   final String consumer) {
+		this(start, end, count, idle);
+		consumer(consumer);
+	}
+
+	public JedisXPendingParams(final StreamEntryId start, final StreamEntryId end, final int count, final long idle,
+							   final byte[] consumer) {
+		this(start, end, count, idle);
 		consumer(consumer);
 	}
 

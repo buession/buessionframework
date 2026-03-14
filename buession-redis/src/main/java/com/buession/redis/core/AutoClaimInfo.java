@@ -31,6 +31,11 @@ import java.util.List;
 /**
  * <code>XAUTOCLAIM</code> 命令结果
  *
+ * @param <K>
+ * 		Key 类型
+ * @param <V>
+ * 		值类型
+ *
  * @author Yong.Teng
  * @since 4.0.0
  */

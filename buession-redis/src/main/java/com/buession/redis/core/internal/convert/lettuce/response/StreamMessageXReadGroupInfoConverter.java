@@ -22,32 +22,52 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.args.XReadGroupArgument;
-import redis.clients.jedis.params.XReadGroupParams;
-
-import java.util.Optional;
+import com.buession.redis.core.XReadGroupInfo;
+import io.lettuce.core.StreamMessage;
 
 /**
- * {@link XReadGroupArgument} 转换为 jedis {@link XReadGroupParams}
+ * Lettuce {@link StreamMessage} 转换为 {@link XReadGroupInfo}
  *
  * @author Yong.Teng
- * @since 4.0.0
+ * @since 3.0.0
  */
-public final class XReadGroupArgumentConverter implements Converter<XReadGroupArgument, XReadGroupParams> {
+public final class StreamMessageXReadGroupInfoConverter<SK, SV, TK, TV>
+		implements Converter<StreamMessage<SK, SV>, XReadGroupInfo<TK, TV>> {
+
+	/**
+	 * Entry key 转换器
+	 */
+	private final Converter<SK, TK> keyConverter;
+
+	/**
+	 * Entry value 转换器
+	 */
+	private final Converter<SV, TV> valueConverter;
+
+	/**
+	 * 构造函数
+	 *
+	 * @param keyConverter
+	 * 		key 转换器
+	 * @param valueConverter
+	 * 		Entry value 转换器
+	 */
+	public StreamMessageXReadGroupInfoConverter(final Converter<SK, TK> keyConverter,
+												final Converter<SV, TV> valueConverter) {
+		this.keyConverter = keyConverter;
+		this.valueConverter = valueConverter;
+	}
 
 	@Override
-	public XReadGroupParams convert(final XReadGroupArgument source) {
+	public XReadGroupInfo<TK, TV> convert(final StreamMessage<SK, SV> source) {
 		if(source == null){
 			return null;
 		}
 
-		final XReadGroupParams xReadGroupParams = new XReadGroupParams();
-
-
-		return xReadGroupParams;
+		return null;//new KeyValue<>();
 	}
 
 }
