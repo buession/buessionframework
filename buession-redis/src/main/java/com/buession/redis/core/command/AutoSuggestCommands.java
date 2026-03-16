@@ -24,6 +24,12 @@
  */
 package com.buession.redis.core.command;
 
+import com.buession.lang.Status;
+import com.buession.redis.core.Suggestion;
+import com.buession.redis.core.command.args.FtSugGetArgument;
+
+import java.util.List;
+
 /**
  * 自动提示命令
  *
@@ -33,5 +39,229 @@ package com.buession.redis.core.command;
  * @since 4.0.0
  */
 public interface AutoSuggestCommands extends RedisCommands {
+
+	/**
+	 * 将一个建议词条添加到自动补全索引
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		词条
+	 * @param score
+	 * 		分值
+	 *
+	 * @return The number of elements added to the suggestion dictionary.
+	 */
+	Long ftSugAdd(final String key, final String value, final double score);
+
+	/**
+	 * 将一个建议词条添加到自动补全索引
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		词条
+	 * @param score
+	 * 		分值
+	 *
+	 * @return The number of elements added to the suggestion dictionary.
+	 */
+	Long ftSugAdd(final byte[] key, final byte[] value, final double score);
+
+	/**
+	 * 将一个建议词条添加到自动补全索引
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		词条
+	 * @param score
+	 * 		分值
+	 * @param incr
+	 * 		为 true 时且词条已存在，则将提供的 score 累加到现有分数上，而不是覆盖它
+	 *
+	 * @return The number of elements added to the suggestion dictionary.
+	 */
+	Long ftSugAdd(final String key, final String value, final double score, final boolean incr);
+
+	/**
+	 * 将一个建议词条添加到自动补全索引
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		词条
+	 * @param score
+	 * 		分值
+	 * @param incr
+	 * 		为 true 时且词条已存在，则将提供的 score 累加到现有分数上，而不是覆盖它
+	 *
+	 * @return The number of elements added to the suggestion dictionary.
+	 */
+	Long ftSugAdd(final byte[] key, final byte[] value, final double score, final boolean incr);
+
+	/**
+	 * 将一个建议词条添加到自动补全索引
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		词条
+	 * @param score
+	 * 		分值
+	 * @param incr
+	 * 		为 true 时且词条已存在，则将提供的 score 累加到现有分数上，而不是覆盖它
+	 * @param payload
+	 * 		与词条关联的额外数据
+	 *
+	 * @return The number of elements added to the suggestion dictionary.
+	 */
+	Long ftSugAdd(final String key, final String value, final double score, final boolean incr, final String payload);
+
+	/**
+	 * 将一个建议词条添加到自动补全索引
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		词条
+	 * @param score
+	 * 		分值
+	 * @param incr
+	 * 		为 true 时且词条已存在，则将提供的 score 累加到现有分数上，而不是覆盖它
+	 * @param payload
+	 * 		与词条关联的额外数据
+	 *
+	 * @return The number of elements added to the suggestion dictionary.
+	 */
+	Long ftSugAdd(final byte[] key, final byte[] value, final double score, final boolean incr, final byte[] payload);
+
+	/**
+	 * 将一个建议词条添加到自动补全索引
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		词条
+	 * @param score
+	 * 		分值
+	 * @param payload
+	 * 		与词条关联的额外数据
+	 *
+	 * @return The number of elements added to the suggestion dictionary.
+	 */
+	Long ftSugAdd(final String key, final String value, final double score, final String payload);
+
+	/**
+	 * 将一个建议词条添加到自动补全索引
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		词条
+	 * @param score
+	 * 		分值
+	 * @param payload
+	 * 		与词条关联的额外数据
+	 *
+	 * @return The number of elements added to the suggestion dictionary.
+	 */
+	Long ftSugAdd(final byte[] key, final byte[] value, final double score, final byte[] payload);
+
+	/**
+	 * 从自动补全索引中删除词条
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		词条
+	 *
+	 * @return 删除结果
+	 */
+	Status ftSugDel(final String key, final String value);
+
+	/**
+	 * 从自动补全索引中删除词条
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		词条
+	 *
+	 * @return 删除结果
+	 */
+	Status ftSugDel(final byte[] key, final byte[] value);
+
+	/**
+	 * 根据用户输入的前缀，从索引中检索匹配的建议词条列表
+	 *
+	 * @param key
+	 * 		Key
+	 * @param prefix
+	 * 		词条前缀
+	 *
+	 * @return 匹配的建议词条
+	 */
+	List<Suggestion> ftSugGet(final String key, final String prefix);
+
+	/**
+	 * 根据用户输入的前缀，从索引中检索匹配的建议词条列表
+	 *
+	 * @param key
+	 * 		Key
+	 * @param prefix
+	 * 		词条前缀
+	 *
+	 * @return 匹配的建议词条
+	 */
+	List<Suggestion> ftSugGet(final byte[] key, final byte[] prefix);
+
+	/**
+	 * 根据用户输入的前缀，从索引中检索匹配的建议词条列表
+	 *
+	 * @param key
+	 * 		Key
+	 * @param prefix
+	 * 		词条前缀
+	 * @param argument
+	 * 		参数
+	 *
+	 * @return 匹配的建议词条
+	 */
+	List<Suggestion> ftSugGet(final String key, final String prefix, final FtSugGetArgument argument);
+
+	/**
+	 * 根据用户输入的前缀，从索引中检索匹配的建议词条列表
+	 *
+	 * @param key
+	 * 		Key
+	 * @param prefix
+	 * 		词条前缀
+	 * @param argument
+	 * 		参数
+	 *
+	 * @return 匹配的建议词条
+	 */
+	List<Suggestion> ftSugGet(final byte[] key, final byte[] prefix, final FtSugGetArgument argument);
+
+	/**
+	 * 获取自动补全索引中词条总数
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 自动补全索引中词条总数
+	 */
+	Long ftSugLen(final String key);
+
+	/**
+	 * 获取自动补全索引中词条总数
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 自动补全索引中词条总数
+	 */
+	Long ftSugLen(final byte[] key);
 
 }

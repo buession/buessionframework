@@ -22,154 +22,65 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command;
+package com.buession.redis.core.internal.lettuce.args;
+
+import io.lettuce.core.search.arguments.SugAddArgs;
 
 /**
- * Redis 协议命令分组
+ * Lettuce {@link SugAddArgs} 扩展
+ *
+ * @param <K>
+ * 		Key 类型
+ * @param <V>
+ * 		值类型
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public enum CommandGroup {
+public final class LettuceSugAddArgs<K, V> extends SugAddArgs<K, V> {
 
 	/**
-	 * 布隆过滤器
+	 * 构造函数
 	 */
-	AUTO_SUGGEST("Auto-suggest"),
-
-	/**
-	 * 布隆过滤器
-	 */
-	BLOOM_FILTER("Bloom filter"),
-
-	/**
-	 * 位图命令
-	 */
-	BITMAP("BitMap"),
-
-	/**
-	 * 布谷鸟过滤器
-	 */
-	CUCKOO_FILTER("Cuckoo filter"),
-
-	/**
-	 * 集群命令
-	 */
-	CLUSTER("Cluster"),
-
-	/**
-	 * 计数最小草图
-	 */
-	COUNT_MIN_SKETCH("Count-min sketch"),
-
-	/**
-	 * 权限命令
-	 */
-	ACL("Acl"),
-
-	/**
-	 * 连接命令
-	 */
-	CONNECTION("Connection"),
-
-	/**
-	 * 常规命令
-	 */
-	GENERIC("Generic"),
-
-	/**
-	 * 地理位置命令
-	 */
-	GEO("Geo"),
-
-	/**
-	 * 哈希命令
-	 */
-	HASH("Hash"),
-
-	/**
-	 * HyperLogLog 命令
-	 */
-	HYPERLOGLOG("HyperLogLog"),
-
-	/**
-	 * JSON 命令
-	 */
-	JSON("JSON"),
-
-	/**
-	 * 键命令
-	 */
-	KEY("Key"),
-
-	/**
-	 * 列表命令
-	 */
-	LIST("List"),
-
-	/**
-	 * 发布订阅命令
-	 */
-	PUBSUB("PubSub"),
-
-	/**
-	 * 脚本命令
-	 */
-	SCRIPTING("Scripting"),
-
-	/**
-	 * 搜索命令
-	 */
-	SEARCH("Query Engine"),
-
-	/**
-	 * 服务器命令
-	 */
-	SERVER("Server"),
-
-	/**
-	 * 集合命令
-	 */
-	SET("Set"),
-
-	/**
-	 * 有序集合命令
-	 */
-	SORTEDSET("Sorted Set"),
-
-	/**
-	 * 流命令
-	 */
-	STREAM("Stream"),
-
-	/**
-	 * 字符串命令
-	 */
-	STRING("String"),
-
-	/**
-	 * 事务命令
-	 */
-	TRANSACTION("Transaction");
-
-	private final String name;
-
-	CommandGroup(final String name) {
-		this.name = name;
+	public LettuceSugAddArgs() {
+		super();
 	}
 
-	public String getName() {
-		return name;
+	/**
+	 * 构造函数
+	 *
+	 * @param incr
+	 * 		为 true 时且词条已存在，则将提供的 score 累加到现有分数上，而不是覆盖它
+	 */
+	public LettuceSugAddArgs(final boolean incr) {
+		super();
+		if(incr){
+			incr();
+		}
 	}
 
-	@Deprecated
-	public String getValue() {
-		return getName();
+	/**
+	 * 构造函数
+	 *
+	 * @param incr
+	 * 		为 true 时且词条已存在，则将提供的 score 累加到现有分数上，而不是覆盖它
+	 * @param payload
+	 * 		与词条关联的额外数据
+	 */
+	public LettuceSugAddArgs(final boolean incr, final V payload) {
+		this(incr);
+		payload(payload);
 	}
 
-	@Override
-	public String toString() {
-		return getName();
+	/**
+	 * 构造函数
+	 *
+	 * @param payload
+	 * 		与词条关联的额外数据
+	 */
+	public LettuceSugAddArgs(final V payload) {
+		super();
+		payload(payload);
 	}
 
 }

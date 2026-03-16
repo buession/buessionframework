@@ -24,8 +24,20 @@
  */
 package com.buession.redis.client.jedis.command;
 
+import com.buession.core.converter.BooleanStatusConverter;
+import com.buession.core.converter.ListConverter;
+import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.core.Suggestion;
 import com.buession.redis.core.command.AutoSuggestCommands;
+import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.args.FtSugGetArgument;
+import com.buession.redis.core.internal.convert.jedis.response.TupleSuggestionConverter;
+import com.buession.redis.utils.SafeEncoder;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Jedis 自动提示命令
@@ -37,6 +49,150 @@ public final class JedisAutoSuggestCommands extends AbstractJedisRedisCommands i
 
 	public JedisAutoSuggestCommands(final JedisRedisClient client) {
 		super(client);
+	}
+
+	@Override
+	public Long ftSugAdd(final String key, final String value, final double score) {
+		final CommandArguments args = CommandArguments.create(key, value).add(score);
+		return ftSugAdd(rawKey(key), value, score, args);
+	}
+
+	@Override
+	public Long ftSugAdd(final byte[] key, final byte[] value, final double score) {
+		final CommandArguments args = CommandArguments.create(key, value).add(score);
+		return ftSugAdd(rawStringKey(key), SafeEncoder.encode(value), score, args);
+	}
+
+	@Override
+	public Long ftSugAdd(final String key, final String value, final double score, final boolean incr) {
+		final CommandArguments args = CommandArguments.create(key, value).add(score).add(incr ? "INCR" : null);
+
+		if(incr){
+			return executeCommand(Command.FT_SUGADD, args, (cmd)->cmd.ftSugAddIncr(rawKey(key), value, score));
+		}else{
+			return ftSugAdd(rawKey(key), value, score, args);
+		}
+	}
+
+	@Override
+	public Long ftSugAdd(final byte[] key, final byte[] value, final double score, final boolean incr) {
+		final CommandArguments args = CommandArguments.create(key, value).add(score).add(incr ? "INCR" : null);
+
+		if(incr){
+			return executeCommand(Command.FT_SUGADD, args,
+					(cmd)->cmd.ftSugAddIncr(rawStringKey(key), SafeEncoder.encode(value), score));
+		}else{
+			return ftSugAdd(rawStringKey(key), SafeEncoder.encode(value), score, args);
+		}
+	}
+
+	@Override
+	public Long ftSugAdd(final String key, final String value, final double score, final boolean incr,
+						 final String payload) {
+		final CommandArguments args = CommandArguments.create(key, value).add(score).add(incr ? "INCR" : null)
+				.add("PAYLOAD", payload);
+
+		if(incr){
+			return executeCommand(Command.FT_SUGADD, args, (cmd)->cmd.ftSugAddIncr(rawKey(key), value, score));
+		}else{
+			return ftSugAdd(rawKey(key), value, score, args);
+		}
+	}
+
+	@Override
+	public Long ftSugAdd(final byte[] key, final byte[] value, final double score, final boolean incr,
+						 final byte[] payload) {
+		final CommandArguments args = CommandArguments.create(key, value).add(score).add(incr ? "INCR" : null)
+				.add("PAYLOAD", payload);
+
+		if(incr){
+			return executeCommand(Command.FT_SUGADD, args,
+					(cmd)->cmd.ftSugAddIncr(rawStringKey(key), SafeEncoder.encode(value), score));
+		}else{
+			return ftSugAdd(rawStringKey(key), SafeEncoder.encode(value), score, args);
+		}
+	}
+
+	@Override
+	public Long ftSugAdd(final String key, final String value, final double score, final String payload) {
+		final CommandArguments args = CommandArguments.create(key, value).add(score).add("PAYLOAD", payload);
+		return ftSugAdd(rawKey(key), value, score, args);
+	}
+
+	@Override
+	public Long ftSugAdd(final byte[] key, final byte[] value, final double score, final byte[] payload) {
+		final CommandArguments args = CommandArguments.create(key, value).add(score).add("PAYLOAD", payload);
+		return ftSugAdd(rawStringKey(key), SafeEncoder.encode(value), score, args);
+	}
+
+	@Override
+	public Status ftSugDel(final String key, final String value) {
+		final CommandArguments args = CommandArguments.create(key, value);
+		return executeCommand(Command.FT_SUGDEL, args, (cmd)->cmd.ftSugDel(rawKey(key), value),
+				new BooleanStatusConverter());
+	}
+
+	@Override
+	public Status ftSugDel(final byte[] key, final byte[] value) {
+		final CommandArguments args = CommandArguments.create(key, value);
+		return executeCommand(Command.FT_SUGDEL, args,
+				(cmd)->cmd.ftSugDel(rawStringKey(key), SafeEncoder.encode(value)), new BooleanStatusConverter());
+	}
+
+	@Override
+	public List<Suggestion> ftSugGet(final String key, final String prefix) {
+		final CommandArguments args = CommandArguments.create(key, prefix);
+		return executeCommand(Command.FT_SUGGET, args, (cmd)->cmd.ftSugGet(rawKey(key), prefix),
+				(v)->v.stream().map((item)->new Suggestion(item, null)).collect(Collectors.toList()));
+	}
+
+	@Override
+	public List<Suggestion> ftSugGet(final byte[] key, final byte[] prefix) {
+		final CommandArguments args = CommandArguments.create(key, prefix);
+		return executeCommand(Command.FT_SUGGET, args,
+				(cmd)->cmd.ftSugGet(rawStringKey(key), SafeEncoder.encode(prefix)),
+				(v)->v.stream().map((item)->new Suggestion(item, null)).collect(Collectors.toList()));
+	}
+
+	@Override
+	public List<Suggestion> ftSugGet(final String key, final String prefix, final FtSugGetArgument argument) {
+		final CommandArguments args = CommandArguments.create(key, prefix).add(argument);
+		return ftSugGet(rawKey(key), prefix, argument, args);
+	}
+
+	@Override
+	public List<Suggestion> ftSugGet(final byte[] key, final byte[] prefix, final FtSugGetArgument argument) {
+		final CommandArguments args = CommandArguments.create(key, prefix).add(argument);
+		return ftSugGet(rawStringKey(key), SafeEncoder.encode(prefix), argument, args);
+	}
+
+	@Override
+	public Long ftSugLen(final String key) {
+		final CommandArguments args = CommandArguments.create(key);
+		return executeCommand(Command.FT_SUGLEN, args, (cmd)->cmd.ftSugLen(rawKey(key)));
+	}
+
+	@Override
+	public Long ftSugLen(final byte[] key) {
+		final CommandArguments args = CommandArguments.create(key);
+		return executeCommand(Command.FT_SUGLEN, args, (cmd)->cmd.ftSugLen(rawStringKey(key)));
+	}
+
+	private Long ftSugAdd(final String key, final String value, final double score, final CommandArguments args) {
+		return executeCommand(Command.FT_SUGADD, args, (cmd)->cmd.ftSugAdd(key, value, score));
+	}
+
+	private List<Suggestion> ftSugGet(final String key, final String prefix, final FtSugGetArgument argument,
+									  final CommandArguments args) {
+		if(argument != null && Boolean.TRUE.equals(argument.getWithScores())){
+			return executeCommand(Command.FT_SUGGET, args,
+					(cmd)->cmd.ftSugGetWithScores(rawKey(key), prefix, argument.getFuzzy(),
+							argument.getMax().intValue()), new ListConverter<>(new TupleSuggestionConverter()));
+		}else{
+			return executeCommand(Command.FT_SUGGET, args, (cmd)->cmd.ftSugGet(rawKey(key), prefix,
+							argument.getFuzzy(), argument.getMax().intValue()),
+					(v)->v.stream().map((item)->new Suggestion(item, null)).collect(Collectors.toList()));
+		}
 	}
 
 }

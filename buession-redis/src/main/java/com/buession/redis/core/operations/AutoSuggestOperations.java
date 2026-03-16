@@ -24,7 +24,12 @@
  */
 package com.buession.redis.core.operations;
 
+import com.buession.lang.Status;
+import com.buession.redis.core.Suggestion;
 import com.buession.redis.core.command.AutoSuggestCommands;
+import com.buession.redis.core.command.args.FtSugGetArgument;
+
+import java.util.List;
 
 /**
  * 自动提示命令
@@ -35,5 +40,87 @@ import com.buession.redis.core.command.AutoSuggestCommands;
  * @since 4.0.0
  */
 public interface AutoSuggestOperations extends AutoSuggestCommands, RedisOperations {
+
+	@Override
+	default Long ftSugAdd(final String key, final String value, final double score) {
+		return execute((client)->client.autoSuggestCommands().ftSugAdd(key, value, score));
+	}
+
+	@Override
+	default Long ftSugAdd(final byte[] key, final byte[] value, final double score) {
+		return execute((client)->client.autoSuggestCommands().ftSugAdd(key, value, score));
+	}
+
+	@Override
+	default Long ftSugAdd(final String key, final String value, final double score, final boolean incr) {
+		return execute((client)->client.autoSuggestCommands().ftSugAdd(key, value, score, incr));
+	}
+
+	@Override
+	default Long ftSugAdd(final byte[] key, final byte[] value, final double score, final boolean incr) {
+		return execute((client)->client.autoSuggestCommands().ftSugAdd(key, value, score, incr));
+	}
+
+	@Override
+	default Long ftSugAdd(final String key, final String value, final double score, final boolean incr,
+						  final String payload) {
+		return execute((client)->client.autoSuggestCommands().ftSugAdd(key, value, score, incr, payload));
+	}
+
+	@Override
+	default Long ftSugAdd(final byte[] key, final byte[] value, final double score, final boolean incr,
+						  final byte[] payload) {
+		return execute((client)->client.autoSuggestCommands().ftSugAdd(key, value, score, incr, payload));
+	}
+
+	@Override
+	default Long ftSugAdd(final String key, final String value, final double score, final String payload) {
+		return execute((client)->client.autoSuggestCommands().ftSugAdd(key, value, score, payload));
+	}
+
+	@Override
+	default Long ftSugAdd(final byte[] key, final byte[] value, final double score, final byte[] payload) {
+		return execute((client)->client.autoSuggestCommands().ftSugAdd(key, value, score, payload));
+	}
+
+	@Override
+	default Status ftSugDel(final String key, final String value) {
+		return execute((client)->client.autoSuggestCommands().ftSugDel(key, value));
+	}
+
+	@Override
+	default Status ftSugDel(final byte[] key, final byte[] value) {
+		return execute((client)->client.autoSuggestCommands().ftSugDel(key, value));
+	}
+
+	@Override
+	default List<Suggestion> ftSugGet(final String key, final String prefix) {
+		return execute((client)->client.autoSuggestCommands().ftSugGet(key, prefix));
+	}
+
+	@Override
+	default List<Suggestion> ftSugGet(final byte[] key, final byte[] prefix) {
+		return execute((client)->client.autoSuggestCommands().ftSugGet(key, prefix));
+	}
+
+	@Override
+	default List<Suggestion> ftSugGet(final String key, final String prefix, final FtSugGetArgument argument) {
+		return execute((client)->client.autoSuggestCommands().ftSugGet(key, prefix, argument));
+	}
+
+	@Override
+	default List<Suggestion> ftSugGet(final byte[] key, final byte[] prefix, final FtSugGetArgument argument) {
+		return execute((client)->client.autoSuggestCommands().ftSugGet(key, prefix, argument));
+	}
+
+	@Override
+	default Long ftSugLen(final String key) {
+		return execute((client)->client.autoSuggestCommands().ftSugLen(key));
+	}
+
+	@Override
+	default Long ftSugLen(final byte[] key) {
+		return execute((client)->client.autoSuggestCommands().ftSugLen(key));
+	}
 
 }
