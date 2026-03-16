@@ -34,7 +34,6 @@ import com.buession.redis.core.command.args.MSetExArgument;
 import com.buession.redis.core.command.args.SetArgument;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 字符串命令
@@ -230,6 +229,30 @@ public interface StringCommands extends RedisCommands {
 	 * @return 键 key 的值
 	 */
 	byte[] getDel(final byte[] key);
+
+	/**
+	 * 获取键 key 的值，并重置 key 的过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/getex/" target="_blank">https://redis.io/commands/getex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 键 key 的值
+	 */
+	String getEx(final String key);
+
+	/**
+	 * 获取键 key 的值，并重置 key 的过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/getex/" target="_blank">https://redis.io/commands/getex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 键 key 的值
+	 */
+	byte[] getEx(final byte[] key);
 
 	/**
 	 * 获取键 key 的值，并重置 key 的过期时间
@@ -496,7 +519,21 @@ public interface StringCommands extends RedisCommands {
 	 *
 	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
+	@SuppressWarnings({"unchecked"})
 	Status mSet(final KeyValue<String, String>... values);
+
+	/**
+	 * Atomically sets multiple string keys with an optional shared expiration in a single operation.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/msetnx/" target="_blank">https://redis.io/docs/latest/commands/msetnx/</a></p>
+	 *
+	 * @param values
+	 * 		键值对
+	 *
+	 * @return 当所有给定键都设置成功时，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	@SuppressWarnings({"unchecked"})
+	Status mSetEx(final KeyValue<String, String>... values);
 
 	/**
 	 * Atomically sets multiple string keys with an optional shared expiration in a single operation.
@@ -522,6 +559,7 @@ public interface StringCommands extends RedisCommands {
 	 *
 	 * @return 当所有给定键都设置成功时，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
+	@SuppressWarnings({"unchecked"})
 	Status mSetNx(final KeyValue<String, String>... values);
 
 	/**

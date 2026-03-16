@@ -25,6 +25,7 @@
 package com.buession.redis.core.internal.lettuce.args;
 
 import com.buession.redis.core.command.args.LcsArgument;
+import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.LcsArgs;
 
 /**
@@ -44,10 +45,61 @@ public final class LettuceLcsArgs extends LcsArgs {
 
 	/**
 	 * 构造函数
+	 *
+	 * @param key1
+	 * 		-
+	 * @param key2
+	 * 		-
 	 */
-	public LettuceLcsArgs(final LcsArgument lcsArgument) {
+	public LettuceLcsArgs(final String key1, final String key2) {
 		super();
+		by(key1, key2);
+	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param key1
+	 * 		-
+	 * @param key2
+	 * 		-
+	 */
+	public LettuceLcsArgs(final byte[] key1, final byte[] key2) {
+		super();
+		by(SafeEncoder.encode(key1), SafeEncoder.encode(key2));
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param key1
+	 * 		-
+	 * @param key2
+	 * 		-
+	 * @param lcsArgument
+	 *        {@link LcsArgument}
+	 */
+	public LettuceLcsArgs(final String key1, final String key2, final LcsArgument lcsArgument) {
+		this(key1, key2);
+		lcsArgument(lcsArgument);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param key1
+	 * 		-
+	 * @param key2
+	 * 		-
+	 * @param lcsArgument
+	 *        {@link LcsArgument}
+	 */
+	public LettuceLcsArgs(final byte[] key1, final byte[] key2, final LcsArgument lcsArgument) {
+		this(key1, key2);
+		lcsArgument(lcsArgument);
+	}
+
+	private void lcsArgument(final LcsArgument lcsArgument) {
 		if(lcsArgument != null){
 			if(Boolean.TRUE.equals(lcsArgument.getLen())){
 				justLen();

@@ -261,6 +261,16 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	<V> V getDel(final byte[] key, final TypeReference<V> type);
 
 	@Override
+	default String getEx(final String key) {
+		return execute((client)->client.stringCommands().getEx(key));
+	}
+
+	@Override
+	default byte[] getEx(final byte[] key) {
+		return execute((client)->client.stringCommands().getEx(key));
+	}
+
+	@Override
 	default String getEx(final String key, final GetExArgument argument) {
 		return execute((client)->client.stringCommands().getEx(key, argument));
 	}
@@ -269,6 +279,70 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	default byte[] getEx(final byte[] key, final GetExArgument argument) {
 		return execute((client)->client.stringCommands().getEx(key, argument));
 	}
+
+	/**
+	 * 获取键 key 的值反序列化为 clazz 指定类型后的对象，并重置 key 的过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/getex/" target="_blank">https://redis.io/commands/getex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 键 key 的值反序列化后对象
+	 */
+	<V> V getEx(final String key, final Class<V> clazz);
+
+	/**
+	 * 获取键 key 的值反序列化为 clazz 指定类型后的对象，并重置 key 的过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/getex/" target="_blank">https://redis.io/commands/getex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 键 key 的值反序列化后对象
+	 */
+	<V> V getEx(final byte[] key, final Class<V> clazz);
+
+	/**
+	 * 获取键 key 的值反序列化为 type 指定类型后的对象，并重置 key 的过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/getex/" target="_blank">https://redis.io/commands/getex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 键 key 的值反序列化后对象
+	 */
+	<V> V getEx(final String key, final TypeReference<V> type);
+
+	/**
+	 * 获取键 key 的值反序列化为 type 指定类型后的对象，并重置 key 的过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/getex/" target="_blank">https://redis.io/commands/getex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 键 key 的值反序列化后对象
+	 */
+	<V> V getEx(final byte[] key, final TypeReference<V> type);
 
 	/**
 	 * 获取键 key 的值反序列化为 clazz 指定类型后的对象，并重置 key 的过期时间
@@ -562,9 +636,16 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 */
 	<V> List<V> mGet(final byte[][] keys, final TypeReference<V> type);
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	default Status mSet(final KeyValue<String, String>... values) {
 		return execute((client)->client.stringCommands().mSet(values));
+	}
+
+	@SuppressWarnings({"unchecked"})
+	@Override
+	default Status mSetEx(final KeyValue<String, String>... values) {
+		return execute((client)->client.stringCommands().mSetEx(values));
 	}
 
 	@Override
@@ -572,6 +653,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 		return execute((client)->client.stringCommands().mSetEx(values, argument));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	default Status mSetNx(final KeyValue<String, String>... values) {
 		return execute((client)->client.stringCommands().mSetNx(values));

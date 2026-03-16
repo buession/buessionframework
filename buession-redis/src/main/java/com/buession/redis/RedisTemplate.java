@@ -2038,6 +2038,30 @@ public class RedisTemplate extends AbstractRedisTemplate implements AutoSuggestO
 	}
 
 	@Override
+	public <V> V getEx(final String key, final Class<V> clazz) {
+		return execute((client)->client.stringCommands().getEx(key),
+				new Converter.ClazzStringConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> V getEx(final byte[] key, final Class<V> clazz) {
+		return execute((client)->client.stringCommands().getEx(key),
+				new Converter.ClazzBinaryConverter<>(this, clazz));
+	}
+
+	@Override
+	public <V> V getEx(final String key, final TypeReference<V> type) {
+		return execute((client)->client.stringCommands().getEx(key),
+				new Converter.TypeStringConverter<>(this, type));
+	}
+
+	@Override
+	public <V> V getEx(final byte[] key, final TypeReference<V> type) {
+		return execute((client)->client.stringCommands().getEx(key),
+				new Converter.TypeBinaryConverter<>(this, type));
+	}
+
+	@Override
 	public <V> V getEx(final String key, final GetExArgument argument, final Class<V> clazz) {
 		return execute((client)->client.stringCommands().getEx(key, argument),
 				new Converter.ClazzStringConverter<>(this, clazz));
