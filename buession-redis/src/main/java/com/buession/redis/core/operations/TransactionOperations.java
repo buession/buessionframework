@@ -26,7 +26,6 @@ package com.buession.redis.core.operations;
 
 import com.buession.lang.Status;
 import com.buession.redis.core.command.TransactionCommands;
-import com.buession.redis.transaction.Transaction;
 
 /**
  * 事务运算
@@ -39,14 +38,7 @@ public interface TransactionOperations extends TransactionCommands, RedisOperati
 
 	@Override
 	default Status multi() {
-		return execute((client)->{
-			try{
-				final Transaction transaction = client.getConnection().multi();
-				return transaction != null ? Status.SUCCESS : Status.FAILURE;
-			}catch(Exception e){
-				return Status.FAILURE;
-			}
-		});
+		return execute((client)->client.transactionCommands().multi());
 	}
 
 	@Override

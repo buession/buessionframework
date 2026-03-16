@@ -53,7 +53,7 @@ public final class LettuceTransactionCommands extends AbstractLettuceRedisComman
 		return executeCommand(Command.DISCARD, (cmd)->{
 			RedisConnection connection = client.getConnection();
 			return connection.discard();
-		}, (v)->v);
+		});
 	}
 
 	@Override

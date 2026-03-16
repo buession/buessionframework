@@ -51,7 +51,7 @@ public final class JedisTransactionCommands extends AbstractJedisRedisCommands i
 		return executeCommand(Command.DISCARD, (cmd)->{
 			RedisConnection connection = client.getConnection();
 			return connection.discard();
-		}, (v)->v);
+		});
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public final class JedisTransactionCommands extends AbstractJedisRedisCommands i
 		return executeCommand(Command.MULTI, (cmd)->{
 			cmd.multi();
 			return Status.SUCCESS;
-		}, (v)->v);
+		});
 	}
 
 	@Override
@@ -86,7 +86,7 @@ public final class JedisTransactionCommands extends AbstractJedisRedisCommands i
 		return executeCommand(Command.UNWATCH, (cmd)->{
 			//cmd.unwatch();
 			return Status.SUCCESS;
-		}, (v)->v);
+		});
 	}
 
 	@Override
@@ -95,7 +95,7 @@ public final class JedisTransactionCommands extends AbstractJedisRedisCommands i
 		return executeCommand(Command.WATCH, args, (cmd)->{
 			//cmd.unwatch();
 			return Status.SUCCESS;
-		}, (v)->v);
+		});
 	}
 
 	@Override
@@ -104,7 +104,7 @@ public final class JedisTransactionCommands extends AbstractJedisRedisCommands i
 		return executeCommand(Command.WATCH, args, (cmd)->{
 			//cmd.unwatch();
 			return Status.SUCCESS;
-		}, (v)->v);
+		});
 	}
 
 }

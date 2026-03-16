@@ -62,10 +62,7 @@ public abstract class AbstractRedisTemplate extends RedisAccessor implements Aut
 
 	@Override
 	public Status discard() {
-		Status result = execute((client)->{
-			client.getConnection().discard();
-			return null;
-		});
+		Status result = execute((client)->client.transactionCommands().discard());
 		resetTransactionOrPipeline();
 		return result;
 	}
@@ -73,7 +70,7 @@ public abstract class AbstractRedisTemplate extends RedisAccessor implements Aut
 	@SuppressWarnings({"unchecked"})
 	@Override
 	public List<Object> exec() {
-		List<Object> result = execute((client)->client.getConnection().exec());
+		List<Object> result = execute((client)->client.transactionCommands().exec());
 
 		if(result != null){
 			Map<Integer, Function<?, ?>> map = txConverters.get();
