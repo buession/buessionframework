@@ -175,16 +175,14 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	@Override
 	public StreamEntryId xAdd(final String key, final StreamEntryId id, final Map<String, String> hash,
 							  final XAddArgument xAddArgument) {
-		final CommandArguments args = CommandArguments.create(key).add(xAddArgument).add(id).add(xAddArgument)
-				.add(hash);
+		final CommandArguments args = CommandArguments.create(key).add(xAddArgument).add(id).add(hash);
 		return xAdd(rawKey(key), id, hash, xAddArgument, args);
 	}
 
 	@Override
 	public StreamEntryId xAdd(final byte[] key, final StreamEntryId id, final Map<byte[], byte[]> hash,
 							  final XAddArgument xAddArgument) {
-		final CommandArguments args = CommandArguments.create(key).add(xAddArgument).add(id).add(xAddArgument)
-				.add(hash);
+		final CommandArguments args = CommandArguments.create(key).add(xAddArgument).add(id).add(hash);
 		final BinaryMapStringMapConverter mapConverter = new BinaryMapStringMapConverter();
 		return xAdd(rawStringKey(key), id, mapConverter.convert(hash), xAddArgument, args);
 	}
@@ -567,44 +565,46 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	public Stream<String, String> xInfoStream(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(Command.XINFO, SubCommand.XINFO_STREAM, args, (cmd)->cmd.xinfoStream(rawKey(key)),
-				new StreamInfoConverter<>());
+				new StreamInfoConverter<>((k)->k, (v)->v));
 	}
 
 	@Override
 	public Stream<byte[], byte[]> xInfoStream(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(Command.XINFO, SubCommand.XINFO_STREAM, args, (cmd)->cmd.xinfoStream(rawStringKey(key)),
-				new StreamInfoConverter<>());
+				new StreamInfoConverter<>(SafeEncoder::encode, SafeEncoder::encode));
 	}
 
 	@Override
-	public StreamFull xInfoStream(final String key, final boolean full) {
+	public StreamFull<String, String> xInfoStream(final String key, final boolean full) {
 		final CommandArguments args = CommandArguments.create(key).add(full ? "FULL" : null);
 		return executeCommand(Command.XINFO, SubCommand.XINFO_STREAM, args, (cmd)->cmd.xinfoStreamFull(rawKey(key)),
-				new StreamFullInfoConverter());
+				new StreamFullInfoConverter<>((k)->k, (v)->v));
 	}
 
 	@Override
-	public StreamFull xInfoStream(final byte[] key, final boolean full) {
+	public StreamFull<byte[], byte[]> xInfoStream(final byte[] key, final boolean full) {
 		final CommandArguments args = CommandArguments.create(key).add(full ? "FULL" : null);
 		return executeCommand(Command.XINFO, SubCommand.XINFO_STREAM, args,
-				(cmd)->cmd.xinfoStreamFull(rawStringKey(key)), new StreamFullInfoConverter());
+				(cmd)->cmd.xinfoStreamFull(rawStringKey(key)),
+				new StreamFullInfoConverter<>(SafeEncoder::encode, SafeEncoder::encode));
 	}
 
 	@Override
-	public StreamFull xInfoStream(final String key, final boolean full, final int count) {
+	public StreamFull<String, String> xInfoStream(final String key, final boolean full, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(full ? "FULL" : null)
 				.add(Keyword.Common.COUNT, count);
 		return executeCommand(Command.XINFO, SubCommand.XINFO_STREAM, args,
-				(cmd)->cmd.xinfoStreamFull(rawKey(key), count), new StreamFullInfoConverter());
+				(cmd)->cmd.xinfoStreamFull(rawKey(key), count), new StreamFullInfoConverter<>((k)->k, (v)->v));
 	}
 
 	@Override
-	public StreamFull xInfoStream(final byte[] key, final boolean full, final int count) {
+	public StreamFull<byte[], byte[]> xInfoStream(final byte[] key, final boolean full, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(full ? "FULL" : null)
 				.add(Keyword.Common.COUNT, count);
 		return executeCommand(Command.XINFO, SubCommand.XINFO_STREAM, args,
-				(cmd)->cmd.xinfoStreamFull(rawStringKey(key), count), new StreamFullInfoConverter());
+				(cmd)->cmd.xinfoStreamFull(rawStringKey(key), count),
+				new StreamFullInfoConverter<>(SafeEncoder::encode, SafeEncoder::encode));
 	}
 
 	@Override

@@ -26,10 +26,9 @@ package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.MapConverter;
-import com.buession.redis.core.StreamEntry;
 
 /**
- * Jedis {@link redis.clients.jedis.resps.StreamEntry} 转换为 {@link StreamEntry}
+ * Jedis {@link redis.clients.jedis.resps.StreamEntry} 转换为 {@link com.buession.redis.core.StreamEntry}
  *
  * @param <K>
  * 		Key 类型
@@ -40,7 +39,7 @@ import com.buession.redis.core.StreamEntry;
  * @since 2.0.0
  */
 public final class StreamEntryConverter<K, V>
-		implements Converter<redis.clients.jedis.resps.StreamEntry, StreamEntry<K, V>> {
+		implements Converter<redis.clients.jedis.resps.StreamEntry, com.buession.redis.core.StreamEntry<K, V>> {
 
 	private final Converter<String, K> keyConverter;
 
@@ -52,14 +51,14 @@ public final class StreamEntryConverter<K, V>
 	}
 
 	@Override
-	public StreamEntry<K, V> convert(final redis.clients.jedis.resps.StreamEntry source) {
+	public com.buession.redis.core.StreamEntry<K, V> convert(final redis.clients.jedis.resps.StreamEntry source) {
 		if(source == null){
 			return null;
 		}
 
 		final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
 		final MapConverter<String, String, K, V> mapConverter = new MapConverter<>(keyConverter, valueConverter);
-		return new StreamEntry<>(streamEntryIDConverter.convert(source.getID()),
+		return new com.buession.redis.core.StreamEntry<>(streamEntryIDConverter.convert(source.getID()),
 				mapConverter.convert(source.getFields()));
 	}
 

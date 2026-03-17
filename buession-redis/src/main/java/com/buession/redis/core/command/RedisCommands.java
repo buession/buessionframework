@@ -44,12 +44,11 @@ public interface RedisCommands {
 
 	/**
 	 * Redis 运算命令
-	 * *
-	 * * @param <CLIENT>
-	 * * 		Redis 客户端 {@link RedisClient}
-	 * * @param <CONN>
-	 * * 		Redis 连接对象 {@link RedisConnection}
 	 *
+	 * @param <CLIENT>
+	 * 		Redis 客户端 {@link RedisClient}
+	 * @param <CONN>
+	 * 		Redis 连接对象 {@link RedisConnection}
 	 * @param <R>
 	 * 		返回值类型
 	 *

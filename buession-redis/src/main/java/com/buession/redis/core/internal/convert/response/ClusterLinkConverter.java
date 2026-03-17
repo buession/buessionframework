@@ -27,6 +27,7 @@ package com.buession.redis.core.internal.convert.response;
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.redis.core.ClusterLink;
+import com.buession.redis.core.Event;
 
 import java.util.Map;
 import java.util.Objects;
@@ -46,29 +47,99 @@ public class ClusterLinkConverter implements Converter<Map<String, Object>, Clus
 		}
 
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
-		final ClusterLink clusterLink = new ClusterLink();
+		final ClusterLinkBuilder clusterLinkBuilder = new ClusterLinkBuilder();
 
 		propertyMapper.from(source.get("direction"))
 				.as((v)->Enum.valueOf(ClusterLink.Direction.class, v.toString().toUpperCase()))
-				.to(clusterLink::direction);
-		propertyMapper.from(source.get("node")).as(Object::toString).to(clusterLink::setNode);
-		propertyMapper.from(source.get("create-time")).as((v)->(Long) v).to(clusterLink::setCreateTime);
+				.to(clusterLinkBuilder::setDirection);
+		propertyMapper.from(source.get("node")).as(Object::toString).to(clusterLinkBuilder::setNode);
+		propertyMapper.from(source.get("create-time")).as((v)->(Long) v).to(clusterLinkBuilder::setCreateTime);
 		propertyMapper.from(source.get("events")).as((v)->{
 			if(Objects.equals(v, "rw")){
-				return new ClusterLink.Event[]{ClusterLink.Event.R, ClusterLink.Event.W};
+				return new Event[]{Event.R, Event.W};
 			}else if(Objects.equals(v, "r")){
-				return new ClusterLink.Event[]{ClusterLink.Event.R};
+				return new Event[]{Event.R};
 			}else if(Objects.equals(v, "w")){
-				return new ClusterLink.Event[]{ClusterLink.Event.W};
+				return new Event[]{Event.W};
 			}else{
-				return new ClusterLink.Event[]{};
+				return new Event[]{};
 			}
-		}).to(clusterLink::setEvents);
+		}).to(clusterLinkBuilder::setEvents);
 		propertyMapper.from(source.get("send-buffer-allocated")).as((v)->(Integer) v)
-				.to(clusterLink::setSendBufferAllocated);
-		propertyMapper.from(source.get("send-buffer-used")).as((v)->(Integer) v).to(clusterLink::setSendBufferUsed);
+				.to(clusterLinkBuilder::setSendBufferAllocated);
+		propertyMapper.from(source.get("send-buffer-used")).as((v)->(Integer) v)
+				.to(clusterLinkBuilder::setSendBufferUsed);
 
-		return clusterLink;
+		return new ClusterLink(clusterLinkBuilder.getDirection(), clusterLinkBuilder.getNode(),
+				clusterLinkBuilder.getCreateTime(), clusterLinkBuilder.getEvents(),
+				clusterLinkBuilder.getSendBufferAllocated(), clusterLinkBuilder.getSendBufferUsed());
+	}
+
+	private final static class ClusterLinkBuilder {
+
+		private ClusterLink.Direction direction;
+
+		private String node;
+
+		private Long createTime;
+
+		private Event[] events;
+
+		private Integer sendBufferAllocated;
+
+		private Integer sendBufferUsed;
+
+		private ClusterLinkBuilder() {
+
+		}
+
+		public ClusterLink.Direction getDirection() {
+			return direction;
+		}
+
+		public void setDirection(ClusterLink.Direction direction) {
+			this.direction = direction;
+		}
+
+		public String getNode() {
+			return node;
+		}
+
+		public void setNode(String node) {
+			this.node = node;
+		}
+
+		public Long getCreateTime() {
+			return createTime;
+		}
+
+		public void setCreateTime(Long createTime) {
+			this.createTime = createTime;
+		}
+
+		public Event[] getEvents() {
+			return events;
+		}
+
+		public void setEvents(Event[] events) {
+			this.events = events;
+		}
+
+		public Integer getSendBufferAllocated() {
+			return sendBufferAllocated;
+		}
+
+		public void setSendBufferAllocated(Integer sendBufferAllocated) {
+			this.sendBufferAllocated = sendBufferAllocated;
+		}
+
+		public Integer getSendBufferUsed() {
+			return sendBufferUsed;
+		}
+
+		public void setSendBufferUsed(Integer sendBufferUsed) {
+			this.sendBufferUsed = sendBufferUsed;
+		}
 	}
 
 }

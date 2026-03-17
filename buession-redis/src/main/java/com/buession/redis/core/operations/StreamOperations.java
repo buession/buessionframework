@@ -1309,22 +1309,22 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	}
 
 	@Override
-	default StreamFull xInfoStream(final String key, final boolean full) {
+	default StreamFull<String, String> xInfoStream(final String key, final boolean full) {
 		return execute((client)->client.streamCommands().xInfoStream(key, full));
 	}
 
 	@Override
-	default StreamFull xInfoStream(final byte[] key, final boolean full) {
+	default StreamFull<byte[], byte[]> xInfoStream(final byte[] key, final boolean full) {
 		return execute((client)->client.streamCommands().xInfoStream(key, full));
 	}
 
 	@Override
-	default StreamFull xInfoStream(final String key, final boolean full, final int count) {
+	default StreamFull<String, String> xInfoStream(final String key, final boolean full, final int count) {
 		return execute((client)->client.streamCommands().xInfoStream(key, full, count));
 	}
 
 	@Override
-	default StreamFull xInfoStream(final byte[] key, final boolean full, final int count) {
+	default StreamFull<byte[], byte[]> xInfoStream(final byte[] key, final boolean full, final int count) {
 		return execute((client)->client.streamCommands().xInfoStream(key, full, count));
 	}
 

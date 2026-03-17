@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.command.args;
 
+import com.buession.redis.core.ApproximateExactTrimming;
 import com.buession.redis.core.StreamDeletionPolicy;
 import com.buession.redis.utils.ArgStringBuilder;
 import com.buession.redis.utils.SafeEncoder;
@@ -55,6 +56,8 @@ public class XAddArgument {
 	 * {@link MaxLenMinId}
 	 */
 	private MaxLenMinId<?> maxLenMinId;
+
+	private ApproximateExactTrimming approximateExactTrimming;
 
 	/**
 	 * 构造函数
@@ -295,14 +298,29 @@ public class XAddArgument {
 		return this;
 	}
 
+	public ApproximateExactTrimming getApproximateExactTrimming() {
+		return approximateExactTrimming;
+	}
+
+	public XAddArgument setApproximateExactTrimming(ApproximateExactTrimming approximateExactTrimming) {
+		this.approximateExactTrimming = approximateExactTrimming;
+		return this;
+	}
+
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create()
+		final ArgStringBuilder builder = ArgStringBuilder.create()
 				.append(Boolean.TRUE.equals(getNoMkStream()) ? "NOMKSTREAM" : null)
 				.append(getDeletionPolicy())
 				.append(getIdmp())
-				.append(getMaxLenMinId())
-				.build();
+				.append(getMaxLenMinId());
+
+		if(getMaxLenMinId() != null){
+			builder.append(getMaxLenMinId().getType()).append(getApproximateExactTrimming())
+					.append(getMaxLenMinId().getThreshold());
+		}
+
+		return builder.build();
 	}
 
 	public static abstract class BaseIdmp {

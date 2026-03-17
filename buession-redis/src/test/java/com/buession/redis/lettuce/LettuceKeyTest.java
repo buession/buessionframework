@@ -46,7 +46,7 @@ public class LettuceKeyTest extends AbstractLettuceRedisTest {
 	@Test
 	public void scan() {
 		RedisTemplate redisTemplate = redisTemplate();
-		ScanResult<List<String>> result = redisTemplate.scan(0);
+		ScanResult<String> result = redisTemplate.scan(0);
 		System.out.println(result.getCursorAsString());
 		result.getResults().forEach(System.out::println);
 	}

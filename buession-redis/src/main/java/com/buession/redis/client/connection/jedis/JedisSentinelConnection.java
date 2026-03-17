@@ -606,7 +606,7 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection<RedisS
 	@Override
 	public void remove(String masterName) {
 		Assert.isBlank(masterName, "Redis master name cloud be 'null' or empty when trying to remove.");
-		client.sentinelRemove(masterName);
+		//client.sentinelRemove(masterName);
 	}
 
 	@Override

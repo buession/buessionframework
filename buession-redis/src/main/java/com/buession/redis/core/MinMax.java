@@ -25,7 +25,7 @@
 package com.buession.redis.core;
 
 /**
- * <code><MIN|MAX></code>
+ * <code>MIN|MAX</code>
  *
  * @author Yong.Teng
  * @since 4.0.0

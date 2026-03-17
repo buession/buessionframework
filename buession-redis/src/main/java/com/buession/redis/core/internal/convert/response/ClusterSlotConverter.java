@@ -27,6 +27,7 @@ package com.buession.redis.core.internal.convert.response;
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.ClusterSlot;
 import com.buession.redis.core.RedisServer;
+import com.buession.redis.core.SlotRange;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public final class ClusterSlotConverter implements Converter<Object, ClusterSlot
 					masterNodes.add(redisServer);
 				}
 
-				return new ClusterSlot(start, end, masterNodes);
+				return new ClusterSlot(new SlotRange((int) start, (int) end), masterNodes);
 			}
 		}
 

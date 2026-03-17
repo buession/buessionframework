@@ -39,6 +39,16 @@ import redis.clients.jedis.resps.StreamInfo;
  */
 public final class StreamInfoConverter<K, V> implements Converter<StreamInfo, Stream<K, V>> {
 
+	private final Converter<String, K> keyConverter;
+
+	private final Converter<String, V> valueConverter;
+
+	public StreamInfoConverter(final Converter<String, K> keyConverter,
+							   final Converter<String, V> valueConverter) {
+		this.keyConverter = keyConverter;
+		this.valueConverter = valueConverter;
+	}
+
 	@Override
 	public Stream<K, V> convert(final StreamInfo source) {
 		if(source == null){
@@ -46,10 +56,12 @@ public final class StreamInfoConverter<K, V> implements Converter<StreamInfo, St
 		}
 
 		final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
-		final StreamEntryConverter<K, V> streamEntryConverter = new StreamEntryConverter<>((k)->k, (v)->v);
+		final StreamEntryConverter<K, V> streamEntryConverter = new StreamEntryConverter<>(keyConverter,
+				valueConverter);
 		final StreamEntryId lastGeneratedId = streamEntryIDConverter.convert(source.getLastGeneratedId());
 		final StreamEntry<K, V> firstEntry = streamEntryConverter.convert(source.getFirstEntry());
 		final StreamEntry<K, V> lastEntry = streamEntryConverter.convert(source.getLastEntry());
+
 		return new Stream<>(source.getLength(), source.getRadixTreeKeys(), source.getRadixTreeNodes(),
 				source.getGroups(), lastGeneratedId, firstEntry, lastEntry, source.getStreamInfo());
 	}

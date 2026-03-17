@@ -41,8 +41,7 @@ public final class ClusterShardInfoConverter implements Converter<Object, Cluste
 			return null;
 		}
 
-		final ClusterShardInfo clusterShardInfo = new ClusterShardInfo();
-		return clusterShardInfo;
+		return new ClusterShardInfo(null, null);
 	}
 
 }

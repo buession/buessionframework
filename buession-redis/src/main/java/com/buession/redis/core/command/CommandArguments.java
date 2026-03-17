@@ -368,6 +368,7 @@ public final class CommandArguments {
 		return this;
 	}
 
+	/*
 	public CommandArguments add(final byte[]... values) {
 		return doBatchAdd(values);
 	}
@@ -399,6 +400,8 @@ public final class CommandArguments {
 	public CommandArguments add(final boolean... values) {
 		return doBatchAdd(values);
 	}
+
+	 */
 
 	public CommandArguments add(final String... values) {
 		return doBatchAdd(values);

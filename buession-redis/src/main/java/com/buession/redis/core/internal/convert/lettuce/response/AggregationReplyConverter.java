@@ -38,7 +38,7 @@ public final class AggregationReplyConverter implements Converter<AggregationRep
 
 	@Override
 	public AggregationResult convert(final AggregationReply<byte[], byte[]> source) {
-		return source == null ? null : new AggregationResult();
+		return source == null ? null : new AggregationResult(source.getAggregationGroups());
 	}
 
 }

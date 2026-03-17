@@ -40,10 +40,20 @@ import java.util.List;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class StreamFullInfoConverter implements Converter<StreamFullInfo, StreamFull> {
+public final class StreamFullInfoConverter<TK, TV> implements Converter<StreamFullInfo, StreamFull<TK, TV>> {
+
+	private final Converter<String, TK> keyConverter;
+
+	private final Converter<String, TV> valueConverter;
+
+	public StreamFullInfoConverter(final Converter<String, TK> keyConverter,
+								   final Converter<String, TV> valueConverter) {
+		this.keyConverter = keyConverter;
+		this.valueConverter = valueConverter;
+	}
 
 	@Override
-	public StreamFull convert(final StreamFullInfo source) {
+	public StreamFull<TK, TV> convert(final StreamFullInfo source) {
 		if(source == null){
 			return null;
 		}
@@ -51,14 +61,14 @@ public final class StreamFullInfoConverter implements Converter<StreamFullInfo, 
 		final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
 		final ListConverter<StreamGroupFullInfo, StreamFull.Group> listStreamFullInfoGroupConverter =
 				new ListConverter<>(new StreamFullInfoGroupConverter());
-		final ListConverter<redis.clients.jedis.resps.StreamEntry, StreamEntry> listStreamEntryConverter =
-				new ListConverter<>(new StreamEntryConverter<>());
-
+		final ListConverter<redis.clients.jedis.resps.StreamEntry, StreamEntry<TK, TV>> listStreamEntryConverter =
+				new ListConverter<>(new StreamEntryConverter<>(keyConverter, valueConverter));
 		final List<StreamFull.Group> groups = listStreamFullInfoGroupConverter.convert(source.getGroups());
 		final StreamEntryId lastGeneratedId = streamEntryIDConverter.convert(source.getLastGeneratedId());
-		final List<StreamEntry> entries = listStreamEntryConverter.convert(source.getEntries());
-		return new StreamFull(source.getLength(), source.getRadixTreeKeys(), source.getRadixTreeNodes(),
-				groups, lastGeneratedId, entries, source.getStreamFullInfo());
+		final List<StreamEntry<TK, TV>> entries = listStreamEntryConverter.convert(source.getEntries());
+
+		return new StreamFull<>(source.getLength(), groups, source.getRadixTreeKeys(), source.getRadixTreeNodes(),
+				lastGeneratedId, source.getStreamFullInfo(), entries);
 	}
 
 }

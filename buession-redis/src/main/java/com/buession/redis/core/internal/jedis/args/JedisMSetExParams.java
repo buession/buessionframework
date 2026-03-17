@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.internal.jedis.args;
 
+import com.buession.redis.core.NxXx;
 import com.buession.redis.core.command.args.MSetExArgument;
 import redis.clients.jedis.params.MSetExParams;
 
@@ -52,21 +53,20 @@ public final class JedisMSetExParams extends MSetExParams {
 		super();
 
 		if(mSetExArgument != null){
-			if(mSetExArgument.getType() == null){
+			if(mSetExArgument.getType() == null && mSetExArgument.getExpires() != null){
 				switch(mSetExArgument.getType()){
-					case EX -> ex(mSetExArgument.getValue());
-					case EXAT -> exAt(mSetExArgument.getValue());
-					case PX -> px(mSetExArgument.getValue());
-					case PXAT -> pxAt(mSetExArgument.getValue());
+					case EX -> ex(mSetExArgument.getExpires());
+					case EXAT -> exAt(mSetExArgument.getExpires());
+					case PX -> px(mSetExArgument.getExpires());
+					case PXAT -> pxAt(mSetExArgument.getExpires());
 					case KEEPTTL -> keepTtl();
 				}
 			}
 
-			if(mSetExArgument.getNxXx() != null){
-				switch(mSetExArgument.getNxXx()){
-					case NX -> nx();
-					case XX -> xx();
-				}
+			if(mSetExArgument.getNxXx() == NxXx.NX){
+				nx();
+			}else if(mSetExArgument.getNxXx() == NxXx.XX){
+				xx();
 			}
 		}
 	}

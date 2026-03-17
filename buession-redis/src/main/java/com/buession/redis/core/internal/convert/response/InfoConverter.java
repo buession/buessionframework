@@ -107,7 +107,7 @@ public final class InfoConverter implements Converter<String, Info> {
 			}
 		}
 
-		return new Info(server, clients, memory, persistence, stats, replication, sentinel, cpu, cluster, keyspaces);
+		return new Info(server, clients, memory, persistence, stats, replication, sentinel, cluster, cpu, keyspaces);
 	}
 
 	@FunctionalInterface

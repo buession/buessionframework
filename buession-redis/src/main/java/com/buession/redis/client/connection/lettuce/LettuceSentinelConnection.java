@@ -83,7 +83,8 @@ import java.util.stream.Collectors;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class LettuceSentinelConnection extends AbstractLettuceRedisConnection<StatefulRedisConnection<byte[], byte[]>>
+public class LettuceSentinelConnection
+		extends AbstractLettuceRedisConnection<StatefulRedisSentinelConnection<byte[], byte[]>>
 		implements RedisSentinelConnection {
 
 	/**
@@ -603,14 +604,10 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection<St
 				.monitor(SafeEncoder.encode(server.getName()), server.getHost(), server.getPort(), server.getQuorum());
 	}
 
-	public StatefulRedisSentinelConnection<byte[], byte[]> getSentinelDelegate() {
-		return sentinelDelegate;
-	}
-
 	@Override
 	public Transaction multi() {
 		if(transaction == null){
-			final RedisCommands<byte[], byte[]> commands = conn.sync();
+			final RedisCommands<byte[], byte[]> commands = null;//conn.sync();
 			commands.multi();
 			transaction = new LettuceTransactionProxy(new LettuceTransaction(commands), commands);
 		}
@@ -627,7 +624,7 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection<St
 	@Override
 	public void remove(String masterName) {
 		Assert.isBlank(masterName, "Redis master name cloud be 'null' or empty when trying to remove.");
-		delegate.async().remove(SafeEncoder.encode(masterName));
+		//delegate.async().remove(SafeEncoder.encode(masterName));
 	}
 
 	@Override
@@ -638,14 +635,14 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection<St
 	}
 
 	private RedisSentinelCommands<byte[], byte[]> getSentinelCommands(final LettuceSentinelDataSource dataSource) {
-		return delegate.sync();
+		return null;//delegate.sync();
 	}
 
 	protected boolean isUsePool() {
 		return pool != null;
 	}
 
-	protected <K, V> StatefulRedisConnection<K, V> createStatefulRedisConnection(
+	protected <K, V> StatefulRedisSentinelConnection<K, V> createStatefulRedisConnection(
 			final RedisCodec<K, V> codec) {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
 		final LettuceSentinelDataSource dataSource = (LettuceSentinelDataSource) getDataSource();
@@ -667,7 +664,7 @@ public class LettuceSentinelConnection extends AbstractLettuceRedisConnection<St
 
 		redisURIBuilder.withSsl(dataSource.getSslConfiguration() != null);
 
-		return RedisClient.create(redisURIBuilder.build()).connect(codec);
+		return null;//RedisClient.create(redisURIBuilder.build()).connect(codec);
 	}
 
 	protected <K, V> StatefulRedisConnection<K, V> createStatefulRedisSentinelConnection(

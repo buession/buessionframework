@@ -164,16 +164,14 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public StreamEntryId xAdd(final String key, final StreamEntryId id, final Map<String, String> hash,
 							  final XAddArgument xAddArgument) {
-		final CommandArguments args = CommandArguments.create(key).add(xAddArgument).add(id).add(xAddArgument)
-				.add(hash);
+		final CommandArguments args = CommandArguments.create(key).add(xAddArgument).add(id).add(hash);
 		return stringXAdd(rawBinaryKey(key), hash, new LettuceXAddArgs(xAddArgument, id), args);
 	}
 
 	@Override
 	public StreamEntryId xAdd(final byte[] key, final StreamEntryId id, final Map<byte[], byte[]> hash,
 							  final XAddArgument xAddArgument) {
-		final CommandArguments args = CommandArguments.create(key).add(xAddArgument).add(id).add(xAddArgument)
-				.add(hash);
+		final CommandArguments args = CommandArguments.create(key).add(xAddArgument).add(id).add(hash);
 		return binaryXAdd(rawKey(key), hash, new LettuceXAddArgs(xAddArgument, id), args);
 	}
 
@@ -568,21 +566,21 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	}
 
 	@Override
-	public StreamFull xInfoStream(final String key, final boolean full) {
+	public StreamFull<String, String> xInfoStream(final String key, final boolean full) {
 		final CommandArguments args = CommandArguments.create(key).add(full ? "FULL" : null);
 		return executeCommand(Command.XINFO, SubCommand.XINFO_STREAM, args, (cmd)->cmd.xinfoStream(rawBinaryKey(key)),
 				new StreamFullInfoConverter());
 	}
 
 	@Override
-	public StreamFull xInfoStream(final byte[] key, final boolean full) {
+	public StreamFull<byte[], byte[]> xInfoStream(final byte[] key, final boolean full) {
 		final CommandArguments args = CommandArguments.create(key).add(full ? "FULL" : null);
 		return executeCommand(Command.XINFO, SubCommand.XINFO_STREAM, args, (cmd)->cmd.xinfoStream(rawKey(key)),
 				new StreamFullInfoConverter());
 	}
 
 	@Override
-	public StreamFull xInfoStream(final String key, final boolean full, final int count) {
+	public StreamFull<String, String> xInfoStream(final String key, final boolean full, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(full ? "FULL" : null)
 				.add(Keyword.Common.COUNT, count);
 		return executeCommand(Command.XINFO, SubCommand.XINFO_STREAM, args, (cmd)->cmd.xinfoStream(rawBinaryKey(key)),
@@ -590,7 +588,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	}
 
 	@Override
-	public StreamFull xInfoStream(final byte[] key, final boolean full, final int count) {
+	public StreamFull<byte[], byte[]> xInfoStream(final byte[] key, final boolean full, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(full ? "FULL" : null)
 				.add(Keyword.Common.COUNT, count);
 		return executeCommand(Command.XINFO, SubCommand.XINFO_STREAM, args, (cmd)->cmd.xinfoStream(rawKey(key)),

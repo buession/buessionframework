@@ -1174,7 +1174,7 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @return {@link StreamFull}
 	 */
-	StreamFull xInfoStream(final String key, final boolean full);
+	StreamFull<String, String> xInfoStream(final String key, final boolean full);
 
 	/**
 	 * This command returns information about the stream stored at key
@@ -1188,23 +1188,7 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @return {@link StreamFull}
 	 */
-	StreamFull xInfoStream(final byte[] key, final boolean full);
-
-	/**
-	 * This command returns information about the stream stored at key
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/xinfo-stream/" target="_blank">https://redis.io/commands/xinfo-stream/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param full
-	 * 		Full
-	 * @param count
-	 * 		返回数量
-	 *
-	 * @return {@link StreamFull}
-	 */
-	StreamFull xInfoStream(final String key, final boolean full, final int count);
+	StreamFull<byte[], byte[]> xInfoStream(final byte[] key, final boolean full);
 
 	/**
 	 * This command returns information about the stream stored at key
@@ -1220,7 +1204,23 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @return {@link StreamFull}
 	 */
-	StreamFull xInfoStream(final byte[] key, final boolean full, final int count);
+	StreamFull<String, String> xInfoStream(final String key, final boolean full, final int count);
+
+	/**
+	 * This command returns information about the stream stored at key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xinfo-stream/" target="_blank">https://redis.io/commands/xinfo-stream/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param full
+	 * 		Full
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return {@link StreamFull}
+	 */
+	StreamFull<byte[], byte[]> xInfoStream(final byte[] key, final boolean full, final int count);
 
 	/**
 	 * Returns the number of entries inside a stream

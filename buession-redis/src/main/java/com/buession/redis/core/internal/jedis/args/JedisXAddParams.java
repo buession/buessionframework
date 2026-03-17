@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.internal.jedis.args;
 
+import com.buession.redis.core.ApproximateExactTrimming;
 import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.command.args.MaxLenMinId;
 import com.buession.redis.core.command.args.XAddArgument;
@@ -77,11 +78,10 @@ public final class JedisXAddParams extends XAddParams {
 					minId(((MaxLenMinId.MinId) maxLenMinId).getThreshold().toString());
 				}
 
-				if(maxLenMinId.getApproximateExactTrimming() != null){
-					switch(maxLenMinId.getApproximateExactTrimming()){
-						case APPROXIMATE -> approximateTrimming();
-						case EXACT -> exactTrimming();
-					}
+				if(xAddArgument.getApproximateExactTrimming() == ApproximateExactTrimming.APPROXIMATE){
+					approximateTrimming();
+				}else if(xAddArgument.getApproximateExactTrimming() == ApproximateExactTrimming.EXACT){
+					exactTrimming();
 				}
 			}
 		}

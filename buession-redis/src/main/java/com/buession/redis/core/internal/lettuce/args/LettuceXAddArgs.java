@@ -78,9 +78,9 @@ public final class LettuceXAddArgs extends XAddArgs {
 					minId(((MaxLenMinId.MinId) maxLenMinId).getThreshold().toString());
 				}
 
-				if(maxLenMinId.getApproximateExactTrimming() == ApproximateExactTrimming.APPROXIMATE){
+				if(xAddArgument.getApproximateExactTrimming() == ApproximateExactTrimming.APPROXIMATE){
 					approximateTrimming();
-				}else if(maxLenMinId.getApproximateExactTrimming() == ApproximateExactTrimming.EXACT){
+				}else if(xAddArgument.getApproximateExactTrimming() == ApproximateExactTrimming.EXACT){
 					exactTrimming();
 				}
 			}

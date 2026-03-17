@@ -32,6 +32,10 @@ import java.util.Map;
 /**
  * Stream 完整元数据
  *
+ * @param <K>
+ * 		Key 类型
+ * @param <V>
+ * 		值类型
  * @param length
  * 		Stream 中消息的总条数
  * @param groups
@@ -50,7 +54,7 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public record StreamFull(
+public record StreamFull<K, V>(
 		long length,
 
 		List<StreamFull.Group> groups,
@@ -63,7 +67,7 @@ public record StreamFull(
 
 		Map<String, Object> infos,
 
-		List<StreamEntry> entries
+		List<StreamEntry<K, V>> entries
 ) {
 
 	@Override

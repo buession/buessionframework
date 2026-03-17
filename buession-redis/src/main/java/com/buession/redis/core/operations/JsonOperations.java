@@ -837,22 +837,22 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 	}
 
 	@Override
-	default List<String> jsonResp(final String key) {
+	default List<Object> jsonResp(final String key) {
 		return execute((client)->client.jsonCommands().jsonResp(key));
 	}
 
 	@Override
-	default List<byte[]> jsonResp(final byte[] key) {
+	default List<Object> jsonResp(final byte[] key) {
 		return execute((client)->client.jsonCommands().jsonResp(key));
 	}
 
 	@Override
-	default List<String> jsonResp(final String key, final String path) {
+	default List<Object> jsonResp(final String key, final String path) {
 		return execute((client)->client.jsonCommands().jsonResp(key, path));
 	}
 
 	@Override
-	default List<byte[]> jsonResp(final byte[] key, final byte[] path) {
+	default List<Object> jsonResp(final byte[] key, final byte[] path) {
 		return execute((client)->client.jsonCommands().jsonResp(key, path));
 	}
 

@@ -55,7 +55,7 @@ public class JedisStringTest extends AbstractJedisRedisTest {
 	@Test
 	public void getObject() {
 		RedisTemplate redisTemplate = redisTemplate();
-		Options result = redisTemplate.getObject("jedis", Options.class);
+		Options result = redisTemplate.get("jedis", Options.class);
 		System.out.println(result);
 	}
 

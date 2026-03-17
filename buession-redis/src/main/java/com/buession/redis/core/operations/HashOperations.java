@@ -2467,8 +2467,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	<V> ScanResult<KeyValue<String, V>> hScan(final String key, final String cursor, final String pattern,
-											  final int count,
-											  final Class<V> clazz);
+											  final int count, final Class<V> clazz);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
@@ -2491,8 +2490,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	<V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-											  final int count,
-											  final Class<V> clazz);
+											  final int count, final Class<V> clazz);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -2514,8 +2512,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<KeyValue<String, V>> hScanObject(final String key, final String cursor, final String pattern,
-													final int count, final TypeReference<V> type);
+	<V> ScanResult<KeyValue<String, V>> hScan(final String key, final String cursor, final String pattern,
+											  final int count, final TypeReference<V> type);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -2537,8 +2535,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 返回的每个元素都是一个键值对
 	 */
-	<V> ScanResult<KeyValue<byte[], V>> hScanObject(final byte[] key, final byte[] cursor, final byte[] pattern,
-													final int count, final TypeReference<V> type);
+	<V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+											  final int count, final TypeReference<V> type);
 
 	@SuppressWarnings({"unchecked"})
 	@Override

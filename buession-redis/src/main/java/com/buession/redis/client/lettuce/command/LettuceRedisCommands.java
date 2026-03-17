@@ -83,7 +83,7 @@ public interface LettuceRedisCommands extends com.buession.redis.core.command.Re
 
 		@Override
 		protected R doExecute() throws RedisException {
-			final SR result = executor.execute(connection.getConn());
+			final SR result = null;//executor.execute(connection.getConn());
 			return converter.convert(result);
 		}
 

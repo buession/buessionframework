@@ -31,6 +31,7 @@ import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
 import com.buession.net.HostAndPort;
 import com.buession.redis.core.Client;
+import com.buession.redis.core.Event;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.SubCommand;
 
@@ -143,7 +144,7 @@ public final class ClientConverter implements Converter<String, Client> {
 			}else if("lib-ver".equals(keyValueParser.getKey())){
 				client.setLibVer(keyValueParser.getValue());
 			}else if("events".equals(keyValueParser.getKey())){
-				client.setEvents(keyValueParser.getEnumValue(Client.Event.class));
+				client.setEvents(keyValueParser.getEnumValue(Event.class));
 			}else if("cmd".equals(keyValueParser.getKey())){
 				int ci = keyValueParser.getValue().indexOf(':');
 				client.setCmd(EnumUtils.valueOf(Command.class, keyValueParser.getValue().substring(0, ci)));

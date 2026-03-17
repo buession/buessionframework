@@ -35,7 +35,7 @@ public enum Role implements Keyword {
 
 	SLAVE,
 
-	SENTINEL
+	SENTINEL;
 
 	@Override
 	public String getValue() {
