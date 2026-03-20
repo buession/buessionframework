@@ -24,7 +24,11 @@
  */
 package com.buession.redis.core.operations;
 
+import com.buession.lang.Status;
+import com.buession.redis.core.TdigestInfo;
 import com.buession.redis.core.command.TDigestCommands;
+
+import java.util.List;
 
 /**
  * T-Digest 命令
@@ -35,5 +39,187 @@ import com.buession.redis.core.command.TDigestCommands;
  * @since 4.0.0
  */
 public interface TDigestOperations extends TDigestCommands, RedisOperations {
+
+	@Override
+	default Status tdigestAdd(final String key, final double... values) {
+		return execute((client)->client.tDigestCommands().tdigestAdd(key, values));
+	}
+
+	@Override
+	default Status tdigestAdd(final byte[] key, final double... values) {
+		return execute((client)->client.tDigestCommands().tdigestAdd(key, values));
+	}
+
+	@Override
+	default List<Double> tdigestByRank(final String key, final long... ranks) {
+		return execute((client)->client.tDigestCommands().tdigestByRank(key, ranks));
+	}
+
+	@Override
+	default List<Double> tdigestByRank(final byte[] key, final long... ranks) {
+		return execute((client)->client.tDigestCommands().tdigestByRank(key, ranks));
+	}
+
+	@Override
+	default List<Double> tdigestByRevRank(final String key, final long... ranks) {
+		return execute((client)->client.tDigestCommands().tdigestByRevRank(key, ranks));
+	}
+
+	@Override
+	default List<Double> tdigestByRevRank(final byte[] key, final long... ranks) {
+		return execute((client)->client.tDigestCommands().tdigestByRevRank(key, ranks));
+	}
+
+	@Override
+	default List<Double> tdigestCdf(final String key, final double... values) {
+		return execute((client)->client.tDigestCommands().tdigestCdf(key, values));
+	}
+
+	@Override
+	default List<Double> tdigestCdf(final byte[] key, final double... values) {
+		return execute((client)->client.tDigestCommands().tdigestCdf(key, values));
+	}
+
+	@Override
+	default Status tdigestCreate(final String key) {
+		return execute((client)->client.tDigestCommands().tdigestCreate(key));
+	}
+
+	@Override
+	default Status tdigestCreate(final byte[] key) {
+		return execute((client)->client.tDigestCommands().tdigestCreate(key));
+	}
+
+	@Override
+	default Status tdigestCreate(final String key, final int compression) {
+		return execute((client)->client.tDigestCommands().tdigestCreate(key, compression));
+	}
+
+	@Override
+	default Status tdigestCreate(final byte[] key, final int compression) {
+		return execute((client)->client.tDigestCommands().tdigestCreate(key, compression));
+	}
+
+	@Override
+	default TdigestInfo tdigestInfo(final String key) {
+		return execute((client)->client.tDigestCommands().tdigestInfo(key));
+	}
+
+	@Override
+	default TdigestInfo tdigestInfo(final byte[] key) {
+		return execute((client)->client.tDigestCommands().tdigestInfo(key));
+	}
+
+	@Override
+	default Double tdigestMax(final String key) {
+		return execute((client)->client.tDigestCommands().tdigestMax(key));
+	}
+
+	@Override
+	default Double tdigestMax(final byte[] key) {
+		return execute((client)->client.tDigestCommands().tdigestMax(key));
+	}
+
+	@Override
+	default Status tdigestMerge(final String destKey, final String... keys) {
+		return execute((client)->client.tDigestCommands().tdigestMerge(destKey, keys));
+	}
+
+	@Override
+	default Status tdigestMerge(final byte[] destKey, final byte[]... keys) {
+		return execute((client)->client.tDigestCommands().tdigestMerge(destKey, keys));
+	}
+
+	@Override
+	default Status tdigestMerge(final String destKey, final String[] keys, final int compression) {
+		return execute((client)->client.tDigestCommands().tdigestMerge(destKey, keys, compression));
+	}
+
+	@Override
+	default Status tdigestMerge(final byte[] destKey, final byte[][] keys, final int compression) {
+		return execute((client)->client.tDigestCommands().tdigestMerge(destKey, keys, compression));
+	}
+
+	@Override
+	default Status tdigestMerge(final String destKey, final String[] keys, final int compression,
+								final boolean override) {
+		return execute((client)->client.tDigestCommands().tdigestMerge(destKey, keys, compression, override));
+	}
+
+	@Override
+	default Status tdigestMerge(final byte[] destKey, final byte[][] keys, final int compression,
+								final boolean override) {
+		return execute((client)->client.tDigestCommands().tdigestMerge(destKey, keys, compression, override));
+	}
+
+	@Override
+	default Status tdigestMerge(final String destKey, final String[] keys, final boolean override) {
+		return execute((client)->client.tDigestCommands().tdigestMerge(destKey, keys, override));
+	}
+
+	@Override
+	default Status tdigestMerge(final byte[] destKey, final byte[][] keys, final boolean override) {
+		return execute((client)->client.tDigestCommands().tdigestMerge(destKey, keys, override));
+	}
+
+	@Override
+	default Double tdigestMin(final String key) {
+		return execute((client)->client.tDigestCommands().tdigestMin(key));
+	}
+
+	@Override
+	default Double tdigestMin(final byte[] key) {
+		return execute((client)->client.tDigestCommands().tdigestMin(key));
+	}
+
+	@Override
+	default List<Double> tdigestQuantile(final String key, final double... quantiles) {
+		return execute((client)->client.tDigestCommands().tdigestQuantile(key, quantiles));
+	}
+
+	@Override
+	default List<Double> tdigestQuantile(final byte[] key, final double... quantiles) {
+		return execute((client)->client.tDigestCommands().tdigestQuantile(key, quantiles));
+	}
+
+	@Override
+	default List<Long> tdigestRank(final String key, final double... values) {
+		return execute((client)->client.tDigestCommands().tdigestRank(key, values));
+	}
+
+	@Override
+	default List<Long> tdigestRank(final byte[] key, final double... values) {
+		return execute((client)->client.tDigestCommands().tdigestRank(key, values));
+	}
+
+	@Override
+	default Status tdigestReset(final String key) {
+		return execute((client)->client.tDigestCommands().tdigestReset(key));
+	}
+
+	@Override
+	default Status tdigestReset(final byte[] key) {
+		return execute((client)->client.tDigestCommands().tdigestReset(key));
+	}
+
+	@Override
+	default List<Long> tdigestRevRank(final String key, final double... values) {
+		return execute((client)->client.tDigestCommands().tdigestRevRank(key, values));
+	}
+
+	@Override
+	default List<Long> tdigestRevRank(final byte[] key, final double... values) {
+		return execute((client)->client.tDigestCommands().tdigestRevRank(key, values));
+	}
+
+	@Override
+	default Double tdigestTrimmedMean(final String key, final double lowCutQuantile, final double highCutQuantile) {
+		return execute((client)->client.tDigestCommands().tdigestTrimmedMean(key, lowCutQuantile, highCutQuantile));
+	}
+
+	@Override
+	default Double tdigestTrimmedMean(final byte[] key, final double lowCutQuantile, final double highCutQuantile) {
+		return execute((client)->client.tDigestCommands().tdigestTrimmedMean(key, lowCutQuantile, highCutQuantile));
+	}
 
 }

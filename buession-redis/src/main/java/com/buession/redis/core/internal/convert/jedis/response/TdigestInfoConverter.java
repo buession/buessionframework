@@ -22,11 +22,12 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command.args;
+package com.buession.redis.core.internal.convert.jedis.response;
 
-import com.buession.redis.core.SetExType;
-import com.buession.redis.utils.ArgStringBuilder;
-import com.buession.redis.utils.ObjectStringBuilder;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.TdigestInfo;
+
+import java.util.Map;
 
 /**
  *
@@ -34,92 +35,11 @@ import com.buession.redis.utils.ObjectStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-abstract class BaseSetExArgument<T> implements ExArgument<T> {
-
-	/**
-	 * 过期时间类型
-	 */
-	private SetExType type;
-
-	/**
-	 * 过期时间(戳)
-	 */
-	private Long expires;
-
-	/**
-	 * 构造函数
-	 */
-	public BaseSetExArgument() {
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param type
-	 * 		过期时间类型
-	 * @param expires
-	 * 		过期时间(戳)
-	 */
-	public BaseSetExArgument(final SetExType type, final long expires) {
-		this.type = type;
-		this.expires = expires;
-	}
-
-	/**
-	 * 获取过期时间类型
-	 *
-	 * @return 过期时间类型
-	 */
-	public SetExType getType() {
-		return type;
-	}
-
-	/**
-	 * 设置过期时间类型
-	 *
-	 * @param type
-	 * 		过期时间类型
-	 *
-	 * @return {@link BaseSetExArgument}
-	 */
-	public BaseSetExArgument<T> setType(SetExType type) {
-		this.type = type;
-		return this;
-	}
-
-	/**
-	 * 获取设置的键过期时间(戳)
-	 *
-	 * @return 设置的键过期时间(戳)
-	 */
-	public Long getExpires() {
-		return expires;
-	}
-
-	/**
-	 * 设置过期时间戳
-	 *
-	 * @param expires
-	 * 		过期时间(戳)
-	 *
-	 * @return {@link BaseSetExArgument}
-	 */
-	public BaseSetExArgument<T> setExpires(long expires) {
-		this.expires = expires;
-		return this;
-	}
+public final class TdigestInfoConverter implements Converter<Map<String, Object>, TdigestInfo> {
 
 	@Override
-	public String toString() {
-		final ArgStringBuilder builder = ArgStringBuilder.create();
-
-		if(getType() == SetExType.KEEPTTL){
-			builder.append(getType());
-		}else{
-			builder.add(getType().name(), getExpires());
-		}
-
-		return builder.build();
+	public TdigestInfo convert(final Map<String, Object> source) {
+		return null;
 	}
 
 }

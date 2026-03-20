@@ -455,15 +455,13 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	@Override
 	public String[] toArray() {
-		return arguments.stream()
-				.map((v)->v instanceof State ? ((State) v).name() : v.toString())
+		return arguments.stream().map((v)->v instanceof State ? ((State) v).name() : v.toString())
 				.toArray(String[]::new);
 	}
 
 	@Override
 	public byte[][] toBinaryArray() {
-		return arguments.stream()
-				.map((v)->SafeEncoder.encode(v instanceof State ? ((State) v).name() : v.toString()))
+		return arguments.stream().map((v)->SafeEncoder.encode(v instanceof State ? ((State) v).name() : v.toString()))
 				.toArray(byte[][]::new);
 	}
 
@@ -590,6 +588,9 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	}
 
+	/**
+	 * 重置键权限
+	 */
 	public final static class ResetKeys extends StringArgument {
 
 		public ResetKeys() {
@@ -631,6 +632,9 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	}
 
+	/**
+	 * 清除所有通道限制
+	 */
 	public final static class ResetChannels extends StringArgument {
 
 		public ResetChannels() {
@@ -715,6 +719,9 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	}
 
+	/**
+	 * 允许无密码登录
+	 */
 	public final static class NoPass extends StringArgument {
 
 		public NoPass() {
@@ -723,6 +730,9 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	}
 
+	/**
+	 * 重置密码
+	 */
 	public final static class ResetPass extends StringArgument {
 
 		public ResetPass() {
@@ -799,6 +809,9 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	}
 
+	/**
+	 * 重置用户为默认状态
+	 */
 	public final static class Reset extends ProtocolCommandArgument {
 
 		public Reset() {

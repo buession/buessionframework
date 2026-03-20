@@ -148,9 +148,29 @@ public enum CommandGroup {
 	STRING("String"),
 
 	/**
+	 * T-Digest 命令
+	 */
+	TDIGEST("T-digest"),
+
+	/**
+	 * Time Series 命令
+	 */
+	TIME_SERIES("Time series"),
+
+	/**
+	 * Top k 命令
+	 */
+	TOP_K("Top-k"),
+
+	/**
 	 * 事务命令
 	 */
-	TRANSACTION("Transaction");
+	TRANSACTION("Transaction"),
+
+	/**
+	 * Vector Set 命令
+	 */
+	VECTOR_SET("Vector set");
 
 	private final String name;
 

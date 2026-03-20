@@ -22,104 +22,60 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command.args;
+package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.redis.core.SetExType;
-import com.buession.redis.utils.ArgStringBuilder;
-import com.buession.redis.utils.ObjectStringBuilder;
+import redis.clients.jedis.bloom.TDigestMergeParams;
 
 /**
- *
+ * Jedis {@link TDigestMergeParams} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-abstract class BaseSetExArgument<T> implements ExArgument<T> {
-
-	/**
-	 * 过期时间类型
-	 */
-	private SetExType type;
-
-	/**
-	 * 过期时间(戳)
-	 */
-	private Long expires;
+public final class JedisTDigestMergeParams extends TDigestMergeParams {
 
 	/**
 	 * 构造函数
 	 */
-	public BaseSetExArgument() {
+	public JedisTDigestMergeParams() {
+		super();
 	}
 
 	/**
 	 * 构造函数
 	 *
-	 * @param type
-	 * 		过期时间类型
-	 * @param expires
-	 * 		过期时间(戳)
+	 * @param compression
+	 * 		压缩级别
 	 */
-	public BaseSetExArgument(final SetExType type, final long expires) {
-		this.type = type;
-		this.expires = expires;
+	public JedisTDigestMergeParams(final int compression) {
+		super();
+		compression(compression);
 	}
 
 	/**
-	 * 获取过期时间类型
+	 * 构造函数
 	 *
-	 * @return 过期时间类型
+	 * @param compression
+	 * 		压缩级别
+	 * @param override
+	 * 		是否允许覆盖
 	 */
-	public SetExType getType() {
-		return type;
+	public JedisTDigestMergeParams(final int compression, final boolean override) {
+		this(override);
+		compression(compression);
 	}
 
 	/**
-	 * 设置过期时间类型
+	 * 构造函数
 	 *
-	 * @param type
-	 * 		过期时间类型
-	 *
-	 * @return {@link BaseSetExArgument}
+	 * @param override
+	 * 		是否允许覆盖
 	 */
-	public BaseSetExArgument<T> setType(SetExType type) {
-		this.type = type;
-		return this;
-	}
-
-	/**
-	 * 获取设置的键过期时间(戳)
-	 *
-	 * @return 设置的键过期时间(戳)
-	 */
-	public Long getExpires() {
-		return expires;
-	}
-
-	/**
-	 * 设置过期时间戳
-	 *
-	 * @param expires
-	 * 		过期时间(戳)
-	 *
-	 * @return {@link BaseSetExArgument}
-	 */
-	public BaseSetExArgument<T> setExpires(long expires) {
-		this.expires = expires;
-		return this;
-	}
-
-	@Override
-	public String toString() {
-		final ArgStringBuilder builder = ArgStringBuilder.create();
-
-		if(getType() == SetExType.KEEPTTL){
-			builder.append(getType());
-		}else{
-			builder.add(getType().name(), getExpires());
+	public JedisTDigestMergeParams(final boolean override) {
+		super();
+		if(override){
+			override();
 		}
-
-		return builder.build();
 	}
 
 }

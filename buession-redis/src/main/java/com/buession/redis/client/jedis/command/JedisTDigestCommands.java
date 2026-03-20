@@ -24,8 +24,18 @@
  */
 package com.buession.redis.client.jedis.command;
 
+import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.core.TdigestInfo;
+import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.TDigestCommands;
+import com.buession.redis.core.internal.convert.jedis.response.TdigestInfoConverter;
+import com.buession.redis.core.internal.convert.response.OkStatusConverter;
+import com.buession.redis.core.internal.jedis.args.JedisTDigestMergeParams;
+import com.buession.redis.utils.SafeEncoder;
+
+import java.util.List;
 
 /**
  * Jedis T-Digest 命令
@@ -37,6 +47,224 @@ public final class JedisTDigestCommands extends AbstractJedisRedisCommands imple
 
 	public JedisTDigestCommands(final JedisRedisClient client) {
 		super(client);
+	}
+
+	@Override
+	public Status tdigestAdd(final String key, final double... values) {
+		final CommandArguments args = CommandArguments.create(key).add(values);
+		return executeCommand(Command.TDIGEST_ADD, args, (cmd)->cmd.tdigestAdd(rawKey(key), values),
+				new OkStatusConverter());
+	}
+
+	@Override
+	public Status tdigestAdd(final byte[] key, final double... values) {
+		return tdigestAdd(SafeEncoder.encode(key), values);
+	}
+
+	@Override
+	public List<Double> tdigestByRank(final String key, final long... ranks) {
+		final CommandArguments args = CommandArguments.create(key).add(ranks);
+		return executeCommand(Command.TDIGEST_BYRANK, args, (cmd)->cmd.tdigestByRank(rawKey(key), ranks));
+	}
+
+	@Override
+	public List<Double> tdigestByRank(final byte[] key, final long... ranks) {
+		return tdigestByRank(SafeEncoder.encode(key), ranks);
+	}
+
+	@Override
+	public List<Double> tdigestByRevRank(final String key, final long... ranks) {
+		final CommandArguments args = CommandArguments.create(key).add(ranks);
+		return executeCommand(Command.TDIGEST_BYREVRANK, args, (cmd)->cmd.tdigestByRevRank(rawKey(key), ranks));
+	}
+
+	@Override
+	public List<Double> tdigestByRevRank(final byte[] key, final long... ranks) {
+		return tdigestByRevRank(SafeEncoder.encode(key), ranks);
+	}
+
+	@Override
+	public List<Double> tdigestCdf(final String key, final double... values) {
+		final CommandArguments args = CommandArguments.create(key).add(values);
+		return executeCommand(Command.TDIGEST_CDF, args, (cmd)->cmd.tdigestCDF(rawKey(key), values));
+	}
+
+	@Override
+	public List<Double> tdigestCdf(final byte[] key, final double... values) {
+		return tdigestCdf(SafeEncoder.encode(key), values);
+	}
+
+	@Override
+	public Status tdigestCreate(final String key) {
+		final CommandArguments args = CommandArguments.create(key);
+		return executeCommand(Command.TDIGEST_CREATE, args, (cmd)->cmd.tdigestCreate(rawKey(key)),
+				new OkStatusConverter());
+	}
+
+	@Override
+	public Status tdigestCreate(final byte[] key) {
+		return tdigestCreate(SafeEncoder.encode(key));
+	}
+
+	@Override
+	public Status tdigestCreate(final String key, final int compression) {
+		final CommandArguments args = CommandArguments.create(key).add("COMPRESSION", compression);
+		return executeCommand(Command.TDIGEST_CREATE, args, (cmd)->cmd.tdigestCreate(rawKey(key), compression),
+				new OkStatusConverter());
+	}
+
+	@Override
+	public Status tdigestCreate(final byte[] key, final int compression) {
+		return tdigestCreate(SafeEncoder.encode(key), compression);
+	}
+
+	@Override
+	public TdigestInfo tdigestInfo(final String key) {
+		final CommandArguments args = CommandArguments.create(key);
+		return executeCommand(Command.TDIGEST_INFO, args, (cmd)->cmd.tdigestInfo(rawKey(key)),
+				new TdigestInfoConverter());
+	}
+
+	@Override
+	public TdigestInfo tdigestInfo(final byte[] key) {
+		return tdigestInfo(SafeEncoder.encode(key));
+	}
+
+	@Override
+	public Double tdigestMax(final String key) {
+		final CommandArguments args = CommandArguments.create(key);
+		return executeCommand(Command.TDIGEST_MAX, args, (cmd)->cmd.tdigestMax(rawKey(key)));
+	}
+
+	@Override
+	public Double tdigestMax(final byte[] key) {
+		return tdigestMax(SafeEncoder.encode(key));
+	}
+
+	@Override
+	public Status tdigestMerge(final String destKey, final String... keys) {
+		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys);
+		return executeCommand(Command.TDIGEST_MERGE, args, (cmd)->cmd.tdigestMerge(rawKey(destKey), rawKeys(keys)),
+				new OkStatusConverter());
+	}
+
+	@Override
+	public Status tdigestMerge(final byte[] destKey, final byte[]... keys) {
+		return tdigestMerge(SafeEncoder.encode(destKey), SafeEncoder.encode(keys));
+	}
+
+	@Override
+	public Status tdigestMerge(final String destKey, final String[] keys, final int compression) {
+		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
+				.add("COMPRESSION", compression);
+		return executeCommand(Command.TDIGEST_MERGE, args,
+				(cmd)->cmd.tdigestMerge(new JedisTDigestMergeParams(compression), rawKey(destKey), rawKeys(keys)),
+				new OkStatusConverter());
+	}
+
+	@Override
+	public Status tdigestMerge(final byte[] destKey, final byte[][] keys, final int compression) {
+		return tdigestMerge(SafeEncoder.encode(destKey), SafeEncoder.encode(keys), compression);
+	}
+
+	@Override
+	public Status tdigestMerge(final String destKey, final String[] keys, final int compression,
+							   final boolean override) {
+		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
+				.add("COMPRESSION", compression).add(override ? "OVERRIDE" : null);
+		return executeCommand(Command.TDIGEST_MERGE, args,
+				(cmd)->cmd.tdigestMerge(new JedisTDigestMergeParams(compression, override), rawKey(destKey),
+						rawKeys(keys)), new OkStatusConverter());
+	}
+
+	@Override
+	public Status tdigestMerge(final byte[] destKey, final byte[][] keys, final int compression,
+							   final boolean override) {
+		return tdigestMerge(SafeEncoder.encode(destKey), SafeEncoder.encode(keys), compression, override);
+	}
+
+	@Override
+	public Status tdigestMerge(final String destKey, final String[] keys, final boolean override) {
+		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
+				.add(override ? "OVERRIDE" : null);
+		return executeCommand(Command.TDIGEST_MERGE, args,
+				(cmd)->cmd.tdigestMerge(new JedisTDigestMergeParams(override), rawKey(destKey), rawKeys(keys)),
+				new OkStatusConverter());
+	}
+
+	@Override
+	public Status tdigestMerge(final byte[] destKey, final byte[][] keys, final boolean override) {
+		return tdigestMerge(SafeEncoder.encode(destKey), SafeEncoder.encode(keys), override);
+	}
+
+	@Override
+	public Double tdigestMin(final String key) {
+		final CommandArguments args = CommandArguments.create(key);
+		return executeCommand(Command.TDIGEST_MIN, args, (cmd)->cmd.tdigestMin(rawKey(key)));
+	}
+
+	@Override
+	public Double tdigestMin(final byte[] key) {
+		return tdigestMin(SafeEncoder.encode(key));
+	}
+
+	@Override
+	public List<Double> tdigestQuantile(final String key, final double... quantiles) {
+		final CommandArguments args = CommandArguments.create(key).add(quantiles);
+		return executeCommand(Command.TDIGEST_QUANTILE, args, (cmd)->cmd.tdigestQuantile(rawKey(key), quantiles));
+	}
+
+	@Override
+	public List<Double> tdigestQuantile(final byte[] key, final double... quantiles) {
+		return tdigestQuantile(SafeEncoder.encode(key), quantiles);
+	}
+
+	@Override
+	public List<Long> tdigestRank(final String key, final double... values) {
+		final CommandArguments args = CommandArguments.create(key).add(values);
+		return executeCommand(Command.TDIGEST_RANK, args, (cmd)->cmd.tdigestRank(rawKey(key), values));
+	}
+
+	@Override
+	public List<Long> tdigestRank(final byte[] key, final double... values) {
+		return tdigestRank(SafeEncoder.encode(key), values);
+	}
+
+	@Override
+	public Status tdigestReset(final String key) {
+		final CommandArguments args = CommandArguments.create(key);
+		return executeCommand(Command.TDIGEST_RESET, args, (cmd)->cmd.tdigestReset(rawKey(key)),
+				new OkStatusConverter());
+	}
+
+	@Override
+	public Status tdigestReset(final byte[] key) {
+		return tdigestReset(SafeEncoder.encode(key));
+	}
+
+	@Override
+	public List<Long> tdigestRevRank(final String key, final double... values) {
+		final CommandArguments args = CommandArguments.create(key).add(values);
+		return executeCommand(Command.TDIGEST_REVRANK, args, (cmd)->cmd.tdigestRevRank(rawKey(key), values));
+	}
+
+	@Override
+	public List<Long> tdigestRevRank(final byte[] key, final double... values) {
+		return tdigestRevRank(SafeEncoder.encode(key), values);
+	}
+
+	@Override
+	public Double tdigestTrimmedMean(final String key, final double lowCutQuantile,
+									 final double highCutQuantile) {
+		final CommandArguments args = CommandArguments.create(key).add(lowCutQuantile).add(highCutQuantile);
+		return executeCommand(Command.TDIGEST_TRIMMED_MEAN, args, (cmd)->cmd.tdigestTrimmedMean(rawKey(key),
+				lowCutQuantile, highCutQuantile));
+	}
+
+	@Override
+	public Double tdigestTrimmedMean(final byte[] key, final double lowCutQuantile,
+									 final double highCutQuantile) {
+		return tdigestTrimmedMean(SafeEncoder.encode(key), lowCutQuantile, highCutQuantile);
 	}
 
 }

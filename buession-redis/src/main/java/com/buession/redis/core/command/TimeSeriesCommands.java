@@ -25,7 +25,7 @@
 package com.buession.redis.core.command;
 
 /**
- * TimeSeries 命令
+ * Time Series 命令
  *
  * <p>详情说明 <a href="https://redis.io/docs/latest/commands/?group=timeseries" target="_blank">https://redis.io/docs/latest/commands/?group=timeseries</a></p>
  *

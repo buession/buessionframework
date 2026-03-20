@@ -867,6 +867,40 @@ public enum Command implements ProtocolCommand {
 	 **/
 
 	/**
+	 * T-Digest command start
+	 **/
+	TDIGEST_ADD(CommandGroup.TDIGEST, "TDIGEST.ADD", "w"),
+
+	TDIGEST_BYRANK(CommandGroup.TDIGEST, "TDIGEST.BYRANK", "r"),
+
+	TDIGEST_BYREVRANK(CommandGroup.TDIGEST, "TDIGEST.BYREVRANK", "r"),
+
+	TDIGEST_CDF(CommandGroup.TDIGEST, "TDIGEST.CDF", "r"),
+
+	TDIGEST_CREATE(CommandGroup.TDIGEST, "TDIGEST.CREATE", "w"),
+
+	TDIGEST_INFO(CommandGroup.TDIGEST, "TDIGEST.INFO", "r"),
+
+	TDIGEST_MAX(CommandGroup.TDIGEST, "TDIGEST.MAX", "r"),
+
+	TDIGEST_MERGE(CommandGroup.TDIGEST, "TDIGEST.MERGE", "w"),
+
+	TDIGEST_MIN(CommandGroup.TDIGEST, "TDIGEST.MIN", "r"),
+
+	TDIGEST_QUANTILE(CommandGroup.TDIGEST, "TDIGEST.QUANTILE", "r"),
+
+	TDIGEST_RANK(CommandGroup.TDIGEST, "TDIGEST.RANK", "r"),
+
+	TDIGEST_RESET(CommandGroup.TDIGEST, "TDIGEST.RESET", "w"),
+
+	TDIGEST_REVRANK(CommandGroup.TDIGEST, "TDIGEST.REVRANK", "r"),
+
+	TDIGEST_TRIMMED_MEAN(CommandGroup.TDIGEST, "TDIGEST.TRIMMED_MEAN", "r"),
+	/**
+	 * T-Digest command end
+	 **/
+
+	/**
 	 * transaction command start
 	 **/
 	DISCARD(CommandGroup.TRANSACTION, "w"),
@@ -881,7 +915,6 @@ public enum Command implements ProtocolCommand {
 	/**
 	 * transaction command end
 	 **/
-	;
 
 	/**
 	 * 命令分组
