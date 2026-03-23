@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.redis.core.command.args.ShutdownArgument;
+import com.buession.redis.core.command.args.server.ShutdownArgument;
 import io.lettuce.core.ShutdownArgs;
 
 import java.util.Optional;

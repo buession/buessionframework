@@ -25,7 +25,7 @@
 package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.ClientUnblockType;
+import com.buession.redis.core.command.args.connection.ClientUnblockType;
 import redis.clients.jedis.args.UnblockType;
 
 /**

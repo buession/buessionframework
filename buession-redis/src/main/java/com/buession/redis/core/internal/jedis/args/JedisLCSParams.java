@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.redis.core.command.args.LcsArgument;
+import com.buession.redis.core.command.args.string.LcsArgument;
 import redis.clients.jedis.params.LCSParams;
 
 import java.util.Optional;

@@ -24,9 +24,7 @@
  */
 package com.buession.redis.core.command.args;
 
-import com.buession.redis.core.SetExType;
 import com.buession.redis.utils.ArgStringBuilder;
-import com.buession.redis.utils.ObjectStringBuilder;
 
 /**
  *
@@ -34,7 +32,7 @@ import com.buession.redis.utils.ObjectStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-abstract class BaseSetExArgument<T> implements ExArgument<T> {
+public abstract class BaseSetExArgument<T> implements ExArgument<T> {
 
 	/**
 	 * 过期时间类型

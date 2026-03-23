@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.redis.core.command.args.HSetExArgument;
+import com.buession.redis.core.command.args.hash.HSetExArgument;
 import redis.clients.jedis.params.HSetExParams;
 
 /**

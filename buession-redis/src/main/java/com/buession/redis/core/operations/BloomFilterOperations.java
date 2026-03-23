@@ -25,9 +25,9 @@
 package com.buession.redis.core.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.core.BfInfoOption;
+import com.buession.redis.core.command.args.bloomfilter.BfInfoOption;
 import com.buession.redis.core.command.BloomFilterCommands;
-import com.buession.redis.core.command.args.BFInsertArgument;
+import com.buession.redis.core.command.args.bloomfilter.InsertArgument;
 
 import java.util.List;
 import java.util.Map;
@@ -103,12 +103,12 @@ public interface BloomFilterOperations extends BloomFilterCommands, RedisOperati
 	}
 
 	@Override
-	default List<Boolean> bfInsert(final String key, final BFInsertArgument argument, final String... items) {
+	default List<Boolean> bfInsert(final String key, final InsertArgument argument, final String... items) {
 		return execute((client)->client.bloomFilterCommands().bfInsert(key, argument, items));
 	}
 
 	@Override
-	default List<Boolean> bfInsert(final byte[] key, final BFInsertArgument argument, final byte[]... items) {
+	default List<Boolean> bfInsert(final byte[] key, final InsertArgument argument, final byte[]... items) {
 		return execute((client)->client.bloomFilterCommands().bfInsert(key, argument, items));
 	}
 

@@ -25,7 +25,7 @@
 package com.buession.redis.core.command;
 
 import com.buession.lang.Status;
-import com.buession.redis.core.ApproximateExactTrimming;
+import com.buession.redis.core.command.args.stream.ApproximateExactTrimming;
 import com.buession.redis.core.AutoClaimId;
 import com.buession.redis.core.AutoClaimInfo;
 import com.buession.redis.core.Stream;
@@ -41,9 +41,9 @@ import com.buession.redis.core.StreamPendingSummary;
 import com.buession.redis.core.XReadGroupInfo;
 import com.buession.redis.core.XReadInfo;
 import com.buession.redis.core.command.args.MaxLenMinId;
-import com.buession.redis.core.command.args.XAddArgument;
-import com.buession.redis.core.command.args.XClaimArgument;
-import com.buession.redis.core.command.args.XReadGroupArgument;
+import com.buession.redis.core.command.args.stream.XAddArgument;
+import com.buession.redis.core.command.args.stream.XClaimArgument;
+import com.buession.redis.core.command.args.stream.XReadGroupArgument;
 
 import java.util.List;
 import java.util.Map;

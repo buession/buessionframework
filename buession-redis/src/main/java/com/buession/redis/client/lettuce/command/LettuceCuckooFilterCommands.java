@@ -30,8 +30,8 @@ import com.buession.redis.core.Keyword;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.CuckooFilterCommands;
-import com.buession.redis.core.command.args.CFInsertArgument;
-import com.buession.redis.core.command.args.CFReserveArgument;
+import com.buession.redis.core.command.args.cuckoofilter.CFInsertArgument;
+import com.buession.redis.core.command.args.cuckoofilter.CFReserveArgument;
 
 import java.util.List;
 import java.util.Map;

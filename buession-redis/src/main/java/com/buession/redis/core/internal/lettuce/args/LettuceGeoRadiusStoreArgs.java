@@ -25,8 +25,8 @@
 package com.buession.redis.core.internal.lettuce.args;
 
 import com.buession.lang.Order;
-import com.buession.redis.core.GeoStoreOption;
-import com.buession.redis.core.command.args.GeoRadiusArgument;
+import com.buession.redis.core.command.args.geo.GeoStoreOption;
+import com.buession.redis.core.command.args.geo.GeoRadiusArgument;
 import io.lettuce.core.GeoRadiusStoreArgs;
 
 /**

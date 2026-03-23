@@ -27,12 +27,12 @@ package com.buession.redis.client.lettuce.command;
 import com.buession.core.converter.ListConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
-import com.buession.redis.core.FlushMode;
-import com.buession.redis.core.FunctionRestoreMode;
+import com.buession.redis.core.command.args.FlushMode;
+import com.buession.redis.core.command.args.scripting.FunctionRestoreMode;
 import com.buession.redis.core.FunctionStats;
 import com.buession.redis.core.Keyword;
 import com.buession.redis.core.LibraryInfo;
-import com.buession.redis.core.ScriptDebugMode;
+import com.buession.redis.core.command.args.scripting.DebugMode;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ScriptingCommands;
@@ -426,7 +426,7 @@ public final class LettuceScriptingCommands extends AbstractLettuceRedisCommands
 	}
 
 	@Override
-	public Object scriptDebug(final ScriptDebugMode mode) {
+	public Object scriptDebug(final DebugMode mode) {
 		final CommandArguments args = CommandArguments.create(mode);
 		return executeCommand(Command.SCRIPT, SubCommand.SCRIPT_DEBUG, args);
 	}

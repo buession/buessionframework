@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.redis.core.command.args.XClaimArgument;
+import com.buession.redis.core.command.args.stream.XClaimArgument;
 import io.lettuce.core.XClaimArgs;
 
 import java.util.Optional;

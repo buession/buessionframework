@@ -26,9 +26,9 @@ package com.buession.redis.core.command;
 
 import com.buession.lang.Status;
 import com.buession.redis.core.JsonType;
-import com.buession.redis.core.NxXx;
-import com.buession.redis.core.command.args.JsonGetArgument;
-import com.buession.redis.core.command.args.JsonKeyPathValue;
+import com.buession.redis.core.command.args.NxXx;
+import com.buession.redis.core.command.args.json.JsonGetArgument;
+import com.buession.redis.core.command.args.json.KeyPathValue;
 
 import java.util.List;
 
@@ -805,7 +805,7 @@ public interface JsonCommands extends RedisCommands {
 	 *
 	 * @return 操作结果
 	 */
-	Status jsonMSet(final JsonKeyPathValue... data);
+	Status jsonMSet(final KeyPathValue... data);
 
 	/**
 	 * 对 JSON 文档中的数值字段执行原子递增

@@ -28,13 +28,13 @@ import com.buession.core.converter.Converter;
 import com.buession.redis.core.AclCategory;
 
 /**
- * Lettuce {@link io.lettuce.core.AclCategory} 转换为 {@link com.buession.redis.core.AclCategory}
+ * Lettuce {@link io.lettuce.core.AclCategory} 转换为 {@link AclCategory}
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
 public final class AclCategoryConverter
-		implements Converter<io.lettuce.core.AclCategory, com.buession.redis.core.AclCategory> {
+		implements Converter<io.lettuce.core.AclCategory, AclCategory> {
 
 	@Override
 	public AclCategory convert(final io.lettuce.core.AclCategory source) {

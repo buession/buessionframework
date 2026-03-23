@@ -25,19 +25,19 @@
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.ClusterResetOption;
+import com.buession.redis.core.command.args.cluster.ResetOption;
 import redis.clients.jedis.args.ClusterResetType;
 
 /**
- * {@link ClusterResetOption} 转换为 Jedis {@link ClusterResetType}
+ * {@link ResetOption} 转换为 Jedis {@link ClusterResetType}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class ClusterResetOptionConverter implements Converter<ClusterResetOption, ClusterResetType> {
+public final class ClusterResetOptionConverter implements Converter<ResetOption, ClusterResetType> {
 
 	@Override
-	public ClusterResetType convert(final ClusterResetOption source) {
+	public ClusterResetType convert(final ResetOption source) {
 		if(source == null){
 			return null;
 		}

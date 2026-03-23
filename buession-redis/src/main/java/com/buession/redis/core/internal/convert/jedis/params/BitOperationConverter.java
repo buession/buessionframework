@@ -25,7 +25,7 @@
 package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.BitOperation;
+import com.buession.redis.core.command.args.bitmap.BitOperation;
 import redis.clients.jedis.args.BitOP;
 
 /**

@@ -32,7 +32,7 @@ import com.buession.redis.core.Suggestion;
 import com.buession.redis.core.command.AutoSuggestCommands;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.args.FtSugGetArgument;
+import com.buession.redis.core.command.args.autosuggest.SugGetArgument;
 import com.buession.redis.core.internal.convert.lettuce.response.SuggestionConverter;
 import com.buession.redis.core.internal.lettuce.args.LettuceSugAddArgs;
 import com.buession.redis.core.internal.lettuce.args.LettuceSugGetArgs;
@@ -138,7 +138,7 @@ public final class LettuceAutoSuggestCommands extends AbstractLettuceRedisComman
 	}
 
 	@Override
-	public List<Suggestion> ftSugGet(final String key, final String prefix, final FtSugGetArgument argument) {
+	public List<Suggestion> ftSugGet(final String key, final String prefix, final SugGetArgument argument) {
 		final CommandArguments args = CommandArguments.create(key, prefix).add(argument);
 		return executeCommand(Command.FT_SUGGET, args,
 				(cmd)->cmd.ftSugget(rawBinaryKey(key), SafeEncoder.encode(prefix), new LettuceSugGetArgs<>(argument)),
@@ -146,7 +146,7 @@ public final class LettuceAutoSuggestCommands extends AbstractLettuceRedisComman
 	}
 
 	@Override
-	public List<Suggestion> ftSugGet(final byte[] key, final byte[] prefix, final FtSugGetArgument argument) {
+	public List<Suggestion> ftSugGet(final byte[] key, final byte[] prefix, final SugGetArgument argument) {
 		final CommandArguments args = CommandArguments.create(key, prefix).add(argument);
 		return executeCommand(Command.FT_SUGGET, args,
 				(cmd)->cmd.ftSugget(rawKey(key), prefix, new LettuceSugGetArgs<>(argument)),

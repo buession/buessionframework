@@ -25,8 +25,8 @@
 package com.buession.redis.core.command;
 
 import com.buession.lang.Status;
-import com.buession.redis.core.command.args.CFInsertArgument;
-import com.buession.redis.core.command.args.CFReserveArgument;
+import com.buession.redis.core.command.args.cuckoofilter.CFInsertArgument;
+import com.buession.redis.core.command.args.cuckoofilter.CFReserveArgument;
 
 import java.util.List;
 import java.util.Map;

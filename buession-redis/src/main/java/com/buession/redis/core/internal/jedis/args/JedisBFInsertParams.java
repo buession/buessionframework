@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.redis.core.command.args.BFInsertArgument;
+import com.buession.redis.core.command.args.bloomfilter.InsertArgument;
 import redis.clients.jedis.bloom.BFInsertParams;
 
 import java.util.Optional;
@@ -47,22 +47,22 @@ public final class JedisBFInsertParams extends BFInsertParams {
 	/**
 	 * 构造函数
 	 *
-	 * @param bfInsertArgument
-	 *        {@link BFInsertArgument}
+	 * @param insertArgument
+	 *        {@link InsertArgument}
 	 */
-	public JedisBFInsertParams(final BFInsertArgument bfInsertArgument) {
+	public JedisBFInsertParams(final InsertArgument insertArgument) {
 		super();
 
-		if(bfInsertArgument != null){
-			Optional.ofNullable(bfInsertArgument.getCapacity()).ifPresent(this::capacity);
-			Optional.ofNullable(bfInsertArgument.getErrorRate()).ifPresent(this::error);
-			Optional.ofNullable(bfInsertArgument.getExpansion()).ifPresent(this::expansion);
+		if(insertArgument != null){
+			Optional.ofNullable(insertArgument.getCapacity()).ifPresent(this::capacity);
+			Optional.ofNullable(insertArgument.getErrorRate()).ifPresent(this::error);
+			Optional.ofNullable(insertArgument.getExpansion()).ifPresent(this::expansion);
 
-			if(Boolean.TRUE.equals(bfInsertArgument.isNoCreate())){
+			if(Boolean.TRUE.equals(insertArgument.isNoCreate())){
 				this.noCreate();
 			}
 
-			if(Boolean.TRUE.equals(bfInsertArgument.isNonScaling())){
+			if(Boolean.TRUE.equals(insertArgument.isNonScaling())){
 				this.nonScaling();
 			}
 		}

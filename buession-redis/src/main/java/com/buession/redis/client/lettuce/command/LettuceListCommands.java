@@ -29,13 +29,13 @@ import com.buession.core.converter.ListConverter;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
-import com.buession.redis.core.Direction;
+import com.buession.redis.core.command.args.list.Direction;
 import com.buession.redis.core.Keyword;
-import com.buession.redis.core.ListPosition;
+import com.buession.redis.core.command.args.list.Position;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ListCommands;
-import com.buession.redis.core.command.args.LPosArgument;
+import com.buession.redis.core.command.args.list.LPosArgument;
 import com.buession.redis.core.internal.convert.BinaryListStringListConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.KeyValueConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
@@ -157,18 +157,18 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 	}
 
 	@Override
-	public Long lInsert(final String key, final ListPosition position, final String pivot, final String value) {
+	public Long lInsert(final String key, final Position position, final String pivot, final String value) {
 		final CommandArguments args = CommandArguments.create(key).add(position).add(pivot).add(value);
 		return executeCommand(Command.LINSERT, args,
-				(cmd)->cmd.linsert(rawBinaryKey(key), ListPosition.BEFORE == position, SafeEncoder.encode(pivot),
+				(cmd)->cmd.linsert(rawBinaryKey(key), Position.BEFORE == position, SafeEncoder.encode(pivot),
 						SafeEncoder.encode(value)));
 	}
 
 	@Override
-	public Long lInsert(final byte[] key, final ListPosition position, final byte[] pivot, final byte[] value) {
+	public Long lInsert(final byte[] key, final Position position, final byte[] pivot, final byte[] value) {
 		final CommandArguments args = CommandArguments.create(key).add(position).add(pivot).add(value);
 		return executeCommand(Command.LINSERT, args,
-				(cmd)->cmd.linsert(key, ListPosition.BEFORE == position, pivot, value));
+				(cmd)->cmd.linsert(key, Position.BEFORE == position, pivot, value));
 	}
 
 	@Override

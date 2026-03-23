@@ -24,8 +24,8 @@
  */
 package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.redis.core.NxXx;
-import com.buession.redis.core.command.args.SetArgument;
+import com.buession.redis.core.command.args.NxXx;
+import com.buession.redis.core.command.args.string.SetArgument;
 import io.lettuce.core.SetArgs;
 
 import java.time.Duration;

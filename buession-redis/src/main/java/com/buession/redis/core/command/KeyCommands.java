@@ -25,13 +25,13 @@
 package com.buession.redis.core.command;
 
 import com.buession.lang.Status;
-import com.buession.redis.core.ExpireOption;
+import com.buession.redis.core.command.args.ExpireOption;
 import com.buession.redis.core.ObjectEncoding;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Type;
-import com.buession.redis.core.command.args.MigrateArgument;
+import com.buession.redis.core.command.args.key.MigrateArgument;
 import com.buession.redis.core.command.args.RestoreArgument;
-import com.buession.redis.core.command.args.SortArgument;
+import com.buession.redis.core.command.args.key.SortArgument;
 
 import java.util.List;
 import java.util.Set;

@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.internal.lettuce.args;
 
+import com.buession.redis.core.command.args.sortedset.Aggregate;
 import io.lettuce.core.ZStoreArgs;
 
 /**
@@ -45,16 +46,16 @@ public final class LettuceZStoreArgs extends ZStoreArgs {
 	 * 构造函数
 	 *
 	 * @param aggregate
-	 *        {@link com.buession.redis.core.Aggregate}
+	 *        {@link Aggregate}
 	 */
-	public LettuceZStoreArgs(final com.buession.redis.core.Aggregate aggregate) {
+	public LettuceZStoreArgs(final Aggregate aggregate) {
 		super();
 
-		if(aggregate == com.buession.redis.core.Aggregate.MIN){
+		if(aggregate == Aggregate.MIN){
 			min();
-		}else if(aggregate == com.buession.redis.core.Aggregate.MAX){
+		}else if(aggregate == Aggregate.MAX){
 			max();
-		}else if(aggregate == com.buession.redis.core.Aggregate.SUM){
+		}else if(aggregate == Aggregate.SUM){
 			sum();
 		}
 	}
@@ -74,11 +75,11 @@ public final class LettuceZStoreArgs extends ZStoreArgs {
 	 * 构造函数
 	 *
 	 * @param aggregate
-	 *        {@link com.buession.redis.core.Aggregate}
+	 *        {@link Aggregate}
 	 * @param weights
 	 * 		权重
 	 */
-	public LettuceZStoreArgs(final com.buession.redis.core.Aggregate aggregate, final double... weights) {
+	public LettuceZStoreArgs(final Aggregate aggregate, final double... weights) {
 		this(aggregate);
 		weights(weights);
 	}

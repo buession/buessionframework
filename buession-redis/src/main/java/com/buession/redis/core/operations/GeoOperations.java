@@ -27,12 +27,12 @@ package com.buession.redis.core.operations;
 import com.buession.lang.Geo;
 import com.buession.lang.KeyValue;
 import com.buession.redis.core.GeoRadius;
-import com.buession.redis.core.GeoStoreOption;
-import com.buession.redis.core.GeoUnit;
-import com.buession.redis.core.NxXx;
+import com.buession.redis.core.command.args.geo.GeoStoreOption;
+import com.buession.redis.core.command.args.geo.GeoUnit;
+import com.buession.redis.core.command.args.NxXx;
 import com.buession.redis.core.command.GeoCommands;
-import com.buession.redis.core.command.args.GeoRadiusArgument;
-import com.buession.redis.core.command.args.GeoSearchArgument;
+import com.buession.redis.core.command.args.geo.GeoRadiusArgument;
+import com.buession.redis.core.command.args.geo.GeoSearchArgument;
 
 import java.util.List;
 

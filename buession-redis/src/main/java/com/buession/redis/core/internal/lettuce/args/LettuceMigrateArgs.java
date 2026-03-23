@@ -25,7 +25,7 @@
 package com.buession.redis.core.internal.lettuce.args;
 
 import com.buession.core.validator.Validate;
-import com.buession.redis.core.command.args.MigrateArgument;
+import com.buession.redis.core.command.args.key.MigrateArgument;
 import io.lettuce.core.MigrateArgs;
 
 import java.util.List;

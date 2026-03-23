@@ -24,8 +24,8 @@
  */
 package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.redis.core.NxXx;
-import com.buession.redis.core.command.args.SetArgument;
+import com.buession.redis.core.command.args.NxXx;
+import com.buession.redis.core.command.args.string.SetArgument;
 import redis.clients.jedis.params.SetParams;
 
 /**

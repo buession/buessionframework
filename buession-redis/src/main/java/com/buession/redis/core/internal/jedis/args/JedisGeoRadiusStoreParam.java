@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.redis.core.GeoStoreOption;
+import com.buession.redis.core.command.args.geo.GeoStoreOption;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.params.GeoRadiusStoreParam;
 

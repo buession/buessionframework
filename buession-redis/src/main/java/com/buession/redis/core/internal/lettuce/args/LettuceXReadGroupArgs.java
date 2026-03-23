@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.redis.core.command.args.XReadGroupArgument;
+import com.buession.redis.core.command.args.stream.XReadGroupArgument;
 import io.lettuce.core.XReadArgs;
 
 import java.util.Optional;

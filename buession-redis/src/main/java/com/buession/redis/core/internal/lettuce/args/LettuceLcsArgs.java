@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.redis.core.command.args.LcsArgument;
+import com.buession.redis.core.command.args.string.LcsArgument;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.LcsArgs;
 

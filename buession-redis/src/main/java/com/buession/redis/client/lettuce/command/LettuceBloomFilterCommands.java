@@ -26,12 +26,12 @@ package com.buession.redis.client.lettuce.command;
 
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
-import com.buession.redis.core.BfInfoOption;
+import com.buession.redis.core.command.args.bloomfilter.BfInfoOption;
 import com.buession.redis.core.Keyword;
 import com.buession.redis.core.command.BloomFilterCommands;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.args.BFInsertArgument;
+import com.buession.redis.core.command.args.bloomfilter.InsertArgument;
 
 import java.util.List;
 import java.util.Map;
@@ -122,13 +122,13 @@ public final class LettuceBloomFilterCommands extends AbstractLettuceRedisComman
 	}
 
 	@Override
-	public List<Boolean> bfInsert(final String key, final BFInsertArgument argument, final String... items) {
+	public List<Boolean> bfInsert(final String key, final InsertArgument argument, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.ITEMS, items);
 		return executeCommand(Command.BF_INSERT, args);
 	}
 
 	@Override
-	public List<Boolean> bfInsert(final byte[] key, final BFInsertArgument argument, final byte[]... items) {
+	public List<Boolean> bfInsert(final byte[] key, final InsertArgument argument, final byte[]... items) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.ITEMS, items);
 		return executeCommand(Command.BF_INSERT, args);
 	}

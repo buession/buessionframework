@@ -25,7 +25,7 @@
 package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.FunctionRestoreMode;
+import com.buession.redis.core.command.args.scripting.FunctionRestoreMode;
 import redis.clients.jedis.args.FunctionRestorePolicy;
 
 /**

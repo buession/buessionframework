@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.redis.core.command.args.XReadGroupArgument;
+import com.buession.redis.core.command.args.stream.XReadGroupArgument;
 import redis.clients.jedis.params.XReadGroupParams;
 
 import java.util.Optional;

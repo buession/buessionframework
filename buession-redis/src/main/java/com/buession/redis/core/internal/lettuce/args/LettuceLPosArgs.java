@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.redis.core.command.args.LPosArgument;
+import com.buession.redis.core.command.args.list.LPosArgument;
 import io.lettuce.core.LPosArgs;
 
 import java.util.Optional;

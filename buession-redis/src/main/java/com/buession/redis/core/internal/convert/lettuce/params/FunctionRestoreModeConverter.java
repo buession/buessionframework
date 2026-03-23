@@ -28,16 +28,18 @@ import com.buession.core.converter.Converter;
 import io.lettuce.core.FunctionRestoreMode;
 
 /**
- * {@link com.buession.redis.core.FunctionRestoreMode} 转换为 {@link io.lettuce.core.FunctionRestoreMode}
+ * {@link com.buession.redis.core.command.args.scripting.FunctionRestoreMode} 转换为 {@link io.lettuce.core.FunctionRestoreMode}
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class FunctionRestoreModeConverter implements Converter<com.buession.redis.core.FunctionRestoreMode,
+public final class FunctionRestoreModeConverter
+		implements Converter<com.buession.redis.core.command.args.scripting.FunctionRestoreMode,
 		io.lettuce.core.FunctionRestoreMode> {
 
 	@Override
-	public FunctionRestoreMode convert(final com.buession.redis.core.FunctionRestoreMode source) {
+	public FunctionRestoreMode convert(
+			final com.buession.redis.core.command.args.scripting.FunctionRestoreMode source) {
 		if(source == null){
 			return null;
 		}

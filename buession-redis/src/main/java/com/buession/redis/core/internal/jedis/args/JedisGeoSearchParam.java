@@ -25,7 +25,7 @@
 package com.buession.redis.core.internal.jedis.args;
 
 import com.buession.lang.Order;
-import com.buession.redis.core.command.args.GeoSearchArgument;
+import com.buession.redis.core.command.args.geo.GeoSearchArgument;
 import redis.clients.jedis.params.GeoSearchParam;
 
 /**

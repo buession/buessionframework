@@ -26,7 +26,7 @@ package com.buession.redis.core.command;
 
 import com.buession.lang.Status;
 import com.buession.redis.core.Suggestion;
-import com.buession.redis.core.command.args.FtSugGetArgument;
+import com.buession.redis.core.command.args.autosuggest.SugGetArgument;
 
 import java.util.List;
 
@@ -43,6 +43,8 @@ public interface AutoSuggestCommands extends RedisCommands {
 	/**
 	 * 将一个建议词条添加到自动补全索引
 	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/ft.sugadd/" target="_blank">https://redis.io/docs/latest/commands/ft.sugadd/</a></p>
+	 *
 	 * @param key
 	 * 		Key
 	 * @param value
@@ -57,6 +59,8 @@ public interface AutoSuggestCommands extends RedisCommands {
 	/**
 	 * 将一个建议词条添加到自动补全索引
 	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/ft.sugadd/" target="_blank">https://redis.io/docs/latest/commands/ft.sugadd/</a></p>
+	 *
 	 * @param key
 	 * 		Key
 	 * @param value
@@ -70,6 +74,8 @@ public interface AutoSuggestCommands extends RedisCommands {
 
 	/**
 	 * 将一个建议词条添加到自动补全索引
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/ft.sugadd/" target="_blank">https://redis.io/docs/latest/commands/ft.sugadd/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -87,6 +93,8 @@ public interface AutoSuggestCommands extends RedisCommands {
 	/**
 	 * 将一个建议词条添加到自动补全索引
 	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/ft.sugadd/" target="_blank">https://redis.io/docs/latest/commands/ft.sugadd/</a></p>
+	 *
 	 * @param key
 	 * 		Key
 	 * @param value
@@ -102,6 +110,8 @@ public interface AutoSuggestCommands extends RedisCommands {
 
 	/**
 	 * 将一个建议词条添加到自动补全索引
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/ft.sugadd/" target="_blank">https://redis.io/docs/latest/commands/ft.sugadd/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -121,6 +131,8 @@ public interface AutoSuggestCommands extends RedisCommands {
 	/**
 	 * 将一个建议词条添加到自动补全索引
 	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/ft.sugadd/" target="_blank">https://redis.io/docs/latest/commands/ft.sugadd/</a></p>
+	 *
 	 * @param key
 	 * 		Key
 	 * @param value
@@ -139,6 +151,8 @@ public interface AutoSuggestCommands extends RedisCommands {
 	/**
 	 * 将一个建议词条添加到自动补全索引
 	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/ft.sugadd/" target="_blank">https://redis.io/docs/latest/commands/ft.sugadd/</a></p>
+	 *
 	 * @param key
 	 * 		Key
 	 * @param value
@@ -154,6 +168,8 @@ public interface AutoSuggestCommands extends RedisCommands {
 
 	/**
 	 * 将一个建议词条添加到自动补全索引
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/ft.sugadd/" target="_blank">https://redis.io/docs/latest/commands/ft.sugadd/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -171,6 +187,8 @@ public interface AutoSuggestCommands extends RedisCommands {
 	/**
 	 * 从自动补全索引中删除词条
 	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/ft.sugdel/" target="_blank">https://redis.io/docs/latest/commands/ft.sugdel/</a></p>
+	 *
 	 * @param key
 	 * 		Key
 	 * @param value
@@ -182,6 +200,8 @@ public interface AutoSuggestCommands extends RedisCommands {
 
 	/**
 	 * 从自动补全索引中删除词条
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/ft.sugdel/" target="_blank">https://redis.io/docs/latest/commands/ft.sugdel/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -195,6 +215,8 @@ public interface AutoSuggestCommands extends RedisCommands {
 	/**
 	 * 根据用户输入的前缀，从索引中检索匹配的建议词条列表
 	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/ft.sugget/" target="_blank">https://redis.io/docs/latest/commands/ft.sugget/</a></p>
+	 *
 	 * @param key
 	 * 		Key
 	 * @param prefix
@@ -206,6 +228,8 @@ public interface AutoSuggestCommands extends RedisCommands {
 
 	/**
 	 * 根据用户输入的前缀，从索引中检索匹配的建议词条列表
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/ft.sugget/" target="_blank">https://redis.io/docs/latest/commands/ft.sugget/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -219,6 +243,8 @@ public interface AutoSuggestCommands extends RedisCommands {
 	/**
 	 * 根据用户输入的前缀，从索引中检索匹配的建议词条列表
 	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/ft.sugget/" target="_blank">https://redis.io/docs/latest/commands/ft.sugget/</a></p>
+	 *
 	 * @param key
 	 * 		Key
 	 * @param prefix
@@ -228,11 +254,13 @@ public interface AutoSuggestCommands extends RedisCommands {
 	 *
 	 * @return 匹配的建议词条
 	 */
-	List<Suggestion> ftSugGet(final String key, final String prefix, final FtSugGetArgument argument);
+	List<Suggestion> ftSugGet(final String key, final String prefix, final SugGetArgument argument);
 
 	/**
 	 * 根据用户输入的前缀，从索引中检索匹配的建议词条列表
 	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/ft.sugget/" target="_blank">https://redis.io/docs/latest/commands/ft.sugget/</a></p>
+	 *
 	 * @param key
 	 * 		Key
 	 * @param prefix
@@ -242,10 +270,12 @@ public interface AutoSuggestCommands extends RedisCommands {
 	 *
 	 * @return 匹配的建议词条
 	 */
-	List<Suggestion> ftSugGet(final byte[] key, final byte[] prefix, final FtSugGetArgument argument);
+	List<Suggestion> ftSugGet(final byte[] key, final byte[] prefix, final SugGetArgument argument);
 
 	/**
 	 * 获取自动补全索引中词条总数
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/ft.suglen/" target="_blank">https://redis.io/docs/latest/commands/ft.suglen/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -256,6 +286,8 @@ public interface AutoSuggestCommands extends RedisCommands {
 
 	/**
 	 * 获取自动补全索引中词条总数
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/ft.suglen/" target="_blank">https://redis.io/docs/latest/commands/ft.suglen/</a></p>
 	 *
 	 * @param key
 	 * 		Key

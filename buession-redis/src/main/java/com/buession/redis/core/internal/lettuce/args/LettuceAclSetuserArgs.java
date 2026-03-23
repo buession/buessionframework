@@ -26,7 +26,7 @@ package com.buession.redis.core.internal.lettuce.args;
 
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.SubCommand;
-import com.buession.redis.core.command.args.AclSetUserArgument;
+import com.buession.redis.core.command.args.acl.AclSetUserArgument;
 import com.buession.redis.core.internal.convert.lettuce.params.AclCategoryConverter;
 import io.lettuce.core.AclSetuserArgs;
 import io.lettuce.core.BitFieldArgs;

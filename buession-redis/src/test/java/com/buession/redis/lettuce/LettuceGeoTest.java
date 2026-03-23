@@ -27,7 +27,7 @@ package com.buession.redis.lettuce;
 import com.buession.lang.Geo;
 import com.buession.redis.RedisTemplate;
 import com.buession.redis.core.GeoRadius;
-import com.buession.redis.core.GeoUnit;
+import com.buession.redis.core.command.args.geo.GeoUnit;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

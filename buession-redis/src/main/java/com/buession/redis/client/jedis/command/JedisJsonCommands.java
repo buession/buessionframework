@@ -34,12 +34,12 @@ import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.JsonType;
-import com.buession.redis.core.NxXx;
+import com.buession.redis.core.command.args.NxXx;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.JsonCommands;
-import com.buession.redis.core.command.args.JsonGetArgument;
-import com.buession.redis.core.command.args.JsonKeyPathValue;
+import com.buession.redis.core.command.args.json.JsonGetArgument;
+import com.buession.redis.core.command.args.json.KeyPathValue;
 import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.StringListBinaryListConverter;
 import com.buession.redis.core.internal.convert.jedis.response.JsonTypeConverter;
@@ -388,7 +388,7 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	}
 
 	@Override
-	public Status jsonMSet(final JsonKeyPathValue... data) {
+	public Status jsonMSet(final KeyPathValue... data) {
 		final CommandArguments args = CommandArguments.create(data);
 		return executeCommand(Command.JSON_MSET, args);
 	}

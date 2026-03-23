@@ -32,7 +32,7 @@ import com.buession.redis.core.Suggestion;
 import com.buession.redis.core.command.AutoSuggestCommands;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.args.FtSugGetArgument;
+import com.buession.redis.core.command.args.autosuggest.SugGetArgument;
 import com.buession.redis.core.internal.convert.jedis.response.TupleSuggestionConverter;
 import com.buession.redis.utils.SafeEncoder;
 
@@ -155,13 +155,13 @@ public final class JedisAutoSuggestCommands extends AbstractJedisRedisCommands i
 	}
 
 	@Override
-	public List<Suggestion> ftSugGet(final String key, final String prefix, final FtSugGetArgument argument) {
+	public List<Suggestion> ftSugGet(final String key, final String prefix, final SugGetArgument argument) {
 		final CommandArguments args = CommandArguments.create(key, prefix).add(argument);
 		return ftSugGet(rawKey(key), prefix, argument, args);
 	}
 
 	@Override
-	public List<Suggestion> ftSugGet(final byte[] key, final byte[] prefix, final FtSugGetArgument argument) {
+	public List<Suggestion> ftSugGet(final byte[] key, final byte[] prefix, final SugGetArgument argument) {
 		final CommandArguments args = CommandArguments.create(key, prefix).add(argument);
 		return ftSugGet(rawStringKey(key), SafeEncoder.encode(prefix), argument, args);
 	}
@@ -182,7 +182,7 @@ public final class JedisAutoSuggestCommands extends AbstractJedisRedisCommands i
 		return executeCommand(Command.FT_SUGADD, args, (cmd)->cmd.ftSugAdd(key, value, score));
 	}
 
-	private List<Suggestion> ftSugGet(final String key, final String prefix, final FtSugGetArgument argument,
+	private List<Suggestion> ftSugGet(final String key, final String prefix, final SugGetArgument argument,
 									  final CommandArguments args) {
 		if(argument != null && Boolean.TRUE.equals(argument.getWithScores())){
 			return executeCommand(Command.FT_SUGGET, args,

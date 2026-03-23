@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.redis.core.command.args.FtSugGetArgument;
+import com.buession.redis.core.command.args.autosuggest.SugGetArgument;
 import io.lettuce.core.search.arguments.SugGetArgs;
 
 import java.util.Optional;
@@ -52,23 +52,23 @@ public final class LettuceSugGetArgs<K, V> extends SugGetArgs<K, V> {
 	/**
 	 * 构造函数
 	 *
-	 * @param ftSugGetArgument
-	 *        {@link FtSugGetArgument}
+	 * @param sugGetArgument
+	 *        {@link SugGetArgument}
 	 */
-	public LettuceSugGetArgs(final FtSugGetArgument ftSugGetArgument) {
+	public LettuceSugGetArgs(final SugGetArgument sugGetArgument) {
 		super();
 
-		if(ftSugGetArgument != null){
-			if(Boolean.TRUE.equals(ftSugGetArgument.getFuzzy())){
+		if(sugGetArgument != null){
+			if(Boolean.TRUE.equals(sugGetArgument.getFuzzy())){
 				fuzzy();
 			}
-			if(Boolean.TRUE.equals(ftSugGetArgument.getWithScores())){
+			if(Boolean.TRUE.equals(sugGetArgument.getWithScores())){
 				withScores();
 			}
-			if(Boolean.TRUE.equals(ftSugGetArgument.getWithPayloads())){
+			if(Boolean.TRUE.equals(sugGetArgument.getWithPayloads())){
 				withPayloads();
 			}
-			Optional.ofNullable(ftSugGetArgument.getMax()).ifPresent(this::max);
+			Optional.ofNullable(sugGetArgument.getMax()).ifPresent(this::max);
 		}
 	}
 

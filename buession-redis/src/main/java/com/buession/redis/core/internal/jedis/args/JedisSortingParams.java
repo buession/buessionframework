@@ -25,7 +25,7 @@
 package com.buession.redis.core.internal.jedis.args;
 
 import com.buession.lang.Order;
-import com.buession.redis.core.command.args.SortArgument;
+import com.buession.redis.core.command.args.key.SortArgument;
 import redis.clients.jedis.params.SortingParams;
 
 import java.util.Optional;

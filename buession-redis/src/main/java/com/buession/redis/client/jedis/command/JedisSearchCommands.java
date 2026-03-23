@@ -25,17 +25,7 @@
 package com.buession.redis.client.jedis.command;
 
 import com.buession.redis.client.jedis.JedisRedisClient;
-import com.buession.redis.core.AggregationResult;
-import com.buession.redis.core.command.Command;
-import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.SearchCommands;
-import com.buession.redis.core.command.args.FtAggregateArgument;
-import com.buession.redis.core.internal.convert.jedis.params.JedisAggregationBuilder;
-import com.buession.redis.core.internal.convert.jedis.response.AggregationResultConverter;
-import com.buession.redis.utils.SafeEncoder;
-import redis.clients.jedis.search.aggr.AggregationBuilder;
-
-import java.util.Set;
 
 /**
  * Jedis 搜索命令

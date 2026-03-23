@@ -26,10 +26,10 @@ package com.buession.redis.core.command;
 
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
-import com.buession.redis.core.ExpireOption;
+import com.buession.redis.core.command.args.ExpireOption;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.args.GetExArgument;
-import com.buession.redis.core.command.args.HSetExArgument;
+import com.buession.redis.core.command.args.hash.HSetExArgument;
 
 import java.util.List;
 import java.util.Map;

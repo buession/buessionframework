@@ -25,11 +25,11 @@
 package com.buession.redis.core.command;
 
 import com.buession.lang.Status;
-import com.buession.redis.core.FlushMode;
-import com.buession.redis.core.FunctionRestoreMode;
+import com.buession.redis.core.command.args.FlushMode;
+import com.buession.redis.core.command.args.scripting.FunctionRestoreMode;
 import com.buession.redis.core.FunctionStats;
 import com.buession.redis.core.LibraryInfo;
-import com.buession.redis.core.ScriptDebugMode;
+import com.buession.redis.core.command.args.scripting.DebugMode;
 
 import java.util.List;
 
@@ -777,7 +777,7 @@ public interface ScriptingCommands extends RedisCommands {
 	 *
 	 * @return -
 	 */
-	Object scriptDebug(final ScriptDebugMode mode);
+	Object scriptDebug(final DebugMode mode);
 
 	/**
 	 * 根据一个或多个脚本的 SHA1 校验和，检测校验和所指定的脚本是否已经被保存在缓存当中

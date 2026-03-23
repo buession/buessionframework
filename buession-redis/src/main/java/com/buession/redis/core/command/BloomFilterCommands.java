@@ -25,8 +25,8 @@
 package com.buession.redis.core.command;
 
 import com.buession.lang.Status;
-import com.buession.redis.core.BfInfoOption;
-import com.buession.redis.core.command.args.BFInsertArgument;
+import com.buession.redis.core.command.args.bloomfilter.BfInfoOption;
+import com.buession.redis.core.command.args.bloomfilter.InsertArgument;
 
 import java.util.List;
 import java.util.Map;
@@ -213,7 +213,7 @@ public interface BloomFilterCommands extends RedisCommands {
 	 *
 	 * @return 返回一个数组，每个元素对应输入项的插入结果；true 表示添加成功，false 表示添加失败
 	 */
-	List<Boolean> bfInsert(final String key, final BFInsertArgument argument, final String... items);
+	List<Boolean> bfInsert(final String key, final InsertArgument argument, final String... items);
 
 	/**
 	 * 向布隆过滤器 key 中批量添加元素
@@ -229,7 +229,7 @@ public interface BloomFilterCommands extends RedisCommands {
 	 *
 	 * @return 返回一个数组，每个元素对应输入项的插入结果；true 表示添加成功，false 表示添加失败
 	 */
-	List<Boolean> bfInsert(final byte[] key, final BFInsertArgument argument, final byte[]... items);
+	List<Boolean> bfInsert(final byte[] key, final InsertArgument argument, final byte[]... items);
 
 	/**
 	 * 从外部导入布隆过滤器数据块

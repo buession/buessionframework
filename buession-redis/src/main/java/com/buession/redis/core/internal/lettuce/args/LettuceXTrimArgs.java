@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.redis.core.ApproximateExactTrimming;
+import com.buession.redis.core.command.args.stream.ApproximateExactTrimming;
 import com.buession.redis.core.StreamDeletionPolicy;
 import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.command.args.MaxLenMinId;

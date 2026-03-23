@@ -24,12 +24,6 @@
  */
 package com.buession.redis.core.command;
 
-import com.buession.redis.core.AggregationResult;
-import com.buession.redis.core.command.args.FtAggregateArgument;
-
-import java.util.List;
-import java.util.Set;
-
 /**
  * 搜索命令
  *

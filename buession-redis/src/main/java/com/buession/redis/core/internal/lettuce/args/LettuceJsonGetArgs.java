@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.redis.core.command.args.JsonGetArgument;
+import com.buession.redis.core.command.args.json.JsonGetArgument;
 import io.lettuce.core.json.arguments.JsonGetArgs;
 
 import java.util.Optional;

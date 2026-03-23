@@ -25,18 +25,18 @@
 package com.buession.redis.core.internal.convert.lettuce.params;
 
 import com.buession.core.converter.Converter;
+import com.buession.redis.core.command.args.FlushMode;
 
 /**
- * {@link com.buession.redis.core.FlushMode} 转换为 Lettuce {@link io.lettuce.core.FlushMode}
+ * {@link FlushMode} 转换为 Lettuce {@link io.lettuce.core.FlushMode}
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class FlushModeConverter
-		implements Converter<com.buession.redis.core.FlushMode, io.lettuce.core.FlushMode> {
+public final class FlushModeConverter implements Converter<FlushMode, io.lettuce.core.FlushMode> {
 
 	@Override
-	public io.lettuce.core.FlushMode convert(final com.buession.redis.core.FlushMode source) {
+	public io.lettuce.core.FlushMode convert(final FlushMode source) {
 		if(source == null){
 			return null;
 		}

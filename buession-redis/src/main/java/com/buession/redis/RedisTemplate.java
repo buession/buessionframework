@@ -28,15 +28,15 @@ import com.buession.core.type.TypeReference;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.datasource.DataSource;
-import com.buession.redis.core.Aggregate;
-import com.buession.redis.core.Direction;
-import com.buession.redis.core.ListPosition;
-import com.buession.redis.core.NxXx;
+import com.buession.redis.core.command.args.sortedset.Aggregate;
+import com.buession.redis.core.command.args.list.Direction;
+import com.buession.redis.core.command.args.list.Position;
+import com.buession.redis.core.command.args.NxXx;
 import com.buession.redis.core.ScanResult;
-import com.buession.redis.core.ZRangeType;
+import com.buession.redis.core.command.args.sortedset.ZRangeType;
 import com.buession.redis.core.command.args.GetExArgument;
-import com.buession.redis.core.command.args.JsonGetArgument;
-import com.buession.redis.core.command.args.SetArgument;
+import com.buession.redis.core.command.args.json.JsonGetArgument;
+import com.buession.redis.core.command.args.string.SetArgument;
 import com.buession.redis.core.operations.*;
 
 import java.util.List;
@@ -707,12 +707,12 @@ public class RedisTemplate extends AbstractRedisTemplate implements AutoSuggestO
 	}
 
 	@Override
-	public <V> Long lInsert(final String key, final ListPosition position, final V pivot, final V value) {
+	public <V> Long lInsert(final String key, final Position position, final V pivot, final V value) {
 		return lInsert(key, position, serializer.serialize(pivot), serializer.serialize(value));
 	}
 
 	@Override
-	public <V> Long lInsert(final byte[] key, final ListPosition position, final V pivot, final V value) {
+	public <V> Long lInsert(final byte[] key, final Position position, final V pivot, final V value) {
 		return lInsert(key, position, serializer.serializeAsBytes(pivot), serializer.serializeAsBytes(value));
 	}
 

@@ -25,7 +25,7 @@
 package com.buession.redis.core.internal.jedis.args;
 
 import com.buession.core.utils.NumberUtils;
-import com.buession.redis.core.ZRangeType;
+import com.buession.redis.core.command.args.sortedset.ZRangeType;
 import redis.clients.jedis.Protocol;
 import redis.clients.jedis.params.ZRangeParams;
 

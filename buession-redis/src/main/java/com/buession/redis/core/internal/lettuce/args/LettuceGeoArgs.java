@@ -25,7 +25,7 @@
 package com.buession.redis.core.internal.lettuce.args;
 
 import com.buession.lang.Order;
-import com.buession.redis.core.command.args.BaseGeoDistanceArgument;
+import com.buession.redis.core.command.args.geo.BaseGeoDistanceArgument;
 import io.lettuce.core.GeoArgs;
 
 /**

@@ -24,10 +24,10 @@
  */
 package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.redis.core.ApproximateExactTrimming;
+import com.buession.redis.core.command.args.stream.ApproximateExactTrimming;
 import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.command.args.MaxLenMinId;
-import com.buession.redis.core.command.args.XAddArgument;
+import com.buession.redis.core.command.args.stream.XAddArgument;
 import com.buession.redis.core.internal.convert.jedis.params.StreamDeletionPolicyConverter;
 import redis.clients.jedis.params.XAddParams;
 

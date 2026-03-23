@@ -901,6 +901,22 @@ public enum Command implements ProtocolCommand {
 	 **/
 
 	/**
+	 * Time Series command start
+	 **/
+	TS_ADD(CommandGroup.TIME_SERIES, "TS.ADD", "w"),
+
+	TS_ALTER(CommandGroup.TIME_SERIES, "TS.ALTER", "w"),
+
+	TS_CREATE(CommandGroup.TIME_SERIES, "TS.CREATE", "w"),
+
+	TS_CREATERULE(CommandGroup.TIME_SERIES, "TS.CREATERULE", "w"),
+
+	TS_DECRBY(CommandGroup.TIME_SERIES, "TS.DECRBY", "w"),
+	/**
+	 * Time Series command end
+	 **/
+
+	/**
 	 * transaction command start
 	 **/
 	DISCARD(CommandGroup.TRANSACTION, "w"),

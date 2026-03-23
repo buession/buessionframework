@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.redis.core.NxXx;
+import com.buession.redis.core.command.args.NxXx;
 import io.lettuce.core.json.arguments.JsonSetArgs;
 
 /**

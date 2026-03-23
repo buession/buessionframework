@@ -24,11 +24,11 @@
  */
 package com.buession.redis.core.command;
 
-import com.buession.redis.core.BitCountOption;
-import com.buession.redis.core.BitOperation;
-import com.buession.redis.core.BitType;
-import com.buession.redis.core.command.args.BitFieldArgument;
-import com.buession.redis.core.command.args.BitFieldRoArgument;
+import com.buession.redis.core.command.args.bitmap.BitCountOption;
+import com.buession.redis.core.command.args.bitmap.BitOperation;
+import com.buession.redis.core.command.args.bitmap.BitType;
+import com.buession.redis.core.command.args.bitmap.BitFieldArgument;
+import com.buession.redis.core.command.args.bitmap.BitFieldRoArgument;
 
 import java.util.List;
 

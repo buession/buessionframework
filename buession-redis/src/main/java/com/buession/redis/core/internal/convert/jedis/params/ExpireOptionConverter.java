@@ -25,7 +25,7 @@
 package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.ExpireOption;
+import com.buession.redis.core.command.args.ExpireOption;
 import redis.clients.jedis.args.ExpiryOption;
 
 /**

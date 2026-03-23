@@ -27,16 +27,16 @@ package com.buession.redis.core.operations;
 import com.buession.core.utils.Assert;
 import com.buession.lang.Status;
 import com.buession.redis.core.Client;
-import com.buession.redis.core.ClientInfoOption;
-import com.buession.redis.core.ClientPauseMode;
-import com.buession.redis.core.ClientReply;
-import com.buession.redis.core.ClientType;
-import com.buession.redis.core.ClientUnblockType;
+import com.buession.redis.core.command.args.connection.ClientInfoOption;
+import com.buession.redis.core.command.args.connection.ClientPauseMode;
+import com.buession.redis.core.command.args.connection.ClientReply;
+import com.buession.redis.core.command.args.connection.ClientType;
+import com.buession.redis.core.command.args.connection.ClientUnblockType;
 import com.buession.redis.core.Hello;
 import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.TrackingInfo;
 import com.buession.redis.core.command.ConnectionCommands;
-import com.buession.redis.core.command.args.TrackingArgument;
+import com.buession.redis.core.command.args.connection.TrackingArgument;
 
 import java.util.List;
 

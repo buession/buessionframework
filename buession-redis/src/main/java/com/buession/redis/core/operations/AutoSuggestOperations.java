@@ -27,7 +27,7 @@ package com.buession.redis.core.operations;
 import com.buession.lang.Status;
 import com.buession.redis.core.Suggestion;
 import com.buession.redis.core.command.AutoSuggestCommands;
-import com.buession.redis.core.command.args.FtSugGetArgument;
+import com.buession.redis.core.command.args.autosuggest.SugGetArgument;
 
 import java.util.List;
 
@@ -104,12 +104,12 @@ public interface AutoSuggestOperations extends AutoSuggestCommands, RedisOperati
 	}
 
 	@Override
-	default List<Suggestion> ftSugGet(final String key, final String prefix, final FtSugGetArgument argument) {
+	default List<Suggestion> ftSugGet(final String key, final String prefix, final SugGetArgument argument) {
 		return execute((client)->client.autoSuggestCommands().ftSugGet(key, prefix, argument));
 	}
 
 	@Override
-	default List<Suggestion> ftSugGet(final byte[] key, final byte[] prefix, final FtSugGetArgument argument) {
+	default List<Suggestion> ftSugGet(final byte[] key, final byte[] prefix, final SugGetArgument argument) {
 		return execute((client)->client.autoSuggestCommands().ftSugGet(key, prefix, argument));
 	}
 

@@ -27,13 +27,13 @@ package com.buession.redis.core.operations;
 import com.buession.core.type.TypeReference;
 import com.buession.core.utils.NumberUtils;
 import com.buession.lang.KeyValue;
-import com.buession.redis.core.Aggregate;
-import com.buession.redis.core.MinMax;
+import com.buession.redis.core.command.args.sortedset.Aggregate;
+import com.buession.redis.core.command.args.MinMax;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
-import com.buession.redis.core.ZRangeType;
+import com.buession.redis.core.command.args.sortedset.ZRangeType;
 import com.buession.redis.core.command.SortedSetCommands;
-import com.buession.redis.core.command.args.ZAddArgument;
+import com.buession.redis.core.command.args.sortedset.ZAddArgument;
 
 import java.util.List;
 

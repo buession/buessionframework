@@ -24,17 +24,8 @@
  */
 package com.buession.redis.client.lettuce.command;
 
-import com.buession.core.converter.ListSetConverter;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
-import com.buession.redis.core.AggregationResult;
-import com.buession.redis.core.command.Command;
-import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.SearchCommands;
-import com.buession.redis.core.command.args.FtAggregateArgument;
-import com.buession.redis.core.internal.convert.lettuce.response.AggregationReplyConverter;
-import com.buession.redis.utils.SafeEncoder;
-
-import java.util.Set;
 
 /**
  * Lettuce 搜索命令

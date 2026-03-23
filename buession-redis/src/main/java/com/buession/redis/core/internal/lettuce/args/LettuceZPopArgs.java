@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.redis.core.MinMax;
+import com.buession.redis.core.command.args.MinMax;
 import io.lettuce.core.ZPopArgs;
 
 /**

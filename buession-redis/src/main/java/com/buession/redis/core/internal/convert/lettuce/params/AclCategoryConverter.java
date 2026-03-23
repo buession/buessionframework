@@ -25,18 +25,19 @@
 package com.buession.redis.core.internal.convert.lettuce.params;
 
 import com.buession.core.converter.Converter;
+import com.buession.redis.core.AclCategory;
 
 /**
- * {@link com.buession.redis.core.AclCategory} 转换为 Lettuce {@link io.lettuce.core.AclCategory}
+ * {@link AclCategory} 转换为 Lettuce {@link io.lettuce.core.AclCategory}
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
 public final class AclCategoryConverter
-		implements Converter<com.buession.redis.core.AclCategory, io.lettuce.core.AclCategory> {
+		implements Converter<AclCategory, io.lettuce.core.AclCategory> {
 
 	@Override
-	public io.lettuce.core.AclCategory convert(final com.buession.redis.core.AclCategory source) {
+	public io.lettuce.core.AclCategory convert(final AclCategory source) {
 		return source == null ? null : Enum.valueOf(io.lettuce.core.AclCategory.class, source.name());
 	}
 

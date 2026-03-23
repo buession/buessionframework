@@ -29,13 +29,13 @@ import com.buession.lang.KeyValue;
 import com.buession.lang.Order;
 import com.buession.lang.Status;
 import com.buession.redis.core.BumpEpoch;
-import com.buession.redis.core.ClusterFailoverOption;
+import com.buession.redis.core.command.args.cluster.FailoverOption;
 import com.buession.redis.core.ClusterInfo;
 import com.buession.redis.core.ClusterLink;
-import com.buession.redis.core.ClusterMigrationOp;
+import com.buession.redis.core.command.args.cluster.MigrationOp;
 import com.buession.redis.core.ClusterRedisNode;
-import com.buession.redis.core.ClusterResetOption;
-import com.buession.redis.core.ClusterSetSlotOption;
+import com.buession.redis.core.command.args.cluster.ResetOption;
+import com.buession.redis.core.command.args.cluster.SetSlotOption;
 import com.buession.redis.core.ClusterShardInfo;
 import com.buession.redis.core.ClusterSlot;
 import com.buession.redis.core.ClusterSlotStat;
@@ -100,7 +100,7 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	}
 
 	@Override
-	default Status clusterFailover(final ClusterFailoverOption option) {
+	default Status clusterFailover(final FailoverOption option) {
 		return execute((client)->client.clusterCommands().clusterFailover(option));
 	}
 
@@ -202,17 +202,17 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	}
 
 	@Override
-	default Object clusterMigration(final ClusterMigrationOp option) {
+	default Object clusterMigration(final MigrationOp option) {
 		return execute((client)->client.clusterCommands().clusterMigration(option));
 	}
 
 	@Override
-	default Object clusterMigration(final ClusterMigrationOp option, final String id) {
+	default Object clusterMigration(final MigrationOp option, final String id) {
 		return execute((client)->client.clusterCommands().clusterMigration(option, id));
 	}
 
 	@Override
-	default Object clusterMigration(final ClusterMigrationOp option, final byte[] id) {
+	default Object clusterMigration(final MigrationOp option, final byte[] id) {
 		return execute((client)->client.clusterCommands().clusterMigration(option, id));
 	}
 
@@ -257,7 +257,7 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	}
 
 	@Override
-	default Status clusterReset(final ClusterResetOption option) {
+	default Status clusterReset(final ResetOption option) {
 		return execute((client)->client.clusterCommands().clusterReset(option));
 	}
 
@@ -272,12 +272,12 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	}
 
 	@Override
-	default Status clusterSetSlot(final int slot, final ClusterSetSlotOption option, final String nodeId) {
+	default Status clusterSetSlot(final int slot, final SetSlotOption option, final String nodeId) {
 		return execute((client)->client.clusterCommands().clusterSetSlot(slot, option, nodeId));
 	}
 
 	@Override
-	default Status clusterSetSlot(final int slot, final ClusterSetSlotOption option, final byte[] nodeId) {
+	default Status clusterSetSlot(final int slot, final SetSlotOption option, final byte[] nodeId) {
 		return execute((client)->client.clusterCommands().clusterSetSlot(slot, option, nodeId));
 	}
 

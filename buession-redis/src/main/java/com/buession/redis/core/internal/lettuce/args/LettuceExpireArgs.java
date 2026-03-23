@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.redis.core.ExpireOption;
+import com.buession.redis.core.command.args.ExpireOption;
 import io.lettuce.core.ExpireArgs;
 
 /**

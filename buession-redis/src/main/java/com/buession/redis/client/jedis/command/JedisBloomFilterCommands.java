@@ -29,12 +29,12 @@ import com.buession.core.converter.MapConverter;
 import com.buession.core.converter.MapEntryMapConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
-import com.buession.redis.core.BfInfoOption;
+import com.buession.redis.core.command.args.bloomfilter.BfInfoOption;
 import com.buession.redis.core.Keyword;
 import com.buession.redis.core.command.BloomFilterCommands;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.args.BFInsertArgument;
+import com.buession.redis.core.command.args.bloomfilter.InsertArgument;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.jedis.args.JedisBFInsertParams;
 import com.buession.redis.utils.SafeEncoder;
@@ -139,14 +139,14 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 	}
 
 	@Override
-	public List<Boolean> bfInsert(final String key, final BFInsertArgument argument, final String... items) {
+	public List<Boolean> bfInsert(final String key, final InsertArgument argument, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS, items);
 		return executeCommand(Command.BF_INSERT, args,
 				(cmd)->cmd.bfInsert(rawKey(key), new JedisBFInsertParams(argument), items));
 	}
 
 	@Override
-	public List<Boolean> bfInsert(final byte[] key, final BFInsertArgument argument, final byte[]... items) {
+	public List<Boolean> bfInsert(final byte[] key, final InsertArgument argument, final byte[]... items) {
 		return bfInsert(SafeEncoder.encode(key), argument, SafeEncoder.encode(items));
 	}
 

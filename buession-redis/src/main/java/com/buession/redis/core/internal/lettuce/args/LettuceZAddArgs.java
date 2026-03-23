@@ -24,9 +24,9 @@
  */
 package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.redis.core.GtLt;
-import com.buession.redis.core.NxXx;
-import com.buession.redis.core.command.args.ZAddArgument;
+import com.buession.redis.core.command.args.GtLt;
+import com.buession.redis.core.command.args.NxXx;
+import com.buession.redis.core.command.args.sortedset.ZAddArgument;
 import io.lettuce.core.ZAddArgs;
 
 /**

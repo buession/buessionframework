@@ -27,10 +27,10 @@ package com.buession.redis.core.operations;
 import com.buession.core.type.TypeReference;
 import com.buession.lang.Status;
 import com.buession.redis.core.JsonType;
-import com.buession.redis.core.NxXx;
+import com.buession.redis.core.command.args.NxXx;
 import com.buession.redis.core.command.JsonCommands;
-import com.buession.redis.core.command.args.JsonGetArgument;
-import com.buession.redis.core.command.args.JsonKeyPathValue;
+import com.buession.redis.core.command.args.json.JsonGetArgument;
+import com.buession.redis.core.command.args.json.KeyPathValue;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -670,7 +670,7 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 	<V> List<V> jsonMGet(final byte[][] keys, final byte[] path, final TypeReference<V> type);
 
 	@Override
-	default Status jsonMSet(final JsonKeyPathValue... data) {
+	default Status jsonMSet(final KeyPathValue... data) {
 		return execute((client)->client.jsonCommands().jsonMSet(data));
 	}
 

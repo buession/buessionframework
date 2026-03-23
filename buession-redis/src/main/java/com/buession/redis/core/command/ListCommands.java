@@ -26,9 +26,9 @@ package com.buession.redis.core.command;
 
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
-import com.buession.redis.core.Direction;
-import com.buession.redis.core.ListPosition;
-import com.buession.redis.core.command.args.LPosArgument;
+import com.buession.redis.core.command.args.list.Direction;
+import com.buession.redis.core.command.args.list.Position;
+import com.buession.redis.core.command.args.list.LPosArgument;
 
 import java.util.List;
 
@@ -296,7 +296,7 @@ public interface ListCommands extends RedisCommands {
 	 * @return 执行成功，返回插入操作完成之后，列表的长度；
 	 * 如果没有找到 pivot ，返回 -1 ；如果 key 不存在或为空列表，返回 0 。
 	 */
-	Long lInsert(final String key, final ListPosition position, final String pivot, final String value);
+	Long lInsert(final String key, final Position position, final String pivot, final String value);
 
 	/**
 	 * 将值 value 插入到列表 key 当中，位于值 pivot 之前或之后
@@ -315,7 +315,7 @@ public interface ListCommands extends RedisCommands {
 	 * @return 执行成功，返回插入操作完成之后，列表的长度；
 	 * 如果没有找到 pivot ，返回 -1 ；如果 key 不存在或为空列表，返回 0 。
 	 */
-	Long lInsert(final byte[] key, final ListPosition position, final byte[] pivot, final byte[] value);
+	Long lInsert(final byte[] key, final Position position, final byte[] pivot, final byte[] value);
 
 	/**
 	 * 获取列表 key 的长度

@@ -25,7 +25,7 @@
 package com.buession.redis.core.internal.lettuce.args;
 
 import com.buession.lang.Order;
-import com.buession.redis.core.command.args.SortArgument;
+import com.buession.redis.core.command.args.key.SortArgument;
 import io.lettuce.core.SortArgs;
 
 import java.util.Optional;

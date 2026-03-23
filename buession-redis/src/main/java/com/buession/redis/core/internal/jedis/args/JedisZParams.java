@@ -44,9 +44,9 @@ public final class JedisZParams extends ZParams {
 	 * 构造函数
 	 *
 	 * @param aggregate
-	 *        {@link com.buession.redis.core.Aggregate}
+	 *        {@link com.buession.redis.core.command.args.sortedset.Aggregate}
 	 */
-	public JedisZParams(final com.buession.redis.core.Aggregate aggregate) {
+	public JedisZParams(final com.buession.redis.core.command.args.sortedset.Aggregate aggregate) {
 		super();
 		aggregate(aggregate);
 	}
@@ -66,17 +66,18 @@ public final class JedisZParams extends ZParams {
 	 * 构造函数
 	 *
 	 * @param aggregate
-	 *        {@link com.buession.redis.core.Aggregate}
+	 *        {@link com.buession.redis.core.command.args.sortedset.Aggregate}
 	 * @param weights
 	 * 		权重
 	 */
-	public JedisZParams(final com.buession.redis.core.Aggregate aggregate, final double... weights) {
+	public JedisZParams(final com.buession.redis.core.command.args.sortedset.Aggregate aggregate,
+						final double... weights) {
 		super();
 		aggregate(aggregate);
 		weights(weights);
 	}
 
-	private void aggregate(final com.buession.redis.core.Aggregate aggregate) {
+	private void aggregate(final com.buession.redis.core.command.args.sortedset.Aggregate aggregate) {
 		if(aggregate != null){
 			switch(aggregate){
 				case MIN:

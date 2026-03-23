@@ -24,8 +24,15 @@
  */
 package com.buession.redis.client.lettuce.command;
 
+import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
+import com.buession.redis.core.command.args.timeseries.AggregationType;
+import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.TimeSeriesCommands;
+import com.buession.redis.core.command.args.timeseries.AddArgument;
+import com.buession.redis.core.command.args.timeseries.AlertArgument;
+import com.buession.redis.core.command.args.timeseries.CreateArgument;
 
 /**
  * Lettuce TimeSeries 命令
@@ -37,6 +44,98 @@ public final class LettuceTimeSeriesCommands extends AbstractLettuceRedisCommand
 
 	public LettuceTimeSeriesCommands(final LettuceRedisClient client) {
 		super(client);
+	}
+
+	@Override
+	public Long tsAdd(final String key, final long timestamp, final double value) {
+		final CommandArguments args = CommandArguments.create(key).add(timestamp).add(value);
+		return executeCommand(Command.TS_ADD, args);
+	}
+
+	@Override
+	public Long tsAdd(final byte[] key, final long timestamp, final double value) {
+		final CommandArguments args = CommandArguments.create(key).add(timestamp).add(value);
+		return executeCommand(Command.TS_ADD, args);
+	}
+
+	@Override
+	public Long tsAdd(final String key, final long timestamp, final double value, final AddArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add(timestamp).add(value).add(argument);
+		return executeCommand(Command.TS_ADD, args);
+	}
+
+	@Override
+	public Long tsAdd(final byte[] key, final long timestamp, final double value, final AddArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add(timestamp).add(value).add(argument);
+		return executeCommand(Command.TS_ADD, args);
+	}
+
+	@Override
+	public Status tsAlert(final String key, final AlertArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add(argument);
+		return executeCommand(Command.TS_ALTER, args);
+	}
+
+	@Override
+	public Status tsAlert(final byte[] key, final AlertArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add(argument);
+		return executeCommand(Command.TS_ALTER, args);
+	}
+
+	@Override
+	public Status tsCreate(final String key) {
+		final CommandArguments args = CommandArguments.create(key);
+		return executeCommand(Command.TS_CREATE, args);
+	}
+
+	@Override
+	public Status tsCreate(final byte[] key) {
+		final CommandArguments args = CommandArguments.create(key);
+		return executeCommand(Command.TS_CREATE, args);
+	}
+
+	@Override
+	public Status tsCreate(final String key, final CreateArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add(argument);
+		return executeCommand(Command.TS_CREATE, args);
+	}
+
+	@Override
+	public Status tsCreate(final byte[] key, final CreateArgument argument) {
+		final CommandArguments args = CommandArguments.create(key).add(argument);
+		return executeCommand(Command.TS_CREATE, args);
+	}
+
+	@Override
+	public Status tsCreateRule(final String sourceKey, final String destKey, final AggregationType aggregationType,
+							   final long timeBucket) {
+		final CommandArguments args = CommandArguments.create(destKey, sourceKey).add("AGGREGATION", aggregationType)
+				.add(timeBucket);
+		return executeCommand(Command.TS_CREATERULE, args);
+	}
+
+	@Override
+	public Status tsCreateRule(final byte[] sourceKey, final byte[] destKey, final AggregationType aggregationType,
+							   final long timeBucket) {
+		final CommandArguments args = CommandArguments.create(destKey, sourceKey).add("AGGREGATION", aggregationType)
+				.add(timeBucket);
+		return executeCommand(Command.TS_CREATERULE, args);
+	}
+
+	@Override
+	public Status tsCreateRule(final String sourceKey, final String destKey, final AggregationType aggregationType,
+							   final long timeBucket, final long alignTimestamp) {
+		final CommandArguments args = CommandArguments.create(destKey, sourceKey).add("AGGREGATION", aggregationType)
+				.add(timeBucket, alignTimestamp);
+		return executeCommand(Command.TS_CREATERULE, args);
+	}
+
+	@Override
+	public Status tsCreateRule(final byte[] sourceKey, final byte[] destKey, final AggregationType aggregationType,
+							   final long timeBucket, final long alignTimestamp) {
+		final CommandArguments args = CommandArguments.create(destKey, sourceKey).add("AGGREGATION", aggregationType)
+				.add(timeBucket, alignTimestamp);
+		return executeCommand(Command.TS_CREATERULE, args);
 	}
 
 }

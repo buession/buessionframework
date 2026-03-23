@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.redis.core.command.args.TrackingArgument;
+import com.buession.redis.core.command.args.connection.TrackingArgument;
 import io.lettuce.core.TrackingArgs;
 
 import java.util.Optional;

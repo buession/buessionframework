@@ -27,10 +27,10 @@ package com.buession.redis.core.operations;
 import com.buession.core.type.TypeReference;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
-import com.buession.redis.core.Direction;
-import com.buession.redis.core.ListPosition;
+import com.buession.redis.core.command.args.list.Direction;
+import com.buession.redis.core.command.args.list.Position;
 import com.buession.redis.core.command.ListCommands;
-import com.buession.redis.core.command.args.LPosArgument;
+import com.buession.redis.core.command.args.list.LPosArgument;
 
 import java.util.List;
 
@@ -714,12 +714,12 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	<V> V lIndex(final byte[] key, final long index, final TypeReference<V> type);
 
 	@Override
-	default Long lInsert(final String key, final ListPosition position, final String pivot, final String value) {
+	default Long lInsert(final String key, final Position position, final String pivot, final String value) {
 		return execute((client)->client.listCommands().lInsert(key, position, pivot, value));
 	}
 
 	@Override
-	default Long lInsert(final byte[] key, final ListPosition position, final byte[] pivot, final byte[] value) {
+	default Long lInsert(final byte[] key, final Position position, final byte[] pivot, final byte[] value) {
 		return execute((client)->client.listCommands().lInsert(key, position, pivot, value));
 	}
 
@@ -742,7 +742,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * @return 执行成功，返回插入操作完成之后，列表的长度；
 	 * 如果没有找到 pivot ，返回 -1 ；如果 key 不存在或为空列表，返回 0 。
 	 */
-	<V> Long lInsert(final String key, final ListPosition position, final V pivot, final V value);
+	<V> Long lInsert(final String key, final Position position, final V pivot, final V value);
 
 	/**
 	 * 将值 value 序列化后，插入到列表 key 当中，位于值 pivot 之前或之后
@@ -763,7 +763,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * @return 执行成功，返回插入操作完成之后，列表的长度；
 	 * 如果没有找到 pivot ，返回 -1 ；如果 key 不存在或为空列表，返回 0 。
 	 */
-	<V> Long lInsert(final byte[] key, final ListPosition position, final V pivot, final V value);
+	<V> Long lInsert(final byte[] key, final Position position, final V pivot, final V value);
 
 	@Override
 	default Long lLen(final String key) {

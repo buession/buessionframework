@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.redis.core.command.args.XClaimArgument;
+import com.buession.redis.core.command.args.stream.XClaimArgument;
 import redis.clients.jedis.params.XClaimParams;
 
 import java.util.Optional;

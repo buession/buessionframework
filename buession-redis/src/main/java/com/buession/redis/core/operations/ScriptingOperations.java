@@ -25,11 +25,11 @@
 package com.buession.redis.core.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.core.FlushMode;
-import com.buession.redis.core.FunctionRestoreMode;
+import com.buession.redis.core.command.args.FlushMode;
+import com.buession.redis.core.command.args.scripting.FunctionRestoreMode;
 import com.buession.redis.core.FunctionStats;
 import com.buession.redis.core.LibraryInfo;
-import com.buession.redis.core.ScriptDebugMode;
+import com.buession.redis.core.command.args.scripting.DebugMode;
 import com.buession.redis.core.command.ScriptingCommands;
 
 import java.util.List;
@@ -319,7 +319,7 @@ public interface ScriptingOperations extends ScriptingCommands, RedisOperations 
 	}
 
 	@Override
-	default Object scriptDebug(final ScriptDebugMode mode) {
+	default Object scriptDebug(final DebugMode mode) {
 		return execute((client)->client.scriptingCommands().scriptDebug(mode));
 	}
 

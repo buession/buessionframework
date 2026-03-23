@@ -27,13 +27,13 @@ package com.buession.redis.core.operations;
 import com.buession.core.type.TypeReference;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
-import com.buession.redis.core.DelExType;
+import com.buession.redis.core.command.args.string.DelExType;
 import com.buession.redis.core.LcsResult;
 import com.buession.redis.core.command.StringCommands;
 import com.buession.redis.core.command.args.GetExArgument;
-import com.buession.redis.core.command.args.LcsArgument;
-import com.buession.redis.core.command.args.MSetExArgument;
-import com.buession.redis.core.command.args.SetArgument;
+import com.buession.redis.core.command.args.string.LcsArgument;
+import com.buession.redis.core.command.args.string.MSetExArgument;
+import com.buession.redis.core.command.args.string.SetArgument;
 
 import java.util.List;
 

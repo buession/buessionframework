@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.redis.core.command.args.CFInsertArgument;
+import com.buession.redis.core.command.args.cuckoofilter.CFInsertArgument;
 import redis.clients.jedis.bloom.CFInsertParams;
 
 import java.util.Optional;

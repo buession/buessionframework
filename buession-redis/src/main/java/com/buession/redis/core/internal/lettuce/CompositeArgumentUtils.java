@@ -25,7 +25,7 @@
 package com.buession.redis.core.internal.lettuce;
 
 import com.buession.core.collect.Arrays;
-import com.buession.redis.core.Direction;
+import com.buession.redis.core.command.args.list.Direction;
 import com.buession.redis.core.StreamEntryId;
 import io.lettuce.core.LMPopArgs;
 import io.lettuce.core.LMoveArgs;

@@ -27,15 +27,15 @@ package com.buession.redis.client.jedis.command;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
-import com.buession.redis.core.Direction;
+import com.buession.redis.core.command.args.list.Direction;
 import com.buession.redis.core.Keyword;
-import com.buession.redis.core.ListPosition;
+import com.buession.redis.core.command.args.list.Position;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ListCommands;
-import com.buession.redis.core.command.args.LPosArgument;
+import com.buession.redis.core.command.args.list.LPosArgument;
 import com.buession.redis.core.internal.convert.jedis.params.DirectionConverter;
-import com.buession.redis.core.internal.convert.jedis.params.ListPositionConverter;
+import com.buession.redis.core.internal.convert.jedis.params.PositionConverter;
 import com.buession.redis.core.internal.convert.jedis.response.KeyValueConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.jedis.args.JedisLPosParams;
@@ -164,19 +164,19 @@ public final class JedisListCommands extends AbstractJedisRedisCommands implemen
 	}
 
 	@Override
-	public Long lInsert(final String key, final ListPosition position, final String pivot, final String value) {
+	public Long lInsert(final String key, final Position position, final String pivot, final String value) {
 		final CommandArguments args = CommandArguments.create(key).add(position).add(pivot).add(value);
-		final ListPositionConverter listPositionConverter = new ListPositionConverter();
+		final PositionConverter positionConverter = new PositionConverter();
 		return executeCommand(Command.LINSERT, args,
-				(cmd)->cmd.linsert(rawKey(key), listPositionConverter.convert(position), pivot, value));
+				(cmd)->cmd.linsert(rawKey(key), positionConverter.convert(position), pivot, value));
 	}
 
 	@Override
-	public Long lInsert(final byte[] key, final ListPosition position, final byte[] pivot, final byte[] value) {
+	public Long lInsert(final byte[] key, final Position position, final byte[] pivot, final byte[] value) {
 		final CommandArguments args = CommandArguments.create(key).add(position).add(pivot).add(value);
-		final ListPositionConverter listPositionConverter = new ListPositionConverter();
+		final PositionConverter positionConverter = new PositionConverter();
 		return executeCommand(Command.LINSERT, args,
-				(cmd)->cmd.linsert(rawKey(key), listPositionConverter.convert(position), pivot, value));
+				(cmd)->cmd.linsert(rawKey(key), positionConverter.convert(position), pivot, value));
 	}
 
 	@Override

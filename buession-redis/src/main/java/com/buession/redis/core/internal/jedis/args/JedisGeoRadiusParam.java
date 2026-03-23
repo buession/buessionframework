@@ -25,10 +25,8 @@
 package com.buession.redis.core.internal.jedis.args;
 
 import com.buession.lang.Order;
-import com.buession.redis.core.command.args.GeoRadiusArgument;
+import com.buession.redis.core.command.args.geo.GeoRadiusArgument;
 import redis.clients.jedis.params.GeoRadiusParam;
-
-import java.util.Optional;
 
 /**
  * Jedis {@link GeoRadiusParam} 扩展

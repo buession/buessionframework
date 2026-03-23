@@ -29,13 +29,13 @@ import com.buession.lang.KeyValue;
 import com.buession.lang.Order;
 import com.buession.lang.Status;
 import com.buession.redis.core.BumpEpoch;
-import com.buession.redis.core.ClusterFailoverOption;
+import com.buession.redis.core.command.args.cluster.FailoverOption;
 import com.buession.redis.core.ClusterInfo;
 import com.buession.redis.core.ClusterLink;
-import com.buession.redis.core.ClusterMigrationOp;
+import com.buession.redis.core.command.args.cluster.MigrationOp;
 import com.buession.redis.core.ClusterRedisNode;
-import com.buession.redis.core.ClusterResetOption;
-import com.buession.redis.core.ClusterSetSlotOption;
+import com.buession.redis.core.command.args.cluster.ResetOption;
+import com.buession.redis.core.command.args.cluster.SetSlotOption;
 import com.buession.redis.core.ClusterShardInfo;
 import com.buession.redis.core.ClusterSlot;
 import com.buession.redis.core.ClusterSlotStat;
@@ -168,7 +168,7 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @return 该命令已被接受并进行人工故障转移，返回 Status.SUCCESS；切换操作无法执行，返回 Status.FAILURE
 	 */
-	Status clusterFailover(final ClusterFailoverOption option);
+	Status clusterFailover(final FailoverOption option);
 
 	/**
 	 * Deletes all slots from a node
@@ -309,7 +309,7 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @return -
 	 */
-	Object clusterMigration(final ClusterMigrationOp option);
+	Object clusterMigration(final MigrationOp option);
 
 	/**
 	 * 执行原子化的哈希槽迁移操作
@@ -323,7 +323,7 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @return -
 	 */
-	Object clusterMigration(final ClusterMigrationOp option, final String id);
+	Object clusterMigration(final MigrationOp option, final String id);
 
 	/**
 	 * 执行原子化的哈希槽迁移操作
@@ -337,7 +337,7 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @return -
 	 */
-	Object clusterMigration(final ClusterMigrationOp option, final byte[] id);
+	Object clusterMigration(final MigrationOp option, final byte[] id);
 
 	/**
 	 * 返回当前节点 Id
@@ -433,7 +433,7 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	Status clusterReset(final ClusterResetOption option);
+	Status clusterReset(final ResetOption option);
 
 	/**
 	 * 强制保存配置 nodes.conf 至磁盘
@@ -466,13 +466,13 @@ public interface ClusterCommands extends RedisCommands {
 	 * @param slot
 	 * 		hash slot
 	 * @param option
-	 * 		命令选项 {@link ClusterSetSlotOption}
+	 * 		命令选项 {@link SetSlotOption}
 	 * @param nodeId
 	 * 		节点 Id
 	 *
 	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	Status clusterSetSlot(final int slot, final ClusterSetSlotOption option, final String nodeId);
+	Status clusterSetSlot(final int slot, final SetSlotOption option, final String nodeId);
 
 	/**
 	 * 根据如下子命令选项，修改接受节点中哈希槽的状态
@@ -482,13 +482,13 @@ public interface ClusterCommands extends RedisCommands {
 	 * @param slot
 	 * 		hash slot
 	 * @param option
-	 * 		命令选项 {@link ClusterSetSlotOption}
+	 * 		命令选项 {@link SetSlotOption}
 	 * @param nodeId
 	 * 		节点 Id
 	 *
 	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	Status clusterSetSlot(final int slot, final ClusterSetSlotOption option, final byte[] nodeId);
+	Status clusterSetSlot(final int slot, final SetSlotOption option, final byte[] nodeId);
 
 	/**
 	 * 返回整个 Redis Cluster 的节点和槽分布信息

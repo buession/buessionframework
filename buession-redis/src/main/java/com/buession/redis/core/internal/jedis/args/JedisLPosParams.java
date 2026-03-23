@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.redis.core.command.args.LPosArgument;
+import com.buession.redis.core.command.args.list.LPosArgument;
 import redis.clients.jedis.params.LPosParams;
 
 import java.util.Optional;

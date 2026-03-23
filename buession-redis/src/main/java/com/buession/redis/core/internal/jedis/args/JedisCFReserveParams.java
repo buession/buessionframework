@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.redis.core.command.args.CFReserveArgument;
+import com.buession.redis.core.command.args.cuckoofilter.CFReserveArgument;
 import redis.clients.jedis.bloom.CFReserveParams;
 
 import java.util.Optional;
