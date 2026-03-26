@@ -32,7 +32,7 @@ import com.buession.redis.utils.ArgStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class DecrByArgument extends BaseTsAACArgument {
+public class IncrByArgument extends BaseTsAACArgument {
 
 	private Long timestamp;
 
@@ -43,7 +43,7 @@ public class DecrByArgument extends BaseTsAACArgument {
 	/**
 	 * 构造函数
 	 */
-	public DecrByArgument() {
+	public IncrByArgument() {
 		super();
 	}
 
@@ -51,7 +51,7 @@ public class DecrByArgument extends BaseTsAACArgument {
 		return timestamp;
 	}
 
-	public DecrByArgument setTimestamp(long timestamp) {
+	public IncrByArgument setTimestamp(long timestamp) {
 		this.timestamp = timestamp;
 		return this;
 	}
@@ -60,7 +60,7 @@ public class DecrByArgument extends BaseTsAACArgument {
 		return encoding;
 	}
 
-	public DecrByArgument setEncoding(Encoding encoding) {
+	public IncrByArgument setEncoding(Encoding encoding) {
 		this.encoding = encoding;
 		return this;
 	}
@@ -69,7 +69,7 @@ public class DecrByArgument extends BaseTsAACArgument {
 		return ignore;
 	}
 
-	public DecrByArgument setIgnore(Ignore ignore) {
+	public IncrByArgument setIgnore(Ignore ignore) {
 		this.ignore = ignore;
 		return this;
 	}

@@ -22,9 +22,11 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command.args.timeseries;
+package com.buession.redis.core;
 
-import com.buession.redis.utils.ArgStringBuilder;
+import com.buession.redis.utils.ObjectStringBuilder;
+
+import java.util.Map;
 
 /**
  *
@@ -32,58 +34,11 @@ import com.buession.redis.utils.ArgStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class DecrByArgument extends BaseTsAACArgument {
-
-	private Long timestamp;
-
-	private Encoding encoding;
-
-	private Ignore ignore;
-
-	/**
-	 * 构造函数
-	 */
-	public DecrByArgument() {
-		super();
-	}
-
-	public Long getTimestamp() {
-		return timestamp;
-	}
-
-	public DecrByArgument setTimestamp(long timestamp) {
-		this.timestamp = timestamp;
-		return this;
-	}
-
-	public Encoding getEncoding() {
-		return encoding;
-	}
-
-	public DecrByArgument setEncoding(Encoding encoding) {
-		this.encoding = encoding;
-		return this;
-	}
-
-	public Ignore getIgnore() {
-		return ignore;
-	}
-
-	public DecrByArgument setIgnore(Ignore ignore) {
-		this.ignore = ignore;
-		return this;
-	}
+public record TimeSeriesMGetElement(String key, TimeSeriesElement value, Map<String, String> labels) {
 
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create().add("TIMESTAMP", getTimestamp())
-				.add("RETENTION", getRetention())
-				.add("ENCODING", getEncoding())
-				.add("CHUNK_SIZE", getChunkSize())
-				.add("DUPLICATE_POLICY", getDuplicatePolicy())
-				.append(getIgnore())
-				.append(getLabels())
-				.build();
+		return ObjectStringBuilder.create().append("key=").append(key()).append("element=").append(value())
+				.append("labels=").append(labels()).build();
 	}
-
 }

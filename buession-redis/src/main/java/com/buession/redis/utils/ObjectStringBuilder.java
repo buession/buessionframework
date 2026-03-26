@@ -92,9 +92,25 @@ public final class ObjectStringBuilder {
 		return this;
 	}
 
+	public ObjectStringBuilder append(final Number value) {
+		if(value != null){
+			joiner.add(value);
+		}
+
+		return this;
+	}
+
 	public ObjectStringBuilder append(final CharSequence seq) {
 		if(seq != null){
 			joiner.add(seq);
+		}
+
+		return this;
+	}
+
+	public ObjectStringBuilder append(final Object obj) {
+		if(obj != null){
+			joiner.add(obj.toString());
 		}
 
 		return this;

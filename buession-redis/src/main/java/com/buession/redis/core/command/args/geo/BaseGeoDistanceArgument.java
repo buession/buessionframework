@@ -33,7 +33,7 @@ import com.buession.redis.utils.ArgStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public abstract class BaseGeoDistanceArgument {
+abstract class BaseGeoDistanceArgument {
 
 	/**
 	 * 是否将位置元素的经度和维度也一并返回

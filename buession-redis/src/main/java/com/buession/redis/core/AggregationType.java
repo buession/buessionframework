@@ -22,9 +22,7 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command.args.timeseries;
-
-import com.buession.redis.utils.ArgStringBuilder;
+package com.buession.redis.core;
 
 /**
  *
@@ -32,58 +30,52 @@ import com.buession.redis.utils.ArgStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class DecrByArgument extends BaseTsAACArgument {
+public enum AggregationType implements Keyword {
 
-	private Long timestamp;
+	AVG,
 
-	private Encoding encoding;
+	SUM,
 
-	private Ignore ignore;
+	MIN,
 
-	/**
-	 * 构造函数
-	 */
-	public DecrByArgument() {
-		super();
+	MAX,
+
+	RANGE,
+
+	COUNT,
+
+	FIRST,
+
+	LAST,
+
+	STD_P("STD.P"),
+
+	STD_S("STD.S"),
+
+	VAR_P("VAR.P"),
+
+	VAR_S("VAR.S"),
+
+	TWA;
+
+	private final String value;
+
+	AggregationType() {
+		this.value = name();
 	}
 
-	public Long getTimestamp() {
-		return timestamp;
+	AggregationType(final String value) {
+		this.value = value;
 	}
 
-	public DecrByArgument setTimestamp(long timestamp) {
-		this.timestamp = timestamp;
-		return this;
-	}
-
-	public Encoding getEncoding() {
-		return encoding;
-	}
-
-	public DecrByArgument setEncoding(Encoding encoding) {
-		this.encoding = encoding;
-		return this;
-	}
-
-	public Ignore getIgnore() {
-		return ignore;
-	}
-
-	public DecrByArgument setIgnore(Ignore ignore) {
-		this.ignore = ignore;
-		return this;
+	@Override
+	public String getValue() {
+		return value;
 	}
 
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create().add("TIMESTAMP", getTimestamp())
-				.add("RETENTION", getRetention())
-				.add("ENCODING", getEncoding())
-				.add("CHUNK_SIZE", getChunkSize())
-				.add("DUPLICATE_POLICY", getDuplicatePolicy())
-				.append(getIgnore())
-				.append(getLabels())
-				.build();
+		return getValue();
 	}
 
 }

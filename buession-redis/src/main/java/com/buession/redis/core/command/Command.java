@@ -130,8 +130,7 @@ public enum Command implements ProtocolCommand {
 	 **/
 	ASKING(CommandGroup.CLUSTER, "r"),
 
-	CLUSTER(CommandGroup.CLUSTER, "rw", new SubCommand[]{
-			SubCommand.CLUSTER_ADDSLOTS, SubCommand.CLUSTER_ADDSLOTSRANGE,
+	CLUSTER(CommandGroup.CLUSTER, "rw", new SubCommand[]{SubCommand.CLUSTER_ADDSLOTS, SubCommand.CLUSTER_ADDSLOTSRANGE,
 			SubCommand.CLUSTER_BUMPEPOCH, SubCommand.CLUSTER_COUNTFAILUREREPORTS, SubCommand.CLUSTER_COUNTKEYSINSLOT,
 			SubCommand.CLUSTER_DELSLOTS, SubCommand.CLUSTER_DELSLOTSRANGE, SubCommand.CLUSTER_FAILOVER,
 			SubCommand.CLUSTER_FLUSHSLOTS, SubCommand.CLUSTER_FORGET, SubCommand.CLUSTER_GETKEYSINSLOT,
@@ -140,8 +139,7 @@ public enum Command implements ProtocolCommand {
 			SubCommand.CLUSTER_NODES, SubCommand.CLUSTER_REPLICAS, SubCommand.CLUSTER_REPLICATE,
 			SubCommand.CLUSTER_RESET, SubCommand.CLUSTER_SAVECONFIG, SubCommand.CLUSTER_SETCONFIGEPOCH,
 			SubCommand.CLUSTER_SETSLOT, SubCommand.CLUSTER_SHARDS, SubCommand.CLUSTER_SLAVES,
-			SubCommand.CLUSTER_SLOT_STATS, SubCommand.CLUSTER_SLOTS
-	}),
+			SubCommand.CLUSTER_SLOT_STATS, SubCommand.CLUSTER_SLOTS}),
 
 	READONLY(CommandGroup.CLUSTER, "w"),
 
@@ -174,14 +172,12 @@ public enum Command implements ProtocolCommand {
 	AUTH(CommandGroup.CONNECTION, "r"),
 
 	CLIENT(CommandGroup.CONNECTION, "rw",
-			new SubCommand[]{
-					SubCommand.CLIENT_CACHING, SubCommand.CLIENT_GETNAME, SubCommand.CLIENT_GETREDIR,
+			new SubCommand[]{SubCommand.CLIENT_CACHING, SubCommand.CLIENT_GETNAME, SubCommand.CLIENT_GETREDIR,
 					SubCommand.CLIENT_ID, SubCommand.CLIENT_INFO, SubCommand.CLIENT_KILL, SubCommand.CLIENT_LIST,
 					SubCommand.CLIENT_NO_EVICT, SubCommand.CLIENT_NO_TOUCH, SubCommand.CLIENT_PAUSE,
 					SubCommand.CLIENT_REPLY, SubCommand.CLIENT_SETINFO, SubCommand.CLIENT_SETNAME,
 					SubCommand.CLIENT_TRACKING, SubCommand.CLIENT_TRACKINGINFO, SubCommand.CLIENT_UNBLOCK,
-					SubCommand.CLIENT_UNPAUSE
-			}),
+					SubCommand.CLIENT_UNPAUSE}),
 
 	ECHO(CommandGroup.CONNECTION, "w"),
 
@@ -327,9 +323,7 @@ public enum Command implements ProtocolCommand {
 
 	JSON_CLEAR(CommandGroup.JSON, "JSON.CLEAR", "w"),
 
-	JSON_DEBUG(CommandGroup.JSON, "JSON.DEBUG", "r", new SubCommand[]{
-			SubCommand.JSON_DEBUG_MEMORY
-	}),
+	JSON_DEBUG(CommandGroup.JSON, "JSON.DEBUG", "r", new SubCommand[]{SubCommand.JSON_DEBUG_MEMORY}),
 
 	JSON_DEL(CommandGroup.JSON, "JSON.DEL", "w"),
 
@@ -389,10 +383,9 @@ public enum Command implements ProtocolCommand {
 
 	MOVE(CommandGroup.KEY, "w"),
 
-	OBJECT(CommandGroup.KEY, "rw", new SubCommand[]{
-			SubCommand.OBJECT_ENCODING, SubCommand.OBJECT_FREQ,
-			SubCommand.OBJECT_IDLETIME, SubCommand.OBJECT_REFCOUNT
-	}),
+	OBJECT(CommandGroup.KEY, "rw",
+			new SubCommand[]{SubCommand.OBJECT_ENCODING, SubCommand.OBJECT_FREQ, SubCommand.OBJECT_IDLETIME,
+					SubCommand.OBJECT_REFCOUNT}),
 
 	PERSIST(CommandGroup.KEY, "w"),
 
@@ -487,10 +480,8 @@ public enum Command implements ProtocolCommand {
 	PUBLISH(CommandGroup.PUBSUB, "w"),
 
 	PUBSUB(CommandGroup.PUBSUB, "rw",
-			new SubCommand[]{
-					SubCommand.PUBSUB_CHANNELS, SubCommand.PUBSUB_NUMPAT, SubCommand.PUBSUB_NUMSUB,
-					SubCommand.PUBSUB_SHARDCHANNELS
-			}),
+			new SubCommand[]{SubCommand.PUBSUB_CHANNELS, SubCommand.PUBSUB_NUMPAT, SubCommand.PUBSUB_NUMSUB,
+					SubCommand.PUBSUB_SHARDCHANNELS}),
 
 	PUNSUBSCRIBE(CommandGroup.PUBSUB, "w"),
 
@@ -523,16 +514,12 @@ public enum Command implements ProtocolCommand {
 	FCALL_RO(CommandGroup.SCRIPTING, "r"),
 
 	FUNCTION(CommandGroup.SCRIPTING, "rw",
-			new SubCommand[]{
-					SubCommand.FUNCTION_DELETE, SubCommand.FUNCTION_DUMP, SubCommand.FUNCTION_FLUSH,
-					SubCommand.FUNCTION_KILL, SubCommand.FUNCTION_LIST, SubCommand.FUNCTION_LOAD
-			}),
+			new SubCommand[]{SubCommand.FUNCTION_DELETE, SubCommand.FUNCTION_DUMP, SubCommand.FUNCTION_FLUSH,
+					SubCommand.FUNCTION_KILL, SubCommand.FUNCTION_LIST, SubCommand.FUNCTION_LOAD}),
 
 	SCRIPT(CommandGroup.SCRIPTING, "rw",
-			new SubCommand[]{
-					SubCommand.SCRIPT_DEBUG, SubCommand.SCRIPT_EXISTS, SubCommand.SCRIPT_FLUSH,
-					SubCommand.SCRIPT_KILL, SubCommand.SCRIPT_LOAD
-			}),
+			new SubCommand[]{SubCommand.SCRIPT_DEBUG, SubCommand.SCRIPT_EXISTS, SubCommand.SCRIPT_FLUSH,
+					SubCommand.SCRIPT_KILL, SubCommand.SCRIPT_LOAD}),
 	/**
 	 * scripting command end
 	 **/
@@ -551,21 +538,17 @@ public enum Command implements ProtocolCommand {
 	 * server command start
 	 **/
 	ACL(CommandGroup.SERVER, "rw",
-			new SubCommand[]{
-					SubCommand.ACL_CAT, SubCommand.ACL_DELUSER, SubCommand.ACL_DRYRUN, SubCommand.ACL_GENPASS,
+			new SubCommand[]{SubCommand.ACL_CAT, SubCommand.ACL_DELUSER, SubCommand.ACL_DRYRUN, SubCommand.ACL_GENPASS,
 					SubCommand.ACL_GETUSER, SubCommand.ACL_LIST, SubCommand.ACL_LOAD, SubCommand.ACL_LOG,
-					SubCommand.ACL_SAVE, SubCommand.ACL_SETUSER, SubCommand.ACL_USERS, SubCommand.ACL_WHOAMI
-			}),
+					SubCommand.ACL_SAVE, SubCommand.ACL_SETUSER, SubCommand.ACL_USERS, SubCommand.ACL_WHOAMI}),
 
 	BGREWRITEAOF(CommandGroup.SERVER, "w"),
 
 	BGSAVE(CommandGroup.SERVER, "w"),
 
 	COMMAND(CommandGroup.SERVER, "rw",
-			new SubCommand[]{
-					SubCommand.COMMAND_COUNT, SubCommand.COMMAND_DOCS, SubCommand.COMMAND_GETKEYS,
-					SubCommand.COMMAND_GETKEYSANDFLAGS, SubCommand.COMMAND_INFO, SubCommand.COMMAND_LIST
-			}),
+			new SubCommand[]{SubCommand.COMMAND_COUNT, SubCommand.COMMAND_DOCS, SubCommand.COMMAND_GETKEYS,
+					SubCommand.COMMAND_GETKEYSANDFLAGS, SubCommand.COMMAND_INFO, SubCommand.COMMAND_LIST}),
 
 	CONFIG_GET(CommandGroup.SERVER, "r"),
 
@@ -584,34 +567,26 @@ public enum Command implements ProtocolCommand {
 	FLUSHDB(CommandGroup.SERVER, "w"),
 
 	HOTKEYS(CommandGroup.SERVER, "rw",
-			new SubCommand[]{
-					SubCommand.HOTKEYS_GET, SubCommand.HOTKEYS_RESET, SubCommand.HOTKEYS_START,
-					SubCommand.HOTKEYS_STOP
-			}),
+			new SubCommand[]{SubCommand.HOTKEYS_GET, SubCommand.HOTKEYS_RESET, SubCommand.HOTKEYS_START,
+					SubCommand.HOTKEYS_STOP}),
 
 	INFO(CommandGroup.SERVER, "r"),
 
 	LASTSAVE(CommandGroup.SERVER, "r"),
 
 	LATENCY(CommandGroup.SERVER, "rw",
-			new SubCommand[]{
-					SubCommand.LATENCY_DOCTOR, SubCommand.LATENCY_GRAPH, SubCommand.LATENCY_HISTOGRAM,
-					SubCommand.LATENCY_HISTORY, SubCommand.LATENCY_LATEST, SubCommand.LATENCY_RESET
-			}),
+			new SubCommand[]{SubCommand.LATENCY_DOCTOR, SubCommand.LATENCY_GRAPH, SubCommand.LATENCY_HISTOGRAM,
+					SubCommand.LATENCY_HISTORY, SubCommand.LATENCY_LATEST, SubCommand.LATENCY_RESET}),
 
 	LOLWUT(CommandGroup.SERVER, "w"),
 
 	MEMORY(CommandGroup.SERVER, "rw",
-			new SubCommand[]{
-					SubCommand.MEMORY_DOCTOR, SubCommand.MEMORY_MALLOC_STATS, SubCommand.MEMORY_PURGE,
-					SubCommand.MEMORY_STATS, SubCommand.MEMORY_USAGE
-			}),
+			new SubCommand[]{SubCommand.MEMORY_DOCTOR, SubCommand.MEMORY_MALLOC_STATS, SubCommand.MEMORY_PURGE,
+					SubCommand.MEMORY_STATS, SubCommand.MEMORY_USAGE}),
 
 	MODULE(CommandGroup.SERVER, "rw",
-			new SubCommand[]{
-					SubCommand.MODULE_LIST, SubCommand.MODULE_LOAD, SubCommand.MODULE_LOADEX,
-					SubCommand.MODULE_UNLOAD
-			}),
+			new SubCommand[]{SubCommand.MODULE_LIST, SubCommand.MODULE_LOAD, SubCommand.MODULE_LOADEX,
+					SubCommand.MODULE_UNLOAD}),
 
 	MONITOR(CommandGroup.SERVER, "rw"),
 
@@ -632,9 +607,7 @@ public enum Command implements ProtocolCommand {
 	SLAVEOF(CommandGroup.SERVER, "w"),
 
 	SLOWLOG(CommandGroup.SERVER, "rw",
-			new SubCommand[]{
-					SubCommand.SLOWLOG_GET, SubCommand.SLOWLOG_LEN, SubCommand.SLOWLOG_RESET
-			}),
+			new SubCommand[]{SubCommand.SLOWLOG_GET, SubCommand.SLOWLOG_LEN, SubCommand.SLOWLOG_RESET}),
 
 	SWAPDB(CommandGroup.SERVER, "w"),
 
@@ -781,15 +754,11 @@ public enum Command implements ProtocolCommand {
 	XDELEX(CommandGroup.STREAM, "w"),
 
 	XGROUP(CommandGroup.STREAM, "rw",
-			new SubCommand[]{
-					SubCommand.XGROUP_CREATE, SubCommand.XGROUP_CREATECONSUMER, SubCommand.XGROUP_DELCONSUMER,
-					SubCommand.XGROUP_DESTROY, SubCommand.XGROUP_SETID
-			}),
+			new SubCommand[]{SubCommand.XGROUP_CREATE, SubCommand.XGROUP_CREATECONSUMER, SubCommand.XGROUP_DELCONSUMER,
+					SubCommand.XGROUP_DESTROY, SubCommand.XGROUP_SETID}),
 
 	XINFO(CommandGroup.STREAM, "rw",
-			new SubCommand[]{
-					SubCommand.XINFO_CONSUMERS, SubCommand.XINFO_GROUPS, SubCommand.XINFO_STREAM
-			}),
+			new SubCommand[]{SubCommand.XINFO_CONSUMERS, SubCommand.XINFO_GROUPS, SubCommand.XINFO_STREAM}),
 
 	XLEN(CommandGroup.STREAM, "r"),
 
@@ -912,6 +881,30 @@ public enum Command implements ProtocolCommand {
 	TS_CREATERULE(CommandGroup.TIME_SERIES, "TS.CREATERULE", "w"),
 
 	TS_DECRBY(CommandGroup.TIME_SERIES, "TS.DECRBY", "w"),
+
+	TS_DEL(CommandGroup.TIME_SERIES, "TS.DEL", "w"),
+
+	TS_DELETERULE(CommandGroup.TIME_SERIES, "TS.DELETERULE", "w"),
+
+	TS_GET(CommandGroup.TIME_SERIES, "TS.GET", "r"),
+
+	TS_INCRBY(CommandGroup.TIME_SERIES, "TS.INCRBY", "w"),
+
+	TS_INFO(CommandGroup.TIME_SERIES, "TS.INFO", "r"),
+
+	TS_MADD(CommandGroup.TIME_SERIES, "TS.MADD", "w"),
+
+	TS_MGET(CommandGroup.TIME_SERIES, "TS.MGET", "r"),
+
+	TS_MRANGE(CommandGroup.TIME_SERIES, "TS.MRANGE", "w"),
+
+	TS_MREVRANGE(CommandGroup.TIME_SERIES, "TS.MREVRANGE", "w"),
+
+	TS_QUERYINDEX(CommandGroup.TIME_SERIES, "TS.QUERYINDEX", "r"),
+
+	TS_RANGE(CommandGroup.TIME_SERIES, "TS.RANGE", "w"),
+
+	TS_REVRANGE(CommandGroup.TIME_SERIES, "TS.REVRANGE", "w"),
 	/**
 	 * Time Series command end
 	 **/

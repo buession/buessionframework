@@ -22,44 +22,55 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core.command.args.timeseries;
 
-import com.buession.redis.utils.SafeEncoder;
-import redis.clients.jedis.search.aggr.AggregationBuilder;
+import com.buession.redis.utils.ArgStringBuilder;
 
 /**
- * Jedis {@link AggregationBuilder} 扩展
+ *
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class JedisAggregationBuilder extends AggregationBuilder {
+public class Ignore {
 
-	/**
-	 * 构造函数
-	 */
-	public JedisAggregationBuilder() {
-		super();
+	private long maxTimediff;
+
+	private double maxValDiff;
+
+	public Ignore() {
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param query
-	 * 		Base filtering query that retrieves the documents
-	 */
-	public JedisAggregationBuilder(final String query) {
-		super(query);
+	public Ignore(final long maxTimediff, final double maxValDiff) {
+		this.maxTimediff = maxTimediff;
+		this.maxValDiff = maxValDiff;
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param query
-	 * 		Base filtering query that retrieves the documents
-	 */
-	public JedisAggregationBuilder(final byte[] query) {
-		super(SafeEncoder.encode(query));
+	public long getMaxTimediff() {
+		return maxTimediff;
+	}
+
+	public Ignore setMaxTimediff(long maxTimediff) {
+		this.maxTimediff = maxTimediff;
+		return this;
+	}
+
+	public double getMaxValDiff() {
+		return maxValDiff;
+	}
+
+	public Ignore setMaxValDiff(double maxValDiff) {
+		this.maxValDiff = maxValDiff;
+		return this;
+	}
+
+	@Override
+	public String toString() {
+		return ArgStringBuilder.create()
+				.append("IGNORE")
+				.append(getMaxTimediff())
+				.append(getMaxValDiff())
+				.build();
 	}
 
 }

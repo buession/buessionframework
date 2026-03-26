@@ -32,58 +32,71 @@ import com.buession.redis.utils.ArgStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class DecrByArgument extends BaseTsAACArgument {
+public class TSMGetAegument {
 
-	private Long timestamp;
+	private Boolean latest;
 
-	private Encoding encoding;
+	private Boolean withLabels;
 
-	private Ignore ignore;
+	private String[] selectedLabels;
 
-	/**
-	 * 构造函数
-	 */
-	public DecrByArgument() {
-		super();
+	public TSMGetAegument() {
 	}
 
-	public Long getTimestamp() {
-		return timestamp;
+	public TSMGetAegument(boolean latest, boolean withLabels, String[] selectedLabels) {
+		this.latest = latest;
+		this.withLabels = withLabels;
+		this.selectedLabels = selectedLabels;
 	}
 
-	public DecrByArgument setTimestamp(long timestamp) {
-		this.timestamp = timestamp;
+	public Boolean isLatest() {
+		return getLatest();
+	}
+
+	public Boolean getLatest() {
+		return latest;
+	}
+
+	public TSMGetAegument latest() {
+		return setLatest(true);
+	}
+
+	public TSMGetAegument setLatest(boolean latest) {
+		this.latest = latest;
 		return this;
 	}
 
-	public Encoding getEncoding() {
-		return encoding;
+	public Boolean isWithLabels() {
+		return getWithLabels();
 	}
 
-	public DecrByArgument setEncoding(Encoding encoding) {
-		this.encoding = encoding;
+	public Boolean getWithLabels() {
+		return withLabels;
+	}
+
+	public TSMGetAegument withWithLabels() {
+		return setWithLabels(true);
+	}
+
+	public TSMGetAegument setWithLabels(boolean withLabels) {
+		this.withLabels = withLabels;
 		return this;
 	}
 
-	public Ignore getIgnore() {
-		return ignore;
+	public String[] getSelectedLabels() {
+		return selectedLabels;
 	}
 
-	public DecrByArgument setIgnore(Ignore ignore) {
-		this.ignore = ignore;
+	public TSMGetAegument setSelectedLabels(String[] selectedLabels) {
+		this.selectedLabels = selectedLabels;
 		return this;
 	}
 
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create().add("TIMESTAMP", getTimestamp())
-				.add("RETENTION", getRetention())
-				.add("ENCODING", getEncoding())
-				.add("CHUNK_SIZE", getChunkSize())
-				.add("DUPLICATE_POLICY", getDuplicatePolicy())
-				.append(getIgnore())
-				.append(getLabels())
-				.build();
+		return ArgStringBuilder.create().append(Boolean.TRUE.equals(getLatest()) ? "LATEST" : null)
+				.append(Boolean.TRUE.equals(getWithLabels()) ? "WITHLABELS" : null)
+				.add("SELECTED_LABELS", getSelectedLabels()).build();
 	}
 
 }

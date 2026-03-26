@@ -22,30 +22,23 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command.args.cluster;
+package com.buession.redis.core.internal.convert.jedis.response;
 
-import com.buession.redis.core.Keyword;
+import com.buession.core.converter.Converter;
 
 /**
- * 集群合并操作
+ * Jedis {@link redis.clients.jedis.timeseries.AggregationType} 转换为 {@link com.buession.redis.core.AggregationType}
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public enum MigrationOp implements Keyword {
-
-	CANCEL,
-
-	STATUS;
+public final class AggregationTypeConverter
+		implements Converter<redis.clients.jedis.timeseries.AggregationType, com.buession.redis.core.AggregationType> {
 
 	@Override
-	public String getValue() {
-		return name();
-	}
-
-	@Override
-	public String toString() {
-		return getValue();
+	public com.buession.redis.core.AggregationType convert(
+			final redis.clients.jedis.timeseries.AggregationType source) {
+		return source == null ? null : Enum.valueOf(com.buession.redis.core.AggregationType.class, source.name());
 	}
 
 }

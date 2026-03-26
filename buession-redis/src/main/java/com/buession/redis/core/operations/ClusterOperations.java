@@ -32,7 +32,7 @@ import com.buession.redis.core.BumpEpoch;
 import com.buession.redis.core.command.args.cluster.FailoverOption;
 import com.buession.redis.core.ClusterInfo;
 import com.buession.redis.core.ClusterLink;
-import com.buession.redis.core.command.args.cluster.MigrationOp;
+import com.buession.redis.core.command.args.cluster.MigrationOperation;
 import com.buession.redis.core.ClusterRedisNode;
 import com.buession.redis.core.command.args.cluster.ResetOption;
 import com.buession.redis.core.command.args.cluster.SetSlotOption;
@@ -202,17 +202,17 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	}
 
 	@Override
-	default Object clusterMigration(final MigrationOp option) {
+	default Object clusterMigration(final MigrationOperation option) {
 		return execute((client)->client.clusterCommands().clusterMigration(option));
 	}
 
 	@Override
-	default Object clusterMigration(final MigrationOp option, final String id) {
+	default Object clusterMigration(final MigrationOperation option, final String id) {
 		return execute((client)->client.clusterCommands().clusterMigration(option, id));
 	}
 
 	@Override
-	default Object clusterMigration(final MigrationOp option, final byte[] id) {
+	default Object clusterMigration(final MigrationOperation option, final byte[] id) {
 		return execute((client)->client.clusterCommands().clusterMigration(option, id));
 	}
 

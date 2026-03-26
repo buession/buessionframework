@@ -34,7 +34,7 @@ import com.buession.redis.core.BumpEpoch;
 import com.buession.redis.core.command.args.cluster.FailoverOption;
 import com.buession.redis.core.ClusterInfo;
 import com.buession.redis.core.ClusterLink;
-import com.buession.redis.core.command.args.cluster.MigrationOp;
+import com.buession.redis.core.command.args.cluster.MigrationOperation;
 import com.buession.redis.core.ClusterRedisNode;
 import com.buession.redis.core.command.args.cluster.ResetOption;
 import com.buession.redis.core.command.args.cluster.SetSlotOption;
@@ -204,19 +204,19 @@ public final class LettuceClusterCommands extends AbstractLettuceRedisCommands i
 	}
 
 	@Override
-	public Object clusterMigration(final MigrationOp option) {
+	public Object clusterMigration(final MigrationOperation option) {
 		final CommandArguments args = CommandArguments.create(option).add(Keyword.Common.ALL);
 		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_MIGRATION, args);
 	}
 
 	@Override
-	public Object clusterMigration(final MigrationOp option, final String id) {
+	public Object clusterMigration(final MigrationOperation option, final String id) {
 		final CommandArguments args = CommandArguments.create(option).add("ID", id);
 		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_MIGRATION, args);
 	}
 
 	@Override
-	public Object clusterMigration(final MigrationOp option, final byte[] id) {
+	public Object clusterMigration(final MigrationOperation option, final byte[] id) {
 		final CommandArguments args = CommandArguments.create(option).add("ID", id);
 		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_MIGRATION, args);
 	}

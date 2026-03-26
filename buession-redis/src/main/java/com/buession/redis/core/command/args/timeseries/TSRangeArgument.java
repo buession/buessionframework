@@ -32,58 +32,65 @@ import com.buession.redis.utils.ArgStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class DecrByArgument extends BaseTsAACArgument {
+public class TSRangeArgument {
 
-	private Long timestamp;
+	private Boolean latest;
 
-	private Encoding encoding;
+	private long[] filterByTimestamps;
 
-	private Ignore ignore;
+	private MinMax filterByValues;
 
-	/**
-	 * 构造函数
-	 */
-	public DecrByArgument() {
-		super();
+	private Aggregation aggregation;
+
+	public Boolean isLatest() {
+		return getLatest();
 	}
 
-	public Long getTimestamp() {
-		return timestamp;
+	public Boolean getLatest() {
+		return latest;
 	}
 
-	public DecrByArgument setTimestamp(long timestamp) {
-		this.timestamp = timestamp;
+	public TSRangeArgument latest() {
+		return setLatest(true);
+	}
+
+	public TSRangeArgument setLatest(Boolean latest) {
+		this.latest = latest;
 		return this;
 	}
 
-	public Encoding getEncoding() {
-		return encoding;
+	public long[] getFilterByTimestamps() {
+		return filterByTimestamps;
 	}
 
-	public DecrByArgument setEncoding(Encoding encoding) {
-		this.encoding = encoding;
+	public TSRangeArgument setFilterByTimestamps(long[] filterByTimestamps) {
+		this.filterByTimestamps = filterByTimestamps;
 		return this;
 	}
 
-	public Ignore getIgnore() {
-		return ignore;
+	public MinMax getFilterByValues() {
+		return filterByValues;
 	}
 
-	public DecrByArgument setIgnore(Ignore ignore) {
-		this.ignore = ignore;
+	public TSRangeArgument setFilterByValues(MinMax filterByValues) {
+		this.filterByValues = filterByValues;
+		return this;
+	}
+
+	public Aggregation getAggregation() {
+		return aggregation;
+	}
+
+	public TSRangeArgument setAggregation(Aggregation aggregation) {
+		this.aggregation = aggregation;
 		return this;
 	}
 
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create().add("TIMESTAMP", getTimestamp())
-				.add("RETENTION", getRetention())
-				.add("ENCODING", getEncoding())
-				.add("CHUNK_SIZE", getChunkSize())
-				.add("DUPLICATE_POLICY", getDuplicatePolicy())
-				.append(getIgnore())
-				.append(getLabels())
-				.build();
+		return ArgStringBuilder.create().append(Boolean.TRUE.equals(getLatest()) ? "LATEST" : "")
+				.add("FILTER_BY_TS", getFilterByTimestamps()).add("FILTER_BY_VALUE", getFilterByValues())
+				.append(getAggregation()).build();
 	}
 
 }

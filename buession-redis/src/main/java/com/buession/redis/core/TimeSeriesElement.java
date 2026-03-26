@@ -22,67 +22,46 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command.args.timeseries;
+package com.buession.redis.core;
 
-import com.buession.redis.utils.ArgStringBuilder;
+import com.buession.redis.utils.ObjectStringBuilder;
 
 /**
+ * 时间序列数据
  *
+ * @param timestamp
+ * 		时间戳
+ * @param value
+ * 		值
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class DecrByArgument extends BaseTsAACArgument {
+public record TimeSeriesElement(long timestamp, double value) {
 
-	private Long timestamp;
-
-	private Encoding encoding;
-
-	private Ignore ignore;
-
-	/**
-	 * 构造函数
-	 */
-	public DecrByArgument() {
-		super();
+	@Override
+	public int hashCode() {
+		return 31 * Long.hashCode(timestamp) + Long.hashCode(Double.doubleToLongBits(value));
 	}
 
-	public Long getTimestamp() {
-		return timestamp;
-	}
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == this){
+			return true;
+		}
 
-	public DecrByArgument setTimestamp(long timestamp) {
-		this.timestamp = timestamp;
-		return this;
-	}
+		if(obj instanceof TimeSeriesElement other){
+			return this.timestamp == other.timestamp && this.value == other.value;
+		}
 
-	public Encoding getEncoding() {
-		return encoding;
-	}
-
-	public DecrByArgument setEncoding(Encoding encoding) {
-		this.encoding = encoding;
-		return this;
-	}
-
-	public Ignore getIgnore() {
-		return ignore;
-	}
-
-	public DecrByArgument setIgnore(Ignore ignore) {
-		this.ignore = ignore;
-		return this;
+		return false;
 	}
 
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create().add("TIMESTAMP", getTimestamp())
-				.add("RETENTION", getRetention())
-				.add("ENCODING", getEncoding())
-				.add("CHUNK_SIZE", getChunkSize())
-				.add("DUPLICATE_POLICY", getDuplicatePolicy())
-				.append(getIgnore())
-				.append(getLabels())
+		return ObjectStringBuilder.create()
+				.append("timestamp=").append(timestamp())
+				.append("value=").append(value())
 				.build();
 	}
 

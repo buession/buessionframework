@@ -25,7 +25,7 @@
 package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.args.timeseries.AggregationType;
+import com.buession.redis.core.AggregationType;
 
 /**
  * {@link AggregationType} 转换为 jedis {@link redis.clients.jedis.timeseries.AggregationType}
@@ -34,10 +34,12 @@ import com.buession.redis.core.command.args.timeseries.AggregationType;
  * @since 4.0.0
  */
 public final class AggregationTypeConverter
-		implements Converter<AggregationType, redis.clients.jedis.timeseries.AggregationType> {
+		implements
+		Converter<AggregationType, redis.clients.jedis.timeseries.AggregationType> {
 
 	@Override
-	public redis.clients.jedis.timeseries.AggregationType convert(final AggregationType source) {
+	public redis.clients.jedis.timeseries.AggregationType convert(
+			final AggregationType source) {
 		return source == null ? null : Enum.valueOf(redis.clients.jedis.timeseries.AggregationType.class,
 				source.name());
 	}

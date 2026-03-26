@@ -32,58 +32,28 @@ import com.buession.redis.utils.ArgStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class DecrByArgument extends BaseTsAACArgument {
+public class MinMax {
 
-	private Long timestamp;
+	private final double min;
 
-	private Encoding encoding;
+	private final double max;
 
-	private Ignore ignore;
-
-	/**
-	 * 构造函数
-	 */
-	public DecrByArgument() {
-		super();
+	public MinMax(final double min, final double max) {
+		this.min = min;
+		this.max = max;
 	}
 
-	public Long getTimestamp() {
-		return timestamp;
+	public double getMin() {
+		return min;
 	}
 
-	public DecrByArgument setTimestamp(long timestamp) {
-		this.timestamp = timestamp;
-		return this;
-	}
-
-	public Encoding getEncoding() {
-		return encoding;
-	}
-
-	public DecrByArgument setEncoding(Encoding encoding) {
-		this.encoding = encoding;
-		return this;
-	}
-
-	public Ignore getIgnore() {
-		return ignore;
-	}
-
-	public DecrByArgument setIgnore(Ignore ignore) {
-		this.ignore = ignore;
-		return this;
+	public double getMax() {
+		return max;
 	}
 
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create().add("TIMESTAMP", getTimestamp())
-				.add("RETENTION", getRetention())
-				.add("ENCODING", getEncoding())
-				.add("CHUNK_SIZE", getChunkSize())
-				.add("DUPLICATE_POLICY", getDuplicatePolicy())
-				.append(getIgnore())
-				.append(getLabels())
-				.build();
+		return ArgStringBuilder.create().append(getMin()).append(getMax()).build();
 	}
 
 }

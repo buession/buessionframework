@@ -22,68 +22,36 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command.args.timeseries;
+package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.redis.utils.ArgStringBuilder;
+import redis.clients.jedis.timeseries.TSGetParams;
 
 /**
- *
+ * Jedis {@link TSGetParams} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class DecrByArgument extends BaseTsAACArgument {
-
-	private Long timestamp;
-
-	private Encoding encoding;
-
-	private Ignore ignore;
+public final class JedisTSGetParams extends TSGetParams {
 
 	/**
 	 * 构造函数
 	 */
-	public DecrByArgument() {
+	public JedisTSGetParams() {
 		super();
 	}
 
-	public Long getTimestamp() {
-		return timestamp;
-	}
-
-	public DecrByArgument setTimestamp(long timestamp) {
-		this.timestamp = timestamp;
-		return this;
-	}
-
-	public Encoding getEncoding() {
-		return encoding;
-	}
-
-	public DecrByArgument setEncoding(Encoding encoding) {
-		this.encoding = encoding;
-		return this;
-	}
-
-	public Ignore getIgnore() {
-		return ignore;
-	}
-
-	public DecrByArgument setIgnore(Ignore ignore) {
-		this.ignore = ignore;
-		return this;
-	}
-
-	@Override
-	public String toString() {
-		return ArgStringBuilder.create().add("TIMESTAMP", getTimestamp())
-				.add("RETENTION", getRetention())
-				.add("ENCODING", getEncoding())
-				.add("CHUNK_SIZE", getChunkSize())
-				.add("DUPLICATE_POLICY", getDuplicatePolicy())
-				.append(getIgnore())
-				.append(getLabels())
-				.build();
+	/**
+	 * 构造函数
+	 *
+	 * @param latest
+	 * 		is used when a time series is a compaction
+	 */
+	public JedisTSGetParams(final boolean latest) {
+		super();
+		if(latest){
+			latest();
+		}
 	}
 
 }

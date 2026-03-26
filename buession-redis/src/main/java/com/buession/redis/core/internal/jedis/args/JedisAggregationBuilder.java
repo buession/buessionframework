@@ -22,68 +22,44 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command.args.timeseries;
+package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.redis.utils.ArgStringBuilder;
+import com.buession.redis.utils.SafeEncoder;
+import redis.clients.jedis.search.aggr.AggregationBuilder;
 
 /**
- *
+ * Jedis {@link AggregationBuilder} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class DecrByArgument extends BaseTsAACArgument {
-
-	private Long timestamp;
-
-	private Encoding encoding;
-
-	private Ignore ignore;
+public final class JedisAggregationBuilder extends AggregationBuilder {
 
 	/**
 	 * 构造函数
 	 */
-	public DecrByArgument() {
+	public JedisAggregationBuilder() {
 		super();
 	}
 
-	public Long getTimestamp() {
-		return timestamp;
+	/**
+	 * 构造函数
+	 *
+	 * @param query
+	 * 		Base filtering query that retrieves the documents
+	 */
+	public JedisAggregationBuilder(final String query) {
+		super(query);
 	}
 
-	public DecrByArgument setTimestamp(long timestamp) {
-		this.timestamp = timestamp;
-		return this;
-	}
-
-	public Encoding getEncoding() {
-		return encoding;
-	}
-
-	public DecrByArgument setEncoding(Encoding encoding) {
-		this.encoding = encoding;
-		return this;
-	}
-
-	public Ignore getIgnore() {
-		return ignore;
-	}
-
-	public DecrByArgument setIgnore(Ignore ignore) {
-		this.ignore = ignore;
-		return this;
-	}
-
-	@Override
-	public String toString() {
-		return ArgStringBuilder.create().add("TIMESTAMP", getTimestamp())
-				.add("RETENTION", getRetention())
-				.add("ENCODING", getEncoding())
-				.add("CHUNK_SIZE", getChunkSize())
-				.add("DUPLICATE_POLICY", getDuplicatePolicy())
-				.append(getIgnore())
-				.append(getLabels())
-				.build();
+	/**
+	 * 构造函数
+	 *
+	 * @param query
+	 * 		Base filtering query that retrieves the documents
+	 */
+	public JedisAggregationBuilder(final byte[] query) {
+		super(SafeEncoder.encode(query));
 	}
 
 }

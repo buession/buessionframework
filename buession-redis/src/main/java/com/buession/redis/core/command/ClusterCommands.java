@@ -32,7 +32,7 @@ import com.buession.redis.core.BumpEpoch;
 import com.buession.redis.core.command.args.cluster.FailoverOption;
 import com.buession.redis.core.ClusterInfo;
 import com.buession.redis.core.ClusterLink;
-import com.buession.redis.core.command.args.cluster.MigrationOp;
+import com.buession.redis.core.command.args.cluster.MigrationOperation;
 import com.buession.redis.core.ClusterRedisNode;
 import com.buession.redis.core.command.args.cluster.ResetOption;
 import com.buession.redis.core.command.args.cluster.SetSlotOption;
@@ -309,7 +309,7 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @return -
 	 */
-	Object clusterMigration(final MigrationOp option);
+	Object clusterMigration(final MigrationOperation option);
 
 	/**
 	 * 执行原子化的哈希槽迁移操作
@@ -323,7 +323,7 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @return -
 	 */
-	Object clusterMigration(final MigrationOp option, final String id);
+	Object clusterMigration(final MigrationOperation option, final String id);
 
 	/**
 	 * 执行原子化的哈希槽迁移操作
@@ -337,7 +337,7 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @return -
 	 */
-	Object clusterMigration(final MigrationOp option, final byte[] id);
+	Object clusterMigration(final MigrationOperation option, final byte[] id);
 
 	/**
 	 * 返回当前节点 Id

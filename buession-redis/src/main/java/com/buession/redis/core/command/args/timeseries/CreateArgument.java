@@ -73,47 +73,4 @@ public class CreateArgument extends BaseTsAACArgument {
 				.build();
 	}
 
-	public final static class Ignore {
-
-		private long maxTimediff;
-
-		private double maxValDiff;
-
-		public Ignore() {
-		}
-
-		public Ignore(final long maxTimediff, final double maxValDiff) {
-			this.maxTimediff = maxTimediff;
-			this.maxValDiff = maxValDiff;
-		}
-
-		public long getMaxTimediff() {
-			return maxTimediff;
-		}
-
-		public Ignore setMaxTimediff(long maxTimediff) {
-			this.maxTimediff = maxTimediff;
-			return this;
-		}
-
-		public double getMaxValDiff() {
-			return maxValDiff;
-		}
-
-		public Ignore setMaxValDiff(double maxValDiff) {
-			this.maxValDiff = maxValDiff;
-			return this;
-		}
-
-		@Override
-		public String toString() {
-			return ArgStringBuilder.create()
-					.append("IGNORE")
-					.append(getMaxTimediff())
-					.append(getMaxValDiff())
-					.build();
-		}
-
-	}
-
 }

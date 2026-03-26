@@ -25,6 +25,7 @@
 package com.buession.redis.core.command.args.timeseries;
 
 import com.buession.redis.utils.ArgStringBuilder;
+import com.buession.redis.utils.SafeEncoder;
 
 /**
  *
@@ -32,58 +33,39 @@ import com.buession.redis.utils.ArgStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class DecrByArgument extends BaseTsAACArgument {
+public class TSElement {
 
-	private Long timestamp;
+	private final String key;
 
-	private Encoding encoding;
+	private final long timestamp;
 
-	private Ignore ignore;
+	private final double value;
 
-	/**
-	 * 构造函数
-	 */
-	public DecrByArgument() {
-		super();
+	public TSElement(String key, long timestamp, double value) {
+		this.key = key;
+		this.timestamp = timestamp;
+		this.value = value;
 	}
 
-	public Long getTimestamp() {
+	public TSElement(byte[] key, long timestamp, double value) {
+		this(SafeEncoder.encode(key), timestamp, value);
+	}
+
+	public String getKey() {
+		return key;
+	}
+
+	public long getTimestamp() {
 		return timestamp;
 	}
 
-	public DecrByArgument setTimestamp(long timestamp) {
-		this.timestamp = timestamp;
-		return this;
-	}
-
-	public Encoding getEncoding() {
-		return encoding;
-	}
-
-	public DecrByArgument setEncoding(Encoding encoding) {
-		this.encoding = encoding;
-		return this;
-	}
-
-	public Ignore getIgnore() {
-		return ignore;
-	}
-
-	public DecrByArgument setIgnore(Ignore ignore) {
-		this.ignore = ignore;
-		return this;
+	public double getValue() {
+		return value;
 	}
 
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create().add("TIMESTAMP", getTimestamp())
-				.add("RETENTION", getRetention())
-				.add("ENCODING", getEncoding())
-				.add("CHUNK_SIZE", getChunkSize())
-				.add("DUPLICATE_POLICY", getDuplicatePolicy())
-				.append(getIgnore())
-				.append(getLabels())
-				.build();
+		return ArgStringBuilder.create().append(getKey()).append(getTimestamp()).append(getValue()).build();
 	}
 
 }

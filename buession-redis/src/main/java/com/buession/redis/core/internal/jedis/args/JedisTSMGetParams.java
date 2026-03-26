@@ -22,62 +22,47 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command.args.timeseries;
+package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.redis.core.Keyword;
+import com.buession.redis.core.command.args.timeseries.TSMGetAegument;
+import redis.clients.jedis.timeseries.TSMGetParams;
+
+import java.util.Optional;
 
 /**
- *
+ * Jedis {@link TSMGetParams} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public enum AggregationType implements Keyword {
+public final class JedisTSMGetParams extends TSMGetParams {
 
-	AVG,
-
-	SUM,
-
-	MIN,
-
-	MAX,
-
-	RANGE,
-
-	COUNT,
-
-	FIRST,
-
-	LAST,
-
-	STD_P("STD.P"),
-
-	STD_S("STD.S"),
-
-	VAR_P("VAR.P"),
-
-	VAR_S("VAR.S"),
-
-	TWA;
-
-	private final String value;
-
-	AggregationType() {
-		this.value = name();
+	/**
+	 * 构造函数
+	 */
+	public JedisTSMGetParams() {
+		super();
 	}
 
-	AggregationType(final String value) {
-		this.value = value;
-	}
+	/**
+	 * 构造函数
+	 *
+	 * @param tsMGetAegument
+	 *        {@link TSMGetAegument}
+	 */
+	public JedisTSMGetParams(final TSMGetAegument tsMGetAegument) {
+		super();
 
-	@Override
-	public String getValue() {
-		return value;
-	}
+		if(tsMGetAegument != null){
+			if(Boolean.TRUE.equals(tsMGetAegument.getLatest())){
+				latest();
+			}
+			if(Boolean.TRUE.equals(tsMGetAegument.getWithLabels())){
+				withLabels();
+			}
 
-	@Override
-	public String toString() {
-		return getValue();
+			Optional.ofNullable(tsMGetAegument.getSelectedLabels()).ifPresent(this::selectedLabels);
+		}
 	}
 
 }

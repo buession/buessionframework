@@ -22,68 +22,31 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command.args.timeseries;
+package com.buession.redis.core.internal.convert.jedis.response;
 
-import com.buession.redis.utils.ArgStringBuilder;
+import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
+import com.buession.redis.core.TimeSeriesMRangeElement;
+import redis.clients.jedis.timeseries.TSMRangeElements;
 
 /**
- *
+ * Jedis {@link TSMRangeElements} 转换为 {@link TimeSeriesMRangeElement}
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class DecrByArgument extends BaseTsAACArgument {
-
-	private Long timestamp;
-
-	private Encoding encoding;
-
-	private Ignore ignore;
-
-	/**
-	 * 构造函数
-	 */
-	public DecrByArgument() {
-		super();
-	}
-
-	public Long getTimestamp() {
-		return timestamp;
-	}
-
-	public DecrByArgument setTimestamp(long timestamp) {
-		this.timestamp = timestamp;
-		return this;
-	}
-
-	public Encoding getEncoding() {
-		return encoding;
-	}
-
-	public DecrByArgument setEncoding(Encoding encoding) {
-		this.encoding = encoding;
-		return this;
-	}
-
-	public Ignore getIgnore() {
-		return ignore;
-	}
-
-	public DecrByArgument setIgnore(Ignore ignore) {
-		this.ignore = ignore;
-		return this;
-	}
+public final class TSMRangeElementsConverter implements Converter<TSMRangeElements, TimeSeriesMRangeElement> {
 
 	@Override
-	public String toString() {
-		return ArgStringBuilder.create().add("TIMESTAMP", getTimestamp())
-				.add("RETENTION", getRetention())
-				.add("ENCODING", getEncoding())
-				.add("CHUNK_SIZE", getChunkSize())
-				.add("DUPLICATE_POLICY", getDuplicatePolicy())
-				.append(getIgnore())
-				.append(getLabels())
-				.build();
+	public TimeSeriesMRangeElement convert(final TSMRangeElements source) {
+		if(source == null){
+			return null;
+		}
+
+		final ListConverter<redis.clients.jedis.timeseries.AggregationType, com.buession.redis.core.AggregationType> listConverter = new ListConverter<>(
+				new AggregationTypeConverter());
+		return new TimeSeriesMRangeElement(source.getLabels(), listConverter.convert(source.getAggregators()),
+				source.getSources(), source.getReducers());
 	}
 
 }
