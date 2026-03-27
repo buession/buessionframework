@@ -44,7 +44,7 @@ public record FunctionStats(RunningScript runningscript, Map<String, Map<String,
 				.build();
 	}
 
-	public record RunningScript(String name, String command, long durationMs) {
+	public record RunningScript(String name, String command, Long durationMs) {
 
 		@Override
 		public String toString() {

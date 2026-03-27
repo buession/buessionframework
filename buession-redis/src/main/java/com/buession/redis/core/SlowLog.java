@@ -47,14 +47,14 @@ import java.util.List;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public record SlowLog(long id, long timestamp, long executionTime, List<String> args, Client client,
+public record SlowLog(Long id, Long timestamp, Long executionTime, List<String> args, Client client,
 					  String clientName) {
 
 	@Override
 	public String toString() {
-		return ObjectStringBuilder.create().add("id", id).add("timestamp", timestamp)
-				.add("executionTime", executionTime).add("args", args).add("client", client)
-				.add("clientName", clientName).build();
+		return ObjectStringBuilder.create().add("id", id()).add("timestamp", timestamp())
+				.add("executionTime", executionTime()).add("args", args()).add("client", client())
+				.add("clientName", clientName()).build();
 	}
 
 }

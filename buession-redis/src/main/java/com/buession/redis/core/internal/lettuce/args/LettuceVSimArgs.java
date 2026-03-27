@@ -21,10 +21,75 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.lettuce.args;/**
- * 
+ */
+package com.buession.redis.core.internal.lettuce.args;
+
+import com.buession.redis.core.command.args.vectorset.VSimArgument;
+import io.lettuce.core.VSimArgs;
+
+import java.util.Optional;
+
+/**
+ * Lettuce {@link VSimArgs} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
- */public class LettuceVSimArgs {
+ */
+public final class LettuceVSimArgs extends VSimArgs {
+
+	/**
+	 * 构造函数
+	 */
+	public LettuceVSimArgs() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param vSimArgument
+	 *        {@link VSimArgument}
+	 */
+	public LettuceVSimArgs(final VSimArgument vSimArgument) {
+		super();
+
+		if(vSimArgument != null){
+			Optional.ofNullable(vSimArgument.getEpsilon()).ifPresent(this::epsilon);
+			Optional.ofNullable(vSimArgument.getEf()).map(Integer::longValue).ifPresent(this::explorationFactor);
+			Optional.ofNullable(vSimArgument.getFilter()).ifPresent(this::filter);
+			Optional.ofNullable(vSimArgument.getFilterEf()).map(Integer::longValue).ifPresent(this::filterEfficiency);
+
+			if(Boolean.TRUE.equals(vSimArgument.getTruth())){
+				truth();
+			}
+			if(Boolean.TRUE.equals(vSimArgument.getNoThread())){
+				noThread();
+			}
+		}
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param vSimArgument
+	 *        {@link VSimArgument}
+	 * @param count
+	 * 		数量
+	 */
+	public LettuceVSimArgs(final VSimArgument vSimArgument, final int count) {
+		this(vSimArgument);
+		count((long) count);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param count
+	 * 		数量
+	 */
+	public LettuceVSimArgs(final int count) {
+		super();
+		count((long) count);
+	}
+
 }

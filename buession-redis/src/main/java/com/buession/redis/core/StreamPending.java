@@ -32,7 +32,7 @@ import com.buession.redis.utils.ObjectStringBuilder;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public record StreamPending(StreamEntryId id, String consumerName, long idleTime, long deliveredTimes) {
+public record StreamPending(StreamEntryId id, String consumerName, Long idleTime, Long deliveredTimes) {
 
 	@Override
 	public String toString() {

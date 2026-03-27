@@ -43,7 +43,7 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public record StreamGroup(String name, long consumers, long pending, StreamEntryId lastDeliveredId,
+public record StreamGroup(String name, Long consumers, Long pending, StreamEntryId lastDeliveredId,
 						  Map<String, Object> infos) {
 
 	@Override

@@ -21,10 +21,27 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core;/**
- * 
+ */
+package com.buession.redis.core;
+
+import com.buession.redis.utils.ObjectStringBuilder;
+
+/**
+ *
  *
  * @author Yong.Teng
  * @since 4.0.0
- */public record RawVector() {
+ */
+public record RawVector(Quantization quantization, byte[] rawData, Double norm, Double quantizationRange) {
+
+	@Override
+	public String toString() {
+		return ObjectStringBuilder.create()
+				.add("quantization", quantization())
+				.addIfAbsent("rawData", rawData())
+				.addIfAbsent("norm", norm())
+				.addIfAbsent("quantizationRange", quantizationRange())
+				.build();
+	}
+
 }

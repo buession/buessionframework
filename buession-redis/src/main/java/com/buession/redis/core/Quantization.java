@@ -21,10 +21,30 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core;/**
- * 
+ */
+package com.buession.redis.core;
+
+/**
+ *
  *
  * @author Yong.Teng
  * @since 4.0.0
- */public enum Quantization {
+ */
+public enum Quantization implements Keyword {
+	BIN,
+
+	NOQUANT,
+
+	Q8;
+
+	@Override
+	public String getValue() {
+		return name();
+	}
+
+	@Override
+	public String toString() {
+		return getValue();
+	}
+
 }

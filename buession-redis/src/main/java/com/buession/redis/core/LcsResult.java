@@ -32,19 +32,19 @@ import java.util.List;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public record LcsResult(String matchString, List<MatchedPosition> matches, long len) {
+public record LcsResult(String matchString, List<MatchedPosition> matches, Long len) {
 
 	/**
 	 * Match position in each string.
 	 */
-	public record MatchedPosition(Position a, Position b, long matchLen) {
+	public record MatchedPosition(Position a, Position b, Long matchLen) {
 
 	}
 
 	/**
 	 * Position range.
 	 */
-	public record Position(long start, long end) {
+	public record Position(Long start, Long end) {
 
 	}
 

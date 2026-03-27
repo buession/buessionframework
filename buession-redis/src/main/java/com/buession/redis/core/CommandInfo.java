@@ -34,17 +34,19 @@ import java.util.List;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public record CommandInfo(String summary,
+public record CommandInfo(
+		String summary,
 
-						  String since,
+		String since,
 
-						  CommandGroup group,
+		CommandGroup group,
 
-						  String complexity,
+		String complexity,
 
-						  List<History> history,
+		List<History> history,
 
-						  List<Argument> arguments) {
+		List<Argument> arguments
+) {
 
 	public record History(String version, String commont) {
 

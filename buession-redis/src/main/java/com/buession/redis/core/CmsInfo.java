@@ -32,7 +32,7 @@ import com.buession.redis.utils.ObjectStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public record CmsInfo(int width, int depth, int count) {
+public record CmsInfo(Integer width, Integer depth, Integer count) {
 
 	@Override
 	public String toString() {

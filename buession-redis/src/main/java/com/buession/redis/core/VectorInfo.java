@@ -21,10 +21,25 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core;/**
- * 
+ */
+package com.buession.redis.core;
+
+import com.buession.redis.utils.ObjectStringBuilder;
+
+/**
+ * <code>VINFO</code> 命令结果
  *
  * @author Yong.Teng
  * @since 4.0.0
- */public record VectorInfo() {
+ */
+public record VectorInfo(Quantization quantType, Long vectorDim, Long size, Integer maxLevel, Integer vsetUid,
+						 Integer hnswMaxNodeUid) {
+
+	@Override
+	public String toString() {
+		return ObjectStringBuilder.create().add("quant-type", quantType()).addIfAbsent("vector-dim", vectorDim())
+				.addIfAbsent("size", size()).addIfAbsent("max-level", maxLevel()).addIfAbsent("vset-uid", vsetUid())
+				.addIfAbsent("hnsw-max-node-uid", hnswMaxNodeUid()).build();
+	}
+
 }

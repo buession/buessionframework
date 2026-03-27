@@ -26,7 +26,7 @@ package com.buession.redis.client.lettuce.command;
 
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.core.command.args.bitmap.BitCountOption;
-import com.buession.redis.core.BitFieldEncoding;
+import com.buession.redis.core.command.args.bitmap.BitFieldEncoding;
 import com.buession.redis.core.command.args.bitmap.BitOperation;
 import com.buession.redis.core.command.args.bitmap.BitType;
 import com.buession.redis.core.command.BitMapCommands;

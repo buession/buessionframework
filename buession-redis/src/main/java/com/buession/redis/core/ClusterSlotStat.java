@@ -33,15 +33,15 @@ import com.buession.redis.utils.ObjectStringBuilder;
  * @since 4.0.0
  */
 public record ClusterSlotStat(
-		long keyCount,
+		Long keyCount,
 
-		double cpuUsec,
+		Double cpuUsec,
 
-		long memoryBytes,
+		Long memoryBytes,
 
-		long networkBytesIn,
+		Long networkBytesIn,
 
-		long networkBytesOut
+		Long networkBytesOut
 ) {
 
 	@Override

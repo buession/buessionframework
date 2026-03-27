@@ -68,35 +68,35 @@ import com.buession.redis.utils.ObjectStringBuilder;
 public record ClusterInfo(
 		State state,
 
-		int slotsAssigned,
+		Integer slotsAssigned,
 
-		int slotsOk,
+		Integer slotsOk,
 
-		int slotsPfail,
+		Integer slotsPfail,
 
-		int slotsFail,
+		Integer slotsFail,
 
-		int knownNodes,
+		Integer knownNodes,
 
-		int size,
+		Integer size,
 
-		int currentEpoch,
+		Integer currentEpoch,
 
-		int myEpoch,
+		Integer myEpoch,
 
-		long messagesPingSent,
+		Long messagesPingSent,
 
-		long messagesPongSent,
+		Long messagesPongSent,
 
-		long messagesSent,
+		Long messagesSent,
 
-		long messagesPingReceived,
+		Long messagesPingReceived,
 
-		long messagesPongReceived,
+		Long messagesPongReceived,
 
-		long messagesMeetReceived,
+		Long messagesMeetReceived,
 
-		long messagesReceived
+		Long messagesReceived
 ) {
 
 	@Override

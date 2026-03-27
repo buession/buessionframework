@@ -76,7 +76,7 @@ public interface TopKOperations extends TopKCommands, RedisOperations {
 	/**
 	 * 按指定的增量（权重）增加 Top-K 数据结构中元素的计数 1
 	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/topk.count/ target="_blank">https://redis.io/docs/latest/commands/topk.count</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/topk.count/" target="_blank">https://redis.io/docs/latest/commands/topk.count</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -97,7 +97,7 @@ public interface TopKOperations extends TopKCommands, RedisOperations {
 	/**
 	 * 按指定的增量（权重）增加 Top-K 数据结构中元素的计数 1
 	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/topk.incrby/ target="_blank">https://redis.io/docs/latest/commands/topk.incrby/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/topk.incrby/" target="_blank">https://redis.io/docs/latest/commands/topk.incrby/</a></p>
 	 *
 	 * @param key
 	 * 		Key

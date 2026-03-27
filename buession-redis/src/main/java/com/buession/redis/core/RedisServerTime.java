@@ -32,7 +32,7 @@ import java.util.Objects;
 /**
  * @author Yong.Teng
  */
-public record RedisServerTime(Date date, long usec) {
+public record RedisServerTime(Date date, Long usec) {
 
 	@Override
 	public boolean equals(Object obj) {
@@ -41,7 +41,7 @@ public record RedisServerTime(Date date, long usec) {
 		}
 
 		if(obj instanceof RedisServerTime that){
-			return usec == that.usec && Objects.equals(date, that.date);
+			return Objects.equals(usec, that.usec) && Objects.equals(date, that.date);
 		}
 
 		return false;
@@ -50,8 +50,8 @@ public record RedisServerTime(Date date, long usec) {
 	@Override
 	public String toString() {
 		return ObjectStringBuilder.create()
-				.add("date", date)
-				.add("usec", usec)
+				.add("date", date())
+				.add("usec", usec())
 				.build();
 	}
 

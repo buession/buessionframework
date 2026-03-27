@@ -24,7 +24,6 @@
  */
 package com.buession.redis.core.command.args.bitmap;
 
-import com.buession.redis.core.BitFieldEncoding;
 import com.buession.redis.core.Keyword;
 import com.buession.redis.utils.ArgStringBuilder;
 

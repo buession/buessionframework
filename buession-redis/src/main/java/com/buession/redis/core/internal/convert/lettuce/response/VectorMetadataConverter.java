@@ -22,29 +22,30 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.response;
+package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.Quantization;
+import com.buession.redis.core.VectorInfo;
+import io.lettuce.core.vector.VectorMetadata;
 
 /**
- * Jedis {@link redis.clients.jedis.resps.VectorInfo} 转换为 {@link com.buession.redis.core.VectorInfo}
+ * Lettuce {@link VectorMetadata} 转换为 {@link VectorInfo}
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class VectorInfoConverter
-		implements Converter<redis.clients.jedis.resps.VectorInfo, com.buession.redis.core.VectorInfo> {
+public final class VectorMetadataConverter implements Converter<VectorMetadata, VectorInfo> {
 
 	@Override
-	public com.buession.redis.core.VectorInfo convert(final redis.clients.jedis.resps.VectorInfo source) {
+	public VectorInfo convert(final VectorMetadata source) {
 		if(source == null){
 			return null;
 		}
 
-		final Quantization quantType = Enum.valueOf(Quantization.class, source.getType());
-		return new com.buession.redis.core.VectorInfo(quantType, source.getDimensionality(), source.getSize(),
-				source.getMaxLevel().intValue(), source.getVSetUid().intValue(), source.getMaxNodeUid().intValue());
+		final QuantizationTypeConverter quantizationTypeConverter = new QuantizationTypeConverter();
+		return new com.buession.redis.core.VectorInfo(quantizationTypeConverter.convert(source.getType()),
+				source.getDimensionality().longValue(), source.getSize().longValue(), source.getMaxLevel(),
+				source.getvSetUid(), source.getMaxNodeUid());
 	}
 
 }

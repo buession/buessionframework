@@ -37,7 +37,7 @@ import com.buession.redis.utils.ObjectStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public record TimeSeriesElement(long timestamp, double value) {
+public record TimeSeriesElement(Long timestamp, Double value) {
 
 	@Override
 	public int hashCode() {

@@ -35,9 +35,9 @@ import java.util.Map;
  * @since 2.0.0
  */
 public record AclLog(
-		long entryId,
+		Long entryId,
 
-		long count,
+		Long count,
 
 		String reason,
 
@@ -51,9 +51,9 @@ public record AclLog(
 
 		Client clientInfo,
 
-		long timestampCreated,
+		Long timestampCreated,
 
-		long timestampLastUpdated,
+		Long timestampLastUpdated,
 
 		Map<String, Object> logEntry
 ) {

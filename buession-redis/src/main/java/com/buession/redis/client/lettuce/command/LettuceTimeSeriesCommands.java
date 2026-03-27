@@ -305,30 +305,32 @@ public final class LettuceTimeSeriesCommands extends AbstractLettuceRedisCommand
 	@Override
 	public Map<String, TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 														 final String... filters) {
-		final CommandArguments args = CommandArguments.create(fromTimestamp, toTimestamp).add("FILTER").add(filters);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+				.add(filters);
 		return executeCommand(Command.TS_MRANGE, args);
 	}
 
 	@Override
 	public Map<byte[], TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 														 final byte[]... filters) {
-		final CommandArguments args = CommandArguments.create(fromTimestamp, toTimestamp).add("FILTER").add(filters);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+				.add(filters);
 		return executeCommand(Command.TS_MRANGE, args);
 	}
 
 	@Override
 	public Map<String, TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 														 final TSMRangeArgument argument, final String... filters) {
-		final CommandArguments args =
-				CommandArguments.create(fromTimestamp, toTimestamp).add("FILTER").add(filters).add(argument);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+				.add(filters).add(argument);
 		return executeCommand(Command.TS_MRANGE, args);
 	}
 
 	@Override
 	public Map<byte[], TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 														 final TSMRangeArgument argument, final byte[]... filters) {
-		final CommandArguments args =
-				CommandArguments.create(fromTimestamp, toTimestamp).add("FILTER").add(filters).add(argument);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+				.add(filters).add(argument);
 		return executeCommand(Command.TS_MRANGE, args);
 	}
 
@@ -336,8 +338,8 @@ public final class LettuceTimeSeriesCommands extends AbstractLettuceRedisCommand
 	public Map<String, TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 														 final TSMRangeArgument argument, final int count,
 														 final String... filters) {
-		final CommandArguments args = CommandArguments.create(fromTimestamp, toTimestamp).add("FILTER").add(filters)
-				.add(argument).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+				.add(filters).add(argument).add(Keyword.Common.COUNT, count);
 		return executeCommand(Command.TS_MRANGE, args);
 	}
 
@@ -345,54 +347,56 @@ public final class LettuceTimeSeriesCommands extends AbstractLettuceRedisCommand
 	public Map<byte[], TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 														 final TSMRangeArgument argument, final int count,
 														 final byte[]... filters) {
-		final CommandArguments args = CommandArguments.create(fromTimestamp, toTimestamp).add("FILTER").add(filters)
-				.add(argument).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+				.add(filters).add(argument).add(Keyword.Common.COUNT, count);
 		return executeCommand(Command.TS_MRANGE, args);
 	}
 
 	@Override
 	public Map<String, TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 														 final int count, final String... filters) {
-		final CommandArguments args = CommandArguments.create(fromTimestamp, toTimestamp).add("FILTER").add(filters)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+				.add(filters).add(Keyword.Common.COUNT, count);
 		return executeCommand(Command.TS_MRANGE, args);
 	}
 
 	@Override
 	public Map<byte[], TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 														 final int count, final byte[]... filters) {
-		final CommandArguments args = CommandArguments.create(fromTimestamp, toTimestamp).add("FILTER").add(filters)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+				.add(filters).add(Keyword.Common.COUNT, count);
 		return executeCommand(Command.TS_MRANGE, args);
 	}
 
 	@Override
 	public Map<String, TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 															final String... filters) {
-		final CommandArguments args = CommandArguments.create(fromTimestamp, toTimestamp).add("FILTER").add(filters);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+				.add(filters);
 		return executeCommand(Command.TS_MREVRANGE, args);
 	}
 
 	@Override
 	public Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 															final byte[]... filters) {
-		final CommandArguments args = CommandArguments.create(fromTimestamp, toTimestamp).add("FILTER").add(filters);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+				.add(filters);
 		return executeCommand(Command.TS_MREVRANGE, args);
 	}
 
 	@Override
 	public Map<String, TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 															final TSMRangeArgument argument, final String... filters) {
-		final CommandArguments args =
-				CommandArguments.create(fromTimestamp, toTimestamp).add("FILTER").add(filters).add(argument);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+				.add(filters).add(argument);
 		return executeCommand(Command.TS_MREVRANGE, args);
 	}
 
 	@Override
 	public Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 															final TSMRangeArgument argument, final byte[]... filters) {
-		final CommandArguments args =
-				CommandArguments.create(fromTimestamp, toTimestamp).add("FILTER").add(filters).add(argument);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+				.add(filters).add(argument);
 		return executeCommand(Command.TS_MREVRANGE, args);
 	}
 
@@ -400,8 +404,8 @@ public final class LettuceTimeSeriesCommands extends AbstractLettuceRedisCommand
 	public Map<String, TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 															final TSMRangeArgument argument, final int count,
 															final String... filters) {
-		final CommandArguments args = CommandArguments.create(fromTimestamp, toTimestamp).add("FILTER").add(filters)
-				.add(argument).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+				.add(filters).add(argument).add(Keyword.Common.COUNT, count);
 		return executeCommand(Command.TS_MREVRANGE, args);
 	}
 
@@ -409,24 +413,24 @@ public final class LettuceTimeSeriesCommands extends AbstractLettuceRedisCommand
 	public Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 															final TSMRangeArgument argument, final int count,
 															final byte[]... filters) {
-		final CommandArguments args = CommandArguments.create(fromTimestamp, toTimestamp).add("FILTER").add(filters)
-				.add(argument).add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+				.add(filters).add(argument).add(Keyword.Common.COUNT, count);
 		return executeCommand(Command.TS_MREVRANGE, args);
 	}
 
 	@Override
 	public Map<String, TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 															final int count, final String... filters) {
-		final CommandArguments args = CommandArguments.create(fromTimestamp, toTimestamp).add("FILTER").add(filters)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+				.add(filters).add(Keyword.Common.COUNT, count);
 		return executeCommand(Command.TS_MREVRANGE, args);
 	}
 
 	@Override
 	public Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 															final int count, final byte[]... filters) {
-		final CommandArguments args = CommandArguments.create(fromTimestamp, toTimestamp).add("FILTER").add(filters)
-				.add(Keyword.Common.COUNT, count);
+		final CommandArguments args = CommandArguments.create().add(fromTimestamp, toTimestamp).add("FILTER")
+				.add(filters).add(Keyword.Common.COUNT, count);
 		return executeCommand(Command.TS_MREVRANGE, args);
 	}
 

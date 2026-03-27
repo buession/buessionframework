@@ -21,10 +21,30 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.convert.jedis.response;/**
- * 
+ */
+package com.buession.redis.core.internal.convert.jedis.response;
+
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.Quantization;
+
+/**
+ * Jedis {@link redis.clients.jedis.resps.VectorInfo} 转换为 {@link com.buession.redis.core.VectorInfo}
  *
  * @author Yong.Teng
  * @since 4.0.0
- */public class VectorInfoConverter {
+ */
+public final class VectorInfoConverter
+		implements Converter<redis.clients.jedis.resps.VectorInfo, com.buession.redis.core.VectorInfo> {
+
+	@Override
+	public com.buession.redis.core.VectorInfo convert(final redis.clients.jedis.resps.VectorInfo source) {
+		if(source == null){
+			return null;
+		}
+
+		final Quantization quantType = Enum.valueOf(Quantization.class, source.getType());
+		return new com.buession.redis.core.VectorInfo(quantType, source.getDimensionality(), source.getSize(),
+				source.getMaxLevel().intValue(), source.getVSetUid().intValue(), source.getMaxNodeUid().intValue());
+	}
+
 }

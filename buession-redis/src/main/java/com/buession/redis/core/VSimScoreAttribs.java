@@ -21,10 +21,22 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core;/**
- * 
+ */
+package com.buession.redis.core;
+
+import com.buession.redis.utils.ObjectStringBuilder;
+
+/**
+ *
  *
  * @author Yong.Teng
  * @since 4.0.0
- */public record VSimScoreAttribs() {
+ */
+public record VSimScoreAttribs(Double score, String attributes) {
+
+	@Override
+	public String toString() {
+		return ObjectStringBuilder.create().add("score", score()).add("attributes", attributes()).build();
+	}
+
 }

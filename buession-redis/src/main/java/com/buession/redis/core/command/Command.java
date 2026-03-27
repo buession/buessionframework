@@ -940,9 +940,41 @@ public enum Command implements ProtocolCommand {
 
 	UNWATCH(CommandGroup.TRANSACTION, "w"),
 
-	WATCH(CommandGroup.TRANSACTION, "w");
+	WATCH(CommandGroup.TRANSACTION, "w"),
 	/**
 	 * transaction command end
+	 **/
+
+	/**
+	 * Vector Set command start
+	 **/
+	VADD(CommandGroup.VECTOR_SET, "w"),
+
+	VCARD(CommandGroup.VECTOR_SET, "r"),
+
+	VDIM(CommandGroup.VECTOR_SET, "r"),
+
+	VEMB(CommandGroup.VECTOR_SET, "r"),
+
+	VGETATTR(CommandGroup.VECTOR_SET, "r"),
+
+	VINFO(CommandGroup.VECTOR_SET, "r"),
+
+	VISMEMBER(CommandGroup.VECTOR_SET, "r"),
+
+	VLINKS(CommandGroup.VECTOR_SET, "r"),
+
+	VRANDMEMBER(CommandGroup.VECTOR_SET, "r"),
+
+	VRANGE(CommandGroup.VECTOR_SET, "r"),
+
+	VREM(CommandGroup.VECTOR_SET, "w"),
+
+	VSETATTR(CommandGroup.VECTOR_SET, "w"),
+
+	VSIM(CommandGroup.VECTOR_SET, "r");
+	/**
+	 * Vector Set command end
 	 **/
 
 	/**

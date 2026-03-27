@@ -21,10 +21,32 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.convert.lettuce.response;/**
- * 
+ */
+package com.buession.redis.core.internal.convert.lettuce.response;
+
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.Quantization;
+import io.lettuce.core.vector.QuantizationType;
+
+/**
+ * Lettuce {@link QuantizationType} 转换为 {@link Quantization}
  *
  * @author Yong.Teng
  * @since 4.0.0
- */public class QuantizationTypeConverter {
+ */
+public final class QuantizationTypeConverter implements Converter<QuantizationType, Quantization> {
+
+	@Override
+	public Quantization convert(final QuantizationType source) {
+		if(source == QuantizationType.BINARY){
+			return Quantization.BIN;
+		}else if(source == QuantizationType.NO_QUANTIZATION){
+			return Quantization.NOQUANT;
+		}else if(source == QuantizationType.Q8){
+			return Quantization.Q8;
+		}else{
+			return null;
+		}
+	}
+
 }

@@ -41,7 +41,7 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public record StreamConsumer(String name, long idle, long pending, Map<String, Object> infos) {
+public record StreamConsumer(String name, Long idle, Long pending, Map<String, Object> infos) {
 
 	@Override
 	public String toString() {

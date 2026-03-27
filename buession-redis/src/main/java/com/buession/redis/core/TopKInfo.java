@@ -41,6 +41,6 @@ package com.buession.redis.core;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public record TopKInfo(int k, int size, int width, int depth, double decay) {
+public record TopKInfo(Integer k, Integer size, Integer width, Integer depth, Double decay) {
 
 }

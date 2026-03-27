@@ -45,7 +45,7 @@ public record ClusterShardInfo(IntegerRange slots, List<ClusterShardNode> nodes)
 	public record ClusterShardNode(
 			String id,
 
-			int port,
+			Integer port,
 
 			String ip,
 
@@ -53,7 +53,7 @@ public record ClusterShardInfo(IntegerRange slots, List<ClusterShardNode> nodes)
 
 			ClusterRole role,
 
-			int replicationOffset,
+			Integer replicationOffset,
 
 			ClusterHealth health
 	) {

@@ -40,7 +40,7 @@ import java.util.Objects;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public record Module(String name, int version) {
+public record Module(String name, Integer version) {
 
 	@Override
 	public int hashCode() {
@@ -54,7 +54,7 @@ public record Module(String name, int version) {
 		}
 
 		if(obj instanceof Module that){
-			return Objects.equals(name, that.name) && version == that.version;
+			return Objects.equals(name, that.name) && Objects.equals(version, that.version);
 		}
 
 		return false;
@@ -63,8 +63,8 @@ public record Module(String name, int version) {
 	@Override
 	public String toString() {
 		return ObjectStringBuilder.create()
-				.add("name", name)
-				.add("version", version)
+				.add("name", name())
+				.add("version", version())
 				.build();
 	}
 

@@ -24,68 +24,49 @@
  */
 package com.buession.redis.core.command.args.vectorset;
 
-import com.buession.redis.core.Quantization;
 import com.buession.redis.utils.ArgStringBuilder;
 import com.buession.redis.utils.SafeEncoder;
 
 /**
- *
+ * <code>VSIM</code> 命令参数
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class VAddArgument {
+public class VSimArgument {
 
-	private Integer reduce;
+	private EleFp32Values eleFp32Values;
 
-	private Fp32Values fp32Values;
-
-	private Boolean cas;
-
-	private Quantization quantization;
+	private Double epsilon;
 
 	private Integer ef;
 
-	private String setattr;
+	private String filter;
 
-	private Integer m;
+	private Integer filterEf;
 
-	public VAddArgument() {
+	private Boolean truth;
+
+	private Boolean noThread;
+
+	public VSimArgument() {
 	}
 
-	public Integer getReduce() {
-		return reduce;
+	public EleFp32Values getEleFp32Values() {
+		return eleFp32Values;
 	}
 
-	public VAddArgument setReduce(int reduce) {
-		this.reduce = reduce;
+	public VSimArgument setEleFp32Values(EleFp32Values eleFp32Values) {
+		this.eleFp32Values = eleFp32Values;
 		return this;
 	}
 
-	public Fp32Values getFp32Values() {
-		return fp32Values;
+	public Double getEpsilon() {
+		return epsilon;
 	}
 
-	public VAddArgument setFp32Values(Fp32Values fp32Values) {
-		this.fp32Values = fp32Values;
-		return this;
-	}
-
-	public Boolean getCas() {
-		return cas;
-	}
-
-	public VAddArgument setCas(boolean cas) {
-		this.cas = cas;
-		return this;
-	}
-
-	public Quantization getQuantization() {
-		return quantization;
-	}
-
-	public VAddArgument setQuantization(Quantization quantization) {
-		this.quantization = quantization;
+	public VSimArgument setEpsilon(Double epsilon) {
+		this.epsilon = epsilon;
 		return this;
 	}
 
@@ -93,45 +74,89 @@ public class VAddArgument {
 		return ef;
 	}
 
-	public VAddArgument setEf(int ef) {
+	public VSimArgument setEf(int ef) {
 		this.ef = ef;
 		return this;
 	}
 
-	public String getSetattr() {
-		return setattr;
+	public String getFilter() {
+		return filter;
 	}
 
-	public VAddArgument setSetattr(String setattr) {
-		this.setattr = setattr;
+	public VSimArgument setFilter(String filter) {
+		this.filter = filter;
 		return this;
 	}
 
-	public VAddArgument setSetattr(byte[] setattr) {
-		return setSetattr(SafeEncoder.encode(setattr));
+	public VSimArgument setFilter(byte[] filter) {
+		return setFilter(SafeEncoder.encode(filter));
 	}
 
-	public Integer getM() {
-		return m;
+	public Integer getFilterEf() {
+		return filterEf;
 	}
 
-	public VAddArgument setM(int m) {
-		this.m = m;
+	public VSimArgument setFilterEf(int filterEf) {
+		this.filterEf = filterEf;
+		return this;
+	}
+
+	public Boolean isTruth() {
+		return getTruth();
+	}
+
+	public Boolean getTruth() {
+		return truth;
+	}
+
+	public VSimArgument truth() {
+		return setTruth(true);
+	}
+
+	public VSimArgument setTruth(boolean truth) {
+		this.truth = truth;
+		return this;
+	}
+
+	public Boolean isNoThread() {
+		return getNoThread();
+	}
+
+	public Boolean getNoThread() {
+		return noThread;
+	}
+
+	public VSimArgument noThread() {
+		return setNoThread(true);
+	}
+
+	public VSimArgument setNoThread(boolean noThread) {
+		this.noThread = noThread;
 		return this;
 	}
 
 	@Override
 	public String toString() {
-		return ArgStringBuilder.create().add("REDUCE", getReduce()).append(getFp32Values())
-				.append(Boolean.TRUE.equals(getCas()) ? "CAS" : null).append(getQuantization()).add("EF", getEf())
-				.add("SETATTR", getSetattr()).add("M", getM()).build();
+		return ArgStringBuilder.create().append(getEleFp32Values()).add("EPSILON", getEpsilon()).add("EF", getEf())
+				.add("FILTER", getFilter()).add("FILTER-EF", getFilterEf())
+				.append(Boolean.TRUE.equals(getTruth()) ? "TRUTH" : null)
+				.append(Boolean.TRUE.equals(getNoThread()) ? "NOTHREAD" : null).build();
 	}
 
-	public interface Fp32Values {
+	public interface EleFp32Values {
 
 	}
 
-	public final static class Fp32 implements Fp32Values {
+	public final static class Ele implements EleFp32Values {
+
+		@Override
+		public String toString() {
+			return "ELE";
+		}
+
+	}
+
+	public final static class Fp32 implements EleFp32Values {
 
 		@Override
 		public String toString() {
@@ -140,7 +165,7 @@ public class VAddArgument {
 
 	}
 
-	public final static class Values implements Fp32Values {
+	public final static class Values implements EleFp32Values {
 
 		private Integer num;
 

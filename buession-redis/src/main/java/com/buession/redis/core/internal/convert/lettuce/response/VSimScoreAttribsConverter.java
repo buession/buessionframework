@@ -21,10 +21,24 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.convert.lettuce.response;/**
- * 
+ */
+package com.buession.redis.core.internal.convert.lettuce.response;
+
+import com.buession.core.converter.Converter;
+
+/**
+ * Lettuce {@link io.lettuce.core.vector.VSimScoreAttribs} 转换为 {@link com.buession.redis.core.VSimScoreAttribs}
  *
  * @author Yong.Teng
  * @since 4.0.0
- */public class VSimScoreAttribsConverter {
+ */
+public final class VSimScoreAttribsConverter
+		implements Converter<io.lettuce.core.vector.VSimScoreAttribs, com.buession.redis.core.VSimScoreAttribs> {
+
+	@Override
+	public com.buession.redis.core.VSimScoreAttribs convert(final io.lettuce.core.vector.VSimScoreAttribs source) {
+		return source == null ? null : new com.buession.redis.core.VSimScoreAttribs(source.getScore(),
+				source.getAttributes());
+	}
+
 }

@@ -32,8 +32,9 @@ import com.buession.redis.utils.ObjectStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public record TdigestInfo(int compression, int capacity, int mergedNodes, int unmergedNodes, int mergedWeight,
-						  int unmergedWeight, int observations, int totalCompressions, int memoryUsage) {
+public record TdigestInfo(Integer compression, Integer capacity, Integer mergedNodes, Integer unmergedNodes,
+						  Integer mergedWeight, Integer unmergedWeight, Integer observations, Integer totalCompressions,
+						  Integer memoryUsage) {
 
 	@Override
 	public String toString() {

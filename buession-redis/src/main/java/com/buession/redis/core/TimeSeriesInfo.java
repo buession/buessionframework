@@ -68,10 +68,10 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public record TimeSeriesInfo(String sourceKey, String keySelfName, int totalSamples, long memoryUsage,
-							 long firstTimestamp, long lastTimestamp, int retentionTime, int chunkCount, int chunkSize,
-							 ChunkType chunkType, DuplicatePolicy duplicatePolicy, Map<String, String> labels,
-							 List<Rule> rules, List<Chunk> chunks) {
+public record TimeSeriesInfo(String sourceKey, String keySelfName, Integer totalSamples, Long memoryUsage,
+							 Long firstTimestamp, Long lastTimestamp, Integer retentionTime, Integer chunkCount,
+							 Integer chunkSize, ChunkType chunkType, DuplicatePolicy duplicatePolicy,
+							 Map<String, String> labels, List<Rule> rules, List<Chunk> chunks) {
 
 	public enum ChunkType implements Keyword {
 
@@ -91,7 +91,7 @@ public record TimeSeriesInfo(String sourceKey, String keySelfName, int totalSamp
 
 	}
 
-	public record Rule(String compactionKey, int bucketDuration, String aggregator, int alignment) {
+	public record Rule(String compactionKey, Integer bucketDuration, String aggregator, Integer alignment) {
 
 
 	}
@@ -109,7 +109,7 @@ public record TimeSeriesInfo(String sourceKey, String keySelfName, int totalSamp
 	 * @param bytesPerSample
 	 * 		Ratio of size and samples
 	 */
-	public record Chunk(long startTimestamp, long endTimestamp, int samples, int size, double bytesPerSample) {
+	public record Chunk(Long startTimestamp, Long endTimestamp, Integer samples, Integer size, Double bytesPerSample) {
 
 
 	}

@@ -21,10 +21,75 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.jedis.args;/**
- * 
+ */
+package com.buession.redis.core.internal.jedis.args;
+
+import com.buession.redis.core.command.args.vectorset.VSimArgument;
+import redis.clients.jedis.params.VSimParams;
+
+import java.util.Optional;
+
+/**
+ * Jedis {@link VSimParams} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
- */public class JedisVSimParams {
+ */
+public final class JedisVSimParams extends VSimParams {
+
+	/**
+	 * 构造函数
+	 */
+	public JedisVSimParams() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param vSimArgument
+	 *        {@link VSimArgument}
+	 */
+	public JedisVSimParams(final VSimArgument vSimArgument) {
+		super();
+
+		if(vSimArgument != null){
+			Optional.ofNullable(vSimArgument.getEpsilon()).ifPresent(this::epsilon);
+			Optional.ofNullable(vSimArgument.getEf()).ifPresent(this::ef);
+			Optional.ofNullable(vSimArgument.getFilter()).ifPresent(this::filter);
+			Optional.ofNullable(vSimArgument.getFilterEf()).ifPresent(this::filterEf);
+
+			if(Boolean.TRUE.equals(vSimArgument.getTruth())){
+				truth();
+			}
+			if(Boolean.TRUE.equals(vSimArgument.getNoThread())){
+				noThread();
+			}
+		}
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param vSimArgument
+	 *        {@link VSimArgument}
+	 * @param count
+	 * 		数量
+	 */
+	public JedisVSimParams(final VSimArgument vSimArgument, final int count) {
+		this(vSimArgument);
+		count(count);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param count
+	 * 		数量
+	 */
+	public JedisVSimParams(final int count) {
+		super();
+		count(count);
+	}
+
 }

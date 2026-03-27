@@ -28,4 +28,4 @@
  * @author Yong.Teng
  * @since 4.0.0
  */
-package com.buession.redis.core.command.args.timeseries;
+package com.buession.redis.core.command.args.vectorset;

@@ -30,6 +30,6 @@ package com.buession.redis.core;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public record AggregationResult(long totalResults) {
+public record AggregationResult(Long totalResults) {
 
 }

@@ -55,13 +55,13 @@ import java.util.Map;
  * @since 2.0.0
  */
 public record StreamFull<K, V>(
-		long length,
+		Long length,
 
 		List<StreamFull.Group> groups,
 
-		long radixTreeKeys,
+		Long radixTreeKeys,
 
-		long radixTreeNodes,
+		Long radixTreeNodes,
 
 		StreamEntryId lastGeneratedId,
 

@@ -56,13 +56,13 @@ import java.util.Map;
  * @since 2.0.0
  */
 public record Stream<K, V>(
-		long length,
+		Long length,
 
-		long groups,
+		Long groups,
 
-		long radixTreeKeys,
+		Long radixTreeKeys,
 
-		long radixTreeNodes,
+		Long radixTreeNodes,
 
 		StreamEntryId lastGeneratedId,
 
