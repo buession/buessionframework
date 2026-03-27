@@ -910,6 +910,26 @@ public enum Command implements ProtocolCommand {
 	 **/
 
 	/**
+	 * Top-K command start
+	 **/
+	TOPK_ADD(CommandGroup.TOP_K, "TOPK.ADD", "w"),
+
+	TOPK_COUNT(CommandGroup.TOP_K, "TOPK.COUNT", "r"),
+
+	TOPK_INCRBY(CommandGroup.TOP_K, "TOPK.INCRBY", "w"),
+
+	TOPK_INFO(CommandGroup.TOP_K, "TOPK.INFO", "r"),
+
+	TOPK_LIST(CommandGroup.TOP_K, "TOPK.LIST", "r"),
+
+	TOPK_QUERY(CommandGroup.TOP_K, "TOPK.QUERY", "r"),
+
+	TOPK_RESERVE(CommandGroup.TOP_K, "TOPK.RESERVE", "w"),
+	/**
+	 * Top-K command end
+	 **/
+
+	/**
 	 * transaction command start
 	 **/
 	DISCARD(CommandGroup.TRANSACTION, "w"),
