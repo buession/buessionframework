@@ -54,30 +54,18 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public record StreamFull<K, V>(
-		Long length,
-
-		List<StreamFull.Group> groups,
-
-		Long radixTreeKeys,
-
-		Long radixTreeNodes,
-
-		StreamEntryId lastGeneratedId,
-
-		Map<String, Object> infos,
-
-		List<StreamEntry<K, V>> entries
-) {
+public record StreamFull<K, V>(Long length, List<StreamFull.Group> groups, Long radixTreeKeys,
+							   Long radixTreeNodes, StreamEntryId lastGeneratedId, Map<String, Object> infos,
+							   List<StreamEntry<K, V>> entries) {
 
 	@Override
 	public String toString() {
 		return ObjectStringBuilder.create()
 				.add("length", length)
 				.add("groups", groups)
-				.add("radixTreeKeys", radixTreeKeys)
-				.add("radixTreeNodes", radixTreeNodes)
-				.add("lastGeneratedId", lastGeneratedId)
+				.add("radix tree keys", radixTreeKeys)
+				.add("radix tree nodes", radixTreeNodes)
+				.add("last generated id", lastGeneratedId)
 				.add("entries", entries)
 				.add("infos", infos)
 				.build();
@@ -86,19 +74,8 @@ public record StreamFull<K, V>(
 	/**
 	 * @since 2.0.1
 	 */
-	public record Group(
-			String name,
-
-			List<StreamConsumerFull> consumers,
-
-			List<List<Object>> pending,
-
-			Long pelCount,
-
-			StreamEntryId lastDeliveredId,
-
-			Map<String, Object> infos
-	) {
+	public record Group(String name, List<StreamConsumerFull> consumers, List<List<Object>> pending, Long pelCount,
+						StreamEntryId lastDeliveredId, Map<String, Object> infos) {
 
 		@Override
 		public String toString() {
@@ -106,8 +83,8 @@ public record StreamFull<K, V>(
 					.add("name", name)
 					.add("consumers", consumers)
 					.add("pending", pending)
-					.add("pelCount", pelCount)
-					.add("lastDeliveredId", lastDeliveredId)
+					.add("pel count", pelCount)
+					.add("last delivered id", lastDeliveredId)
 					.add("infos", infos)
 					.build();
 		}

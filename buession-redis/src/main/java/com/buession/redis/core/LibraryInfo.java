@@ -24,6 +24,8 @@
  */
 package com.buession.redis.core;
 
+import com.buession.redis.utils.ObjectStringBuilder;
+
 import java.util.List;
 import java.util.Map;
 
@@ -43,5 +45,15 @@ import java.util.Map;
  * @since 4.0.0
  */
 public record LibraryInfo(String libraryName, String engineName, String code, List<Map<String, Object>> functions) {
+
+	@Override
+	public String toString() {
+		return ObjectStringBuilder.create()
+				.add("library name", libraryName)
+				.add("engine name", engineName)
+				.add("code", code)
+				.add("functions", functions)
+				.build();
+	}
 
 }

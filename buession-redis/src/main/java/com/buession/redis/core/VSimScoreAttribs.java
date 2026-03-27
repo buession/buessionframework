@@ -36,7 +36,7 @@ public record VSimScoreAttribs(Double score, String attributes) {
 
 	@Override
 	public String toString() {
-		return ObjectStringBuilder.create().add("score", score()).add("attributes", attributes()).build();
+		return ObjectStringBuilder.create().add("score", score).add("attributes", attributes).build();
 	}
 
 }

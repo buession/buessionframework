@@ -50,8 +50,8 @@ public record RedisServerTime(Date date, Long usec) {
 	@Override
 	public String toString() {
 		return ObjectStringBuilder.create()
-				.add("date", date())
-				.add("usec", usec())
+				.add("date", date)
+				.add("usec", usec)
 				.build();
 	}
 

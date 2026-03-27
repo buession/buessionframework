@@ -55,23 +55,9 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public record Stream<K, V>(
-		Long length,
-
-		Long groups,
-
-		Long radixTreeKeys,
-
-		Long radixTreeNodes,
-
-		StreamEntryId lastGeneratedId,
-
-		StreamEntry<K, V> firstEntry,
-
-		StreamEntry<K, V> lastEntry,
-
-		Map<String, Object> infos
-) {
+public record Stream<K, V>(Long length, Long groups, Long radixTreeKeys, Long radixTreeNodes,
+						   StreamEntryId lastGeneratedId, StreamEntry<K, V> firstEntry, StreamEntry<K, V> lastEntry,
+						   Map<String, Object> infos) {
 
 	@Override
 	public String toString() {

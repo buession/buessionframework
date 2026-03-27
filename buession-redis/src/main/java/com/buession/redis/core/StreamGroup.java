@@ -52,7 +52,7 @@ public record StreamGroup(String name, Long consumers, Long pending, StreamEntry
 				.add("name", name)
 				.add("consumers", consumers)
 				.add("pending", pending)
-				.add("lastDeliveredId", lastDeliveredId)
+				.add("last delivered id", lastDeliveredId)
 				.add("infos", infos)
 				.build();
 	}

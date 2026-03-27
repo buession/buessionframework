@@ -25,11 +25,11 @@
 package com.buession.redis.core;
 
 import com.buession.core.utils.comparator.ByteArrayComparable;
+import com.buession.redis.utils.ObjectStringBuilder;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.StringJoiner;
 
 /**
  * @author Yong.Teng
@@ -95,10 +95,10 @@ public record Tuple(byte[] element, Double score) implements Comparable<Tuple> {
 
 	@Override
 	public String toString() {
-		return new StringJoiner(", ", "{", "}")
-				.add("element=" + SafeEncoder.encode(element))
-				.add("score=" + score)
-				.toString();
+		return ObjectStringBuilder.create()
+				.add("element", SafeEncoder.encode(element))
+				.add("score", score)
+				.build();
 	}
 
 }

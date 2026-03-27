@@ -52,9 +52,9 @@ public record SlowLog(Long id, Long timestamp, Long executionTime, List<String> 
 
 	@Override
 	public String toString() {
-		return ObjectStringBuilder.create().add("id", id()).add("timestamp", timestamp())
-				.add("executionTime", executionTime()).add("args", args()).add("client", client())
-				.add("clientName", clientName()).build();
+		return ObjectStringBuilder.create().add("id", id).add("timestamp", timestamp)
+				.add("executionTime", executionTime).add("args", args).add("client", client)
+				.add("clientName", clientName).build();
 	}
 
 }

@@ -34,29 +34,9 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public record AclLog(
-		Long entryId,
-
-		Long count,
-
-		String reason,
-
-		String context,
-
-		String object,
-
-		String username,
-
-		Double ageSeconds,
-
-		Client clientInfo,
-
-		Long timestampCreated,
-
-		Long timestampLastUpdated,
-
-		Map<String, Object> logEntry
-) {
+public record AclLog(Long entryId, Long count, String reason, String context, String object, String username,
+					 Double ageSeconds, Client clientInfo, Long timestampCreated, Long timestampLastUpdated,
+					 Map<String, Object> logEntry) {
 
 	@Override
 	public String toString() {

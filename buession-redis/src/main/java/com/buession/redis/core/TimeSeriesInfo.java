@@ -25,6 +25,7 @@
 package com.buession.redis.core;
 
 import com.buession.redis.core.command.args.timeseries.DuplicatePolicy;
+import com.buession.redis.utils.ObjectStringBuilder;
 
 import java.util.List;
 import java.util.Map;
@@ -73,6 +74,26 @@ public record TimeSeriesInfo(String sourceKey, String keySelfName, Integer total
 							 Integer chunkSize, ChunkType chunkType, DuplicatePolicy duplicatePolicy,
 							 Map<String, String> labels, List<Rule> rules, List<Chunk> chunks) {
 
+	@Override
+	public String toString() {
+		return ObjectStringBuilder.create()
+				.add("source key", sourceKey)
+				.add("key self name", keySelfName)
+				.add("total samples", totalSamples)
+				.add("memory usage", memoryUsage)
+				.add("first timestamp", firstTimestamp)
+				.add("last timestamp", lastTimestamp)
+				.add("retention time", retentionTime)
+				.add("chunk count", chunkCount)
+				.add("chunk size", chunkSize)
+				.add("chunk type", chunkType)
+				.add("duplicate policy", duplicatePolicy)
+				.add("labels", labels)
+				.add("rules", rules)
+				.add("chunks", chunks)
+				.build();
+	}
+
 	public enum ChunkType implements Keyword {
 
 		COMPRESSED,
@@ -93,6 +114,15 @@ public record TimeSeriesInfo(String sourceKey, String keySelfName, Integer total
 
 	public record Rule(String compactionKey, Integer bucketDuration, String aggregator, Integer alignment) {
 
+		@Override
+		public String toString() {
+			return ObjectStringBuilder.create()
+					.add("compaction key", compactionKey)
+					.add("bucket duration", bucketDuration)
+					.add("aggregator", aggregator)
+					.add("alignment", alignment)
+					.build();
+		}
 
 	}
 
@@ -111,6 +141,16 @@ public record TimeSeriesInfo(String sourceKey, String keySelfName, Integer total
 	 */
 	public record Chunk(Long startTimestamp, Long endTimestamp, Integer samples, Integer size, Double bytesPerSample) {
 
+		@Override
+		public String toString() {
+			return ObjectStringBuilder.create()
+					.add("start timestamp", startTimestamp)
+					.add("end timestamp", endTimestamp)
+					.add("samples", samples)
+					.add("size", size)
+					.add("bytes per sample", bytesPerSample)
+					.build();
+		}
 
 	}
 

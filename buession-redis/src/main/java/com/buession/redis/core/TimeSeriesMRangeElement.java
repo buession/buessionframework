@@ -40,7 +40,8 @@ public record TimeSeriesMRangeElement(Map<String, String> labels, List<Aggregati
 
 	@Override
 	public String toString() {
-		return ObjectStringBuilder.create().add("labels", labels()).add("aggregators", aggregators())
-				.add("sources", sources()).add("reducers", reducers()).build();
+		return ObjectStringBuilder.create().add("labels", labels).add("aggregators", aggregators)
+				.add("sources", sources).add("reducers", reducers).build();
 	}
+
 }

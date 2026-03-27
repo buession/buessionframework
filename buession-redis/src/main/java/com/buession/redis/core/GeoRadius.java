@@ -113,8 +113,8 @@ public record GeoRadius(byte[] member, Double distance, Geo geo) {
 	public String toString() {
 		return ObjectStringBuilder.create()
 				.add("member", member)
-				.addIfAbsent("distance", distance)
-				.addIfAbsent("geo", geo)
+				.add("distance", distance)
+				.add("geo", geo)
 				.build();
 	}
 

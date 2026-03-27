@@ -24,6 +24,8 @@
  */
 package com.buession.redis.core;
 
+import com.buession.redis.utils.ObjectStringBuilder;
+
 import java.util.Map;
 
 /**
@@ -83,61 +85,44 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public record MemoryStats(
-		Long dataset,
+public record MemoryStats(Long dataset, Double datasetPercentage, Long rssOverhead, Double rssOverheadRatio,
+						  Double peakPercentage, Long aofBuffer, Long keysBytesPerKey, Long allocatorAllocated,
+						  Long allocatorFragmentation, Double allocatorFragmentationRatio, Long allocatorActive,
+						  Long allocatorRss, Double allocatorRssRatio, Long allocatorResident, Long clientsNormal,
+						  Long clientsSlaves, Long fragmentation, Double fragmentationRatio, Long luaCaches,
+						  Long peakAllocated, Long totalAllocated, Long replicationBacklog, Long startupAllocated,
+						  Long overheadTotal, Long keysCount, Map<Integer, Db> dbs) {
 
-		Double datasetPercentage,
+	@Override
+	public String toString() {
+		final ObjectStringBuilder builder = ObjectStringBuilder.create().add("dataset", dataset)
+				.add("dataset percentage", datasetPercentage).add("rss overhead", rssOverhead)
+				.add("rss overhead ratio", rssOverheadRatio).add("peak percentage", peakPercentage)
+				.add("aof buffer", aofBuffer).add("keys bytes per key", keysBytesPerKey)
+				.add("allocator allocated", allocatorAllocated).add("allocator fragmentation", allocatorFragmentation)
+				.add("allocator fragmentation ratio", allocatorFragmentationRatio)
+				.add("allocator active", allocatorActive).add("allocator rss", allocatorRss)
+				.add("clients normal", clientsNormal).add("clients slaves", clientsSlaves)
+				.add("fragmentation", fragmentation).add("fragmentation ratio", fragmentationRatio)
+				.add("lua caches", luaCaches).add("peak allocated", peakAllocated)
+				.add("total allocated", totalAllocated).add("replication backlog", replicationBacklog)
+				.add("startup allocated", startupAllocated).add("overhead total", overheadTotal)
+				.add("keys count", keysCount);
 
-		Long rssOverhead,
+		for(final Map.Entry<Integer, Db> entry : dbs.entrySet()){
+			builder.add("db " + entry.getKey(), entry.getValue());
+		}
 
-		Double rssOverheadRatio,
-
-		Double peakPercentage,
-
-		Long aofBuffer,
-
-		Long keysBytesPerKey,
-
-		Long allocatorAllocated,
-
-		Long allocatorFragmentation,
-
-		Double allocatorFragmentationRatio,
-
-		Long allocatorActive,
-
-		Long allocatorRss,
-
-		Double allocatorRssRatio,
-
-		Long allocatorResident,
-
-		Long clientsNormal,
-
-		Long clientsSlaves,
-
-		Long fragmentation,
-
-		Double fragmentationRatio,
-
-		Long luaCaches,
-
-		Long peakAllocated,
-
-		Long totalAllocated,
-
-		Long replicationBacklog,
-
-		Long startupAllocated,
-
-		Long overheadTotal,
-
-		Long keysCount,
-
-		Map<Integer, Db> dbs
-) {
+		return builder.build();
+	}
 
 	public record Db(Long overheadHashTableMain, Long overheadHashTableExpires) {
+
+		@Override
+		public String toString() {
+			return ObjectStringBuilder.create().add("overhead hash table main", overheadHashTableMain)
+					.add("overhead hash table expires", overheadHashTableExpires).build();
+		}
 
 	}
 

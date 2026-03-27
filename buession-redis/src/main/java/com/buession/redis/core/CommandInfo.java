@@ -25,6 +25,7 @@
 package com.buession.redis.core;
 
 import com.buession.redis.core.command.CommandGroup;
+import com.buession.redis.utils.ObjectStringBuilder;
 
 import java.util.List;
 
@@ -34,25 +35,45 @@ import java.util.List;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public record CommandInfo(
-		String summary,
+public record CommandInfo(String summary, String since, CommandGroup group, String complexity,
+						  List<CommandDoc.History> history, List<CommandDoc.Argument> arguments) {
 
-		String since,
-
-		CommandGroup group,
-
-		String complexity,
-
-		List<History> history,
-
-		List<Argument> arguments
-) {
+	@Override
+	public String toString() {
+		return ObjectStringBuilder.create()
+				.add("summary", summary)
+				.add("since", since)
+				.add("group", group)
+				.add("complexity", complexity)
+				.add("history", history)
+				.add("arguments", arguments)
+				.build();
+	}
 
 	public record History(String version, String commont) {
+
+		@Override
+		public String toString() {
+			return ObjectStringBuilder.create()
+					.add("version", version)
+					.add("commont", commont)
+					.build();
+		}
 
 	}
 
 	public record Argument(String name, String type, String displayText, String token, String since) {
+
+		@Override
+		public String toString() {
+			return ObjectStringBuilder.create()
+					.add("name", name)
+					.add("type", type)
+					.add("display_text", displayText)
+					.add("token", token)
+					.add("since", since)
+					.build();
+		}
 
 	}
 

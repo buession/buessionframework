@@ -37,9 +37,14 @@ public record VectorInfo(Quantization quantType, Long vectorDim, Long size, Inte
 
 	@Override
 	public String toString() {
-		return ObjectStringBuilder.create().add("quant-type", quantType()).addIfAbsent("vector-dim", vectorDim())
-				.addIfAbsent("size", size()).addIfAbsent("max-level", maxLevel()).addIfAbsent("vset-uid", vsetUid())
-				.addIfAbsent("hnsw-max-node-uid", hnswMaxNodeUid()).build();
+		return ObjectStringBuilder.create()
+				.add("quant-type", quantType)
+				.add("vector-dim", vectorDim)
+				.add("size", size)
+				.add("max-level", maxLevel)
+				.add("vset-uid", vsetUid)
+				.add("hnsw-max-node-uid", hnswMaxNodeUid)
+				.build();
 	}
 
 }

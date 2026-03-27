@@ -24,6 +24,8 @@
  */
 package com.buession.redis.core;
 
+import com.buession.redis.utils.ObjectStringBuilder;
+
 import java.util.List;
 
 /**
@@ -33,5 +35,13 @@ import java.util.List;
  * @since 4.0.0
  */
 public record CommandKeyAndFlag(String name, List<String> flags) {
+
+	@Override
+	public String toString() {
+		return ObjectStringBuilder.create()
+				.add("name", name)
+				.add("flags", flags)
+				.build();
+	}
 
 }

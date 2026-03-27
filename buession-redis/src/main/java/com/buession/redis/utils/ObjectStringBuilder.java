@@ -72,23 +72,12 @@ public final class ObjectStringBuilder {
 	}
 
 	public ObjectStringBuilder add(final String name, final byte[] value) {
-		if(value != null){
-			joiner.add(name + '=' + SafeEncoder.encode(value));
-		}
-
+		joiner.add(name + '=' + SafeEncoder.encode(value));
 		return this;
 	}
 
 	public ObjectStringBuilder add(final String name, final Object value) {
 		joiner.add(name + '=' + value);
-		return this;
-	}
-
-	public ObjectStringBuilder addIfAbsent(final String name, final Object value) {
-		if(value != null){
-			joiner.add(name + '=' + value);
-		}
-
 		return this;
 	}
 

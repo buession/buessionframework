@@ -52,7 +52,7 @@ public record StreamPendingSummary(Long total, StreamEntryId minId, StreamEntryI
 				.add("total", total)
 				.add("minId", minId)
 				.add("maxId", maxId)
-				.add("consumerMessageCount", consumerMessageCount)
+				.add("consumer message count", consumerMessageCount)
 				.build();
 	}
 

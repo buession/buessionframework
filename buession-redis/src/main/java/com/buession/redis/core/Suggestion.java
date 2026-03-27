@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core;
 
+import com.buession.redis.utils.ObjectStringBuilder;
 import com.buession.redis.utils.SafeEncoder;
 
 /**
@@ -44,6 +45,15 @@ public record Suggestion(String value, Double score, String payload) {
 
 	public Suggestion(byte[] value, Double score) {
 		this(SafeEncoder.encode(value), score);
+	}
+
+	@Override
+	public String toString() {
+		return ObjectStringBuilder.create()
+				.add("value", value)
+				.add("score", score)
+				.add("payload", payload)
+				.build();
 	}
 
 }

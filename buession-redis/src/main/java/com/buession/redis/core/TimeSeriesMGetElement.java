@@ -38,7 +38,11 @@ public record TimeSeriesMGetElement(String key, TimeSeriesElement value, Map<Str
 
 	@Override
 	public String toString() {
-		return ObjectStringBuilder.create().append("key=").append(key()).append("element=").append(value())
-				.append("labels=").append(labels()).build();
+		return ObjectStringBuilder.create()
+				.add("key", key)
+				.add("element", value)
+				.add("labels", labels)
+				.build();
 	}
+
 }

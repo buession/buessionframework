@@ -68,27 +68,8 @@ import java.util.Properties;
  *
  * @author Yong.Teng
  */
-public record Info(
-		Server server,
-
-		Clients clients,
-
-		Memory memory,
-
-		Persistence persistence,
-
-		Stats stats,
-
-		Replication replication,
-
-		Sentinel sentinel,
-
-		Cluster cluster,
-
-		Cpu cpu,
-
-		List<Keyspace> keyspace
-) {
+public record Info(Server server, Clients clients, Memory memory, Persistence persistence, Stats stats,
+				   Replication replication, Sentinel sentinel, Cluster cluster, Cpu cpu, List<Keyspace> keyspace) {
 
 	public String toPrettyString() {
 		final StringBuilder sb = new StringBuilder();
@@ -148,20 +129,20 @@ public record Info(
 			sb.append("sentinel:").append(lineSeparator).append(sentinel.toPrettyString());
 		}
 
-		if(cpu != null){
-			if(init){
-				sb.append(lineSeparator).append(lineSeparator);
-			}
-			init = true;
-			sb.append("cpu:").append(lineSeparator).append(cpu.toPrettyString());
-		}
-
 		if(cluster != null){
 			if(init){
 				sb.append(lineSeparator).append(lineSeparator);
 			}
 			init = true;
 			sb.append("cluster:").append(lineSeparator).append(cluster.toPrettyString());
+		}
+
+		if(cpu != null){
+			if(init){
+				sb.append(lineSeparator).append(lineSeparator);
+			}
+			init = true;
+			sb.append("cpu:").append(lineSeparator).append(cpu.toPrettyString());
 		}
 
 		if(keyspace != null){
@@ -176,86 +157,18 @@ public record Info(
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder();
-		boolean init = false;
-
-		if(server != null){
-			init = true;
-			sb.append("server=").append('[').append(server).append(']');
-		}
-
-		if(clients != null){
-			if(init){
-				sb.append(", ");
-			}
-			init = true;
-			sb.append("clients=").append('[').append(clients).append(']').append(", ");
-		}
-
-		if(memory != null){
-			if(init){
-				sb.append(", ");
-			}
-			init = true;
-			sb.append("memory=").append('[').append(memory).append(']');
-		}
-
-		if(persistence != null){
-			if(init){
-				sb.append(", ");
-			}
-			init = true;
-			sb.append("persistence=").append('[').append(persistence).append(']');
-		}
-
-		if(stats != null){
-			if(init){
-				sb.append(", ");
-			}
-			init = true;
-			sb.append("stats=").append('[').append(stats).append(']');
-		}
-
-		if(replication != null){
-			if(init){
-				sb.append(", ");
-			}
-			init = true;
-			sb.append("replication=").append('[').append(replication).append(']');
-		}
-
-		if(sentinel != null){
-			if(init){
-				sb.append(", ");
-			}
-			init = true;
-			sb.append("sentinel=").append('[').append(sentinel).append(']');
-		}
-
-		if(cpu != null){
-			if(init){
-				sb.append(", ");
-			}
-			init = true;
-			sb.append("cpu=").append('[').append(cpu).append(']');
-		}
-
-		if(cluster != null){
-			if(init){
-				sb.append(", ");
-			}
-			init = true;
-			sb.append("cluster=").append('[').append(cluster).append(']');
-		}
-
-		if(keyspace != null){
-			if(init){
-				sb.append(", ");
-			}
-			sb.append("keyspace=").append('[').append(keyspace).append(']');
-		}
-
-		return sb.toString();
+		return ObjectStringBuilder.create()
+				.add("server", server)
+				.add("clients", clients)
+				.add("memory", memory)
+				.add("persistence", persistence)
+				.add("stats", stats)
+				.add("replication", replication)
+				.add("sentinel", sentinel)
+				.add("cluster", cluster)
+				.add("cpu", cpu)
+				.add("keyspace", keyspace)
+				.build();
 	}
 
 	private static Double getPercent(final Properties properties, final String key) {

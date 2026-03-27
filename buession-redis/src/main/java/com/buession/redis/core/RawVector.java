@@ -37,10 +37,10 @@ public record RawVector(Quantization quantization, byte[] rawData, Double norm, 
 	@Override
 	public String toString() {
 		return ObjectStringBuilder.create()
-				.add("quantization", quantization())
-				.addIfAbsent("rawData", rawData())
-				.addIfAbsent("norm", norm())
-				.addIfAbsent("quantizationRange", quantizationRange())
+				.add("quantization", quantization)
+				.add("raw_data", rawData)
+				.add("norm", norm)
+				.add("quantization_range", quantizationRange)
 				.build();
 	}
 

@@ -38,9 +38,9 @@ public record StreamPending(StreamEntryId id, String consumerName, Long idleTime
 	public String toString() {
 		return ObjectStringBuilder.create()
 				.add("id", id)
-				.add("consumerName", consumerName)
-				.add("idleTime", idleTime)
-				.add("deliveredTimes", deliveredTimes)
+				.add("consumer name", consumerName)
+				.add("idle time", idleTime)
+				.add("delivered times", deliveredTimes)
 				.build();
 	}
 

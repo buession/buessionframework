@@ -45,19 +45,8 @@ import com.buession.redis.utils.ObjectStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public record ClusterLink(
-		Direction direction,
-
-		String node,
-
-		Long createTime,
-
-		Event[] events,
-
-		Integer sendBufferAllocated,
-
-		Integer sendBufferUsed
-) {
+public record ClusterLink(Direction direction, String node, Long createTime, Event[] events,
+						  Integer sendBufferAllocated, Integer sendBufferUsed) {
 
 	@Override
 	public String toString() {

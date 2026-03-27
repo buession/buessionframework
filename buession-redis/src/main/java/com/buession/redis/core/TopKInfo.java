@@ -24,6 +24,8 @@
  */
 package com.buession.redis.core;
 
+import com.buession.redis.utils.ObjectStringBuilder;
+
 /**
  * <code>TOPK.INFO</code> 命令结果
  *
@@ -42,5 +44,16 @@ package com.buession.redis.core;
  * @since 4.0.0
  */
 public record TopKInfo(Integer k, Integer size, Integer width, Integer depth, Double decay) {
+
+	@Override
+	public String toString() {
+		return ObjectStringBuilder.create()
+				.add("k", k)
+				.add("size", size)
+				.add("width", width)
+				.add("depth", depth)
+				.add("decay", decay)
+				.build();
+	}
 
 }

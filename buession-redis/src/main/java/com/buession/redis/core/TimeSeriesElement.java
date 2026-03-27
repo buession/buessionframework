@@ -60,8 +60,8 @@ public record TimeSeriesElement(Long timestamp, Double value) {
 	@Override
 	public String toString() {
 		return ObjectStringBuilder.create()
-				.append("timestamp=").append(timestamp())
-				.append("value=").append(value())
+				.add("timestamp", timestamp)
+				.add("value", value)
 				.build();
 	}
 

@@ -33,21 +33,8 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public record AclUser(
-		String commands,
-
-		Map<String, Object> userInfo,
-
-		List<String> passwords,
-
-		List<String> flags,
-
-		List<String> keys,
-
-		List<String> channels,
-
-		List<String> selectors
-) {
+public record AclUser(String commands, Map<String, Object> userInfo, List<String> passwords, List<String> flags,
+					  List<String> keys, List<String> channels, List<String> selectors) {
 
 	@Override
 	public String toString() {

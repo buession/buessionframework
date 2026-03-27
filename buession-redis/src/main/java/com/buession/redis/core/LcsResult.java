@@ -24,6 +24,8 @@
  */
 package com.buession.redis.core;
 
+import com.buession.redis.utils.ObjectStringBuilder;
+
 import java.util.List;
 
 /**
@@ -34,10 +36,27 @@ import java.util.List;
  */
 public record LcsResult(String matchString, List<MatchedPosition> matches, Long len) {
 
+	@Override
+	public String toString() {
+		return ObjectStringBuilder.create()
+				.add("match_string", matchString)
+				.add("matches", matches)
+				.add("len", len)
+				.build();
+	}
+
 	/**
 	 * Match position in each string.
 	 */
 	public record MatchedPosition(Position a, Position b, Long matchLen) {
+
+		@Override
+		public String toString() {
+			return ObjectStringBuilder.create()
+					.add("a", a)
+					.add("b", b)
+					.build();
+		}
 
 	}
 
@@ -45,6 +64,14 @@ public record LcsResult(String matchString, List<MatchedPosition> matches, Long 
 	 * Position range.
 	 */
 	public record Position(Long start, Long end) {
+
+		@Override
+		public String toString() {
+			return ObjectStringBuilder.create()
+					.add("start", start)
+					.add("end", end)
+					.build();
+		}
 
 	}
 

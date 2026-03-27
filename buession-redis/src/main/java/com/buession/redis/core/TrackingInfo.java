@@ -24,6 +24,8 @@
  */
 package com.buession.redis.core;
 
+import com.buession.redis.utils.ObjectStringBuilder;
+
 import java.util.List;
 import java.util.Set;
 
@@ -34,6 +36,15 @@ import java.util.Set;
  * @since 4.0.0
  */
 public record TrackingInfo(Set<TrackingFlag> flags, Long redirect, List<String> prefixes) {
+
+	@Override
+	public String toString() {
+		return ObjectStringBuilder.create()
+				.add("flags", flags)
+				.add("redirect", redirect)
+				.add("prefixes", prefixes)
+				.build();
+	}
 
 	public enum TrackingFlag implements Keyword {
 

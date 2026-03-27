@@ -42,26 +42,20 @@ public record ClusterShardInfo(IntegerRange slots, List<ClusterShardNode> nodes)
 		return ObjectStringBuilder.create().add("slots", slots).add("nodes", nodes).build();
 	}
 
-	public record ClusterShardNode(
-			String id,
-
-			Integer port,
-
-			String ip,
-
-			String endpoint,
-
-			ClusterRole role,
-
-			Integer replicationOffset,
-
-			ClusterHealth health
-	) {
+	public record ClusterShardNode(String id, Integer port, String ip, String endpoint, ClusterRole role,
+								   Integer replicationOffset, ClusterHealth health) {
 
 		@Override
 		public String toString() {
-			return ObjectStringBuilder.create().add("id", id).add("port", port).add("ip", ip).add("endpoint", endpoint)
-					.add("role", role).add("replicationOffset", replicationOffset).add("health", health).build();
+			return ObjectStringBuilder.create()
+					.add("id", id)
+					.add("port", port)
+					.add("ip", ip)
+					.add("endpoint", endpoint)
+					.add("role", role)
+					.add("replicationOffset", replicationOffset)
+					.add("health", health)
+					.build();
 		}
 
 	}
