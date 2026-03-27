@@ -38,14 +38,13 @@ public final class ClientUnblockTypeConverter implements Converter<ClientUnblock
 
 	@Override
 	public UnblockType convert(final ClientUnblockType source) {
-		if(source == null){
+		if(source == ClientUnblockType.TIMEOUT){
+			return UnblockType.TIMEOUT;
+		}else if(source == ClientUnblockType.ERROR){
+			return UnblockType.ERROR;
+		}else{
 			return null;
 		}
-
-		return switch(source){
-			case TIMEOUT -> UnblockType.TIMEOUT;
-			case ERROR -> UnblockType.ERROR;
-		};
 	}
 
 }

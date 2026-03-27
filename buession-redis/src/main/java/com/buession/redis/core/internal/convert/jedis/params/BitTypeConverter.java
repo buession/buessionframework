@@ -29,7 +29,7 @@ import com.buession.redis.core.command.args.bitmap.BitType;
 import redis.clients.jedis.args.BitCountOption;
 
 /**
- * {@link BitType} 转换为 Jedis {@link BitCountOption} 互转
+ * {@link BitType} 转换为 Jedis {@link BitCountOption}
  *
  * @author Yong.Teng
  * @since 4.0.0
@@ -38,14 +38,13 @@ public final class BitTypeConverter implements Converter<BitType, BitCountOption
 
 	@Override
 	public BitCountOption convert(final BitType source) {
-		if(source == null){
+		if(source == BitType.BYTE){
+			return BitCountOption.BYTE;
+		}else if(source == BitType.BIT){
+			return BitCountOption.BIT;
+		}else{
 			return null;
 		}
-
-		return switch(source){
-			case BYTE -> BitCountOption.BYTE;
-			case BIT -> BitCountOption.BIT;
-		};
 	}
 
 }

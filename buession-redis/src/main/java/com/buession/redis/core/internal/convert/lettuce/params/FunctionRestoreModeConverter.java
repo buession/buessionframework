@@ -25,7 +25,6 @@
 package com.buession.redis.core.internal.convert.lettuce.params;
 
 import com.buession.core.converter.Converter;
-import io.lettuce.core.FunctionRestoreMode;
 
 /**
  * {@link com.buession.redis.core.command.args.scripting.FunctionRestoreMode} 转换为 {@link io.lettuce.core.FunctionRestoreMode}
@@ -38,17 +37,17 @@ public final class FunctionRestoreModeConverter
 		io.lettuce.core.FunctionRestoreMode> {
 
 	@Override
-	public FunctionRestoreMode convert(
+	public io.lettuce.core.FunctionRestoreMode convert(
 			final com.buession.redis.core.command.args.scripting.FunctionRestoreMode source) {
-		if(source == null){
+		if(source == com.buession.redis.core.command.args.scripting.FunctionRestoreMode.APPEND){
+			return io.lettuce.core.FunctionRestoreMode.APPEND;
+		}else if(source == com.buession.redis.core.command.args.scripting.FunctionRestoreMode.FLUSH){
+			return io.lettuce.core.FunctionRestoreMode.FLUSH;
+		}else if(source == com.buession.redis.core.command.args.scripting.FunctionRestoreMode.REPLACE){
+			return io.lettuce.core.FunctionRestoreMode.REPLACE;
+		}else{
 			return null;
 		}
-
-		return switch(source){
-			case APPEND -> FunctionRestoreMode.APPEND;
-			case FLUSH -> FunctionRestoreMode.FLUSH;
-			case REPLACE -> FunctionRestoreMode.REPLACE;
-		};
 	}
 
 }

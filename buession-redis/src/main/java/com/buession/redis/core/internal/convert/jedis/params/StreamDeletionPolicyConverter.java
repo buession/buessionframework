@@ -38,15 +38,15 @@ public final class StreamDeletionPolicyConverter implements Converter<com.buessi
 	@Override
 	public redis.clients.jedis.args.StreamDeletionPolicy convert(
 			final com.buession.redis.core.StreamDeletionPolicy source) {
-		if(source == null){
+		if(source == com.buession.redis.core.StreamDeletionPolicy.ACKED){
+			return redis.clients.jedis.args.StreamDeletionPolicy.ACKNOWLEDGED;
+		}else if(source == com.buession.redis.core.StreamDeletionPolicy.KEEPREF){
+			return redis.clients.jedis.args.StreamDeletionPolicy.KEEP_REFERENCES;
+		}else if(source == com.buession.redis.core.StreamDeletionPolicy.DELREF){
+			return redis.clients.jedis.args.StreamDeletionPolicy.DELETE_REFERENCES;
+		}else{
 			return null;
 		}
-
-		return switch(source){
-			case ACKED -> redis.clients.jedis.args.StreamDeletionPolicy.ACKNOWLEDGED;
-			case KEEPREF -> redis.clients.jedis.args.StreamDeletionPolicy.KEEP_REFERENCES;
-			case DELREF -> redis.clients.jedis.args.StreamDeletionPolicy.DELETE_REFERENCES;
-		};
 	}
 
 }

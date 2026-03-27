@@ -38,14 +38,13 @@ public final class MinMaxSortedSetOptionConverter implements Converter<MinMax, S
 
 	@Override
 	public SortedSetOption convert(final MinMax source) {
-		if(source == null){
+		if(source == MinMax.MIN){
+			return SortedSetOption.MIN;
+		}else if(source == MinMax.MAX){
+			return SortedSetOption.MAX;
+		}else{
 			return null;
 		}
-
-		return switch(source){
-			case MIN -> SortedSetOption.MIN;
-			case MAX -> SortedSetOption.MAX;
-		};
 	}
 
 }

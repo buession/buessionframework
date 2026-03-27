@@ -39,15 +39,15 @@ public final class FunctionRestoreModeFunctionRestorePolicyConverter
 
 	@Override
 	public FunctionRestorePolicy convert(final FunctionRestoreMode source) {
-		if(source == null){
+		if(source == FunctionRestoreMode.APPEND){
+			return FunctionRestorePolicy.APPEND;
+		}else if(source == FunctionRestoreMode.FLUSH){
+			return FunctionRestorePolicy.FLUSH;
+		}else if(source == FunctionRestoreMode.REPLACE){
+			return FunctionRestorePolicy.REPLACE;
+		}else{
 			return null;
 		}
-
-		return switch(source){
-			case APPEND -> FunctionRestorePolicy.APPEND;
-			case FLUSH -> FunctionRestorePolicy.FLUSH;
-			case REPLACE -> FunctionRestorePolicy.REPLACE;
-		};
 	}
 
 }

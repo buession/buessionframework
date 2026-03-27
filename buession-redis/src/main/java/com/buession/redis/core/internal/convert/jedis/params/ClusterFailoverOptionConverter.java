@@ -26,27 +26,26 @@ package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.command.args.cluster.FailoverOption;
+import redis.clients.jedis.args.ClusterFailoverOption;
 
 /**
- * {@link FailoverOption} 转换为 jedis {@link redis.clients.jedis.args.ClusterFailoverOption}
+ * {@link FailoverOption} 转换为 jedis {@link ClusterFailoverOption}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class ClusterFailoverOptionConverter implements
-		Converter<FailoverOption, redis.clients.jedis.args.ClusterFailoverOption> {
+public final class ClusterFailoverOptionConverter implements Converter<FailoverOption, ClusterFailoverOption> {
 
 	@Override
 	public redis.clients.jedis.args.ClusterFailoverOption convert(
 			final FailoverOption source) {
-		if(source == null){
+		if(source == FailoverOption.FORCE){
+			return ClusterFailoverOption.FORCE;
+		}else if(source == FailoverOption.TAKEOVER){
+			return ClusterFailoverOption.TAKEOVER;
+		}else{
 			return null;
 		}
-
-		return switch(source){
-			case FORCE -> redis.clients.jedis.args.ClusterFailoverOption.FORCE;
-			case TAKEOVER -> redis.clients.jedis.args.ClusterFailoverOption.TAKEOVER;
-		};
 	}
 
 }

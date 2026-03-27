@@ -37,15 +37,15 @@ public final class StreamDeletionPolicyConverter implements Converter<com.buessi
 
 	@Override
 	public io.lettuce.core.StreamDeletionPolicy convert(final com.buession.redis.core.StreamDeletionPolicy source) {
-		if(source == null){
+		if(source == com.buession.redis.core.StreamDeletionPolicy.ACKED){
+			return io.lettuce.core.StreamDeletionPolicy.ACKNOWLEDGED;
+		}else if(source == com.buession.redis.core.StreamDeletionPolicy.KEEPREF){
+			return io.lettuce.core.StreamDeletionPolicy.KEEP_REFERENCES;
+		}else if(source == com.buession.redis.core.StreamDeletionPolicy.DELREF){
+			return io.lettuce.core.StreamDeletionPolicy.DELETE_REFERENCES;
+		}else{
 			return null;
 		}
-
-		return switch(source){
-			case ACKED -> io.lettuce.core.StreamDeletionPolicy.ACKNOWLEDGED;
-			case KEEPREF -> io.lettuce.core.StreamDeletionPolicy.KEEP_REFERENCES;
-			case DELREF -> io.lettuce.core.StreamDeletionPolicy.DELETE_REFERENCES;
-		};
 	}
 
 }

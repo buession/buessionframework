@@ -38,14 +38,13 @@ public final class DirectionConverter implements Converter<Direction, ListDirect
 
 	@Override
 	public ListDirection convert(final Direction source) {
-		if(source == null){
+		if(source == Direction.LEFT){
+			return ListDirection.LEFT;
+		}else if(source == Direction.RIGHT){
+			return ListDirection.RIGHT;
+		}else{
 			return null;
 		}
-
-		return switch(source){
-			case LEFT -> ListDirection.LEFT;
-			case RIGHT -> ListDirection.RIGHT;
-		};
 	}
 
 }

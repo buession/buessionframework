@@ -33,13 +33,11 @@ import com.buession.redis.core.AggregationType;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class AggregationTypeConverter
-		implements
+public final class AggregationTypeConverter implements
 		Converter<AggregationType, redis.clients.jedis.timeseries.AggregationType> {
 
 	@Override
-	public redis.clients.jedis.timeseries.AggregationType convert(
-			final AggregationType source) {
+	public redis.clients.jedis.timeseries.AggregationType convert(final AggregationType source) {
 		return source == null ? null : Enum.valueOf(redis.clients.jedis.timeseries.AggregationType.class,
 				source.name());
 	}

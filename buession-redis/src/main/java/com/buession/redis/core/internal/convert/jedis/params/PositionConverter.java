@@ -37,14 +37,13 @@ public final class PositionConverter implements Converter<Position, redis.client
 
 	@Override
 	public redis.clients.jedis.args.ListPosition convert(final Position source) {
-		if(source == null){
+		if(source == Position.BEFORE){
+			return redis.clients.jedis.args.ListPosition.BEFORE;
+		}else if(source == Position.AFTER){
+			return redis.clients.jedis.args.ListPosition.AFTER;
+		}else{
 			return null;
 		}
-
-		return switch(source){
-			case BEFORE -> redis.clients.jedis.args.ListPosition.BEFORE;
-			case AFTER -> redis.clients.jedis.args.ListPosition.AFTER;
-		};
 	}
 
 }

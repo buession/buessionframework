@@ -25,27 +25,25 @@
 package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.args.FlushMode;
 
 /**
- * {@link FlushMode} 转换为 jedis {@link redis.clients.jedis.args.FlushMode}
+ * {@link com.buession.redis.core.command.args.FlushMode} 转换为 jedis {@link redis.clients.jedis.args.FlushMode}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
 public final class FlushModeConverter
-		implements Converter<FlushMode, redis.clients.jedis.args.FlushMode> {
+		implements Converter<com.buession.redis.core.command.args.FlushMode, redis.clients.jedis.args.FlushMode> {
 
 	@Override
-	public redis.clients.jedis.args.FlushMode convert(final FlushMode source) {
-		if(source == null){
+	public redis.clients.jedis.args.FlushMode convert(final com.buession.redis.core.command.args.FlushMode source) {
+		if(source == com.buession.redis.core.command.args.FlushMode.ASYNC){
+			return redis.clients.jedis.args.FlushMode.ASYNC;
+		}else if(source == com.buession.redis.core.command.args.FlushMode.SYNC){
+			return redis.clients.jedis.args.FlushMode.SYNC;
+		}else{
 			return null;
 		}
-
-		return switch(source){
-			case ASYNC -> redis.clients.jedis.args.FlushMode.ASYNC;
-			case SYNC -> redis.clients.jedis.args.FlushMode.SYNC;
-		};
 	}
 
 }

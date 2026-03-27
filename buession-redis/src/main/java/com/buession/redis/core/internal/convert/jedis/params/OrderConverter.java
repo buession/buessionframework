@@ -38,15 +38,13 @@ public final class OrderConverter implements Converter<Order, SortingOrder> {
 
 	@Override
 	public SortingOrder convert(final Order source) {
-		if(source == null){
+		if(source == Order.ASC){
+			return SortingOrder.ASC;
+		}else if(source == Order.DESC){
+			return SortingOrder.DESC;
+		}else{
 			return null;
 		}
-
-		return switch(source){
-			case ASC -> SortingOrder.ASC;
-			case DESC -> SortingOrder.DESC;
-		};
-
 	}
 
 }
