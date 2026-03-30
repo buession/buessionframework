@@ -135,7 +135,7 @@ public class LettuceClusterConnection
 	 * 		Infinite 读取超时（单位：毫秒）
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, int connectTimeout, int soTimeout,
-									int infiniteSoTimeout) {
+	                                int infiniteSoTimeout) {
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
 	}
 
@@ -164,7 +164,7 @@ public class LettuceClusterConnection
 	 * 		SSL 配置
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, int connectTimeout, int soTimeout,
-									SslConfiguration sslConfiguration) {
+	                                SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
 	}
 
@@ -183,7 +183,7 @@ public class LettuceClusterConnection
 	 * 		SSL 配置
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, int connectTimeout, int soTimeout,
-									int infiniteSoTimeout, SslConfiguration sslConfiguration) {
+	                                int infiniteSoTimeout, SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 	}
 
@@ -212,7 +212,7 @@ public class LettuceClusterConnection
 	 * 		读取超时（单位：毫秒）
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-									int soTimeout) {
+	                                int soTimeout) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout);
 	}
 
@@ -231,7 +231,7 @@ public class LettuceClusterConnection
 	 * 		Infinite 读取超时（单位：毫秒）
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-									int soTimeout, int infiniteSoTimeout) {
+	                                int soTimeout, int infiniteSoTimeout) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
 	}
 
@@ -246,7 +246,7 @@ public class LettuceClusterConnection
 	 * 		SSL 配置
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig,
-									SslConfiguration sslConfiguration) {
+	                                SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, sslConfiguration);
 	}
 
@@ -265,7 +265,7 @@ public class LettuceClusterConnection
 	 * 		SSL 配置
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-									int soTimeout, SslConfiguration sslConfiguration) {
+	                                int soTimeout, SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
 	}
 
@@ -286,7 +286,7 @@ public class LettuceClusterConnection
 	 * 		SSL 配置
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-									int soTimeout, int infiniteSoTimeout, SslConfiguration sslConfiguration) {
+	                                int soTimeout, int infiniteSoTimeout, SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 	}
 
@@ -305,7 +305,7 @@ public class LettuceClusterConnection
 	 * 		最大重试时长
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, int connectTimeout, int soTimeout,
-									int maxRedirects, Duration maxTotalRetriesDuration) {
+	                                int maxRedirects, Duration maxTotalRetriesDuration) {
 		super(dataSource, connectTimeout, soTimeout);
 		this.maxRedirects = maxRedirects;
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
@@ -330,8 +330,8 @@ public class LettuceClusterConnection
 	 * @since 4.0.0
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, int connectTimeout, int soTimeout,
-									int maxRedirects, Duration maxTotalRetriesDuration,
-									Duration topologyRefreshPeriod) {
+	                                int maxRedirects, Duration maxTotalRetriesDuration,
+	                                Duration topologyRefreshPeriod) {
 		this(dataSource, connectTimeout, soTimeout, maxRedirects, maxTotalRetriesDuration);
 		this.topologyRefreshPeriod = topologyRefreshPeriod;
 	}
@@ -353,7 +353,7 @@ public class LettuceClusterConnection
 	 * 		最大重试时长
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, int connectTimeout, int soTimeout,
-									int infiniteSoTimeout, int maxRedirects, Duration maxTotalRetriesDuration) {
+	                                int infiniteSoTimeout, int maxRedirects, Duration maxTotalRetriesDuration) {
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
 		this.maxRedirects = maxRedirects;
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
@@ -380,8 +380,8 @@ public class LettuceClusterConnection
 	 * @since 4.0.0
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, int connectTimeout, int soTimeout,
-									int infiniteSoTimeout, int maxRedirects, Duration maxTotalRetriesDuration,
-									Duration topologyRefreshPeriod) {
+	                                int infiniteSoTimeout, int maxRedirects, Duration maxTotalRetriesDuration,
+	                                Duration topologyRefreshPeriod) {
 		this(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, maxRedirects, maxTotalRetriesDuration);
 		this.topologyRefreshPeriod = topologyRefreshPeriod;
 	}
@@ -403,8 +403,8 @@ public class LettuceClusterConnection
 	 * 		SSL 配置
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, int connectTimeout, int soTimeout,
-									int maxRedirects, Duration maxTotalRetriesDuration,
-									SslConfiguration sslConfiguration) {
+	                                int maxRedirects, Duration maxTotalRetriesDuration,
+	                                SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
 		this.maxRedirects = maxRedirects;
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
@@ -431,8 +431,8 @@ public class LettuceClusterConnection
 	 * @since 4.0.0
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, int connectTimeout, int soTimeout,
-									int maxRedirects, Duration maxTotalRetriesDuration, Duration topologyRefreshPeriod,
-									SslConfiguration sslConfiguration) {
+	                                int maxRedirects, Duration maxTotalRetriesDuration, Duration topologyRefreshPeriod,
+	                                SslConfiguration sslConfiguration) {
 		this(dataSource, connectTimeout, soTimeout, maxRedirects, maxTotalRetriesDuration, sslConfiguration);
 		this.topologyRefreshPeriod = topologyRefreshPeriod;
 	}
@@ -456,8 +456,8 @@ public class LettuceClusterConnection
 	 * 		SSL 配置
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, int connectTimeout, int soTimeout,
-									int infiniteSoTimeout, int maxRedirects, Duration maxTotalRetriesDuration,
-									SslConfiguration sslConfiguration) {
+	                                int infiniteSoTimeout, int maxRedirects, Duration maxTotalRetriesDuration,
+	                                SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 		this.maxRedirects = maxRedirects;
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
@@ -486,8 +486,8 @@ public class LettuceClusterConnection
 	 * @since 4.0.0
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, int connectTimeout, int soTimeout,
-									int infiniteSoTimeout, int maxRedirects, Duration maxTotalRetriesDuration,
-									Duration topologyRefreshPeriod, SslConfiguration sslConfiguration) {
+	                                int infiniteSoTimeout, int maxRedirects, Duration maxTotalRetriesDuration,
+	                                Duration topologyRefreshPeriod, SslConfiguration sslConfiguration) {
 		this(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, maxRedirects, maxTotalRetriesDuration,
 				sslConfiguration);
 		this.topologyRefreshPeriod = topologyRefreshPeriod;
@@ -510,7 +510,7 @@ public class LettuceClusterConnection
 	 * 		最大重试时长
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-									int soTimeout, int maxRedirects, Duration maxTotalRetriesDuration) {
+	                                int soTimeout, int maxRedirects, Duration maxTotalRetriesDuration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout);
 		this.maxRedirects = maxRedirects;
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
@@ -537,8 +537,8 @@ public class LettuceClusterConnection
 	 * @since 4.0.0
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-									int soTimeout, int maxRedirects, Duration maxTotalRetriesDuration,
-									Duration topologyRefreshPeriod) {
+	                                int soTimeout, int maxRedirects, Duration maxTotalRetriesDuration,
+	                                Duration topologyRefreshPeriod) {
 		this(dataSource, poolConfig, connectTimeout, soTimeout, maxRedirects, maxTotalRetriesDuration);
 		this.topologyRefreshPeriod = topologyRefreshPeriod;
 	}
@@ -562,8 +562,8 @@ public class LettuceClusterConnection
 	 * 		最大重试时长
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-									int soTimeout, int infiniteSoTimeout, int maxRedirects,
-									Duration maxTotalRetriesDuration) {
+	                                int soTimeout, int infiniteSoTimeout, int maxRedirects,
+	                                Duration maxTotalRetriesDuration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
 		this.maxRedirects = maxRedirects;
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
@@ -592,8 +592,8 @@ public class LettuceClusterConnection
 	 * @since 4.0.0
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-									int soTimeout, int infiniteSoTimeout, int maxRedirects,
-									Duration maxTotalRetriesDuration, Duration topologyRefreshPeriod) {
+	                                int soTimeout, int infiniteSoTimeout, int maxRedirects,
+	                                Duration maxTotalRetriesDuration, Duration topologyRefreshPeriod) {
 		this(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, maxRedirects,
 				maxTotalRetriesDuration);
 		this.topologyRefreshPeriod = topologyRefreshPeriod;
@@ -618,8 +618,8 @@ public class LettuceClusterConnection
 	 * 		SSL 配置
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-									int soTimeout, int maxRedirects, Duration maxTotalRetriesDuration,
-									SslConfiguration sslConfiguration) {
+	                                int soTimeout, int maxRedirects, Duration maxTotalRetriesDuration,
+	                                SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
 		this.maxRedirects = maxRedirects;
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
@@ -648,8 +648,8 @@ public class LettuceClusterConnection
 	 * @since 4.0.0
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-									int soTimeout, int maxRedirects, Duration maxTotalRetriesDuration,
-									Duration topologyRefreshPeriod, SslConfiguration sslConfiguration) {
+	                                int soTimeout, int maxRedirects, Duration maxTotalRetriesDuration,
+	                                Duration topologyRefreshPeriod, SslConfiguration sslConfiguration) {
 		this(dataSource, poolConfig, connectTimeout, soTimeout, maxRedirects, maxTotalRetriesDuration,
 				sslConfiguration);
 		this.topologyRefreshPeriod = topologyRefreshPeriod;
@@ -676,8 +676,8 @@ public class LettuceClusterConnection
 	 * 		SSL 配置
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-									int soTimeout, int infiniteSoTimeout, int maxRedirects,
-									Duration maxTotalRetriesDuration, SslConfiguration sslConfiguration) {
+	                                int soTimeout, int infiniteSoTimeout, int maxRedirects,
+	                                Duration maxTotalRetriesDuration, SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 		this.maxRedirects = maxRedirects;
 		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
@@ -708,9 +708,9 @@ public class LettuceClusterConnection
 	 * @since 4.0.0
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-									int soTimeout, int infiniteSoTimeout, int maxRedirects,
-									Duration maxTotalRetriesDuration, Duration topologyRefreshPeriod,
-									SslConfiguration sslConfiguration) {
+	                                int soTimeout, int infiniteSoTimeout, int maxRedirects,
+	                                Duration maxTotalRetriesDuration, Duration topologyRefreshPeriod,
+	                                SslConfiguration sslConfiguration) {
 		this(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, maxRedirects,
 				maxTotalRetriesDuration, sslConfiguration);
 		this.topologyRefreshPeriod = topologyRefreshPeriod;
@@ -758,17 +758,13 @@ public class LettuceClusterConnection
 		}
 	}
 
-	protected boolean isUsePool() {
-		return pool != null;
-	}
-
 	protected <K, V> StatefulRedisClusterConnection<K, V> createStatefulRedisClusterConnection(
 			final RedisCodec<K, V> codec) {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
 		final LettuceClusterDataSource dataSource = (LettuceClusterDataSource) getDataSource();
 		final RedisCredentialsProvider redisCredentialsProvider = Validate.hasText(dataSource.getPassword()) ?
 				new StaticCredentialsProvider(Validate.hasText(dataSource.getUsername()) ? dataSource.getUsername() :
-						null, dataSource.getPassword().toCharArray()) : null;
+											  null, dataSource.getPassword().toCharArray()) : null;
 		final Set<RedisURI> redisURIs = dataSource.getNodes().stream().map((node)->{
 			int port = node.getPort() == 0 ? RedisNode.DEFAULT_PORT : node.getPort();
 			final RedisURI redisURI = RedisURI.create(node.getHost(), port);
@@ -815,7 +811,7 @@ public class LettuceClusterConnection
 			return Status.SUCCESS;
 		}
 
-		if(isUsePool()){
+		if(pool != null){
 			try{
 				conn = pool.getResource();
 

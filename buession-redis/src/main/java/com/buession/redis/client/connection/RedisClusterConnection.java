@@ -26,7 +26,7 @@ package com.buession.redis.client.connection;
 
 import com.buession.lang.Status;
 import com.buession.redis.core.RedisMode;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
@@ -106,17 +106,17 @@ public interface RedisClusterConnection extends RedisConnection {
 
 	@Override
 	default Transaction multi() {
-		throw new NotSupportedCommandException(RedisMode.CLUSTER, Command.MULTI);
+		throw new NotSupportedCommandException(RedisMode.CLUSTER, RedisCommand.MULTI);
 	}
 
 	@Override
 	default List<Object> exec() throws RedisException {
-		throw new NotSupportedCommandException(RedisMode.CLUSTER, Command.EXEC);
+		throw new NotSupportedCommandException(RedisMode.CLUSTER, RedisCommand.EXEC);
 	}
 
 	@Override
 	default Status discard() throws RedisException {
-		throw new NotSupportedCommandException(RedisMode.CLUSTER, Command.DISCARD);
+		throw new NotSupportedCommandException(RedisMode.CLUSTER, RedisCommand.DISCARD);
 	}
 
 }

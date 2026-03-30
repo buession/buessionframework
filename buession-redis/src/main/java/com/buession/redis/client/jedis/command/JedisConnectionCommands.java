@@ -36,10 +36,10 @@ import com.buession.redis.core.command.args.connection.ClientUnblockType;
 import com.buession.redis.core.Hello;
 import com.buession.redis.core.Keyword;
 import com.buession.redis.core.TrackingInfo;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ConnectionCommands;
-import com.buession.redis.core.command.SubCommand;
+import com.buession.redis.core.command.RedisSubCommand;
 import com.buession.redis.core.command.args.connection.TrackingArgument;
 import com.buession.redis.core.internal.convert.response.PingResultConverter;
 import com.buession.redis.utils.SafeEncoder;
@@ -61,242 +61,242 @@ public final class JedisConnectionCommands extends AbstractJedisRedisCommands im
 	@Override
 	public Status auth(final String user, final String password) {
 		final CommandArguments args = CommandArguments.create().add(user, password);
-		return executeCommand(Command.AUTH, args);
+		return executeCommand(RedisCommand.AUTH, args);
 	}
 
 	@Override
 	public Status auth(final byte[] user, final byte[] password) {
 		final CommandArguments args = CommandArguments.create().add(user, password);
-		return executeCommand(Command.AUTH, args);
+		return executeCommand(RedisCommand.AUTH, args);
 	}
 
 	@Override
 	public Status auth(final String password) {
 		final CommandArguments args = CommandArguments.create(password);
-		return executeCommand(Command.AUTH, args);
+		return executeCommand(RedisCommand.AUTH, args);
 	}
 
 	@Override
 	public Status auth(final byte[] password) {
 		final CommandArguments args = CommandArguments.create(password);
-		return executeCommand(Command.AUTH, args);
+		return executeCommand(RedisCommand.AUTH, args);
 	}
 
 	@Override
 	public Status clientCaching(final boolean isYes) {
 		final CommandArguments args = CommandArguments.create(isYes ? Keyword.Common.YES : Keyword.Common.NO);
-		return executeCommand(Command.CLIENT, SubCommand.CLIENT_CACHING, args);
+		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_CACHING, args);
 	}
 
 	@Override
 	public String clientGetName() {
-		return executeCommand(Command.CLIENT, SubCommand.CLIENT_GETNAME);
+		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_GETNAME);
 	}
 
 	@Override
 	public Integer clientGetRedir() {
-		return executeCommand(Command.CLIENT, SubCommand.CLIENT_GETREDIR);
+		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_GETREDIR);
 	}
 
 	@Override
 	public Long clientId() {
-		return executeCommand(Command.CLIENT, SubCommand.CLIENT_ID);
+		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_ID);
 	}
 
 	@Override
 	public Client clientInfo() {
-		return executeCommand(Command.CLIENT, SubCommand.CLIENT_INFO);
+		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_INFO);
 	}
 
 	@Override
 	public Status clientKill(final String host, final int port) {
 		final CommandArguments args = CommandArguments.create().add(host, port);
-		return executeCommand(Command.CLIENT, SubCommand.CLIENT_KILL, args);
+		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_KILL, args);
 	}
 
 	@Override
 	public Status clientKill(final byte[] host, final int port) {
 		final CommandArguments args = CommandArguments.create().add(host, port);
-		return executeCommand(Command.CLIENT, SubCommand.CLIENT_KILL, args);
+		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_KILL, args);
 	}
 
 	@Override
 	public List<Client> clientList() {
-		return executeCommand(Command.CLIENT, SubCommand.CLIENT_LIST);
+		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_LIST);
 	}
 
 	@Override
 	public List<Client> clientList(final ClientType clientType) {
 		final CommandArguments args = CommandArguments.create("TYPE", clientType);
-		return executeCommand(Command.CLIENT, SubCommand.CLIENT_LIST, args);
+		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_LIST, args);
 	}
 
 	@Override
 	public List<Client> clientList(final long... ids) {
 		final CommandArguments args = CommandArguments.create("ID").add(ids);
-		return executeCommand(Command.CLIENT, SubCommand.CLIENT_LIST, args);
+		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_LIST, args);
 	}
 
 	@Override
 	public Status clientNoEvict(final boolean on) {
 		final CommandArguments args = CommandArguments.create(on ? Keyword.Common.ON : Keyword.Common.OFF);
-		return executeCommand(Command.CLIENT, SubCommand.CLIENT_NO_EVICT, args);
+		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_NO_EVICT, args);
 	}
 
 	@Override
 	public Status clientNoTouch(final boolean on) {
 		final CommandArguments args = CommandArguments.create(on ? Keyword.Common.ON : Keyword.Common.OFF);
-		return executeCommand(Command.CLIENT, SubCommand.CLIENT_NO_TOUCH, args);
+		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_NO_TOUCH, args);
 	}
 
 	@Override
 	public Status clientPause(final int timeout) {
 		final CommandArguments args = CommandArguments.create(timeout);
-		return executeCommand(Command.CLIENT, SubCommand.CLIENT_PAUSE, args);
+		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_PAUSE, args);
 	}
 
 	@Override
 	public Status clientPause(final int timeout, final ClientPauseMode pauseMode) {
 		final CommandArguments args = CommandArguments.create(timeout).add(pauseMode);
-		return executeCommand(Command.CLIENT, SubCommand.CLIENT_PAUSE, args);
+		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_PAUSE, args);
 	}
 
 	@Override
 	public Status clientReply(final ClientReply option) {
 		final CommandArguments args = CommandArguments.create(option);
-		return executeCommand(Command.CLIENT, SubCommand.CLIENT_REPLY, args);
+		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_REPLY, args);
 	}
 
 	@Override
 	public Status clientSetInfo(final ClientInfoOption option, final String value) {
 		final CommandArguments args = CommandArguments.create(option).add(value);
-		return executeCommand(Command.CLIENT, SubCommand.CLIENT_SETINFO, args);
+		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_SETINFO, args);
 	}
 
 	@Override
 	public Status clientSetName(final String name) {
 		final CommandArguments args = CommandArguments.create(name);
-		return executeCommand(Command.CLIENT, SubCommand.CLIENT_SETNAME, args);
+		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_SETNAME, args);
 	}
 
 	@Override
 	public Status clientSetName(final byte[] name) {
 		final CommandArguments args = CommandArguments.create(name);
-		return executeCommand(Command.CLIENT, SubCommand.CLIENT_SETNAME, args);
+		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_SETNAME, args);
 	}
 
 	@Override
 	public Status clientTracking(final boolean on, final TrackingArgument argument) {
 		final CommandArguments args = CommandArguments.create(on ? Keyword.Common.ON : Keyword.Common.OFF)
 				.add(argument);
-		return executeCommand(Command.CLIENT, SubCommand.CLIENT_TRACKING, args);
+		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_TRACKING, args);
 	}
 
 	@Override
 	public TrackingInfo clientTrackingInfo() {
-		return executeCommand(Command.CLIENT, SubCommand.CLIENT_TRACKINGINFO);
+		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_TRACKINGINFO);
 	}
 
 	@Override
 	public Status clientUnblock(final int clientId) {
 		final CommandArguments args = CommandArguments.create(clientId);
-		return executeCommand(Command.CLIENT, SubCommand.CLIENT_UNBLOCK, args);
+		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_UNBLOCK, args);
 	}
 
 	@Override
 	public Status clientUnblock(final int clientId, final ClientUnblockType type) {
 		final CommandArguments args = CommandArguments.create(clientId).add(type);
-		return executeCommand(Command.CLIENT, SubCommand.CLIENT_UNBLOCK, args);
+		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_UNBLOCK, args);
 	}
 
 	@Override
 	public Status clientUnpause() {
-		return executeCommand(Command.CLIENT, SubCommand.CLIENT_UNPAUSE);
+		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_UNPAUSE);
 	}
 
 	@Override
 	public String echo(final String str) {
 		final CommandArguments args = CommandArguments.create(str);
-		return executeCommand(Command.ECHO, args, (cmd)->cmd.echo(str), (v)->v);
+		return executeCommand(RedisCommand.ECHO, args, (cmd)->cmd.echo(str), (v)->v);
 	}
 
 	@Override
 	public byte[] echo(final byte[] str) {
 		final String s = SafeEncoder.encode(str);
 		final CommandArguments args = CommandArguments.create(s);
-		return executeCommand(Command.ECHO, args, (cmd)->cmd.echo(s), SafeEncoder::encode);
+		return executeCommand(RedisCommand.ECHO, args, (cmd)->cmd.echo(s), SafeEncoder::encode);
 	}
 
 	@Override
 	public Hello hello() {
-		return executeCommand(Command.HELLO);
+		return executeCommand(RedisCommand.HELLO);
 	}
 
 	@Override
 	public Hello hello(int protover) {
 		final CommandArguments args = CommandArguments.create(protover);
-		return executeCommand(Command.HELLO, args);
+		return executeCommand(RedisCommand.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, String password) {
 		final CommandArguments args = CommandArguments.create(protover).add(Keyword.Conn.AUTH).add(password);
-		return executeCommand(Command.HELLO, args);
+		return executeCommand(RedisCommand.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, byte[] password) {
 		final CommandArguments args = CommandArguments.create(protover).add(Keyword.Conn.AUTH).add(password);
-		return executeCommand(Command.HELLO, args);
+		return executeCommand(RedisCommand.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, String username, String password) {
 		final CommandArguments args = CommandArguments.create(protover).add(Validate.isEmpty(username) ?
 				Keyword.Conn.AUTH : Keyword.Conn.AUTH2).add(username, password);
-		return executeCommand(Command.HELLO, args);
+		return executeCommand(RedisCommand.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, byte[] username, byte[] password) {
 		final CommandArguments args = CommandArguments.create(protover).add(Validate.isEmpty(username) ?
 				Keyword.Conn.AUTH : Keyword.Conn.AUTH2).add(username, password);
-		return executeCommand(Command.HELLO, args);
+		return executeCommand(RedisCommand.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, String username, String password, String clientName) {
 		final CommandArguments args = CommandArguments.create(protover).add(Validate.isEmpty(username) ?
 				Keyword.Conn.AUTH : Keyword.Conn.AUTH2).add(username, password).add("SETNAME", clientName);
-		return executeCommand(Command.HELLO, args);
+		return executeCommand(RedisCommand.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, byte[] username, byte[] password, byte[] clientName) {
 		final CommandArguments args = CommandArguments.create(protover).add(Validate.isEmpty(username) ?
 				Keyword.Conn.AUTH : Keyword.Conn.AUTH2).add(username, password).add("SETNAME", clientName);
-		return executeCommand(Command.HELLO, args);
+		return executeCommand(RedisCommand.HELLO, args);
 	}
 
 	@Override
 	public Status ping() {
-		return executeCommand(Command.PING, (cmd)->cmd.ping(), new PingResultConverter());
+		return executeCommand(RedisCommand.PING, (cmd)->cmd.ping(), new PingResultConverter());
 	}
 
 	@Override
 	public Status quit() {
-		return executeCommand(Command.QUIT);
+		return executeCommand(RedisCommand.QUIT);
 	}
 
 	@Override
 	public Status reset() {
-		return executeCommand(Command.RESET);
+		return executeCommand(RedisCommand.RESET);
 	}
 
 	@Override
 	public Status select(final int db) {
 		final CommandArguments args = CommandArguments.create(db);
-		return executeCommand(Command.SELECT, args);
+		return executeCommand(RedisCommand.SELECT, args);
 	}
 
 }

@@ -22,7 +22,70 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
+package com.buession.redis.core.command.args.timeseries;
+
 /**
+ *
+ *
  * @author Yong.Teng
+ * @since 4.0.0
  */
-package com.buession.redis.pipeline;
+class BaseTSRangeArgument {
+
+	private Boolean latest;
+
+	private long[] filterByTimestamps;
+
+	private MinMax filterByValues;
+
+	private Aggregation aggregation;
+
+	protected BaseTSRangeArgument() {
+
+	}
+
+	public Boolean isLatest() {
+		return getLatest();
+	}
+
+	public Boolean getLatest() {
+		return latest;
+	}
+
+	public BaseTSRangeArgument latest() {
+		return setLatest(true);
+	}
+
+	public BaseTSRangeArgument setLatest(Boolean latest) {
+		this.latest = latest;
+		return this;
+	}
+
+	public long[] getFilterByTimestamps() {
+		return filterByTimestamps;
+	}
+
+	public BaseTSRangeArgument setFilterByTimestamps(long[] filterByTimestamps) {
+		this.filterByTimestamps = filterByTimestamps;
+		return this;
+	}
+
+	public MinMax getFilterByValues() {
+		return filterByValues;
+	}
+
+	public BaseTSRangeArgument setFilterByValues(MinMax filterByValues) {
+		this.filterByValues = filterByValues;
+		return this;
+	}
+
+	public Aggregation getAggregation() {
+		return aggregation;
+	}
+
+	public BaseTSRangeArgument setAggregation(Aggregation aggregation) {
+		this.aggregation = aggregation;
+		return this;
+	}
+
+}

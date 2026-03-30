@@ -25,8 +25,8 @@
 package com.buession.redis.exception;
 
 import com.buession.redis.core.RedisMode;
-import com.buession.redis.core.command.Command;
-import com.buession.redis.core.command.SubCommand;
+import com.buession.redis.core.command.RedisCommand;
+import com.buession.redis.core.command.RedisSubCommand;
 
 /**
  * 不支持管道异常
@@ -41,19 +41,19 @@ public class NotSupportedPipelineCommandException extends NotSupportedCommandExc
 		super();
 	}
 
-	public NotSupportedPipelineCommandException(Command command) {
+	public NotSupportedPipelineCommandException(RedisCommand command) {
 		super(Type.PIPELINE, command);
 	}
 
-	public NotSupportedPipelineCommandException(RedisMode mode, Command command) {
+	public NotSupportedPipelineCommandException(RedisMode mode, RedisCommand command) {
 		super(mode, command);
 	}
 
-	public NotSupportedPipelineCommandException(Command command, SubCommand subCommand) {
+	public NotSupportedPipelineCommandException(RedisCommand command, RedisSubCommand subCommand) {
 		super(Type.PIPELINE, command, subCommand);
 	}
 
-	public NotSupportedPipelineCommandException(RedisMode mode, Command command, SubCommand subCommand) {
+	public NotSupportedPipelineCommandException(RedisMode mode, RedisCommand command, RedisSubCommand subCommand) {
 		super(mode, command, subCommand);
 	}
 

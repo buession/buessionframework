@@ -39,11 +39,12 @@ import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.client.connection.lettuce.LettuceRedisConnection;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
-import com.buession.redis.core.Command;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.Options;
 import com.buession.redis.core.SessionCallback;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.SubCommand;
+import com.buession.redis.core.command.RedisCommand;
+import com.buession.redis.core.command.RedisSubCommand;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.serializer.JacksonJsonSerializer;
@@ -119,6 +120,19 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 	 */
 	public RedisAccessor(DataSource dataSource) {
 		setDataSource(dataSource);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		数据源
+	 * @param options
+	 * 		配置选项
+	 */
+	public RedisAccessor(DataSource dataSource, Options options) {
+		setDataSource(dataSource);
+		setOptions(options);
 	}
 
 	/**
@@ -203,26 +217,22 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 		RedisConnection connection = fetchRequiredConnection();
 		RedisClient client = fetchRequiredRedisClient(connection);
 
-		client.execute(new Command<Pipeline>() {
+		client.execute(new Command<RedisConnection, Pipeline>() {
 
 			@Override
-			public com.buession.redis.core.command.Command getCommand() {
+			public RedisCommand getCommand() {
 				return null;
 			}
 
 			@Override
-			public SubCommand getSubCommand() {
+			public RedisSubCommand getSubCommand() {
 				return null;
 			}
 
 			@Override
-			public Pipeline execute() throws RedisException {
+			public Pipeline execute(final RedisConnection conn, final CommandArguments arguments)
+					throws RedisException {
 				return client.getConnection().openPipeline();
-			}
-
-			@Override
-			public Pipeline run(final CommandArguments arguments) throws RedisException {
-				return execute();
 			}
 
 		});

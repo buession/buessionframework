@@ -42,9 +42,9 @@ import com.buession.redis.core.ClusterSlot;
 import com.buession.redis.core.ClusterSlotStat;
 import com.buession.redis.core.Keyword;
 import com.buession.redis.core.command.ClusterCommands;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.SubCommand;
+import com.buession.redis.core.command.RedisSubCommand;
 
 import java.util.List;
 
@@ -62,327 +62,327 @@ public final class JedisClusterCommands extends AbstractJedisRedisCommands imple
 
 	@Override
 	public Status asking() {
-		return executeCommand(Command.ASKING);
+		return executeCommand(RedisCommand.ASKING);
 	}
 
 	@Override
 	public Status clusterAddSlots(final int... slots) {
 		final CommandArguments args = CommandArguments.create(slots);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_ADDSLOTS, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_ADDSLOTS, args);
 	}
 
 	@Override
 	public Status clusterAddSlotsRange(final IntegerRange... slots) {
 		final CommandArguments args = CommandArguments.create(slots);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_ADDSLOTSRANGE, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_ADDSLOTSRANGE, args);
 	}
 
 	@Override
 	public KeyValue<BumpEpoch, Integer> clusterBumpEpoch() {
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_BUMPEPOCH);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_BUMPEPOCH);
 	}
 
 	@Override
 	public Integer clusterCountFailureReports(final String nodeId) {
 		final CommandArguments args = CommandArguments.create(nodeId);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_COUNTFAILUREREPORTS, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_COUNTFAILUREREPORTS, args);
 	}
 
 	@Override
 	public Integer clusterCountFailureReports(final byte[] nodeId) {
 		final CommandArguments args = CommandArguments.create(nodeId);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_COUNTFAILUREREPORTS, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_COUNTFAILUREREPORTS, args);
 	}
 
 	@Override
 	public Long clusterCountKeysInSlot(final int slot) {
 		final CommandArguments args = CommandArguments.create(slot);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_COUNTKEYSINSLOT, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_COUNTKEYSINSLOT, args);
 	}
 
 	@Override
 	public Status clusterDelSlots(final int... slots) {
 		final CommandArguments args = CommandArguments.create(slots);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_DELSLOTS, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_DELSLOTS, args);
 	}
 
 	@Override
 	public Status clusterDelSlotsRange(final IntegerRange... slots) {
 		final CommandArguments args = CommandArguments.create(slots);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_DELSLOTSRANGE, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_DELSLOTSRANGE, args);
 	}
 
 	@Override
 	public Status clusterFailover(final FailoverOption option) {
 		final CommandArguments args = CommandArguments.create(option);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_FAILOVER, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_FAILOVER, args);
 	}
 
 	@Override
 	public Status clusterFlushSlots() {
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_FLUSHSLOTS);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_FLUSHSLOTS);
 	}
 
 	@Override
 	public Status clusterForget(final String nodeId) {
 		final CommandArguments args = CommandArguments.create(nodeId);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_FORGET, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_FORGET, args);
 	}
 
 	@Override
 	public Status clusterForget(final byte[] nodeId) {
 		final CommandArguments args = CommandArguments.create(nodeId);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_FORGET, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_FORGET, args);
 	}
 
 	@Override
 	public List<String> clusterGetKeysInSlot(final int slot, final int count) {
 		final CommandArguments args = CommandArguments.create(slot).add(count);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_GETKEYSINSLOT, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_GETKEYSINSLOT, args);
 	}
 
 	@Override
 	public ClusterInfo clusterInfo() {
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_INFO);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_INFO);
 	}
 
 	@Override
 	public Long clusterKeySlot(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_KEYSLOT, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_KEYSLOT, args);
 	}
 
 	@Override
 	public Long clusterKeySlot(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_KEYSLOT, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_KEYSLOT, args);
 	}
 
 	@Override
 	public List<ClusterLink> clusterLinks() {
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_LINKS);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_LINKS);
 	}
 
 	@Override
 	public Status clusterMeet(final String ip, final int port) {
 		final CommandArguments args = CommandArguments.create().add(ip, port);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_MEET, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_MEET, args);
 	}
 
 	@Override
 	public Status clusterMeet(final byte[] ip, final int port) {
 		final CommandArguments args = CommandArguments.create().add(ip, port);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_MEET, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_MEET, args);
 	}
 
 	@Override
 	public Status clusterMigration(final IntegerRange... slots) {
 		final CommandArguments args = CommandArguments.create().add("IMPORT", slots);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_MIGRATION, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_MIGRATION, args);
 	}
 
 	@Override
 	public Object clusterMigration(final MigrationOperation migrationOperation) {
 		final CommandArguments args = CommandArguments.create(migrationOperation).add(Keyword.Common.ALL);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_MIGRATION, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_MIGRATION, args);
 	}
 
 	@Override
 	public Object clusterMigration(final MigrationOperation migrationOperation, final String id) {
 		final CommandArguments args = CommandArguments.create(migrationOperation).add("ID", id);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_MIGRATION, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_MIGRATION, args);
 	}
 
 	@Override
 	public Object clusterMigration(final MigrationOperation migrationOperation, final byte[] id) {
 		final CommandArguments args = CommandArguments.create(migrationOperation).add("ID", id);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_MIGRATION, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_MIGRATION, args);
 	}
 
 	@Override
 	public String clusterMyId() {
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_MYID);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_MYID);
 	}
 
 	@Override
 	public String clusterMyShardId() {
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_MYSHARDID);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_MYSHARDID);
 	}
 
 	@Override
 	public List<ClusterRedisNode> clusterNodes() {
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_NODES);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_NODES);
 	}
 
 	@Override
 	public List<ClusterRedisNode> clusterReplicas(final String nodeId) {
 		final CommandArguments args = CommandArguments.create(nodeId);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_REPLICAS, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_REPLICAS, args);
 	}
 
 	@Override
 	public List<ClusterRedisNode> clusterReplicas(final byte[] nodeId) {
 		final CommandArguments args = CommandArguments.create(nodeId);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_REPLICAS, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_REPLICAS, args);
 	}
 
 	@Override
 	public Status clusterReplicate(final String nodeId) {
 		final CommandArguments args = CommandArguments.create(nodeId);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_REPLICATE, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_REPLICATE, args);
 	}
 
 	@Override
 	public Status clusterReplicate(final byte[] nodeId) {
 		final CommandArguments args = CommandArguments.create(nodeId);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_REPLICATE, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_REPLICATE, args);
 	}
 
 	@Override
 	public Status clusterReset() {
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_RESET);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_RESET);
 	}
 
 	@Override
 	public Status clusterReset(final ResetOption option) {
 		final CommandArguments args = CommandArguments.create(option);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_RESET, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_RESET, args);
 	}
 
 	@Override
 	public Status clusterSaveConfig() {
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SAVECONFIG);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_SAVECONFIG);
 	}
 
 	@Override
 	public Status clusterSetConfigEpoch(final long configEpoch) {
 		final CommandArguments args = CommandArguments.create(configEpoch);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SETCONFIGEPOCH, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_SETCONFIGEPOCH, args);
 	}
 
 	@Override
 	public Status clusterSetSlot(final int slot, final SetSlotOption option, final String nodeId) {
 		final CommandArguments args = CommandArguments.create(slot).add(option).add(nodeId);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SETSLOT, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_SETSLOT, args);
 	}
 
 	@Override
 	public Status clusterSetSlot(final int slot, final SetSlotOption option, final byte[] nodeId) {
 		final CommandArguments args = CommandArguments.create(slot).add(option).add(nodeId);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SETSLOT, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_SETSLOT, args);
 	}
 
 	@Override
 	public List<ClusterShardInfo> clusterShards() {
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SHARDS);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_SHARDS);
 	}
 
 	@Override
 	public List<ClusterRedisNode> clusterSlaves(final String nodeId) {
 		final CommandArguments args = CommandArguments.create(nodeId);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLAVES, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_SLAVES, args);
 	}
 
 	@Override
 	public List<ClusterRedisNode> clusterSlaves(final byte[] nodeId) {
 		final CommandArguments args = CommandArguments.create(nodeId);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLAVES, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_SLAVES, args);
 	}
 
 	@Override
 	public List<ClusterSlotStat> clusterSlotStats() {
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLOT_STATS);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_SLOT_STATS);
 	}
 
 	@Override
 	public List<ClusterSlotStat> clusterSlotStats(final IntegerRange slot) {
 		final CommandArguments args = CommandArguments.create().add("SLOTSRANGE", slot);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLOT_STATS, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_SLOT_STATS, args);
 	}
 
 	@Override
 	public List<ClusterSlotStat> clusterSlotStats(final IntegerRange slot, final int limit) {
 		final CommandArguments args = CommandArguments.create().add("SLOTSRANGE", slot)
 				.add(Keyword.Common.LIMIT, limit);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLOT_STATS, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_SLOT_STATS, args);
 	}
 
 	@Override
 	public List<ClusterSlotStat> clusterSlotStats(final IntegerRange slot, final int limit, final Order order) {
 		final CommandArguments args = CommandArguments.create().add("SLOTSRANGE", slot)
 				.add(Keyword.Common.LIMIT, limit).add(order);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLOT_STATS, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_SLOT_STATS, args);
 	}
 
 	@Override
 	public List<ClusterSlotStat> clusterSlotStats(final String metric) {
 		final CommandArguments args = CommandArguments.create().add("ORDERBY", metric);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLOT_STATS, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_SLOT_STATS, args);
 	}
 
 	@Override
 	public List<ClusterSlotStat> clusterSlotStats(final byte[] metric) {
 		final CommandArguments args = CommandArguments.create().add("ORDERBY", metric);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLOT_STATS, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_SLOT_STATS, args);
 	}
 
 	@Override
 	public List<ClusterSlotStat> clusterSlotStats(final String metric, final int limit) {
 		final CommandArguments args = CommandArguments.create().add("ORDERBY", metric).add(Keyword.Common.LIMIT, limit);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLOT_STATS, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_SLOT_STATS, args);
 	}
 
 	@Override
 	public List<ClusterSlotStat> clusterSlotStats(final byte[] metric, final int limit) {
 		final CommandArguments args = CommandArguments.create().add("ORDERBY", metric).add(Keyword.Common.LIMIT, limit);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLOT_STATS, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_SLOT_STATS, args);
 	}
 
 	@Override
 	public List<ClusterSlotStat> clusterSlotStats(final String metric, final int limit, final Order order) {
 		final CommandArguments args = CommandArguments.create().add("ORDERBY", metric).add(Keyword.Common.LIMIT, limit)
 				.add(order);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLOT_STATS, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_SLOT_STATS, args);
 	}
 
 	@Override
 	public List<ClusterSlotStat> clusterSlotStats(final byte[] metric, final int limit, final Order order) {
 		final CommandArguments args = CommandArguments.create().add("ORDERBY", metric).add(Keyword.Common.LIMIT, limit)
 				.add(order);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLOT_STATS, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_SLOT_STATS, args);
 	}
 
 	@Override
 	public List<ClusterSlotStat> clusterSlotStats(final int limit) {
 		final CommandArguments args = CommandArguments.create().add(Keyword.Common.LIMIT, limit);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLOT_STATS, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_SLOT_STATS, args);
 	}
 
 	@Override
 	public List<ClusterSlotStat> clusterSlotStats(final int limit, final Order order) {
 		final CommandArguments args = CommandArguments.create().add(Keyword.Common.LIMIT, limit).add(order);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLOT_STATS, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_SLOT_STATS, args);
 	}
 
 	@Override
 	public List<ClusterSlotStat> clusterSlotStats(final Order order) {
 		final CommandArguments args = CommandArguments.create(order);
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLOT_STATS, args);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_SLOT_STATS, args);
 	}
 
 	@Override
 	public List<ClusterSlot> clusterSlots() {
-		return executeCommand(Command.CLUSTER, SubCommand.CLUSTER_SLOTS);
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_SLOTS);
 	}
 
 	@Override
 	public Status readOnly() {
-		return executeCommand(Command.READONLY);
+		return executeCommand(RedisCommand.READONLY);
 	}
 
 	@Override
 	public Status readWrite() {
-		return executeCommand(Command.READWRITE);
+		return executeCommand(RedisCommand.READWRITE);
 	}
 
 }

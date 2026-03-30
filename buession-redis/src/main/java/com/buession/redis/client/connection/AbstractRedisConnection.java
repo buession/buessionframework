@@ -24,14 +24,12 @@
  */
 package com.buession.redis.client.connection;
 
-import com.buession.core.Executor;
 import com.buession.lang.Status;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.core.Constants;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.core.PoolConfig;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
-import com.buession.redis.exception.LettuceRedisExceptionUtils;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
@@ -82,11 +80,6 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	 * SSL 配置
 	 */
 	private SslConfiguration sslConfiguration;
-
-	/**
-	 * 是否使用连接池
-	 */
-	private boolean usePool = false;
 
 	private volatile boolean initialized = false;
 
@@ -149,7 +142,7 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	 * @since 2.0.0
 	 */
 	public AbstractRedisConnection(DataSource dataSource, int connectTimeout, int soTimeout,
-								   int infiniteSoTimeout) {
+	                               int infiniteSoTimeout) {
 		this(dataSource, connectTimeout, soTimeout);
 		this.infiniteSoTimeout = infiniteSoTimeout;
 	}
@@ -180,7 +173,7 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	 * 		SSL 配置
 	 */
 	public AbstractRedisConnection(DataSource dataSource, int connectTimeout, int soTimeout,
-								   SslConfiguration sslConfiguration) {
+	                               SslConfiguration sslConfiguration) {
 		this(dataSource, connectTimeout, soTimeout);
 		this.sslConfiguration = sslConfiguration;
 	}
@@ -202,7 +195,7 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	 * @since 2.0.0
 	 */
 	public AbstractRedisConnection(DataSource dataSource, int connectTimeout, int soTimeout,
-								   int infiniteSoTimeout, SslConfiguration sslConfiguration) {
+	                               int infiniteSoTimeout, SslConfiguration sslConfiguration) {
 		this(dataSource, connectTimeout, soTimeout, sslConfiguration);
 		this.infiniteSoTimeout = infiniteSoTimeout;
 	}
@@ -258,7 +251,7 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	 * @since 3.0.0
 	 */
 	public AbstractRedisConnection(DataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
-								   int infiniteSoTimeout) {
+	                               int infiniteSoTimeout) {
 		this(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
 		this.poolConfig = poolConfig;
 	}
@@ -297,7 +290,7 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	 * @since 3.0.0
 	 */
 	public AbstractRedisConnection(DataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
-								   SslConfiguration sslConfiguration) {
+	                               SslConfiguration sslConfiguration) {
 		this(dataSource, connectTimeout, soTimeout, sslConfiguration);
 		this.poolConfig = poolConfig;
 	}
@@ -321,7 +314,7 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	 * @since 3.0.0
 	 */
 	public AbstractRedisConnection(DataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
-								   int infiniteSoTimeout, SslConfiguration sslConfiguration) {
+	                               int infiniteSoTimeout, SslConfiguration sslConfiguration) {
 		this(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 		this.poolConfig = poolConfig;
 	}
@@ -405,15 +398,6 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	}
 
 	@Override
-	public <R> R execute(final Executor<RedisConnection, R> executor) throws RedisException {
-		try{
-			return executor.execute(this);
-		}catch(Exception e){
-			throw LettuceRedisExceptionUtils.convert(e);
-		}
-	}
-
-	@Override
 	public boolean isPipeline() {
 		return pipeline != null;
 	}
@@ -483,14 +467,6 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 				}
 			}
 		}
-	}
-
-	protected boolean isUsePool() {
-		return usePool;
-	}
-
-	protected void setUsePool(boolean usePool) {
-		this.usePool = usePool;
 	}
 
 	protected abstract void internalInit();

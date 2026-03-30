@@ -32,7 +32,7 @@ import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.core.command.args.list.Direction;
 import com.buession.redis.core.Keyword;
 import com.buession.redis.core.command.args.list.Position;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ListCommands;
 import com.buession.redis.core.command.args.list.LPosArgument;
@@ -60,18 +60,18 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public String blMove(final String key, final String destKey, final Direction from, final Direction to,
-						 final int timeout) {
+	                     final int timeout) {
 		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from, to).add(timeout);
-		return executeCommand(Command.BLMOVE, args,
+		return executeCommand(RedisCommand.BLMOVE, args,
 				(cmd)->cmd.blmove(rawBinaryKey(key), rawBinaryKey(destKey), CompositeArgumentUtils.lMoveArgs(from, to),
 						timeout), SafeEncoder::encode);
 	}
 
 	@Override
 	public byte[] blMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
-						 final int timeout) {
+	                     final int timeout) {
 		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from, to).add(timeout);
-		return executeCommand(Command.BLMOVE, args,
+		return executeCommand(RedisCommand.BLMOVE, args,
 				(cmd)->cmd.blmove(rawKey(key), rawKey(destKey), CompositeArgumentUtils.lMoveArgs(from, to), timeout));
 	}
 
@@ -89,7 +89,7 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public KeyValue<String, List<String>> blMPop(final int timeout, final String[] keys, final Direction direction,
-												 final int count) {
+	                                             final int count) {
 		final CommandArguments args = CommandArguments.create(timeout).add(keys.length, keys).add(direction)
 				.add(Keyword.Common.COUNT, count);
 		return stringBlMPop(rawBinaryKeys(keys), timeout, CompositeArgumentUtils.lMPopArgs(direction, count), args);
@@ -97,7 +97,7 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 
 	@Override
 	public KeyValue<byte[], List<byte[]>> blMPop(final int timeout, final byte[][] keys, final Direction direction,
-												 final int count) {
+	                                             final int count) {
 		final CommandArguments args = CommandArguments.create(timeout).add(keys.length, keys).add(direction)
 				.add(Keyword.Common.COUNT, count);
 		return binaryBlMPop(rawKeys(keys), timeout, CompositeArgumentUtils.lMPopArgs(direction, count), args);
@@ -106,60 +106,62 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public List<String> blPop(final String[] keys, final int timeout) {
 		final CommandArguments args = CommandArguments.create(keys).add(timeout);
-		return executeCommand(Command.BLPOP, args, (cmd)->cmd.blpop(timeout, rawBinaryKeys(keys)),
+		return executeCommand(RedisCommand.BLPOP, args, (cmd)->cmd.blpop(timeout, rawBinaryKeys(keys)),
 				(v)->ListBuilder.of(SafeEncoder.encode(v.getValue())));
 	}
 
 	@Override
 	public List<byte[]> blPop(final byte[][] keys, final int timeout) {
 		final CommandArguments args = CommandArguments.create(keys).add(timeout);
-		return executeCommand(Command.BLPOP, args, (cmd)->cmd.blpop(timeout, rawKeys(keys)),
+		return executeCommand(RedisCommand.BLPOP, args, (cmd)->cmd.blpop(timeout, rawKeys(keys)),
 				(v)->ListBuilder.of(v.getValue()));
 	}
 
 	@Override
 	public List<String> brPop(final String[] keys, final int timeout) {
 		final CommandArguments args = CommandArguments.create(keys).add(timeout);
-		return executeCommand(Command.BRPOP, args, (cmd)->cmd.brpop(timeout, rawBinaryKeys(keys)),
+		return executeCommand(RedisCommand.BRPOP, args, (cmd)->cmd.brpop(timeout, rawBinaryKeys(keys)),
 				(v)->ListBuilder.of(SafeEncoder.encode(v.getValue())));
 	}
 
 	@Override
 	public List<byte[]> brPop(final byte[][] keys, final int timeout) {
 		final CommandArguments args = CommandArguments.create(keys).add(timeout);
-		return executeCommand(Command.BRPOP, args, (cmd)->cmd.brpop(timeout, rawKeys(keys)),
+		return executeCommand(RedisCommand.BRPOP, args, (cmd)->cmd.brpop(timeout, rawKeys(keys)),
 				(v)->ListBuilder.of(v.getValue()));
 	}
 
 	@Override
 	public String brPoplPush(final String key, final String destKey, final int timeout) {
 		final CommandArguments args = CommandArguments.create(key, destKey).add(timeout);
-		return executeCommand(Command.BRPOPLPUSH, args,
+		return executeCommand(RedisCommand.BRPOPLPUSH, args,
 				(cmd)->cmd.brpoplpush(timeout, rawBinaryKey(key), rawBinaryKey(destKey)), SafeEncoder::encode);
 	}
 
 	@Override
 	public byte[] brPoplPush(final byte[] key, final byte[] destKey, final int timeout) {
 		final CommandArguments args = CommandArguments.create(key, destKey).add(timeout);
-		return executeCommand(Command.BRPOPLPUSH, args, (cmd)->cmd.brpoplpush(timeout, rawKey(key), rawKey(destKey)));
+		return executeCommand(
+				RedisCommand.BRPOPLPUSH, args, (cmd)->cmd.brpoplpush(timeout, rawKey(key), rawKey(destKey)));
 	}
 
 	@Override
 	public String lIndex(final String key, final long index) {
 		final CommandArguments args = CommandArguments.create(key).add(index);
-		return executeCommand(Command.LINDEX, args, (cmd)->cmd.lindex(rawBinaryKey(key), index), SafeEncoder::encode);
+		return executeCommand(
+				RedisCommand.LINDEX, args, (cmd)->cmd.lindex(rawBinaryKey(key), index), SafeEncoder::encode);
 	}
 
 	@Override
 	public byte[] lIndex(final byte[] key, final long index) {
 		final CommandArguments args = CommandArguments.create(key).add(index);
-		return executeCommand(Command.LINDEX, args, (cmd)->cmd.lindex(rawKey(key), index));
+		return executeCommand(RedisCommand.LINDEX, args, (cmd)->cmd.lindex(rawKey(key), index));
 	}
 
 	@Override
 	public Long lInsert(final String key, final Position position, final String pivot, final String value) {
 		final CommandArguments args = CommandArguments.create(key).add(position).add(pivot).add(value);
-		return executeCommand(Command.LINSERT, args,
+		return executeCommand(RedisCommand.LINSERT, args,
 				(cmd)->cmd.linsert(rawBinaryKey(key), Position.BEFORE == position, SafeEncoder.encode(pivot),
 						SafeEncoder.encode(value)));
 	}
@@ -167,26 +169,26 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public Long lInsert(final byte[] key, final Position position, final byte[] pivot, final byte[] value) {
 		final CommandArguments args = CommandArguments.create(key).add(position).add(pivot).add(value);
-		return executeCommand(Command.LINSERT, args,
+		return executeCommand(RedisCommand.LINSERT, args,
 				(cmd)->cmd.linsert(key, Position.BEFORE == position, pivot, value));
 	}
 
 	@Override
 	public Long lLen(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.LLEN, args, (cmd)->cmd.llen(rawBinaryKey(key)));
+		return executeCommand(RedisCommand.LLEN, args, (cmd)->cmd.llen(rawBinaryKey(key)));
 	}
 
 	@Override
 	public Long lLen(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.LLEN, args, (cmd)->cmd.llen(rawKey(key)));
+		return executeCommand(RedisCommand.LLEN, args, (cmd)->cmd.llen(rawKey(key)));
 	}
 
 	@Override
 	public String lMove(final String key, final String destKey, final Direction from, final Direction to) {
 		final CommandArguments args = CommandArguments.create(key, destKey).add(from, to);
-		return executeCommand(Command.LMOVE, args,
+		return executeCommand(RedisCommand.LMOVE, args,
 				(cmd)->cmd.lmove(rawBinaryKey(key), rawBinaryKey(destKey), CompositeArgumentUtils.lMoveArgs(from, to)),
 				SafeEncoder::encode);
 	}
@@ -194,7 +196,7 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public byte[] lMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to) {
 		final CommandArguments args = CommandArguments.create(key, destKey).add(from, to);
-		return executeCommand(Command.LMOVE, args,
+		return executeCommand(RedisCommand.LMOVE, args,
 				(cmd)->cmd.lmove(rawKey(key), rawKey(destKey), CompositeArgumentUtils.lMoveArgs(from, to)));
 	}
 
@@ -227,58 +229,59 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public String lPop(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.LPOP, args, (cmd)->cmd.lpop(rawBinaryKey(key)), SafeEncoder::encode);
+		return executeCommand(RedisCommand.LPOP, args, (cmd)->cmd.lpop(rawBinaryKey(key)), SafeEncoder::encode);
 	}
 
 	@Override
 	public byte[] lPop(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.LPOP, args, (cmd)->cmd.lpop(rawKey(key)));
+		return executeCommand(RedisCommand.LPOP, args, (cmd)->cmd.lpop(rawKey(key)));
 	}
 
 	@Override
 	public List<String> lPop(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.COUNT, count);
-		return executeCommand(Command.LPOP, args, (cmd)->cmd.lpop(rawBinaryKey(key), count),
+		return executeCommand(RedisCommand.LPOP, args, (cmd)->cmd.lpop(rawBinaryKey(key), count),
 				new BinaryListStringListConverter());
 	}
 
 	@Override
 	public List<byte[]> lPop(final byte[] key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.COUNT, count);
-		return executeCommand(Command.LPOP, args, (cmd)->cmd.lpop(rawKey(key), count));
+		return executeCommand(RedisCommand.LPOP, args, (cmd)->cmd.lpop(rawKey(key), count));
 	}
 
 	@Override
 	public Long lPos(final String key, final String element) {
 		final CommandArguments args = CommandArguments.create(key, element);
-		return executeCommand(Command.LPOS, args, (cmd)->cmd.lpos(rawBinaryKey(key), SafeEncoder.encode(element)));
+		return executeCommand(RedisCommand.LPOS, args, (cmd)->cmd.lpos(rawBinaryKey(key), SafeEncoder.encode(element)));
 	}
 
 	@Override
 	public Long lPos(final byte[] key, final byte[] element) {
 		final CommandArguments args = CommandArguments.create(key, element);
-		return executeCommand(Command.LPOS, args, (cmd)->cmd.lpos(rawKey(key), element));
+		return executeCommand(RedisCommand.LPOS, args, (cmd)->cmd.lpos(rawKey(key), element));
 	}
 
 	@Override
 	public Long lPos(final String key, final String element, final LPosArgument argument) {
 		final CommandArguments args = CommandArguments.create(key, element).add(argument);
-		return executeCommand(Command.LPOS, args,
+		return executeCommand(RedisCommand.LPOS, args,
 				(cmd)->cmd.lpos(rawBinaryKey(key), SafeEncoder.encode(element), new LettuceLPosArgs(argument)));
 	}
 
 	@Override
 	public Long lPos(final byte[] key, final byte[] element, final LPosArgument argument) {
 		final CommandArguments args = CommandArguments.create(key, element).add(argument);
-		return executeCommand(Command.LPOS, args, (cmd)->cmd.lpos(rawKey(key), element, new LettuceLPosArgs(argument)));
+		return executeCommand(
+				RedisCommand.LPOS, args, (cmd)->cmd.lpos(rawKey(key), element, new LettuceLPosArgs(argument)));
 	}
 
 	@Override
 	public List<Long> lPos(final String key, final String element, final LPosArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key, element).add(argument)
 				.add(Keyword.Common.COUNT, count);
-		return executeCommand(Command.LPOS, args,
+		return executeCommand(RedisCommand.LPOS, args,
 				(cmd)->cmd.lpos(rawBinaryKey(key), SafeEncoder.encode(element), count, new LettuceLPosArgs(argument)));
 	}
 
@@ -286,182 +289,191 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 	public List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key, element).add(argument)
 				.add(Keyword.Common.COUNT, count);
-		return executeCommand(Command.LPOS, args,
+		return executeCommand(RedisCommand.LPOS, args,
 				(cmd)->cmd.lpos(rawKey(key), element, count, new LettuceLPosArgs(argument)));
 	}
 
 	@Override
 	public List<Long> lPos(final String key, final String element, final int count) {
 		final CommandArguments args = CommandArguments.create(key, element).add(Keyword.Common.COUNT, count);
-		return executeCommand(Command.LPOS, args,
+		return executeCommand(RedisCommand.LPOS, args,
 				(cmd)->cmd.lpos(rawBinaryKey(key), SafeEncoder.encode(element), count));
 	}
 
 	@Override
 	public List<Long> lPos(final byte[] key, final byte[] element, final int count) {
 		final CommandArguments args = CommandArguments.create(key, element).add(Keyword.Common.COUNT, count);
-		return executeCommand(Command.LPOS, args, (cmd)->cmd.lpos(rawKey(key), element, count));
+		return executeCommand(RedisCommand.LPOS, args, (cmd)->cmd.lpos(rawKey(key), element, count));
 	}
 
 	@Override
 	public Long lPush(final String key, final String... values) {
 		final CommandArguments args = CommandArguments.create(key).add(values);
-		return executeCommand(Command.LPUSH, args, (cmd)->cmd.lpush(rawBinaryKey(key), SafeEncoder.encode(values)));
+		return executeCommand(RedisCommand.LPUSH, args,
+				(cmd)->cmd.lpush(rawBinaryKey(key), SafeEncoder.encode(values)));
 	}
 
 	@Override
 	public Long lPush(final byte[] key, final byte[]... values) {
 		final CommandArguments args = CommandArguments.create(key).add(values);
-		return executeCommand(Command.LPUSH, args, (cmd)->cmd.lpush(rawKey(key), values));
+		return executeCommand(RedisCommand.LPUSH, args, (cmd)->cmd.lpush(rawKey(key), values));
 	}
 
 	@Override
 	public Long lPushX(final String key, final String... values) {
 		final CommandArguments args = CommandArguments.create(key).add(values);
-		return executeCommand(Command.LPUSHX, args, (cmd)->cmd.lpushx(rawBinaryKey(key), SafeEncoder.encode(values)));
+		return executeCommand(
+				RedisCommand.LPUSHX, args, (cmd)->cmd.lpushx(rawBinaryKey(key), SafeEncoder.encode(values)));
 	}
 
 	@Override
 	public Long lPushX(final byte[] key, final byte[]... values) {
 		final CommandArguments args = CommandArguments.create(key).add(values);
-		return executeCommand(Command.LPUSHX, args, (cmd)->cmd.lpushx(rawKey(key), values));
+		return executeCommand(RedisCommand.LPUSHX, args, (cmd)->cmd.lpushx(rawKey(key), values));
 	}
 
 	@Override
 	public List<String> lRange(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
-		return executeCommand(Command.LRANGE, args, (cmd)->cmd.lrange(rawBinaryKey(key), start, end),
+		return executeCommand(RedisCommand.LRANGE, args, (cmd)->cmd.lrange(rawBinaryKey(key), start, end),
 				new BinaryListStringListConverter());
 	}
 
 	@Override
 	public List<byte[]> lRange(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
-		return executeCommand(Command.LRANGE, args, (cmd)->cmd.lrange(rawKey(key), start, end));
+		return executeCommand(RedisCommand.LRANGE, args, (cmd)->cmd.lrange(rawKey(key), start, end));
 	}
 
 	@Override
 	public Long lRem(final String key, final String value, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(value).add(count);
-		return executeCommand(Command.LREM, args, (cmd)->cmd.lrem(rawBinaryKey(key), count, SafeEncoder.encode(value)));
+		return executeCommand(
+				RedisCommand.LREM, args, (cmd)->cmd.lrem(rawBinaryKey(key), count, SafeEncoder.encode(value)));
 	}
 
 	@Override
 	public Long lRem(final byte[] key, final byte[] value, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(value).add(count);
-		return executeCommand(Command.LREM, args, (cmd)->cmd.lrem(rawKey(key), count, value));
+		return executeCommand(RedisCommand.LREM, args, (cmd)->cmd.lrem(rawKey(key), count, value));
 	}
 
 	@Override
 	public Status lSet(final String key, final long index, final String value) {
 		final CommandArguments args = CommandArguments.create(key).add(index).add(value);
-		return executeCommand(Command.LSET, args, (cmd)->cmd.lset(rawBinaryKey(key), index, SafeEncoder.encode(value)),
+		return executeCommand(
+				RedisCommand.LSET, args, (cmd)->cmd.lset(rawBinaryKey(key), index, SafeEncoder.encode(value)),
 				new OkStatusConverter());
 	}
 
 	@Override
 	public Status lSet(final byte[] key, final long index, final byte[] value) {
 		final CommandArguments args = CommandArguments.create(key).add(index).add(value);
-		return executeCommand(Command.LSET, args, (cmd)->cmd.lset(rawKey(key), index, value), new OkStatusConverter());
+		return executeCommand(
+				RedisCommand.LSET, args, (cmd)->cmd.lset(rawKey(key), index, value), new OkStatusConverter());
 	}
 
 	@Override
 	public Status lTrim(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
-		return executeCommand(Command.LTRIM, args, (cmd)->cmd.ltrim(rawBinaryKey(key), start, end),
+		return executeCommand(RedisCommand.LTRIM, args, (cmd)->cmd.ltrim(rawBinaryKey(key), start, end),
 				new OkStatusConverter());
 	}
 
 	@Override
 	public Status lTrim(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
-		return executeCommand(Command.LTRIM, args, (cmd)->cmd.ltrim(rawKey(key), start, end), new OkStatusConverter());
+		return executeCommand(
+				RedisCommand.LTRIM, args, (cmd)->cmd.ltrim(rawKey(key), start, end), new OkStatusConverter());
 	}
 
 	@Override
 	public String rPop(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.RPOP, args, (cmd)->cmd.rpop(rawBinaryKey(key)), SafeEncoder::encode);
+		return executeCommand(RedisCommand.RPOP, args, (cmd)->cmd.rpop(rawBinaryKey(key)), SafeEncoder::encode);
 	}
 
 	@Override
 	public byte[] rPop(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.RPOP, args, (cmd)->cmd.rpop(rawKey(key)));
+		return executeCommand(RedisCommand.RPOP, args, (cmd)->cmd.rpop(rawKey(key)));
 	}
 
 	@Override
 	public List<String> rPop(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
-		return executeCommand(Command.RPOP, args, (cmd)->cmd.rpop(rawBinaryKey(key), count),
+		return executeCommand(RedisCommand.RPOP, args, (cmd)->cmd.rpop(rawBinaryKey(key), count),
 				new BinaryListStringListConverter());
 	}
 
 	@Override
 	public List<byte[]> rPop(final byte[] key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
-		return executeCommand(Command.RPOP, args, (cmd)->cmd.rpop(rawKey(key), count));
+		return executeCommand(RedisCommand.RPOP, args, (cmd)->cmd.rpop(rawKey(key), count));
 	}
 
 	@Override
 	public String rPoplPush(final String key, final String destKey) {
 		final CommandArguments args = CommandArguments.create(key, destKey);
-		return executeCommand(Command.RPOPLPUSH, args, (cmd)->cmd.rpoplpush(rawBinaryKey(key), rawBinaryKey(destKey)),
+		return executeCommand(
+				RedisCommand.RPOPLPUSH, args, (cmd)->cmd.rpoplpush(rawBinaryKey(key), rawBinaryKey(destKey)),
 				SafeEncoder::encode);
 	}
 
 	@Override
 	public byte[] rPoplPush(final byte[] key, final byte[] destKey) {
 		final CommandArguments args = CommandArguments.create(key, destKey);
-		return executeCommand(Command.RPOPLPUSH, args, (cmd)->cmd.rpoplpush(rawKey(key), rawKey(destKey)));
+		return executeCommand(RedisCommand.RPOPLPUSH, args, (cmd)->cmd.rpoplpush(rawKey(key), rawKey(destKey)));
 	}
 
 	@Override
 	public Long rPush(final String key, final String... values) {
 		final CommandArguments args = CommandArguments.create(key).add(values);
-		return executeCommand(Command.RPUSH, args, (cmd)->cmd.rpush(rawBinaryKey(key), SafeEncoder.encode(values)));
+		return executeCommand(RedisCommand.RPUSH, args,
+				(cmd)->cmd.rpush(rawBinaryKey(key), SafeEncoder.encode(values)));
 	}
 
 	@Override
 	public Long rPush(final byte[] key, final byte[]... values) {
 		final CommandArguments args = CommandArguments.create(key).add(values);
-		return executeCommand(Command.RPUSH, args, (cmd)->cmd.rpush(rawKey(key), values));
+		return executeCommand(RedisCommand.RPUSH, args, (cmd)->cmd.rpush(rawKey(key), values));
 	}
 
 	@Override
 	public Long rPushX(final String key, final String... values) {
 		final CommandArguments args = CommandArguments.create(key).add(values);
-		return executeCommand(Command.RPUSHX, args, (cmd)->cmd.rpushx(rawBinaryKey(key), SafeEncoder.encode(values)));
+		return executeCommand(
+				RedisCommand.RPUSHX, args, (cmd)->cmd.rpushx(rawBinaryKey(key), SafeEncoder.encode(values)));
 	}
 
 	@Override
 	public Long rPushX(final byte[] key, final byte[]... values) {
 		final CommandArguments args = CommandArguments.create(key).add(values);
-		return executeCommand(Command.RPUSHX, args, (cmd)->cmd.rpushx(rawKey(key), values));
+		return executeCommand(RedisCommand.RPUSHX, args, (cmd)->cmd.rpushx(rawKey(key), values));
 	}
 
 	private KeyValue<String, List<String>> stringBlMPop(final byte[][] keys, final int timeout,
-														final LMPopArgs lmPopArgs, final CommandArguments args) {
-		return executeCommand(Command.BLMPOP, args, (cmd)->cmd.blmpop(timeout, lmPopArgs, keys),
+	                                                    final LMPopArgs lmPopArgs, final CommandArguments args) {
+		return executeCommand(RedisCommand.BLMPOP, args, (cmd)->cmd.blmpop(timeout, lmPopArgs, keys),
 				new KeyValueConverter<>(SafeEncoder::encode, new ListConverter<>(SafeEncoder::encode)));
 	}
 
 	private KeyValue<byte[], List<byte[]>> binaryBlMPop(final byte[][] keys, final int timeout,
-														final LMPopArgs lmPopArgs, final CommandArguments args) {
-		return executeCommand(Command.BLMPOP, args, (cmd)->cmd.blmpop(timeout, lmPopArgs, keys),
+	                                                    final LMPopArgs lmPopArgs, final CommandArguments args) {
+		return executeCommand(RedisCommand.BLMPOP, args, (cmd)->cmd.blmpop(timeout, lmPopArgs, keys),
 				new KeyValueConverter<>((k)->k, (v)->v));
 	}
 
 	private KeyValue<String, List<String>> stringLMPop(final byte[][] keys, final LMPopArgs lmPopArgs,
-													   final CommandArguments args) {
-		return executeCommand(Command.LMPOP, args,
+	                                                   final CommandArguments args) {
+		return executeCommand(RedisCommand.LMPOP, args,
 				(cmd)->cmd.lmpop(lmPopArgs, keys),
 				new KeyValueConverter<>(SafeEncoder::encode, new ListConverter<>(SafeEncoder::encode)));
 	}
 
 	private KeyValue<byte[], List<byte[]>> binaryLMPop(final byte[][] keys, final LMPopArgs lmPopArgs,
-													   final CommandArguments args) {
-		return executeCommand(Command.LMPOP, args,
+	                                                   final CommandArguments args) {
+		return executeCommand(RedisCommand.LMPOP, args,
 				(cmd)->cmd.lmpop(lmPopArgs, keys),
 				new KeyValueConverter<>((k)->k, (v)->v));
 	}

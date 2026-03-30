@@ -45,10 +45,10 @@ import com.buession.redis.core.RedisMonitor;
 import com.buession.redis.core.RedisServerTime;
 import com.buession.redis.core.Role;
 import com.buession.redis.core.SlowLog;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ServerCommands;
-import com.buession.redis.core.command.SubCommand;
+import com.buession.redis.core.command.RedisSubCommand;
 import com.buession.redis.core.command.args.acl.AclSetUserArgument;
 import com.buession.redis.core.command.args.server.FailoverArgument;
 import com.buession.redis.core.command.args.server.HotkeysStartArgument;
@@ -75,573 +75,576 @@ public final class JedisServerCommands extends AbstractJedisRedisCommands implem
 
 	@Override
 	public Set<AclCategory> aclCat() {
-		return executeCommand(Command.ACL, SubCommand.ACL_CAT);
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_CAT);
 	}
 
 	@Override
-	public Set<Command> aclCat(final String categoryName) {
+	public Set<RedisCommand> aclCat(final String categoryName) {
 		final CommandArguments args = CommandArguments.create(categoryName);
-		return executeCommand(Command.ACL, SubCommand.ACL_CAT, args);
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_CAT, args);
 	}
 
 	@Override
-	public Set<Command> aclCat(final byte[] categoryName) {
+	public Set<RedisCommand> aclCat(final byte[] categoryName) {
 		final CommandArguments args = CommandArguments.create(categoryName);
-		return executeCommand(Command.ACL, SubCommand.ACL_CAT, args);
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_CAT, args);
 	}
 
 	@Override
 	public Long aclDelUser(final String... usernames) {
 		final CommandArguments args = CommandArguments.create(usernames);
-		return executeCommand(Command.ACL, SubCommand.ACL_DELUSER, args);
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_DELUSER, args);
 	}
 
 	@Override
 	public Long aclDelUser(final byte[]... usernames) {
 		final CommandArguments args = CommandArguments.create(usernames);
-		return executeCommand(Command.ACL, SubCommand.ACL_DELUSER, args);
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_DELUSER, args);
 	}
 
 	@Override
-	public Status aclDryRun(final String username, final Command command) {
+	public Status aclDryRun(final String username, final RedisCommand command) {
 		final CommandArguments args = CommandArguments.create(username).add(command);
-		return executeCommand(Command.ACL, SubCommand.ACL_DRYRUN, args);
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_DRYRUN, args);
 	}
 
 	@Override
-	public Status aclDryRun(final byte[] username, final Command command) {
+	public Status aclDryRun(final byte[] username, final RedisCommand command) {
 		final CommandArguments args = CommandArguments.create(username).add(command);
-		return executeCommand(Command.ACL, SubCommand.ACL_DRYRUN, args);
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_DRYRUN, args);
 	}
 
 	@Override
-	public Status aclDryRun(final String username, final Command command, final String... arguments) {
+	public Status aclDryRun(final String username, final RedisCommand command, final String... arguments) {
 		final CommandArguments args = CommandArguments.create(username).add(command).add(arguments);
-		return executeCommand(Command.ACL, SubCommand.ACL_DRYRUN, args);
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_DRYRUN, args);
 	}
 
 	@Override
-	public Status aclDryRun(final byte[] username, final Command command, final byte[]... arguments) {
+	public Status aclDryRun(final byte[] username, final RedisCommand command, final byte[]... arguments) {
 		final CommandArguments args = CommandArguments.create(username).add(command).add(arguments);
-		return executeCommand(Command.ACL, SubCommand.ACL_DRYRUN, args);
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_DRYRUN, args);
 	}
 
 	@Override
 	public String aclGenPass() {
-		return executeCommand(Command.ACL, SubCommand.ACL_GENPASS);
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_GENPASS);
 	}
 
 	@Override
 	public String aclGenPass(final int bits) {
 		final CommandArguments args = CommandArguments.create(bits);
-		return executeCommand(Command.ACL, SubCommand.ACL_GENPASS, args);
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_GENPASS, args);
 	}
 
 	@Override
 	public AclUser aclGetUser(final String username) {
 		final CommandArguments args = CommandArguments.create(username);
-		return executeCommand(Command.ACL, SubCommand.ACL_GETUSER, args);
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_GETUSER, args);
 	}
 
 	@Override
 	public AclUser aclGetUser(final byte[] username) {
 		final CommandArguments args = CommandArguments.create(username);
-		return executeCommand(Command.ACL, SubCommand.ACL_GETUSER, args);
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_GETUSER, args);
 	}
 
 	@Override
 	public List<String> aclList() {
-		return executeCommand(Command.ACL, SubCommand.ACL_LIST);
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_LIST);
 	}
 
 	@Override
 	public Status aclLoad() {
-		return executeCommand(Command.ACL, SubCommand.ACL_LOAD);
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_LOAD);
 	}
 
 	@Override
 	public List<AclLog> aclLog() {
-		return executeCommand(Command.ACL, SubCommand.ACL_LOG);
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_LOG);
 	}
 
 	@Override
 	public List<AclLog> aclLog(final int count) {
 		final CommandArguments args = CommandArguments.create(count);
-		return executeCommand(Command.ACL, SubCommand.ACL_LOG, args);
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_LOG, args);
 	}
 
 	@Override
 	public Status aclLogReset() {
 		final CommandArguments args = CommandArguments.create(Keyword.Conn.RESET);
-		return executeCommand(Command.ACL, SubCommand.ACL_LOG, args);
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_LOG, args);
 	}
 
 	@Override
 	public Status aclSave() {
-		return executeCommand(Command.ACL, SubCommand.ACL_SAVE);
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_SAVE);
 	}
 
 	@Override
 	public Status aclSetUser(final String username, final AclSetUserArgument argument) {
 		final CommandArguments args = CommandArguments.create(username).add(argument);
-		return executeCommand(Command.ACL, SubCommand.ACL_SETUSER, args);
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_SETUSER, args);
 	}
 
 	@Override
 	public Status aclSetUser(final byte[] username, final AclSetUserArgument argument) {
 		final CommandArguments args = CommandArguments.create(username).add(argument);
-		return executeCommand(Command.ACL, SubCommand.ACL_SETUSER, args);
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_SETUSER, args);
 	}
 
 	@Override
 	public List<String> aclUsers() {
-		return executeCommand(Command.ACL, SubCommand.ACL_USERS);
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_USERS);
 	}
 
 	@Override
 	public String aclWhoAmI() {
-		return executeCommand(Command.ACL, SubCommand.ACL_WHOAMI);
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_WHOAMI);
 	}
 
 	@Override
 	public String bgRewriteAof() {
-		return executeCommand(Command.BGREWRITEAOF);
+		return executeCommand(RedisCommand.BGREWRITEAOF);
 	}
 
 	@Override
 	public String bgSave() {
-		return executeCommand(Command.BGSAVE);
+		return executeCommand(RedisCommand.BGSAVE);
 	}
 
 	@Override
 	public Integer commandCount() {
-		return executeCommand(Command.COMMAND, SubCommand.COMMAND_COUNT);
+		return executeCommand(RedisCommand.COMMAND, RedisSubCommand.COMMAND_COUNT);
 	}
 
 	@Override
 	public List<CommandDoc> commandDocs() {
-		return executeCommand(Command.COMMAND, SubCommand.COMMAND_DOCS);
+		return executeCommand(RedisCommand.COMMAND, RedisSubCommand.COMMAND_DOCS);
 	}
 
 	@Override
-	public List<CommandDoc> commandDocs(final Command... commands) {
+	public List<CommandDoc> commandDocs(final RedisCommand... commands) {
 		final CommandArguments args = CommandArguments.create(commands);
-		return executeCommand(Command.COMMAND, SubCommand.COMMAND_DOCS, args);
+		return executeCommand(RedisCommand.COMMAND, RedisSubCommand.COMMAND_DOCS, args);
 	}
 
 	@Override
-	public List<String> commandGetKeys(final Command command) {
+	public List<String> commandGetKeys(final RedisCommand command) {
 		final CommandArguments args = CommandArguments.create(command);
-		return executeCommand(Command.COMMAND, SubCommand.COMMAND_GETKEYS, args);
+		return executeCommand(RedisCommand.COMMAND, RedisSubCommand.COMMAND_GETKEYS, args);
 	}
 
 	@Override
-	public List<String> commandGetKeys(final Command command, final String... args) {
+	public List<String> commandGetKeys(final RedisCommand command, final String... args) {
 		final CommandArguments args1 = CommandArguments.create(command, args);
-		return executeCommand(Command.COMMAND, SubCommand.COMMAND_GETKEYS, args1);
+		return executeCommand(RedisCommand.COMMAND, RedisSubCommand.COMMAND_GETKEYS, args1);
 	}
 
 	@Override
-	public List<CommandKeyAndFlag> commandGetKeysAndFlags(final Command command) {
+	public List<CommandKeyAndFlag> commandGetKeysAndFlags(final RedisCommand command) {
 		final CommandArguments args = CommandArguments.create(command);
-		return executeCommand(Command.COMMAND, SubCommand.COMMAND_GETKEYSANDFLAGS, args);
+		return executeCommand(RedisCommand.COMMAND, RedisSubCommand.COMMAND_GETKEYSANDFLAGS, args);
 	}
 
 	@Override
-	public List<CommandKeyAndFlag> commandGetKeysAndFlags(final Command command, final String... arguments) {
+	public List<CommandKeyAndFlag> commandGetKeysAndFlags(final RedisCommand command, final String... arguments) {
 		final CommandArguments args = CommandArguments.create(command).add(arguments);
-		return executeCommand(Command.COMMAND, SubCommand.COMMAND_GETKEYSANDFLAGS, args);
+		return executeCommand(RedisCommand.COMMAND, RedisSubCommand.COMMAND_GETKEYSANDFLAGS, args);
 	}
 
 	@Override
-	public List<CommandInfo> commandInfo(final Command... commands) {
+	public List<CommandInfo> commandInfo(final RedisCommand... commands) {
 		final CommandArguments args = CommandArguments.create(commands);
-		return executeCommand(Command.COMMAND, SubCommand.COMMAND_INFO, args);
+		return executeCommand(RedisCommand.COMMAND, RedisSubCommand.COMMAND_INFO, args);
 	}
 
 	@Override
-	public List<Command> commandList() {
-		return executeCommand(Command.COMMAND, SubCommand.COMMAND_LIST);
+	public List<RedisCommand> commandList() {
+		return executeCommand(RedisCommand.COMMAND, RedisSubCommand.COMMAND_LIST);
 	}
 
 	@Override
 	public Map<String, String> configGet(final String... parameters) {
 		final CommandArguments args = CommandArguments.create(parameters);
-		return executeCommand(Command.CONFIG_GET, args);
+		return executeCommand(RedisCommand.CONFIG_GET, args);
 	}
 
 	@Override
 	public Map<byte[], byte[]> configGet(final byte[]... parameters) {
 		final CommandArguments args = CommandArguments.create(parameters);
-		return executeCommand(Command.CONFIG_GET, args);
+		return executeCommand(RedisCommand.CONFIG_GET, args);
 	}
 
 	@Override
 	public Status configResetStat() {
-		return executeCommand(Command.CONFIG_RESETSTAT);
+		return executeCommand(RedisCommand.CONFIG_RESETSTAT);
 	}
 
 	@Override
 	public Status configRewrite() {
-		return executeCommand(Command.CONFIG_REWRITE);
+		return executeCommand(RedisCommand.CONFIG_REWRITE);
 	}
 
 	@Override
 	public Status configSet(final String parameter, final String value) {
 		final CommandArguments args = CommandArguments.create(parameter).add(value);
-		return executeCommand(Command.CONFIG_SET, args);
+		return executeCommand(RedisCommand.CONFIG_SET, args);
 	}
 
 	@Override
 	public Status configSet(final byte[] parameter, final byte[] value) {
 		final CommandArguments args = CommandArguments.create(parameter).add(value);
-		return executeCommand(Command.CONFIG_SET, args);
+		return executeCommand(RedisCommand.CONFIG_SET, args);
 	}
 
 	@Override
 	public Status configSet(final Map<String, String> configs) {
 		final CommandArguments args = CommandArguments.create(configs);
-		return executeCommand(Command.CONFIG_SET, args);
+		return executeCommand(RedisCommand.CONFIG_SET, args);
 	}
 
 	@Override
 	public Long dbSize() {
-		return executeCommand(Command.DBSIZE, (cmd)->cmd.dbSize());
+		return executeCommand(RedisCommand.DBSIZE, (cmd)->cmd.dbSize());
 	}
 
 	@Override
 	public Status failover() {
-		return executeCommand(Command.FAILOVER);
+		return executeCommand(RedisCommand.FAILOVER);
 	}
 
 	@Override
 	public Status failover(final FailoverArgument argument) {
 		final CommandArguments args = CommandArguments.create(argument);
-		return executeCommand(Command.FAILOVER, args);
+		return executeCommand(RedisCommand.FAILOVER, args);
 	}
 
 	@Override
 	public Status flushAll() {
-		return executeCommand(Command.FLUSHALL, (cmd)->cmd.flushAll(), new OkStatusConverter());
+		return executeCommand(RedisCommand.FLUSHALL, (cmd)->cmd.flushAll(), new OkStatusConverter());
 	}
 
 	@Override
 	public Status flushAll(final FlushMode mode) {
 		final CommandArguments args = CommandArguments.create(mode);
-		return executeCommand(Command.FLUSHALL, args, (cmd)->cmd.flushAll(), new OkStatusConverter());
+		return executeCommand(RedisCommand.FLUSHALL, args, (cmd)->cmd.flushAll(), new OkStatusConverter());
 	}
 
 	@Override
 	public Status flushDb() {
-		return executeCommand(Command.FLUSHDB, (cmd)->cmd.flushDB(), new OkStatusConverter());
+		return executeCommand(RedisCommand.FLUSHDB, (cmd)->cmd.flushDB(), new OkStatusConverter());
 	}
 
 	@Override
 	public Status flushDb(final FlushMode mode) {
 		final CommandArguments args = CommandArguments.create(mode);
-		return executeCommand(Command.FLUSHDB, args, (cmd)->cmd.flushDB(), new OkStatusConverter());
+		return executeCommand(RedisCommand.FLUSHDB, args, (cmd)->cmd.flushDB(), new OkStatusConverter());
 	}
 
 	@Override
 	public List<HotKey> hotkeysGet() {
-		return executeCommand(Command.HOTKEYS, SubCommand.HOTKEYS_GET);
+		return executeCommand(RedisCommand.HOTKEYS, RedisSubCommand.HOTKEYS_GET);
 	}
 
 	@Override
 	public Status hotkeysReset() {
-		return executeCommand(Command.HOTKEYS, SubCommand.HOTKEYS_RESET);
+		return executeCommand(RedisCommand.HOTKEYS, RedisSubCommand.HOTKEYS_RESET);
 	}
 
 	@Override
 	public Status hotkeysStart(final int count) {
 		final CommandArguments args = CommandArguments.create("METRICS").add(count);
-		return executeCommand(Command.HOTKEYS, SubCommand.HOTKEYS_START, args);
+		return executeCommand(RedisCommand.HOTKEYS, RedisSubCommand.HOTKEYS_START, args);
 	}
 
 	@Override
 	public Status hotkeysStart(final int count, final HotkeysStartArgument argument) {
 		final CommandArguments args = CommandArguments.create("METRICS").add(count).add(argument);
-		return executeCommand(Command.HOTKEYS, SubCommand.HOTKEYS_START, args);
+		return executeCommand(RedisCommand.HOTKEYS, RedisSubCommand.HOTKEYS_START, args);
 	}
 
 	@Override
 	public Status hotkeysStop() {
-		return executeCommand(Command.HOTKEYS, SubCommand.HOTKEYS_STOP);
+		return executeCommand(RedisCommand.HOTKEYS, RedisSubCommand.HOTKEYS_STOP);
 	}
 
 	@Override
 	public Info info() {
-		return executeCommand(Command.INFO, (cmd)->cmd.info(), new InfoConverter());
+		return executeCommand(RedisCommand.INFO, (cmd)->cmd.info(), new InfoConverter());
 	}
 
 	@Override
 	public Info info(final Info.Section section) {
 		final CommandArguments args = CommandArguments.create(section);
-		return executeCommand(Command.INFO, args, (cmd)->cmd.info(section.name().toLowerCase()), new InfoConverter());
+		return executeCommand(
+				RedisCommand.INFO, args, (cmd)->cmd.info(section.name().toLowerCase()), new InfoConverter());
 	}
 
 	@Override
 	public Long lastSave() {
-		return executeCommand(Command.LASTSAVE);
+		return executeCommand(RedisCommand.LASTSAVE);
 	}
 
 	@Override
 	public String latencyDoctor() {
-		return executeCommand(Command.LATENCY, SubCommand.LATENCY_DOCTOR);
+		return executeCommand(RedisCommand.LATENCY, RedisSubCommand.LATENCY_DOCTOR);
 	}
 
 	@Override
 	public String latencyGraph() {
-		return executeCommand(Command.LATENCY, SubCommand.LATENCY_GRAPH);
+		return executeCommand(RedisCommand.LATENCY, RedisSubCommand.LATENCY_GRAPH);
 	}
 
 	@Override
 	public List<LatencyHistogram> latencyHistogram() {
-		return executeCommand(Command.LATENCY, SubCommand.LATENCY_HISTOGRAM);
+		return executeCommand(RedisCommand.LATENCY, RedisSubCommand.LATENCY_HISTOGRAM);
 	}
 
 	@Override
-	public List<LatencyHistogram> latencyHistogram(final Command... commands) {
+	public List<LatencyHistogram> latencyHistogram(final RedisCommand... commands) {
 		final CommandArguments args = CommandArguments.create(commands);
-		return executeCommand(Command.LATENCY, SubCommand.LATENCY_HISTOGRAM, args);
+		return executeCommand(RedisCommand.LATENCY, RedisSubCommand.LATENCY_HISTOGRAM, args);
 	}
 
 	@Override
 	public List<LatencyHistory> latencyHistory(final String event) {
 		final CommandArguments args = CommandArguments.create(event);
-		return executeCommand(Command.LATENCY, SubCommand.LATENCY_HISTORY, args);
+		return executeCommand(RedisCommand.LATENCY, RedisSubCommand.LATENCY_HISTORY, args);
 	}
 
 	@Override
 	public List<LatencyLatest> latencyLatest() {
-		return executeCommand(Command.LATENCY, SubCommand.LATENCY_LATEST);
+		return executeCommand(RedisCommand.LATENCY, RedisSubCommand.LATENCY_LATEST);
 	}
 
 	@Override
 	public Status latencyReset() {
-		return executeCommand(Command.LATENCY, SubCommand.LATENCY_RESET);
+		return executeCommand(RedisCommand.LATENCY, RedisSubCommand.LATENCY_RESET);
 	}
 
 	@Override
 	public Status latencyReset(final String... events) {
 		final CommandArguments args = CommandArguments.create(events);
-		return executeCommand(Command.LATENCY, SubCommand.LATENCY_RESET, args);
+		return executeCommand(RedisCommand.LATENCY, RedisSubCommand.LATENCY_RESET, args);
 	}
 
 	@Override
 	public String lolwut() {
-		return executeCommand(Command.LOLWUT);
+		return executeCommand(RedisCommand.LOLWUT);
 	}
 
 	@Override
 	public String lolwut(final String version) {
 		final CommandArguments args = CommandArguments.create("VERSION").add(version);
-		return executeCommand(Command.LOLWUT, args);
+		return executeCommand(RedisCommand.LOLWUT, args);
 	}
 
 	@Override
 	public String memoryDoctor() {
-		return executeCommand(Command.MEMORY, SubCommand.MEMORY_DOCTOR);
+		return executeCommand(RedisCommand.MEMORY, RedisSubCommand.MEMORY_DOCTOR);
 	}
 
 	@Override
 	public String memoryMallocStats() {
-		return executeCommand(Command.MEMORY, SubCommand.MEMORY_MALLOC_STATS);
+		return executeCommand(RedisCommand.MEMORY, RedisSubCommand.MEMORY_MALLOC_STATS);
 	}
 
 	@Override
 	public Status memoryPurge() {
-		return executeCommand(Command.MEMORY, SubCommand.MEMORY_PURGE);
+		return executeCommand(RedisCommand.MEMORY, RedisSubCommand.MEMORY_PURGE);
 	}
 
 	@Override
 	public MemoryStats memoryStats() {
-		return executeCommand(Command.MEMORY, SubCommand.MEMORY_STATS);
+		return executeCommand(RedisCommand.MEMORY, RedisSubCommand.MEMORY_STATS);
 	}
 
 	@Override
 	public Long memoryUsage(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.MEMORY, SubCommand.MEMORY_USAGE, args, (cmd)->cmd.memoryUsage(rawKey(key)));
+		return executeCommand(RedisCommand.MEMORY, RedisSubCommand.MEMORY_USAGE, args,
+				(cmd)->cmd.memoryUsage(rawKey(key)));
 	}
 
 	@Override
 	public Long memoryUsage(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.MEMORY, SubCommand.MEMORY_USAGE, args, (cmd)->cmd.memoryUsage(rawKey(key)));
+		return executeCommand(RedisCommand.MEMORY, RedisSubCommand.MEMORY_USAGE, args,
+				(cmd)->cmd.memoryUsage(rawKey(key)));
 	}
 
 	@Override
 	public Long memoryUsage(final String key, final int samples) {
 		final CommandArguments args = CommandArguments.create(key).add("SAMPLES", samples);
-		return executeCommand(Command.MEMORY, SubCommand.MEMORY_USAGE, args,
+		return executeCommand(RedisCommand.MEMORY, RedisSubCommand.MEMORY_USAGE, args,
 				(cmd)->cmd.memoryUsage(rawKey(key), samples));
 	}
 
 	@Override
 	public Long memoryUsage(final byte[] key, final int samples) {
 		final CommandArguments args = CommandArguments.create(key).add("SAMPLES", samples);
-		return executeCommand(Command.MEMORY, SubCommand.MEMORY_USAGE, args,
+		return executeCommand(RedisCommand.MEMORY, RedisSubCommand.MEMORY_USAGE, args,
 				(cmd)->cmd.memoryUsage(rawKey(key), samples));
 	}
 
 	@Override
 	public List<Module> moduleList() {
-		return executeCommand(Command.MODULE, SubCommand.MODULE_LIST);
+		return executeCommand(RedisCommand.MODULE, RedisSubCommand.MODULE_LIST);
 	}
 
 	@Override
 	public Status moduleLoad(final String path, final String... arguments) {
 		final CommandArguments args = CommandArguments.create(path).add(arguments);
-		return executeCommand(Command.MODULE, SubCommand.MODULE_LOAD, args);
+		return executeCommand(RedisCommand.MODULE, RedisSubCommand.MODULE_LOAD, args);
 	}
 
 	@Override
 	public Status moduleLoad(final byte[] path, final byte[]... arguments) {
 		final CommandArguments args = CommandArguments.create(path).add(arguments);
-		return executeCommand(Command.MODULE, SubCommand.MODULE_LOAD, args);
+		return executeCommand(RedisCommand.MODULE, RedisSubCommand.MODULE_LOAD, args);
 	}
 
 	@Override
 	public Status moduleLoadex(final String path, final Map<String, String> configs, final String... arguments) {
 		final CommandArguments args = CommandArguments.create(path).add(configs).add(arguments);
-		return executeCommand(Command.MODULE, SubCommand.MODULE_LOADEX, args);
+		return executeCommand(RedisCommand.MODULE, RedisSubCommand.MODULE_LOADEX, args);
 	}
 
 	@Override
 	public Status moduleLoadex(final byte[] path, final Map<byte[], byte[]> configs, final byte[]... arguments) {
 		final CommandArguments args = CommandArguments.create(path).add(configs).add(arguments);
-		return executeCommand(Command.MODULE, SubCommand.MODULE_LOADEX, args);
+		return executeCommand(RedisCommand.MODULE, RedisSubCommand.MODULE_LOADEX, args);
 	}
 
 	@Override
 	public Status moduleUnLoad(final String name) {
 		final CommandArguments args = CommandArguments.create(name);
-		return executeCommand(Command.MODULE, SubCommand.MODULE_UNLOAD, args);
+		return executeCommand(RedisCommand.MODULE, RedisSubCommand.MODULE_UNLOAD, args);
 	}
 
 	@Override
 	public Status moduleUnLoad(final byte[] name) {
 		final CommandArguments args = CommandArguments.create(name);
-		return executeCommand(Command.MODULE, SubCommand.MODULE_UNLOAD, args);
+		return executeCommand(RedisCommand.MODULE, RedisSubCommand.MODULE_UNLOAD, args);
 	}
 
 	@Override
 	public void monitor(final RedisMonitor redisMonitor) {
-		executeCommand(Command.MONITOR);
+		executeCommand(RedisCommand.MONITOR);
 	}
 
 	@Override
 	public Object pSync(final String replicationId, final long offset) {
 		final CommandArguments args = CommandArguments.create(replicationId).add(offset);
-		return executeCommand(Command.PSYNC, args);
+		return executeCommand(RedisCommand.PSYNC, args);
 	}
 
 	@Override
 	public Object pSync(final byte[] replicationId, final long offset) {
 		final CommandArguments args = CommandArguments.create(replicationId).add(offset);
-		return executeCommand(Command.PSYNC, args);
+		return executeCommand(RedisCommand.PSYNC, args);
 	}
 
 	@Override
 	public Status replconf() {
-		return executeCommand(Command.REPLCONF);
+		return executeCommand(RedisCommand.REPLCONF);
 	}
 
 	@Override
 	public Status replicaOf(final String host, final int port) {
 		final CommandArguments args = CommandArguments.create(host, port);
-		return executeCommand(Command.REPLICAOF, args);
+		return executeCommand(RedisCommand.REPLICAOF, args);
 	}
 
 	@Override
 	public Status restoreAsking(final String key, final byte[] serializedValue, final int ttl) {
 		final CommandArguments args = CommandArguments.create(key).add(ttl).add(serializedValue);
-		return executeCommand(Command.RESTORE_ASKING, args);
+		return executeCommand(RedisCommand.RESTORE_ASKING, args);
 	}
 
 	@Override
 	public Status restoreAsking(final byte[] key, final byte[] serializedValue, final int ttl) {
 		final CommandArguments args = CommandArguments.create(key).add(ttl).add(serializedValue);
-		return executeCommand(Command.RESTORE_ASKING, args);
+		return executeCommand(RedisCommand.RESTORE_ASKING, args);
 	}
 
 	@Override
 	public Status restoreAsking(final String key, final byte[] serializedValue, final int ttl,
-								final RestoreArgument argument) {
+	                            final RestoreArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(ttl).add(serializedValue).add(argument);
-		return executeCommand(Command.RESTORE_ASKING, args);
+		return executeCommand(RedisCommand.RESTORE_ASKING, args);
 	}
 
 	@Override
 	public Status restoreAsking(final byte[] key, byte[] serializedValue, final int ttl,
-								final RestoreArgument argument) {
+	                            final RestoreArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(ttl).add(serializedValue).add(argument);
-		return executeCommand(Command.RESTORE_ASKING, args);
+		return executeCommand(RedisCommand.RESTORE_ASKING, args);
 	}
 
 	@Override
 	public Role role() {
-		return executeCommand(Command.ROLE);
+		return executeCommand(RedisCommand.ROLE);
 	}
 
 	@Override
 	public Status save() {
-		return executeCommand(Command.SAVE);
+		return executeCommand(RedisCommand.SAVE);
 	}
 
 	@Override
 	public void shutdown() {
-		executeCommand(Command.SHUTDOWN);
+		executeCommand(RedisCommand.SHUTDOWN);
 	}
 
 	@Override
 	public void shutdown(final ShutdownArgument argument) {
 		final CommandArguments args = CommandArguments.create(argument);
-		executeCommand(Command.SHUTDOWN, args);
+		executeCommand(RedisCommand.SHUTDOWN, args);
 	}
 
 	@Override
 	public Status slaveOf(final String host, final int port) {
 		final CommandArguments args = CommandArguments.create(host, port);
-		return executeCommand(Command.SLAVEOF, args);
+		return executeCommand(RedisCommand.SLAVEOF, args);
 	}
 
 	@Override
 	public List<SlowLog> slowLogGet() {
-		return executeCommand(Command.SLOWLOG, SubCommand.SLOWLOG_GET);
+		return executeCommand(RedisCommand.SLOWLOG, RedisSubCommand.SLOWLOG_GET);
 	}
 
 	@Override
 	public List<SlowLog> slowLogGet(final int count) {
 		final CommandArguments args = CommandArguments.create(count);
-		return executeCommand(Command.SLOWLOG, SubCommand.SLOWLOG_GET, args);
+		return executeCommand(RedisCommand.SLOWLOG, RedisSubCommand.SLOWLOG_GET, args);
 	}
 
 	@Override
 	public Long slowLogLen() {
-		return executeCommand(Command.SLOWLOG, SubCommand.SLOWLOG_LEN);
+		return executeCommand(RedisCommand.SLOWLOG, RedisSubCommand.SLOWLOG_LEN);
 	}
 
 	@Override
 	public Status slowLogReset() {
-		return executeCommand(Command.SLOWLOG, SubCommand.SLOWLOG_RESET);
+		return executeCommand(RedisCommand.SLOWLOG, RedisSubCommand.SLOWLOG_RESET);
 	}
 
 	@Override
 	public Status swapdb(final int db1, final int db2) {
 		final CommandArguments args = CommandArguments.create(db1).add(db2);
-		return executeCommand(Command.SWAPDB, args);
+		return executeCommand(RedisCommand.SWAPDB, args);
 	}
 
 	@Override
 	public void sync() {
-		executeCommand(Command.SYNC);
+		executeCommand(RedisCommand.SYNC);
 	}
 
 	@Override
 	public RedisServerTime time() {
-		return executeCommand(Command.TIME);
+		return executeCommand(RedisCommand.TIME);
 	}
 
 }

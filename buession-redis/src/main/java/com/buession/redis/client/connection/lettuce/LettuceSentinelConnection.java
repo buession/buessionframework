@@ -157,7 +157,7 @@ public class LettuceSentinelConnection
 	 * 		Infinite 读取超时（单位：毫秒）
 	 */
 	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, int connectTimeout, int soTimeout,
-									 int infiniteSoTimeout) {
+	                                 int infiniteSoTimeout) {
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
 		this.sentinelConnectTimeout = connectTimeout;
 		this.sentinelSoTimeout = soTimeout;
@@ -188,7 +188,7 @@ public class LettuceSentinelConnection
 	 * 		SSL 配置
 	 */
 	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, int connectTimeout, int soTimeout,
-									 SslConfiguration sslConfiguration) {
+	                                 SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
 		this.sentinelConnectTimeout = connectTimeout;
 		this.sentinelSoTimeout = soTimeout;
@@ -209,7 +209,7 @@ public class LettuceSentinelConnection
 	 * 		SSL 配置
 	 */
 	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, int connectTimeout, int soTimeout,
-									 int infiniteSoTimeout, SslConfiguration sslConfiguration) {
+	                                 int infiniteSoTimeout, SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 		this.sentinelConnectTimeout = connectTimeout;
 		this.sentinelSoTimeout = soTimeout;
@@ -230,7 +230,7 @@ public class LettuceSentinelConnection
 	 * 		哨兵节点读取超时（单位：毫秒）
 	 */
 	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, int connectTimeout, int soTimeout,
-									 int sentinelConnectTimeout, int sentinelSoTimeout) {
+	                                 int sentinelConnectTimeout, int sentinelSoTimeout) {
 		super(dataSource, connectTimeout, soTimeout);
 		this.sentinelConnectTimeout = sentinelConnectTimeout;
 		this.sentinelSoTimeout = sentinelSoTimeout;
@@ -253,7 +253,7 @@ public class LettuceSentinelConnection
 	 * 		哨兵节点读取超时（单位：毫秒）
 	 */
 	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, int connectTimeout, int soTimeout,
-									 int infiniteSoTimeout, int sentinelConnectTimeout, int sentinelSoTimeout) {
+	                                 int infiniteSoTimeout, int sentinelConnectTimeout, int sentinelSoTimeout) {
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
 		this.sentinelConnectTimeout = sentinelConnectTimeout;
 		this.sentinelSoTimeout = sentinelSoTimeout;
@@ -276,8 +276,8 @@ public class LettuceSentinelConnection
 	 * 		SSL 配置
 	 */
 	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, int connectTimeout, int soTimeout,
-									 int sentinelConnectTimeout, int sentinelSoTimeout,
-									 SslConfiguration sslConfiguration) {
+	                                 int sentinelConnectTimeout, int sentinelSoTimeout,
+	                                 SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
 		this.sentinelConnectTimeout = sentinelConnectTimeout;
 		this.sentinelSoTimeout = sentinelSoTimeout;
@@ -302,8 +302,8 @@ public class LettuceSentinelConnection
 	 * 		SSL 配置
 	 */
 	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, int connectTimeout, int soTimeout,
-									 int infiniteSoTimeout, int sentinelConnectTimeout, int sentinelSoTimeout,
-									 SslConfiguration sslConfiguration) {
+	                                 int infiniteSoTimeout, int sentinelConnectTimeout, int sentinelSoTimeout,
+	                                 SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 		this.sentinelConnectTimeout = sentinelConnectTimeout;
 		this.sentinelSoTimeout = sentinelSoTimeout;
@@ -334,7 +334,7 @@ public class LettuceSentinelConnection
 	 * 		读取超时（单位：毫秒）
 	 */
 	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-									 int soTimeout) {
+	                                 int soTimeout) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout);
 		this.sentinelConnectTimeout = connectTimeout;
 		this.sentinelSoTimeout = soTimeout;
@@ -355,7 +355,7 @@ public class LettuceSentinelConnection
 	 * 		Infinite 读取超时（单位：毫秒）
 	 */
 	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-									 int soTimeout, int infiniteSoTimeout) {
+	                                 int soTimeout, int infiniteSoTimeout) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
 		this.sentinelConnectTimeout = connectTimeout;
 		this.sentinelSoTimeout = soTimeout;
@@ -372,7 +372,7 @@ public class LettuceSentinelConnection
 	 * 		SSL 配置
 	 */
 	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, PoolConfig poolConfig,
-									 SslConfiguration sslConfiguration) {
+	                                 SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, sslConfiguration);
 	}
 
@@ -391,7 +391,7 @@ public class LettuceSentinelConnection
 	 * 		SSL 配置
 	 */
 	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-									 int soTimeout, SslConfiguration sslConfiguration) {
+	                                 int soTimeout, SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
 		this.sentinelConnectTimeout = connectTimeout;
 		this.sentinelSoTimeout = soTimeout;
@@ -414,7 +414,7 @@ public class LettuceSentinelConnection
 	 * 		SSL 配置
 	 */
 	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-									 int soTimeout, int infiniteSoTimeout, SslConfiguration sslConfiguration) {
+	                                 int soTimeout, int infiniteSoTimeout, SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 		this.sentinelConnectTimeout = connectTimeout;
 		this.sentinelSoTimeout = soTimeout;
@@ -437,7 +437,7 @@ public class LettuceSentinelConnection
 	 * 		哨兵节点读取超时（单位：毫秒）
 	 */
 	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-									 int soTimeout, int sentinelConnectTimeout, int sentinelSoTimeout) {
+	                                 int soTimeout, int sentinelConnectTimeout, int sentinelSoTimeout) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout);
 		this.sentinelConnectTimeout = sentinelConnectTimeout;
 		this.sentinelSoTimeout = sentinelSoTimeout;
@@ -462,8 +462,8 @@ public class LettuceSentinelConnection
 	 * 		哨兵节点读取超时（单位：毫秒）
 	 */
 	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-									 int soTimeout, int infiniteSoTimeout, int sentinelConnectTimeout,
-									 int sentinelSoTimeout) {
+	                                 int soTimeout, int infiniteSoTimeout, int sentinelConnectTimeout,
+	                                 int sentinelSoTimeout) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
 		this.sentinelConnectTimeout = sentinelConnectTimeout;
 		this.sentinelSoTimeout = sentinelSoTimeout;
@@ -488,8 +488,8 @@ public class LettuceSentinelConnection
 	 * 		SSL 配置
 	 */
 	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-									 int soTimeout, int sentinelConnectTimeout, int sentinelSoTimeout,
-									 SslConfiguration sslConfiguration) {
+	                                 int soTimeout, int sentinelConnectTimeout, int sentinelSoTimeout,
+	                                 SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
 		this.sentinelConnectTimeout = sentinelConnectTimeout;
 		this.sentinelSoTimeout = sentinelSoTimeout;
@@ -516,8 +516,8 @@ public class LettuceSentinelConnection
 	 * 		SSL 配置
 	 */
 	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-									 int soTimeout, int infiniteSoTimeout, int sentinelConnectTimeout,
-									 int sentinelSoTimeout, SslConfiguration sslConfiguration) {
+	                                 int soTimeout, int infiniteSoTimeout, int sentinelConnectTimeout,
+	                                 int sentinelSoTimeout, SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 		this.sentinelConnectTimeout = sentinelConnectTimeout;
 		this.sentinelSoTimeout = sentinelSoTimeout;
@@ -638,10 +638,6 @@ public class LettuceSentinelConnection
 		return null;//delegate.sync();
 	}
 
-	protected boolean isUsePool() {
-		return pool != null;
-	}
-
 	protected <K, V> StatefulRedisSentinelConnection<K, V> createStatefulRedisConnection(
 			final RedisCodec<K, V> codec) {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
@@ -649,7 +645,7 @@ public class LettuceSentinelConnection
 		final RedisURI.Builder redisURIBuilder = RedisURI.builder();
 		final RedisCredentialsProvider redisCredentialsProvider = Validate.hasText(dataSource.getPassword()) ?
 				new StaticCredentialsProvider(Validate.hasText(dataSource.getUsername()) ? dataSource.getUsername() :
-						null, dataSource.getPassword().toCharArray()) : null;
+											  null, dataSource.getPassword().toCharArray()) : null;
 
 		if(dataSource.getDatabase() >= 0){
 			redisURIBuilder.withDatabase(dataSource.getDatabase());
@@ -674,7 +670,7 @@ public class LettuceSentinelConnection
 		final RedisURI.Builder redisURIBuilder = RedisURI.builder();
 		final RedisCredentialsProvider redisCredentialsProvider = Validate.hasText(dataSource.getPassword()) ?
 				new StaticCredentialsProvider(Validate.hasText(dataSource.getUsername()) ? dataSource.getUsername() :
-						null, dataSource.getPassword().toCharArray()) : null;
+											  null, dataSource.getPassword().toCharArray()) : null;
 
 		propertyMapper.from(redisCredentialsProvider).to(redisURIBuilder::withAuthentication);
 		propertyMapper.from(dataSource.getSentinelClientName()).to(redisURIBuilder::withClientName);
@@ -718,7 +714,7 @@ public class LettuceSentinelConnection
 			return Status.SUCCESS;
 		}
 
-		if(isUsePool()){
+		if(pool != null){
 			try{
 				conn = pool.getResource();
 

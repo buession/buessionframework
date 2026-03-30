@@ -30,7 +30,7 @@ import com.buession.redis.core.command.args.bitmap.BitFieldEncoding;
 import com.buession.redis.core.command.args.bitmap.BitOperation;
 import com.buession.redis.core.command.args.bitmap.BitType;
 import com.buession.redis.core.command.BitMapCommands;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.args.bitmap.BitFieldArgument;
 import com.buession.redis.core.command.args.bitmap.BitFieldRoArgument;
@@ -55,37 +55,37 @@ public final class LettuceBitMapCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public Long bitCount(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.BITCOUNT, args, (cmd)->cmd.bitcount(rawBinaryKey(key)));
+		return executeCommand(RedisCommand.BITCOUNT, args, (cmd)->cmd.bitcount(rawBinaryKey(key)));
 	}
 
 	@Override
 	public Long bitCount(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.BITCOUNT, args, (cmd)->cmd.bitcount(rawKey(key)));
+		return executeCommand(RedisCommand.BITCOUNT, args, (cmd)->cmd.bitcount(rawKey(key)));
 	}
 
 	@Override
 	public Long bitCount(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
-		return executeCommand(Command.BITCOUNT, args, (cmd)->cmd.bitcount(rawBinaryKey(key), start, end));
+		return executeCommand(RedisCommand.BITCOUNT, args, (cmd)->cmd.bitcount(rawBinaryKey(key), start, end));
 	}
 
 	@Override
 	public Long bitCount(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
-		return executeCommand(Command.BITCOUNT, args, (cmd)->cmd.bitcount(rawKey(key), start, end));
+		return executeCommand(RedisCommand.BITCOUNT, args, (cmd)->cmd.bitcount(rawKey(key), start, end));
 	}
 
 	@Override
 	public Long bitCount(final String key, final long start, final long end, final BitCountOption option) {
 		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(option);
-		return executeCommand(Command.BITCOUNT, args, (cmd)->cmd.bitcount(rawBinaryKey(key), start, end));
+		return executeCommand(RedisCommand.BITCOUNT, args, (cmd)->cmd.bitcount(rawBinaryKey(key), start, end));
 	}
 
 	@Override
 	public Long bitCount(final byte[] key, final long start, final long end, final BitCountOption option) {
 		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(option);
-		return executeCommand(Command.BITCOUNT, args, (cmd)->cmd.bitcount(rawKey(key), start, end));
+		return executeCommand(RedisCommand.BITCOUNT, args, (cmd)->cmd.bitcount(rawKey(key), start, end));
 	}
 
 	@Override
@@ -103,13 +103,13 @@ public final class LettuceBitMapCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public List<Long> bitFieldRo(final String key, final BitFieldRoArgument... arguments) {
 		final CommandArguments args = CommandArguments.create(key).add(arguments);
-		return executeCommand(Command.BITFIELD_RO, args);
+		return executeCommand(RedisCommand.BITFIELD_RO, args);
 	}
 
 	@Override
 	public List<Long> bitFieldRo(final byte[] key, final BitFieldRoArgument... arguments) {
 		final CommandArguments args = CommandArguments.create(key).add(arguments);
-		return executeCommand(Command.BITFIELD_RO, args);
+		return executeCommand(RedisCommand.BITFIELD_RO, args);
 	}
 
 	@Override
@@ -127,75 +127,76 @@ public final class LettuceBitMapCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public Long bitPos(final String key, final boolean value) {
 		final CommandArguments args = CommandArguments.create(key).add(value);
-		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawBinaryKey(key), value));
+		return executeCommand(RedisCommand.BITPOS, args, (cmd)->cmd.bitpos(rawBinaryKey(key), value));
 	}
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value) {
 		final CommandArguments args = CommandArguments.create(key).add(value);
-		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawKey(key), value));
+		return executeCommand(RedisCommand.BITPOS, args, (cmd)->cmd.bitpos(rawKey(key), value));
 	}
 
 	@Override
 	public Long bitPos(final String key, final boolean value, final long start) {
 		final CommandArguments args = CommandArguments.create(key).add(value).add(start);
-		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawBinaryKey(key), value, start));
+		return executeCommand(RedisCommand.BITPOS, args, (cmd)->cmd.bitpos(rawBinaryKey(key), value, start));
 	}
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value, final long start) {
 		final CommandArguments args = CommandArguments.create(key).add(value).add(start);
-		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawKey(key), value, start));
+		return executeCommand(RedisCommand.BITPOS, args, (cmd)->cmd.bitpos(rawKey(key), value, start));
 	}
 
 	@Override
 	public Long bitPos(final String key, final boolean value, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(value).add(start, end);
-		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawBinaryKey(key), value, start, end));
+		return executeCommand(RedisCommand.BITPOS, args, (cmd)->cmd.bitpos(rawBinaryKey(key), value, start, end));
 	}
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(value).add(start, end);
-		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawKey(key), value, start, end));
+		return executeCommand(RedisCommand.BITPOS, args, (cmd)->cmd.bitpos(rawKey(key), value, start, end));
 	}
 
 	@Override
 	public Long bitPos(final String key, final boolean value, final long start, final long end, final BitType type) {
 		final CommandArguments args = CommandArguments.create(key).add(value).add(start, end).add(type);
-		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawBinaryKey(key), value, start, end));
+		return executeCommand(RedisCommand.BITPOS, args, (cmd)->cmd.bitpos(rawBinaryKey(key), value, start, end));
 	}
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value, final long start, final long end, final BitType type) {
 		final CommandArguments args = CommandArguments.create(key).add(value).add(start, end).add(type);
-		return executeCommand(Command.BITPOS, args, (cmd)->cmd.bitpos(rawKey(key), value, start, end));
+		return executeCommand(RedisCommand.BITPOS, args, (cmd)->cmd.bitpos(rawKey(key), value, start, end));
 	}
 
 	@Override
 	public Boolean getBit(final String key, final long offset) {
 		final CommandArguments args = CommandArguments.create(key).add(offset);
-		return executeCommand(Command.GETBIT, args, (cmd)->cmd.getbit(rawBinaryKey(key), offset),
+		return executeCommand(RedisCommand.GETBIT, args, (cmd)->cmd.getbit(rawBinaryKey(key), offset),
 				new OneBooleanConverter());
 	}
 
 	@Override
 	public Boolean getBit(final byte[] key, final long offset) {
 		final CommandArguments args = CommandArguments.create(key).add(offset);
-		return executeCommand(Command.GETBIT, args, (cmd)->cmd.getbit(rawKey(key), offset), new OneBooleanConverter());
+		return executeCommand(
+				RedisCommand.GETBIT, args, (cmd)->cmd.getbit(rawKey(key), offset), new OneBooleanConverter());
 	}
 
 	@Override
 	public Boolean setBit(final String key, final long offset, final boolean value) {
 		final CommandArguments args = CommandArguments.create(key).add(offset).add(value);
-		return executeCommand(Command.SETBIT, args, (cmd)->cmd.setbit(rawBinaryKey(key), offset, value ? 1 : 0),
+		return executeCommand(RedisCommand.SETBIT, args, (cmd)->cmd.setbit(rawBinaryKey(key), offset, value ? 1 : 0),
 				new OneBooleanConverter());
 	}
 
 	@Override
 	public Boolean setBit(final byte[] key, final long offset, final boolean value) {
 		final CommandArguments args = CommandArguments.create(key).add(offset).add(value);
-		return executeCommand(Command.SETBIT, args, (cmd)->cmd.setbit(rawKey(key), offset, value ? 1 : 0),
+		return executeCommand(RedisCommand.SETBIT, args, (cmd)->cmd.setbit(rawKey(key), offset, value ? 1 : 0),
 				new OneBooleanConverter());
 	}
 
@@ -244,12 +245,12 @@ public final class LettuceBitMapCommands extends AbstractLettuceRedisCommands im
 			}
 		}
 
-		return executeCommand(Command.BITFIELD, args, (cmd)->cmd.bitfield(key, bitFieldArgs));
+		return executeCommand(RedisCommand.BITFIELD, args, (cmd)->cmd.bitfield(key, bitFieldArgs));
 	}
 
 	private Long bitOp(final BitOperation operation, final byte[] destKey, final byte[][] keys,
-					   final CommandArguments args) {
-		return executeCommand(Command.BITOP, args, (cmd)->{
+	                   final CommandArguments args) {
+		return executeCommand(RedisCommand.BITOP, args, (cmd)->{
 			if(operation == BitOperation.AND){
 				return cmd.bitopAnd(destKey, keys);
 			}else if(operation == BitOperation.OR){

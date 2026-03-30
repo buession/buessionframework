@@ -33,10 +33,10 @@ import com.buession.redis.core.Keyword;
 import com.buession.redis.core.ObjectEncoding;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Type;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.KeyCommands;
-import com.buession.redis.core.command.SubCommand;
+import com.buession.redis.core.command.RedisSubCommand;
 import com.buession.redis.core.command.args.key.MigrateArgument;
 import com.buession.redis.core.command.args.RestoreArgument;
 import com.buession.redis.core.command.args.key.SortArgument;
@@ -129,69 +129,70 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 	@Override
 	public Long del(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.DEL, args, (cmd)->cmd.del(rawBinaryKeys(keys)));
+		return executeCommand(RedisCommand.DEL, args, (cmd)->cmd.del(rawBinaryKeys(keys)));
 	}
 
 	@Override
 	public Long del(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.DEL, args, (cmd)->cmd.del(rawKeys(keys)));
+		return executeCommand(RedisCommand.DEL, args, (cmd)->cmd.del(rawKeys(keys)));
 	}
 
 	@Override
 	public String dump(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.DUMP, args, (cmd)->cmd.dump(rawBinaryKey(key)), SafeEncoder::encode);
+		return executeCommand(RedisCommand.DUMP, args, (cmd)->cmd.dump(rawBinaryKey(key)), SafeEncoder::encode);
 	}
 
 	@Override
 	public byte[] dump(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.DUMP, args, (cmd)->cmd.dump(rawKey(key)));
+		return executeCommand(RedisCommand.DUMP, args, (cmd)->cmd.dump(rawKey(key)));
 	}
 
 	@Override
 	public Boolean exists(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.EXISTS, args, (cmd)->cmd.exists(rawBinaryKey(key)), new OneBooleanConverter());
+		return executeCommand(
+				RedisCommand.EXISTS, args, (cmd)->cmd.exists(rawBinaryKey(key)), new OneBooleanConverter());
 	}
 
 	@Override
 	public Boolean exists(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.EXISTS, args, (cmd)->cmd.exists(rawKey(key)), new OneBooleanConverter());
+		return executeCommand(RedisCommand.EXISTS, args, (cmd)->cmd.exists(rawKey(key)), new OneBooleanConverter());
 	}
 
 	@Override
 	public Long exists(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.EXISTS, args, (cmd)->cmd.exists(rawBinaryKeys(keys)));
+		return executeCommand(RedisCommand.EXISTS, args, (cmd)->cmd.exists(rawBinaryKeys(keys)));
 	}
 
 	@Override
 	public Long exists(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.EXISTS, args, (cmd)->cmd.exists(rawKeys(keys)));
+		return executeCommand(RedisCommand.EXISTS, args, (cmd)->cmd.exists(rawKeys(keys)));
 	}
 
 	@Override
 	public Status expire(final String key, final int lifetime) {
 		final CommandArguments args = CommandArguments.create(key).add(lifetime);
-		return executeCommand(Command.EXPIRE, args, (cmd)->cmd.expire(rawBinaryKey(key), lifetime),
+		return executeCommand(RedisCommand.EXPIRE, args, (cmd)->cmd.expire(rawBinaryKey(key), lifetime),
 				new BooleanStatusConverter());
 	}
 
 	@Override
 	public Status expire(final byte[] key, final int lifetime) {
 		final CommandArguments args = CommandArguments.create(key).add(lifetime);
-		return executeCommand(Command.EXPIRE, args, (cmd)->cmd.expire(rawKey(key), lifetime),
+		return executeCommand(RedisCommand.EXPIRE, args, (cmd)->cmd.expire(rawKey(key), lifetime),
 				new BooleanStatusConverter());
 	}
 
 	@Override
 	public Status expire(final String key, final int lifetime, final ExpireOption expireOption) {
 		final CommandArguments args = CommandArguments.create(key).add(lifetime).add(expireOption);
-		return executeCommand(Command.EXPIRE, args,
+		return executeCommand(RedisCommand.EXPIRE, args,
 				(cmd)->cmd.expire(rawBinaryKey(key), lifetime, new LettuceExpireArgs(expireOption)),
 				new BooleanStatusConverter());
 	}
@@ -199,7 +200,7 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 	@Override
 	public Status expire(final byte[] key, final int lifetime, final ExpireOption expireOption) {
 		final CommandArguments args = CommandArguments.create(key).add(lifetime).add(expireOption);
-		return executeCommand(Command.EXPIRE, args,
+		return executeCommand(RedisCommand.EXPIRE, args,
 				(cmd)->cmd.expire(rawKey(key), lifetime, new LettuceExpireArgs(expireOption)),
 				new BooleanStatusConverter());
 	}
@@ -207,21 +208,21 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 	@Override
 	public Status expireAt(final String key, final long unixTimestamp) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp);
-		return executeCommand(Command.EXPIREAT, args, (cmd)->cmd.expireat(rawBinaryKey(key), unixTimestamp),
+		return executeCommand(RedisCommand.EXPIREAT, args, (cmd)->cmd.expireat(rawBinaryKey(key), unixTimestamp),
 				new BooleanStatusConverter());
 	}
 
 	@Override
 	public Status expireAt(final byte[] key, final long unixTimestamp) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp);
-		return executeCommand(Command.EXPIREAT, args, (cmd)->cmd.expireat(rawKey(key), unixTimestamp),
+		return executeCommand(RedisCommand.EXPIREAT, args, (cmd)->cmd.expireat(rawKey(key), unixTimestamp),
 				new BooleanStatusConverter());
 	}
 
 	@Override
 	public Status expireAt(final String key, final long unixTimestamp, final ExpireOption expireOption) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp);
-		return executeCommand(Command.EXPIREAT, args,
+		return executeCommand(RedisCommand.EXPIREAT, args,
 				(cmd)->cmd.expireat(rawBinaryKey(key), unixTimestamp, new LettuceExpireArgs(expireOption)),
 				new BooleanStatusConverter());
 	}
@@ -229,7 +230,7 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 	@Override
 	public Status expireAt(final byte[] key, final long unixTimestamp, final ExpireOption expireOption) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp);
-		return executeCommand(Command.EXPIREAT, args,
+		return executeCommand(RedisCommand.EXPIREAT, args,
 				(cmd)->cmd.expireat(rawKey(key), unixTimestamp, new LettuceExpireArgs(expireOption)),
 				new BooleanStatusConverter());
 	}
@@ -237,26 +238,26 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 	@Override
 	public Long expireTime(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.EXPIRETIME, args, (cmd)->cmd.expiretime(rawBinaryKey(key)));
+		return executeCommand(RedisCommand.EXPIRETIME, args, (cmd)->cmd.expiretime(rawBinaryKey(key)));
 	}
 
 	@Override
 	public Long expireTime(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.EXPIRETIME, args, (cmd)->cmd.expiretime(rawKey(key)));
+		return executeCommand(RedisCommand.EXPIRETIME, args, (cmd)->cmd.expiretime(rawKey(key)));
 	}
 
 	@Override
 	public Set<String> keys(final String pattern) {
 		final CommandArguments args = CommandArguments.create(pattern);
-		return executeCommand(Command.KEYS, args, (cmd)->cmd.keys(pattern),
+		return executeCommand(RedisCommand.KEYS, args, (cmd)->cmd.keys(pattern),
 				new ListSetConverter<>(SafeEncoder::encode));
 	}
 
 	@Override
 	public Set<byte[]> keys(final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create(pattern);
-		return executeCommand(Command.KEYS, args, (cmd)->cmd.keys(SafeEncoder.encode(pattern)),
+		return executeCommand(RedisCommand.KEYS, args, (cmd)->cmd.keys(SafeEncoder.encode(pattern)),
 				new ListSetConverter<>((v)->v));
 	}
 
@@ -276,7 +277,7 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final int timeout,
-						  final MigrateArgument argument, final String... keys) {
+	                      final MigrateArgument argument, final String... keys) {
 		final CommandArguments args = CommandArguments.create(host).add(port).add("", db).add(timeout).add(argument)
 				.add(keys);
 		return migrate(host, port, db, timeout, new LettuceMigrateArgs<>(argument, rawBinaryKeys(keys)), args);
@@ -284,7 +285,7 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final int timeout,
-						  final MigrateArgument argument, final byte[]... keys) {
+	                      final MigrateArgument argument, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(host).add(port).add("", db).add(timeout).add(argument)
 				.add(keys);
 		return migrate(host, port, db, timeout, new LettuceMigrateArgs<>(argument, rawKeys(keys)), args);
@@ -293,98 +294,105 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 	@Override
 	public Status move(final String key, final int db) {
 		final CommandArguments args = CommandArguments.create(key).add(db);
-		return executeCommand(Command.MOVE, args, (cmd)->cmd.move(rawBinaryKey(key), db), new BooleanStatusConverter());
+		return executeCommand(
+				RedisCommand.MOVE, args, (cmd)->cmd.move(rawBinaryKey(key), db), new BooleanStatusConverter());
 	}
 
 	@Override
 	public Status move(final byte[] key, final int db) {
 		final CommandArguments args = CommandArguments.create(key).add(db);
-		return executeCommand(Command.MOVE, args, (cmd)->cmd.move(rawKey(key), db), new BooleanStatusConverter());
+		return executeCommand(RedisCommand.MOVE, args, (cmd)->cmd.move(rawKey(key), db), new BooleanStatusConverter());
 	}
 
 	@Override
 	public ObjectEncoding objectEncoding(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.OBJECT, SubCommand.OBJECT_ENCODING, args,
+		return executeCommand(RedisCommand.OBJECT, RedisSubCommand.OBJECT_ENCODING, args,
 				(cmd)->cmd.objectEncoding(rawBinaryKey(key)), new ObjectEncodingConverter());
 	}
 
 	@Override
 	public ObjectEncoding objectEncoding(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.OBJECT, SubCommand.OBJECT_ENCODING, args, (cmd)->cmd.objectEncoding(rawKey(key)),
+		return executeCommand(
+				RedisCommand.OBJECT, RedisSubCommand.OBJECT_ENCODING, args, (cmd)->cmd.objectEncoding(rawKey(key)),
 				new ObjectEncodingConverter());
 	}
 
 	@Override
 	public Long objectFreq(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.OBJECT, SubCommand.OBJECT_FREQ, args, (cmd)->cmd.objectFreq(rawBinaryKey(key)));
+		return executeCommand(
+				RedisCommand.OBJECT, RedisSubCommand.OBJECT_FREQ, args, (cmd)->cmd.objectFreq(rawBinaryKey(key)));
 	}
 
 	@Override
 	public Long objectFreq(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.OBJECT, SubCommand.OBJECT_FREQ, args, (cmd)->cmd.objectFreq(rawKey(key)));
+		return executeCommand(RedisCommand.OBJECT, RedisSubCommand.OBJECT_FREQ, args,
+				(cmd)->cmd.objectFreq(rawKey(key)));
 	}
 
 	@Override
 	public Long objectIdleTime(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.OBJECT, SubCommand.OBJECT_IDLETIME, args,
+		return executeCommand(RedisCommand.OBJECT, RedisSubCommand.OBJECT_IDLETIME, args,
 				(cmd)->cmd.objectIdletime(rawBinaryKey(key)));
 	}
 
 	@Override
 	public Long objectIdleTime(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.OBJECT, SubCommand.OBJECT_IDLETIME, args, (cmd)->cmd.objectIdletime(rawKey(key)));
+		return executeCommand(
+				RedisCommand.OBJECT, RedisSubCommand.OBJECT_IDLETIME, args, (cmd)->cmd.objectIdletime(rawKey(key)));
 	}
 
 	@Override
 	public Long objectRefcount(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.OBJECT, SubCommand.OBJECT_REFCOUNT, args,
+		return executeCommand(RedisCommand.OBJECT, RedisSubCommand.OBJECT_REFCOUNT, args,
 				(cmd)->cmd.objectRefcount(rawBinaryKey(key)));
 	}
 
 	@Override
 	public Long objectRefcount(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.OBJECT, SubCommand.OBJECT_REFCOUNT, args, (cmd)->cmd.objectRefcount(rawKey(key)));
+		return executeCommand(
+				RedisCommand.OBJECT, RedisSubCommand.OBJECT_REFCOUNT, args, (cmd)->cmd.objectRefcount(rawKey(key)));
 	}
 
 	@Override
 	public Status persist(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.PERSIST, args, (cmd)->cmd.persist(rawBinaryKey(key)),
+		return executeCommand(RedisCommand.PERSIST, args, (cmd)->cmd.persist(rawBinaryKey(key)),
 				new BooleanStatusConverter());
 	}
 
 	@Override
 	public Status persist(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.PERSIST, args, (cmd)->cmd.persist(rawKey(key)), new BooleanStatusConverter());
+		return executeCommand(RedisCommand.PERSIST, args, (cmd)->cmd.persist(rawKey(key)),
+				new BooleanStatusConverter());
 	}
 
 	@Override
 	public Status pExpire(final String key, final int lifetime) {
 		final CommandArguments args = CommandArguments.create(key).add(lifetime);
-		return executeCommand(Command.PEXPIRE, args, (cmd)->cmd.pexpire(rawBinaryKey(key), lifetime),
+		return executeCommand(RedisCommand.PEXPIRE, args, (cmd)->cmd.pexpire(rawBinaryKey(key), lifetime),
 				new BooleanStatusConverter());
 	}
 
 	@Override
 	public Status pExpire(final byte[] key, final int lifetime) {
 		final CommandArguments args = CommandArguments.create(key).add(lifetime);
-		return executeCommand(Command.PEXPIRE, args, (cmd)->cmd.pexpire(rawKey(key), lifetime),
+		return executeCommand(RedisCommand.PEXPIRE, args, (cmd)->cmd.pexpire(rawKey(key), lifetime),
 				new BooleanStatusConverter());
 	}
 
 	@Override
 	public Status pExpire(final String key, final int lifetime, final ExpireOption expireOption) {
 		final CommandArguments args = CommandArguments.create(key).add(lifetime).add(expireOption);
-		return executeCommand(Command.PEXPIRE, args,
+		return executeCommand(RedisCommand.PEXPIRE, args,
 				(cmd)->cmd.pexpire(rawBinaryKey(key), lifetime, new LettuceExpireArgs(expireOption)),
 				new BooleanStatusConverter());
 	}
@@ -392,7 +400,7 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 	@Override
 	public Status pExpire(final byte[] key, final int lifetime, final ExpireOption expireOption) {
 		final CommandArguments args = CommandArguments.create(key).add(lifetime).add(expireOption);
-		return executeCommand(Command.PEXPIRE, args,
+		return executeCommand(RedisCommand.PEXPIRE, args,
 				(cmd)->cmd.pexpire(rawKey(key), lifetime, new LettuceExpireArgs(expireOption)),
 				new BooleanStatusConverter());
 	}
@@ -400,21 +408,21 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 	@Override
 	public Status pExpireAt(final String key, final long unixTimestamp) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp);
-		return executeCommand(Command.EXPIREAT, args, (cmd)->cmd.pexpireat(rawBinaryKey(key), unixTimestamp),
+		return executeCommand(RedisCommand.EXPIREAT, args, (cmd)->cmd.pexpireat(rawBinaryKey(key), unixTimestamp),
 				new BooleanStatusConverter());
 	}
 
 	@Override
 	public Status pExpireAt(final byte[] key, final long unixTimestamp) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp);
-		return executeCommand(Command.EXPIREAT, args, (cmd)->cmd.pexpireat(rawKey(key), unixTimestamp),
+		return executeCommand(RedisCommand.EXPIREAT, args, (cmd)->cmd.pexpireat(rawKey(key), unixTimestamp),
 				new BooleanStatusConverter());
 	}
 
 	@Override
 	public Status pExpireAt(final String key, final long unixTimestamp, final ExpireOption expireOption) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(expireOption);
-		return executeCommand(Command.EXPIREAT, args,
+		return executeCommand(RedisCommand.EXPIREAT, args,
 				(cmd)->cmd.pexpireat(rawBinaryKey(key), unixTimestamp, new LettuceExpireArgs(expireOption)),
 				new BooleanStatusConverter());
 	}
@@ -422,7 +430,7 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 	@Override
 	public Status pExpireAt(final byte[] key, final long unixTimestamp, final ExpireOption expireOption) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(expireOption);
-		return executeCommand(Command.EXPIREAT, args,
+		return executeCommand(RedisCommand.EXPIREAT, args,
 				(cmd)->cmd.pexpireat(rawKey(key), unixTimestamp, new LettuceExpireArgs(expireOption)),
 				new BooleanStatusConverter());
 	}
@@ -430,83 +438,84 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 	@Override
 	public Long pExpireTime(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.PEXPIRETIME, args, (cmd)->cmd.pexpiretime(rawBinaryKey(key)));
+		return executeCommand(RedisCommand.PEXPIRETIME, args, (cmd)->cmd.pexpiretime(rawBinaryKey(key)));
 	}
 
 	@Override
 	public Long pExpireTime(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.PEXPIRETIME, args, (cmd)->cmd.pexpiretime(rawKey(key)));
+		return executeCommand(RedisCommand.PEXPIRETIME, args, (cmd)->cmd.pexpiretime(rawKey(key)));
 	}
 
 	@Override
 	public Long pTtl(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.PTTL, args, (cmd)->cmd.pttl(rawBinaryKey(key)));
+		return executeCommand(RedisCommand.PTTL, args, (cmd)->cmd.pttl(rawBinaryKey(key)));
 	}
 
 	@Override
 	public Long pTtl(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.PTTL, args, (cmd)->cmd.pttl(rawKey(key)));
+		return executeCommand(RedisCommand.PTTL, args, (cmd)->cmd.pttl(rawKey(key)));
 	}
 
 	@Override
 	public String randomKey() {
-		return executeCommand(Command.RANDOMKEY, (cmd)->cmd.randomkey(), SafeEncoder::encode);
+		return executeCommand(RedisCommand.RANDOMKEY, (cmd)->cmd.randomkey(), SafeEncoder::encode);
 	}
 
 	@Override
 	public Status rename(final String key, final String newKey) {
 		final CommandArguments args = CommandArguments.create(key).add(newKey);
-		return executeCommand(Command.RENAME, args, (cmd)->cmd.rename(rawBinaryKey(key), rawBinaryKey(newKey)),
+		return executeCommand(RedisCommand.RENAME, args, (cmd)->cmd.rename(rawBinaryKey(key), rawBinaryKey(newKey)),
 				new OkStatusConverter());
 	}
 
 	@Override
 	public Status rename(final byte[] key, final byte[] newKey) {
 		final CommandArguments args = CommandArguments.create(key).add(newKey);
-		return executeCommand(Command.RENAME, args, (cmd)->cmd.rename(rawKey(key), newKey), new OkStatusConverter());
+		return executeCommand(
+				RedisCommand.RENAME, args, (cmd)->cmd.rename(rawKey(key), newKey), new OkStatusConverter());
 	}
 
 	@Override
 	public Status renameNx(final String key, final String newKey) {
 		final CommandArguments args = CommandArguments.create(key).add(newKey);
-		return executeCommand(Command.RENAMENX, args, (cmd)->cmd.renamenx(rawBinaryKey(key), rawBinaryKey(newKey)),
+		return executeCommand(RedisCommand.RENAMENX, args, (cmd)->cmd.renamenx(rawBinaryKey(key), rawBinaryKey(newKey)),
 				new BooleanStatusConverter());
 	}
 
 	@Override
 	public Status renameNx(final byte[] key, final byte[] newKey) {
 		final CommandArguments args = CommandArguments.create(key).add(newKey);
-		return executeCommand(Command.RENAMENX, args, (cmd)->cmd.renamenx(rawKey(key), rawKey(newKey)),
+		return executeCommand(RedisCommand.RENAMENX, args, (cmd)->cmd.renamenx(rawKey(key), rawKey(newKey)),
 				new BooleanStatusConverter());
 	}
 
 	@Override
 	public Status restore(final String key, final byte[] serializedValue, final int ttl) {
 		final CommandArguments args = CommandArguments.create(key).add(serializedValue).add(ttl);
-		return executeCommand(Command.RESTORE, args, (cmd)->cmd.restore(rawBinaryKey(key), ttl, serializedValue),
+		return executeCommand(RedisCommand.RESTORE, args, (cmd)->cmd.restore(rawBinaryKey(key), ttl, serializedValue),
 				new OkStatusConverter());
 	}
 
 	@Override
 	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl) {
 		final CommandArguments args = CommandArguments.create(key).add(serializedValue).add(ttl);
-		return executeCommand(Command.RESTORE, args, (cmd)->cmd.restore(rawKey(key), ttl, serializedValue),
+		return executeCommand(RedisCommand.RESTORE, args, (cmd)->cmd.restore(rawKey(key), ttl, serializedValue),
 				new OkStatusConverter());
 	}
 
 	@Override
 	public Status restore(final String key, final byte[] serializedValue, final int ttl,
-						  final RestoreArgument argument) {
+	                      final RestoreArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(serializedValue).add(ttl).add(argument);
 		return restore(rawBinaryKey(key), serializedValue, ttl, argument, args);
 	}
 
 	@Override
 	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl,
-						  final RestoreArgument argument) {
+	                      final RestoreArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(serializedValue).add(ttl).add(argument);
 		return restore(rawKey(key), serializedValue, ttl, argument, args);
 	}
@@ -514,14 +523,14 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 	@Override
 	public ScanResult<String> scan(final String cursor) {
 		final CommandArguments args = CommandArguments.create(cursor);
-		return executeCommand(Command.SCAN, args, (cmd)->cmd.scan(new LettuceScanCursor(cursor)),
+		return executeCommand(RedisCommand.SCAN, args, (cmd)->cmd.scan(new LettuceScanCursor(cursor)),
 				new ScanCursorConverter.KeyScanCursorConverter<>(SafeEncoder::encode));
 	}
 
 	@Override
 	public ScanResult<byte[]> scan(final byte[] cursor) {
 		final CommandArguments args = CommandArguments.create(cursor);
-		return executeCommand(Command.SCAN, args, (cmd)->cmd.scan(new LettuceScanCursor(cursor)),
+		return executeCommand(RedisCommand.SCAN, args, (cmd)->cmd.scan(new LettuceScanCursor(cursor)),
 				new ScanCursorConverter.KeyScanCursorConverter<>((v)->v));
 	}
 
@@ -566,14 +575,14 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 	@Override
 	public List<String> sort(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.SORT, args, (cmd)->cmd.sort(rawBinaryKey(key)),
+		return executeCommand(RedisCommand.SORT, args, (cmd)->cmd.sort(rawBinaryKey(key)),
 				new BinaryListStringListConverter());
 	}
 
 	@Override
 	public List<byte[]> sort(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.SORT, args, (cmd)->cmd.sort(rawKey(key)));
+		return executeCommand(RedisCommand.SORT, args, (cmd)->cmd.sort(rawKey(key)));
 	}
 
 	@Override
@@ -640,7 +649,7 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 
 	@Override
 	public Long sort(final String key, final String destKey, final SortArgument argument, final int offset,
-					 final int count) {
+	                 final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.LIMIT)
 				.add(offset, count).add("STORE", destKey);
 		return sortStore(SafeEncoder.encode(key), rawBinaryKey(destKey), new LettuceSortArgs(argument, offset, count),
@@ -649,7 +658,7 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 
 	@Override
 	public Long sort(final byte[] key, final byte[] destKey, final SortArgument argument, final int offset,
-					 final int count) {
+	                 final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.LIMIT)
 				.add(offset, count).add("STORE", destKey);
 		return sortStore(rawKey(key), rawKey(destKey), new LettuceSortArgs(argument, offset, count), args);
@@ -672,14 +681,14 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 	@Override
 	public List<String> sortRo(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.SORT_RO, args, (cmd)->cmd.sortReadOnly(rawBinaryKey(key)),
+		return executeCommand(RedisCommand.SORT_RO, args, (cmd)->cmd.sortReadOnly(rawBinaryKey(key)),
 				new BinaryListStringListConverter());
 	}
 
 	@Override
 	public List<byte[]> sortRo(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.SORT_RO, args, (cmd)->cmd.sortReadOnly(rawKey(key)), (v)->v);
+		return executeCommand(RedisCommand.SORT_RO, args, (cmd)->cmd.sortReadOnly(rawKey(key)), (v)->v);
 	}
 
 	@Override
@@ -723,104 +732,105 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 	@Override
 	public Long touch(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.TOUCH, args, (cmd)->cmd.touch(rawBinaryKeys(keys)));
+		return executeCommand(RedisCommand.TOUCH, args, (cmd)->cmd.touch(rawBinaryKeys(keys)));
 	}
 
 	@Override
 	public Long touch(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.TOUCH, args, (cmd)->cmd.touch(rawKeys(keys)));
+		return executeCommand(RedisCommand.TOUCH, args, (cmd)->cmd.touch(rawKeys(keys)));
 	}
 
 	@Override
 	public Long ttl(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.TTL, args, (cmd)->cmd.ttl(rawBinaryKey(key)));
+		return executeCommand(RedisCommand.TTL, args, (cmd)->cmd.ttl(rawBinaryKey(key)));
 	}
 
 	@Override
 	public Long ttl(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.TTL, args, (cmd)->cmd.ttl(rawKey(key)));
+		return executeCommand(RedisCommand.TTL, args, (cmd)->cmd.ttl(rawKey(key)));
 	}
 
 	@Override
 	public Type type(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.TYPE, args, (cmd)->cmd.type(rawBinaryKey(key)), new TypeConverter());
+		return executeCommand(RedisCommand.TYPE, args, (cmd)->cmd.type(rawBinaryKey(key)), new TypeConverter());
 	}
 
 	@Override
 	public Type type(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.TYPE, args, (cmd)->cmd.type(rawKey(key)), new TypeConverter());
+		return executeCommand(RedisCommand.TYPE, args, (cmd)->cmd.type(rawKey(key)), new TypeConverter());
 	}
 
 	@Override
 	public Long unlink(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.UNLINK, args, (cmd)->cmd.unlink(rawBinaryKeys(keys)));
+		return executeCommand(RedisCommand.UNLINK, args, (cmd)->cmd.unlink(rawBinaryKeys(keys)));
 	}
 
 	@Override
 	public Long unlink(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.UNLINK, args, (cmd)->cmd.unlink(rawKeys(keys)));
+		return executeCommand(RedisCommand.UNLINK, args, (cmd)->cmd.unlink(rawKeys(keys)));
 	}
 
 	private Status copy(final byte[] key, final byte[] destKey, final Integer destinationDb, final boolean replace,
-						final CommandArguments args) {
+	                    final CommandArguments args) {
 		final CopyArgs copyArgs = CopyArgs.Builder.replace(replace);
 
 		Optional.ofNullable(destinationDb).ifPresent(copyArgs::destinationDb);
 
-		return executeCommand(Command.COPY, args, (cmd)->cmd.copy(key, destKey, copyArgs),
+		return executeCommand(RedisCommand.COPY, args, (cmd)->cmd.copy(key, destKey, copyArgs),
 				new BooleanStatusConverter());
 	}
 
 	private Status migrate(final String host, final int port, final int db, final int timeout,
-						   final MigrateArgs<byte[]> migrateArgs, final CommandArguments args) {
-		return executeCommand(Command.MIGRATE, args, (cmd)->cmd.migrate(host, port, db, timeout, migrateArgs),
+	                       final MigrateArgs<byte[]> migrateArgs, final CommandArguments args) {
+		return executeCommand(RedisCommand.MIGRATE, args, (cmd)->cmd.migrate(host, port, db, timeout, migrateArgs),
 				new OkStatusConverter());
 	}
 
 	private Status restore(final byte[] key, final byte[] serializedValue, final int ttl,
-						   final RestoreArgument argument, final CommandArguments args) {
-		return executeCommand(Command.RESTORE, args,
+	                       final RestoreArgument argument, final CommandArguments args) {
+		return executeCommand(RedisCommand.RESTORE, args,
 				(cmd)->cmd.restore(key, serializedValue, new LettuceRestoreArgs(argument).ttl(ttl)),
 				new OkStatusConverter());
 	}
 
 	private ScanResult<String> scan(final String cursor, final ScanArgs scanArgs, final CommandArguments args) {
-		return executeCommand(Command.SCAN, args, (cmd)->cmd.scan(new LettuceScanCursor(cursor), scanArgs),
+		return executeCommand(RedisCommand.SCAN, args, (cmd)->cmd.scan(new LettuceScanCursor(cursor), scanArgs),
 				new ScanCursorConverter.KeyScanCursorConverter<>(SafeEncoder::encode));
 	}
 
 	private ScanResult<byte[]> scan(final byte[] cursor, final ScanArgs scanArgs, final CommandArguments args) {
-		return executeCommand(Command.SCAN, args, (cmd)->cmd.scan(new LettuceScanCursor(cursor), scanArgs),
+		return executeCommand(RedisCommand.SCAN, args, (cmd)->cmd.scan(new LettuceScanCursor(cursor), scanArgs),
 				new ScanCursorConverter.KeyScanCursorConverter<>((v)->v));
 	}
 
 	private List<String> stringSort(final byte[] key, final SortArgs sortArgs, final CommandArguments args) {
-		return executeCommand(Command.SORT, args, (cmd)->cmd.sort(key, sortArgs), new BinaryListStringListConverter());
+		return executeCommand(
+				RedisCommand.SORT, args, (cmd)->cmd.sort(key, sortArgs), new BinaryListStringListConverter());
 	}
 
 	private List<byte[]> binarySort(final byte[] key, final SortArgs sortArgs, final CommandArguments args) {
-		return executeCommand(Command.SORT, args, (cmd)->cmd.sort(key, sortArgs));
+		return executeCommand(RedisCommand.SORT, args, (cmd)->cmd.sort(key, sortArgs));
 	}
 
 	private Long sortStore(final byte[] key, final byte[] destKey, final SortArgs sortArgs,
-						   final CommandArguments args) {
-		return executeCommand(Command.SORT, args, (cmd)->cmd.sortStore(key, sortArgs, destKey));
+	                       final CommandArguments args) {
+		return executeCommand(RedisCommand.SORT, args, (cmd)->cmd.sortStore(key, sortArgs, destKey));
 	}
 
 	private List<String> stringSortRo(final byte[] key, final SortArgs sortArgs, final CommandArguments args) {
-		return executeCommand(Command.SORT_RO, args, (cmd)->cmd.sortReadOnly(key, sortArgs),
+		return executeCommand(RedisCommand.SORT_RO, args, (cmd)->cmd.sortReadOnly(key, sortArgs),
 				new BinaryListStringListConverter());
 	}
 
 	private List<byte[]> binarySortRo(final byte[] key, final SortArgs sortArgs, final CommandArguments args) {
-		return executeCommand(Command.SORT_RO, args, (cmd)->cmd.sortReadOnly(key, sortArgs));
+		return executeCommand(RedisCommand.SORT_RO, args, (cmd)->cmd.sortReadOnly(key, sortArgs));
 	}
 
 }

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package io.lettuce.core;
@@ -40,11 +40,20 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public abstract class AbstractLettuceFactory<CONN extends StatefulConnection<byte[], byte[]>,
-		C extends AbstractRedisClient> extends BasePooledObjectFactory<CONN> {
+public abstract class AbstractLettuceFactory<CONN extends StatefulConnection<byte[], byte[]>, C extends AbstractRedisClient>
+		extends BasePooledObjectFactory<CONN> {
 
+	/**
+	 * {@link AbstractRedisClient}
+	 */
 	private final C client;
 
+	/**
+	 * 构造函数
+	 *
+	 * @param client
+	 *        {@link AbstractRedisClient}
+	 */
 	protected AbstractLettuceFactory(final C client) {
 		this.client = client;
 	}
@@ -69,6 +78,11 @@ public abstract class AbstractLettuceFactory<CONN extends StatefulConnection<byt
 		}
 	}
 
+	/**
+	 * 返回 {@link AbstractRedisClient}
+	 *
+	 * @return {@link AbstractRedisClient}
+	 */
 	protected C getClient() {
 		return client;
 	}

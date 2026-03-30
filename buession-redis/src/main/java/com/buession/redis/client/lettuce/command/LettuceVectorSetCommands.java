@@ -32,7 +32,7 @@ import com.buession.redis.core.Keyword;
 import com.buession.redis.core.RawVector;
 import com.buession.redis.core.VSimScoreAttribs;
 import com.buession.redis.core.VectorInfo;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.VectorSetCommands;
 import com.buession.redis.core.command.args.vectorset.VAddArgument;
@@ -88,106 +88,111 @@ public final class LettuceVectorSetCommands extends AbstractLettuceRedisCommands
 	@Override
 	public Long vCard(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.VCARD, args, (cmd)->cmd.vcard(rawBinaryKey(key)));
+		return executeCommand(RedisCommand.VCARD, args, (cmd)->cmd.vcard(rawBinaryKey(key)));
 	}
 
 	@Override
 	public Long vCard(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.VCARD, args, (cmd)->cmd.vcard(rawKey(key)));
+		return executeCommand(RedisCommand.VCARD, args, (cmd)->cmd.vcard(rawKey(key)));
 	}
 
 	@Override
 	public Long vDim(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.VDIM, args, (cmd)->cmd.vdim(rawBinaryKey(key)));
+		return executeCommand(RedisCommand.VDIM, args, (cmd)->cmd.vdim(rawBinaryKey(key)));
 	}
 
 	@Override
 	public Long vDim(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.VDIM, args, (cmd)->cmd.vdim(rawKey(key)));
+		return executeCommand(RedisCommand.VDIM, args, (cmd)->cmd.vdim(rawKey(key)));
 	}
 
 	@Override
 	public List<Double> vEmb(final String key, final String element) {
 		final CommandArguments args = CommandArguments.create(key, element);
-		return executeCommand(Command.VEMB, args, (cmd)->cmd.vemb(rawBinaryKey(key), SafeEncoder.encode(element)));
+		return executeCommand(RedisCommand.VEMB, args, (cmd)->cmd.vemb(rawBinaryKey(key), SafeEncoder.encode(element)));
 	}
 
 	@Override
 	public List<Double> vEmb(final byte[] key, final byte[] element) {
 		final CommandArguments args = CommandArguments.create(key, element);
-		return executeCommand(Command.VDIM, args, (cmd)->cmd.vemb(rawKey(key), element));
+		return executeCommand(RedisCommand.VDIM, args, (cmd)->cmd.vemb(rawKey(key), element));
 	}
 
 	@Override
 	public RawVector vembRaw(final String key, final String element) {
 		final CommandArguments args = CommandArguments.create(key, element).add("RAW");
-		return executeCommand(Command.VEMB, args, (cmd)->cmd.vembRaw(rawBinaryKey(key), SafeEncoder.encode(element)),
+		return executeCommand(
+				RedisCommand.VEMB, args, (cmd)->cmd.vembRaw(rawBinaryKey(key), SafeEncoder.encode(element)),
 				new RawVectorConveter());
 	}
 
 	@Override
 	public RawVector vembRaw(final byte[] key, final byte[] element) {
 		final CommandArguments args = CommandArguments.create(key, element).add("RAW");
-		return executeCommand(Command.VDIM, args, (cmd)->cmd.vembRaw(rawKey(key), element), new RawVectorConveter());
+		return executeCommand(
+				RedisCommand.VDIM, args, (cmd)->cmd.vembRaw(rawKey(key), element), new RawVectorConveter());
 	}
 
 	@Override
 	public String vGetAttr(final String key, final String element) {
 		final CommandArguments args = CommandArguments.create(key, element);
-		return executeCommand(Command.VGETATTR, args,
+		return executeCommand(RedisCommand.VGETATTR, args,
 				(cmd)->cmd.vgetattr(rawBinaryKey(key), SafeEncoder.encode(element)));
 	}
 
 	@Override
 	public byte[] vGetAttr(final byte[] key, final byte[] element) {
 		final CommandArguments args = CommandArguments.create(key, element);
-		return executeCommand(Command.VGETATTR, args, (cmd)->cmd.vgetattr(rawKey(key), element), SafeEncoder::encode);
+		return executeCommand(
+				RedisCommand.VGETATTR, args, (cmd)->cmd.vgetattr(rawKey(key), element), SafeEncoder::encode);
 	}
 
 	@Override
 	public VectorInfo vInfo(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.VINFO, args, (cmd)->cmd.vinfo(rawBinaryKey(key)), new VectorMetadataConverter());
+		return executeCommand(
+				RedisCommand.VINFO, args, (cmd)->cmd.vinfo(rawBinaryKey(key)), new VectorMetadataConverter());
 	}
 
 	@Override
 	public VectorInfo vInfo(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.VINFO, args, (cmd)->cmd.vinfo(rawKey(key)), new VectorMetadataConverter());
+		return executeCommand(RedisCommand.VINFO, args, (cmd)->cmd.vinfo(rawKey(key)), new VectorMetadataConverter());
 	}
 
 	@Override
 	public Boolean vIsMember(final String key, final String element) {
 		final CommandArguments args = CommandArguments.create(key, element);
-		return executeCommand(Command.VISMEMBER, args);
+		return executeCommand(RedisCommand.VISMEMBER, args);
 	}
 
 	@Override
 	public Boolean vIsMember(final byte[] key, final byte[] element) {
 		final CommandArguments args = CommandArguments.create(key, element);
-		return executeCommand(Command.VISMEMBER, args);
+		return executeCommand(RedisCommand.VISMEMBER, args);
 	}
 
 	@Override
 	public List<String> vLinks(final String key, final String element) {
 		final CommandArguments args = CommandArguments.create(key, element);
-		return executeCommand(Command.VLINKS, args, (cmd)->cmd.vlinks(rawBinaryKey(key), SafeEncoder.encode(element)),
+		return executeCommand(
+				RedisCommand.VLINKS, args, (cmd)->cmd.vlinks(rawBinaryKey(key), SafeEncoder.encode(element)),
 				new BinaryListStringListConverter());
 	}
 
 	@Override
 	public List<byte[]> vLinks(final byte[] key, final byte[] element) {
 		final CommandArguments args = CommandArguments.create(key, element);
-		return executeCommand(Command.VLINKS, args, (cmd)->cmd.vlinks(rawKey(key), element));
+		return executeCommand(RedisCommand.VLINKS, args, (cmd)->cmd.vlinks(rawKey(key), element));
 	}
 
 	@Override
 	public Map<String, Double> vLinksWithScores(final String key, final String element) {
 		final CommandArguments args = CommandArguments.create(key, element).add("WITHSCORES");
-		return executeCommand(Command.VLINKS, args,
+		return executeCommand(RedisCommand.VLINKS, args,
 				(cmd)->cmd.vlinksWithScores(rawBinaryKey(key), SafeEncoder.encode(element)),
 				new MapConverter<>(SafeEncoder::encode, (v)->v));
 	}
@@ -195,76 +200,77 @@ public final class LettuceVectorSetCommands extends AbstractLettuceRedisCommands
 	@Override
 	public Map<byte[], Double> vLinksWithScores(final byte[] key, final byte[] element) {
 		final CommandArguments args = CommandArguments.create(key, element).add("WITHSCORES");
-		return executeCommand(Command.VLINKS, args, (cmd)->cmd.vlinksWithScores(rawKey(key), element));
+		return executeCommand(RedisCommand.VLINKS, args, (cmd)->cmd.vlinksWithScores(rawKey(key), element));
 	}
 
 	@Override
 	public String vRandMember(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.VRANDMEMBER, args, (cmd)->cmd.vrandmember(rawBinaryKey(key)),
+		return executeCommand(RedisCommand.VRANDMEMBER, args, (cmd)->cmd.vrandmember(rawBinaryKey(key)),
 				SafeEncoder::encode);
 	}
 
 	@Override
 	public byte[] vRandMember(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.VRANDMEMBER, args, (cmd)->cmd.vrandmember(rawKey(key)));
+		return executeCommand(RedisCommand.VRANDMEMBER, args, (cmd)->cmd.vrandmember(rawKey(key)));
 	}
 
 	@Override
 	public List<String> vRandMember(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create(key, count);
-		return executeCommand(Command.VRANDMEMBER, args, (cmd)->cmd.vrandmember(rawBinaryKey(key), count),
+		return executeCommand(RedisCommand.VRANDMEMBER, args, (cmd)->cmd.vrandmember(rawBinaryKey(key), count),
 				new BinaryListStringListConverter());
 	}
 
 	@Override
 	public List<byte[]> vRandMember(final byte[] key, final int count) {
 		final CommandArguments args = CommandArguments.create(key, count);
-		return executeCommand(Command.VRANDMEMBER, args, (cmd)->cmd.vrandmember(rawKey(key), count));
+		return executeCommand(RedisCommand.VRANDMEMBER, args, (cmd)->cmd.vrandmember(rawKey(key), count));
 	}
 
 	@Override
 	public List<String> vRange(final String key, final String start, final String end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
-		return executeCommand(Command.VRANGE, args);
+		return executeCommand(RedisCommand.VRANGE, args);
 	}
 
 	@Override
 	public List<byte[]> vRange(final byte[] key, final byte[] start, final byte[] end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
-		return executeCommand(Command.VRANGE, args);
+		return executeCommand(RedisCommand.VRANGE, args);
 	}
 
 	@Override
 	public List<String> vRange(final String key, final String start, final String end, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(count);
-		return executeCommand(Command.VRANGE, args);
+		return executeCommand(RedisCommand.VRANGE, args);
 	}
 
 	@Override
 	public List<byte[]> vRange(final byte[] key, final byte[] start, final byte[] end, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(count);
-		return executeCommand(Command.VRANGE, args);
+		return executeCommand(RedisCommand.VRANGE, args);
 	}
 
 	@Override
 	public Status vRem(final String key, final String element) {
 		final CommandArguments args = CommandArguments.create(key, element);
-		return executeCommand(Command.VREM, args, (cmd)->cmd.vrem(rawBinaryKey(key), SafeEncoder.encode(element)),
+		return executeCommand(RedisCommand.VREM, args, (cmd)->cmd.vrem(rawBinaryKey(key), SafeEncoder.encode(element)),
 				new BooleanStatusConverter());
 	}
 
 	@Override
 	public Status vRem(final byte[] key, final byte[] element) {
 		final CommandArguments args = CommandArguments.create(key, element);
-		return executeCommand(Command.VREM, args, (cmd)->cmd.vrem(rawKey(key), element), new BooleanStatusConverter());
+		return executeCommand(
+				RedisCommand.VREM, args, (cmd)->cmd.vrem(rawKey(key), element), new BooleanStatusConverter());
 	}
 
 	@Override
 	public Status vSetAttr(final String key, final String element, final String value) {
 		final CommandArguments args = CommandArguments.create(key, element).add(value);
-		return executeCommand(Command.VREM, args,
+		return executeCommand(RedisCommand.VREM, args,
 				(cmd)->cmd.vsetattr(rawBinaryKey(key), SafeEncoder.encode(element), value),
 				new BooleanStatusConverter());
 	}
@@ -272,34 +278,35 @@ public final class LettuceVectorSetCommands extends AbstractLettuceRedisCommands
 	@Override
 	public Status vSetAttr(final byte[] key, final byte[] element, final byte[] value) {
 		final CommandArguments args = CommandArguments.create(key, element).add(value);
-		return executeCommand(Command.VREM, args, (cmd)->cmd.vsetattr(rawKey(key), element, SafeEncoder.encode(value)),
+		return executeCommand(
+				RedisCommand.VREM, args, (cmd)->cmd.vsetattr(rawKey(key), element, SafeEncoder.encode(value)),
 				new BooleanStatusConverter());
 	}
 
 	@Override
 	public List<String> vSim(final String key, final double... vectors) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors);
-		return executeCommand(Command.VSIM, args, (cmd)->cmd.vsim(rawBinaryKey(key), vectors(vectors)),
+		return executeCommand(RedisCommand.VSIM, args, (cmd)->cmd.vsim(rawBinaryKey(key), vectors(vectors)),
 				new BinaryListStringListConverter());
 	}
 
 	@Override
 	public List<byte[]> vSim(final byte[] key, final double... vectors) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors);
-		return executeCommand(Command.VSIM, args, (cmd)->cmd.vsim(rawKey(key), vectors(vectors)));
+		return executeCommand(RedisCommand.VSIM, args, (cmd)->cmd.vsim(rawKey(key), vectors(vectors)));
 	}
 
 	@Override
 	public List<String> vSim(final String key, final String element) {
 		final CommandArguments args = CommandArguments.create(key, element);
-		return executeCommand(Command.VSIM, args, (cmd)->cmd.vsim(rawBinaryKey(key), SafeEncoder.encode(element)),
+		return executeCommand(RedisCommand.VSIM, args, (cmd)->cmd.vsim(rawBinaryKey(key), SafeEncoder.encode(element)),
 				new BinaryListStringListConverter());
 	}
 
 	@Override
 	public List<byte[]> vSim(final byte[] key, final byte[] element) {
 		final CommandArguments args = CommandArguments.create(key, element);
-		return executeCommand(Command.VSIM, args, (cmd)->cmd.vsim(rawKey(key), element));
+		return executeCommand(RedisCommand.VSIM, args, (cmd)->cmd.vsim(rawKey(key), element));
 	}
 
 	@Override
@@ -381,20 +388,20 @@ public final class LettuceVectorSetCommands extends AbstractLettuceRedisCommands
 	@Override
 	public Map<String, Double> vSimWithScores(final String key, final double... vectors) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add("WITHSCORES");
-		return executeCommand(Command.VSIM, args, (cmd)->cmd.vsimWithScore(rawBinaryKey(key), vectors(vectors)),
+		return executeCommand(RedisCommand.VSIM, args, (cmd)->cmd.vsimWithScore(rawBinaryKey(key), vectors(vectors)),
 				new MapConverter<>(SafeEncoder::encode, (v)->v));
 	}
 
 	@Override
 	public Map<byte[], Double> vSimWithScores(final byte[] key, final double... vectors) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add("WITHSCORES");
-		return executeCommand(Command.VSIM, args, (cmd)->cmd.vsimWithScore(rawKey(key), vectors(vectors)));
+		return executeCommand(RedisCommand.VSIM, args, (cmd)->cmd.vsimWithScore(rawKey(key), vectors(vectors)));
 	}
 
 	@Override
 	public Map<String, Double> vSimWithScores(final String key, final String element) {
 		final CommandArguments args = CommandArguments.create(key, element).add("WITHSCORES");
-		return executeCommand(Command.VSIM, args,
+		return executeCommand(RedisCommand.VSIM, args,
 				(cmd)->cmd.vlinksWithScores(rawBinaryKey(key), SafeEncoder.encode(element)),
 				new MapConverter<>(SafeEncoder::encode, (v)->v));
 	}
@@ -402,7 +409,7 @@ public final class LettuceVectorSetCommands extends AbstractLettuceRedisCommands
 	@Override
 	public Map<byte[], Double> vSimWithScores(final byte[] key, final byte[] element) {
 		final CommandArguments args = CommandArguments.create(key, element).add("WITHSCORES");
-		return executeCommand(Command.VSIM, args, (cmd)->cmd.vlinksWithScores(rawKey(key), element));
+		return executeCommand(RedisCommand.VSIM, args, (cmd)->cmd.vlinksWithScores(rawKey(key), element));
 	}
 
 	@Override
@@ -419,7 +426,7 @@ public final class LettuceVectorSetCommands extends AbstractLettuceRedisCommands
 
 	@Override
 	public Map<String, Double> vSimWithScores(final String key, final double[] vectors, final VSimArgument argument,
-											  final int count) {
+	                                          final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add(argument).add("WITHSCORES")
 				.add(Keyword.Common.COUNT, count);
 		return vStringSimWithScores(rawBinaryKey(key), vectors, new LettuceVSimArgs(argument, count), args);
@@ -427,7 +434,7 @@ public final class LettuceVectorSetCommands extends AbstractLettuceRedisCommands
 
 	@Override
 	public Map<byte[], Double> vSimWithScores(final byte[] key, final double[] vectors, final VSimArgument argument,
-											  final int count) {
+	                                          final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add(argument).add("WITHSCORES")
 				.add(Keyword.Common.COUNT, count);
 		return vBinarySimWithScores(rawKey(key), vectors, new LettuceVSimArgs(argument, count), args);
@@ -461,7 +468,7 @@ public final class LettuceVectorSetCommands extends AbstractLettuceRedisCommands
 
 	@Override
 	public Map<String, Double> vSimWithScores(final String key, final String element, final VSimArgument argument,
-											  final int count) {
+	                                          final int count) {
 		final CommandArguments args = CommandArguments.create(key, element).add(argument).add("WITHSCORES")
 				.add(Keyword.Common.COUNT, count);
 		return vsimWithScores(rawBinaryKey(key), element, new LettuceVSimArgs(argument, count), args);
@@ -469,7 +476,7 @@ public final class LettuceVectorSetCommands extends AbstractLettuceRedisCommands
 
 	@Override
 	public Map<byte[], Double> vSimWithScores(final byte[] key, final byte[] element, final VSimArgument argument,
-											  final int count) {
+	                                          final int count) {
 		final CommandArguments args = CommandArguments.create(key, element).add(argument).add("WITHSCORES")
 				.add(Keyword.Common.COUNT, count);
 		return vsimWithScores(rawKey(key), element, new LettuceVSimArgs(argument, count), args);
@@ -492,7 +499,7 @@ public final class LettuceVectorSetCommands extends AbstractLettuceRedisCommands
 	@Override
 	public Map<String, VSimScoreAttribs> vSimWithScoresWithAttribs(final String key, final double... vectors) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add("WITHSCORES", "WITHATTRIBS");
-		return executeCommand(Command.VSIM, args,
+		return executeCommand(RedisCommand.VSIM, args,
 				(cmd)->cmd.vsimWithScoreWithAttribs(rawBinaryKey(key), vectors(vectors)),
 				new MapConverter<>(SafeEncoder::encode, new VSimScoreAttribsConverter()));
 	}
@@ -500,14 +507,15 @@ public final class LettuceVectorSetCommands extends AbstractLettuceRedisCommands
 	@Override
 	public Map<byte[], VSimScoreAttribs> vSimWithScoresWithAttribs(final byte[] key, final double... vectors) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add("WITHSCORES", "WITHATTRIBS");
-		return executeCommand(Command.VSIM, args, (cmd)->cmd.vsimWithScoreWithAttribs(rawKey(key), vectors(vectors)),
+		return executeCommand(
+				RedisCommand.VSIM, args, (cmd)->cmd.vsimWithScoreWithAttribs(rawKey(key), vectors(vectors)),
 				new MapConverter<>((k)->k, new VSimScoreAttribsConverter()));
 	}
 
 	@Override
 	public Map<String, VSimScoreAttribs> vSimWithScoresWithAttribs(final String key, final String element) {
 		final CommandArguments args = CommandArguments.create(key, element).add("WITHSCORES", "WITHATTRIBS");
-		return executeCommand(Command.VSIM, args,
+		return executeCommand(RedisCommand.VSIM, args,
 				(cmd)->cmd.vsimWithScoreWithAttribs(rawBinaryKey(key), SafeEncoder.encode(element)),
 				new MapConverter<>(SafeEncoder::encode, new VSimScoreAttribsConverter()));
 	}
@@ -515,13 +523,13 @@ public final class LettuceVectorSetCommands extends AbstractLettuceRedisCommands
 	@Override
 	public Map<byte[], VSimScoreAttribs> vSimWithScoresWithAttribs(final byte[] key, final byte[] element) {
 		final CommandArguments args = CommandArguments.create(key, element).add("WITHSCORES", "WITHATTRIBS");
-		return executeCommand(Command.VSIM, args, (cmd)->cmd.vsimWithScoreWithAttribs(rawKey(key), element),
+		return executeCommand(RedisCommand.VSIM, args, (cmd)->cmd.vsimWithScoreWithAttribs(rawKey(key), element),
 				new MapConverter<>((k)->k, new VSimScoreAttribsConverter()));
 	}
 
 	@Override
 	public Map<String, VSimScoreAttribs> vSimWithScoresWithAttribs(final String key, final double[] vectors,
-																   final VSimArgument argument) {
+	                                                               final VSimArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add("WITHSCORES", "WITHATTRIBS")
 				.add(argument);
 		return vStringSimWithScoresWithAttribs(rawBinaryKey(key), vectors, new LettuceVSimArgs(argument), args);
@@ -529,7 +537,7 @@ public final class LettuceVectorSetCommands extends AbstractLettuceRedisCommands
 
 	@Override
 	public Map<byte[], VSimScoreAttribs> vSimWithScoresWithAttribs(final byte[] key, final double[] vectors,
-																   final VSimArgument argument) {
+	                                                               final VSimArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add("WITHSCORES", "WITHATTRIBS")
 				.add(argument);
 		return vBinarySimWithScoresWithAttribs(rawKey(key), vectors, new LettuceVSimArgs(argument), args);
@@ -537,8 +545,8 @@ public final class LettuceVectorSetCommands extends AbstractLettuceRedisCommands
 
 	@Override
 	public Map<String, VSimScoreAttribs> vSimWithScoresWithAttribs(final String key, final double[] vectors,
-																   final VSimArgument argument,
-																   final int count) {
+	                                                               final VSimArgument argument,
+	                                                               final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add(argument)
 				.add("WITHSCORES", "WITHATTRIBS").add(Keyword.Common.COUNT, count);
 		return vStringSimWithScoresWithAttribs(rawBinaryKey(key), vectors, new LettuceVSimArgs(argument, count), args);
@@ -546,8 +554,8 @@ public final class LettuceVectorSetCommands extends AbstractLettuceRedisCommands
 
 	@Override
 	public Map<byte[], VSimScoreAttribs> vSimWithScoresWithAttribs(final byte[] key, final double[] vectors,
-																   final VSimArgument argument,
-																   final int count) {
+	                                                               final VSimArgument argument,
+	                                                               final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add(argument)
 				.add("WITHSCORES", "WITHATTRIBS").add(Keyword.Common.COUNT, count);
 		return vBinarySimWithScoresWithAttribs(rawKey(key), vectors, new LettuceVSimArgs(argument, count), args);
@@ -555,7 +563,7 @@ public final class LettuceVectorSetCommands extends AbstractLettuceRedisCommands
 
 	@Override
 	public Map<String, VSimScoreAttribs> vSimWithScoresWithAttribs(final String key, final double[] vectors,
-																   final int count) {
+	                                                               final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add("WITHSCORES", "WITHATTRIBS")
 				.add(Keyword.Common.COUNT, count);
 		return vStringSimWithScoresWithAttribs(rawBinaryKey(key), vectors, new LettuceVSimArgs(count), args);
@@ -563,7 +571,7 @@ public final class LettuceVectorSetCommands extends AbstractLettuceRedisCommands
 
 	@Override
 	public Map<byte[], VSimScoreAttribs> vSimWithScoresWithAttribs(final byte[] key, final double[] vectors,
-																   final int count) {
+	                                                               final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add("WITHSCORES", "WITHATTRIBS")
 				.add(Keyword.Common.COUNT, count);
 		return vBinarySimWithScoresWithAttribs(rawKey(key), vectors, new LettuceVSimArgs(count), args);
@@ -571,7 +579,7 @@ public final class LettuceVectorSetCommands extends AbstractLettuceRedisCommands
 
 	@Override
 	public Map<String, VSimScoreAttribs> vSimWithScoresWithAttribs(final String key, final String element,
-																   final VSimArgument argument) {
+	                                                               final VSimArgument argument) {
 		final CommandArguments args = CommandArguments.create(key, element).add(argument)
 				.add("WITHSCORES", "WITHATTRIBS");
 		return vsimWithScoresWithAttribs(rawBinaryKey(key), element, new LettuceVSimArgs(argument), args);
@@ -579,7 +587,7 @@ public final class LettuceVectorSetCommands extends AbstractLettuceRedisCommands
 
 	@Override
 	public Map<byte[], VSimScoreAttribs> vSimWithScoresWithAttribs(final byte[] key, final byte[] element,
-																   final VSimArgument argument) {
+	                                                               final VSimArgument argument) {
 		final CommandArguments args = CommandArguments.create(key, element).add(argument)
 				.add("WITHSCORES", "WITHATTRIBS");
 		return vsimWithScoresWithAttribs(rawKey(key), element, new LettuceVSimArgs(argument), args);
@@ -587,7 +595,7 @@ public final class LettuceVectorSetCommands extends AbstractLettuceRedisCommands
 
 	@Override
 	public Map<String, VSimScoreAttribs> vSimWithScoresWithAttribs(final String key, final String element,
-																   final VSimArgument argument, final int count) {
+	                                                               final VSimArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key, element).add(argument)
 				.add("WITHSCORES", "WITHATTRIBS").add(Keyword.Common.COUNT, count);
 		return vsimWithScoresWithAttribs(rawBinaryKey(key), element, new LettuceVSimArgs(argument, count), args);
@@ -595,7 +603,7 @@ public final class LettuceVectorSetCommands extends AbstractLettuceRedisCommands
 
 	@Override
 	public Map<byte[], VSimScoreAttribs> vSimWithScoresWithAttribs(final byte[] key, final byte[] element,
-																   final VSimArgument argument, final int count) {
+	                                                               final VSimArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key, element).add(argument)
 				.add("WITHSCORES", "WITHATTRIBS").add(Keyword.Common.COUNT, count);
 		return vsimWithScoresWithAttribs(rawKey(key), element, new LettuceVSimArgs(argument, count), args);
@@ -603,7 +611,7 @@ public final class LettuceVectorSetCommands extends AbstractLettuceRedisCommands
 
 	@Override
 	public Map<String, VSimScoreAttribs> vSimWithScoresWithAttribs(final String key, final String element,
-																   final int count) {
+	                                                               final int count) {
 		final CommandArguments args = CommandArguments.create(key, element).add("WITHSCORES", "WITHATTRIBS")
 				.add(Keyword.Common.COUNT, count);
 		return vsimWithScoresWithAttribs(rawBinaryKey(key), element, new LettuceVSimArgs(count), args);
@@ -611,102 +619,102 @@ public final class LettuceVectorSetCommands extends AbstractLettuceRedisCommands
 
 	@Override
 	public Map<byte[], VSimScoreAttribs> vSimWithScoresWithAttribs(final byte[] key, final byte[] element,
-																   final int count) {
+	                                                               final int count) {
 		final CommandArguments args = CommandArguments.create(key, element).add("WITHSCORES", "WITHATTRIBS")
 				.add(Keyword.Common.COUNT, count);
 		return vsimWithScoresWithAttribs(rawKey(key), element, new LettuceVSimArgs(count), args);
 	}
 
 	private Status vAdd(final byte[] key, final double[] vectors, final byte[] element, final CommandArguments args) {
-		return executeCommand(Command.VADD, args, (cmd)->cmd.vadd(rawKey(key), element, vectors(vectors)),
+		return executeCommand(RedisCommand.VADD, args, (cmd)->cmd.vadd(rawKey(key), element, vectors(vectors)),
 				new BooleanStatusConverter());
 	}
 
 	private Status vAdd(final byte[] key, final double[] vectors, final byte[] element, final VAddArgument argument,
-						final CommandArguments args) {
-		return executeCommand(Command.VADD, args,
+	                    final CommandArguments args) {
+		return executeCommand(RedisCommand.VADD, args,
 				(cmd)->cmd.vadd(rawKey(key), element, new LettuceVAddArgs(argument), vectors(vectors)),
 				new BooleanStatusConverter());
 	}
 
 	private List<String> vStringSim(final byte[] key, final double[] vectors, final VSimArgs vSimArgs,
-									final CommandArguments args) {
-		return executeCommand(Command.VSIM, args,
+	                                final CommandArguments args) {
+		return executeCommand(RedisCommand.VSIM, args,
 				(cmd)->cmd.vsim(key, vSimArgs, vectors(vectors)),
 				new BinaryListStringListConverter());
 	}
 
 	private List<byte[]> vBinarySim(final byte[] key, final double[] vectors, final VSimArgs vSimArgs,
-									final CommandArguments args) {
-		return executeCommand(Command.VSIM, args,
+	                                final CommandArguments args) {
+		return executeCommand(RedisCommand.VSIM, args,
 				(cmd)->cmd.vsim(key, vSimArgs, vectors(vectors)));
 	}
 
 	private List<String> vSim(final byte[] key, final String element, final VSimArgs vSimArgs,
-							  final CommandArguments args) {
-		return executeCommand(Command.VSIM, args,
+	                          final CommandArguments args) {
+		return executeCommand(RedisCommand.VSIM, args,
 				(cmd)->cmd.vsim(key, vSimArgs, SafeEncoder.encode(element)),
 				new BinaryListStringListConverter());
 	}
 
 	private List<byte[]> vSim(final byte[] key, final byte[] element, final VSimArgs vSimArgs,
-							  final CommandArguments args) {
-		return executeCommand(Command.VSIM, args, (cmd)->cmd.vsim(key, vSimArgs, element));
+	                          final CommandArguments args) {
+		return executeCommand(RedisCommand.VSIM, args, (cmd)->cmd.vsim(key, vSimArgs, element));
 	}
 
 	private Map<String, Double> vStringSimWithScores(final byte[] key, final double[] vectors, final VSimArgs vSimArgs,
-													 final CommandArguments args) {
-		return executeCommand(Command.VSIM, args,
+	                                                 final CommandArguments args) {
+		return executeCommand(RedisCommand.VSIM, args,
 				(cmd)->cmd.vsimWithScore(key, vSimArgs, vectors(vectors)),
 				new MapConverter<>(SafeEncoder::encode, (v)->v));
 	}
 
 	private Map<byte[], Double> vBinarySimWithScores(final byte[] key, final double[] vectors, final VSimArgs vSimArgs,
-													 final CommandArguments args) {
-		return executeCommand(Command.VSIM, args,
+	                                                 final CommandArguments args) {
+		return executeCommand(RedisCommand.VSIM, args,
 				(cmd)->cmd.vsimWithScore(key, vSimArgs, vectors(vectors)));
 	}
 
 	private Map<String, Double> vsimWithScores(final byte[] key, final String element, final VSimArgs vSimArgs,
-											   final CommandArguments args) {
-		return executeCommand(Command.VSIM, args,
+	                                           final CommandArguments args) {
+		return executeCommand(RedisCommand.VSIM, args,
 				(cmd)->cmd.vsimWithScore(key, vSimArgs, SafeEncoder.encode(element)),
 				new MapConverter<>(SafeEncoder::encode, (v)->v));
 	}
 
 	private Map<byte[], Double> vsimWithScores(final byte[] key, final byte[] element, final VSimArgs vSimArgs,
-											   final CommandArguments args) {
-		return executeCommand(Command.VSIM, args, (cmd)->cmd.vsimWithScore(key, vSimArgs, element));
+	                                           final CommandArguments args) {
+		return executeCommand(RedisCommand.VSIM, args, (cmd)->cmd.vsimWithScore(key, vSimArgs, element));
 	}
 
 	private Map<String, VSimScoreAttribs> vStringSimWithScoresWithAttribs(final byte[] key, final double[] vectors,
-																		  final VSimArgs vSimArgs,
-																		  final CommandArguments args) {
-		return executeCommand(Command.VSIM, args,
+	                                                                      final VSimArgs vSimArgs,
+	                                                                      final CommandArguments args) {
+		return executeCommand(RedisCommand.VSIM, args,
 				(cmd)->cmd.vsimWithScoreWithAttribs(key, vSimArgs, vectors(vectors)),
 				new MapConverter<>(SafeEncoder::encode, new VSimScoreAttribsConverter()));
 	}
 
 	private Map<byte[], VSimScoreAttribs> vBinarySimWithScoresWithAttribs(final byte[] key, final double[] vectors,
-																		  final VSimArgs vSimArgs,
-																		  final CommandArguments args) {
-		return executeCommand(Command.VSIM, args,
+	                                                                      final VSimArgs vSimArgs,
+	                                                                      final CommandArguments args) {
+		return executeCommand(RedisCommand.VSIM, args,
 				(cmd)->cmd.vsimWithScoreWithAttribs(key, vSimArgs, vectors(vectors)),
 				new MapConverter<>((k)->k, new VSimScoreAttribsConverter()));
 	}
 
 	private Map<String, VSimScoreAttribs> vsimWithScoresWithAttribs(final byte[] key, final String element,
-																	final VSimArgs vSimArgs,
-																	final CommandArguments args) {
-		return executeCommand(Command.VSIM, args,
+	                                                                final VSimArgs vSimArgs,
+	                                                                final CommandArguments args) {
+		return executeCommand(RedisCommand.VSIM, args,
 				(cmd)->cmd.vsimWithScoreWithAttribs(key, vSimArgs, SafeEncoder.encode(element)),
 				new MapConverter<>(SafeEncoder::encode, new VSimScoreAttribsConverter()));
 	}
 
 	private Map<byte[], VSimScoreAttribs> vsimWithScoresWithAttribs(final byte[] key, final byte[] element,
-																	final VSimArgs vSimArgs,
-																	final CommandArguments args) {
-		return executeCommand(Command.VSIM, args, (cmd)->cmd.vsimWithScoreWithAttribs(key, vSimArgs, element),
+	                                                                final VSimArgs vSimArgs,
+	                                                                final CommandArguments args) {
+		return executeCommand(RedisCommand.VSIM, args, (cmd)->cmd.vsimWithScoreWithAttribs(key, vSimArgs, element),
 				new MapConverter<>((k)->k, new VSimScoreAttribsConverter()));
 	}
 

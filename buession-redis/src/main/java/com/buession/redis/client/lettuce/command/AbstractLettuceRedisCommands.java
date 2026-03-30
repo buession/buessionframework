@@ -28,9 +28,10 @@ import com.buession.core.converter.Converter;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.core.command.AbstractRedisCommands;
 import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.RedisCommands;
-import com.buession.redis.core.command.SubCommand;
+import com.buession.redis.core.command.RedisSubCommand;
 
 /**
  * Lettuce Redis 命令抽象类
@@ -45,64 +46,67 @@ public abstract class AbstractLettuceRedisCommands extends AbstractRedisCommands
 		super(client);
 	}
 
-	protected <R> R executeCommand(final Command command) {
-		return executeCommand(LettuceCommandBuilder.newBuilder(client, command));
+	protected <R> R executeCommand(final RedisCommand command) {
+		return client.execute(new LettuceCommand<>(this.client, command));
 	}
 
-	protected <R> R executeCommand(final Command command,
-								   final com.buession.redis.core.Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, R> executor) {
-		return executeCommand(LettuceCommandBuilder.newBuilder(client, command), executor, (v)->v);
+	protected <R> R executeCommand(final RedisCommand command,
+	                               final Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, R> executor) {
+		return executeCommand(command, executor, (v)->v);
 	}
 
-	protected <SR, R> R executeCommand(final Command command,
-									   final com.buession.redis.core.Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, SR> executor,
-									   final Converter<SR, R> converter) {
-		return executeCommand(LettuceCommandBuilder.newBuilder(client, command), executor, converter);
+	protected <SR, R> R executeCommand(final RedisCommand command,
+	                                   final Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, SR> executor,
+	                                   final Converter<SR, R> converter) {
+		return client.execute(new LettuceCommand<>(this.client, command, executor, converter));
 	}
 
-	protected <R> R executeCommand(final Command command, final CommandArguments args) {
-		return executeCommand(LettuceCommandBuilder.newBuilder(client, command), args);
+	protected <R> R executeCommand(final RedisCommand command, final CommandArguments args) {
+		return client.execute(new LettuceCommand<>(this.client, command), args);
 	}
 
-	protected <R> R executeCommand(final Command command, final CommandArguments args,
-								   final com.buession.redis.core.Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, R> executor) {
-		return executeCommand(LettuceCommandBuilder.newBuilder(client, command), args, executor, (v)->v);
+	protected <R> R executeCommand(final RedisCommand command, final CommandArguments args,
+	                               final Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, R> executor) {
+		return executeCommand(command, args, executor, (v)->v);
 	}
 
-	protected <SR, R> R executeCommand(final Command command, final CommandArguments args,
-									   final com.buession.redis.core.Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, SR> executor,
-									   final Converter<SR, R> converter) {
-		return executeCommand(LettuceCommandBuilder.newBuilder(client, command), args, executor, converter);
+	protected <SR, R> R executeCommand(final RedisCommand command, final CommandArguments args,
+	                                   final Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, SR> executor,
+	                                   final Converter<SR, R> converter) {
+		return client.execute(new LettuceCommand<>(this.client, command, executor, converter), args);
 	}
 
-	protected <R> R executeCommand(final Command command, final SubCommand subCommand) {
-		return executeCommand(LettuceCommandBuilder.newBuilder(client, command, subCommand));
+	protected <R> R executeCommand(final RedisCommand command, final RedisSubCommand subCommand) {
+		return client.execute(new LettuceCommand<>(this.client, command, subCommand));
 	}
 
-	protected <R> R executeCommand(final Command command, final SubCommand subCommand,
-								   final com.buession.redis.core.Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, R> executor) {
-		return executeCommand(LettuceCommandBuilder.newBuilder(client, command, subCommand), executor, (v)->v);
+	protected <R> R executeCommand(final RedisCommand command, final RedisSubCommand subCommand,
+	                               final Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, R> executor) {
+		return executeCommand(command, subCommand, executor, (v)->v);
 	}
 
-	protected <SR, R> R executeCommand(final Command command, final SubCommand subCommand,
-									   final com.buession.redis.core.Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, SR> executor,
-									   final Converter<SR, R> converter) {
-		return executeCommand(LettuceCommandBuilder.newBuilder(client, command, subCommand), executor, converter);
+	protected <SR, R> R executeCommand(final RedisCommand command, final RedisSubCommand subCommand,
+	                                   final Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, SR> executor,
+	                                   final Converter<SR, R> converter) {
+		return client.execute(new LettuceCommand<>(this.client, command, subCommand, executor, converter));
 	}
 
-	protected <R> R executeCommand(final Command command, final SubCommand subCommand, final CommandArguments args) {
-		return executeCommand(LettuceCommandBuilder.<R, R>newBuilder(client, command, subCommand), args);
+	protected <R> R executeCommand(final RedisCommand command, final RedisSubCommand subCommand,
+	                               final CommandArguments args) {
+		return client.execute(new LettuceCommand<>(this.client, command, subCommand), args);
 	}
 
-	protected <R> R executeCommand(final Command command, final SubCommand subCommand, final CommandArguments args,
-								   final com.buession.redis.core.Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, R> executor) {
-		return executeCommand(LettuceCommandBuilder.newBuilder(client, command, subCommand), args, executor, (v)->v);
+	protected <R> R executeCommand(final RedisCommand command, final RedisSubCommand subCommand,
+	                               final CommandArguments args,
+	                               final Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, R> executor) {
+		return executeCommand(command, subCommand, args, executor, (v)->v);
 	}
 
-	protected <SR, R> R executeCommand(final Command command, final SubCommand subCommand, final CommandArguments args,
-									   final com.buession.redis.core.Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, SR> executor,
-									   final Converter<SR, R> converter) {
-		return executeCommand(LettuceCommandBuilder.newBuilder(client, command, subCommand), args, executor, converter);
+	protected <SR, R> R executeCommand(final RedisCommand command, final RedisSubCommand subCommand,
+	                                   final CommandArguments args,
+	                                   final Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, SR> executor,
+	                                   final Converter<SR, R> converter) {
+		return client.execute(new LettuceCommand<>(this.client, command, subCommand, executor, converter), args);
 	}
 
 }

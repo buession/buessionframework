@@ -117,6 +117,10 @@ public interface CountMinSketchCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		Key
+	 * @param width
+	 * 		每行的桶数量
+	 * @param depth
+	 * 		哈希函数的数量
 	 *
 	 * @return 操作结果
 	 */

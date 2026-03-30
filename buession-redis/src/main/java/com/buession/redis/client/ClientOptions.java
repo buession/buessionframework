@@ -24,6 +24,8 @@
  */
 package com.buession.redis.client;
 
+import com.buession.redis.utils.SafeEncoder;
+
 /**
  * 客户端配置选项
  *
@@ -36,6 +38,8 @@ public class ClientOptions {
 	 * Key 前缀
 	 */
 	private String prefix;
+
+	private byte[] prefixRaw;
 
 	/**
 	 * 返回 Key 前缀
@@ -54,6 +58,11 @@ public class ClientOptions {
 	 */
 	public void setPrefix(String prefix) {
 		this.prefix = prefix;
+		this.prefixRaw = SafeEncoder.encode(prefix);
+	}
+
+	public byte[] getPrefixRaw() {
+		return prefixRaw;
 	}
 
 }

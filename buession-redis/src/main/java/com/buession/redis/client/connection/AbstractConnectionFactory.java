@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection;
@@ -31,21 +31,43 @@ import com.buession.redis.client.connection.datasource.SentinelDataSource;
 /**
  * Redis 连接工厂抽象类
  *
+ * @param <DS>
+ * 		数据源
+ *
  * @author Yong.Teng
  * @since 3.0.0
  */
 public abstract class AbstractConnectionFactory<DS extends DataSource> implements RedisConnectionFactory {
 
+	/**
+	 * 数据源
+	 */
 	private final DS dataSource;
 
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		数据源
+	 */
 	public AbstractConnectionFactory(final DS dataSource) {
 		this.dataSource = dataSource;
 	}
 
+	/**
+	 * 返回是否为哨兵模式
+	 *
+	 * @return true / false
+	 */
 	public boolean isRedisSentinelAware() {
 		return dataSource instanceof SentinelDataSource;
 	}
 
+	/**
+	 * 返回是否为集群模式
+	 *
+	 * @return true / false
+	 */
 	public boolean isRedisClusterAware() {
 		return dataSource instanceof ClusterDataSource;
 	}
@@ -69,6 +91,11 @@ public abstract class AbstractConnectionFactory<DS extends DataSource> implement
 		return redisConnection;
 	}
 
+	/**
+	 * 返回数据源
+	 *
+	 * @return 数据源
+	 */
 	protected DS getDataSource() {
 		return dataSource;
 	}

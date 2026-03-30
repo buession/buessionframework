@@ -27,7 +27,7 @@ package com.buession.redis.client.lettuce.command;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.core.TdigestInfo;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.TDigestCommands;
 
@@ -48,227 +48,227 @@ public final class LettuceTDigestCommands extends AbstractLettuceRedisCommands i
 	@Override
 	public Status tdigestAdd(final String key, final double... values) {
 		final CommandArguments args = CommandArguments.create(key).add(values);
-		return executeCommand(Command.TDIGEST_ADD, args);
+		return executeCommand(RedisCommand.TDIGEST_ADD, args);
 	}
 
 	@Override
 	public Status tdigestAdd(final byte[] key, final double... values) {
 		final CommandArguments args = CommandArguments.create(key).add(values);
-		return executeCommand(Command.TDIGEST_ADD, args);
+		return executeCommand(RedisCommand.TDIGEST_ADD, args);
 	}
 
 	@Override
 	public List<Double> tdigestByRank(final String key, final long... ranks) {
 		final CommandArguments args = CommandArguments.create(key).add(ranks);
-		return executeCommand(Command.TDIGEST_BYRANK, args);
+		return executeCommand(RedisCommand.TDIGEST_BYRANK, args);
 	}
 
 	@Override
 	public List<Double> tdigestByRank(final byte[] key, final long... ranks) {
 		final CommandArguments args = CommandArguments.create(key).add(ranks);
-		return executeCommand(Command.TDIGEST_BYRANK, args);
+		return executeCommand(RedisCommand.TDIGEST_BYRANK, args);
 	}
 
 	@Override
 	public List<Double> tdigestByRevRank(final String key, final long... ranks) {
 		final CommandArguments args = CommandArguments.create(key).add(ranks);
-		return executeCommand(Command.TDIGEST_BYREVRANK, args);
+		return executeCommand(RedisCommand.TDIGEST_BYREVRANK, args);
 	}
 
 	@Override
 	public List<Double> tdigestByRevRank(final byte[] key, final long... ranks) {
 		final CommandArguments args = CommandArguments.create(key).add(ranks);
-		return executeCommand(Command.TDIGEST_BYREVRANK, args);
+		return executeCommand(RedisCommand.TDIGEST_BYREVRANK, args);
 	}
 
 	@Override
 	public List<Double> tdigestCdf(final String key, final double... values) {
 		final CommandArguments args = CommandArguments.create(key).add(values);
-		return executeCommand(Command.TDIGEST_CDF, args);
+		return executeCommand(RedisCommand.TDIGEST_CDF, args);
 	}
 
 	@Override
 	public List<Double> tdigestCdf(final byte[] key, final double... values) {
 		final CommandArguments args = CommandArguments.create(key).add(values);
-		return executeCommand(Command.TDIGEST_CDF, args);
+		return executeCommand(RedisCommand.TDIGEST_CDF, args);
 	}
 
 	@Override
 	public Status tdigestCreate(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.TDIGEST_CREATE, args);
+		return executeCommand(RedisCommand.TDIGEST_CREATE, args);
 	}
 
 	@Override
 	public Status tdigestCreate(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.TDIGEST_CREATE, args);
+		return executeCommand(RedisCommand.TDIGEST_CREATE, args);
 	}
 
 	@Override
 	public Status tdigestCreate(final String key, final int compression) {
 		final CommandArguments args = CommandArguments.create(key).add("COMPRESSION", compression);
-		return executeCommand(Command.TDIGEST_CREATE, args);
+		return executeCommand(RedisCommand.TDIGEST_CREATE, args);
 	}
 
 	@Override
 	public Status tdigestCreate(final byte[] key, final int compression) {
 		final CommandArguments args = CommandArguments.create(key).add("COMPRESSION", compression);
-		return executeCommand(Command.TDIGEST_CREATE, args);
+		return executeCommand(RedisCommand.TDIGEST_CREATE, args);
 	}
 
 	@Override
 	public TdigestInfo tdigestInfo(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.TDIGEST_INFO, args);
+		return executeCommand(RedisCommand.TDIGEST_INFO, args);
 	}
 
 	@Override
 	public TdigestInfo tdigestInfo(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.TDIGEST_INFO, args);
+		return executeCommand(RedisCommand.TDIGEST_INFO, args);
 	}
 
 	@Override
 	public Double tdigestMax(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.TDIGEST_MAX, args);
+		return executeCommand(RedisCommand.TDIGEST_MAX, args);
 	}
 
 	@Override
 	public Double tdigestMax(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.TDIGEST_MAX, args);
+		return executeCommand(RedisCommand.TDIGEST_MAX, args);
 	}
 
 	@Override
 	public Status tdigestMerge(final String destKey, final String... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-		return executeCommand(Command.TDIGEST_MERGE, args);
+		return executeCommand(RedisCommand.TDIGEST_MERGE, args);
 	}
 
 	@Override
 	public Status tdigestMerge(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-		return executeCommand(Command.TDIGEST_MERGE, args);
+		return executeCommand(RedisCommand.TDIGEST_MERGE, args);
 	}
 
 	@Override
 	public Status tdigestMerge(final String destKey, final String[] keys, final int compression) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
 				.add("COMPRESSION", compression);
-		return executeCommand(Command.TDIGEST_MERGE, args);
+		return executeCommand(RedisCommand.TDIGEST_MERGE, args);
 	}
 
 	@Override
 	public Status tdigestMerge(final byte[] destKey, final byte[][] keys, final int compression) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
 				.add("COMPRESSION", compression);
-		return executeCommand(Command.TDIGEST_MERGE, args);
+		return executeCommand(RedisCommand.TDIGEST_MERGE, args);
 	}
 
 	@Override
 	public Status tdigestMerge(final String destKey, final String[] keys, final int compression,
-							   final boolean override) {
+	                           final boolean override) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
 				.add("COMPRESSION", compression).add(override ? "OVERRIDE" : null);
-		return executeCommand(Command.TDIGEST_MERGE, args);
+		return executeCommand(RedisCommand.TDIGEST_MERGE, args);
 	}
 
 	@Override
 	public Status tdigestMerge(final byte[] destKey, final byte[][] keys, final int compression,
-							   final boolean override) {
+	                           final boolean override) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
 				.add("COMPRESSION", compression).add(override ? "OVERRIDE" : null);
-		return executeCommand(Command.TDIGEST_MERGE, args);
+		return executeCommand(RedisCommand.TDIGEST_MERGE, args);
 	}
 
 	@Override
 	public Status tdigestMerge(final String destKey, final String[] keys, final boolean override) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
 				.add(override ? "OVERRIDE" : null);
-		return executeCommand(Command.TDIGEST_MERGE, args);
+		return executeCommand(RedisCommand.TDIGEST_MERGE, args);
 	}
 
 	@Override
 	public Status tdigestMerge(final byte[] destKey, final byte[][] keys, final boolean override) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
 				.add(override ? "OVERRIDE" : null);
-		return executeCommand(Command.TDIGEST_MERGE, args);
+		return executeCommand(RedisCommand.TDIGEST_MERGE, args);
 	}
 
 	@Override
 	public Double tdigestMin(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.TDIGEST_MIN, args);
+		return executeCommand(RedisCommand.TDIGEST_MIN, args);
 	}
 
 	@Override
 	public Double tdigestMin(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.TDIGEST_MIN, args);
+		return executeCommand(RedisCommand.TDIGEST_MIN, args);
 	}
 
 	@Override
 	public List<Double> tdigestQuantile(final String key, final double... quantiles) {
 		final CommandArguments args = CommandArguments.create(key).add(quantiles);
-		return executeCommand(Command.TDIGEST_QUANTILE, args);
+		return executeCommand(RedisCommand.TDIGEST_QUANTILE, args);
 	}
 
 	@Override
 	public List<Double> tdigestQuantile(final byte[] key, final double... quantiles) {
 		final CommandArguments args = CommandArguments.create(key).add(quantiles);
-		return executeCommand(Command.TDIGEST_QUANTILE, args);
+		return executeCommand(RedisCommand.TDIGEST_QUANTILE, args);
 	}
 
 	@Override
 	public List<Long> tdigestRank(final String key, final double... values) {
 		final CommandArguments args = CommandArguments.create(key).add(values);
-		return executeCommand(Command.TDIGEST_RANK, args);
+		return executeCommand(RedisCommand.TDIGEST_RANK, args);
 	}
 
 	@Override
 	public List<Long> tdigestRank(final byte[] key, final double... values) {
 		final CommandArguments args = CommandArguments.create(key).add(values);
-		return executeCommand(Command.TDIGEST_RANK, args);
+		return executeCommand(RedisCommand.TDIGEST_RANK, args);
 	}
 
 	@Override
 	public Status tdigestReset(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.TDIGEST_RESET, args);
+		return executeCommand(RedisCommand.TDIGEST_RESET, args);
 	}
 
 	@Override
 	public Status tdigestReset(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.TDIGEST_RESET, args);
+		return executeCommand(RedisCommand.TDIGEST_RESET, args);
 	}
 
 	@Override
 	public List<Long> tdigestRevRank(final String key, final double... values) {
 		final CommandArguments args = CommandArguments.create(key).add(values);
-		return executeCommand(Command.TDIGEST_REVRANK, args);
+		return executeCommand(RedisCommand.TDIGEST_REVRANK, args);
 	}
 
 	@Override
 	public List<Long> tdigestRevRank(final byte[] key, final double... values) {
 		final CommandArguments args = CommandArguments.create(key).add(values);
-		return executeCommand(Command.TDIGEST_REVRANK, args);
+		return executeCommand(RedisCommand.TDIGEST_REVRANK, args);
 	}
 
 	@Override
 	public Double tdigestTrimmedMean(final String key, final double lowCutQuantile,
-									 final double highCutQuantile) {
+	                                 final double highCutQuantile) {
 		final CommandArguments args = CommandArguments.create(key).add(lowCutQuantile).add(highCutQuantile);
-		return executeCommand(Command.TDIGEST_TRIMMED_MEAN, args);
+		return executeCommand(RedisCommand.TDIGEST_TRIMMED_MEAN, args);
 	}
 
 	@Override
 	public Double tdigestTrimmedMean(final byte[] key, final double lowCutQuantile,
-									 final double highCutQuantile) {
+	                                 final double highCutQuantile) {
 		final CommandArguments args = CommandArguments.create(key).add(lowCutQuantile).add(highCutQuantile);
-		return executeCommand(Command.TDIGEST_TRIMMED_MEAN, args);
+		return executeCommand(RedisCommand.TDIGEST_TRIMMED_MEAN, args);
 	}
 
 }

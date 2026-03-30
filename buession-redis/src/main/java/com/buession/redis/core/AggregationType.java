@@ -25,7 +25,7 @@
 package com.buession.redis.core;
 
 /**
- *
+ * 降采样或聚合计算方式
  *
  * @author Yong.Teng
  * @since 4.0.0

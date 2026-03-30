@@ -25,7 +25,7 @@
 package com.buession.redis.client;
 
 import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.core.Command;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.*;
 import com.buession.redis.exception.RedisException;
 
@@ -272,7 +272,7 @@ public interface RedisClient {
 	 * @throws RedisException
 	 * 		Redis Exception
 	 */
-	default <R> R execute(final Command<R> command) throws RedisException {
+	default <R> R execute(final Command<RedisConnection, R> command) throws RedisException {
 		return execute(command, null);
 	}
 
@@ -291,6 +291,7 @@ public interface RedisClient {
 	 * @throws RedisException
 	 * 		Redis Exception
 	 */
-	<R> R execute(final Command<R> command, final CommandArguments arguments) throws RedisException;
+	<R> R execute(final Command<RedisConnection, R> command, final CommandArguments arguments)
+			throws RedisException;
 
 }

@@ -25,11 +25,9 @@
 package com.buession.redis.core.command;
 
 import com.buession.core.collect.Arrays;
-import com.buession.core.converter.Converter;
 import com.buession.core.utils.ByteUtils;
 import com.buession.core.validator.Validate;
 import com.buession.redis.client.RedisClient;
-import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.utils.SafeEncoder;
 
 /**
@@ -56,58 +54,34 @@ public abstract class AbstractRedisCommands<C extends RedisClient> implements Re
 		return client.getConnection().isTransaction();
 	}
 
-	protected <B extends BaseCommandBuilder<C, O, R, R>, O, R> R executeCommand(final B builder) {
-		return builder.run();
-	}
-
-	protected <B extends BaseCommandBuilder<C, O, SR, R>, O, SR, R> R executeCommand(final B builder,
-																					 final com.buession.redis.core.Command.Executor<O, SR> executor,
-																					 final Converter<SR, R> converter) {
-		return builder.executor(executor).converter(converter).run();
-	}
-
-	protected <B extends BaseCommandBuilder<C, O, R, R>, O, R> R executeCommand(final B builder,
-																				final CommandArguments args) {
-		return executeCommand(builder, args, (v)->v);
-	}
-
-	protected <B extends BaseCommandBuilder<C, O, SR, R>, O, SR, R> R executeCommand(final B builder,
-																					 final CommandArguments args,
-																					 final Converter<SR, R> converter) {
-		return builder.arguments(args).converter(converter).run();
-	}
-
-	protected <B extends BaseCommandBuilder<C, O, SR, R>, O, SR, R> R executeCommand(final B builder,
-																					 final CommandArguments args,
-																					 final com.buession.redis.core.Command.Executor<O, SR> executor,
-																					 final Converter<SR, R> converter) {
-		return builder.arguments(args).executor(executor).converter(converter).run();
-	}
-
 	protected final String rawKey(final String key) {
 		String prefix = client.getClientOptions().getPrefix();
 		return Validate.isEmpty(prefix) ? key : prefix.concat(key);
 	}
 
 	protected final byte[] rawKey(byte[] key) {
-		String prefix = client.getClientOptions().getPrefix();
-		return Validate.isEmpty(prefix) ? key : ByteUtils.concat(SafeEncoder.encode(prefix), key);
+		byte[] prefix = client.getClientOptions().getPrefixRaw();
+		return Validate.isEmpty(prefix) ? key : ByteUtils.concat(prefix, key);
 	}
 
 	protected final String[] rawKeys(final String[] keys) {
-		String prefix = client.getClientOptions().getPrefix();
-		return Validate.isEmpty(prefix) || Validate.isEmpty(keys) ? keys : Arrays.map(keys, String.class, this::rawKey);
-	}
-
-	protected final byte[][] rawKeys(final byte[][] keys) {
 		String prefix = client.getClientOptions().getPrefix();
 
 		if(Validate.isEmpty(prefix) || Validate.isEmpty(keys)){
 			return keys;
 		}
 
-		byte[] prefixByte = SafeEncoder.encode(prefix);
-		return Arrays.map(keys, byte[].class, (value)->ByteUtils.concat(prefixByte, value));
+		return Arrays.map(keys, String.class, this::rawKey);
+	}
+
+	protected final byte[][] rawKeys(final byte[][] keys) {
+		byte[] prefix = client.getClientOptions().getPrefixRaw();
+
+		if(Validate.isEmpty(prefix) || Validate.isEmpty(keys)){
+			return keys;
+		}
+
+		return Arrays.map(keys, byte[].class, (value)->ByteUtils.concat(prefix, value));
 	}
 
 	protected final byte[] rawBinaryKey(final String key) {
@@ -115,13 +89,7 @@ public abstract class AbstractRedisCommands<C extends RedisClient> implements Re
 	}
 
 	protected final byte[][] rawBinaryKeys(final String[] keys) {
-		final byte[][] result = new byte[keys.length][];
-
-		for(int i = 0; i < keys.length; i++){
-			result[i] = SafeEncoder.encode(rawKey(keys[i]));
-		}
-
-		return result;
+		return Arrays.map(keys, byte[].class, (value)->SafeEncoder.encode(rawKey(value)));
 	}
 
 	protected final String rawStringKey(final byte[] key) {
@@ -129,13 +97,7 @@ public abstract class AbstractRedisCommands<C extends RedisClient> implements Re
 	}
 
 	protected final String[] rawStringKeys(final byte[][] keys) {
-		final String[] result = new String[keys.length];
-
-		for(int i = 0; i < keys.length; i++){
-			result[i] = SafeEncoder.encode(rawKey(keys[i]));
-		}
-
-		return result;
+		return Arrays.map(keys, String.class, (value)->SafeEncoder.encode(rawKey(value)));
 	}
 
 }

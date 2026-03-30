@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core;
 
-import com.buession.redis.core.command.CommandGroup;
+import com.buession.redis.core.command.RedisCommandGroup;
 import com.buession.redis.utils.ObjectStringBuilder;
 
 import java.util.List;
@@ -35,8 +35,8 @@ import java.util.List;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public record CommandInfo(String summary, String since, CommandGroup group, String complexity,
-						  List<CommandDoc.History> history, List<CommandDoc.Argument> arguments) {
+public record CommandInfo(String summary, String since, RedisCommandGroup group, String complexity,
+                          List<CommandDoc.History> history, List<CommandDoc.Argument> arguments) {
 
 	@Override
 	public String toString() {

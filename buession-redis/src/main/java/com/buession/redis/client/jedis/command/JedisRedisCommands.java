@@ -25,11 +25,13 @@
 package com.buession.redis.client.jedis.command;
 
 import com.buession.core.converter.Converter;
+import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.jedis.JedisRedisConnection;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.RedisCommands;
-import com.buession.redis.core.command.SubCommand;
+import com.buession.redis.core.command.RedisSubCommand;
 import com.buession.redis.core.internal.jedis.JedisResult;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.PipelineProxy;
@@ -55,86 +57,45 @@ public interface JedisRedisCommands extends RedisCommands {
 	 *
 	 * @since 4.0.0
 	 */
-	final class JedisCommand<SR, R> extends
-			AbstractRedisOperationsCommand<JedisRedisClient, JedisRedisConnection<? extends UnifiedJedis>, UnifiedJedis,
-					SR, SR, R> {
+	final class JedisCommand<SR, R> extends AbstractCommand<JedisRedisClient, UnifiedJedis, SR, SR, R> {
 
-		public JedisCommand(final JedisRedisClient client, final Command command) {
+		public JedisCommand(final JedisRedisClient client, final RedisCommand command) {
 			super(client, command);
 		}
 
-		public JedisCommand(final JedisRedisClient client, final Command command,
-							final Executor<UnifiedJedis, SR> executor, final Converter<SR, R> converter) {
+		public JedisCommand(final JedisRedisClient client, final RedisCommand command,
+		                    final Executor<UnifiedJedis, SR> executor, final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
 		}
 
-		public JedisCommand(final JedisRedisClient client, final Command command, final SubCommand subCommand) {
+		public JedisCommand(final JedisRedisClient client, final RedisCommand command,
+		                    final RedisSubCommand subCommand) {
 			super(client, command, subCommand);
 		}
 
-		public JedisCommand(final JedisRedisClient client, final Command command, final SubCommand subCommand,
-							final Executor<UnifiedJedis, SR> executor, final Converter<SR, R> converter) {
+		public JedisCommand(final JedisRedisClient client, final RedisCommand command, final RedisSubCommand subCommand,
+		                    final Executor<UnifiedJedis, SR> executor, final Converter<SR, R> converter) {
 			super(client, command, subCommand, executor, converter);
 		}
 
 		@Override
-		protected R doExecute() throws RedisException {
-			final SR result = executor.execute(connection.getClient());
+		protected R doExecute(final RedisConnection conn) throws RedisException {
+			final SR result = executor.execute(((JedisRedisConnection<? extends UnifiedJedis>) conn).getClient());
 			return converter.convert(result);
 		}
 
 	}
 
-	/**
-	 * Jedis 命令构建器
-	 *
-	 * @param <SR>
-	 * 		原始类型
-	 * @param <R>
-	 * 		返回类型
-	 *
-	 * @since 4.0.0
-	 */
-	final class JedisCommandBuilder<SR, R> extends BaseCommandBuilder<JedisRedisClient, UnifiedJedis, SR, R> {
+	abstract class PtRunner<T, SR, R> implements Command.Runner<JedisResult<SR, R>> {
 
-		private JedisCommandBuilder(final JedisRedisClient client, final Command command) {
-			super(client, command);
-		}
-
-		private JedisCommandBuilder(final JedisRedisClient client, final Command command, final SubCommand subCommand) {
-			super(client, command, subCommand);
-		}
-
-		public static <SR, R> JedisCommandBuilder<SR, R> newBuilder(final JedisRedisClient client,
-																	final Command command) {
-			return new JedisCommandBuilder<>(client, command);
-		}
-
-		public static <SR, R> JedisCommandBuilder<SR, R> newBuilder(final JedisRedisClient client,
-																	final Command command,
-																	final SubCommand subCommand) {
-			return new JedisCommandBuilder<>(client, command, subCommand);
-		}
-
-		@Override
-		public R run() {
-			final JedisCommand<SR, R> command = new JedisCommand<>(this.client, this.command, this.subCommand,
-					this.executor, this.converter);
-			return command.run(this.arguments);
-		}
-
-	}
-
-	abstract class PtRunner<T, SR, R> implements com.buession.redis.core.Command.Runner<JedisResult<SR, R>> {
-
-		protected final com.buession.redis.core.Command.Executor<T, Response<SR>> executor;
+		protected final Command.Executor<T, Response<SR>> executor;
 
 		protected final T context;
 
 		protected final Converter<SR, R> converter;
 
-		public PtRunner(final com.buession.redis.core.Command.Executor<T, Response<SR>> executor, final T context,
-						final Converter<SR, R> converter) {
+		public PtRunner(final Command.Executor<T, Response<SR>> executor, final T context,
+		                final Converter<SR, R> converter) {
 			this.executor = executor;
 			this.context = context;
 			this.converter = converter;
@@ -158,9 +119,9 @@ public interface JedisRedisCommands extends RedisCommands {
 
 	final class PipelineRunner<T, SR, R> extends PtRunner<T, SR, R> {
 
-		public PipelineRunner(final com.buession.redis.core.Command.Executor<T, Response<SR>> executor,
-							  final PipelineProxy<T, JedisResult<SR, R>> pipelineFactory,
-							  final Converter<SR, R> converter) {
+		public PipelineRunner(final Command.Executor<T, Response<SR>> executor,
+		                      final PipelineProxy<T, JedisResult<SR, R>> pipelineFactory,
+		                      final Converter<SR, R> converter) {
 			super(executor, pipelineFactory.getObject(), converter);
 		}
 
@@ -168,9 +129,9 @@ public interface JedisRedisCommands extends RedisCommands {
 
 	final class TransactionRunner<T, SR, R> extends PtRunner<T, SR, R> {
 
-		public TransactionRunner(final com.buession.redis.core.Command.Executor<T, Response<SR>> executor,
-								 final TransactionProxy<T, JedisResult<SR, R>> transactionFactory,
-								 final Converter<SR, R> converter) {
+		public TransactionRunner(final Command.Executor<T, Response<SR>> executor,
+		                         final TransactionProxy<T, JedisResult<SR, R>> transactionFactory,
+		                         final Converter<SR, R> converter) {
 			super(executor, transactionFactory.getObject(), converter);
 		}
 

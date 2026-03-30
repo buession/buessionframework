@@ -41,33 +41,12 @@ import com.buession.redis.transaction.Transaction;
  */
 public interface RedisCommands {
 
-
-	/**
-	 * Redis 运算命令
-	 *
-	 * @param <CLIENT>
-	 * 		Redis 客户端 {@link RedisClient}
-	 * @param <CONN>
-	 * 		Redis 连接对象 {@link RedisConnection}
-	 * @param <R>
-	 * 		返回值类型
-	 *
-	 * @author Yong.Teng
-	 * @since 4.0.0
-	 */
-	interface RedisOperationsCommand<CLIENT extends RedisClient, CONN extends RedisConnection, R> extends
-			com.buession.redis.core.Command<R> {
-
-	}
-
 	/**
 	 *
 	 * Redis 运算命令抽象类
 	 *
 	 * @param <CLIENT>
 	 * 		Redis 客户端 {@link RedisClient}
-	 * @param <CONN>
-	 * 		Redis 连接对象 {@link RedisConnection}
 	 * @param <CXT>
 	 * 		Redis 提供者原生类型
 	 * @param <OSR>
@@ -80,13 +59,8 @@ public interface RedisCommands {
 	 * @author Yong.Teng
 	 * @since 4.0.0
 	 */
-	abstract class AbstractRedisOperationsCommand<CLIENT extends RedisClient, CONN extends RedisConnection, CXT,
-			OSR, SR, R> implements RedisOperationsCommand<CLIENT, CONN, R> {
-
-		/**
-		 * Redis 连接对象 {@link RedisConnection} 实例
-		 */
-		protected final CONN connection;
+	abstract class AbstractCommand<CLIENT extends RedisClient, CXT, OSR, SR, R>
+			implements Command<RedisConnection, R> {
 
 		/**
 		 * {@link RedisClient} 实例
@@ -96,14 +70,14 @@ public interface RedisCommands {
 		/**
 		 * Redis 协议命令
 		 */
-		protected final com.buession.redis.core.command.Command command;
+		protected final RedisCommand command;
 
 		/**
 		 * Redis 协议子命令
 		 *
 		 * @since 4.0.0
 		 */
-		protected final SubCommand subCommand;
+		protected final RedisSubCommand subCommand;
 
 		/**
 		 * Redis 命令执行器
@@ -124,7 +98,7 @@ public interface RedisCommands {
 		 * 		Redis 命令
 		 */
 		@SuppressWarnings({"unchecked"})
-		public AbstractRedisOperationsCommand(final CLIENT client, final Command command) {
+		public AbstractCommand(final CLIENT client, final RedisCommand command) {
 			this(client, command, null, (value)->(R) value);
 		}
 
@@ -140,8 +114,8 @@ public interface RedisCommands {
 		 * @param converter
 		 * 		结果转换器
 		 */
-		public AbstractRedisOperationsCommand(final CLIENT client, final Command command,
-											  final Executor<CXT, OSR> executor, final Converter<SR, R> converter) {
+		public AbstractCommand(final CLIENT client, final RedisCommand command, final Executor<CXT, OSR> executor,
+		                       final Converter<SR, R> converter) {
 			this(client, command, null, executor, converter);
 		}
 
@@ -158,7 +132,7 @@ public interface RedisCommands {
 		 * @since 4.0.0
 		 */
 		@SuppressWarnings({"unchecked"})
-		public AbstractRedisOperationsCommand(final CLIENT client, final Command command, final SubCommand subCommand) {
+		public AbstractCommand(final CLIENT client, final RedisCommand command, final RedisSubCommand subCommand) {
 			this(client, command, subCommand, null, (value)->(R) value);
 		}
 
@@ -178,102 +152,52 @@ public interface RedisCommands {
 		 *
 		 * @since 4.0.0
 		 */
-		@SuppressWarnings({"unchecked"})
-		public AbstractRedisOperationsCommand(final CLIENT client, final Command command, final SubCommand subCommand,
-											  final Executor<CXT, OSR> executor, final Converter<SR, R> converter) {
+		public AbstractCommand(final CLIENT client, final RedisCommand command, final RedisSubCommand subCommand,
+		                       final Executor<CXT, OSR> executor, final Converter<SR, R> converter) {
 			this.client = client;
 			this.command = command;
 			this.subCommand = subCommand;
-			this.connection = (CONN) client.getConnection();
 			this.executor = executor;
 			this.converter = converter;
 		}
 
 		@Override
-		public com.buession.redis.core.command.Command getCommand() {
+		public RedisCommand getCommand() {
 			return command;
 		}
 
 		@Override
-		public SubCommand getSubCommand() {
+		public RedisSubCommand getSubCommand() {
 			return subCommand;
 		}
 
 		@Override
-		public R run(final CommandArguments arguments) throws RedisException {
-			return client.execute(this, arguments);
-		}
-
-		@Override
-		public R execute() throws RedisException {
-			final RedisMode mode = RedisConnectionUtils.getRedisMode(connection);
+		public R execute(final RedisConnection conn, final CommandArguments arguments) throws RedisException {
+			final RedisMode mode = RedisConnectionUtils.getRedisMode(conn);
 
 			if(executor == null){
-				if(connection.isPipeline()){
+				if(conn.isPipeline()){
 					throw new NotSupportedPipelineCommandException(mode, getCommand());
-				}else if(connection.isTransaction()){
+				}else if(conn.isTransaction()){
 					throw new NotSupportedTransactionCommandException(mode, getCommand());
 				}else{
 					throw new NotSupportedCommandException(mode, NotSupportedCommandException.Type.NORMAL,
 							getCommand());
 				}
 			}else{
-				return doExecute();
+				return doExecute(conn);
 			}
 		}
 
 		protected Pipeline pipeline() {
-			return connection.openPipeline();
+			return null;//connection.openPipeline();
 		}
 
 		protected Transaction transaction() {
-			return connection.multi();
+			return null;//connection.multi();
 		}
 
-		protected abstract R doExecute() throws RedisException;
-
-	}
-
-	abstract class BaseCommandBuilder<C extends RedisClient, O, SR, R> {
-
-		protected final C client;
-
-		protected final Command command;
-
-		protected SubCommand subCommand;
-
-		protected com.buession.redis.core.Command.Executor<O, SR> executor;
-
-		protected CommandArguments arguments;
-
-		protected Converter<SR, R> converter;
-
-		protected BaseCommandBuilder(final C client, final Command command) {
-			this.client = client;
-			this.command = command;
-		}
-
-		protected BaseCommandBuilder(final C client, final Command command, final SubCommand subCommand) {
-			this(client, command);
-			this.subCommand = subCommand;
-		}
-
-		public BaseCommandBuilder<C, O, SR, R> executor(com.buession.redis.core.Command.Executor<O, SR> executor) {
-			this.executor = executor;
-			return this;
-		}
-
-		public BaseCommandBuilder<C, O, SR, R> arguments(CommandArguments arguments) {
-			this.arguments = arguments;
-			return this;
-		}
-
-		public BaseCommandBuilder<C, O, SR, R> converter(Converter<SR, R> converter) {
-			this.converter = converter;
-			return this;
-		}
-
-		abstract public R run();
+		protected abstract R doExecute(final RedisConnection conn) throws RedisException;
 
 	}
 

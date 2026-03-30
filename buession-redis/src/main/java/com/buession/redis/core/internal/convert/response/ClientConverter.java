@@ -32,8 +32,8 @@ import com.buession.core.validator.Validate;
 import com.buession.net.HostAndPort;
 import com.buession.redis.core.Client;
 import com.buession.redis.core.Event;
-import com.buession.redis.core.command.Command;
-import com.buession.redis.core.command.SubCommand;
+import com.buession.redis.core.command.RedisCommand;
+import com.buession.redis.core.command.RedisSubCommand;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -147,9 +147,10 @@ public final class ClientConverter implements Converter<String, Client> {
 				client.setEvents(keyValueParser.getEnumValue(Event.class));
 			}else if("cmd".equals(keyValueParser.getKey())){
 				int ci = keyValueParser.getValue().indexOf(':');
-				client.setCmd(EnumUtils.valueOf(Command.class, keyValueParser.getValue().substring(0, ci)));
+				client.setCmd(EnumUtils.valueOf(RedisCommand.class, keyValueParser.getValue().substring(0, ci)));
 				if(ci != -1){
-					client.setSubCmd(EnumUtils.valueOf(SubCommand.class, keyValueParser.getValue().substring(ci + 1)));
+					client.setSubCmd(EnumUtils.valueOf(
+							RedisSubCommand.class, keyValueParser.getValue().substring(ci + 1)));
 				}
 			}
 		}

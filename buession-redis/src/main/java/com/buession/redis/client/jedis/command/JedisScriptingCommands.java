@@ -33,10 +33,10 @@ import com.buession.redis.core.FunctionStats;
 import com.buession.redis.core.Keyword;
 import com.buession.redis.core.LibraryInfo;
 import com.buession.redis.core.command.args.scripting.DebugMode;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ScriptingCommands;
-import com.buession.redis.core.command.SubCommand;
+import com.buession.redis.core.command.RedisSubCommand;
 import com.buession.redis.core.internal.convert.jedis.params.FlushModeConverter;
 import com.buession.redis.core.internal.convert.jedis.params.FunctionRestoreModeFunctionRestorePolicyConverter;
 import com.buession.redis.core.internal.convert.jedis.response.FunctionStatsConverter;
@@ -62,13 +62,13 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public Object eval(final String script) {
 		final CommandArguments args = CommandArguments.create(script);
-		return executeCommand(Command.EVAL, args, (cmd)->cmd.eval(script));
+		return executeCommand(RedisCommand.EVAL, args, (cmd)->cmd.eval(script));
 	}
 
 	@Override
 	public Object eval(final byte[] script) {
 		final CommandArguments args = CommandArguments.create(script);
-		return executeCommand(Command.EVAL, args, (cmd)->cmd.eval(script));
+		return executeCommand(RedisCommand.EVAL, args, (cmd)->cmd.eval(script));
 	}
 
 	@Override
@@ -134,13 +134,13 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public Object evalSha(final String digest) {
 		final CommandArguments args = CommandArguments.create(digest);
-		return executeCommand(Command.EVALSHA, args, (cmd)->cmd.evalsha(digest));
+		return executeCommand(RedisCommand.EVALSHA, args, (cmd)->cmd.evalsha(digest));
 	}
 
 	@Override
 	public Object evalSha(final byte[] digest) {
 		final CommandArguments args = CommandArguments.create(digest);
-		return executeCommand(Command.EVALSHA, args, (cmd)->cmd.evalsha(digest));
+		return executeCommand(RedisCommand.EVALSHA, args, (cmd)->cmd.evalsha(digest));
 	}
 
 	@Override
@@ -278,18 +278,18 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public Status functionDelete(final String libraryName) {
 		final CommandArguments args = CommandArguments.create(libraryName);
-		return executeCommand(Command.FUNCTION, SubCommand.FUNCTION_DELETE, args,
+		return executeCommand(RedisCommand.FUNCTION, RedisSubCommand.FUNCTION_DELETE, args,
 				(cmd)->cmd.functionDelete(libraryName), new OkStatusConverter());
 	}
 
 	@Override
 	public byte[] functionDump() {
-		return executeCommand(Command.FUNCTION, SubCommand.FUNCTION_DUMP, (cmd)->cmd.functionDump());
+		return executeCommand(RedisCommand.FUNCTION, RedisSubCommand.FUNCTION_DUMP, (cmd)->cmd.functionDump());
 	}
 
 	@Override
 	public Status functionFlush() {
-		return executeCommand(Command.FUNCTION, SubCommand.FUNCTION_FLUSH, (cmd)->cmd.functionFlush(),
+		return executeCommand(RedisCommand.FUNCTION, RedisSubCommand.FUNCTION_FLUSH, (cmd)->cmd.functionFlush(),
 				new OkStatusConverter());
 	}
 
@@ -297,26 +297,27 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 	public Status functionFlush(final FlushMode flushMode) {
 		final CommandArguments args = CommandArguments.create(flushMode);
 		final FlushModeConverter flushModeConverter = new FlushModeConverter();
-		return executeCommand(Command.FUNCTION, SubCommand.FUNCTION_FLUSH, args,
+		return executeCommand(RedisCommand.FUNCTION, RedisSubCommand.FUNCTION_FLUSH, args,
 				(cmd)->cmd.functionFlush(flushModeConverter.convert(flushMode)), new OkStatusConverter());
 	}
 
 	@Override
 	public Status functionKill() {
-		return executeCommand(Command.FUNCTION, SubCommand.FUNCTION_KILL, (cmd)->cmd.functionKill(),
+		return executeCommand(RedisCommand.FUNCTION, RedisSubCommand.FUNCTION_KILL, (cmd)->cmd.functionKill(),
 				new OkStatusConverter());
 	}
 
 	@Override
 	public List<LibraryInfo> functionList() {
-		return executeCommand(Command.FUNCTION, SubCommand.FUNCTION_LIST, (cmd)->cmd.functionList(),
+		return executeCommand(RedisCommand.FUNCTION, RedisSubCommand.FUNCTION_LIST, (cmd)->cmd.functionList(),
 				new ListConverter<>(new LibraryInfoConverter()));
 	}
 
 	@Override
 	public List<LibraryInfo> functionList(final String pattern) {
 		final CommandArguments args = CommandArguments.create("LIBRARYNAME", pattern);
-		return executeCommand(Command.FUNCTION, SubCommand.FUNCTION_LIST, args, (cmd)->cmd.functionList(pattern),
+		return executeCommand(RedisCommand.FUNCTION, RedisSubCommand.FUNCTION_LIST, args,
+				(cmd)->cmd.functionList(pattern),
 				new ListConverter<>(new LibraryInfoConverter()));
 	}
 
@@ -328,7 +329,7 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public List<LibraryInfo> functionList(final String pattern, final boolean withCode) {
 		final CommandArguments args = CommandArguments.create("LIBRARYNAME", pattern).add(withCode ? "WITHCODE" : null);
-		return executeCommand(Command.FUNCTION, SubCommand.FUNCTION_LIST, args,
+		return executeCommand(RedisCommand.FUNCTION, RedisSubCommand.FUNCTION_LIST, args,
 				(cmd)->withCode ? cmd.functionListWithCode(pattern) : cmd.functionList(pattern),
 				new ListConverter<>(new LibraryInfoConverter()));
 	}
@@ -341,7 +342,7 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public List<LibraryInfo> functionList(final boolean withCode) {
 		final CommandArguments args = CommandArguments.create(withCode ? "WITHCODE" : null);
-		return executeCommand(Command.FUNCTION, SubCommand.FUNCTION_LIST, args,
+		return executeCommand(RedisCommand.FUNCTION, RedisSubCommand.FUNCTION_LIST, args,
 				(cmd)->withCode ? cmd.functionListWithCode() : cmd.functionList(),
 				new ListConverter<>(new LibraryInfoConverter()));
 	}
@@ -349,13 +350,14 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public String functionLoad(final String functionCode) {
 		final CommandArguments args = CommandArguments.create(functionCode);
-		return executeCommand(Command.FUNCTION, SubCommand.FUNCTION_LOAD, args, (cmd)->cmd.functionLoad(functionCode));
+		return executeCommand(
+				RedisCommand.FUNCTION, RedisSubCommand.FUNCTION_LOAD, args, (cmd)->cmd.functionLoad(functionCode));
 	}
 
 	@Override
 	public byte[] functionLoad(final byte[] functionCode) {
 		final CommandArguments args = CommandArguments.create(functionCode);
-		return executeCommand(Command.FUNCTION, SubCommand.FUNCTION_LOAD, args,
+		return executeCommand(RedisCommand.FUNCTION, RedisSubCommand.FUNCTION_LOAD, args,
 				(cmd)->cmd.functionLoad(SafeEncoder.encode(functionCode)), SafeEncoder::encode);
 	}
 
@@ -363,7 +365,7 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 	public String functionLoad(final String functionCode, final boolean replace) {
 		final CommandArguments args = CommandArguments.create(replace ? Keyword.Common.REPLACE : null)
 				.add(functionCode);
-		return executeCommand(Command.FUNCTION, SubCommand.FUNCTION_LOAD, args,
+		return executeCommand(RedisCommand.FUNCTION, RedisSubCommand.FUNCTION_LOAD, args,
 				(cmd)->cmd.functionLoadReplace(functionCode));
 	}
 
@@ -371,14 +373,15 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 	public byte[] functionLoad(final byte[] functionCode, final boolean replace) {
 		final CommandArguments args = CommandArguments.create(replace ? Keyword.Common.REPLACE : null)
 				.add(functionCode);
-		return executeCommand(Command.FUNCTION, SubCommand.FUNCTION_LOAD, args,
+		return executeCommand(RedisCommand.FUNCTION, RedisSubCommand.FUNCTION_LOAD, args,
 				(cmd)->cmd.functionLoadReplace(SafeEncoder.encode(functionCode)), SafeEncoder::encode);
 	}
 
 	@Override
 	public Status functionRestore(final byte[] value) {
 		final CommandArguments args = CommandArguments.create(value);
-		return executeCommand(Command.FUNCTION, SubCommand.FUNCTION_RESTORE, args, (cmd)->cmd.functionRestore(value),
+		return executeCommand(
+				RedisCommand.FUNCTION, RedisSubCommand.FUNCTION_RESTORE, args, (cmd)->cmd.functionRestore(value),
 				new OkStatusConverter());
 	}
 
@@ -386,43 +389,45 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 	public Status functionRestore(final byte[] value, final FunctionRestoreMode mode) {
 		final CommandArguments args = CommandArguments.create(value).add(mode);
 		final FunctionRestoreModeFunctionRestorePolicyConverter functionRestoreModeFunctionRestorePolicyConverter = new FunctionRestoreModeFunctionRestorePolicyConverter();
-		return executeCommand(Command.FUNCTION, SubCommand.FUNCTION_RESTORE, args,
+		return executeCommand(RedisCommand.FUNCTION, RedisSubCommand.FUNCTION_RESTORE, args,
 				(cmd)->cmd.functionRestore(value, functionRestoreModeFunctionRestorePolicyConverter.convert(mode)),
 				new OkStatusConverter());
 	}
 
 	@Override
 	public FunctionStats functionStats() {
-		return executeCommand(Command.FUNCTION, SubCommand.FUNCTION_STATS, (cmd)->cmd.functionStats(),
+		return executeCommand(RedisCommand.FUNCTION, RedisSubCommand.FUNCTION_STATS, (cmd)->cmd.functionStats(),
 				new FunctionStatsConverter());
 	}
 
 	@Override
 	public Object scriptDebug() {
-		return executeCommand(Command.SCRIPT, SubCommand.SCRIPT_DEBUG);
+		return executeCommand(RedisCommand.SCRIPT, RedisSubCommand.SCRIPT_DEBUG);
 	}
 
 	@Override
 	public Object scriptDebug(final DebugMode mode) {
 		final CommandArguments args = CommandArguments.create(mode);
-		return executeCommand(Command.SCRIPT, SubCommand.SCRIPT_DEBUG, args);
+		return executeCommand(RedisCommand.SCRIPT, RedisSubCommand.SCRIPT_DEBUG, args);
 	}
 
 	@Override
 	public List<Boolean> scriptExists(final String... sha1) {
 		final CommandArguments args = CommandArguments.create(sha1);
-		return executeCommand(Command.SCRIPT, SubCommand.SCRIPT_EXISTS, args, (cmd)->cmd.scriptExists(null, sha1));
+		return executeCommand(RedisCommand.SCRIPT, RedisSubCommand.SCRIPT_EXISTS, args,
+				(cmd)->cmd.scriptExists(null, sha1));
 	}
 
 	@Override
 	public List<Boolean> scriptExists(final byte[]... sha1) {
 		final CommandArguments args = CommandArguments.create(sha1);
-		return executeCommand(Command.SCRIPT, SubCommand.SCRIPT_EXISTS, args, (cmd)->cmd.scriptExists(null, sha1));
+		return executeCommand(RedisCommand.SCRIPT, RedisSubCommand.SCRIPT_EXISTS, args,
+				(cmd)->cmd.scriptExists(null, sha1));
 	}
 
 	@Override
 	public Status scriptFlush() {
-		return executeCommand(Command.SCRIPT, SubCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
+		return executeCommand(RedisCommand.SCRIPT, RedisSubCommand.SCRIPT_FLUSH, (cmd)->cmd.scriptFlush(),
 				new OkStatusConverter());
 	}
 
@@ -430,97 +435,100 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 	public Status scriptFlush(final FlushMode mode) {
 		final CommandArguments args = CommandArguments.create(mode);
 		final FlushModeConverter flushModeConverter = new FlushModeConverter();
-		return executeCommand(Command.SCRIPT, SubCommand.SCRIPT_FLUSH, args,
+		return executeCommand(RedisCommand.SCRIPT, RedisSubCommand.SCRIPT_FLUSH, args,
 				(cmd)->cmd.scriptFlush((String) null, flushModeConverter.convert(mode)), new OkStatusConverter());
 	}
 
 	@Override
 	public Status scriptKill() {
-		return executeCommand(Command.SCRIPT, SubCommand.SCRIPT_KILL, (cmd)->cmd.scriptKill(), new OkStatusConverter());
+		return executeCommand(
+				RedisCommand.SCRIPT, RedisSubCommand.SCRIPT_KILL, (cmd)->cmd.scriptKill(), new OkStatusConverter());
 	}
 
 	@Override
 	public String scriptLoad(final String script) {
 		final CommandArguments args = CommandArguments.create(script);
-		return executeCommand(Command.SCRIPT, SubCommand.SCRIPT_LOAD, args, (cmd)->cmd.scriptLoad(script), (v)->v);
+		return executeCommand(RedisCommand.SCRIPT, RedisSubCommand.SCRIPT_LOAD, args, (cmd)->cmd.scriptLoad(script),
+				(v)->v);
 	}
 
 	@Override
 	public byte[] scriptLoad(final byte[] script) {
 		final CommandArguments args = CommandArguments.create(script);
-		return executeCommand(Command.SCRIPT, SubCommand.SCRIPT_LOAD, args, (cmd)->cmd.scriptLoad(script, null),
+		return executeCommand(RedisCommand.SCRIPT, RedisSubCommand.SCRIPT_LOAD, args,
+				(cmd)->cmd.scriptLoad(script, null),
 				(v)->v);
 	}
 
 	private Object eval(final String script, final String[] keys, final String[] arguments,
-						final CommandArguments args) {
-		return executeCommand(Command.EVAL, args,
+	                    final CommandArguments args) {
+		return executeCommand(RedisCommand.EVAL, args,
 				(cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)));
 	}
 
 	private Object eval(final byte[] script, final byte[][] keys, final byte[][] arguments,
-						final CommandArguments args) {
-		return executeCommand(Command.EVAL, args,
+	                    final CommandArguments args) {
+		return executeCommand(RedisCommand.EVAL, args,
 				(cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)));
 	}
 
 	private Object evalRo(final String script, final String[] keys, final String[] arguments,
-						  final CommandArguments args) {
-		return executeCommand(Command.EVAL_RO, args,
+	                      final CommandArguments args) {
+		return executeCommand(RedisCommand.EVAL_RO, args,
 				(cmd)->cmd.evalReadonly(script, Arrays.asList(keys), Arrays.asList(arguments)));
 	}
 
 	private Object evalRo(final byte[] script, final byte[][] keys, final byte[][] arguments,
-						  final CommandArguments args) {
-		return executeCommand(Command.EVAL_RO, args,
+	                      final CommandArguments args) {
+		return executeCommand(RedisCommand.EVAL_RO, args,
 				(cmd)->cmd.evalReadonly(script, Arrays.asList(keys), Arrays.asList(arguments)));
 	}
 
 	private Object evalSha(final String digest, final String[] keys, final String[] arguments,
-						   final CommandArguments args) {
-		return executeCommand(Command.EVALSHA, args,
+	                       final CommandArguments args) {
+		return executeCommand(RedisCommand.EVALSHA, args,
 				(cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)));
 	}
 
 	private Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] arguments,
-						   final CommandArguments args) {
-		return executeCommand(Command.EVALSHA, args,
+	                       final CommandArguments args) {
+		return executeCommand(RedisCommand.EVALSHA, args,
 				(cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)));
 	}
 
 	private Object evalShaRo(final String digest, final String[] keys, final String[] arguments,
-							 final CommandArguments args) {
-		return executeCommand(Command.EVALSHA_RO, args,
+	                         final CommandArguments args) {
+		return executeCommand(RedisCommand.EVALSHA_RO, args,
 				(cmd)->cmd.evalshaReadonly(digest, Arrays.asList(keys), Arrays.asList(arguments)));
 	}
 
 	private Object evalShaRo(final byte[] digest, final byte[][] keys, final byte[][] arguments,
-							 final CommandArguments args) {
-		return executeCommand(Command.EVALSHA_RO, args,
+	                         final CommandArguments args) {
+		return executeCommand(RedisCommand.EVALSHA_RO, args,
 				(cmd)->cmd.evalshaReadonly(digest, Arrays.asList(keys), Arrays.asList(arguments)));
 	}
 
 	private Object fCall(final String function, final String[] keys, final String[] arguments,
-						 final CommandArguments args) {
-		return executeCommand(Command.FCALL, args,
+	                     final CommandArguments args) {
+		return executeCommand(RedisCommand.FCALL, args,
 				(cmd)->cmd.fcall(function, Arrays.asList(keys), Arrays.asList(arguments)));
 	}
 
 	private Object fCall(final byte[] function, final byte[][] keys, final byte[][] arguments,
-						 final CommandArguments args) {
-		return executeCommand(Command.FCALL, args,
+	                     final CommandArguments args) {
+		return executeCommand(RedisCommand.FCALL, args,
 				(cmd)->cmd.fcall(function, Arrays.asList(keys), Arrays.asList(arguments)));
 	}
 
 	private Object fCallRo(final String function, final String[] keys, final String[] arguments,
-						   final CommandArguments args) {
-		return executeCommand(Command.FCALL_RO, args,
+	                       final CommandArguments args) {
+		return executeCommand(RedisCommand.FCALL_RO, args,
 				(cmd)->cmd.fcallReadonly(function, Arrays.asList(keys), Arrays.asList(arguments)));
 	}
 
 	private Object fCallRo(final byte[] function, final byte[][] keys, final byte[][] arguments,
-						   final CommandArguments args) {
-		return executeCommand(Command.FCALL_RO, args,
+	                       final CommandArguments args) {
+		return executeCommand(RedisCommand.FCALL_RO, args,
 				(cmd)->cmd.fcallReadonly(function, Arrays.asList(keys), Arrays.asList(arguments)));
 	}
 

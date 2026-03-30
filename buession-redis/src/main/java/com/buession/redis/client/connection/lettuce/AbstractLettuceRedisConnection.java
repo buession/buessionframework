@@ -24,10 +24,14 @@
  */
 package com.buession.redis.client.connection.lettuce;
 
+import com.buession.core.Executor;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.AbstractRedisConnection;
+import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceRedisDataSource;
 import com.buession.redis.core.PoolConfig;
+import com.buession.redis.exception.LettuceRedisExceptionUtils;
+import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.lettuce.LettucePipeline;
 import com.buession.redis.pipeline.lettuce.LettucePipelineProxy;
@@ -99,7 +103,7 @@ public abstract class AbstractLettuceRedisConnection<C extends StatefulConnectio
 	 * 		Infinite 读取超时（单位：毫秒）
 	 */
 	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, int connectTimeout, int soTimeout,
-										  int infiniteSoTimeout) {
+	                                      int infiniteSoTimeout) {
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
 	}
 
@@ -128,7 +132,7 @@ public abstract class AbstractLettuceRedisConnection<C extends StatefulConnectio
 	 * 		SSL 配置
 	 */
 	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, int connectTimeout, int soTimeout,
-										  SslConfiguration sslConfiguration) {
+	                                      SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
 	}
 
@@ -147,7 +151,7 @@ public abstract class AbstractLettuceRedisConnection<C extends StatefulConnectio
 	 * 		SSL 配置
 	 */
 	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, int connectTimeout, int soTimeout,
-										  int infiniteSoTimeout, SslConfiguration sslConfiguration) {
+	                                      int infiniteSoTimeout, SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 	}
 
@@ -176,7 +180,7 @@ public abstract class AbstractLettuceRedisConnection<C extends StatefulConnectio
 	 * 		读取超时（单位：毫秒）
 	 */
 	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-										  int soTimeout) {
+	                                      int soTimeout) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout);
 	}
 
@@ -195,7 +199,7 @@ public abstract class AbstractLettuceRedisConnection<C extends StatefulConnectio
 	 * 		Infinite 读取超时（单位：毫秒）
 	 */
 	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-										  int soTimeout, int infiniteSoTimeout) {
+	                                      int soTimeout, int infiniteSoTimeout) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
 	}
 
@@ -210,7 +214,7 @@ public abstract class AbstractLettuceRedisConnection<C extends StatefulConnectio
 	 * 		SSL 配置
 	 */
 	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, PoolConfig poolConfig,
-										  SslConfiguration sslConfiguration) {
+	                                      SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, sslConfiguration);
 	}
 
@@ -229,7 +233,7 @@ public abstract class AbstractLettuceRedisConnection<C extends StatefulConnectio
 	 * 		SSL 配置
 	 */
 	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-										  int soTimeout, SslConfiguration sslConfiguration) {
+	                                      int soTimeout, SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
 	}
 
@@ -250,7 +254,7 @@ public abstract class AbstractLettuceRedisConnection<C extends StatefulConnectio
 	 * 		SSL 配置
 	 */
 	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-										  int soTimeout, int infiniteSoTimeout, SslConfiguration sslConfiguration) {
+	                                      int soTimeout, int infiniteSoTimeout, SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 	}
 
@@ -264,6 +268,15 @@ public abstract class AbstractLettuceRedisConnection<C extends StatefulConnectio
 	@Override
 	public C getConn() {
 		return conn;
+	}
+
+	@Override
+	public <R> R execute(final Executor<RedisConnection, R> executor) throws RedisException {
+		try{
+			return executor.execute(this);
+		}catch(Exception e){
+			throw LettuceRedisExceptionUtils.convert(e);
+		}
 	}
 
 	@Override

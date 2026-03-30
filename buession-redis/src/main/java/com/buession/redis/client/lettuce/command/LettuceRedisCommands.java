@@ -25,10 +25,12 @@
 package com.buession.redis.client.lettuce.command;
 
 import com.buession.core.converter.Converter;
+import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.lettuce.LettuceRedisConnection;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.core.command.Command;
-import com.buession.redis.core.command.SubCommand;
+import com.buession.redis.core.command.RedisCommand;
+import com.buession.redis.core.command.RedisSubCommand;
 import com.buession.redis.core.internal.lettuce.LettuceResult;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.PipelineProxy;
@@ -55,92 +57,50 @@ public interface LettuceRedisCommands extends com.buession.redis.core.command.Re
 	 *
 	 * @since 4.0.0
 	 */
-	final class LettuceCommand<SR, R> extends
-			AbstractRedisOperationsCommand<LettuceRedisClient, LettuceRedisConnection<? extends StatefulConnection<byte[], byte[]>>, RedisCommands<byte[],
-					byte[]>, SR, SR, R> {
+	final class LettuceCommand<SR, R> extends AbstractCommand<LettuceRedisClient, RedisCommands<byte[], byte[]>, SR,
+			SR, R> {
 
-		public LettuceCommand(final LettuceRedisClient client, final com.buession.redis.core.command.Command command) {
+		public LettuceCommand(final LettuceRedisClient client, final RedisCommand command) {
 			super(client, command);
 		}
 
-		public LettuceCommand(final LettuceRedisClient client, final com.buession.redis.core.command.Command command,
-							  final Executor<RedisCommands<byte[], byte[]>, SR> executor,
-							  final Converter<SR, R> converter) {
+		public LettuceCommand(final LettuceRedisClient client, final RedisCommand command,
+		                      final Executor<RedisCommands<byte[], byte[]>, SR> executor,
+		                      final Converter<SR, R> converter) {
 			super(client, command, executor, converter);
 		}
 
-		public LettuceCommand(final LettuceRedisClient client, final com.buession.redis.core.command.Command command,
-							  final SubCommand subCommand) {
+		public LettuceCommand(final LettuceRedisClient client, final RedisCommand command,
+		                      final RedisSubCommand subCommand) {
 			super(client, command, subCommand);
 		}
 
-		public LettuceCommand(final LettuceRedisClient client, final com.buession.redis.core.command.Command command,
-							  final SubCommand subCommand,
-							  final Executor<RedisCommands<byte[], byte[]>, SR> executor,
-							  final Converter<SR, R> converter) {
+		public LettuceCommand(final LettuceRedisClient client, final RedisCommand command,
+		                      final RedisSubCommand subCommand,
+		                      final Executor<RedisCommands<byte[], byte[]>, SR> executor,
+		                      final Converter<SR, R> converter) {
 			super(client, command, subCommand, executor, converter);
 		}
 
 		@Override
-		protected R doExecute() throws RedisException {
-			final SR result = null;//executor.execute(connection.getConn());
+		protected R doExecute(final RedisConnection conn) throws RedisException {
+			final SR result = null;//executor.execute(( LettuceRedisConnection<? extends StatefulConnection<byte[],
+			// byte[]>> conn).getConn());
 			return converter.convert(result);
 		}
 
 	}
 
-	/**
-	 * Lettuce 命令构建器
-	 *
-	 * @param <SR>
-	 * 		原始类型
-	 * @param <R>
-	 * 		返回类型
-	 *
-	 * @since 4.0.0
-	 */
-	final class LettuceCommandBuilder<SR, R> extends BaseCommandBuilder<LettuceRedisClient, RedisCommands<byte[],
-			byte[]>, SR, R> {
+	abstract class PtRunner<T, SR, R> implements Command.Runner<LettuceResult<SR, R>> {
 
-		private LettuceCommandBuilder(final LettuceRedisClient client, final Command command) {
-			super(client, command);
-		}
-
-		private LettuceCommandBuilder(final LettuceRedisClient client, final Command command,
-									  final SubCommand subCommand) {
-			super(client, command, subCommand);
-		}
-
-		public static <SR, R> LettuceCommandBuilder<SR, R> newBuilder(final LettuceRedisClient client,
-																	  final Command command) {
-			return new LettuceCommandBuilder<>(client, command);
-		}
-
-		public static <SR, R> LettuceCommandBuilder<SR, R> newBuilder(final LettuceRedisClient client,
-																	  final Command command,
-																	  final SubCommand subCommand) {
-			return new LettuceCommandBuilder<>(client, command, subCommand);
-		}
-
-		@Override
-		public R run() {
-			final LettuceCommand<SR, R> command = new LettuceCommand<>(this.client, this.command, this.subCommand,
-					this.executor, this.converter);
-			return command.run(this.arguments);
-		}
-
-	}
-
-	abstract class PtRunner<T, SR, R> implements com.buession.redis.core.Command.Runner<LettuceResult<SR, R>> {
-
-		protected final com.buession.redis.core.Command.Executor<T, RedisFuture<SR>> executor;
+		protected final Command.Executor<T, RedisFuture<SR>> executor;
 
 		protected final T context;
 
 		protected final Converter<SR, R> converter;
 
-		public PtRunner(final com.buession.redis.core.Command.Executor<T, RedisFuture<SR>> executor, final T context,
-						final Converter<SR, R> converter) {
+		public PtRunner(final Command.Executor<T, RedisFuture<SR>> executor, final T context,
+		                final Converter<SR, R> converter) {
 			this.executor = executor;
 			this.context = context;
 			this.converter = converter;
@@ -157,7 +117,7 @@ public interface LettuceRedisCommands extends com.buession.redis.core.command.Re
 		}
 
 		protected LettuceResult<SR, R> newLettuceResult(final RedisFuture<SR> future,
-														final Converter<SR, R> converter) {
+		                                                final Converter<SR, R> converter) {
 			return LettuceResult.Builder.<SR, R>fromRedisFuture(future).mappedWith(converter).build();
 		}
 
@@ -165,9 +125,9 @@ public interface LettuceRedisCommands extends com.buession.redis.core.command.Re
 
 	final class PipelineRunner<T, SR, R> extends PtRunner<T, SR, R> {
 
-		public PipelineRunner(final com.buession.redis.core.Command.Executor<T, RedisFuture<SR>> executor,
-							  final PipelineProxy<T, LettuceResult<SR, R>> pipelineFactory,
-							  final Converter<SR, R> converter) {
+		public PipelineRunner(final Command.Executor<T, RedisFuture<SR>> executor,
+		                      final PipelineProxy<T, LettuceResult<SR, R>> pipelineFactory,
+		                      final Converter<SR, R> converter) {
 			super(executor, pipelineFactory.getObject(), converter);
 		}
 
@@ -175,9 +135,9 @@ public interface LettuceRedisCommands extends com.buession.redis.core.command.Re
 
 	final class TransactionRunner<T, SR, R> extends PtRunner<T, SR, R> {
 
-		public TransactionRunner(final com.buession.redis.core.Command.Executor<T, RedisFuture<SR>> executor,
-								 final TransactionProxy<T, LettuceResult<SR, R>> transactionProxy,
-								 final Converter<SR, R> converter) {
+		public TransactionRunner(final Command.Executor<T, RedisFuture<SR>> executor,
+		                         final TransactionProxy<T, LettuceResult<SR, R>> transactionProxy,
+		                         final Converter<SR, R> converter) {
 			super(executor, transactionProxy.getObject(), converter);
 		}
 

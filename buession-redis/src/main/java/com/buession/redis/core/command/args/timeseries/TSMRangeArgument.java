@@ -32,54 +32,11 @@ import com.buession.redis.utils.ArgStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class TSMRangeArgument {
-
-	private Boolean latest;
-
-	private long[] filterByTimestamps;
-
-	private MinMax filterByValues;
+public class TSMRangeArgument extends BaseTSRangeArgument {
 
 	private Labels labels;
 
-	private Aggregation aggregation;
-
 	private GroupBy groupBy;
-
-	public Boolean isLatest() {
-		return getLatest();
-	}
-
-	public Boolean getLatest() {
-		return latest;
-	}
-
-	public TSMRangeArgument latest() {
-		return setLatest(true);
-	}
-
-	public TSMRangeArgument setLatest(Boolean latest) {
-		this.latest = latest;
-		return this;
-	}
-
-	public long[] getFilterByTimestamps() {
-		return filterByTimestamps;
-	}
-
-	public TSMRangeArgument setFilterByTimestamps(long[] filterByTimestamps) {
-		this.filterByTimestamps = filterByTimestamps;
-		return this;
-	}
-
-	public MinMax getFilterByValues() {
-		return filterByValues;
-	}
-
-	public TSMRangeArgument setFilterByValues(MinMax filterByValues) {
-		this.filterByValues = filterByValues;
-		return this;
-	}
 
 	public Labels getLabels() {
 		return labels;
@@ -87,15 +44,6 @@ public class TSMRangeArgument {
 
 	public TSMRangeArgument setLabels(Labels labels) {
 		this.labels = labels;
-		return this;
-	}
-
-	public Aggregation getAggregation() {
-		return aggregation;
-	}
-
-	public TSMRangeArgument setAggregation(Aggregation aggregation) {
-		this.aggregation = aggregation;
 		return this;
 	}
 
@@ -146,6 +94,9 @@ public class TSMRangeArgument {
 
 	}
 
+	/**
+	 * 标签分组
+	 */
 	public final static class GroupBy {
 
 		private final String label;

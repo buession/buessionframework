@@ -30,7 +30,7 @@ package com.buession.redis.core.command;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public enum CommandGroup {
+public enum RedisCommandGroup {
 
 	/**
 	 * 布隆过滤器
@@ -174,7 +174,7 @@ public enum CommandGroup {
 
 	private final String name;
 
-	CommandGroup(final String name) {
+	RedisCommandGroup(final String name) {
 		this.name = name;
 	}
 

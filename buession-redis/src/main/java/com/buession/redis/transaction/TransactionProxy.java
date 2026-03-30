@@ -48,6 +48,11 @@ public interface TransactionProxy<T, FR extends FutureResult<?>> extends Transac
 	 */
 	T getObject();
 
+	/**
+	 * 返回事务结果
+	 *
+	 * @return 事务结果
+	 */
 	Queue<FR> getTxResults();
 
 }

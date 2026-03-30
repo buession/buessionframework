@@ -44,8 +44,14 @@ abstract class BaseTsAACArgument {
 	 */
 	private Long chunkSize;
 
+	/**
+	 * Policy that will define handling of duplicate samples.
+	 */
 	private DuplicatePolicy duplicatePolicy;
 
+	/**
+	 * Labels
+	 */
 	private Map<String, String> labels;
 
 	/**
@@ -68,6 +74,8 @@ abstract class BaseTsAACArgument {
 	 *
 	 * @param retention
 	 * 		数据的保留时间
+	 *
+	 * @return {@link BaseTsAACArgument}
 	 */
 	public BaseTsAACArgument setRetention(long retention) {
 		this.retention = retention;
@@ -88,25 +96,53 @@ abstract class BaseTsAACArgument {
 	 *
 	 * @param chunkSize
 	 * 		每个内存块的大小（单位：字节）
+	 *
+	 * @return {@link BaseTsAACArgument}
 	 */
 	public BaseTsAACArgument setChunkSize(Long chunkSize) {
 		this.chunkSize = chunkSize;
 		return this;
 	}
 
+	/**
+	 * Return policy that will define handling of duplicate samples.
+	 *
+	 * @return The policy that will define handling of duplicate samples.
+	 */
 	public DuplicatePolicy getDuplicatePolicy() {
 		return duplicatePolicy;
 	}
 
+	/**
+	 * Sets policy that will define handling of duplicate samples.
+	 *
+	 * @param duplicatePolicy
+	 * 		Policy that will define handling of duplicate samples.
+	 *
+	 * @return {@link BaseTsAACArgument}
+	 */
 	public BaseTsAACArgument setDuplicatePolicy(DuplicatePolicy duplicatePolicy) {
 		this.duplicatePolicy = duplicatePolicy;
 		return this;
 	}
 
+	/**
+	 * Return labels
+	 *
+	 * @return Labels
+	 */
 	public Map<String, String> getLabels() {
 		return labels;
 	}
 
+	/**
+	 * Sets labels
+	 *
+	 * @param labels
+	 * 		Labels
+	 *
+	 * @return {@link BaseTsAACArgument}
+	 */
 	public BaseTsAACArgument setLabels(Map<String, String> labels) {
 		this.labels = labels;
 		return this;

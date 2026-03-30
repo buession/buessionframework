@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.transaction;
@@ -30,7 +30,6 @@ import com.buession.redis.client.connection.RedisConnectionHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.support.TransactionSynchronization;
-import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.io.IOException;
@@ -38,7 +37,7 @@ import java.io.IOException;
 /**
  * @author Yong.Teng
  */
-public class RedisTransactionSynchronizationAdapter extends TransactionSynchronizationAdapter {
+public class RedisTransactionSynchronizationAdapter implements TransactionSynchronization {
 
 	private final RedisConnectionFactory factory;
 
@@ -71,7 +70,7 @@ public class RedisTransactionSynchronizationAdapter extends TransactionSynchroni
 						connection.discard();
 						break;
 					default:
-						connection.discard();
+						//connection.discard();
 						break;
 				}
 			}

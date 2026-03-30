@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.transaction;
@@ -54,6 +54,14 @@ public abstract class AbstractTransactionProxy<T, FR extends FutureResult<?>> im
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
+	/**
+	 * 构造函数
+	 *
+	 * @param target
+	 * 		事务 {@link Transaction} 实例
+	 * @param object
+	 * 		原生对象
+	 */
 	public AbstractTransactionProxy(final Transaction target, final T object) {
 		//Assert.isNull(target, "Redis Transaction cloud not be null.");
 		this.target = target;

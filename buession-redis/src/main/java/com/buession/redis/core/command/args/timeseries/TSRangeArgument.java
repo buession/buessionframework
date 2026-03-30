@@ -32,59 +32,7 @@ import com.buession.redis.utils.ArgStringBuilder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class TSRangeArgument {
-
-	private Boolean latest;
-
-	private long[] filterByTimestamps;
-
-	private MinMax filterByValues;
-
-	private Aggregation aggregation;
-
-	public Boolean isLatest() {
-		return getLatest();
-	}
-
-	public Boolean getLatest() {
-		return latest;
-	}
-
-	public TSRangeArgument latest() {
-		return setLatest(true);
-	}
-
-	public TSRangeArgument setLatest(Boolean latest) {
-		this.latest = latest;
-		return this;
-	}
-
-	public long[] getFilterByTimestamps() {
-		return filterByTimestamps;
-	}
-
-	public TSRangeArgument setFilterByTimestamps(long[] filterByTimestamps) {
-		this.filterByTimestamps = filterByTimestamps;
-		return this;
-	}
-
-	public MinMax getFilterByValues() {
-		return filterByValues;
-	}
-
-	public TSRangeArgument setFilterByValues(MinMax filterByValues) {
-		this.filterByValues = filterByValues;
-		return this;
-	}
-
-	public Aggregation getAggregation() {
-		return aggregation;
-	}
-
-	public TSRangeArgument setAggregation(Aggregation aggregation) {
-		this.aggregation = aggregation;
-		return this;
-	}
+public class TSRangeArgument extends BaseTSRangeArgument {
 
 	@Override
 	public String toString() {

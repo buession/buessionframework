@@ -26,7 +26,7 @@ package com.buession.redis.client.lettuce.command;
 
 import com.buession.lang.KeyValue;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.GenericCommands;
 
@@ -45,14 +45,14 @@ public final class LettuceGenericCommands extends AbstractLettuceRedisCommands i
 	@Override
 	public Long wait(final int replicas, final int timeout) {
 		final CommandArguments args = CommandArguments.create(replicas).add(timeout);
-		return executeCommand(Command.WAIT, args, (cmd)->cmd.waitForReplication(replicas, timeout));
+		return executeCommand(RedisCommand.WAIT, args, (cmd)->cmd.waitForReplication(replicas, timeout));
 
 	}
 
 	@Override
 	public KeyValue<Long, Long> waitOf(final int locals, final int replicas, final int timeout) {
 		final CommandArguments args = CommandArguments.create(locals).add(replicas).add(timeout);
-		return executeCommand(Command.WAITOF, args);
+		return executeCommand(RedisCommand.WAITOF, args);
 	}
 
 }

@@ -166,6 +166,8 @@ public interface BloomFilterCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		布隆过滤器的名称
+	 * @param option
+	 * 		选项
 	 *
 	 * @return 布隆过滤器 key 的详细元信息
 	 */
@@ -407,7 +409,7 @@ public interface BloomFilterCommands extends RedisCommands {
 	 * @return 操作结果
 	 */
 	Status bfReserve(final String key, final double errorRate, final long capacity, final int expansion,
-					 final boolean nonScaling);
+	                 final boolean nonScaling);
 
 	/**
 	 * 控制布隆过滤器的关键参数：预期容量（capacity） 和 可接受的误判率（error rate）
@@ -429,7 +431,7 @@ public interface BloomFilterCommands extends RedisCommands {
 	 * @return 操作结果
 	 */
 	Status bfReserve(final byte[] key, final double errorRate, final long capacity, final int expansion,
-					 final boolean nonScaling);
+	                 final boolean nonScaling);
 
 	/**
 	 * 控制布隆过滤器的关键参数：预期容量（capacity） 和 可接受的误判率（error rate）

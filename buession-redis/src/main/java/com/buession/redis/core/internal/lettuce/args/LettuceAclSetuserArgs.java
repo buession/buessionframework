@@ -24,8 +24,8 @@
  */
 package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.redis.core.command.Command;
-import com.buession.redis.core.command.SubCommand;
+import com.buession.redis.core.command.RedisCommand;
+import com.buession.redis.core.command.RedisSubCommand;
 import com.buession.redis.core.command.args.acl.AclSetUserArgument;
 import com.buession.redis.core.internal.convert.lettuce.params.AclCategoryConverter;
 import io.lettuce.core.AclSetuserArgs;
@@ -121,11 +121,11 @@ public final class LettuceAclSetuserArgs extends AclSetuserArgs {
 		}
 	}
 
-	private static CommandType commandType(final Command command) {
+	private static CommandType commandType(final RedisCommand command) {
 		return Enum.valueOf(CommandType.class, command.getName());
 	}
 
-	private static ProtocolKeyword protocolKeyword(final SubCommand subCommand) {
+	private static ProtocolKeyword protocolKeyword(final RedisSubCommand subCommand) {
 		try{
 			return Enum.valueOf(CommandKeyword.class, subCommand.getName());
 		}catch(IllegalArgumentException e){

@@ -25,7 +25,7 @@
 package com.buession.redis.client;
 
 import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.core.Command;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.*;
 import com.buession.redis.exception.RedisException;
 import org.slf4j.Logger;
@@ -238,7 +238,7 @@ public abstract class AbstractRedisClient implements RedisClient {
 	}
 
 	@Override
-	public <R> R execute(final Command<R> command, final CommandArguments arguments) {
+	public <R> R execute(final Command<RedisConnection, R> command, final CommandArguments arguments) {
 		long startTime = 0;
 		if(logger.isDebugEnabled()){
 			startTime = System.nanoTime();
@@ -249,7 +249,7 @@ public abstract class AbstractRedisClient implements RedisClient {
 		}
 
 		try{
-			return getConnection().execute((conn)->command.execute());
+			return getConnection().execute((conn)->command.execute(conn, arguments));
 		}catch(RedisException e){
 			if(logger.isErrorEnabled()){
 				logger.error("Execute command: {}, failure: {}", runCommand(command.getCommand(), arguments),
@@ -264,8 +264,8 @@ public abstract class AbstractRedisClient implements RedisClient {
 		}
 	}
 
-	private static String runCommand(final com.buession.redis.core.command.Command command,
-									 final CommandArguments arguments) {
+	protected static String runCommand(final RedisCommand command,
+	                                   final CommandArguments arguments) {
 		final StringBuilder sb = new StringBuilder(command.name());
 
 		if(arguments != null){

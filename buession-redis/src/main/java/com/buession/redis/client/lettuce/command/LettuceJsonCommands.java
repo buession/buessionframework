@@ -35,10 +35,10 @@ import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.core.JsonType;
 import com.buession.redis.core.command.args.NxXx;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.JsonCommands;
-import com.buession.redis.core.command.SubCommand;
+import com.buession.redis.core.command.RedisSubCommand;
 import com.buession.redis.core.command.args.json.JsonGetArgument;
 import com.buession.redis.core.command.args.json.KeyPathValue;
 import com.buession.redis.core.internal.convert.Converters;
@@ -73,48 +73,48 @@ public final class LettuceJsonCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public List<Long> jsonArrAppend(final String key, final String... values) {
 		final CommandArguments args = CommandArguments.create(key).add(values);
-		return executeCommand(Command.JSON_ARRAPPEND, args, (cmd)->cmd.jsonArrappend(rawBinaryKey(key), values));
+		return executeCommand(RedisCommand.JSON_ARRAPPEND, args, (cmd)->cmd.jsonArrappend(rawBinaryKey(key), values));
 	}
 
 	@Override
 	public List<Long> jsonArrAppend(final byte[] key, final byte[]... values) {
 		final CommandArguments args = CommandArguments.create(key).add(values);
-		return executeCommand(Command.JSON_ARRAPPEND, args,
+		return executeCommand(RedisCommand.JSON_ARRAPPEND, args,
 				(cmd)->cmd.jsonArrappend(rawKey(key), SafeEncoder.encode(values)));
 	}
 
 	@Override
 	public List<Long> jsonArrAppend(final String key, final String path, final String... values) {
 		final CommandArguments args = CommandArguments.create(key).add(path).add(values);
-		return executeCommand(Command.JSON_ARRAPPEND, args,
+		return executeCommand(RedisCommand.JSON_ARRAPPEND, args,
 				(cmd)->cmd.jsonArrappend(rawBinaryKey(key), new LettuceJsonPath(path), values));
 	}
 
 	@Override
 	public List<Long> jsonArrAppend(final byte[] key, final byte[] path, final byte[]... values) {
 		final CommandArguments args = CommandArguments.create(key).add(path).add(values);
-		return executeCommand(Command.JSON_ARRAPPEND, args,
+		return executeCommand(RedisCommand.JSON_ARRAPPEND, args,
 				(cmd)->cmd.jsonArrappend(rawKey(key), new LettuceJsonPath(path), SafeEncoder.encode(values)));
 	}
 
 	@Override
 	public List<Long> jsonArrIndex(final String key, final String path, final String value) {
 		final CommandArguments args = CommandArguments.create(key).add(path, value);
-		return executeCommand(Command.JSON_ARRINDEX, args,
+		return executeCommand(RedisCommand.JSON_ARRINDEX, args,
 				(cmd)->cmd.jsonArrindex(rawBinaryKey(key), new LettuceJsonPath(path), value));
 	}
 
 	@Override
 	public List<Long> jsonArrIndex(final byte[] key, final byte[] path, final byte[] value) {
 		final CommandArguments args = CommandArguments.create(key).add(path, value);
-		return executeCommand(Command.JSON_ARRINDEX, args,
+		return executeCommand(RedisCommand.JSON_ARRINDEX, args,
 				(cmd)->cmd.jsonArrindex(rawKey(key), new LettuceJsonPath(path), SafeEncoder.encode(value)));
 	}
 
 	@Override
 	public List<Long> jsonArrIndex(final String key, final String path, final String value, final int start) {
 		final CommandArguments args = CommandArguments.create(key).add(path, value).add(start);
-		return executeCommand(Command.JSON_ARRINDEX, args,
+		return executeCommand(RedisCommand.JSON_ARRINDEX, args,
 				(cmd)->cmd.jsonArrindex(rawBinaryKey(key), new LettuceJsonPath(path), value,
 						new LettuceJsonRangeArgs(start)));
 	}
@@ -122,25 +122,25 @@ public final class LettuceJsonCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public List<Long> jsonArrIndex(final byte[] key, final byte[] path, final byte[] value, final int start) {
 		final CommandArguments args = CommandArguments.create(key).add(path, value).add(start);
-		return executeCommand(Command.JSON_ARRINDEX, args,
+		return executeCommand(RedisCommand.JSON_ARRINDEX, args,
 				(cmd)->cmd.jsonArrindex(rawKey(key), new LettuceJsonPath(path), SafeEncoder.encode(value),
 						new LettuceJsonRangeArgs(start)));
 	}
 
 	@Override
 	public List<Long> jsonArrIndex(final String key, final String path, final String value, final int start,
-								   final int stop) {
+	                               final int stop) {
 		final CommandArguments args = CommandArguments.create(key).add(path, value).add(start, stop);
-		return executeCommand(Command.JSON_ARRINDEX, args,
+		return executeCommand(RedisCommand.JSON_ARRINDEX, args,
 				(cmd)->cmd.jsonArrindex(rawBinaryKey(key), new LettuceJsonPath(path), value,
 						new LettuceJsonRangeArgs(start, stop)));
 	}
 
 	@Override
 	public List<Long> jsonArrIndex(final byte[] key, final byte[] path, final byte[] value, final int start,
-								   final int stop) {
+	                               final int stop) {
 		final CommandArguments args = CommandArguments.create(key).add(path, value).add(start, stop);
-		return executeCommand(Command.JSON_ARRINDEX, args,
+		return executeCommand(RedisCommand.JSON_ARRINDEX, args,
 				(cmd)->cmd.jsonArrindex(rawKey(key), new LettuceJsonPath(path), SafeEncoder.encode(value),
 						new LettuceJsonRangeArgs(start, stop)));
 	}
@@ -148,69 +148,70 @@ public final class LettuceJsonCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public List<Long> jsonArrInsert(final String key, final String path, final int index, final String... values) {
 		final CommandArguments args = CommandArguments.create(key, path).add(index).add(values);
-		return executeCommand(Command.JSON_ARRINSERT, args,
+		return executeCommand(RedisCommand.JSON_ARRINSERT, args,
 				(cmd)->cmd.jsonArrinsert(rawBinaryKey(key), new LettuceJsonPath(path), index, values));
 	}
 
 	@Override
 	public List<Long> jsonArrInsert(final byte[] key, final byte[] path, final int index, final byte[]... values) {
 		final CommandArguments args = CommandArguments.create(key, path).add(index).add(values);
-		return executeCommand(Command.JSON_ARRINSERT, args,
+		return executeCommand(RedisCommand.JSON_ARRINSERT, args,
 				(cmd)->cmd.jsonArrinsert(rawKey(key), new LettuceJsonPath(path), index, SafeEncoder.encode(values)));
 	}
 
 	@Override
 	public Long jsonArrLen(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.JSON_ARRLEN, args, (cmd)->cmd.jsonArrlen(rawBinaryKey(key)),
+		return executeCommand(RedisCommand.JSON_ARRLEN, args, (cmd)->cmd.jsonArrlen(rawBinaryKey(key)),
 				Converters.list0Converter());
 	}
 
 	@Override
 	public Long jsonArrLen(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.JSON_ARRLEN, args, (cmd)->cmd.jsonArrlen(rawKey(key)),
+		return executeCommand(RedisCommand.JSON_ARRLEN, args, (cmd)->cmd.jsonArrlen(rawKey(key)),
 				Converters.list0Converter());
 	}
 
 	@Override
 	public List<Long> jsonArrLen(final String key, final String path) {
 		final CommandArguments args = CommandArguments.create(key).add(path);
-		return executeCommand(Command.JSON_ARRLEN, args,
+		return executeCommand(RedisCommand.JSON_ARRLEN, args,
 				(cmd)->cmd.jsonArrlen(rawBinaryKey(key), new LettuceJsonPath(path)));
 	}
 
 	@Override
 	public List<Long> jsonArrLen(final byte[] key, final byte[] path) {
 		final CommandArguments args = CommandArguments.create(key).add(path);
-		return executeCommand(Command.JSON_ARRLEN, args, (cmd)->cmd.jsonArrlen(rawKey(key), new LettuceJsonPath(path)));
+		return executeCommand(
+				RedisCommand.JSON_ARRLEN, args, (cmd)->cmd.jsonArrlen(rawKey(key), new LettuceJsonPath(path)));
 	}
 
 	@Override
 	public String jsonArrPop(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.JSON_ARRPOP, args, (cmd)->cmd.jsonArrpopRaw(rawBinaryKey(key)),
+		return executeCommand(RedisCommand.JSON_ARRPOP, args, (cmd)->cmd.jsonArrpopRaw(rawBinaryKey(key)),
 				Converters.list0Converter());
 	}
 
 	@Override
 	public byte[] jsonArrPop(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.JSON_ARRPOP, args, (cmd)->cmd.jsonArrpopRaw(rawKey(key)),
+		return executeCommand(RedisCommand.JSON_ARRPOP, args, (cmd)->cmd.jsonArrpopRaw(rawKey(key)),
 				(v)->Validate.isEmpty(v) ? null : SafeEncoder.encode(v.get(0)));
 	}
 
 	@Override
 	public List<String> jsonArrPop(final String key, final String path) {
 		final CommandArguments args = CommandArguments.create(key, path);
-		return executeCommand(Command.JSON_ARRPOP, args,
+		return executeCommand(RedisCommand.JSON_ARRPOP, args,
 				(cmd)->cmd.jsonArrpopRaw(rawBinaryKey(key), new LettuceJsonPath(path)));
 	}
 
 	@Override
 	public List<byte[]> jsonArrPop(final byte[] key, final byte[] path) {
 		final CommandArguments args = CommandArguments.create(key, path);
-		return executeCommand(Command.JSON_ARRPOP, args,
+		return executeCommand(RedisCommand.JSON_ARRPOP, args,
 				(cmd)->cmd.jsonArrpopRaw(rawKey(key), new LettuceJsonPath(path)),
 				new ListConverter<>(SafeEncoder::encode));
 	}
@@ -218,14 +219,14 @@ public final class LettuceJsonCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public List<String> jsonArrPop(final String key, final String path, final int index) {
 		final CommandArguments args = CommandArguments.create(key, path).add(index);
-		return executeCommand(Command.JSON_ARRPOP, args,
+		return executeCommand(RedisCommand.JSON_ARRPOP, args,
 				(cmd)->cmd.jsonArrpopRaw(rawBinaryKey(key), new LettuceJsonPath(path), index));
 	}
 
 	@Override
 	public List<byte[]> jsonArrPop(final byte[] key, final byte[] path, final int index) {
 		final CommandArguments args = CommandArguments.create(key, path).add(index);
-		return executeCommand(Command.JSON_ARRPOP, args,
+		return executeCommand(RedisCommand.JSON_ARRPOP, args,
 				(cmd)->cmd.jsonArrpopRaw(rawKey(key), new LettuceJsonPath(path), index),
 				new ListConverter<>(SafeEncoder::encode));
 	}
@@ -233,7 +234,7 @@ public final class LettuceJsonCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public List<Long> jsonArrTrim(final String key, final String path, final int start, final int stop) {
 		final CommandArguments args = CommandArguments.create(key, path).add(start, stop);
-		return executeCommand(Command.JSON_ARRTRIM, args,
+		return executeCommand(RedisCommand.JSON_ARRTRIM, args,
 				(cmd)->cmd.jsonArrtrim(rawBinaryKey(key), new LettuceJsonPath(path),
 						new LettuceJsonRangeArgs(start, stop)));
 	}
@@ -241,126 +242,129 @@ public final class LettuceJsonCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public List<Long> jsonArrTrim(final byte[] key, final byte[] path, final int start, final int stop) {
 		final CommandArguments args = CommandArguments.create(key, path).add(start, stop);
-		return executeCommand(Command.JSON_ARRTRIM, args,
+		return executeCommand(RedisCommand.JSON_ARRTRIM, args,
 				(cmd)->cmd.jsonArrtrim(rawKey(key), new LettuceJsonPath(path), new LettuceJsonRangeArgs(start, stop)));
 	}
 
 	@Override
 	public Long jsonClear(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.JSON_CLEAR, args, (cmd)->cmd.jsonClear(rawBinaryKey(key)));
+		return executeCommand(RedisCommand.JSON_CLEAR, args, (cmd)->cmd.jsonClear(rawBinaryKey(key)));
 	}
 
 	@Override
 	public Long jsonClear(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.JSON_CLEAR, args, (cmd)->cmd.jsonClear(rawKey(key)));
+		return executeCommand(RedisCommand.JSON_CLEAR, args, (cmd)->cmd.jsonClear(rawKey(key)));
 	}
 
 	@Override
 	public Long jsonClear(final String key, final String path) {
 		final CommandArguments args = CommandArguments.create(key, path);
-		return executeCommand(Command.JSON_CLEAR, args,
+		return executeCommand(RedisCommand.JSON_CLEAR, args,
 				(cmd)->cmd.jsonClear(rawBinaryKey(key), new LettuceJsonPath(path)));
 	}
 
 	@Override
 	public Long jsonClear(final byte[] key, final byte[] path) {
 		final CommandArguments args = CommandArguments.create(key, path);
-		return executeCommand(Command.JSON_CLEAR, args, (cmd)->cmd.jsonClear(rawKey(key), new LettuceJsonPath(path)));
+		return executeCommand(
+				RedisCommand.JSON_CLEAR, args, (cmd)->cmd.jsonClear(rawKey(key), new LettuceJsonPath(path)));
 	}
 
 	@Override
 	public Long jsonDebugMemory(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.JSON_DEBUG, SubCommand.JSON_DEBUG_MEMORY, args);
+		return executeCommand(RedisCommand.JSON_DEBUG, RedisSubCommand.JSON_DEBUG_MEMORY, args);
 	}
 
 	@Override
 	public Long jsonDebugMemory(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.JSON_DEBUG, SubCommand.JSON_DEBUG_MEMORY, args);
+		return executeCommand(RedisCommand.JSON_DEBUG, RedisSubCommand.JSON_DEBUG_MEMORY, args);
 	}
 
 	@Override
 	public List<Long> jsonDebugMemory(final String key, final String path) {
 		final CommandArguments args = CommandArguments.create(key).add(path);
-		return executeCommand(Command.JSON_DEBUG, SubCommand.JSON_DEBUG_MEMORY, args);
+		return executeCommand(RedisCommand.JSON_DEBUG, RedisSubCommand.JSON_DEBUG_MEMORY, args);
 	}
 
 	@Override
 	public List<Long> jsonDebugMemory(final byte[] key, final byte[] path) {
 		final CommandArguments args = CommandArguments.create(key).add(path);
-		return executeCommand(Command.JSON_DEBUG, SubCommand.JSON_DEBUG_MEMORY, args);
+		return executeCommand(RedisCommand.JSON_DEBUG, RedisSubCommand.JSON_DEBUG_MEMORY, args);
 	}
 
 	@Override
 	public Long jsonDel(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.JSON_DEL, args, (cmd)->cmd.jsonDel(rawBinaryKey(key)));
+		return executeCommand(RedisCommand.JSON_DEL, args, (cmd)->cmd.jsonDel(rawBinaryKey(key)));
 	}
 
 	@Override
 	public Long jsonDel(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.JSON_DEL, args, (cmd)->cmd.jsonDel(rawKey(key)));
+		return executeCommand(RedisCommand.JSON_DEL, args, (cmd)->cmd.jsonDel(rawKey(key)));
 	}
 
 	@Override
 	public Long jsonDel(final String key, final String path) {
 		final CommandArguments args = CommandArguments.create(key).add(path);
-		return executeCommand(Command.JSON_DEL, args, (cmd)->cmd.jsonDel(rawBinaryKey(key), new LettuceJsonPath(path)));
+		return executeCommand(
+				RedisCommand.JSON_DEL, args, (cmd)->cmd.jsonDel(rawBinaryKey(key), new LettuceJsonPath(path)));
 	}
 
 	@Override
 	public Long jsonDel(final byte[] key, final byte[] path) {
 		final CommandArguments args = CommandArguments.create(key).add(path);
-		return executeCommand(Command.JSON_DEL, args, (cmd)->cmd.jsonDel(rawKey(key), new LettuceJsonPath(path)));
+		return executeCommand(RedisCommand.JSON_DEL, args, (cmd)->cmd.jsonDel(rawKey(key), new LettuceJsonPath(path)));
 	}
 
 	@Override
 	public Long jsonForget(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.JSON_FORGET, args, (cmd)->cmd.jsonDel(rawBinaryKey(key)));
+		return executeCommand(RedisCommand.JSON_FORGET, args, (cmd)->cmd.jsonDel(rawBinaryKey(key)));
 	}
 
 	@Override
 	public Long jsonForget(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.JSON_FORGET, args, (cmd)->cmd.jsonDel(rawKey(key)));
+		return executeCommand(RedisCommand.JSON_FORGET, args, (cmd)->cmd.jsonDel(rawKey(key)));
 	}
 
 	@Override
 	public Long jsonForget(final String key, final String path) {
 		final CommandArguments args = CommandArguments.create(key, path);
-		return executeCommand(Command.JSON_FORGET, args,
+		return executeCommand(RedisCommand.JSON_FORGET, args,
 				(cmd)->cmd.jsonDel(rawBinaryKey(key), new LettuceJsonPath(path)));
 	}
 
 	@Override
 	public Long jsonForget(final byte[] key, final byte[] path) {
 		final CommandArguments args = CommandArguments.create(key, path);
-		return executeCommand(Command.JSON_FORGET, args, (cmd)->cmd.jsonDel(rawKey(key), new LettuceJsonPath(path)));
+		return executeCommand(
+				RedisCommand.JSON_FORGET, args, (cmd)->cmd.jsonDel(rawKey(key), new LettuceJsonPath(path)));
 	}
 
 	@Override
 	public String jsonGet(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.JSON_GET, args, (cmd)->cmd.jsonGetRaw(rawBinaryKey(key)),
+		return executeCommand(RedisCommand.JSON_GET, args, (cmd)->cmd.jsonGetRaw(rawBinaryKey(key)),
 				Converters.list0Converter());
 	}
 
 	@Override
 	public byte[] jsonGet(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.JSON_GET, args, (cmd)->cmd.jsonGetRaw(rawKey(key)),
+		return executeCommand(RedisCommand.JSON_GET, args, (cmd)->cmd.jsonGetRaw(rawKey(key)),
 				(v)->Validate.isEmpty(v) ? null : SafeEncoder.encode(v.get(0)));
 	}
 
 	@Override
 	public String jsonGet(final String key, final JsonGetArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument);
-		return executeCommand(Command.JSON_GET, args,
+		return executeCommand(RedisCommand.JSON_GET, args,
 				(cmd)->cmd.jsonGetRaw(rawBinaryKey(key), new LettuceJsonGetArgs(argument)),
 				Converters.list0Converter());
 	}
@@ -368,7 +372,7 @@ public final class LettuceJsonCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public byte[] jsonGet(final byte[] key, final JsonGetArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument);
-		return executeCommand(Command.JSON_ARRINSERT, args,
+		return executeCommand(RedisCommand.JSON_ARRINSERT, args,
 				(cmd)->cmd.jsonGetRaw(rawKey(key), new LettuceJsonGetArgs(argument)),
 				(v)->Validate.isEmpty(v) ? null : SafeEncoder.encode(v.get(0)));
 	}
@@ -378,7 +382,7 @@ public final class LettuceJsonCommands extends AbstractLettuceRedisCommands impl
 		final CommandArguments args = CommandArguments.create(key).add(path);
 		final ArrayConverter<String, LettuceJsonPath> arrayConverter = new ArrayConverter<>(LettuceJsonPath::new,
 				LettuceJsonPath.class);
-		return executeCommand(Command.JSON_GET, args,
+		return executeCommand(RedisCommand.JSON_GET, args,
 				(cmd)->cmd.jsonGetRaw(rawBinaryKey(key), arrayConverter.convert(path)));
 	}
 
@@ -387,7 +391,8 @@ public final class LettuceJsonCommands extends AbstractLettuceRedisCommands impl
 		final CommandArguments args = CommandArguments.create(key).add(path);
 		final ArrayConverter<byte[], LettuceJsonPath> arrayConverter = new ArrayConverter<>(LettuceJsonPath::new,
 				LettuceJsonPath.class);
-		return executeCommand(Command.JSON_GET, args, (cmd)->cmd.jsonGetRaw(rawKey(key), arrayConverter.convert(path)),
+		return executeCommand(
+				RedisCommand.JSON_GET, args, (cmd)->cmd.jsonGetRaw(rawKey(key), arrayConverter.convert(path)),
 				new StringListBinaryListConverter());
 	}
 
@@ -396,7 +401,7 @@ public final class LettuceJsonCommands extends AbstractLettuceRedisCommands impl
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(path);
 		final ArrayConverter<String, LettuceJsonPath> arrayConverter = new ArrayConverter<>(LettuceJsonPath::new,
 				LettuceJsonPath.class);
-		return executeCommand(Command.JSON_GET, args,
+		return executeCommand(RedisCommand.JSON_GET, args,
 				(cmd)->cmd.jsonGetRaw(rawBinaryKey(key), new LettuceJsonGetArgs(argument),
 						arrayConverter.convert(path)));
 	}
@@ -406,7 +411,7 @@ public final class LettuceJsonCommands extends AbstractLettuceRedisCommands impl
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(path);
 		final ArrayConverter<byte[], LettuceJsonPath> arrayConverter = new ArrayConverter<>(LettuceJsonPath::new,
 				LettuceJsonPath.class);
-		return executeCommand(Command.JSON_GET, args,
+		return executeCommand(RedisCommand.JSON_GET, args,
 				(cmd)->cmd.jsonGetRaw(rawKey(key), new LettuceJsonGetArgs(argument),
 						arrayConverter.convert(path)), new StringListBinaryListConverter());
 	}
@@ -414,14 +419,14 @@ public final class LettuceJsonCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public Status jsonMerge(final String key, final String path, final String value) {
 		final CommandArguments args = CommandArguments.create(key).add(path).add(value);
-		return executeCommand(Command.JSON_MERGE, args,
+		return executeCommand(RedisCommand.JSON_MERGE, args,
 				(cmd)->cmd.jsonMerge(rawBinaryKey(key), new LettuceJsonPath(path), value), new OkStatusConverter());
 	}
 
 	@Override
 	public Status jsonMerge(final byte[] key, final byte[] path, final byte[] value) {
 		final CommandArguments args = CommandArguments.create(key).add(path).add(value);
-		return executeCommand(Command.JSON_MERGE, args,
+		return executeCommand(RedisCommand.JSON_MERGE, args,
 				(cmd)->cmd.jsonMerge(rawKey(key), new LettuceJsonPath(path), SafeEncoder.encode(value)),
 				new OkStatusConverter());
 	}
@@ -429,14 +434,15 @@ public final class LettuceJsonCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public List<String> jsonMGet(final String[] keys, final String path) {
 		final CommandArguments args = CommandArguments.create(keys).add(path);
-		return executeCommand(Command.JSON_MGET, args,
+		return executeCommand(RedisCommand.JSON_MGET, args,
 				(cmd)->cmd.jsonMGetRaw(new LettuceJsonPath(path), rawBinaryKeys(keys)));
 	}
 
 	@Override
 	public List<byte[]> jsonMGet(final byte[][] keys, final byte[] path) {
 		final CommandArguments args = CommandArguments.create(keys).add(path);
-		return executeCommand(Command.JSON_MGET, args, (cmd)->cmd.jsonMGetRaw(new LettuceJsonPath(path), rawKeys(keys)),
+		return executeCommand(
+				RedisCommand.JSON_MGET, args, (cmd)->cmd.jsonMGetRaw(new LettuceJsonPath(path), rawKeys(keys)),
 				new StringListBinaryListConverter());
 	}
 
@@ -447,41 +453,41 @@ public final class LettuceJsonCommands extends AbstractLettuceRedisCommands impl
 		final ArrayListConverter<KeyPathValue, JsonMsetArgs<byte[], byte[]>> arrayListConverter = new ArrayListConverter<>(
 				(v)->new JsonMsetArgs<>(rawBinaryKey(v.getKey()), new LettuceJsonPath(v.getPath()),
 						jsonParser.createJsonValue(v.getValue())));
-		return executeCommand(Command.JSON_MSET, args, (cmd)->cmd.jsonMSet(arrayListConverter.convert(data)),
+		return executeCommand(RedisCommand.JSON_MSET, args, (cmd)->cmd.jsonMSet(arrayListConverter.convert(data)),
 				new OkStatusConverter());
 	}
 
 	@Override
 	public List<Number> jsonNumIncrBy(final String key, final String path, final Number value) {
 		final CommandArguments args = CommandArguments.create(key, path).add(value);
-		return executeCommand(Command.JSON_NUMINCRBY, args,
+		return executeCommand(RedisCommand.JSON_NUMINCRBY, args,
 				(cmd)->cmd.jsonNumincrby(rawBinaryKey(key), new LettuceJsonPath(path), value));
 	}
 
 	@Override
 	public List<Number> jsonNumIncrBy(final byte[] key, final byte[] path, final Number value) {
 		final CommandArguments args = CommandArguments.create(key, path).add(value);
-		return executeCommand(Command.JSON_NUMINCRBY, args,
+		return executeCommand(RedisCommand.JSON_NUMINCRBY, args,
 				(cmd)->cmd.jsonNumincrby(rawKey(key), new LettuceJsonPath(path), value));
 	}
 
 	@Override
 	public List<Number> jsonNumMultBy(final String key, final String path, final Number value) {
 		final CommandArguments args = CommandArguments.create(key, path).add(value);
-		return executeCommand(Command.JSON_NUMMULTBY, args);
+		return executeCommand(RedisCommand.JSON_NUMMULTBY, args);
 	}
 
 	@Override
 	public List<Number> jsonNumMultBy(final byte[] key, final byte[] path, final Number value) {
 		final CommandArguments args = CommandArguments.create(key, path).add(value);
-		return executeCommand(Command.JSON_NUMMULTBY, args);
+		return executeCommand(RedisCommand.JSON_NUMMULTBY, args);
 	}
 
 	@Override
 	public List<List<String>> jsonObjKeys(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
 		final ByteArrayDeserializer byteArrayDeserializer = new DefaultByteArrayDeserializer();
-		return executeCommand(Command.JSON_OBJKEYS, args,
+		return executeCommand(RedisCommand.JSON_OBJKEYS, args,
 				(cmd)->cmd.jsonObjkeys(rawBinaryKey(key)), new ListConverter<>((v)->{
 					try{
 						return byteArrayDeserializer.deserialize(v);
@@ -495,7 +501,7 @@ public final class LettuceJsonCommands extends AbstractLettuceRedisCommands impl
 	public List<List<byte[]>> jsonObjKeys(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
 		final ByteArrayDeserializer byteArrayDeserializer = new DefaultByteArrayDeserializer();
-		return executeCommand(Command.JSON_OBJKEYS, args,
+		return executeCommand(RedisCommand.JSON_OBJKEYS, args,
 				(cmd)->cmd.jsonObjkeys(rawKey(key)), new ListConverter<>((v)->{
 					try{
 						return byteArrayDeserializer.deserialize(v);
@@ -509,7 +515,7 @@ public final class LettuceJsonCommands extends AbstractLettuceRedisCommands impl
 	public List<List<String>> jsonObjKeys(final String key, final String path) {
 		final CommandArguments args = CommandArguments.create(key, path);
 		final ByteArrayDeserializer byteArrayDeserializer = new DefaultByteArrayDeserializer();
-		return executeCommand(Command.JSON_OBJKEYS, args,
+		return executeCommand(RedisCommand.JSON_OBJKEYS, args,
 				(cmd)->cmd.jsonObjkeys(rawBinaryKey(key), new LettuceJsonPath(path)),
 				new ListConverter<>((v)->{
 					try{
@@ -524,7 +530,7 @@ public final class LettuceJsonCommands extends AbstractLettuceRedisCommands impl
 	public List<List<byte[]>> jsonObjKeys(final byte[] key, final byte[] path) {
 		final CommandArguments args = CommandArguments.create(key, path);
 		final ByteArrayDeserializer byteArrayDeserializer = new DefaultByteArrayDeserializer();
-		return executeCommand(Command.JSON_OBJKEYS, args,
+		return executeCommand(RedisCommand.JSON_OBJKEYS, args,
 				(cmd)->cmd.jsonObjkeys(rawKey(key), new LettuceJsonPath(path)),
 				new ListConverter<>((v)->{
 					try{
@@ -538,52 +544,53 @@ public final class LettuceJsonCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public Long jsonObjLen(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.JSON_OBJLEN, args, (cmd)->cmd.jsonObjlen(rawBinaryKey(key)),
+		return executeCommand(RedisCommand.JSON_OBJLEN, args, (cmd)->cmd.jsonObjlen(rawBinaryKey(key)),
 				Converters.list0Converter());
 	}
 
 	@Override
 	public Long jsonObjLen(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.JSON_OBJLEN, args, (cmd)->cmd.jsonObjlen(rawKey(key)),
+		return executeCommand(RedisCommand.JSON_OBJLEN, args, (cmd)->cmd.jsonObjlen(rawKey(key)),
 				Converters.list0Converter());
 	}
 
 	@Override
 	public List<Long> jsonObjLen(final String key, final String path) {
 		final CommandArguments args = CommandArguments.create(key, path);
-		return executeCommand(Command.JSON_OBJLEN, args,
+		return executeCommand(RedisCommand.JSON_OBJLEN, args,
 				(cmd)->cmd.jsonObjlen(rawBinaryKey(key), new LettuceJsonPath(path)));
 	}
 
 	@Override
 	public List<Long> jsonObjLen(final byte[] key, final byte[] path) {
 		final CommandArguments args = CommandArguments.create(key, path);
-		return executeCommand(Command.JSON_OBJLEN, args, (cmd)->cmd.jsonObjlen(rawKey(key), new LettuceJsonPath(path)));
+		return executeCommand(
+				RedisCommand.JSON_OBJLEN, args, (cmd)->cmd.jsonObjlen(rawKey(key), new LettuceJsonPath(path)));
 	}
 
 	@Override
 	public List<Object> jsonResp(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.JSON_RESP, args);
+		return executeCommand(RedisCommand.JSON_RESP, args);
 	}
 
 	@Override
 	public List<Object> jsonResp(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.JSON_RESP, args);
+		return executeCommand(RedisCommand.JSON_RESP, args);
 	}
 
 	@Override
 	public List<Object> jsonResp(final String key, final String path) {
 		final CommandArguments args = CommandArguments.create(key, path);
-		return executeCommand(Command.JSON_RESP, args);
+		return executeCommand(RedisCommand.JSON_RESP, args);
 	}
 
 	@Override
 	public List<Object> jsonResp(final byte[] key, final byte[] path) {
 		final CommandArguments args = CommandArguments.create(key, path);
-		return executeCommand(Command.JSON_RESP, args);
+		return executeCommand(RedisCommand.JSON_RESP, args);
 	}
 
 	@Override
@@ -613,61 +620,62 @@ public final class LettuceJsonCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public List<Long> jsonStrAppend(final String key, final String value) {
 		final CommandArguments args = CommandArguments.create(key).add(value);
-		return executeCommand(Command.JSON_STRAPPEND, args, (cmd)->cmd.jsonStrappend(rawBinaryKey(key), value));
+		return executeCommand(RedisCommand.JSON_STRAPPEND, args, (cmd)->cmd.jsonStrappend(rawBinaryKey(key), value));
 	}
 
 	@Override
 	public List<Long> jsonStrAppend(final byte[] key, final byte[] value) {
 		final CommandArguments args = CommandArguments.create(key).add(value);
-		return executeCommand(Command.JSON_STRAPPEND, args,
+		return executeCommand(RedisCommand.JSON_STRAPPEND, args,
 				(cmd)->cmd.jsonStrappend(rawKey(key), SafeEncoder.encode(value)));
 	}
 
 	@Override
 	public List<Long> jsonStrAppend(final String key, final String path, final String value) {
 		final CommandArguments args = CommandArguments.create(key, path).add(value);
-		return executeCommand(Command.JSON_STRAPPEND, args,
+		return executeCommand(RedisCommand.JSON_STRAPPEND, args,
 				(cmd)->cmd.jsonStrappend(rawBinaryKey(key), new LettuceJsonPath(path), value));
 	}
 
 	@Override
 	public List<Long> jsonStrAppend(final byte[] key, final byte[] path, final byte[] value) {
 		final CommandArguments args = CommandArguments.create(key, path).add(value);
-		return executeCommand(Command.JSON_STRAPPEND, args,
+		return executeCommand(RedisCommand.JSON_STRAPPEND, args,
 				(cmd)->cmd.jsonStrappend(rawKey(key), new LettuceJsonPath(path), SafeEncoder.encode(value)));
 	}
 
 	@Override
 	public Long jsonStrLen(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.JSON_STRLEN, args, (cmd)->cmd.jsonStrlen(rawBinaryKey(key)),
+		return executeCommand(RedisCommand.JSON_STRLEN, args, (cmd)->cmd.jsonStrlen(rawBinaryKey(key)),
 				Converters.list0Converter());
 	}
 
 	@Override
 	public Long jsonStrLen(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.JSON_STRLEN, args, (cmd)->cmd.jsonStrlen(rawKey(key)),
+		return executeCommand(RedisCommand.JSON_STRLEN, args, (cmd)->cmd.jsonStrlen(rawKey(key)),
 				Converters.list0Converter());
 	}
 
 	@Override
 	public List<Long> jsonStrLen(final String key, final String path) {
 		final CommandArguments args = CommandArguments.create(key, path);
-		return executeCommand(Command.JSON_STRLEN, args,
+		return executeCommand(RedisCommand.JSON_STRLEN, args,
 				(cmd)->cmd.jsonStrlen(rawBinaryKey(key), new LettuceJsonPath(path)));
 	}
 
 	@Override
 	public List<Long> jsonStrLen(final byte[] key, final byte[] path) {
 		final CommandArguments args = CommandArguments.create(key, path);
-		return executeCommand(Command.JSON_STRLEN, args, (cmd)->cmd.jsonStrlen(rawKey(key), new LettuceJsonPath(path)));
+		return executeCommand(
+				RedisCommand.JSON_STRLEN, args, (cmd)->cmd.jsonStrlen(rawKey(key), new LettuceJsonPath(path)));
 	}
 
 	@Override
 	public List<Status> jsonToggle(final String key, final String path) {
 		final CommandArguments args = CommandArguments.create(key, path);
-		return executeCommand(Command.JSON_TOGGLE, args,
+		return executeCommand(RedisCommand.JSON_TOGGLE, args,
 				(cmd)->cmd.jsonToggle(rawBinaryKey(key), new LettuceJsonPath(path)),
 				new ListConverter<>(new OneStatusConverter()));
 	}
@@ -675,7 +683,8 @@ public final class LettuceJsonCommands extends AbstractLettuceRedisCommands impl
 	@Override
 	public List<Status> jsonToggle(final byte[] key, final byte[] path) {
 		final CommandArguments args = CommandArguments.create(key, path);
-		return executeCommand(Command.JSON_TOGGLE, args, (cmd)->cmd.jsonToggle(rawKey(key), new LettuceJsonPath(path)),
+		return executeCommand(
+				RedisCommand.JSON_TOGGLE, args, (cmd)->cmd.jsonToggle(rawKey(key), new LettuceJsonPath(path)),
 				new ListConverter<>(new OneStatusConverter()));
 	}
 
@@ -704,26 +713,26 @@ public final class LettuceJsonCommands extends AbstractLettuceRedisCommands impl
 	}
 
 	private Status jsonSet(final byte[] key, final JsonPath path, final String value, final CommandArguments args) {
-		return executeCommand(Command.JSON_SET, args,
+		return executeCommand(RedisCommand.JSON_SET, args,
 				(cmd)->cmd.jsonSet(key, path, value), new OkStatusConverter());
 	}
 
 	private Status jsonSet(final byte[] key, final JsonPath path, final String value, final NxXx nxXx,
-						   final CommandArguments args) {
-		return executeCommand(Command.JSON_SET, args,
+	                       final CommandArguments args) {
+		return executeCommand(RedisCommand.JSON_SET, args,
 				(cmd)->cmd.jsonSet(key, path, value, new LettuceJsonSetArgs(nxXx)),
 				new OkStatusConverter());
 	}
 
 	private JsonType jsonType(final byte[] key, final CommandArguments args) {
-		return executeCommand(Command.JSON_TYPE, args, (cmd)->{
+		return executeCommand(RedisCommand.JSON_TYPE, args, (cmd)->{
 			final List<io.lettuce.core.json.JsonType> result = cmd.jsonType(key);
 			return Validate.isEmpty(result) ? null : result.get(0);
 		}, new JsonTypeConverter());
 	}
 
 	private List<JsonType> jsonType(final byte[] key, final JsonPath path, final CommandArguments args) {
-		return executeCommand(Command.JSON_TYPE, args, (cmd)->cmd.jsonType(key, path),
+		return executeCommand(RedisCommand.JSON_TYPE, args, (cmd)->cmd.jsonType(key, path),
 				new ListConverter<>(new JsonTypeConverter()));
 	}
 

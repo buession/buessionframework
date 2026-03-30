@@ -25,20 +25,20 @@
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.RedisCommand;
 import io.lettuce.core.protocol.CommandType;
 
 /**
- * Lettuce {@link CommandType} 转换为 {@link Command}
+ * Lettuce {@link CommandType} 转换为 {@link RedisCommand}
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class CommandTypeConverter implements Converter<CommandType, Command> {
+public final class CommandTypeConverter implements Converter<CommandType, RedisCommand> {
 
 	@Override
-	public Command convert(final CommandType source) {
-		return source == null ? null : Enum.valueOf(Command.class, source.name());
+	public RedisCommand convert(final CommandType source) {
+		return source == null ? null : Enum.valueOf(RedisCommand.class, source.name());
 	}
 
 }

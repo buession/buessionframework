@@ -26,9 +26,9 @@ package com.buession.redis.core.command.args.acl;
 
 import com.buession.core.utils.StringUtils;
 import com.buession.redis.core.AclCategory;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.command.SubCommand;
+import com.buession.redis.core.command.RedisSubCommand;
 import com.buession.redis.core.ArrayArgument;
 import com.buession.redis.utils.SafeEncoder;
 
@@ -57,7 +57,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	/**
 	 * Set user active.
 	 *
-	 * @return {@code this}
+	 * @return {@link AclSetUserArgument}
 	 */
 	public AclSetUserArgument on() {
 		return state(State.ON);
@@ -66,7 +66,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	/**
 	 * Set user inactive.
 	 *
-	 * @return {@code this}
+	 * @return {@link AclSetUserArgument}
 	 */
 	public AclSetUserArgument off() {
 		return state(State.OFF);
@@ -75,7 +75,10 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	/**
 	 * Set user active or inactive.
 	 *
-	 * @return {@code this}
+	 * @param state
+	 *        {@link State}
+	 *
+	 * @return {@link AclSetUserArgument}
 	 */
 	public AclSetUserArgument state(State state) {
 		if(state != null){
@@ -91,7 +94,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 * @param keyPattern
 	 * 		accessible key pattern
 	 *
-	 * @return {@code this}
+	 * @return {@link AclSetUserArgument}
 	 */
 	public AclSetUserArgument keyPattern(String keyPattern) {
 		if(keyPattern != null){
@@ -106,7 +109,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 * @param keyPattern
 	 * 		accessible key pattern
 	 *
-	 * @return {@code this}
+	 * @return {@link AclSetUserArgument}
 	 */
 	public AclSetUserArgument keyPattern(byte[] keyPattern) {
 		if(keyPattern != null){
@@ -118,7 +121,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	/**
 	 * Allows the user to access all the keys.
 	 *
-	 * @return {@code this}
+	 * @return {@link AclSetUserArgument}
 	 */
 	public AclSetUserArgument allKeys() {
 		this.arguments.add(new AllKeys());
@@ -128,7 +131,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	/**
 	 * Removes all the key patterns from the list of key patterns the user can access.
 	 *
-	 * @return {@code this}
+	 * @return {@link AclSetUserArgument}
 	 */
 	public AclSetUserArgument resetKeys() {
 		this.arguments.add(new ResetKeys());
@@ -141,7 +144,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 * @param channelPattern
 	 * 		accessible channel pattern
 	 *
-	 * @return {@code this}
+	 * @return {@link AclSetUserArgument}
 	 */
 	public AclSetUserArgument channelPattern(String channelPattern) {
 		if(channelPattern != null){
@@ -156,7 +159,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 * @param channelPattern
 	 * 		accessible channel pattern
 	 *
-	 * @return {@code this}
+	 * @return {@link AclSetUserArgument}
 	 */
 	public AclSetUserArgument channelPattern(byte[] channelPattern) {
 		if(channelPattern != null){
@@ -168,7 +171,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	/**
 	 * Allows the user to access all the Pub/Sub channels.
 	 *
-	 * @return {@code this}
+	 * @return {@link AclSetUserArgument}
 	 */
 	public AclSetUserArgument allChannels() {
 		this.arguments.add(new AllChannels());
@@ -178,7 +181,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	/**
 	 * Removes all channel patterns from the list of Pub/Sub channel patterns the user can access.
 	 *
-	 * @return {@code this}
+	 * @return {@link AclSetUserArgument}
 	 */
 	public AclSetUserArgument resetChannels() {
 		this.arguments.add(new ResetChannels());
@@ -191,9 +194,9 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 * @param command
 	 * 		accessible command
 	 *
-	 * @return {@code this}
+	 * @return {@link AclSetUserArgument}
 	 */
-	public AclSetUserArgument addCommand(Command command) {
+	public AclSetUserArgument addCommand(RedisCommand command) {
 		if(command != null){
 			this.arguments.add(new AddCommand(command));
 		}
@@ -208,9 +211,9 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 * @param subCommand
 	 * 		accessible subcommand
 	 *
-	 * @return {@code this}
+	 * @return {@link AclSetUserArgument}
 	 */
-	public AclSetUserArgument addCommand(Command command, SubCommand subCommand) {
+	public AclSetUserArgument addCommand(RedisCommand command, RedisSubCommand subCommand) {
 		if(command != null){
 			this.arguments.add(new AddCommand(command, subCommand));
 		}
@@ -220,7 +223,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	/**
 	 * Adds all the commands there are in the server.
 	 *
-	 * @return {@code this}
+	 * @return {@link AclSetUserArgument}
 	 */
 	public AclSetUserArgument allCommands() {
 		this.arguments.add(new AllCommands());
@@ -233,9 +236,9 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 * @param command
 	 * 		inaccessible command
 	 *
-	 * @return {@code this}
+	 * @return {@link AclSetUserArgument}
 	 */
-	public AclSetUserArgument removeCommand(Command command) {
+	public AclSetUserArgument removeCommand(RedisCommand command) {
 		if(command != null){
 			this.arguments.add(new RemoveCommand(command));
 		}
@@ -250,9 +253,9 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 * @param subCommand
 	 * 		inaccessible subcommand
 	 *
-	 * @return {@code this}
+	 * @return {@link AclSetUserArgument}
 	 */
-	public AclSetUserArgument removeCommand(Command command, SubCommand subCommand) {
+	public AclSetUserArgument removeCommand(RedisCommand command, RedisSubCommand subCommand) {
 		if(command != null){
 			this.arguments.add(new RemoveCommand(command, subCommand));
 		}
@@ -262,7 +265,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	/**
 	 * Removes all the commands the user can execute.
 	 *
-	 * @return {@code this}
+	 * @return {@link AclSetUserArgument}
 	 */
 	public AclSetUserArgument noCommands() {
 		this.arguments.add(new NoCommands());
@@ -275,7 +278,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 * @param category
 	 * 		specified category
 	 *
-	 * @return {@code this}
+	 * @return {@link AclSetUserArgument}
 	 */
 	public AclSetUserArgument addCategory(AclCategory category) {
 		if(category != null){
@@ -290,7 +293,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 * @param category
 	 * 		specified category
 	 *
-	 * @return {@code this}
+	 * @return {@link AclSetUserArgument}
 	 */
 	public AclSetUserArgument removeCategory(AclCategory category) {
 		if(category != null){
@@ -302,7 +305,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	/**
 	 * Sets the user as a "no password".
 	 *
-	 * @return {@code this}
+	 * @return {@link AclSetUserArgument}
 	 */
 	public AclSetUserArgument noPass() {
 		this.arguments.add(new NoPass());
@@ -313,7 +316,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 * Flushes the list of allowed passwords and removes the "no password" status. After resetting the password there is no way
 	 * to authenticate as the user without adding some password (or setting it as {@link #noPass()} later).
 	 *
-	 * @return {@code this}
+	 * @return {@link AclSetUserArgument}
 	 */
 	public AclSetUserArgument resetPass() {
 		this.arguments.add(new ResetPass());
@@ -326,7 +329,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 * @param password
 	 * 		clear text password
 	 *
-	 * @return {@code this}
+	 * @return {@link AclSetUserArgument}
 	 */
 	public AclSetUserArgument addPassword(String password) {
 		if(password != null){
@@ -341,7 +344,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 * @param password
 	 * 		clear text password
 	 *
-	 * @return {@code this}
+	 * @return {@link AclSetUserArgument}
 	 */
 	public AclSetUserArgument addPassword(byte[] password) {
 		if(password != null){
@@ -356,7 +359,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 * @param password
 	 * 		clear text password
 	 *
-	 * @return {@code this}
+	 * @return {@link AclSetUserArgument}
 	 */
 	public AclSetUserArgument removePassword(String password) {
 		if(password != null){
@@ -371,7 +374,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 * @param password
 	 * 		clear text password
 	 *
-	 * @return {@code this}
+	 * @return {@link AclSetUserArgument}
 	 */
 	public AclSetUserArgument removePassword(byte[] password) {
 		if(password != null){
@@ -386,7 +389,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 * @param hashedPassword
 	 * 		hashed password
 	 *
-	 * @return {@code this}
+	 * @return {@link AclSetUserArgument}
 	 */
 	public AclSetUserArgument addHashedPassword(String hashedPassword) {
 		if(hashedPassword != null){
@@ -401,7 +404,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 * @param hashedPassword
 	 * 		hashed password
 	 *
-	 * @return {@code this}
+	 * @return {@link AclSetUserArgument}
 	 */
 	public AclSetUserArgument addHashedPassword(byte[] hashedPassword) {
 		if(hashedPassword != null){
@@ -416,7 +419,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 * @param hashedPassword
 	 * 		hashed password
 	 *
-	 * @return {@code this}
+	 * @return {@link AclSetUserArgument}
 	 */
 	public AclSetUserArgument removeHashedPassword(String hashedPassword) {
 		if(hashedPassword != null){
@@ -431,7 +434,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 * @param hashedPassword
 	 * 		hashed password
 	 *
-	 * @return {@code this}
+	 * @return {@link AclSetUserArgument}
 	 */
 	public AclSetUserArgument removeHashedPassword(byte[] hashedPassword) {
 		if(hashedPassword != null){
@@ -443,7 +446,7 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	/**
 	 * Removes any capability from the user.
 	 *
-	 * @return {@code this}
+	 * @return {@link AclSetUserArgument}
 	 */
 	public AclSetUserArgument reset() {
 		this.arguments.add(new Reset());
@@ -525,24 +528,24 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	private static abstract class CommandArgument implements Argument {
 
-		private final Command command;
+		private final RedisCommand command;
 
-		private final SubCommand subCommand;
+		private final RedisSubCommand subCommand;
 
-		public CommandArgument(final Command command) {
+		public CommandArgument(final RedisCommand command) {
 			this(command, null);
 		}
 
-		public CommandArgument(final Command command, final SubCommand subCommand) {
+		public CommandArgument(final RedisCommand command, final RedisSubCommand subCommand) {
 			this.command = command;
 			this.subCommand = subCommand;
 		}
 
-		public Command getCommand() {
+		public RedisCommand getCommand() {
 			return command;
 		}
 
-		public SubCommand getSubCommand() {
+		public RedisSubCommand getSubCommand() {
 			return subCommand;
 		}
 
@@ -572,12 +575,27 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	}
 
+	/**
+	 * 允许用户访问匹配指定模式的键
+	 */
 	public final static class KeyPattern extends StringArgument {
 
+		/**
+		 * 构造函数
+		 *
+		 * @param keyPattern
+		 * 		Key 模式
+		 */
 		public KeyPattern(final String keyPattern) {
 			super(keyPattern);
 		}
 
+		/**
+		 * 构造函数
+		 *
+		 * @param keyPattern
+		 * 		Key 模式
+		 */
 		public KeyPattern(final byte[] keyPattern) {
 			super(keyPattern);
 		}
@@ -594,26 +612,50 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 */
 	public final static class ResetKeys extends StringArgument {
 
+		/**
+		 * 构造函数
+		 */
 		public ResetKeys() {
 			super("resetkeys");
 		}
 
 	}
 
+	/**
+	 * 允许用户访问所有键
+	 */
 	public final static class AllKeys extends StringArgument {
 
+		/**
+		 * 构造函数
+		 */
 		public AllKeys() {
 			super("allkeys");
 		}
 
 	}
 
+	/**
+	 * 允许订阅特定通道
+	 */
 	public final static class ChannelPattern extends StringArgument {
 
+		/**
+		 * 构造函数
+		 *
+		 * @param channelPattern
+		 * 		通道模式
+		 */
 		public ChannelPattern(final String channelPattern) {
 			super(channelPattern);
 		}
 
+		/**
+		 * 构造函数
+		 *
+		 * @param channelPattern
+		 * 		通道模式
+		 */
 		public ChannelPattern(final byte[] channelPattern) {
 			super(channelPattern);
 		}
@@ -625,8 +667,14 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	}
 
+	/**
+	 * 允许用户访问所有 Pub/Sub 频道
+	 */
 	public final static class AllChannels extends StringArgument {
 
+		/**
+		 * 构造函数
+		 */
 		public AllChannels() {
 			super("allchannels");
 		}
@@ -638,19 +686,39 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 */
 	public final static class ResetChannels extends StringArgument {
 
+		/**
+		 * 构造函数
+		 */
 		public ResetChannels() {
 			super("resetchannels");
 		}
 
 	}
 
+	/**
+	 * 允许执行某命令
+	 */
 	public final static class AddCommand extends CommandArgument {
 
-		public AddCommand(final Command command) {
+		/**
+		 * 构造函数
+		 *
+		 * @param command
+		 * 		命令
+		 */
+		public AddCommand(final RedisCommand command) {
 			super(command);
 		}
 
-		public AddCommand(final Command command, final SubCommand subCommand) {
+		/**
+		 * 构造函数
+		 *
+		 * @param command
+		 * 		命令
+		 * @param subCommand
+		 * 		子命令
+		 */
+		public AddCommand(final RedisCommand command, final RedisSubCommand subCommand) {
 			super(command, subCommand);
 		}
 
@@ -661,21 +729,44 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	}
 
+	/**
+	 * 允许用户执行所有命令
+	 */
 	public final static class AllCommands extends StringArgument {
 
+		/**
+		 * 构造函数
+		 */
 		public AllCommands() {
 			super("allcommands");
 		}
 
 	}
 
+	/**
+	 * 禁止某命令
+	 */
 	public final static class RemoveCommand extends CommandArgument {
 
-		public RemoveCommand(final Command command) {
+		/**
+		 * 构造函数
+		 *
+		 * @param command
+		 * 		命令
+		 */
+		public RemoveCommand(final RedisCommand command) {
 			super(command);
 		}
 
-		public RemoveCommand(final Command command, final SubCommand subCommand) {
+		/**
+		 * 构造函数
+		 *
+		 * @param command
+		 * 		命令
+		 * @param subCommand
+		 * 		子命令
+		 */
+		public RemoveCommand(final RedisCommand command, final RedisSubCommand subCommand) {
 			super(command, subCommand);
 		}
 
@@ -686,16 +777,31 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	}
 
+	/**
+	 * 禁止用户执行所有命令
+	 */
 	public final static class NoCommands extends StringArgument {
 
+		/**
+		 * 构造函数
+		 */
 		public NoCommands() {
 			super("nocommands");
 		}
 
 	}
 
+	/**
+	 * 允许某类命令
+	 */
 	public final static class AddCategory extends AclCategoryArgument {
 
+		/**
+		 * 构造函数
+		 *
+		 * @param category
+		 * 		类命令
+		 */
 		public AddCategory(final AclCategory category) {
 			super(category);
 		}
@@ -707,8 +813,17 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	}
 
+	/**
+	 * 删除某类命令
+	 */
 	public final static class RemoveCategory extends AclCategoryArgument {
 
+		/**
+		 * 构造函数
+		 *
+		 * @param category
+		 * 		类命令
+		 */
 		public RemoveCategory(final AclCategory category) {
 			super(category);
 		}
@@ -725,6 +840,9 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 */
 	public final static class NoPass extends StringArgument {
 
+		/**
+		 * 构造函数
+		 */
 		public NoPass() {
 			super("nopass");
 		}
@@ -736,18 +854,36 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 */
 	public final static class ResetPass extends StringArgument {
 
+		/**
+		 * 构造函数
+		 */
 		public ResetPass() {
 			super("resetpass");
 		}
 
 	}
 
+	/**
+	 * 设置明文密码
+	 */
 	public final static class AddPassword extends StringArgument {
 
+		/**
+		 * 构造函数
+		 *
+		 * @param password
+		 * 		明文密码
+		 */
 		public AddPassword(final String password) {
 			super(password);
 		}
 
+		/**
+		 * 构造函数
+		 *
+		 * @param password
+		 * 		明文密码
+		 */
 		public AddPassword(final byte[] password) {
 			super(password);
 		}
@@ -759,12 +895,27 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	}
 
+	/**
+	 * 删除明文密码
+	 */
 	public final static class RemovePassword extends StringArgument {
 
+		/**
+		 * 构造函数
+		 *
+		 * @param password
+		 * 		明文密码
+		 */
 		public RemovePassword(final String password) {
 			super(password);
 		}
 
+		/**
+		 * 构造函数
+		 *
+		 * @param password
+		 * 		明文密码
+		 */
 		public RemovePassword(final byte[] password) {
 			super(password);
 		}
@@ -776,12 +927,27 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	}
 
+	/**
+	 * 设置 Hashed 密码
+	 */
 	public final static class AddHashedPassword extends StringArgument {
 
+		/**
+		 * 构造函数
+		 *
+		 * @param password
+		 * 		Hashed 密码
+		 */
 		public AddHashedPassword(final String password) {
 			super(password);
 		}
 
+		/**
+		 * 构造函数
+		 *
+		 * @param password
+		 * 		Hashed 密码
+		 */
 		public AddHashedPassword(final byte[] password) {
 			super(password);
 		}
@@ -793,12 +959,27 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 
 	}
 
+	/**
+	 * 删除 Hashed 密码
+	 */
 	public final static class RemoveHashedPassword extends StringArgument {
 
+		/**
+		 * 构造函数
+		 *
+		 * @param password
+		 * 		Hashed 密码
+		 */
 		public RemoveHashedPassword(final String password) {
 			super(password);
 		}
 
+		/**
+		 * 构造函数
+		 *
+		 * @param password
+		 * 		Hashed 密码
+		 */
 		public RemoveHashedPassword(final byte[] password) {
 			super(password);
 		}
@@ -815,8 +996,11 @@ public class AclSetUserArgument implements ArrayArgument<String> {
 	 */
 	public final static class Reset extends ProtocolCommandArgument {
 
+		/**
+		 * 构造函数
+		 */
 		public Reset() {
-			super(Command.RESET);
+			super(RedisCommand.RESET);
 		}
 
 	}

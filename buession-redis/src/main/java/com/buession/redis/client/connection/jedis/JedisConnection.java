@@ -36,6 +36,8 @@ import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.RedisClient;
 import redis.clients.jedis.builders.StandaloneClientBuilder;
 
+import java.util.Optional;
+
 /**
  * Jedis 单机模式连接器
  *
@@ -117,7 +119,7 @@ public class JedisConnection extends AbstractJedisRedisConnection<RedisClient> i
 	 * 		SSL 配置
 	 */
 	public JedisConnection(JedisDataSource dataSource, int connectTimeout, int soTimeout,
-						   SslConfiguration sslConfiguration) {
+	                       SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
 	}
 
@@ -138,7 +140,7 @@ public class JedisConnection extends AbstractJedisRedisConnection<RedisClient> i
 	 * @since 2.0.0
 	 */
 	public JedisConnection(JedisDataSource dataSource, int connectTimeout, int soTimeout, int infiniteSoTimeout,
-						   SslConfiguration sslConfiguration) {
+	                       SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 	}
 
@@ -191,7 +193,7 @@ public class JedisConnection extends AbstractJedisRedisConnection<RedisClient> i
 	 * @since 3.0.0
 	 */
 	public JedisConnection(JedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
-						   int infiniteSoTimeout) {
+	                       int infiniteSoTimeout) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
 	}
 
@@ -228,7 +230,7 @@ public class JedisConnection extends AbstractJedisRedisConnection<RedisClient> i
 	 * @since 3.0.0
 	 */
 	public JedisConnection(JedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
-						   SslConfiguration sslConfiguration) {
+	                       SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
 	}
 
@@ -251,14 +253,12 @@ public class JedisConnection extends AbstractJedisRedisConnection<RedisClient> i
 	 * @since 3.0.0
 	 */
 	public JedisConnection(JedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
-						   int infiniteSoTimeout, SslConfiguration sslConfiguration) {
+	                       int infiniteSoTimeout, SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 	}
 
 	@Override
 	protected void internalInit() {
-		final JedisDataSource dataSource = (JedisDataSource) getDataSource();
-		setUsePool(dataSource.getPoolConfig() != null);
 	}
 
 	@Override
@@ -284,11 +284,10 @@ public class JedisConnection extends AbstractJedisRedisConnection<RedisClient> i
 					.infiniteSoTimeout(getInfiniteSoTimeout()).database(dataSource.getDatabase()).build();
 
 			final StandaloneClientBuilder<RedisClient> builder = RedisClient.builder().clientConfig(clientConfig)
-					.cacheConfig(getCacheConfig())
 					.hostAndPort(new HostAndPort(dataSource.getHost(), dataSource.getPort()));
-			if(isUsePool()){
-				builder.poolConfig(getConnectionPoolConfig());
-			}
+
+			Optional.ofNullable(getConnectionPoolConfig()).ifPresent(builder::poolConfig);
+			Optional.ofNullable(getCacheConfig()).ifPresent(builder::cacheConfig);
 
 			client = builder.build();
 		}

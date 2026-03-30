@@ -27,7 +27,7 @@ package com.buession.redis.client.lettuce.command;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.core.Keyword;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.CuckooFilterCommands;
 import com.buession.redis.core.command.args.cuckoofilter.CFInsertArgument;
@@ -52,181 +52,181 @@ public final class LettuceCuckooFilterCommands extends AbstractLettuceRedisComma
 	@Override
 	public Status cfAdd(final String key, final String item) {
 		final CommandArguments args = CommandArguments.create(key, item);
-		return executeCommand(Command.CF_ADD, args);
+		return executeCommand(RedisCommand.CF_ADD, args);
 	}
 
 	@Override
 	public Status cfAdd(final byte[] key, final byte[] item) {
 		final CommandArguments args = CommandArguments.create(key, item);
-		return executeCommand(Command.CF_ADD, args);
+		return executeCommand(RedisCommand.CF_ADD, args);
 	}
 
 	@Override
 	public Status cfAddNx(final String key, final String item) {
 		final CommandArguments args = CommandArguments.create(key, item);
-		return executeCommand(Command.CF_ADDNX, args);
+		return executeCommand(RedisCommand.CF_ADDNX, args);
 	}
 
 	@Override
 	public Status cfAddNx(final byte[] key, final byte[] item) {
 		final CommandArguments args = CommandArguments.create(key, item);
-		return executeCommand(Command.CF_ADDNX, args);
+		return executeCommand(RedisCommand.CF_ADDNX, args);
 	}
 
 	@Override
 	public Long cfCount(final String key, final String item) {
 		final CommandArguments args = CommandArguments.create(key, item);
-		return executeCommand(Command.CF_COUNT, args);
+		return executeCommand(RedisCommand.CF_COUNT, args);
 	}
 
 	@Override
 	public Long cfCount(final byte[] key, final byte[] item) {
 		final CommandArguments args = CommandArguments.create(key, item);
-		return executeCommand(Command.CF_COUNT, args);
+		return executeCommand(RedisCommand.CF_COUNT, args);
 	}
 
 	@Override
 	public Status cfDel(final String key, final String item) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.CF_DEL, args);
+		return executeCommand(RedisCommand.CF_DEL, args);
 	}
 
 	@Override
 	public Status cfDel(final byte[] key, final byte[] item) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.CF_DEL, args);
+		return executeCommand(RedisCommand.CF_DEL, args);
 	}
 
 	@Override
 	public Boolean cfExists(final String key, final String item) {
 		final CommandArguments args = CommandArguments.create(key, item);
-		return executeCommand(Command.CF_EXISTS, args);
+		return executeCommand(RedisCommand.CF_EXISTS, args);
 	}
 
 	@Override
 	public Boolean cfExists(final byte[] key, final byte[] item) {
 		final CommandArguments args = CommandArguments.create(key, item);
-		return executeCommand(Command.CF_EXISTS, args);
+		return executeCommand(RedisCommand.CF_EXISTS, args);
 	}
 
 	@Override
 	public Map<String, Object> cfInfo(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.CF_INFO, args);
+		return executeCommand(RedisCommand.CF_INFO, args);
 	}
 
 	@Override
 	public Map<String, Object> cfInfo(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.CF_INFO, args);
+		return executeCommand(RedisCommand.CF_INFO, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsert(final String key, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS, items);
-		return executeCommand(Command.CF_INSERT, args);
+		return executeCommand(RedisCommand.CF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsert(final byte[] key, final byte[]... items) {
 		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS, items);
-		return executeCommand(Command.CF_INSERT, args);
+		return executeCommand(RedisCommand.CF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsert(final String key, final CFInsertArgument argument, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.ITEMS, items);
-		return executeCommand(Command.CF_INSERT, args);
+		return executeCommand(RedisCommand.CF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsert(final byte[] key, final CFInsertArgument argument, final byte[]... items) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.ITEMS, items);
-		return executeCommand(Command.CF_INSERT, args);
+		return executeCommand(RedisCommand.CF_INSERT, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsertNx(final String key, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS, items);
-		return executeCommand(Command.CF_INSERTNX, args);
+		return executeCommand(RedisCommand.CF_INSERTNX, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsertNx(final byte[] key, final byte[]... items) {
 		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS, items);
-		return executeCommand(Command.CF_INSERTNX, args);
+		return executeCommand(RedisCommand.CF_INSERTNX, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsertNx(final String key, final CFInsertArgument argument, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.ITEMS, items);
-		return executeCommand(Command.CF_INSERTNX, args);
+		return executeCommand(RedisCommand.CF_INSERTNX, args);
 	}
 
 	@Override
 	public List<Boolean> cfInsertNx(final byte[] key, final CFInsertArgument argument, final byte[]... items) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.ITEMS, items);
-		return executeCommand(Command.CF_INSERTNX, args);
+		return executeCommand(RedisCommand.CF_INSERTNX, args);
 	}
 
 	@Override
 	public Status cfLoadchunk(final String key, final long iterator, final byte[] data) {
 		final CommandArguments args = CommandArguments.create(key).add(iterator).add(data);
-		return executeCommand(Command.CF_LOADCHUNK, args);
+		return executeCommand(RedisCommand.CF_LOADCHUNK, args);
 	}
 
 	@Override
 	public Status cfLoadchunk(final byte[] key, final long iterator, final byte[] data) {
 		final CommandArguments args = CommandArguments.create(key).add(iterator).add(data);
-		return executeCommand(Command.CF_LOADCHUNK, args);
+		return executeCommand(RedisCommand.CF_LOADCHUNK, args);
 	}
 
 	@Override
 	public List<Boolean> cfMExists(final String key, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(items);
-		return executeCommand(Command.CF_MEXISTS, args);
+		return executeCommand(RedisCommand.CF_MEXISTS, args);
 	}
 
 	@Override
 	public List<Boolean> cfMExists(final byte[] key, final byte[]... items) {
 		final CommandArguments args = CommandArguments.create(key).add(items);
-		return executeCommand(Command.CF_MEXISTS, args);
+		return executeCommand(RedisCommand.CF_MEXISTS, args);
 	}
 
 	@Override
 	public Status cfReserve(final String key, final long capacity) {
 		final CommandArguments args = CommandArguments.create(key, capacity);
-		return executeCommand(Command.CF_RESERVE, args);
+		return executeCommand(RedisCommand.CF_RESERVE, args);
 	}
 
 	@Override
 	public Status cfReserve(final byte[] key, final long capacity) {
 		final CommandArguments args = CommandArguments.create(key, capacity);
-		return executeCommand(Command.CF_RESERVE, args);
+		return executeCommand(RedisCommand.CF_RESERVE, args);
 	}
 
 	@Override
 	public Status cfReserve(final String key, final long capacity, final CFReserveArgument argument) {
 		final CommandArguments args = CommandArguments.create(key, capacity).add(argument);
-		return executeCommand(Command.CF_RESERVE, args);
+		return executeCommand(RedisCommand.CF_RESERVE, args);
 	}
 
 	@Override
 	public Status cfReserve(final byte[] key, final long capacity, final CFReserveArgument argument) {
 		final CommandArguments args = CommandArguments.create(key, capacity).add(argument);
-		return executeCommand(Command.CF_RESERVE, args);
+		return executeCommand(RedisCommand.CF_RESERVE, args);
 	}
 
 	@Override
 	public Map<Long, byte[]> cfScanDump(final String key, final long iterator) {
 		final CommandArguments args = CommandArguments.create(key).add(iterator);
-		return executeCommand(Command.CF_SCANDUMP, args);
+		return executeCommand(RedisCommand.CF_SCANDUMP, args);
 	}
 
 	@Override
 	public Map<Long, byte[]> cfScanDump(final byte[] key, final long iterator) {
 		final CommandArguments args = CommandArguments.create(key).add(iterator);
-		return executeCommand(Command.CF_SCANDUMP, args);
+		return executeCommand(RedisCommand.CF_SCANDUMP, args);
 	}
 
 }

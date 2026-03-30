@@ -27,10 +27,10 @@ package com.buession.redis.client.lettuce.command;
 import com.buession.core.converter.MapConverter;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.core.PubSubListener;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.PubSubCommands;
-import com.buession.redis.core.command.SubCommand;
+import com.buession.redis.core.command.RedisSubCommand;
 import com.buession.redis.core.internal.convert.BinaryListStringListConverter;
 import com.buession.redis.utils.SafeEncoder;
 
@@ -52,13 +52,13 @@ public final class LettucePubSubCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener) {
 		final CommandArguments args = CommandArguments.create(patterns).add(pubSubListener);
-		executeCommand(Command.PSUBSCRIBE, args);
+		executeCommand(RedisCommand.PSUBSCRIBE, args);
 	}
 
 	@Override
 	public void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener) {
 		final CommandArguments args = CommandArguments.create(patterns).add(pubSubListener);
-		executeCommand(Command.PSUBSCRIBE, args);
+		executeCommand(RedisCommand.PSUBSCRIBE, args);
 	}
 
 	@Override
@@ -69,19 +69,19 @@ public final class LettucePubSubCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public Long publish(final byte[] channel, final byte[] message) {
 		final CommandArguments args = CommandArguments.create(channel).add(message);
-		return executeCommand(Command.PUBLISH, args, (cmd)->cmd.publish(channel, message), (v)->v);
+		return executeCommand(RedisCommand.PUBLISH, args, (cmd)->cmd.publish(channel, message), (v)->v);
 	}
 
 	@Override
 	public List<String> pubsubChannels() {
-		return executeCommand(Command.PUBSUB, SubCommand.PUBSUB_CHANNELS, (cmd)->cmd.pubsubChannels(),
+		return executeCommand(RedisCommand.PUBSUB, RedisSubCommand.PUBSUB_CHANNELS, (cmd)->cmd.pubsubChannels(),
 				new BinaryListStringListConverter());
 	}
 
 	@Override
 	public List<String> pubsubChannels(final String pattern) {
 		final CommandArguments args = CommandArguments.create(pattern);
-		return executeCommand(Command.PUBSUB, SubCommand.PUBSUB_CHANNELS, args,
+		return executeCommand(RedisCommand.PUBSUB, RedisSubCommand.PUBSUB_CHANNELS, args,
 				(cmd)->cmd.pubsubChannels(SafeEncoder.encode(pattern)),
 				new BinaryListStringListConverter());
 	}
@@ -89,24 +89,25 @@ public final class LettucePubSubCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public List<byte[]> pubsubChannels(final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create(pattern);
-		return executeCommand(Command.PUBSUB, SubCommand.PUBSUB_CHANNELS, args, (cmd)->cmd.pubsubChannels(pattern));
+		return executeCommand(RedisCommand.PUBSUB, RedisSubCommand.PUBSUB_CHANNELS, args,
+				(cmd)->cmd.pubsubChannels(pattern));
 	}
 
 	@Override
 	public Long pubsubNumPat() {
-		return executeCommand(Command.PUBSUB, SubCommand.PUBSUB_NUMPAT, (cmd)->cmd.pubsubNumpat());
+		return executeCommand(RedisCommand.PUBSUB, RedisSubCommand.PUBSUB_NUMPAT, (cmd)->cmd.pubsubNumpat());
 	}
 
 	@Override
 	public Map<String, Long> pubsubNumSub() {
-		return executeCommand(Command.PUBSUB, SubCommand.PUBSUB_NUMSUB, (cmd)->cmd.pubsubNumsub(),
+		return executeCommand(RedisCommand.PUBSUB, RedisSubCommand.PUBSUB_NUMSUB, (cmd)->cmd.pubsubNumsub(),
 				new MapConverter<>(SafeEncoder::encode, (v)->v));
 	}
 
 	@Override
 	public Map<String, Long> pubsubNumSub(final String... channels) {
 		final CommandArguments args = CommandArguments.create(channels);
-		return executeCommand(Command.PUBSUB, SubCommand.PUBSUB_NUMSUB, args,
+		return executeCommand(RedisCommand.PUBSUB, RedisSubCommand.PUBSUB_NUMSUB, args,
 				(cmd)->cmd.pubsubNumsub(SafeEncoder.encode(channels)),
 				new MapConverter<>(SafeEncoder::encode, (v)->v));
 	}
@@ -114,19 +115,21 @@ public final class LettucePubSubCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public Map<byte[], Long> pubsubNumSub(final byte[]... channels) {
 		final CommandArguments args = CommandArguments.create(channels);
-		return executeCommand(Command.PUBSUB, SubCommand.PUBSUB_NUMSUB, args, (cmd)->cmd.pubsubNumsub(channels));
+		return executeCommand(RedisCommand.PUBSUB, RedisSubCommand.PUBSUB_NUMSUB, args,
+				(cmd)->cmd.pubsubNumsub(channels));
 	}
 
 	@Override
 	public List<String> pubsubShardChannels() {
-		return executeCommand(Command.PUBSUB, SubCommand.PUBSUB_SHARDCHANNELS, (cmd)->cmd.pubsubShardChannels(),
+		return executeCommand(RedisCommand.PUBSUB, RedisSubCommand.PUBSUB_SHARDCHANNELS,
+				(cmd)->cmd.pubsubShardChannels(),
 				new BinaryListStringListConverter());
 	}
 
 	@Override
 	public List<String> pubsubShardChannels(final String pattern) {
 		final CommandArguments args = CommandArguments.create(pattern);
-		return executeCommand(Command.PUBSUB, SubCommand.PUBSUB_SHARDCHANNELS, args,
+		return executeCommand(RedisCommand.PUBSUB, RedisSubCommand.PUBSUB_SHARDCHANNELS, args,
 				(cmd)->cmd.pubsubShardChannels(SafeEncoder.encode(pattern)),
 				new BinaryListStringListConverter());
 	}
@@ -134,20 +137,20 @@ public final class LettucePubSubCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public List<byte[]> pubsubShardChannels(final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create(pattern);
-		return executeCommand(Command.PUBSUB, SubCommand.PUBSUB_SHARDCHANNELS, args,
+		return executeCommand(RedisCommand.PUBSUB, RedisSubCommand.PUBSUB_SHARDCHANNELS, args,
 				(cmd)->cmd.pubsubShardChannels(pattern));
 	}
 
 	@Override
 	public Map<String, Long> pubsubShardNumSub() {
-		return executeCommand(Command.PUBSUB, SubCommand.PUBSUB_SHARDNUMSUB, (cmd)->cmd.pubsubShardNumsub(),
+		return executeCommand(RedisCommand.PUBSUB, RedisSubCommand.PUBSUB_SHARDNUMSUB, (cmd)->cmd.pubsubShardNumsub(),
 				new MapConverter<>(SafeEncoder::encode, (v)->v));
 	}
 
 	@Override
 	public Map<String, Long> pubsubShardNumSub(final String... shardChannels) {
 		final CommandArguments args = CommandArguments.create(shardChannels);
-		return executeCommand(Command.PUBSUB, SubCommand.PUBSUB_SHARDNUMSUB, args,
+		return executeCommand(RedisCommand.PUBSUB, RedisSubCommand.PUBSUB_SHARDNUMSUB, args,
 				(cmd)->cmd.pubsubShardNumsub(SafeEncoder.encode(shardChannels)),
 				new MapConverter<>(SafeEncoder::encode, (v)->v));
 	}
@@ -155,25 +158,25 @@ public final class LettucePubSubCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public Map<byte[], Long> pubsubShardNumSub(final byte[]... shardChannels) {
 		final CommandArguments args = CommandArguments.create(shardChannels);
-		return executeCommand(Command.PUBSUB, SubCommand.PUBSUB_SHARDNUMSUB, args,
+		return executeCommand(RedisCommand.PUBSUB, RedisSubCommand.PUBSUB_SHARDNUMSUB, args,
 				(cmd)->cmd.pubsubShardNumsub(shardChannels));
 	}
 
 	@Override
 	public Object pUnSubscribe() {
-		return executeCommand(Command.PUNSUBSCRIBE);
+		return executeCommand(RedisCommand.PUNSUBSCRIBE);
 	}
 
 	@Override
 	public Object pUnSubscribe(final String... patterns) {
 		final CommandArguments args = CommandArguments.create(patterns);
-		return executeCommand(Command.PUNSUBSCRIBE, args);
+		return executeCommand(RedisCommand.PUNSUBSCRIBE, args);
 	}
 
 	@Override
 	public Object pUnSubscribe(final byte[]... patterns) {
 		final CommandArguments args = CommandArguments.create(patterns);
-		return executeCommand(Command.PUNSUBSCRIBE, args);
+		return executeCommand(RedisCommand.PUNSUBSCRIBE, args);
 	}
 
 	@Override
@@ -184,65 +187,65 @@ public final class LettucePubSubCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public Long sPublish(final byte[] shardchannel, final byte[] message) {
 		final CommandArguments args = CommandArguments.create(shardchannel).add(message);
-		return executeCommand(Command.SPUBLISH, args, (cmd)->cmd.spublish(shardchannel, message));
+		return executeCommand(RedisCommand.SPUBLISH, args, (cmd)->cmd.spublish(shardchannel, message));
 	}
 
 	@Override
 	public void sSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener) {
 		final CommandArguments args = CommandArguments.create(patterns).add(pubSubListener);
-		executeCommand(Command.SSUBSCRIBE, args);
+		executeCommand(RedisCommand.SSUBSCRIBE, args);
 	}
 
 	@Override
 	public void sSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener) {
 		final CommandArguments args = CommandArguments.create(patterns).add(pubSubListener);
-		executeCommand(Command.SSUBSCRIBE, args);
+		executeCommand(RedisCommand.SSUBSCRIBE, args);
 	}
 
 	@Override
 	public void subscribe(final String[] channels, final PubSubListener<String> pubSubListener) {
 		final CommandArguments args = CommandArguments.create(channels).add(pubSubListener);
-		executeCommand(Command.SUBSCRIBE, args);
+		executeCommand(RedisCommand.SUBSCRIBE, args);
 	}
 
 	@Override
 	public void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener) {
 		final CommandArguments args = CommandArguments.create(channels).add(pubSubListener);
-		executeCommand(Command.SUBSCRIBE, args);
+		executeCommand(RedisCommand.SUBSCRIBE, args);
 	}
 
 	@Override
 	public Object sUnSubscribe() {
-		return executeCommand(Command.SUNSUBSCRIBE);
+		return executeCommand(RedisCommand.SUNSUBSCRIBE);
 	}
 
 	@Override
 	public Object sUnSubscribe(final String... shardchannel) {
 		final CommandArguments args = CommandArguments.create(shardchannel);
-		return executeCommand(Command.SUNSUBSCRIBE, args);
+		return executeCommand(RedisCommand.SUNSUBSCRIBE, args);
 	}
 
 	@Override
 	public Object sUnSubscribe(final byte[]... shardchannel) {
 		final CommandArguments args = CommandArguments.create(shardchannel);
-		return executeCommand(Command.SUNSUBSCRIBE, args);
+		return executeCommand(RedisCommand.SUNSUBSCRIBE, args);
 	}
 
 	@Override
 	public Object unSubscribe() {
-		return executeCommand(Command.UNSUBSCRIBE);
+		return executeCommand(RedisCommand.UNSUBSCRIBE);
 	}
 
 	@Override
 	public Object unSubscribe(final String... channels) {
 		final CommandArguments args = CommandArguments.create(channels);
-		return executeCommand(Command.UNSUBSCRIBE, args);
+		return executeCommand(RedisCommand.UNSUBSCRIBE, args);
 	}
 
 	@Override
 	public Object unSubscribe(final byte[]... channels) {
 		final CommandArguments args = CommandArguments.create(channels);
-		return executeCommand(Command.UNSUBSCRIBE, args);
+		return executeCommand(RedisCommand.UNSUBSCRIBE, args);
 	}
 
 }

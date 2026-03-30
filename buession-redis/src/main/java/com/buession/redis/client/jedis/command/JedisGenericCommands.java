@@ -26,7 +26,7 @@ package com.buession.redis.client.jedis.command;
 
 import com.buession.lang.KeyValue;
 import com.buession.redis.client.jedis.JedisRedisClient;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.GenericCommands;
 import com.buession.redis.core.internal.convert.jedis.response.KeyValueConverter;
@@ -46,13 +46,13 @@ public final class JedisGenericCommands extends AbstractJedisRedisCommands imple
 	@Override
 	public Long wait(final int replicas, final int timeout) {
 		final CommandArguments args = CommandArguments.create(replicas).add(timeout);
-		return executeCommand(Command.WAIT, args, (cmd)->cmd.waitReplicas((String) null, replicas, timeout));
+		return executeCommand(RedisCommand.WAIT, args, (cmd)->cmd.waitReplicas((String) null, replicas, timeout));
 	}
 
 	@Override
 	public KeyValue<Long, Long> waitOf(final int locals, final int replicas, final int timeout) {
 		final CommandArguments args = CommandArguments.create(locals).add(replicas).add(timeout);
-		return executeCommand(Command.WAITOF, args,
+		return executeCommand(RedisCommand.WAITOF, args,
 				(cmd)->cmd.waitAOF((String) null, locals, replicas, timeout), new KeyValueConverter<>((k)->k, (v)->v));
 	}
 

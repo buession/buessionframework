@@ -27,7 +27,7 @@ package com.buession.redis.client.jedis.command;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.TdigestInfo;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.TDigestCommands;
 import com.buession.redis.core.internal.convert.jedis.response.TdigestInfoConverter;
@@ -52,7 +52,7 @@ public final class JedisTDigestCommands extends AbstractJedisRedisCommands imple
 	@Override
 	public Status tdigestAdd(final String key, final double... values) {
 		final CommandArguments args = CommandArguments.create(key).add(values);
-		return executeCommand(Command.TDIGEST_ADD, args, (cmd)->cmd.tdigestAdd(rawKey(key), values),
+		return executeCommand(RedisCommand.TDIGEST_ADD, args, (cmd)->cmd.tdigestAdd(rawKey(key), values),
 				new OkStatusConverter());
 	}
 
@@ -64,7 +64,7 @@ public final class JedisTDigestCommands extends AbstractJedisRedisCommands imple
 	@Override
 	public List<Double> tdigestByRank(final String key, final long... ranks) {
 		final CommandArguments args = CommandArguments.create(key).add(ranks);
-		return executeCommand(Command.TDIGEST_BYRANK, args, (cmd)->cmd.tdigestByRank(rawKey(key), ranks));
+		return executeCommand(RedisCommand.TDIGEST_BYRANK, args, (cmd)->cmd.tdigestByRank(rawKey(key), ranks));
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public final class JedisTDigestCommands extends AbstractJedisRedisCommands imple
 	@Override
 	public List<Double> tdigestByRevRank(final String key, final long... ranks) {
 		final CommandArguments args = CommandArguments.create(key).add(ranks);
-		return executeCommand(Command.TDIGEST_BYREVRANK, args, (cmd)->cmd.tdigestByRevRank(rawKey(key), ranks));
+		return executeCommand(RedisCommand.TDIGEST_BYREVRANK, args, (cmd)->cmd.tdigestByRevRank(rawKey(key), ranks));
 	}
 
 	@Override
@@ -86,7 +86,7 @@ public final class JedisTDigestCommands extends AbstractJedisRedisCommands imple
 	@Override
 	public List<Double> tdigestCdf(final String key, final double... values) {
 		final CommandArguments args = CommandArguments.create(key).add(values);
-		return executeCommand(Command.TDIGEST_CDF, args, (cmd)->cmd.tdigestCDF(rawKey(key), values));
+		return executeCommand(RedisCommand.TDIGEST_CDF, args, (cmd)->cmd.tdigestCDF(rawKey(key), values));
 	}
 
 	@Override
@@ -97,7 +97,7 @@ public final class JedisTDigestCommands extends AbstractJedisRedisCommands imple
 	@Override
 	public Status tdigestCreate(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.TDIGEST_CREATE, args, (cmd)->cmd.tdigestCreate(rawKey(key)),
+		return executeCommand(RedisCommand.TDIGEST_CREATE, args, (cmd)->cmd.tdigestCreate(rawKey(key)),
 				new OkStatusConverter());
 	}
 
@@ -109,7 +109,7 @@ public final class JedisTDigestCommands extends AbstractJedisRedisCommands imple
 	@Override
 	public Status tdigestCreate(final String key, final int compression) {
 		final CommandArguments args = CommandArguments.create(key).add("COMPRESSION", compression);
-		return executeCommand(Command.TDIGEST_CREATE, args, (cmd)->cmd.tdigestCreate(rawKey(key), compression),
+		return executeCommand(RedisCommand.TDIGEST_CREATE, args, (cmd)->cmd.tdigestCreate(rawKey(key), compression),
 				new OkStatusConverter());
 	}
 
@@ -121,7 +121,7 @@ public final class JedisTDigestCommands extends AbstractJedisRedisCommands imple
 	@Override
 	public TdigestInfo tdigestInfo(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.TDIGEST_INFO, args, (cmd)->cmd.tdigestInfo(rawKey(key)),
+		return executeCommand(RedisCommand.TDIGEST_INFO, args, (cmd)->cmd.tdigestInfo(rawKey(key)),
 				new TdigestInfoConverter());
 	}
 
@@ -133,7 +133,7 @@ public final class JedisTDigestCommands extends AbstractJedisRedisCommands imple
 	@Override
 	public Double tdigestMax(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.TDIGEST_MAX, args, (cmd)->cmd.tdigestMax(rawKey(key)));
+		return executeCommand(RedisCommand.TDIGEST_MAX, args, (cmd)->cmd.tdigestMax(rawKey(key)));
 	}
 
 	@Override
@@ -144,7 +144,7 @@ public final class JedisTDigestCommands extends AbstractJedisRedisCommands imple
 	@Override
 	public Status tdigestMerge(final String destKey, final String... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys);
-		return executeCommand(Command.TDIGEST_MERGE, args, (cmd)->cmd.tdigestMerge(rawKey(destKey), rawKeys(keys)),
+		return executeCommand(RedisCommand.TDIGEST_MERGE, args, (cmd)->cmd.tdigestMerge(rawKey(destKey), rawKeys(keys)),
 				new OkStatusConverter());
 	}
 
@@ -157,7 +157,7 @@ public final class JedisTDigestCommands extends AbstractJedisRedisCommands imple
 	public Status tdigestMerge(final String destKey, final String[] keys, final int compression) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
 				.add("COMPRESSION", compression);
-		return executeCommand(Command.TDIGEST_MERGE, args,
+		return executeCommand(RedisCommand.TDIGEST_MERGE, args,
 				(cmd)->cmd.tdigestMerge(new JedisTDigestMergeParams(compression), rawKey(destKey), rawKeys(keys)),
 				new OkStatusConverter());
 	}
@@ -169,17 +169,17 @@ public final class JedisTDigestCommands extends AbstractJedisRedisCommands imple
 
 	@Override
 	public Status tdigestMerge(final String destKey, final String[] keys, final int compression,
-							   final boolean override) {
+	                           final boolean override) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
 				.add("COMPRESSION", compression).add(override ? "OVERRIDE" : null);
-		return executeCommand(Command.TDIGEST_MERGE, args,
+		return executeCommand(RedisCommand.TDIGEST_MERGE, args,
 				(cmd)->cmd.tdigestMerge(new JedisTDigestMergeParams(compression, override), rawKey(destKey),
 						rawKeys(keys)), new OkStatusConverter());
 	}
 
 	@Override
 	public Status tdigestMerge(final byte[] destKey, final byte[][] keys, final int compression,
-							   final boolean override) {
+	                           final boolean override) {
 		return tdigestMerge(SafeEncoder.encode(destKey), SafeEncoder.encode(keys), compression, override);
 	}
 
@@ -187,7 +187,7 @@ public final class JedisTDigestCommands extends AbstractJedisRedisCommands imple
 	public Status tdigestMerge(final String destKey, final String[] keys, final boolean override) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
 				.add(override ? "OVERRIDE" : null);
-		return executeCommand(Command.TDIGEST_MERGE, args,
+		return executeCommand(RedisCommand.TDIGEST_MERGE, args,
 				(cmd)->cmd.tdigestMerge(new JedisTDigestMergeParams(override), rawKey(destKey), rawKeys(keys)),
 				new OkStatusConverter());
 	}
@@ -200,7 +200,7 @@ public final class JedisTDigestCommands extends AbstractJedisRedisCommands imple
 	@Override
 	public Double tdigestMin(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.TDIGEST_MIN, args, (cmd)->cmd.tdigestMin(rawKey(key)));
+		return executeCommand(RedisCommand.TDIGEST_MIN, args, (cmd)->cmd.tdigestMin(rawKey(key)));
 	}
 
 	@Override
@@ -211,7 +211,7 @@ public final class JedisTDigestCommands extends AbstractJedisRedisCommands imple
 	@Override
 	public List<Double> tdigestQuantile(final String key, final double... quantiles) {
 		final CommandArguments args = CommandArguments.create(key).add(quantiles);
-		return executeCommand(Command.TDIGEST_QUANTILE, args, (cmd)->cmd.tdigestQuantile(rawKey(key), quantiles));
+		return executeCommand(RedisCommand.TDIGEST_QUANTILE, args, (cmd)->cmd.tdigestQuantile(rawKey(key), quantiles));
 	}
 
 	@Override
@@ -222,7 +222,7 @@ public final class JedisTDigestCommands extends AbstractJedisRedisCommands imple
 	@Override
 	public List<Long> tdigestRank(final String key, final double... values) {
 		final CommandArguments args = CommandArguments.create(key).add(values);
-		return executeCommand(Command.TDIGEST_RANK, args, (cmd)->cmd.tdigestRank(rawKey(key), values));
+		return executeCommand(RedisCommand.TDIGEST_RANK, args, (cmd)->cmd.tdigestRank(rawKey(key), values));
 	}
 
 	@Override
@@ -233,7 +233,7 @@ public final class JedisTDigestCommands extends AbstractJedisRedisCommands imple
 	@Override
 	public Status tdigestReset(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.TDIGEST_RESET, args, (cmd)->cmd.tdigestReset(rawKey(key)),
+		return executeCommand(RedisCommand.TDIGEST_RESET, args, (cmd)->cmd.tdigestReset(rawKey(key)),
 				new OkStatusConverter());
 	}
 
@@ -245,7 +245,7 @@ public final class JedisTDigestCommands extends AbstractJedisRedisCommands imple
 	@Override
 	public List<Long> tdigestRevRank(final String key, final double... values) {
 		final CommandArguments args = CommandArguments.create(key).add(values);
-		return executeCommand(Command.TDIGEST_REVRANK, args, (cmd)->cmd.tdigestRevRank(rawKey(key), values));
+		return executeCommand(RedisCommand.TDIGEST_REVRANK, args, (cmd)->cmd.tdigestRevRank(rawKey(key), values));
 	}
 
 	@Override
@@ -255,15 +255,15 @@ public final class JedisTDigestCommands extends AbstractJedisRedisCommands imple
 
 	@Override
 	public Double tdigestTrimmedMean(final String key, final double lowCutQuantile,
-									 final double highCutQuantile) {
+	                                 final double highCutQuantile) {
 		final CommandArguments args = CommandArguments.create(key).add(lowCutQuantile).add(highCutQuantile);
-		return executeCommand(Command.TDIGEST_TRIMMED_MEAN, args, (cmd)->cmd.tdigestTrimmedMean(rawKey(key),
+		return executeCommand(RedisCommand.TDIGEST_TRIMMED_MEAN, args, (cmd)->cmd.tdigestTrimmedMean(rawKey(key),
 				lowCutQuantile, highCutQuantile));
 	}
 
 	@Override
 	public Double tdigestTrimmedMean(final byte[] key, final double lowCutQuantile,
-									 final double highCutQuantile) {
+	                                 final double highCutQuantile) {
 		return tdigestTrimmedMean(SafeEncoder.encode(key), lowCutQuantile, highCutQuantile);
 	}
 

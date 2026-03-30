@@ -32,7 +32,7 @@ import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.command.args.bloomfilter.BfInfoOption;
 import com.buession.redis.core.Keyword;
 import com.buession.redis.core.command.BloomFilterCommands;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.args.bloomfilter.InsertArgument;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
@@ -58,7 +58,8 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 	@Override
 	public Status bfAdd(final String key, final String item) {
 		final CommandArguments args = CommandArguments.create(key).add(item);
-		return executeCommand(Command.BF_ADD, args, (cmd)->cmd.bfAdd(rawKey(key), item), new BooleanStatusConverter());
+		return executeCommand(
+				RedisCommand.BF_ADD, args, (cmd)->cmd.bfAdd(rawKey(key), item), new BooleanStatusConverter());
 	}
 
 	@Override
@@ -69,7 +70,7 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 	@Override
 	public Long bfCard(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.BF_CARD, args, (cmd)->cmd.bfCard(rawKey(key)));
+		return executeCommand(RedisCommand.BF_CARD, args, (cmd)->cmd.bfCard(rawKey(key)));
 	}
 
 	@Override
@@ -80,7 +81,7 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 	@Override
 	public Boolean bfExists(final String key, final String item) {
 		final CommandArguments args = CommandArguments.create(key).add(item);
-		return executeCommand(Command.BF_EXISTS, args, (cmd)->cmd.bfExists(rawKey(key), item));
+		return executeCommand(RedisCommand.BF_EXISTS, args, (cmd)->cmd.bfExists(rawKey(key), item));
 	}
 
 	@Override
@@ -91,7 +92,7 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 	@Override
 	public Map<String, Number> bfInfo(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.BF_INFO, args, (cmd)->cmd.bfInfo(rawKey(key)),
+		return executeCommand(RedisCommand.BF_INFO, args, (cmd)->cmd.bfInfo(rawKey(key)),
 				new MapConverter<>((k)->k, (v)->(Number) v));
 	}
 
@@ -103,7 +104,7 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 	@Override
 	public Number bfInfo(final String key, final BfInfoOption option) {
 		final CommandArguments args = CommandArguments.create(key).add(option);
-		return executeCommand(Command.BF_INFO, args, (cmd)->cmd.bfInfo(rawKey(key)), (v)->{
+		return executeCommand(RedisCommand.BF_INFO, args, (cmd)->cmd.bfInfo(rawKey(key)), (v)->{
 			Object result = null;
 
 			if(option == BfInfoOption.CAPACITY){
@@ -130,7 +131,7 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 	@Override
 	public List<Boolean> bfInsert(final String key, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS, items);
-		return executeCommand(Command.BF_INSERT, args, (cmd)->cmd.bfInsert(rawKey(key), items));
+		return executeCommand(RedisCommand.BF_INSERT, args, (cmd)->cmd.bfInsert(rawKey(key), items));
 	}
 
 	@Override
@@ -141,7 +142,7 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 	@Override
 	public List<Boolean> bfInsert(final String key, final InsertArgument argument, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.ITEMS, items);
-		return executeCommand(Command.BF_INSERT, args,
+		return executeCommand(RedisCommand.BF_INSERT, args,
 				(cmd)->cmd.bfInsert(rawKey(key), new JedisBFInsertParams(argument), items));
 	}
 
@@ -153,7 +154,7 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 	@Override
 	public Status bfLoadchunk(final String key, final long iterator, final byte[] data) {
 		final CommandArguments args = CommandArguments.create(key).add(iterator).add(data);
-		return executeCommand(Command.BF_LOADCHUNK, args, (cmd)->cmd.bfLoadChunk(rawKey(key), iterator, data),
+		return executeCommand(RedisCommand.BF_LOADCHUNK, args, (cmd)->cmd.bfLoadChunk(rawKey(key), iterator, data),
 				new OkStatusConverter());
 	}
 
@@ -165,7 +166,7 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 	@Override
 	public List<Boolean> bfMAdd(final String key, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(items);
-		return executeCommand(Command.BF_MADD, args, (cmd)->cmd.bfMAdd(rawKey(key), items));
+		return executeCommand(RedisCommand.BF_MADD, args, (cmd)->cmd.bfMAdd(rawKey(key), items));
 	}
 
 	@Override
@@ -176,7 +177,7 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 	@Override
 	public List<Boolean> bfMExists(final String key, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(items);
-		return executeCommand(Command.BF_MEXISTS, args, (cmd)->cmd.bfMExists(rawKey(key), items));
+		return executeCommand(RedisCommand.BF_MEXISTS, args, (cmd)->cmd.bfMExists(rawKey(key), items));
 	}
 
 	@Override
@@ -187,7 +188,7 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 	@Override
 	public Status bfReserve(final String key, final double errorRate, final long capacity) {
 		final CommandArguments args = CommandArguments.create(key).add(errorRate).add(capacity);
-		return executeCommand(Command.BF_RESERVE, args, (cmd)->cmd.bfReserve(rawKey(key), errorRate, capacity),
+		return executeCommand(RedisCommand.BF_RESERVE, args, (cmd)->cmd.bfReserve(rawKey(key), errorRate, capacity),
 				new OkStatusConverter());
 	}
 
@@ -210,7 +211,7 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 
 	@Override
 	public Status bfReserve(final String key, final double errorRate, final long capacity, final int expansion,
-							final boolean nonScaling) {
+	                        final boolean nonScaling) {
 		final CommandArguments args = CommandArguments.create(key).add(errorRate).add(capacity)
 				.add("EXPANSION", expansion).add("NONSCALING");
 		final BFReserveParams bfReserveParams = BFReserveParams.reserveParams().expansion(expansion);
@@ -224,7 +225,7 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 
 	@Override
 	public Status bfReserve(final byte[] key, final double errorRate, final long capacity, final int expansion,
-							final boolean nonScaling) {
+	                        final boolean nonScaling) {
 		return bfReserve(SafeEncoder.encode(key), errorRate, capacity, expansion, nonScaling);
 	}
 
@@ -248,7 +249,7 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 	@Override
 	public Map<Long, byte[]> bfScandump(final String key, final long iterator) {
 		final CommandArguments args = CommandArguments.create(key).add(iterator);
-		return executeCommand(Command.BF_SCANDUMP, args, (cmd)->cmd.bfScanDump(rawKey(key), iterator),
+		return executeCommand(RedisCommand.BF_SCANDUMP, args, (cmd)->cmd.bfScanDump(rawKey(key), iterator),
 				new MapEntryMapConverter<>((k)->k, (v)->v));
 	}
 
@@ -258,8 +259,8 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 	}
 
 	private Status bfReserve(final String key, final double errorRate, final long capacity,
-							 final BFReserveParams bfReserveParams, final CommandArguments args) {
-		return executeCommand(Command.BF_RESERVE, args, (cmd)->cmd.bfReserve(key, errorRate, capacity,
+	                         final BFReserveParams bfReserveParams, final CommandArguments args) {
+		return executeCommand(RedisCommand.BF_RESERVE, args, (cmd)->cmd.bfReserve(key, errorRate, capacity,
 				bfReserveParams), new OkStatusConverter());
 	}
 

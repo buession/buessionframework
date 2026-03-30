@@ -34,7 +34,7 @@ import com.buession.redis.utils.SafeEncoder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public enum SubCommand implements ProtocolCommand {
+public enum RedisSubCommand implements ProtocolCommand {
 	/**
 	 * Cluster command start
 	 **/
@@ -338,7 +338,7 @@ public enum SubCommand implements ProtocolCommand {
 	 */
 	private final boolean write;
 
-	SubCommand(final String mode) {
+	RedisSubCommand(final String mode) {
 		this.name = StringUtils.split(name(), '_')[1];
 		this.raw = SafeEncoder.encode(name);
 		if(Validate.hasText(mode)){
@@ -351,7 +351,7 @@ public enum SubCommand implements ProtocolCommand {
 		}
 	}
 
-	SubCommand(final String name, final String mode) {
+	RedisSubCommand(final String name, final String mode) {
 		this.name = name;
 		this.raw = SafeEncoder.encode(name);
 		if(Validate.hasText(mode)){

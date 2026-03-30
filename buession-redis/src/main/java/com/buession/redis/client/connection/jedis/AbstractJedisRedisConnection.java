@@ -24,11 +24,15 @@
  */
 package com.buession.redis.client.connection.jedis;
 
+import com.buession.core.Executor;
 import com.buession.redis.client.connection.AbstractRedisConnection;
 import com.buession.net.ssl.SslConfiguration;
+import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisRedisDataSource;
 import com.buession.redis.core.PoolConfig;
+import com.buession.redis.exception.JedisRedisExceptionUtils;
+import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.jedis.JedisPipeline;
 import com.buession.redis.pipeline.jedis.JedisPipelineProxy;
@@ -112,7 +116,7 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 	 * @since 2.0.0
 	 */
 	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource, int connectTimeout, int soTimeout,
-										int infiniteSoTimeout) {
+	                                    int infiniteSoTimeout) {
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
 	}
 
@@ -141,7 +145,7 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 	 * 		SSL 配置
 	 */
 	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource, int connectTimeout, int soTimeout,
-										SslConfiguration sslConfiguration) {
+	                                    SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
 	}
 
@@ -162,7 +166,7 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 	 * @since 2.0.0
 	 */
 	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource, int connectTimeout, int soTimeout,
-										int infiniteSoTimeout, SslConfiguration sslConfiguration) {
+	                                    int infiniteSoTimeout, SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 	}
 
@@ -195,7 +199,7 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 	 * @since 3.0.0
 	 */
 	public AbstractJedisRedisConnection(DataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-										int soTimeout) {
+	                                    int soTimeout) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout);
 	}
 
@@ -216,7 +220,7 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 	 * @since 3.0.0
 	 */
 	public AbstractJedisRedisConnection(DataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
-										int infiniteSoTimeout) {
+	                                    int infiniteSoTimeout) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
 	}
 
@@ -233,7 +237,7 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 	 * @since 3.0.0
 	 */
 	public AbstractJedisRedisConnection(DataSource dataSource, PoolConfig poolConfig,
-										SslConfiguration sslConfiguration) {
+	                                    SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, sslConfiguration);
 	}
 
@@ -254,7 +258,7 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 	 * @since 3.0.0
 	 */
 	public AbstractJedisRedisConnection(DataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
-										SslConfiguration sslConfiguration) {
+	                                    SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
 	}
 
@@ -277,7 +281,7 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 	 * @since 3.0.0
 	 */
 	public AbstractJedisRedisConnection(DataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
-										int infiniteSoTimeout, SslConfiguration sslConfiguration) {
+	                                    int infiniteSoTimeout, SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 	}
 
@@ -294,6 +298,15 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 	@Override
 	public C getClient() {
 		return client;
+	}
+
+	@Override
+	public <R> R execute(final Executor<RedisConnection, R> executor) throws RedisException {
+		try{
+			return executor.execute(this);
+		}catch(Exception e){
+			throw JedisRedisExceptionUtils.convert(e);
+		}
 	}
 
 	@Override
@@ -317,6 +330,10 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 	}
 
 	protected ConnectionPoolConfig getConnectionPoolConfig() {
+		if(getPoolConfig() == null){
+			return null;
+		}
+
 		final ConnectionPoolConfig connectionPoolConfig = new ConnectionPoolConfig();
 
 		getPoolConfig().toGenericObjectPoolConfig(connectionPoolConfig);

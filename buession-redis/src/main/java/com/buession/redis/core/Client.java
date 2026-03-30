@@ -25,8 +25,8 @@
 package com.buession.redis.core;
 
 import com.buession.net.HostAndPort;
-import com.buession.redis.core.command.Command;
-import com.buession.redis.core.command.SubCommand;
+import com.buession.redis.core.command.RedisCommand;
+import com.buession.redis.core.command.RedisSubCommand;
 import com.buession.redis.utils.ObjectStringBuilder;
 
 import java.io.Serializable;
@@ -246,12 +246,12 @@ public class Client implements Serializable {
 	/**
 	 * 最近一次执行的命令
 	 */
-	private Command cmd;
+	private RedisCommand cmd;
 
 	/**
 	 * 最近一次执行的命令子命令
 	 */
-	private SubCommand subCmd;
+	private RedisSubCommand subCmd;
 
 	/**
 	 * 获取客户端 ID
@@ -972,7 +972,7 @@ public class Client implements Serializable {
 	 *
 	 * @return 最近一次执行的命令
 	 */
-	public Command getCmd() {
+	public RedisCommand getCmd() {
 		return cmd;
 	}
 
@@ -982,7 +982,7 @@ public class Client implements Serializable {
 	 * @param cmd
 	 * 		最近一次执行的命令
 	 */
-	public void setCmd(Command cmd) {
+	public void setCmd(RedisCommand cmd) {
 		this.cmd = cmd;
 	}
 
@@ -993,7 +993,7 @@ public class Client implements Serializable {
 	 *
 	 * @since 4.0.0
 	 */
-	public SubCommand getSubCmd() {
+	public RedisSubCommand getSubCmd() {
 		return subCmd;
 	}
 
@@ -1005,7 +1005,7 @@ public class Client implements Serializable {
 	 *
 	 * @since 4.0.0
 	 */
-	public void setSubCmd(SubCommand subCmd) {
+	public void setSubCmd(RedisSubCommand subCmd) {
 		this.subCmd = subCmd;
 	}
 

@@ -38,14 +38,13 @@ import redis.clients.jedis.resps.AccessControlLogEntry;
  */
 public final class AccessControlLogEntryConverter implements Converter<AccessControlLogEntry, AclLog> {
 
-	private final static ClientConverter clientConverter = new ClientConverter();
-
 	@Override
 	public AclLog convert(final AccessControlLogEntry source) {
 		if(source == null){
 			return null;
 		}
 
+		final ClientConverter clientConverter = new ClientConverter();
 		final Client client = clientConverter.convert((String) source.getlogEntry().get("client-info"));
 
 		return new AclLog(source.getEntryId(), source.getCount(), source.getReason(), source.getContext(),

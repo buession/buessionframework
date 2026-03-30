@@ -27,7 +27,7 @@ package com.buession.redis.client.jedis.command;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.jedis.JedisRedisClient;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.TransactionCommands;
 
@@ -48,7 +48,7 @@ public final class JedisTransactionCommands extends AbstractJedisRedisCommands i
 
 	@Override
 	public Status discard() {
-		return executeCommand(Command.DISCARD, (cmd)->{
+		return executeCommand(RedisCommand.DISCARD, (cmd)->{
 			RedisConnection connection = client.getConnection();
 			return connection.discard();
 		});
@@ -56,7 +56,7 @@ public final class JedisTransactionCommands extends AbstractJedisRedisCommands i
 
 	@Override
 	public List<Object> exec() {
-		return executeCommand(Command.EXEC, (cmd)->{
+		return executeCommand(RedisCommand.EXEC, (cmd)->{
 			RedisConnection connection = client.getConnection();
 			return connection.exec();
 			/*
@@ -75,7 +75,7 @@ public final class JedisTransactionCommands extends AbstractJedisRedisCommands i
 
 	@Override
 	public Status multi() {
-		return executeCommand(Command.MULTI, (cmd)->{
+		return executeCommand(RedisCommand.MULTI, (cmd)->{
 			cmd.multi();
 			return Status.SUCCESS;
 		});
@@ -83,7 +83,7 @@ public final class JedisTransactionCommands extends AbstractJedisRedisCommands i
 
 	@Override
 	public Status unwatch() {
-		return executeCommand(Command.UNWATCH, (cmd)->{
+		return executeCommand(RedisCommand.UNWATCH, (cmd)->{
 			//cmd.unwatch();
 			return Status.SUCCESS;
 		});
@@ -92,7 +92,7 @@ public final class JedisTransactionCommands extends AbstractJedisRedisCommands i
 	@Override
 	public Status watch(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.WATCH, args, (cmd)->{
+		return executeCommand(RedisCommand.WATCH, args, (cmd)->{
 			//cmd.unwatch();
 			return Status.SUCCESS;
 		});
@@ -101,7 +101,7 @@ public final class JedisTransactionCommands extends AbstractJedisRedisCommands i
 	@Override
 	public Status watch(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.WATCH, args, (cmd)->{
+		return executeCommand(RedisCommand.WATCH, args, (cmd)->{
 			//cmd.unwatch();
 			return Status.SUCCESS;
 		});

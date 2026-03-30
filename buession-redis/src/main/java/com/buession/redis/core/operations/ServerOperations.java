@@ -45,7 +45,7 @@ import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.RedisServerTime;
 import com.buession.redis.core.Role;
 import com.buession.redis.core.SlowLog;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.ServerCommands;
 import com.buession.redis.core.command.args.acl.AclSetUserArgument;
 import com.buession.redis.core.command.args.server.FailoverArgument;
@@ -73,12 +73,12 @@ public interface ServerOperations extends ServerCommands, RedisOperations {
 	}
 
 	@Override
-	default Set<Command> aclCat(final String categoryName) {
+	default Set<RedisCommand> aclCat(final String categoryName) {
 		return execute((client)->client.serverCommands().aclCat(categoryName));
 	}
 
 	@Override
-	default Set<Command> aclCat(final byte[] categoryName) {
+	default Set<RedisCommand> aclCat(final byte[] categoryName) {
 		return execute((client)->client.serverCommands().aclCat(categoryName));
 	}
 
@@ -93,22 +93,22 @@ public interface ServerOperations extends ServerCommands, RedisOperations {
 	}
 
 	@Override
-	default Status aclDryRun(final String username, final Command command) {
+	default Status aclDryRun(final String username, final RedisCommand command) {
 		return execute((client)->client.serverCommands().aclDryRun(username, command));
 	}
 
 	@Override
-	default Status aclDryRun(final byte[] username, final Command command) {
+	default Status aclDryRun(final byte[] username, final RedisCommand command) {
 		return execute((client)->client.serverCommands().aclDryRun(username, command));
 	}
 
 	@Override
-	default Status aclDryRun(final String username, final Command command, final String... arguments) {
+	default Status aclDryRun(final String username, final RedisCommand command, final String... arguments) {
 		return execute((client)->client.serverCommands().aclDryRun(username, command, arguments));
 	}
 
 	@Override
-	default Status aclDryRun(final byte[] username, final Command command, final byte[]... arguments) {
+	default Status aclDryRun(final byte[] username, final RedisCommand command, final byte[]... arguments) {
 		return execute((client)->client.serverCommands().aclDryRun(username, command, arguments));
 	}
 
@@ -203,37 +203,37 @@ public interface ServerOperations extends ServerCommands, RedisOperations {
 	}
 
 	@Override
-	default List<CommandDoc> commandDocs(final Command... commands) {
+	default List<CommandDoc> commandDocs(final RedisCommand... commands) {
 		return execute((client)->client.serverCommands().commandDocs(commands));
 	}
 
 	@Override
-	default List<String> commandGetKeys(final Command command) {
+	default List<String> commandGetKeys(final RedisCommand command) {
 		return execute((client)->client.serverCommands().commandGetKeys(command));
 	}
 
 	@Override
-	default List<String> commandGetKeys(final Command command, final String... arguments) {
+	default List<String> commandGetKeys(final RedisCommand command, final String... arguments) {
 		return execute((client)->client.serverCommands().commandGetKeys(command, arguments));
 	}
 
 	@Override
-	default List<CommandKeyAndFlag> commandGetKeysAndFlags(final Command command) {
+	default List<CommandKeyAndFlag> commandGetKeysAndFlags(final RedisCommand command) {
 		return execute((client)->client.serverCommands().commandGetKeysAndFlags(command));
 	}
 
 	@Override
-	default List<CommandKeyAndFlag> commandGetKeysAndFlags(final Command command, final String... arguments) {
+	default List<CommandKeyAndFlag> commandGetKeysAndFlags(final RedisCommand command, final String... arguments) {
 		return execute((client)->client.serverCommands().commandGetKeysAndFlags(command, arguments));
 	}
 
 	@Override
-	default List<CommandInfo> commandInfo(final Command... commands) {
+	default List<CommandInfo> commandInfo(final RedisCommand... commands) {
 		return execute((client)->client.serverCommands().commandInfo(commands));
 	}
 
 	@Override
-	default List<Command> commandList() {
+	default List<RedisCommand> commandList() {
 		return execute((client)->client.serverCommands().commandList());
 	}
 
@@ -374,7 +374,7 @@ public interface ServerOperations extends ServerCommands, RedisOperations {
 	}
 
 	@Override
-	default List<LatencyHistogram> latencyHistogram(final Command... commands) {
+	default List<LatencyHistogram> latencyHistogram(final RedisCommand... commands) {
 		return execute((client)->client.serverCommands().latencyHistogram(commands));
 	}
 
@@ -555,13 +555,13 @@ public interface ServerOperations extends ServerCommands, RedisOperations {
 
 	@Override
 	default Status restoreAsking(final String key, final byte[] serializedValue, final int ttl,
-								 final RestoreArgument argument) {
+	                             final RestoreArgument argument) {
 		return execute((client)->client.serverCommands().restoreAsking(key, serializedValue, ttl, argument));
 	}
 
 	@Override
 	default Status restoreAsking(final byte[] key, final byte[] serializedValue, final int ttl,
-								 final RestoreArgument argument) {
+	                             final RestoreArgument argument) {
 		return execute((client)->client.serverCommands().restoreAsking(key, serializedValue, ttl, argument));
 	}
 

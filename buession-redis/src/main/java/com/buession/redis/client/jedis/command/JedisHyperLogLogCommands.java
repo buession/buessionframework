@@ -26,7 +26,7 @@ package com.buession.redis.client.jedis.command;
 
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.HyperLogLogCommands;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
@@ -47,38 +47,40 @@ public final class JedisHyperLogLogCommands extends AbstractJedisRedisCommands i
 	@Override
 	public Status pfAdd(final String key, final String... elements) {
 		final CommandArguments args = CommandArguments.create(key).add(elements);
-		return executeCommand(Command.PFADD, args, (cmd)->cmd.pfadd(rawKey(key), elements), new OneStatusConverter());
+		return executeCommand(
+				RedisCommand.PFADD, args, (cmd)->cmd.pfadd(rawKey(key), elements), new OneStatusConverter());
 	}
 
 	@Override
 	public Status pfAdd(final byte[] key, final byte[]... elements) {
 		final CommandArguments args = CommandArguments.create(key).add(elements);
-		return executeCommand(Command.PFADD, args, (cmd)->cmd.pfadd(rawKey(key), elements), new OneStatusConverter());
+		return executeCommand(
+				RedisCommand.PFADD, args, (cmd)->cmd.pfadd(rawKey(key), elements), new OneStatusConverter());
 	}
 
 	@Override
 	public Long pfCount(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.PFCOUNT, args, (cmd)->cmd.pfcount(rawKeys(keys)));
+		return executeCommand(RedisCommand.PFCOUNT, args, (cmd)->cmd.pfcount(rawKeys(keys)));
 	}
 
 	@Override
 	public Long pfCount(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.PFCOUNT, args, (cmd)->cmd.pfcount(rawKeys(keys)));
+		return executeCommand(RedisCommand.PFCOUNT, args, (cmd)->cmd.pfcount(rawKeys(keys)));
 	}
 
 	@Override
 	public Status pfMerge(final String destKey, final String... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-		return executeCommand(Command.PFADD, args, (cmd)->cmd.pfmerge(rawKey(destKey), rawKeys(keys)),
+		return executeCommand(RedisCommand.PFADD, args, (cmd)->cmd.pfmerge(rawKey(destKey), rawKeys(keys)),
 				new OkStatusConverter());
 	}
 
 	@Override
 	public Status pfMerge(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-		return executeCommand(Command.PFADD, args, (cmd)->cmd.pfmerge(rawKey(destKey), rawKeys(keys)),
+		return executeCommand(RedisCommand.PFADD, args, (cmd)->cmd.pfmerge(rawKey(destKey), rawKeys(keys)),
 				new OkStatusConverter());
 	}
 

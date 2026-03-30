@@ -29,7 +29,7 @@ import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.CmsInfo;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.CountMinSketchCommands;
 import com.buession.redis.core.internal.convert.response.CmsInfoConverter;
@@ -57,7 +57,7 @@ public final class JedisCountMinSketchCommands extends AbstractJedisRedisCommand
 		final CommandArguments args = CommandArguments.create(key).add(items);
 		final ArrayKeyValueMapConverter<String, Long, String, Long> arrayKeyValueMapConverter = new ArrayKeyValueMapConverter<>(
 				(k)->k, (v)->v);
-		return executeCommand(Command.CMS_INCRBY, args,
+		return executeCommand(RedisCommand.CMS_INCRBY, args,
 				(cmd)->cmd.cmsIncrBy(rawKey(key), arrayKeyValueMapConverter.convert(items)));
 	}
 
@@ -67,14 +67,14 @@ public final class JedisCountMinSketchCommands extends AbstractJedisRedisCommand
 		final CommandArguments args = CommandArguments.create(key).add(items);
 		final ArrayKeyValueMapConverter<byte[], Long, String, Long> arrayKeyValueMapConverter = new ArrayKeyValueMapConverter<>(
 				SafeEncoder::encode, (v)->v);
-		return executeCommand(Command.CMS_INCRBY, args,
+		return executeCommand(RedisCommand.CMS_INCRBY, args,
 				(cmd)->cmd.cmsIncrBy(SafeEncoder.encode(rawKey(key)), arrayKeyValueMapConverter.convert(items)));
 	}
 
 	@Override
 	public CmsInfo cmsInfo(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(Command.CMS_INFO, args, (cmd)->cmd.cmsInfo(rawKey(key)), new CmsInfoConverter());
+		return executeCommand(RedisCommand.CMS_INFO, args, (cmd)->cmd.cmsInfo(rawKey(key)), new CmsInfoConverter());
 	}
 
 	@Override
@@ -85,7 +85,7 @@ public final class JedisCountMinSketchCommands extends AbstractJedisRedisCommand
 	@Override
 	public Status cmsInitByDim(final String key, final int width, final int depth) {
 		final CommandArguments args = CommandArguments.create(key).add(width).add(depth);
-		return executeCommand(Command.CMS_INITBYDIM, args, (cmd)->cmd.cmsInitByDim(rawKey(key), width, depth),
+		return executeCommand(RedisCommand.CMS_INITBYDIM, args, (cmd)->cmd.cmsInitByDim(rawKey(key), width, depth),
 				new OkStatusConverter());
 	}
 
@@ -97,7 +97,8 @@ public final class JedisCountMinSketchCommands extends AbstractJedisRedisCommand
 	@Override
 	public Status cmsInitByProb(final String key, final double error, final double probability) {
 		final CommandArguments args = CommandArguments.create(key).add(error).add(probability);
-		return executeCommand(Command.CMS_INITBYPROB, args, (cmd)->cmd.cmsInitByProb(rawKey(key), error, probability),
+		return executeCommand(
+				RedisCommand.CMS_INITBYPROB, args, (cmd)->cmd.cmsInitByProb(rawKey(key), error, probability),
 				new OkStatusConverter());
 	}
 
@@ -115,7 +116,7 @@ public final class JedisCountMinSketchCommands extends AbstractJedisRedisCommand
 		final CommandArguments args = CommandArguments.create(key).add(data.length).add(keysAndWeights.keySet())
 				.add("WEIGHTS").add(keysAndWeights.values());
 
-		return executeCommand(Command.CMS_MERGE, args, (cmd)->cmd.cmsMerge(rawKey(key), keysAndWeights),
+		return executeCommand(RedisCommand.CMS_MERGE, args, (cmd)->cmd.cmsMerge(rawKey(key), keysAndWeights),
 				new OkStatusConverter());
 	}
 
@@ -128,14 +129,14 @@ public final class JedisCountMinSketchCommands extends AbstractJedisRedisCommand
 		final CommandArguments args = CommandArguments.create(key).add(data.length).add(keysAndWeights.keySet())
 				.add("WEIGHTS").add(keysAndWeights.values());
 
-		return executeCommand(Command.CMS_MERGE, args,
+		return executeCommand(RedisCommand.CMS_MERGE, args,
 				(cmd)->cmd.cmsMerge(rawKey(SafeEncoder.encode(key)), keysAndWeights), new OkStatusConverter());
 	}
 
 	@Override
 	public List<Long> cmsQuery(final String key, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(items);
-		return executeCommand(Command.CMS_QUERY, args, (cmd)->cmd.cmsQuery(rawKey(key), items), (v)->v);
+		return executeCommand(RedisCommand.CMS_QUERY, args, (cmd)->cmd.cmsQuery(rawKey(key), items), (v)->v);
 	}
 
 	@Override

@@ -144,7 +144,7 @@ public class LettuceConnection extends AbstractLettuceRedisConnection<StatefulRe
 	 * 		SSL 配置
 	 */
 	public LettuceConnection(LettuceDataSource dataSource, int connectTimeout, int soTimeout,
-							 SslConfiguration sslConfiguration) {
+	                         SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
 	}
 
@@ -163,7 +163,7 @@ public class LettuceConnection extends AbstractLettuceRedisConnection<StatefulRe
 	 * 		SSL 配置
 	 */
 	public LettuceConnection(LettuceDataSource dataSource, int connectTimeout, int soTimeout, int infiniteSoTimeout,
-							 SslConfiguration sslConfiguration) {
+	                         SslConfiguration sslConfiguration) {
 		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 	}
 
@@ -210,7 +210,7 @@ public class LettuceConnection extends AbstractLettuceRedisConnection<StatefulRe
 	 * 		Infinite 读取超时（单位：毫秒）
 	 */
 	public LettuceConnection(LettuceDataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
-							 int infiniteSoTimeout) {
+	                         int infiniteSoTimeout) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
 	}
 
@@ -243,7 +243,7 @@ public class LettuceConnection extends AbstractLettuceRedisConnection<StatefulRe
 	 * 		SSL 配置
 	 */
 	public LettuceConnection(LettuceDataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
-							 SslConfiguration sslConfiguration) {
+	                         SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
 	}
 
@@ -264,7 +264,7 @@ public class LettuceConnection extends AbstractLettuceRedisConnection<StatefulRe
 	 * 		SSL 配置
 	 */
 	public LettuceConnection(LettuceDataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
-							 int infiniteSoTimeout, SslConfiguration sslConfiguration) {
+	                         int infiniteSoTimeout, SslConfiguration sslConfiguration) {
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 	}
 
@@ -286,17 +286,13 @@ public class LettuceConnection extends AbstractLettuceRedisConnection<StatefulRe
 		}
 	}
 
-	protected boolean isUsePool() {
-		return pool != null;
-	}
-
 	protected <K, V> StatefulRedisConnection<K, V> createStatefulRedisConnection(final RedisCodec<K, V> codec) {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
 		final LettuceDataSource dataSource = (LettuceDataSource) getDataSource();
 		final RedisURI redisURI = RedisURI.create(dataSource.getHost(), dataSource.getPort());
 		final RedisCredentialsProvider redisCredentialsProvider = Validate.hasText(dataSource.getPassword()) ?
 				new StaticCredentialsProvider(Validate.hasText(dataSource.getUsername()) ? dataSource.getUsername() :
-						null, dataSource.getPassword().toCharArray()) : null;
+											  null, dataSource.getPassword().toCharArray()) : null;
 
 		if(dataSource.getDatabase() >= 0){
 			redisURI.setDatabase(dataSource.getDatabase());
@@ -342,7 +338,7 @@ public class LettuceConnection extends AbstractLettuceRedisConnection<StatefulRe
 			return Status.SUCCESS;
 		}
 
-		if(isUsePool()){
+		if(pool != null){
 			try{
 				conn = pool.getResource();
 

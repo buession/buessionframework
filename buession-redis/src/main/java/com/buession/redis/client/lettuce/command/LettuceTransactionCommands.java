@@ -27,7 +27,7 @@ package com.buession.redis.client.lettuce.command;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
-import com.buession.redis.core.command.Command;
+import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.TransactionCommands;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
@@ -50,7 +50,7 @@ public final class LettuceTransactionCommands extends AbstractLettuceRedisComman
 
 	@Override
 	public Status discard() {
-		return executeCommand(Command.DISCARD, (cmd)->{
+		return executeCommand(RedisCommand.DISCARD, (cmd)->{
 			RedisConnection connection = client.getConnection();
 			return connection.discard();
 		});
@@ -58,29 +58,29 @@ public final class LettuceTransactionCommands extends AbstractLettuceRedisComman
 
 	@Override
 	public List<Object> exec() {
-		return executeCommand(Command.EXEC, (cmd)->cmd.exec(), (v)->v.stream().collect(Collectors.toList()));
+		return executeCommand(RedisCommand.EXEC, (cmd)->cmd.exec(), (v)->v.stream().collect(Collectors.toList()));
 	}
 
 	@Override
 	public Status multi() {
-		return executeCommand(Command.MULTI, (cmd)->cmd.multi(), new OkStatusConverter());
+		return executeCommand(RedisCommand.MULTI, (cmd)->cmd.multi(), new OkStatusConverter());
 	}
 
 	@Override
 	public Status unwatch() {
-		return executeCommand(Command.UNWATCH, (cmd)->cmd.unwatch(), new OkStatusConverter());
+		return executeCommand(RedisCommand.UNWATCH, (cmd)->cmd.unwatch(), new OkStatusConverter());
 	}
 
 	@Override
 	public Status watch(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.WATCH, args, (cmd)->cmd.watch(rawBinaryKeys(keys)), new OkStatusConverter());
+		return executeCommand(RedisCommand.WATCH, args, (cmd)->cmd.watch(rawBinaryKeys(keys)), new OkStatusConverter());
 	}
 
 	@Override
 	public Status watch(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(Command.WATCH, args, (cmd)->cmd.watch(rawKeys(keys)), new OkStatusConverter());
+		return executeCommand(RedisCommand.WATCH, args, (cmd)->cmd.watch(rawKeys(keys)), new OkStatusConverter());
 	}
 
 }

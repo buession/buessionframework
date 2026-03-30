@@ -27,6 +27,7 @@ package com.buession.redis;
 import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.datasource.DataSource;
+import com.buession.redis.core.Options;
 import com.buession.redis.core.command.*;
 
 import java.util.List;
@@ -58,6 +59,18 @@ public abstract class AbstractRedisTemplate extends RedisAccessor implements Aut
 	 */
 	public AbstractRedisTemplate(DataSource dataSource) {
 		super(dataSource);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		数据源
+	 * @param options
+	 * 		配置选项
+	 */
+	public AbstractRedisTemplate(DataSource dataSource, Options options) {
+		super(dataSource, options);
 	}
 
 	@Override

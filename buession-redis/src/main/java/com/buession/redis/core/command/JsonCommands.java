@@ -748,6 +748,8 @@ public interface JsonCommands extends RedisCommands {
 	 * 		Key
 	 * @param path
 	 * 		JSONPath 表达式
+	 * @param value
+	 * 		要合并进去的 JSON 字符串
 	 *
 	 * @return 操作结果
 	 */
@@ -762,6 +764,8 @@ public interface JsonCommands extends RedisCommands {
 	 * 		Key
 	 * @param path
 	 * 		JSONPath 表达式
+	 * @param value
+	 * 		要合并进去的 JSON 字符串
 	 *
 	 * @return 操作结果
 	 */

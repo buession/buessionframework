@@ -81,7 +81,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return A list of ACL categories or a list of commands inside a given category
 	 */
-	Set<Command> aclCat(final String categoryName);
+	Set<RedisCommand> aclCat(final String categoryName);
 
 	/**
 	 * The command shows all the Redis commands in the specified category
@@ -93,7 +93,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return A list of ACL categories or a list of commands inside a given category
 	 */
-	Set<Command> aclCat(final byte[] categoryName);
+	Set<RedisCommand> aclCat(final byte[] categoryName);
 
 	/**
 	 * Delete all the specified ACL users and terminate all the connections that are authenticated with such users
@@ -131,7 +131,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return 测试结果
 	 */
-	Status aclDryRun(final String username, final Command command);
+	Status aclDryRun(final String username, final RedisCommand command);
 
 	/**
 	 * 在不实际执行命令的情况下，模拟测试某个用户是否具备执行特定命令的权限
@@ -145,23 +145,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return 测试结果
 	 */
-	Status aclDryRun(final byte[] username, final Command command);
-
-	/**
-	 * 在不实际执行命令的情况下，模拟测试某个用户是否具备执行特定命令的权限
-	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/acl-dryrun/" target="_blank">https://redis.io/docs/latest/commands/acl-dryrun/</a></p>
-	 *
-	 * @param username
-	 * 		用户名
-	 * @param command
-	 * 		命令
-	 * @param arguments
-	 * 		参数
-	 *
-	 * @return 测试结果
-	 */
-	Status aclDryRun(final String username, final Command command, final String... arguments);
+	Status aclDryRun(final byte[] username, final RedisCommand command);
 
 	/**
 	 * 在不实际执行命令的情况下，模拟测试某个用户是否具备执行特定命令的权限
@@ -177,7 +161,23 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return 测试结果
 	 */
-	Status aclDryRun(final byte[] username, final Command command, final byte[]... arguments);
+	Status aclDryRun(final String username, final RedisCommand command, final String... arguments);
+
+	/**
+	 * 在不实际执行命令的情况下，模拟测试某个用户是否具备执行特定命令的权限
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/acl-dryrun/" target="_blank">https://redis.io/docs/latest/commands/acl-dryrun/</a></p>
+	 *
+	 * @param username
+	 * 		用户名
+	 * @param command
+	 * 		命令
+	 * @param arguments
+	 * 		参数
+	 *
+	 * @return 测试结果
+	 */
+	Status aclDryRun(final byte[] username, final RedisCommand command, final byte[]... arguments);
 
 	/**
 	 * ACL users need a solid password in order to authenticate to the server without security risks
@@ -375,7 +375,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return The documentary information about commands.
 	 */
-	List<CommandDoc> commandDocs(final Command... commands);
+	List<CommandDoc> commandDocs(final RedisCommand... commands);
 
 	/**
 	 * Returns Array reply of keys from a full Redis command.
@@ -387,7 +387,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return The keys from a full Redis command.
 	 */
-	List<String> commandGetKeys(final Command command);
+	List<String> commandGetKeys(final RedisCommand command);
 
 	/**
 	 * Returns Array reply of keys from a full Redis command.
@@ -401,7 +401,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return The keys from a full Redis command.
 	 */
-	List<String> commandGetKeys(final Command command, final String... args);
+	List<String> commandGetKeys(final RedisCommand command, final String... args);
 
 	/**
 	 * Returns Array reply of keys from a full Redis command and their usage flags.
@@ -413,7 +413,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return The keys from a full Redis command and their usage flags.
 	 */
-	List<CommandKeyAndFlag> commandGetKeysAndFlags(final Command command);
+	List<CommandKeyAndFlag> commandGetKeysAndFlags(final RedisCommand command);
 
 	/**
 	 * Returns Array reply of keys from a full Redis command and their usage flags.
@@ -427,7 +427,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return The keys from a full Redis command and their usage flags.
 	 */
-	List<CommandKeyAndFlag> commandGetKeysAndFlags(final Command command, final String... args);
+	List<CommandKeyAndFlag> commandGetKeysAndFlags(final RedisCommand command, final String... args);
 
 	/**
 	 * Returns Array reply of details about multiple Redis commands.
@@ -439,7 +439,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return The details about multiple Redis commands.
 	 */
-	List<CommandInfo> commandInfo(final Command... commands);
+	List<CommandInfo> commandInfo(final RedisCommand... commands);
 
 	/**
 	 * Return an array of the server's command names.
@@ -448,7 +448,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return The server's command names.
 	 */
-	List<Command> commandList();
+	List<RedisCommand> commandList();
 
 	/**
 	 * 获取 Redis 服务器的配置参数
@@ -734,7 +734,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return The cumulative distribution of commands' latencies in histogram format.
 	 */
-	List<LatencyHistogram> latencyHistogram(final Command... commands);
+	List<LatencyHistogram> latencyHistogram(final RedisCommand... commands);
 
 	/**
 	 * The LATENCY HISTORY command returns the raw data of the event's latency spikes time series.
