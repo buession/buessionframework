@@ -24,7 +24,6 @@
  */
 package com.buession.redis.core.command;
 
-import com.buession.redis.core.command.args.bitmap.BitCountOption;
 import com.buession.redis.core.command.args.bitmap.BitOperation;
 import com.buession.redis.core.command.args.bitmap.BitType;
 import com.buession.redis.core.command.args.bitmap.BitFieldArgument;
@@ -109,12 +108,12 @@ public interface BitMapCommands extends RedisCommands {
 	 * 		开始位置
 	 * @param end
 	 * 		结束位置
-	 * @param option
-	 *        {@link BitCountOption}
+	 * @param type
+	 *        {@link BitType}
 	 *
 	 * @return 被设置为 1 的位的数量
 	 */
-	Long bitCount(final String key, final long start, final long end, final BitCountOption option);
+	Long bitCount(final String key, final long start, final long end, final BitType type);
 
 	/**
 	 * 计算给定字符串中，被设置为 1 的比特位的数量
@@ -127,12 +126,12 @@ public interface BitMapCommands extends RedisCommands {
 	 * 		开始位置
 	 * @param end
 	 * 		结束位置
-	 * @param option
-	 *        {@link BitCountOption}
+	 * @param type
+	 *        {@link BitType}
 	 *
 	 * @return 被设置为 1 的位的数量
 	 */
-	Long bitCount(final byte[] key, final long start, final long end, final BitCountOption option);
+	Long bitCount(final byte[] key, final long start, final long end, final BitType type);
 
 	/**
 	 * 可以将一个 Redis 字符串看作是一个由二进制位组成的数组，并对这个数组中储存的长度不同的整数进行访问；

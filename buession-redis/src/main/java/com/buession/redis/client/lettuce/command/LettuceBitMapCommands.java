@@ -25,7 +25,6 @@
 package com.buession.redis.client.lettuce.command;
 
 import com.buession.redis.client.lettuce.LettuceRedisClient;
-import com.buession.redis.core.command.args.bitmap.BitCountOption;
 import com.buession.redis.core.command.args.bitmap.BitFieldEncoding;
 import com.buession.redis.core.command.args.bitmap.BitOperation;
 import com.buession.redis.core.command.args.bitmap.BitType;
@@ -77,14 +76,14 @@ public final class LettuceBitMapCommands extends AbstractLettuceRedisCommands im
 	}
 
 	@Override
-	public Long bitCount(final String key, final long start, final long end, final BitCountOption option) {
-		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(option);
+	public Long bitCount(final String key, final long start, final long end, final BitType type) {
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(type);
 		return executeCommand(RedisCommand.BITCOUNT, args, (cmd)->cmd.bitcount(rawBinaryKey(key), start, end));
 	}
 
 	@Override
-	public Long bitCount(final byte[] key, final long start, final long end, final BitCountOption option) {
-		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(option);
+	public Long bitCount(final byte[] key, final long start, final long end, final BitType type) {
+		final CommandArguments args = CommandArguments.create(key).add(start).add(end).add(type);
 		return executeCommand(RedisCommand.BITCOUNT, args, (cmd)->cmd.bitcount(rawKey(key), start, end));
 	}
 

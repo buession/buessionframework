@@ -19,41 +19,50 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.jedis;
+package com.buession.redis.core.internal.convert.response;
 
-import com.buession.redis.RedisTemplate;
-import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
-import com.buession.redis.core.Options;
-import com.buession.redis.core.PoolConfig;
+import com.buession.core.converter.Converter;
 
 /**
+ *
+ * @param <SK>
+ * 		原始 Key 类型
+ * @param <SV>
+ * 		原始值类型
+ * @param <TK>
+ * 		目标 Key 类型
+ * @param <TV>
+ * 		目标值类型
+ *
  * @author Yong.Teng
+ * @since 4.0.0
  */
-public abstract class AbstractJedisRedisTest {
+public abstract class BaseKeyValueConverter<SK, SV, TK, TV, ST, TT> implements Converter<ST, TT> {
 
-	protected JedisDataSource dataSource() {
-		JedisDataSource dataSource = new JedisDataSource();
+	/**
+	 * Key 转换器
+	 */
+	protected final Converter<SK, TK> keyConverter;
 
-		dataSource.setHost("192.168.0.161");
-		dataSource.setPort(30341);
-		dataSource.setDatabase(1);
-		//	dataSource.setPassword("rds_PWD");
-		dataSource.setPoolConfig(new PoolConfig());
+	/**
+	 * 值转换器
+	 */
+	protected final Converter<SV, TV> valueConverter;
 
-		return dataSource;
-	}
-
-	protected RedisTemplate redisTemplate() {
-		Options options = new Options();
-		options.setPrefix("test:");
-		RedisTemplate redisTemplate = new RedisTemplate(dataSource(), options);
-
-		redisTemplate.afterPropertiesSet();
-
-		return redisTemplate;
+	/**
+	 * 构造函数
+	 *
+	 * @param keyConverter
+	 * 		Key 转换器
+	 * @param valueConverter
+	 * 		值转换器
+	 */
+	public BaseKeyValueConverter(final Converter<SK, TK> keyConverter, final Converter<SV, TV> valueConverter) {
+		this.keyConverter = keyConverter;
+		this.valueConverter = valueConverter;
 	}
 
 }

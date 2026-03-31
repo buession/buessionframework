@@ -24,7 +24,6 @@
  */
 package com.buession.redis.core.operations;
 
-import com.buession.redis.core.command.args.bitmap.BitCountOption;
 import com.buession.redis.core.command.args.bitmap.BitOperation;
 import com.buession.redis.core.command.args.bitmap.BitType;
 import com.buession.redis.core.command.BitMapCommands;
@@ -64,13 +63,13 @@ public interface BitMapOperations extends BitMapCommands, RedisOperations {
 	}
 
 	@Override
-	default Long bitCount(final String key, final long start, final long end, final BitCountOption option) {
-		return execute((client)->client.bitMapCommands().bitCount(key, start, end, option));
+	default Long bitCount(final String key, final long start, final long end, final BitType type) {
+		return execute((client)->client.bitMapCommands().bitCount(key, start, end, type));
 	}
 
 	@Override
-	default Long bitCount(final byte[] key, final long start, final long end, final BitCountOption option) {
-		return execute((client)->client.bitMapCommands().bitCount(key, start, end, option));
+	default Long bitCount(final byte[] key, final long start, final long end, final BitType type) {
+		return execute((client)->client.bitMapCommands().bitCount(key, start, end, type));
 	}
 
 	@Override

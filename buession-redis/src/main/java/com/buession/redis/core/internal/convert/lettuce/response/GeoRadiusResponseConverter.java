@@ -44,7 +44,7 @@ public final class GeoRadiusResponseConverter implements Converter<GeoWithin<byt
 
 		final GeoCoordinateConverter geoCoordinateConverter = new GeoCoordinateConverter();
 		return new GeoRadius(source.getMember(), source.getDistance(),
-				source.getCoordinates() == null ? null : geoCoordinateConverter.convert(source.getCoordinates()));
+				geoCoordinateConverter.convert(source.getCoordinates()));
 	}
 
 }

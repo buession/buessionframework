@@ -29,6 +29,7 @@ import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.AutoClaimInfo;
 import com.buession.redis.core.StreamEntry;
 import com.buession.redis.core.StreamEntryId;
+import com.buession.redis.core.internal.convert.response.BaseKeyValueConverter;
 import io.lettuce.core.StreamMessage;
 import io.lettuce.core.models.stream.ClaimedMessages;
 
@@ -47,18 +48,8 @@ import io.lettuce.core.models.stream.ClaimedMessages;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class ClaimedMessagesAutoClaimInfoConverter<SK, SV, TK, TV> implements Converter<ClaimedMessages<SK, SV>,
-		AutoClaimInfo<TK, TV>> {
-
-	/**
-	 * Entry key 转换器
-	 */
-	private final Converter<SK, TK> keyConverter;
-
-	/**
-	 * Entry value 转换器
-	 */
-	private final Converter<SV, TV> valueConverter;
+public final class ClaimedMessagesAutoClaimInfoConverter<SK, SV, TK, TV>
+		extends BaseKeyValueConverter<SK, SV, TK, TV, ClaimedMessages<SK, SV>, AutoClaimInfo<TK, TV>> {
 
 	/**
 	 * 构造函数
@@ -69,9 +60,8 @@ public final class ClaimedMessagesAutoClaimInfoConverter<SK, SV, TK, TV> impleme
 	 * 		Entry value 转换器
 	 */
 	public ClaimedMessagesAutoClaimInfoConverter(final Converter<SK, TK> keyConverter,
-												 final Converter<SV, TV> valueConverter) {
-		this.keyConverter = keyConverter;
-		this.valueConverter = valueConverter;
+	                                             final Converter<SV, TV> valueConverter) {
+		super(keyConverter, valueConverter);
 	}
 
 	@Override

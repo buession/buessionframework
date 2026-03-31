@@ -186,10 +186,10 @@ public final class JedisAutoSuggestCommands extends AbstractJedisRedisCommands i
 	                                  final CommandArguments args) {
 		if(argument != null && Boolean.TRUE.equals(argument.getWithScores())){
 			return executeCommand(RedisCommand.FT_SUGGET, args,
-					(cmd)->cmd.ftSugGetWithScores(rawKey(key), prefix, argument.getFuzzy(),
+					(cmd)->cmd.ftSugGetWithScores(key, prefix, argument.getFuzzy(),
 							argument.getMax().intValue()), new ListConverter<>(new TupleSuggestionConverter()));
 		}else{
-			return executeCommand(RedisCommand.FT_SUGGET, args, (cmd)->cmd.ftSugGet(rawKey(key), prefix,
+			return executeCommand(RedisCommand.FT_SUGGET, args, (cmd)->cmd.ftSugGet(key, prefix,
 							argument.getFuzzy(), argument.getMax().intValue()),
 					(v)->v.stream().map((item)->new Suggestion(item, null)).collect(Collectors.toList()));
 		}

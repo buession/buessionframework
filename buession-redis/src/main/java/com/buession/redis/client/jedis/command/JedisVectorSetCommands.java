@@ -644,14 +644,12 @@ public final class JedisVectorSetCommands extends AbstractJedisRedisCommands imp
 
 	private Map<String, Double> vSimWithScores(final String key, final double[] vectors, final VSimParams vSimParams,
 	                                           final CommandArguments args) {
-		return executeCommand(
-				RedisCommand.VSIM, args, (cmd)->cmd.vsimWithScores(rawKey(key), vectors(vectors), vSimParams));
+		return executeCommand(RedisCommand.VSIM, args, (cmd)->cmd.vsimWithScores(key, vectors(vectors), vSimParams));
 	}
 
 	private Map<byte[], Double> vSimWithScores(final byte[] key, final double[] vectors, final VSimParams vSimParams,
 	                                           final CommandArguments args) {
-		return executeCommand(
-				RedisCommand.VSIM, args, (cmd)->cmd.vsimWithScores(rawKey(key), vectors(vectors), vSimParams));
+		return executeCommand(RedisCommand.VSIM, args, (cmd)->cmd.vsimWithScores(key, vectors(vectors), vSimParams));
 	}
 
 	private Map<String, Double> vSimWithScores(final String key, final String element, final VSimParams vSimParams,
@@ -668,7 +666,7 @@ public final class JedisVectorSetCommands extends AbstractJedisRedisCommands imp
 	                                                                final VSimParams vSimParams,
 	                                                                final CommandArguments args) {
 		return executeCommand(RedisCommand.VSIM, args,
-				(cmd)->cmd.vsimWithScoresAndAttribs(rawKey(key), vectors(vectors), vSimParams),
+				(cmd)->cmd.vsimWithScoresAndAttribs(key, vectors(vectors), vSimParams),
 				new MapConverter<>((k)->k, new VSimScoreAttribsConverter()));
 	}
 
@@ -676,7 +674,7 @@ public final class JedisVectorSetCommands extends AbstractJedisRedisCommands imp
 	                                                                final VSimParams vSimParams,
 	                                                                final CommandArguments args) {
 		return executeCommand(RedisCommand.VSIM, args,
-				(cmd)->cmd.vsimWithScoresAndAttribs(rawKey(key), vectors(vectors), vSimParams),
+				(cmd)->cmd.vsimWithScoresAndAttribs(key, vectors(vectors), vSimParams),
 				new MapConverter<>((k)->k, new VSimScoreAttribsConverter()));
 	}
 
@@ -684,7 +682,7 @@ public final class JedisVectorSetCommands extends AbstractJedisRedisCommands imp
 	                                                                final VSimParams vSimParams,
 	                                                                final CommandArguments args) {
 		return executeCommand(RedisCommand.VSIM, args,
-				(cmd)->cmd.vsimByElementWithScoresAndAttribs(rawKey(key), element, vSimParams),
+				(cmd)->cmd.vsimByElementWithScoresAndAttribs(key, element, vSimParams),
 				new MapConverter<>((k)->k, new VSimScoreAttribsConverter()));
 	}
 
@@ -692,7 +690,7 @@ public final class JedisVectorSetCommands extends AbstractJedisRedisCommands imp
 	                                                                final VSimParams vSimParams,
 	                                                                final CommandArguments args) {
 		return executeCommand(RedisCommand.VSIM, args,
-				(cmd)->cmd.vsimByElementWithScoresAndAttribs(rawKey(key), element, vSimParams),
+				(cmd)->cmd.vsimByElementWithScoresAndAttribs(key, element, vSimParams),
 				new MapConverter<>((k)->k, new VSimScoreAttribsConverter()));
 	}
 

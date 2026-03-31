@@ -45,24 +45,24 @@ public final class TrackingInfoTrackingInfoConverter
 			return null;
 		}
 
-		final Set<TrackingInfo.TrackingFlag> flags = source.getFlags() == null ?
-				null : source.getFlags().stream().map((v)->{
-			if(v == null){
-				return null;
-			}else{
-				return switch(v){
-					case OFF -> TrackingInfo.TrackingFlag.OFF;
-					case ON -> TrackingInfo.TrackingFlag.ON;
-					case BCAST -> TrackingInfo.TrackingFlag.BCAST;
-					case OPTIN -> TrackingInfo.TrackingFlag.OPTIN;
-					case OPTOUT -> TrackingInfo.TrackingFlag.OPTOUT;
-					case CACHING_YES -> TrackingInfo.TrackingFlag.CACHING_YES;
-					case CACHING_NO -> TrackingInfo.TrackingFlag.CACHING_NO;
-					case NOLOOP -> TrackingInfo.TrackingFlag.NOLOOP;
-					case BROKEN_REDIRECT -> TrackingInfo.TrackingFlag.BROKEN_REDIRECT;
-				};
-			}
-		}).collect(Collectors.toSet());
+		final Set<TrackingInfo.TrackingFlag> flags = source.getFlags() == null ? null :
+				source.getFlags().stream().map((v)->{
+					if(v == null){
+						return null;
+					}else{
+						return switch(v){
+							case OFF -> TrackingInfo.TrackingFlag.OFF;
+							case ON -> TrackingInfo.TrackingFlag.ON;
+							case BCAST -> TrackingInfo.TrackingFlag.BCAST;
+							case OPTIN -> TrackingInfo.TrackingFlag.OPTIN;
+							case OPTOUT -> TrackingInfo.TrackingFlag.OPTOUT;
+							case CACHING_YES -> TrackingInfo.TrackingFlag.CACHING_YES;
+							case CACHING_NO -> TrackingInfo.TrackingFlag.CACHING_NO;
+							case NOLOOP -> TrackingInfo.TrackingFlag.NOLOOP;
+							case BROKEN_REDIRECT -> TrackingInfo.TrackingFlag.BROKEN_REDIRECT;
+						};
+					}
+				}).collect(Collectors.toSet());
 
 		return new com.buession.redis.core.TrackingInfo(flags, source.getRedirect(), source.getPrefixes());
 	}

@@ -46,8 +46,7 @@ public final class PendingMessagesConverter implements Converter<PendingMessages
 
 		final Range<String> messageIds = source.getMessageIds();
 
-		return new StreamPendingSummary(source.getCount(),
-				new StreamEntryId(messageIds.getLower().getValue()),
+		return new StreamPendingSummary(source.getCount(), new StreamEntryId(messageIds.getLower().getValue()),
 				new StreamEntryId(messageIds.getUpper().getValue()), source.getConsumerMessageCount());
 	}
 

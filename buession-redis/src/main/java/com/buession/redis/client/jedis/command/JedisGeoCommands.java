@@ -1537,20 +1537,18 @@ public final class JedisGeoCommands extends AbstractJedisRedisCommands implement
 	                               final String member, final double radius, final GeoUnit unit,
 	                               final GeoRadiusParam geoRadiusParam, final CommandArguments args) {
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return executeCommand(
-				RedisCommand.GEORADIUSBYMEMBER, args, (cmd)->cmd.georadiusByMemberStore(key, member, radius,
-						geoUnitConverter.convert(unit), geoRadiusParam,
-						new JedisGeoRadiusStoreParam(destKey, storeOption)));
+		return executeCommand(RedisCommand.GEORADIUSBYMEMBER, args,
+				(cmd)->cmd.georadiusByMemberStore(key, member, radius, geoUnitConverter.convert(unit),
+						geoRadiusParam, new JedisGeoRadiusStoreParam(destKey, storeOption)));
 	}
 
 	private Long geoRadiusByMember(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
 	                               final byte[] member, final double radius, final GeoUnit unit,
 	                               final GeoRadiusParam geoRadiusParam, final CommandArguments args) {
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
-		return executeCommand(
-				RedisCommand.GEORADIUSBYMEMBER, args, (cmd)->cmd.georadiusByMemberStore(key, member, radius,
-						geoUnitConverter.convert(unit), geoRadiusParam,
-						new JedisGeoRadiusStoreParam(destKey, storeOption)));
+		return executeCommand(RedisCommand.GEORADIUSBYMEMBER, args,
+				(cmd)->cmd.georadiusByMemberStore(key, member, radius, geoUnitConverter.convert(unit),
+						geoRadiusParam, new JedisGeoRadiusStoreParam(destKey, storeOption)));
 	}
 
 	private List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,

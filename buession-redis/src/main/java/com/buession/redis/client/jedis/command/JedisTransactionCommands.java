@@ -75,6 +75,8 @@ public final class JedisTransactionCommands extends AbstractJedisRedisCommands i
 
 	@Override
 	public Status multi() {
+		//client.getConnection().multi();
+		//return Status.SUCCESS;
 		return executeCommand(RedisCommand.MULTI, (cmd)->{
 			cmd.multi();
 			return Status.SUCCESS;

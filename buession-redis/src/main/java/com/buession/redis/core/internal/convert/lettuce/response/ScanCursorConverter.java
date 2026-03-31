@@ -29,6 +29,7 @@ import com.buession.core.converter.ListConverter;
 import com.buession.lang.KeyValue;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
+import com.buession.redis.core.internal.convert.response.BaseKeyValueConverter;
 import io.lettuce.core.KeyScanCursor;
 import io.lettuce.core.MapScanCursor;
 import io.lettuce.core.ScanCursor;
@@ -137,15 +138,11 @@ public interface ScanCursorConverter<T extends ScanCursor, R> extends Converter<
 	 * @author Yong.Teng
 	 */
 	final class MapScanCursorConverter<SK, SV, TK, TV>
+			extends BaseKeyValueConverter<SK, SV, TK, TV, MapScanCursor<SK, SV>, ScanResult<KeyValue<TK, TV>>>
 			implements ScanCursorConverter<MapScanCursor<SK, SV>, KeyValue<TK, TV>> {
 
-		private final Converter<SK, TK> keyConverter;
-
-		private final Converter<SV, TV> valueConverter;
-
 		public MapScanCursorConverter(final Converter<SK, TK> keyConverter, final Converter<SV, TV> valueConverter) {
-			this.keyConverter = keyConverter;
-			this.valueConverter = valueConverter;
+			super(keyConverter, valueConverter);
 		}
 
 		@Override

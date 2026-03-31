@@ -25,6 +25,8 @@
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.redis.core.internal.convert.response.BaseKeyValueConverter;
+import io.lettuce.core.KeyValue;
 
 /**
  * Lettuce {@link io.lettuce.core.KeyValue} 转换为 {@link com.buession.lang.KeyValue}
@@ -41,18 +43,8 @@ import com.buession.core.converter.Converter;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class KeyValueConverter<SK, SV, TK, TV> implements Converter<io.lettuce.core.KeyValue<SK, SV>,
-		com.buession.lang.KeyValue<TK, TV>> {
-
-	/**
-	 * Key 转换器
-	 */
-	private final Converter<SK, TK> keyConverter;
-
-	/**
-	 * 值转换器
-	 */
-	private final Converter<SV, TV> valueConverter;
+public class KeyValueConverter<SK, SV, TK, TV>
+		extends BaseKeyValueConverter<SK, SV, TK, TV, KeyValue<SK, SV>, com.buession.lang.KeyValue<TK, TV>> {
 
 	/**
 	 * 构造函数
@@ -63,8 +55,7 @@ public class KeyValueConverter<SK, SV, TK, TV> implements Converter<io.lettuce.c
 	 * 		值转换器
 	 */
 	public KeyValueConverter(final Converter<SK, TK> keyConverter, final Converter<SV, TV> valueConverter) {
-		this.keyConverter = keyConverter;
-		this.valueConverter = valueConverter;
+		super(keyConverter, valueConverter);
 	}
 
 	@Override

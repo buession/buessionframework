@@ -33,10 +33,10 @@ import java.util.List;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class StreamFullInfoConverter implements Converter<List<Object>, StreamFull> {
+public final class StreamFullInfoConverter<K, V> implements Converter<List<Object>, StreamFull<K, V>> {
 
 	@Override
-	public StreamFull convert(final List<Object> source) {
+	public StreamFull<K, V> convert(final List<Object> source) {
 		return null;
 	}
 

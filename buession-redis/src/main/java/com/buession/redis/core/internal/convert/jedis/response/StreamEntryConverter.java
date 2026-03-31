@@ -26,6 +26,8 @@ package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.MapConverter;
+import com.buession.redis.core.internal.convert.response.BaseKeyValueConverter;
+import redis.clients.jedis.resps.StreamEntry;
 
 /**
  * Jedis {@link redis.clients.jedis.resps.StreamEntry} 转换为 {@link com.buession.redis.core.StreamEntry}
@@ -39,15 +41,10 @@ import com.buession.core.converter.MapConverter;
  * @since 2.0.0
  */
 public final class StreamEntryConverter<K, V>
-		implements Converter<redis.clients.jedis.resps.StreamEntry, com.buession.redis.core.StreamEntry<K, V>> {
-
-	private final Converter<String, K> keyConverter;
-
-	private final Converter<String, V> valueConverter;
+		extends BaseKeyValueConverter<String, String, K, V, StreamEntry, com.buession.redis.core.StreamEntry<K, V>> {
 
 	public StreamEntryConverter(final Converter<String, K> keyConverter, final Converter<String, V> valueConverter) {
-		this.keyConverter = keyConverter;
-		this.valueConverter = valueConverter;
+		super(keyConverter, valueConverter);
 	}
 
 	@Override

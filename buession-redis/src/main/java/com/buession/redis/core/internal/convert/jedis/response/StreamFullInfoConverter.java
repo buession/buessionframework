@@ -29,6 +29,7 @@ import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.StreamEntry;
 import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.StreamFull;
+import com.buession.redis.core.internal.convert.response.BaseKeyValueConverter;
 import redis.clients.jedis.resps.StreamFullInfo;
 import redis.clients.jedis.resps.StreamGroupFullInfo;
 
@@ -40,16 +41,12 @@ import java.util.List;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class StreamFullInfoConverter<TK, TV> implements Converter<StreamFullInfo, StreamFull<TK, TV>> {
-
-	private final Converter<String, TK> keyConverter;
-
-	private final Converter<String, TV> valueConverter;
+public final class StreamFullInfoConverter<TK, TV>
+		extends BaseKeyValueConverter<String, String, TK, TV, StreamFullInfo, StreamFull<TK, TV>> {
 
 	public StreamFullInfoConverter(final Converter<String, TK> keyConverter,
-								   final Converter<String, TV> valueConverter) {
-		this.keyConverter = keyConverter;
-		this.valueConverter = valueConverter;
+	                               final Converter<String, TV> valueConverter) {
+		super(keyConverter, valueConverter);
 	}
 
 	@Override

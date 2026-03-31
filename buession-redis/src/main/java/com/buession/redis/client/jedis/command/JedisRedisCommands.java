@@ -81,7 +81,7 @@ public interface JedisRedisCommands extends RedisCommands {
 		@Override
 		protected R doExecute(final RedisConnection conn) throws RedisException {
 			final SR result = executor.execute(((JedisRedisConnection<? extends UnifiedJedis>) conn).getClient());
-			return converter.convert(result);
+			return result == null ? null : converter.convert(result);
 		}
 
 	}

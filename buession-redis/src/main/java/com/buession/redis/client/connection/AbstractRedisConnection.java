@@ -404,8 +404,10 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 
 	@Override
 	public void closePipeline() {
-		pipeline.close();
-		pipeline = null;
+		if(pipeline != null){
+			pipeline.close();
+			pipeline = null;
+		}
 	}
 
 	@Override

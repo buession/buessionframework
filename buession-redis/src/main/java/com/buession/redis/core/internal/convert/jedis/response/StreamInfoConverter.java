@@ -29,6 +29,7 @@ import com.buession.redis.core.Stream;
 import com.buession.redis.core.StreamEntry;
 import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.StreamGroup;
+import com.buession.redis.core.internal.convert.response.BaseKeyValueConverter;
 import redis.clients.jedis.resps.StreamInfo;
 
 /**
@@ -37,16 +38,12 @@ import redis.clients.jedis.resps.StreamInfo;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class StreamInfoConverter<K, V> implements Converter<StreamInfo, Stream<K, V>> {
-
-	private final Converter<String, K> keyConverter;
-
-	private final Converter<String, V> valueConverter;
+public final class StreamInfoConverter<K, V> extends BaseKeyValueConverter<String, String, K, V, StreamInfo,
+		Stream<K, V>> {
 
 	public StreamInfoConverter(final Converter<String, K> keyConverter,
-							   final Converter<String, V> valueConverter) {
-		this.keyConverter = keyConverter;
-		this.valueConverter = valueConverter;
+	                           final Converter<String, V> valueConverter) {
+		super(keyConverter, valueConverter);
 	}
 
 	@Override

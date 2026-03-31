@@ -38,14 +38,13 @@ public final class ClusterResetOptionConverter implements Converter<ResetOption,
 
 	@Override
 	public ClusterResetType convert(final ResetOption source) {
-		if(source == null){
+		if(source == ResetOption.HARD){
+			return ClusterResetType.HARD;
+		}else if(source == ResetOption.SOFT){
+			return ClusterResetType.SOFT;
+		}else{
 			return null;
 		}
-
-		return switch(source){
-			case SOFT -> ClusterResetType.SOFT;
-			case HARD -> ClusterResetType.HARD;
-		};
 	}
 
 }

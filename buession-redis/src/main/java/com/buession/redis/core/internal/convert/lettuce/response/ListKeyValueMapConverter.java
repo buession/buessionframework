@@ -26,6 +26,7 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.CollectionMapConverter;
 import com.buession.core.converter.Converter;
+import com.buession.redis.core.internal.convert.response.BaseKeyValueConverter;
 import io.lettuce.core.KeyValue;
 
 import java.util.LinkedHashMap;
@@ -48,17 +49,8 @@ import java.util.Map;
  * @since 3.0.0
  */
 public final class ListKeyValueMapConverter<SK, SV, TK, TV>
+		extends BaseKeyValueConverter<SK, SV, TK, TV, List<KeyValue<SK, SV>>, Map<TK, TV>>
 		implements CollectionMapConverter<KeyValue<SK, SV>, TK, TV, List<KeyValue<SK, SV>>> {
-
-	/**
-	 * Key 转换器
-	 */
-	private final Converter<SK, TK> keyConverter;
-
-	/**
-	 * 值转换器
-	 */
-	private final Converter<SV, TV> valueConverter;
 
 	/**
 	 * 构造函数
@@ -69,8 +61,7 @@ public final class ListKeyValueMapConverter<SK, SV, TK, TV>
 	 * 		值转换器
 	 */
 	public ListKeyValueMapConverter(final Converter<SK, TK> keyConverter, final Converter<SV, TV> valueConverter) {
-		this.keyConverter = keyConverter;
-		this.valueConverter = valueConverter;
+		super(keyConverter, valueConverter);
 	}
 
 	@Override

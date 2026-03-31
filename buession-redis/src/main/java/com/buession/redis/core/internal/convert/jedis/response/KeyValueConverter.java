@@ -26,6 +26,7 @@ package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.lang.KeyValue;
+import com.buession.redis.core.internal.convert.response.BaseKeyValueConverter;
 
 /**
  * Jedis {@link redis.clients.jedis.util.KeyValue} 转换为 {@link com.buession.lang.KeyValue}
@@ -42,18 +43,8 @@ import com.buession.lang.KeyValue;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class KeyValueConverter<SK, SV, TK, TV> implements Converter<redis.clients.jedis.util.KeyValue<SK, SV>,
-		com.buession.lang.KeyValue<TK, TV>> {
-
-	/**
-	 * Key 转换器
-	 */
-	private final Converter<SK, TK> keyConverter;
-
-	/**
-	 * 值转换器
-	 */
-	private final Converter<SV, TV> valueConverter;
+public final class KeyValueConverter<SK, SV, TK, TV> extends BaseKeyValueConverter<SK, SV, TK, TV,
+		redis.clients.jedis.util.KeyValue<SK, SV>, KeyValue<TK, TV>> {
 
 	/**
 	 * 构造函数
@@ -64,8 +55,7 @@ public final class KeyValueConverter<SK, SV, TK, TV> implements Converter<redis.
 	 * 		值转换器
 	 */
 	public KeyValueConverter(final Converter<SK, TK> keyConverter, final Converter<SV, TV> valueConverter) {
-		this.keyConverter = keyConverter;
-		this.valueConverter = valueConverter;
+		super(keyConverter, valueConverter);
 	}
 
 	@Override

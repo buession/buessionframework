@@ -46,8 +46,7 @@ public final class LCSMatchResultConveter implements Converter<LCSMatchResult, L
 		final ListConverter<LCSMatchResult.MatchedPosition, LcsResult.MatchedPosition> lcsMatchResultMatchedPositionConveter = new ListConverter<>(
 				new LCSMatchResultMatchedPositionConveter());
 		return new LcsResult(source.getMatchString(),
-				source.getMatches() == null ? null : lcsMatchResultMatchedPositionConveter.convert(source.getMatches()),
-				source.getLen());
+				lcsMatchResultMatchedPositionConveter.convert(source.getMatches()), source.getLen());
 	}
 
 	private final static class LCSMatchResultMatchedPositionConveter

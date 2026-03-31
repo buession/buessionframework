@@ -48,28 +48,4 @@ public class ScanResultConverter<S, T>
 		return source == null ? null : new ScanResult<>(source.getCursor(), converter.convert(source.getResult()));
 	}
 
-	/**
-	 * jedis {@link redis.clients.jedis.resps.Tuple} 转换为 {@link java.util.List}&lt;T&gt;
-	 *
-	 * @author Yong.Teng
-	 * @since 2.0.0
-	 */
-	/*
-	final class ListTupleScanResultConverter
-			implements ScanResultConverter<redis.clients.jedis.resps.Tuple, List<Tuple>> {
-
-		private final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> listTupleConverter =
-				new ListConverter<>(new TupleConverter());
-
-		@Override
-		public ScanResult<List<Tuple>> convert(
-				final redis.clients.jedis.resps.ScanResult<redis.clients.jedis.resps.Tuple> source) {
-			return new com.buession.redis.core.ScanResult<>(source.getCursor(),
-					listTupleConverter.convert(source.getResult()));
-		}
-
-	}
-
-	 */
-
 }

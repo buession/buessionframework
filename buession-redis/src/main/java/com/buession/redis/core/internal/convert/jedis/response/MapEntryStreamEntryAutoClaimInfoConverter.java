@@ -27,7 +27,9 @@ package com.buession.redis.core.internal.convert.jedis.response;
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.AutoClaimInfo;
+import com.buession.redis.core.internal.convert.response.BaseKeyValueConverter;
 import redis.clients.jedis.StreamEntryID;
+import redis.clients.jedis.resps.StreamEntry;
 
 import java.util.List;
 import java.util.Map;
@@ -43,18 +45,8 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class MapEntryStreamEntryAutoClaimInfoConverter<K, V> implements
-		Converter<Map.Entry<StreamEntryID, List<redis.clients.jedis.resps.StreamEntry>>, AutoClaimInfo<K, V>> {
-
-	/**
-	 * Entry key 转换器
-	 */
-	private final Converter<String, K> keyConverter;
-
-	/**
-	 * Entry value 转换器
-	 */
-	private final Converter<String, V> valueConverter;
+public final class MapEntryStreamEntryAutoClaimInfoConverter<K, V> extends BaseKeyValueConverter<String, String, K, V,
+		Map.Entry<StreamEntryID, List<StreamEntry>>, AutoClaimInfo<K, V>> {
 
 	/**
 	 * 构造函数
@@ -65,9 +57,8 @@ public final class MapEntryStreamEntryAutoClaimInfoConverter<K, V> implements
 	 * 		Entry value 转换器
 	 */
 	public MapEntryStreamEntryAutoClaimInfoConverter(final Converter<String, K> keyConverter,
-													 final Converter<String, V> valueConverter) {
-		this.keyConverter = keyConverter;
-		this.valueConverter = valueConverter;
+	                                                 final Converter<String, V> valueConverter) {
+		super(keyConverter, valueConverter);
 	}
 
 	@Override

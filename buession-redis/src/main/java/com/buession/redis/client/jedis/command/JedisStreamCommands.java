@@ -1056,7 +1056,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 
 	private StreamEntryId xAdd(final String key, final StreamEntryId id, final Map<String, String> hash,
 	                           final CommandArguments args) {
-		return executeCommand(RedisCommand.XADD, args, (cmd)->cmd.xadd(rawKey(key), new JedisStreamEntryID(id), hash),
+		return executeCommand(RedisCommand.XADD, args, (cmd)->cmd.xadd(key, new JedisStreamEntryID(id), hash),
 				new StreamEntryIDConverter());
 	}
 
@@ -1177,9 +1177,8 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                                        final CommandArguments args) {
 		final MapConverter<String, StreamEntryId, String, StreamEntryID> mapConverter = new MapConverter<>((k)->k,
 				new StreamEntryIdConverter());
-		return executeCommand(RedisCommand.XREADGROUP, args,
-				(cmd)->cmd.xreadGroup(groupName, consumerName, xReadGroupParams, mapConverter.convert(streams)),
-				new ListConverter<>(new MapEntryStreamEntryXReadGroupInfoConverter<>((k)->k, (k)->k, (v)->v)));
+		return xReadGroup(groupName, consumerName, mapConverter.convert(streams), xReadGroupParams, (k)->k, (v)->v,
+				args);
 	}
 
 	private List<XReadGroupInfo<byte[], byte[]>> xReadGroup(final byte[] groupName, final byte[] consumerName,
@@ -1188,11 +1187,20 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                                        final CommandArguments args) {
 		final MapConverter<byte[], StreamEntryId, String, StreamEntryID> mapConverter = new MapConverter<>(
 				SafeEncoder::encode, new StreamEntryIdConverter());
+		return xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName),
+				mapConverter.convert(streams), xReadGroupParams, SafeEncoder::encode, SafeEncoder::encode, args);
+	}
+
+	private <K, V> List<XReadGroupInfo<K, V>> xReadGroup(final String groupName, final String consumerName,
+	                                                     final Map<String, StreamEntryID> streams,
+	                                                     final XReadGroupParams xReadGroupParams,
+	                                                     final Converter<String, K> keyConverter,
+	                                                     final Converter<String, V> valueConverter,
+	                                                     final CommandArguments args) {
 		return executeCommand(RedisCommand.XREADGROUP, args,
-				(cmd)->cmd.xreadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), xReadGroupParams,
-						mapConverter.convert(streams)), new ListConverter<>(
-						new MapEntryStreamEntryXReadGroupInfoConverter<>(SafeEncoder::encode, SafeEncoder::encode,
-								SafeEncoder::encode)));
+				(cmd)->cmd.xreadGroup(groupName, consumerName, xReadGroupParams, streams),
+				new ListConverter<>(
+						new MapEntryStreamEntryXReadGroupInfoConverter<>(keyConverter, keyConverter, valueConverter)));
 	}
 
 	private Long xTrim(final String key, final XTrimParams xTrimParams, final CommandArguments args) {

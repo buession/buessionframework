@@ -572,15 +572,14 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 		final CommandArguments args = CommandArguments.create(key).add(full ? "FULL" : null);
 		return executeCommand(
 				RedisCommand.XINFO, RedisSubCommand.XINFO_STREAM, args, (cmd)->cmd.xinfoStream(rawBinaryKey(key)),
-				new StreamFullInfoConverter());
+				new StreamFullInfoConverter<>());
 	}
 
 	@Override
 	public StreamFull<byte[], byte[]> xInfoStream(final byte[] key, final boolean full) {
 		final CommandArguments args = CommandArguments.create(key).add(full ? "FULL" : null);
 		return executeCommand(RedisCommand.XINFO, RedisSubCommand.XINFO_STREAM, args,
-				(cmd)->cmd.xinfoStream(rawKey(key)),
-				new StreamFullInfoConverter());
+				(cmd)->cmd.xinfoStream(rawKey(key)), new StreamFullInfoConverter<>());
 	}
 
 	@Override
@@ -589,7 +588,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 				.add(Keyword.Common.COUNT, count);
 		return executeCommand(
 				RedisCommand.XINFO, RedisSubCommand.XINFO_STREAM, args, (cmd)->cmd.xinfoStream(rawBinaryKey(key)),
-				new StreamFullInfoConverter());
+				new StreamFullInfoConverter<>());
 	}
 
 	@Override
@@ -597,8 +596,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 		final CommandArguments args = CommandArguments.create(key).add(full ? "FULL" : null)
 				.add(Keyword.Common.COUNT, count);
 		return executeCommand(RedisCommand.XINFO, RedisSubCommand.XINFO_STREAM, args,
-				(cmd)->cmd.xinfoStream(rawKey(key)),
-				new StreamFullInfoConverter());
+				(cmd)->cmd.xinfoStream(rawKey(key)), new StreamFullInfoConverter<>());
 	}
 
 	@Override

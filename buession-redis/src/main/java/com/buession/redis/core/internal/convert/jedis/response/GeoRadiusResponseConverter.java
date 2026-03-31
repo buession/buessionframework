@@ -36,12 +36,15 @@ import redis.clients.jedis.resps.GeoRadiusResponse;
  */
 public class GeoRadiusResponseConverter implements Converter<GeoRadiusResponse, GeoRadius> {
 
-	private final GeoCoordinateConverter geoCoordinateConverter = new GeoCoordinateConverter();
-
 	@Override
 	public GeoRadius convert(final GeoRadiusResponse source) {
-		return source == null ? null : new GeoRadius(source.getMember(), source.getDistance(),
-				source.getCoordinate() == null ? null : geoCoordinateConverter.convert(source.getCoordinate()));
+		if(source == null){
+			return null;
+		}else{
+			final GeoCoordinateConverter geoCoordinateConverter = new GeoCoordinateConverter();
+			return new GeoRadius(source.getMember(), source.getDistance(),
+					geoCoordinateConverter.convert(source.getCoordinate()));
+		}
 	}
 
 }

@@ -19,32 +19,36 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2026 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.jedis;
 
-import com.buession.core.converter.Converter;
+import com.buession.redis.RedisTemplate;
+import com.buession.redis.core.FunctionStats;
+import com.buession.redis.core.LibraryInfo;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 /**
- * {@link com.buession.redis.core.command.args.bitmap.BitCountOption} 转换为 Jedis {@link redis.clients.jedis.args.BitCountOption}
- *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 3.0.0
  */
-public final class BitCountOptionConverter implements
-		Converter<com.buession.redis.core.command.args.bitmap.BitCountOption, redis.clients.jedis.args.BitCountOption> {
+public class JediScriptingTest extends AbstractJedisRedisTest {
 
-	@Override
-	public redis.clients.jedis.args.BitCountOption convert(
-			final com.buession.redis.core.command.args.bitmap.BitCountOption source) {
-		if(source == com.buession.redis.core.command.args.bitmap.BitCountOption.BYTE){
-			return redis.clients.jedis.args.BitCountOption.BYTE;
-		}else if(source == com.buession.redis.core.command.args.bitmap.BitCountOption.BIT){
-			return redis.clients.jedis.args.BitCountOption.BIT;
-		}else{
-			return null;
-		}
+	@Test
+	public void functionStats() {
+		RedisTemplate redisTemplate = redisTemplate();
+		FunctionStats functionStats = redisTemplate.functionStats();
+		System.out.println(functionStats);
+	}
+
+	@Test
+	public void functionList() {
+		RedisTemplate redisTemplate = redisTemplate();
+		List<LibraryInfo> result = redisTemplate.functionList();
+		System.out.println(result);
 	}
 
 }

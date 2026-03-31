@@ -629,9 +629,8 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	}
 
 	@SuppressWarnings({"unchecked"})
-	private List<String> jsonListStringGet(
-			final Command.Executor<UnifiedJedis, Object> executor,
-			final CommandArguments args) {
+	private List<String> jsonListStringGet(final Command.Executor<UnifiedJedis, Object> executor,
+	                                       final CommandArguments args) {
 		return executeCommand(RedisCommand.JSON_GET, args, executor, (v)->{
 			final List<Object> temp = (List<Object>) v;
 			return temp.stream().map(Object::toString).collect(Collectors.toList());
@@ -639,9 +638,8 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	}
 
 	@SuppressWarnings({"unchecked"})
-	private List<byte[]> jsonListBinaryGet(
-			final Command.Executor<UnifiedJedis, Object> executor,
-			final CommandArguments args) {
+	private List<byte[]> jsonListBinaryGet(final Command.Executor<UnifiedJedis, Object> executor,
+	                                       final CommandArguments args) {
 		final ByteArrayDeserializer byteArrayDeserializer = new DefaultByteArrayDeserializer();
 		return executeCommand(RedisCommand.JSON_GET, args, executor, (v)->{
 			final List<Object> temp = (List<Object>) v;

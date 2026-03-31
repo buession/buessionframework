@@ -45,9 +45,8 @@ public final class StringMatchResultConveter implements Converter<StringMatchRes
 
 		final ListConverter<StringMatchResult.MatchedPosition, LcsResult.MatchedPosition> stringMatchResultMatchedPositionConveter = new ListConverter<>(
 				new StringMatchResultMatchedPositionConveter());
-		return new LcsResult(source.getMatchString(),
-				source.getMatches() == null ? null : stringMatchResultMatchedPositionConveter.convert(
-						source.getMatches()), source.getLen());
+		return new LcsResult(source.getMatchString(), stringMatchResultMatchedPositionConveter.convert(
+				source.getMatches()), source.getLen());
 	}
 
 	private final static class StringMatchResultMatchedPositionConveter

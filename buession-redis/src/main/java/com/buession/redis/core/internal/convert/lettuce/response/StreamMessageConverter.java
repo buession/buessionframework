@@ -28,6 +28,7 @@ import com.buession.core.converter.Converter;
 import com.buession.core.converter.MapConverter;
 import com.buession.redis.core.StreamEntry;
 import com.buession.redis.core.StreamEntryId;
+import com.buession.redis.core.internal.convert.response.BaseKeyValueConverter;
 import io.lettuce.core.StreamMessage;
 
 /**
@@ -46,15 +47,10 @@ import io.lettuce.core.StreamMessage;
  * @since 3.0.0
  */
 public final class StreamMessageConverter<SK, SV, TK, TV>
-		implements Converter<StreamMessage<SK, SV>, StreamEntry<TK, TV>> {
-
-	private final Converter<SK, TK> keyConverter;
-
-	private final Converter<SV, TV> valueConverter;
+		extends BaseKeyValueConverter<SK, SV, TK, TV, StreamMessage<SK, SV>, StreamEntry<TK, TV>> {
 
 	public StreamMessageConverter(final Converter<SK, TK> keyConverter, final Converter<SV, TV> valueConverter) {
-		this.keyConverter = keyConverter;
-		this.valueConverter = valueConverter;
+		super(keyConverter, valueConverter);
 	}
 
 	@Override

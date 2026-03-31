@@ -27,6 +27,8 @@ package com.buession.redis.core.internal.convert.jedis.response;
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.FunctionStats;
 
+import java.util.Map;
+
 /**
  * Jedis {@link redis.clients.jedis.resps.FunctionStats} 转换为 {@link com.buession.redis.core.FunctionStats}
  *
@@ -42,9 +44,10 @@ public final class FunctionStatsConverter
 			return null;
 		}
 
-		final FunctionStats.RunningScript runningscript = new FunctionStats.RunningScript(
-				source.getRunningScript().get("name").toString(), source.getRunningScript().get("command").toString(),
-				(Long) source.getRunningScript().get("duration_ms"));
+		final Map<String, Object> sourceRunningScript = source.getRunningScript();
+		final FunctionStats.RunningScript runningscript = sourceRunningScript == null ? null :
+				new FunctionStats.RunningScript(sourceRunningScript.get("name").toString(),
+						sourceRunningScript.get("command").toString(), (Long) sourceRunningScript.get("duration_ms"));
 		return new com.buession.redis.core.FunctionStats(runningscript, source.getEngines());
 	}
 

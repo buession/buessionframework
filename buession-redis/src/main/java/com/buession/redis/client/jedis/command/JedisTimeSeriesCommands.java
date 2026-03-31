@@ -621,8 +621,8 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 	                                                        final String[] filters,
 	                                                        final Converter<String, K> keyConveter,
 	                                                        final CommandArguments args) {
-		return executeCommand(
-				RedisCommand.TS_MREVRANGE, args, (cmd)->cmd.tsMRevRange(fromTimestamp, toTimestamp, filters),
+		return executeCommand(RedisCommand.TS_MREVRANGE, args,
+				(cmd)->cmd.tsMRevRange(fromTimestamp, toTimestamp, filters),
 				new MapConverter<>(keyConveter, new TSMRangeElementsConverter()));
 	}
 

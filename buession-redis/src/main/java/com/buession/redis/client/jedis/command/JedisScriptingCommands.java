@@ -317,8 +317,7 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 	public List<LibraryInfo> functionList(final String pattern) {
 		final CommandArguments args = CommandArguments.create("LIBRARYNAME", pattern);
 		return executeCommand(RedisCommand.FUNCTION, RedisSubCommand.FUNCTION_LIST, args,
-				(cmd)->cmd.functionList(pattern),
-				new ListConverter<>(new LibraryInfoConverter()));
+				(cmd)->cmd.functionList(pattern), new ListConverter<>(new LibraryInfoConverter()));
 	}
 
 	@Override
@@ -350,8 +349,8 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public String functionLoad(final String functionCode) {
 		final CommandArguments args = CommandArguments.create(functionCode);
-		return executeCommand(
-				RedisCommand.FUNCTION, RedisSubCommand.FUNCTION_LOAD, args, (cmd)->cmd.functionLoad(functionCode));
+		return executeCommand(RedisCommand.FUNCTION, RedisSubCommand.FUNCTION_LOAD, args,
+				(cmd)->cmd.functionLoad(functionCode));
 	}
 
 	@Override
@@ -380,9 +379,8 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public Status functionRestore(final byte[] value) {
 		final CommandArguments args = CommandArguments.create(value);
-		return executeCommand(
-				RedisCommand.FUNCTION, RedisSubCommand.FUNCTION_RESTORE, args, (cmd)->cmd.functionRestore(value),
-				new OkStatusConverter());
+		return executeCommand(RedisCommand.FUNCTION, RedisSubCommand.FUNCTION_RESTORE, args,
+				(cmd)->cmd.functionRestore(value), new OkStatusConverter());
 	}
 
 	@Override
@@ -441,8 +439,8 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public Status scriptKill() {
-		return executeCommand(
-				RedisCommand.SCRIPT, RedisSubCommand.SCRIPT_KILL, (cmd)->cmd.scriptKill(), new OkStatusConverter());
+		return executeCommand(RedisCommand.SCRIPT, RedisSubCommand.SCRIPT_KILL, (cmd)->cmd.scriptKill(),
+				new OkStatusConverter());
 	}
 
 	@Override
@@ -456,8 +454,7 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 	public byte[] scriptLoad(final byte[] script) {
 		final CommandArguments args = CommandArguments.create(script);
 		return executeCommand(RedisCommand.SCRIPT, RedisSubCommand.SCRIPT_LOAD, args,
-				(cmd)->cmd.scriptLoad(script, null),
-				(v)->v);
+				(cmd)->cmd.scriptLoad(script, null), (v)->v);
 	}
 
 	private Object eval(final String script, final String[] keys, final String[] arguments,

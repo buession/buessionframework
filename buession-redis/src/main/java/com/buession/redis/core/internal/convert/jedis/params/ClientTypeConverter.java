@@ -33,8 +33,7 @@ import com.buession.redis.core.command.args.connection.ClientType;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class ClientTypeConverter
-		implements Converter<ClientType, redis.clients.jedis.args.ClientType> {
+public final class ClientTypeConverter implements Converter<ClientType, redis.clients.jedis.args.ClientType> {
 
 	@Override
 	public redis.clients.jedis.args.ClientType convert(final ClientType source) {

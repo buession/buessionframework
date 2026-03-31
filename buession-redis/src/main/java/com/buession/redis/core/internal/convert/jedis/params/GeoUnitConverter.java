@@ -25,6 +25,7 @@
 package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
+import com.buession.redis.core.command.args.geo.GeoUnit;
 
 /**
  * {@link com.buession.redis.core.command.args.geo.GeoUnit} 转换为 jedis {@link redis.clients.jedis.args.GeoUnit}
@@ -37,16 +38,17 @@ public final class GeoUnitConverter
 
 	@Override
 	public redis.clients.jedis.args.GeoUnit convert(final com.buession.redis.core.command.args.geo.GeoUnit source) {
-		if(source == null){
+		if(source == GeoUnit.M){
+			return redis.clients.jedis.args.GeoUnit.M;
+		}else if(source == GeoUnit.KM){
+			return redis.clients.jedis.args.GeoUnit.KM;
+		}else if(source == GeoUnit.MI){
+			return redis.clients.jedis.args.GeoUnit.MI;
+		}else if(source == GeoUnit.FT){
+			return redis.clients.jedis.args.GeoUnit.FT;
+		}else{
 			return null;
 		}
-
-		return switch(source){
-			case M -> redis.clients.jedis.args.GeoUnit.M;
-			case KM -> redis.clients.jedis.args.GeoUnit.KM;
-			case MI -> redis.clients.jedis.args.GeoUnit.MI;
-			case FT -> redis.clients.jedis.args.GeoUnit.FT;
-		};
 	}
 
 }

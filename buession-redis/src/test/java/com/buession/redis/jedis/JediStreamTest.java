@@ -19,37 +19,47 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2026 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.response;
+package com.buession.redis.jedis;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.AclLog;
-import com.buession.redis.core.Client;
-import com.buession.redis.core.internal.convert.response.ClientConverter;
-import redis.clients.jedis.resps.AccessControlLogEntry;
+import com.buession.core.builder.MapBuilder;
+import com.buession.redis.RedisTemplate;
+import com.buession.redis.core.AutoClaimId;
+import com.buession.redis.core.FunctionStats;
+import com.buession.redis.core.LibraryInfo;
+import com.buession.redis.core.StreamEntryId;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 /**
- * jedis {@link AccessControlLogEntry} 转换为 {@link AclLog}
- *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 3.0.0
  */
-public final class AccessControlLogEntryConverter implements Converter<AccessControlLogEntry, AclLog> {
+public class JediStreamTest extends AbstractJedisRedisTest {
 
-	@Override
-	public AclLog convert(final AccessControlLogEntry source) {
-		if(source == null){
-			return null;
-		}
+	@Test
+	public void xAdd() {
+		RedisTemplate redisTemplate = redisTemplate();
+		StreamEntryId result = redisTemplate.xAdd("stream_a", "1-0",
+				MapBuilder.<String, String>create().put("1", "A").put("2", "B").build());
+		System.out.println(result);
+	}
 
-		final ClientConverter clientConverter = new ClientConverter();
-		final Client client = clientConverter.convert((String) source.getlogEntry().get("client-info"));
+	@Test
+	public void xAutoClaimJustId() {
+		RedisTemplate redisTemplate = redisTemplate();
+		AutoClaimId result = redisTemplate.xAutoClaimJustId("stream_a", "test", "cs", 0, "*");
+		System.out.println(result);
+	}
 
-		return new AclLog(source.getEntryId(), source.getCount(), source.getReason(), source.getContext(),
-				source.getObject(), source.getUsername(), source.getAgeSeconds(), client, source.getTimestampCreated(),
-				source.getTimestampLastUpdated(), source.getlogEntry());
+	@Test
+	public void functionList() {
+		RedisTemplate redisTemplate = redisTemplate();
+		List<LibraryInfo> result = redisTemplate.functionList();
+		System.out.println(result);
 	}
 
 }

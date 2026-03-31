@@ -27,7 +27,6 @@ package com.buession.redis.client.jedis.command;
 import com.buession.core.collect.Arrays;
 import com.buession.core.utils.StringUtils;
 import com.buession.redis.client.jedis.JedisRedisClient;
-import com.buession.redis.core.command.args.bitmap.BitCountOption;
 import com.buession.redis.core.command.args.bitmap.BitOperation;
 import com.buession.redis.core.command.args.bitmap.BitType;
 import com.buession.redis.core.command.BitMapCommands;
@@ -35,7 +34,6 @@ import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.args.bitmap.BitFieldArgument;
 import com.buession.redis.core.command.args.bitmap.BitFieldRoArgument;
-import com.buession.redis.core.internal.convert.jedis.params.BitCountOptionConverter;
 import com.buession.redis.core.internal.convert.jedis.params.BitOperationConverter;
 import com.buession.redis.core.internal.convert.jedis.params.BitTypeConverter;
 import com.buession.redis.utils.SafeEncoder;
@@ -80,19 +78,19 @@ public final class JedisBitMapCommands extends AbstractJedisRedisCommands implem
 	}
 
 	@Override
-	public Long bitCount(final String key, final long start, final long end, final BitCountOption option) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(option);
-		final BitCountOptionConverter optionConverter = new BitCountOptionConverter();
+	public Long bitCount(final String key, final long start, final long end, final BitType type) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type);
+		final BitTypeConverter bitTypeConverter = new BitTypeConverter();
 		return executeCommand(RedisCommand.BITCOUNT, args,
-				(cmd)->cmd.bitcount(rawKey(key), start, end, optionConverter.convert(option)));
+				(cmd)->cmd.bitcount(rawKey(key), start, end, bitTypeConverter.convert(type)));
 	}
 
 	@Override
-	public Long bitCount(final byte[] key, final long start, final long end, final BitCountOption option) {
-		final CommandArguments args = CommandArguments.create(key).add(start, end).add(option);
-		final BitCountOptionConverter optionConverter = new BitCountOptionConverter();
+	public Long bitCount(final byte[] key, final long start, final long end, final BitType type) {
+		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type);
+		final BitTypeConverter bitTypeConverter = new BitTypeConverter();
 		return executeCommand(RedisCommand.BITCOUNT, args,
-				(cmd)->cmd.bitcount(rawKey(key), start, end, optionConverter.convert(option)));
+				(cmd)->cmd.bitcount(rawKey(key), start, end, bitTypeConverter.convert(type)));
 	}
 
 	@Override
