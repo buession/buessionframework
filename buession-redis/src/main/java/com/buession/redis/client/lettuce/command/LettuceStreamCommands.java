@@ -70,7 +70,6 @@ import com.buession.redis.core.internal.convert.lettuce.response.StreamMessageCo
 import com.buession.redis.core.internal.convert.lettuce.response.StreamMessageXReadGroupInfoConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.StreamMessageXReadInfoConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
-import com.buession.redis.core.internal.lettuce.CompositeArgumentUtils;
 import com.buession.redis.core.internal.lettuce.args.LettuceXAddArgs;
 import com.buession.redis.core.internal.lettuce.args.LettuceXAutoClaimArgs;
 import com.buession.redis.core.internal.lettuce.args.LettuceXClaimArgs;
@@ -1060,7 +1059,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 		final StreamDeletionPolicyConverter streamDeletionPolicyConverter = new StreamDeletionPolicyConverter();
 		return executeCommand(RedisCommand.XACKDEL, args,
 				(cmd)->cmd.xackdel(key, groupName, streamDeletionPolicyConverter.convert(deletionPolicy),
-						CompositeArgumentUtils.messageIds(ids)),
+						Arrays.map(ids, String.class, StreamEntryId::toString)),
 				new ListConverter<>(new StreamEntryDeletionResultConverter()));
 	}
 
@@ -1141,7 +1140,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 		final StreamDeletionPolicyConverter streamDeletionPolicyConverter = new StreamDeletionPolicyConverter();
 		return executeCommand(RedisCommand.XDELEX, args,
 				(cmd)->cmd.xdelex(key, streamDeletionPolicyConverter.convert(deletionPolicy),
-						CompositeArgumentUtils.messageIds(ids)),
+						Arrays.map(ids, String.class, StreamEntryId::toString)),
 				new ListConverter<>(new StreamEntryDeletionResultConverter()));
 	}
 

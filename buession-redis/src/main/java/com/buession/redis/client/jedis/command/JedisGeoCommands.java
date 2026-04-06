@@ -42,7 +42,6 @@ import com.buession.redis.core.command.args.geo.GeoSearchArgument;
 import com.buession.redis.core.internal.convert.jedis.params.GeoUnitConverter;
 import com.buession.redis.core.internal.convert.jedis.response.GeoCoordinateConverter;
 import com.buession.redis.core.internal.convert.jedis.response.GeoRadiusResponseConverter;
-import com.buession.redis.core.internal.jedis.JedisGeoCoordinate;
 import com.buession.redis.core.internal.jedis.args.JedisGeoAddParams;
 import com.buession.redis.core.internal.jedis.args.JedisGeoRadiusParam;
 import com.buession.redis.core.internal.jedis.args.JedisGeoRadiusStoreParam;
@@ -1447,7 +1446,8 @@ public final class JedisGeoCommands extends AbstractJedisRedisCommands implement
 	@SuppressWarnings({"unchecked"})
 	public <K> Map<K, GeoCoordinate> createMemberCoordinates(final KeyValue<K, Geo>... memberCoordinates) {
 		final ArrayKeyValueMapConverter<K, Geo, K, GeoCoordinate> arrayKeyValueMapConverter =
-				new ArrayKeyValueMapConverter<>((k)->k, (v)->v == null ? null : new JedisGeoCoordinate(v));
+				new ArrayKeyValueMapConverter<>((k)->k, (v)->v == null ? null : new GeoCoordinate(v.getLongitude(),
+						v.getLatitude()));
 		return arrayKeyValueMapConverter.convert(memberCoordinates);
 	}
 

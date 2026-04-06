@@ -39,10 +39,10 @@ import com.buession.redis.core.command.args.list.LPosArgument;
 import com.buession.redis.core.internal.convert.BinaryListStringListConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.KeyValueConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
-import com.buession.redis.core.internal.lettuce.CompositeArgumentUtils;
 import com.buession.redis.core.internal.lettuce.args.LettuceLPosArgs;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.LMPopArgs;
+import io.lettuce.core.LMoveArgs;
 
 import java.util.List;
 
@@ -63,7 +63,7 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 	                     final int timeout) {
 		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from, to).add(timeout);
 		return executeCommand(RedisCommand.BLMOVE, args,
-				(cmd)->cmd.blmove(rawBinaryKey(key), rawBinaryKey(destKey), CompositeArgumentUtils.lMoveArgs(from, to),
+				(cmd)->cmd.blmove(rawBinaryKey(key), rawBinaryKey(destKey), lMoveArgs(from, to),
 						timeout), SafeEncoder::encode);
 	}
 
@@ -72,19 +72,19 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 	                     final int timeout) {
 		final CommandArguments args = CommandArguments.create(key).add(destKey).add(from, to).add(timeout);
 		return executeCommand(RedisCommand.BLMOVE, args,
-				(cmd)->cmd.blmove(rawKey(key), rawKey(destKey), CompositeArgumentUtils.lMoveArgs(from, to), timeout));
+				(cmd)->cmd.blmove(rawKey(key), rawKey(destKey), lMoveArgs(from, to), timeout));
 	}
 
 	@Override
 	public KeyValue<String, List<String>> blMPop(final int timeout, final String[] keys, final Direction direction) {
 		final CommandArguments args = CommandArguments.create(timeout).add(keys.length, keys).add(direction);
-		return stringBlMPop(rawBinaryKeys(keys), timeout, CompositeArgumentUtils.lMPopArgs(direction), args);
+		return stringBlMPop(rawBinaryKeys(keys), timeout, lMPopArgs(direction), args);
 	}
 
 	@Override
 	public KeyValue<byte[], List<byte[]>> blMPop(final int timeout, final byte[][] keys, final Direction direction) {
 		final CommandArguments args = CommandArguments.create(timeout).add(keys.length, keys).add(direction);
-		return binaryBlMPop(rawKeys(keys), timeout, CompositeArgumentUtils.lMPopArgs(direction), args);
+		return binaryBlMPop(rawKeys(keys), timeout, lMPopArgs(direction), args);
 	}
 
 	@Override
@@ -92,7 +92,7 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 	                                             final int count) {
 		final CommandArguments args = CommandArguments.create(timeout).add(keys.length, keys).add(direction)
 				.add(Keyword.Common.COUNT, count);
-		return stringBlMPop(rawBinaryKeys(keys), timeout, CompositeArgumentUtils.lMPopArgs(direction, count), args);
+		return stringBlMPop(rawBinaryKeys(keys), timeout, lMPopArgs(direction, count), args);
 	}
 
 	@Override
@@ -100,7 +100,7 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 	                                             final int count) {
 		final CommandArguments args = CommandArguments.create(timeout).add(keys.length, keys).add(direction)
 				.add(Keyword.Common.COUNT, count);
-		return binaryBlMPop(rawKeys(keys), timeout, CompositeArgumentUtils.lMPopArgs(direction, count), args);
+		return binaryBlMPop(rawKeys(keys), timeout, lMPopArgs(direction, count), args);
 	}
 
 	@Override
@@ -189,7 +189,7 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 	public String lMove(final String key, final String destKey, final Direction from, final Direction to) {
 		final CommandArguments args = CommandArguments.create(key, destKey).add(from, to);
 		return executeCommand(RedisCommand.LMOVE, args,
-				(cmd)->cmd.lmove(rawBinaryKey(key), rawBinaryKey(destKey), CompositeArgumentUtils.lMoveArgs(from, to)),
+				(cmd)->cmd.lmove(rawBinaryKey(key), rawBinaryKey(destKey), lMoveArgs(from, to)),
 				SafeEncoder::encode);
 	}
 
@@ -197,33 +197,33 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 	public byte[] lMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to) {
 		final CommandArguments args = CommandArguments.create(key, destKey).add(from, to);
 		return executeCommand(RedisCommand.LMOVE, args,
-				(cmd)->cmd.lmove(rawKey(key), rawKey(destKey), CompositeArgumentUtils.lMoveArgs(from, to)));
+				(cmd)->cmd.lmove(rawKey(key), rawKey(destKey), lMoveArgs(from, to)));
 	}
 
 	@Override
 	public KeyValue<String, List<String>> lMPop(final String[] keys, final Direction direction) {
 		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(direction);
-		return stringLMPop(rawBinaryKeys(keys), CompositeArgumentUtils.lMPopArgs(direction), args);
+		return stringLMPop(rawBinaryKeys(keys), lMPopArgs(direction), args);
 	}
 
 	@Override
 	public KeyValue<byte[], List<byte[]>> lMPop(final byte[][] keys, final Direction direction) {
 		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(direction);
-		return binaryLMPop(rawKeys(keys), CompositeArgumentUtils.lMPopArgs(direction), args);
+		return binaryLMPop(rawKeys(keys), lMPopArgs(direction), args);
 	}
 
 	@Override
 	public KeyValue<String, List<String>> lMPop(final String[] keys, final Direction direction, final int count) {
 		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(direction)
 				.add(Keyword.Common.COUNT, count);
-		return stringLMPop(rawBinaryKeys(keys), CompositeArgumentUtils.lMPopArgs(direction).count(count), args);
+		return stringLMPop(rawBinaryKeys(keys), lMPopArgs(direction).count(count), args);
 	}
 
 	@Override
 	public KeyValue<byte[], List<byte[]>> lMPop(final byte[][] keys, final Direction direction, final int count) {
 		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(direction)
 				.add(Keyword.Common.COUNT, count);
-		return binaryLMPop(rawKeys(keys), CompositeArgumentUtils.lMPopArgs(direction).count(count), args);
+		return binaryLMPop(rawKeys(keys), lMPopArgs(direction).count(count), args);
 	}
 
 	@Override
@@ -476,6 +476,37 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 		return executeCommand(RedisCommand.LMPOP, args,
 				(cmd)->cmd.lmpop(lmPopArgs, keys),
 				new KeyValueConverter<>((k)->k, (v)->v));
+	}
+
+	private static LMoveArgs lMoveArgs(final Direction source, final Direction destination) {
+		if(source == null || destination == null){
+			return null;
+		}
+
+		if(Direction.LEFT.equals(source)){
+			return Direction.LEFT.equals(destination) ? LMoveArgs.Builder.leftLeft() : LMoveArgs.Builder.leftRight();
+		}else{
+			return Direction.LEFT.equals(destination) ? LMoveArgs.Builder.rightLeft() : LMoveArgs.Builder.rightRight();
+		}
+	}
+
+	private static LMPopArgs lMPopArgs(final Direction direction) {
+		return lMPopArgs(direction, null);
+	}
+
+	private static LMPopArgs lMPopArgs(final Direction direction, final Integer count) {
+		if(direction == null){
+			return null;
+		}
+
+		final LMPopArgs lmPopArgs = Direction.LEFT.equals(direction) ?
+				LMPopArgs.Builder.left() : LMPopArgs.Builder.right();
+
+		if(count != null){
+			lmPopArgs.count(count);
+		}
+
+		return lmPopArgs;
 	}
 
 }
