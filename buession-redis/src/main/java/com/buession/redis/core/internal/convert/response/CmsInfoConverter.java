@@ -51,43 +51,47 @@ public final class CmsInfoConverter implements Converter<Map<String, Object>, Cm
 		propertyMapper.from(source.get("depth")).as((v)->(Integer) v).to(cmsInfoBuilder::setDepth);
 		propertyMapper.from(source.get("count")).as((v)->(Integer) v).to(cmsInfoBuilder::setCount);
 
-		return new CmsInfo(cmsInfoBuilder.getWidth(), cmsInfoBuilder.getDepth(), cmsInfoBuilder.getCount());
+		return cmsInfoBuilder.build();
 	}
 
 	private final static class CmsInfoBuilder {
 
-		private int width;
+		private Integer width;
 
-		private int depth;
+		private Integer depth;
 
-		private int count;
+		private Integer count;
 
 		private CmsInfoBuilder() {
 
 		}
 
-		public int getWidth() {
+		public Integer getWidth() {
 			return width;
 		}
 
-		public void setWidth(int width) {
+		public void setWidth(Integer width) {
 			this.width = width;
 		}
 
-		public int getDepth() {
+		public Integer getDepth() {
 			return depth;
 		}
 
-		public void setDepth(int depth) {
+		public void setDepth(Integer depth) {
 			this.depth = depth;
 		}
 
-		public int getCount() {
+		public Integer getCount() {
 			return count;
 		}
 
-		public void setCount(int count) {
+		public void setCount(Integer count) {
 			this.count = count;
+		}
+
+		public CmsInfo build() {
+			return new CmsInfo(width, depth, count);
 		}
 
 	}

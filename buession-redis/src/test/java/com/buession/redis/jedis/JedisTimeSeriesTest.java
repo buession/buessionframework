@@ -34,7 +34,7 @@ import java.util.Date;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class JediTimeSeriesTest extends AbstractJedisRedisTest {
+public class JedisTimeSeriesTest extends AbstractJedisRedisTest {
 
 	@Test
 	public void tsAdd() {

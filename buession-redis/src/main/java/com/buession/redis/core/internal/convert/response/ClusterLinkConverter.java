@@ -70,9 +70,7 @@ public class ClusterLinkConverter implements Converter<Map<String, Object>, Clus
 		propertyMapper.from(source.get("send-buffer-used")).as((v)->(Integer) v)
 				.to(clusterLinkBuilder::setSendBufferUsed);
 
-		return new ClusterLink(clusterLinkBuilder.getDirection(), clusterLinkBuilder.getNode(),
-				clusterLinkBuilder.getCreateTime(), clusterLinkBuilder.getEvents(),
-				clusterLinkBuilder.getSendBufferAllocated(), clusterLinkBuilder.getSendBufferUsed());
+		return clusterLinkBuilder.build();
 	}
 
 	private final static class ClusterLinkBuilder {
@@ -140,6 +138,11 @@ public class ClusterLinkConverter implements Converter<Map<String, Object>, Clus
 		public void setSendBufferUsed(Integer sendBufferUsed) {
 			this.sendBufferUsed = sendBufferUsed;
 		}
+
+		public ClusterLink build() {
+			return new ClusterLink(direction, node, createTime, events, sendBufferAllocated, sendBufferUsed);
+		}
+
 	}
 
 }

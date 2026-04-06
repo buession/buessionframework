@@ -580,33 +580,31 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	}
 
 	@Override
-	public StreamFull<String, String> xInfoStream(final String key, final boolean full) {
-		final CommandArguments args = CommandArguments.create(key).add(full ? "FULL" : null);
+	public StreamFull<String, String> xInfoStreamFull(final String key) {
+		final CommandArguments args = CommandArguments.create(key, "FULL");
 		return executeCommand(RedisCommand.XINFO, RedisSubCommand.XINFO_STREAM, args,
 				(cmd)->cmd.xinfoStreamFull(rawKey(key)),
 				new StreamFullInfoConverter<>((k)->k, (v)->v));
 	}
 
 	@Override
-	public StreamFull<byte[], byte[]> xInfoStream(final byte[] key, final boolean full) {
-		final CommandArguments args = CommandArguments.create(key).add(full ? "FULL" : null);
+	public StreamFull<byte[], byte[]> xInfoStreamFull(final byte[] key) {
+		final CommandArguments args = CommandArguments.create(key, "FULL");
 		return executeCommand(RedisCommand.XINFO, RedisSubCommand.XINFO_STREAM, args,
 				(cmd)->cmd.xinfoStreamFull(rawStringKey(key)),
 				new StreamFullInfoConverter<>(SafeEncoder::encode, SafeEncoder::encode));
 	}
 
 	@Override
-	public StreamFull<String, String> xInfoStream(final String key, final boolean full, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(full ? "FULL" : null)
-				.add(Keyword.Common.COUNT, count);
+	public StreamFull<String, String> xInfoStreamFull(final String key, final int count) {
+		final CommandArguments args = CommandArguments.create(key, "FULL").add(Keyword.Common.COUNT, count);
 		return executeCommand(RedisCommand.XINFO, RedisSubCommand.XINFO_STREAM, args,
 				(cmd)->cmd.xinfoStreamFull(rawKey(key), count), new StreamFullInfoConverter<>((k)->k, (v)->v));
 	}
 
 	@Override
-	public StreamFull<byte[], byte[]> xInfoStream(final byte[] key, final boolean full, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(full ? "FULL" : null)
-				.add(Keyword.Common.COUNT, count);
+	public StreamFull<byte[], byte[]> xInfoStreamFull(final byte[] key, final int count) {
+		final CommandArguments args = CommandArguments.create(key, "FULL").add(Keyword.Common.COUNT, count);
 		return executeCommand(RedisCommand.XINFO, RedisSubCommand.XINFO_STREAM, args,
 				(cmd)->cmd.xinfoStreamFull(rawStringKey(key), count),
 				new StreamFullInfoConverter<>(SafeEncoder::encode, SafeEncoder::encode));

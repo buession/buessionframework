@@ -49,47 +49,25 @@ public final class LettuceConnectionFactory extends AbstractConnectionFactory<Le
 	@Override
 	public RedisStandaloneConnection getStandaloneConnection() {
 		final LettuceDataSource dataSource = (LettuceDataSource) getDataSource();
-
-		if(dataSource.getPoolConfig() == null){
-			return new LettuceConnection(dataSource, dataSource.getConnectTimeout(), dataSource.getSoTimeout(),
-					dataSource.getInfiniteSoTimeout(), dataSource.getSslConfiguration());
-		}else{
-			return new LettuceConnection(dataSource, dataSource.getPoolConfig(), dataSource.getConnectTimeout(),
-					dataSource.getSoTimeout(), dataSource.getInfiniteSoTimeout(), dataSource.getSslConfiguration());
-		}
+		return new LettuceConnection(dataSource, dataSource.getPoolConfig(), dataSource.getConnectTimeout(),
+				dataSource.getSoTimeout(), dataSource.getInfiniteSoTimeout(), dataSource.getSslConfiguration());
 	}
 
 	@Override
 	public RedisSentinelConnection getSentinelConnection() {
 		final JedisSentinelDataSource dataSource = (JedisSentinelDataSource) getDataSource();
-
-		if(dataSource.getPoolConfig() == null){
-			return new JedisSentinelConnection(dataSource, dataSource.getConnectTimeout(), dataSource.getSoTimeout(),
-					dataSource.getInfiniteSoTimeout(), dataSource.getSentinelConnectTimeout(),
-					dataSource.getSentinelSoTimeout(), dataSource.getSslConfiguration());
-		}else{
-			return new JedisSentinelConnection(dataSource, dataSource.getPoolConfig(), dataSource.getConnectTimeout(),
-					dataSource.getSoTimeout(), dataSource.getInfiniteSoTimeout(),
-					dataSource.getSentinelConnectTimeout(), dataSource.getSentinelSoTimeout(),
-					dataSource.getSslConfiguration());
-		}
+		return new JedisSentinelConnection(dataSource, dataSource.getPoolConfig(), dataSource.getConnectTimeout(),
+				dataSource.getSoTimeout(), dataSource.getInfiniteSoTimeout(), dataSource.getSentinelConnectTimeout(),
+				dataSource.getSentinelSoTimeout(), dataSource.getSslConfiguration());
 	}
 
 	@Override
 	public RedisClusterConnection getClusterConnection() {
 		final LettuceClusterDataSource dataSource = (LettuceClusterDataSource) getDataSource();
-
-		if(dataSource.getPoolConfig() == null){
-			return new LettuceClusterConnection(dataSource, dataSource.getConnectTimeout(), dataSource.getSoTimeout(),
-					dataSource.getInfiniteSoTimeout(), dataSource.getMaxRedirects(),
-					dataSource.getMaxTotalRetriesDuration(), dataSource.getTopologyRefreshPeriod(),
-					dataSource.getSslConfiguration());
-		}else{
-			return new LettuceClusterConnection(dataSource, dataSource.getPoolConfig(),
-					dataSource.getConnectTimeout(), dataSource.getSoTimeout(), dataSource.getInfiniteSoTimeout(),
-					dataSource.getMaxRedirects(), dataSource.getMaxTotalRetriesDuration(),
-					dataSource.getTopologyRefreshPeriod(), dataSource.getSslConfiguration());
-		}
+		return new LettuceClusterConnection(dataSource, dataSource.getPoolConfig(), dataSource.getConnectTimeout(),
+				dataSource.getSoTimeout(), dataSource.getInfiniteSoTimeout(), dataSource.getMaxRedirects(),
+				dataSource.getMaxTotalRetriesDuration(), dataSource.getTopologyRefreshPeriod(),
+				dataSource.getSslConfiguration());
 	}
 
 }

@@ -26,13 +26,16 @@ package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
+import com.buession.redis.core.StreamConsumerFull;
 import com.buession.redis.core.StreamEntry;
 import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.StreamFull;
 import com.buession.redis.core.internal.convert.response.BaseKeyValueConverter;
+import redis.clients.jedis.resps.StreamConsumerFullInfo;
 import redis.clients.jedis.resps.StreamFullInfo;
 import redis.clients.jedis.resps.StreamGroupFullInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -67,5 +70,65 @@ public final class StreamFullInfoConverter<TK, TV>
 		return new StreamFull<>(source.getLength(), groups, source.getRadixTreeKeys(), source.getRadixTreeNodes(),
 				lastGeneratedId, source.getStreamFullInfo(), entries);
 	}
+
+	/**
+	 * Jedis {@link StreamGroupFullInfo} 转换为 {@link StreamFull.Group}
+	 *
+	 * @author Yong.Teng
+	 * @since 4.0.0
+	 */
+	private final static class StreamFullInfoGroupConverter
+			implements Converter<StreamGroupFullInfo, StreamFull.Group> {
+
+		@Override
+		public StreamFull.Group convert(final StreamGroupFullInfo source) {
+			if(source == null){
+				return null;
+			}
+
+			final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
+			final ListConverter<StreamConsumerFullInfo, StreamConsumerFull> listStreamConsumerFullInfoConverter =
+					new ListConverter<>(new StreamConsumerFullInfoConverter());
+			final List<StreamConsumerFull> consumers = listStreamConsumerFullInfoConverter.convert(
+					source.getConsumers());
+			final StreamEntryId lastDeliveredId = streamEntryIDConverter.convert(source.getLastDeliveredId());
+
+			return new StreamFull.Group(source.getName(), consumers, source.getPending(), source.getPelCount(),
+					lastDeliveredId, source.getGroupFullInfo());
+		}
+
+	}
+
+	/**
+	 * jedis {@link StreamConsumerFullInfo} 转换为 {@link StreamConsumerFull}
+	 *
+	 * @author Yong.Teng
+	 * @since 4.0.0
+	 */
+	private final static class StreamConsumerFullInfoConverter
+			implements Converter<StreamConsumerFullInfo, StreamConsumerFull> {
+
+		@Override
+		public StreamConsumerFull convert(final StreamConsumerFullInfo source) {
+			if(source == null){
+				return null;
+			}
+
+			final List<Long> pendings = new ArrayList<>();
+
+			if(source.getPending() != null){
+				for(List<Object> pending : source.getPending()){
+					for(Object item : pending){
+						pendings.add((Long) item);
+					}
+				}
+			}
+
+			return new StreamConsumerFull(source.getName(), source.getSeenTime(), source.getPelCount(), pendings,
+					source.getConsumerInfo());
+		}
+
+	}
+
 
 }

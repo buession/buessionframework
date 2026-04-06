@@ -264,8 +264,7 @@ public abstract class AbstractRedisClient implements RedisClient {
 		}
 	}
 
-	protected static String runCommand(final RedisCommand command,
-	                                   final CommandArguments arguments) {
+	protected static String runCommand(final RedisCommand command, final CommandArguments arguments) {
 		final StringBuilder sb = new StringBuilder(command.name());
 
 		if(arguments != null){

@@ -29,8 +29,6 @@ import com.buession.lang.Status;
 import com.buession.redis.RedisTemplate;
 import com.buession.redis.core.AutoClaimId;
 import com.buession.redis.core.AutoClaimInfo;
-import com.buession.redis.core.FunctionStats;
-import com.buession.redis.core.LibraryInfo;
 import com.buession.redis.core.Stream;
 import com.buession.redis.core.StreamConsumer;
 import com.buession.redis.core.StreamEntryId;
@@ -44,7 +42,7 @@ import java.util.List;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class JediStreamTest extends AbstractJedisRedisTest {
+public class JedisStreamTest extends AbstractJedisRedisTest {
 
 	@Test
 	public void xAdd() {

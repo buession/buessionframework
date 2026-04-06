@@ -139,7 +139,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return The command returns the number of messages successfully acknowledged
 	 */
 	List<StreamEntryDeletionResult> xAckDel(final String key, final String groupName,
-											final StreamDeletionPolicy deletionPolicy, final StreamEntryId... ids);
+	                                        final StreamDeletionPolicy deletionPolicy, final StreamEntryId... ids);
 
 	/**
 	 * Acknowledges and conditionally deletes one or multiple entries (messages) for a stream consumer group at the specified key.
@@ -158,7 +158,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return The command returns the number of messages successfully acknowledged
 	 */
 	List<StreamEntryDeletionResult> xAckDel(final byte[] key, final byte[] groupName,
-											final StreamDeletionPolicy deletionPolicy, final StreamEntryId... ids);
+	                                        final StreamDeletionPolicy deletionPolicy, final StreamEntryId... ids);
 
 	/**
 	 * Appends the specified stream entry to the stream at the specified key.
@@ -212,7 +212,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntryId}
 	 */
 	StreamEntryId xAdd(final String key, final StreamEntryId id, final Map<String, String> hash,
-					   final XAddArgument xAddArgument);
+	                   final XAddArgument xAddArgument);
 
 	/**
 	 * Appends the specified stream entry to the stream at the specified key.
@@ -232,7 +232,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntryId}
 	 */
 	StreamEntryId xAdd(final byte[] key, final StreamEntryId id, final Map<byte[], byte[]> hash,
-					   final XAddArgument xAddArgument);
+	                   final XAddArgument xAddArgument);
 
 	/**
 	 * This command transfers ownership of pending stream entries that match the specified criteria
@@ -253,7 +253,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntry}
 	 */
 	AutoClaimInfo<String, String> xAutoClaim(final String key, final String groupName, final String consumerName,
-											 final int minIdleTime, final StreamEntryId start);
+	                                         final int minIdleTime, final StreamEntryId start);
 
 	/**
 	 * This command transfers ownership of pending stream entries that match the specified criteria
@@ -274,7 +274,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntry}
 	 */
 	AutoClaimInfo<byte[], byte[]> xAutoClaim(final byte[] key, final byte[] groupName, final byte[] consumerName,
-											 final int minIdleTime, final StreamEntryId start);
+	                                         final int minIdleTime, final StreamEntryId start);
 
 	/**
 	 * This command transfers ownership of pending stream entries that match the specified criteria
@@ -297,7 +297,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntry}
 	 */
 	AutoClaimInfo<String, String> xAutoClaim(final String key, final String groupName, final String consumerName,
-											 final int minIdleTime, final StreamEntryId start, final int count);
+	                                         final int minIdleTime, final StreamEntryId start, final int count);
 
 	/**
 	 * This command transfers ownership of pending stream entries that match the specified criteria
@@ -320,7 +320,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntry}
 	 */
 	AutoClaimInfo<byte[], byte[]> xAutoClaim(final byte[] key, final byte[] groupName, final byte[] consumerName,
-											 final int minIdleTime, final StreamEntryId start, final int count);
+	                                         final int minIdleTime, final StreamEntryId start, final int count);
 
 	/**
 	 * This command transfers ownership of pending stream entries that match the specified criteria
@@ -341,7 +341,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntryId}
 	 */
 	AutoClaimId xAutoClaimJustId(final String key, final String groupName, final String consumerName,
-								 final int minIdleTime, final StreamEntryId start);
+	                             final int minIdleTime, final StreamEntryId start);
 
 	/**
 	 * This command transfers ownership of pending stream entries that match the specified criteria
@@ -362,7 +362,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntryId}
 	 */
 	AutoClaimId xAutoClaimJustId(final byte[] key, final byte[] groupName, final byte[] consumerName,
-								 final int minIdleTime, final StreamEntryId start);
+	                             final int minIdleTime, final StreamEntryId start);
 
 	/**
 	 * This command transfers ownership of pending stream entries that match the specified criteria
@@ -385,7 +385,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntryId}
 	 */
 	AutoClaimId xAutoClaimJustId(final String key, final String groupName, final String consumerName,
-								 final int minIdleTime, final StreamEntryId start, final int count);
+	                             final int minIdleTime, final StreamEntryId start, final int count);
 
 	/**
 	 * This command transfers ownership of pending stream entries that match the specified criteria
@@ -408,7 +408,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntryId}
 	 */
 	AutoClaimId xAutoClaimJustId(final byte[] key, final byte[] groupName, final byte[] consumerName,
-								 final int minIdleTime, final StreamEntryId start, final int count);
+	                             final int minIdleTime, final StreamEntryId start, final int count);
 
 	/**
 	 * Sets the IDMP (Idempotent Message Processing) configuration parameters for a stream.
@@ -550,7 +550,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntry} 列表
 	 */
 	List<StreamEntry<String, String>> xClaim(final String key, final String groupName, final String consumerName,
-											 final int minIdleTime, final StreamEntryId... ids);
+	                                         final int minIdleTime, final StreamEntryId... ids);
 
 	/**
 	 * In the context of a stream consumer group, this command changes the ownership of a pending message,
@@ -572,7 +572,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntry} 列表
 	 */
 	List<StreamEntry<byte[], byte[]>> xClaim(final byte[] key, final byte[] groupName, final byte[] consumerName,
-											 final int minIdleTime, final StreamEntryId... ids);
+	                                         final int minIdleTime, final StreamEntryId... ids);
 
 	/**
 	 * In the context of a stream consumer group, this command changes the ownership of a pending message,
@@ -596,8 +596,8 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntry} 列表
 	 */
 	List<StreamEntry<String, String>> xClaim(final String key, final String groupName, final String consumerName,
-											 final int minIdleTime, final StreamEntryId[] ids,
-											 final XClaimArgument xClaimArgument);
+	                                         final int minIdleTime, final StreamEntryId[] ids,
+	                                         final XClaimArgument xClaimArgument);
 
 	/**
 	 * In the context of a stream consumer group, this command changes the ownership of a pending message,
@@ -621,8 +621,8 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntry} 列表
 	 */
 	List<StreamEntry<byte[], byte[]>> xClaim(final byte[] key, final byte[] groupName, final byte[] consumerName,
-											 final int minIdleTime, final StreamEntryId[] ids,
-											 final XClaimArgument xClaimArgument);
+	                                         final int minIdleTime, final StreamEntryId[] ids,
+	                                         final XClaimArgument xClaimArgument);
 
 	/**
 	 * In the context of a stream consumer group, this command changes the ownership of a pending message,
@@ -644,7 +644,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntryId} 列表
 	 */
 	List<StreamEntryId> xClaimJustId(final String key, final String groupName, final String consumerName,
-									 final int minIdleTime, final StreamEntryId... ids);
+	                                 final int minIdleTime, final StreamEntryId... ids);
 
 	/**
 	 * In the context of a stream consumer group, this command changes the ownership of a pending message,
@@ -666,7 +666,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntryId} 列表
 	 */
 	List<StreamEntryId> xClaimJustId(final byte[] key, final byte[] groupName, final byte[] consumerName,
-									 final int minIdleTime, final StreamEntryId... ids);
+	                                 final int minIdleTime, final StreamEntryId... ids);
 
 	/**
 	 * In the context of a stream consumer group, this command changes the ownership of a pending message,
@@ -690,8 +690,8 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntryId} 列表
 	 */
 	List<StreamEntryId> xClaimJustId(final String key, final String groupName, final String consumerName,
-									 final int minIdleTime, final StreamEntryId[] ids,
-									 final XClaimArgument xClaimArgument);
+	                                 final int minIdleTime, final StreamEntryId[] ids,
+	                                 final XClaimArgument xClaimArgument);
 
 	/**
 	 * In the context of a stream consumer group, this command changes the ownership of a pending message,
@@ -715,8 +715,8 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntryId} 列表
 	 */
 	List<StreamEntryId> xClaimJustId(final byte[] key, final byte[] groupName, final byte[] consumerName,
-									 final int minIdleTime, final StreamEntryId[] ids,
-									 final XClaimArgument xClaimArgument);
+	                                 final int minIdleTime, final StreamEntryId[] ids,
+	                                 final XClaimArgument xClaimArgument);
 
 	/**
 	 * Removes the specified entries from a stream, and returns the number of entries deleted
@@ -761,7 +761,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return The number of entries actually deleted
 	 */
 	List<StreamEntryDeletionResult> xDelEx(final String key, final StreamDeletionPolicy deletionPolicy,
-										   final StreamEntryId... ids);
+	                                       final StreamEntryId... ids);
 
 	/**
 	 * Deletes one or multiple entries from the stream at the specified key.
@@ -778,7 +778,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return The number of entries actually deleted
 	 */
 	List<StreamEntryDeletionResult> xDelEx(final byte[] key, final StreamDeletionPolicy deletionPolicy,
-										   final StreamEntryId... ids);
+	                                       final StreamEntryId... ids);
 
 	/**
 	 * This command creates a new consumer group uniquely identified by groupname for the stream stored at key
@@ -867,7 +867,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return 创建成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
 	 */
 	Status xGroupCreate(final String key, final String groupName, final StreamEntryId id, final boolean makeStream,
-						final long entriesRead);
+	                    final long entriesRead);
 
 	/**
 	 * This command creates a new consumer group uniquely identified by groupname for the stream stored at key
@@ -888,7 +888,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return 创建成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
 	 */
 	Status xGroupCreate(final byte[] key, final byte[] groupName, final StreamEntryId id, final boolean makeStream,
-						final long entriesRead);
+	                    final long entriesRead);
 
 	/**
 	 * This command creates a new consumer group uniquely identified by groupname for the stream stored at key
@@ -1169,12 +1169,10 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param full
-	 * 		Full
 	 *
 	 * @return {@link StreamFull}
 	 */
-	StreamFull<String, String> xInfoStream(final String key, final boolean full);
+	StreamFull<String, String> xInfoStreamFull(final String key);
 
 	/**
 	 * This command returns information about the stream stored at key
@@ -1183,12 +1181,10 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param full
-	 * 		Full
 	 *
 	 * @return {@link StreamFull}
 	 */
-	StreamFull<byte[], byte[]> xInfoStream(final byte[] key, final boolean full);
+	StreamFull<byte[], byte[]> xInfoStreamFull(final byte[] key);
 
 	/**
 	 * This command returns information about the stream stored at key
@@ -1197,14 +1193,12 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param full
-	 * 		Full
 	 * @param count
 	 * 		返回数量
 	 *
 	 * @return {@link StreamFull}
 	 */
-	StreamFull<String, String> xInfoStream(final String key, final boolean full, final int count);
+	StreamFull<String, String> xInfoStreamFull(final String key, final int count);
 
 	/**
 	 * This command returns information about the stream stored at key
@@ -1213,14 +1207,12 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param full
-	 * 		Full
 	 * @param count
 	 * 		返回数量
 	 *
 	 * @return {@link StreamFull}
 	 */
-	StreamFull<byte[], byte[]> xInfoStream(final byte[] key, final boolean full, final int count);
+	StreamFull<byte[], byte[]> xInfoStreamFull(final byte[] key, final int count);
 
 	/**
 	 * Returns the number of entries inside a stream
@@ -1293,7 +1285,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamPending} 列表
 	 */
 	List<StreamPending> xPending(final String key, final String groupName, final StreamEntryId start,
-								 final StreamEntryId end, final int count);
+	                             final StreamEntryId end, final int count);
 
 	/**
 	 * Fetching data from a stream via a consumer group, and not acknowledging such data, has the effect of creating pending entries
@@ -1314,7 +1306,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamPending} 列表
 	 */
 	List<StreamPending> xPending(final byte[] key, final byte[] groupName, final StreamEntryId start,
-								 final StreamEntryId end, final int count);
+	                             final StreamEntryId end, final int count);
 
 	/**
 	 * Fetching data from a stream via a consumer group, and not acknowledging such data, has the effect of creating pending entries
@@ -1337,7 +1329,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamPending} 列表
 	 */
 	List<StreamPending> xPending(final String key, final String groupName, final long minIdleTime,
-								 final StreamEntryId start, final StreamEntryId end, final int count);
+	                             final StreamEntryId start, final StreamEntryId end, final int count);
 
 	/**
 	 * Fetching data from a stream via a consumer group, and not acknowledging such data, has the effect of creating pending entries
@@ -1360,7 +1352,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamPending} 列表
 	 */
 	List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime,
-								 final StreamEntryId start, final StreamEntryId end, final int count);
+	                             final StreamEntryId start, final StreamEntryId end, final int count);
 
 	/**
 	 * Fetching data from a stream via a consumer group, and not acknowledging such data, has the effect of creating pending entries
@@ -1383,7 +1375,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamPending} 列表
 	 */
 	List<StreamPending> xPending(final String key, final String groupName, final StreamEntryId start,
-								 final StreamEntryId end, final int count, final String consumerName);
+	                             final StreamEntryId end, final int count, final String consumerName);
 
 	/**
 	 * Fetching data from a stream via a consumer group, and not acknowledging such data, has the effect of creating pending entries
@@ -1406,7 +1398,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamPending} 列表
 	 */
 	List<StreamPending> xPending(final byte[] key, final byte[] groupName, final StreamEntryId start,
-								 final StreamEntryId end, final int count, final byte[] consumerName);
+	                             final StreamEntryId end, final int count, final byte[] consumerName);
 
 	/**
 	 * Fetching data from a stream via a consumer group, and not acknowledging such data, has the effect of creating pending entries
@@ -1431,8 +1423,8 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamPending} 列表
 	 */
 	List<StreamPending> xPending(final String key, final String groupName, final long minIdleTime,
-								 final StreamEntryId start, final StreamEntryId end, final int count,
-								 final String consumerName);
+	                             final StreamEntryId start, final StreamEntryId end, final int count,
+	                             final String consumerName);
 
 	/**
 	 * Fetching data from a stream via a consumer group, and not acknowledging such data, has the effect of creating pending entries
@@ -1457,8 +1449,8 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamPending} 列表
 	 */
 	List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime,
-								 final StreamEntryId start, final StreamEntryId end, final int count,
-								 final byte[] consumerName);
+	                             final StreamEntryId start, final StreamEntryId end, final int count,
+	                             final byte[] consumerName);
 
 	/**
 	 * The command returns the stream entries matching a given range of IDs
@@ -1509,7 +1501,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntry} 列表
 	 */
 	List<StreamEntry<String, String>> xRange(final String key, final StreamEntryId start, final StreamEntryId end,
-											 final int count);
+	                                         final int count);
 
 	/**
 	 * The command returns the stream entries matching a given range of IDs
@@ -1528,7 +1520,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntry} 列表
 	 */
 	List<StreamEntry<byte[], byte[]>> xRange(final byte[] key, final StreamEntryId start, final StreamEntryId end,
-											 final int count);
+	                                         final int count);
 
 	/**
 	 * Read data from one or multiple streams, only returning entries with an ID greater than the last received ID reported by the caller
@@ -1601,7 +1593,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntry} 列表
 	 */
 	List<XReadGroupInfo<String, String>> xReadGroup(final String groupName, final String consumerName,
-													final Map<String, StreamEntryId> streams);
+	                                                final Map<String, StreamEntryId> streams);
 
 	/**
 	 * The XREADGROUP command is a special version of the XREAD command with support for consumer groups
@@ -1618,7 +1610,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntry} 列表
 	 */
 	List<XReadGroupInfo<byte[], byte[]>> xReadGroup(final byte[] groupName, final byte[] consumerName,
-													final Map<byte[], StreamEntryId> streams);
+	                                                final Map<byte[], StreamEntryId> streams);
 
 	/**
 	 * The XREADGROUP command is a special version of the XREAD command with support for consumer groups
@@ -1637,8 +1629,8 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntry} 列表
 	 */
 	List<XReadGroupInfo<String, String>> xReadGroup(final String groupName, final String consumerName,
-													final XReadGroupArgument xReadGroupArgument,
-													final Map<String, StreamEntryId> streams);
+	                                                final XReadGroupArgument xReadGroupArgument,
+	                                                final Map<String, StreamEntryId> streams);
 
 	/**
 	 * The XREADGROUP command is a special version of the XREAD command with support for consumer groups
@@ -1657,8 +1649,8 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntry} 列表
 	 */
 	List<XReadGroupInfo<byte[], byte[]>> xReadGroup(final byte[] groupName, final byte[] consumerName,
-													final XReadGroupArgument xReadGroupArgument,
-													final Map<byte[], StreamEntryId> streams);
+	                                                final XReadGroupArgument xReadGroupArgument,
+	                                                final Map<byte[], StreamEntryId> streams);
 
 	/**
 	 * The XREADGROUP command is a special version of the XREAD command with support for consumer groups
@@ -1679,8 +1671,8 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntry} 列表
 	 */
 	List<XReadGroupInfo<String, String>> xReadGroup(final String groupName, final String consumerName,
-													final XReadGroupArgument xReadGroupArgument,
-													final Map<String, StreamEntryId> streams, final int count);
+	                                                final XReadGroupArgument xReadGroupArgument,
+	                                                final Map<String, StreamEntryId> streams, final int count);
 
 	/**
 	 * The XREADGROUP command is a special version of the XREAD command with support for consumer groups
@@ -1701,8 +1693,8 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntry} 列表
 	 */
 	List<XReadGroupInfo<byte[], byte[]>> xReadGroup(final byte[] groupName, final byte[] consumerName,
-													final XReadGroupArgument xReadGroupArgument,
-													final Map<byte[], StreamEntryId> streams, final int count);
+	                                                final XReadGroupArgument xReadGroupArgument,
+	                                                final Map<byte[], StreamEntryId> streams, final int count);
 
 	/**
 	 * The XREADGROUP command is a special version of the XREAD command with support for consumer groups
@@ -1721,7 +1713,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntry} 列表
 	 */
 	List<XReadGroupInfo<String, String>> xReadGroup(final String groupName, final String consumerName,
-													final Map<String, StreamEntryId> streams, final int count);
+	                                                final Map<String, StreamEntryId> streams, final int count);
 
 	/**
 	 * The XREADGROUP command is a special version of the XREAD command with support for consumer groups
@@ -1740,7 +1732,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntry} 列表
 	 */
 	List<XReadGroupInfo<byte[], byte[]>> xReadGroup(final byte[] groupName, final byte[] consumerName,
-													final Map<byte[], StreamEntryId> streams, final int count);
+	                                                final Map<byte[], StreamEntryId> streams, final int count);
 
 	/**
 	 * This command is exactly like XRANGE, but with the notable difference of returning the entries in reverse order,
@@ -1797,7 +1789,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntry} 列表
 	 */
 	List<StreamEntry<String, String>> xRevRange(final String key, final StreamEntryId end, final StreamEntryId start,
-												final int count);
+	                                            final int count);
 
 	/**
 	 * This command is exactly like XRANGE, but with the notable difference of returning the entries in reverse order,
@@ -1818,7 +1810,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntry} 列表
 	 */
 	List<StreamEntry<byte[], byte[]>> xRevRange(final byte[] key, final StreamEntryId end, final StreamEntryId start,
-												final int count);
+	                                            final int count);
 
 	/**
 	 * The XSETID command is an internal command. It is used by a Redis master to replicate the last delivered ID of streams.
@@ -1897,7 +1889,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return 操作结果
 	 */
 	Status xSetId(final String key, final StreamEntryId lastId, final long entriesAdded,
-				  final StreamEntryId maxDeletedId);
+	              final StreamEntryId maxDeletedId);
 
 	/**
 	 * The XSETID command is an internal command. It is used by a Redis master to replicate the last delivered ID of streams.
@@ -1916,7 +1908,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return 操作结果
 	 */
 	Status xSetId(final byte[] key, final StreamEntryId lastId, final long entriesAdded,
-				  final StreamEntryId maxDeletedId);
+	              final StreamEntryId maxDeletedId);
 
 	/**
 	 * The XSETID command is an internal command. It is used by a Redis master to replicate the last delivered ID of streams.
@@ -1993,7 +1985,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return The number of entries deleted from the stream.
 	 */
 	Long xTrim(final String key, final ApproximateExactTrimming approximateExactTrimming,
-			   final MaxLenMinId<?> maxLenMinId);
+	           final MaxLenMinId<?> maxLenMinId);
 
 	/**
 	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed
@@ -2010,7 +2002,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return The number of entries deleted from the stream.
 	 */
 	Long xTrim(final byte[] key, final ApproximateExactTrimming approximateExactTrimming,
-			   final MaxLenMinId<?> maxLenMinId);
+	           final MaxLenMinId<?> maxLenMinId);
 
 	/**
 	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed
@@ -2029,7 +2021,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return The number of entries deleted from the stream.
 	 */
 	Long xTrim(final String key, final ApproximateExactTrimming approximateExactTrimming,
-			   final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy);
+	           final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy);
 
 	/**
 	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed
@@ -2048,7 +2040,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return The number of entries deleted from the stream.
 	 */
 	Long xTrim(final byte[] key, final ApproximateExactTrimming approximateExactTrimming,
-			   final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy);
+	           final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy);
 
 	/**
 	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed
@@ -2131,7 +2123,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return The number of entries deleted from the stream.
 	 */
 	Long xTrim(final String key, final ApproximateExactTrimming approximateExactTrimming,
-			   final MaxLenMinId<?> maxLenMinId, final int count);
+	           final MaxLenMinId<?> maxLenMinId, final int count);
 
 	/**
 	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed
@@ -2150,7 +2142,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return The number of entries deleted from the stream.
 	 */
 	Long xTrim(final byte[] key, final ApproximateExactTrimming approximateExactTrimming,
-			   final MaxLenMinId<?> maxLenMinId, final int count);
+	           final MaxLenMinId<?> maxLenMinId, final int count);
 
 	/**
 	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed
@@ -2171,7 +2163,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return The number of entries deleted from the stream.
 	 */
 	Long xTrim(final String key, final ApproximateExactTrimming approximateExactTrimming,
-			   final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy, final int count);
+	           final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy, final int count);
 
 	/**
 	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed
@@ -2192,7 +2184,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return The number of entries deleted from the stream.
 	 */
 	Long xTrim(final byte[] key, final ApproximateExactTrimming approximateExactTrimming,
-			   final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy, final int count);
+	           final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy, final int count);
 
 	/**
 	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed
@@ -2211,7 +2203,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return The number of entries deleted from the stream.
 	 */
 	Long xTrim(final String key, final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy,
-			   final int count);
+	           final int count);
 
 	/**
 	 * XTRIM trims the stream by evicting older entries (entries with lower IDs) if needed
@@ -2230,6 +2222,6 @@ public interface StreamCommands extends RedisCommands {
 	 * @return The number of entries deleted from the stream.
 	 */
 	Long xTrim(final byte[] key, final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy,
-			   final int count);
+	           final int count);
 
 }

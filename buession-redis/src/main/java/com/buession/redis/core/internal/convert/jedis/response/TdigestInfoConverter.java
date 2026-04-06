@@ -25,6 +25,7 @@
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.redis.core.TdigestInfo;
 
 import java.util.Map;
@@ -39,7 +40,136 @@ public final class TdigestInfoConverter implements Converter<Map<String, Object>
 
 	@Override
 	public TdigestInfo convert(final Map<String, Object> source) {
-		return null;
+		if(source == null){
+			return null;
+		}
+
+		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
+		final TdigestInfoBuilder tdigestInfoBuilder = new TdigestInfoBuilder();
+
+		propertyMapper.from(source.get("Compression")).as((v)->(Long) v).as(Long::intValue)
+				.to(tdigestInfoBuilder::setCompression);
+		propertyMapper.from(source.get("Capacity")).as((v)->(Long) v).as(Long::intValue)
+				.to(tdigestInfoBuilder::setCapacity);
+		propertyMapper.from(source.get("Merged nodes")).as((v)->(Long) v).as(Long::intValue)
+				.to(tdigestInfoBuilder::setMergedNodes);
+		propertyMapper.from(source.get("Unmerged nodes")).as((v)->(Long) v).as(Long::intValue)
+				.to(tdigestInfoBuilder::setUnmergedNodes);
+		propertyMapper.from(source.get("Merged weight")).as((v)->(Long) v).as(Long::intValue)
+				.to(tdigestInfoBuilder::setMergedWeight);
+		propertyMapper.from(source.get("Unmerged weight")).as((v)->(Long) v).as(Long::intValue)
+				.to(tdigestInfoBuilder::setUnmergedWeight);
+		propertyMapper.from(source.get("Observations")).as((v)->(Long) v).as(Long::intValue)
+				.to(tdigestInfoBuilder::setObservations);
+		propertyMapper.from(source.get("Total compressions")).as((v)->(Long) v).as(Long::intValue)
+				.to(tdigestInfoBuilder::setTotalCompressions);
+		propertyMapper.from(source.get("Memory usage")).as((v)->(Long) v).as(Long::intValue)
+				.to(tdigestInfoBuilder::setMemoryUsage);
+
+		return tdigestInfoBuilder.build();
+	}
+
+	private final static class TdigestInfoBuilder {
+
+		private Integer compression;
+
+		private Integer capacity;
+
+		private Integer mergedNodes;
+
+		private Integer unmergedNodes;
+
+		private Integer mergedWeight;
+
+		private Integer unmergedWeight;
+
+		private Integer observations;
+
+		private Integer totalCompressions;
+
+		private Integer memoryUsage;
+
+		private TdigestInfoBuilder() {
+
+		}
+
+		public Integer getCompression() {
+			return compression;
+		}
+
+		public void setCompression(Integer compression) {
+			this.compression = compression;
+		}
+
+		public Integer getCapacity() {
+			return capacity;
+		}
+
+		public void setCapacity(Integer capacity) {
+			this.capacity = capacity;
+		}
+
+		public Integer getMergedNodes() {
+			return mergedNodes;
+		}
+
+		public void setMergedNodes(Integer mergedNodes) {
+			this.mergedNodes = mergedNodes;
+		}
+
+		public Integer getUnmergedNodes() {
+			return unmergedNodes;
+		}
+
+		public void setUnmergedNodes(Integer unmergedNodes) {
+			this.unmergedNodes = unmergedNodes;
+		}
+
+		public Integer getMergedWeight() {
+			return mergedWeight;
+		}
+
+		public void setMergedWeight(Integer mergedWeight) {
+			this.mergedWeight = mergedWeight;
+		}
+
+		public Integer getUnmergedWeight() {
+			return unmergedWeight;
+		}
+
+		public void setUnmergedWeight(Integer unmergedWeight) {
+			this.unmergedWeight = unmergedWeight;
+		}
+
+		public Integer getObservations() {
+			return observations;
+		}
+
+		public void setObservations(Integer observations) {
+			this.observations = observations;
+		}
+
+		public Integer getTotalCompressions() {
+			return totalCompressions;
+		}
+
+		public void setTotalCompressions(Integer totalCompressions) {
+			this.totalCompressions = totalCompressions;
+		}
+
+		public Integer getMemoryUsage() {
+			return memoryUsage;
+		}
+
+		public void setMemoryUsage(Integer memoryUsage) {
+			this.memoryUsage = memoryUsage;
+		}
+
+		public TdigestInfo build() {
+			return new TdigestInfo(compression, capacity, mergedNodes, unmergedNodes, mergedWeight, unmergedWeight,
+					observations, totalCompressions, memoryUsage);
+		}
+
 	}
 
 }

@@ -205,10 +205,10 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 			}else if(dataSource instanceof JedisRedisDataSource){
 				connectionFactory = new JedisConnectionFactory((JedisRedisDataSource) dataSource);
 			}else{
-				throw new RedisException(
-						"dataSource must be an instance of " + JedisRedisDataSource.class.getName() + " or " +
-								LettuceRedisDataSource.class.getName() + ", but an instance of " +
-								dataSource.getClass().getName() + ".");
+				final String message = "dataSource must be an instance of " + JedisRedisDataSource.class.getName() +
+						" or " + LettuceRedisDataSource.class.getName() + ", but an instance of " +
+						dataSource.getClass().getName() + ".";
+				throw new RedisException(message);
 			}
 		}
 	}

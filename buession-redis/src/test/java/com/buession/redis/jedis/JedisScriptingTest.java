@@ -35,7 +35,7 @@ import java.util.List;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class JediScriptingTest extends AbstractJedisRedisTest {
+public class JedisScriptingTest extends AbstractJedisRedisTest {
 
 	@Test
 	public void functionStats() {

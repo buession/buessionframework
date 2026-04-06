@@ -29,6 +29,8 @@ import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.LcsResult;
 import redis.clients.jedis.resps.LCSMatchResult;
 
+import java.util.List;
+
 /**
  * Jedis {@link LCSMatchResult} 转换为 {@link LcsResult}
  *
@@ -45,8 +47,9 @@ public final class LCSMatchResultConveter implements Converter<LCSMatchResult, L
 
 		final ListConverter<LCSMatchResult.MatchedPosition, LcsResult.MatchedPosition> lcsMatchResultMatchedPositionConveter = new ListConverter<>(
 				new LCSMatchResultMatchedPositionConveter());
-		return new LcsResult(source.getMatchString(),
-				lcsMatchResultMatchedPositionConveter.convert(source.getMatches()), source.getLen());
+		final List<LcsResult.MatchedPosition> matches =
+				lcsMatchResultMatchedPositionConveter.convert(source.getMatches());
+		return new LcsResult(source.getMatchString(), matches, source.getLen());
 	}
 
 	private final static class LCSMatchResultMatchedPositionConveter

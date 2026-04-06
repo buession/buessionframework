@@ -36,8 +36,16 @@ import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.PipelineProxy;
 import com.buession.redis.transaction.TransactionProxy;
 import io.lettuce.core.RedisCommands;
+import io.lettuce.core.RedisCommandsInvocationHandler;
 import io.lettuce.core.RedisFuture;
+import io.lettuce.core.StatefulRedisClusterCommandsHandler;
+import io.lettuce.core.StatefulRedisCommandsHandler;
 import io.lettuce.core.api.StatefulConnection;
+import io.lettuce.core.api.StatefulRedisConnection;
+import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
+import io.lettuce.core.sentinel.api.StatefulRedisSentinelConnection;
+
+import java.lang.reflect.Proxy;
 
 /**
  * Lettuce Redis 命令
@@ -57,8 +65,8 @@ public interface LettuceRedisCommands extends com.buession.redis.core.command.Re
 	 *
 	 * @since 4.0.0
 	 */
-	final class LettuceCommand<SR, R> extends AbstractCommand<LettuceRedisClient, RedisCommands<byte[], byte[]>, SR,
-			SR, R> {
+	final class LettuceCommand<SR, R>
+			extends AbstractCommand<LettuceRedisClient, RedisCommands<byte[], byte[]>, SR, SR, R> {
 
 		public LettuceCommand(final LettuceRedisClient client, final RedisCommand command) {
 			super(client, command);
@@ -82,11 +90,29 @@ public interface LettuceRedisCommands extends com.buession.redis.core.command.Re
 			super(client, command, subCommand, executor, converter);
 		}
 
+		@SuppressWarnings({"unchecked"})
 		@Override
 		protected R doExecute(final RedisConnection conn) throws RedisException {
-			final SR result = null;//executor.execute(( LettuceRedisConnection<? extends StatefulConnection<byte[],
-			// byte[]>> conn).getConn());
+			final StatefulConnection<byte[], byte[]> connection =
+					((LettuceRedisConnection<StatefulConnection<byte[], byte[]>>) conn).getConn();
+			final SR result = executor.execute(createRedisCommands(connection));
 			return result == null ? null : converter.convert(result);
+		}
+
+		@SuppressWarnings({"unchecked"})
+		private static <K, V> RedisCommands<K, V> createRedisCommands(final StatefulConnection<K, V> connection) {
+			RedisCommandsInvocationHandler<K, V> handler;
+
+			if(connection instanceof StatefulRedisClusterConnection){
+				handler = new StatefulRedisClusterCommandsHandler<>((StatefulRedisClusterConnection<K, V>) connection);
+			}else if(connection instanceof StatefulRedisSentinelConnection){
+				handler = new StatefulRedisCommandsHandler<>((StatefulRedisConnection<K, V>) connection);
+			}else{
+				handler = new StatefulRedisCommandsHandler<>((StatefulRedisConnection<K, V>) connection);
+			}
+
+			return (RedisCommands<K, V>) Proxy.newProxyInstance(RedisCommands.class.getClassLoader(),
+					new Class[]{RedisCommands.class}, handler);
 		}
 
 	}

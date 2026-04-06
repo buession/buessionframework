@@ -37,6 +37,7 @@ import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.args.bloomfilter.InsertArgument;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.jedis.args.JedisBFInsertParams;
+import com.buession.redis.core.internal.jedis.args.JedisBFReserveParams;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.bloom.BFReserveParams;
 
@@ -58,8 +59,8 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 	@Override
 	public Status bfAdd(final String key, final String item) {
 		final CommandArguments args = CommandArguments.create(key).add(item);
-		return executeCommand(
-				RedisCommand.BF_ADD, args, (cmd)->cmd.bfAdd(rawKey(key), item), new BooleanStatusConverter());
+		return executeCommand(RedisCommand.BF_ADD, args, (cmd)->cmd.bfAdd(rawKey(key), item),
+				new BooleanStatusConverter());
 	}
 
 	@Override
@@ -201,7 +202,7 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 	public Status bfReserve(final String key, final double errorRate, final long capacity, final int expansion) {
 		final CommandArguments args = CommandArguments.create(key).add(errorRate).add(capacity)
 				.add("EXPANSION", expansion);
-		return bfReserve(rawKey(key), errorRate, capacity, BFReserveParams.reserveParams().expansion(expansion), args);
+		return bfReserve(rawKey(key), errorRate, capacity, new JedisBFReserveParams(expansion), args);
 	}
 
 	@Override
@@ -214,13 +215,7 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 	                        final boolean nonScaling) {
 		final CommandArguments args = CommandArguments.create(key).add(errorRate).add(capacity)
 				.add("EXPANSION", expansion).add("NONSCALING");
-		final BFReserveParams bfReserveParams = BFReserveParams.reserveParams().expansion(expansion);
-
-		if(nonScaling){
-			bfReserveParams.nonScaling();
-		}
-
-		return bfReserve(rawKey(key), errorRate, capacity, bfReserveParams, args);
+		return bfReserve(rawKey(key), errorRate, capacity, new JedisBFReserveParams(expansion, nonScaling), args);
 	}
 
 	@Override
@@ -232,13 +227,7 @@ public final class JedisBloomFilterCommands extends AbstractJedisRedisCommands i
 	@Override
 	public Status bfReserve(final String key, final double errorRate, final long capacity, final boolean nonScaling) {
 		final CommandArguments args = CommandArguments.create(key).add(errorRate).add(capacity).add("NONSCALING");
-		final BFReserveParams bfReserveParams = BFReserveParams.reserveParams();
-
-		if(nonScaling){
-			bfReserveParams.nonScaling();
-		}
-
-		return bfReserve(rawKey(key), errorRate, capacity, bfReserveParams, args);
+		return bfReserve(rawKey(key), errorRate, capacity, new JedisBFReserveParams(nonScaling), args);
 	}
 
 	@Override

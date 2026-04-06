@@ -24,20 +24,28 @@
  */
 package io.lettuce.core;
 
-import java.lang.reflect.InvocationHandler;
+import io.lettuce.core.api.StatefulRedisConnection;
+import io.lettuce.core.api.sync.RedisCommands;
+
 import java.lang.reflect.Method;
 
 /**
- *
+ * {@link RedisCommands} 代理类
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class RedisCommandsHandler implements InvocationHandler {
+public final class StatefulRedisCommandsHandler<K, V> implements RedisCommandsInvocationHandler<K, V> {
+
+	private final StatefulRedisConnection<K, V> conn;
+
+	public StatefulRedisCommandsHandler(final StatefulRedisConnection<K, V> conn) {
+		this.conn = conn;
+	}
 
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-		return method.invoke(target, args);
+		return method.invoke(conn.sync(), args);
 	}
 
 }

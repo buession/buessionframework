@@ -22,20 +22,19 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.jedis;
+package com.buession.redis.lettuce;
 
 import com.buession.core.builder.MapBuilder;
 import com.buession.lang.Status;
 import com.buession.redis.RedisTemplate;
 import com.buession.redis.core.AutoClaimId;
 import com.buession.redis.core.AutoClaimInfo;
-import com.buession.redis.core.FunctionStats;
-import com.buession.redis.core.LibraryInfo;
 import com.buession.redis.core.Stream;
 import com.buession.redis.core.StreamConsumer;
 import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.StreamFull;
 import com.buession.redis.core.StreamGroup;
+import com.buession.redis.jedis.AbstractJedisRedisTest;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -44,12 +43,12 @@ import java.util.List;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class JediStreamTest extends AbstractJedisRedisTest {
+public class LettuceStreamTest extends AbstractJedisRedisTest {
 
 	@Test
 	public void xAdd() {
 		RedisTemplate redisTemplate = redisTemplate();
-		StreamEntryId result = redisTemplate.xAdd("stream_a", "1-0",
+		StreamEntryId result = redisTemplate.xAdd("stream_b", "2-1",
 				MapBuilder.<String, String>create().put("1", "A").put("2", "B").build());
 		System.out.println(result);
 	}

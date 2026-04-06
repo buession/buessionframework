@@ -28,6 +28,7 @@ import com.buession.redis.core.command.RedisCommandGroup;
 import com.buession.redis.utils.ObjectStringBuilder;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 命令文档
@@ -35,29 +36,77 @@ import java.util.List;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public record CommandInfo(String summary, String since, RedisCommandGroup group, String complexity,
+public record CommandInfo(String name, RedisCommandGroup group, Integer arity, Set<Flag> flags, Integer firstKey,
+                          Integer lastKey, Integer step, Set<String> aclCategories,
                           List<CommandDoc.History> history, List<CommandDoc.Argument> arguments) {
 
 	@Override
 	public String toString() {
-		return ObjectStringBuilder.create()
-				.add("summary", summary)
-				.add("since", since)
-				.add("group", group)
-				.add("complexity", complexity)
-				.add("history", history)
-				.add("arguments", arguments)
-				.build();
+		return ObjectStringBuilder.create().add("name", name).add("group", group).add("flags", flags)
+				.add("First key", firstKey).add("Las key", lastKey).add("step", step)
+				.add("ACL categories", aclCategories)
+				.add("history", history).add("arguments", arguments).build();
+	}
+
+	public enum Flag implements Keyword {
+
+		ADMIN,
+
+		ASKING,
+
+		BLOCKING,
+
+		DENYOOM,
+
+		FAST,
+
+		LOADING,
+
+		MOVABLEKEYS,
+
+		NO_AUTH,
+
+		NO_ASYNC_LOADING,
+
+		NO_MANDATORY_KEYS,
+
+		NO_MULTI,
+
+		NOSCRIPT,
+
+		PUBSUB,
+
+		RANDOM,
+
+		READONLY,
+
+		SORT_FOR_SCRIPT,
+
+		SKIP_MONITOR,
+
+		SORT_SLOWLOG,
+
+		STALE,
+
+		WRITE;
+
+		@Override
+		public String getValue() {
+			return name().toLowerCase();
+		}
+
+		@Override
+		public String toString() {
+			return getValue();
+		}
+
 	}
 
 	public record History(String version, String commont) {
 
 		@Override
 		public String toString() {
-			return ObjectStringBuilder.create()
-					.add("version", version)
-					.add("commont", commont)
-					.build();
+			return ObjectStringBuilder.create().add("version", version).add("commont", commont).build();
 		}
 
 	}
@@ -66,13 +115,8 @@ public record CommandInfo(String summary, String since, RedisCommandGroup group,
 
 		@Override
 		public String toString() {
-			return ObjectStringBuilder.create()
-					.add("name", name)
-					.add("type", type)
-					.add("display_text", displayText)
-					.add("token", token)
-					.add("since", since)
-					.build();
+			return ObjectStringBuilder.create().add("name", name).add("type", type).add("display_text", displayText)
+					.add("token", token).add("since", since).build();
 		}
 
 	}

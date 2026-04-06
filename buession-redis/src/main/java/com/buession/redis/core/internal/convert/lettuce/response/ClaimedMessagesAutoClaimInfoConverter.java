@@ -33,6 +33,8 @@ import com.buession.redis.core.internal.convert.response.BaseKeyValueConverter;
 import io.lettuce.core.StreamMessage;
 import io.lettuce.core.models.stream.ClaimedMessages;
 
+import java.util.List;
+
 /**
  * Lettuce {@link ClaimedMessages} 转换为 {@link AutoClaimInfo}
  *
@@ -72,7 +74,8 @@ public final class ClaimedMessagesAutoClaimInfoConverter<SK, SV, TK, TV>
 
 		final ListConverter<StreamMessage<SK, SV>, StreamEntry<TK, TV>> listConverter =
 				new ListConverter<>(new StreamMessageConverter<>(keyConverter, valueConverter));
-		return new AutoClaimInfo<>(new StreamEntryId(source.getId()), listConverter.convert(source.getMessages()));
+		final List<StreamEntry<TK, TV>> value = listConverter.convert(source.getMessages());
+		return new AutoClaimInfo<>(new StreamEntryId(source.getId()), value);
 	}
 
 }

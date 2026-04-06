@@ -26,6 +26,12 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.CommandInfo;
+import com.buession.redis.core.command.RedisCommandGroup;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * <code>COMMAND INFO</code> 命令结果转换
@@ -37,7 +43,122 @@ public final class CommandInfoConverter implements Converter<Object, CommandInfo
 
 	@Override
 	public CommandInfo convert(final Object source) {
-		return null;
+		if(source instanceof List){
+			final CommandInfoBuilder commandInfoBuilder = new CommandInfoBuilder();
+			final List<Object> tmp = (List<Object>) source;
+
+			commandInfoBuilder.setName(tmp.get(0).toString());
+			commandInfoBuilder.setArity(((Long) tmp.get(1)).intValue());
+
+			List<String> flagsTemp = (List<String>) tmp.get(2);
+
+			if(flagsTemp != null){
+				commandInfoBuilder.setFlags(
+						flagsTemp.stream().map((v)->Enum.valueOf(CommandInfo.Flag.class, v.toUpperCase()))
+								.collect(Collectors.toSet()));
+			}
+
+			commandInfoBuilder.setFirstKey(((Long) tmp.get(3)).intValue());
+			commandInfoBuilder.setLastKey(((Long) tmp.get(4)).intValue());
+			commandInfoBuilder.setStep(((Long) tmp.get(5)).intValue());
+			commandInfoBuilder.setAclCategories(tmp.get(6) != null ? new HashSet<>((List<String>) tmp.get(6)) : null);
+
+			return commandInfoBuilder.build();
+		}else{
+			return null;
+		}
+	}
+
+	private final static class CommandInfoBuilder {
+
+		private String name;
+
+		private RedisCommandGroup group;
+
+		private Integer arity;
+
+		private Set<CommandInfo.Flag> flags;
+
+		private Integer firstKey;
+
+		private Integer lastKey;
+
+		private Integer step;
+
+		private Set<String> aclCategories;
+
+		private CommandInfoBuilder() {
+
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public RedisCommandGroup getGroup() {
+			return group;
+		}
+
+		public void setGroup(RedisCommandGroup group) {
+			this.group = group;
+		}
+
+		public Integer getArity() {
+			return arity;
+		}
+
+		public void setArity(Integer arity) {
+			this.arity = arity;
+		}
+
+		public Set<CommandInfo.Flag> getFlags() {
+			return flags;
+		}
+
+		public void setFlags(Set<CommandInfo.Flag> flags) {
+			this.flags = flags;
+		}
+
+		public Integer getFirstKey() {
+			return firstKey;
+		}
+
+		public void setFirstKey(Integer firstKey) {
+			this.firstKey = firstKey;
+		}
+
+		public Integer getLastKey() {
+			return lastKey;
+		}
+
+		public void setLastKey(Integer lastKey) {
+			this.lastKey = lastKey;
+		}
+
+		public Integer getStep() {
+			return step;
+		}
+
+		public void setStep(Integer step) {
+			this.step = step;
+		}
+
+		public Set<String> getAclCategories() {
+			return aclCategories;
+		}
+
+		public void setAclCategories(Set<String> aclCategories) {
+			this.aclCategories = aclCategories;
+		}
+
+		public CommandInfo build() {
+			return null;//new CommandInfo(name, group, arity, flags, firstKey, lastKey, step, aclCategories);
+		}
+
 	}
 
 }

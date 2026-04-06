@@ -26,6 +26,7 @@ package com.buession.redis.lettuce;
 
 import com.buession.redis.RedisTemplate;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceDataSource;
+import com.buession.redis.core.Options;
 import com.buession.redis.core.PoolConfig;
 
 /**
@@ -36,17 +37,19 @@ public abstract class AbstractLettuceRedisTest {
 	protected LettuceDataSource dataSource() {
 		LettuceDataSource dataSource = new LettuceDataSource();
 
-		dataSource.setHost("192.168.0.231");
-		dataSource.setPort(6379);
+		dataSource.setHost("192.168.0.161");
+		dataSource.setPort(30341);
 		dataSource.setDatabase(1);
-		dataSource.setPassword("rds_PWD");
-		//	dataSource.setPoolConfig(new PoolConfig());
+		//	dataSource.setPassword("rds_PWD");
+		dataSource.setPoolConfig(new PoolConfig());
 
 		return dataSource;
 	}
 
 	protected RedisTemplate redisTemplate() {
-		RedisTemplate redisTemplate = new RedisTemplate(dataSource());
+		Options options = new Options();
+		options.setPrefix("test:");
+		RedisTemplate redisTemplate = new RedisTemplate(dataSource(), options);
 
 		redisTemplate.afterPropertiesSet();
 

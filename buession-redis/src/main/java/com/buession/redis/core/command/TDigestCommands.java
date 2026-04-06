@@ -204,9 +204,9 @@ public interface TDigestCommands extends RedisCommands {
 	Status tdigestCreate(final byte[] key, final int compression);
 
 	/**
-	 * 创建一个新的 t-digest 数据结构
+	 * 查询 t-digest 数据结构详细信息
 	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/tdigest.create/" target="_blank">https://redis.io/docs/latest/commands/tdigest.create/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/tdigest.info/" target="_blank">https://redis.io/docs/latest/commands/tdigest.info/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -216,9 +216,9 @@ public interface TDigestCommands extends RedisCommands {
 	TdigestInfo tdigestInfo(final String key);
 
 	/**
-	 * 创建一个新的 t-digest 数据结构
+	 * 查询 t-digest 数据结构详细信息
 	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/tdigest.create/" target="_blank">https://redis.io/docs/latest/commands/tdigest.create/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/tdigest.info/" target="_blank">https://redis.io/docs/latest/commands/tdigest.info/</a></p>
 	 *
 	 * @param key
 	 * 		Key

@@ -41,12 +41,11 @@ import java.util.stream.Collectors;
  */
 public final class ClusterNodesConverter implements Converter<String, List<ClusterRedisNode>> {
 
-	private final ClusterNodeConverter clusterNodeConverter = new ClusterNodeConverter();
-
 	@Override
 	public List<ClusterRedisNode> convert(final String source) {
-		return Arrays.stream(StringUtils.split(source, "\r\n")).map(clusterNodeConverter::convert).collect(
-				Collectors.toList());
+		final ClusterNodeConverter clusterNodeConverter = new ClusterNodeConverter();
+		return Arrays.stream(StringUtils.split(source, "\r\n")).map(clusterNodeConverter::convert)
+				.collect(Collectors.toList());
 	}
 
 }

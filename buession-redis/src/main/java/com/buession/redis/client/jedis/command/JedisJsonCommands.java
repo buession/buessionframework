@@ -370,9 +370,8 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public Status jsonMerge(final String key, final String path, final String value) {
 		final CommandArguments args = CommandArguments.create(key).add(path).add(value);
-		return executeCommand(
-				RedisCommand.JSON_MERGE, args, (cmd)->cmd.jsonMerge(rawKey(key), new JedisPath(path), value),
-				new OkStatusConverter());
+		return executeCommand(RedisCommand.JSON_MERGE, args,
+				(cmd)->cmd.jsonMerge(rawKey(key), new JedisPath(path), value), new OkStatusConverter());
 	}
 
 	@Override
@@ -390,9 +389,9 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public List<byte[]> jsonMGet(final byte[][] keys, final byte[] path) {
 		final CommandArguments args = CommandArguments.create(keys).add(path);
-		return executeCommand(
-				RedisCommand.JSON_MGET, args, (cmd)->cmd.jsonMGet(new JedisPath(path), rawStringKeys(keys)),
-				new ListConverter<>((v)->v == null ? null : SafeEncoder.encode(v.toString())));
+		return executeCommand(RedisCommand.JSON_MGET, args, (cmd)->cmd.jsonMGet(new JedisPath(path),
+				rawStringKeys(keys)), new ListConverter<>((v)->v == null ? null :
+				SafeEncoder.encode(v.toString())));
 	}
 
 	@Override
@@ -468,8 +467,7 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public List<Long> jsonObjLen(final String key, final String path) {
 		final CommandArguments args = CommandArguments.create(key, path);
-		return executeCommand(RedisCommand.JSON_OBJLEN, args, (cmd)->cmd.jsonObjLen(rawKey(key), new JedisPath(path)),
-				(v)->v);
+		return executeCommand(RedisCommand.JSON_OBJLEN, args, (cmd)->cmd.jsonObjLen(rawKey(key), new JedisPath(path)));
 	}
 
 	@Override

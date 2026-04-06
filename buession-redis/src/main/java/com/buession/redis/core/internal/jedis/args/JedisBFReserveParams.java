@@ -21,10 +21,63 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.jedis.args;/**
- * 
+ */
+package com.buession.redis.core.internal.jedis.args;
+
+import redis.clients.jedis.bloom.BFReserveParams;
+
+/**
+ * Jedis {@link BFReserveParams} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
- */public class JedisBFReserveParams {
+ */
+public final class JedisBFReserveParams extends BFReserveParams {
+
+	/**
+	 * 构造函数
+	 */
+	public JedisBFReserveParams() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param expansion
+	 * 		-
+	 */
+	public JedisBFReserveParams(final int expansion) {
+		super();
+		expansion(expansion);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param expansion
+	 * 		-
+	 * @param nonScaling
+	 * 		-
+	 */
+	public JedisBFReserveParams(final int expansion, final boolean nonScaling) {
+		this(expansion);
+		if(nonScaling){
+			nonScaling();
+		}
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param nonScaling
+	 * 		-
+	 */
+	public JedisBFReserveParams(final boolean nonScaling) {
+		super();
+		if(nonScaling){
+			nonScaling();
+		}
+	}
+
 }

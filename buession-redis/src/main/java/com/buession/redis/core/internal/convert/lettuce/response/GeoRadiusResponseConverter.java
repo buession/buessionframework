@@ -25,6 +25,7 @@
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.lang.Geo;
 import com.buession.redis.core.GeoRadius;
 import io.lettuce.core.GeoWithin;
 
@@ -43,8 +44,8 @@ public final class GeoRadiusResponseConverter implements Converter<GeoWithin<byt
 		}
 
 		final GeoCoordinateConverter geoCoordinateConverter = new GeoCoordinateConverter();
-		return new GeoRadius(source.getMember(), source.getDistance(),
-				geoCoordinateConverter.convert(source.getCoordinates()));
+		final Geo geo = geoCoordinateConverter.convert(source.getCoordinates());
+		return new GeoRadius(source.getMember(), source.getDistance(), geo);
 	}
 
 }

@@ -26,6 +26,8 @@ package com.buession.redis.core;
 
 import com.buession.redis.utils.ObjectStringBuilder;
 
+import java.util.Objects;
+
 /**
  * 时间序列数据
  *
@@ -51,7 +53,7 @@ public record TimeSeriesElement(Long timestamp, Double value) {
 		}
 
 		if(obj instanceof TimeSeriesElement other){
-			return this.timestamp == other.timestamp && this.value == other.value;
+			return Objects.equals(this.timestamp, other.timestamp) && Objects.equals(this.value, other.value);
 		}
 
 		return false;

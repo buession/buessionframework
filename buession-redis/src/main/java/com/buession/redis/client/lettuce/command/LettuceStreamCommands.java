@@ -568,33 +568,31 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	}
 
 	@Override
-	public StreamFull<String, String> xInfoStream(final String key, final boolean full) {
-		final CommandArguments args = CommandArguments.create(key).add(full ? "FULL" : null);
+	public StreamFull<String, String> xInfoStreamFull(final String key) {
+		final CommandArguments args = CommandArguments.create(key, "FULL");
 		return executeCommand(
 				RedisCommand.XINFO, RedisSubCommand.XINFO_STREAM, args, (cmd)->cmd.xinfoStream(rawBinaryKey(key)),
 				new StreamFullInfoConverter<>());
 	}
 
 	@Override
-	public StreamFull<byte[], byte[]> xInfoStream(final byte[] key, final boolean full) {
-		final CommandArguments args = CommandArguments.create(key).add(full ? "FULL" : null);
+	public StreamFull<byte[], byte[]> xInfoStreamFull(final byte[] key) {
+		final CommandArguments args = CommandArguments.create(key, "FULL");
 		return executeCommand(RedisCommand.XINFO, RedisSubCommand.XINFO_STREAM, args,
 				(cmd)->cmd.xinfoStream(rawKey(key)), new StreamFullInfoConverter<>());
 	}
 
 	@Override
-	public StreamFull<String, String> xInfoStream(final String key, final boolean full, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(full ? "FULL" : null)
-				.add(Keyword.Common.COUNT, count);
+	public StreamFull<String, String> xInfoStreamFull(final String key, final int count) {
+		final CommandArguments args = CommandArguments.create(key, "FULL").add(Keyword.Common.COUNT, count);
 		return executeCommand(
 				RedisCommand.XINFO, RedisSubCommand.XINFO_STREAM, args, (cmd)->cmd.xinfoStream(rawBinaryKey(key)),
 				new StreamFullInfoConverter<>());
 	}
 
 	@Override
-	public StreamFull<byte[], byte[]> xInfoStream(final byte[] key, final boolean full, final int count) {
-		final CommandArguments args = CommandArguments.create(key).add(full ? "FULL" : null)
-				.add(Keyword.Common.COUNT, count);
+	public StreamFull<byte[], byte[]> xInfoStreamFull(final byte[] key, final int count) {
+		final CommandArguments args = CommandArguments.create(key, "FULL").add(Keyword.Common.COUNT, count);
 		return executeCommand(RedisCommand.XINFO, RedisSubCommand.XINFO_STREAM, args,
 				(cmd)->cmd.xinfoStream(rawKey(key)), new StreamFullInfoConverter<>());
 	}
@@ -1134,7 +1132,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 		xClaimArgs.minIdleTime(minIdleTime).justid();
 		return executeCommand(RedisCommand.XCLAIM, args,
 				(cmd)->cmd.xclaim(key, Consumer.from(groupName, consumerName), xClaimArgs, messageIds(ids)),
-				new ListConverter<>(new StreamMessageConverter.StreamMessageStreamEntryIdConverter()));
+				new ListConverter<>((m)->m == null ? null : new StreamEntryId(m.getId())));
 	}
 
 	private List<StreamEntryDeletionResult> xDelEx(final byte[] key, final StreamEntryId[] ids,

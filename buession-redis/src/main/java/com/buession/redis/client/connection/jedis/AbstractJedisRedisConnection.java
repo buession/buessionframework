@@ -24,10 +24,8 @@
  */
 package com.buession.redis.client.connection.jedis;
 
-import com.buession.core.Executor;
 import com.buession.redis.client.connection.AbstractRedisConnection;
 import com.buession.net.ssl.SslConfiguration;
-import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisRedisDataSource;
 import com.buession.redis.core.PoolConfig;
@@ -301,15 +299,6 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 	}
 
 	@Override
-	public <R> R execute(final Executor<RedisConnection, R> executor) throws RedisException {
-		try{
-			return executor.execute(this);
-		}catch(Exception e){
-			throw JedisRedisExceptionUtils.convert(e);
-		}
-	}
-
-	@Override
 	public Pipeline openPipeline() {
 		if(this.pipeline == null){
 			final redis.clients.jedis.AbstractPipeline pipeline = client.pipelined();
@@ -339,6 +328,11 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 		getPoolConfig().toGenericObjectPoolConfig(connectionPoolConfig);
 
 		return connectionPoolConfig;
+	}
+
+	@Override
+	protected RedisException executeException(final Exception e) {
+		return JedisRedisExceptionUtils.convert(e);
 	}
 
 	@Override

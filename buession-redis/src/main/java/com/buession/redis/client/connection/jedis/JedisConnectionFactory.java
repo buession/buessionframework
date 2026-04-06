@@ -48,47 +48,25 @@ public final class JedisConnectionFactory extends AbstractConnectionFactory<Jedi
 	@Override
 	public RedisStandaloneConnection getStandaloneConnection() {
 		final JedisDataSource dataSource = (JedisDataSource) getDataSource();
-
-		if(dataSource.getPoolConfig() == null){
-			return new JedisConnection(dataSource, dataSource.getConnectTimeout(), dataSource.getSoTimeout(),
-					dataSource.getInfiniteSoTimeout(), dataSource.getSslConfiguration());
-		}else{
-			return new JedisConnection(dataSource, dataSource.getPoolConfig(), dataSource.getConnectTimeout(),
-					dataSource.getSoTimeout(), dataSource.getInfiniteSoTimeout(), dataSource.getSslConfiguration());
-		}
+		return new JedisConnection(dataSource, dataSource.getPoolConfig(), dataSource.getConnectTimeout(),
+				dataSource.getSoTimeout(), dataSource.getInfiniteSoTimeout(), dataSource.getSslConfiguration());
 	}
 
 	@Override
 	public RedisSentinelConnection getSentinelConnection() {
 		final JedisSentinelDataSource dataSource = (JedisSentinelDataSource) getDataSource();
-
-		if(dataSource.getPoolConfig() == null){
-			return new JedisSentinelConnection(dataSource, dataSource.getConnectTimeout(), dataSource.getSoTimeout(),
-					dataSource.getInfiniteSoTimeout(), dataSource.getSentinelConnectTimeout(),
-					dataSource.getSentinelSoTimeout(), dataSource.getSslConfiguration());
-		}else{
-			return new JedisSentinelConnection(dataSource, dataSource.getPoolConfig(), dataSource.getConnectTimeout(),
-					dataSource.getSoTimeout(), dataSource.getInfiniteSoTimeout(),
-					dataSource.getSentinelConnectTimeout(), dataSource.getSentinelSoTimeout(),
-					dataSource.getSslConfiguration());
-		}
+		return new JedisSentinelConnection(dataSource, dataSource.getPoolConfig(), dataSource.getConnectTimeout(),
+				dataSource.getSoTimeout(), dataSource.getInfiniteSoTimeout(), dataSource.getSentinelConnectTimeout(),
+				dataSource.getSentinelSoTimeout(), dataSource.getSslConfiguration());
 	}
 
 	@Override
 	public RedisClusterConnection getClusterConnection() {
 		final JedisClusterDataSource dataSource = (JedisClusterDataSource) getDataSource();
-
-		if(dataSource.getPoolConfig() == null){
-			return new JedisClusterConnection(dataSource, dataSource.getConnectTimeout(), dataSource.getSoTimeout(),
-					dataSource.getInfiniteSoTimeout(), dataSource.getMaxRedirects(),
-					dataSource.getMaxTotalRetriesDuration(), dataSource.getTopologyRefreshPeriod(),
-					dataSource.getSslConfiguration());
-		}else{
-			return new JedisClusterConnection(dataSource, dataSource.getPoolConfig(), dataSource.getConnectTimeout(),
-					dataSource.getSoTimeout(), dataSource.getInfiniteSoTimeout(), dataSource.getMaxRedirects(),
-					dataSource.getMaxTotalRetriesDuration(), dataSource.getTopologyRefreshPeriod(),
-					dataSource.getSslConfiguration());
-		}
+		return new JedisClusterConnection(dataSource, dataSource.getPoolConfig(), dataSource.getConnectTimeout(),
+				dataSource.getSoTimeout(), dataSource.getInfiniteSoTimeout(), dataSource.getMaxRedirects(),
+				dataSource.getMaxTotalRetriesDuration(), dataSource.getTopologyRefreshPeriod(),
+				dataSource.getSslConfiguration());
 	}
 
 }

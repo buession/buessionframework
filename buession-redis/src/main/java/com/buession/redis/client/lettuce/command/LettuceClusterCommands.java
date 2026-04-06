@@ -46,7 +46,7 @@ import com.buession.redis.core.command.ClusterCommands;
 import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.RedisSubCommand;
-import com.buession.redis.core.internal.convert.lettuce.RangeRangeConverter;
+import com.buession.redis.core.internal.convert.lettuce.params.RangeRangeConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ClusterShardInfoConverter;
 import com.buession.redis.core.internal.convert.response.BumpEpochConverter;
 import com.buession.redis.core.internal.convert.response.ClusterInfoConverter;

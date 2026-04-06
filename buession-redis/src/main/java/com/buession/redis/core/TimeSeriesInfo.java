@@ -70,9 +70,9 @@ import java.util.Map;
  * @since 4.0.0
  */
 public record TimeSeriesInfo(String sourceKey, String keySelfName, Integer totalSamples, Long memoryUsage,
-							 Long firstTimestamp, Long lastTimestamp, Integer retentionTime, Integer chunkCount,
-							 Integer chunkSize, ChunkType chunkType, DuplicatePolicy duplicatePolicy,
-							 Map<String, String> labels, List<Rule> rules, List<Chunk> chunks) {
+                             Long firstTimestamp, Long lastTimestamp, Integer retentionTime, Integer chunkCount,
+                             Integer chunkSize, ChunkType chunkType, DuplicatePolicy duplicatePolicy,
+                             Map<String, String> labels, Map<String, Rule> rules, List<Chunk> chunks) {
 
 	@Override
 	public String toString() {
@@ -112,7 +112,7 @@ public record TimeSeriesInfo(String sourceKey, String keySelfName, Integer total
 
 	}
 
-	public record Rule(String compactionKey, Integer bucketDuration, String aggregator, Integer alignment) {
+	public record Rule(String compactionKey, Integer bucketDuration, AggregationType aggregator, Long alignment) {
 
 		@Override
 		public String toString() {

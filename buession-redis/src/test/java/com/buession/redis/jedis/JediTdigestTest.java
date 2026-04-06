@@ -24,57 +24,28 @@
  */
 package com.buession.redis.jedis;
 
-import com.buession.core.builder.MapBuilder;
 import com.buession.lang.Status;
 import com.buession.redis.RedisTemplate;
-import com.buession.redis.core.AutoClaimId;
-import com.buession.redis.core.AutoClaimInfo;
-import com.buession.redis.core.FunctionStats;
-import com.buession.redis.core.LibraryInfo;
-import com.buession.redis.core.StreamEntryId;
+import com.buession.redis.core.TdigestInfo;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 /**
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class JediStreamTest extends AbstractJedisRedisTest {
+public class JediTdigestTest extends AbstractJedisRedisTest {
 
 	@Test
-	public void xAdd() {
+	public void tdigestCreate() {
 		RedisTemplate redisTemplate = redisTemplate();
-		StreamEntryId result = redisTemplate.xAdd("stream_a", "1-0",
-				MapBuilder.<String, String>create().put("1", "A").put("2", "B").build());
+		Status result = redisTemplate.tdigestCreate("tdigest_a");
 		System.out.println(result);
 	}
 
 	@Test
-	public void xGroupCreate() {
+	public void tdigestInfo() {
 		RedisTemplate redisTemplate = redisTemplate();
-		Status result = redisTemplate.xGroupCreate("stream_a", "test", "1-0");
-		System.out.println(result);
-	}
-
-	@Test
-	public void xGroupCreateConsumer() {
-		RedisTemplate redisTemplate = redisTemplate();
-		Status result = redisTemplate.xGroupCreateConsumer("stream_a", "test", "cs");
-		System.out.println(result);
-	}
-
-	@Test
-	public void xAutoClaimJustId() {
-		RedisTemplate redisTemplate = redisTemplate();
-		AutoClaimId result = redisTemplate.xAutoClaimJustId("stream_a", "test", "cs", 0, "1-0");
-		System.out.println(result);
-	}
-
-	@Test
-	public void xAutoClaim() {
-		RedisTemplate redisTemplate = redisTemplate();
-		AutoClaimInfo<String, String> result = redisTemplate.xAutoClaim("stream_a", "test", "cs", 0, "1-0");
+		TdigestInfo result = redisTemplate.tdigestInfo("tdigest_a");
 		System.out.println(result);
 	}
 

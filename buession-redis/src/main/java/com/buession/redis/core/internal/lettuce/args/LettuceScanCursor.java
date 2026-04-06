@@ -33,7 +33,7 @@ import io.lettuce.core.ScanCursor;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class LettuceScanCursor extends ScanCursor {
+public final class LettuceScanCursor extends ScanCursor {
 
 	public LettuceScanCursor() {
 		super();
@@ -44,7 +44,11 @@ public class LettuceScanCursor extends ScanCursor {
 	}
 
 	public LettuceScanCursor(final byte[] pattern) {
-		this(SafeEncoder.encode(pattern));
+		this(pattern, false);
+	}
+
+	public LettuceScanCursor(final byte[] pattern, boolean finished) {
+		super(SafeEncoder.encode(pattern), finished);
 	}
 
 }

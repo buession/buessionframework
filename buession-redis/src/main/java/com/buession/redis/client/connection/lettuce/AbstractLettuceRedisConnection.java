@@ -24,10 +24,8 @@
  */
 package com.buession.redis.client.connection.lettuce;
 
-import com.buession.core.Executor;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.AbstractRedisConnection;
-import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceRedisDataSource;
 import com.buession.redis.core.PoolConfig;
 import com.buession.redis.exception.LettuceRedisExceptionUtils;
@@ -271,15 +269,6 @@ public abstract class AbstractLettuceRedisConnection<C extends StatefulConnectio
 	}
 
 	@Override
-	public <R> R execute(final Executor<RedisConnection, R> executor) throws RedisException {
-		try{
-			return executor.execute(this);
-		}catch(Exception e){
-			throw LettuceRedisExceptionUtils.convert(e);
-		}
-	}
-
-	@Override
 	public Pipeline openPipeline() {
 		if(pipeline == null){
 			final PipeliningFlushState flushState = pipeliningFlushPolicy.newPipeline();
@@ -302,6 +291,11 @@ public abstract class AbstractLettuceRedisConnection<C extends StatefulConnectio
 	@Override
 	public boolean isClosed() {
 		return conn == null || conn.isOpen() == false;
+	}
+
+	@Override
+	protected RedisException executeException(final Exception e) {
+		return LettuceRedisExceptionUtils.convert(e);
 	}
 
 	@Override

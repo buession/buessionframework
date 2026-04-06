@@ -24,6 +24,7 @@
  */
 package com.buession.redis.client.connection;
 
+import com.buession.core.Executor;
 import com.buession.lang.Status;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.core.Constants;
@@ -398,6 +399,15 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	}
 
 	@Override
+	public <R> R execute(final Executor<RedisConnection, R> executor) throws RedisException {
+		try{
+			return executor.execute(this);
+		}catch(Exception e){
+			throw executeException(e);
+		}
+	}
+
+	@Override
 	public boolean isPipeline() {
 		return pipeline != null;
 	}
@@ -474,6 +484,8 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	protected abstract void internalInit();
 
 	protected abstract Status doConnect() throws RedisConnectionFailureException;
+
+	protected abstract RedisException executeException(final Exception e);
 
 	protected abstract void doDestroy() throws IOException;
 

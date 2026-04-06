@@ -63,20 +63,4 @@ public final class StreamMessageConverter<SK, SV, TK, TV>
 		return new StreamEntry<>(new StreamEntryId(source.getId()), mapConverter.convert(source.getBody()));
 	}
 
-	/**
-	 * Lettuce  {@link StreamMessage} 转换为 {@link StreamEntryId}
-	 *
-	 * @author Yong.Teng
-	 * @since 3.0.0
-	 */
-	public final static class StreamMessageStreamEntryIdConverter implements Converter<StreamMessage<byte[], byte[]>,
-			StreamEntryId> {
-
-		@Override
-		public StreamEntryId convert(final StreamMessage<byte[], byte[]> source) {
-			return source == null ? null : new StreamEntryId(source.getId());
-		}
-
-	}
-
 }
