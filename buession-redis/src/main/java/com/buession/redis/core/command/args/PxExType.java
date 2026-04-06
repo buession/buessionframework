@@ -32,7 +32,7 @@ import com.buession.redis.core.Keyword;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public enum SetExType implements Keyword {
+public enum PxExType implements Keyword {
 	/**
 	 * 设置指定的过期时间，以秒为单位
 	 */

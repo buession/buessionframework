@@ -25,7 +25,6 @@
 package com.buession.redis.core.command;
 
 import com.buession.lang.Status;
-import com.buession.redis.core.command.args.cuckoofilter.CFInsertArgument;
 import com.buession.redis.core.command.args.cuckoofilter.CFReserveArgument;
 
 import java.util.List;
@@ -240,14 +239,14 @@ public interface CuckooFilterCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		布谷鸟过滤器的名称
-	 * @param argument
-	 * 		CFInsert 参数
+	 * @param capacity
+	 * 		初始容量
 	 * @param items
 	 * 		待添加的元素
 	 *
 	 * @return 返回一个数组，每个元素对应输入项的插入结果；true 表示添加成功，false 表示添加失败
 	 */
-	List<Boolean> cfInsert(final String key, final CFInsertArgument argument, final String... items);
+	List<Boolean> cfInsert(final String key, final Long capacity, final String... items);
 
 	/**
 	 * 向布谷鸟过滤器 key 中批量添加元素
@@ -256,14 +255,82 @@ public interface CuckooFilterCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		布谷鸟过滤器的名称
-	 * @param argument
-	 * 		CFInsert 参数
+	 * @param capacity
+	 * 		初始容量
 	 * @param items
 	 * 		待添加的元素
 	 *
 	 * @return 返回一个数组，每个元素对应输入项的插入结果；true 表示添加成功，false 表示添加失败
 	 */
-	List<Boolean> cfInsert(final byte[] key, final CFInsertArgument argument, final byte[]... items);
+	List<Boolean> cfInsert(final byte[] key, final Long capacity, final byte[]... items);
+
+	/**
+	 * 向布谷鸟过滤器 key 中批量添加元素
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cf.insert/" target="_blank">https://redis.io/docs/latest/commands/cf.insert/</a></p>
+	 *
+	 * @param key
+	 * 		布谷鸟过滤器的名称
+	 * @param capacity
+	 * 		初始容量
+	 * @param noCreate
+	 * 		是否当 key 不存在时不自动创建
+	 * @param items
+	 * 		待添加的元素
+	 *
+	 * @return 返回一个数组，每个元素对应输入项的插入结果；true 表示添加成功，false 表示添加失败
+	 */
+	List<Boolean> cfInsert(final String key, final Long capacity, final boolean noCreate, final String... items);
+
+	/**
+	 * 向布谷鸟过滤器 key 中批量添加元素
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cf.insert/" target="_blank">https://redis.io/docs/latest/commands/cf.insert/</a></p>
+	 *
+	 * @param key
+	 * 		布谷鸟过滤器的名称
+	 * @param capacity
+	 * 		初始容量
+	 * @param noCreate
+	 * 		是否当 key 不存在时不自动创建
+	 * @param items
+	 * 		待添加的元素
+	 *
+	 * @return 返回一个数组，每个元素对应输入项的插入结果；true 表示添加成功，false 表示添加失败
+	 */
+	List<Boolean> cfInsert(final byte[] key, final Long capacity, final boolean noCreate, final byte[]... items);
+
+	/**
+	 * 向布谷鸟过滤器 key 中批量添加元素
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cf.insert/" target="_blank">https://redis.io/docs/latest/commands/cf.insert/</a></p>
+	 *
+	 * @param key
+	 * 		布谷鸟过滤器的名称
+	 * @param noCreate
+	 * 		是否当 key 不存在时不自动创建
+	 * @param items
+	 * 		待添加的元素
+	 *
+	 * @return 返回一个数组，每个元素对应输入项的插入结果；true 表示添加成功，false 表示添加失败
+	 */
+	List<Boolean> cfInsert(final String key, final boolean noCreate, final String... items);
+
+	/**
+	 * 向布谷鸟过滤器 key 中批量添加元素
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cf.insert/" target="_blank">https://redis.io/docs/latest/commands/cf.insert/</a></p>
+	 *
+	 * @param key
+	 * 		布谷鸟过滤器的名称
+	 * @param noCreate
+	 * 		是否当 key 不存在时不自动创建
+	 * @param items
+	 * 		待添加的元素
+	 *
+	 * @return 返回一个数组，每个元素对应输入项的插入结果；true 表示添加成功，false 表示添加失败
+	 */
+	List<Boolean> cfInsert(final byte[] key, final boolean noCreate, final byte[]... items);
 
 	/**
 	 * 向布谷鸟过滤器 key 中批量添加元素，仅当元素尚未存在于布谷鸟过滤器中
@@ -300,14 +367,16 @@ public interface CuckooFilterCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		布谷鸟过滤器的名称
-	 * @param argument
-	 * 		CFInsert 参数
+	 * @param capacity
+	 * 		初始容量
+	 * @param noCreate
+	 * 		是否当 key 不存在时不自动创建
 	 * @param items
 	 * 		待添加的元素
 	 *
 	 * @return 返回一个数组，每个元素对应输入项的插入结果；true 表示添加成功，false 表示添加失败
 	 */
-	List<Boolean> cfInsertNx(final String key, final CFInsertArgument argument, final String... items);
+	List<Boolean> cfInsertNx(final String key, final Long capacity, final boolean noCreate, final String... items);
 
 	/**
 	 * 向布谷鸟过滤器 key 中批量添加元素，仅当元素尚未存在于布谷鸟过滤器中
@@ -316,14 +385,80 @@ public interface CuckooFilterCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		布谷鸟过滤器的名称
-	 * @param argument
-	 * 		CFInsert 参数
+	 * @param capacity
+	 * 		初始容量
 	 * @param items
 	 * 		待添加的元素
 	 *
 	 * @return 返回一个数组，每个元素对应输入项的插入结果；true 表示添加成功，false 表示添加失败
 	 */
-	List<Boolean> cfInsertNx(final byte[] key, final CFInsertArgument argument, final byte[]... items);
+	List<Boolean> cfInsertNx(final byte[] key, final Long capacity, final byte[]... items);
+
+	/**
+	 * 向布谷鸟过滤器 key 中批量添加元素，仅当元素尚未存在于布谷鸟过滤器中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cf.insertnx/" target="_blank">https://redis.io/docs/latest/commands/cf.insertnx/</a></p>
+	 *
+	 * @param key
+	 * 		布谷鸟过滤器的名称
+	 * @param capacity
+	 * 		初始容量
+	 * @param items
+	 * 		待添加的元素
+	 *
+	 * @return 返回一个数组，每个元素对应输入项的插入结果；true 表示添加成功，false 表示添加失败
+	 */
+	List<Boolean> cfInsertNx(final String key, final Long capacity, final String... items);
+
+	/**
+	 * 向布谷鸟过滤器 key 中批量添加元素，仅当元素尚未存在于布谷鸟过滤器中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cf.insertnx/" target="_blank">https://redis.io/docs/latest/commands/cf.insertnx/</a></p>
+	 *
+	 * @param key
+	 * 		布谷鸟过滤器的名称
+	 * @param capacity
+	 * 		初始容量
+	 * @param noCreate
+	 * 		是否当 key 不存在时不自动创建
+	 * @param items
+	 * 		待添加的元素
+	 *
+	 * @return 返回一个数组，每个元素对应输入项的插入结果；true 表示添加成功，false 表示添加失败
+	 */
+	List<Boolean> cfInsertNx(final byte[] key, final Long capacity, final boolean noCreate, final byte[]... items);
+
+	/**
+	 * 向布谷鸟过滤器 key 中批量添加元素，仅当元素尚未存在于布谷鸟过滤器中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cf.insertnx/" target="_blank">https://redis.io/docs/latest/commands/cf.insertnx/</a></p>
+	 *
+	 * @param key
+	 * 		布谷鸟过滤器的名称
+	 * @param noCreate
+	 * 		是否当 key 不存在时不自动创建
+	 * @param items
+	 * 		待添加的元素
+	 *
+	 * @return 返回一个数组，每个元素对应输入项的插入结果；true 表示添加成功，false 表示添加失败
+	 */
+	List<Boolean> cfInsertNx(final String key, final boolean noCreate, final String... items);
+
+	/**
+	 * 向布谷鸟过滤器 key 中批量添加元素，仅当元素尚未存在于布谷鸟过滤器中
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/cf.insertnx/" target="_blank">https://redis.io/docs/latest/commands/cf.insertnx/</a></p>
+	 *
+	 * @param key
+	 * 		布谷鸟过滤器的名称
+	 * @param noCreate
+	 * 		是否当 key 不存在时不自动创建
+	 * @param items
+	 * 		待添加的元素
+	 *
+	 * @return 返回一个数组，每个元素对应输入项的插入结果；true 表示添加成功，false 表示添加失败
+	 */
+	List<Boolean> cfInsertNx(final byte[] key, final boolean noCreate, final byte[]... items);
 
 	/**
 	 * 从外部导入布谷鸟过滤器数据块

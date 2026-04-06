@@ -22,25 +22,26 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command.args.string;
+package com.buession.redis.core.command.args;
 
 import com.buession.redis.core.Keyword;
 
 /**
- *
+ * 过期时间类型
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public enum DelExType implements Keyword {
+public enum GetExType implements Keyword {
+	EX,
 
-	IFEQ,
+	EXAT,
 
-	IFNE,
+	PX,
 
-	IFDEQ,
+	PXAT,
 
-	IFDNE;
+	PERSIST;
 
 	@Override
 	public String getValue() {
@@ -51,5 +52,4 @@ public enum DelExType implements Keyword {
 	public String toString() {
 		return getValue();
 	}
-
 }

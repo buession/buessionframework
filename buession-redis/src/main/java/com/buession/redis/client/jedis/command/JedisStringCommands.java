@@ -28,15 +28,16 @@ import com.buession.core.converter.BooleanStatusConverter;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
-import com.buession.redis.core.command.args.string.DelExType;
+import com.buession.redis.core.command.args.GetExType;
+import com.buession.redis.core.command.args.NxXx;
+import com.buession.redis.core.command.args.PxExType;
+import com.buession.redis.core.command.args.string.CompareCondition;
 import com.buession.redis.core.LcsResult;
 import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.StringCommands;
-import com.buession.redis.core.command.args.GetExArgument;
 import com.buession.redis.core.command.args.string.LcsArgument;
-import com.buession.redis.core.command.args.string.MSetExArgument;
-import com.buession.redis.core.command.args.string.SetArgument;
+import com.buession.redis.core.command.args.string.SetType;
 import com.buession.redis.core.internal.convert.jedis.response.LCSMatchResultConveter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.response.OneStatusConverter;
@@ -45,7 +46,8 @@ import com.buession.redis.core.internal.jedis.args.JedisLCSParams;
 import com.buession.redis.core.internal.jedis.args.JedisMSetExParams;
 import com.buession.redis.core.internal.jedis.args.JedisSetParams;
 import redis.clients.jedis.params.LCSParams;
-import redis.clients.jedis.util.CompareCondition;
+import redis.clients.jedis.params.MSetExParams;
+import redis.clients.jedis.params.SetParams;
 
 import java.util.List;
 
@@ -98,34 +100,34 @@ public final class JedisStringCommands extends AbstractJedisRedisCommands implem
 	}
 
 	@Override
-	public Status delEx(final String key, final DelExType type, final String value) {
+	public Status delEx(final String key, final CompareCondition type, final String value) {
 		final CommandArguments args = CommandArguments.create(key).add(type, value);
 
-		if(type == DelExType.IFEQ){
-			return delEx(rawKey(key), CompareCondition.valueEq(value), args);
-		}else if(type == DelExType.IFNE){
-			return delEx(rawKey(key), CompareCondition.valueNe(value), args);
-		}else if(type == DelExType.IFDEQ){
-			return delEx(rawKey(key), CompareCondition.digestEq(value), args);
-		}else if(type == DelExType.IFDNE){
-			return delEx(rawKey(key), CompareCondition.digestNe(value), args);
+		if(type == CompareCondition.IFEQ){
+			return delEx(rawKey(key), redis.clients.jedis.util.CompareCondition.valueEq(value), args);
+		}else if(type == CompareCondition.IFNE){
+			return delEx(rawKey(key), redis.clients.jedis.util.CompareCondition.valueNe(value), args);
+		}else if(type == CompareCondition.IFDEQ){
+			return delEx(rawKey(key), redis.clients.jedis.util.CompareCondition.digestEq(value), args);
+		}else if(type == CompareCondition.IFDNE){
+			return delEx(rawKey(key), redis.clients.jedis.util.CompareCondition.digestNe(value), args);
 		}else{
 			return executeCommand(RedisCommand.DELEX, args);
 		}
 	}
 
 	@Override
-	public Status delEx(final byte[] key, final DelExType type, final byte[] value) {
+	public Status delEx(final byte[] key, final CompareCondition type, final byte[] value) {
 		final CommandArguments args = CommandArguments.create(key).add(type, value);
 
-		if(type == DelExType.IFEQ){
-			return delEx(rawKey(key), CompareCondition.valueEq(value), args);
-		}else if(type == DelExType.IFNE){
-			return delEx(rawKey(key), CompareCondition.valueNe(value), args);
-		}else if(type == DelExType.IFDEQ){
-			return delEx(rawKey(key), CompareCondition.digestEq(value), args);
-		}else if(type == DelExType.IFDNE){
-			return delEx(rawKey(key), CompareCondition.digestNe(value), args);
+		if(type == CompareCondition.IFEQ){
+			return delEx(rawKey(key), redis.clients.jedis.util.CompareCondition.valueEq(value), args);
+		}else if(type == CompareCondition.IFNE){
+			return delEx(rawKey(key), redis.clients.jedis.util.CompareCondition.valueNe(value), args);
+		}else if(type == CompareCondition.IFDEQ){
+			return delEx(rawKey(key), redis.clients.jedis.util.CompareCondition.digestEq(value), args);
+		}else if(type == CompareCondition.IFDNE){
+			return delEx(rawKey(key), redis.clients.jedis.util.CompareCondition.digestNe(value), args);
 		}else{
 			return executeCommand(RedisCommand.DELEX, args);
 		}
@@ -180,15 +182,17 @@ public final class JedisStringCommands extends AbstractJedisRedisCommands implem
 	}
 
 	@Override
-	public String getEx(final String key, final GetExArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(argument);
-		return executeCommand(RedisCommand.GETEX, args, (cmd)->cmd.getEx(rawKey(key), new JedisGetExParams(argument)));
+	public String getEx(final String key, final GetExType exType, final long expires) {
+		final CommandArguments args = CommandArguments.create(key).add(exType, expires);
+		return executeCommand(RedisCommand.GETEX, args,
+				(cmd)->cmd.getEx(rawKey(key), new JedisGetExParams(exType, expires)));
 	}
 
 	@Override
-	public byte[] getEx(final byte[] key, final GetExArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(argument);
-		return executeCommand(RedisCommand.GETEX, args, (cmd)->cmd.getEx(rawKey(key), new JedisGetExParams(argument)));
+	public byte[] getEx(final byte[] key, final GetExType exType, final long expires) {
+		final CommandArguments args = CommandArguments.create(key).add(exType, expires);
+		return executeCommand(RedisCommand.GETEX, args,
+				(cmd)->cmd.getEx(rawKey(key), new JedisGetExParams(exType, expires)));
 	}
 
 	@Override
@@ -300,16 +304,29 @@ public final class JedisStringCommands extends AbstractJedisRedisCommands implem
 	public Status mSetEx(final KeyValue<String, String>... values) {
 		final CommandArguments args = CommandArguments.create(values);
 		return executeCommand(RedisCommand.MSETEX, args,
-				(cmd)->cmd.msetex(new JedisMSetExParams(), buildSetValues(values)),
-				new BooleanStatusConverter());
+				(cmd)->cmd.msetex(new JedisMSetExParams(), buildSetValues(values)), new BooleanStatusConverter());
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
-	public Status mSetEx(final KeyValue<String, String>[] values, final MSetExArgument argument) {
-		final CommandArguments args = CommandArguments.create(values).add(argument);
-		return executeCommand(RedisCommand.MSETEX, args,
-				(cmd)->cmd.msetex(new JedisMSetExParams(argument), buildSetValues(values)),
-				new BooleanStatusConverter());
+	public Status mSetEx(final NxXx nxXx, final KeyValue<String, String>... values) {
+		final CommandArguments args = CommandArguments.create(values).add(nxXx);
+		return mSetEx(new JedisMSetExParams(nxXx), values, args);
+	}
+
+	@SuppressWarnings({"unchecked"})
+	@Override
+	public Status mSetEx(final NxXx nxXx, final PxExType exType, final long expires,
+	                     final KeyValue<String, String>... values) {
+		final CommandArguments args = CommandArguments.create(values).add(nxXx).add(exType, expires);
+		return mSetEx(new JedisMSetExParams(nxXx, exType, expires), values, args);
+	}
+
+	@SuppressWarnings({"unchecked"})
+	@Override
+	public Status mSetEx(final PxExType exType, final long expires, final KeyValue<String, String>... values) {
+		final CommandArguments args = CommandArguments.create(values).add(exType, expires);
+		return mSetEx(new JedisMSetExParams(exType, expires), values, args);
 	}
 
 	@SuppressWarnings({"unchecked"})
@@ -347,17 +364,41 @@ public final class JedisStringCommands extends AbstractJedisRedisCommands implem
 	}
 
 	@Override
-	public Status set(final String key, final String value, final SetArgument argument) {
-		final CommandArguments args = CommandArguments.create(key, value).add(argument);
-		return executeCommand(RedisCommand.SET, args,
-				(cmd)->cmd.set(rawKey(key), value, new JedisSetParams(argument)), new OkStatusConverter());
+	public Status set(final String key, final String value, final SetType setType) {
+		final CommandArguments args = CommandArguments.create(key, value).add(setType);
+		return set(rawKey(key), value, new JedisSetParams(setType), args);
 	}
 
 	@Override
-	public Status set(final byte[] key, final byte[] value, final SetArgument argument) {
-		final CommandArguments args = CommandArguments.create(key, value).add(argument);
-		return executeCommand(RedisCommand.SET, args,
-				(cmd)->cmd.set(rawKey(key), value, new JedisSetParams(argument)), new OkStatusConverter());
+	public Status set(final byte[] key, final byte[] value, final SetType setType) {
+		final CommandArguments args = CommandArguments.create(key, value).add(setType);
+		return set(rawKey(key), value, new JedisSetParams(setType), args);
+	}
+
+	@Override
+	public Status set(final String key, final String value, final SetType setType, final PxExType pxExType,
+	                  final long expires) {
+		final CommandArguments args = CommandArguments.create(key, value).add(setType).add(pxExType, expires);
+		return set(rawKey(key), value, new JedisSetParams(setType, pxExType, expires), args);
+	}
+
+	@Override
+	public Status set(final byte[] key, final byte[] value, final SetType setType, final PxExType pxExType,
+	                  final long expires) {
+		final CommandArguments args = CommandArguments.create(key, value).add(setType).add(pxExType, expires);
+		return set(rawKey(key), value, new JedisSetParams(setType, pxExType, expires), args);
+	}
+
+	@Override
+	public Status set(final String key, final String value, final PxExType pxExType, final long expires) {
+		final CommandArguments args = CommandArguments.create(key, value).add(pxExType, expires);
+		return set(rawKey(key), value, new JedisSetParams(pxExType, expires), args);
+	}
+
+	@Override
+	public Status set(final byte[] key, final byte[] value, final PxExType pxExType, final long expires) {
+		final CommandArguments args = CommandArguments.create(key, value).add(pxExType, expires);
+		return set(rawKey(key), value, new JedisSetParams(pxExType, expires), args);
 	}
 
 	@Override
@@ -377,15 +418,13 @@ public final class JedisStringCommands extends AbstractJedisRedisCommands implem
 	@Override
 	public Status setNx(final String key, final String value) {
 		final CommandArguments args = CommandArguments.create(key, value);
-		return executeCommand(RedisCommand.SETNX, args, (cmd)->cmd.setnx(rawKey(key), value),
-				new OneStatusConverter());
+		return executeCommand(RedisCommand.SETNX, args, (cmd)->cmd.setnx(rawKey(key), value), new OneStatusConverter());
 	}
 
 	@Override
 	public Status setNx(final byte[] key, final byte[] value) {
 		final CommandArguments args = CommandArguments.create(key, value);
-		return executeCommand(RedisCommand.SETNX, args, (cmd)->cmd.setnx(rawKey(key), value),
-				new OneStatusConverter());
+		return executeCommand(RedisCommand.SETNX, args, (cmd)->cmd.setnx(rawKey(key), value), new OneStatusConverter());
 	}
 
 	@Override
@@ -424,14 +463,16 @@ public final class JedisStringCommands extends AbstractJedisRedisCommands implem
 		return executeCommand(RedisCommand.SUBSTR, args, (cmd)->cmd.substr(rawKey(key), (int) start, (int) end));
 	}
 
-	private Status delEx(final String key, final CompareCondition condition, final CommandArguments args) {
-		return executeCommand(
-				RedisCommand.DELEX, args, (cmd)->cmd.delex(rawKey(key), condition), new OneStatusConverter());
+	private Status delEx(final String key, final redis.clients.jedis.util.CompareCondition condition,
+	                     final CommandArguments args) {
+		return executeCommand(RedisCommand.DELEX, args, (cmd)->cmd.delex(rawKey(key), condition),
+				new OneStatusConverter());
 	}
 
-	private Status delEx(final byte[] key, final CompareCondition condition, final CommandArguments args) {
-		return executeCommand(
-				RedisCommand.DELEX, args, (cmd)->cmd.delex(rawKey(key), condition), new OneStatusConverter());
+	private Status delEx(final byte[] key, final redis.clients.jedis.util.CompareCondition condition,
+	                     final CommandArguments args) {
+		return executeCommand(RedisCommand.DELEX, args, (cmd)->cmd.delex(rawKey(key), condition),
+				new OneStatusConverter());
 	}
 
 	private LcsResult lcs(final String key1, final String key2, final LCSParams lcsParams,
@@ -444,6 +485,22 @@ public final class JedisStringCommands extends AbstractJedisRedisCommands implem
 	                      final CommandArguments args) {
 		return executeCommand(RedisCommand.LCS, args, (cmd)->cmd.lcs(key1, key2, lcsParams),
 				new LCSMatchResultConveter());
+	}
+
+	private Status mSetEx(final MSetExParams mSetExParams, final KeyValue<String, String>[] values,
+	                      final CommandArguments args) {
+		return executeCommand(RedisCommand.MSETEX, args, (cmd)->cmd.msetex(mSetExParams, buildSetValues(values)),
+				new BooleanStatusConverter());
+	}
+
+	private Status set(final String key, final String value, final SetParams setParams, final CommandArguments args) {
+		return executeCommand(RedisCommand.SET, args, (cmd)->cmd.set(key, value, setParams),
+				new OkStatusConverter());
+	}
+
+	private Status set(final byte[] key, final byte[] value, final SetParams setParams, final CommandArguments args) {
+		return executeCommand(RedisCommand.SET, args, (cmd)->cmd.set(key, value, setParams),
+				new OkStatusConverter());
 	}
 
 	@SuppressWarnings({"unchecked"})

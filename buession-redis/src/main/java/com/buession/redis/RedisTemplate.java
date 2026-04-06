@@ -29,15 +29,16 @@ import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.core.Options;
+import com.buession.redis.core.command.args.GetExType;
+import com.buession.redis.core.command.args.PxExType;
 import com.buession.redis.core.command.args.sortedset.Aggregate;
 import com.buession.redis.core.command.args.list.Direction;
 import com.buession.redis.core.command.args.list.Position;
 import com.buession.redis.core.command.args.NxXx;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.args.sortedset.ZRangeType;
-import com.buession.redis.core.command.args.GetExArgument;
 import com.buession.redis.core.command.args.json.JsonGetArgument;
-import com.buession.redis.core.command.args.string.SetArgument;
+import com.buession.redis.core.command.args.string.SetType;
 import com.buession.redis.core.operations.*;
 
 import java.util.List;
@@ -182,30 +183,30 @@ public class RedisTemplate extends AbstractRedisTemplate implements AutoSuggestO
 	}
 
 	@Override
-	public <V> List<V> hGetEx(final String key, final GetExArgument argument, final String[] fields,
+	public <V> List<V> hGetEx(final String key, final GetExType exType, final long expires, final String[] fields,
 	                          final Class<V> clazz) {
-		return execute((client)->client.hashCommands().hGetEx(key, argument, fields),
+		return execute((client)->client.hashCommands().hGetEx(key, exType, expires, fields),
 				new Converter.ClazzListStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> List<V> hGetEx(final byte[] key, final GetExArgument argument, final byte[][] fields,
+	public <V> List<V> hGetEx(final byte[] key, final GetExType exType, final long expires, final byte[][] fields,
 	                          final Class<V> clazz) {
-		return execute((client)->client.hashCommands().hGetEx(key, argument, fields),
+		return execute((client)->client.hashCommands().hGetEx(key, exType, expires, fields),
 				new Converter.ClazzListBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> List<V> hGetEx(final String key, final GetExArgument argument, final String[] fields,
+	public <V> List<V> hGetEx(final String key, final GetExType exType, final long expires, final String[] fields,
 	                          final TypeReference<V> type) {
-		return execute((client)->client.hashCommands().hGetEx(key, argument, fields),
+		return execute((client)->client.hashCommands().hGetEx(key, exType, expires, fields),
 				new Converter.TypeListStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> List<V> hGetEx(final byte[] key, final GetExArgument argument, final byte[][] fields,
+	public <V> List<V> hGetEx(final byte[] key, final GetExType exType, final long expires, final byte[][] fields,
 	                          final TypeReference<V> type) {
-		return execute((client)->client.hashCommands().hGetEx(key, argument, fields),
+		return execute((client)->client.hashCommands().hGetEx(key, exType, expires, fields),
 				new Converter.TypeListBinaryConverter<>(this, type));
 	}
 
@@ -2086,26 +2087,26 @@ public class RedisTemplate extends AbstractRedisTemplate implements AutoSuggestO
 	}
 
 	@Override
-	public <V> V getEx(final String key, final GetExArgument argument, final Class<V> clazz) {
-		return execute((client)->client.stringCommands().getEx(key, argument),
+	public <V> V getEx(final String key, final GetExType exType, final long expires, final Class<V> clazz) {
+		return execute((client)->client.stringCommands().getEx(key, exType, expires),
 				new Converter.ClazzStringConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> V getEx(final byte[] key, final GetExArgument argument, final Class<V> clazz) {
-		return execute((client)->client.stringCommands().getEx(key, argument),
+	public <V> V getEx(final byte[] key, final GetExType exType, final long expires, final Class<V> clazz) {
+		return execute((client)->client.stringCommands().getEx(key, exType, expires),
 				new Converter.ClazzBinaryConverter<>(this, clazz));
 	}
 
 	@Override
-	public <V> V getEx(final String key, final GetExArgument argument, final TypeReference<V> type) {
-		return execute((client)->client.stringCommands().getEx(key, argument),
+	public <V> V getEx(final String key, final GetExType exType, final long expires, final TypeReference<V> type) {
+		return execute((client)->client.stringCommands().getEx(key, exType, expires),
 				new Converter.TypeStringConverter<>(this, type));
 	}
 
 	@Override
-	public <V> V getEx(final byte[] key, final GetExArgument argument, final TypeReference<V> type) {
-		return execute((client)->client.stringCommands().getEx(key, argument),
+	public <V> V getEx(final byte[] key, final GetExType exType, final long expires, final TypeReference<V> type) {
+		return execute((client)->client.stringCommands().getEx(key, exType, expires),
 				new Converter.TypeBinaryConverter<>(this, type));
 	}
 
@@ -2178,13 +2179,35 @@ public class RedisTemplate extends AbstractRedisTemplate implements AutoSuggestO
 	}
 
 	@Override
-	public <V> Status set(final String key, final V value, final SetArgument argument) {
-		return set(key, serializer.serialize(value), argument);
+	public <V> Status set(final String key, final V value, final SetType setType) {
+		return set(key, serializer.serialize(value), setType);
 	}
 
 	@Override
-	public <V> Status set(final byte[] key, final V value, final SetArgument argument) {
-		return set(key, serializer.serializeAsBytes(value), argument);
+	public <V> Status set(final byte[] key, final V value, final SetType setType) {
+		return set(key, serializer.serializeAsBytes(value), setType);
+	}
+
+	@Override
+	public <V> Status set(final String key, final V value, final SetType setType, final PxExType pxExType,
+	                      final long expires) {
+		return set(key, serializer.serialize(value), setType, pxExType, expires);
+	}
+
+	@Override
+	public <V> Status set(final byte[] key, final V value, final SetType setType, final PxExType pxExType,
+	                      final long expires) {
+		return set(key, serializer.serializeAsBytes(value), setType, pxExType, expires);
+	}
+
+	@Override
+	public <V> Status set(final String key, final V value, final PxExType pxExType, final long expires) {
+		return set(key, serializer.serialize(value), pxExType, expires);
+	}
+
+	@Override
+	public <V> Status set(final byte[] key, final V value, final PxExType pxExType, final long expires) {
+		return set(key, serializer.serialize(value), pxExType, expires);
 	}
 
 	@Override

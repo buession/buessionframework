@@ -24,16 +24,8 @@
  */
 package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.core.utils.Assert;
-import com.buession.redis.core.command.args.GetExArgument;
+import com.buession.redis.core.command.args.GetExType;
 import redis.clients.jedis.params.GetExParams;
-
-import java.time.Duration;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.Date;
 
 /**
  * Jedis {@link GetExParams} 扩展
@@ -53,81 +45,25 @@ public final class JedisGetExParams extends GetExParams {
 	/**
 	 * 构造函数
 	 *
-	 * @param getExArgument
-	 *        {@link GetExArgument}
+	 * @param getExType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
 	 */
-	public JedisGetExParams(final GetExArgument getExArgument) {
+	public JedisGetExParams(final GetExType getExType, final long expires) {
 		super();
 
-		if(getExArgument != null && getExArgument.getExpires() != null){
-			switch(getExArgument.getType()){
-				case EX -> ex(getExArgument.getExpires());
-				case EXAT -> exAt(getExArgument.getExpires());
-				case PX -> px(getExArgument.getExpires());
-				case PXAT -> pxAt(getExArgument.getExpires());
-				case PERSIST -> persist();
-			}
+		if(getExType == GetExType.EX){
+			ex(expires);
+		}else if(getExType == GetExType.EXAT){
+			exAt(expires);
+		}else if(getExType == GetExType.PX){
+			px(expires);
+		}else if(getExType == GetExType.PXAT){
+			pxAt(expires);
+		}else if(getExType == GetExType.PERSIST){
+			persist();
 		}
-	}
-
-	public JedisGetExParams ex(Duration timeout) {
-		Assert.isNull(timeout, "Timeout must not be null");
-		ex(timeout.getSeconds());
-		return this;
-	}
-
-	public JedisGetExParams px(Duration timeout) {
-		Assert.isNull(timeout, "Timeout must not be null");
-		px(timeout.toMillis());
-		return this;
-	}
-
-	public JedisGetExParams exAt(Date date) {
-		Assert.isNull(date, "Timestamp must not be null");
-		exAt(date.getTime() / 1000);
-		return this;
-	}
-
-	public JedisGetExParams exAt(LocalDateTime dateTime) {
-		Assert.isNull(dateTime, "Timestamp must not be null");
-		exAt(dateTime.atZone(ZoneId.systemDefault()).toInstant());
-		return this;
-	}
-
-	public JedisGetExParams exAt(ZonedDateTime dateTime) {
-		Assert.isNull(dateTime, "Timestamp must not be null");
-		exAt(dateTime.toEpochSecond());
-		return this;
-	}
-
-	public JedisGetExParams exAt(Instant instant) {
-		Assert.isNull(instant, "Timestamp must not be null");
-		exAt(instant.toEpochMilli() / 1000);
-		return this;
-	}
-
-	public JedisGetExParams pxAt(Date date) {
-		Assert.isNull(date, "Timestamp must not be null");
-		pxAt(date.getTime());
-		return this;
-	}
-
-	public JedisGetExParams pxAt(LocalDateTime dateTime) {
-		Assert.isNull(dateTime, "Timestamp must not be null");
-		pxAt(dateTime.atZone(ZoneId.systemDefault()).toInstant());
-		return this;
-	}
-
-	public JedisGetExParams pxAt(ZonedDateTime dateTime) {
-		Assert.isNull(dateTime, "Timestamp must not be null");
-		exAt(dateTime.toInstant().toEpochMilli());
-		return this;
-	}
-
-	public JedisGetExParams pxAt(Instant instant) {
-		Assert.isNull(instant, "Timestamp must not be null");
-		exAt(instant.toEpochMilli());
-		return this;
 	}
 
 }

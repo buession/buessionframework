@@ -748,20 +748,6 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection<RedisCl
 	}
 
 	@Override
-	public boolean isConnected() {
-		return client != null;
-	}
-
-	@Override
-	public boolean isClosed() {
-		return client == null;
-	}
-
-	@Override
-	protected void internalInit() {
-	}
-
-	@Override
 	protected Status doConnect() throws RedisConnectionFailureException {
 		if(isConnected()){
 			return Status.SUCCESS;

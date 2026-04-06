@@ -35,8 +35,8 @@ import com.buession.redis.core.command.KeyCommands;
 import com.buession.redis.core.command.args.key.MigrateArgument;
 import com.buession.redis.core.command.args.RestoreArgument;
 import com.buession.redis.core.command.args.key.SortArgument;
-import com.buession.redis.core.internal.ResultUtils;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -180,6 +180,74 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	@Override
 	default Status expire(final byte[] key, final int lifetime, final ExpireOption expireOption) {
 		return execute((client)->client.keyCommands().expire(key, lifetime, expireOption));
+	}
+
+	/**
+	 * 为给定 key 设置生存时间，当 key 过期时(生存时间为 0)，它会被自动删除
+	 *
+	 * <p>详情说明<a href="http://redisdoc.com/expire/expire.html" target="_blank">http://redisdoc.com/expire/expire.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param duration
+	 * 		生存时间
+	 *
+	 * @return 操作结果
+	 */
+	default Status expire(final String key, final Duration duration) {
+		return expire(key, (int) duration.toSeconds());
+	}
+
+	/**
+	 * 为给定 key 设置生存时间，当 key 过期时(生存时间为 0)，它会被自动删除
+	 *
+	 * <p>详情说明<a href="http://redisdoc.com/expire/expire.html" target="_blank">http://redisdoc.com/expire/expire.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param duration
+	 * 		生存时间
+	 *
+	 * @return 操作结果
+	 */
+	default Status expire(final byte[] key, final Duration duration) {
+		return expire(key, (int) duration.toSeconds());
+	}
+
+	/**
+	 * 为给定 key 设置生存时间，当 key 过期时(生存时间为 0)，它会被自动删除
+	 *
+	 * <p>详情说明<a href="http://redisdoc.com/expire/expire.html" target="_blank">http://redisdoc.com/expire/expire.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param duration
+	 * 		生存时间
+	 * @param expireOption
+	 * 		过期选项
+	 *
+	 * @return 操作结果
+	 */
+	default Status expire(final String key, final Duration duration, final ExpireOption expireOption) {
+		return expire(key, (int) duration.toSeconds(), expireOption);
+	}
+
+	/**
+	 * 为给定 key 设置生存时间，当 key 过期时(生存时间为 0)，它会被自动删除
+	 *
+	 * <p>详情说明<a href="http://redisdoc.com/expire/expire.html" target="_blank">http://redisdoc.com/expire/expire.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param duration
+	 * 		生存时间
+	 * @param expireOption
+	 * 		过期选项
+	 *
+	 * @return 操作结果
+	 */
+	default Status expire(final byte[] key, final Duration duration, final ExpireOption expireOption) {
+		return expire(key, (int) duration.toSeconds(), expireOption);
 	}
 
 	@Override
@@ -496,7 +564,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * the expiration (Unix timestamp) in seconds.
 	 */
 	default Date expireTimeDate(final String key) {
-		return ResultUtils.createDate(expireTime(key), true);
+		return createDate(expireTime(key), true);
 	}
 
 	/**
@@ -511,7 +579,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * the expiration (Unix timestamp) in seconds.
 	 */
 	default Date expireTimeDate(final byte[] key) {
-		return ResultUtils.createDate(expireTime(key), true);
+		return createDate(expireTime(key), true);
 	}
 
 	@Override
@@ -536,13 +604,13 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 
 	@Override
 	default Status migrate(final String host, final int port, final int db, final int timeout,
-						   final MigrateArgument argument, final String... keys) {
+	                       final MigrateArgument argument, final String... keys) {
 		return execute((client)->client.keyCommands().migrate(host, port, db, timeout, argument, keys));
 	}
 
 	@Override
 	default Status migrate(final String host, final int port, final int db, final int timeout,
-						   final MigrateArgument argument, final byte[]... keys) {
+	                       final MigrateArgument argument, final byte[]... keys) {
 		return execute((client)->client.keyCommands().migrate(host, port, db, timeout, argument, keys));
 	}
 
@@ -650,7 +718,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status migrate(final String host, final int db, final int timeout, final MigrateArgument argument,
-						   final String... keys) {
+	                       final String... keys) {
 		return migrate(host, RedisNode.DEFAULT_PORT, db, timeout, argument, keys);
 	}
 
@@ -674,7 +742,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status migrate(final String host, final int db, final int timeout, final MigrateArgument argument,
-						   final byte[]... keys) {
+	                       final byte[]... keys) {
 		return migrate(host, RedisNode.DEFAULT_PORT, db, timeout, argument, keys);
 	}
 
@@ -698,7 +766,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status migrate(final RedisNode server, final int db, final int timeout, final MigrateArgument argument,
-						   final String... keys) {
+	                       final String... keys) {
 		return migrate(server.getHost(), server.getPort(), db, timeout, argument, keys);
 	}
 
@@ -722,7 +790,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status migrate(final RedisNode server, final int db, final int timeout, final MigrateArgument argument,
-						   final byte[]... keys) {
+	                       final byte[]... keys) {
 		return migrate(server.getHost(), server.getPort(), db, timeout, argument, keys);
 	}
 
@@ -804,6 +872,74 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	@Override
 	default Status pExpire(final byte[] key, final int lifetime, final ExpireOption expireOption) {
 		return execute((client)->client.keyCommands().pExpire(key, lifetime, expireOption));
+	}
+
+	/**
+	 * 为给定 key 设置生存时间，当 key 过期时(生存时间为 0)，它会被自动删除
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/pexpire/" target="_blank">https://redis.io/docs/latest/commands/pexpire/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param duration
+	 * 		生存时间
+	 *
+	 * @return 操作结果
+	 */
+	default Status pExpire(final String key, final Duration duration) {
+		return pExpire(key, (int) duration.toMillis());
+	}
+
+	/**
+	 * 为给定 key 设置生存时间，当 key 过期时(生存时间为 0)，它会被自动删除
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/pexpire/" target="_blank">https://redis.io/docs/latest/commands/pexpire/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param duration
+	 * 		生存时间
+	 *
+	 * @return 操作结果
+	 */
+	default Status pExpire(final byte[] key, final Duration duration) {
+		return pExpire(key, (int) duration.toMillis());
+	}
+
+	/**
+	 * 为给定 key 设置生存时间，当 key 过期时(生存时间为 0)，它会被自动删除
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/pexpire/" target="_blank">https://redis.io/docs/latest/commands/pexpire/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param duration
+	 * 		生存时间
+	 * @param expireOption
+	 * 		过期选项
+	 *
+	 * @return 操作结果
+	 */
+	default Status pExpire(final String key, final Duration duration, final ExpireOption expireOption) {
+		return pExpire(key, (int) duration.toMillis(), expireOption);
+	}
+
+	/**
+	 * 为给定 key 设置生存时间，当 key 过期时(生存时间为 0)，它会被自动删除
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/pexpire/" target="_blank">https://redis.io/docs/latest/commands/pexpire/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param duration
+	 * 		生存时间
+	 * @param expireOption
+	 * 		过期选项
+	 *
+	 * @return 操作结果
+	 */
+	default Status pExpire(final byte[] key, final Duration duration, final ExpireOption expireOption) {
+		return pExpire(key, (int) duration.toMillis(), expireOption);
 	}
 
 	@Override
@@ -1119,7 +1255,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return Key 的过期时间戳
 	 */
 	default Date pExpireTimeDate(final String key) {
-		return ResultUtils.createDate(pExpireTime(key), false);
+		return createDate(pExpireTime(key), false);
 	}
 
 	/**
@@ -1133,7 +1269,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return Key 的过期时间戳
 	 */
 	default Date pExpireTimeDate(final byte[] key) {
-		return ResultUtils.createDate(pExpireTime(key), false);
+		return createDate(pExpireTime(key), false);
 	}
 
 	@Override
@@ -1183,13 +1319,13 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 
 	@Override
 	default Status restore(final String key, final byte[] serializedValue, final int ttl,
-						   final RestoreArgument argument) {
+	                       final RestoreArgument argument) {
 		return execute((client)->client.keyCommands().restore(key, serializedValue, ttl, argument));
 	}
 
 	@Override
 	default Status restore(final byte[] key, final byte[] serializedValue, final int ttl,
-						   final RestoreArgument argument) {
+	                       final RestoreArgument argument) {
 		return execute((client)->client.keyCommands().restore(key, serializedValue, ttl, argument));
 	}
 
@@ -1521,13 +1657,13 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 
 	@Override
 	default Long sort(final String key, final String destKey, final SortArgument argument, final int offset,
-					  final int count) {
+	                  final int count) {
 		return execute((client)->client.keyCommands().sort(key, destKey, argument, offset, count));
 	}
 
 	@Override
 	default Long sort(final byte[] key, final byte[] destKey, final SortArgument argument, final int offset,
-					  final int count) {
+	                  final int count) {
 		return execute((client)->client.keyCommands().sort(key, destKey, argument, offset, count));
 	}
 
@@ -1619,6 +1755,10 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	@Override
 	default Long unlink(final byte[]... keys) {
 		return execute((client)->client.keyCommands().unlink(keys));
+	}
+
+	private static Date createDate(final Long value, final boolean unixTimestamp) {
+		return value != null && value != -1 && value != -2 ? new Date(unixTimestamp ? value * 1000 : value) : null;
 	}
 
 }

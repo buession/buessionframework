@@ -24,12 +24,10 @@
  */
 package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.redis.core.command.args.NxXx;
-import com.buession.redis.core.command.args.string.SetArgument;
+import com.buession.redis.core.command.args.PxExType;
+import com.buession.redis.core.command.args.string.SetType;
+import io.lettuce.core.CompareCondition;
 import io.lettuce.core.SetArgs;
-
-import java.time.Duration;
-import java.time.Instant;
 
 /**
  * Lettuce {@link SetArgs} 扩展
@@ -49,28 +47,72 @@ public final class LettuceSetArgs extends SetArgs {
 	/**
 	 * 构造函数
 	 *
-	 * @param setArgument
-	 *        {@link SetArgument}
+	 * @param setType
+	 *        {@link SetType}
 	 */
-	public LettuceSetArgs(final SetArgument setArgument) {
+	public LettuceSetArgs(final SetType setType) {
 		super();
+		setType(setType);
+	}
 
-		if(setArgument != null){
-			if(setArgument.getType() == null && setArgument.getExpires() != null){
-				switch(setArgument.getType()){
-					case EX -> ex(Duration.ofSeconds(setArgument.getExpires()));
-					case EXAT -> exAt(Instant.ofEpochSecond(setArgument.getExpires()));
-					case PX -> px(Duration.ofMillis(setArgument.getExpires()));
-					case PXAT -> pxAt(Instant.ofEpochMilli(setArgument.getExpires()));
-					case KEEPTTL -> keepttl();
+	/**
+	 * 构造函数
+	 *
+	 * @param setType
+	 *        {@link SetType}
+	 * @param pxExType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
+	 */
+	public LettuceSetArgs(final SetType setType, final PxExType pxExType, final long expires) {
+		super();
+		setType(setType);
+		pxEx(pxExType, expires);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param pxExType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
+	 */
+	public LettuceSetArgs(final PxExType pxExType, final long expires) {
+		super();
+		pxEx(pxExType, expires);
+	}
+
+	private void setType(final SetType setType) {
+		if(setType != null){
+			if(setType.getNxXx() != null){
+				switch(setType.getNxXx()){
+					case NX -> nx();
+					case XX -> xx();
+				}
+			}else if(setType.getCompareCondition() != null && setType.getCompareValue() != null){
+				switch(setType.getCompareCondition()){
+					case IFEQ -> compareCondition(CompareCondition.valueEq(setType.getCompareValue()));
+					case IFDEQ -> compareCondition(CompareCondition.digestEq(setType.getCompareValue()));
+					case IFNE -> compareCondition(CompareCondition.valueNe(setType.getCompareValue()));
+					case IFDNE -> compareCondition(CompareCondition.digestNe(setType.getCompareValue()));
 				}
 			}
+		}
+	}
 
-			if(setArgument.getNxXx() == NxXx.NX){
-				nx();
-			}else if(setArgument.getNxXx() == NxXx.XX){
-				xx();
-			}
+	private void pxEx(final PxExType pxExType, final long expires) {
+		if(pxExType == PxExType.EX){
+			ex(expires);
+		}else if(pxExType == PxExType.EXAT){
+			exAt(expires);
+		}else if(pxExType == PxExType.PX){
+			px(expires);
+		}else if(pxExType == PxExType.PXAT){
+			pxAt(expires);
+		}else if(pxExType == PxExType.KEEPTTL){
+			keepttl();
 		}
 	}
 

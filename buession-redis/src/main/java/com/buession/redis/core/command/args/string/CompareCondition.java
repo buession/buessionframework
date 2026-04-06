@@ -22,7 +22,9 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command.args;
+package com.buession.redis.core.command.args.string;
+
+import com.buession.redis.core.Keyword;
 
 /**
  *
@@ -30,6 +32,24 @@ package com.buession.redis.core.command.args;
  * @author Yong.Teng
  * @since 4.0.0
  */
-interface ExArgument<T> {
+public enum CompareCondition implements Keyword {
+
+	IFEQ,
+
+	IFNE,
+
+	IFDEQ,
+
+	IFDNE;
+
+	@Override
+	public String getValue() {
+		return name();
+	}
+
+	@Override
+	public String toString() {
+		return getValue();
+	}
 
 }

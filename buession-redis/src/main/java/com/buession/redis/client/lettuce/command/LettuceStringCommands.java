@@ -30,15 +30,16 @@ import com.buession.core.converter.ListConverter;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
-import com.buession.redis.core.command.args.string.DelExType;
+import com.buession.redis.core.command.args.GetExType;
+import com.buession.redis.core.command.args.NxXx;
+import com.buession.redis.core.command.args.PxExType;
+import com.buession.redis.core.command.args.string.CompareCondition;
 import com.buession.redis.core.LcsResult;
 import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.StringCommands;
-import com.buession.redis.core.command.args.GetExArgument;
 import com.buession.redis.core.command.args.string.LcsArgument;
-import com.buession.redis.core.command.args.string.MSetExArgument;
-import com.buession.redis.core.command.args.string.SetArgument;
+import com.buession.redis.core.command.args.string.SetType;
 import com.buession.redis.core.internal.convert.lettuce.response.StringMatchResultConveter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.response.OneStatusConverter;
@@ -47,7 +48,8 @@ import com.buession.redis.core.internal.lettuce.args.LettuceLcsArgs;
 import com.buession.redis.core.internal.lettuce.args.LettuceMSetExArgs;
 import com.buession.redis.core.internal.lettuce.args.LettuceSetArgs;
 import com.buession.redis.utils.SafeEncoder;
-import io.lettuce.core.CompareCondition;
+import io.lettuce.core.MSetExArgs;
+import io.lettuce.core.SetArgs;
 import io.lettuce.core.Value;
 
 import java.util.List;
@@ -103,34 +105,34 @@ public final class LettuceStringCommands extends AbstractLettuceRedisCommands im
 	}
 
 	@Override
-	public Status delEx(final String key, final DelExType type, final String value) {
+	public Status delEx(final String key, final CompareCondition type, final String value) {
 		final CommandArguments args = CommandArguments.create(key).add(type, value);
 
-		if(type == DelExType.IFEQ){
-			return delEx(rawBinaryKey(key), CompareCondition.valueEq(SafeEncoder.encode(value)), args);
-		}else if(type == DelExType.IFNE){
-			return delEx(rawBinaryKey(key), CompareCondition.valueNe(SafeEncoder.encode(value)), args);
-		}else if(type == DelExType.IFDEQ){
-			return delEx(rawBinaryKey(key), CompareCondition.digestEq(value), args);
-		}else if(type == DelExType.IFDNE){
-			return delEx(rawBinaryKey(key), CompareCondition.digestNe(value), args);
+		if(type == CompareCondition.IFEQ){
+			return delEx(rawBinaryKey(key), io.lettuce.core.CompareCondition.valueEq(SafeEncoder.encode(value)), args);
+		}else if(type == CompareCondition.IFNE){
+			return delEx(rawBinaryKey(key), io.lettuce.core.CompareCondition.valueNe(SafeEncoder.encode(value)), args);
+		}else if(type == CompareCondition.IFDEQ){
+			return delEx(rawBinaryKey(key), io.lettuce.core.CompareCondition.digestEq(value), args);
+		}else if(type == CompareCondition.IFDNE){
+			return delEx(rawBinaryKey(key), io.lettuce.core.CompareCondition.digestNe(value), args);
 		}else{
 			return executeCommand(RedisCommand.DELEX, args);
 		}
 	}
 
 	@Override
-	public Status delEx(final byte[] key, final DelExType type, final byte[] value) {
+	public Status delEx(final byte[] key, final CompareCondition type, final byte[] value) {
 		final CommandArguments args = CommandArguments.create(key).add(type, value);
 
-		if(type == DelExType.IFEQ){
-			return delEx(rawKey(key), CompareCondition.valueEq(value), args);
-		}else if(type == DelExType.IFNE){
-			return delEx(rawKey(key), CompareCondition.valueNe(value), args);
-		}else if(type == DelExType.IFDEQ){
-			return delEx(rawKey(key), CompareCondition.digestEq(SafeEncoder.encode(value)), args);
-		}else if(type == DelExType.IFDNE){
-			return delEx(rawKey(key), CompareCondition.digestNe(SafeEncoder.encode(value)), args);
+		if(type == CompareCondition.IFEQ){
+			return delEx(rawKey(key), io.lettuce.core.CompareCondition.valueEq(value), args);
+		}else if(type == CompareCondition.IFNE){
+			return delEx(rawKey(key), io.lettuce.core.CompareCondition.valueNe(value), args);
+		}else if(type == CompareCondition.IFDEQ){
+			return delEx(rawKey(key), io.lettuce.core.CompareCondition.digestEq(SafeEncoder.encode(value)), args);
+		}else if(type == CompareCondition.IFDNE){
+			return delEx(rawKey(key), io.lettuce.core.CompareCondition.digestNe(SafeEncoder.encode(value)), args);
 		}else{
 			return executeCommand(RedisCommand.DELEX, args);
 		}
@@ -187,18 +189,18 @@ public final class LettuceStringCommands extends AbstractLettuceRedisCommands im
 	}
 
 	@Override
-	public String getEx(final String key, final GetExArgument getExArgument) {
-		final CommandArguments args = CommandArguments.create(key).add(getExArgument);
+	public String getEx(final String key, final GetExType exType, final long expires) {
+		final CommandArguments args = CommandArguments.create(key).add(exType, expires);
 		return executeCommand(RedisCommand.GETEX, args,
-				(cmd)->cmd.getex(rawBinaryKey(key), new LettuceGetExArgs(getExArgument)),
+				(cmd)->cmd.getex(rawBinaryKey(key), new LettuceGetExArgs(exType, expires)),
 				SafeEncoder::encode);
 	}
 
 	@Override
-	public byte[] getEx(final byte[] key, final GetExArgument getExArgument) {
-		final CommandArguments args = CommandArguments.create(key).add(getExArgument);
+	public byte[] getEx(final byte[] key, final GetExType exType, final long expires) {
+		final CommandArguments args = CommandArguments.create(key).add(exType, expires);
 		return executeCommand(RedisCommand.GETEX, args,
-				(cmd)->cmd.getex(rawKey(key), new LettuceGetExArgs(getExArgument)));
+				(cmd)->cmd.getex(rawKey(key), new LettuceGetExArgs(exType, expires)));
 	}
 
 	@Override
@@ -304,8 +306,8 @@ public final class LettuceStringCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public List<byte[]> mGet(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(
-				RedisCommand.MGET, args, (cmd)->cmd.mget(rawKeys(keys)), new ListConverter<>(Value::getValue));
+		return executeCommand(RedisCommand.MGET, args, (cmd)->cmd.mget(rawKeys(keys)),
+				new ListConverter<>(Value::getValue));
 	}
 
 	@SuppressWarnings({"unchecked"})
@@ -324,11 +326,26 @@ public final class LettuceStringCommands extends AbstractLettuceRedisCommands im
 				new LettuceMSetExArgs()), new BooleanStatusConverter());
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
-	public Status mSetEx(final KeyValue<String, String>[] values, final MSetExArgument argument) {
-		final CommandArguments args = CommandArguments.create(values).add(argument);
-		return executeCommand(RedisCommand.MSETNX, args, (cmd)->cmd.msetex(buildSetValues(values),
-				new LettuceMSetExArgs(argument)), new BooleanStatusConverter());
+	public Status mSetEx(final NxXx nxXx, final KeyValue<String, String>... values) {
+		final CommandArguments args = CommandArguments.create(values).add(nxXx);
+		return mSetEx(new LettuceMSetExArgs(nxXx), values, args);
+	}
+
+	@SuppressWarnings({"unchecked"})
+	@Override
+	public Status mSetEx(final NxXx nxXx, final PxExType exType, final long expires,
+	                     final KeyValue<String, String>... values) {
+		final CommandArguments args = CommandArguments.create(values).add(nxXx).add(exType, expires);
+		return mSetEx(new LettuceMSetExArgs(nxXx, exType, expires), values, args);
+	}
+
+	@SuppressWarnings({"unchecked"})
+	@Override
+	public Status mSetEx(final PxExType exType, final long expires, final KeyValue<String, String>... values) {
+		final CommandArguments args = CommandArguments.create(values).add(exType, expires);
+		return mSetEx(new LettuceMSetExArgs(exType, expires), values, args);
 	}
 
 	@SuppressWarnings({"unchecked"})
@@ -368,18 +385,41 @@ public final class LettuceStringCommands extends AbstractLettuceRedisCommands im
 	}
 
 	@Override
-	public Status set(final String key, final String value, final SetArgument argument) {
-		final CommandArguments args = CommandArguments.create(key, value).add(argument);
-		return executeCommand(RedisCommand.SET, args,
-				(cmd)->cmd.set(rawBinaryKey(key), SafeEncoder.encode(value), new LettuceSetArgs(argument)),
-				new OkStatusConverter());
+	public Status set(final String key, final String value, final SetType setType) {
+		final CommandArguments args = CommandArguments.create(key, value).add(setType);
+		return set(rawBinaryKey(key), value, new LettuceSetArgs(setType), args);
 	}
 
 	@Override
-	public Status set(final byte[] key, final byte[] value, final SetArgument argument) {
-		final CommandArguments args = CommandArguments.create(key, value).add(argument);
-		return executeCommand(RedisCommand.SET, args,
-				(cmd)->cmd.set(rawKey(key), value, new LettuceSetArgs(argument)), new OkStatusConverter());
+	public Status set(final byte[] key, final byte[] value, final SetType setType) {
+		final CommandArguments args = CommandArguments.create(key, value).add(setType);
+		return set(rawKey(key), value, new LettuceSetArgs(setType), args);
+	}
+
+	@Override
+	public Status set(final String key, final String value, final SetType setType, final PxExType pxExType,
+	                  final long expires) {
+		final CommandArguments args = CommandArguments.create(key, value).add(setType).add(pxExType, expires);
+		return set(rawBinaryKey(key), value, new LettuceSetArgs(setType, pxExType, expires), args);
+	}
+
+	@Override
+	public Status set(final byte[] key, final byte[] value, final SetType setType, final PxExType pxExType,
+	                  final long expires) {
+		final CommandArguments args = CommandArguments.create(key, value).add(setType).add(pxExType, expires);
+		return set(rawKey(key), value, new LettuceSetArgs(setType, pxExType, expires), args);
+	}
+
+	@Override
+	public Status set(final String key, final String value, final PxExType pxExType, final long expires) {
+		final CommandArguments args = CommandArguments.create(key, value).add(pxExType, expires);
+		return set(rawBinaryKey(key), value, new LettuceSetArgs(pxExType, expires), args);
+	}
+
+	@Override
+	public Status set(final byte[] key, final byte[] value, final PxExType pxExType, final long expires) {
+		final CommandArguments args = CommandArguments.create(key, value).add(pxExType, expires);
+		return set(rawKey(key), value, new LettuceSetArgs(pxExType, expires), args);
 	}
 
 	@Override
@@ -449,8 +489,25 @@ public final class LettuceStringCommands extends AbstractLettuceRedisCommands im
 		return executeCommand(RedisCommand.SUBSTR, args, (cmd)->cmd.getrange(rawKey(key), start, end));
 	}
 
-	private Status delEx(final byte[] key, final CompareCondition<byte[]> condition, final CommandArguments args) {
+	private Status delEx(final byte[] key, final io.lettuce.core.CompareCondition<byte[]> condition,
+	                     final CommandArguments args) {
 		return executeCommand(RedisCommand.DELEX, args, (cmd)->cmd.delex(key, condition), new OneStatusConverter());
+	}
+
+	private Status mSetEx(final MSetExArgs mSetExArgs, final KeyValue<String, String>[] values,
+	                      final CommandArguments args) {
+		return executeCommand(RedisCommand.MSETEX, args, (cmd)->cmd.msetex(buildSetValues(values),
+				mSetExArgs), new BooleanStatusConverter());
+	}
+
+	private Status set(final byte[] key, final String value, final SetArgs setArgs, final CommandArguments args) {
+		return executeCommand(RedisCommand.SET, args, (cmd)->cmd.set(key, SafeEncoder.encode(value), setArgs),
+				new OkStatusConverter());
+	}
+
+	private Status set(final byte[] key, final byte[] value, final SetArgs setArgs, final CommandArguments args) {
+		return executeCommand(RedisCommand.SET, args, (cmd)->cmd.set(key, value, setArgs),
+				new OkStatusConverter());
 	}
 
 	@SuppressWarnings({"unchecked"})

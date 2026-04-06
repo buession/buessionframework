@@ -28,8 +28,9 @@ import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.core.command.args.ExpireOption;
 import com.buession.redis.core.ScanResult;
-import com.buession.redis.core.command.args.GetExArgument;
-import com.buession.redis.core.command.args.hash.HSetExArgument;
+import com.buession.redis.core.command.args.FnxFxx;
+import com.buession.redis.core.command.args.GetExType;
+import com.buession.redis.core.command.args.PxExType;
 
 import java.util.List;
 import java.util.Map;
@@ -397,14 +398,16 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param argument
-	 * 		参数
+	 * @param exType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
 	 * @param fields
 	 * 		一个或多个域
 	 *
 	 * @return 哈希表 key 中获取并删除域的值
 	 */
-	List<String> hGetEx(final String key, final GetExArgument argument, final String... fields);
+	List<String> hGetEx(final String key, final GetExType exType, final long expires, final String... fields);
 
 	/**
 	 * 从哈希（Hash）中获取一个或多个字段的值，并同时为这些字段设置过期时间
@@ -413,14 +416,16 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param argument
-	 * 		参数
+	 * @param exType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
 	 * @param fields
 	 * 		一个或多个域
 	 *
 	 * @return 哈哈希表 key 中获取并删除域的值
 	 */
-	List<byte[]> hGetEx(final byte[] key, final GetExArgument argument, final byte[]... fields);
+	List<byte[]> hGetEx(final byte[] key, final GetExType exType, final long expires, final byte[]... fields);
 
 	/**
 	 * 为哈希表 key 中的域 field 的值加上增量 increment
@@ -755,7 +760,7 @@ public interface HashCommands extends RedisCommands {
 	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
 	 */
 	List<Long> hPExpireAt(final String key, final long unixTimestamp, final ExpireOption option,
-						  final String... fields);
+	                      final String... fields);
 
 	/**
 	 * 为哈希中的一个或多个字段设置过期时间
@@ -776,7 +781,7 @@ public interface HashCommands extends RedisCommands {
 	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
 	 */
 	List<Long> hPExpireAt(final byte[] key, final long unixTimestamp, final ExpireOption option,
-						  final byte[]... fields);
+	                      final byte[]... fields);
 
 	/**
 	 * 获取哈希中的一个或多个字段的过期时间
@@ -999,7 +1004,7 @@ public interface HashCommands extends RedisCommands {
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
 	ScanResult<KeyValue<String, String>> hScan(final String key, final String cursor, final String pattern,
-											   final int count);
+	                                           final int count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对
@@ -1018,7 +1023,7 @@ public interface HashCommands extends RedisCommands {
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
 	ScanResult<KeyValue<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-											   final int count);
+	                                           final int count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对
@@ -1247,14 +1252,15 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		Key
+	 * @param fnxFxx
+	 *        {@link FnxFxx}
 	 * @param data
 	 * 		field =&gt; value (域-值)对
-	 * @param argument
-	 * 		参数
 	 *
 	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
 	 */
-	Status hSetEx(final String key, final KeyValue<String, String>[] data, final HSetExArgument argument);
+	@SuppressWarnings({"unchecked"})
+	Status hSetEx(final String key, final FnxFxx fnxFxx, final KeyValue<String, String>... data);
 
 	/**
 	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
@@ -1263,14 +1269,97 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		Key
+	 * @param fnxFxx
+	 *        {@link FnxFxx}
 	 * @param data
 	 * 		field =&gt; value (域-值)对
-	 * @param argument
-	 * 		参数
 	 *
 	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
 	 */
-	Status hSetEx(final byte[] key, final KeyValue<byte[], byte[]>[] data, final HSetExArgument argument);
+	@SuppressWarnings({"unchecked"})
+	Status hSetEx(final byte[] key, final FnxFxx fnxFxx, final KeyValue<byte[], byte[]>... data);
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fnxFxx
+	 *        {@link FnxFxx}
+	 * @param exType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
+	 * @param data
+	 * 		field =&gt; value (域-值)对
+	 *
+	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
+	 */
+	@SuppressWarnings({"unchecked"})
+	Status hSetEx(final String key, final FnxFxx fnxFxx, final PxExType exType, final long expires,
+	              final KeyValue<String, String>... data);
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param fnxFxx
+	 *        {@link FnxFxx}
+	 * @param exType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
+	 * @param data
+	 * 		field =&gt; value (域-值)对
+	 *
+	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
+	 */
+	@SuppressWarnings({"unchecked"})
+	Status hSetEx(final byte[] key, final FnxFxx fnxFxx, final PxExType exType, final long expires,
+	              final KeyValue<byte[], byte[]>... data);
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param exType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
+	 * @param data
+	 * 		field =&gt; value (域-值)对
+	 *
+	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
+	 */
+	@SuppressWarnings({"unchecked"})
+	Status hSetEx(final String key, final PxExType exType, final long expires, final KeyValue<String, String>... data);
+
+	/**
+	 * 哈希中设置一个或多个字段的值，并同时为这些字段指定过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hsetex/" target="_blank">https://redis.io/docs/latest/commands/hsetex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param exType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
+	 * @param data
+	 * 		field =&gt; value (域-值)对
+	 *
+	 * @return 操作结果；设置成功时返回 Status.Success，在给定域已经存在而放弃执行设置操作时返回 Status.FAILURE
+	 */
+	@SuppressWarnings({"unchecked"})
+	Status hSetEx(final byte[] key, final PxExType exType, final long expires, final KeyValue<byte[], byte[]>... data);
 
 	/**
 	 * 当且仅当域 field 尚未存在于哈希表 key 中的情况下，将它的值设置为 value

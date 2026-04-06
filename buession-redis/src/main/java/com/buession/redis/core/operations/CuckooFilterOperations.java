@@ -26,7 +26,6 @@ package com.buession.redis.core.operations;
 
 import com.buession.lang.Status;
 import com.buession.redis.core.command.CuckooFilterCommands;
-import com.buession.redis.core.command.args.cuckoofilter.CFInsertArgument;
 import com.buession.redis.core.command.args.cuckoofilter.CFReserveArgument;
 
 import java.util.List;
@@ -113,13 +112,35 @@ public interface CuckooFilterOperations extends CuckooFilterCommands, RedisOpera
 	}
 
 	@Override
-	default List<Boolean> cfInsert(final String key, final CFInsertArgument argument, final String... items) {
-		return execute((client)->client.cuckooFilterCommands().cfInsert(key, argument, items));
+	default List<Boolean> cfInsert(final String key, final Long capacity, final String... items) {
+		return execute((client)->client.cuckooFilterCommands().cfInsert(key, capacity, items));
 	}
 
 	@Override
-	default List<Boolean> cfInsert(final byte[] key, final CFInsertArgument argument, final byte[]... items) {
-		return execute((client)->client.cuckooFilterCommands().cfInsert(key, argument, items));
+	default List<Boolean> cfInsert(final byte[] key, final Long capacity, final byte[]... items) {
+		return execute((client)->client.cuckooFilterCommands().cfInsert(key, capacity, items));
+	}
+
+	@Override
+	default List<Boolean> cfInsert(final String key, final Long capacity, final boolean noCreate,
+	                               final String... items) {
+		return execute((client)->client.cuckooFilterCommands().cfInsert(key, capacity, noCreate, items));
+	}
+
+	@Override
+	default List<Boolean> cfInsert(final byte[] key, final Long capacity, final boolean noCreate,
+	                               final byte[]... items) {
+		return execute((client)->client.cuckooFilterCommands().cfInsert(key, capacity, noCreate, items));
+	}
+
+	@Override
+	default List<Boolean> cfInsert(final String key, final boolean noCreate, final String... items) {
+		return execute((client)->client.cuckooFilterCommands().cfInsert(key, noCreate, items));
+	}
+
+	@Override
+	default List<Boolean> cfInsert(final byte[] key, final boolean noCreate, final byte[]... items) {
+		return execute((client)->client.cuckooFilterCommands().cfInsert(key, noCreate, items));
 	}
 
 	@Override
@@ -133,13 +154,13 @@ public interface CuckooFilterOperations extends CuckooFilterCommands, RedisOpera
 	}
 
 	@Override
-	default List<Boolean> cfInsertNx(final String key, final CFInsertArgument argument, final String... items) {
-		return execute((client)->client.cuckooFilterCommands().cfInsertNx(key, argument, items));
+	default List<Boolean> cfInsertNx(final String key, final Long capacity, final String... items) {
+		return execute((client)->client.cuckooFilterCommands().cfInsertNx(key, capacity, items));
 	}
 
 	@Override
-	default List<Boolean> cfInsertNx(final byte[] key, final CFInsertArgument argument, final byte[]... items) {
-		return execute((client)->client.cuckooFilterCommands().cfInsertNx(key, argument, items));
+	default List<Boolean> cfInsertNx(final byte[] key, final Long capacity, final byte[]... items) {
+		return execute((client)->client.cuckooFilterCommands().cfInsertNx(key, capacity, items));
 	}
 
 	@Override

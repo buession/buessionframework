@@ -77,6 +77,7 @@ public abstract class MaxLenMinId<T> {
 	}
 
 	public enum Type implements Keyword {
+
 		MAXLEN,
 
 		MINID;

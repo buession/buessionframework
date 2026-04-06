@@ -27,14 +27,16 @@ package com.buession.redis.core.operations;
 import com.buession.core.type.TypeReference;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
-import com.buession.redis.core.command.args.string.DelExType;
+import com.buession.redis.core.command.args.GetExType;
+import com.buession.redis.core.command.args.NxXx;
+import com.buession.redis.core.command.args.PxExType;
+import com.buession.redis.core.command.args.string.CompareCondition;
 import com.buession.redis.core.LcsResult;
 import com.buession.redis.core.command.StringCommands;
-import com.buession.redis.core.command.args.GetExArgument;
 import com.buession.redis.core.command.args.string.LcsArgument;
-import com.buession.redis.core.command.args.string.MSetExArgument;
-import com.buession.redis.core.command.args.string.SetArgument;
+import com.buession.redis.core.command.args.string.SetType;
 
+import java.time.Duration;
 import java.util.List;
 
 /**
@@ -85,12 +87,12 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	}
 
 	@Override
-	default Status delEx(final String key, final DelExType type, final String value) {
+	default Status delEx(final String key, final CompareCondition type, final String value) {
 		return execute((client)->client.stringCommands().delEx(key, type, value));
 	}
 
 	@Override
-	default Status delEx(final byte[] key, final DelExType type, final byte[] value) {
+	default Status delEx(final byte[] key, final CompareCondition type, final byte[] value) {
 		return execute((client)->client.stringCommands().delEx(key, type, value));
 	}
 
@@ -271,13 +273,13 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	}
 
 	@Override
-	default String getEx(final String key, final GetExArgument argument) {
-		return execute((client)->client.stringCommands().getEx(key, argument));
+	default String getEx(final String key, final GetExType type, final long expires) {
+		return execute((client)->client.stringCommands().getEx(key, type, expires));
 	}
 
 	@Override
-	default byte[] getEx(final byte[] key, final GetExArgument argument) {
-		return execute((client)->client.stringCommands().getEx(key, argument));
+	default byte[] getEx(final byte[] key, final GetExType type, final long expires) {
+		return execute((client)->client.stringCommands().getEx(key, type, expires));
 	}
 
 	/**
@@ -351,8 +353,10 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param argument
-	 * 		Key 过期时间参数
+	 * @param exType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
 	 * @param clazz
 	 * 		值对象类
 	 * @param <V>
@@ -360,7 +364,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 *
 	 * @return 键 key 的值反序列化后对象
 	 */
-	<V> V getEx(final String key, final GetExArgument argument, final Class<V> clazz);
+	<V> V getEx(final String key, final GetExType exType, final long expires, final Class<V> clazz);
 
 	/**
 	 * 获取键 key 的值反序列化为 clazz 指定类型后的对象，并重置 key 的过期时间
@@ -369,8 +373,10 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param argument
-	 * 		Key 过期时间参数
+	 * @param exType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
 	 * @param clazz
 	 * 		值对象类
 	 * @param <V>
@@ -378,7 +384,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 *
 	 * @return 键 key 的值反序列化后对象
 	 */
-	<V> V getEx(final byte[] key, final GetExArgument argument, final Class<V> clazz);
+	<V> V getEx(final byte[] key, final GetExType exType, final long expires, final Class<V> clazz);
 
 	/**
 	 * 获取键 key 的值反序列化为 type 指定类型后的对象，并重置 key 的过期时间
@@ -387,8 +393,10 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param argument
-	 * 		Key 过期时间参数
+	 * @param exType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
 	 * @param type
 	 * 		值类型引用
 	 * @param <V>
@@ -396,7 +404,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 *
 	 * @return 键 key 的值反序列化后对象
 	 */
-	<V> V getEx(final String key, final GetExArgument argument, final TypeReference<V> type);
+	<V> V getEx(final String key, final GetExType exType, final long expires, final TypeReference<V> type);
 
 	/**
 	 * 获取键 key 的值反序列化为 type 指定类型后的对象，并重置 key 的过期时间
@@ -405,8 +413,10 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param argument
-	 * 		Key 过期时间参数
+	 * @param exType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
 	 * @param type
 	 * 		值类型引用
 	 * @param <V>
@@ -414,7 +424,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 *
 	 * @return 键 key 的值反序列化后对象
 	 */
-	<V> V getEx(final byte[] key, final GetExArgument argument, final TypeReference<V> type);
+	<V> V getEx(final byte[] key, final GetExType exType, final long expires, final TypeReference<V> type);
 
 	@Override
 	default String getRange(final String key, final long start, final long end) {
@@ -648,9 +658,23 @@ public interface StringOperations extends StringCommands, RedisOperations {
 		return execute((client)->client.stringCommands().mSetEx(values));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
-	default Status mSetEx(final KeyValue<String, String>[] values, final MSetExArgument argument) {
-		return execute((client)->client.stringCommands().mSetEx(values, argument));
+	default Status mSetEx(final NxXx nxXx, final KeyValue<String, String>... values) {
+		return execute((client)->client.stringCommands().mSetEx(nxXx, values));
+	}
+
+	@SuppressWarnings({"unchecked"})
+	@Override
+	default Status mSetEx(final NxXx nxXx, final PxExType exType, final long expires,
+	                      final KeyValue<String, String>... values) {
+		return execute((client)->client.stringCommands().mSetEx(nxXx, exType, expires, values));
+	}
+
+	@SuppressWarnings({"unchecked"})
+	@Override
+	default Status mSetEx(final PxExType exType, final long expires, final KeyValue<String, String>... values) {
+		return execute((client)->client.stringCommands().mSetEx(exType, expires, values));
 	}
 
 	@SuppressWarnings({"unchecked"})
@@ -660,13 +684,51 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	}
 
 	@Override
-	default Status pSetEx(final String key, String value, int lifetime) {
+	default Status pSetEx(final String key, final String value, final int lifetime) {
 		return execute((client)->client.stringCommands().pSetEx(key, value, lifetime));
 	}
 
 	@Override
 	default Status pSetEx(final byte[] key, final byte[] value, final int lifetime) {
 		return execute((client)->client.stringCommands().pSetEx(key, value, lifetime));
+	}
+
+	/**
+	 * 将键 key 的值设置为 value ，并将键 key 的生存时间设置为 lifetime；
+	 * 如果键 key 已经存在，那么将覆盖已有的值
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/string/psetex.html" target="_blank">http://redisdoc.com/string/psetex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		值
+	 * @param duration
+	 * 		生存时间
+	 *
+	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	default Status pSetEx(final String key, final String value, final Duration duration) {
+		return pSetEx(key, value, (int) duration.toMillis());
+	}
+
+	/**
+	 * 将键 key 的值设置为 value ，并将键 key 的生存时间设置为 lifetime；
+	 * 如果键 key 已经存在，那么将覆盖已有的值
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/string/psetex.html" target="_blank">http://redisdoc.com/string/psetex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		值
+	 * @param duration
+	 * 		生存时间
+	 *
+	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	default Status pSetEx(final byte[] key, final byte[] value, final Duration duration) {
+		return pSetEx(key, value, (int) duration.toMillis());
 	}
 
 	/**
@@ -707,6 +769,44 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 */
 	<V> Status pSetEx(final byte[] key, final V value, final int lifetime);
 
+	/**
+	 * 将键 key 的值设置为 value ，并将键 key 的生存时间设置为 lifetime；
+	 * 如果键 key 已经存在，那么将覆盖已有的值
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/string/psetex.html" target="_blank">http://redisdoc.com/string/psetex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		值
+	 * @param duration
+	 * 		生存时间
+	 *
+	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	default <V> Status pSetEx(final String key, final V value, final Duration duration) {
+		return pSetEx(key, value, (int) duration.toMillis());
+	}
+
+	/**
+	 * 将键 key 的值设置为 value ，并将键 key 的生存时间设置为 lifetime；
+	 * 如果键 key 已经存在，那么将覆盖已有的值
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/string/psetex.html" target="_blank">http://redisdoc.com/string/psetex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		值
+	 * @param duration
+	 * 		生存时间
+	 *
+	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	default <V> Status pSetEx(final byte[] key, final V value, final Duration duration) {
+		return pSetEx(key, value, (int) duration.toMillis());
+	}
+
 	@Override
 	default Status set(final String key, final String value) {
 		return execute((client)->client.stringCommands().set(key, value));
@@ -718,20 +818,42 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	}
 
 	@Override
-	default Status set(final String key, final String value, final SetArgument argument) {
-		return execute((client)->client.stringCommands().set(key, value, argument));
+	default Status set(final String key, final String value, final SetType setType) {
+		return execute((client)->client.stringCommands().set(key, value, setType));
 	}
 
 	@Override
-	default Status set(final byte[] key, final byte[] value, final SetArgument argument) {
-		return execute((client)->client.stringCommands().set(key, value, argument));
+	default Status set(final byte[] key, final byte[] value, final SetType setType) {
+		return execute((client)->client.stringCommands().set(key, value, setType));
+	}
+
+	@Override
+	default Status set(final String key, final String value, final SetType setType, final PxExType pxExType,
+	                   final long expires) {
+		return execute((client)->client.stringCommands().set(key, value, setType, pxExType, expires));
+	}
+
+	@Override
+	default Status set(final byte[] key, final byte[] value, final SetType setType, final PxExType pxExType,
+	                   final long expires) {
+		return execute((client)->client.stringCommands().set(key, value, setType, pxExType, expires));
+	}
+
+	@Override
+	default Status set(final String key, final String value, final PxExType pxExType, final long expires) {
+		return execute((client)->client.stringCommands().set(key, value, pxExType, expires));
+	}
+
+	@Override
+	default Status set(final byte[] key, final byte[] value, final PxExType pxExType, final long expires) {
+		return execute((client)->client.stringCommands().set(key, value, pxExType, expires));
 	}
 
 	/**
 	 * 将对象 value 序列化后关联到 key；
 	 * 如果 key 已经持有其他值，SET 就覆写旧值，忽略类型
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/set.html" target="_blank">http://redisdoc.com/string/set.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/set/" target="_blank">https://redis.io/docs/latest/commands/set/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -748,7 +870,7 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 * 将对象 value 序列化后关联到 key；
 	 * 如果 key 已经持有其他值，SET 就覆写旧值，忽略类型
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/set.html" target="_blank">http://redisdoc.com/string/set.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/set/" target="_blank">https://redis.io/docs/latest/commands/set/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -765,39 +887,127 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 * 将字符串值 value 关联到 key；
 	 * 如果 key 已经持有其他值，SET 就覆写旧值，忽略类型
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/set.html" target="_blank">http://redisdoc.com/string/set.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/set/" target="_blank">https://redis.io/docs/latest/commands/set/</a></p>
 	 *
 	 * @param key
 	 * 		Key
 	 * @param value
 	 * 		值
-	 * @param argument
-	 * 		参数
+	 * @param setType
+	 * 		SET 方式
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	<V> Status set(final String key, final V value, final SetArgument argument);
+	<V> Status set(final String key, final V value, final SetType setType);
 
 	/**
 	 * 将字符串值 value 关联到 key；
 	 * 如果 key 已经持有其他值，SET 就覆写旧值，忽略类型
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/set.html" target="_blank">http://redisdoc.com/string/set.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/set/" target="_blank">https://redis.io/docs/latest/commands/set/</a></p>
 	 *
 	 * @param key
 	 * 		Key
 	 * @param value
 	 * 		值
-	 * @param argument
-	 * 		参数
+	 * @param setType
+	 * 		SET 方式
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	<V> Status set(final byte[] key, final V value, final SetArgument argument);
+	<V> Status set(final byte[] key, final V value, final SetType setType);
+
+	/**
+	 * 将字符串值 value 关联到 key；
+	 * 如果 key 已经持有其他值，SET 就覆写旧值，忽略类型
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/set/" target="_blank">https://redis.io/docs/latest/commands/set/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		值
+	 * @param setType
+	 * 		SET 方式
+	 * @param pxExType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	<V> Status set(final String key, final V value, final SetType setType, final PxExType pxExType, final long expires);
+
+	/**
+	 * 将字符串值 value 关联到 key；
+	 * 如果 key 已经持有其他值，SET 就覆写旧值，忽略类型
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/set/" target="_blank">https://redis.io/docs/latest/commands/set/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		值
+	 * @param setType
+	 * 		SET 方式
+	 * @param pxExType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	<V> Status set(final byte[] key, final V value, final SetType setType, final PxExType pxExType, final long expires);
+
+	/**
+	 * 将字符串值 value 关联到 key；
+	 * 如果 key 已经持有其他值，SET 就覆写旧值，忽略类型
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/set/" target="_blank">https://redis.io/docs/latest/commands/set/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		值
+	 * @param pxExType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	<V> Status set(final String key, final V value, final PxExType pxExType, final long expires);
+
+	/**
+	 * 将字符串值 value 关联到 key；
+	 * 如果 key 已经持有其他值，SET 就覆写旧值，忽略类型
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/set/" target="_blank">https://redis.io/docs/latest/commands/set/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		值
+	 * @param pxExType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	<V> Status set(final byte[] key, final V value, final PxExType pxExType, final long expires);
 
 	@Override
 	default Status setEx(final String key, final String value, final int lifetime) {
@@ -807,6 +1017,44 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	@Override
 	default Status setEx(final byte[] key, final byte[] value, final int lifetime) {
 		return execute((client)->client.stringCommands().setEx(key, value, lifetime));
+	}
+
+	/**
+	 * 将键 key 的值设置为 value ，并将键 key 的生存时间设置为 lifetime；
+	 * 如果键 key 已经存在，那么将覆盖已有的值
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/string/setex.html" target="_blank">http://redisdoc.com/string/setex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		值
+	 * @param duration
+	 * 		生存时间
+	 *
+	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	default Status setEx(final String key, final String value, final Duration duration) {
+		return setEx(key, value, (int) duration.toSeconds());
+	}
+
+	/**
+	 * 将键 key 的值设置为 value ，并将键 key 的生存时间设置为 lifetime；
+	 * 如果键 key 已经存在，那么将覆盖已有的值
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/string/setex.html" target="_blank">http://redisdoc.com/string/setex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		值
+	 * @param duration
+	 * 		生存时间
+	 *
+	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	default Status setEx(final byte[] key, final byte[] value, final Duration duration) {
+		return setEx(key, value, (int) duration.toSeconds());
 	}
 
 	/**
@@ -846,6 +1094,44 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
 	<V> Status setEx(final byte[] key, final V value, final int lifetime);
+
+	/**
+	 * 将键 key 的值设置为 value ，并将键 key 的生存时间设置为 lifetime；
+	 * 如果键 key 已经存在，那么将覆盖已有的值
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/string/setex.html" target="_blank">http://redisdoc.com/string/setex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		值
+	 * @param duration
+	 * 		生存时间
+	 *
+	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	default <V> Status setEx(final String key, final V value, final Duration duration) {
+		return setEx(key, value, (int) duration.toSeconds());
+	}
+
+	/**
+	 * 将键 key 的值设置为 value ，并将键 key 的生存时间设置为 lifetime；
+	 * 如果键 key 已经存在，那么将覆盖已有的值
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/string/setex.html" target="_blank">http://redisdoc.com/string/setex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		值
+	 * @param duration
+	 * 		生存时间
+	 *
+	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	default <V> Status setEx(final byte[] key, final V value, final Duration duration) {
+		return setEx(key, value, (int) duration.toSeconds());
+	}
 
 	@Override
 	default Status setNx(final String key, final String value) {

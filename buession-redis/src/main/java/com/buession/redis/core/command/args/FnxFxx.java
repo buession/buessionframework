@@ -22,11 +22,9 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal;
+package com.buession.redis.core.command.args;
 
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.buession.redis.core.Keyword;
 
 /**
  *
@@ -34,17 +32,24 @@ import java.util.stream.Collectors;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class ResultUtils {
+public enum FnxFxx implements Keyword {
+	/**
+	 * Only set the fields if none of them already exist.
+	 */
+	FNX,
 
-	protected ResultUtils() {
+	/**
+	 * Only set the fields if all of them already exist.
+	 */
+	FXX;
+
+	@Override
+	public String getValue() {
+		return name();
 	}
 
-	public static Date createDate(final Long value, final boolean unixTimestamp) {
-		return value != null && value != -1 && value != -2 ? new Date(unixTimestamp ? value * 1000 : value) : null;
+	@Override
+	public String toString() {
+		return super.toString();
 	}
-
-	public static List<Date> createDateList(final List<Long> data, final boolean unixTimestamp) {
-		return data == null ? null : data.stream().map((v)->createDate(v, unixTimestamp)).collect(Collectors.toList());
-	}
-
 }

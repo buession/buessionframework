@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2023 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis;
@@ -411,38 +411,6 @@ public interface Converter<SV, TV> {
 
 		protected static <SSV, TTV> Function<List<SSV>, List<TTV>> initialize(final Function<SSV, TTV> mapper) {
 			return (data)->data == null ? null : data.stream().map(mapper).collect(Collectors.toList());
-		}
-
-	}
-
-	final class ClazzKeyValueStringConverter<V> extends AbstractKeyValueConverter<String, String, V> {
-
-		public ClazzKeyValueStringConverter(final RedisAccessor accessor, final Class<V> clazz) {
-			super((val)->accessor.serializer.deserialize(val, clazz));
-		}
-
-	}
-
-	final class ClazzKeyValueBinaryConverter<V> extends AbstractKeyValueConverter<byte[], byte[], V> {
-
-		public ClazzKeyValueBinaryConverter(final RedisAccessor accessor, final Class<V> clazz) {
-			super((val)->accessor.serializer.deserializeBytes(val, clazz));
-		}
-
-	}
-
-	final class TypeKeyValueStringConverter<V> extends AbstractKeyValueConverter<String, String, V> {
-
-		public TypeKeyValueStringConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
-			super((val)->accessor.serializer.deserialize(val, typeReference));
-		}
-
-	}
-
-	final class TypeKeyValueBinaryConverter<V> extends AbstractKeyValueConverter<byte[], byte[], V> {
-
-		public TypeKeyValueBinaryConverter(final RedisAccessor accessor, final TypeReference<V> typeReference) {
-			super((val)->accessor.serializer.deserializeBytes(val, typeReference));
 		}
 
 	}

@@ -26,12 +26,13 @@ package com.buession.redis.core.command;
 
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
-import com.buession.redis.core.command.args.string.DelExType;
+import com.buession.redis.core.command.args.GetExType;
+import com.buession.redis.core.command.args.NxXx;
+import com.buession.redis.core.command.args.PxExType;
+import com.buession.redis.core.command.args.string.CompareCondition;
 import com.buession.redis.core.LcsResult;
-import com.buession.redis.core.command.args.GetExArgument;
 import com.buession.redis.core.command.args.string.LcsArgument;
-import com.buession.redis.core.command.args.string.MSetExArgument;
-import com.buession.redis.core.command.args.string.SetArgument;
+import com.buession.redis.core.command.args.string.SetType;
 
 import java.util.List;
 
@@ -138,7 +139,7 @@ public interface StringCommands extends RedisCommands {
 	 *
 	 * @return 操作结果
 	 */
-	Status delEx(final String key, final DelExType type, final String value);
+	Status delEx(final String key, final CompareCondition type, final String value);
 
 	/**
 	 * Conditionally removes the specified key based on value or hash digest comparison.
@@ -154,7 +155,7 @@ public interface StringCommands extends RedisCommands {
 	 *
 	 * @return 操作结果
 	 */
-	Status delEx(final byte[] key, final DelExType type, final byte[] value);
+	Status delEx(final byte[] key, final CompareCondition type, final byte[] value);
 
 	/**
 	 * Get the hash digest for the value stored in the specified key as a hexadecimal string.
@@ -261,12 +262,14 @@ public interface StringCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param argument
-	 * 		Key 过期时间参数
+	 * @param exType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
 	 *
 	 * @return 键 key 的值
 	 */
-	String getEx(final String key, final GetExArgument argument);
+	String getEx(final String key, final GetExType exType, final long expires);
 
 	/**
 	 * 获取键 key 的值，并重置 key 的过期时间
@@ -275,12 +278,14 @@ public interface StringCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param argument
-	 * 		Key 过期时间参数
+	 * @param exType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
 	 *
 	 * @return 键 key 的值
 	 */
-	byte[] getEx(final byte[] key, final GetExArgument argument);
+	byte[] getEx(final byte[] key, final GetExType exType, final long expires);
 
 	/**
 	 * 获取键 key 储存的字符串值的指定部分，字符串的截取范围由 start 和 end 两个偏移量决定 (包括 start 和 end 在内)；
@@ -538,16 +543,54 @@ public interface StringCommands extends RedisCommands {
 	/**
 	 * Atomically sets multiple string keys with an optional shared expiration in a single operation.
 	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/msetnx/" target="_blank">https://redis.io/docs/latest/commands/msetnx/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/msetex/" target="_blank">https://redis.io/docs/latest/commands/msetex/</a></p>
 	 *
+	 * @param nxXx
+	 *        {@link NxXx}
 	 * @param values
 	 * 		键值对
-	 * @param argument
-	 * 		参数
 	 *
 	 * @return 当所有给定键都设置成功时，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	Status mSetEx(final KeyValue<String, String>[] values, final MSetExArgument argument);
+	@SuppressWarnings({"unchecked"})
+	Status mSetEx(final NxXx nxXx, final KeyValue<String, String>... values);
+
+	/**
+	 * Atomically sets multiple string keys with an optional shared expiration in a single operation.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/msetex/" target="_blank">https://redis.io/docs/latest/commands/msetex/</a></p>
+	 *
+	 * @param nxXx
+	 *        {@link NxXx}
+	 * @param exType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
+	 * @param values
+	 * 		键值对
+	 *
+	 * @return 当所有给定键都设置成功时，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	@SuppressWarnings({"unchecked"})
+	Status mSetEx(final NxXx nxXx, final PxExType exType, final long expires,
+	              final KeyValue<String, String>... values);
+
+	/**
+	 * Atomically sets multiple string keys with an optional shared expiration in a single operation.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/msetex/" target="_blank">https://redis.io/docs/latest/commands/msetex/</a></p>
+	 *
+	 * @param exType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
+	 * @param values
+	 * 		键值对
+	 *
+	 * @return 当所有给定键都设置成功时，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	@SuppressWarnings({"unchecked"})
+	Status mSetEx(final PxExType exType, final long expires, final KeyValue<String, String>... values);
 
 	/**
 	 * 当且仅当所有给定键都不存在时，为所有给定键设置值
@@ -600,7 +643,7 @@ public interface StringCommands extends RedisCommands {
 	 * 将字符串值 value 关联到 key；
 	 * 如果 key 已经持有其他值，SET 就覆写旧值，忽略类型
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/set.html" target="_blank">http://redisdoc.com/string/set.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/set/" target="_blank">https://redis.io/docs/latest/commands/set/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -615,7 +658,7 @@ public interface StringCommands extends RedisCommands {
 	 * 将字符串值 value 关联到 key；
 	 * 如果 key 已经持有其他值，SET 就覆写旧值，忽略类型
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/set.html" target="_blank">http://redisdoc.com/string/set.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/set/" target="_blank">https://redis.io/docs/latest/commands/set/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -630,35 +673,117 @@ public interface StringCommands extends RedisCommands {
 	 * 将字符串值 value 关联到 key；
 	 * 如果 key 已经持有其他值，SET 就覆写旧值，忽略类型
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/set.html" target="_blank">http://redisdoc.com/string/set.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/set/" target="_blank">https://redis.io/docs/latest/commands/set/</a></p>
 	 *
 	 * @param key
 	 * 		Key
 	 * @param value
 	 * 		值
-	 * @param argument
-	 * 		参数
+	 * @param setType
+	 * 		SET 方式
 	 *
 	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	Status set(final String key, final String value, final SetArgument argument);
+	Status set(final String key, final String value, final SetType setType);
 
 	/**
 	 * 将字符串值 value 关联到 key；
 	 * 如果 key 已经持有其他值，SET 就覆写旧值，忽略类型
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/set.html" target="_blank">http://redisdoc.com/string/set.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/set/" target="_blank">https://redis.io/docs/latest/commands/set/</a></p>
 	 *
 	 * @param key
 	 * 		Key
 	 * @param value
 	 * 		值
-	 * @param argument
-	 * 		参数
+	 * @param setType
+	 * 		SET 方式
 	 *
 	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	Status set(final byte[] key, final byte[] value, final SetArgument argument);
+	Status set(final byte[] key, final byte[] value, final SetType setType);
+
+	/**
+	 * 将字符串值 value 关联到 key；
+	 * 如果 key 已经持有其他值，SET 就覆写旧值，忽略类型
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/set/" target="_blank">https://redis.io/docs/latest/commands/set/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		值
+	 * @param setType
+	 * 		SET 方式
+	 * @param pxExType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
+	 *
+	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	Status set(final String key, final String value, final SetType setType, final PxExType pxExType,
+	           final long expires);
+
+	/**
+	 * 将字符串值 value 关联到 key；
+	 * 如果 key 已经持有其他值，SET 就覆写旧值，忽略类型
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/set/" target="_blank">https://redis.io/docs/latest/commands/set/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		值
+	 * @param setType
+	 * 		SET 方式
+	 * @param pxExType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
+	 *
+	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	Status set(final byte[] key, final byte[] value, final SetType setType, final PxExType pxExType,
+	           final long expires);
+
+	/**
+	 * 将字符串值 value 关联到 key；
+	 * 如果 key 已经持有其他值，SET 就覆写旧值，忽略类型
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/set/" target="_blank">https://redis.io/docs/latest/commands/set/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		值
+	 * @param pxExType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
+	 *
+	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	Status set(final String key, final String value, final PxExType pxExType, final long expires);
+
+	/**
+	 * 将字符串值 value 关联到 key；
+	 * 如果 key 已经持有其他值，SET 就覆写旧值，忽略类型
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/set/" target="_blank">https://redis.io/docs/latest/commands/set/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		值
+	 * @param pxExType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
+	 *
+	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	Status set(final byte[] key, final byte[] value, final PxExType pxExType, final long expires);
 
 	/**
 	 * 将键 key 的值设置为 value ，并将键 key 的生存时间设置为 lifetime；

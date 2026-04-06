@@ -24,11 +24,8 @@
  */
 package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.redis.core.command.args.GetExArgument;
+import com.buession.redis.core.command.args.GetExType;
 import io.lettuce.core.GetExArgs;
-
-import java.time.Duration;
-import java.time.Instant;
 
 /**
  * Lettuce {@link GetExArgs} 扩展
@@ -48,22 +45,24 @@ public final class LettuceGetExArgs extends GetExArgs {
 	/**
 	 * 构造函数
 	 *
-	 * @param getExArgument
-	 *        {@link GetExArgument}
+	 * @param getExType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
 	 */
-	public LettuceGetExArgs(final GetExArgument getExArgument) {
+	public LettuceGetExArgs(final GetExType getExType, final long expires) {
 		super();
 
-		if(getExArgument != null){
-			if(getExArgument.getType() != null && getExArgument.getExpires() != null){
-				switch(getExArgument.getType()){
-					case EX -> ex(Duration.ofSeconds(getExArgument.getExpires()));
-					case EXAT -> exAt(Instant.ofEpochSecond(getExArgument.getExpires()));
-					case PX -> px(Duration.ofMillis(getExArgument.getExpires()));
-					case PXAT -> pxAt(Instant.ofEpochMilli(getExArgument.getExpires()));
-					case PERSIST -> persist();
-				}
-			}
+		if(getExType == GetExType.EX){
+			ex(expires);
+		}else if(getExType == GetExType.EXAT){
+			exAt(expires);
+		}else if(getExType == GetExType.PX){
+			px(expires);
+		}else if(getExType == GetExType.PXAT){
+			pxAt(expires);
+		}else if(getExType == GetExType.PERSIST){
+			persist();
 		}
 	}
 

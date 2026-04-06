@@ -24,10 +24,7 @@
  */
 package com.buession.redis.core.internal.jedis.args;
 
-import com.buession.redis.core.command.args.cuckoofilter.CFInsertArgument;
 import redis.clients.jedis.bloom.CFInsertParams;
-
-import java.util.Optional;
 
 /**
  * Jedis {@link CFInsertParams}
@@ -47,18 +44,41 @@ public final class JedisCFInsertParams extends CFInsertParams {
 	/**
 	 * 构造函数
 	 *
-	 * @param cfInsertArgument
-	 *        {@link CFInsertArgument}
+	 * @param capacity
+	 * 		初始容量
 	 */
-	public JedisCFInsertParams(final CFInsertArgument cfInsertArgument) {
+	public JedisCFInsertParams(final long capacity) {
+		super();
+		capacity(capacity);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param capacity
+	 * 		初始容量
+	 * @param noCreate
+	 * 		是否当 key 不存在时不自动创建
+	 */
+	public JedisCFInsertParams(final long capacity, final boolean noCreate) {
+		this(capacity);
+
+		if(noCreate){
+			noCreate();
+		}
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param noCreate
+	 * 		是否当 key 不存在时不自动创建
+	 */
+	public JedisCFInsertParams(final boolean noCreate) {
 		super();
 
-		if(cfInsertArgument != null){
-			Optional.ofNullable(cfInsertArgument.getCapacity()).ifPresent(this::capacity);
-
-			if(Boolean.TRUE.equals(cfInsertArgument.isNoCreate())){
-				noCreate();
-			}
+		if(noCreate){
+			noCreate();
 		}
 	}
 

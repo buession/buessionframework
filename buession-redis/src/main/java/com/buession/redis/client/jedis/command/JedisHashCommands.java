@@ -36,8 +36,9 @@ import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.HashCommands;
-import com.buession.redis.core.command.args.GetExArgument;
-import com.buession.redis.core.command.args.hash.HSetExArgument;
+import com.buession.redis.core.command.args.FnxFxx;
+import com.buession.redis.core.command.args.GetExType;
+import com.buession.redis.core.command.args.PxExType;
 import com.buession.redis.core.internal.convert.jedis.params.ExpireOptionConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ScanResultConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
@@ -216,17 +217,17 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 	}
 
 	@Override
-	public List<String> hGetEx(final String key, final GetExArgument argument, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Hash.FIELDS, fields.length)
-				.add(fields);
-		return hGetEx(key, new JedisHGetExParams(argument), fields, args);
+	public List<String> hGetEx(final String key, final GetExType exType, final long expires, final String... fields) {
+		final CommandArguments args = CommandArguments.create(key).add(exType, expires)
+				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		return hGetEx(key, new JedisHGetExParams(exType, expires), fields, args);
 	}
 
 	@Override
-	public List<byte[]> hGetEx(final byte[] key, final GetExArgument argument, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Hash.FIELDS, fields.length)
-				.add(fields);
-		return hGetEx(key, new JedisHGetExParams(argument), fields, args);
+	public List<byte[]> hGetEx(final byte[] key, final GetExType exType, final long expires, final byte[]... fields) {
+		final CommandArguments args = CommandArguments.create(key).add(exType, expires)
+				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
+		return hGetEx(key, new JedisHGetExParams(exType, expires), fields, args);
 	}
 
 	@Override
@@ -595,16 +596,50 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 		return hSetEx(rawKey(key), data, new HSetExParams(), args);
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
-	public Status hSetEx(final String key, final KeyValue<String, String>[] data, final HSetExArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(argument).add(data);
-		return hSetEx(rawKey(key), data, new JedisHSetExParams(argument), args);
+	public Status hSetEx(final String key, final FnxFxx fnxFxx, final KeyValue<String, String>... data) {
+		final CommandArguments args = CommandArguments.create(key).add(fnxFxx).add(data);
+		return hSetEx(rawKey(key), data, new JedisHSetExParams(fnxFxx), args);
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
-	public Status hSetEx(final byte[] key, final KeyValue<byte[], byte[]>[] data, final HSetExArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(argument).add(data);
-		return hSetEx(rawKey(key), data, new JedisHSetExParams(argument), args);
+	public Status hSetEx(final byte[] key, final FnxFxx fnxFxx, final KeyValue<byte[], byte[]>... data) {
+		final CommandArguments args = CommandArguments.create(key).add(fnxFxx).add(data);
+		return hSetEx(rawKey(key), data, new JedisHSetExParams(fnxFxx), args);
+	}
+
+	@SuppressWarnings({"unchecked"})
+	@Override
+	public Status hSetEx(final String key, final FnxFxx fnxFxx, final PxExType exType, final long expires,
+	                     final KeyValue<String, String>... data) {
+		final CommandArguments args = CommandArguments.create(key).add(fnxFxx).add(exType, expires).add(data);
+		return hSetEx(rawKey(key), data, new JedisHSetExParams(fnxFxx, exType, expires), args);
+	}
+
+	@SuppressWarnings({"unchecked"})
+	@Override
+	public Status hSetEx(final byte[] key, final FnxFxx fnxFxx, final PxExType exType, final long expires,
+	                     final KeyValue<byte[], byte[]>... data) {
+		final CommandArguments args = CommandArguments.create(key).add(fnxFxx).add(exType, expires).add(data);
+		return hSetEx(rawKey(key), data, new JedisHSetExParams(fnxFxx, exType, expires), args);
+	}
+
+	@SuppressWarnings({"unchecked"})
+	@Override
+	public Status hSetEx(final String key, final PxExType exType, final long expires,
+	                     final KeyValue<String, String>... data) {
+		final CommandArguments args = CommandArguments.create(key).add(exType, expires).add(data);
+		return hSetEx(rawKey(key), data, new JedisHSetExParams(exType, expires), args);
+	}
+
+	@SuppressWarnings({"unchecked"})
+	@Override
+	public Status hSetEx(final byte[] key, final PxExType exType, final long expires,
+	                     final KeyValue<byte[], byte[]>... data) {
+		final CommandArguments args = CommandArguments.create(key).add(exType, expires).add(data);
+		return hSetEx(rawKey(key), data, new JedisHSetExParams(exType, expires), args);
 	}
 
 	@Override

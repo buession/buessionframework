@@ -174,7 +174,7 @@ public interface BitMapCommands extends RedisCommands {
 	 * 可以在一次调用中同时对多个位范围进行操作，
 	 * 它接受一系列待执行的操作作为参数，并返回一个数组作为回复，数组中的每个元素就是对应操作的执行结果
 	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/bitfield/" target="_blank">https://redis.io/docs/latest/commands/bitfield/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/bitfield_ro/" target="_blank">https://redis.io/docs/latest/commands/bitfield_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -190,7 +190,7 @@ public interface BitMapCommands extends RedisCommands {
 	 * 可以在一次调用中同时对多个位范围进行操作，
 	 * 它接受一系列待执行的操作作为参数，并返回一个数组作为回复，数组中的每个元素就是对应操作的执行结果
 	 *
-	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/bitfield/" target="_blank">https://redis.io/docs/latest/commands/bitfield/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/bitfield_ro/" target="_blank">https://redis.io/docs/latest/commands/bitfield_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key

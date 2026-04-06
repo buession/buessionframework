@@ -25,7 +25,7 @@
 package com.buession.redis.core.internal.jedis.args;
 
 import com.buession.redis.core.command.args.NxXx;
-import com.buession.redis.core.command.args.string.MSetExArgument;
+import com.buession.redis.core.command.args.PxExType;
 import redis.clients.jedis.params.MSetExParams;
 
 /**
@@ -46,28 +46,62 @@ public final class JedisMSetExParams extends MSetExParams {
 	/**
 	 * 构造函数
 	 *
-	 * @param mSetExArgument
-	 *        {@link MSetExArgument}
+	 * @param nxXx
+	 *        {@link NxXx}
 	 */
-	public JedisMSetExParams(final MSetExArgument mSetExArgument) {
+	public JedisMSetExParams(final NxXx nxXx) {
 		super();
+		nxXx(nxXx);
+	}
 
-		if(mSetExArgument != null){
-			if(mSetExArgument.getType() == null && mSetExArgument.getExpires() != null){
-				switch(mSetExArgument.getType()){
-					case EX -> ex(mSetExArgument.getExpires());
-					case EXAT -> exAt(mSetExArgument.getExpires());
-					case PX -> px(mSetExArgument.getExpires());
-					case PXAT -> pxAt(mSetExArgument.getExpires());
-					case KEEPTTL -> keepTtl();
-				}
-			}
+	/**
+	 * 构造函数
+	 *
+	 * @param nxXx
+	 *        {@link NxXx}
+	 * @param pxExType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
+	 */
+	public JedisMSetExParams(final NxXx nxXx, final PxExType pxExType, final long expires) {
+		super();
+		nxXx(nxXx);
+		expires(pxExType, expires);
+	}
 
-			if(mSetExArgument.getNxXx() == NxXx.NX){
-				nx();
-			}else if(mSetExArgument.getNxXx() == NxXx.XX){
-				xx();
-			}
+	/**
+	 * 构造函数
+	 *
+	 * @param pxExType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
+	 */
+	public JedisMSetExParams(final PxExType pxExType, final long expires) {
+		super();
+		expires(pxExType, expires);
+	}
+
+	private void nxXx(final NxXx nxXx) {
+		if(nxXx == NxXx.NX){
+			nx();
+		}else if(nxXx == NxXx.XX){
+			xx();
+		}
+	}
+
+	private void expires(final PxExType pxExType, final long expires) {
+		if(pxExType == PxExType.EX){
+			ex(expires);
+		}else if(pxExType == PxExType.EXAT){
+			exAt(expires);
+		}else if(pxExType == PxExType.PX){
+			px(expires);
+		}else if(pxExType == PxExType.PXAT){
+			pxAt(expires);
+		}else if(pxExType == PxExType.KEEPTTL){
+			keepTtl();
 		}
 	}
 

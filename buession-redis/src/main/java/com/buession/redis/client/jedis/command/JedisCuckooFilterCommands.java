@@ -32,12 +32,12 @@ import com.buession.redis.core.Keyword;
 import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.CuckooFilterCommands;
-import com.buession.redis.core.command.args.cuckoofilter.CFInsertArgument;
 import com.buession.redis.core.command.args.cuckoofilter.CFReserveArgument;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.jedis.args.JedisCFInsertParams;
 import com.buession.redis.core.internal.jedis.args.JedisCFReserveParams;
 import com.buession.redis.utils.SafeEncoder;
+import redis.clients.jedis.bloom.CFInsertParams;
 
 import java.util.List;
 import java.util.Map;
@@ -57,8 +57,8 @@ public final class JedisCuckooFilterCommands extends AbstractJedisRedisCommands 
 	@Override
 	public Status cfAdd(final String key, final String item) {
 		final CommandArguments args = CommandArguments.create(key, item);
-		return executeCommand(
-				RedisCommand.CF_ADD, args, (cmd)->cmd.cfAdd(rawKey(key), item), new BooleanStatusConverter());
+		return executeCommand(RedisCommand.CF_ADD, args, (cmd)->cmd.cfAdd(rawKey(key), item),
+				new BooleanStatusConverter());
 	}
 
 	@Override
@@ -92,8 +92,8 @@ public final class JedisCuckooFilterCommands extends AbstractJedisRedisCommands 
 	@Override
 	public Status cfDel(final String key, final String item) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(
-				RedisCommand.CF_DEL, args, (cmd)->cmd.cfDel(rawKey(key), item), new BooleanStatusConverter());
+		return executeCommand(RedisCommand.CF_DEL, args, (cmd)->cmd.cfDel(rawKey(key), item),
+				new BooleanStatusConverter());
 	}
 
 	@Override
@@ -135,15 +135,41 @@ public final class JedisCuckooFilterCommands extends AbstractJedisRedisCommands 
 	}
 
 	@Override
-	public List<Boolean> cfInsert(final String key, final CFInsertArgument argument, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.ITEMS, items);
-		return executeCommand(RedisCommand.CF_INSERT, args,
-				(cmd)->cmd.cfInsert(rawKey(key), new JedisCFInsertParams(argument), items), (v)->v);
+	public List<Boolean> cfInsert(final String key, final Long capacity, final String... items) {
+		final CommandArguments args = CommandArguments.create(key).add("CAPACITY", capacity)
+				.add(Keyword.Common.ITEMS, items);
+		return cfInsert(rawKey(key), new JedisCFInsertParams(capacity), items, args);
 	}
 
 	@Override
-	public List<Boolean> cfInsert(final byte[] key, final CFInsertArgument argument, final byte[]... items) {
-		return cfInsert(SafeEncoder.encode(key), argument, SafeEncoder.encode(items));
+	public List<Boolean> cfInsert(final byte[] key, final Long capacity, final byte[]... items) {
+		return cfInsert(SafeEncoder.encode(key), capacity, SafeEncoder.encode(items));
+	}
+
+	@Override
+	public List<Boolean> cfInsert(final String key, final Long capacity, final boolean noCreate,
+	                              final String... items) {
+		final CommandArguments args = CommandArguments.create(key).add("CAPACITY", capacity)
+				.add(noCreate ? "NOCREATE" : null).add(Keyword.Common.ITEMS, items);
+		return cfInsert(rawKey(key), new JedisCFInsertParams(capacity, noCreate), items, args);
+	}
+
+	@Override
+	public List<Boolean> cfInsert(final byte[] key, final Long capacity, final boolean noCreate,
+	                              final byte[]... items) {
+		return cfInsert(SafeEncoder.encode(key), capacity, noCreate, SafeEncoder.encode(items));
+	}
+
+	@Override
+	public List<Boolean> cfInsert(final String key, final boolean noCreate, final String... items) {
+		final CommandArguments args = CommandArguments.create(key).add(noCreate ? "NOCREATE" : null)
+				.add(Keyword.Common.ITEMS, items);
+		return cfInsert(rawKey(key), new JedisCFInsertParams(noCreate), items, args);
+	}
+
+	@Override
+	public List<Boolean> cfInsert(final byte[] key, final boolean noCreate, final byte[]... items) {
+		return cfInsert(SafeEncoder.encode(key), noCreate, SafeEncoder.encode(items));
 	}
 
 	@Override
@@ -158,15 +184,41 @@ public final class JedisCuckooFilterCommands extends AbstractJedisRedisCommands 
 	}
 
 	@Override
-	public List<Boolean> cfInsertNx(final String key, final CFInsertArgument argument, final String... items) {
-		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Common.ITEMS, items);
-		return executeCommand(RedisCommand.CF_INSERTNX, args,
-				(cmd)->cmd.cfInsertNx(rawKey(key), new JedisCFInsertParams(argument), items), (v)->v);
+	public List<Boolean> cfInsertNx(final String key, final Long capacity, final String... items) {
+		final CommandArguments args = CommandArguments.create(key).add("CAPACITY", capacity)
+				.add(Keyword.Common.ITEMS, items);
+		return cfInsertNx(rawKey(key), new JedisCFInsertParams(capacity), items, args);
 	}
 
 	@Override
-	public List<Boolean> cfInsertNx(final byte[] key, final CFInsertArgument argument, final byte[]... items) {
-		return cfInsertNx(SafeEncoder.encode(key), argument, SafeEncoder.encode(items));
+	public List<Boolean> cfInsertNx(final byte[] key, final Long capacity, final byte[]... items) {
+		return cfInsertNx(SafeEncoder.encode(key), capacity, SafeEncoder.encode(items));
+	}
+
+	@Override
+	public List<Boolean> cfInsertNx(final String key, final Long capacity, final boolean noCreate,
+	                                final String... items) {
+		final CommandArguments args = CommandArguments.create(key).add("CAPACITY", capacity)
+				.add(noCreate ? "NOCREATE" : null).add(Keyword.Common.ITEMS, items);
+		return cfInsertNx(rawKey(key), new JedisCFInsertParams(capacity, noCreate), items, args);
+	}
+
+	@Override
+	public List<Boolean> cfInsertNx(final byte[] key, final Long capacity, final boolean noCreate,
+	                                final byte[]... items) {
+		return cfInsertNx(SafeEncoder.encode(key), capacity, noCreate, SafeEncoder.encode(items));
+	}
+
+	@Override
+	public List<Boolean> cfInsertNx(final String key, final boolean noCreate, final String... items) {
+		final CommandArguments args = CommandArguments.create(key).add(noCreate ? "NOCREATE" : null)
+				.add(Keyword.Common.ITEMS, items);
+		return cfInsertNx(rawKey(key), new JedisCFInsertParams(noCreate), items, args);
+	}
+
+	@Override
+	public List<Boolean> cfInsertNx(final byte[] key, final boolean noCreate, final byte[]... items) {
+		return cfInsertNx(SafeEncoder.encode(key), noCreate, SafeEncoder.encode(items));
 	}
 
 	@Override
@@ -207,8 +259,9 @@ public final class JedisCuckooFilterCommands extends AbstractJedisRedisCommands 
 	@Override
 	public Status cfReserve(final String key, final long capacity, final CFReserveArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument);
-		return executeCommand(RedisCommand.CF_RESERVE, args, (cmd)->cmd.cfReserve(rawKey(key), capacity,
-				new JedisCFReserveParams(argument)), new OkStatusConverter());
+		return executeCommand(RedisCommand.CF_RESERVE, args,
+				(cmd)->cmd.cfReserve(rawKey(key), capacity, new JedisCFReserveParams(argument)),
+				new OkStatusConverter());
 	}
 
 	@Override
@@ -226,6 +279,16 @@ public final class JedisCuckooFilterCommands extends AbstractJedisRedisCommands 
 	@Override
 	public Map<Long, byte[]> cfScanDump(final byte[] key, final long iterator) {
 		return cfScanDump(SafeEncoder.encode(key), iterator);
+	}
+
+	private List<Boolean> cfInsert(final String key, final CFInsertParams cfInsertParams, final String[] items,
+	                               final CommandArguments args) {
+		return executeCommand(RedisCommand.CF_INSERT, args, (cmd)->cmd.cfInsert(key, cfInsertParams, items));
+	}
+
+	private List<Boolean> cfInsertNx(final String key, final CFInsertParams cfInsertParams, final String[] items,
+	                                 final CommandArguments args) {
+		return executeCommand(RedisCommand.CF_INSERTNX, args, (cmd)->cmd.cfInsertNx(key, cfInsertParams, items));
 	}
 
 }

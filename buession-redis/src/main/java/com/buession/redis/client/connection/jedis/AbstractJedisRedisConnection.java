@@ -318,6 +318,16 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 		return this.transaction;
 	}
 
+	@Override
+	public boolean isConnected() {
+		return client != null;
+	}
+
+	@Override
+	public boolean isClosed() {
+		return client == null;
+	}
+
 	protected ConnectionPoolConfig getConnectionPoolConfig() {
 		if(getPoolConfig() == null){
 			return null;
@@ -333,6 +343,10 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 	@Override
 	protected RedisException executeException(final Exception e) {
 		return JedisRedisExceptionUtils.convert(e);
+	}
+
+	@Override
+	protected void internalInit() {
 	}
 
 	@Override

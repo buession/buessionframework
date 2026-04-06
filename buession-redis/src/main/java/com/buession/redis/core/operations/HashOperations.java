@@ -31,9 +31,9 @@ import com.buession.lang.Status;
 import com.buession.redis.core.command.args.ExpireOption;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.HashCommands;
-import com.buession.redis.core.command.args.GetExArgument;
-import com.buession.redis.core.command.args.hash.HSetExArgument;
-import com.buession.redis.core.internal.ResultUtils;
+import com.buession.redis.core.command.args.FnxFxx;
+import com.buession.redis.core.command.args.GetExType;
+import com.buession.redis.core.command.args.PxExType;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -43,6 +43,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 哈希表运算
@@ -137,13 +138,13 @@ public interface HashOperations extends HashCommands, RedisOperations {
 
 	@Override
 	default List<Long> hExpireAt(final String key, final long unixTimestamp, final ExpireOption option,
-								 final String... fields) {
+	                             final String... fields) {
 		return execute((client)->client.hashCommands().hExpireAt(key, unixTimestamp, option, fields));
 	}
 
 	@Override
 	default List<Long> hExpireAt(final byte[] key, final long unixTimestamp, final ExpireOption option,
-								 final byte[]... fields) {
+	                             final byte[]... fields) {
 		return execute((client)->client.hashCommands().hExpireAt(key, unixTimestamp, option, fields));
 	}
 
@@ -348,7 +349,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
 	 */
 	default List<Long> hExpireAt(final String key, final LocalDateTime dateTime, final ExpireOption option,
-								 final String... fields) {
+	                             final String... fields) {
 		return hExpireAt(key, dateTime.atZone(ZoneId.systemDefault()).toInstant(), option, fields);
 	}
 
@@ -371,7 +372,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
 	 */
 	default List<Long> hExpireAt(final String key, final ZonedDateTime dateTime, final ExpireOption option,
-								 final String... fields) {
+	                             final String... fields) {
 		return hExpireAt(key, dateTime.toEpochSecond(), option, fields);
 	}
 
@@ -394,7 +395,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
 	 */
 	default List<Long> hExpireAt(final String key, final Instant instant, final ExpireOption option,
-								 final String... fields) {
+	                             final String... fields) {
 		return hExpireAt(key, instant.toEpochMilli() / 1000, option, fields);
 	}
 
@@ -439,7 +440,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
 	 */
 	default List<Long> hExpireAt(final byte[] key, final LocalDateTime dateTime, final ExpireOption option,
-								 final byte[]... fields) {
+	                             final byte[]... fields) {
 		return hExpireAt(key, dateTime.atZone(ZoneId.systemDefault()).toInstant(), option, fields);
 	}
 
@@ -462,7 +463,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
 	 */
 	default List<Long> hExpireAt(final byte[] key, final Instant instant, final ExpireOption option,
-								 final byte[]... fields) {
+	                             final byte[]... fields) {
 		return hExpireAt(key, instant.toEpochMilli() / 1000, option, fields);
 	}
 
@@ -485,7 +486,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
 	 */
 	default List<Long> hExpireAt(final byte[] key, final ZonedDateTime dateTime, final ExpireOption option,
-								 final byte[]... fields) {
+	                             final byte[]... fields) {
 		return hExpireAt(key, dateTime.toEpochSecond(), option, fields);
 	}
 
@@ -513,7 +514,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * the expiration (Unix timestamp) in seconds.
 	 */
 	default List<Date> hExpireTimeDate(final String key, final String... fields) {
-		return ResultUtils.createDateList(hExpireTime(key, fields), true);
+		return createDateList(hExpireTime(key, fields), true);
 	}
 
 	/**
@@ -530,7 +531,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * the expiration (Unix timestamp) in seconds.
 	 */
 	default List<Date> hExpireTimeDate(final byte[] key, final byte[]... fields) {
-		return ResultUtils.createDateList(hExpireTime(key, fields), true);
+		return createDateList(hExpireTime(key, fields), true);
 	}
 
 	@Override
@@ -782,13 +783,13 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	}
 
 	@Override
-	default List<String> hGetEx(final String key, final GetExArgument argument, final String... fields) {
-		return execute((client)->client.hashCommands().hGetEx(key, argument, fields));
+	default List<String> hGetEx(final String key, final GetExType exType, final long expires, final String... fields) {
+		return execute((client)->client.hashCommands().hGetEx(key, exType, expires, fields));
 	}
 
 	@Override
-	default List<byte[]> hGetEx(final byte[] key, final GetExArgument argument, final byte[]... fields) {
-		return execute((client)->client.hashCommands().hGetEx(key, argument, fields));
+	default List<byte[]> hGetEx(final byte[] key, final GetExType exType, final long expires, final byte[]... fields) {
+		return execute((client)->client.hashCommands().hGetEx(key, exType, expires, fields));
 	}
 
 	/**
@@ -870,6 +871,10 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @param key
 	 * 		Key
+	 * @param exType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
 	 * @param fields
 	 * 		一个或多个域
 	 * @param clazz
@@ -879,7 +884,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中获取并删除域的值
 	 */
-	<V> List<V> hGetEx(final String key, final GetExArgument argument, final String[] fields, final Class<V> clazz);
+	<V> List<V> hGetEx(final String key, final GetExType exType, final long expires, final String[] fields,
+	                   final Class<V> clazz);
 
 	/**
 	 * 从哈希（Hash）中获取一个字段的值，并将值反序列化为对象，并同时删除该字段
@@ -888,8 +894,10 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param argument
-	 * 		参数
+	 * @param exType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
 	 * @param fields
 	 * 		一个或多个域
 	 * @param clazz
@@ -899,7 +907,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中获取并删除域的值
 	 */
-	<V> List<V> hGetEx(final byte[] key, final GetExArgument argument, final byte[][] fields, final Class<V> clazz);
+	<V> List<V> hGetEx(final byte[] key, final GetExType exType, final long expires, final byte[][] fields,
+	                   final Class<V> clazz);
 
 	/**
 	 * 从哈希（Hash）中获取一个字段的值，并将值反序列化为对象，并同时删除该字段
@@ -908,8 +917,10 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param argument
-	 * 		参数
+	 * @param exType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
 	 * @param fields
 	 * 		一个或多个域
 	 * @param type
@@ -919,8 +930,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中获取并删除域的值
 	 */
-	<V> List<V> hGetEx(final String key, final GetExArgument argument, final String[] fields,
-					   final TypeReference<V> type);
+	<V> List<V> hGetEx(final String key, final GetExType exType, final long expires, final String[] fields,
+	                   final TypeReference<V> type);
 
 	/**
 	 * 从哈希（Hash）中获取一个字段的值，并将值反序列化为对象，并同时删除该字段
@@ -929,8 +940,10 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param argument
-	 * 		参数
+	 * @param exType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
 	 * @param fields
 	 * 		一个或多个域
 	 * @param type
@@ -940,8 +953,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中获取并删除域的值
 	 */
-	<V> List<V> hGetEx(final byte[] key, final GetExArgument argument, final byte[][] fields,
-					   final TypeReference<V> type);
+	<V> List<V> hGetEx(final byte[] key, final GetExType exType, final long expires, final byte[][] fields,
+	                   final TypeReference<V> type);
 
 	@Override
 	default Long hIncrBy(final String key, final String field, final long value) {
@@ -1191,13 +1204,13 @@ public interface HashOperations extends HashCommands, RedisOperations {
 
 	@Override
 	default List<Long> hPExpireAt(final String key, final long unixTimestamp, final ExpireOption option,
-								  final String... fields) {
+	                              final String... fields) {
 		return execute((client)->client.hashCommands().hPExpireAt(key, unixTimestamp, option, fields));
 	}
 
 	@Override
 	default List<Long> hPExpireAt(final byte[] key, final long unixTimestamp, final ExpireOption option,
-								  final byte[]... fields) {
+	                              final byte[]... fields) {
 		return execute((client)->client.hashCommands().hPExpireAt(key, unixTimestamp, option, fields));
 	}
 
@@ -1380,7 +1393,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
 	 */
 	default List<Long> hPExpireAt(final String key, final Date date, final ExpireOption option,
-								  final String... fields) {
+	                              final String... fields) {
 		return hPExpireAt(key, date.getTime(), option, fields);
 	}
 
@@ -1403,7 +1416,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
 	 */
 	default List<Long> hPExpireAt(final String key, final LocalDateTime dateTime, final ExpireOption option,
-								  final String... fields) {
+	                              final String... fields) {
 		return hPExpireAt(key, dateTime.atZone(ZoneId.systemDefault()).toInstant(), option, fields);
 	}
 
@@ -1426,7 +1439,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
 	 */
 	default List<Long> hPExpireAt(final String key, final ZonedDateTime dateTime, final ExpireOption option,
-								  final String... fields) {
+	                              final String... fields) {
 		return hPExpireAt(key, dateTime.toInstant(), option, fields);
 	}
 
@@ -1449,7 +1462,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
 	 */
 	default List<Long> hPExpireAt(final String key, final Instant instant, final ExpireOption option,
-								  final String... fields) {
+	                              final String... fields) {
 		return hPExpireAt(key, instant.toEpochMilli(), option, fields);
 	}
 
@@ -1472,7 +1485,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
 	 */
 	default List<Long> hPExpireAt(final byte[] key, final Date date, final ExpireOption option,
-								  final byte[]... fields) {
+	                              final byte[]... fields) {
 		return hPExpireAt(key, date.getTime(), option, fields);
 	}
 
@@ -1495,7 +1508,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
 	 */
 	default List<Long> hPExpireAt(final byte[] key, final LocalDateTime dateTime, final ExpireOption option,
-								  final byte[]... fields) {
+	                              final byte[]... fields) {
 		return hPExpireAt(key, dateTime.atZone(ZoneId.systemDefault()).toInstant(), option, fields);
 	}
 
@@ -1518,7 +1531,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
 	 */
 	default List<Long> hPExpireAt(final byte[] key, final Instant instant, final ExpireOption option,
-								  final byte[]... fields) {
+	                              final byte[]... fields) {
 		return hPExpireAt(key, instant.toEpochMilli(), option, fields);
 	}
 
@@ -1541,7 +1554,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
 	 */
 	default List<Long> hPExpireAt(final byte[] key, final ZonedDateTime dateTime, final ExpireOption option,
-								  final byte[]... fields) {
+	                              final byte[]... fields) {
 		return hPExpireAt(key, dateTime.toInstant(), option, fields);
 	}
 
@@ -1579,7 +1592,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * the expiration (Unix timestamp) in milliseconds.
 	 */
 	default List<Date> hPExpireTimeDate(final String key, final String... fields) {
-		return ResultUtils.createDateList(hPExpireTime(key, fields), false);
+		return createDateList(hPExpireTime(key, fields), false);
 	}
 
 	/**
@@ -1596,7 +1609,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * the expiration (Unix timestamp) in milliseconds.
 	 */
 	default List<Date> hPExpireTimeDate(final byte[] key, final byte[]... fields) {
-		return ResultUtils.createDateList(hPExpireTime(key, fields), false);
+		return createDateList(hPExpireTime(key, fields), false);
 	}
 
 	@Override
@@ -1731,13 +1744,13 @@ public interface HashOperations extends HashCommands, RedisOperations {
 
 	@Override
 	default ScanResult<KeyValue<String, String>> hScan(final String key, final String cursor, final String pattern,
-													   final int count) {
+	                                                   final int count) {
 		return execute((client)->client.hashCommands().hScan(key, cursor, pattern, count));
 	}
 
 	@Override
 	default ScanResult<KeyValue<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-													   final int count) {
+	                                                   final int count) {
 		return execute((client)->client.hashCommands().hScan(key, cursor, pattern, count));
 	}
 
@@ -1773,13 +1786,13 @@ public interface HashOperations extends HashCommands, RedisOperations {
 
 	@Override
 	default ScanResult<String> hScanNoValues(final String key, final String cursor, final String pattern,
-											 final int count) {
+	                                         final int count) {
 		return execute((client)->client.hashCommands().hScanNoValues(key, cursor, pattern, count));
 	}
 
 	@Override
 	default ScanResult<byte[]> hScanNoValues(final byte[] key, final byte[] cursor, final byte[] pattern,
-											 final int count) {
+	                                         final int count) {
 		return execute((client)->client.hashCommands().hScanNoValues(key, cursor, pattern, count));
 	}
 
@@ -1914,7 +1927,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
 	default ScanResult<KeyValue<String, String>> hScan(final String key, final long cursor, final String pattern,
-													   final int count) {
+	                                                   final int count) {
 		return hScan(key, Long.toString(cursor), pattern, count);
 	}
 
@@ -1935,7 +1948,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
 	default ScanResult<KeyValue<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern,
-													   final int count) {
+	                                                   final int count) {
 		return hScan(key, NumberUtils.long2bytes(cursor), pattern, count);
 	}
 
@@ -1997,7 +2010,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	default <V> ScanResult<KeyValue<String, V>> hScan(final String key, final long cursor,
-													  final TypeReference<V> type) {
+	                                                  final TypeReference<V> type) {
 		return hScan(key, Long.toString(cursor), type);
 	}
 
@@ -2018,7 +2031,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	default <V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final long cursor,
-													  final TypeReference<V> type) {
+	                                                  final TypeReference<V> type) {
 		return hScan(key, NumberUtils.long2bytes(cursor), type);
 	}
 
@@ -2113,7 +2126,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	default <V> ScanResult<KeyValue<String, V>> hScan(final String key, final long cursor, final String pattern,
-													  final Class<V> clazz) {
+	                                                  final Class<V> clazz) {
 		return hScan(key, Long.toString(cursor), pattern, clazz);
 	}
 
@@ -2136,7 +2149,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	default <V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final long cursor, final byte[] pattern,
-													  final Class<V> clazz) {
+	                                                  final Class<V> clazz) {
 		return hScan(key, NumberUtils.long2bytes(cursor), pattern, clazz);
 	}
 
@@ -2159,7 +2172,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	default <V> ScanResult<KeyValue<String, V>> hScan(final String key, final long cursor, final String pattern,
-													  final TypeReference<V> type) {
+	                                                  final TypeReference<V> type) {
 		return hScan(key, Long.toString(cursor), pattern, type);
 	}
 
@@ -2182,7 +2195,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	default <V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final long cursor, final byte[] pattern,
-													  final TypeReference<V> type) {
+	                                                  final TypeReference<V> type) {
 		return hScan(key, NumberUtils.long2bytes(cursor), pattern, type);
 	}
 
@@ -2205,7 +2218,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	<V> ScanResult<KeyValue<String, V>> hScan(final String key, final String cursor, final String pattern,
-											  final Class<V> clazz);
+	                                          final Class<V> clazz);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
@@ -2226,7 +2239,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	<V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-											  final Class<V> clazz);
+	                                          final Class<V> clazz);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -2247,7 +2260,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	<V> ScanResult<KeyValue<String, V>> hScan(final String key, final String cursor, final String pattern,
-											  final TypeReference<V> type);
+	                                          final TypeReference<V> type);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -2268,7 +2281,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	<V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-											  final TypeReference<V> type);
+	                                          final TypeReference<V> type);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
@@ -2289,7 +2302,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	default <V> ScanResult<KeyValue<String, V>> hScan(final String key, final long cursor, final int count,
-													  final Class<V> clazz) {
+	                                                  final Class<V> clazz) {
 		return hScan(key, Long.toString(cursor), count, clazz);
 	}
 
@@ -2312,7 +2325,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	default <V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final long cursor, final int count,
-													  final Class<V> clazz) {
+	                                                  final Class<V> clazz) {
 		return hScan(key, NumberUtils.long2bytes(cursor), count, clazz);
 	}
 
@@ -2335,7 +2348,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	default <V> ScanResult<KeyValue<String, V>> hScan(final String key, final long cursor, final int count,
-													  final TypeReference<V> type) {
+	                                                  final TypeReference<V> type) {
 		return hScan(key, Long.toString(cursor), count, type);
 	}
 
@@ -2358,7 +2371,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	default <V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final long cursor, final int count,
-													  final TypeReference<V> type) {
+	                                                  final TypeReference<V> type) {
 		return hScan(key, NumberUtils.long2bytes(cursor), count, type);
 	}
 
@@ -2381,7 +2394,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	<V> ScanResult<KeyValue<String, V>> hScan(final String key, final String cursor, final int count,
-											  final Class<V> clazz);
+	                                          final Class<V> clazz);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
@@ -2402,7 +2415,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	<V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final byte[] cursor, final int count,
-											  final Class<V> clazz);
+	                                          final Class<V> clazz);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -2423,7 +2436,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	<V> ScanResult<KeyValue<String, V>> hScan(final String key, final String cursor, final int count,
-											  final TypeReference<V> type);
+	                                          final TypeReference<V> type);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -2444,7 +2457,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	<V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final byte[] cursor, final int count,
-											  final TypeReference<V> type);
+	                                          final TypeReference<V> type);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
@@ -2467,7 +2480,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	<V> ScanResult<KeyValue<String, V>> hScan(final String key, final String cursor, final String pattern,
-											  final int count, final Class<V> clazz);
+	                                          final int count, final Class<V> clazz);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
@@ -2490,7 +2503,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	<V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-											  final int count, final Class<V> clazz);
+	                                          final int count, final Class<V> clazz);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -2513,7 +2526,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	<V> ScanResult<KeyValue<String, V>> hScan(final String key, final String cursor, final String pattern,
-											  final int count, final TypeReference<V> type);
+	                                          final int count, final TypeReference<V> type);
 
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
@@ -2536,7 +2549,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	<V> ScanResult<KeyValue<byte[], V>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-											  final int count, final TypeReference<V> type);
+	                                          final int count, final TypeReference<V> type);
 
 	@SuppressWarnings({"unchecked"})
 	@Override
@@ -2562,14 +2575,44 @@ public interface HashOperations extends HashCommands, RedisOperations {
 		return execute((client)->client.hashCommands().hSetEx(key, data));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
-	default Status hSetEx(final String key, final KeyValue<String, String>[] data, final HSetExArgument argument) {
-		return execute((client)->client.hashCommands().hSetEx(key, data, argument));
+	default Status hSetEx(final String key, final FnxFxx fnxFxx, final KeyValue<String, String>... data) {
+		return execute((client)->client.hashCommands().hSetEx(key, fnxFxx, data));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
-	default Status hSetEx(final byte[] key, final KeyValue<byte[], byte[]>[] data, final HSetExArgument argument) {
-		return execute((client)->client.hashCommands().hSetEx(key, data, argument));
+	default Status hSetEx(final byte[] key, final FnxFxx fnxFxx, final KeyValue<byte[], byte[]>... data) {
+		return execute((client)->client.hashCommands().hSetEx(key, fnxFxx, data));
+	}
+
+	@SuppressWarnings({"unchecked"})
+	@Override
+	default Status hSetEx(final String key, final FnxFxx fnxFxx, final PxExType exType, final long expires,
+	                      final KeyValue<String, String>... data) {
+		return execute((client)->client.hashCommands().hSetEx(key, fnxFxx, exType, expires, data));
+	}
+
+	@SuppressWarnings({"unchecked"})
+	@Override
+	default Status hSetEx(final byte[] key, final FnxFxx fnxFxx, final PxExType exType, final long expires,
+	                      final KeyValue<byte[], byte[]>... data) {
+		return execute((client)->client.hashCommands().hSetEx(key, fnxFxx, exType, expires, data));
+	}
+
+	@SuppressWarnings({"unchecked"})
+	@Override
+	default Status hSetEx(final String key, final PxExType exType, final long expires,
+	                      final KeyValue<String, String>... data) {
+		return execute((client)->client.hashCommands().hSetEx(key, exType, expires, data));
+	}
+
+	@SuppressWarnings({"unchecked"})
+	@Override
+	default Status hSetEx(final byte[] key, final PxExType exType, final long expires,
+	                      final KeyValue<byte[], byte[]>... data) {
+		return execute((client)->client.hashCommands().hSetEx(key, exType, expires, data));
 	}
 
 	@Override
@@ -2699,5 +2742,10 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 哈希表 key 中所有域的值反序列化后的对象
 	 */
 	<V> List<V> hVals(final byte[] key, final TypeReference<V> type);
+
+	private static List<Date> createDateList(final List<Long> data, final boolean unixTimestamp) {
+		return data == null ? null : data.stream().map((v)->v != null && v != -1 && v != -2 ? new Date(
+				unixTimestamp ? v * 1000 : v) : null).collect(Collectors.toList());
+	}
 
 }

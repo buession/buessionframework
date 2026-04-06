@@ -610,20 +610,6 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection<RedisS
 		//client.sentinelRemove(masterName);
 	}
 
-	@Override
-	public boolean isConnected() {
-		return client != null;
-	}
-
-	@Override
-	public boolean isClosed() {
-		return client == null;
-	}
-
-	@Override
-	protected void internalInit() {
-	}
-
 	private Jedis createSentinelJedis(final JedisSentinelDataSource dataSource) {
 		final JedisClientConfig sentinelClientConfig = createSentinelJedisClientConfig(dataSource);
 

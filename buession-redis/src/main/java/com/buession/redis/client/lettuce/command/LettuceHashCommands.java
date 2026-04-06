@@ -37,8 +37,9 @@ import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.HashCommands;
-import com.buession.redis.core.command.args.GetExArgument;
-import com.buession.redis.core.command.args.hash.HSetExArgument;
+import com.buession.redis.core.command.args.FnxFxx;
+import com.buession.redis.core.command.args.GetExType;
+import com.buession.redis.core.command.args.PxExType;
 import com.buession.redis.core.internal.convert.BinaryListStringListConverter;
 import com.buession.redis.core.internal.convert.BinaryMapStringMapConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ListKeyValueMapConverter;
@@ -51,6 +52,7 @@ import com.buession.redis.core.internal.lettuce.args.LettuceHSetExArgs;
 import com.buession.redis.core.internal.lettuce.args.LettuceScanArgs;
 import com.buession.redis.core.internal.lettuce.args.LettuceScanCursor;
 import com.buession.redis.utils.SafeEncoder;
+import io.lettuce.core.HSetExArgs;
 import io.lettuce.core.ScanArgs;
 import io.lettuce.core.Value;
 
@@ -231,20 +233,21 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 	}
 
 	@Override
-	public List<String> hGetEx(final String key, final GetExArgument argument, final String... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Hash.FIELDS, fields.length)
-				.add(fields);
+	public List<String> hGetEx(final String key, final GetExType exType, final long expires, final String... fields) {
+		final CommandArguments args = CommandArguments.create(key).add(exType, expires)
+				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
 		return executeCommand(RedisCommand.HGETEX, args,
-				(cmd)->cmd.hgetex(rawBinaryKey(key), new LettuceHGetExArgs(argument), SafeEncoder.encode(fields)),
+				(cmd)->cmd.hgetex(rawBinaryKey(key), new LettuceHGetExArgs(exType, expires),
+						SafeEncoder.encode(fields)),
 				new ListConverter<>((kv)->SafeEncoder.encode(kv.getValue())));
 	}
 
 	@Override
-	public List<byte[]> hGetEx(final byte[] key, final GetExArgument argument, final byte[]... fields) {
-		final CommandArguments args = CommandArguments.create(key).add(argument).add(Keyword.Hash.FIELDS, fields.length)
-				.add(fields);
+	public List<byte[]> hGetEx(final byte[] key, final GetExType exType, final long expires, final byte[]... fields) {
+		final CommandArguments args = CommandArguments.create(key).add(exType, expires)
+				.add(Keyword.Hash.FIELDS, fields.length).add(fields);
 		return executeCommand(RedisCommand.HGETEX, args,
-				(cmd)->cmd.hgetex(rawKey(key), new LettuceHGetExArgs(argument), fields),
+				(cmd)->cmd.hgetex(rawKey(key), new LettuceHGetExArgs(exType, expires), fields),
 				new ListConverter<>(Value::getValue));
 	}
 
@@ -634,24 +637,50 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 				new OneStatusConverter());
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
-	public Status hSetEx(final String key, final KeyValue<String, String>[] data, final HSetExArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(argument).add(data);
-		final ArrayKeyValueMapConverter<String, String, byte[], byte[]> arrayKeyValueMapConverter =
-				new ArrayKeyValueMapConverter<>(SafeEncoder::encode, SafeEncoder::encode);
-		return executeCommand(RedisCommand.HSETEX, args,
-				(cmd)->cmd.hsetex(rawBinaryKey(key), new LettuceHSetExArgs(argument),
-						arrayKeyValueMapConverter.convert(data)), new OneStatusConverter());
+	public Status hSetEx(final String key, final FnxFxx fnxFxx, final KeyValue<String, String>... data) {
+		final CommandArguments args = CommandArguments.create(key).add(fnxFxx).add(data);
+		return hStringSetEx(rawBinaryKey(key), new LettuceHSetExArgs(fnxFxx), data, args);
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
-	public Status hSetEx(final byte[] key, final KeyValue<byte[], byte[]>[] data, final HSetExArgument argument) {
-		final CommandArguments args = CommandArguments.create(key).add(argument).add(data);
-		final ArrayKeyValueMapConverter<byte[], byte[], byte[], byte[]> arrayKeyValueMapConverter = new ArrayKeyValueMapConverter<>(
-				(k)->k, (v)->v);
-		return executeCommand(RedisCommand.HSETEX, args,
-				(cmd)->cmd.hsetex(rawKey(key), new LettuceHSetExArgs(argument),
-						arrayKeyValueMapConverter.convert(data)), new OneStatusConverter());
+	public Status hSetEx(final byte[] key, final FnxFxx fnxFxx, final KeyValue<byte[], byte[]>... data) {
+		final CommandArguments args = CommandArguments.create(key).add(fnxFxx).add(data);
+		return hBinarySetEx(rawKey(key), new LettuceHSetExArgs(fnxFxx), data, args);
+	}
+
+	@SuppressWarnings({"unchecked"})
+	@Override
+	public Status hSetEx(final String key, final FnxFxx fnxFxx, final PxExType exType, final long expires,
+	                     final KeyValue<String, String>... data) {
+		final CommandArguments args = CommandArguments.create(key).add(fnxFxx).add(exType, expires).add(data);
+		return hStringSetEx(rawBinaryKey(key), new LettuceHSetExArgs(fnxFxx, exType, expires), data, args);
+	}
+
+	@SuppressWarnings({"unchecked"})
+	@Override
+	public Status hSetEx(final byte[] key, final FnxFxx fnxFxx, final PxExType exType, final long expires,
+	                     final KeyValue<byte[], byte[]>... data) {
+		final CommandArguments args = CommandArguments.create(key).add(fnxFxx).add(exType, expires).add(data);
+		return hBinarySetEx(rawKey(key), new LettuceHSetExArgs(fnxFxx, exType, expires), data, args);
+	}
+
+	@SuppressWarnings({"unchecked"})
+	@Override
+	public Status hSetEx(final String key, final PxExType exType, final long expires,
+	                     final KeyValue<String, String>... data) {
+		final CommandArguments args = CommandArguments.create(key).add(exType, expires).add(data);
+		return hStringSetEx(rawBinaryKey(key), new LettuceHSetExArgs(exType, expires), data, args);
+	}
+
+	@SuppressWarnings({"unchecked"})
+	@Override
+	public Status hSetEx(final byte[] key, final PxExType exType, final long expires,
+	                     final KeyValue<byte[], byte[]>... data) {
+		final CommandArguments args = CommandArguments.create(key).add(exType, expires).add(data);
+		return hBinarySetEx(rawKey(key), new LettuceHSetExArgs(exType, expires), data, args);
 	}
 
 	@Override
@@ -731,6 +760,22 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 		return executeCommand(RedisCommand.SCAN, args,
 				(cmd)->cmd.hscanNovalues(rawKey(key), new LettuceScanCursor(cursor),
 						scanArgs), new ScanCursorConverter.KeyScanCursorConverter<>((v)->v));
+	}
+
+	private Status hStringSetEx(final byte[] key, final HSetExArgs hSetExArgs, final KeyValue<String, String>[] data,
+	                            final CommandArguments args) {
+		final ArrayKeyValueMapConverter<String, String, byte[], byte[]> arrayKeyValueMapConverter =
+				new ArrayKeyValueMapConverter<>(SafeEncoder::encode, SafeEncoder::encode);
+		return executeCommand(RedisCommand.HSETEX, args, (cmd)->cmd.hsetex(key, hSetExArgs,
+				arrayKeyValueMapConverter.convert(data)), new OneStatusConverter());
+	}
+
+	private Status hBinarySetEx(final byte[] key, final HSetExArgs hSetExArgs, final KeyValue<byte[], byte[]>[] data,
+	                            final CommandArguments args) {
+		final ArrayKeyValueMapConverter<byte[], byte[], byte[], byte[]> arrayKeyValueMapConverter = new ArrayKeyValueMapConverter<>(
+				(k)->k, (v)->v);
+		return executeCommand(RedisCommand.HSETEX, args, (cmd)->cmd.hsetex(key, hSetExArgs,
+				arrayKeyValueMapConverter.convert(data)), new OneStatusConverter());
 	}
 
 }

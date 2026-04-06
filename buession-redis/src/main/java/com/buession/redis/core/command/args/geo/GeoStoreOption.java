@@ -33,6 +33,7 @@ import com.buession.redis.core.Keyword;
  * @since 4.0.0
  */
 public enum GeoStoreOption implements Keyword {
+
 	STORE,
 
 	STOREDIST;

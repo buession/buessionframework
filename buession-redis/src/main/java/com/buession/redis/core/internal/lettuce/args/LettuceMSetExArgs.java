@@ -25,7 +25,7 @@
 package com.buession.redis.core.internal.lettuce.args;
 
 import com.buession.redis.core.command.args.NxXx;
-import com.buession.redis.core.command.args.string.MSetExArgument;
+import com.buession.redis.core.command.args.PxExType;
 import io.lettuce.core.MSetExArgs;
 
 import java.time.Duration;
@@ -49,28 +49,62 @@ public final class LettuceMSetExArgs extends MSetExArgs {
 	/**
 	 * 构造函数
 	 *
-	 * @param mSetExArgument
-	 *        {@link MSetExArgument}
+	 * @param nxXx
+	 *        {@link NxXx}
 	 */
-	public LettuceMSetExArgs(final MSetExArgument mSetExArgument) {
+	public LettuceMSetExArgs(final NxXx nxXx) {
 		super();
+		nxXx(nxXx);
+	}
 
-		if(mSetExArgument != null){
-			if(mSetExArgument.getType() == null && mSetExArgument.getExpires() != null){
-				switch(mSetExArgument.getType()){
-					case EX -> ex(Duration.ofSeconds(mSetExArgument.getExpires()));
-					case EXAT -> exAt(Instant.ofEpochSecond(mSetExArgument.getExpires()));
-					case PX -> px(Duration.ofMillis(mSetExArgument.getExpires()));
-					case PXAT -> pxAt(Instant.ofEpochMilli(mSetExArgument.getExpires()));
-					case KEEPTTL -> keepttl();
-				}
-			}
+	/**
+	 * 构造函数
+	 *
+	 * @param nxXx
+	 *        {@link NxXx}
+	 * @param pxExType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
+	 */
+	public LettuceMSetExArgs(final NxXx nxXx, final PxExType pxExType, final long expires) {
+		super();
+		nxXx(nxXx);
+		expires(pxExType, expires);
+	}
 
-			if(mSetExArgument.getNxXx() == NxXx.NX){
-				nx();
-			}else if(mSetExArgument.getNxXx() == NxXx.XX){
-				xx();
-			}
+	/**
+	 * 构造函数
+	 *
+	 * @param pxExType
+	 * 		过期时间类型
+	 * @param expires
+	 * 		过期时间
+	 */
+	public LettuceMSetExArgs(final PxExType pxExType, final long expires) {
+		super();
+		expires(pxExType, expires);
+	}
+
+	private void nxXx(final NxXx nxXx) {
+		if(nxXx == NxXx.NX){
+			nx();
+		}else if(nxXx == NxXx.XX){
+			xx();
+		}
+	}
+
+	private void expires(final PxExType pxExType, final long expires) {
+		if(pxExType == PxExType.EX){
+			ex(Duration.ofSeconds(expires));
+		}else if(pxExType == PxExType.EXAT){
+			exAt(Instant.ofEpochSecond(expires));
+		}else if(pxExType == PxExType.PX){
+			px(Duration.ofMillis(expires));
+		}else if(pxExType == PxExType.PXAT){
+			pxAt(Instant.ofEpochMilli(expires));
+		}else if(pxExType == PxExType.KEEPTTL){
+			keepttl();
 		}
 	}
 

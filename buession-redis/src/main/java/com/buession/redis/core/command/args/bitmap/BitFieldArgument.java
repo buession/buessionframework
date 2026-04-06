@@ -88,6 +88,7 @@ public interface BitFieldArgument {
 	}
 
 	enum Overflow implements GetOp, Keyword {
+
 		WRAP,
 
 		SAT,
