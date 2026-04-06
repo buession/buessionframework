@@ -167,7 +167,7 @@ public class VSimArgument {
 
 	public final static class Values implements EleFp32Values {
 
-		private Integer num;
+		private final Integer num;
 
 		public Values(final int num) {
 			this.num = num;

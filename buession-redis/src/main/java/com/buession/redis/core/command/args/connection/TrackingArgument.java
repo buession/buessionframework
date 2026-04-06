@@ -25,6 +25,7 @@
 package com.buession.redis.core.command.args.connection;
 
 import com.buession.redis.utils.ArgStringBuilder;
+import com.buession.redis.utils.SafeEncoder;
 
 /**
  * CLIENT TRACKING 参数
@@ -93,6 +94,16 @@ public class TrackingArgument {
 	/**
 	 * 构造函数
 	 *
+	 * @param prefixes
+	 * 		仅跟踪以该前缀开头的 key
+	 */
+	public TrackingArgument(final byte[][] prefixes) {
+		this(SafeEncoder.encode(prefixes));
+	}
+
+	/**
+	 * 构造函数
+	 *
 	 * @param redirect
 	 * 		将失效消息转发给另一个客户端
 	 * @param prefixes
@@ -101,6 +112,18 @@ public class TrackingArgument {
 	public TrackingArgument(final long redirect, final String[] prefixes) {
 		this(redirect);
 		this.prefixes = prefixes;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param redirect
+	 * 		将失效消息转发给另一个客户端
+	 * @param prefixes
+	 * 		仅跟踪以该前缀开头的 key
+	 */
+	public TrackingArgument(final long redirect, final byte[][] prefixes) {
+		this(redirect, SafeEncoder.encode(prefixes));
 	}
 
 	/**
@@ -118,7 +141,7 @@ public class TrackingArgument {
 	 * 		是否不向自己发送失效通知
 	 */
 	public TrackingArgument(final long redirect, final boolean bcast, final boolean optin, final boolean optout,
-							final boolean noloop) {
+	                        final boolean noloop) {
 		this(redirect);
 		this.bcast = bcast;
 		this.optin = optin;
@@ -141,12 +164,31 @@ public class TrackingArgument {
 	 * 		是否不向自己发送失效通知
 	 */
 	public TrackingArgument(final String[] prefixes, final boolean bcast, final boolean optin,
-							final boolean optout, final boolean noloop) {
+	                        final boolean optout, final boolean noloop) {
 		this(prefixes);
 		this.bcast = bcast;
 		this.optin = optin;
 		this.optout = optout;
 		this.noloop = noloop;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param prefixes
+	 * 		仅跟踪以该前缀开头的 key
+	 * @param bcast
+	 * 		是否为广播模式
+	 * @param optin
+	 * 		是否为选择性跟踪
+	 * @param optout
+	 * 		是否排除跟踪
+	 * @param noloop
+	 * 		是否不向自己发送失效通知
+	 */
+	public TrackingArgument(final byte[][] prefixes, final boolean bcast, final boolean optin,
+	                        final boolean optout, final boolean noloop) {
+		this(SafeEncoder.encode(prefixes), bcast, optin, optout, noloop);
 	}
 
 	/**
@@ -166,9 +208,30 @@ public class TrackingArgument {
 	 * 		是否不向自己发送失效通知
 	 */
 	public TrackingArgument(final long redirect, final String[] prefixes, final boolean bcast, final boolean optin,
-							final boolean optout, final boolean noloop) {
+	                        final boolean optout, final boolean noloop) {
 		this(redirect, bcast, optin, optout, noloop);
 		this.prefixes = prefixes;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param redirect
+	 * 		将失效消息转发给另一个客户端
+	 * @param prefixes
+	 * 		仅跟踪以该前缀开头的 key
+	 * @param bcast
+	 * 		是否为广播模式
+	 * @param optin
+	 * 		是否为选择性跟踪
+	 * @param optout
+	 * 		是否排除跟踪
+	 * @param noloop
+	 * 		是否不向自己发送失效通知
+	 */
+	public TrackingArgument(final long redirect, final byte[][] prefixes, final boolean bcast, final boolean optin,
+	                        final boolean optout, final boolean noloop) {
+		this(redirect, SafeEncoder.encode(prefixes), bcast, optin, optout, noloop);
 	}
 
 	/**
@@ -213,6 +276,18 @@ public class TrackingArgument {
 	public TrackingArgument setPrefixes(String[] prefixes) {
 		this.prefixes = prefixes;
 		return this;
+	}
+
+	/**
+	 * 设置仅跟踪以该前缀开头的 key
+	 *
+	 * @param prefixes
+	 * 		仅跟踪以该前缀开头的 key
+	 *
+	 * @return {@link TrackingArgument}
+	 */
+	public TrackingArgument setPrefixes(byte[][] prefixes) {
+		return setPrefixes(SafeEncoder.encode(prefixes));
 	}
 
 	/**

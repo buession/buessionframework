@@ -25,6 +25,7 @@
 package com.buession.redis.core.command.args.json;
 
 import com.buession.redis.utils.ArgStringBuilder;
+import com.buession.redis.utils.SafeEncoder;
 
 /**
  * JSON.GET 命令参数
@@ -63,6 +64,20 @@ public class JsonGetArgument {
 		this.space = space;
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param indent
+	 * 		-
+	 * @param newline
+	 * 		-
+	 * @param space
+	 * 		-
+	 */
+	public JsonGetArgument(final byte[] indent, final byte[] newline, final byte[] space) {
+		this(SafeEncoder.encode(indent), SafeEncoder.encode(newline), SafeEncoder.encode(space));
+	}
+
 	public String getIndent() {
 		return indent;
 	}
@@ -70,6 +85,10 @@ public class JsonGetArgument {
 	public JsonGetArgument setIndent(String indent) {
 		this.indent = indent;
 		return this;
+	}
+
+	public JsonGetArgument setIndent(byte[] indent) {
+		return setIndent(SafeEncoder.encode(indent));
 	}
 
 	public String getNewline() {
@@ -81,6 +100,10 @@ public class JsonGetArgument {
 		return this;
 	}
 
+	public JsonGetArgument setNewline(byte[] newline) {
+		return setNewline(SafeEncoder.encode(newline));
+	}
+
 	public String getSpace() {
 		return space;
 	}
@@ -88,6 +111,10 @@ public class JsonGetArgument {
 	public JsonGetArgument setSpace(String space) {
 		this.space = space;
 		return this;
+	}
+
+	public JsonGetArgument setSpace(byte[] space) {
+		return setSpace(SafeEncoder.encode(space));
 	}
 
 	@Override

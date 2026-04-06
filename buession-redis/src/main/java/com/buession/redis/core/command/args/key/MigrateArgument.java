@@ -27,6 +27,7 @@ package com.buession.redis.core.command.args.key;
 import com.buession.core.validator.Validate;
 import com.buession.redis.core.Keyword;
 import com.buession.redis.utils.ArgStringBuilder;
+import com.buession.redis.utils.SafeEncoder;
 
 /**
  * {@code MIGRATE} 命令参数
@@ -85,6 +86,18 @@ public class MigrateArgument {
 	 *
 	 * @param mode
 	 * 		迁移模式
+	 * @param password
+	 * 		密码
+	 */
+	public MigrateArgument(final Mode mode, final byte[] password) {
+		this(mode, SafeEncoder.encode(password));
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param mode
+	 * 		迁移模式
 	 * @param username
 	 * 		用户名
 	 * @param password
@@ -93,6 +106,20 @@ public class MigrateArgument {
 	public MigrateArgument(final Mode mode, final String username, final String password) {
 		this(username, password);
 		this.mode = mode;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param mode
+	 * 		迁移模式
+	 * @param username
+	 * 		用户名
+	 * @param password
+	 * 		密码
+	 */
+	public MigrateArgument(final Mode mode, final byte[] username, final byte[] password) {
+		this(mode, SafeEncoder.encode(username), SafeEncoder.encode(password));
 	}
 
 	/**
@@ -108,6 +135,16 @@ public class MigrateArgument {
 	/**
 	 * 构造函数
 	 *
+	 * @param password
+	 * 		密码
+	 */
+	public MigrateArgument(final byte[] password) {
+		this(SafeEncoder.encode(password));
+	}
+
+	/**
+	 * 构造函数
+	 *
 	 * @param username
 	 * 		用户名
 	 * @param password
@@ -116,6 +153,18 @@ public class MigrateArgument {
 	public MigrateArgument(final String username, final String password) {
 		this.username = username;
 		this.password = password;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param username
+	 * 		用户名
+	 * @param password
+	 * 		密码
+	 */
+	public MigrateArgument(final byte[] username, final byte[] password) {
+		this(SafeEncoder.encode(username), SafeEncoder.encode(password));
 	}
 
 	/**
@@ -159,6 +208,16 @@ public class MigrateArgument {
 	}
 
 	/**
+	 * 设置用户名
+	 *
+	 * @param username
+	 * 		用户名
+	 */
+	public MigrateArgument setUsername(byte[] username) {
+		return setUsername(SafeEncoder.encode(username));
+	}
+
+	/**
 	 * 返回密码
 	 *
 	 * @return 密码
@@ -176,6 +235,16 @@ public class MigrateArgument {
 	public MigrateArgument setPassword(String password) {
 		this.password = password;
 		return this;
+	}
+
+	/**
+	 * 设置密码
+	 *
+	 * @param password
+	 * 		密码
+	 */
+	public MigrateArgument setPassword(byte[] password) {
+		return setPassword(SafeEncoder.encode(password));
 	}
 
 	@Override

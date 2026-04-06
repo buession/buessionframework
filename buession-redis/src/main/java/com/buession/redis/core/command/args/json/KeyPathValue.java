@@ -109,6 +109,18 @@ public class KeyPathValue {
 	}
 
 	/**
+	 * 设置 Key
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return {@link KeyPathValue}
+	 */
+	public KeyPathValue setKey(byte[] key) {
+		return setKey(SafeEncoder.encode(key));
+	}
+
+	/**
 	 * 返回 JSONPath 表达式
 	 *
 	 * @return JSONPath 表达式
@@ -131,6 +143,18 @@ public class KeyPathValue {
 	}
 
 	/**
+	 * 设置 JSONPath 表达式
+	 *
+	 * @param path
+	 * 		JSONPath 表达式
+	 *
+	 * @return {@link KeyPathValue}
+	 */
+	public KeyPathValue setPath(byte[] path) {
+		return setPath(SafeEncoder.encode(path));
+	}
+
+	/**
 	 * 返回值
 	 *
 	 * @return 值
@@ -150,6 +174,18 @@ public class KeyPathValue {
 	public KeyPathValue setValue(String value) {
 		this.value = value;
 		return this;
+	}
+
+	/**
+	 * 设置值
+	 *
+	 * @param value
+	 * 		值
+	 *
+	 * @return {@link KeyPathValue}
+	 */
+	public KeyPathValue setValue(byte[] value) {
+		return setValue(SafeEncoder.encode(value));
 	}
 
 	@Override

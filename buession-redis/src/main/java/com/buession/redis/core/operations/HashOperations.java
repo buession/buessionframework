@@ -35,6 +35,7 @@ import com.buession.redis.core.command.args.FnxFxx;
 import com.buession.redis.core.command.args.GetExType;
 import com.buession.redis.core.command.args.PxExType;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -124,6 +125,92 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	@Override
 	default List<Long> hExpire(final byte[] key, final long ttl, final ExpireOption option, final byte[]... fields) {
 		return execute((client)->client.hashCommands().hExpire(key, ttl, option, fields));
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置生存时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpire/" target="_blank">https://redis.io/docs/latest/commands/hexpire/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param ttl
+	 * 		生存时间
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hExpire(final String key, final Duration ttl, final String... fields) {
+		return hExpire(key, ttl.toSeconds(), fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置生存时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpire/" target="_blank">https://redis.io/docs/latest/commands/hexpire/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param ttl
+	 * 		生存时间
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hExpire(final byte[] key, final Duration ttl, final byte[]... fields) {
+		return hExpire(key, ttl.toSeconds(), fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置生存时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpire/" target="_blank">https://redis.io/docs/latest/commands/hexpire/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param ttl
+	 * 		生存时间
+	 * @param option
+	 * 		选项
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hExpire(final String key, final Duration ttl, final ExpireOption option,
+	                           final String... fields) {
+		return hExpire(key, ttl.toSeconds(), option, fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置生存时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hexpire/" target="_blank">https://redis.io/docs/latest/commands/hexpire/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param ttl
+	 * 		生存时间
+	 * @param option
+	 * 		选项
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hExpire(final byte[] key, final Duration ttl, final ExpireOption option,
+	                           final byte[]... fields) {
+		return hExpire(key, ttl.toSeconds(), option, fields);
 	}
 
 	@Override
@@ -1190,6 +1277,92 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	@Override
 	default List<Long> hPExpire(final byte[] key, final long ttl, final ExpireOption option, final byte[]... fields) {
 		return execute((client)->client.hashCommands().hPExpire(key, ttl, option, fields));
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置生存时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hpexpire/" target="_blank">https://redis.io/docs/latest/commands/hpexpire/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param ttl
+	 * 		生存时间（单位：毫秒）
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hPExpire(final String key, final Duration ttl, final String... fields) {
+		return hPExpire(key, ttl.toMillis(), fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置生存时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hpexpire/" target="_blank">https://redis.io/docs/latest/commands/hpexpire/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param ttl
+	 * 		生存时间（单位：毫秒）
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hPExpire(final byte[] key, final Duration ttl, final byte[]... fields) {
+		return hPExpire(key, ttl.toMillis(), fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置生存时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hpexpire/" target="_blank">https://redis.io/docs/latest/commands/hpexpire/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param ttl
+	 * 		生存时间（单位：毫秒）
+	 * @param option
+	 * 		选项
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hPExpire(final String key, final Duration ttl, final ExpireOption option,
+	                            final String... fields) {
+		return hPExpire(key, ttl.toMillis(), option, fields);
+	}
+
+	/**
+	 * 为哈希中的一个或多个字段设置生存时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/hpexpire/" target="_blank">https://redis.io/docs/latest/commands/hpexpire/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param ttl
+	 * 		生存时间（单位：毫秒）
+	 * @param option
+	 * 		选项
+	 * @param fields
+	 * 		一个或多个域
+	 *
+	 * @return -2 if no such field exists in the provided hash key, or the provided key does not exist;0 if the
+	 * specified NX, XX, GT, or LT condition has not been met;1 if the expiration time was set/updated;
+	 * 2 when HEXPIRE or HPEXPIRE is called with 0 seconds or milliseconds, or when HEXPIREAT or HPEXPIREAT is called with a past Unix time in seconds or milliseconds.
+	 */
+	default List<Long> hPExpire(final byte[] key, final Duration ttl, final ExpireOption option,
+	                            final byte[]... fields) {
+		return hPExpire(key, ttl.toMillis(), option, fields);
 	}
 
 	@Override

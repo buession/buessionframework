@@ -70,7 +70,7 @@ public class SortArgument {
 	 * 		-
 	 */
 	public SortArgument(final byte[] by) {
-		setBy(by);
+		this(SafeEncoder.encode(by));
 	}
 
 	/**
@@ -95,8 +95,7 @@ public class SortArgument {
 	 * 		-
 	 */
 	public SortArgument(final byte[] by, final byte[][] gets) {
-		this(by);
-		setGetPatterns(gets);
+		this(SafeEncoder.encode(by), SafeEncoder.encode(gets));
 	}
 
 	/**
@@ -121,8 +120,7 @@ public class SortArgument {
 	 * 		排序方式
 	 */
 	public SortArgument(final byte[] by, final Order order) {
-		this(by);
-		this.order = order;
+		this(SafeEncoder.encode(by), order);
 	}
 
 	/**
@@ -151,16 +149,11 @@ public class SortArgument {
 	 * 		排序方式
 	 */
 	public SortArgument(final byte[] by, final byte[][] gets, final Order order) {
-		this(by, gets);
-		this.order = order;
+		this(SafeEncoder.encode(by), SafeEncoder.encode(gets), order);
 	}
 
 	public String getBy() {
 		return by;
-	}
-
-	public byte[] getByAsBytes() {
-		return SafeEncoder.encode(by);
 	}
 
 	public SortArgument setBy(final String by) {
@@ -169,8 +162,7 @@ public class SortArgument {
 	}
 
 	public SortArgument setBy(final byte[] by) {
-		this.by = SafeEncoder.encode(by);
-		return this;
+		return setBy(SafeEncoder.encode(by));
 	}
 
 	/**
@@ -195,10 +187,6 @@ public class SortArgument {
 
 	public String[] getGetPatterns() {
 		return getPatterns;
-	}
-
-	public byte[][] getGetPatternsAsBytes() {
-		return SafeEncoder.encode(getPatterns);
 	}
 
 	public SortArgument setGetPatterns(String[] getPatterns) {

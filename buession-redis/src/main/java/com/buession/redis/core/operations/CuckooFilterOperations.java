@@ -164,6 +164,28 @@ public interface CuckooFilterOperations extends CuckooFilterCommands, RedisOpera
 	}
 
 	@Override
+	default List<Boolean> cfInsertNx(final String key, final Long capacity, final boolean noCreate,
+	                                 final String... items) {
+		return execute((client)->client.cuckooFilterCommands().cfInsertNx(key, capacity, noCreate, items));
+	}
+
+	@Override
+	default List<Boolean> cfInsertNx(final byte[] key, final Long capacity, final boolean noCreate,
+	                                 final byte[]... items) {
+		return execute((client)->client.cuckooFilterCommands().cfInsertNx(key, capacity, noCreate, items));
+	}
+
+	@Override
+	default List<Boolean> cfInsertNx(final String key, final boolean noCreate, final String... items) {
+		return execute((client)->client.cuckooFilterCommands().cfInsertNx(key, noCreate, items));
+	}
+
+	@Override
+	default List<Boolean> cfInsertNx(final byte[] key, final boolean noCreate, final byte[]... items) {
+		return execute((client)->client.cuckooFilterCommands().cfInsertNx(key, noCreate, items));
+	}
+
+	@Override
 	default Status cfLoadchunk(final String key, final long iterator, final byte[] data) {
 		return execute((client)->client.cuckooFilterCommands().cfLoadchunk(key, iterator, data));
 	}
