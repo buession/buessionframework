@@ -22,41 +22,19 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.response;
-
-import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
-import com.buession.redis.core.StreamConsumerFull;
-import com.buession.redis.core.StreamEntryId;
-import com.buession.redis.core.StreamFull;
-import redis.clients.jedis.resps.StreamConsumerFullInfo;
-import redis.clients.jedis.resps.StreamGroupFullInfo;
-
-import java.util.List;
+package com.buession.core.converter;
 
 /**
- * Jedis {@link StreamGroupFullInfo} 转换为 {@link StreamFull.Group}
+ * {@link Double} 转换为 {@link Long}
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public final class StreamFullInfoGroupConverter implements Converter<StreamGroupFullInfo, StreamFull.Group> {
+public final class DoubleLongConverter implements Converter<Double, Long> {
 
 	@Override
-	public StreamFull.Group convert(final StreamGroupFullInfo source) {
-		if(source == null){
-			return null;
-		}
-
-		final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
-		final ListConverter<StreamConsumerFullInfo, StreamConsumerFull> listStreamConsumerFullInfoConverter =
-				new ListConverter<>(new StreamConsumerFullInfoConverter());
-		final List<StreamConsumerFull> consumers = listStreamConsumerFullInfoConverter.convert(
-				source.getConsumers());
-		final StreamEntryId lastDeliveredId = streamEntryIDConverter.convert(source.getLastDeliveredId());
-
-		return new StreamFull.Group(source.getName(), consumers, source.getPending(), source.getPelCount(),
-				lastDeliveredId, source.getGroupFullInfo());
+	public Long convert(final Double source) {
+		return source == null ? null : source.longValue();
 	}
 
 }

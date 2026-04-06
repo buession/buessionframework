@@ -19,47 +19,22 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.jedis;
-
-import com.buession.core.builder.MapBuilder;
-import com.buession.redis.RedisTemplate;
-import com.buession.redis.core.AutoClaimId;
-import com.buession.redis.core.FunctionStats;
-import com.buession.redis.core.LibraryInfo;
-import com.buession.redis.core.StreamEntryId;
-import org.junit.jupiter.api.Test;
-
-import java.util.List;
+package com.buession.core.converter;
 
 /**
+ * {@link Long} 转换为 {@link Float}
+ *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public class JediStreamTest extends AbstractJedisRedisTest {
+public final class LongFloatConverter implements Converter<Long, Float> {
 
-	@Test
-	public void xAdd() {
-		RedisTemplate redisTemplate = redisTemplate();
-		StreamEntryId result = redisTemplate.xAdd("stream_a", "1-0",
-				MapBuilder.<String, String>create().put("1", "A").put("2", "B").build());
-		System.out.println(result);
-	}
-
-	@Test
-	public void xAutoClaimJustId() {
-		RedisTemplate redisTemplate = redisTemplate();
-		AutoClaimId result = redisTemplate.xAutoClaimJustId("stream_a", "test", "cs", 0, "*");
-		System.out.println(result);
-	}
-
-	@Test
-	public void functionList() {
-		RedisTemplate redisTemplate = redisTemplate();
-		List<LibraryInfo> result = redisTemplate.functionList();
-		System.out.println(result);
+	@Override
+	public Float convert(final Long source) {
+		return source == null ? null : source.floatValue();
 	}
 
 }

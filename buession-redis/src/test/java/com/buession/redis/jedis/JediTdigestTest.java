@@ -22,55 +22,60 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.converter;
+package com.buession.redis.jedis;
 
-import java.util.LinkedHashMap;
+import com.buession.core.builder.MapBuilder;
+import com.buession.lang.Status;
+import com.buession.redis.RedisTemplate;
+import com.buession.redis.core.AutoClaimId;
+import com.buession.redis.core.AutoClaimInfo;
+import com.buession.redis.core.FunctionStats;
+import com.buession.redis.core.LibraryInfo;
+import com.buession.redis.core.StreamEntryId;
+import org.junit.jupiter.api.Test;
+
 import java.util.List;
-import java.util.Map;
 
 /**
- * 值为 {@link Map.Entry} 的 {@link List} 到 {@link Map} 转换器
- *
- * @param <SK>
- * 		Map 原 key 类型
- * @param <SV>
- * 		Map 原 value 类型
- * @param <TK>
- * 		Map 目标 key 类型
- * @param <TV>
- * 		Map 目标 value 类型
- *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class ListMapEntryMapConverter<SK, SV, TK, TV> extends BaseKeyValueConverter<SK, SV, TK, TV, List<Map.Entry<SK,
-		SV>>, Map<TK, TV>> implements Converter<List<Map.Entry<SK, SV>>, Map<TK, TV>> {
+public class JediStreamTest extends AbstractJedisRedisTest {
 
-	/**
-	 * 构造函数
-	 *
-	 * @param keyConverter
-	 * 		Map key 转换器
-	 * @param valueConverter
-	 * 		Map value 转换器
-	 */
-	public ListMapEntryMapConverter(final Converter<SK, TK> keyConverter, final Converter<SV, TV> valueConverter) {
-		super(keyConverter, valueConverter);
+	@Test
+	public void xAdd() {
+		RedisTemplate redisTemplate = redisTemplate();
+		StreamEntryId result = redisTemplate.xAdd("stream_a", "1-0",
+				MapBuilder.<String, String>create().put("1", "A").put("2", "B").build());
+		System.out.println(result);
 	}
 
-	@Override
-	public Map<TK, TV> convert(final List<Map.Entry<SK, SV>> source) {
-		if(source == null){
-			return null;
-		}else{
-			final Map<TK, TV> result = new LinkedHashMap<>(source.size());
+	@Test
+	public void xGroupCreate() {
+		RedisTemplate redisTemplate = redisTemplate();
+		Status result = redisTemplate.xGroupCreate("stream_a", "test", "1-0");
+		System.out.println(result);
+	}
 
-			for(Map.Entry<SK, SV> e : source){
-				result.put(keyConverter.convert(e.getKey()), valueConverter.convert(e.getValue()));
-			}
+	@Test
+	public void xGroupCreateConsumer() {
+		RedisTemplate redisTemplate = redisTemplate();
+		Status result = redisTemplate.xGroupCreateConsumer("stream_a", "test", "cs");
+		System.out.println(result);
+	}
 
-			return result;
-		}
+	@Test
+	public void xAutoClaimJustId() {
+		RedisTemplate redisTemplate = redisTemplate();
+		AutoClaimId result = redisTemplate.xAutoClaimJustId("stream_a", "test", "cs", 0, "1-0");
+		System.out.println(result);
+	}
+
+	@Test
+	public void xAutoClaim() {
+		RedisTemplate redisTemplate = redisTemplate();
+		AutoClaimInfo<String, String> result = redisTemplate.xAutoClaim("stream_a", "test", "cs", 0, "1-0");
+		System.out.println(result);
 	}
 
 }

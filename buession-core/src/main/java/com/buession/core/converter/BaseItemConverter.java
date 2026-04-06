@@ -24,57 +24,24 @@
  */
 package com.buession.core.converter;
 
-import com.buession.lang.KeyValue;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
+import com.buession.core.utils.Assert;
 
 /**
- * {@link Map} 转换为 {@link KeyValue} {@link Collection}
  *
- * @param <SK>
- * 		原始 Key 类型
- * @param <SV>
- * 		原始值类型
- * @param <TK>
- * 		目标 Key 类型
- * @param <TV>
- * 		目标值类型
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class MapCollectionKeyValueConverter<SK, SV, TK, TV>
-		extends BaseKeyValueConverter<SK, SV, TK, TV, Map<SK, SV>, Collection<KeyValue<TK, TV>>>
-		implements Converter<Map<SK, SV>, Collection<KeyValue<TK, TV>>> {
+abstract class BaseItemConverter<SI, TI, S, T> implements Converter<S, T> {
 
 	/**
-	 * 构造函数
-	 *
-	 * @param keyConverter
-	 * 		Key 转换器
-	 * @param valueConverter
-	 * 		值转换器
+	 * 元素转换器
 	 */
-	public MapCollectionKeyValueConverter(final Converter<SK, TK> keyConverter,
-	                                      final Converter<SV, TV> valueConverter) {
-		super(keyConverter, valueConverter);
-	}
+	protected final Converter<SI, TI> itemConverter;
 
-	@Override
-	public Collection<KeyValue<TK, TV>> convert(final Map<SK, SV> source) {
-		if(source == null){
-			return null;
-		}else{
-			final Collection<KeyValue<TK, TV>> result = new ArrayList<>(source.size());
-
-			for(Map.Entry<SK, SV> e : source.entrySet()){
-				result.add(new KeyValue<>(keyConverter.convert(e.getKey()), valueConverter.convert(e.getValue())));
-			}
-
-			return result;
-		}
+	public BaseItemConverter(Converter<SI, TI> itemConverter) {
+		Assert.isNull(itemConverter, "itemConverter cloud not be null.");
+		this.itemConverter = itemConverter;
 	}
 
 }

@@ -24,7 +24,6 @@
  */
 package com.buession.core.converter;
 
-import com.buession.core.utils.Assert;
 import com.buession.lang.KeyValue;
 
 import java.util.LinkedHashMap;
@@ -45,17 +44,9 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class ArrayKeyValueMapConverter<SK, SV, TK, TV> implements Converter<KeyValue<SK, SV>[], Map<TK, TV>> {
-
-	/**
-	 * Key 转换器
-	 */
-	private final Converter<SK, TK> keyConverter;
-
-	/**
-	 * 值转换器
-	 */
-	private final Converter<SV, TV> valueConverter;
+public class ArrayKeyValueMapConverter<SK, SV, TK, TV>
+		extends BaseKeyValueConverter<SK, SV, TK, TV, KeyValue<SK, SV>[], Map<TK, TV>>
+		implements Converter<KeyValue<SK, SV>[], Map<TK, TV>> {
 
 	/**
 	 * 构造函数
@@ -66,10 +57,7 @@ public class ArrayKeyValueMapConverter<SK, SV, TK, TV> implements Converter<KeyV
 	 * 		值转换器
 	 */
 	public ArrayKeyValueMapConverter(final Converter<SK, TK> keyConverter, final Converter<SV, TV> valueConverter) {
-		Assert.isNull(keyConverter, "keyConverter can not be null");
-		Assert.isNull(valueConverter, "valueConverter can not be null");
-		this.keyConverter = keyConverter;
-		this.valueConverter = valueConverter;
+		super(keyConverter, valueConverter);
 	}
 
 	@Override

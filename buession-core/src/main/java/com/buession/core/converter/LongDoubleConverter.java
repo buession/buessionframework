@@ -22,41 +22,19 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.response;
-
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.StreamConsumerFull;
-import redis.clients.jedis.resps.StreamConsumerFullInfo;
-
-import java.util.ArrayList;
-import java.util.List;
+package com.buession.core.converter;
 
 /**
- * jedis {@link StreamConsumerFullInfo} 转换为 {@link StreamConsumerFull}
+ * {@link Long} 转换为 {@link Double}
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 4.0.0
  */
-public final class StreamConsumerFullInfoConverter implements Converter<StreamConsumerFullInfo, StreamConsumerFull> {
+public final class LongDoubleConverter implements Converter<Long, Double> {
 
 	@Override
-	public StreamConsumerFull convert(final StreamConsumerFullInfo source) {
-		if(source == null){
-			return null;
-		}
-
-		final List<Long> pendings = new ArrayList<>();
-
-		if(source.getPending() != null){
-			for(List<Object> pending : source.getPending()){
-				for(Object item : pending){
-					pendings.add((Long) item);
-				}
-			}
-		}
-
-		return new StreamConsumerFull(source.getName(), source.getSeenTime(), source.getPelCount(), pendings,
-				source.getConsumerInfo());
+	public Double convert(final Long source) {
+		return source == null ? null : source.doubleValue();
 	}
 
 }

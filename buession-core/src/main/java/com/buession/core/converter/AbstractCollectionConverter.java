@@ -24,8 +24,6 @@
  */
 package com.buession.core.converter;
 
-import com.buession.core.utils.Assert;
-
 import java.util.Collection;
 import java.util.stream.Collector;
 
@@ -45,12 +43,7 @@ import java.util.stream.Collector;
  * @since 4.0.0
  */
 public abstract class AbstractCollectionConverter<SV, TV, ST extends Collection<SV>, TT extends Collection<TV>>
-		implements CollectionConverter<SV, TV, ST, TT> {
-
-	/**
-	 * item 转换器
-	 */
-	protected final Converter<SV, TV> itemConverter;
+		extends BaseItemConverter<SV, TV, ST, TT> implements CollectionConverter<SV, TV, ST, TT> {
 
 	/**
 	 * 构造函数
@@ -59,8 +52,7 @@ public abstract class AbstractCollectionConverter<SV, TV, ST extends Collection<
 	 * 		item 转换器
 	 */
 	public AbstractCollectionConverter(final Converter<SV, TV> itemConverter) {
-		Assert.isNull(itemConverter, "itemConverter can not be null");
-		this.itemConverter = itemConverter;
+		super(itemConverter);
 	}
 
 	@Override

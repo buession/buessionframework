@@ -41,12 +41,8 @@ import java.util.Collection;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public abstract class AbstractCollectionArrayConverter<S, T, C extends Collection<S>> implements Converter<C, T[]> {
-
-	/**
-	 * 数组 item 转换器
-	 */
-	private final Converter<S, T> itemConverter;
+public abstract class AbstractCollectionArrayConverter<S, T, C extends Collection<S>>
+		extends BaseItemConverter<S, T, C, T[]> implements Converter<C, T[]> {
 
 	private final Class<T> clazz;
 
@@ -57,9 +53,8 @@ public abstract class AbstractCollectionArrayConverter<S, T, C extends Collectio
 	 * 		Collection item 转换器
 	 */
 	public AbstractCollectionArrayConverter(final Converter<S, T> itemConverter, final Class<T> clazz) {
-		Assert.isNull(itemConverter, "itemConverter cloud not be null.");
+		super(itemConverter);
 		Assert.isNull(clazz, "target clazz cloud not be null.");
-		this.itemConverter = itemConverter;
 		this.clazz = clazz;
 	}
 

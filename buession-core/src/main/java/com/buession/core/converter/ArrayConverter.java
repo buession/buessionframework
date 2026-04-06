@@ -38,12 +38,7 @@ import com.buession.core.utils.Assert;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class ArrayConverter<S, T> implements Converter<S[], T[]> {
-
-	/**
-	 * 数组 item 转换器
-	 */
-	private final Converter<S, T> itemConverter;
+public class ArrayConverter<S, T> extends BaseItemConverter<S, T, S[], T[]> implements Converter<S[], T[]> {
 
 	private final Class<T> clazz;
 
@@ -56,9 +51,8 @@ public class ArrayConverter<S, T> implements Converter<S[], T[]> {
 	 * 		目标数组类型
 	 */
 	public ArrayConverter(final Converter<S, T> itemConverter, final Class<T> clazz) {
-		Assert.isNull(itemConverter, "ItemConverter cloud not be null.");
+		super(itemConverter);
 		Assert.isNull(clazz, "Target clazz cloud not be null.");
-		this.itemConverter = itemConverter;
 		this.clazz = clazz;
 	}
 

@@ -22,59 +22,30 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.converter;
+package io.lettuce.core;
 
-import com.buession.lang.KeyValue;
+import io.lettuce.core.api.sync.RedisCommands;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 
 /**
- * {@link Map} 转换为 {@link KeyValue} {@link Collection}
  *
- * @param <SK>
- * 		原始 Key 类型
- * @param <SV>
- * 		原始值类型
- * @param <TK>
- * 		目标 Key 类型
- * @param <TV>
- * 		目标值类型
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class MapCollectionKeyValueConverter<SK, SV, TK, TV>
-		extends BaseKeyValueConverter<SK, SV, TK, TV, Map<SK, SV>, Collection<KeyValue<TK, TV>>>
-		implements Converter<Map<SK, SV>, Collection<KeyValue<TK, TV>>> {
+public class StatefulRedisCommandsHandler implements InvocationHandler {
 
-	/**
-	 * 构造函数
-	 *
-	 * @param keyConverter
-	 * 		Key 转换器
-	 * @param valueConverter
-	 * 		值转换器
-	 */
-	public MapCollectionKeyValueConverter(final Converter<SK, TK> keyConverter,
-	                                      final Converter<SV, TV> valueConverter) {
-		super(keyConverter, valueConverter);
+	private final io.lettuce.core.api.sync.RedisCommands<byte[], byte[]> target;
+
+	public StatefulRedisCommandsHandler(RedisCommands<byte[], byte[]> target) {
+		this.target = target;
 	}
 
 	@Override
-	public Collection<KeyValue<TK, TV>> convert(final Map<SK, SV> source) {
-		if(source == null){
-			return null;
-		}else{
-			final Collection<KeyValue<TK, TV>> result = new ArrayList<>(source.size());
-
-			for(Map.Entry<SK, SV> e : source.entrySet()){
-				result.add(new KeyValue<>(keyConverter.convert(e.getKey()), valueConverter.convert(e.getValue())));
-			}
-
-			return result;
-		}
+	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+		return method.invoke(target, args);
 	}
 
 }
