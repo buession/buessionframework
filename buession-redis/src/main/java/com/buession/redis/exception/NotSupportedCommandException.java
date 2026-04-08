@@ -37,8 +37,6 @@ public class NotSupportedCommandException extends RedisException {
 
 	private final static long serialVersionUID = -3098408677930013922L;
 
-	private Type type;
-
 	public NotSupportedCommandException() {
 		super();
 	}

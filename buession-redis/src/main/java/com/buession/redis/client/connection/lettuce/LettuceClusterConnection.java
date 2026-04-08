@@ -37,7 +37,6 @@ import com.buession.redis.core.internal.lettuce.LettuceClientConfigBuilder;
 import com.buession.redis.exception.LettuceRedisExceptionUtils;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
-import com.buession.redis.transaction.Transaction;
 import io.lettuce.core.LettuceClientConfig;
 import io.lettuce.core.LettuceClusterPool;
 import io.lettuce.core.LettucePoolConfig;
@@ -744,11 +743,6 @@ public class LettuceClusterConnection
 	@Override
 	public void setTopologyRefreshPeriod(Duration topologyRefreshPeriod) {
 		this.topologyRefreshPeriod = topologyRefreshPeriod;
-	}
-
-	@Override
-	public Transaction multi() {
-		throw new RedisException("MULTI is currently not supported in cluster mode");
 	}
 
 	@Override

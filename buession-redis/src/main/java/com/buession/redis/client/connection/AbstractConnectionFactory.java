@@ -44,6 +44,8 @@ public abstract class AbstractConnectionFactory<DS extends DataSource> implement
 	 */
 	private final DS dataSource;
 
+	private RedisConnection redisConnection;
+
 	/**
 	 * 构造函数
 	 *
@@ -74,14 +76,14 @@ public abstract class AbstractConnectionFactory<DS extends DataSource> implement
 
 	@Override
 	public RedisConnection getConnection() {
-		RedisConnection redisConnection;
-
-		if(isRedisClusterAware()){
-			redisConnection = getClusterConnection();
-		}else if(isRedisSentinelAware()){
-			redisConnection = getSentinelConnection();
-		}else{
-			redisConnection = getStandaloneConnection();
+		if(redisConnection == null){
+			if(isRedisClusterAware()){
+				redisConnection = getClusterConnection();
+			}else if(isRedisSentinelAware()){
+				redisConnection = getSentinelConnection();
+			}else{
+				redisConnection = getStandaloneConnection();
+			}
 		}
 
 		if(redisConnection.isConnected() == false){

@@ -189,14 +189,6 @@ public interface RedisCommands {
 			}
 		}
 
-		protected Pipeline pipeline() {
-			return null;//connection.openPipeline();
-		}
-
-		protected Transaction transaction() {
-			return null;//connection.multi();
-		}
-
 		protected abstract R doExecute(final RedisConnection conn) throws RedisException;
 
 	}

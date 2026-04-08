@@ -31,11 +31,11 @@ import com.buession.lang.Order;
 import com.buession.lang.Status;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.core.BumpEpoch;
+import com.buession.redis.core.RedisClusterNode;
 import com.buession.redis.core.command.args.cluster.FailoverOption;
 import com.buession.redis.core.ClusterInfo;
 import com.buession.redis.core.ClusterLink;
 import com.buession.redis.core.command.args.cluster.MigrationOperation;
-import com.buession.redis.core.ClusterRedisNode;
 import com.buession.redis.core.command.args.cluster.ResetOption;
 import com.buession.redis.core.command.args.cluster.SetSlotOption;
 import com.buession.redis.core.ClusterShardInfo;
@@ -237,13 +237,13 @@ public final class LettuceClusterCommands extends AbstractLettuceRedisCommands i
 	}
 
 	@Override
-	public List<ClusterRedisNode> clusterNodes() {
+	public List<RedisClusterNode> clusterNodes() {
 		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_NODES, (cmd)->cmd.clusterNodes(),
 				new ClusterNodesConverter());
 	}
 
 	@Override
-	public List<ClusterRedisNode> clusterReplicas(final String nodeId) {
+	public List<RedisClusterNode> clusterReplicas(final String nodeId) {
 		final CommandArguments args = CommandArguments.create(nodeId);
 		return executeCommand(
 				RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_REPLICAS, args, (cmd)->cmd.clusterReplicas(nodeId),
@@ -251,7 +251,7 @@ public final class LettuceClusterCommands extends AbstractLettuceRedisCommands i
 	}
 
 	@Override
-	public List<ClusterRedisNode> clusterReplicas(final byte[] nodeId) {
+	public List<RedisClusterNode> clusterReplicas(final byte[] nodeId) {
 		return clusterReplicas(SafeEncoder.encode(nodeId));
 	}
 
@@ -316,15 +316,14 @@ public final class LettuceClusterCommands extends AbstractLettuceRedisCommands i
 	}
 
 	@Override
-	public List<ClusterRedisNode> clusterSlaves(final String nodeId) {
+	public List<RedisClusterNode> clusterSlaves(final String nodeId) {
 		final CommandArguments args = CommandArguments.create(nodeId);
 		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_SLAVES, args,
-				(cmd)->cmd.clusterSlaves(nodeId),
-				new ListConverter<>(new ClusterNodeConverter()));
+				(cmd)->cmd.clusterSlaves(nodeId), new ListConverter<>(new ClusterNodeConverter()));
 	}
 
 	@Override
-	public List<ClusterRedisNode> clusterSlaves(final byte[] nodeId) {
+	public List<RedisClusterNode> clusterSlaves(final byte[] nodeId) {
 		return clusterSlaves(SafeEncoder.encode(nodeId));
 	}
 

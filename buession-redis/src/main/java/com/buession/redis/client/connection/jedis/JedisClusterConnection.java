@@ -29,8 +29,12 @@ import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.RedisClusterConnection;
 import com.buession.redis.client.connection.datasource.jedis.JedisClusterDataSource;
 import com.buession.redis.core.PoolConfig;
+import com.buession.redis.core.RedisMode;
+import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.internal.jedis.JedisClientConfigBuilder;
+import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.RedisConnectionFailureException;
+import com.buession.redis.transaction.Transaction;
 import redis.clients.jedis.DefaultJedisClientConfig;
 import redis.clients.jedis.RedisClusterClient;
 import redis.clients.jedis.builders.ClusterClientBuilder;
@@ -745,6 +749,11 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection<RedisCl
 	@Override
 	public void setTopologyRefreshPeriod(Duration topologyRefreshPeriod) {
 		this.topologyRefreshPeriod = topologyRefreshPeriod;
+	}
+
+	@Override
+	public Transaction multi() {
+		throw new NotSupportedCommandException(RedisMode.CLUSTER, RedisCommand.MULTI);
 	}
 
 	@Override

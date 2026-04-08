@@ -22,21 +22,24 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.pipeline.jedis;
+package com.buession.redis.pipeline;
 
-import com.buession.redis.core.internal.jedis.JedisResult;
-import com.buession.redis.pipeline.AbstractPipelineProxy;
-import com.buession.redis.pipeline.Pipeline;
+import com.buession.redis.core.FutureResult;
 
 /**
- * Jedis 管道代理
+ * 默认管道代理
+ *
+ * @param <T>
+ * 		原生管道类型
+ * @param <FR>
+ * 		管道异步结果
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public class JedisPipelineProxy<T, R> extends AbstractPipelineProxy<T, JedisResult<R, Object>> {
+public class DefaultPipelineProxy<T, FR extends FutureResult<?>> extends AbstractPipelineProxy<T, FR> {
 
-	public JedisPipelineProxy(final Pipeline target, final T object) {
+	public DefaultPipelineProxy(final Pipeline target, final T object) {
 		super(target, object);
 	}
 

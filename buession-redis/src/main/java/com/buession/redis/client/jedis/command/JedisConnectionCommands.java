@@ -217,14 +217,14 @@ public final class JedisConnectionCommands extends AbstractJedisRedisCommands im
 	@Override
 	public String echo(final String str) {
 		final CommandArguments args = CommandArguments.create(str);
-		return executeCommand(RedisCommand.ECHO, args, (cmd)->cmd.echo(str), (v)->v);
+		return executeCommand(RedisCommand.ECHO, args, null, null, (cmd)->cmd.echo(str), (v)->v);
 	}
 
 	@Override
 	public byte[] echo(final byte[] str) {
 		final String s = SafeEncoder.encode(str);
 		final CommandArguments args = CommandArguments.create(s);
-		return executeCommand(RedisCommand.ECHO, args, (cmd)->cmd.echo(s), SafeEncoder::encode);
+		return executeCommand(RedisCommand.ECHO, args, null, null, (cmd)->cmd.echo(s), SafeEncoder::encode);
 	}
 
 	@Override
@@ -252,35 +252,37 @@ public final class JedisConnectionCommands extends AbstractJedisRedisCommands im
 
 	@Override
 	public Hello hello(int protover, String username, String password) {
-		final CommandArguments args = CommandArguments.create(protover).add(Validate.isEmpty(username) ?
-				Keyword.Conn.AUTH : Keyword.Conn.AUTH2).add(username, password);
+		final CommandArguments args = CommandArguments.create(protover)
+				.add(Validate.isEmpty(username) ? Keyword.Conn.AUTH : Keyword.Conn.AUTH2).add(username, password);
 		return executeCommand(RedisCommand.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, byte[] username, byte[] password) {
-		final CommandArguments args = CommandArguments.create(protover).add(Validate.isEmpty(username) ?
-				Keyword.Conn.AUTH : Keyword.Conn.AUTH2).add(username, password);
+		final CommandArguments args = CommandArguments.create(protover)
+				.add(Validate.isEmpty(username) ? Keyword.Conn.AUTH : Keyword.Conn.AUTH2).add(username, password);
 		return executeCommand(RedisCommand.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, String username, String password, String clientName) {
-		final CommandArguments args = CommandArguments.create(protover).add(Validate.isEmpty(username) ?
-				Keyword.Conn.AUTH : Keyword.Conn.AUTH2).add(username, password).add("SETNAME", clientName);
+		final CommandArguments args = CommandArguments.create(protover)
+				.add(Validate.isEmpty(username) ? Keyword.Conn.AUTH : Keyword.Conn.AUTH2).add(username, password)
+				.add("SETNAME", clientName);
 		return executeCommand(RedisCommand.HELLO, args);
 	}
 
 	@Override
 	public Hello hello(int protover, byte[] username, byte[] password, byte[] clientName) {
-		final CommandArguments args = CommandArguments.create(protover).add(Validate.isEmpty(username) ?
-				Keyword.Conn.AUTH : Keyword.Conn.AUTH2).add(username, password).add("SETNAME", clientName);
+		final CommandArguments args = CommandArguments.create(protover)
+				.add(Validate.isEmpty(username) ? Keyword.Conn.AUTH : Keyword.Conn.AUTH2).add(username, password)
+				.add("SETNAME", clientName);
 		return executeCommand(RedisCommand.HELLO, args);
 	}
 
 	@Override
 	public Status ping() {
-		return executeCommand(RedisCommand.PING, (cmd)->cmd.ping(), new PingResultConverter());
+		return executeCommand(RedisCommand.PING, null, null, (cmd)->cmd.ping(), new PingResultConverter());
 	}
 
 	@Override

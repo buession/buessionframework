@@ -26,7 +26,6 @@ package com.buession.redis.core;
 
 import com.buession.redis.utils.ObjectStringBuilder;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -59,6 +58,7 @@ public record Module(String name, Integer version) {
 
 		return false;
 	}
+
 
 	@Override
 	public String toString() {

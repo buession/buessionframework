@@ -26,6 +26,7 @@ package com.buession.redis;
 
 import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
+import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.core.Options;
 import com.buession.redis.core.command.*;
@@ -83,7 +84,7 @@ public abstract class AbstractRedisTemplate extends RedisAccessor implements Aut
 	@SuppressWarnings({"unchecked"})
 	@Override
 	public List<Object> exec() {
-		List<Object> result = execute((client)->client.transactionCommands().exec());
+		List<Object> result = client.getConnection().exec();//execute((client)->client.transactionCommands().exec());
 
 		if(result != null){
 			Map<Integer, Function<?, ?>> map = txConverters.get();

@@ -68,7 +68,10 @@ public final class JedisAutoSuggestCommands extends AbstractJedisRedisCommands i
 		final CommandArguments args = CommandArguments.create(key, value).add(score).add(incr ? "INCR" : null);
 
 		if(incr){
-			return executeCommand(RedisCommand.FT_SUGADD, args, (cmd)->cmd.ftSugAddIncr(rawKey(key), value, score));
+			return executeCommand(RedisCommand.FT_SUGADD, args,
+					(cmd)->cmd.ftSugAddIncr(rawKey(key), value, score),
+					(cmd)->cmd.ftSugAddIncr(rawKey(key), value, score),
+					(cmd)->cmd.ftSugAddIncr(rawKey(key), value, score));
 		}else{
 			return ftSugAdd(rawKey(key), value, score, args);
 		}
@@ -80,6 +83,8 @@ public final class JedisAutoSuggestCommands extends AbstractJedisRedisCommands i
 
 		if(incr){
 			return executeCommand(RedisCommand.FT_SUGADD, args,
+					(cmd)->cmd.ftSugAddIncr(rawStringKey(key), SafeEncoder.encode(value), score),
+					(cmd)->cmd.ftSugAddIncr(rawStringKey(key), SafeEncoder.encode(value), score),
 					(cmd)->cmd.ftSugAddIncr(rawStringKey(key), SafeEncoder.encode(value), score));
 		}else{
 			return ftSugAdd(rawStringKey(key), SafeEncoder.encode(value), score, args);
@@ -93,7 +98,9 @@ public final class JedisAutoSuggestCommands extends AbstractJedisRedisCommands i
 				.add("PAYLOAD", payload);
 
 		if(incr){
-			return executeCommand(RedisCommand.FT_SUGADD, args, (cmd)->cmd.ftSugAddIncr(rawKey(key), value, score));
+			return executeCommand(RedisCommand.FT_SUGADD, args, (cmd)->cmd.ftSugAddIncr(rawKey(key), value, score),
+					(cmd)->cmd.ftSugAddIncr(rawKey(key), value, score),
+					(cmd)->cmd.ftSugAddIncr(rawKey(key), value, score));
 		}else{
 			return ftSugAdd(rawKey(key), value, score, args);
 		}
@@ -107,6 +114,8 @@ public final class JedisAutoSuggestCommands extends AbstractJedisRedisCommands i
 
 		if(incr){
 			return executeCommand(RedisCommand.FT_SUGADD, args,
+					(cmd)->cmd.ftSugAddIncr(rawStringKey(key), SafeEncoder.encode(value), score),
+					(cmd)->cmd.ftSugAddIncr(rawStringKey(key), SafeEncoder.encode(value), score),
 					(cmd)->cmd.ftSugAddIncr(rawStringKey(key), SafeEncoder.encode(value), score));
 		}else{
 			return ftSugAdd(rawStringKey(key), SafeEncoder.encode(value), score, args);
@@ -129,6 +138,7 @@ public final class JedisAutoSuggestCommands extends AbstractJedisRedisCommands i
 	public Status ftSugDel(final String key, final String value) {
 		final CommandArguments args = CommandArguments.create(key, value);
 		return executeCommand(RedisCommand.FT_SUGDEL, args, (cmd)->cmd.ftSugDel(rawKey(key), value),
+				(cmd)->cmd.ftSugDel(rawKey(key), value), (cmd)->cmd.ftSugDel(rawKey(key), value),
 				new BooleanStatusConverter());
 	}
 
@@ -136,6 +146,8 @@ public final class JedisAutoSuggestCommands extends AbstractJedisRedisCommands i
 	public Status ftSugDel(final byte[] key, final byte[] value) {
 		final CommandArguments args = CommandArguments.create(key, value);
 		return executeCommand(RedisCommand.FT_SUGDEL, args,
+				(cmd)->cmd.ftSugDel(rawStringKey(key), SafeEncoder.encode(value)),
+				(cmd)->cmd.ftSugDel(rawStringKey(key), SafeEncoder.encode(value)),
 				(cmd)->cmd.ftSugDel(rawStringKey(key), SafeEncoder.encode(value)), new BooleanStatusConverter());
 	}
 
@@ -143,6 +155,7 @@ public final class JedisAutoSuggestCommands extends AbstractJedisRedisCommands i
 	public List<Suggestion> ftSugGet(final String key, final String prefix) {
 		final CommandArguments args = CommandArguments.create(key, prefix);
 		return executeCommand(RedisCommand.FT_SUGGET, args, (cmd)->cmd.ftSugGet(rawKey(key), prefix),
+				(cmd)->cmd.ftSugGet(rawKey(key), prefix), (cmd)->cmd.ftSugGet(rawKey(key), prefix),
 				(v)->v.stream().map((item)->new Suggestion(item, null)).collect(Collectors.toList()));
 	}
 
@@ -150,6 +163,8 @@ public final class JedisAutoSuggestCommands extends AbstractJedisRedisCommands i
 	public List<Suggestion> ftSugGet(final byte[] key, final byte[] prefix) {
 		final CommandArguments args = CommandArguments.create(key, prefix);
 		return executeCommand(RedisCommand.FT_SUGGET, args,
+				(cmd)->cmd.ftSugGet(rawStringKey(key), SafeEncoder.encode(prefix)),
+				(cmd)->cmd.ftSugGet(rawStringKey(key), SafeEncoder.encode(prefix)),
 				(cmd)->cmd.ftSugGet(rawStringKey(key), SafeEncoder.encode(prefix)),
 				(v)->v.stream().map((item)->new Suggestion(item, null)).collect(Collectors.toList()));
 	}
@@ -169,28 +184,36 @@ public final class JedisAutoSuggestCommands extends AbstractJedisRedisCommands i
 	@Override
 	public Long ftSugLen(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.FT_SUGLEN, args, (cmd)->cmd.ftSugLen(rawKey(key)));
+		return executeCommand(RedisCommand.FT_SUGLEN, args, (cmd)->cmd.ftSugLen(rawKey(key)),
+				(cmd)->cmd.ftSugLen(rawKey(key)), (cmd)->cmd.ftSugLen(rawKey(key)));
 	}
 
 	@Override
 	public Long ftSugLen(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.FT_SUGLEN, args, (cmd)->cmd.ftSugLen(rawStringKey(key)));
+		return executeCommand(RedisCommand.FT_SUGLEN, args, (cmd)->cmd.ftSugLen(rawStringKey(key)),
+				(cmd)->cmd.ftSugLen(rawStringKey(key)), (cmd)->cmd.ftSugLen(rawStringKey(key)));
 	}
 
 	private Long ftSugAdd(final String key, final String value, final double score, final CommandArguments args) {
-		return executeCommand(RedisCommand.FT_SUGADD, args, (cmd)->cmd.ftSugAdd(key, value, score));
+		return executeCommand(RedisCommand.FT_SUGADD, args, (cmd)->cmd.ftSugAdd(key, value, score),
+				(cmd)->cmd.ftSugAdd(key, value, score), (cmd)->cmd.ftSugAdd(key, value, score));
 	}
 
 	private List<Suggestion> ftSugGet(final String key, final String prefix, final SugGetArgument argument,
 	                                  final CommandArguments args) {
+		int max = argument.getMax().intValue();
 		if(argument != null && Boolean.TRUE.equals(argument.getWithScores())){
 			return executeCommand(RedisCommand.FT_SUGGET, args,
-					(cmd)->cmd.ftSugGetWithScores(key, prefix, argument.getFuzzy(),
-							argument.getMax().intValue()), new ListConverter<>(new TupleSuggestionConverter()));
+					(cmd)->cmd.ftSugGetWithScores(key, prefix, argument.getFuzzy(), max),
+					(cmd)->cmd.ftSugGetWithScores(key, prefix, argument.getFuzzy(), max),
+					(cmd)->cmd.ftSugGetWithScores(key, prefix, argument.getFuzzy(), max),
+					new ListConverter<>(new TupleSuggestionConverter()));
 		}else{
-			return executeCommand(RedisCommand.FT_SUGGET, args, (cmd)->cmd.ftSugGet(key, prefix,
-							argument.getFuzzy(), argument.getMax().intValue()),
+			return executeCommand(RedisCommand.FT_SUGGET, args,
+					(cmd)->cmd.ftSugGet(key, prefix, argument.getFuzzy(), max),
+					(cmd)->cmd.ftSugGet(key, prefix, argument.getFuzzy(), max),
+					(cmd)->cmd.ftSugGet(key, prefix, argument.getFuzzy(), max),
 					(v)->v.stream().map((item)->new Suggestion(item, null)).collect(Collectors.toList()));
 		}
 	}

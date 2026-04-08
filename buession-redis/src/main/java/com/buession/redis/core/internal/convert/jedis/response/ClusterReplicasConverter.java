@@ -27,8 +27,7 @@ package com.buession.redis.core.internal.convert.jedis.response;
 import com.buession.core.converter.Converter;
 import com.buession.core.utils.EnumUtils;
 import com.buession.core.utils.StringUtils;
-import com.buession.redis.core.ClusterRedisNode;
-import com.buession.redis.core.RedisClusterServer;
+import com.buession.redis.core.RedisClusterNode;
 import com.buession.redis.core.SlotRange;
 
 import java.util.Arrays;
@@ -36,15 +35,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Jedis Cluster Replicas 命令结果转换为 {@link RedisClusterServer}
+ * Jedis Cluster Replicas 命令结果转换为 {@link RedisClusterNode}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class ClusterReplicasConverter implements Converter<String, ClusterRedisNode> {
+public final class ClusterReplicasConverter implements Converter<String, RedisClusterNode> {
 
 	@Override
-	public ClusterRedisNode convert(final String source) {
+	public RedisClusterNode convert(final String source) {
 		if(source == null){
 			return null;
 		}
@@ -54,11 +53,11 @@ public final class ClusterReplicasConverter implements Converter<String, Cluster
 		String host = hostAndPort[0];
 		String port = hostAndPort[1].substring(0, hostAndPort[1].indexOf('@'));
 		String[] flagsValues = StringUtils.split(values[2], ':');
-		Set<ClusterRedisNode.Flag> flags =
-				Arrays.stream(flagsValues).map((v)->EnumUtils.getEnumIgnoreCase(ClusterRedisNode.Flag.class, v))
+		Set<RedisClusterNode.Flag> flags =
+				Arrays.stream(flagsValues).map((v)->EnumUtils.getEnumIgnoreCase(RedisClusterNode.Flag.class, v))
 						.collect(Collectors.toSet());
 
-		ClusterRedisNode.LinkState linkState = EnumUtils.getEnumIgnoreCase(ClusterRedisNode.LinkState.class, values[7]);
+		RedisClusterNode.LinkState linkState = EnumUtils.getEnumIgnoreCase(RedisClusterNode.LinkState.class, values[7]);
 		SlotRange slotRange = null;
 
 		if(values.length == 9){
@@ -66,7 +65,7 @@ public final class ClusterReplicasConverter implements Converter<String, Cluster
 			slotRange = new SlotRange(Integer.parseInt(slotRangeValues[0]), Integer.parseInt(slotRangeValues[1]));
 		}
 
-		return new ClusterRedisNode(values[0], host, Integer.parseInt(port), flags, values[3],
+		return new RedisClusterNode(values[0], host, Integer.parseInt(port), flags, values[3],
 				Long.parseLong(values[4]), Long.parseLong(values[5]), Long.parseLong(values[6]), linkState, slotRange);
 	}
 

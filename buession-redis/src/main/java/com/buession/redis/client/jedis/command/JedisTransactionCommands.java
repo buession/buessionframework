@@ -48,7 +48,7 @@ public final class JedisTransactionCommands extends AbstractJedisRedisCommands i
 
 	@Override
 	public Status discard() {
-		return executeCommand(RedisCommand.DISCARD, (cmd)->{
+		return executeCommand(RedisCommand.DISCARD, null, null, (cmd)->{
 			RedisConnection connection = client.getConnection();
 			return connection.discard();
 		});
@@ -56,36 +56,23 @@ public final class JedisTransactionCommands extends AbstractJedisRedisCommands i
 
 	@Override
 	public List<Object> exec() {
-		return executeCommand(RedisCommand.EXEC, (cmd)->{
+		return executeCommand(RedisCommand.EXEC, null, null, (cmd)->{
 			RedisConnection connection = client.getConnection();
 			return connection.exec();
-			/*
-			return new Response<>(new Builder<List<Object>>() {
-
-				@Override
-				public List<Object> build(Object data) {
-					return connection.exec();
-				}
-
-			});
-
-			 */
-		}, (v)->v);
+		});
 	}
 
 	@Override
 	public Status multi() {
-		//client.getConnection().multi();
-		//return Status.SUCCESS;
-		return executeCommand(RedisCommand.MULTI, (cmd)->{
-			cmd.multi();
+		return executeCommand(RedisCommand.MULTI, null, null, (cmd)->{
+			client.getConnection().multi();
 			return Status.SUCCESS;
 		});
 	}
 
 	@Override
 	public Status unwatch() {
-		return executeCommand(RedisCommand.UNWATCH, (cmd)->{
+		return executeCommand(RedisCommand.UNWATCH, null, null, (cmd)->{
 			//cmd.unwatch();
 			return Status.SUCCESS;
 		});
@@ -94,8 +81,8 @@ public final class JedisTransactionCommands extends AbstractJedisRedisCommands i
 	@Override
 	public Status watch(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.WATCH, args, (cmd)->{
-			//cmd.unwatch();
+		return executeCommand(RedisCommand.WATCH, args, null, null, (cmd)->{
+			//cmd.watch();
 			return Status.SUCCESS;
 		});
 	}
@@ -103,7 +90,7 @@ public final class JedisTransactionCommands extends AbstractJedisRedisCommands i
 	@Override
 	public Status watch(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.WATCH, args, (cmd)->{
+		return executeCommand(RedisCommand.WATCH, args, null, null, (cmd)->{
 			//cmd.unwatch();
 			return Status.SUCCESS;
 		});

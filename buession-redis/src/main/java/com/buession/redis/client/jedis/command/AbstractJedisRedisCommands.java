@@ -32,6 +32,9 @@ import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.RedisCommands;
 import com.buession.redis.core.command.RedisSubCommand;
+import redis.clients.jedis.Pipeline;
+import redis.clients.jedis.Response;
+import redis.clients.jedis.Transaction;
 import redis.clients.jedis.UnifiedJedis;
 
 /**
@@ -54,62 +57,134 @@ public abstract class AbstractJedisRedisCommands extends AbstractRedisCommands<J
 	}
 
 	protected <R> R executeCommand(final RedisCommand command) {
-		return client.execute(new JedisCommand<>(this.client, command));
+		if(isTransaction()){
+			return client.execute(new JedisTransactionCommand<>(client, command));
+		}else if(isPipeline()){
+			return client.execute(new JedisPipelineCommand<>(client, command));
+		}else{
+			return client.execute(new JedisCommand<>(client, command));
+		}
 	}
 
-	protected <R> R executeCommand(final RedisCommand command, final Command.Executor<UnifiedJedis, R> executor) {
-		return executeCommand(command, executor, (v)->v);
+	protected <R> R executeCommand(final RedisCommand command,
+	                               final Command.Executor<Transaction, Response<R>> transactionExecutor,
+	                               final Command.Executor<Pipeline, Response<R>> pipelineExecutor,
+	                               final Command.Executor<UnifiedJedis, R> executor) {
+		return executeCommand(command, transactionExecutor, pipelineExecutor, executor, (v)->v);
 	}
 
-	protected <SR, R> R executeCommand(final RedisCommand command, final Command.Executor<UnifiedJedis, SR> executor,
+	protected <SR, R> R executeCommand(final RedisCommand command,
+	                                   final Command.Executor<Transaction, Response<SR>> transactionExecutor,
+	                                   final Command.Executor<Pipeline, Response<SR>> pipelineExecutor,
+	                                   final Command.Executor<UnifiedJedis, SR> executor,
 	                                   final Converter<SR, R> converter) {
-		return client.execute(new JedisCommand<>(this.client, command, executor, converter));
+		if(isTransaction()){
+			System.out.println("AAAAA");
+			return client.execute(new JedisTransactionCommand<>(client, command, transactionExecutor, converter));
+		}else if(isPipeline()){
+			return client.execute(new JedisPipelineCommand<>(client, command, pipelineExecutor, converter));
+		}else{
+			return client.execute(new JedisCommand<>(client, command, executor, converter));
+		}
 	}
 
 	protected <R> R executeCommand(final RedisCommand command, final CommandArguments args) {
-		return client.execute(new JedisCommand<>(this.client, command), args);
+		if(isTransaction()){
+			return client.execute(new JedisTransactionCommand<>(client, command), args);
+		}else if(isPipeline()){
+			return client.execute(new JedisPipelineCommand<>(client, command), args);
+		}else{
+			return client.execute(new JedisCommand<>(client, command), args);
+		}
 	}
 
 	protected <R> R executeCommand(final RedisCommand command, final CommandArguments args,
+	                               final Command.Executor<Transaction, Response<R>> transactionExecutor,
+	                               final Command.Executor<Pipeline, Response<R>> pipelineExecutor,
 	                               final Command.Executor<UnifiedJedis, R> executor) {
-		return executeCommand(command, args, executor, (v)->v);
+		return executeCommand(command, args, transactionExecutor, pipelineExecutor, executor, (v)->v);
 	}
 
 	protected <SR, R> R executeCommand(final RedisCommand command, final CommandArguments args,
+	                                   final Command.Executor<Transaction, Response<SR>> transactionExecutor,
+	                                   final Command.Executor<Pipeline, Response<SR>> pipelineExecutor,
 	                                   final Command.Executor<UnifiedJedis, SR> executor,
 	                                   final Converter<SR, R> converter) {
-		return client.execute(new JedisCommand<>(this.client, command, executor, converter), args);
+		if(isTransaction()){
+			return client.execute(new JedisTransactionCommand<>(client, command, transactionExecutor, converter), args);
+		}else if(isPipeline()){
+			return client.execute(new JedisPipelineCommand<>(client, command, pipelineExecutor, converter), args);
+		}else{
+			return client.execute(new JedisCommand<>(client, command, executor, converter), args);
+		}
 	}
 
 	protected <R> R executeCommand(final RedisCommand command, final RedisSubCommand subCommand) {
-		return client.execute(new JedisCommand<>(this.client, command, subCommand));
+		if(isTransaction()){
+			return client.execute(new JedisTransactionCommand<>(client, command, subCommand));
+		}else if(isPipeline()){
+			return client.execute(new JedisPipelineCommand<>(client, command, subCommand));
+		}else{
+			return client.execute(new JedisCommand<>(client, command, subCommand));
+		}
 	}
 
 	protected <R> R executeCommand(final RedisCommand command, final RedisSubCommand subCommand,
+	                               final Command.Executor<Transaction, Response<R>> transactionExecutor,
+	                               final Command.Executor<Pipeline, Response<R>> pipelineExecutor,
 	                               final Command.Executor<UnifiedJedis, R> executor) {
-		return executeCommand(command, subCommand, executor, (v)->v);
+		return executeCommand(command, subCommand, transactionExecutor, pipelineExecutor, executor, (v)->v);
 	}
 
 	protected <SR, R> R executeCommand(final RedisCommand command, final RedisSubCommand subCommand,
+	                                   final Command.Executor<Transaction, Response<SR>> transactionExecutor,
+	                                   final Command.Executor<Pipeline, Response<SR>> pipelineExecutor,
 	                                   final Command.Executor<UnifiedJedis, SR> executor,
 	                                   final Converter<SR, R> converter) {
-		return client.execute(new JedisCommand<>(this.client, command, subCommand, executor, converter));
+		if(isTransaction()){
+			return client.execute(
+					new JedisTransactionCommand<>(client, command, subCommand, transactionExecutor, converter));
+		}else if(isPipeline()){
+			return client.execute(new JedisPipelineCommand<>(client, command, subCommand, pipelineExecutor, converter));
+		}else{
+			return client.execute(new JedisCommand<>(client, command, subCommand, executor, converter));
+		}
 	}
 
 	protected <R> R executeCommand(final RedisCommand command, final RedisSubCommand subCommand,
 	                               final CommandArguments args) {
-		return client.execute(new JedisCommand<>(this.client, command, subCommand), args);
+		if(isTransaction()){
+			return client.execute(new JedisTransactionCommand<>(client, command, subCommand), args);
+		}else if(isPipeline()){
+			return client.execute(new JedisPipelineCommand<>(client, command, subCommand), args);
+		}else{
+			return client.execute(new JedisCommand<>(client, command, subCommand), args);
+		}
 	}
 
 	protected <R> R executeCommand(final RedisCommand command, final RedisSubCommand subCommand,
-	                               final CommandArguments args, final Command.Executor<UnifiedJedis, R> executor) {
-		return executeCommand(command, subCommand, args, executor, (v)->v);
+	                               final CommandArguments args,
+	                               final Command.Executor<Transaction, Response<R>> transactionExecutor,
+	                               final Command.Executor<Pipeline, Response<R>> pipelineExecutor,
+	                               final Command.Executor<UnifiedJedis, R> executor) {
+		return executeCommand(command, subCommand, args, transactionExecutor, pipelineExecutor, executor, (v)->v);
 	}
 
 	protected <SR, R> R executeCommand(final RedisCommand command, final RedisSubCommand subCommand,
-	                                   final CommandArguments args, final Command.Executor<UnifiedJedis, SR> executor,
+	                                   final CommandArguments args,
+	                                   final Command.Executor<Transaction, Response<SR>> transactionExecutor,
+	                                   final Command.Executor<Pipeline, Response<SR>> pipelineExecutor,
+	                                   final Command.Executor<UnifiedJedis, SR> executor,
 	                                   final Converter<SR, R> converter) {
-		return client.execute(new JedisCommand<>(this.client, command, subCommand, executor, converter), args);
+		if(isTransaction()){
+			return client.execute(
+					new JedisTransactionCommand<>(client, command, subCommand, transactionExecutor, converter), args);
+		}else if(isPipeline()){
+			return client.execute(
+					new JedisPipelineCommand<>(client, command, subCommand, pipelineExecutor, converter), args);
+		}else{
+			return client.execute(new JedisCommand<>(client, command, subCommand, executor, converter), args);
+		}
 	}
 
 }

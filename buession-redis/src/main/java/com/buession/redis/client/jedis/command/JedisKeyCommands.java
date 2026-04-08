@@ -125,63 +125,73 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 	@Override
 	public Long del(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.DEL, args, (cmd)->cmd.del(rawKeys(keys)));
+		return executeCommand(RedisCommand.DEL, args, (cmd)->cmd.del(rawKeys(keys)), (cmd)->cmd.del(rawKeys(keys)),
+				(cmd)->cmd.del(rawKeys(keys)));
 	}
 
 	@Override
 	public Long del(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.DEL, args, (cmd)->cmd.del(rawKeys(keys)));
+		return executeCommand(RedisCommand.DEL, args, (cmd)->cmd.del(rawKeys(keys)), (cmd)->cmd.del(rawKeys(keys)),
+				(cmd)->cmd.del(rawKeys(keys)));
 	}
 
 	@Override
 	public String dump(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.DUMP, args, (cmd)->cmd.dump(rawKey(key)), SafeEncoder::encode);
+		return executeCommand(RedisCommand.DUMP, args, (cmd)->cmd.dump(rawKey(key)), (cmd)->cmd.dump(rawKey(key)),
+				(cmd)->cmd.dump(rawKey(key)), SafeEncoder::encode);
 	}
 
 	@Override
 	public byte[] dump(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.DUMP, args, (cmd)->cmd.dump(rawKey(key)));
+		return executeCommand(RedisCommand.DUMP, args, (cmd)->cmd.dump(rawKey(key)), (cmd)->cmd.dump(rawKey(key)),
+				(cmd)->cmd.dump(rawKey(key)));
 	}
 
 	@Override
 	public Boolean exists(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.EXISTS, args, (cmd)->cmd.exists(rawKey(key)));
+		return executeCommand(RedisCommand.EXISTS, args, (cmd)->cmd.exists(rawKey(key)), (cmd)->cmd.exists(rawKey(key)),
+				(cmd)->cmd.exists(rawKey(key)));
 	}
 
 	@Override
 	public Boolean exists(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.EXISTS, args, (cmd)->cmd.exists(rawKey(key)));
+		return executeCommand(RedisCommand.EXISTS, args, (cmd)->cmd.exists(rawKey(key)), (cmd)->cmd.exists(rawKey(key)),
+				(cmd)->cmd.exists(rawKey(key)));
 	}
 
 	@Override
 	public Long exists(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.EXISTS, args, (cmd)->cmd.exists(rawKeys(keys)));
+		return executeCommand(RedisCommand.EXISTS, args, (cmd)->cmd.exists(rawKeys(keys)),
+				(cmd)->cmd.exists(rawKeys(keys)), (cmd)->cmd.exists(rawKeys(keys)));
 	}
 
 	@Override
 	public Long exists(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.EXISTS, args, (cmd)->cmd.exists(rawKeys(keys)));
+		return executeCommand(RedisCommand.EXISTS, args, (cmd)->cmd.exists(rawKeys(keys)),
+				(cmd)->cmd.exists(rawKeys(keys)), (cmd)->cmd.exists(rawKeys(keys)));
 	}
 
 	@Override
 	public Status expire(final String key, final int lifetime) {
 		final CommandArguments args = CommandArguments.create(key).add(lifetime);
-		return executeCommand(
-				RedisCommand.EXPIRE, args, (cmd)->cmd.expire(rawKey(key), lifetime), new OneStatusConverter());
+		return executeCommand(RedisCommand.EXPIRE, args, (cmd)->cmd.expire(rawKey(key), lifetime),
+				(cmd)->cmd.expire(rawKey(key), lifetime), (cmd)->cmd.expire(rawKey(key), lifetime),
+				new OneStatusConverter());
 	}
 
 	@Override
 	public Status expire(final byte[] key, final int lifetime) {
 		final CommandArguments args = CommandArguments.create(key).add(lifetime);
-		return executeCommand(
-				RedisCommand.EXPIRE, args, (cmd)->cmd.expire(rawKey(key), lifetime), new OneStatusConverter());
+		return executeCommand(RedisCommand.EXPIRE, args, (cmd)->cmd.expire(rawKey(key), lifetime),
+				(cmd)->cmd.expire(rawKey(key), lifetime), (cmd)->cmd.expire(rawKey(key), lifetime),
+				new OneStatusConverter());
 	}
 
 	@Override
@@ -189,6 +199,8 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 		final CommandArguments args = CommandArguments.create(key).add(lifetime).add(expireOption);
 		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(RedisCommand.EXPIRE, args,
+				(cmd)->cmd.expire(rawKey(key), lifetime, expireOptionConverter.convert(expireOption)),
+				(cmd)->cmd.expire(rawKey(key), lifetime, expireOptionConverter.convert(expireOption)),
 				(cmd)->cmd.expire(rawKey(key), lifetime, expireOptionConverter.convert(expireOption)),
 				new OneStatusConverter());
 	}
@@ -199,6 +211,8 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(RedisCommand.EXPIRE, args,
 				(cmd)->cmd.expire(rawKey(key), lifetime, expireOptionConverter.convert(expireOption)),
+				(cmd)->cmd.expire(rawKey(key), lifetime, expireOptionConverter.convert(expireOption)),
+				(cmd)->cmd.expire(rawKey(key), lifetime, expireOptionConverter.convert(expireOption)),
 				new OneStatusConverter());
 	}
 
@@ -206,6 +220,7 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 	public Status expireAt(final String key, final long unixTimestamp) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp);
 		return executeCommand(RedisCommand.EXPIREAT, args, (cmd)->cmd.expireAt(rawKey(key), unixTimestamp),
+				(cmd)->cmd.expireAt(rawKey(key), unixTimestamp), (cmd)->cmd.expireAt(rawKey(key), unixTimestamp),
 				new OneStatusConverter());
 	}
 
@@ -213,6 +228,7 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 	public Status expireAt(final byte[] key, final long unixTimestamp) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp);
 		return executeCommand(RedisCommand.EXPIREAT, args, (cmd)->cmd.expireAt(rawKey(key), unixTimestamp),
+				(cmd)->cmd.expireAt(rawKey(key), unixTimestamp), (cmd)->cmd.expireAt(rawKey(key), unixTimestamp),
 				new OneStatusConverter());
 	}
 
@@ -221,6 +237,8 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(expireOption);
 		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(RedisCommand.EXPIREAT, args,
+				(cmd)->cmd.expireAt(rawKey(key), unixTimestamp, expireOptionConverter.convert(expireOption)),
+				(cmd)->cmd.expireAt(rawKey(key), unixTimestamp, expireOptionConverter.convert(expireOption)),
 				(cmd)->cmd.expireAt(rawKey(key), unixTimestamp, expireOptionConverter.convert(expireOption)),
 				new OneStatusConverter());
 	}
@@ -231,31 +249,37 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(RedisCommand.EXPIREAT, args,
 				(cmd)->cmd.expireAt(rawKey(key), unixTimestamp, expireOptionConverter.convert(expireOption)),
+				(cmd)->cmd.expireAt(rawKey(key), unixTimestamp, expireOptionConverter.convert(expireOption)),
+				(cmd)->cmd.expireAt(rawKey(key), unixTimestamp, expireOptionConverter.convert(expireOption)),
 				new OneStatusConverter());
 	}
 
 	@Override
 	public Long expireTime(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.EXPIRETIME, args, (cmd)->cmd.expireTime(rawKey(key)));
+		return executeCommand(RedisCommand.EXPIRETIME, args, (cmd)->cmd.expireTime(rawKey(key)),
+				(cmd)->cmd.expireTime(rawKey(key)), (cmd)->cmd.expireTime(rawKey(key)));
 	}
 
 	@Override
 	public Long expireTime(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.EXPIRETIME, args, (cmd)->cmd.expireTime(rawKey(key)));
+		return executeCommand(RedisCommand.EXPIRETIME, args, (cmd)->cmd.expireTime(rawKey(key)),
+				(cmd)->cmd.expireTime(rawKey(key)), (cmd)->cmd.expireTime(rawKey(key)));
 	}
 
 	@Override
 	public Set<String> keys(final String pattern) {
 		final CommandArguments args = CommandArguments.create(pattern);
-		return executeCommand(RedisCommand.KEYS, args, (cmd)->cmd.keys(pattern));
+		return executeCommand(RedisCommand.KEYS, args, (cmd)->cmd.keys(pattern), (cmd)->cmd.keys(pattern),
+				(cmd)->cmd.keys(pattern));
 	}
 
 	@Override
 	public Set<byte[]> keys(final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create(pattern);
-		return executeCommand(RedisCommand.KEYS, args, (cmd)->cmd.keys(pattern));
+		return executeCommand(RedisCommand.KEYS, args, (cmd)->cmd.keys(pattern), (cmd)->cmd.keys(pattern),
+				(cmd)->cmd.keys(pattern));
 	}
 
 	@Override
@@ -303,23 +327,24 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 	@Override
 	public ObjectEncoding objectEncoding(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(
-				RedisCommand.OBJECT, RedisSubCommand.OBJECT_ENCODING, args, (cmd)->cmd.objectEncoding(rawKey(key)),
-				new ObjectEncodingConverter());
+		return executeCommand(RedisCommand.OBJECT, RedisSubCommand.OBJECT_ENCODING, args,
+				(cmd)->cmd.objectEncoding(rawKey(key)), (cmd)->cmd.objectEncoding(rawKey(key)),
+				(cmd)->cmd.objectEncoding(rawKey(key)), new ObjectEncodingConverter());
 	}
 
 	@Override
 	public ObjectEncoding objectEncoding(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(
-				RedisCommand.OBJECT, RedisSubCommand.OBJECT_ENCODING, args, (cmd)->cmd.objectEncoding(rawKey(key)),
-				new BinaryObjectEncodingConverter());
+		return executeCommand(RedisCommand.OBJECT, RedisSubCommand.OBJECT_ENCODING, args,
+				(cmd)->cmd.objectEncoding(rawKey(key)), (cmd)->cmd.objectEncoding(rawKey(key)),
+				(cmd)->cmd.objectEncoding(rawKey(key)), new BinaryObjectEncodingConverter());
 	}
 
 	@Override
 	public Long objectFreq(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(RedisCommand.OBJECT, RedisSubCommand.OBJECT_FREQ, args,
+				(cmd)->cmd.objectFreq(rawKey(key)), (cmd)->cmd.objectFreq(rawKey(key)),
 				(cmd)->cmd.objectFreq(rawKey(key)));
 	}
 
@@ -327,6 +352,7 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 	public Long objectFreq(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(RedisCommand.OBJECT, RedisSubCommand.OBJECT_FREQ, args,
+				(cmd)->cmd.objectFreq(rawKey(key)), (cmd)->cmd.objectFreq(rawKey(key)),
 				(cmd)->cmd.objectFreq(rawKey(key)));
 	}
 
@@ -334,6 +360,7 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 	public Long objectIdleTime(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(RedisCommand.OBJECT, RedisSubCommand.OBJECT_IDLETIME, args,
+				(cmd)->cmd.objectFreq(rawKey(key)), (cmd)->cmd.objectFreq(rawKey(key)),
 				(cmd)->cmd.objectFreq(rawKey(key)));
 	}
 
@@ -341,39 +368,45 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 	public Long objectIdleTime(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(RedisCommand.OBJECT, RedisSubCommand.OBJECT_IDLETIME, args,
+				(cmd)->cmd.objectFreq(rawKey(key)), (cmd)->cmd.objectFreq(rawKey(key)),
 				(cmd)->cmd.objectFreq(rawKey(key)));
 	}
 
 	@Override
 	public Long objectRefcount(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(
-				RedisCommand.OBJECT, RedisSubCommand.OBJECT_REFCOUNT, args, (cmd)->cmd.objectRefcount(rawKey(key)));
+		return executeCommand(RedisCommand.OBJECT, RedisSubCommand.OBJECT_REFCOUNT, args,
+				(cmd)->cmd.objectRefcount(rawKey(key)), (cmd)->cmd.objectRefcount(rawKey(key)),
+				(cmd)->cmd.objectRefcount(rawKey(key)));
 	}
 
 	@Override
 	public Long objectRefcount(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(
-				RedisCommand.OBJECT, RedisSubCommand.OBJECT_REFCOUNT, args, (cmd)->cmd.objectRefcount(rawKey(key)));
+		return executeCommand(RedisCommand.OBJECT, RedisSubCommand.OBJECT_REFCOUNT, args,
+				(cmd)->cmd.objectRefcount(rawKey(key)), (cmd)->cmd.objectRefcount(rawKey(key)),
+				(cmd)->cmd.objectRefcount(rawKey(key)));
 	}
 
 	@Override
 	public Status persist(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.PERSIST, args, (cmd)->cmd.persist(rawKey(key)), new OneStatusConverter());
+		return executeCommand(RedisCommand.PERSIST, args, (cmd)->cmd.persist(rawKey(key)),
+				(cmd)->cmd.persist(rawKey(key)), (cmd)->cmd.persist(rawKey(key)), new OneStatusConverter());
 	}
 
 	@Override
 	public Status persist(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.PERSIST, args, (cmd)->cmd.persist(rawKey(key)), new OneStatusConverter());
+		return executeCommand(RedisCommand.PERSIST, args, (cmd)->cmd.persist(rawKey(key)),
+				(cmd)->cmd.persist(rawKey(key)), (cmd)->cmd.persist(rawKey(key)), new OneStatusConverter());
 	}
 
 	@Override
 	public Status pExpire(final String key, final int lifetime) {
 		final CommandArguments args = CommandArguments.create(key).add(lifetime);
 		return executeCommand(RedisCommand.PEXPIRE, args, (cmd)->cmd.pexpire(rawKey(key), lifetime),
+				(cmd)->cmd.pexpire(rawKey(key), lifetime), (cmd)->cmd.pexpire(rawKey(key), lifetime),
 				new OneStatusConverter());
 	}
 
@@ -381,6 +414,7 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 	public Status pExpire(final byte[] key, final int lifetime) {
 		final CommandArguments args = CommandArguments.create(key).add(lifetime);
 		return executeCommand(RedisCommand.PEXPIRE, args, (cmd)->cmd.pexpire(rawKey(key), lifetime),
+				(cmd)->cmd.pexpire(rawKey(key), lifetime), (cmd)->cmd.pexpire(rawKey(key), lifetime),
 				new OneStatusConverter());
 	}
 
@@ -389,6 +423,8 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 		final CommandArguments args = CommandArguments.create(key).add(lifetime).add(expireOption);
 		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(RedisCommand.PEXPIRE, args,
+				(cmd)->cmd.pexpire(rawKey(key), lifetime, expireOptionConverter.convert(expireOption)),
+				(cmd)->cmd.pexpire(rawKey(key), lifetime, expireOptionConverter.convert(expireOption)),
 				(cmd)->cmd.pexpire(rawKey(key), lifetime, expireOptionConverter.convert(expireOption)),
 				new OneStatusConverter());
 	}
@@ -399,6 +435,8 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(RedisCommand.PEXPIRE, args,
 				(cmd)->cmd.pexpire(rawKey(key), lifetime, expireOptionConverter.convert(expireOption)),
+				(cmd)->cmd.pexpire(rawKey(key), lifetime, expireOptionConverter.convert(expireOption)),
+				(cmd)->cmd.pexpire(rawKey(key), lifetime, expireOptionConverter.convert(expireOption)),
 				new OneStatusConverter());
 	}
 
@@ -406,6 +444,7 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 	public Status pExpireAt(final String key, final long unixTimestamp) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp);
 		return executeCommand(RedisCommand.PEXPIREAT, args, (cmd)->cmd.pexpireAt(rawKey(key), unixTimestamp),
+				(cmd)->cmd.pexpireAt(rawKey(key), unixTimestamp), (cmd)->cmd.pexpireAt(rawKey(key), unixTimestamp),
 				new OneStatusConverter());
 	}
 
@@ -413,6 +452,7 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 	public Status pExpireAt(final byte[] key, final long unixTimestamp) {
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp);
 		return executeCommand(RedisCommand.PEXPIREAT, args, (cmd)->cmd.pexpireAt(rawKey(key), unixTimestamp),
+				(cmd)->cmd.pexpireAt(rawKey(key), unixTimestamp), (cmd)->cmd.pexpireAt(rawKey(key), unixTimestamp),
 				new OneStatusConverter());
 	}
 
@@ -421,6 +461,8 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 		final CommandArguments args = CommandArguments.create(key).add(unixTimestamp).add(expireOption);
 		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(RedisCommand.PEXPIREAT, args,
+				(cmd)->cmd.pexpireAt(rawKey(key), unixTimestamp, expireOptionConverter.convert(expireOption)),
+				(cmd)->cmd.pexpireAt(rawKey(key), unixTimestamp, expireOptionConverter.convert(expireOption)),
 				(cmd)->cmd.pexpireAt(rawKey(key), unixTimestamp, expireOptionConverter.convert(expireOption)),
 				new OneStatusConverter());
 	}
@@ -431,56 +473,66 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 		final ExpireOptionConverter expireOptionConverter = new ExpireOptionConverter();
 		return executeCommand(RedisCommand.PEXPIREAT, args,
 				(cmd)->cmd.pexpireAt(rawKey(key), unixTimestamp, expireOptionConverter.convert(expireOption)),
+				(cmd)->cmd.pexpireAt(rawKey(key), unixTimestamp, expireOptionConverter.convert(expireOption)),
+				(cmd)->cmd.pexpireAt(rawKey(key), unixTimestamp, expireOptionConverter.convert(expireOption)),
 				new OneStatusConverter());
 	}
 
 	@Override
 	public Long pExpireTime(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.PEXPIRETIME, args, (cmd)->cmd.pexpireTime(rawKey(key)));
+		return executeCommand(RedisCommand.PEXPIRETIME, args, (cmd)->cmd.pexpireTime(rawKey(key)),
+				(cmd)->cmd.pexpireTime(rawKey(key)), (cmd)->cmd.pexpireTime(rawKey(key)));
 	}
 
 	@Override
 	public Long pExpireTime(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.PEXPIRETIME, args, (cmd)->cmd.pexpireTime(rawKey(key)));
+		return executeCommand(RedisCommand.PEXPIRETIME, args, (cmd)->cmd.pexpireTime(rawKey(key)),
+				(cmd)->cmd.pexpireTime(rawKey(key)), (cmd)->cmd.pexpireTime(rawKey(key)));
 	}
 
 	@Override
 	public Long pTtl(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.PTTL, args, (cmd)->cmd.pttl(rawKey(key)));
+		return executeCommand(RedisCommand.PTTL, args, (cmd)->cmd.pttl(rawKey(key)), (cmd)->cmd.pttl(rawKey(key)),
+				(cmd)->cmd.pttl(rawKey(key)));
 	}
 
 	@Override
 	public Long pTtl(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.PTTL, args, (cmd)->cmd.pttl(rawKey(key)));
+		return executeCommand(RedisCommand.PTTL, args, (cmd)->cmd.pttl(rawKey(key)), (cmd)->cmd.pttl(rawKey(key)),
+				(cmd)->cmd.pttl(rawKey(key)));
 	}
 
 	@Override
 	public String randomKey() {
-		return executeCommand(RedisCommand.RANDOMKEY, (cmd)->cmd.randomKey());
+		return executeCommand(RedisCommand.RANDOMKEY, (cmd)->cmd.randomKey(), (cmd)->cmd.randomKey(),
+				(cmd)->cmd.randomKey());
 	}
 
 	@Override
 	public Status rename(final String key, final String newKey) {
 		final CommandArguments args = CommandArguments.create(key).add(newKey);
-		return executeCommand(
-				RedisCommand.RENAME, args, (cmd)->cmd.rename(rawKey(key), newKey), new OkStatusConverter());
+		return executeCommand(RedisCommand.RENAME, args, (cmd)->cmd.rename(rawKey(key), newKey),
+				(cmd)->cmd.rename(rawKey(key), newKey), (cmd)->cmd.rename(rawKey(key), newKey),
+				new OkStatusConverter());
 	}
 
 	@Override
 	public Status rename(final byte[] key, final byte[] newKey) {
 		final CommandArguments args = CommandArguments.create(key).add(newKey);
-		return executeCommand(
-				RedisCommand.RENAME, args, (cmd)->cmd.rename(rawKey(key), newKey), new OkStatusConverter());
+		return executeCommand(RedisCommand.RENAME, args, (cmd)->cmd.rename(rawKey(key), newKey),
+				(cmd)->cmd.rename(rawKey(key), newKey), (cmd)->cmd.rename(rawKey(key), newKey),
+				new OkStatusConverter());
 	}
 
 	@Override
 	public Status renameNx(final String key, final String newKey) {
 		final CommandArguments args = CommandArguments.create(key).add(newKey);
 		return executeCommand(RedisCommand.RENAMENX, args, (cmd)->cmd.renamenx(rawKey(key), newKey),
+				(cmd)->cmd.renamenx(rawKey(key), newKey), (cmd)->cmd.renamenx(rawKey(key), newKey),
 				new OneStatusConverter());
 	}
 
@@ -488,6 +540,7 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 	public Status renameNx(final byte[] key, final byte[] newKey) {
 		final CommandArguments args = CommandArguments.create(key).add(newKey);
 		return executeCommand(RedisCommand.RENAMENX, args, (cmd)->cmd.renamenx(rawKey(key), newKey),
+				(cmd)->cmd.renamenx(rawKey(key), newKey), (cmd)->cmd.renamenx(rawKey(key), newKey),
 				new OneStatusConverter());
 	}
 
@@ -495,6 +548,8 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 	public Status restore(final String key, final byte[] serializedValue, final int ttl) {
 		final CommandArguments args = CommandArguments.create(key).add(serializedValue).add(ttl);
 		return executeCommand(RedisCommand.RESTORE, args, (cmd)->cmd.restore(rawKey(key), ttl, serializedValue),
+				(cmd)->cmd.restore(rawKey(key), ttl, serializedValue),
+				(cmd)->cmd.restore(rawKey(key), ttl, serializedValue),
 				new OkStatusConverter());
 	}
 
@@ -502,6 +557,8 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl) {
 		final CommandArguments args = CommandArguments.create(key).add(serializedValue).add(ttl);
 		return executeCommand(RedisCommand.RESTORE, args, (cmd)->cmd.restore(rawKey(key), ttl, serializedValue),
+				(cmd)->cmd.restore(rawKey(key), ttl, serializedValue),
+				(cmd)->cmd.restore(rawKey(key), ttl, serializedValue),
 				new OkStatusConverter());
 	}
 
@@ -510,6 +567,8 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 	                      final RestoreArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(serializedValue).add(ttl).add(argument);
 		return executeCommand(RedisCommand.RESTORE, args,
+				(cmd)->cmd.restore(rawKey(key), ttl, serializedValue, new JedisRestoreParams(argument)),
+				(cmd)->cmd.restore(rawKey(key), ttl, serializedValue, new JedisRestoreParams(argument)),
 				(cmd)->cmd.restore(rawKey(key), ttl, serializedValue, new JedisRestoreParams(argument)),
 				new OkStatusConverter());
 	}
@@ -520,19 +579,23 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 		final CommandArguments args = CommandArguments.create(key).add(serializedValue).add(ttl).add(argument);
 		return executeCommand(RedisCommand.RESTORE, args,
 				(cmd)->cmd.restore(rawKey(key), ttl, serializedValue, new JedisRestoreParams(argument)),
+				(cmd)->cmd.restore(rawKey(key), ttl, serializedValue, new JedisRestoreParams(argument)),
+				(cmd)->cmd.restore(rawKey(key), ttl, serializedValue, new JedisRestoreParams(argument)),
 				new OkStatusConverter());
 	}
 
 	@Override
 	public ScanResult<String> scan(final String cursor) {
 		final CommandArguments args = CommandArguments.create(cursor);
-		return executeCommand(RedisCommand.SCAN, args, (cmd)->cmd.scan(cursor), new ScanResultConverter<>((k)->k));
+		return executeCommand(RedisCommand.SCAN, args, (cmd)->cmd.scan(cursor), (cmd)->cmd.scan(cursor),
+				(cmd)->cmd.scan(cursor), new ScanResultConverter<>((k)->k));
 	}
 
 	@Override
 	public ScanResult<byte[]> scan(final byte[] cursor) {
 		final CommandArguments args = CommandArguments.create(cursor);
-		return executeCommand(RedisCommand.SCAN, args, (cmd)->cmd.scan(cursor), new ScanResultConverter<>((k)->k));
+		return executeCommand(RedisCommand.SCAN, args, (cmd)->cmd.scan(cursor), (cmd)->cmd.scan(cursor),
+				(cmd)->cmd.scan(cursor), new ScanResultConverter<>((k)->k));
 	}
 
 	@Override
@@ -576,13 +639,15 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 	@Override
 	public List<String> sort(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.SORT, args, (cmd)->cmd.sort(rawKey(key)));
+		return executeCommand(RedisCommand.SORT, args, (cmd)->cmd.sort(rawKey(key)), (cmd)->cmd.sort(rawKey(key)),
+				(cmd)->cmd.sort(rawKey(key)));
 	}
 
 	@Override
 	public List<byte[]> sort(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.SORT, args, (cmd)->cmd.sort(rawKey(key)));
+		return executeCommand(RedisCommand.SORT, args, (cmd)->cmd.sort(rawKey(key)), (cmd)->cmd.sort(rawKey(key)),
+				(cmd)->cmd.sort(rawKey(key)));
 	}
 
 	@Override
@@ -626,13 +691,15 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 	@Override
 	public Long sort(final String key, final String destKey) {
 		final CommandArguments args = CommandArguments.create(key).add("STORE", destKey);
-		return executeCommand(RedisCommand.SORT, args, (cmd)->cmd.sort(rawKey(key), rawKey(destKey)));
+		return executeCommand(RedisCommand.SORT, args, (cmd)->cmd.sort(rawKey(key), rawKey(destKey)),
+				(cmd)->cmd.sort(rawKey(key), rawKey(destKey)), (cmd)->cmd.sort(rawKey(key), rawKey(destKey)));
 	}
 
 	@Override
 	public Long sort(final byte[] key, final byte[] destKey) {
 		final CommandArguments args = CommandArguments.create(key).add("STORE", destKey);
-		return executeCommand(RedisCommand.SORT, args, (cmd)->cmd.sort(rawKey(key), rawKey(destKey)));
+		return executeCommand(RedisCommand.SORT, args, (cmd)->cmd.sort(rawKey(key), rawKey(destKey)),
+				(cmd)->cmd.sort(rawKey(key), rawKey(destKey)), (cmd)->cmd.sort(rawKey(key), rawKey(destKey)));
 	}
 
 	@Override
@@ -730,107 +797,127 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 	@Override
 	public Long touch(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.TOUCH, args, (cmd)->cmd.touch(rawKeys(keys)));
+		return executeCommand(RedisCommand.TOUCH, args, (cmd)->cmd.touch(rawKeys(keys)),
+				(cmd)->cmd.touch(rawKeys(keys)), (cmd)->cmd.touch(rawKeys(keys)));
 	}
 
 	@Override
 	public Long touch(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.TOUCH, args, (cmd)->cmd.touch(rawKeys(keys)));
+		return executeCommand(RedisCommand.TOUCH, args, (cmd)->cmd.touch(rawKeys(keys)),
+				(cmd)->cmd.touch(rawKeys(keys)), (cmd)->cmd.touch(rawKeys(keys)));
 	}
 
 	@Override
 	public Long ttl(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.TTL, args, (cmd)->cmd.ttl(rawKey(key)));
+		return executeCommand(RedisCommand.TTL, args, (cmd)->cmd.ttl(rawKey(key)), (cmd)->cmd.ttl(rawKey(key)),
+				(cmd)->cmd.ttl(rawKey(key)));
 	}
 
 	@Override
 	public Long ttl(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.TTL, args, (cmd)->cmd.ttl(rawKey(key)));
+		return executeCommand(RedisCommand.TTL, args, (cmd)->cmd.ttl(rawKey(key)), (cmd)->cmd.ttl(rawKey(key)),
+				(cmd)->cmd.ttl(rawKey(key)));
 	}
 
 	@Override
 	public Type type(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.TYPE, args, (cmd)->cmd.type(rawKey(key)), new TypeConverter());
+		return executeCommand(RedisCommand.TYPE, args, (cmd)->cmd.type(rawKey(key)), (cmd)->cmd.type(rawKey(key)),
+				(cmd)->cmd.type(rawKey(key)), new TypeConverter());
 	}
 
 	@Override
 	public Type type(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.TYPE, args, (cmd)->cmd.type(rawKey(key)), new TypeConverter());
+		return executeCommand(RedisCommand.TYPE, args, (cmd)->cmd.type(rawKey(key)), (cmd)->cmd.type(rawKey(key)),
+				(cmd)->cmd.type(rawKey(key)), new TypeConverter());
 	}
 
 	@Override
 	public Long unlink(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.UNLINK, args, (cmd)->cmd.unlink(rawKeys(keys)));
+		return executeCommand(RedisCommand.UNLINK, args, (cmd)->cmd.unlink(rawKeys(keys)),
+				(cmd)->cmd.unlink(rawKeys(keys)), (cmd)->cmd.unlink(rawKeys(keys)));
 	}
 
 	@Override
 	public Long unlink(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.UNLINK, args, (cmd)->cmd.unlink(rawKeys(keys)));
+		return executeCommand(RedisCommand.UNLINK, args, (cmd)->cmd.unlink(rawKeys(keys)),
+				(cmd)->cmd.unlink(rawKeys(keys)), (cmd)->cmd.unlink(rawKeys(keys)));
 	}
 
 	private Status copy(final String key, final String destKey, final boolean replace, final CommandArguments args) {
-		return executeCommand(
-				RedisCommand.COPY, args, (cmd)->cmd.copy(key, destKey, replace), new BooleanStatusConverter());
+		return executeCommand(RedisCommand.COPY, args, (cmd)->cmd.copy(key, destKey, replace),
+				(cmd)->cmd.copy(key, destKey, replace), (cmd)->cmd.copy(key, destKey, replace),
+				new BooleanStatusConverter());
 	}
 
 	private Status copy(final byte[] key, final byte[] destKey, final boolean replace, final CommandArguments args) {
-		return executeCommand(
-				RedisCommand.COPY, args, (cmd)->cmd.copy(key, destKey, replace), new BooleanStatusConverter());
+		return executeCommand(RedisCommand.COPY, args, (cmd)->cmd.copy(key, destKey, replace),
+				(cmd)->cmd.copy(key, destKey, replace), (cmd)->cmd.copy(key, destKey, replace),
+				new BooleanStatusConverter());
 	}
 
 	private Status migrate(final String host, final int port, final int db, final int timeout, final String[] keys,
 	                       final MigrateParams migrateParams, final CommandArguments args) {
 		return executeCommand(RedisCommand.MIGRATE, args, (cmd)->cmd.migrate(host, port, timeout, migrateParams, keys),
-				new OkStatusConverter());
+				(cmd)->cmd.migrate(host, port, timeout, migrateParams, keys),
+				(cmd)->cmd.migrate(host, port, timeout, migrateParams, keys), new OkStatusConverter());
 	}
 
 	private Status migrate(final String host, final int port, final int db, final int timeout, final byte[][] keys,
 	                       final MigrateParams migrateParams, final CommandArguments args) {
 		return executeCommand(RedisCommand.MIGRATE, args, (cmd)->cmd.migrate(host, port, timeout, migrateParams, keys),
-				new OkStatusConverter());
+				(cmd)->cmd.migrate(host, port, timeout, migrateParams, keys),
+				(cmd)->cmd.migrate(host, port, timeout, migrateParams, keys), new OkStatusConverter());
 	}
 
 	private ScanResult<String> scan(final String cursor, final ScanParams scanParams, final CommandArguments args) {
 		return executeCommand(RedisCommand.SCAN, args, (cmd)->cmd.scan(cursor, scanParams),
+				(cmd)->cmd.scan(cursor, scanParams), (cmd)->cmd.scan(cursor, scanParams),
 				new ScanResultConverter<>((k)->k));
 	}
 
 	private ScanResult<byte[]> scan(final byte[] cursor, final ScanParams scanParams, final CommandArguments args) {
 		return executeCommand(RedisCommand.SCAN, args, (cmd)->cmd.scan(cursor, scanParams),
+				(cmd)->cmd.scan(cursor, scanParams), (cmd)->cmd.scan(cursor, scanParams),
 				new ScanResultConverter<>((k)->k));
 	}
 
 	private List<String> sort(final String key, final SortingParams sortingParams, final CommandArguments args) {
-		return executeCommand(RedisCommand.SORT, args, (cmd)->cmd.sort(key, sortingParams));
+		return executeCommand(RedisCommand.SORT, args, (cmd)->cmd.sort(key, sortingParams),
+				(cmd)->cmd.sort(key, sortingParams), (cmd)->cmd.sort(key, sortingParams));
 	}
 
 	private List<byte[]> sort(final byte[] key, final SortingParams sortingParams, final CommandArguments args) {
-		return executeCommand(RedisCommand.SORT, args, (cmd)->cmd.sort(key, sortingParams));
+		return executeCommand(RedisCommand.SORT, args, (cmd)->cmd.sort(key, sortingParams),
+				(cmd)->cmd.sort(key, sortingParams), (cmd)->cmd.sort(key, sortingParams));
 	}
 
 	private Long sort(final String key, final String destKey, final SortingParams sortingParams,
 	                  final CommandArguments args) {
-		return executeCommand(RedisCommand.SORT, args, (cmd)->cmd.sort(key, sortingParams, destKey));
+		return executeCommand(RedisCommand.SORT, args, (cmd)->cmd.sort(key, sortingParams, destKey),
+				(cmd)->cmd.sort(key, sortingParams, destKey), (cmd)->cmd.sort(key, sortingParams, destKey));
 	}
 
 	private Long sort(final byte[] key, final byte[] destKey, final SortingParams sortingParams,
 	                  final CommandArguments args) {
-		return executeCommand(RedisCommand.SORT, args, (cmd)->cmd.sort(key, sortingParams, destKey));
+		return executeCommand(RedisCommand.SORT, args, (cmd)->cmd.sort(key, sortingParams, destKey),
+				(cmd)->cmd.sort(key, sortingParams, destKey), (cmd)->cmd.sort(key, sortingParams, destKey));
 	}
 
 	private List<String> sortRo(final String key, final SortingParams sortingParam, final CommandArguments args) {
-		return executeCommand(RedisCommand.SORT_RO, args, (cmd)->cmd.sortReadonly(key, sortingParam));
+		return executeCommand(RedisCommand.SORT_RO, args, (cmd)->cmd.sortReadonly(key, sortingParam),
+				(cmd)->cmd.sortReadonly(key, sortingParam), (cmd)->cmd.sortReadonly(key, sortingParam));
 	}
 
 	private List<byte[]> sortRo(final byte[] key, final SortingParams sortingParam, final CommandArguments args) {
-		return executeCommand(RedisCommand.SORT_RO, args, (cmd)->cmd.sortReadonly(key, sortingParam));
+		return executeCommand(RedisCommand.SORT_RO, args, (cmd)->cmd.sortReadonly(key, sortingParam),
+				(cmd)->cmd.sortReadonly(key, sortingParam), (cmd)->cmd.sortReadonly(key, sortingParam));
 	}
 
 }

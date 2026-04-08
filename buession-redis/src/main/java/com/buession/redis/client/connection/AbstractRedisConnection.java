@@ -87,7 +87,7 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	/**
 	 * 事务
 	 */
-	protected Transaction transaction;
+	protected volatile Transaction transaction;
 
 	/**
 	 * 管道
@@ -423,6 +423,16 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	@Override
 	public boolean isTransaction() {
 		return transaction != null;
+	}
+
+	@Override
+	public Transaction getTransaction() {
+		return transaction;
+	}
+
+	@Override
+	public Pipeline getPipeline() {
+		return pipeline;
 	}
 
 	@Override

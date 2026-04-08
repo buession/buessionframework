@@ -24,8 +24,6 @@
  */
 package com.buession.redis.core;
 
-import com.buession.redis.utils.ObjectStringBuilder;
-
 import java.util.Set;
 
 /**
@@ -34,44 +32,10 @@ import java.util.Set;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class ClusterRedisNode extends RedisNode {
+@Deprecated
+public class ClusterRedisNode extends RedisClusterNode {
 
 	private final static long serialVersionUID = -6841072654023820951L;
-
-	/**
-	 * Redis 服务器主机 IP 地址
-	 */
-	private final String ip;
-
-	/**
-	 * 标记位
-	 */
-	private final Set<Flag> flags;
-
-	/**
-	 * 最近一次发送 ping 的时间（unix 毫秒时间戳），0 代表没有发送过
-	 */
-	private final long pingSent;
-
-	/**
-	 * 最近一次收到 pong 的时间（unix 毫秒时间戳），0 代表没有接收过
-	 */
-	private final long pongSent;
-
-	/**
-	 * 节点的 epoch 值
-	 */
-	private final long configEpoch;
-
-	/**
-	 * node-to-node 集群总线使用的链接的状态
-	 */
-	private final LinkState linkState;
-
-	/**
-	 * 哈希槽值或者一个哈希槽范围
-	 */
-	private final SlotRange slot;
 
 	/**
 	 * 构造函数
@@ -98,185 +62,9 @@ public class ClusterRedisNode extends RedisNode {
 	 * 		哈希槽值或者一个哈希槽范围
 	 */
 	public ClusterRedisNode(final String id, final String ip, final int port, final Set<Flag> flags,
-							final String masterId, final long pingSent, final long pongSent, final long configEpoch,
-							final LinkState linkState, final SlotRange slot) {
-		super(ip, port);
-		setId(id);
-		this.ip = ip;
-		this.flags = flags;
-		setMasterId(masterId);
-		this.pingSent = pingSent;
-		this.pongSent = pongSent;
-		this.configEpoch = configEpoch;
-		this.linkState = linkState;
-		this.slot = slot;
-	}
-
-	/**
-	 * 返回客户端与节点通信使用的地址
-	 *
-	 * @return 客户端与节点通信使用的地址
-	 */
-	public String getIp() {
-		return ip;
-	}
-
-	/**
-	 * 返回标记位
-	 *
-	 * @return 标记位
-	 */
-	public Set<Flag> getFlags() {
-		return flags;
-	}
-
-	/**
-	 * 返回最近一次发送 ping 的时间（unix 毫秒时间戳），0 代表没有发送过
-	 *
-	 * @return 最近一次发送 ping 的时间（unix 毫秒时间戳），0 代表没有发送过
-	 */
-	public long getPingSent() {
-		return pingSent;
-	}
-
-	/**
-	 * 返回最近一次收到 pong 的时间（unix 毫秒时间戳），0 代表没有接收过
-	 *
-	 * @return 最近一次收到 pong 的时间（unix 毫秒时间戳），0 代表没有接收过
-	 */
-	public long getPongSent() {
-		return pongSent;
-	}
-
-	/**
-	 * 返回节点的 epoch 值
-	 *
-	 * @return 节点的 epoch 值
-	 */
-	public long getConfigEpoch() {
-		return configEpoch;
-	}
-
-	/**
-	 * 返回 node-to-node 集群总线使用的链接的状态
-	 *
-	 * @return node-to-node 集群总线使用的链接的状态
-	 */
-	public LinkState getLinkState() {
-		return linkState;
-	}
-
-	/**
-	 * 返回哈希槽值或者一个哈希槽范围
-	 *
-	 * @return 哈希槽值或者一个哈希槽范围
-	 */
-	public SlotRange getSlot() {
-		return slot;
-	}
-
-	@Override
-	public String toString() {
-		return ObjectStringBuilder.create()
-				.add("id", getId())
-				.add("host", getHost() + ":" + getPort())
-				.add("masterId", getMasterId())
-				.add("ping-sent", pingSent)
-				.add("pong-recv", pongSent)
-				.add("config-epoch", configEpoch)
-				.add("link-state", linkState)
-				.add("slot", slot)
-				.build();
-	}
-
-	/**
-	 * 标记位
-	 */
-	public enum Flag implements Keyword {
-
-		/**
-		 * 当前连接的节点
-		 */
-		MYSELF("myself"),
-
-		/**
-		 * master 节点
-		 */
-		MASTER("master"),
-
-		/**
-		 * slave 节点
-		 */
-		SLAVE("slave"),
-
-		/**
-		 * 节点处于 PFAIL 状态
-		 */
-		PFAIL("fail?"),
-
-		/**
-		 * 节点处于FAIL 状态
-		 */
-		FAIL(""),
-
-		/**
-		 * 还未取得信任的节点，当前正在与其进行握手
-		 */
-		HANDSHAKE("handshake"),
-
-		/**
-		 * 没有地址的节点
-		 */
-		NOADDR("noaddr"),
-
-		/**
-		 * 没有标记
-		 */
-		NOFLAGS("noflags");
-
-		private final String value;
-
-		Flag(final String value) {
-			this.value = value;
-		}
-
-		@Override
-		public String getValue() {
-			return value;
-		}
-
-		@Override
-		public String toString() {
-			return getValue();
-		}
-
-	}
-
-	/**
-	 * node-to-node 集群总线使用的链接的状态
-	 */
-	public enum LinkState implements Keyword {
-
-		CONNECTED("connected"),
-
-		DISCONNECTED("disconnected");
-
-		private final String value;
-
-		LinkState(final String value) {
-			this.value = value;
-		}
-
-		@Override
-		public String getValue() {
-			return value;
-		}
-
-		@Override
-		public String toString() {
-			return getValue();
-		}
-
+	                        final String masterId, final long pingSent, final long pongSent, final long configEpoch,
+	                        final LinkState linkState, final SlotRange slot) {
+		super(id, ip, port, flags, masterId, pingSent, pongSent, configEpoch, linkState, slot);
 	}
 
 }

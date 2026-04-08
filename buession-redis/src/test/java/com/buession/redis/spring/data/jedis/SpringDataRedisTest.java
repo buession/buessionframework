@@ -19,25 +19,45 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.transaction.lettuce;
+package com.buession.redis.spring.data.jedis;
 
-import com.buession.redis.core.internal.lettuce.LettuceResult;
-import com.buession.redis.transaction.AbstractTransactionProxy;
-import com.buession.redis.transaction.Transaction;
-import io.lettuce.core.api.sync.RedisCommands;
+import org.junit.jupiter.api.Test;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.StringRedisTemplate;
+
+import java.time.Duration;
+import java.util.List;
 
 /**
+ *
+ *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public class LettuceTransactionProxy
-		extends AbstractTransactionProxy<RedisCommands<byte[], byte[]>, LettuceResult<?, ?>> {
+public class SpringDataRedisTest {
 
-	public LettuceTransactionProxy(final Transaction target, final RedisCommands<byte[], byte[]> object) {
-		super(target, object);
+	@Test
+	public void exec() {
+		RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration("192.168.0.161", 30341);
+		JedisConnectionFactory connectionFactory = new JedisConnectionFactory(configuration);
+
+		connectionFactory.start();
+
+		StringRedisTemplate redisTemplate = new StringRedisTemplate(connectionFactory);
+
+		redisTemplate.afterPropertiesSet();
+
+		redisTemplate.multi();
+		redisTemplate.opsForValue().set("a", "Jedis");
+		redisTemplate.opsForValue().set("b", "Jedis");
+		redisTemplate.expire("a", Duration.ofSeconds(30));
+		String ret = redisTemplate.opsForValue().get("a");
+		List<Object> result = redisTemplate.exec();
+		System.out.println(result);
 	}
 
 }

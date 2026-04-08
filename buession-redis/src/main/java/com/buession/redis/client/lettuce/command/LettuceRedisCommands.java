@@ -28,7 +28,6 @@ import com.buession.core.converter.Converter;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.lettuce.LettuceRedisConnection;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
-import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.RedisSubCommand;
 import com.buession.redis.core.internal.lettuce.LettuceResult;
@@ -113,58 +112,6 @@ public interface LettuceRedisCommands extends com.buession.redis.core.command.Re
 
 			return (RedisCommands<K, V>) Proxy.newProxyInstance(RedisCommands.class.getClassLoader(),
 					new Class[]{RedisCommands.class}, handler);
-		}
-
-	}
-
-	abstract class PtRunner<T, SR, R> implements Command.Runner<LettuceResult<SR, R>> {
-
-		protected final Command.Executor<T, RedisFuture<SR>> executor;
-
-		protected final T context;
-
-		protected final Converter<SR, R> converter;
-
-		public PtRunner(final Command.Executor<T, RedisFuture<SR>> executor, final T context,
-		                final Converter<SR, R> converter) {
-			this.executor = executor;
-			this.context = context;
-			this.converter = converter;
-		}
-
-		@Override
-		public LettuceResult<SR, R> run() throws RedisException {
-			final RedisFuture<SR> future = executor.execute(context);
-			return converter == null ? newLettuceResult(future) : newLettuceResult(future, converter);
-		}
-
-		protected LettuceResult<SR, R> newLettuceResult(final RedisFuture<SR> future) {
-			return LettuceResult.Builder.<SR, R>fromRedisFuture(future).build();
-		}
-
-		protected LettuceResult<SR, R> newLettuceResult(final RedisFuture<SR> future,
-		                                                final Converter<SR, R> converter) {
-			return LettuceResult.Builder.<SR, R>fromRedisFuture(future).mappedWith(converter).build();
-		}
-
-	}
-
-	final class PipelineRunner<T, SR, R> extends PtRunner<T, SR, R> {
-
-		public PipelineRunner(final Command.Executor<T, RedisFuture<SR>> executor,
-		                      final PipelineProxy<T, LettuceResult<SR, R>> pipelineFactory,
-		                      final Converter<SR, R> converter) {
-			super(executor, pipelineFactory.getObject(), converter);
-		}
-
-	}
-
-	final class TransactionRunner<T, SR, R> extends PtRunner<T, SR, R> {
-
-		public TransactionRunner(final Command.Executor<T, RedisFuture<SR>> executor,
-		                         final TransactionProxy<T, LettuceResult<SR, R>> transactionProxy,
-		                         final Converter<SR, R> converter) {
-			super(executor, transactionProxy.getObject(), converter);
 		}
 
 	}

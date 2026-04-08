@@ -306,7 +306,7 @@ public final class JedisServerCommands extends AbstractJedisRedisCommands implem
 
 	@Override
 	public Long dbSize() {
-		return executeCommand(RedisCommand.DBSIZE, (cmd)->cmd.dbSize());
+		return executeCommand(RedisCommand.DBSIZE, null, (cmd)->cmd.dbSize(), (cmd)->cmd.dbSize());
 	}
 
 	@Override
@@ -322,24 +322,27 @@ public final class JedisServerCommands extends AbstractJedisRedisCommands implem
 
 	@Override
 	public Status flushAll() {
-		return executeCommand(RedisCommand.FLUSHALL, (cmd)->cmd.flushAll(), new OkStatusConverter());
+		return executeCommand(RedisCommand.FLUSHALL, null, null, (cmd)->cmd.flushAll(),
+				new OkStatusConverter());
 	}
 
 	@Override
 	public Status flushAll(final FlushMode mode) {
 		final CommandArguments args = CommandArguments.create(mode);
-		return executeCommand(RedisCommand.FLUSHALL, args, (cmd)->cmd.flushAll(), new OkStatusConverter());
+		return executeCommand(RedisCommand.FLUSHALL, args, null, null, (cmd)->cmd.flushAll(),
+				new OkStatusConverter());
 	}
 
 	@Override
 	public Status flushDb() {
-		return executeCommand(RedisCommand.FLUSHDB, (cmd)->cmd.flushDB(), new OkStatusConverter());
+		return executeCommand(RedisCommand.FLUSHDB, null, null, (cmd)->cmd.flushDB(),
+				new OkStatusConverter());
 	}
 
 	@Override
 	public Status flushDb(final FlushMode mode) {
 		final CommandArguments args = CommandArguments.create(mode);
-		return executeCommand(RedisCommand.FLUSHDB, args, (cmd)->cmd.flushDB(), new OkStatusConverter());
+		return executeCommand(RedisCommand.FLUSHDB, args, null, null, (cmd)->cmd.flushDB(), new OkStatusConverter());
 	}
 
 	@Override
@@ -371,14 +374,15 @@ public final class JedisServerCommands extends AbstractJedisRedisCommands implem
 
 	@Override
 	public Info info() {
-		return executeCommand(RedisCommand.INFO, (cmd)->cmd.info(), new InfoConverter());
+		return executeCommand(RedisCommand.INFO, null, null, (cmd)->cmd.info(), new InfoConverter());
 	}
 
 	@Override
 	public Info info(final Info.Section section) {
 		final CommandArguments args = CommandArguments.create(section);
 		return executeCommand(
-				RedisCommand.INFO, args, (cmd)->cmd.info(section.name().toLowerCase()), new InfoConverter());
+				RedisCommand.INFO, args, null, null,
+				(cmd)->cmd.info(section.name().toLowerCase()), new InfoConverter());
 	}
 
 	@Override
@@ -464,6 +468,7 @@ public final class JedisServerCommands extends AbstractJedisRedisCommands implem
 	public Long memoryUsage(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(RedisCommand.MEMORY, RedisSubCommand.MEMORY_USAGE, args,
+				(cmd)->cmd.memoryUsage(rawKey(key)), (cmd)->cmd.memoryUsage(rawKey(key)),
 				(cmd)->cmd.memoryUsage(rawKey(key)));
 	}
 
@@ -471,6 +476,7 @@ public final class JedisServerCommands extends AbstractJedisRedisCommands implem
 	public Long memoryUsage(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(RedisCommand.MEMORY, RedisSubCommand.MEMORY_USAGE, args,
+				(cmd)->cmd.memoryUsage(rawKey(key)), (cmd)->cmd.memoryUsage(rawKey(key)),
 				(cmd)->cmd.memoryUsage(rawKey(key)));
 	}
 
@@ -478,6 +484,8 @@ public final class JedisServerCommands extends AbstractJedisRedisCommands implem
 	public Long memoryUsage(final String key, final int samples) {
 		final CommandArguments args = CommandArguments.create(key).add("SAMPLES", samples);
 		return executeCommand(RedisCommand.MEMORY, RedisSubCommand.MEMORY_USAGE, args,
+				(cmd)->cmd.memoryUsage(rawKey(key), samples),
+				(cmd)->cmd.memoryUsage(rawKey(key), samples),
 				(cmd)->cmd.memoryUsage(rawKey(key), samples));
 	}
 
@@ -485,6 +493,8 @@ public final class JedisServerCommands extends AbstractJedisRedisCommands implem
 	public Long memoryUsage(final byte[] key, final int samples) {
 		final CommandArguments args = CommandArguments.create(key).add("SAMPLES", samples);
 		return executeCommand(RedisCommand.MEMORY, RedisSubCommand.MEMORY_USAGE, args,
+				(cmd)->cmd.memoryUsage(rawKey(key), samples),
+				(cmd)->cmd.memoryUsage(rawKey(key), samples),
 				(cmd)->cmd.memoryUsage(rawKey(key), samples));
 	}
 

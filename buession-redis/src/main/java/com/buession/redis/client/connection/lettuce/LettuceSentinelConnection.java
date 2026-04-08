@@ -44,9 +44,9 @@ import com.buession.redis.core.internal.lettuce.LettuceClientConfigBuilder;
 import com.buession.redis.exception.LettuceRedisExceptionUtils;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
+import com.buession.redis.transaction.DefaultTransactionProxy;
 import com.buession.redis.transaction.Transaction;
 import com.buession.redis.transaction.lettuce.LettuceTransaction;
-import com.buession.redis.transaction.lettuce.LettuceTransactionProxy;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.LettuceClientConfig;
 import io.lettuce.core.LettucePoolConfig;
@@ -609,7 +609,7 @@ public class LettuceSentinelConnection
 		if(transaction == null){
 			final RedisCommands<byte[], byte[]> commands = null;//conn.sync();
 			commands.multi();
-			transaction = new LettuceTransactionProxy(new LettuceTransaction(commands), commands);
+			transaction = new DefaultTransactionProxy<>(new LettuceTransaction(commands), commands);
 		}
 
 		return transaction;

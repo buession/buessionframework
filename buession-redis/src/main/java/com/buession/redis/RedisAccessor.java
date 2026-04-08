@@ -251,7 +251,7 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 		try{
 			return callback.execute(client);
 		}finally{
-			RedisConnectionUtils.releaseConnection(connectionFactory, connection, enableTransactionSupport);
+			//RedisConnectionUtils.releaseConnection(connectionFactory, connection, enableTransactionSupport);
 		}
 	}
 
@@ -269,7 +269,7 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 		try{
 			return converter.convert(connection, callback.execute(client));
 		}finally{
-			RedisConnectionUtils.releaseConnection(connectionFactory, connection, enableTransactionSupport);
+			//RedisConnectionUtils.releaseConnection(connectionFactory, connection, enableTransactionSupport);
 		}
 	}
 

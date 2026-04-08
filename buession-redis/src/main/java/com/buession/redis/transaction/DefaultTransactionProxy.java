@@ -22,22 +22,24 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.transaction.jedis;
+package com.buession.redis.transaction;
 
-import com.buession.redis.core.internal.jedis.JedisResult;
-import com.buession.redis.transaction.AbstractTransactionProxy;
-import com.buession.redis.transaction.Transaction;
+import com.buession.redis.core.FutureResult;
 
 /**
- * Jedis 事务代理类
+ * 默认事务代理类
+ *
+ * @param <T>
+ * 		原生事务类型
+ * @param <FR>
+ * 		事务异步结果
  *
  * @author Yong.Teng
- * @since 3.0.0
+ * @since 4.0.0
  */
-public class JedisTransactionProxy
-		extends AbstractTransactionProxy<redis.clients.jedis.AbstractTransaction, JedisResult<?, ?>> {
+public class DefaultTransactionProxy<T, FR extends FutureResult<?>> extends AbstractTransactionProxy<T, FR> {
 
-	public JedisTransactionProxy(final Transaction target, final redis.clients.jedis.AbstractTransaction object) {
+	public DefaultTransactionProxy(final Transaction target, final T object) {
 		super(target, object);
 	}
 

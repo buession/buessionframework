@@ -24,6 +24,7 @@
  */
 package com.buession.redis.client.connection.jedis;
 
+import com.buession.core.utils.FieldUtils;
 import com.buession.redis.client.connection.AbstractRedisConnection;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.datasource.DataSource;
@@ -33,13 +34,15 @@ import com.buession.redis.exception.JedisRedisExceptionUtils;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.jedis.JedisPipeline;
-import com.buession.redis.pipeline.jedis.JedisPipelineProxy;
+import com.buession.redis.pipeline.DefaultPipelineProxy;
 import com.buession.redis.transaction.Transaction;
 import com.buession.redis.transaction.jedis.JedisTransaction;
-import com.buession.redis.transaction.jedis.JedisTransactionProxy;
+import com.buession.redis.transaction.DefaultTransactionProxy;
+import redis.clients.jedis.Connection;
 import redis.clients.jedis.ConnectionPoolConfig;
 import redis.clients.jedis.UnifiedJedis;
 import redis.clients.jedis.csc.CacheConfig;
+import redis.clients.jedis.providers.ConnectionProvider;
 
 import java.io.IOException;
 
@@ -54,6 +57,8 @@ import java.io.IOException;
 public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> extends AbstractRedisConnection
 		implements JedisRedisConnection<C> {
 
+	private ConnectionProvider connectionProvider;
+
 	/**
 	 * Jedis 原生客户端
 	 *
@@ -67,6 +72,8 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 	 * @since 4.0.0
 	 */
 	private CacheConfig cacheConfig;
+
+	private boolean connectionProviderInitialized = false;
 
 	/**
 	 * 构造函数
@@ -302,7 +309,7 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 	public Pipeline openPipeline() {
 		if(this.pipeline == null){
 			final redis.clients.jedis.AbstractPipeline pipeline = client.pipelined();
-			this.pipeline = new JedisPipelineProxy<>(new JedisPipeline(pipeline), pipeline);
+			this.pipeline = new DefaultPipelineProxy<>(new JedisPipeline(pipeline), pipeline);
 		}
 
 		return this.pipeline;
@@ -312,7 +319,7 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 	public Transaction multi() {
 		if(this.transaction == null){
 			final redis.clients.jedis.AbstractTransaction transaction = client.multi();
-			this.transaction = new JedisTransactionProxy(new JedisTransaction(transaction), transaction);
+			this.transaction = new DefaultTransactionProxy<>(new JedisTransaction(transaction), transaction);
 		}
 
 		return this.transaction;
@@ -320,12 +327,40 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 
 	@Override
 	public boolean isConnected() {
-		return client != null;
+		if(client == null){
+			return false;
+		}
+
+		final ConnectionProvider connectionProvider = getConnectionProvider();
+		if(connectionProvider == null){
+			return false;
+		}
+
+		final Connection connection = connectionProvider.getConnection();
+		if(connection == null){
+			return false;
+		}
+
+		return connection.isConnected();
 	}
 
 	@Override
 	public boolean isClosed() {
-		return client == null;
+		if(client == null){
+			return true;
+		}
+
+		final ConnectionProvider connectionProvider = getConnectionProvider();
+		if(connectionProvider == null){
+			return true;
+		}
+
+		final Connection connection = connectionProvider.getConnection();
+		if(connection == null){
+			return true;
+		}
+
+		return connection.isConnected() == false;
 	}
 
 	protected ConnectionPoolConfig getConnectionPoolConfig() {
@@ -349,8 +384,23 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 	protected void internalInit() {
 	}
 
+	protected ConnectionProvider getConnectionProvider() {
+		if(connectionProvider == null && connectionProviderInitialized == false){
+			connectionProviderInitialized = true;
+			try{
+				connectionProvider = (ConnectionProvider) FieldUtils.readField(client, "provider", true);
+			}catch(IllegalAccessException e){
+				//
+			}
+		}
+		return connectionProvider;
+	}
+
 	@Override
 	protected void doDestroy() throws IOException {
+		if(client != null){
+			client.close();
+		}
 		doClose();
 
 		if(logger.isInfoEnabled()){
@@ -363,6 +413,10 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 		if(pipeline != null){
 			pipeline.close();
 			pipeline = null;
+		}
+		if(transaction != null){
+			transaction.close();
+			transaction = null;
 		}
 
 		if(logger.isInfoEnabled()){

@@ -89,27 +89,4 @@ public interface Command<CONN extends RedisConnection, R> {
 
 	}
 
-	/**
-	 * Redis 命令运行器
-	 *
-	 * @param <R>
-	 * 		命令运行结果类型
-	 *
-	 * @author Yong.Teng
-	 */
-	@FunctionalInterface
-	interface Runner<R> {
-
-		/**
-		 * 运行 Redis 命令
-		 *
-		 * @return Redis 命令运行结果
-		 *
-		 * @throws RedisException
-		 * 		Redis 命令运行异常
-		 */
-		R run() throws RedisException;
-
-	}
-
 }

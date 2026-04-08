@@ -46,13 +46,17 @@ public final class JedisGenericCommands extends AbstractJedisRedisCommands imple
 	@Override
 	public Long wait(final int replicas, final int timeout) {
 		final CommandArguments args = CommandArguments.create(replicas).add(timeout);
-		return executeCommand(RedisCommand.WAIT, args, (cmd)->cmd.waitReplicas((String) null, replicas, timeout));
+		return executeCommand(RedisCommand.WAIT, args, (cmd)->cmd.waitReplicas((String) null, replicas, timeout),
+				(cmd)->cmd.waitReplicas((String) null, replicas, timeout),
+				(cmd)->cmd.waitReplicas((String) null, replicas, timeout));
 	}
 
 	@Override
 	public KeyValue<Long, Long> waitOf(final int locals, final int replicas, final int timeout) {
 		final CommandArguments args = CommandArguments.create(locals).add(replicas).add(timeout);
 		return executeCommand(RedisCommand.WAITOF, args,
+				(cmd)->cmd.waitAOF((String) null, locals, replicas, timeout),
+				(cmd)->cmd.waitAOF((String) null, locals, replicas, timeout),
 				(cmd)->cmd.waitAOF((String) null, locals, replicas, timeout), new KeyValueConverter<>((k)->k, (v)->v));
 	}
 

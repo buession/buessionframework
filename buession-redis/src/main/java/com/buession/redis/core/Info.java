@@ -35,7 +35,6 @@ import com.buession.net.HostAndPort;
 import com.buession.redis.utils.ObjectStringBuilder;
 import org.apache.commons.lang3.arch.Processor;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -69,7 +68,7 @@ import java.util.Properties;
  * @author Yong.Teng
  */
 public record Info(Server server, Clients clients, Memory memory, Persistence persistence, Stats stats,
-				   Replication replication, Sentinel sentinel, Cluster cluster, Cpu cpu, List<Keyspace> keyspace) {
+                   Replication replication, Sentinel sentinel, Cluster cluster, Cpu cpu, List<Keyspace> keyspace) {
 
 	public String toPrettyString() {
 		final StringBuilder sb = new StringBuilder();
@@ -2016,6 +2015,8 @@ public record Info(Server server, Clients clients, Memory memory, Persistence pe
 
 		public final static class Slave extends RedisServer {
 
+			private final static long serialVersionUID = 8871476498024081281L;
+
 			private final Properties properties;
 
 			public Slave(final Properties properties) {
@@ -2267,6 +2268,8 @@ public record Info(Server server, Clients clients, Memory memory, Persistence pe
 		}
 
 		public final static class Master extends RedisNode {
+
+			private final static long serialVersionUID = 2956476882682914281L;
 
 			private final Properties properties;
 

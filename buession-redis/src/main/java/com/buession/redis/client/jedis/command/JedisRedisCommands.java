@@ -28,15 +28,17 @@ import com.buession.core.converter.Converter;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.jedis.JedisRedisConnection;
 import com.buession.redis.client.jedis.JedisRedisClient;
-import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.RedisCommands;
 import com.buession.redis.core.command.RedisSubCommand;
 import com.buession.redis.core.internal.jedis.JedisResult;
+import com.buession.redis.exception.NotMultiRedisException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.PipelineProxy;
 import com.buession.redis.transaction.TransactionProxy;
+import redis.clients.jedis.Pipeline;
 import redis.clients.jedis.Response;
+import redis.clients.jedis.Transaction;
 import redis.clients.jedis.UnifiedJedis;
 
 /**
@@ -46,6 +48,38 @@ import redis.clients.jedis.UnifiedJedis;
  * @since 4.0.0
  */
 public interface JedisRedisCommands extends RedisCommands {
+
+	abstract class AbstractPipelineCommand<CXT, OSR, SR, R> extends AbstractCommand<JedisRedisClient, CXT, OSR, SR, R> {
+
+		public AbstractPipelineCommand(final JedisRedisClient client, final RedisCommand command) {
+			super(client, command);
+		}
+
+		public AbstractPipelineCommand(final JedisRedisClient client, final RedisCommand command,
+		                               final Executor<CXT, OSR> executor, final Converter<SR, R> converter) {
+			super(client, command, executor, converter);
+		}
+
+		public AbstractPipelineCommand(final JedisRedisClient client, final RedisCommand command,
+		                               final RedisSubCommand subCommand) {
+			super(client, command, subCommand);
+		}
+
+		public AbstractPipelineCommand(final JedisRedisClient client, final RedisCommand command,
+		                               final RedisSubCommand subCommand, final Executor<CXT, OSR> executor,
+		                               final Converter<SR, R> converter) {
+			super(client, command, subCommand, executor, converter);
+		}
+
+		protected JedisResult<SR, R> newJedisResult(final Response<SR> response) {
+			return JedisResult.Builder.<SR, R>fromResponse(response).build();
+		}
+
+		protected JedisResult<SR, R> newJedisResult(final Response<SR> response, final Converter<SR, R> converter) {
+			return JedisResult.Builder.<SR, R>fromResponse(response).mappedWith(converter).build();
+		}
+
+	}
 
 	/**
 	 * Jedis 命令
@@ -86,53 +120,108 @@ public interface JedisRedisCommands extends RedisCommands {
 
 	}
 
-	abstract class PtRunner<T, SR, R> implements Command.Runner<JedisResult<SR, R>> {
+	/**
+	 * Jedis 事务命令
+	 *
+	 * @param <SR>
+	 * 		原始类型
+	 * @param <R>
+	 * 		返回类型
+	 *
+	 * @since 4.0.0
+	 */
+	final class JedisTransactionCommand<SR, R> extends AbstractPipelineCommand<Transaction, Response<SR>, SR, R> {
 
-		protected final Command.Executor<T, Response<SR>> executor;
+		public JedisTransactionCommand(final JedisRedisClient client, final RedisCommand command) {
+			super(client, command);
+		}
 
-		protected final T context;
+		public JedisTransactionCommand(final JedisRedisClient client, final RedisCommand command,
+		                               final Executor<Transaction, Response<SR>> executor,
+		                               final Converter<SR, R> converter) {
+			super(client, command, executor, converter);
+		}
 
-		protected final Converter<SR, R> converter;
+		public JedisTransactionCommand(final JedisRedisClient client, final RedisCommand command,
+		                               final RedisSubCommand subCommand) {
+			super(client, command, subCommand);
+		}
 
-		public PtRunner(final Command.Executor<T, Response<SR>> executor, final T context,
-		                final Converter<SR, R> converter) {
-			this.executor = executor;
-			this.context = context;
-			this.converter = converter;
+		public JedisTransactionCommand(final JedisRedisClient client, final RedisCommand command,
+		                               final RedisSubCommand subCommand,
+		                               final Executor<Transaction, Response<SR>> executor,
+		                               final Converter<SR, R> converter) {
+			super(client, command, subCommand, executor, converter);
 		}
 
 		@Override
-		public JedisResult<SR, R> run() throws RedisException {
-			final Response<SR> response = executor.execute(context);
-			return converter == null ? newJedisResult(response) : newJedisResult(response, converter);
-		}
+		protected R doExecute(final RedisConnection conn) throws RedisException {
+			com.buession.redis.transaction.Transaction transaction = conn.getTransaction();
 
-		protected JedisResult<SR, R> newJedisResult(final Response<SR> response) {
-			return JedisResult.Builder.<SR, R>fromResponse(response).build();
-		}
+			if(transaction == null){
+				throw new NotMultiRedisException(getCommand(), getSubCommand());
+			}
 
-		protected JedisResult<SR, R> newJedisResult(final Response<SR> response, final Converter<SR, R> converter) {
-			return JedisResult.Builder.<SR, R>fromResponse(response).mappedWith(converter).build();
-		}
+			final TransactionProxy<redis.clients.jedis.Transaction, JedisResult<SR, R>> transactionProxy =
+					(TransactionProxy<redis.clients.jedis.Transaction, JedisResult<SR, R>>) transaction;
+			final Response<SR> response = executor.execute(transactionProxy.getObject());
+			final JedisResult<SR, R> result =
+					converter == null ? newJedisResult(response) : newJedisResult(response, converter);
 
-	}
-
-	final class PipelineRunner<T, SR, R> extends PtRunner<T, SR, R> {
-
-		public PipelineRunner(final Command.Executor<T, Response<SR>> executor,
-		                      final PipelineProxy<T, JedisResult<SR, R>> pipelineFactory,
-		                      final Converter<SR, R> converter) {
-			super(executor, pipelineFactory.getObject(), converter);
+			transactionProxy.getTxResults().add(result);
+			return null;
 		}
 
 	}
 
-	final class TransactionRunner<T, SR, R> extends PtRunner<T, SR, R> {
+	/**
+	 * Jedis 管道命令
+	 *
+	 * @param <SR>
+	 * 		原始类型
+	 * @param <R>
+	 * 		返回类型
+	 *
+	 * @since 4.0.0
+	 */
+	final class JedisPipelineCommand<SR, R> extends AbstractPipelineCommand<Pipeline, Response<SR>, SR, R> {
 
-		public TransactionRunner(final Command.Executor<T, Response<SR>> executor,
-		                         final TransactionProxy<T, JedisResult<SR, R>> transactionFactory,
-		                         final Converter<SR, R> converter) {
-			super(executor, transactionFactory.getObject(), converter);
+		public JedisPipelineCommand(final JedisRedisClient client, final RedisCommand command) {
+			super(client, command);
+		}
+
+		public JedisPipelineCommand(final JedisRedisClient client, final RedisCommand command,
+		                            final Executor<Pipeline, Response<SR>> executor, final Converter<SR, R> converter) {
+			super(client, command, executor, converter);
+		}
+
+		public JedisPipelineCommand(final JedisRedisClient client, final RedisCommand command,
+		                            final RedisSubCommand subCommand) {
+			super(client, command, subCommand);
+		}
+
+		public JedisPipelineCommand(final JedisRedisClient client, final RedisCommand command,
+		                            final RedisSubCommand subCommand, final Executor<Pipeline, Response<SR>> executor,
+		                            final Converter<SR, R> converter) {
+			super(client, command, subCommand, executor, converter);
+		}
+
+		@Override
+		protected R doExecute(final RedisConnection conn) throws RedisException {
+			com.buession.redis.pipeline.Pipeline pipeline = conn.getPipeline();
+
+			if(pipeline == null){
+				throw new NotMultiRedisException(getCommand(), getSubCommand());
+			}
+
+			final PipelineProxy<redis.clients.jedis.Pipeline, JedisResult<SR, R>> pipelineProxy =
+					(PipelineProxy<redis.clients.jedis.Pipeline, JedisResult<SR, R>>) pipeline;
+			final Response<SR> response = executor.execute(pipelineProxy.getObject());
+			final JedisResult<SR, R> result =
+					converter == null ? newJedisResult(response) : newJedisResult(response, converter);
+
+			pipelineProxy.getTxResults().add(result);
+			return null;
 		}
 
 	}

@@ -22,62 +22,28 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
+package com.buession.redis.exception;
+
+import com.buession.redis.core.command.RedisCommand;
+import com.buession.redis.core.command.RedisSubCommand;
 
 /**
+ *
+ *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 4.0.0
  */
-public class RedisClusterServer extends RedisServer {
+public class NotMultiRedisException extends RedisException {
 
-	private final static long serialVersionUID = -7258418154795222406L;
+	private final static long serialVersionUID = -1270712578454280855L;
 
-	/**
-	 * 构造函数
-	 *
-	 * @param host
-	 * 		Redis 节点地址
-	 */
-	public RedisClusterServer(final String host) {
-		super(host);
+	public NotMultiRedisException(final RedisCommand command) {
+		super("ERR " + command + " without MULTI. Did you forget to call multi?");
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param host
-	 * 		Redis 节点地址
-	 * @param port
-	 * 		Redis 端口
-	 */
-	public RedisClusterServer(final String host, final int port) {
-		super(host, port);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param host
-	 * 		Redis 节点地址
-	 * @param role
-	 * 		节点角色
-	 */
-	public RedisClusterServer(final String host, final Role role) {
-		super(host, role);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param host
-	 * 		Redis 节点地址
-	 * @param port
-	 * 		Redis 端口
-	 * @param role
-	 * 		节点角色
-	 */
-	public RedisClusterServer(final String host, final int port, final Role role) {
-		super(host, port, role);
+	public NotMultiRedisException(final RedisCommand command, final RedisSubCommand subCommand) {
+		super("ERR " + command + (subCommand == null ? "" : " " + subCommand) +
+				" without MULTI. Did you forget to call multi?");
 	}
 
 }

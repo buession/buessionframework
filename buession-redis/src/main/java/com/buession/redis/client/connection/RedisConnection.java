@@ -198,6 +198,20 @@ public interface RedisConnection extends Destroyable, Closeable {
 	boolean isTransaction();
 
 	/**
+	 * 返回事务对象
+	 *
+	 * @return 事务对象
+	 */
+	Transaction getTransaction();
+
+	/**
+	 * 返回管道对象
+	 *
+	 * @return 管道对象
+	 */
+	Pipeline getPipeline();
+
+	/**
 	 * 标记事务开始
 	 *
 	 * @return 事务

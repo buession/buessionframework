@@ -24,6 +24,7 @@
  */
 package com.buession.redis.transaction;
 
+import com.buession.core.utils.Assert;
 import com.buession.redis.core.FutureResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +64,7 @@ public abstract class AbstractTransactionProxy<T, FR extends FutureResult<?>> im
 	 * 		原生对象
 	 */
 	public AbstractTransactionProxy(final Transaction target, final T object) {
-		//Assert.isNull(target, "Redis Transaction cloud not be null.");
+		Assert.isNull(target, "Redis Transaction cloud not be null.");
 		this.target = target;
 		this.object = object;
 	}

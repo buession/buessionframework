@@ -300,8 +300,7 @@ public class RedisNode implements RedisNamedNode, Serializable {
 			return true;
 		}
 
-		if(obj instanceof RedisNode){
-			RedisNode that = (RedisNode) obj;
+		if(obj instanceof RedisNode that){
 			return port == that.port && Objects.equals(host, that.host) && Objects.equals(name, that.name);
 		}
 

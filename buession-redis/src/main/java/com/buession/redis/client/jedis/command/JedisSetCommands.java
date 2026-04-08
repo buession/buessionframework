@@ -54,139 +54,167 @@ public final class JedisSetCommands extends AbstractJedisRedisCommands implement
 	@Override
 	public Long sAdd(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		return executeCommand(RedisCommand.SADD, args, (cmd)->cmd.sadd(rawKey(key), members));
+		return executeCommand(RedisCommand.SADD, args, (cmd)->cmd.sadd(rawKey(key), members),
+				(cmd)->cmd.sadd(rawKey(key), members), (cmd)->cmd.sadd(rawKey(key), members));
 	}
 
 	@Override
 	public Long sAdd(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		return executeCommand(RedisCommand.SADD, args, (cmd)->cmd.sadd(rawKey(key), members));
+		return executeCommand(RedisCommand.SADD, args, (cmd)->cmd.sadd(rawKey(key), members),
+				(cmd)->cmd.sadd(rawKey(key), members), (cmd)->cmd.sadd(rawKey(key), members));
 	}
 
 	@Override
 	public Long sCard(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.SCARD, args, (cmd)->cmd.scard(rawKey(key)));
+		return executeCommand(RedisCommand.SCARD, args, (cmd)->cmd.scard(rawKey(key)), (cmd)->cmd.scard(rawKey(key)),
+				(cmd)->cmd.scard(rawKey(key)));
 	}
 
 	@Override
 	public Long sCard(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.SCARD, args, (cmd)->cmd.scard(rawKey(key)));
+		return executeCommand(RedisCommand.SCARD, args, (cmd)->cmd.scard(rawKey(key)), (cmd)->cmd.scard(rawKey(key)),
+				(cmd)->cmd.scard(rawKey(key)));
 	}
 
 	@Override
 	public Set<String> sDiff(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.SDIFF, args, (cmd)->cmd.sdiff(rawKeys(keys)));
+		return executeCommand(RedisCommand.SDIFF, args, (cmd)->cmd.sdiff(rawKeys(keys)),
+				(cmd)->cmd.sdiff(rawKeys(keys)), (cmd)->cmd.sdiff(rawKeys(keys)));
 	}
 
 	@Override
 	public Set<byte[]> sDiff(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.SDIFF, args, (cmd)->cmd.sdiff(rawKeys(keys)));
+		return executeCommand(RedisCommand.SDIFF, args, (cmd)->cmd.sdiff(rawKeys(keys)),
+				(cmd)->cmd.sdiff(rawKeys(keys)), (cmd)->cmd.sdiff(rawKeys(keys)));
 	}
 
 	@Override
 	public Long sDiffStore(final String destKey, final String... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-		return executeCommand(RedisCommand.SDIFFSTORE, args, (cmd)->cmd.sdiffstore(rawKey(destKey), rawKeys(keys)));
+		return executeCommand(RedisCommand.SDIFFSTORE, args, (cmd)->cmd.sdiffstore(rawKey(destKey), rawKeys(keys)),
+				(cmd)->cmd.sdiffstore(rawKey(destKey), rawKeys(keys)),
+				(cmd)->cmd.sdiffstore(rawKey(destKey), rawKeys(keys)));
 	}
 
 	@Override
 	public Long sDiffStore(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-		return executeCommand(RedisCommand.SDIFFSTORE, args, (cmd)->cmd.sdiffstore(rawKey(destKey), rawKeys(keys)));
+		return executeCommand(RedisCommand.SDIFFSTORE, args, (cmd)->cmd.sdiffstore(rawKey(destKey), rawKeys(keys)),
+				(cmd)->cmd.sdiffstore(rawKey(destKey), rawKeys(keys)),
+				(cmd)->cmd.sdiffstore(rawKey(destKey), rawKeys(keys)));
 	}
 
 	@Override
 	public Set<String> sInter(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.SINTER, args, (cmd)->cmd.sinter(rawKeys(keys)));
+		return executeCommand(RedisCommand.SINTER, args, (cmd)->cmd.sinter(rawKeys(keys)),
+				(cmd)->cmd.sinter(rawKeys(keys)), (cmd)->cmd.sinter(rawKeys(keys)));
 	}
 
 	@Override
 	public Set<byte[]> sInter(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.SINTER, args, (cmd)->cmd.sinter(rawKeys(keys)));
+		return executeCommand(RedisCommand.SINTER, args, (cmd)->cmd.sinter(rawKeys(keys)),
+				(cmd)->cmd.sinter(rawKeys(keys)), (cmd)->cmd.sinter(rawKeys(keys)));
 	}
 
 	@Override
 	public Long sInterCard(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys.length).add(keys);
-		return executeCommand(RedisCommand.SINTERCARD, args, (cmd)->cmd.sintercard(rawKeys(keys)));
+		return executeCommand(RedisCommand.SINTERCARD, args, (cmd)->cmd.sintercard(rawKeys(keys)),
+				(cmd)->cmd.sintercard(rawKeys(keys)), (cmd)->cmd.sintercard(rawKeys(keys)));
 	}
 
 	@Override
 	public Long sInterCard(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys.length).add(keys);
-		return executeCommand(RedisCommand.SINTERCARD, args, (cmd)->cmd.sintercard(rawKeys(keys)));
+		return executeCommand(RedisCommand.SINTERCARD, args, (cmd)->cmd.sintercard(rawKeys(keys)),
+				(cmd)->cmd.sintercard(rawKeys(keys)), (cmd)->cmd.sintercard(rawKeys(keys)));
 	}
 
 	@Override
 	public Long sInterCard(final String[] keys, final int limit) {
 		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(Keyword.Common.LIMIT, limit);
-		return executeCommand(RedisCommand.SINTERCARD, args, (cmd)->cmd.sintercard(limit, rawKeys(keys)));
+		return executeCommand(RedisCommand.SINTERCARD, args, (cmd)->cmd.sintercard(limit, rawKeys(keys)),
+				(cmd)->cmd.sintercard(limit, rawKeys(keys)), (cmd)->cmd.sintercard(limit, rawKeys(keys)));
 	}
 
 	@Override
 	public Long sInterCard(final byte[][] keys, final int limit) {
 		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(Keyword.Common.LIMIT, limit);
-		return executeCommand(RedisCommand.SINTERCARD, args, (cmd)->cmd.sintercard(limit, rawKeys(keys)));
+		return executeCommand(RedisCommand.SINTERCARD, args, (cmd)->cmd.sintercard(limit, rawKeys(keys)),
+				(cmd)->cmd.sintercard(limit, rawKeys(keys)), (cmd)->cmd.sintercard(limit, rawKeys(keys)));
 	}
 
 	@Override
 	public Long sInterStore(final String destKey, final String... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-		return executeCommand(RedisCommand.SINTERSTORE, args, (cmd)->cmd.sinterstore(rawKey(destKey), rawKeys(keys)));
+		return executeCommand(RedisCommand.SINTERSTORE, args, (cmd)->cmd.sinterstore(rawKey(destKey), rawKeys(keys)),
+				(cmd)->cmd.sinterstore(rawKey(destKey), rawKeys(keys)),
+				(cmd)->cmd.sinterstore(rawKey(destKey), rawKeys(keys)));
 	}
 
 	@Override
 	public Long sInterStore(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-		return executeCommand(RedisCommand.SINTERSTORE, args, (cmd)->cmd.sinterstore(rawKey(destKey), rawKeys(keys)));
+		return executeCommand(RedisCommand.SINTERSTORE, args, (cmd)->cmd.sinterstore(rawKey(destKey), rawKeys(keys)),
+				(cmd)->cmd.sinterstore(rawKey(destKey), rawKeys(keys)),
+				(cmd)->cmd.sinterstore(rawKey(destKey), rawKeys(keys)));
 	}
 
 	@Override
 	public Boolean sIsMember(final String key, final String member) {
 		final CommandArguments args = CommandArguments.create(key, member);
-		return executeCommand(RedisCommand.SISMEMBER, args, (cmd)->cmd.sismember(rawKey(key), member));
+		return executeCommand(RedisCommand.SISMEMBER, args, (cmd)->cmd.sismember(rawKey(key), member),
+				(cmd)->cmd.sismember(rawKey(key), member), (cmd)->cmd.sismember(rawKey(key), member));
 	}
 
 	@Override
 	public Boolean sIsMember(final byte[] key, final byte[] member) {
 		final CommandArguments args = CommandArguments.create(key, member);
-		return executeCommand(RedisCommand.SISMEMBER, args, (cmd)->cmd.sismember(rawKey(key), member));
+		return executeCommand(RedisCommand.SISMEMBER, args, (cmd)->cmd.sismember(rawKey(key), member),
+				(cmd)->cmd.sismember(rawKey(key), member), (cmd)->cmd.sismember(rawKey(key), member));
 	}
 
 	@Override
 	public Set<String> sMembers(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.SMEMBERS, args, (cmd)->cmd.smembers(rawKey(key)));
+		return executeCommand(RedisCommand.SMEMBERS, args, (cmd)->cmd.smembers(rawKey(key)),
+				(cmd)->cmd.smembers(rawKey(key)), (cmd)->cmd.smembers(rawKey(key)));
 	}
 
 	@Override
 	public Set<byte[]> sMembers(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.SMEMBERS, args, (cmd)->cmd.smembers(rawKey(key)));
+		return executeCommand(RedisCommand.SMEMBERS, args, (cmd)->cmd.smembers(rawKey(key)),
+				(cmd)->cmd.smembers(rawKey(key)), (cmd)->cmd.smembers(rawKey(key)));
 	}
 
 	@Override
 	public List<Boolean> smIsMember(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		return executeCommand(RedisCommand.SMISMEMBER, args, (cmd)->cmd.smismember(rawKey(key), members));
+		return executeCommand(RedisCommand.SMISMEMBER, args, (cmd)->cmd.smismember(rawKey(key), members),
+				(cmd)->cmd.smismember(rawKey(key), members), (cmd)->cmd.smismember(rawKey(key), members));
 	}
 
 	@Override
 	public List<Boolean> smIsMember(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		return executeCommand(RedisCommand.SMISMEMBER, args, (cmd)->cmd.smismember(rawKey(key), members));
+		return executeCommand(RedisCommand.SMISMEMBER, args, (cmd)->cmd.smismember(rawKey(key), members),
+				(cmd)->cmd.smismember(rawKey(key), members), (cmd)->cmd.smismember(rawKey(key), members));
 	}
 
 	@Override
 	public Status sMove(final String key, final String destKey, final String member) {
 		final CommandArguments args = CommandArguments.create(key, destKey).add(member);
 		return executeCommand(RedisCommand.SMOVE, args, (cmd)->cmd.smove(rawKey(key), rawKey(destKey), member),
+				(cmd)->cmd.smove(rawKey(key), rawKey(destKey), member),
+				(cmd)->cmd.smove(rawKey(key), rawKey(destKey), member),
 				new OneStatusConverter());
 	}
 
@@ -194,73 +222,86 @@ public final class JedisSetCommands extends AbstractJedisRedisCommands implement
 	public Status sMove(final byte[] key, final byte[] destKey, final byte[] member) {
 		final CommandArguments args = CommandArguments.create(key, destKey).add(member);
 		return executeCommand(RedisCommand.SMOVE, args, (cmd)->cmd.smove(rawKey(key), rawKey(destKey), member),
+				(cmd)->cmd.smove(rawKey(key), rawKey(destKey), member),
+				(cmd)->cmd.smove(rawKey(key), rawKey(destKey), member),
 				new OneStatusConverter());
 	}
 
 	@Override
 	public String sPop(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.SPOP, args, (cmd)->cmd.spop(rawKey(key)));
+		return executeCommand(RedisCommand.SPOP, args, (cmd)->cmd.spop(rawKey(key)), (cmd)->cmd.spop(rawKey(key)),
+				(cmd)->cmd.spop(rawKey(key)));
 	}
 
 	@Override
 	public byte[] sPop(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.SPOP, args, (cmd)->cmd.spop(rawKey(key)));
+		return executeCommand(RedisCommand.SPOP, args, (cmd)->cmd.spop(rawKey(key)), (cmd)->cmd.spop(rawKey(key)),
+				(cmd)->cmd.spop(rawKey(key)));
 	}
 
 	@Override
 	public Set<String> sPop(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
-		return executeCommand(RedisCommand.SPOP, args, (cmd)->cmd.spop(rawKey(key), count));
+		return executeCommand(RedisCommand.SPOP, args, (cmd)->cmd.spop(rawKey(key), count),
+				(cmd)->cmd.spop(rawKey(key), count), (cmd)->cmd.spop(rawKey(key), count));
 	}
 
 	@Override
 	public Set<byte[]> sPop(final byte[] key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
-		return executeCommand(RedisCommand.SPOP, args, (cmd)->cmd.spop(rawKey(key), count));
+		return executeCommand(RedisCommand.SPOP, args, (cmd)->cmd.spop(rawKey(key), count),
+				(cmd)->cmd.spop(rawKey(key), count), (cmd)->cmd.spop(rawKey(key), count));
 	}
 
 	@Override
 	public String sRandMember(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.SRANDMEMBER, args, (cmd)->cmd.srandmember(rawKey(key)));
+		return executeCommand(RedisCommand.SRANDMEMBER, args, (cmd)->cmd.srandmember(rawKey(key)),
+				(cmd)->cmd.srandmember(rawKey(key)), (cmd)->cmd.srandmember(rawKey(key)));
 	}
 
 	@Override
 	public byte[] sRandMember(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.SRANDMEMBER, args, (cmd)->cmd.srandmember(rawKey(key)));
+		return executeCommand(RedisCommand.SRANDMEMBER, args, (cmd)->cmd.srandmember(rawKey(key)),
+				(cmd)->cmd.srandmember(rawKey(key)), (cmd)->cmd.srandmember(rawKey(key)));
 	}
 
 	@Override
 	public List<String> sRandMember(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
-		return executeCommand(RedisCommand.SRANDMEMBER, args, (cmd)->cmd.srandmember(rawKey(key), count));
+		return executeCommand(RedisCommand.SRANDMEMBER, args, (cmd)->cmd.srandmember(rawKey(key), count),
+				(cmd)->cmd.srandmember(rawKey(key), count), (cmd)->cmd.srandmember(rawKey(key), count));
 	}
 
 	@Override
 	public List<byte[]> sRandMember(final byte[] key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
-		return executeCommand(RedisCommand.SRANDMEMBER, args, (cmd)->cmd.srandmember(rawKey(key), count));
+		return executeCommand(RedisCommand.SRANDMEMBER, args, (cmd)->cmd.srandmember(rawKey(key), count),
+				(cmd)->cmd.srandmember(rawKey(key), count), (cmd)->cmd.srandmember(rawKey(key), count));
 	}
 
 	@Override
 	public Long sRem(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		return executeCommand(RedisCommand.SREM, args, (cmd)->cmd.srem(rawKey(key), members));
+		return executeCommand(RedisCommand.SREM, args, (cmd)->cmd.srem(rawKey(key), members),
+				(cmd)->cmd.srem(rawKey(key), members), (cmd)->cmd.srem(rawKey(key), members));
 	}
 
 	@Override
 	public Long sRem(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		return executeCommand(RedisCommand.SREM, args, (cmd)->cmd.srem(rawKey(key), members));
+		return executeCommand(RedisCommand.SREM, args, (cmd)->cmd.srem(rawKey(key), members),
+				(cmd)->cmd.srem(rawKey(key), members), (cmd)->cmd.srem(rawKey(key), members));
 	}
 
 	@Override
 	public ScanResult<String> sScan(final String key, final String cursor) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor);
 		return executeCommand(RedisCommand.SSCAN, args, (cmd)->cmd.sscan(rawKey(key), cursor),
+				(cmd)->cmd.sscan(rawKey(key), cursor), (cmd)->cmd.sscan(rawKey(key), cursor),
 				new ScanResultConverter<>((v)->v));
 	}
 
@@ -268,6 +309,7 @@ public final class JedisSetCommands extends AbstractJedisRedisCommands implement
 	public ScanResult<byte[]> sScan(final byte[] key, final byte[] cursor) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor);
 		return executeCommand(RedisCommand.SSCAN, args, (cmd)->cmd.sscan(rawKey(key), cursor),
+				(cmd)->cmd.sscan(rawKey(key), cursor), (cmd)->cmd.sscan(rawKey(key), cursor),
 				new ScanResultConverter<>((v)->v));
 	}
 
@@ -312,36 +354,44 @@ public final class JedisSetCommands extends AbstractJedisRedisCommands implement
 	@Override
 	public Set<String> sUnion(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.SUNION, args, (cmd)->cmd.sunion(rawKeys(keys)));
+		return executeCommand(RedisCommand.SUNION, args, (cmd)->cmd.sunion(rawKeys(keys)),
+				(cmd)->cmd.sunion(rawKeys(keys)), (cmd)->cmd.sunion(rawKeys(keys)));
 	}
 
 	@Override
 	public Set<byte[]> sUnion(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.SUNION, args, (cmd)->cmd.sunion(rawKeys(keys)));
+		return executeCommand(RedisCommand.SUNION, args, (cmd)->cmd.sunion(rawKeys(keys)),
+				(cmd)->cmd.sunion(rawKeys(keys)), (cmd)->cmd.sunion(rawKeys(keys)));
 	}
 
 	@Override
 	public Long sUnionStore(final String destKey, final String... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-		return executeCommand(RedisCommand.SUNIONSTORE, args, (cmd)->cmd.sunionstore(rawKey(destKey), rawKeys(keys)));
+		return executeCommand(RedisCommand.SUNIONSTORE, args, (cmd)->cmd.sunionstore(rawKey(destKey), rawKeys(keys)),
+				(cmd)->cmd.sunionstore(rawKey(destKey), rawKeys(keys)),
+				(cmd)->cmd.sunionstore(rawKey(destKey), rawKeys(keys)));
 	}
 
 	@Override
 	public Long sUnionStore(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-		return executeCommand(RedisCommand.SUNIONSTORE, args, (cmd)->cmd.sunionstore(rawKey(destKey), rawKeys(keys)));
+		return executeCommand(RedisCommand.SUNIONSTORE, args, (cmd)->cmd.sunionstore(rawKey(destKey), rawKeys(keys)),
+				(cmd)->cmd.sunionstore(rawKey(destKey), rawKeys(keys)),
+				(cmd)->cmd.sunionstore(rawKey(destKey), rawKeys(keys)));
 	}
 
 	private ScanResult<String> sScan(final String key, final String cursor, final ScanParams scanParams,
 	                                 final CommandArguments args) {
 		return executeCommand(RedisCommand.SSCAN, args, (cmd)->cmd.sscan(key, cursor, scanParams),
+				(cmd)->cmd.sscan(key, cursor, scanParams), (cmd)->cmd.sscan(key, cursor, scanParams),
 				new ScanResultConverter<>((v)->v));
 	}
 
 	private ScanResult<byte[]> sScan(final byte[] key, final byte[] cursor, final ScanParams scanParams,
 	                                 final CommandArguments args) {
 		return executeCommand(RedisCommand.SSCAN, args, (cmd)->cmd.sscan(key, cursor, scanParams),
+				(cmd)->cmd.sscan(key, cursor, scanParams), (cmd)->cmd.sscan(key, cursor, scanParams),
 				new ScanResultConverter<>((v)->v));
 	}
 

@@ -2207,7 +2207,7 @@ public class RedisTemplate extends AbstractRedisTemplate implements AutoSuggestO
 
 	@Override
 	public <V> Status set(final byte[] key, final V value, final PxExType pxExType, final long expires) {
-		return set(key, serializer.serialize(value), pxExType, expires);
+		return set(key, serializer.serializeAsBytes(value), pxExType, expires);
 	}
 
 	@Override

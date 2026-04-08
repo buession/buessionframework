@@ -25,6 +25,7 @@
 package com.buession.redis.client.connection.jedis;
 
 import com.buession.redis.client.connection.RedisConnection;
+import redis.clients.jedis.Transaction;
 import redis.clients.jedis.UnifiedJedis;
 import redis.clients.jedis.csc.CacheConfig;
 

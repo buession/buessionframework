@@ -58,6 +58,8 @@ public final class JedisCountMinSketchCommands extends AbstractJedisRedisCommand
 		final ArrayKeyValueMapConverter<String, Long, String, Long> arrayKeyValueMapConverter = new ArrayKeyValueMapConverter<>(
 				(k)->k, (v)->v);
 		return executeCommand(RedisCommand.CMS_INCRBY, args,
+				(cmd)->cmd.cmsIncrBy(rawKey(key), arrayKeyValueMapConverter.convert(items)),
+				(cmd)->cmd.cmsIncrBy(rawKey(key), arrayKeyValueMapConverter.convert(items)),
 				(cmd)->cmd.cmsIncrBy(rawKey(key), arrayKeyValueMapConverter.convert(items)));
 	}
 
@@ -68,13 +70,16 @@ public final class JedisCountMinSketchCommands extends AbstractJedisRedisCommand
 		final ArrayKeyValueMapConverter<byte[], Long, String, Long> arrayKeyValueMapConverter = new ArrayKeyValueMapConverter<>(
 				SafeEncoder::encode, (v)->v);
 		return executeCommand(RedisCommand.CMS_INCRBY, args,
+				(cmd)->cmd.cmsIncrBy(SafeEncoder.encode(rawKey(key)), arrayKeyValueMapConverter.convert(items)),
+				(cmd)->cmd.cmsIncrBy(SafeEncoder.encode(rawKey(key)), arrayKeyValueMapConverter.convert(items)),
 				(cmd)->cmd.cmsIncrBy(SafeEncoder.encode(rawKey(key)), arrayKeyValueMapConverter.convert(items)));
 	}
 
 	@Override
 	public CmsInfo cmsInfo(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.CMS_INFO, args, (cmd)->cmd.cmsInfo(rawKey(key)), new CmsInfoConverter());
+		return executeCommand(RedisCommand.CMS_INFO, args, (cmd)->cmd.cmsInfo(rawKey(key)),
+				(cmd)->cmd.cmsInfo(rawKey(key)), (cmd)->cmd.cmsInfo(rawKey(key)), new CmsInfoConverter());
 	}
 
 	@Override
@@ -86,6 +91,8 @@ public final class JedisCountMinSketchCommands extends AbstractJedisRedisCommand
 	public Status cmsInitByDim(final String key, final int width, final int depth) {
 		final CommandArguments args = CommandArguments.create(key).add(width).add(depth);
 		return executeCommand(RedisCommand.CMS_INITBYDIM, args, (cmd)->cmd.cmsInitByDim(rawKey(key), width, depth),
+				(cmd)->cmd.cmsInitByDim(rawKey(key), width, depth),
+				(cmd)->cmd.cmsInitByDim(rawKey(key), width, depth),
 				new OkStatusConverter());
 	}
 
@@ -97,8 +104,10 @@ public final class JedisCountMinSketchCommands extends AbstractJedisRedisCommand
 	@Override
 	public Status cmsInitByProb(final String key, final double error, final double probability) {
 		final CommandArguments args = CommandArguments.create(key).add(error).add(probability);
-		return executeCommand(
-				RedisCommand.CMS_INITBYPROB, args, (cmd)->cmd.cmsInitByProb(rawKey(key), error, probability),
+		return executeCommand(RedisCommand.CMS_INITBYPROB, args,
+				(cmd)->cmd.cmsInitByProb(rawKey(key), error, probability),
+				(cmd)->cmd.cmsInitByProb(rawKey(key), error, probability),
+				(cmd)->cmd.cmsInitByProb(rawKey(key), error, probability),
 				new OkStatusConverter());
 	}
 
@@ -117,6 +126,7 @@ public final class JedisCountMinSketchCommands extends AbstractJedisRedisCommand
 				.add("WEIGHTS").add(keysAndWeights.values());
 
 		return executeCommand(RedisCommand.CMS_MERGE, args, (cmd)->cmd.cmsMerge(rawKey(key), keysAndWeights),
+				(cmd)->cmd.cmsMerge(rawKey(key), keysAndWeights), (cmd)->cmd.cmsMerge(rawKey(key), keysAndWeights),
 				new OkStatusConverter());
 	}
 
@@ -130,13 +140,16 @@ public final class JedisCountMinSketchCommands extends AbstractJedisRedisCommand
 				.add("WEIGHTS").add(keysAndWeights.values());
 
 		return executeCommand(RedisCommand.CMS_MERGE, args,
+				(cmd)->cmd.cmsMerge(rawKey(SafeEncoder.encode(key)), keysAndWeights),
+				(cmd)->cmd.cmsMerge(rawKey(SafeEncoder.encode(key)), keysAndWeights),
 				(cmd)->cmd.cmsMerge(rawKey(SafeEncoder.encode(key)), keysAndWeights), new OkStatusConverter());
 	}
 
 	@Override
 	public List<Long> cmsQuery(final String key, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(items);
-		return executeCommand(RedisCommand.CMS_QUERY, args, (cmd)->cmd.cmsQuery(rawKey(key), items), (v)->v);
+		return executeCommand(RedisCommand.CMS_QUERY, args, (cmd)->cmd.cmsQuery(rawKey(key), items),
+				(cmd)->cmd.cmsQuery(rawKey(key), items), (cmd)->cmd.cmsQuery(rawKey(key), items));
 	}
 
 	@Override

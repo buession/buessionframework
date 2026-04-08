@@ -29,11 +29,11 @@ import com.buession.lang.KeyValue;
 import com.buession.lang.Order;
 import com.buession.lang.Status;
 import com.buession.redis.core.BumpEpoch;
+import com.buession.redis.core.RedisClusterNode;
 import com.buession.redis.core.command.args.cluster.FailoverOption;
 import com.buession.redis.core.ClusterInfo;
 import com.buession.redis.core.ClusterLink;
 import com.buession.redis.core.command.args.cluster.MigrationOperation;
-import com.buession.redis.core.ClusterRedisNode;
 import com.buession.redis.core.command.args.cluster.ResetOption;
 import com.buession.redis.core.command.args.cluster.SetSlotOption;
 import com.buession.redis.core.ClusterShardInfo;
@@ -364,7 +364,7 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @return 集群配置信息
 	 */
-	List<ClusterRedisNode> clusterNodes();
+	List<RedisClusterNode> clusterNodes();
 
 	/**
 	 * 列出指定主节点的辅助副本节点
@@ -376,7 +376,7 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @return 主节点的辅助副本节点
 	 */
-	List<ClusterRedisNode> clusterReplicas(final String nodeId);
+	List<RedisClusterNode> clusterReplicas(final String nodeId);
 
 	/**
 	 * 列出指定主节点的辅助副本节点
@@ -388,7 +388,7 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @return 主节点的辅助副本节点
 	 */
-	List<ClusterRedisNode> clusterReplicas(final byte[] nodeId);
+	List<RedisClusterNode> clusterReplicas(final byte[] nodeId);
 
 	/**
 	 * 重新配置一个节点成为指定master的salve节点
@@ -509,7 +509,7 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @return 指定 master 节点所有 slave 节点
 	 */
-	List<ClusterRedisNode> clusterSlaves(final String nodeId);
+	List<RedisClusterNode> clusterSlaves(final String nodeId);
 
 	/**
 	 * 列出指定 master 节点所有 slave 节点
@@ -521,7 +521,7 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @return 指定 master 节点所有 slave 节点
 	 */
-	List<ClusterRedisNode> clusterSlaves(final byte[] nodeId);
+	List<RedisClusterNode> clusterSlaves(final byte[] nodeId);
 
 	/**
 	 * 哈希槽的详细统计信息

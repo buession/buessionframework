@@ -29,11 +29,11 @@ import com.buession.lang.KeyValue;
 import com.buession.lang.Order;
 import com.buession.lang.Status;
 import com.buession.redis.core.BumpEpoch;
+import com.buession.redis.core.RedisClusterNode;
 import com.buession.redis.core.command.args.cluster.FailoverOption;
 import com.buession.redis.core.ClusterInfo;
 import com.buession.redis.core.ClusterLink;
 import com.buession.redis.core.command.args.cluster.MigrationOperation;
-import com.buession.redis.core.ClusterRedisNode;
 import com.buession.redis.core.command.args.cluster.ResetOption;
 import com.buession.redis.core.command.args.cluster.SetSlotOption;
 import com.buession.redis.core.ClusterShardInfo;
@@ -227,17 +227,17 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	}
 
 	@Override
-	default List<ClusterRedisNode> clusterNodes() {
+	default List<RedisClusterNode> clusterNodes() {
 		return execute((client)->client.clusterCommands().clusterNodes());
 	}
 
 	@Override
-	default List<ClusterRedisNode> clusterReplicas(final String nodeId) {
+	default List<RedisClusterNode> clusterReplicas(final String nodeId) {
 		return execute((client)->client.clusterCommands().clusterReplicas(nodeId));
 	}
 
 	@Override
-	default List<ClusterRedisNode> clusterReplicas(final byte[] nodeId) {
+	default List<RedisClusterNode> clusterReplicas(final byte[] nodeId) {
 		return execute((client)->client.clusterCommands().clusterReplicas(nodeId));
 	}
 
@@ -287,12 +287,12 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	}
 
 	@Override
-	default List<ClusterRedisNode> clusterSlaves(final String nodeId) {
+	default List<RedisClusterNode> clusterSlaves(final String nodeId) {
 		return execute((client)->client.clusterCommands().clusterSlaves(nodeId));
 	}
 
 	@Override
-	default List<ClusterRedisNode> clusterSlaves(final byte[] nodeId) {
+	default List<RedisClusterNode> clusterSlaves(final byte[] nodeId) {
 		return execute((client)->client.clusterCommands().clusterSlaves(nodeId));
 	}
 
