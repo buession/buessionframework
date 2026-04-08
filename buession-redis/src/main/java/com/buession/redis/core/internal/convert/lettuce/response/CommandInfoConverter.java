@@ -91,64 +91,32 @@ public final class CommandInfoConverter implements Converter<Object, CommandInfo
 
 		}
 
-		public String getName() {
-			return name;
-		}
-
 		public void setName(String name) {
 			this.name = name;
-		}
-
-		public RedisCommandGroup getGroup() {
-			return group;
 		}
 
 		public void setGroup(RedisCommandGroup group) {
 			this.group = group;
 		}
 
-		public Integer getArity() {
-			return arity;
-		}
-
 		public void setArity(Integer arity) {
 			this.arity = arity;
-		}
-
-		public Set<CommandInfo.Flag> getFlags() {
-			return flags;
 		}
 
 		public void setFlags(Set<CommandInfo.Flag> flags) {
 			this.flags = flags;
 		}
 
-		public Integer getFirstKey() {
-			return firstKey;
-		}
-
 		public void setFirstKey(Integer firstKey) {
 			this.firstKey = firstKey;
-		}
-
-		public Integer getLastKey() {
-			return lastKey;
 		}
 
 		public void setLastKey(Integer lastKey) {
 			this.lastKey = lastKey;
 		}
 
-		public Integer getStep() {
-			return step;
-		}
-
 		public void setStep(Integer step) {
 			this.step = step;
-		}
-
-		public Set<String> getAclCategories() {
-			return aclCategories;
 		}
 
 		public void setAclCategories(Set<String> aclCategories) {

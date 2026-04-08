@@ -25,6 +25,7 @@
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.redis.core.Quantization;
 
 /**
  * Jedis {@link io.lettuce.core.vector.RawVector} 转换为 {@link com.buession.redis.core.RawVector}
@@ -42,8 +43,9 @@ public final class RawVectorConveter implements Converter<io.lettuce.core.vector
 		}
 
 		final QuantizationTypeConverter quantizationTypeConverter = new QuantizationTypeConverter();
-		return new com.buession.redis.core.RawVector(quantizationTypeConverter.convert(source.getType()),
-				source.getVector().array(), null, source.getQuantizationRange());
+		final Quantization quantization = quantizationTypeConverter.convert(source.getType());
+		return new com.buession.redis.core.RawVector(quantization, source.getVector().array(), null,
+				source.getQuantizationRange());
 	}
 
 }

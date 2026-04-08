@@ -27,6 +27,7 @@ package com.buession.redis.core.internal.convert.jedis.response;
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.AutoClaimInfo;
+import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.internal.convert.response.BaseKeyValueConverter;
 import redis.clients.jedis.StreamEntryID;
 import redis.clients.jedis.resps.StreamEntry;
@@ -71,8 +72,9 @@ public final class MapEntryStreamEntryAutoClaimInfoConverter<K, V> extends BaseK
 		final StreamEntryIDConverter streamEntryIdConverter = new StreamEntryIDConverter();
 		final ListConverter<redis.clients.jedis.resps.StreamEntry, com.buession.redis.core.StreamEntry<K, V>> listConverter =
 				new ListConverter<>(new StreamEntryConverter<>(keyConverter, valueConverter));
-		return new AutoClaimInfo<>(streamEntryIdConverter.convert(source.getKey()),
-				listConverter.convert(source.getValue()));
+		final StreamEntryId key = streamEntryIdConverter.convert(source.getKey());
+		final List<com.buession.redis.core.StreamEntry<K, V>> value = listConverter.convert(source.getValue());
+		return new AutoClaimInfo<>(key, value);
 	}
 
 }

@@ -93,72 +93,36 @@ public final class TdigestInfoConverter implements Converter<Map<String, Object>
 
 		}
 
-		public Integer getCompression() {
-			return compression;
-		}
-
 		public void setCompression(Integer compression) {
 			this.compression = compression;
-		}
-
-		public Integer getCapacity() {
-			return capacity;
 		}
 
 		public void setCapacity(Integer capacity) {
 			this.capacity = capacity;
 		}
 
-		public Integer getMergedNodes() {
-			return mergedNodes;
-		}
-
 		public void setMergedNodes(Integer mergedNodes) {
 			this.mergedNodes = mergedNodes;
-		}
-
-		public Integer getUnmergedNodes() {
-			return unmergedNodes;
 		}
 
 		public void setUnmergedNodes(Integer unmergedNodes) {
 			this.unmergedNodes = unmergedNodes;
 		}
 
-		public Integer getMergedWeight() {
-			return mergedWeight;
-		}
-
 		public void setMergedWeight(Integer mergedWeight) {
 			this.mergedWeight = mergedWeight;
-		}
-
-		public Integer getUnmergedWeight() {
-			return unmergedWeight;
 		}
 
 		public void setUnmergedWeight(Integer unmergedWeight) {
 			this.unmergedWeight = unmergedWeight;
 		}
 
-		public Integer getObservations() {
-			return observations;
-		}
-
 		public void setObservations(Integer observations) {
 			this.observations = observations;
 		}
 
-		public Integer getTotalCompressions() {
-			return totalCompressions;
-		}
-
 		public void setTotalCompressions(Integer totalCompressions) {
 			this.totalCompressions = totalCompressions;
-		}
-
-		public Integer getMemoryUsage() {
-			return memoryUsage;
 		}
 
 		public void setMemoryUsage(Integer memoryUsage) {

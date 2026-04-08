@@ -26,8 +26,11 @@ package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.MapConverter;
+import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.internal.convert.response.BaseKeyValueConverter;
 import redis.clients.jedis.resps.StreamEntry;
+
+import java.util.Map;
 
 /**
  * Jedis {@link redis.clients.jedis.resps.StreamEntry} 转换为 {@link com.buession.redis.core.StreamEntry}
@@ -55,8 +58,9 @@ public final class StreamEntryConverter<K, V>
 
 		final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
 		final MapConverter<String, String, K, V> mapConverter = new MapConverter<>(keyConverter, valueConverter);
-		return new com.buession.redis.core.StreamEntry<>(streamEntryIDConverter.convert(source.getID()),
-				mapConverter.convert(source.getFields()));
+		final StreamEntryId id = streamEntryIDConverter.convert(source.getID());
+		final Map<K, V> fields = mapConverter.convert(source.getFields());
+		return new com.buession.redis.core.StreamEntry<>(id, fields);
 	}
 
 }

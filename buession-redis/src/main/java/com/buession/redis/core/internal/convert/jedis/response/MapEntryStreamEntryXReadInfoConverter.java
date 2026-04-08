@@ -26,6 +26,7 @@ package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
+import com.buession.redis.core.StreamEntry;
 import com.buession.redis.core.XReadInfo;
 
 import java.util.List;
@@ -73,8 +74,8 @@ public final class MapEntryStreamEntryXReadInfoConverter<SK, TK, TV>
 	 * 		Entry value 转换器
 	 */
 	public MapEntryStreamEntryXReadInfoConverter(final Converter<SK, TK> keyConverter,
-												 final Converter<String, TK> entryKeyConverter,
-												 final Converter<String, TV> entryValueConverter) {
+	                                             final Converter<String, TK> entryKeyConverter,
+	                                             final Converter<String, TV> entryValueConverter) {
 		this.keyConverter = keyConverter;
 		this.entryKeyConverter = entryKeyConverter;
 		this.entryValueConverter = entryValueConverter;
@@ -88,7 +89,9 @@ public final class MapEntryStreamEntryXReadInfoConverter<SK, TK, TV>
 
 		final ListConverter<redis.clients.jedis.resps.StreamEntry, com.buession.redis.core.StreamEntry<TK, TV>> listConverter =
 				new ListConverter<>(new StreamEntryConverter<>(entryKeyConverter, entryValueConverter));
-		return new XReadInfo<>(keyConverter.convert(source.getKey()), listConverter.convert(source.getValue()));
+		final TK key = keyConverter.convert(source.getKey());
+		final List<StreamEntry<TK, TV>> value = listConverter.convert(source.getValue());
+		return new XReadInfo<>(key, value);
 	}
 
 }

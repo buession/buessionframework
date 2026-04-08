@@ -60,8 +60,13 @@ public class KeyValueConverter<SK, SV, TK, TV>
 
 	@Override
 	public com.buession.lang.KeyValue<TK, TV> convert(final io.lettuce.core.KeyValue<SK, SV> source) {
-		return source == null ? null : new com.buession.lang.KeyValue<>(keyConverter.convert(source.getKey()),
-				valueConverter.convert(source.getValue()));
+		if(source == null){
+			return null;
+		}else{
+			final TK key = keyConverter.convert(source.getKey());
+			final TV value = valueConverter.convert(source.getValue());
+			return new com.buession.lang.KeyValue<>(key, value);
+		}
 	}
 
 }

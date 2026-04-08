@@ -28,6 +28,8 @@ import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.ScanResult;
 
+import java.util.List;
+
 /**
  * jedis {@link redis.clients.jedis.resps.ScanResult} 转换为 {@link ScanResult}
  *
@@ -45,7 +47,12 @@ public class ScanResultConverter<S, T>
 
 	@Override
 	public ScanResult<T> convert(final redis.clients.jedis.resps.ScanResult<S> source) {
-		return source == null ? null : new ScanResult<>(source.getCursor(), converter.convert(source.getResult()));
+		if(source == null){
+			return null;
+		}else{
+			final List<T> results = converter.convert(source.getResult());
+			return new ScanResult<>(source.getCursor(), results);
+		}
 	}
 
 }

@@ -25,6 +25,7 @@
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.redis.core.TimeSeriesElement;
 import com.buession.redis.core.TimeSeriesMGetElement;
 import redis.clients.jedis.timeseries.TSMGetElement;
 
@@ -43,8 +44,8 @@ public final class TSMGetElementConveter implements Converter<TSMGetElement, Tim
 		}
 
 		final TSElementConverter tsmElementConverter = new TSElementConverter();
-		return new TimeSeriesMGetElement(source.getKey(), tsmElementConverter.convert(source.getValue()),
-				source.getLabels());
+		final TimeSeriesElement value = tsmElementConverter.convert(source.getValue());
+		return new TimeSeriesMGetElement(source.getKey(), value, source.getLabels());
 	}
 
 }

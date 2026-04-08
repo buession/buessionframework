@@ -31,6 +31,8 @@ import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.internal.convert.response.BaseKeyValueConverter;
 import io.lettuce.core.StreamMessage;
 
+import java.util.Map;
+
 /**
  * Lettuce {@link StreamMessage} 转换为 {@link StreamEntry}
  *
@@ -60,7 +62,8 @@ public final class StreamMessageConverter<SK, SV, TK, TV>
 		}
 
 		final MapConverter<SK, SV, TK, TV> mapConverter = new MapConverter<>(keyConverter, valueConverter);
-		return new StreamEntry<>(new StreamEntryId(source.getId()), mapConverter.convert(source.getBody()));
+		final Map<TK, TV> fields = mapConverter.convert(source.getBody());
+		return new StreamEntry<>(new StreamEntryId(source.getId()), fields);
 	}
 
 }

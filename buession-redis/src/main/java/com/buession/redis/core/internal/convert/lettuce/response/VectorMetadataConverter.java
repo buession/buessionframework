@@ -25,6 +25,7 @@
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.redis.core.Quantization;
 import com.buession.redis.core.VectorInfo;
 import io.lettuce.core.vector.VectorMetadata;
 
@@ -43,9 +44,9 @@ public final class VectorMetadataConverter implements Converter<VectorMetadata, 
 		}
 
 		final QuantizationTypeConverter quantizationTypeConverter = new QuantizationTypeConverter();
-		return new com.buession.redis.core.VectorInfo(quantizationTypeConverter.convert(source.getType()),
-				source.getDimensionality().longValue(), source.getSize().longValue(), source.getMaxLevel(),
-				source.getvSetUid(), source.getMaxNodeUid());
+		final Quantization quantType = quantizationTypeConverter.convert(source.getType());
+		return new com.buession.redis.core.VectorInfo(quantType, source.getDimensionality().longValue(),
+				source.getSize().longValue(), source.getMaxLevel(), source.getvSetUid(), source.getMaxNodeUid());
 	}
 
 }

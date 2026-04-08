@@ -26,8 +26,11 @@ package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
+import com.buession.redis.core.AggregationType;
 import com.buession.redis.core.TimeSeriesMRangeElement;
 import redis.clients.jedis.timeseries.TSMRangeElements;
+
+import java.util.List;
 
 /**
  * Jedis {@link TSMRangeElements} 转换为 {@link TimeSeriesMRangeElement}
@@ -45,8 +48,8 @@ public final class TSMRangeElementsConverter implements Converter<TSMRangeElemen
 
 		final ListConverter<redis.clients.jedis.timeseries.AggregationType, com.buession.redis.core.AggregationType> listConverter = new ListConverter<>(
 				new AggregationTypeConverter());
-		return new TimeSeriesMRangeElement(source.getLabels(), listConverter.convert(source.getAggregators()),
-				source.getSources(), source.getReducers());
+		final List<AggregationType> aggregators = listConverter.convert(source.getAggregators());
+		return new TimeSeriesMRangeElement(source.getLabels(), aggregators, source.getSources(), source.getReducers());
 	}
 
 }

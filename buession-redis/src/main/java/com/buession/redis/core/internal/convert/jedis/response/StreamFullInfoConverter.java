@@ -130,5 +130,4 @@ public final class StreamFullInfoConverter<TK, TV>
 
 	}
 
-
 }

@@ -143,104 +143,52 @@ public final class TSInfoConverter implements Converter<TSInfo, TimeSeriesInfo> 
 
 		}
 
-		public String getSourceKey() {
-			return sourceKey;
-		}
-
 		public void setSourceKey(String sourceKey) {
 			this.sourceKey = sourceKey;
-		}
-
-		public String getKeySelfName() {
-			return keySelfName;
 		}
 
 		public void setKeySelfName(String keySelfName) {
 			this.keySelfName = keySelfName;
 		}
 
-		public Integer getTotalSamples() {
-			return totalSamples;
-		}
-
 		public void setTotalSamples(Integer totalSamples) {
 			this.totalSamples = totalSamples;
-		}
-
-		public Long getMemoryUsage() {
-			return memoryUsage;
 		}
 
 		public void setMemoryUsage(Long memoryUsage) {
 			this.memoryUsage = memoryUsage;
 		}
 
-		public Long getFirstTimestamp() {
-			return firstTimestamp;
-		}
-
 		public void setFirstTimestamp(Long firstTimestamp) {
 			this.firstTimestamp = firstTimestamp;
-		}
-
-		public Long getLastTimestamp() {
-			return lastTimestamp;
 		}
 
 		public void setLastTimestamp(Long lastTimestamp) {
 			this.lastTimestamp = lastTimestamp;
 		}
 
-		public Integer getRetentionTime() {
-			return retentionTime;
-		}
-
 		public void setRetentionTime(Integer retentionTime) {
 			this.retentionTime = retentionTime;
-		}
-
-		public Integer getChunkCount() {
-			return chunkCount;
 		}
 
 		public void setChunkCount(Integer chunkCount) {
 			this.chunkCount = chunkCount;
 		}
 
-		public Integer getChunkSize() {
-			return chunkSize;
-		}
-
 		public void setChunkSize(Integer chunkSize) {
 			this.chunkSize = chunkSize;
-		}
-
-		public TimeSeriesInfo.ChunkType getChunkType() {
-			return chunkType;
 		}
 
 		public void setChunkType(TimeSeriesInfo.ChunkType chunkType) {
 			this.chunkType = chunkType;
 		}
 
-		public DuplicatePolicy getDuplicatePolicy() {
-			return duplicatePolicy;
-		}
-
 		public void setDuplicatePolicy(DuplicatePolicy duplicatePolicy) {
 			this.duplicatePolicy = duplicatePolicy;
 		}
 
-		public Map<String, String> getLabels() {
-			return labels;
-		}
-
 		public void setLabels(Map<String, String> labels) {
 			this.labels = labels;
-		}
-
-		public Map<String, TimeSeriesInfo.Rule> getRules() {
-			return rules;
 		}
 
 		public void addRule(String key, TSInfo.Rule rule) {
@@ -255,10 +203,6 @@ public final class TSInfoConverter implements Converter<TSInfo, TimeSeriesInfo> 
 
 		public void setRules(Map<String, TimeSeriesInfo.Rule> rules) {
 			this.rules = rules;
-		}
-
-		public List<TimeSeriesInfo.Chunk> getChunks() {
-			return chunks;
 		}
 
 		public void setChunks(List<TimeSeriesInfo.Chunk> chunks) {

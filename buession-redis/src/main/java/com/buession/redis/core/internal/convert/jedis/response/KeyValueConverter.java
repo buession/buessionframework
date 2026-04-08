@@ -60,8 +60,13 @@ public final class KeyValueConverter<SK, SV, TK, TV> extends BaseKeyValueConvert
 
 	@Override
 	public KeyValue<TK, TV> convert(final redis.clients.jedis.util.KeyValue<SK, SV> source) {
-		return source == null ? null : new com.buession.lang.KeyValue<>(keyConverter.convert(source.getKey()),
-				valueConverter.convert(source.getValue()));
+		if(source == null){
+			return null;
+		}else{
+			final TK key = keyConverter.convert(source.getKey());
+			final TV value = valueConverter.convert(source.getValue());
+			return new com.buession.lang.KeyValue<>(key, value);
+		}
 	}
 
 }

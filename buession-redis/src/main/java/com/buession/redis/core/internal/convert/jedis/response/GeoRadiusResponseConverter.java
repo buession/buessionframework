@@ -25,6 +25,7 @@
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.lang.Geo;
 import com.buession.redis.core.GeoRadius;
 import redis.clients.jedis.resps.GeoRadiusResponse;
 
@@ -42,8 +43,8 @@ public class GeoRadiusResponseConverter implements Converter<GeoRadiusResponse, 
 			return null;
 		}else{
 			final GeoCoordinateConverter geoCoordinateConverter = new GeoCoordinateConverter();
-			return new GeoRadius(source.getMember(), source.getDistance(),
-					geoCoordinateConverter.convert(source.getCoordinate()));
+			final Geo geo = geoCoordinateConverter.convert(source.getCoordinate());
+			return new GeoRadius(source.getMember(), source.getDistance(), geo);
 		}
 	}
 

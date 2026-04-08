@@ -29,6 +29,8 @@ import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.LcsResult;
 import io.lettuce.core.StringMatchResult;
 
+import java.util.List;
+
 /**
  * Lettuce {@link StringMatchResult} 转换为 {@link LcsResult}
  *
@@ -45,8 +47,9 @@ public final class StringMatchResultConveter implements Converter<StringMatchRes
 
 		final ListConverter<StringMatchResult.MatchedPosition, LcsResult.MatchedPosition> stringMatchResultMatchedPositionConveter = new ListConverter<>(
 				new StringMatchResultMatchedPositionConveter());
-		return new LcsResult(source.getMatchString(), stringMatchResultMatchedPositionConveter.convert(
-				source.getMatches()), source.getLen());
+		final List<LcsResult.MatchedPosition> matches = stringMatchResultMatchedPositionConveter.convert(
+				source.getMatches());
+		return new LcsResult(source.getMatchString(), matches, source.getLen());
 	}
 
 	private final static class StringMatchResultMatchedPositionConveter

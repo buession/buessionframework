@@ -44,7 +44,12 @@ public final class ScoredValueKeyValueConverter<SK, TK> implements Converter<Sco
 
 	@Override
 	public KeyValue<TK, Double> convert(final ScoredValue<SK> source) {
-		return source == null ? null : new KeyValue<>(converter.convert(source.getValue()), source.getScore());
+		if(source == null){
+			return null;
+		}else{
+			final TK key = converter.convert(source.getValue());
+			return new KeyValue<>(key, source.getScore());
+		}
 	}
 
 }

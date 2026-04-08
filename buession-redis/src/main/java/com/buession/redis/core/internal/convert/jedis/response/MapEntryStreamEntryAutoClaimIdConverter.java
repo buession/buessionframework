@@ -51,7 +51,8 @@ public final class MapEntryStreamEntryAutoClaimIdConverter implements
 		final StreamEntryIDConverter streamEntryIdConverter = new StreamEntryIDConverter();
 		final List<StreamEntryId> streamEntryIds = source.getValue() == null ? null :
 				source.getValue().stream().map(streamEntryIdConverter::convert).collect(Collectors.toList());
-		return new AutoClaimId(streamEntryIdConverter.convert(source.getKey()), streamEntryIds);
+		final StreamEntryId id = streamEntryIdConverter.convert(source.getKey());
+		return new AutoClaimId(id, streamEntryIds);
 	}
 
 }

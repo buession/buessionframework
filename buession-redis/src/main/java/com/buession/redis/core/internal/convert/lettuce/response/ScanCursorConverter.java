@@ -76,7 +76,8 @@ public interface ScanCursorConverter<T extends ScanCursor, R> extends Converter<
 		@Override
 		public ScanResult<TK> convert(final KeyScanCursor<SK> source) {
 			final ListConverter<SK, TK> listConverter = new ListConverter<>(converter);
-			return new ScanResult<>(source.getCursor(), listConverter.convert(source.getKeys()));
+			final List<TK> results = listConverter.convert(source.getKeys());
+			return new ScanResult<>(source.getCursor(), results);
 		}
 
 	}
@@ -102,7 +103,8 @@ public interface ScanCursorConverter<T extends ScanCursor, R> extends Converter<
 		@Override
 		public ScanResult<TV> convert(final ValueScanCursor<SV> source) {
 			final ListConverter<SV, TV> listConverter = new ListConverter<>(converter);
-			return new ScanResult<>(source.getCursor(), listConverter.convert(source.getValues()));
+			final List<TV> results = listConverter.convert(source.getValues());
+			return new ScanResult<>(source.getCursor(), results);
 		}
 
 	}
@@ -118,7 +120,8 @@ public interface ScanCursorConverter<T extends ScanCursor, R> extends Converter<
 		public ScanResult<Tuple> convert(final ScoredValueScanCursor<byte[]> source) {
 			ListConverter<ScoredValue<byte[]>, Tuple> listScoredValueConverter = new ListConverter<>(
 					new ScoredValueTupleConverter());
-			return new ScanResult<>(source.getCursor(), listScoredValueConverter.convert(source.getValues()));
+			final List<Tuple> results = listScoredValueConverter.convert(source.getValues());
+			return new ScanResult<>(source.getCursor(), results);
 		}
 
 	}
