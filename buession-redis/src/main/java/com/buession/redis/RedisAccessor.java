@@ -52,10 +52,6 @@ import com.buession.redis.serializer.Serializer;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.lang.Nullable;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.function.Function;
-
 /**
  * Base class for {@link RedisTemplate} defining common properties. Not intended to be used directly.
  *
@@ -97,13 +93,8 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 	 */
 	protected boolean enableTransactionSupport = false;
 
-	protected final static ThreadLocal<Map<Integer, Function<?, ?>>> txConverters = new ThreadLocal<>();
-
-	protected final static ThreadLocal<Integer> index = new ThreadLocal<>();
-
 	static {
 		DEFAULT_OPTIONS.setSerializer(DEFAULT_SERIALIZER);
-		index.set(-1);
 	}
 
 	/**
@@ -244,10 +235,6 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 		RedisConnection connection = fetchRequiredConnection();
 		RedisClient client = fetchRequiredRedisClient(connection);
 
-		if(isMulti(connection)){
-			index.set(index.get() + 1);
-		}
-
 		try{
 			return callback.execute(client);
 		}finally{
@@ -261,10 +248,6 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 
 		RedisConnection connection = fetchRequiredConnection();
 		RedisClient client = fetchRequiredRedisClient(connection);
-
-		if(isMulti(connection)){
-			index.set(index.get() + 1);
-		}
 
 		try{
 			return converter.convert(connection, callback.execute(client));
@@ -331,22 +314,6 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 
 	protected boolean isMulti(final RedisConnection connection) {
 		return isTransaction(connection) || isPipeline(connection);
-	}
-
-	protected static Map<Integer, Function<?, ?>> getTxConverters() {
-		Map<Integer, Function<?, ?>> txResult = txConverters.get();
-
-		if(txResult == null){
-			txResult = new LinkedHashMap<>(16, 0.8F);
-			txConverters.set(txResult);
-		}
-
-		return txResult;
-	}
-
-	protected void resetTransactionOrPipeline() {
-		index.remove();
-		txConverters.remove();
 	}
 
 }

@@ -56,7 +56,7 @@ public class JedisTransactionTest extends AbstractJedisRedisTest {
 	public void discard() {
 		RedisTemplate redisTemplate = redisTemplate();
 		redisTemplate.multi();
-		redisTemplate.set("b", "B");
+		redisTemplate.set("discard", "B");
 		redisTemplate.discard();
 	}
 

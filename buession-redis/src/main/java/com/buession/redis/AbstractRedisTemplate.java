@@ -24,16 +24,13 @@
  */
 package com.buession.redis;
 
-import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
-import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.client.connection.RedisConnectionUtils;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.core.Options;
 import com.buession.redis.core.command.*;
 
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 
 /**
  * @author Yong.Teng
@@ -76,33 +73,23 @@ public abstract class AbstractRedisTemplate extends RedisAccessor implements Aut
 
 	@Override
 	public Status discard() {
-		Status result = execute((client)->client.transactionCommands().discard());
-		resetTransactionOrPipeline();
-		return result;
+		try{
+			//execute((client)->client.transactionCommands().discard());
+			return client.getConnection().discard();
+		}finally{
+			RedisConnectionUtils.releaseConnection(connectionFactory, client.getConnection(), enableTransactionSupport);
+		}
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	public List<Object> exec() {
-		List<Object> result = client.getConnection().exec();//execute((client)->client.transactionCommands().exec());
-
-		if(result != null){
-			Map<Integer, Function<?, ?>> map = txConverters.get();
-
-			if(Validate.isNotEmpty(map)){
-				for(int i = 0, j = result.size(); i < j; i++){
-					Function<Object, Object> fun = (Function<Object, Object>) map.get(i);
-
-					if(fun != null){
-						result.set(i, fun.apply(result.get(i)));
-					}
-				}
-			}
+		try{
+			//execute((client)->client.transactionCommands().exec());
+			return client.getConnection().exec();
+		}finally{
+			RedisConnectionUtils.releaseConnection(connectionFactory, client.getConnection(), enableTransactionSupport);
 		}
-
-		resetTransactionOrPipeline();
-
-		return result;
 	}
 
 }

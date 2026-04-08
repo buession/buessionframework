@@ -79,7 +79,6 @@ public abstract class AbstractJedisRedisCommands extends AbstractRedisCommands<J
 	                                   final Command.Executor<UnifiedJedis, SR> executor,
 	                                   final Converter<SR, R> converter) {
 		if(isTransaction()){
-			System.out.println("AAAAA");
 			return client.execute(new JedisTransactionCommand<>(client, command, transactionExecutor, converter));
 		}else if(isPipeline()){
 			return client.execute(new JedisPipelineCommand<>(client, command, pipelineExecutor, converter));

@@ -49,39 +49,15 @@ public interface Converter<SV, TV> {
 
 	abstract class AbstractConverter<SV, TV> implements Converter<SV, TV> {
 
-		protected final ThreadLocal<Integer> index;
-
 		private final Function<SV, TV> call;
 
 		public AbstractConverter(final Function<SV, TV> call) {
 			this.call = call;
-			this.index = RedisAccessor.index;
 		}
 
 		@Override
 		public TV convert(final RedisConnection connection, final SV value) {
-			if(isTransactionOrPipeline(connection)){
-				return addConverter(index, call);
-			}else{
-				return call.apply(value);
-			}
-		}
-
-		protected static <K, V> V addConverter(ThreadLocal<Integer> index, Function<K, V> function) {
-			RedisAccessor.getTxConverters().put(index.get(), function);
-			return null;
-		}
-
-		protected boolean isTransaction(final RedisConnection connection) {
-			return connection.isTransaction();
-		}
-
-		protected boolean isPipeline(final RedisConnection connection) {
-			return connection.isPipeline();
-		}
-
-		protected boolean isTransactionOrPipeline(final RedisConnection connection) {
-			return isTransaction(connection) || isPipeline(connection);
+			return call.apply(value);
 		}
 
 	}
