@@ -81,7 +81,6 @@ public abstract class AbstractRedisTemplate extends RedisAccessor implements Aut
 		}
 	}
 
-	@SuppressWarnings({"unchecked"})
 	@Override
 	public List<Object> exec() {
 		try{

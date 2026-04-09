@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.transaction;
@@ -39,7 +39,7 @@ import java.util.Queue;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public interface TransactionProxy<T, FR extends FutureResult<?>> extends Transaction {
+public interface TransactionProxy<T, FR extends FutureResult<Object, ?>> extends Transaction {
 
 	/**
 	 * 返回原生事务实例

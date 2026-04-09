@@ -37,7 +37,7 @@ import com.buession.redis.core.FutureResult;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class DefaultTransactionProxy<T, FR extends FutureResult<?>> extends AbstractTransactionProxy<T, FR> {
+public class DefaultTransactionProxy<T, FR extends FutureResult<Object, ?>> extends AbstractTransactionProxy<T, FR> {
 
 	public DefaultTransactionProxy(final Transaction target, final T object) {
 		super(target, object);

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.pipeline;
@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public abstract class AbstractPipelineProxy<T, FR extends FutureResult<?>> implements PipelineProxy<T, FR> {
+public abstract class AbstractPipelineProxy<T, FR extends FutureResult<Object, ?>> implements PipelineProxy<T, FR> {
 
 	private Pipeline target;
 

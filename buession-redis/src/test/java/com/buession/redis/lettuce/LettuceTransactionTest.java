@@ -39,10 +39,10 @@ public class LettuceTransactionTest extends AbstractLettuceRedisTest {
 	public void exec() {
 		RedisTemplate redisTemplate = redisTemplate();
 		redisTemplate.multi();
-		redisTemplate.set("a", "Lettuce");
-		redisTemplate.exists("a");
-		redisTemplate.expire("a", 60);
-		String ret = redisTemplate.get("a");
+		redisTemplate.set("a1", "Lettuce");
+		redisTemplate.exists("a1");
+		redisTemplate.expire("a1", 60);
+		String ret = redisTemplate.get("a1");
 		//redisTemplate.role();
 		List<Object> result = redisTemplate.exec();
 		System.out.println(result);

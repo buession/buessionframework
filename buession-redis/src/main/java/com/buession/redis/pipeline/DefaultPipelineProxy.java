@@ -37,7 +37,7 @@ import com.buession.redis.core.FutureResult;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class DefaultPipelineProxy<T, FR extends FutureResult<?>> extends AbstractPipelineProxy<T, FR> {
+public class DefaultPipelineProxy<T, FR extends FutureResult<Object, ?>> extends AbstractPipelineProxy<T, FR> {
 
 	public DefaultPipelineProxy(final Pipeline target, final T object) {
 		super(target, object);

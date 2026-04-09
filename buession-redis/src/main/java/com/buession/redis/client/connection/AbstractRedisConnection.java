@@ -30,7 +30,9 @@ import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.core.Constants;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.core.PoolConfig;
+import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
+import com.buession.redis.exception.NotMultiRedisException;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
@@ -452,7 +454,7 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 
 			return result;
 		}else{
-			throw new RedisException("ERR EXEC without MULTI. Did you forget to call multi?");
+			throw new NotMultiRedisException(RedisCommand.EXEC);
 		}
 	}
 
@@ -464,7 +466,7 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 			transaction = null;
 			return okStatusConverter.convert(result);
 		}else{
-			throw new RedisException("ERR DISCARD without MULTI. Did you forget to call multi?");
+			throw new NotMultiRedisException(RedisCommand.DISCARD);
 		}
 	}
 

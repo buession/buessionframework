@@ -45,7 +45,8 @@ import java.util.stream.Collectors;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public abstract class AbstractTransactionProxy<T, FR extends FutureResult<?>> implements TransactionProxy<T, FR> {
+public abstract class AbstractTransactionProxy<T, FR extends FutureResult<Object, ?>>
+		implements TransactionProxy<T, FR> {
 
 	private Transaction target;
 

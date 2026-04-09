@@ -47,7 +47,7 @@ public abstract class AbstractLettuceRedisCommands extends AbstractRedisCommands
 	}
 
 	protected <R> R executeCommand(final RedisCommand command) {
-		return client.execute(new LettuceCommand<>(this.client, command));
+		return client.execute(new LettuceCommand<>(client, command));
 	}
 
 	protected <R> R executeCommand(final RedisCommand command,
@@ -58,11 +58,11 @@ public abstract class AbstractLettuceRedisCommands extends AbstractRedisCommands
 	protected <SR, R> R executeCommand(final RedisCommand command,
 	                                   final Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, SR> executor,
 	                                   final Converter<SR, R> converter) {
-		return client.execute(new LettuceCommand<>(this.client, command, executor, converter));
+		return client.execute(new LettuceCommand<>(client, command, executor, converter));
 	}
 
 	protected <R> R executeCommand(final RedisCommand command, final CommandArguments args) {
-		return client.execute(new LettuceCommand<>(this.client, command), args);
+		return client.execute(new LettuceCommand<>(client, command), args);
 	}
 
 	protected <R> R executeCommand(final RedisCommand command, final CommandArguments args,
@@ -73,11 +73,11 @@ public abstract class AbstractLettuceRedisCommands extends AbstractRedisCommands
 	protected <SR, R> R executeCommand(final RedisCommand command, final CommandArguments args,
 	                                   final Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, SR> executor,
 	                                   final Converter<SR, R> converter) {
-		return client.execute(new LettuceCommand<>(this.client, command, executor, converter), args);
+		return client.execute(new LettuceCommand<>(client, command, executor, converter), args);
 	}
 
 	protected <R> R executeCommand(final RedisCommand command, final RedisSubCommand subCommand) {
-		return client.execute(new LettuceCommand<>(this.client, command, subCommand));
+		return client.execute(new LettuceCommand<>(client, command, subCommand));
 	}
 
 	protected <R> R executeCommand(final RedisCommand command, final RedisSubCommand subCommand,
@@ -88,12 +88,12 @@ public abstract class AbstractLettuceRedisCommands extends AbstractRedisCommands
 	protected <SR, R> R executeCommand(final RedisCommand command, final RedisSubCommand subCommand,
 	                                   final Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, SR> executor,
 	                                   final Converter<SR, R> converter) {
-		return client.execute(new LettuceCommand<>(this.client, command, subCommand, executor, converter));
+		return client.execute(new LettuceCommand<>(client, command, subCommand, executor, converter));
 	}
 
 	protected <R> R executeCommand(final RedisCommand command, final RedisSubCommand subCommand,
 	                               final CommandArguments args) {
-		return client.execute(new LettuceCommand<>(this.client, command, subCommand), args);
+		return client.execute(new LettuceCommand<>(client, command, subCommand), args);
 	}
 
 	protected <R> R executeCommand(final RedisCommand command, final RedisSubCommand subCommand,
@@ -106,7 +106,7 @@ public abstract class AbstractLettuceRedisCommands extends AbstractRedisCommands
 	                                   final CommandArguments args,
 	                                   final Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, SR> executor,
 	                                   final Converter<SR, R> converter) {
-		return client.execute(new LettuceCommand<>(this.client, command, subCommand, executor, converter), args);
+		return client.execute(new LettuceCommand<>(client, command, subCommand, executor, converter), args);
 	}
 
 }

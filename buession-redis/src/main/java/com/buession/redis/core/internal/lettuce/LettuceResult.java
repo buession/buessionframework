@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.lettuce;
@@ -36,7 +36,7 @@ import io.lettuce.core.protocol.RedisCommand;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class LettuceResult<SV, TV> extends FutureResult<RedisCommand<?, SV, ?>> {
+public class LettuceResult<SV, TV> extends FutureResult<SV, RedisCommand<?, SV, ?>> {
 
 	@SuppressWarnings({"unchecked"})
 	public LettuceResult(final RedisFuture<SV> resultHolder) {
@@ -54,26 +54,18 @@ public class LettuceResult<SV, TV> extends FutureResult<RedisCommand<?, SV, ?>> 
 		return (SV) getHolder().getOutput().get();
 	}
 
-	public final static class Builder<SV, TV> {
-
-		private final RedisFuture<SV> response;
-
-		private Converter<SV, TV> converter;
+	public final static class Builder<SV, TV>
+			extends BaseBuild<SV, TV, RedisFuture<SV>, RedisCommand<?, SV, ?>, LettuceResult<SV, TV>> {
 
 		private Builder(final RedisFuture<SV> response, final Converter<SV, TV> converter) {
-			this.response = response;
-			this.converter = converter;
+			super(response, converter);
 		}
 
 		public static <SV, TV> Builder<SV, TV> fromRedisFuture(RedisFuture<SV> redisFuture) {
 			return new LettuceResult.Builder<>(redisFuture, Converters.always());
 		}
 
-		public Builder<SV, TV> mappedWith(Converter<SV, TV> converter) {
-			this.converter = converter;
-			return this;
-		}
-
+		@Override
 		public LettuceResult<SV, TV> build() {
 			return new LettuceResult<>(response, converter);
 		}
