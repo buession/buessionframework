@@ -49,34 +49,38 @@ public final class LettuceHyperLogLoCommands extends AbstractLettuceRedisCommand
 	@Override
 	public Status pfAdd(final String key, final String... elements) {
 		final CommandArguments args = CommandArguments.create(key).add(elements);
-		return executeCommand(
-				RedisCommand.PFADD, args, (cmd)->cmd.pfadd(rawBinaryKey(key), SafeEncoder.encode(elements)),
+		return executeCommand(RedisCommand.PFADD, args,
+				(cmd)->cmd.pfadd(rawBinaryKey(key), SafeEncoder.encode(elements)),
+				(cmd)->cmd.pfadd(rawBinaryKey(key), SafeEncoder.encode(elements)),
 				new OneStatusConverter());
 	}
 
 	@Override
 	public Status pfAdd(final byte[] key, final byte[]... elements) {
 		final CommandArguments args = CommandArguments.create(key).add(elements);
-		return executeCommand(
-				RedisCommand.PFADD, args, (cmd)->cmd.pfadd(rawKey(key), elements), new OneStatusConverter());
+		return executeCommand(RedisCommand.PFADD, args, (cmd)->cmd.pfadd(rawKey(key), elements),
+				(cmd)->cmd.pfadd(rawKey(key), elements), new OneStatusConverter());
 	}
 
 	@Override
 	public Long pfCount(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.PFCOUNT, args, (cmd)->cmd.pfcount(rawBinaryKeys(keys)));
+		return executeCommand(RedisCommand.PFCOUNT, args, (cmd)->cmd.pfcount(rawBinaryKeys(keys)),
+				(cmd)->cmd.pfcount(rawBinaryKeys(keys)));
 	}
 
 	@Override
 	public Long pfCount(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.PFCOUNT, args, (cmd)->cmd.pfcount(rawKeys(keys)));
+		return executeCommand(RedisCommand.PFCOUNT, args, (cmd)->cmd.pfcount(rawKeys(keys)),
+				(cmd)->cmd.pfcount(rawKeys(keys)));
 	}
 
 	@Override
 	public Status pfMerge(final String destKey, final String... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
 		return executeCommand(RedisCommand.PFMERGE, args,
+				(cmd)->cmd.pfmerge(rawBinaryKey(destKey), rawBinaryKeys(keys)),
 				(cmd)->cmd.pfmerge(rawBinaryKey(destKey), rawBinaryKeys(keys)),
 				new OkStatusConverter());
 	}
@@ -85,6 +89,7 @@ public final class LettuceHyperLogLoCommands extends AbstractLettuceRedisCommand
 	public Status pfMerge(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
 		return executeCommand(RedisCommand.PFMERGE, args, (cmd)->cmd.pfmerge(rawKey(destKey), rawKeys(keys)),
+				(cmd)->cmd.pfmerge(rawKey(destKey), rawKeys(keys)),
 				new OkStatusConverter());
 	}
 

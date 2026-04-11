@@ -41,8 +41,7 @@ import java.util.stream.Collectors;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class LettuceTransactionCommands extends AbstractLettuceRedisCommands
-		implements TransactionCommands {
+public final class LettuceTransactionCommands extends AbstractLettuceRedisCommands implements TransactionCommands {
 
 	public LettuceTransactionCommands(final LettuceRedisClient client) {
 		super(client);
@@ -50,37 +49,38 @@ public final class LettuceTransactionCommands extends AbstractLettuceRedisComman
 
 	@Override
 	public Status discard() {
-		return executeCommand(RedisCommand.DISCARD, (cmd)->{
-			RedisConnection connection = client.getConnection();
-			return connection.discard();
-		});
+		return executeCommand(RedisCommand.DISCARD, (cmd)->client.getConnection().discard(), null);
 	}
 
 	@Override
 	public List<Object> exec() {
-		return executeCommand(RedisCommand.EXEC, (cmd)->cmd.exec(), (v)->v.stream().collect(Collectors.toList()));
+		return executeCommand(RedisCommand.EXEC, (cmd)->client.getConnection().exec(), null);
 	}
 
 	@Override
 	public Status multi() {
-		return executeCommand(RedisCommand.MULTI, (cmd)->cmd.multi(), new OkStatusConverter());
+		return executeCommand(RedisCommand.MULTI, (cmd)->{
+			client.getConnection().multi();
+			return Status.SUCCESS;
+		}, null);
 	}
 
 	@Override
 	public Status unwatch() {
-		return executeCommand(RedisCommand.UNWATCH, (cmd)->cmd.unwatch(), new OkStatusConverter());
+		return executeCommand(RedisCommand.UNWATCH, (cmd)->cmd.unwatch(), null, new OkStatusConverter());
 	}
 
 	@Override
 	public Status watch(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.WATCH, args, (cmd)->cmd.watch(rawBinaryKeys(keys)), new OkStatusConverter());
+		return executeCommand(RedisCommand.WATCH, args, (cmd)->cmd.watch(rawBinaryKeys(keys)), null,
+				new OkStatusConverter());
 	}
 
 	@Override
 	public Status watch(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.WATCH, args, (cmd)->cmd.watch(rawKeys(keys)), new OkStatusConverter());
+		return executeCommand(RedisCommand.WATCH, args, (cmd)->cmd.watch(rawKeys(keys)), null, new OkStatusConverter());
 	}
 
 }

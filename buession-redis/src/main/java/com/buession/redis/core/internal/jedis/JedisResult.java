@@ -50,7 +50,7 @@ public class JedisResult<SV, TV> extends FutureResult<SV, Response<SV>> {
 	}
 
 	public final static class Builder<SV, TV>
-			extends BaseBuild<SV, TV, Response<SV>, Response<SV>, JedisResult<SV, TV>> {
+			extends BaseBuilder<SV, TV, Response<SV>, Response<SV>, JedisResult<SV, TV>> {
 
 		private Builder(final Response<SV> response, final Converter<SV, TV> converter) {
 			super(response, converter);
@@ -58,6 +58,11 @@ public class JedisResult<SV, TV> extends FutureResult<SV, Response<SV>> {
 
 		public static <SV, TV> Builder<SV, TV> fromResponse(Response<SV> response) {
 			return new Builder<>(response, Converters.always());
+		}
+
+		public Builder<SV, TV> mappedWith(Converter<SV, TV> converter) {
+			this.converter = converter;
+			return this;
 		}
 
 		@Override

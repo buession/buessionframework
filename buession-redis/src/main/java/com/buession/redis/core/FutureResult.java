@@ -73,20 +73,15 @@ public abstract class FutureResult<SV, T> {
 		return result == null ? null : converter.convert(result);
 	}
 
-	protected abstract static class BaseBuild<SV, TV, REP, T, FR extends FutureResult<SV, T>> {
+	protected abstract static class BaseBuilder<SV, TV, REP, T, FR extends FutureResult<SV, T>> {
 
 		protected final REP response;
 
 		protected Converter<SV, TV> converter;
 
-		protected BaseBuild(final REP response, final Converter<SV, TV> converter) {
+		protected BaseBuilder(final REP response, final Converter<SV, TV> converter) {
 			this.response = response;
 			this.converter = converter;
-		}
-
-		public BaseBuild<SV, TV, REP, T, FR> mappedWith(Converter<SV, TV> converter) {
-			this.converter = converter;
-			return this;
 		}
 
 		public abstract FR build();

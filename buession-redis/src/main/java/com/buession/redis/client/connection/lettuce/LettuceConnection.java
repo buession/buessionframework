@@ -42,10 +42,13 @@ import io.lettuce.core.LettuceClientConfig;
 import io.lettuce.core.LettucePool;
 import io.lettuce.core.LettucePoolConfig;
 import io.lettuce.core.RedisClient;
+import io.lettuce.core.RedisCommandsInvocationHandler;
 import io.lettuce.core.RedisCredentialsProvider;
 import io.lettuce.core.RedisURI;
+import io.lettuce.core.StatefulRedisCommandsHandler;
 import io.lettuce.core.StaticCredentialsProvider;
 import io.lettuce.core.api.StatefulRedisConnection;
+import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.codec.ByteArrayCodec;
 import io.lettuce.core.codec.RedisCodec;
@@ -269,11 +272,21 @@ public class LettuceConnection extends AbstractLettuceRedisConnection<StatefulRe
 	}
 
 	@Override
+	public RedisCommands<byte[], byte[]> getRedisCommands() {
+		return conn.sync();
+	}
+
+	@Override
+	public RedisAsyncCommands<byte[], byte[]> getRedisAsyncCommands() {
+		return conn.async();
+	}
+
+	@Override
 	public Transaction multi() {
 		if(transaction == null){
-			final RedisCommands<byte[], byte[]> commands = conn.sync();
-			commands.multi();
-			transaction = new DefaultTransactionProxy<>(new LettuceTransaction(commands), commands);
+			getRedisCommands().multi();
+			transaction = new DefaultTransactionProxy<>(new LettuceTransaction<>(getRedisAsyncCommands()),
+					getRedisAsyncCommands());
 		}
 
 		return transaction;
@@ -286,13 +299,19 @@ public class LettuceConnection extends AbstractLettuceRedisConnection<StatefulRe
 		}
 	}
 
+	@Override
+	protected RedisCommandsInvocationHandler<byte[], byte[]> createRedisCommandsInvocationHandler() {
+		return new StatefulRedisCommandsHandler<>(conn);
+	}
+
 	protected <K, V> StatefulRedisConnection<K, V> createStatefulRedisConnection(final RedisCodec<K, V> codec) {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
 		final LettuceDataSource dataSource = (LettuceDataSource) getDataSource();
 		final RedisURI redisURI = RedisURI.create(dataSource.getHost(), dataSource.getPort());
-		final RedisCredentialsProvider redisCredentialsProvider = Validate.hasText(dataSource.getPassword()) ?
-				new StaticCredentialsProvider(Validate.hasText(dataSource.getUsername()) ? dataSource.getUsername() :
-											  null, dataSource.getPassword().toCharArray()) : null;
+		final RedisCredentialsProvider redisCredentialsProvider = Validate.hasText(
+				dataSource.getPassword()) ? new StaticCredentialsProvider(
+				Validate.hasText(dataSource.getUsername()) ? dataSource.getUsername() : null,
+				dataSource.getPassword().toCharArray()) : null;
 
 		if(dataSource.getDatabase() >= 0){
 			redisURI.setDatabase(dataSource.getDatabase());
@@ -314,11 +333,8 @@ public class LettuceConnection extends AbstractLettuceRedisConnection<StatefulRe
 		final LettuceDataSource dataSource = (LettuceDataSource) getDataSource();
 		final LettucePoolConfig<byte[], byte[], StatefulRedisConnection<byte[], byte[]>> lettucePoolConfig = new LettucePoolConfig<>();
 		final LettuceClientConfig clientConfig = LettuceClientConfigBuilder.create(dataSource, getSslConfiguration())
-				.connectTimeout(getConnectTimeout())
-				.socketTimeout(getSoTimeout())
-				.infiniteSoTimeout(getInfiniteSoTimeout())
-				.database(dataSource.getDatabase())
-				.build();
+				.connectTimeout(getConnectTimeout()).socketTimeout(getSoTimeout())
+				.infiniteSoTimeout(getInfiniteSoTimeout()).database(dataSource.getDatabase()).build();
 
 		getPoolConfig().toGenericObjectPoolConfig(lettucePoolConfig);
 

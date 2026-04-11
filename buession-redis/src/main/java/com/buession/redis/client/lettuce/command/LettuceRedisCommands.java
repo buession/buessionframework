@@ -24,28 +24,6 @@
  */
 package com.buession.redis.client.lettuce.command;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.client.connection.lettuce.LettuceRedisConnection;
-import com.buession.redis.client.lettuce.LettuceRedisClient;
-import com.buession.redis.core.command.RedisCommand;
-import com.buession.redis.core.command.RedisSubCommand;
-import com.buession.redis.core.internal.lettuce.LettuceResult;
-import com.buession.redis.exception.RedisException;
-import com.buession.redis.pipeline.PipelineProxy;
-import com.buession.redis.transaction.TransactionProxy;
-import io.lettuce.core.RedisCommands;
-import io.lettuce.core.RedisCommandsInvocationHandler;
-import io.lettuce.core.RedisFuture;
-import io.lettuce.core.StatefulRedisClusterCommandsHandler;
-import io.lettuce.core.StatefulRedisCommandsHandler;
-import io.lettuce.core.api.StatefulConnection;
-import io.lettuce.core.api.StatefulRedisConnection;
-import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
-import io.lettuce.core.sentinel.api.StatefulRedisSentinelConnection;
-
-import java.lang.reflect.Proxy;
-
 /**
  * Lettuce Redis 命令
  *
@@ -53,67 +31,5 @@ import java.lang.reflect.Proxy;
  * @since 4.0.0
  */
 public interface LettuceRedisCommands extends com.buession.redis.core.command.RedisCommands {
-
-	/**
-	 * Lettuce 命令
-	 *
-	 * @param <SR>
-	 * 		原始类型
-	 * @param <R>
-	 * 		返回类型
-	 *
-	 * @since 4.0.0
-	 */
-	final class LettuceCommand<SR, R>
-			extends AbstractCommand<LettuceRedisClient, RedisCommands<byte[], byte[]>, SR, SR, R> {
-
-		public LettuceCommand(final LettuceRedisClient client, final RedisCommand command) {
-			super(client, command);
-		}
-
-		public LettuceCommand(final LettuceRedisClient client, final RedisCommand command,
-		                      final Executor<RedisCommands<byte[], byte[]>, SR> executor,
-		                      final Converter<SR, R> converter) {
-			super(client, command, executor, converter);
-		}
-
-		public LettuceCommand(final LettuceRedisClient client, final RedisCommand command,
-		                      final RedisSubCommand subCommand) {
-			super(client, command, subCommand);
-		}
-
-		public LettuceCommand(final LettuceRedisClient client, final RedisCommand command,
-		                      final RedisSubCommand subCommand,
-		                      final Executor<RedisCommands<byte[], byte[]>, SR> executor,
-		                      final Converter<SR, R> converter) {
-			super(client, command, subCommand, executor, converter);
-		}
-
-		@SuppressWarnings({"unchecked"})
-		@Override
-		protected R doExecute(final RedisConnection conn) throws RedisException {
-			final StatefulConnection<byte[], byte[]> connection =
-					((LettuceRedisConnection<StatefulConnection<byte[], byte[]>>) conn).getConn();
-			final SR result = executor.execute(createRedisCommands(connection));
-			return result == null ? null : converter.convert(result);
-		}
-
-		@SuppressWarnings({"unchecked"})
-		private static <K, V> RedisCommands<K, V> createRedisCommands(final StatefulConnection<K, V> connection) {
-			RedisCommandsInvocationHandler<K, V> handler;
-
-			if(connection instanceof StatefulRedisClusterConnection){
-				handler = new StatefulRedisClusterCommandsHandler<>((StatefulRedisClusterConnection<K, V>) connection);
-			}else if(connection instanceof StatefulRedisSentinelConnection){
-				handler = new StatefulRedisCommandsHandler<>((StatefulRedisConnection<K, V>) connection);
-			}else{
-				handler = new StatefulRedisCommandsHandler<>((StatefulRedisConnection<K, V>) connection);
-			}
-
-			return (RedisCommands<K, V>) Proxy.newProxyInstance(RedisCommands.class.getClassLoader(),
-					new Class[]{RedisCommands.class}, handler);
-		}
-
-	}
 
 }

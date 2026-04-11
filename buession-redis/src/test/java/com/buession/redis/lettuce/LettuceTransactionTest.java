@@ -25,6 +25,7 @@
 package com.buession.redis.lettuce;
 
 import com.buession.redis.RedisTemplate;
+import com.buession.redis.User;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -40,10 +41,12 @@ public class LettuceTransactionTest extends AbstractLettuceRedisTest {
 		RedisTemplate redisTemplate = redisTemplate();
 		redisTemplate.multi();
 		redisTemplate.set("a1", "Lettuce");
-		redisTemplate.exists("a1");
-		redisTemplate.expire("a1", 60);
+		//redisTemplate.exists("a1");
+		//redisTemplate.expire("a1", 60);
 		String ret = redisTemplate.get("a1");
 		//redisTemplate.role();
+		User user = redisTemplate.get("user", User.class);
+		System.out.println(user);
 		List<Object> result = redisTemplate.exec();
 		System.out.println(result);
 	}

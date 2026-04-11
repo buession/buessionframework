@@ -69,7 +69,8 @@ public final class LettuceConnectionCommands extends AbstractLettuceRedisCommand
 	@Override
 	public Status auth(final String user, final String password) {
 		final CommandArguments args = CommandArguments.create(user, password);
-		return executeCommand(RedisCommand.AUTH, args, (cmd)->cmd.auth(user, password), new OkStatusConverter());
+		return executeCommand(RedisCommand.AUTH, args, (cmd)->cmd.auth(user, password), (cmd)->cmd.auth(user, password),
+				new OkStatusConverter());
 	}
 
 	@Override
@@ -80,7 +81,8 @@ public final class LettuceConnectionCommands extends AbstractLettuceRedisCommand
 	@Override
 	public Status auth(final String password) {
 		final CommandArguments args = CommandArguments.create(password);
-		return executeCommand(RedisCommand.AUTH, args, (cmd)->cmd.auth(password), new OkStatusConverter());
+		return executeCommand(RedisCommand.AUTH, args, (cmd)->cmd.auth(password), (cmd)->cmd.auth(password),
+				new OkStatusConverter());
 	}
 
 	@Override
@@ -92,38 +94,41 @@ public final class LettuceConnectionCommands extends AbstractLettuceRedisCommand
 	public Status clientCaching(final boolean isYes) {
 		final CommandArguments args = CommandArguments.create(isYes ? Keyword.Common.YES : Keyword.Common.NO);
 		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_CACHING, args,
-				(cmd)->cmd.clientCaching(isYes),
+				(cmd)->cmd.clientCaching(isYes), (cmd)->cmd.clientCaching(isYes),
 				new OkStatusConverter());
 	}
 
 	@Override
 	public String clientGetName() {
 		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_GETNAME, (cmd)->cmd.clientGetname(),
-				SafeEncoder::encode);
+				(cmd)->cmd.clientGetname(), SafeEncoder::encode);
 	}
 
 	@Override
 	public Integer clientGetRedir() {
 		return executeCommand(
-				RedisCommand.CLIENT, RedisSubCommand.CLIENT_GETREDIR, (cmd)->cmd.clientGetredir(), Long::intValue);
+				RedisCommand.CLIENT, RedisSubCommand.CLIENT_GETREDIR, (cmd)->cmd.clientGetredir(),
+				(cmd)->cmd.clientGetredir(), Long::intValue);
 	}
 
 	@Override
 	public Long clientId() {
-		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_ID, (cmd)->cmd.clientId(), (v)->v);
+		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_ID, (cmd)->cmd.clientId(),
+				(cmd)->cmd.clientId(), (v)->v);
 	}
 
 	@Override
 	public Client clientInfo() {
-		return executeCommand(
-				RedisCommand.CLIENT, RedisSubCommand.CLIENT_INFO, (cmd)->cmd.clientInfo(), new ClientConverter());
+		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_INFO,
+				(cmd)->cmd.clientInfo(), (cmd)->cmd.clientInfo(),
+				new ClientConverter());
 	}
 
 	@Override
 	public Status clientKill(final String host, final int port) {
 		final CommandArguments args = CommandArguments.create(host, port);
-		return executeCommand(
-				RedisCommand.CLIENT, RedisSubCommand.CLIENT_KILL, args, (cmd)->cmd.clientKill(host + ':' + port),
+		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_KILL, args,
+				(cmd)->cmd.clientKill(host + ':' + port), (cmd)->cmd.clientKill(host + ':' + port),
 				new OkStatusConverter());
 	}
 
@@ -135,13 +140,18 @@ public final class LettuceConnectionCommands extends AbstractLettuceRedisCommand
 	@Override
 	public List<Client> clientList() {
 		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_LIST, (cmd)->cmd.clientList(),
-				new ClientConverter.ClientListConverter());
+				(cmd)->cmd.clientList(), new ClientConverter.ClientListConverter());
 	}
 
 	@Override
 	public List<Client> clientList(final ClientType clientType) {
 		final CommandArguments args = CommandArguments.create("TYPE", clientType);
 		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_LIST, args, (cmd)->switch(clientType){
+			case NORMAL -> cmd.clientList(ClientListArgs.Builder.typeNormal());
+			case MASTER -> cmd.clientList(ClientListArgs.Builder.typeMaster());
+			case SLAVE, REPLICA -> cmd.clientList(ClientListArgs.Builder.typeReplica());
+			case PUBSUB -> cmd.clientList(ClientListArgs.Builder.typePubsub());
+		}, (cmd)->switch(clientType){
 			case NORMAL -> cmd.clientList(ClientListArgs.Builder.typeNormal());
 			case MASTER -> cmd.clientList(ClientListArgs.Builder.typeMaster());
 			case SLAVE, REPLICA -> cmd.clientList(ClientListArgs.Builder.typeReplica());
@@ -153,6 +163,7 @@ public final class LettuceConnectionCommands extends AbstractLettuceRedisCommand
 	public List<Client> clientList(final long... ids) {
 		final CommandArguments args = CommandArguments.create().add("ID", ids);
 		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_LIST, args,
+				(cmd)->cmd.clientList(ClientListArgs.Builder.ids(ids)),
 				(cmd)->cmd.clientList(ClientListArgs.Builder.ids(ids)), new ClientConverter.ClientListConverter());
 	}
 
@@ -160,7 +171,7 @@ public final class LettuceConnectionCommands extends AbstractLettuceRedisCommand
 	public Status clientNoEvict(final boolean on) {
 		final CommandArguments args = CommandArguments.create(on ? Keyword.Common.ON : Keyword.Common.OFF);
 		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_NO_EVICT, args, (cmd)->cmd.clientNoEvict(on),
-				new OkStatusConverter());
+				(cmd)->cmd.clientNoEvict(on), new OkStatusConverter());
 	}
 
 	@Override
@@ -173,14 +184,14 @@ public final class LettuceConnectionCommands extends AbstractLettuceRedisCommand
 	public Status clientPause(final int timeout) {
 		final CommandArguments args = CommandArguments.create(timeout);
 		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_PAUSE, args, (cmd)->cmd.clientPause(timeout),
-				new OkStatusConverter());
+				(cmd)->cmd.clientPause(timeout), new OkStatusConverter());
 	}
 
 	@Override
 	public Status clientPause(final int timeout, final ClientPauseMode pauseMode) {
 		final CommandArguments args = CommandArguments.create(timeout).add(pauseMode);
 		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_PAUSE, args, (cmd)->cmd.clientPause(timeout),
-				new OkStatusConverter());
+				(cmd)->cmd.clientPause(timeout), new OkStatusConverter());
 	}
 
 	@Override
@@ -193,7 +204,8 @@ public final class LettuceConnectionCommands extends AbstractLettuceRedisCommand
 	public Status clientSetInfo(final ClientInfoOption option, final String value) {
 		final CommandArguments args = CommandArguments.create(option).add(value);
 		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_SETINFO, args,
-				(cmd)->cmd.clientSetinfo(option.getValue(), value), new OkStatusConverter());
+				(cmd)->cmd.clientSetinfo(option.getValue(), value), (cmd)->cmd.clientSetinfo(option.getValue(), value),
+				new OkStatusConverter());
 	}
 
 	@Override
@@ -205,7 +217,7 @@ public final class LettuceConnectionCommands extends AbstractLettuceRedisCommand
 	public Status clientSetName(final byte[] name) {
 		final CommandArguments args = CommandArguments.create(name);
 		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_SETNAME, args, (cmd)->cmd.clientSetname(name),
-				new OkStatusConverter());
+				(cmd)->cmd.clientSetname(name), new OkStatusConverter());
 	}
 
 	@Override
@@ -216,19 +228,21 @@ public final class LettuceConnectionCommands extends AbstractLettuceRedisCommand
 
 		lettuceTrackingArgs.enabled(on);
 		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_TRACKING, args,
-				(cmd)->cmd.clientTracking(lettuceTrackingArgs), new OkStatusConverter());
+				(cmd)->cmd.clientTracking(lettuceTrackingArgs), (cmd)->cmd.clientTracking(lettuceTrackingArgs),
+				new OkStatusConverter());
 	}
 
 	@Override
 	public TrackingInfo clientTrackingInfo() {
 		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_TRACKINGINFO, (cmd)->cmd.clientTrackinginfo(),
-				new TrackingInfoTrackingInfoConverter());
+				(cmd)->cmd.clientTrackinginfo(), new TrackingInfoTrackingInfoConverter());
 	}
 
 	@Override
 	public Status clientUnblock(final int clientId) {
 		final CommandArguments args = CommandArguments.create(clientId);
 		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_TRACKINGINFO, args,
+				(cmd)->cmd.clientUnblock(clientId, UnblockType.ERROR),
 				(cmd)->cmd.clientUnblock(clientId, UnblockType.ERROR), new OneStatusConverter());
 	}
 
@@ -237,6 +251,7 @@ public final class LettuceConnectionCommands extends AbstractLettuceRedisCommand
 		final CommandArguments args = CommandArguments.create(clientId).add(type);
 		final ClientUnblockTypeConverter clientUnblockTypeConverter = new ClientUnblockTypeConverter();
 		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_UNBLOCK, args,
+				(cmd)->cmd.clientUnblock(clientId, clientUnblockTypeConverter.convert(type)),
 				(cmd)->cmd.clientUnblock(clientId, clientUnblockTypeConverter.convert(type)), new OneStatusConverter());
 	}
 
@@ -249,13 +264,13 @@ public final class LettuceConnectionCommands extends AbstractLettuceRedisCommand
 	public String echo(final String str) {
 		final CommandArguments args = CommandArguments.create(str);
 		return executeCommand(RedisCommand.ECHO, args, (cmd)->cmd.echo(SafeEncoder.encode(str)),
-				SafeEncoder::encode);
+				(cmd)->cmd.echo(SafeEncoder.encode(str)), SafeEncoder::encode);
 	}
 
 	@Override
 	public byte[] echo(final byte[] str) {
 		final CommandArguments args = CommandArguments.create(str);
-		return executeCommand(RedisCommand.ECHO, args, (cmd)->cmd.echo(str));
+		return executeCommand(RedisCommand.ECHO, args, (cmd)->cmd.echo(str), (cmd)->cmd.echo(str));
 	}
 
 	@Override
@@ -311,12 +326,12 @@ public final class LettuceConnectionCommands extends AbstractLettuceRedisCommand
 
 	@Override
 	public Status ping() {
-		return executeCommand(RedisCommand.PING, (cmd)->cmd.ping(), new PingResultConverter());
+		return executeCommand(RedisCommand.PING, (cmd)->cmd.ping(), (cmd)->cmd.ping(), new PingResultConverter());
 	}
 
 	@Override
 	public Status quit() {
-		return executeCommand(RedisCommand.QUIT, (cmd)->cmd.quit(), new OkStatusConverter());
+		return executeCommand(RedisCommand.QUIT, (cmd)->cmd.quit(), (cmd)->cmd.quit(), new OkStatusConverter());
 	}
 
 	@Override

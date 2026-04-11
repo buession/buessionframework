@@ -72,7 +72,7 @@ public class LettucePipeline implements Pipeline {
 		List<RedisCommand<?, ?, ?>> futures = new ArrayList<>(ppline.size());
 
 		for(LettuceResult<?, ?> result : ppline){
-			futures.add(result.getHolder());
+			//futures.add(result.getHolder());
 		}
 
 		try{
@@ -85,7 +85,7 @@ public class LettucePipeline implements Pipeline {
 				CommandOutput<?, ?, ?> output;
 
 				for(LettuceResult<?, ?> result : ppline){
-					output = result.getHolder().getOutput();
+					output = null;//result.getHolder().getOutput();
 					if(output.hasError()){
 						Exception err = new RedisPipelineException(output.getError());
 						if(problem == null){
@@ -116,7 +116,7 @@ public class LettucePipeline implements Pipeline {
 		List<RedisCommand<?, ?, ?>> futures = new ArrayList<>(ppline.size());
 
 		for(LettuceResult<?, ?> result : ppline){
-			futures.add(result.getHolder());
+			//futures.add(result.getHolder());
 		}
 
 		try{
@@ -131,7 +131,7 @@ public class LettucePipeline implements Pipeline {
 				CommandOutput<?, ?, ?> output;
 
 				for(LettuceResult<?, ?> result : ppline){
-					output = result.getHolder().getOutput();
+					output = null;//result.getHolder().getOutput();
 					if(output.hasError()){
 						Exception err = new RedisPipelineException(output.getError());
 						if(problem == null){

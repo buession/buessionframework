@@ -25,13 +25,22 @@
 package com.buession.redis.client.lettuce.command;
 
 import com.buession.core.converter.Converter;
+import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.client.connection.lettuce.LettuceRedisConnection;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.core.command.AbstractRedisCommands;
 import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.RedisCommands;
 import com.buession.redis.core.command.RedisSubCommand;
+import com.buession.redis.core.internal.lettuce.LettuceResult;
+import com.buession.redis.exception.NotMultiRedisException;
+import com.buession.redis.exception.RedisException;
+import com.buession.redis.transaction.TransactionProxy;
+import io.lettuce.core.RedisFuture;
+import io.lettuce.core.api.StatefulConnection;
+import io.lettuce.core.api.async.RedisAsyncCommands;
+import io.lettuce.core.api.sync.RedisCommands;
 
 /**
  * Lettuce Redis 命令抽象类
@@ -40,73 +49,225 @@ import com.buession.redis.core.command.RedisSubCommand;
  * @since 4.0.0
  */
 public abstract class AbstractLettuceRedisCommands extends AbstractRedisCommands<LettuceRedisClient>
-		implements LettuceRedisCommands, RedisCommands {
+		implements LettuceRedisCommands, com.buession.redis.core.command.RedisCommands {
 
 	public AbstractLettuceRedisCommands(final LettuceRedisClient client) {
 		super(client);
 	}
 
 	protected <R> R executeCommand(final RedisCommand command) {
-		return client.execute(new LettuceCommand<>(client, command));
+		if(isMulti()){
+			return client.execute(new LettuceAsyncCommand<>(client, command));
+		}else{
+			return client.execute(new LettuceCommand<>(client, command));
+		}
 	}
 
 	protected <R> R executeCommand(final RedisCommand command,
-	                               final Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, R> executor) {
-		return executeCommand(command, executor, (v)->v);
+	                               final Command.Executor<RedisCommands<byte[], byte[]>, R> executor,
+	                               final Command.Executor<RedisAsyncCommands<byte[], byte[]>, RedisFuture<R>> asyncExecutor) {
+		return executeCommand(command, executor, asyncExecutor, (v)->v);
 	}
 
 	protected <SR, R> R executeCommand(final RedisCommand command,
-	                                   final Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, SR> executor,
+	                                   final Command.Executor<RedisCommands<byte[], byte[]>, SR> executor,
+	                                   final Command.Executor<RedisAsyncCommands<byte[], byte[]>, RedisFuture<SR>> asyncExecutor,
 	                                   final Converter<SR, R> converter) {
-		return client.execute(new LettuceCommand<>(client, command, executor, converter));
+		if(isMulti()){
+			return client.execute(new LettuceAsyncCommand<>(client, command, asyncExecutor, converter));
+		}else{
+			return client.execute(new LettuceCommand<>(client, command, executor, converter));
+		}
 	}
 
 	protected <R> R executeCommand(final RedisCommand command, final CommandArguments args) {
-		return client.execute(new LettuceCommand<>(client, command), args);
+		if(isMulti()){
+			return client.execute(new LettuceAsyncCommand<>(client, command), args);
+		}else{
+			return client.execute(new LettuceCommand<>(client, command), args);
+		}
 	}
 
 	protected <R> R executeCommand(final RedisCommand command, final CommandArguments args,
-	                               final Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, R> executor) {
-		return executeCommand(command, args, executor, (v)->v);
+	                               final Command.Executor<RedisCommands<byte[], byte[]>, R> executor,
+	                               final Command.Executor<RedisAsyncCommands<byte[], byte[]>, RedisFuture<R>> asyncExecutor) {
+		return executeCommand(command, args, executor, asyncExecutor, (v)->v);
 	}
 
 	protected <SR, R> R executeCommand(final RedisCommand command, final CommandArguments args,
-	                                   final Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, SR> executor,
+	                                   final Command.Executor<RedisCommands<byte[], byte[]>, SR> executor,
+	                                   final Command.Executor<RedisAsyncCommands<byte[], byte[]>, RedisFuture<SR>> asyncExecutor,
 	                                   final Converter<SR, R> converter) {
-		return client.execute(new LettuceCommand<>(client, command, executor, converter), args);
+		if(isMulti()){
+			return client.execute(new LettuceAsyncCommand<>(client, command, asyncExecutor, converter), args);
+		}else{
+			return client.execute(new LettuceCommand<>(client, command, executor, converter), args);
+		}
 	}
 
 	protected <R> R executeCommand(final RedisCommand command, final RedisSubCommand subCommand) {
-		return client.execute(new LettuceCommand<>(client, command, subCommand));
+		if(isMulti()){
+			return client.execute(new LettuceAsyncCommand<>(client, command, subCommand));
+		}else{
+			return client.execute(new LettuceCommand<>(client, command, subCommand));
+		}
 	}
 
 	protected <R> R executeCommand(final RedisCommand command, final RedisSubCommand subCommand,
-	                               final Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, R> executor) {
-		return executeCommand(command, subCommand, executor, (v)->v);
+	                               final Command.Executor<RedisCommands<byte[], byte[]>, R> executor,
+	                               final Command.Executor<RedisAsyncCommands<byte[], byte[]>, RedisFuture<R>> asyncExecutor) {
+		return executeCommand(command, subCommand, executor, asyncExecutor, (v)->v);
 	}
 
 	protected <SR, R> R executeCommand(final RedisCommand command, final RedisSubCommand subCommand,
-	                                   final Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, SR> executor,
+	                                   final Command.Executor<RedisCommands<byte[], byte[]>, SR> executor,
+	                                   final Command.Executor<RedisAsyncCommands<byte[], byte[]>, RedisFuture<SR>> asyncExecutor,
 	                                   final Converter<SR, R> converter) {
-		return client.execute(new LettuceCommand<>(client, command, subCommand, executor, converter));
+		if(isMulti()){
+			return client.execute(new LettuceAsyncCommand<>(client, command, subCommand, asyncExecutor, converter));
+		}else{
+			return client.execute(new LettuceCommand<>(client, command, subCommand, executor, converter));
+		}
 	}
 
 	protected <R> R executeCommand(final RedisCommand command, final RedisSubCommand subCommand,
 	                               final CommandArguments args) {
-		return client.execute(new LettuceCommand<>(client, command, subCommand), args);
+		if(isMulti()){
+			return client.execute(new LettuceAsyncCommand<>(client, command, subCommand), args);
+		}else{
+			return client.execute(new LettuceCommand<>(client, command, subCommand), args);
+		}
 	}
 
 	protected <R> R executeCommand(final RedisCommand command, final RedisSubCommand subCommand,
 	                               final CommandArguments args,
-	                               final Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, R> executor) {
-		return executeCommand(command, subCommand, args, executor, (v)->v);
+	                               final Command.Executor<RedisCommands<byte[], byte[]>, R> executor,
+	                               final Command.Executor<RedisAsyncCommands<byte[], byte[]>, RedisFuture<R>> asyncExecutor) {
+		return executeCommand(command, subCommand, args, executor, asyncExecutor, (v)->v);
 	}
 
 	protected <SR, R> R executeCommand(final RedisCommand command, final RedisSubCommand subCommand,
 	                                   final CommandArguments args,
-	                                   final Command.Executor<io.lettuce.core.RedisCommands<byte[], byte[]>, SR> executor,
+	                                   final Command.Executor<RedisCommands<byte[], byte[]>, SR> executor,
+	                                   final Command.Executor<RedisAsyncCommands<byte[], byte[]>, RedisFuture<SR>> asyncExecutor,
 	                                   final Converter<SR, R> converter) {
-		return client.execute(new LettuceCommand<>(client, command, subCommand, executor, converter), args);
+		if(isMulti()){
+			return client.execute(new LettuceAsyncCommand<>(client, command, subCommand, asyncExecutor, converter),
+					args);
+		}else{
+			return client.execute(new LettuceCommand<>(client, command, subCommand, executor, converter), args);
+		}
+	}
+
+	/**
+	 * Lettuce 命令
+	 *
+	 * @param <SR>
+	 * 		原始类型
+	 * @param <R>
+	 * 		返回类型
+	 *
+	 * @since 4.0.0
+	 */
+	protected final static class LettuceCommand<SR, R> extends
+			AbstractCommand<LettuceRedisClient, RedisCommands<byte[], byte[]>, SR, SR, R> {
+
+		public LettuceCommand(final LettuceRedisClient client, final RedisCommand command) {
+			super(client, command);
+		}
+
+		public LettuceCommand(final LettuceRedisClient client, final RedisCommand command,
+		                      final Executor<RedisCommands<byte[], byte[]>, SR> executor,
+		                      final Converter<SR, R> converter) {
+			super(client, command, executor, converter);
+		}
+
+		public LettuceCommand(final LettuceRedisClient client, final RedisCommand command,
+		                      final RedisSubCommand subCommand) {
+			super(client, command, subCommand);
+		}
+
+		public LettuceCommand(final LettuceRedisClient client, final RedisCommand command,
+		                      final RedisSubCommand subCommand,
+		                      final Executor<RedisCommands<byte[], byte[]>, SR> executor,
+		                      final Converter<SR, R> converter) {
+			super(client, command, subCommand, executor, converter);
+		}
+
+		@SuppressWarnings({"unchecked"})
+		@Override
+		protected R doExecute(final RedisConnection conn) throws RedisException {
+			final LettuceRedisConnection<StatefulConnection<byte[], byte[]>> lettuceRedisConnection =
+					(LettuceRedisConnection<StatefulConnection<byte[], byte[]>>) conn;
+			final SR result = executor.execute(lettuceRedisConnection.getRedisCommands());
+			return result == null ? null : converter.convert(result);
+		}
+
+	}
+
+	/**
+	 * Lettuce 命令
+	 *
+	 * @param <SR>
+	 * 		原始类型
+	 * @param <R>
+	 * 		返回类型
+	 *
+	 * @since 4.0.0
+	 */
+	protected final static class LettuceAsyncCommand<SR, R> extends
+			AbstractCommand<LettuceRedisClient, RedisAsyncCommands<byte[], byte[]>, RedisFuture<SR>, SR, R> {
+
+		public LettuceAsyncCommand(final LettuceRedisClient client, final RedisCommand command) {
+			super(client, command);
+		}
+
+		public LettuceAsyncCommand(final LettuceRedisClient client, final RedisCommand command,
+		                           final Executor<RedisAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
+		                           final Converter<SR, R> converter) {
+			super(client, command, executor, converter);
+		}
+
+		public LettuceAsyncCommand(final LettuceRedisClient client, final RedisCommand command,
+		                           final RedisSubCommand subCommand) {
+			super(client, command, subCommand);
+		}
+
+		public LettuceAsyncCommand(final LettuceRedisClient client, final RedisCommand command,
+		                           final RedisSubCommand subCommand,
+		                           final Executor<RedisAsyncCommands<byte[], byte[]>, RedisFuture<SR>> executor,
+		                           final Converter<SR, R> converter) {
+			super(client, command, subCommand, executor, converter);
+		}
+
+		@SuppressWarnings({"unchecked"})
+		@Override
+		protected R doExecute(final RedisConnection conn) throws RedisException {
+			final com.buession.redis.transaction.Transaction transaction = conn.getTransaction();
+
+			if(transaction == null){
+				throw new NotMultiRedisException(getCommand(), getSubCommand());
+			}
+
+			final TransactionProxy<RedisAsyncCommands<byte[], byte[]>, LettuceResult<SR, R>> transactionProxy =
+					(TransactionProxy<RedisAsyncCommands<byte[], byte[]>, LettuceResult<SR, R>>) transaction;
+			final RedisFuture<SR> future = executor.execute(transactionProxy.getObject());
+			final LettuceResult<SR, R> result =
+					converter == null ? newLettuceResult(future) : newLettuceResult(future, converter);
+
+			transactionProxy.getTxResults().add(result);
+			return null;
+		}
+
+		protected LettuceResult<SR, R> newLettuceResult(final RedisFuture<SR> future) {
+			return LettuceResult.Builder.<SR, R>fromRedisFuture(future).build();
+		}
+
+		protected LettuceResult<SR, R> newLettuceResult(final RedisFuture<SR> future,
+		                                                final Converter<SR, R> converter) {
+			return LettuceResult.Builder.<SR, R>fromRedisFuture(future).mappedWith(converter).build();
+		}
+
 	}
 
 }

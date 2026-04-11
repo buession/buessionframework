@@ -54,6 +54,10 @@ public abstract class AbstractRedisCommands<C extends RedisClient> implements Re
 		return client.getConnection().isTransaction();
 	}
 
+	protected boolean isMulti() {
+		return isPipeline() || isTransaction();
+	}
+
 	protected final String rawKey(final String key) {
 		String prefix = client.getClientOptions().getPrefix();
 		return Validate.isEmpty(prefix) ? key : prefix.concat(key);

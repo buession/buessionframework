@@ -29,7 +29,10 @@ package com.buession.redis.serializer;
 import com.buession.core.deserializer.DeserializerException;
 import com.buession.core.deserializer.FastJson2JsonDeserializer;
 import com.buession.core.deserializer.FastJsonJsonDeserializer;
+import com.buession.core.deserializer.JsonDeserializer;
+import com.buession.core.serializer.JsonSerializer;
 import com.buession.core.serializer.SerializerException;
+import com.buession.core.type.TypeReference;
 import com.buession.core.utils.ClassUtils;
 
 import java.nio.charset.Charset;
@@ -55,9 +58,9 @@ public class FastJsonJsonSerializer extends AbstractSerializer<FastJsonJsonSeria
 	/**
 	 * FastJSON 序列化实现
 	 */
-	protected final static class FastJsonJsonSerializerImpl implements com.buession.core.serializer.Serializer {
+	protected final static class FastJsonJsonSerializerImpl implements JsonSerializer<Object> {
 
-		private final com.buession.core.serializer.Serializer serializer;
+		private final JsonSerializer<?> serializer;
 
 		public FastJsonJsonSerializerImpl(final boolean isFastJson2) {
 			this.serializer = isFastJson2 ? new com.buession.core.serializer.FastJson2JsonSerializer() : new com.buession.core.serializer.FastJsonJsonSerializer();
@@ -98,9 +101,9 @@ public class FastJsonJsonSerializer extends AbstractSerializer<FastJsonJsonSeria
 	/**
 	 * FastJSON 反序列化实现
 	 */
-	protected final static class FastJsonJsonDeserializerImpl implements com.buession.core.deserializer.Deserializer {
+	protected final static class FastJsonJsonDeserializerImpl implements JsonDeserializer<Object> {
 
-		private final com.buession.core.deserializer.Deserializer deserializer;
+		private final JsonDeserializer<?> deserializer;
 
 		public FastJsonJsonDeserializerImpl(final boolean isFastJson2) {
 			this.deserializer = isFastJson2 ? new FastJson2JsonDeserializer() : new FastJsonJsonDeserializer();
@@ -134,6 +137,26 @@ public class FastJsonJsonSerializer extends AbstractSerializer<FastJsonJsonSeria
 		@Override
 		public <V> V deserialize(byte[] bytes, Charset charset) throws DeserializerException {
 			return deserializer.deserialize(bytes, charset);
+		}
+
+		@Override
+		public <V> V deserialize(final String str, final Class<V> clazz) throws DeserializerException {
+			return deserializer.deserialize(str, clazz);
+		}
+
+		@Override
+		public <V> V deserialize(final String str, final TypeReference<V> type) throws DeserializerException {
+			return deserializer.deserialize(str, type);
+		}
+
+		@Override
+		public <V> V deserialize(final byte[] str, final Class<V> clazz) throws DeserializerException {
+			return deserializer.deserialize(str, clazz);
+		}
+
+		@Override
+		public <V> V deserialize(final byte[] str, final TypeReference<V> type) throws DeserializerException {
+			return deserializer.deserialize(str, type);
 		}
 
 	}

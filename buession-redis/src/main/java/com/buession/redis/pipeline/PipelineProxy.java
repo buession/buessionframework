@@ -39,7 +39,7 @@ import java.util.Queue;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public interface PipelineProxy<T, FR extends FutureResult<Object, ?>> extends Pipeline {
+public interface PipelineProxy<T, FR extends FutureResult<?, ?>> extends Pipeline {
 
 	/**
 	 * 返回原生管道实例

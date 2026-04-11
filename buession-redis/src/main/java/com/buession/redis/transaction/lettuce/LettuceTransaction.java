@@ -19,47 +19,57 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.transaction.lettuce;
 
 import com.buession.core.utils.Assert;
 import com.buession.redis.transaction.Transaction;
-import io.lettuce.core.api.sync.RedisCommands;
+import io.lettuce.core.api.async.RedisTransactionalAsyncCommands;
+import io.lettuce.core.api.sync.RedisTransactionalCommands;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * Lettuce 事务
  *
+ * @param <K>
+ * 		Key 类型
+ * @param <V>
+ * 		值类型
+ *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class LettuceTransaction implements Transaction {
+public class LettuceTransaction<K, V> implements Transaction {
 
-	private final RedisCommands<byte[], byte[]> delegate;
+	private final RedisTransactionalAsyncCommands<K, V> delegate;
 
 	private final static Logger logger = LoggerFactory.getLogger(LettuceTransaction.class);
 
-	public LettuceTransaction(RedisCommands<byte[], byte[]> transaction) {
-		Assert.isNull(transaction, "Redis Transaction cloud not be null.");
-		this.delegate = transaction;
+	public LettuceTransaction(final RedisTransactionalAsyncCommands<K, V> redisCommands) {
+		Assert.isNull(redisCommands, "Redis Transaction cloud not be null.");
+		this.delegate = redisCommands;
 	}
 
 	@Override
 	public List<Object> exec() {
 		logger.info("Redis transaction exec.");
-		return delegate.exec().stream().collect(Collectors.toList());
+		//return delegate.exec().stream().collect(Collectors.toList());
+		delegate.exec();
+		return new ArrayList<>();
 	}
 
 	@Override
 	public String discard() {
 		logger.info("Redis transaction discard.");
-		return delegate.discard();
+		delegate.discard();
+		return "OK";
 	}
 
 	@Override

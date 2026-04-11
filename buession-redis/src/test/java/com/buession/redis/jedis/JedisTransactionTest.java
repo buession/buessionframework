@@ -40,14 +40,13 @@ public class JedisTransactionTest extends AbstractJedisRedisTest {
 	public void exec() {
 		RedisTemplate redisTemplate = redisTemplate();
 		redisTemplate.multi();
-		redisTemplate.set("t_a", "Jedis 2");
-		redisTemplate.exists("a");
-		redisTemplate.set("user", new User(1000, "redis"));
-		//redisTemplate.expire("t_a", 60);
-		String ret = redisTemplate.get("t_a");
-		redisTemplate.get("user", User.class);
-		System.out.println(ret);
+		redisTemplate.set("a1", "Lettuce");
+		//redisTemplate.exists("a1");
+		//redisTemplate.expire("a1", 60);
+		String ret = redisTemplate.get("a1");
 		//redisTemplate.role();
+		User user = redisTemplate.get("user", User.class);
+		System.out.println(user);
 		List<Object> result = redisTemplate.exec();
 		System.out.println(result);
 	}
@@ -58,6 +57,10 @@ public class JedisTransactionTest extends AbstractJedisRedisTest {
 		redisTemplate.multi();
 		redisTemplate.set("discard", "B");
 		redisTemplate.discard();
+		redisTemplate.multi();
+		System.out.println(redisTemplate.get("user", User.class));
+		List<Object> result = redisTemplate.exec();
+		System.out.println(result);
 	}
 
 }

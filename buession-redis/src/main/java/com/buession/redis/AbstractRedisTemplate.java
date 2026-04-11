@@ -25,7 +25,6 @@
 package com.buession.redis;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.connection.RedisConnectionUtils;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.core.Options;
 import com.buession.redis.core.command.*;
@@ -73,22 +72,14 @@ public abstract class AbstractRedisTemplate extends RedisAccessor implements Aut
 
 	@Override
 	public Status discard() {
-		try{
-			//execute((client)->client.transactionCommands().discard());
-			return client.getConnection().discard();
-		}finally{
-			RedisConnectionUtils.releaseConnection(connectionFactory, client.getConnection(), enableTransactionSupport);
-		}
+		//execute((client)->client.transactionCommands().discard());
+		return execute((client)->client.getConnection().discard());
 	}
 
 	@Override
 	public List<Object> exec() {
-		try{
-			//execute((client)->client.transactionCommands().exec());
-			return client.getConnection().exec();
-		}finally{
-			RedisConnectionUtils.releaseConnection(connectionFactory, client.getConnection(), enableTransactionSupport);
-		}
+		//execute((client)->client.transactionCommands().exec());
+		return execute((client)->client.getConnection().exec());
 	}
 
 }

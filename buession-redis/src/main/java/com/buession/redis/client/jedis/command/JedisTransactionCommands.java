@@ -48,18 +48,12 @@ public final class JedisTransactionCommands extends AbstractJedisRedisCommands i
 
 	@Override
 	public Status discard() {
-		return executeCommand(RedisCommand.DISCARD, null, null, (cmd)->{
-			RedisConnection connection = client.getConnection();
-			return connection.discard();
-		});
+		return executeCommand(RedisCommand.DISCARD, null, null, (cmd)->client.getConnection().discard());
 	}
 
 	@Override
 	public List<Object> exec() {
-		return executeCommand(RedisCommand.EXEC, null, null, (cmd)->{
-			RedisConnection connection = client.getConnection();
-			return connection.exec();
-		});
+		return executeCommand(RedisCommand.EXEC, null, null, (cmd)->client.getConnection().exec());
 	}
 
 	@Override

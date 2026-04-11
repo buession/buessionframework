@@ -31,18 +31,6 @@ package com.buession.redis.exception;
 public class LettuceRedisExceptionUtils {
 
 	public static RedisException convert(final Exception e) {
-		/*
-		if(e instanceof JedisConnectionException){
-			if(StringUtils.contains(e.getMessage(), "pool")){
-				return new PoolException(e.getMessage(), e);
-			}else{
-				return new RedisConnectionFailureException(e.getMessage(), e);
-			}
-		}else
-
-		}
-
-		 */
 		if(e instanceof RedisException){
 			return (RedisException) e;
 		}else{

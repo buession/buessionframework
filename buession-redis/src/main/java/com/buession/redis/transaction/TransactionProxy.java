@@ -39,7 +39,7 @@ import java.util.Queue;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public interface TransactionProxy<T, FR extends FutureResult<Object, ?>> extends Transaction {
+public interface TransactionProxy<T, FR extends FutureResult<?, ?>> extends Transaction {
 
 	/**
 	 * 返回原生事务实例

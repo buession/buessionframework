@@ -29,6 +29,7 @@ import com.buession.redis.core.FutureResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -48,7 +49,7 @@ import java.util.stream.Collectors;
 public abstract class AbstractTransactionProxy<T, FR extends FutureResult<Object, ?>>
 		implements TransactionProxy<T, FR> {
 
-	private Transaction target;
+	private final Transaction target;
 
 	private final T object;
 
@@ -71,12 +72,12 @@ public abstract class AbstractTransactionProxy<T, FR extends FutureResult<Object
 	}
 
 	@Override
-	public T getObject() {
+	public final T getObject() {
 		return object;
 	}
 
 	@Override
-	public Queue<FR> getTxResults() {
+	public final Queue<FR> getTxResults() {
 		return txResults;
 	}
 
@@ -84,7 +85,7 @@ public abstract class AbstractTransactionProxy<T, FR extends FutureResult<Object
 	public List<Object> exec() {
 		logger.info("Redis transaction exec.");
 		target.exec();
-		return txResults.stream().map((r)->r.convert(r.get())).collect(Collectors.toList());
+		return getTxResults().stream().map((r)->r.convert(r.get())).collect(Collectors.toList());
 	}
 
 	@Override
@@ -96,12 +97,8 @@ public abstract class AbstractTransactionProxy<T, FR extends FutureResult<Object
 	@Override
 	public void close() {
 		logger.info("Redis pipeline close.");
-		txResults.clear();
+		getTxResults().clear();
 		target.close();
-	}
-
-	protected void setTarget(Transaction target) {
-		this.target = target;
 	}
 
 }

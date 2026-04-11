@@ -52,6 +52,7 @@ import io.lettuce.core.LettuceClientConfig;
 import io.lettuce.core.LettucePoolConfig;
 import io.lettuce.core.LettuceSentinelPool;
 import io.lettuce.core.RedisClient;
+import io.lettuce.core.RedisCommandsInvocationHandler;
 import io.lettuce.core.RedisCredentialsProvider;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.StaticCredentialsProvider;
@@ -108,6 +109,8 @@ public class LettuceSentinelConnection
 	 * @since 4.0.0
 	 */
 	private StatefulRedisSentinelConnection<byte[], byte[]> sentinelConn;
+
+	//private io.lettuce.core.RedisCommands<byte[], byte[]> redisCommands;
 
 	private final static Logger logger = LoggerFactory.getLogger(LettuceSentinelConnection.class);
 
@@ -609,7 +612,7 @@ public class LettuceSentinelConnection
 		if(transaction == null){
 			final RedisCommands<byte[], byte[]> commands = null;//conn.sync();
 			commands.multi();
-			transaction = new DefaultTransactionProxy<>(new LettuceTransaction(commands), commands);
+			//transaction = new DefaultTransactionProxy<>(new LettuceTransaction(commands), commands);
 		}
 
 		return transaction;
@@ -632,6 +635,11 @@ public class LettuceSentinelConnection
 		if(pool == null && getPoolConfig() != null){
 			pool = createPool();
 		}
+	}
+
+	@Override
+	protected RedisCommandsInvocationHandler<byte[], byte[]> createRedisCommandsInvocationHandler() {
+		return null;
 	}
 
 	private RedisSentinelCommands<byte[], byte[]> getSentinelCommands(final LettuceSentinelDataSource dataSource) {

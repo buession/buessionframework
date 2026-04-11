@@ -26,6 +26,9 @@
  */
 package com.buession.redis.serializer;
 
+import com.buession.core.deserializer.DeserializerException;
+import com.buession.core.type.TypeReference;
+
 /**
  * GSON 序列化和反序列化
  *
@@ -40,6 +43,36 @@ public class GsonJsonSerializer extends AbstractSerializer<com.buession.core.ser
 	public GsonJsonSerializer() {
 		super(new com.buession.core.serializer.GsonJsonSerializer(),
 				new com.buession.core.deserializer.GsonJsonDeserializer());
+	}
+
+	@Override
+	public <V> V deserialize(final String str, final Class<V> clazz) {
+		if(str != null){
+			try{
+				return deserializer.deserialize(str, clazz);
+			}catch(DeserializerException e){
+				if(logger.isErrorEnabled()){
+					logger.error("{} deserialize to: [{}] error.", str, clazz.getName(), e);
+				}
+			}
+		}
+
+		return null;
+	}
+
+	@Override
+	public <V> V deserialize(final String str, final TypeReference<V> type) {
+		if(str != null){
+			try{
+				return deserializer.deserialize(str, type);
+			}catch(DeserializerException e){
+				if(logger.isErrorEnabled()){
+					logger.error("{} deserialize to: [{}] error.", str, type.getType().getTypeName(), e);
+				}
+			}
+		}
+
+		return null;
 	}
 
 }

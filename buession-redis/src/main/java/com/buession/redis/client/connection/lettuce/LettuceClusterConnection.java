@@ -40,8 +40,10 @@ import com.buession.redis.exception.RedisException;
 import io.lettuce.core.LettuceClientConfig;
 import io.lettuce.core.LettuceClusterPool;
 import io.lettuce.core.LettucePoolConfig;
+import io.lettuce.core.RedisCommandsInvocationHandler;
 import io.lettuce.core.RedisCredentialsProvider;
 import io.lettuce.core.RedisURI;
+import io.lettuce.core.StatefulRedisClusterCommandsHandler;
 import io.lettuce.core.StaticCredentialsProvider;
 import io.lettuce.core.cluster.RedisClusterClient;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
@@ -750,6 +752,11 @@ public class LettuceClusterConnection
 		if(pool == null && getPoolConfig() != null){
 			pool = createPool();
 		}
+	}
+
+	@Override
+	protected RedisCommandsInvocationHandler<byte[], byte[]> createRedisCommandsInvocationHandler() {
+		return new StatefulRedisClusterCommandsHandler<>(conn);
 	}
 
 	protected <K, V> StatefulRedisClusterConnection<K, V> createStatefulRedisClusterConnection(

@@ -74,14 +74,14 @@ public final class LettuceClusterCommands extends AbstractLettuceRedisCommands i
 
 	@Override
 	public Status asking() {
-		return executeCommand(RedisCommand.ASKING, (cmd)->cmd.asking(), new OkStatusConverter());
+		return executeCommand(RedisCommand.ASKING, (cmd)->cmd.asking(), (cmd)->cmd.asking(), new OkStatusConverter());
 	}
 
 	@Override
 	public Status clusterAddSlots(final int... slots) {
 		final CommandArguments args = CommandArguments.create(slots);
 		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_ADDSLOTS, args,
-				(cmd)->cmd.clusterAddSlots(slots),
+				(cmd)->cmd.clusterAddSlots(slots), (cmd)->cmd.clusterAddSlots(slots),
 				new OkStatusConverter());
 	}
 
@@ -89,20 +89,22 @@ public final class LettuceClusterCommands extends AbstractLettuceRedisCommands i
 	public Status clusterAddSlotsRange(final IntegerRange... slots) {
 		final CommandArguments args = CommandArguments.create(slots);
 		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_ADDSLOTSRANGE, args,
+				(cmd)->cmd.clusterAddSlotsRange(createRangs(slots)),
 				(cmd)->cmd.clusterAddSlotsRange(createRangs(slots)), new OkStatusConverter());
 	}
 
 	@Override
 	public KeyValue<BumpEpoch, Integer> clusterBumpEpoch() {
 		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_BUMPEPOCH, (cmd)->cmd.clusterBumpepoch(),
-				new BumpEpochConverter());
+				(cmd)->cmd.clusterBumpepoch(), new BumpEpochConverter());
 	}
 
 	@Override
 	public Integer clusterCountFailureReports(final String nodeId) {
 		final CommandArguments args = CommandArguments.create(nodeId);
 		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_COUNTFAILUREREPORTS, args,
-				(cmd)->cmd.clusterCountFailureReports(nodeId), Long::intValue);
+				(cmd)->cmd.clusterCountFailureReports(nodeId), (cmd)->cmd.clusterCountFailureReports(nodeId),
+				Long::intValue);
 	}
 
 	@Override
@@ -114,14 +116,14 @@ public final class LettuceClusterCommands extends AbstractLettuceRedisCommands i
 	public Long clusterCountKeysInSlot(final int slot) {
 		final CommandArguments args = CommandArguments.create(slot);
 		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_COUNTKEYSINSLOT, args,
-				(cmd)->cmd.clusterCountKeysInSlot(slot));
+				(cmd)->cmd.clusterCountKeysInSlot(slot), (cmd)->cmd.clusterCountKeysInSlot(slot));
 	}
 
 	@Override
 	public Status clusterDelSlots(final int... slots) {
 		final CommandArguments args = CommandArguments.create(slots);
 		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_DELSLOTS, args,
-				(cmd)->cmd.clusterDelSlots(slots),
+				(cmd)->cmd.clusterDelSlots(slots), (cmd)->cmd.clusterDelSlots(slots),
 				new OkStatusConverter());
 	}
 
@@ -129,6 +131,7 @@ public final class LettuceClusterCommands extends AbstractLettuceRedisCommands i
 	public Status clusterDelSlotsRange(final IntegerRange... slots) {
 		final CommandArguments args = CommandArguments.create(slots);
 		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_DELSLOTSRANGE, args,
+				(cmd)->cmd.clusterDelSlotsRange(createRangs(slots)),
 				(cmd)->cmd.clusterDelSlotsRange(createRangs(slots)), new OkStatusConverter());
 	}
 
@@ -136,20 +139,21 @@ public final class LettuceClusterCommands extends AbstractLettuceRedisCommands i
 	public Status clusterFailover(final FailoverOption option) {
 		final CommandArguments args = CommandArguments.create(option);
 		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_FAILOVER, args,
+				(cmd)->cmd.clusterFailover(FailoverOption.FORCE == option),
 				(cmd)->cmd.clusterFailover(FailoverOption.FORCE == option), new OkStatusConverter());
 	}
 
 	@Override
 	public Status clusterFlushSlots() {
 		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_FLUSHSLOTS, (cmd)->cmd.clusterFlushslots(),
-				new OkStatusConverter());
+				(cmd)->cmd.clusterFlushslots(), new OkStatusConverter());
 	}
 
 	@Override
 	public Status clusterForget(final String nodeId) {
 		final CommandArguments args = CommandArguments.create(nodeId);
 		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_FORGET, args,
-				(cmd)->cmd.clusterForget(nodeId),
+				(cmd)->cmd.clusterForget(nodeId), (cmd)->cmd.clusterForget(nodeId),
 				new OkStatusConverter());
 	}
 
@@ -162,13 +166,14 @@ public final class LettuceClusterCommands extends AbstractLettuceRedisCommands i
 	public List<String> clusterGetKeysInSlot(final int slot, final int count) {
 		final CommandArguments args = CommandArguments.create(slot).add(count);
 		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_GETKEYSINSLOT, args,
-				(cmd)->cmd.clusterGetKeysInSlot(slot, count), new ListConverter<>(SafeEncoder::encode));
+				(cmd)->cmd.clusterGetKeysInSlot(slot, count), (cmd)->cmd.clusterGetKeysInSlot(slot, count),
+				new ListConverter<>(SafeEncoder::encode));
 	}
 
 	@Override
 	public ClusterInfo clusterInfo() {
 		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_INFO, (cmd)->cmd.clusterInfo(),
-				new ClusterInfoConverter());
+				(cmd)->cmd.clusterInfo(), new ClusterInfoConverter());
 	}
 
 	@Override
@@ -180,20 +185,20 @@ public final class LettuceClusterCommands extends AbstractLettuceRedisCommands i
 	public Long clusterKeySlot(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_KEYSLOT, args,
-				(cmd)->cmd.clusterKeyslot(key));
+				(cmd)->cmd.clusterKeyslot(key), (cmd)->cmd.clusterKeyslot(key));
 	}
 
 	@Override
 	public List<ClusterLink> clusterLinks() {
 		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_LINKS, (cmd)->cmd.clusterLinks(),
-				new ListConverter<>(new ClusterLinkConverter()));
+				(cmd)->cmd.clusterLinks(), new ListConverter<>(new ClusterLinkConverter()));
 	}
 
 	@Override
 	public Status clusterMeet(final String ip, final int port) {
 		final CommandArguments args = CommandArguments.create().add(ip, port);
 		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_MEET, args,
-				(cmd)->cmd.clusterMeet(ip, port),
+				(cmd)->cmd.clusterMeet(ip, port), (cmd)->cmd.clusterMeet(ip, port),
 				new OkStatusConverter());
 	}
 
@@ -228,25 +233,27 @@ public final class LettuceClusterCommands extends AbstractLettuceRedisCommands i
 
 	@Override
 	public String clusterMyId() {
-		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_MYID, (cmd)->cmd.clusterMyId());
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_MYID, (cmd)->cmd.clusterMyId(),
+				(cmd)->cmd.clusterMyId());
 	}
 
 	@Override
 	public String clusterMyShardId() {
-		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_MYSHARDID, (cmd)->cmd.clusterMyShardId());
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_MYSHARDID, (cmd)->cmd.clusterMyShardId(),
+				(cmd)->cmd.clusterMyShardId());
 	}
 
 	@Override
 	public List<RedisClusterNode> clusterNodes() {
 		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_NODES, (cmd)->cmd.clusterNodes(),
-				new ClusterNodesConverter());
+				(cmd)->cmd.clusterNodes(), new ClusterNodesConverter());
 	}
 
 	@Override
 	public List<RedisClusterNode> clusterReplicas(final String nodeId) {
 		final CommandArguments args = CommandArguments.create(nodeId);
-		return executeCommand(
-				RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_REPLICAS, args, (cmd)->cmd.clusterReplicas(nodeId),
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_REPLICAS, args,
+				(cmd)->cmd.clusterReplicas(nodeId), (cmd)->cmd.clusterReplicas(nodeId),
 				new ListConverter<>(new ClusterNodeConverter()));
 	}
 
@@ -258,8 +265,8 @@ public final class LettuceClusterCommands extends AbstractLettuceRedisCommands i
 	@Override
 	public Status clusterReplicate(final String nodeId) {
 		final CommandArguments args = CommandArguments.create(nodeId);
-		return executeCommand(
-				RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_REPLICATE, args, (cmd)->cmd.clusterReplicate(nodeId),
+		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_REPLICATE, args,
+				(cmd)->cmd.clusterReplicate(nodeId), (cmd)->cmd.clusterReplicate(nodeId),
 				new OkStatusConverter());
 	}
 
@@ -277,26 +284,33 @@ public final class LettuceClusterCommands extends AbstractLettuceRedisCommands i
 	public Status clusterReset(final ResetOption option) {
 		final CommandArguments args = CommandArguments.create(option);
 		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_RESET, args,
+				(cmd)->cmd.clusterReset(ResetOption.HARD == option),
 				(cmd)->cmd.clusterReset(ResetOption.HARD == option), new OkStatusConverter());
 	}
 
 	@Override
 	public Status clusterSaveConfig() {
 		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_SAVECONFIG, (cmd)->cmd.clusterSaveconfig(),
-				new OkStatusConverter());
+				(cmd)->cmd.clusterSaveconfig(), new OkStatusConverter());
 	}
 
 	@Override
 	public Status clusterSetConfigEpoch(final long configEpoch) {
 		final CommandArguments args = CommandArguments.create(configEpoch);
 		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_SETCONFIGEPOCH, args,
-				(cmd)->cmd.clusterSetConfigEpoch(configEpoch), new OkStatusConverter());
+				(cmd)->cmd.clusterSetConfigEpoch(configEpoch), (cmd)->cmd.clusterSetConfigEpoch(configEpoch),
+				new OkStatusConverter());
 	}
 
 	@Override
 	public Status clusterSetSlot(final int slot, final SetSlotOption option, final String nodeId) {
 		final CommandArguments args = CommandArguments.create(slot).add(option).add(nodeId);
 		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_SETSLOT, args, (cmd)->switch(option){
+			case IMPORTING -> cmd.clusterSetSlotImporting(slot, nodeId);
+			case MIGRATING -> cmd.clusterSetSlotMigrating(slot, nodeId);
+			case STABLE -> cmd.clusterSetSlotStable(slot);
+			case NODE -> cmd.clusterSetSlotNode(slot, nodeId);
+		}, (cmd)->switch(option){
 			case IMPORTING -> cmd.clusterSetSlotImporting(slot, nodeId);
 			case MIGRATING -> cmd.clusterSetSlotMigrating(slot, nodeId);
 			case STABLE -> cmd.clusterSetSlotStable(slot);
@@ -312,14 +326,15 @@ public final class LettuceClusterCommands extends AbstractLettuceRedisCommands i
 	@Override
 	public List<ClusterShardInfo> clusterShards() {
 		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_SHARDS, (cmd)->cmd.clusterShards(),
-				new ListConverter<>(new ClusterShardInfoConverter()));
+				(cmd)->cmd.clusterShards(), new ListConverter<>(new ClusterShardInfoConverter()));
 	}
 
 	@Override
 	public List<RedisClusterNode> clusterSlaves(final String nodeId) {
 		final CommandArguments args = CommandArguments.create(nodeId);
 		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_SLAVES, args,
-				(cmd)->cmd.clusterSlaves(nodeId), new ListConverter<>(new ClusterNodeConverter()));
+				(cmd)->cmd.clusterSlaves(nodeId), (cmd)->cmd.clusterSlaves(nodeId),
+				new ListConverter<>(new ClusterNodeConverter()));
 	}
 
 	@Override
@@ -411,17 +426,19 @@ public final class LettuceClusterCommands extends AbstractLettuceRedisCommands i
 	@Override
 	public List<ClusterSlot> clusterSlots() {
 		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_SLOTS, (cmd)->cmd.clusterSlots(),
-				new ListConverter<>(new ClusterSlotConverter()));
+				(cmd)->cmd.clusterSlots(), new ListConverter<>(new ClusterSlotConverter()));
 	}
 
 	@Override
 	public Status readOnly() {
-		return executeCommand(RedisCommand.READONLY, (cmd)->cmd.readOnly(), new OkStatusConverter());
+		return executeCommand(RedisCommand.READONLY, (cmd)->cmd.readOnly(), (cmd)->cmd.readOnly(),
+				new OkStatusConverter());
 	}
 
 	@Override
 	public Status readWrite() {
-		return executeCommand(RedisCommand.READWRITE, (cmd)->cmd.readWrite(), new OkStatusConverter());
+		return executeCommand(RedisCommand.READWRITE, (cmd)->cmd.readWrite(), (cmd)->cmd.readWrite(),
+				new OkStatusConverter());
 	}
 
 	public Range<Integer>[] createRangs(final IntegerRange... slots) {

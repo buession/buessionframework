@@ -26,6 +26,8 @@ package com.buession.redis.client.connection.lettuce;
 
 import com.buession.redis.client.connection.RedisConnection;
 import io.lettuce.core.api.StatefulConnection;
+import io.lettuce.core.api.async.RedisAsyncCommands;
+import io.lettuce.core.api.sync.RedisCommands;
 
 /**
  * Lettuce Redis 连接对象
@@ -46,5 +48,9 @@ public interface LettuceRedisConnection<C extends StatefulConnection<byte[], byt
 	 * @since 4.0.0
 	 */
 	C getConn();
+
+	RedisCommands<byte[], byte[]> getRedisCommands();
+
+	RedisAsyncCommands<byte[], byte[]> getRedisAsyncCommands();
 
 }

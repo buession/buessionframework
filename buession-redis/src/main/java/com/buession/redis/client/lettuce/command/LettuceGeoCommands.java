@@ -73,6 +73,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	public Long geoAdd(final String key, final KeyValue<String, Geo>... memberCoordinates) {
 		final CommandArguments args = CommandArguments.create(key).add(memberCoordinates);
 		return executeCommand(RedisCommand.GEOADD, args,
+				(cmd)->cmd.geoadd(SafeEncoder.encode(key), stringMemberCoordinatesToGeoValue(memberCoordinates)),
 				(cmd)->cmd.geoadd(SafeEncoder.encode(key), stringMemberCoordinatesToGeoValue(memberCoordinates)));
 	}
 
@@ -81,6 +82,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	public Long geoAdd(final byte[] key, final KeyValue<byte[], Geo>... memberCoordinates) {
 		final CommandArguments args = CommandArguments.create(key).add(memberCoordinates);
 		return executeCommand(RedisCommand.GEOADD, args,
+				(cmd)->cmd.geoadd(key, byteMemberCoordinatesToGeoValue(memberCoordinates)),
 				(cmd)->cmd.geoadd(key, byteMemberCoordinatesToGeoValue(memberCoordinates)));
 	}
 
@@ -135,14 +137,17 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(key).add(member1, member2);
 		return executeCommand(RedisCommand.GEODIST, args,
 				(cmd)->cmd.geodist(rawBinaryKey(key), SafeEncoder.encode(member1), SafeEncoder.encode(member2),
+						GeoArgs.Unit.m),
+				(cmd)->cmd.geodist(rawBinaryKey(key), SafeEncoder.encode(member1), SafeEncoder.encode(member2),
 						GeoArgs.Unit.m));
 	}
 
 	@Override
 	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2) {
 		final CommandArguments args = CommandArguments.create(key).add(member1, member2);
-		return executeCommand(
-				RedisCommand.GEODIST, args, (cmd)->cmd.geodist(rawKey(key), member1, member2, GeoArgs.Unit.m));
+		return executeCommand(RedisCommand.GEODIST, args,
+				(cmd)->cmd.geodist(rawKey(key), member1, member2, GeoArgs.Unit.m),
+				(cmd)->cmd.geodist(rawKey(key), member1, member2, GeoArgs.Unit.m));
 	}
 
 	@Override
@@ -150,6 +155,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(key).add(member1, member2).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
 		return executeCommand(RedisCommand.GEODIST, args,
+				(cmd)->cmd.geodist(rawBinaryKey(key), SafeEncoder.encode(member1), SafeEncoder.encode(member2),
+						geoUnitConverter.convert(unit)),
 				(cmd)->cmd.geodist(rawBinaryKey(key), SafeEncoder.encode(member1), SafeEncoder.encode(member2),
 						geoUnitConverter.convert(unit)));
 	}
@@ -159,14 +166,15 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(key).add(member1, member2).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
 		return executeCommand(RedisCommand.GEODIST, args,
+				(cmd)->cmd.geodist(rawKey(key), member1, member2, geoUnitConverter.convert(unit)),
 				(cmd)->cmd.geodist(rawKey(key), member1, member2, geoUnitConverter.convert(unit)));
 	}
 
 	@Override
 	public List<String> geoHash(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		return executeCommand(
-				RedisCommand.GEOHASH, args, (cmd)->cmd.geohash(rawBinaryKey(key), SafeEncoder.encode(members)),
+		return executeCommand(RedisCommand.GEOHASH, args, (cmd)->cmd.geohash(rawBinaryKey(key), SafeEncoder.encode(members)),
+				(cmd)->cmd.geohash(rawBinaryKey(key), SafeEncoder.encode(members)),
 				new ListConverter<>(Value::getValue));
 	}
 
@@ -174,14 +182,15 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	public List<byte[]> geoHash(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
 		return executeCommand(RedisCommand.GEOHASH, args, (cmd)->cmd.geohash(rawKey(key), members),
+				(cmd)->cmd.geohash(rawKey(key), members),
 				new ListConverter<>((v)->SafeEncoder.encode(v.getValue())));
 	}
 
 	@Override
 	public List<Geo> geoPos(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create(key).add(SafeEncoder.encode(members));
-		return executeCommand(
-				RedisCommand.GEOPOS, args, (cmd)->cmd.geopos(rawBinaryKey(key), SafeEncoder.encode(members)),
+		return executeCommand(RedisCommand.GEOPOS, args, (cmd)->cmd.geopos(rawBinaryKey(key), SafeEncoder.encode(members)),
+				(cmd)->cmd.geopos(rawBinaryKey(key), SafeEncoder.encode(members)),
 				new ListConverter<>(new GeoCoordinateConverter()));
 	}
 
@@ -189,6 +198,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	public List<Geo> geoPos(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
 		return executeCommand(RedisCommand.GEOPOS, args, (cmd)->cmd.geopos(rawKey(key), members),
+				(cmd)->cmd.geopos(rawKey(key), members),
 				new ListConverter<>(new GeoCoordinateConverter()));
 	}
 
@@ -199,6 +209,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
 		return executeCommand(RedisCommand.GEORADIUS, args,
 				(cmd)->cmd.georadius(rawBinaryKey(key), longitude, latitude, radius, geoUnitConverter.convert(unit)),
+				(cmd)->cmd.georadius(rawBinaryKey(key), longitude, latitude, radius, geoUnitConverter.convert(unit)),
 				new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
 	}
 
@@ -208,6 +219,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
 		return executeCommand(RedisCommand.GEORADIUS, args,
+				(cmd)->cmd.georadius(rawKey(key), longitude, latitude, radius, geoUnitConverter.convert(unit)),
 				(cmd)->cmd.georadius(rawKey(key), longitude, latitude, radius, geoUnitConverter.convert(unit)),
 				new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
 	}
@@ -426,6 +438,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
 		return executeCommand(RedisCommand.GEORADIUS_RO, args,
 				(cmd)->cmd.georadius(rawBinaryKey(key), longitude, latitude, radius, geoUnitConverter.convert(unit)),
+				(cmd)->cmd.georadius(rawBinaryKey(key), longitude, latitude, radius, geoUnitConverter.convert(unit)),
 				new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
 	}
 
@@ -435,6 +448,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
 		return executeCommand(RedisCommand.GEORADIUS_RO, args,
+				(cmd)->cmd.georadius(rawKey(key), longitude, latitude, radius, geoUnitConverter.convert(unit)),
 				(cmd)->cmd.georadius(rawKey(key), longitude, latitude, radius, geoUnitConverter.convert(unit)),
 				new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
 	}
@@ -533,6 +547,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
 		return executeCommand(RedisCommand.GEORADIUS, args,
 				(cmd)->cmd.georadiusbymember(rawBinaryKey(key), SafeEncoder.encode(member), radius,
+						geoUnitConverter.convert(unit)),
+				(cmd)->cmd.georadiusbymember(rawBinaryKey(key), SafeEncoder.encode(member), radius,
 						geoUnitConverter.convert(unit)), new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
 	}
 
@@ -542,6 +558,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
 		return executeCommand(RedisCommand.GEORADIUS, args,
+				(cmd)->cmd.georadiusbymember(rawKey(key), member, radius, geoUnitConverter.convert(unit)),
 				(cmd)->cmd.georadiusbymember(rawKey(key), member, radius, geoUnitConverter.convert(unit)),
 				new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
 	}
@@ -754,6 +771,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
 		return executeCommand(RedisCommand.GEORADIUS_RO, args,
 				(cmd)->cmd.georadiusbymember(rawBinaryKey(key), SafeEncoder.encode(member), radius,
+						geoUnitConverter.convert(unit)),
+				(cmd)->cmd.georadiusbymember(rawBinaryKey(key), SafeEncoder.encode(member), radius,
 						geoUnitConverter.convert(unit)), new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
 	}
 
@@ -763,6 +782,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
 		return executeCommand(RedisCommand.GEORADIUS_RO, args,
+				(cmd)->cmd.georadiusbymember(rawKey(key), member, radius, geoUnitConverter.convert(unit)),
 				(cmd)->cmd.georadiusbymember(rawKey(key), member, radius, geoUnitConverter.convert(unit)),
 				new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
 	}
@@ -1440,12 +1460,14 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	private Long geoAdd(final String key, final GeoAddArgs geoAddArgs, final KeyValue<String, Geo>[] memberCoordinates,
 	                    final CommandArguments args) {
 		return executeCommand(RedisCommand.GEOADD, args, (cmd)->cmd.geoadd(SafeEncoder.encode(key), geoAddArgs,
+				stringMemberCoordinatesToGeoValue(memberCoordinates)), (cmd)->cmd.geoadd(SafeEncoder.encode(key), geoAddArgs,
 				stringMemberCoordinatesToGeoValue(memberCoordinates)));
 	}
 
 	private Long geoAdd(final byte[] key, final GeoAddArgs geoAddArgs, final KeyValue<byte[], Geo>[] memberCoordinates,
 	                    final CommandArguments args) {
 		return executeCommand(RedisCommand.GEOADD, args,
+				(cmd)->cmd.geoadd(key, geoAddArgs, byteMemberCoordinatesToGeoValue(memberCoordinates)),
 				(cmd)->cmd.geoadd(key, geoAddArgs, byteMemberCoordinatesToGeoValue(memberCoordinates)));
 	}
 
@@ -1454,6 +1476,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                  final CommandArguments args) {
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
 		return executeCommand(RedisCommand.GEORADIUS, args,
+				(cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnitConverter.convert(unit), geoArgs),
 				(cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnitConverter.convert(unit), geoArgs),
 				new ListConverter<>(new GeoRadiusResponseConverter()));
 	}
@@ -1464,6 +1487,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
 		return executeCommand(RedisCommand.GEORADIUS, args,
 				(cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnitConverter.convert(unit),
+						geoRadiusStoreArgs),
+				(cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnitConverter.convert(unit),
 						geoRadiusStoreArgs));
 	}
 
@@ -1473,6 +1498,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
 		return executeCommand(RedisCommand.GEORADIUS_RO, args,
 				(cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnitConverter.convert(unit), geoArgs),
+				(cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnitConverter.convert(unit), geoArgs),
 				new ListConverter<>(new GeoRadiusResponseConverter()));
 	}
 
@@ -1481,6 +1507,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
 		return executeCommand(RedisCommand.GEORADIUSBYMEMBER, args,
 				(cmd)->cmd.georadiusbymember(key, member, radius, geoUnitConverter.convert(unit), geoArgs),
+				(cmd)->cmd.georadiusbymember(key, member, radius, geoUnitConverter.convert(unit), geoArgs),
 				new ListConverter<>(new GeoRadiusResponseConverter()));
 	}
 
@@ -1488,6 +1515,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                               final GeoRadiusStoreArgs<byte[]> geoRadiusStoreArgs, final CommandArguments args) {
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
 		return executeCommand(RedisCommand.GEORADIUSBYMEMBER, args,
+				(cmd)->cmd.georadiusbymember(key, member, radius, geoUnitConverter.convert(unit), geoRadiusStoreArgs),
 				(cmd)->cmd.georadiusbymember(key, member, radius, geoUnitConverter.convert(unit), geoRadiusStoreArgs));
 	}
 
@@ -1496,6 +1524,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                            final CommandArguments args) {
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
 		return executeCommand(RedisCommand.GEORADIUSBYMEMBER_RO, args,
+				(cmd)->cmd.georadiusbymember(key, member, radius, geoUnitConverter.convert(unit), geoArgs),
 				(cmd)->cmd.georadiusbymember(key, member, radius, geoUnitConverter.convert(unit), geoArgs),
 				new ListConverter<>(new GeoRadiusResponseConverter()));
 	}
@@ -1534,6 +1563,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                  final GeoSearch.GeoPredicate predicate, final CommandArguments args) {
 		return executeCommand(RedisCommand.GEOSEARCH, args,
 				(cmd)->cmd.geosearch(key, GeoSearch.fromCoordinates(longitude, latitude), predicate),
+				(cmd)->cmd.geosearch(key, GeoSearch.fromCoordinates(longitude, latitude), predicate),
 				new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
 	}
 
@@ -1541,6 +1571,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                  final GeoSearch.GeoPredicate predicate, final GeoArgs geoArgs,
 	                                  final CommandArguments args) {
 		return executeCommand(RedisCommand.GEOSEARCH, args,
+				(cmd)->cmd.geosearch(key, GeoSearch.fromCoordinates(longitude, latitude), predicate, geoArgs),
 				(cmd)->cmd.geosearch(key, GeoSearch.fromCoordinates(longitude, latitude), predicate, geoArgs),
 				new ListConverter<>(new GeoRadiusResponseConverter()));
 	}
@@ -1573,12 +1604,14 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                  final CommandArguments args) {
 		return executeCommand(RedisCommand.GEOSEARCH, args,
 				(cmd)->cmd.geosearch(key, GeoSearch.fromMember(member), predicate),
+				(cmd)->cmd.geosearch(key, GeoSearch.fromMember(member), predicate),
 				new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
 	}
 
 	private List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final GeoSearch.GeoPredicate predicate,
 	                                  final GeoArgs geoArgs, final CommandArguments args) {
 		return executeCommand(RedisCommand.GEOSEARCH, args,
+				(cmd)->cmd.geosearch(key, GeoSearch.fromMember(member), predicate, geoArgs),
 				(cmd)->cmd.geosearch(key, GeoSearch.fromMember(member), predicate, geoArgs),
 				new ListConverter<>(new GeoRadiusResponseConverter()));
 	}
@@ -1620,6 +1653,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                            final CommandArguments args) {
 		return executeCommand(RedisCommand.GEOSEARCHSTORE, args,
 				(cmd)->cmd.geosearchstore(key, destKey, GeoSearch.fromCoordinates(longitude, latitude), predicate,
+						geoArgs, storeDist),
+				(cmd)->cmd.geosearchstore(key, destKey, GeoSearch.fromCoordinates(longitude, latitude), predicate,
 						geoArgs, storeDist));
 	}
 
@@ -1658,6 +1693,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                            final GeoSearch.GeoPredicate predicate, final GeoArgs geoArgs, final boolean storeDist,
 	                            final CommandArguments args) {
 		return executeCommand(RedisCommand.GEOSEARCHSTORE, args,
+				(cmd)->cmd.geosearchstore(key, destKey, GeoSearch.fromMember(member), predicate, geoArgs, storeDist),
 				(cmd)->cmd.geosearchstore(key, destKey, GeoSearch.fromMember(member), predicate, geoArgs, storeDist));
 	}
 

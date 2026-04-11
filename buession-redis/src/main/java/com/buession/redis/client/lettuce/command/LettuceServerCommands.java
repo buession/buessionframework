@@ -92,13 +92,14 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public Set<AclCategory> aclCat() {
 		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_CAT, (cmd)->cmd.aclCat(),
-				new SetConverter<>(new AclCategoryConverter()));
+				(cmd)->cmd.aclCat(), new SetConverter<>(new AclCategoryConverter()));
 	}
 
 	@Override
 	public Set<RedisCommand> aclCat(final String categoryName) {
 		final CommandArguments args = CommandArguments.create(categoryName);
 		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_CAT, args,
+				(cmd)->cmd.aclCat(Enum.valueOf(io.lettuce.core.AclCategory.class, categoryName)),
 				(cmd)->cmd.aclCat(Enum.valueOf(io.lettuce.core.AclCategory.class, categoryName)),
 				new SetConverter<>(new CommandTypeConverter()));
 	}
@@ -111,7 +112,8 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public Long aclDelUser(final String... usernames) {
 		final CommandArguments args = CommandArguments.create(usernames);
-		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_DELUSER, args, (cmd)->cmd.aclDeluser(usernames));
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_DELUSER, args, (cmd)->cmd.aclDeluser(usernames),
+				(cmd)->cmd.aclDeluser(usernames));
 	}
 
 	@Override
@@ -123,7 +125,8 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 	public Status aclDryRun(final String username, final RedisCommand command) {
 		final CommandArguments args = CommandArguments.create(username).add(command);
 		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_DRYRUN, args,
-				(cmd)->cmd.aclDryRun(username, command.getName()), new OkStatusConverter());
+				(cmd)->cmd.aclDryRun(username, command.getName()), (cmd)->cmd.aclDryRun(username, command.getName()),
+				new OkStatusConverter());
 	}
 
 	@Override
@@ -135,6 +138,7 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 	public Status aclDryRun(final String username, final RedisCommand command, final String... arguments) {
 		final CommandArguments args = CommandArguments.create(username).add(command).add(arguments);
 		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_DRYRUN, args,
+				(cmd)->cmd.aclDryRun(username, command.getName(), arguments),
 				(cmd)->cmd.aclDryRun(username, command.getName(), arguments), new OkStatusConverter());
 	}
 
@@ -145,20 +149,22 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public String aclGenPass() {
-		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_GENPASS, (cmd)->cmd.aclGenpass());
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_GENPASS, (cmd)->cmd.aclGenpass(),
+				(cmd)->cmd.aclGenpass());
 	}
 
 	@Override
 	public String aclGenPass(final int bits) {
 		final CommandArguments args = CommandArguments.create(bits);
-		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_GENPASS, args, (cmd)->cmd.aclGenpass(bits));
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_GENPASS, args, (cmd)->cmd.aclGenpass(bits),
+				(cmd)->cmd.aclGenpass(bits));
 	}
 
 	@Override
 	public AclUser aclGetUser(final String username) {
 		final CommandArguments args = CommandArguments.create(username);
 		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_GETUSER, args, (cmd)->cmd.aclGetuser(username),
-				new AclUserConverter());
+				(cmd)->cmd.aclGetuser(username), new AclUserConverter());
 	}
 
 	@Override
@@ -168,18 +174,18 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public List<String> aclList() {
-		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_LIST, (cmd)->cmd.aclList());
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_LIST, (cmd)->cmd.aclList(), (cmd)->cmd.aclList());
 	}
 
 	@Override
 	public Status aclLoad() {
-		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_LOAD, (cmd)->cmd.aclLoad(),
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_LOAD, (cmd)->cmd.aclLoad(), (cmd)->cmd.aclLoad(),
 				new OkStatusConverter());
 	}
 
 	@Override
 	public List<AclLog> aclLog() {
-		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_LOG, (cmd)->cmd.aclLog(),
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_LOG, (cmd)->cmd.aclLog(), (cmd)->cmd.aclLog(),
 				new ListConverter<>(new AclLogConverter()));
 	}
 
@@ -187,19 +193,19 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 	public List<AclLog> aclLog(final int count) {
 		final CommandArguments args = CommandArguments.create(count);
 		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_LOG, args, (cmd)->cmd.aclLog(count),
-				new ListConverter<>(new AclLogConverter()));
+				(cmd)->cmd.aclLog(count), new ListConverter<>(new AclLogConverter()));
 	}
 
 	@Override
 	public Status aclLogReset() {
 		final CommandArguments args = CommandArguments.create(Keyword.Conn.RESET);
-		return executeCommand(
-				RedisCommand.ACL, RedisSubCommand.ACL_LOG, args, (cmd)->cmd.aclLogReset(), new OkStatusConverter());
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_LOG, args,
+				(cmd)->cmd.aclLogReset(), (cmd)->cmd.aclLogReset(), new OkStatusConverter());
 	}
 
 	@Override
 	public Status aclSave() {
-		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_SAVE, (cmd)->cmd.aclSave(),
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_SAVE, (cmd)->cmd.aclSave(), (cmd)->cmd.aclSave(),
 				new OkStatusConverter());
 	}
 
@@ -207,6 +213,7 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 	public Status aclSetUser(final String username, final AclSetUserArgument argument) {
 		final CommandArguments args = CommandArguments.create(username).add(argument);
 		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_SETUSER, args,
+				(cmd)->cmd.aclSetuser(username, new LettuceAclSetuserArgs(argument)),
 				(cmd)->cmd.aclSetuser(username, new LettuceAclSetuserArgs(argument)),
 				new OkStatusConverter());
 	}
@@ -218,12 +225,14 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public List<String> aclUsers() {
-		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_USERS, (cmd)->cmd.aclUsers());
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_USERS, (cmd)->cmd.aclUsers(),
+				(cmd)->cmd.aclUsers());
 	}
 
 	@Override
 	public String aclWhoAmI() {
-		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_WHOAMI, (cmd)->cmd.aclWhoami());
+		return executeCommand(RedisCommand.ACL, RedisSubCommand.ACL_WHOAMI, (cmd)->cmd.aclWhoami(),
+				(cmd)->cmd.aclWhoami());
 	}
 
 	@Override
@@ -233,13 +242,13 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public String bgSave() {
-		return executeCommand(RedisCommand.BGSAVE, (cmd)->cmd.bgsave());
+		return executeCommand(RedisCommand.BGSAVE, (cmd)->cmd.bgsave(), (cmd)->cmd.bgsave());
 	}
 
 	@Override
 	public Integer commandCount() {
 		return executeCommand(RedisCommand.COMMAND, RedisSubCommand.COMMAND_COUNT, (cmd)->cmd.commandCount(),
-				Long::intValue);
+				(cmd)->cmd.commandCount(), Long::intValue);
 	}
 
 	@Override
@@ -286,8 +295,8 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 			commandInfoArgs[i] = commands[i].toString();
 		}
 
-		return executeCommand(
-				RedisCommand.COMMAND, RedisSubCommand.COMMAND_INFO, args, (cmd)->cmd.commandInfo(commandInfoArgs),
+		return executeCommand(RedisCommand.COMMAND, RedisSubCommand.COMMAND_INFO, args,
+				(cmd)->cmd.commandInfo(commandInfoArgs), (cmd)->cmd.commandInfo(commandInfoArgs),
 				new ListConverter<>(new CommandInfoConverter()));
 	}
 
@@ -299,31 +308,34 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public Map<String, String> configGet(final String... parameters) {
 		final CommandArguments args = CommandArguments.create(parameters);
-		return executeCommand(RedisCommand.CONFIG_GET, args, (cmd)->cmd.configGet(parameters));
+		return executeCommand(RedisCommand.CONFIG_GET, args, (cmd)->cmd.configGet(parameters),
+				(cmd)->cmd.configGet(parameters));
 	}
 
 	@Override
 	public Map<byte[], byte[]> configGet(final byte[]... parameters) {
 		final CommandArguments args = CommandArguments.create(parameters);
 		return executeCommand(RedisCommand.CONFIG_GET, args, (cmd)->cmd.configGet(SafeEncoder.encode(parameters)),
-				new StringMapBinaryMapConverter());
+				(cmd)->cmd.configGet(SafeEncoder.encode(parameters)), new StringMapBinaryMapConverter());
 	}
 
 	@Override
 	public Status configResetStat() {
-		return executeCommand(RedisCommand.CONFIG_RESETSTAT, (cmd)->cmd.configResetstat(), new OkStatusConverter());
+		return executeCommand(RedisCommand.CONFIG_RESETSTAT, (cmd)->cmd.configResetstat(), (cmd)->cmd.configResetstat(),
+				new OkStatusConverter());
 	}
 
 	@Override
 	public Status configRewrite() {
-		return executeCommand(RedisCommand.CONFIG_REWRITE, (cmd)->cmd.configRewrite(), new OkStatusConverter());
+		return executeCommand(RedisCommand.CONFIG_REWRITE, (cmd)->cmd.configRewrite(), (cmd)->cmd.configRewrite(),
+				new OkStatusConverter());
 	}
 
 	@Override
 	public Status configSet(final String parameter, final String value) {
 		final CommandArguments args = CommandArguments.create(parameter).add(value);
 		return executeCommand(RedisCommand.CONFIG_SET, args, (cmd)->cmd.configSet(parameter, value),
-				new OkStatusConverter());
+				(cmd)->cmd.configSet(parameter, value), new OkStatusConverter());
 	}
 
 	@Override
@@ -334,12 +346,13 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public Status configSet(final Map<String, String> configs) {
 		final CommandArguments args = CommandArguments.create(configs);
-		return executeCommand(RedisCommand.CONFIG_SET, args, (cmd)->cmd.configSet(configs), new OkStatusConverter());
+		return executeCommand(RedisCommand.CONFIG_SET, args, (cmd)->cmd.configSet(configs),
+				(cmd)->cmd.configSet(configs), new OkStatusConverter());
 	}
 
 	@Override
 	public Long dbSize() {
-		return executeCommand(RedisCommand.DBSIZE, (cmd)->cmd.dbsize());
+		return executeCommand(RedisCommand.DBSIZE, (cmd)->cmd.dbsize(), (cmd)->cmd.dbsize());
 	}
 
 	@Override
@@ -355,7 +368,8 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public Status flushAll() {
-		return executeCommand(RedisCommand.FLUSHALL, (cmd)->cmd.flushall(), new OkStatusConverter());
+		return executeCommand(RedisCommand.FLUSHALL, (cmd)->cmd.flushall(), (cmd)->cmd.flushall(),
+				new OkStatusConverter());
 	}
 
 	@Override
@@ -363,12 +377,13 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 		final CommandArguments args = CommandArguments.create(mode);
 		final FlushModeConverter flushModeConverter = new FlushModeConverter();
 		return executeCommand(RedisCommand.FLUSHALL, args, (cmd)->cmd.flushall(flushModeConverter.convert(mode)),
-				new OkStatusConverter());
+				(cmd)->cmd.flushall(flushModeConverter.convert(mode)), new OkStatusConverter());
 	}
 
 	@Override
 	public Status flushDb() {
-		return executeCommand(RedisCommand.FLUSHDB, (cmd)->cmd.flushdb(), new OkStatusConverter());
+		return executeCommand(RedisCommand.FLUSHDB, (cmd)->cmd.flushdb(), (cmd)->cmd.flushdb(),
+				new OkStatusConverter());
 	}
 
 	@Override
@@ -376,7 +391,7 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 		final CommandArguments args = CommandArguments.create(mode);
 		final FlushModeConverter flushModeConverter = new FlushModeConverter();
 		return executeCommand(RedisCommand.FLUSHDB, args, (cmd)->cmd.flushdb(flushModeConverter.convert(mode)),
-				new OkStatusConverter());
+				(cmd)->cmd.flushdb(flushModeConverter.convert(mode)), new OkStatusConverter());
 	}
 
 	@Override
@@ -408,19 +423,19 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public Info info() {
-		return executeCommand(RedisCommand.INFO, (cmd)->cmd.info(), new InfoConverter());
+		return executeCommand(RedisCommand.INFO, (cmd)->cmd.info(), (cmd)->cmd.info(), new InfoConverter());
 	}
 
 	@Override
 	public Info info(final Info.Section section) {
 		final CommandArguments args = CommandArguments.create(section);
-		return executeCommand(
-				RedisCommand.INFO, args, (cmd)->cmd.info(section.name().toLowerCase()), new InfoConverter());
+		return executeCommand(RedisCommand.INFO, args, (cmd)->cmd.info(section.name().toLowerCase()),
+				(cmd)->cmd.info(section.name().toLowerCase()), new InfoConverter());
 	}
 
 	@Override
 	public Long lastSave() {
-		return executeCommand(RedisCommand.LASTSAVE, (cmd)->cmd.lastsave(), Date::getTime);
+		return executeCommand(RedisCommand.LASTSAVE, (cmd)->cmd.lastsave(), (cmd)->cmd.lastsave(), Date::getTime);
 	}
 
 	@Override
@@ -500,29 +515,29 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public Long memoryUsage(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(
-				RedisCommand.MEMORY, RedisSubCommand.MEMORY_USAGE, args, (cmd)->cmd.memoryUsage(rawBinaryKey(key)));
+		return executeCommand(RedisCommand.MEMORY, RedisSubCommand.MEMORY_USAGE, args,
+				(cmd)->cmd.memoryUsage(rawBinaryKey(key)), (cmd)->cmd.memoryUsage(rawBinaryKey(key)));
 	}
 
 	@Override
 	public Long memoryUsage(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(RedisCommand.MEMORY, RedisSubCommand.MEMORY_USAGE, args,
-				(cmd)->cmd.memoryUsage(rawKey(key)));
+				(cmd)->cmd.memoryUsage(rawKey(key)), (cmd)->cmd.memoryUsage(rawKey(key)));
 	}
 
 	@Override
 	public Long memoryUsage(final String key, final int samples) {
 		final CommandArguments args = CommandArguments.create(key).add("SAMPLES", samples);
-		return executeCommand(
-				RedisCommand.MEMORY, RedisSubCommand.MEMORY_USAGE, args, (cmd)->cmd.memoryUsage(rawBinaryKey(key)));
+		return executeCommand(RedisCommand.MEMORY, RedisSubCommand.MEMORY_USAGE, args,
+				(cmd)->cmd.memoryUsage(rawBinaryKey(key)), (cmd)->cmd.memoryUsage(rawBinaryKey(key)));
 	}
 
 	@Override
 	public Long memoryUsage(final byte[] key, final int samples) {
 		final CommandArguments args = CommandArguments.create(key).add("SAMPLES", samples);
 		return executeCommand(RedisCommand.MEMORY, RedisSubCommand.MEMORY_USAGE, args,
-				(cmd)->cmd.memoryUsage(rawKey(key)));
+				(cmd)->cmd.memoryUsage(rawKey(key)), (cmd)->cmd.memoryUsage(rawKey(key)));
 	}
 
 	@Override
@@ -622,12 +637,12 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public Role role() {
-		return executeCommand(RedisCommand.ROLE, (cmd)->cmd.role(), new RoleConverter());
+		return executeCommand(RedisCommand.ROLE, (cmd)->cmd.role(), (cmd)->cmd.role(), new RoleConverter());
 	}
 
 	@Override
 	public Status save() {
-		return executeCommand(RedisCommand.SAVE, (cmd)->cmd.save(), new OkStatusConverter());
+		return executeCommand(RedisCommand.SAVE, (cmd)->cmd.save(), (cmd)->cmd.save(), new OkStatusConverter());
 	}
 
 	@Override
@@ -635,7 +650,10 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 		executeCommand(RedisCommand.SHUTDOWN, (cmd)->{
 			cmd.shutdown(true);
 			return null;
-		}, (v)->v);
+		}, (cmd)->{
+			cmd.shutdown(true);
+			return null;
+		});
 	}
 
 	@Override
@@ -644,37 +662,42 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 		executeCommand(RedisCommand.SHUTDOWN, args, (cmd)->{
 			cmd.shutdown(new LettuceShutdownArgs(argument));
 			return null;
-		}, (v)->v);
+		}, (cmd)->{
+			cmd.shutdown(new LettuceShutdownArgs(argument));
+			return null;
+		});
 	}
 
 	@Override
 	public Status slaveOf(final String host, final int port) {
 		final CommandArguments args = CommandArguments.create(host, port);
-		return executeCommand(RedisCommand.SAVE, args, (cmd)->cmd.slaveof(host, port), new OkStatusConverter());
+		return executeCommand(RedisCommand.SAVE, args, (cmd)->cmd.slaveof(host, port), (cmd)->cmd.slaveof(host, port),
+				new OkStatusConverter());
 	}
 
 	@Override
 	public List<SlowLog> slowLogGet() {
 		return executeCommand(RedisCommand.SLOWLOG, RedisSubCommand.SLOWLOG_GET, (cmd)->cmd.slowlogGet(),
-				new ListConverter<>(new SlowlogConverter()));
+				(cmd)->cmd.slowlogGet(), new ListConverter<>(new SlowlogConverter()));
 	}
 
 	@Override
 	public List<SlowLog> slowLogGet(final int count) {
 		final CommandArguments args = CommandArguments.create(count);
-		return executeCommand(RedisCommand.SLOWLOG, RedisSubCommand.SLOWLOG_GET, args, (cmd)->cmd.slowlogGet(),
-				new ListConverter<>(new SlowlogConverter()));
+		return executeCommand(RedisCommand.SLOWLOG, RedisSubCommand.SLOWLOG_GET, args, (cmd)->cmd.slowlogGet(count),
+				(cmd)->cmd.slowlogGet(count), new ListConverter<>(new SlowlogConverter()));
 	}
 
 	@Override
 	public Long slowLogLen() {
-		return executeCommand(RedisCommand.SLOWLOG, RedisSubCommand.SLOWLOG_LEN, (cmd)->cmd.slowlogLen());
+		return executeCommand(RedisCommand.SLOWLOG, RedisSubCommand.SLOWLOG_LEN, (cmd)->cmd.slowlogLen(),
+				(cmd)->cmd.slowlogLen());
 	}
 
 	@Override
 	public Status slowLogReset() {
 		return executeCommand(RedisCommand.SLOWLOG, RedisSubCommand.SLOWLOG_RESET, (cmd)->cmd.slowlogReset(),
-				new OkStatusConverter());
+				(cmd)->cmd.slowlogReset(), new OkStatusConverter());
 	}
 
 	@Override
@@ -690,7 +713,7 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 
 	@Override
 	public RedisServerTime time() {
-		return executeCommand(RedisCommand.TIME, (cmd)->cmd.time(), new RedisServerTimeConverter());
+		return executeCommand(RedisCommand.TIME, (cmd)->cmd.time(), (cmd)->cmd.time(), new RedisServerTimeConverter());
 	}
 
 }

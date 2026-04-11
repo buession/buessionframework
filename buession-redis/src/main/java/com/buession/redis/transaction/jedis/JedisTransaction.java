@@ -26,6 +26,7 @@ package com.buession.redis.transaction.jedis;
 
 import com.buession.core.utils.Assert;
 import com.buession.redis.transaction.Transaction;
+import redis.clients.jedis.AbstractTransaction;
 
 import java.util.List;
 
@@ -36,15 +37,15 @@ import java.util.List;
  */
 public class JedisTransaction implements Transaction {
 
-	private final redis.clients.jedis.AbstractTransaction delegate;
+	private final AbstractTransaction delegate;
 
 	/**
 	 * 构造函数
 	 *
 	 * @param transaction
-	 * 		原生事务对象 {@link redis.clients.jedis.AbstractTransaction} 实例
+	 * 		原生事务对象 {@link AbstractTransaction} 实例
 	 */
-	public JedisTransaction(redis.clients.jedis.AbstractTransaction transaction) {
+	public JedisTransaction(final AbstractTransaction transaction) {
 		Assert.isNull(transaction, "Redis Transaction cloud not be null.");
 		this.delegate = transaction;
 	}
