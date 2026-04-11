@@ -30,11 +30,11 @@ import com.buession.redis.pipeline.Pipeline;
 import java.util.List;
 
 /**
- * Jedis 单例、哨兵模式管道
+ * Jedis 管道
  *
  * @author Yong.Teng
  */
-public class JedisPipeline implements Pipeline {
+public final class JedisPipeline implements Pipeline {
 
 	private final redis.clients.jedis.AbstractPipeline delegate;
 

@@ -24,6 +24,7 @@
  */
 package com.buession.redis.pipeline;
 
+import com.buession.core.utils.Assert;
 import com.buession.redis.core.FutureResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,7 @@ import java.util.stream.Collectors;
  */
 public abstract class AbstractPipelineProxy<T, FR extends FutureResult<Object, ?>> implements PipelineProxy<T, FR> {
 
-	private Pipeline target;
+	private final Pipeline target;
 
 	private final T object;
 
@@ -55,18 +56,18 @@ public abstract class AbstractPipelineProxy<T, FR extends FutureResult<Object, ?
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	public AbstractPipelineProxy(final Pipeline target, final T object) {
-		//Assert.isNull(target, "Redis Pipeline cloud not be null.");
+		Assert.isNull(target, "Redis Pipeline cloud not be null.");
 		this.target = target;
 		this.object = object;
 	}
 
 	@Override
-	public T getObject() {
+	public final T getObject() {
 		return object;
 	}
 
 	@Override
-	public Queue<FR> getTxResults() {
+	public final Queue<FR> getTxResults() {
 		return txResults;
 	}
 
@@ -79,20 +80,15 @@ public abstract class AbstractPipelineProxy<T, FR extends FutureResult<Object, ?
 	@Override
 	public List<Object> syncAndReturnAll() {
 		logger.info("Redis pipeline syncAndReturnAll.");
-
 		target.sync();
-		return txResults.stream().map((r)->r.convert(r.get())).collect(Collectors.toList());
+		return getTxResults().stream().map((r)->r.convert(r.get())).collect(Collectors.toList());
 	}
 
 	@Override
 	public void close() {
 		logger.info("Redis pipeline close.");
-		txResults.clear();
+		getTxResults().clear();
 		target.close();
-	}
-
-	protected void setTarget(Pipeline target) {
-		this.target = target;
 	}
 
 }

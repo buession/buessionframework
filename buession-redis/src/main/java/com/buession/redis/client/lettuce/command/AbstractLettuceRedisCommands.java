@@ -36,6 +36,7 @@ import com.buession.redis.core.command.RedisSubCommand;
 import com.buession.redis.core.internal.lettuce.LettuceResult;
 import com.buession.redis.exception.NotMultiRedisException;
 import com.buession.redis.exception.RedisException;
+import com.buession.redis.pipeline.PipelineProxy;
 import com.buession.redis.transaction.TransactionProxy;
 import io.lettuce.core.RedisFuture;
 import io.lettuce.core.api.StatefulConnection;
@@ -245,18 +246,31 @@ public abstract class AbstractLettuceRedisCommands extends AbstractRedisCommands
 		protected R doExecute(final RedisConnection conn) throws RedisException {
 			final com.buession.redis.transaction.Transaction transaction = conn.getTransaction();
 
-			if(transaction == null){
-				throw new NotMultiRedisException(getCommand(), getSubCommand());
+			if(transaction != null){
+				final TransactionProxy<RedisAsyncCommands<byte[], byte[]>, LettuceResult<SR, R>> transactionProxy =
+						(TransactionProxy<RedisAsyncCommands<byte[], byte[]>, LettuceResult<SR, R>>) transaction;
+				final RedisFuture<SR> future = executor.execute(transactionProxy.getObject());
+				final LettuceResult<SR, R> result =
+						converter == null ? newLettuceResult(future) : newLettuceResult(future, converter);
+
+				transactionProxy.getTxResults().add(result);
+				return null;
 			}
 
-			final TransactionProxy<RedisAsyncCommands<byte[], byte[]>, LettuceResult<SR, R>> transactionProxy =
-					(TransactionProxy<RedisAsyncCommands<byte[], byte[]>, LettuceResult<SR, R>>) transaction;
-			final RedisFuture<SR> future = executor.execute(transactionProxy.getObject());
-			final LettuceResult<SR, R> result =
-					converter == null ? newLettuceResult(future) : newLettuceResult(future, converter);
+			final com.buession.redis.pipeline.Pipeline pipeline = conn.getPipeline();
 
-			transactionProxy.getTxResults().add(result);
-			return null;
+			if(pipeline != null){
+				final PipelineProxy<RedisAsyncCommands<byte[], byte[]>, LettuceResult<SR, R>> pipelineProxy =
+						(PipelineProxy<RedisAsyncCommands<byte[], byte[]>, LettuceResult<SR, R>>) pipeline;
+				final RedisFuture<SR> future = executor.execute(pipelineProxy.getObject());
+				final LettuceResult<SR, R> result =
+						converter == null ? newLettuceResult(future) : newLettuceResult(future, converter);
+
+				pipelineProxy.getTxResults().add(result);
+				return null;
+			}
+
+			throw new NotMultiRedisException(getCommand(), getSubCommand());
 		}
 
 		protected LettuceResult<SR, R> newLettuceResult(final RedisFuture<SR> future) {

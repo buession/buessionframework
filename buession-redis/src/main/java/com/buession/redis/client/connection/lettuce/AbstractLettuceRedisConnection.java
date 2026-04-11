@@ -30,7 +30,9 @@ import com.buession.redis.client.connection.datasource.lettuce.LettuceRedisDataS
 import com.buession.redis.core.PoolConfig;
 import com.buession.redis.exception.LettuceRedisExceptionUtils;
 import com.buession.redis.exception.RedisException;
+import com.buession.redis.pipeline.DefaultPipelineProxy;
 import com.buession.redis.pipeline.Pipeline;
+import com.buession.redis.pipeline.lettuce.LettucePipeline;
 import io.lettuce.core.RedisCommandsInvocationHandler;
 import io.lettuce.core.api.PipeliningFlushPolicy;
 import io.lettuce.core.api.PipeliningFlushState;
@@ -292,16 +294,7 @@ public abstract class AbstractLettuceRedisConnection<C extends StatefulConnectio
 	public Pipeline openPipeline() {
 		if(pipeline == null){
 			final PipeliningFlushState flushState = pipeliningFlushPolicy.newPipeline();
-			/*
-			final LettucePipelineProxy<PipeliningFlushState> lettucePipelineProxy =
-					new DefaultPipelineProxy<>(new LettucePipeline(conn, flushState,
-							lettucePipelineProxy.getTxResults()), flushState);
-
-			lettucePipelineProxy.setTarget(
-					new LettucePipeline(conn, flushState, lettucePipelineProxy.getTxResults()));
-			pipeline = lettucePipelineProxy;
-
-			 */
+			pipeline = new DefaultPipelineProxy<>(new LettucePipeline(conn, flushState), getRedisAsyncCommands());
 		}
 
 		return pipeline;

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection;
@@ -72,7 +72,7 @@ public final class RedisConnectionUtils {
 	 * @return whether the connection is transactional or not
 	 */
 	public static boolean isConnectionTransactional(final RedisConnectionFactory factory,
-													final RedisConnection connection) {
+	                                                final RedisConnection connection) {
 		Assert.isNull(factory, "No RedisConnectionFactory specified");
 
 		RedisConnectionHolder connHolder = TransactionUtils.getResource(factory);
@@ -108,7 +108,7 @@ public final class RedisConnectionUtils {
 	 * @return A new Redis connection with transaction support if requested.
 	 */
 	public static RedisConnection bindConnection(final RedisConnectionFactory factory,
-												 final boolean enableTransactionSupport) {
+	                                             final boolean enableTransactionSupport) {
 		return doGetConnection(factory, true, true, enableTransactionSupport);
 	}
 
@@ -139,7 +139,7 @@ public final class RedisConnectionUtils {
 	 * @return An active Redis connection with transaction management if requested.
 	 */
 	public static RedisConnection getConnection(final RedisConnectionFactory factory,
-												final boolean enableTransactionSupport) {
+	                                            final boolean enableTransactionSupport) {
 		return doGetConnection(factory, true, false, enableTransactionSupport);
 	}
 
@@ -161,7 +161,7 @@ public final class RedisConnectionUtils {
 	 * @return An active Redis connection.
 	 */
 	private static RedisConnection doGetConnection(final RedisConnectionFactory factory, final boolean allowCreate,
-												   final boolean bind, final boolean enableTransactionSupport) {
+	                                               final boolean bind, final boolean enableTransactionSupport) {
 		Assert.isNull(factory, "No RedisConnectionFactory specified");
 		RedisConnectionHolder connectionHolder = TransactionUtils.getResource(factory);
 
@@ -232,7 +232,7 @@ public final class RedisConnectionUtils {
 	 * 		The Redis connection to close.
 	 */
 	public static void releaseConnection(final RedisConnectionFactory factory,
-										 @Nullable final RedisConnection connection) {
+	                                     @Nullable final RedisConnection connection) {
 		if(connection == null){
 			logger.warn("Redis connection is null.");
 			return;
@@ -293,22 +293,6 @@ public final class RedisConnectionUtils {
 				doCloseConnection(connection);
 			}
 		}
-	}
-
-	/**
-	 * Closes the given {@link RedisConnection}, created via the given factory if not managed externally (i.e. not bound
-	 * to the transaction).
-	 *
-	 * @param factory
-	 * 		The Redis factory that the connection was created with.
-	 * @param connection
-	 * 		The Redis connection to close.
-	 * @param transactionSupport
-	 * 		whether transaction support is enabled.
-	 */
-	public static void releaseConnection(final RedisConnectionFactory factory,
-										 @Nullable final RedisConnection connection, final boolean transactionSupport) {
-		releaseConnection(factory, connection);
 	}
 
 	/**
@@ -385,7 +369,7 @@ public final class RedisConnectionUtils {
 	 * @see #getTargetConnection
 	 */
 	private static boolean connectionEquals(final RedisConnectionHolder connectionHolder,
-											final RedisConnection connection) {
+	                                        final RedisConnection connection) {
 		if(connectionHolder.hasConnection()){
 			RedisConnection heldCConnection = connectionHolder.getRequiredConnection();
 			return heldCConnection.equals(connection) || getTargetConnection(heldCConnection).equals(connection);
@@ -395,7 +379,7 @@ public final class RedisConnectionUtils {
 	}
 
 	private static void doCloseConnection(@Nullable final RedisConnection connection) {
-		if(connection == null){
+		if(connection == null || connection.isTransaction() || connection.isPipeline()){
 			return;
 		}
 

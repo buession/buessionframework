@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.pipeline.lettuce;
@@ -38,33 +38,37 @@ import io.lettuce.core.protocol.RedisCommand;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * Lettuce 管道
+ *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class LettucePipeline implements Pipeline {
+public final class LettucePipeline implements Pipeline {
 
 	private final PipeliningFlushState flushState;
 
 	private final StatefulConnection<byte[], byte[]> connection;
 
-	private Queue<LettuceResult<?, ?>> ppline;
+	private Queue<LettuceResult<?, ?>> ppline = new LinkedList<>();
 
 	public LettucePipeline(final StatefulConnection<byte[], byte[]> connection, final PipeliningFlushState flushState) {
+		Assert.isNull(connection, "Redis Pipeline cloud not be null.");
 		Assert.isNull(flushState, "Redis Pipeline cloud not be null.");
 		this.connection = connection;
 		this.flushState = flushState;
 		this.flushState.onOpen(connection);
 	}
 
-	public LettucePipeline(final StatefulConnection<byte[], byte[]> connection, final PipeliningFlushState flushState
-			, final Queue<LettuceResult<?, ?>> ppline) {
+	public LettucePipeline(final StatefulConnection<byte[], byte[]> connection, final PipeliningFlushState flushState,
+	                       final Queue<LettuceResult<?, ?>> ppline) {
 		this(connection, flushState);
-		this.ppline = Optional.ofNullable(ppline).orElse(new LinkedList<>());
+		if(ppline != null){
+			this.ppline = ppline;
+		}
 	}
 
 	@Override

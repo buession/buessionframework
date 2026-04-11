@@ -308,10 +308,10 @@ public class LettuceConnection extends AbstractLettuceRedisConnection<StatefulRe
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
 		final LettuceDataSource dataSource = (LettuceDataSource) getDataSource();
 		final RedisURI redisURI = RedisURI.create(dataSource.getHost(), dataSource.getPort());
-		final RedisCredentialsProvider redisCredentialsProvider = Validate.hasText(
-				dataSource.getPassword()) ? new StaticCredentialsProvider(
-				Validate.hasText(dataSource.getUsername()) ? dataSource.getUsername() : null,
-				dataSource.getPassword().toCharArray()) : null;
+		final RedisCredentialsProvider redisCredentialsProvider = Validate.hasText(dataSource.getPassword()) ?
+				new StaticCredentialsProvider(
+						Validate.hasText(dataSource.getUsername()) ? dataSource.getUsername() : null,
+						dataSource.getPassword().toCharArray()) : null;
 
 		if(dataSource.getDatabase() >= 0){
 			redisURI.setDatabase(dataSource.getDatabase());
