@@ -22,39 +22,33 @@
  * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.converter;
+package com.buession.redis.jedis;
 
-import com.buession.lang.KeyValue;
-import org.springframework.lang.Nullable;
+import com.buession.redis.RedisTemplate;
+import com.buession.redis.core.ScanResult;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import java.util.Map;
+import java.util.List;
 
 /**
- * {@link Map.Entry} 到 {@link  KeyValue} 转换器
- *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class MapEntryKeyValueConverter<SK, SV, TK, TV>
-		extends BaseKeyValueConverter<SK, SV, TK, TV, Map.Entry<SK, SV>, KeyValue<TK, TV>> {
+public class JedisKeyTest extends AbstractJedisRedisTest {
 
-	/**
-	 * 构造函数
-	 *
-	 * @param keyConverter
-	 * 		Map key 转换器
-	 * @param valueConverter
-	 * 		Map value 转换器
-	 */
-	public MapEntryKeyValueConverter(final Converter<SK, TK> keyConverter, final Converter<SV, TV> valueConverter) {
-		super(keyConverter, valueConverter);
+	@Test
+	public void exists() {
+		RedisTemplate redisTemplate = redisTemplate();
+		Assertions.assertTrue(redisTemplate.exists("a"));
 	}
 
-	@Nullable
-	@Override
-	public KeyValue<TK, TV> convert(final Map.Entry<SK, SV> source) {
-		return source == null ? null : new KeyValue<>(keyConverter.convert(source.getKey()),
-				valueConverter.convert(source.getValue()));
+	@Test
+	public void scan() {
+		RedisTemplate redisTemplate = redisTemplate();
+		ScanResult<String> result = redisTemplate.scan(0L);
+		System.out.println(result.getCursorAsString());
+		result.getResults().forEach(System.out::println);
 	}
 
 }

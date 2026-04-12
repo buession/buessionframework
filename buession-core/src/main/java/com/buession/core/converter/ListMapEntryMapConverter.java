@@ -43,8 +43,8 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class ListMapEntryMapConverter<SK, SV, TK, TV> extends BaseKeyValueConverter<SK, SV, TK, TV, List<Map.Entry<SK,
-		SV>>, Map<TK, TV>> implements Converter<List<Map.Entry<SK, SV>>, Map<TK, TV>> {
+public class ListMapEntryMapConverter<SK, SV, TK, TV>
+		extends BaseKeyValueConverter<SK, SV, TK, TV, List<Map.Entry<SK, SV>>, Map<TK, TV>> {
 
 	/**
 	 * 构造函数

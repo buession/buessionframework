@@ -44,8 +44,7 @@ import java.util.Map;
  * @since 4.0.0
  */
 public class MapArrayKeyValueConverter<SK, SV, TK, TV>
-		extends BaseKeyValueConverter<SK, SV, TK, TV, Map<SK, SV>, KeyValue<TK, TV>[]>
-		implements Converter<Map<SK, SV>, KeyValue<TK, TV>[]> {
+		extends BaseKeyValueConverter<SK, SV, TK, TV, Map<SK, SV>, KeyValue<TK, TV>[]> {
 
 	/**
 	 * 构造函数

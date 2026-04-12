@@ -19,26 +19,34 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2026 Buession.com Inc.														       |
+ * | Copyright @ 2013-2024 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.lettuce.response;
+package com.buession.redis.jedis;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.AggregationResult;
-import io.lettuce.core.search.AggregationReply;
+import com.buession.lang.Status;
+import com.buession.redis.RedisTemplate;
+import com.buession.redis.core.TdigestInfo;
+import org.junit.jupiter.api.Test;
 
 /**
- * Lettuce {@link AggregationReply} 转换为 {@link AggregationResult}
- *
  * @author Yong.Teng
- * @since 4.0.0
+ * @since 3.0.0
  */
-public final class AggregationReplyConverter implements Converter<AggregationReply<byte[], byte[]>, AggregationResult> {
+public class JediTdigestTest extends AbstractJedisRedisTest {
 
-	@Override
-	public AggregationResult convert(final AggregationReply<byte[], byte[]> source) {
-		return source == null ? null : new AggregationResult(source.getAggregationGroups());
+	@Test
+	public void tdigestCreate() {
+		RedisTemplate redisTemplate = redisTemplate();
+		Status result = redisTemplate.tdigestCreate("tdigest_a");
+		System.out.println(result);
+	}
+
+	@Test
+	public void tdigestInfo() {
+		RedisTemplate redisTemplate = redisTemplate();
+		TdigestInfo result = redisTemplate.tdigestInfo("tdigest_a");
+		System.out.println(result);
 	}
 
 }
