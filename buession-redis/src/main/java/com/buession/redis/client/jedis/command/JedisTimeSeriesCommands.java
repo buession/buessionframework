@@ -47,7 +47,7 @@ import com.buession.redis.core.command.args.timeseries.TSElement;
 import com.buession.redis.core.command.args.timeseries.TSMGetAegument;
 import com.buession.redis.core.command.args.timeseries.TSMRangeArgument;
 import com.buession.redis.core.command.args.timeseries.TSRangeArgument;
-import com.buession.redis.core.internal.convert.StringListBinaryListConverter;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.jedis.params.AggregationTypeConverter;
 import com.buession.redis.core.internal.jedis.args.JedisTSGetParams;
 import com.buession.redis.core.internal.convert.jedis.response.TSElementConverter;
@@ -507,7 +507,7 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 		return executeCommand(RedisCommand.TS_QUERYINDEX, args, (cmd)->cmd.tsQueryIndex(SafeEncoder.encode(filters)),
 				(cmd)->cmd.tsQueryIndex(SafeEncoder.encode(filters)),
 				(cmd)->cmd.tsQueryIndex(SafeEncoder.encode(filters)),
-				new StringListBinaryListConverter());
+				Converters.stringListBinaryListConverter());
 	}
 
 	@Override

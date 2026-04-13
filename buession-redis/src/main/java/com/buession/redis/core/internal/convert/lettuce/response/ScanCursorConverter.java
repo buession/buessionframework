@@ -26,6 +26,7 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
+import com.buession.core.converter.MapCollectionKeyValueConverter;
 import com.buession.lang.KeyValue;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
@@ -39,7 +40,6 @@ import io.lettuce.core.ValueScanCursor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Lettuce {@link ScanCursor} 转换为 {@link ScanResult}
@@ -150,18 +150,11 @@ public interface ScanCursorConverter<T extends ScanCursor, R> extends Converter<
 
 		@Override
 		public ScanResult<KeyValue<TK, TV>> convert(final MapScanCursor<SK, SV> source) {
-			final Map<SK, SV> map = source.getMap();
-			final List<KeyValue<TK, TV>> results = new ArrayList<>(map.size());
-
-			for(Map.Entry<SK, SV> entry : map.entrySet()){
-				results.add(
-						new KeyValue<>(keyConverter.convert(entry.getKey()), valueConverter.convert(entry.getValue())));
-			}
-
-			return new ScanResult<>(source.getCursor(), results);
+			final MapCollectionKeyValueConverter<SK, SV, TK, TV> mapConverter = new MapCollectionKeyValueConverter<>(
+					keyConverter, valueConverter);
+			return new ScanResult<>(source.getCursor(), new ArrayList<>(mapConverter.convert(source.getMap())));
 		}
 
 	}
-
 
 }

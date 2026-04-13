@@ -203,15 +203,17 @@ public final class LettuceBitMapCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public Boolean setBit(final String key, final long offset, final boolean value) {
 		final CommandArguments args = CommandArguments.create(key).add(offset).add(value);
-		return executeCommand(RedisCommand.SETBIT, args, (cmd)->cmd.setbit(rawBinaryKey(key), offset, value ? 1 : 0),
-				(cmd)->cmd.setbit(rawBinaryKey(key), offset, value ? 1 : 0), new OneBooleanConverter());
+		final int bitValue = value ? 1 : 0;
+		return executeCommand(RedisCommand.SETBIT, args, (cmd)->cmd.setbit(rawBinaryKey(key), offset, bitValue),
+				(cmd)->cmd.setbit(rawBinaryKey(key), offset, bitValue), new OneBooleanConverter());
 	}
 
 	@Override
 	public Boolean setBit(final byte[] key, final long offset, final boolean value) {
 		final CommandArguments args = CommandArguments.create(key).add(offset).add(value);
-		return executeCommand(RedisCommand.SETBIT, args, (cmd)->cmd.setbit(rawKey(key), offset, value ? 1 : 0),
-				(cmd)->cmd.setbit(rawKey(key), offset, value ? 1 : 0), new OneBooleanConverter());
+		final int bitValue = value ? 1 : 0;
+		return executeCommand(RedisCommand.SETBIT, args, (cmd)->cmd.setbit(rawKey(key), offset, bitValue),
+				(cmd)->cmd.setbit(rawKey(key), offset, bitValue), new OneBooleanConverter());
 	}
 
 	private List<Long> bitField(final byte[] key, final BitFieldArgument[] arguments, final CommandArguments args) {

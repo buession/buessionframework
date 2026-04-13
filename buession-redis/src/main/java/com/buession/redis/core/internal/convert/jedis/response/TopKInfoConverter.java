@@ -28,6 +28,7 @@ import com.buession.core.converter.Converter;
 import com.buession.redis.core.TopKInfo;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * <code>TOPK.INFO</code> 命令结果转换
@@ -39,7 +40,64 @@ public final class TopKInfoConverter implements Converter<Map<String, Object>, T
 
 	@Override
 	public TopKInfo convert(final Map<String, Object> source) {
-		return null;
+		if(source == null){
+			return null;
+		}
+
+		final TopKInfoBuilder topKInfoBuilder = new TopKInfoBuilder();
+
+		Optional.ofNullable(source.get("k")).ifPresent((v)->topKInfoBuilder.setK(Integer.parseInt(v.toString())));
+		Optional.ofNullable(source.get("size")).ifPresent((v)->topKInfoBuilder.setSize(Integer.parseInt(v.toString())));
+		Optional.ofNullable(source.get("width"))
+				.ifPresent((v)->topKInfoBuilder.setWidth(Integer.parseInt(v.toString())));
+		Optional.ofNullable(source.get("depth"))
+				.ifPresent((v)->topKInfoBuilder.setDepth(Integer.parseInt(v.toString())));
+		Optional.ofNullable(source.get("decay"))
+				.ifPresent((v)->topKInfoBuilder.setDecay(Double.parseDouble(v.toString())));
+
+		return topKInfoBuilder.build();
+	}
+
+	private final static class TopKInfoBuilder {
+
+		private Integer k;
+
+		private Integer size;
+
+		private Integer width;
+
+		private Integer depth;
+
+		private Double decay;
+
+		private TopKInfoBuilder() {
+
+		}
+
+		public void setK(Integer k) {
+			this.k = k;
+		}
+
+		public void setSize(Integer size) {
+			this.size = size;
+		}
+
+		public void setWidth(Integer width) {
+			this.width = width;
+		}
+
+		public void setDepth(Integer depth) {
+			this.depth = depth;
+		}
+
+		public void setDecay(Double decay) {
+			this.decay = decay;
+		}
+
+		public TopKInfo build() {
+			return new TopKInfo(k, size, width, depth, decay);
+		}
+
 	}
 
 }

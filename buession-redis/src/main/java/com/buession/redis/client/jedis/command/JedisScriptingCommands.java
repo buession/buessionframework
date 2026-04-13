@@ -61,14 +61,14 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public Object eval(final String script) {
-		final CommandArguments args = CommandArguments.create(script);
+		final CommandArguments args = CommandArguments.create(script, 0);
 		return executeCommand(RedisCommand.EVAL, args, (cmd)->cmd.eval(script), (cmd)->cmd.eval(script),
 				(cmd)->cmd.eval(script));
 	}
 
 	@Override
 	public Object eval(final byte[] script) {
-		final CommandArguments args = CommandArguments.create(script);
+		final CommandArguments args = CommandArguments.create(script, 0);
 		return executeCommand(RedisCommand.EVAL, args, (cmd)->cmd.eval(script), (cmd)->cmd.eval(script),
 				(cmd)->cmd.eval(script));
 	}
@@ -99,13 +99,13 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public Object evalRo(final String script) {
-		final CommandArguments args = CommandArguments.create(script);
+		final CommandArguments args = CommandArguments.create(script, 0);
 		return evalRo(script, new String[]{}, new String[]{}, args);
 	}
 
 	@Override
 	public Object evalRo(final byte[] script) {
-		final CommandArguments args = CommandArguments.create(script);
+		final CommandArguments args = CommandArguments.create(script, 0);
 		return evalRo(script, new byte[][]{}, new byte[][]{}, args);
 	}
 
@@ -135,14 +135,14 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public Object evalSha(final String digest) {
-		final CommandArguments args = CommandArguments.create(digest);
+		final CommandArguments args = CommandArguments.create(digest, 0);
 		return executeCommand(RedisCommand.EVALSHA, args, (cmd)->cmd.evalsha(digest), (cmd)->cmd.evalsha(digest),
 				(cmd)->cmd.evalsha(digest));
 	}
 
 	@Override
 	public Object evalSha(final byte[] digest) {
-		final CommandArguments args = CommandArguments.create(digest);
+		final CommandArguments args = CommandArguments.create(digest, 0);
 		return executeCommand(RedisCommand.EVALSHA, args, (cmd)->cmd.evalsha(digest), (cmd)->cmd.evalsha(digest),
 				(cmd)->cmd.evalsha(digest));
 	}
@@ -173,13 +173,13 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public Object evalShaRo(final String digest) {
-		final CommandArguments args = CommandArguments.create(digest);
+		final CommandArguments args = CommandArguments.create(digest, 0);
 		return evalShaRo(digest, new String[]{}, new String[]{}, args);
 	}
 
 	@Override
 	public Object evalShaRo(final byte[] digest) {
-		final CommandArguments args = CommandArguments.create(digest);
+		final CommandArguments args = CommandArguments.create(digest, 0);
 		return evalShaRo(digest, new byte[][]{}, new byte[][]{}, args);
 	}
 
@@ -209,13 +209,13 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public Object fCall(final String function) {
-		final CommandArguments args = CommandArguments.create(function);
+		final CommandArguments args = CommandArguments.create(function, 0);
 		return fCall(function, new String[]{}, new String[]{}, args);
 	}
 
 	@Override
 	public Object fCall(final byte[] function) {
-		final CommandArguments args = CommandArguments.create(function);
+		final CommandArguments args = CommandArguments.create(function, 0);
 		return fCall(function, new byte[][]{}, new byte[][]{}, args);
 	}
 
@@ -245,13 +245,13 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 
 	@Override
 	public Object fCallRo(final String function) {
-		final CommandArguments args = CommandArguments.create(function);
+		final CommandArguments args = CommandArguments.create(function, 0);
 		return fCallRo(function, new String[]{}, new String[]{}, args);
 	}
 
 	@Override
 	public Object fCallRo(final byte[] function) {
-		final CommandArguments args = CommandArguments.create(function);
+		final CommandArguments args = CommandArguments.create(function, 0);
 		return fCallRo(function, new byte[][]{}, new byte[][]{}, args);
 	}
 

@@ -24,31 +24,45 @@
  */
 package com.buession.redis.jedis;
 
+import com.buession.lang.Status;
 import com.buession.redis.RedisTemplate;
 import com.buession.redis.core.ScanResult;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 /**
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class JedisKeyTest extends AbstractJedisRedisTest {
+public class JedisJsonTest extends AbstractJedisRedisTest {
 
 	@Test
-	public void exists() {
+	public void jsonSet() {
 		RedisTemplate redisTemplate = redisTemplate();
-		Assertions.assertTrue(redisTemplate.exists("a"));
+		Assertions.assertTrue(
+				redisTemplate.jsonSet("json_1", "$", "{\"id\":100, \"name\":\"buession\"}") == Status.SUCCESS);
 	}
 
 	@Test
-	public void scan() {
+	public void jsonObjLen() {
 		RedisTemplate redisTemplate = redisTemplate();
-		ScanResult<String> result = redisTemplate.scan(0L);
-		System.out.println(result.getCursorAsString());
-		result.getResults().forEach(System.out::println);
+		System.out.println(redisTemplate.jsonObjLen("json_1"));
+		System.out.println(redisTemplate.jsonObjLen("json_1", "$.id"));
+	}
+
+	@Test
+	public void jsonObjKeys() {
+		RedisTemplate redisTemplate = redisTemplate();
+		System.out.println(redisTemplate.jsonObjKeys("json_1"));
+		System.out.println(redisTemplate.jsonObjKeys("json_1", "$.id"));
+	}
+
+	@Test
+	public void jsonType() {
+		RedisTemplate redisTemplate = redisTemplate();
+		System.out.println(redisTemplate.jsonType("json_1"));
+		System.out.println(redisTemplate.jsonType("json_1", "$.id"));
+		System.out.println(redisTemplate.jsonType("json_1", "$.name"));
 	}
 
 }

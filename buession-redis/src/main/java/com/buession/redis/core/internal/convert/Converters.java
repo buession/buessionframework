@@ -25,7 +25,11 @@
 package com.buession.redis.core.internal.convert;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
+import com.buession.core.converter.MapConverter;
+import com.buession.core.converter.SetConverter;
 import com.buession.core.validator.Validate;
+import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
 
@@ -35,8 +39,32 @@ import java.util.List;
  */
 public interface Converters {
 
+	static ListConverter<byte[], String> binaryListStringListConverter() {
+		return new ListConverter<>(SafeEncoder::encode);
+	}
+
+	static ListConverter<String, byte[]> stringListBinaryListConverter() {
+		return new ListConverter<>(SafeEncoder::encode);
+	}
+
 	static <T> Converter<List<T>, T> list0Converter() {
 		return (value)->Validate.isEmpty(value) ? null : value.get(0);
+	}
+
+	static SetConverter<byte[], String> binarySetStringSetConverter() {
+		return new SetConverter<>(SafeEncoder::encode);
+	}
+
+	static SetConverter<String, byte[]> stringSetBinarySetConverter() {
+		return new SetConverter<>(SafeEncoder::encode);
+	}
+
+	static MapConverter<byte[], byte[], String, String> binaryMapStringMapConverter() {
+		return new MapConverter<>(SafeEncoder::encode, SafeEncoder::encode);
+	}
+
+	static MapConverter<String, String, byte[], byte[]> stringMapBinaryMapConverter() {
+		return new MapConverter<>(SafeEncoder::encode, SafeEncoder::encode);
 	}
 
 	@SuppressWarnings({"unchecked"})

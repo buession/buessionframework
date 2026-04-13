@@ -57,7 +57,7 @@ public class LettuceRedisClient extends AbstractRedisClient {
 	 * @since 4.0.0
 	 */
 	public LettuceRedisClient(final ClientOptions clientOptions,
-							  final LettuceRedisConnection<? extends StatefulConnection<byte[], byte[]>> connection) {
+	                          final LettuceRedisConnection<? extends StatefulConnection<byte[], byte[]>> connection) {
 		super(clientOptions, connection);
 	}
 
@@ -164,7 +164,7 @@ public class LettuceRedisClient extends AbstractRedisClient {
 	@Override
 	public HyperLogLogCommands hyperLogLogCommands() {
 		if(hyperLogLogCommands == null){
-			hyperLogLogCommands = new LettuceHyperLogLoCommands(this);
+			hyperLogLogCommands = new LettuceHyperLogLogCommands(this);
 		}
 
 		return hyperLogLogCommands;

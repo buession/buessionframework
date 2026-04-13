@@ -35,7 +35,7 @@ import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ListCommands;
 import com.buession.redis.core.command.args.list.LPosArgument;
-import com.buession.redis.core.internal.convert.BinaryListStringListConverter;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.response.KeyValueConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.lettuce.args.LettuceLPosArgs;
@@ -259,7 +259,7 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 	public List<String> lPop(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(Keyword.Common.COUNT, count);
 		return executeCommand(RedisCommand.LPOP, args, (cmd)->cmd.lpop(rawBinaryKey(key), count),
-				(cmd)->cmd.lpop(rawBinaryKey(key), count), new BinaryListStringListConverter());
+				(cmd)->cmd.lpop(rawBinaryKey(key), count), Converters.binaryListStringListConverter());
 	}
 
 	@Override
@@ -366,7 +366,7 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 	public List<String> lRange(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
 		return executeCommand(RedisCommand.LRANGE, args, (cmd)->cmd.lrange(rawBinaryKey(key), start, end),
-				(cmd)->cmd.lrange(rawBinaryKey(key), start, end), new BinaryListStringListConverter());
+				(cmd)->cmd.lrange(rawBinaryKey(key), start, end), Converters.binaryListStringListConverter());
 	}
 
 	@Override
@@ -437,7 +437,7 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 	public List<String> rPop(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
 		return executeCommand(RedisCommand.RPOP, args, (cmd)->cmd.rpop(rawBinaryKey(key), count),
-				(cmd)->cmd.rpop(rawBinaryKey(key), count), new BinaryListStringListConverter());
+				(cmd)->cmd.rpop(rawBinaryKey(key), count), Converters.binaryListStringListConverter());
 	}
 
 	@Override
@@ -497,7 +497,7 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 	                                                    final LMPopArgs lmPopArgs, final CommandArguments args) {
 		return executeCommand(RedisCommand.BLMPOP, args, (cmd)->cmd.blmpop(timeout, lmPopArgs, keys),
 				(cmd)->cmd.blmpop(timeout, lmPopArgs, keys),
-				new KeyValueConverter<>(SafeEncoder::encode, new BinaryListStringListConverter()));
+				new KeyValueConverter<>(SafeEncoder::encode, Converters.binaryListStringListConverter()));
 	}
 
 	private KeyValue<byte[], List<byte[]>> binaryBlMPop(final byte[][] keys, final int timeout,
@@ -510,7 +510,7 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 	                                                   final CommandArguments args) {
 		return executeCommand(RedisCommand.LMPOP, args, (cmd)->cmd.lmpop(lmPopArgs, keys),
 				(cmd)->cmd.lmpop(lmPopArgs, keys),
-				new KeyValueConverter<>(SafeEncoder::encode, new BinaryListStringListConverter()));
+				new KeyValueConverter<>(SafeEncoder::encode, Converters.binaryListStringListConverter()));
 	}
 
 	private KeyValue<byte[], List<byte[]>> binaryLMPop(final byte[][] keys, final LMPopArgs lmPopArgs,

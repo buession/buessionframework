@@ -24,28 +24,42 @@
  */
 package com.buession.redis.jedis;
 
-import com.buession.lang.Status;
 import com.buession.redis.RedisTemplate;
-import com.buession.redis.core.TdigestInfo;
+import com.buession.redis.core.TopKInfo;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 /**
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class JediTdigestTest extends AbstractJedisRedisTest {
+public class JediTopKTest extends AbstractJedisRedisTest {
 
 	@Test
-	public void tdigestCreate() {
+	public void topKReserve() {
 		RedisTemplate redisTemplate = redisTemplate();
-		Status result = redisTemplate.tdigestCreate("tdigest_a");
+		redisTemplate.topKReserve("hot_today_news", 5);
+	}
+
+	@Test
+	public void topKAdd() {
+		RedisTemplate redisTemplate = redisTemplate();
+		List<String> result = redisTemplate.topKAdd("hot_today_news", "A", "B", "13", "中国", "TG");
+		System.out.println(result);
+	}
+
+	@Test
+	public void topKList() {
+		RedisTemplate redisTemplate = redisTemplate();
+		List<String> result = redisTemplate.topKList("hot_today_news");
 		System.out.println(result);
 	}
 
 	@Test
 	public void tdigestInfo() {
 		RedisTemplate redisTemplate = redisTemplate();
-		TdigestInfo result = redisTemplate.tdigestInfo("tdigest_a");
+		TopKInfo result = redisTemplate.topKInfo("hot_today_news");
 		System.out.println(result);
 	}
 

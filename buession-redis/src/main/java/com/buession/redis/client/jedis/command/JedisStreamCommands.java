@@ -56,7 +56,7 @@ import com.buession.redis.core.command.args.MaxLenMinId;
 import com.buession.redis.core.command.args.stream.XAddArgument;
 import com.buession.redis.core.command.args.stream.XClaimArgument;
 import com.buession.redis.core.command.args.stream.XReadGroupArgument;
-import com.buession.redis.core.internal.convert.BinaryMapStringMapConverter;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.jedis.params.StreamDeletionPolicyConverter;
 import com.buession.redis.core.internal.convert.jedis.params.StreamEntryIdConverter;
 import com.buession.redis.core.internal.convert.jedis.response.MapEntryStreamEntryAutoClaimIdConverter;
@@ -186,7 +186,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	@Override
 	public StreamEntryId xAdd(final byte[] key, final StreamEntryId id, final Map<byte[], byte[]> hash) {
 		final CommandArguments args = CommandArguments.create(key).add(id).add(hash);
-		final BinaryMapStringMapConverter mapConverter = new BinaryMapStringMapConverter();
+		final MapConverter<byte[], byte[], String, String> mapConverter = Converters.binaryMapStringMapConverter();
 		return xAdd(rawStringKey(key), id, mapConverter.convert(hash), args);
 	}
 
@@ -201,7 +201,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	public StreamEntryId xAdd(final byte[] key, final StreamEntryId id, final Map<byte[], byte[]> hash,
 	                          final XAddArgument xAddArgument) {
 		final CommandArguments args = CommandArguments.create(key).add(xAddArgument).add(id).add(hash);
-		final BinaryMapStringMapConverter mapConverter = new BinaryMapStringMapConverter();
+		final MapConverter<byte[], byte[], String, String> mapConverter = Converters.binaryMapStringMapConverter();
 		return xAdd(rawStringKey(key), id, mapConverter.convert(hash), xAddArgument, args);
 	}
 

@@ -41,11 +41,11 @@ public class GeoRadiusResponseConverter implements Converter<GeoRadiusResponse, 
 	public GeoRadius convert(final GeoRadiusResponse source) {
 		if(source == null){
 			return null;
-		}else{
-			final GeoCoordinateConverter geoCoordinateConverter = new GeoCoordinateConverter();
-			final Geo geo = geoCoordinateConverter.convert(source.getCoordinate());
-			return new GeoRadius(source.getMember(), source.getDistance(), geo);
 		}
+
+		final GeoCoordinateConverter geoCoordinateConverter = new GeoCoordinateConverter();
+		final Geo geo = geoCoordinateConverter.convert(source.getCoordinate());
+		return new GeoRadius(source.getMember(), source.getDistance(), geo);
 	}
 
 }

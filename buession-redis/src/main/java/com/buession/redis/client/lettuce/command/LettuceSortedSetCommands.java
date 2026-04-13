@@ -39,7 +39,6 @@ import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.SortedSetCommands;
 import com.buession.redis.core.command.args.sortedset.ZAddArgument;
-import com.buession.redis.core.internal.convert.BinaryListStringListConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.KeyValueConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ScoredValueKeyValueConverter;
@@ -184,7 +183,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	public List<String> zDiff(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
 		return executeCommand(RedisCommand.ZDIFF, args, (cmd)->cmd.zdiff(rawBinaryKeys(keys)),
-				(cmd)->cmd.zdiff(rawBinaryKeys(keys)), new BinaryListStringListConverter());
+				(cmd)->cmd.zdiff(rawBinaryKeys(keys)), Converters.binaryListStringListConverter());
 	}
 
 	@Override
@@ -240,7 +239,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	public List<String> zInter(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
 		return executeCommand(RedisCommand.ZINTER, args, (cmd)->cmd.zinter(rawBinaryKeys(keys)),
-				(cmd)->cmd.zinter(rawBinaryKeys(keys)), new BinaryListStringListConverter());
+				(cmd)->cmd.zinter(rawBinaryKeys(keys)), Converters.binaryListStringListConverter());
 	}
 
 	@Override
@@ -556,7 +555,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	public List<String> zRandMember(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
 		return executeCommand(RedisCommand.ZRANDMEMBER, args, (cmd)->cmd.zrandmember(rawBinaryKey(key), count),
-				(cmd)->cmd.zrandmember(rawBinaryKey(key), count), new BinaryListStringListConverter());
+				(cmd)->cmd.zrandmember(rawBinaryKey(key), count), Converters.binaryListStringListConverter());
 	}
 
 	@Override
@@ -601,7 +600,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	public List<String> zRange(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
 		return executeCommand(RedisCommand.ZRANGE, args, (cmd)->cmd.zrange(rawBinaryKey(key), start, end),
-				(cmd)->cmd.zrange(rawBinaryKey(key), start, end), new BinaryListStringListConverter());
+				(cmd)->cmd.zrange(rawBinaryKey(key), start, end), Converters.binaryListStringListConverter());
 	}
 
 	@Override
@@ -614,7 +613,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	@Override
 	public List<String> zRange(final String key, final long start, final long end, final ZRangeType type) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type);
-		return zRange(rawBinaryKey(key), start, end, type, new BinaryListStringListConverter(), args);
+		return zRange(rawBinaryKey(key), start, end, type, Converters.binaryListStringListConverter(), args);
 	}
 
 	@Override
@@ -627,7 +626,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	public List<String> zRange(final String key, final long start, final long end, final ZRangeType type,
 	                           final boolean rev) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(rev ? "REV" : null);
-		return zRange(rawBinaryKey(key), start, end, type, new BinaryListStringListConverter(), args);
+		return zRange(rawBinaryKey(key), start, end, type, Converters.binaryListStringListConverter(), args);
 	}
 
 	@Override
@@ -641,7 +640,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	public List<String> zRange(final String key, final long start, final long end, final boolean rev) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(rev ? "REV" : null);
 		return executeCommand(RedisCommand.ZRANGE, args, (cmd)->cmd.zrange(rawBinaryKey(key), start, end),
-				(cmd)->cmd.zrange(rawBinaryKey(key), start, end), new BinaryListStringListConverter());
+				(cmd)->cmd.zrange(rawBinaryKey(key), start, end), Converters.binaryListStringListConverter());
 	}
 
 	@Override
@@ -656,7 +655,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(Keyword.Common.LIMIT)
 				.add(offset, count);
 		return executeCommand(RedisCommand.ZRANGE, args, (cmd)->cmd.zrange(rawBinaryKey(key), start, end),
-				(cmd)->cmd.zrange(rawBinaryKey(key), start, end), new BinaryListStringListConverter());
+				(cmd)->cmd.zrange(rawBinaryKey(key), start, end), Converters.binaryListStringListConverter());
 	}
 
 	@Override
@@ -672,7 +671,8 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                           final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(Keyword.Common.LIMIT)
 				.add(offset, count);
-		return zRange(rawBinaryKey(key), start, end, type, offset, count, new BinaryListStringListConverter(), args);
+		return zRange(rawBinaryKey(key), start, end, type, offset, count, Converters.binaryListStringListConverter(),
+				args);
 	}
 
 	@Override
@@ -688,7 +688,8 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                           final boolean rev, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(rev ? "REV" : null)
 				.add(Keyword.Common.LIMIT).add(offset, count);
-		return zRange(rawBinaryKey(key), start, end, type, offset, count, new BinaryListStringListConverter(), args);
+		return zRange(rawBinaryKey(key), start, end, type, offset, count, Converters.binaryListStringListConverter(),
+				args);
 	}
 
 	@Override
@@ -705,7 +706,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(rev ? "REV" : null)
 				.add(Keyword.Common.LIMIT).add(offset, count);
 		return executeCommand(RedisCommand.ZRANGE, args, (cmd)->cmd.zrange(rawBinaryKey(key), start, end),
-				(cmd)->cmd.zrange(rawBinaryKey(key), start, end), new BinaryListStringListConverter());
+				(cmd)->cmd.zrange(rawBinaryKey(key), start, end), Converters.binaryListStringListConverter());
 	}
 
 	@Override
@@ -834,7 +835,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	@Override
 	public List<String> zRangeByLex(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min, max);
-		return zRangeByLex(rawBinaryKey(key), min, max, new BinaryListStringListConverter(), args);
+		return zRangeByLex(rawBinaryKey(key), min, max, Converters.binaryListStringListConverter(), args);
 	}
 
 	@Override
@@ -848,7 +849,8 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                                final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(min, max).add(Keyword.Common.LIMIT)
 				.add(offset, count);
-		return zRangeByLex(rawBinaryKey(key), min, max, offset, count, new BinaryListStringListConverter(), args);
+		return zRangeByLex(rawBinaryKey(key), min, max, offset, count, Converters.binaryListStringListConverter(),
+				args);
 	}
 
 	@Override
@@ -865,7 +867,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 		return executeCommand(RedisCommand.ZRANGEBYSCORE, args,
 				(cmd)->cmd.zrangebyscore(rawBinaryKey(key), Range.create(min, max)),
 				(cmd)->cmd.zrangebyscore(rawBinaryKey(key), Range.create(min, max)),
-				new BinaryListStringListConverter());
+				Converters.binaryListStringListConverter());
 	}
 
 	@Override
@@ -884,7 +886,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 		return executeCommand(RedisCommand.ZRANGEBYSCORE, args,
 				(cmd)->cmd.zrangebyscore(rawBinaryKey(key), Range.create(min, max), Limit.create(offset, count)),
 				(cmd)->cmd.zrangebyscore(rawBinaryKey(key), Range.create(min, max), Limit.create(offset, count)),
-				new BinaryListStringListConverter());
+				Converters.binaryListStringListConverter());
 	}
 
 	@Override
@@ -1134,7 +1136,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	public List<String> zRevRange(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
 		return executeCommand(RedisCommand.ZREVRANGE, args, (cmd)->cmd.zrevrange(rawBinaryKey(key), start, end),
-				(cmd)->cmd.zrevrange(rawBinaryKey(key), start, end), new BinaryListStringListConverter());
+				(cmd)->cmd.zrevrange(rawBinaryKey(key), start, end), Converters.binaryListStringListConverter());
 	}
 
 	@Override
@@ -1163,7 +1165,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 						Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max))),
 				(cmd)->cmd.zrevrangebylex(rawBinaryKey(key),
 						Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max))),
-				new BinaryListStringListConverter());
+				Converters.binaryListStringListConverter());
 	}
 
 	@Override
@@ -1184,7 +1186,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 				Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)),
 				Limit.create(offset, count)), (cmd)->cmd.zrevrangebylex(rawBinaryKey(key),
 				Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)),
-				Limit.create(offset, count)), new BinaryListStringListConverter());
+				Limit.create(offset, count)), Converters.binaryListStringListConverter());
 	}
 
 	@Override
@@ -1205,7 +1207,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 		return executeCommand(RedisCommand.ZREVRANGEBYSCORE, args,
 				(cmd)->cmd.zrevrangebyscore(rawBinaryKey(key), Range.create(min, max)),
 				(cmd)->cmd.zrevrangebyscore(rawBinaryKey(key), Range.create(min, max)),
-				new BinaryListStringListConverter());
+				Converters.binaryListStringListConverter());
 	}
 
 	@Override
@@ -1224,7 +1226,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 		return executeCommand(RedisCommand.ZREVRANGEBYSCORE, args,
 				(cmd)->cmd.zrevrangebyscore(rawBinaryKey(key), Range.create(min, max), Limit.create(offset, count)),
 				(cmd)->cmd.zrevrangebyscore(rawBinaryKey(key), Range.create(min, max), Limit.create(offset, count)),
-				new BinaryListStringListConverter());
+				Converters.binaryListStringListConverter());
 	}
 
 	@Override
@@ -1370,7 +1372,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	public List<String> zUnion(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
 		return executeCommand(RedisCommand.ZUNION, args, (cmd)->cmd.zunion(rawBinaryKeys(keys)),
-				(cmd)->cmd.zunion(rawBinaryKeys(keys)), new BinaryListStringListConverter());
+				(cmd)->cmd.zunion(rawBinaryKeys(keys)), Converters.binaryListStringListConverter());
 	}
 
 	@Override
@@ -1563,7 +1565,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	private List<String> stringZInter(final byte[][] keys, final LettuceZAggregateArgs zAggregateArgs,
 	                                  final CommandArguments args) {
 		return executeCommand(RedisCommand.ZINTER, args, (cmd)->cmd.zinter(zAggregateArgs, keys),
-				(cmd)->cmd.zinter(zAggregateArgs, keys), new BinaryListStringListConverter());
+				(cmd)->cmd.zinter(zAggregateArgs, keys), Converters.binaryListStringListConverter());
 	}
 
 	private List<byte[]> binaryZInter(final byte[][] keys, final LettuceZAggregateArgs zAggregateArgs,
@@ -1742,7 +1744,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	private List<String> stringZUnion(final byte[][] keys, final LettuceZAggregateArgs aggregateArgs,
 	                                  final CommandArguments args) {
 		return executeCommand(RedisCommand.ZUNION, args, (cmd)->cmd.zunion(aggregateArgs, keys),
-				(cmd)->cmd.zunion(aggregateArgs, keys), new BinaryListStringListConverter());
+				(cmd)->cmd.zunion(aggregateArgs, keys), Converters.binaryListStringListConverter());
 	}
 
 	private List<byte[]> binaryZUnion(final byte[][] keys, final LettuceZAggregateArgs aggregateArgs,

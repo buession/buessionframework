@@ -37,7 +37,7 @@ import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.VectorSetCommands;
 import com.buession.redis.core.command.args.vectorset.VAddArgument;
 import com.buession.redis.core.command.args.vectorset.VSimArgument;
-import com.buession.redis.core.internal.convert.BinaryListStringListConverter;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.response.RawVectorConveter;
 import com.buession.redis.core.internal.convert.lettuce.response.VSimScoreAttribsConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.VectorMetadataConverter;
@@ -187,7 +187,7 @@ public final class LettuceVectorSetCommands extends AbstractLettuceRedisCommands
 		return executeCommand(RedisCommand.VLINKS, args,
 				(cmd)->cmd.vlinks(rawBinaryKey(key), SafeEncoder.encode(element)),
 				(cmd)->cmd.vlinks(rawBinaryKey(key), SafeEncoder.encode(element)),
-				new BinaryListStringListConverter());
+				Converters.binaryListStringListConverter());
 	}
 
 	@Override
@@ -231,7 +231,7 @@ public final class LettuceVectorSetCommands extends AbstractLettuceRedisCommands
 	public List<String> vRandMember(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create(key, count);
 		return executeCommand(RedisCommand.VRANDMEMBER, args, (cmd)->cmd.vrandmember(rawBinaryKey(key), count),
-				(cmd)->cmd.vrandmember(rawBinaryKey(key), count), new BinaryListStringListConverter());
+				(cmd)->cmd.vrandmember(rawBinaryKey(key), count), Converters.binaryListStringListConverter());
 	}
 
 	@Override
@@ -301,7 +301,7 @@ public final class LettuceVectorSetCommands extends AbstractLettuceRedisCommands
 	public List<String> vSim(final String key, final double... vectors) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors);
 		return executeCommand(RedisCommand.VSIM, args, (cmd)->cmd.vsim(rawBinaryKey(key), vectors(vectors)),
-				(cmd)->cmd.vsim(rawBinaryKey(key), vectors(vectors)), new BinaryListStringListConverter());
+				(cmd)->cmd.vsim(rawBinaryKey(key), vectors(vectors)), Converters.binaryListStringListConverter());
 	}
 
 	@Override
@@ -315,7 +315,8 @@ public final class LettuceVectorSetCommands extends AbstractLettuceRedisCommands
 	public List<String> vSim(final String key, final String element) {
 		final CommandArguments args = CommandArguments.create(key, element);
 		return executeCommand(RedisCommand.VSIM, args, (cmd)->cmd.vsim(rawBinaryKey(key), SafeEncoder.encode(element)),
-				(cmd)->cmd.vsim(rawBinaryKey(key), SafeEncoder.encode(element)), new BinaryListStringListConverter());
+				(cmd)->cmd.vsim(rawBinaryKey(key), SafeEncoder.encode(element)),
+				Converters.binaryListStringListConverter());
 	}
 
 	@Override
@@ -665,7 +666,7 @@ public final class LettuceVectorSetCommands extends AbstractLettuceRedisCommands
 	private List<String> vStringSim(final byte[] key, final double[] vectors, final VSimArgs vSimArgs,
 	                                final CommandArguments args) {
 		return executeCommand(RedisCommand.VSIM, args, (cmd)->cmd.vsim(key, vSimArgs, vectors(vectors)),
-				(cmd)->cmd.vsim(key, vSimArgs, vectors(vectors)), new BinaryListStringListConverter());
+				(cmd)->cmd.vsim(key, vSimArgs, vectors(vectors)), Converters.binaryListStringListConverter());
 	}
 
 	private List<byte[]> vBinarySim(final byte[] key, final double[] vectors, final VSimArgs vSimArgs,
@@ -678,7 +679,7 @@ public final class LettuceVectorSetCommands extends AbstractLettuceRedisCommands
 	                          final CommandArguments args) {
 		return executeCommand(RedisCommand.VSIM, args, (cmd)->cmd.vsim(key, vSimArgs, SafeEncoder.encode(element)),
 				(cmd)->cmd.vsim(key, vSimArgs, SafeEncoder.encode(element)),
-				new BinaryListStringListConverter());
+				Converters.binaryListStringListConverter());
 	}
 
 	private List<byte[]> vSim(final byte[] key, final byte[] element, final VSimArgs vSimArgs,

@@ -39,10 +39,10 @@ import com.buession.redis.utils.SafeEncoder;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class LettuceHyperLogLoCommands extends AbstractLettuceRedisCommands implements
+public final class LettuceHyperLogLogCommands extends AbstractLettuceRedisCommands implements
 		HyperLogLogCommands {
 
-	public LettuceHyperLogLoCommands(final LettuceRedisClient client) {
+	public LettuceHyperLogLogCommands(final LettuceRedisClient client) {
 		super(client);
 	}
 
@@ -88,7 +88,8 @@ public final class LettuceHyperLogLoCommands extends AbstractLettuceRedisCommand
 	@Override
 	public Status pfMerge(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-		return executeCommand(RedisCommand.PFMERGE, args, (cmd)->cmd.pfmerge(rawKey(destKey), rawKeys(keys)),
+		return executeCommand(RedisCommand.PFMERGE, args,
+				(cmd)->cmd.pfmerge(rawKey(destKey), rawKeys(keys)),
 				(cmd)->cmd.pfmerge(rawKey(destKey), rawKeys(keys)),
 				new OkStatusConverter());
 	}

@@ -56,7 +56,7 @@ import com.buession.redis.core.command.args.server.FailoverArgument;
 import com.buession.redis.core.command.args.server.HotkeysStartArgument;
 import com.buession.redis.core.command.args.RestoreArgument;
 import com.buession.redis.core.command.args.server.ShutdownArgument;
-import com.buession.redis.core.internal.convert.StringMapBinaryMapConverter;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.params.FlushModeConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.AclCategoryConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.AclLogConverter;
@@ -316,7 +316,7 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 	public Map<byte[], byte[]> configGet(final byte[]... parameters) {
 		final CommandArguments args = CommandArguments.create(parameters);
 		return executeCommand(RedisCommand.CONFIG_GET, args, (cmd)->cmd.configGet(SafeEncoder.encode(parameters)),
-				(cmd)->cmd.configGet(SafeEncoder.encode(parameters)), new StringMapBinaryMapConverter());
+				(cmd)->cmd.configGet(SafeEncoder.encode(parameters)), Converters.stringMapBinaryMapConverter());
 	}
 
 	@Override

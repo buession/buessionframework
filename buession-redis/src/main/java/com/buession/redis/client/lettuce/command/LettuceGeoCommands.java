@@ -173,7 +173,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	@Override
 	public List<String> geoHash(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		return executeCommand(RedisCommand.GEOHASH, args, (cmd)->cmd.geohash(rawBinaryKey(key), SafeEncoder.encode(members)),
+		return executeCommand(RedisCommand.GEOHASH, args,
+				(cmd)->cmd.geohash(rawBinaryKey(key), SafeEncoder.encode(members)),
 				(cmd)->cmd.geohash(rawBinaryKey(key), SafeEncoder.encode(members)),
 				new ListConverter<>(Value::getValue));
 	}
@@ -189,7 +190,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	@Override
 	public List<Geo> geoPos(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create(key).add(SafeEncoder.encode(members));
-		return executeCommand(RedisCommand.GEOPOS, args, (cmd)->cmd.geopos(rawBinaryKey(key), SafeEncoder.encode(members)),
+		return executeCommand(RedisCommand.GEOPOS, args,
+				(cmd)->cmd.geopos(rawBinaryKey(key), SafeEncoder.encode(members)),
 				(cmd)->cmd.geopos(rawBinaryKey(key), SafeEncoder.encode(members)),
 				new ListConverter<>(new GeoCoordinateConverter()));
 	}
@@ -1460,8 +1462,9 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	private Long geoAdd(final String key, final GeoAddArgs geoAddArgs, final KeyValue<String, Geo>[] memberCoordinates,
 	                    final CommandArguments args) {
 		return executeCommand(RedisCommand.GEOADD, args, (cmd)->cmd.geoadd(SafeEncoder.encode(key), geoAddArgs,
-				stringMemberCoordinatesToGeoValue(memberCoordinates)), (cmd)->cmd.geoadd(SafeEncoder.encode(key), geoAddArgs,
-				stringMemberCoordinatesToGeoValue(memberCoordinates)));
+						stringMemberCoordinatesToGeoValue(memberCoordinates)),
+				(cmd)->cmd.geoadd(SafeEncoder.encode(key), geoAddArgs,
+						stringMemberCoordinatesToGeoValue(memberCoordinates)));
 	}
 
 	private Long geoAdd(final byte[] key, final GeoAddArgs geoAddArgs, final KeyValue<byte[], Geo>[] memberCoordinates,

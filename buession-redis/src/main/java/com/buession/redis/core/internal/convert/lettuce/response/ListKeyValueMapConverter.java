@@ -68,15 +68,15 @@ public final class ListKeyValueMapConverter<SK, SV, TK, TV>
 	public Map<TK, TV> convert(final List<KeyValue<SK, SV>> source) {
 		if(source == null){
 			return null;
-		}else{
-			final Map<TK, TV> map = new LinkedHashMap<>(source.size());
-
-			for(KeyValue<SK, SV> kv : source){
-				map.put(keyConverter.convert(kv.getKey()), valueConverter.convert(kv.getValue()));
-			}
-
-			return map;
 		}
+
+		final Map<TK, TV> map = new LinkedHashMap<>(source.size());
+
+		for(KeyValue<SK, SV> kv : source){
+			map.put(keyConverter.convert(kv.getKey()), valueConverter.convert(kv.getValue()));
+		}
+
+		return map;
 	}
 
 }

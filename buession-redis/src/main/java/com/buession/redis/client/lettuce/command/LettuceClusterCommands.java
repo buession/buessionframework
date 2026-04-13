@@ -441,6 +441,7 @@ public final class LettuceClusterCommands extends AbstractLettuceRedisCommands i
 				new OkStatusConverter());
 	}
 
+	@SuppressWarnings({"unchecked"})
 	public Range<Integer>[] createRangs(final IntegerRange... slots) {
 		final RangeRangeConverter<Integer> rangeRangeConverter = new RangeRangeConverter<>();
 		final Range<Integer>[] ranges = new Range[slots.length];

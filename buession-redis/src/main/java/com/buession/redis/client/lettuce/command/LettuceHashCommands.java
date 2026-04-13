@@ -40,8 +40,7 @@ import com.buession.redis.core.command.HashCommands;
 import com.buession.redis.core.command.args.FnxFxx;
 import com.buession.redis.core.command.args.GetExType;
 import com.buession.redis.core.command.args.PxExType;
-import com.buession.redis.core.internal.convert.BinaryListStringListConverter;
-import com.buession.redis.core.internal.convert.BinaryMapStringMapConverter;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.response.ListKeyValueMapConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
@@ -210,7 +209,7 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 	public Map<String, String> hGetAll(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(RedisCommand.HGETALL, args, (cmd)->cmd.hgetall(rawBinaryKey(key)),
-				(cmd)->cmd.hgetall(rawBinaryKey(key)), new BinaryMapStringMapConverter());
+				(cmd)->cmd.hgetall(rawBinaryKey(key)), Converters.binaryMapStringMapConverter());
 	}
 
 	@Override
@@ -505,7 +504,7 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 	public List<String> hRandField(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
 		return executeCommand(RedisCommand.HRANDFIELD, args, (cmd)->cmd.hrandfield(rawBinaryKey(key), count),
-				(cmd)->cmd.hrandfield(rawBinaryKey(key), count), new BinaryListStringListConverter());
+				(cmd)->cmd.hrandfield(rawBinaryKey(key), count), Converters.binaryListStringListConverter());
 	}
 
 	@Override
@@ -791,7 +790,7 @@ public final class LettuceHashCommands extends AbstractLettuceRedisCommands impl
 	public List<String> hVals(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(RedisCommand.HVALS, args, (cmd)->cmd.hvals(rawBinaryKey(key)),
-				(cmd)->cmd.hvals(rawBinaryKey(key)), new BinaryListStringListConverter());
+				(cmd)->cmd.hvals(rawBinaryKey(key)), Converters.binaryListStringListConverter());
 	}
 
 	@Override

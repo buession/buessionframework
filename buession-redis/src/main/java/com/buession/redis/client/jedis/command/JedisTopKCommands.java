@@ -32,7 +32,7 @@ import com.buession.redis.core.TopKInfo;
 import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.TopKCommands;
-import com.buession.redis.core.internal.convert.StringListBinaryListConverter;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.jedis.response.TopKInfoConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.utils.SafeEncoder;
@@ -67,7 +67,7 @@ public final class JedisTopKCommands extends AbstractJedisRedisCommands implemen
 				(cmd)->cmd.topkAdd(rawStringKey(key), SafeEncoder.encode(items)),
 				(cmd)->cmd.topkAdd(rawStringKey(key), SafeEncoder.encode(items)),
 				(cmd)->cmd.topkAdd(rawStringKey(key), SafeEncoder.encode(items)),
-				new StringListBinaryListConverter());
+				Converters.stringListBinaryListConverter());
 	}
 
 	@Override
@@ -104,7 +104,7 @@ public final class JedisTopKCommands extends AbstractJedisRedisCommands implemen
 				(cmd)->cmd.topkIncrBy(rawStringKey(key), arrayKeyValueMapConverter.convert(items)),
 				(cmd)->cmd.topkIncrBy(rawStringKey(key), arrayKeyValueMapConverter.convert(items)),
 				(cmd)->cmd.topkIncrBy(rawStringKey(key), arrayKeyValueMapConverter.convert(items)),
-				new StringListBinaryListConverter());
+				Converters.stringListBinaryListConverter());
 	}
 
 	@Override

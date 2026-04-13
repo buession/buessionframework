@@ -40,8 +40,7 @@ import com.buession.redis.core.command.RedisSubCommand;
 import com.buession.redis.core.command.args.key.MigrateArgument;
 import com.buession.redis.core.command.args.RestoreArgument;
 import com.buession.redis.core.command.args.key.SortArgument;
-import com.buession.redis.core.internal.convert.BinaryListStringListConverter;
-import com.buession.redis.core.internal.convert.BinarySetStringSetConverter;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.lettuce.args.LettuceExpireArgs;
 import com.buession.redis.core.internal.lettuce.args.LettuceRestoreArgs;
 import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConverter;
@@ -601,7 +600,7 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 	public List<String> sort(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(RedisCommand.SORT, args, (cmd)->cmd.sort(rawBinaryKey(key)),
-				(cmd)->cmd.sort(rawBinaryKey(key)), new BinaryListStringListConverter());
+				(cmd)->cmd.sort(rawBinaryKey(key)), Converters.binaryListStringListConverter());
 	}
 
 	@Override
@@ -707,7 +706,7 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 	public List<String> sortRo(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(RedisCommand.SORT_RO, args, (cmd)->cmd.sortReadOnly(rawBinaryKey(key)),
-				(cmd)->cmd.sortReadOnly(rawBinaryKey(key)), new BinaryListStringListConverter());
+				(cmd)->cmd.sortReadOnly(rawBinaryKey(key)), Converters.binaryListStringListConverter());
 	}
 
 	@Override
@@ -848,7 +847,7 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 
 	private List<String> stringSort(final byte[] key, final SortArgs sortArgs, final CommandArguments args) {
 		return executeCommand(RedisCommand.SORT, args, (cmd)->cmd.sort(key, sortArgs), (cmd)->cmd.sort(key, sortArgs),
-				new BinaryListStringListConverter());
+				Converters.binaryListStringListConverter());
 	}
 
 	private List<byte[]> binarySort(final byte[] key, final SortArgs sortArgs, final CommandArguments args) {
@@ -863,7 +862,7 @@ public final class LettuceKeyCommands extends AbstractLettuceRedisCommands imple
 
 	private List<String> stringSortRo(final byte[] key, final SortArgs sortArgs, final CommandArguments args) {
 		return executeCommand(RedisCommand.SORT_RO, args, (cmd)->cmd.sortReadOnly(key, sortArgs),
-				(cmd)->cmd.sortReadOnly(key, sortArgs), new BinaryListStringListConverter());
+				(cmd)->cmd.sortReadOnly(key, sortArgs), Converters.binaryListStringListConverter());
 	}
 
 	private List<byte[]> binarySortRo(final byte[] key, final SortArgs sortArgs, final CommandArguments args) {

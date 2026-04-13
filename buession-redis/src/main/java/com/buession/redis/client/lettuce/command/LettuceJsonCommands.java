@@ -42,7 +42,6 @@ import com.buession.redis.core.command.RedisSubCommand;
 import com.buession.redis.core.command.args.json.JsonGetArgument;
 import com.buession.redis.core.command.args.json.KeyPathValue;
 import com.buession.redis.core.internal.convert.Converters;
-import com.buession.redis.core.internal.convert.StringListBinaryListConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.JsonTypeConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.response.OneStatusConverter;
@@ -232,7 +231,8 @@ public final class LettuceJsonCommands extends AbstractLettuceRedisCommands impl
 		final CommandArguments args = CommandArguments.create(key, path);
 		return executeCommand(RedisCommand.JSON_ARRPOP, args,
 				(cmd)->cmd.jsonArrpopRaw(rawKey(key), new LettuceJsonPath(path)),
-				(cmd)->cmd.jsonArrpopRaw(rawKey(key), new LettuceJsonPath(path)), new StringListBinaryListConverter());
+				(cmd)->cmd.jsonArrpopRaw(rawKey(key), new LettuceJsonPath(path)),
+				Converters.stringListBinaryListConverter());
 	}
 
 	@Override
@@ -249,7 +249,7 @@ public final class LettuceJsonCommands extends AbstractLettuceRedisCommands impl
 		return executeCommand(RedisCommand.JSON_ARRPOP, args,
 				(cmd)->cmd.jsonArrpopRaw(rawKey(key), new LettuceJsonPath(path), index),
 				(cmd)->cmd.jsonArrpopRaw(rawKey(key), new LettuceJsonPath(path), index),
-				new StringListBinaryListConverter());
+				Converters.stringListBinaryListConverter());
 	}
 
 	@Override
@@ -432,7 +432,8 @@ public final class LettuceJsonCommands extends AbstractLettuceRedisCommands impl
 				LettuceJsonPath.class);
 		return executeCommand(RedisCommand.JSON_GET, args,
 				(cmd)->cmd.jsonGetRaw(rawKey(key), arrayConverter.convert(path)),
-				(cmd)->cmd.jsonGetRaw(rawKey(key), arrayConverter.convert(path)), new StringListBinaryListConverter());
+				(cmd)->cmd.jsonGetRaw(rawKey(key), arrayConverter.convert(path)),
+				Converters.stringListBinaryListConverter());
 	}
 
 	@Override
@@ -455,7 +456,7 @@ public final class LettuceJsonCommands extends AbstractLettuceRedisCommands impl
 		return executeCommand(RedisCommand.JSON_GET, args,
 				(cmd)->cmd.jsonGetRaw(rawKey(key), new LettuceJsonGetArgs(argument), arrayConverter.convert(path)),
 				(cmd)->cmd.jsonGetRaw(rawKey(key), new LettuceJsonGetArgs(argument), arrayConverter.convert(path)),
-				new StringListBinaryListConverter());
+				Converters.stringListBinaryListConverter());
 	}
 
 	@Override
@@ -488,7 +489,8 @@ public final class LettuceJsonCommands extends AbstractLettuceRedisCommands impl
 		final CommandArguments args = CommandArguments.create(keys).add(path);
 		return executeCommand(RedisCommand.JSON_MGET, args,
 				(cmd)->cmd.jsonMGetRaw(new LettuceJsonPath(path), rawKeys(keys)),
-				(cmd)->cmd.jsonMGetRaw(new LettuceJsonPath(path), rawKeys(keys)), new StringListBinaryListConverter());
+				(cmd)->cmd.jsonMGetRaw(new LettuceJsonPath(path), rawKeys(keys)),
+				Converters.stringListBinaryListConverter());
 	}
 
 	@Override

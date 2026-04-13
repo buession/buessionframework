@@ -22,24 +22,34 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert;
+package com.buession.redis.core.internal.lettuce.args;
 
-import com.buession.core.converter.MapConverter;
-import com.buession.redis.utils.SafeEncoder;
+import io.lettuce.core.ClientListArgs;
 
 /**
- * {@link String} {@link java.util.Map} 转换为 二进制 {@link java.util.Map}
+ * Lettuce {@link ClientListArgs} 扩展
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public final class StringMapBinaryMapConverter extends MapConverter<String, String, byte[], byte[]> {
+public final class LettuceClientListArgs extends ClientListArgs {
 
 	/**
 	 * 构造函数
 	 */
-	public StringMapBinaryMapConverter() {
-		super(SafeEncoder::encode, SafeEncoder::encode);
+	public LettuceClientListArgs() {
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		ID
+	 */
+	public LettuceClientListArgs(final long... id) {
+		super();
+		ids(id);
 	}
 
 }

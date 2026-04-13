@@ -54,7 +54,7 @@ import com.buession.redis.core.command.args.MaxLenMinId;
 import com.buession.redis.core.command.args.stream.XAddArgument;
 import com.buession.redis.core.command.args.stream.XClaimArgument;
 import com.buession.redis.core.command.args.stream.XReadGroupArgument;
-import com.buession.redis.core.internal.convert.StringMapBinaryMapConverter;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.params.StreamDeletionPolicyConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ClaimedMessagesAutoClaimIdConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ClaimedMessagesAutoClaimInfoConverter;
@@ -1089,7 +1089,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 
 	private StreamEntryId stringXAdd(final byte[] key, final Map<String, String> hash, final XAddArgs xAddArgs,
 	                                 final CommandArguments args) {
-		final MapConverter<String, String, byte[], byte[]> mapConverter = new StringMapBinaryMapConverter();
+		final MapConverter<String, String, byte[], byte[]> mapConverter = Converters.stringMapBinaryMapConverter();
 		return executeCommand(RedisCommand.XADD, args, (cmd)->cmd.xadd(key, xAddArgs, mapConverter.convert(hash)),
 				(cmd)->cmd.xadd(key, xAddArgs, mapConverter.convert(hash)), new StreamEntryIDConverter());
 	}

@@ -47,9 +47,9 @@ import com.buession.redis.core.internal.convert.response.ClientConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.response.OneStatusConverter;
 import com.buession.redis.core.internal.convert.response.PingResultConverter;
+import com.buession.redis.core.internal.lettuce.args.LettuceClientListArgs;
 import com.buession.redis.core.internal.lettuce.args.LettuceTrackingArgs;
 import com.buession.redis.utils.SafeEncoder;
-import io.lettuce.core.ClientListArgs;
 import io.lettuce.core.UnblockType;
 
 import java.util.List;
@@ -147,15 +147,15 @@ public final class LettuceConnectionCommands extends AbstractLettuceRedisCommand
 	public List<Client> clientList(final ClientType clientType) {
 		final CommandArguments args = CommandArguments.create("TYPE", clientType);
 		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_LIST, args, (cmd)->switch(clientType){
-			case NORMAL -> cmd.clientList(ClientListArgs.Builder.typeNormal());
-			case MASTER -> cmd.clientList(ClientListArgs.Builder.typeMaster());
-			case SLAVE, REPLICA -> cmd.clientList(ClientListArgs.Builder.typeReplica());
-			case PUBSUB -> cmd.clientList(ClientListArgs.Builder.typePubsub());
+			case NORMAL -> cmd.clientList(LettuceClientListArgs.Builder.typeNormal());
+			case MASTER -> cmd.clientList(LettuceClientListArgs.Builder.typeMaster());
+			case SLAVE, REPLICA -> cmd.clientList(LettuceClientListArgs.Builder.typeReplica());
+			case PUBSUB -> cmd.clientList(LettuceClientListArgs.Builder.typePubsub());
 		}, (cmd)->switch(clientType){
-			case NORMAL -> cmd.clientList(ClientListArgs.Builder.typeNormal());
-			case MASTER -> cmd.clientList(ClientListArgs.Builder.typeMaster());
-			case SLAVE, REPLICA -> cmd.clientList(ClientListArgs.Builder.typeReplica());
-			case PUBSUB -> cmd.clientList(ClientListArgs.Builder.typePubsub());
+			case NORMAL -> cmd.clientList(LettuceClientListArgs.Builder.typeNormal());
+			case MASTER -> cmd.clientList(LettuceClientListArgs.Builder.typeMaster());
+			case SLAVE, REPLICA -> cmd.clientList(LettuceClientListArgs.Builder.typeReplica());
+			case PUBSUB -> cmd.clientList(LettuceClientListArgs.Builder.typePubsub());
 		}, new ClientConverter.ClientListConverter());
 	}
 
@@ -163,8 +163,8 @@ public final class LettuceConnectionCommands extends AbstractLettuceRedisCommand
 	public List<Client> clientList(final long... ids) {
 		final CommandArguments args = CommandArguments.create().add("ID", ids);
 		return executeCommand(RedisCommand.CLIENT, RedisSubCommand.CLIENT_LIST, args,
-				(cmd)->cmd.clientList(ClientListArgs.Builder.ids(ids)),
-				(cmd)->cmd.clientList(ClientListArgs.Builder.ids(ids)), new ClientConverter.ClientListConverter());
+				(cmd)->cmd.clientList(new LettuceClientListArgs(ids)),
+				(cmd)->cmd.clientList(new LettuceClientListArgs(ids)), new ClientConverter.ClientListConverter());
 	}
 
 	@Override

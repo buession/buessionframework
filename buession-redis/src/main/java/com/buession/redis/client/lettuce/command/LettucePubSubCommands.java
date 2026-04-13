@@ -31,7 +31,7 @@ import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.PubSubCommands;
 import com.buession.redis.core.command.RedisSubCommand;
-import com.buession.redis.core.internal.convert.BinaryListStringListConverter;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
@@ -76,7 +76,7 @@ public final class LettucePubSubCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public List<String> pubsubChannels() {
 		return executeCommand(RedisCommand.PUBSUB, RedisSubCommand.PUBSUB_CHANNELS, (cmd)->cmd.pubsubChannels(),
-				(cmd)->cmd.pubsubChannels(), new BinaryListStringListConverter());
+				(cmd)->cmd.pubsubChannels(), Converters.binaryListStringListConverter());
 	}
 
 	@Override
@@ -85,7 +85,7 @@ public final class LettucePubSubCommands extends AbstractLettuceRedisCommands im
 		return executeCommand(RedisCommand.PUBSUB, RedisSubCommand.PUBSUB_CHANNELS, args,
 				(cmd)->cmd.pubsubChannels(SafeEncoder.encode(pattern)),
 				(cmd)->cmd.pubsubChannels(SafeEncoder.encode(pattern)),
-				new BinaryListStringListConverter());
+				Converters.binaryListStringListConverter());
 	}
 
 	@Override
@@ -127,7 +127,7 @@ public final class LettucePubSubCommands extends AbstractLettuceRedisCommands im
 	public List<String> pubsubShardChannels() {
 		return executeCommand(RedisCommand.PUBSUB, RedisSubCommand.PUBSUB_SHARDCHANNELS,
 				(cmd)->cmd.pubsubShardChannels(), (cmd)->cmd.pubsubShardChannels(),
-				new BinaryListStringListConverter());
+				Converters.binaryListStringListConverter());
 	}
 
 	@Override
@@ -136,7 +136,7 @@ public final class LettucePubSubCommands extends AbstractLettuceRedisCommands im
 		return executeCommand(RedisCommand.PUBSUB, RedisSubCommand.PUBSUB_SHARDCHANNELS, args,
 				(cmd)->cmd.pubsubShardChannels(SafeEncoder.encode(pattern)),
 				(cmd)->cmd.pubsubShardChannels(SafeEncoder.encode(pattern)),
-				new BinaryListStringListConverter());
+				Converters.binaryListStringListConverter());
 	}
 
 	@Override

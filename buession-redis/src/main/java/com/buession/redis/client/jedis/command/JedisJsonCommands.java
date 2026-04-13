@@ -42,7 +42,6 @@ import com.buession.redis.core.command.JsonCommands;
 import com.buession.redis.core.command.args.json.JsonGetArgument;
 import com.buession.redis.core.command.args.json.KeyPathValue;
 import com.buession.redis.core.internal.convert.Converters;
-import com.buession.redis.core.internal.convert.StringListBinaryListConverter;
 import com.buession.redis.core.internal.convert.jedis.response.JsonTypeConverter;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.jedis.args.JedisJsonSetParams;
@@ -492,7 +491,7 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(RedisCommand.JSON_OBJKEYS, args, null, null,
 				(cmd)->cmd.jsonObjKeys(rawStringKey(key), JedisPath.ROOT_PATH),
-				new ListConverter<>(new StringListBinaryListConverter()));
+				new ListConverter<>(Converters.stringListBinaryListConverter()));
 	}
 
 	@Override
@@ -507,7 +506,7 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 		final CommandArguments args = CommandArguments.create(key, path);
 		return executeCommand(RedisCommand.JSON_OBJKEYS, args, null, null,
 				(cmd)->cmd.jsonObjKeys(rawStringKey(key), new JedisPath(path)),
-				new ListConverter<>(new StringListBinaryListConverter()));
+				new ListConverter<>(Converters.stringListBinaryListConverter()));
 	}
 
 	@Override

@@ -40,7 +40,7 @@ public class JedisResult<SV, TV> extends FutureResult<SV, Response<SV>> {
 		super(resultHolder);
 	}
 
-	public JedisResult(final Response<SV> resultHolder, final Converter<SV, ?> converter) {
+	public JedisResult(final Response<SV> resultHolder, final Converter<SV, TV> converter) {
 		super(resultHolder, converter);
 	}
 

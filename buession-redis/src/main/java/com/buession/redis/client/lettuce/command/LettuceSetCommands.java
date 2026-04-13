@@ -32,8 +32,7 @@ import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.SetCommands;
-import com.buession.redis.core.internal.convert.BinaryListStringListConverter;
-import com.buession.redis.core.internal.convert.BinarySetStringSetConverter;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConverter;
 import com.buession.redis.core.internal.lettuce.args.LettuceScanArgs;
 import com.buession.redis.core.internal.lettuce.args.LettuceScanCursor;
@@ -86,7 +85,7 @@ public final class LettuceSetCommands extends AbstractLettuceRedisCommands imple
 	public Set<String> sDiff(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
 		return executeCommand(RedisCommand.SDIFF, args, (cmd)->cmd.sdiff(rawBinaryKeys(keys)),
-				(cmd)->cmd.sdiff(rawBinaryKeys(keys)), new BinarySetStringSetConverter());
+				(cmd)->cmd.sdiff(rawBinaryKeys(keys)), Converters.binarySetStringSetConverter());
 	}
 
 	@Override
@@ -115,7 +114,7 @@ public final class LettuceSetCommands extends AbstractLettuceRedisCommands imple
 	public Set<String> sInter(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
 		return executeCommand(RedisCommand.SINTER, args, (cmd)->cmd.sinter(rawBinaryKeys(keys)),
-				(cmd)->cmd.sinter(rawBinaryKeys(keys)), new BinarySetStringSetConverter());
+				(cmd)->cmd.sinter(rawBinaryKeys(keys)), Converters.binarySetStringSetConverter());
 	}
 
 	@Override
@@ -187,7 +186,7 @@ public final class LettuceSetCommands extends AbstractLettuceRedisCommands imple
 	public Set<String> sMembers(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(RedisCommand.SMEMBERS, args, (cmd)->cmd.smembers(rawBinaryKey(key)),
-				(cmd)->cmd.smembers(rawBinaryKey(key)), new BinarySetStringSetConverter());
+				(cmd)->cmd.smembers(rawBinaryKey(key)), Converters.binarySetStringSetConverter());
 	}
 
 	@Override
@@ -245,7 +244,7 @@ public final class LettuceSetCommands extends AbstractLettuceRedisCommands imple
 	public Set<String> sPop(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
 		return executeCommand(RedisCommand.SPOP, args, (cmd)->cmd.spop(rawBinaryKey(key), count),
-				(cmd)->cmd.spop(rawBinaryKey(key), count), new BinarySetStringSetConverter());
+				(cmd)->cmd.spop(rawBinaryKey(key), count), Converters.binarySetStringSetConverter());
 	}
 
 	@Override
@@ -273,7 +272,7 @@ public final class LettuceSetCommands extends AbstractLettuceRedisCommands imple
 	public List<String> sRandMember(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
 		return executeCommand(RedisCommand.SRANDMEMBER, args, (cmd)->cmd.srandmember(rawBinaryKey(key), count),
-				(cmd)->cmd.srandmember(rawBinaryKey(key), count), new BinaryListStringListConverter());
+				(cmd)->cmd.srandmember(rawBinaryKey(key), count), Converters.binaryListStringListConverter());
 	}
 
 	@Override
@@ -356,7 +355,7 @@ public final class LettuceSetCommands extends AbstractLettuceRedisCommands imple
 	public Set<String> sUnion(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
 		return executeCommand(RedisCommand.SUNION, args, (cmd)->cmd.sunion(rawBinaryKeys(keys)),
-				(cmd)->cmd.sunion(rawBinaryKeys(keys)), new BinarySetStringSetConverter());
+				(cmd)->cmd.sunion(rawBinaryKeys(keys)), Converters.binarySetStringSetConverter());
 	}
 
 	@Override
