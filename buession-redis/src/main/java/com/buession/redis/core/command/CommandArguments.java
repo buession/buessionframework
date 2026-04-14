@@ -195,6 +195,7 @@ public final class CommandArguments {
 		return new CommandArguments(value);
 	}
 
+	/*
 	public static CommandArguments create(final byte[]... values) {
 		return new CommandArguments(values);
 	}
@@ -250,6 +251,8 @@ public final class CommandArguments {
 	public static CommandArguments create(final KeyValue<?, ?>... values) {
 		return new CommandArguments(values);
 	}
+
+	 */
 
 	public static CommandArguments create(final Object... values) {
 		return new CommandArguments(values);
@@ -401,8 +404,6 @@ public final class CommandArguments {
 		return doBatchAdd(values);
 	}
 
-	 */
-
 	public CommandArguments add(final String... values) {
 		return doBatchAdd(values);
 	}
@@ -426,6 +427,8 @@ public final class CommandArguments {
 	public CommandArguments add(final Range<?>... values) {
 		return doBatchAdd(values);
 	}
+
+	 */
 
 	public CommandArguments add(final Object... values) {
 		return doBatchAdd(values);

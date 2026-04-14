@@ -34,7 +34,6 @@ import com.buession.redis.core.StreamConsumer;
 import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.StreamFull;
 import com.buession.redis.core.StreamGroup;
-import com.buession.redis.jedis.AbstractJedisRedisTest;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -43,12 +42,12 @@ import java.util.List;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class LettuceStreamTest extends AbstractJedisRedisTest {
+public class LettuceStreamTest extends AbstractLettuceRedisTest {
 
 	@Test
 	public void xAdd() {
 		RedisTemplate redisTemplate = redisTemplate();
-		StreamEntryId result = redisTemplate.xAdd("stream_b", "2-1",
+		StreamEntryId result = redisTemplate.xAdd("stream_b", "2-2",
 				MapBuilder.<String, String>create().put("1", "A").put("2", "B").build());
 		System.out.println(result);
 	}
@@ -56,56 +55,56 @@ public class LettuceStreamTest extends AbstractJedisRedisTest {
 	@Test
 	public void xGroupCreate() {
 		RedisTemplate redisTemplate = redisTemplate();
-		Status result = redisTemplate.xGroupCreate("stream_a", "test", "1-0");
+		Status result = redisTemplate.xGroupCreate("stream_b", "test_2", "1-0");
 		System.out.println(result);
 	}
 
 	@Test
 	public void xGroupCreateConsumer() {
 		RedisTemplate redisTemplate = redisTemplate();
-		Status result = redisTemplate.xGroupCreateConsumer("stream_a", "test", "cs");
+		Status result = redisTemplate.xGroupCreateConsumer("stream_b", "test", "cs");
 		System.out.println(result);
 	}
 
 	@Test
 	public void xAutoClaimJustId() {
 		RedisTemplate redisTemplate = redisTemplate();
-		AutoClaimId result = redisTemplate.xAutoClaimJustId("stream_a", "test", "cs", 0, "1-0");
+		AutoClaimId result = redisTemplate.xAutoClaimJustId("stream_b", "test", "cs", 0, "1-0");
 		System.out.println(result);
 	}
 
 	@Test
 	public void xAutoClaim() {
 		RedisTemplate redisTemplate = redisTemplate();
-		AutoClaimInfo<String, String> result = redisTemplate.xAutoClaim("stream_a", "test", "cs", 0, "1-0");
+		AutoClaimInfo<String, String> result = redisTemplate.xAutoClaim("stream_b", "test", "cs", 0, "1-0");
 		System.out.println(result);
 	}
 
 	@Test
 	public void xInfoStream() {
 		RedisTemplate redisTemplate = redisTemplate();
-		Stream<String, String> result = redisTemplate.xInfoStream("stream_a");
+		Stream<String, String> result = redisTemplate.xInfoStream("stream_b");
 		System.out.println(result);
 	}
 
 	@Test
 	public void xInfoStreamFull() {
 		RedisTemplate redisTemplate = redisTemplate();
-		StreamFull<String, String> result = redisTemplate.xInfoStreamFull("stream_a");
+		StreamFull<String, String> result = redisTemplate.xInfoStreamFull("stream_b");
 		System.out.println(result);
 	}
 
 	@Test
 	public void xInfoGroups() {
 		RedisTemplate redisTemplate = redisTemplate();
-		List<StreamGroup> result = redisTemplate.xInfoGroups("stream_a");
+		List<StreamGroup> result = redisTemplate.xInfoGroups("stream_b");
 		System.out.println(result);
 	}
 
 	@Test
 	public void xInfoConsumers() {
 		RedisTemplate redisTemplate = redisTemplate();
-		List<StreamConsumer> result = redisTemplate.xInfoConsumers("stream_a", "test");
+		List<StreamConsumer> result = redisTemplate.xInfoConsumers("stream_b", "test");
 		System.out.println(result);
 	}
 

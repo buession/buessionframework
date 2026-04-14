@@ -33,11 +33,11 @@ import com.buession.redis.core.StreamEntryId;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class StreamEntryIDConverter implements Converter<String, StreamEntryId> {
+public final class StreamEntryIDConverter implements Converter<String, StreamEntryId> {
 
 	@Override
 	public StreamEntryId convert(final String source) {
-		return null;
+		return source == null ? null : new StreamEntryId(source);
 	}
 
 }

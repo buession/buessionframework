@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core;
 
+import com.buession.net.HostAndPort;
 import com.buession.redis.utils.ObjectStringBuilder;
 
 import java.util.List;
@@ -47,8 +48,8 @@ import java.util.List;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public record SlowLog(Long id, Long timestamp, Long executionTime, List<String> args, Client client,
-					  String clientName) {
+public record SlowLog(Long id, Long timestamp, Long executionTime, List<String> args, HostAndPort client,
+                      String clientName) {
 
 	@Override
 	public String toString() {

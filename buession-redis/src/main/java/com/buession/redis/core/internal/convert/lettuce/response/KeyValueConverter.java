@@ -43,7 +43,7 @@ import io.lettuce.core.KeyValue;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class KeyValueConverter<SK, SV, TK, TV>
+public final class KeyValueConverter<SK, SV, TK, TV>
 		extends BaseKeyValueConverter<SK, SV, TK, TV, KeyValue<SK, SV>, com.buession.lang.KeyValue<TK, TV>> {
 
 	/**
@@ -58,15 +58,19 @@ public class KeyValueConverter<SK, SV, TK, TV>
 		super(keyConverter, valueConverter);
 	}
 
+	public static <K, V> KeyValueConverter<K, V, K, V> defaultKeyValueConverter() {
+		return new KeyValueConverter<>((k)->k, (v)->v);
+	}
+
 	@Override
 	public com.buession.lang.KeyValue<TK, TV> convert(final io.lettuce.core.KeyValue<SK, SV> source) {
 		if(source == null){
 			return null;
-		}else{
-			final TK key = keyConverter.convert(source.getKey());
-			final TV value = valueConverter.convert(source.getValue());
-			return new com.buession.lang.KeyValue<>(key, value);
 		}
+
+		final TK key = keyConverter.convert(source.getKey());
+		final TV value = valueConverter.convert(source.getValue());
+		return new com.buession.lang.KeyValue<>(key, value);
 	}
 
 }

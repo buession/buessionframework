@@ -26,6 +26,9 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.StreamConsumer;
+import com.buession.redis.utils.SafeEncoder;
+
+import java.util.List;
 
 /**
  * Lettuce 'xinfo-consumers' 命令结果转换为 {@link StreamConsumer}
@@ -35,9 +38,16 @@ import com.buession.redis.core.StreamConsumer;
  */
 public final class StreamConsumersInfoConverter implements Converter<Object, StreamConsumer> {
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public StreamConsumer convert(final Object source) {
-		return null;
+		if(source == null){
+			return null;
+		}else{
+			final List<Object> tmp = (List<Object>) source;
+			return new StreamConsumer(SafeEncoder.encode((byte[]) tmp.get(1)), (Long) tmp.get(3), (Long) tmp.get(5),
+					(Long) tmp.get(7));
+		}
 	}
 
 }

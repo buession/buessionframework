@@ -37,20 +37,18 @@ import java.util.Map;
  * 		自上次活跃以来的空闲时间（单位：毫秒）
  * @param pending
  * 		未 ACK（确认）的消息数量
+ * @param inactive
+ * 		the number of milliseconds that have passed since the consumer's last successful interaction
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public record StreamConsumer(String name, Long idle, Long pending, Map<String, Object> infos) {
+public record StreamConsumer(String name, Long idle, Long pending, Long inactive) {
 
 	@Override
 	public String toString() {
-		return ObjectStringBuilder.create()
-				.add("name", name)
-				.add("idle", idle)
-				.add("pending", pending)
-				.add("infos", infos)
-				.build();
+		return ObjectStringBuilder.create().add("name", name).add("idle", idle).add("pending", pending)
+				.add("inactive", inactive).build();
 	}
 
 }

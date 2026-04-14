@@ -25,6 +25,7 @@
 package com.buession.redis.lettuce;
 
 import com.buession.redis.RedisTemplate;
+import com.buession.redis.core.AclLog;
 import com.buession.redis.core.MemoryStats;
 import com.buession.redis.core.Module;
 import com.buession.redis.core.SlowLog;
@@ -82,6 +83,13 @@ public class LettuceServerTest extends AbstractLettuceRedisTest {
 		RedisTemplate redisTemplate = redisTemplate();
 		List<Module> result = redisTemplate.moduleList();
 		result.forEach(System.out::println);
+	}
+
+	@Test
+	public void aclLog() {
+		RedisTemplate redisTemplate = redisTemplate();
+		List<AclLog> result = redisTemplate.aclLog();
+		System.out.println(result);
 	}
 
 }

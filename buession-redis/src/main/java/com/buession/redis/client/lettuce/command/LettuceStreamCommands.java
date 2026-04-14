@@ -743,6 +743,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 				new ListConverter<>(new StreamMessageConverter<>((k)->k, (v)->v)));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public List<XReadInfo<String, String>> xRead(final Map<String, StreamEntryId> streams) {
 		final CommandArguments args = CommandArguments.create().add("STREAMS", streams);
@@ -1079,11 +1080,12 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                                                final StreamDeletionPolicy deletionPolicy,
 	                                                final StreamEntryId[] ids, final CommandArguments args) {
 		final StreamDeletionPolicyConverter streamDeletionPolicyConverter = new StreamDeletionPolicyConverter();
+		final String[] messageIds = Arrays.map(ids, String.class, StreamEntryId::toString);
 		return executeCommand(RedisCommand.XACKDEL, args,
 				(cmd)->cmd.xackdel(key, groupName, streamDeletionPolicyConverter.convert(deletionPolicy),
-						Arrays.map(ids, String.class, StreamEntryId::toString)),
+						messageIds),
 				(cmd)->cmd.xackdel(key, groupName, streamDeletionPolicyConverter.convert(deletionPolicy),
-						Arrays.map(ids, String.class, StreamEntryId::toString)),
+						messageIds),
 				new ListConverter<>(new StreamEntryDeletionResultConverter()));
 	}
 
@@ -1178,17 +1180,19 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 
 	private Status xGroupCreate(final byte[] key, final byte[] groupName, final StreamEntryId id,
 	                            final CommandArguments args) {
+		final XReadArgs.StreamOffset<byte[]> streamOffset = XReadArgs.StreamOffset.from(key, id.toString());
 		return executeCommand(RedisCommand.XGROUP, RedisSubCommand.XGROUP_CREATE, args,
-				(cmd)->cmd.xgroupCreate(XReadArgs.StreamOffset.from(key, id.toString()), groupName),
-				(cmd)->cmd.xgroupCreate(XReadArgs.StreamOffset.from(key, id.toString()), groupName),
+				(cmd)->cmd.xgroupCreate(streamOffset, groupName),
+				(cmd)->cmd.xgroupCreate(streamOffset, groupName),
 				new OkStatusConverter());
 	}
 
 	private Status xGroupCreate(final byte[] key, final byte[] groupName, final StreamEntryId id,
 	                            final LettuceXGroupCreateArgs xGroupCreateArgs, final CommandArguments args) {
+		final XReadArgs.StreamOffset<byte[]> streamOffset = XReadArgs.StreamOffset.from(key, id.toString());
 		return executeCommand(RedisCommand.XGROUP, RedisSubCommand.XGROUP_CREATE, args,
-				(cmd)->cmd.xgroupCreate(XReadArgs.StreamOffset.from(key, id.toString()), groupName, xGroupCreateArgs),
-				(cmd)->cmd.xgroupCreate(XReadArgs.StreamOffset.from(key, id.toString()), groupName, xGroupCreateArgs),
+				(cmd)->cmd.xgroupCreate(streamOffset, groupName, xGroupCreateArgs),
+				(cmd)->cmd.xgroupCreate(streamOffset, groupName, xGroupCreateArgs),
 				new OkStatusConverter());
 	}
 
@@ -1209,9 +1213,10 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 
 	private Status xGroupSetId(final byte[] key, final byte[] groupName, final StreamEntryId id,
 	                           final CommandArguments args) {
+		final XReadArgs.StreamOffset<byte[]> streamOffset = XReadArgs.StreamOffset.from(key, id.toString());
 		return executeCommand(RedisCommand.XGROUP, RedisSubCommand.XGROUP_SETID, args,
-				(cmd)->cmd.xgroupSetid(XReadArgs.StreamOffset.from(key, id.toString()), groupName),
-				(cmd)->cmd.xgroupSetid(XReadArgs.StreamOffset.from(key, id.toString()), groupName),
+				(cmd)->cmd.xgroupSetid(streamOffset, groupName),
+				(cmd)->cmd.xgroupSetid(streamOffset, groupName),
 				new OkStatusConverter());
 	}
 
@@ -1232,6 +1237,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 				(cmd)->cmd.xpending(key, xPendingArgs), new ListConverter<>(new PendingMessageConverter()));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	private List<XReadInfo<String, String>> xRead(final Map<String, StreamEntryId> streams, final XReadArgs xReadArgs,
 	                                              final CommandArguments args) {
 		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
@@ -1246,9 +1252,12 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 				new ListConverter<>(new StreamMessageXReadInfoConverter<>(SafeEncoder::encode, SafeEncoder::encode)));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	private List<XReadGroupInfo<String, String>> xReadGroup(final String groupName, final String consumerName,
 	                                                        final Map<String, StreamEntryId> streams,
 	                                                        final CommandArguments args) {
+		final Consumer<byte[]> consumer = Consumer.from(SafeEncoder.encode(groupName),
+				SafeEncoder.encode(consumerName));
 		final XReadArgs.StreamOffset<byte[]>[] streamOffsets = new XReadArgs.StreamOffset[streams.size()];
 		int i = 0;
 
@@ -1257,14 +1266,13 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 		}
 
 		return executeCommand(RedisCommand.XREADGROUP, args,
-				(cmd)->cmd.xreadgroup(Consumer.from(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName)),
-						streamOffsets),
-				(cmd)->cmd.xreadgroup(Consumer.from(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName)),
-						streamOffsets),
+				(cmd)->cmd.xreadgroup(consumer, streamOffsets),
+				(cmd)->cmd.xreadgroup(consumer, streamOffsets),
 				new ListConverter<>(
 						new StreamMessageXReadGroupInfoConverter<>(SafeEncoder::encode, SafeEncoder::encode)));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	private List<XReadGroupInfo<byte[], byte[]>> xReadGroup(final byte[] groupName, final byte[] consumerName,
 	                                                        final Map<byte[], StreamEntryId> streams,
 	                                                        final CommandArguments args) {
@@ -1281,6 +1289,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 				new ListConverter<>(new StreamMessageXReadGroupInfoConverter<>((k)->k, (v)->v)));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	private List<XReadGroupInfo<String, String>> xReadGroup(final String groupName, final String consumerName,
 	                                                        final Map<String, StreamEntryId> streams,
 	                                                        final XReadArgs xReadArgs, final CommandArguments args) {
@@ -1300,6 +1309,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 						new StreamMessageXReadGroupInfoConverter<>(SafeEncoder::encode, SafeEncoder::encode)));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	private List<XReadGroupInfo<byte[], byte[]>> xReadGroup(final byte[] groupName, final byte[] consumerName,
 	                                                        final Map<byte[], StreamEntryId> streams,
 	                                                        final XReadArgs xReadArgs, final CommandArguments args) {

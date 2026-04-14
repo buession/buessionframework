@@ -39,6 +39,7 @@ import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.SortedSetCommands;
 import com.buession.redis.core.command.args.sortedset.ZAddArgument;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.lettuce.response.KeyValueConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ScanCursorConverter;
 import com.buession.redis.core.internal.convert.lettuce.response.ScoredValueKeyValueConverter;
@@ -1161,20 +1162,20 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	@Override
 	public List<String> zRevRangeByLex(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min, max);
-		return executeCommand(RedisCommand.ZREVRANGEBYLEX, args, (cmd)->cmd.zrevrangebylex(rawBinaryKey(key),
-						Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max))),
-				(cmd)->cmd.zrevrangebylex(rawBinaryKey(key),
-						Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max))),
+		final Range<byte[]> range = Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
+		return executeCommand(RedisCommand.ZREVRANGEBYLEX, args,
+				(cmd)->cmd.zrevrangebylex(rawBinaryKey(key), range),
+				(cmd)->cmd.zrevrangebylex(rawBinaryKey(key), range),
 				Converters.binaryListStringListConverter());
 	}
 
 	@Override
 	public List<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min, max);
-		return executeCommand(RedisCommand.ZREVRANGEBYLEX, args, (cmd)->cmd.zrevrangebylex(rawKey(key),
-						Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max))),
-				(cmd)->cmd.zrevrangebylex(rawKey(key),
-						Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max))));
+		final Range<byte[]> range = Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
+		return executeCommand(RedisCommand.ZREVRANGEBYLEX, args,
+				(cmd)->cmd.zrevrangebylex(rawKey(key), range),
+				(cmd)->cmd.zrevrangebylex(rawKey(key), range));
 	}
 
 	@Override
@@ -1182,11 +1183,12 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                                   final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(min, max).add(Keyword.Common.LIMIT)
 				.add(offset, count);
-		return executeCommand(RedisCommand.ZREVRANGEBYLEX, args, (cmd)->cmd.zrevrangebylex(rawBinaryKey(key),
-				Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)),
-				Limit.create(offset, count)), (cmd)->cmd.zrevrangebylex(rawBinaryKey(key),
-				Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)),
-				Limit.create(offset, count)), Converters.binaryListStringListConverter());
+		final Range<byte[]> range = Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
+		final Limit limit = Limit.create(offset, count);
+		return executeCommand(RedisCommand.ZREVRANGEBYLEX, args,
+				(cmd)->cmd.zrevrangebylex(rawBinaryKey(key), range, limit),
+				(cmd)->cmd.zrevrangebylex(rawBinaryKey(key), range, limit),
+				Converters.binaryListStringListConverter());
 	}
 
 	@Override
@@ -1194,11 +1196,11 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                                   final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(min, max).add(Keyword.Common.LIMIT)
 				.add(offset, count);
-		return executeCommand(RedisCommand.ZREVRANGEBYLEX, args, (cmd)->cmd.zrevrangebylex(rawKey(key),
-				Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)),
-				Limit.create(offset, count)), (cmd)->cmd.zrevrangebylex(rawKey(key),
-				Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)),
-				Limit.create(offset, count)));
+		final Range<byte[]> range = Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
+		final Limit limit = Limit.create(offset, count);
+		return executeCommand(RedisCommand.ZREVRANGEBYLEX, args,
+				(cmd)->cmd.zrevrangebylex(rawKey(key), range, limit),
+				(cmd)->cmd.zrevrangebylex(rawKey(key), range, limit));
 	}
 
 	@Override
@@ -1532,7 +1534,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 				new KeyValueConverter<>(keyConverter, new ListConverter<>(new ScoredValueTupleConverter())));
 	}
 
-
+	@SuppressWarnings({"unchecked"})
 	private Long zAdd(final byte[] key, final Tuple[] members, final CommandArguments args) {
 		final ScoredValue<byte[]>[] scoredValues = new ScoredValue[members.length];
 
@@ -1544,6 +1546,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 				(cmd)->cmd.zadd(key, scoredValues));
 	}
 
+	@SuppressWarnings({"unchecked"})
 	private Long zAdd(final byte[] key, final Tuple[] members, final ZAddArgument argument,
 	                  final CommandArguments args) {
 		final ScoredValue<byte[]>[] scoredValues = new ScoredValue[members.length];
@@ -1588,9 +1591,9 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	}
 
 	private Long zLexCount(final byte[] key, final double min, final double max, final CommandArguments args) {
-		return executeCommand(RedisCommand.ZLEXCOUNT, args,
-				(cmd)->cmd.zlexcount(key, Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max))),
-				(cmd)->cmd.zlexcount(key, Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max))));
+		final Range<byte[]> range = Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
+		return executeCommand(RedisCommand.ZLEXCOUNT, args, (cmd)->cmd.zlexcount(key, range),
+				(cmd)->cmd.zlexcount(key, range));
 	}
 
 	private <K> KeyValue<K, List<Tuple>> zMPop(final byte[][] keys, final MinMax minMax, final int count,
@@ -1603,10 +1606,9 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	private <V> List<V> zRange(final byte[] key, final long start, final long end, final ZRangeType type,
 	                           final Converter<List<byte[]>, List<V>> converter, final CommandArguments args) {
 		if(type == ZRangeType.BYLEX){
-			return executeCommand(RedisCommand.ZRANGE, args, (cmd)->cmd.zrangebylex(key,
-							Range.create(NumberUtils.long2bytes(start), NumberUtils.long2bytes(end))),
-					(cmd)->cmd.zrangebylex(key,
-							Range.create(NumberUtils.long2bytes(start), NumberUtils.long2bytes(end))), converter);
+			final Range<byte[]> range = Range.create(NumberUtils.long2bytes(start), NumberUtils.long2bytes(end));
+			return executeCommand(RedisCommand.ZRANGE, args, (cmd)->cmd.zrangebylex(key, range),
+					(cmd)->cmd.zrangebylex(key, range), converter);
 		}else if(type == ZRangeType.BYSCORE){
 			return executeCommand(RedisCommand.ZRANGE, args, (cmd)->cmd.zrangebyscore(key, Range.create(start, end)),
 					(cmd)->cmd.zrangebyscore(key, Range.create(start, end)), converter);
@@ -1619,16 +1621,16 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	private <V> List<V> zRange(final byte[] key, final long start, final long end, final ZRangeType type,
 	                           final int offset, final int count, final Converter<List<byte[]>, List<V>> converter,
 	                           final CommandArguments args) {
+		final Limit limit = Limit.create(offset, count);
 		if(type == ZRangeType.BYLEX){
-			return executeCommand(RedisCommand.ZRANGE, args, (cmd)->cmd.zrangebylex(key,
-					Range.create(NumberUtils.long2bytes(start), NumberUtils.long2bytes(end)),
-					Limit.create(offset, count)), (cmd)->cmd.zrangebylex(key,
-					Range.create(NumberUtils.long2bytes(start), NumberUtils.long2bytes(end)),
-					Limit.create(offset, count)), converter);
+			final Range<byte[]> range = Range.create(NumberUtils.long2bytes(start), NumberUtils.long2bytes(end));
+			return executeCommand(RedisCommand.ZRANGE, args,
+					(cmd)->cmd.zrangebylex(key, range, limit),
+					(cmd)->cmd.zrangebylex(key, range, limit), converter);
 		}else if(type == ZRangeType.BYSCORE){
 			return executeCommand(RedisCommand.ZRANGE, args,
-					(cmd)->cmd.zrangebyscore(key, Range.create(start, end), Limit.create(offset, count)),
-					(cmd)->cmd.zrangebyscore(key, Range.create(start, end), Limit.create(offset, count)), converter);
+					(cmd)->cmd.zrangebyscore(key, Range.create(start, end), limit),
+					(cmd)->cmd.zrangebyscore(key, Range.create(start, end), limit), converter);
 		}else{
 			return executeCommand(RedisCommand.ZRANGE, args, (cmd)->cmd.zrange(key, start, end),
 					(cmd)->cmd.zrange(key, start, end), converter);
@@ -1644,20 +1646,18 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 
 	private <T> List<T> zRangeByLex(final byte[] key, final double min, final double max,
 	                                final Converter<List<byte[]>, List<T>> converter, final CommandArguments args) {
-		return executeCommand(RedisCommand.ZRANGEBYLEX, args, (cmd)->cmd.zrangebylex(rawKey(key),
-						Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max))),
-				(cmd)->cmd.zrangebylex(rawKey(key),
-						Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max))), converter);
+		final Range<byte[]> range = Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
+		return executeCommand(RedisCommand.ZRANGEBYLEX, args, (cmd)->cmd.zrangebylex(rawKey(key), range),
+				(cmd)->cmd.zrangebylex(rawKey(key), range), converter);
 	}
 
 	private <T> List<T> zRangeByLex(final byte[] key, final double min, final double max, final int offset,
 	                                final int count, final Converter<List<byte[]>, List<T>> converter,
 	                                final CommandArguments args) {
-		return executeCommand(RedisCommand.ZRANGEBYLEX, args,
-				(cmd)->cmd.zrangebylex(key, Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)),
-						Limit.create(offset, count)),
-				(cmd)->cmd.zrangebylex(key, Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max)),
-						Limit.create(offset, count)), converter);
+		final Range<byte[]> range = Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
+		final Limit limit = Limit.create(offset, count);
+		return executeCommand(RedisCommand.ZRANGEBYLEX, args, (cmd)->cmd.zrangebylex(key, range, limit),
+				(cmd)->cmd.zrangebylex(key, range, limit), converter);
 	}
 
 	private List<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max,
@@ -1685,11 +1685,11 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 
 	private Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
 	                         final ZRangeType type, final Limit limit, final CommandArguments args) {
+		final Range<byte[]> range = Range.create(NumberUtils.long2bytes(start), NumberUtils.long2bytes(end));
 		if(type == ZRangeType.BYLEX){
-			return executeCommand(RedisCommand.ZRANGESTORE, args, (cmd)->cmd.zrangestorebylex(destKey, key,
-							Range.create(NumberUtils.long2bytes(start), NumberUtils.long2bytes(end)), limit),
-					(cmd)->cmd.zrangestorebylex(destKey, key,
-							Range.create(NumberUtils.long2bytes(start), NumberUtils.long2bytes(end)), limit));
+			return executeCommand(RedisCommand.ZRANGESTORE, args,
+					(cmd)->cmd.zrangestorebylex(destKey, key, range, limit),
+					(cmd)->cmd.zrangestorebylex(destKey, key, range, limit));
 		}else if(type == ZRangeType.BYSCORE){
 			return executeCommand(RedisCommand.ZRANGESTORE, args,
 					(cmd)->cmd.zrangestorebyscore(destKey, key, Range.create(start, end), limit),
@@ -1707,10 +1707,10 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	}
 
 	private Long zRemRangeByLex(final byte[] key, final double min, final double max, final CommandArguments args) {
-		return executeCommand(RedisCommand.ZREMRANGEBYLEX, args, (cmd)->cmd.zremrangebylex(key,
-						Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max))),
-				(cmd)->cmd.zremrangebylex(key,
-						Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max))));
+		final Range<byte[]> range = Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
+		return executeCommand(RedisCommand.ZREMRANGEBYLEX, args,
+				(cmd)->cmd.zremrangebylex(key, range),
+				(cmd)->cmd.zremrangebylex(key, range));
 	}
 
 	private List<Tuple> zRevRangeWithScores(final byte[] key, final long start, final long end,

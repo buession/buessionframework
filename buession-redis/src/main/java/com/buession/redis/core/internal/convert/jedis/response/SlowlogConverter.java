@@ -26,7 +26,6 @@ package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.net.HostAndPort;
-import com.buession.redis.core.Client;
 import com.buession.redis.core.SlowLog;
 import redis.clients.jedis.resps.Slowlog;
 
@@ -44,12 +43,11 @@ public final class SlowlogConverter implements Converter<Slowlog, SlowLog> {
 			return null;
 		}
 
-		final Client client = new Client();
+		final HostAndPort client = new HostAndPort(source.getClientIpPort().getHost(),
+				source.getClientIpPort().getPort());
 
-		client.setAddr(new HostAndPort(source.getClientIpPort().getHost(), source.getClientIpPort().getPort()));
-
-		return new SlowLog(source.getId(), source.getTimeStamp(), source.getExecutionTime(), source.getArgs(),
-				client, source.getClientName());
+		return new SlowLog(source.getId(), source.getTimeStamp(), source.getExecutionTime(), source.getArgs(), client,
+				source.getClientName());
 	}
 
 }

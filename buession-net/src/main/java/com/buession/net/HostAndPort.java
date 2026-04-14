@@ -107,7 +107,7 @@ public class HostAndPort implements Serializable {
 	 * 		端口
 	 */
 	public void setPort(int port) {
-		Assert.isTrue(Validate.isPort(port), String.format("Port out of range: %s", port));
+		Assert.isFalse(Validate.isPort(port), String.format("Port out of range: %s", port));
 		this.port = port;
 	}
 

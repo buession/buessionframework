@@ -503,7 +503,7 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 	private KeyValue<byte[], List<byte[]>> binaryBlMPop(final byte[][] keys, final int timeout,
 	                                                    final LMPopArgs lmPopArgs, final CommandArguments args) {
 		return executeCommand(RedisCommand.BLMPOP, args, (cmd)->cmd.blmpop(timeout, lmPopArgs, keys),
-				(cmd)->cmd.blmpop(timeout, lmPopArgs, keys), new KeyValueConverter<>((k)->k, (v)->v));
+				(cmd)->cmd.blmpop(timeout, lmPopArgs, keys), KeyValueConverter.defaultKeyValueConverter());
 	}
 
 	private KeyValue<String, List<String>> stringLMPop(final byte[][] keys, final LMPopArgs lmPopArgs,
@@ -516,7 +516,7 @@ public final class LettuceListCommands extends AbstractLettuceRedisCommands impl
 	private KeyValue<byte[], List<byte[]>> binaryLMPop(final byte[][] keys, final LMPopArgs lmPopArgs,
 	                                                   final CommandArguments args) {
 		return executeCommand(RedisCommand.LMPOP, args, (cmd)->cmd.lmpop(lmPopArgs, keys),
-				(cmd)->cmd.lmpop(lmPopArgs, keys), new KeyValueConverter<>((k)->k, (v)->v));
+				(cmd)->cmd.lmpop(lmPopArgs, keys), KeyValueConverter.defaultKeyValueConverter());
 	}
 
 	private static LMoveArgs lMoveArgs(final Direction source, final Direction destination) {

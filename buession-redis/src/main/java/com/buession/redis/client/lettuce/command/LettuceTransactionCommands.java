@@ -25,7 +25,6 @@
 package com.buession.redis.client.lettuce.command;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.lettuce.LettuceRedisClient;
 import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
@@ -33,7 +32,6 @@ import com.buession.redis.core.command.TransactionCommands;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Lettuce 事务命令

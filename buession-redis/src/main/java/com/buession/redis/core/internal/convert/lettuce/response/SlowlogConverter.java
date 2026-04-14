@@ -25,9 +25,7 @@
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.utils.StringUtils;
 import com.buession.net.HostAndPort;
-import com.buession.redis.core.Client;
 import com.buession.redis.core.SlowLog;
 
 import java.util.List;
@@ -48,26 +46,16 @@ public final class SlowlogConverter implements Converter<Object, SlowLog> {
 			final List<Object> tmp = (List<Object>) source;
 
 			if(tmp.size() == 6){
-				final Client client = parseHostAndPort(tmp.get(4));
-				final String clientName = parseClientName(tmp.get(5));
-
 				return new SlowLog((long) tmp.get(0), (long) tmp.get(1), (long) tmp.get(2), parseArgs(tmp.get(3)),
-						client, clientName);
+						parseHostAndPort(tmp.get(4)), parseClientName(tmp.get(5)));
 			}
 		}
 
 		return null;
 	}
 
-	private static Client parseHostAndPort(final Object value) {
-		final Client client = new Client();
-
-		if(value != null){
-			String[] hostAndPort = StringUtils.split(new String((byte[]) value), ':');
-			client.setAddr(new HostAndPort(hostAndPort[0], Integer.parseInt(hostAndPort[1])));
-		}
-
-		return client;
+	private static HostAndPort parseHostAndPort(final Object value) {
+		return value == null ? null : HostAndPort.create(new String((byte[]) value));
 	}
 
 	private static String parseClientName(final Object value) {
