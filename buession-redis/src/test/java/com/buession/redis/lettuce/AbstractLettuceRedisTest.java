@@ -24,10 +24,15 @@
  */
 package com.buession.redis.lettuce;
 
+import com.buession.core.builder.ListBuilder;
 import com.buession.redis.RedisTemplate;
+import com.buession.redis.client.connection.datasource.lettuce.LettuceClusterDataSource;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceDataSource;
 import com.buession.redis.core.Options;
 import com.buession.redis.core.PoolConfig;
+import com.buession.redis.core.RedisNode;
+
+import java.util.List;
 
 /**
  * @author Yong.Teng
@@ -46,10 +51,28 @@ public abstract class AbstractLettuceRedisTest {
 		return dataSource;
 	}
 
+	protected LettuceClusterDataSource clusterDataSource() {
+		LettuceClusterDataSource dataSource = new LettuceClusterDataSource();
+		List<RedisNode> redisNodes = ListBuilder.<RedisNode>create()
+				.add(new RedisNode("192.168.0.231", 6371))
+				.add(new RedisNode("192.168.0.231", 6372))
+				.add(new RedisNode("192.168.0.231", 6373))
+				.add(new RedisNode("192.168.0.231", 6374))
+				.add(new RedisNode("192.168.0.231", 6375))
+				.add(new RedisNode("192.168.0.231", 6376))
+				.build();
+
+		dataSource.setNodes(redisNodes);
+		dataSource.setPassword("rds_PWD");
+		dataSource.setPoolConfig(new PoolConfig());
+
+		return dataSource;
+	}
+
 	protected RedisTemplate redisTemplate() {
 		Options options = new Options();
 		options.setPrefix("test:");
-		RedisTemplate redisTemplate = new RedisTemplate(dataSource(), options);
+		RedisTemplate redisTemplate = new RedisTemplate(clusterDataSource(), options);
 
 		redisTemplate.afterPropertiesSet();
 

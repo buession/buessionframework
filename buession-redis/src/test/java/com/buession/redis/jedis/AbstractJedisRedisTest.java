@@ -24,10 +24,15 @@
  */
 package com.buession.redis.jedis;
 
+import com.buession.core.builder.ListBuilder;
 import com.buession.redis.RedisTemplate;
+import com.buession.redis.client.connection.datasource.jedis.JedisClusterDataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
 import com.buession.redis.core.Options;
 import com.buession.redis.core.PoolConfig;
+import com.buession.redis.core.RedisNode;
+
+import java.util.List;
 
 /**
  * @author Yong.Teng
@@ -40,7 +45,25 @@ public abstract class AbstractJedisRedisTest {
 		dataSource.setHost("192.168.0.161");
 		dataSource.setPort(30341);
 		dataSource.setDatabase(1);
-		//	dataSource.setPassword("rds_PWD");
+		dataSource.setPassword("abc123456");
+		dataSource.setPoolConfig(new PoolConfig());
+
+		return dataSource;
+	}
+
+	protected JedisClusterDataSource clusterDataSource() {
+		JedisClusterDataSource dataSource = new JedisClusterDataSource();
+		List<RedisNode> redisNodes = ListBuilder.<RedisNode>create()
+				.add(new RedisNode("192.168.0.231", 6371))
+				.add(new RedisNode("192.168.0.231", 6372))
+				.add(new RedisNode("192.168.0.231", 6373))
+				.add(new RedisNode("192.168.0.231", 6374))
+				.add(new RedisNode("192.168.0.231", 6375))
+				.add(new RedisNode("192.168.0.231", 6376))
+				.build();
+
+		dataSource.setNodes(redisNodes);
+		dataSource.setPassword("rds_PWD");
 		dataSource.setPoolConfig(new PoolConfig());
 
 		return dataSource;
@@ -49,7 +72,7 @@ public abstract class AbstractJedisRedisTest {
 	protected RedisTemplate redisTemplate() {
 		Options options = new Options();
 		options.setPrefix("test:");
-		RedisTemplate redisTemplate = new RedisTemplate(dataSource(), options);
+		RedisTemplate redisTemplate = new RedisTemplate(clusterDataSource(), options);
 
 		redisTemplate.afterPropertiesSet();
 

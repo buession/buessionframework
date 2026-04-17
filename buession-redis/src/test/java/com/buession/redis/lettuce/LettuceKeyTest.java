@@ -41,7 +41,7 @@ public class LettuceKeyTest extends AbstractLettuceRedisTest {
 	@Test
 	public void exists() {
 		RedisTemplate redisTemplate = redisTemplate();
-		Assertions.assertTrue(redisTemplate.exists("a"));
+		Assertions.assertTrue(redisTemplate.exists("user"));
 	}
 
 	@Test

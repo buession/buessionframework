@@ -45,6 +45,8 @@ import io.lettuce.core.RedisCredentialsProvider;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.StatefulRedisClusterCommandsHandler;
 import io.lettuce.core.StaticCredentialsProvider;
+import io.lettuce.core.cluster.ClusterClientOptions;
+import io.lettuce.core.cluster.ClusterTopologyRefreshOptions;
 import io.lettuce.core.cluster.RedisClusterClient;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.codec.ByteArrayCodec;
@@ -781,8 +783,24 @@ public class LettuceClusterConnection
 
 			return redisURI;
 		}).collect(Collectors.toSet());
+		final ClusterClientOptions.Builder clusterClientOptionsBuilder = ClusterClientOptions.builder();
+		final RedisClusterClient redisClusterClient = RedisClusterClient.create(redisURIs);
 
-		return RedisClusterClient.create(redisURIs).connect(codec);
+		if(getTopologyRefreshPeriod() != null){
+			ClusterTopologyRefreshOptions clusterTopologyRefreshOptions = ClusterTopologyRefreshOptions.builder()
+					.adaptiveRefreshTriggersTimeout(getTopologyRefreshPeriod()).build();
+			clusterClientOptionsBuilder.topologyRefreshOptions(clusterTopologyRefreshOptions);
+
+		}
+		if(getMaxRedirects() > 0){
+			clusterClientOptionsBuilder.maxRedirects(getMaxRedirects());
+		}
+		if(getMaxTotalRetriesDuration() != null){
+		}
+
+		redisClusterClient.setOptions(clusterClientOptionsBuilder.build());
+
+		return redisClusterClient.connect(codec);
 	}
 
 	protected LettuceClusterPool createPool() {

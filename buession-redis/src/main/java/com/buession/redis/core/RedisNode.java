@@ -307,5 +307,4 @@ public class RedisNode implements RedisNamedNode, Serializable {
 		return false;
 	}
 
-
 }

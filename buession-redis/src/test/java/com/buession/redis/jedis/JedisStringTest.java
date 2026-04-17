@@ -43,7 +43,8 @@ public class JedisStringTest extends AbstractJedisRedisTest {
 	@Test
 	public void set() {
 		RedisTemplate redisTemplate = redisTemplate();
-		Assertions.assertTrue(redisTemplate.set("jedis", new Options()) == Status.SUCCESS);
+		User user = new User(1000, "buession");
+		Assertions.assertTrue(redisTemplate.set("user", user) == Status.SUCCESS);
 	}
 
 	@Test

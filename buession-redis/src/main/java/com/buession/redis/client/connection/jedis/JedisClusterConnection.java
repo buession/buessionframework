@@ -36,11 +36,14 @@ import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.transaction.Transaction;
 import redis.clients.jedis.DefaultJedisClientConfig;
+import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.RedisClusterClient;
 import redis.clients.jedis.builders.ClusterClientBuilder;
 
 import java.time.Duration;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Jedis 集群模式连接器
@@ -769,7 +772,7 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection<RedisCl
 					.infiniteSoTimeout(getInfiniteSoTimeout()).build();
 
 			final ClusterClientBuilder<RedisClusterClient> builder = RedisClusterClient.builder()
-					.clientConfig(clientConfig);
+					.nodes(createNodes(dataSource)).clientConfig(clientConfig);
 
 			Optional.ofNullable(getConnectionPoolConfig()).ifPresent(builder::poolConfig);
 			Optional.ofNullable(getCacheConfig()).ifPresent(builder::cacheConfig);
@@ -784,6 +787,11 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection<RedisCl
 		}
 
 		return client == null ? Status.FAILURE : Status.SUCCESS;
+	}
+
+	private static Set<HostAndPort> createNodes(final JedisClusterDataSource dataSource) {
+		return dataSource.getNodes().stream().map((node)->new HostAndPort(node.getHost(), node.getPort()))
+				.collect(Collectors.toSet());
 	}
 
 }
