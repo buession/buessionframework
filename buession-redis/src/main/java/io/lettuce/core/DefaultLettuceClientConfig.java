@@ -64,10 +64,10 @@ public class DefaultLettuceClientConfig implements LettuceClientConfig {
 	}
 
 	private DefaultLettuceClientConfig(final Duration connectionTimeout, final Duration socketTimeout,
-									   final String user, final String password, final int database,
-									   final String clientName, final boolean isSsl,
-									   final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
-									   final HostnameVerifier hostnameVerifier) {
+	                                   final String user, final String password, final int database,
+	                                   final String clientName, final boolean isSsl,
+	                                   final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
+	                                   final HostnameVerifier hostnameVerifier) {
 		this.connectionTimeout = connectionTimeout;
 		this.socketTimeout = socketTimeout;
 		this.user = user;
@@ -166,7 +166,7 @@ public class DefaultLettuceClientConfig implements LettuceClientConfig {
 		}
 
 		public Builder socketTimeoutMillis(final long timeoutMillis) {
-			return connectionTimeout(Duration.ofMillis(timeoutMillis));
+			return socketTimeout(Duration.ofMillis(timeoutMillis));
 		}
 
 		public Builder user(final String user) {
@@ -220,22 +220,22 @@ public class DefaultLettuceClientConfig implements LettuceClientConfig {
 		}
 
 		public static LettuceClientConfig create(final int connectionTimeoutMillis, final int soTimeoutMillis,
-												 final String user, final String password, final int database,
-												 final String clientName, final boolean isSsl,
-												 final SSLSocketFactory sslSocketFactory,
-												 final SSLParameters sslParameters,
-												 final HostnameVerifier hostnameVerifier) {
+		                                         final String user, final String password, final int database,
+		                                         final String clientName, final boolean isSsl,
+		                                         final SSLSocketFactory sslSocketFactory,
+		                                         final SSLParameters sslParameters,
+		                                         final HostnameVerifier hostnameVerifier) {
 			return new DefaultLettuceClientConfig(Duration.ofMillis(connectionTimeoutMillis),
-					Duration.ofMillis(soTimeoutMillis), user, password, database, clientName, isSsl, sslSocketFactory
-					, sslParameters, hostnameVerifier);
+					Duration.ofMillis(soTimeoutMillis), user, password, database, clientName, isSsl, sslSocketFactory,
+					sslParameters, hostnameVerifier);
 		}
 
 		public static LettuceClientConfig create(final Duration connectionTimeout, final Duration soTimeoutMillis,
-												 final String user, final String password, final int database,
-												 final String clientName, final boolean isSsl,
-												 final SSLSocketFactory sslSocketFactory,
-												 final SSLParameters sslParameters,
-												 final HostnameVerifier hostnameVerifier) {
+		                                         final String user, final String password, final int database,
+		                                         final String clientName, final boolean isSsl,
+		                                         final SSLSocketFactory sslSocketFactory,
+		                                         final SSLParameters sslParameters,
+		                                         final HostnameVerifier hostnameVerifier) {
 			return new DefaultLettuceClientConfig(connectionTimeout, soTimeoutMillis, user, password, database,
 					clientName, isSsl, sslSocketFactory, sslParameters, hostnameVerifier);
 		}

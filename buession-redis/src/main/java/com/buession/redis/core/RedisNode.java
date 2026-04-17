@@ -50,11 +50,6 @@ public class RedisNode implements Serializable {
 	private String id;
 
 	/**
-	 * 主机名称
-	 */
-	//private String name;
-
-	/**
 	 * 主机地址
 	 */
 	private String host;
@@ -138,26 +133,6 @@ public class RedisNode implements Serializable {
 	public void setId(String id) {
 		this.id = id;
 	}
-
-	/**
-	 * 返回主机名称
-	 *
-	 * @return 主机名称
-	 */
-	//@Override
-	//public String getName() {
-	//return name;
-	//}
-
-	/**
-	 * 设置主机名称
-	 *
-	 * @param name
-	 * 		主机名称
-	 */
-	//public void setName(String name) {
-	//this.name = name;
-	//}
 
 	/**
 	 * 返回主机地址
@@ -277,7 +252,7 @@ public class RedisNode implements Serializable {
 		}
 
 		if(obj instanceof RedisNode that){
-			return port == that.port && Objects.equals(host, that.host);//&& Objects.equals(name, that.name);
+			return port == that.port && Objects.equals(host, that.host);
 		}
 
 		return false;
