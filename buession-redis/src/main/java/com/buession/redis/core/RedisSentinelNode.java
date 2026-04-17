@@ -30,7 +30,7 @@ package com.buession.redis.core;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class RedisSentinelNode extends RedisNode {
+public class RedisSentinelNode extends RedisNamedNode {
 
 	private final static long serialVersionUID = 7609068824843419481L;
 
@@ -67,7 +67,8 @@ public class RedisSentinelNode extends RedisNode {
 	 * 		主机角色
 	 */
 	public RedisSentinelNode(String host, Role role) {
-		super(host, role);
+		super(host);
+		setRole(role);
 	}
 
 	/**
@@ -81,7 +82,8 @@ public class RedisSentinelNode extends RedisNode {
 	 * 		主机角色
 	 */
 	public RedisSentinelNode(String host, int port, Role role) {
-		super(host, port, role);
+		super(host, port);
+		setRole(role);
 	}
 
 	public int getQuorum() {

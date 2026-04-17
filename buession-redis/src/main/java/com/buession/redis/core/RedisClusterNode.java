@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core;
 
+import com.buession.core.utils.StringUtils;
 import com.buession.redis.utils.ObjectStringBuilder;
 
 import java.util.Set;
@@ -34,7 +35,7 @@ import java.util.Set;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class RedisClusterNode extends RedisNode {
+public class RedisClusterNode extends RedisNamedNode {
 
 	private final static long serialVersionUID = -6841072654023820951L;
 
@@ -42,6 +43,21 @@ public class RedisClusterNode extends RedisNode {
 	 * Redis 服务器主机 IP 地址
 	 */
 	private final String ip;
+
+	/**
+	 * 客户端端口
+	 */
+	private final int clientPort;
+
+	/**
+	 * HOSTNAME
+	 */
+	private final String hostname;
+
+	/**
+	 * Master 主机 ID
+	 */
+	private final String masterId;
 
 	/**
 	 * 标记位
@@ -82,6 +98,10 @@ public class RedisClusterNode extends RedisNode {
 	 * 		客户端与节点通信使用的地址
 	 * @param port
 	 * 		客户端与节点通信使用的端口
+	 * @param clientPort
+	 * 		客户端端口
+	 * @param hostname
+	 * 		HOSTNAME
 	 * @param flags
 	 * 		标记位
 	 * @param masterId
@@ -97,14 +117,17 @@ public class RedisClusterNode extends RedisNode {
 	 * @param slot
 	 * 		哈希槽值或者一个哈希槽范围
 	 */
-	public RedisClusterNode(final String id, final String ip, final int port, final Set<Flag> flags,
-	                        final String masterId, final long pingSent, final long pongSent, final long configEpoch,
-	                        final LinkState linkState, final SlotRange slot) {
+	public RedisClusterNode(final String id, final String ip, final int port, final int clientPort,
+	                        final String hostname, final Set<Flag> flags, final String masterId, final long pingSent,
+	                        final long pongSent, final long configEpoch, final LinkState linkState,
+	                        final SlotRange slot) {
 		super(ip, port);
 		setId(id);
 		this.ip = ip;
+		this.clientPort = clientPort;
+		this.hostname = hostname;
 		this.flags = flags;
-		setMasterId(masterId);
+		this.masterId = masterId;
 		this.pingSent = pingSent;
 		this.pongSent = pongSent;
 		this.configEpoch = configEpoch;
@@ -120,6 +143,51 @@ public class RedisClusterNode extends RedisNode {
 	public String getIp() {
 		return ip;
 	}
+
+	/**
+	 * 返回客户端端口
+	 *
+	 * @return 客户端端口
+	 */
+	public int getClientPort() {
+		return clientPort;
+	}
+
+	/**
+	 * 返回 HOSTNAME
+	 *
+	 * @return HOSTNAME
+	 */
+	public String getHostname() {
+		return hostname;
+	}
+
+	@Override
+	public String getName() {
+		return getHostname();
+	}
+
+	/**
+	 * 返回主机 Master Id
+	 *
+	 * @return 主机 Master Id
+	 */
+	public String getMasterId() {
+		return masterId;
+	}
+
+	/**
+	 * 设置主机 Master Id
+	 *
+	 * @param masterId
+	 * 		主机 Master Id
+	 */
+	/*
+	public void setMasterId(String masterId) {
+		this.masterId = masterId;
+	}
+
+	 */
 
 	/**
 	 * 返回标记位
@@ -177,16 +245,11 @@ public class RedisClusterNode extends RedisNode {
 
 	@Override
 	public String toString() {
-		return ObjectStringBuilder.create()
-				.add("id", getId())
-				.add("host", getHost() + ":" + getPort())
-				.add("masterId", getMasterId())
-				.add("ping-sent", pingSent)
-				.add("pong-recv", pongSent)
-				.add("config-epoch", configEpoch)
-				.add("link-state", linkState)
-				.add("slot", slot)
-				.build();
+		return ObjectStringBuilder.create().add("id", getId()).add("host", getHost() + ":" + getPort())
+				.add("client-port", clientPort).add("hostname", hostname)
+				.add("flags", flags == null ? null : StringUtils.join(flags, ","))
+				.add("masterId", getMasterId()).add("ping-sent", pingSent).add("pong-recv", pongSent)
+				.add("config-epoch", configEpoch).add("link-state", linkState).add("slot", slot).build();
 	}
 
 	/**

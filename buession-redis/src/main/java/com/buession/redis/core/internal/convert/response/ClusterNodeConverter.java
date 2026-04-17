@@ -46,7 +46,11 @@ public final class ClusterNodeConverter implements Converter<String, RedisCluste
 		String[] values = StringUtils.split(source, " ");
 		String[] hostAndPort = StringUtils.split(values[1], ":");
 		String host = hostAndPort[0];
-		String port = hostAndPort[1].substring(0, hostAndPort[1].indexOf('@'));
+		String[] ports = StringUtils.split(hostAndPort[1], '@');
+		int port = Integer.parseInt(ports[0]);
+		String[] clientPortAndHostname = StringUtils.split(ports[1], ',');
+		int clientPort = Integer.parseInt(clientPortAndHostname[0]);
+		String hostname = clientPortAndHostname.length >= 2 ? clientPortAndHostname[1] : null;
 		String[] flagsValues = StringUtils.split(values[2], ":");
 		Set<RedisClusterNode.Flag> flags = new HashSet<>(flagsValues.length);
 
@@ -62,7 +66,7 @@ public final class ClusterNodeConverter implements Converter<String, RedisCluste
 			slotRange = new SlotRange(Integer.parseInt(slotRangeValues[0]), Integer.parseInt(slotRangeValues[1]));
 		}
 
-		return new RedisClusterNode(values[0], host, Integer.parseInt(port), flags, values[3],
+		return new RedisClusterNode(values[0], host, port, clientPort, hostname, flags, values[3],
 				Long.parseLong(values[4]), Long.parseLong(values[5]), Long.parseLong(values[6]), linkState, slotRange);
 	}
 

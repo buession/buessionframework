@@ -765,10 +765,35 @@ public class LettuceClusterConnection
 			final RedisCodec<K, V> codec) {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
 		final LettuceClusterDataSource dataSource = (LettuceClusterDataSource) getDataSource();
+		final Set<RedisURI> redisURIs = createRedisURIs(dataSource, propertyMapper);
+		final ClusterClientOptions.Builder clusterClientOptionsBuilder = ClusterClientOptions.builder();
+		final RedisClusterClient redisClusterClient = RedisClusterClient.create(redisURIs);
+
+		if(getTopologyRefreshPeriod() != null){
+			ClusterTopologyRefreshOptions clusterTopologyRefreshOptions = ClusterTopologyRefreshOptions.builder()
+					.adaptiveRefreshTriggersTimeout(getTopologyRefreshPeriod())
+					.enablePeriodicRefresh(getTopologyRefreshPeriod())
+					.build();
+			clusterClientOptionsBuilder.topologyRefreshOptions(clusterTopologyRefreshOptions);
+
+		}
+		if(getMaxRedirects() > 0){
+			clusterClientOptionsBuilder.maxRedirects(getMaxRedirects());
+		}
+		if(getMaxTotalRetriesDuration() != null){
+		}
+
+		redisClusterClient.setOptions(clusterClientOptionsBuilder.build());
+
+		return redisClusterClient.connect(codec);
+	}
+
+	private Set<RedisURI> createRedisURIs(final LettuceClusterDataSource dataSource,
+	                                      final PropertyMapper propertyMapper) {
 		final RedisCredentialsProvider redisCredentialsProvider = Validate.hasText(dataSource.getPassword()) ?
 				new StaticCredentialsProvider(Validate.hasText(dataSource.getUsername()) ? dataSource.getUsername() :
 											  null, dataSource.getPassword().toCharArray()) : null;
-		final Set<RedisURI> redisURIs = dataSource.getNodes().stream().map((node)->{
+		return dataSource.getNodes().stream().map((node)->{
 			int port = node.getPort() == 0 ? RedisNode.DEFAULT_PORT : node.getPort();
 			final RedisURI redisURI = RedisURI.create(node.getHost(), port);
 
@@ -783,24 +808,6 @@ public class LettuceClusterConnection
 
 			return redisURI;
 		}).collect(Collectors.toSet());
-		final ClusterClientOptions.Builder clusterClientOptionsBuilder = ClusterClientOptions.builder();
-		final RedisClusterClient redisClusterClient = RedisClusterClient.create(redisURIs);
-
-		if(getTopologyRefreshPeriod() != null){
-			ClusterTopologyRefreshOptions clusterTopologyRefreshOptions = ClusterTopologyRefreshOptions.builder()
-					.adaptiveRefreshTriggersTimeout(getTopologyRefreshPeriod()).build();
-			clusterClientOptionsBuilder.topologyRefreshOptions(clusterTopologyRefreshOptions);
-
-		}
-		if(getMaxRedirects() > 0){
-			clusterClientOptionsBuilder.maxRedirects(getMaxRedirects());
-		}
-		if(getMaxTotalRetriesDuration() != null){
-		}
-
-		redisClusterClient.setOptions(clusterClientOptionsBuilder.build());
-
-		return redisClusterClient.connect(codec);
 	}
 
 	protected LettuceClusterPool createPool() {

@@ -38,7 +38,7 @@ import java.util.Set;
 /**
  * @author Yong.Teng
  */
-public class RedisServer extends RedisNode {
+public class RedisServer extends RedisNamedNode {
 
 	private final static long serialVersionUID = 5743488459995739733L;
 
@@ -85,7 +85,8 @@ public class RedisServer extends RedisNode {
 	 * 		节点角色
 	 */
 	public RedisServer(final String host, final Role role) {
-		super(host, role);
+		super(host);
+		setRole(role);
 		this.ip = host;
 	}
 
@@ -100,8 +101,9 @@ public class RedisServer extends RedisNode {
 	 * 		节点角色
 	 */
 	public RedisServer(final String host, final int port, final Role role) {
-		super(host, port, role);
+		super(host, port);
 		this.ip = host;
+		setRole(role);
 	}
 
 	/**

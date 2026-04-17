@@ -2267,7 +2267,7 @@ public record Info(Server server, Clients clients, Memory memory, Persistence pe
 
 		}
 
-		public final static class Master extends RedisNode {
+		public final static class Master extends RedisServer {
 
 			private final static long serialVersionUID = 2956476882682914281L;
 

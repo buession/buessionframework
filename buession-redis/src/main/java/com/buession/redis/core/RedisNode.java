@@ -32,7 +32,7 @@ import java.util.Objects;
  *
  * @author Yong.Teng
  */
-public class RedisNode implements RedisNamedNode, Serializable {
+public class RedisNode implements Serializable {
 
 	private final static long serialVersionUID = -2212702986712034274L;
 
@@ -52,7 +52,7 @@ public class RedisNode implements RedisNamedNode, Serializable {
 	/**
 	 * 主机名称
 	 */
-	private String name;
+	//private String name;
 
 	/**
 	 * 主机地址
@@ -68,11 +68,6 @@ public class RedisNode implements RedisNamedNode, Serializable {
 	 * 主机角色
 	 */
 	private Role role;
-
-	/**
-	 * Master 主机 ID
-	 */
-	private String masterId;
 
 	/**
 	 * 构造函数
@@ -149,10 +144,10 @@ public class RedisNode implements RedisNamedNode, Serializable {
 	 *
 	 * @return 主机名称
 	 */
-	@Override
-	public String getName() {
-		return name;
-	}
+	//@Override
+	//public String getName() {
+	//return name;
+	//}
 
 	/**
 	 * 设置主机名称
@@ -160,9 +155,9 @@ public class RedisNode implements RedisNamedNode, Serializable {
 	 * @param name
 	 * 		主机名称
 	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+	//public void setName(String name) {
+	//this.name = name;
+	//}
 
 	/**
 	 * 返回主机地址
@@ -219,25 +214,6 @@ public class RedisNode implements RedisNamedNode, Serializable {
 	 */
 	public void setRole(Role role) {
 		this.role = role;
-	}
-
-	/**
-	 * 返回主机 Master Id
-	 *
-	 * @return 主机 Master Id
-	 */
-	public String getMasterId() {
-		return masterId;
-	}
-
-	/**
-	 * 设置主机 Master Id
-	 *
-	 * @param masterId
-	 * 		主机 Master Id
-	 */
-	public void setMasterId(String masterId) {
-		this.masterId = masterId;
 	}
 
 	/**
@@ -301,7 +277,7 @@ public class RedisNode implements RedisNamedNode, Serializable {
 		}
 
 		if(obj instanceof RedisNode that){
-			return port == that.port && Objects.equals(host, that.host) && Objects.equals(name, that.name);
+			return port == that.port && Objects.equals(host, that.host);//&& Objects.equals(name, that.name);
 		}
 
 		return false;

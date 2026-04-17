@@ -51,7 +51,9 @@ public final class ClusterReplicasConverter implements Converter<String, RedisCl
 		String[] values = StringUtils.split(source, " ");
 		String[] hostAndPort = StringUtils.split(values[1], ':');
 		String host = hostAndPort[0];
-		String port = hostAndPort[1].substring(0, hostAndPort[1].indexOf('@'));
+		String[] ports = StringUtils.split(values[1], '@');
+		int port = Integer.parseInt(ports[0]);
+		int clientPort = Integer.parseInt(ports[1]);
 		String[] flagsValues = StringUtils.split(values[2], ':');
 		Set<RedisClusterNode.Flag> flags =
 				Arrays.stream(flagsValues).map((v)->EnumUtils.getEnumIgnoreCase(RedisClusterNode.Flag.class, v))
@@ -65,7 +67,7 @@ public final class ClusterReplicasConverter implements Converter<String, RedisCl
 			slotRange = new SlotRange(Integer.parseInt(slotRangeValues[0]), Integer.parseInt(slotRangeValues[1]));
 		}
 
-		return new RedisClusterNode(values[0], host, Integer.parseInt(port), flags, values[3],
+		return new RedisClusterNode(values[0], host, port, clientPort, null, flags, values[3],
 				Long.parseLong(values[4]), Long.parseLong(values[5]), Long.parseLong(values[6]), linkState, slotRange);
 	}
 
