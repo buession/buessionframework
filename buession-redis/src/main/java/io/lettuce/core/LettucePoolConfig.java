@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package io.lettuce.core;
@@ -56,7 +56,7 @@ public class LettucePoolConfig<K, V, C extends StatefulConnection<K, V>> extends
 		setMaxIdle(boundedPoolConfig.getMaxIdle());
 		setTestOnCreate(boundedPoolConfig.isTestOnCreate());
 		setTestWhileIdle(true);
-		setMinEvictableIdleTime(Duration.ofMillis(60000));
+		setMinEvictableIdleDuration(Duration.ofMillis(60000));
 		setTimeBetweenEvictionRuns(Duration.ofMillis(30000));
 		setNumTestsPerEvictionRun(-1);
 	}

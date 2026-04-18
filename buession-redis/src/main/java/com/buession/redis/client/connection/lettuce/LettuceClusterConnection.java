@@ -51,7 +51,6 @@ import io.lettuce.core.cluster.RedisClusterClient;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.codec.ByteArrayCodec;
 import io.lettuce.core.codec.RedisCodec;
-import io.lettuce.core.support.ConnectionPoolUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -828,7 +827,7 @@ public class LettuceClusterConnection
 			logger.debug("Create LettuceClusterPool with ssl.");
 		}
 
-		return ConnectionPoolUtils.createLettuceClusterPool(lettucePoolConfig, nodes, clientConfig);
+		return new LettuceClusterPool(nodes, lettucePoolConfig, clientConfig);
 	}
 
 	@Override

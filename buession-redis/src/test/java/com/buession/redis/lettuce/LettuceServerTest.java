@@ -55,7 +55,7 @@ public class LettuceServerTest extends AbstractLettuceRedisTest {
 	@Test
 	public void info() {
 		RedisTemplate redisTemplate = redisTemplate();
-		System.out.println(redisTemplate.info());
+		System.out.println(redisTemplate.info().toPrettyString());
 	}
 
 	@Test

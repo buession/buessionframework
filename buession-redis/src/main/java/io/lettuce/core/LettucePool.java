@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2024 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package io.lettuce.core;
@@ -143,7 +143,7 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 	 * 		连接地址
 	 */
 	public LettucePool(final GenericObjectPoolConfig<StatefulRedisConnection<byte[], byte[]>> poolConfig,
-					   final String url) {
+	                   final String url) {
 		this(poolConfig, URI.create(url));
 	}
 
@@ -158,7 +158,7 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 	 * 		Redis 端口
 	 */
 	public LettucePool(final GenericObjectPoolConfig<StatefulRedisConnection<byte[], byte[]>> poolConfig,
-					   final String host, final int port) {
+	                   final String host, final int port) {
 		this(poolConfig, new LettuceFactory(host, port, DefaultLettuceClientConfig.builder().build()));
 	}
 
@@ -177,7 +177,7 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 	 * 		密码
 	 */
 	public LettucePool(final GenericObjectPoolConfig<StatefulRedisConnection<byte[], byte[]>> poolConfig,
-					   final String host, final int port, final String user, final String password) {
+	                   final String host, final int port, final String user, final String password) {
 		this(poolConfig, new LettuceFactory(host, port,
 				DefaultLettuceClientConfig.builder().credentials(user, password).build()));
 	}
@@ -195,7 +195,7 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 	 * 		客户端配置
 	 */
 	public LettucePool(final GenericObjectPoolConfig<StatefulRedisConnection<byte[], byte[]>> poolConfig,
-					   final String host, final int port, final LettuceClientConfig lettuceClientConfig) {
+	                   final String host, final int port, final LettuceClientConfig lettuceClientConfig) {
 		this(poolConfig, new LettuceFactory(host, port, lettuceClientConfig));
 	}
 
@@ -218,7 +218,7 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 	 * 		连接 URL
 	 */
 	public LettucePool(final GenericObjectPoolConfig<StatefulRedisConnection<byte[], byte[]>> poolConfig,
-					   final URI uri) {
+	                   final URI uri) {
 		this(poolConfig, uri, DefaultLettuceClientConfig.builder().build());
 	}
 
@@ -233,7 +233,7 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 	 * 		客户端配置
 	 */
 	public LettucePool(final GenericObjectPoolConfig<StatefulRedisConnection<byte[], byte[]>> poolConfig, final URI uri,
-					   final LettuceClientConfig lettuceClientConfig) {
+	                   final LettuceClientConfig lettuceClientConfig) {
 		this(poolConfig, new LettuceFactory(RedisURI.create(uri), lettuceClientConfig));
 	}
 
@@ -246,14 +246,8 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 	 * 		连接线对象工厂
 	 */
 	public LettucePool(final GenericObjectPoolConfig<StatefulRedisConnection<byte[], byte[]>> poolConfig,
-					   final PooledObjectFactory<StatefulRedisConnection<byte[], byte[]>> factory) {
+	                   final PooledObjectFactory<StatefulRedisConnection<byte[], byte[]>> factory) {
 		super(factory, poolConfig);
-	}
-
-	@Override
-	public StatefulRedisConnection<byte[], byte[]> getResource() {
-		StatefulRedisConnection<byte[], byte[]> connection = super.getResource();
-		return connection;
 	}
 
 	@Override
@@ -267,5 +261,5 @@ public class LettucePool extends Pool<StatefulRedisConnection<byte[], byte[]>> {
 			}
 		}
 	}
-	
+
 }

@@ -33,7 +33,9 @@ public enum AtomicvarApi implements Keyword {
 
 	SYNC_BUILTIN("sync-builtin"),
 
-	PTHREAD_MUTEX("pthread-mutex");
+	PTHREAD_MUTEX("pthread-mutex"),
+
+	C11_BUILTIN("c11-builtin");
 
 	private final String value;
 

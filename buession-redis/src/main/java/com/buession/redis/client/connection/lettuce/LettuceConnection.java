@@ -52,7 +52,6 @@ import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.codec.ByteArrayCodec;
 import io.lettuce.core.codec.RedisCodec;
-import io.lettuce.core.support.ConnectionPoolUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -344,8 +343,13 @@ public class LettuceConnection extends AbstractLettuceRedisConnection<StatefulRe
 			logger.debug("Create LettucePool with ssl.");
 		}
 
+		return new LettucePool(lettucePoolConfig, dataSource.getHost(), dataSource.getPort(),
+				clientConfig);
+		/*
 		return ConnectionPoolUtils.createLettucePool(lettucePoolConfig, dataSource.getHost(), dataSource.getPort(),
 				clientConfig);
+
+		 */
 	}
 
 	@Override

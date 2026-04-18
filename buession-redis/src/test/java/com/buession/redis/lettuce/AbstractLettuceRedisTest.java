@@ -45,7 +45,7 @@ public abstract class AbstractLettuceRedisTest {
 		dataSource.setHost("192.168.0.161");
 		dataSource.setPort(30341);
 		dataSource.setDatabase(1);
-		//	dataSource.setPassword("rds_PWD");
+		dataSource.setPassword("abc123456");
 		dataSource.setPoolConfig(new PoolConfig());
 
 		return dataSource;
@@ -72,7 +72,7 @@ public abstract class AbstractLettuceRedisTest {
 	protected RedisTemplate redisTemplate() {
 		Options options = new Options();
 		options.setPrefix("test:");
-		RedisTemplate redisTemplate = new RedisTemplate(clusterDataSource(), options);
+		RedisTemplate redisTemplate = new RedisTemplate(dataSource(), options);
 
 		redisTemplate.afterPropertiesSet();
 

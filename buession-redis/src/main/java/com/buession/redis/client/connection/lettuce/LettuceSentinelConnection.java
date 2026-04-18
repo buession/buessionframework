@@ -44,9 +44,7 @@ import com.buession.redis.core.internal.lettuce.LettuceClientConfigBuilder;
 import com.buession.redis.exception.LettuceRedisExceptionUtils;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
-import com.buession.redis.transaction.DefaultTransactionProxy;
 import com.buession.redis.transaction.Transaction;
-import com.buession.redis.transaction.lettuce.LettuceTransaction;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.LettuceClientConfig;
 import io.lettuce.core.LettucePoolConfig;
@@ -62,7 +60,6 @@ import io.lettuce.core.codec.ByteArrayCodec;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.sentinel.api.StatefulRedisSentinelConnection;
 import io.lettuce.core.sentinel.api.sync.RedisSentinelCommands;
-import io.lettuce.core.support.ConnectionPoolUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -712,8 +709,8 @@ public class LettuceSentinelConnection
 			logger.debug("Create LettuceSentinelPool with ssl.");
 		}
 
-		return ConnectionPoolUtils.createLettuceSentinelPool(dataSource.getMasterName(), lettucePoolConfig,
-				sentinels, clientConfig, sentinelClientConfig);
+		return new LettuceSentinelPool(dataSource.getMasterName(), sentinels, lettucePoolConfig,
+				clientConfig, sentinelClientConfig);
 	}
 
 	@Override
