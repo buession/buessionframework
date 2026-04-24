@@ -92,7 +92,7 @@ public class KeyValueParser {
 	public KeyValueParser(final String str, final String delimiter) {
 		int i = str.indexOf(delimiter);
 		this.key = str.substring(0, i);
-		this.value = str.substring(i + 1);
+		this.value = str.substring(i + delimiter.length());
 	}
 
 	/**

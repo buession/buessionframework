@@ -26,6 +26,7 @@ package com.buession.core.converter;
 
 import org.springframework.beans.BeanUtils;
 
+import java.lang.reflect.Modifier;
 import java.util.Set;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -57,11 +58,15 @@ public class SetConverter<S, T> extends AbstractCollectionConverter<S, T, Set<S>
 	@SuppressWarnings({"unchecked"})
 	@Override
 	protected Collector<T, ?, Set<T>> collect(final Set<S> source) {
-		try{
-			return Collectors.toCollection(()->BeanUtils.instantiateClass(source.getClass()));
-		}catch(Exception e){
-			return Collectors.toSet();
+		if(Modifier.isPublic(source.getClass().getModifiers())){
+			try{
+				return Collectors.toCollection(()->BeanUtils.instantiateClass(source.getClass()));
+			}catch(Exception e){
+				//
+			}
 		}
+
+		return Collectors.toSet();
 	}
 
 }

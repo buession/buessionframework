@@ -26,6 +26,7 @@ package com.buession.core.converter;
 
 import org.springframework.beans.BeanUtils;
 
+import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -56,11 +57,15 @@ public class ListConverter<S, T> extends AbstractCollectionConverter<S, T, List<
 	@SuppressWarnings({"unchecked"})
 	@Override
 	protected Collector<T, ?, List<T>> collect(final List<S> source) {
-		try{
-			return Collectors.toCollection(()->BeanUtils.instantiateClass(source.getClass()));
-		}catch(Exception e){
-			return Collectors.toList();
+		if(Modifier.isPublic(source.getClass().getModifiers())){
+			try{
+				return Collectors.toCollection(()->BeanUtils.instantiateClass(source.getClass()));
+			}catch(Exception e){
+				//
+			}
 		}
+
+		return Collectors.toList();
 	}
 
 }
