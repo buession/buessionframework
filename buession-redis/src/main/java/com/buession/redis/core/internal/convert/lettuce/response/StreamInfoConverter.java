@@ -26,8 +26,11 @@ package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.Stream;
+import com.buession.redis.core.StreamEntry;
+import com.buession.redis.core.StreamEntryId;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Lettuce 'xinfo-consumers' 命令结果转换为 {@link Stream}
@@ -39,7 +42,21 @@ public final class StreamInfoConverter<K, V> implements Converter<List<Object>, 
 
 	@Override
 	public Stream<K, V> convert(final List<Object> source) {
-		return null;
+		if(source == null){
+			return null;
+		}else{
+			Long length = null;
+			Long groups = null;
+			Long radixTreeKeys = null;
+			Long radixTreeNodes = null;
+			StreamEntryId lastGeneratedId = null;
+			StreamEntry<K, V> firstEntry = null;
+			StreamEntry<K, V> lastEntry = null;
+			Map<String, Object> infos = null;
+
+			return new Stream<>(length, groups, radixTreeKeys, radixTreeNodes, lastGeneratedId, firstEntry, lastEntry,
+					infos);
+		}
 	}
 
 }

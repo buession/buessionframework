@@ -30,6 +30,7 @@ import com.buession.redis.core.MemoryStats;
 import com.buession.redis.core.Module;
 import com.buession.redis.core.SlowLog;
 import com.buession.redis.core.command.RedisCommand;
+import com.buession.redis.core.command.RedisSubCommand;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -61,7 +62,7 @@ public class LettuceServerTest extends AbstractLettuceRedisTest {
 	@Test
 	public void commandInfo() {
 		RedisTemplate redisTemplate = redisTemplate();
-		System.out.println(redisTemplate.commandInfo(RedisCommand.GET));
+		System.out.println(redisTemplate.commandInfo(RedisCommand.SET));
 	}
 
 	@Test

@@ -90,22 +90,26 @@ public class JedisStreamTest extends AbstractJedisRedisTest {
 	@Test
 	public void xInfoStreamFull() {
 		RedisTemplate redisTemplate = redisTemplate();
-		StreamFull<String, String> result = redisTemplate.xInfoStreamFull("stream_a");
+		StreamFull<String, String> result = redisTemplate.xInfoStreamFull("stream_b");
 		System.out.println(result);
 	}
 
 	@Test
 	public void xInfoGroups() {
 		RedisTemplate redisTemplate = redisTemplate();
-		List<StreamGroup> result = redisTemplate.xInfoGroups("stream_a");
-		System.out.println(result);
+		System.out.println(redisTemplate.xInfoGroups("stream_b"));
 	}
 
 	@Test
 	public void xInfoConsumers() {
 		RedisTemplate redisTemplate = redisTemplate();
-		List<StreamConsumer> result = redisTemplate.xInfoConsumers("stream_a", "test");
-		System.out.println(result);
+		System.out.println(redisTemplate.xInfoConsumers("stream_b", "test_2"));
+	}
+
+	@Test
+	public void xRead() {
+		RedisTemplate redisTemplate = redisTemplate();
+		System.out.println(redisTemplate.xRead(MapBuilder.of("stream_b", new StreamEntryId(2, 2))));
 	}
 
 }

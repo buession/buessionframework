@@ -46,108 +46,133 @@ public final class MemoryStatsConverter implements Converter<Map<String, Object>
 			return null;
 		}
 
-		final MemoryStatsBuilder memoryStatsBuilder = new MemoryStatsBuilder();
+		Long dataset = null;
+		Double datasetPercentage = null;
+		Long rssOverhead = null;
+		Double rssOverheadRatio = null;
+		Double peakPercentage = null;
+		Long aofBuffer = null;
+		Long keysBytesPerKey = null;
+		Long allocatorAllocated = null;
+		Long allocatorFragmentation = null;
+		Double allocatorFragmentationRatio = null;
+		Long allocatorActive = null;
+		Long allocatorRss = null;
+		Double allocatorRssRatio = null;
+		Long allocatorResident = null;
+		Long clientsNormal = null;
+		Long clientsSlaves = null;
+		Long fragmentation = null;
+		Double fragmentationRatio = null;
+		Long luaCaches = null;
+		Long peakAllocated = null;
+		Long totalAllocated = null;
+		Long replicationBacklog = null;
+		Long startupAllocated = null;
+		Long overheadTotal = null;
+		Long keysCount = null;
+		Map<Integer, MemoryStats.Db> dbs = null;
 
 		for(Map.Entry<String, Object> e : source.entrySet()){
 			if("dataset.bytes".equals(e.getKey())){
 				if(e.getValue() != null){
-					memoryStatsBuilder.setDataset(Long.parseLong(e.getValue().toString()));
+					dataset = Long.parseLong(e.getValue().toString());
 				}
 			}else if("dataset.percentage".equals(e.getKey())){
 				if(e.getValue() != null){
-					memoryStatsBuilder.setDatasetPercentage(Double.parseDouble(e.getValue().toString()));
+					datasetPercentage = Double.parseDouble(e.getValue().toString());
 				}
 			}else if("rss-overhead.bytes".equals(e.getKey())){
 				if(e.getValue() != null){
-					memoryStatsBuilder.setRssOverhead(Long.parseLong(e.getValue().toString()));
+					rssOverhead = Long.parseLong(e.getValue().toString());
 				}
 			}else if("rss-overhead.ratio".equals(e.getKey())){
 				if(e.getValue() != null){
-					memoryStatsBuilder.setRssOverheadRatio(Double.parseDouble(e.getValue().toString()));
+					rssOverheadRatio = Double.parseDouble(e.getValue().toString());
 				}
 			}else if("peak.percentage".equals(e.getKey())){
 				if(e.getValue() != null){
-					memoryStatsBuilder.setPeakPercentage(Double.parseDouble(e.getValue().toString()));
+					peakPercentage = Double.parseDouble(e.getValue().toString());
 				}
 			}else if("aof.buffer".equals(e.getKey())){
 				if(e.getValue() != null){
-					memoryStatsBuilder.setAofBuffer(Long.parseLong(e.getValue().toString()));
+					aofBuffer = Long.parseLong(e.getValue().toString());
 				}
 			}else if("keys.bytes-per-key".equals(e.getKey())){
 				if(e.getValue() != null){
-					memoryStatsBuilder.setKeysBytesPerKey(Long.parseLong(e.getValue().toString()));
+					keysBytesPerKey = Long.parseLong(e.getValue().toString());
 				}
 			}else if("allocator.allocated".equals(e.getKey())){
 				if(e.getValue() != null){
-					memoryStatsBuilder.setAllocatorAllocated(Long.parseLong(e.getValue().toString()));
+					allocatorAllocated = Long.parseLong(e.getValue().toString());
 				}
 			}else if("allocator-fragmentation.bytes".equals(e.getKey())){
 				if(e.getValue() != null){
-					memoryStatsBuilder.setAllocatorFragmentation(Long.parseLong(e.getValue().toString()));
+					allocatorFragmentation = Long.parseLong(e.getValue().toString());
 				}
 			}else if("allocator-fragmentation.ratio".equals(e.getKey())){
 				if(e.getValue() != null){
-					memoryStatsBuilder.setAllocatorFragmentationRatio(Double.parseDouble(e.getValue().toString()));
+					allocatorFragmentationRatio = Double.parseDouble(e.getValue().toString());
 				}
 			}else if("allocator.active".equals(e.getKey())){
 				if(e.getValue() != null){
-					memoryStatsBuilder.setAllocatorActive(Long.parseLong(e.getValue().toString()));
+					allocatorActive = Long.parseLong(e.getValue().toString());
 				}
 			}else if("allocator-rss.bytes".equals(e.getKey())){
 				if(e.getValue() != null){
-					memoryStatsBuilder.setAllocatorRss(Long.parseLong(e.getValue().toString()));
+					allocatorRss = Long.parseLong(e.getValue().toString());
 				}
 			}else if("allocator-rss.ratio".equals(e.getKey())){
 				if(e.getValue() != null){
-					memoryStatsBuilder.setAllocatorRssRatio(Double.parseDouble(e.getValue().toString()));
+					allocatorRssRatio = Double.parseDouble(e.getValue().toString());
 				}
 			}else if("allocator.resident".equals(e.getKey())){
 				if(e.getValue() != null){
-					memoryStatsBuilder.setAllocatorResident(Long.parseLong(e.getValue().toString()));
+					allocatorResident = Long.parseLong(e.getValue().toString());
 				}
 			}else if("clients.normal".equals(e.getKey())){
 				if(e.getValue() != null){
-					memoryStatsBuilder.setClientsNormal(Long.parseLong(e.getValue().toString()));
+					clientsNormal = Long.parseLong(e.getValue().toString());
 				}
 			}else if("clients.slaves".equals(e.getKey())){
 				if(e.getValue() != null){
-					memoryStatsBuilder.setClientsSlaves(Long.parseLong(e.getValue().toString()));
+					clientsSlaves = Long.parseLong(e.getValue().toString());
 				}
 			}else if("fragmentation.bytes".equals(e.getKey())){
 				if(e.getValue() != null){
-					memoryStatsBuilder.setFragmentation(Long.parseLong(e.getValue().toString()));
+					fragmentation = Long.parseLong(e.getValue().toString());
 				}
 			}else if("fragmentation".equals(e.getKey())){
 				if(e.getValue() != null){
-					memoryStatsBuilder.setFragmentationRatio(Double.parseDouble(e.getValue().toString()));
+					fragmentationRatio = Double.parseDouble(e.getValue().toString());
 				}
 			}else if("lua.caches".equals(e.getKey())){
 				if(e.getValue() != null){
-					memoryStatsBuilder.setLuaCaches(Long.parseLong(e.getValue().toString()));
+					luaCaches = Long.parseLong(e.getValue().toString());
 				}
 			}else if("peak.allocated".equals(e.getKey())){
 				if(e.getValue() != null){
-					memoryStatsBuilder.setPeakAllocated(Long.parseLong(e.getValue().toString()));
+					peakAllocated = Long.parseLong(e.getValue().toString());
 				}
 			}else if("total.allocated".equals(e.getKey())){
 				if(e.getValue() != null){
-					memoryStatsBuilder.setTotalAllocated(Long.parseLong(e.getValue().toString()));
+					totalAllocated = Long.parseLong(e.getValue().toString());
 				}
 			}else if("replication.backlog".equals(e.getKey())){
 				if(e.getValue() != null){
-					memoryStatsBuilder.setReplicationBacklog(Long.parseLong(e.getValue().toString()));
+					replicationBacklog = Long.parseLong(e.getValue().toString());
 				}
 			}else if("startup.allocated".equals(e.getKey())){
 				if(e.getValue() != null){
-					memoryStatsBuilder.setStartupAllocated(Long.parseLong(e.getValue().toString()));
+					startupAllocated = Long.parseLong(e.getValue().toString());
 				}
 			}else if("overhead.total".equals(e.getKey())){
 				if(e.getValue() != null){
-					memoryStatsBuilder.setOverheadTotal(Long.parseLong(e.getValue().toString()));
+					overheadTotal = Long.parseLong(e.getValue().toString());
 				}
 			}else if("keys.count".equals(e.getKey())){
 				if(e.getValue() != null){
-					memoryStatsBuilder.setKeysCount(Long.parseLong(e.getValue().toString()));
+					keysCount = Long.parseLong(e.getValue().toString());
 				}
 			}else if(e.getKey().startsWith("db.")){
 				String[] nameParts = StringUtils.split(e.getKey(), '.');
@@ -155,7 +180,9 @@ public final class MemoryStatsConverter implements Converter<Map<String, Object>
 				Long overheadHashTableMain = null;
 				Long overheadHashTableExpires = null;
 
-				final Map<Integer, MemoryStats.Db> dbs = new TreeMap<>();
+				if(dbs == null){
+					dbs = new TreeMap<>();
+				}
 				List<Object> dbStatTmp = (List<Object>) e.getValue();
 
 				for(int j = 0, jl = dbStatTmp.size(); j < jl; j++){
@@ -174,183 +201,14 @@ public final class MemoryStatsConverter implements Converter<Map<String, Object>
 				}
 
 				dbs.put(db, new MemoryStats.Db(overheadHashTableMain, overheadHashTableExpires));
-				memoryStatsBuilder.setDbs(dbs);
 			}
 		}
 
-		return memoryStatsBuilder.build();
-	}
-
-	private final static class MemoryStatsBuilder {
-
-		private Long dataset;
-
-		private Double datasetPercentage;
-
-		private Long rssOverhead;
-
-		private Double rssOverheadRatio;
-
-		private Double peakPercentage;
-
-		private Long aofBuffer;
-
-		private Long keysBytesPerKey;
-
-		private Long allocatorAllocated;
-
-		private Long allocatorFragmentation;
-
-		private Double allocatorFragmentationRatio;
-
-		private Long allocatorActive;
-
-		private Long allocatorRss;
-
-		private Double allocatorRssRatio;
-
-		private Long allocatorResident;
-
-		private Long clientsNormal;
-
-		private Long clientsSlaves;
-
-		private Long fragmentation;
-
-		private Double fragmentationRatio;
-
-		private Long luaCaches;
-
-		private Long peakAllocated;
-
-		private Long totalAllocated;
-
-		private Long replicationBacklog;
-
-		private Long startupAllocated;
-
-		private Long overheadTotal;
-
-		private Long keysCount;
-
-		private Map<Integer, MemoryStats.Db> dbs;
-
-		private MemoryStatsBuilder() {
-
-		}
-
-		public void setDataset(Long dataset) {
-			this.dataset = dataset;
-		}
-
-		public void setDatasetPercentage(Double datasetPercentage) {
-			this.datasetPercentage = datasetPercentage;
-		}
-
-		public void setRssOverhead(Long rssOverhead) {
-			this.rssOverhead = rssOverhead;
-		}
-
-		public void setRssOverheadRatio(Double rssOverheadRatio) {
-			this.rssOverheadRatio = rssOverheadRatio;
-		}
-
-		public void setPeakPercentage(Double peakPercentage) {
-			this.peakPercentage = peakPercentage;
-		}
-
-		public void setAofBuffer(Long aofBuffer) {
-			this.aofBuffer = aofBuffer;
-		}
-
-		public void setKeysBytesPerKey(Long keysBytesPerKey) {
-			this.keysBytesPerKey = keysBytesPerKey;
-		}
-
-		public void setAllocatorAllocated(Long allocatorAllocated) {
-			this.allocatorAllocated = allocatorAllocated;
-		}
-
-		public void setAllocatorFragmentation(Long allocatorFragmentation) {
-			this.allocatorFragmentation = allocatorFragmentation;
-		}
-
-		public void setAllocatorFragmentationRatio(Double allocatorFragmentationRatio) {
-			this.allocatorFragmentationRatio = allocatorFragmentationRatio;
-		}
-
-		public void setAllocatorActive(Long allocatorActive) {
-			this.allocatorActive = allocatorActive;
-		}
-
-		public void setAllocatorRss(Long allocatorRss) {
-			this.allocatorRss = allocatorRss;
-		}
-
-		public void setAllocatorRssRatio(Double allocatorRssRatio) {
-			this.allocatorRssRatio = allocatorRssRatio;
-		}
-
-		public void setAllocatorResident(Long allocatorResident) {
-			this.allocatorResident = allocatorResident;
-		}
-
-		public void setClientsNormal(Long clientsNormal) {
-			this.clientsNormal = clientsNormal;
-		}
-
-		public void setClientsSlaves(Long clientsSlaves) {
-			this.clientsSlaves = clientsSlaves;
-		}
-
-		public void setFragmentation(Long fragmentation) {
-			this.fragmentation = fragmentation;
-		}
-
-		public void setFragmentationRatio(Double fragmentationRatio) {
-			this.fragmentationRatio = fragmentationRatio;
-		}
-
-		public void setLuaCaches(Long luaCaches) {
-			this.luaCaches = luaCaches;
-		}
-
-		public void setPeakAllocated(Long peakAllocated) {
-			this.peakAllocated = peakAllocated;
-		}
-
-		public void setTotalAllocated(Long totalAllocated) {
-			this.totalAllocated = totalAllocated;
-		}
-
-		public void setReplicationBacklog(Long replicationBacklog) {
-			this.replicationBacklog = replicationBacklog;
-		}
-
-		public void setStartupAllocated(Long startupAllocated) {
-			this.startupAllocated = startupAllocated;
-		}
-
-		public void setOverheadTotal(Long overheadTotal) {
-			this.overheadTotal = overheadTotal;
-		}
-
-		public void setKeysCount(Long keysCount) {
-			this.keysCount = keysCount;
-		}
-
-		public void setDbs(Map<Integer, MemoryStats.Db> dbs) {
-			this.dbs = dbs;
-		}
-
-		public MemoryStats build() {
-			return new MemoryStats(dataset, datasetPercentage, rssOverhead, rssOverheadRatio, peakPercentage, aofBuffer,
-					keysBytesPerKey, allocatorAllocated, allocatorFragmentation, allocatorFragmentationRatio,
-					allocatorActive, allocatorRss, allocatorRssRatio, allocatorResident, clientsNormal, clientsSlaves,
-					fragmentation, fragmentationRatio, luaCaches, peakAllocated, totalAllocated, replicationBacklog,
-					startupAllocated, overheadTotal, keysCount, dbs);
-		}
-
+		return new MemoryStats(dataset, datasetPercentage, rssOverhead, rssOverheadRatio, peakPercentage, aofBuffer,
+				keysBytesPerKey, allocatorAllocated, allocatorFragmentation, allocatorFragmentationRatio,
+				allocatorActive, allocatorRss, allocatorRssRatio, allocatorResident, clientsNormal, clientsSlaves,
+				fragmentation, fragmentationRatio, luaCaches, peakAllocated, totalAllocated, replicationBacklog,
+				startupAllocated, overheadTotal, keysCount, dbs);
 	}
 
 }

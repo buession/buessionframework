@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core;
 
+import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.RedisCommandGroup;
 import com.buession.redis.utils.ObjectStringBuilder;
 
@@ -36,16 +37,17 @@ import java.util.Set;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public record CommandInfo(String name, RedisCommandGroup group, Integer arity, Set<Flag> flags, Integer firstKey,
-                          Integer lastKey, Integer step, Set<String> aclCategories,
-                          List<CommandDoc.History> history, List<CommandDoc.Argument> arguments) {
+public record CommandInfo(String name, RedisCommand redisCommand, RedisCommandGroup group, Integer arity,
+                          Set<Flag> flags, Integer firstKey, Integer lastKey, Integer step,
+                          Set<AclCategory> aclCategories, Tips tips, List<KeySpecification> keySpecifications,
+                          List<String> subcommands) {
 
 	@Override
 	public String toString() {
 		return ObjectStringBuilder.create().add("name", name).add("group", group).add("flags", flags)
 				.add("First key", firstKey).add("Las key", lastKey).add("step", step)
-				.add("ACL categories", aclCategories)
-				.add("history", history).add("arguments", arguments).build();
+				.add("ACL categories", aclCategories).add("tips", tips).add("key specifications", keySpecifications)
+				.add("subcommands", subcommands).build();
 	}
 
 	public enum Flag implements Keyword {
@@ -102,21 +104,152 @@ public record CommandInfo(String name, RedisCommandGroup group, Integer arity, S
 
 	}
 
-	public record History(String version, String commont) {
+	public record Tips(Boolean nondeterministicOutput, Boolean nondeterministicOutputOrder, RequestPolicy requestPolicy,
+	                   ResponsePolicy responsePolicy) {
 
 		@Override
 		public String toString() {
-			return ObjectStringBuilder.create().add("version", version).add("commont", commont).build();
+			return ObjectStringBuilder.create()
+					.append(nondeterministicOutput == null ? null : "nondeterministic_output")
+					.append(nondeterministicOutputOrder == null ? null : "nondeterministic_output_order")
+					.add("request_policy", requestPolicy).add("response_policy", responsePolicy).build();
+		}
+
+		public enum RequestPolicy implements Keyword {
+
+			ALL_NODES,
+
+			ALL_SHARDS,
+
+			MULTI_SHARD,
+
+			SPECIAL;
+
+			@Override
+			public String getValue() {
+				return name().toLowerCase();
+			}
+
+			@Override
+			public String toString() {
+				return getValue();
+			}
+
+		}
+
+		public enum ResponsePolicy implements Keyword {
+
+			ONE_SUCCEEDED,
+
+			ALL_SUCCEEDED,
+
+			AGG_LOGICAL_AND,
+
+			AGG_LOGICAL_OR,
+
+			AGG_MIN,
+
+			AGG_MAX,
+
+			AGG_SUM,
+
+			SPECIAL;
+
+			@Override
+			public String getValue() {
+				return name().toLowerCase();
+			}
+
+			@Override
+			public String toString() {
+				return getValue();
+			}
+
 		}
 
 	}
 
-	public record Argument(String name, String type, String displayText, String token, String since) {
+	public record KeySpecification(String notes, Flag flags, String beginSearch, String findKeys) {
 
 		@Override
 		public String toString() {
-			return ObjectStringBuilder.create().add("name", name).add("type", type).add("display_text", displayText)
-					.add("token", token).add("since", since).build();
+			return ObjectStringBuilder.create().add("notes", notes).add("flags", flags).add("begin_search", beginSearch)
+					.add("find_keys", findKeys).build();
+		}
+
+		public record Flag(AccessType accessType, LogicalOperation logicalOperation, Miscellaneous miscellaneous) {
+
+			@Override
+			public String toString() {
+				return ObjectStringBuilder.create().add("Access type flags", accessType)
+						.add("Logical operation flags", logicalOperation).add("Miscellaneous flags", miscellaneous)
+						.build();
+			}
+
+			public enum AccessType implements Keyword {
+
+				RW,
+
+				RO,
+
+				OW,
+
+				RM;
+
+				@Override
+				public String getValue() {
+					return name();
+				}
+
+				@Override
+				public String toString() {
+					return getValue();
+				}
+
+			}
+
+			public enum LogicalOperation implements Keyword {
+
+				ACCESS,
+
+				UPDATE,
+
+				INSERT,
+
+				DELETE;
+
+				@Override
+				public String getValue() {
+					return name().toLowerCase();
+				}
+
+				@Override
+				public String toString() {
+					return getValue();
+				}
+
+			}
+
+			public enum Miscellaneous implements Keyword {
+
+				NOT_KEY,
+
+				INCOMPLETE,
+
+				VARIABLE_FLAGS;
+
+				@Override
+				public String getValue() {
+					return name().toLowerCase();
+				}
+
+				@Override
+				public String toString() {
+					return getValue();
+				}
+
+			}
+
 		}
 
 	}

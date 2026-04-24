@@ -45,8 +45,36 @@ public final class StreamConsumersInfoConverter implements Converter<Object, Str
 			return null;
 		}else{
 			final List<Object> tmp = (List<Object>) source;
-			return new StreamConsumer(SafeEncoder.encode((byte[]) tmp.get(1)), (Long) tmp.get(3), (Long) tmp.get(5),
-					(Long) tmp.get(7));
+			String key;
+			Object value;
+			String name = null;
+			Long idle = null;
+			Long pending = null;
+			Long inactive = null;
+
+			for(int i = 0, j = tmp.size(); i < j; i += 2){
+				key = SafeEncoder.encode((byte[]) tmp.get(i));
+				value = tmp.get(i + 1);
+
+				switch(key){
+					case "name":
+						name = SafeEncoder.encode((byte[]) value);
+						break;
+					case "idle":
+						idle = (Long) value;
+						break;
+					case "pending":
+						pending = (Long) value;
+						break;
+					case "inactive":
+						inactive = (Long) value;
+						break;
+					default:
+						break;
+				}
+			}
+
+			return new StreamConsumer(name, idle, pending, inactive);
 		}
 	}
 

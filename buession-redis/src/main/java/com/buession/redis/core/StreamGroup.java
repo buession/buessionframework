@@ -39,12 +39,16 @@ import java.util.Map;
  * 		已投递但未被 ACK（确认）的消息数量
  * @param lastDeliveredId
  * 		最后投递给消费者的消息 ID
+ * @param entriesRread
+ * 		-
+ * @param lag
+ * 		-
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
 public record StreamGroup(String name, Long consumers, Long pending, StreamEntryId lastDeliveredId,
-						  Map<String, Object> infos) {
+                          Long entriesRread, Long lag) {
 
 	@Override
 	public String toString() {
@@ -52,8 +56,9 @@ public record StreamGroup(String name, Long consumers, Long pending, StreamEntry
 				.add("name", name)
 				.add("consumers", consumers)
 				.add("pending", pending)
-				.add("last delivered id", lastDeliveredId)
-				.add("infos", infos)
+				.add("last-delivered-id", lastDeliveredId)
+				.add("entries-read", entriesRread)
+				.add("lag", lag)
 				.build();
 	}
 

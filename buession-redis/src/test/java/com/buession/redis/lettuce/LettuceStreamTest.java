@@ -62,7 +62,7 @@ public class LettuceStreamTest extends AbstractLettuceRedisTest {
 	@Test
 	public void xGroupCreateConsumer() {
 		RedisTemplate redisTemplate = redisTemplate();
-		Status result = redisTemplate.xGroupCreateConsumer("stream_b", "test", "cs");
+		Status result = redisTemplate.xGroupCreateConsumer("stream_b", "test_2", "cs");
 		System.out.println(result);
 	}
 
@@ -97,15 +97,20 @@ public class LettuceStreamTest extends AbstractLettuceRedisTest {
 	@Test
 	public void xInfoGroups() {
 		RedisTemplate redisTemplate = redisTemplate();
-		List<StreamGroup> result = redisTemplate.xInfoGroups("stream_b");
-		System.out.println(result);
+		System.out.println(redisTemplate.xInfoGroups("stream_b"));
 	}
 
 	@Test
 	public void xInfoConsumers() {
 		RedisTemplate redisTemplate = redisTemplate();
-		List<StreamConsumer> result = redisTemplate.xInfoConsumers("stream_b", "test");
+		List<StreamConsumer> result = redisTemplate.xInfoConsumers("stream_b", "test_2");
 		System.out.println(result);
+	}
+
+	@Test
+	public void xRead() {
+		RedisTemplate redisTemplate = redisTemplate();
+		System.out.println(redisTemplate.xRead(MapBuilder.of("stream_b", new StreamEntryId(2, 2))));
 	}
 
 }

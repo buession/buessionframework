@@ -46,7 +46,23 @@ import java.util.Map;
  * 		Stream 内部 Radix Tree 结构信息
  * @param lastGeneratedId
  * 		-
- * @param infos
+ * @param maxDeletedEntryId
+ * 		-
+ * @param recordedFirstEntryId
+ * 		-
+ * @param entriesAdded
+ * 		-
+ * @param idmpDuration
+ * 		-
+ * @param idmpMaxsize
+ * 		-
+ * @param pidsTracked
+ * 		-
+ * @param iidsTracked
+ * 		-
+ * @param iidsAdded
+ * 		-
+ * @param iidsDuplicates
  * 		-
  * @param entries
  * 		-
@@ -54,39 +70,33 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public record StreamFull<K, V>(Long length, List<StreamFull.Group> groups, Long radixTreeKeys,
-							   Long radixTreeNodes, StreamEntryId lastGeneratedId, Map<String, Object> infos,
-							   List<StreamEntry<K, V>> entries) {
+public record StreamFull<K, V>(Long length, List<StreamFull.Group> groups, Long radixTreeKeys, Long radixTreeNodes,
+                               StreamEntryId lastGeneratedId, StreamEntryId maxDeletedEntryId,
+                               StreamEntryId recordedFirstEntryId, Long entriesAdded, Long idmpDuration,
+                               Long idmpMaxsize, Long pidsTracked, Long iidsTracked,
+                               Long iidsAdded, Long iidsDuplicates, List<StreamEntry<K, V>> entries) {
 
 	@Override
 	public String toString() {
-		return ObjectStringBuilder.create()
-				.add("length", length)
-				.add("groups", groups)
-				.add("radix tree keys", radixTreeKeys)
-				.add("radix tree nodes", radixTreeNodes)
-				.add("last generated id", lastGeneratedId)
-				.add("entries", entries)
-				.add("infos", infos)
-				.build();
+		return ObjectStringBuilder.create().add("length", length).add("groups", groups)
+				.add("radix-tree-keys", radixTreeKeys).add("radix-tree-nodes", radixTreeNodes)
+				.add("last-generated-id", lastGeneratedId).add("max-deleted-entry-id", maxDeletedEntryId)
+				.add("recorded-first-entry-id", recordedFirstEntryId).add("entries-added", entriesAdded)
+				.add("idmp-duration", idmpDuration).add("idmp-maxsize", idmpMaxsize).add("pids-tracked", pidsTracked)
+				.add("iids-tracked", iidsTracked).add("iids-added", iidsAdded).add("iids-duplicates", iidsDuplicates)
+				.add("entries", entries).build();
 	}
 
 	/**
 	 * @since 2.0.1
 	 */
 	public record Group(String name, List<StreamConsumerFull> consumers, List<List<Object>> pending, Long pelCount,
-						StreamEntryId lastDeliveredId, Map<String, Object> infos) {
+	                    StreamEntryId lastDeliveredId, Map<String, Object> infos) {
 
 		@Override
 		public String toString() {
-			return ObjectStringBuilder.create()
-					.add("name", name)
-					.add("consumers", consumers)
-					.add("pending", pending)
-					.add("pel count", pelCount)
-					.add("last delivered id", lastDeliveredId)
-					.add("infos", infos)
-					.build();
+			return ObjectStringBuilder.create().add("name", name).add("consumers", consumers).add("pending", pending)
+					.add("pel count", pelCount).add("last delivered id", lastDeliveredId).add("infos", infos).build();
 		}
 
 	}

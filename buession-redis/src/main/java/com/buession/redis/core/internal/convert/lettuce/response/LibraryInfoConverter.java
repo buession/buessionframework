@@ -38,6 +38,7 @@ import java.util.Map;
  */
 public final class LibraryInfoConverter implements Converter<Map<String, Object>, LibraryInfo> {
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public LibraryInfo convert(final Map<String, Object> source) {
 		if(source == null){

@@ -45,8 +45,12 @@ public final class StreamGroupInfoConverter implements Converter<StreamGroupInfo
 
 		final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
 		final StreamEntryId lastDeliveredId = streamEntryIDConverter.convert(source.getLastDeliveredId());
+		Long entriesRread = source.getGroupInfo().containsKey("entries-read") ? (Long) source.getGroupInfo().get(
+				"entries-read") : null;
+		Long lag = source.getGroupInfo().containsKey("lag") ? (Long) source.getGroupInfo().get("lag") : null;
+
 		return new StreamGroup(source.getName(), source.getConsumers(), source.getPending(), lastDeliveredId,
-				source.getGroupInfo());
+				entriesRread, lag);
 	}
 
 }

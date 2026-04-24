@@ -39,17 +39,16 @@ public final class StreamEntryDeletionResultConverter implements
 	@Override
 	public com.buession.redis.core.StreamEntryDeletionResult convert(
 			final redis.clients.jedis.resps.StreamEntryDeletionResult source) {
-		if(source == null){
-			return null;
+		if(source == redis.clients.jedis.resps.StreamEntryDeletionResult.DELETED){
+			return com.buession.redis.core.StreamEntryDeletionResult.DELETED;
+		}else if(source == redis.clients.jedis.resps.StreamEntryDeletionResult.NOT_FOUND){
+			return com.buession.redis.core.StreamEntryDeletionResult.NOT_FOUND;
+		}else if(source ==
+				redis.clients.jedis.resps.StreamEntryDeletionResult.NOT_DELETED_UNACKNOWLEDGED_OR_STILL_REFERENCED){
+			return com.buession.redis.core.StreamEntryDeletionResult.NOT_DELETED_UNACKNOWLEDGED_OR_STILL_REFERENCED;
+		}else{
+			return com.buession.redis.core.StreamEntryDeletionResult.UNKNOWN;
 		}
-
-		return switch(source){
-			case DELETED -> com.buession.redis.core.StreamEntryDeletionResult.DELETED;
-			case NOT_FOUND -> com.buession.redis.core.StreamEntryDeletionResult.NOT_FOUND;
-			case NOT_DELETED_UNACKNOWLEDGED_OR_STILL_REFERENCED ->
-					com.buession.redis.core.StreamEntryDeletionResult.NOT_DELETED_UNACKNOWLEDGED_OR_STILL_REFERENCED;
-			default -> com.buession.redis.core.StreamEntryDeletionResult.UNKNOWN;
-		};
 	}
 
 }

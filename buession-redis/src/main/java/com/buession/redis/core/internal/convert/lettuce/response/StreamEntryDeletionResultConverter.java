@@ -38,17 +38,18 @@ public final class StreamEntryDeletionResultConverter implements
 	@Override
 	public com.buession.redis.core.StreamEntryDeletionResult convert(
 			final io.lettuce.core.models.stream.StreamEntryDeletionResult source) {
-		if(source == null){
+		if(source == io.lettuce.core.models.stream.StreamEntryDeletionResult.DELETED){
+			return com.buession.redis.core.StreamEntryDeletionResult.DELETED;
+		}else if(source == io.lettuce.core.models.stream.StreamEntryDeletionResult.NOT_FOUND){
+			return com.buession.redis.core.StreamEntryDeletionResult.NOT_FOUND;
+		}else if(source ==
+				io.lettuce.core.models.stream.StreamEntryDeletionResult.NOT_DELETED_UNACKNOWLEDGED_OR_STILL_REFERENCED){
+			return com.buession.redis.core.StreamEntryDeletionResult.NOT_DELETED_UNACKNOWLEDGED_OR_STILL_REFERENCED;
+		}else if(source == io.lettuce.core.models.stream.StreamEntryDeletionResult.UNKNOWN){
+			return com.buession.redis.core.StreamEntryDeletionResult.UNKNOWN;
+		}else{
 			return null;
 		}
-
-		return switch(source){
-			case DELETED -> com.buession.redis.core.StreamEntryDeletionResult.DELETED;
-			case NOT_FOUND -> com.buession.redis.core.StreamEntryDeletionResult.NOT_FOUND;
-			case NOT_DELETED_UNACKNOWLEDGED_OR_STILL_REFERENCED ->
-					com.buession.redis.core.StreamEntryDeletionResult.NOT_DELETED_UNACKNOWLEDGED_OR_STILL_REFERENCED;
-			case UNKNOWN -> com.buession.redis.core.StreamEntryDeletionResult.UNKNOWN;
-		};
 	}
 
 }

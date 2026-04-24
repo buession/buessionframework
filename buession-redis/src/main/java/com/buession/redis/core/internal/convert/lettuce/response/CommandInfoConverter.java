@@ -25,10 +25,12 @@
 package com.buession.redis.core.internal.convert.lettuce.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.utils.StringUtils;
+import com.buession.redis.core.AclCategory;
 import com.buession.redis.core.CommandInfo;
+import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.RedisCommandGroup;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -41,92 +43,118 @@ import java.util.stream.Collectors;
  */
 public final class CommandInfoConverter implements Converter<Object, CommandInfo> {
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public CommandInfo convert(final Object source) {
 		if(source instanceof List){
-			final CommandInfoBuilder commandInfoBuilder = new CommandInfoBuilder();
 			final List<Object> tmp = (List<Object>) source;
+			int sourceSize = tmp.size();
+			String name = tmp.get(0).toString();
+			RedisCommand redisCommand = null;
+			RedisCommandGroup group = null;
+			Integer arity = null;
+			Set<CommandInfo.Flag> flags = null;
+			Integer firstKey = null;
+			Integer lastKey = null;
+			Integer step = null;
+			Set<AclCategory> aclCategories = null;
+			CommandInfo.Tips tips = null;
+			List<CommandInfo.KeySpecification> keySpecifications = null;
+			List<String> subcommands = null;
 
-			commandInfoBuilder.setName(tmp.get(0).toString());
-			commandInfoBuilder.setArity(((Long) tmp.get(1)).intValue());
-
-			List<String> flagsTemp = (List<String>) tmp.get(2);
-
-			if(flagsTemp != null){
-				commandInfoBuilder.setFlags(
-						flagsTemp.stream().map((v)->Enum.valueOf(CommandInfo.Flag.class, v.toUpperCase()))
-								.collect(Collectors.toSet()));
+			for(RedisCommand command : RedisCommand.values()){
+				if(StringUtils.equalsIgnoreCase(command.getName(), name)){
+					redisCommand = command;
+					group = command.getGroup();
+					break;
+				}
 			}
 
-			commandInfoBuilder.setFirstKey(((Long) tmp.get(3)).intValue());
-			commandInfoBuilder.setLastKey(((Long) tmp.get(4)).intValue());
-			commandInfoBuilder.setStep(((Long) tmp.get(5)).intValue());
-			commandInfoBuilder.setAclCategories(tmp.get(6) != null ? new HashSet<>((List<String>) tmp.get(6)) : null);
+			if(sourceSize >= 2){
+				arity = ((Long) tmp.get(1)).intValue();
 
-			return commandInfoBuilder.build();
+				if(sourceSize >= 3){
+					List<String> flagsTemp = (List<String>) tmp.get(2);
+
+					if(flagsTemp != null){
+						flags = flagsTemp.stream().map((v)->Enum.valueOf(CommandInfo.Flag.class, v.toUpperCase()))
+								.collect(Collectors.toSet());
+					}
+				}
+
+				if(sourceSize >= 4){
+					firstKey = ((Long) tmp.get(3)).intValue();
+					if(sourceSize >= 5){
+						lastKey = ((Long) tmp.get(4)).intValue();
+						if(sourceSize >= 6){
+							step = ((Long) tmp.get(5)).intValue();
+							if(sourceSize >= 7){
+								List<String> aclCategoriesTemp = (List<String>) tmp.get(6);
+								if(aclCategoriesTemp != null){
+									aclCategories = aclCategoriesTemp.stream().map((v)->Enum.valueOf(AclCategory.class,
+											StringUtils.substr(v.toUpperCase(), 1))).collect(Collectors.toSet());
+								}
+
+								if(sourceSize >= 8){
+									List<String> tipsTemp = (List<String>) tmp.get(7);
+									tips = parseTips(tipsTemp);
+
+									if(sourceSize >= 9){
+										List<String> keySpecificationsTemp = tmp.get(8) != null ?
+												(List<String>) tmp.get(8) : null;
+										if(sourceSize >= 10){
+											subcommands = tmp.get(9) != null ? (List<String>) tmp.get(9) : null;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			return new CommandInfo(name, redisCommand, group, arity, flags, firstKey, lastKey, step, aclCategories,
+					tips, keySpecifications, subcommands);
 		}else{
 			return null;
 		}
 	}
 
-	private final static class CommandInfoBuilder {
-
-		private String name;
-
-		private RedisCommandGroup group;
-
-		private Integer arity;
-
-		private Set<CommandInfo.Flag> flags;
-
-		private Integer firstKey;
-
-		private Integer lastKey;
-
-		private Integer step;
-
-		private Set<String> aclCategories;
-
-		private CommandInfoBuilder() {
-
+	private static CommandInfo.Tips parseTips(final List<String> tips) {
+		if(tips == null){
+			return null;
 		}
 
-		public void setName(String name) {
-			this.name = name;
+		Boolean nondeterministicOutput = null;
+		Boolean nondeterministicOutputOrder = null;
+		CommandInfo.Tips.RequestPolicy requestPolicy = null;
+		CommandInfo.Tips.ResponsePolicy responsePolicy = null;
+
+		for(String v : tips){
+			if("nondeterministic_output".equals(v)){
+				nondeterministicOutput = true;
+			}else if("nondeterministic_output_order".equals(v)){
+				nondeterministicOutputOrder = true;
+			}else if(v.startsWith("request_policy:")){
+				String s = v.substring("request_policy:".length());
+				for(CommandInfo.Tips.RequestPolicy policy : CommandInfo.Tips.RequestPolicy.values()){
+					if(StringUtils.equalsIgnoreCase(s, policy.name())){
+						requestPolicy = policy;
+						break;
+					}
+				}
+			}else if(v.startsWith("response_policy:")){
+				String s = v.substring("response_policy:".length());
+				for(CommandInfo.Tips.ResponsePolicy policy : CommandInfo.Tips.ResponsePolicy.values()){
+					if(StringUtils.equalsIgnoreCase(s, policy.name())){
+						responsePolicy = policy;
+						break;
+					}
+				}
+			}
 		}
 
-		public void setGroup(RedisCommandGroup group) {
-			this.group = group;
-		}
-
-		public void setArity(Integer arity) {
-			this.arity = arity;
-		}
-
-		public void setFlags(Set<CommandInfo.Flag> flags) {
-			this.flags = flags;
-		}
-
-		public void setFirstKey(Integer firstKey) {
-			this.firstKey = firstKey;
-		}
-
-		public void setLastKey(Integer lastKey) {
-			this.lastKey = lastKey;
-		}
-
-		public void setStep(Integer step) {
-			this.step = step;
-		}
-
-		public void setAclCategories(Set<String> aclCategories) {
-			this.aclCategories = aclCategories;
-		}
-
-		public CommandInfo build() {
-			return null;//new CommandInfo(name, group, arity, flags, firstKey, lastKey, step, aclCategories);
-		}
-
+		return new CommandInfo.Tips(nondeterministicOutput, nondeterministicOutputOrder, requestPolicy, responsePolicy);
 	}
 
 }

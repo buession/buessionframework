@@ -31,12 +31,14 @@ import com.buession.redis.core.StreamEntry;
 import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.StreamFull;
 import com.buession.redis.core.internal.convert.response.BaseKeyValueConverter;
+import redis.clients.jedis.StreamEntryID;
 import redis.clients.jedis.resps.StreamConsumerFullInfo;
 import redis.clients.jedis.resps.StreamFullInfo;
 import redis.clients.jedis.resps.StreamGroupFullInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * jedis {@link StreamFullInfo} 转换为 {@link StreamFull}
@@ -46,6 +48,8 @@ import java.util.List;
  */
 public final class StreamFullInfoConverter<TK, TV>
 		extends BaseKeyValueConverter<String, String, TK, TV, StreamFullInfo, StreamFull<TK, TV>> {
+
+	private final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
 
 	public StreamFullInfoConverter(final Converter<String, TK> keyConverter,
 	                               final Converter<String, TV> valueConverter) {
@@ -58,17 +62,38 @@ public final class StreamFullInfoConverter<TK, TV>
 			return null;
 		}
 
-		final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
-		final ListConverter<StreamGroupFullInfo, StreamFull.Group> listStreamFullInfoGroupConverter =
-				new ListConverter<>(new StreamFullInfoGroupConverter());
-		final ListConverter<redis.clients.jedis.resps.StreamEntry, StreamEntry<TK, TV>> listStreamEntryConverter =
-				new ListConverter<>(new StreamEntryConverter<>(keyConverter, valueConverter));
+		final ListConverter<StreamGroupFullInfo, StreamFull.Group> listStreamFullInfoGroupConverter = new ListConverter<>(
+				new StreamFullInfoGroupConverter());
+		final ListConverter<redis.clients.jedis.resps.StreamEntry, StreamEntry<TK, TV>> listStreamEntryConverter = new ListConverter<>(
+				new StreamEntryConverter<>(keyConverter, valueConverter));
 		final List<StreamFull.Group> groups = listStreamFullInfoGroupConverter.convert(source.getGroups());
 		final StreamEntryId lastGeneratedId = streamEntryIDConverter.convert(source.getLastGeneratedId());
+		final Map<String, Object> streamFullInfo = source.getStreamFullInfo();
+		final StreamEntryId maxDeletedEntryId = streamFullInfoOfStreamEntryId(streamFullInfo, "max-deleted-entry-id");
+		final StreamEntryId recordedFirstEntryId = streamFullInfoOfStreamEntryId(streamFullInfo,
+				"recorded-first-entry-id");
+		final Long entriesAdded = streamFullInfoOfLong(streamFullInfo, "entries-added");
+		final Long idmpDuration = streamFullInfoOfLong(streamFullInfo, "idmp-duration");
+		final Long idmpMaxsize = streamFullInfoOfLong(streamFullInfo, "idmp-maxsize");
+		final Long pidsTracked = streamFullInfoOfLong(streamFullInfo, "pids-tracked");
+		final Long iidsTracked = streamFullInfoOfLong(streamFullInfo, "iids-tracked");
+		final Long iidsAdded = streamFullInfoOfLong(streamFullInfo, "iids-added");
+		final Long iidsDuplicates = streamFullInfoOfLong(streamFullInfo, "iids-duplicates");
 		final List<StreamEntry<TK, TV>> entries = listStreamEntryConverter.convert(source.getEntries());
 
 		return new StreamFull<>(source.getLength(), groups, source.getRadixTreeKeys(), source.getRadixTreeNodes(),
-				lastGeneratedId, source.getStreamFullInfo(), entries);
+				lastGeneratedId, maxDeletedEntryId, recordedFirstEntryId, entriesAdded, idmpDuration, idmpMaxsize,
+				pidsTracked, iidsTracked, iidsAdded, iidsDuplicates, entries);
+	}
+
+	private StreamEntryId streamFullInfoOfStreamEntryId(final Map<String, Object> streamFullInfo, final String key) {
+		final Object value = streamFullInfo.get(key);
+		return value == null ? null : streamEntryIDConverter.convert((StreamEntryID) value);
+	}
+
+	private Long streamFullInfoOfLong(final Map<String, Object> streamFullInfo, final String key) {
+		final Object value = streamFullInfo.get(key);
+		return value == null ? null : (Long) value;
 	}
 
 	/**
@@ -87,8 +112,8 @@ public final class StreamFullInfoConverter<TK, TV>
 			}
 
 			final StreamEntryIDConverter streamEntryIDConverter = new StreamEntryIDConverter();
-			final ListConverter<StreamConsumerFullInfo, StreamConsumerFull> listStreamConsumerFullInfoConverter =
-					new ListConverter<>(new StreamConsumerFullInfoConverter());
+			final ListConverter<StreamConsumerFullInfo, StreamConsumerFull> listStreamConsumerFullInfoConverter = new ListConverter<>(
+					new StreamConsumerFullInfoConverter());
 			final List<StreamConsumerFull> consumers = listStreamConsumerFullInfoConverter.convert(
 					source.getConsumers());
 			final StreamEntryId lastDeliveredId = streamEntryIDConverter.convert(source.getLastDeliveredId());

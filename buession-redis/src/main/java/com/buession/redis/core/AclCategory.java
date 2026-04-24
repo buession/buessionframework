@@ -184,7 +184,7 @@ public enum AclCategory implements Keyword {
 
 	@Override
 	public String toString() {
-		return getValue();
+		return '@' + getValue().toLowerCase();
 	}
 
 }

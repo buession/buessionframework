@@ -54,6 +54,7 @@ public abstract class AbstractLettuceRedisTest {
 	protected LettuceClusterDataSource clusterDataSource() {
 		LettuceClusterDataSource dataSource = new LettuceClusterDataSource();
 		List<RedisNode> redisNodes = ListBuilder.<RedisNode>create()
+				//.add(new RedisNode("192.168.0.162", 30943))
 				.add(new RedisNode("192.168.0.231", 6371))
 				.add(new RedisNode("192.168.0.231", 6372))
 				.add(new RedisNode("192.168.0.231", 6373))
@@ -64,6 +65,7 @@ public abstract class AbstractLettuceRedisTest {
 
 		dataSource.setNodes(redisNodes);
 		dataSource.setPassword("rds_PWD");
+		//dataSource.setPassword("abc123456");
 		dataSource.setPoolConfig(new PoolConfig());
 
 		return dataSource;
