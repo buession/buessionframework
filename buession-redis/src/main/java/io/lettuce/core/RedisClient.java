@@ -21,70 +21,10 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */
-package io.lettuce.core;
-
-import io.lettuce.core.api.StatefulConnection;
-import org.apache.commons.pool2.BasePooledObjectFactory;
-import org.apache.commons.pool2.PooledObject;
-import org.apache.commons.pool2.impl.DefaultPooledObject;
-
-/**
- * Lettuce 连接池对象工厂抽象类
- *
- * @param <CONN>
- * 		原生连接类型
- * @param <C>
- *        {@link AbstractRedisClient}
+ */package io.lettuce.core;/**
+ * 
  *
  * @author Yong.Teng
- * @since 3.0.0
- */
-public abstract class AbstractLettuceFactory<CONN extends StatefulConnection<byte[], byte[]>, C extends AbstractRedisClient>
-		extends BasePooledObjectFactory<CONN> {
-
-	/**
-	 * {@link AbstractRedisClient}
-	 */
-	private final C client;
-
-	/**
-	 * 构造函数
-	 *
-	 * @param client
-	 *        {@link AbstractRedisClient}
-	 */
-	protected AbstractLettuceFactory(final C client) {
-		this.client = client;
-	}
-
-	@Override
-	public PooledObject<CONN> wrap(CONN connection) {
-		return new DefaultPooledObject<>(connection);
-	}
-
-	@Override
-	public void activateObject(PooledObject<CONN> pooledObject) throws Exception {
-		CONN connection = pooledObject.getObject();
-		//connection.sync().select(database);
-	}
-
-	@Override
-	public void destroyObject(PooledObject<CONN> pooledObject) throws Exception {
-		CONN connection = pooledObject.getObject();
-
-		if(connection.isOpen()){
-			connection.close();
-		}
-	}
-
-	/**
-	 * 返回 {@link AbstractRedisClient}
-	 *
-	 * @return {@link AbstractRedisClient}
-	 */
-	protected C getClient() {
-		return client;
-	}
-
+ * @since 4.0.0
+ */public class RedisClient {
 }

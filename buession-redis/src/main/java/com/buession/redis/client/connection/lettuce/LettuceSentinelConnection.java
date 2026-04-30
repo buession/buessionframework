@@ -47,8 +47,6 @@ import com.buession.redis.exception.RedisException;
 import com.buession.redis.transaction.Transaction;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.LettuceClientConfig;
-import io.lettuce.core.LettucePoolConfig;
-import io.lettuce.core.LettuceSentinelPool;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisCommandsInvocationHandler;
 import io.lettuce.core.RedisCredentialsProvider;
@@ -94,11 +92,6 @@ public class LettuceSentinelConnection
 	 * 哨兵节点读取超时（单位：毫秒）
 	 */
 	private int sentinelSoTimeout = Constants.DEFAULT_SO_TIMEOUT;
-
-	/**
-	 * 连接池
-	 */
-	private LettuceSentinelPool pool;
 
 	/**
 	 * {@link StatefulRedisSentinelConnection} 实例
@@ -629,9 +622,12 @@ public class LettuceSentinelConnection
 
 	@Override
 	protected void internalInit() {
+		/*
 		if(pool == null && getPoolConfig() != null){
 			pool = createPool();
 		}
+
+		 */
 	}
 
 	@Override
@@ -686,9 +682,10 @@ public class LettuceSentinelConnection
 
 		redisURIBuilder.withSsl(dataSource.getSslConfiguration() != null);
 
-		return RedisClient.create(redisURIBuilder.build()).connect(codec);
+		return null;//RedisClient.create(redisURIBuilder.build()).connect(codec);
 	}
 
+	/*
 	protected LettuceSentinelPool createPool() {
 		final LettuceSentinelDataSource dataSource = (LettuceSentinelDataSource) getDataSource();
 		final LettucePoolConfig<byte[], byte[], StatefulRedisSentinelConnection<byte[], byte[]>> lettucePoolConfig = new LettucePoolConfig<>();
@@ -713,12 +710,15 @@ public class LettuceSentinelConnection
 				clientConfig, sentinelClientConfig);
 	}
 
+	 */
+
 	@Override
 	protected Status doConnect() throws RedisConnectionFailureException {
 		if(isConnected()){
 			return Status.SUCCESS;
 		}
 
+		/*
 		if(pool != null){
 			try{
 				conn = pool.getResource();
@@ -738,6 +738,8 @@ public class LettuceSentinelConnection
 			conn = createStatefulRedisConnection(new ByteArrayCodec());
 		}
 
+		 */
+
 		return conn == null ? Status.FAILURE : Status.SUCCESS;
 	}
 
@@ -746,6 +748,7 @@ public class LettuceSentinelConnection
 		super.doDestroy();
 
 		logger.debug("Lettuce destroy.");
+		/*
 		if(pool != null){
 			if(logger.isDebugEnabled()){
 				logger.debug("Lettuce sentinel pool for {} destroy.", pool.getClass().getName());
@@ -762,6 +765,8 @@ public class LettuceSentinelConnection
 
 			pool = null;
 		}
+
+		 */
 	}
 
 	protected LettuceClientConfig createSentinelLettuceClientConfig(final LettuceSentinelDataSource dataSource) {

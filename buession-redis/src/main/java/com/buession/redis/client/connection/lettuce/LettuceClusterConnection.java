@@ -38,8 +38,6 @@ import com.buession.redis.exception.LettuceRedisExceptionUtils;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
 import io.lettuce.core.LettuceClientConfig;
-import io.lettuce.core.LettuceClusterPool;
-import io.lettuce.core.LettucePoolConfig;
 import io.lettuce.core.RedisCommandsInvocationHandler;
 import io.lettuce.core.RedisCredentialsProvider;
 import io.lettuce.core.RedisURI;
@@ -85,11 +83,6 @@ public class LettuceClusterConnection
 	 * @since 4.0.0
 	 */
 	private Duration topologyRefreshPeriod;
-
-	/**
-	 * 连接池
-	 */
-	private LettuceClusterPool pool;
 
 	private final static Logger logger = LoggerFactory.getLogger(LettuceClusterConnection.class);
 
@@ -750,9 +743,12 @@ public class LettuceClusterConnection
 
 	@Override
 	protected void internalInit() {
+		/*
 		if(pool == null && getPoolConfig() != null){
 			pool = createPool();
 		}
+
+		 */
 	}
 
 	@Override
@@ -809,6 +805,7 @@ public class LettuceClusterConnection
 		}).collect(Collectors.toSet());
 	}
 
+	/*
 	protected LettuceClusterPool createPool() {
 		final LettuceClusterDataSource dataSource = (LettuceClusterDataSource) getDataSource();
 		final LettucePoolConfig<byte[], byte[], StatefulRedisClusterConnection<byte[], byte[]>> lettucePoolConfig = new LettucePoolConfig<>();
@@ -830,12 +827,15 @@ public class LettuceClusterConnection
 		return new LettuceClusterPool(nodes, lettucePoolConfig, clientConfig);
 	}
 
+	 */
+
 	@Override
 	protected Status doConnect() throws RedisConnectionFailureException {
 		if(isConnected()){
 			return Status.SUCCESS;
 		}
 
+		/*
 		if(pool != null){
 			try{
 				conn = pool.getResource();
@@ -855,6 +855,8 @@ public class LettuceClusterConnection
 			conn = createStatefulRedisClusterConnection(new ByteArrayCodec());
 		}
 
+		 */
+
 		return conn == null ? Status.FAILURE : Status.SUCCESS;
 	}
 
@@ -863,6 +865,7 @@ public class LettuceClusterConnection
 		super.doDestroy();
 
 		logger.debug("Lettuce destroy.");
+		/*
 		if(pool != null){
 			if(logger.isDebugEnabled()){
 				logger.debug("Lettuce cluster pool for {} destroy.", pool.getClass().getName());
@@ -879,6 +882,8 @@ public class LettuceClusterConnection
 
 			pool = null;
 		}
+
+		 */
 	}
 
 	private static Set<HostAndPort> createHostAndPorts(final LettuceClusterDataSource clusterDataSource) {

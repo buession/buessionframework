@@ -39,8 +39,6 @@ import com.buession.redis.transaction.DefaultTransactionProxy;
 import com.buession.redis.transaction.Transaction;
 import com.buession.redis.transaction.lettuce.LettuceTransaction;
 import io.lettuce.core.LettuceClientConfig;
-import io.lettuce.core.LettucePool;
-import io.lettuce.core.LettucePoolConfig;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisCommandsInvocationHandler;
 import io.lettuce.core.RedisCredentialsProvider;
@@ -66,11 +64,6 @@ import java.time.Duration;
  */
 public class LettuceConnection extends AbstractLettuceRedisConnection<StatefulRedisConnection<byte[], byte[]>>
 		implements RedisStandaloneConnection {
-
-	/**
-	 * 连接池
-	 */
-	private LettucePool pool;
 
 	private final static Logger logger = LoggerFactory.getLogger(LettuceConnection.class);
 
@@ -293,9 +286,12 @@ public class LettuceConnection extends AbstractLettuceRedisConnection<StatefulRe
 
 	@Override
 	protected void internalInit() {
+		/*
 		if(pool == null && getPoolConfig() != null){
 			pool = createPool();
 		}
+
+		 */
 	}
 
 	@Override
@@ -325,9 +321,10 @@ public class LettuceConnection extends AbstractLettuceRedisConnection<StatefulRe
 
 		redisURI.setSsl(dataSource.getSslConfiguration() != null);
 
-		return RedisClient.create(redisURI).connect(codec);
+		return null;//RedisClient.create(redisURI).connect(codec);
 	}
 
+	/*
 	protected LettucePool createPool() {
 		final LettuceDataSource dataSource = (LettuceDataSource) getDataSource();
 		final LettucePoolConfig<byte[], byte[], StatefulRedisConnection<byte[], byte[]>> lettucePoolConfig = new LettucePoolConfig<>();
@@ -345,12 +342,9 @@ public class LettuceConnection extends AbstractLettuceRedisConnection<StatefulRe
 
 		return new LettucePool(lettucePoolConfig, dataSource.getHost(), dataSource.getPort(),
 				clientConfig);
-		/*
-		return ConnectionPoolUtils.createLettucePool(lettucePoolConfig, dataSource.getHost(), dataSource.getPort(),
-				clientConfig);
-
-		 */
 	}
+
+	 */
 
 	@Override
 	protected Status doConnect() throws RedisConnectionFailureException {
@@ -358,6 +352,7 @@ public class LettuceConnection extends AbstractLettuceRedisConnection<StatefulRe
 			return Status.SUCCESS;
 		}
 
+		/*
 		if(pool != null){
 			try{
 				conn = pool.getResource();
@@ -376,6 +371,8 @@ public class LettuceConnection extends AbstractLettuceRedisConnection<StatefulRe
 			conn = createStatefulRedisConnection(new ByteArrayCodec());
 		}
 
+		 */
+
 		return conn == null ? Status.FAILURE : Status.SUCCESS;
 	}
 
@@ -384,6 +381,7 @@ public class LettuceConnection extends AbstractLettuceRedisConnection<StatefulRe
 		super.doDestroy();
 
 		logger.debug("Lettuce destroy.");
+		/*
 		if(pool != null){
 			if(logger.isDebugEnabled()){
 				logger.debug("Lettuce pool for {} destroy.", pool.getClass().getName());
@@ -400,6 +398,8 @@ public class LettuceConnection extends AbstractLettuceRedisConnection<StatefulRe
 
 			pool = null;
 		}
+
+		 */
 	}
 
 }
