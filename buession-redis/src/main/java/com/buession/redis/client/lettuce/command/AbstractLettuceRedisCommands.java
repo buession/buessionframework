@@ -38,8 +38,8 @@ import com.buession.redis.exception.NotMultiRedisException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.PipelineProxy;
 import com.buession.redis.transaction.TransactionProxy;
+import io.lettuce.core.BaseRedisClient;
 import io.lettuce.core.RedisFuture;
-import io.lettuce.core.api.StatefulConnection;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.api.sync.RedisCommands;
 
@@ -198,9 +198,9 @@ public abstract class AbstractLettuceRedisCommands extends AbstractRedisCommands
 		@SuppressWarnings({"unchecked"})
 		@Override
 		protected R doExecute(final RedisConnection conn) throws RedisException {
-			final LettuceRedisConnection<StatefulConnection<byte[], byte[]>> lettuceRedisConnection =
-					(LettuceRedisConnection<StatefulConnection<byte[], byte[]>>) conn;
-			final SR result = executor.execute(lettuceRedisConnection.getRedisCommands());
+			final LettuceRedisConnection<byte[], byte[], BaseRedisClient<byte[], byte[]>> lettuceRedisConnection =
+					(LettuceRedisConnection<byte[], byte[], BaseRedisClient<byte[], byte[]>>) conn;
+			final SR result = executor.execute(lettuceRedisConnection.getClient().getRedisCommands());
 			return result == null ? null : converter.convert(result);
 		}
 

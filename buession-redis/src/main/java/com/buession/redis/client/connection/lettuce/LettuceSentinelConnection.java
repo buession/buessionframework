@@ -41,20 +41,17 @@ import com.buession.redis.core.RedisSentinelNode;
 import com.buession.redis.core.RedisServer;
 import com.buession.redis.core.Role;
 import com.buession.redis.core.internal.lettuce.LettuceClientConfigBuilder;
-import com.buession.redis.exception.LettuceRedisExceptionUtils;
 import com.buession.redis.exception.RedisConnectionFailureException;
-import com.buession.redis.exception.RedisException;
 import com.buession.redis.transaction.Transaction;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.LettuceClientConfig;
-import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisCommandsInvocationHandler;
 import io.lettuce.core.RedisCredentialsProvider;
+import io.lettuce.core.RedisSentinelClient;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.StaticCredentialsProvider;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisCommands;
-import io.lettuce.core.codec.ByteArrayCodec;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.sentinel.api.StatefulRedisSentinelConnection;
 import io.lettuce.core.sentinel.api.sync.RedisSentinelCommands;
@@ -76,11 +73,16 @@ import java.util.stream.Collectors;
 /**
  * Lettuce 哨兵模式连接器
  *
+ * @param <K>
+ * 		Key 类型
+ * @param <V>
+ * 		值类型
+ *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class LettuceSentinelConnection
-		extends AbstractLettuceRedisConnection<StatefulRedisSentinelConnection<byte[], byte[]>>
+public class LettuceSentinelConnection<K, V>
+		extends AbstractLettuceRedisConnection<K, V, RedisSentinelClient<K, V>>
 		implements RedisSentinelConnection {
 
 	/**
@@ -543,7 +545,7 @@ public class LettuceSentinelConnection
 			return null;
 		}
 
-		final List<Map<byte[], byte[]>> masterNodes = getSentinelCommands(
+		final List<Map<K, V>> masterNodes = getSentinelCommands(
 				(LettuceSentinelDataSource) dataSource).masters();
 		return parseRedisServer(masterNodes, Role.MASTER);
 	}
@@ -563,9 +565,13 @@ public class LettuceSentinelConnection
 			return null;
 		}
 
+		/*
 		final List<Map<byte[], byte[]>> slaveNodes = getSentinelCommands(
 				(LettuceSentinelDataSource) dataSource).slaves(SafeEncoder.encode(masterName));
 		return parseRedisServer(slaveNodes, Role.SLAVE);
+
+		 */
+		return null;
 	}
 
 	@Override
@@ -578,8 +584,12 @@ public class LettuceSentinelConnection
 			return;
 		}
 
+		/*
 		Objects.requireNonNull(getSentinelCommands((LettuceSentinelDataSource) dataSource))
 				.failover(SafeEncoder.encode(namedNode.getName()));
+
+		 */
+		return;
 	}
 
 	@Override
@@ -593,8 +603,11 @@ public class LettuceSentinelConnection
 			return;
 		}
 
+		/*
 		Objects.requireNonNull(getSentinelCommands((LettuceSentinelDataSource) dataSource))
 				.monitor(SafeEncoder.encode(server.getName()), server.getHost(), server.getPort(), server.getQuorum());
+
+		 */
 	}
 
 	@Override
@@ -631,11 +644,11 @@ public class LettuceSentinelConnection
 	}
 
 	@Override
-	protected RedisCommandsInvocationHandler<byte[], byte[]> createRedisCommandsInvocationHandler() {
+	protected RedisCommandsInvocationHandler<K, V> createRedisCommandsInvocationHandler() {
 		return null;
 	}
 
-	private RedisSentinelCommands<byte[], byte[]> getSentinelCommands(final LettuceSentinelDataSource dataSource) {
+	private RedisSentinelCommands<K, V> getSentinelCommands(final LettuceSentinelDataSource dataSource) {
 		return null;//delegate.sync();
 	}
 
@@ -740,7 +753,7 @@ public class LettuceSentinelConnection
 
 		 */
 
-		return conn == null ? Status.FAILURE : Status.SUCCESS;
+		return client == null ? Status.FAILURE : Status.SUCCESS;
 	}
 
 	@Override
@@ -789,7 +802,7 @@ public class LettuceSentinelConnection
 		}).collect(Collectors.toSet());
 	}
 
-	protected List<RedisServer> parseRedisServer(final List<Map<byte[], byte[]>> nodes, final Role role) {
+	protected List<RedisServer> parseRedisServer(final List<Map<K, V>> nodes, final Role role) {
 		if(nodes == null){
 			return null;
 		}
@@ -799,7 +812,7 @@ public class LettuceSentinelConnection
 			final Properties properties = new Properties();
 
 			node.forEach((key, value)->{
-				sNodes.put(SafeEncoder.encode(key), SafeEncoder.encode(value));
+				//sNodes.put(SafeEncoder.encode(key), SafeEncoder.encode(value));
 			});
 
 			properties.putAll(sNodes);

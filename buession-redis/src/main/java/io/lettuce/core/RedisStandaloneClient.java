@@ -21,10 +21,20 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package io.lettuce.core;/**
- * 
+ */
+package io.lettuce.core;
+
+/**
+ *
+ *
+ * @param <K>
+ * 		Key 类型
+ * @param <V>
+ * 		值类型
  *
  * @author Yong.Teng
  * @since 4.0.0
- */public class RedisClient {
+ */
+public class RedisStandaloneClient<K, V> extends BaseRedisClient<K, V> {
+
 }

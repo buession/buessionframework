@@ -30,36 +30,27 @@ import com.buession.redis.client.connection.datasource.lettuce.LettuceRedisDataS
 import com.buession.redis.core.PoolConfig;
 import com.buession.redis.exception.LettuceRedisExceptionUtils;
 import com.buession.redis.exception.RedisException;
-import com.buession.redis.pipeline.DefaultPipelineProxy;
 import com.buession.redis.pipeline.Pipeline;
-import com.buession.redis.pipeline.lettuce.LettucePipeline;
+import io.lettuce.core.BaseRedisClient;
 import io.lettuce.core.RedisCommandsInvocationHandler;
 import io.lettuce.core.api.PipeliningFlushPolicy;
 import io.lettuce.core.api.PipeliningFlushState;
-import io.lettuce.core.api.StatefulConnection;
-import io.lettuce.core.api.async.RedisAsyncCommands;
-import io.lettuce.core.api.sync.RedisCommands;
 
 import java.io.IOException;
-import java.lang.reflect.Proxy;
 
 /**
  * Lettuce Redis 连接对象抽象类
  *
+ * @param <K>
+ * 		Key 类型
+ * @param <V>
+ * 		值类型
+ *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public abstract class AbstractLettuceRedisConnection<C extends StatefulConnection<byte[], byte[]>>
-		extends AbstractRedisConnection implements LettuceRedisConnection<C> {
-
-	/**
-	 * Redis 连接对象实例 {@link StatefulConnection}
-	 *
-	 * @since 4.0.0
-	 */
-	protected C conn;
-
-	protected RedisCommands<byte[], byte[]> redisCommands;
+public abstract class AbstractLettuceRedisConnection<K, V, C extends BaseRedisClient<K, V>>
+		extends AbstractRedisConnection<C> implements LettuceRedisConnection<K, V, C> {
 
 	private final PipeliningFlushPolicy pipeliningFlushPolicy = PipeliningFlushPolicy.flushEachCommand();
 
@@ -262,23 +253,12 @@ public abstract class AbstractLettuceRedisConnection<C extends StatefulConnectio
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 	}
 
-	/**
-	 * 返回 Redis 连接对象实例 {@link StatefulConnection}
-	 *
-	 * @return Redis 连接对象实例 {@link StatefulConnection}
-	 *
-	 * @since 4.0.0
-	 */
-	@Override
-	public C getConn() {
-		return conn;
-	}
-
+	/*
 	@SuppressWarnings({"unchecked"})
 	@Override
-	public RedisCommands<byte[], byte[]> getRedisCommands() {
+	public RedisCommands<K, V> getRedisCommands() {
 		if(redisCommands == null){
-			redisCommands = (RedisCommands<byte[], byte[]>) Proxy.newProxyInstance(RedisCommands.class.getClassLoader(),
+			redisCommands = (RedisCommands<K, V>) Proxy.newProxyInstance(RedisCommands.class.getClassLoader(),
 					new Class[]{RedisCommands.class}, createRedisCommandsInvocationHandler());
 		}
 
@@ -286,15 +266,17 @@ public abstract class AbstractLettuceRedisConnection<C extends StatefulConnectio
 	}
 
 	@Override
-	public RedisAsyncCommands<byte[], byte[]> getRedisAsyncCommands() {
+	public RedisAsyncCommands<K, V> getRedisAsyncCommands() {
 		return null;
 	}
+
+	 */
 
 	@Override
 	public Pipeline openPipeline() {
 		if(pipeline == null){
 			final PipeliningFlushState flushState = pipeliningFlushPolicy.newPipeline();
-			pipeline = new DefaultPipelineProxy<>(new LettucePipeline(conn, flushState), getRedisAsyncCommands());
+			//pipeline = new DefaultPipelineProxy<>(new LettucePipeline(conn, flushState), getRedisAsyncCommands());
 		}
 
 		return pipeline;
@@ -302,15 +284,15 @@ public abstract class AbstractLettuceRedisConnection<C extends StatefulConnectio
 
 	@Override
 	public boolean isConnected() {
-		return conn != null && conn.isOpen();
+		return false;//conn != null && conn.isOpen();
 	}
 
 	@Override
 	public boolean isClosed() {
-		return conn == null || conn.isOpen() == false;
+		return false;// conn == null || conn.isOpen() == false;
 	}
 
-	protected abstract RedisCommandsInvocationHandler<byte[], byte[]> createRedisCommandsInvocationHandler();
+	protected abstract RedisCommandsInvocationHandler<K, V> createRedisCommandsInvocationHandler();
 
 	@Override
 	protected RedisException executeException(final Exception e) {
@@ -334,9 +316,12 @@ public abstract class AbstractLettuceRedisConnection<C extends StatefulConnectio
 
 		logger.debug("Lettuce close.");
 
+		/*
 		if(conn != null){
 			conn.close();
 		}
+
+		 */
 	}
 
 }

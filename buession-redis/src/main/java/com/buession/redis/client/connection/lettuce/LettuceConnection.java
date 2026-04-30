@@ -31,24 +31,20 @@ import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.RedisStandaloneConnection;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceDataSource;
 import com.buession.redis.core.PoolConfig;
-import com.buession.redis.core.internal.lettuce.LettuceClientConfigBuilder;
-import com.buession.redis.exception.LettuceRedisExceptionUtils;
 import com.buession.redis.exception.RedisConnectionFailureException;
-import com.buession.redis.exception.RedisException;
 import com.buession.redis.transaction.DefaultTransactionProxy;
 import com.buession.redis.transaction.Transaction;
 import com.buession.redis.transaction.lettuce.LettuceTransaction;
-import io.lettuce.core.LettuceClientConfig;
-import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisCommandsInvocationHandler;
 import io.lettuce.core.RedisCredentialsProvider;
+import io.lettuce.core.RedisSentinelClient;
+import io.lettuce.core.RedisStandaloneClient;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.StatefulRedisCommandsHandler;
 import io.lettuce.core.StaticCredentialsProvider;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.api.sync.RedisCommands;
-import io.lettuce.core.codec.ByteArrayCodec;
 import io.lettuce.core.codec.RedisCodec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,10 +55,15 @@ import java.time.Duration;
 /**
  * Lettuce 单机模式连接器
  *
+ * @param <K>
+ * 		Key 类型
+ * @param <V>
+ * 		值类型
+ *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class LettuceConnection extends AbstractLettuceRedisConnection<StatefulRedisConnection<byte[], byte[]>>
+public class LettuceConnection<K, V> extends AbstractLettuceRedisConnection<K, V, RedisStandaloneClient<K, V>>
 		implements RedisStandaloneConnection {
 
 	private final static Logger logger = LoggerFactory.getLogger(LettuceConnection.class);
@@ -263,22 +264,28 @@ public class LettuceConnection extends AbstractLettuceRedisConnection<StatefulRe
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 	}
 
+	/*
 	@Override
-	public RedisCommands<byte[], byte[]> getRedisCommands() {
+	public RedisCommands<K, V> getRedisCommands() {
 		return conn.sync();
 	}
 
 	@Override
-	public RedisAsyncCommands<byte[], byte[]> getRedisAsyncCommands() {
+	public RedisAsyncCommands<K, V> getRedisAsyncCommands() {
 		return conn.async();
 	}
+
+	 */
 
 	@Override
 	public Transaction multi() {
 		if(transaction == null){
+			/*
 			getRedisCommands().multi();
 			transaction = new DefaultTransactionProxy<>(new LettuceTransaction<>(getRedisAsyncCommands()),
 					getRedisAsyncCommands());
+
+			 */
 		}
 
 		return transaction;
@@ -295,8 +302,8 @@ public class LettuceConnection extends AbstractLettuceRedisConnection<StatefulRe
 	}
 
 	@Override
-	protected RedisCommandsInvocationHandler<byte[], byte[]> createRedisCommandsInvocationHandler() {
-		return new StatefulRedisCommandsHandler<>(conn);
+	protected RedisCommandsInvocationHandler<K, V> createRedisCommandsInvocationHandler() {
+		return null;//new StatefulRedisCommandsHandler<>(conn);
 	}
 
 	protected <K, V> StatefulRedisConnection<K, V> createStatefulRedisConnection(final RedisCodec<K, V> codec) {
@@ -373,7 +380,7 @@ public class LettuceConnection extends AbstractLettuceRedisConnection<StatefulRe
 
 		 */
 
-		return conn == null ? Status.FAILURE : Status.SUCCESS;
+		return client == null ? Status.FAILURE : Status.SUCCESS;
 	}
 
 	@Override

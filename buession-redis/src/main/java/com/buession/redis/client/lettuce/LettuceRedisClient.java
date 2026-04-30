@@ -57,7 +57,8 @@ public class LettuceRedisClient extends AbstractRedisClient {
 	 * @since 4.0.0
 	 */
 	public LettuceRedisClient(final ClientOptions clientOptions,
-	                          final LettuceRedisConnection<? extends StatefulConnection<byte[], byte[]>> connection) {
+	                          final LettuceRedisConnection<byte[], byte[],
+									  ? extends StatefulConnection<byte[], byte[]>> connection) {
 		super(clientOptions, connection);
 	}
 
@@ -67,7 +68,8 @@ public class LettuceRedisClient extends AbstractRedisClient {
 	 * @param connection
 	 * 		Lettuce Redis 连接对象 {@link LettuceRedisConnection}
 	 */
-	public LettuceRedisClient(final LettuceRedisConnection<? extends StatefulConnection<byte[], byte[]>> connection) {
+	public LettuceRedisClient(
+			final LettuceRedisConnection<byte[], byte[], ? extends StatefulConnection<byte[], byte[]>> connection) {
 		super(connection);
 	}
 

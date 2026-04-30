@@ -46,9 +46,12 @@ import java.util.List;
 /**
  * Redis 连接对象抽象类
  *
+ * @param <C>
+ * 		原生客户端
+ *
  * @author Yong.Teng
  */
-public abstract class AbstractRedisConnection implements RedisConnection {
+public abstract class AbstractRedisConnection<C> implements RedisConnection {
 
 	/**
 	 * Redis 数据源
@@ -83,6 +86,13 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	 * SSL 配置
 	 */
 	private SslConfiguration sslConfiguration;
+
+	/**
+	 * Jedis 原生客户端
+	 *
+	 * @since 4.0.0
+	 */
+	protected C client;
 
 	private volatile boolean initialized = false;
 
@@ -144,8 +154,7 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	 *
 	 * @since 2.0.0
 	 */
-	public AbstractRedisConnection(DataSource dataSource, int connectTimeout, int soTimeout,
-	                               int infiniteSoTimeout) {
+	public AbstractRedisConnection(DataSource dataSource, int connectTimeout, int soTimeout, int infiniteSoTimeout) {
 		this(dataSource, connectTimeout, soTimeout);
 		this.infiniteSoTimeout = infiniteSoTimeout;
 	}
@@ -197,8 +206,8 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	 *
 	 * @since 2.0.0
 	 */
-	public AbstractRedisConnection(DataSource dataSource, int connectTimeout, int soTimeout,
-	                               int infiniteSoTimeout, SslConfiguration sslConfiguration) {
+	public AbstractRedisConnection(DataSource dataSource, int connectTimeout, int soTimeout, int infiniteSoTimeout,
+	                               SslConfiguration sslConfiguration) {
 		this(dataSource, connectTimeout, soTimeout, sslConfiguration);
 		this.infiniteSoTimeout = infiniteSoTimeout;
 	}
@@ -385,6 +394,10 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	@Override
 	public void setSslConfiguration(SslConfiguration sslConfiguration) {
 		this.sslConfiguration = sslConfiguration;
+	}
+
+	public C getClient() {
+		return client;
 	}
 
 	@Override

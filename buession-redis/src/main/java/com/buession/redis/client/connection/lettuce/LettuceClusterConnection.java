@@ -60,11 +60,16 @@ import java.util.stream.Collectors;
 /**
  * Lettuce 集群模式连接器
  *
+ * @param <K>
+ * 		Key 类型
+ * @param <V>
+ * 		值类型
+ *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class LettuceClusterConnection
-		extends AbstractLettuceRedisConnection<StatefulRedisClusterConnection<byte[], byte[]>>
+public class LettuceClusterConnection<K, V>
+		extends AbstractLettuceRedisConnection<K, V, io.lettuce.core.RedisClusterClient<K, V>>
 		implements RedisClusterConnection {
 
 	/**
@@ -752,8 +757,8 @@ public class LettuceClusterConnection
 	}
 
 	@Override
-	protected RedisCommandsInvocationHandler<byte[], byte[]> createRedisCommandsInvocationHandler() {
-		return new StatefulRedisClusterCommandsHandler<>(conn);
+	protected RedisCommandsInvocationHandler<K, V> createRedisCommandsInvocationHandler() {
+		return null;//new StatefulRedisClusterCommandsHandler<>(conn);
 	}
 
 	protected <K, V> StatefulRedisClusterConnection<K, V> createStatefulRedisClusterConnection(
@@ -857,7 +862,7 @@ public class LettuceClusterConnection
 
 		 */
 
-		return conn == null ? Status.FAILURE : Status.SUCCESS;
+		return client == null ? Status.FAILURE : Status.SUCCESS;
 	}
 
 	@Override

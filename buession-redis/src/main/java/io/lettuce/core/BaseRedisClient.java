@@ -21,10 +21,31 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package io.lettuce.core;/**
- * 
+ */
+package io.lettuce.core;
+
+import io.lettuce.core.api.async.RedisAsyncCommands;
+import io.lettuce.core.api.sync.RedisCommands;
+
+/**
+ *
+ *
+ * @param <K>
+ * 		Key 类型
+ * @param <V>
+ * 		值类型
  *
  * @author Yong.Teng
  * @since 4.0.0
- */public class BaseRedisClient {
+ */
+public abstract class BaseRedisClient<K, V> {
+
+	public RedisCommands<K, V> getRedisCommands() {
+		return null;
+	}
+
+	public RedisAsyncCommands<K, V> getRedisAsyncCommands() {
+		return null;
+	}
+
 }

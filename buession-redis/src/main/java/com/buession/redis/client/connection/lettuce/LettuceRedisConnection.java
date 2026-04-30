@@ -25,32 +25,30 @@
 package com.buession.redis.client.connection.lettuce;
 
 import com.buession.redis.client.connection.RedisConnection;
-import io.lettuce.core.api.StatefulConnection;
-import io.lettuce.core.api.async.RedisAsyncCommands;
-import io.lettuce.core.api.sync.RedisCommands;
+import io.lettuce.core.BaseRedisClient;
 
 /**
  * Lettuce Redis 连接对象
  *
+ * @param <K>
+ * 		Key 类型
+ * @param <V>
+ * 		值类型
  * @param <C>
- *        {@link StatefulConnection} 类型
+ *        {@link BaseRedisClient} 类型
  *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public interface LettuceRedisConnection<C extends StatefulConnection<byte[], byte[]>> extends RedisConnection {
+public interface LettuceRedisConnection<K, V, C extends BaseRedisClient<K, V>> extends RedisConnection {
 
 	/**
-	 * 返回 Redis 连接对象实例 {@link StatefulConnection}
+	 * 返回 Lettuce 原生客户端
 	 *
-	 * @return Redis 连接对象实例 {@link StatefulConnection}
+	 * @return Lettuce 原生客户端
 	 *
 	 * @since 4.0.0
 	 */
-	C getConn();
-
-	RedisCommands<byte[], byte[]> getRedisCommands();
-
-	RedisAsyncCommands<byte[], byte[]> getRedisAsyncCommands();
+	C getClient();
 
 }

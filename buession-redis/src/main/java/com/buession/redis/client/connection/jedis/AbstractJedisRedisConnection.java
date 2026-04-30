@@ -54,17 +54,10 @@ import java.io.IOException;
  *
  * @author Yong.Teng
  */
-public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> extends AbstractRedisConnection
+public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> extends AbstractRedisConnection<C>
 		implements JedisRedisConnection<C> {
 
 	private ConnectionProvider connectionProvider;
-
-	/**
-	 * Jedis 原生客户端
-	 *
-	 * @since 4.0.0
-	 */
-	protected C client;
 
 	/**
 	 * 缓存配置
@@ -298,11 +291,6 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 	@Override
 	public void setCacheConfig(CacheConfig cacheConfig) {
 		this.cacheConfig = cacheConfig;
-	}
-
-	@Override
-	public C getClient() {
-		return client;
 	}
 
 	@Override

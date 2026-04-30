@@ -44,18 +44,23 @@ import java.util.concurrent.TimeUnit;
 /**
  * Lettuce 管道
  *
+ * @param <K>
+ * 		Key 类型
+ * @param <V>
+ * 		值类型
+ *
  * @author Yong.Teng
  * @since 3.0.0
  */
-public final class LettucePipeline implements Pipeline {
+public final class LettucePipeline<K, V> implements Pipeline {
 
 	private final PipeliningFlushState flushState;
 
-	private final StatefulConnection<byte[], byte[]> connection;
+	private final StatefulConnection<K, V> connection;
 
 	private Queue<LettuceResult<?, ?>> ppline = new LinkedList<>();
 
-	public LettucePipeline(final StatefulConnection<byte[], byte[]> connection, final PipeliningFlushState flushState) {
+	public LettucePipeline(final StatefulConnection<K, V> connection, final PipeliningFlushState flushState) {
 		Assert.isNull(connection, "Redis Pipeline cloud not be null.");
 		Assert.isNull(flushState, "Redis Pipeline cloud not be null.");
 		this.connection = connection;
@@ -63,7 +68,7 @@ public final class LettucePipeline implements Pipeline {
 		this.flushState.onOpen(connection);
 	}
 
-	public LettucePipeline(final StatefulConnection<byte[], byte[]> connection, final PipeliningFlushState flushState,
+	public LettucePipeline(final StatefulConnection<K, V> connection, final PipeliningFlushState flushState,
 	                       final Queue<LettuceResult<?, ?>> ppline) {
 		this(connection, flushState);
 		if(ppline != null){
