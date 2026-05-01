@@ -25,6 +25,8 @@
 package com.buession.redis.client.connection.datasource.lettuce;
 
 import com.buession.redis.client.connection.datasource.DataSource;
+import io.lettuce.core.ClientOptions;
+import io.lettuce.core.resource.ClientResources;
 
 /**
  * Lettuce 数据源
@@ -33,5 +35,35 @@ import com.buession.redis.client.connection.datasource.DataSource;
  * @since 3.0.0
  */
 public interface LettuceRedisDataSource extends DataSource {
+
+	/**
+	 * 获取 Lettuce 客户端资源
+	 *
+	 * @return Lettuce 客户端资源
+	 */
+	ClientResources getClientResources();
+
+	/**
+	 * 设置 Lettuce 客户端资源
+	 *
+	 * @param clientResources
+	 * 		Lettuce 客户端资源
+	 */
+	void setClientResources(ClientResources clientResources);
+
+	/**
+	 * 获取 Lettuce 客户端选项
+	 *
+	 * @return Lettuce 客户端选项
+	 */
+	ClientOptions getClientOptions();
+
+	/**
+	 * 获取 Lettuce 客户端选项
+	 *
+	 * @param clientOptions
+	 * 		Lettuce 客户端选项
+	 */
+	void setClientOptions(ClientOptions clientOptions);
 
 }

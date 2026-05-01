@@ -24,15 +24,15 @@
  */
 package com.buession.redis.jedis;
 
-import com.buession.core.builder.ListBuilder;
+import com.buession.core.builder.SetBuilder;
 import com.buession.redis.RedisTemplate;
+import com.buession.redis.client.connection.RedisNode;
 import com.buession.redis.client.connection.datasource.jedis.JedisClusterDataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
 import com.buession.redis.core.Options;
 import com.buession.redis.core.PoolConfig;
-import com.buession.redis.core.RedisNode;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author Yong.Teng
@@ -53,7 +53,7 @@ public abstract class AbstractJedisRedisTest {
 
 	protected JedisClusterDataSource clusterDataSource() {
 		JedisClusterDataSource dataSource = new JedisClusterDataSource();
-		List<RedisNode> redisNodes = ListBuilder.<RedisNode>create()
+		Set<RedisNode> redisNodes = SetBuilder.<RedisNode>create()
 				.add(new RedisNode("192.168.0.231", 6371))
 				.add(new RedisNode("192.168.0.231", 6372))
 				.add(new RedisNode("192.168.0.231", 6373))

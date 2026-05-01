@@ -24,11 +24,9 @@
  */
 package io.lettuce.core.builders;
 
-import com.buession.core.validator.Validate;
 import com.buession.redis.core.RedisNode;
 import io.lettuce.core.internal.HostAndPort;
 import io.lettuce.core.providers.ConnectionProvider;
-import io.lettuce.core.providers.PooledConnectionProvider;
 
 /**
  * Builder for creating RedisClient instances (standalone Redis connections).
@@ -46,9 +44,8 @@ import io.lettuce.core.providers.PooledConnectionProvider;
 public abstract class StandaloneClientBuilder<K, V, C>
 		extends AbstractClientBuilder<K, V, StandaloneClientBuilder<K, V, C>, C> {
 
-	private String host = RedisNode.DEFAULT_HOST;
 
-	private int port = RedisNode.DEFAULT_PORT;
+	private HostAndPort hostAndPort = HostAndPort.of(RedisNode.DEFAULT_HOST, RedisNode.DEFAULT_PORT);
 
 	protected StandaloneClientBuilder() {
 
@@ -65,8 +62,7 @@ public abstract class StandaloneClientBuilder<K, V, C>
 	 * @return this builder
 	 */
 	public StandaloneClientBuilder<K, V, C> hostAndPort(String host, int port) {
-		this.host = host;
-		this.port = port;
+		this.hostAndPort = HostAndPort.of(host, port);
 		return this;
 	}
 
@@ -79,7 +75,8 @@ public abstract class StandaloneClientBuilder<K, V, C>
 	 * @return this builder
 	 */
 	public StandaloneClientBuilder<K, V, C> hostAndPort(HostAndPort hostAndPort) {
-		return hostAndPort(hostAndPort.getHostText(), hostAndPort.getPort());
+		this.hostAndPort = hostAndPort;
+		return this;
 	}
 
 	@Override
@@ -126,14 +123,10 @@ public abstract class StandaloneClientBuilder<K, V, C>
 
 	@Override
 	protected void validateSpecificConfiguration() {
-		//validateCommonConfiguration();
+		validateCommonConfiguration();
 
-		if(host == null){
+		if(hostAndPort == null){
 			throw new IllegalArgumentException("Either URI or host/port must be specified");
-		}
-
-		if(Validate.isPort(port) == false){
-			throw new IllegalArgumentException("Port out of range: " + port);
 		}
 	}
 

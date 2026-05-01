@@ -37,6 +37,7 @@ import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.transaction.Transaction;
 import redis.clients.jedis.DefaultJedisClientConfig;
 import redis.clients.jedis.HostAndPort;
+import redis.clients.jedis.JedisClientConfig;
 import redis.clients.jedis.RedisClusterClient;
 import redis.clients.jedis.builders.ClusterClientBuilder;
 
@@ -767,9 +768,9 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection<RedisCl
 
 		if(client == null){
 			final JedisClusterDataSource dataSource = (JedisClusterDataSource) getDataSource();
-			final DefaultJedisClientConfig clientConfig = JedisClientConfigBuilder.create(dataSource,
-							getSslConfiguration()).connectTimeout(getConnectTimeout()).socketTimeout(getSoTimeout())
-					.infiniteSoTimeout(getInfiniteSoTimeout()).build();
+			final JedisClientConfig clientConfig = JedisClientConfigBuilder.
+					create(dataSource, getSslConfiguration()).connectTimeout(getConnectTimeout())
+					.socketTimeout(getSoTimeout()).infiniteSoTimeout(getInfiniteSoTimeout()).build();
 
 			final ClusterClientBuilder<RedisClusterClient> builder = RedisClusterClient.builder()
 					.nodes(createNodes(dataSource)).clientConfig(clientConfig);

@@ -24,11 +24,11 @@
  */
 package com.buession.redis.client.connection.datasource.lettuce;
 
+import com.buession.redis.client.connection.RedisNode;
 import com.buession.redis.client.connection.datasource.ClusterDataSource;
-import com.buession.redis.core.RedisNode;
 
 import java.time.Duration;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Lettuce 集群模式数据源
@@ -41,12 +41,12 @@ public class LettuceClusterDataSource extends AbstractLettuceDataSource implemen
 	/**
 	 * 集群主机节点
 	 */
-	private List<RedisNode> nodes;
+	private Set<RedisNode> nodes;
 
 	/**
 	 * 最大重定向次数
 	 */
-	private int maxRedirects = 5;
+	private int maxRedirects = DEFAULT_MAX_ATTEMPTS;
 
 	/**
 	 * 最大重数时长
@@ -61,12 +61,12 @@ public class LettuceClusterDataSource extends AbstractLettuceDataSource implemen
 	private Duration topologyRefreshPeriod = Duration.ofMillis(3000);
 
 	@Override
-	public List<RedisNode> getNodes() {
+	public Set<RedisNode> getNodes() {
 		return nodes;
 	}
 
 	@Override
-	public void setNodes(List<RedisNode> nodes) {
+	public void setNodes(Set<RedisNode> nodes) {
 		this.nodes = nodes;
 	}
 

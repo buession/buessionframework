@@ -24,10 +24,10 @@
  */
 package com.buession.redis.client.connection.datasource;
 
-import com.buession.redis.core.RedisNode;
+import com.buession.redis.client.connection.RedisNode;
 
 import java.time.Duration;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Redis 集群（Cluster）模式数据源
@@ -36,12 +36,14 @@ import java.util.List;
  */
 public interface ClusterDataSource extends DataSource {
 
+	int DEFAULT_MAX_ATTEMPTS = 5;
+
 	/**
 	 * 获取集群主机节点
 	 *
 	 * @return 集群主机节点
 	 */
-	List<RedisNode> getNodes();
+	Set<RedisNode> getNodes();
 
 	/**
 	 * 设置集群主机节点
@@ -49,7 +51,7 @@ public interface ClusterDataSource extends DataSource {
 	 * @param nodes
 	 * 		集群主机节点
 	 */
-	void setNodes(List<RedisNode> nodes);
+	void setNodes(Set<RedisNode> nodes);
 
 	/**
 	 * 返回最大重定向次数

@@ -21,10 +21,29 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.client.connection;/**
- * 
+ */
+package com.buession.redis.client.connection;
+
+/**
+ *
  *
  * @author Yong.Teng
  * @since 4.0.0
- */public class SentinelRedisNode {
+ */
+public class SentinelRedisNode extends RedisNode {
+
+	private final static long serialVersionUID = -1057414498111465489L;
+
+	public SentinelRedisNode() {
+		super(com.buession.redis.core.RedisNode.DEFAULT_HOST, com.buession.redis.core.RedisNode.DEFAULT_SENTINEL_PORT);
+	}
+
+	public SentinelRedisNode(String host) {
+		super(host, com.buession.redis.core.RedisNode.DEFAULT_SENTINEL_PORT);
+	}
+
+	public SentinelRedisNode(String host, int port) {
+		super(host, port);
+	}
+
 }

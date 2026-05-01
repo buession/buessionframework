@@ -31,16 +31,17 @@ import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.RedisStandaloneConnection;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceDataSource;
 import com.buession.redis.core.PoolConfig;
+import com.buession.redis.core.internal.lettuce.LettuceClientConfigBuilder;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.transaction.DefaultTransactionProxy;
 import com.buession.redis.transaction.Transaction;
 import com.buession.redis.transaction.lettuce.LettuceTransaction;
+import io.lettuce.core.LettuceClientConfig;
 import io.lettuce.core.RedisCommandsInvocationHandler;
 import io.lettuce.core.RedisCredentialsProvider;
 import io.lettuce.core.RedisSentinelClient;
 import io.lettuce.core.RedisStandaloneClient;
 import io.lettuce.core.RedisURI;
-import io.lettuce.core.StatefulRedisCommandsHandler;
 import io.lettuce.core.StaticCredentialsProvider;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.async.RedisAsyncCommands;
@@ -301,11 +302,6 @@ public class LettuceConnection<K, V> extends AbstractLettuceRedisConnection<K, V
 		 */
 	}
 
-	@Override
-	protected RedisCommandsInvocationHandler<K, V> createRedisCommandsInvocationHandler() {
-		return null;//new StatefulRedisCommandsHandler<>(conn);
-	}
-
 	protected <K, V> StatefulRedisConnection<K, V> createStatefulRedisConnection(final RedisCodec<K, V> codec) {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
 		final LettuceDataSource dataSource = (LettuceDataSource) getDataSource();
@@ -359,6 +355,13 @@ public class LettuceConnection<K, V> extends AbstractLettuceRedisConnection<K, V
 			return Status.SUCCESS;
 		}
 
+		if(client == null){
+			final LettuceDataSource dataSource = (LettuceDataSource) getDataSource();
+			final LettuceClientConfig clientConfig = LettuceClientConfigBuilder
+					.create(dataSource, getSslConfiguration()).connectTimeout(getConnectTimeout())
+					.socketTimeout(getSoTimeout()).infiniteSoTimeout(getInfiniteSoTimeout())
+					.database(dataSource.getDatabase()).build();
+		}
 		/*
 		if(pool != null){
 			try{

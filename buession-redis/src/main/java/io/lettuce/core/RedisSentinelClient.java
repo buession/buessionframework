@@ -36,4 +36,13 @@ package io.lettuce.core;
  */
 public class RedisSentinelClient<K, V> extends BaseRedisClient<K, V> {
 
+	private RedisSentinelClient() {
+
+	}
+
+	@Override
+	protected RedisCommandsInvocationHandler<K, V> createRedisCommandsInvocationHandler() {
+		return null;
+	}
+
 }

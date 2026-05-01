@@ -21,10 +21,31 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.client.connection;/**
- * 
+ */
+package com.buession.redis.client.connection;
+
+import com.buession.net.HostAndPort;
+
+/**
+ *
  *
  * @author Yong.Teng
  * @since 4.0.0
- */public class RedisNode {
+ */
+public class RedisNode extends HostAndPort {
+
+	private final static long serialVersionUID = 5460272093066382186L;
+
+	public RedisNode() {
+		super(com.buession.redis.core.RedisNode.DEFAULT_HOST, com.buession.redis.core.RedisNode.DEFAULT_PORT);
+	}
+
+	public RedisNode(String host) {
+		super(host, com.buession.redis.core.RedisNode.DEFAULT_PORT);
+	}
+
+	public RedisNode(String host, int port) {
+		super(host, port);
+	}
+
 }

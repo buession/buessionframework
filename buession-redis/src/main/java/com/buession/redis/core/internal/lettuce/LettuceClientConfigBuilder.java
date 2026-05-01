@@ -19,16 +19,17 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2025 Buession.com Inc.														       |
+ * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.internal.lettuce;
 
 import com.buession.core.converter.mapper.PropertyMapper;
-import com.buession.core.validator.Validate;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceRedisDataSource;
+import io.lettuce.core.ClientOptions;
 import io.lettuce.core.DefaultLettuceClientConfig;
+import io.lettuce.core.resource.ClientResources;
 
 /**
  * Lettuce 客户端配置构建器
@@ -40,20 +41,19 @@ public class LettuceClientConfigBuilder {
 
 	private final DefaultLettuceClientConfig.Builder builder = DefaultLettuceClientConfig.builder();
 
-	private final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
+	private final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
 
 	private LettuceClientConfigBuilder(final LettuceRedisDataSource dataSource,
-									   final SslConfiguration sslConfiguration) {
+	                                   final SslConfiguration sslConfiguration) {
 		builder.connectionTimeoutMillis(dataSource.getConnectTimeout())
 				.socketTimeoutMillis(dataSource.getSoTimeout())
 				.ssl(sslConfiguration != null);
 
+		propertyMapper.from(dataSource.getClientResources()).to(builder::clientResources);
+		propertyMapper.from(dataSource.getClientOptions()).to(builder::clientOptions);
 		propertyMapper.from(dataSource.getClientName()).to(builder::clientName);
-
-		if(Validate.hasText(dataSource.getPassword())){
-			propertyMapper.from(dataSource.getUsername()).to(builder::user);
-			builder.password(dataSource.getPassword());
-		}
+		propertyMapper.from(dataSource.getUsername()).to(builder::user);
+		propertyMapper.from(dataSource.getPassword()).to(builder::password);
 
 		if(sslConfiguration != null){
 			builder.sslSocketFactory(sslConfiguration.getSslSocketFactory())
@@ -63,8 +63,18 @@ public class LettuceClientConfigBuilder {
 	}
 
 	public static LettuceClientConfigBuilder create(final LettuceRedisDataSource dataSource,
-													final SslConfiguration sslConfiguration) {
+	                                                final SslConfiguration sslConfiguration) {
 		return new LettuceClientConfigBuilder(dataSource, sslConfiguration);
+	}
+
+	public LettuceClientConfigBuilder clientResources(ClientResources clientResources) {
+		builder.clientResources(clientResources);
+		return this;
+	}
+
+	public LettuceClientConfigBuilder clientOptions(ClientOptions clientOptions) {
+		builder.clientOptions(clientOptions);
+		return this;
 	}
 
 	public LettuceClientConfigBuilder user(final String user) {

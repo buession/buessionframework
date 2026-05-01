@@ -36,4 +36,24 @@ package io.lettuce.core;
  */
 public class RedisClusterClient<K, V> extends BaseRedisClient<K, V> {
 
+	private RedisClusterClient() {
+
+	}
+
+	@Override
+	protected RedisCommandsInvocationHandler<K, V> createRedisCommandsInvocationHandler() {
+		return new StatefulRedisClusterCommandsHandler<>(null);
+	}
+
+	/*
+	public RedisCommands<K, V> getRedisCommands() {
+		return connection.sync();
+	}
+
+	public RedisAsyncCommands<K, V> getRedisAsyncCommands() {
+		return connection.async();
+	}
+
+	 */
+
 }

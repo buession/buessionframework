@@ -24,15 +24,15 @@
  */
 package com.buession.redis.lettuce;
 
-import com.buession.core.builder.ListBuilder;
+import com.buession.core.builder.SetBuilder;
 import com.buession.redis.RedisTemplate;
+import com.buession.redis.client.connection.RedisNode;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceClusterDataSource;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceDataSource;
 import com.buession.redis.core.Options;
 import com.buession.redis.core.PoolConfig;
-import com.buession.redis.core.RedisNode;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author Yong.Teng
@@ -53,7 +53,7 @@ public abstract class AbstractLettuceRedisTest {
 
 	protected LettuceClusterDataSource clusterDataSource() {
 		LettuceClusterDataSource dataSource = new LettuceClusterDataSource();
-		List<RedisNode> redisNodes = ListBuilder.<RedisNode>create()
+		Set<RedisNode> redisNodes = SetBuilder.<RedisNode>create()
 				//.add(new RedisNode("192.168.0.162", 30943))
 				.add(new RedisNode("192.168.0.231", 6371))
 				.add(new RedisNode("192.168.0.231", 6372))

@@ -24,7 +24,9 @@
  */
 package io.lettuce.core;
 
+import com.buession.core.validator.Validate;
 import com.buession.redis.core.RedisNode;
+import io.lettuce.core.resource.ClientResources;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLParameters;
@@ -39,13 +41,15 @@ import java.time.Duration;
  */
 public class DefaultLettuceClientConfig implements LettuceClientConfig {
 
+	private ClientResources clientResources = ClientResources.create();
+
+	private ClientOptions clientOptions = ClientOptions.create();
+
 	private Duration connectionTimeout = Duration.ofMillis(RedisURI.DEFAULT_TIMEOUT);
 
 	private Duration socketTimeout = connectionTimeout;
 
-	private String user;
-
-	private String password;
+	private RedisCredentialsProvider.ImmediateRedisCredentialsProvider credentialsProvider;
 
 	private int database = RedisNode.DEFAULT_DATABASE;
 
@@ -63,21 +67,14 @@ public class DefaultLettuceClientConfig implements LettuceClientConfig {
 
 	}
 
-	private DefaultLettuceClientConfig(final Duration connectionTimeout, final Duration socketTimeout,
-	                                   final String user, final String password, final int database,
-	                                   final String clientName, final boolean isSsl,
-	                                   final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
-	                                   final HostnameVerifier hostnameVerifier) {
-		this.connectionTimeout = connectionTimeout;
-		this.socketTimeout = socketTimeout;
-		this.user = user;
-		this.password = password;
-		this.database = database;
-		this.clientName = clientName;
-		this.isSsl = isSsl;
-		this.sslSocketFactory = sslSocketFactory;
-		this.sslParameters = sslParameters;
-		this.hostnameVerifier = hostnameVerifier;
+	@Override
+	public ClientResources getClientResources() {
+		return clientResources;
+	}
+
+	@Override
+	public ClientOptions getClientOptions() {
+		return clientOptions;
 	}
 
 	@Override
@@ -92,12 +89,17 @@ public class DefaultLettuceClientConfig implements LettuceClientConfig {
 
 	@Override
 	public String getUser() {
-		return user;
+		return credentialsProvider == null ? null : credentialsProvider.resolveCredentialsNow().getUsername();
 	}
 
 	@Override
 	public String getPassword() {
-		return password;
+		return credentialsProvider == null ? null : new String(
+				credentialsProvider.resolveCredentialsNow().getPassword());
+	}
+
+	public RedisCredentialsProvider getCredentialsProvider() {
+		return credentialsProvider;
 	}
 
 	@Override
@@ -138,7 +140,21 @@ public class DefaultLettuceClientConfig implements LettuceClientConfig {
 
 		private final DefaultLettuceClientConfig lettuceClientConfig = new DefaultLettuceClientConfig();
 
+		private String user;
+
+		private String password;
+
 		private Builder() {
+		}
+
+		public Builder clientResources(final ClientResources clientResources) {
+			lettuceClientConfig.clientResources = clientResources;
+			return this;
+		}
+
+		public Builder clientOptions(final ClientOptions clientOptions) {
+			lettuceClientConfig.clientOptions = clientOptions;
+			return this;
 		}
 
 		public Builder timeout(final Duration timeout) {
@@ -170,18 +186,29 @@ public class DefaultLettuceClientConfig implements LettuceClientConfig {
 		}
 
 		public Builder user(final String user) {
-			lettuceClientConfig.user = user;
+			this.user = user;
 			return this;
 		}
 
 		public Builder password(final String password) {
-			lettuceClientConfig.password = password;
+			this.password = password;
 			return this;
 		}
 
 		public Builder credentials(final String user, final String password) {
-			lettuceClientConfig.user = user;
-			lettuceClientConfig.password = password;
+			this.user = user;
+			this.password = password;
+			return this;
+		}
+
+		public Builder credentials(final RedisCredentials redisCredentials) {
+			lettuceClientConfig.credentialsProvider = new StaticCredentialsProvider(redisCredentials);
+			return this;
+		}
+
+		public Builder credentials(
+				final RedisCredentialsProvider.ImmediateRedisCredentialsProvider credentialsProvider) {
+			lettuceClientConfig.credentialsProvider = credentialsProvider;
 			return this;
 		}
 
@@ -216,28 +243,14 @@ public class DefaultLettuceClientConfig implements LettuceClientConfig {
 		}
 
 		public DefaultLettuceClientConfig build() {
+			if(lettuceClientConfig.credentialsProvider == null){
+				if(Validate.hasText(password)){
+					lettuceClientConfig.credentialsProvider =
+							new StaticCredentialsProvider(RedisCredentials.just(user, password));
+				}
+			}
+
 			return lettuceClientConfig;
-		}
-
-		public static LettuceClientConfig create(final int connectionTimeoutMillis, final int soTimeoutMillis,
-		                                         final String user, final String password, final int database,
-		                                         final String clientName, final boolean isSsl,
-		                                         final SSLSocketFactory sslSocketFactory,
-		                                         final SSLParameters sslParameters,
-		                                         final HostnameVerifier hostnameVerifier) {
-			return new DefaultLettuceClientConfig(Duration.ofMillis(connectionTimeoutMillis),
-					Duration.ofMillis(soTimeoutMillis), user, password, database, clientName, isSsl, sslSocketFactory,
-					sslParameters, hostnameVerifier);
-		}
-
-		public static LettuceClientConfig create(final Duration connectionTimeout, final Duration soTimeoutMillis,
-		                                         final String user, final String password, final int database,
-		                                         final String clientName, final boolean isSsl,
-		                                         final SSLSocketFactory sslSocketFactory,
-		                                         final SSLParameters sslParameters,
-		                                         final HostnameVerifier hostnameVerifier) {
-			return new DefaultLettuceClientConfig(connectionTimeout, soTimeoutMillis, user, password, database,
-					clientName, isSsl, sslSocketFactory, sslParameters, hostnameVerifier);
 		}
 
 	}

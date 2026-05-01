@@ -24,15 +24,13 @@
  */
 package io.lettuce.core.builders;
 
-import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.core.validator.Validate;
-import com.buession.redis.client.connection.datasource.lettuce.LettuceClusterDataSource;
+import com.buession.redis.client.connection.datasource.ClusterDataSource;
 import io.lettuce.core.internal.HostAndPort;
 import io.lettuce.core.providers.ConnectionProvider;
 
 import java.time.Duration;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Builder for creating RedisClient instances (cluster Redis connections).
@@ -45,7 +43,7 @@ public abstract class ClusterClientBuilder<K, V, C>
 
 	private Set<HostAndPort> nodes = null;
 
-	private int maxAttempts = 5;
+	private int maxAttempts = ClusterDataSource.DEFAULT_MAX_ATTEMPTS;
 
 	private Duration maxTotalRetriesDuration;
 
@@ -164,7 +162,23 @@ public abstract class ClusterClientBuilder<K, V, C>
 
 	@Override
 	protected void validateSpecificConfiguration() {
+		validateCommonConfiguration();
 
+		if(Validate.isEmpty(nodes)){
+			throw new IllegalArgumentException("At least one cluster node must be specified for cluster mode");
+		}
+
+		if(maxAttempts <= 0){
+			throw new IllegalArgumentException("Max attempts must be positive for cluster mode");
+		}
+
+		if(maxTotalRetriesDuration != null && maxTotalRetriesDuration.isNegative()){
+			throw new IllegalArgumentException("Max total retries duration cannot be negative for cluster mode");
+		}
+
+		if(topologyRefreshPeriod != null && topologyRefreshPeriod.isNegative()){
+			throw new IllegalArgumentException("Topology refresh period cannot be negative for cluster mode");
+		}
 	}
 
 	/*
@@ -189,7 +203,7 @@ public abstract class ClusterClientBuilder<K, V, C>
 			return redisURI;
 		}).collect(Collectors.toSet());
 	}
-	
+
 	 */
 
 }

@@ -41,7 +41,6 @@ import io.lettuce.core.LettuceClientConfig;
 import io.lettuce.core.RedisCommandsInvocationHandler;
 import io.lettuce.core.RedisCredentialsProvider;
 import io.lettuce.core.RedisURI;
-import io.lettuce.core.StatefulRedisClusterCommandsHandler;
 import io.lettuce.core.StaticCredentialsProvider;
 import io.lettuce.core.cluster.ClusterClientOptions;
 import io.lettuce.core.cluster.ClusterTopologyRefreshOptions;
@@ -756,11 +755,6 @@ public class LettuceClusterConnection<K, V>
 		 */
 	}
 
-	@Override
-	protected RedisCommandsInvocationHandler<K, V> createRedisCommandsInvocationHandler() {
-		return null;//new StatefulRedisClusterCommandsHandler<>(conn);
-	}
-
 	protected <K, V> StatefulRedisClusterConnection<K, V> createStatefulRedisClusterConnection(
 			final RedisCodec<K, V> codec) {
 		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
@@ -812,7 +806,6 @@ public class LettuceClusterConnection<K, V>
 
 	/*
 	protected LettuceClusterPool createPool() {
-		final LettuceClusterDataSource dataSource = (LettuceClusterDataSource) getDataSource();
 		final LettucePoolConfig<byte[], byte[], StatefulRedisClusterConnection<byte[], byte[]>> lettucePoolConfig = new LettucePoolConfig<>();
 		final LettuceClientConfig clientConfig = LettuceClientConfigBuilder.create(dataSource, getSslConfiguration())
 				.connectTimeout(getConnectTimeout())
@@ -838,6 +831,15 @@ public class LettuceClusterConnection<K, V>
 	protected Status doConnect() throws RedisConnectionFailureException {
 		if(isConnected()){
 			return Status.SUCCESS;
+		}
+
+		if(client == null){
+			final LettuceClusterDataSource dataSource = (LettuceClusterDataSource) getDataSource();
+			final LettuceClientConfig clientConfig = LettuceClientConfigBuilder
+					.create(dataSource, getSslConfiguration()).connectTimeout(getConnectTimeout())
+					.socketTimeout(getSoTimeout()).infiniteSoTimeout(getInfiniteSoTimeout())
+					.build();
+
 		}
 
 		/*

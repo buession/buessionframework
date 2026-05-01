@@ -37,4 +37,13 @@ package io.lettuce.core;
  */
 public class RedisStandaloneClient<K, V> extends BaseRedisClient<K, V> {
 
+	private RedisStandaloneClient() {
+
+	}
+
+	@Override
+	protected RedisCommandsInvocationHandler<K, V> createRedisCommandsInvocationHandler() {
+		return new StatefulRedisCommandsHandler<>(null);
+	}
+
 }

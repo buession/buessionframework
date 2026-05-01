@@ -643,11 +643,6 @@ public class LettuceSentinelConnection<K, V>
 		 */
 	}
 
-	@Override
-	protected RedisCommandsInvocationHandler<K, V> createRedisCommandsInvocationHandler() {
-		return null;
-	}
-
 	private RedisSentinelCommands<K, V> getSentinelCommands(final LettuceSentinelDataSource dataSource) {
 		return null;//delegate.sync();
 	}
@@ -700,7 +695,6 @@ public class LettuceSentinelConnection<K, V>
 
 	/*
 	protected LettuceSentinelPool createPool() {
-		final LettuceSentinelDataSource dataSource = (LettuceSentinelDataSource) getDataSource();
 		final LettucePoolConfig<byte[], byte[], StatefulRedisSentinelConnection<byte[], byte[]>> lettucePoolConfig = new LettucePoolConfig<>();
 		final Set<HostAndPort> sentinels = createSentinelHosts(dataSource.getSentinels());
 		final LettuceClientConfig clientConfig = LettuceClientConfigBuilder.create(dataSource, getSslConfiguration())
@@ -731,6 +725,14 @@ public class LettuceSentinelConnection<K, V>
 			return Status.SUCCESS;
 		}
 
+		if(client == null){
+			final LettuceSentinelDataSource dataSource = (LettuceSentinelDataSource) getDataSource();
+			final LettuceClientConfig clientConfig = LettuceClientConfigBuilder
+					.create(dataSource, getSslConfiguration()).connectTimeout(getConnectTimeout())
+					.socketTimeout(getSoTimeout()).infiniteSoTimeout(getInfiniteSoTimeout())
+					.database(dataSource.getDatabase()).build();
+
+		}
 		/*
 		if(pool != null){
 			try{

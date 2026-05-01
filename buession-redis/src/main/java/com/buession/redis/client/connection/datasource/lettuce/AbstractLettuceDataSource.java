@@ -25,6 +25,8 @@
 package com.buession.redis.client.connection.datasource.lettuce;
 
 import com.buession.redis.client.connection.datasource.AbstractDataSource;
+import io.lettuce.core.ClientOptions;
+import io.lettuce.core.resource.ClientResources;
 
 /**
  * Lettuce 数据源抽象类
@@ -33,5 +35,29 @@ import com.buession.redis.client.connection.datasource.AbstractDataSource;
  * @since 3.0.0
  */
 public abstract class AbstractLettuceDataSource extends AbstractDataSource implements LettuceRedisDataSource {
+
+	private ClientResources clientResources = ClientResources.create();
+
+	private ClientOptions clientOptions = ClientOptions.create();
+
+	@Override
+	public ClientResources getClientResources() {
+		return clientResources;
+	}
+
+	@Override
+	public void setClientResources(ClientResources clientResources) {
+		this.clientResources = clientResources;
+	}
+
+	@Override
+	public ClientOptions getClientOptions() {
+		return clientOptions;
+	}
+
+	@Override
+	public void setClientOptions(ClientOptions clientOptions) {
+		this.clientOptions = clientOptions;
+	}
 
 }

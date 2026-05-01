@@ -24,12 +24,12 @@
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
+import com.buession.redis.client.connection.RedisNode;
 import com.buession.redis.client.connection.datasource.ClusterDataSource;
-import com.buession.redis.core.RedisNode;
 import redis.clients.jedis.RedisClusterClient;
 
 import java.time.Duration;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Jedis 集群模式数据源
@@ -42,12 +42,12 @@ public class JedisClusterDataSource extends AbstractJedisDataSource implements C
 	/**
 	 * 集群主机节点
 	 */
-	private List<RedisNode> nodes;
+	private Set<RedisNode> nodes;
 
 	/**
 	 * 最大重定向次数
 	 */
-	private int maxRedirects = RedisClusterClient.DEFAULT_MAX_ATTEMPTS;
+	private int maxRedirects = DEFAULT_MAX_ATTEMPTS;
 
 	/**
 	 * 最大重数时长
@@ -62,12 +62,12 @@ public class JedisClusterDataSource extends AbstractJedisDataSource implements C
 	private Duration topologyRefreshPeriod = Duration.ofMillis(RedisClusterClient.DEFAULT_TIMEOUT);
 
 	@Override
-	public List<RedisNode> getNodes() {
+	public Set<RedisNode> getNodes() {
 		return nodes;
 	}
 
 	@Override
-	public void setNodes(List<RedisNode> nodes) {
+	public void setNodes(Set<RedisNode> nodes) {
 		this.nodes = nodes;
 	}
 

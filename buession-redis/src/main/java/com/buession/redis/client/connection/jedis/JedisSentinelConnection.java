@@ -635,10 +635,10 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection<RedisS
 
 		if(client == null){
 			final JedisSentinelDataSource dataSource = (JedisSentinelDataSource) getDataSource();
-			final DefaultJedisClientConfig clientConfig = JedisClientConfigBuilder.create(dataSource,
-							getSslConfiguration())
-					.connectTimeout(getConnectTimeout()).socketTimeout(getSoTimeout())
-					.infiniteSoTimeout(getInfiniteSoTimeout()).database(dataSource.getDatabase()).build();
+			final DefaultJedisClientConfig clientConfig = JedisClientConfigBuilder
+					.create(dataSource, getSslConfiguration()).connectTimeout(getConnectTimeout())
+					.socketTimeout(getSoTimeout()).infiniteSoTimeout(getInfiniteSoTimeout())
+					.database(dataSource.getDatabase()).build();
 
 			final SentinelClientBuilder<RedisSentinelClient> builder = RedisSentinelClient.builder()
 					.clientConfig(clientConfig)

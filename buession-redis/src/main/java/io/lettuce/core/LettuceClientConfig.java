@@ -25,6 +25,7 @@
 package io.lettuce.core;
 
 import com.buession.redis.core.RedisNode;
+import io.lettuce.core.resource.ClientResources;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLParameters;
@@ -38,6 +39,24 @@ import java.time.Duration;
  * @since 3.0.0
  */
 public interface LettuceClientConfig {
+
+	/**
+	 * 获取 {@link ClientResources}
+	 *
+	 * @return {@link ClientResources}
+	 */
+	default ClientResources getClientResources() {
+		return ClientResources.create();
+	}
+
+	/**
+	 * 获取 {@link ClientOptions}
+	 *
+	 * @return {@link ClientOptions}
+	 */
+	default ClientOptions getClientOptions() {
+		return ClientOptions.builder().build();
+	}
 
 	/**
 	 * 返回连接超时
@@ -73,6 +92,10 @@ public interface LettuceClientConfig {
 	 */
 	default String getPassword() {
 		return null;
+	}
+
+	default RedisCredentialsProvider getCredentialsProvider() {
+		return new StaticCredentialsProvider(RedisCredentials.just(getUser(), getPassword()));
 	}
 
 	/**
