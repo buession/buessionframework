@@ -303,7 +303,7 @@ public class Validate {
 	 * @since 1.2.0
 	 */
 	public static boolean isNotEmpty(final CharSequence charSequence) {
-		return charSequence != null && charSequence.length() > 0;
+		return charSequence != null && charSequence.isEmpty() == false;
 	}
 
 	/**
