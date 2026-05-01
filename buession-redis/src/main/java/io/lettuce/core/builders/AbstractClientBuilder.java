@@ -25,6 +25,7 @@
 package io.lettuce.core.builders;
 
 import io.lettuce.core.ClientOptions;
+import io.lettuce.core.ConnectionPoolConfig;
 import io.lettuce.core.DefaultLettuceClientConfig;
 import io.lettuce.core.LettuceClientConfig;
 import io.lettuce.core.api.StatefulConnection;
@@ -48,7 +49,7 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
  */
 public abstract class AbstractClientBuilder<K, V, T extends AbstractClientBuilder<K, V, T, C>, C> {
 
-	protected GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig = null;//new ConnectionPoolConfig<>();
+	protected GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig = new ConnectionPoolConfig<>();
 
 	protected LettuceClientConfig clientConfig;
 
@@ -169,8 +170,8 @@ public abstract class AbstractClientBuilder<K, V, T extends AbstractClientBuilde
 			this.connectionProvider = createDefaultConnectionProvider();
 		}
 
-		// Create and return the specific connection instance
-		return null;//createConnection();
+		// Create and return the specific client instance
+		return createClient();
 	}
 
 	/**
@@ -213,7 +214,7 @@ public abstract class AbstractClientBuilder<K, V, T extends AbstractClientBuilde
 
 	protected void validateCommonConfiguration() {
 		if(codec == null){
-			throw new IllegalArgumentException("The encodes keys and values codec cloud not be null.");
+			//throw new IllegalArgumentException("The encodes keys and values codec cloud not be null.");
 		}
 	}
 

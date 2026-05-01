@@ -45,7 +45,6 @@ import io.lettuce.core.providers.PooledConnectionProvider;
 public abstract class StandaloneClientBuilder<K, V, C>
 		extends AbstractClientBuilder<K, V, StandaloneClientBuilder<K, V, C>, C> {
 
-
 	private HostAndPort hostAndPort = HostAndPort.of(RedisNode.DEFAULT_HOST, RedisNode.DEFAULT_PORT);
 
 	protected StandaloneClientBuilder() {
@@ -86,40 +85,8 @@ public abstract class StandaloneClientBuilder<K, V, C>
 	}
 
 	@Override
-	protected C createClient() {
-		//final RedisURI redisURI = RedisURI.create(host, port);
-		/*
-		final RedisCredentialsProvider redisCredentialsProvider = Validate.hasText(clientConfig.getPassword()) ?
-				new StaticCredentialsProvider(
-						Validate.hasText(clientConfig.getUsername()) ? clientConfig.getUsername() : null,
-						clientConfig.getPassword().toCharArray()) : null;
-
-		if(dataSource.getDatabase() >= 0){
-			redisURI.setDatabase(dataSource.getDatabase());
-		}
-
-		propertyMapper.from(redisCredentialsProvider).to(redisURI::setCredentialsProvider);
-		propertyMapper.from(dataSource.getClientName()).to(redisURI::setClientName);
-
-		if(dataSource.getConnectTimeout() > 0){
-			redisURI.setTimeout(Duration.ofMillis(dataSource.getConnectTimeout()));
-		}
-
-		redisURI.setSsl(dataSource.getSslConfiguration() != null);
-
-		 */
-
-		//final RedisClient redisClient = RedisClient.create(clientResources, redisURI);
-
-		//redisClient.setOptions(clientOptions);
-
-		//return (C) redisClient.connect(codec);
-		return null;//new RedisClient<>(this.connectionProvider);
-	}
-
-	@Override
 	protected ConnectionProvider<K, V> createDefaultConnectionProvider() {
-		return new PooledConnectionProvider<>(this.hostAndPort, this.clientConfig, this.poolConfig);
+		return new PooledConnectionProvider<>(this.hostAndPort, this.clientConfig, this.codec, this.poolConfig);
 	}
 
 	@Override

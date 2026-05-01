@@ -24,8 +24,6 @@
  */
 package com.buession.redis.client.connection.lettuce;
 
-import com.buession.core.converter.mapper.PropertyMapper;
-import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.RedisStandaloneConnection;
@@ -35,17 +33,9 @@ import com.buession.redis.core.internal.lettuce.LettuceClientConfigBuilder;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.transaction.Transaction;
 import io.lettuce.core.LettuceClientConfig;
-import io.lettuce.core.RedisCredentialsProvider;
 import io.lettuce.core.RedisStandaloneClient;
-import io.lettuce.core.RedisURI;
-import io.lettuce.core.StaticCredentialsProvider;
-import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.builders.StandaloneClientBuilder;
-import io.lettuce.core.codec.RedisCodec;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.time.Duration;
 import java.util.Optional;
 
 /**
@@ -61,8 +51,6 @@ import java.util.Optional;
  */
 public class LettuceConnection<K, V> extends AbstractLettuceRedisConnection<K, V, RedisStandaloneClient<K, V>>
 		implements RedisStandaloneConnection {
-
-	private final static Logger logger = LoggerFactory.getLogger(LettuceConnection.class);
 
 	/**
 	 * 构造函数
@@ -260,19 +248,6 @@ public class LettuceConnection<K, V> extends AbstractLettuceRedisConnection<K, V
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 	}
 
-	/*
-	@Override
-	public RedisCommands<K, V> getRedisCommands() {
-		return conn.sync();
-	}
-
-	@Override
-	public RedisAsyncCommands<K, V> getRedisAsyncCommands() {
-		return conn.async();
-	}
-
-	 */
-
 	@Override
 	public Transaction multi() {
 		if(transaction == null){
@@ -292,31 +267,6 @@ public class LettuceConnection<K, V> extends AbstractLettuceRedisConnection<K, V
 		super.internalInit();
 	}
 
-	protected <K, V> StatefulRedisConnection<K, V> createStatefulRedisConnection(final RedisCodec<K, V> codec) {
-		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
-		final LettuceDataSource dataSource = (LettuceDataSource) getDataSource();
-		final RedisURI redisURI = RedisURI.create(dataSource.getHost(), dataSource.getPort());
-		final RedisCredentialsProvider redisCredentialsProvider = Validate.hasText(dataSource.getPassword()) ?
-				new StaticCredentialsProvider(
-						Validate.hasText(dataSource.getUsername()) ? dataSource.getUsername() : null,
-						dataSource.getPassword().toCharArray()) : null;
-
-		if(dataSource.getDatabase() >= 0){
-			redisURI.setDatabase(dataSource.getDatabase());
-		}
-
-		propertyMapper.from(redisCredentialsProvider).to(redisURI::setCredentialsProvider);
-		propertyMapper.from(dataSource.getClientName()).to(redisURI::setClientName);
-
-		if(dataSource.getConnectTimeout() > 0){
-			redisURI.setTimeout(Duration.ofMillis(dataSource.getConnectTimeout()));
-		}
-
-		redisURI.setSsl(dataSource.getSslConfiguration() != null);
-
-		return null;//RedisClient.create(redisURI).connect(codec);
-	}
-
 	@Override
 	protected Status doConnect() throws RedisConnectionFailureException {
 		if(isConnected()){
@@ -332,7 +282,7 @@ public class LettuceConnection<K, V> extends AbstractLettuceRedisConnection<K, V
 
 			final StandaloneClientBuilder<K, V, RedisStandaloneClient<K, V>> builder =
 					RedisStandaloneClient.<K, V>builder().clientConfig(clientConfig)
-							.hostAndPort(dataSource.getHost(), dataSource.getPort());
+							.hostAndPort(dataSource.getHost(), dataSource.getPort()).codec(getCodec());
 
 			Optional.ofNullable(getConnectionPoolConfig()).ifPresent(builder::poolConfig);
 			//Optional.ofNullable(getCacheConfig()).ifPresent(builder::cacheConfig);

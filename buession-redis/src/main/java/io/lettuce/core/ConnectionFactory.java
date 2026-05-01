@@ -24,7 +24,9 @@
  */
 package io.lettuce.core;
 
+import com.buession.core.converter.mapper.PropertyMapper;
 import io.lettuce.core.api.StatefulConnection;
+import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.internal.HostAndPort;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.PooledObjectFactory;
@@ -51,27 +53,22 @@ public class ConnectionFactory<K, V> implements PooledObjectFactory<StatefulConn
 
 	private final LettuceClientConfig clientConfig;
 
-	private Supplier<StatefulConnection<K, V>> objectMaker;
+	private final HostAndPort hostAndPort;
 
-	public ConnectionFactory(final HostAndPort hostAndPort) {
-		this(ConnectionFactory.<K, V>builder().hostAndPort(hostAndPort).withDefaults());
+	private final RedisCodec<K, V> redisCodec;
+
+	private final Supplier<StatefulConnection<K, V>> objectMaker;
+
+	public ConnectionFactory(final HostAndPort hostAndPort, final RedisCodec<K, V> redisCodec) {
+		this(hostAndPort, DefaultLettuceClientConfig.builder().build(), redisCodec);
 	}
 
-	public ConnectionFactory(final HostAndPort hostAndPort, final LettuceClientConfig clientConfig) {
-		this(ConnectionFactory.<K, V>builder().hostAndPort(hostAndPort).clientConfig(clientConfig).withDefaults());
-	}
-
-	public ConnectionFactory(Builder<K, V> builder) {
-		this.clientConfig = builder.getClientConfig();
+	public ConnectionFactory(final HostAndPort hostAndPort, final LettuceClientConfig clientConfig,
+	                         final RedisCodec<K, V> redisCodec) {
+		this.hostAndPort = hostAndPort;
+		this.clientConfig = clientConfig;
+		this.redisCodec = redisCodec;
 		this.objectMaker = this::build;
-	}
-
-	public static <K, V> Builder<K, V> builder() {
-		return new Builder<>();
-	}
-
-	private StatefulConnection<K, V> build() {
-		return null;// connectionBuilder.build();
 	}
 
 	@Override
@@ -123,42 +120,51 @@ public class ConnectionFactory<K, V> implements PooledObjectFactory<StatefulConn
 		}
 	}
 
-	private void reAuthenticate(StatefulConnection<K, V> jedis) throws Exception {
+	private StatefulConnection<K, V> build() {
+		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
+		final RedisURI redisURI = RedisURI.create(hostAndPort.getHostText(), hostAndPort.getPort());
+		final RedisClient redisClient = RedisClient.create(clientConfig.getClientResources(), redisURI);
+		ClientOptions clientOptions = null;
+
+		propertyMapper.from(clientConfig.getCredentialsProvider()).to(redisURI::setCredentialsProvider);
+		propertyMapper.from(clientConfig.getClientName()).to(redisURI::setClientName);
+
+		if(clientConfig.getDatabase() >= 0){
+			redisURI.setDatabase(clientConfig.getDatabase());
+		}
+
+		if(clientConfig.isSsl()){
+			redisURI.setSsl(true);
+		}
+
+		if(clientConfig.getClientOptions() != null){
+			if(clientConfig.getConnectionTimeout() != null &&
+					clientConfig.getConnectionTimeout().isNegative() == false){
+				SocketOptions socketOptions = clientConfig.getClientOptions().getSocketOptions().mutate()
+						.connectTimeout(clientConfig.getConnectionTimeout()).build();
+				clientOptions = clientConfig.getClientOptions().mutate().socketOptions(socketOptions).build();
+			}else{
+				clientOptions = clientConfig.getClientOptions();
+			}
+		}else{
+			if(clientConfig.getConnectionTimeout() != null &&
+					clientConfig.getConnectionTimeout().isNegative() == false){
+				SocketOptions socketOptions = SocketOptions.builder()
+						.connectTimeout(clientConfig.getConnectionTimeout())
+						.build();
+				clientOptions = ClientOptions.builder().socketOptions(socketOptions).build();
+			}
+		}
+		propertyMapper.from(clientOptions).to(redisClient::setOptions);
+
+		if(clientConfig.getSocketTimeout() != null && clientConfig.getSocketTimeout().isNegative() == false){
+			redisURI.setTimeout(clientConfig.getSocketTimeout());
+		}
+
+		return redisClient.connect(redisCodec);
 	}
 
-	public static class Builder<K, V> {
-
-		private LettuceClientConfig clientConfig;
-
-		private HostAndPort hostAndPort;
-
-		public Builder<K, V> clientConfig(LettuceClientConfig clientConfig) {
-			this.clientConfig = clientConfig;
-			return this;
-		}
-
-		public Builder<K, V> hostAndPort(HostAndPort hostAndPort) {
-			this.hostAndPort = hostAndPort;
-			return this;
-		}
-
-		public LettuceClientConfig getClientConfig() {
-			return clientConfig;
-		}
-
-		public HostAndPort getHostAndPort() {
-			return hostAndPort;
-		}
-
-		public ConnectionFactory<K, V> build() {
-			withDefaults();
-			return new ConnectionFactory<>(this);
-		}
-
-		private Builder<K, V> withDefaults() {
-			return this;
-		}
-
+	private void reAuthenticate(StatefulConnection<K, V> connection) throws Exception {
 	}
 
 }

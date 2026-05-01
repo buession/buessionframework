@@ -42,6 +42,7 @@ import com.buession.redis.core.Role;
 import com.buession.redis.core.internal.lettuce.LettuceClientConfigBuilder;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.transaction.Transaction;
+import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.LettuceClientConfig;
 import io.lettuce.core.RedisCredentialsProvider;
 import io.lettuce.core.RedisSentinelClient;
@@ -709,7 +710,7 @@ public class LettuceSentinelConnection<K, V> extends AbstractLettuceRedisConnect
 			final SentinelClientBuilder<K, V, RedisSentinelClient<K, V>> builder = RedisSentinelClient.<K, V>builder()
 					.clientConfig(clientConfig)
 					.sentinelClientConfig(createSentinelLettuceClientConfig(dataSource))
-					.sentinels(createSentinelHosts(dataSource.getSentinels()));
+					.sentinels(createSentinelHosts(dataSource.getSentinels())).codec(getCodec());
 
 			Optional.ofNullable(getConnectionPoolConfig()).ifPresent(builder::poolConfig);
 			//Optional.ofNullable(getCacheConfig()).ifPresent(builder::cacheConfig);
@@ -780,7 +781,8 @@ public class LettuceSentinelConnection<K, V> extends AbstractLettuceRedisConnect
 			final Properties properties = new Properties();
 
 			node.forEach((key, value)->{
-				sNodes.put(getKeyCodec().decode(key), getValueCodec().decode(value));
+				sNodes.put(SafeEncoder.encode(getCodec().encodeKey(key).array()),
+						SafeEncoder.encode(getCodec().encodeValue(value).array()));
 			});
 
 			properties.putAll(sNodes);

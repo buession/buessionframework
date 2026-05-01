@@ -809,7 +809,7 @@ public class LettuceClusterConnection<K, V> extends AbstractLettuceRedisConnecti
 					.infiniteSoTimeout(getInfiniteSoTimeout()).build();
 
 			final ClusterClientBuilder<K, V, RedisClusterClient<K, V>> builder = RedisClusterClient.<K, V>builder()
-					.nodes(createNodes(dataSource.getNodes())).clientConfig(clientConfig);
+					.nodes(createNodes(dataSource.getNodes())).clientConfig(clientConfig).codec(getCodec());
 
 			Optional.ofNullable(getConnectionPoolConfig()).ifPresent(builder::poolConfig);
 			//Optional.ofNullable(getCacheConfig()).ifPresent(builder::cacheConfig);

@@ -25,6 +25,7 @@
 package io.lettuce.core;
 
 import com.buession.core.utils.Assert;
+import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.builders.StandaloneClientBuilder;
 import io.lettuce.core.internal.HostAndPort;
 import io.lettuce.core.providers.ConnectionProvider;
@@ -163,7 +164,7 @@ public class RedisStandaloneClient<K, V> extends BaseRedisClient<K, V> {
 		com.buession.net.HostAndPort hostAndPort = LettuceURIHelper.getHostAndPort(uri);
 
 		return RedisStandaloneClient.<K, V>builder()
-				.hostAndPort(io.lettuce.core.internal.HostAndPort.of(hostAndPort.getHost(), hostAndPort.getPort()))
+				.hostAndPort(HostAndPort.of(hostAndPort.getHost(), hostAndPort.getPort()))
 				.clientConfig(clientConfig).build();
 	}
 
@@ -178,7 +179,7 @@ public class RedisStandaloneClient<K, V> extends BaseRedisClient<K, V> {
 
 	@Override
 	protected RedisCommandsInvocationHandler<K, V> createRedisCommandsInvocationHandler() {
-		return new StatefulRedisCommandsHandler<>(null);
+		return new StatefulRedisCommandsHandler<>((StatefulRedisConnection<K, V>) connectionProvider.getConnection());
 	}
 
 	/**

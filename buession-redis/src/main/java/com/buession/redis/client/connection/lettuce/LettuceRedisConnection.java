@@ -25,8 +25,8 @@
 package com.buession.redis.client.connection.lettuce;
 
 import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.core.Codec;
 import io.lettuce.core.BaseRedisClient;
+import io.lettuce.core.codec.RedisCodec;
 
 /**
  * Lettuce Redis 连接对象
@@ -53,33 +53,18 @@ public interface LettuceRedisConnection<K, V, C extends BaseRedisClient<K, V>> e
 	C getClient();
 
 	/**
-	 * 返回 Key 编解码器
+	 * 获取 Redis 编解码器
 	 *
-	 * @return Key 编解码器
+	 * @return Redis 编解码器
 	 */
-	Codec<K> getKeyCodec();
+	RedisCodec<K, V> getCodec();
 
 	/**
-	 * 设置 Key 编解码器
+	 * 设置 Redis 编解码器
 	 *
-	 * @param keyCodec
-	 * 		Key 编解码器
+	 * @param codec
+	 * 		Redis 编解码器
 	 */
-	void setKeyCodec(Codec<K> keyCodec);
-
-	/**
-	 * 获取值编解码器
-	 *
-	 * @return 值编解码器
-	 */
-	Codec<V> getValueCodec();
-
-	/**
-	 * 设置值编解码器
-	 *
-	 * @param valueCodec
-	 * 		值编解码器
-	 */
-	void setValueCodec(Codec<V> valueCodec);
+	void setCodec(RedisCodec<K, V> codec);
 
 }

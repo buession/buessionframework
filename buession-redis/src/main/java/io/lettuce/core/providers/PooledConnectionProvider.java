@@ -29,6 +29,7 @@ import io.lettuce.core.ConnectionPool;
 import io.lettuce.core.LettuceClientConfig;
 import io.lettuce.core.Pool;
 import io.lettuce.core.api.StatefulConnection;
+import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.internal.HostAndPort;
 import io.lettuce.core.protocol.CommandArgs;
 import org.apache.commons.pool2.PooledObjectFactory;
@@ -54,19 +55,21 @@ public class PooledConnectionProvider<K, V> implements ConnectionProvider<K, V> 
 
 	private Object connectionMapKey = "";
 
-	public PooledConnectionProvider(HostAndPort hostAndPort) {
-		this(new ConnectionFactory<>(hostAndPort));
-		this.connectionMapKey = hostAndPort;
-	}
-
-	public PooledConnectionProvider(HostAndPort hostAndPort, LettuceClientConfig clientConfig) {
-		this(new ConnectionPool<>(hostAndPort, clientConfig));
+	public PooledConnectionProvider(HostAndPort hostAndPort, RedisCodec<K, V> redisCodec) {
+		this(new ConnectionFactory<>(hostAndPort, redisCodec));
 		this.connectionMapKey = hostAndPort;
 	}
 
 	public PooledConnectionProvider(HostAndPort hostAndPort, LettuceClientConfig clientConfig,
+	                                RedisCodec<K, V> redisCodec) {
+		this(new ConnectionPool<>(hostAndPort, clientConfig, redisCodec));
+		this.connectionMapKey = hostAndPort;
+	}
+
+	public PooledConnectionProvider(HostAndPort hostAndPort, LettuceClientConfig clientConfig,
+	                                RedisCodec<K, V> redisCodec,
 	                                GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig) {
-		this(new ConnectionPool<>(hostAndPort, clientConfig, poolConfig));
+		this(new ConnectionPool<>(hostAndPort, clientConfig, redisCodec, poolConfig));
 		this.connectionMapKey = hostAndPort;
 	}
 

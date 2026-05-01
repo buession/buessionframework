@@ -28,7 +28,6 @@ import com.buession.core.utils.Assert;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.AbstractRedisConnection;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceRedisDataSource;
-import com.buession.redis.core.Codec;
 import com.buession.redis.core.PoolConfig;
 import com.buession.redis.exception.LettuceRedisExceptionUtils;
 import com.buession.redis.exception.RedisException;
@@ -37,6 +36,7 @@ import io.lettuce.core.BaseRedisClient;
 import io.lettuce.core.ConnectionPoolConfig;
 import io.lettuce.core.api.PipeliningFlushPolicy;
 import io.lettuce.core.api.PipeliningFlushState;
+import io.lettuce.core.codec.RedisCodec;
 
 import java.io.IOException;
 
@@ -56,9 +56,7 @@ public abstract class AbstractLettuceRedisConnection<K, V, C extends BaseRedisCl
 
 	private final PipeliningFlushPolicy pipeliningFlushPolicy = PipeliningFlushPolicy.flushEachCommand();
 
-	private Codec<K> keyCodec;
-
-	private Codec<V> valueCodec;
+	private RedisCodec<K, V> codec;
 
 	/**
 	 * 构造函数
@@ -260,25 +258,16 @@ public abstract class AbstractLettuceRedisConnection<K, V, C extends BaseRedisCl
 	}
 
 	@Override
-	public Codec<K> getKeyCodec() {
-		return keyCodec;
+	public RedisCodec<K, V> getCodec() {
+		return codec;
 	}
 
 	@Override
-	public void setKeyCodec(Codec<K> keyCodec) {
-		this.keyCodec = keyCodec;
+	public void setCodec(RedisCodec<K, V> codec) {
+		this.codec = codec;
 	}
 
-	@Override
-	public Codec<V> getValueCodec() {
-		return valueCodec;
-	}
-
-	@Override
-	public void setValueCodec(Codec<V> valueCodec) {
-		this.valueCodec = valueCodec;
-	}
-/*
+	/*
 	@SuppressWarnings({"unchecked"})
 	@Override
 	public RedisCommands<K, V> getRedisCommands() {
@@ -319,8 +308,7 @@ public abstract class AbstractLettuceRedisConnection<K, V, C extends BaseRedisCl
 
 	@Override
 	protected void internalInit() {
-		Assert.isNull(getKeyCodec(), "Key codec cloud not be null.");
-		Assert.isNull(getValueCodec(), "Value codec cloud not be null.");
+		Assert.isNull(getCodec(), "Key and value codec cloud not be null.");
 	}
 
 	protected ConnectionPoolConfig<K, V> getConnectionPoolConfig() {
