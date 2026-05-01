@@ -24,12 +24,29 @@
  */
 package io.lettuce.core;
 
+import io.lettuce.core.api.StatefulConnection;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+
+import java.time.Duration;
+
 /**
+ * 连接池配置
  *
+ * @param <K>
+ * 		Key 类型
+ * @param <V>
+ * 		值类型
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class ConnectionPoolConfig<K, V> {
+public class ConnectionPoolConfig<K, V> extends GenericObjectPoolConfig<StatefulConnection<K, V>> {
+
+	public ConnectionPoolConfig() {
+		setMinEvictableIdleTime(Duration.ofMillis(60000));
+		setTimeBetweenEvictionRuns(Duration.ofMillis(30000));
+		setNumTestsPerEvictionRun(-1);
+		setTestWhileIdle(true);
+	}
 
 }

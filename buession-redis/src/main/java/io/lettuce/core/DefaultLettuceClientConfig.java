@@ -24,13 +24,16 @@
  */
 package io.lettuce.core;
 
+import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
 import com.buession.redis.core.RedisNode;
 import io.lettuce.core.resource.ClientResources;
+import io.lettuce.core.utils.LettuceURIHelper;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLSocketFactory;
+import java.net.URI;
 import java.time.Duration;
 
 /**
@@ -134,6 +137,50 @@ public class DefaultLettuceClientConfig implements LettuceClientConfig {
 
 	public static Builder builder() {
 		return new Builder();
+	}
+
+	/**
+	 * Creates a new Builder pre-initialized with settings from the provided Redis URI.
+	 * <p>
+	 * The URI format is:
+	 * {@code redis[s]://[username:password@]host:port[/database][?protocol=version]}
+	 * </p>
+	 * <p>
+	 * Settings extracted from URI:
+	 * <ul>
+	 * <li>Credentials (username/password) if present in URI</li>
+	 * <li>Database index if specified in path</li>
+	 * <li>SSL enabled if scheme is "rediss"</li>
+	 * <li>Protocol version if specified in query parameters</li>
+	 * </ul>
+	 *
+	 * @param redisUri
+	 * 		the Redis URI to extract settings from
+	 *
+	 * @return a new Builder pre-initialized from the URI
+	 */
+	public static Builder builder(URI redisUri) {
+		Assert.isNull(redisUri, "Redis URI must not be null");
+		Assert.isFalse(LettuceURIHelper.isValid(redisUri), "Invalid Redis URI");
+
+		Builder builder = new Builder();
+
+		String user = LettuceURIHelper.getUser(redisUri);
+		String password = LettuceURIHelper.getPassword(redisUri);
+
+		if(user != null || password != null){
+			builder.credentials(RedisCredentials.just(user, password));
+		}
+
+		if(LettuceURIHelper.hasDbIndex(redisUri)){
+			builder.database(LettuceURIHelper.getDBIndex(redisUri));
+		}
+
+		if(LettuceURIHelper.isRedisSSLScheme(redisUri)){
+			builder.ssl(true);
+		}
+
+		return builder;
 	}
 
 	public final static class Builder {

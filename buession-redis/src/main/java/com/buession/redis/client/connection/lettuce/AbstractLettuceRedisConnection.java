@@ -32,6 +32,7 @@ import com.buession.redis.exception.LettuceRedisExceptionUtils;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
 import io.lettuce.core.BaseRedisClient;
+import io.lettuce.core.ConnectionPoolConfig;
 import io.lettuce.core.api.PipeliningFlushPolicy;
 import io.lettuce.core.api.PipeliningFlushState;
 
@@ -289,6 +290,18 @@ public abstract class AbstractLettuceRedisConnection<K, V, C extends BaseRedisCl
 	@Override
 	public boolean isClosed() {
 		return false;// conn == null || conn.isOpen() == false;
+	}
+
+	protected ConnectionPoolConfig<K, V> getConnectionPoolConfig() {
+		if(getPoolConfig() == null){
+			return null;
+		}
+
+		final ConnectionPoolConfig<K, V> connectionPoolConfig = new ConnectionPoolConfig<>();
+
+		getPoolConfig().toGenericObjectPoolConfig(connectionPoolConfig);
+
+		return connectionPoolConfig;
 	}
 
 	@Override

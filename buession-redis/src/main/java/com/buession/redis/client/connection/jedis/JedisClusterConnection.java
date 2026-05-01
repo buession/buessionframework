@@ -27,6 +27,7 @@ package com.buession.redis.client.connection.jedis;
 import com.buession.lang.Status;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.RedisClusterConnection;
+import com.buession.redis.client.connection.RedisNode;
 import com.buession.redis.client.connection.datasource.jedis.JedisClusterDataSource;
 import com.buession.redis.core.PoolConfig;
 import com.buession.redis.core.RedisMode;
@@ -773,7 +774,7 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection<RedisCl
 					.socketTimeout(getSoTimeout()).infiniteSoTimeout(getInfiniteSoTimeout()).build();
 
 			final ClusterClientBuilder<RedisClusterClient> builder = RedisClusterClient.builder()
-					.nodes(createNodes(dataSource)).clientConfig(clientConfig);
+					.nodes(createNodes(dataSource.getNodes())).clientConfig(clientConfig);
 
 			Optional.ofNullable(getConnectionPoolConfig()).ifPresent(builder::poolConfig);
 			Optional.ofNullable(getCacheConfig()).ifPresent(builder::cacheConfig);
@@ -790,8 +791,9 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection<RedisCl
 		return client == null ? Status.FAILURE : Status.SUCCESS;
 	}
 
-	private static Set<HostAndPort> createNodes(final JedisClusterDataSource dataSource) {
-		return dataSource.getNodes().stream().map((node)->new HostAndPort(node.getHost(), node.getPort()))
+	private static Set<HostAndPort> createNodes(final Set<RedisNode> nodes) {
+		return nodes.stream().map((node)->new HostAndPort(node.getHost(),
+						node.getPort() == 0 ? com.buession.redis.core.RedisNode.DEFAULT_PORT : node.getPort()))
 				.collect(Collectors.toSet());
 	}
 

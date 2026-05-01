@@ -33,25 +33,22 @@ import com.buession.redis.client.connection.datasource.lettuce.LettuceDataSource
 import com.buession.redis.core.PoolConfig;
 import com.buession.redis.core.internal.lettuce.LettuceClientConfigBuilder;
 import com.buession.redis.exception.RedisConnectionFailureException;
-import com.buession.redis.transaction.DefaultTransactionProxy;
 import com.buession.redis.transaction.Transaction;
-import com.buession.redis.transaction.lettuce.LettuceTransaction;
 import io.lettuce.core.LettuceClientConfig;
-import io.lettuce.core.RedisCommandsInvocationHandler;
 import io.lettuce.core.RedisCredentialsProvider;
-import io.lettuce.core.RedisSentinelClient;
 import io.lettuce.core.RedisStandaloneClient;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.StaticCredentialsProvider;
 import io.lettuce.core.api.StatefulRedisConnection;
-import io.lettuce.core.api.async.RedisAsyncCommands;
-import io.lettuce.core.api.sync.RedisCommands;
+import io.lettuce.core.builders.StandaloneClientBuilder;
 import io.lettuce.core.codec.RedisCodec;
+import io.lettuce.core.internal.HostAndPort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.Optional;
 
 /**
  * Lettuce 单机模式连接器
@@ -361,6 +358,15 @@ public class LettuceConnection<K, V> extends AbstractLettuceRedisConnection<K, V
 					.create(dataSource, getSslConfiguration()).connectTimeout(getConnectTimeout())
 					.socketTimeout(getSoTimeout()).infiniteSoTimeout(getInfiniteSoTimeout())
 					.database(dataSource.getDatabase()).build();
+
+			final StandaloneClientBuilder<K, V, RedisStandaloneClient<K, V>> builder =
+					RedisStandaloneClient.<K, V>builder().clientConfig(clientConfig)
+							.hostAndPort(HostAndPort.of(dataSource.getHost(), dataSource.getPort()));
+
+			Optional.ofNullable(getConnectionPoolConfig()).ifPresent(builder::poolConfig);
+			//Optional.ofNullable(getCacheConfig()).ifPresent(builder::cacheConfig);
+
+			client = builder.build();
 		}
 		/*
 		if(pool != null){

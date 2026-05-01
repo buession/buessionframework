@@ -21,10 +21,64 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package io.lettuce.core.utils;/**
- * 
+ */
+package io.lettuce.core.utils;
+
+import com.buession.core.utils.StringUtils;
+import com.buession.core.validator.Validate;
+import com.buession.net.URIHelper;
+import com.buession.redis.core.RedisNode;
+import io.lettuce.core.RedisURI;
+
+import java.net.URI;
+
+/**
+ *
  *
  * @author Yong.Teng
  * @since 4.0.0
- */public class LettuceURIHelper {
+ */
+public class LettuceURIHelper extends URIHelper {
+
+	private LettuceURIHelper() {
+
+	}
+
+	public static boolean isValid(URI uri) {
+		if(Validate.isBlank(uri.getScheme()) || Validate.isBlank(uri.getHost()) || uri.getPort() == -1){
+			return false;
+		}
+
+		return true;
+	}
+
+	public static boolean hasDbIndex(URI uri) {
+		if(uri.getPath() == null || uri.getPath().isEmpty()){
+			return false;
+		}
+
+		String[] pathSplit = StringUtils.split(uri.getPath(), "/", 2);
+
+		return pathSplit.length > 1 && Validate.isNotEmpty(pathSplit[1]);
+	}
+
+	public static int getDBIndex(URI uri) {
+		String[] pathSplit = StringUtils.split(uri.getPath(), "/", 2);
+		if(pathSplit.length > 1){
+			String dbIndexStr = pathSplit[1];
+			if(dbIndexStr.isEmpty()){
+				return RedisNode.DEFAULT_DATABASE;
+			}
+			return Integer.parseInt(dbIndexStr);
+		}else{
+			return RedisNode.DEFAULT_DATABASE;
+		}
+	}
+
+	public static boolean isRedisSSLScheme(URI uri) {
+		return RedisURI.URI_SCHEME_REDIS_SECURE.equals(uri.getScheme()) ||
+				RedisURI.URI_SCHEME_REDIS_SECURE_ALT.equals(uri.getScheme()) ||
+				RedisURI.URI_SCHEME_REDIS_TLS_ALT.equals(uri.getScheme());
+	}
+
 }

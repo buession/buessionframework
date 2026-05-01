@@ -24,8 +24,15 @@
  */
 package io.lettuce.core;
 
+import com.buession.core.utils.Assert;
+import io.lettuce.core.builders.StandaloneClientBuilder;
+import io.lettuce.core.internal.HostAndPort;
+import io.lettuce.core.utils.LettuceURIHelper;
+
+import java.net.URI;
+
 /**
- *
+ * Lettuce Redis 单机客户端
  *
  * @param <K>
  * 		Key 类型
@@ -41,9 +48,151 @@ public class RedisStandaloneClient<K, V> extends BaseRedisClient<K, V> {
 
 	}
 
+	/**
+	 * Creates a RedisClient with default host and port (localhost:6379).
+	 * <p>
+	 * This is a convenience factory method that uses the builder pattern internally.
+	 * </p>
+	 *
+	 * @return a new {@link RedisStandaloneClient} instance
+	 */
+	public static <K, V> RedisStandaloneClient<K, V> create() {
+		return RedisStandaloneClient.<K, V>builder().build();
+	}
+
+	/**
+	 * Creates a RedisClient with the specified host and port.
+	 * <p>
+	 * This is a convenience factory method that uses the builder pattern internally.
+	 * </p>
+	 *
+	 * @param host
+	 * 		the Redis server hostname
+	 * @param port
+	 * 		the Redis server port
+	 *
+	 * @return a new {@link RedisStandaloneClient} instance
+	 */
+	public static <K, V> RedisStandaloneClient<K, V> create(final String host, final int port) {
+		return RedisStandaloneClient.<K, V>builder().hostAndPort(host, port).build();
+	}
+
+	/**
+	 * Creates a RedisClient with the specified host and port.
+	 * <p>
+	 * This is a convenience factory method that uses the builder pattern internally.
+	 * </p>
+	 *
+	 * @param hostAndPort
+	 * 		the Redis server host and port
+	 *
+	 * @return a new {@link RedisStandaloneClient} instance
+	 */
+	public static <K, V> RedisStandaloneClient<K, V> create(final HostAndPort hostAndPort) {
+		return RedisStandaloneClient.<K, V>builder().hostAndPort(hostAndPort).build();
+	}
+
+	/**
+	 * Creates a RedisClient with the specified host, port, user, and password.
+	 * <p>
+	 * This is a convenience factory method that uses the builder pattern internally.
+	 *
+	 * @param host
+	 * 		the Redis server hostname
+	 * @param port
+	 * 		the Redis server port
+	 * @param user
+	 * 		the username for authentication
+	 * @param password
+	 * 		the password for authentication
+	 *
+	 * @return a new {@link RedisStandaloneClient} instance
+	 */
+	public static <K, V> RedisStandaloneClient<K, V> create(final String host, final int port, final String user,
+	                                                        final String password) {
+		return RedisStandaloneClient.<K, V>builder().hostAndPort(host, port)
+				.clientConfig(DefaultLettuceClientConfig.builder().user(user).password(password).build())
+				.build();
+	}
+
+	/**
+	 * Creates a RedisClient from a Redis URI.
+	 * <p>
+	 * The URI must be in the format: {@code redis[s]://[[user][:password]@]host[:port][/database]}
+	 * <p>
+	 * Examples:
+	 * <ul>
+	 * <li>{@code redis://localhost:6379}</li>
+	 * <li>{@code redis://user:password@localhost:6379/0}</li>
+	 * <li>{@code rediss://localhost:6380} (SSL)</li>
+	 * </ul>
+	 * <p>
+	 * <b>Note:</b> To connect using just a hostname and port without a URI, use
+	 * {@link #create(String, int)} instead.
+	 * <p>
+	 * This is a convenience factory method that uses the builder pattern internally.
+	 *
+	 * @param url
+	 * 		Redis URI string (not just a hostname)
+	 *
+	 * @return a new {@link RedisStandaloneClient} instance
+	 *
+	 * @throws IllegalArgumentException
+	 * 		if the URI format is invalid
+	 */
+	public static <K, V> RedisStandaloneClient<K, V> create(final String url) {
+		return RedisStandaloneClient.<K, V>create(URI.create(url));
+	}
+
+	/**
+	 * Creates a RedisClient from a Redis URI.
+	 * <p>
+	 * This is a convenience factory method that uses the builder pattern internally.
+	 *
+	 * @param uri
+	 * 		the Redis server URI
+	 *
+	 * @return a new {@link RedisStandaloneClient} instance
+	 */
+	public static <K, V> RedisStandaloneClient<K, V> create(final URI uri) {
+		Assert.isNull(uri, "Redis URI must not be null");
+		Assert.isFalse(LettuceURIHelper.isValid(uri), "Invalid Redis URI");
+
+		LettuceClientConfig clientConfig = DefaultLettuceClientConfig.builder(uri).build();
+		com.buession.net.HostAndPort hostAndPort = LettuceURIHelper.getHostAndPort(uri);
+
+		return RedisStandaloneClient.<K, V>builder()
+				.hostAndPort(io.lettuce.core.internal.HostAndPort.of(hostAndPort.getHost(), hostAndPort.getPort()))
+				.clientConfig(clientConfig).build();
+	}
+
+	/**
+	 * Create a new builder for configuring RedisClient instances.
+	 *
+	 * @return a new {@link Builder} instance
+	 */
+	public static <K, V> Builder<K, V> builder() {
+		return new Builder<>();
+	}
+
 	@Override
 	protected RedisCommandsInvocationHandler<K, V> createRedisCommandsInvocationHandler() {
 		return new StatefulRedisCommandsHandler<>(null);
+	}
+
+	/**
+	 * Fluent builder for {@link RedisStandaloneClient} (standalone).
+	 * <p>
+	 * Obtain an instance via {@link #builder()}.
+	 * </p>
+	 */
+	public static class Builder<K, V> extends StandaloneClientBuilder<K, V, RedisStandaloneClient<K, V>> {
+
+		@Override
+		protected RedisStandaloneClient<K, V> createClient() {
+			return new RedisStandaloneClient<>();
+		}
+
 	}
 
 }

@@ -24,7 +24,16 @@
  */
 package io.lettuce.core;
 
+import com.buession.redis.client.connection.datasource.ClusterDataSource;
+import io.lettuce.core.builders.ClusterClientBuilder;
+import io.lettuce.core.internal.HostAndPort;
+
+import java.time.Duration;
+import java.util.Collections;
+import java.util.Set;
+
 /**
+ * Lettuce Redis 集群客户端
  *
  * @param <K>
  * 		Key 类型
@@ -43,6 +52,104 @@ public class RedisClusterClient<K, V> extends BaseRedisClient<K, V> {
 	@Override
 	protected RedisCommandsInvocationHandler<K, V> createRedisCommandsInvocationHandler() {
 		return new StatefulRedisClusterCommandsHandler<>(null);
+	}
+
+	/**
+	 * Creates a RedisClusterClient instance. The provided node is used to make the first contact with
+	 * the cluster.
+	 * <p>
+	 * Here, the default timeout of {@value io.lettuce.core.RedisURI#DEFAULT_TIMEOUT} ms
+	 * is being used with {@value com.buession.redis.client.connection.datasource.ClusterDataSource#DEFAULT_MAX_ATTEMPTS} maximum
+	 * attempts.
+	 * <p>
+	 * This is a convenience factory method that uses the builder pattern internally.
+	 *
+	 * @param node
+	 * 		Node to first connect to.
+	 *
+	 * @return a new {@link RedisClusterClient} instance
+	 */
+	public static <K, V> RedisClusterClient<K, V> create(HostAndPort node) {
+		return RedisClusterClient.<K, V>builder().nodes(Collections.singleton(node))
+				.clientConfig(DefaultLettuceClientConfig.builder().timeoutMillis(RedisURI.DEFAULT_TIMEOUT).build())
+				.maxAttempts(ClusterDataSource.DEFAULT_MAX_ATTEMPTS)
+				.maxTotalRetriesDuration(
+						Duration.ofMillis(RedisURI.DEFAULT_TIMEOUT * ClusterDataSource.DEFAULT_MAX_ATTEMPTS))
+				.build();
+	}
+
+	/**
+	 * Creates a RedisClusterClient with multiple entry points.
+	 * <p>
+	 * Here, the default timeout of {@value io.lettuce.core.RedisURI#DEFAULT_TIMEOUT} ms
+	 * is being used with {@value com.buession.redis.client.connection.datasource.ClusterDataSource#DEFAULT_MAX_ATTEMPTS} maximum
+	 * attempts.
+	 * <p>
+	 * This is a convenience factory method that uses the builder pattern internally.
+	 *
+	 * @param nodes
+	 * 		Nodes to connect to.
+	 *
+	 * @return a new {@link RedisClusterClient} instance
+	 */
+	public static <K, V> RedisClusterClient<K, V> create(Set<HostAndPort> nodes) {
+		return RedisClusterClient.<K, V>builder().nodes(nodes)
+				.clientConfig(DefaultLettuceClientConfig.builder().timeoutMillis(RedisURI.DEFAULT_TIMEOUT).build())
+				.maxAttempts(ClusterDataSource.DEFAULT_MAX_ATTEMPTS)
+				.maxTotalRetriesDuration(
+						Duration.ofMillis(RedisURI.DEFAULT_TIMEOUT * ClusterDataSource.DEFAULT_MAX_ATTEMPTS))
+				.build();
+	}
+
+	/**
+	 * Creates a RedisClusterClient with multiple entry points and authentication.
+	 * <p>
+	 * Here, the default timeout of {@value io.lettuce.core.RedisURI#DEFAULT_TIMEOUT} ms is being
+	 * used with {@value com.buession.redis.client.connection.datasource.ClusterDataSource#DEFAULT_MAX_ATTEMPTS} maximum
+	 * attempts.
+	 * <p>
+	 * This is a convenience factory method that uses the builder pattern internally.
+	 *
+	 * @param nodes
+	 * 		Nodes to connect to.
+	 * @param user
+	 * 		Username for authentication.
+	 * @param password
+	 * 		Password for authentication.
+	 *
+	 * @return a new {@link RedisClusterClient} instance
+	 */
+	public static <K, V> RedisClusterClient<K, V> create(Set<HostAndPort> nodes, String user, String password) {
+		return RedisClusterClient.<K, V>builder().nodes(nodes)
+				.clientConfig(DefaultLettuceClientConfig.builder().user(user).password(password).build())
+				.maxAttempts(ClusterDataSource.DEFAULT_MAX_ATTEMPTS)
+				.maxTotalRetriesDuration(
+						Duration.ofMillis(RedisURI.DEFAULT_TIMEOUT * ClusterDataSource.DEFAULT_MAX_ATTEMPTS))
+				.build();
+	}
+
+	/**
+	 * Create a new builder for configuring RedisClusterClient instances.
+	 *
+	 * @return a new {@link Builder} instance
+	 */
+	public static <K, V> Builder<K, V> builder() {
+		return new Builder<>();
+	}
+
+	/**
+	 * Fluent builder for {@link RedisClusterClient} (Redis Cluster).
+	 * <p>
+	 * Obtain an instance via {@link #builder()}.
+	 * </p>
+	 */
+	public static class Builder<K, V> extends ClusterClientBuilder<K, V, RedisClusterClient<K, V>> {
+
+		@Override
+		protected RedisClusterClient<K, V> createClient() {
+			return new RedisClusterClient<>();
+		}
+
 	}
 
 	/*

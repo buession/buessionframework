@@ -24,7 +24,10 @@
  */
 package io.lettuce.core;
 
+import io.lettuce.core.builders.SentinelClientBuilder;
+
 /**
+ * Lettuce Redis Sentinel 客户端
  *
  * @param <K>
  * 		Key 类型
@@ -43,6 +46,30 @@ public class RedisSentinelClient<K, V> extends BaseRedisClient<K, V> {
 	@Override
 	protected RedisCommandsInvocationHandler<K, V> createRedisCommandsInvocationHandler() {
 		return null;
+	}
+
+	/**
+	 * Create a new builder for configuring RedisSentinelClient instances.
+	 *
+	 * @return a new {@link io.lettuce.core.RedisSentinelClient.Builder} instance
+	 */
+	public static <K, V> Builder<K, V> builder() {
+		return new Builder<>();
+	}
+
+	/**
+	 * Fluent builder for {@link io.lettuce.core.RedisSentinelClient} (Redis Sentinel).
+	 * <p>
+	 * Obtain an instance via {@link #builder()}.
+	 * </p>
+	 */
+	public static class Builder<K, V> extends SentinelClientBuilder<K, V, RedisSentinelClient<K, V>> {
+
+		@Override
+		protected RedisSentinelClient<K, V> createClient() {
+			return new RedisSentinelClient<>();
+		}
+
 	}
 
 }
