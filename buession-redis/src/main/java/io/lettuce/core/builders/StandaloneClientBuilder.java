@@ -27,6 +27,7 @@ package io.lettuce.core.builders;
 import com.buession.redis.core.RedisNode;
 import io.lettuce.core.internal.HostAndPort;
 import io.lettuce.core.providers.ConnectionProvider;
+import io.lettuce.core.providers.PooledConnectionProvider;
 
 /**
  * Builder for creating RedisClient instances (standalone Redis connections).
@@ -118,7 +119,7 @@ public abstract class StandaloneClientBuilder<K, V, C>
 
 	@Override
 	protected ConnectionProvider<K, V> createDefaultConnectionProvider() {
-		return null;//new PooledConnectionProvider<>(this.hostAndPort, this.clientConfig, this.cache, this.poolConfig);
+		return new PooledConnectionProvider<>(this.hostAndPort, this.clientConfig, this.poolConfig);
 	}
 
 	@Override

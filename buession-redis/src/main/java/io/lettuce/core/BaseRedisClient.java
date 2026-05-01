@@ -26,6 +26,7 @@ package io.lettuce.core;
 
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.api.sync.RedisCommands;
+import io.lettuce.core.providers.ConnectionProvider;
 
 import java.lang.reflect.Proxy;
 
@@ -42,7 +43,13 @@ import java.lang.reflect.Proxy;
  */
 public abstract class BaseRedisClient<K, V> {
 
+	protected ConnectionProvider<K, V> connectionProvider;
+
 	protected RedisCommands<K, V> redisCommands;
+
+	protected BaseRedisClient(ConnectionProvider<K, V> connectionProvider) {
+		this.connectionProvider = connectionProvider;
+	}
 
 	@SuppressWarnings({"unchecked"})
 	public RedisCommands<K, V> getRedisCommands() {

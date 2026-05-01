@@ -25,6 +25,7 @@
 package io.lettuce.core;
 
 import io.lettuce.core.builders.SentinelClientBuilder;
+import io.lettuce.core.providers.ConnectionProvider;
 
 /**
  * Lettuce Redis Sentinel 客户端
@@ -39,8 +40,8 @@ import io.lettuce.core.builders.SentinelClientBuilder;
  */
 public class RedisSentinelClient<K, V> extends BaseRedisClient<K, V> {
 
-	private RedisSentinelClient() {
-
+	private RedisSentinelClient(ConnectionProvider<K, V> connectionProvider) {
+		super(connectionProvider);
 	}
 
 	@Override
@@ -67,7 +68,7 @@ public class RedisSentinelClient<K, V> extends BaseRedisClient<K, V> {
 
 		@Override
 		protected RedisSentinelClient<K, V> createClient() {
-			return new RedisSentinelClient<>();
+			return new RedisSentinelClient<>(connectionProvider);
 		}
 
 	}

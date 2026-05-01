@@ -24,12 +24,38 @@
  */
 package io.lettuce.core.providers;
 
+import io.lettuce.core.api.StatefulConnection;
+import io.lettuce.core.protocol.CommandArgs;
+
+import java.util.Collections;
+import java.util.Map;
+
 /**
+ * Lettuce Redis 连接提供者
  *
+ * @param <K>
+ * 		Key 类型
+ * @param <V>
+ * 		值类型
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public interface ConnectionProvider<K, V> {
+public interface ConnectionProvider<K, V> extends AutoCloseable {
+
+	StatefulConnection<K, V> getConnection();
+
+	StatefulConnection<K, V> getConnection(CommandArgs<K, V> commandArgs);
+
+	default Map<?, ?> getConnectionMap() {
+		final StatefulConnection<K, V> connection = getConnection();
+		return Collections.singletonMap(connection.toString(), connection);
+	}
+
+	default Map<?, ?> getPrimaryNodesConnectionMap() {
+		final StatefulConnection<K, V> connection = getConnection();
+		return Collections.singletonMap(connection.toString(), connection);
+	}
+
 
 }

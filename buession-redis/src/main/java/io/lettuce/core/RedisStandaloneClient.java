@@ -27,6 +27,7 @@ package io.lettuce.core;
 import com.buession.core.utils.Assert;
 import io.lettuce.core.builders.StandaloneClientBuilder;
 import io.lettuce.core.internal.HostAndPort;
+import io.lettuce.core.providers.ConnectionProvider;
 import io.lettuce.core.utils.LettuceURIHelper;
 
 import java.net.URI;
@@ -44,8 +45,8 @@ import java.net.URI;
  */
 public class RedisStandaloneClient<K, V> extends BaseRedisClient<K, V> {
 
-	private RedisStandaloneClient() {
-
+	private RedisStandaloneClient(ConnectionProvider<K, V> connectionProvider) {
+		super(connectionProvider);
 	}
 
 	/**
@@ -190,7 +191,7 @@ public class RedisStandaloneClient<K, V> extends BaseRedisClient<K, V> {
 
 		@Override
 		protected RedisStandaloneClient<K, V> createClient() {
-			return new RedisStandaloneClient<>();
+			return new RedisStandaloneClient<>(connectionProvider);
 		}
 
 	}

@@ -21,10 +21,92 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package io.lettuce.core.providers;/**
- * 
+ */
+package io.lettuce.core.providers;
+
+import io.lettuce.core.ConnectionFactory;
+import io.lettuce.core.ConnectionPool;
+import io.lettuce.core.LettuceClientConfig;
+import io.lettuce.core.Pool;
+import io.lettuce.core.api.StatefulConnection;
+import io.lettuce.core.internal.HostAndPort;
+import io.lettuce.core.protocol.CommandArgs;
+import org.apache.commons.pool2.PooledObjectFactory;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+
+import java.util.Collections;
+import java.util.Map;
+
+/**
+ * Lettuce Redis 连接池连接提供者
+ *
+ * @param <K>
+ * 		Key 类型
+ * @param <V>
+ * 		值类型
  *
  * @author Yong.Teng
  * @since 4.0.0
- */public class PooledConnectionProvider {
+ */
+public class PooledConnectionProvider<K, V> implements ConnectionProvider<K, V> {
+
+	private final Pool<StatefulConnection<K, V>> pool;
+
+	private Object connectionMapKey = "";
+
+	public PooledConnectionProvider(HostAndPort hostAndPort) {
+		this(new ConnectionFactory<>(hostAndPort));
+		this.connectionMapKey = hostAndPort;
+	}
+
+	public PooledConnectionProvider(HostAndPort hostAndPort, LettuceClientConfig clientConfig) {
+		this(new ConnectionPool<>(hostAndPort, clientConfig));
+		this.connectionMapKey = hostAndPort;
+	}
+
+	public PooledConnectionProvider(HostAndPort hostAndPort, LettuceClientConfig clientConfig,
+	                                GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig) {
+		this(new ConnectionPool<>(hostAndPort, clientConfig, poolConfig));
+		this.connectionMapKey = hostAndPort;
+	}
+
+	public PooledConnectionProvider(PooledObjectFactory<StatefulConnection<K, V>> factory) {
+		this(new ConnectionPool<>(factory));
+		this.connectionMapKey = factory;
+	}
+
+	public PooledConnectionProvider(PooledObjectFactory<StatefulConnection<K, V>> factory,
+	                                GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig) {
+		this(new ConnectionPool<>(factory, poolConfig));
+		this.connectionMapKey = factory;
+	}
+
+	private PooledConnectionProvider(Pool<StatefulConnection<K, V>> pool) {
+		this.pool = pool;
+	}
+
+	@Override
+	public void close() {
+		pool.close();
+	}
+
+	public final Pool<StatefulConnection<K, V>> getPool() {
+		return pool;
+	}
+
+	@Override
+	public StatefulConnection<K, V> getConnection() {
+		return pool.getResource();
+	}
+
+	@Override
+	public StatefulConnection<K, V> getConnection(CommandArgs<K, V> commandArgs) {
+		return pool.getResource();
+	}
+
+	@Override
+	public Map<?, Pool<StatefulConnection<K, V>>> getConnectionMap() {
+		return Collections.singletonMap(connectionMapKey, pool);
+	}
+
 }

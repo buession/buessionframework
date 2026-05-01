@@ -27,6 +27,7 @@ package io.lettuce.core;
 import com.buession.redis.client.connection.datasource.ClusterDataSource;
 import io.lettuce.core.builders.ClusterClientBuilder;
 import io.lettuce.core.internal.HostAndPort;
+import io.lettuce.core.providers.ConnectionProvider;
 
 import java.time.Duration;
 import java.util.Collections;
@@ -45,8 +46,8 @@ import java.util.Set;
  */
 public class RedisClusterClient<K, V> extends BaseRedisClient<K, V> {
 
-	private RedisClusterClient() {
-
+	private RedisClusterClient(ConnectionProvider<K, V> connectionProvider) {
+		super(connectionProvider);
 	}
 
 	@Override
@@ -147,7 +148,7 @@ public class RedisClusterClient<K, V> extends BaseRedisClient<K, V> {
 
 		@Override
 		protected RedisClusterClient<K, V> createClient() {
-			return new RedisClusterClient<>();
+			return new RedisClusterClient<>(connectionProvider);
 		}
 
 	}

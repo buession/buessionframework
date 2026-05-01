@@ -21,10 +21,53 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package io.lettuce.core;/**
- * 
+ */
+package io.lettuce.core;
+
+import io.lettuce.core.api.StatefulConnection;
+import io.lettuce.core.internal.HostAndPort;
+import org.apache.commons.pool2.PooledObjectFactory;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+
+/**
+ * 连接池
+ *
+ * @param <K>
+ * 		Key 类型
+ * @param <V>
+ * 		值类型
  *
  * @author Yong.Teng
  * @since 4.0.0
- */public class ConnectionPool {
+ */
+public class ConnectionPool<K, V> extends Pool<StatefulConnection<K, V>> {
+
+	public ConnectionPool(PooledObjectFactory<StatefulConnection<K, V>> factory) {
+		super(factory);
+	}
+
+	public ConnectionPool(PooledObjectFactory<StatefulConnection<K, V>> factory,
+	                      GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig) {
+		super(factory, poolConfig);
+	}
+
+	public ConnectionPool(HostAndPort hostAndPort, LettuceClientConfig clientConfig) {
+		this(new ConnectionFactory<>(hostAndPort, clientConfig));
+	}
+
+	public ConnectionPool(HostAndPort hostAndPort, LettuceClientConfig clientConfig,
+	                      GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig) {
+		this(new ConnectionFactory<>(hostAndPort, clientConfig), poolConfig);
+	}
+
+	@Override
+	public StatefulConnection<K, V> getResource() {
+		return super.getResource();
+	}
+
+	@Override
+	public void close() {
+		super.close();
+	}
+
 }
