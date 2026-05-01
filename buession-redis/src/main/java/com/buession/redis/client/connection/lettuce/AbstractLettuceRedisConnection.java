@@ -24,9 +24,11 @@
  */
 package com.buession.redis.client.connection.lettuce;
 
+import com.buession.core.utils.Assert;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.AbstractRedisConnection;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceRedisDataSource;
+import com.buession.redis.core.Codec;
 import com.buession.redis.core.PoolConfig;
 import com.buession.redis.exception.LettuceRedisExceptionUtils;
 import com.buession.redis.exception.RedisException;
@@ -53,6 +55,10 @@ public abstract class AbstractLettuceRedisConnection<K, V, C extends BaseRedisCl
 		extends AbstractRedisConnection<C> implements LettuceRedisConnection<K, V, C> {
 
 	private final PipeliningFlushPolicy pipeliningFlushPolicy = PipeliningFlushPolicy.flushEachCommand();
+
+	private Codec<K> keyCodec;
+
+	private Codec<V> valueCodec;
 
 	/**
 	 * 构造函数
@@ -253,7 +259,26 @@ public abstract class AbstractLettuceRedisConnection<K, V, C extends BaseRedisCl
 		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 	}
 
-	/*
+	@Override
+	public Codec<K> getKeyCodec() {
+		return keyCodec;
+	}
+
+	@Override
+	public void setKeyCodec(Codec<K> keyCodec) {
+		this.keyCodec = keyCodec;
+	}
+
+	@Override
+	public Codec<V> getValueCodec() {
+		return valueCodec;
+	}
+
+	@Override
+	public void setValueCodec(Codec<V> valueCodec) {
+		this.valueCodec = valueCodec;
+	}
+/*
 	@SuppressWarnings({"unchecked"})
 	@Override
 	public RedisCommands<K, V> getRedisCommands() {
@@ -290,6 +315,12 @@ public abstract class AbstractLettuceRedisConnection<K, V, C extends BaseRedisCl
 	@Override
 	public boolean isClosed() {
 		return false;// conn == null || conn.isOpen() == false;
+	}
+
+	@Override
+	protected void internalInit() {
+		Assert.isNull(getKeyCodec(), "Key codec cloud not be null.");
+		Assert.isNull(getValueCodec(), "Value codec cloud not be null.");
 	}
 
 	protected ConnectionPoolConfig<K, V> getConnectionPoolConfig() {

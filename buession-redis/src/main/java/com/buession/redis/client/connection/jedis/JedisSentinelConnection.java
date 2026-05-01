@@ -29,12 +29,12 @@ import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisSentinelConnection;
 import com.buession.net.ssl.SslConfiguration;
+import com.buession.redis.client.connection.SentinelRedisNode;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisSentinelDataSource;
 import com.buession.redis.core.Constants;
 import com.buession.redis.core.PoolConfig;
 import com.buession.redis.core.RedisNamedNode;
-import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.RedisSentinelNode;
 import com.buession.redis.core.RedisServer;
 import com.buession.redis.core.Role;
@@ -613,8 +613,8 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection<RedisS
 	private Jedis createSentinelJedis(final JedisSentinelDataSource dataSource) {
 		final JedisClientConfig sentinelClientConfig = createSentinelJedisClientConfig(dataSource);
 
-		for(RedisNode node : dataSource.getSentinels()){
-			int port = node.getPort() == 0 ? RedisNode.DEFAULT_SENTINEL_PORT : node.getPort();
+		for(SentinelRedisNode node : dataSource.getSentinels()){
+			int port = node.getPort() == 0 ? SentinelRedisNode.DEFAULT_SENTINEL_PORT : node.getPort();
 			HostAndPort sentinel = new HostAndPort(node.getHost(), port);
 			try(Jedis jedis = new Jedis(sentinel, sentinelClientConfig)){
 				return jedis;
@@ -641,8 +641,7 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection<RedisS
 					.database(dataSource.getDatabase()).build();
 
 			final SentinelClientBuilder<RedisSentinelClient> builder = RedisSentinelClient.builder()
-					.clientConfig(clientConfig)
-					.sentinelClientConfig(createSentinelJedisClientConfig(dataSource))
+					.clientConfig(clientConfig).sentinelClientConfig(createSentinelJedisClientConfig(dataSource))
 					.sentinels(createSentinelHosts(dataSource.getSentinels()));
 
 			Optional.ofNullable(getConnectionPoolConfig()).ifPresent(builder::poolConfig);
@@ -663,13 +662,13 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection<RedisS
 				.infiniteSoTimeout(getInfiniteSoTimeout()).clientName(dataSource.getSentinelClientName()).build();
 	}
 
-	protected Set<HostAndPort> createSentinelHosts(final Collection<RedisNode> sentinelNodes) {
+	protected Set<HostAndPort> createSentinelHosts(final Collection<SentinelRedisNode> sentinelNodes) {
 		if(Validate.isEmpty(sentinelNodes)){
 			return Collections.emptySet();
 		}
 
 		return sentinelNodes.stream().filter(Objects::nonNull).map(node->{
-			int port = node.getPort() == 0 ? RedisNode.DEFAULT_SENTINEL_PORT : node.getPort();
+			int port = node.getPort() == 0 ? SentinelRedisNode.DEFAULT_SENTINEL_PORT : node.getPort();
 			return new HostAndPort(node.getHost(), port);
 		}).collect(Collectors.toSet());
 	}

@@ -24,6 +24,7 @@
  */
 package com.buession.redis.client.connection.datasource.lettuce;
 
+import com.buession.redis.client.connection.SentinelRedisNode;
 import com.buession.redis.client.connection.datasource.SentinelDataSource;
 import com.buession.redis.core.Constants;
 import com.buession.redis.core.RedisNode;
@@ -66,7 +67,7 @@ public class LettuceSentinelDataSource extends AbstractLettuceDataSource impleme
 	/**
 	 * 哨兵节点
 	 */
-	private List<RedisNode> sentinels;
+	private List<SentinelRedisNode> sentinels;
 
 	@Override
 	public int getDatabase() {
@@ -119,12 +120,12 @@ public class LettuceSentinelDataSource extends AbstractLettuceDataSource impleme
 	}
 
 	@Override
-	public List<RedisNode> getSentinels() {
+	public List<SentinelRedisNode> getSentinels() {
 		return sentinels;
 	}
 
 	@Override
-	public void setSentinels(List<RedisNode> sentinels) {
+	public void setSentinels(List<SentinelRedisNode> sentinels) {
 		this.sentinels = sentinels;
 	}
 

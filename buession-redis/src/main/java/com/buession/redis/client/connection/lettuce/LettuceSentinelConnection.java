@@ -28,31 +28,30 @@ import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
-import com.buession.net.HostAndPort;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.RedisSentinelConnection;
+import com.buession.redis.client.connection.SentinelRedisNode;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceSentinelDataSource;
 import com.buession.redis.core.Constants;
 import com.buession.redis.core.PoolConfig;
 import com.buession.redis.core.RedisNamedNode;
-import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.RedisSentinelNode;
 import com.buession.redis.core.RedisServer;
 import com.buession.redis.core.Role;
 import com.buession.redis.core.internal.lettuce.LettuceClientConfigBuilder;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.transaction.Transaction;
-import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.LettuceClientConfig;
-import io.lettuce.core.RedisCommandsInvocationHandler;
 import io.lettuce.core.RedisCredentialsProvider;
 import io.lettuce.core.RedisSentinelClient;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.StaticCredentialsProvider;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisCommands;
+import io.lettuce.core.builders.SentinelClientBuilder;
 import io.lettuce.core.codec.RedisCodec;
+import io.lettuce.core.internal.HostAndPort;
 import io.lettuce.core.sentinel.api.StatefulRedisSentinelConnection;
 import io.lettuce.core.sentinel.api.sync.RedisSentinelCommands;
 import org.slf4j.Logger;
@@ -66,6 +65,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -81,8 +81,7 @@ import java.util.stream.Collectors;
  * @author Yong.Teng
  * @since 3.0.0
  */
-public class LettuceSentinelConnection<K, V>
-		extends AbstractLettuceRedisConnection<K, V, RedisSentinelClient<K, V>>
+public class LettuceSentinelConnection<K, V> extends AbstractLettuceRedisConnection<K, V, RedisSentinelClient<K, V>>
 		implements RedisSentinelConnection {
 
 	/**
@@ -635,6 +634,7 @@ public class LettuceSentinelConnection<K, V>
 
 	@Override
 	protected void internalInit() {
+		super.internalInit();
 		/*
 		if(pool == null && getPoolConfig() != null){
 			pool = createPool();
@@ -693,32 +693,6 @@ public class LettuceSentinelConnection<K, V>
 		return null;//RedisClient.create(redisURIBuilder.build()).connect(codec);
 	}
 
-	/*
-	protected LettuceSentinelPool createPool() {
-		final LettucePoolConfig<byte[], byte[], StatefulRedisSentinelConnection<byte[], byte[]>> lettucePoolConfig = new LettucePoolConfig<>();
-		final Set<HostAndPort> sentinels = createSentinelHosts(dataSource.getSentinels());
-		final LettuceClientConfig clientConfig = LettuceClientConfigBuilder.create(dataSource, getSslConfiguration())
-				.connectTimeout(getConnectTimeout())
-				.socketTimeout(getSoTimeout())
-				.infiniteSoTimeout(getInfiniteSoTimeout())
-				.database(dataSource.getDatabase())
-				.build();
-		final LettuceClientConfig sentinelClientConfig = createSentinelLettuceClientConfig(dataSource);
-
-		getPoolConfig().toGenericObjectPoolConfig(lettucePoolConfig);
-
-		if(getSslConfiguration() == null){
-			logger.debug("Create LettuceSentinelPool.");
-		}else{
-			logger.debug("Create LettuceSentinelPool with ssl.");
-		}
-
-		return new LettuceSentinelPool(dataSource.getMasterName(), sentinels, lettucePoolConfig,
-				clientConfig, sentinelClientConfig);
-	}
-
-	 */
-
 	@Override
 	protected Status doConnect() throws RedisConnectionFailureException {
 		if(isConnected()){
@@ -732,28 +706,20 @@ public class LettuceSentinelConnection<K, V>
 					.socketTimeout(getSoTimeout()).infiniteSoTimeout(getInfiniteSoTimeout())
 					.database(dataSource.getDatabase()).build();
 
-		}
-		/*
-		if(pool != null){
-			try{
-				conn = pool.getResource();
+			final SentinelClientBuilder<K, V, RedisSentinelClient<K, V>> builder = RedisSentinelClient.<K, V>builder()
+					.clientConfig(clientConfig)
+					.sentinelClientConfig(createSentinelLettuceClientConfig(dataSource))
+					.sentinels(createSentinelHosts(dataSource.getSentinels()));
 
-				if(logger.isDebugEnabled()){
-					logger.debug("StatefulRedisSentinelConnection initialized with pool success.");
-				}
-			}catch(Exception e){
-				if(logger.isErrorEnabled()){
-					logger.error("StatefulRedisSentinelConnection initialized with pool failure: {}", e.getMessage(),
-							e);
-				}
-
-				throw LettuceRedisExceptionUtils.convert(e);
+			Optional.ofNullable(getConnectionPoolConfig()).ifPresent(builder::poolConfig);
+			//Optional.ofNullable(getCacheConfig()).ifPresent(builder::cacheConfig);
+			if(Validate.hasText(dataSource.getMasterName())){
+				builder.masterName(dataSource.getMasterName());
 			}
-		}else{
-			conn = createStatefulRedisConnection(new ByteArrayCodec());
-		}
 
-		 */
+			client = builder.build();
+
+		}
 
 		return client == null ? Status.FAILURE : Status.SUCCESS;
 	}
@@ -793,14 +759,14 @@ public class LettuceSentinelConnection<K, V>
 				.build();
 	}
 
-	protected Set<HostAndPort> createSentinelHosts(final Collection<RedisNode> sentinelNodes) {
+	protected Set<HostAndPort> createSentinelHosts(final Collection<SentinelRedisNode> sentinelNodes) {
 		if(Validate.isEmpty(sentinelNodes)){
 			return Collections.emptySet();
 		}
 
 		return sentinelNodes.stream().filter(Objects::nonNull).map(node->{
-			int port = node.getPort() == 0 ? RedisNode.DEFAULT_SENTINEL_PORT : node.getPort();
-			return new HostAndPort(node.getHost(), port);
+			int port = node.getPort() == 0 ? SentinelRedisNode.DEFAULT_SENTINEL_PORT : node.getPort();
+			return HostAndPort.of(node.getHost(), port);
 		}).collect(Collectors.toSet());
 	}
 
@@ -814,7 +780,7 @@ public class LettuceSentinelConnection<K, V>
 			final Properties properties = new Properties();
 
 			node.forEach((key, value)->{
-				//sNodes.put(SafeEncoder.encode(key), SafeEncoder.encode(value));
+				sNodes.put(getKeyCodec().decode(key), getValueCodec().decode(value));
 			});
 
 			properties.putAll(sNodes);

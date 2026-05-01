@@ -27,7 +27,7 @@ package com.buession.redis.client.connection;
 import com.buession.net.HostAndPort;
 
 /**
- *
+ * Redis 节点
  *
  * @author Yong.Teng
  * @since 4.0.0
@@ -36,14 +36,35 @@ public class RedisNode extends HostAndPort {
 
 	private final static long serialVersionUID = 5460272093066382186L;
 
+	public final static String DEFAULT_HOST = com.buession.redis.core.RedisNode.DEFAULT_HOST;
+
+	public final static int DEFAULT_PORT = com.buession.redis.core.RedisNode.DEFAULT_PORT;
+
+	/**
+	 * 构造函数，设置 Redis 默认地址和默认端口
+	 */
 	public RedisNode() {
-		super(com.buession.redis.core.RedisNode.DEFAULT_HOST, com.buession.redis.core.RedisNode.DEFAULT_PORT);
+		super(DEFAULT_HOST, DEFAULT_PORT);
 	}
 
+	/**
+	 * 构造函数，设置默认端口
+	 *
+	 * @param host
+	 * 		Redis 地址
+	 */
 	public RedisNode(String host) {
-		super(host, com.buession.redis.core.RedisNode.DEFAULT_PORT);
+		super(host, DEFAULT_PORT);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 地址
+	 * @param port
+	 * 		Redis 端口
+	 */
 	public RedisNode(String host, int port) {
 		super(host, port);
 	}

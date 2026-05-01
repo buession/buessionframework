@@ -29,31 +29,23 @@ import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.RedisClusterConnection;
+import com.buession.redis.client.connection.RedisNode;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceClusterDataSource;
 import com.buession.redis.core.PoolConfig;
-import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.internal.lettuce.LettuceClientConfigBuilder;
-import com.buession.redis.exception.LettuceRedisExceptionUtils;
 import com.buession.redis.exception.RedisConnectionFailureException;
-import com.buession.redis.exception.RedisException;
 import io.lettuce.core.LettuceClientConfig;
 import io.lettuce.core.RedisClusterClient;
-import io.lettuce.core.RedisCommandsInvocationHandler;
 import io.lettuce.core.RedisCredentialsProvider;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.StaticCredentialsProvider;
 import io.lettuce.core.builders.ClusterClientBuilder;
-import io.lettuce.core.cluster.ClusterClientOptions;
-import io.lettuce.core.cluster.ClusterTopologyRefreshOptions;
-import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
-import io.lettuce.core.codec.ByteArrayCodec;
-import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.internal.HostAndPort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.time.Duration;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -748,12 +740,7 @@ public class LettuceClusterConnection<K, V> extends AbstractLettuceRedisConnecti
 
 	@Override
 	protected void internalInit() {
-		/*
-		if(pool == null && getPoolConfig() != null){
-			pool = createPool();
-		}
-
-		 */
+		super.internalInit();
 	}
 
 	/*
@@ -809,29 +796,6 @@ public class LettuceClusterConnection<K, V> extends AbstractLettuceRedisConnecti
 		}).collect(Collectors.toSet());
 	}
 
-	/*
-	protected LettuceClusterPool createPool() {
-		final LettucePoolConfig<byte[], byte[], StatefulRedisClusterConnection<byte[], byte[]>> lettucePoolConfig = new LettucePoolConfig<>();
-		final LettuceClientConfig clientConfig = LettuceClientConfigBuilder.create(dataSource, getSslConfiguration())
-				.connectTimeout(getConnectTimeout())
-				.socketTimeout(getSoTimeout())
-				.infiniteSoTimeout(getInfiniteSoTimeout())
-				.build();
-		final Set<HostAndPort> nodes = createHostAndPorts(dataSource);
-
-		getPoolConfig().toGenericObjectPoolConfig(lettucePoolConfig);
-
-		if(getSslConfiguration() == null){
-			logger.debug("Create LettuceClusterPool.");
-		}else{
-			logger.debug("Create LettuceClusterPool with ssl.");
-		}
-
-		return new LettuceClusterPool(nodes, lettucePoolConfig, clientConfig);
-	}
-
-	 */
-
 	@Override
 	protected Status doConnect() throws RedisConnectionFailureException {
 		if(isConnected()){
@@ -859,61 +823,14 @@ public class LettuceClusterConnection<K, V> extends AbstractLettuceRedisConnecti
 			client = builder.build();
 		}
 
-		/*
-		if(pool != null){
-			try{
-				conn = pool.getResource();
-
-				if(logger.isDebugEnabled()){
-					logger.debug("StatefulRedisClusterConnection initialized with pool success.");
-				}
-			}catch(Exception e){
-				if(logger.isErrorEnabled()){
-					logger.error("StatefulRedisClusterConnection initialized with pool failure: {}", e.getMessage(),
-							e);
-				}
-
-				throw LettuceRedisExceptionUtils.convert(e);
-			}
-		}else{
-			conn = createStatefulRedisClusterConnection(new ByteArrayCodec());
-		}
-
-		 */
-
 		return client == null ? Status.FAILURE : Status.SUCCESS;
 	}
 
-	@Override
-	protected void doDestroy() throws IOException {
-		super.doDestroy();
-
-		logger.debug("Lettuce destroy.");
-		/*
-		if(pool != null){
-			if(logger.isDebugEnabled()){
-				logger.debug("Lettuce cluster pool for {} destroy.", pool.getClass().getName());
-			}
-
-			try{
-				pool.destroy();
-			}catch(Exception e){
-				if(logger.isWarnEnabled()){
-					logger.warn("Cannot properly close Lettuce cluster pool.", e);
-				}
-				throw new RedisException(e);
-			}
-
-			pool = null;
-		}
-
-		 */
-	}
-
-	private static Set<HostAndPort> createNodes(final Set<com.buession.redis.client.connection.RedisNode> nodes) {
-		return nodes.stream().map((node)->HostAndPort.of(node.getHost(),
-						node.getPort() == 0 ? com.buession.redis.core.RedisNode.DEFAULT_PORT : node.getPort()))
-				.collect(Collectors.toSet());
+	private static Set<HostAndPort> createNodes(final Set<RedisNode> nodes) {
+		return nodes.stream().filter(Objects::nonNull).map((node)->{
+			int port = node.getPort() == 0 ? RedisNode.DEFAULT_PORT : node.getPort();
+			return HostAndPort.of(node.getHost(), port);
+		}).collect(Collectors.toSet());
 	}
 
 }

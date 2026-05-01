@@ -42,11 +42,9 @@ import io.lettuce.core.StaticCredentialsProvider;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.builders.StandaloneClientBuilder;
 import io.lettuce.core.codec.RedisCodec;
-import io.lettuce.core.internal.HostAndPort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.time.Duration;
 import java.util.Optional;
 
@@ -291,12 +289,7 @@ public class LettuceConnection<K, V> extends AbstractLettuceRedisConnection<K, V
 
 	@Override
 	protected void internalInit() {
-		/*
-		if(pool == null && getPoolConfig() != null){
-			pool = createPool();
-		}
-
-		 */
+		super.internalInit();
 	}
 
 	protected <K, V> StatefulRedisConnection<K, V> createStatefulRedisConnection(final RedisCodec<K, V> codec) {
@@ -324,28 +317,6 @@ public class LettuceConnection<K, V> extends AbstractLettuceRedisConnection<K, V
 		return null;//RedisClient.create(redisURI).connect(codec);
 	}
 
-	/*
-	protected LettucePool createPool() {
-		final LettuceDataSource dataSource = (LettuceDataSource) getDataSource();
-		final LettucePoolConfig<byte[], byte[], StatefulRedisConnection<byte[], byte[]>> lettucePoolConfig = new LettucePoolConfig<>();
-		final LettuceClientConfig clientConfig = LettuceClientConfigBuilder.create(dataSource, getSslConfiguration())
-				.connectTimeout(getConnectTimeout()).socketTimeout(getSoTimeout())
-				.infiniteSoTimeout(getInfiniteSoTimeout()).database(dataSource.getDatabase()).build();
-
-		getPoolConfig().toGenericObjectPoolConfig(lettucePoolConfig);
-
-		if(getSslConfiguration() == null){
-			logger.debug("Create LettucePool.");
-		}else{
-			logger.debug("Create LettucePool with ssl.");
-		}
-
-		return new LettucePool(lettucePoolConfig, dataSource.getHost(), dataSource.getPort(),
-				clientConfig);
-	}
-
-	 */
-
 	@Override
 	protected Status doConnect() throws RedisConnectionFailureException {
 		if(isConnected()){
@@ -361,61 +332,15 @@ public class LettuceConnection<K, V> extends AbstractLettuceRedisConnection<K, V
 
 			final StandaloneClientBuilder<K, V, RedisStandaloneClient<K, V>> builder =
 					RedisStandaloneClient.<K, V>builder().clientConfig(clientConfig)
-							.hostAndPort(HostAndPort.of(dataSource.getHost(), dataSource.getPort()));
+							.hostAndPort(dataSource.getHost(), dataSource.getPort());
 
 			Optional.ofNullable(getConnectionPoolConfig()).ifPresent(builder::poolConfig);
 			//Optional.ofNullable(getCacheConfig()).ifPresent(builder::cacheConfig);
 
 			client = builder.build();
 		}
-		/*
-		if(pool != null){
-			try{
-				conn = pool.getResource();
-
-				if(logger.isDebugEnabled()){
-					logger.debug("StatefulConnection initialized with pool success.");
-				}
-			}catch(Exception e){
-				if(logger.isErrorEnabled()){
-					logger.error("StatefulConnection initialized with pool failure: {}", e.getMessage(), e);
-				}
-
-				throw LettuceRedisExceptionUtils.convert(e);
-			}
-		}else{
-			conn = createStatefulRedisConnection(new ByteArrayCodec());
-		}
-
-		 */
 
 		return client == null ? Status.FAILURE : Status.SUCCESS;
-	}
-
-	@Override
-	protected void doDestroy() throws IOException {
-		super.doDestroy();
-
-		logger.debug("Lettuce destroy.");
-		/*
-		if(pool != null){
-			if(logger.isDebugEnabled()){
-				logger.debug("Lettuce pool for {} destroy.", pool.getClass().getName());
-			}
-
-			try{
-				pool.destroy();
-			}catch(Exception e){
-				if(logger.isWarnEnabled()){
-					logger.warn("Cannot properly close Lettuce pool.", e);
-				}
-				throw new RedisException(e);
-			}
-
-			pool = null;
-		}
-
-		 */
 	}
 
 }

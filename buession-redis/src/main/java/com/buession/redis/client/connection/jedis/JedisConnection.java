@@ -31,8 +31,6 @@ import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
 import com.buession.redis.core.PoolConfig;
 import com.buession.redis.core.internal.jedis.JedisClientConfigBuilder;
 import com.buession.redis.exception.RedisConnectionFailureException;
-import redis.clients.jedis.DefaultJedisClientConfig;
-import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.JedisClientConfig;
 import redis.clients.jedis.RedisClient;
 import redis.clients.jedis.builders.StandaloneClientBuilder;
@@ -272,7 +270,7 @@ public class JedisConnection extends AbstractJedisRedisConnection<RedisClient> i
 					.database(dataSource.getDatabase()).build();
 
 			final StandaloneClientBuilder<RedisClient> builder = RedisClient.builder().clientConfig(clientConfig)
-					.hostAndPort(new HostAndPort(dataSource.getHost(), dataSource.getPort()));
+					.hostAndPort(dataSource.getHost(), dataSource.getPort());
 
 			Optional.ofNullable(getConnectionPoolConfig()).ifPresent(builder::poolConfig);
 			Optional.ofNullable(getCacheConfig()).ifPresent(builder::cacheConfig);
