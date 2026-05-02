@@ -27,6 +27,8 @@ package io.lettuce.core;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.providers.ConnectionProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Proxy;
 
@@ -47,6 +49,8 @@ public abstract class BaseRedisClient<K, V> {
 
 	protected RedisCommands<K, V> redisCommands;
 
+	protected final Logger logger = LoggerFactory.getLogger(getClass());
+
 	protected BaseRedisClient(ConnectionProvider<K, V> connectionProvider) {
 		this.connectionProvider = connectionProvider;
 	}
@@ -59,6 +63,18 @@ public abstract class BaseRedisClient<K, V> {
 		}
 
 		return redisCommands;
+	}
+
+	public void multi() {
+		getRedisCommands().multi();
+	}
+
+	public void close() {
+		try{
+			connectionProvider.close();
+		}catch(Exception e){
+			logger.warn("Close redis connection error: {}", e.getMessage());
+		}
 	}
 
 	public RedisAsyncCommands<K, V> getRedisAsyncCommands() {

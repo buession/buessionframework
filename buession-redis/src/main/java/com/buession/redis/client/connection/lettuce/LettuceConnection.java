@@ -249,25 +249,6 @@ public class LettuceConnection<K, V> extends AbstractLettuceRedisConnection<K, V
 	}
 
 	@Override
-	public Transaction multi() {
-		if(transaction == null){
-			/*
-			getRedisCommands().multi();
-			transaction = new DefaultTransactionProxy<>(new LettuceTransaction<>(getRedisAsyncCommands()),
-					getRedisAsyncCommands());
-
-			 */
-		}
-
-		return transaction;
-	}
-
-	@Override
-	protected void internalInit() {
-		super.internalInit();
-	}
-
-	@Override
 	protected Status doConnect() throws RedisConnectionFailureException {
 		if(isConnected()){
 			return Status.SUCCESS;

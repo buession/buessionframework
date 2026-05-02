@@ -32,8 +32,12 @@ import com.buession.redis.client.connection.RedisClusterConnection;
 import com.buession.redis.client.connection.RedisNode;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceClusterDataSource;
 import com.buession.redis.core.PoolConfig;
+import com.buession.redis.core.RedisMode;
+import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.internal.lettuce.LettuceClientConfigBuilder;
+import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.RedisConnectionFailureException;
+import com.buession.redis.transaction.Transaction;
 import io.lettuce.core.LettuceClientConfig;
 import io.lettuce.core.RedisClusterClient;
 import io.lettuce.core.RedisCredentialsProvider;
@@ -738,11 +742,6 @@ public class LettuceClusterConnection<K, V> extends AbstractLettuceRedisConnecti
 		this.topologyRefreshPeriod = topologyRefreshPeriod;
 	}
 
-	@Override
-	protected void internalInit() {
-		super.internalInit();
-	}
-
 	/*
 	protected <K, V> StatefulRedisClusterConnection<K, V> createStatefulRedisClusterConnection(
 			final RedisCodec<K, V> codec) {
@@ -772,6 +771,11 @@ public class LettuceClusterConnection<K, V> extends AbstractLettuceRedisConnecti
 	}
 
 	 */
+
+	@Override
+	public Transaction multi() {
+		throw new NotSupportedCommandException(RedisMode.CLUSTER, RedisCommand.MULTI);
+	}
 
 	private Set<RedisURI> createRedisURIs(final LettuceClusterDataSource dataSource,
 	                                      final PropertyMapper propertyMapper) {

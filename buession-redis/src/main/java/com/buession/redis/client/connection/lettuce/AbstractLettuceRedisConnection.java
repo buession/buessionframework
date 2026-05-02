@@ -32,6 +32,9 @@ import com.buession.redis.core.PoolConfig;
 import com.buession.redis.exception.LettuceRedisExceptionUtils;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
+import com.buession.redis.transaction.DefaultTransactionProxy;
+import com.buession.redis.transaction.Transaction;
+import com.buession.redis.transaction.lettuce.LettuceTransaction;
 import io.lettuce.core.BaseRedisClient;
 import io.lettuce.core.ConnectionPoolConfig;
 import io.lettuce.core.api.PipeliningFlushPolicy;
@@ -297,6 +300,17 @@ public abstract class AbstractLettuceRedisConnection<K, V, C extends BaseRedisCl
 	}
 
 	@Override
+	public Transaction multi() {
+		if(transaction == null){
+			client.multi();
+			transaction = new DefaultTransactionProxy<>(new LettuceTransaction<>(client.getRedisAsyncCommands()),
+					client.getRedisAsyncCommands());
+		}
+
+		return transaction;
+	}
+
+	@Override
 	public boolean isConnected() {
 		return false;//conn != null && conn.isOpen();
 	}
@@ -330,27 +344,34 @@ public abstract class AbstractLettuceRedisConnection<K, V, C extends BaseRedisCl
 
 	@Override
 	protected void doDestroy() throws IOException {
-		if(pipeline != null){
-			pipeline.close();
-			pipeline = null;
+		if(client != null){
+			client.close();
+		}
+		doClose1();
+
+		if(logger.isInfoEnabled()){
+			logger.debug("{} destroy.", getClass().getSimpleName());
 		}
 	}
 
 	@Override
 	protected void doClose() throws IOException {
+		doClose1();
+
+		if(logger.isInfoEnabled()){
+			logger.debug("{} close.", getClass().getSimpleName());
+		}
+	}
+
+	private void doClose1() {
 		if(pipeline != null){
 			pipeline.close();
 			pipeline = null;
 		}
-
-		logger.debug("Lettuce close.");
-
-		/*
-		if(conn != null){
-			conn.close();
+		if(transaction != null){
+			transaction.close();
+			transaction = null;
 		}
-
-		 */
 	}
 
 }

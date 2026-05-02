@@ -49,7 +49,7 @@ import java.util.function.Supplier;
  */
 public class ConnectionFactory<K, V> implements PooledObjectFactory<StatefulConnection<K, V>> {
 
-	private final static Logger logger = LoggerFactory.getLogger(ConnectionFactory.class);
+	private final static PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
 
 	private final LettuceClientConfig clientConfig;
 
@@ -58,6 +58,8 @@ public class ConnectionFactory<K, V> implements PooledObjectFactory<StatefulConn
 	private final RedisCodec<K, V> redisCodec;
 
 	private final Supplier<StatefulConnection<K, V>> objectMaker;
+
+	private final static Logger logger = LoggerFactory.getLogger(ConnectionFactory.class);
 
 	public ConnectionFactory(final HostAndPort hostAndPort, final RedisCodec<K, V> redisCodec) {
 		this(hostAndPort, DefaultLettuceClientConfig.builder().build(), redisCodec);
@@ -121,7 +123,6 @@ public class ConnectionFactory<K, V> implements PooledObjectFactory<StatefulConn
 	}
 
 	private StatefulConnection<K, V> build() {
-		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
 		final RedisURI redisURI = RedisURI.create(hostAndPort.getHostText(), hostAndPort.getPort());
 		final RedisClient redisClient = RedisClient.create(clientConfig.getClientResources(), redisURI);
 		ClientOptions clientOptions = null;
@@ -142,9 +143,12 @@ public class ConnectionFactory<K, V> implements PooledObjectFactory<StatefulConn
 					clientConfig.getConnectionTimeout().isNegative() == false){
 				SocketOptions socketOptions = clientConfig.getClientOptions().getSocketOptions().mutate()
 						.connectTimeout(clientConfig.getConnectionTimeout()).build();
-				clientOptions = clientConfig.getClientOptions().mutate().socketOptions(socketOptions).build();
+
+				clientOptions = createClientOptions(clientConfig.getClientOptions().mutate(), socketOptions,
+						createSslOptions());
 			}else{
-				clientOptions = clientConfig.getClientOptions();
+				clientOptions = clientConfig.getSslParameters() == null ? clientConfig.getClientOptions() :
+						createClientOptions(clientConfig.getClientOptions().mutate(), null, createSslOptions());
 			}
 		}else{
 			if(clientConfig.getConnectionTimeout() != null &&
@@ -152,7 +156,11 @@ public class ConnectionFactory<K, V> implements PooledObjectFactory<StatefulConn
 				SocketOptions socketOptions = SocketOptions.builder()
 						.connectTimeout(clientConfig.getConnectionTimeout())
 						.build();
-				clientOptions = ClientOptions.builder().socketOptions(socketOptions).build();
+				clientOptions = createClientOptions(socketOptions, createSslOptions());
+			}else{
+				if(clientConfig.getSslParameters() != null){
+					clientOptions = createClientOptions(null, createSslOptions());
+				}
 			}
 		}
 		propertyMapper.from(clientOptions).to(redisClient::setOptions);
@@ -162,6 +170,30 @@ public class ConnectionFactory<K, V> implements PooledObjectFactory<StatefulConn
 		}
 
 		return redisClient.connect(redisCodec);
+	}
+
+	private SslOptions createSslOptions() {
+		return createSslOptions(SslOptions.builder());
+	}
+
+	private SslOptions createSslOptions(final SslOptions.Builder sslOptionsBuilder) {
+		if(clientConfig.getSslParameters() != null){
+			sslOptionsBuilder.sslParameters(clientConfig::getSslParameters);
+		}
+
+		return sslOptionsBuilder.build();
+	}
+
+	private ClientOptions createClientOptions(final SocketOptions socketOptions, final SslOptions sslOptions) {
+		return createClientOptions(ClientOptions.builder(), socketOptions, sslOptions);
+	}
+
+	private ClientOptions createClientOptions(final ClientOptions.Builder clientOptionsBuilder,
+	                                          final SocketOptions socketOptions, final SslOptions sslOptions) {
+		propertyMapper.from(socketOptions).to(clientOptionsBuilder::socketOptions);
+		propertyMapper.from(sslOptions).to(clientOptionsBuilder::sslOptions);
+
+		return clientOptionsBuilder.build();
 	}
 
 	private void reAuthenticate(StatefulConnection<K, V> connection) throws Exception {

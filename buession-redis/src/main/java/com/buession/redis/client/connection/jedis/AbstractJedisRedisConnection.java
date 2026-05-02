@@ -389,7 +389,7 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 		if(client != null){
 			client.close();
 		}
-		doClose();
+		doClose1();
 
 		if(logger.isInfoEnabled()){
 			logger.debug("{} destroy.", getClass().getSimpleName());
@@ -398,6 +398,14 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 
 	@Override
 	protected void doClose() throws IOException {
+		doClose1();
+
+		if(logger.isInfoEnabled()){
+			logger.debug("{} close.", getClass().getSimpleName());
+		}
+	}
+
+	private void doClose1() {
 		if(pipeline != null){
 			pipeline.close();
 			pipeline = null;
@@ -405,10 +413,6 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 		if(transaction != null){
 			transaction.close();
 			transaction = null;
-		}
-
-		if(logger.isInfoEnabled()){
-			logger.debug("{} close.", getClass().getSimpleName());
 		}
 	}
 

@@ -58,7 +58,6 @@ import io.lettuce.core.sentinel.api.sync.RedisSentinelCommands;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
@@ -633,17 +632,6 @@ public class LettuceSentinelConnection<K, V> extends AbstractLettuceRedisConnect
 		//delegate.async().remove(SafeEncoder.encode(masterName));
 	}
 
-	@Override
-	protected void internalInit() {
-		super.internalInit();
-		/*
-		if(pool == null && getPoolConfig() != null){
-			pool = createPool();
-		}
-
-		 */
-	}
-
 	private RedisSentinelCommands<K, V> getSentinelCommands(final LettuceSentinelDataSource dataSource) {
 		return null;//delegate.sync();
 	}
@@ -723,32 +711,6 @@ public class LettuceSentinelConnection<K, V> extends AbstractLettuceRedisConnect
 		}
 
 		return client == null ? Status.FAILURE : Status.SUCCESS;
-	}
-
-	@Override
-	protected void doDestroy() throws IOException {
-		super.doDestroy();
-
-		logger.debug("Lettuce destroy.");
-		/*
-		if(pool != null){
-			if(logger.isDebugEnabled()){
-				logger.debug("Lettuce sentinel pool for {} destroy.", pool.getClass().getName());
-			}
-
-			try{
-				pool.destroy();
-			}catch(Exception e){
-				if(logger.isWarnEnabled()){
-					logger.warn("Cannot properly close Lettuce sentinel pool.", e);
-				}
-				throw new RedisException(e);
-			}
-
-			pool = null;
-		}
-
-		 */
 	}
 
 	protected LettuceClientConfig createSentinelLettuceClientConfig(final LettuceSentinelDataSource dataSource) {
