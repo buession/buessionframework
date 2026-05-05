@@ -32,7 +32,6 @@ import com.buession.redis.client.connection.datasource.lettuce.LettuceClusterDat
 import com.buession.redis.client.connection.datasource.lettuce.LettuceDataSource;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceRedisDataSource;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceSentinelDataSource;
-import io.lettuce.core.BaseRedisClient;
 import io.lettuce.core.codec.ByteArrayCodec;
 
 /**
@@ -50,34 +49,19 @@ public final class LettuceConnectionFactory extends AbstractConnectionFactory<Le
 	@Override
 	public RedisStandaloneConnection getStandaloneConnection() {
 		final LettuceDataSource dataSource = (LettuceDataSource) getDataSource();
-		return createConnection(new LettuceConnection<>(dataSource, dataSource.getPoolConfig(),
-				dataSource.getConnectTimeout(), dataSource.getSoTimeout(), dataSource.getInfiniteSoTimeout(),
-				dataSource.getSslConfiguration()));
+		return new LettuceConnection<>(dataSource, dataSource.getPoolConfig(), new ByteArrayCodec());
 	}
 
 	@Override
 	public RedisSentinelConnection getSentinelConnection() {
 		final LettuceSentinelDataSource dataSource = (LettuceSentinelDataSource) getDataSource();
-		return createConnection(new LettuceSentinelConnection<>(dataSource, dataSource.getPoolConfig(),
-				dataSource.getConnectTimeout(), dataSource.getSoTimeout(), dataSource.getInfiniteSoTimeout(),
-				dataSource.getSentinelConnectTimeout(), dataSource.getSentinelSoTimeout(),
-				dataSource.getSslConfiguration()));
+		return new LettuceSentinelConnection<>(dataSource, dataSource.getPoolConfig(), new ByteArrayCodec());
 	}
 
 	@Override
 	public RedisClusterConnection getClusterConnection() {
 		final LettuceClusterDataSource dataSource = (LettuceClusterDataSource) getDataSource();
-		return createConnection(new LettuceClusterConnection<>(dataSource, dataSource.getPoolConfig(),
-				dataSource.getConnectTimeout(), dataSource.getSoTimeout(), dataSource.getInfiniteSoTimeout(),
-				dataSource.getMaxRedirects(), dataSource.getMaxTotalRetriesDuration(),
-				dataSource.getTopologyRefreshPeriod(), dataSource.getSslConfiguration()));
-	}
-
-	private static <C extends BaseRedisClient<byte[], byte[]>, CONN extends LettuceRedisConnection<byte[], byte[], C>> CONN createConnection(
-			final CONN connection) {
-		connection.setCodec(new ByteArrayCodec());
-
-		return connection;
+		return new LettuceClusterConnection<>(dataSource, dataSource.getPoolConfig(), new ByteArrayCodec());
 	}
 
 }

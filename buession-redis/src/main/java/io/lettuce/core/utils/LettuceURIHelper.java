@@ -26,7 +26,7 @@ package io.lettuce.core.utils;
 
 import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
-import com.buession.net.URIHelper;
+import com.buession.net.HostAndPort;
 import com.buession.redis.core.RedisNode;
 import io.lettuce.core.RedisURI;
 
@@ -38,7 +38,7 @@ import java.net.URI;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class LettuceURIHelper extends URIHelper {
+public class LettuceURIHelper {
 
 	private LettuceURIHelper() {
 
@@ -50,6 +50,59 @@ public class LettuceURIHelper extends URIHelper {
 		}
 
 		return true;
+	}
+
+	public static HostAndPort getHostAndPort(URI uri) {
+		return new HostAndPort(uri.getHost(), uri.getPort());
+	}
+
+	/**
+	 * Extracts the user from the given URI.
+	 * <p>
+	 * For details on the URI format and authentication examples.
+	 * </p>
+	 *
+	 * @param uri
+	 * 		the URI to extract the user from
+	 *
+	 * @return the user as a String, or null if user is empty or {@link URI#getUserInfo()} info is missing
+	 */
+	public static String getUser(URI uri) {
+		String userInfo = uri.getUserInfo();
+		if(userInfo != null){
+			String user = StringUtils.split(userInfo, ":")[0];
+			if(user.isEmpty()){
+				user = null; // return null user is not specified
+			}
+			return user;
+		}
+		return null;
+	}
+
+	/**
+	 * Extracts the password from the given URI.
+	 * <p>
+	 * For details on the URI format and authentication examples.
+	 * </p>
+	 *
+	 * @param uri
+	 * 		the URI to extract the password from
+	 *
+	 * @return the password as a String, or null if {@link URI#getUserInfo()} info is missing
+	 *
+	 * @throws IllegalArgumentException
+	 * 		if {@link URI#getUserInfo()} is provided but does not contain a password
+	 */
+	public static String getPassword(URI uri) {
+		String userInfo = uri.getUserInfo();
+		if(userInfo != null){
+			String[] userAndPassword = StringUtils.split(userInfo, ":", 2);
+			if(userAndPassword.length < 2){
+				throw new IllegalArgumentException("Password not provided in uri.");
+			}
+			return userAndPassword[1];
+		}
+		return null;
 	}
 
 	public static boolean hasDbIndex(URI uri) {

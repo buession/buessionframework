@@ -214,7 +214,7 @@ public abstract class AbstractClientBuilder<K, V, T extends AbstractClientBuilde
 
 	protected void validateCommonConfiguration() {
 		if(codec == null){
-			//throw new IllegalArgumentException("The encodes keys and values codec cloud not be null.");
+			throw new IllegalArgumentException("The encodes keys and values codec cloud not be null.");
 		}
 	}
 

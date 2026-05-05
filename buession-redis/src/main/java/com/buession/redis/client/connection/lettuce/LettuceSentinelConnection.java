@@ -120,6 +120,33 @@ public class LettuceSentinelConnection<K, V> extends AbstractLettuceRedisConnect
 		super(dataSource, poolConfig);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param codec
+	 * 		Redis 编解码器
+	 */
+	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, RedisCodec<K, V> codec) {
+		super(dataSource, codec);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param codec
+	 * 		Redis 编解码器
+	 */
+	public LettuceSentinelConnection(LettuceSentinelDataSource dataSource, PoolConfig poolConfig,
+	                                 RedisCodec<K, V> codec) {
+		super(dataSource, poolConfig, codec);
+	}
+
 	@Override
 	public int getSentinelConnectTimeout() {
 		return sentinelConnectTimeout;

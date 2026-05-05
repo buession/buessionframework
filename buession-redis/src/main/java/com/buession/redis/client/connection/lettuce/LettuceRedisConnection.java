@@ -56,6 +56,8 @@ public interface LettuceRedisConnection<K, V, C extends BaseRedisClient<K, V>> e
 	 * 获取 Redis 编解码器
 	 *
 	 * @return Redis 编解码器
+	 *
+	 * @since 4.0.0
 	 */
 	RedisCodec<K, V> getCodec();
 
@@ -64,6 +66,8 @@ public interface LettuceRedisConnection<K, V, C extends BaseRedisClient<K, V>> e
 	 *
 	 * @param codec
 	 * 		Redis 编解码器
+	 *
+	 * @since 4.0.0
 	 */
 	void setCodec(RedisCodec<K, V> codec);
 

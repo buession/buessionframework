@@ -42,6 +42,7 @@ import io.lettuce.core.RedisCredentialsProvider;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.StaticCredentialsProvider;
 import io.lettuce.core.builders.ClusterClientBuilder;
+import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.internal.HostAndPort;
 
 import java.time.Duration;
@@ -110,6 +111,33 @@ public class LettuceClusterConnection<K, V> extends AbstractLettuceRedisConnecti
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig) {
 		super(dataSource, poolConfig);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param codec
+	 * 		Redis 编解码器
+	 */
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, RedisCodec<K, V> codec) {
+		super(dataSource, codec);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param codec
+	 * 		Redis 编解码器
+	 */
+	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig,
+	                                RedisCodec<K, V> codec) {
+		super(dataSource, poolConfig, codec);
 	}
 
 	@Override

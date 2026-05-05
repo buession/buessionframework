@@ -32,6 +32,7 @@ import com.buession.redis.exception.RedisConnectionFailureException;
 import io.lettuce.core.DefaultLettuceClientConfig;
 import io.lettuce.core.RedisStandaloneClient;
 import io.lettuce.core.builders.StandaloneClientBuilder;
+import io.lettuce.core.codec.RedisCodec;
 
 import java.util.Optional;
 
@@ -76,6 +77,32 @@ public class LettuceConnection<K, V> extends AbstractLettuceRedisConnection<K, V
 	 */
 	public LettuceConnection(LettuceDataSource dataSource, PoolConfig poolConfig) {
 		super(dataSource, poolConfig);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param codec
+	 * 		Redis 编解码器
+	 */
+	public LettuceConnection(LettuceDataSource dataSource, RedisCodec<K, V> codec) {
+		super(dataSource, codec);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param codec
+	 * 		Redis 编解码器
+	 */
+	public LettuceConnection(LettuceDataSource dataSource, PoolConfig poolConfig, RedisCodec<K, V> codec) {
+		super(dataSource, poolConfig, codec);
 	}
 
 	@Override
