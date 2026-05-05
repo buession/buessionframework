@@ -48,6 +48,8 @@ public class DefaultLettuceClientConfig implements LettuceClientConfig {
 
 	private ClientOptions clientOptions = ClientOptions.create();
 
+	private SslOptions sslOptions = SslOptions.create();
+
 	private Duration connectionTimeout = Duration.ofMillis(RedisURI.DEFAULT_TIMEOUT);
 
 	private Duration socketTimeout = connectionTimeout;
@@ -78,6 +80,11 @@ public class DefaultLettuceClientConfig implements LettuceClientConfig {
 	@Override
 	public ClientOptions getClientOptions() {
 		return clientOptions;
+	}
+
+	@Override
+	public SslOptions getSslOptions() {
+		return sslOptions;
 	}
 
 	@Override
@@ -271,6 +278,11 @@ public class DefaultLettuceClientConfig implements LettuceClientConfig {
 
 		public Builder ssl(boolean isSsl) {
 			lettuceClientConfig.isSsl = isSsl;
+			return this;
+		}
+
+		public Builder sslOptions(SslOptions sslOptions) {
+			lettuceClientConfig.sslOptions = sslOptions;
 			return this;
 		}
 

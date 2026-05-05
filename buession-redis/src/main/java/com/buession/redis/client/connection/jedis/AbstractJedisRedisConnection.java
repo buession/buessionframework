@@ -25,8 +25,8 @@
 package com.buession.redis.client.connection.jedis;
 
 import com.buession.core.utils.FieldUtils;
+import com.buession.core.validator.Validate;
 import com.buession.redis.client.connection.AbstractRedisConnection;
-import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisRedisDataSource;
 import com.buession.redis.core.PoolConfig;
@@ -40,10 +40,13 @@ import com.buession.redis.transaction.jedis.JedisTransaction;
 import com.buession.redis.transaction.DefaultTransactionProxy;
 import redis.clients.jedis.Connection;
 import redis.clients.jedis.ConnectionPoolConfig;
+import redis.clients.jedis.DefaultJedisClientConfig;
+import redis.clients.jedis.SslOptions;
 import redis.clients.jedis.UnifiedJedis;
 import redis.clients.jedis.csc.CacheConfig;
 import redis.clients.jedis.providers.ConnectionProvider;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -68,6 +71,7 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 
 	private boolean connectionProviderInitialized = false;
 
+
 	/**
 	 * 构造函数
 	 */
@@ -90,89 +94,6 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 	 *
 	 * @param dataSource
 	 * 		Redis 数据源
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 */
-	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource, int connectTimeout, int soTimeout) {
-		super(dataSource, connectTimeout, soTimeout);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时（单位：毫秒）
-	 *
-	 * @since 2.0.0
-	 */
-	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource, int connectTimeout, int soTimeout,
-	                                    int infiniteSoTimeout) {
-		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource, SslConfiguration sslConfiguration) {
-		super(dataSource, sslConfiguration);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource, int connectTimeout, int soTimeout,
-	                                    SslConfiguration sslConfiguration) {
-		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时（单位：毫秒）
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 *
-	 * @since 2.0.0
-	 */
-	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource, int connectTimeout, int soTimeout,
-	                                    int infiniteSoTimeout, SslConfiguration sslConfiguration) {
-		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
 	 * @param poolConfig
 	 * 		连接池配置
 	 *
@@ -180,107 +101,6 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 	 */
 	public AbstractJedisRedisConnection(DataSource dataSource, PoolConfig poolConfig) {
 		super(dataSource, poolConfig);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 *
-	 * @since 3.0.0
-	 */
-	public AbstractJedisRedisConnection(DataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-	                                    int soTimeout) {
-		super(dataSource, poolConfig, connectTimeout, soTimeout);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时（单位：毫秒）
-	 *
-	 * @since 3.0.0
-	 */
-	public AbstractJedisRedisConnection(DataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
-	                                    int infiniteSoTimeout) {
-		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 *
-	 * @since 3.0.0
-	 */
-	public AbstractJedisRedisConnection(DataSource dataSource, PoolConfig poolConfig,
-	                                    SslConfiguration sslConfiguration) {
-		super(dataSource, poolConfig, sslConfiguration);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param connectTimeout（单位：毫秒）
-	 * 		连接超时
-	 * @param soTimeout（单位：毫秒）
-	 * 		读取超时
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 *
-	 * @since 3.0.0
-	 */
-	public AbstractJedisRedisConnection(DataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
-	                                    SslConfiguration sslConfiguration) {
-		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout（单位：毫秒）
-	 * 		Infinite 读取超时
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 *
-	 * @since 3.0.0
-	 */
-	public AbstractJedisRedisConnection(DataSource dataSource, PoolConfig poolConfig, int connectTimeout, int soTimeout,
-	                                    int infiniteSoTimeout, SslConfiguration sslConfiguration) {
-		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
 	}
 
 	@Override
@@ -370,6 +190,72 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 
 	@Override
 	protected void internalInit() {
+	}
+
+	protected void commonClientConfigBuilder(final DefaultJedisClientConfig.Builder builder) {
+		if(builder == null){
+			return;
+		}
+
+		builder.connectionTimeoutMillis(getConnectTimeout())
+				.socketTimeoutMillis(getSoTimeout())
+				.blockingSocketTimeoutMillis(getInfiniteSoTimeout());
+
+		if(Validate.hasText(getDataSource().getPassword())){
+			builder.password(getDataSource().getPassword());
+			if(Validate.hasText(getDataSource().getUsername())){
+				builder.user(getDataSource().getUsername());
+			}
+		}
+
+		propertyMapper.from(getDataSource().getClientName()).to(builder::clientName);
+		if(getSslOptions() != null){
+			builder.ssl(getSslOptions().isEnabled());
+
+			if(getSslOptions().isEnabled()){
+				builder.sslSocketFactory(getSslOptions().getSslSocketFactory())
+						.sslParameters(getSslOptions().getSslParameters())
+						.hostnameVerifier(getSslOptions().getHostnameVerifier());
+
+				SslOptions.Builder sslOptionsBuilder = SslOptions.builder();
+
+				propertyMapper.from(getSslOptions().getKeyStoreType()).to(sslOptionsBuilder::keyStoreType);
+
+				if(Validate.hasText(getSslOptions().getKeyStore())){
+					if(Validate.hasText(getSslOptions().getKeyStorePassword())){
+						sslOptionsBuilder.keystore(new File(getSslOptions().getKeyStore()),
+								getSslOptions().getKeyStorePassword().toCharArray());
+					}else{
+						sslOptionsBuilder.keystore(new File(getSslOptions().getKeyStore()));
+					}
+				}
+
+				propertyMapper.from(getSslOptions().getTrustStoreType()).to(sslOptionsBuilder::trustStoreType);
+
+				if(Validate.hasText(getSslOptions().getTrustStore())){
+					if(Validate.hasText(getSslOptions().getTrustStorePassword())){
+						sslOptionsBuilder.truststore(new File(getSslOptions().getTrustStore()),
+								getSslOptions().getTrustStorePassword().toCharArray());
+					}else{
+						sslOptionsBuilder.truststore(new File(getSslOptions().getTrustStore()));
+					}
+				}
+
+				propertyMapper.from(getSslOptions().getProtocol()).to(sslOptionsBuilder::sslProtocol);
+				propertyMapper.from(getSslOptions().getSslParameters()).to(sslOptionsBuilder::sslParameters);
+
+				if(getSslOptions().getSslVerifyMode() == com.buession.redis.core.SslOptions.SslVerifyMode.CA){
+					sslOptionsBuilder.sslVerifyMode(redis.clients.jedis.SslVerifyMode.CA);
+				}else if(getSslOptions().getSslVerifyMode() == com.buession.redis.core.SslOptions.SslVerifyMode.FULL){
+					sslOptionsBuilder.sslVerifyMode(redis.clients.jedis.SslVerifyMode.FULL);
+				}else if(getSslOptions().getSslVerifyMode() ==
+						com.buession.redis.core.SslOptions.SslVerifyMode.INSECURE){
+					sslOptionsBuilder.sslVerifyMode(redis.clients.jedis.SslVerifyMode.INSECURE);
+				}
+
+				builder.sslOptions(sslOptionsBuilder.build());
+			}
+		}
 	}
 
 	protected ConnectionProvider getConnectionProvider() {

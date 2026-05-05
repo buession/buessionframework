@@ -52,6 +52,44 @@ public interface SentinelDataSource extends DataSource {
 	void setDatabase(int database);
 
 	/**
+	 * 返回哨兵节点用户名
+	 *
+	 * @return 哨兵节点用户名
+	 *
+	 * @since 4.0.0
+	 */
+	String getSentinelUsername();
+
+	/**
+	 * 设置哨兵节点用户名
+	 *
+	 * @param sentinelUsername
+	 * 		哨兵节点用户名
+	 *
+	 * @since 4.0.0
+	 */
+	void setSentinelUsername(String sentinelUsername);
+
+	/**
+	 * 返回哨兵节点密码
+	 *
+	 * @return 哨兵节点密码
+	 *
+	 * @since 4.0.0
+	 */
+	String getSentinelPassword();
+
+	/**
+	 * 设置哨兵节点密码
+	 *
+	 * @param sentinelPassword
+	 * 		哨兵节点密码
+	 *
+	 * @since 4.0.0
+	 */
+	void setSentinelPassword(String sentinelPassword);
+
+	/**
 	 * 返回哨兵节点连接超时（单位：秒）
 	 *
 	 * @return 哨兵节点连接超时

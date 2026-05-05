@@ -25,7 +25,7 @@
 package com.buession.redis.client.connection.lettuce;
 
 import com.buession.core.utils.Assert;
-import com.buession.net.ssl.SslConfiguration;
+import com.buession.core.validator.Validate;
 import com.buession.redis.client.connection.AbstractRedisConnection;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceRedisDataSource;
 import com.buession.redis.core.PoolConfig;
@@ -37,11 +37,15 @@ import com.buession.redis.transaction.Transaction;
 import com.buession.redis.transaction.lettuce.LettuceTransaction;
 import io.lettuce.core.BaseRedisClient;
 import io.lettuce.core.ConnectionPoolConfig;
+import io.lettuce.core.DefaultLettuceClientConfig;
+import io.lettuce.core.SslOptions;
 import io.lettuce.core.api.PipeliningFlushPolicy;
 import io.lettuce.core.api.PipeliningFlushState;
 import io.lettuce.core.codec.RedisCodec;
 
+import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
 
 /**
  * Lettuce Redis 连接对象抽象类
@@ -83,85 +87,6 @@ public abstract class AbstractLettuceRedisConnection<K, V, C extends BaseRedisCl
 	 *
 	 * @param dataSource
 	 * 		Redis 数据源
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 */
-	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, int connectTimeout, int soTimeout) {
-		super(dataSource, connectTimeout, soTimeout);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时（单位：毫秒）
-	 */
-	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, int connectTimeout, int soTimeout,
-	                                      int infiniteSoTimeout) {
-		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, SslConfiguration sslConfiguration) {
-		super(dataSource, sslConfiguration);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, int connectTimeout, int soTimeout,
-	                                      SslConfiguration sslConfiguration) {
-		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时（单位：毫秒）
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, int connectTimeout, int soTimeout,
-	                                      int infiniteSoTimeout, SslConfiguration sslConfiguration) {
-		super(dataSource, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
 	 * @param poolConfig
 	 * 		连接池配置
 	 */
@@ -174,16 +99,12 @@ public abstract class AbstractLettuceRedisConnection<K, V, C extends BaseRedisCl
 	 *
 	 * @param dataSource
 	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
+	 * @param codec
+	 * 		Redis 编解码器
 	 */
-	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-	                                      int soTimeout) {
-		super(dataSource, poolConfig, connectTimeout, soTimeout);
+	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, RedisCodec<K, V> codec) {
+		super(dataSource);
+		this.codec = codec;
 	}
 
 	/**
@@ -193,71 +114,13 @@ public abstract class AbstractLettuceRedisConnection<K, V, C extends BaseRedisCl
 	 * 		Redis 数据源
 	 * @param poolConfig
 	 * 		连接池配置
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时（单位：毫秒）
-	 */
-	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-	                                      int soTimeout, int infiniteSoTimeout) {
-		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param sslConfiguration
-	 * 		SSL 配置
+	 * @param codec
+	 * 		Redis 编解码器
 	 */
 	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, PoolConfig poolConfig,
-	                                      SslConfiguration sslConfiguration) {
-		super(dataSource, poolConfig, sslConfiguration);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-	                                      int soTimeout, SslConfiguration sslConfiguration) {
-		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param poolConfig
-	 * 		连接池配置
-	 * @param connectTimeout
-	 * 		连接超时（单位：毫秒）
-	 * @param soTimeout
-	 * 		读取超时（单位：毫秒）
-	 * @param infiniteSoTimeout
-	 * 		Infinite 读取超时（单位：毫秒）
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	public AbstractLettuceRedisConnection(LettuceRedisDataSource dataSource, PoolConfig poolConfig, int connectTimeout,
-	                                      int soTimeout, int infiniteSoTimeout, SslConfiguration sslConfiguration) {
-		super(dataSource, poolConfig, connectTimeout, soTimeout, infiniteSoTimeout, sslConfiguration);
+	                                      RedisCodec<K, V> codec) {
+		super(dataSource, poolConfig);
+		this.codec = codec;
 	}
 
 	@Override
@@ -323,6 +186,70 @@ public abstract class AbstractLettuceRedisConnection<K, V, C extends BaseRedisCl
 	@Override
 	protected void internalInit() {
 		Assert.isNull(getCodec(), "Key and value codec cloud not be null.");
+	}
+
+	protected void commonClientConfigBuilder(final DefaultLettuceClientConfig.Builder builder) {
+		if(builder == null){
+			return;
+		}
+
+		builder.connectionTimeoutMillis(getConnectTimeout())
+				.socketTimeoutMillis(getSoTimeout());
+
+		if(Validate.hasText(getDataSource().getPassword())){
+			builder.password(getDataSource().getPassword());
+			if(Validate.hasText(getDataSource().getUsername())){
+				builder.user(getDataSource().getUsername());
+			}
+		}
+
+		propertyMapper.from(getDataSource().getClientName()).to(builder::clientName);
+		if(getSslOptions() != null){
+			builder.ssl(getSslOptions().isEnabled());
+
+			if(getSslOptions().isEnabled()){
+				builder.sslSocketFactory(getSslOptions().getSslSocketFactory())
+						.sslParameters(getSslOptions().getSslParameters())
+						.hostnameVerifier(getSslOptions().getHostnameVerifier());
+
+				SslOptions.Builder sslOptionsBuilder = SslOptions.builder();
+
+				propertyMapper.from(getSslOptions().getKeyStoreType()).to(sslOptionsBuilder::keyStoreType);
+
+				if(Validate.hasText(getSslOptions().getKeyStore())){
+					if(Validate.hasText(getSslOptions().getKeyStorePassword())){
+						sslOptionsBuilder.keystore(new File(getSslOptions().getKeyStore()),
+								getSslOptions().getKeyStorePassword().toCharArray());
+					}else{
+						sslOptionsBuilder.keystore(new File(getSslOptions().getKeyStore()));
+					}
+				}
+
+				if(Validate.hasText(getSslOptions().getTrustStore())){
+					if(Validate.hasText(getSslOptions().getTrustStorePassword())){
+						sslOptionsBuilder.truststore(new File(getSslOptions().getTrustStore()),
+								getSslOptions().getTrustStorePassword());
+					}else{
+						sslOptionsBuilder.truststore(new File(getSslOptions().getTrustStore()));
+					}
+				}
+
+				if(Validate.hasText(getSslOptions().getProtocol())){
+					sslOptionsBuilder.protocols(getSslOptions().getProtocol());
+				}
+				if(getSslOptions().getSslParameters() != null){
+					sslOptionsBuilder.sslParameters(()->getSslOptions().getSslParameters());
+				}
+
+				propertyMapper.from(getSslOptions().getCipherSuites()).to(sslOptionsBuilder::cipherSuites);
+
+				if(getSslOptions().getHandshakeTimeout() > 0){
+					sslOptionsBuilder.handshakeTimeout(Duration.ofMillis(getSslOptions().getHandshakeTimeout()));
+				}
+
+				builder.sslOptions(sslOptionsBuilder.build());
+			}
+		}
 	}
 
 	protected ConnectionPoolConfig<K, V> getConnectionPoolConfig() {

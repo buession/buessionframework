@@ -24,8 +24,10 @@
  */
 package com.buession.redis.client.connection.datasource;
 
-import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.core.PoolConfig;
+import com.buession.redis.core.SslOptions;
+
+import java.util.function.Consumer;
 
 /**
  * Redis 数据源
@@ -148,18 +150,20 @@ public interface DataSource {
 	 *
 	 * @return SSL 配置
 	 *
-	 * @since 2.0.0
+	 * @since 4.0.0
 	 */
-	SslConfiguration getSslConfiguration();
+	SslOptions getSslOptions();
 
 	/**
 	 * 设置 SSL 配置
 	 *
-	 * @param sslConfiguration
+	 * @param sslOptions
 	 * 		SSL 配置
 	 *
-	 * @since 2.0.0
+	 * @since 4.0.0
 	 */
-	void setSslConfiguration(SslConfiguration sslConfiguration);
+	void setSslOptions(SslOptions sslOptions);
+
+	void apply(Consumer<DataSource> consumer);
 
 }

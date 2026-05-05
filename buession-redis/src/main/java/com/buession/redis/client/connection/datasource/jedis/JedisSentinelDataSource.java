@@ -45,6 +45,20 @@ public class JedisSentinelDataSource extends AbstractJedisDataSource implements 
 	private int database = RedisNode.DEFAULT_DATABASE;
 
 	/**
+	 * 哨兵节点用户名
+	 *
+	 * @since 4.0.0
+	 */
+	private String sentinelUsername;
+
+	/**
+	 * 哨兵节点密码
+	 *
+	 * @since 4.0.0
+	 */
+	private String sentinelPassword;
+
+	/**
 	 * 哨兵节点连接超时（单位：毫秒）
 	 */
 	private int sentinelConnectTimeout = Constants.DEFAULT_CONNECT_TIMEOUT;
@@ -77,6 +91,26 @@ public class JedisSentinelDataSource extends AbstractJedisDataSource implements 
 	@Override
 	public void setDatabase(int database) {
 		this.database = database;
+	}
+
+	@Override
+	public String getSentinelUsername() {
+		return sentinelUsername;
+	}
+
+	@Override
+	public void setSentinelUsername(String sentinelUsername) {
+		this.sentinelUsername = sentinelUsername;
+	}
+
+	@Override
+	public String getSentinelPassword() {
+		return sentinelPassword;
+	}
+
+	@Override
+	public void setSentinelPassword(String sentinelPassword) {
+		this.sentinelPassword = sentinelPassword;
 	}
 
 	@Override

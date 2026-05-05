@@ -55,7 +55,16 @@ public interface LettuceClientConfig {
 	 * @return {@link ClientOptions}
 	 */
 	default ClientOptions getClientOptions() {
-		return ClientOptions.builder().build();
+		return ClientOptions.create();
+	}
+
+	/**
+	 * 获取 {@link SslOptions}
+	 *
+	 * @return {@link SslOptions}
+	 */
+	default SslOptions getSslOptions() {
+		return SslOptions.create();
 	}
 
 	/**

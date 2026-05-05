@@ -30,6 +30,7 @@ import com.buession.lang.Status;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.core.PoolConfig;
+import com.buession.redis.core.SslOptions;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
@@ -125,26 +126,53 @@ public interface RedisConnection extends Destroyable, Closeable {
 	void setInfiniteSoTimeout(int infiniteSoTimeout);
 
 	/**
-	 * 返回是否启用 SSL 连接
+	 * 返回是否自动重连
 	 *
-	 * @return 启用 SSL 连接，返回 true; 否则，返回 false
+	 * @return 是否自动重连
+	 *
+	 * @since 4.0.0
 	 */
-	boolean isUseSsl();
+	default boolean isAutoReconnect() {
+		return getAutoReconnect();
+	}
+
+	/**
+	 * 返回是否自动重连
+	 *
+	 * @return 是否自动重连
+	 *
+	 * @since 4.0.0
+	 */
+	boolean getAutoReconnect();
+
+	/**
+	 * 设置是否自动重连
+	 *
+	 * @param autoReconnect
+	 * 		是否自动重连
+	 *
+	 * @since 4.0.0
+	 */
+	void setAutoReconnect(boolean autoReconnect);
 
 	/**
 	 * SSL 配置
 	 *
 	 * @return SSL 配置
+	 *
+	 * @since 4.0.0
 	 */
-	SslConfiguration getSslConfiguration();
+	SslOptions getSslOptions();
 
 	/**
 	 * 设置 SSL 配置
 	 *
-	 * @param sslConfiguration
+	 * @param sslOptions
 	 * 		SSL 配置
+	 *
+	 * @since 4.0.0
 	 */
-	void setSslConfiguration(SslConfiguration sslConfiguration);
+	void setSslOptions(SslOptions sslOptions);
 
 	/**
 	 * 连接 Redis

@@ -25,8 +25,6 @@
 package com.buession.redis.client.connection.datasource.lettuce;
 
 import com.buession.redis.client.connection.datasource.DataSource;
-import io.lettuce.core.ClientOptions;
-import io.lettuce.core.resource.ClientResources;
 
 /**
  * Lettuce 数据源
@@ -37,33 +35,48 @@ import io.lettuce.core.resource.ClientResources;
 public interface LettuceRedisDataSource extends DataSource {
 
 	/**
-	 * 获取 Lettuce 客户端资源
+	 * 返回计算线程池大小
 	 *
-	 * @return Lettuce 客户端资源
+	 * @return 计算线程池大小
 	 */
-	ClientResources getClientResources();
+	int getComputationThreadPoolSize();
 
 	/**
-	 * 设置 Lettuce 客户端资源
+	 * 设置计算线程池大小
 	 *
-	 * @param clientResources
-	 * 		Lettuce 客户端资源
+	 * @param computationThreadPoolSize
+	 * 		计算线程池大小
 	 */
-	void setClientResources(ClientResources clientResources);
+	void setComputationThreadPoolSize(int computationThreadPoolSize);
 
 	/**
-	 * 获取 Lettuce 客户端选项
+	 * 获取 I/O 线程池大小
 	 *
-	 * @return Lettuce 客户端选项
+	 * @return I/O 线程池大小
 	 */
-	ClientOptions getClientOptions();
+	int getIoThreadPoolSize();
 
 	/**
-	 * 获取 Lettuce 客户端选项
+	 * 设置 I/O 线程池大小
 	 *
-	 * @param clientOptions
-	 * 		Lettuce 客户端选项
+	 * @param ioThreadPoolSize
+	 * 		I/O 线程池大小
 	 */
-	void setClientOptions(ClientOptions clientOptions);
+	void setIoThreadPoolSize(int ioThreadPoolSize);
+
+	/**
+	 * 返回请求队列大小
+	 *
+	 * @return 请求队列大小
+	 */
+	int getRequestQueueSize();
+
+	/**
+	 * 设置请求队列大小
+	 *
+	 * @param requestQueueSize
+	 * 		请求队列大小
+	 */
+	void setRequestQueueSize(int requestQueueSize);
 
 }

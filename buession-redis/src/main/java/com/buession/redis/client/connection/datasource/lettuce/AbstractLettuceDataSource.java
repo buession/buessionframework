@@ -25,8 +25,6 @@
 package com.buession.redis.client.connection.datasource.lettuce;
 
 import com.buession.redis.client.connection.datasource.AbstractDataSource;
-import io.lettuce.core.ClientOptions;
-import io.lettuce.core.resource.ClientResources;
 
 /**
  * Lettuce 数据源抽象类
@@ -36,28 +34,55 @@ import io.lettuce.core.resource.ClientResources;
  */
 public abstract class AbstractLettuceDataSource extends AbstractDataSource implements LettuceRedisDataSource {
 
-	private ClientResources clientResources = ClientResources.create();
+	/**
+	 * 计算线程池大小
+	 *
+	 * @since 4.0.0
+	 */
+	private int computationThreadPoolSize;
 
-	private ClientOptions clientOptions = ClientOptions.create();
+	/**
+	 * IO 线程池大小
+	 *
+	 * @since 4.0.0
+	 */
+	private int ioThreadPoolSize;
+
+	/**
+	 * 请求队列大小
+	 *
+	 * @since 4.0.0
+	 */
+	private int requestQueueSize;
 
 	@Override
-	public ClientResources getClientResources() {
-		return clientResources;
+	public int getComputationThreadPoolSize() {
+		return computationThreadPoolSize;
 	}
 
 	@Override
-	public void setClientResources(ClientResources clientResources) {
-		this.clientResources = clientResources;
+	public void setComputationThreadPoolSize(int computationThreadPoolSize) {
+		this.computationThreadPoolSize = computationThreadPoolSize;
 	}
 
 	@Override
-	public ClientOptions getClientOptions() {
-		return clientOptions;
+	public int getIoThreadPoolSize() {
+		return ioThreadPoolSize;
 	}
 
 	@Override
-	public void setClientOptions(ClientOptions clientOptions) {
-		this.clientOptions = clientOptions;
+	public void setIoThreadPoolSize(int ioThreadPoolSize) {
+		this.ioThreadPoolSize = ioThreadPoolSize;
+	}
+
+	@Override
+	public int getRequestQueueSize() {
+		return requestQueueSize;
+	}
+
+	@Override
+	public void setRequestQueueSize(int requestQueueSize) {
+		this.requestQueueSize = requestQueueSize;
 	}
 
 }
