@@ -38,6 +38,8 @@ public interface LettuceRedisDataSource extends DataSource {
 	 * 返回计算线程池大小
 	 *
 	 * @return 计算线程池大小
+	 *
+	 * @since 4.0.0
 	 */
 	int getComputationThreadPoolSize();
 
@@ -46,6 +48,8 @@ public interface LettuceRedisDataSource extends DataSource {
 	 *
 	 * @param computationThreadPoolSize
 	 * 		计算线程池大小
+	 *
+	 * @since 4.0.0
 	 */
 	void setComputationThreadPoolSize(int computationThreadPoolSize);
 
@@ -53,6 +57,8 @@ public interface LettuceRedisDataSource extends DataSource {
 	 * 获取 I/O 线程池大小
 	 *
 	 * @return I/O 线程池大小
+	 *
+	 * @since 4.0.0
 	 */
 	int getIoThreadPoolSize();
 
@@ -61,6 +67,8 @@ public interface LettuceRedisDataSource extends DataSource {
 	 *
 	 * @param ioThreadPoolSize
 	 * 		I/O 线程池大小
+	 *
+	 * @since 4.0.0
 	 */
 	void setIoThreadPoolSize(int ioThreadPoolSize);
 
@@ -68,6 +76,8 @@ public interface LettuceRedisDataSource extends DataSource {
 	 * 返回请求队列大小
 	 *
 	 * @return 请求队列大小
+	 *
+	 * @since 4.0.0
 	 */
 	int getRequestQueueSize();
 
@@ -76,6 +86,8 @@ public interface LettuceRedisDataSource extends DataSource {
 	 *
 	 * @param requestQueueSize
 	 * 		请求队列大小
+	 *
+	 * @since 4.0.0
 	 */
 	void setRequestQueueSize(int requestQueueSize);
 

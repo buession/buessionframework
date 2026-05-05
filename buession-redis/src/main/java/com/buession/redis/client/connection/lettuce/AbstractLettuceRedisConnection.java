@@ -208,10 +208,6 @@ public abstract class AbstractLettuceRedisConnection<K, V, C extends BaseRedisCl
 			builder.ssl(getSslOptions().isEnabled());
 
 			if(getSslOptions().isEnabled()){
-				builder.sslSocketFactory(getSslOptions().getSslSocketFactory())
-						.sslParameters(getSslOptions().getSslParameters())
-						.hostnameVerifier(getSslOptions().getHostnameVerifier());
-
 				SslOptions.Builder sslOptionsBuilder = SslOptions.builder();
 
 				propertyMapper.from(getSslOptions().getKeyStoreType()).to(sslOptionsBuilder::keyStoreType);

@@ -28,6 +28,7 @@ import com.buession.core.converter.mapper.PropertyMapper;
 import io.lettuce.core.api.StatefulConnection;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.internal.HostAndPort;
+import io.lettuce.core.resource.ClientResources;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.PooledObjectFactory;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
@@ -57,18 +58,31 @@ public class ConnectionFactory<K, V> implements PooledObjectFactory<StatefulConn
 
 	private final RedisCodec<K, V> redisCodec;
 
+	private final boolean autoReconnect;
+
 	private final Supplier<StatefulConnection<K, V>> objectMaker;
 
 	private final static Logger logger = LoggerFactory.getLogger(ConnectionFactory.class);
 
 	public ConnectionFactory(final HostAndPort hostAndPort, final RedisCodec<K, V> redisCodec) {
-		this(hostAndPort, DefaultLettuceClientConfig.builder().build(), redisCodec);
+		this(hostAndPort, ClientOptions.DEFAULT_AUTO_RECONNECT, redisCodec);
 	}
 
 	public ConnectionFactory(final HostAndPort hostAndPort, final LettuceClientConfig clientConfig,
 	                         final RedisCodec<K, V> redisCodec) {
+		this(hostAndPort, clientConfig, ClientOptions.DEFAULT_AUTO_RECONNECT, redisCodec);
+	}
+
+	public ConnectionFactory(final HostAndPort hostAndPort, final boolean autoReconnect,
+	                         final RedisCodec<K, V> redisCodec) {
+		this(hostAndPort, DefaultLettuceClientConfig.builder().build(), autoReconnect, redisCodec);
+	}
+
+	public ConnectionFactory(final HostAndPort hostAndPort, final LettuceClientConfig clientConfig,
+	                         final boolean autoReconnect, final RedisCodec<K, V> redisCodec) {
 		this.hostAndPort = hostAndPort;
 		this.clientConfig = clientConfig;
+		this.autoReconnect = autoReconnect;
 		this.redisCodec = redisCodec;
 		this.objectMaker = this::build;
 	}
@@ -124,8 +138,6 @@ public class ConnectionFactory<K, V> implements PooledObjectFactory<StatefulConn
 
 	private StatefulConnection<K, V> build() {
 		final RedisURI redisURI = RedisURI.create(hostAndPort.getHostText(), hostAndPort.getPort());
-		final RedisClient redisClient = RedisClient.create(clientConfig.getClientResources(), redisURI);
-		ClientOptions clientOptions = null;
 
 		propertyMapper.from(clientConfig.getCredentialsProvider()).to(redisURI::setCredentialsProvider);
 		propertyMapper.from(clientConfig.getClientName()).to(redisURI::setClientName);
@@ -138,62 +150,46 @@ public class ConnectionFactory<K, V> implements PooledObjectFactory<StatefulConn
 			redisURI.setSsl(true);
 		}
 
-		if(clientConfig.getClientOptions() != null){
-			if(clientConfig.getConnectionTimeout() != null &&
-					clientConfig.getConnectionTimeout().isNegative() == false){
-				SocketOptions socketOptions = clientConfig.getClientOptions().getSocketOptions().mutate()
-						.connectTimeout(clientConfig.getConnectionTimeout()).build();
-
-				clientOptions = createClientOptions(clientConfig.getClientOptions().mutate(), socketOptions,
-						createSslOptions());
-			}else{
-				clientOptions = clientConfig.getSslParameters() == null ? clientConfig.getClientOptions() :
-						createClientOptions(clientConfig.getClientOptions().mutate(), null, createSslOptions());
-			}
-		}else{
-			if(clientConfig.getConnectionTimeout() != null &&
-					clientConfig.getConnectionTimeout().isNegative() == false){
-				SocketOptions socketOptions = SocketOptions.builder()
-						.connectTimeout(clientConfig.getConnectionTimeout())
-						.build();
-				clientOptions = createClientOptions(socketOptions, createSslOptions());
-			}else{
-				if(clientConfig.getSslParameters() != null){
-					clientOptions = createClientOptions(null, createSslOptions());
-				}
-			}
-		}
-		propertyMapper.from(clientOptions).to(redisClient::setOptions);
-
 		if(clientConfig.getSocketTimeout() != null && clientConfig.getSocketTimeout().isNegative() == false){
 			redisURI.setTimeout(clientConfig.getSocketTimeout());
 		}
 
+		final RedisClient redisClient = RedisClient.create(createClientResources(), redisURI);
+		propertyMapper.from(createClientOptions()).to(redisClient::setOptions);
+
 		return redisClient.connect(redisCodec);
 	}
 
-	private SslOptions createSslOptions() {
-		return createSslOptions(SslOptions.builder());
-	}
+	private ClientOptions createClientOptions() {
+		ClientOptions.Builder builder = ClientOptions.builder();
 
-	private SslOptions createSslOptions(final SslOptions.Builder sslOptionsBuilder) {
-		if(clientConfig.getSslParameters() != null){
-			sslOptionsBuilder.sslParameters(clientConfig::getSslParameters);
+		builder.autoReconnect(autoReconnect);
+		propertyMapper.from(clientConfig.getRequestQueueSize()).to(builder::requestQueueSize);
+		builder.socketOptions(createSocketOptions());
+
+		if(clientConfig.isSsl()){
+			builder.sslOptions(clientConfig.getSslOptions());
 		}
 
-		return sslOptionsBuilder.build();
+		return builder.build();
 	}
 
-	private ClientOptions createClientOptions(final SocketOptions socketOptions, final SslOptions sslOptions) {
-		return createClientOptions(ClientOptions.builder(), socketOptions, sslOptions);
+	private SocketOptions createSocketOptions() {
+		SocketOptions.Builder builder = SocketOptions.builder();
+
+		propertyMapper.from(clientConfig.getConnectionTimeout()).to(builder::connectTimeout);
+
+		return builder.build();
 	}
 
-	private ClientOptions createClientOptions(final ClientOptions.Builder clientOptionsBuilder,
-	                                          final SocketOptions socketOptions, final SslOptions sslOptions) {
-		propertyMapper.from(socketOptions).to(clientOptionsBuilder::socketOptions);
-		propertyMapper.from(sslOptions).to(clientOptionsBuilder::sslOptions);
+	private ClientResources createClientResources() {
+		ClientResources.Builder builder = ClientResources.builder();
 
-		return clientOptionsBuilder.build();
+		propertyMapper.from(clientConfig.getComputationThreadPoolSize()).to(builder::computationThreadPoolSize);
+		propertyMapper.from(clientConfig.getIoThreadPoolSize()).to(builder::ioThreadPoolSize);
+		//builder.reconnectDelay();
+
+		return builder.build();
 	}
 
 	private void reAuthenticate(StatefulConnection<K, V> connection) throws Exception {

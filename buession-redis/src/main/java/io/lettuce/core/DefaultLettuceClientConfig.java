@@ -27,12 +27,8 @@ package io.lettuce.core;
 import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
 import com.buession.redis.core.RedisNode;
-import io.lettuce.core.resource.ClientResources;
 import io.lettuce.core.utils.LettuceURIHelper;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLParameters;
-import javax.net.ssl.SSLSocketFactory;
 import java.net.URI;
 import java.time.Duration;
 
@@ -43,10 +39,6 @@ import java.time.Duration;
  * @since 3.0.0
  */
 public class DefaultLettuceClientConfig implements LettuceClientConfig {
-
-	private ClientResources clientResources = ClientResources.create();
-
-	private ClientOptions clientOptions = ClientOptions.create();
 
 	private SslOptions sslOptions = SslOptions.create();
 
@@ -60,31 +52,16 @@ public class DefaultLettuceClientConfig implements LettuceClientConfig {
 
 	private String clientName;
 
+	private Integer computationThreadPoolSize;
+
+	private Integer ioThreadPoolSize;
+
+	private Integer requestQueueSize;
+
 	private boolean isSsl;
-
-	private SSLSocketFactory sslSocketFactory;
-
-	private SSLParameters sslParameters;
-
-	private HostnameVerifier hostnameVerifier;
 
 	private DefaultLettuceClientConfig() {
 
-	}
-
-	@Override
-	public ClientResources getClientResources() {
-		return clientResources;
-	}
-
-	@Override
-	public ClientOptions getClientOptions() {
-		return clientOptions;
-	}
-
-	@Override
-	public SslOptions getSslOptions() {
-		return sslOptions;
 	}
 
 	@Override
@@ -123,23 +100,28 @@ public class DefaultLettuceClientConfig implements LettuceClientConfig {
 	}
 
 	@Override
+	public Integer getComputationThreadPoolSize() {
+		return computationThreadPoolSize;
+	}
+
+	@Override
+	public Integer getIoThreadPoolSize() {
+		return ioThreadPoolSize;
+	}
+
+	@Override
+	public Integer getRequestQueueSize() {
+		return requestQueueSize;
+	}
+
+	@Override
 	public boolean isSsl() {
 		return isSsl;
 	}
 
 	@Override
-	public SSLSocketFactory getSslSocketFactory() {
-		return sslSocketFactory;
-	}
-
-	@Override
-	public SSLParameters getSslParameters() {
-		return sslParameters;
-	}
-
-	@Override
-	public HostnameVerifier getHostnameVerifier() {
-		return hostnameVerifier;
+	public SslOptions getSslOptions() {
+		return sslOptions;
 	}
 
 	public static Builder builder() {
@@ -199,16 +181,6 @@ public class DefaultLettuceClientConfig implements LettuceClientConfig {
 		private String password;
 
 		private Builder() {
-		}
-
-		public Builder clientResources(final ClientResources clientResources) {
-			lettuceClientConfig.clientResources = clientResources;
-			return this;
-		}
-
-		public Builder clientOptions(final ClientOptions clientOptions) {
-			lettuceClientConfig.clientOptions = clientOptions;
-			return this;
 		}
 
 		public Builder timeout(final Duration timeout) {
@@ -276,6 +248,21 @@ public class DefaultLettuceClientConfig implements LettuceClientConfig {
 			return this;
 		}
 
+		public Builder setComputationThreadPoolSize(int computationThreadPoolSize) {
+			lettuceClientConfig.computationThreadPoolSize = computationThreadPoolSize;
+			return this;
+		}
+
+		public Builder setIoThreadPoolSize(int ioThreadPoolSize) {
+			lettuceClientConfig.ioThreadPoolSize = ioThreadPoolSize;
+			return this;
+		}
+
+		public Builder setRequestQueueSize(int requestQueueSize) {
+			lettuceClientConfig.requestQueueSize = requestQueueSize;
+			return this;
+		}
+
 		public Builder ssl(boolean isSsl) {
 			lettuceClientConfig.isSsl = isSsl;
 			return this;
@@ -283,21 +270,6 @@ public class DefaultLettuceClientConfig implements LettuceClientConfig {
 
 		public Builder sslOptions(SslOptions sslOptions) {
 			lettuceClientConfig.sslOptions = sslOptions;
-			return this;
-		}
-
-		public Builder sslSocketFactory(SSLSocketFactory sslSocketFactory) {
-			lettuceClientConfig.sslSocketFactory = sslSocketFactory;
-			return this;
-		}
-
-		public Builder sslParameters(SSLParameters sslParameters) {
-			lettuceClientConfig.sslParameters = sslParameters;
-			return this;
-		}
-
-		public Builder hostnameVerifier(HostnameVerifier hostnameVerifier) {
-			lettuceClientConfig.hostnameVerifier = hostnameVerifier;
 			return this;
 		}
 
