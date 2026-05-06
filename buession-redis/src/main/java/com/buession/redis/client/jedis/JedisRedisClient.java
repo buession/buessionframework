@@ -25,7 +25,6 @@
 package com.buession.redis.client.jedis;
 
 import com.buession.redis.client.AbstractRedisClient;
-import com.buession.redis.client.ClientOptions;
 import com.buession.redis.client.connection.jedis.JedisRedisConnection;
 import com.buession.redis.client.jedis.command.*;
 import com.buession.redis.core.command.*;
@@ -44,21 +43,6 @@ public class JedisRedisClient extends AbstractRedisClient {
 	 */
 	public JedisRedisClient() {
 		super();
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param clientOptions
-	 * 		客户端选项
-	 * @param connection
-	 * 		Jedis Redis 连接对象 {@link JedisRedisConnection}
-	 *
-	 * @since 4.0.0
-	 */
-	public JedisRedisClient(final ClientOptions clientOptions,
-							final JedisRedisConnection<? extends UnifiedJedis> connection) {
-		super(clientOptions, connection);
 	}
 
 	/**

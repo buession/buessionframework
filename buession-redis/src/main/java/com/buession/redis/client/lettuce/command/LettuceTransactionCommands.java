@@ -30,6 +30,7 @@ import com.buession.redis.core.command.RedisCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.TransactionCommands;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
+import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
 
@@ -71,14 +72,14 @@ public final class LettuceTransactionCommands extends AbstractLettuceRedisComman
 	@Override
 	public Status watch(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.WATCH, args, (cmd)->cmd.watch(rawBinaryKeys(keys)), null,
+		return executeCommand(RedisCommand.WATCH, args, (cmd)->cmd.watch(SafeEncoder.encode(keys)), null,
 				new OkStatusConverter());
 	}
 
 	@Override
 	public Status watch(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.WATCH, args, (cmd)->cmd.watch(rawKeys(keys)), null, new OkStatusConverter());
+		return executeCommand(RedisCommand.WATCH, args, (cmd)->cmd.watch(keys), null, new OkStatusConverter());
 	}
 
 }

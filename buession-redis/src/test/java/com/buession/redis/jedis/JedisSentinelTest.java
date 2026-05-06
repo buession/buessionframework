@@ -22,49 +22,27 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.connection;
+package com.buession.redis.jedis;
+
+import com.buession.redis.RedisTemplate;
+import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 /**
- * Redis 哨兵节点
+ *
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class SentinelRedisNode extends RedisNode {
+public class JedisSentinelTest extends AbstractJedisRedisTest {
 
-	private final static long serialVersionUID = -1057414498111465489L;
-
-	public final static int DEFAULT_SENTINEL_PORT = com.buession.redis.core.RedisNode.DEFAULT_SENTINEL_PORT;
-
-	public final static String DEFAULT_MASTER_NAME = "mymaster";
-
-	/**
-	 * 构造函数，设置 Redis 默认地址和默认哨兵端口
-	 */
-	public SentinelRedisNode() {
-		super(DEFAULT_HOST, DEFAULT_SENTINEL_PORT);
-	}
-
-	/**
-	 * 构造函数，设置默认哨兵端口
-	 *
-	 * @param host
-	 * 		Redis 地址
-	 */
-	public SentinelRedisNode(String host) {
-		super(host, DEFAULT_SENTINEL_PORT);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param host
-	 * 		Redis 地址
-	 * @param port
-	 * 		Redis 哨兵端口
-	 */
-	public SentinelRedisNode(String host, int port) {
-		super(host, port);
+	@Test
+	public void myId() {
+		RedisTemplate redisTemplate = redisTemplate();
+		String result = redisTemplate.execute(client->((JedisSentinelConnection) client.getConnection()).myId());
+		System.out.println(result);
 	}
 
 }

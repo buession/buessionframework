@@ -29,24 +29,23 @@ import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisSentinelConnection;
 import com.buession.redis.client.connection.SentinelRedisNode;
-import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisSentinelDataSource;
 import com.buession.redis.core.Constants;
 import com.buession.redis.core.PoolConfig;
-import com.buession.redis.core.RedisNamedNode;
-import com.buession.redis.core.RedisSentinelNode;
+import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.RedisServer;
 import com.buession.redis.core.Role;
+import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.exception.RedisConnectionFailureException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import redis.clients.jedis.BuilderFactory;
+import redis.clients.jedis.CommandArguments;
+import redis.clients.jedis.Connection;
 import redis.clients.jedis.DefaultJedisClientConfig;
 import redis.clients.jedis.HostAndPort;
-import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisClientConfig;
+import redis.clients.jedis.Protocol;
 import redis.clients.jedis.RedisSentinelClient;
 import redis.clients.jedis.builders.SentinelClientBuilder;
-import redis.clients.jedis.exceptions.JedisException;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -76,8 +75,6 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection<RedisS
 	 * 哨兵节点读取超时（单位：毫秒）
 	 */
 	private int sentinelSoTimeout = Constants.DEFAULT_SO_TIMEOUT;
-
-	private final static Logger logger = LoggerFactory.getLogger(JedisSentinelConnection.class);
 
 	/**
 	 * 构造函数
@@ -131,93 +128,131 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection<RedisS
 	}
 
 	@Override
-	public List<RedisServer> masters() {
-		DataSource dataSource = getDataSource();
-		if(dataSource == null){
-			return null;
+	public String myId() {
+		try(Connection connection = getConnectionProvider().getConnection()){
+			connection.sendCommand(Protocol.Command.SENTINEL, Protocol.SentinelKeyword.MYID);
+			return connection.getBulkReply();
 		}
-
-		final List<Map<String, String>> masterNodes = Objects.requireNonNull(
-				createSentinelJedis((JedisSentinelDataSource) dataSource)).sentinelMasters();
-		return parseRedisServer(masterNodes, Role.MASTER);
 	}
 
 	@Override
-	public List<RedisServer> slaves(RedisNamedNode master) {
-		Assert.isNull(master, "Redis master node cloud not be 'null' for loading slaves.");
-		return slaves(master.getName());
+	public List<RedisNode> sentinels(String masterName) {
+		try(Connection connection = getConnectionProvider().getConnection()){
+			connection.sendCommand(Protocol.Command.SENTINEL, Protocol.SentinelKeyword.SENTINELS.name(), masterName);
+		}
+		/*
+		return connection.getObjectMultiBulkReply().stream()
+				.map(BuilderFactory.STRING_MAP::build).collect(Collectors.toList());
+
+		 */
+		return null;
+	}
+
+	@Override
+	public String sentinelSet(String masterName, Map<String, String> parameters) {
+		Assert.isBlank(masterName, "Redis master name cloud not be 'null' or empty for loading sentinel set.");
+
+		try(Connection connection = getConnectionProvider().getConnection()){
+			CommandArguments args = new CommandArguments(Protocol.Command.SENTINEL).add(Protocol.SentinelKeyword.SET)
+					.add(masterName);
+
+			parameters.forEach((key, value)->args.add(key).add(value));
+			connection.sendCommand(args);
+			return connection.getStatusCodeReply();
+		}
+	}
+
+	@Override
+	public List<RedisServer> masters() {
+		try(Connection connection = getConnectionProvider().getConnection()){
+			connection.sendCommand(Protocol.Command.SENTINEL, Protocol.SentinelKeyword.MASTERS);
+		}
+		/*
+		return connection.getObjectMultiBulkReply().stream().map(BuilderFactory.STRING_MAP::build)
+				.collect(Collectors.toList());
+
+		 */
+		return null;
+	}
+
+	@Override
+	public RedisServer master(String masterName) {
+		Assert.isBlank(masterName, "Redis master name cloud not be 'null' or empty for loading master.");
+
+		try(Connection connection = getConnectionProvider().getConnection()){
+			connection.sendCommand(Protocol.Command.SENTINEL, Protocol.SentinelKeyword.MASTER.name(), masterName);
+		}
+		return null;//BuilderFactory.STRING_MAP.build(connection.getOne());
 	}
 
 	@Override
 	public List<RedisServer> slaves(String masterName) {
 		Assert.isBlank(masterName, "Redis master name cloud not be 'null' or empty for loading slaves.");
 
-		DataSource dataSource = getDataSource();
-		if(dataSource == null){
-			return null;
+		try(Connection connection = getConnectionProvider().getConnection()){
+			connection.sendCommand(Protocol.Command.SENTINEL, Protocol.SentinelKeyword.SLAVES.name(), masterName);
 		}
+		/*
+		return connection.getObjectMultiBulkReply().stream().map(BuilderFactory.STRING_MAP::build)
+				.collect(Collectors.toList());
 
-		final List<Map<String, String>> slaveNodes = Objects.requireNonNull(
-				createSentinelJedis((JedisSentinelDataSource) dataSource)).sentinelReplicas(masterName);
-		return parseRedisServer(slaveNodes, Role.SLAVE);
-	}
-
-	@Override
-	public void failover(RedisNamedNode namedNode) {
-		Assert.isNull(namedNode, "Redis master node cloud not be 'null' for failover.");
-		Assert.isBlank(namedNode.getName(), "Redis master name cloud not be 'null' or empty for failover.");
-
-		DataSource dataSource = getDataSource();
-		if(dataSource == null){
-			return;
-		}
-
-		Objects.requireNonNull(createSentinelJedis((JedisSentinelDataSource) dataSource))
-				.sentinelFailover(namedNode.getName());
-	}
-
-	@Override
-	public void monitor(RedisSentinelNode server) {
-		Assert.isNull(server, "Cannot monitor 'null' server.");
-		Assert.isBlank(server.getName(), "Name of server to monitor must not be 'null' or empty.");
-		Assert.isBlank(server.getHost(), "Host must not be 'null' for server to monitor.");
-
-		DataSource dataSource = getDataSource();
-		if(dataSource == null){
-			return;
-		}
-
-		Objects.requireNonNull(createSentinelJedis((JedisSentinelDataSource) dataSource))
-				.sentinelMonitor(server.getName(), server.getHost(), server.getPort(), server.getQuorum());
-	}
-
-	@Override
-	public void remove(RedisNamedNode master) {
-		Assert.isNull(master, "Master node cloud be 'null' when trying to remove.");
-		remove(master.getName());
-	}
-
-	@Override
-	public void remove(String masterName) {
-		Assert.isBlank(masterName, "Redis master name cloud be 'null' or empty when trying to remove.");
-		//client.sentinelRemove(masterName);
-	}
-
-	private Jedis createSentinelJedis(final JedisSentinelDataSource dataSource) {
-		final JedisClientConfig sentinelClientConfig = createSentinelJedisClientConfig(dataSource);
-
-		for(SentinelRedisNode node : dataSource.getSentinels()){
-			int port = node.getPort() == 0 ? SentinelRedisNode.DEFAULT_SENTINEL_PORT : node.getPort();
-			HostAndPort sentinel = new HostAndPort(node.getHost(), port);
-			try(Jedis jedis = new Jedis(sentinel, sentinelClientConfig)){
-				return jedis;
-			}catch(JedisException e){
-				logger.warn("Cannot get master address from sentinel running @ {}. Reason: {}. Trying next one.",
-						sentinel, e.getMessage());
-			}
-		}
-
+		 */
 		return null;
+	}
+
+	@Override
+	public List<RedisServer> replicas(String masterName) {
+		Assert.isBlank(masterName, "Redis master name cloud not be 'null' or empty for loading replicas.");
+
+		try(Connection connection = getConnectionProvider().getConnection()){
+			connection.sendCommand(Protocol.Command.SENTINEL, Protocol.SentinelKeyword.REPLICAS.name(), masterName);
+		}
+		/*
+		return connection.getObjectMultiBulkReply().stream().map(BuilderFactory.STRING_MAP::build)
+				.collect(Collectors.toList());
+
+		 */
+		return null;
+	}
+
+	@Override
+	public Status failover(String masterName) {
+		Assert.isBlank(masterName, "Redis master name cloud not be 'null' or empty for loading failover.");
+
+		try(Connection connection = getConnectionProvider().getConnection()){
+			connection.sendCommand(Protocol.Command.SENTINEL, Protocol.SentinelKeyword.FAILOVER.name(), masterName);
+			return new OkStatusConverter().convert(connection.getStatusCodeReply());
+		}
+	}
+
+	@Override
+	public Status monitor(String masterName, String ip, int port, int quorum) {
+		Assert.isBlank(masterName, "Redis master name cloud not be 'null' or empty for loading failover.");
+
+		try(Connection connection = getConnectionProvider().getConnection()){
+			CommandArguments args = new CommandArguments(Protocol.Command.SENTINEL).add(
+					Protocol.SentinelKeyword.MONITOR).add(masterName).add(ip).add(port).add(quorum);
+			connection.sendCommand(args);
+			return new OkStatusConverter().convert(connection.getStatusCodeReply());
+		}
+	}
+
+	@Override
+	public Long reset(String pattern) {
+		try(Connection connection = getConnectionProvider().getConnection()){
+			connection.sendCommand(Protocol.Command.SENTINEL, Protocol.SentinelKeyword.RESET.name(), pattern);
+			return connection.getIntegerReply();
+		}
+	}
+
+	@Override
+	public Status remove(String masterName) {
+		Assert.isBlank(masterName, "Redis master name cloud be 'null' or empty when trying to remove.");
+
+		try(Connection connection = getConnectionProvider().getConnection()){
+			connection.sendCommand(Protocol.Command.SENTINEL, Protocol.SentinelKeyword.REMOVE.name(), masterName);
+			return new OkStatusConverter().convert(connection.getStatusCodeReply());
+		}
 	}
 
 	@Override
@@ -243,9 +278,7 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection<RedisS
 
 			Optional.ofNullable(getConnectionPoolConfig()).ifPresent(builder::poolConfig);
 			Optional.ofNullable(getCacheConfig()).ifPresent(builder::cacheConfig);
-			if(Validate.hasText(dataSource.getMasterName())){
-				builder.masterName(dataSource.getMasterName());
-			}
+			propertyMapper.from(dataSource.getMasterName()).to(builder::masterName);
 
 			client = builder.build();
 		}
@@ -262,9 +295,7 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection<RedisS
 
 		if(Validate.hasText(dataSource.getSentinelPassword())){
 			clientConfigBuilder.password(dataSource.getSentinelPassword());
-			if(Validate.hasText(dataSource.getSentinelUsername())){
-				clientConfigBuilder.user(dataSource.getSentinelUsername());
-			}
+			propertyMapper.from(dataSource.getSentinelUsername()).to(clientConfigBuilder::user);
 		}
 
 		clientConfigBuilder.connectionTimeoutMillis(getSentinelConnectTimeout());

@@ -24,11 +24,7 @@
  */
 package com.buession.redis.core.command;
 
-import com.buession.core.collect.Arrays;
-import com.buession.core.utils.ByteUtils;
-import com.buession.core.validator.Validate;
 import com.buession.redis.client.RedisClient;
-import com.buession.redis.utils.SafeEncoder;
 
 /**
  * Redis 命令操作
@@ -56,52 +52,6 @@ public abstract class AbstractRedisCommands<C extends RedisClient> implements Re
 
 	protected boolean isMulti() {
 		return isPipeline() || isTransaction();
-	}
-
-	protected final String rawKey(final String key) {
-		String prefix = client.getClientOptions().getPrefix();
-		return Validate.isEmpty(prefix) ? key : prefix.concat(key);
-	}
-
-	protected final byte[] rawKey(byte[] key) {
-		byte[] prefix = client.getClientOptions().getPrefixRaw();
-		return Validate.isEmpty(prefix) ? key : ByteUtils.concat(prefix, key);
-	}
-
-	protected final String[] rawKeys(final String[] keys) {
-		String prefix = client.getClientOptions().getPrefix();
-
-		if(Validate.isEmpty(prefix) || Validate.isEmpty(keys)){
-			return keys;
-		}
-
-		return Arrays.map(keys, String.class, this::rawKey);
-	}
-
-	protected final byte[][] rawKeys(final byte[][] keys) {
-		byte[] prefix = client.getClientOptions().getPrefixRaw();
-
-		if(Validate.isEmpty(prefix) || Validate.isEmpty(keys)){
-			return keys;
-		}
-
-		return Arrays.map(keys, byte[].class, (value)->ByteUtils.concat(prefix, value));
-	}
-
-	protected final byte[] rawBinaryKey(final String key) {
-		return SafeEncoder.encode(rawKey(key));
-	}
-
-	protected final byte[][] rawBinaryKeys(final String[] keys) {
-		return Arrays.map(keys, byte[].class, (value)->SafeEncoder.encode(rawKey(value)));
-	}
-
-	protected final String rawStringKey(final byte[] key) {
-		return SafeEncoder.encode(rawKey(key));
-	}
-
-	protected final String[] rawStringKeys(final byte[][] keys) {
-		return Arrays.map(keys, String.class, (value)->SafeEncoder.encode(rawKey(value)));
 	}
 
 }

@@ -107,27 +107,27 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public Long xAck(final String key, final String groupName, final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(ids);
-		return xAck(rawBinaryKey(key), SafeEncoder.encode(groupName), ids, args);
+		return xAck(SafeEncoder.encode(key), SafeEncoder.encode(groupName), ids, args);
 	}
 
 	@Override
 	public Long xAck(final byte[] key, final byte[] groupName, final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(ids);
-		return xAck(rawKey(key), groupName, ids, args);
+		return xAck(key, groupName, ids, args);
 	}
 
 	@Override
 	public List<StreamEntryDeletionResult> xAckDel(final String key, final String groupName,
 	                                               final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add("IDS", ids.length).add(ids);
-		return xAckDel(rawBinaryKey(key), SafeEncoder.encode(groupName), ids, args);
+		return xAckDel(SafeEncoder.encode(key), SafeEncoder.encode(groupName), ids, args);
 	}
 
 	@Override
 	public List<StreamEntryDeletionResult> xAckDel(final byte[] key, final byte[] groupName,
 	                                               final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add("IDS", ids.length).add(ids);
-		return xAckDel(rawKey(key), groupName, ids, args);
+		return xAckDel(key, groupName, ids, args);
 	}
 
 	@Override
@@ -136,7 +136,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                                               final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(deletionPolicy).add("IDS", ids.length)
 				.add(ids);
-		return xAckDel(rawBinaryKey(key), SafeEncoder.encode(groupName), deletionPolicy, ids, args);
+		return xAckDel(SafeEncoder.encode(key), SafeEncoder.encode(groupName), deletionPolicy, ids, args);
 	}
 
 	@Override
@@ -145,33 +145,33 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                                               final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(deletionPolicy).add("IDS", ids.length)
 				.add(ids);
-		return xAckDel(rawKey(key), groupName, deletionPolicy, ids, args);
+		return xAckDel(key, groupName, deletionPolicy, ids, args);
 	}
 
 	@Override
 	public StreamEntryId xAdd(final String key, final StreamEntryId id, final Map<String, String> hash) {
 		final CommandArguments args = CommandArguments.create(key).add(id).add(hash);
-		return stringXAdd(rawBinaryKey(key), hash, new LettuceXAddArgs(id), args);
+		return stringXAdd(SafeEncoder.encode(key), hash, new LettuceXAddArgs(id), args);
 	}
 
 	@Override
 	public StreamEntryId xAdd(final byte[] key, final StreamEntryId id, final Map<byte[], byte[]> hash) {
 		final CommandArguments args = CommandArguments.create(key).add(id).add(hash);
-		return binaryXAdd(rawKey(key), hash, new LettuceXAddArgs(id), args);
+		return binaryXAdd(key, hash, new LettuceXAddArgs(id), args);
 	}
 
 	@Override
 	public StreamEntryId xAdd(final String key, final StreamEntryId id, final Map<String, String> hash,
 	                          final XAddArgument xAddArgument) {
 		final CommandArguments args = CommandArguments.create(key).add(xAddArgument).add(id).add(hash);
-		return stringXAdd(rawBinaryKey(key), hash, new LettuceXAddArgs(xAddArgument, id), args);
+		return stringXAdd(SafeEncoder.encode(key), hash, new LettuceXAddArgs(xAddArgument, id), args);
 	}
 
 	@Override
 	public StreamEntryId xAdd(final byte[] key, final StreamEntryId id, final Map<byte[], byte[]> hash,
 	                          final XAddArgument xAddArgument) {
 		final CommandArguments args = CommandArguments.create(key).add(xAddArgument).add(id).add(hash);
-		return binaryXAdd(rawKey(key), hash, new LettuceXAddArgs(xAddArgument, id), args);
+		return binaryXAdd(key, hash, new LettuceXAddArgs(xAddArgument, id), args);
 	}
 
 	@Override
@@ -179,7 +179,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                                                final int minIdleTime, final StreamEntryId start) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName).add(minIdleTime)
 				.add(start);
-		return stringXAutoClaim(rawBinaryKey(key),
+		return stringXAutoClaim(SafeEncoder.encode(key),
 				new LettuceXAutoClaimArgs<>(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName),
 						minIdleTime, start), args);
 	}
@@ -189,7 +189,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                                                final int minIdleTime, final StreamEntryId start) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName).add(minIdleTime)
 				.add(start);
-		return binaryXAutoClaim(rawKey(key), new LettuceXAutoClaimArgs<>(groupName, consumerName, minIdleTime, start),
+		return binaryXAutoClaim(key, new LettuceXAutoClaimArgs<>(groupName, consumerName, minIdleTime, start),
 				args);
 	}
 
@@ -198,7 +198,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                                                final int minIdleTime, final StreamEntryId start, final int count) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName).add(minIdleTime)
 				.add(start).add(Keyword.Common.COUNT, count);
-		return stringXAutoClaim(rawBinaryKey(key),
+		return stringXAutoClaim(SafeEncoder.encode(key),
 				new LettuceXAutoClaimArgs<>(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName),
 						minIdleTime, start, count), args);
 	}
@@ -208,7 +208,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                                                final int minIdleTime, final StreamEntryId start, final int count) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName).add(minIdleTime)
 				.add(start).add(Keyword.Common.COUNT, count);
-		return binaryXAutoClaim(rawKey(key),
+		return binaryXAutoClaim(key,
 				new LettuceXAutoClaimArgs<>(groupName, consumerName, minIdleTime, start, count), args);
 	}
 
@@ -217,7 +217,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                                    final int minIdleTime, final StreamEntryId start) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName).add(minIdleTime)
 				.add(start).add("JUSTID");
-		return xAutoClaimJustId(rawBinaryKey(key),
+		return xAutoClaimJustId(SafeEncoder.encode(key),
 				new LettuceXAutoClaimArgs<>(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName),
 						minIdleTime, start), args);
 	}
@@ -227,7 +227,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                                    final int minIdleTime, final StreamEntryId start) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName).add(minIdleTime)
 				.add(start).add("JUSTID");
-		return xAutoClaimJustId(rawKey(key), new LettuceXAutoClaimArgs<>(groupName, consumerName, minIdleTime, start),
+		return xAutoClaimJustId(key, new LettuceXAutoClaimArgs<>(groupName, consumerName, minIdleTime, start),
 				args);
 	}
 
@@ -236,7 +236,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                                    final int minIdleTime, final StreamEntryId start, final int count) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName).add(minIdleTime)
 				.add(start).add(Keyword.Common.COUNT, count).add("JUSTID");
-		return xAutoClaimJustId(rawBinaryKey(key),
+		return xAutoClaimJustId(SafeEncoder.encode(key),
 				new LettuceXAutoClaimArgs<>(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName),
 						minIdleTime, start, count), args);
 	}
@@ -246,7 +246,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                                    final int minIdleTime, final StreamEntryId start, final int count) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName).add(minIdleTime)
 				.add(start).add(Keyword.Common.COUNT, count).add("JUSTID");
-		return xAutoClaimJustId(rawKey(key),
+		return xAutoClaimJustId(key,
 				new LettuceXAutoClaimArgs<>(groupName, consumerName, minIdleTime, start, count), args);
 	}
 
@@ -305,7 +305,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                                                final int minIdleTime, final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName).add(minIdleTime)
 				.add(ids);
-		return xClaim(rawBinaryKey(key), groupName, consumerName, ids, minIdleTime, new XClaimArgs(), args);
+		return xClaim(SafeEncoder.encode(key), groupName, consumerName, ids, minIdleTime, new XClaimArgs(), args);
 	}
 
 	@Override
@@ -313,7 +313,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                                                final int minIdleTime, final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName).add(minIdleTime)
 				.add(ids);
-		return xClaim(rawKey(key), groupName, consumerName, ids, minIdleTime, new XClaimArgs(), args);
+		return xClaim(key, groupName, consumerName, ids, minIdleTime, new XClaimArgs(), args);
 	}
 
 	@Override
@@ -322,7 +322,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                                                final XClaimArgument xClaimArgument) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName).add(minIdleTime)
 				.add(ids).add(xClaimArgument);
-		return xClaim(rawBinaryKey(key), groupName, consumerName, ids, minIdleTime,
+		return xClaim(SafeEncoder.encode(key), groupName, consumerName, ids, minIdleTime,
 				new LettuceXClaimArgs(xClaimArgument), args);
 	}
 
@@ -332,7 +332,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                                                final XClaimArgument xClaimArgument) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName).add(minIdleTime)
 				.add(ids).add(xClaimArgument);
-		return xClaim(rawKey(key), groupName, consumerName, ids, minIdleTime, new LettuceXClaimArgs(xClaimArgument),
+		return xClaim(key, groupName, consumerName, ids, minIdleTime, new LettuceXClaimArgs(xClaimArgument),
 				args);
 	}
 
@@ -341,7 +341,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                                        final int minIdleTime, final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName).add(minIdleTime)
 				.add(ids).add("JUSTID");
-		return xClaimJustId(rawBinaryKey(key), groupName, consumerName, ids, minIdleTime, new XClaimArgs(), args);
+		return xClaimJustId(SafeEncoder.encode(key), groupName, consumerName, ids, minIdleTime, new XClaimArgs(), args);
 	}
 
 	@Override
@@ -349,7 +349,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                                        final int minIdleTime, final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName).add(minIdleTime)
 				.add(ids).add("JUSTID");
-		return xClaimJustId(rawKey(key), groupName, consumerName, ids, minIdleTime, new XClaimArgs(), args);
+		return xClaimJustId(key, groupName, consumerName, ids, minIdleTime, new XClaimArgs(), args);
 	}
 
 	@Override
@@ -358,7 +358,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                                        final XClaimArgument xClaimArgument) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName).add(minIdleTime)
 				.add(ids).add(xClaimArgument).add("JUSTID");
-		return xClaimJustId(rawBinaryKey(key), groupName, consumerName, ids, minIdleTime,
+		return xClaimJustId(SafeEncoder.encode(key), groupName, consumerName, ids, minIdleTime,
 				new LettuceXClaimArgs(xClaimArgument), args);
 	}
 
@@ -368,48 +368,48 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                                        final XClaimArgument xClaimArgument) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName).add(minIdleTime)
 				.add(ids).add(xClaimArgument).add("JUSTID");
-		return xClaimJustId(rawKey(key), groupName, consumerName, ids, minIdleTime,
+		return xClaimJustId(key, groupName, consumerName, ids, minIdleTime,
 				new LettuceXClaimArgs(xClaimArgument), args);
 	}
 
 	@Override
 	public Long xDel(final String key, final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key).add(ids);
-		return executeCommand(RedisCommand.XDEL, args, (cmd)->cmd.xdel(rawBinaryKey(key), messageIds(ids)),
-				(cmd)->cmd.xdel(rawBinaryKey(key), messageIds(ids)));
+		return executeCommand(RedisCommand.XDEL, args, (cmd)->cmd.xdel(SafeEncoder.encode(key), messageIds(ids)),
+				(cmd)->cmd.xdel(SafeEncoder.encode(key), messageIds(ids)));
 	}
 
 	@Override
 	public Long xDel(final byte[] key, final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key).add(ids);
-		return executeCommand(RedisCommand.XDEL, args, (cmd)->cmd.xdel(rawKey(key), messageIds(ids)),
-				(cmd)->cmd.xdel(rawKey(key), messageIds(ids)));
+		return executeCommand(RedisCommand.XDEL, args, (cmd)->cmd.xdel(key, messageIds(ids)),
+				(cmd)->cmd.xdel(key, messageIds(ids)));
 	}
 
 	@Override
 	public List<StreamEntryDeletionResult> xDelEx(final String key, final StreamDeletionPolicy deletionPolicy,
 	                                              final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key).add(deletionPolicy).add("IDS", ids.length).add(ids);
-		return xDelEx(rawBinaryKey(key), ids, deletionPolicy, args);
+		return xDelEx(SafeEncoder.encode(key), ids, deletionPolicy, args);
 	}
 
 	@Override
 	public List<StreamEntryDeletionResult> xDelEx(final byte[] key, final StreamDeletionPolicy deletionPolicy,
 	                                              final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key).add(deletionPolicy).add("IDS", ids.length).add(ids);
-		return xDelEx(rawKey(key), ids, deletionPolicy, args);
+		return xDelEx(key, ids, deletionPolicy, args);
 	}
 
 	@Override
 	public Status xGroupCreate(final String key, final String groupName, final StreamEntryId id) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(id);
-		return xGroupCreate(rawBinaryKey(key), SafeEncoder.encode(groupName), id, args);
+		return xGroupCreate(SafeEncoder.encode(key), SafeEncoder.encode(groupName), id, args);
 	}
 
 	@Override
 	public Status xGroupCreate(final byte[] key, final byte[] groupName, final StreamEntryId id) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(id);
-		return xGroupCreate(rawKey(key), groupName, id, args);
+		return xGroupCreate(key, groupName, id, args);
 	}
 
 	@Override
@@ -417,7 +417,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                           final boolean makeStream) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(id)
 				.add(makeStream ? "MKSTREAM" : null);
-		return xGroupCreate(rawBinaryKey(key), SafeEncoder.encode(groupName), id,
+		return xGroupCreate(SafeEncoder.encode(key), SafeEncoder.encode(groupName), id,
 				new LettuceXGroupCreateArgs(makeStream), args);
 	}
 
@@ -426,7 +426,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                           final boolean makeStream) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(id)
 				.add(makeStream ? "MKSTREAM" : null);
-		return xGroupCreate(rawKey(key), groupName, id, new LettuceXGroupCreateArgs(makeStream), args);
+		return xGroupCreate(key, groupName, id, new LettuceXGroupCreateArgs(makeStream), args);
 	}
 
 	@Override
@@ -434,7 +434,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                           final boolean makeStream, final long entriesRead) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName).add(id)
 				.add(makeStream ? "MKSTREAM" : null).add("ENTRIESREAD", entriesRead);
-		return xGroupCreate(rawBinaryKey(key), SafeEncoder.encode(groupName), id,
+		return xGroupCreate(SafeEncoder.encode(key), SafeEncoder.encode(groupName), id,
 				new LettuceXGroupCreateArgs(makeStream, entriesRead), args);
 	}
 
@@ -443,14 +443,14 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                           final boolean makeStream, final long entriesRead) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName).add(id)
 				.add(makeStream ? "MKSTREAM" : null).add("ENTRIESREAD", entriesRead);
-		return xGroupCreate(rawKey(key), groupName, id, new LettuceXGroupCreateArgs(makeStream, entriesRead), args);
+		return xGroupCreate(key, groupName, id, new LettuceXGroupCreateArgs(makeStream, entriesRead), args);
 	}
 
 	@Override
 	public Status xGroupCreate(final String key, final String groupName, final StreamEntryId id,
 	                           final long entriesRead) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(id).add("ENTRIESREAD", entriesRead);
-		return xGroupCreate(rawBinaryKey(key), SafeEncoder.encode(groupName), id,
+		return xGroupCreate(SafeEncoder.encode(key), SafeEncoder.encode(groupName), id,
 				new LettuceXGroupCreateArgs(entriesRead), args);
 	}
 
@@ -458,41 +458,43 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	public Status xGroupCreate(final byte[] key, final byte[] groupName, final StreamEntryId id,
 	                           final long entriesRead) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(id).add("ENTRIESREAD", entriesRead);
-		return xGroupCreate(rawKey(key), groupName, id, new LettuceXGroupCreateArgs(entriesRead), args);
+		return xGroupCreate(key, groupName, id, new LettuceXGroupCreateArgs(entriesRead), args);
 	}
 
 	@Override
 	public Status xGroupCreateConsumer(final String key, final String groupName, final String consumerName) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName);
-		return xGroupCreateConsumer(rawBinaryKey(key), SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName),
+		return xGroupCreateConsumer(SafeEncoder.encode(key), SafeEncoder.encode(groupName),
+				SafeEncoder.encode(consumerName),
 				args);
 	}
 
 	@Override
 	public Status xGroupCreateConsumer(final byte[] key, final byte[] groupName, final byte[] consumerName) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName);
-		return xGroupCreateConsumer(rawKey(key), groupName, consumerName, args);
+		return xGroupCreateConsumer(key, groupName, consumerName, args);
 	}
 
 	@Override
 	public Long xGroupDelConsumer(final String key, final String groupName, final String consumerName) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName);
-		return xGroupDelConsumer(rawBinaryKey(key), SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName),
+		return xGroupDelConsumer(SafeEncoder.encode(key), SafeEncoder.encode(groupName),
+				SafeEncoder.encode(consumerName),
 				args);
 	}
 
 	@Override
 	public Long xGroupDelConsumer(final byte[] key, final byte[] groupName, final byte[] consumerName) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName);
-		return xGroupDelConsumer(rawKey(key), groupName, consumerName, args);
+		return xGroupDelConsumer(key, groupName, consumerName, args);
 	}
 
 	@Override
 	public Status xGroupDestroy(final String key, final String groupName) {
 		final CommandArguments args = CommandArguments.create(key, groupName);
 		return executeCommand(RedisCommand.XGROUP, RedisSubCommand.XGROUP_DESTROY, args,
-				(cmd)->cmd.xgroupDestroy(rawBinaryKey(key), SafeEncoder.encode(groupName)),
-				(cmd)->cmd.xgroupDestroy(rawBinaryKey(key), SafeEncoder.encode(groupName)),
+				(cmd)->cmd.xgroupDestroy(SafeEncoder.encode(key), SafeEncoder.encode(groupName)),
+				(cmd)->cmd.xgroupDestroy(SafeEncoder.encode(key), SafeEncoder.encode(groupName)),
 				new BooleanStatusConverter());
 	}
 
@@ -500,65 +502,65 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	public Status xGroupDestroy(final byte[] key, final byte[] groupName) {
 		final CommandArguments args = CommandArguments.create(key, groupName);
 		return executeCommand(RedisCommand.XGROUP, RedisSubCommand.XGROUP_DESTROY, args,
-				(cmd)->cmd.xgroupDestroy(rawKey(key), groupName), (cmd)->cmd.xgroupDestroy(rawKey(key), groupName),
+				(cmd)->cmd.xgroupDestroy(key, groupName), (cmd)->cmd.xgroupDestroy(key, groupName),
 				new BooleanStatusConverter());
 	}
 
 	@Override
 	public Status xGroupSetId(final String key, final String groupName, final StreamEntryId id) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(id);
-		return xGroupSetId(rawBinaryKey(key), SafeEncoder.encode(groupName), id, args);
+		return xGroupSetId(SafeEncoder.encode(key), SafeEncoder.encode(groupName), id, args);
 	}
 
 	@Override
 	public Status xGroupSetId(final byte[] key, final byte[] groupName, final StreamEntryId id) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(id);
-		return xGroupSetId(rawKey(key), groupName, id, args);
+		return xGroupSetId(key, groupName, id, args);
 	}
 
 	@Override
 	public Status xGroupSetId(final String key, final String groupName, final StreamEntryId id,
 	                          final long entriesRead) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(id).add("ENTRIESREAD", entriesRead);
-		return xGroupSetId(rawBinaryKey(key), SafeEncoder.encode(groupName), id, args);
+		return xGroupSetId(SafeEncoder.encode(key), SafeEncoder.encode(groupName), id, args);
 	}
 
 	@Override
 	public Status xGroupSetId(final byte[] key, final byte[] groupName, final StreamEntryId id,
 	                          final long entriesRead) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(id).add("ENTRIESREAD", entriesRead);
-		return xGroupSetId(rawKey(key), groupName, id, args);
+		return xGroupSetId(key, groupName, id, args);
 	}
 
 	@Override
 	public List<StreamConsumer> xInfoConsumers(final String key, final String groupName) {
 		final CommandArguments args = CommandArguments.create(key, groupName);
-		return xInfoConsumers(rawBinaryKey(key), SafeEncoder.encode(groupName), args);
+		return xInfoConsumers(SafeEncoder.encode(key), SafeEncoder.encode(groupName), args);
 	}
 
 	@Override
 	public List<StreamConsumer> xInfoConsumers(final byte[] key, final byte[] groupName) {
 		final CommandArguments args = CommandArguments.create(key, groupName);
-		return xInfoConsumers(rawKey(key), groupName, args);
+		return xInfoConsumers(key, groupName, args);
 	}
 
 	@Override
 	public List<StreamGroup> xInfoGroups(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return xInfoGroups(rawBinaryKey(key), args);
+		return xInfoGroups(SafeEncoder.encode(key), args);
 	}
 
 	@Override
 	public List<StreamGroup> xInfoGroups(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return xInfoGroups(rawKey(key), args);
+		return xInfoGroups(key, args);
 	}
 
 	@Override
 	public Stream<String, String> xInfoStream(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(RedisCommand.XINFO, RedisSubCommand.XINFO_STREAM, args,
-				(cmd)->cmd.xinfoStream(rawBinaryKey(key)), (cmd)->cmd.xinfoStream(rawBinaryKey(key)),
+				(cmd)->cmd.xinfoStream(SafeEncoder.encode(key)), (cmd)->cmd.xinfoStream(SafeEncoder.encode(key)),
 				new StreamInfoConverter<>());
 	}
 
@@ -566,7 +568,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	public Stream<byte[], byte[]> xInfoStream(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(RedisCommand.XINFO, RedisSubCommand.XINFO_STREAM, args,
-				(cmd)->cmd.xinfoStream(rawKey(key)), (cmd)->cmd.xinfoStream(rawKey(key)),
+				(cmd)->cmd.xinfoStream(key), (cmd)->cmd.xinfoStream(key),
 				new StreamInfoConverter<>());
 	}
 
@@ -574,7 +576,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	public StreamFull<String, String> xInfoStreamFull(final String key) {
 		final CommandArguments args = CommandArguments.create(key, "FULL");
 		return executeCommand(RedisCommand.XINFO, RedisSubCommand.XINFO_STREAM, args,
-				(cmd)->cmd.xinfoStream(rawBinaryKey(key)), (cmd)->cmd.xinfoStream(rawBinaryKey(key)),
+				(cmd)->cmd.xinfoStream(SafeEncoder.encode(key)), (cmd)->cmd.xinfoStream(SafeEncoder.encode(key)),
 				new StreamFullInfoConverter<>());
 	}
 
@@ -582,7 +584,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	public StreamFull<byte[], byte[]> xInfoStreamFull(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key, "FULL");
 		return executeCommand(RedisCommand.XINFO, RedisSubCommand.XINFO_STREAM, args,
-				(cmd)->cmd.xinfoStream(rawKey(key)), (cmd)->cmd.xinfoStream(rawKey(key)),
+				(cmd)->cmd.xinfoStream(key), (cmd)->cmd.xinfoStream(key),
 				new StreamFullInfoConverter<>());
 	}
 
@@ -590,7 +592,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	public StreamFull<String, String> xInfoStreamFull(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create(key, "FULL").add(Keyword.Common.COUNT, count);
 		return executeCommand(RedisCommand.XINFO, RedisSubCommand.XINFO_STREAM, args,
-				(cmd)->cmd.xinfoStream(rawBinaryKey(key)), (cmd)->cmd.xinfoStream(rawBinaryKey(key)),
+				(cmd)->cmd.xinfoStream(SafeEncoder.encode(key)), (cmd)->cmd.xinfoStream(SafeEncoder.encode(key)),
 				new StreamFullInfoConverter<>());
 	}
 
@@ -598,44 +600,45 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	public StreamFull<byte[], byte[]> xInfoStreamFull(final byte[] key, final int count) {
 		final CommandArguments args = CommandArguments.create(key, "FULL").add(Keyword.Common.COUNT, count);
 		return executeCommand(RedisCommand.XINFO, RedisSubCommand.XINFO_STREAM, args,
-				(cmd)->cmd.xinfoStream(rawKey(key)), (cmd)->cmd.xinfoStream(rawKey(key)),
+				(cmd)->cmd.xinfoStream(key), (cmd)->cmd.xinfoStream(key),
 				new StreamFullInfoConverter<>());
 	}
 
 	@Override
 	public Long xLen(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.XLEN, args, (cmd)->cmd.xlen(rawBinaryKey(key)),
-				(cmd)->cmd.xlen(rawBinaryKey(key)));
+		return executeCommand(RedisCommand.XLEN, args, (cmd)->cmd.xlen(SafeEncoder.encode(key)),
+				(cmd)->cmd.xlen(SafeEncoder.encode(key)));
 	}
 
 	@Override
 	public Long xLen(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.XLEN, args, (cmd)->cmd.xlen(rawKey(key)), (cmd)->cmd.xlen(rawKey(key)));
+		return executeCommand(RedisCommand.XLEN, args, (cmd)->cmd.xlen(key), (cmd)->cmd.xlen(key));
 	}
 
 	@Override
 	public StreamPendingSummary xPending(final String key, final String groupName) {
 		final CommandArguments args = CommandArguments.create(key, groupName);
 		return executeCommand(RedisCommand.XPENDING, args,
-				(cmd)->cmd.xpending(rawBinaryKey(key), SafeEncoder.encode(groupName)),
-				(cmd)->cmd.xpending(rawBinaryKey(key), SafeEncoder.encode(groupName)),
+				(cmd)->cmd.xpending(SafeEncoder.encode(key), SafeEncoder.encode(groupName)),
+				(cmd)->cmd.xpending(SafeEncoder.encode(key), SafeEncoder.encode(groupName)),
 				new PendingMessagesConverter());
 	}
 
 	@Override
 	public StreamPendingSummary xPending(final byte[] key, final byte[] groupName) {
 		final CommandArguments args = CommandArguments.create(key, groupName);
-		return executeCommand(RedisCommand.XPENDING, args, (cmd)->cmd.xpending(rawKey(key), groupName),
-				(cmd)->cmd.xpending(rawKey(key), groupName), new PendingMessagesConverter());
+		return executeCommand(RedisCommand.XPENDING, args, (cmd)->cmd.xpending(key, groupName),
+				(cmd)->cmd.xpending(key, groupName), new PendingMessagesConverter());
 	}
 
 	@Override
 	public List<StreamPending> xPending(final String key, final String groupName, final StreamEntryId start,
 	                                    final StreamEntryId end, final int count) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(start, end).add(count);
-		return xPending(rawBinaryKey(key), new LettuceXPendingArgs<>(start, end, count, SafeEncoder.encode(groupName)),
+		return xPending(SafeEncoder.encode(key),
+				new LettuceXPendingArgs<>(start, end, count, SafeEncoder.encode(groupName)),
 				args);
 	}
 
@@ -643,7 +646,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final StreamEntryId start,
 	                                    final StreamEntryId end, final int count) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(start, end).add(count);
-		return xPending(rawKey(key), new LettuceXPendingArgs<>(start, end, count, groupName), args);
+		return xPending(key, new LettuceXPendingArgs<>(start, end, count, groupName), args);
 	}
 
 	@Override
@@ -651,7 +654,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                                    final StreamEntryId start, final StreamEntryId end, final int count) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(Keyword.Time.IDLE, minIdleTime)
 				.add(start, end).add(count);
-		return xPending(rawBinaryKey(key),
+		return xPending(SafeEncoder.encode(key),
 				new LettuceXPendingArgs<>(start, end, count, minIdleTime, SafeEncoder.encode(groupName)), args);
 	}
 
@@ -660,7 +663,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                                    final StreamEntryId start, final StreamEntryId end, final int count) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(Keyword.Time.IDLE, minIdleTime)
 				.add(start, end).add(count);
-		return xPending(rawKey(key), new LettuceXPendingArgs<>(start, end, count, minIdleTime, groupName), args);
+		return xPending(key, new LettuceXPendingArgs<>(start, end, count, minIdleTime, groupName), args);
 	}
 
 	@Override
@@ -668,8 +671,9 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                                    final StreamEntryId end, final int count, final String consumerName) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(start, end).add(count)
 				.add(consumerName);
-		return xPending(rawBinaryKey(key), new LettuceXPendingArgs<>(start, end, count, SafeEncoder.encode(groupName),
-				SafeEncoder.encode(consumerName)), args);
+		return xPending(SafeEncoder.encode(key),
+				new LettuceXPendingArgs<>(start, end, count, SafeEncoder.encode(groupName),
+						SafeEncoder.encode(consumerName)), args);
 	}
 
 	@Override
@@ -677,7 +681,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                                    final StreamEntryId end, final int count, final byte[] consumerName) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(start, end).add(count)
 				.add(consumerName);
-		return xPending(rawKey(key), new LettuceXPendingArgs<>(start, end, count, groupName, consumerName), args);
+		return xPending(key, new LettuceXPendingArgs<>(start, end, count, groupName, consumerName), args);
 	}
 
 	@Override
@@ -686,7 +690,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                                    final String consumerName) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(Keyword.Time.IDLE, minIdleTime)
 				.add(start, end).add(count).add(consumerName);
-		return xPending(rawBinaryKey(key),
+		return xPending(SafeEncoder.encode(key),
 				new LettuceXPendingArgs<>(start, end, count, minIdleTime, SafeEncoder.encode(groupName),
 						SafeEncoder.encode(consumerName)), args);
 	}
@@ -697,7 +701,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                                    final byte[] consumerName) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(Keyword.Time.IDLE, minIdleTime)
 				.add(start, end).add(count).add(consumerName);
-		return xPending(rawKey(key), new LettuceXPendingArgs<>(start, end, count, minIdleTime, groupName, consumerName),
+		return xPending(key, new LettuceXPendingArgs<>(start, end, count, minIdleTime, groupName, consumerName),
 				args);
 	}
 
@@ -751,7 +755,8 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 		int i = 0;
 
 		for(Map.Entry<String, StreamEntryId> entry : streams.entrySet()){
-			streamOffsets[i++] = XReadArgs.StreamOffset.from(rawBinaryKey(entry.getKey()), entry.getValue().toString());
+			streamOffsets[i++] = XReadArgs.StreamOffset.from(SafeEncoder.encode(entry.getKey()),
+					entry.getValue().toString());
 		}
 
 		return executeCommand(RedisCommand.XREAD, args, (cmd)->cmd.xread(streamOffsets),
@@ -850,8 +855,8 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                                                   final StreamEntryId start) {
 		final CommandArguments args = CommandArguments.create(key).add(end, start);
 		return executeCommand(RedisCommand.XREVRANGE, args,
-				(cmd)->cmd.xrevrange(rawBinaryKey(key), Range.create(start.toString(), end.toString())),
-				(cmd)->cmd.xrevrange(rawBinaryKey(key), Range.create(start.toString(), end.toString())),
+				(cmd)->cmd.xrevrange(SafeEncoder.encode(key), Range.create(start.toString(), end.toString())),
+				(cmd)->cmd.xrevrange(SafeEncoder.encode(key), Range.create(start.toString(), end.toString())),
 				new ListConverter<>(new StreamMessageConverter<>(SafeEncoder::encode, SafeEncoder::encode)));
 	}
 
@@ -860,8 +865,8 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                                                   final StreamEntryId start) {
 		final CommandArguments args = CommandArguments.create(key).add(end, start);
 		return executeCommand(RedisCommand.XREVRANGE, args,
-				(cmd)->cmd.xrevrange(rawKey(key), Range.create(start.toString(), end.toString())),
-				(cmd)->cmd.xrevrange(rawKey(key), Range.create(start.toString(), end.toString())),
+				(cmd)->cmd.xrevrange(key, Range.create(start.toString(), end.toString())),
+				(cmd)->cmd.xrevrange(key, Range.create(start.toString(), end.toString())),
 				new ListConverter<>(new StreamMessageConverter<>((k)->k, (v)->v)));
 	}
 
@@ -870,9 +875,9 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                                                   final StreamEntryId start, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(end, start).add(Keyword.Common.COUNT, count);
 		return executeCommand(RedisCommand.XREVRANGE, args,
-				(cmd)->cmd.xrevrange(rawBinaryKey(key), Range.create(start.toString(), end.toString()),
+				(cmd)->cmd.xrevrange(SafeEncoder.encode(key), Range.create(start.toString(), end.toString()),
 						Limit.from(count)),
-				(cmd)->cmd.xrevrange(rawBinaryKey(key), Range.create(start.toString(), end.toString()),
+				(cmd)->cmd.xrevrange(SafeEncoder.encode(key), Range.create(start.toString(), end.toString()),
 						Limit.from(count)),
 				new ListConverter<>(new StreamMessageConverter<>(SafeEncoder::encode, SafeEncoder::encode)));
 	}
@@ -882,8 +887,8 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                                                   final StreamEntryId start, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(end, start).add(Keyword.Common.COUNT, count);
 		return executeCommand(RedisCommand.XREVRANGE, args,
-				(cmd)->cmd.xrevrange(rawKey(key), Range.create(start.toString(), end.toString()), Limit.from(count)),
-				(cmd)->cmd.xrevrange(rawKey(key), Range.create(start.toString(), end.toString()), Limit.from(count)),
+				(cmd)->cmd.xrevrange(key, Range.create(start.toString(), end.toString()), Limit.from(count)),
+				(cmd)->cmd.xrevrange(key, Range.create(start.toString(), end.toString()), Limit.from(count)),
 				new ListConverter<>(new StreamMessageConverter<>((k)->k, (v)->v)));
 	}
 
@@ -942,13 +947,13 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public Long xTrim(final String key, final MaxLenMinId<?> maxLenMinId) {
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId);
-		return xTrim(rawBinaryKey(key), new LettuceXTrimArgs(maxLenMinId), args);
+		return xTrim(SafeEncoder.encode(key), new LettuceXTrimArgs(maxLenMinId), args);
 	}
 
 	@Override
 	public Long xTrim(final byte[] key, final MaxLenMinId<?> maxLenMinId) {
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId);
-		return xTrim(rawKey(key), new LettuceXTrimArgs(maxLenMinId), args);
+		return xTrim(key, new LettuceXTrimArgs(maxLenMinId), args);
 	}
 
 	@Override
@@ -956,7 +961,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                  final MaxLenMinId<?> maxLenMinId) {
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId.getType())
 				.add(approximateExactTrimming).add(maxLenMinId.getThreshold());
-		return xTrim(rawBinaryKey(key), new LettuceXTrimArgs(maxLenMinId, approximateExactTrimming), args);
+		return xTrim(SafeEncoder.encode(key), new LettuceXTrimArgs(maxLenMinId, approximateExactTrimming), args);
 	}
 
 	@Override
@@ -964,7 +969,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                  final MaxLenMinId<?> maxLenMinId) {
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId.getType())
 				.add(approximateExactTrimming).add(maxLenMinId.getThreshold());
-		return xTrim(rawKey(key), new LettuceXTrimArgs(maxLenMinId, approximateExactTrimming), args);
+		return xTrim(key, new LettuceXTrimArgs(maxLenMinId, approximateExactTrimming), args);
 	}
 
 	@Override
@@ -972,7 +977,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                  final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy) {
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId.getType())
 				.add(approximateExactTrimming).add(maxLenMinId.getThreshold()).add(deletionPolicy);
-		return xTrim(rawBinaryKey(key),
+		return xTrim(SafeEncoder.encode(key),
 				new LettuceXTrimArgs(maxLenMinId, approximateExactTrimming).deletionPolicy(deletionPolicy), args);
 	}
 
@@ -981,32 +986,32 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                  final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy) {
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId.getType())
 				.add(approximateExactTrimming).add(maxLenMinId.getThreshold()).add(deletionPolicy);
-		return xTrim(rawKey(key),
+		return xTrim(key,
 				new LettuceXTrimArgs(maxLenMinId, approximateExactTrimming).deletionPolicy(deletionPolicy), args);
 	}
 
 	@Override
 	public Long xTrim(final String key, final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy) {
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId).add(deletionPolicy);
-		return xTrim(rawBinaryKey(key), new LettuceXTrimArgs(maxLenMinId).deletionPolicy(deletionPolicy), args);
+		return xTrim(SafeEncoder.encode(key), new LettuceXTrimArgs(maxLenMinId).deletionPolicy(deletionPolicy), args);
 	}
 
 	@Override
 	public Long xTrim(final byte[] key, final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy) {
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId).add(deletionPolicy);
-		return xTrim(rawKey(key), new LettuceXTrimArgs(maxLenMinId).deletionPolicy(deletionPolicy), args);
+		return xTrim(key, new LettuceXTrimArgs(maxLenMinId).deletionPolicy(deletionPolicy), args);
 	}
 
 	@Override
 	public Long xTrim(final String key, final MaxLenMinId<?> maxLenMinId, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId).add(Keyword.Common.LIMIT, count);
-		return xTrim(rawBinaryKey(key), new LettuceXTrimArgs(maxLenMinId, count), args);
+		return xTrim(SafeEncoder.encode(key), new LettuceXTrimArgs(maxLenMinId, count), args);
 	}
 
 	@Override
 	public Long xTrim(final byte[] key, final MaxLenMinId<?> maxLenMinId, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId).add(Keyword.Common.LIMIT, count);
-		return xTrim(rawKey(key), new LettuceXTrimArgs(maxLenMinId, count), args);
+		return xTrim(key, new LettuceXTrimArgs(maxLenMinId, count), args);
 	}
 
 	@Override
@@ -1014,7 +1019,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                  final MaxLenMinId<?> maxLenMinId, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId.getType())
 				.add(approximateExactTrimming).add(maxLenMinId.getThreshold()).add(Keyword.Common.LIMIT, count);
-		return xTrim(rawBinaryKey(key), new LettuceXTrimArgs(maxLenMinId, approximateExactTrimming), args);
+		return xTrim(SafeEncoder.encode(key), new LettuceXTrimArgs(maxLenMinId, approximateExactTrimming), args);
 	}
 
 	@Override
@@ -1022,7 +1027,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                  final MaxLenMinId<?> maxLenMinId, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId.getType())
 				.add(approximateExactTrimming).add(maxLenMinId.getThreshold()).add(Keyword.Common.LIMIT, count);
-		return xTrim(rawKey(key), new LettuceXTrimArgs(maxLenMinId, approximateExactTrimming), args);
+		return xTrim(key, new LettuceXTrimArgs(maxLenMinId, approximateExactTrimming), args);
 	}
 
 	@Override
@@ -1031,7 +1036,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId.getType())
 				.add(approximateExactTrimming).add(maxLenMinId.getThreshold()).add(deletionPolicy)
 				.add(Keyword.Common.LIMIT, count);
-		return xTrim(rawBinaryKey(key), new LettuceXTrimArgs(maxLenMinId, count), args);
+		return xTrim(SafeEncoder.encode(key), new LettuceXTrimArgs(maxLenMinId, count), args);
 	}
 
 	@Override
@@ -1040,7 +1045,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId.getType())
 				.add(approximateExactTrimming).add(maxLenMinId.getThreshold()).add(deletionPolicy)
 				.add(Keyword.Common.LIMIT, count);
-		return xTrim(rawKey(key), new LettuceXTrimArgs(maxLenMinId, count), args);
+		return xTrim(key, new LettuceXTrimArgs(maxLenMinId, count), args);
 	}
 
 	@Override
@@ -1048,7 +1053,8 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                  final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId).add(deletionPolicy)
 				.add(Keyword.Common.LIMIT, count);
-		return xTrim(rawBinaryKey(key), new LettuceXTrimArgs(maxLenMinId, count).deletionPolicy(deletionPolicy), args);
+		return xTrim(SafeEncoder.encode(key), new LettuceXTrimArgs(maxLenMinId, count).deletionPolicy(deletionPolicy),
+				args);
 	}
 
 	@Override
@@ -1056,7 +1062,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 	                  final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId).add(deletionPolicy)
 				.add(Keyword.Common.LIMIT, count);
-		return xTrim(rawKey(key), new LettuceXTrimArgs(maxLenMinId, count).deletionPolicy(deletionPolicy), args);
+		return xTrim(key, new LettuceXTrimArgs(maxLenMinId, count).deletionPolicy(deletionPolicy), args);
 	}
 
 	private static String[] messageIds(final StreamEntryId... ids) {
@@ -1244,7 +1250,8 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 		int i = 0;
 
 		for(Map.Entry<String, StreamEntryId> entry : streams.entrySet()){
-			streamOffsets[i++] = XReadArgs.StreamOffset.from(rawBinaryKey(entry.getKey()), entry.getValue().toString());
+			streamOffsets[i++] = XReadArgs.StreamOffset.from(SafeEncoder.encode(entry.getKey()),
+					entry.getValue().toString());
 		}
 
 		return executeCommand(RedisCommand.XREAD, args, (cmd)->cmd.xread(xReadArgs, streamOffsets),
@@ -1262,7 +1269,8 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 		int i = 0;
 
 		for(Map.Entry<String, StreamEntryId> entry : streams.entrySet()){
-			streamOffsets[i++] = XReadArgs.StreamOffset.from(rawBinaryKey(entry.getKey()), entry.getValue().toString());
+			streamOffsets[i++] = XReadArgs.StreamOffset.from(SafeEncoder.encode(entry.getKey()),
+					entry.getValue().toString());
 		}
 
 		return executeCommand(RedisCommand.XREADGROUP, args,
@@ -1280,7 +1288,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 		int i = 0;
 
 		for(Map.Entry<byte[], StreamEntryId> entry : streams.entrySet()){
-			streamOffsets[i++] = XReadArgs.StreamOffset.from(rawKey(entry.getKey()), entry.getValue().toString());
+			streamOffsets[i++] = XReadArgs.StreamOffset.from(entry.getKey(), entry.getValue().toString());
 		}
 
 		return executeCommand(RedisCommand.XREADGROUP, args,
@@ -1297,7 +1305,8 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 		int i = 0;
 
 		for(Map.Entry<String, StreamEntryId> entry : streams.entrySet()){
-			streamOffsets[i++] = XReadArgs.StreamOffset.from(rawBinaryKey(entry.getKey()), entry.getValue().toString());
+			streamOffsets[i++] = XReadArgs.StreamOffset.from(SafeEncoder.encode(entry.getKey()),
+					entry.getValue().toString());
 		}
 
 		return executeCommand(RedisCommand.XREADGROUP, args,
@@ -1317,7 +1326,7 @@ public final class LettuceStreamCommands extends AbstractLettuceRedisCommands im
 		int i = 0;
 
 		for(Map.Entry<byte[], StreamEntryId> entry : streams.entrySet()){
-			streamOffsets[i++] = XReadArgs.StreamOffset.from(rawKey(entry.getKey()), entry.getValue().toString());
+			streamOffsets[i++] = XReadArgs.StreamOffset.from(entry.getKey(), entry.getValue().toString());
 		}
 
 		return executeCommand(RedisCommand.XREADGROUP, args,

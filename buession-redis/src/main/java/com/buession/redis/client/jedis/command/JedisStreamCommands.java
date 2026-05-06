@@ -109,18 +109,18 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	@Override
 	public Long xAck(final String key, final String groupName, final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(ids);
-		return executeCommand(RedisCommand.XACK, args, (cmd)->cmd.xack(rawKey(key), groupName, streamEntryIds(ids)),
-				(cmd)->cmd.xack(rawKey(key), groupName, streamEntryIds(ids)),
-				(cmd)->cmd.xack(rawKey(key), groupName, streamEntryIds(ids)));
+		return executeCommand(RedisCommand.XACK, args, (cmd)->cmd.xack(key, groupName, streamEntryIds(ids)),
+				(cmd)->cmd.xack(key, groupName, streamEntryIds(ids)),
+				(cmd)->cmd.xack(key, groupName, streamEntryIds(ids)));
 	}
 
 	@Override
 	public Long xAck(final byte[] key, final byte[] groupName, final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(ids);
 		return executeCommand(RedisCommand.XACK, args,
-				(cmd)->cmd.xack(rawKey(key), groupName, binaryStreamEntryIds(ids)),
-				(cmd)->cmd.xack(rawKey(key), groupName, binaryStreamEntryIds(ids)),
-				(cmd)->cmd.xack(rawKey(key), groupName, binaryStreamEntryIds(ids)));
+				(cmd)->cmd.xack(key, groupName, binaryStreamEntryIds(ids)),
+				(cmd)->cmd.xack(key, groupName, binaryStreamEntryIds(ids)),
+				(cmd)->cmd.xack(key, groupName, binaryStreamEntryIds(ids)));
 	}
 
 	@Override
@@ -128,9 +128,9 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                               final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add("IDS", ids.length).add(ids);
 		return executeCommand(RedisCommand.XACKDEL, args,
-				(cmd)->cmd.xackdel(rawKey(key), groupName, streamEntryIds(ids)),
-				(cmd)->cmd.xackdel(rawKey(key), groupName, streamEntryIds(ids)),
-				(cmd)->cmd.xackdel(rawKey(key), groupName, streamEntryIds(ids)),
+				(cmd)->cmd.xackdel(key, groupName, streamEntryIds(ids)),
+				(cmd)->cmd.xackdel(key, groupName, streamEntryIds(ids)),
+				(cmd)->cmd.xackdel(key, groupName, streamEntryIds(ids)),
 				new ListConverter<>(new StreamEntryDeletionResultConverter()));
 	}
 
@@ -139,9 +139,9 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                               final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add("IDS", ids.length).add(ids);
 		return executeCommand(RedisCommand.XACKDEL, args,
-				(cmd)->cmd.xackdel(rawKey(key), groupName, binaryStreamEntryIds(ids)),
-				(cmd)->cmd.xackdel(rawKey(key), groupName, binaryStreamEntryIds(ids)),
-				(cmd)->cmd.xackdel(rawKey(key), groupName, binaryStreamEntryIds(ids)),
+				(cmd)->cmd.xackdel(key, groupName, binaryStreamEntryIds(ids)),
+				(cmd)->cmd.xackdel(key, groupName, binaryStreamEntryIds(ids)),
+				(cmd)->cmd.xackdel(key, groupName, binaryStreamEntryIds(ids)),
 				new ListConverter<>(new StreamEntryDeletionResultConverter()));
 	}
 
@@ -153,11 +153,11 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 				.add(ids);
 		final StreamDeletionPolicyConverter streamDeletionPolicyConverter = new StreamDeletionPolicyConverter();
 		return executeCommand(RedisCommand.XACKDEL, args,
-				(cmd)->cmd.xackdel(rawKey(key), groupName, streamDeletionPolicyConverter.convert(deletionPolicy),
+				(cmd)->cmd.xackdel(key, groupName, streamDeletionPolicyConverter.convert(deletionPolicy),
 						streamEntryIds(ids)),
-				(cmd)->cmd.xackdel(rawKey(key), groupName, streamDeletionPolicyConverter.convert(deletionPolicy),
+				(cmd)->cmd.xackdel(key, groupName, streamDeletionPolicyConverter.convert(deletionPolicy),
 						streamEntryIds(ids)),
-				(cmd)->cmd.xackdel(rawKey(key), groupName, streamDeletionPolicyConverter.convert(deletionPolicy),
+				(cmd)->cmd.xackdel(key, groupName, streamDeletionPolicyConverter.convert(deletionPolicy),
 						streamEntryIds(ids)), new ListConverter<>(new StreamEntryDeletionResultConverter()));
 	}
 
@@ -169,32 +169,32 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 				.add(ids);
 		final StreamDeletionPolicyConverter streamDeletionPolicyConverter = new StreamDeletionPolicyConverter();
 		return executeCommand(RedisCommand.XACKDEL, args,
-				(cmd)->cmd.xackdel(rawKey(key), groupName, streamDeletionPolicyConverter.convert(deletionPolicy),
+				(cmd)->cmd.xackdel(key, groupName, streamDeletionPolicyConverter.convert(deletionPolicy),
 						binaryStreamEntryIds(ids)),
-				(cmd)->cmd.xackdel(rawKey(key), groupName, streamDeletionPolicyConverter.convert(deletionPolicy),
+				(cmd)->cmd.xackdel(key, groupName, streamDeletionPolicyConverter.convert(deletionPolicy),
 						binaryStreamEntryIds(ids)),
-				(cmd)->cmd.xackdel(rawKey(key), groupName, streamDeletionPolicyConverter.convert(deletionPolicy),
+				(cmd)->cmd.xackdel(key, groupName, streamDeletionPolicyConverter.convert(deletionPolicy),
 						binaryStreamEntryIds(ids)), new ListConverter<>(new StreamEntryDeletionResultConverter()));
 	}
 
 	@Override
 	public StreamEntryId xAdd(final String key, final StreamEntryId id, final Map<String, String> hash) {
 		final CommandArguments args = CommandArguments.create(key).add(id).add(hash);
-		return xAdd(rawKey(key), id, hash, args);
+		return xAdd(key, id, hash, args);
 	}
 
 	@Override
 	public StreamEntryId xAdd(final byte[] key, final StreamEntryId id, final Map<byte[], byte[]> hash) {
 		final CommandArguments args = CommandArguments.create(key).add(id).add(hash);
 		final MapConverter<byte[], byte[], String, String> mapConverter = Converters.binaryMapStringMapConverter();
-		return xAdd(rawStringKey(key), id, mapConverter.convert(hash), args);
+		return xAdd(SafeEncoder.encode(key), id, mapConverter.convert(hash), args);
 	}
 
 	@Override
 	public StreamEntryId xAdd(final String key, final StreamEntryId id, final Map<String, String> hash,
 	                          final XAddArgument xAddArgument) {
 		final CommandArguments args = CommandArguments.create(key).add(xAddArgument).add(id).add(hash);
-		return xAdd(rawKey(key), id, hash, xAddArgument, args);
+		return xAdd(key, id, hash, xAddArgument, args);
 	}
 
 	@Override
@@ -202,7 +202,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                          final XAddArgument xAddArgument) {
 		final CommandArguments args = CommandArguments.create(key).add(xAddArgument).add(id).add(hash);
 		final MapConverter<byte[], byte[], String, String> mapConverter = Converters.binaryMapStringMapConverter();
-		return xAdd(rawStringKey(key), id, mapConverter.convert(hash), xAddArgument, args);
+		return xAdd(SafeEncoder.encode(key), id, mapConverter.convert(hash), xAddArgument, args);
 	}
 
 	@Override
@@ -210,7 +210,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                                final int minIdleTime, final StreamEntryId start) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName, consumerName).add(minIdleTime)
 				.add(start);
-		return xAutoClaim(rawKey(key), groupName, consumerName, minIdleTime, start, new JedisXAutoClaimParams(), (v)->v,
+		return xAutoClaim(key, groupName, consumerName, minIdleTime, start, new JedisXAutoClaimParams(), (v)->v,
 				args);
 	}
 
@@ -219,7 +219,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                                final int minIdleTime, final StreamEntryId start) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName, consumerName).add(minIdleTime)
 				.add(start);
-		return xAutoClaim(rawStringKey(key), SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName),
+		return xAutoClaim(SafeEncoder.encode(key), SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName),
 				minIdleTime, start, new JedisXAutoClaimParams(), SafeEncoder::encode, args);
 	}
 
@@ -228,7 +228,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                                final int minIdleTime, final StreamEntryId start, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName, consumerName).add(minIdleTime)
 				.add(start).add(Keyword.Common.COUNT, count);
-		return xAutoClaim(rawKey(key), groupName, consumerName, minIdleTime, start, new JedisXAutoClaimParams(count),
+		return xAutoClaim(key, groupName, consumerName, minIdleTime, start, new JedisXAutoClaimParams(count),
 				(v)->v, args);
 	}
 
@@ -237,7 +237,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                                final int minIdleTime, final StreamEntryId start, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName, consumerName).add(minIdleTime)
 				.add(start).add(Keyword.Common.COUNT, count);
-		return xAutoClaim(rawStringKey(key), SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName),
+		return xAutoClaim(SafeEncoder.encode(key), SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName),
 				minIdleTime, start, new JedisXAutoClaimParams(count), SafeEncoder::encode, args);
 	}
 
@@ -246,7 +246,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                    final int minIdleTime, final StreamEntryId start) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName, consumerName).add(minIdleTime)
 				.add(start).add("JUSTID");
-		return xAutoClaimJustId(rawKey(key), groupName, consumerName, minIdleTime, start, new JedisXAutoClaimParams(),
+		return xAutoClaimJustId(key, groupName, consumerName, minIdleTime, start, new JedisXAutoClaimParams(),
 				args);
 	}
 
@@ -255,7 +255,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                    final int minIdleTime, final StreamEntryId start) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName, consumerName).add(minIdleTime)
 				.add(start).add("JUSTID");
-		return xAutoClaimJustId(rawStringKey(key), groupName, consumerName, minIdleTime, start,
+		return xAutoClaimJustId(SafeEncoder.encode(key), groupName, consumerName, minIdleTime, start,
 				new JedisXAutoClaimParams(), args);
 	}
 
@@ -264,7 +264,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                    final int minIdleTime, final StreamEntryId start, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName, consumerName).add(minIdleTime)
 				.add(start).add(Keyword.Common.COUNT, count).add("JUSTID");
-		return xAutoClaimJustId(rawKey(key), groupName, consumerName, minIdleTime, start,
+		return xAutoClaimJustId(key, groupName, consumerName, minIdleTime, start,
 				new JedisXAutoClaimParams(count), args);
 	}
 
@@ -273,7 +273,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                    final int minIdleTime, final StreamEntryId start, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName, consumerName).add(minIdleTime)
 				.add(start).add(Keyword.Common.COUNT, count).add("JUSTID");
-		return xAutoClaimJustId(rawStringKey(key), groupName, consumerName, minIdleTime, start,
+		return xAutoClaimJustId(SafeEncoder.encode(key), groupName, consumerName, minIdleTime, start,
 				new JedisXAutoClaimParams(count), args);
 	}
 
@@ -332,7 +332,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                                final int minIdleTime, final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName).add(minIdleTime)
 				.add(ids);
-		return xClaim(rawKey(key), groupName, consumerName, minIdleTime, ids, new XClaimParams(), args);
+		return xClaim(key, groupName, consumerName, minIdleTime, ids, new XClaimParams(), args);
 	}
 
 	@Override
@@ -340,7 +340,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                                final int minIdleTime, final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName).add(minIdleTime)
 				.add(ids);
-		return xClaim(rawStringKey(key), groupName, consumerName, minIdleTime, ids, new XClaimParams(), args);
+		return xClaim(SafeEncoder.encode(key), groupName, consumerName, minIdleTime, ids, new XClaimParams(), args);
 	}
 
 	@Override
@@ -349,7 +349,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                                final XClaimArgument xClaimArgument) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName).add(minIdleTime)
 				.add(ids).add(xClaimArgument);
-		return xClaim(rawKey(key), groupName, consumerName, minIdleTime, ids, new JedisXClaimParams(xClaimArgument),
+		return xClaim(key, groupName, consumerName, minIdleTime, ids, new JedisXClaimParams(xClaimArgument),
 				args);
 	}
 
@@ -359,7 +359,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                                final XClaimArgument xClaimArgument) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName).add(minIdleTime)
 				.add(ids).add(xClaimArgument);
-		return xClaim(rawStringKey(key), groupName, consumerName, minIdleTime, ids,
+		return xClaim(SafeEncoder.encode(key), groupName, consumerName, minIdleTime, ids,
 				new JedisXClaimParams(xClaimArgument), args);
 	}
 
@@ -368,7 +368,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                        final int minIdleTime, final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName).add(minIdleTime)
 				.add(ids).add("JUSTID");
-		return xClaimJustId(rawKey(key), groupName, consumerName, minIdleTime, ids, new XClaimParams(), args);
+		return xClaimJustId(key, groupName, consumerName, minIdleTime, ids, new XClaimParams(), args);
 	}
 
 	@Override
@@ -376,7 +376,8 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                        final int minIdleTime, final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName).add(minIdleTime)
 				.add(ids).add("JUSTID");
-		return xClaimJustId(rawStringKey(key), groupName, consumerName, minIdleTime, ids, new XClaimParams(), args);
+		return xClaimJustId(SafeEncoder.encode(key), groupName, consumerName, minIdleTime, ids, new XClaimParams(),
+				args);
 	}
 
 	@Override
@@ -385,7 +386,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                        final XClaimArgument xClaimArgument) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName).add(minIdleTime)
 				.add(ids).add(xClaimArgument).add("JUSTID");
-		return xClaimJustId(rawKey(key), groupName, consumerName, minIdleTime, ids,
+		return xClaimJustId(key, groupName, consumerName, minIdleTime, ids,
 				new JedisXClaimParams(xClaimArgument), args);
 	}
 
@@ -395,49 +396,49 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                        final XClaimArgument xClaimArgument) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName).add(minIdleTime)
 				.add(ids).add(xClaimArgument).add("JUSTID");
-		return xClaimJustId(rawStringKey(key), groupName, consumerName, minIdleTime, ids,
+		return xClaimJustId(SafeEncoder.encode(key), groupName, consumerName, minIdleTime, ids,
 				new JedisXClaimParams(xClaimArgument), args);
 	}
 
 	@Override
 	public Long xDel(final String key, final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key).add(ids);
-		return executeCommand(RedisCommand.XDEL, args, (cmd)->cmd.xdel(rawKey(key), streamEntryIds(ids)),
-				(cmd)->cmd.xdel(rawKey(key), streamEntryIds(ids)), (cmd)->cmd.xdel(rawKey(key), streamEntryIds(ids)));
+		return executeCommand(RedisCommand.XDEL, args, (cmd)->cmd.xdel(key, streamEntryIds(ids)),
+				(cmd)->cmd.xdel(key, streamEntryIds(ids)), (cmd)->cmd.xdel(key, streamEntryIds(ids)));
 	}
 
 	@Override
 	public Long xDel(final byte[] key, final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key).add(ids);
-		return executeCommand(RedisCommand.XDEL, args, (cmd)->cmd.xdel(rawStringKey(key), streamEntryIds(ids)),
-				(cmd)->cmd.xdel(rawStringKey(key), streamEntryIds(ids)),
-				(cmd)->cmd.xdel(rawStringKey(key), streamEntryIds(ids)));
+		return executeCommand(RedisCommand.XDEL, args, (cmd)->cmd.xdel(SafeEncoder.encode(key), streamEntryIds(ids)),
+				(cmd)->cmd.xdel(SafeEncoder.encode(key), streamEntryIds(ids)),
+				(cmd)->cmd.xdel(SafeEncoder.encode(key), streamEntryIds(ids)));
 	}
 
 	@Override
 	public List<StreamEntryDeletionResult> xDelEx(final String key, final StreamDeletionPolicy deletionPolicy,
 	                                              final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key).add(deletionPolicy).add("IDS", ids.length).add(ids);
-		return xDelEx(rawKey(key), ids, deletionPolicy, args);
+		return xDelEx(key, ids, deletionPolicy, args);
 	}
 
 	@Override
 	public List<StreamEntryDeletionResult> xDelEx(final byte[] key, final StreamDeletionPolicy deletionPolicy,
 	                                              final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key).add(deletionPolicy).add("IDS", ids.length).add(ids);
-		return xDelEx(rawStringKey(key), ids, deletionPolicy, args);
+		return xDelEx(SafeEncoder.encode(key), ids, deletionPolicy, args);
 	}
 
 	@Override
 	public Status xGroupCreate(final String key, final String groupName, final StreamEntryId id) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(id);
-		return xGroupCreate(rawKey(key), groupName, id, false, args);
+		return xGroupCreate(key, groupName, id, false, args);
 	}
 
 	@Override
 	public Status xGroupCreate(final byte[] key, final byte[] groupName, final StreamEntryId id) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(id);
-		return xGroupCreate(rawKey(key), groupName, id, false, args);
+		return xGroupCreate(key, groupName, id, false, args);
 	}
 
 	@Override
@@ -445,7 +446,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                           final boolean makeStream) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(id)
 				.add(makeStream ? "MKSTREAM" : null);
-		return xGroupCreate(rawKey(key), groupName, id, makeStream, args);
+		return xGroupCreate(key, groupName, id, makeStream, args);
 	}
 
 	@Override
@@ -453,7 +454,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                           final boolean makeStream) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(id)
 				.add(makeStream ? "MKSTREAM" : null);
-		return xGroupCreate(rawKey(key), groupName, id, makeStream, args);
+		return xGroupCreate(key, groupName, id, makeStream, args);
 	}
 
 	@Override
@@ -461,7 +462,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                           final boolean makeStream, final long entriesRead) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(id)
 				.add(makeStream ? "MKSTREAM" : null).add("ENTRIESREAD", entriesRead);
-		return xGroupCreate(rawKey(key), groupName, id, makeStream, args);
+		return xGroupCreate(key, groupName, id, makeStream, args);
 	}
 
 	@Override
@@ -469,91 +470,91 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                           final boolean makeStream, final long entriesRead) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(id)
 				.add(makeStream ? "MKSTREAM" : null).add("ENTRIESREAD", entriesRead);
-		return xGroupCreate(rawKey(key), groupName, id, makeStream, args);
+		return xGroupCreate(key, groupName, id, makeStream, args);
 	}
 
 	@Override
 	public Status xGroupCreate(final String key, final String groupName, final StreamEntryId id,
 	                           final long entriesRead) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(id).add("ENTRIESREAD", entriesRead);
-		return xGroupCreate(rawKey(key), groupName, id, false, args);
+		return xGroupCreate(key, groupName, id, false, args);
 	}
 
 	@Override
 	public Status xGroupCreate(final byte[] key, final byte[] groupName, final StreamEntryId id,
 	                           final long entriesRead) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(id).add("ENTRIESREAD", entriesRead);
-		return xGroupCreate(rawKey(key), groupName, id, false, args);
+		return xGroupCreate(key, groupName, id, false, args);
 	}
 
 	@Override
 	public Status xGroupCreateConsumer(final String key, final String groupName, final String consumerName) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName);
 		return executeCommand(RedisCommand.XGROUP, RedisSubCommand.XGROUP_CREATECONSUMER, args,
-				(cmd)->cmd.xgroupCreateConsumer(rawKey(key), groupName, consumerName),
-				(cmd)->cmd.xgroupCreateConsumer(rawKey(key), groupName, consumerName),
-				(cmd)->cmd.xgroupCreateConsumer(rawKey(key), groupName, consumerName), new BooleanStatusConverter());
+				(cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName),
+				(cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName),
+				(cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName), new BooleanStatusConverter());
 	}
 
 	@Override
 	public Status xGroupCreateConsumer(final byte[] key, final byte[] groupName, final byte[] consumerName) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName);
 		return executeCommand(RedisCommand.XGROUP, RedisSubCommand.XGROUP_CREATECONSUMER, args,
-				(cmd)->cmd.xgroupCreateConsumer(rawKey(key), groupName, consumerName),
-				(cmd)->cmd.xgroupCreateConsumer(rawKey(key), groupName, consumerName),
-				(cmd)->cmd.xgroupCreateConsumer(rawKey(key), groupName, consumerName), new BooleanStatusConverter());
+				(cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName),
+				(cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName),
+				(cmd)->cmd.xgroupCreateConsumer(key, groupName, consumerName), new BooleanStatusConverter());
 	}
 
 	@Override
 	public Long xGroupDelConsumer(final String key, final String groupName, final String consumerName) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName, consumerName);
 		return executeCommand(RedisCommand.XGROUP, RedisSubCommand.XGROUP_DELCONSUMER, args,
-				(cmd)->cmd.xgroupDelConsumer(rawKey(key), groupName, consumerName),
-				(cmd)->cmd.xgroupDelConsumer(rawKey(key), groupName, consumerName),
-				(cmd)->cmd.xgroupDelConsumer(rawKey(key), groupName, consumerName));
+				(cmd)->cmd.xgroupDelConsumer(key, groupName, consumerName),
+				(cmd)->cmd.xgroupDelConsumer(key, groupName, consumerName),
+				(cmd)->cmd.xgroupDelConsumer(key, groupName, consumerName));
 	}
 
 	@Override
 	public Long xGroupDelConsumer(final byte[] key, final byte[] groupName, final byte[] consumerName) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName, consumerName);
 		return executeCommand(RedisCommand.XGROUP, RedisSubCommand.XGROUP_DELCONSUMER, args,
-				(cmd)->cmd.xgroupDelConsumer(rawKey(key), groupName, consumerName),
-				(cmd)->cmd.xgroupDelConsumer(rawKey(key), groupName, consumerName),
-				(cmd)->cmd.xgroupDelConsumer(rawKey(key), groupName, consumerName));
+				(cmd)->cmd.xgroupDelConsumer(key, groupName, consumerName),
+				(cmd)->cmd.xgroupDelConsumer(key, groupName, consumerName),
+				(cmd)->cmd.xgroupDelConsumer(key, groupName, consumerName));
 	}
 
 	@Override
 	public Status xGroupDestroy(final String key, final String groupName) {
 		final CommandArguments args = CommandArguments.create(key, groupName);
 		return executeCommand(RedisCommand.XGROUP, RedisSubCommand.XGROUP_DESTROY, args,
-				(cmd)->cmd.xgroupDestroy(rawKey(key), groupName), (cmd)->cmd.xgroupDestroy(rawKey(key), groupName),
-				(cmd)->cmd.xgroupDestroy(rawKey(key), groupName), new OneStatusConverter());
+				(cmd)->cmd.xgroupDestroy(key, groupName), (cmd)->cmd.xgroupDestroy(key, groupName),
+				(cmd)->cmd.xgroupDestroy(key, groupName), new OneStatusConverter());
 	}
 
 	@Override
 	public Status xGroupDestroy(final byte[] key, final byte[] groupName) {
 		final CommandArguments args = CommandArguments.create(key, groupName);
 		return executeCommand(RedisCommand.XGROUP, RedisSubCommand.XGROUP_DESTROY, args,
-				(cmd)->cmd.xgroupDestroy(rawKey(key), groupName), (cmd)->cmd.xgroupDestroy(rawKey(key), groupName),
-				(cmd)->cmd.xgroupDestroy(rawKey(key), groupName), new OneStatusConverter());
+				(cmd)->cmd.xgroupDestroy(key, groupName), (cmd)->cmd.xgroupDestroy(key, groupName),
+				(cmd)->cmd.xgroupDestroy(key, groupName), new OneStatusConverter());
 	}
 
 	@Override
 	public Status xGroupSetId(final String key, final String groupName, final StreamEntryId id) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(id);
 		return executeCommand(RedisCommand.XGROUP, RedisSubCommand.XGROUP_SETID, args,
-				(cmd)->cmd.xgroupSetID(rawKey(key), groupName, new JedisStreamEntryID(id)),
-				(cmd)->cmd.xgroupSetID(rawKey(key), groupName, new JedisStreamEntryID(id)),
-				(cmd)->cmd.xgroupSetID(rawKey(key), groupName, new JedisStreamEntryID(id)), new OkStatusConverter());
+				(cmd)->cmd.xgroupSetID(key, groupName, new JedisStreamEntryID(id)),
+				(cmd)->cmd.xgroupSetID(key, groupName, new JedisStreamEntryID(id)),
+				(cmd)->cmd.xgroupSetID(key, groupName, new JedisStreamEntryID(id)), new OkStatusConverter());
 	}
 
 	@Override
 	public Status xGroupSetId(final byte[] key, final byte[] groupName, final StreamEntryId id) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(id);
 		return executeCommand(RedisCommand.XGROUP, RedisSubCommand.XGROUP_SETID, args,
-				(cmd)->cmd.xgroupSetID(rawKey(key), groupName, id.getRaw()),
-				(cmd)->cmd.xgroupSetID(rawKey(key), groupName, id.getRaw()),
-				(cmd)->cmd.xgroupSetID(rawKey(key), groupName, id.getRaw()), new OkStatusConverter());
+				(cmd)->cmd.xgroupSetID(key, groupName, id.getRaw()),
+				(cmd)->cmd.xgroupSetID(key, groupName, id.getRaw()),
+				(cmd)->cmd.xgroupSetID(key, groupName, id.getRaw()), new OkStatusConverter());
 	}
 
 	@Override
@@ -561,9 +562,9 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                          final long entriesRead) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(id).add("ENTRIESREAD", entriesRead);
 		return executeCommand(RedisCommand.XGROUP, RedisSubCommand.XGROUP_SETID, args,
-				(cmd)->cmd.xgroupSetID(rawKey(key), groupName, new JedisStreamEntryID(id)),
-				(cmd)->cmd.xgroupSetID(rawKey(key), groupName, new JedisStreamEntryID(id)),
-				(cmd)->cmd.xgroupSetID(rawKey(key), groupName, new JedisStreamEntryID(id)), new OkStatusConverter());
+				(cmd)->cmd.xgroupSetID(key, groupName, new JedisStreamEntryID(id)),
+				(cmd)->cmd.xgroupSetID(key, groupName, new JedisStreamEntryID(id)),
+				(cmd)->cmd.xgroupSetID(key, groupName, new JedisStreamEntryID(id)), new OkStatusConverter());
 	}
 
 	@Override
@@ -571,49 +572,49 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                          final long entriesRead) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(id).add("ENTRIESREAD", entriesRead);
 		return executeCommand(RedisCommand.XGROUP, RedisSubCommand.XGROUP_SETID, args,
-				(cmd)->cmd.xgroupSetID(rawKey(key), groupName, id.getRaw()),
-				(cmd)->cmd.xgroupSetID(rawKey(key), groupName, id.getRaw()),
-				(cmd)->cmd.xgroupSetID(rawKey(key), groupName, id.getRaw()), new OkStatusConverter());
+				(cmd)->cmd.xgroupSetID(key, groupName, id.getRaw()),
+				(cmd)->cmd.xgroupSetID(key, groupName, id.getRaw()),
+				(cmd)->cmd.xgroupSetID(key, groupName, id.getRaw()), new OkStatusConverter());
 	}
 
 	@Override
 	public List<StreamConsumer> xInfoConsumers(final String key, final String groupName) {
 		final CommandArguments args = CommandArguments.create(key, groupName);
-		return xInfoConsumers(rawKey(key), groupName, args);
+		return xInfoConsumers(key, groupName, args);
 	}
 
 	@Override
 	public List<StreamConsumer> xInfoConsumers(final byte[] key, final byte[] groupName) {
 		final CommandArguments args = CommandArguments.create(key, groupName);
-		return xInfoConsumers(rawStringKey(key), SafeEncoder.encode(groupName), args);
+		return xInfoConsumers(SafeEncoder.encode(key), SafeEncoder.encode(groupName), args);
 	}
 
 	@Override
 	public List<StreamGroup> xInfoGroups(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return xInfoGroups(rawKey(key), args);
+		return xInfoGroups(key, args);
 	}
 
 	@Override
 	public List<StreamGroup> xInfoGroups(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return xInfoGroups(rawStringKey(key), args);
+		return xInfoGroups(SafeEncoder.encode(key), args);
 	}
 
 	@Override
 	public Stream<String, String> xInfoStream(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(RedisCommand.XINFO, RedisSubCommand.XINFO_STREAM, args,
-				(cmd)->cmd.xinfoStream(rawKey(key)), (cmd)->cmd.xinfoStream(rawKey(key)),
-				(cmd)->cmd.xinfoStream(rawKey(key)), new StreamInfoConverter<>((k)->k, (v)->v));
+				(cmd)->cmd.xinfoStream(key), (cmd)->cmd.xinfoStream(key),
+				(cmd)->cmd.xinfoStream(key), new StreamInfoConverter<>((k)->k, (v)->v));
 	}
 
 	@Override
 	public Stream<byte[], byte[]> xInfoStream(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(RedisCommand.XINFO, RedisSubCommand.XINFO_STREAM, args,
-				(cmd)->cmd.xinfoStream(rawStringKey(key)), (cmd)->cmd.xinfoStream(rawStringKey(key)),
-				(cmd)->cmd.xinfoStream(rawStringKey(key)),
+				(cmd)->cmd.xinfoStream(SafeEncoder.encode(key)), (cmd)->cmd.xinfoStream(SafeEncoder.encode(key)),
+				(cmd)->cmd.xinfoStream(SafeEncoder.encode(key)),
 				new StreamInfoConverter<>(SafeEncoder::encode, SafeEncoder::encode));
 	}
 
@@ -621,8 +622,8 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	public StreamFull<String, String> xInfoStreamFull(final String key) {
 		final CommandArguments args = CommandArguments.create(key, "FULL");
 		return executeCommand(RedisCommand.XINFO, RedisSubCommand.XINFO_STREAM, args,
-				(cmd)->cmd.xinfoStreamFull(rawKey(key)), (cmd)->cmd.xinfoStreamFull(rawKey(key)),
-				(cmd)->cmd.xinfoStreamFull(rawKey(key)),
+				(cmd)->cmd.xinfoStreamFull(key), (cmd)->cmd.xinfoStreamFull(key),
+				(cmd)->cmd.xinfoStreamFull(key),
 				new StreamFullInfoConverter<>((k)->k, (v)->v));
 	}
 
@@ -630,8 +631,9 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	public StreamFull<byte[], byte[]> xInfoStreamFull(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key, "FULL");
 		return executeCommand(RedisCommand.XINFO, RedisSubCommand.XINFO_STREAM, args,
-				(cmd)->cmd.xinfoStreamFull(rawStringKey(key)), (cmd)->cmd.xinfoStreamFull(rawStringKey(key)),
-				(cmd)->cmd.xinfoStreamFull(rawStringKey(key)),
+				(cmd)->cmd.xinfoStreamFull(SafeEncoder.encode(key)),
+				(cmd)->cmd.xinfoStreamFull(SafeEncoder.encode(key)),
+				(cmd)->cmd.xinfoStreamFull(SafeEncoder.encode(key)),
 				new StreamFullInfoConverter<>(SafeEncoder::encode, SafeEncoder::encode));
 	}
 
@@ -639,39 +641,39 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	public StreamFull<String, String> xInfoStreamFull(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create(key, "FULL").add(Keyword.Common.COUNT, count);
 		return executeCommand(RedisCommand.XINFO, RedisSubCommand.XINFO_STREAM, args,
-				(cmd)->cmd.xinfoStreamFull(rawKey(key), count), (cmd)->cmd.xinfoStreamFull(rawKey(key), count),
-				(cmd)->cmd.xinfoStreamFull(rawKey(key), count), new StreamFullInfoConverter<>((k)->k, (v)->v));
+				(cmd)->cmd.xinfoStreamFull(key, count), (cmd)->cmd.xinfoStreamFull(key, count),
+				(cmd)->cmd.xinfoStreamFull(key, count), new StreamFullInfoConverter<>((k)->k, (v)->v));
 	}
 
 	@Override
 	public StreamFull<byte[], byte[]> xInfoStreamFull(final byte[] key, final int count) {
 		final CommandArguments args = CommandArguments.create(key, "FULL").add(Keyword.Common.COUNT, count);
 		return executeCommand(RedisCommand.XINFO, RedisSubCommand.XINFO_STREAM, args,
-				(cmd)->cmd.xinfoStreamFull(rawStringKey(key), count),
-				(cmd)->cmd.xinfoStreamFull(rawStringKey(key), count),
-				(cmd)->cmd.xinfoStreamFull(rawStringKey(key), count),
+				(cmd)->cmd.xinfoStreamFull(SafeEncoder.encode(key), count),
+				(cmd)->cmd.xinfoStreamFull(SafeEncoder.encode(key), count),
+				(cmd)->cmd.xinfoStreamFull(SafeEncoder.encode(key), count),
 				new StreamFullInfoConverter<>(SafeEncoder::encode, SafeEncoder::encode));
 	}
 
 	@Override
 	public Long xLen(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.XLEN, args, (cmd)->cmd.xlen(rawKey(key)), (cmd)->cmd.xlen(rawKey(key)),
-				(cmd)->cmd.xlen(rawKey(key)));
+		return executeCommand(RedisCommand.XLEN, args, (cmd)->cmd.xlen(key), (cmd)->cmd.xlen(key),
+				(cmd)->cmd.xlen(key));
 	}
 
 	@Override
 	public Long xLen(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.XLEN, args, (cmd)->cmd.xlen(rawKey(key)), (cmd)->cmd.xlen(rawKey(key)),
-				(cmd)->cmd.xlen(rawKey(key)));
+		return executeCommand(RedisCommand.XLEN, args, (cmd)->cmd.xlen(key), (cmd)->cmd.xlen(key),
+				(cmd)->cmd.xlen(key));
 	}
 
 	@Override
 	public StreamPendingSummary xPending(final String key, final String groupName) {
 		final CommandArguments args = CommandArguments.create(key, groupName);
-		return executeCommand(RedisCommand.XPENDING, args, (cmd)->cmd.xpending(rawKey(key), groupName),
-				(cmd)->cmd.xpending(rawKey(key), groupName), (cmd)->cmd.xpending(rawKey(key), groupName),
+		return executeCommand(RedisCommand.XPENDING, args, (cmd)->cmd.xpending(key, groupName),
+				(cmd)->cmd.xpending(key, groupName), (cmd)->cmd.xpending(key, groupName),
 				new StreamPendingSummaryConverter());
 	}
 
@@ -679,9 +681,9 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	public StreamPendingSummary xPending(final byte[] key, final byte[] groupName) {
 		final CommandArguments args = CommandArguments.create(key, groupName);
 		return executeCommand(RedisCommand.XPENDING, args,
-				(cmd)->cmd.xpending(rawStringKey(key), SafeEncoder.encode(groupName)),
-				(cmd)->cmd.xpending(rawStringKey(key), SafeEncoder.encode(groupName)),
-				(cmd)->cmd.xpending(rawStringKey(key), SafeEncoder.encode(groupName)),
+				(cmd)->cmd.xpending(SafeEncoder.encode(key), SafeEncoder.encode(groupName)),
+				(cmd)->cmd.xpending(SafeEncoder.encode(key), SafeEncoder.encode(groupName)),
+				(cmd)->cmd.xpending(SafeEncoder.encode(key), SafeEncoder.encode(groupName)),
 				new StreamPendingSummaryConverter());
 	}
 
@@ -689,14 +691,15 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	public List<StreamPending> xPending(final String key, final String groupName, final StreamEntryId start,
 	                                    final StreamEntryId end, final int count) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(start, end).add(count);
-		return xPending(rawKey(key), groupName, new JedisXPendingParams(start, end, count), args);
+		return xPending(key, groupName, new JedisXPendingParams(start, end, count), args);
 	}
 
 	@Override
 	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final StreamEntryId start,
 	                                    final StreamEntryId end, final int count) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(start, end).add(count);
-		return xPending(rawStringKey(key), rawStringKey(groupName), new JedisXPendingParams(start, end, count), args);
+		return xPending(SafeEncoder.encode(key), SafeEncoder.encode(groupName),
+				new JedisXPendingParams(start, end, count), args);
 	}
 
 	@Override
@@ -704,7 +707,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                    final StreamEntryId start, final StreamEntryId end, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName).add(Keyword.Time.IDLE, minIdleTime)
 				.add(start, end).add(count);
-		return xPending(rawKey(key), groupName, new JedisXPendingParams(start, end, count, minIdleTime), args);
+		return xPending(key, groupName, new JedisXPendingParams(start, end, count, minIdleTime), args);
 	}
 
 	@Override
@@ -712,7 +715,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                    final StreamEntryId start, final StreamEntryId end, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName).add(Keyword.Time.IDLE, minIdleTime)
 				.add(start, end).add(count);
-		return xPending(rawStringKey(key), rawStringKey(groupName),
+		return xPending(SafeEncoder.encode(key), SafeEncoder.encode(groupName),
 				new JedisXPendingParams(start, end, count, minIdleTime), args);
 	}
 
@@ -721,7 +724,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                    final StreamEntryId end, final int count, final String consumerName) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(start, end).add(count)
 				.add(consumerName);
-		return xPending(rawKey(key), groupName, new JedisXPendingParams(start, end, count, consumerName), args);
+		return xPending(key, groupName, new JedisXPendingParams(start, end, count, consumerName), args);
 	}
 
 	@Override
@@ -729,7 +732,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                    final StreamEntryId end, final int count, final byte[] consumerName) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(start, end).add(count)
 				.add(consumerName);
-		return xPending(rawStringKey(key), rawStringKey(groupName),
+		return xPending(SafeEncoder.encode(key), SafeEncoder.encode(groupName),
 				new JedisXPendingParams(start, end, count, consumerName), args);
 	}
 
@@ -739,7 +742,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                    final String consumerName) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName).add(Keyword.Time.IDLE, minIdleTime)
 				.add(start, end).add(count).add(consumerName);
-		return xPending(rawKey(key), groupName, new JedisXPendingParams(start, end, count, minIdleTime, consumerName),
+		return xPending(key, groupName, new JedisXPendingParams(start, end, count, minIdleTime, consumerName),
 				args);
 	}
 
@@ -749,7 +752,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                    final byte[] consumerName) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName).add(Keyword.Time.IDLE, minIdleTime)
 				.add(start, end).add(count).add(consumerName);
-		return xPending(rawStringKey(key), rawStringKey(groupName),
+		return xPending(SafeEncoder.encode(key), SafeEncoder.encode(groupName),
 				new JedisXPendingParams(start, end, count, minIdleTime, consumerName), args);
 	}
 
@@ -758,9 +761,9 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                                final StreamEntryId end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
 		return executeCommand(RedisCommand.XRANGE, args,
-				(cmd)->cmd.xrange(rawKey(key), new JedisStreamEntryID(start), new JedisStreamEntryID(end)),
-				(cmd)->cmd.xrange(rawKey(key), new JedisStreamEntryID(start), new JedisStreamEntryID(end)),
-				(cmd)->cmd.xrange(rawKey(key), new JedisStreamEntryID(start), new JedisStreamEntryID(end)),
+				(cmd)->cmd.xrange(key, new JedisStreamEntryID(start), new JedisStreamEntryID(end)),
+				(cmd)->cmd.xrange(key, new JedisStreamEntryID(start), new JedisStreamEntryID(end)),
+				(cmd)->cmd.xrange(key, new JedisStreamEntryID(start), new JedisStreamEntryID(end)),
 				new ListConverter<>(new StreamEntryConverter<>((k)->k, (v)->v)));
 	}
 
@@ -769,9 +772,9 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                                final StreamEntryId end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
 		return executeCommand(RedisCommand.XRANGE, args,
-				(cmd)->cmd.xrange(rawStringKey(key), new JedisStreamEntryID(start), new JedisStreamEntryID(end)),
-				(cmd)->cmd.xrange(rawStringKey(key), new JedisStreamEntryID(start), new JedisStreamEntryID(end)),
-				(cmd)->cmd.xrange(rawStringKey(key), new JedisStreamEntryID(start), new JedisStreamEntryID(end)),
+				(cmd)->cmd.xrange(SafeEncoder.encode(key), new JedisStreamEntryID(start), new JedisStreamEntryID(end)),
+				(cmd)->cmd.xrange(SafeEncoder.encode(key), new JedisStreamEntryID(start), new JedisStreamEntryID(end)),
+				(cmd)->cmd.xrange(SafeEncoder.encode(key), new JedisStreamEntryID(start), new JedisStreamEntryID(end)),
 				new ListConverter<>(new StreamEntryConverter<>(SafeEncoder::encode, SafeEncoder::encode)));
 	}
 
@@ -780,9 +783,9 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                                final StreamEntryId end, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(Keyword.Common.COUNT, count);
 		return executeCommand(RedisCommand.XRANGE, args,
-				(cmd)->cmd.xrange(rawKey(key), new JedisStreamEntryID(start), new JedisStreamEntryID(end), count),
-				(cmd)->cmd.xrange(rawKey(key), new JedisStreamEntryID(start), new JedisStreamEntryID(end), count),
-				(cmd)->cmd.xrange(rawKey(key), new JedisStreamEntryID(start), new JedisStreamEntryID(end), count),
+				(cmd)->cmd.xrange(key, new JedisStreamEntryID(start), new JedisStreamEntryID(end), count),
+				(cmd)->cmd.xrange(key, new JedisStreamEntryID(start), new JedisStreamEntryID(end), count),
+				(cmd)->cmd.xrange(key, new JedisStreamEntryID(start), new JedisStreamEntryID(end), count),
 				new ListConverter<>(new StreamEntryConverter<>((k)->k, (v)->v)));
 	}
 
@@ -791,9 +794,12 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                                final StreamEntryId end, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(Keyword.Common.COUNT, count);
 		return executeCommand(RedisCommand.XRANGE, args,
-				(cmd)->cmd.xrange(rawStringKey(key), new JedisStreamEntryID(start), new JedisStreamEntryID(end), count),
-				(cmd)->cmd.xrange(rawStringKey(key), new JedisStreamEntryID(start), new JedisStreamEntryID(end), count),
-				(cmd)->cmd.xrange(rawStringKey(key), new JedisStreamEntryID(start), new JedisStreamEntryID(end), count),
+				(cmd)->cmd.xrange(SafeEncoder.encode(key), new JedisStreamEntryID(start), new JedisStreamEntryID(end),
+						count),
+				(cmd)->cmd.xrange(SafeEncoder.encode(key), new JedisStreamEntryID(start), new JedisStreamEntryID(end),
+						count),
+				(cmd)->cmd.xrange(SafeEncoder.encode(key), new JedisStreamEntryID(start), new JedisStreamEntryID(end),
+						count),
 				new ListConverter<>(new StreamEntryConverter<>(SafeEncoder::encode, SafeEncoder::encode)));
 	}
 
@@ -894,9 +900,9 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                                   final StreamEntryId start) {
 		final CommandArguments args = CommandArguments.create(key).add(end, start);
 		return executeCommand(RedisCommand.XREVRANGE, args,
-				(cmd)->cmd.xrevrange(rawKey(key), new JedisStreamEntryID(end), new JedisStreamEntryID(start)),
-				(cmd)->cmd.xrevrange(rawKey(key), new JedisStreamEntryID(end), new JedisStreamEntryID(start)),
-				(cmd)->cmd.xrevrange(rawKey(key), new JedisStreamEntryID(end), new JedisStreamEntryID(start)),
+				(cmd)->cmd.xrevrange(key, new JedisStreamEntryID(end), new JedisStreamEntryID(start)),
+				(cmd)->cmd.xrevrange(key, new JedisStreamEntryID(end), new JedisStreamEntryID(start)),
+				(cmd)->cmd.xrevrange(key, new JedisStreamEntryID(end), new JedisStreamEntryID(start)),
 				new ListConverter<>(new StreamEntryConverter<>((k)->k, (v)->v)));
 	}
 
@@ -905,9 +911,12 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                                   final StreamEntryId start) {
 		final CommandArguments args = CommandArguments.create(key).add(end, start);
 		return executeCommand(RedisCommand.XREVRANGE, args,
-				(cmd)->cmd.xrevrange(rawStringKey(key), new JedisStreamEntryID(end), new JedisStreamEntryID(start)),
-				(cmd)->cmd.xrevrange(rawStringKey(key), new JedisStreamEntryID(end), new JedisStreamEntryID(start)),
-				(cmd)->cmd.xrevrange(rawStringKey(key), new JedisStreamEntryID(end), new JedisStreamEntryID(start)),
+				(cmd)->cmd.xrevrange(SafeEncoder.encode(key), new JedisStreamEntryID(end),
+						new JedisStreamEntryID(start)),
+				(cmd)->cmd.xrevrange(SafeEncoder.encode(key), new JedisStreamEntryID(end),
+						new JedisStreamEntryID(start)),
+				(cmd)->cmd.xrevrange(SafeEncoder.encode(key), new JedisStreamEntryID(end),
+						new JedisStreamEntryID(start)),
 				new ListConverter<>(new StreamEntryConverter<>(SafeEncoder::encode, SafeEncoder::encode)));
 	}
 
@@ -916,9 +925,9 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                                   final StreamEntryId start, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(end, start).add(Keyword.Common.COUNT, count);
 		return executeCommand(RedisCommand.XREVRANGE, args,
-				(cmd)->cmd.xrevrange(rawKey(key), new JedisStreamEntryID(end), new JedisStreamEntryID(start), count),
-				(cmd)->cmd.xrevrange(rawKey(key), new JedisStreamEntryID(end), new JedisStreamEntryID(start), count),
-				(cmd)->cmd.xrevrange(rawKey(key), new JedisStreamEntryID(end), new JedisStreamEntryID(start), count),
+				(cmd)->cmd.xrevrange(key, new JedisStreamEntryID(end), new JedisStreamEntryID(start), count),
+				(cmd)->cmd.xrevrange(key, new JedisStreamEntryID(end), new JedisStreamEntryID(start), count),
+				(cmd)->cmd.xrevrange(key, new JedisStreamEntryID(end), new JedisStreamEntryID(start), count),
 				new ListConverter<>(new StreamEntryConverter<>((k)->k, (v)->v)));
 	}
 
@@ -927,11 +936,14 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                                   final StreamEntryId start, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(end, start).add(Keyword.Common.COUNT, count);
 		return executeCommand(RedisCommand.XREVRANGE, args,
-				(cmd)->cmd.xrevrange(rawStringKey(key), new JedisStreamEntryID(end), new JedisStreamEntryID(start),
+				(cmd)->cmd.xrevrange(SafeEncoder.encode(key), new JedisStreamEntryID(end),
+						new JedisStreamEntryID(start),
 						count),
-				(cmd)->cmd.xrevrange(rawStringKey(key), new JedisStreamEntryID(end), new JedisStreamEntryID(start),
+				(cmd)->cmd.xrevrange(SafeEncoder.encode(key), new JedisStreamEntryID(end),
+						new JedisStreamEntryID(start),
 						count),
-				(cmd)->cmd.xrevrange(rawStringKey(key), new JedisStreamEntryID(end), new JedisStreamEntryID(start),
+				(cmd)->cmd.xrevrange(SafeEncoder.encode(key), new JedisStreamEntryID(end),
+						new JedisStreamEntryID(start),
 						count),
 				new ListConverter<>(new StreamEntryConverter<>(SafeEncoder::encode, SafeEncoder::encode)));
 	}
@@ -991,13 +1003,13 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	@Override
 	public Long xTrim(final String key, final MaxLenMinId<?> maxLenMinId) {
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId);
-		return xTrim(rawKey(key), new JedisXTrimParams(maxLenMinId), args);
+		return xTrim(key, new JedisXTrimParams(maxLenMinId), args);
 	}
 
 	@Override
 	public Long xTrim(final byte[] key, final MaxLenMinId<?> maxLenMinId) {
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId);
-		return xTrim(rawKey(key), new JedisXTrimParams(), args);
+		return xTrim(key, new JedisXTrimParams(), args);
 	}
 
 	@Override
@@ -1005,7 +1017,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                  final MaxLenMinId<?> maxLenMinId) {
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId.getType())
 				.add(approximateExactTrimming).add(maxLenMinId.getThreshold());
-		return xTrim(rawKey(key), new JedisXTrimParams(maxLenMinId, approximateExactTrimming), args);
+		return xTrim(key, new JedisXTrimParams(maxLenMinId, approximateExactTrimming), args);
 	}
 
 	@Override
@@ -1013,7 +1025,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                  final MaxLenMinId<?> maxLenMinId) {
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId.getType())
 				.add(approximateExactTrimming).add(maxLenMinId.getThreshold());
-		return xTrim(rawKey(key), new JedisXTrimParams(maxLenMinId, approximateExactTrimming), args);
+		return xTrim(key, new JedisXTrimParams(maxLenMinId, approximateExactTrimming), args);
 	}
 
 	@Override
@@ -1021,7 +1033,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                  final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy) {
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId.getType())
 				.add(approximateExactTrimming).add(maxLenMinId.getThreshold()).add(deletionPolicy);
-		return xTrim(rawKey(key),
+		return xTrim(key,
 				new JedisXTrimParams(maxLenMinId, approximateExactTrimming).deletionPolicy(deletionPolicy), args);
 	}
 
@@ -1030,32 +1042,32 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                  final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy) {
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId.getType())
 				.add(approximateExactTrimming).add(maxLenMinId.getThreshold()).add(deletionPolicy);
-		return xTrim(rawKey(key),
+		return xTrim(key,
 				new JedisXTrimParams(maxLenMinId, approximateExactTrimming).deletionPolicy(deletionPolicy), args);
 	}
 
 	@Override
 	public Long xTrim(final String key, final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy) {
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId).add(deletionPolicy);
-		return xTrim(rawKey(key), new JedisXTrimParams(maxLenMinId).deletionPolicy(deletionPolicy), args);
+		return xTrim(key, new JedisXTrimParams(maxLenMinId).deletionPolicy(deletionPolicy), args);
 	}
 
 	@Override
 	public Long xTrim(final byte[] key, final MaxLenMinId<?> maxLenMinId, final StreamDeletionPolicy deletionPolicy) {
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId).add(deletionPolicy);
-		return xTrim(rawKey(key), new JedisXTrimParams(maxLenMinId).deletionPolicy(deletionPolicy), args);
+		return xTrim(key, new JedisXTrimParams(maxLenMinId).deletionPolicy(deletionPolicy), args);
 	}
 
 	@Override
 	public Long xTrim(final String key, final MaxLenMinId<?> maxLenMinId, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId).add(Keyword.Common.LIMIT, count);
-		return xTrim(rawKey(key), new JedisXTrimParams(maxLenMinId, count), args);
+		return xTrim(key, new JedisXTrimParams(maxLenMinId, count), args);
 	}
 
 	@Override
 	public Long xTrim(final byte[] key, final MaxLenMinId<?> maxLenMinId, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId).add(Keyword.Common.LIMIT, count);
-		return xTrim(rawKey(key), new JedisXTrimParams(maxLenMinId, count), args);
+		return xTrim(key, new JedisXTrimParams(maxLenMinId, count), args);
 	}
 
 	@Override
@@ -1063,7 +1075,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                  final MaxLenMinId<?> maxLenMinId, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId.getType())
 				.add(approximateExactTrimming).add(maxLenMinId.getThreshold()).add(Keyword.Common.LIMIT, count);
-		return xTrim(rawKey(key), new JedisXTrimParams(maxLenMinId, approximateExactTrimming), args);
+		return xTrim(key, new JedisXTrimParams(maxLenMinId, approximateExactTrimming), args);
 	}
 
 	@Override
@@ -1071,7 +1083,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                  final MaxLenMinId<?> maxLenMinId, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId.getType())
 				.add(approximateExactTrimming).add(maxLenMinId.getThreshold()).add(Keyword.Common.LIMIT, count);
-		return xTrim(rawKey(key), new JedisXTrimParams(maxLenMinId, approximateExactTrimming), args);
+		return xTrim(key, new JedisXTrimParams(maxLenMinId, approximateExactTrimming), args);
 	}
 
 	@Override
@@ -1080,7 +1092,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId.getType())
 				.add(approximateExactTrimming).add(maxLenMinId.getThreshold()).add(deletionPolicy)
 				.add(Keyword.Common.LIMIT, count);
-		return xTrim(rawKey(key), new JedisXTrimParams(maxLenMinId, count), args);
+		return xTrim(key, new JedisXTrimParams(maxLenMinId, count), args);
 	}
 
 	@Override
@@ -1089,7 +1101,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId.getType())
 				.add(approximateExactTrimming).add(maxLenMinId.getThreshold()).add(deletionPolicy)
 				.add(Keyword.Common.LIMIT, count);
-		return xTrim(rawKey(key), new JedisXTrimParams(maxLenMinId, count), args);
+		return xTrim(key, new JedisXTrimParams(maxLenMinId, count), args);
 	}
 
 	@Override
@@ -1097,7 +1109,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                  final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId).add(deletionPolicy)
 				.add(Keyword.Common.LIMIT, count);
-		return xTrim(rawKey(key), new JedisXTrimParams(maxLenMinId, count).deletionPolicy(deletionPolicy), args);
+		return xTrim(key, new JedisXTrimParams(maxLenMinId, count).deletionPolicy(deletionPolicy), args);
 	}
 
 	@Override
@@ -1105,7 +1117,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                  final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(maxLenMinId).add(deletionPolicy)
 				.add(Keyword.Common.LIMIT, count);
-		return xTrim(rawKey(key), new JedisXTrimParams(maxLenMinId, count).deletionPolicy(deletionPolicy), args);
+		return xTrim(key, new JedisXTrimParams(maxLenMinId, count).deletionPolicy(deletionPolicy), args);
 	}
 
 	private StreamEntryID[] streamEntryIds(final StreamEntryId... ids) {
@@ -1259,7 +1271,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 
 	private List<XReadInfo<String, String>> xRead(final Map<String, StreamEntryId> streams,
 	                                              final XReadParams xReadParams, final CommandArguments args) {
-		final MapConverter<String, StreamEntryId, String, StreamEntryID> mapConverter = new MapConverter<>(this::rawKey,
+		final MapConverter<String, StreamEntryId, String, StreamEntryID> mapConverter = new MapConverter<>((k)->k,
 				new StreamEntryIdConverter());
 		return executeCommand(RedisCommand.XREAD, args, (cmd)->cmd.xread(xReadParams, mapConverter.convert(streams)),
 				(cmd)->cmd.xread(xReadParams, mapConverter.convert(streams)),

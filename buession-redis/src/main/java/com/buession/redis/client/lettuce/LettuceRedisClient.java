@@ -25,7 +25,6 @@
 package com.buession.redis.client.lettuce;
 
 import com.buession.redis.client.AbstractRedisClient;
-import com.buession.redis.client.ClientOptions;
 import com.buession.redis.client.connection.lettuce.LettuceRedisConnection;
 import com.buession.redis.client.lettuce.command.*;
 import com.buession.redis.core.command.*;
@@ -44,22 +43,6 @@ public class LettuceRedisClient extends AbstractRedisClient {
 	 */
 	public LettuceRedisClient() {
 		super();
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param clientOptions
-	 * 		客户端选项
-	 * @param connection
-	 * 		Lettuce Redis 连接对象 {@link LettuceRedisConnection}
-	 *
-	 * @since 4.0.0
-	 */
-	public LettuceRedisClient(final ClientOptions clientOptions,
-	                          final LettuceRedisConnection<byte[], byte[],
-									  ? extends StatefulConnection<byte[], byte[]>> connection) {
-		super(clientOptions, connection);
 	}
 
 	/**

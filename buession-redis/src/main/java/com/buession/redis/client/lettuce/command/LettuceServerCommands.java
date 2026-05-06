@@ -516,28 +516,28 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 	public Long memoryUsage(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(RedisCommand.MEMORY, RedisSubCommand.MEMORY_USAGE, args,
-				(cmd)->cmd.memoryUsage(rawBinaryKey(key)), (cmd)->cmd.memoryUsage(rawBinaryKey(key)));
+				(cmd)->cmd.memoryUsage(SafeEncoder.encode(key)), (cmd)->cmd.memoryUsage(SafeEncoder.encode(key)));
 	}
 
 	@Override
 	public Long memoryUsage(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(RedisCommand.MEMORY, RedisSubCommand.MEMORY_USAGE, args,
-				(cmd)->cmd.memoryUsage(rawKey(key)), (cmd)->cmd.memoryUsage(rawKey(key)));
+				(cmd)->cmd.memoryUsage(key), (cmd)->cmd.memoryUsage(key));
 	}
 
 	@Override
 	public Long memoryUsage(final String key, final int samples) {
 		final CommandArguments args = CommandArguments.create(key).add("SAMPLES", samples);
 		return executeCommand(RedisCommand.MEMORY, RedisSubCommand.MEMORY_USAGE, args,
-				(cmd)->cmd.memoryUsage(rawBinaryKey(key)), (cmd)->cmd.memoryUsage(rawBinaryKey(key)));
+				(cmd)->cmd.memoryUsage(SafeEncoder.encode(key)), (cmd)->cmd.memoryUsage(SafeEncoder.encode(key)));
 	}
 
 	@Override
 	public Long memoryUsage(final byte[] key, final int samples) {
 		final CommandArguments args = CommandArguments.create(key).add("SAMPLES", samples);
 		return executeCommand(RedisCommand.MEMORY, RedisSubCommand.MEMORY_USAGE, args,
-				(cmd)->cmd.memoryUsage(rawKey(key)), (cmd)->cmd.memoryUsage(rawKey(key)));
+				(cmd)->cmd.memoryUsage(key), (cmd)->cmd.memoryUsage(key));
 	}
 
 	@Override

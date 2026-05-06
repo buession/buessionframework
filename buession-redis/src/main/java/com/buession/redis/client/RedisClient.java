@@ -37,25 +37,6 @@ import com.buession.redis.exception.RedisException;
 public interface RedisClient {
 
 	/**
-	 * 返回客户端选项
-	 *
-	 * @return 客户端选项
-	 *
-	 * @since 4.0.0
-	 */
-	ClientOptions getClientOptions();
-
-	/**
-	 * 设置客户端选项
-	 *
-	 * @param clientOptions
-	 * 		客户端选项
-	 *
-	 * @since 4.0.0
-	 */
-	void setClientOptions(ClientOptions clientOptions);
-
-	/**
 	 * 返回 Redis 连接对象 {@link RedisConnection}
 	 *
 	 * @return Redis 连接对象 {@link RedisConnection}

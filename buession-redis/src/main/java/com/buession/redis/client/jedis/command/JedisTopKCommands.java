@@ -56,17 +56,17 @@ public final class JedisTopKCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public List<String> topKAdd(final String key, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(items);
-		return executeCommand(RedisCommand.TOPK_ADD, args, (cmd)->cmd.topkAdd(rawKey(key), items),
-				(cmd)->cmd.topkAdd(rawKey(key), items), (cmd)->cmd.topkAdd(rawKey(key), items));
+		return executeCommand(RedisCommand.TOPK_ADD, args, (cmd)->cmd.topkAdd(key, items),
+				(cmd)->cmd.topkAdd(key, items), (cmd)->cmd.topkAdd(key, items));
 	}
 
 	@Override
 	public List<byte[]> topKAdd(final byte[] key, final byte[]... items) {
 		final CommandArguments args = CommandArguments.create(key).add(items);
 		return executeCommand(RedisCommand.TOPK_ADD, args,
-				(cmd)->cmd.topkAdd(rawStringKey(key), SafeEncoder.encode(items)),
-				(cmd)->cmd.topkAdd(rawStringKey(key), SafeEncoder.encode(items)),
-				(cmd)->cmd.topkAdd(rawStringKey(key), SafeEncoder.encode(items)),
+				(cmd)->cmd.topkAdd(SafeEncoder.encode(key), SafeEncoder.encode(items)),
+				(cmd)->cmd.topkAdd(SafeEncoder.encode(key), SafeEncoder.encode(items)),
+				(cmd)->cmd.topkAdd(SafeEncoder.encode(key), SafeEncoder.encode(items)),
 				Converters.stringListBinaryListConverter());
 	}
 
@@ -89,9 +89,9 @@ public final class JedisTopKCommands extends AbstractJedisRedisCommands implemen
 		final ArrayKeyValueMapConverter<String, Long, String, Long> arrayKeyValueMapConverter = new ArrayKeyValueMapConverter<>(
 				(k)->k, (v)->v);
 		return executeCommand(RedisCommand.TOPK_INCRBY, args,
-				(cmd)->cmd.topkIncrBy(rawKey(key), arrayKeyValueMapConverter.convert(items)),
-				(cmd)->cmd.topkIncrBy(rawKey(key), arrayKeyValueMapConverter.convert(items)),
-				(cmd)->cmd.topkIncrBy(rawKey(key), arrayKeyValueMapConverter.convert(items)));
+				(cmd)->cmd.topkIncrBy(key, arrayKeyValueMapConverter.convert(items)),
+				(cmd)->cmd.topkIncrBy(key, arrayKeyValueMapConverter.convert(items)),
+				(cmd)->cmd.topkIncrBy(key, arrayKeyValueMapConverter.convert(items)));
 	}
 
 	@SuppressWarnings({"unchecked"})
@@ -101,17 +101,17 @@ public final class JedisTopKCommands extends AbstractJedisRedisCommands implemen
 		final ArrayKeyValueMapConverter<byte[], Long, String, Long> arrayKeyValueMapConverter = new ArrayKeyValueMapConverter<>(
 				SafeEncoder::encode, (v)->v);
 		return executeCommand(RedisCommand.TOPK_INCRBY, args,
-				(cmd)->cmd.topkIncrBy(rawStringKey(key), arrayKeyValueMapConverter.convert(items)),
-				(cmd)->cmd.topkIncrBy(rawStringKey(key), arrayKeyValueMapConverter.convert(items)),
-				(cmd)->cmd.topkIncrBy(rawStringKey(key), arrayKeyValueMapConverter.convert(items)),
+				(cmd)->cmd.topkIncrBy(SafeEncoder.encode(key), arrayKeyValueMapConverter.convert(items)),
+				(cmd)->cmd.topkIncrBy(SafeEncoder.encode(key), arrayKeyValueMapConverter.convert(items)),
+				(cmd)->cmd.topkIncrBy(SafeEncoder.encode(key), arrayKeyValueMapConverter.convert(items)),
 				Converters.stringListBinaryListConverter());
 	}
 
 	@Override
 	public TopKInfo topKInfo(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.TOPK_INFO, args, (cmd)->cmd.topkInfo(rawKey(key)),
-				(cmd)->cmd.topkInfo(rawKey(key)), (cmd)->cmd.topkInfo(rawKey(key)), new TopKInfoConverter());
+		return executeCommand(RedisCommand.TOPK_INFO, args, (cmd)->cmd.topkInfo(key),
+				(cmd)->cmd.topkInfo(key), (cmd)->cmd.topkInfo(key), new TopKInfoConverter());
 	}
 
 	@Override
@@ -122,8 +122,8 @@ public final class JedisTopKCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public List<String> topKList(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.TOPK_LIST, args, (cmd)->cmd.topkList(rawKey(key)),
-				(cmd)->cmd.topkList(rawKey(key)), (cmd)->cmd.topkList(rawKey(key)));
+		return executeCommand(RedisCommand.TOPK_LIST, args, (cmd)->cmd.topkList(key),
+				(cmd)->cmd.topkList(key), (cmd)->cmd.topkList(key));
 	}
 
 	@Override
@@ -134,8 +134,8 @@ public final class JedisTopKCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public List<KeyValue<String, Long>> topKListWithCount(final String key) {
 		final CommandArguments args = CommandArguments.create(key, "WITHCOUNT");
-		return executeCommand(RedisCommand.TOPK_LIST, args, (cmd)->cmd.topkListWithCount(rawKey(key)),
-				(cmd)->cmd.topkListWithCount(rawKey(key)), (cmd)->cmd.topkListWithCount(rawKey(key)), (v)->{
+		return executeCommand(RedisCommand.TOPK_LIST, args, (cmd)->cmd.topkListWithCount(key),
+				(cmd)->cmd.topkListWithCount(key), (cmd)->cmd.topkListWithCount(key), (v)->{
 					final List<KeyValue<String, Long>> result = new ArrayList<>(v.size());
 
 					for(Map.Entry<String, Long> e : v.entrySet()){
@@ -149,8 +149,9 @@ public final class JedisTopKCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public List<KeyValue<byte[], Long>> topKListWithCount(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key, "WITHCOUNT");
-		return executeCommand(RedisCommand.TOPK_LIST, args, (cmd)->cmd.topkListWithCount(rawStringKey(key)),
-				(cmd)->cmd.topkListWithCount(rawStringKey(key)), (cmd)->cmd.topkListWithCount(rawStringKey(key)), (v)->{
+		return executeCommand(RedisCommand.TOPK_LIST, args, (cmd)->cmd.topkListWithCount(SafeEncoder.encode(key)),
+				(cmd)->cmd.topkListWithCount(SafeEncoder.encode(key)),
+				(cmd)->cmd.topkListWithCount(SafeEncoder.encode(key)), (v)->{
 					final List<KeyValue<byte[], Long>> result = new ArrayList<>(v.size());
 
 					for(Map.Entry<String, Long> e : v.entrySet()){
@@ -164,8 +165,8 @@ public final class JedisTopKCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public List<Boolean> topKQuery(final String key, final String... items) {
 		final CommandArguments args = CommandArguments.create(key).add(items);
-		return executeCommand(RedisCommand.TOPK_QUERY, args, (cmd)->cmd.topkQuery(rawKey(key), items),
-				(cmd)->cmd.topkQuery(rawKey(key), items), (cmd)->cmd.topkQuery(rawKey(key), items));
+		return executeCommand(RedisCommand.TOPK_QUERY, args, (cmd)->cmd.topkQuery(key, items),
+				(cmd)->cmd.topkQuery(key, items), (cmd)->cmd.topkQuery(key, items));
 	}
 
 	@Override
@@ -176,8 +177,8 @@ public final class JedisTopKCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public Status topKReserve(final String key, final long topK) {
 		final CommandArguments args = CommandArguments.create(key, topK);
-		return executeCommand(RedisCommand.TOPK_RESERVE, args, (cmd)->cmd.topkReserve(rawKey(key), topK),
-				(cmd)->cmd.topkReserve(rawKey(key), topK), (cmd)->cmd.topkReserve(rawKey(key), topK),
+		return executeCommand(RedisCommand.TOPK_RESERVE, args, (cmd)->cmd.topkReserve(key, topK),
+				(cmd)->cmd.topkReserve(key, topK), (cmd)->cmd.topkReserve(key, topK),
 				new OkStatusConverter());
 	}
 
@@ -191,9 +192,9 @@ public final class JedisTopKCommands extends AbstractJedisRedisCommands implemen
 	                          final double decay) {
 		final CommandArguments args = CommandArguments.create(key, topK).add(width).add(depth).add(decay);
 		return executeCommand(RedisCommand.TOPK_QUERY, args,
-				(cmd)->cmd.topkReserve(rawKey(key), topK, width, depth, decay),
-				(cmd)->cmd.topkReserve(rawKey(key), topK, width, depth, decay),
-				(cmd)->cmd.topkReserve(rawKey(key), topK, width, depth, decay),
+				(cmd)->cmd.topkReserve(key, topK, width, depth, decay),
+				(cmd)->cmd.topkReserve(key, topK, width, depth, decay),
+				(cmd)->cmd.topkReserve(key, topK, width, depth, decay),
 				new OkStatusConverter());
 	}
 

@@ -76,25 +76,25 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public Object eval(final String script, final String... keys) {
 		final CommandArguments args = CommandArguments.create(script).add(keys.length, keys);
-		return eval(script, rawKeys(keys), new String[]{}, args);
+		return eval(script, keys, new String[]{}, args);
 	}
 
 	@Override
 	public Object eval(final byte[] script, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(script).add(keys.length, keys);
-		return eval(script, rawKeys(keys), new byte[][]{}, args);
+		return eval(script, keys, new byte[][]{}, args);
 	}
 
 	@Override
 	public Object eval(final String script, final String[] keys, final String[] arguments) {
 		final CommandArguments args = CommandArguments.create(script).add(keys.length, keys).add(arguments);
-		return eval(script, rawKeys(keys), arguments, args);
+		return eval(script, keys, arguments, args);
 	}
 
 	@Override
 	public Object eval(final byte[] script, final byte[][] keys, final byte[][] arguments) {
 		final CommandArguments args = CommandArguments.create(script).add(keys.length, keys).add(arguments);
-		return eval(script, rawKeys(keys), arguments, args);
+		return eval(script, keys, arguments, args);
 	}
 
 	@Override
@@ -112,25 +112,25 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public Object evalRo(final String script, final String... keys) {
 		final CommandArguments args = CommandArguments.create(script).add(keys.length, keys);
-		return evalRo(script, rawKeys(keys), new String[]{}, args);
+		return evalRo(script, keys, new String[]{}, args);
 	}
 
 	@Override
 	public Object evalRo(final byte[] script, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(script).add(keys.length, keys);
-		return evalRo(script, rawKeys(keys), new byte[][]{}, args);
+		return evalRo(script, keys, new byte[][]{}, args);
 	}
 
 	@Override
 	public Object evalRo(final String script, final String[] keys, final String[] arguments) {
 		final CommandArguments args = CommandArguments.create(script).add(keys).add(arguments);
-		return evalRo(script, rawKeys(keys), arguments, args);
+		return evalRo(script, keys, arguments, args);
 	}
 
 	@Override
 	public Object evalRo(final byte[] script, final byte[][] keys, final byte[][] arguments) {
 		final CommandArguments args = CommandArguments.create(script).add(keys).add(arguments);
-		return evalRo(script, rawKeys(keys), arguments, args);
+		return evalRo(script, keys, arguments, args);
 	}
 
 	@Override
@@ -150,25 +150,25 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public Object evalSha(final String digest, final String... keys) {
 		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys);
-		return evalSha(digest, rawKeys(keys), new String[]{}, args);
+		return evalSha(digest, keys, new String[]{}, args);
 	}
 
 	@Override
 	public Object evalSha(final byte[] digest, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys);
-		return evalSha(digest, rawKeys(keys), new byte[][]{}, args);
+		return evalSha(digest, keys, new byte[][]{}, args);
 	}
 
 	@Override
 	public Object evalSha(final String digest, final String[] keys, final String[] arguments) {
 		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys).add(arguments);
-		return evalSha(digest, rawKeys(keys), arguments, args);
+		return evalSha(digest, keys, arguments, args);
 	}
 
 	@Override
 	public Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] arguments) {
 		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys).add(arguments);
-		return evalSha(digest, rawKeys(keys), arguments, args);
+		return evalSha(digest, keys, arguments, args);
 	}
 
 	@Override
@@ -186,25 +186,25 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public Object evalShaRo(final String digest, final String... keys) {
 		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys);
-		return evalShaRo(digest, rawKeys(keys), new String[]{}, args);
+		return evalShaRo(digest, keys, new String[]{}, args);
 	}
 
 	@Override
 	public Object evalShaRo(final byte[] digest, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys);
-		return evalShaRo(digest, rawKeys(keys), new byte[][]{}, args);
+		return evalShaRo(digest, keys, new byte[][]{}, args);
 	}
 
 	@Override
 	public Object evalShaRo(final String digest, final String[] keys, final String[] arguments) {
 		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys).add(arguments);
-		return evalShaRo(digest, rawKeys(keys), arguments, args);
+		return evalShaRo(digest, keys, arguments, args);
 	}
 
 	@Override
 	public Object evalShaRo(final byte[] digest, final byte[][] keys, final byte[][] arguments) {
 		final CommandArguments args = CommandArguments.create(digest).add(keys.length, keys).add(arguments);
-		return evalShaRo(digest, rawKeys(keys), arguments, args);
+		return evalShaRo(digest, keys, arguments, args);
 	}
 
 	@Override
@@ -222,25 +222,25 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public Object fCall(final String function, final String... keys) {
 		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys);
-		return fCall(function, rawKeys(keys), new String[]{}, args);
+		return fCall(function, keys, new String[]{}, args);
 	}
 
 	@Override
 	public Object fCall(final byte[] function, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys);
-		return fCall(function, rawKeys(keys), new byte[][]{}, args);
+		return fCall(function, keys, new byte[][]{}, args);
 	}
 
 	@Override
 	public Object fCall(final String function, final String[] keys, final String[] arguments) {
 		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys).add(arguments);
-		return fCall(function, rawKeys(keys), arguments, args);
+		return fCall(function, keys, arguments, args);
 	}
 
 	@Override
 	public Object fCall(final byte[] function, final byte[][] keys, final byte[][] arguments) {
 		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys).add(arguments);
-		return fCall(function, rawKeys(keys), arguments, args);
+		return fCall(function, keys, arguments, args);
 	}
 
 	@Override
@@ -258,25 +258,25 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public Object fCallRo(final String function, final String... keys) {
 		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys);
-		return fCallRo(function, rawKeys(keys), new String[]{}, args);
+		return fCallRo(function, keys, new String[]{}, args);
 	}
 
 	@Override
 	public Object fCallRo(final byte[] function, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys);
-		return fCallRo(function, rawKeys(keys), new byte[][]{}, args);
+		return fCallRo(function, keys, new byte[][]{}, args);
 	}
 
 	@Override
 	public Object fCallRo(final String function, final String[] keys, final String[] arguments) {
 		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys).add(arguments);
-		return fCallRo(function, rawKeys(keys), arguments, args);
+		return fCallRo(function, keys, arguments, args);
 	}
 
 	@Override
 	public Object fCallRo(final byte[] function, final byte[][] keys, final byte[][] arguments) {
 		final CommandArguments args = CommandArguments.create(function).add(keys.length, keys).add(arguments);
-		return fCallRo(function, rawKeys(keys), arguments, args);
+		return fCallRo(function, keys, arguments, args);
 	}
 
 	@Override

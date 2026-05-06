@@ -64,18 +64,18 @@ public final class JedisVectorSetCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public Status vAdd(final String key, final double[] vectors, final String element) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add(element);
-		return executeCommand(RedisCommand.VADD, args, (cmd)->cmd.vadd(rawKey(key), vectors(vectors), element),
-				(cmd)->cmd.vadd(rawKey(key), vectors(vectors), element),
-				(cmd)->cmd.vadd(rawKey(key), vectors(vectors), element),
+		return executeCommand(RedisCommand.VADD, args, (cmd)->cmd.vadd(key, vectors(vectors), element),
+				(cmd)->cmd.vadd(key, vectors(vectors), element),
+				(cmd)->cmd.vadd(key, vectors(vectors), element),
 				new BooleanStatusConverter());
 	}
 
 	@Override
 	public Status vAdd(final byte[] key, final double[] vectors, final byte[] element) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add(element);
-		return executeCommand(RedisCommand.VADD, args, (cmd)->cmd.vadd(rawKey(key), vectors(vectors), element),
-				(cmd)->cmd.vadd(rawKey(key), vectors(vectors), element),
-				(cmd)->cmd.vadd(rawKey(key), vectors(vectors), element),
+		return executeCommand(RedisCommand.VADD, args, (cmd)->cmd.vadd(key, vectors(vectors), element),
+				(cmd)->cmd.vadd(key, vectors(vectors), element),
+				(cmd)->cmd.vadd(key, vectors(vectors), element),
 				new BooleanStatusConverter());
 	}
 
@@ -85,17 +85,17 @@ public final class JedisVectorSetCommands extends AbstractJedisRedisCommands imp
 
 		if(argument != null && argument.getReduce() != null){
 			return executeCommand(RedisCommand.VADD, args,
-					(cmd)->cmd.vadd(rawKey(key), vectors(vectors), element, argument.getReduce(),
+					(cmd)->cmd.vadd(key, vectors(vectors), element, argument.getReduce(),
 							new JedisVAddParams(argument)),
-					(cmd)->cmd.vadd(rawKey(key), vectors(vectors), element, argument.getReduce(),
+					(cmd)->cmd.vadd(key, vectors(vectors), element, argument.getReduce(),
 							new JedisVAddParams(argument)),
-					(cmd)->cmd.vadd(rawKey(key), vectors(vectors), element, argument.getReduce(),
+					(cmd)->cmd.vadd(key, vectors(vectors), element, argument.getReduce(),
 							new JedisVAddParams(argument)), new BooleanStatusConverter());
 		}else{
 			return executeCommand(RedisCommand.VADD, args,
-					(cmd)->cmd.vadd(rawKey(key), vectors(vectors), element, new JedisVAddParams(argument)),
-					(cmd)->cmd.vadd(rawKey(key), vectors(vectors), element, new JedisVAddParams(argument)),
-					(cmd)->cmd.vadd(rawKey(key), vectors(vectors), element, new JedisVAddParams(argument)),
+					(cmd)->cmd.vadd(key, vectors(vectors), element, new JedisVAddParams(argument)),
+					(cmd)->cmd.vadd(key, vectors(vectors), element, new JedisVAddParams(argument)),
+					(cmd)->cmd.vadd(key, vectors(vectors), element, new JedisVAddParams(argument)),
 					new BooleanStatusConverter());
 		}
 	}
@@ -106,17 +106,17 @@ public final class JedisVectorSetCommands extends AbstractJedisRedisCommands imp
 
 		if(argument != null && argument.getReduce() != null){
 			return executeCommand(RedisCommand.VADD, args,
-					(cmd)->cmd.vadd(rawKey(key), vectors(vectors), element, argument.getReduce(),
+					(cmd)->cmd.vadd(key, vectors(vectors), element, argument.getReduce(),
 							new JedisVAddParams(argument)),
-					(cmd)->cmd.vadd(rawKey(key), vectors(vectors), element, argument.getReduce(),
+					(cmd)->cmd.vadd(key, vectors(vectors), element, argument.getReduce(),
 							new JedisVAddParams(argument)),
-					(cmd)->cmd.vadd(rawKey(key), vectors(vectors), element, argument.getReduce(),
+					(cmd)->cmd.vadd(key, vectors(vectors), element, argument.getReduce(),
 							new JedisVAddParams(argument)), new BooleanStatusConverter());
 		}else{
 			return executeCommand(RedisCommand.VADD, args,
-					(cmd)->cmd.vadd(rawKey(key), vectors(vectors), element, new JedisVAddParams(argument)),
-					(cmd)->cmd.vadd(rawKey(key), vectors(vectors), element, new JedisVAddParams(argument)),
-					(cmd)->cmd.vadd(rawKey(key), vectors(vectors), element, new JedisVAddParams(argument)),
+					(cmd)->cmd.vadd(key, vectors(vectors), element, new JedisVAddParams(argument)),
+					(cmd)->cmd.vadd(key, vectors(vectors), element, new JedisVAddParams(argument)),
+					(cmd)->cmd.vadd(key, vectors(vectors), element, new JedisVAddParams(argument)),
 					new BooleanStatusConverter());
 		}
 	}
@@ -124,80 +124,80 @@ public final class JedisVectorSetCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public Long vCard(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.VCARD, args, (cmd)->cmd.vcard(rawKey(key)), (cmd)->cmd.vcard(rawKey(key)),
-				(cmd)->cmd.vcard(rawKey(key)));
+		return executeCommand(RedisCommand.VCARD, args, (cmd)->cmd.vcard(key), (cmd)->cmd.vcard(key),
+				(cmd)->cmd.vcard(key));
 	}
 
 	@Override
 	public Long vCard(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.VCARD, args, (cmd)->cmd.vcard(rawKey(key)), (cmd)->cmd.vcard(rawKey(key)),
-				(cmd)->cmd.vcard(rawKey(key)));
+		return executeCommand(RedisCommand.VCARD, args, (cmd)->cmd.vcard(key), (cmd)->cmd.vcard(key),
+				(cmd)->cmd.vcard(key));
 	}
 
 	@Override
 	public Long vDim(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.VDIM, args, (cmd)->cmd.vdim(rawKey(key)), (cmd)->cmd.vdim(rawKey(key)),
-				(cmd)->cmd.vdim(rawKey(key)));
+		return executeCommand(RedisCommand.VDIM, args, (cmd)->cmd.vdim(key), (cmd)->cmd.vdim(key),
+				(cmd)->cmd.vdim(key));
 	}
 
 	@Override
 	public Long vDim(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.VDIM, args, (cmd)->cmd.vdim(rawKey(key)), (cmd)->cmd.vdim(rawKey(key)),
-				(cmd)->cmd.vdim(rawKey(key)));
+		return executeCommand(RedisCommand.VDIM, args, (cmd)->cmd.vdim(key), (cmd)->cmd.vdim(key),
+				(cmd)->cmd.vdim(key));
 	}
 
 	@Override
 	public List<Double> vEmb(final String key, final String element) {
 		final CommandArguments args = CommandArguments.create(key, element);
-		return executeCommand(RedisCommand.VEMB, args, (cmd)->cmd.vemb(rawKey(key), element),
-				(cmd)->cmd.vemb(rawKey(key), element), (cmd)->cmd.vemb(rawKey(key), element));
+		return executeCommand(RedisCommand.VEMB, args, (cmd)->cmd.vemb(key, element),
+				(cmd)->cmd.vemb(key, element), (cmd)->cmd.vemb(key, element));
 	}
 
 	@Override
 	public List<Double> vEmb(final byte[] key, final byte[] element) {
 		final CommandArguments args = CommandArguments.create(key, element);
-		return executeCommand(RedisCommand.VDIM, args, (cmd)->cmd.vemb(rawKey(key), element),
-				(cmd)->cmd.vemb(rawKey(key), element), (cmd)->cmd.vemb(rawKey(key), element));
+		return executeCommand(RedisCommand.VDIM, args, (cmd)->cmd.vemb(key, element),
+				(cmd)->cmd.vemb(key, element), (cmd)->cmd.vemb(key, element));
 	}
 
 	@Override
 	public RawVector vembRaw(final String key, final String element) {
 		final CommandArguments args = CommandArguments.create(key, element).add("RAW");
 		return executeCommand(RedisCommand.VEMB, args,
-				(cmd)->cmd.vembRaw(rawKey(key), element), (cmd)->cmd.vembRaw(rawKey(key), element),
-				(cmd)->cmd.vembRaw(rawKey(key), element), new RawVectorConveter());
+				(cmd)->cmd.vembRaw(key, element), (cmd)->cmd.vembRaw(key, element),
+				(cmd)->cmd.vembRaw(key, element), new RawVectorConveter());
 	}
 
 	@Override
 	public RawVector vembRaw(final byte[] key, final byte[] element) {
 		final CommandArguments args = CommandArguments.create(key, element).add("RAW");
-		return executeCommand(RedisCommand.VDIM, args, (cmd)->cmd.vembRaw(rawKey(key), element),
-				(cmd)->cmd.vembRaw(rawKey(key), element), (cmd)->cmd.vembRaw(rawKey(key), element),
+		return executeCommand(RedisCommand.VDIM, args, (cmd)->cmd.vembRaw(key, element),
+				(cmd)->cmd.vembRaw(key, element), (cmd)->cmd.vembRaw(key, element),
 				new RawVectorConveter());
 	}
 
 	@Override
 	public String vGetAttr(final String key, final String element) {
 		final CommandArguments args = CommandArguments.create(key, element);
-		return executeCommand(RedisCommand.VGETATTR, args, (cmd)->cmd.vgetattr(rawKey(key), element),
-				(cmd)->cmd.vgetattr(rawKey(key), element), (cmd)->cmd.vgetattr(rawKey(key), element));
+		return executeCommand(RedisCommand.VGETATTR, args, (cmd)->cmd.vgetattr(key, element),
+				(cmd)->cmd.vgetattr(key, element), (cmd)->cmd.vgetattr(key, element));
 	}
 
 	@Override
 	public byte[] vGetAttr(final byte[] key, final byte[] element) {
 		final CommandArguments args = CommandArguments.create(key, element);
-		return executeCommand(RedisCommand.VGETATTR, args, (cmd)->cmd.vgetattr(rawKey(key), element),
-				(cmd)->cmd.vgetattr(rawKey(key), element), (cmd)->cmd.vgetattr(rawKey(key), element));
+		return executeCommand(RedisCommand.VGETATTR, args, (cmd)->cmd.vgetattr(key, element),
+				(cmd)->cmd.vgetattr(key, element), (cmd)->cmd.vgetattr(key, element));
 	}
 
 	@Override
 	public VectorInfo vInfo(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.VINFO, args, (cmd)->cmd.vinfo(rawKey(key)), (cmd)->cmd.vinfo(rawKey(key)),
-				(cmd)->cmd.vinfo(rawKey(key)), new VectorInfoConverter());
+		return executeCommand(RedisCommand.VINFO, args, (cmd)->cmd.vinfo(key), (cmd)->cmd.vinfo(key),
+				(cmd)->cmd.vinfo(key), new VectorInfoConverter());
 	}
 
 	@Override
@@ -220,61 +220,61 @@ public final class JedisVectorSetCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public List<String> vLinks(final String key, final String element) {
 		final CommandArguments args = CommandArguments.create(key, element);
-		return executeCommand(RedisCommand.VLINKS, args, (cmd)->cmd.vlinks(rawKey(key), element),
-				(cmd)->cmd.vlinks(rawKey(key), element), (cmd)->cmd.vlinks(rawKey(key), element),
+		return executeCommand(RedisCommand.VLINKS, args, (cmd)->cmd.vlinks(key, element),
+				(cmd)->cmd.vlinks(key, element), (cmd)->cmd.vlinks(key, element),
 				Converters.list0Converter());
 	}
 
 	@Override
 	public List<byte[]> vLinks(final byte[] key, final byte[] element) {
 		final CommandArguments args = CommandArguments.create(key, element);
-		return executeCommand(RedisCommand.VLINKS, args, (cmd)->cmd.vlinks(rawKey(key), element),
-				(cmd)->cmd.vlinks(rawKey(key), element), (cmd)->cmd.vlinks(rawKey(key), element),
+		return executeCommand(RedisCommand.VLINKS, args, (cmd)->cmd.vlinks(key, element),
+				(cmd)->cmd.vlinks(key, element), (cmd)->cmd.vlinks(key, element),
 				Converters.list0Converter());
 	}
 
 	@Override
 	public Map<String, Double> vLinksWithScores(final String key, final String element) {
 		final CommandArguments args = CommandArguments.create(key, element).add("WITHSCORES");
-		return executeCommand(RedisCommand.VLINKS, args, (cmd)->cmd.vlinksWithScores(rawKey(key), element),
-				(cmd)->cmd.vlinksWithScores(rawKey(key), element), (cmd)->cmd.vlinksWithScores(rawKey(key), element),
+		return executeCommand(RedisCommand.VLINKS, args, (cmd)->cmd.vlinksWithScores(key, element),
+				(cmd)->cmd.vlinksWithScores(key, element), (cmd)->cmd.vlinksWithScores(key, element),
 				Converters.list0Converter());
 	}
 
 	@Override
 	public Map<byte[], Double> vLinksWithScores(final byte[] key, final byte[] element) {
 		final CommandArguments args = CommandArguments.create(key, element).add("WITHSCORES");
-		return executeCommand(RedisCommand.VLINKS, args, (cmd)->cmd.vlinksWithScores(rawKey(key), element),
-				(cmd)->cmd.vlinksWithScores(rawKey(key), element), (cmd)->cmd.vlinksWithScores(rawKey(key), element),
+		return executeCommand(RedisCommand.VLINKS, args, (cmd)->cmd.vlinksWithScores(key, element),
+				(cmd)->cmd.vlinksWithScores(key, element), (cmd)->cmd.vlinksWithScores(key, element),
 				Converters.list0Converter());
 	}
 
 	@Override
 	public String vRandMember(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.VRANDMEMBER, args, (cmd)->cmd.vrandmember(rawKey(key)),
-				(cmd)->cmd.vrandmember(rawKey(key)), (cmd)->cmd.vrandmember(rawKey(key)));
+		return executeCommand(RedisCommand.VRANDMEMBER, args, (cmd)->cmd.vrandmember(key),
+				(cmd)->cmd.vrandmember(key), (cmd)->cmd.vrandmember(key));
 	}
 
 	@Override
 	public byte[] vRandMember(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.VRANDMEMBER, args, (cmd)->cmd.vrandmember(rawKey(key)),
-				(cmd)->cmd.vrandmember(rawKey(key)), (cmd)->cmd.vrandmember(rawKey(key)));
+		return executeCommand(RedisCommand.VRANDMEMBER, args, (cmd)->cmd.vrandmember(key),
+				(cmd)->cmd.vrandmember(key), (cmd)->cmd.vrandmember(key));
 	}
 
 	@Override
 	public List<String> vRandMember(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create(key, count);
-		return executeCommand(RedisCommand.VRANDMEMBER, args, (cmd)->cmd.vrandmember(rawKey(key), count),
-				(cmd)->cmd.vrandmember(rawKey(key), count), (cmd)->cmd.vrandmember(rawKey(key), count));
+		return executeCommand(RedisCommand.VRANDMEMBER, args, (cmd)->cmd.vrandmember(key, count),
+				(cmd)->cmd.vrandmember(key, count), (cmd)->cmd.vrandmember(key, count));
 	}
 
 	@Override
 	public List<byte[]> vRandMember(final byte[] key, final int count) {
 		final CommandArguments args = CommandArguments.create(key, count);
-		return executeCommand(RedisCommand.VRANDMEMBER, args, (cmd)->cmd.vrandmember(rawKey(key), count),
-				(cmd)->cmd.vrandmember(rawKey(key), count), (cmd)->cmd.vrandmember(rawKey(key), count));
+		return executeCommand(RedisCommand.VRANDMEMBER, args, (cmd)->cmd.vrandmember(key, count),
+				(cmd)->cmd.vrandmember(key, count), (cmd)->cmd.vrandmember(key, count));
 	}
 
 	@Override
@@ -304,173 +304,173 @@ public final class JedisVectorSetCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public Status vRem(final String key, final String element) {
 		final CommandArguments args = CommandArguments.create(key, element);
-		return executeCommand(RedisCommand.VREM, args, (cmd)->cmd.vrem(rawKey(key), element),
-				(cmd)->cmd.vrem(rawKey(key), element), (cmd)->cmd.vrem(rawKey(key), element),
+		return executeCommand(RedisCommand.VREM, args, (cmd)->cmd.vrem(key, element),
+				(cmd)->cmd.vrem(key, element), (cmd)->cmd.vrem(key, element),
 				new BooleanStatusConverter());
 	}
 
 	@Override
 	public Status vRem(final byte[] key, final byte[] element) {
 		final CommandArguments args = CommandArguments.create(key, element);
-		return executeCommand(RedisCommand.VREM, args, (cmd)->cmd.vrem(rawKey(key), element),
-				(cmd)->cmd.vrem(rawKey(key), element), (cmd)->cmd.vrem(rawKey(key), element),
+		return executeCommand(RedisCommand.VREM, args, (cmd)->cmd.vrem(key, element),
+				(cmd)->cmd.vrem(key, element), (cmd)->cmd.vrem(key, element),
 				new BooleanStatusConverter());
 	}
 
 	@Override
 	public Status vSetAttr(final String key, final String element, final String value) {
 		final CommandArguments args = CommandArguments.create(key, element).add(value);
-		return executeCommand(RedisCommand.VREM, args, (cmd)->cmd.vsetattr(rawKey(key), element, value),
-				(cmd)->cmd.vsetattr(rawKey(key), element, value), (cmd)->cmd.vsetattr(rawKey(key), element, value),
+		return executeCommand(RedisCommand.VREM, args, (cmd)->cmd.vsetattr(key, element, value),
+				(cmd)->cmd.vsetattr(key, element, value), (cmd)->cmd.vsetattr(key, element, value),
 				new BooleanStatusConverter());
 	}
 
 	@Override
 	public Status vSetAttr(final byte[] key, final byte[] element, final byte[] value) {
 		final CommandArguments args = CommandArguments.create(key, element).add(value);
-		return executeCommand(RedisCommand.VREM, args, (cmd)->cmd.vsetattr(rawKey(key), element, value),
-				(cmd)->cmd.vsetattr(rawKey(key), element, value), (cmd)->cmd.vsetattr(rawKey(key), element, value),
+		return executeCommand(RedisCommand.VREM, args, (cmd)->cmd.vsetattr(key, element, value),
+				(cmd)->cmd.vsetattr(key, element, value), (cmd)->cmd.vsetattr(key, element, value),
 				new BooleanStatusConverter());
 	}
 
 	@Override
 	public List<String> vSim(final String key, final double... vectors) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors);
-		return executeCommand(RedisCommand.VSIM, args, (cmd)->cmd.vsim(rawKey(key), vectors(vectors)),
-				(cmd)->cmd.vsim(rawKey(key), vectors(vectors)), (cmd)->cmd.vsim(rawKey(key), vectors(vectors)));
+		return executeCommand(RedisCommand.VSIM, args, (cmd)->cmd.vsim(key, vectors(vectors)),
+				(cmd)->cmd.vsim(key, vectors(vectors)), (cmd)->cmd.vsim(key, vectors(vectors)));
 	}
 
 	@Override
 	public List<byte[]> vSim(final byte[] key, final double... vectors) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors);
-		return executeCommand(RedisCommand.VSIM, args, (cmd)->cmd.vsim(rawKey(key), vectors(vectors)),
-				(cmd)->cmd.vsim(rawKey(key), vectors(vectors)), (cmd)->cmd.vsim(rawKey(key), vectors(vectors)));
+		return executeCommand(RedisCommand.VSIM, args, (cmd)->cmd.vsim(key, vectors(vectors)),
+				(cmd)->cmd.vsim(key, vectors(vectors)), (cmd)->cmd.vsim(key, vectors(vectors)));
 	}
 
 	@Override
 	public List<String> vSim(final String key, final String element) {
 		final CommandArguments args = CommandArguments.create(key, element);
-		return executeCommand(RedisCommand.VSIM, args, (cmd)->cmd.vsimByElement(rawKey(key), element),
-				(cmd)->cmd.vsimByElement(rawKey(key), element), (cmd)->cmd.vsimByElement(rawKey(key), element));
+		return executeCommand(RedisCommand.VSIM, args, (cmd)->cmd.vsimByElement(key, element),
+				(cmd)->cmd.vsimByElement(key, element), (cmd)->cmd.vsimByElement(key, element));
 	}
 
 	@Override
 	public List<byte[]> vSim(final byte[] key, final byte[] element) {
 		final CommandArguments args = CommandArguments.create(key, element);
-		return executeCommand(RedisCommand.VSIM, args, (cmd)->cmd.vsimByElement(rawKey(key), element),
-				(cmd)->cmd.vsimByElement(rawKey(key), element), (cmd)->cmd.vsimByElement(rawKey(key), element));
+		return executeCommand(RedisCommand.VSIM, args, (cmd)->cmd.vsimByElement(key, element),
+				(cmd)->cmd.vsimByElement(key, element), (cmd)->cmd.vsimByElement(key, element));
 	}
 
 	@Override
 	public List<String> vSim(final String key, final double[] vectors, final VSimArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add(argument);
-		return vSim(rawKey(key), vectors, new JedisVSimParams(argument), args);
+		return vSim(key, vectors, new JedisVSimParams(argument), args);
 	}
 
 	@Override
 	public List<byte[]> vSim(final byte[] key, final double[] vectors, final VSimArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add(argument);
-		return vSim(rawKey(key), vectors, new JedisVSimParams(argument), args);
+		return vSim(key, vectors, new JedisVSimParams(argument), args);
 	}
 
 	@Override
 	public List<String> vSim(final String key, final double[] vectors, final VSimArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add(argument)
 				.add(Keyword.Common.COUNT, count);
-		return vSim(rawKey(key), vectors, new JedisVSimParams(argument, count), args);
+		return vSim(key, vectors, new JedisVSimParams(argument, count), args);
 	}
 
 	@Override
 	public List<byte[]> vSim(final byte[] key, final double[] vectors, final VSimArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add(argument)
 				.add(Keyword.Common.COUNT, count);
-		return vSim(rawKey(key), vectors, new JedisVSimParams(argument, count), args);
+		return vSim(key, vectors, new JedisVSimParams(argument, count), args);
 	}
 
 	@Override
 	public List<String> vSim(final String key, final double[] vectors, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add(Keyword.Common.COUNT, count);
-		return vSim(rawKey(key), vectors, new JedisVSimParams(count), args);
+		return vSim(key, vectors, new JedisVSimParams(count), args);
 	}
 
 	@Override
 	public List<byte[]> vSim(final byte[] key, final double[] vectors, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add(Keyword.Common.COUNT, count);
-		return vSim(rawKey(key), vectors, new JedisVSimParams(count), args);
+		return vSim(key, vectors, new JedisVSimParams(count), args);
 	}
 
 	@Override
 	public List<String> vSim(final String key, final String element, final VSimArgument argument) {
 		final CommandArguments args = CommandArguments.create(key, element).add(argument);
-		return vSim(rawKey(key), element, new JedisVSimParams(argument), args);
+		return vSim(key, element, new JedisVSimParams(argument), args);
 	}
 
 	@Override
 	public List<byte[]> vSim(final byte[] key, final byte[] element, final VSimArgument argument) {
 		final CommandArguments args = CommandArguments.create(key, element).add(argument);
-		return vSim(rawKey(key), element, new JedisVSimParams(argument), args);
+		return vSim(key, element, new JedisVSimParams(argument), args);
 	}
 
 	@Override
 	public List<String> vSim(final String key, final String element, final VSimArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key, element).add(argument)
 				.add(Keyword.Common.COUNT, count);
-		return vSim(rawKey(key), element, new JedisVSimParams(argument, count), args);
+		return vSim(key, element, new JedisVSimParams(argument, count), args);
 	}
 
 	@Override
 	public List<byte[]> vSim(final byte[] key, final byte[] element, final VSimArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key, element).add(argument)
 				.add(Keyword.Common.COUNT, count);
-		return vSim(rawKey(key), element, new JedisVSimParams(argument, count), args);
+		return vSim(key, element, new JedisVSimParams(argument, count), args);
 	}
 
 	@Override
 	public List<String> vSim(final String key, final String element, final int count) {
 		final CommandArguments args = CommandArguments.create(key, element).add(Keyword.Common.COUNT, count);
-		return vSim(rawKey(key), element, new JedisVSimParams(count), args);
+		return vSim(key, element, new JedisVSimParams(count), args);
 	}
 
 	@Override
 	public List<byte[]> vSim(final byte[] key, final byte[] element, final int count) {
 		final CommandArguments args = CommandArguments.create(key, element).add(Keyword.Common.COUNT, count);
-		return vSim(rawKey(key), element, new JedisVSimParams(count), args);
+		return vSim(key, element, new JedisVSimParams(count), args);
 	}
 
 	@Override
 	public Map<String, Double> vSimWithScores(final String key, final double... vectors) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add("WITHSCORES");
-		return vSimWithScores(rawKey(key), vectors, new JedisVSimParams(), args);
+		return vSimWithScores(key, vectors, new JedisVSimParams(), args);
 	}
 
 	@Override
 	public Map<byte[], Double> vSimWithScores(final byte[] key, final double... vectors) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add("WITHSCORES");
-		return vSimWithScores(rawKey(key), vectors, new JedisVSimParams(), args);
+		return vSimWithScores(key, vectors, new JedisVSimParams(), args);
 	}
 
 	@Override
 	public Map<String, Double> vSimWithScores(final String key, final String element) {
 		final CommandArguments args = CommandArguments.create(key, element).add("WITHSCORES");
-		return vSimWithScores(rawKey(key), element, new JedisVSimParams(), args);
+		return vSimWithScores(key, element, new JedisVSimParams(), args);
 	}
 
 	@Override
 	public Map<byte[], Double> vSimWithScores(final byte[] key, final byte[] element) {
 		final CommandArguments args = CommandArguments.create(key, element).add("WITHSCORES");
-		return vSimWithScores(rawKey(key), element, new JedisVSimParams(), args);
+		return vSimWithScores(key, element, new JedisVSimParams(), args);
 	}
 
 	@Override
 	public Map<String, Double> vSimWithScores(final String key, final double[] vectors, final VSimArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add(argument).add("WITHSCORES");
-		return vSimWithScores(rawKey(key), vectors, new JedisVSimParams(argument), args);
+		return vSimWithScores(key, vectors, new JedisVSimParams(argument), args);
 	}
 
 	@Override
 	public Map<byte[], Double> vSimWithScores(final byte[] key, final double[] vectors, final VSimArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add(argument).add("WITHSCORES");
-		return vSimWithScores(rawKey(key), vectors, new JedisVSimParams(argument), args);
+		return vSimWithScores(key, vectors, new JedisVSimParams(argument), args);
 	}
 
 	@Override
@@ -478,7 +478,7 @@ public final class JedisVectorSetCommands extends AbstractJedisRedisCommands imp
 	                                          final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add(argument).add("WITHSCORES")
 				.add(Keyword.Common.COUNT, count);
-		return vSimWithScores(rawKey(key), vectors, new JedisVSimParams(argument, count), args);
+		return vSimWithScores(key, vectors, new JedisVSimParams(argument, count), args);
 	}
 
 	@Override
@@ -486,33 +486,33 @@ public final class JedisVectorSetCommands extends AbstractJedisRedisCommands imp
 	                                          final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add(argument).add("WITHSCORES")
 				.add(Keyword.Common.COUNT, count);
-		return vSimWithScores(rawKey(key), vectors, new JedisVSimParams(argument, count), args);
+		return vSimWithScores(key, vectors, new JedisVSimParams(argument, count), args);
 	}
 
 	@Override
 	public Map<String, Double> vSimWithScores(final String key, final double[] vectors, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add("WITHSCORES")
 				.add(Keyword.Common.COUNT, count);
-		return vSimWithScores(rawKey(key), vectors, new JedisVSimParams(count), args);
+		return vSimWithScores(key, vectors, new JedisVSimParams(count), args);
 	}
 
 	@Override
 	public Map<byte[], Double> vSimWithScores(final byte[] key, final double[] vectors, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add("WITHSCORES")
 				.add(Keyword.Common.COUNT, count);
-		return vSimWithScores(rawKey(key), vectors, new JedisVSimParams(count), args);
+		return vSimWithScores(key, vectors, new JedisVSimParams(count), args);
 	}
 
 	@Override
 	public Map<String, Double> vSimWithScores(final String key, final String element, final VSimArgument argument) {
 		final CommandArguments args = CommandArguments.create(key, element).add(argument).add("WITHSCORES");
-		return vSimWithScores(rawKey(key), element, new JedisVSimParams(argument), args);
+		return vSimWithScores(key, element, new JedisVSimParams(argument), args);
 	}
 
 	@Override
 	public Map<byte[], Double> vSimWithScores(final byte[] key, final byte[] element, final VSimArgument argument) {
 		final CommandArguments args = CommandArguments.create(key, element).add(argument).add("WITHSCORES");
-		return vSimWithScores(rawKey(key), element, new JedisVSimParams(argument), args);
+		return vSimWithScores(key, element, new JedisVSimParams(argument), args);
 	}
 
 	@Override
@@ -520,7 +520,7 @@ public final class JedisVectorSetCommands extends AbstractJedisRedisCommands imp
 	                                          final int count) {
 		final CommandArguments args = CommandArguments.create(key, element).add(argument).add("WITHSCORES")
 				.add(Keyword.Common.COUNT, count);
-		return vSimWithScores(rawKey(key), element, new JedisVSimParams(argument, count), args);
+		return vSimWithScores(key, element, new JedisVSimParams(argument, count), args);
 	}
 
 	@Override
@@ -528,45 +528,45 @@ public final class JedisVectorSetCommands extends AbstractJedisRedisCommands imp
 	                                          final int count) {
 		final CommandArguments args = CommandArguments.create(key, element).add(argument).add("WITHSCORES")
 				.add(Keyword.Common.COUNT, count);
-		return vSimWithScores(rawKey(key), element, new JedisVSimParams(argument, count), args);
+		return vSimWithScores(key, element, new JedisVSimParams(argument, count), args);
 	}
 
 	@Override
 	public Map<String, Double> vSimWithScores(final String key, final String element, final int count) {
 		final CommandArguments args = CommandArguments.create(key, element).add("WITHSCORES")
 				.add(Keyword.Common.COUNT, count);
-		return vSimWithScores(rawKey(key), element, new JedisVSimParams(count), args);
+		return vSimWithScores(key, element, new JedisVSimParams(count), args);
 	}
 
 	@Override
 	public Map<byte[], Double> vSimWithScores(final byte[] key, final byte[] element, final int count) {
 		final CommandArguments args = CommandArguments.create(key, element).add("WITHSCORES")
 				.add(Keyword.Common.COUNT, count);
-		return vSimWithScores(rawKey(key), element, new JedisVSimParams(count), args);
+		return vSimWithScores(key, element, new JedisVSimParams(count), args);
 	}
 
 	@Override
 	public Map<String, VSimScoreAttribs> vSimWithScoresWithAttribs(final String key, final double... vectors) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add("WITHSCORES", "WITHATTRIBS");
-		return vSimWithScoresWithAttribs(rawKey(key), vectors, new JedisVSimParams(), args);
+		return vSimWithScoresWithAttribs(key, vectors, new JedisVSimParams(), args);
 	}
 
 	@Override
 	public Map<byte[], VSimScoreAttribs> vSimWithScoresWithAttribs(final byte[] key, final double... vectors) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add("WITHSCORES", "WITHATTRIBS");
-		return vSimWithScoresWithAttribs(rawKey(key), vectors, new JedisVSimParams(), args);
+		return vSimWithScoresWithAttribs(key, vectors, new JedisVSimParams(), args);
 	}
 
 	@Override
 	public Map<String, VSimScoreAttribs> vSimWithScoresWithAttribs(final String key, final String element) {
 		final CommandArguments args = CommandArguments.create(key, element).add("WITHSCORES", "WITHATTRIBS");
-		return vSimWithScoresWithAttribs(rawKey(key), element, new JedisVSimParams(), args);
+		return vSimWithScoresWithAttribs(key, element, new JedisVSimParams(), args);
 	}
 
 	@Override
 	public Map<byte[], VSimScoreAttribs> vSimWithScoresWithAttribs(final byte[] key, final byte[] element) {
 		final CommandArguments args = CommandArguments.create(key, element).add("WITHSCORES", "WITHATTRIBS");
-		return vSimWithScoresWithAttribs(rawKey(key), element, new JedisVSimParams(), args);
+		return vSimWithScoresWithAttribs(key, element, new JedisVSimParams(), args);
 	}
 
 	@Override
@@ -574,7 +574,7 @@ public final class JedisVectorSetCommands extends AbstractJedisRedisCommands imp
 	                                                               final VSimArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add("WITHSCORES", "WITHATTRIBS")
 				.add(argument);
-		return vSimWithScoresWithAttribs(rawKey(key), vectors, new JedisVSimParams(argument), args);
+		return vSimWithScoresWithAttribs(key, vectors, new JedisVSimParams(argument), args);
 	}
 
 	@Override
@@ -582,7 +582,7 @@ public final class JedisVectorSetCommands extends AbstractJedisRedisCommands imp
 	                                                               final VSimArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add("WITHSCORES", "WITHATTRIBS")
 				.add(argument);
-		return vSimWithScoresWithAttribs(rawKey(key), vectors, new JedisVSimParams(argument), args);
+		return vSimWithScoresWithAttribs(key, vectors, new JedisVSimParams(argument), args);
 	}
 
 	@Override
@@ -590,7 +590,7 @@ public final class JedisVectorSetCommands extends AbstractJedisRedisCommands imp
 	                                                               final VSimArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add(argument)
 				.add("WITHSCORES", "WITHATTRIBS").add(Keyword.Common.COUNT, count);
-		return vSimWithScoresWithAttribs(rawKey(key), vectors, new JedisVSimParams(argument, count), args);
+		return vSimWithScoresWithAttribs(key, vectors, new JedisVSimParams(argument, count), args);
 	}
 
 	@Override
@@ -598,7 +598,7 @@ public final class JedisVectorSetCommands extends AbstractJedisRedisCommands imp
 	                                                               final VSimArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add(argument)
 				.add("WITHSCORES", "WITHATTRIBS").add(Keyword.Common.COUNT, count);
-		return vSimWithScoresWithAttribs(rawKey(key), vectors, new JedisVSimParams(argument, count), args);
+		return vSimWithScoresWithAttribs(key, vectors, new JedisVSimParams(argument, count), args);
 	}
 
 	@Override
@@ -606,7 +606,7 @@ public final class JedisVectorSetCommands extends AbstractJedisRedisCommands imp
 	                                                               final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add("WITHSCORES", "WITHATTRIBS")
 				.add(Keyword.Common.COUNT, count);
-		return vSimWithScoresWithAttribs(rawKey(key), vectors, new JedisVSimParams(count), args);
+		return vSimWithScoresWithAttribs(key, vectors, new JedisVSimParams(count), args);
 	}
 
 	@Override
@@ -614,7 +614,7 @@ public final class JedisVectorSetCommands extends AbstractJedisRedisCommands imp
 	                                                               final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add("WITHSCORES", "WITHATTRIBS")
 				.add(Keyword.Common.COUNT, count);
-		return vSimWithScoresWithAttribs(rawKey(key), vectors, new JedisVSimParams(count), args);
+		return vSimWithScoresWithAttribs(key, vectors, new JedisVSimParams(count), args);
 	}
 
 	@Override
@@ -622,7 +622,7 @@ public final class JedisVectorSetCommands extends AbstractJedisRedisCommands imp
 	                                                               final VSimArgument argument) {
 		final CommandArguments args = CommandArguments.create(key, element).add(argument)
 				.add("WITHSCORES", "WITHATTRIBS");
-		return vSimWithScoresWithAttribs(rawKey(key), element, new JedisVSimParams(argument), args);
+		return vSimWithScoresWithAttribs(key, element, new JedisVSimParams(argument), args);
 	}
 
 	@Override
@@ -630,7 +630,7 @@ public final class JedisVectorSetCommands extends AbstractJedisRedisCommands imp
 	                                                               final VSimArgument argument) {
 		final CommandArguments args = CommandArguments.create(key, element).add(argument)
 				.add("WITHSCORES", "WITHATTRIBS");
-		return vSimWithScoresWithAttribs(rawKey(key), element, new JedisVSimParams(argument), args);
+		return vSimWithScoresWithAttribs(key, element, new JedisVSimParams(argument), args);
 	}
 
 	@Override
@@ -638,7 +638,7 @@ public final class JedisVectorSetCommands extends AbstractJedisRedisCommands imp
 	                                                               final VSimArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key, element).add(argument)
 				.add("WITHSCORES", "WITHATTRIBS").add(Keyword.Common.COUNT, count);
-		return vSimWithScoresWithAttribs(rawKey(key), element, new JedisVSimParams(argument, count), args);
+		return vSimWithScoresWithAttribs(key, element, new JedisVSimParams(argument, count), args);
 	}
 
 	@Override
@@ -646,7 +646,7 @@ public final class JedisVectorSetCommands extends AbstractJedisRedisCommands imp
 	                                                               final VSimArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key, element).add(argument)
 				.add("WITHSCORES", "WITHATTRIBS").add(Keyword.Common.COUNT, count);
-		return vSimWithScoresWithAttribs(rawKey(key), element, new JedisVSimParams(argument, count), args);
+		return vSimWithScoresWithAttribs(key, element, new JedisVSimParams(argument, count), args);
 	}
 
 	@Override
@@ -654,7 +654,7 @@ public final class JedisVectorSetCommands extends AbstractJedisRedisCommands imp
 	                                                               final int count) {
 		final CommandArguments args = CommandArguments.create(key, element).add("WITHSCORES", "WITHATTRIBS")
 				.add(Keyword.Common.COUNT, count);
-		return vSimWithScoresWithAttribs(rawKey(key), element, new JedisVSimParams(count), args);
+		return vSimWithScoresWithAttribs(key, element, new JedisVSimParams(count), args);
 	}
 
 	@Override
@@ -662,7 +662,7 @@ public final class JedisVectorSetCommands extends AbstractJedisRedisCommands imp
 	                                                               final int count) {
 		final CommandArguments args = CommandArguments.create(key, element).add("WITHSCORES", "WITHATTRIBS")
 				.add(Keyword.Common.COUNT, count);
-		return vSimWithScoresWithAttribs(rawKey(key), element, new JedisVSimParams(count), args);
+		return vSimWithScoresWithAttribs(key, element, new JedisVSimParams(count), args);
 	}
 
 	private List<String> vSim(final String key, final double[] vectors, final VSimParams vSimParams,

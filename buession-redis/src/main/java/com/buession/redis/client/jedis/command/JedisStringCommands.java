@@ -67,43 +67,43 @@ public final class JedisStringCommands extends AbstractJedisRedisCommands implem
 	@Override
 	public Long append(final String key, final String value) {
 		final CommandArguments args = CommandArguments.create().add(key, value);
-		return executeCommand(RedisCommand.APPEND, args, (cmd)->cmd.append(rawKey(key), value),
-				(cmd)->cmd.append(rawKey(key), value), (cmd)->cmd.append(rawKey(key), value));
+		return executeCommand(RedisCommand.APPEND, args, (cmd)->cmd.append(key, value),
+				(cmd)->cmd.append(key, value), (cmd)->cmd.append(key, value));
 	}
 
 	@Override
 	public Long append(final byte[] key, final byte[] value) {
 		final CommandArguments args = CommandArguments.create().add(key, value);
-		return executeCommand(RedisCommand.APPEND, args, (cmd)->cmd.append(rawKey(key), value),
-				(cmd)->cmd.append(rawKey(key), value), (cmd)->cmd.append(rawKey(key), value));
+		return executeCommand(RedisCommand.APPEND, args, (cmd)->cmd.append(key, value),
+				(cmd)->cmd.append(key, value), (cmd)->cmd.append(key, value));
 	}
 
 	@Override
 	public Long decr(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.DECR, args, (cmd)->cmd.decr(rawKey(key)), (cmd)->cmd.decr(rawKey(key)),
-				(cmd)->cmd.decr(rawKey(key)));
+		return executeCommand(RedisCommand.DECR, args, (cmd)->cmd.decr(key), (cmd)->cmd.decr(key),
+				(cmd)->cmd.decr(key));
 	}
 
 	@Override
 	public Long decr(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.DECR, args, (cmd)->cmd.decr(rawKey(key)), (cmd)->cmd.decr(rawKey(key)),
-				(cmd)->cmd.decr(rawKey(key)));
+		return executeCommand(RedisCommand.DECR, args, (cmd)->cmd.decr(key), (cmd)->cmd.decr(key),
+				(cmd)->cmd.decr(key));
 	}
 
 	@Override
 	public Long decrBy(final String key, final long value) {
 		final CommandArguments args = CommandArguments.create().add(key, value);
-		return executeCommand(RedisCommand.DECRBY, args, (cmd)->cmd.decrBy(rawKey(key), value),
-				(cmd)->cmd.decrBy(rawKey(key), value), (cmd)->cmd.decrBy(rawKey(key), value));
+		return executeCommand(RedisCommand.DECRBY, args, (cmd)->cmd.decrBy(key, value),
+				(cmd)->cmd.decrBy(key, value), (cmd)->cmd.decrBy(key, value));
 	}
 
 	@Override
 	public Long decrBy(final byte[] key, final long value) {
 		final CommandArguments args = CommandArguments.create().add(key, value);
-		return executeCommand(RedisCommand.DECRBY, args, (cmd)->cmd.decrBy(rawKey(key), value),
-				(cmd)->cmd.decrBy(rawKey(key), value), (cmd)->cmd.decrBy(rawKey(key), value));
+		return executeCommand(RedisCommand.DECRBY, args, (cmd)->cmd.decrBy(key, value),
+				(cmd)->cmd.decrBy(key, value), (cmd)->cmd.decrBy(key, value));
 	}
 
 	@Override
@@ -111,13 +111,13 @@ public final class JedisStringCommands extends AbstractJedisRedisCommands implem
 		final CommandArguments args = CommandArguments.create(key).add(type, value);
 
 		if(type == CompareCondition.IFEQ){
-			return delEx(rawKey(key), redis.clients.jedis.util.CompareCondition.valueEq(value), args);
+			return delEx(key, redis.clients.jedis.util.CompareCondition.valueEq(value), args);
 		}else if(type == CompareCondition.IFNE){
-			return delEx(rawKey(key), redis.clients.jedis.util.CompareCondition.valueNe(value), args);
+			return delEx(key, redis.clients.jedis.util.CompareCondition.valueNe(value), args);
 		}else if(type == CompareCondition.IFDEQ){
-			return delEx(rawKey(key), redis.clients.jedis.util.CompareCondition.digestEq(value), args);
+			return delEx(key, redis.clients.jedis.util.CompareCondition.digestEq(value), args);
 		}else if(type == CompareCondition.IFDNE){
-			return delEx(rawKey(key), redis.clients.jedis.util.CompareCondition.digestNe(value), args);
+			return delEx(key, redis.clients.jedis.util.CompareCondition.digestNe(value), args);
 		}else{
 			return executeCommand(RedisCommand.DELEX, args);
 		}
@@ -128,13 +128,13 @@ public final class JedisStringCommands extends AbstractJedisRedisCommands implem
 		final CommandArguments args = CommandArguments.create(key).add(type, value);
 
 		if(type == CompareCondition.IFEQ){
-			return delEx(rawKey(key), redis.clients.jedis.util.CompareCondition.valueEq(value), args);
+			return delEx(key, redis.clients.jedis.util.CompareCondition.valueEq(value), args);
 		}else if(type == CompareCondition.IFNE){
-			return delEx(rawKey(key), redis.clients.jedis.util.CompareCondition.valueNe(value), args);
+			return delEx(key, redis.clients.jedis.util.CompareCondition.valueNe(value), args);
 		}else if(type == CompareCondition.IFDEQ){
-			return delEx(rawKey(key), redis.clients.jedis.util.CompareCondition.digestEq(value), args);
+			return delEx(key, redis.clients.jedis.util.CompareCondition.digestEq(value), args);
 		}else if(type == CompareCondition.IFDNE){
-			return delEx(rawKey(key), redis.clients.jedis.util.CompareCondition.digestNe(value), args);
+			return delEx(key, redis.clients.jedis.util.CompareCondition.digestNe(value), args);
 		}else{
 			return executeCommand(RedisCommand.DELEX, args);
 		}
@@ -143,175 +143,175 @@ public final class JedisStringCommands extends AbstractJedisRedisCommands implem
 	@Override
 	public String digest(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.DIGEST, args, (cmd)->cmd.digestKey(rawKey(key)),
-				(cmd)->cmd.digestKey(rawKey(key)), (cmd)->cmd.digestKey(rawKey(key)));
+		return executeCommand(RedisCommand.DIGEST, args, (cmd)->cmd.digestKey(key),
+				(cmd)->cmd.digestKey(key), (cmd)->cmd.digestKey(key));
 	}
 
 	@Override
 	public byte[] digest(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.DIGEST, args, (cmd)->cmd.digestKey(rawKey(key)),
-				(cmd)->cmd.digestKey(rawKey(key)), (cmd)->cmd.digestKey(rawKey(key)));
+		return executeCommand(RedisCommand.DIGEST, args, (cmd)->cmd.digestKey(key),
+				(cmd)->cmd.digestKey(key), (cmd)->cmd.digestKey(key));
 	}
 
 	@Override
 	public String get(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.GET, args, (cmd)->cmd.get(rawKey(key)), (cmd)->cmd.get(rawKey(key)),
-				(cmd)->cmd.get(rawKey(key)));
+		return executeCommand(RedisCommand.GET, args, (cmd)->cmd.get(key), (cmd)->cmd.get(key),
+				(cmd)->cmd.get(key));
 	}
 
 	@Override
 	public byte[] get(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.GET, args, (cmd)->cmd.get(rawKey(key)), (cmd)->cmd.get(rawKey(key)),
-				(cmd)->cmd.get(rawKey(key)));
+		return executeCommand(RedisCommand.GET, args, (cmd)->cmd.get(key), (cmd)->cmd.get(key),
+				(cmd)->cmd.get(key));
 	}
 
 	@Override
 	public String getDel(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.GETDEL, args, (cmd)->cmd.getDel(rawKey(key)), (cmd)->cmd.getDel(rawKey(key)),
-				(cmd)->cmd.getDel(rawKey(key)));
+		return executeCommand(RedisCommand.GETDEL, args, (cmd)->cmd.getDel(key), (cmd)->cmd.getDel(key),
+				(cmd)->cmd.getDel(key));
 	}
 
 	@Override
 	public byte[] getDel(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.GETDEL, args, (cmd)->cmd.getDel(rawKey(key)), (cmd)->cmd.getDel(rawKey(key)),
-				(cmd)->cmd.getDel(rawKey(key)));
+		return executeCommand(RedisCommand.GETDEL, args, (cmd)->cmd.getDel(key), (cmd)->cmd.getDel(key),
+				(cmd)->cmd.getDel(key));
 	}
 
 	@Override
 	public String getEx(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return getEx(rawKey(key), new JedisGetExParams(), args);
+		return getEx(key, new JedisGetExParams(), args);
 	}
 
 	@Override
 	public byte[] getEx(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return getEx(rawKey(key), new JedisGetExParams(), args);
+		return getEx(key, new JedisGetExParams(), args);
 	}
 
 	@Override
 	public String getEx(final String key, final GetExType exType, final long expires) {
 		final CommandArguments args = CommandArguments.create(key).add(exType, expires);
-		return getEx(rawKey(key), new JedisGetExParams(exType, expires), args);
+		return getEx(key, new JedisGetExParams(exType, expires), args);
 	}
 
 	@Override
 	public byte[] getEx(final byte[] key, final GetExType exType, final long expires) {
 		final CommandArguments args = CommandArguments.create(key).add(exType, expires);
-		return getEx(rawKey(key), new JedisGetExParams(exType, expires), args);
+		return getEx(key, new JedisGetExParams(exType, expires), args);
 	}
 
 	@Override
 	public String getRange(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
-		return executeCommand(RedisCommand.GETRANGE, args, (cmd)->cmd.getrange(rawKey(key), start, end),
-				(cmd)->cmd.getrange(rawKey(key), start, end), (cmd)->cmd.getrange(rawKey(key), start, end));
+		return executeCommand(RedisCommand.GETRANGE, args, (cmd)->cmd.getrange(key, start, end),
+				(cmd)->cmd.getrange(key, start, end), (cmd)->cmd.getrange(key, start, end));
 	}
 
 	@Override
 	public byte[] getRange(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
-		return executeCommand(RedisCommand.GETRANGE, args, (cmd)->cmd.getrange(rawKey(key), start, end),
-				(cmd)->cmd.getrange(rawKey(key), start, end), (cmd)->cmd.getrange(rawKey(key), start, end));
+		return executeCommand(RedisCommand.GETRANGE, args, (cmd)->cmd.getrange(key, start, end),
+				(cmd)->cmd.getrange(key, start, end), (cmd)->cmd.getrange(key, start, end));
 	}
 
 	@Override
 	public String getSet(final String key, final String value) {
 		final CommandArguments args = CommandArguments.create().add(key, value);
-		return executeCommand(RedisCommand.GETSET, args, (cmd)->cmd.getSet(rawKey(key), value),
-				(cmd)->cmd.getSet(rawKey(key), value), (cmd)->cmd.getSet(rawKey(key), value));
+		return executeCommand(RedisCommand.GETSET, args, (cmd)->cmd.getSet(key, value),
+				(cmd)->cmd.getSet(key, value), (cmd)->cmd.getSet(key, value));
 	}
 
 	@Override
 	public byte[] getSet(final byte[] key, final byte[] value) {
 		final CommandArguments args = CommandArguments.create().add(key, value);
-		return executeCommand(RedisCommand.GETSET, args, (cmd)->cmd.getSet(rawKey(key), value),
-				(cmd)->cmd.getSet(rawKey(key), value), (cmd)->cmd.getSet(rawKey(key), value));
+		return executeCommand(RedisCommand.GETSET, args, (cmd)->cmd.getSet(key, value),
+				(cmd)->cmd.getSet(key, value), (cmd)->cmd.getSet(key, value));
 	}
 
 	@Override
 	public Long incr(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.INCR, args, (cmd)->cmd.incr(rawKey(key)), (cmd)->cmd.incr(rawKey(key)),
-				(cmd)->cmd.incr(rawKey(key)));
+		return executeCommand(RedisCommand.INCR, args, (cmd)->cmd.incr(key), (cmd)->cmd.incr(key),
+				(cmd)->cmd.incr(key));
 	}
 
 	@Override
 	public Long incr(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.INCR, args, (cmd)->cmd.incr(rawKey(key)), (cmd)->cmd.incr(rawKey(key)),
-				(cmd)->cmd.incr(rawKey(key)));
+		return executeCommand(RedisCommand.INCR, args, (cmd)->cmd.incr(key), (cmd)->cmd.incr(key),
+				(cmd)->cmd.incr(key));
 	}
 
 	@Override
 	public Long incrBy(final String key, final long value) {
 		final CommandArguments args = CommandArguments.create(key, value);
-		return executeCommand(RedisCommand.INCRBY, args, (cmd)->cmd.incrBy(rawKey(key), value),
-				(cmd)->cmd.incrBy(rawKey(key), value), (cmd)->cmd.incrBy(rawKey(key), value));
+		return executeCommand(RedisCommand.INCRBY, args, (cmd)->cmd.incrBy(key, value),
+				(cmd)->cmd.incrBy(key, value), (cmd)->cmd.incrBy(key, value));
 	}
 
 	@Override
 	public Long incrBy(final byte[] key, final long value) {
 		final CommandArguments args = CommandArguments.create(key, value);
-		return executeCommand(RedisCommand.INCRBY, args, (cmd)->cmd.incrBy(rawKey(key), value),
-				(cmd)->cmd.incrBy(rawKey(key), value), (cmd)->cmd.incrBy(rawKey(key), value));
+		return executeCommand(RedisCommand.INCRBY, args, (cmd)->cmd.incrBy(key, value),
+				(cmd)->cmd.incrBy(key, value), (cmd)->cmd.incrBy(key, value));
 	}
 
 	@Override
 	public Double incrByFloat(final String key, final double value) {
 		final CommandArguments args = CommandArguments.create(key, value);
-		return executeCommand(RedisCommand.INCRBYFLOAT, args, (cmd)->cmd.incrByFloat(rawKey(key), value),
-				(cmd)->cmd.incrByFloat(rawKey(key), value), (cmd)->cmd.incrByFloat(rawKey(key), value));
+		return executeCommand(RedisCommand.INCRBYFLOAT, args, (cmd)->cmd.incrByFloat(key, value),
+				(cmd)->cmd.incrByFloat(key, value), (cmd)->cmd.incrByFloat(key, value));
 	}
 
 	@Override
 	public Double incrByFloat(final byte[] key, final double value) {
 		final CommandArguments args = CommandArguments.create(key, value);
-		return executeCommand(RedisCommand.INCRBYFLOAT, args, (cmd)->cmd.incrByFloat(rawKey(key), value),
-				(cmd)->cmd.incrByFloat(rawKey(key), value), (cmd)->cmd.incrByFloat(rawKey(key), value));
+		return executeCommand(RedisCommand.INCRBYFLOAT, args, (cmd)->cmd.incrByFloat(key, value),
+				(cmd)->cmd.incrByFloat(key, value), (cmd)->cmd.incrByFloat(key, value));
 	}
 
 	@Override
 	public LcsResult lcs(final String key1, final String key2) {
 		final CommandArguments args = CommandArguments.create(key1, key2);
-		return lcs(rawKey(key1), rawKey(key2), new JedisLCSParams(), args);
+		return lcs(key1, key2, new JedisLCSParams(), args);
 	}
 
 	@Override
 	public LcsResult lcs(final byte[] key1, final byte[] key2) {
 		final CommandArguments args = CommandArguments.create(key1, key2);
-		return lcs(rawKey(key1), rawKey(key2), new JedisLCSParams(), args);
+		return lcs(key1, key2, new JedisLCSParams(), args);
 	}
 
 	@Override
 	public LcsResult lcs(final String key1, final String key2, final LcsArgument argument) {
 		final CommandArguments args = CommandArguments.create(key1, key2).add(argument);
-		return lcs(rawKey(key1), rawKey(key2), new JedisLCSParams(argument), args);
+		return lcs(key1, key2, new JedisLCSParams(argument), args);
 	}
 
 	@Override
 	public LcsResult lcs(final byte[] key1, final byte[] key2, final LcsArgument argument) {
 		final CommandArguments args = CommandArguments.create(key1, key2).add(argument);
-		return lcs(rawKey(key1), rawKey(key2), new JedisLCSParams(argument), args);
+		return lcs(key1, key2, new JedisLCSParams(argument), args);
 	}
 
 	@Override
 	public List<String> mGet(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.MGET, args, (cmd)->cmd.mget(rawKeys(keys)), (cmd)->cmd.mget(rawKeys(keys)),
-				(cmd)->cmd.mget(rawKeys(keys)));
+		return executeCommand(RedisCommand.MGET, args, (cmd)->cmd.mget(keys), (cmd)->cmd.mget(keys),
+				(cmd)->cmd.mget(keys));
 	}
 
 	@Override
 	public List<byte[]> mGet(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.MGET, args, (cmd)->cmd.mget(rawKeys(keys)), (cmd)->cmd.mget(rawKeys(keys)),
-				(cmd)->cmd.mget(rawKeys(keys)));
+		return executeCommand(RedisCommand.MGET, args, (cmd)->cmd.mget(keys), (cmd)->cmd.mget(keys),
+				(cmd)->cmd.mget(keys));
 	}
 
 	@SuppressWarnings({"unchecked"})
@@ -367,143 +367,143 @@ public final class JedisStringCommands extends AbstractJedisRedisCommands implem
 	@Override
 	public Status pSetEx(final String key, final String value, final int lifetime) {
 		final CommandArguments args = CommandArguments.create(key, value).add(lifetime);
-		return executeCommand(RedisCommand.PSETEX, args, (cmd)->cmd.psetex(rawKey(key), lifetime, value),
-				(cmd)->cmd.psetex(rawKey(key), lifetime, value), (cmd)->cmd.psetex(rawKey(key), lifetime, value),
+		return executeCommand(RedisCommand.PSETEX, args, (cmd)->cmd.psetex(key, lifetime, value),
+				(cmd)->cmd.psetex(key, lifetime, value), (cmd)->cmd.psetex(key, lifetime, value),
 				new OkStatusConverter());
 	}
 
 	@Override
 	public Status pSetEx(final byte[] key, final byte[] value, final int lifetime) {
 		final CommandArguments args = CommandArguments.create(key, value).add(lifetime);
-		return executeCommand(RedisCommand.PSETEX, args, (cmd)->cmd.psetex(rawKey(key), lifetime, value),
-				(cmd)->cmd.psetex(rawKey(key), lifetime, value), (cmd)->cmd.psetex(rawKey(key), lifetime, value),
+		return executeCommand(RedisCommand.PSETEX, args, (cmd)->cmd.psetex(key, lifetime, value),
+				(cmd)->cmd.psetex(key, lifetime, value), (cmd)->cmd.psetex(key, lifetime, value),
 				new OkStatusConverter());
 	}
 
 	@Override
 	public Status set(final String key, final String value) {
 		final CommandArguments args = CommandArguments.create(key, value);
-		return executeCommand(RedisCommand.SET, args, (cmd)->cmd.set(rawKey(key), value),
-				(cmd)->cmd.set(rawKey(key), value), (cmd)->cmd.set(rawKey(key), value), new OkStatusConverter());
+		return executeCommand(RedisCommand.SET, args, (cmd)->cmd.set(key, value),
+				(cmd)->cmd.set(key, value), (cmd)->cmd.set(key, value), new OkStatusConverter());
 	}
 
 	@Override
 	public Status set(final byte[] key, final byte[] value) {
 		final CommandArguments args = CommandArguments.create(key, value);
-		return executeCommand(RedisCommand.SET, args, (cmd)->cmd.set(rawKey(key), value),
-				(cmd)->cmd.set(rawKey(key), value), (cmd)->cmd.set(rawKey(key), value), new OkStatusConverter());
+		return executeCommand(RedisCommand.SET, args, (cmd)->cmd.set(key, value),
+				(cmd)->cmd.set(key, value), (cmd)->cmd.set(key, value), new OkStatusConverter());
 	}
 
 	@Override
 	public Status set(final String key, final String value, final SetType setType) {
 		final CommandArguments args = CommandArguments.create(key, value).add(setType);
-		return set(rawKey(key), value, new JedisSetParams(setType), args);
+		return set(key, value, new JedisSetParams(setType), args);
 	}
 
 	@Override
 	public Status set(final byte[] key, final byte[] value, final SetType setType) {
 		final CommandArguments args = CommandArguments.create(key, value).add(setType);
-		return set(rawKey(key), value, new JedisSetParams(setType), args);
+		return set(key, value, new JedisSetParams(setType), args);
 	}
 
 	@Override
 	public Status set(final String key, final String value, final SetType setType, final PxExType pxExType,
 	                  final long expires) {
 		final CommandArguments args = CommandArguments.create(key, value).add(setType).add(pxExType, expires);
-		return set(rawKey(key), value, new JedisSetParams(setType, pxExType, expires), args);
+		return set(key, value, new JedisSetParams(setType, pxExType, expires), args);
 	}
 
 	@Override
 	public Status set(final byte[] key, final byte[] value, final SetType setType, final PxExType pxExType,
 	                  final long expires) {
 		final CommandArguments args = CommandArguments.create(key, value).add(setType).add(pxExType, expires);
-		return set(rawKey(key), value, new JedisSetParams(setType, pxExType, expires), args);
+		return set(key, value, new JedisSetParams(setType, pxExType, expires), args);
 	}
 
 	@Override
 	public Status set(final String key, final String value, final PxExType pxExType, final long expires) {
 		final CommandArguments args = CommandArguments.create(key, value).add(pxExType, expires);
-		return set(rawKey(key), value, new JedisSetParams(pxExType, expires), args);
+		return set(key, value, new JedisSetParams(pxExType, expires), args);
 	}
 
 	@Override
 	public Status set(final byte[] key, final byte[] value, final PxExType pxExType, final long expires) {
 		final CommandArguments args = CommandArguments.create(key, value).add(pxExType, expires);
-		return set(rawKey(key), value, new JedisSetParams(pxExType, expires), args);
+		return set(key, value, new JedisSetParams(pxExType, expires), args);
 	}
 
 	@Override
 	public Status setEx(final String key, final String value, final int lifetime) {
 		final CommandArguments args = CommandArguments.create(key, value).add(lifetime);
-		return executeCommand(RedisCommand.SETEX, args, (cmd)->cmd.setex(rawKey(key), lifetime, value),
-				(cmd)->cmd.setex(rawKey(key), lifetime, value), (cmd)->cmd.setex(rawKey(key), lifetime, value),
+		return executeCommand(RedisCommand.SETEX, args, (cmd)->cmd.setex(key, lifetime, value),
+				(cmd)->cmd.setex(key, lifetime, value), (cmd)->cmd.setex(key, lifetime, value),
 				new OkStatusConverter());
 	}
 
 	@Override
 	public Status setEx(final byte[] key, final byte[] value, final int lifetime) {
 		final CommandArguments args = CommandArguments.create(key, value).add(lifetime);
-		return executeCommand(RedisCommand.SETEX, args, (cmd)->cmd.setex(rawKey(key), lifetime, value),
-				(cmd)->cmd.setex(rawKey(key), lifetime, value), (cmd)->cmd.setex(rawKey(key), lifetime, value),
+		return executeCommand(RedisCommand.SETEX, args, (cmd)->cmd.setex(key, lifetime, value),
+				(cmd)->cmd.setex(key, lifetime, value), (cmd)->cmd.setex(key, lifetime, value),
 				new OkStatusConverter());
 	}
 
 	@Override
 	public Status setNx(final String key, final String value) {
 		final CommandArguments args = CommandArguments.create(key, value);
-		return executeCommand(RedisCommand.SETNX, args, (cmd)->cmd.setnx(rawKey(key), value),
-				(cmd)->cmd.setnx(rawKey(key), value), (cmd)->cmd.setnx(rawKey(key), value), new OneStatusConverter());
+		return executeCommand(RedisCommand.SETNX, args, (cmd)->cmd.setnx(key, value),
+				(cmd)->cmd.setnx(key, value), (cmd)->cmd.setnx(key, value), new OneStatusConverter());
 	}
 
 	@Override
 	public Status setNx(final byte[] key, final byte[] value) {
 		final CommandArguments args = CommandArguments.create(key, value);
-		return executeCommand(RedisCommand.SETNX, args, (cmd)->cmd.setnx(rawKey(key), value),
-				(cmd)->cmd.setnx(rawKey(key), value), (cmd)->cmd.setnx(rawKey(key), value), new OneStatusConverter());
+		return executeCommand(RedisCommand.SETNX, args, (cmd)->cmd.setnx(key, value),
+				(cmd)->cmd.setnx(key, value), (cmd)->cmd.setnx(key, value), new OneStatusConverter());
 	}
 
 	@Override
 	public Long setRange(final String key, final long offset, final String value) {
 		final CommandArguments args = CommandArguments.create(key).add(offset).add(value);
-		return executeCommand(RedisCommand.SETRANGE, args, (cmd)->cmd.setrange(rawKey(key), offset, value),
-				(cmd)->cmd.setrange(rawKey(key), offset, value), (cmd)->cmd.setrange(rawKey(key), offset, value));
+		return executeCommand(RedisCommand.SETRANGE, args, (cmd)->cmd.setrange(key, offset, value),
+				(cmd)->cmd.setrange(key, offset, value), (cmd)->cmd.setrange(key, offset, value));
 	}
 
 	@Override
 	public Long setRange(final byte[] key, final long offset, final byte[] value) {
 		final CommandArguments args = CommandArguments.create(key).add(offset).add(value);
-		return executeCommand(RedisCommand.SETRANGE, args, (cmd)->cmd.setrange(rawKey(key), offset, value),
-				(cmd)->cmd.setrange(rawKey(key), offset, value), (cmd)->cmd.setrange(rawKey(key), offset, value));
+		return executeCommand(RedisCommand.SETRANGE, args, (cmd)->cmd.setrange(key, offset, value),
+				(cmd)->cmd.setrange(key, offset, value), (cmd)->cmd.setrange(key, offset, value));
 	}
 
 	@Override
 	public Long strlen(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.STRLEN, args, (cmd)->cmd.strlen(rawKey(key)), (cmd)->cmd.strlen(rawKey(key)),
-				(cmd)->cmd.strlen(rawKey(key)));
+		return executeCommand(RedisCommand.STRLEN, args, (cmd)->cmd.strlen(key), (cmd)->cmd.strlen(key),
+				(cmd)->cmd.strlen(key));
 	}
 
 	@Override
 	public Long strlen(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.STRLEN, args, (cmd)->cmd.strlen(rawKey(key)), (cmd)->cmd.strlen(rawKey(key)),
-				(cmd)->cmd.strlen(rawKey(key)));
+		return executeCommand(RedisCommand.STRLEN, args, (cmd)->cmd.strlen(key), (cmd)->cmd.strlen(key),
+				(cmd)->cmd.strlen(key));
 	}
 
 	@Override
 	public String substr(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
-		return executeCommand(RedisCommand.SUBSTR, args, (cmd)->cmd.substr(rawKey(key), (int) start, (int) end),
-				(cmd)->cmd.substr(rawKey(key), (int) start, (int) end),
-				(cmd)->cmd.substr(rawKey(key), (int) start, (int) end));
+		return executeCommand(RedisCommand.SUBSTR, args, (cmd)->cmd.substr(key, (int) start, (int) end),
+				(cmd)->cmd.substr(key, (int) start, (int) end),
+				(cmd)->cmd.substr(key, (int) start, (int) end));
 	}
 
 	@Override
 	public byte[] substr(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
-		return executeCommand(RedisCommand.SUBSTR, args, (cmd)->cmd.substr(rawKey(key), (int) start, (int) end),
-				(cmd)->cmd.substr(rawKey(key), (int) start, (int) end),
-				(cmd)->cmd.substr(rawKey(key), (int) start, (int) end));
+		return executeCommand(RedisCommand.SUBSTR, args, (cmd)->cmd.substr(key, (int) start, (int) end),
+				(cmd)->cmd.substr(key, (int) start, (int) end),
+				(cmd)->cmd.substr(key, (int) start, (int) end));
 	}
 
 	private String getEx(final String key, final GetExParams getExParams, final CommandArguments args) {
@@ -518,15 +518,15 @@ public final class JedisStringCommands extends AbstractJedisRedisCommands implem
 
 	private Status delEx(final String key, final redis.clients.jedis.util.CompareCondition condition,
 	                     final CommandArguments args) {
-		return executeCommand(RedisCommand.DELEX, args, (cmd)->cmd.delex(rawKey(key), condition),
-				(cmd)->cmd.delex(rawKey(key), condition), (cmd)->cmd.delex(rawKey(key), condition),
+		return executeCommand(RedisCommand.DELEX, args, (cmd)->cmd.delex(key, condition),
+				(cmd)->cmd.delex(key, condition), (cmd)->cmd.delex(key, condition),
 				new OneStatusConverter());
 	}
 
 	private Status delEx(final byte[] key, final redis.clients.jedis.util.CompareCondition condition,
 	                     final CommandArguments args) {
-		return executeCommand(RedisCommand.DELEX, args, (cmd)->cmd.delex(rawKey(key), condition),
-				(cmd)->cmd.delex(rawKey(key), condition), (cmd)->cmd.delex(rawKey(key), condition),
+		return executeCommand(RedisCommand.DELEX, args, (cmd)->cmd.delex(key, condition),
+				(cmd)->cmd.delex(key, condition), (cmd)->cmd.delex(key, condition),
 				new OneStatusConverter());
 	}
 
@@ -570,7 +570,7 @@ public final class JedisStringCommands extends AbstractJedisRedisCommands implem
 		int i = 0;
 
 		for(KeyValue<String, String> kv : values){
-			keysValues[i++] = rawKey(kv.getKey());
+			keysValues[i++] = kv.getKey();
 			keysValues[i++] = kv.getValue();
 		}
 

@@ -69,8 +69,6 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 	 */
 	private CacheConfig cacheConfig;
 
-	private boolean connectionProviderInitialized = false;
-
 
 	/**
 	 * 构造函数
@@ -203,9 +201,7 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 
 		if(Validate.hasText(getDataSource().getPassword())){
 			builder.password(getDataSource().getPassword());
-			if(Validate.hasText(getDataSource().getUsername())){
-				builder.user(getDataSource().getUsername());
-			}
+			propertyMapper.from(getDataSource().getUsername()).to(builder::user);
 		}
 
 		propertyMapper.from(getDataSource().getClientName()).to(builder::clientName);
@@ -259,8 +255,7 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 	}
 
 	protected ConnectionProvider getConnectionProvider() {
-		if(connectionProvider == null && connectionProviderInitialized == false){
-			connectionProviderInitialized = true;
+		if(connectionProvider == null){
 			try{
 				connectionProvider = (ConnectionProvider) FieldUtils.readField(client, "provider", true);
 			}catch(IllegalAccessException e){

@@ -24,12 +24,13 @@
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
+import com.buession.core.builder.SetBuilder;
 import com.buession.redis.client.connection.SentinelRedisNode;
 import com.buession.redis.client.connection.datasource.SentinelDataSource;
 import com.buession.redis.core.Constants;
 import com.buession.redis.core.RedisNode;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Jedis 哨兵模式数据源
@@ -76,12 +77,13 @@ public class JedisSentinelDataSource extends AbstractJedisDataSource implements 
 	/**
 	 * Master 名称
 	 */
-	private String masterName;
+	private String masterName = SentinelRedisNode.DEFAULT_MASTER_NAME;
 
 	/**
 	 * 哨兵节点
 	 */
-	private List<SentinelRedisNode> sentinels;
+	private Set<SentinelRedisNode> sentinels = SetBuilder.of(new SentinelRedisNode(SentinelRedisNode.DEFAULT_HOST,
+			SentinelRedisNode.DEFAULT_SENTINEL_PORT));
 
 	@Override
 	public int getDatabase() {
@@ -154,12 +156,12 @@ public class JedisSentinelDataSource extends AbstractJedisDataSource implements 
 	}
 
 	@Override
-	public List<SentinelRedisNode> getSentinels() {
+	public Set<SentinelRedisNode> getSentinels() {
 		return sentinels;
 	}
 
 	@Override
-	public void setSentinels(List<SentinelRedisNode> sentinels) {
+	public void setSentinels(Set<SentinelRedisNode> sentinels) {
 		this.sentinels = sentinels;
 	}
 

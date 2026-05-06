@@ -29,6 +29,7 @@ import com.buession.redis.serializer.ByteArraySerializer;
 import com.buession.redis.serializer.FastJsonJsonSerializer;
 import com.buession.redis.serializer.GsonJsonSerializer;
 import com.buession.redis.serializer.JacksonJsonSerializer;
+import com.buession.redis.utils.SafeEncoder;
 
 import java.util.Optional;
 
@@ -43,6 +44,8 @@ public class Options {
 	 * Key 前缀
 	 */
 	private String prefix;
+
+	private byte[] prefixRaw;
 
 	/**
 	 * 序列化实例
@@ -75,7 +78,7 @@ public class Options {
 	 * @since 4.0.0
 	 */
 	public Options(String prefix) {
-		this.prefix = prefix;
+		setPrefix(prefix);
 	}
 
 	/**
@@ -113,7 +116,7 @@ public class Options {
 	 * @since 4.0.0
 	 */
 	public Options(String prefix, Serializer serializer) {
-		this.prefix = prefix;
+		setPrefix(prefix);
 		this.serializer = serializer;
 	}
 
@@ -128,7 +131,7 @@ public class Options {
 	 * @since 4.0.0
 	 */
 	public Options(String prefix, boolean enableTransactionSupport) {
-		this.prefix = prefix;
+		setPrefix(prefix);
 		this.enableTransactionSupport = enableTransactionSupport;
 	}
 
@@ -145,8 +148,7 @@ public class Options {
 	 * @since 4.0.0
 	 */
 	public Options(String prefix, Serializer serializer, boolean enableTransactionSupport) {
-		this.prefix = prefix;
-		this.serializer = serializer;
+		this(prefix, serializer);
 		this.enableTransactionSupport = enableTransactionSupport;
 	}
 
@@ -182,6 +184,11 @@ public class Options {
 	 */
 	public void setPrefix(String prefix) {
 		this.prefix = prefix;
+		this.prefixRaw = SafeEncoder.encode(prefix);
+	}
+
+	public byte[] getPrefixRaw() {
+		return prefixRaw;
 	}
 
 	/**

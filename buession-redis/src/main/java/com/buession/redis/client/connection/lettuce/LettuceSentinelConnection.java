@@ -30,12 +30,10 @@ import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisSentinelConnection;
 import com.buession.redis.client.connection.SentinelRedisNode;
-import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceSentinelDataSource;
 import com.buession.redis.core.Constants;
 import com.buession.redis.core.PoolConfig;
-import com.buession.redis.core.RedisNamedNode;
-import com.buession.redis.core.RedisSentinelNode;
+import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.RedisServer;
 import com.buession.redis.core.Role;
 import com.buession.redis.exception.RedisConnectionFailureException;
@@ -168,75 +166,65 @@ public class LettuceSentinelConnection<K, V> extends AbstractLettuceRedisConnect
 	}
 
 	@Override
-	public List<RedisServer> masters() {
-		DataSource dataSource = getDataSource();
-		if(dataSource == null){
-			return null;
-		}
-
-		final List<Map<K, V>> masterNodes = getSentinelCommands(
-				(LettuceSentinelDataSource) dataSource).masters();
-		return parseRedisServer(masterNodes, Role.MASTER);
+	public String myId() {
+		return null;
 	}
 
 	@Override
-	public List<RedisServer> slaves(RedisNamedNode master) {
-		Assert.isNull(master, "Redis master node cloud not be 'null' for loading slaves.");
-		return slaves(master.getName());
+	public List<RedisNode> sentinels(String masterName) {
+		return null;
+	}
+
+	@Override
+	public String sentinelSet(String masterName, Map<String, String> parameters) {
+		Assert.isBlank(masterName, "Redis master name cloud not be 'null' or empty for loading sentinel set.");
+		return null;
+	}
+
+	@Override
+	public List<RedisServer> masters() {
+		return null;
+	}
+
+	@Override
+	public RedisServer master(String masterName) {
+		Assert.isBlank(masterName, "Redis master name cloud not be 'null' or empty for loading master.");
+		return null;
 	}
 
 	@Override
 	public List<RedisServer> slaves(String masterName) {
 		Assert.isBlank(masterName, "Redis master name cloud not be 'null' or empty for loading slaves.");
-
-		DataSource dataSource = getDataSource();
-		if(dataSource == null){
-			return null;
-		}
-
-		/*
-		final List<Map<byte[], byte[]>> slaveNodes = getSentinelCommands(
-				(LettuceSentinelDataSource) dataSource).slaves(SafeEncoder.encode(masterName));
-		return parseRedisServer(slaveNodes, Role.SLAVE);
-
-		 */
 		return null;
 	}
 
 	@Override
-	public void failover(RedisNamedNode namedNode) {
-		Assert.isNull(namedNode, "Redis master node cloud not be 'null' for failover.");
-		Assert.isBlank(namedNode.getName(), "Redis master name cloud not be 'null' or empty for failover.");
-
-		DataSource dataSource = getDataSource();
-		if(dataSource == null){
-			return;
-		}
-
-		/*
-		Objects.requireNonNull(getSentinelCommands((LettuceSentinelDataSource) dataSource))
-				.failover(SafeEncoder.encode(namedNode.getName()));
-
-		 */
-		return;
+	public List<RedisServer> replicas(String masterName) {
+		Assert.isBlank(masterName, "Redis master name cloud not be 'null' or empty for loading replicas.");
+		return null;
 	}
 
 	@Override
-	public void monitor(RedisSentinelNode server) {
-		Assert.isNull(server, "Cannot monitor 'null' server.");
-		Assert.isBlank(server.getName(), "Name of server to monitor must not be 'null' or empty.");
-		Assert.isBlank(server.getHost(), "Host must not be 'null' for server to monitor.");
+	public Status failover(String masterName) {
+		Assert.isBlank(masterName, "Redis master name cloud not be 'null' or empty for loading failover.");
+		return null;
+	}
 
-		DataSource dataSource = getDataSource();
-		if(dataSource == null){
-			return;
-		}
+	@Override
+	public Status monitor(String masterName, String ip, int port, int quorum) {
+		Assert.isBlank(masterName, "Redis master name cloud not be 'null' or empty for loading failover.");
+		return null;
+	}
 
-		/*
-		Objects.requireNonNull(getSentinelCommands((LettuceSentinelDataSource) dataSource))
-				.monitor(SafeEncoder.encode(server.getName()), server.getHost(), server.getPort(), server.getQuorum());
+	@Override
+	public Long reset(String pattern) {
+		return null;
+	}
 
-		 */
+	@Override
+	public Status remove(String masterName) {
+		Assert.isBlank(masterName, "Redis master name cloud be 'null' or empty when trying to remove.");
+		return null;
 	}
 
 	@Override
@@ -248,18 +236,6 @@ public class LettuceSentinelConnection<K, V> extends AbstractLettuceRedisConnect
 		}
 
 		return transaction;
-	}
-
-	@Override
-	public void remove(RedisNamedNode master) {
-		Assert.isNull(master, "Master node cloud be 'null' when trying to remove.");
-		remove(master.getName());
-	}
-
-	@Override
-	public void remove(String masterName) {
-		Assert.isBlank(masterName, "Redis master name cloud be 'null' or empty when trying to remove.");
-		//delegate.async().remove(SafeEncoder.encode(masterName));
 	}
 
 	private RedisSentinelCommands<K, V> getSentinelCommands(final LettuceSentinelDataSource dataSource) {
@@ -340,7 +316,6 @@ public class LettuceSentinelConnection<K, V> extends AbstractLettuceRedisConnect
 			}
 
 			client = builder.build();
-
 		}
 
 		return client == null ? Status.FAILURE : Status.SUCCESS;

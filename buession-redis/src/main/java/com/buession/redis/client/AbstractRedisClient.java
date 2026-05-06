@@ -39,11 +39,6 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractRedisClient implements RedisClient {
 
 	/**
-	 * 客户端选项
-	 */
-	protected ClientOptions clientOptions = new ClientOptions();
-
-	/**
 	 * Redis 连接对象
 	 */
 	protected RedisConnection connection;
@@ -195,36 +190,11 @@ public abstract class AbstractRedisClient implements RedisClient {
 	/**
 	 * 构造函数
 	 *
-	 * @param clientOptions
-	 * 		客户端选项
-	 * @param connection
-	 * 		Redis 连接对象 {@link RedisConnection}
-	 *
-	 * @since 4.0.0
-	 */
-	public AbstractRedisClient(final ClientOptions clientOptions, final RedisConnection connection) {
-		setClientOptions(clientOptions);
-		setConnection(connection);
-	}
-
-	/**
-	 * 构造函数
-	 *
 	 * @param connection
 	 * 		Redis 连接对象 {@link RedisConnection}
 	 */
 	public AbstractRedisClient(final RedisConnection connection) {
 		setConnection(connection);
-	}
-
-	@Override
-	public ClientOptions getClientOptions() {
-		return clientOptions;
-	}
-
-	@Override
-	public void setClientOptions(ClientOptions clientOptions) {
-		this.clientOptions = clientOptions;
 	}
 
 	@Override

@@ -25,7 +25,6 @@
 package com.buession.redis;
 
 import com.buession.core.utils.Assert;
-import com.buession.redis.client.ClientOptions;
 import com.buession.redis.client.RedisClient;
 import com.buession.redis.client.connection.datasource.jedis.JedisRedisDataSource;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceRedisDataSource;
@@ -165,16 +164,6 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 		this.dataSource = dataSource;
 	}
 
-	/**
-	 * 返回 Redis 连接工厂
-	 *
-	 * @return Redis 连接工厂
-	 */
-	@Nullable
-	public RedisConnectionFactory getConnectionFactory() {
-		return connectionFactory;
-	}
-
 	@Override
 	public void afterPropertiesSet() throws RedisException {
 		Assert.isNull(getDataSource(), "dataSource is required");
@@ -261,6 +250,16 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 		// empty
 	}
 
+	/**
+	 * 返回 Redis 连接工厂
+	 *
+	 * @return Redis 连接工厂
+	 */
+	@Nullable
+	protected RedisConnectionFactory getConnectionFactory() {
+		return connectionFactory;
+	}
+
 	protected RedisConnection fetchConnection() {
 		return RedisConnectionUtils.getConnection(connectionFactory, enableTransactionSupport);
 	}
@@ -271,22 +270,13 @@ public abstract class RedisAccessor implements InitializingBean, AutoCloseable {
 	}
 
 	protected RedisClient fetchRedisClient(final RedisConnection connection) throws RedisException {
-		RedisClient redisClient;
 		if(connection instanceof JedisRedisConnection){
-			redisClient = new JedisRedisClient();
+			return new JedisRedisClient();
 		}else if(connection instanceof LettuceRedisConnection){
-			redisClient = new LettuceRedisClient();
+			return new LettuceRedisClient();
 		}else{
 			throw new RedisException("Cloud not initialize RedisClient for: " + connection);
 		}
-
-		final ClientOptions clientOptions = new ClientOptions();
-
-		clientOptions.setPrefix(getOptions().getPrefix());
-
-		redisClient.setClientOptions(clientOptions);
-
-		return redisClient;
 	}
 
 	protected RedisClient fetchRequiredRedisClient(final RedisConnection connection) throws RedisException {

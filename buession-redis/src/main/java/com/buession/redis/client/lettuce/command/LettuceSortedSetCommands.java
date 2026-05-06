@@ -72,13 +72,13 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	@Override
 	public KeyValue<String, List<Tuple>> bzMPop(final String[] keys, final int timeout, final MinMax minMax) {
 		final CommandArguments args = CommandArguments.create(timeout).add(keys.length, keys).add(minMax);
-		return bzMPop(rawBinaryKeys(keys), timeout, minMax, 1, SafeEncoder::encode, args);
+		return bzMPop(SafeEncoder.encode(keys), timeout, minMax, 1, SafeEncoder::encode, args);
 	}
 
 	@Override
 	public KeyValue<byte[], List<Tuple>> bzMPop(final byte[][] keys, final int timeout, final MinMax minMax) {
 		final CommandArguments args = CommandArguments.create(timeout).add(keys.length, keys).add(minMax);
-		return bzMPop(rawKeys(keys), timeout, minMax, 1, (k)->k, args);
+		return bzMPop(keys, timeout, minMax, 1, (k)->k, args);
 	}
 
 	@Override
@@ -86,7 +86,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                                            final int count) {
 		final CommandArguments args = CommandArguments.create(timeout).add(keys.length, keys).add(minMax)
 				.add(Keyword.Common.COUNT, count);
-		return bzMPop(rawBinaryKeys(keys), timeout, minMax, count, SafeEncoder::encode, args);
+		return bzMPop(SafeEncoder.encode(keys), timeout, minMax, count, SafeEncoder::encode, args);
 	}
 
 	@Override
@@ -94,309 +94,312 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                                            final int count) {
 		final CommandArguments args = CommandArguments.create(timeout).add(keys.length, keys).add(minMax)
 				.add(Keyword.Common.COUNT, count);
-		return bzMPop(rawKeys(keys), timeout, minMax, count, (k)->k, args);
+		return bzMPop(keys, timeout, minMax, count, (k)->k, args);
 	}
 
 	@Override
 	public KeyValue<String, Tuple> bzPopMax(final String[] keys, final int timeout) {
 		final CommandArguments args = CommandArguments.create(keys).add(timeout);
-		return executeCommand(RedisCommand.BZPOPMAX, args, (cmd)->cmd.bzpopmax(timeout, rawBinaryKeys(keys)),
-				(cmd)->cmd.bzpopmax(timeout, rawBinaryKeys(keys)),
+		return executeCommand(RedisCommand.BZPOPMAX, args, (cmd)->cmd.bzpopmax(timeout, SafeEncoder.encode(keys)),
+				(cmd)->cmd.bzpopmax(timeout, SafeEncoder.encode(keys)),
 				new KeyValueConverter<>(SafeEncoder::encode, new ScoredValueTupleConverter()));
 	}
 
 	@Override
 	public KeyValue<byte[], Tuple> bzPopMax(final byte[][] keys, final int timeout) {
 		final CommandArguments args = CommandArguments.create(keys).add(timeout);
-		return executeCommand(RedisCommand.BZPOPMAX, args, (cmd)->cmd.bzpopmax(timeout, rawKeys(keys)),
-				(cmd)->cmd.bzpopmax(timeout, rawKeys(keys)),
+		return executeCommand(RedisCommand.BZPOPMAX, args, (cmd)->cmd.bzpopmax(timeout, keys),
+				(cmd)->cmd.bzpopmax(timeout, keys),
 				new KeyValueConverter<>((k)->k, new ScoredValueTupleConverter()));
 	}
 
 	@Override
 	public KeyValue<String, Tuple> bzPopMin(final String[] keys, final int timeout) {
 		final CommandArguments args = CommandArguments.create(keys).add(timeout);
-		return executeCommand(RedisCommand.BZPOPMIN, args, (cmd)->cmd.bzpopmin(timeout, rawBinaryKeys(keys)),
-				(cmd)->cmd.bzpopmin(timeout, rawBinaryKeys(keys)),
+		return executeCommand(RedisCommand.BZPOPMIN, args, (cmd)->cmd.bzpopmin(timeout, SafeEncoder.encode(keys)),
+				(cmd)->cmd.bzpopmin(timeout, SafeEncoder.encode(keys)),
 				new KeyValueConverter<>(SafeEncoder::encode, new ScoredValueTupleConverter()));
 	}
 
 	@Override
 	public KeyValue<byte[], Tuple> bzPopMin(final byte[][] keys, final int timeout) {
 		final CommandArguments args = CommandArguments.create(keys).add(timeout);
-		return executeCommand(RedisCommand.BZPOPMIN, args, (cmd)->cmd.bzpopmin(timeout, rawKeys(keys)),
-				(cmd)->cmd.bzpopmin(timeout, rawKeys(keys)),
+		return executeCommand(RedisCommand.BZPOPMIN, args, (cmd)->cmd.bzpopmin(timeout, keys),
+				(cmd)->cmd.bzpopmin(timeout, keys),
 				new KeyValueConverter<>((k)->k, new ScoredValueTupleConverter()));
 	}
 
 	@Override
 	public Long zAdd(final String key, final Tuple... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		return zAdd(rawBinaryKey(key), members, args);
+		return zAdd(SafeEncoder.encode(key), members, args);
 	}
 
 	@Override
 	public Long zAdd(final byte[] key, final Tuple... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		return zAdd(rawKey(key), members, args);
+		return zAdd(key, members, args);
 	}
 
 	@Override
 	public Long zAdd(final String key, final Tuple[] members, final ZAddArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(members);
-		return zAdd(rawBinaryKey(key), members, argument, args);
+		return zAdd(SafeEncoder.encode(key), members, argument, args);
 	}
 
 	@Override
 	public Long zAdd(final byte[] key, final Tuple[] members, final ZAddArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(members);
-		return zAdd(rawKey(key), members, argument, args);
+		return zAdd(key, members, argument, args);
 	}
 
 	@Override
 	public Long zCard(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.ZCARD, args, (cmd)->cmd.zcard(rawBinaryKey(key)),
-				(cmd)->cmd.zcard(rawBinaryKey(key)));
+		return executeCommand(RedisCommand.ZCARD, args, (cmd)->cmd.zcard(SafeEncoder.encode(key)),
+				(cmd)->cmd.zcard(SafeEncoder.encode(key)));
 	}
 
 	@Override
 	public Long zCard(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.ZCARD, args, (cmd)->cmd.zcard(rawKey(key)), (cmd)->cmd.zcard(rawKey(key)));
+		return executeCommand(RedisCommand.ZCARD, args, (cmd)->cmd.zcard(key), (cmd)->cmd.zcard(key));
 	}
 
 	@Override
 	public Long zCount(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min, max);
-		return executeCommand(RedisCommand.ZCOUNT, args, (cmd)->cmd.zcount(rawBinaryKey(key), Range.create(min, max)),
-				(cmd)->cmd.zcount(rawBinaryKey(key), Range.create(min, max)));
+		return executeCommand(RedisCommand.ZCOUNT, args,
+				(cmd)->cmd.zcount(SafeEncoder.encode(key), Range.create(min, max)),
+				(cmd)->cmd.zcount(SafeEncoder.encode(key), Range.create(min, max)));
 	}
 
 	@Override
 	public Long zCount(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min, max);
-		return executeCommand(RedisCommand.ZCOUNT, args, (cmd)->cmd.zcount(rawKey(key), Range.create(min, max)),
-				(cmd)->cmd.zcount(rawKey(key), Range.create(min, max)));
+		return executeCommand(RedisCommand.ZCOUNT, args, (cmd)->cmd.zcount(key, Range.create(min, max)),
+				(cmd)->cmd.zcount(key, Range.create(min, max)));
 	}
 
 	@Override
 	public List<String> zDiff(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.ZDIFF, args, (cmd)->cmd.zdiff(rawBinaryKeys(keys)),
-				(cmd)->cmd.zdiff(rawBinaryKeys(keys)), Converters.binaryListStringListConverter());
+		return executeCommand(RedisCommand.ZDIFF, args, (cmd)->cmd.zdiff(SafeEncoder.encode(keys)),
+				(cmd)->cmd.zdiff(SafeEncoder.encode(keys)), Converters.binaryListStringListConverter());
 	}
 
 	@Override
 	public List<byte[]> zDiff(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.ZDIFF, args, (cmd)->cmd.zdiff(rawKeys(keys)),
-				(cmd)->cmd.zdiff(rawKeys(keys)));
+		return executeCommand(RedisCommand.ZDIFF, args, (cmd)->cmd.zdiff(keys),
+				(cmd)->cmd.zdiff(keys));
 	}
 
 	@Override
 	public List<Tuple> zDiffWithScores(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys).add(Keyword.Common.WITHSCORES);
-		return zDiffWithScores(rawBinaryKeys(keys), args);
+		return zDiffWithScores(SafeEncoder.encode(keys), args);
 	}
 
 	@Override
 	public List<Tuple> zDiffWithScores(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys).add(Keyword.Common.WITHSCORES);
-		return zDiffWithScores(rawKeys(keys), args);
+		return zDiffWithScores(keys, args);
 	}
 
 	@Override
 	public Long zDiffStore(final String destKey, final String... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
 		return executeCommand(RedisCommand.ZDIFFSTORE, args,
-				(cmd)->cmd.zdiffstore(rawBinaryKey(destKey), rawBinaryKeys(keys)),
-				(cmd)->cmd.zdiffstore(rawBinaryKey(destKey), rawBinaryKeys(keys)));
+				(cmd)->cmd.zdiffstore(SafeEncoder.encode(destKey), SafeEncoder.encode(keys)),
+				(cmd)->cmd.zdiffstore(SafeEncoder.encode(destKey), SafeEncoder.encode(keys)));
 	}
 
 	@Override
 	public Long zDiffStore(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-		return executeCommand(RedisCommand.ZDIFFSTORE, args, (cmd)->cmd.zdiffstore(rawKey(destKey), rawKeys(keys)),
-				(cmd)->cmd.zdiffstore(rawKey(destKey), rawKeys(keys)));
+		return executeCommand(RedisCommand.ZDIFFSTORE, args, (cmd)->cmd.zdiffstore(destKey, keys),
+				(cmd)->cmd.zdiffstore(destKey, keys));
 	}
 
 	@Override
 	public Double zIncrBy(final String key, final double increment, final String member) {
 		final CommandArguments args = CommandArguments.create(key).add(increment).add(member);
 		return executeCommand(RedisCommand.ZINCRBY, args,
-				(cmd)->cmd.zincrby(rawBinaryKey(key), increment, SafeEncoder.encode(member)),
-				(cmd)->cmd.zincrby(rawBinaryKey(key), increment, SafeEncoder.encode(member)));
+				(cmd)->cmd.zincrby(SafeEncoder.encode(key), increment, SafeEncoder.encode(member)),
+				(cmd)->cmd.zincrby(SafeEncoder.encode(key), increment, SafeEncoder.encode(member)));
 	}
 
 	@Override
 	public Double zIncrBy(final byte[] key, final double increment, final byte[] member) {
 		final CommandArguments args = CommandArguments.create(key).add(increment).add(member);
-		return executeCommand(RedisCommand.ZINCRBY, args, (cmd)->cmd.zincrby(rawKey(key), increment, member),
-				(cmd)->cmd.zincrby(rawKey(key), increment, member));
+		return executeCommand(RedisCommand.ZINCRBY, args, (cmd)->cmd.zincrby(key, increment, member),
+				(cmd)->cmd.zincrby(key, increment, member));
 	}
 
 	@Override
 	public List<String> zInter(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.ZINTER, args, (cmd)->cmd.zinter(rawBinaryKeys(keys)),
-				(cmd)->cmd.zinter(rawBinaryKeys(keys)), Converters.binaryListStringListConverter());
+		return executeCommand(RedisCommand.ZINTER, args, (cmd)->cmd.zinter(SafeEncoder.encode(keys)),
+				(cmd)->cmd.zinter(SafeEncoder.encode(keys)), Converters.binaryListStringListConverter());
 	}
 
 	@Override
 	public List<byte[]> zInter(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.ZINTER, args, (cmd)->cmd.zinter(rawKeys(keys)),
-				(cmd)->cmd.zinter(rawKeys(keys)));
+		return executeCommand(RedisCommand.ZINTER, args, (cmd)->cmd.zinter(keys),
+				(cmd)->cmd.zinter(keys));
 	}
 
 	@Override
 	public List<String> zInter(final String[] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate);
-		return stringZInter(rawBinaryKeys(keys), new LettuceZAggregateArgs(aggregate), args);
+		return stringZInter(SafeEncoder.encode(keys), new LettuceZAggregateArgs(aggregate), args);
 	}
 
 	@Override
 	public List<byte[]> zInter(final byte[][] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate);
-		return binaryZInter(rawKeys(keys), new LettuceZAggregateArgs(aggregate), args);
+		return binaryZInter(keys, new LettuceZAggregateArgs(aggregate), args);
 	}
 
 	@Override
 	public List<String> zInter(final String[] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS", weights);
-		return stringZInter(rawBinaryKeys(keys), new LettuceZAggregateArgs(weights), args);
+		return stringZInter(SafeEncoder.encode(keys), new LettuceZAggregateArgs(weights), args);
 	}
 
 	@Override
 	public List<byte[]> zInter(final byte[][] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS", weights);
-		return binaryZInter(rawKeys(keys), new LettuceZAggregateArgs(weights), args);
+		return binaryZInter(keys, new LettuceZAggregateArgs(weights), args);
 	}
 
 	@Override
 	public List<String> zInter(final String[] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate).add("WEIGHTS", weights);
-		return stringZInter(rawBinaryKeys(keys), new LettuceZAggregateArgs(aggregate, weights), args);
+		return stringZInter(SafeEncoder.encode(keys), new LettuceZAggregateArgs(aggregate, weights), args);
 	}
 
 	@Override
 	public List<byte[]> zInter(final byte[][] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate).add("WEIGHTS", weights);
-		return binaryZInter(rawKeys(keys), new LettuceZAggregateArgs(aggregate, weights), args);
+		return binaryZInter(keys, new LettuceZAggregateArgs(aggregate, weights), args);
 	}
 
 	@Override
 	public List<Tuple> zInterWithScores(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys).add(Keyword.Common.WITHSCORES);
-		return executeCommand(RedisCommand.ZINTER, args, (cmd)->cmd.zinterWithScores(rawBinaryKeys(keys)),
-				(cmd)->cmd.zinterWithScores(rawBinaryKeys(keys)), new ListConverter<>(new ScoredValueTupleConverter()));
+		return executeCommand(RedisCommand.ZINTER, args, (cmd)->cmd.zinterWithScores(SafeEncoder.encode(keys)),
+				(cmd)->cmd.zinterWithScores(SafeEncoder.encode(keys)),
+				new ListConverter<>(new ScoredValueTupleConverter()));
 	}
 
 	@Override
 	public List<Tuple> zInterWithScores(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys).add(Keyword.Common.WITHSCORES);
-		return executeCommand(RedisCommand.ZINTER, args, (cmd)->cmd.zinterWithScores(rawKeys(keys)),
-				(cmd)->cmd.zinterWithScores(rawKeys(keys)), new ListConverter<>(new ScoredValueTupleConverter()));
+		return executeCommand(RedisCommand.ZINTER, args, (cmd)->cmd.zinterWithScores(keys),
+				(cmd)->cmd.zinterWithScores(keys), new ListConverter<>(new ScoredValueTupleConverter()));
 	}
 
 	@Override
 	public List<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate)
 				.add(Keyword.Common.WITHSCORES);
-		return zInterWithScores(rawBinaryKeys(keys), new LettuceZAggregateArgs(aggregate), args);
+		return zInterWithScores(SafeEncoder.encode(keys), new LettuceZAggregateArgs(aggregate), args);
 	}
 
 	@Override
 	public List<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate)
 				.add(Keyword.Common.WITHSCORES);
-		return zInterWithScores(rawKeys(keys), new LettuceZAggregateArgs(aggregate), args);
+		return zInterWithScores(keys, new LettuceZAggregateArgs(aggregate), args);
 	}
 
 	@Override
 	public List<Tuple> zInterWithScores(final String[] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate).add("WEIGHTS", weights)
 				.add(Keyword.Common.WITHSCORES);
-		return zInterWithScores(rawBinaryKeys(keys), new LettuceZAggregateArgs(aggregate), args);
+		return zInterWithScores(SafeEncoder.encode(keys), new LettuceZAggregateArgs(aggregate), args);
 	}
 
 	@Override
 	public List<Tuple> zInterWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate).add("WEIGHTS", weights)
 				.add(Keyword.Common.WITHSCORES);
-		return zInterWithScores(rawKeys(keys), new LettuceZAggregateArgs(aggregate), args);
+		return zInterWithScores(keys, new LettuceZAggregateArgs(aggregate), args);
 	}
 
 	@Override
 	public List<Tuple> zInterWithScores(final String[] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS", weights)
 				.add(Keyword.Common.WITHSCORES);
-		return zInterWithScores(rawBinaryKeys(keys), new LettuceZAggregateArgs(weights), args);
+		return zInterWithScores(SafeEncoder.encode(keys), new LettuceZAggregateArgs(weights), args);
 	}
 
 	@Override
 	public List<Tuple> zInterWithScores(final byte[][] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS", weights)
 				.add(Keyword.Common.WITHSCORES);
-		return zInterWithScores(rawKeys(keys), new LettuceZAggregateArgs(weights), args);
+		return zInterWithScores(keys, new LettuceZAggregateArgs(weights), args);
 	}
 
 	@Override
 	public long zInterCard(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys.length).add(keys);
-		return executeCommand(RedisCommand.ZINTERCARD, args, (cmd)->cmd.zintercard(rawBinaryKeys(keys)),
-				(cmd)->cmd.zintercard(rawBinaryKeys(keys)));
+		return executeCommand(RedisCommand.ZINTERCARD, args, (cmd)->cmd.zintercard(SafeEncoder.encode(keys)),
+				(cmd)->cmd.zintercard(SafeEncoder.encode(keys)));
 	}
 
 	@Override
 	public long zInterCard(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys.length).add(keys);
-		return executeCommand(RedisCommand.ZINTERCARD, args, (cmd)->cmd.zintercard(rawKeys(keys)),
-				(cmd)->cmd.zintercard(rawKeys(keys)));
+		return executeCommand(RedisCommand.ZINTERCARD, args, (cmd)->cmd.zintercard(keys),
+				(cmd)->cmd.zintercard(keys));
 	}
 
 	@Override
 	public long zInterCard(final String[] keys, final int limit) {
 		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(Keyword.Common.LIMIT, limit);
-		return executeCommand(RedisCommand.ZINTERCARD, args, (cmd)->cmd.zintercard(limit, rawBinaryKeys(keys)),
-				(cmd)->cmd.zintercard(limit, rawBinaryKeys(keys)));
+		return executeCommand(RedisCommand.ZINTERCARD, args, (cmd)->cmd.zintercard(limit, SafeEncoder.encode(keys)),
+				(cmd)->cmd.zintercard(limit, SafeEncoder.encode(keys)));
 	}
 
 	@Override
 	public long zInterCard(final byte[][] keys, final int limit) {
 		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(Keyword.Common.LIMIT, limit);
-		return executeCommand(RedisCommand.ZINTERCARD, args, (cmd)->cmd.zintercard(limit, rawKeys(keys)),
-				(cmd)->cmd.zintercard(limit, rawKeys(keys)));
+		return executeCommand(RedisCommand.ZINTERCARD, args, (cmd)->cmd.zintercard(limit, keys),
+				(cmd)->cmd.zintercard(limit, keys));
 	}
 
 	@Override
 	public Long zInterStore(final String destKey, final String... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys.length, keys);
 		return executeCommand(RedisCommand.ZINTERSTORE, args,
-				(cmd)->cmd.zinterstore(rawBinaryKey(destKey), rawBinaryKeys(keys)),
-				(cmd)->cmd.zinterstore(rawBinaryKey(destKey), rawBinaryKeys(keys)));
+				(cmd)->cmd.zinterstore(SafeEncoder.encode(destKey), SafeEncoder.encode(keys)),
+				(cmd)->cmd.zinterstore(SafeEncoder.encode(destKey), SafeEncoder.encode(keys)));
 	}
 
 	@Override
 	public Long zInterStore(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys.length, keys);
-		return executeCommand(RedisCommand.ZINTERSTORE, args, (cmd)->cmd.zinterstore(rawKey(destKey), rawKeys(keys)),
-				(cmd)->cmd.zinterstore(rawKey(destKey), rawKeys(keys)));
+		return executeCommand(RedisCommand.ZINTERSTORE, args, (cmd)->cmd.zinterstore(destKey, keys),
+				(cmd)->cmd.zinterstore(destKey, keys));
 	}
 
 	@Override
 	public Long zInterStore(final String destKey, final String[] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
 				.add("AGGREGATE", aggregate);
-		return zInterStore(rawBinaryKey(destKey), rawBinaryKeys(keys), new LettuceZStoreArgs(aggregate), args);
+		return zInterStore(SafeEncoder.encode(destKey), SafeEncoder.encode(keys), new LettuceZStoreArgs(aggregate),
+				args);
 	}
 
 	@Override
 	public Long zInterStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
 				.add("AGGREGATE", aggregate);
-		return zInterStore(rawKey(destKey), rawKeys(keys), new LettuceZStoreArgs(aggregate), args);
+		return zInterStore(destKey, keys, new LettuceZStoreArgs(aggregate), args);
 	}
 
 	@Override
@@ -404,7 +407,8 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                        final double... weights) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
 				.add("AGGREGATE", aggregate).add("WEIGHTS", weights);
-		return zInterStore(rawBinaryKey(destKey), rawBinaryKeys(keys), new LettuceZStoreArgs(aggregate, weights), args);
+		return zInterStore(SafeEncoder.encode(destKey), SafeEncoder.encode(keys),
+				new LettuceZStoreArgs(aggregate, weights), args);
 	}
 
 	@Override
@@ -412,259 +416,261 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                        final double... weights) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
 				.add("AGGREGATE", aggregate).add("WEIGHTS", weights);
-		return zInterStore(rawKey(destKey), rawKeys(keys), new LettuceZStoreArgs(aggregate, weights), args);
+		return zInterStore(destKey, keys, new LettuceZStoreArgs(aggregate, weights), args);
 	}
 
 	@Override
 	public Long zInterStore(final String destKey, final String[] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
 				.add("WEIGHTS", weights);
-		return zInterStore(rawBinaryKey(destKey), rawBinaryKeys(keys), new LettuceZStoreArgs(weights), args);
+		return zInterStore(SafeEncoder.encode(destKey), SafeEncoder.encode(keys), new LettuceZStoreArgs(weights), args);
 	}
 
 	@Override
 	public Long zInterStore(final byte[] destKey, final byte[][] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
 				.add("WEIGHTS", weights);
-		return zInterStore(rawKey(destKey), rawKeys(keys), new LettuceZStoreArgs(weights), args);
+		return zInterStore(destKey, keys, new LettuceZStoreArgs(weights), args);
 	}
 
 	@Override
 	public Long zLexCount(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min, max);
-		return zLexCount(rawBinaryKey(key), min, max, args);
+		return zLexCount(SafeEncoder.encode(key), min, max, args);
 	}
 
 	@Override
 	public Long zLexCount(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min, max);
-		return zLexCount(rawKey(key), min, max, args);
+		return zLexCount(key, min, max, args);
 	}
 
 	@Override
 	public KeyValue<String, List<Tuple>> zMPop(final String[] keys, final MinMax minMax) {
 		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(minMax);
-		return zMPop(rawBinaryKeys(keys), minMax, 1, SafeEncoder::encode, args);
+		return zMPop(SafeEncoder.encode(keys), minMax, 1, SafeEncoder::encode, args);
 	}
 
 	@Override
 	public KeyValue<byte[], List<Tuple>> zMPop(final byte[][] keys, final MinMax minMax) {
 		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(minMax);
-		return zMPop(rawKeys(keys), minMax, 1, (k)->k, args);
+		return zMPop(keys, minMax, 1, (k)->k, args);
 	}
 
 	@Override
 	public KeyValue<String, List<Tuple>> zMPop(final String[] keys, final MinMax minMax, final int count) {
 		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(minMax)
 				.add(Keyword.Common.COUNT, count);
-		return zMPop(rawBinaryKeys(keys), minMax, count, SafeEncoder::encode, args);
+		return zMPop(SafeEncoder.encode(keys), minMax, count, SafeEncoder::encode, args);
 	}
 
 	@Override
 	public KeyValue<byte[], List<Tuple>> zMPop(final byte[][] keys, final MinMax minMax, final int count) {
 		final CommandArguments args = CommandArguments.create(keys.length).add(keys).add(minMax)
 				.add(Keyword.Common.COUNT, count);
-		return zMPop(rawKeys(keys), minMax, count, (k)->k, args);
+		return zMPop(keys, minMax, count, (k)->k, args);
 	}
 
 	@Override
 	public List<Double> zMScore(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
 		return executeCommand(RedisCommand.ZMSCORE, args,
-				(cmd)->cmd.zmscore(rawBinaryKey(key), SafeEncoder.encode(members)),
-				(cmd)->cmd.zmscore(rawBinaryKey(key), SafeEncoder.encode(members)));
+				(cmd)->cmd.zmscore(SafeEncoder.encode(key), SafeEncoder.encode(members)),
+				(cmd)->cmd.zmscore(SafeEncoder.encode(key), SafeEncoder.encode(members)));
 	}
 
 	@Override
 	public List<Double> zMScore(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		return executeCommand(RedisCommand.ZMSCORE, args, (cmd)->cmd.zmscore(rawKey(key), members),
-				(cmd)->cmd.zmscore(rawKey(key), members));
+		return executeCommand(RedisCommand.ZMSCORE, args, (cmd)->cmd.zmscore(key, members),
+				(cmd)->cmd.zmscore(key, members));
 	}
 
 	@Override
 	public Tuple zPopMax(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.ZPOPMAX, args, (cmd)->cmd.zpopmax(rawBinaryKey(key)),
-				(cmd)->cmd.zpopmax(rawBinaryKey(key)), new ScoredValueTupleConverter());
+		return executeCommand(RedisCommand.ZPOPMAX, args, (cmd)->cmd.zpopmax(SafeEncoder.encode(key)),
+				(cmd)->cmd.zpopmax(SafeEncoder.encode(key)), new ScoredValueTupleConverter());
 	}
 
 	@Override
 	public Tuple zPopMax(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.ZPOPMAX, args, (cmd)->cmd.zpopmax(rawKey(key)),
-				(cmd)->cmd.zpopmax(rawKey(key)), new ScoredValueTupleConverter());
+		return executeCommand(RedisCommand.ZPOPMAX, args, (cmd)->cmd.zpopmax(key),
+				(cmd)->cmd.zpopmax(key), new ScoredValueTupleConverter());
 	}
 
 	@Override
 	public List<Tuple> zPopMax(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
-		return executeCommand(RedisCommand.ZPOPMAX, args, (cmd)->cmd.zpopmax(rawBinaryKey(key), count),
-				(cmd)->cmd.zpopmax(rawBinaryKey(key), count), new ListConverter<>(new ScoredValueTupleConverter()));
+		return executeCommand(RedisCommand.ZPOPMAX, args, (cmd)->cmd.zpopmax(SafeEncoder.encode(key), count),
+				(cmd)->cmd.zpopmax(SafeEncoder.encode(key), count),
+				new ListConverter<>(new ScoredValueTupleConverter()));
 	}
 
 	@Override
 	public List<Tuple> zPopMax(final byte[] key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
-		return executeCommand(RedisCommand.ZPOPMAX, args, (cmd)->cmd.zpopmax(rawKey(key), count),
-				(cmd)->cmd.zpopmax(rawKey(key), count), new ListConverter<>(new ScoredValueTupleConverter()));
+		return executeCommand(RedisCommand.ZPOPMAX, args, (cmd)->cmd.zpopmax(key, count),
+				(cmd)->cmd.zpopmax(key, count), new ListConverter<>(new ScoredValueTupleConverter()));
 	}
 
 	@Override
 	public Tuple zPopMin(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.ZPOPMIN, args, (cmd)->cmd.zpopmin(rawBinaryKey(key)),
-				(cmd)->cmd.zpopmin(rawBinaryKey(key)), new ScoredValueTupleConverter());
+		return executeCommand(RedisCommand.ZPOPMIN, args, (cmd)->cmd.zpopmin(SafeEncoder.encode(key)),
+				(cmd)->cmd.zpopmin(SafeEncoder.encode(key)), new ScoredValueTupleConverter());
 	}
 
 	@Override
 	public Tuple zPopMin(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.ZPOPMIN, args, (cmd)->cmd.zpopmin(rawKey(key)),
-				(cmd)->cmd.zpopmin(rawKey(key)), new ScoredValueTupleConverter());
+		return executeCommand(RedisCommand.ZPOPMIN, args, (cmd)->cmd.zpopmin(key),
+				(cmd)->cmd.zpopmin(key), new ScoredValueTupleConverter());
 	}
 
 	@Override
 	public List<Tuple> zPopMin(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
-		return executeCommand(RedisCommand.ZPOPMIN, args, (cmd)->cmd.zpopmin(rawBinaryKey(key), count),
-				(cmd)->cmd.zpopmin(rawBinaryKey(key), count), new ListConverter<>(new ScoredValueTupleConverter()));
+		return executeCommand(RedisCommand.ZPOPMIN, args, (cmd)->cmd.zpopmin(SafeEncoder.encode(key), count),
+				(cmd)->cmd.zpopmin(SafeEncoder.encode(key), count),
+				new ListConverter<>(new ScoredValueTupleConverter()));
 	}
 
 	@Override
 	public List<Tuple> zPopMin(final byte[] key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
-		return executeCommand(RedisCommand.ZPOPMIN, args, (cmd)->cmd.zpopmin(rawKey(key), count),
-				(cmd)->cmd.zpopmin(rawKey(key), count), new ListConverter<>(new ScoredValueTupleConverter()));
+		return executeCommand(RedisCommand.ZPOPMIN, args, (cmd)->cmd.zpopmin(key, count),
+				(cmd)->cmd.zpopmin(key, count), new ListConverter<>(new ScoredValueTupleConverter()));
 	}
 
 	@Override
 	public String zRandMember(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.ZRANDMEMBER, args, (cmd)->cmd.zrandmember(rawBinaryKey(key)),
-				(cmd)->cmd.zrandmember(rawBinaryKey(key)), SafeEncoder::encode);
+		return executeCommand(RedisCommand.ZRANDMEMBER, args, (cmd)->cmd.zrandmember(SafeEncoder.encode(key)),
+				(cmd)->cmd.zrandmember(SafeEncoder.encode(key)), SafeEncoder::encode);
 	}
 
 	@Override
 	public byte[] zRandMember(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.ZRANDMEMBER, args, (cmd)->cmd.zrandmember(rawKey(key)),
-				(cmd)->cmd.zrandmember(rawKey(key)));
+		return executeCommand(RedisCommand.ZRANDMEMBER, args, (cmd)->cmd.zrandmember(key),
+				(cmd)->cmd.zrandmember(key));
 	}
 
 	@Override
 	public List<String> zRandMember(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
-		return executeCommand(RedisCommand.ZRANDMEMBER, args, (cmd)->cmd.zrandmember(rawBinaryKey(key), count),
-				(cmd)->cmd.zrandmember(rawBinaryKey(key), count), Converters.binaryListStringListConverter());
+		return executeCommand(RedisCommand.ZRANDMEMBER, args, (cmd)->cmd.zrandmember(SafeEncoder.encode(key), count),
+				(cmd)->cmd.zrandmember(SafeEncoder.encode(key), count), Converters.binaryListStringListConverter());
 	}
 
 	@Override
 	public List<byte[]> zRandMember(final byte[] key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
-		return executeCommand(RedisCommand.ZRANDMEMBER, args, (cmd)->cmd.zrandmember(rawKey(key), count),
-				(cmd)->cmd.zrandmember(rawKey(key), count));
+		return executeCommand(RedisCommand.ZRANDMEMBER, args, (cmd)->cmd.zrandmember(key, count),
+				(cmd)->cmd.zrandmember(key, count));
 	}
 
 	@Override
 	public Tuple zRandMemberWithScores(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.ZRANDMEMBER, args, (cmd)->cmd.zrandmemberWithScores(rawBinaryKey(key)),
-				(cmd)->cmd.zrandmemberWithScores(rawBinaryKey(key)), new ScoredValueTupleConverter());
+		return executeCommand(RedisCommand.ZRANDMEMBER, args, (cmd)->cmd.zrandmemberWithScores(SafeEncoder.encode(key)),
+				(cmd)->cmd.zrandmemberWithScores(SafeEncoder.encode(key)), new ScoredValueTupleConverter());
 	}
 
 	@Override
 	public Tuple zRandMemberWithScores(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.ZRANDMEMBER, args, (cmd)->cmd.zrandmemberWithScores(rawKey(key)),
-				(cmd)->cmd.zrandmemberWithScores(rawKey(key)), new ScoredValueTupleConverter());
+		return executeCommand(RedisCommand.ZRANDMEMBER, args, (cmd)->cmd.zrandmemberWithScores(key),
+				(cmd)->cmd.zrandmemberWithScores(key), new ScoredValueTupleConverter());
 	}
 
 	@Override
 	public List<Tuple> zRandMemberWithScores(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
 		return executeCommand(RedisCommand.ZRANDMEMBER, args,
-				(cmd)->cmd.zrandmemberWithScores(rawBinaryKey(key), count),
-				(cmd)->cmd.zrandmemberWithScores(rawBinaryKey(key), count),
+				(cmd)->cmd.zrandmemberWithScores(SafeEncoder.encode(key), count),
+				(cmd)->cmd.zrandmemberWithScores(SafeEncoder.encode(key), count),
 				new ListConverter<>(new ScoredValueTupleConverter()));
 	}
 
 	@Override
 	public List<Tuple> zRandMemberWithScores(final byte[] key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count);
-		return executeCommand(RedisCommand.ZRANDMEMBER, args, (cmd)->cmd.zrandmemberWithScores(rawKey(key), count),
-				(cmd)->cmd.zrandmemberWithScores(rawKey(key), count),
+		return executeCommand(RedisCommand.ZRANDMEMBER, args, (cmd)->cmd.zrandmemberWithScores(key, count),
+				(cmd)->cmd.zrandmemberWithScores(key, count),
 				new ListConverter<>(new ScoredValueTupleConverter()));
 	}
 
 	@Override
 	public List<String> zRange(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
-		return executeCommand(RedisCommand.ZRANGE, args, (cmd)->cmd.zrange(rawBinaryKey(key), start, end),
-				(cmd)->cmd.zrange(rawBinaryKey(key), start, end), Converters.binaryListStringListConverter());
+		return executeCommand(RedisCommand.ZRANGE, args, (cmd)->cmd.zrange(SafeEncoder.encode(key), start, end),
+				(cmd)->cmd.zrange(SafeEncoder.encode(key), start, end), Converters.binaryListStringListConverter());
 	}
 
 	@Override
 	public List<byte[]> zRange(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
-		return executeCommand(RedisCommand.ZRANGE, args, (cmd)->cmd.zrange(rawKey(key), start, end),
-				(cmd)->cmd.zrange(rawKey(key), start, end));
+		return executeCommand(RedisCommand.ZRANGE, args, (cmd)->cmd.zrange(key, start, end),
+				(cmd)->cmd.zrange(key, start, end));
 	}
 
 	@Override
 	public List<String> zRange(final String key, final long start, final long end, final ZRangeType type) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type);
-		return zRange(rawBinaryKey(key), start, end, type, Converters.binaryListStringListConverter(), args);
+		return zRange(SafeEncoder.encode(key), start, end, type, Converters.binaryListStringListConverter(), args);
 	}
 
 	@Override
 	public List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeType type) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type);
-		return zRange(rawKey(key), start, end, type, (v)->v, args);
+		return zRange(key, start, end, type, (v)->v, args);
 	}
 
 	@Override
 	public List<String> zRange(final String key, final long start, final long end, final ZRangeType type,
 	                           final boolean rev) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(rev ? "REV" : null);
-		return zRange(rawBinaryKey(key), start, end, type, Converters.binaryListStringListConverter(), args);
+		return zRange(SafeEncoder.encode(key), start, end, type, Converters.binaryListStringListConverter(), args);
 	}
 
 	@Override
 	public List<byte[]> zRange(final byte[] key, final long start, final long end, final ZRangeType type,
 	                           final boolean rev) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(rev ? "REV" : null);
-		return zRange(rawKey(key), start, end, type, (v)->v, args);
+		return zRange(key, start, end, type, (v)->v, args);
 	}
 
 	@Override
 	public List<String> zRange(final String key, final long start, final long end, final boolean rev) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(rev ? "REV" : null);
-		return executeCommand(RedisCommand.ZRANGE, args, (cmd)->cmd.zrange(rawBinaryKey(key), start, end),
-				(cmd)->cmd.zrange(rawBinaryKey(key), start, end), Converters.binaryListStringListConverter());
+		return executeCommand(RedisCommand.ZRANGE, args, (cmd)->cmd.zrange(SafeEncoder.encode(key), start, end),
+				(cmd)->cmd.zrange(SafeEncoder.encode(key), start, end), Converters.binaryListStringListConverter());
 	}
 
 	@Override
 	public List<byte[]> zRange(final byte[] key, final long start, final long end, final boolean rev) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(rev ? "REV" : null);
-		return executeCommand(RedisCommand.ZRANGE, args, (cmd)->cmd.zrange(rawKey(key), start, end),
-				(cmd)->cmd.zrange(rawKey(key), start, end));
+		return executeCommand(RedisCommand.ZRANGE, args, (cmd)->cmd.zrange(key, start, end),
+				(cmd)->cmd.zrange(key, start, end));
 	}
 
 	@Override
 	public List<String> zRange(final String key, final long start, final long end, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(Keyword.Common.LIMIT)
 				.add(offset, count);
-		return executeCommand(RedisCommand.ZRANGE, args, (cmd)->cmd.zrange(rawBinaryKey(key), start, end),
-				(cmd)->cmd.zrange(rawBinaryKey(key), start, end), Converters.binaryListStringListConverter());
+		return executeCommand(RedisCommand.ZRANGE, args, (cmd)->cmd.zrange(SafeEncoder.encode(key), start, end),
+				(cmd)->cmd.zrange(SafeEncoder.encode(key), start, end), Converters.binaryListStringListConverter());
 	}
 
 	@Override
 	public List<byte[]> zRange(final byte[] key, final long start, final long end, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(Keyword.Common.LIMIT)
 				.add(offset, count);
-		return executeCommand(RedisCommand.ZRANGE, args, (cmd)->cmd.zrange(rawKey(key), start, end),
-				(cmd)->cmd.zrange(rawKey(key), start, end));
+		return executeCommand(RedisCommand.ZRANGE, args, (cmd)->cmd.zrange(key, start, end),
+				(cmd)->cmd.zrange(key, start, end));
 	}
 
 	@Override
@@ -672,7 +678,8 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                           final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(Keyword.Common.LIMIT)
 				.add(offset, count);
-		return zRange(rawBinaryKey(key), start, end, type, offset, count, Converters.binaryListStringListConverter(),
+		return zRange(SafeEncoder.encode(key), start, end, type, offset, count,
+				Converters.binaryListStringListConverter(),
 				args);
 	}
 
@@ -681,7 +688,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                           final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(Keyword.Common.LIMIT)
 				.add(offset, count);
-		return zRange(rawKey(key), start, end, type, offset, count, (v)->v, args);
+		return zRange(key, start, end, type, offset, count, (v)->v, args);
 	}
 
 	@Override
@@ -689,7 +696,8 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                           final boolean rev, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(rev ? "REV" : null)
 				.add(Keyword.Common.LIMIT).add(offset, count);
-		return zRange(rawBinaryKey(key), start, end, type, offset, count, Converters.binaryListStringListConverter(),
+		return zRange(SafeEncoder.encode(key), start, end, type, offset, count,
+				Converters.binaryListStringListConverter(),
 				args);
 	}
 
@@ -698,7 +706,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                           final boolean rev, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(rev ? "REV" : null)
 				.add(Keyword.Common.LIMIT).add(offset, count);
-		return zRange(rawKey(key), start, end, type, offset, count, (v)->v, args);
+		return zRange(key, start, end, type, offset, count, (v)->v, args);
 	}
 
 	@Override
@@ -706,8 +714,8 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                           final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(rev ? "REV" : null)
 				.add(Keyword.Common.LIMIT).add(offset, count);
-		return executeCommand(RedisCommand.ZRANGE, args, (cmd)->cmd.zrange(rawBinaryKey(key), start, end),
-				(cmd)->cmd.zrange(rawBinaryKey(key), start, end), Converters.binaryListStringListConverter());
+		return executeCommand(RedisCommand.ZRANGE, args, (cmd)->cmd.zrange(SafeEncoder.encode(key), start, end),
+				(cmd)->cmd.zrange(SafeEncoder.encode(key), start, end), Converters.binaryListStringListConverter());
 	}
 
 	@Override
@@ -715,58 +723,58 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                           final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(rev ? "REV" : null)
 				.add(Keyword.Common.LIMIT).add(offset, count);
-		return executeCommand(RedisCommand.ZRANGE, args, (cmd)->cmd.zrange(rawKey(key), start, end),
-				(cmd)->cmd.zrange(rawKey(key), start, end));
+		return executeCommand(RedisCommand.ZRANGE, args, (cmd)->cmd.zrange(key, start, end),
+				(cmd)->cmd.zrange(key, start, end));
 	}
 
 	@Override
 	public List<Tuple> zRangeWithScores(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
-		return zRangeWithScores(rawBinaryKey(key), start, end, args);
+		return zRangeWithScores(SafeEncoder.encode(key), start, end, args);
 	}
 
 	@Override
 	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
-		return zRangeWithScores(rawKey(key), start, end, args);
+		return zRangeWithScores(key, start, end, args);
 	}
 
 	@Override
 	public List<Tuple> zRangeWithScores(final String key, final long start, final long end, final ZRangeType type) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type);
-		return zRangeWithScores(rawBinaryKey(key), start, end, args);
+		return zRangeWithScores(SafeEncoder.encode(key), start, end, args);
 	}
 
 	@Override
 	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final ZRangeType type) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type);
-		return zRangeWithScores(rawKey(key), start, end, args);
+		return zRangeWithScores(key, start, end, args);
 	}
 
 	@Override
 	public List<Tuple> zRangeWithScores(final String key, final long start, final long end, final ZRangeType type,
 	                                    final boolean rev) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(rev ? "REV" : null);
-		return zRangeWithScores(rawBinaryKey(key), start, end, args);
+		return zRangeWithScores(SafeEncoder.encode(key), start, end, args);
 	}
 
 	@Override
 	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final ZRangeType type,
 	                                    final boolean rev) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(rev ? "REV" : null);
-		return zRangeWithScores(rawKey(key), start, end, args);
+		return zRangeWithScores(key, start, end, args);
 	}
 
 	@Override
 	public List<Tuple> zRangeWithScores(final String key, final long start, final long end, final boolean rev) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(rev ? "REV" : null);
-		return zRangeWithScores(rawBinaryKey(key), start, end, args);
+		return zRangeWithScores(SafeEncoder.encode(key), start, end, args);
 	}
 
 	@Override
 	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end, final boolean rev) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(rev ? "REV" : null);
-		return zRangeWithScores(rawKey(key), start, end, args);
+		return zRangeWithScores(key, start, end, args);
 	}
 
 	@Override
@@ -774,7 +782,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                                    final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(Keyword.Common.LIMIT)
 				.add(offset, count);
-		return zRangeWithScores(rawBinaryKey(key), start, end, args);
+		return zRangeWithScores(SafeEncoder.encode(key), start, end, args);
 	}
 
 	@Override
@@ -782,7 +790,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                                    final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(Keyword.Common.LIMIT)
 				.add(offset, count);
-		return zRangeWithScores(rawKey(key), start, end, args);
+		return zRangeWithScores(key, start, end, args);
 	}
 
 	@Override
@@ -790,7 +798,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                                    final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(Keyword.Common.LIMIT)
 				.add(offset, count);
-		return zRangeWithScores(rawBinaryKey(key), start, end, args);
+		return zRangeWithScores(SafeEncoder.encode(key), start, end, args);
 	}
 
 	@Override
@@ -798,7 +806,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                                    final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(Keyword.Common.LIMIT)
 				.add(offset, count);
-		return zRangeWithScores(rawKey(key), start, end, args);
+		return zRangeWithScores(key, start, end, args);
 	}
 
 	@Override
@@ -806,7 +814,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                                    final boolean rev, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(rev ? "REV" : null)
 				.add(Keyword.Common.LIMIT).add(offset, count);
-		return zRangeWithScores(rawBinaryKey(key), start, end, args);
+		return zRangeWithScores(SafeEncoder.encode(key), start, end, args);
 	}
 
 	@Override
@@ -814,7 +822,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                                    final boolean rev, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(type).add(rev ? "REV" : null)
 				.add(Keyword.Common.LIMIT).add(offset, count);
-		return zRangeWithScores(rawKey(key), start, end, args);
+		return zRangeWithScores(key, start, end, args);
 	}
 
 	@Override
@@ -822,7 +830,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                                    final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(rev ? "REV" : null)
 				.add(Keyword.Common.LIMIT).add(offset, count);
-		return zRangeWithScores(rawBinaryKey(key), start, end, args);
+		return zRangeWithScores(SafeEncoder.encode(key), start, end, args);
 	}
 
 	@Override
@@ -830,19 +838,19 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                                    final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end).add(rev ? "REV" : null)
 				.add(Keyword.Common.LIMIT).add(offset, count);
-		return zRangeWithScores(rawKey(key), start, end, args);
+		return zRangeWithScores(key, start, end, args);
 	}
 
 	@Override
 	public List<String> zRangeByLex(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min, max);
-		return zRangeByLex(rawBinaryKey(key), min, max, Converters.binaryListStringListConverter(), args);
+		return zRangeByLex(SafeEncoder.encode(key), min, max, Converters.binaryListStringListConverter(), args);
 	}
 
 	@Override
 	public List<byte[]> zRangeByLex(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min, max);
-		return zRangeByLex(rawKey(key), min, max, (v)->v, args);
+		return zRangeByLex(key, min, max, (v)->v, args);
 	}
 
 	@Override
@@ -850,7 +858,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                                final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(min, max).add(Keyword.Common.LIMIT)
 				.add(offset, count);
-		return zRangeByLex(rawBinaryKey(key), min, max, offset, count, Converters.binaryListStringListConverter(),
+		return zRangeByLex(SafeEncoder.encode(key), min, max, offset, count, Converters.binaryListStringListConverter(),
 				args);
 	}
 
@@ -859,15 +867,15 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                                final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(min, max).add(Keyword.Common.LIMIT)
 				.add(offset, count);
-		return zRangeByLex(rawKey(key), min, max, offset, count, (v)->v, args);
+		return zRangeByLex(key, min, max, offset, count, (v)->v, args);
 	}
 
 	@Override
 	public List<String> zRangeByScore(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min, max);
 		return executeCommand(RedisCommand.ZRANGEBYSCORE, args,
-				(cmd)->cmd.zrangebyscore(rawBinaryKey(key), Range.create(min, max)),
-				(cmd)->cmd.zrangebyscore(rawBinaryKey(key), Range.create(min, max)),
+				(cmd)->cmd.zrangebyscore(SafeEncoder.encode(key), Range.create(min, max)),
+				(cmd)->cmd.zrangebyscore(SafeEncoder.encode(key), Range.create(min, max)),
 				Converters.binaryListStringListConverter());
 	}
 
@@ -875,8 +883,8 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	public List<byte[]> zRangeByScore(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min, max);
 		return executeCommand(RedisCommand.ZRANGEBYSCORE, args,
-				(cmd)->cmd.zrangebyscore(rawKey(key), Range.create(min, max)),
-				(cmd)->cmd.zrangebyscore(rawKey(key), Range.create(min, max)));
+				(cmd)->cmd.zrangebyscore(key, Range.create(min, max)),
+				(cmd)->cmd.zrangebyscore(key, Range.create(min, max)));
 	}
 
 	@Override
@@ -885,8 +893,8 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 		final CommandArguments args = CommandArguments.create(key).add(min, max).add(Keyword.Common.LIMIT)
 				.add(offset, count);
 		return executeCommand(RedisCommand.ZRANGEBYSCORE, args,
-				(cmd)->cmd.zrangebyscore(rawBinaryKey(key), Range.create(min, max), Limit.create(offset, count)),
-				(cmd)->cmd.zrangebyscore(rawBinaryKey(key), Range.create(min, max), Limit.create(offset, count)),
+				(cmd)->cmd.zrangebyscore(SafeEncoder.encode(key), Range.create(min, max), Limit.create(offset, count)),
+				(cmd)->cmd.zrangebyscore(SafeEncoder.encode(key), Range.create(min, max), Limit.create(offset, count)),
 				Converters.binaryListStringListConverter());
 	}
 
@@ -896,20 +904,20 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 		final CommandArguments args = CommandArguments.create(key).add(min, max).add(Keyword.Common.LIMIT)
 				.add(offset, count);
 		return executeCommand(RedisCommand.ZRANGEBYSCORE, args,
-				(cmd)->cmd.zrangebyscore(rawKey(key), Range.create(min, max), Limit.create(offset, count)),
-				(cmd)->cmd.zrangebyscore(rawKey(key), Range.create(min, max), Limit.create(offset, count)));
+				(cmd)->cmd.zrangebyscore(key, Range.create(min, max), Limit.create(offset, count)),
+				(cmd)->cmd.zrangebyscore(key, Range.create(min, max), Limit.create(offset, count)));
 	}
 
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min, max).add(Keyword.Common.WITHSCORES);
-		return zRangeByScoreWithScores(rawBinaryKey(key), min, max, args);
+		return zRangeByScoreWithScores(SafeEncoder.encode(key), min, max, args);
 	}
 
 	@Override
 	public List<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min, max).add(Keyword.Common.WITHSCORES);
-		return zRangeByScoreWithScores(rawKey(key), min, max, args);
+		return zRangeByScoreWithScores(key, min, max, args);
 	}
 
 	@Override
@@ -917,7 +925,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                                           final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(min, max).add(Keyword.Common.WITHSCORES)
 				.add(Keyword.Common.LIMIT).add(offset, count);
-		return zRangeByScoreWithScores(rawBinaryKey(key), min, max, offset, count, args);
+		return zRangeByScoreWithScores(SafeEncoder.encode(key), min, max, offset, count, args);
 	}
 
 	@Override
@@ -925,33 +933,34 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                                           final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(min, max).add(Keyword.Common.WITHSCORES)
 				.add(Keyword.Common.LIMIT).add(offset, count);
-		return zRangeByScoreWithScores(rawKey(key), min, max, offset, count, args);
+		return zRangeByScoreWithScores(key, min, max, offset, count, args);
 	}
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add(start, end);
-		return zRangeStore(rawBinaryKey(destKey), rawBinaryKey(key), start, end, Limit.unlimited(), args);
+		return zRangeStore(SafeEncoder.encode(destKey), SafeEncoder.encode(key), start, end, Limit.unlimited(), args);
 	}
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add(start, end);
-		return zRangeStore(rawKey(destKey), rawKey(key), start, end, Limit.unlimited(), args);
+		return zRangeStore(destKey, key, start, end, Limit.unlimited(), args);
 	}
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end,
 	                        final ZRangeType type) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add(start, end).add(type);
-		return zRangeStore(rawBinaryKey(destKey), rawBinaryKey(key), start, end, type, Limit.unlimited(), args);
+		return zRangeStore(SafeEncoder.encode(destKey), SafeEncoder.encode(key), start, end, type, Limit.unlimited(),
+				args);
 	}
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
 	                        final ZRangeType type) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add(start, end).add(type);
-		return zRangeStore(rawKey(destKey), rawKey(key), start, end, type, Limit.unlimited(), args);
+		return zRangeStore(destKey, key, start, end, type, Limit.unlimited(), args);
 	}
 
 	@Override
@@ -959,7 +968,8 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                        final ZRangeType type, final boolean rev) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add(start, end).add(type)
 				.add(rev ? "REV" : null);
-		return zRangeStore(rawBinaryKey(destKey), rawBinaryKey(key), start, end, type, Limit.unlimited(), args);
+		return zRangeStore(SafeEncoder.encode(destKey), SafeEncoder.encode(key), start, end, type, Limit.unlimited(),
+				args);
 	}
 
 	@Override
@@ -967,21 +977,21 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                        final ZRangeType type, final boolean rev) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add(start, end).add(type)
 				.add(rev ? "REV" : null);
-		return zRangeStore(rawKey(destKey), rawKey(key), start, end, type, Limit.unlimited(), args);
+		return zRangeStore(destKey, key, start, end, type, Limit.unlimited(), args);
 	}
 
 	@Override
 	public Long zRangeStore(final String destKey, final String key, final long start, final long end,
 	                        final boolean rev) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add(start, end).add(rev ? "REV" : null);
-		return zRangeStore(rawBinaryKey(destKey), rawBinaryKey(key), start, end, Limit.unlimited(), args);
+		return zRangeStore(SafeEncoder.encode(destKey), SafeEncoder.encode(key), start, end, Limit.unlimited(), args);
 	}
 
 	@Override
 	public Long zRangeStore(final byte[] destKey, final byte[] key, final long start, final long end,
 	                        final boolean rev) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add(start, end).add(rev ? "REV" : null);
-		return zRangeStore(rawKey(destKey), rawKey(key), start, end, Limit.unlimited(), args);
+		return zRangeStore(destKey, key, start, end, Limit.unlimited(), args);
 	}
 
 	@Override
@@ -989,7 +999,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                        final int count) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add(start, end).add(Keyword.Common.LIMIT)
 				.add(offset, count);
-		return zRangeStore(rawBinaryKey(destKey), rawBinaryKey(key), start, end, Limit.unlimited(), args);
+		return zRangeStore(SafeEncoder.encode(destKey), SafeEncoder.encode(key), start, end, Limit.unlimited(), args);
 	}
 
 	@Override
@@ -997,7 +1007,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                        final int count) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add(start, end).add(Keyword.Common.LIMIT)
 				.add(offset, count);
-		return zRangeStore(rawKey(destKey), rawKey(key), start, end, Limit.unlimited(), args);
+		return zRangeStore(destKey, key, start, end, Limit.unlimited(), args);
 	}
 
 	@Override
@@ -1005,7 +1015,8 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                        final ZRangeType type, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add(start, end).add(type)
 				.add(Keyword.Common.LIMIT).add(offset, count);
-		return zRangeStore(rawBinaryKey(destKey), rawBinaryKey(key), start, end, type, Limit.create(offset, count),
+		return zRangeStore(SafeEncoder.encode(destKey), SafeEncoder.encode(key), start, end, type,
+				Limit.create(offset, count),
 				args);
 	}
 
@@ -1014,7 +1025,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                        final ZRangeType type, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start, end).add(type)
 				.add(Keyword.Common.LIMIT).add(offset, count);
-		return zRangeStore(rawKey(destKey), rawKey(key), start, end, type, Limit.create(offset, count), args);
+		return zRangeStore(destKey, key, start, end, type, Limit.create(offset, count), args);
 	}
 
 	@Override
@@ -1022,7 +1033,8 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                        final ZRangeType type, final boolean rev, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add(start, end).add(type)
 				.add(rev ? "REV" : null).add(Keyword.Common.LIMIT).add(offset, count);
-		return zRangeStore(rawBinaryKey(destKey), rawBinaryKey(key), start, end, type, Limit.create(offset, count),
+		return zRangeStore(SafeEncoder.encode(destKey), SafeEncoder.encode(key), start, end, type,
+				Limit.create(offset, count),
 				args);
 	}
 
@@ -1031,7 +1043,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                        final ZRangeType type, final boolean rev, final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start, end).add(type)
 				.add(rev ? "REV" : null).add(Keyword.Common.LIMIT).add(offset, count);
-		return zRangeStore(rawKey(destKey), rawKey(key), start, end, type, Limit.create(offset, count), args);
+		return zRangeStore(destKey, key, start, end, type, Limit.create(offset, count), args);
 	}
 
 	@Override
@@ -1039,7 +1051,8 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                        final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add(start, end).add(rev ? "REV" : null)
 				.add(Keyword.Common.LIMIT).add(offset, count);
-		return zRangeStore(rawBinaryKey(destKey), rawBinaryKey(key), start, end, Limit.create(offset, count), args);
+		return zRangeStore(SafeEncoder.encode(destKey), SafeEncoder.encode(key), start, end,
+				Limit.create(offset, count), args);
 	}
 
 	@Override
@@ -1047,116 +1060,118 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                        final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(destKey).add(key).add(start, end).add(rev ? "REV" : null)
 				.add(Keyword.Common.LIMIT).add(offset, count);
-		return zRangeStore(rawKey(destKey), rawKey(key), start, end, Limit.create(offset, count), args);
+		return zRangeStore(destKey, key, start, end, Limit.create(offset, count), args);
 	}
 
 	@Override
 	public Long zRank(final String key, final String member) {
 		final CommandArguments args = CommandArguments.create(key, member);
-		return executeCommand(RedisCommand.ZRANK, args, (cmd)->cmd.zrank(rawBinaryKey(key), SafeEncoder.encode(member)),
-				(cmd)->cmd.zrank(rawBinaryKey(key), SafeEncoder.encode(member)));
+		return executeCommand(RedisCommand.ZRANK, args,
+				(cmd)->cmd.zrank(SafeEncoder.encode(key), SafeEncoder.encode(member)),
+				(cmd)->cmd.zrank(SafeEncoder.encode(key), SafeEncoder.encode(member)));
 	}
 
 	@Override
 	public Long zRank(final byte[] key, final byte[] member) {
 		final CommandArguments args = CommandArguments.create(key).add(member);
-		return executeCommand(RedisCommand.ZRANK, args, (cmd)->cmd.zrank(rawKey(key), member),
-				(cmd)->cmd.zrank(rawKey(key), member));
+		return executeCommand(RedisCommand.ZRANK, args, (cmd)->cmd.zrank(key, member),
+				(cmd)->cmd.zrank(key, member));
 	}
 
 	@Override
 	public KeyValue<Long, Double> zRankWithScores(final String key, final String member) {
 		final CommandArguments args = CommandArguments.create(key, member).add(Keyword.Common.WITHSCORE);
-		return zRankWithScores(rawBinaryKey(key), SafeEncoder.encode(member), args);
+		return zRankWithScores(SafeEncoder.encode(key), SafeEncoder.encode(member), args);
 	}
 
 	@Override
 	public KeyValue<Long, Double> zRankWithScores(final byte[] key, final byte[] member) {
 		final CommandArguments args = CommandArguments.create(key).add(member).add(Keyword.Common.WITHSCORE);
-		return zRankWithScores(rawKey(key), member, args);
+		return zRankWithScores(key, member, args);
 	}
 
 	@Override
 	public Long zRem(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		return executeCommand(RedisCommand.ZREM, args, (cmd)->cmd.zrem(rawBinaryKey(key), SafeEncoder.encode(members)),
-				(cmd)->cmd.zrem(rawBinaryKey(key), SafeEncoder.encode(members)));
+		return executeCommand(RedisCommand.ZREM, args,
+				(cmd)->cmd.zrem(SafeEncoder.encode(key), SafeEncoder.encode(members)),
+				(cmd)->cmd.zrem(SafeEncoder.encode(key), SafeEncoder.encode(members)));
 	}
 
 	@Override
 	public Long zRem(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		return executeCommand(RedisCommand.ZREM, args, (cmd)->cmd.zrem(rawKey(key), members),
-				(cmd)->cmd.zrem(rawKey(key), members));
+		return executeCommand(RedisCommand.ZREM, args, (cmd)->cmd.zrem(key, members),
+				(cmd)->cmd.zrem(key, members));
 	}
 
 	@Override
 	public Long zRemRangeByLex(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min, max);
-		return zRemRangeByLex(rawBinaryKey(key), min, max, args);
+		return zRemRangeByLex(SafeEncoder.encode(key), min, max, args);
 	}
 
 	@Override
 	public Long zRemRangeByLex(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min, max);
-		return zRemRangeByLex(rawKey(key), min, max, args);
+		return zRemRangeByLex(key, min, max, args);
 	}
 
 	@Override
 	public Long zRemRangeByRank(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
 		return executeCommand(RedisCommand.ZREMRANGEBYRANK, args,
-				(cmd)->cmd.zremrangebyrank(rawBinaryKey(key), start, end),
-				(cmd)->cmd.zremrangebyrank(rawBinaryKey(key), start, end));
+				(cmd)->cmd.zremrangebyrank(SafeEncoder.encode(key), start, end),
+				(cmd)->cmd.zremrangebyrank(SafeEncoder.encode(key), start, end));
 	}
 
 	@Override
 	public Long zRemRangeByRank(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
-		return executeCommand(RedisCommand.ZREMRANGEBYRANK, args, (cmd)->cmd.zremrangebyrank(rawKey(key), start, end),
-				(cmd)->cmd.zremrangebyrank(rawKey(key), start, end));
+		return executeCommand(RedisCommand.ZREMRANGEBYRANK, args, (cmd)->cmd.zremrangebyrank(key, start, end),
+				(cmd)->cmd.zremrangebyrank(key, start, end));
 	}
 
 	@Override
 	public Long zRemRangeByScore(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min, max);
 		return executeCommand(RedisCommand.ZREMRANGEBYSCORE, args,
-				(cmd)->cmd.zremrangebyscore(rawBinaryKey(key), Range.create(min, max)),
-				(cmd)->cmd.zremrangebyscore(rawBinaryKey(key), Range.create(min, max)));
+				(cmd)->cmd.zremrangebyscore(SafeEncoder.encode(key), Range.create(min, max)),
+				(cmd)->cmd.zremrangebyscore(SafeEncoder.encode(key), Range.create(min, max)));
 	}
 
 	@Override
 	public Long zRemRangeByScore(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min, max);
 		return executeCommand(RedisCommand.ZREMRANGEBYSCORE, args,
-				(cmd)->cmd.zremrangebyscore(rawKey(key), Range.create(min, max)),
-				(cmd)->cmd.zremrangebyscore(rawKey(key), Range.create(min, max)));
+				(cmd)->cmd.zremrangebyscore(key, Range.create(min, max)),
+				(cmd)->cmd.zremrangebyscore(key, Range.create(min, max)));
 	}
 
 	@Override
 	public List<String> zRevRange(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
-		return executeCommand(RedisCommand.ZREVRANGE, args, (cmd)->cmd.zrevrange(rawBinaryKey(key), start, end),
-				(cmd)->cmd.zrevrange(rawBinaryKey(key), start, end), Converters.binaryListStringListConverter());
+		return executeCommand(RedisCommand.ZREVRANGE, args, (cmd)->cmd.zrevrange(SafeEncoder.encode(key), start, end),
+				(cmd)->cmd.zrevrange(SafeEncoder.encode(key), start, end), Converters.binaryListStringListConverter());
 	}
 
 	@Override
 	public List<byte[]> zRevRange(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
-		return executeCommand(RedisCommand.ZREVRANGE, args, (cmd)->cmd.zrevrange(rawKey(key), start, end),
-				(cmd)->cmd.zrevrange(rawKey(key), start, end));
+		return executeCommand(RedisCommand.ZREVRANGE, args, (cmd)->cmd.zrevrange(key, start, end),
+				(cmd)->cmd.zrevrange(key, start, end));
 	}
 
 	@Override
 	public List<Tuple> zRevRangeWithScores(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
-		return zRevRangeWithScores(rawBinaryKey(key), start, end, args);
+		return zRevRangeWithScores(SafeEncoder.encode(key), start, end, args);
 	}
 
 	@Override
 	public List<Tuple> zRevRangeWithScores(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
-		return zRevRangeWithScores(rawKey(key), start, end, args);
+		return zRevRangeWithScores(key, start, end, args);
 	}
 
 	@Override
@@ -1164,8 +1179,8 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 		final CommandArguments args = CommandArguments.create(key).add(min, max);
 		final Range<byte[]> range = Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
 		return executeCommand(RedisCommand.ZREVRANGEBYLEX, args,
-				(cmd)->cmd.zrevrangebylex(rawBinaryKey(key), range),
-				(cmd)->cmd.zrevrangebylex(rawBinaryKey(key), range),
+				(cmd)->cmd.zrevrangebylex(SafeEncoder.encode(key), range),
+				(cmd)->cmd.zrevrangebylex(SafeEncoder.encode(key), range),
 				Converters.binaryListStringListConverter());
 	}
 
@@ -1174,8 +1189,8 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 		final CommandArguments args = CommandArguments.create(key).add(min, max);
 		final Range<byte[]> range = Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
 		return executeCommand(RedisCommand.ZREVRANGEBYLEX, args,
-				(cmd)->cmd.zrevrangebylex(rawKey(key), range),
-				(cmd)->cmd.zrevrangebylex(rawKey(key), range));
+				(cmd)->cmd.zrevrangebylex(key, range),
+				(cmd)->cmd.zrevrangebylex(key, range));
 	}
 
 	@Override
@@ -1186,8 +1201,8 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 		final Range<byte[]> range = Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
 		final Limit limit = Limit.create(offset, count);
 		return executeCommand(RedisCommand.ZREVRANGEBYLEX, args,
-				(cmd)->cmd.zrevrangebylex(rawBinaryKey(key), range, limit),
-				(cmd)->cmd.zrevrangebylex(rawBinaryKey(key), range, limit),
+				(cmd)->cmd.zrevrangebylex(SafeEncoder.encode(key), range, limit),
+				(cmd)->cmd.zrevrangebylex(SafeEncoder.encode(key), range, limit),
 				Converters.binaryListStringListConverter());
 	}
 
@@ -1199,16 +1214,16 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 		final Range<byte[]> range = Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
 		final Limit limit = Limit.create(offset, count);
 		return executeCommand(RedisCommand.ZREVRANGEBYLEX, args,
-				(cmd)->cmd.zrevrangebylex(rawKey(key), range, limit),
-				(cmd)->cmd.zrevrangebylex(rawKey(key), range, limit));
+				(cmd)->cmd.zrevrangebylex(key, range, limit),
+				(cmd)->cmd.zrevrangebylex(key, range, limit));
 	}
 
 	@Override
 	public List<String> zRevRangeByScore(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min, max);
 		return executeCommand(RedisCommand.ZREVRANGEBYSCORE, args,
-				(cmd)->cmd.zrevrangebyscore(rawBinaryKey(key), Range.create(min, max)),
-				(cmd)->cmd.zrevrangebyscore(rawBinaryKey(key), Range.create(min, max)),
+				(cmd)->cmd.zrevrangebyscore(SafeEncoder.encode(key), Range.create(min, max)),
+				(cmd)->cmd.zrevrangebyscore(SafeEncoder.encode(key), Range.create(min, max)),
 				Converters.binaryListStringListConverter());
 	}
 
@@ -1216,8 +1231,8 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	public List<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min, max);
 		return executeCommand(RedisCommand.ZREVRANGEBYSCORE, args,
-				(cmd)->cmd.zrevrangebyscore(rawKey(key), Range.create(min, max)),
-				(cmd)->cmd.zrevrangebyscore(rawKey(key), Range.create(min, max)));
+				(cmd)->cmd.zrevrangebyscore(key, Range.create(min, max)),
+				(cmd)->cmd.zrevrangebyscore(key, Range.create(min, max)));
 	}
 
 	@Override
@@ -1226,8 +1241,10 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 		final CommandArguments args = CommandArguments.create(key).add(min, max).add(Keyword.Common.LIMIT)
 				.add(offset, count);
 		return executeCommand(RedisCommand.ZREVRANGEBYSCORE, args,
-				(cmd)->cmd.zrevrangebyscore(rawBinaryKey(key), Range.create(min, max), Limit.create(offset, count)),
-				(cmd)->cmd.zrevrangebyscore(rawBinaryKey(key), Range.create(min, max), Limit.create(offset, count)),
+				(cmd)->cmd.zrevrangebyscore(SafeEncoder.encode(key), Range.create(min, max),
+						Limit.create(offset, count)),
+				(cmd)->cmd.zrevrangebyscore(SafeEncoder.encode(key), Range.create(min, max),
+						Limit.create(offset, count)),
 				Converters.binaryListStringListConverter());
 	}
 
@@ -1237,20 +1254,20 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 		final CommandArguments args = CommandArguments.create(key).add(min, max).add(Keyword.Common.LIMIT)
 				.add(offset, count);
 		return executeCommand(RedisCommand.ZREVRANGEBYSCORE, args,
-				(cmd)->cmd.zrevrangebyscore(rawKey(key), Range.create(min, max), Limit.create(offset, count)),
-				(cmd)->cmd.zrevrangebyscore(rawKey(key), Range.create(min, max), Limit.create(offset, count)));
+				(cmd)->cmd.zrevrangebyscore(key, Range.create(min, max), Limit.create(offset, count)),
+				(cmd)->cmd.zrevrangebyscore(key, Range.create(min, max), Limit.create(offset, count)));
 	}
 
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min, max);
-		return zRevRangeByScoreWithScores(rawBinaryKey(key), min, max, args);
+		return zRevRangeByScoreWithScores(SafeEncoder.encode(key), min, max, args);
 	}
 
 	@Override
 	public List<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max) {
 		final CommandArguments args = CommandArguments.create(key).add(min, max);
-		return zRevRangeByScoreWithScores(rawKey(key), min, max, args);
+		return zRevRangeByScoreWithScores(key, min, max, args);
 	}
 
 	@Override
@@ -1258,7 +1275,7 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                                              final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(min, max).add(Keyword.Common.LIMIT)
 				.add(offset, count);
-		return zRevRangeByScoreWithScores(rawBinaryKey(key), min, max, offset, count, args);
+		return zRevRangeByScoreWithScores(SafeEncoder.encode(key), min, max, offset, count, args);
 	}
 
 	@Override
@@ -1266,235 +1283,237 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                                              final int offset, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(min, max).add(Keyword.Common.LIMIT)
 				.add(offset, count);
-		return zRevRangeByScoreWithScores(rawKey(key), min, max, offset, count, args);
+		return zRevRangeByScoreWithScores(key, min, max, offset, count, args);
 	}
 
 	@Override
 	public Long zRevRank(final String key, final String member) {
 		final CommandArguments args = CommandArguments.create(key, member);
 		return executeCommand(RedisCommand.ZREVRANK, args,
-				(cmd)->cmd.zrevrank(rawBinaryKey(key), SafeEncoder.encode(member)),
-				(cmd)->cmd.zrevrank(rawBinaryKey(key), SafeEncoder.encode(member)));
+				(cmd)->cmd.zrevrank(SafeEncoder.encode(key), SafeEncoder.encode(member)),
+				(cmd)->cmd.zrevrank(SafeEncoder.encode(key), SafeEncoder.encode(member)));
 	}
 
 	@Override
 	public Long zRevRank(final byte[] key, final byte[] member) {
 		final CommandArguments args = CommandArguments.create(key, member);
-		return executeCommand(RedisCommand.ZREVRANK, args, (cmd)->cmd.zrevrank(rawKey(key), member),
-				(cmd)->cmd.zrevrank(rawKey(key), member));
+		return executeCommand(RedisCommand.ZREVRANK, args, (cmd)->cmd.zrevrank(key, member),
+				(cmd)->cmd.zrevrank(key, member));
 	}
 
 	@Override
 	public KeyValue<Long, Double> zRevRankWithScore(final String key, final String member) {
 		final CommandArguments args = CommandArguments.create(key, member).add(Keyword.Common.WITHSCORE);
 		return executeCommand(RedisCommand.ZREVRANK, args,
-				(cmd)->cmd.zrankWithScore(rawBinaryKey(key), SafeEncoder.encode(member)),
-				(cmd)->cmd.zrankWithScore(rawBinaryKey(key), SafeEncoder.encode(member)),
+				(cmd)->cmd.zrankWithScore(SafeEncoder.encode(key), SafeEncoder.encode(member)),
+				(cmd)->cmd.zrankWithScore(SafeEncoder.encode(key), SafeEncoder.encode(member)),
 				new ScoredValueKeyValueConverter<>((v)->v));
 	}
 
 	@Override
 	public KeyValue<Long, Double> zRevRankWithScore(final byte[] key, final byte[] member) {
 		final CommandArguments args = CommandArguments.create(key, member).add(Keyword.Common.WITHSCORE);
-		return executeCommand(RedisCommand.ZREVRANK, args, (cmd)->cmd.zrankWithScore(rawKey(key), member),
-				(cmd)->cmd.zrankWithScore(rawKey(key), member), new ScoredValueKeyValueConverter<>((v)->v));
+		return executeCommand(RedisCommand.ZREVRANK, args, (cmd)->cmd.zrankWithScore(key, member),
+				(cmd)->cmd.zrankWithScore(key, member), new ScoredValueKeyValueConverter<>((v)->v));
 	}
 
 	@Override
 	public ScanResult<Tuple> zScan(final String key, final String cursor) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor);
 		return executeCommand(RedisCommand.ZSCAN, args,
-				(cmd)->cmd.zscan(rawBinaryKey(key), new LettuceScanCursor(cursor)),
-				(cmd)->cmd.zscan(rawBinaryKey(key), new LettuceScanCursor(cursor)),
+				(cmd)->cmd.zscan(SafeEncoder.encode(key), new LettuceScanCursor(cursor)),
+				(cmd)->cmd.zscan(SafeEncoder.encode(key), new LettuceScanCursor(cursor)),
 				new ScanCursorConverter.ScoredValueScanCursorConverter());
 	}
 
 	@Override
 	public ScanResult<Tuple> zScan(final byte[] key, final byte[] cursor) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor);
-		return executeCommand(RedisCommand.ZSCAN, args, (cmd)->cmd.zscan(rawKey(key), new LettuceScanCursor(cursor)),
-				(cmd)->cmd.zscan(rawKey(key), new LettuceScanCursor(cursor)),
+		return executeCommand(RedisCommand.ZSCAN, args, (cmd)->cmd.zscan(key, new LettuceScanCursor(cursor)),
+				(cmd)->cmd.zscan(key, new LettuceScanCursor(cursor)),
 				new ScanCursorConverter.ScoredValueScanCursorConverter());
 	}
 
 	@Override
 	public ScanResult<Tuple> zScan(final String key, final String cursor, final String pattern) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern);
-		return zScan(rawBinaryKey(key), new LettuceScanCursor(cursor), new LettuceScanArgs(pattern), args);
+		return zScan(SafeEncoder.encode(key), new LettuceScanCursor(cursor), new LettuceScanArgs(pattern), args);
 	}
 
 	@Override
 	public ScanResult<Tuple> zScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern);
-		return zScan(rawKey(key), new LettuceScanCursor(cursor), new LettuceScanArgs(pattern), args);
+		return zScan(key, new LettuceScanCursor(cursor), new LettuceScanArgs(pattern), args);
 	}
 
 	@Override
 	public ScanResult<Tuple> zScan(final String key, final String cursor, final String pattern, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern)
 				.add(Keyword.Common.COUNT, count);
-		return zScan(rawBinaryKey(key), new LettuceScanCursor(cursor), new LettuceScanArgs(pattern, count), args);
+		return zScan(SafeEncoder.encode(key), new LettuceScanCursor(cursor), new LettuceScanArgs(pattern, count), args);
 	}
 
 	@Override
 	public ScanResult<Tuple> zScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Scan.MATCH, pattern)
 				.add(Keyword.Common.COUNT, count);
-		return zScan(rawKey(key), new LettuceScanCursor(cursor), new LettuceScanArgs(pattern, count), args);
+		return zScan(key, new LettuceScanCursor(cursor), new LettuceScanArgs(pattern, count), args);
 	}
 
 	@Override
 	public ScanResult<Tuple> zScan(final String key, final String cursor, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT, count);
-		return zScan(rawBinaryKey(key), new LettuceScanCursor(cursor), new LettuceScanArgs(count), args);
+		return zScan(SafeEncoder.encode(key), new LettuceScanCursor(cursor), new LettuceScanArgs(count), args);
 	}
 
 	@Override
 	public ScanResult<Tuple> zScan(final byte[] key, final byte[] cursor, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(cursor).add(Keyword.Common.COUNT, count);
-		return zScan(rawKey(key), new LettuceScanCursor(cursor), new LettuceScanArgs(count), args);
+		return zScan(key, new LettuceScanCursor(cursor), new LettuceScanArgs(count), args);
 	}
 
 	@Override
 	public Double zScore(final String key, final String member) {
 		final CommandArguments args = CommandArguments.create(key, member);
 		return executeCommand(RedisCommand.ZSCORE, args,
-				(cmd)->cmd.zscore(rawBinaryKey(key), SafeEncoder.encode(member)),
-				(cmd)->cmd.zscore(rawBinaryKey(key), SafeEncoder.encode(member)));
+				(cmd)->cmd.zscore(SafeEncoder.encode(key), SafeEncoder.encode(member)),
+				(cmd)->cmd.zscore(SafeEncoder.encode(key), SafeEncoder.encode(member)));
 	}
 
 	@Override
 	public Double zScore(final byte[] key, final byte[] member) {
 		final CommandArguments args = CommandArguments.create(key, member);
-		return executeCommand(RedisCommand.ZSCORE, args, (cmd)->cmd.zscore(rawKey(key), member),
-				(cmd)->cmd.zscore(rawKey(key), member));
+		return executeCommand(RedisCommand.ZSCORE, args, (cmd)->cmd.zscore(key, member),
+				(cmd)->cmd.zscore(key, member));
 	}
 
 	@Override
 	public List<String> zUnion(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.ZUNION, args, (cmd)->cmd.zunion(rawBinaryKeys(keys)),
-				(cmd)->cmd.zunion(rawBinaryKeys(keys)), Converters.binaryListStringListConverter());
+		return executeCommand(RedisCommand.ZUNION, args, (cmd)->cmd.zunion(SafeEncoder.encode(keys)),
+				(cmd)->cmd.zunion(SafeEncoder.encode(keys)), Converters.binaryListStringListConverter());
 	}
 
 	@Override
 	public List<byte[]> zUnion(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.ZUNION, args, (cmd)->cmd.zunion(rawKeys(keys)),
-				(cmd)->cmd.zunion(rawKeys(keys)));
+		return executeCommand(RedisCommand.ZUNION, args, (cmd)->cmd.zunion(keys),
+				(cmd)->cmd.zunion(keys));
 	}
 
 	@Override
 	public List<String> zUnion(final String[] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate);
-		return stringZUnion(rawBinaryKeys(keys), new LettuceZAggregateArgs(aggregate), args);
+		return stringZUnion(SafeEncoder.encode(keys), new LettuceZAggregateArgs(aggregate), args);
 	}
 
 	@Override
 	public List<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate);
-		return binaryZUnion(rawKeys(keys), new LettuceZAggregateArgs(aggregate), args);
+		return binaryZUnion(keys, new LettuceZAggregateArgs(aggregate), args);
 	}
 
 	@Override
 	public List<String> zUnion(final String[] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate).add("WEIGHTS", weights);
-		return stringZUnion(rawBinaryKeys(keys), new LettuceZAggregateArgs(aggregate, weights), args);
+		return stringZUnion(SafeEncoder.encode(keys), new LettuceZAggregateArgs(aggregate, weights), args);
 	}
 
 	@Override
 	public List<byte[]> zUnion(final byte[][] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate).add("WEIGHTS", weights);
-		return binaryZUnion(rawKeys(keys), new LettuceZAggregateArgs(aggregate, weights), args);
+		return binaryZUnion(keys, new LettuceZAggregateArgs(aggregate, weights), args);
 	}
 
 	@Override
 	public List<String> zUnion(final String[] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS", weights);
-		return stringZUnion(rawBinaryKeys(keys), new LettuceZAggregateArgs(weights), args);
+		return stringZUnion(SafeEncoder.encode(keys), new LettuceZAggregateArgs(weights), args);
 	}
 
 	@Override
 	public List<byte[]> zUnion(final byte[][] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS", weights);
-		return binaryZUnion(rawKeys(keys), new LettuceZAggregateArgs(weights), args);
+		return binaryZUnion(keys, new LettuceZAggregateArgs(weights), args);
 	}
 
 	@Override
 	public List<Tuple> zUnionWithScores(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.ZUNION, args, (cmd)->cmd.zunionWithScores(rawBinaryKeys(keys)),
-				(cmd)->cmd.zunionWithScores(rawBinaryKeys(keys)), new ListConverter<>(new ScoredValueTupleConverter()));
+		return executeCommand(RedisCommand.ZUNION, args, (cmd)->cmd.zunionWithScores(SafeEncoder.encode(keys)),
+				(cmd)->cmd.zunionWithScores(SafeEncoder.encode(keys)),
+				new ListConverter<>(new ScoredValueTupleConverter()));
 	}
 
 	@Override
 	public List<Tuple> zUnionWithScores(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.ZUNION, args, (cmd)->cmd.zunionWithScores(rawKeys(keys)),
-				(cmd)->cmd.zunionWithScores(rawKeys(keys)), new ListConverter<>(new ScoredValueTupleConverter()));
+		return executeCommand(RedisCommand.ZUNION, args, (cmd)->cmd.zunionWithScores(keys),
+				(cmd)->cmd.zunionWithScores(keys), new ListConverter<>(new ScoredValueTupleConverter()));
 	}
 
 	@Override
 	public List<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate);
-		return zUnionWithScores(rawBinaryKeys(keys), new LettuceZAggregateArgs(aggregate), args);
+		return zUnionWithScores(SafeEncoder.encode(keys), new LettuceZAggregateArgs(aggregate), args);
 	}
 
 	@Override
 	public List<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate);
-		return zUnionWithScores(rawKeys(keys), new LettuceZAggregateArgs(aggregate), args);
+		return zUnionWithScores(keys, new LettuceZAggregateArgs(aggregate), args);
 	}
 
 	@Override
 	public List<Tuple> zUnionWithScores(final String[] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate).add("WEIGHTS", weights);
-		return zUnionWithScores(rawBinaryKeys(keys), new LettuceZAggregateArgs(aggregate, weights), args);
+		return zUnionWithScores(SafeEncoder.encode(keys), new LettuceZAggregateArgs(aggregate, weights), args);
 	}
 
 	@Override
 	public List<Tuple> zUnionWithScores(final byte[][] keys, final Aggregate aggregate, final double... weights) {
 		final CommandArguments args = CommandArguments.create(keys).add("AGGREGATE", aggregate).add("WEIGHTS", weights);
-		return zUnionWithScores(rawKeys(keys), new LettuceZAggregateArgs(aggregate, weights), args);
+		return zUnionWithScores(keys, new LettuceZAggregateArgs(aggregate, weights), args);
 	}
 
 	@Override
 	public List<Tuple> zUnionWithScores(final String[] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS", weights);
-		return zUnionWithScores(rawBinaryKeys(keys), new LettuceZAggregateArgs(weights), args);
+		return zUnionWithScores(SafeEncoder.encode(keys), new LettuceZAggregateArgs(weights), args);
 	}
 
 	@Override
 	public List<Tuple> zUnionWithScores(final byte[][] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create(keys).add("WEIGHTS", weights);
-		return zUnionWithScores(rawKeys(keys), new LettuceZAggregateArgs(weights), args);
+		return zUnionWithScores(keys, new LettuceZAggregateArgs(weights), args);
 	}
 
 	@Override
 	public Long zUnionStore(final String destKey, final String... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
 		return executeCommand(RedisCommand.ZUNIONSTORE, args,
-				(cmd)->cmd.zunionstore(rawBinaryKey(destKey), rawBinaryKeys(keys)),
-				(cmd)->cmd.zunionstore(rawBinaryKey(destKey), rawBinaryKeys(keys)));
+				(cmd)->cmd.zunionstore(SafeEncoder.encode(destKey), SafeEncoder.encode(keys)),
+				(cmd)->cmd.zunionstore(SafeEncoder.encode(destKey), SafeEncoder.encode(keys)));
 	}
 
 	@Override
 	public Long zUnionStore(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-		return executeCommand(RedisCommand.ZUNIONSTORE, args, (cmd)->cmd.zunionstore(rawKey(destKey), rawKeys(keys)),
-				(cmd)->cmd.zunionstore(rawKey(destKey), rawKeys(keys)));
+		return executeCommand(RedisCommand.ZUNIONSTORE, args, (cmd)->cmd.zunionstore(destKey, keys),
+				(cmd)->cmd.zunionstore(destKey, keys));
 	}
 
 	@Override
 	public Long zUnionStore(final String destKey, final String[] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys).add("AGGREGATE", aggregate);
-		return zUnionStore(rawBinaryKey(destKey), rawBinaryKeys(keys), new LettuceZStoreArgs(aggregate), args);
+		return zUnionStore(SafeEncoder.encode(destKey), SafeEncoder.encode(keys), new LettuceZStoreArgs(aggregate),
+				args);
 	}
 
 	@Override
 	public Long zUnionStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys).add("AGGREGATE", aggregate);
-		return zUnionStore(rawKey(destKey), rawKeys(keys), new LettuceZStoreArgs(aggregate), args);
+		return zUnionStore(destKey, keys, new LettuceZStoreArgs(aggregate), args);
 	}
 
 	@Override
@@ -1502,7 +1521,8 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                        final double... weights) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys).add("AGGREGATE", aggregate)
 				.add("WEIGHTS", weights);
-		return zUnionStore(rawBinaryKey(destKey), rawBinaryKeys(keys), new LettuceZStoreArgs(aggregate, weights), args);
+		return zUnionStore(SafeEncoder.encode(destKey), SafeEncoder.encode(keys),
+				new LettuceZStoreArgs(aggregate, weights), args);
 	}
 
 	@Override
@@ -1510,27 +1530,27 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 	                        final double... weights) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys).add("AGGREGATE", aggregate)
 				.add("WEIGHTS", weights);
-		return zUnionStore(rawKey(destKey), rawKeys(keys), new LettuceZStoreArgs(aggregate, weights), args);
+		return zUnionStore(destKey, keys, new LettuceZStoreArgs(aggregate, weights), args);
 	}
 
 	@Override
 	public Long zUnionStore(final String destKey, final String[] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys).add("WEIGHTS", weights);
-		return zUnionStore(rawBinaryKey(destKey), rawBinaryKeys(keys), new LettuceZStoreArgs(weights), args);
+		return zUnionStore(SafeEncoder.encode(destKey), SafeEncoder.encode(keys), new LettuceZStoreArgs(weights), args);
 	}
 
 	@Override
 	public Long zUnionStore(final byte[] destKey, final byte[][] keys, final double... weights) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys).add("WEIGHTS", weights);
-		return zUnionStore(rawKey(destKey), rawKeys(keys), new LettuceZStoreArgs(weights), args);
+		return zUnionStore(destKey, keys, new LettuceZStoreArgs(weights), args);
 	}
 
 	private <K> KeyValue<K, List<Tuple>> bzMPop(final byte[][] keys, final int timeout, final MinMax minMax,
 	                                            final int count, final Converter<byte[], K> keyConverter,
 	                                            final CommandArguments args) {
 		return executeCommand(RedisCommand.BZMPOP, args,
-				(cmd)->cmd.bzmpop(timeout, (long) count, new LettuceZPopArgs(minMax), rawKeys(keys)),
-				(cmd)->cmd.bzmpop(timeout, (long) count, new LettuceZPopArgs(minMax), rawKeys(keys)),
+				(cmd)->cmd.bzmpop(timeout, (long) count, new LettuceZPopArgs(minMax), keys),
+				(cmd)->cmd.bzmpop(timeout, (long) count, new LettuceZPopArgs(minMax), keys),
 				new KeyValueConverter<>(keyConverter, new ListConverter<>(new ScoredValueTupleConverter())));
 	}
 
@@ -1556,8 +1576,8 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 		}
 
 		return executeCommand(RedisCommand.ZADD, args,
-				(cmd)->cmd.zadd(rawKey(key), new LettuceZAddArgs(argument), scoredValues),
-				(cmd)->cmd.zadd(rawKey(key), new LettuceZAddArgs(argument), scoredValues));
+				(cmd)->cmd.zadd(key, new LettuceZAddArgs(argument), scoredValues),
+				(cmd)->cmd.zadd(key, new LettuceZAddArgs(argument), scoredValues));
 	}
 
 	private List<Tuple> zDiffWithScores(final byte[][] keys, final CommandArguments args) {
@@ -1639,16 +1659,16 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 
 	private List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end,
 	                                     final CommandArguments args) {
-		return executeCommand(RedisCommand.ZRANGE, args, (cmd)->cmd.zrangeWithScores(rawKey(key), start, end),
-				(cmd)->cmd.zrangeWithScores(rawKey(key), start, end),
+		return executeCommand(RedisCommand.ZRANGE, args, (cmd)->cmd.zrangeWithScores(key, start, end),
+				(cmd)->cmd.zrangeWithScores(key, start, end),
 				new ListConverter<>(new ScoredValueTupleConverter()));
 	}
 
 	private <T> List<T> zRangeByLex(final byte[] key, final double min, final double max,
 	                                final Converter<List<byte[]>, List<T>> converter, final CommandArguments args) {
 		final Range<byte[]> range = Range.create(NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
-		return executeCommand(RedisCommand.ZRANGEBYLEX, args, (cmd)->cmd.zrangebylex(rawKey(key), range),
-				(cmd)->cmd.zrangebylex(rawKey(key), range), converter);
+		return executeCommand(RedisCommand.ZRANGEBYLEX, args, (cmd)->cmd.zrangebylex(key, range),
+				(cmd)->cmd.zrangebylex(key, range), converter);
 	}
 
 	private <T> List<T> zRangeByLex(final byte[] key, final double min, final double max, final int offset,
@@ -1749,14 +1769,14 @@ public final class LettuceSortedSetCommands extends AbstractLettuceRedisCommands
 
 	private List<byte[]> binaryZUnion(final byte[][] keys, final LettuceZAggregateArgs aggregateArgs,
 	                                  final CommandArguments args) {
-		return executeCommand(RedisCommand.ZUNION, args, (cmd)->cmd.zunion(aggregateArgs, rawKeys(keys)),
-				(cmd)->cmd.zunion(aggregateArgs, rawKeys(keys)));
+		return executeCommand(RedisCommand.ZUNION, args, (cmd)->cmd.zunion(aggregateArgs, keys),
+				(cmd)->cmd.zunion(aggregateArgs, keys));
 	}
 
 	private List<Tuple> zUnionWithScores(final byte[][] keys, final LettuceZAggregateArgs aggregateArgs,
 	                                     final CommandArguments args) {
-		return executeCommand(RedisCommand.ZUNION, args, (cmd)->cmd.zunionWithScores(aggregateArgs, rawKeys(keys)),
-				(cmd)->cmd.zunionWithScores(aggregateArgs, rawKeys(keys)),
+		return executeCommand(RedisCommand.ZUNION, args, (cmd)->cmd.zunionWithScores(aggregateArgs, keys),
+				(cmd)->cmd.zunionWithScores(aggregateArgs, keys),
 				new ListConverter<>(new ScoredValueTupleConverter()));
 	}
 

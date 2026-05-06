@@ -24,7 +24,9 @@
  */
 package com.buession.redis.spring.data.jedis;
 
+import com.buession.core.builder.SetBuilder;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.redis.connection.RedisSentinelConfiguration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -42,7 +44,8 @@ public class SpringDataRedisTest {
 
 	@Test
 	public void exec() {
-		RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration("192.168.0.161", 30341);
+		RedisSentinelConfiguration configuration = new RedisSentinelConfiguration("redis-master", SetBuilder.of("192" +
+				".168.0.231:26371"));
 		JedisConnectionFactory connectionFactory = new JedisConnectionFactory(configuration);
 
 		connectionFactory.start();
@@ -51,13 +54,11 @@ public class SpringDataRedisTest {
 
 		redisTemplate.afterPropertiesSet();
 
-		redisTemplate.multi();
 		redisTemplate.opsForValue().set("a", "Jedis");
 		redisTemplate.opsForValue().set("b", "Jedis");
 		redisTemplate.expire("a", Duration.ofSeconds(30));
 		String ret = redisTemplate.opsForValue().get("a");
-		List<Object> result = redisTemplate.exec();
-		System.out.println(result);
+		System.out.println(ret);
 	}
 
 }

@@ -90,14 +90,14 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	@Override
 	public Long geoAdd(final String key, final NxXx nxXx, final KeyValue<String, Geo>... memberCoordinates) {
 		final CommandArguments args = CommandArguments.create(key).add(nxXx).add(memberCoordinates);
-		return geoAdd(rawKey(key), new LettuceGeoAddArgs(nxXx), memberCoordinates, args);
+		return geoAdd(key, new LettuceGeoAddArgs(nxXx), memberCoordinates, args);
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	public Long geoAdd(final byte[] key, final NxXx nxXx, final KeyValue<byte[], Geo>... memberCoordinates) {
 		final CommandArguments args = CommandArguments.create(key).add(nxXx).add(memberCoordinates);
-		return geoAdd(rawKey(key), new LettuceGeoAddArgs(nxXx), memberCoordinates, args);
+		return geoAdd(key, new LettuceGeoAddArgs(nxXx), memberCoordinates, args);
 	}
 
 	@SuppressWarnings({"unchecked"})
@@ -106,7 +106,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                   final KeyValue<String, Geo>... memberCoordinates) {
 		final CommandArguments args = CommandArguments.create(key).add(nxXx).add(ch ? "CH" : null)
 				.add(memberCoordinates);
-		return geoAdd(rawKey(key), new LettuceGeoAddArgs(nxXx, ch), memberCoordinates, args);
+		return geoAdd(key, new LettuceGeoAddArgs(nxXx, ch), memberCoordinates, args);
 	}
 
 	@SuppressWarnings({"unchecked"})
@@ -115,30 +115,30 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                   final KeyValue<byte[], Geo>... memberCoordinates) {
 		final CommandArguments args = CommandArguments.create(key).add(nxXx).add(ch ? "CH" : null)
 				.add(memberCoordinates);
-		return geoAdd(rawKey(key), new LettuceGeoAddArgs(nxXx, ch), memberCoordinates, args);
+		return geoAdd(key, new LettuceGeoAddArgs(nxXx, ch), memberCoordinates, args);
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	public Long geoAdd(final String key, final boolean ch, final KeyValue<String, Geo>... memberCoordinates) {
 		final CommandArguments args = CommandArguments.create(key).add(ch ? "CH" : null).add(memberCoordinates);
-		return geoAdd(rawKey(key), new LettuceGeoAddArgs(ch), memberCoordinates, args);
+		return geoAdd(key, new LettuceGeoAddArgs(ch), memberCoordinates, args);
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	public Long geoAdd(final byte[] key, final boolean ch, final KeyValue<byte[], Geo>... memberCoordinates) {
 		final CommandArguments args = CommandArguments.create(key).add(ch ? "CH" : null).add(memberCoordinates);
-		return geoAdd(rawKey(key), new LettuceGeoAddArgs(ch), memberCoordinates, args);
+		return geoAdd(key, new LettuceGeoAddArgs(ch), memberCoordinates, args);
 	}
 
 	@Override
 	public Double geoDist(final String key, final String member1, final String member2) {
 		final CommandArguments args = CommandArguments.create(key).add(member1, member2);
 		return executeCommand(RedisCommand.GEODIST, args,
-				(cmd)->cmd.geodist(rawBinaryKey(key), SafeEncoder.encode(member1), SafeEncoder.encode(member2),
+				(cmd)->cmd.geodist(SafeEncoder.encode(key), SafeEncoder.encode(member1), SafeEncoder.encode(member2),
 						GeoArgs.Unit.m),
-				(cmd)->cmd.geodist(rawBinaryKey(key), SafeEncoder.encode(member1), SafeEncoder.encode(member2),
+				(cmd)->cmd.geodist(SafeEncoder.encode(key), SafeEncoder.encode(member1), SafeEncoder.encode(member2),
 						GeoArgs.Unit.m));
 	}
 
@@ -146,8 +146,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2) {
 		final CommandArguments args = CommandArguments.create(key).add(member1, member2);
 		return executeCommand(RedisCommand.GEODIST, args,
-				(cmd)->cmd.geodist(rawKey(key), member1, member2, GeoArgs.Unit.m),
-				(cmd)->cmd.geodist(rawKey(key), member1, member2, GeoArgs.Unit.m));
+				(cmd)->cmd.geodist(key, member1, member2, GeoArgs.Unit.m),
+				(cmd)->cmd.geodist(key, member1, member2, GeoArgs.Unit.m));
 	}
 
 	@Override
@@ -155,9 +155,9 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(key).add(member1, member2).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
 		return executeCommand(RedisCommand.GEODIST, args,
-				(cmd)->cmd.geodist(rawBinaryKey(key), SafeEncoder.encode(member1), SafeEncoder.encode(member2),
+				(cmd)->cmd.geodist(SafeEncoder.encode(key), SafeEncoder.encode(member1), SafeEncoder.encode(member2),
 						geoUnitConverter.convert(unit)),
-				(cmd)->cmd.geodist(rawBinaryKey(key), SafeEncoder.encode(member1), SafeEncoder.encode(member2),
+				(cmd)->cmd.geodist(SafeEncoder.encode(key), SafeEncoder.encode(member1), SafeEncoder.encode(member2),
 						geoUnitConverter.convert(unit)));
 	}
 
@@ -166,24 +166,24 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(key).add(member1, member2).add(unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
 		return executeCommand(RedisCommand.GEODIST, args,
-				(cmd)->cmd.geodist(rawKey(key), member1, member2, geoUnitConverter.convert(unit)),
-				(cmd)->cmd.geodist(rawKey(key), member1, member2, geoUnitConverter.convert(unit)));
+				(cmd)->cmd.geodist(key, member1, member2, geoUnitConverter.convert(unit)),
+				(cmd)->cmd.geodist(key, member1, member2, geoUnitConverter.convert(unit)));
 	}
 
 	@Override
 	public List<String> geoHash(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
 		return executeCommand(RedisCommand.GEOHASH, args,
-				(cmd)->cmd.geohash(rawBinaryKey(key), SafeEncoder.encode(members)),
-				(cmd)->cmd.geohash(rawBinaryKey(key), SafeEncoder.encode(members)),
+				(cmd)->cmd.geohash(SafeEncoder.encode(key), SafeEncoder.encode(members)),
+				(cmd)->cmd.geohash(SafeEncoder.encode(key), SafeEncoder.encode(members)),
 				new ListConverter<>(Value::getValue));
 	}
 
 	@Override
 	public List<byte[]> geoHash(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		return executeCommand(RedisCommand.GEOHASH, args, (cmd)->cmd.geohash(rawKey(key), members),
-				(cmd)->cmd.geohash(rawKey(key), members),
+		return executeCommand(RedisCommand.GEOHASH, args, (cmd)->cmd.geohash(key, members),
+				(cmd)->cmd.geohash(key, members),
 				new ListConverter<>((v)->SafeEncoder.encode(v.getValue())));
 	}
 
@@ -191,16 +191,16 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	public List<Geo> geoPos(final String key, final String... members) {
 		final CommandArguments args = CommandArguments.create(key).add(SafeEncoder.encode(members));
 		return executeCommand(RedisCommand.GEOPOS, args,
-				(cmd)->cmd.geopos(rawBinaryKey(key), SafeEncoder.encode(members)),
-				(cmd)->cmd.geopos(rawBinaryKey(key), SafeEncoder.encode(members)),
+				(cmd)->cmd.geopos(SafeEncoder.encode(key), SafeEncoder.encode(members)),
+				(cmd)->cmd.geopos(SafeEncoder.encode(key), SafeEncoder.encode(members)),
 				new ListConverter<>(new GeoCoordinateConverter()));
 	}
 
 	@Override
 	public List<Geo> geoPos(final byte[] key, final byte[]... members) {
 		final CommandArguments args = CommandArguments.create(key).add(members);
-		return executeCommand(RedisCommand.GEOPOS, args, (cmd)->cmd.geopos(rawKey(key), members),
-				(cmd)->cmd.geopos(rawKey(key), members),
+		return executeCommand(RedisCommand.GEOPOS, args, (cmd)->cmd.geopos(key, members),
+				(cmd)->cmd.geopos(key, members),
 				new ListConverter<>(new GeoCoordinateConverter()));
 	}
 
@@ -210,8 +210,10 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
 		return executeCommand(RedisCommand.GEORADIUS, args,
-				(cmd)->cmd.georadius(rawBinaryKey(key), longitude, latitude, radius, geoUnitConverter.convert(unit)),
-				(cmd)->cmd.georadius(rawBinaryKey(key), longitude, latitude, radius, geoUnitConverter.convert(unit)),
+				(cmd)->cmd.georadius(SafeEncoder.encode(key), longitude, latitude, radius,
+						geoUnitConverter.convert(unit)),
+				(cmd)->cmd.georadius(SafeEncoder.encode(key), longitude, latitude, radius,
+						geoUnitConverter.convert(unit)),
 				new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
 	}
 
@@ -221,8 +223,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
 		return executeCommand(RedisCommand.GEORADIUS, args,
-				(cmd)->cmd.georadius(rawKey(key), longitude, latitude, radius, geoUnitConverter.convert(unit)),
-				(cmd)->cmd.georadius(rawKey(key), longitude, latitude, radius, geoUnitConverter.convert(unit)),
+				(cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnitConverter.convert(unit)),
+				(cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnitConverter.convert(unit)),
 				new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
 	}
 
@@ -231,7 +233,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final double radius, final GeoUnit unit, final GeoRadiusArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(argument);
-		return geoRadius(rawBinaryKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument), args);
+		return geoRadius(SafeEncoder.encode(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument),
+				args);
 	}
 
 	@Override
@@ -239,7 +242,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final double radius, final GeoUnit unit, final GeoRadiusArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(argument);
-		return geoRadius(rawKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument), args);
+		return geoRadius(key, longitude, latitude, radius, unit, new LettuceGeoArgs(argument), args);
 	}
 
 	@Override
@@ -248,7 +251,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(argument).add(Keyword.Common.COUNT, count);
-		return geoRadius(rawBinaryKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count),
+		return geoRadius(SafeEncoder.encode(key), longitude, latitude, radius, unit,
+				new LettuceGeoArgs(argument, count),
 				args);
 	}
 
@@ -258,7 +262,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(argument).add(Keyword.Common.COUNT, count);
-		return geoRadius(rawKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count), args);
+		return geoRadius(key, longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count), args);
 	}
 
 	@Override
@@ -267,7 +271,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final int count, final boolean any) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(argument).add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
-		return geoRadius(rawBinaryKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count, any),
+		return geoRadius(SafeEncoder.encode(key), longitude, latitude, radius, unit,
+				new LettuceGeoArgs(argument, count, any),
 				args);
 	}
 
@@ -277,7 +282,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final int count, final boolean any) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(argument).add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
-		return geoRadius(rawKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count, any),
+		return geoRadius(key, longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count, any),
 				args);
 	}
 
@@ -286,7 +291,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final double radius, final GeoUnit unit, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(Keyword.Common.COUNT, count);
-		return geoRadius(rawBinaryKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(count), args);
+		return geoRadius(SafeEncoder.encode(key), longitude, latitude, radius, unit, new LettuceGeoArgs(count), args);
 	}
 
 	@Override
@@ -294,7 +299,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final double radius, final GeoUnit unit, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(Keyword.Common.COUNT, count);
-		return geoRadius(rawKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(count), args);
+		return geoRadius(key, longitude, latitude, radius, unit, new LettuceGeoArgs(count), args);
 	}
 
 	@Override
@@ -302,7 +307,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final double radius, final GeoUnit unit, final int count, final boolean any) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
-		return geoRadius(rawBinaryKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(count, any), args);
+		return geoRadius(SafeEncoder.encode(key), longitude, latitude, radius, unit, new LettuceGeoArgs(count, any),
+				args);
 	}
 
 	@Override
@@ -310,7 +316,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final double radius, final GeoUnit unit, final int count, final boolean any) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
-		return geoRadius(rawKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(count, any), args);
+		return geoRadius(key, longitude, latitude, radius, unit, new LettuceGeoArgs(count, any), args);
 	}
 
 	@Override
@@ -318,8 +324,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                      final double longitude, final double latitude, final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(storeOption, destKey);
-		return geoRadius(rawBinaryKey(key), longitude, latitude, radius, unit,
-				new LettuceGeoRadiusStoreArgs<>(rawBinaryKey(key), storeOption), args);
+		return geoRadius(SafeEncoder.encode(key), longitude, latitude, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(SafeEncoder.encode(key), storeOption), args);
 	}
 
 	@Override
@@ -327,8 +333,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                      final double longitude, final double latitude, final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(storeOption, destKey);
-		return geoRadius(rawKey(key), longitude, latitude, radius, unit,
-				new LettuceGeoRadiusStoreArgs<>(rawKey(key), storeOption), args);
+		return geoRadius(key, longitude, latitude, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(key, storeOption), args);
 	}
 
 	@Override
@@ -337,8 +343,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                      final GeoRadiusArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(argument).add(storeOption, destKey);
-		return geoRadius(rawBinaryKey(key), longitude, latitude, radius, unit,
-				new LettuceGeoRadiusStoreArgs<>(rawBinaryKey(key), storeOption, argument), args);
+		return geoRadius(SafeEncoder.encode(key), longitude, latitude, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(SafeEncoder.encode(key), storeOption, argument), args);
 	}
 
 	@Override
@@ -347,8 +353,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                      final GeoRadiusArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(argument).add(storeOption, destKey);
-		return geoRadius(rawKey(key), longitude, latitude, radius, unit,
-				new LettuceGeoRadiusStoreArgs<>(rawKey(key), storeOption, argument), args);
+		return geoRadius(key, longitude, latitude, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(key, storeOption, argument), args);
 	}
 
 	@Override
@@ -357,8 +363,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                      final GeoRadiusArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(argument).add(Keyword.Common.COUNT, count).add(storeOption, destKey);
-		return geoRadius(rawBinaryKey(key), longitude, latitude, radius, unit,
-				new LettuceGeoRadiusStoreArgs<>(rawBinaryKey(key), storeOption, argument, count), args);
+		return geoRadius(SafeEncoder.encode(key), longitude, latitude, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(SafeEncoder.encode(key), storeOption, argument, count), args);
 	}
 
 	@Override
@@ -367,8 +373,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                      final GeoRadiusArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(argument).add(Keyword.Common.COUNT, count).add(storeOption, destKey);
-		return geoRadius(rawKey(key), longitude, latitude, radius, unit,
-				new LettuceGeoRadiusStoreArgs<>(rawKey(key), storeOption, argument, count), args);
+		return geoRadius(key, longitude, latitude, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(key, storeOption, argument, count), args);
 	}
 
 	@Override
@@ -378,8 +384,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(argument).add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null)
 				.add(storeOption, destKey);
-		return geoRadius(rawBinaryKey(key), longitude, latitude, radius, unit,
-				new LettuceGeoRadiusStoreArgs<>(rawBinaryKey(key), storeOption, argument, count), args);
+		return geoRadius(SafeEncoder.encode(key), longitude, latitude, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(SafeEncoder.encode(key), storeOption, argument, count), args);
 	}
 
 	@Override
@@ -389,8 +395,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(argument).add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null)
 				.add(storeOption, destKey);
-		return geoRadius(rawKey(key), longitude, latitude, radius, unit,
-				new LettuceGeoRadiusStoreArgs<>(rawKey(key), storeOption, argument, count), args);
+		return geoRadius(key, longitude, latitude, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(key, storeOption, argument, count), args);
 	}
 
 	@Override
@@ -399,8 +405,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                      final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(Keyword.Common.COUNT, count).add(storeOption, destKey);
-		return geoRadius(rawBinaryKey(key), longitude, latitude, radius, unit,
-				new LettuceGeoRadiusStoreArgs<>(rawBinaryKey(key), storeOption, count), args);
+		return geoRadius(SafeEncoder.encode(key), longitude, latitude, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(SafeEncoder.encode(key), storeOption, count), args);
 	}
 
 	@Override
@@ -409,8 +415,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                      final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(Keyword.Common.COUNT, count).add(storeOption, destKey);
-		return geoRadius(rawKey(key), longitude, latitude, radius, unit,
-				new LettuceGeoRadiusStoreArgs<>(rawKey(key), storeOption, count), args);
+		return geoRadius(key, longitude, latitude, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(key, storeOption, count), args);
 	}
 
 	@Override
@@ -419,8 +425,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                      final int count, final boolean any) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null).add(storeOption, destKey);
-		return geoRadius(rawBinaryKey(key), longitude, latitude, radius, unit,
-				new LettuceGeoRadiusStoreArgs<>(rawBinaryKey(key), storeOption, count, any), args);
+		return geoRadius(SafeEncoder.encode(key), longitude, latitude, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(SafeEncoder.encode(key), storeOption, count, any), args);
 	}
 
 	@Override
@@ -429,8 +435,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                      final int count, final boolean any) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null).add(storeOption, destKey);
-		return geoRadius(rawKey(key), longitude, latitude, radius, unit,
-				new LettuceGeoRadiusStoreArgs<>(rawKey(key), storeOption, count, any), args);
+		return geoRadius(key, longitude, latitude, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(key, storeOption, count, any), args);
 	}
 
 	@Override
@@ -439,8 +445,10 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
 		return executeCommand(RedisCommand.GEORADIUS_RO, args,
-				(cmd)->cmd.georadius(rawBinaryKey(key), longitude, latitude, radius, geoUnitConverter.convert(unit)),
-				(cmd)->cmd.georadius(rawBinaryKey(key), longitude, latitude, radius, geoUnitConverter.convert(unit)),
+				(cmd)->cmd.georadius(SafeEncoder.encode(key), longitude, latitude, radius,
+						geoUnitConverter.convert(unit)),
+				(cmd)->cmd.georadius(SafeEncoder.encode(key), longitude, latitude, radius,
+						geoUnitConverter.convert(unit)),
 				new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
 	}
 
@@ -450,8 +458,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
 		return executeCommand(RedisCommand.GEORADIUS_RO, args,
-				(cmd)->cmd.georadius(rawKey(key), longitude, latitude, radius, geoUnitConverter.convert(unit)),
-				(cmd)->cmd.georadius(rawKey(key), longitude, latitude, radius, geoUnitConverter.convert(unit)),
+				(cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnitConverter.convert(unit)),
+				(cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnitConverter.convert(unit)),
 				new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
 	}
 
@@ -460,7 +468,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                   final double radius, final GeoUnit unit, final GeoRadiusArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(argument);
-		return geoRadiusRo(rawBinaryKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument), args);
+		return geoRadiusRo(SafeEncoder.encode(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument),
+				args);
 	}
 
 	@Override
@@ -468,7 +477,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                   final double radius, final GeoUnit unit, final GeoRadiusArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(argument);
-		return geoRadiusRo(rawKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument), args);
+		return geoRadiusRo(key, longitude, latitude, radius, unit, new LettuceGeoArgs(argument), args);
 	}
 
 	@Override
@@ -477,7 +486,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                   final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(argument).add(Keyword.Common.COUNT, count);
-		return geoRadiusRo(rawBinaryKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count),
+		return geoRadiusRo(SafeEncoder.encode(key), longitude, latitude, radius, unit,
+				new LettuceGeoArgs(argument, count),
 				args);
 	}
 
@@ -487,7 +497,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                   final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(argument).add(Keyword.Common.COUNT, count);
-		return geoRadiusRo(rawKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count), args);
+		return geoRadiusRo(key, longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count), args);
 	}
 
 	@Override
@@ -496,7 +506,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                   final int count, final boolean any) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(argument).add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
-		return geoRadiusRo(rawBinaryKey(key), longitude, latitude, radius, unit,
+		return geoRadiusRo(SafeEncoder.encode(key), longitude, latitude, radius, unit,
 				new LettuceGeoArgs(argument, count, any), args);
 	}
 
@@ -506,7 +516,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                   final int count, final boolean any) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(argument).add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
-		return geoRadiusRo(rawKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count, any),
+		return geoRadiusRo(key, longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count, any),
 				args);
 	}
 
@@ -515,7 +525,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                   final double radius, final GeoUnit unit, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(Keyword.Common.COUNT, count);
-		return geoRadiusRo(rawBinaryKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(count), args);
+		return geoRadiusRo(SafeEncoder.encode(key), longitude, latitude, radius, unit, new LettuceGeoArgs(count), args);
 	}
 
 	@Override
@@ -523,7 +533,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                   final double radius, final GeoUnit unit, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(Keyword.Common.COUNT, count);
-		return geoRadiusRo(rawKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(count), args);
+		return geoRadiusRo(key, longitude, latitude, radius, unit, new LettuceGeoArgs(count), args);
 	}
 
 	@Override
@@ -531,7 +541,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                   final double radius, final GeoUnit unit, final int count, final boolean any) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
-		return geoRadiusRo(rawBinaryKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(count, any), args);
+		return geoRadiusRo(SafeEncoder.encode(key), longitude, latitude, radius, unit, new LettuceGeoArgs(count, any),
+				args);
 	}
 
 	@Override
@@ -539,7 +550,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                   final double radius, final GeoUnit unit, final int count, final boolean any) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
-		return geoRadiusRo(rawKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(count, any), args);
+		return geoRadiusRo(key, longitude, latitude, radius, unit, new LettuceGeoArgs(count, any), args);
 	}
 
 	@Override
@@ -548,9 +559,9 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
 		return executeCommand(RedisCommand.GEORADIUS, args,
-				(cmd)->cmd.georadiusbymember(rawBinaryKey(key), SafeEncoder.encode(member), radius,
+				(cmd)->cmd.georadiusbymember(SafeEncoder.encode(key), SafeEncoder.encode(member), radius,
 						geoUnitConverter.convert(unit)),
-				(cmd)->cmd.georadiusbymember(rawBinaryKey(key), SafeEncoder.encode(member), radius,
+				(cmd)->cmd.georadiusbymember(SafeEncoder.encode(key), SafeEncoder.encode(member), radius,
 						geoUnitConverter.convert(unit)), new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
 	}
 
@@ -560,8 +571,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
 		return executeCommand(RedisCommand.GEORADIUS, args,
-				(cmd)->cmd.georadiusbymember(rawKey(key), member, radius, geoUnitConverter.convert(unit)),
-				(cmd)->cmd.georadiusbymember(rawKey(key), member, radius, geoUnitConverter.convert(unit)),
+				(cmd)->cmd.georadiusbymember(key, member, radius, geoUnitConverter.convert(unit)),
+				(cmd)->cmd.georadiusbymember(key, member, radius, geoUnitConverter.convert(unit)),
 				new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
 	}
 
@@ -569,7 +580,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
 	                                         final GeoUnit unit, final GeoRadiusArgument argument) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument);
-		return geoRadiusByMember(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
+		return geoRadiusByMember(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit,
 				new LettuceGeoArgs(argument), args);
 	}
 
@@ -577,7 +588,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
 	                                         final GeoUnit unit, final GeoRadiusArgument argument) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument);
-		return geoRadiusByMember(rawKey(key), member, radius, unit, new LettuceGeoArgs(argument), args);
+		return geoRadiusByMember(key, member, radius, unit, new LettuceGeoArgs(argument), args);
 	}
 
 	@Override
@@ -585,7 +596,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                         final GeoUnit unit, final GeoRadiusArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument)
 				.add(Keyword.Common.COUNT, count);
-		return geoRadiusByMember(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
+		return geoRadiusByMember(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit,
 				new LettuceGeoArgs(argument, count), args);
 	}
 
@@ -594,7 +605,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                         final GeoUnit unit, final GeoRadiusArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument)
 				.add(Keyword.Common.COUNT, count);
-		return geoRadiusByMember(rawKey(key), member, radius, unit, new LettuceGeoArgs(argument, count), args);
+		return geoRadiusByMember(key, member, radius, unit, new LettuceGeoArgs(argument, count), args);
 	}
 
 	@Override
@@ -603,7 +614,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                         final boolean any) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument)
 				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
-		return geoRadiusByMember(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
+		return geoRadiusByMember(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit,
 				new LettuceGeoArgs(argument, count, any), args);
 	}
 
@@ -613,7 +624,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                         final boolean any) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument)
 				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
-		return geoRadiusByMember(rawKey(key), member, radius, unit, new LettuceGeoArgs(argument, count, any), args);
+		return geoRadiusByMember(key, member, radius, unit, new LettuceGeoArgs(argument, count, any), args);
 	}
 
 	@Override
@@ -621,7 +632,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                         final GeoUnit unit, final int count) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit)
 				.add(Keyword.Common.COUNT, count);
-		return geoRadiusByMember(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit, new LettuceGeoArgs(count),
+		return geoRadiusByMember(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit,
+				new LettuceGeoArgs(count),
 				args);
 	}
 
@@ -630,7 +642,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                         final GeoUnit unit, final int count) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit)
 				.add(Keyword.Common.COUNT, count);
-		return geoRadiusByMember(rawKey(key), member, radius, unit, new LettuceGeoArgs(count), args);
+		return geoRadiusByMember(key, member, radius, unit, new LettuceGeoArgs(count), args);
 	}
 
 	@Override
@@ -638,7 +650,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                         final GeoUnit unit, final int count, final boolean any) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit)
 				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
-		return geoRadiusByMember(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
+		return geoRadiusByMember(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit,
 				new LettuceGeoArgs(count, any), args);
 	}
 
@@ -647,7 +659,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                         final GeoUnit unit, final int count, final boolean any) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit)
 				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
-		return geoRadiusByMember(rawKey(key), member, radius, unit, new LettuceGeoArgs(count, any), args);
+		return geoRadiusByMember(key, member, radius, unit, new LettuceGeoArgs(count, any), args);
 	}
 
 	@Override
@@ -655,8 +667,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                              final String member, final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit)
 				.add(storeOption, destKey);
-		return geoRadiusByMember(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
-				new LettuceGeoRadiusStoreArgs<>(rawBinaryKey(destKey), storeOption), args);
+		return geoRadiusByMember(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(SafeEncoder.encode(destKey), storeOption), args);
 	}
 
 	@Override
@@ -664,8 +676,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                              final byte[] member, final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit)
 				.add(storeOption, destKey);
-		return geoRadiusByMember(rawKey(key), member, radius, unit,
-				new LettuceGeoRadiusStoreArgs<>(rawKey(destKey), storeOption), args);
+		return geoRadiusByMember(key, member, radius, unit, new LettuceGeoRadiusStoreArgs<>(destKey, storeOption),
+				args);
 	}
 
 	@Override
@@ -674,8 +686,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                              final GeoRadiusArgument argument) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument)
 				.add(storeOption, destKey);
-		return geoRadiusByMember(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
-				new LettuceGeoRadiusStoreArgs<>(rawBinaryKey(destKey), storeOption, argument), args);
+		return geoRadiusByMember(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(SafeEncoder.encode(destKey), storeOption, argument), args);
 	}
 
 	@Override
@@ -684,8 +696,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                              final GeoRadiusArgument argument) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument)
 				.add(storeOption, destKey);
-		return geoRadiusByMember(rawKey(key), member, radius, unit,
-				new LettuceGeoRadiusStoreArgs<>(rawKey(destKey), storeOption, argument), args);
+		return geoRadiusByMember(key, member, radius, unit, new LettuceGeoRadiusStoreArgs<>(destKey, storeOption,
+				argument), args);
 	}
 
 	@Override
@@ -694,8 +706,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                              final GeoRadiusArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument)
 				.add(Keyword.Common.COUNT, count).add(storeOption, destKey);
-		return geoRadiusByMember(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
-				new LettuceGeoRadiusStoreArgs<>(rawBinaryKey(destKey), storeOption, argument, count), args);
+		return geoRadiusByMember(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(SafeEncoder.encode(destKey), storeOption, argument, count), args);
 	}
 
 	@Override
@@ -704,8 +716,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                              final GeoRadiusArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument)
 				.add(Keyword.Common.COUNT, count).add(storeOption, destKey);
-		return geoRadiusByMember(rawKey(key), member, radius, unit,
-				new LettuceGeoRadiusStoreArgs<>(rawKey(destKey), storeOption, argument, count), args);
+		return geoRadiusByMember(key, member, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(destKey, storeOption, argument, count), args);
 	}
 
 	@Override
@@ -714,8 +726,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                              final GeoRadiusArgument argument, final int count, final boolean any) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument)
 				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null).add(storeOption, destKey);
-		return geoRadiusByMember(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
-				new LettuceGeoRadiusStoreArgs<>(rawBinaryKey(destKey), storeOption, argument, count, any), args);
+		return geoRadiusByMember(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(SafeEncoder.encode(destKey), storeOption, argument, count, any), args);
 	}
 
 	@Override
@@ -724,8 +736,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                              final GeoRadiusArgument argument, final int count, final boolean any) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument)
 				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null).add(storeOption, destKey);
-		return geoRadiusByMember(rawKey(key), member, radius, unit,
-				new LettuceGeoRadiusStoreArgs<>(rawKey(destKey), storeOption, argument, count, any), args);
+		return geoRadiusByMember(key, member, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(destKey, storeOption, argument, count, any), args);
 	}
 
 	@Override
@@ -733,8 +745,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                              final String member, final double radius, final GeoUnit unit, final int count) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit)
 				.add(Keyword.Common.COUNT, count).add(storeOption, destKey);
-		return geoRadiusByMember(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
-				new LettuceGeoRadiusStoreArgs<>(rawBinaryKey(destKey), storeOption, count), args);
+		return geoRadiusByMember(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(SafeEncoder.encode(destKey), storeOption, count), args);
 	}
 
 	@Override
@@ -742,8 +754,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                              final byte[] member, final double radius, final GeoUnit unit, final int count) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit)
 				.add(Keyword.Common.COUNT, count).add(storeOption, destKey);
-		return geoRadiusByMember(rawKey(key), member, radius, unit,
-				new LettuceGeoRadiusStoreArgs<>(rawKey(destKey), storeOption, count), args);
+		return geoRadiusByMember(key, member, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(destKey, storeOption, count), args);
 	}
 
 	@Override
@@ -752,8 +764,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                              final boolean any) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit)
 				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null).add(storeOption, destKey);
-		return geoRadiusByMember(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
-				new LettuceGeoRadiusStoreArgs<>(rawBinaryKey(destKey), storeOption, count, any), args);
+		return geoRadiusByMember(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(SafeEncoder.encode(destKey), storeOption, count, any), args);
 	}
 
 	@Override
@@ -762,8 +774,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                              final boolean any) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit)
 				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null).add(storeOption, destKey);
-		return geoRadiusByMember(rawKey(key), member, radius, unit,
-				new LettuceGeoRadiusStoreArgs<>(rawKey(destKey), storeOption, count, any), args);
+		return geoRadiusByMember(key, member, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(destKey, storeOption, count, any), args);
 	}
 
 	@Override
@@ -772,9 +784,9 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
 		return executeCommand(RedisCommand.GEORADIUS_RO, args,
-				(cmd)->cmd.georadiusbymember(rawBinaryKey(key), SafeEncoder.encode(member), radius,
+				(cmd)->cmd.georadiusbymember(SafeEncoder.encode(key), SafeEncoder.encode(member), radius,
 						geoUnitConverter.convert(unit)),
-				(cmd)->cmd.georadiusbymember(rawBinaryKey(key), SafeEncoder.encode(member), radius,
+				(cmd)->cmd.georadiusbymember(SafeEncoder.encode(key), SafeEncoder.encode(member), radius,
 						geoUnitConverter.convert(unit)), new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
 	}
 
@@ -784,8 +796,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit);
 		final GeoUnitConverter geoUnitConverter = new GeoUnitConverter();
 		return executeCommand(RedisCommand.GEORADIUS_RO, args,
-				(cmd)->cmd.georadiusbymember(rawKey(key), member, radius, geoUnitConverter.convert(unit)),
-				(cmd)->cmd.georadiusbymember(rawKey(key), member, radius, geoUnitConverter.convert(unit)),
+				(cmd)->cmd.georadiusbymember(key, member, radius, geoUnitConverter.convert(unit)),
+				(cmd)->cmd.georadiusbymember(key, member, radius, geoUnitConverter.convert(unit)),
 				new SetListConverter<>(new GeoRadiusGeneralResultConverter()));
 	}
 
@@ -793,7 +805,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	public List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
 	                                           final GeoUnit unit, final GeoRadiusArgument argument) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument);
-		return geoRadiusByMemberRo(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
+		return geoRadiusByMemberRo(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit,
 				new LettuceGeoArgs(argument), args);
 	}
 
@@ -801,7 +813,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	public List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
 	                                           final GeoUnit unit, final GeoRadiusArgument argument) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument);
-		return geoRadiusByMemberRo(rawKey(key), member, radius, unit, new LettuceGeoArgs(argument), args);
+		return geoRadiusByMemberRo(key, member, radius, unit, new LettuceGeoArgs(argument), args);
 	}
 
 	@Override
@@ -809,7 +821,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                           final GeoUnit unit, final GeoRadiusArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument)
 				.add(Keyword.Common.COUNT, count);
-		return geoRadiusByMemberRo(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
+		return geoRadiusByMemberRo(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit,
 				new LettuceGeoArgs(argument, count), args);
 	}
 
@@ -818,7 +830,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                           final GeoUnit unit, final GeoRadiusArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument)
 				.add(Keyword.Common.COUNT, count);
-		return geoRadiusByMemberRo(rawKey(key), member, radius, unit, new LettuceGeoArgs(argument, count), args);
+		return geoRadiusByMemberRo(key, member, radius, unit, new LettuceGeoArgs(argument, count), args);
 	}
 
 	@Override
@@ -827,7 +839,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                           final boolean any) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument)
 				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
-		return geoRadiusByMemberRo(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
+		return geoRadiusByMemberRo(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit,
 				new LettuceGeoArgs(argument, count, any), args);
 	}
 
@@ -837,7 +849,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                           final boolean any) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument)
 				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
-		return geoRadiusByMemberRo(rawKey(key), member, radius, unit, new LettuceGeoArgs(argument, count, any), args);
+		return geoRadiusByMemberRo(key, member, radius, unit, new LettuceGeoArgs(argument, count, any), args);
 	}
 
 	@Override
@@ -845,7 +857,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                           final GeoUnit unit, final int count) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit)
 				.add(Keyword.Common.COUNT, count);
-		return geoRadiusByMemberRo(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
+		return geoRadiusByMemberRo(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit,
 				new LettuceGeoArgs(count), args);
 	}
 
@@ -854,7 +866,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                           final GeoUnit unit, final int count) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit)
 				.add(Keyword.Common.COUNT, count);
-		return geoRadiusByMemberRo(rawKey(key), member, radius, unit, new LettuceGeoArgs(count), args);
+		return geoRadiusByMemberRo(key, member, radius, unit, new LettuceGeoArgs(count), args);
 	}
 
 	@Override
@@ -862,7 +874,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                           final GeoUnit unit, final int count, final boolean any) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit)
 				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
-		return geoRadiusByMemberRo(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
+		return geoRadiusByMemberRo(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit,
 				new LettuceGeoArgs(count, any), args);
 	}
 
@@ -871,7 +883,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                           final GeoUnit unit, final int count, final boolean any) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit)
 				.add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
-		return geoRadiusByMemberRo(rawKey(key), member, radius, unit, new LettuceGeoArgs(count, any), args);
+		return geoRadiusByMemberRo(key, member, radius, unit, new LettuceGeoArgs(count, any), args);
 	}
 
 	@Override
@@ -879,7 +891,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYRADIUS").add(radius, unit);
-		return geoSearch(rawBinaryKey(key), longitude, latitude, radius, unit, args);
+		return geoSearch(SafeEncoder.encode(key), longitude, latitude, radius, unit, args);
 	}
 
 	@Override
@@ -887,7 +899,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYRADIUS").add(radius, unit);
-		return geoSearch(rawKey(key), longitude, latitude, radius, unit, args);
+		return geoSearch(key, longitude, latitude, radius, unit, args);
 	}
 
 	@Override
@@ -895,7 +907,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final double radius, final GeoUnit unit, final GeoSearchArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYRADIUS").add(radius, unit).add(argument);
-		return geoSearch(rawBinaryKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument), args);
+		return geoSearch(SafeEncoder.encode(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument),
+				args);
 	}
 
 	@Override
@@ -903,7 +916,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final double radius, final GeoUnit unit, final GeoSearchArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYRADIUS").add(radius, unit).add(argument);
-		return geoSearch(rawKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument), args);
+		return geoSearch(key, longitude, latitude, radius, unit, new LettuceGeoArgs(argument), args);
 	}
 
 	@Override
@@ -912,7 +925,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final int count) {
 		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYRADIUS").add(radius, unit).add(argument).add(Keyword.Common.COUNT, count);
-		return geoSearch(rawBinaryKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count),
+		return geoSearch(SafeEncoder.encode(key), longitude, latitude, radius, unit,
+				new LettuceGeoArgs(argument, count),
 				args);
 	}
 
@@ -922,7 +936,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final int count) {
 		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYRADIUS").add(radius, unit).add(argument).add(Keyword.Common.COUNT, count);
-		return geoSearch(rawKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count), args);
+		return geoSearch(key, longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count), args);
 	}
 
 	@Override
@@ -932,7 +946,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYRADIUS").add(radius, unit).add(argument).add(Keyword.Common.COUNT, count)
 				.add(any ? Keyword.Common.ANY : null);
-		return geoSearch(rawBinaryKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count, any),
+		return geoSearch(SafeEncoder.encode(key), longitude, latitude, radius, unit,
+				new LettuceGeoArgs(argument, count, any),
 				args);
 	}
 
@@ -943,7 +958,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYRADIUS").add(radius, unit).add(argument).add(Keyword.Common.COUNT, count)
 				.add(any ? Keyword.Common.ANY : null);
-		return geoSearch(rawKey(key), longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count, any),
+		return geoSearch(key, longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count, any),
 				args);
 	}
 
@@ -952,7 +967,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final double width, final double height, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYBOX").add(width, height).add(unit);
-		return geoSearch(rawBinaryKey(key), longitude, latitude, width, height, unit, args);
+		return geoSearch(SafeEncoder.encode(key), longitude, latitude, width, height, unit, args);
 	}
 
 	@Override
@@ -960,7 +975,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final double width, final double height, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYBOX").add(width, height).add(unit);
-		return geoSearch(rawKey(key), longitude, latitude, width, height, unit, args);
+		return geoSearch(key, longitude, latitude, width, height, unit, args);
 	}
 
 	@Override
@@ -969,7 +984,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final GeoSearchArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYBOX").add(width, height).add(unit).add(argument);
-		return geoSearch(rawBinaryKey(key), longitude, latitude, width, height, unit, new LettuceGeoArgs(argument),
+		return geoSearch(SafeEncoder.encode(key), longitude, latitude, width, height, unit,
+				new LettuceGeoArgs(argument),
 				args);
 	}
 
@@ -979,7 +995,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final GeoSearchArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYBOX").add(width, height).add(unit).add(argument);
-		return geoSearch(rawKey(key), longitude, latitude, width, height, unit, new LettuceGeoArgs(argument), args);
+		return geoSearch(key, longitude, latitude, width, height, unit, new LettuceGeoArgs(argument), args);
 	}
 
 	@Override
@@ -988,7 +1004,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final GeoSearchArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYBOX").add(width, height).add(unit).add(argument).add(Keyword.Common.COUNT, count);
-		return geoSearch(rawBinaryKey(key), longitude, latitude, width, height, unit,
+		return geoSearch(SafeEncoder.encode(key), longitude, latitude, width, height, unit,
 				new LettuceGeoArgs(argument, count), args);
 	}
 
@@ -998,7 +1014,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final GeoSearchArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYBOX").add(width, height).add(unit).add(argument).add(Keyword.Common.COUNT, count);
-		return geoSearch(rawKey(key), longitude, latitude, width, height, unit, new LettuceGeoArgs(argument, count),
+		return geoSearch(key, longitude, latitude, width, height, unit, new LettuceGeoArgs(argument, count),
 				args);
 	}
 
@@ -1009,7 +1025,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYBOX").add(width, height).add(unit).add(argument).add(Keyword.Common.COUNT, count)
 				.add(any ? Keyword.Common.ANY : null);
-		return geoSearch(rawBinaryKey(key), longitude, latitude, width, height, unit,
+		return geoSearch(SafeEncoder.encode(key), longitude, latitude, width, height, unit,
 				new LettuceGeoArgs(argument, count, any), args);
 	}
 
@@ -1020,7 +1036,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYBOX").add(width, height).add(unit).add(argument).add(Keyword.Common.COUNT, count)
 				.add(any ? Keyword.Common.ANY : null);
-		return geoSearch(rawKey(key), longitude, latitude, width, height, unit,
+		return geoSearch(key, longitude, latitude, width, height, unit,
 				new LettuceGeoArgs(argument, count, any), args);
 	}
 
@@ -1028,14 +1044,14 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	public List<GeoRadius> geoSearch(final String key, final String member, final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYRADIUS")
 				.add(radius, unit);
-		return geoSearch(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit, args);
+		return geoSearch(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit, args);
 	}
 
 	@Override
 	public List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYRADIUS")
 				.add(radius, unit);
-		return geoSearch(rawKey(key), member, radius, unit, args);
+		return geoSearch(key, member, radius, unit, args);
 	}
 
 	@Override
@@ -1043,7 +1059,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final GeoSearchArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYRADIUS")
 				.add(radius, unit).add(argument);
-		return geoSearch(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit, new LettuceGeoArgs(argument),
+		return geoSearch(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit,
+				new LettuceGeoArgs(argument),
 				args);
 	}
 
@@ -1052,7 +1069,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final GeoSearchArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYRADIUS")
 				.add(radius, unit).add(argument);
-		return geoSearch(rawKey(key), member, radius, unit, new LettuceGeoArgs(argument), args);
+		return geoSearch(key, member, radius, unit, new LettuceGeoArgs(argument), args);
 	}
 
 	@Override
@@ -1060,7 +1077,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final GeoSearchArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYRADIUS")
 				.add(radius, unit).add(argument).add(Keyword.Common.COUNT, count);
-		return geoSearch(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
+		return geoSearch(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit,
 				new LettuceGeoArgs(argument, count), args);
 	}
 
@@ -1069,7 +1086,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final GeoSearchArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYRADIUS")
 				.add(radius, unit).add(argument).add(Keyword.Common.COUNT, count);
-		return geoSearch(rawKey(key), member, radius, unit, new LettuceGeoArgs(argument, count), args);
+		return geoSearch(key, member, radius, unit, new LettuceGeoArgs(argument, count), args);
 	}
 
 	@Override
@@ -1077,7 +1094,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final GeoSearchArgument argument, final int count, final boolean any) {
 		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYRADIUS", radius)
 				.add(unit).add(argument).add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
-		return geoSearch(rawBinaryKey(key), SafeEncoder.encode(member), radius, unit,
+		return geoSearch(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit,
 				new LettuceGeoArgs(argument, count, any), args);
 	}
 
@@ -1086,7 +1103,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final GeoSearchArgument argument, final int count, final boolean any) {
 		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYRADIUS")
 				.add(radius, unit).add(argument).add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
-		return geoSearch(rawKey(key), member, radius, unit, new LettuceGeoArgs(argument, count, any), args);
+		return geoSearch(key, member, radius, unit, new LettuceGeoArgs(argument, count, any), args);
 	}
 
 	@Override
@@ -1094,7 +1111,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYBOX")
 				.add(width, height).add(unit);
-		return geoSearch(rawBinaryKey(key), SafeEncoder.encode(member), width, height, unit, args);
+		return geoSearch(SafeEncoder.encode(key), SafeEncoder.encode(member), width, height, unit, args);
 	}
 
 	@Override
@@ -1102,7 +1119,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYBOX")
 				.add(width, height).add(unit);
-		return geoSearch(rawKey(key), member, width, height, unit, args);
+		return geoSearch(key, member, width, height, unit, args);
 	}
 
 	@Override
@@ -1110,7 +1127,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final GeoUnit unit, final GeoSearchArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYBOX")
 				.add(width, height).add(unit).add(argument);
-		return geoSearch(rawBinaryKey(key), SafeEncoder.encode(member), width, height, unit,
+		return geoSearch(SafeEncoder.encode(key), SafeEncoder.encode(member), width, height, unit,
 				new LettuceGeoArgs(argument), args);
 	}
 
@@ -1119,7 +1136,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final GeoUnit unit, final GeoSearchArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYBOX")
 				.add(width, height).add(unit).add(argument);
-		return geoSearch(rawKey(key), member, width, height, unit, new LettuceGeoArgs(argument), args);
+		return geoSearch(key, member, width, height, unit, new LettuceGeoArgs(argument), args);
 	}
 
 	@Override
@@ -1127,7 +1144,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final GeoUnit unit, final GeoSearchArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYBOX")
 				.add(width, height).add(unit).add(argument).add(Keyword.Common.COUNT, count);
-		return geoSearch(rawBinaryKey(key), SafeEncoder.encode(member), width, height, unit,
+		return geoSearch(SafeEncoder.encode(key), SafeEncoder.encode(member), width, height, unit,
 				new LettuceGeoArgs(argument, count), args);
 	}
 
@@ -1136,7 +1153,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final GeoUnit unit, final GeoSearchArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYBOX")
 				.add(width, height).add(unit).add(argument).add(Keyword.Common.COUNT, count);
-		return geoSearch(rawKey(key), member, width, height, unit, new LettuceGeoArgs(argument, count), args);
+		return geoSearch(key, member, width, height, unit, new LettuceGeoArgs(argument, count), args);
 	}
 
 	@Override
@@ -1146,7 +1163,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYBOX")
 				.add(width, height).add(unit).add(argument).add(Keyword.Common.COUNT, count)
 				.add(any ? Keyword.Common.ANY : null);
-		return geoSearch(rawBinaryKey(key), SafeEncoder.encode(member), width, height, unit,
+		return geoSearch(SafeEncoder.encode(key), SafeEncoder.encode(member), width, height, unit,
 				new LettuceGeoArgs(argument, count, any), args);
 	}
 
@@ -1157,7 +1174,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(key).add("FROMMEMBER", member).add("BYBOX")
 				.add(width, height).add(unit).add(argument).add(Keyword.Common.COUNT, count)
 				.add(any ? Keyword.Common.ANY : null);
-		return geoSearch(rawKey(key), member, width, height, unit, new LettuceGeoArgs(argument, count, any), args);
+		return geoSearch(key, member, width, height, unit, new LettuceGeoArgs(argument, count, any), args);
 	}
 
 	@Override
@@ -1165,7 +1182,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                           final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYRADIUS").add(radius, unit);
-		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), longitude, latitude, radius, unit, false, args);
+		return geoSearchStore(SafeEncoder.encode(key), SafeEncoder.encode(destKey), longitude, latitude, radius, unit,
+				false, args);
 	}
 
 	@Override
@@ -1173,7 +1191,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                           final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYRADIUS").add(radius, unit);
-		return geoSearchStore(rawKey(key), rawKey(destKey), longitude, latitude, radius, unit, false, args);
+		return geoSearchStore(key, destKey, longitude, latitude, radius, unit, false, args);
 	}
 
 	@Override
@@ -1181,7 +1199,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                           final double radius, final GeoUnit unit, final boolean storeDist) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYRADIUS").add(radius, unit).add(storeDist ? "STOREDIST" : null);
-		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), longitude, latitude, radius, unit, storeDist,
+		return geoSearchStore(SafeEncoder.encode(key), SafeEncoder.encode(destKey), longitude, latitude, radius, unit,
+				storeDist,
 				args);
 	}
 
@@ -1190,7 +1209,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                           final double radius, final GeoUnit unit, final boolean storeDist) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYRADIUS").add(radius, unit).add(storeDist ? "STOREDIST" : null);
-		return geoSearchStore(rawKey(key), rawKey(destKey), longitude, latitude, radius, unit, storeDist, args);
+		return geoSearchStore(key, destKey, longitude, latitude, radius, unit, storeDist, args);
 	}
 
 	@Override
@@ -1199,7 +1218,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYRADIUS").add(radius, unit).add(Keyword.Common.COUNT, count)
 				.add(storeDist ? "STOREDIST" : null);
-		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), longitude, latitude, radius, unit,
+		return geoSearchStore(SafeEncoder.encode(key), SafeEncoder.encode(destKey), longitude, latitude, radius, unit,
 				new LettuceGeoArgs(count), storeDist, args);
 	}
 
@@ -1209,7 +1228,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYRADIUS").add(radius, unit).add(Keyword.Common.COUNT, count)
 				.add(storeDist ? "STOREDIST" : null);
-		return geoSearchStore(rawKey(key), rawKey(destKey), longitude, latitude, radius, unit,
+		return geoSearchStore(key, destKey, longitude, latitude, radius, unit,
 				new LettuceGeoArgs(count), storeDist, args);
 	}
 
@@ -1220,7 +1239,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYRADIUS").add(radius, unit).add(Keyword.Common.COUNT, count)
 				.add(any ? Keyword.Common.ANY : null).add(storeDist ? "STOREDIST" : null);
-		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), longitude, latitude, radius, unit,
+		return geoSearchStore(SafeEncoder.encode(key), SafeEncoder.encode(destKey), longitude, latitude, radius, unit,
 				new LettuceGeoArgs(count, any), storeDist, args);
 	}
 
@@ -1231,7 +1250,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYRADIUS").add(radius, unit).add(Keyword.Common.COUNT, count)
 				.add(any ? Keyword.Common.ANY : null).add(storeDist ? "STOREDIST" : null);
-		return geoSearchStore(rawKey(key), rawKey(destKey), longitude, latitude, radius, unit,
+		return geoSearchStore(key, destKey, longitude, latitude, radius, unit,
 				new LettuceGeoArgs(count, any), storeDist, args);
 	}
 
@@ -1240,7 +1259,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                           final double width, final double height, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYBOX").add(width, height);
-		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), longitude, latitude, width, height, unit, false,
+		return geoSearchStore(SafeEncoder.encode(key), SafeEncoder.encode(destKey), longitude, latitude, width, height,
+				unit, false,
 				args);
 	}
 
@@ -1249,7 +1269,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                           final double width, final double height, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYBOX").add(width, height);
-		return geoSearchStore(rawKey(key), rawKey(destKey), longitude, latitude, width, height, unit, false, args);
+		return geoSearchStore(key, destKey, longitude, latitude, width, height, unit, false, args);
 	}
 
 	@Override
@@ -1257,7 +1277,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                           final double width, final double height, final GeoUnit unit, final boolean storeDist) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYBOX").add(width, height).add(storeDist ? "STOREDIST" : null);
-		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), longitude, latitude, width, height, unit,
+		return geoSearchStore(SafeEncoder.encode(key), SafeEncoder.encode(destKey), longitude, latitude, width, height,
+				unit,
 				storeDist, args);
 	}
 
@@ -1266,7 +1287,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                           final double width, final double height, final GeoUnit unit, final boolean storeDist) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYBOX").add(width, height).add(storeDist ? "STOREDIST" : null);
-		return geoSearchStore(rawKey(key), rawKey(destKey), longitude, latitude, width, height, unit, false, args);
+		return geoSearchStore(key, destKey, longitude, latitude, width, height, unit, false, args);
 	}
 
 	@Override
@@ -1275,7 +1296,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                           final int count) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYBOX").add(width, height).add(Keyword.Common.COUNT, count).add(storeDist ? "STOREDIST" : null);
-		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), longitude, latitude, width, unit,
+		return geoSearchStore(SafeEncoder.encode(key), SafeEncoder.encode(destKey), longitude, latitude, width, unit,
 				new LettuceGeoArgs(count), storeDist, args);
 	}
 
@@ -1285,7 +1306,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                           final int count) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYBOX").add(width, height).add(Keyword.Common.COUNT, count).add(storeDist ? "STOREDIST" : null);
-		return geoSearchStore(rawKey(key), rawKey(destKey), longitude, latitude, width, height, unit,
+		return geoSearchStore(key, destKey, longitude, latitude, width, height, unit,
 				new LettuceGeoArgs(count), storeDist, args);
 	}
 
@@ -1296,7 +1317,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYBOX").add(width, height).add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null)
 				.add(storeDist ? "STOREDIST" : null);
-		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), longitude, latitude, width, unit,
+		return geoSearchStore(SafeEncoder.encode(key), SafeEncoder.encode(destKey), longitude, latitude, width, unit,
 				new LettuceGeoArgs(count, any), storeDist, args);
 	}
 
@@ -1307,7 +1328,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYBOX").add(width, height).add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null)
 				.add(storeDist ? "STOREDIST" : null);
-		return geoSearchStore(rawKey(key), rawKey(destKey), longitude, latitude, width, height, unit,
+		return geoSearchStore(key, destKey, longitude, latitude, width, height, unit,
 				new LettuceGeoArgs(count, any), storeDist, args);
 	}
 
@@ -1316,7 +1337,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                           final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member)
 				.add("BYRADIUS").add(radius, unit);
-		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), SafeEncoder.encode(member), radius, unit, false,
+		return geoSearchStore(SafeEncoder.encode(key), SafeEncoder.encode(destKey), SafeEncoder.encode(member), radius,
+				unit, false,
 				args);
 	}
 
@@ -1325,7 +1347,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                           final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member)
 				.add("BYRADIUS").add(radius, unit);
-		return geoSearchStore(rawKey(key), rawKey(destKey), member, radius, unit, false, args);
+		return geoSearchStore(key, destKey, member, radius, unit, false, args);
 	}
 
 	@Override
@@ -1333,7 +1355,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                           final GeoUnit unit, final boolean storeDist) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member)
 				.add("BYRADIUS").add(radius, unit).add(storeDist ? "STOREDIST" : null);
-		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), SafeEncoder.encode(member), radius, unit,
+		return geoSearchStore(SafeEncoder.encode(key), SafeEncoder.encode(destKey), SafeEncoder.encode(member), radius,
+				unit,
 				storeDist, args);
 	}
 
@@ -1342,7 +1365,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                           final GeoUnit unit, final boolean storeDist) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member)
 				.add("BYRADIUS").add(radius, unit).add(storeDist ? "STOREDIST" : null);
-		return geoSearchStore(rawKey(key), rawKey(destKey), member, radius, unit, storeDist, args);
+		return geoSearchStore(key, destKey, member, radius, unit, storeDist, args);
 	}
 
 	@Override
@@ -1351,7 +1374,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member)
 				.add("BYRADIUS").add(radius, unit).add(Keyword.Common.COUNT, count)
 				.add(storeDist ? "STOREDIST" : null);
-		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), SafeEncoder.encode(member), radius, unit,
+		return geoSearchStore(SafeEncoder.encode(key), SafeEncoder.encode(destKey), SafeEncoder.encode(member), radius,
+				unit,
 				new LettuceGeoArgs(count), storeDist, args);
 	}
 
@@ -1361,7 +1385,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member)
 				.add("BYRADIUS").add(radius, unit).add(Keyword.Common.COUNT, count)
 				.add(storeDist ? "STOREDIST" : null);
-		return geoSearchStore(rawKey(key), rawKey(destKey), member, radius, unit, new LettuceGeoArgs(count),
+		return geoSearchStore(key, destKey, member, radius, unit, new LettuceGeoArgs(count),
 				storeDist, args);
 	}
 
@@ -1371,7 +1395,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member)
 				.add("BYRADIUS").add(radius, unit).add(Keyword.Common.COUNT, count)
 				.add(any ? Keyword.Common.ANY : null).add(storeDist ? "STOREDIST" : null);
-		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), SafeEncoder.encode(member), radius, unit,
+		return geoSearchStore(SafeEncoder.encode(key), SafeEncoder.encode(destKey), SafeEncoder.encode(member), radius,
+				unit,
 				new LettuceGeoArgs(count, any), storeDist, args);
 	}
 
@@ -1381,7 +1406,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member)
 				.add("BYRADIUS").add(radius, unit).add(Keyword.Common.COUNT, count)
 				.add(any ? Keyword.Common.ANY : null).add(storeDist ? "STOREDIST" : null);
-		return geoSearchStore(rawKey(key), rawKey(destKey), member, radius, unit, new LettuceGeoArgs(count, any),
+		return geoSearchStore(key, destKey, member, radius, unit, new LettuceGeoArgs(count, any),
 				storeDist, args);
 	}
 
@@ -1390,7 +1415,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                           final double height, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member).add("BYBOX")
 				.add(width, height).add(unit);
-		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), SafeEncoder.encode(member), width, height, unit,
+		return geoSearchStore(SafeEncoder.encode(key), SafeEncoder.encode(destKey), SafeEncoder.encode(member), width,
+				height, unit,
 				false, args);
 	}
 
@@ -1399,7 +1425,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                           final double height, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member).add("BYBOX")
 				.add(width, height).add(unit);
-		return geoSearchStore(rawKey(key), rawKey(destKey), member, width, height, unit, false, args);
+		return geoSearchStore(key, destKey, member, width, height, unit, false, args);
 	}
 
 	@Override
@@ -1407,7 +1433,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                           final double height, final GeoUnit unit, final boolean storeDist) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member).add("BYBOX")
 				.add(width, height).add(unit).add(storeDist ? "STOREDIST" : null);
-		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), SafeEncoder.encode(member), width, height, unit,
+		return geoSearchStore(SafeEncoder.encode(key), SafeEncoder.encode(destKey), SafeEncoder.encode(member), width,
+				height, unit,
 				storeDist, args);
 	}
 
@@ -1416,7 +1443,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                           final double height, final GeoUnit unit, final boolean storeDist) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member).add("BYBOX")
 				.add(width, height).add(unit).add(storeDist ? "STOREDIST" : null);
-		return geoSearchStore(rawKey(key), rawKey(destKey), member, width, height, unit, storeDist, args);
+		return geoSearchStore(key, destKey, member, width, height, unit, storeDist, args);
 	}
 
 	@Override
@@ -1424,7 +1451,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                           final double height, final GeoUnit unit, final boolean storeDist, final int count) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member).add("BYBOX")
 				.add(width, height).add(unit).add(Keyword.Common.COUNT, count).add(storeDist ? "STOREDIST" : null);
-		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), SafeEncoder.encode(member), width, height, unit,
+		return geoSearchStore(SafeEncoder.encode(key), SafeEncoder.encode(destKey), SafeEncoder.encode(member), width,
+				height, unit,
 				new LettuceGeoArgs(count), storeDist, args);
 	}
 
@@ -1433,7 +1461,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                           final double height, final GeoUnit unit, final boolean storeDist, final int count) {
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member).add("BYBOX")
 				.add(width, height).add(unit).add(Keyword.Common.COUNT, count).add(storeDist ? "STOREDIST" : null);
-		return geoSearchStore(rawKey(key), rawKey(destKey), member, width, height, unit, new LettuceGeoArgs(count),
+		return geoSearchStore(key, destKey, member, width, height, unit, new LettuceGeoArgs(count),
 				storeDist, args);
 	}
 
@@ -1444,7 +1472,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member).add("BYBOX")
 				.add(width, height).add(unit).add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null)
 				.add(storeDist ? "STOREDIST" : null);
-		return geoSearchStore(rawBinaryKey(key), rawBinaryKey(destKey), SafeEncoder.encode(member), width, height, unit,
+		return geoSearchStore(SafeEncoder.encode(key), SafeEncoder.encode(destKey), SafeEncoder.encode(member), width,
+				height, unit,
 				new LettuceGeoArgs(count, any), storeDist, args);
 	}
 
@@ -1455,7 +1484,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member).add("BYBOX")
 				.add(width, height).add(unit).add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null)
 				.add(storeDist ? "STOREDIST" : null);
-		return geoSearchStore(rawKey(key), rawKey(destKey), member, width, height, unit, new LettuceGeoArgs(count, any),
+		return geoSearchStore(key, destKey, member, width, height, unit, new LettuceGeoArgs(count, any),
 				storeDist, args);
 	}
 

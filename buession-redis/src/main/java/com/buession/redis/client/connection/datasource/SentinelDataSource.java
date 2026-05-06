@@ -26,7 +26,7 @@ package com.buession.redis.client.connection.datasource;
 
 import com.buession.redis.client.connection.SentinelRedisNode;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Redis 哨兵（Sentinel）模式数据源
@@ -154,7 +154,7 @@ public interface SentinelDataSource extends DataSource {
 	 *
 	 * @return 哨兵节点
 	 */
-	List<SentinelRedisNode> getSentinels();
+	Set<SentinelRedisNode> getSentinels();
 
 	/**
 	 * 设置哨兵节点
@@ -162,6 +162,6 @@ public interface SentinelDataSource extends DataSource {
 	 * @param sentinels
 	 * 		哨兵节点
 	 */
-	void setSentinels(List<SentinelRedisNode> sentinels);
+	void setSentinels(Set<SentinelRedisNode> sentinels);
 
 }

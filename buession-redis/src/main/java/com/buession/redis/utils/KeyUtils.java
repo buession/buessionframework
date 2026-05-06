@@ -22,47 +22,59 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client;
+package com.buession.redis.utils;
 
-import com.buession.redis.utils.SafeEncoder;
+import com.buession.core.collect.Arrays;
+import com.buession.core.utils.ByteUtils;
+import com.buession.core.validator.Validate;
+import com.buession.redis.RedisAccessor;
+import com.buession.redis.core.operations.RedisOperations;
 
 /**
- * 客户端配置选项
+ *
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class ClientOptions {
+public class KeyUtils {
 
-	/**
-	 * Key 前缀
-	 */
-	private String prefix;
+	private KeyUtils() {
 
-	private byte[] prefixRaw;
-
-	/**
-	 * 返回 Key 前缀
-	 *
-	 * @return Key 前缀
-	 */
-	public String getPrefix() {
-		return prefix;
 	}
 
-	/**
-	 * 设置 Key 前缀
-	 *
-	 * @param prefix
-	 * 		Key 前缀
-	 */
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
-		this.prefixRaw = SafeEncoder.encode(prefix);
+	public static String rawKey(final RedisOperations operations, final String key) {
+		if(operations instanceof RedisAccessor redisAccessor){
+			String prefix = redisAccessor.getOptions().getPrefix();
+			return Validate.isEmpty(prefix) ? key : prefix.concat(key);
+		}else{
+			return key;
+		}
 	}
 
-	public byte[] getPrefixRaw() {
-		return prefixRaw;
+	public static byte[] rawKey(final RedisOperations operations, final byte[] key) {
+		if(operations instanceof RedisAccessor redisAccessor){
+			byte[] prefix = redisAccessor.getOptions().getPrefixRaw();
+			return Validate.isEmpty(prefix) ? key : ByteUtils.concat(prefix, key);
+		}else{
+			return key;
+		}
+	}
+
+	public static String[] rawKeys(final RedisOperations operations, final String[] keys) {
+		if(Validate.isNotEmpty(keys)){
+			return Arrays.map(keys, String.class, (value)->rawKey(operations, value));
+		}else{
+			return keys;
+		}
+	}
+
+	public static byte[][] rawKeys(final RedisOperations operations, final byte[][] keys) {
+		if(operations instanceof RedisAccessor redisAccessor && Validate.isNotEmpty(keys)){
+			byte[] prefix = redisAccessor.getOptions().getPrefixRaw();
+			return Arrays.map(keys, byte[].class, (value)->ByteUtils.concat(prefix, value));
+		}else{
+			return keys;
+		}
 	}
 
 }

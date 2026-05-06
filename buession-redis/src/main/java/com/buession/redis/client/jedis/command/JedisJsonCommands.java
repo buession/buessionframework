@@ -73,9 +73,9 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	public List<Long> jsonArrAppend(final String key, final String... values) {
 		final CommandArguments args = CommandArguments.create(key).add(values);
 		return executeCommand(RedisCommand.JSON_ARRAPPEND, args,
-				(cmd)->cmd.jsonArrAppend(rawKey(key), JedisPath.ROOT_PATH, values),
-				(cmd)->cmd.jsonArrAppend(rawKey(key), JedisPath.ROOT_PATH, values),
-				(cmd)->cmd.jsonArrAppend(rawKey(key), JedisPath.ROOT_PATH, values));
+				(cmd)->cmd.jsonArrAppend(key, JedisPath.ROOT_PATH, values),
+				(cmd)->cmd.jsonArrAppend(key, JedisPath.ROOT_PATH, values),
+				(cmd)->cmd.jsonArrAppend(key, JedisPath.ROOT_PATH, values));
 	}
 
 	@Override
@@ -87,9 +87,9 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	public List<Long> jsonArrAppend(final String key, final String path, final String... values) {
 		final CommandArguments args = CommandArguments.create(key).add(path).add(values);
 		return executeCommand(RedisCommand.JSON_ARRAPPEND, args,
-				(cmd)->cmd.jsonArrAppend(rawKey(key), new JedisPath(path), values),
-				(cmd)->cmd.jsonArrAppend(rawKey(key), new JedisPath(path), values),
-				(cmd)->cmd.jsonArrAppend(rawKey(key), new JedisPath(path), values));
+				(cmd)->cmd.jsonArrAppend(key, new JedisPath(path), values),
+				(cmd)->cmd.jsonArrAppend(key, new JedisPath(path), values),
+				(cmd)->cmd.jsonArrAppend(key, new JedisPath(path), values));
 	}
 
 	@Override
@@ -101,9 +101,9 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	public List<Long> jsonArrIndex(final String key, final String path, final String value) {
 		final CommandArguments args = CommandArguments.create(key).add(path, value);
 		return executeCommand(RedisCommand.JSON_ARRINDEX, args,
-				(cmd)->cmd.jsonArrIndex(rawKey(key), new JedisPath(path), value),
-				(cmd)->cmd.jsonArrIndex(rawKey(key), new JedisPath(path), value),
-				(cmd)->cmd.jsonArrIndex(rawKey(key), new JedisPath(path), value));
+				(cmd)->cmd.jsonArrIndex(key, new JedisPath(path), value),
+				(cmd)->cmd.jsonArrIndex(key, new JedisPath(path), value),
+				(cmd)->cmd.jsonArrIndex(key, new JedisPath(path), value));
 	}
 
 	@Override
@@ -115,9 +115,9 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	public List<Long> jsonArrIndex(final String key, final String path, final String value, final int start) {
 		final CommandArguments args = CommandArguments.create(key).add(path, value).add(start);
 		return executeCommand(RedisCommand.JSON_ARRINDEX, args,
-				(cmd)->cmd.jsonArrIndex(rawKey(key), new JedisPath(path), value),
-				(cmd)->cmd.jsonArrIndex(rawKey(key), new JedisPath(path), value),
-				(cmd)->cmd.jsonArrIndex(rawKey(key), new JedisPath(path), value));
+				(cmd)->cmd.jsonArrIndex(key, new JedisPath(path), value),
+				(cmd)->cmd.jsonArrIndex(key, new JedisPath(path), value),
+				(cmd)->cmd.jsonArrIndex(key, new JedisPath(path), value));
 	}
 
 	@Override
@@ -130,9 +130,9 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	                               final int stop) {
 		final CommandArguments args = CommandArguments.create(key).add(path, value).add(start, stop);
 		return executeCommand(RedisCommand.JSON_ARRINDEX, args,
-				(cmd)->cmd.jsonArrIndex(rawKey(key), new JedisPath(path), value),
-				(cmd)->cmd.jsonArrIndex(rawKey(key), new JedisPath(path), value),
-				(cmd)->cmd.jsonArrIndex(rawKey(key), new JedisPath(path), value));
+				(cmd)->cmd.jsonArrIndex(key, new JedisPath(path), value),
+				(cmd)->cmd.jsonArrIndex(key, new JedisPath(path), value),
+				(cmd)->cmd.jsonArrIndex(key, new JedisPath(path), value));
 	}
 
 	@Override
@@ -145,9 +145,9 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	public List<Long> jsonArrInsert(final String key, final String path, final int index, final String... values) {
 		final CommandArguments args = CommandArguments.create(key).add(path).add(index).add(values);
 		return executeCommand(RedisCommand.JSON_ARRINSERT, args,
-				(cmd)->cmd.jsonArrInsert(rawKey(key), new JedisPath(path), index, values),
-				(cmd)->cmd.jsonArrInsert(rawKey(key), new JedisPath(path), index, values),
-				(cmd)->cmd.jsonArrInsert(rawKey(key), new JedisPath(path), index, values));
+				(cmd)->cmd.jsonArrInsert(key, new JedisPath(path), index, values),
+				(cmd)->cmd.jsonArrInsert(key, new JedisPath(path), index, values),
+				(cmd)->cmd.jsonArrInsert(key, new JedisPath(path), index, values));
 	}
 
 	@Override
@@ -158,9 +158,9 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public Long jsonArrLen(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.JSON_ARRLEN, args, (cmd)->cmd.jsonArrLen(rawKey(key), JedisPath.ROOT_PATH),
-				(cmd)->cmd.jsonArrLen(rawKey(key), JedisPath.ROOT_PATH),
-				(cmd)->cmd.jsonArrLen(rawKey(key), JedisPath.ROOT_PATH), Converters.list0Converter());
+		return executeCommand(RedisCommand.JSON_ARRLEN, args, (cmd)->cmd.jsonArrLen(key, JedisPath.ROOT_PATH),
+				(cmd)->cmd.jsonArrLen(key, JedisPath.ROOT_PATH),
+				(cmd)->cmd.jsonArrLen(key, JedisPath.ROOT_PATH), Converters.list0Converter());
 	}
 
 	@Override
@@ -171,9 +171,9 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public List<Long> jsonArrLen(final String key, final String path) {
 		final CommandArguments args = CommandArguments.create(key).add(path);
-		return executeCommand(RedisCommand.JSON_ARRLEN, args, (cmd)->cmd.jsonArrLen(rawKey(key), new JedisPath(path)),
-				(cmd)->cmd.jsonArrLen(rawKey(key), new JedisPath(path)),
-				(cmd)->cmd.jsonArrLen(rawKey(key), new JedisPath(path)));
+		return executeCommand(RedisCommand.JSON_ARRLEN, args, (cmd)->cmd.jsonArrLen(key, new JedisPath(path)),
+				(cmd)->cmd.jsonArrLen(key, new JedisPath(path)),
+				(cmd)->cmd.jsonArrLen(key, new JedisPath(path)));
 	}
 
 	@Override
@@ -184,9 +184,9 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public String jsonArrPop(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.JSON_ARRPOP, args, (cmd)->cmd.jsonArrPop(rawKey(key), JedisPath.ROOT_PATH),
-				(cmd)->cmd.jsonArrPop(rawKey(key), JedisPath.ROOT_PATH),
-				(cmd)->cmd.jsonArrPop(rawKey(key), JedisPath.ROOT_PATH),
+		return executeCommand(RedisCommand.JSON_ARRPOP, args, (cmd)->cmd.jsonArrPop(key, JedisPath.ROOT_PATH),
+				(cmd)->cmd.jsonArrPop(key, JedisPath.ROOT_PATH),
+				(cmd)->cmd.jsonArrPop(key, JedisPath.ROOT_PATH),
 				(v)->Validate.isEmpty(v) ? null : v.get(0).toString());
 	}
 
@@ -194,18 +194,18 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	public byte[] jsonArrPop(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(RedisCommand.JSON_ARRPOP, args,
-				(cmd)->cmd.jsonArrPop(rawStringKey(key), JedisPath.ROOT_PATH),
-				(cmd)->cmd.jsonArrPop(rawStringKey(key), JedisPath.ROOT_PATH),
-				(cmd)->cmd.jsonArrPop(rawStringKey(key), JedisPath.ROOT_PATH),
+				(cmd)->cmd.jsonArrPop(SafeEncoder.encode(key), JedisPath.ROOT_PATH),
+				(cmd)->cmd.jsonArrPop(SafeEncoder.encode(key), JedisPath.ROOT_PATH),
+				(cmd)->cmd.jsonArrPop(SafeEncoder.encode(key), JedisPath.ROOT_PATH),
 				(v)->Validate.isEmpty(v) ? null : SafeEncoder.encode(v.get(0).toString()));
 	}
 
 	@Override
 	public List<String> jsonArrPop(final String key, final String path) {
 		final CommandArguments args = CommandArguments.create(key, path);
-		return executeCommand(RedisCommand.JSON_ARRPOP, args, (cmd)->cmd.jsonArrPop(rawKey(key), new JedisPath(path)),
-				(cmd)->cmd.jsonArrPop(rawKey(key), new JedisPath(path)),
-				(cmd)->cmd.jsonArrPop(rawKey(key), new JedisPath(path)),
+		return executeCommand(RedisCommand.JSON_ARRPOP, args, (cmd)->cmd.jsonArrPop(key, new JedisPath(path)),
+				(cmd)->cmd.jsonArrPop(key, new JedisPath(path)),
+				(cmd)->cmd.jsonArrPop(key, new JedisPath(path)),
 				new ListConverter<>((v)->v == null ? null : v.toString()));
 	}
 
@@ -213,9 +213,9 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	public List<byte[]> jsonArrPop(final byte[] key, final byte[] path) {
 		final CommandArguments args = CommandArguments.create(key, path);
 		return executeCommand(RedisCommand.JSON_ARRPOP, args,
-				(cmd)->cmd.jsonArrPop(rawKey(SafeEncoder.encode(key)), new JedisPath(path)),
-				(cmd)->cmd.jsonArrPop(rawKey(SafeEncoder.encode(key)), new JedisPath(path)),
-				(cmd)->cmd.jsonArrPop(rawKey(SafeEncoder.encode(key)), new JedisPath(path)),
+				(cmd)->cmd.jsonArrPop(SafeEncoder.encode(key), new JedisPath(path)),
+				(cmd)->cmd.jsonArrPop(SafeEncoder.encode(key), new JedisPath(path)),
+				(cmd)->cmd.jsonArrPop(SafeEncoder.encode(key), new JedisPath(path)),
 				new ListConverter<>((v)->v == null ? null : SafeEncoder.encode(v.toString())));
 	}
 
@@ -223,9 +223,9 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	public List<String> jsonArrPop(final String key, final String path, final int index) {
 		final CommandArguments args = CommandArguments.create(key, path).add(index);
 		return executeCommand(RedisCommand.JSON_ARRPOP, args,
-				(cmd)->cmd.jsonArrPop(rawKey(key), new JedisPath(path), index),
-				(cmd)->cmd.jsonArrPop(rawKey(key), new JedisPath(path), index),
-				(cmd)->cmd.jsonArrPop(rawKey(key), new JedisPath(path), index),
+				(cmd)->cmd.jsonArrPop(key, new JedisPath(path), index),
+				(cmd)->cmd.jsonArrPop(key, new JedisPath(path), index),
+				(cmd)->cmd.jsonArrPop(key, new JedisPath(path), index),
 				new ListConverter<>((v)->v == null ? null : v.toString()));
 	}
 
@@ -233,9 +233,9 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	public List<byte[]> jsonArrPop(final byte[] key, final byte[] path, final int index) {
 		final CommandArguments args = CommandArguments.create(key, path).add(index);
 		return executeCommand(RedisCommand.JSON_ARRPOP, args,
-				(cmd)->cmd.jsonArrPop(rawKey(SafeEncoder.encode(key)), new JedisPath(path), index),
-				(cmd)->cmd.jsonArrPop(rawKey(SafeEncoder.encode(key)), new JedisPath(path), index),
-				(cmd)->cmd.jsonArrPop(rawKey(SafeEncoder.encode(key)), new JedisPath(path), index),
+				(cmd)->cmd.jsonArrPop(SafeEncoder.encode(key), new JedisPath(path), index),
+				(cmd)->cmd.jsonArrPop(SafeEncoder.encode(key), new JedisPath(path), index),
+				(cmd)->cmd.jsonArrPop(SafeEncoder.encode(key), new JedisPath(path), index),
 				new ListConverter<>((v)->v == null ? null : SafeEncoder.encode(v.toString())));
 	}
 
@@ -243,9 +243,9 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	public List<Long> jsonArrTrim(final String key, final String path, final int start, final int stop) {
 		final CommandArguments args = CommandArguments.create(key, path).add(start, stop);
 		return executeCommand(RedisCommand.JSON_ARRTRIM, args,
-				(cmd)->cmd.jsonArrTrim(rawKey(key), new JedisPath(path), start, stop),
-				(cmd)->cmd.jsonArrTrim(rawKey(key), new JedisPath(path), start, stop),
-				(cmd)->cmd.jsonArrTrim(rawKey(key), new JedisPath(path), start, stop));
+				(cmd)->cmd.jsonArrTrim(key, new JedisPath(path), start, stop),
+				(cmd)->cmd.jsonArrTrim(key, new JedisPath(path), start, stop),
+				(cmd)->cmd.jsonArrTrim(key, new JedisPath(path), start, stop));
 	}
 
 	@Override
@@ -256,8 +256,8 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public Long jsonClear(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.JSON_CLEAR, args, (cmd)->cmd.jsonClear(rawKey(key)),
-				(cmd)->cmd.jsonClear(rawKey(key)), (cmd)->cmd.jsonClear(rawKey(key)));
+		return executeCommand(RedisCommand.JSON_CLEAR, args, (cmd)->cmd.jsonClear(key),
+				(cmd)->cmd.jsonClear(key), (cmd)->cmd.jsonClear(key));
 	}
 
 	@Override
@@ -268,9 +268,9 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public Long jsonClear(final String key, final String path) {
 		final CommandArguments args = CommandArguments.create(key).add(path);
-		return executeCommand(RedisCommand.JSON_CLEAR, args, (cmd)->cmd.jsonClear(rawKey(key), new JedisPath(path)),
-				(cmd)->cmd.jsonClear(rawKey(key), new JedisPath(path)),
-				(cmd)->cmd.jsonClear(rawKey(key), new JedisPath(path)));
+		return executeCommand(RedisCommand.JSON_CLEAR, args, (cmd)->cmd.jsonClear(key, new JedisPath(path)),
+				(cmd)->cmd.jsonClear(key, new JedisPath(path)),
+				(cmd)->cmd.jsonClear(key, new JedisPath(path)));
 	}
 
 	@Override
@@ -282,7 +282,7 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	public Long jsonDebugMemory(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(RedisCommand.JSON_DEBUG, args, null, null,
-				(cmd)->cmd.jsonDebugMemory(rawKey(key), JedisPath.ROOT_PATH), Converters.list0Converter());
+				(cmd)->cmd.jsonDebugMemory(key, JedisPath.ROOT_PATH), Converters.list0Converter());
 	}
 
 	@Override
@@ -294,7 +294,7 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	public List<Long> jsonDebugMemory(final String key, final String path) {
 		final CommandArguments args = CommandArguments.create(key).add(path);
 		return executeCommand(RedisCommand.JSON_DEBUG, args, null, null,
-				(cmd)->cmd.jsonDebugMemory(rawKey(key), new JedisPath(path)));
+				(cmd)->cmd.jsonDebugMemory(key, new JedisPath(path)));
 	}
 
 	@Override
@@ -305,8 +305,8 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public Long jsonDel(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.JSON_DEL, args, (cmd)->cmd.jsonDel(rawKey(key)),
-				(cmd)->cmd.jsonDel(rawKey(key)), (cmd)->cmd.jsonDel(rawKey(key)));
+		return executeCommand(RedisCommand.JSON_DEL, args, (cmd)->cmd.jsonDel(key),
+				(cmd)->cmd.jsonDel(key), (cmd)->cmd.jsonDel(key));
 	}
 
 	@Override
@@ -317,8 +317,8 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public Long jsonDel(final String key, final String path) {
 		final CommandArguments args = CommandArguments.create(key, path);
-		return executeCommand(RedisCommand.JSON_DEL, args, (cmd)->cmd.jsonDel(rawKey(key), new JedisPath(path)),
-				(cmd)->cmd.jsonDel(rawKey(key)), (cmd)->cmd.jsonDel(rawKey(key)));
+		return executeCommand(RedisCommand.JSON_DEL, args, (cmd)->cmd.jsonDel(key, new JedisPath(path)),
+				(cmd)->cmd.jsonDel(key), (cmd)->cmd.jsonDel(key));
 	}
 
 	@Override
@@ -329,8 +329,8 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public Long jsonForget(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.JSON_FORGET, args, (cmd)->cmd.jsonDel(rawKey(key)),
-				(cmd)->cmd.jsonDel(rawKey(key)), (cmd)->cmd.jsonDel(rawKey(key)));
+		return executeCommand(RedisCommand.JSON_FORGET, args, (cmd)->cmd.jsonDel(key),
+				(cmd)->cmd.jsonDel(key), (cmd)->cmd.jsonDel(key));
 	}
 
 	@Override
@@ -341,9 +341,9 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public Long jsonForget(final String key, final String path) {
 		final CommandArguments args = CommandArguments.create(key, path);
-		return executeCommand(RedisCommand.JSON_FORGET, args, (cmd)->cmd.jsonDel(rawKey(key), new JedisPath(path)),
-				(cmd)->cmd.jsonDel(rawKey(key), new JedisPath(path)),
-				(cmd)->cmd.jsonDel(rawKey(key), new JedisPath(path)));
+		return executeCommand(RedisCommand.JSON_FORGET, args, (cmd)->cmd.jsonDel(key, new JedisPath(path)),
+				(cmd)->cmd.jsonDel(key, new JedisPath(path)),
+				(cmd)->cmd.jsonDel(key, new JedisPath(path)));
 	}
 
 	@Override
@@ -354,8 +354,8 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public String jsonGet(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.JSON_GET, args, (cmd)->cmd.jsonGet(rawKey(key)),
-				(cmd)->cmd.jsonGet(rawKey(key)), (cmd)->cmd.jsonGet(rawKey(key)), Objects::toString);
+		return executeCommand(RedisCommand.JSON_GET, args, (cmd)->cmd.jsonGet(key),
+				(cmd)->cmd.jsonGet(key), (cmd)->cmd.jsonGet(key), Objects::toString);
 	}
 
 	@Override
@@ -368,60 +368,60 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public String jsonGet(final String key, final JsonGetArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument);
-		return executeCommand(RedisCommand.JSON_GET, args, (cmd)->cmd.jsonGet(rawKey(key)),
-				(cmd)->cmd.jsonGet(rawKey(key)), (cmd)->cmd.jsonGet(rawKey(key)), Objects::toString);
+		return executeCommand(RedisCommand.JSON_GET, args, (cmd)->cmd.jsonGet(key),
+				(cmd)->cmd.jsonGet(key), (cmd)->cmd.jsonGet(key), Objects::toString);
 	}
 
 	@Override
 	public byte[] jsonGet(final byte[] key, final JsonGetArgument argument) {
 		final CommandArguments args = CommandArguments.create(key);
-		return jsonBinaryGet((cmd)->cmd.jsonGet(rawStringKey(key)), (cmd)->cmd.jsonGet(rawStringKey(key)),
-				(cmd)->cmd.jsonGet(rawStringKey(key)), args);
+		return jsonBinaryGet((cmd)->cmd.jsonGet(SafeEncoder.encode(key)), (cmd)->cmd.jsonGet(SafeEncoder.encode(key)),
+				(cmd)->cmd.jsonGet(SafeEncoder.encode(key)), args);
 	}
 
 	@Override
 	public List<String> jsonGet(final String key, final String... path) {
 		final CommandArguments args = CommandArguments.create(key).add(path);
 		final ArrayConverter<String, JedisPath> arrayConverter = new ArrayConverter<>(JedisPath::new, JedisPath.class);
-		return jsonListStringGet((cmd)->cmd.jsonGet(rawKey(key), arrayConverter.convert(path)),
-				(cmd)->cmd.jsonGet(rawKey(key), arrayConverter.convert(path)),
-				(cmd)->cmd.jsonGet(rawKey(key), arrayConverter.convert(path)), args);
+		return jsonListStringGet((cmd)->cmd.jsonGet(key, arrayConverter.convert(path)),
+				(cmd)->cmd.jsonGet(key, arrayConverter.convert(path)),
+				(cmd)->cmd.jsonGet(key, arrayConverter.convert(path)), args);
 	}
 
 	@Override
 	public List<byte[]> jsonGet(final byte[] key, final byte[]... path) {
 		final CommandArguments args = CommandArguments.create(key).add(path);
 		final ArrayConverter<byte[], JedisPath> arrayConverter = new ArrayConverter<>(JedisPath::new, JedisPath.class);
-		return jsonListBinaryGet((cmd)->cmd.jsonGet(rawStringKey(key), arrayConverter.convert(path)),
-				(cmd)->cmd.jsonGet(rawStringKey(key), arrayConverter.convert(path)),
-				(cmd)->cmd.jsonGet(rawStringKey(key), arrayConverter.convert(path)), args);
+		return jsonListBinaryGet((cmd)->cmd.jsonGet(SafeEncoder.encode(key), arrayConverter.convert(path)),
+				(cmd)->cmd.jsonGet(SafeEncoder.encode(key), arrayConverter.convert(path)),
+				(cmd)->cmd.jsonGet(SafeEncoder.encode(key), arrayConverter.convert(path)), args);
 	}
 
 	@Override
 	public List<String> jsonGet(final String key, final JsonGetArgument argument, final String... path) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(path);
 		final ArrayConverter<String, JedisPath> arrayConverter = new ArrayConverter<>(JedisPath::new, JedisPath.class);
-		return jsonListStringGet((cmd)->cmd.jsonGet(rawKey(key), arrayConverter.convert(path)),
-				(cmd)->cmd.jsonGet(rawKey(key), arrayConverter.convert(path)),
-				(cmd)->cmd.jsonGet(rawKey(key), arrayConverter.convert(path)), args);
+		return jsonListStringGet((cmd)->cmd.jsonGet(key, arrayConverter.convert(path)),
+				(cmd)->cmd.jsonGet(key, arrayConverter.convert(path)),
+				(cmd)->cmd.jsonGet(key, arrayConverter.convert(path)), args);
 	}
 
 	@Override
 	public List<byte[]> jsonGet(final byte[] key, final JsonGetArgument argument, final byte[]... path) {
 		final CommandArguments args = CommandArguments.create(key).add(argument).add(path);
 		final ArrayConverter<byte[], JedisPath> arrayConverter = new ArrayConverter<>(JedisPath::new, JedisPath.class);
-		return jsonListBinaryGet((cmd)->cmd.jsonGet(rawStringKey(key), arrayConverter.convert(path)),
-				(cmd)->cmd.jsonGet(rawStringKey(key), arrayConverter.convert(path)),
-				(cmd)->cmd.jsonGet(rawStringKey(key), arrayConverter.convert(path)), args);
+		return jsonListBinaryGet((cmd)->cmd.jsonGet(SafeEncoder.encode(key), arrayConverter.convert(path)),
+				(cmd)->cmd.jsonGet(SafeEncoder.encode(key), arrayConverter.convert(path)),
+				(cmd)->cmd.jsonGet(SafeEncoder.encode(key), arrayConverter.convert(path)), args);
 	}
 
 	@Override
 	public Status jsonMerge(final String key, final String path, final String value) {
 		final CommandArguments args = CommandArguments.create(key).add(path).add(value);
 		return executeCommand(RedisCommand.JSON_MERGE, args,
-				(cmd)->cmd.jsonMerge(rawKey(key), new JedisPath(path), value),
-				(cmd)->cmd.jsonMerge(rawKey(key), new JedisPath(path), value),
-				(cmd)->cmd.jsonMerge(rawKey(key), new JedisPath(path), value), new OkStatusConverter());
+				(cmd)->cmd.jsonMerge(key, new JedisPath(path), value),
+				(cmd)->cmd.jsonMerge(key, new JedisPath(path), value),
+				(cmd)->cmd.jsonMerge(key, new JedisPath(path), value), new OkStatusConverter());
 	}
 
 	@Override
@@ -432,9 +432,9 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public List<String> jsonMGet(final String[] keys, final String path) {
 		final CommandArguments args = CommandArguments.create(keys).add(path);
-		return executeCommand(RedisCommand.JSON_MGET, args, (cmd)->cmd.jsonMGet(new JedisPath(path), rawKeys(keys)),
-				(cmd)->cmd.jsonMGet(new JedisPath(path), rawKeys(keys)),
-				(cmd)->cmd.jsonMGet(new JedisPath(path), rawKeys(keys)),
+		return executeCommand(RedisCommand.JSON_MGET, args, (cmd)->cmd.jsonMGet(new JedisPath(path), keys),
+				(cmd)->cmd.jsonMGet(new JedisPath(path), keys),
+				(cmd)->cmd.jsonMGet(new JedisPath(path), keys),
 				new ListConverter<>((v)->v == null ? null : v.toString()));
 	}
 
@@ -442,9 +442,9 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	public List<byte[]> jsonMGet(final byte[][] keys, final byte[] path) {
 		final CommandArguments args = CommandArguments.create(keys).add(path);
 		return executeCommand(RedisCommand.JSON_MGET, args,
-				(cmd)->cmd.jsonMGet(new JedisPath(path), rawStringKeys(keys)),
-				(cmd)->cmd.jsonMGet(new JedisPath(path), rawStringKeys(keys)),
-				(cmd)->cmd.jsonMGet(new JedisPath(path), rawStringKeys(keys)),
+				(cmd)->cmd.jsonMGet(new JedisPath(path), SafeEncoder.encode(keys)),
+				(cmd)->cmd.jsonMGet(new JedisPath(path), SafeEncoder.encode(keys)),
+				(cmd)->cmd.jsonMGet(new JedisPath(path), SafeEncoder.encode(keys)),
 				new ListConverter<>((v)->v == null ? null : SafeEncoder.encode(v.toString())));
 	}
 
@@ -458,9 +458,9 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	public List<Number> jsonNumIncrBy(final String key, final String path, final Number value) {
 		final CommandArguments args = CommandArguments.create(key, path).add(value);
 		return executeCommand(RedisCommand.JSON_NUMINCRBY, args,
-				(cmd)->cmd.jsonNumIncrBy(rawKey(key), new JedisPath(path), value.doubleValue()),
-				(cmd)->cmd.jsonNumIncrBy(rawKey(key), new JedisPath(path), value.doubleValue()),
-				(cmd)->cmd.jsonNumIncrBy(rawKey(key), new JedisPath(path), value.doubleValue()), (v)->(List<Number>) v);
+				(cmd)->cmd.jsonNumIncrBy(key, new JedisPath(path), value.doubleValue()),
+				(cmd)->cmd.jsonNumIncrBy(key, new JedisPath(path), value.doubleValue()),
+				(cmd)->cmd.jsonNumIncrBy(key, new JedisPath(path), value.doubleValue()), (v)->(List<Number>) v);
 	}
 
 	@Override
@@ -483,14 +483,14 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	public List<List<String>> jsonObjKeys(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(RedisCommand.JSON_OBJKEYS, args, null, null,
-				(cmd)->cmd.jsonObjKeys(rawKey(key), JedisPath.ROOT_PATH));
+				(cmd)->cmd.jsonObjKeys(key, JedisPath.ROOT_PATH));
 	}
 
 	@Override
 	public List<List<byte[]>> jsonObjKeys(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
 		return executeCommand(RedisCommand.JSON_OBJKEYS, args, null, null,
-				(cmd)->cmd.jsonObjKeys(rawStringKey(key), JedisPath.ROOT_PATH),
+				(cmd)->cmd.jsonObjKeys(SafeEncoder.encode(key), JedisPath.ROOT_PATH),
 				new ListConverter<>(Converters.stringListBinaryListConverter()));
 	}
 
@@ -498,21 +498,21 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	public List<List<String>> jsonObjKeys(final String key, final String path) {
 		final CommandArguments args = CommandArguments.create(key, path);
 		return executeCommand(RedisCommand.JSON_OBJKEYS, args, null, null,
-				(cmd)->cmd.jsonObjKeys(rawKey(key), new JedisPath(path)));
+				(cmd)->cmd.jsonObjKeys(key, new JedisPath(path)));
 	}
 
 	@Override
 	public List<List<byte[]>> jsonObjKeys(final byte[] key, final byte[] path) {
 		final CommandArguments args = CommandArguments.create(key, path);
 		return executeCommand(RedisCommand.JSON_OBJKEYS, args, null, null,
-				(cmd)->cmd.jsonObjKeys(rawStringKey(key), new JedisPath(path)),
+				(cmd)->cmd.jsonObjKeys(SafeEncoder.encode(key), new JedisPath(path)),
 				new ListConverter<>(Converters.stringListBinaryListConverter()));
 	}
 
 	@Override
 	public Long jsonObjLen(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.JSON_OBJLEN, args, null, null, (cmd)->cmd.jsonObjLen(rawKey(key)));
+		return executeCommand(RedisCommand.JSON_OBJLEN, args, null, null, (cmd)->cmd.jsonObjLen(key));
 	}
 
 	@Override
@@ -524,7 +524,7 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	public List<Long> jsonObjLen(final String key, final String path) {
 		final CommandArguments args = CommandArguments.create(key, path);
 		return executeCommand(RedisCommand.JSON_OBJLEN, args, null, null,
-				(cmd)->cmd.jsonObjLen(rawKey(key), new JedisPath(path)));
+				(cmd)->cmd.jsonObjLen(key, new JedisPath(path)));
 	}
 
 	@Override
@@ -559,9 +559,9 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public Status jsonSet(final String key, final String path, final String value) {
 		final CommandArguments args = CommandArguments.create(key, path);
-		return executeCommand(RedisCommand.JSON_SET, args, (cmd)->cmd.jsonSet(rawKey(key), new JedisPath(path), value),
-				(cmd)->cmd.jsonSet(rawKey(key), new JedisPath(path), value),
-				(cmd)->cmd.jsonSet(rawKey(key), new JedisPath(path), value), new OkStatusConverter());
+		return executeCommand(RedisCommand.JSON_SET, args, (cmd)->cmd.jsonSet(key, new JedisPath(path), value),
+				(cmd)->cmd.jsonSet(key, new JedisPath(path), value),
+				(cmd)->cmd.jsonSet(key, new JedisPath(path), value), new OkStatusConverter());
 	}
 
 	@Override
@@ -573,9 +573,9 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	public Status jsonSet(final String key, final String path, final String value, final NxXx nxXx) {
 		final CommandArguments args = CommandArguments.create(key, path).add(nxXx);
 		return executeCommand(RedisCommand.JSON_SET, args,
-				(cmd)->cmd.jsonSet(rawKey(key), new JedisPath(path), value, new JedisJsonSetParams(nxXx)),
-				(cmd)->cmd.jsonSet(rawKey(key), new JedisPath(path), value, new JedisJsonSetParams(nxXx)),
-				(cmd)->cmd.jsonSet(rawKey(key), new JedisPath(path), value, new JedisJsonSetParams(nxXx)),
+				(cmd)->cmd.jsonSet(key, new JedisPath(path), value, new JedisJsonSetParams(nxXx)),
+				(cmd)->cmd.jsonSet(key, new JedisPath(path), value, new JedisJsonSetParams(nxXx)),
+				(cmd)->cmd.jsonSet(key, new JedisPath(path), value, new JedisJsonSetParams(nxXx)),
 				new OkStatusConverter());
 	}
 
@@ -588,9 +588,9 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	public List<Long> jsonStrAppend(final String key, final String value) {
 		final CommandArguments args = CommandArguments.create(key).add(value);
 		return executeCommand(RedisCommand.JSON_STRAPPEND, args,
-				(cmd)->cmd.jsonStrAppend(rawKey(key), JedisPath.ROOT_PATH, value),
-				(cmd)->cmd.jsonStrAppend(rawKey(key), JedisPath.ROOT_PATH, value),
-				(cmd)->cmd.jsonStrAppend(rawKey(key), JedisPath.ROOT_PATH, value));
+				(cmd)->cmd.jsonStrAppend(key, JedisPath.ROOT_PATH, value),
+				(cmd)->cmd.jsonStrAppend(key, JedisPath.ROOT_PATH, value),
+				(cmd)->cmd.jsonStrAppend(key, JedisPath.ROOT_PATH, value));
 	}
 
 	@Override
@@ -602,9 +602,9 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	public List<Long> jsonStrAppend(final String key, final String path, final String value) {
 		final CommandArguments args = CommandArguments.create(key, path).add(value);
 		return executeCommand(RedisCommand.JSON_STRAPPEND, args,
-				(cmd)->cmd.jsonStrAppend(rawKey(key), new JedisPath(path), value),
-				(cmd)->cmd.jsonStrAppend(rawKey(key), new JedisPath(path), value),
-				(cmd)->cmd.jsonStrAppend(rawKey(key), new JedisPath(path), value));
+				(cmd)->cmd.jsonStrAppend(key, new JedisPath(path), value),
+				(cmd)->cmd.jsonStrAppend(key, new JedisPath(path), value),
+				(cmd)->cmd.jsonStrAppend(key, new JedisPath(path), value));
 	}
 
 	@Override
@@ -615,9 +615,9 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public Long jsonStrLen(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.JSON_STRLEN, args, (cmd)->cmd.jsonStrLen(rawKey(key), JedisPath.ROOT_PATH),
-				(cmd)->cmd.jsonStrLen(rawKey(key), JedisPath.ROOT_PATH),
-				(cmd)->cmd.jsonStrLen(rawKey(key), JedisPath.ROOT_PATH), Converters.list0Converter());
+		return executeCommand(RedisCommand.JSON_STRLEN, args, (cmd)->cmd.jsonStrLen(key, JedisPath.ROOT_PATH),
+				(cmd)->cmd.jsonStrLen(key, JedisPath.ROOT_PATH),
+				(cmd)->cmd.jsonStrLen(key, JedisPath.ROOT_PATH), Converters.list0Converter());
 	}
 
 	@Override
@@ -628,9 +628,9 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public List<Long> jsonStrLen(final String key, final String path) {
 		final CommandArguments args = CommandArguments.create(key, path);
-		return executeCommand(RedisCommand.JSON_STRLEN, args, (cmd)->cmd.jsonStrLen(rawKey(key), new JedisPath(path)),
-				(cmd)->cmd.jsonStrLen(rawKey(key), new JedisPath(path)),
-				(cmd)->cmd.jsonStrLen(rawKey(key), new JedisPath(path)));
+		return executeCommand(RedisCommand.JSON_STRLEN, args, (cmd)->cmd.jsonStrLen(key, new JedisPath(path)),
+				(cmd)->cmd.jsonStrLen(key, new JedisPath(path)),
+				(cmd)->cmd.jsonStrLen(key, new JedisPath(path)));
 	}
 
 	@Override
@@ -641,9 +641,9 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public List<Status> jsonToggle(final String key, final String path) {
 		final CommandArguments args = CommandArguments.create(key, path);
-		return executeCommand(RedisCommand.JSON_TOGGLE, args, (cmd)->cmd.jsonToggle(rawKey(key), new JedisPath(path)),
-				(cmd)->cmd.jsonToggle(rawKey(key), new JedisPath(path)),
-				(cmd)->cmd.jsonToggle(rawKey(key), new JedisPath(path)),
+		return executeCommand(RedisCommand.JSON_TOGGLE, args, (cmd)->cmd.jsonToggle(key, new JedisPath(path)),
+				(cmd)->cmd.jsonToggle(key, new JedisPath(path)),
+				(cmd)->cmd.jsonToggle(key, new JedisPath(path)),
 				new ListConverter<>(new BooleanStatusConverter()));
 	}
 
@@ -655,9 +655,9 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public JsonType jsonType(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.JSON_TYPE, args, (cmd)->cmd.jsonType(rawKey(key), JedisPath.ROOT_PATH),
-				(cmd)->cmd.jsonType(rawKey(key), JedisPath.ROOT_PATH),
-				(cmd)->cmd.jsonType(rawKey(key), JedisPath.ROOT_PATH), (v)->{
+		return executeCommand(RedisCommand.JSON_TYPE, args, (cmd)->cmd.jsonType(key, JedisPath.ROOT_PATH),
+				(cmd)->cmd.jsonType(key, JedisPath.ROOT_PATH),
+				(cmd)->cmd.jsonType(key, JedisPath.ROOT_PATH), (v)->{
 					if(Validate.isEmpty(v)){
 						return null;
 					}else{
@@ -675,9 +675,9 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public List<JsonType> jsonType(final String key, final String path) {
 		final CommandArguments args = CommandArguments.create(key, path);
-		return executeCommand(RedisCommand.JSON_TYPE, args, (cmd)->cmd.jsonType(rawKey(key), new JedisPath(path)),
-				(cmd)->cmd.jsonType(rawKey(key), new JedisPath(path)),
-				(cmd)->cmd.jsonType(rawKey(key), new JedisPath(path)), new ListConverter<>(new JsonTypeConverter()));
+		return executeCommand(RedisCommand.JSON_TYPE, args, (cmd)->cmd.jsonType(key, new JedisPath(path)),
+				(cmd)->cmd.jsonType(key, new JedisPath(path)),
+				(cmd)->cmd.jsonType(key, new JedisPath(path)), new ListConverter<>(new JsonTypeConverter()));
 	}
 
 	@Override

@@ -72,42 +72,42 @@ public final class LettuceStringCommands extends AbstractLettuceRedisCommands im
 	public Long append(final String key, final String value) {
 		final CommandArguments args = CommandArguments.create(key).add(value);
 		return executeCommand(RedisCommand.APPEND, args,
-				(cmd)->cmd.append(rawBinaryKey(key), SafeEncoder.encode(value)),
-				(cmd)->cmd.append(rawBinaryKey(key), SafeEncoder.encode(value)));
+				(cmd)->cmd.append(SafeEncoder.encode(key), SafeEncoder.encode(value)),
+				(cmd)->cmd.append(SafeEncoder.encode(key), SafeEncoder.encode(value)));
 	}
 
 	@Override
 	public Long append(final byte[] key, final byte[] value) {
 		final CommandArguments args = CommandArguments.create(key).add(value);
-		return executeCommand(RedisCommand.APPEND, args, (cmd)->cmd.append(rawKey(key), value),
-				(cmd)->cmd.append(rawKey(key), value));
+		return executeCommand(RedisCommand.APPEND, args, (cmd)->cmd.append(key, value),
+				(cmd)->cmd.append(key, value));
 	}
 
 	@Override
 	public Long decr(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.DECR, args, (cmd)->cmd.decr(rawBinaryKey(key)),
-				(cmd)->cmd.decr(rawBinaryKey(key)));
+		return executeCommand(RedisCommand.DECR, args, (cmd)->cmd.decr(SafeEncoder.encode(key)),
+				(cmd)->cmd.decr(SafeEncoder.encode(key)));
 	}
 
 	@Override
 	public Long decr(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.DECR, args, (cmd)->cmd.decr(rawKey(key)), (cmd)->cmd.decr(rawKey(key)));
+		return executeCommand(RedisCommand.DECR, args, (cmd)->cmd.decr(key), (cmd)->cmd.decr(key));
 	}
 
 	@Override
 	public Long decrBy(final String key, final long value) {
 		final CommandArguments args = CommandArguments.create(key).add(value);
-		return executeCommand(RedisCommand.DECRBY, args, (cmd)->cmd.decrby(rawBinaryKey(key), value),
-				(cmd)->cmd.decrby(rawBinaryKey(key), value));
+		return executeCommand(RedisCommand.DECRBY, args, (cmd)->cmd.decrby(SafeEncoder.encode(key), value),
+				(cmd)->cmd.decrby(SafeEncoder.encode(key), value));
 	}
 
 	@Override
 	public Long decrBy(final byte[] key, final long value) {
 		final CommandArguments args = CommandArguments.create(key).add(value);
-		return executeCommand(RedisCommand.DECRBY, args, (cmd)->cmd.decrby(rawKey(key), value),
-				(cmd)->cmd.decrby(rawKey(key), value));
+		return executeCommand(RedisCommand.DECRBY, args, (cmd)->cmd.decrby(key, value),
+				(cmd)->cmd.decrby(key, value));
 	}
 
 	@Override
@@ -115,13 +115,15 @@ public final class LettuceStringCommands extends AbstractLettuceRedisCommands im
 		final CommandArguments args = CommandArguments.create(key).add(type, value);
 
 		if(type == CompareCondition.IFEQ){
-			return delEx(rawBinaryKey(key), io.lettuce.core.CompareCondition.valueEq(SafeEncoder.encode(value)), args);
+			return delEx(SafeEncoder.encode(key), io.lettuce.core.CompareCondition.valueEq(SafeEncoder.encode(value)),
+					args);
 		}else if(type == CompareCondition.IFNE){
-			return delEx(rawBinaryKey(key), io.lettuce.core.CompareCondition.valueNe(SafeEncoder.encode(value)), args);
+			return delEx(SafeEncoder.encode(key), io.lettuce.core.CompareCondition.valueNe(SafeEncoder.encode(value)),
+					args);
 		}else if(type == CompareCondition.IFDEQ){
-			return delEx(rawBinaryKey(key), io.lettuce.core.CompareCondition.digestEq(value), args);
+			return delEx(SafeEncoder.encode(key), io.lettuce.core.CompareCondition.digestEq(value), args);
 		}else if(type == CompareCondition.IFDNE){
-			return delEx(rawBinaryKey(key), io.lettuce.core.CompareCondition.digestNe(value), args);
+			return delEx(SafeEncoder.encode(key), io.lettuce.core.CompareCondition.digestNe(value), args);
 		}else{
 			return executeCommand(RedisCommand.DELEX, args);
 		}
@@ -132,13 +134,13 @@ public final class LettuceStringCommands extends AbstractLettuceRedisCommands im
 		final CommandArguments args = CommandArguments.create(key).add(type, value);
 
 		if(type == CompareCondition.IFEQ){
-			return delEx(rawKey(key), io.lettuce.core.CompareCondition.valueEq(value), args);
+			return delEx(key, io.lettuce.core.CompareCondition.valueEq(value), args);
 		}else if(type == CompareCondition.IFNE){
-			return delEx(rawKey(key), io.lettuce.core.CompareCondition.valueNe(value), args);
+			return delEx(key, io.lettuce.core.CompareCondition.valueNe(value), args);
 		}else if(type == CompareCondition.IFDEQ){
-			return delEx(rawKey(key), io.lettuce.core.CompareCondition.digestEq(SafeEncoder.encode(value)), args);
+			return delEx(key, io.lettuce.core.CompareCondition.digestEq(SafeEncoder.encode(value)), args);
 		}else if(type == CompareCondition.IFDNE){
-			return delEx(rawKey(key), io.lettuce.core.CompareCondition.digestNe(SafeEncoder.encode(value)), args);
+			return delEx(key, io.lettuce.core.CompareCondition.digestNe(SafeEncoder.encode(value)), args);
 		}else{
 			return executeCommand(RedisCommand.DELEX, args);
 		}
@@ -147,156 +149,156 @@ public final class LettuceStringCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public String digest(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.DIGEST, args, (cmd)->cmd.digest(rawKey(key)), null);
+		return executeCommand(RedisCommand.DIGEST, args, (cmd)->cmd.digest(key), null);
 	}
 
 	@Override
 	public byte[] digest(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.DIGEST, args, (cmd)->cmd.digest(rawKey(key)), null, SafeEncoder::encode);
+		return executeCommand(RedisCommand.DIGEST, args, (cmd)->cmd.digest(key), null, SafeEncoder::encode);
 	}
 
 	@Override
 	public String get(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.GET, args, (cmd)->cmd.get(rawBinaryKey(key)),
-				(cmd)->cmd.get(rawBinaryKey(key)), SafeEncoder::encode);
+		return executeCommand(RedisCommand.GET, args, (cmd)->cmd.get(SafeEncoder.encode(key)),
+				(cmd)->cmd.get(SafeEncoder.encode(key)), SafeEncoder::encode);
 	}
 
 	@Override
 	public byte[] get(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.GET, args, (cmd)->cmd.get(rawKey(key)), (cmd)->cmd.get(rawKey(key)));
+		return executeCommand(RedisCommand.GET, args, (cmd)->cmd.get(key), (cmd)->cmd.get(key));
 	}
 
 	@Override
 	public String getDel(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.GETDEL, args, (cmd)->cmd.getdel(rawBinaryKey(key)),
-				(cmd)->cmd.getdel(rawBinaryKey(key)), SafeEncoder::encode);
+		return executeCommand(RedisCommand.GETDEL, args, (cmd)->cmd.getdel(SafeEncoder.encode(key)),
+				(cmd)->cmd.getdel(SafeEncoder.encode(key)), SafeEncoder::encode);
 	}
 
 	@Override
 	public byte[] getDel(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.GETDEL, args, (cmd)->cmd.getdel(rawKey(key)),
-				(cmd)->cmd.getdel(rawKey(key)));
+		return executeCommand(RedisCommand.GETDEL, args, (cmd)->cmd.getdel(key),
+				(cmd)->cmd.getdel(key));
 	}
 
 	@Override
 	public String getEx(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return getStringEx(rawBinaryKey(key), new LettuceGetExArgs(), args);
+		return getStringEx(SafeEncoder.encode(key), new LettuceGetExArgs(), args);
 	}
 
 	@Override
 	public byte[] getEx(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return getBinaryEx(rawKey(key), new LettuceGetExArgs(), args);
+		return getBinaryEx(key, new LettuceGetExArgs(), args);
 	}
 
 	@Override
 	public String getEx(final String key, final GetExType exType, final long expires) {
 		final CommandArguments args = CommandArguments.create(key).add(exType, expires);
-		return getStringEx(rawBinaryKey(key), new LettuceGetExArgs(exType, expires), args);
+		return getStringEx(SafeEncoder.encode(key), new LettuceGetExArgs(exType, expires), args);
 	}
 
 	@Override
 	public byte[] getEx(final byte[] key, final GetExType exType, final long expires) {
 		final CommandArguments args = CommandArguments.create(key).add(exType, expires);
-		return getBinaryEx(rawKey(key), new LettuceGetExArgs(exType, expires), args);
+		return getBinaryEx(key, new LettuceGetExArgs(exType, expires), args);
 	}
 
 	@Override
 	public String getRange(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
-		return executeCommand(RedisCommand.GETRANGE, args, (cmd)->cmd.getrange(rawBinaryKey(key), start, end),
-				(cmd)->cmd.getrange(rawBinaryKey(key), start, end), SafeEncoder::encode);
+		return executeCommand(RedisCommand.GETRANGE, args, (cmd)->cmd.getrange(SafeEncoder.encode(key), start, end),
+				(cmd)->cmd.getrange(SafeEncoder.encode(key), start, end), SafeEncoder::encode);
 	}
 
 	@Override
 	public byte[] getRange(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
-		return executeCommand(RedisCommand.GETRANGE, args, (cmd)->cmd.getrange(rawKey(key), start, end),
-				(cmd)->cmd.getrange(rawKey(key), start, end));
+		return executeCommand(RedisCommand.GETRANGE, args, (cmd)->cmd.getrange(key, start, end),
+				(cmd)->cmd.getrange(key, start, end));
 	}
 
 	@Override
 	public String getSet(final String key, final String value) {
 		final CommandArguments args = CommandArguments.create(key).add(value);
 		return executeCommand(RedisCommand.GETSET, args,
-				(cmd)->cmd.getset(rawBinaryKey(key), SafeEncoder.encode(value)),
-				(cmd)->cmd.getset(rawBinaryKey(key), SafeEncoder.encode(value)), SafeEncoder::encode);
+				(cmd)->cmd.getset(SafeEncoder.encode(key), SafeEncoder.encode(value)),
+				(cmd)->cmd.getset(SafeEncoder.encode(key), SafeEncoder.encode(value)), SafeEncoder::encode);
 	}
 
 	@Override
 	public byte[] getSet(final byte[] key, final byte[] value) {
 		final CommandArguments args = CommandArguments.create(key).add(value);
-		return executeCommand(RedisCommand.GETSET, args, (cmd)->cmd.getset(rawKey(key), value),
-				(cmd)->cmd.getset(rawKey(key), value));
+		return executeCommand(RedisCommand.GETSET, args, (cmd)->cmd.getset(key, value),
+				(cmd)->cmd.getset(key, value));
 	}
 
 	@Override
 	public Long incr(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.INCR, args, (cmd)->cmd.incr(rawBinaryKey(key)),
-				(cmd)->cmd.incr(rawBinaryKey(key)));
+		return executeCommand(RedisCommand.INCR, args, (cmd)->cmd.incr(SafeEncoder.encode(key)),
+				(cmd)->cmd.incr(SafeEncoder.encode(key)));
 	}
 
 	@Override
 	public Long incr(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.INCR, args, (cmd)->cmd.incr(rawKey(key)), (cmd)->cmd.incr(rawKey(key)));
+		return executeCommand(RedisCommand.INCR, args, (cmd)->cmd.incr(key), (cmd)->cmd.incr(key));
 	}
 
 	@Override
 	public Long incrBy(final String key, final long value) {
 		final CommandArguments args = CommandArguments.create(key, value);
-		return executeCommand(RedisCommand.INCRBY, args, (cmd)->cmd.incrby(rawBinaryKey(key), value),
-				(cmd)->cmd.incrby(rawBinaryKey(key), value));
+		return executeCommand(RedisCommand.INCRBY, args, (cmd)->cmd.incrby(SafeEncoder.encode(key), value),
+				(cmd)->cmd.incrby(SafeEncoder.encode(key), value));
 	}
 
 	@Override
 	public Long incrBy(final byte[] key, final long value) {
 		final CommandArguments args = CommandArguments.create(key, value);
-		return executeCommand(RedisCommand.INCRBY, args, (cmd)->cmd.incrby(rawKey(key), value),
-				(cmd)->cmd.incrby(rawKey(key), value));
+		return executeCommand(RedisCommand.INCRBY, args, (cmd)->cmd.incrby(key, value),
+				(cmd)->cmd.incrby(key, value));
 	}
 
 	@Override
 	public Double incrByFloat(final String key, final double value) {
 		final CommandArguments args = CommandArguments.create(key, value);
-		return executeCommand(RedisCommand.INCRBYFLOAT, args, (cmd)->cmd.incrbyfloat(rawBinaryKey(key), value),
-				(cmd)->cmd.incrbyfloat(rawBinaryKey(key), value));
+		return executeCommand(RedisCommand.INCRBYFLOAT, args, (cmd)->cmd.incrbyfloat(SafeEncoder.encode(key), value),
+				(cmd)->cmd.incrbyfloat(SafeEncoder.encode(key), value));
 	}
 
 	@Override
 	public Double incrByFloat(final byte[] key, final double value) {
 		final CommandArguments args = CommandArguments.create(key, value);
-		return executeCommand(RedisCommand.INCRBYFLOAT, args, (cmd)->cmd.incrbyfloat(rawKey(key), value),
-				(cmd)->cmd.incrbyfloat(rawKey(key), value));
+		return executeCommand(RedisCommand.INCRBYFLOAT, args, (cmd)->cmd.incrbyfloat(key, value),
+				(cmd)->cmd.incrbyfloat(key, value));
 	}
 
 	@Override
 	public LcsResult lcs(final String key1, final String key2) {
 		final CommandArguments args = CommandArguments.create(key1, key2);
-		return executeCommand(RedisCommand.LCS, args, (cmd)->cmd.lcs(new LettuceLcsArgs(rawKey(key1), rawKey(key2))),
-				(cmd)->cmd.lcs(new LettuceLcsArgs(rawKey(key1), rawKey(key2))), new StringMatchResultConveter());
+		return executeCommand(RedisCommand.LCS, args, (cmd)->cmd.lcs(new LettuceLcsArgs(key1, key2)),
+				(cmd)->cmd.lcs(new LettuceLcsArgs(key1, key2)), new StringMatchResultConveter());
 	}
 
 	@Override
 	public LcsResult lcs(byte[] key1, byte[] key2) {
 		final CommandArguments args = CommandArguments.create(key1, key2);
-		return executeCommand(RedisCommand.LCS, args, (cmd)->cmd.lcs(new LettuceLcsArgs(rawKey(key1), rawKey(key2))),
-				(cmd)->cmd.lcs(new LettuceLcsArgs(rawKey(key1), rawKey(key2))), new StringMatchResultConveter());
+		return executeCommand(RedisCommand.LCS, args, (cmd)->cmd.lcs(new LettuceLcsArgs(key1, key2)),
+				(cmd)->cmd.lcs(new LettuceLcsArgs(key1, key2)), new StringMatchResultConveter());
 	}
 
 	@Override
 	public LcsResult lcs(final String key1, final String key2, final LcsArgument argument) {
 		final CommandArguments args = CommandArguments.create(key1, key2).add(argument);
 		return executeCommand(RedisCommand.LCS, args,
-				(cmd)->cmd.lcs(new LettuceLcsArgs(rawKey(key1), rawKey(key2), argument)),
-				(cmd)->cmd.lcs(new LettuceLcsArgs(rawKey(key1), rawKey(key2), argument)),
+				(cmd)->cmd.lcs(new LettuceLcsArgs(key1, key2, argument)),
+				(cmd)->cmd.lcs(new LettuceLcsArgs(key1, key2, argument)),
 				new StringMatchResultConveter());
 	}
 
@@ -304,22 +306,22 @@ public final class LettuceStringCommands extends AbstractLettuceRedisCommands im
 	public LcsResult lcs(final byte[] key1, final byte[] key2, final LcsArgument argument) {
 		final CommandArguments args = CommandArguments.create(key1, key2).add(argument);
 		return executeCommand(RedisCommand.LCS, args,
-				(cmd)->cmd.lcs(new LettuceLcsArgs(rawKey(key1), rawKey(key2), argument)),
-				(cmd)->cmd.lcs(new LettuceLcsArgs(rawKey(key1), rawKey(key2), argument)),
+				(cmd)->cmd.lcs(new LettuceLcsArgs(key1, key2, argument)),
+				(cmd)->cmd.lcs(new LettuceLcsArgs(key1, key2, argument)),
 				new StringMatchResultConveter());
 	}
 
 	@Override
 	public List<String> mGet(final String... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.MGET, args, (cmd)->cmd.mget(rawBinaryKeys(keys)),
-				(cmd)->cmd.mget(rawBinaryKeys(keys)), new ListConverter<>((v)->SafeEncoder.encode(v.getValue())));
+		return executeCommand(RedisCommand.MGET, args, (cmd)->cmd.mget(SafeEncoder.encode(keys)),
+				(cmd)->cmd.mget(SafeEncoder.encode(keys)), new ListConverter<>((v)->SafeEncoder.encode(v.getValue())));
 	}
 
 	@Override
 	public List<byte[]> mGet(final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(keys);
-		return executeCommand(RedisCommand.MGET, args, (cmd)->cmd.mget(rawKeys(keys)), (cmd)->cmd.mget(rawKeys(keys)),
+		return executeCommand(RedisCommand.MGET, args, (cmd)->cmd.mget(keys), (cmd)->cmd.mget(keys),
 				new ListConverter<>(Value::getValue));
 	}
 
@@ -374,139 +376,143 @@ public final class LettuceStringCommands extends AbstractLettuceRedisCommands im
 	public Status pSetEx(final String key, final String value, final int lifetime) {
 		final CommandArguments args = CommandArguments.create(key, value).add(lifetime);
 		return executeCommand(RedisCommand.PSETEX, args,
-				(cmd)->cmd.psetex(rawBinaryKey(key), lifetime, SafeEncoder.encode(value)),
-				(cmd)->cmd.psetex(rawBinaryKey(key), lifetime, SafeEncoder.encode(value)), new OkStatusConverter());
+				(cmd)->cmd.psetex(SafeEncoder.encode(key), lifetime, SafeEncoder.encode(value)),
+				(cmd)->cmd.psetex(SafeEncoder.encode(key), lifetime, SafeEncoder.encode(value)),
+				new OkStatusConverter());
 	}
 
 	@Override
 	public Status pSetEx(final byte[] key, final byte[] value, final int lifetime) {
 		final CommandArguments args = CommandArguments.create(key, value).add(lifetime);
-		return executeCommand(RedisCommand.PSETEX, args, (cmd)->cmd.psetex(rawKey(key), lifetime, value),
-				(cmd)->cmd.psetex(rawKey(key), lifetime, value), new OkStatusConverter());
+		return executeCommand(RedisCommand.PSETEX, args, (cmd)->cmd.psetex(key, lifetime, value),
+				(cmd)->cmd.psetex(key, lifetime, value), new OkStatusConverter());
 	}
 
 	@Override
 	public Status set(final String key, final String value) {
 		final CommandArguments args = CommandArguments.create(key, value);
-		return executeCommand(RedisCommand.SET, args, (cmd)->cmd.set(rawBinaryKey(key), SafeEncoder.encode(value)),
-				(cmd)->cmd.set(rawBinaryKey(key), SafeEncoder.encode(value)), new OkStatusConverter());
+		return executeCommand(RedisCommand.SET, args,
+				(cmd)->cmd.set(SafeEncoder.encode(key), SafeEncoder.encode(value)),
+				(cmd)->cmd.set(SafeEncoder.encode(key), SafeEncoder.encode(value)), new OkStatusConverter());
 	}
 
 	@Override
 	public Status set(final byte[] key, final byte[] value) {
 		final CommandArguments args = CommandArguments.create(key, value);
-		return executeCommand(RedisCommand.SET, args, (cmd)->cmd.set(rawKey(key), value),
-				(cmd)->cmd.set(rawKey(key), value), new OkStatusConverter());
+		return executeCommand(RedisCommand.SET, args, (cmd)->cmd.set(key, value),
+				(cmd)->cmd.set(key, value), new OkStatusConverter());
 	}
 
 	@Override
 	public Status set(final String key, final String value, final SetType setType) {
 		final CommandArguments args = CommandArguments.create(key, value).add(setType);
-		return set(rawBinaryKey(key), value, new LettuceSetArgs(setType), args);
+		return set(SafeEncoder.encode(key), value, new LettuceSetArgs(setType), args);
 	}
 
 	@Override
 	public Status set(final byte[] key, final byte[] value, final SetType setType) {
 		final CommandArguments args = CommandArguments.create(key, value).add(setType);
-		return set(rawKey(key), value, new LettuceSetArgs(setType), args);
+		return set(key, value, new LettuceSetArgs(setType), args);
 	}
 
 	@Override
 	public Status set(final String key, final String value, final SetType setType, final PxExType pxExType,
 	                  final long expires) {
 		final CommandArguments args = CommandArguments.create(key, value).add(setType).add(pxExType, expires);
-		return set(rawBinaryKey(key), value, new LettuceSetArgs(setType, pxExType, expires), args);
+		return set(SafeEncoder.encode(key), value, new LettuceSetArgs(setType, pxExType, expires), args);
 	}
 
 	@Override
 	public Status set(final byte[] key, final byte[] value, final SetType setType, final PxExType pxExType,
 	                  final long expires) {
 		final CommandArguments args = CommandArguments.create(key, value).add(setType).add(pxExType, expires);
-		return set(rawKey(key), value, new LettuceSetArgs(setType, pxExType, expires), args);
+		return set(key, value, new LettuceSetArgs(setType, pxExType, expires), args);
 	}
 
 	@Override
 	public Status set(final String key, final String value, final PxExType pxExType, final long expires) {
 		final CommandArguments args = CommandArguments.create(key, value).add(pxExType, expires);
-		return set(rawBinaryKey(key), value, new LettuceSetArgs(pxExType, expires), args);
+		return set(SafeEncoder.encode(key), value, new LettuceSetArgs(pxExType, expires), args);
 	}
 
 	@Override
 	public Status set(final byte[] key, final byte[] value, final PxExType pxExType, final long expires) {
 		final CommandArguments args = CommandArguments.create(key, value).add(pxExType, expires);
-		return set(rawKey(key), value, new LettuceSetArgs(pxExType, expires), args);
+		return set(key, value, new LettuceSetArgs(pxExType, expires), args);
 	}
 
 	@Override
 	public Status setEx(final String key, final String value, final int lifetime) {
 		final CommandArguments args = CommandArguments.create(key, value).add(lifetime);
 		return executeCommand(RedisCommand.SETEX, args,
-				(cmd)->cmd.setex(rawBinaryKey(key), lifetime, SafeEncoder.encode(value)),
-				(cmd)->cmd.setex(rawBinaryKey(key), lifetime, SafeEncoder.encode(value)), new OkStatusConverter());
+				(cmd)->cmd.setex(SafeEncoder.encode(key), lifetime, SafeEncoder.encode(value)),
+				(cmd)->cmd.setex(SafeEncoder.encode(key), lifetime, SafeEncoder.encode(value)),
+				new OkStatusConverter());
 	}
 
 	@Override
 	public Status setEx(final byte[] key, final byte[] value, final int lifetime) {
 		final CommandArguments args = CommandArguments.create(key, value).add(lifetime);
-		return executeCommand(RedisCommand.SETEX, args, (cmd)->cmd.setex(rawKey(key), lifetime, value),
-				(cmd)->cmd.setex(rawKey(key), lifetime, value), new OkStatusConverter());
+		return executeCommand(RedisCommand.SETEX, args, (cmd)->cmd.setex(key, lifetime, value),
+				(cmd)->cmd.setex(key, lifetime, value), new OkStatusConverter());
 	}
 
 	@Override
 	public Status setNx(final String key, final String value) {
 		final CommandArguments args = CommandArguments.create(key, value);
-		return executeCommand(RedisCommand.SETNX, args, (cmd)->cmd.setnx(rawBinaryKey(key), SafeEncoder.encode(value)),
-				(cmd)->cmd.setnx(rawBinaryKey(key), SafeEncoder.encode(value)), new BooleanStatusConverter());
+		return executeCommand(RedisCommand.SETNX, args,
+				(cmd)->cmd.setnx(SafeEncoder.encode(key), SafeEncoder.encode(value)),
+				(cmd)->cmd.setnx(SafeEncoder.encode(key), SafeEncoder.encode(value)), new BooleanStatusConverter());
 	}
 
 	@Override
 	public Status setNx(final byte[] key, final byte[] value) {
 		final CommandArguments args = CommandArguments.create(key, value);
-		return executeCommand(RedisCommand.SETNX, args, (cmd)->cmd.setnx(rawKey(key), value),
-				(cmd)->cmd.setnx(rawKey(key), value), new BooleanStatusConverter());
+		return executeCommand(RedisCommand.SETNX, args, (cmd)->cmd.setnx(key, value),
+				(cmd)->cmd.setnx(key, value), new BooleanStatusConverter());
 	}
 
 	@Override
 	public Long setRange(final String key, final long offset, final String value) {
 		final CommandArguments args = CommandArguments.create(key).add(offset).add(value);
 		return executeCommand(RedisCommand.SETRANGE, args,
-				(cmd)->cmd.setrange(rawBinaryKey(key), offset, SafeEncoder.encode(value)),
-				(cmd)->cmd.setrange(rawBinaryKey(key), offset, SafeEncoder.encode(value)));
+				(cmd)->cmd.setrange(SafeEncoder.encode(key), offset, SafeEncoder.encode(value)),
+				(cmd)->cmd.setrange(SafeEncoder.encode(key), offset, SafeEncoder.encode(value)));
 	}
 
 	@Override
 	public Long setRange(final byte[] key, final long offset, final byte[] value) {
 		final CommandArguments args = CommandArguments.create(key).add(offset).add(value);
-		return executeCommand(RedisCommand.SETRANGE, args, (cmd)->cmd.setrange(rawKey(key), offset, value),
-				(cmd)->cmd.setrange(rawKey(key), offset, value));
+		return executeCommand(RedisCommand.SETRANGE, args, (cmd)->cmd.setrange(key, offset, value),
+				(cmd)->cmd.setrange(key, offset, value));
 	}
 
 	@Override
 	public Long strlen(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.STRLEN, args, (cmd)->cmd.strlen(rawBinaryKey(key)),
-				(cmd)->cmd.strlen(rawBinaryKey(key)));
+		return executeCommand(RedisCommand.STRLEN, args, (cmd)->cmd.strlen(SafeEncoder.encode(key)),
+				(cmd)->cmd.strlen(SafeEncoder.encode(key)));
 	}
 
 	@Override
 	public Long strlen(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.STRLEN, args, (cmd)->cmd.strlen(rawKey(key)),
-				(cmd)->cmd.strlen(rawKey(key)));
+		return executeCommand(RedisCommand.STRLEN, args, (cmd)->cmd.strlen(key),
+				(cmd)->cmd.strlen(key));
 	}
 
 	@Override
 	public String substr(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start).add(end);
-		return executeCommand(RedisCommand.SUBSTR, args, (cmd)->cmd.getrange(rawBinaryKey(key), start, end),
-				(cmd)->cmd.getrange(rawBinaryKey(key), start, end), SafeEncoder::encode);
+		return executeCommand(RedisCommand.SUBSTR, args, (cmd)->cmd.getrange(SafeEncoder.encode(key), start, end),
+				(cmd)->cmd.getrange(SafeEncoder.encode(key), start, end), SafeEncoder::encode);
 	}
 
 	@Override
 	public byte[] substr(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
-		return executeCommand(RedisCommand.SUBSTR, args, (cmd)->cmd.getrange(rawKey(key), start, end),
-				(cmd)->cmd.getrange(rawKey(key), start, end));
+		return executeCommand(RedisCommand.SUBSTR, args, (cmd)->cmd.getrange(key, start, end),
+				(cmd)->cmd.getrange(key, start, end));
 	}
 
 	private String getStringEx(final byte[] key, final GetExArgs getExArgs, final CommandArguments args) {
@@ -544,7 +550,7 @@ public final class LettuceStringCommands extends AbstractLettuceRedisCommands im
 	@SuppressWarnings({"unchecked"})
 	private Map<byte[], byte[]> buildSetValues(final KeyValue<String, String>... values) {
 		final ArrayKeyValueMapConverter<String, String, byte[], byte[]> arrayKeyValueMapConverter = new ArrayKeyValueMapConverter<>(
-				this::rawBinaryKey, SafeEncoder::encode);
+				SafeEncoder::encode, SafeEncoder::encode);
 		return arrayKeyValueMapConverter.convert(values);
 	}
 

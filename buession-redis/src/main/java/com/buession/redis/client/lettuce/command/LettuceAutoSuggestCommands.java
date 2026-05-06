@@ -57,27 +57,27 @@ public final class LettuceAutoSuggestCommands extends AbstractLettuceRedisComman
 	public Long ftSugAdd(final String key, final String value, final double score) {
 		final CommandArguments args = CommandArguments.create(key, value).add(score);
 		return executeCommand(RedisCommand.FT_SUGADD, args,
-				(cmd)->cmd.ftSugadd(rawBinaryKey(key), SafeEncoder.encode(value), score),
-				(cmd)->cmd.ftSugadd(rawBinaryKey(key), SafeEncoder.encode(value), score));
+				(cmd)->cmd.ftSugadd(SafeEncoder.encode(key), SafeEncoder.encode(value), score),
+				(cmd)->cmd.ftSugadd(SafeEncoder.encode(key), SafeEncoder.encode(value), score));
 	}
 
 	@Override
 	public Long ftSugAdd(final byte[] key, final byte[] value, final double score) {
 		final CommandArguments args = CommandArguments.create(key, value).add(score);
-		return executeCommand(RedisCommand.FT_SUGADD, args, (cmd)->cmd.ftSugadd(rawKey(key), value, score),
-				(cmd)->cmd.ftSugadd(rawKey(key), value, score));
+		return executeCommand(RedisCommand.FT_SUGADD, args, (cmd)->cmd.ftSugadd(key, value, score),
+				(cmd)->cmd.ftSugadd(key, value, score));
 	}
 
 	@Override
 	public Long ftSugAdd(final String key, final String value, final double score, final boolean incr) {
 		final CommandArguments args = CommandArguments.create(key, value).add(score).add(incr ? "INCR" : null);
-		return ftSugAdd(rawBinaryKey(key), SafeEncoder.encode(value), score, new LettuceSugAddArgs<>(incr), args);
+		return ftSugAdd(SafeEncoder.encode(key), SafeEncoder.encode(value), score, new LettuceSugAddArgs<>(incr), args);
 	}
 
 	@Override
 	public Long ftSugAdd(final byte[] key, final byte[] value, final double score, final boolean incr) {
 		final CommandArguments args = CommandArguments.create(key, value).add(score).add(incr ? "INCR" : null);
-		return ftSugAdd(rawKey(key), value, score, new LettuceSugAddArgs<>(incr), args);
+		return ftSugAdd(key, value, score, new LettuceSugAddArgs<>(incr), args);
 	}
 
 	@Override
@@ -85,7 +85,7 @@ public final class LettuceAutoSuggestCommands extends AbstractLettuceRedisComman
 	                     final String payload) {
 		final CommandArguments args = CommandArguments.create(key, value).add(score).add(incr ? "INCR" : null)
 				.add("PAYLOAD", payload);
-		return ftSugAdd(rawBinaryKey(key), SafeEncoder.encode(value), score,
+		return ftSugAdd(SafeEncoder.encode(key), SafeEncoder.encode(value), score,
 				new LettuceSugAddArgs<>(incr, SafeEncoder.encode(payload)), args);
 	}
 
@@ -94,59 +94,61 @@ public final class LettuceAutoSuggestCommands extends AbstractLettuceRedisComman
 	                     final byte[] payload) {
 		final CommandArguments args = CommandArguments.create(key, value).add(score).add(incr ? "INCR" : null)
 				.add("PAYLOAD", payload);
-		return ftSugAdd(rawKey(key), value, score, new LettuceSugAddArgs<>(incr, payload), args);
+		return ftSugAdd(key, value, score, new LettuceSugAddArgs<>(incr, payload), args);
 	}
 
 	@Override
 	public Long ftSugAdd(final String key, final String value, final double score, final String payload) {
 		final CommandArguments args = CommandArguments.create(key, value).add(score).add("PAYLOAD", payload);
-		return ftSugAdd(rawBinaryKey(key), SafeEncoder.encode(value), score,
+		return ftSugAdd(SafeEncoder.encode(key), SafeEncoder.encode(value), score,
 				new LettuceSugAddArgs<>(SafeEncoder.encode(payload)), args);
 	}
 
 	@Override
 	public Long ftSugAdd(final byte[] key, final byte[] value, final double score, final byte[] payload) {
 		final CommandArguments args = CommandArguments.create(key, value).add(score).add("PAYLOAD", payload);
-		return ftSugAdd(rawKey(key), value, score, new LettuceSugAddArgs<>(payload), args);
+		return ftSugAdd(key, value, score, new LettuceSugAddArgs<>(payload), args);
 	}
 
 	@Override
 	public Status ftSugDel(final String key, final String value) {
 		final CommandArguments args = CommandArguments.create(key, value);
 		return executeCommand(RedisCommand.FT_SUGDEL, args,
-				(cmd)->cmd.ftSugdel(rawBinaryKey(key), SafeEncoder.encode(value)),
-				(cmd)->cmd.ftSugdel(rawBinaryKey(key), SafeEncoder.encode(value)), new BooleanStatusConverter());
+				(cmd)->cmd.ftSugdel(SafeEncoder.encode(key), SafeEncoder.encode(value)),
+				(cmd)->cmd.ftSugdel(SafeEncoder.encode(key), SafeEncoder.encode(value)), new BooleanStatusConverter());
 	}
 
 	@Override
 	public Status ftSugDel(final byte[] key, final byte[] value) {
 		final CommandArguments args = CommandArguments.create(key, value);
-		return executeCommand(RedisCommand.FT_SUGDEL, args, (cmd)->cmd.ftSugdel(rawKey(key), value),
-				(cmd)->cmd.ftSugdel(rawKey(key), value), new BooleanStatusConverter());
+		return executeCommand(RedisCommand.FT_SUGDEL, args, (cmd)->cmd.ftSugdel(key, value),
+				(cmd)->cmd.ftSugdel(key, value), new BooleanStatusConverter());
 	}
 
 	@Override
 	public List<Suggestion> ftSugGet(final String key, final String prefix) {
 		final CommandArguments args = CommandArguments.create(key, prefix);
 		return executeCommand(RedisCommand.FT_SUGGET, args,
-				(cmd)->cmd.ftSugget(rawBinaryKey(key), SafeEncoder.encode(prefix)),
-				(cmd)->cmd.ftSugget(rawBinaryKey(key), SafeEncoder.encode(prefix)),
+				(cmd)->cmd.ftSugget(SafeEncoder.encode(key), SafeEncoder.encode(prefix)),
+				(cmd)->cmd.ftSugget(SafeEncoder.encode(key), SafeEncoder.encode(prefix)),
 				new ListConverter<>(new SuggestionConverter()));
 	}
 
 	@Override
 	public List<Suggestion> ftSugGet(final byte[] key, final byte[] prefix) {
 		final CommandArguments args = CommandArguments.create(key, prefix);
-		return executeCommand(RedisCommand.FT_SUGGET, args, (cmd)->cmd.ftSugget(rawKey(key), prefix),
-				(cmd)->cmd.ftSugget(rawKey(key), prefix), new ListConverter<>(new SuggestionConverter()));
+		return executeCommand(RedisCommand.FT_SUGGET, args, (cmd)->cmd.ftSugget(key, prefix),
+				(cmd)->cmd.ftSugget(key, prefix), new ListConverter<>(new SuggestionConverter()));
 	}
 
 	@Override
 	public List<Suggestion> ftSugGet(final String key, final String prefix, final SugGetArgument argument) {
 		final CommandArguments args = CommandArguments.create(key, prefix).add(argument);
 		return executeCommand(RedisCommand.FT_SUGGET, args,
-				(cmd)->cmd.ftSugget(rawBinaryKey(key), SafeEncoder.encode(prefix), new LettuceSugGetArgs<>(argument)),
-				(cmd)->cmd.ftSugget(rawBinaryKey(key), SafeEncoder.encode(prefix), new LettuceSugGetArgs<>(argument)),
+				(cmd)->cmd.ftSugget(SafeEncoder.encode(key), SafeEncoder.encode(prefix),
+						new LettuceSugGetArgs<>(argument)),
+				(cmd)->cmd.ftSugget(SafeEncoder.encode(key), SafeEncoder.encode(prefix),
+						new LettuceSugGetArgs<>(argument)),
 				new ListConverter<>(new SuggestionConverter()));
 	}
 
@@ -154,23 +156,23 @@ public final class LettuceAutoSuggestCommands extends AbstractLettuceRedisComman
 	public List<Suggestion> ftSugGet(final byte[] key, final byte[] prefix, final SugGetArgument argument) {
 		final CommandArguments args = CommandArguments.create(key, prefix).add(argument);
 		return executeCommand(RedisCommand.FT_SUGGET, args,
-				(cmd)->cmd.ftSugget(rawKey(key), prefix, new LettuceSugGetArgs<>(argument)),
-				(cmd)->cmd.ftSugget(rawKey(key), prefix, new LettuceSugGetArgs<>(argument)),
+				(cmd)->cmd.ftSugget(key, prefix, new LettuceSugGetArgs<>(argument)),
+				(cmd)->cmd.ftSugget(key, prefix, new LettuceSugGetArgs<>(argument)),
 				new ListConverter<>(new SuggestionConverter()));
 	}
 
 	@Override
 	public Long ftSugLen(final String key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.FT_SUGLEN, args, (cmd)->cmd.ftSuglen(rawBinaryKey(key)),
-				(cmd)->cmd.ftSuglen(rawBinaryKey(key)));
+		return executeCommand(RedisCommand.FT_SUGLEN, args, (cmd)->cmd.ftSuglen(SafeEncoder.encode(key)),
+				(cmd)->cmd.ftSuglen(SafeEncoder.encode(key)));
 	}
 
 	@Override
 	public Long ftSugLen(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.FT_SUGLEN, args, (cmd)->cmd.ftSuglen(rawKey(key)),
-				(cmd)->cmd.ftSuglen(rawKey(key)));
+		return executeCommand(RedisCommand.FT_SUGLEN, args, (cmd)->cmd.ftSuglen(key),
+				(cmd)->cmd.ftSuglen(key));
 	}
 
 	private Long ftSugAdd(final byte[] key, final byte[] value, final double score,
