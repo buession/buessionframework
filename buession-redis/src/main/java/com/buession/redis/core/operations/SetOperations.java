@@ -29,6 +29,7 @@ import com.buession.core.utils.NumberUtils;
 import com.buession.lang.Status;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.SetCommands;
+import com.buession.redis.utils.KeyUtils;
 
 import java.util.List;
 import java.util.Set;
@@ -44,12 +45,12 @@ public interface SetOperations extends SetCommands, RedisOperations {
 
 	@Override
 	default Long sAdd(final String key, final String... members) {
-		return execute((client)->client.setCommands().sAdd(key, members));
+		return execute((client)->client.setCommands().sAdd(KeyUtils.rawKey(this, key), members));
 	}
 
 	@Override
 	default Long sAdd(final byte[] key, final byte[]... members) {
-		return execute((client)->client.setCommands().sAdd(key, members));
+		return execute((client)->client.setCommands().sAdd(KeyUtils.rawKey(this, key), members));
 	}
 
 	/**
@@ -88,22 +89,22 @@ public interface SetOperations extends SetCommands, RedisOperations {
 
 	@Override
 	default Long sCard(final String key) {
-		return execute((client)->client.setCommands().sCard(key));
+		return execute((client)->client.setCommands().sCard(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long sCard(final byte[] key) {
-		return execute((client)->client.setCommands().sCard(key));
+		return execute((client)->client.setCommands().sCard(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Set<String> sDiff(final String... keys) {
-		return execute((client)->client.setCommands().sDiff(keys));
+		return execute((client)->client.setCommands().sDiff(KeyUtils.rawKeys(this, keys)));
 	}
 
 	@Override
 	default Set<byte[]> sDiff(final byte[]... keys) {
-		return execute((client)->client.setCommands().sDiff(keys));
+		return execute((client)->client.setCommands().sDiff(KeyUtils.rawKeys(this, keys)));
 	}
 
 	/**
@@ -172,22 +173,24 @@ public interface SetOperations extends SetCommands, RedisOperations {
 
 	@Override
 	default Long sDiffStore(final String destKey, final String... keys) {
-		return execute((client)->client.setCommands().sDiffStore(destKey, keys));
+		return execute((client)->client.setCommands()
+				.sDiffStore(KeyUtils.rawKey(this, destKey), KeyUtils.rawKeys(this, keys)));
 	}
 
 	@Override
 	default Long sDiffStore(final byte[] destKey, final byte[]... keys) {
-		return execute((client)->client.setCommands().sDiffStore(destKey, keys));
+		return execute((client)->client.setCommands()
+				.sDiffStore(KeyUtils.rawKey(this, destKey), KeyUtils.rawKeys(this, keys)));
 	}
 
 	@Override
 	default Set<String> sInter(final String... keys) {
-		return execute((client)->client.setCommands().sInter(keys));
+		return execute((client)->client.setCommands().sInter(KeyUtils.rawKeys(this, keys)));
 	}
 
 	@Override
 	default Set<byte[]> sInter(final byte[]... keys) {
-		return execute((client)->client.setCommands().sInter(keys));
+		return execute((client)->client.setCommands().sInter(KeyUtils.rawKeys(this, keys)));
 	}
 
 	/**
@@ -256,52 +259,54 @@ public interface SetOperations extends SetCommands, RedisOperations {
 
 	@Override
 	default Long sInterCard(final String... keys) {
-		return execute((client)->client.setCommands().sInterCard(keys));
+		return execute((client)->client.setCommands().sInterCard(KeyUtils.rawKeys(this, keys)));
 	}
 
 	@Override
 	default Long sInterCard(final byte[]... keys) {
-		return execute((client)->client.setCommands().sInterCard(keys));
+		return execute((client)->client.setCommands().sInterCard(KeyUtils.rawKeys(this, keys)));
 	}
 
 	@Override
 	default Long sInterCard(final String[] keys, final int limit) {
-		return execute((client)->client.setCommands().sInterCard(keys, limit));
+		return execute((client)->client.setCommands().sInterCard(KeyUtils.rawKeys(this, keys), limit));
 	}
 
 	@Override
 	default Long sInterCard(final byte[][] keys, final int limit) {
-		return execute((client)->client.setCommands().sInterCard(keys, limit));
+		return execute((client)->client.setCommands().sInterCard(KeyUtils.rawKeys(this, keys), limit));
 	}
 
 	@Override
 	default Long sInterStore(final String destKey, final String... keys) {
-		return execute((client)->client.setCommands().sDiffStore(destKey, keys));
+		return execute((client)->client.setCommands()
+				.sDiffStore(KeyUtils.rawKey(this, destKey), KeyUtils.rawKeys(this, keys)));
 	}
 
 	@Override
 	default Long sInterStore(final byte[] destKey, final byte[]... keys) {
-		return execute((client)->client.setCommands().sDiffStore(destKey, keys));
+		return execute((client)->client.setCommands()
+				.sDiffStore(KeyUtils.rawKey(this, destKey), KeyUtils.rawKeys(this, keys)));
 	}
 
 	@Override
 	default Boolean sIsMember(final String key, final String member) {
-		return execute((client)->client.setCommands().sIsMember(key, member));
+		return execute((client)->client.setCommands().sIsMember(KeyUtils.rawKey(this, key), member));
 	}
 
 	@Override
 	default Boolean sIsMember(final byte[] key, final byte[] member) {
-		return execute((client)->client.setCommands().sIsMember(key, member));
+		return execute((client)->client.setCommands().sIsMember(KeyUtils.rawKey(this, key), member));
 	}
 
 	@Override
 	default Set<String> sMembers(final String key) {
-		return execute((client)->client.setCommands().sMembers(key));
+		return execute((client)->client.setCommands().sMembers(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Set<byte[]> sMembers(final byte[] key) {
-		return execute((client)->client.setCommands().sMembers(key));
+		return execute((client)->client.setCommands().sMembers(KeyUtils.rawKey(this, key)));
 	}
 
 	/**
@@ -370,42 +375,44 @@ public interface SetOperations extends SetCommands, RedisOperations {
 
 	@Override
 	default List<Boolean> smIsMember(final String key, final String... members) {
-		return execute((client)->client.setCommands().smIsMember(key, members));
+		return execute((client)->client.setCommands().smIsMember(KeyUtils.rawKey(this, key), members));
 	}
 
 	@Override
 	default List<Boolean> smIsMember(final byte[] key, final byte[]... members) {
-		return execute((client)->client.setCommands().smIsMember(key, members));
+		return execute((client)->client.setCommands().smIsMember(KeyUtils.rawKey(this, key), members));
 	}
 
 	@Override
 	default Status sMove(final String key, final String destKey, final String member) {
-		return execute((client)->client.setCommands().sMove(key, destKey, member));
+		return execute((client)->client.setCommands()
+				.sMove(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), member));
 	}
 
 	@Override
 	default Status sMove(final byte[] key, final byte[] destKey, final byte[] member) {
-		return execute((client)->client.setCommands().sMove(key, destKey, member));
+		return execute((client)->client.setCommands()
+				.sMove(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), member));
 	}
 
 	@Override
 	default String sPop(final String key) {
-		return execute((client)->client.setCommands().sPop(key));
+		return execute((client)->client.setCommands().sPop(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default byte[] sPop(final byte[] key) {
-		return execute((client)->client.setCommands().sPop(key));
+		return execute((client)->client.setCommands().sPop(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Set<String> sPop(final String key, final int count) {
-		return execute((client)->client.setCommands().sPop(key, count));
+		return execute((client)->client.setCommands().sPop(KeyUtils.rawKey(this, key), count));
 	}
 
 	@Override
 	default Set<byte[]> sPop(final byte[] key, final int count) {
-		return execute((client)->client.setCommands().sPop(key, count));
+		return execute((client)->client.setCommands().sPop(KeyUtils.rawKey(this, key), count));
 	}
 
 	/**
@@ -546,22 +553,22 @@ public interface SetOperations extends SetCommands, RedisOperations {
 
 	@Override
 	default String sRandMember(final String key) {
-		return execute((client)->client.setCommands().sRandMember(key));
+		return execute((client)->client.setCommands().sRandMember(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default byte[] sRandMember(final byte[] key) {
-		return execute((client)->client.setCommands().sRandMember(key));
+		return execute((client)->client.setCommands().sRandMember(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default List<String> sRandMember(final String key, final int count) {
-		return execute((client)->client.setCommands().sRandMember(key, count));
+		return execute((client)->client.setCommands().sRandMember(KeyUtils.rawKey(this, key), count));
 	}
 
 	@Override
 	default List<byte[]> sRandMember(final byte[] key, final int count) {
-		return execute((client)->client.setCommands().sRandMember(key, count));
+		return execute((client)->client.setCommands().sRandMember(KeyUtils.rawKey(this, key), count));
 	}
 
 	/**
@@ -702,12 +709,12 @@ public interface SetOperations extends SetCommands, RedisOperations {
 
 	@Override
 	default Long sRem(final String key, final String... members) {
-		return execute((client)->client.setCommands().sRem(key, members));
+		return execute((client)->client.setCommands().sRem(KeyUtils.rawKey(this, key), members));
 	}
 
 	@Override
 	default Long sRem(final byte[] key, final byte[]... members) {
-		return execute((client)->client.setCommands().sRem(key, members));
+		return execute((client)->client.setCommands().sRem(KeyUtils.rawKey(this, key), members));
 	}
 
 	/**
@@ -746,42 +753,42 @@ public interface SetOperations extends SetCommands, RedisOperations {
 
 	@Override
 	default ScanResult<String> sScan(final String key, final String cursor) {
-		return execute((client)->client.setCommands().sScan(key, cursor));
+		return execute((client)->client.setCommands().sScan(KeyUtils.rawKey(this, key), cursor));
 	}
 
 	@Override
 	default ScanResult<byte[]> sScan(final byte[] key, final byte[] cursor) {
-		return execute((client)->client.setCommands().sScan(key, cursor));
+		return execute((client)->client.setCommands().sScan(KeyUtils.rawKey(this, key), cursor));
 	}
 
 	@Override
 	default ScanResult<String> sScan(final String key, final String cursor, final String pattern) {
-		return execute((client)->client.setCommands().sScan(key, cursor, pattern));
+		return execute((client)->client.setCommands().sScan(KeyUtils.rawKey(this, key), cursor, pattern));
 	}
 
 	@Override
 	default ScanResult<byte[]> sScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
-		return execute((client)->client.setCommands().sScan(key, cursor, pattern));
+		return execute((client)->client.setCommands().sScan(KeyUtils.rawKey(this, key), cursor, pattern));
 	}
 
 	@Override
 	default ScanResult<String> sScan(final String key, final String cursor, final String pattern, final int count) {
-		return execute((client)->client.setCommands().sScan(key, cursor, pattern, count));
+		return execute((client)->client.setCommands().sScan(KeyUtils.rawKey(this, key), cursor, pattern, count));
 	}
 
 	@Override
 	default ScanResult<byte[]> sScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count) {
-		return execute((client)->client.setCommands().sScan(key, cursor, pattern, count));
+		return execute((client)->client.setCommands().sScan(KeyUtils.rawKey(this, key), cursor, pattern, count));
 	}
 
 	@Override
 	default ScanResult<String> sScan(final String key, final String cursor, final int count) {
-		return execute((client)->client.setCommands().sScan(key, cursor, count));
+		return execute((client)->client.setCommands().sScan(KeyUtils.rawKey(this, key), cursor, count));
 	}
 
 	@Override
 	default ScanResult<byte[]> sScan(final byte[] key, final byte[] cursor, final int count) {
-		return execute((client)->client.setCommands().sScan(key, cursor, count));
+		return execute((client)->client.setCommands().sScan(KeyUtils.rawKey(this, key), cursor, count));
 	}
 
 	/**
@@ -1147,7 +1154,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	default <V> ScanResult<V> sScan(final String key, final long cursor, final String pattern,
-									final TypeReference<V> type) {
+	                                final TypeReference<V> type) {
 		return sScan(key, Long.toString(cursor), pattern, type);
 	}
 
@@ -1170,7 +1177,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	default <V> ScanResult<V> sScan(final byte[] key, final long cursor, final byte[] pattern,
-									final TypeReference<V> type) {
+	                                final TypeReference<V> type) {
 		return sScan(key, NumberUtils.long2bytes(cursor), pattern, type);
 	}
 
@@ -1235,7 +1242,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	<V> ScanResult<V> sScan(final String key, final String cursor, final String pattern, final int count,
-							final Class<V> clazz);
+	                        final Class<V> clazz);
 
 	/**
 	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
@@ -1258,7 +1265,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	<V> ScanResult<V> sScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count,
-							final Class<V> clazz);
+	                        final Class<V> clazz);
 
 	/**
 	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
@@ -1281,7 +1288,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	<V> ScanResult<V> sScan(final String key, final String cursor, final String pattern, final int count,
-							final TypeReference<V> type);
+	                        final TypeReference<V> type);
 
 	/**
 	 * 迭代集合键中的元素，并将值反序列化为 type 指定的对象
@@ -1304,7 +1311,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	<V> ScanResult<V> sScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count,
-							final TypeReference<V> type);
+	                        final TypeReference<V> type);
 
 	/**
 	 * 迭代集合键中的元素，并将值反序列化为 clazz 指定的对象
@@ -1327,7 +1334,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	default <V> ScanResult<V> sScan(final String key, final long cursor, final String pattern, final int count,
-									final Class<V> clazz) {
+	                                final Class<V> clazz) {
 		return sScan(key, Long.toString(cursor), pattern, count, clazz);
 	}
 
@@ -1352,7 +1359,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	default <V> ScanResult<V> sScan(final byte[] key, final long cursor, final byte[] pattern, final int count,
-									final Class<V> clazz) {
+	                                final Class<V> clazz) {
 		return sScan(key, NumberUtils.long2bytes(cursor), pattern, count, clazz);
 	}
 
@@ -1377,7 +1384,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	default <V> ScanResult<V> sScan(final String key, final long cursor, final String pattern, final int count,
-									final TypeReference<V> type) {
+	                                final TypeReference<V> type) {
 		return sScan(key, Long.toString(cursor), pattern, count, type);
 	}
 
@@ -1402,7 +1409,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * @return 返回的每个元素都是一个键值对
 	 */
 	default <V> ScanResult<V> sScan(final byte[] key, final long cursor, final byte[] pattern, final int count,
-									final TypeReference<V> type) {
+	                                final TypeReference<V> type) {
 		return sScan(key, NumberUtils.long2bytes(cursor), pattern, count, type);
 	}
 
@@ -1612,12 +1619,12 @@ public interface SetOperations extends SetCommands, RedisOperations {
 
 	@Override
 	default Set<String> sUnion(final String... keys) {
-		return execute((client)->client.setCommands().sUnion(keys));
+		return execute((client)->client.setCommands().sUnion(KeyUtils.rawKeys(this, keys)));
 	}
 
 	@Override
 	default Set<byte[]> sUnion(final byte[]... keys) {
-		return execute((client)->client.setCommands().sUnion(keys));
+		return execute((client)->client.setCommands().sUnion(KeyUtils.rawKeys(this, keys)));
 	}
 
 	/**
@@ -1686,12 +1693,14 @@ public interface SetOperations extends SetCommands, RedisOperations {
 
 	@Override
 	default Long sUnionStore(final String destKey, final String... keys) {
-		return execute((client)->client.setCommands().sUnionStore(destKey, keys));
+		return execute((client)->client.setCommands()
+				.sUnionStore(KeyUtils.rawKey(this, destKey), KeyUtils.rawKeys(this, keys)));
 	}
 
 	@Override
 	default Long sUnionStore(final byte[] destKey, final byte[]... keys) {
-		return execute((client)->client.setCommands().sUnionStore(destKey, keys));
+		return execute((client)->client.setCommands()
+				.sUnionStore(KeyUtils.rawKey(this, destKey), KeyUtils.rawKeys(this, keys)));
 	}
 
 }

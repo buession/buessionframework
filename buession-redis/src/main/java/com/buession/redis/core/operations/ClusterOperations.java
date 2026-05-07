@@ -41,6 +41,7 @@ import com.buession.redis.core.ClusterSlot;
 import com.buession.redis.core.ClusterSlotStat;
 import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.command.ClusterCommands;
+import com.buession.redis.utils.KeyUtils;
 
 import java.util.List;
 
@@ -131,12 +132,12 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 
 	@Override
 	default Long clusterKeySlot(final String key) {
-		return execute((client)->client.clusterCommands().clusterKeySlot(key));
+		return execute((client)->client.clusterCommands().clusterKeySlot(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long clusterKeySlot(final byte[] key) {
-		return execute((client)->client.clusterCommands().clusterKeySlot(key));
+		return execute((client)->client.clusterCommands().clusterKeySlot(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override

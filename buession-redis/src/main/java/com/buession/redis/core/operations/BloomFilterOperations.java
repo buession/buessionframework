@@ -28,6 +28,7 @@ import com.buession.lang.Status;
 import com.buession.redis.core.command.args.bloomfilter.BfInfoOption;
 import com.buession.redis.core.command.BloomFilterCommands;
 import com.buession.redis.core.command.args.bloomfilter.InsertArgument;
+import com.buession.redis.utils.KeyUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -44,156 +45,162 @@ public interface BloomFilterOperations extends BloomFilterCommands, RedisOperati
 
 	@Override
 	default Status bfAdd(final String key, final String item) {
-		return execute((client)->client.bloomFilterCommands().bfAdd(key, item));
+		return execute((client)->client.bloomFilterCommands().bfAdd(KeyUtils.rawKey(this, key), item));
 	}
 
 	@Override
 	default Status bfAdd(final byte[] key, final byte[] item) {
-		return execute((client)->client.bloomFilterCommands().bfAdd(key, item));
+		return execute((client)->client.bloomFilterCommands().bfAdd(KeyUtils.rawKey(this, key), item));
 	}
 
 	@Override
 	default Long bfCard(final String key) {
-		return execute((client)->client.bloomFilterCommands().bfCard(key));
+		return execute((client)->client.bloomFilterCommands().bfCard(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long bfCard(final byte[] key) {
-		return execute((client)->client.bloomFilterCommands().bfCard(key));
+		return execute((client)->client.bloomFilterCommands().bfCard(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Boolean bfExists(final String key, final String item) {
-		return execute((client)->client.bloomFilterCommands().bfExists(key, item));
+		return execute((client)->client.bloomFilterCommands().bfExists(KeyUtils.rawKey(this, key), item));
 	}
 
 	@Override
 	default Boolean bfExists(final byte[] key, final byte[] item) {
-		return execute((client)->client.bloomFilterCommands().bfExists(key, item));
+		return execute((client)->client.bloomFilterCommands().bfExists(KeyUtils.rawKey(this, key), item));
 	}
 
 	@Override
 	default Map<String, Number> bfInfo(final String key) {
-		return execute((client)->client.bloomFilterCommands().bfInfo(key));
+		return execute((client)->client.bloomFilterCommands().bfInfo(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Map<String, Number> bfInfo(final byte[] key) {
-		return execute((client)->client.bloomFilterCommands().bfInfo(key));
+		return execute((client)->client.bloomFilterCommands().bfInfo(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Number bfInfo(final String key, final BfInfoOption option) {
-		return execute((client)->client.bloomFilterCommands().bfInfo(key, option));
+		return execute((client)->client.bloomFilterCommands().bfInfo(KeyUtils.rawKey(this, key), option));
 	}
 
 	@Override
 	default Number bfInfo(final byte[] key, final BfInfoOption option) {
-		return execute((client)->client.bloomFilterCommands().bfInfo(key, option));
+		return execute((client)->client.bloomFilterCommands().bfInfo(KeyUtils.rawKey(this, key), option));
 	}
 
 	@Override
 	default List<Boolean> bfInsert(final String key, final String... items) {
-		return execute((client)->client.bloomFilterCommands().bfInsert(key, items));
+		return execute((client)->client.bloomFilterCommands().bfInsert(KeyUtils.rawKey(this, key), items));
 	}
 
 	@Override
 	default List<Boolean> bfInsert(final byte[] key, final byte[]... items) {
-		return execute((client)->client.bloomFilterCommands().bfInsert(key, items));
+		return execute((client)->client.bloomFilterCommands().bfInsert(KeyUtils.rawKey(this, key), items));
 	}
 
 	@Override
 	default List<Boolean> bfInsert(final String key, final InsertArgument argument, final String... items) {
-		return execute((client)->client.bloomFilterCommands().bfInsert(key, argument, items));
+		return execute((client)->client.bloomFilterCommands().bfInsert(KeyUtils.rawKey(this, key), argument, items));
 	}
 
 	@Override
 	default List<Boolean> bfInsert(final byte[] key, final InsertArgument argument, final byte[]... items) {
-		return execute((client)->client.bloomFilterCommands().bfInsert(key, argument, items));
+		return execute((client)->client.bloomFilterCommands().bfInsert(KeyUtils.rawKey(this, key), argument, items));
 	}
 
 	@Override
 	default Status bfLoadchunk(final String key, final long iterator, final byte[] data) {
-		return execute((client)->client.bloomFilterCommands().bfLoadchunk(key, iterator, data));
+		return execute((client)->client.bloomFilterCommands().bfLoadchunk(KeyUtils.rawKey(this, key), iterator, data));
 	}
 
 	@Override
 	default Status bfLoadchunk(final byte[] key, final long iterator, final byte[] data) {
-		return execute((client)->client.bloomFilterCommands().bfLoadchunk(key, iterator, data));
+		return execute((client)->client.bloomFilterCommands().bfLoadchunk(KeyUtils.rawKey(this, key), iterator, data));
 	}
 
 	@Override
 	default List<Boolean> bfMAdd(final String key, final String... items) {
-		return execute((client)->client.bloomFilterCommands().bfMAdd(key, items));
+		return execute((client)->client.bloomFilterCommands().bfMAdd(KeyUtils.rawKey(this, key), items));
 	}
 
 	@Override
 	default List<Boolean> bfMAdd(final byte[] key, final byte[]... items) {
-		return execute((client)->client.bloomFilterCommands().bfMAdd(key, items));
+		return execute((client)->client.bloomFilterCommands().bfMAdd(KeyUtils.rawKey(this, key), items));
 	}
 
 	@Override
 	default List<Boolean> bfMExists(final String key, final String... items) {
-		return execute((client)->client.bloomFilterCommands().bfMExists(key, items));
+		return execute((client)->client.bloomFilterCommands().bfMExists(KeyUtils.rawKey(this, key), items));
 	}
 
 	@Override
 	default List<Boolean> bfMExists(final byte[] key, final byte[]... items) {
-		return execute((client)->client.bloomFilterCommands().bfMExists(key, items));
+		return execute((client)->client.bloomFilterCommands().bfMExists(KeyUtils.rawKey(this, key), items));
 	}
 
 	@Override
 	default Status bfReserve(final String key, final double errorRate, final long capacity) {
-		return execute((client)->client.bloomFilterCommands().bfReserve(key, errorRate, capacity));
+		return execute(
+				(client)->client.bloomFilterCommands().bfReserve(KeyUtils.rawKey(this, key), errorRate, capacity));
 	}
 
 	@Override
 	default Status bfReserve(final byte[] key, final double errorRate, final long capacity) {
-		return execute((client)->client.bloomFilterCommands().bfReserve(key, errorRate, capacity));
+		return execute(
+				(client)->client.bloomFilterCommands().bfReserve(KeyUtils.rawKey(this, key), errorRate, capacity));
 	}
 
 	@Override
 	default Status bfReserve(final String key, final double errorRate, final long capacity, final int expansion) {
-		return execute((client)->client.bloomFilterCommands().bfReserve(key, errorRate, capacity, expansion));
+		return execute((client)->client.bloomFilterCommands()
+				.bfReserve(KeyUtils.rawKey(this, key), errorRate, capacity, expansion));
 	}
 
 	@Override
 	default Status bfReserve(final byte[] key, final double errorRate, final long capacity, final int expansion) {
-		return execute((client)->client.bloomFilterCommands().bfReserve(key, errorRate, capacity, expansion));
+		return execute((client)->client.bloomFilterCommands()
+				.bfReserve(KeyUtils.rawKey(this, key), errorRate, capacity, expansion));
 	}
 
 	@Override
 	default Status bfReserve(final String key, final double errorRate, final long capacity, final int expansion,
-							 final boolean nonScaling) {
-		return execute(
-				(client)->client.bloomFilterCommands().bfReserve(key, errorRate, capacity, expansion, nonScaling));
+	                         final boolean nonScaling) {
+		return execute((client)->client.bloomFilterCommands()
+				.bfReserve(KeyUtils.rawKey(this, key), errorRate, capacity, expansion, nonScaling));
 	}
 
 	@Override
 	default Status bfReserve(final byte[] key, final double errorRate, final long capacity, final int expansion,
-							 final boolean nonScaling) {
-		return execute(
-				(client)->client.bloomFilterCommands().bfReserve(key, errorRate, capacity, expansion, nonScaling));
+	                         final boolean nonScaling) {
+		return execute((client)->client.bloomFilterCommands()
+				.bfReserve(KeyUtils.rawKey(this, key), errorRate, capacity, expansion, nonScaling));
 	}
 
 	@Override
 	default Status bfReserve(final String key, final double errorRate, final long capacity, final boolean nonScaling) {
-		return execute((client)->client.bloomFilterCommands().bfReserve(key, errorRate, capacity, nonScaling));
+		return execute((client)->client.bloomFilterCommands()
+				.bfReserve(KeyUtils.rawKey(this, key), errorRate, capacity, nonScaling));
 	}
 
 	@Override
 	default Status bfReserve(final byte[] key, final double errorRate, final long capacity, final boolean nonScaling) {
-		return execute((client)->client.bloomFilterCommands().bfReserve(key, errorRate, capacity, nonScaling));
+		return execute((client)->client.bloomFilterCommands()
+				.bfReserve(KeyUtils.rawKey(this, key), errorRate, capacity, nonScaling));
 	}
 
 	@Override
 	default Map<Long, byte[]> bfScandump(final String key, final long iterator) {
-		return execute((client)->client.bloomFilterCommands().bfScandump(key, iterator));
+		return execute((client)->client.bloomFilterCommands().bfScandump(KeyUtils.rawKey(this, key), iterator));
 	}
 
 	@Override
 	default Map<Long, byte[]> bfScandump(final byte[] key, final long iterator) {
-		return execute((client)->client.bloomFilterCommands().bfScandump(key, iterator));
+		return execute((client)->client.bloomFilterCommands().bfScandump(KeyUtils.rawKey(this, key), iterator));
 	}
 
 }

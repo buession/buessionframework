@@ -28,6 +28,7 @@ import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.core.TopKInfo;
 import com.buession.redis.core.command.TopKCommands;
+import com.buession.redis.utils.KeyUtils;
 
 import java.util.List;
 
@@ -43,34 +44,34 @@ public interface TopKOperations extends TopKCommands, RedisOperations {
 
 	@Override
 	default List<String> topKAdd(final String key, final String... items) {
-		return execute((client)->client.topKCommands().topKAdd(key, items));
+		return execute((client)->client.topKCommands().topKAdd(KeyUtils.rawKey(this, key), items));
 	}
 
 	@Override
 	default List<byte[]> topKAdd(final byte[] key, final byte[]... items) {
-		return execute((client)->client.topKCommands().topKAdd(key, items));
+		return execute((client)->client.topKCommands().topKAdd(KeyUtils.rawKey(this, key), items));
 	}
 
 	@Override
 	default List<Long> topKCount(final String key, final String... items) {
-		return execute((client)->client.topKCommands().topKCount(key, items));
+		return execute((client)->client.topKCommands().topKCount(KeyUtils.rawKey(this, key), items));
 	}
 
 	@Override
 	default List<Long> topKCount(final byte[] key, final byte[]... items) {
-		return execute((client)->client.topKCommands().topKCount(key, items));
+		return execute((client)->client.topKCommands().topKCount(KeyUtils.rawKey(this, key), items));
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	default List<String> topKIncrBy(final String key, final KeyValue<String, Long>... items) {
-		return execute((client)->client.topKCommands().topKIncrBy(key, items));
+		return execute((client)->client.topKCommands().topKIncrBy(KeyUtils.rawKey(this, key), items));
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	default List<byte[]> topKIncrBy(final byte[] key, final KeyValue<byte[], Long>... items) {
-		return execute((client)->client.topKCommands().topKIncrBy(key, items));
+		return execute((client)->client.topKCommands().topKIncrBy(KeyUtils.rawKey(this, key), items));
 	}
 
 	/**
@@ -117,64 +118,66 @@ public interface TopKOperations extends TopKCommands, RedisOperations {
 
 	@Override
 	default TopKInfo topKInfo(final String key) {
-		return execute((client)->client.topKCommands().topKInfo(key));
+		return execute((client)->client.topKCommands().topKInfo(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default TopKInfo topKInfo(final byte[] key) {
-		return execute((client)->client.topKCommands().topKInfo(key));
+		return execute((client)->client.topKCommands().topKInfo(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default List<String> topKList(final String key) {
-		return execute((client)->client.topKCommands().topKList(key));
+		return execute((client)->client.topKCommands().topKList(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default List<String> topKList(final byte[] key) {
-		return execute((client)->client.topKCommands().topKList(key));
+		return execute((client)->client.topKCommands().topKList(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default List<KeyValue<String, Long>> topKListWithCount(final String key) {
-		return execute((client)->client.topKCommands().topKListWithCount(key));
+		return execute((client)->client.topKCommands().topKListWithCount(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default List<KeyValue<byte[], Long>> topKListWithCount(final byte[] key) {
-		return execute((client)->client.topKCommands().topKListWithCount(key));
+		return execute((client)->client.topKCommands().topKListWithCount(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default List<Boolean> topKQuery(final String key, final String... items) {
-		return execute((client)->client.topKCommands().topKQuery(key, items));
+		return execute((client)->client.topKCommands().topKQuery(KeyUtils.rawKey(this, key), items));
 	}
 
 	@Override
 	default List<Boolean> topKQuery(final byte[] key, final byte[]... items) {
-		return execute((client)->client.topKCommands().topKQuery(key, items));
+		return execute((client)->client.topKCommands().topKQuery(KeyUtils.rawKey(this, key), items));
 	}
 
 	@Override
 	default Status topKReserve(final String key, final long topK) {
-		return execute((client)->client.topKCommands().topKReserve(key, topK));
+		return execute((client)->client.topKCommands().topKReserve(KeyUtils.rawKey(this, key), topK));
 	}
 
 	@Override
 	default Status topKReserve(final byte[] key, final long topK) {
-		return execute((client)->client.topKCommands().topKReserve(key, topK));
+		return execute((client)->client.topKCommands().topKReserve(KeyUtils.rawKey(this, key), topK));
 	}
 
 	@Override
 	default Status topKReserve(final String key, final long topK, final long width, final long depth,
-							   final double decay) {
-		return execute((client)->client.topKCommands().topKReserve(key, topK, width, depth, decay));
+	                           final double decay) {
+		return execute((client)->client.topKCommands()
+				.topKReserve(KeyUtils.rawKey(this, key), topK, width, depth, decay));
 	}
 
 	@Override
 	default Status topKReserve(final byte[] key, final long topK, final long width, final long depth,
-							   final double decay) {
-		return execute((client)->client.topKCommands().topKReserve(key, topK, width, depth, decay));
+	                           final double decay) {
+		return execute((client)->client.topKCommands()
+				.topKReserve(KeyUtils.rawKey(this, key), topK, width, depth, decay));
 	}
 
 }

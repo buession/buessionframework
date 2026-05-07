@@ -40,6 +40,7 @@ import com.buession.redis.core.command.args.timeseries.TSElement;
 import com.buession.redis.core.command.args.timeseries.TSMGetAegument;
 import com.buession.redis.core.command.args.timeseries.TSMRangeArgument;
 import com.buession.redis.core.command.args.timeseries.TSRangeArgument;
+import com.buession.redis.utils.KeyUtils;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -61,22 +62,24 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 
 	@Override
 	default Long tsAdd(final String key, final long timestamp, final double value) {
-		return execute((client)->client.timeSeriesCommands().tsAdd(key, timestamp, value));
+		return execute((client)->client.timeSeriesCommands().tsAdd(KeyUtils.rawKey(this, key), timestamp, value));
 	}
 
 	@Override
 	default Long tsAdd(final byte[] key, final long timestamp, final double value) {
-		return execute((client)->client.timeSeriesCommands().tsAdd(key, timestamp, value));
+		return execute((client)->client.timeSeriesCommands().tsAdd(KeyUtils.rawKey(this, key), timestamp, value));
 	}
 
 	@Override
 	default Long tsAdd(final String key, final long timestamp, final double value, final AddArgument argument) {
-		return execute((client)->client.timeSeriesCommands().tsAdd(key, timestamp, value, argument));
+		return execute(
+				(client)->client.timeSeriesCommands().tsAdd(KeyUtils.rawKey(this, key), timestamp, value, argument));
 	}
 
 	@Override
 	default Long tsAdd(final byte[] key, final long timestamp, final double value, final AddArgument argument) {
-		return execute((client)->client.timeSeriesCommands().tsAdd(key, timestamp, value, argument));
+		return execute(
+				(client)->client.timeSeriesCommands().tsAdd(KeyUtils.rawKey(this, key), timestamp, value, argument));
 	}
 
 	/**
@@ -385,60 +388,64 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 
 	@Override
 	default Status tsAlert(final String key, final AlertArgument argument) {
-		return execute((client)->client.timeSeriesCommands().tsAlert(key, argument));
+		return execute((client)->client.timeSeriesCommands().tsAlert(KeyUtils.rawKey(this, key), argument));
 	}
 
 	@Override
 	default Status tsAlert(final byte[] key, final AlertArgument argument) {
-		return execute((client)->client.timeSeriesCommands().tsAlert(key, argument));
+		return execute((client)->client.timeSeriesCommands().tsAlert(KeyUtils.rawKey(this, key), argument));
 	}
 
 	@Override
 	default Status tsCreate(final String key) {
-		return execute((client)->client.timeSeriesCommands().tsCreate(key));
+		return execute((client)->client.timeSeriesCommands().tsCreate(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Status tsCreate(final byte[] key) {
-		return execute((client)->client.timeSeriesCommands().tsCreate(key));
+		return execute((client)->client.timeSeriesCommands().tsCreate(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Status tsCreate(final String key, final CreateArgument argument) {
-		return execute((client)->client.timeSeriesCommands().tsCreate(key, argument));
+		return execute((client)->client.timeSeriesCommands().tsCreate(KeyUtils.rawKey(this, key), argument));
 	}
 
 	@Override
 	default Status tsCreate(final byte[] key, final CreateArgument argument) {
-		return execute((client)->client.timeSeriesCommands().tsCreate(key, argument));
+		return execute((client)->client.timeSeriesCommands().tsCreate(KeyUtils.rawKey(this, key), argument));
 	}
 
 	@Override
 	default Status tsCreateRule(final String sourceKey, final String destKey, final AggregationType aggregationType,
-								final long timeBucket) {
-		return execute(
-				(client)->client.timeSeriesCommands().tsCreateRule(sourceKey, destKey, aggregationType, timeBucket));
+	                            final long timeBucket) {
+		return execute((client)->client.timeSeriesCommands()
+				.tsCreateRule(KeyUtils.rawKey(this, sourceKey), KeyUtils.rawKey(this, destKey), aggregationType,
+						timeBucket));
 	}
 
 	@Override
 	default Status tsCreateRule(final byte[] sourceKey, final byte[] destKey, final AggregationType aggregationType,
-								final long timeBucket) {
-		return execute(
-				(client)->client.timeSeriesCommands().tsCreateRule(sourceKey, destKey, aggregationType, timeBucket));
+	                            final long timeBucket) {
+		return execute((client)->client.timeSeriesCommands()
+				.tsCreateRule(KeyUtils.rawKey(this, sourceKey), KeyUtils.rawKey(this, destKey), aggregationType,
+						timeBucket));
 	}
 
 	@Override
 	default Status tsCreateRule(final String sourceKey, final String destKey, final AggregationType aggregationType,
-								final long timeBucket, final long alignTimestamp) {
+	                            final long timeBucket, final long alignTimestamp) {
 		return execute((client)->client.timeSeriesCommands()
-				.tsCreateRule(sourceKey, destKey, aggregationType, timeBucket, alignTimestamp));
+				.tsCreateRule(KeyUtils.rawKey(this, sourceKey), KeyUtils.rawKey(this, destKey), aggregationType,
+						timeBucket, alignTimestamp));
 	}
 
 	@Override
 	default Status tsCreateRule(final byte[] sourceKey, final byte[] destKey, final AggregationType aggregationType,
-								final long timeBucket, final long alignTimestamp) {
+	                            final long timeBucket, final long alignTimestamp) {
 		return execute((client)->client.timeSeriesCommands()
-				.tsCreateRule(sourceKey, destKey, aggregationType, timeBucket, alignTimestamp));
+				.tsCreateRule(KeyUtils.rawKey(this, sourceKey), KeyUtils.rawKey(this, destKey), aggregationType,
+						timeBucket, alignTimestamp));
 	}
 
 	/**
@@ -503,32 +510,34 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 
 	@Override
 	default Long tsDecrBy(final String key, final double value) {
-		return execute((client)->client.timeSeriesCommands().tsDecrBy(key, value));
+		return execute((client)->client.timeSeriesCommands().tsDecrBy(KeyUtils.rawKey(this, key), value));
 	}
 
 	@Override
 	default Long tsDecrBy(final byte[] key, final double value) {
-		return execute((client)->client.timeSeriesCommands().tsDecrBy(key, value));
+		return execute((client)->client.timeSeriesCommands().tsDecrBy(KeyUtils.rawKey(this, key), value));
 	}
 
 	@Override
 	default Long tsDecrBy(final String key, final double value, final DecrByArgument argument) {
-		return execute((client)->client.timeSeriesCommands().tsDecrBy(key, value, argument));
+		return execute((client)->client.timeSeriesCommands().tsDecrBy(KeyUtils.rawKey(this, key), value, argument));
 	}
 
 	@Override
 	default Long tsDecrBy(final byte[] key, final double value, final DecrByArgument argument) {
-		return execute((client)->client.timeSeriesCommands().tsDecrBy(key, value, argument));
+		return execute((client)->client.timeSeriesCommands().tsDecrBy(KeyUtils.rawKey(this, key), value, argument));
 	}
 
 	@Override
 	default Long tsDel(final String key, final long fromTimestamp, final long toTimestamp) {
-		return execute((client)->client.timeSeriesCommands().tsDel(key, fromTimestamp, toTimestamp));
+		return execute(
+				(client)->client.timeSeriesCommands().tsDel(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp));
 	}
 
 	@Override
 	default Long tsDel(final byte[] key, final long fromTimestamp, final long toTimestamp) {
-		return execute((client)->client.timeSeriesCommands().tsDel(key, fromTimestamp, toTimestamp));
+		return execute(
+				(client)->client.timeSeriesCommands().tsDel(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp));
 	}
 
 	/**
@@ -679,32 +688,34 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 
 	@Override
 	default Status tsDeleteRule(final String sourceKey, final String destKey) {
-		return execute((client)->client.timeSeriesCommands().tsDeleteRule(sourceKey, destKey));
+		return execute((client)->client.timeSeriesCommands()
+				.tsDeleteRule(KeyUtils.rawKey(this, sourceKey), KeyUtils.rawKey(this, destKey)));
 	}
 
 	@Override
 	default Status tsDeleteRule(final byte[] sourceKey, final byte[] destKey) {
-		return execute((client)->client.timeSeriesCommands().tsDeleteRule(sourceKey, destKey));
+		return execute((client)->client.timeSeriesCommands()
+				.tsDeleteRule(KeyUtils.rawKey(this, sourceKey), KeyUtils.rawKey(this, destKey)));
 	}
 
 	@Override
 	default TimeSeriesElement tsGet(final String key) {
-		return execute((client)->client.timeSeriesCommands().tsGet(key));
+		return execute((client)->client.timeSeriesCommands().tsGet(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default TimeSeriesElement tsGet(final byte[] key) {
-		return execute((client)->client.timeSeriesCommands().tsGet(key));
+		return execute((client)->client.timeSeriesCommands().tsGet(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default TimeSeriesElement tsGet(final String key, final boolean latest) {
-		return execute((client)->client.timeSeriesCommands().tsGet(key, latest));
+		return execute((client)->client.timeSeriesCommands().tsGet(KeyUtils.rawKey(this, key), latest));
 	}
 
 	@Override
 	default TimeSeriesElement tsGet(final byte[] key, final boolean latest) {
-		return execute((client)->client.timeSeriesCommands().tsGet(key, latest));
+		return execute((client)->client.timeSeriesCommands().tsGet(KeyUtils.rawKey(this, key), latest));
 	}
 
 	/**
@@ -769,42 +780,42 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 
 	@Override
 	default Long tsIncrBy(final String key, final double value) {
-		return execute((client)->client.timeSeriesCommands().tsIncrBy(key, value));
+		return execute((client)->client.timeSeriesCommands().tsIncrBy(KeyUtils.rawKey(this, key), value));
 	}
 
 	@Override
 	default Long tsIncrBy(final byte[] key, final double value) {
-		return execute((client)->client.timeSeriesCommands().tsIncrBy(key, value));
+		return execute((client)->client.timeSeriesCommands().tsIncrBy(KeyUtils.rawKey(this, key), value));
 	}
 
 	@Override
 	default Long tsIncrBy(final String key, final double value, final IncrByArgument argument) {
-		return execute((client)->client.timeSeriesCommands().tsIncrBy(key, value, argument));
+		return execute((client)->client.timeSeriesCommands().tsIncrBy(KeyUtils.rawKey(this, key), value, argument));
 	}
 
 	@Override
 	default Long tsIncrBy(final byte[] key, final double value, final IncrByArgument argument) {
-		return execute((client)->client.timeSeriesCommands().tsIncrBy(key, value, argument));
+		return execute((client)->client.timeSeriesCommands().tsIncrBy(KeyUtils.rawKey(this, key), value, argument));
 	}
 
 	@Override
 	default TimeSeriesInfo tsInfo(final String key) {
-		return execute((client)->client.timeSeriesCommands().tsInfo(key));
+		return execute((client)->client.timeSeriesCommands().tsInfo(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default TimeSeriesInfo tsInfo(final byte[] key) {
-		return execute((client)->client.timeSeriesCommands().tsInfo(key));
+		return execute((client)->client.timeSeriesCommands().tsInfo(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default TimeSeriesInfo tsInfo(final String key, final boolean debug) {
-		return execute((client)->client.timeSeriesCommands().tsInfo(key, debug));
+		return execute((client)->client.timeSeriesCommands().tsInfo(KeyUtils.rawKey(this, key), debug));
 	}
 
 	@Override
 	default TimeSeriesInfo tsInfo(final byte[] key, final boolean debug) {
-		return execute((client)->client.timeSeriesCommands().tsInfo(key, debug));
+		return execute((client)->client.timeSeriesCommands().tsInfo(KeyUtils.rawKey(this, key), debug));
 	}
 
 	@Override
@@ -834,53 +845,53 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 
 	@Override
 	default Map<String, TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
-														  final String... filters) {
+	                                                      final String... filters) {
 		return execute((client)->client.timeSeriesCommands().tsMRange(fromTimestamp, toTimestamp, filters));
 	}
 
 	@Override
 	default Map<byte[], TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
-														  final byte[]... filters) {
+	                                                      final byte[]... filters) {
 		return execute((client)->client.timeSeriesCommands().tsMRange(fromTimestamp, toTimestamp, filters));
 	}
 
 	@Override
 	default Map<String, TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
-														  final TSMRangeArgument argument, final String... filters) {
+	                                                      final TSMRangeArgument argument, final String... filters) {
 		return execute((client)->client.timeSeriesCommands().tsMRange(fromTimestamp, toTimestamp, argument, filters));
 	}
 
 	@Override
 	default Map<byte[], TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
-														  final TSMRangeArgument argument, final byte[]... filters) {
+	                                                      final TSMRangeArgument argument, final byte[]... filters) {
 		return execute((client)->client.timeSeriesCommands().tsMRange(fromTimestamp, toTimestamp, argument, filters));
 	}
 
 	@Override
 	default Map<String, TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
-														  final TSMRangeArgument argument, final int count,
-														  final String... filters) {
+	                                                      final TSMRangeArgument argument, final int count,
+	                                                      final String... filters) {
 		return execute(
 				(client)->client.timeSeriesCommands().tsMRange(fromTimestamp, toTimestamp, argument, count, filters));
 	}
 
 	@Override
 	default Map<byte[], TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
-														  final TSMRangeArgument argument, final int count,
-														  final byte[]... filters) {
+	                                                      final TSMRangeArgument argument, final int count,
+	                                                      final byte[]... filters) {
 		return execute(
 				(client)->client.timeSeriesCommands().tsMRange(fromTimestamp, toTimestamp, argument, count, filters));
 	}
 
 	@Override
 	default Map<String, TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
-														  final int count, final String... filters) {
+	                                                      final int count, final String... filters) {
 		return execute((client)->client.timeSeriesCommands().tsMRange(fromTimestamp, toTimestamp, count, filters));
 	}
 
 	@Override
 	default Map<byte[], TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
-														  final int count, final byte[]... filters) {
+	                                                      final int count, final byte[]... filters) {
 		return execute((client)->client.timeSeriesCommands().tsMRange(fromTimestamp, toTimestamp, count, filters));
 	}
 
@@ -899,7 +910,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRange(final Date fromDate, final Date toDate,
-														  final String... filters) {
+	                                                      final String... filters) {
 		return tsMRange(fromDate.getTime(), toDate.getTime(), filters);
 	}
 
@@ -918,7 +929,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRange(final Date fromDate, final Date toDate,
-														  final byte[]... filters) {
+	                                                      final byte[]... filters) {
 		return tsMRange(fromDate.getTime(), toDate.getTime(), filters);
 	}
 
@@ -937,7 +948,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRange(final LocalDateTime fromDateTime,
-														  final LocalDateTime toDateTime, final String... filters) {
+	                                                      final LocalDateTime toDateTime, final String... filters) {
 		return tsMRange(fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant(), filters);
 	}
@@ -957,7 +968,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRange(final LocalDateTime fromDateTime,
-														  final LocalDateTime toDateTime, final byte[]... filters) {
+	                                                      final LocalDateTime toDateTime, final byte[]... filters) {
 		return tsMRange(fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant(), filters);
 	}
@@ -977,7 +988,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRange(final ZonedDateTime fromDateTime,
-														  final ZonedDateTime toDateTime, final String... filters) {
+	                                                      final ZonedDateTime toDateTime, final String... filters) {
 		return tsMRange(fromDateTime.toInstant(), toDateTime.toInstant(), filters);
 	}
 
@@ -996,7 +1007,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRange(final ZonedDateTime fromDateTime,
-														  final ZonedDateTime toDateTime, final byte[]... filters) {
+	                                                      final ZonedDateTime toDateTime, final byte[]... filters) {
 		return tsMRange(fromDateTime.toInstant(), toDateTime.toInstant(), filters);
 	}
 
@@ -1015,7 +1026,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRange(final Instant fromInstant, final Instant toInstant,
-														  final String... filters) {
+	                                                      final String... filters) {
 		return tsMRange(fromInstant.toEpochMilli(), toInstant.toEpochMilli(), filters);
 	}
 
@@ -1034,7 +1045,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRange(final Instant fromInstant, final Instant toInstant,
-														  final byte[]... filters) {
+	                                                      final byte[]... filters) {
 		return tsMRange(fromInstant.toEpochMilli(), toInstant.toEpochMilli(), filters);
 	}
 
@@ -1055,7 +1066,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRange(final Date fromDate, final Date toDate,
-														  final TSMRangeArgument argument, final String... filters) {
+	                                                      final TSMRangeArgument argument, final String... filters) {
 		return tsMRange(fromDate.getTime(), toDate.getTime(), argument, filters);
 	}
 
@@ -1076,7 +1087,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRange(final Date fromDate, final Date toDate,
-														  final TSMRangeArgument argument, final byte[]... filters) {
+	                                                      final TSMRangeArgument argument, final byte[]... filters) {
 		return tsMRange(fromDate.getTime(), toDate.getTime(), argument, filters);
 	}
 
@@ -1097,8 +1108,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRange(final LocalDateTime fromDateTime,
-														  final LocalDateTime toDateTime,
-														  final TSMRangeArgument argument, final String... filters) {
+	                                                      final LocalDateTime toDateTime,
+	                                                      final TSMRangeArgument argument, final String... filters) {
 		return tsMRange(fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant(), argument, filters);
 	}
@@ -1120,8 +1131,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRange(final LocalDateTime fromDateTime,
-														  final LocalDateTime toDateTime,
-														  final TSMRangeArgument argument, final byte[]... filters) {
+	                                                      final LocalDateTime toDateTime,
+	                                                      final TSMRangeArgument argument, final byte[]... filters) {
 		return tsMRange(fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant(), argument, filters);
 	}
@@ -1143,8 +1154,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRange(final ZonedDateTime fromDateTime,
-														  final ZonedDateTime toDateTime,
-														  final TSMRangeArgument argument, final String... filters) {
+	                                                      final ZonedDateTime toDateTime,
+	                                                      final TSMRangeArgument argument, final String... filters) {
 		return tsMRange(fromDateTime.toInstant(), toDateTime.toInstant(), argument, filters);
 	}
 
@@ -1165,8 +1176,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRange(final ZonedDateTime fromDateTime,
-														  final ZonedDateTime toDateTime,
-														  final TSMRangeArgument argument, final byte[]... filters) {
+	                                                      final ZonedDateTime toDateTime,
+	                                                      final TSMRangeArgument argument, final byte[]... filters) {
 		return tsMRange(fromDateTime.toInstant(), toDateTime.toInstant(), argument, filters);
 	}
 
@@ -1187,7 +1198,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRange(final Instant fromInstant, final Instant toInstant,
-														  final TSMRangeArgument argument, final String... filters) {
+	                                                      final TSMRangeArgument argument, final String... filters) {
 		return tsMRange(fromInstant.toEpochMilli(), toInstant.toEpochMilli(), argument, filters);
 	}
 
@@ -1208,7 +1219,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRange(final Instant fromInstant, final Instant toInstant,
-														  final TSMRangeArgument argument, final byte[]... filters) {
+	                                                      final TSMRangeArgument argument, final byte[]... filters) {
 		return tsMRange(fromInstant.toEpochMilli(), toInstant.toEpochMilli(), argument, filters);
 	}
 
@@ -1231,8 +1242,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRange(final Date fromDate, final Date toDate,
-														  final TSMRangeArgument argument, final int count,
-														  final String... filters) {
+	                                                      final TSMRangeArgument argument, final int count,
+	                                                      final String... filters) {
 		return tsMRange(fromDate.getTime(), toDate.getTime(), argument, count, filters);
 	}
 
@@ -1255,8 +1266,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRange(final Date fromDate, final Date toDate,
-														  final TSMRangeArgument argument, final int count,
-														  final byte[]... filters) {
+	                                                      final TSMRangeArgument argument, final int count,
+	                                                      final byte[]... filters) {
 		return tsMRange(fromDate.getTime(), toDate.getTime(), argument, count, filters);
 	}
 
@@ -1279,9 +1290,9 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRange(final LocalDateTime fromDateTime,
-														  final LocalDateTime toDateTime,
-														  final TSMRangeArgument argument, final int count,
-														  final String... filters) {
+	                                                      final LocalDateTime toDateTime,
+	                                                      final TSMRangeArgument argument, final int count,
+	                                                      final String... filters) {
 		return tsMRange(fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant(), argument, count, filters);
 	}
@@ -1305,9 +1316,9 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRange(final LocalDateTime fromDateTime,
-														  final LocalDateTime toDateTime,
-														  final TSMRangeArgument argument, final int count,
-														  final byte[]... filters) {
+	                                                      final LocalDateTime toDateTime,
+	                                                      final TSMRangeArgument argument, final int count,
+	                                                      final byte[]... filters) {
 		return tsMRange(fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant(), argument, count, filters);
 	}
@@ -1331,9 +1342,9 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRange(final ZonedDateTime fromDateTime,
-														  final ZonedDateTime toDateTime,
-														  final TSMRangeArgument argument, final int count,
-														  final String... filters) {
+	                                                      final ZonedDateTime toDateTime,
+	                                                      final TSMRangeArgument argument, final int count,
+	                                                      final String... filters) {
 		return tsMRange(fromDateTime.toInstant(), toDateTime.toInstant(), argument, count, filters);
 	}
 
@@ -1356,9 +1367,9 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRange(final ZonedDateTime fromDateTime,
-														  final ZonedDateTime toDateTime,
-														  final TSMRangeArgument argument, final int count,
-														  final byte[]... filters) {
+	                                                      final ZonedDateTime toDateTime,
+	                                                      final TSMRangeArgument argument, final int count,
+	                                                      final byte[]... filters) {
 		return tsMRange(fromDateTime.toInstant(), toDateTime.toInstant(), argument, count, filters);
 	}
 
@@ -1381,8 +1392,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRange(final Instant fromInstant, final Instant toInstant,
-														  final TSMRangeArgument argument, final int count,
-														  final String... filters) {
+	                                                      final TSMRangeArgument argument, final int count,
+	                                                      final String... filters) {
 		return tsMRange(fromInstant.toEpochMilli(), toInstant.toEpochMilli(), argument, count, filters);
 	}
 
@@ -1405,8 +1416,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRange(final Instant fromInstant, final Instant toInstant,
-														  final TSMRangeArgument argument, final int count,
-														  final byte[]... filters) {
+	                                                      final TSMRangeArgument argument, final int count,
+	                                                      final byte[]... filters) {
 		return tsMRange(fromInstant.toEpochMilli(), toInstant.toEpochMilli(), argument, count, filters);
 	}
 
@@ -1427,7 +1438,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRange(final Date fromDate, final Date toDate, final int count,
-														  final String... filters) {
+	                                                      final String... filters) {
 		return tsMRange(fromDate.getTime(), toDate.getTime(), count, filters);
 	}
 
@@ -1448,7 +1459,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRange(final Date fromDate, final Date toDate, final int count,
-														  final byte[]... filters) {
+	                                                      final byte[]... filters) {
 		return tsMRange(fromDate.getTime(), toDate.getTime(), count, filters);
 	}
 
@@ -1469,8 +1480,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRange(final LocalDateTime fromDateTime,
-														  final LocalDateTime toDateTime, final int count,
-														  final String... filters) {
+	                                                      final LocalDateTime toDateTime, final int count,
+	                                                      final String... filters) {
 		return tsMRange(fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant(), count, filters);
 	}
@@ -1492,8 +1503,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRange(final LocalDateTime fromDateTime,
-														  final LocalDateTime toDateTime, final int count,
-														  final byte[]... filters) {
+	                                                      final LocalDateTime toDateTime, final int count,
+	                                                      final byte[]... filters) {
 		return tsMRange(fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant(), count, filters);
 	}
@@ -1515,8 +1526,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRange(final ZonedDateTime fromDateTime,
-														  final ZonedDateTime toDateTime, final int count,
-														  final String... filters) {
+	                                                      final ZonedDateTime toDateTime, final int count,
+	                                                      final String... filters) {
 		return tsMRange(fromDateTime.toInstant(), toDateTime.toInstant(), count, filters);
 	}
 
@@ -1537,8 +1548,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRange(final ZonedDateTime fromDateTime,
-														  final ZonedDateTime toDateTime, final int count,
-														  final byte[]... filters) {
+	                                                      final ZonedDateTime toDateTime, final int count,
+	                                                      final byte[]... filters) {
 		return tsMRange(fromDateTime.toInstant(), toDateTime.toInstant(), count, filters);
 	}
 
@@ -1559,7 +1570,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRange(final Instant fromInstant, final Instant toInstant,
-														  final int count, final String... filters) {
+	                                                      final int count, final String... filters) {
 		return tsMRange(fromInstant.toEpochMilli(), toInstant.toEpochMilli(), count, filters);
 	}
 
@@ -1580,61 +1591,61 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRange(final Instant fromInstant, final Instant toInstant,
-														  final int count, final byte[]... filters) {
+	                                                      final int count, final byte[]... filters) {
 		return tsMRange(fromInstant.toEpochMilli(), toInstant.toEpochMilli(), count, filters);
 	}
 
 	@Override
 	default Map<String, TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
-															 final String... filters) {
+	                                                         final String... filters) {
 		return execute((client)->client.timeSeriesCommands().tsMRevRange(fromTimestamp, toTimestamp, filters));
 	}
 
 	@Override
 	default Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
-															 final byte[]... filters) {
+	                                                         final byte[]... filters) {
 		return execute((client)->client.timeSeriesCommands().tsMRevRange(fromTimestamp, toTimestamp, filters));
 	}
 
 	@Override
 	default Map<String, TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
-															 final TSMRangeArgument argument, final String... filters) {
+	                                                         final TSMRangeArgument argument, final String... filters) {
 		return execute(
 				(client)->client.timeSeriesCommands().tsMRevRange(fromTimestamp, toTimestamp, argument, filters));
 	}
 
 	@Override
 	default Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
-															 final TSMRangeArgument argument, final byte[]... filters) {
+	                                                         final TSMRangeArgument argument, final byte[]... filters) {
 		return execute(
 				(client)->client.timeSeriesCommands().tsMRevRange(fromTimestamp, toTimestamp, argument, filters));
 	}
 
 	@Override
 	default Map<String, TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
-															 final TSMRangeArgument argument, final int count,
-															 final String... filters) {
+	                                                         final TSMRangeArgument argument, final int count,
+	                                                         final String... filters) {
 		return execute((client)->client.timeSeriesCommands()
 				.tsMRevRange(fromTimestamp, toTimestamp, argument, count, filters));
 	}
 
 	@Override
 	default Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
-															 final TSMRangeArgument argument, final int count,
-															 final byte[]... filters) {
+	                                                         final TSMRangeArgument argument, final int count,
+	                                                         final byte[]... filters) {
 		return execute((client)->client.timeSeriesCommands()
 				.tsMRevRange(fromTimestamp, toTimestamp, argument, count, filters));
 	}
 
 	@Override
 	default Map<String, TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
-															 final int count, final String... filters) {
+	                                                         final int count, final String... filters) {
 		return execute((client)->client.timeSeriesCommands().tsMRevRange(fromTimestamp, toTimestamp, count, filters));
 	}
 
 	@Override
 	default Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
-															 final int count, final byte[]... filters) {
+	                                                         final int count, final byte[]... filters) {
 		return execute((client)->client.timeSeriesCommands().tsMRevRange(fromTimestamp, toTimestamp, count, filters));
 	}
 
@@ -1653,7 +1664,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRevRange(final Date fromDate, final Date toDate,
-															 final String... filters) {
+	                                                         final String... filters) {
 		return tsMRevRange(fromDate.getTime(), toDate.getTime(), filters);
 	}
 
@@ -1672,7 +1683,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final Date fromDate, final Date toDate,
-															 final byte[]... filters) {
+	                                                         final byte[]... filters) {
 		return tsMRevRange(fromDate.getTime(), toDate.getTime(), filters);
 	}
 
@@ -1691,7 +1702,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRevRange(final LocalDateTime fromDateTime,
-															 final LocalDateTime toDateTime, final String... filters) {
+	                                                         final LocalDateTime toDateTime, final String... filters) {
 		return tsMRevRange(fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant(), filters);
 	}
@@ -1711,7 +1722,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final LocalDateTime fromDateTime,
-															 final LocalDateTime toDateTime, final byte[]... filters) {
+	                                                         final LocalDateTime toDateTime, final byte[]... filters) {
 		return tsMRevRange(fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant(), filters);
 	}
@@ -1731,7 +1742,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRevRange(final ZonedDateTime fromDateTime,
-															 final ZonedDateTime toDateTime, final String... filters) {
+	                                                         final ZonedDateTime toDateTime, final String... filters) {
 		return tsMRevRange(fromDateTime.toInstant(), toDateTime.toInstant(), filters);
 	}
 
@@ -1750,7 +1761,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final ZonedDateTime fromDateTime,
-															 final ZonedDateTime toDateTime, final byte[]... filters) {
+	                                                         final ZonedDateTime toDateTime, final byte[]... filters) {
 		return tsMRevRange(fromDateTime.toInstant(), toDateTime.toInstant(), filters);
 	}
 
@@ -1769,7 +1780,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRevRange(final Instant fromInstant, final Instant toInstant,
-															 final String... filters) {
+	                                                         final String... filters) {
 		return tsMRevRange(fromInstant.toEpochMilli(), toInstant.toEpochMilli(), filters);
 	}
 
@@ -1788,7 +1799,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final Instant fromInstant, final Instant toInstant,
-															 final byte[]... filters) {
+	                                                         final byte[]... filters) {
 		return tsMRevRange(fromInstant.toEpochMilli(), toInstant.toEpochMilli(), filters);
 	}
 
@@ -1809,7 +1820,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRevRange(final Date fromDate, final Date toDate,
-															 final TSMRangeArgument argument, final String... filters) {
+	                                                         final TSMRangeArgument argument, final String... filters) {
 		return tsMRevRange(fromDate.getTime(), toDate.getTime(), argument, filters);
 	}
 
@@ -1830,7 +1841,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final Date fromDate, final Date toDate,
-															 final TSMRangeArgument argument, final byte[]... filters) {
+	                                                         final TSMRangeArgument argument, final byte[]... filters) {
 		return tsMRevRange(fromDate.getTime(), toDate.getTime(), argument, filters);
 	}
 
@@ -1851,8 +1862,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRevRange(final LocalDateTime fromDateTime,
-															 final LocalDateTime toDateTime,
-															 final TSMRangeArgument argument, final String... filters) {
+	                                                         final LocalDateTime toDateTime,
+	                                                         final TSMRangeArgument argument, final String... filters) {
 		return tsMRevRange(fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant(), argument, filters);
 	}
@@ -1874,8 +1885,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final LocalDateTime fromDateTime,
-															 final LocalDateTime toDateTime,
-															 final TSMRangeArgument argument, final byte[]... filters) {
+	                                                         final LocalDateTime toDateTime,
+	                                                         final TSMRangeArgument argument, final byte[]... filters) {
 		return tsMRevRange(fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant(), argument, filters);
 	}
@@ -1897,8 +1908,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRevRange(final ZonedDateTime fromDateTime,
-															 final ZonedDateTime toDateTime,
-															 final TSMRangeArgument argument, final String... filters) {
+	                                                         final ZonedDateTime toDateTime,
+	                                                         final TSMRangeArgument argument, final String... filters) {
 		return tsMRevRange(fromDateTime.toInstant(), toDateTime.toInstant(), argument, filters);
 	}
 
@@ -1919,8 +1930,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final ZonedDateTime fromDateTime,
-															 final ZonedDateTime toDateTime,
-															 final TSMRangeArgument argument, final byte[]... filters) {
+	                                                         final ZonedDateTime toDateTime,
+	                                                         final TSMRangeArgument argument, final byte[]... filters) {
 		return tsMRevRange(fromDateTime.toInstant(), toDateTime.toInstant(), argument, filters);
 	}
 
@@ -1941,7 +1952,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRevRange(final Instant fromInstant, final Instant toInstant,
-															 final TSMRangeArgument argument, final String... filters) {
+	                                                         final TSMRangeArgument argument, final String... filters) {
 		return tsMRevRange(fromInstant.toEpochMilli(), toInstant.toEpochMilli(), argument, filters);
 	}
 
@@ -1962,7 +1973,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final Instant fromInstant, final Instant toInstant,
-															 final TSMRangeArgument argument, final byte[]... filters) {
+	                                                         final TSMRangeArgument argument, final byte[]... filters) {
 		return tsMRevRange(fromInstant.toEpochMilli(), toInstant.toEpochMilli(), argument, filters);
 	}
 
@@ -1985,8 +1996,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRevRange(final Date fromDate, final Date toDate,
-															 final TSMRangeArgument argument, final int count,
-															 final String... filters) {
+	                                                         final TSMRangeArgument argument, final int count,
+	                                                         final String... filters) {
 		return tsMRevRange(fromDate.getTime(), toDate.getTime(), argument, count, filters);
 	}
 
@@ -2009,8 +2020,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final Date fromDate, final Date toDate,
-															 final TSMRangeArgument argument, final int count,
-															 final byte[]... filters) {
+	                                                         final TSMRangeArgument argument, final int count,
+	                                                         final byte[]... filters) {
 		return tsMRevRange(fromDate.getTime(), toDate.getTime(), argument, count, filters);
 	}
 
@@ -2033,9 +2044,9 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRevRange(final LocalDateTime fromDateTime,
-															 final LocalDateTime toDateTime,
-															 final TSMRangeArgument argument, final int count,
-															 final String... filters) {
+	                                                         final LocalDateTime toDateTime,
+	                                                         final TSMRangeArgument argument, final int count,
+	                                                         final String... filters) {
 		return tsMRevRange(fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant(), argument, count, filters);
 	}
@@ -2059,9 +2070,9 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final LocalDateTime fromDateTime,
-															 final LocalDateTime toDateTime,
-															 final TSMRangeArgument argument, final int count,
-															 final byte[]... filters) {
+	                                                         final LocalDateTime toDateTime,
+	                                                         final TSMRangeArgument argument, final int count,
+	                                                         final byte[]... filters) {
 		return tsMRevRange(fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant(), argument, count, filters);
 	}
@@ -2085,9 +2096,9 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRevRange(final ZonedDateTime fromDateTime,
-															 final ZonedDateTime toDateTime,
-															 final TSMRangeArgument argument, final int count,
-															 final String... filters) {
+	                                                         final ZonedDateTime toDateTime,
+	                                                         final TSMRangeArgument argument, final int count,
+	                                                         final String... filters) {
 		return tsMRevRange(fromDateTime.toInstant(), toDateTime.toInstant(), argument, count, filters);
 	}
 
@@ -2110,9 +2121,9 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final ZonedDateTime fromDateTime,
-															 final ZonedDateTime toDateTime,
-															 final TSMRangeArgument argument, final int count,
-															 final byte[]... filters) {
+	                                                         final ZonedDateTime toDateTime,
+	                                                         final TSMRangeArgument argument, final int count,
+	                                                         final byte[]... filters) {
 		return tsMRevRange(fromDateTime.toInstant(), toDateTime.toInstant(), argument, count, filters);
 	}
 
@@ -2135,8 +2146,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRevRange(final Instant fromInstant, final Instant toInstant,
-															 final TSMRangeArgument argument, final int count,
-															 final String... filters) {
+	                                                         final TSMRangeArgument argument, final int count,
+	                                                         final String... filters) {
 		return tsMRevRange(fromInstant.toEpochMilli(), toInstant.toEpochMilli(), argument, count, filters);
 	}
 
@@ -2159,8 +2170,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final Instant fromInstant, final Instant toInstant,
-															 final TSMRangeArgument argument, final int count,
-															 final byte[]... filters) {
+	                                                         final TSMRangeArgument argument, final int count,
+	                                                         final byte[]... filters) {
 		return tsMRevRange(fromInstant.toEpochMilli(), toInstant.toEpochMilli(), argument, count, filters);
 	}
 
@@ -2181,7 +2192,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRevRange(final Date fromDate, final Date toDate, final int count,
-															 final String... filters) {
+	                                                         final String... filters) {
 		return tsMRevRange(fromDate.getTime(), toDate.getTime(), count, filters);
 	}
 
@@ -2202,7 +2213,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final Date fromDate, final Date toDate, final int count,
-															 final byte[]... filters) {
+	                                                         final byte[]... filters) {
 		return tsMRevRange(fromDate.getTime(), toDate.getTime(), count, filters);
 	}
 
@@ -2223,8 +2234,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRevRange(final LocalDateTime fromDateTime,
-															 final LocalDateTime toDateTime, final int count,
-															 final String... filters) {
+	                                                         final LocalDateTime toDateTime, final int count,
+	                                                         final String... filters) {
 		return tsMRevRange(fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant(), count, filters);
 	}
@@ -2246,8 +2257,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final LocalDateTime fromDateTime,
-															 final LocalDateTime toDateTime, final int count,
-															 final byte[]... filters) {
+	                                                         final LocalDateTime toDateTime, final int count,
+	                                                         final byte[]... filters) {
 		return tsMRevRange(fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant(), count, filters);
 	}
@@ -2269,8 +2280,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRevRange(final ZonedDateTime fromDateTime,
-															 final ZonedDateTime toDateTime, final int count,
-															 final String... filters) {
+	                                                         final ZonedDateTime toDateTime, final int count,
+	                                                         final String... filters) {
 		return tsMRevRange(fromDateTime.toInstant(), toDateTime.toInstant(), count, filters);
 	}
 
@@ -2291,8 +2302,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final ZonedDateTime fromDateTime,
-															 final ZonedDateTime toDateTime, final int count,
-															 final byte[]... filters) {
+	                                                         final ZonedDateTime toDateTime, final int count,
+	                                                         final byte[]... filters) {
 		return tsMRevRange(fromDateTime.toInstant(), toDateTime.toInstant(), count, filters);
 	}
 
@@ -2313,7 +2324,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<String, TimeSeriesMRangeElement> tsMRevRange(final Instant fromInstant, final Instant toInstant,
-															 final int count, final String... filters) {
+	                                                         final int count, final String... filters) {
 		return tsMRevRange(fromInstant.toEpochMilli(), toInstant.toEpochMilli(), count, filters);
 	}
 
@@ -2334,7 +2345,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 多个时间序列的最新数据点
 	 */
 	default Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final Instant fromInstant, final Instant toInstant,
-															 final int count, final byte[]... filters) {
+	                                                         final int count, final byte[]... filters) {
 		return tsMRevRange(fromInstant.toEpochMilli(), toInstant.toEpochMilli(), count, filters);
 	}
 
@@ -2350,48 +2361,56 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 
 	@Override
 	default List<TimeSeriesElement> tsRange(final String key, final long fromTimestamp, final long toTimestamp) {
-		return execute((client)->client.timeSeriesCommands().tsRange(key, fromTimestamp, toTimestamp));
+		return execute((client)->client.timeSeriesCommands()
+				.tsRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp));
 	}
 
 	@Override
 	default List<TimeSeriesElement> tsRange(final byte[] key, final long fromTimestamp, final long toTimestamp) {
-		return execute((client)->client.timeSeriesCommands().tsRange(key, fromTimestamp, toTimestamp));
+		return execute(
+				(client)->client.timeSeriesCommands().tsRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp));
 	}
 
 	@Override
 	default List<TimeSeriesElement> tsRange(final String key, final long fromTimestamp, final long toTimestamp,
-											final TSRangeArgument argument) {
-		return execute((client)->client.timeSeriesCommands().tsRange(key, fromTimestamp, toTimestamp, argument));
+	                                        final TSRangeArgument argument) {
+		return execute((client)->client.timeSeriesCommands()
+				.tsRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp, argument));
 	}
 
 	@Override
 	default List<TimeSeriesElement> tsRange(final byte[] key, final long fromTimestamp, final long toTimestamp,
-											final TSRangeArgument argument) {
-		return execute((client)->client.timeSeriesCommands().tsRange(key, fromTimestamp, toTimestamp, argument));
+	                                        final TSRangeArgument argument) {
+		return execute((client)->client.timeSeriesCommands()
+				.tsRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp, argument));
 	}
 
 	@Override
 	default List<TimeSeriesElement> tsRange(final String key, final long fromTimestamp, final long toTimestamp,
-											final TSRangeArgument argument, final int count) {
-		return execute((client)->client.timeSeriesCommands().tsRange(key, fromTimestamp, toTimestamp, argument, count));
+	                                        final TSRangeArgument argument, final int count) {
+		return execute((client)->client.timeSeriesCommands()
+				.tsRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp, argument, count));
 	}
 
 	@Override
 	default List<TimeSeriesElement> tsRange(final byte[] key, final long fromTimestamp, final long toTimestamp,
-											final TSRangeArgument argument, final int count) {
-		return execute((client)->client.timeSeriesCommands().tsRange(key, fromTimestamp, toTimestamp, argument, count));
+	                                        final TSRangeArgument argument, final int count) {
+		return execute((client)->client.timeSeriesCommands()
+				.tsRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp, argument, count));
 	}
 
 	@Override
 	default List<TimeSeriesElement> tsRange(final String key, final long fromTimestamp, final long toTimestamp,
-											final int count) {
-		return execute((client)->client.timeSeriesCommands().tsRange(key, fromTimestamp, toTimestamp, count));
+	                                        final int count) {
+		return execute((client)->client.timeSeriesCommands()
+				.tsRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp, count));
 	}
 
 	@Override
 	default List<TimeSeriesElement> tsRange(final byte[] key, final long fromTimestamp, final long toTimestamp,
-											final int count) {
-		return execute((client)->client.timeSeriesCommands().tsRange(key, fromTimestamp, toTimestamp, count));
+	                                        final int count) {
+		return execute((client)->client.timeSeriesCommands()
+				.tsRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp, count));
 	}
 
 	/**
@@ -2445,7 +2464,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRange(final String key, final LocalDateTime fromDateTime,
-											final LocalDateTime toDateTime) {
+	                                        final LocalDateTime toDateTime) {
 		return tsRange(key, fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant());
 	}
@@ -2465,7 +2484,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRange(final byte[] key, final LocalDateTime fromDateTime,
-											final LocalDateTime toDateTime) {
+	                                        final LocalDateTime toDateTime) {
 		return tsRange(key, fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant());
 	}
@@ -2485,7 +2504,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRange(final String key, final ZonedDateTime fromDateTime,
-											final ZonedDateTime toDateTime) {
+	                                        final ZonedDateTime toDateTime) {
 		return tsRange(key, fromDateTime.toInstant(), toDateTime.toInstant());
 	}
 
@@ -2504,7 +2523,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRange(final byte[] key, final ZonedDateTime fromDateTime,
-											final ZonedDateTime toDateTime) {
+	                                        final ZonedDateTime toDateTime) {
 		return tsRange(key, fromDateTime.toInstant(), toDateTime.toInstant());
 	}
 
@@ -2561,7 +2580,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRange(final String key, final Date fromDate, final Date toDate,
-											final TSRangeArgument argument) {
+	                                        final TSRangeArgument argument) {
 		return tsRange(key, fromDate.getTime(), toDate.getTime(), argument);
 	}
 
@@ -2582,7 +2601,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRange(final byte[] key, final Date fromDate, final Date toDate,
-											final TSRangeArgument argument) {
+	                                        final TSRangeArgument argument) {
 		return tsRange(key, fromDate.getTime(), toDate.getTime(), argument);
 	}
 
@@ -2603,7 +2622,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRange(final String key, final LocalDateTime fromDateTime,
-											final LocalDateTime toDateTime, final TSRangeArgument argument) {
+	                                        final LocalDateTime toDateTime, final TSRangeArgument argument) {
 		return tsRange(key, fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant(), argument);
 	}
@@ -2625,7 +2644,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRange(final byte[] key, final LocalDateTime fromDateTime,
-											final LocalDateTime toDateTime, final TSRangeArgument argument) {
+	                                        final LocalDateTime toDateTime, final TSRangeArgument argument) {
 		return tsRange(key, fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant(), argument);
 	}
@@ -2647,7 +2666,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRange(final String key, final ZonedDateTime fromDateTime,
-											final ZonedDateTime toDateTime, final TSRangeArgument argument) {
+	                                        final ZonedDateTime toDateTime, final TSRangeArgument argument) {
 		return tsRange(key, fromDateTime.toInstant(), toDateTime.toInstant(), argument);
 	}
 
@@ -2668,7 +2687,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRange(final byte[] key, final ZonedDateTime fromDateTime,
-											final ZonedDateTime toDateTime, final TSRangeArgument argument) {
+	                                        final ZonedDateTime toDateTime, final TSRangeArgument argument) {
 		return tsRange(key, fromDateTime.toInstant(), toDateTime.toInstant(), argument);
 	}
 
@@ -2689,7 +2708,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRange(final String key, final Instant fromInstant, final Instant toInstant,
-											final TSRangeArgument argument) {
+	                                        final TSRangeArgument argument) {
 		return tsRange(key, fromInstant.toEpochMilli(), toInstant.toEpochMilli(), argument);
 	}
 
@@ -2710,7 +2729,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRange(final byte[] key, final Instant fromInstant, final Instant toInstant,
-											final TSRangeArgument argument) {
+	                                        final TSRangeArgument argument) {
 		return tsRange(key, fromInstant.toEpochMilli(), toInstant.toEpochMilli(), argument);
 	}
 
@@ -2733,7 +2752,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRange(final String key, final Date fromDate, final Date toDate,
-											final TSRangeArgument argument, final int count) {
+	                                        final TSRangeArgument argument, final int count) {
 		return tsRange(key, fromDate.getTime(), toDate.getTime(), argument, count);
 	}
 
@@ -2756,7 +2775,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRange(final byte[] key, final Date fromDate, final Date toDate,
-											final TSRangeArgument argument, final int count) {
+	                                        final TSRangeArgument argument, final int count) {
 		return tsRange(key, fromDate.getTime(), toDate.getTime(), argument, count);
 	}
 
@@ -2779,8 +2798,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRange(final String key, final LocalDateTime fromDateTime,
-											final LocalDateTime toDateTime, final TSRangeArgument argument,
-											final int count) {
+	                                        final LocalDateTime toDateTime, final TSRangeArgument argument,
+	                                        final int count) {
 		return tsRange(key, fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant(), argument, count);
 	}
@@ -2804,8 +2823,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRange(final byte[] key, final LocalDateTime fromDateTime,
-											final LocalDateTime toDateTime, final TSRangeArgument argument,
-											final int count) {
+	                                        final LocalDateTime toDateTime, final TSRangeArgument argument,
+	                                        final int count) {
 		return tsRange(key, fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant(), argument, count);
 	}
@@ -2829,8 +2848,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRange(final String key, final ZonedDateTime fromDateTime,
-											final ZonedDateTime toDateTime, final TSRangeArgument argument,
-											final int count) {
+	                                        final ZonedDateTime toDateTime, final TSRangeArgument argument,
+	                                        final int count) {
 		return tsRange(key, fromDateTime.toInstant(), toDateTime.toInstant(), argument, count);
 	}
 
@@ -2853,8 +2872,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRange(final byte[] key, final ZonedDateTime fromDateTime,
-											final ZonedDateTime toDateTime, final TSRangeArgument argument,
-											final int count) {
+	                                        final ZonedDateTime toDateTime, final TSRangeArgument argument,
+	                                        final int count) {
 		return tsRange(key, fromDateTime.toInstant(), toDateTime.toInstant(), argument, count);
 	}
 
@@ -2877,7 +2896,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRange(final String key, final Instant fromInstant, final Instant toInstant,
-											final TSRangeArgument argument, final int count) {
+	                                        final TSRangeArgument argument, final int count) {
 		return tsRange(key, fromInstant.toEpochMilli(), toInstant.toEpochMilli(), argument, count);
 	}
 
@@ -2900,7 +2919,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRange(final byte[] key, final Instant fromInstant, final Instant toInstant,
-											final TSRangeArgument argument, final int count) {
+	                                        final TSRangeArgument argument, final int count) {
 		return tsRange(key, fromInstant.toEpochMilli(), toInstant.toEpochMilli(), argument, count);
 	}
 
@@ -2961,7 +2980,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRange(final String key, final LocalDateTime fromDateTime,
-											final LocalDateTime toDateTime, final int count) {
+	                                        final LocalDateTime toDateTime, final int count) {
 		return tsRange(key, fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant(), count);
 	}
@@ -2983,7 +3002,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRange(final byte[] key, final LocalDateTime fromDateTime,
-											final LocalDateTime toDateTime, final int count) {
+	                                        final LocalDateTime toDateTime, final int count) {
 		return tsRange(key, fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant(), count);
 	}
@@ -3005,7 +3024,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRange(final String key, final ZonedDateTime fromDateTime,
-											final ZonedDateTime toDateTime, final int count) {
+	                                        final ZonedDateTime toDateTime, final int count) {
 		return tsRange(key, fromDateTime.toInstant(), toDateTime.toInstant(), count);
 	}
 
@@ -3026,7 +3045,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRange(final byte[] key, final ZonedDateTime fromDateTime,
-											final ZonedDateTime toDateTime, final int count) {
+	                                        final ZonedDateTime toDateTime, final int count) {
 		return tsRange(key, fromDateTime.toInstant(), toDateTime.toInstant(), count);
 	}
 
@@ -3047,7 +3066,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRange(final String key, final Instant fromInstant, final Instant toInstant,
-											final int count) {
+	                                        final int count) {
 		return tsRange(key, fromInstant.toEpochMilli(), toInstant.toEpochMilli(), count);
 	}
 
@@ -3068,56 +3087,62 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRange(final byte[] key, final Instant fromInstant, final Instant toInstant,
-											final int count) {
+	                                        final int count) {
 		return tsRange(key, fromInstant.toEpochMilli(), toInstant.toEpochMilli(), count);
 	}
 
 	@Override
 	default List<TimeSeriesElement> tsRevRange(final String key, final long fromTimestamp, final long toTimestamp) {
-		return execute((client)->client.timeSeriesCommands().tsRevRange(key, fromTimestamp, toTimestamp));
+		return execute((client)->client.timeSeriesCommands()
+				.tsRevRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp));
 	}
 
 	@Override
 	default List<TimeSeriesElement> tsRevRange(final byte[] key, final long fromTimestamp, final long toTimestamp) {
-		return execute((client)->client.timeSeriesCommands().tsRevRange(key, fromTimestamp, toTimestamp));
+		return execute((client)->client.timeSeriesCommands()
+				.tsRevRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp));
 	}
 
 	@Override
 	default List<TimeSeriesElement> tsRevRange(final String key, final long fromTimestamp, final long toTimestamp,
-											   final TSRangeArgument argument) {
-		return execute((client)->client.timeSeriesCommands().tsRevRange(key, fromTimestamp, toTimestamp, argument));
+	                                           final TSRangeArgument argument) {
+		return execute((client)->client.timeSeriesCommands()
+				.tsRevRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp, argument));
 	}
 
 	@Override
 	default List<TimeSeriesElement> tsRevRange(final byte[] key, final long fromTimestamp, final long toTimestamp,
-											   final TSRangeArgument argument) {
-		return execute((client)->client.timeSeriesCommands().tsRevRange(key, fromTimestamp, toTimestamp, argument));
+	                                           final TSRangeArgument argument) {
+		return execute((client)->client.timeSeriesCommands()
+				.tsRevRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp, argument));
 	}
 
 	@Override
 	default List<TimeSeriesElement> tsRevRange(final String key, final long fromTimestamp, final long toTimestamp,
-											   final TSRangeArgument argument, final int count) {
-		return execute(
-				(client)->client.timeSeriesCommands().tsRevRange(key, fromTimestamp, toTimestamp, argument, count));
+	                                           final TSRangeArgument argument, final int count) {
+		return execute((client)->client.timeSeriesCommands()
+				.tsRevRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp, argument, count));
 	}
 
 	@Override
 	default List<TimeSeriesElement> tsRevRange(final byte[] key, final long fromTimestamp, final long toTimestamp,
-											   final TSRangeArgument argument, final int count) {
-		return execute(
-				(client)->client.timeSeriesCommands().tsRevRange(key, fromTimestamp, toTimestamp, argument, count));
+	                                           final TSRangeArgument argument, final int count) {
+		return execute((client)->client.timeSeriesCommands()
+				.tsRevRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp, argument, count));
 	}
 
 	@Override
 	default List<TimeSeriesElement> tsRevRange(final String key, final long fromTimestamp, final long toTimestamp,
-											   final int count) {
-		return execute((client)->client.timeSeriesCommands().tsRevRange(key, fromTimestamp, toTimestamp, count));
+	                                           final int count) {
+		return execute((client)->client.timeSeriesCommands()
+				.tsRevRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp, count));
 	}
 
 	@Override
 	default List<TimeSeriesElement> tsRevRange(final byte[] key, final long fromTimestamp, final long toTimestamp,
-											   final int count) {
-		return execute((client)->client.timeSeriesCommands().tsRevRange(key, fromTimestamp, toTimestamp, count));
+	                                           final int count) {
+		return execute((client)->client.timeSeriesCommands()
+				.tsRevRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp, count));
 	}
 
 	/**
@@ -3171,7 +3196,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRevRange(final String key, final LocalDateTime fromDateTime,
-											   final LocalDateTime toDateTime) {
+	                                           final LocalDateTime toDateTime) {
 		return tsRevRange(key, fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant());
 	}
@@ -3191,7 +3216,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRevRange(final byte[] key, final LocalDateTime fromDateTime,
-											   final LocalDateTime toDateTime) {
+	                                           final LocalDateTime toDateTime) {
 		return tsRevRange(key, fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant());
 	}
@@ -3211,7 +3236,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRevRange(final String key, final ZonedDateTime fromDateTime,
-											   final ZonedDateTime toDateTime) {
+	                                           final ZonedDateTime toDateTime) {
 		return tsRevRange(key, fromDateTime.toInstant(), toDateTime.toInstant());
 	}
 
@@ -3230,7 +3255,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRevRange(final byte[] key, final ZonedDateTime fromDateTime,
-											   final ZonedDateTime toDateTime) {
+	                                           final ZonedDateTime toDateTime) {
 		return tsRevRange(key, fromDateTime.toInstant(), toDateTime.toInstant());
 	}
 
@@ -3287,7 +3312,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRevRange(final String key, final Date fromDate, final Date toDate,
-											   final TSRangeArgument argument) {
+	                                           final TSRangeArgument argument) {
 		return tsRevRange(key, fromDate.getTime(), toDate.getTime(), argument);
 	}
 
@@ -3308,7 +3333,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRevRange(final byte[] key, final Date fromDate, final Date toDate,
-											   final TSRangeArgument argument) {
+	                                           final TSRangeArgument argument) {
 		return tsRevRange(key, fromDate.getTime(), toDate.getTime(), argument);
 	}
 
@@ -3329,7 +3354,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRevRange(final String key, final LocalDateTime fromDateTime,
-											   final LocalDateTime toDateTime, final TSRangeArgument argument) {
+	                                           final LocalDateTime toDateTime, final TSRangeArgument argument) {
 		return tsRevRange(key, fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant(), argument);
 	}
@@ -3351,7 +3376,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRevRange(final byte[] key, final LocalDateTime fromDateTime,
-											   final LocalDateTime toDateTime, final TSRangeArgument argument) {
+	                                           final LocalDateTime toDateTime, final TSRangeArgument argument) {
 		return tsRevRange(key, fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant(), argument);
 	}
@@ -3373,7 +3398,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRevRange(final String key, final ZonedDateTime fromDateTime,
-											   final ZonedDateTime toDateTime, final TSRangeArgument argument) {
+	                                           final ZonedDateTime toDateTime, final TSRangeArgument argument) {
 		return tsRevRange(key, fromDateTime.toInstant(), toDateTime.toInstant(), argument);
 	}
 
@@ -3394,7 +3419,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRevRange(final byte[] key, final ZonedDateTime fromDateTime,
-											   final ZonedDateTime toDateTime, final TSRangeArgument argument) {
+	                                           final ZonedDateTime toDateTime, final TSRangeArgument argument) {
 		return tsRevRange(key, fromDateTime.toInstant(), toDateTime.toInstant(), argument);
 	}
 
@@ -3415,7 +3440,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRevRange(final String key, final Instant fromInstant, final Instant toInstant,
-											   final TSRangeArgument argument) {
+	                                           final TSRangeArgument argument) {
 		return tsRevRange(key, fromInstant.toEpochMilli(), toInstant.toEpochMilli(), argument);
 	}
 
@@ -3436,7 +3461,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRevRange(final byte[] key, final Instant fromInstant, final Instant toInstant,
-											   final TSRangeArgument argument) {
+	                                           final TSRangeArgument argument) {
 		return tsRevRange(key, fromInstant.toEpochMilli(), toInstant.toEpochMilli(), argument);
 	}
 
@@ -3459,7 +3484,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRevRange(final String key, final Date fromDate, final Date toDate,
-											   final TSRangeArgument argument, final int count) {
+	                                           final TSRangeArgument argument, final int count) {
 		return tsRevRange(key, fromDate.getTime(), toDate.getTime(), argument, count);
 	}
 
@@ -3482,7 +3507,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRevRange(final byte[] key, final Date fromDate, final Date toDate,
-											   final TSRangeArgument argument, final int count) {
+	                                           final TSRangeArgument argument, final int count) {
 		return tsRevRange(key, fromDate.getTime(), toDate.getTime(), argument, count);
 	}
 
@@ -3505,8 +3530,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRevRange(final String key, final LocalDateTime fromDateTime,
-											   final LocalDateTime toDateTime, final TSRangeArgument argument,
-											   final int count) {
+	                                           final LocalDateTime toDateTime, final TSRangeArgument argument,
+	                                           final int count) {
 		return tsRevRange(key, fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant(), argument, count);
 	}
@@ -3530,8 +3555,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRevRange(final byte[] key, final LocalDateTime fromDateTime,
-											   final LocalDateTime toDateTime, final TSRangeArgument argument,
-											   final int count) {
+	                                           final LocalDateTime toDateTime, final TSRangeArgument argument,
+	                                           final int count) {
 		return tsRevRange(key, fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant(), argument, count);
 	}
@@ -3555,8 +3580,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRevRange(final String key, final ZonedDateTime fromDateTime,
-											   final ZonedDateTime toDateTime, final TSRangeArgument argument,
-											   final int count) {
+	                                           final ZonedDateTime toDateTime, final TSRangeArgument argument,
+	                                           final int count) {
 		return tsRevRange(key, fromDateTime.toInstant(), toDateTime.toInstant(), argument, count);
 	}
 
@@ -3579,8 +3604,8 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRevRange(final byte[] key, final ZonedDateTime fromDateTime,
-											   final ZonedDateTime toDateTime, final TSRangeArgument argument,
-											   final int count) {
+	                                           final ZonedDateTime toDateTime, final TSRangeArgument argument,
+	                                           final int count) {
 		return tsRevRange(key, fromDateTime.toInstant(), toDateTime.toInstant(), argument, count);
 	}
 
@@ -3603,7 +3628,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRevRange(final String key, final Instant fromInstant, final Instant toInstant,
-											   final TSRangeArgument argument, final int count) {
+	                                           final TSRangeArgument argument, final int count) {
 		return tsRevRange(key, fromInstant.toEpochMilli(), toInstant.toEpochMilli(), argument, count);
 	}
 
@@ -3626,7 +3651,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRevRange(final byte[] key, final Instant fromInstant, final Instant toInstant,
-											   final TSRangeArgument argument, final int count) {
+	                                           final TSRangeArgument argument, final int count) {
 		return tsRevRange(key, fromInstant.toEpochMilli(), toInstant.toEpochMilli(), argument, count);
 	}
 
@@ -3647,7 +3672,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRevRange(final String key, final Date fromDate, final Date toDate,
-											   final int count) {
+	                                           final int count) {
 		return tsRevRange(key, fromDate.getTime(), toDate.getTime(), count);
 	}
 
@@ -3668,7 +3693,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRevRange(final byte[] key, final Date fromDate, final Date toDate,
-											   final int count) {
+	                                           final int count) {
 		return tsRevRange(key, fromDate.getTime(), toDate.getTime(), count);
 	}
 
@@ -3689,7 +3714,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRevRange(final String key, final LocalDateTime fromDateTime,
-											   final LocalDateTime toDateTime, final int count) {
+	                                           final LocalDateTime toDateTime, final int count) {
 		return tsRevRange(key, fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant(), count);
 	}
@@ -3711,7 +3736,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRevRange(final byte[] key, final LocalDateTime fromDateTime,
-											   final LocalDateTime toDateTime, final int count) {
+	                                           final LocalDateTime toDateTime, final int count) {
 		return tsRevRange(key, fromDateTime.atZone(ZoneId.systemDefault()).toInstant(),
 				toDateTime.atZone(ZoneId.systemDefault()).toInstant(), count);
 	}
@@ -3733,7 +3758,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRevRange(final String key, final ZonedDateTime fromDateTime,
-											   final ZonedDateTime toDateTime, final int count) {
+	                                           final ZonedDateTime toDateTime, final int count) {
 		return tsRevRange(key, fromDateTime.toInstant(), toDateTime.toInstant(), count);
 	}
 
@@ -3754,7 +3779,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRevRange(final byte[] key, final ZonedDateTime fromDateTime,
-											   final ZonedDateTime toDateTime, final int count) {
+	                                           final ZonedDateTime toDateTime, final int count) {
 		return tsRevRange(key, fromDateTime.toInstant(), toDateTime.toInstant(), count);
 	}
 
@@ -3775,7 +3800,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRevRange(final String key, final Instant fromInstant, final Instant toInstant,
-											   final int count) {
+	                                           final int count) {
 		return tsRevRange(key, fromInstant.toEpochMilli(), toInstant.toEpochMilli(), count);
 	}
 
@@ -3796,7 +3821,7 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	 * @return 指定时间序列（Key）在特定时间范围内的历史数据点
 	 */
 	default List<TimeSeriesElement> tsRevRange(final byte[] key, final Instant fromInstant, final Instant toInstant,
-											   final int count) {
+	                                           final int count) {
 		return tsRevRange(key, fromInstant.toEpochMilli(), toInstant.toEpochMilli(), count);
 	}
 

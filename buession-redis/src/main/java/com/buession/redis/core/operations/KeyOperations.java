@@ -35,6 +35,7 @@ import com.buession.redis.core.command.KeyCommands;
 import com.buession.redis.core.command.args.key.MigrateArgument;
 import com.buession.redis.core.command.args.RestoreArgument;
 import com.buession.redis.core.command.args.key.SortArgument;
+import com.buession.redis.utils.KeyUtils;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -56,52 +57,58 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 
 	@Override
 	default Status copy(final String key, final String destKey) {
-		return execute((client)->client.keyCommands().copy(key, destKey));
+		return execute((client)->client.keyCommands().copy(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey)));
 	}
 
 	@Override
 	default Status copy(final byte[] key, final byte[] destKey) {
-		return execute((client)->client.keyCommands().copy(key, destKey));
+		return execute((client)->client.keyCommands().copy(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey)));
 	}
 
 	@Override
 	default Status copy(final String key, final String destKey, final int db) {
-		return execute((client)->client.keyCommands().copy(key, destKey, db));
+		return execute(
+				(client)->client.keyCommands().copy(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), db));
 	}
 
 	@Override
 	default Status copy(final byte[] key, final byte[] destKey, final int db) {
-		return execute((client)->client.keyCommands().copy(key, destKey, db));
+		return execute(
+				(client)->client.keyCommands().copy(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), db));
 	}
 
 	@Override
 	default Status copy(final String key, final String destKey, final boolean replace) {
-		return execute((client)->client.keyCommands().copy(key, destKey, replace));
+		return execute((client)->client.keyCommands()
+				.copy(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), replace));
 	}
 
 	@Override
 	default Status copy(final byte[] key, final byte[] destKey, final boolean replace) {
-		return execute((client)->client.keyCommands().copy(key, destKey, replace));
+		return execute((client)->client.keyCommands()
+				.copy(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), replace));
 	}
 
 	@Override
 	default Status copy(final String key, final String destKey, final int db, final boolean replace) {
-		return execute((client)->client.keyCommands().copy(key, destKey, db, replace));
+		return execute((client)->client.keyCommands()
+				.copy(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), db, replace));
 	}
 
 	@Override
 	default Status copy(final byte[] key, final byte[] destKey, final int db, final boolean replace) {
-		return execute((client)->client.keyCommands().copy(key, destKey, db, replace));
+		return execute((client)->client.keyCommands()
+				.copy(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), db, replace));
 	}
 
 	@Override
 	default Long del(final String... keys) {
-		return execute((client)->client.keyCommands().del(keys));
+		return execute((client)->client.keyCommands().del(KeyUtils.rawKeys(this, keys)));
 	}
 
 	@Override
 	default Long del(final byte[]... keys) {
-		return execute((client)->client.keyCommands().del(keys));
+		return execute((client)->client.keyCommands().del(KeyUtils.rawKeys(this, keys)));
 	}
 
 	/**
@@ -134,52 +141,52 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 
 	@Override
 	default String dump(final String key) {
-		return execute((client)->client.keyCommands().dump(key));
+		return execute((client)->client.keyCommands().dump(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default byte[] dump(final byte[] key) {
-		return execute((client)->client.keyCommands().dump(key));
+		return execute((client)->client.keyCommands().dump(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Boolean exists(final String key) {
-		return execute((client)->client.keyCommands().exists(key));
+		return execute((client)->client.keyCommands().exists(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Boolean exists(final byte[] key) {
-		return execute((client)->client.keyCommands().exists(key));
+		return execute((client)->client.keyCommands().exists(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long exists(final String... keys) {
-		return execute((client)->client.keyCommands().exists(keys));
+		return execute((client)->client.keyCommands().exists(KeyUtils.rawKeys(this, keys)));
 	}
 
 	@Override
 	default Long exists(final byte[]... keys) {
-		return execute((client)->client.keyCommands().exists(keys));
+		return execute((client)->client.keyCommands().exists(KeyUtils.rawKeys(this, keys)));
 	}
 
 	@Override
 	default Status expire(final String key, final int lifetime) {
-		return execute((client)->client.keyCommands().expire(key, lifetime));
+		return execute((client)->client.keyCommands().expire(KeyUtils.rawKey(this, key), lifetime));
 	}
 
 	@Override
 	default Status expire(final byte[] key, final int lifetime) {
-		return execute((client)->client.keyCommands().expire(key, lifetime));
+		return execute((client)->client.keyCommands().expire(KeyUtils.rawKey(this, key), lifetime));
 	}
 
 	@Override
 	default Status expire(final String key, final int lifetime, final ExpireOption expireOption) {
-		return execute((client)->client.keyCommands().expire(key, lifetime, expireOption));
+		return execute((client)->client.keyCommands().expire(KeyUtils.rawKey(this, key), lifetime, expireOption));
 	}
 
 	@Override
 	default Status expire(final byte[] key, final int lifetime, final ExpireOption expireOption) {
-		return execute((client)->client.keyCommands().expire(key, lifetime, expireOption));
+		return execute((client)->client.keyCommands().expire(KeyUtils.rawKey(this, key), lifetime, expireOption));
 	}
 
 	/**
@@ -252,22 +259,24 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 
 	@Override
 	default Status expireAt(final String key, final long unixTimestamp) {
-		return execute((client)->client.keyCommands().expireAt(key, unixTimestamp));
+		return execute((client)->client.keyCommands().expireAt(KeyUtils.rawKey(this, key), unixTimestamp));
 	}
 
 	@Override
 	default Status expireAt(final byte[] key, final long unixTimestamp) {
-		return execute((client)->client.keyCommands().expireAt(key, unixTimestamp));
+		return execute((client)->client.keyCommands().expireAt(KeyUtils.rawKey(this, key), unixTimestamp));
 	}
 
 	@Override
 	default Status expireAt(final String key, final long unixTimestamp, final ExpireOption expireOption) {
-		return execute((client)->client.keyCommands().expireAt(key, unixTimestamp, expireOption));
+		return execute(
+				(client)->client.keyCommands().expireAt(KeyUtils.rawKey(this, key), unixTimestamp, expireOption));
 	}
 
 	@Override
 	default Status expireAt(final byte[] key, final long unixTimestamp, final ExpireOption expireOption) {
-		return execute((client)->client.keyCommands().expireAt(key, unixTimestamp, expireOption));
+		return execute(
+				(client)->client.keyCommands().expireAt(KeyUtils.rawKey(this, key), unixTimestamp, expireOption));
 	}
 
 	/**
@@ -544,12 +553,12 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 
 	@Override
 	default Long expireTime(final String key) {
-		return execute((client)->client.keyCommands().expireTime(key));
+		return execute((client)->client.keyCommands().expireTime(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long expireTime(final byte[] key) {
-		return execute((client)->client.keyCommands().expireTime(key));
+		return execute((client)->client.keyCommands().expireTime(KeyUtils.rawKey(this, key)));
 	}
 
 	/**
@@ -594,24 +603,26 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 
 	@Override
 	default Status migrate(final String host, final int port, final int db, final int timeout, final String... keys) {
-		return execute((client)->client.keyCommands().migrate(host, port, db, timeout, keys));
+		return execute((client)->client.keyCommands().migrate(host, port, db, timeout, KeyUtils.rawKeys(this, keys)));
 	}
 
 	@Override
 	default Status migrate(final String host, final int port, final int db, final int timeout, final byte[]... keys) {
-		return execute((client)->client.keyCommands().migrate(host, port, db, timeout, keys));
+		return execute((client)->client.keyCommands().migrate(host, port, db, timeout, KeyUtils.rawKeys(this, keys)));
 	}
 
 	@Override
 	default Status migrate(final String host, final int port, final int db, final int timeout,
 	                       final MigrateArgument argument, final String... keys) {
-		return execute((client)->client.keyCommands().migrate(host, port, db, timeout, argument, keys));
+		return execute((client)->client.keyCommands()
+				.migrate(host, port, db, timeout, argument, KeyUtils.rawKeys(this, keys)));
 	}
 
 	@Override
 	default Status migrate(final String host, final int port, final int db, final int timeout,
 	                       final MigrateArgument argument, final byte[]... keys) {
-		return execute((client)->client.keyCommands().migrate(host, port, db, timeout, argument, keys));
+		return execute((client)->client.keyCommands()
+				.migrate(host, port, db, timeout, argument, KeyUtils.rawKeys(this, keys)));
 	}
 
 	/**
@@ -796,82 +807,82 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 
 	@Override
 	default Status move(final String key, final int db) {
-		return execute((client)->client.keyCommands().move(key, db));
+		return execute((client)->client.keyCommands().move(KeyUtils.rawKey(this, key), db));
 	}
 
 	@Override
 	default Status move(final byte[] key, final int db) {
-		return execute((client)->client.keyCommands().move(key, db));
+		return execute((client)->client.keyCommands().move(KeyUtils.rawKey(this, key), db));
 	}
 
 	@Override
 	default ObjectEncoding objectEncoding(final String key) {
-		return execute((client)->client.keyCommands().objectEncoding(key));
+		return execute((client)->client.keyCommands().objectEncoding(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default ObjectEncoding objectEncoding(final byte[] key) {
-		return execute((client)->client.keyCommands().objectEncoding(key));
+		return execute((client)->client.keyCommands().objectEncoding(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long objectFreq(final String key) {
-		return execute((client)->client.keyCommands().objectFreq(key));
+		return execute((client)->client.keyCommands().objectFreq(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long objectFreq(final byte[] key) {
-		return execute((client)->client.keyCommands().objectFreq(key));
+		return execute((client)->client.keyCommands().objectFreq(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long objectIdleTime(final String key) {
-		return execute((client)->client.keyCommands().objectIdleTime(key));
+		return execute((client)->client.keyCommands().objectIdleTime(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long objectIdleTime(final byte[] key) {
-		return execute((client)->client.keyCommands().objectIdleTime(key));
+		return execute((client)->client.keyCommands().objectIdleTime(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long objectRefcount(final String key) {
-		return execute((client)->client.keyCommands().objectRefcount(key));
+		return execute((client)->client.keyCommands().objectRefcount(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long objectRefcount(final byte[] key) {
-		return execute((client)->client.keyCommands().objectRefcount(key));
+		return execute((client)->client.keyCommands().objectRefcount(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Status persist(final String key) {
-		return execute((client)->client.keyCommands().persist(key));
+		return execute((client)->client.keyCommands().persist(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Status persist(final byte[] key) {
-		return execute((client)->client.keyCommands().persist(key));
+		return execute((client)->client.keyCommands().persist(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Status pExpire(final String key, final int lifetime) {
-		return execute((client)->client.keyCommands().pExpire(key, lifetime));
+		return execute((client)->client.keyCommands().pExpire(KeyUtils.rawKey(this, key), lifetime));
 	}
 
 	@Override
 	default Status pExpire(final byte[] key, final int lifetime) {
-		return execute((client)->client.keyCommands().pExpire(key, lifetime));
+		return execute((client)->client.keyCommands().pExpire(KeyUtils.rawKey(this, key), lifetime));
 	}
 
 	@Override
 	default Status pExpire(final String key, final int lifetime, final ExpireOption expireOption) {
-		return execute((client)->client.keyCommands().pExpire(key, lifetime, expireOption));
+		return execute((client)->client.keyCommands().pExpire(KeyUtils.rawKey(this, key), lifetime, expireOption));
 	}
 
 	@Override
 	default Status pExpire(final byte[] key, final int lifetime, final ExpireOption expireOption) {
-		return execute((client)->client.keyCommands().pExpire(key, lifetime, expireOption));
+		return execute((client)->client.keyCommands().pExpire(KeyUtils.rawKey(this, key), lifetime, expireOption));
 	}
 
 	/**
@@ -944,22 +955,24 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 
 	@Override
 	default Status pExpireAt(final String key, final long unixTimestamp) {
-		return execute((client)->client.keyCommands().pExpireAt(key, unixTimestamp));
+		return execute((client)->client.keyCommands().pExpireAt(KeyUtils.rawKey(this, key), unixTimestamp));
 	}
 
 	@Override
 	default Status pExpireAt(final byte[] key, final long unixTimestamp) {
-		return execute((client)->client.keyCommands().pExpireAt(key, unixTimestamp));
+		return execute((client)->client.keyCommands().pExpireAt(KeyUtils.rawKey(this, key), unixTimestamp));
 	}
 
 	@Override
 	default Status pExpireAt(final String key, final long unixTimestamp, final ExpireOption expireOption) {
-		return execute((client)->client.keyCommands().pExpireAt(key, unixTimestamp, expireOption));
+		return execute(
+				(client)->client.keyCommands().pExpireAt(KeyUtils.rawKey(this, key), unixTimestamp, expireOption));
 	}
 
 	@Override
 	default Status pExpireAt(final byte[] key, final long unixTimestamp, final ExpireOption expireOption) {
-		return execute((client)->client.keyCommands().pExpireAt(key, unixTimestamp, expireOption));
+		return execute(
+				(client)->client.keyCommands().pExpireAt(KeyUtils.rawKey(this, key), unixTimestamp, expireOption));
 	}
 
 	/**
@@ -1236,12 +1249,12 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 
 	@Override
 	default Long pExpireTime(final String key) {
-		return execute((client)->client.keyCommands().pExpireTime(key));
+		return execute((client)->client.keyCommands().pExpireTime(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long pExpireTime(final byte[] key) {
-		return execute((client)->client.keyCommands().pExpireTime(key));
+		return execute((client)->client.keyCommands().pExpireTime(KeyUtils.rawKey(this, key)));
 	}
 
 	/**
@@ -1274,12 +1287,12 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 
 	@Override
 	default Long pTtl(final String key) {
-		return execute((client)->client.keyCommands().pTtl(key));
+		return execute((client)->client.keyCommands().pTtl(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long pTtl(final byte[] key) {
-		return execute((client)->client.keyCommands().pTtl(key));
+		return execute((client)->client.keyCommands().pTtl(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
@@ -1289,44 +1302,50 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 
 	@Override
 	default Status rename(final String key, final String newKey) {
-		return execute((client)->client.keyCommands().rename(key, newKey));
+		return execute(
+				(client)->client.keyCommands().rename(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, newKey)));
 	}
 
 	@Override
 	default Status rename(final byte[] key, final byte[] newKey) {
-		return execute((client)->client.keyCommands().rename(key, newKey));
+		return execute(
+				(client)->client.keyCommands().rename(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, newKey)));
 	}
 
 	@Override
 	default Status renameNx(final String key, final String newKey) {
-		return execute((client)->client.keyCommands().renameNx(key, newKey));
+		return execute(
+				(client)->client.keyCommands().renameNx(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, newKey)));
 	}
 
 	@Override
 	default Status renameNx(final byte[] key, final byte[] newKey) {
-		return execute((client)->client.keyCommands().renameNx(key, newKey));
+		return execute(
+				(client)->client.keyCommands().renameNx(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, newKey)));
 	}
 
 	@Override
 	default Status restore(final String key, final byte[] serializedValue, final int ttl) {
-		return execute((client)->client.keyCommands().restore(key, serializedValue, ttl));
+		return execute((client)->client.keyCommands().restore(KeyUtils.rawKey(this, key), serializedValue, ttl));
 	}
 
 	@Override
 	default Status restore(final byte[] key, final byte[] serializedValue, final int ttl) {
-		return execute((client)->client.keyCommands().restore(key, serializedValue, ttl));
+		return execute((client)->client.keyCommands().restore(KeyUtils.rawKey(this, key), serializedValue, ttl));
 	}
 
 	@Override
 	default Status restore(final String key, final byte[] serializedValue, final int ttl,
 	                       final RestoreArgument argument) {
-		return execute((client)->client.keyCommands().restore(key, serializedValue, ttl, argument));
+		return execute(
+				(client)->client.keyCommands().restore(KeyUtils.rawKey(this, key), serializedValue, ttl, argument));
 	}
 
 	@Override
 	default Status restore(final byte[] key, final byte[] serializedValue, final int ttl,
 	                       final RestoreArgument argument) {
-		return execute((client)->client.keyCommands().restore(key, serializedValue, ttl, argument));
+		return execute(
+				(client)->client.keyCommands().restore(KeyUtils.rawKey(this, key), serializedValue, ttl, argument));
 	}
 
 	/**
@@ -1607,154 +1626,156 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 
 	@Override
 	default List<String> sort(final String key, final SortArgument argument) {
-		return execute((client)->client.keyCommands().sort(key, argument));
+		return execute((client)->client.keyCommands().sort(KeyUtils.rawKey(this, key), argument));
 	}
 
 	@Override
 	default List<byte[]> sort(final byte[] key, final SortArgument argument) {
-		return execute((client)->client.keyCommands().sort(key, argument));
+		return execute((client)->client.keyCommands().sort(KeyUtils.rawKey(this, key), argument));
 	}
 
 	@Override
 	default List<String> sort(final String key, final SortArgument argument, final int offset, final int count) {
-		return execute((client)->client.keyCommands().sort(key, argument, offset, count));
+		return execute((client)->client.keyCommands().sort(KeyUtils.rawKey(this, key), argument, offset, count));
 	}
 
 	@Override
 	default List<byte[]> sort(final byte[] key, final SortArgument argument, final int offset, final int count) {
-		return execute((client)->client.keyCommands().sort(key, argument, offset, count));
+		return execute((client)->client.keyCommands().sort(KeyUtils.rawKey(this, key), argument, offset, count));
 	}
 
 	@Override
 	default List<String> sort(final String key, final int offset, final int count) {
-		return execute((client)->client.keyCommands().sort(key, offset, count));
+		return execute((client)->client.keyCommands().sort(KeyUtils.rawKey(this, key), offset, count));
 	}
 
 	@Override
 	default List<byte[]> sort(final byte[] key, final int offset, final int count) {
-		return execute((client)->client.keyCommands().sort(key, offset, count));
+		return execute((client)->client.keyCommands().sort(KeyUtils.rawKey(this, key), offset, count));
 	}
 
 	@Override
 	default Long sort(final String key, final String destKey) {
-		return execute((client)->client.keyCommands().sort(key, destKey));
+		return execute((client)->client.keyCommands().sort(KeyUtils.rawKey(this, key), destKey));
 	}
 
 	@Override
 	default Long sort(final byte[] key, final byte[] destKey) {
-		return execute((client)->client.keyCommands().sort(key, destKey));
+		return execute((client)->client.keyCommands().sort(KeyUtils.rawKey(this, key), destKey));
 	}
 
 	@Override
 	default Long sort(final String key, final String destKey, final SortArgument sortArgument) {
-		return execute((client)->client.keyCommands().sort(key, destKey, sortArgument));
+		return execute((client)->client.keyCommands().sort(KeyUtils.rawKey(this, key), destKey, sortArgument));
 	}
 
 	@Override
 	default Long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument) {
-		return execute((client)->client.keyCommands().sort(key, destKey, sortArgument));
+		return execute((client)->client.keyCommands().sort(KeyUtils.rawKey(this, key), destKey, sortArgument));
 	}
 
 	@Override
 	default Long sort(final String key, final String destKey, final SortArgument argument, final int offset,
 	                  final int count) {
-		return execute((client)->client.keyCommands().sort(key, destKey, argument, offset, count));
+		return execute(
+				(client)->client.keyCommands().sort(KeyUtils.rawKey(this, key), destKey, argument, offset, count));
 	}
 
 	@Override
 	default Long sort(final byte[] key, final byte[] destKey, final SortArgument argument, final int offset,
 	                  final int count) {
-		return execute((client)->client.keyCommands().sort(key, destKey, argument, offset, count));
+		return execute(
+				(client)->client.keyCommands().sort(KeyUtils.rawKey(this, key), destKey, argument, offset, count));
 	}
 
 	@Override
 	default Long sort(final String key, final String destKey, final int offset, final int count) {
-		return execute((client)->client.keyCommands().sort(key, destKey, offset, count));
+		return execute((client)->client.keyCommands().sort(KeyUtils.rawKey(this, key), destKey, offset, count));
 	}
 
 	@Override
 	default Long sort(final byte[] key, final byte[] destKey, final int offset, final int count) {
-		return execute((client)->client.keyCommands().sort(key, destKey, offset, count));
+		return execute((client)->client.keyCommands().sort(KeyUtils.rawKey(this, key), destKey, offset, count));
 	}
 
 	@Override
 	default List<String> sortRo(final String key) {
-		return execute((client)->client.keyCommands().sortRo(key));
+		return execute((client)->client.keyCommands().sortRo(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default List<byte[]> sortRo(final byte[] key) {
-		return execute((client)->client.keyCommands().sortRo(key));
+		return execute((client)->client.keyCommands().sortRo(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default List<String> sortRo(final String key, final SortArgument argument) {
-		return execute((client)->client.keyCommands().sortRo(key, argument));
+		return execute((client)->client.keyCommands().sortRo(KeyUtils.rawKey(this, key), argument));
 	}
 
 	@Override
 	default List<byte[]> sortRo(final byte[] key, final SortArgument argument) {
-		return execute((client)->client.keyCommands().sortRo(key, argument));
+		return execute((client)->client.keyCommands().sortRo(KeyUtils.rawKey(this, key), argument));
 	}
 
 	@Override
 	default List<String> sortRo(final String key, final SortArgument argument, final int offset, final int count) {
-		return execute((client)->client.keyCommands().sortRo(key, argument, offset, count));
+		return execute((client)->client.keyCommands().sortRo(KeyUtils.rawKey(this, key), argument, offset, count));
 	}
 
 	@Override
 	default List<byte[]> sortRo(final byte[] key, final SortArgument argument, final int offset, final int count) {
-		return execute((client)->client.keyCommands().sortRo(key, argument, offset, count));
+		return execute((client)->client.keyCommands().sortRo(KeyUtils.rawKey(this, key), argument, offset, count));
 	}
 
 	@Override
 	default List<String> sortRo(final String key, final int offset, final int count) {
-		return execute((client)->client.keyCommands().sortRo(key, offset, count));
+		return execute((client)->client.keyCommands().sortRo(KeyUtils.rawKey(this, key), offset, count));
 	}
 
 	@Override
 	default List<byte[]> sortRo(final byte[] key, final int offset, final int count) {
-		return execute((client)->client.keyCommands().sortRo(key, offset, count));
+		return execute((client)->client.keyCommands().sortRo(KeyUtils.rawKey(this, key), offset, count));
 	}
 
 	@Override
 	default Long touch(final String... keys) {
-		return execute((client)->client.keyCommands().touch(keys));
+		return execute((client)->client.keyCommands().touch(KeyUtils.rawKeys(this, keys)));
 	}
 
 	@Override
 	default Long touch(final byte[]... keys) {
-		return execute((client)->client.keyCommands().touch(keys));
+		return execute((client)->client.keyCommands().touch(KeyUtils.rawKeys(this, keys)));
 	}
 
 	@Override
 	default Long ttl(final String key) {
-		return execute((client)->client.keyCommands().ttl(key));
+		return execute((client)->client.keyCommands().ttl(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long ttl(final byte[] key) {
-		return execute((client)->client.keyCommands().ttl(key));
+		return execute((client)->client.keyCommands().ttl(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Type type(final String key) {
-		return execute((client)->client.keyCommands().type(key));
+		return execute((client)->client.keyCommands().type(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Type type(final byte[] key) {
-		return execute((client)->client.keyCommands().type(key));
+		return execute((client)->client.keyCommands().type(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long unlink(final String... keys) {
-		return execute((client)->client.keyCommands().unlink(keys));
+		return execute((client)->client.keyCommands().unlink(KeyUtils.rawKeys(this, keys)));
 	}
 
 	@Override
 	default Long unlink(final byte[]... keys) {
-		return execute((client)->client.keyCommands().unlink(keys));
+		return execute((client)->client.keyCommands().unlink(KeyUtils.rawKeys(this, keys)));
 	}
 
 	private static Date createDate(final Long value, final boolean unixTimestamp) {

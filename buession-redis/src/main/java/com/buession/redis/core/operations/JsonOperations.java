@@ -31,6 +31,7 @@ import com.buession.redis.core.command.args.NxXx;
 import com.buession.redis.core.command.JsonCommands;
 import com.buession.redis.core.command.args.json.JsonGetArgument;
 import com.buession.redis.core.command.args.json.KeyPathValue;
+import com.buession.redis.utils.KeyUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -47,244 +48,246 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 
 	@Override
 	default List<Long> jsonArrAppend(final String key, final String... values) {
-		return execute((client)->client.jsonCommands().jsonArrAppend(key, values));
+		return execute((client)->client.jsonCommands().jsonArrAppend(KeyUtils.rawKey(this, key), values));
 	}
 
 	@Override
 	default List<Long> jsonArrAppend(final byte[] key, final byte[]... values) {
-		return execute((client)->client.jsonCommands().jsonArrAppend(key, values));
+		return execute((client)->client.jsonCommands().jsonArrAppend(KeyUtils.rawKey(this, key), values));
 	}
 
 	@Override
 	default List<Long> jsonArrAppend(final String key, final String path, final String... values) {
-		return execute((client)->client.jsonCommands().jsonArrAppend(key, path, values));
+		return execute((client)->client.jsonCommands().jsonArrAppend(KeyUtils.rawKey(this, key), path, values));
 	}
 
 	@Override
 	default List<Long> jsonArrAppend(final byte[] key, final byte[] path, final byte[]... values) {
-		return execute((client)->client.jsonCommands().jsonArrAppend(key, path, values));
+		return execute((client)->client.jsonCommands().jsonArrAppend(KeyUtils.rawKey(this, key), path, values));
 	}
 
 	@Override
 	default List<Long> jsonArrIndex(final String key, final String path, final String value) {
-		return execute((client)->client.jsonCommands().jsonArrIndex(key, path, value));
+		return execute((client)->client.jsonCommands().jsonArrIndex(KeyUtils.rawKey(this, key), path, value));
 	}
 
 	@Override
 	default List<Long> jsonArrIndex(final byte[] key, final byte[] path, final byte[] value) {
-		return execute((client)->client.jsonCommands().jsonArrIndex(key, path, value));
+		return execute((client)->client.jsonCommands().jsonArrIndex(KeyUtils.rawKey(this, key), path, value));
 	}
 
 	@Override
 	default List<Long> jsonArrIndex(final String key, final String path, final String value, final int start) {
-		return execute((client)->client.jsonCommands().jsonArrIndex(key, path, value, start));
+		return execute((client)->client.jsonCommands().jsonArrIndex(KeyUtils.rawKey(this, key), path, value, start));
 	}
 
 	@Override
 	default List<Long> jsonArrIndex(final byte[] key, final byte[] path, final byte[] value, final int start) {
-		return execute((client)->client.jsonCommands().jsonArrIndex(key, path, value, start));
+		return execute((client)->client.jsonCommands().jsonArrIndex(KeyUtils.rawKey(this, key), path, value, start));
 	}
 
 	@Override
 	default List<Long> jsonArrIndex(final String key, final String path, final String value, final int start,
-									final int stop) {
-		return execute((client)->client.jsonCommands().jsonArrIndex(key, path, value, start, stop));
+	                                final int stop) {
+		return execute(
+				(client)->client.jsonCommands().jsonArrIndex(KeyUtils.rawKey(this, key), path, value, start, stop));
 	}
 
 	@Override
 	default List<Long> jsonArrIndex(final byte[] key, final byte[] path, final byte[] value, final int start,
-									final int stop) {
-		return execute((client)->client.jsonCommands().jsonArrIndex(key, path, value, start, stop));
+	                                final int stop) {
+		return execute(
+				(client)->client.jsonCommands().jsonArrIndex(KeyUtils.rawKey(this, key), path, value, start, stop));
 	}
 
 	@Override
 	default List<Long> jsonArrInsert(final String key, final String path, final int index, final String... values) {
-		return execute((client)->client.jsonCommands().jsonArrInsert(key, path, index, values));
+		return execute((client)->client.jsonCommands().jsonArrInsert(KeyUtils.rawKey(this, key), path, index, values));
 	}
 
 	@Override
 	default List<Long> jsonArrInsert(final byte[] key, final byte[] path, final int index, final byte[]... values) {
-		return execute((client)->client.jsonCommands().jsonArrInsert(key, path, index, values));
+		return execute((client)->client.jsonCommands().jsonArrInsert(KeyUtils.rawKey(this, key), path, index, values));
 	}
 
 	@Override
 	default Long jsonArrLen(final String key) {
-		return execute((client)->client.jsonCommands().jsonArrLen(key));
+		return execute((client)->client.jsonCommands().jsonArrLen(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long jsonArrLen(final byte[] key) {
-		return execute((client)->client.jsonCommands().jsonArrLen(key));
+		return execute((client)->client.jsonCommands().jsonArrLen(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default List<Long> jsonArrLen(final String key, final String path) {
-		return execute((client)->client.jsonCommands().jsonArrLen(key, path));
+		return execute((client)->client.jsonCommands().jsonArrLen(KeyUtils.rawKey(this, key), path));
 	}
 
 	@Override
 	default List<Long> jsonArrLen(final byte[] key, final byte[] path) {
-		return execute((client)->client.jsonCommands().jsonArrLen(key, path));
+		return execute((client)->client.jsonCommands().jsonArrLen(KeyUtils.rawKey(this, key), path));
 	}
 
 	@Override
 	default Object jsonArrPop(final String key) {
-		return execute((client)->client.jsonCommands().jsonArrPop(key));
+		return execute((client)->client.jsonCommands().jsonArrPop(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Object jsonArrPop(final byte[] key) {
-		return execute((client)->client.jsonCommands().jsonArrPop(key));
+		return execute((client)->client.jsonCommands().jsonArrPop(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default List<String> jsonArrPop(final String key, final String path) {
-		return execute((client)->client.jsonCommands().jsonArrPop(key, path));
+		return execute((client)->client.jsonCommands().jsonArrPop(KeyUtils.rawKey(this, key), path));
 	}
 
 	@Override
 	default List<byte[]> jsonArrPop(final byte[] key, final byte[] path) {
-		return execute((client)->client.jsonCommands().jsonArrPop(key, path));
+		return execute((client)->client.jsonCommands().jsonArrPop(KeyUtils.rawKey(this, key), path));
 	}
 
 	@Override
 	default List<String> jsonArrPop(final String key, final String path, final int index) {
-		return execute((client)->client.jsonCommands().jsonArrPop(key, path, index));
+		return execute((client)->client.jsonCommands().jsonArrPop(KeyUtils.rawKey(this, key), path, index));
 	}
 
 	@Override
 	default List<byte[]> jsonArrPop(final byte[] key, final byte[] path, final int index) {
-		return execute((client)->client.jsonCommands().jsonArrPop(key, path, index));
+		return execute((client)->client.jsonCommands().jsonArrPop(KeyUtils.rawKey(this, key), path, index));
 	}
 
 	@Override
 	default List<Long> jsonArrTrim(final String key, final String path, final int start, final int stop) {
-		return execute((client)->client.jsonCommands().jsonArrTrim(key, path, start, stop));
+		return execute((client)->client.jsonCommands().jsonArrTrim(KeyUtils.rawKey(this, key), path, start, stop));
 	}
 
 	@Override
 	default List<Long> jsonArrTrim(final byte[] key, final byte[] path, final int start, final int stop) {
-		return execute((client)->client.jsonCommands().jsonArrTrim(key, path, start, stop));
+		return execute((client)->client.jsonCommands().jsonArrTrim(KeyUtils.rawKey(this, key), path, start, stop));
 	}
 
 	@Override
 	default Long jsonClear(final String key) {
-		return execute((client)->client.jsonCommands().jsonClear(key));
+		return execute((client)->client.jsonCommands().jsonClear(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long jsonClear(final byte[] key) {
-		return execute((client)->client.jsonCommands().jsonClear(key));
+		return execute((client)->client.jsonCommands().jsonClear(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long jsonClear(final String key, final String path) {
-		return execute((client)->client.jsonCommands().jsonClear(key, path));
+		return execute((client)->client.jsonCommands().jsonClear(KeyUtils.rawKey(this, key), path));
 	}
 
 	@Override
 	default Long jsonClear(final byte[] key, final byte[] path) {
-		return execute((client)->client.jsonCommands().jsonClear(key, path));
+		return execute((client)->client.jsonCommands().jsonClear(KeyUtils.rawKey(this, key), path));
 	}
 
 	@Override
 	default Long jsonDebugMemory(final String key) {
-		return execute((client)->client.jsonCommands().jsonDebugMemory(key));
+		return execute((client)->client.jsonCommands().jsonDebugMemory(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long jsonDebugMemory(final byte[] key) {
-		return execute((client)->client.jsonCommands().jsonDebugMemory(key));
+		return execute((client)->client.jsonCommands().jsonDebugMemory(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default List<Long> jsonDebugMemory(final String key, final String path) {
-		return execute((client)->client.jsonCommands().jsonDebugMemory(key, path));
+		return execute((client)->client.jsonCommands().jsonDebugMemory(KeyUtils.rawKey(this, key), path));
 	}
 
 	@Override
 	default List<Long> jsonDebugMemory(final byte[] key, final byte[] path) {
-		return execute((client)->client.jsonCommands().jsonDebugMemory(key, path));
+		return execute((client)->client.jsonCommands().jsonDebugMemory(KeyUtils.rawKey(this, key), path));
 	}
 
 	@Override
 	default Long jsonDel(final String key) {
-		return execute((client)->client.jsonCommands().jsonDel(key));
+		return execute((client)->client.jsonCommands().jsonDel(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long jsonDel(final byte[] key) {
-		return execute((client)->client.jsonCommands().jsonDel(key));
+		return execute((client)->client.jsonCommands().jsonDel(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long jsonDel(final String key, final String path) {
-		return execute((client)->client.jsonCommands().jsonDel(key, path));
+		return execute((client)->client.jsonCommands().jsonDel(KeyUtils.rawKey(this, key), path));
 	}
 
 	@Override
 	default Long jsonDel(final byte[] key, final byte[] path) {
-		return execute((client)->client.jsonCommands().jsonDel(key, path));
+		return execute((client)->client.jsonCommands().jsonDel(KeyUtils.rawKey(this, key), path));
 	}
 
 	@Override
 	default Long jsonForget(final String key) {
-		return execute((client)->client.jsonCommands().jsonForget(key));
+		return execute((client)->client.jsonCommands().jsonForget(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long jsonForget(final byte[] key) {
-		return execute((client)->client.jsonCommands().jsonForget(key));
+		return execute((client)->client.jsonCommands().jsonForget(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long jsonForget(final String key, final String path) {
-		return execute((client)->client.jsonCommands().jsonForget(key, path));
+		return execute((client)->client.jsonCommands().jsonForget(KeyUtils.rawKey(this, key), path));
 	}
 
 	@Override
 	default Long jsonForget(final byte[] key, final byte[] path) {
-		return execute((client)->client.jsonCommands().jsonForget(key, path));
+		return execute((client)->client.jsonCommands().jsonForget(KeyUtils.rawKey(this, key), path));
 	}
 
 	@Override
 	default String jsonGet(final String key) {
-		return execute((client)->client.jsonCommands().jsonGet(key));
+		return execute((client)->client.jsonCommands().jsonGet(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default byte[] jsonGet(final byte[] key) {
-		return execute((client)->client.jsonCommands().jsonGet(key));
+		return execute((client)->client.jsonCommands().jsonGet(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default String jsonGet(final String key, final JsonGetArgument argument) {
-		return execute((client)->client.jsonCommands().jsonGet(key, argument));
+		return execute((client)->client.jsonCommands().jsonGet(KeyUtils.rawKey(this, key), argument));
 	}
 
 	@Override
 	default byte[] jsonGet(final byte[] key, final JsonGetArgument argument) {
-		return execute((client)->client.jsonCommands().jsonGet(key, argument));
+		return execute((client)->client.jsonCommands().jsonGet(KeyUtils.rawKey(this, key), argument));
 	}
 
 	@Override
 	default List<String> jsonGet(final String key, final String... path) {
-		return execute((client)->client.jsonCommands().jsonGet(key, path));
+		return execute((client)->client.jsonCommands().jsonGet(KeyUtils.rawKey(this, key), path));
 	}
 
 	@Override
 	default List<byte[]> jsonGet(final byte[] key, final byte[]... path) {
-		return execute((client)->client.jsonCommands().jsonGet(key, path));
+		return execute((client)->client.jsonCommands().jsonGet(KeyUtils.rawKey(this, key), path));
 	}
 
 	@Override
 	default List<String> jsonGet(final String key, final JsonGetArgument argument, final String... path) {
-		return execute((client)->client.jsonCommands().jsonGet(key, argument, path));
+		return execute((client)->client.jsonCommands().jsonGet(KeyUtils.rawKey(this, key), argument, path));
 	}
 
 	@Override
 	default List<byte[]> jsonGet(final byte[] key, final JsonGetArgument argument, final byte[]... path) {
-		return execute((client)->client.jsonCommands().jsonGet(key, argument, path));
+		return execute((client)->client.jsonCommands().jsonGet(KeyUtils.rawKey(this, key), argument, path));
 	}
 
 	/**
@@ -554,7 +557,7 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 	 * @return 文档指定路径的值
 	 */
 	<V> List<V> jsonGet(final String key, final JsonGetArgument argument, final String[] path,
-						final TypeReference<V> type);
+	                    final TypeReference<V> type);
 
 	/**
 	 * 从 JSON 文档获取指定路径的值，并将值反序列化为对象
@@ -575,16 +578,16 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 	 * @return 文档指定路径的值
 	 */
 	<V> List<V> jsonGet(final byte[] key, final JsonGetArgument argument, final byte[][] path,
-						final TypeReference<V> type);
+	                    final TypeReference<V> type);
 
 	@Override
 	default Status jsonMerge(final String key, final String path, final String value) {
-		return execute((client)->client.jsonCommands().jsonMerge(key, path, value));
+		return execute((client)->client.jsonCommands().jsonMerge(KeyUtils.rawKey(this, key), path, value));
 	}
 
 	@Override
 	default Status jsonMerge(final byte[] key, final byte[] path, final byte[] value) {
-		return execute((client)->client.jsonCommands().jsonMerge(key, path, value));
+		return execute((client)->client.jsonCommands().jsonMerge(KeyUtils.rawKey(this, key), path, value));
 	}
 
 	@Override
@@ -676,12 +679,12 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 
 	@Override
 	default List<Number> jsonNumIncrBy(final String key, final String path, final Number value) {
-		return execute((client)->client.jsonCommands().jsonNumIncrBy(key, path, value));
+		return execute((client)->client.jsonCommands().jsonNumIncrBy(KeyUtils.rawKey(this, key), path, value));
 	}
 
 	@Override
 	default List<Number> jsonNumIncrBy(final byte[] key, final byte[] path, final Number value) {
-		return execute((client)->client.jsonCommands().jsonNumIncrBy(key, path, value));
+		return execute((client)->client.jsonCommands().jsonNumIncrBy(KeyUtils.rawKey(this, key), path, value));
 	}
 
 	/**
@@ -788,92 +791,92 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 
 	@Override
 	default List<Number> jsonNumMultBy(final String key, final String path, final Number value) {
-		return execute((client)->client.jsonCommands().jsonNumMultBy(key, path, value));
+		return execute((client)->client.jsonCommands().jsonNumMultBy(KeyUtils.rawKey(this, key), path, value));
 	}
 
 	@Override
 	default List<Number> jsonNumMultBy(final byte[] key, final byte[] path, final Number value) {
-		return execute((client)->client.jsonCommands().jsonNumMultBy(key, path, value));
+		return execute((client)->client.jsonCommands().jsonNumMultBy(KeyUtils.rawKey(this, key), path, value));
 	}
 
 	@Override
 	default List<List<String>> jsonObjKeys(final String key) {
-		return execute((client)->client.jsonCommands().jsonObjKeys(key));
+		return execute((client)->client.jsonCommands().jsonObjKeys(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default List<List<byte[]>> jsonObjKeys(final byte[] key) {
-		return execute((client)->client.jsonCommands().jsonObjKeys(key));
+		return execute((client)->client.jsonCommands().jsonObjKeys(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default List<List<String>> jsonObjKeys(final String key, final String path) {
-		return execute((client)->client.jsonCommands().jsonObjKeys(key, path));
+		return execute((client)->client.jsonCommands().jsonObjKeys(KeyUtils.rawKey(this, key), path));
 	}
 
 	@Override
 	default List<List<byte[]>> jsonObjKeys(final byte[] key, final byte[] path) {
-		return execute((client)->client.jsonCommands().jsonObjKeys(key, path));
+		return execute((client)->client.jsonCommands().jsonObjKeys(KeyUtils.rawKey(this, key), path));
 	}
 
 	@Override
 	default Long jsonObjLen(final String key) {
-		return execute((client)->client.jsonCommands().jsonObjLen(key));
+		return execute((client)->client.jsonCommands().jsonObjLen(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long jsonObjLen(final byte[] key) {
-		return execute((client)->client.jsonCommands().jsonObjLen(key));
+		return execute((client)->client.jsonCommands().jsonObjLen(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default List<Long> jsonObjLen(final String key, final String path) {
-		return execute((client)->client.jsonCommands().jsonObjLen(key, path));
+		return execute((client)->client.jsonCommands().jsonObjLen(KeyUtils.rawKey(this, key), path));
 	}
 
 	@Override
 	default List<Long> jsonObjLen(final byte[] key, final byte[] path) {
-		return execute((client)->client.jsonCommands().jsonObjLen(key, path));
+		return execute((client)->client.jsonCommands().jsonObjLen(KeyUtils.rawKey(this, key), path));
 	}
 
 	@Override
 	default List<Object> jsonResp(final String key) {
-		return execute((client)->client.jsonCommands().jsonResp(key));
+		return execute((client)->client.jsonCommands().jsonResp(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default List<Object> jsonResp(final byte[] key) {
-		return execute((client)->client.jsonCommands().jsonResp(key));
+		return execute((client)->client.jsonCommands().jsonResp(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default List<Object> jsonResp(final String key, final String path) {
-		return execute((client)->client.jsonCommands().jsonResp(key, path));
+		return execute((client)->client.jsonCommands().jsonResp(KeyUtils.rawKey(this, key), path));
 	}
 
 	@Override
 	default List<Object> jsonResp(final byte[] key, final byte[] path) {
-		return execute((client)->client.jsonCommands().jsonResp(key, path));
+		return execute((client)->client.jsonCommands().jsonResp(KeyUtils.rawKey(this, key), path));
 	}
 
 	@Override
 	default Status jsonSet(final String key, final String path, final String value) {
-		return execute((client)->client.jsonCommands().jsonSet(key, path, value));
+		return execute((client)->client.jsonCommands().jsonSet(KeyUtils.rawKey(this, key), path, value));
 	}
 
 	@Override
 	default Status jsonSet(final byte[] key, final byte[] path, final byte[] value) {
-		return execute((client)->client.jsonCommands().jsonSet(key, path, value));
+		return execute((client)->client.jsonCommands().jsonSet(KeyUtils.rawKey(this, key), path, value));
 	}
 
 	@Override
 	default Status jsonSet(final String key, final String path, final String value, final NxXx nxXx) {
-		return execute((client)->client.jsonCommands().jsonSet(key, path, value, nxXx));
+		return execute((client)->client.jsonCommands().jsonSet(KeyUtils.rawKey(this, key), path, value, nxXx));
 	}
 
 	@Override
 	default Status jsonSet(final byte[] key, final byte[] path, final byte[] value, final NxXx nxXx) {
-		return execute((client)->client.jsonCommands().jsonSet(key, path, value, nxXx));
+		return execute((client)->client.jsonCommands().jsonSet(KeyUtils.rawKey(this, key), path, value, nxXx));
 	}
 
 	/**
@@ -954,72 +957,72 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 
 	@Override
 	default List<Long> jsonStrAppend(final String key, final String value) {
-		return execute((client)->client.jsonCommands().jsonStrAppend(key, value));
+		return execute((client)->client.jsonCommands().jsonStrAppend(KeyUtils.rawKey(this, key), value));
 	}
 
 	@Override
 	default List<Long> jsonStrAppend(final byte[] key, final byte[] value) {
-		return execute((client)->client.jsonCommands().jsonStrAppend(key, value));
+		return execute((client)->client.jsonCommands().jsonStrAppend(KeyUtils.rawKey(this, key), value));
 	}
 
 	@Override
 	default List<Long> jsonStrAppend(final String key, final String path, final String value) {
-		return execute((client)->client.jsonCommands().jsonStrAppend(key, path, value));
+		return execute((client)->client.jsonCommands().jsonStrAppend(KeyUtils.rawKey(this, key), path, value));
 	}
 
 	@Override
 	default List<Long> jsonStrAppend(final byte[] key, final byte[] path, final byte[] value) {
-		return execute((client)->client.jsonCommands().jsonStrAppend(key, path, value));
+		return execute((client)->client.jsonCommands().jsonStrAppend(KeyUtils.rawKey(this, key), path, value));
 	}
 
 	@Override
 	default Long jsonStrLen(final String key) {
-		return execute((client)->client.jsonCommands().jsonStrLen(key));
+		return execute((client)->client.jsonCommands().jsonStrLen(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long jsonStrLen(final byte[] key) {
-		return execute((client)->client.jsonCommands().jsonStrLen(key));
+		return execute((client)->client.jsonCommands().jsonStrLen(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default List<Long> jsonStrLen(final String key, final String path) {
-		return execute((client)->client.jsonCommands().jsonStrLen(key, path));
+		return execute((client)->client.jsonCommands().jsonStrLen(KeyUtils.rawKey(this, key), path));
 	}
 
 	@Override
 	default List<Long> jsonStrLen(final byte[] key, final byte[] path) {
-		return execute((client)->client.jsonCommands().jsonStrLen(key, path));
+		return execute((client)->client.jsonCommands().jsonStrLen(KeyUtils.rawKey(this, key), path));
 	}
 
 	@Override
 	default List<Status> jsonToggle(final String key, final String path) {
-		return execute((client)->client.jsonCommands().jsonToggle(key, path));
+		return execute((client)->client.jsonCommands().jsonToggle(KeyUtils.rawKey(this, key), path));
 	}
 
 	@Override
 	default List<Status> jsonToggle(final byte[] key, final byte[] path) {
-		return execute((client)->client.jsonCommands().jsonToggle(key, path));
+		return execute((client)->client.jsonCommands().jsonToggle(KeyUtils.rawKey(this, key), path));
 	}
 
 	@Override
 	default JsonType jsonType(final String key) {
-		return execute((client)->client.jsonCommands().jsonType(key));
+		return execute((client)->client.jsonCommands().jsonType(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default JsonType jsonType(final byte[] key) {
-		return execute((client)->client.jsonCommands().jsonType(key));
+		return execute((client)->client.jsonCommands().jsonType(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default List<JsonType> jsonType(final String key, final String path) {
-		return execute((client)->client.jsonCommands().jsonType(key, path));
+		return execute((client)->client.jsonCommands().jsonType(KeyUtils.rawKey(this, key), path));
 	}
 
 	@Override
 	default List<JsonType> jsonType(final byte[] key, final byte[] path) {
-		return execute((client)->client.jsonCommands().jsonType(key, path));
+		return execute((client)->client.jsonCommands().jsonType(KeyUtils.rawKey(this, key), path));
 	}
 
 }

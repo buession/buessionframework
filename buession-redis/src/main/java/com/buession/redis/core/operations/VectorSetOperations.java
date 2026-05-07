@@ -31,6 +31,7 @@ import com.buession.redis.core.VectorInfo;
 import com.buession.redis.core.command.VectorSetCommands;
 import com.buession.redis.core.command.args.vectorset.VAddArgument;
 import com.buession.redis.core.command.args.vectorset.VSimArgument;
+import com.buession.redis.utils.KeyUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -47,428 +48,454 @@ public interface VectorSetOperations extends VectorSetCommands, RedisOperations 
 
 	@Override
 	default Status vAdd(final String key, final double[] vectors, final String element) {
-		return execute((client)->client.vectorSetCommands().vAdd(key, vectors, element));
+		return execute((client)->client.vectorSetCommands().vAdd(KeyUtils.rawKey(this, key), vectors, element));
 	}
 
 	@Override
 	default Status vAdd(final byte[] key, final double[] vectors, final byte[] element) {
-		return execute((client)->client.vectorSetCommands().vAdd(key, vectors, element));
+		return execute((client)->client.vectorSetCommands().vAdd(KeyUtils.rawKey(this, key), vectors, element));
 	}
 
 	@Override
 	default Status vAdd(final String key, final double[] vectors, final String element, final VAddArgument argument) {
-		return execute((client)->client.vectorSetCommands().vAdd(key, vectors, element, argument));
+		return execute(
+				(client)->client.vectorSetCommands().vAdd(KeyUtils.rawKey(this, key), vectors, element, argument));
 	}
 
 	@Override
 	default Status vAdd(final byte[] key, final double[] vectors, final byte[] element, final VAddArgument argument) {
-		return execute((client)->client.vectorSetCommands().vAdd(key, vectors, element, argument));
+		return execute(
+				(client)->client.vectorSetCommands().vAdd(KeyUtils.rawKey(this, key), vectors, element, argument));
 	}
 
 	@Override
 	default Long vCard(final String key) {
-		return execute((client)->client.vectorSetCommands().vCard(key));
+		return execute((client)->client.vectorSetCommands().vCard(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long vCard(final byte[] key) {
-		return execute((client)->client.vectorSetCommands().vCard(key));
+		return execute((client)->client.vectorSetCommands().vCard(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long vDim(final String key) {
-		return execute((client)->client.vectorSetCommands().vDim(key));
+		return execute((client)->client.vectorSetCommands().vDim(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long vDim(final byte[] key) {
-		return execute((client)->client.vectorSetCommands().vDim(key));
+		return execute((client)->client.vectorSetCommands().vDim(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default List<Double> vEmb(final String key, final String element) {
-		return execute((client)->client.vectorSetCommands().vEmb(key, element));
+		return execute((client)->client.vectorSetCommands().vEmb(KeyUtils.rawKey(this, key), element));
 	}
 
 	@Override
 	default List<Double> vEmb(final byte[] key, final byte[] element) {
-		return execute((client)->client.vectorSetCommands().vEmb(key, element));
+		return execute((client)->client.vectorSetCommands().vEmb(KeyUtils.rawKey(this, key), element));
 	}
 
 	@Override
 	default RawVector vembRaw(final String key, final String element) {
-		return execute((client)->client.vectorSetCommands().vembRaw(key, element));
+		return execute((client)->client.vectorSetCommands().vembRaw(KeyUtils.rawKey(this, key), element));
 	}
 
 	@Override
 	default RawVector vembRaw(final byte[] key, final byte[] element) {
-		return execute((client)->client.vectorSetCommands().vembRaw(key, element));
+		return execute((client)->client.vectorSetCommands().vembRaw(KeyUtils.rawKey(this, key), element));
 	}
 
 	@Override
 	default String vGetAttr(final String key, final String element) {
-		return execute((client)->client.vectorSetCommands().vGetAttr(key, element));
+		return execute((client)->client.vectorSetCommands().vGetAttr(KeyUtils.rawKey(this, key), element));
 	}
 
 	@Override
 	default byte[] vGetAttr(final byte[] key, final byte[] element) {
-		return execute((client)->client.vectorSetCommands().vGetAttr(key, element));
+		return execute((client)->client.vectorSetCommands().vGetAttr(KeyUtils.rawKey(this, key), element));
 	}
 
 	@Override
 	default Boolean vIsMember(final String key, final String element) {
-		return execute((client)->client.vectorSetCommands().vIsMember(key, element));
+		return execute((client)->client.vectorSetCommands().vIsMember(KeyUtils.rawKey(this, key), element));
 	}
 
 	@Override
 	default Boolean vIsMember(final byte[] key, final byte[] element) {
-		return execute((client)->client.vectorSetCommands().vIsMember(key, element));
+		return execute((client)->client.vectorSetCommands().vIsMember(KeyUtils.rawKey(this, key), element));
 	}
 
 	@Override
 	default VectorInfo vInfo(final String key) {
-		return execute((client)->client.vectorSetCommands().vInfo(key));
+		return execute((client)->client.vectorSetCommands().vInfo(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default VectorInfo vInfo(final byte[] key) {
-		return execute((client)->client.vectorSetCommands().vInfo(key));
+		return execute((client)->client.vectorSetCommands().vInfo(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default List<String> vLinks(final String key, final String element) {
-		return execute((client)->client.vectorSetCommands().vLinks(key, element));
+		return execute((client)->client.vectorSetCommands().vLinks(KeyUtils.rawKey(this, key), element));
 	}
 
 	@Override
 	default List<byte[]> vLinks(final byte[] key, final byte[] element) {
-		return execute((client)->client.vectorSetCommands().vLinks(key, element));
+		return execute((client)->client.vectorSetCommands().vLinks(KeyUtils.rawKey(this, key), element));
 	}
 
 	@Override
 	default Map<String, Double> vLinksWithScores(final String key, final String element) {
-		return execute((client)->client.vectorSetCommands().vLinksWithScores(key, element));
+		return execute((client)->client.vectorSetCommands().vLinksWithScores(KeyUtils.rawKey(this, key), element));
 	}
 
 	@Override
 	default Map<byte[], Double> vLinksWithScores(final byte[] key, final byte[] element) {
-		return execute((client)->client.vectorSetCommands().vLinksWithScores(key, element));
+		return execute((client)->client.vectorSetCommands().vLinksWithScores(KeyUtils.rawKey(this, key), element));
 	}
 
 	@Override
 	default String vRandMember(final String key) {
-		return execute((client)->client.vectorSetCommands().vRandMember(key));
+		return execute((client)->client.vectorSetCommands().vRandMember(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default byte[] vRandMember(final byte[] key) {
-		return execute((client)->client.vectorSetCommands().vRandMember(key));
+		return execute((client)->client.vectorSetCommands().vRandMember(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default List<String> vRandMember(final String key, final int count) {
-		return execute((client)->client.vectorSetCommands().vRandMember(key, count));
+		return execute((client)->client.vectorSetCommands().vRandMember(KeyUtils.rawKey(this, key), count));
 	}
 
 	@Override
 	default List<byte[]> vRandMember(final byte[] key, final int count) {
-		return execute((client)->client.vectorSetCommands().vRandMember(key, count));
+		return execute((client)->client.vectorSetCommands().vRandMember(KeyUtils.rawKey(this, key), count));
 	}
 
 	@Override
 	default List<String> vRange(final String key, final String start, final String end) {
-		return execute((client)->client.vectorSetCommands().vRange(key, start, end));
+		return execute((client)->client.vectorSetCommands().vRange(KeyUtils.rawKey(this, key), start, end));
 	}
 
 	@Override
 	default List<byte[]> vRange(final byte[] key, final byte[] start, final byte[] end) {
-		return execute((client)->client.vectorSetCommands().vRange(key, start, end));
+		return execute((client)->client.vectorSetCommands().vRange(KeyUtils.rawKey(this, key), start, end));
 	}
 
 	@Override
 	default List<String> vRange(final String key, final String start, final String end, final int count) {
-		return execute((client)->client.vectorSetCommands().vRange(key, start, end, count));
+		return execute((client)->client.vectorSetCommands().vRange(KeyUtils.rawKey(this, key), start, end, count));
 	}
 
 	@Override
 	default List<byte[]> vRange(final byte[] key, final byte[] start, final byte[] end, final int count) {
-		return execute((client)->client.vectorSetCommands().vRange(key, start, end, count));
+		return execute((client)->client.vectorSetCommands().vRange(KeyUtils.rawKey(this, key), start, end, count));
 	}
 
 	@Override
 	default Status vRem(final String key, final String element) {
-		return execute((client)->client.vectorSetCommands().vRem(key, element));
+		return execute((client)->client.vectorSetCommands().vRem(KeyUtils.rawKey(this, key), element));
 	}
 
 	@Override
 	default Status vRem(final byte[] key, final byte[] element) {
-		return execute((client)->client.vectorSetCommands().vRem(key, element));
+		return execute((client)->client.vectorSetCommands().vRem(KeyUtils.rawKey(this, key), element));
 	}
 
 	@Override
 	default Status vSetAttr(final String key, final String element, final String value) {
-		return execute((client)->client.vectorSetCommands().vSetAttr(key, element, value));
+		return execute((client)->client.vectorSetCommands().vSetAttr(KeyUtils.rawKey(this, key), element, value));
 	}
 
 	@Override
 	default Status vSetAttr(final byte[] key, final byte[] element, final byte[] value) {
-		return execute((client)->client.vectorSetCommands().vSetAttr(key, element, value));
+		return execute((client)->client.vectorSetCommands().vSetAttr(KeyUtils.rawKey(this, key), element, value));
 	}
 
 	@Override
 	default List<String> vSim(final String key, final double... vectors) {
-		return execute((client)->client.vectorSetCommands().vSim(key, vectors));
+		return execute((client)->client.vectorSetCommands().vSim(KeyUtils.rawKey(this, key), vectors));
 	}
 
 	@Override
 	default List<byte[]> vSim(final byte[] key, final double... vectors) {
-		return execute((client)->client.vectorSetCommands().vSim(key, vectors));
+		return execute((client)->client.vectorSetCommands().vSim(KeyUtils.rawKey(this, key), vectors));
 	}
 
 	@Override
 	default List<String> vSim(final String key, final String element) {
-		return execute((client)->client.vectorSetCommands().vSim(key, element));
+		return execute((client)->client.vectorSetCommands().vSim(KeyUtils.rawKey(this, key), element));
 	}
 
 	@Override
 	default List<byte[]> vSim(final byte[] key, final byte[] element) {
-		return execute((client)->client.vectorSetCommands().vSim(key, element));
+		return execute((client)->client.vectorSetCommands().vSim(KeyUtils.rawKey(this, key), element));
 	}
 
 	@Override
 	default List<String> vSim(final String key, final double[] vectors, final VSimArgument argument) {
-		return execute((client)->client.vectorSetCommands().vSim(key, vectors, argument));
+		return execute((client)->client.vectorSetCommands().vSim(KeyUtils.rawKey(this, key), vectors, argument));
 	}
 
 	@Override
 	default List<byte[]> vSim(final byte[] key, final double[] vectors, final VSimArgument argument) {
-		return execute((client)->client.vectorSetCommands().vSim(key, vectors, argument));
+		return execute((client)->client.vectorSetCommands().vSim(KeyUtils.rawKey(this, key), vectors, argument));
 	}
 
 	@Override
 	default List<String> vSim(final String key, final double[] vectors, final VSimArgument argument, final int count) {
-		return execute((client)->client.vectorSetCommands().vSim(key, vectors, argument, count));
+		return execute((client)->client.vectorSetCommands().vSim(KeyUtils.rawKey(this, key), vectors, argument, count));
 	}
 
 	@Override
 	default List<byte[]> vSim(final byte[] key, final double[] vectors, final VSimArgument argument, final int count) {
-		return execute((client)->client.vectorSetCommands().vSim(key, vectors, argument, count));
+		return execute((client)->client.vectorSetCommands().vSim(KeyUtils.rawKey(this, key), vectors, argument, count));
 	}
 
 	@Override
 	default List<String> vSim(final String key, final double[] vectors, final int count) {
-		return execute((client)->client.vectorSetCommands().vSim(key, vectors, count));
+		return execute((client)->client.vectorSetCommands().vSim(KeyUtils.rawKey(this, key), vectors, count));
 	}
 
 	@Override
 	default List<byte[]> vSim(final byte[] key, final double[] vectors, final int count) {
-		return execute((client)->client.vectorSetCommands().vSim(key, vectors, count));
+		return execute((client)->client.vectorSetCommands().vSim(KeyUtils.rawKey(this, key), vectors, count));
 	}
 
 	@Override
 	default List<String> vSim(final String key, final String element, final VSimArgument argument) {
-		return execute((client)->client.vectorSetCommands().vSim(key, element, argument));
+		return execute((client)->client.vectorSetCommands().vSim(KeyUtils.rawKey(this, key), element, argument));
 	}
 
 	@Override
 	default List<byte[]> vSim(final byte[] key, final byte[] element, final VSimArgument argument) {
-		return execute((client)->client.vectorSetCommands().vSim(key, element, argument));
+		return execute((client)->client.vectorSetCommands().vSim(KeyUtils.rawKey(this, key), element, argument));
 	}
 
 	@Override
 	default List<String> vSim(final String key, final String element, final VSimArgument argument, final int count) {
-		return execute((client)->client.vectorSetCommands().vSim(key, element, argument, count));
+		return execute((client)->client.vectorSetCommands().vSim(KeyUtils.rawKey(this, key), element, argument, count));
 	}
 
 	@Override
 	default List<byte[]> vSim(final byte[] key, final byte[] element, final VSimArgument argument, final int count) {
-		return execute((client)->client.vectorSetCommands().vSim(key, element, argument, count));
+		return execute((client)->client.vectorSetCommands().vSim(KeyUtils.rawKey(this, key), element, argument, count));
 	}
 
 	@Override
 	default List<String> vSim(final String key, final String element, final int count) {
-		return execute((client)->client.vectorSetCommands().vSim(key, element, count));
+		return execute((client)->client.vectorSetCommands().vSim(KeyUtils.rawKey(this, key), element, count));
 	}
 
 	@Override
 	default List<byte[]> vSim(final byte[] key, final byte[] element, final int count) {
-		return execute((client)->client.vectorSetCommands().vSim(key, element, count));
+		return execute((client)->client.vectorSetCommands().vSim(KeyUtils.rawKey(this, key), element, count));
 	}
 
 	@Override
 	default Map<String, Double> vSimWithScores(final String key, final double... vectors) {
-		return execute((client)->client.vectorSetCommands().vSimWithScores(key, vectors));
+		return execute((client)->client.vectorSetCommands().vSimWithScores(KeyUtils.rawKey(this, key), vectors));
 	}
 
 	@Override
 	default Map<byte[], Double> vSimWithScores(final byte[] key, final double... vectors) {
-		return execute((client)->client.vectorSetCommands().vSimWithScores(key, vectors));
+		return execute((client)->client.vectorSetCommands().vSimWithScores(KeyUtils.rawKey(this, key), vectors));
 	}
 
 	@Override
 	default Map<String, Double> vSimWithScores(final String key, final String element) {
-		return execute((client)->client.vectorSetCommands().vSimWithScores(key, element));
+		return execute((client)->client.vectorSetCommands().vSimWithScores(KeyUtils.rawKey(this, key), element));
 	}
 
 	@Override
 	default Map<byte[], Double> vSimWithScores(final byte[] key, final byte[] element) {
-		return execute((client)->client.vectorSetCommands().vSimWithScores(key, element));
+		return execute((client)->client.vectorSetCommands().vSimWithScores(KeyUtils.rawKey(this, key), element));
 	}
 
 	@Override
 	default Map<String, Double> vSimWithScores(final String key, final double[] vectors, final VSimArgument argument) {
-		return execute((client)->client.vectorSetCommands().vSimWithScores(key, vectors, argument));
+		return execute(
+				(client)->client.vectorSetCommands().vSimWithScores(KeyUtils.rawKey(this, key), vectors, argument));
 	}
 
 	@Override
 	default Map<byte[], Double> vSimWithScores(final byte[] key, final double[] vectors, final VSimArgument argument) {
-		return execute((client)->client.vectorSetCommands().vSimWithScores(key, vectors, argument));
+		return execute(
+				(client)->client.vectorSetCommands().vSimWithScores(KeyUtils.rawKey(this, key), vectors, argument));
 	}
 
 	@Override
 	default Map<String, Double> vSimWithScores(final String key, final double[] vectors, final VSimArgument argument,
-											   final int count) {
-		return execute((client)->client.vectorSetCommands().vSimWithScores(key, vectors, argument, count));
+	                                           final int count) {
+		return execute((client)->client.vectorSetCommands()
+				.vSimWithScores(KeyUtils.rawKey(this, key), vectors, argument, count));
 	}
 
 	@Override
 	default Map<byte[], Double> vSimWithScores(final byte[] key, final double[] vectors, final VSimArgument argument,
-											   final int count) {
-		return execute((client)->client.vectorSetCommands().vSimWithScores(key, vectors, argument, count));
+	                                           final int count) {
+		return execute((client)->client.vectorSetCommands()
+				.vSimWithScores(KeyUtils.rawKey(this, key), vectors, argument, count));
 	}
 
 	@Override
 	default Map<String, Double> vSimWithScores(final String key, final double[] vectors, final int count) {
-		return execute((client)->client.vectorSetCommands().vSimWithScores(key, vectors, count));
+		return execute((client)->client.vectorSetCommands().vSimWithScores(KeyUtils.rawKey(this, key), vectors, count));
 	}
 
 	@Override
 	default Map<byte[], Double> vSimWithScores(final byte[] key, final double[] vectors, final int count) {
-		return execute((client)->client.vectorSetCommands().vSimWithScores(key, vectors, count));
+		return execute((client)->client.vectorSetCommands().vSimWithScores(KeyUtils.rawKey(this, key), vectors, count));
 	}
 
 	@Override
 	default Map<String, Double> vSimWithScores(final String key, final String element, final VSimArgument argument) {
-		return execute((client)->client.vectorSetCommands().vSimWithScores(key, element, argument));
+		return execute(
+				(client)->client.vectorSetCommands().vSimWithScores(KeyUtils.rawKey(this, key), element, argument));
 	}
 
 	@Override
 	default Map<byte[], Double> vSimWithScores(final byte[] key, final byte[] element, final VSimArgument argument) {
-		return execute((client)->client.vectorSetCommands().vSimWithScores(key, element, argument));
+		return execute(
+				(client)->client.vectorSetCommands().vSimWithScores(KeyUtils.rawKey(this, key), element, argument));
 	}
 
 	@Override
 	default Map<String, Double> vSimWithScores(final String key, final String element, final VSimArgument argument,
-											   final int count) {
-		return execute((client)->client.vectorSetCommands().vSimWithScores(key, element, argument, count));
+	                                           final int count) {
+		return execute((client)->client.vectorSetCommands()
+				.vSimWithScores(KeyUtils.rawKey(this, key), element, argument, count));
 	}
 
 	@Override
 	default Map<byte[], Double> vSimWithScores(final byte[] key, final byte[] element, final VSimArgument argument,
-											   final int count) {
-		return execute((client)->client.vectorSetCommands().vSimWithScores(key, element, argument, count));
+	                                           final int count) {
+		return execute((client)->client.vectorSetCommands()
+				.vSimWithScores(KeyUtils.rawKey(this, key), element, argument, count));
 	}
 
 	@Override
 	default Map<String, Double> vSimWithScores(final String key, final String element, final int count) {
-		return execute((client)->client.vectorSetCommands().vSimWithScores(key, element, count));
+		return execute((client)->client.vectorSetCommands().vSimWithScores(KeyUtils.rawKey(this, key), element, count));
 	}
 
 	@Override
 	default Map<byte[], Double> vSimWithScores(final byte[] key, final byte[] element, final int count) {
-		return execute((client)->client.vectorSetCommands().vSimWithScores(key, element, count));
+		return execute((client)->client.vectorSetCommands().vSimWithScores(KeyUtils.rawKey(this, key), element, count));
 	}
 
 	@Override
 	default Map<String, VSimScoreAttribs> vSimWithScoresWithAttribs(final String key, final double... vectors) {
-		return execute((client)->client.vectorSetCommands().vSimWithScoresWithAttribs(key, vectors));
+		return execute(
+				(client)->client.vectorSetCommands().vSimWithScoresWithAttribs(KeyUtils.rawKey(this, key), vectors));
 	}
 
 	@Override
 	default Map<byte[], VSimScoreAttribs> vSimWithScoresWithAttribs(final byte[] key, final double... vectors) {
-		return execute((client)->client.vectorSetCommands().vSimWithScoresWithAttribs(key, vectors));
+		return execute(
+				(client)->client.vectorSetCommands().vSimWithScoresWithAttribs(KeyUtils.rawKey(this, key), vectors));
 	}
 
 	@Override
 	default Map<String, VSimScoreAttribs> vSimWithScoresWithAttribs(final String key, final String element) {
-		return execute((client)->client.vectorSetCommands().vSimWithScoresWithAttribs(key, element));
+		return execute(
+				(client)->client.vectorSetCommands().vSimWithScoresWithAttribs(KeyUtils.rawKey(this, key), element));
 	}
 
 	@Override
 	default Map<byte[], VSimScoreAttribs> vSimWithScoresWithAttribs(final byte[] key, final byte[] element) {
-		return execute((client)->client.vectorSetCommands().vSimWithScoresWithAttribs(key, element));
+		return execute(
+				(client)->client.vectorSetCommands().vSimWithScoresWithAttribs(KeyUtils.rawKey(this, key), element));
 	}
 
 	@Override
 	default Map<String, VSimScoreAttribs> vSimWithScoresWithAttribs(final String key, final double[] vectors,
-																	final VSimArgument argument) {
-		return execute((client)->client.vectorSetCommands().vSimWithScoresWithAttribs(key, vectors, argument));
+	                                                                final VSimArgument argument) {
+		return execute((client)->client.vectorSetCommands()
+				.vSimWithScoresWithAttribs(KeyUtils.rawKey(this, key), vectors, argument));
 	}
 
 	@Override
 	default Map<byte[], VSimScoreAttribs> vSimWithScoresWithAttribs(final byte[] key, final double[] vectors,
-																	final VSimArgument argument) {
-		return execute((client)->client.vectorSetCommands().vSimWithScoresWithAttribs(key, vectors, argument));
+	                                                                final VSimArgument argument) {
+		return execute((client)->client.vectorSetCommands()
+				.vSimWithScoresWithAttribs(KeyUtils.rawKey(this, key), vectors, argument));
 	}
 
 	@Override
 	default Map<String, VSimScoreAttribs> vSimWithScoresWithAttribs(final String key, final double[] vectors,
-																	final VSimArgument argument, final int count) {
-		return execute((client)->client.vectorSetCommands().vSimWithScoresWithAttribs(key, vectors, argument, count));
+	                                                                final VSimArgument argument, final int count) {
+		return execute((client)->client.vectorSetCommands()
+				.vSimWithScoresWithAttribs(KeyUtils.rawKey(this, key), vectors, argument, count));
 	}
 
 	@Override
 	default Map<byte[], VSimScoreAttribs> vSimWithScoresWithAttribs(final byte[] key, final double[] vectors,
-																	final VSimArgument argument, final int count) {
-		return execute((client)->client.vectorSetCommands().vSimWithScoresWithAttribs(key, vectors, argument, count));
+	                                                                final VSimArgument argument, final int count) {
+		return execute((client)->client.vectorSetCommands()
+				.vSimWithScoresWithAttribs(KeyUtils.rawKey(this, key), vectors, argument, count));
 	}
 
 	@Override
 	default Map<String, VSimScoreAttribs> vSimWithScoresWithAttribs(final String key, final double[] vectors,
-																	final int count) {
-		return execute((client)->client.vectorSetCommands().vSimWithScoresWithAttribs(key, vectors, count));
+	                                                                final int count) {
+		return execute((client)->client.vectorSetCommands()
+				.vSimWithScoresWithAttribs(KeyUtils.rawKey(this, key), vectors, count));
 	}
 
 	@Override
 	default Map<byte[], VSimScoreAttribs> vSimWithScoresWithAttribs(final byte[] key, final double[] vectors,
-																	final int count) {
-		return execute((client)->client.vectorSetCommands().vSimWithScoresWithAttribs(key, vectors, count));
+	                                                                final int count) {
+		return execute((client)->client.vectorSetCommands()
+				.vSimWithScoresWithAttribs(KeyUtils.rawKey(this, key), vectors, count));
 	}
 
 	@Override
 	default Map<String, VSimScoreAttribs> vSimWithScoresWithAttribs(final String key, final String element,
-																	final VSimArgument argument) {
-		return execute((client)->client.vectorSetCommands().vSimWithScoresWithAttribs(key, element, argument));
+	                                                                final VSimArgument argument) {
+		return execute((client)->client.vectorSetCommands()
+				.vSimWithScoresWithAttribs(KeyUtils.rawKey(this, key), element, argument));
 	}
 
 	@Override
 	default Map<byte[], VSimScoreAttribs> vSimWithScoresWithAttribs(final byte[] key, final byte[] element,
-																	final VSimArgument argument) {
-		return execute((client)->client.vectorSetCommands().vSimWithScoresWithAttribs(key, element, argument));
+	                                                                final VSimArgument argument) {
+		return execute((client)->client.vectorSetCommands()
+				.vSimWithScoresWithAttribs(KeyUtils.rawKey(this, key), element, argument));
 	}
 
 	@Override
 	default Map<String, VSimScoreAttribs> vSimWithScoresWithAttribs(final String key, final String element,
-																	final VSimArgument argument, final int count) {
-		return execute((client)->client.vectorSetCommands().vSimWithScoresWithAttribs(key, element, argument, count));
+	                                                                final VSimArgument argument, final int count) {
+		return execute((client)->client.vectorSetCommands()
+				.vSimWithScoresWithAttribs(KeyUtils.rawKey(this, key), element, argument, count));
 	}
 
 	@Override
 	default Map<byte[], VSimScoreAttribs> vSimWithScoresWithAttribs(final byte[] key, final byte[] element,
-																	final VSimArgument argument, final int count) {
-		return execute((client)->client.vectorSetCommands().vSimWithScoresWithAttribs(key, element, argument, count));
+	                                                                final VSimArgument argument, final int count) {
+		return execute((client)->client.vectorSetCommands()
+				.vSimWithScoresWithAttribs(KeyUtils.rawKey(this, key), element, argument, count));
 	}
 
 	@Override
 	default Map<String, VSimScoreAttribs> vSimWithScoresWithAttribs(final String key, final String element,
-																	final int count) {
-		return execute((client)->client.vectorSetCommands().vSimWithScoresWithAttribs(key, element, count));
+	                                                                final int count) {
+		return execute((client)->client.vectorSetCommands()
+				.vSimWithScoresWithAttribs(KeyUtils.rawKey(this, key), element, count));
 	}
 
 	@Override
 	default Map<byte[], VSimScoreAttribs> vSimWithScoresWithAttribs(final byte[] key, final byte[] element,
-																	final int count) {
-		return execute((client)->client.vectorSetCommands().vSimWithScoresWithAttribs(key, element, count));
+	                                                                final int count) {
+		return execute((client)->client.vectorSetCommands()
+				.vSimWithScoresWithAttribs(KeyUtils.rawKey(this, key), element, count));
 	}
 
 }

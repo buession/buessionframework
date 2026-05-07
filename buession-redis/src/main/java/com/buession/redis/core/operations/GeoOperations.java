@@ -33,6 +33,7 @@ import com.buession.redis.core.command.args.NxXx;
 import com.buession.redis.core.command.GeoCommands;
 import com.buession.redis.core.command.args.geo.GeoRadiusArgument;
 import com.buession.redis.core.command.args.geo.GeoSearchArgument;
+import com.buession.redis.utils.KeyUtils;
 
 import java.util.List;
 
@@ -48,13 +49,13 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	@SuppressWarnings({"unchecked"})
 	@Override
 	default Long geoAdd(final String key, final KeyValue<String, Geo>... memberCoordinates) {
-		return execute((client)->client.geoCommands().geoAdd(key, memberCoordinates));
+		return execute((client)->client.geoCommands().geoAdd(KeyUtils.rawKey(this, key), memberCoordinates));
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	default Long geoAdd(final byte[] key, final KeyValue<byte[], Geo>... memberCoordinates) {
-		return execute((client)->client.geoCommands().geoAdd(key, memberCoordinates));
+		return execute((client)->client.geoCommands().geoAdd(KeyUtils.rawKey(this, key), memberCoordinates));
 	}
 
 	/**
@@ -138,13 +139,13 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	@SuppressWarnings({"unchecked"})
 	@Override
 	default Long geoAdd(final String key, final NxXx nxXx, final KeyValue<String, Geo>... memberCoordinates) {
-		return execute((client)->client.geoCommands().geoAdd(key, nxXx, memberCoordinates));
+		return execute((client)->client.geoCommands().geoAdd(KeyUtils.rawKey(this, key), nxXx, memberCoordinates));
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	default Long geoAdd(final byte[] key, final NxXx nxXx, final KeyValue<byte[], Geo>... memberCoordinates) {
-		return execute((client)->client.geoCommands().geoAdd(key, nxXx, memberCoordinates));
+		return execute((client)->client.geoCommands().geoAdd(KeyUtils.rawKey(this, key), nxXx, memberCoordinates));
 	}
 
 	/**
@@ -166,7 +167,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
 	 */
 	default Long geoAdd(final String key, final NxXx nxXx, final String member, final double longitude,
-						final double latitude) {
+	                    final double latitude) {
 		return geoAdd(key, nxXx, member, new Geo(longitude, latitude));
 	}
 
@@ -189,7 +190,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
 	 */
 	default Long geoAdd(final byte[] key, final NxXx nxXx, final byte[] member, final double longitude,
-						final double latitude) {
+	                    final double latitude) {
 		return geoAdd(key, nxXx, member, new Geo(longitude, latitude));
 	}
 
@@ -238,15 +239,15 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	@SuppressWarnings({"unchecked"})
 	@Override
 	default Long geoAdd(final String key, final NxXx nxXx, final boolean ch,
-						final KeyValue<String, Geo>... memberCoordinates) {
-		return execute((client)->client.geoCommands().geoAdd(key, nxXx, ch, memberCoordinates));
+	                    final KeyValue<String, Geo>... memberCoordinates) {
+		return execute((client)->client.geoCommands().geoAdd(KeyUtils.rawKey(this, key), nxXx, ch, memberCoordinates));
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	default Long geoAdd(final byte[] key, final NxXx nxXx, final boolean ch,
-						final KeyValue<byte[], Geo>... memberCoordinates) {
-		return execute((client)->client.geoCommands().geoAdd(key, nxXx, ch, memberCoordinates));
+	                    final KeyValue<byte[], Geo>... memberCoordinates) {
+		return execute((client)->client.geoCommands().geoAdd(KeyUtils.rawKey(this, key), nxXx, ch, memberCoordinates));
 	}
 
 	/**
@@ -270,7 +271,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
 	 */
 	default Long geoAdd(final String key, final NxXx nxXx, final boolean ch, final String member,
-						final double longitude, final double latitude) {
+	                    final double longitude, final double latitude) {
 		return geoAdd(key, nxXx, ch, member, new Geo(longitude, latitude));
 	}
 
@@ -295,7 +296,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
 	 */
 	default Long geoAdd(final byte[] key, final NxXx nxXx, final boolean ch, final byte[] member,
-						final double longitude, final double latitude) {
+	                    final double longitude, final double latitude) {
 		return geoAdd(key, nxXx, ch, member, new Geo(longitude, latitude));
 	}
 
@@ -348,13 +349,13 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	@SuppressWarnings({"unchecked"})
 	@Override
 	default Long geoAdd(final String key, final boolean ch, final KeyValue<String, Geo>... memberCoordinates) {
-		return execute((client)->client.geoCommands().geoAdd(key, ch, memberCoordinates));
+		return execute((client)->client.geoCommands().geoAdd(KeyUtils.rawKey(this, key), ch, memberCoordinates));
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	default Long geoAdd(final byte[] key, final boolean ch, final KeyValue<byte[], Geo>... memberCoordinates) {
-		return execute((client)->client.geoCommands().geoAdd(key, ch, memberCoordinates));
+		return execute((client)->client.geoCommands().geoAdd(KeyUtils.rawKey(this, key), ch, memberCoordinates));
 	}
 
 	/**
@@ -376,7 +377,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
 	 */
 	default Long geoAdd(final String key, final boolean ch, final String member, final double longitude,
-						final double latitude) {
+	                    final double latitude) {
 		return geoAdd(key, ch, member, new Geo(longitude, latitude));
 	}
 
@@ -399,7 +400,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
 	 */
 	default Long geoAdd(final byte[] key, final boolean ch, final byte[] member, final double longitude,
-						final double latitude) {
+	                    final double latitude) {
 		return geoAdd(key, ch, member, new Geo(longitude, latitude));
 	}
 
@@ -447,54 +448,56 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 
 	@Override
 	default Double geoDist(final String key, final String member1, final String member2) {
-		return execute((client)->client.geoCommands().geoDist(key, member1, member2));
+		return execute((client)->client.geoCommands().geoDist(KeyUtils.rawKey(this, key), member1, member2));
 	}
 
 	@Override
 	default Double geoDist(final byte[] key, final byte[] member1, final byte[] member2) {
-		return execute((client)->client.geoCommands().geoDist(key, member1, member2));
+		return execute((client)->client.geoCommands().geoDist(KeyUtils.rawKey(this, key), member1, member2));
 	}
 
 	@Override
 	default Double geoDist(final String key, final String member1, final String member2, final GeoUnit unit) {
-		return execute((client)->client.geoCommands().geoDist(key, member1, member2, unit));
+		return execute((client)->client.geoCommands().geoDist(KeyUtils.rawKey(this, key), member1, member2, unit));
 	}
 
 	@Override
 	default Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit) {
-		return execute((client)->client.geoCommands().geoDist(key, member1, member2, unit));
+		return execute((client)->client.geoCommands().geoDist(KeyUtils.rawKey(this, key), member1, member2, unit));
 	}
 
 	@Override
 	default List<String> geoHash(final String key, final String... members) {
-		return execute((client)->client.geoCommands().geoHash(key, members));
+		return execute((client)->client.geoCommands().geoHash(KeyUtils.rawKey(this, key), members));
 	}
 
 	@Override
 	default List<byte[]> geoHash(final byte[] key, final byte[]... members) {
-		return execute((client)->client.geoCommands().geoHash(key, members));
+		return execute((client)->client.geoCommands().geoHash(KeyUtils.rawKey(this, key), members));
 	}
 
 	@Override
 	default List<Geo> geoPos(final String key, final String... members) {
-		return execute((client)->client.geoCommands().geoPos(key, members));
+		return execute((client)->client.geoCommands().geoPos(KeyUtils.rawKey(this, key), members));
 	}
 
 	@Override
 	default List<Geo> geoPos(final byte[] key, final byte[]... members) {
-		return execute((client)->client.geoCommands().geoPos(key, members));
+		return execute((client)->client.geoCommands().geoPos(KeyUtils.rawKey(this, key), members));
 	}
 
 	@Override
 	default List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-									  final double radius, final GeoUnit unit) {
-		return execute((client)->client.geoCommands().geoRadius(key, longitude, latitude, radius, unit));
+	                                  final double radius, final GeoUnit unit) {
+		return execute((client)->client.geoCommands()
+				.geoRadius(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit));
 	}
 
 	@Override
 	default List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-									  final double radius, final GeoUnit unit) {
-		return execute((client)->client.geoCommands().geoRadius(key, longitude, latitude, radius, unit));
+	                                  final double radius, final GeoUnit unit) {
+		return execute((client)->client.geoCommands()
+				.geoRadius(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit));
 	}
 
 	/**
@@ -539,14 +542,16 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 
 	@Override
 	default List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-									  final double radius, final GeoUnit unit, final GeoRadiusArgument argument) {
-		return execute((client)->client.geoCommands().geoRadius(key, longitude, latitude, radius, unit, argument));
+	                                  final double radius, final GeoUnit unit, final GeoRadiusArgument argument) {
+		return execute((client)->client.geoCommands()
+				.geoRadius(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit, argument));
 	}
 
 	@Override
 	default List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-									  final double radius, final GeoUnit unit, final GeoRadiusArgument argument) {
-		return execute((client)->client.geoCommands().geoRadius(key, longitude, latitude, radius, unit, argument));
+	                                  final double radius, final GeoUnit unit, final GeoRadiusArgument argument) {
+		return execute((client)->client.geoCommands()
+				.geoRadius(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit, argument));
 	}
 
 	/**
@@ -568,7 +573,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadius(final String key, final Geo geo, final double radius, final GeoUnit unit,
-									  final GeoRadiusArgument argument) {
+	                                  final GeoRadiusArgument argument) {
 		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, unit, argument);
 	}
 
@@ -591,24 +596,24 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadius(final byte[] key, final Geo geo, final double radius, final GeoUnit unit,
-									  final GeoRadiusArgument argument) {
+	                                  final GeoRadiusArgument argument) {
 		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, unit, argument);
 	}
 
 	@Override
 	default List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-									  final double radius, final GeoUnit unit, final GeoRadiusArgument argument,
-									  final int count) {
-		return execute(
-				(client)->client.geoCommands().geoRadius(key, longitude, latitude, radius, unit, argument, count));
+	                                  final double radius, final GeoUnit unit, final GeoRadiusArgument argument,
+	                                  final int count) {
+		return execute((client)->client.geoCommands()
+				.geoRadius(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit, argument, count));
 	}
 
 	@Override
 	default List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-									  final double radius, final GeoUnit unit, final GeoRadiusArgument argument,
-									  final int count) {
-		return execute(
-				(client)->client.geoCommands().geoRadius(key, longitude, latitude, radius, unit, argument, count));
+	                                  final double radius, final GeoUnit unit, final GeoRadiusArgument argument,
+	                                  final int count) {
+		return execute((client)->client.geoCommands()
+				.geoRadius(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit, argument, count));
 	}
 
 	/**
@@ -632,7 +637,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadius(final String key, final Geo geo, final double radius, final GeoUnit unit,
-									  final GeoRadiusArgument argument, final int count) {
+	                                  final GeoRadiusArgument argument, final int count) {
 		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, unit, argument, count);
 	}
 
@@ -657,24 +662,24 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadius(final byte[] key, final Geo geo, final double radius, final GeoUnit unit,
-									  final GeoRadiusArgument argument, final int count) {
+	                                  final GeoRadiusArgument argument, final int count) {
 		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, unit, argument, count);
 	}
 
 	@Override
 	default List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-									  final double radius, final GeoUnit unit, final GeoRadiusArgument argument,
-									  final int count, final boolean any) {
-		return execute(
-				(client)->client.geoCommands().geoRadius(key, longitude, latitude, radius, unit, argument, count, any));
+	                                  final double radius, final GeoUnit unit, final GeoRadiusArgument argument,
+	                                  final int count, final boolean any) {
+		return execute((client)->client.geoCommands()
+				.geoRadius(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit, argument, count, any));
 	}
 
 	@Override
 	default List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-									  final double radius, final GeoUnit unit, final GeoRadiusArgument argument,
-									  final int count, final boolean any) {
-		return execute(
-				(client)->client.geoCommands().geoRadius(key, longitude, latitude, radius, unit, argument, count, any));
+	                                  final double radius, final GeoUnit unit, final GeoRadiusArgument argument,
+	                                  final int count, final boolean any) {
+		return execute((client)->client.geoCommands()
+				.geoRadius(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit, argument, count, any));
 	}
 
 	/**
@@ -700,7 +705,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadius(final String key, final Geo geo, final double radius, final GeoUnit unit,
-									  final GeoRadiusArgument argument, final int count, final boolean any) {
+	                                  final GeoRadiusArgument argument, final int count, final boolean any) {
 		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, unit, argument, count, any);
 	}
 
@@ -727,20 +732,22 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadius(final byte[] key, final Geo geo, final double radius, final GeoUnit unit,
-									  final GeoRadiusArgument argument, final int count, final boolean any) {
+	                                  final GeoRadiusArgument argument, final int count, final boolean any) {
 		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, unit, argument, count, any);
 	}
 
 	@Override
 	default List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-									  final double radius, final GeoUnit unit, final int count) {
-		return execute((client)->client.geoCommands().geoRadius(key, longitude, latitude, radius, unit, count));
+	                                  final double radius, final GeoUnit unit, final int count) {
+		return execute((client)->client.geoCommands()
+				.geoRadius(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit, count));
 	}
 
 	@Override
 	default List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-									  final double radius, final GeoUnit unit, final int count) {
-		return execute((client)->client.geoCommands().geoRadius(key, longitude, latitude, radius, unit, count));
+	                                  final double radius, final GeoUnit unit, final int count) {
+		return execute((client)->client.geoCommands()
+				.geoRadius(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit, count));
 	}
 
 	/**
@@ -762,7 +769,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadius(final String key, final Geo geo, final double radius, final GeoUnit unit,
-									  final int count) {
+	                                  final int count) {
 		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, unit, count);
 	}
 
@@ -785,20 +792,22 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadius(final byte[] key, final Geo geo, final double radius, final GeoUnit unit,
-									  final int count) {
+	                                  final int count) {
 		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, unit, count);
 	}
 
 	@Override
 	default List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-									  final double radius, final GeoUnit unit, final int count, final boolean any) {
-		return execute((client)->client.geoCommands().geoRadius(key, longitude, latitude, radius, unit, count, any));
+	                                  final double radius, final GeoUnit unit, final int count, final boolean any) {
+		return execute((client)->client.geoCommands()
+				.geoRadius(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit, count, any));
 	}
 
 	@Override
 	default List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-									  final double radius, final GeoUnit unit, final int count, final boolean any) {
-		return execute((client)->client.geoCommands().geoRadius(key, longitude, latitude, radius, unit, count, any));
+	                                  final double radius, final GeoUnit unit, final int count, final boolean any) {
+		return execute((client)->client.geoCommands()
+				.geoRadius(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit, count, any));
 	}
 
 	/**
@@ -822,7 +831,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadius(final String key, final Geo geo, final double radius, final GeoUnit unit,
-									  final int count, final boolean any) {
+	                                  final int count, final boolean any) {
 		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, unit, count, any);
 	}
 
@@ -847,22 +856,22 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadius(final byte[] key, final Geo geo, final double radius, final GeoUnit unit,
-									  final int count, final boolean any) {
+	                                  final int count, final boolean any) {
 		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, unit, count, any);
 	}
 
 	@Override
 	default Long geoRadius(final String key, final String destKey, final GeoStoreOption storeOption,
-						   final double longitude, final double latitude, final double radius, final GeoUnit unit) {
-		return execute(
-				(client)->client.geoCommands().geoRadius(key, destKey, storeOption, longitude, latitude, radius, unit));
+	                       final double longitude, final double latitude, final double radius, final GeoUnit unit) {
+		return execute((client)->client.geoCommands()
+				.geoRadius(KeyUtils.rawKey(this, key), destKey, storeOption, longitude, latitude, radius, unit));
 	}
 
 	@Override
 	default Long geoRadius(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
-						   final double longitude, final double latitude, final double radius, final GeoUnit unit) {
-		return execute(
-				(client)->client.geoCommands().geoRadius(key, destKey, storeOption, longitude, latitude, radius, unit));
+	                       final double longitude, final double latitude, final double radius, final GeoUnit unit) {
+		return execute((client)->client.geoCommands()
+				.geoRadius(KeyUtils.rawKey(this, key), destKey, storeOption, longitude, latitude, radius, unit));
 	}
 
 	/**
@@ -886,7 +895,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default Long geoRadius(final String key, final String destKey, final GeoStoreOption storeOption, final Geo geo,
-						   final double radius, final GeoUnit unit) {
+	                       final double radius, final GeoUnit unit) {
 		return geoRadius(key, destKey, storeOption, geo.getLongitude(), geo.getLatitude(), radius, unit);
 	}
 
@@ -911,24 +920,26 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default Long geoRadius(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption, final Geo geo,
-						   final double radius, final GeoUnit unit) {
+	                       final double radius, final GeoUnit unit) {
 		return geoRadius(key, destKey, storeOption, geo.getLongitude(), geo.getLatitude(), radius, unit);
 	}
 
 	@Override
 	default Long geoRadius(final String key, final String destKey, final GeoStoreOption storeOption,
-						   final double longitude, final double latitude, final double radius, final GeoUnit unit,
-						   final GeoRadiusArgument argument) {
+	                       final double longitude, final double latitude, final double radius, final GeoUnit unit,
+	                       final GeoRadiusArgument argument) {
 		return execute((client)->client.geoCommands()
-				.geoRadius(key, destKey, storeOption, longitude, latitude, radius, unit, argument));
+				.geoRadius(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey),
+						storeOption, longitude, latitude, radius, unit, argument));
 	}
 
 	@Override
 	default Long geoRadius(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
-						   final double longitude, final double latitude, final double radius, final GeoUnit unit,
-						   final GeoRadiusArgument argument) {
+	                       final double longitude, final double latitude, final double radius, final GeoUnit unit,
+	                       final GeoRadiusArgument argument) {
 		return execute((client)->client.geoCommands()
-				.geoRadius(key, destKey, storeOption, longitude, latitude, radius, unit, argument));
+				.geoRadius(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey),
+						storeOption, longitude, latitude, radius, unit, argument));
 	}
 
 	/**
@@ -954,7 +965,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default Long geoRadius(final String key, final String destKey, final GeoStoreOption storeOption, final Geo geo,
-						   final double radius, final GeoUnit unit, final GeoRadiusArgument argument) {
+	                       final double radius, final GeoUnit unit, final GeoRadiusArgument argument) {
 		return geoRadius(key, destKey, storeOption, geo.getLongitude(), geo.getLatitude(), radius, unit, argument);
 	}
 
@@ -981,24 +992,26 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default Long geoRadius(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption, final Geo geo,
-						   final double radius, final GeoUnit unit, final GeoRadiusArgument argument) {
+	                       final double radius, final GeoUnit unit, final GeoRadiusArgument argument) {
 		return geoRadius(key, destKey, storeOption, geo.getLongitude(), geo.getLatitude(), radius, unit, argument);
 	}
 
 	@Override
 	default Long geoRadius(final String key, final String destKey, final GeoStoreOption storeOption,
-						   final double longitude, final double latitude, final double radius, final GeoUnit unit,
-						   final GeoRadiusArgument argument, final int count) {
+	                       final double longitude, final double latitude, final double radius, final GeoUnit unit,
+	                       final GeoRadiusArgument argument, final int count) {
 		return execute((client)->client.geoCommands()
-				.geoRadius(key, destKey, storeOption, longitude, latitude, radius, unit, argument, count));
+				.geoRadius(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey),
+						storeOption, longitude, latitude, radius, unit, argument, count));
 	}
 
 	@Override
 	default Long geoRadius(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
-						   final double longitude, final double latitude, final double radius, final GeoUnit unit,
-						   final GeoRadiusArgument argument, final int count) {
+	                       final double longitude, final double latitude, final double radius, final GeoUnit unit,
+	                       final GeoRadiusArgument argument, final int count) {
 		return execute((client)->client.geoCommands()
-				.geoRadius(key, destKey, storeOption, longitude, latitude, radius, unit, argument, count));
+				.geoRadius(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey),
+						storeOption, longitude, latitude, radius, unit, argument, count));
 	}
 
 	/**
@@ -1026,7 +1039,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default Long geoRadius(final String key, final String destKey, final GeoStoreOption storeOption, final Geo geo,
-						   final double radius, final GeoUnit unit, final GeoRadiusArgument argument, final int count) {
+	                       final double radius, final GeoUnit unit, final GeoRadiusArgument argument, final int count) {
 		return geoRadius(key, destKey, storeOption, geo.getLongitude(), geo.getLatitude(), radius, unit, argument,
 				count);
 	}
@@ -1056,25 +1069,27 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default Long geoRadius(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption, final Geo geo,
-						   final double radius, final GeoUnit unit, final GeoRadiusArgument argument, final int count) {
+	                       final double radius, final GeoUnit unit, final GeoRadiusArgument argument, final int count) {
 		return geoRadius(key, destKey, storeOption, geo.getLongitude(), geo.getLatitude(), radius, unit, argument,
 				count);
 	}
 
 	@Override
 	default Long geoRadius(final String key, final String destKey, final GeoStoreOption storeOption,
-						   final double longitude, final double latitude, final double radius, final GeoUnit unit,
-						   final GeoRadiusArgument argument, final int count, final boolean any) {
+	                       final double longitude, final double latitude, final double radius, final GeoUnit unit,
+	                       final GeoRadiusArgument argument, final int count, final boolean any) {
 		return execute((client)->client.geoCommands()
-				.geoRadius(key, destKey, storeOption, longitude, latitude, radius, unit, argument, count, any));
+				.geoRadius(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey),
+						storeOption, longitude, latitude, radius, unit, argument, count, any));
 	}
 
 	@Override
 	default Long geoRadius(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
-						   final double longitude, final double latitude, final double radius, final GeoUnit unit,
-						   final GeoRadiusArgument argument, final int count, final boolean any) {
+	                       final double longitude, final double latitude, final double radius, final GeoUnit unit,
+	                       final GeoRadiusArgument argument, final int count, final boolean any) {
 		return execute((client)->client.geoCommands()
-				.geoRadius(key, destKey, storeOption, longitude, latitude, radius, unit, argument, count, any));
+				.geoRadius(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey),
+						storeOption, longitude, latitude, radius, unit, argument, count, any));
 	}
 
 	/**
@@ -1104,8 +1119,8 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default Long geoRadius(final String key, final String destKey, final GeoStoreOption storeOption, final Geo geo,
-						   final double radius, final GeoUnit unit, final GeoRadiusArgument argument, final int count,
-						   final boolean any) {
+	                       final double radius, final GeoUnit unit, final GeoRadiusArgument argument, final int count,
+	                       final boolean any) {
 		return geoRadius(key, destKey, storeOption, geo.getLongitude(), geo.getLatitude(), radius, unit, argument,
 				count, any);
 	}
@@ -1137,26 +1152,28 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default Long geoRadius(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption, final Geo geo,
-						   final double radius, final GeoUnit unit, final GeoRadiusArgument argument, final int count,
-						   final boolean any) {
+	                       final double radius, final GeoUnit unit, final GeoRadiusArgument argument, final int count,
+	                       final boolean any) {
 		return geoRadius(key, destKey, storeOption, geo.getLongitude(), geo.getLatitude(), radius, unit, argument,
 				count, any);
 	}
 
 	@Override
 	default Long geoRadius(final String key, final String destKey, final GeoStoreOption storeOption,
-						   final double longitude, final double latitude, final double radius, final GeoUnit unit,
-						   final int count) {
+	                       final double longitude, final double latitude, final double radius, final GeoUnit unit,
+	                       final int count) {
 		return execute((client)->client.geoCommands()
-				.geoRadius(key, destKey, storeOption, longitude, latitude, radius, unit, count));
+				.geoRadius(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey),
+						storeOption, longitude, latitude, radius, unit, count));
 	}
 
 	@Override
 	default Long geoRadius(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
-						   final double longitude, final double latitude, final double radius, final GeoUnit unit,
-						   final int count) {
+	                       final double longitude, final double latitude, final double radius, final GeoUnit unit,
+	                       final int count) {
 		return execute((client)->client.geoCommands()
-				.geoRadius(key, destKey, storeOption, longitude, latitude, radius, unit, count));
+				.geoRadius(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey),
+						storeOption, longitude, latitude, radius, unit, count));
 	}
 
 	/**
@@ -1182,7 +1199,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default Long geoRadius(final String key, final String destKey, final GeoStoreOption storeOption, final Geo geo,
-						   final double radius, final GeoUnit unit, final int count) {
+	                       final double radius, final GeoUnit unit, final int count) {
 		return geoRadius(key, destKey, storeOption, geo.getLongitude(), geo.getLatitude(), radius, unit, count);
 	}
 
@@ -1209,24 +1226,26 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default Long geoRadius(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption, final Geo geo,
-						   final double radius, final GeoUnit unit, final int count) {
+	                       final double radius, final GeoUnit unit, final int count) {
 		return geoRadius(key, destKey, storeOption, geo.getLongitude(), geo.getLatitude(), radius, unit, count);
 	}
 
 	@Override
 	default Long geoRadius(final String key, final String destKey, final GeoStoreOption storeOption,
-						   final double longitude, final double latitude, final double radius, final GeoUnit unit,
-						   final int count, final boolean any) {
+	                       final double longitude, final double latitude, final double radius, final GeoUnit unit,
+	                       final int count, final boolean any) {
 		return execute((client)->client.geoCommands()
-				.geoRadius(key, destKey, storeOption, longitude, latitude, radius, unit, count, any));
+				.geoRadius(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey),
+						storeOption, longitude, latitude, radius, unit, count, any));
 	}
 
 	@Override
 	default Long geoRadius(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
-						   final double longitude, final double latitude, final double radius, final GeoUnit unit,
-						   final int count, final boolean any) {
+	                       final double longitude, final double latitude, final double radius, final GeoUnit unit,
+	                       final int count, final boolean any) {
 		return execute((client)->client.geoCommands()
-				.geoRadius(key, destKey, storeOption, longitude, latitude, radius, unit, count, any));
+				.geoRadius(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey),
+						storeOption, longitude, latitude, radius, unit, count, any));
 	}
 
 	/**
@@ -1254,7 +1273,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default Long geoRadius(final String key, final String destKey, final GeoStoreOption storeOption, final Geo geo,
-						   final double radius, final GeoUnit unit, final int count, final boolean any) {
+	                       final double radius, final GeoUnit unit, final int count, final boolean any) {
 		return geoRadius(key, destKey, storeOption, geo.getLongitude(), geo.getLatitude(), radius, unit, count, any);
 	}
 
@@ -1283,20 +1302,22 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default Long geoRadius(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption, final Geo geo,
-						   final double radius, final GeoUnit unit, final int count, final boolean any) {
+	                       final double radius, final GeoUnit unit, final int count, final boolean any) {
 		return geoRadius(key, destKey, storeOption, geo.getLongitude(), geo.getLatitude(), radius, unit, count, any);
 	}
 
 	@Override
 	default List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
-										final double radius, final GeoUnit unit) {
-		return execute((client)->client.geoCommands().geoRadiusRo(key, longitude, latitude, radius, unit));
+	                                    final double radius, final GeoUnit unit) {
+		return execute((client)->client.geoCommands()
+				.geoRadiusRo(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit));
 	}
 
 	@Override
 	default List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
-										final double radius, final GeoUnit unit) {
-		return execute((client)->client.geoCommands().geoRadiusRo(key, longitude, latitude, radius, unit));
+	                                    final double radius, final GeoUnit unit) {
+		return execute((client)->client.geoCommands()
+				.geoRadiusRo(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit));
 	}
 
 	/**
@@ -1341,14 +1362,16 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 
 	@Override
 	default List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
-										final double radius, final GeoUnit unit, final GeoRadiusArgument argument) {
-		return execute((client)->client.geoCommands().geoRadiusRo(key, longitude, latitude, radius, unit, argument));
+	                                    final double radius, final GeoUnit unit, final GeoRadiusArgument argument) {
+		return execute((client)->client.geoCommands()
+				.geoRadiusRo(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit, argument));
 	}
 
 	@Override
 	default List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
-										final double radius, final GeoUnit unit, final GeoRadiusArgument argument) {
-		return execute((client)->client.geoCommands().geoRadiusRo(key, longitude, latitude, radius, unit, argument));
+	                                    final double radius, final GeoUnit unit, final GeoRadiusArgument argument) {
+		return execute((client)->client.geoCommands()
+				.geoRadiusRo(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit, argument));
 	}
 
 	/**
@@ -1370,7 +1393,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadiusRo(final String key, final Geo geo, final double radius, final GeoUnit unit,
-										final GeoRadiusArgument argument) {
+	                                    final GeoRadiusArgument argument) {
 		return geoRadiusRo(key, geo.getLongitude(), geo.getLatitude(), radius, unit, argument);
 	}
 
@@ -1393,24 +1416,24 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadiusRo(final byte[] key, final Geo geo, final double radius, final GeoUnit unit,
-										final GeoRadiusArgument argument) {
+	                                    final GeoRadiusArgument argument) {
 		return geoRadiusRo(key, geo.getLongitude(), geo.getLatitude(), radius, unit, argument);
 	}
 
 	@Override
 	default List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
-										final double radius, final GeoUnit unit, final GeoRadiusArgument argument,
-										final int count) {
-		return execute(
-				(client)->client.geoCommands().geoRadiusRo(key, longitude, latitude, radius, unit, argument, count));
+	                                    final double radius, final GeoUnit unit, final GeoRadiusArgument argument,
+	                                    final int count) {
+		return execute((client)->client.geoCommands()
+				.geoRadiusRo(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit, argument, count));
 	}
 
 	@Override
 	default List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
-										final double radius, final GeoUnit unit, final GeoRadiusArgument argument,
-										final int count) {
-		return execute(
-				(client)->client.geoCommands().geoRadiusRo(key, longitude, latitude, radius, unit, argument, count));
+	                                    final double radius, final GeoUnit unit, final GeoRadiusArgument argument,
+	                                    final int count) {
+		return execute((client)->client.geoCommands()
+				.geoRadiusRo(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit, argument, count));
 	}
 
 	/**
@@ -1434,7 +1457,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadiusRo(final String key, final Geo geo, final double radius, final GeoUnit unit,
-										final GeoRadiusArgument argument, final int count) {
+	                                    final GeoRadiusArgument argument, final int count) {
 		return geoRadiusRo(key, geo.getLongitude(), geo.getLatitude(), radius, unit, argument, count);
 	}
 
@@ -1459,24 +1482,24 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadiusRo(final byte[] key, final Geo geo, final double radius, final GeoUnit unit,
-										final GeoRadiusArgument argument, final int count) {
+	                                    final GeoRadiusArgument argument, final int count) {
 		return geoRadiusRo(key, geo.getLongitude(), geo.getLatitude(), radius, unit, argument, count);
 	}
 
 	@Override
 	default List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
-										final double radius, final GeoUnit unit, final GeoRadiusArgument argument,
-										final int count, final boolean any) {
+	                                    final double radius, final GeoUnit unit, final GeoRadiusArgument argument,
+	                                    final int count, final boolean any) {
 		return execute((client)->client.geoCommands()
-				.geoRadiusRo(key, longitude, latitude, radius, unit, argument, count, any));
+				.geoRadiusRo(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit, argument, count, any));
 	}
 
 	@Override
 	default List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
-										final double radius, final GeoUnit unit, final GeoRadiusArgument argument,
-										final int count, final boolean any) {
+	                                    final double radius, final GeoUnit unit, final GeoRadiusArgument argument,
+	                                    final int count, final boolean any) {
 		return execute((client)->client.geoCommands()
-				.geoRadiusRo(key, longitude, latitude, radius, unit, argument, count, any));
+				.geoRadiusRo(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit, argument, count, any));
 	}
 
 	/**
@@ -1502,7 +1525,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadiusRo(final String key, final Geo geo, final double radius, final GeoUnit unit,
-										final GeoRadiusArgument argument, final int count, final boolean any) {
+	                                    final GeoRadiusArgument argument, final int count, final boolean any) {
 		return geoRadiusRo(key, geo.getLongitude(), geo.getLatitude(), radius, unit, argument, count, any);
 	}
 
@@ -1529,20 +1552,22 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadiusRo(final byte[] key, final Geo geo, final double radius, final GeoUnit unit,
-										final GeoRadiusArgument argument, final int count, final boolean any) {
+	                                    final GeoRadiusArgument argument, final int count, final boolean any) {
 		return geoRadiusRo(key, geo.getLongitude(), geo.getLatitude(), radius, unit, argument, count, any);
 	}
 
 	@Override
 	default List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
-										final double radius, final GeoUnit unit, final int count) {
-		return execute((client)->client.geoCommands().geoRadiusRo(key, longitude, latitude, radius, unit, count));
+	                                    final double radius, final GeoUnit unit, final int count) {
+		return execute((client)->client.geoCommands()
+				.geoRadiusRo(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit, count));
 	}
 
 	@Override
 	default List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
-										final double radius, final GeoUnit unit, final int count) {
-		return execute((client)->client.geoCommands().geoRadiusRo(key, longitude, latitude, radius, unit, count));
+	                                    final double radius, final GeoUnit unit, final int count) {
+		return execute((client)->client.geoCommands()
+				.geoRadiusRo(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit, count));
 	}
 
 	/**
@@ -1564,7 +1589,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadiusRo(final String key, final Geo geo, final double radius, final GeoUnit unit,
-										final int count) {
+	                                    final int count) {
 		return geoRadiusRo(key, geo.getLongitude(), geo.getLatitude(), radius, unit, count);
 	}
 
@@ -1587,20 +1612,22 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadiusRo(final byte[] key, final Geo geo, final double radius, final GeoUnit unit,
-										final int count) {
+	                                    final int count) {
 		return geoRadiusRo(key, geo.getLongitude(), geo.getLatitude(), radius, unit, count);
 	}
 
 	@Override
 	default List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
-										final double radius, final GeoUnit unit, final int count, final boolean any) {
-		return execute((client)->client.geoCommands().geoRadiusRo(key, longitude, latitude, radius, unit, count, any));
+	                                    final double radius, final GeoUnit unit, final int count, final boolean any) {
+		return execute((client)->client.geoCommands()
+				.geoRadiusRo(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit, count, any));
 	}
 
 	@Override
 	default List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
-										final double radius, final GeoUnit unit, final int count, final boolean any) {
-		return execute((client)->client.geoCommands().geoRadiusRo(key, longitude, latitude, radius, unit, count, any));
+	                                    final double radius, final GeoUnit unit, final int count, final boolean any) {
+		return execute((client)->client.geoCommands()
+				.geoRadiusRo(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit, count, any));
 	}
 
 	/**
@@ -1624,7 +1651,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadiusRo(final String key, final Geo geo, final double radius, final GeoUnit unit,
-										final int count, final boolean any) {
+	                                    final int count, final boolean any) {
 		return geoRadiusRo(key, geo.getLongitude(), geo.getLatitude(), radius, unit, count, any);
 	}
 
@@ -1649,264 +1676,298 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadiusRo(final byte[] key, final Geo geo, final double radius, final GeoUnit unit,
-										final int count, final boolean any) {
+	                                    final int count, final boolean any) {
 		return geoRadiusRo(key, geo.getLongitude(), geo.getLatitude(), radius, unit, count, any);
 	}
 
 	@Override
 	default List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-											  final GeoUnit unit) {
-		return execute((client)->client.geoCommands().geoRadiusByMember(key, member, radius, unit));
-	}
-
-	@Override
-	default List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-											  final GeoUnit unit) {
-		return execute((client)->client.geoCommands().geoRadiusByMember(key, member, radius, unit));
-	}
-
-	@Override
-	default List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-											  final GeoUnit unit, final GeoRadiusArgument argument) {
-		return execute((client)->client.geoCommands().geoRadiusByMember(key, member, radius, unit, argument));
-	}
-
-	@Override
-	default List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-											  final GeoUnit unit, final GeoRadiusArgument argument) {
-		return execute((client)->client.geoCommands().geoRadiusByMember(key, member, radius, unit, argument));
-	}
-
-	@Override
-	default List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-											  final GeoUnit unit, final GeoRadiusArgument argument, final int count) {
-		return execute((client)->client.geoCommands().geoRadiusByMember(key, member, radius, unit, argument, count));
-	}
-
-	@Override
-	default List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-											  final GeoUnit unit, final GeoRadiusArgument argument, final int count) {
-		return execute((client)->client.geoCommands().geoRadiusByMember(key, member, radius, unit, argument, count));
-	}
-
-	@Override
-	default List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-											  final GeoUnit unit, final GeoRadiusArgument argument, final int count,
-											  final boolean any) {
+	                                          final GeoUnit unit) {
 		return execute(
-				(client)->client.geoCommands().geoRadiusByMember(key, member, radius, unit, argument, count, any));
+				(client)->client.geoCommands().geoRadiusByMember(KeyUtils.rawKey(this, key), member, radius, unit));
 	}
 
 	@Override
 	default List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-											  final GeoUnit unit, final GeoRadiusArgument argument, final int count,
-											  final boolean any) {
+	                                          final GeoUnit unit) {
 		return execute(
-				(client)->client.geoCommands().geoRadiusByMember(key, member, radius, unit, argument, count, any));
+				(client)->client.geoCommands().geoRadiusByMember(KeyUtils.rawKey(this, key), member, radius, unit));
 	}
 
 	@Override
 	default List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-											  final GeoUnit unit, final int count) {
-		return execute((client)->client.geoCommands().geoRadiusByMember(key, member, radius, unit, count));
+	                                          final GeoUnit unit, final GeoRadiusArgument argument) {
+		return execute((client)->client.geoCommands()
+				.geoRadiusByMember(KeyUtils.rawKey(this, key), member, radius, unit, argument));
 	}
 
 	@Override
 	default List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-											  final GeoUnit unit, final int count) {
-		return execute((client)->client.geoCommands().geoRadiusByMember(key, member, radius, unit, count));
+	                                          final GeoUnit unit, final GeoRadiusArgument argument) {
+		return execute((client)->client.geoCommands()
+				.geoRadiusByMember(KeyUtils.rawKey(this, key), member, radius, unit, argument));
 	}
 
 	@Override
 	default List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-											  final GeoUnit unit, final int count, final boolean any) {
-		return execute((client)->client.geoCommands().geoRadiusByMember(key, member, radius, unit, count, any));
+	                                          final GeoUnit unit, final GeoRadiusArgument argument, final int count) {
+		return execute((client)->client.geoCommands()
+				.geoRadiusByMember(KeyUtils.rawKey(this, key), member, radius, unit, argument, count));
 	}
 
 	@Override
 	default List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-											  final GeoUnit unit, final int count, final boolean any) {
-		return execute((client)->client.geoCommands().geoRadiusByMember(key, member, radius, unit, count, any));
+	                                          final GeoUnit unit, final GeoRadiusArgument argument, final int count) {
+		return execute((client)->client.geoCommands()
+				.geoRadiusByMember(KeyUtils.rawKey(this, key), member, radius, unit, argument, count));
+	}
+
+	@Override
+	default List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
+	                                          final GeoUnit unit, final GeoRadiusArgument argument, final int count,
+	                                          final boolean any) {
+		return execute((client)->client.geoCommands()
+				.geoRadiusByMember(KeyUtils.rawKey(this, key), member, radius, unit, argument, count, any));
+	}
+
+	@Override
+	default List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
+	                                          final GeoUnit unit, final GeoRadiusArgument argument, final int count,
+	                                          final boolean any) {
+		return execute((client)->client.geoCommands()
+				.geoRadiusByMember(KeyUtils.rawKey(this, key), member, radius, unit, argument, count, any));
+	}
+
+	@Override
+	default List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
+	                                          final GeoUnit unit, final int count) {
+		return execute((client)->client.geoCommands()
+				.geoRadiusByMember(KeyUtils.rawKey(this, key), member, radius, unit, count));
+	}
+
+	@Override
+	default List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
+	                                          final GeoUnit unit, final int count) {
+		return execute((client)->client.geoCommands()
+				.geoRadiusByMember(KeyUtils.rawKey(this, key), member, radius, unit, count));
+	}
+
+	@Override
+	default List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
+	                                          final GeoUnit unit, final int count, final boolean any) {
+		return execute((client)->client.geoCommands()
+				.geoRadiusByMember(KeyUtils.rawKey(this, key), member, radius, unit, count, any));
+	}
+
+	@Override
+	default List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
+	                                          final GeoUnit unit, final int count, final boolean any) {
+		return execute((client)->client.geoCommands()
+				.geoRadiusByMember(KeyUtils.rawKey(this, key), member, radius, unit, count, any));
 	}
 
 	@Override
 	default Long geoRadiusByMember(final String key, final String destKey, final GeoStoreOption storeOption,
-								   final String member, final double radius, final GeoUnit unit) {
+	                               final String member, final double radius, final GeoUnit unit) {
 		return execute((client)->client.geoCommands()
-				.geoRadiusByMember(key, destKey, storeOption, member, radius, unit));
+				.geoRadiusByMember(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey),
+						storeOption, member, radius, unit));
 	}
 
 	@Override
 	default Long geoRadiusByMember(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
-								   final byte[] member, final double radius, final GeoUnit unit) {
+	                               final byte[] member, final double radius, final GeoUnit unit) {
 		return execute((client)->client.geoCommands()
-				.geoRadiusByMember(key, destKey, storeOption, member, radius, unit));
+				.geoRadiusByMember(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey),
+						storeOption, member, radius, unit));
 	}
 
 	@Override
 	default Long geoRadiusByMember(final String key, final String destKey, final GeoStoreOption storeOption,
-								   final String member, final double radius, final GeoUnit unit,
-								   final GeoRadiusArgument argument) {
+	                               final String member, final double radius, final GeoUnit unit,
+	                               final GeoRadiusArgument argument) {
 		return execute((client)->client.geoCommands()
-				.geoRadiusByMember(key, destKey, storeOption, member, radius, unit, argument));
+				.geoRadiusByMember(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey),
+						storeOption, member, radius, unit, argument));
 	}
 
 	@Override
 	default Long geoRadiusByMember(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
-								   final byte[] member, final double radius, final GeoUnit unit,
-								   final GeoRadiusArgument argument) {
+	                               final byte[] member, final double radius, final GeoUnit unit,
+	                               final GeoRadiusArgument argument) {
 		return execute((client)->client.geoCommands()
-				.geoRadiusByMember(key, destKey, storeOption, member, radius, unit, argument));
+				.geoRadiusByMember(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey),
+						storeOption, member, radius, unit, argument));
 	}
 
 	@Override
 	default Long geoRadiusByMember(final String key, final String destKey, final GeoStoreOption storeOption,
-								   final String member, final double radius, final GeoUnit unit,
-								   final GeoRadiusArgument argument, final int count) {
+	                               final String member, final double radius, final GeoUnit unit,
+	                               final GeoRadiusArgument argument, final int count) {
 		return execute((client)->client.geoCommands()
-				.geoRadiusByMember(key, destKey, storeOption, member, radius, unit, argument, count));
+				.geoRadiusByMember(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey),
+						storeOption, member, radius, unit, argument, count));
 	}
 
 	@Override
 	default Long geoRadiusByMember(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
-								   final byte[] member, final double radius, final GeoUnit unit,
-								   final GeoRadiusArgument argument, final int count) {
+	                               final byte[] member, final double radius, final GeoUnit unit,
+	                               final GeoRadiusArgument argument, final int count) {
 		return execute((client)->client.geoCommands()
-				.geoRadiusByMember(key, destKey, storeOption, member, radius, unit, argument, count));
+				.geoRadiusByMember(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey),
+						storeOption, member, radius, unit, argument, count));
 	}
 
 	@Override
 	default Long geoRadiusByMember(final String key, final String destKey, final GeoStoreOption storeOption,
-								   final String member, final double radius, final GeoUnit unit,
-								   final GeoRadiusArgument argument, final int count, final boolean any) {
+	                               final String member, final double radius, final GeoUnit unit,
+	                               final GeoRadiusArgument argument, final int count, final boolean any) {
 		return execute((client)->client.geoCommands()
-				.geoRadiusByMember(key, destKey, storeOption, member, radius, unit, argument, count, any));
+				.geoRadiusByMember(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey),
+						storeOption, member, radius, unit, argument, count, any));
 	}
 
 	@Override
 	default Long geoRadiusByMember(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
-								   final byte[] member, final double radius, final GeoUnit unit,
-								   final GeoRadiusArgument argument, final int count, final boolean any) {
+	                               final byte[] member, final double radius, final GeoUnit unit,
+	                               final GeoRadiusArgument argument, final int count, final boolean any) {
 		return execute((client)->client.geoCommands()
-				.geoRadiusByMember(key, destKey, storeOption, member, radius, unit, argument, count, any));
+				.geoRadiusByMember(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey),
+						storeOption, member, radius, unit, argument, count, any));
 	}
 
 	@Override
 	default Long geoRadiusByMember(final String key, final String destKey, final GeoStoreOption storeOption,
-								   final String member, final double radius, final GeoUnit unit, final int count) {
+	                               final String member, final double radius, final GeoUnit unit, final int count) {
 		return execute((client)->client.geoCommands()
-				.geoRadiusByMember(key, destKey, storeOption, member, radius, unit, count));
+				.geoRadiusByMember(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey),
+						storeOption, member, radius, unit, count));
 	}
 
 	@Override
 	default Long geoRadiusByMember(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
-								   final byte[] member, final double radius, final GeoUnit unit, final int count) {
+	                               final byte[] member, final double radius, final GeoUnit unit, final int count) {
 		return execute((client)->client.geoCommands()
-				.geoRadiusByMember(key, destKey, storeOption, member, radius, unit, count));
+				.geoRadiusByMember(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey),
+						storeOption, member, radius, unit, count));
 	}
 
 	@Override
 	default Long geoRadiusByMember(final String key, final String destKey, final GeoStoreOption storeOption,
-								   final String member, final double radius, final GeoUnit unit, final int count,
-								   final boolean any) {
+	                               final String member, final double radius, final GeoUnit unit, final int count,
+	                               final boolean any) {
 		return execute((client)->client.geoCommands()
-				.geoRadiusByMember(key, destKey, storeOption, member, radius, unit, count, any));
+				.geoRadiusByMember(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey),
+						storeOption, member, radius, unit, count, any));
 	}
 
 	@Override
 	default Long geoRadiusByMember(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
-								   final byte[] member, final double radius, final GeoUnit unit, final int count,
-								   final boolean any) {
+	                               final byte[] member, final double radius, final GeoUnit unit, final int count,
+	                               final boolean any) {
 		return execute((client)->client.geoCommands()
-				.geoRadiusByMember(key, destKey, storeOption, member, radius, unit, count, any));
+				.geoRadiusByMember(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey),
+						storeOption, member, radius, unit, count, any));
 	}
 
 	@Override
 	default List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
-												final GeoUnit unit) {
-		return execute((client)->client.geoCommands().geoRadiusByMemberRo(key, member, radius, unit));
-	}
-
-	@Override
-	default List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
-												final GeoUnit unit) {
-		return execute((client)->client.geoCommands().geoRadiusByMemberRo(key, member, radius, unit));
-	}
-
-	@Override
-	default List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
-												final GeoUnit unit, final GeoRadiusArgument argument) {
-		return execute((client)->client.geoCommands().geoRadiusByMemberRo(key, member, radius, unit, argument));
-	}
-
-	@Override
-	default List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
-												final GeoUnit unit, final GeoRadiusArgument argument) {
-		return execute((client)->client.geoCommands().geoRadiusByMemberRo(key, member, radius, unit, argument));
-	}
-
-	@Override
-	default List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
-												final GeoUnit unit, final GeoRadiusArgument argument, final int count) {
-		return execute((client)->client.geoCommands().geoRadiusByMemberRo(key, member, radius, unit, argument, count));
-	}
-
-	@Override
-	default List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
-												final GeoUnit unit, final GeoRadiusArgument argument, final int count) {
-		return execute((client)->client.geoCommands().geoRadiusByMemberRo(key, member, radius, unit, argument, count));
-	}
-
-	@Override
-	default List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
-												final GeoUnit unit, final GeoRadiusArgument argument, final int count,
-												final boolean any) {
+	                                            final GeoUnit unit) {
 		return execute((client)->client.geoCommands()
-				.geoRadiusByMemberRo(key, member, radius, unit, argument, count, any));
+				.geoRadiusByMemberRo(KeyUtils.rawKey(this, key), member, radius, unit));
 	}
 
 	@Override
 	default List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
-												final GeoUnit unit, final GeoRadiusArgument argument, final int count,
-												final boolean any) {
+	                                            final GeoUnit unit) {
 		return execute((client)->client.geoCommands()
-				.geoRadiusByMemberRo(key, member, radius, unit, argument, count, any));
+				.geoRadiusByMemberRo(KeyUtils.rawKey(this, key), member, radius, unit));
 	}
 
 	@Override
 	default List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
-												final GeoUnit unit, final int count) {
-		return execute((client)->client.geoCommands().geoRadiusByMemberRo(key, member, radius, unit, count));
+	                                            final GeoUnit unit, final GeoRadiusArgument argument) {
+		return execute((client)->client.geoCommands()
+				.geoRadiusByMemberRo(KeyUtils.rawKey(this, key), member, radius, unit, argument));
 	}
 
 	@Override
 	default List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
-												final GeoUnit unit, final int count) {
-		return execute((client)->client.geoCommands().geoRadiusByMemberRo(key, member, radius, unit, count));
+	                                            final GeoUnit unit, final GeoRadiusArgument argument) {
+		return execute((client)->client.geoCommands()
+				.geoRadiusByMemberRo(KeyUtils.rawKey(this, key), member, radius, unit, argument));
 	}
 
 	@Override
 	default List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
-												final GeoUnit unit, final int count, final boolean any) {
-		return execute((client)->client.geoCommands().geoRadiusByMemberRo(key, member, radius, unit, count, any));
+	                                            final GeoUnit unit, final GeoRadiusArgument argument, final int count) {
+		return execute((client)->client.geoCommands()
+				.geoRadiusByMemberRo(KeyUtils.rawKey(this, key), member, radius, unit, argument, count));
 	}
 
 	@Override
 	default List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
-												final GeoUnit unit, final int count, final boolean any) {
-		return execute((client)->client.geoCommands().geoRadiusByMemberRo(key, member, radius, unit, count, any));
+	                                            final GeoUnit unit, final GeoRadiusArgument argument, final int count) {
+		return execute((client)->client.geoCommands()
+				.geoRadiusByMemberRo(KeyUtils.rawKey(this, key), member, radius, unit, argument, count));
+	}
+
+	@Override
+	default List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
+	                                            final GeoUnit unit, final GeoRadiusArgument argument, final int count,
+	                                            final boolean any) {
+		return execute((client)->client.geoCommands()
+				.geoRadiusByMemberRo(KeyUtils.rawKey(this, key), member, radius, unit, argument, count, any));
+	}
+
+	@Override
+	default List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
+	                                            final GeoUnit unit, final GeoRadiusArgument argument, final int count,
+	                                            final boolean any) {
+		return execute((client)->client.geoCommands()
+				.geoRadiusByMemberRo(KeyUtils.rawKey(this, key), member, radius, unit, argument, count, any));
+	}
+
+	@Override
+	default List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
+	                                            final GeoUnit unit, final int count) {
+		return execute((client)->client.geoCommands()
+				.geoRadiusByMemberRo(KeyUtils.rawKey(this, key), member, radius, unit, count));
+	}
+
+	@Override
+	default List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
+	                                            final GeoUnit unit, final int count) {
+		return execute((client)->client.geoCommands()
+				.geoRadiusByMemberRo(KeyUtils.rawKey(this, key), member, radius, unit, count));
+	}
+
+	@Override
+	default List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
+	                                            final GeoUnit unit, final int count, final boolean any) {
+		return execute((client)->client.geoCommands()
+				.geoRadiusByMemberRo(KeyUtils.rawKey(this, key), member, radius, unit, count, any));
+	}
+
+	@Override
+	default List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
+	                                            final GeoUnit unit, final int count, final boolean any) {
+		return execute((client)->client.geoCommands()
+				.geoRadiusByMemberRo(KeyUtils.rawKey(this, key), member, radius, unit, count, any));
 	}
 
 	@Override
 	default List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude,
-									  final double radius, final GeoUnit unit) {
-		return execute((client)->client.geoCommands().geoSearch(key, longitude, latitude, radius, unit));
+	                                  final double radius, final GeoUnit unit) {
+		return execute((client)->client.geoCommands()
+				.geoSearch(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit));
 	}
 
 	@Override
 	default List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
-									  final double radius, final GeoUnit unit) {
-		return execute((client)->client.geoCommands().geoSearch(key, longitude, latitude, radius, unit));
+	                                  final double radius, final GeoUnit unit) {
+		return execute((client)->client.geoCommands()
+				.geoSearch(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit));
 	}
 
 	/**
@@ -1951,14 +2012,16 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 
 	@Override
 	default List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude,
-									  final double radius, final GeoUnit unit, final GeoSearchArgument argument) {
-		return execute((client)->client.geoCommands().geoSearch(key, longitude, latitude, radius, unit, argument));
+	                                  final double radius, final GeoUnit unit, final GeoSearchArgument argument) {
+		return execute((client)->client.geoCommands()
+				.geoSearch(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit, argument));
 	}
 
 	@Override
 	default List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
-									  final double radius, final GeoUnit unit, final GeoSearchArgument argument) {
-		return execute((client)->client.geoCommands().geoSearch(key, longitude, latitude, radius, unit, argument));
+	                                  final double radius, final GeoUnit unit, final GeoSearchArgument argument) {
+		return execute((client)->client.geoCommands()
+				.geoSearch(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit, argument));
 	}
 
 	/**
@@ -1980,7 +2043,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 地理位置搜索结果
 	 */
 	default List<GeoRadius> geoSearch(final String key, final Geo geo, final double radius, final GeoUnit unit,
-									  final GeoSearchArgument argument) {
+	                                  final GeoSearchArgument argument) {
 		return geoSearch(key, geo.getLongitude(), geo.getLatitude(), radius, unit, argument);
 	}
 
@@ -2003,24 +2066,24 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 地理位置搜索结果
 	 */
 	default List<GeoRadius> geoSearch(final byte[] key, final Geo geo, final double radius, final GeoUnit unit,
-									  final GeoSearchArgument argument) {
+	                                  final GeoSearchArgument argument) {
 		return geoSearch(key, geo.getLongitude(), geo.getLatitude(), radius, unit, argument);
 	}
 
 	@Override
 	default List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude,
-									  final double radius, final GeoUnit unit, final GeoSearchArgument argument,
-									  final int count) {
+	                                  final double radius, final GeoUnit unit, final GeoSearchArgument argument,
+	                                  final int count) {
 		return execute((client)->client.geoCommands()
-				.geoSearch(key, longitude, latitude, radius, unit, argument, count));
+				.geoSearch(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit, argument, count));
 	}
 
 	@Override
 	default List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
-									  final double radius, final GeoUnit unit, final GeoSearchArgument argument,
-									  final int count) {
+	                                  final double radius, final GeoUnit unit, final GeoSearchArgument argument,
+	                                  final int count) {
 		return execute((client)->client.geoCommands()
-				.geoSearch(key, longitude, latitude, radius, unit, argument, count));
+				.geoSearch(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit, argument, count));
 	}
 
 	/**
@@ -2044,7 +2107,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 地理位置搜索结果
 	 */
 	default List<GeoRadius> geoSearch(final String key, final Geo geo, final double radius, final GeoUnit unit,
-									  final GeoSearchArgument argument, final int count) {
+	                                  final GeoSearchArgument argument, final int count) {
 		return geoSearch(key, geo.getLongitude(), geo.getLatitude(), radius, unit, argument, count);
 	}
 
@@ -2069,24 +2132,24 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 地理位置搜索结果
 	 */
 	default List<GeoRadius> geoSearch(final byte[] key, final Geo geo, final double radius, final GeoUnit unit,
-									  final GeoSearchArgument argument, final int count) {
+	                                  final GeoSearchArgument argument, final int count) {
 		return geoSearch(key, geo.getLongitude(), geo.getLatitude(), radius, unit, argument, count);
 	}
 
 	@Override
 	default List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude,
-									  final double radius, final GeoUnit unit, final GeoSearchArgument argument,
-									  final int count, final boolean any) {
+	                                  final double radius, final GeoUnit unit, final GeoSearchArgument argument,
+	                                  final int count, final boolean any) {
 		return execute((client)->client.geoCommands()
-				.geoSearch(key, longitude, latitude, radius, unit, argument, count, any));
+				.geoSearch(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit, argument, count, any));
 	}
 
 	@Override
 	default List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
-									  final double radius, final GeoUnit unit, final GeoSearchArgument argument,
-									  final int count, final boolean any) {
+	                                  final double radius, final GeoUnit unit, final GeoSearchArgument argument,
+	                                  final int count, final boolean any) {
 		return execute((client)->client.geoCommands()
-				.geoSearch(key, longitude, latitude, radius, unit, argument, count, any));
+				.geoSearch(KeyUtils.rawKey(this, key), longitude, latitude, radius, unit, argument, count, any));
 	}
 
 	/**
@@ -2112,7 +2175,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 地理位置搜索结果
 	 */
 	default List<GeoRadius> geoSearch(final String key, final Geo geo, final double radius, final GeoUnit unit,
-									  final GeoSearchArgument argument, final int count, final boolean any) {
+	                                  final GeoSearchArgument argument, final int count, final boolean any) {
 		return geoSearch(key, geo.getLongitude(), geo.getLatitude(), radius, unit, argument, count, any);
 	}
 
@@ -2139,20 +2202,22 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 地理位置搜索结果
 	 */
 	default List<GeoRadius> geoSearch(final byte[] key, final Geo geo, final double radius, final GeoUnit unit,
-									  final GeoSearchArgument argument, final int count, final boolean any) {
+	                                  final GeoSearchArgument argument, final int count, final boolean any) {
 		return geoSearch(key, geo.getLongitude(), geo.getLatitude(), radius, unit, argument, count, any);
 	}
 
 	@Override
 	default List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude,
-									  final double width, final double height, final GeoUnit unit) {
-		return execute((client)->client.geoCommands().geoSearch(key, longitude, latitude, width, height, unit));
+	                                  final double width, final double height, final GeoUnit unit) {
+		return execute((client)->client.geoCommands()
+				.geoSearch(KeyUtils.rawKey(this, key), longitude, latitude, width, height, unit));
 	}
 
 	@Override
 	default List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
-									  final double width, final double height, final GeoUnit unit) {
-		return execute((client)->client.geoCommands().geoSearch(key, longitude, latitude, width, height, unit));
+	                                  final double width, final double height, final GeoUnit unit) {
+		return execute((client)->client.geoCommands()
+				.geoSearch(KeyUtils.rawKey(this, key), longitude, latitude, width, height, unit));
 	}
 
 	/**
@@ -2174,7 +2239,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 地理位置搜索结果
 	 */
 	default List<GeoRadius> geoSearch(final String key, final Geo geo, final double width, final double height,
-									  final GeoUnit unit) {
+	                                  final GeoUnit unit) {
 		return geoSearch(key, geo.getLongitude(), geo.getLatitude(), width, height, unit);
 	}
 
@@ -2197,24 +2262,24 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 地理位置搜索结果
 	 */
 	default List<GeoRadius> geoSearch(final byte[] key, final Geo geo, final double width, final double height,
-									  final GeoUnit unit) {
+	                                  final GeoUnit unit) {
 		return geoSearch(key, geo.getLongitude(), geo.getLatitude(), width, height, unit);
 	}
 
 	@Override
 	default List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude,
-									  final double width, final double height, final GeoUnit unit,
-									  final GeoSearchArgument argument) {
+	                                  final double width, final double height, final GeoUnit unit,
+	                                  final GeoSearchArgument argument) {
 		return execute((client)->client.geoCommands()
-				.geoSearch(key, longitude, latitude, width, height, unit, argument));
+				.geoSearch(KeyUtils.rawKey(this, key), longitude, latitude, width, height, unit, argument));
 	}
 
 	@Override
 	default List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
-									  final double width, final double height, final GeoUnit unit,
-									  final GeoSearchArgument argument) {
+	                                  final double width, final double height, final GeoUnit unit,
+	                                  final GeoSearchArgument argument) {
 		return execute((client)->client.geoCommands()
-				.geoSearch(key, longitude, latitude, width, height, unit, argument));
+				.geoSearch(KeyUtils.rawKey(this, key), longitude, latitude, width, height, unit, argument));
 	}
 
 	/**
@@ -2238,7 +2303,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 地理位置搜索结果
 	 */
 	default List<GeoRadius> geoSearch(final String key, final Geo geo, final double width, final double height,
-									  final GeoUnit unit, final GeoSearchArgument argument) {
+	                                  final GeoUnit unit, final GeoSearchArgument argument) {
 		return geoSearch(key, geo.getLongitude(), geo.getLatitude(), width, height, unit, argument);
 	}
 
@@ -2263,24 +2328,24 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 地理位置搜索结果
 	 */
 	default List<GeoRadius> geoSearch(final byte[] key, final Geo geo, final double width, final double height,
-									  final GeoUnit unit, final GeoSearchArgument argument) {
+	                                  final GeoUnit unit, final GeoSearchArgument argument) {
 		return geoSearch(key, geo.getLongitude(), geo.getLatitude(), width, height, unit, argument);
 	}
 
 	@Override
 	default List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude,
-									  final double width, final double height, final GeoUnit unit,
-									  final GeoSearchArgument argument, final int count) {
+	                                  final double width, final double height, final GeoUnit unit,
+	                                  final GeoSearchArgument argument, final int count) {
 		return execute((client)->client.geoCommands()
-				.geoSearch(key, longitude, latitude, width, height, unit, argument, count));
+				.geoSearch(KeyUtils.rawKey(this, key), longitude, latitude, width, height, unit, argument, count));
 	}
 
 	@Override
 	default List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
-									  final double width, final double height, final GeoUnit unit,
-									  final GeoSearchArgument argument, final int count) {
+	                                  final double width, final double height, final GeoUnit unit,
+	                                  final GeoSearchArgument argument, final int count) {
 		return execute((client)->client.geoCommands()
-				.geoSearch(key, longitude, latitude, width, height, unit, argument, count));
+				.geoSearch(KeyUtils.rawKey(this, key), longitude, latitude, width, height, unit, argument, count));
 	}
 
 	/**
@@ -2306,7 +2371,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 地理位置搜索结果
 	 */
 	default List<GeoRadius> geoSearch(final String key, final Geo geo, final double width, final double height,
-									  final GeoUnit unit, final GeoSearchArgument argument, final int count) {
+	                                  final GeoUnit unit, final GeoSearchArgument argument, final int count) {
 		return geoSearch(key, geo.getLongitude(), geo.getLatitude(), width, height, unit, argument, count);
 	}
 
@@ -2333,24 +2398,24 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 地理位置搜索结果
 	 */
 	default List<GeoRadius> geoSearch(final byte[] key, final Geo geo, final double width, final double height,
-									  final GeoUnit unit, final GeoSearchArgument argument, final int count) {
+	                                  final GeoUnit unit, final GeoSearchArgument argument, final int count) {
 		return geoSearch(key, geo.getLongitude(), geo.getLatitude(), width, height, unit, argument, count);
 	}
 
 	@Override
 	default List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude,
-									  final double width, final double height, final GeoUnit unit,
-									  final GeoSearchArgument argument, final int count, final boolean any) {
+	                                  final double width, final double height, final GeoUnit unit,
+	                                  final GeoSearchArgument argument, final int count, final boolean any) {
 		return execute((client)->client.geoCommands()
-				.geoSearch(key, longitude, latitude, width, height, unit, argument, count, any));
+				.geoSearch(KeyUtils.rawKey(this, key), longitude, latitude, width, height, unit, argument, count, any));
 	}
 
 	@Override
 	default List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
-									  final double width, final double height, final GeoUnit unit,
-									  final GeoSearchArgument argument, final int count, final boolean any) {
+	                                  final double width, final double height, final GeoUnit unit,
+	                                  final GeoSearchArgument argument, final int count, final boolean any) {
 		return execute((client)->client.geoCommands()
-				.geoSearch(key, longitude, latitude, width, height, unit, argument, count, any));
+				.geoSearch(KeyUtils.rawKey(this, key), longitude, latitude, width, height, unit, argument, count, any));
 	}
 
 	/**
@@ -2378,8 +2443,8 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 地理位置搜索结果
 	 */
 	default List<GeoRadius> geoSearch(final String key, final Geo geo, final double width, final double height,
-									  final GeoUnit unit, final GeoSearchArgument argument, final int count,
-									  final boolean any) {
+	                                  final GeoUnit unit, final GeoSearchArgument argument, final int count,
+	                                  final boolean any) {
 		return geoSearch(key, geo.getLongitude(), geo.getLatitude(), width, height, unit, argument, count, any);
 	}
 
@@ -2408,125 +2473,135 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 地理位置搜索结果
 	 */
 	default List<GeoRadius> geoSearch(final byte[] key, final Geo geo, final double width, final double height,
-									  final GeoUnit unit, final GeoSearchArgument argument, final int count,
-									  final boolean any) {
+	                                  final GeoUnit unit, final GeoSearchArgument argument, final int count,
+	                                  final boolean any) {
 		return geoSearch(key, geo.getLongitude(), geo.getLatitude(), width, height, unit, argument, count, any);
 	}
 
 	@Override
 	default List<GeoRadius> geoSearch(final String key, final String member, final double radius, final GeoUnit unit) {
-		return execute((client)->client.geoCommands().geoSearch(key, member, radius, unit));
+		return execute((client)->client.geoCommands().geoSearch(KeyUtils.rawKey(this, key), member, radius, unit));
 	}
 
 	@Override
 	default List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double radius, final GeoUnit unit) {
-		return execute((client)->client.geoCommands().geoSearch(key, member, radius, unit));
+		return execute((client)->client.geoCommands().geoSearch(KeyUtils.rawKey(this, key), member, radius, unit));
 	}
 
 	@Override
 	default List<GeoRadius> geoSearch(final String key, final String member, final double radius, final GeoUnit unit,
-									  final GeoSearchArgument argument) {
-		return execute((client)->client.geoCommands().geoSearch(key, member, radius, unit, argument));
+	                                  final GeoSearchArgument argument) {
+		return execute(
+				(client)->client.geoCommands().geoSearch(KeyUtils.rawKey(this, key), member, radius, unit, argument));
 	}
 
 	@Override
 	default List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double radius, final GeoUnit unit,
-									  final GeoSearchArgument argument) {
-		return execute((client)->client.geoCommands().geoSearch(key, member, radius, unit, argument));
+	                                  final GeoSearchArgument argument) {
+		return execute(
+				(client)->client.geoCommands().geoSearch(KeyUtils.rawKey(this, key), member, radius, unit, argument));
 	}
 
 	@Override
 	default List<GeoRadius> geoSearch(final String key, final String member, final double radius, final GeoUnit unit,
-									  final GeoSearchArgument argument, final int count) {
-		return execute(
-				(client)->client.geoCommands().geoSearch(key, member, radius, unit, argument, count));
+	                                  final GeoSearchArgument argument, final int count) {
+		return execute((client)->client.geoCommands()
+				.geoSearch(KeyUtils.rawKey(this, key), member, radius, unit, argument, count));
 	}
 
 	@Override
 	default List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double radius, final GeoUnit unit,
-									  final GeoSearchArgument argument, final int count) {
-		return execute(
-				(client)->client.geoCommands().geoSearch(key, member, radius, unit, argument, count));
+	                                  final GeoSearchArgument argument, final int count) {
+		return execute((client)->client.geoCommands()
+				.geoSearch(KeyUtils.rawKey(this, key), member, radius, unit, argument, count));
 	}
 
 	@Override
 	default List<GeoRadius> geoSearch(final String key, final String member, final double radius, final GeoUnit unit,
-									  final GeoSearchArgument argument, final int count, final boolean any) {
-		return execute(
-				(client)->client.geoCommands().geoSearch(key, member, radius, unit, argument, count, any));
+	                                  final GeoSearchArgument argument, final int count, final boolean any) {
+		return execute((client)->client.geoCommands()
+				.geoSearch(KeyUtils.rawKey(this, key), member, radius, unit, argument, count, any));
 	}
 
 	@Override
 	default List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double radius, final GeoUnit unit,
-									  final GeoSearchArgument argument, final int count, final boolean any) {
+	                                  final GeoSearchArgument argument, final int count, final boolean any) {
+		return execute((client)->client.geoCommands()
+				.geoSearch(KeyUtils.rawKey(this, key), member, radius, unit, argument, count, any));
+	}
+
+	@Override
+	default List<GeoRadius> geoSearch(final String key, final String member, final double width, final double height,
+	                                  final GeoUnit unit) {
 		return execute(
-				(client)->client.geoCommands().geoSearch(key, member, radius, unit, argument, count, any));
-	}
-
-	@Override
-	default List<GeoRadius> geoSearch(final String key, final String member, final double width, final double height,
-									  final GeoUnit unit) {
-		return execute((client)->client.geoCommands().geoSearch(key, member, width, height, unit));
+				(client)->client.geoCommands().geoSearch(KeyUtils.rawKey(this, key), member, width, height, unit));
 	}
 
 	@Override
 	default List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double width, final double height,
-									  final GeoUnit unit) {
-		return execute((client)->client.geoCommands().geoSearch(key, member, width, height, unit));
+	                                  final GeoUnit unit) {
+		return execute((client)->client.geoCommands()
+				.geoSearch(KeyUtils.rawKey(this, key), member, width, height, unit));
 	}
 
 	@Override
 	default List<GeoRadius> geoSearch(final String key, final String member, final double width, final double height,
-									  final GeoUnit unit, final GeoSearchArgument argument) {
-		return execute((client)->client.geoCommands().geoSearch(key, member, width, height, unit, argument));
+	                                  final GeoUnit unit, final GeoSearchArgument argument) {
+		return execute((client)->client.geoCommands()
+				.geoSearch(KeyUtils.rawKey(this, key), member, width, height, unit, argument));
 	}
 
 	@Override
 	default List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double width, final double height,
-									  final GeoUnit unit, final GeoSearchArgument argument) {
-		return execute((client)->client.geoCommands().geoSearch(key, member, width, height, unit, argument));
+	                                  final GeoUnit unit, final GeoSearchArgument argument) {
+		return execute((client)->client.geoCommands()
+				.geoSearch(KeyUtils.rawKey(this, key), member, width, height, unit, argument));
 	}
 
 	@Override
 	default List<GeoRadius> geoSearch(final String key, final String member, final double width, final double height,
-									  final GeoUnit unit, final GeoSearchArgument argument, final int count) {
-		return execute((client)->client.geoCommands().geoSearch(key, member, width, height, unit, argument, count));
+	                                  final GeoUnit unit, final GeoSearchArgument argument, final int count) {
+		return execute((client)->client.geoCommands()
+				.geoSearch(KeyUtils.rawKey(this, key), member, width, height, unit, argument, count));
 	}
 
 	@Override
 	default List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double width, final double height,
-									  final GeoUnit unit, final GeoSearchArgument argument, final int count) {
-		return execute((client)->client.geoCommands().geoSearch(key, member, width, height, unit, argument, count));
+	                                  final GeoUnit unit, final GeoSearchArgument argument, final int count) {
+		return execute((client)->client.geoCommands()
+				.geoSearch(KeyUtils.rawKey(this, key), member, width, height, unit, argument, count));
 	}
 
 	@Override
 	default List<GeoRadius> geoSearch(final String key, final String member, final double width, final double height,
-									  final GeoUnit unit, final GeoSearchArgument argument, final int count,
-									  final boolean any) {
-		return execute(
-				(client)->client.geoCommands().geoSearch(key, member, width, height, unit, argument, count, any));
+	                                  final GeoUnit unit, final GeoSearchArgument argument, final int count,
+	                                  final boolean any) {
+		return execute((client)->client.geoCommands()
+				.geoSearch(KeyUtils.rawKey(this, key), member, width, height, unit, argument, count, any));
 	}
 
 	@Override
 	default List<GeoRadius> geoSearch(final byte[] key, final byte[] member, final double width, final double height,
-									  final GeoUnit unit, final GeoSearchArgument argument, final int count,
-									  final boolean any) {
-		return execute(
-				(client)->client.geoCommands().geoSearch(key, member, width, height, unit, argument, count, any));
+	                                  final GeoUnit unit, final GeoSearchArgument argument, final int count,
+	                                  final boolean any) {
+		return execute((client)->client.geoCommands()
+				.geoSearch(KeyUtils.rawKey(this, key), member, width, height, unit, argument, count, any));
 	}
 
 	@Override
 	default Long geoSearchStore(final String key, final String destKey, final double longitude, final double latitude,
-								final double radius, final GeoUnit unit) {
-		return execute(
-				(client)->client.geoCommands().geoSearchStore(key, destKey, longitude, latitude, radius, unit));
+	                            final double radius, final GeoUnit unit) {
+		return execute((client)->client.geoCommands()
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), longitude, latitude, radius,
+						unit));
 	}
 
 	@Override
 	default Long geoSearchStore(final byte[] key, final byte[] destKey, final double longitude, final double latitude,
-								final double radius, final GeoUnit unit) {
-		return execute(
-				(client)->client.geoCommands().geoSearchStore(key, destKey, longitude, latitude, radius, unit));
+	                            final double radius, final GeoUnit unit) {
+		return execute((client)->client.geoCommands()
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), longitude, latitude, radius,
+						unit));
 	}
 
 	/**
@@ -2548,7 +2623,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 结果数量
 	 */
 	default Long geoSearchStore(final String key, final String destKey, final Geo geo, final double radius,
-								final GeoUnit unit) {
+	                            final GeoUnit unit) {
 		return geoSearchStore(key, destKey, geo.getLongitude(), geo.getLatitude(), radius, unit);
 	}
 
@@ -2571,24 +2646,24 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 结果数量
 	 */
 	default Long geoSearchStore(final byte[] key, final byte[] destKey, final Geo geo, final double radius,
-								final GeoUnit unit) {
+	                            final GeoUnit unit) {
 		return geoSearchStore(key, destKey, geo.getLongitude(), geo.getLatitude(), radius, unit);
 	}
 
 	@Override
 	default Long geoSearchStore(final String key, final String destKey, final double longitude, final double latitude,
-								final double radius, final GeoUnit unit, final boolean storeDist) {
-		return execute(
-				(client)->client.geoCommands()
-						.geoSearchStore(key, destKey, longitude, latitude, radius, unit, storeDist));
+	                            final double radius, final GeoUnit unit, final boolean storeDist) {
+		return execute((client)->client.geoCommands()
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), longitude, latitude, radius,
+						unit, storeDist));
 	}
 
 	@Override
 	default Long geoSearchStore(final byte[] key, final byte[] destKey, final double longitude, final double latitude,
-								final double radius, final GeoUnit unit, final boolean storeDist) {
-		return execute(
-				(client)->client.geoCommands()
-						.geoSearchStore(key, destKey, longitude, latitude, radius, unit, storeDist));
+	                            final double radius, final GeoUnit unit, final boolean storeDist) {
+		return execute((client)->client.geoCommands()
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), longitude, latitude, radius,
+						unit, storeDist));
 	}
 
 	/**
@@ -2612,7 +2687,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
 	 */
 	default Long geoSearchStore(final String key, final String destKey, final Geo geo, final double radius,
-								final GeoUnit unit, final boolean storeDist) {
+	                            final GeoUnit unit, final boolean storeDist) {
 		return geoSearchStore(key, destKey, geo.getLongitude(), geo.getLatitude(), radius, unit, storeDist);
 	}
 
@@ -2637,22 +2712,24 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
 	 */
 	default Long geoSearchStore(final byte[] key, final byte[] destKey, final Geo geo, final double radius,
-								final GeoUnit unit, final boolean storeDist) {
+	                            final GeoUnit unit, final boolean storeDist) {
 		return geoSearchStore(key, destKey, geo.getLongitude(), geo.getLatitude(), radius, unit, storeDist);
 	}
 
 	@Override
 	default Long geoSearchStore(final String key, final String destKey, final double longitude, final double latitude,
-								final double radius, final GeoUnit unit, final boolean storeDist, final int count) {
+	                            final double radius, final GeoUnit unit, final boolean storeDist, final int count) {
 		return execute((client)->client.geoCommands()
-				.geoSearchStore(key, destKey, longitude, latitude, radius, unit, storeDist, count));
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), longitude, latitude, radius,
+						unit, storeDist, count));
 	}
 
 	@Override
 	default Long geoSearchStore(final byte[] key, final byte[] destKey, final double longitude, final double latitude,
-								final double radius, final GeoUnit unit, final boolean storeDist, final int count) {
+	                            final double radius, final GeoUnit unit, final boolean storeDist, final int count) {
 		return execute((client)->client.geoCommands()
-				.geoSearchStore(key, destKey, longitude, latitude, radius, unit, storeDist, count));
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), longitude, latitude, radius,
+						unit, storeDist, count));
 	}
 
 	/**
@@ -2678,7 +2755,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
 	 */
 	default Long geoSearchStore(final String key, final String destKey, final Geo geo, final double radius,
-								final GeoUnit unit, final boolean storeDist, final int count) {
+	                            final GeoUnit unit, final boolean storeDist, final int count) {
 		return geoSearchStore(key, destKey, geo.getLongitude(), geo.getLatitude(), radius, unit, storeDist, count);
 	}
 
@@ -2705,24 +2782,26 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
 	 */
 	default Long geoSearchStore(final byte[] key, final byte[] destKey, final Geo geo, final double radius,
-								final GeoUnit unit, final boolean storeDist, final int count) {
+	                            final GeoUnit unit, final boolean storeDist, final int count) {
 		return geoSearchStore(key, destKey, geo.getLongitude(), geo.getLatitude(), radius, unit, storeDist, count);
 	}
 
 	@Override
 	default Long geoSearchStore(final String key, final String destKey, final double longitude, final double latitude,
-								final double radius, final GeoUnit unit, final boolean storeDist, final int count,
-								final boolean any) {
+	                            final double radius, final GeoUnit unit, final boolean storeDist, final int count,
+	                            final boolean any) {
 		return execute((client)->client.geoCommands()
-				.geoSearchStore(key, destKey, longitude, latitude, radius, unit, storeDist, count, any));
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), longitude, latitude, radius,
+						unit, storeDist, count, any));
 	}
 
 	@Override
 	default Long geoSearchStore(final byte[] key, final byte[] destKey, final double longitude, final double latitude,
-								final double radius, final GeoUnit unit, final boolean storeDist, final int count,
-								final boolean any) {
+	                            final double radius, final GeoUnit unit, final boolean storeDist, final int count,
+	                            final boolean any) {
 		return execute((client)->client.geoCommands()
-				.geoSearchStore(key, destKey, longitude, latitude, radius, unit, storeDist, count, any));
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), longitude, latitude, radius,
+						unit, storeDist, count, any));
 	}
 
 	/**
@@ -2750,7 +2829,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
 	 */
 	default Long geoSearchStore(final String key, final String destKey, final Geo geo, final double radius,
-								final GeoUnit unit, final boolean storeDist, final int count, final boolean any) {
+	                            final GeoUnit unit, final boolean storeDist, final int count, final boolean any) {
 		return geoSearchStore(key, destKey, geo.getLongitude(), geo.getLatitude(), radius, unit, storeDist, count, any);
 	}
 
@@ -2779,22 +2858,24 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
 	 */
 	default Long geoSearchStore(final byte[] key, final byte[] destKey, final Geo geo, final double radius,
-								final GeoUnit unit, final boolean storeDist, final int count, final boolean any) {
+	                            final GeoUnit unit, final boolean storeDist, final int count, final boolean any) {
 		return geoSearchStore(key, destKey, geo.getLongitude(), geo.getLatitude(), radius, unit, storeDist, count, any);
 	}
 
 	@Override
 	default Long geoSearchStore(final String key, final String destKey, final double longitude, final double latitude,
-								final double width, final double height, final GeoUnit unit) {
+	                            final double width, final double height, final GeoUnit unit) {
 		return execute((client)->client.geoCommands()
-				.geoSearchStore(key, destKey, longitude, latitude, width, height, unit));
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), longitude, latitude, width,
+						height, unit));
 	}
 
 	@Override
 	default Long geoSearchStore(final byte[] key, final byte[] destKey, final double longitude, final double latitude,
-								final double width, final double height, final GeoUnit unit) {
+	                            final double width, final double height, final GeoUnit unit) {
 		return execute((client)->client.geoCommands()
-				.geoSearchStore(key, destKey, longitude, latitude, width, height, unit));
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), longitude, latitude, width,
+						height, unit));
 	}
 
 	/**
@@ -2818,7 +2899,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
 	 */
 	default Long geoSearchStore(final String key, final String destKey, final Geo geo, final double width,
-								final double height, final GeoUnit unit) {
+	                            final double height, final GeoUnit unit) {
 		return geoSearchStore(key, destKey, geo.getLongitude(), geo.getLatitude(), width, height, unit);
 	}
 
@@ -2843,22 +2924,24 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
 	 */
 	default Long geoSearchStore(final byte[] key, final byte[] destKey, final Geo geo, final double width,
-								final double height, final GeoUnit unit) {
+	                            final double height, final GeoUnit unit) {
 		return geoSearchStore(key, destKey, geo.getLongitude(), geo.getLatitude(), width, height, unit);
 	}
 
 	@Override
 	default Long geoSearchStore(final String key, final String destKey, final double longitude, final double latitude,
-								final double width, final double height, final GeoUnit unit, final boolean storeDist) {
+	                            final double width, final double height, final GeoUnit unit, final boolean storeDist) {
 		return execute((client)->client.geoCommands()
-				.geoSearchStore(key, destKey, longitude, latitude, width, height, unit, storeDist));
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), longitude, latitude, width,
+						height, unit, storeDist));
 	}
 
 	@Override
 	default Long geoSearchStore(final byte[] key, final byte[] destKey, final double longitude, final double latitude,
-								final double width, final double height, final GeoUnit unit, final boolean storeDist) {
+	                            final double width, final double height, final GeoUnit unit, final boolean storeDist) {
 		return execute((client)->client.geoCommands()
-				.geoSearchStore(key, destKey, longitude, latitude, width, height, unit, storeDist));
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), longitude, latitude, width,
+						height, unit, storeDist));
 	}
 
 	/**
@@ -2884,7 +2967,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
 	 */
 	default Long geoSearchStore(final String key, final String destKey, final Geo geo, final double width,
-								final double height, final GeoUnit unit, final boolean storeDist) {
+	                            final double height, final GeoUnit unit, final boolean storeDist) {
 		return geoSearchStore(key, destKey, geo.getLongitude(), geo.getLatitude(), width, height, unit, storeDist);
 	}
 
@@ -2911,24 +2994,26 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
 	 */
 	default Long geoSearchStore(final byte[] key, final byte[] destKey, final Geo geo, final double width,
-								final double height, final GeoUnit unit, final boolean storeDist) {
+	                            final double height, final GeoUnit unit, final boolean storeDist) {
 		return geoSearchStore(key, destKey, geo.getLongitude(), geo.getLatitude(), width, height, unit, storeDist);
 	}
 
 	@Override
 	default Long geoSearchStore(final String key, final String destKey, final double longitude, final double latitude,
-								final double width, final double height, final GeoUnit unit, final boolean storeDist,
-								final int count) {
+	                            final double width, final double height, final GeoUnit unit, final boolean storeDist,
+	                            final int count) {
 		return execute((client)->client.geoCommands()
-				.geoSearchStore(key, destKey, longitude, latitude, width, height, unit, storeDist, count));
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), longitude, latitude, width,
+						height, unit, storeDist, count));
 	}
 
 	@Override
 	default Long geoSearchStore(final byte[] key, final byte[] destKey, final double longitude, final double latitude,
-								final double width, final double height, final GeoUnit unit, final boolean storeDist,
-								final int count) {
+	                            final double width, final double height, final GeoUnit unit, final boolean storeDist,
+	                            final int count) {
 		return execute((client)->client.geoCommands()
-				.geoSearchStore(key, destKey, longitude, latitude, width, height, unit, storeDist, count));
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), longitude, latitude, width,
+						height, unit, storeDist, count));
 	}
 
 	/**
@@ -2956,7 +3041,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
 	 */
 	default Long geoSearchStore(final String key, final String destKey, final Geo geo, final double width,
-								final double height, final GeoUnit unit, final boolean storeDist, final int count) {
+	                            final double height, final GeoUnit unit, final boolean storeDist, final int count) {
 		return geoSearchStore(key, destKey, geo.getLongitude(), geo.getLatitude(), width, height, unit, storeDist,
 				count);
 	}
@@ -2986,25 +3071,27 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
 	 */
 	default Long geoSearchStore(final byte[] key, final byte[] destKey, final Geo geo, final double width,
-								final double height, final GeoUnit unit, final boolean storeDist, final int count) {
+	                            final double height, final GeoUnit unit, final boolean storeDist, final int count) {
 		return geoSearchStore(key, destKey, geo.getLongitude(), geo.getLatitude(), width, height, unit, storeDist,
 				count);
 	}
 
 	@Override
 	default Long geoSearchStore(final String key, final String destKey, final double longitude, final double latitude,
-								final double width, final double height, final GeoUnit unit, final boolean storeDist,
-								final int count, final boolean any) {
+	                            final double width, final double height, final GeoUnit unit, final boolean storeDist,
+	                            final int count, final boolean any) {
 		return execute((client)->client.geoCommands()
-				.geoSearchStore(key, destKey, longitude, latitude, width, height, unit, storeDist, count, any));
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), longitude, latitude, width,
+						height, unit, storeDist, count, any));
 	}
 
 	@Override
 	default Long geoSearchStore(final byte[] key, final byte[] destKey, final double longitude, final double latitude,
-								final double width, final double height, final GeoUnit unit, final boolean storeDist,
-								final int count, final boolean any) {
+	                            final double width, final double height, final GeoUnit unit, final boolean storeDist,
+	                            final int count, final boolean any) {
 		return execute((client)->client.geoCommands()
-				.geoSearchStore(key, destKey, longitude, latitude, width, height, unit, storeDist, count, any));
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), longitude, latitude, width,
+						height, unit, storeDist, count, any));
 	}
 
 	/**
@@ -3034,8 +3121,8 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
 	 */
 	default Long geoSearchStore(final String key, final String destKey, final Geo geo, final double width,
-								final double height, final GeoUnit unit, final boolean storeDist, final int count,
-								final boolean any) {
+	                            final double height, final GeoUnit unit, final boolean storeDist, final int count,
+	                            final boolean any) {
 		return geoSearchStore(key, destKey, geo.getLongitude(), geo.getLatitude(), width, height, unit, storeDist,
 				count, any);
 	}
@@ -3067,118 +3154,138 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * @return 将地理位置搜索结果存储到目标 destKey 中结果
 	 */
 	default Long geoSearchStore(final byte[] key, final byte[] destKey, final Geo geo, final double width,
-								final double height, final GeoUnit unit, final boolean storeDist, final int count,
-								final boolean any) {
+	                            final double height, final GeoUnit unit, final boolean storeDist, final int count,
+	                            final boolean any) {
 		return geoSearchStore(key, destKey, geo.getLongitude(), geo.getLatitude(), width, height, unit, storeDist,
 				count, any);
 	}
 
 	@Override
 	default Long geoSearchStore(final String key, final String destKey, final String member, final double radius,
-								final GeoUnit unit) {
-		return execute((client)->client.geoCommands().geoSearchStore(key, destKey, member, radius, unit));
+	                            final GeoUnit unit) {
+		return execute((client)->client.geoCommands()
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), member, radius, unit));
 	}
 
 	@Override
 	default Long geoSearchStore(final byte[] key, final byte[] destKey, final byte[] member, final double radius,
-								final GeoUnit unit) {
-		return execute((client)->client.geoCommands().geoSearchStore(key, destKey, member, radius, unit));
+	                            final GeoUnit unit) {
+		return execute((client)->client.geoCommands()
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), member, radius, unit));
 	}
 
 	@Override
 	default Long geoSearchStore(final String key, final String destKey, final String member, final double radius,
-								final GeoUnit unit, final boolean storeDist) {
-		return execute((client)->client.geoCommands().geoSearchStore(key, destKey, member, radius, unit, storeDist));
+	                            final GeoUnit unit, final boolean storeDist) {
+		return execute((client)->client.geoCommands()
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), member, radius, unit,
+						storeDist));
 	}
 
 	@Override
 	default Long geoSearchStore(final byte[] key, final byte[] destKey, final byte[] member, final double radius,
-								final GeoUnit unit, final boolean storeDist) {
-		return execute((client)->client.geoCommands().geoSearchStore(key, destKey, member, radius, unit, storeDist));
+	                            final GeoUnit unit, final boolean storeDist) {
+		return execute((client)->client.geoCommands()
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), member, radius, unit,
+						storeDist));
 	}
 
 	@Override
 	default Long geoSearchStore(final String key, final String destKey, final String member, final double radius,
-								final GeoUnit unit, final boolean storeDist, final int count) {
-		return execute((client)->client.geoCommands().geoSearchStore(key, destKey, member, radius, unit, storeDist,
-				count));
+	                            final GeoUnit unit, final boolean storeDist, final int count) {
+		return execute((client)->client.geoCommands()
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), member, radius, unit,
+						storeDist, count));
 	}
 
 	@Override
 	default Long geoSearchStore(final byte[] key, final byte[] destKey, final byte[] member, final double radius,
-								final GeoUnit unit, final boolean storeDist, final int count) {
-		return execute((client)->client.geoCommands().geoSearchStore(key, destKey, member, radius, unit, storeDist,
-				count));
+	                            final GeoUnit unit, final boolean storeDist, final int count) {
+		return execute((client)->client.geoCommands()
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), member, radius, unit,
+						storeDist, count));
 	}
 
 	@Override
 	default Long geoSearchStore(final String key, final String destKey, final String member, final double radius,
-								final GeoUnit unit, final boolean storeDist, final int count, final boolean any) {
-		return execute((client)->client.geoCommands().geoSearchStore(key, destKey, member, radius, unit, storeDist,
-				count, any));
+	                            final GeoUnit unit, final boolean storeDist, final int count, final boolean any) {
+		return execute((client)->client.geoCommands()
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), member, radius, unit,
+						storeDist, count, any));
 	}
 
 	@Override
 	default Long geoSearchStore(final byte[] key, final byte[] destKey, final byte[] member, final double radius,
-								final GeoUnit unit, final boolean storeDist, final int count, final boolean any) {
-		return execute((client)->client.geoCommands().geoSearchStore(key, destKey, member, radius, unit, storeDist,
-				count, any));
+	                            final GeoUnit unit, final boolean storeDist, final int count, final boolean any) {
+		return execute((client)->client.geoCommands()
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), member, radius, unit,
+						storeDist, count, any));
 	}
 
 	@Override
 	default Long geoSearchStore(final String key, final String destKey, final String member, final double width,
-								final double height, final GeoUnit unit) {
-		return execute((client)->client.geoCommands().geoSearchStore(key, destKey, member, width, height, unit));
+	                            final double height, final GeoUnit unit) {
+		return execute((client)->client.geoCommands()
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), member, width, height,
+						unit));
 	}
 
 	@Override
 	default Long geoSearchStore(final byte[] key, final byte[] destKey, final byte[] member, final double width,
-								final double height, final GeoUnit unit) {
-		return execute((client)->client.geoCommands().geoSearchStore(key, destKey, member, width, height, unit));
+	                            final double height, final GeoUnit unit) {
+		return execute((client)->client.geoCommands()
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), member, width, height,
+						unit));
 	}
 
 	@Override
 	default Long geoSearchStore(final String key, final String destKey, final String member, final double width,
-								final double height, final GeoUnit unit, final boolean storeDist) {
-		return execute(
-				(client)->client.geoCommands().geoSearchStore(key, destKey, member, width, height, unit, storeDist));
+	                            final double height, final GeoUnit unit, final boolean storeDist) {
+		return execute((client)->client.geoCommands()
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), member, width, height, unit,
+						storeDist));
 	}
 
 	@Override
 	default Long geoSearchStore(final byte[] key, final byte[] destKey, final byte[] member, final double width,
-								final double height, final GeoUnit unit, final boolean storeDist) {
-		return execute(
-				(client)->client.geoCommands().geoSearchStore(key, destKey, member, width, height, unit, storeDist));
+	                            final double height, final GeoUnit unit, final boolean storeDist) {
+		return execute((client)->client.geoCommands()
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), member, width, height, unit,
+						storeDist));
 	}
 
 	@Override
 	default Long geoSearchStore(final String key, final String destKey, final String member, final double width,
-								final double height, final GeoUnit unit, final boolean storeDist, final int count) {
+	                            final double height, final GeoUnit unit, final boolean storeDist, final int count) {
 		return execute((client)->client.geoCommands()
-				.geoSearchStore(key, destKey, member, width, height, unit, storeDist, count));
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), member, width, height, unit,
+						storeDist, count));
 	}
 
 	@Override
 	default Long geoSearchStore(final byte[] key, final byte[] destKey, final byte[] member, final double width,
-								final double height, final GeoUnit unit, final boolean storeDist, final int count) {
+	                            final double height, final GeoUnit unit, final boolean storeDist, final int count) {
 		return execute((client)->client.geoCommands()
-				.geoSearchStore(key, destKey, member, width, height, unit, storeDist, count));
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), member, width, height, unit,
+						storeDist, count));
 	}
 
 	@Override
 	default Long geoSearchStore(final String key, final String destKey, final String member, final double width,
-								final double height, final GeoUnit unit, final boolean storeDist, final int count,
-								final boolean any) {
+	                            final double height, final GeoUnit unit, final boolean storeDist, final int count,
+	                            final boolean any) {
 		return execute((client)->client.geoCommands()
-				.geoSearchStore(key, destKey, member, width, height, unit, storeDist, count, any));
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), member, width, height, unit,
+						storeDist, count, any));
 	}
 
 	@Override
 	default Long geoSearchStore(final byte[] key, final byte[] destKey, final byte[] member, final double width,
-								final double height, final GeoUnit unit, final boolean storeDist, final int count,
-								final boolean any) {
+	                            final double height, final GeoUnit unit, final boolean storeDist, final int count,
+	                            final boolean any) {
 		return execute((client)->client.geoCommands()
-				.geoSearchStore(key, destKey, member, width, height, unit, storeDist, count, any));
+				.geoSearchStore(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), member, width, height, unit,
+						storeDist, count, any));
 	}
 
 }
