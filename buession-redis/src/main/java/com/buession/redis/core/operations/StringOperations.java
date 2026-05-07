@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.operations;
 
+import com.buession.core.collect.Arrays;
 import com.buession.core.type.TypeReference;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
@@ -652,39 +653,51 @@ public interface StringOperations extends StringCommands, RedisOperations {
 
 	@SuppressWarnings({"unchecked"})
 	@Override
-	default Status mSet(final KeyValue<String, String>... values) {
-		return doExecute((cmd)->cmd.mSet(values));
+	default Status mSet(final KeyValue<String, String>... data) {
+		final KeyValue<String, String>[] newData = Arrays.map(data, (item)->new KeyValue<>(KeyUtils.rawKey(this,
+				item.getKey()), item.getValue()));
+		return doExecute((cmd)->cmd.mSet(newData));
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
-	default Status mSetEx(final KeyValue<String, String>... values) {
-		return doExecute((cmd)->cmd.mSetEx(values));
+	default Status mSetEx(final KeyValue<String, String>... data) {
+		final KeyValue<String, String>[] newData = Arrays.map(data, (item)->new KeyValue<>(KeyUtils.rawKey(this,
+				item.getKey()), item.getValue()));
+		return doExecute((cmd)->cmd.mSetEx(newData));
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
-	default Status mSetEx(final NxXx nxXx, final KeyValue<String, String>... values) {
-		return doExecute((cmd)->cmd.mSetEx(nxXx, values));
+	default Status mSetEx(final NxXx nxXx, final KeyValue<String, String>... data) {
+		final KeyValue<String, String>[] newData = Arrays.map(data, (item)->new KeyValue<>(KeyUtils.rawKey(this,
+				item.getKey()), item.getValue()));
+		return doExecute((cmd)->cmd.mSetEx(nxXx, newData));
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	default Status mSetEx(final NxXx nxXx, final PxExType exType, final long expires,
-	                      final KeyValue<String, String>... values) {
-		return doExecute((cmd)->cmd.mSetEx(nxXx, exType, expires, values));
+	                      final KeyValue<String, String>... data) {
+		final KeyValue<String, String>[] newData = Arrays.map(data, (item)->new KeyValue<>(KeyUtils.rawKey(this,
+				item.getKey()), item.getValue()));
+		return doExecute((cmd)->cmd.mSetEx(nxXx, exType, expires, newData));
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
-	default Status mSetEx(final PxExType exType, final long expires, final KeyValue<String, String>... values) {
-		return doExecute((cmd)->cmd.mSetEx(exType, expires, values));
+	default Status mSetEx(final PxExType exType, final long expires, final KeyValue<String, String>... data) {
+		final KeyValue<String, String>[] newData = Arrays.map(data, (item)->new KeyValue<>(KeyUtils.rawKey(this,
+				item.getKey()), item.getValue()));
+		return doExecute((cmd)->cmd.mSetEx(exType, expires, newData));
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
-	default Status mSetNx(final KeyValue<String, String>... values) {
-		return doExecute((cmd)->cmd.mSetNx(values));
+	default Status mSetNx(final KeyValue<String, String>... data) {
+		final KeyValue<String, String>[] newData = Arrays.map(data, (item)->new KeyValue<>(KeyUtils.rawKey(this,
+				item.getKey()), item.getValue()));
+		return doExecute((cmd)->cmd.mSetNx(newData));
 	}
 
 	@Override

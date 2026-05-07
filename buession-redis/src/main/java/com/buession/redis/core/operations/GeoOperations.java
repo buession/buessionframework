@@ -862,15 +862,15 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	@Override
 	default Long geoRadius(final String key, final String destKey, final GeoStoreOption storeOption,
 	                       final double longitude, final double latitude, final double radius, final GeoUnit unit) {
-		return doExecute((cmd)->cmd
-				.geoRadius(KeyUtils.rawKey(this, key), destKey, storeOption, longitude, latitude, radius, unit));
+		return doExecute((cmd)->cmd.geoRadius(KeyUtils.rawKey(this, key),
+				KeyUtils.rawKey(this, destKey), storeOption, longitude, latitude, radius, unit));
 	}
 
 	@Override
 	default Long geoRadius(final byte[] key, final byte[] destKey, final GeoStoreOption storeOption,
 	                       final double longitude, final double latitude, final double radius, final GeoUnit unit) {
-		return doExecute((cmd)->cmd
-				.geoRadius(KeyUtils.rawKey(this, key), destKey, storeOption, longitude, latitude, radius, unit));
+		return doExecute((cmd)->cmd.geoRadius(KeyUtils.rawKey(this, key),
+				KeyUtils.rawKey(this, destKey), storeOption, longitude, latitude, radius, unit));
 	}
 
 	/**
@@ -2176,15 +2176,13 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	@Override
 	default List<GeoRadius> geoSearch(final String key, final double longitude, final double latitude,
 	                                  final double width, final double height, final GeoUnit unit) {
-		return doExecute((cmd)->cmd
-				.geoSearch(KeyUtils.rawKey(this, key), longitude, latitude, width, height, unit));
+		return doExecute((cmd)->cmd.geoSearch(KeyUtils.rawKey(this, key), longitude, latitude, width, height, unit));
 	}
 
 	@Override
 	default List<GeoRadius> geoSearch(final byte[] key, final double longitude, final double latitude,
 	                                  final double width, final double height, final GeoUnit unit) {
-		return doExecute((cmd)->cmd
-				.geoSearch(KeyUtils.rawKey(this, key), longitude, latitude, width, height, unit));
+		return doExecute((cmd)->cmd.geoSearch(KeyUtils.rawKey(this, key), longitude, latitude, width, height, unit));
 	}
 
 	/**

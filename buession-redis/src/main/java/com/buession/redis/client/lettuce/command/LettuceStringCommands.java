@@ -327,49 +327,49 @@ public final class LettuceStringCommands extends AbstractLettuceRedisCommands im
 
 	@SuppressWarnings({"unchecked"})
 	@Override
-	public Status mSet(final KeyValue<String, String>... values) {
-		final CommandArguments args = CommandArguments.create(values);
-		return executeCommand(RedisCommand.MSET, args, (cmd)->cmd.mset(buildSetValues(values)),
-				(cmd)->cmd.mset(buildSetValues(values)), new OkStatusConverter());
+	public Status mSet(final KeyValue<String, String>... data) {
+		final CommandArguments args = CommandArguments.create(data);
+		return executeCommand(RedisCommand.MSET, args, (cmd)->cmd.mset(buildSetValues(data)),
+				(cmd)->cmd.mset(buildSetValues(data)), new OkStatusConverter());
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
-	public Status mSetEx(final KeyValue<String, String>... values) {
-		final CommandArguments args = CommandArguments.create(values);
+	public Status mSetEx(final KeyValue<String, String>... data) {
+		final CommandArguments args = CommandArguments.create(data);
 		return executeCommand(RedisCommand.MSETNX, args,
-				(cmd)->cmd.msetex(buildSetValues(values), new LettuceMSetExArgs()),
-				(cmd)->cmd.msetex(buildSetValues(values), new LettuceMSetExArgs()), new BooleanStatusConverter());
+				(cmd)->cmd.msetex(buildSetValues(data), new LettuceMSetExArgs()),
+				(cmd)->cmd.msetex(buildSetValues(data), new LettuceMSetExArgs()), new BooleanStatusConverter());
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
-	public Status mSetEx(final NxXx nxXx, final KeyValue<String, String>... values) {
-		final CommandArguments args = CommandArguments.create(values).add(nxXx);
-		return mSetEx(new LettuceMSetExArgs(nxXx), values, args);
+	public Status mSetEx(final NxXx nxXx, final KeyValue<String, String>... data) {
+		final CommandArguments args = CommandArguments.create(data).add(nxXx);
+		return mSetEx(new LettuceMSetExArgs(nxXx), data, args);
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	public Status mSetEx(final NxXx nxXx, final PxExType exType, final long expires,
-	                     final KeyValue<String, String>... values) {
-		final CommandArguments args = CommandArguments.create(values).add(nxXx).add(exType, expires);
-		return mSetEx(new LettuceMSetExArgs(nxXx, exType, expires), values, args);
+	                     final KeyValue<String, String>... data) {
+		final CommandArguments args = CommandArguments.create(data).add(nxXx).add(exType, expires);
+		return mSetEx(new LettuceMSetExArgs(nxXx, exType, expires), data, args);
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
-	public Status mSetEx(final PxExType exType, final long expires, final KeyValue<String, String>... values) {
-		final CommandArguments args = CommandArguments.create(values).add(exType, expires);
-		return mSetEx(new LettuceMSetExArgs(exType, expires), values, args);
+	public Status mSetEx(final PxExType exType, final long expires, final KeyValue<String, String>... data) {
+		final CommandArguments args = CommandArguments.create(data).add(exType, expires);
+		return mSetEx(new LettuceMSetExArgs(exType, expires), data, args);
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
-	public Status mSetNx(final KeyValue<String, String>... values) {
-		final CommandArguments args = CommandArguments.create(values);
-		return executeCommand(RedisCommand.MSETNX, args, (cmd)->cmd.msetnx(buildSetValues(values)),
-				(cmd)->cmd.msetnx(buildSetValues(values)), new BooleanStatusConverter());
+	public Status mSetNx(final KeyValue<String, String>... data) {
+		final CommandArguments args = CommandArguments.create(data);
+		return executeCommand(RedisCommand.MSETNX, args, (cmd)->cmd.msetnx(buildSetValues(data)),
+				(cmd)->cmd.msetnx(buildSetValues(data)), new BooleanStatusConverter());
 	}
 
 	@Override
@@ -531,10 +531,10 @@ public final class LettuceStringCommands extends AbstractLettuceRedisCommands im
 				(cmd)->cmd.delex(key, condition), new OneStatusConverter());
 	}
 
-	private Status mSetEx(final MSetExArgs mSetExArgs, final KeyValue<String, String>[] values,
+	private Status mSetEx(final MSetExArgs mSetExArgs, final KeyValue<String, String>[] data,
 	                      final CommandArguments args) {
-		return executeCommand(RedisCommand.MSETEX, args, (cmd)->cmd.msetex(buildSetValues(values), mSetExArgs),
-				(cmd)->cmd.msetex(buildSetValues(values), mSetExArgs), new BooleanStatusConverter());
+		return executeCommand(RedisCommand.MSETEX, args, (cmd)->cmd.msetex(buildSetValues(data), mSetExArgs),
+				(cmd)->cmd.msetex(buildSetValues(data), mSetExArgs), new BooleanStatusConverter());
 	}
 
 	private Status set(final byte[] key, final String value, final SetArgs setArgs, final CommandArguments args) {
@@ -548,10 +548,10 @@ public final class LettuceStringCommands extends AbstractLettuceRedisCommands im
 	}
 
 	@SuppressWarnings({"unchecked"})
-	private Map<byte[], byte[]> buildSetValues(final KeyValue<String, String>... values) {
+	private Map<byte[], byte[]> buildSetValues(final KeyValue<String, String>... data) {
 		final ArrayKeyValueMapConverter<String, String, byte[], byte[]> arrayKeyValueMapConverter = new ArrayKeyValueMapConverter<>(
 				SafeEncoder::encode, SafeEncoder::encode);
-		return arrayKeyValueMapConverter.convert(values);
+		return arrayKeyValueMapConverter.convert(data);
 	}
 
 }

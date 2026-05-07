@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.operations;
 
+import com.buession.core.collect.Arrays;
 import com.buession.core.type.TypeReference;
 import com.buession.lang.Status;
 import com.buession.redis.core.JsonType;
@@ -90,15 +91,13 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 	@Override
 	default List<Long> jsonArrIndex(final String key, final String path, final String value, final int start,
 	                                final int stop) {
-		return execute(
-				(client)->client.jsonCommands().jsonArrIndex(KeyUtils.rawKey(this, key), path, value, start, stop));
+		return doExecute((cmd)->cmd.jsonArrIndex(KeyUtils.rawKey(this, key), path, value, start, stop));
 	}
 
 	@Override
 	default List<Long> jsonArrIndex(final byte[] key, final byte[] path, final byte[] value, final int start,
 	                                final int stop) {
-		return execute(
-				(client)->client.jsonCommands().jsonArrIndex(KeyUtils.rawKey(this, key), path, value, start, stop));
+		return doExecute((cmd)->cmd.jsonArrIndex(KeyUtils.rawKey(this, key), path, value, start, stop));
 	}
 
 	@Override
@@ -675,7 +674,9 @@ public interface JsonOperations extends JsonCommands, RedisOperations {
 
 	@Override
 	default Status jsonMSet(final KeyPathValue... data) {
-		return doExecute((cmd)->cmd.jsonMSet(data));
+		final KeyPathValue[] newData = Arrays.map(data, (item)->new KeyPathValue(KeyUtils.rawKey(this, item.getKey())
+				, item.getPath(), item.getValue()));
+		return doExecute((cmd)->cmd.jsonMSet(newData));
 	}
 
 	@Override

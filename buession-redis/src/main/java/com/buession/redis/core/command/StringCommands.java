@@ -519,26 +519,26 @@ public interface StringCommands extends RedisCommands {
 	 *
 	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/mset/" target="_blank">https://redis.io/docs/latest/commands/mset/</a></p>
 	 *
-	 * @param values
+	 * @param data
 	 * 		键值对
 	 *
 	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
 	@SuppressWarnings({"unchecked"})
-	Status mSet(final KeyValue<String, String>... values);
+	Status mSet(final KeyValue<String, String>... data);
 
 	/**
 	 * Atomically sets multiple string keys with an optional shared expiration in a single operation.
 	 *
 	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/msetnx/" target="_blank">https://redis.io/docs/latest/commands/msetnx/</a></p>
 	 *
-	 * @param values
+	 * @param data
 	 * 		键值对
 	 *
 	 * @return 当所有给定键都设置成功时，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
 	@SuppressWarnings({"unchecked"})
-	Status mSetEx(final KeyValue<String, String>... values);
+	Status mSetEx(final KeyValue<String, String>... data);
 
 	/**
 	 * Atomically sets multiple string keys with an optional shared expiration in a single operation.
@@ -547,13 +547,13 @@ public interface StringCommands extends RedisCommands {
 	 *
 	 * @param nxXx
 	 *        {@link NxXx}
-	 * @param values
+	 * @param data
 	 * 		键值对
 	 *
 	 * @return 当所有给定键都设置成功时，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
 	@SuppressWarnings({"unchecked"})
-	Status mSetEx(final NxXx nxXx, final KeyValue<String, String>... values);
+	Status mSetEx(final NxXx nxXx, final KeyValue<String, String>... data);
 
 	/**
 	 * Atomically sets multiple string keys with an optional shared expiration in a single operation.
@@ -566,14 +566,14 @@ public interface StringCommands extends RedisCommands {
 	 * 		过期时间类型
 	 * @param expires
 	 * 		过期时间
-	 * @param values
+	 * @param data
 	 * 		键值对
 	 *
 	 * @return 当所有给定键都设置成功时，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
 	@SuppressWarnings({"unchecked"})
 	Status mSetEx(final NxXx nxXx, final PxExType exType, final long expires,
-	              final KeyValue<String, String>... values);
+	              final KeyValue<String, String>... data);
 
 	/**
 	 * Atomically sets multiple string keys with an optional shared expiration in a single operation.
@@ -584,26 +584,26 @@ public interface StringCommands extends RedisCommands {
 	 * 		过期时间类型
 	 * @param expires
 	 * 		过期时间
-	 * @param values
+	 * @param data
 	 * 		键值对
 	 *
 	 * @return 当所有给定键都设置成功时，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
 	@SuppressWarnings({"unchecked"})
-	Status mSetEx(final PxExType exType, final long expires, final KeyValue<String, String>... values);
+	Status mSetEx(final PxExType exType, final long expires, final KeyValue<String, String>... data);
 
 	/**
 	 * 当且仅当所有给定键都不存在时，为所有给定键设置值
 	 *
 	 * <p>详情说明 <a href="https://redis.io/docs/latest/commands/msetnx/" target="_blank">https://redis.io/docs/latest/commands/msetnx/</a></p>
 	 *
-	 * @param values
+	 * @param data
 	 * 		键值对
 	 *
 	 * @return 当所有给定键都设置成功时，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
 	@SuppressWarnings({"unchecked"})
-	Status mSetNx(final KeyValue<String, String>... values);
+	Status mSetNx(final KeyValue<String, String>... data);
 
 	/**
 	 * 将键 key 的值设置为 value ，并将键 key 的生存时间设置为 lifetime；

@@ -316,51 +316,51 @@ public final class JedisStringCommands extends AbstractJedisRedisCommands implem
 
 	@SuppressWarnings({"unchecked"})
 	@Override
-	public Status mSet(final KeyValue<String, String>... values) {
-		final CommandArguments args = CommandArguments.create(values);
-		return executeCommand(RedisCommand.MSET, args, (cmd)->cmd.mset(buildSetValues(values)),
-				(cmd)->cmd.mset(buildSetValues(values)), (cmd)->cmd.mset(buildSetValues(values)),
+	public Status mSet(final KeyValue<String, String>... data) {
+		final CommandArguments args = CommandArguments.create(data);
+		return executeCommand(RedisCommand.MSET, args, (cmd)->cmd.mset(buildSetValues(data)),
+				(cmd)->cmd.mset(buildSetValues(data)), (cmd)->cmd.mset(buildSetValues(data)),
 				new OkStatusConverter());
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
-	public Status mSetEx(final KeyValue<String, String>... values) {
-		final CommandArguments args = CommandArguments.create(values);
+	public Status mSetEx(final KeyValue<String, String>... data) {
+		final CommandArguments args = CommandArguments.create(data);
 		return executeCommand(RedisCommand.MSETEX, args,
-				(cmd)->cmd.msetex(new JedisMSetExParams(), buildSetValues(values)),
-				(cmd)->cmd.msetex(new JedisMSetExParams(), buildSetValues(values)),
-				(cmd)->cmd.msetex(new JedisMSetExParams(), buildSetValues(values)), new BooleanStatusConverter());
+				(cmd)->cmd.msetex(new JedisMSetExParams(), buildSetValues(data)),
+				(cmd)->cmd.msetex(new JedisMSetExParams(), buildSetValues(data)),
+				(cmd)->cmd.msetex(new JedisMSetExParams(), buildSetValues(data)), new BooleanStatusConverter());
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
-	public Status mSetEx(final NxXx nxXx, final KeyValue<String, String>... values) {
-		final CommandArguments args = CommandArguments.create(values).add(nxXx);
-		return mSetEx(new JedisMSetExParams(nxXx), values, args);
+	public Status mSetEx(final NxXx nxXx, final KeyValue<String, String>... data) {
+		final CommandArguments args = CommandArguments.create(data).add(nxXx);
+		return mSetEx(new JedisMSetExParams(nxXx), data, args);
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	public Status mSetEx(final NxXx nxXx, final PxExType exType, final long expires,
-	                     final KeyValue<String, String>... values) {
-		final CommandArguments args = CommandArguments.create(values).add(nxXx).add(exType, expires);
-		return mSetEx(new JedisMSetExParams(nxXx, exType, expires), values, args);
+	                     final KeyValue<String, String>... data) {
+		final CommandArguments args = CommandArguments.create(data).add(nxXx).add(exType, expires);
+		return mSetEx(new JedisMSetExParams(nxXx, exType, expires), data, args);
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
-	public Status mSetEx(final PxExType exType, final long expires, final KeyValue<String, String>... values) {
-		final CommandArguments args = CommandArguments.create(values).add(exType, expires);
-		return mSetEx(new JedisMSetExParams(exType, expires), values, args);
+	public Status mSetEx(final PxExType exType, final long expires, final KeyValue<String, String>... data) {
+		final CommandArguments args = CommandArguments.create(data).add(exType, expires);
+		return mSetEx(new JedisMSetExParams(exType, expires), data, args);
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
-	public Status mSetNx(final KeyValue<String, String>... values) {
-		final CommandArguments args = CommandArguments.create(values);
-		return executeCommand(RedisCommand.MSETNX, args, (cmd)->cmd.msetnx(buildSetValues(values)),
-				(cmd)->cmd.msetnx(buildSetValues(values)), (cmd)->cmd.msetnx(buildSetValues(values)),
+	public Status mSetNx(final KeyValue<String, String>... data) {
+		final CommandArguments args = CommandArguments.create(data);
+		return executeCommand(RedisCommand.MSETNX, args, (cmd)->cmd.msetnx(buildSetValues(data)),
+				(cmd)->cmd.msetnx(buildSetValues(data)), (cmd)->cmd.msetnx(buildSetValues(data)),
 				new OneStatusConverter());
 	}
 
@@ -542,11 +542,11 @@ public final class JedisStringCommands extends AbstractJedisRedisCommands implem
 				new LCSMatchResultConveter());
 	}
 
-	private Status mSetEx(final MSetExParams mSetExParams, final KeyValue<String, String>[] values,
+	private Status mSetEx(final MSetExParams mSetExParams, final KeyValue<String, String>[] data,
 	                      final CommandArguments args) {
-		return executeCommand(RedisCommand.MSETEX, args, (cmd)->cmd.msetex(mSetExParams, buildSetValues(values)),
-				(cmd)->cmd.msetex(mSetExParams, buildSetValues(values)),
-				(cmd)->cmd.msetex(mSetExParams, buildSetValues(values)), new BooleanStatusConverter());
+		return executeCommand(RedisCommand.MSETEX, args, (cmd)->cmd.msetex(mSetExParams, buildSetValues(data)),
+				(cmd)->cmd.msetex(mSetExParams, buildSetValues(data)),
+				(cmd)->cmd.msetex(mSetExParams, buildSetValues(data)), new BooleanStatusConverter());
 	}
 
 	private Status set(final String key, final String value, final SetParams setParams, final CommandArguments args) {
@@ -562,16 +562,22 @@ public final class JedisStringCommands extends AbstractJedisRedisCommands implem
 	}
 
 	@SuppressWarnings({"unchecked"})
-	private String[] buildSetValues(final KeyValue<String, String>... values) {
-		final String[] keysValues = new String[values.length * 2];
-		int i = 0;
+	private String[] buildSetValues(final KeyValue<String, String>... data) {
+		if(data == null){
+			return null;
+		}else if(data.length == 0){
+			return new String[0];
+		}else{
+			final String[] newData = new String[data.length * 2];
+			int i = 0;
 
-		for(KeyValue<String, String> kv : values){
-			keysValues[i++] = kv.getKey();
-			keysValues[i++] = kv.getValue();
+			for(KeyValue<String, String> kv : data){
+				newData[i++] = kv.getKey();
+				newData[i++] = kv.getValue();
+			}
+
+			return newData;
 		}
-
-		return keysValues;
 	}
 
 }

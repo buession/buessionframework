@@ -1053,12 +1053,12 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default String lPop(final String key) {
-		return doExecute((cmd)->cmd.lPop(key));
+		return doExecute((cmd)->cmd.lPop(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default byte[] lPop(final byte[] key) {
-		return doExecute((cmd)->cmd.lPop(key));
+		return doExecute((cmd)->cmd.lPop(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override

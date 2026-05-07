@@ -1605,12 +1605,12 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 
 	@Override
 	default List<String> sort(final String key) {
-		return doExecute((cmd)->cmd.sort(key));
+		return doExecute((cmd)->cmd.sort(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default List<byte[]> sort(final byte[] key) {
-		return doExecute((cmd)->cmd.sort(key));
+		return doExecute((cmd)->cmd.sort(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
