@@ -3027,7 +3027,7 @@ public class Arrays extends org.apache.commons.lang3.ArrayUtils {
 	 * @param <T>
 	 * 		目标数组类型
 	 *
-	 * @return 新的 Map
+	 * @return 新的数组
 	 */
 	@SuppressWarnings("unchecked")
 	public static <S, T> T[] map(final S[] arrays, final Class<T> clazz, final Function<S, T> fn) {
@@ -3041,6 +3041,32 @@ public class Arrays extends org.apache.commons.lang3.ArrayUtils {
 			}
 
 			return result;
+		}
+	}
+
+	/**
+	 * 对数组的元素进行操作
+	 *
+	 * @param arrays
+	 * 		需操作的数组
+	 * @param fn
+	 * 		Value 操作函数
+	 * @param <T>
+	 * 		数组类型
+	 *
+	 * @return 数组
+	 *
+	 * @since 4.0.0
+	 */
+	public static <T> T[] map(final T[] arrays, final Function<T, T> fn) {
+		if(arrays == null){
+			return null;
+		}else{
+			for(int i = 0; i < arrays.length; i++){
+				arrays[i] = fn.apply(arrays[i]);
+			}
+
+			return arrays;
 		}
 	}
 
