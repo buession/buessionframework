@@ -25,6 +25,7 @@
 package com.buession.redis.core.operations;
 
 import com.buession.lang.Status;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.args.FlushMode;
 import com.buession.redis.core.command.args.scripting.FunctionRestoreMode;
 import com.buession.redis.core.FunctionStats;
@@ -45,317 +46,321 @@ public interface ScriptingOperations extends ScriptingCommands, RedisOperations 
 
 	@Override
 	default Object eval(final String script) {
-		return execute((client)->client.scriptingCommands().eval(script));
+		return doExecute((cmd)->cmd.eval(script));
 	}
 
 	@Override
 	default Object eval(final byte[] script) {
-		return execute((client)->client.scriptingCommands().eval(script));
+		return doExecute((cmd)->cmd.eval(script));
 	}
 
 	@Override
 	default Object eval(final String script, final String... keys) {
-		return execute((client)->client.scriptingCommands().eval(script, keys));
+		return doExecute((cmd)->cmd.eval(script, keys));
 	}
 
 	@Override
 	default Object eval(final byte[] script, final byte[]... keys) {
-		return execute((client)->client.scriptingCommands().eval(script, keys));
+		return doExecute((cmd)->cmd.eval(script, keys));
 	}
 
 	@Override
 	default Object eval(final String script, final String[] keys, final String[] arguments) {
-		return execute((client)->client.scriptingCommands().eval(script, keys, arguments));
+		return doExecute((cmd)->cmd.eval(script, keys, arguments));
 	}
 
 	@Override
 	default Object eval(final byte[] script, final byte[][] keys, final byte[][] arguments) {
-		return execute((client)->client.scriptingCommands().eval(script, keys, arguments));
+		return doExecute((cmd)->cmd.eval(script, keys, arguments));
 	}
 
 	@Override
 	default Object evalRo(final String script) {
-		return execute((client)->client.scriptingCommands().evalRo(script));
+		return doExecute((cmd)->cmd.evalRo(script));
 	}
 
 	@Override
 	default Object evalRo(final byte[] script) {
-		return execute((client)->client.scriptingCommands().evalRo(script));
+		return doExecute((cmd)->cmd.evalRo(script));
 	}
 
 	@Override
 	default Object evalRo(final String script, final String... keys) {
-		return execute((client)->client.scriptingCommands().evalRo(script, keys));
+		return doExecute((cmd)->cmd.evalRo(script, keys));
 	}
 
 	@Override
 	default Object evalRo(final byte[] script, final byte[]... keys) {
-		return execute((client)->client.scriptingCommands().evalRo(script, keys));
+		return doExecute((cmd)->cmd.evalRo(script, keys));
 	}
 
 	@Override
 	default Object evalRo(final String script, final String[] keys, final String[] arguments) {
-		return execute((client)->client.scriptingCommands().evalRo(script, keys, arguments));
+		return doExecute((cmd)->cmd.evalRo(script, keys, arguments));
 	}
 
 	@Override
 	default Object evalRo(final byte[] script, final byte[][] keys, final byte[][] arguments) {
-		return execute((client)->client.scriptingCommands().evalRo(script, keys, arguments));
+		return doExecute((cmd)->cmd.evalRo(script, keys, arguments));
 	}
 
 	@Override
 	default Object evalSha(final String digest) {
-		return execute((client)->client.scriptingCommands().evalSha(digest));
+		return doExecute((cmd)->cmd.evalSha(digest));
 	}
 
 	@Override
 	default Object evalSha(final byte[] digest) {
-		return execute((client)->client.scriptingCommands().evalSha(digest));
+		return doExecute((cmd)->cmd.evalSha(digest));
 	}
 
 	@Override
 	default Object evalSha(final String digest, final String... keys) {
-		return execute((client)->client.scriptingCommands().evalSha(digest, keys));
+		return doExecute((cmd)->cmd.evalSha(digest, keys));
 	}
 
 	@Override
 	default Object evalSha(final byte[] digest, final byte[]... keys) {
-		return execute((client)->client.scriptingCommands().evalSha(digest, keys));
+		return doExecute((cmd)->cmd.evalSha(digest, keys));
 	}
 
 	@Override
 	default Object evalSha(final String digest, final String[] keys, final String[] arguments) {
-		return execute((client)->client.scriptingCommands().evalSha(digest, keys, arguments));
+		return doExecute((cmd)->cmd.evalSha(digest, keys, arguments));
 	}
 
 	@Override
 	default Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] arguments) {
-		return execute((client)->client.scriptingCommands().evalSha(digest, keys, arguments));
+		return doExecute((cmd)->cmd.evalSha(digest, keys, arguments));
 	}
 
 	@Override
 	default Object evalShaRo(final String digest) {
-		return execute((client)->client.scriptingCommands().evalShaRo(digest));
+		return doExecute((cmd)->cmd.evalShaRo(digest));
 	}
 
 	@Override
 	default Object evalShaRo(final byte[] digest) {
-		return execute((client)->client.scriptingCommands().evalShaRo(digest));
+		return doExecute((cmd)->cmd.evalShaRo(digest));
 	}
 
 	@Override
 	default Object evalShaRo(final String digest, final String... keys) {
-		return execute((client)->client.scriptingCommands().evalShaRo(digest, keys));
+		return doExecute((cmd)->cmd.evalShaRo(digest, keys));
 	}
 
 	@Override
 	default Object evalShaRo(final byte[] digest, final byte[]... keys) {
-		return execute((client)->client.scriptingCommands().evalShaRo(digest, keys));
+		return doExecute((cmd)->cmd.evalShaRo(digest, keys));
 	}
 
 	@Override
 	default Object evalShaRo(final String digest, final String[] keys, final String[] arguments) {
-		return execute((client)->client.scriptingCommands().evalShaRo(digest, keys, arguments));
+		return doExecute((cmd)->cmd.evalShaRo(digest, keys, arguments));
 	}
 
 	@Override
 	default Object evalShaRo(final byte[] digest, final byte[][] keys, final byte[][] arguments) {
-		return execute((client)->client.scriptingCommands().evalShaRo(digest, keys, arguments));
+		return doExecute((cmd)->cmd.evalShaRo(digest, keys, arguments));
 	}
 
 	@Override
 	default Object fCall(final String function) {
-		return execute((client)->client.scriptingCommands().fCall(function));
+		return doExecute((cmd)->cmd.fCall(function));
 	}
 
 	@Override
 	default Object fCall(final byte[] function) {
-		return execute((client)->client.scriptingCommands().fCall(function));
+		return doExecute((cmd)->cmd.fCall(function));
 	}
 
 	@Override
 	default Object fCall(final String function, final String... keys) {
-		return execute((client)->client.scriptingCommands().fCall(function, keys));
+		return doExecute((cmd)->cmd.fCall(function, keys));
 	}
 
 	@Override
 	default Object fCall(final byte[] function, final byte[]... keys) {
-		return execute((client)->client.scriptingCommands().fCall(function, keys));
+		return doExecute((cmd)->cmd.fCall(function, keys));
 	}
 
 	@Override
 	default Object fCall(final String function, final String[] keys, final String[] arguments) {
-		return execute((client)->client.scriptingCommands().fCall(function, keys, arguments));
+		return doExecute((cmd)->cmd.fCall(function, keys, arguments));
 	}
 
 	@Override
 	default Object fCall(final byte[] function, final byte[][] keys, final byte[][] arguments) {
-		return execute((client)->client.scriptingCommands().fCall(function, keys, arguments));
+		return doExecute((cmd)->cmd.fCall(function, keys, arguments));
 	}
 
 	@Override
 	default Object fCallRo(final String function) {
-		return execute((client)->client.scriptingCommands().fCallRo(function));
+		return doExecute((cmd)->cmd.fCallRo(function));
 	}
 
 	@Override
 	default Object fCallRo(final byte[] function) {
-		return execute((client)->client.scriptingCommands().fCallRo(function));
+		return doExecute((cmd)->cmd.fCallRo(function));
 	}
 
 	@Override
 	default Object fCallRo(final String function, final String... keys) {
-		return execute((client)->client.scriptingCommands().fCallRo(function, keys));
+		return doExecute((cmd)->cmd.fCallRo(function, keys));
 	}
 
 	@Override
 	default Object fCallRo(final byte[] function, final byte[]... keys) {
-		return execute((client)->client.scriptingCommands().fCallRo(function, keys));
+		return doExecute((cmd)->cmd.fCallRo(function, keys));
 	}
 
 	@Override
 	default Object fCallRo(final String function, final String[] keys, final String[] arguments) {
-		return execute((client)->client.scriptingCommands().fCallRo(function, keys, arguments));
+		return doExecute((cmd)->cmd.fCallRo(function, keys, arguments));
 	}
 
 	@Override
 	default Object fCallRo(final byte[] function, final byte[][] keys, final byte[][] arguments) {
-		return execute((client)->client.scriptingCommands().fCallRo(function, keys, arguments));
+		return doExecute((cmd)->cmd.fCallRo(function, keys, arguments));
 	}
 
 	@Override
 	default Status functionDelete(final String libraryName) {
-		return execute((client)->client.scriptingCommands().functionDelete(libraryName));
+		return doExecute((cmd)->cmd.functionDelete(libraryName));
 	}
 
 	@Override
 	default byte[] functionDump() {
-		return execute((client)->client.scriptingCommands().functionDump());
+		return doExecute((cmd)->cmd.functionDump());
 	}
 
 	@Override
 	default Status functionFlush() {
-		return execute((client)->client.scriptingCommands().functionFlush());
+		return doExecute((cmd)->cmd.functionFlush());
 	}
 
 	@Override
 	default Status functionFlush(final FlushMode flushMode) {
-		return execute((client)->client.scriptingCommands().functionFlush(flushMode));
+		return doExecute((cmd)->cmd.functionFlush(flushMode));
 	}
 
 	@Override
 	default Status functionKill() {
-		return execute((client)->client.scriptingCommands().functionKill());
+		return doExecute((cmd)->cmd.functionKill());
 	}
 
 	@Override
 	default List<LibraryInfo> functionList() {
-		return execute((client)->client.scriptingCommands().functionList());
+		return doExecute((cmd)->cmd.functionList());
 	}
 
 	@Override
 	default List<LibraryInfo> functionList(final String pattern) {
-		return execute((client)->client.scriptingCommands().functionList(pattern));
+		return doExecute((cmd)->cmd.functionList(pattern));
 	}
 
 	@Override
 	default List<LibraryInfo> functionList(final byte[] pattern) {
-		return execute((client)->client.scriptingCommands().functionList(pattern));
+		return doExecute((cmd)->cmd.functionList(pattern));
 	}
 
 	@Override
 	default List<LibraryInfo> functionList(final String pattern, final boolean withCode) {
-		return execute((client)->client.scriptingCommands().functionList(pattern, withCode));
+		return doExecute((cmd)->cmd.functionList(pattern, withCode));
 	}
 
 	@Override
 	default List<LibraryInfo> functionList(final byte[] pattern, final boolean withCode) {
-		return execute((client)->client.scriptingCommands().functionList(pattern, withCode));
+		return doExecute((cmd)->cmd.functionList(pattern, withCode));
 	}
 
 	@Override
 	default List<LibraryInfo> functionList(final boolean withCode) {
-		return execute((client)->client.scriptingCommands().functionList(withCode));
+		return doExecute((cmd)->cmd.functionList(withCode));
 	}
 
 	@Override
 	default String functionLoad(final String functionCode) {
-		return execute((client)->client.scriptingCommands().functionLoad(functionCode));
+		return doExecute((cmd)->cmd.functionLoad(functionCode));
 	}
 
 	@Override
 	default byte[] functionLoad(final byte[] functionCode) {
-		return execute((client)->client.scriptingCommands().functionLoad(functionCode));
+		return doExecute((cmd)->cmd.functionLoad(functionCode));
 	}
 
 	@Override
 	default String functionLoad(final String functionCode, final boolean replace) {
-		return execute((client)->client.scriptingCommands().functionLoad(functionCode, replace));
+		return doExecute((cmd)->cmd.functionLoad(functionCode, replace));
 	}
 
 	@Override
 	default byte[] functionLoad(final byte[] functionCode, final boolean replace) {
-		return execute((client)->client.scriptingCommands().functionLoad(functionCode, replace));
+		return doExecute((cmd)->cmd.functionLoad(functionCode, replace));
 	}
 
 	@Override
 	default Status functionRestore(final byte[] value) {
-		return execute((client)->client.scriptingCommands().functionRestore(value));
+		return doExecute((cmd)->cmd.functionRestore(value));
 	}
 
 	@Override
 	default Status functionRestore(final byte[] value, final FunctionRestoreMode mode) {
-		return execute((client)->client.scriptingCommands().functionRestore(value, mode));
+		return doExecute((cmd)->cmd.functionRestore(value, mode));
 	}
 
 	@Override
 	default FunctionStats functionStats() {
-		return execute((client)->client.scriptingCommands().functionStats());
+		return doExecute((cmd)->cmd.functionStats());
 	}
 
 	@Override
 	default Object scriptDebug() {
-		return execute((client)->client.scriptingCommands().scriptDebug());
+		return doExecute((cmd)->cmd.scriptDebug());
 	}
 
 	@Override
 	default Object scriptDebug(final DebugMode mode) {
-		return execute((client)->client.scriptingCommands().scriptDebug(mode));
+		return doExecute((cmd)->cmd.scriptDebug(mode));
 	}
 
 	@Override
 	default List<Boolean> scriptExists(final String... sha1) {
-		return execute((client)->client.scriptingCommands().scriptExists(sha1));
+		return doExecute((cmd)->cmd.scriptExists(sha1));
 	}
 
 	@Override
 	default List<Boolean> scriptExists(final byte[]... sha1) {
-		return execute((client)->client.scriptingCommands().scriptExists(sha1));
+		return doExecute((cmd)->cmd.scriptExists(sha1));
 	}
 
 	@Override
 	default Status scriptFlush() {
-		return execute((client)->client.scriptingCommands().scriptFlush());
+		return doExecute((cmd)->cmd.scriptFlush());
 	}
 
 	@Override
 	default Status scriptFlush(final FlushMode mode) {
-		return execute((client)->client.scriptingCommands().scriptFlush(mode));
+		return doExecute((cmd)->cmd.scriptFlush(mode));
 	}
 
 	@Override
 	default Status scriptKill() {
-		return execute((client)->client.scriptingCommands().scriptKill());
+		return doExecute((cmd)->cmd.scriptKill());
 	}
 
 	@Override
 	default String scriptLoad(final String script) {
-		return execute((client)->client.scriptingCommands().scriptLoad(script));
+		return doExecute((cmd)->cmd.scriptLoad(script));
 	}
 
 	@Override
 	default byte[] scriptLoad(final byte[] script) {
-		return execute((client)->client.scriptingCommands().scriptLoad(script));
+		return doExecute((cmd)->cmd.scriptLoad(script));
+	}
+
+	private <R> R doExecute(final Command.Executor<ScriptingCommands, R> executor) {
+		return execute((client)->executor.execute(client.scriptingCommands()));
 	}
 
 }

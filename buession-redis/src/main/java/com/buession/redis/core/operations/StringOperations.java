@@ -27,6 +27,7 @@ package com.buession.redis.core.operations;
 import com.buession.core.type.TypeReference;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.args.GetExType;
 import com.buession.redis.core.command.args.NxXx;
 import com.buession.redis.core.command.args.PxExType;
@@ -51,70 +52,70 @@ public interface StringOperations extends StringCommands, RedisOperations {
 
 	@Override
 	default Long append(final String key, final String value) {
-		return execute((client)->client.stringCommands().append(KeyUtils.rawKey(this, key), value));
+		return doExecute((cmd)->cmd.append(KeyUtils.rawKey(this, key), value));
 	}
 
 	@Override
 	default Long append(final byte[] key, final byte[] value) {
-		return execute((client)->client.stringCommands().append(KeyUtils.rawKey(this, key), value));
+		return doExecute((cmd)->cmd.append(KeyUtils.rawKey(this, key), value));
 	}
 
 	@Override
 	default Long decr(final String key) {
-		return execute((client)->client.stringCommands().decr(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.decr(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long decr(final byte[] key) {
-		return execute((client)->client.stringCommands().decr(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.decr(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long decrBy(final String key, final long value) {
-		return execute((client)->client.stringCommands().decrBy(KeyUtils.rawKey(this, key), value));
+		return doExecute((cmd)->cmd.decrBy(KeyUtils.rawKey(this, key), value));
 	}
 
 	@Override
 	default Long decrBy(final byte[] key, final long value) {
-		return execute((client)->client.stringCommands().decrBy(KeyUtils.rawKey(this, key), value));
+		return doExecute((cmd)->cmd.decrBy(KeyUtils.rawKey(this, key), value));
 	}
 
 	default Double decrByFloat(final String key, final double value) {
-		return execute((client)->client.stringCommands().incrByFloat(KeyUtils.rawKey(this, key), value * -1));
+		return doExecute((cmd)->cmd.incrByFloat(KeyUtils.rawKey(this, key), value * -1));
 	}
 
 	default Double decrByFloat(final byte[] key, final double value) {
-		return execute((client)->client.stringCommands().incrByFloat(KeyUtils.rawKey(this, key), value * -1));
+		return doExecute((cmd)->cmd.incrByFloat(KeyUtils.rawKey(this, key), value * -1));
 	}
 
 	@Override
 	default Status delEx(final String key, final CompareCondition type, final String value) {
-		return execute((client)->client.stringCommands().delEx(KeyUtils.rawKey(this, key), type, value));
+		return doExecute((cmd)->cmd.delEx(KeyUtils.rawKey(this, key), type, value));
 	}
 
 	@Override
 	default Status delEx(final byte[] key, final CompareCondition type, final byte[] value) {
-		return execute((client)->client.stringCommands().delEx(KeyUtils.rawKey(this, key), type, value));
+		return doExecute((cmd)->cmd.delEx(KeyUtils.rawKey(this, key), type, value));
 	}
 
 	@Override
 	default String digest(final String key) {
-		return execute((client)->client.stringCommands().digest(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.digest(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default byte[] digest(final byte[] key) {
-		return execute((client)->client.stringCommands().digest(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.digest(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default String get(final String key) {
-		return execute((client)->client.stringCommands().get(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.get(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default byte[] get(final byte[] key) {
-		return execute((client)->client.stringCommands().get(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.get(KeyUtils.rawKey(this, key)));
 	}
 
 	/**
@@ -187,12 +188,12 @@ public interface StringOperations extends StringCommands, RedisOperations {
 
 	@Override
 	default String getDel(final String key) {
-		return execute((client)->client.stringCommands().getDel(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.getDel(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default byte[] getDel(final byte[] key) {
-		return execute((client)->client.stringCommands().getDel(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.getDel(KeyUtils.rawKey(this, key)));
 	}
 
 	/**
@@ -265,22 +266,22 @@ public interface StringOperations extends StringCommands, RedisOperations {
 
 	@Override
 	default String getEx(final String key) {
-		return execute((client)->client.stringCommands().getEx(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.getEx(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default byte[] getEx(final byte[] key) {
-		return execute((client)->client.stringCommands().getEx(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.getEx(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default String getEx(final String key, final GetExType type, final long expires) {
-		return execute((client)->client.stringCommands().getEx(KeyUtils.rawKey(this, key), type, expires));
+		return doExecute((cmd)->cmd.getEx(KeyUtils.rawKey(this, key), type, expires));
 	}
 
 	@Override
 	default byte[] getEx(final byte[] key, final GetExType type, final long expires) {
-		return execute((client)->client.stringCommands().getEx(KeyUtils.rawKey(this, key), type, expires));
+		return doExecute((cmd)->cmd.getEx(KeyUtils.rawKey(this, key), type, expires));
 	}
 
 	/**
@@ -429,22 +430,22 @@ public interface StringOperations extends StringCommands, RedisOperations {
 
 	@Override
 	default String getRange(final String key, final long start, final long end) {
-		return execute((client)->client.stringCommands().getRange(KeyUtils.rawKey(this, key), start, end));
+		return doExecute((cmd)->cmd.getRange(KeyUtils.rawKey(this, key), start, end));
 	}
 
 	@Override
 	default byte[] getRange(final byte[] key, final long start, final long end) {
-		return execute((client)->client.stringCommands().getRange(KeyUtils.rawKey(this, key), start, end));
+		return doExecute((cmd)->cmd.getRange(KeyUtils.rawKey(this, key), start, end));
 	}
 
 	@Override
 	default String getSet(final String key, final String value) {
-		return execute((client)->client.stringCommands().getSet(KeyUtils.rawKey(this, key), value));
+		return doExecute((cmd)->cmd.getSet(KeyUtils.rawKey(this, key), value));
 	}
 
 	@Override
 	default byte[] getSet(final byte[] key, final byte[] value) {
-		return execute((client)->client.stringCommands().getSet(KeyUtils.rawKey(this, key), value));
+		return doExecute((cmd)->cmd.getSet(KeyUtils.rawKey(this, key), value));
 	}
 
 	/**
@@ -521,64 +522,64 @@ public interface StringOperations extends StringCommands, RedisOperations {
 
 	@Override
 	default Long incr(final String key) {
-		return execute((client)->client.stringCommands().incr(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.incr(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long incr(final byte[] key) {
-		return execute((client)->client.stringCommands().incr(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.incr(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long incrBy(final String key, final long value) {
-		return execute((client)->client.stringCommands().incrBy(KeyUtils.rawKey(this, key), value));
+		return doExecute((cmd)->cmd.incrBy(KeyUtils.rawKey(this, key), value));
 	}
 
 	@Override
 	default Long incrBy(final byte[] key, final long value) {
-		return execute((client)->client.stringCommands().incrBy(KeyUtils.rawKey(this, key), value));
+		return doExecute((cmd)->cmd.incrBy(KeyUtils.rawKey(this, key), value));
 	}
 
 	@Override
 	default Double incrByFloat(final String key, final double value) {
-		return execute((client)->client.stringCommands().incrByFloat(KeyUtils.rawKey(this, key), value));
+		return doExecute((cmd)->cmd.incrByFloat(KeyUtils.rawKey(this, key), value));
 	}
 
 	@Override
 	default Double incrByFloat(final byte[] key, final double value) {
-		return execute((client)->client.stringCommands().incrByFloat(KeyUtils.rawKey(this, key), value));
+		return doExecute((cmd)->cmd.incrByFloat(KeyUtils.rawKey(this, key), value));
 	}
 
 	@Override
 	default LcsResult lcs(final String key1, final String key2) {
-		return execute((client)->client.stringCommands().lcs(KeyUtils.rawKey(this, key1), KeyUtils.rawKey(this, key2)));
+		return doExecute((cmd)->cmd.lcs(KeyUtils.rawKey(this, key1), KeyUtils.rawKey(this, key2)));
 	}
 
 	@Override
 	default LcsResult lcs(final byte[] key1, final byte[] key2) {
-		return execute((client)->client.stringCommands().lcs(KeyUtils.rawKey(this, key1), KeyUtils.rawKey(this, key2)));
+		return doExecute((cmd)->cmd.lcs(KeyUtils.rawKey(this, key1), KeyUtils.rawKey(this, key2)));
 	}
 
 	@Override
 	default LcsResult lcs(final String key1, final String key2, final LcsArgument argument) {
-		return execute((client)->client.stringCommands()
+		return doExecute((cmd)->cmd
 				.lcs(KeyUtils.rawKey(this, key1), KeyUtils.rawKey(this, key2), argument));
 	}
 
 	@Override
 	default LcsResult lcs(final byte[] key1, final byte[] key2, final LcsArgument argument) {
-		return execute((client)->client.stringCommands()
+		return doExecute((cmd)->cmd
 				.lcs(KeyUtils.rawKey(this, key1), KeyUtils.rawKey(this, key2), argument));
 	}
 
 	@Override
 	default List<String> mGet(final String... keys) {
-		return execute((client)->client.stringCommands().mGet(KeyUtils.rawKeys(this, keys)));
+		return doExecute((cmd)->cmd.mGet(KeyUtils.rawKeys(this, keys)));
 	}
 
 	@Override
 	default List<byte[]> mGet(final byte[]... keys) {
-		return execute((client)->client.stringCommands().mGet(KeyUtils.rawKeys(this, keys)));
+		return doExecute((cmd)->cmd.mGet(KeyUtils.rawKeys(this, keys)));
 	}
 
 	/**
@@ -652,48 +653,48 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	@SuppressWarnings({"unchecked"})
 	@Override
 	default Status mSet(final KeyValue<String, String>... values) {
-		return execute((client)->client.stringCommands().mSet(values));
+		return doExecute((cmd)->cmd.mSet(values));
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	default Status mSetEx(final KeyValue<String, String>... values) {
-		return execute((client)->client.stringCommands().mSetEx(values));
+		return doExecute((cmd)->cmd.mSetEx(values));
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	default Status mSetEx(final NxXx nxXx, final KeyValue<String, String>... values) {
-		return execute((client)->client.stringCommands().mSetEx(nxXx, values));
+		return doExecute((cmd)->cmd.mSetEx(nxXx, values));
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	default Status mSetEx(final NxXx nxXx, final PxExType exType, final long expires,
 	                      final KeyValue<String, String>... values) {
-		return execute((client)->client.stringCommands().mSetEx(nxXx, exType, expires, values));
+		return doExecute((cmd)->cmd.mSetEx(nxXx, exType, expires, values));
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	default Status mSetEx(final PxExType exType, final long expires, final KeyValue<String, String>... values) {
-		return execute((client)->client.stringCommands().mSetEx(exType, expires, values));
+		return doExecute((cmd)->cmd.mSetEx(exType, expires, values));
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	default Status mSetNx(final KeyValue<String, String>... values) {
-		return execute((client)->client.stringCommands().mSetNx(values));
+		return doExecute((cmd)->cmd.mSetNx(values));
 	}
 
 	@Override
 	default Status pSetEx(final String key, final String value, final int lifetime) {
-		return execute((client)->client.stringCommands().pSetEx(KeyUtils.rawKey(this, key), value, lifetime));
+		return doExecute((cmd)->cmd.pSetEx(KeyUtils.rawKey(this, key), value, lifetime));
 	}
 
 	@Override
 	default Status pSetEx(final byte[] key, final byte[] value, final int lifetime) {
-		return execute((client)->client.stringCommands().pSetEx(KeyUtils.rawKey(this, key), value, lifetime));
+		return doExecute((cmd)->cmd.pSetEx(KeyUtils.rawKey(this, key), value, lifetime));
 	}
 
 	/**
@@ -812,46 +813,44 @@ public interface StringOperations extends StringCommands, RedisOperations {
 
 	@Override
 	default Status set(final String key, final String value) {
-		return execute((client)->client.stringCommands().set(KeyUtils.rawKey(this, key), value));
+		return doExecute((cmd)->cmd.set(KeyUtils.rawKey(this, key), value));
 	}
 
 	@Override
 	default Status set(final byte[] key, final byte[] value) {
-		return execute((client)->client.stringCommands().set(KeyUtils.rawKey(this, key), value));
+		return doExecute((cmd)->cmd.set(KeyUtils.rawKey(this, key), value));
 	}
 
 	@Override
 	default Status set(final String key, final String value, final SetType setType) {
-		return execute((client)->client.stringCommands().set(KeyUtils.rawKey(this, key), value, setType));
+		return doExecute((cmd)->cmd.set(KeyUtils.rawKey(this, key), value, setType));
 	}
 
 	@Override
 	default Status set(final byte[] key, final byte[] value, final SetType setType) {
-		return execute((client)->client.stringCommands().set(KeyUtils.rawKey(this, key), value, setType));
+		return doExecute((cmd)->cmd.set(KeyUtils.rawKey(this, key), value, setType));
 	}
 
 	@Override
 	default Status set(final String key, final String value, final SetType setType, final PxExType pxExType,
 	                   final long expires) {
-		return execute(
-				(client)->client.stringCommands().set(KeyUtils.rawKey(this, key), value, setType, pxExType, expires));
+		return doExecute((cmd)->cmd.set(KeyUtils.rawKey(this, key), value, setType, pxExType, expires));
 	}
 
 	@Override
 	default Status set(final byte[] key, final byte[] value, final SetType setType, final PxExType pxExType,
 	                   final long expires) {
-		return execute(
-				(client)->client.stringCommands().set(KeyUtils.rawKey(this, key), value, setType, pxExType, expires));
+		return doExecute((cmd)->cmd.set(KeyUtils.rawKey(this, key), value, setType, pxExType, expires));
 	}
 
 	@Override
 	default Status set(final String key, final String value, final PxExType pxExType, final long expires) {
-		return execute((client)->client.stringCommands().set(KeyUtils.rawKey(this, key), value, pxExType, expires));
+		return doExecute((cmd)->cmd.set(KeyUtils.rawKey(this, key), value, pxExType, expires));
 	}
 
 	@Override
 	default Status set(final byte[] key, final byte[] value, final PxExType pxExType, final long expires) {
-		return execute((client)->client.stringCommands().set(KeyUtils.rawKey(this, key), value, pxExType, expires));
+		return doExecute((cmd)->cmd.set(KeyUtils.rawKey(this, key), value, pxExType, expires));
 	}
 
 	/**
@@ -1016,12 +1015,12 @@ public interface StringOperations extends StringCommands, RedisOperations {
 
 	@Override
 	default Status setEx(final String key, final String value, final int lifetime) {
-		return execute((client)->client.stringCommands().setEx(KeyUtils.rawKey(this, key), value, lifetime));
+		return doExecute((cmd)->cmd.setEx(KeyUtils.rawKey(this, key), value, lifetime));
 	}
 
 	@Override
 	default Status setEx(final byte[] key, final byte[] value, final int lifetime) {
-		return execute((client)->client.stringCommands().setEx(KeyUtils.rawKey(this, key), value, lifetime));
+		return doExecute((cmd)->cmd.setEx(KeyUtils.rawKey(this, key), value, lifetime));
 	}
 
 	/**
@@ -1140,12 +1139,12 @@ public interface StringOperations extends StringCommands, RedisOperations {
 
 	@Override
 	default Status setNx(final String key, final String value) {
-		return execute((client)->client.stringCommands().setNx(KeyUtils.rawKey(this, key), value));
+		return doExecute((cmd)->cmd.setNx(KeyUtils.rawKey(this, key), value));
 	}
 
 	@Override
 	default Status setNx(final byte[] key, final byte[] value) {
-		return execute((client)->client.stringCommands().setNx(KeyUtils.rawKey(this, key), value));
+		return doExecute((cmd)->cmd.setNx(KeyUtils.rawKey(this, key), value));
 	}
 
 	/**
@@ -1182,32 +1181,36 @@ public interface StringOperations extends StringCommands, RedisOperations {
 
 	@Override
 	default Long setRange(final String key, final long offset, final String value) {
-		return execute((client)->client.stringCommands().setRange(KeyUtils.rawKey(this, key), offset, value));
+		return doExecute((cmd)->cmd.setRange(KeyUtils.rawKey(this, key), offset, value));
 	}
 
 	@Override
 	default Long setRange(final byte[] key, final long offset, final byte[] value) {
-		return execute((client)->client.stringCommands().setRange(KeyUtils.rawKey(this, key), offset, value));
+		return doExecute((cmd)->cmd.setRange(KeyUtils.rawKey(this, key), offset, value));
 	}
 
 	@Override
 	default Long strlen(final String key) {
-		return execute((client)->client.stringCommands().strlen(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.strlen(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long strlen(final byte[] key) {
-		return execute((client)->client.stringCommands().strlen(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.strlen(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default String substr(final String key, final long start, final long end) {
-		return execute((client)->client.stringCommands().substr(KeyUtils.rawKey(this, key), start, end));
+		return doExecute((cmd)->cmd.substr(KeyUtils.rawKey(this, key), start, end));
 	}
 
 	@Override
 	default byte[] substr(final byte[] key, final long start, final long end) {
-		return execute((client)->client.stringCommands().substr(KeyUtils.rawKey(this, key), start, end));
+		return doExecute((cmd)->cmd.substr(KeyUtils.rawKey(this, key), start, end));
+	}
+
+	private <R> R doExecute(final Command.Executor<StringCommands, R> executor) {
+		return execute((client)->executor.execute(client.stringCommands()));
 	}
 
 }

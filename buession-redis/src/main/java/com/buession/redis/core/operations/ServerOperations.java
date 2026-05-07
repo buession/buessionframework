@@ -32,6 +32,7 @@ import com.buession.redis.core.AclUser;
 import com.buession.redis.core.CommandDoc;
 import com.buession.redis.core.CommandInfo;
 import com.buession.redis.core.CommandKeyAndFlag;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.args.FlushMode;
 import com.buession.redis.core.HotKey;
 import com.buession.redis.core.Info;
@@ -52,6 +53,7 @@ import com.buession.redis.core.command.args.server.FailoverArgument;
 import com.buession.redis.core.command.args.server.HotkeysStartArgument;
 import com.buession.redis.core.command.args.RestoreArgument;
 import com.buession.redis.core.command.args.server.ShutdownArgument;
+import com.buession.redis.utils.KeyUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -69,282 +71,282 @@ public interface ServerOperations extends ServerCommands, RedisOperations {
 
 	@Override
 	default Set<AclCategory> aclCat() {
-		return execute((client)->client.serverCommands().aclCat());
+		return doExecute((cmd)->cmd.aclCat());
 	}
 
 	@Override
 	default Set<RedisCommand> aclCat(final String categoryName) {
-		return execute((client)->client.serverCommands().aclCat(categoryName));
+		return doExecute((cmd)->cmd.aclCat(categoryName));
 	}
 
 	@Override
 	default Set<RedisCommand> aclCat(final byte[] categoryName) {
-		return execute((client)->client.serverCommands().aclCat(categoryName));
+		return doExecute((cmd)->cmd.aclCat(categoryName));
 	}
 
 	@Override
 	default Long aclDelUser(final String... usernames) {
-		return execute((client)->client.serverCommands().aclDelUser(usernames));
+		return doExecute((cmd)->cmd.aclDelUser(usernames));
 	}
 
 	@Override
 	default Long aclDelUser(final byte[]... username) {
-		return execute((client)->client.serverCommands().aclDelUser(username));
+		return doExecute((cmd)->cmd.aclDelUser(username));
 	}
 
 	@Override
 	default Status aclDryRun(final String username, final RedisCommand command) {
-		return execute((client)->client.serverCommands().aclDryRun(username, command));
+		return doExecute((cmd)->cmd.aclDryRun(username, command));
 	}
 
 	@Override
 	default Status aclDryRun(final byte[] username, final RedisCommand command) {
-		return execute((client)->client.serverCommands().aclDryRun(username, command));
+		return doExecute((cmd)->cmd.aclDryRun(username, command));
 	}
 
 	@Override
 	default Status aclDryRun(final String username, final RedisCommand command, final String... arguments) {
-		return execute((client)->client.serverCommands().aclDryRun(username, command, arguments));
+		return doExecute((cmd)->cmd.aclDryRun(username, command, arguments));
 	}
 
 	@Override
 	default Status aclDryRun(final byte[] username, final RedisCommand command, final byte[]... arguments) {
-		return execute((client)->client.serverCommands().aclDryRun(username, command, arguments));
+		return doExecute((cmd)->cmd.aclDryRun(username, command, arguments));
 	}
 
 	@Override
 	default String aclGenPass() {
-		return execute((client)->client.serverCommands().aclGenPass());
+		return doExecute((cmd)->cmd.aclGenPass());
 	}
 
 	@Override
 	default String aclGenPass(final int bits) {
-		return execute((client)->client.serverCommands().aclGenPass(bits));
+		return doExecute((cmd)->cmd.aclGenPass(bits));
 	}
 
 	@Override
 	default AclUser aclGetUser(final String username) {
-		return execute((client)->client.serverCommands().aclGetUser(username));
+		return doExecute((cmd)->cmd.aclGetUser(username));
 	}
 
 	@Override
 	default AclUser aclGetUser(final byte[] username) {
-		return execute((client)->client.serverCommands().aclGetUser(username));
+		return doExecute((cmd)->cmd.aclGetUser(username));
 	}
 
 	@Override
 	default List<String> aclList() {
-		return execute((client)->client.serverCommands().aclList());
+		return doExecute((cmd)->cmd.aclList());
 	}
 
 	@Override
 	default Status aclLoad() {
-		return execute((client)->client.serverCommands().aclLoad());
+		return doExecute((cmd)->cmd.aclLoad());
 	}
 
 	@Override
 	default List<AclLog> aclLog() {
-		return execute((client)->client.serverCommands().aclLog());
+		return doExecute((cmd)->cmd.aclLog());
 	}
 
 	@Override
 	default List<AclLog> aclLog(final int count) {
-		return execute((client)->client.serverCommands().aclLog(count));
+		return doExecute((cmd)->cmd.aclLog(count));
 	}
 
 	@Override
 	default Status aclLogReset() {
-		return execute((client)->client.serverCommands().aclLogReset());
+		return doExecute((cmd)->cmd.aclLogReset());
 	}
 
 	@Override
 	default Status aclSave() {
-		return execute((client)->client.serverCommands().aclSave());
+		return doExecute((cmd)->cmd.aclSave());
 	}
 
 	@Override
 	default Status aclSetUser(final String username, final AclSetUserArgument argument) {
-		return execute((client)->client.serverCommands().aclSetUser(username, argument));
+		return doExecute((cmd)->cmd.aclSetUser(username, argument));
 	}
 
 	@Override
 	default Status aclSetUser(final byte[] username, final AclSetUserArgument argument) {
-		return execute((client)->client.serverCommands().aclSetUser(username, argument));
+		return doExecute((cmd)->cmd.aclSetUser(username, argument));
 	}
 
 	@Override
 	default List<String> aclUsers() {
-		return execute((client)->client.serverCommands().aclUsers());
+		return doExecute((cmd)->cmd.aclUsers());
 	}
 
 	@Override
 	default String aclWhoAmI() {
-		return execute((client)->client.serverCommands().aclWhoAmI());
+		return doExecute((cmd)->cmd.aclWhoAmI());
 	}
 
 	@Override
 	default String bgRewriteAof() {
-		return execute((client)->client.serverCommands().bgRewriteAof());
+		return doExecute((cmd)->cmd.bgRewriteAof());
 	}
 
 	@Override
 	default String bgSave() {
-		return execute((client)->client.serverCommands().bgSave());
+		return doExecute((cmd)->cmd.bgSave());
 	}
 
 	@Override
 	default Integer commandCount() {
-		return execute((client)->client.serverCommands().commandCount());
+		return doExecute((cmd)->cmd.commandCount());
 	}
 
 	@Override
 	default List<CommandDoc> commandDocs() {
-		return execute((client)->client.serverCommands().commandDocs());
+		return doExecute((cmd)->cmd.commandDocs());
 	}
 
 	@Override
 	default List<CommandDoc> commandDocs(final RedisCommand... commands) {
-		return execute((client)->client.serverCommands().commandDocs(commands));
+		return doExecute((cmd)->cmd.commandDocs(commands));
 	}
 
 	@Override
 	default List<String> commandGetKeys(final RedisCommand command) {
-		return execute((client)->client.serverCommands().commandGetKeys(command));
+		return doExecute((cmd)->cmd.commandGetKeys(command));
 	}
 
 	@Override
 	default List<String> commandGetKeys(final RedisCommand command, final String... arguments) {
-		return execute((client)->client.serverCommands().commandGetKeys(command, arguments));
+		return doExecute((cmd)->cmd.commandGetKeys(command, arguments));
 	}
 
 	@Override
 	default List<CommandKeyAndFlag> commandGetKeysAndFlags(final RedisCommand command) {
-		return execute((client)->client.serverCommands().commandGetKeysAndFlags(command));
+		return doExecute((cmd)->cmd.commandGetKeysAndFlags(command));
 	}
 
 	@Override
 	default List<CommandKeyAndFlag> commandGetKeysAndFlags(final RedisCommand command, final String... arguments) {
-		return execute((client)->client.serverCommands().commandGetKeysAndFlags(command, arguments));
+		return doExecute((cmd)->cmd.commandGetKeysAndFlags(command, arguments));
 	}
 
 	@Override
 	default List<CommandInfo> commandInfo(final RedisCommand... commands) {
-		return execute((client)->client.serverCommands().commandInfo(commands));
+		return doExecute((cmd)->cmd.commandInfo(commands));
 	}
 
 	@Override
 	default List<RedisCommand> commandList() {
-		return execute((client)->client.serverCommands().commandList());
+		return doExecute((cmd)->cmd.commandList());
 	}
 
 	@Override
 	default Map<String, String> configGet(final String... parameters) {
-		return execute((client)->client.serverCommands().configGet(parameters));
+		return doExecute((cmd)->cmd.configGet(parameters));
 	}
 
 	@Override
 	default Map<byte[], byte[]> configGet(final byte[]... parameters) {
-		return execute((client)->client.serverCommands().configGet(parameters));
+		return doExecute((cmd)->cmd.configGet(parameters));
 	}
 
 	@Override
 	default Status configResetStat() {
-		return execute((client)->client.serverCommands().configResetStat());
+		return doExecute((cmd)->cmd.configResetStat());
 	}
 
 	@Override
 	default Status configRewrite() {
-		return execute((client)->client.serverCommands().configRewrite());
+		return doExecute((cmd)->cmd.configRewrite());
 	}
 
 	@Override
 	default Status configSet(final String parameter, final String value) {
-		return execute((client)->client.serverCommands().configSet(parameter, value));
+		return doExecute((cmd)->cmd.configSet(parameter, value));
 	}
 
 	@Override
 	default Status configSet(final byte[] parameter, final byte[] value) {
-		return execute((client)->client.serverCommands().configSet(parameter, value));
+		return doExecute((cmd)->cmd.configSet(parameter, value));
 	}
 
 	@Override
 	default Status configSet(final Map<String, String> configs) {
-		return execute((client)->client.serverCommands().configSet(configs));
+		return doExecute((cmd)->cmd.configSet(configs));
 	}
 
 	@Override
 	default Long dbSize() {
-		return execute((client)->client.serverCommands().dbSize());
+		return doExecute((cmd)->cmd.dbSize());
 	}
 
 	@Override
 	default Status failover() {
-		return execute((client)->client.serverCommands().failover());
+		return doExecute((cmd)->cmd.failover());
 	}
 
 	@Override
 	default Status failover(final FailoverArgument argument) {
-		return execute((client)->client.serverCommands().failover(argument));
+		return doExecute((cmd)->cmd.failover(argument));
 	}
 
 	@Override
 	default Status flushAll() {
-		return execute((client)->client.serverCommands().flushAll());
+		return doExecute((cmd)->cmd.flushAll());
 	}
 
 	@Override
 	default Status flushAll(final FlushMode mode) {
-		return execute((client)->client.serverCommands().flushAll(mode));
+		return doExecute((cmd)->cmd.flushAll(mode));
 	}
 
 	@Override
 	default Status flushDb() {
-		return execute((client)->client.serverCommands().flushDb());
+		return doExecute((cmd)->cmd.flushDb());
 	}
 
 	@Override
 	default Status flushDb(final FlushMode mode) {
-		return execute((client)->client.serverCommands().flushDb(mode));
+		return doExecute((cmd)->cmd.flushDb(mode));
 	}
 
 	@Override
 	default List<HotKey> hotkeysGet() {
-		return execute((client)->client.serverCommands().hotkeysGet());
+		return doExecute((cmd)->cmd.hotkeysGet());
 	}
 
 	@Override
 	default Status hotkeysReset() {
-		return execute((client)->client.serverCommands().hotkeysReset());
+		return doExecute((cmd)->cmd.hotkeysReset());
 	}
 
 	@Override
 	default Status hotkeysStart(final int count) {
-		return execute((client)->client.serverCommands().hotkeysStart(count));
+		return doExecute((cmd)->cmd.hotkeysStart(count));
 	}
 
 	@Override
 	default Status hotkeysStart(final int count, final HotkeysStartArgument argument) {
-		return execute((client)->client.serverCommands().hotkeysStart(count, argument));
+		return doExecute((cmd)->cmd.hotkeysStart(count, argument));
 	}
 
 	@Override
 	default Status hotkeysStop() {
-		return execute((client)->client.serverCommands().hotkeysStop());
+		return doExecute((cmd)->cmd.hotkeysStop());
 	}
 
 	@Override
 	default Info info() {
-		return execute((client)->client.serverCommands().info());
+		return doExecute((cmd)->cmd.info());
 	}
 
 	@Override
 	default Info info(final Info.Section section) {
-		return execute((client)->client.serverCommands().info(section));
+		return doExecute((cmd)->cmd.info(section));
 	}
 
 	@Override
 	default Long lastSave() {
-		return execute((client)->client.serverCommands().lastSave());
+		return doExecute((cmd)->cmd.lastSave());
 	}
 
 	/**
@@ -360,155 +362,155 @@ public interface ServerOperations extends ServerCommands, RedisOperations {
 
 	@Override
 	default String latencyDoctor() {
-		return execute((client)->client.serverCommands().latencyDoctor());
+		return doExecute((cmd)->cmd.latencyDoctor());
 	}
 
 	@Override
 	default String latencyGraph() {
-		return execute((client)->client.serverCommands().latencyGraph());
+		return doExecute((cmd)->cmd.latencyGraph());
 	}
 
 	@Override
 	default List<LatencyHistogram> latencyHistogram() {
-		return execute((client)->client.serverCommands().latencyHistogram());
+		return doExecute((cmd)->cmd.latencyHistogram());
 	}
 
 	@Override
 	default List<LatencyHistogram> latencyHistogram(final RedisCommand... commands) {
-		return execute((client)->client.serverCommands().latencyHistogram(commands));
+		return doExecute((cmd)->cmd.latencyHistogram(commands));
 	}
 
 	@Override
 	default List<LatencyHistory> latencyHistory(final String event) {
-		return execute((client)->client.serverCommands().latencyHistory(event));
+		return doExecute((cmd)->cmd.latencyHistory(event));
 	}
 
 	@Override
 	default List<LatencyLatest> latencyLatest() {
-		return execute((client)->client.serverCommands().latencyLatest());
+		return doExecute((cmd)->cmd.latencyLatest());
 	}
 
 	@Override
 	default Status latencyReset() {
-		return execute((client)->client.serverCommands().latencyReset());
+		return doExecute((cmd)->cmd.latencyReset());
 	}
 
 	@Override
 	default Status latencyReset(final String... events) {
-		return execute((client)->client.serverCommands().latencyReset(events));
+		return doExecute((cmd)->cmd.latencyReset(events));
 	}
 
 	@Override
 	default String lolwut() {
-		return execute((client)->client.serverCommands().lolwut());
+		return doExecute((cmd)->cmd.lolwut());
 	}
 
 	@Override
 	default String lolwut(final String version) {
-		return execute((client)->client.serverCommands().lolwut(version));
+		return doExecute((cmd)->cmd.lolwut(version));
 	}
 
 	@Override
 	default String memoryDoctor() {
-		return execute((client)->client.serverCommands().memoryDoctor());
+		return doExecute((cmd)->cmd.memoryDoctor());
 	}
 
 	@Override
 	default String memoryMallocStats() {
-		return execute((client)->client.serverCommands().memoryMallocStats());
+		return doExecute((cmd)->cmd.memoryMallocStats());
 	}
 
 	@Override
 	default Status memoryPurge() {
-		return execute((client)->client.serverCommands().memoryPurge());
+		return doExecute((cmd)->cmd.memoryPurge());
 	}
 
 	@Override
 	default MemoryStats memoryStats() {
-		return execute((client)->client.serverCommands().memoryStats());
+		return doExecute((cmd)->cmd.memoryStats());
 	}
 
 	@Override
 	default Long memoryUsage(final String key) {
-		return execute((client)->client.serverCommands().memoryUsage(key));
+		return doExecute((cmd)->cmd.memoryUsage(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long memoryUsage(final byte[] key) {
-		return execute((client)->client.serverCommands().memoryUsage(key));
+		return doExecute((cmd)->cmd.memoryUsage(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long memoryUsage(final String key, final int samples) {
-		return execute((client)->client.serverCommands().memoryUsage(key, samples));
+		return doExecute((cmd)->cmd.memoryUsage(KeyUtils.rawKey(this, key), samples));
 	}
 
 	@Override
 	default Long memoryUsage(final byte[] key, final int samples) {
-		return execute((client)->client.serverCommands().memoryUsage(key, samples));
+		return doExecute((cmd)->cmd.memoryUsage(KeyUtils.rawKey(this, key), samples));
 	}
 
 	@Override
 	default List<Module> moduleList() {
-		return execute((client)->client.serverCommands().moduleList());
+		return doExecute((cmd)->cmd.moduleList());
 	}
 
 	@Override
 	default Status moduleLoad(final String path, final String... arguments) {
-		return execute((client)->client.serverCommands().moduleLoad(path, arguments));
+		return doExecute((cmd)->cmd.moduleLoad(path, arguments));
 	}
 
 	@Override
 	default Status moduleLoad(final byte[] path, final byte[]... arguments) {
-		return execute((client)->client.serverCommands().moduleLoad(path, arguments));
+		return doExecute((cmd)->cmd.moduleLoad(path, arguments));
 	}
 
 	@Override
 	default Status moduleLoadex(final String path, final Map<String, String> configs, final String... arguments) {
-		return execute((client)->client.serverCommands().moduleLoadex(path, configs, arguments));
+		return doExecute((cmd)->cmd.moduleLoadex(path, configs, arguments));
 	}
 
 	@Override
 	default Status moduleLoadex(final byte[] path, final Map<byte[], byte[]> configs, final byte[]... arguments) {
-		return execute((client)->client.serverCommands().moduleLoadex(path, configs, arguments));
+		return doExecute((cmd)->cmd.moduleLoadex(path, configs, arguments));
 	}
 
 	@Override
 	default Status moduleUnLoad(final String name) {
-		return execute((client)->client.serverCommands().moduleUnLoad(name));
+		return doExecute((cmd)->cmd.moduleUnLoad(name));
 	}
 
 	@Override
 	default Status moduleUnLoad(final byte[] name) {
-		return execute((client)->client.serverCommands().moduleUnLoad(name));
+		return doExecute((cmd)->cmd.moduleUnLoad(name));
 	}
 
 	@Override
 	default void monitor(final RedisMonitor redisMonitor) {
-		execute((client)->{
-			client.serverCommands().monitor(redisMonitor);
+		doExecute((cmd)->{
+			cmd.monitor(redisMonitor);
 			return null;
 		});
 	}
 
 	@Override
 	default Object pSync(final String replicationId, final long offset) {
-		return execute((client)->client.serverCommands().pSync(replicationId, offset));
+		return doExecute((cmd)->cmd.pSync(replicationId, offset));
 	}
 
 	@Override
 	default Object pSync(final byte[] replicationId, final long offset) {
-		return execute((client)->client.serverCommands().pSync(replicationId, offset));
+		return doExecute((cmd)->cmd.pSync(replicationId, offset));
 	}
 
 	@Override
 	default Status replconf() {
-		return execute((client)->client.serverCommands().replconf());
+		return doExecute((cmd)->cmd.replconf());
 	}
 
 	@Override
 	default Status replicaOf(final String host, final int port) {
-		return execute((client)->client.serverCommands().replicaOf(host, port));
+		return doExecute((cmd)->cmd.replicaOf(host, port));
 	}
 
 	/**
@@ -545,55 +547,55 @@ public interface ServerOperations extends ServerCommands, RedisOperations {
 
 	@Override
 	default Status restoreAsking(final String key, final byte[] serializedValue, final int ttl) {
-		return execute((client)->client.serverCommands().restoreAsking(key, serializedValue, ttl));
+		return doExecute((cmd)->cmd.restoreAsking(KeyUtils.rawKey(this, key), serializedValue, ttl));
 	}
 
 	@Override
 	default Status restoreAsking(final byte[] key, final byte[] serializedValue, final int ttl) {
-		return execute((client)->client.serverCommands().restoreAsking(key, serializedValue, ttl));
+		return doExecute((cmd)->cmd.restoreAsking(KeyUtils.rawKey(this, key), serializedValue, ttl));
 	}
 
 	@Override
 	default Status restoreAsking(final String key, final byte[] serializedValue, final int ttl,
 	                             final RestoreArgument argument) {
-		return execute((client)->client.serverCommands().restoreAsking(key, serializedValue, ttl, argument));
+		return doExecute((cmd)->cmd.restoreAsking(KeyUtils.rawKey(this, key), serializedValue, ttl, argument));
 	}
 
 	@Override
 	default Status restoreAsking(final byte[] key, final byte[] serializedValue, final int ttl,
 	                             final RestoreArgument argument) {
-		return execute((client)->client.serverCommands().restoreAsking(key, serializedValue, ttl, argument));
+		return doExecute((cmd)->cmd.restoreAsking(KeyUtils.rawKey(this, key), serializedValue, ttl, argument));
 	}
 
 	@Override
 	default Role role() {
-		return execute((client)->client.serverCommands().role());
+		return doExecute((cmd)->cmd.role());
 	}
 
 	@Override
 	default Status save() {
-		return execute((client)->client.serverCommands().save());
+		return doExecute((cmd)->cmd.save());
 	}
 
 	@Override
 	default void shutdown() {
-		execute((client)->{
-			client.serverCommands().shutdown();
+		doExecute((cmd)->{
+			cmd.shutdown();
 			return null;
 		});
 	}
 
 	@Override
 	default void shutdown(final ShutdownArgument argument) {
-		execute((client)->{
-			client.serverCommands().shutdown(argument);
+		doExecute((cmd)->{
+			cmd.shutdown(argument);
 			return null;
 		});
 	}
 
 	@Override
 	default Status slaveOf(final String host, final int port) {
-		return execute((client)->client.serverCommands().slaveOf(host, port));
+		return doExecute((cmd)->cmd.slaveOf(host, port));
 	}
 
 	/**
@@ -629,40 +631,44 @@ public interface ServerOperations extends ServerCommands, RedisOperations {
 
 	@Override
 	default List<SlowLog> slowLogGet() {
-		return execute((client)->client.serverCommands().slowLogGet());
+		return doExecute((cmd)->cmd.slowLogGet());
 	}
 
 	@Override
 	default List<SlowLog> slowLogGet(final int count) {
-		return execute((client)->client.serverCommands().slowLogGet(count));
+		return doExecute((cmd)->cmd.slowLogGet(count));
 	}
 
 	@Override
 	default Long slowLogLen() {
-		return execute((client)->client.serverCommands().slowLogLen());
+		return doExecute((cmd)->cmd.slowLogLen());
 	}
 
 	@Override
 	default Status slowLogReset() {
-		return execute((client)->client.serverCommands().slowLogReset());
+		return doExecute((cmd)->cmd.slowLogReset());
 	}
 
 	@Override
 	default Status swapdb(final int db1, final int db2) {
-		return execute((client)->client.serverCommands().swapdb(db1, db2));
+		return doExecute((cmd)->cmd.swapdb(db1, db2));
 	}
 
 	@Override
 	default void sync() {
-		execute((client)->{
-			client.serverCommands().sync();
+		doExecute((cmd)->{
+			cmd.sync();
 			return null;
 		});
 	}
 
 	@Override
 	default RedisServerTime time() {
-		return execute((client)->client.serverCommands().time());
+		return doExecute((cmd)->cmd.time());
+	}
+
+	private <R> R doExecute(final Command.Executor<ServerCommands, R> executor) {
+		return execute((client)->executor.execute(client.serverCommands()));
 	}
 
 }

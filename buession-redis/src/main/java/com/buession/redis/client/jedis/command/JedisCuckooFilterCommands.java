@@ -233,8 +233,8 @@ public final class JedisCuckooFilterCommands extends AbstractJedisRedisCommands 
 	public Status cfLoadchunk(final String key, final long iterator, final byte[] data) {
 		final CommandArguments args = CommandArguments.create(key).add(iterator).add(data);
 		return executeCommand(RedisCommand.CF_LOADCHUNK, args, (cmd)->cmd.cfLoadChunk(key, iterator, data),
-				(cmd)->cmd.cfLoadChunk(key, iterator, data),
-				(cmd)->cmd.cfLoadChunk(key, iterator, data), new OkStatusConverter());
+				(cmd)->cmd.cfLoadChunk(key, iterator, data), (cmd)->cmd.cfLoadChunk(key, iterator, data),
+				new OkStatusConverter());
 	}
 
 	@Override

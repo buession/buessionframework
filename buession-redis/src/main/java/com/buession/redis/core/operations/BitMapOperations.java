@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.operations;
 
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.args.bitmap.BitOperation;
 import com.buession.redis.core.command.args.bitmap.BitType;
 import com.buession.redis.core.command.BitMapCommands;
@@ -45,124 +46,128 @@ public interface BitMapOperations extends BitMapCommands, RedisOperations {
 
 	@Override
 	default Long bitCount(final String key) {
-		return execute((client)->client.bitMapCommands().bitCount(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.bitCount(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long bitCount(final byte[] key) {
-		return execute((client)->client.bitMapCommands().bitCount(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.bitCount(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long bitCount(final String key, final long start, final long end) {
-		return execute((client)->client.bitMapCommands().bitCount(KeyUtils.rawKey(this, key), start, end));
+		return doExecute((cmd)->cmd.bitCount(KeyUtils.rawKey(this, key), start, end));
 	}
 
 	@Override
 	default Long bitCount(final byte[] key, final long start, final long end) {
-		return execute((client)->client.bitMapCommands().bitCount(KeyUtils.rawKey(this, key), start, end));
+		return doExecute((cmd)->cmd.bitCount(KeyUtils.rawKey(this, key), start, end));
 	}
 
 	@Override
 	default Long bitCount(final String key, final long start, final long end, final BitType type) {
-		return execute((client)->client.bitMapCommands().bitCount(KeyUtils.rawKey(this, key), start, end, type));
+		return doExecute((cmd)->cmd.bitCount(KeyUtils.rawKey(this, key), start, end, type));
 	}
 
 	@Override
 	default Long bitCount(final byte[] key, final long start, final long end, final BitType type) {
-		return execute((client)->client.bitMapCommands().bitCount(KeyUtils.rawKey(this, key), start, end, type));
+		return doExecute((cmd)->cmd.bitCount(KeyUtils.rawKey(this, key), start, end, type));
 	}
 
 	@Override
 	default List<Long> bitField(final String key, final BitFieldArgument... arguments) {
-		return execute((client)->client.bitMapCommands().bitField(KeyUtils.rawKey(this, key), arguments));
+		return doExecute((cmd)->cmd.bitField(KeyUtils.rawKey(this, key), arguments));
 	}
 
 	@Override
 	default List<Long> bitField(final byte[] key, final BitFieldArgument... arguments) {
-		return execute((client)->client.bitMapCommands().bitField(KeyUtils.rawKey(this, key), arguments));
+		return doExecute((cmd)->cmd.bitField(KeyUtils.rawKey(this, key), arguments));
 	}
 
 	@Override
 	default List<Long> bitFieldRo(final String key, final BitFieldRoArgument... arguments) {
-		return execute((client)->client.bitMapCommands().bitFieldRo(KeyUtils.rawKey(this, key), arguments));
+		return doExecute((cmd)->cmd.bitFieldRo(KeyUtils.rawKey(this, key), arguments));
 	}
 
 	@Override
 	default List<Long> bitFieldRo(final byte[] key, final BitFieldRoArgument... arguments) {
-		return execute((client)->client.bitMapCommands().bitFieldRo(KeyUtils.rawKey(this, key), arguments));
+		return doExecute((cmd)->cmd.bitFieldRo(KeyUtils.rawKey(this, key), arguments));
 	}
 
 	@Override
 	default Long bitOp(final BitOperation operation, final String destKey, final String... keys) {
-		return execute((client)->client.bitMapCommands().bitOp(operation, KeyUtils.rawKey(this, destKey),
-				KeyUtils.rawKeys(this, keys)));
+		return doExecute((cmd)->cmd
+				.bitOp(operation, KeyUtils.rawKey(this, destKey), KeyUtils.rawKeys(this, keys)));
 	}
 
 	@Override
 	default Long bitOp(final BitOperation operation, final byte[] destKey, final byte[]... keys) {
-		return execute((client)->client.bitMapCommands().bitOp(operation, KeyUtils.rawKey(this, destKey),
-				KeyUtils.rawKeys(this, keys)));
+		return doExecute((cmd)->cmd
+				.bitOp(operation, KeyUtils.rawKey(this, destKey), KeyUtils.rawKeys(this, keys)));
 	}
 
 	@Override
 	default Long bitPos(final String key, final boolean value) {
-		return execute((client)->client.bitMapCommands().bitPos(KeyUtils.rawKey(this, key), value));
+		return doExecute((cmd)->cmd.bitPos(KeyUtils.rawKey(this, key), value));
 	}
 
 	@Override
 	default Long bitPos(final byte[] key, final boolean value) {
-		return execute((client)->client.bitMapCommands().bitPos(KeyUtils.rawKey(this, key), value));
+		return doExecute((cmd)->cmd.bitPos(KeyUtils.rawKey(this, key), value));
 	}
 
 	@Override
 	default Long bitPos(final String key, final boolean value, final long start) {
-		return execute((client)->client.bitMapCommands().bitPos(KeyUtils.rawKey(this, key), value, start));
+		return doExecute((cmd)->cmd.bitPos(KeyUtils.rawKey(this, key), value, start));
 	}
 
 	@Override
 	default Long bitPos(final byte[] key, final boolean value, final long start) {
-		return execute((client)->client.bitMapCommands().bitPos(KeyUtils.rawKey(this, key), value, start));
+		return doExecute((cmd)->cmd.bitPos(KeyUtils.rawKey(this, key), value, start));
 	}
 
 	@Override
 	default Long bitPos(final String key, final boolean value, final long start, final long end) {
-		return execute((client)->client.bitMapCommands().bitPos(KeyUtils.rawKey(this, key), value, start, end));
+		return doExecute((cmd)->cmd.bitPos(KeyUtils.rawKey(this, key), value, start, end));
 	}
 
 	@Override
 	default Long bitPos(final byte[] key, final boolean value, final long start, final long end) {
-		return execute((client)->client.bitMapCommands().bitPos(KeyUtils.rawKey(this, key), value, start, end));
+		return doExecute((cmd)->cmd.bitPos(KeyUtils.rawKey(this, key), value, start, end));
 	}
 
 	@Override
 	default Long bitPos(final String key, final boolean value, final long start, final long end, final BitType type) {
-		return execute((client)->client.bitMapCommands().bitPos(KeyUtils.rawKey(this, key), value, start, end, type));
+		return doExecute((cmd)->cmd.bitPos(KeyUtils.rawKey(this, key), value, start, end, type));
 	}
 
 	@Override
 	default Long bitPos(final byte[] key, final boolean value, final long start, final long end, final BitType type) {
-		return execute((client)->client.bitMapCommands().bitPos(KeyUtils.rawKey(this, key), value, start, end, type));
+		return doExecute((cmd)->cmd.bitPos(KeyUtils.rawKey(this, key), value, start, end, type));
 	}
 
 	@Override
 	default Boolean getBit(final String key, final long offset) {
-		return execute((client)->client.bitMapCommands().getBit(KeyUtils.rawKey(this, key), offset));
+		return doExecute((cmd)->cmd.getBit(KeyUtils.rawKey(this, key), offset));
 	}
 
 	@Override
 	default Boolean getBit(final byte[] key, final long offset) {
-		return execute((client)->client.bitMapCommands().getBit(KeyUtils.rawKey(this, key), offset));
+		return doExecute((cmd)->cmd.getBit(KeyUtils.rawKey(this, key), offset));
 	}
 
 	@Override
 	default Boolean setBit(final String key, final long offset, final boolean value) {
-		return execute((client)->client.bitMapCommands().setBit(KeyUtils.rawKey(this, key), offset, value));
+		return doExecute((cmd)->cmd.setBit(KeyUtils.rawKey(this, key), offset, value));
 	}
 
 	@Override
 	default Boolean setBit(final byte[] key, final long offset, final boolean value) {
-		return execute((client)->client.bitMapCommands().setBit(KeyUtils.rawKey(this, key), offset, value));
+		return doExecute((cmd)->cmd.setBit(KeyUtils.rawKey(this, key), offset, value));
+	}
+
+	private <R> R doExecute(final Command.Executor<BitMapCommands, R> executor) {
+		return execute((client)->executor.execute(client.bitMapCommands()));
 	}
 
 }

@@ -29,6 +29,7 @@ import com.buession.redis.core.TimeSeriesElement;
 import com.buession.redis.core.TimeSeriesInfo;
 import com.buession.redis.core.TimeSeriesMGetElement;
 import com.buession.redis.core.TimeSeriesMRangeElement;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.TimeSeriesCommands;
 import com.buession.redis.core.command.args.timeseries.AddArgument;
 import com.buession.redis.core.AggregationType;
@@ -62,24 +63,22 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 
 	@Override
 	default Long tsAdd(final String key, final long timestamp, final double value) {
-		return execute((client)->client.timeSeriesCommands().tsAdd(KeyUtils.rawKey(this, key), timestamp, value));
+		return doExecute((cmd)->cmd.tsAdd(KeyUtils.rawKey(this, key), timestamp, value));
 	}
 
 	@Override
 	default Long tsAdd(final byte[] key, final long timestamp, final double value) {
-		return execute((client)->client.timeSeriesCommands().tsAdd(KeyUtils.rawKey(this, key), timestamp, value));
+		return doExecute((cmd)->cmd.tsAdd(KeyUtils.rawKey(this, key), timestamp, value));
 	}
 
 	@Override
 	default Long tsAdd(final String key, final long timestamp, final double value, final AddArgument argument) {
-		return execute(
-				(client)->client.timeSeriesCommands().tsAdd(KeyUtils.rawKey(this, key), timestamp, value, argument));
+		return doExecute((cmd)->cmd.tsAdd(KeyUtils.rawKey(this, key), timestamp, value, argument));
 	}
 
 	@Override
 	default Long tsAdd(final byte[] key, final long timestamp, final double value, final AddArgument argument) {
-		return execute(
-				(client)->client.timeSeriesCommands().tsAdd(KeyUtils.rawKey(this, key), timestamp, value, argument));
+		return doExecute((cmd)->cmd.tsAdd(KeyUtils.rawKey(this, key), timestamp, value, argument));
 	}
 
 	/**
@@ -388,64 +387,60 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 
 	@Override
 	default Status tsAlert(final String key, final AlertArgument argument) {
-		return execute((client)->client.timeSeriesCommands().tsAlert(KeyUtils.rawKey(this, key), argument));
+		return doExecute((cmd)->cmd.tsAlert(KeyUtils.rawKey(this, key), argument));
 	}
 
 	@Override
 	default Status tsAlert(final byte[] key, final AlertArgument argument) {
-		return execute((client)->client.timeSeriesCommands().tsAlert(KeyUtils.rawKey(this, key), argument));
+		return doExecute((cmd)->cmd.tsAlert(KeyUtils.rawKey(this, key), argument));
 	}
 
 	@Override
 	default Status tsCreate(final String key) {
-		return execute((client)->client.timeSeriesCommands().tsCreate(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.tsCreate(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Status tsCreate(final byte[] key) {
-		return execute((client)->client.timeSeriesCommands().tsCreate(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.tsCreate(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Status tsCreate(final String key, final CreateArgument argument) {
-		return execute((client)->client.timeSeriesCommands().tsCreate(KeyUtils.rawKey(this, key), argument));
+		return doExecute((cmd)->cmd.tsCreate(KeyUtils.rawKey(this, key), argument));
 	}
 
 	@Override
 	default Status tsCreate(final byte[] key, final CreateArgument argument) {
-		return execute((client)->client.timeSeriesCommands().tsCreate(KeyUtils.rawKey(this, key), argument));
+		return doExecute((cmd)->cmd.tsCreate(KeyUtils.rawKey(this, key), argument));
 	}
 
 	@Override
 	default Status tsCreateRule(final String sourceKey, final String destKey, final AggregationType aggregationType,
 	                            final long timeBucket) {
-		return execute((client)->client.timeSeriesCommands()
-				.tsCreateRule(KeyUtils.rawKey(this, sourceKey), KeyUtils.rawKey(this, destKey), aggregationType,
-						timeBucket));
+		return doExecute((cmd)->cmd.tsCreateRule(KeyUtils.rawKey(this, sourceKey),
+				KeyUtils.rawKey(this, destKey), aggregationType, timeBucket));
 	}
 
 	@Override
 	default Status tsCreateRule(final byte[] sourceKey, final byte[] destKey, final AggregationType aggregationType,
 	                            final long timeBucket) {
-		return execute((client)->client.timeSeriesCommands()
-				.tsCreateRule(KeyUtils.rawKey(this, sourceKey), KeyUtils.rawKey(this, destKey), aggregationType,
-						timeBucket));
+		return doExecute((cmd)->cmd.tsCreateRule(KeyUtils.rawKey(this, sourceKey),
+				KeyUtils.rawKey(this, destKey), aggregationType, timeBucket));
 	}
 
 	@Override
 	default Status tsCreateRule(final String sourceKey, final String destKey, final AggregationType aggregationType,
 	                            final long timeBucket, final long alignTimestamp) {
-		return execute((client)->client.timeSeriesCommands()
-				.tsCreateRule(KeyUtils.rawKey(this, sourceKey), KeyUtils.rawKey(this, destKey), aggregationType,
-						timeBucket, alignTimestamp));
+		return doExecute((cmd)->cmd.tsCreateRule(KeyUtils.rawKey(this, sourceKey),
+				KeyUtils.rawKey(this, destKey), aggregationType, timeBucket, alignTimestamp));
 	}
 
 	@Override
 	default Status tsCreateRule(final byte[] sourceKey, final byte[] destKey, final AggregationType aggregationType,
 	                            final long timeBucket, final long alignTimestamp) {
-		return execute((client)->client.timeSeriesCommands()
-				.tsCreateRule(KeyUtils.rawKey(this, sourceKey), KeyUtils.rawKey(this, destKey), aggregationType,
-						timeBucket, alignTimestamp));
+		return doExecute((cmd)->cmd.tsCreateRule(KeyUtils.rawKey(this, sourceKey),
+				KeyUtils.rawKey(this, destKey), aggregationType, timeBucket, alignTimestamp));
 	}
 
 	/**
@@ -510,34 +505,32 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 
 	@Override
 	default Long tsDecrBy(final String key, final double value) {
-		return execute((client)->client.timeSeriesCommands().tsDecrBy(KeyUtils.rawKey(this, key), value));
+		return doExecute((cmd)->cmd.tsDecrBy(KeyUtils.rawKey(this, key), value));
 	}
 
 	@Override
 	default Long tsDecrBy(final byte[] key, final double value) {
-		return execute((client)->client.timeSeriesCommands().tsDecrBy(KeyUtils.rawKey(this, key), value));
+		return doExecute((cmd)->cmd.tsDecrBy(KeyUtils.rawKey(this, key), value));
 	}
 
 	@Override
 	default Long tsDecrBy(final String key, final double value, final DecrByArgument argument) {
-		return execute((client)->client.timeSeriesCommands().tsDecrBy(KeyUtils.rawKey(this, key), value, argument));
+		return doExecute((cmd)->cmd.tsDecrBy(KeyUtils.rawKey(this, key), value, argument));
 	}
 
 	@Override
 	default Long tsDecrBy(final byte[] key, final double value, final DecrByArgument argument) {
-		return execute((client)->client.timeSeriesCommands().tsDecrBy(KeyUtils.rawKey(this, key), value, argument));
+		return doExecute((cmd)->cmd.tsDecrBy(KeyUtils.rawKey(this, key), value, argument));
 	}
 
 	@Override
 	default Long tsDel(final String key, final long fromTimestamp, final long toTimestamp) {
-		return execute(
-				(client)->client.timeSeriesCommands().tsDel(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp));
+		return doExecute((cmd)->cmd.tsDel(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp));
 	}
 
 	@Override
 	default Long tsDel(final byte[] key, final long fromTimestamp, final long toTimestamp) {
-		return execute(
-				(client)->client.timeSeriesCommands().tsDel(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp));
+		return doExecute((cmd)->cmd.tsDel(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp));
 	}
 
 	/**
@@ -688,34 +681,34 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 
 	@Override
 	default Status tsDeleteRule(final String sourceKey, final String destKey) {
-		return execute((client)->client.timeSeriesCommands()
+		return doExecute((cmd)->cmd
 				.tsDeleteRule(KeyUtils.rawKey(this, sourceKey), KeyUtils.rawKey(this, destKey)));
 	}
 
 	@Override
 	default Status tsDeleteRule(final byte[] sourceKey, final byte[] destKey) {
-		return execute((client)->client.timeSeriesCommands()
+		return doExecute((cmd)->cmd
 				.tsDeleteRule(KeyUtils.rawKey(this, sourceKey), KeyUtils.rawKey(this, destKey)));
 	}
 
 	@Override
 	default TimeSeriesElement tsGet(final String key) {
-		return execute((client)->client.timeSeriesCommands().tsGet(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.tsGet(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default TimeSeriesElement tsGet(final byte[] key) {
-		return execute((client)->client.timeSeriesCommands().tsGet(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.tsGet(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default TimeSeriesElement tsGet(final String key, final boolean latest) {
-		return execute((client)->client.timeSeriesCommands().tsGet(KeyUtils.rawKey(this, key), latest));
+		return doExecute((cmd)->cmd.tsGet(KeyUtils.rawKey(this, key), latest));
 	}
 
 	@Override
 	default TimeSeriesElement tsGet(final byte[] key, final boolean latest) {
-		return execute((client)->client.timeSeriesCommands().tsGet(KeyUtils.rawKey(this, key), latest));
+		return doExecute((cmd)->cmd.tsGet(KeyUtils.rawKey(this, key), latest));
 	}
 
 	/**
@@ -780,119 +773,117 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 
 	@Override
 	default Long tsIncrBy(final String key, final double value) {
-		return execute((client)->client.timeSeriesCommands().tsIncrBy(KeyUtils.rawKey(this, key), value));
+		return doExecute((cmd)->cmd.tsIncrBy(KeyUtils.rawKey(this, key), value));
 	}
 
 	@Override
 	default Long tsIncrBy(final byte[] key, final double value) {
-		return execute((client)->client.timeSeriesCommands().tsIncrBy(KeyUtils.rawKey(this, key), value));
+		return doExecute((cmd)->cmd.tsIncrBy(KeyUtils.rawKey(this, key), value));
 	}
 
 	@Override
 	default Long tsIncrBy(final String key, final double value, final IncrByArgument argument) {
-		return execute((client)->client.timeSeriesCommands().tsIncrBy(KeyUtils.rawKey(this, key), value, argument));
+		return doExecute((cmd)->cmd.tsIncrBy(KeyUtils.rawKey(this, key), value, argument));
 	}
 
 	@Override
 	default Long tsIncrBy(final byte[] key, final double value, final IncrByArgument argument) {
-		return execute((client)->client.timeSeriesCommands().tsIncrBy(KeyUtils.rawKey(this, key), value, argument));
+		return doExecute((cmd)->cmd.tsIncrBy(KeyUtils.rawKey(this, key), value, argument));
 	}
 
 	@Override
 	default TimeSeriesInfo tsInfo(final String key) {
-		return execute((client)->client.timeSeriesCommands().tsInfo(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.tsInfo(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default TimeSeriesInfo tsInfo(final byte[] key) {
-		return execute((client)->client.timeSeriesCommands().tsInfo(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.tsInfo(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default TimeSeriesInfo tsInfo(final String key, final boolean debug) {
-		return execute((client)->client.timeSeriesCommands().tsInfo(KeyUtils.rawKey(this, key), debug));
+		return doExecute((cmd)->cmd.tsInfo(KeyUtils.rawKey(this, key), debug));
 	}
 
 	@Override
 	default TimeSeriesInfo tsInfo(final byte[] key, final boolean debug) {
-		return execute((client)->client.timeSeriesCommands().tsInfo(KeyUtils.rawKey(this, key), debug));
+		return doExecute((cmd)->cmd.tsInfo(KeyUtils.rawKey(this, key), debug));
 	}
 
 	@Override
 	default List<Long> tsMAdd(final TSElement... values) {
-		return execute((client)->client.timeSeriesCommands().tsMAdd(values));
+		return doExecute((cmd)->cmd.tsMAdd(values));
 	}
 
 	@Override
 	default Map<String, TimeSeriesMGetElement> tsMGet(final String... filters) {
-		return execute((client)->client.timeSeriesCommands().tsMGet(filters));
+		return doExecute((cmd)->cmd.tsMGet(filters));
 	}
 
 	@Override
 	default Map<byte[], TimeSeriesMGetElement> tsMGet(final byte[]... filters) {
-		return execute((client)->client.timeSeriesCommands().tsMGet(filters));
+		return doExecute((cmd)->cmd.tsMGet(filters));
 	}
 
 	@Override
 	default Map<String, TimeSeriesMGetElement> tsMGet(final TSMGetAegument argument, final String... filters) {
-		return execute((client)->client.timeSeriesCommands().tsMGet(argument, filters));
+		return doExecute((cmd)->cmd.tsMGet(argument, filters));
 	}
 
 	@Override
 	default Map<byte[], TimeSeriesMGetElement> tsMGet(final TSMGetAegument argument, final byte[]... filters) {
-		return execute((client)->client.timeSeriesCommands().tsMGet(argument, filters));
+		return doExecute((cmd)->cmd.tsMGet(argument, filters));
 	}
 
 	@Override
 	default Map<String, TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 	                                                      final String... filters) {
-		return execute((client)->client.timeSeriesCommands().tsMRange(fromTimestamp, toTimestamp, filters));
+		return doExecute((cmd)->cmd.tsMRange(fromTimestamp, toTimestamp, filters));
 	}
 
 	@Override
 	default Map<byte[], TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 	                                                      final byte[]... filters) {
-		return execute((client)->client.timeSeriesCommands().tsMRange(fromTimestamp, toTimestamp, filters));
+		return doExecute((cmd)->cmd.tsMRange(fromTimestamp, toTimestamp, filters));
 	}
 
 	@Override
 	default Map<String, TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 	                                                      final TSMRangeArgument argument, final String... filters) {
-		return execute((client)->client.timeSeriesCommands().tsMRange(fromTimestamp, toTimestamp, argument, filters));
+		return doExecute((cmd)->cmd.tsMRange(fromTimestamp, toTimestamp, argument, filters));
 	}
 
 	@Override
 	default Map<byte[], TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 	                                                      final TSMRangeArgument argument, final byte[]... filters) {
-		return execute((client)->client.timeSeriesCommands().tsMRange(fromTimestamp, toTimestamp, argument, filters));
+		return doExecute((cmd)->cmd.tsMRange(fromTimestamp, toTimestamp, argument, filters));
 	}
 
 	@Override
 	default Map<String, TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 	                                                      final TSMRangeArgument argument, final int count,
 	                                                      final String... filters) {
-		return execute(
-				(client)->client.timeSeriesCommands().tsMRange(fromTimestamp, toTimestamp, argument, count, filters));
+		return doExecute((cmd)->cmd.tsMRange(fromTimestamp, toTimestamp, argument, count, filters));
 	}
 
 	@Override
 	default Map<byte[], TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 	                                                      final TSMRangeArgument argument, final int count,
 	                                                      final byte[]... filters) {
-		return execute(
-				(client)->client.timeSeriesCommands().tsMRange(fromTimestamp, toTimestamp, argument, count, filters));
+		return doExecute((cmd)->cmd.tsMRange(fromTimestamp, toTimestamp, argument, count, filters));
 	}
 
 	@Override
 	default Map<String, TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 	                                                      final int count, final String... filters) {
-		return execute((client)->client.timeSeriesCommands().tsMRange(fromTimestamp, toTimestamp, count, filters));
+		return doExecute((cmd)->cmd.tsMRange(fromTimestamp, toTimestamp, count, filters));
 	}
 
 	@Override
 	default Map<byte[], TimeSeriesMRangeElement> tsMRange(final long fromTimestamp, final long toTimestamp,
 	                                                      final int count, final byte[]... filters) {
-		return execute((client)->client.timeSeriesCommands().tsMRange(fromTimestamp, toTimestamp, count, filters));
+		return doExecute((cmd)->cmd.tsMRange(fromTimestamp, toTimestamp, count, filters));
 	}
 
 	/**
@@ -1598,55 +1589,51 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	@Override
 	default Map<String, TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 	                                                         final String... filters) {
-		return execute((client)->client.timeSeriesCommands().tsMRevRange(fromTimestamp, toTimestamp, filters));
+		return doExecute((cmd)->cmd.tsMRevRange(fromTimestamp, toTimestamp, filters));
 	}
 
 	@Override
 	default Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 	                                                         final byte[]... filters) {
-		return execute((client)->client.timeSeriesCommands().tsMRevRange(fromTimestamp, toTimestamp, filters));
+		return doExecute((cmd)->cmd.tsMRevRange(fromTimestamp, toTimestamp, filters));
 	}
 
 	@Override
 	default Map<String, TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 	                                                         final TSMRangeArgument argument, final String... filters) {
-		return execute(
-				(client)->client.timeSeriesCommands().tsMRevRange(fromTimestamp, toTimestamp, argument, filters));
+		return doExecute((cmd)->cmd.tsMRevRange(fromTimestamp, toTimestamp, argument, filters));
 	}
 
 	@Override
 	default Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 	                                                         final TSMRangeArgument argument, final byte[]... filters) {
-		return execute(
-				(client)->client.timeSeriesCommands().tsMRevRange(fromTimestamp, toTimestamp, argument, filters));
+		return doExecute((cmd)->cmd.tsMRevRange(fromTimestamp, toTimestamp, argument, filters));
 	}
 
 	@Override
 	default Map<String, TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 	                                                         final TSMRangeArgument argument, final int count,
 	                                                         final String... filters) {
-		return execute((client)->client.timeSeriesCommands()
-				.tsMRevRange(fromTimestamp, toTimestamp, argument, count, filters));
+		return doExecute((cmd)->cmd.tsMRevRange(fromTimestamp, toTimestamp, argument, count, filters));
 	}
 
 	@Override
 	default Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 	                                                         final TSMRangeArgument argument, final int count,
 	                                                         final byte[]... filters) {
-		return execute((client)->client.timeSeriesCommands()
-				.tsMRevRange(fromTimestamp, toTimestamp, argument, count, filters));
+		return doExecute((cmd)->cmd.tsMRevRange(fromTimestamp, toTimestamp, argument, count, filters));
 	}
 
 	@Override
 	default Map<String, TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 	                                                         final int count, final String... filters) {
-		return execute((client)->client.timeSeriesCommands().tsMRevRange(fromTimestamp, toTimestamp, count, filters));
+		return doExecute((cmd)->cmd.tsMRevRange(fromTimestamp, toTimestamp, count, filters));
 	}
 
 	@Override
 	default Map<byte[], TimeSeriesMRangeElement> tsMRevRange(final long fromTimestamp, final long toTimestamp,
 	                                                         final int count, final byte[]... filters) {
-		return execute((client)->client.timeSeriesCommands().tsMRevRange(fromTimestamp, toTimestamp, count, filters));
+		return doExecute((cmd)->cmd.tsMRevRange(fromTimestamp, toTimestamp, count, filters));
 	}
 
 	/**
@@ -2351,65 +2338,63 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 
 	@Override
 	default List<String> tsQueryIndex(final String... filters) {
-		return execute((client)->client.timeSeriesCommands().tsQueryIndex(filters));
+		return doExecute((cmd)->cmd.tsQueryIndex(filters));
 	}
 
 	@Override
 	default List<byte[]> tsQueryIndex(final byte[]... filters) {
-		return execute((client)->client.timeSeriesCommands().tsQueryIndex(filters));
+		return doExecute((cmd)->cmd.tsQueryIndex(filters));
 	}
 
 	@Override
 	default List<TimeSeriesElement> tsRange(final String key, final long fromTimestamp, final long toTimestamp) {
-		return execute((client)->client.timeSeriesCommands()
-				.tsRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp));
+		return doExecute((cmd)->cmd.tsRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp));
 	}
 
 	@Override
 	default List<TimeSeriesElement> tsRange(final byte[] key, final long fromTimestamp, final long toTimestamp) {
-		return execute(
-				(client)->client.timeSeriesCommands().tsRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp));
+		return doExecute((cmd)->cmd.tsRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp));
 	}
 
 	@Override
 	default List<TimeSeriesElement> tsRange(final String key, final long fromTimestamp, final long toTimestamp,
 	                                        final TSRangeArgument argument) {
-		return execute((client)->client.timeSeriesCommands()
+		return doExecute((cmd)->cmd
 				.tsRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp, argument));
 	}
 
 	@Override
 	default List<TimeSeriesElement> tsRange(final byte[] key, final long fromTimestamp, final long toTimestamp,
 	                                        final TSRangeArgument argument) {
-		return execute((client)->client.timeSeriesCommands()
+		return doExecute((cmd)->cmd
 				.tsRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp, argument));
 	}
 
 	@Override
 	default List<TimeSeriesElement> tsRange(final String key, final long fromTimestamp, final long toTimestamp,
 	                                        final TSRangeArgument argument, final int count) {
-		return execute((client)->client.timeSeriesCommands()
+		return doExecute((cmd)->cmd
 				.tsRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp, argument, count));
 	}
 
 	@Override
 	default List<TimeSeriesElement> tsRange(final byte[] key, final long fromTimestamp, final long toTimestamp,
 	                                        final TSRangeArgument argument, final int count) {
-		return execute((client)->client.timeSeriesCommands()
+		return doExecute((cmd)->cmd
 				.tsRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp, argument, count));
 	}
 
 	@Override
 	default List<TimeSeriesElement> tsRange(final String key, final long fromTimestamp, final long toTimestamp,
 	                                        final int count) {
-		return execute((client)->client.timeSeriesCommands()
+		return doExecute((cmd)->cmd
 				.tsRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp, count));
 	}
 
 	@Override
 	default List<TimeSeriesElement> tsRange(final byte[] key, final long fromTimestamp, final long toTimestamp,
 	                                        final int count) {
-		return execute((client)->client.timeSeriesCommands()
+		return doExecute((cmd)->cmd
 				.tsRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp, count));
 	}
 
@@ -3093,55 +3078,55 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 
 	@Override
 	default List<TimeSeriesElement> tsRevRange(final String key, final long fromTimestamp, final long toTimestamp) {
-		return execute((client)->client.timeSeriesCommands()
+		return doExecute((cmd)->cmd
 				.tsRevRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp));
 	}
 
 	@Override
 	default List<TimeSeriesElement> tsRevRange(final byte[] key, final long fromTimestamp, final long toTimestamp) {
-		return execute((client)->client.timeSeriesCommands()
+		return doExecute((cmd)->cmd
 				.tsRevRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp));
 	}
 
 	@Override
 	default List<TimeSeriesElement> tsRevRange(final String key, final long fromTimestamp, final long toTimestamp,
 	                                           final TSRangeArgument argument) {
-		return execute((client)->client.timeSeriesCommands()
+		return doExecute((cmd)->cmd
 				.tsRevRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp, argument));
 	}
 
 	@Override
 	default List<TimeSeriesElement> tsRevRange(final byte[] key, final long fromTimestamp, final long toTimestamp,
 	                                           final TSRangeArgument argument) {
-		return execute((client)->client.timeSeriesCommands()
+		return doExecute((cmd)->cmd
 				.tsRevRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp, argument));
 	}
 
 	@Override
 	default List<TimeSeriesElement> tsRevRange(final String key, final long fromTimestamp, final long toTimestamp,
 	                                           final TSRangeArgument argument, final int count) {
-		return execute((client)->client.timeSeriesCommands()
+		return doExecute((cmd)->cmd
 				.tsRevRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp, argument, count));
 	}
 
 	@Override
 	default List<TimeSeriesElement> tsRevRange(final byte[] key, final long fromTimestamp, final long toTimestamp,
 	                                           final TSRangeArgument argument, final int count) {
-		return execute((client)->client.timeSeriesCommands()
+		return doExecute((cmd)->cmd
 				.tsRevRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp, argument, count));
 	}
 
 	@Override
 	default List<TimeSeriesElement> tsRevRange(final String key, final long fromTimestamp, final long toTimestamp,
 	                                           final int count) {
-		return execute((client)->client.timeSeriesCommands()
+		return doExecute((cmd)->cmd
 				.tsRevRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp, count));
 	}
 
 	@Override
 	default List<TimeSeriesElement> tsRevRange(final byte[] key, final long fromTimestamp, final long toTimestamp,
 	                                           final int count) {
-		return execute((client)->client.timeSeriesCommands()
+		return doExecute((cmd)->cmd
 				.tsRevRange(KeyUtils.rawKey(this, key), fromTimestamp, toTimestamp, count));
 	}
 
@@ -3823,6 +3808,10 @@ public interface TimeSeriesOperations extends TimeSeriesCommands, RedisOperation
 	default List<TimeSeriesElement> tsRevRange(final byte[] key, final Instant fromInstant, final Instant toInstant,
 	                                           final int count) {
 		return tsRevRange(key, fromInstant.toEpochMilli(), toInstant.toEpochMilli(), count);
+	}
+
+	private <R> R doExecute(final Command.Executor<TimeSeriesCommands, R> executor) {
+		return execute((client)->executor.execute(client.timeSeriesCommands()));
 	}
 
 }

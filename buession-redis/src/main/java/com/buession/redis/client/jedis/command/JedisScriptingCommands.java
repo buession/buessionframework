@@ -327,8 +327,8 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 	public List<LibraryInfo> functionList(final String pattern) {
 		final CommandArguments args = CommandArguments.create("LIBRARYNAME", pattern);
 		return executeCommand(RedisCommand.FUNCTION, RedisSubCommand.FUNCTION_LIST, args,
-				(cmd)->cmd.functionList(pattern), (cmd)->cmd.functionList(pattern), (cmd)->cmd.functionList(pattern),
-				new ListConverter<>(new LibraryInfoConverter()));
+				(cmd)->cmd.functionList(pattern), (cmd)->cmd.functionList(pattern),
+				(cmd)->cmd.functionList(pattern), new ListConverter<>(new LibraryInfoConverter()));
 	}
 
 	@Override
@@ -423,8 +423,7 @@ public final class JedisScriptingCommands extends AbstractJedisRedisCommands imp
 	@Override
 	public FunctionStats functionStats() {
 		return executeCommand(RedisCommand.FUNCTION, RedisSubCommand.FUNCTION_STATS, (cmd)->cmd.functionStats(),
-				(cmd)->cmd.functionStats(), (cmd)->cmd.functionStats(),
-				new FunctionStatsConverter());
+				(cmd)->cmd.functionStats(), (cmd)->cmd.functionStats(), new FunctionStatsConverter());
 	}
 
 	@Override

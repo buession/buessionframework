@@ -24,9 +24,11 @@
  */
 package com.buession.redis.core.operations;
 
+import com.buession.core.collect.Arrays;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.core.CmsInfo;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.CountMinSketchCommands;
 import com.buession.redis.utils.KeyUtils;
 
@@ -45,91 +47,77 @@ public interface CountMinSketchOperations extends CountMinSketchCommands, RedisO
 	@SuppressWarnings({"unchecked"})
 	@Override
 	default List<Long> cmsIncrby(final String key, final KeyValue<String, Long>... items) {
-		return execute((client)->client.countMinSketchCommands().cmsIncrby(KeyUtils.rawKey(this, key), items));
+		return doExecute((cmd)->cmd.cmsIncrby(KeyUtils.rawKey(this, key), items));
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	default List<Long> cmsIncrby(final byte[] key, final KeyValue<byte[], Long>... items) {
-		return execute((client)->client.countMinSketchCommands().cmsIncrby(KeyUtils.rawKey(this, key), items));
+		return doExecute((cmd)->cmd.cmsIncrby(KeyUtils.rawKey(this, key), items));
 	}
 
 	@Override
 	default CmsInfo cmsInfo(final String key) {
-		return execute((client)->client.countMinSketchCommands().cmsInfo(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.cmsInfo(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default CmsInfo cmsInfo(final byte[] key) {
-		return execute((client)->client.countMinSketchCommands().cmsInfo(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.cmsInfo(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Status cmsInitByDim(final String key, final int width, final int depth) {
-		return execute(
-				(client)->client.countMinSketchCommands().cmsInitByDim(KeyUtils.rawKey(this, key), width, depth));
+		return doExecute((cmd)->cmd.cmsInitByDim(KeyUtils.rawKey(this, key), width, depth));
 	}
 
 	@Override
 	default Status cmsInitByDim(final byte[] key, final int width, final int depth) {
-		return execute(
-				(client)->client.countMinSketchCommands().cmsInitByDim(KeyUtils.rawKey(this, key), width, depth));
+		return doExecute((cmd)->cmd.cmsInitByDim(KeyUtils.rawKey(this, key), width, depth));
 	}
 
 	@Override
 	default Status cmsInitByProb(final String key, final double error, final double probability) {
-		return execute((client)->client.countMinSketchCommands()
+		return doExecute((cmd)->cmd
 				.cmsInitByProb(KeyUtils.rawKey(this, key), error, probability));
 	}
 
 	@Override
 	default Status cmsInitByProb(final byte[] key, final double error, final double probability) {
-		return execute((client)->client.countMinSketchCommands()
+		return doExecute((cmd)->cmd
 				.cmsInitByProb(KeyUtils.rawKey(this, key), error, probability));
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	default Status cmsMerge(final String destKey, final KeyValue<String, Long>... keysAndWeights) {
-		final KeyValue<String, Long>[] newKeysAndWeights =
-				keysAndWeights == null ? null : new KeyValue[keysAndWeights.length];
-
-		if(keysAndWeights != null){
-			for(int i = 0; i < newKeysAndWeights.length; i++){
-				newKeysAndWeights[i] = new KeyValue<>(KeyUtils.rawKey(this, keysAndWeights[i].getKey()),
-						keysAndWeights[i].getValue());
-			}
-		}
-
-		return execute(
-				(client)->client.countMinSketchCommands().cmsMerge(KeyUtils.rawKey(this, destKey), newKeysAndWeights));
+		final KeyValue<String, Long>[] newKeysAndWeights = Arrays.map(keysAndWeights,
+				(item)->new KeyValue<>(KeyUtils.rawKey(this, item.getKey()),
+						item.getValue()));
+		return doExecute((cmd)->cmd.cmsMerge(KeyUtils.rawKey(this, destKey), newKeysAndWeights));
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	default Status cmsMerge(final byte[] destKey, final KeyValue<byte[], Long>... keysAndWeights) {
-		final KeyValue<byte[], Long>[] newKeysAndWeights =
-				keysAndWeights == null ? null : new KeyValue[keysAndWeights.length];
-
-		if(keysAndWeights != null){
-			for(int i = 0; i < newKeysAndWeights.length; i++){
-				newKeysAndWeights[i] = new KeyValue<>(KeyUtils.rawKey(this, keysAndWeights[i].getKey()),
-						keysAndWeights[i].getValue());
-			}
-		}
-
-		return execute(
-				(client)->client.countMinSketchCommands().cmsMerge(KeyUtils.rawKey(this, destKey), newKeysAndWeights));
+		final KeyValue<byte[], Long>[] newKeysAndWeights = Arrays.map(keysAndWeights,
+				(item)->new KeyValue<>(KeyUtils.rawKey(this, item.getKey()),
+						item.getValue()));
+		return doExecute((cmd)->cmd.cmsMerge(KeyUtils.rawKey(this, destKey), newKeysAndWeights));
 	}
 
 	@Override
 	default List<Long> cmsQuery(final String key, final String... items) {
-		return execute((client)->client.countMinSketchCommands().cmsQuery(KeyUtils.rawKey(this, key), items));
+		return doExecute((cmd)->cmd.cmsQuery(KeyUtils.rawKey(this, key), items));
 	}
 
 	@Override
 	default List<Long> cmsQuery(final byte[] key, final byte[]... items) {
-		return execute((client)->client.countMinSketchCommands().cmsQuery(KeyUtils.rawKey(this, key), items));
+		return doExecute((cmd)->cmd.cmsQuery(KeyUtils.rawKey(this, key), items));
+	}
+
+	private <R> R doExecute(final Command.Executor<CountMinSketchCommands, R> executor) {
+		return execute((client)->executor.execute(client.countMinSketchCommands()));
 	}
 
 }

@@ -27,6 +27,7 @@ package com.buession.redis.core.operations;
 import com.buession.core.type.TypeReference;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.args.list.Direction;
 import com.buession.redis.core.command.args.list.Position;
 import com.buession.redis.core.command.ListCommands;
@@ -47,14 +48,14 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	@Override
 	default String blMove(final String key, final String destKey, final Direction from, final Direction to,
 	                      final int timeout) {
-		return execute((client)->client.listCommands()
+		return doExecute((cmd)->cmd
 				.blMove(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), from, to, timeout));
 	}
 
 	@Override
 	default byte[] blMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
 	                      final int timeout) {
-		return execute((client)->client.listCommands()
+		return doExecute((cmd)->cmd
 				.blMove(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), from, to, timeout));
 	}
 
@@ -164,24 +165,24 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default KeyValue<String, List<String>> blMPop(final int timeout, final String[] keys, final Direction direction) {
-		return execute((client)->client.listCommands().blMPop(timeout, KeyUtils.rawKeys(this, keys), direction));
+		return doExecute((cmd)->cmd.blMPop(timeout, KeyUtils.rawKeys(this, keys), direction));
 	}
 
 	@Override
 	default KeyValue<byte[], List<byte[]>> blMPop(final int timeout, final byte[][] keys, final Direction direction) {
-		return execute((client)->client.listCommands().blMPop(timeout, KeyUtils.rawKeys(this, keys), direction));
+		return doExecute((cmd)->cmd.blMPop(timeout, KeyUtils.rawKeys(this, keys), direction));
 	}
 
 	@Override
 	default KeyValue<String, List<String>> blMPop(final int timeout, final String[] keys, final Direction direction,
 	                                              final int count) {
-		return execute((client)->client.listCommands().blMPop(timeout, KeyUtils.rawKeys(this, keys), direction, count));
+		return doExecute((cmd)->cmd.blMPop(timeout, KeyUtils.rawKeys(this, keys), direction, count));
 	}
 
 	@Override
 	default KeyValue<byte[], List<byte[]>> blMPop(final int timeout, final byte[][] keys, final Direction direction,
 	                                              final int count) {
-		return execute((client)->client.listCommands().blMPop(timeout, KeyUtils.rawKeys(this, keys), direction, count));
+		return doExecute((cmd)->cmd.blMPop(timeout, KeyUtils.rawKeys(this, keys), direction, count));
 	}
 
 	/**
@@ -362,12 +363,12 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default List<String> blPop(final String[] keys, final int timeout) {
-		return execute((client)->client.listCommands().blPop(KeyUtils.rawKeys(this, keys), timeout));
+		return doExecute((cmd)->cmd.blPop(KeyUtils.rawKeys(this, keys), timeout));
 	}
 
 	@Override
 	default List<byte[]> blPop(final byte[][] keys, final int timeout) {
-		return execute((client)->client.listCommands().blPop(KeyUtils.rawKeys(this, keys), timeout));
+		return doExecute((cmd)->cmd.blPop(KeyUtils.rawKeys(this, keys), timeout));
 	}
 
 	/**
@@ -448,12 +449,12 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default List<String> brPop(final String[] keys, final int timeout) {
-		return execute((client)->client.listCommands().brPop(KeyUtils.rawKeys(this, keys), timeout));
+		return doExecute((cmd)->cmd.brPop(KeyUtils.rawKeys(this, keys), timeout));
 	}
 
 	@Override
 	default List<byte[]> brPop(final byte[][] keys, final int timeout) {
-		return execute((client)->client.listCommands().brPop(KeyUtils.rawKeys(this, keys), timeout));
+		return doExecute((cmd)->cmd.brPop(KeyUtils.rawKeys(this, keys), timeout));
 	}
 
 	/**
@@ -534,13 +535,13 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default String brPoplPush(final String key, final String destKey, final int timeout) {
-		return execute((client)->client.listCommands()
+		return doExecute((cmd)->cmd
 				.brPoplPush(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), timeout));
 	}
 
 	@Override
 	default byte[] brPoplPush(final byte[] key, final byte[] destKey, final int timeout) {
-		return execute((client)->client.listCommands()
+		return doExecute((cmd)->cmd
 				.brPoplPush(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), timeout));
 	}
 
@@ -638,12 +639,12 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default String lIndex(final String key, final long index) {
-		return execute((client)->client.listCommands().lIndex(KeyUtils.rawKey(this, key), index));
+		return doExecute((cmd)->cmd.lIndex(KeyUtils.rawKey(this, key), index));
 	}
 
 	@Override
 	default byte[] lIndex(final byte[] key, final long index) {
-		return execute((client)->client.listCommands().lIndex(KeyUtils.rawKey(this, key), index));
+		return doExecute((cmd)->cmd.lIndex(KeyUtils.rawKey(this, key), index));
 	}
 
 	/**
@@ -720,12 +721,12 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default Long lInsert(final String key, final Position position, final String pivot, final String value) {
-		return execute((client)->client.listCommands().lInsert(KeyUtils.rawKey(this, key), position, pivot, value));
+		return doExecute((cmd)->cmd.lInsert(KeyUtils.rawKey(this, key), position, pivot, value));
 	}
 
 	@Override
 	default Long lInsert(final byte[] key, final Position position, final byte[] pivot, final byte[] value) {
-		return execute((client)->client.listCommands().lInsert(KeyUtils.rawKey(this, key), position, pivot, value));
+		return doExecute((cmd)->cmd.lInsert(KeyUtils.rawKey(this, key), position, pivot, value));
 	}
 
 	/**
@@ -772,23 +773,23 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default Long lLen(final String key) {
-		return execute((client)->client.listCommands().lLen(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.lLen(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long lLen(final byte[] key) {
-		return execute((client)->client.listCommands().lLen(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.lLen(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default String lMove(final String key, final String destKey, final Direction from, final Direction to) {
-		return execute((client)->client.listCommands()
+		return doExecute((cmd)->cmd
 				.lMove(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), from, to));
 	}
 
 	@Override
 	default byte[] lMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to) {
-		return execute((client)->client.listCommands()
+		return doExecute((cmd)->cmd
 				.lMove(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey), from, to));
 	}
 
@@ -876,22 +877,22 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default KeyValue<String, List<String>> lMPop(final String[] keys, final Direction direction) {
-		return execute((client)->client.listCommands().lMPop(KeyUtils.rawKeys(this, keys), direction));
+		return doExecute((cmd)->cmd.lMPop(KeyUtils.rawKeys(this, keys), direction));
 	}
 
 	@Override
 	default KeyValue<byte[], List<byte[]>> lMPop(final byte[][] keys, final Direction direction) {
-		return execute((client)->client.listCommands().lMPop(KeyUtils.rawKeys(this, keys), direction));
+		return doExecute((cmd)->cmd.lMPop(KeyUtils.rawKeys(this, keys), direction));
 	}
 
 	@Override
 	default KeyValue<String, List<String>> lMPop(final String[] keys, final Direction direction, final int count) {
-		return execute((client)->client.listCommands().lMPop(KeyUtils.rawKeys(this, keys), direction, count));
+		return doExecute((cmd)->cmd.lMPop(KeyUtils.rawKeys(this, keys), direction, count));
 	}
 
 	@Override
 	default KeyValue<byte[], List<byte[]>> lMPop(final byte[][] keys, final Direction direction, final int count) {
-		return execute((client)->client.listCommands().lMPop(KeyUtils.rawKeys(this, keys), direction, count));
+		return doExecute((cmd)->cmd.lMPop(KeyUtils.rawKeys(this, keys), direction, count));
 	}
 
 	/**
@@ -1052,22 +1053,22 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default String lPop(final String key) {
-		return execute((client)->client.listCommands().lPop(key));
+		return doExecute((cmd)->cmd.lPop(key));
 	}
 
 	@Override
 	default byte[] lPop(final byte[] key) {
-		return execute((client)->client.listCommands().lPop(key));
+		return doExecute((cmd)->cmd.lPop(key));
 	}
 
 	@Override
 	default List<String> lPop(final String key, final int count) {
-		return execute((client)->client.listCommands().lPop(KeyUtils.rawKey(this, key), count));
+		return doExecute((cmd)->cmd.lPop(KeyUtils.rawKey(this, key), count));
 	}
 
 	@Override
 	default List<byte[]> lPop(final byte[] key, final int count) {
-		return execute((client)->client.listCommands().lPop(KeyUtils.rawKey(this, key), count));
+		return doExecute((cmd)->cmd.lPop(KeyUtils.rawKey(this, key), count));
 	}
 
 	/**
@@ -1208,52 +1209,52 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default Long lPos(final String key, final String element) {
-		return execute((client)->client.listCommands().lPos(KeyUtils.rawKey(this, key), element));
+		return doExecute((cmd)->cmd.lPos(KeyUtils.rawKey(this, key), element));
 	}
 
 	@Override
 	default Long lPos(final byte[] key, final byte[] element) {
-		return execute((client)->client.listCommands().lPos(KeyUtils.rawKey(this, key), element));
+		return doExecute((cmd)->cmd.lPos(KeyUtils.rawKey(this, key), element));
 	}
 
 	@Override
 	default Long lPos(final String key, final String element, final LPosArgument argument) {
-		return execute((client)->client.listCommands().lPos(KeyUtils.rawKey(this, key), element, argument));
+		return doExecute((cmd)->cmd.lPos(KeyUtils.rawKey(this, key), element, argument));
 	}
 
 	@Override
 	default Long lPos(final byte[] key, final byte[] element, final LPosArgument argument) {
-		return execute((client)->client.listCommands().lPos(KeyUtils.rawKey(this, key), element, argument));
+		return doExecute((cmd)->cmd.lPos(KeyUtils.rawKey(this, key), element, argument));
 	}
 
 	@Override
 	default List<Long> lPos(final String key, final String element, final LPosArgument argument, final int count) {
-		return execute((client)->client.listCommands().lPos(KeyUtils.rawKey(this, key), element, argument, count));
+		return doExecute((cmd)->cmd.lPos(KeyUtils.rawKey(this, key), element, argument, count));
 	}
 
 	@Override
 	default List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument argument, final int count) {
-		return execute((client)->client.listCommands().lPos(KeyUtils.rawKey(this, key), element, argument, count));
+		return doExecute((cmd)->cmd.lPos(KeyUtils.rawKey(this, key), element, argument, count));
 	}
 
 	@Override
 	default List<Long> lPos(final String key, final String element, final int count) {
-		return execute((client)->client.listCommands().lPos(KeyUtils.rawKey(this, key), element, count));
+		return doExecute((cmd)->cmd.lPos(KeyUtils.rawKey(this, key), element, count));
 	}
 
 	@Override
 	default List<Long> lPos(final byte[] key, final byte[] element, final int count) {
-		return execute((client)->client.listCommands().lPos(KeyUtils.rawKey(this, key), element, count));
+		return doExecute((cmd)->cmd.lPos(KeyUtils.rawKey(this, key), element, count));
 	}
 
 	@Override
 	default Long lPush(final String key, final String... values) {
-		return execute((client)->client.listCommands().lPush(KeyUtils.rawKey(this, key), values));
+		return doExecute((cmd)->cmd.lPush(KeyUtils.rawKey(this, key), values));
 	}
 
 	@Override
 	default Long lPush(final byte[] key, final byte[]... values) {
-		return execute((client)->client.listCommands().lPush(KeyUtils.rawKey(this, key), values));
+		return doExecute((cmd)->cmd.lPush(KeyUtils.rawKey(this, key), values));
 	}
 
 	/**
@@ -1292,12 +1293,12 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default Long lPushX(final String key, final String... values) {
-		return execute((client)->client.listCommands().lPushX(KeyUtils.rawKey(this, key), values));
+		return doExecute((cmd)->cmd.lPushX(KeyUtils.rawKey(this, key), values));
 	}
 
 	@Override
 	default Long lPushX(final byte[] key, final byte[]... values) {
-		return execute((client)->client.listCommands().lPushX(KeyUtils.rawKey(this, key), values));
+		return doExecute((cmd)->cmd.lPushX(KeyUtils.rawKey(this, key), values));
 	}
 
 	/**
@@ -1336,12 +1337,12 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default List<String> lRange(final String key, final long start, final long end) {
-		return execute((client)->client.listCommands().lRange(KeyUtils.rawKey(this, key), start, end));
+		return doExecute((cmd)->cmd.lRange(KeyUtils.rawKey(this, key), start, end));
 	}
 
 	@Override
 	default List<byte[]> lRange(final byte[] key, final long start, final long end) {
-		return execute((client)->client.listCommands().lRange(KeyUtils.rawKey(this, key), start, end));
+		return doExecute((cmd)->cmd.lRange(KeyUtils.rawKey(this, key), start, end));
 	}
 
 	/**
@@ -1438,22 +1439,22 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default Long lRem(final String key, final String value, final int count) {
-		return execute((client)->client.listCommands().lRem(KeyUtils.rawKey(this, key), value, count));
+		return doExecute((cmd)->cmd.lRem(KeyUtils.rawKey(this, key), value, count));
 	}
 
 	@Override
 	default Long lRem(final byte[] key, final byte[] value, final int count) {
-		return execute((client)->client.listCommands().lRem(KeyUtils.rawKey(this, key), value, count));
+		return doExecute((cmd)->cmd.lRem(KeyUtils.rawKey(this, key), value, count));
 	}
 
 	@Override
 	default Status lSet(final String key, final long index, final String value) {
-		return execute((client)->client.listCommands().lSet(KeyUtils.rawKey(this, key), index, value));
+		return doExecute((cmd)->cmd.lSet(KeyUtils.rawKey(this, key), index, value));
 	}
 
 	@Override
 	default Status lSet(final byte[] key, final long index, final byte[] value) {
-		return execute((client)->client.listCommands().lSet(KeyUtils.rawKey(this, key), index, value));
+		return doExecute((cmd)->cmd.lSet(KeyUtils.rawKey(this, key), index, value));
 	}
 
 	/**
@@ -1494,32 +1495,32 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default Status lTrim(final String key, final long start, final long end) {
-		return execute((client)->client.listCommands().lTrim(KeyUtils.rawKey(this, key), start, end));
+		return doExecute((cmd)->cmd.lTrim(KeyUtils.rawKey(this, key), start, end));
 	}
 
 	@Override
 	default Status lTrim(final byte[] key, final long start, final long end) {
-		return execute((client)->client.listCommands().lTrim(KeyUtils.rawKey(this, key), start, end));
+		return doExecute((cmd)->cmd.lTrim(KeyUtils.rawKey(this, key), start, end));
 	}
 
 	@Override
 	default String rPop(final String key) {
-		return execute((client)->client.listCommands().rPop(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.rPop(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default byte[] rPop(final byte[] key) {
-		return execute((client)->client.listCommands().rPop(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.rPop(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default List<String> rPop(final String key, final int count) {
-		return execute((client)->client.listCommands().rPop(KeyUtils.rawKey(this, key), count));
+		return doExecute((cmd)->cmd.rPop(KeyUtils.rawKey(this, key), count));
 	}
 
 	@Override
 	default List<byte[]> rPop(final byte[] key, final int count) {
-		return execute((client)->client.listCommands().rPop(KeyUtils.rawKey(this, key), count));
+		return doExecute((cmd)->cmd.rPop(KeyUtils.rawKey(this, key), count));
 	}
 
 	/**
@@ -1660,13 +1661,13 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default String rPoplPush(final String key, final String destKey) {
-		return execute((client)->client.listCommands()
+		return doExecute((cmd)->cmd
 				.rPoplPush(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey)));
 	}
 
 	@Override
 	default byte[] rPoplPush(final byte[] key, final byte[] destKey) {
-		return execute((client)->client.listCommands()
+		return doExecute((cmd)->cmd
 				.rPoplPush(KeyUtils.rawKey(this, key), KeyUtils.rawKey(this, destKey)));
 	}
 
@@ -1752,12 +1753,12 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default Long rPush(final String key, final String... values) {
-		return execute((client)->client.listCommands().rPush(KeyUtils.rawKey(this, key), values));
+		return doExecute((cmd)->cmd.rPush(KeyUtils.rawKey(this, key), values));
 	}
 
 	@Override
 	default Long rPush(final byte[] key, final byte[]... values) {
-		return execute((client)->client.listCommands().rPush(KeyUtils.rawKey(this, key), values));
+		return doExecute((cmd)->cmd.rPush(KeyUtils.rawKey(this, key), values));
 	}
 
 	/**
@@ -1796,12 +1797,12 @@ public interface ListOperations extends ListCommands, RedisOperations {
 
 	@Override
 	default Long rPushX(final String key, final String... values) {
-		return execute((client)->client.listCommands().rPushX(KeyUtils.rawKey(this, key), values));
+		return doExecute((cmd)->cmd.rPushX(KeyUtils.rawKey(this, key), values));
 	}
 
 	@Override
 	default Long rPushX(final byte[] key, final byte[]... values) {
-		return execute((client)->client.listCommands().rPushX(KeyUtils.rawKey(this, key), values));
+		return doExecute((cmd)->cmd.rPushX(KeyUtils.rawKey(this, key), values));
 	}
 
 	/**
@@ -1837,5 +1838,9 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 */
 	@SuppressWarnings({"unchecked"})
 	<V> Long rPushX(final byte[] key, final V... values);
+
+	private <R> R doExecute(final Command.Executor<ListCommands, R> executor) {
+		return execute((client)->executor.execute(client.listCommands()));
+	}
 
 }

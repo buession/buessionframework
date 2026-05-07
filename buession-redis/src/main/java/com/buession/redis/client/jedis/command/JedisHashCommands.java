@@ -332,8 +332,7 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 		final CommandArguments args = CommandArguments.create(key).add(data);
 		final ArrayKeyValueMapConverter<String, String, String, String> arrayKeyValueMapConverter = new ArrayKeyValueMapConverter<>(
 				(k)->k, (v)->v);
-		return executeCommand(RedisCommand.HMSET, args,
-				(cmd)->cmd.hmset(key, arrayKeyValueMapConverter.convert(data)),
+		return executeCommand(RedisCommand.HMSET, args, (cmd)->cmd.hmset(key, arrayKeyValueMapConverter.convert(data)),
 				(cmd)->cmd.hmset(key, arrayKeyValueMapConverter.convert(data)),
 				(cmd)->cmd.hmset(key, arrayKeyValueMapConverter.convert(data)), new OkStatusConverter());
 	}
@@ -344,8 +343,7 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 		final CommandArguments args = CommandArguments.create(key).add(data);
 		final ArrayKeyValueMapConverter<byte[], byte[], byte[], byte[]> arrayKeyValueMapConverter = new ArrayKeyValueMapConverter<>(
 				(k)->k, (v)->v);
-		return executeCommand(RedisCommand.HMSET, args,
-				(cmd)->cmd.hmset(key, arrayKeyValueMapConverter.convert(data)),
+		return executeCommand(RedisCommand.HMSET, args, (cmd)->cmd.hmset(key, arrayKeyValueMapConverter.convert(data)),
 				(cmd)->cmd.hmset(key, arrayKeyValueMapConverter.convert(data)),
 				(cmd)->cmd.hmset(key, arrayKeyValueMapConverter.convert(data)), new OkStatusConverter());
 	}
@@ -504,8 +502,7 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 	public Map<String, String> hRandFieldWithValues(final String key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count).add(Keyword.Hash.WITHVALUES);
 		return executeCommand(RedisCommand.HRANDFIELD, args, (cmd)->cmd.hrandfieldWithValues(key, count),
-				(cmd)->cmd.hrandfieldWithValues(key, count),
-				(cmd)->cmd.hrandfieldWithValues(key, count),
+				(cmd)->cmd.hrandfieldWithValues(key, count), (cmd)->cmd.hrandfieldWithValues(key, count),
 				new ListMapEntryMapConverter<>((k)->k, (v)->v));
 	}
 
@@ -513,8 +510,7 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 	public Map<byte[], byte[]> hRandFieldWithValues(final byte[] key, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(count).add(Keyword.Hash.WITHVALUES);
 		return executeCommand(RedisCommand.HRANDFIELD, args, (cmd)->cmd.hrandfieldWithValues(key, count),
-				(cmd)->cmd.hrandfieldWithValues(key, count),
-				(cmd)->cmd.hrandfieldWithValues(key, count),
+				(cmd)->cmd.hrandfieldWithValues(key, count), (cmd)->cmd.hrandfieldWithValues(key, count),
 				new ListMapEntryMapConverter<>((k)->k, (v)->v));
 	}
 
@@ -640,8 +636,7 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 		final CommandArguments args = CommandArguments.create(key).add(data);
 		final ArrayKeyValueMapConverter<String, String, String, String> arrayKeyValueMapConverter = new ArrayKeyValueMapConverter<>(
 				(k)->k, (v)->v);
-		return executeCommand(RedisCommand.HSET, args,
-				(cmd)->cmd.hset(key, arrayKeyValueMapConverter.convert(data)),
+		return executeCommand(RedisCommand.HSET, args, (cmd)->cmd.hset(key, arrayKeyValueMapConverter.convert(data)),
 				(cmd)->cmd.hset(key, arrayKeyValueMapConverter.convert(data)),
 				(cmd)->cmd.hset(key, arrayKeyValueMapConverter.convert(data)));
 	}
@@ -652,8 +647,7 @@ public final class JedisHashCommands extends AbstractJedisRedisCommands implemen
 		final CommandArguments args = CommandArguments.create(key).add(data);
 		final ArrayKeyValueMapConverter<byte[], byte[], byte[], byte[]> arrayKeyValueMapConverter = new ArrayKeyValueMapConverter<>(
 				(k)->k, (v)->v);
-		return executeCommand(RedisCommand.HSET, args,
-				(cmd)->cmd.hset(key, arrayKeyValueMapConverter.convert(data)),
+		return executeCommand(RedisCommand.HSET, args, (cmd)->cmd.hset(key, arrayKeyValueMapConverter.convert(data)),
 				(cmd)->cmd.hset(key, arrayKeyValueMapConverter.convert(data)),
 				(cmd)->cmd.hset(key, arrayKeyValueMapConverter.convert(data)));
 	}

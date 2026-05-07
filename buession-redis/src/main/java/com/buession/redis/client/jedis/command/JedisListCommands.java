@@ -342,8 +342,7 @@ public final class JedisListCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public Long lPos(final String key, final String element, final LPosArgument argument) {
 		final CommandArguments args = CommandArguments.create(key, element).add(argument);
-		return executeCommand(RedisCommand.LPOS, args,
-				(cmd)->cmd.lpos(key, element, new JedisLPosParams(argument)),
+		return executeCommand(RedisCommand.LPOS, args, (cmd)->cmd.lpos(key, element, new JedisLPosParams(argument)),
 				(cmd)->cmd.lpos(key, element, new JedisLPosParams(argument)),
 				(cmd)->cmd.lpos(key, element, new JedisLPosParams(argument)));
 	}
@@ -351,8 +350,7 @@ public final class JedisListCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public Long lPos(final byte[] key, final byte[] element, final LPosArgument argument) {
 		final CommandArguments args = CommandArguments.create(key, element).add(argument);
-		return executeCommand(RedisCommand.LPOS, args,
-				(cmd)->cmd.lpos(key, element, new JedisLPosParams(argument)),
+		return executeCommand(RedisCommand.LPOS, args, (cmd)->cmd.lpos(key, element, new JedisLPosParams(argument)),
 				(cmd)->cmd.lpos(key, element, new JedisLPosParams(argument)),
 				(cmd)->cmd.lpos(key, element, new JedisLPosParams(argument)));
 	}

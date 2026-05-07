@@ -138,8 +138,7 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 	@Override
 	public Status tsCreate(final String key, final CreateArgument argument) {
 		final CommandArguments args = CommandArguments.create(key).add(argument);
-		return executeCommand(RedisCommand.TS_CREATE, args,
-				(cmd)->cmd.tsCreate(key, new JedisTSCreateParams(argument)),
+		return executeCommand(RedisCommand.TS_CREATE, args, (cmd)->cmd.tsCreate(key, new JedisTSCreateParams(argument)),
 				(cmd)->cmd.tsCreate(key, new JedisTSCreateParams(argument)),
 				(cmd)->cmd.tsCreate(key, new JedisTSCreateParams(argument)), new OkStatusConverter());
 	}
@@ -156,12 +155,12 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 				.add(timeBucket);
 		final AggregationTypeConverter aggregationTypeConverter = new AggregationTypeConverter();
 		return executeCommand(RedisCommand.TS_CREATERULE, args,
-				(cmd)->cmd.tsCreateRule(sourceKey, destKey,
-						aggregationTypeConverter.convert(aggregationType), timeBucket),
-				(cmd)->cmd.tsCreateRule(sourceKey, destKey,
-						aggregationTypeConverter.convert(aggregationType), timeBucket),
-				(cmd)->cmd.tsCreateRule(sourceKey, destKey,
-						aggregationTypeConverter.convert(aggregationType), timeBucket), new OkStatusConverter());
+				(cmd)->cmd.tsCreateRule(sourceKey, destKey, aggregationTypeConverter.convert(aggregationType),
+						timeBucket),
+				(cmd)->cmd.tsCreateRule(sourceKey, destKey, aggregationTypeConverter.convert(aggregationType),
+						timeBucket),
+				(cmd)->cmd.tsCreateRule(sourceKey, destKey, aggregationTypeConverter.convert(aggregationType),
+						timeBucket), new OkStatusConverter());
 	}
 
 	@Override
@@ -177,12 +176,12 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 				.add(timeBucket, alignTimestamp);
 		final AggregationTypeConverter aggregationTypeConverter = new AggregationTypeConverter();
 		return executeCommand(RedisCommand.TS_CREATERULE, args,
-				(cmd)->cmd.tsCreateRule(sourceKey, destKey,
-						aggregationTypeConverter.convert(aggregationType), timeBucket, alignTimestamp),
-				(cmd)->cmd.tsCreateRule(sourceKey, destKey,
-						aggregationTypeConverter.convert(aggregationType), timeBucket, alignTimestamp),
-				(cmd)->cmd.tsCreateRule(sourceKey, destKey,
-						aggregationTypeConverter.convert(aggregationType), timeBucket, alignTimestamp),
+				(cmd)->cmd.tsCreateRule(sourceKey, destKey, aggregationTypeConverter.convert(aggregationType),
+						timeBucket, alignTimestamp),
+				(cmd)->cmd.tsCreateRule(sourceKey, destKey, aggregationTypeConverter.convert(aggregationType),
+						timeBucket, alignTimestamp),
+				(cmd)->cmd.tsCreateRule(sourceKey, destKey, aggregationTypeConverter.convert(aggregationType),
+						timeBucket, alignTimestamp),
 				new OkStatusConverter());
 	}
 
@@ -223,8 +222,7 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 	public Long tsDel(final String key, final long fromTimestamp, final long toTimestamp) {
 		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp, toTimestamp);
 		return executeCommand(RedisCommand.TS_DEL, args, (cmd)->cmd.tsDel(key, fromTimestamp, toTimestamp),
-				(cmd)->cmd.tsDel(key, fromTimestamp, toTimestamp),
-				(cmd)->cmd.tsDel(key, fromTimestamp, toTimestamp));
+				(cmd)->cmd.tsDel(key, fromTimestamp, toTimestamp), (cmd)->cmd.tsDel(key, fromTimestamp, toTimestamp));
 	}
 
 	@Override
@@ -235,10 +233,9 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 	@Override
 	public Status tsDeleteRule(final String sourceKey, final String destKey) {
 		final CommandArguments args = CommandArguments.create(sourceKey, destKey);
-		return executeCommand(RedisCommand.TS_DELETERULE, args,
-				(cmd)->cmd.tsDeleteRule(sourceKey, destKey),
-				(cmd)->cmd.tsDeleteRule(sourceKey, destKey),
-				(cmd)->cmd.tsDeleteRule(sourceKey, destKey), new OkStatusConverter());
+		return executeCommand(RedisCommand.TS_DELETERULE, args, (cmd)->cmd.tsDeleteRule(sourceKey, destKey),
+				(cmd)->cmd.tsDeleteRule(sourceKey, destKey), (cmd)->cmd.tsDeleteRule(sourceKey, destKey),
+				new OkStatusConverter());
 	}
 
 	@Override
@@ -263,8 +260,7 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 		final CommandArguments args = CommandArguments.create(key).add(latest ? "LATEST" : null);
 		return executeCommand(RedisCommand.TS_GET, args, (cmd)->cmd.tsGet(key, new JedisTSGetParams(latest)),
 				(cmd)->cmd.tsGet(key, new JedisTSGetParams(latest)),
-				(cmd)->cmd.tsGet(key, new JedisTSGetParams(latest)),
-				new TSElementConverter());
+				(cmd)->cmd.tsGet(key, new JedisTSGetParams(latest)), new TSElementConverter());
 	}
 
 	@Override
@@ -506,8 +502,7 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 		final CommandArguments args = CommandArguments.create(filters);
 		return executeCommand(RedisCommand.TS_QUERYINDEX, args, (cmd)->cmd.tsQueryIndex(SafeEncoder.encode(filters)),
 				(cmd)->cmd.tsQueryIndex(SafeEncoder.encode(filters)),
-				(cmd)->cmd.tsQueryIndex(SafeEncoder.encode(filters)),
-				Converters.stringListBinaryListConverter());
+				(cmd)->cmd.tsQueryIndex(SafeEncoder.encode(filters)), Converters.stringListBinaryListConverter());
 	}
 
 	@Override
@@ -515,8 +510,7 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp, toTimestamp);
 		return executeCommand(RedisCommand.TS_RANGE, args, (cmd)->cmd.tsRange(key, fromTimestamp, toTimestamp),
 				(cmd)->cmd.tsRange(key, fromTimestamp, toTimestamp),
-				(cmd)->cmd.tsRange(key, fromTimestamp, toTimestamp),
-				new ListConverter<>(new TSElementConverter()));
+				(cmd)->cmd.tsRange(key, fromTimestamp, toTimestamp), new ListConverter<>(new TSElementConverter()));
 	}
 
 	@Override
@@ -580,8 +574,7 @@ public final class JedisTimeSeriesCommands extends AbstractJedisRedisCommands im
 	@Override
 	public List<TimeSeriesElement> tsRevRange(final String key, final long fromTimestamp, final long toTimestamp) {
 		final CommandArguments args = CommandArguments.create(key).add(fromTimestamp, toTimestamp);
-		return executeCommand(RedisCommand.TS_REVRANGE, args,
-				(cmd)->cmd.tsRevRange(key, fromTimestamp, toTimestamp),
+		return executeCommand(RedisCommand.TS_REVRANGE, args, (cmd)->cmd.tsRevRange(key, fromTimestamp, toTimestamp),
 				(cmd)->cmd.tsRevRange(key, fromTimestamp, toTimestamp),
 				(cmd)->cmd.tsRevRange(key, fromTimestamp, toTimestamp),
 				new ListConverter<>(new TSElementConverter()));

@@ -151,8 +151,7 @@ public final class JedisTDigestCommands extends AbstractJedisRedisCommands imple
 	public Status tdigestMerge(final String destKey, final String... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys);
 		return executeCommand(RedisCommand.TDIGEST_MERGE, args, (cmd)->cmd.tdigestMerge(destKey, keys),
-				(cmd)->cmd.tdigestMerge(destKey, keys),
-				(cmd)->cmd.tdigestMerge(destKey, keys),
+				(cmd)->cmd.tdigestMerge(destKey, keys), (cmd)->cmd.tdigestMerge(destKey, keys),
 				new OkStatusConverter());
 	}
 
@@ -183,12 +182,10 @@ public final class JedisTDigestCommands extends AbstractJedisRedisCommands imple
 		final CommandArguments args = CommandArguments.create(destKey).add(keys.length).add(keys)
 				.add("COMPRESSION", compression).add(override ? "OVERRIDE" : null);
 		return executeCommand(RedisCommand.TDIGEST_MERGE, args,
-				(cmd)->cmd.tdigestMerge(new JedisTDigestMergeParams(compression, override), destKey,
-						keys),
-				(cmd)->cmd.tdigestMerge(new JedisTDigestMergeParams(compression, override), destKey,
-						keys),
-				(cmd)->cmd.tdigestMerge(new JedisTDigestMergeParams(compression, override), destKey,
-						keys), new OkStatusConverter());
+				(cmd)->cmd.tdigestMerge(new JedisTDigestMergeParams(compression, override), destKey, keys),
+				(cmd)->cmd.tdigestMerge(new JedisTDigestMergeParams(compression, override), destKey, keys),
+				(cmd)->cmd.tdigestMerge(new JedisTDigestMergeParams(compression, override), destKey, keys),
+				new OkStatusConverter());
 	}
 
 	@Override

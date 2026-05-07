@@ -380,8 +380,7 @@ public final class JedisServerCommands extends AbstractJedisRedisCommands implem
 	@Override
 	public Info info(final Info.Section section) {
 		final CommandArguments args = CommandArguments.create(section);
-		return executeCommand(
-				RedisCommand.INFO, args, null, null,
+		return executeCommand(RedisCommand.INFO, args, null, null,
 				(cmd)->cmd.info(section.name().toLowerCase()), new InfoConverter());
 	}
 
@@ -484,8 +483,7 @@ public final class JedisServerCommands extends AbstractJedisRedisCommands implem
 	public Long memoryUsage(final String key, final int samples) {
 		final CommandArguments args = CommandArguments.create(key).add("SAMPLES", samples);
 		return executeCommand(RedisCommand.MEMORY, RedisSubCommand.MEMORY_USAGE, args,
-				(cmd)->cmd.memoryUsage(key, samples),
-				(cmd)->cmd.memoryUsage(key, samples),
+				(cmd)->cmd.memoryUsage(key, samples), (cmd)->cmd.memoryUsage(key, samples),
 				(cmd)->cmd.memoryUsage(key, samples));
 	}
 
@@ -493,8 +491,7 @@ public final class JedisServerCommands extends AbstractJedisRedisCommands implem
 	public Long memoryUsage(final byte[] key, final int samples) {
 		final CommandArguments args = CommandArguments.create(key).add("SAMPLES", samples);
 		return executeCommand(RedisCommand.MEMORY, RedisSubCommand.MEMORY_USAGE, args,
-				(cmd)->cmd.memoryUsage(key, samples),
-				(cmd)->cmd.memoryUsage(key, samples),
+				(cmd)->cmd.memoryUsage(key, samples), (cmd)->cmd.memoryUsage(key, samples),
 				(cmd)->cmd.memoryUsage(key, samples));
 	}
 

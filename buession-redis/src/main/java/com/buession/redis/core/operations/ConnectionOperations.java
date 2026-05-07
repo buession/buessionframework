@@ -27,6 +27,7 @@ package com.buession.redis.core.operations;
 import com.buession.core.utils.Assert;
 import com.buession.lang.Status;
 import com.buession.redis.core.Client;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.args.connection.ClientInfoOption;
 import com.buession.redis.core.command.args.connection.ClientPauseMode;
 import com.buession.redis.core.command.args.connection.ClientReply;
@@ -51,57 +52,57 @@ public interface ConnectionOperations extends ConnectionCommands, RedisOperation
 
 	@Override
 	default Status auth(final String user, final String password) {
-		return execute((client)->client.connectionCommands().auth(user, password));
+		return doExecute((cmd)->cmd.auth(user, password));
 	}
 
 	@Override
 	default Status auth(final byte[] user, final byte[] password) {
-		return execute((client)->client.connectionCommands().auth(user, password));
+		return doExecute((cmd)->cmd.auth(user, password));
 	}
 
 	@Override
 	default Status auth(final String password) {
-		return execute((client)->client.connectionCommands().auth(password));
+		return doExecute((cmd)->cmd.auth(password));
 	}
 
 	@Override
 	default Status auth(final byte[] password) {
-		return execute((client)->client.connectionCommands().auth(password));
+		return doExecute((cmd)->cmd.auth(password));
 	}
 
 	@Override
 	default Status clientCaching(final boolean isYes) {
-		return execute((client)->client.connectionCommands().clientCaching(isYes));
+		return doExecute((cmd)->cmd.clientCaching(isYes));
 	}
 
 	@Override
 	default String clientGetName() {
-		return execute((client)->client.connectionCommands().clientGetName());
+		return doExecute((cmd)->cmd.clientGetName());
 	}
 
 	@Override
 	default Integer clientGetRedir() {
-		return execute((client)->client.connectionCommands().clientGetRedir());
+		return doExecute((cmd)->cmd.clientGetRedir());
 	}
 
 	@Override
 	default Long clientId() {
-		return execute((client)->client.connectionCommands().clientId());
+		return doExecute((cmd)->cmd.clientId());
 	}
 
 	@Override
 	default Client clientInfo() {
-		return execute((client)->client.connectionCommands().clientInfo());
+		return doExecute((cmd)->cmd.clientInfo());
 	}
 
 	@Override
 	default Status clientKill(final String host, final int port) {
-		return execute((client)->client.connectionCommands().clientKill(host, port));
+		return doExecute((cmd)->cmd.clientKill(host, port));
 	}
 
 	@Override
 	default Status clientKill(final byte[] host, final int port) {
-		return execute((client)->client.connectionCommands().clientKill(host, port));
+		return doExecute((cmd)->cmd.clientKill(host, port));
 	}
 
 	/**
@@ -121,152 +122,152 @@ public interface ConnectionOperations extends ConnectionCommands, RedisOperation
 
 	@Override
 	default List<Client> clientList() {
-		return execute((client)->client.connectionCommands().clientList());
+		return doExecute((cmd)->cmd.clientList());
 	}
 
 	@Override
 	default List<Client> clientList(final ClientType clientType) {
-		return execute((client)->client.connectionCommands().clientList(clientType));
+		return doExecute((cmd)->cmd.clientList(clientType));
 	}
 
 	@Override
 	default List<Client> clientList(final long... clientIds) {
-		return execute((client)->client.connectionCommands().clientList(clientIds));
+		return doExecute((cmd)->cmd.clientList(clientIds));
 	}
 
 	@Override
 	default Status clientNoEvict(final boolean on) {
-		return execute((client)->client.connectionCommands().clientNoEvict(on));
+		return doExecute((cmd)->cmd.clientNoEvict(on));
 	}
 
 	@Override
 	default Status clientNoTouch(final boolean on) {
-		return execute((client)->client.connectionCommands().clientNoTouch(on));
+		return doExecute((cmd)->cmd.clientNoTouch(on));
 	}
 
 	@Override
 	default Status clientPause(final int timeout) {
-		return execute((client)->client.connectionCommands().clientPause(timeout));
+		return doExecute((cmd)->cmd.clientPause(timeout));
 	}
 
 	@Override
 	default Status clientPause(final int timeout, final ClientPauseMode pauseMode) {
-		return execute((client)->client.connectionCommands().clientPause(timeout, pauseMode));
+		return doExecute((cmd)->cmd.clientPause(timeout, pauseMode));
 	}
 
 	@Override
 	default Status clientReply(final ClientReply option) {
-		return execute((client)->client.connectionCommands().clientReply(option));
+		return doExecute((cmd)->cmd.clientReply(option));
 	}
 
 	@Override
 	default Status clientSetInfo(final ClientInfoOption option, final String value) {
-		return execute((client)->client.connectionCommands().clientSetInfo(option, value));
+		return doExecute((cmd)->cmd.clientSetInfo(option, value));
 	}
 
 	@Override
 	default Status clientSetName(final String name) {
-		return execute((client)->client.connectionCommands().clientSetName(name));
+		return doExecute((cmd)->cmd.clientSetName(name));
 	}
 
 	@Override
 	default Status clientSetName(final byte[] name) {
-		return execute((client)->client.connectionCommands().clientSetName(name));
+		return doExecute((cmd)->cmd.clientSetName(name));
 	}
 
 	@Override
 	default Status clientTracking(final boolean on, final TrackingArgument argument) {
-		return execute((client)->client.connectionCommands().clientTracking(on, argument));
+		return doExecute((cmd)->cmd.clientTracking(on, argument));
 	}
 
 	@Override
 	default TrackingInfo clientTrackingInfo() {
-		return execute((client)->client.connectionCommands().clientTrackingInfo());
+		return doExecute((cmd)->cmd.clientTrackingInfo());
 	}
 
 	@Override
 	default Status clientUnblock(final int clientId) {
-		return execute((client)->client.connectionCommands().clientUnblock(clientId));
+		return doExecute((cmd)->cmd.clientUnblock(clientId));
 	}
 
 	@Override
 	default Status clientUnblock(final int clientId, final ClientUnblockType type) {
-		return execute((client)->client.connectionCommands().clientUnblock(clientId, type));
+		return doExecute((cmd)->cmd.clientUnblock(clientId, type));
 	}
 
 	@Override
 	default Status clientUnpause() {
-		return execute((client)->client.connectionCommands().clientUnpause());
+		return doExecute((cmd)->cmd.clientUnpause());
 	}
 
 	@Override
 	default String echo(final String str) {
-		return execute((client)->client.connectionCommands().echo(str));
+		return doExecute((cmd)->cmd.echo(str));
 	}
 
 	@Override
 	default byte[] echo(final byte[] str) {
-		return execute((client)->client.connectionCommands().echo(str));
+		return doExecute((cmd)->cmd.echo(str));
 	}
 
 	@Override
 	default Hello hello() {
-		return execute((client)->client.connectionCommands().hello());
+		return doExecute((cmd)->cmd.hello());
 	}
 
 	@Override
 	default Hello hello(final int protover) {
-		return execute((client)->client.connectionCommands().hello(protover));
+		return doExecute((cmd)->cmd.hello(protover));
 	}
 
 	@Override
 	default Hello hello(final int protover, final String password) {
-		return execute((client)->client.connectionCommands().hello(protover, password));
+		return doExecute((cmd)->cmd.hello(protover, password));
 	}
 
 	@Override
 	default Hello hello(final int protover, final byte[] password) {
-		return execute((client)->client.connectionCommands().hello(protover, password));
+		return doExecute((cmd)->cmd.hello(protover, password));
 	}
 
 	@Override
 	default Hello hello(final int protover, final String username, final String password) {
-		return execute((client)->client.connectionCommands().hello(protover, username, password));
+		return doExecute((cmd)->cmd.hello(protover, username, password));
 	}
 
 	@Override
 	default Hello hello(final int protover, final byte[] username, final byte[] password) {
-		return execute((client)->client.connectionCommands().hello(protover, username, password));
+		return doExecute((cmd)->cmd.hello(protover, username, password));
 	}
 
 	@Override
 	default Hello hello(final int protover, final String username, final String password, final String clientName) {
-		return execute((client)->client.connectionCommands().hello(protover, username, password, clientName));
+		return doExecute((cmd)->cmd.hello(protover, username, password, clientName));
 	}
 
 	@Override
 	default Hello hello(final int protover, final byte[] username, final byte[] password, final byte[] clientName) {
-		return execute((client)->client.connectionCommands().hello(protover, username, password, clientName));
+		return doExecute((cmd)->cmd.hello(protover, username, password, clientName));
 	}
 
 	@Override
 	default Status ping() {
-		return execute((client)->client.connectionCommands().ping());
+		return doExecute((cmd)->cmd.ping());
 	}
 
 	@Override
 	default Status quit() {
-		return execute((client)->client.connectionCommands().quit());
+		return doExecute((cmd)->cmd.quit());
 	}
 
 	@Override
 	default Status reset() {
-		return execute((client)->client.connectionCommands().reset());
+		return doExecute((cmd)->cmd.reset());
 	}
 
 	@Override
 	default Status select(final int db) {
-		return execute((client)->client.connectionCommands().select(db));
+		return doExecute((cmd)->cmd.select(db));
 	}
 
 	/**
@@ -278,6 +279,10 @@ public interface ConnectionOperations extends ConnectionCommands, RedisOperation
 	 */
 	default Status select() {
 		return select(0);
+	}
+
+	private <R> R doExecute(final Command.Executor<ConnectionCommands, R> executor) {
+		return execute((client)->executor.execute(client.connectionCommands()));
 	}
 
 }

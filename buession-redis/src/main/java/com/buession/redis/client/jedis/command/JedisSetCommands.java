@@ -97,16 +97,14 @@ public final class JedisSetCommands extends AbstractJedisRedisCommands implement
 	public Long sDiffStore(final String destKey, final String... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
 		return executeCommand(RedisCommand.SDIFFSTORE, args, (cmd)->cmd.sdiffstore(destKey, keys),
-				(cmd)->cmd.sdiffstore(destKey, keys),
-				(cmd)->cmd.sdiffstore(destKey, keys));
+				(cmd)->cmd.sdiffstore(destKey, keys), (cmd)->cmd.sdiffstore(destKey, keys));
 	}
 
 	@Override
 	public Long sDiffStore(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
 		return executeCommand(RedisCommand.SDIFFSTORE, args, (cmd)->cmd.sdiffstore(destKey, keys),
-				(cmd)->cmd.sdiffstore(destKey, keys),
-				(cmd)->cmd.sdiffstore(destKey, keys));
+				(cmd)->cmd.sdiffstore(destKey, keys), (cmd)->cmd.sdiffstore(destKey, keys));
 	}
 
 	@Override
@@ -155,16 +153,14 @@ public final class JedisSetCommands extends AbstractJedisRedisCommands implement
 	public Long sInterStore(final String destKey, final String... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
 		return executeCommand(RedisCommand.SINTERSTORE, args, (cmd)->cmd.sinterstore(destKey, keys),
-				(cmd)->cmd.sinterstore(destKey, keys),
-				(cmd)->cmd.sinterstore(destKey, keys));
+				(cmd)->cmd.sinterstore(destKey, keys), (cmd)->cmd.sinterstore(destKey, keys));
 	}
 
 	@Override
 	public Long sInterStore(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
 		return executeCommand(RedisCommand.SINTERSTORE, args, (cmd)->cmd.sinterstore(destKey, keys),
-				(cmd)->cmd.sinterstore(destKey, keys),
-				(cmd)->cmd.sinterstore(destKey, keys));
+				(cmd)->cmd.sinterstore(destKey, keys), (cmd)->cmd.sinterstore(destKey, keys));
 	}
 
 	@Override
@@ -213,8 +209,7 @@ public final class JedisSetCommands extends AbstractJedisRedisCommands implement
 	public Status sMove(final String key, final String destKey, final String member) {
 		final CommandArguments args = CommandArguments.create(key, destKey).add(member);
 		return executeCommand(RedisCommand.SMOVE, args, (cmd)->cmd.smove(key, destKey, member),
-				(cmd)->cmd.smove(key, destKey, member),
-				(cmd)->cmd.smove(key, destKey, member),
+				(cmd)->cmd.smove(key, destKey, member), (cmd)->cmd.smove(key, destKey, member),
 				new OneStatusConverter());
 	}
 
@@ -222,8 +217,7 @@ public final class JedisSetCommands extends AbstractJedisRedisCommands implement
 	public Status sMove(final byte[] key, final byte[] destKey, final byte[] member) {
 		final CommandArguments args = CommandArguments.create(key, destKey).add(member);
 		return executeCommand(RedisCommand.SMOVE, args, (cmd)->cmd.smove(key, destKey, member),
-				(cmd)->cmd.smove(key, destKey, member),
-				(cmd)->cmd.smove(key, destKey, member),
+				(cmd)->cmd.smove(key, destKey, member), (cmd)->cmd.smove(key, destKey, member),
 				new OneStatusConverter());
 	}
 
@@ -369,16 +363,14 @@ public final class JedisSetCommands extends AbstractJedisRedisCommands implement
 	public Long sUnionStore(final String destKey, final String... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
 		return executeCommand(RedisCommand.SUNIONSTORE, args, (cmd)->cmd.sunionstore(destKey, keys),
-				(cmd)->cmd.sunionstore(destKey, keys),
-				(cmd)->cmd.sunionstore(destKey, keys));
+				(cmd)->cmd.sunionstore(destKey, keys), (cmd)->cmd.sunionstore(destKey, keys));
 	}
 
 	@Override
 	public Long sUnionStore(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
 		return executeCommand(RedisCommand.SUNIONSTORE, args, (cmd)->cmd.sunionstore(destKey, keys),
-				(cmd)->cmd.sunionstore(destKey, keys),
-				(cmd)->cmd.sunionstore(destKey, keys));
+				(cmd)->cmd.sunionstore(destKey, keys), (cmd)->cmd.sunionstore(destKey, keys));
 	}
 
 	private ScanResult<String> sScan(final String key, final String cursor, final ScanParams scanParams,

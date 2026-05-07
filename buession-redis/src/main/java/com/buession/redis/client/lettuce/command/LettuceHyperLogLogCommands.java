@@ -88,10 +88,8 @@ public final class LettuceHyperLogLogCommands extends AbstractLettuceRedisComman
 	@Override
 	public Status pfMerge(final byte[] destKey, final byte[]... keys) {
 		final CommandArguments args = CommandArguments.create(destKey).add(keys);
-		return executeCommand(RedisCommand.PFMERGE, args,
-				(cmd)->cmd.pfmerge(destKey, keys),
-				(cmd)->cmd.pfmerge(destKey, keys),
-				new OkStatusConverter());
+		return executeCommand(RedisCommand.PFMERGE, args, (cmd)->cmd.pfmerge(destKey, keys),
+				(cmd)->cmd.pfmerge(destKey, keys), new OkStatusConverter());
 	}
 
 }

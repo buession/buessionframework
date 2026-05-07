@@ -418,8 +418,7 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	@Override
 	public Status jsonMerge(final String key, final String path, final String value) {
 		final CommandArguments args = CommandArguments.create(key).add(path).add(value);
-		return executeCommand(RedisCommand.JSON_MERGE, args,
-				(cmd)->cmd.jsonMerge(key, new JedisPath(path), value),
+		return executeCommand(RedisCommand.JSON_MERGE, args, (cmd)->cmd.jsonMerge(key, new JedisPath(path), value),
 				(cmd)->cmd.jsonMerge(key, new JedisPath(path), value),
 				(cmd)->cmd.jsonMerge(key, new JedisPath(path), value), new OkStatusConverter());
 	}
@@ -433,8 +432,7 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	public List<String> jsonMGet(final String[] keys, final String path) {
 		final CommandArguments args = CommandArguments.create(keys).add(path);
 		return executeCommand(RedisCommand.JSON_MGET, args, (cmd)->cmd.jsonMGet(new JedisPath(path), keys),
-				(cmd)->cmd.jsonMGet(new JedisPath(path), keys),
-				(cmd)->cmd.jsonMGet(new JedisPath(path), keys),
+				(cmd)->cmd.jsonMGet(new JedisPath(path), keys), (cmd)->cmd.jsonMGet(new JedisPath(path), keys),
 				new ListConverter<>((v)->v == null ? null : v.toString()));
 	}
 
@@ -629,8 +627,7 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	public List<Long> jsonStrLen(final String key, final String path) {
 		final CommandArguments args = CommandArguments.create(key, path);
 		return executeCommand(RedisCommand.JSON_STRLEN, args, (cmd)->cmd.jsonStrLen(key, new JedisPath(path)),
-				(cmd)->cmd.jsonStrLen(key, new JedisPath(path)),
-				(cmd)->cmd.jsonStrLen(key, new JedisPath(path)));
+				(cmd)->cmd.jsonStrLen(key, new JedisPath(path)), (cmd)->cmd.jsonStrLen(key, new JedisPath(path)));
 	}
 
 	@Override
@@ -642,8 +639,7 @@ public final class JedisJsonCommands extends AbstractJedisRedisCommands implemen
 	public List<Status> jsonToggle(final String key, final String path) {
 		final CommandArguments args = CommandArguments.create(key, path);
 		return executeCommand(RedisCommand.JSON_TOGGLE, args, (cmd)->cmd.jsonToggle(key, new JedisPath(path)),
-				(cmd)->cmd.jsonToggle(key, new JedisPath(path)),
-				(cmd)->cmd.jsonToggle(key, new JedisPath(path)),
+				(cmd)->cmd.jsonToggle(key, new JedisPath(path)), (cmd)->cmd.jsonToggle(key, new JedisPath(path)),
 				new ListConverter<>(new BooleanStatusConverter()));
 	}
 

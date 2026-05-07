@@ -191,11 +191,9 @@ public final class JedisTopKCommands extends AbstractJedisRedisCommands implemen
 	public Status topKReserve(final String key, final long topK, final long width, final long depth,
 	                          final double decay) {
 		final CommandArguments args = CommandArguments.create(key, topK).add(width).add(depth).add(decay);
-		return executeCommand(RedisCommand.TOPK_QUERY, args,
+		return executeCommand(RedisCommand.TOPK_QUERY, args, (cmd)->cmd.topkReserve(key, topK, width, depth, decay),
 				(cmd)->cmd.topkReserve(key, topK, width, depth, decay),
-				(cmd)->cmd.topkReserve(key, topK, width, depth, decay),
-				(cmd)->cmd.topkReserve(key, topK, width, depth, decay),
-				new OkStatusConverter());
+				(cmd)->cmd.topkReserve(key, topK, width, depth, decay), new OkStatusConverter());
 	}
 
 	@Override

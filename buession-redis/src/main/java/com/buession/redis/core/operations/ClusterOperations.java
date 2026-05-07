@@ -30,6 +30,7 @@ import com.buession.lang.Order;
 import com.buession.lang.Status;
 import com.buession.redis.core.BumpEpoch;
 import com.buession.redis.core.RedisClusterNode;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.args.cluster.FailoverOption;
 import com.buession.redis.core.ClusterInfo;
 import com.buession.redis.core.ClusterLink;
@@ -57,102 +58,102 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 
 	@Override
 	default Status asking() {
-		return execute((client)->client.clusterCommands().asking());
+		return doExecute((cmd)->cmd.asking());
 	}
 
 	@Override
 	default Status clusterAddSlots(final int... slots) {
-		return execute((client)->client.clusterCommands().clusterAddSlots(slots));
+		return doExecute((cmd)->cmd.clusterAddSlots(slots));
 	}
 
 	@Override
 	default Status clusterAddSlotsRange(final IntegerRange... slots) {
-		return execute((client)->client.clusterCommands().clusterAddSlotsRange(slots));
+		return doExecute((cmd)->cmd.clusterAddSlotsRange(slots));
 	}
 
 	@Override
 	default KeyValue<BumpEpoch, Integer> clusterBumpEpoch() {
-		return execute((client)->client.clusterCommands().clusterBumpEpoch());
+		return doExecute((cmd)->cmd.clusterBumpEpoch());
 	}
 
 	@Override
 	default Integer clusterCountFailureReports(final String nodeId) {
-		return execute((client)->client.clusterCommands().clusterCountFailureReports(nodeId));
+		return doExecute((cmd)->cmd.clusterCountFailureReports(nodeId));
 	}
 
 	@Override
 	default Integer clusterCountFailureReports(final byte[] nodeId) {
-		return execute((client)->client.clusterCommands().clusterCountFailureReports(nodeId));
+		return doExecute((cmd)->cmd.clusterCountFailureReports(nodeId));
 	}
 
 	@Override
 	default Long clusterCountKeysInSlot(final int slot) {
-		return execute((client)->client.clusterCommands().clusterCountKeysInSlot(slot));
+		return doExecute((cmd)->cmd.clusterCountKeysInSlot(slot));
 	}
 
 	@Override
 	default Status clusterDelSlots(final int... slots) {
-		return execute((client)->client.clusterCommands().clusterDelSlots(slots));
+		return doExecute((cmd)->cmd.clusterDelSlots(slots));
 	}
 
 	@Override
 	default Status clusterDelSlotsRange(final IntegerRange... slots) {
-		return execute((client)->client.clusterCommands().clusterDelSlotsRange(slots));
+		return doExecute((cmd)->cmd.clusterDelSlotsRange(slots));
 	}
 
 	@Override
 	default Status clusterFailover(final FailoverOption option) {
-		return execute((client)->client.clusterCommands().clusterFailover(option));
+		return doExecute((cmd)->cmd.clusterFailover(option));
 	}
 
 	@Override
 	default Status clusterFlushSlots() {
-		return execute((client)->client.clusterCommands().clusterFlushSlots());
+		return doExecute((cmd)->cmd.clusterFlushSlots());
 	}
 
 	@Override
 	default Status clusterForget(final String nodeId) {
-		return execute((client)->client.clusterCommands().clusterForget(nodeId));
+		return doExecute((cmd)->cmd.clusterForget(nodeId));
 	}
 
 	@Override
 	default Status clusterForget(final byte[] nodeId) {
-		return execute((client)->client.clusterCommands().clusterForget(nodeId));
+		return doExecute((cmd)->cmd.clusterForget(nodeId));
 	}
 
 	@Override
 	default List<String> clusterGetKeysInSlot(final int slot, final int count) {
-		return execute((client)->client.clusterCommands().clusterGetKeysInSlot(slot, count));
+		return doExecute((cmd)->cmd.clusterGetKeysInSlot(slot, count));
 	}
 
 	@Override
 	default ClusterInfo clusterInfo() {
-		return execute((client)->client.clusterCommands().clusterInfo());
+		return doExecute((cmd)->cmd.clusterInfo());
 	}
 
 	@Override
 	default Long clusterKeySlot(final String key) {
-		return execute((client)->client.clusterCommands().clusterKeySlot(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.clusterKeySlot(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long clusterKeySlot(final byte[] key) {
-		return execute((client)->client.clusterCommands().clusterKeySlot(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.clusterKeySlot(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default List<ClusterLink> clusterLinks() {
-		return execute((client)->client.clusterCommands().clusterLinks());
+		return doExecute((cmd)->cmd.clusterLinks());
 	}
 
 	@Override
 	default Status clusterMeet(final String ip, final int port) {
-		return execute((client)->client.clusterCommands().clusterMeet(ip, port));
+		return doExecute((cmd)->cmd.clusterMeet(ip, port));
 	}
 
 	@Override
 	default Status clusterMeet(final byte[] ip, final int port) {
-		return execute((client)->client.clusterCommands().clusterMeet(ip, port));
+		return doExecute((cmd)->cmd.clusterMeet(ip, port));
 	}
 
 	/**
@@ -199,182 +200,186 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 
 	@Override
 	default Status clusterMigration(final IntegerRange... slots) {
-		return execute((client)->client.clusterCommands().clusterMigration(slots));
+		return doExecute((cmd)->cmd.clusterMigration(slots));
 	}
 
 	@Override
 	default Object clusterMigration(final MigrationOperation option) {
-		return execute((client)->client.clusterCommands().clusterMigration(option));
+		return doExecute((cmd)->cmd.clusterMigration(option));
 	}
 
 	@Override
 	default Object clusterMigration(final MigrationOperation option, final String id) {
-		return execute((client)->client.clusterCommands().clusterMigration(option, id));
+		return doExecute((cmd)->cmd.clusterMigration(option, id));
 	}
 
 	@Override
 	default Object clusterMigration(final MigrationOperation option, final byte[] id) {
-		return execute((client)->client.clusterCommands().clusterMigration(option, id));
+		return doExecute((cmd)->cmd.clusterMigration(option, id));
 	}
 
 	@Override
 	default String clusterMyId() {
-		return execute((client)->client.clusterCommands().clusterMyId());
+		return doExecute((cmd)->cmd.clusterMyId());
 	}
 
 	@Override
 	default String clusterMyShardId() {
-		return execute((client)->client.clusterCommands().clusterMyShardId());
+		return doExecute((cmd)->cmd.clusterMyShardId());
 	}
 
 	@Override
 	default List<RedisClusterNode> clusterNodes() {
-		return execute((client)->client.clusterCommands().clusterNodes());
+		return doExecute((cmd)->cmd.clusterNodes());
 	}
 
 	@Override
 	default List<RedisClusterNode> clusterReplicas(final String nodeId) {
-		return execute((client)->client.clusterCommands().clusterReplicas(nodeId));
+		return doExecute((cmd)->cmd.clusterReplicas(nodeId));
 	}
 
 	@Override
 	default List<RedisClusterNode> clusterReplicas(final byte[] nodeId) {
-		return execute((client)->client.clusterCommands().clusterReplicas(nodeId));
+		return doExecute((cmd)->cmd.clusterReplicas(nodeId));
 	}
 
 	@Override
 	default Status clusterReplicate(final String nodeId) {
-		return execute((client)->client.clusterCommands().clusterReplicate(nodeId));
+		return doExecute((cmd)->cmd.clusterReplicate(nodeId));
 	}
 
 	@Override
 	default Status clusterReplicate(final byte[] nodeId) {
-		return execute((client)->client.clusterCommands().clusterReplicate(nodeId));
+		return doExecute((cmd)->cmd.clusterReplicate(nodeId));
 	}
 
 	@Override
 	default Status clusterReset() {
-		return execute((client)->client.clusterCommands().clusterReset());
+		return doExecute((cmd)->cmd.clusterReset());
 	}
 
 	@Override
 	default Status clusterReset(final ResetOption option) {
-		return execute((client)->client.clusterCommands().clusterReset(option));
+		return doExecute((cmd)->cmd.clusterReset(option));
 	}
 
 	@Override
 	default Status clusterSaveConfig() {
-		return execute((client)->client.clusterCommands().clusterSaveConfig());
+		return doExecute((cmd)->cmd.clusterSaveConfig());
 	}
 
 	@Override
 	default Status clusterSetConfigEpoch(final long configEpoch) {
-		return execute((client)->client.clusterCommands().clusterSetConfigEpoch(configEpoch));
+		return doExecute((cmd)->cmd.clusterSetConfigEpoch(configEpoch));
 	}
 
 	@Override
 	default Status clusterSetSlot(final int slot, final SetSlotOption option, final String nodeId) {
-		return execute((client)->client.clusterCommands().clusterSetSlot(slot, option, nodeId));
+		return doExecute((cmd)->cmd.clusterSetSlot(slot, option, nodeId));
 	}
 
 	@Override
 	default Status clusterSetSlot(final int slot, final SetSlotOption option, final byte[] nodeId) {
-		return execute((client)->client.clusterCommands().clusterSetSlot(slot, option, nodeId));
+		return doExecute((cmd)->cmd.clusterSetSlot(slot, option, nodeId));
 	}
 
 	@Override
 	default List<ClusterShardInfo> clusterShards() {
-		return execute((client)->client.clusterCommands().clusterShards());
+		return doExecute((cmd)->cmd.clusterShards());
 	}
 
 	@Override
 	default List<RedisClusterNode> clusterSlaves(final String nodeId) {
-		return execute((client)->client.clusterCommands().clusterSlaves(nodeId));
+		return doExecute((cmd)->cmd.clusterSlaves(nodeId));
 	}
 
 	@Override
 	default List<RedisClusterNode> clusterSlaves(final byte[] nodeId) {
-		return execute((client)->client.clusterCommands().clusterSlaves(nodeId));
+		return doExecute((cmd)->cmd.clusterSlaves(nodeId));
 	}
 
 	@Override
 	default List<ClusterSlotStat> clusterSlotStats() {
-		return execute((client)->client.clusterCommands().clusterSlotStats());
+		return doExecute((cmd)->cmd.clusterSlotStats());
 	}
 
 	@Override
 	default List<ClusterSlotStat> clusterSlotStats(final IntegerRange slot) {
-		return execute((client)->client.clusterCommands().clusterSlotStats(slot));
+		return doExecute((cmd)->cmd.clusterSlotStats(slot));
 	}
 
 	@Override
 	default List<ClusterSlotStat> clusterSlotStats(final IntegerRange slot, final int limit) {
-		return execute((client)->client.clusterCommands().clusterSlotStats(slot, limit));
+		return doExecute((cmd)->cmd.clusterSlotStats(slot, limit));
 	}
 
 	@Override
 	default List<ClusterSlotStat> clusterSlotStats(final IntegerRange slot, final int limit, final Order order) {
-		return execute((client)->client.clusterCommands().clusterSlotStats(slot, limit, order));
+		return doExecute((cmd)->cmd.clusterSlotStats(slot, limit, order));
 	}
 
 	@Override
 	default List<ClusterSlotStat> clusterSlotStats(final String metric) {
-		return execute((client)->client.clusterCommands().clusterSlotStats(metric));
+		return doExecute((cmd)->cmd.clusterSlotStats(metric));
 	}
 
 	@Override
 	default List<ClusterSlotStat> clusterSlotStats(final byte[] metric) {
-		return execute((client)->client.clusterCommands().clusterSlotStats(metric));
+		return doExecute((cmd)->cmd.clusterSlotStats(metric));
 	}
 
 	@Override
 	default List<ClusterSlotStat> clusterSlotStats(final String metric, final int limit) {
-		return execute((client)->client.clusterCommands().clusterSlotStats(metric, limit));
+		return doExecute((cmd)->cmd.clusterSlotStats(metric, limit));
 	}
 
 	@Override
 	default List<ClusterSlotStat> clusterSlotStats(final byte[] metric, final int limit) {
-		return execute((client)->client.clusterCommands().clusterSlotStats(metric, limit));
+		return doExecute((cmd)->cmd.clusterSlotStats(metric, limit));
 	}
 
 	@Override
 	default List<ClusterSlotStat> clusterSlotStats(final String metric, final int limit, final Order order) {
-		return execute((client)->client.clusterCommands().clusterSlotStats(metric, limit, order));
+		return doExecute((cmd)->cmd.clusterSlotStats(metric, limit, order));
 	}
 
 	@Override
 	default List<ClusterSlotStat> clusterSlotStats(final byte[] metric, final int limit, final Order order) {
-		return execute((client)->client.clusterCommands().clusterSlotStats(metric, limit, order));
+		return doExecute((cmd)->cmd.clusterSlotStats(metric, limit, order));
 	}
 
 	@Override
 	default List<ClusterSlotStat> clusterSlotStats(final int limit) {
-		return execute((client)->client.clusterCommands().clusterSlotStats(limit));
+		return doExecute((cmd)->cmd.clusterSlotStats(limit));
 	}
 
 	@Override
 	default List<ClusterSlotStat> clusterSlotStats(final int limit, final Order order) {
-		return execute((client)->client.clusterCommands().clusterSlotStats(limit, order));
+		return doExecute((cmd)->cmd.clusterSlotStats(limit, order));
 	}
 
 	@Override
 	default List<ClusterSlotStat> clusterSlotStats(final Order order) {
-		return execute((client)->client.clusterCommands().clusterSlotStats(order));
+		return doExecute((cmd)->cmd.clusterSlotStats(order));
 	}
 
 	@Override
 	default List<ClusterSlot> clusterSlots() {
-		return execute((client)->client.clusterCommands().clusterSlots());
+		return doExecute((cmd)->cmd.clusterSlots());
 	}
 
 	@Override
 	default Status readOnly() {
-		return execute((client)->client.clusterCommands().readOnly());
+		return doExecute((cmd)->cmd.readOnly());
 	}
 
 	@Override
 	default Status readWrite() {
-		return execute((client)->client.clusterCommands().readWrite());
+		return doExecute((cmd)->cmd.readWrite());
+	}
+
+	private <R> R doExecute(final Command.Executor<ClusterCommands, R> executor) {
+		return execute((client)->executor.execute(client.clusterCommands()));
 	}
 
 }

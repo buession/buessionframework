@@ -28,6 +28,7 @@ import com.buession.core.type.TypeReference;
 import com.buession.core.utils.NumberUtils;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.args.ExpireOption;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.HashCommands;
@@ -58,12 +59,12 @@ public interface HashOperations extends HashCommands, RedisOperations {
 
 	@Override
 	default Long hDel(final String key, final String... fields) {
-		return execute((client)->client.hashCommands().hDel(KeyUtils.rawKey(this, key), fields));
+		return doExecute((cmd)->cmd.hDel(KeyUtils.rawKey(this, key), fields));
 	}
 
 	@Override
 	default Long hDel(final byte[] key, final byte[]... fields) {
-		return execute((client)->client.hashCommands().hDel(KeyUtils.rawKey(this, key), fields));
+		return doExecute((cmd)->cmd.hDel(KeyUtils.rawKey(this, key), fields));
 	}
 
 	/**
@@ -100,32 +101,32 @@ public interface HashOperations extends HashCommands, RedisOperations {
 
 	@Override
 	default Boolean hExists(final String key, final String field) {
-		return execute((client)->client.hashCommands().hExists(KeyUtils.rawKey(this, key), field));
+		return doExecute((cmd)->cmd.hExists(KeyUtils.rawKey(this, key), field));
 	}
 
 	@Override
 	default Boolean hExists(final byte[] key, final byte[] field) {
-		return execute((client)->client.hashCommands().hExists(KeyUtils.rawKey(this, key), field));
+		return doExecute((cmd)->cmd.hExists(KeyUtils.rawKey(this, key), field));
 	}
 
 	@Override
 	default List<Long> hExpire(final String key, final long ttl, final String... fields) {
-		return execute((client)->client.hashCommands().hExpire(KeyUtils.rawKey(this, key), ttl, fields));
+		return doExecute((cmd)->cmd.hExpire(KeyUtils.rawKey(this, key), ttl, fields));
 	}
 
 	@Override
 	default List<Long> hExpire(final byte[] key, final long ttl, final byte[]... fields) {
-		return execute((client)->client.hashCommands().hExpire(KeyUtils.rawKey(this, key), ttl, fields));
+		return doExecute((cmd)->cmd.hExpire(KeyUtils.rawKey(this, key), ttl, fields));
 	}
 
 	@Override
 	default List<Long> hExpire(final String key, final long ttl, final ExpireOption option, final String... fields) {
-		return execute((client)->client.hashCommands().hExpire(KeyUtils.rawKey(this, key), ttl, option, fields));
+		return doExecute((cmd)->cmd.hExpire(KeyUtils.rawKey(this, key), ttl, option, fields));
 	}
 
 	@Override
 	default List<Long> hExpire(final byte[] key, final long ttl, final ExpireOption option, final byte[]... fields) {
-		return execute((client)->client.hashCommands().hExpire(KeyUtils.rawKey(this, key), ttl, option, fields));
+		return doExecute((cmd)->cmd.hExpire(KeyUtils.rawKey(this, key), ttl, option, fields));
 	}
 
 	/**
@@ -216,25 +217,25 @@ public interface HashOperations extends HashCommands, RedisOperations {
 
 	@Override
 	default List<Long> hExpireAt(final String key, final long unixTimestamp, final String... fields) {
-		return execute((client)->client.hashCommands().hExpireAt(KeyUtils.rawKey(this, key), unixTimestamp, fields));
+		return doExecute((cmd)->cmd.hExpireAt(KeyUtils.rawKey(this, key), unixTimestamp, fields));
 	}
 
 	@Override
 	default List<Long> hExpireAt(final byte[] key, final long unixTimestamp, final byte[]... fields) {
-		return execute((client)->client.hashCommands().hExpireAt(KeyUtils.rawKey(this, key), unixTimestamp, fields));
+		return doExecute((cmd)->cmd.hExpireAt(KeyUtils.rawKey(this, key), unixTimestamp, fields));
 	}
 
 	@Override
 	default List<Long> hExpireAt(final String key, final long unixTimestamp, final ExpireOption option,
 	                             final String... fields) {
-		return execute((client)->client.hashCommands()
+		return doExecute((cmd)->cmd
 				.hExpireAt(KeyUtils.rawKey(this, key), unixTimestamp, option, fields));
 	}
 
 	@Override
 	default List<Long> hExpireAt(final byte[] key, final long unixTimestamp, final ExpireOption option,
 	                             final byte[]... fields) {
-		return execute((client)->client.hashCommands()
+		return doExecute((cmd)->cmd
 				.hExpireAt(KeyUtils.rawKey(this, key), unixTimestamp, option, fields));
 	}
 
@@ -582,12 +583,12 @@ public interface HashOperations extends HashCommands, RedisOperations {
 
 	@Override
 	default List<Long> hExpireTime(final String key, final String... fields) {
-		return execute((client)->client.hashCommands().hExpireTime(KeyUtils.rawKey(this, key), fields));
+		return doExecute((cmd)->cmd.hExpireTime(KeyUtils.rawKey(this, key), fields));
 	}
 
 	@Override
 	default List<Long> hExpireTime(final byte[] key, final byte[]... fields) {
-		return execute((client)->client.hashCommands().hExpireTime(KeyUtils.rawKey(this, key), fields));
+		return doExecute((cmd)->cmd.hExpireTime(KeyUtils.rawKey(this, key), fields));
 	}
 
 	/**
@@ -626,12 +627,12 @@ public interface HashOperations extends HashCommands, RedisOperations {
 
 	@Override
 	default String hGet(final String key, final String field) {
-		return execute((client)->client.hashCommands().hGet(KeyUtils.rawKey(this, key), field));
+		return doExecute((cmd)->cmd.hGet(KeyUtils.rawKey(this, key), field));
 	}
 
 	@Override
 	default byte[] hGet(final byte[] key, final byte[] field) {
-		return execute((client)->client.hashCommands().hGet(KeyUtils.rawKey(this, key), field));
+		return doExecute((cmd)->cmd.hGet(KeyUtils.rawKey(this, key), field));
 	}
 
 	/**
@@ -708,12 +709,12 @@ public interface HashOperations extends HashCommands, RedisOperations {
 
 	@Override
 	default Map<String, String> hGetAll(final String key) {
-		return execute((client)->client.hashCommands().hGetAll(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.hGetAll(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Map<byte[], byte[]> hGetAll(final byte[] key) {
-		return execute((client)->client.hashCommands().hGetAll(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.hGetAll(KeyUtils.rawKey(this, key)));
 	}
 
 	/**
@@ -782,12 +783,12 @@ public interface HashOperations extends HashCommands, RedisOperations {
 
 	@Override
 	default List<String> hGetDel(final String key, final String... fields) {
-		return execute((client)->client.hashCommands().hGetDel(KeyUtils.rawKey(this, key), fields));
+		return doExecute((cmd)->cmd.hGetDel(KeyUtils.rawKey(this, key), fields));
 	}
 
 	@Override
 	default List<byte[]> hGetDel(final byte[] key, final byte[]... fields) {
-		return execute((client)->client.hashCommands().hGetDel(KeyUtils.rawKey(this, key), fields));
+		return doExecute((cmd)->cmd.hGetDel(KeyUtils.rawKey(this, key), fields));
 	}
 
 	/**
@@ -864,22 +865,22 @@ public interface HashOperations extends HashCommands, RedisOperations {
 
 	@Override
 	default List<String> hGetEx(final String key, final String... fields) {
-		return execute((client)->client.hashCommands().hGetEx(KeyUtils.rawKey(this, key), fields));
+		return doExecute((cmd)->cmd.hGetEx(KeyUtils.rawKey(this, key), fields));
 	}
 
 	@Override
 	default List<byte[]> hGetEx(final byte[] key, final byte[]... fields) {
-		return execute((client)->client.hashCommands().hGetEx(KeyUtils.rawKey(this, key), fields));
+		return doExecute((cmd)->cmd.hGetEx(KeyUtils.rawKey(this, key), fields));
 	}
 
 	@Override
 	default List<String> hGetEx(final String key, final GetExType exType, final long expires, final String... fields) {
-		return execute((client)->client.hashCommands().hGetEx(KeyUtils.rawKey(this, key), exType, expires, fields));
+		return doExecute((cmd)->cmd.hGetEx(KeyUtils.rawKey(this, key), exType, expires, fields));
 	}
 
 	@Override
 	default List<byte[]> hGetEx(final byte[] key, final GetExType exType, final long expires, final byte[]... fields) {
-		return execute((client)->client.hashCommands().hGetEx(KeyUtils.rawKey(this, key), exType, expires, fields));
+		return doExecute((cmd)->cmd.hGetEx(KeyUtils.rawKey(this, key), exType, expires, fields));
 	}
 
 	/**
@@ -1048,12 +1049,12 @@ public interface HashOperations extends HashCommands, RedisOperations {
 
 	@Override
 	default Long hIncrBy(final String key, final String field, final long value) {
-		return execute((client)->client.hashCommands().hIncrBy(KeyUtils.rawKey(this, key), field, value));
+		return doExecute((cmd)->cmd.hIncrBy(KeyUtils.rawKey(this, key), field, value));
 	}
 
 	@Override
 	default Long hIncrBy(final byte[] key, final byte[] field, final long value) {
-		return execute((client)->client.hashCommands().hIncrBy(KeyUtils.rawKey(this, key), field, value));
+		return doExecute((cmd)->cmd.hIncrBy(KeyUtils.rawKey(this, key), field, value));
 	}
 
 	/**
@@ -1094,12 +1095,12 @@ public interface HashOperations extends HashCommands, RedisOperations {
 
 	@Override
 	default Double hIncrByFloat(final String key, final String field, final double value) {
-		return execute((client)->client.hashCommands().hIncrByFloat(KeyUtils.rawKey(this, key), field, value));
+		return doExecute((cmd)->cmd.hIncrByFloat(KeyUtils.rawKey(this, key), field, value));
 	}
 
 	@Override
 	default Double hIncrByFloat(final byte[] key, final byte[] field, final double value) {
-		return execute((client)->client.hashCommands().hIncrByFloat(KeyUtils.rawKey(this, key), field, value));
+		return doExecute((cmd)->cmd.hIncrByFloat(KeyUtils.rawKey(this, key), field, value));
 	}
 
 	/**
@@ -1140,32 +1141,32 @@ public interface HashOperations extends HashCommands, RedisOperations {
 
 	@Override
 	default Set<String> hKeys(final String key) {
-		return execute((client)->client.hashCommands().hKeys(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.hKeys(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Set<byte[]> hKeys(final byte[] key) {
-		return execute((client)->client.hashCommands().hKeys(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.hKeys(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long hLen(final String key) {
-		return execute((client)->client.hashCommands().hLen(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.hLen(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default Long hLen(final byte[] key) {
-		return execute((client)->client.hashCommands().hLen(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.hLen(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default List<String> hMGet(final String key, final String... fields) {
-		return execute((client)->client.hashCommands().hMGet(KeyUtils.rawKey(this, key), fields));
+		return doExecute((cmd)->cmd.hMGet(KeyUtils.rawKey(this, key), fields));
 	}
 
 	@Override
 	default List<byte[]> hMGet(final byte[] key, final byte[]... fields) {
-		return execute((client)->client.hashCommands().hMGet(KeyUtils.rawKey(this, key), fields));
+		return doExecute((cmd)->cmd.hMGet(KeyUtils.rawKey(this, key), fields));
 	}
 
 	/**
@@ -1243,43 +1244,43 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	@SuppressWarnings({"unchecked"})
 	@Override
 	default Status hMSet(final String key, final KeyValue<String, String>... data) {
-		return execute((client)->client.hashCommands().hMSet(KeyUtils.rawKey(this, key), data));
+		return doExecute((cmd)->cmd.hMSet(KeyUtils.rawKey(this, key), data));
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	default Status hMSet(final byte[] key, final KeyValue<byte[], byte[]>... data) {
-		return execute((client)->client.hashCommands().hMSet(KeyUtils.rawKey(this, key), data));
+		return doExecute((cmd)->cmd.hMSet(KeyUtils.rawKey(this, key), data));
 	}
 
 	@Override
 	default List<Long> hPersist(final String key, final String... fields) {
-		return execute((client)->client.hashCommands().hPersist(KeyUtils.rawKey(this, key), fields));
+		return doExecute((cmd)->cmd.hPersist(KeyUtils.rawKey(this, key), fields));
 	}
 
 	@Override
 	default List<Long> hPersist(final byte[] key, final byte[]... fields) {
-		return execute((client)->client.hashCommands().hPersist(KeyUtils.rawKey(this, key), fields));
+		return doExecute((cmd)->cmd.hPersist(KeyUtils.rawKey(this, key), fields));
 	}
 
 	@Override
 	default List<Long> hPExpire(final String key, final long ttl, final String... fields) {
-		return execute((client)->client.hashCommands().hPExpire(KeyUtils.rawKey(this, key), ttl, fields));
+		return doExecute((cmd)->cmd.hPExpire(KeyUtils.rawKey(this, key), ttl, fields));
 	}
 
 	@Override
 	default List<Long> hPExpire(final byte[] key, final long ttl, final byte[]... fields) {
-		return execute((client)->client.hashCommands().hPExpire(KeyUtils.rawKey(this, key), ttl, fields));
+		return doExecute((cmd)->cmd.hPExpire(KeyUtils.rawKey(this, key), ttl, fields));
 	}
 
 	@Override
 	default List<Long> hPExpire(final String key, final long ttl, final ExpireOption option, final String... fields) {
-		return execute((client)->client.hashCommands().hPExpire(KeyUtils.rawKey(this, key), ttl, option, fields));
+		return doExecute((cmd)->cmd.hPExpire(KeyUtils.rawKey(this, key), ttl, option, fields));
 	}
 
 	@Override
 	default List<Long> hPExpire(final byte[] key, final long ttl, final ExpireOption option, final byte[]... fields) {
-		return execute((client)->client.hashCommands().hPExpire(KeyUtils.rawKey(this, key), ttl, option, fields));
+		return doExecute((cmd)->cmd.hPExpire(KeyUtils.rawKey(this, key), ttl, option, fields));
 	}
 
 	/**
@@ -1370,12 +1371,12 @@ public interface HashOperations extends HashCommands, RedisOperations {
 
 	@Override
 	default List<Long> hPExpireAt(final String key, final long unixTimestamp, final String... fields) {
-		return execute((client)->client.hashCommands().hPExpireAt(KeyUtils.rawKey(this, key), unixTimestamp, fields));
+		return doExecute((cmd)->cmd.hPExpireAt(KeyUtils.rawKey(this, key), unixTimestamp, fields));
 	}
 
 	@Override
 	default List<Long> hPExpireAt(final byte[] key, final long unixTimestamp, final byte[]... fields) {
-		return execute((client)->client.hashCommands().hPExpireAt(KeyUtils.rawKey(this, key), unixTimestamp, fields));
+		return doExecute((cmd)->cmd.hPExpireAt(KeyUtils.rawKey(this, key), unixTimestamp, fields));
 	}
 
 	@Override
@@ -1738,22 +1739,22 @@ public interface HashOperations extends HashCommands, RedisOperations {
 
 	@Override
 	default List<Long> hPExpireTime(final String key, final String... fields) {
-		return execute((client)->client.hashCommands().hPExpireTime(KeyUtils.rawKey(this, key), fields));
+		return doExecute((cmd)->cmd.hPExpireTime(KeyUtils.rawKey(this, key), fields));
 	}
 
 	@Override
 	default List<Long> hPExpireTime(final byte[] key, final byte[]... fields) {
-		return execute((client)->client.hashCommands().hPExpireTime(KeyUtils.rawKey(this, key), fields));
+		return doExecute((cmd)->cmd.hPExpireTime(KeyUtils.rawKey(this, key), fields));
 	}
 
 	@Override
 	default List<Long> hPTtl(final String key, final String... fields) {
-		return execute((client)->client.hashCommands().hPTtl(KeyUtils.rawKey(this, key), fields));
+		return doExecute((cmd)->cmd.hPTtl(KeyUtils.rawKey(this, key), fields));
 	}
 
 	@Override
 	default List<Long> hPTtl(final byte[] key, final byte[]... fields) {
-		return execute((client)->client.hashCommands().hPTtl(KeyUtils.rawKey(this, key), fields));
+		return doExecute((cmd)->cmd.hPTtl(KeyUtils.rawKey(this, key), fields));
 	}
 
 	/**
@@ -1792,32 +1793,32 @@ public interface HashOperations extends HashCommands, RedisOperations {
 
 	@Override
 	default String hRandField(final String key) {
-		return execute((client)->client.hashCommands().hRandField(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.hRandField(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default byte[] hRandField(final byte[] key) {
-		return execute((client)->client.hashCommands().hRandField(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.hRandField(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default List<String> hRandField(final String key, final int count) {
-		return execute((client)->client.hashCommands().hRandField(KeyUtils.rawKey(this, key), count));
+		return doExecute((cmd)->cmd.hRandField(KeyUtils.rawKey(this, key), count));
 	}
 
 	@Override
 	default List<byte[]> hRandField(final byte[] key, final int count) {
-		return execute((client)->client.hashCommands().hRandField(KeyUtils.rawKey(this, key), count));
+		return doExecute((cmd)->cmd.hRandField(KeyUtils.rawKey(this, key), count));
 	}
 
 	@Override
 	default Map<String, String> hRandFieldWithValues(final String key, final int count) {
-		return execute((client)->client.hashCommands().hRandFieldWithValues(KeyUtils.rawKey(this, key), count));
+		return doExecute((cmd)->cmd.hRandFieldWithValues(KeyUtils.rawKey(this, key), count));
 	}
 
 	@Override
 	default Map<byte[], byte[]> hRandFieldWithValues(final byte[] key, final int count) {
-		return execute((client)->client.hashCommands().hRandFieldWithValues(KeyUtils.rawKey(this, key), count));
+		return doExecute((cmd)->cmd.hRandFieldWithValues(KeyUtils.rawKey(this, key), count));
 	}
 
 	/**
@@ -1902,64 +1903,64 @@ public interface HashOperations extends HashCommands, RedisOperations {
 
 	@Override
 	default ScanResult<KeyValue<String, String>> hScan(final String key, final String cursor) {
-		return execute((client)->client.hashCommands().hScan(KeyUtils.rawKey(this, key), cursor));
+		return doExecute((cmd)->cmd.hScan(KeyUtils.rawKey(this, key), cursor));
 	}
 
 	@Override
 	default ScanResult<KeyValue<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor) {
-		return execute((client)->client.hashCommands().hScan(KeyUtils.rawKey(this, key), cursor));
+		return doExecute((cmd)->cmd.hScan(KeyUtils.rawKey(this, key), cursor));
 	}
 
 	@Override
 	default ScanResult<KeyValue<String, String>> hScan(final String key, final String cursor, final String pattern) {
-		return execute((client)->client.hashCommands().hScan(KeyUtils.rawKey(this, key), cursor, pattern));
+		return doExecute((cmd)->cmd.hScan(KeyUtils.rawKey(this, key), cursor, pattern));
 	}
 
 	@Override
 	default ScanResult<KeyValue<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern) {
-		return execute((client)->client.hashCommands().hScan(KeyUtils.rawKey(this, key), cursor, pattern));
+		return doExecute((cmd)->cmd.hScan(KeyUtils.rawKey(this, key), cursor, pattern));
 	}
 
 	@Override
 	default ScanResult<KeyValue<String, String>> hScan(final String key, final String cursor, final String pattern,
 	                                                   final int count) {
-		return execute((client)->client.hashCommands().hScan(KeyUtils.rawKey(this, key), cursor, pattern, count));
+		return doExecute((cmd)->cmd.hScan(KeyUtils.rawKey(this, key), cursor, pattern, count));
 	}
 
 	@Override
 	default ScanResult<KeyValue<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
 	                                                   final int count) {
-		return execute((client)->client.hashCommands().hScan(KeyUtils.rawKey(this, key), cursor, pattern, count));
+		return doExecute((cmd)->cmd.hScan(KeyUtils.rawKey(this, key), cursor, pattern, count));
 	}
 
 	@Override
 	default ScanResult<KeyValue<String, String>> hScan(final String key, final String cursor, final int count) {
-		return execute((client)->client.hashCommands().hScan(KeyUtils.rawKey(this, key), cursor, count));
+		return doExecute((cmd)->cmd.hScan(KeyUtils.rawKey(this, key), cursor, count));
 	}
 
 	@Override
 	default ScanResult<KeyValue<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final int count) {
-		return execute((client)->client.hashCommands().hScan(KeyUtils.rawKey(this, key), cursor, count));
+		return doExecute((cmd)->cmd.hScan(KeyUtils.rawKey(this, key), cursor, count));
 	}
 
 	@Override
 	default ScanResult<String> hScanNoValues(final String key, final String cursor) {
-		return execute((client)->client.hashCommands().hScanNoValues(KeyUtils.rawKey(this, key), cursor));
+		return doExecute((cmd)->cmd.hScanNoValues(KeyUtils.rawKey(this, key), cursor));
 	}
 
 	@Override
 	default ScanResult<byte[]> hScanNoValues(final byte[] key, final byte[] cursor) {
-		return execute((client)->client.hashCommands().hScanNoValues(KeyUtils.rawKey(this, key), cursor));
+		return doExecute((cmd)->cmd.hScanNoValues(KeyUtils.rawKey(this, key), cursor));
 	}
 
 	@Override
 	default ScanResult<String> hScanNoValues(final String key, final String cursor, final String pattern) {
-		return execute((client)->client.hashCommands().hScanNoValues(KeyUtils.rawKey(this, key), cursor, pattern));
+		return doExecute((cmd)->cmd.hScanNoValues(KeyUtils.rawKey(this, key), cursor, pattern));
 	}
 
 	@Override
 	default ScanResult<byte[]> hScanNoValues(final byte[] key, final byte[] cursor, final byte[] pattern) {
-		return execute((client)->client.hashCommands().hScanNoValues(KeyUtils.rawKey(this, key), cursor, pattern));
+		return doExecute((cmd)->cmd.hScanNoValues(KeyUtils.rawKey(this, key), cursor, pattern));
 	}
 
 	@Override
@@ -1978,12 +1979,12 @@ public interface HashOperations extends HashCommands, RedisOperations {
 
 	@Override
 	default ScanResult<String> hScanNoValues(final String key, final String cursor, final int count) {
-		return execute((client)->client.hashCommands().hScanNoValues(KeyUtils.rawKey(this, key), cursor, count));
+		return doExecute((cmd)->cmd.hScanNoValues(KeyUtils.rawKey(this, key), cursor, count));
 	}
 
 	@Override
 	default ScanResult<byte[]> hScanNoValues(final byte[] key, final byte[] cursor, final int count) {
-		return execute((client)->client.hashCommands().hScanNoValues(KeyUtils.rawKey(this, key), cursor, count));
+		return doExecute((cmd)->cmd.hScanNoValues(KeyUtils.rawKey(this, key), cursor, count));
 	}
 
 	/**
@@ -2734,37 +2735,37 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	@SuppressWarnings({"unchecked"})
 	@Override
 	default Long hSet(final String key, final KeyValue<String, String>... data) {
-		return execute((client)->client.hashCommands().hSet(KeyUtils.rawKey(this, key), data));
+		return doExecute((cmd)->cmd.hSet(KeyUtils.rawKey(this, key), data));
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	default Long hSet(final byte[] key, final KeyValue<byte[], byte[]>... data) {
-		return execute((client)->client.hashCommands().hSet(KeyUtils.rawKey(this, key), data));
+		return doExecute((cmd)->cmd.hSet(KeyUtils.rawKey(this, key), data));
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	default Status hSetEx(final String key, final KeyValue<String, String>... data) {
-		return execute((client)->client.hashCommands().hSetEx(KeyUtils.rawKey(this, key), data));
+		return doExecute((cmd)->cmd.hSetEx(KeyUtils.rawKey(this, key), data));
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	default Status hSetEx(final byte[] key, final KeyValue<byte[], byte[]>... data) {
-		return execute((client)->client.hashCommands().hSetEx(KeyUtils.rawKey(this, key), data));
+		return doExecute((cmd)->cmd.hSetEx(KeyUtils.rawKey(this, key), data));
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	default Status hSetEx(final String key, final FnxFxx fnxFxx, final KeyValue<String, String>... data) {
-		return execute((client)->client.hashCommands().hSetEx(KeyUtils.rawKey(this, key), fnxFxx, data));
+		return doExecute((cmd)->cmd.hSetEx(KeyUtils.rawKey(this, key), fnxFxx, data));
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	default Status hSetEx(final byte[] key, final FnxFxx fnxFxx, final KeyValue<byte[], byte[]>... data) {
-		return execute((client)->client.hashCommands().hSetEx(KeyUtils.rawKey(this, key), fnxFxx, data));
+		return doExecute((cmd)->cmd.hSetEx(KeyUtils.rawKey(this, key), fnxFxx, data));
 	}
 
 	@SuppressWarnings({"unchecked"})
@@ -2787,24 +2788,24 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	@Override
 	default Status hSetEx(final String key, final PxExType exType, final long expires,
 	                      final KeyValue<String, String>... data) {
-		return execute((client)->client.hashCommands().hSetEx(KeyUtils.rawKey(this, key), exType, expires, data));
+		return doExecute((cmd)->cmd.hSetEx(KeyUtils.rawKey(this, key), exType, expires, data));
 	}
 
 	@SuppressWarnings({"unchecked"})
 	@Override
 	default Status hSetEx(final byte[] key, final PxExType exType, final long expires,
 	                      final KeyValue<byte[], byte[]>... data) {
-		return execute((client)->client.hashCommands().hSetEx(KeyUtils.rawKey(this, key), exType, expires, data));
+		return doExecute((cmd)->cmd.hSetEx(KeyUtils.rawKey(this, key), exType, expires, data));
 	}
 
 	@Override
 	default Status hSetNx(final String key, final String field, final String value) {
-		return execute((client)->client.hashCommands().hSetNx(KeyUtils.rawKey(this, key), field, value));
+		return doExecute((cmd)->cmd.hSetNx(KeyUtils.rawKey(this, key), field, value));
 	}
 
 	@Override
 	default Status hSetNx(final byte[] key, final byte[] field, final byte[] value) {
-		return execute((client)->client.hashCommands().hSetNx(KeyUtils.rawKey(this, key), field, value));
+		return doExecute((cmd)->cmd.hSetNx(KeyUtils.rawKey(this, key), field, value));
 	}
 
 	/**
@@ -2841,32 +2842,32 @@ public interface HashOperations extends HashCommands, RedisOperations {
 
 	@Override
 	default Long hStrLen(final String key, final String field) {
-		return execute((client)->client.hashCommands().hStrLen(KeyUtils.rawKey(this, key), field));
+		return doExecute((cmd)->cmd.hStrLen(KeyUtils.rawKey(this, key), field));
 	}
 
 	@Override
 	default Long hStrLen(final byte[] key, final byte[] field) {
-		return execute((client)->client.hashCommands().hStrLen(KeyUtils.rawKey(this, key), field));
+		return doExecute((cmd)->cmd.hStrLen(KeyUtils.rawKey(this, key), field));
 	}
 
 	@Override
 	default List<Long> hTtl(final String key, final String... fields) {
-		return execute((client)->client.hashCommands().hTtl(KeyUtils.rawKey(this, key), fields));
+		return doExecute((cmd)->cmd.hTtl(KeyUtils.rawKey(this, key), fields));
 	}
 
 	@Override
 	default List<Long> hTtl(final byte[] key, final byte[]... fields) {
-		return execute((client)->client.hashCommands().hTtl(KeyUtils.rawKey(this, key), fields));
+		return doExecute((cmd)->cmd.hTtl(KeyUtils.rawKey(this, key), fields));
 	}
 
 	@Override
 	default List<String> hVals(final String key) {
-		return execute((client)->client.hashCommands().hVals(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.hVals(KeyUtils.rawKey(this, key)));
 	}
 
 	@Override
 	default List<byte[]> hVals(final byte[] key) {
-		return execute((client)->client.hashCommands().hVals(KeyUtils.rawKey(this, key)));
+		return doExecute((cmd)->cmd.hVals(KeyUtils.rawKey(this, key)));
 	}
 
 	/**
@@ -2924,6 +2925,10 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 哈希表 key 中所有域的值反序列化后的对象
 	 */
 	<V> List<V> hVals(final byte[] key, final TypeReference<V> type);
+
+	private <R> R doExecute(final Command.Executor<HashCommands, R> executor) {
+		return execute((client)->executor.execute(client.hashCommands()));
+	}
 
 	private static List<Date> createDateList(final List<Long> data, final boolean unixTimestamp) {
 		return data == null ? null : data.stream().map((v)->v != null && v != -1 && v != -2 ? new Date(

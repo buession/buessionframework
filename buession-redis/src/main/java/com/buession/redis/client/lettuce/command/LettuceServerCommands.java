@@ -24,6 +24,7 @@
  */
 package com.buession.redis.client.lettuce.command;
 
+import com.buession.core.collect.Arrays;
 import com.buession.core.converter.ListConverter;
 import com.buession.core.converter.SetConverter;
 import com.buession.lang.Status;
@@ -289,11 +290,7 @@ public final class LettuceServerCommands extends AbstractLettuceRedisCommands im
 	@Override
 	public List<CommandInfo> commandInfo(final RedisCommand... commands) {
 		final CommandArguments args = CommandArguments.create(commands);
-		final String[] commandInfoArgs = new String[commands.length];
-
-		for(int i = 0; i < commands.length; i++){
-			commandInfoArgs[i] = commands[i].toString();
-		}
+		final String[] commandInfoArgs = Arrays.map(commands, String.class, RedisCommand::toString);
 
 		return executeCommand(RedisCommand.COMMAND, RedisSubCommand.COMMAND_INFO, args,
 				(cmd)->cmd.commandInfo(commandInfoArgs), (cmd)->cmd.commandInfo(commandInfoArgs),

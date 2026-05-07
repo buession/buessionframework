@@ -351,9 +351,8 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 	@Override
 	public Long objectFreq(final byte[] key) {
 		final CommandArguments args = CommandArguments.create(key);
-		return executeCommand(RedisCommand.OBJECT, RedisSubCommand.OBJECT_FREQ, args,
-				(cmd)->cmd.objectFreq(key), (cmd)->cmd.objectFreq(key),
-				(cmd)->cmd.objectFreq(key));
+		return executeCommand(RedisCommand.OBJECT, RedisSubCommand.OBJECT_FREQ, args, (cmd)->cmd.objectFreq(key),
+				(cmd)->cmd.objectFreq(key), (cmd)->cmd.objectFreq(key));
 	}
 
 	@Override
@@ -548,8 +547,7 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 	public Status restore(final String key, final byte[] serializedValue, final int ttl) {
 		final CommandArguments args = CommandArguments.create(key).add(serializedValue).add(ttl);
 		return executeCommand(RedisCommand.RESTORE, args, (cmd)->cmd.restore(key, ttl, serializedValue),
-				(cmd)->cmd.restore(key, ttl, serializedValue),
-				(cmd)->cmd.restore(key, ttl, serializedValue),
+				(cmd)->cmd.restore(key, ttl, serializedValue), (cmd)->cmd.restore(key, ttl, serializedValue),
 				new OkStatusConverter());
 	}
 
@@ -557,8 +555,7 @@ public final class JedisKeyCommands extends AbstractJedisRedisCommands implement
 	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl) {
 		final CommandArguments args = CommandArguments.create(key).add(serializedValue).add(ttl);
 		return executeCommand(RedisCommand.RESTORE, args, (cmd)->cmd.restore(key, ttl, serializedValue),
-				(cmd)->cmd.restore(key, ttl, serializedValue),
-				(cmd)->cmd.restore(key, ttl, serializedValue),
+				(cmd)->cmd.restore(key, ttl, serializedValue), (cmd)->cmd.restore(key, ttl, serializedValue),
 				new OkStatusConverter());
 	}
 

@@ -25,6 +25,7 @@
 package com.buession.redis.core.operations;
 
 import com.buession.lang.Status;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.HyperLogLogCommands;
 import com.buession.redis.utils.KeyUtils;
 
@@ -39,34 +40,38 @@ public interface HyperLogLogOperations extends HyperLogLogCommands, RedisOperati
 
 	@Override
 	default Status pfAdd(final String key, final String... elements) {
-		return execute((client)->client.hyperLogLogCommands().pfAdd(KeyUtils.rawKey(this, key), elements));
+		return doExecute((cmd)->cmd.pfAdd(KeyUtils.rawKey(this, key), elements));
 	}
 
 	@Override
 	default Status pfAdd(final byte[] key, final byte[]... elements) {
-		return execute((client)->client.hyperLogLogCommands().pfAdd(KeyUtils.rawKey(this, key), elements));
+		return doExecute((cmd)->cmd.pfAdd(KeyUtils.rawKey(this, key), elements));
 	}
 
 	@Override
 	default Long pfCount(final String... keys) {
-		return execute((client)->client.hyperLogLogCommands().pfCount(KeyUtils.rawKeys(this, keys)));
+		return doExecute((cmd)->cmd.pfCount(KeyUtils.rawKeys(this, keys)));
 	}
 
 	@Override
 	default Long pfCount(final byte[]... keys) {
-		return execute((client)->client.hyperLogLogCommands().pfCount(KeyUtils.rawKeys(this, keys)));
+		return doExecute((cmd)->cmd.pfCount(KeyUtils.rawKeys(this, keys)));
 	}
 
 	@Override
 	default Status pfMerge(final String destKey, final String... keys) {
-		return execute((client)->client.hyperLogLogCommands()
+		return doExecute((cmd)->cmd
 				.pfMerge(KeyUtils.rawKey(this, destKey), KeyUtils.rawKeys(this, keys)));
 	}
 
 	@Override
 	default Status pfMerge(final byte[] destKey, final byte[]... keys) {
-		return execute((client)->client.hyperLogLogCommands()
+		return doExecute((cmd)->cmd
 				.pfMerge(KeyUtils.rawKey(this, destKey), KeyUtils.rawKeys(this, keys)));
+	}
+
+	private <R> R doExecute(final Command.Executor<HyperLogLogCommands, R> executor) {
+		return execute((client)->executor.execute(client.hyperLogLogCommands()));
 	}
 
 }

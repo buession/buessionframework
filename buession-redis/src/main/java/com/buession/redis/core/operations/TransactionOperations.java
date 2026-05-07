@@ -25,7 +25,9 @@
 package com.buession.redis.core.operations;
 
 import com.buession.lang.Status;
+import com.buession.redis.core.command.Command;
 import com.buession.redis.core.command.TransactionCommands;
+import com.buession.redis.utils.KeyUtils;
 
 /**
  * 事务运算
@@ -38,22 +40,26 @@ public interface TransactionOperations extends TransactionCommands, RedisOperati
 
 	@Override
 	default Status multi() {
-		return execute((client)->client.transactionCommands().multi());
+		return doExecute((cmd)->cmd.multi());
 	}
 
 	@Override
 	default Status unwatch() {
-		return execute((client)->client.transactionCommands().unwatch());
+		return doExecute((cmd)->cmd.unwatch());
 	}
 
 	@Override
 	default Status watch(final String... keys) {
-		return execute((client)->client.transactionCommands().watch(keys));
+		return doExecute((cmd)->cmd.watch(KeyUtils.rawKeys(this, keys)));
 	}
 
 	@Override
 	default Status watch(final byte[]... keys) {
-		return execute((client)->client.transactionCommands().watch(keys));
+		return doExecute((cmd)->cmd.watch(KeyUtils.rawKeys(this, keys)));
+	}
+
+	private <R> R doExecute(final Command.Executor<TransactionCommands, R> executor) {
+		return execute((client)->executor.execute(client.transactionCommands()));
 	}
 
 }

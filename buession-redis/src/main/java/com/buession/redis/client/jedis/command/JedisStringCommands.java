@@ -494,16 +494,14 @@ public final class JedisStringCommands extends AbstractJedisRedisCommands implem
 	public String substr(final String key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
 		return executeCommand(RedisCommand.SUBSTR, args, (cmd)->cmd.substr(key, (int) start, (int) end),
-				(cmd)->cmd.substr(key, (int) start, (int) end),
-				(cmd)->cmd.substr(key, (int) start, (int) end));
+				(cmd)->cmd.substr(key, (int) start, (int) end), (cmd)->cmd.substr(key, (int) start, (int) end));
 	}
 
 	@Override
 	public byte[] substr(final byte[] key, final long start, final long end) {
 		final CommandArguments args = CommandArguments.create(key).add(start, end);
 		return executeCommand(RedisCommand.SUBSTR, args, (cmd)->cmd.substr(key, (int) start, (int) end),
-				(cmd)->cmd.substr(key, (int) start, (int) end),
-				(cmd)->cmd.substr(key, (int) start, (int) end));
+				(cmd)->cmd.substr(key, (int) start, (int) end), (cmd)->cmd.substr(key, (int) start, (int) end));
 	}
 
 	private String getEx(final String key, final GetExParams getExParams, final CommandArguments args) {
@@ -548,8 +546,7 @@ public final class JedisStringCommands extends AbstractJedisRedisCommands implem
 	                      final CommandArguments args) {
 		return executeCommand(RedisCommand.MSETEX, args, (cmd)->cmd.msetex(mSetExParams, buildSetValues(values)),
 				(cmd)->cmd.msetex(mSetExParams, buildSetValues(values)),
-				(cmd)->cmd.msetex(mSetExParams, buildSetValues(values)),
-				new BooleanStatusConverter());
+				(cmd)->cmd.msetex(mSetExParams, buildSetValues(values)), new BooleanStatusConverter());
 	}
 
 	private Status set(final String key, final String value, final SetParams setParams, final CommandArguments args) {

@@ -117,8 +117,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	@Override
 	public Long xAck(final byte[] key, final byte[] groupName, final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(ids);
-		return executeCommand(RedisCommand.XACK, args,
-				(cmd)->cmd.xack(key, groupName, binaryStreamEntryIds(ids)),
+		return executeCommand(RedisCommand.XACK, args, (cmd)->cmd.xack(key, groupName, binaryStreamEntryIds(ids)),
 				(cmd)->cmd.xack(key, groupName, binaryStreamEntryIds(ids)),
 				(cmd)->cmd.xack(key, groupName, binaryStreamEntryIds(ids)));
 	}
@@ -127,8 +126,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	public List<StreamEntryDeletionResult> xAckDel(final String key, final String groupName,
 	                                               final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add("IDS", ids.length).add(ids);
-		return executeCommand(RedisCommand.XACKDEL, args,
-				(cmd)->cmd.xackdel(key, groupName, streamEntryIds(ids)),
+		return executeCommand(RedisCommand.XACKDEL, args, (cmd)->cmd.xackdel(key, groupName, streamEntryIds(ids)),
 				(cmd)->cmd.xackdel(key, groupName, streamEntryIds(ids)),
 				(cmd)->cmd.xackdel(key, groupName, streamEntryIds(ids)),
 				new ListConverter<>(new StreamEntryDeletionResultConverter()));
@@ -138,8 +136,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	public List<StreamEntryDeletionResult> xAckDel(final byte[] key, final byte[] groupName,
 	                                               final StreamEntryId... ids) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add("IDS", ids.length).add(ids);
-		return executeCommand(RedisCommand.XACKDEL, args,
-				(cmd)->cmd.xackdel(key, groupName, binaryStreamEntryIds(ids)),
+		return executeCommand(RedisCommand.XACKDEL, args, (cmd)->cmd.xackdel(key, groupName, binaryStreamEntryIds(ids)),
 				(cmd)->cmd.xackdel(key, groupName, binaryStreamEntryIds(ids)),
 				(cmd)->cmd.xackdel(key, groupName, binaryStreamEntryIds(ids)),
 				new ListConverter<>(new StreamEntryDeletionResultConverter()));
@@ -210,8 +207,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                                final int minIdleTime, final StreamEntryId start) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName, consumerName).add(minIdleTime)
 				.add(start);
-		return xAutoClaim(key, groupName, consumerName, minIdleTime, start, new JedisXAutoClaimParams(), (v)->v,
-				args);
+		return xAutoClaim(key, groupName, consumerName, minIdleTime, start, new JedisXAutoClaimParams(), (v)->v, args);
 	}
 
 	@Override
@@ -228,8 +224,8 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                                final int minIdleTime, final StreamEntryId start, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName, consumerName).add(minIdleTime)
 				.add(start).add(Keyword.Common.COUNT, count);
-		return xAutoClaim(key, groupName, consumerName, minIdleTime, start, new JedisXAutoClaimParams(count),
-				(v)->v, args);
+		return xAutoClaim(key, groupName, consumerName, minIdleTime, start, new JedisXAutoClaimParams(count), (v)->v,
+				args);
 	}
 
 	@Override
@@ -246,8 +242,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                    final int minIdleTime, final StreamEntryId start) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName, consumerName).add(minIdleTime)
 				.add(start).add("JUSTID");
-		return xAutoClaimJustId(key, groupName, consumerName, minIdleTime, start, new JedisXAutoClaimParams(),
-				args);
+		return xAutoClaimJustId(key, groupName, consumerName, minIdleTime, start, new JedisXAutoClaimParams(), args);
 	}
 
 	@Override
@@ -264,8 +259,8 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                    final int minIdleTime, final StreamEntryId start, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName, consumerName).add(minIdleTime)
 				.add(start).add(Keyword.Common.COUNT, count).add("JUSTID");
-		return xAutoClaimJustId(key, groupName, consumerName, minIdleTime, start,
-				new JedisXAutoClaimParams(count), args);
+		return xAutoClaimJustId(key, groupName, consumerName, minIdleTime, start, new JedisXAutoClaimParams(count),
+				args);
 	}
 
 	@Override
@@ -349,8 +344,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                                final XClaimArgument xClaimArgument) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName).add(minIdleTime)
 				.add(ids).add(xClaimArgument);
-		return xClaim(key, groupName, consumerName, minIdleTime, ids, new JedisXClaimParams(xClaimArgument),
-				args);
+		return xClaim(key, groupName, consumerName, minIdleTime, ids, new JedisXClaimParams(xClaimArgument), args);
 	}
 
 	@Override
@@ -386,8 +380,8 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                        final XClaimArgument xClaimArgument) {
 		final CommandArguments args = CommandArguments.create(key, groupName).add(consumerName).add(minIdleTime)
 				.add(ids).add(xClaimArgument).add("JUSTID");
-		return xClaimJustId(key, groupName, consumerName, minIdleTime, ids,
-				new JedisXClaimParams(xClaimArgument), args);
+		return xClaimJustId(key, groupName, consumerName, minIdleTime, ids, new JedisXClaimParams(xClaimArgument),
+				args);
 	}
 
 	@Override
@@ -623,8 +617,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 		final CommandArguments args = CommandArguments.create(key, "FULL");
 		return executeCommand(RedisCommand.XINFO, RedisSubCommand.XINFO_STREAM, args,
 				(cmd)->cmd.xinfoStreamFull(key), (cmd)->cmd.xinfoStreamFull(key),
-				(cmd)->cmd.xinfoStreamFull(key),
-				new StreamFullInfoConverter<>((k)->k, (v)->v));
+				(cmd)->cmd.xinfoStreamFull(key), new StreamFullInfoConverter<>((k)->k, (v)->v));
 	}
 
 	@Override
@@ -742,8 +735,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                                    final String consumerName) {
 		final CommandArguments args = CommandArguments.create(key).add(groupName).add(Keyword.Time.IDLE, minIdleTime)
 				.add(start, end).add(count).add(consumerName);
-		return xPending(key, groupName, new JedisXPendingParams(start, end, count, minIdleTime, consumerName),
-				args);
+		return xPending(key, groupName, new JedisXPendingParams(start, end, count, minIdleTime, consumerName), args);
 	}
 
 	@Override
@@ -937,14 +929,11 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 		final CommandArguments args = CommandArguments.create(key).add(end, start).add(Keyword.Common.COUNT, count);
 		return executeCommand(RedisCommand.XREVRANGE, args,
 				(cmd)->cmd.xrevrange(SafeEncoder.encode(key), new JedisStreamEntryID(end),
-						new JedisStreamEntryID(start),
-						count),
+						new JedisStreamEntryID(start), count),
 				(cmd)->cmd.xrevrange(SafeEncoder.encode(key), new JedisStreamEntryID(end),
-						new JedisStreamEntryID(start),
-						count),
+						new JedisStreamEntryID(start), count),
 				(cmd)->cmd.xrevrange(SafeEncoder.encode(key), new JedisStreamEntryID(end),
-						new JedisStreamEntryID(start),
-						count),
+						new JedisStreamEntryID(start), count),
 				new ListConverter<>(new StreamEntryConverter<>(SafeEncoder::encode, SafeEncoder::encode)));
 	}
 
@@ -1134,8 +1123,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 	                           final CommandArguments args) {
 		return executeCommand(RedisCommand.XADD, args, (cmd)->cmd.xadd(key, new JedisStreamEntryID(id), hash),
 				(cmd)->cmd.xadd(key, new JedisStreamEntryID(id), hash),
-				(cmd)->cmd.xadd(key, new JedisStreamEntryID(id), hash),
-				new StreamEntryIDConverter());
+				(cmd)->cmd.xadd(key, new JedisStreamEntryID(id), hash), new StreamEntryIDConverter());
 	}
 
 	private StreamEntryId xAdd(final String key, final StreamEntryId id, final Map<String, String> hash,
@@ -1143,8 +1131,7 @@ public final class JedisStreamCommands extends AbstractJedisRedisCommands implem
 		return executeCommand(RedisCommand.XADD, args,
 				(cmd)->cmd.xadd(key, new JedisXAddParams(xAddArgument, id), hash),
 				(cmd)->cmd.xadd(key, new JedisXAddParams(xAddArgument, id), hash),
-				(cmd)->cmd.xadd(key, new JedisXAddParams(xAddArgument, id), hash),
-				new StreamEntryIDConverter());
+				(cmd)->cmd.xadd(key, new JedisXAddParams(xAddArgument, id), hash), new StreamEntryIDConverter());
 	}
 
 	private <T> AutoClaimInfo<T, T> xAutoClaim(final String key, final String groupName, final String consumerName,

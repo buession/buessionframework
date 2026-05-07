@@ -91,8 +91,7 @@ public final class JedisCountMinSketchCommands extends AbstractJedisRedisCommand
 	public Status cmsInitByDim(final String key, final int width, final int depth) {
 		final CommandArguments args = CommandArguments.create(key).add(width).add(depth);
 		return executeCommand(RedisCommand.CMS_INITBYDIM, args, (cmd)->cmd.cmsInitByDim(key, width, depth),
-				(cmd)->cmd.cmsInitByDim(key, width, depth),
-				(cmd)->cmd.cmsInitByDim(key, width, depth),
+				(cmd)->cmd.cmsInitByDim(key, width, depth), (cmd)->cmd.cmsInitByDim(key, width, depth),
 				new OkStatusConverter());
 	}
 
@@ -104,10 +103,8 @@ public final class JedisCountMinSketchCommands extends AbstractJedisRedisCommand
 	@Override
 	public Status cmsInitByProb(final String key, final double error, final double probability) {
 		final CommandArguments args = CommandArguments.create(key).add(error).add(probability);
-		return executeCommand(RedisCommand.CMS_INITBYPROB, args,
-				(cmd)->cmd.cmsInitByProb(key, error, probability),
-				(cmd)->cmd.cmsInitByProb(key, error, probability),
-				(cmd)->cmd.cmsInitByProb(key, error, probability),
+		return executeCommand(RedisCommand.CMS_INITBYPROB, args, (cmd)->cmd.cmsInitByProb(key, error, probability),
+				(cmd)->cmd.cmsInitByProb(key, error, probability), (cmd)->cmd.cmsInitByProb(key, error, probability),
 				new OkStatusConverter());
 	}
 

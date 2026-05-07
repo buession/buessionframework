@@ -272,8 +272,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(argument).add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
 		return geoRadius(SafeEncoder.encode(key), longitude, latitude, radius, unit,
-				new LettuceGeoArgs(argument, count, any),
-				args);
+				new LettuceGeoArgs(argument, count, any), args);
 	}
 
 	@Override
@@ -282,8 +281,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final int count, final boolean any) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(argument).add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
-		return geoRadius(key, longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count, any),
-				args);
+		return geoRadius(key, longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count, any), args);
 	}
 
 	@Override
@@ -333,8 +331,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                      final double longitude, final double latitude, final double radius, final GeoUnit unit) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(storeOption, destKey);
-		return geoRadius(key, longitude, latitude, radius, unit,
-				new LettuceGeoRadiusStoreArgs<>(key, storeOption), args);
+		return geoRadius(key, longitude, latitude, radius, unit, new LettuceGeoRadiusStoreArgs<>(key, storeOption),
+				args);
 	}
 
 	@Override
@@ -487,8 +485,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(argument).add(Keyword.Common.COUNT, count);
 		return geoRadiusRo(SafeEncoder.encode(key), longitude, latitude, radius, unit,
-				new LettuceGeoArgs(argument, count),
-				args);
+				new LettuceGeoArgs(argument, count), args);
 	}
 
 	@Override
@@ -516,8 +513,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                   final int count, final boolean any) {
 		final CommandArguments args = CommandArguments.create(key).add(longitude, latitude).add(radius, unit)
 				.add(argument).add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null);
-		return geoRadiusRo(key, longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count, any),
-				args);
+		return geoRadiusRo(key, longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count, any), args);
 	}
 
 	@Override
@@ -633,8 +629,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit)
 				.add(Keyword.Common.COUNT, count);
 		return geoRadiusByMember(SafeEncoder.encode(key), SafeEncoder.encode(member), radius, unit,
-				new LettuceGeoArgs(count),
-				args);
+				new LettuceGeoArgs(count), args);
 	}
 
 	@Override
@@ -696,8 +691,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                              final GeoRadiusArgument argument) {
 		final CommandArguments args = CommandArguments.create(key, member).add(radius, unit).add(argument)
 				.add(storeOption, destKey);
-		return geoRadiusByMember(key, member, radius, unit, new LettuceGeoRadiusStoreArgs<>(destKey, storeOption,
-				argument), args);
+		return geoRadiusByMember(key, member, radius, unit,
+				new LettuceGeoRadiusStoreArgs<>(destKey, storeOption, argument), args);
 	}
 
 	@Override
@@ -947,8 +942,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 				.add("BYRADIUS").add(radius, unit).add(argument).add(Keyword.Common.COUNT, count)
 				.add(any ? Keyword.Common.ANY : null);
 		return geoSearch(SafeEncoder.encode(key), longitude, latitude, radius, unit,
-				new LettuceGeoArgs(argument, count, any),
-				args);
+				new LettuceGeoArgs(argument, count, any), args);
 	}
 
 	@Override
@@ -958,8 +952,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYRADIUS").add(radius, unit).add(argument).add(Keyword.Common.COUNT, count)
 				.add(any ? Keyword.Common.ANY : null);
-		return geoSearch(key, longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count, any),
-				args);
+		return geoSearch(key, longitude, latitude, radius, unit, new LettuceGeoArgs(argument, count, any), args);
 	}
 
 	@Override
@@ -1014,8 +1007,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 	                                 final GeoSearchArgument argument, final int count) {
 		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYBOX").add(width, height).add(unit).add(argument).add(Keyword.Common.COUNT, count);
-		return geoSearch(key, longitude, latitude, width, height, unit, new LettuceGeoArgs(argument, count),
-				args);
+		return geoSearch(key, longitude, latitude, width, height, unit, new LettuceGeoArgs(argument, count), args);
 	}
 
 	@Override
@@ -1036,8 +1028,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYBOX").add(width, height).add(unit).add(argument).add(Keyword.Common.COUNT, count)
 				.add(any ? Keyword.Common.ANY : null);
-		return geoSearch(key, longitude, latitude, width, height, unit,
-				new LettuceGeoArgs(argument, count, any), args);
+		return geoSearch(key, longitude, latitude, width, height, unit, new LettuceGeoArgs(argument, count, any), args);
 	}
 
 	@Override
@@ -1200,8 +1191,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYRADIUS").add(radius, unit).add(storeDist ? "STOREDIST" : null);
 		return geoSearchStore(SafeEncoder.encode(key), SafeEncoder.encode(destKey), longitude, latitude, radius, unit,
-				storeDist,
-				args);
+				storeDist, args);
 	}
 
 	@Override
@@ -1228,8 +1218,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYRADIUS").add(radius, unit).add(Keyword.Common.COUNT, count)
 				.add(storeDist ? "STOREDIST" : null);
-		return geoSearchStore(key, destKey, longitude, latitude, radius, unit,
-				new LettuceGeoArgs(count), storeDist, args);
+		return geoSearchStore(key, destKey, longitude, latitude, radius, unit, new LettuceGeoArgs(count), storeDist,
+				args);
 	}
 
 	@Override
@@ -1260,8 +1250,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYBOX").add(width, height);
 		return geoSearchStore(SafeEncoder.encode(key), SafeEncoder.encode(destKey), longitude, latitude, width, height,
-				unit, false,
-				args);
+				unit, false, args);
 	}
 
 	@Override
@@ -1278,8 +1267,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYBOX").add(width, height).add(storeDist ? "STOREDIST" : null);
 		return geoSearchStore(SafeEncoder.encode(key), SafeEncoder.encode(destKey), longitude, latitude, width, height,
-				unit,
-				storeDist, args);
+				unit, storeDist, args);
 	}
 
 	@Override
@@ -1328,8 +1316,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMLONLAT").add(longitude, latitude)
 				.add("BYBOX").add(width, height).add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null)
 				.add(storeDist ? "STOREDIST" : null);
-		return geoSearchStore(key, destKey, longitude, latitude, width, height, unit,
-				new LettuceGeoArgs(count, any), storeDist, args);
+		return geoSearchStore(key, destKey, longitude, latitude, width, height, unit, new LettuceGeoArgs(count, any),
+				storeDist, args);
 	}
 
 	@Override
@@ -1338,8 +1326,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member)
 				.add("BYRADIUS").add(radius, unit);
 		return geoSearchStore(SafeEncoder.encode(key), SafeEncoder.encode(destKey), SafeEncoder.encode(member), radius,
-				unit, false,
-				args);
+				unit, false, args);
 	}
 
 	@Override
@@ -1356,8 +1343,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member)
 				.add("BYRADIUS").add(radius, unit).add(storeDist ? "STOREDIST" : null);
 		return geoSearchStore(SafeEncoder.encode(key), SafeEncoder.encode(destKey), SafeEncoder.encode(member), radius,
-				unit,
-				storeDist, args);
+				unit, storeDist, args);
 	}
 
 	@Override
@@ -1375,8 +1361,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 				.add("BYRADIUS").add(radius, unit).add(Keyword.Common.COUNT, count)
 				.add(storeDist ? "STOREDIST" : null);
 		return geoSearchStore(SafeEncoder.encode(key), SafeEncoder.encode(destKey), SafeEncoder.encode(member), radius,
-				unit,
-				new LettuceGeoArgs(count), storeDist, args);
+				unit, new LettuceGeoArgs(count), storeDist, args);
 	}
 
 	@Override
@@ -1385,8 +1370,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member)
 				.add("BYRADIUS").add(radius, unit).add(Keyword.Common.COUNT, count)
 				.add(storeDist ? "STOREDIST" : null);
-		return geoSearchStore(key, destKey, member, radius, unit, new LettuceGeoArgs(count),
-				storeDist, args);
+		return geoSearchStore(key, destKey, member, radius, unit, new LettuceGeoArgs(count), storeDist, args);
 	}
 
 	@Override
@@ -1396,8 +1380,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 				.add("BYRADIUS").add(radius, unit).add(Keyword.Common.COUNT, count)
 				.add(any ? Keyword.Common.ANY : null).add(storeDist ? "STOREDIST" : null);
 		return geoSearchStore(SafeEncoder.encode(key), SafeEncoder.encode(destKey), SafeEncoder.encode(member), radius,
-				unit,
-				new LettuceGeoArgs(count, any), storeDist, args);
+				unit, new LettuceGeoArgs(count, any), storeDist, args);
 	}
 
 	@Override
@@ -1406,8 +1389,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member)
 				.add("BYRADIUS").add(radius, unit).add(Keyword.Common.COUNT, count)
 				.add(any ? Keyword.Common.ANY : null).add(storeDist ? "STOREDIST" : null);
-		return geoSearchStore(key, destKey, member, radius, unit, new LettuceGeoArgs(count, any),
-				storeDist, args);
+		return geoSearchStore(key, destKey, member, radius, unit, new LettuceGeoArgs(count, any), storeDist, args);
 	}
 
 	@Override
@@ -1416,8 +1398,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member).add("BYBOX")
 				.add(width, height).add(unit);
 		return geoSearchStore(SafeEncoder.encode(key), SafeEncoder.encode(destKey), SafeEncoder.encode(member), width,
-				height, unit,
-				false, args);
+				height, unit, false, args);
 	}
 
 	@Override
@@ -1434,8 +1415,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member).add("BYBOX")
 				.add(width, height).add(unit).add(storeDist ? "STOREDIST" : null);
 		return geoSearchStore(SafeEncoder.encode(key), SafeEncoder.encode(destKey), SafeEncoder.encode(member), width,
-				height, unit,
-				storeDist, args);
+				height, unit, storeDist, args);
 	}
 
 	@Override
@@ -1452,8 +1432,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member).add("BYBOX")
 				.add(width, height).add(unit).add(Keyword.Common.COUNT, count).add(storeDist ? "STOREDIST" : null);
 		return geoSearchStore(SafeEncoder.encode(key), SafeEncoder.encode(destKey), SafeEncoder.encode(member), width,
-				height, unit,
-				new LettuceGeoArgs(count), storeDist, args);
+				height, unit, new LettuceGeoArgs(count), storeDist, args);
 	}
 
 	@Override
@@ -1473,8 +1452,7 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 				.add(width, height).add(unit).add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null)
 				.add(storeDist ? "STOREDIST" : null);
 		return geoSearchStore(SafeEncoder.encode(key), SafeEncoder.encode(destKey), SafeEncoder.encode(member), width,
-				height, unit,
-				new LettuceGeoArgs(count, any), storeDist, args);
+				height, unit, new LettuceGeoArgs(count, any), storeDist, args);
 	}
 
 	@Override
@@ -1484,8 +1462,8 @@ public final class LettuceGeoCommands extends AbstractLettuceRedisCommands imple
 		final CommandArguments args = CommandArguments.create(destKey, key).add("FROMMEMBER").add(member).add("BYBOX")
 				.add(width, height).add(unit).add(Keyword.Common.COUNT, count).add(any ? Keyword.Common.ANY : null)
 				.add(storeDist ? "STOREDIST" : null);
-		return geoSearchStore(key, destKey, member, width, height, unit, new LettuceGeoArgs(count, any),
-				storeDist, args);
+		return geoSearchStore(key, destKey, member, width, height, unit, new LettuceGeoArgs(count, any), storeDist,
+				args);
 	}
 
 	private Long geoAdd(final String key, final GeoAddArgs geoAddArgs, final KeyValue<String, Geo>[] memberCoordinates,

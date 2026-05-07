@@ -65,8 +65,7 @@ public final class JedisVectorSetCommands extends AbstractJedisRedisCommands imp
 	public Status vAdd(final String key, final double[] vectors, final String element) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add(element);
 		return executeCommand(RedisCommand.VADD, args, (cmd)->cmd.vadd(key, vectors(vectors), element),
-				(cmd)->cmd.vadd(key, vectors(vectors), element),
-				(cmd)->cmd.vadd(key, vectors(vectors), element),
+				(cmd)->cmd.vadd(key, vectors(vectors), element), (cmd)->cmd.vadd(key, vectors(vectors), element),
 				new BooleanStatusConverter());
 	}
 
@@ -74,8 +73,7 @@ public final class JedisVectorSetCommands extends AbstractJedisRedisCommands imp
 	public Status vAdd(final byte[] key, final double[] vectors, final byte[] element) {
 		final CommandArguments args = CommandArguments.create(key).add(vectors).add(element);
 		return executeCommand(RedisCommand.VADD, args, (cmd)->cmd.vadd(key, vectors(vectors), element),
-				(cmd)->cmd.vadd(key, vectors(vectors), element),
-				(cmd)->cmd.vadd(key, vectors(vectors), element),
+				(cmd)->cmd.vadd(key, vectors(vectors), element), (cmd)->cmd.vadd(key, vectors(vectors), element),
 				new BooleanStatusConverter());
 	}
 
