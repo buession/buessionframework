@@ -90,7 +90,7 @@ public abstract class AbstractJedisRedisTest {
 	protected RedisTemplate redisTemplate() {
 		Options options = new Options();
 		options.setPrefix("test:");
-		RedisTemplate redisTemplate = new RedisTemplate(sentinelDataSource(), options);
+		RedisTemplate redisTemplate = new RedisTemplate(dataSource(), options);
 
 		redisTemplate.afterPropertiesSet();
 

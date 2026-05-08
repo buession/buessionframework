@@ -50,11 +50,6 @@ public class RedisClusterClient<K, V> extends BaseRedisClient<K, V> {
 		super(connectionProvider);
 	}
 
-	@Override
-	protected RedisCommandsInvocationHandler<K, V> createRedisCommandsInvocationHandler() {
-		return new StatefulRedisClusterCommandsHandler<>(null);
-	}
-
 	/**
 	 * Creates a RedisClusterClient instance. The provided node is used to make the first contact with
 	 * the cluster.
@@ -138,6 +133,16 @@ public class RedisClusterClient<K, V> extends BaseRedisClient<K, V> {
 		return new Builder<>();
 	}
 
+	@Override
+	protected RedisCommandsInvocationHandler<K, V> createRedisCommandsInvocationHandler() {
+		return new StatefulRedisClusterCommandsHandler<>(null);
+	}
+
+	@Override
+	protected RedisCommandsInvocationHandler<K, V> createRedisAsyncCommandsInvocationHandler() {
+		return new StatefulRedisClusterCommandsHandler<>(null);
+	}
+
 	/**
 	 * Fluent builder for {@link RedisClusterClient} (Redis Cluster).
 	 * <p>
@@ -152,16 +157,5 @@ public class RedisClusterClient<K, V> extends BaseRedisClient<K, V> {
 		}
 
 	}
-
-	/*
-	public RedisCommands<K, V> getRedisCommands() {
-		return connection.sync();
-	}
-
-	public RedisAsyncCommands<K, V> getRedisAsyncCommands() {
-		return connection.async();
-	}
-
-	 */
 
 }

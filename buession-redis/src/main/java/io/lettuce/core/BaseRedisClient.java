@@ -49,6 +49,8 @@ public abstract class BaseRedisClient<K, V> {
 
 	protected RedisCommands<K, V> redisCommands;
 
+	protected RedisAsyncCommands<K, V> redisAsyncCommands;
+
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
 	protected BaseRedisClient(ConnectionProvider<K, V> connectionProvider) {
@@ -65,8 +67,23 @@ public abstract class BaseRedisClient<K, V> {
 		return redisCommands;
 	}
 
+	@SuppressWarnings({"unchecked"})
+	public RedisAsyncCommands<K, V> getRedisAsyncCommands() {
+		if(redisAsyncCommands == null){
+			redisAsyncCommands = (RedisAsyncCommands<K, V>) Proxy.newProxyInstance(
+					RedisAsyncCommands.class.getClassLoader(), new Class[]{RedisAsyncCommands.class},
+					createRedisAsyncCommandsInvocationHandler());
+		}
+
+		return redisAsyncCommands;
+	}
+
 	public void multi() {
 		getRedisCommands().multi();
+	}
+
+	public Pipeline<K, V> pipelined() {
+		return null;
 	}
 
 	public void close() {
@@ -77,10 +94,8 @@ public abstract class BaseRedisClient<K, V> {
 		}
 	}
 
-	public RedisAsyncCommands<K, V> getRedisAsyncCommands() {
-		return null;
-	}
-
 	protected abstract RedisCommandsInvocationHandler<K, V> createRedisCommandsInvocationHandler();
+
+	protected abstract RedisCommandsInvocationHandler<K, V> createRedisAsyncCommandsInvocationHandler();
 
 }

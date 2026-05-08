@@ -31,7 +31,9 @@ import com.buession.redis.client.connection.datasource.lettuce.LettuceRedisDataS
 import com.buession.redis.core.PoolConfig;
 import com.buession.redis.exception.LettuceRedisExceptionUtils;
 import com.buession.redis.exception.RedisException;
+import com.buession.redis.pipeline.DefaultPipelineProxy;
 import com.buession.redis.pipeline.Pipeline;
+import com.buession.redis.pipeline.lettuce.LettucePipeline;
 import com.buession.redis.transaction.DefaultTransactionProxy;
 import com.buession.redis.transaction.Transaction;
 import com.buession.redis.transaction.lettuce.LettuceTransaction;
@@ -39,8 +41,6 @@ import io.lettuce.core.BaseRedisClient;
 import io.lettuce.core.ConnectionPoolConfig;
 import io.lettuce.core.DefaultLettuceClientConfig;
 import io.lettuce.core.SslOptions;
-import io.lettuce.core.api.PipeliningFlushPolicy;
-import io.lettuce.core.api.PipeliningFlushState;
 import io.lettuce.core.codec.RedisCodec;
 
 import java.io.File;
@@ -60,8 +60,6 @@ import java.time.Duration;
  */
 public abstract class AbstractLettuceRedisConnection<K, V, C extends BaseRedisClient<K, V>>
 		extends AbstractRedisConnection<C> implements LettuceRedisConnection<K, V, C> {
-
-	private final PipeliningFlushPolicy pipeliningFlushPolicy = PipeliningFlushPolicy.flushEachCommand();
 
 	private RedisCodec<K, V> codec;
 
@@ -133,30 +131,11 @@ public abstract class AbstractLettuceRedisConnection<K, V, C extends BaseRedisCl
 		this.codec = codec;
 	}
 
-	/*
-	@SuppressWarnings({"unchecked"})
-	@Override
-	public RedisCommands<K, V> getRedisCommands() {
-		if(redisCommands == null){
-			redisCommands = (RedisCommands<K, V>) Proxy.newProxyInstance(RedisCommands.class.getClassLoader(),
-					new Class[]{RedisCommands.class}, createRedisCommandsInvocationHandler());
-		}
-
-		return redisCommands;
-	}
-
-	@Override
-	public RedisAsyncCommands<K, V> getRedisAsyncCommands() {
-		return null;
-	}
-
-	 */
-
 	@Override
 	public Pipeline openPipeline() {
 		if(pipeline == null){
-			final PipeliningFlushState flushState = pipeliningFlushPolicy.newPipeline();
-			//pipeline = new DefaultPipelineProxy<>(new LettucePipeline(conn, flushState), getRedisAsyncCommands());
+			pipeline = new DefaultPipelineProxy<>(new LettucePipeline<>(client.pipelined()),
+					client.getRedisAsyncCommands());
 		}
 
 		return pipeline;

@@ -24,7 +24,6 @@
  */
 package com.buession.redis.client.connection.jedis;
 
-import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisStandaloneConnection;
 import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;

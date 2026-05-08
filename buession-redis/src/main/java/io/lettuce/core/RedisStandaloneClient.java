@@ -178,8 +178,19 @@ public class RedisStandaloneClient<K, V> extends BaseRedisClient<K, V> {
 	}
 
 	@Override
+	public Pipeline<K, V> pipelined() {
+		return new Pipeline<>(connectionProvider.getConnection());
+	}
+
+	@Override
 	protected RedisCommandsInvocationHandler<K, V> createRedisCommandsInvocationHandler() {
 		return new StatefulRedisCommandsHandler<>((StatefulRedisConnection<K, V>) connectionProvider.getConnection());
+	}
+
+	@Override
+	protected RedisCommandsInvocationHandler<K, V> createRedisAsyncCommandsInvocationHandler() {
+		return new StatefulRedisCommandsHandler<>(
+				(StatefulRedisConnection<K, V>) connectionProvider.getConnection(), true);
 	}
 
 	/**

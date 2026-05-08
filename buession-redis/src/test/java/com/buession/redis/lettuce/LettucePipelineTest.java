@@ -24,6 +24,7 @@
  */
 package com.buession.redis.lettuce;
 
+import com.buession.lang.Status;
 import com.buession.redis.RedisTemplate;
 import com.buession.redis.User;
 import org.junit.jupiter.api.Assertions;
@@ -41,10 +42,12 @@ public class LettucePipelineTest extends AbstractLettuceRedisTest {
 	public void test() {
 		RedisTemplate redisTemplate = redisTemplate();
 		redisTemplate.pipeline();
-		redisTemplate.set("a_l_p", "A");
+		Status status = redisTemplate.set("t58", "A");
+		redisTemplate.set("user", new User(1000, "buession"));
+		System.out.println(status);
 		redisTemplate.exists("a_l_p");
 		redisTemplate.expire("a", 60);
-		String ret = redisTemplate.get("a");
+		String ret = redisTemplate.get("t58");
 		//redisTemplate.role();
 		User user = redisTemplate.get("user", User.class);
 		System.out.println(user);

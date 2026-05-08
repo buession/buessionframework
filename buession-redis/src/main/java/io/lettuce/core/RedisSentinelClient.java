@@ -44,11 +44,6 @@ public class RedisSentinelClient<K, V> extends BaseRedisClient<K, V> {
 		super(connectionProvider);
 	}
 
-	@Override
-	protected RedisCommandsInvocationHandler<K, V> createRedisCommandsInvocationHandler() {
-		return null;
-	}
-
 	/**
 	 * Create a new builder for configuring RedisSentinelClient instances.
 	 *
@@ -56,6 +51,16 @@ public class RedisSentinelClient<K, V> extends BaseRedisClient<K, V> {
 	 */
 	public static <K, V> Builder<K, V> builder() {
 		return new Builder<>();
+	}
+
+	@Override
+	protected RedisCommandsInvocationHandler<K, V> createRedisCommandsInvocationHandler() {
+		return null;
+	}
+
+	@Override
+	protected RedisCommandsInvocationHandler<K, V> createRedisAsyncCommandsInvocationHandler() {
+		return null;
 	}
 
 	/**

@@ -39,13 +39,20 @@ public final class StatefulRedisClusterCommandsHandler<K, V> implements RedisCom
 
 	private final StatefulRedisClusterConnection<K, V> conn;
 
+	private final boolean async;
+
 	public StatefulRedisClusterCommandsHandler(final StatefulRedisClusterConnection<K, V> conn) {
+		this(conn, false);
+	}
+
+	public StatefulRedisClusterCommandsHandler(final StatefulRedisClusterConnection<K, V> conn, final boolean async) {
 		this.conn = conn;
+		this.async = async;
 	}
 
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-		return method.invoke(conn.sync(), args);
+		return async ? method.invoke(conn.async(), args) : method.invoke(conn.sync(), args);
 	}
 
 }

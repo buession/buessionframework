@@ -103,8 +103,8 @@ public final class LettuceClusterCommands extends AbstractLettuceRedisCommands i
 	public Integer clusterCountFailureReports(final String nodeId) {
 		final CommandArguments args = CommandArguments.create(nodeId);
 		return executeCommand(RedisCommand.CLUSTER, RedisSubCommand.CLUSTER_COUNTFAILUREREPORTS, args,
-				(cmd)->cmd.clusterCountFailureReports(nodeId), (cmd)->cmd.clusterCountFailureReports(nodeId),
-				Long::intValue);
+				(cmd)->cmd.clusterCountFailureReports(nodeId),
+				(cmd)->cmd.clusterCountFailureReports(nodeId), Long::intValue);
 	}
 
 	@Override

@@ -137,17 +137,9 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 			return false;
 		}
 
-		final ConnectionProvider connectionProvider = getConnectionProvider();
-		if(connectionProvider == null){
-			return false;
+		try(Connection connection = getConnectionProvider().getConnection()){
+			return connection.isConnected();
 		}
-
-		final Connection connection = connectionProvider.getConnection();
-		if(connection == null){
-			return false;
-		}
-
-		return connection.isConnected();
 	}
 
 	@Override
@@ -156,17 +148,9 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 			return true;
 		}
 
-		final ConnectionProvider connectionProvider = getConnectionProvider();
-		if(connectionProvider == null){
-			return true;
+		try(Connection connection = getConnectionProvider().getConnection()){
+			return connection.isConnected() == false;
 		}
-
-		final Connection connection = connectionProvider.getConnection();
-		if(connection == null){
-			return true;
-		}
-
-		return connection.isConnected() == false;
 	}
 
 	protected ConnectionPoolConfig getConnectionPoolConfig() {
@@ -195,8 +179,7 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 			return;
 		}
 
-		builder.connectionTimeoutMillis(getConnectTimeout())
-				.socketTimeoutMillis(getSoTimeout())
+		builder.connectionTimeoutMillis(getConnectTimeout()).socketTimeoutMillis(getSoTimeout())
 				.blockingSocketTimeoutMillis(getInfiniteSoTimeout());
 
 		if(Validate.hasText(getDataSource().getPassword())){
@@ -209,9 +192,7 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 			builder.ssl(getSslOptions().isEnabled());
 
 			if(getSslOptions().isEnabled()){
-				builder.sslSocketFactory(getSslOptions().getSslSocketFactory())
-						.sslParameters(getSslOptions().getSslParameters())
-						.hostnameVerifier(getSslOptions().getHostnameVerifier());
+				builder.hostnameVerifier(getSslOptions().getHostnameVerifier());
 
 				SslOptions.Builder sslOptionsBuilder = SslOptions.builder();
 
