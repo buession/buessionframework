@@ -143,7 +143,7 @@ public class RedisStandaloneClient<K, V> extends BaseRedisClient<K, V> {
 	 * 		if the URI format is invalid
 	 */
 	public static <K, V> RedisStandaloneClient<K, V> create(final String url) {
-		return RedisStandaloneClient.<K, V>create(URI.create(url));
+		return RedisStandaloneClient.create(URI.create(url));
 	}
 
 	/**

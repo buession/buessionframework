@@ -72,14 +72,4 @@ public class ConnectionPool<K, V> extends Pool<StatefulConnection<K, V>> {
 		this(new ConnectionFactory<>(hostAndPort, clientConfig, redisCodec), poolConfig);
 	}
 
-	@Override
-	public StatefulConnection<K, V> getResource() {
-		return super.getResource();
-	}
-
-	@Override
-	public void close() {
-		super.close();
-	}
-
 }

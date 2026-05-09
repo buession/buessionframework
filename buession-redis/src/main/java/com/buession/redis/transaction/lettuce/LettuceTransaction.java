@@ -25,15 +25,14 @@
 package com.buession.redis.transaction.lettuce;
 
 import com.buession.core.utils.Assert;
+import com.buession.redis.core.Constants;
 import com.buession.redis.transaction.Transaction;
 import io.lettuce.core.api.async.RedisTransactionalAsyncCommands;
-import io.lettuce.core.api.sync.RedisTransactionalCommands;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Lettuce 事务
@@ -60,7 +59,6 @@ public class LettuceTransaction<K, V> implements Transaction {
 	@Override
 	public List<Object> exec() {
 		logger.info("Redis transaction exec.");
-		//return delegate.exec().stream().collect(Collectors.toList());
 		delegate.exec();
 		return new ArrayList<>();
 	}
@@ -69,13 +67,12 @@ public class LettuceTransaction<K, V> implements Transaction {
 	public String discard() {
 		logger.info("Redis transaction discard.");
 		delegate.discard();
-		return "OK";
+		return Constants.OK;
 	}
 
 	@Override
 	public void close() {
 		logger.info("Redis transaction close.");
-		//delegate.close();
 	}
 
 }

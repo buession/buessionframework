@@ -79,20 +79,7 @@ public class Pipeline<K, V> {
 					CompletableFuture<?> future = result.getHolder();
 
 					if(future.isCompletedExceptionally()){
-						String message;
-						if(future instanceof io.lettuce.core.protocol.RedisCommand<?, ?, ?> rc){
-							message = rc.getOutput().getError();
-						}else{
-							try{
-								future.get();
-								message = "";
-							}catch(InterruptedException ignore){
-								message = "";
-							}catch(ExecutionException e){
-								message = e.getCause().getMessage();
-							}
-						}
-
+						String message = get(future);
 						Exception exception = new RedisPipelineException(message);
 
 						// remember only the first error
@@ -131,19 +118,7 @@ public class Pipeline<K, V> {
 					CompletableFuture<?> future = result.getHolder();
 
 					if(future.isCompletedExceptionally()){
-						String message;
-						if(future instanceof io.lettuce.core.protocol.RedisCommand<?, ?, ?> rc){
-							message = rc.getOutput().getError();
-						}else{
-							try{
-								future.get();
-								message = "";
-							}catch(InterruptedException ignore){
-								message = "";
-							}catch(ExecutionException e){
-								message = e.getCause().getMessage();
-							}
-						}
+						String message = get(future);
 
 						Exception exception = new RedisPipelineException(message);
 
@@ -184,6 +159,21 @@ public class Pipeline<K, V> {
 	private boolean checkDone(final List<CompletableFuture<?>> futures) {
 		return LettuceFutures.awaitAll(connection.getTimeout().toMillis(), TimeUnit.MILLISECONDS,
 				futures.toArray(new RedisFuture[futures.size()]));
+	}
+
+	private String get(final CompletableFuture<?> future) {
+		if(future instanceof io.lettuce.core.protocol.RedisCommand<?, ?, ?> rc){
+			return rc.getOutput().getError();
+		}else{
+			try{
+				future.get();
+				return "";
+			}catch(InterruptedException ignore){
+				return "";
+			}catch(ExecutionException e){
+				return e.getCause().getMessage();
+			}
+		}
 	}
 
 }

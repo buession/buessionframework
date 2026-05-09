@@ -172,17 +172,31 @@ public abstract class AbstractLettuceRedisConnection<K, V, C extends BaseRedisCl
 			return;
 		}
 
-		builder.connectionTimeoutMillis(getConnectTimeout())
-				.socketTimeoutMillis(getSoTimeout());
+		LettuceRedisDataSource dataSource = (LettuceRedisDataSource) getDataSource();
 
-		if(Validate.hasText(getDataSource().getPassword())){
-			builder.password(getDataSource().getPassword());
-			if(Validate.hasText(getDataSource().getUsername())){
-				builder.user(getDataSource().getUsername());
+		builder.connectionTimeoutMillis(getConnectTimeout()).socketTimeoutMillis(getSoTimeout());
+
+		if(Validate.hasText(dataSource.getPassword())){
+			builder.password(dataSource.getPassword());
+			if(Validate.hasText(dataSource.getUsername())){
+				builder.user(dataSource.getUsername());
 			}
 		}
 
-		propertyMapper.from(getDataSource().getClientName()).to(builder::clientName);
+		propertyMapper.from(dataSource.getClientName()).to(builder::clientName);
+
+		if(dataSource.getComputationThreadPoolSize() > 0){
+			builder.computationThreadPoolSize(dataSource.getComputationThreadPoolSize());
+		}
+
+		if(dataSource.getIoThreadPoolSize() > 0){
+			builder.ioThreadPoolSize(dataSource.getIoThreadPoolSize());
+		}
+
+		if(dataSource.getRequestQueueSize() > 0){
+			builder.requestQueueSize(dataSource.getRequestQueueSize());
+		}
+
 		if(getSslOptions() != null){
 			builder.ssl(getSslOptions().isEnabled());
 

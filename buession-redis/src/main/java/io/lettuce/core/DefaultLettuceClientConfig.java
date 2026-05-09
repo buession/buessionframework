@@ -158,7 +158,7 @@ public class DefaultLettuceClientConfig implements LettuceClientConfig {
 		String password = LettuceURIHelper.getPassword(redisUri);
 
 		if(user != null || password != null){
-			builder.credentials(RedisCredentials.just(user, password));
+			builder.credentials(user, password);
 		}
 
 		if(LettuceURIHelper.hasDbIndex(redisUri)){
@@ -248,17 +248,17 @@ public class DefaultLettuceClientConfig implements LettuceClientConfig {
 			return this;
 		}
 
-		public Builder setComputationThreadPoolSize(int computationThreadPoolSize) {
+		public Builder computationThreadPoolSize(int computationThreadPoolSize) {
 			lettuceClientConfig.computationThreadPoolSize = computationThreadPoolSize;
 			return this;
 		}
 
-		public Builder setIoThreadPoolSize(int ioThreadPoolSize) {
+		public Builder ioThreadPoolSize(int ioThreadPoolSize) {
 			lettuceClientConfig.ioThreadPoolSize = ioThreadPoolSize;
 			return this;
 		}
 
-		public Builder setRequestQueueSize(int requestQueueSize) {
+		public Builder requestQueueSize(int requestQueueSize) {
 			lettuceClientConfig.requestQueueSize = requestQueueSize;
 			return this;
 		}
