@@ -50,8 +50,9 @@ import java.util.concurrent.ThreadLocalRandom;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class ClusterConnectionProvider<K, V> implements ConnectionProvider<K, V> {
+public class ClusterConnectionProvider<K, V> {
 
+	/*
 	protected final LettuceClusterInfoCache<K, V> cache;
 
 	public ClusterConnectionProvider(Set<HostAndPort> clusterNodes, LettuceClientConfig clientConfig) {
@@ -241,5 +242,7 @@ public class ClusterConnectionProvider<K, V> implements ConnectionProvider<K, V>
 		uninitializedException.addSuppressed(firstException);
 		throw uninitializedException;
 	}
+
+	 */
 
 }

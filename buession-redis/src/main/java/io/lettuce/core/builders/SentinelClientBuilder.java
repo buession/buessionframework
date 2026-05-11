@@ -31,8 +31,7 @@ import io.lettuce.core.DefaultLettuceClientConfig;
 import io.lettuce.core.LettuceClientConfig;
 import io.lettuce.core.internal.HostAndPort;
 import io.lettuce.core.providers.ConnectionProvider;
-import io.lettuce.core.providers.PooledConnectionProvider;
-import io.lettuce.core.providers.SentineledConnectionProvider;
+import io.lettuce.core.providers.SentinelConnectionProvider;
 import io.lettuce.core.resource.Delay;
 
 import java.time.Duration;
@@ -155,14 +154,15 @@ public abstract class SentinelClientBuilder<K, V, C> extends AbstractClientBuild
 
 	@Override
 	protected ConnectionProvider<K, V> createDefaultConnectionProvider() {
-		return new SentineledConnectionProvider<>(this.hostAndPort, this.clientConfig, this.codec, this.poolConfig)
+		return new SentinelConnectionProvider<>(this.sentinels, this.masterName, this.clientConfig,
+				this.sentinelClientConfig, this.poolConfig, this.codec);
 	}
 
 	@Override
 	protected void validateSpecificConfiguration() {
 		validateCommonConfiguration();
 
-		if(masterName == null || masterName.trim().isEmpty()){
+		if(Validate.isBlank(masterName)){
 			throw new IllegalArgumentException("Master name is required for Sentinel mode");
 		}
 

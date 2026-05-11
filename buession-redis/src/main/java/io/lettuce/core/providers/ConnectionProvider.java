@@ -57,5 +57,4 @@ public interface ConnectionProvider<K, V> extends AutoCloseable {
 		return Collections.singletonMap(connection.toString(), connection);
 	}
 
-
 }

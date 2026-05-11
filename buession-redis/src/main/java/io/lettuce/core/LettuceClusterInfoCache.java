@@ -62,6 +62,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public class LettuceClusterInfoCache<K, V> {
 
+	/*
 	private final static int CLUSTER_HASHSLOTS = 16384;
 
 	private final static int MASTER_NODE_INDEX = 2;
@@ -97,6 +98,7 @@ public class LettuceClusterInfoCache<K, V> {
 	/**
 	 * The single thread executor for the topology refresh task.
 	 */
+	/*
 	private ScheduledExecutorService topologyRefreshExecutor = null;
 
 	private static final Logger logger = LoggerFactory.getLogger(LettuceClusterInfoCache.class);
@@ -443,6 +445,7 @@ public class LettuceClusterInfoCache<K, V> {
 	/**
 	 * Clear discovered nodes collections and gently release allocated resources
 	 */
+	/*
 	public void reset() {
 		w.lock();
 		try{
@@ -495,6 +498,7 @@ public class LettuceClusterInfoCache<K, V> {
 	 *
 	 * @return if slots is ok, return true, elese return false.
 	 */
+	/*
 	private boolean checkClusterSlotSequence(List<Object> slotsInfo) {
 		List<Integer> slots = new ArrayList<>();
 		for(Object slotInfoObj : slotsInfo){
@@ -567,5 +571,7 @@ public class LettuceClusterInfoCache<K, V> {
 		}
 
 	}
+
+	 */
 
 }

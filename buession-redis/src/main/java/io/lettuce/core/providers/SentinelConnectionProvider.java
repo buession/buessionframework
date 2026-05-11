@@ -27,24 +27,27 @@ package io.lettuce.core.providers;
 import com.buession.redis.exception.RedisException;
 import io.lettuce.core.ConnectionPool;
 import io.lettuce.core.LettuceClientConfig;
+import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisConnectionException;
+import io.lettuce.core.RedisFuture;
+import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.StatefulConnection;
+import io.lettuce.core.codec.RedisCodec;
+import io.lettuce.core.codec.StringCodec;
 import io.lettuce.core.internal.HostAndPort;
 import io.lettuce.core.protocol.CommandArgs;
+import io.lettuce.core.resource.Delay;
+import io.lettuce.core.sentinel.api.StatefulRedisSentinelConnection;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPubSub;
-import redis.clients.jedis.csc.Cache;
-import redis.clients.jedis.util.Delay;
-import redis.clients.jedis.util.IOUtils;
 
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -52,7 +55,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- *
  * Lettuce Redis 哨兵连接池连接提供者
  *
  * @param <K>
@@ -63,7 +65,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class SentineledConnectionProvider<K, V> implements ConnectionProvider<K, V> {
+public class SentinelConnectionProvider<K, V> implements ConnectionProvider<K, V> {
 
 	public final static long DEFAULT_SUBSCRIBE_RETRY_WAIT_TIME_MILLIS = 5000;
 
@@ -86,87 +88,68 @@ public class SentineledConnectionProvider<K, V> implements ConnectionProvider<K,
 
 	private final LettuceClientConfig sentinelClientConfig;
 
+	private final RedisCodec<K, V> redisCodec;
+
 	private final Delay resubscribeDelay;
 
 	private final Lock initPoolLock = new ReentrantLock(true);
 
-	private final SentinelConnectionFactory sentinelConnectionFactory;
+	private final SentinelConnectionFactory<String, String> sentinelConnectionFactory;
 
 	private final Sleeper sleeper;
 
-	private final static Logger logger = LoggerFactory.getLogger(SentineledConnectionProvider.class);
+	private final static Logger logger = LoggerFactory.getLogger(SentinelConnectionProvider.class);
 
-	public SentineledConnectionProvider(String masterName, final LettuceClientConfig masterClientConfig,
-	                                    Set<HostAndPort> sentinels, final LettuceClientConfig sentinelClientConfig) {
-		this(masterName, masterClientConfig, null, null, sentinels, sentinelClientConfig);
+	public SentinelConnectionProvider(final Set<HostAndPort> sentinels, final String masterName,
+	                                  final LettuceClientConfig masterClientConfig,
+	                                  final LettuceClientConfig sentinelClientConfig,
+	                                  final RedisCodec<K, V> redisCodec) {
+		this(sentinels, masterName, masterClientConfig, sentinelClientConfig, null, redisCodec);
 	}
 
-	public SentineledConnectionProvider(String masterName, final LettuceClientConfig masterClientConfig,
-	                                    Cache clientSideCache, Set<HostAndPort> sentinels,
-	                                    final LettuceClientConfig sentinelClientConfig) {
-		this(masterName, masterClientConfig, clientSideCache, null, sentinels, sentinelClientConfig);
-	}
-
-	public SentineledConnectionProvider(String masterName, final LettuceClientConfig masterClientConfig,
-	                                    final GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig,
-	                                    Set<HostAndPort> sentinels, final LettuceClientConfig sentinelClientConfig) {
-		this(masterName, masterClientConfig, poolConfig, sentinels, sentinelClientConfig, DEFAULT_RESUBSCRIBE_DELAY);
-	}
-
-	public SentineledConnectionProvider(String masterName, final LettuceClientConfig masterClientConfig,
-	                                    Cache clientSideCache,
-	                                    final GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig,
-	                                    Set<HostAndPort> sentinels, final LettuceClientConfig sentinelClientConfig) {
-		this(masterName, masterClientConfig, clientSideCache, poolConfig, sentinels, sentinelClientConfig,
+	public SentinelConnectionProvider(final Set<HostAndPort> sentinels, final String masterName,
+	                                  final LettuceClientConfig masterClientConfig,
+	                                  final LettuceClientConfig sentinelClientConfig,
+	                                  final GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig,
+	                                  final RedisCodec<K, V> redisCodec) {
+		this(sentinels, masterName, masterClientConfig, sentinelClientConfig, poolConfig, redisCodec,
 				DEFAULT_RESUBSCRIBE_DELAY);
 	}
 
-	public SentineledConnectionProvider(String masterName, final LettuceClientConfig masterClientConfig,
-	                                    final GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig,
-	                                    Set<HostAndPort> sentinels, final LettuceClientConfig sentinelClientConfig,
-	                                    final long subscribeRetryWaitTimeMillis) {
-		this(masterName, masterClientConfig, null, poolConfig, sentinels, sentinelClientConfig,
+	public SentinelConnectionProvider(final Set<HostAndPort> sentinels, final String masterName,
+	                                  final LettuceClientConfig masterClientConfig,
+	                                  final LettuceClientConfig sentinelClientConfig,
+	                                  final GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig,
+	                                  final RedisCodec<K, V> redisCodec, final long subscribeRetryWaitTimeMillis) {
+		this(sentinels, masterName, masterClientConfig, sentinelClientConfig, poolConfig, redisCodec,
 				Delay.constant(Duration.ofMillis(subscribeRetryWaitTimeMillis)));
 	}
 
-	public SentineledConnectionProvider(String masterName, final LettuceClientConfig masterClientConfig,
-	                                    final GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig,
-	                                    Set<HostAndPort> sentinels, final LettuceClientConfig sentinelClientConfig,
-	                                    final Delay subscribeRetryWaitTimeMillis) {
-		this(masterName, masterClientConfig, null, poolConfig, sentinels, sentinelClientConfig,
-				subscribeRetryWaitTimeMillis);
+	public SentinelConnectionProvider(final Set<HostAndPort> sentinels, final String masterName,
+	                                  final LettuceClientConfig masterClientConfig,
+	                                  final LettuceClientConfig sentinelClientConfig,
+	                                  final GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig,
+	                                  final RedisCodec<K, V> redisCodec, final Delay resubscribeDelay) {
+		this(sentinels, masterName, masterClientConfig, sentinelClientConfig, poolConfig, redisCodec, resubscribeDelay,
+				null, null);
 	}
 
-	public SentineledConnectionProvider(String masterName, final LettuceClientConfig masterClientConfig,
-	                                    Cache clientSideCache,
-	                                    final GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig,
-	                                    Set<HostAndPort> sentinels, final LettuceClientConfig sentinelClientConfig,
-	                                    final long subscribeRetryWaitTimeMillis) {
-
-		this(masterName, masterClientConfig, clientSideCache, poolConfig, sentinels, sentinelClientConfig,
-				Delay.constant(Duration.ofMillis(subscribeRetryWaitTimeMillis)));
-	}
-
-	public SentineledConnectionProvider(String masterName, final LettuceClientConfig masterClientConfig,
-	                                    Cache clientSideCache,
-	                                    final GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig,
-	                                    Set<HostAndPort> sentinels, final LettuceClientConfig sentinelClientConfig,
-	                                    final Delay resubscribeDelay) {
-		this(masterName, masterClientConfig, clientSideCache, poolConfig, sentinels, sentinelClientConfig,
-				resubscribeDelay, null, null);
-	}
-
-	private SentineledConnectionProvider(String masterName, final LettuceClientConfig masterClientConfig,
-	                                     Cache clientSideCache,
-	                                     final GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig,
-	                                     Set<HostAndPort> sentinels, final LettuceClientConfig sentinelClientConfig,
-	                                     final Delay resubscribeDelay,
-	                                     SentinelConnectionFactory sentinelConnectionFactory, Sleeper sleeper) {
+	private SentinelConnectionProvider(final Set<HostAndPort> sentinels, final String masterName,
+	                                   final LettuceClientConfig masterClientConfig,
+	                                   final LettuceClientConfig sentinelClientConfig,
+	                                   final GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig,
+	                                   final RedisCodec<K, V> redisCodec, final Delay resubscribeDelay,
+	                                   final SentinelConnectionFactory<String, String> sentinelConnectionFactory,
+	                                   final Sleeper sleeper) {
 		this.masterName = masterName;
+
 		this.masterClientConfig = masterClientConfig;
+		this.sentinelClientConfig = sentinelClientConfig;
+
 		this.masterPoolConfig = poolConfig;
 
-		this.sentinelClientConfig = sentinelClientConfig;
+		this.redisCodec = redisCodec;
+
 		this.resubscribeDelay = resubscribeDelay;
 
 		this.sentinelConnectionFactory =
@@ -209,6 +192,14 @@ public class SentineledConnectionProvider<K, V> implements ConnectionProvider<K,
 		return currentMaster;
 	}
 
+	private ConnectionPool<K, V> createNodePool(HostAndPort master) {
+		if(masterPoolConfig == null){
+			return new ConnectionPool<>(master, masterClientConfig, redisCodec);
+		}else{
+			return new ConnectionPool<>(master, masterClientConfig, masterPoolConfig, redisCodec);
+		}
+	}
+
 	private void initMaster(HostAndPort master) {
 		initPoolLock.lock();
 
@@ -217,15 +208,12 @@ public class SentineledConnectionProvider<K, V> implements ConnectionProvider<K,
 				currentMaster = master;
 
 				ConnectionPool<K, V> newPool = createNodePool(currentMaster);
-
 				ConnectionPool<K, V> existingPool = pool;
+
 				pool = newPool;
 				logger.info("Created connection pool to master at {}.", master);
 
 				if(existingPool != null){
-					// although we clear the pool, we still have to check the returned object in getResource,
-					// this call only clears idle instances, not borrowed instances
-					// existingPool.clear(); // necessary??
 					existingPool.close();
 				}
 			}
@@ -234,24 +222,7 @@ public class SentineledConnectionProvider<K, V> implements ConnectionProvider<K,
 		}
 	}
 
-	private ConnectionPool<K, V> createNodePool(HostAndPort master) {
-		if(masterPoolConfig == null){
-			//if(clientSideCache == null){
-			return new ConnectionPool<>(master, masterClientConfig);
-			//}else{
-			//return new ConnectionPool<>(master, masterClientConfig, clientSideCache);
-			//}
-		}else{
-			//if(clientSideCache == null){
-			return new ConnectionPool<>(master, masterClientConfig, masterPoolConfig);
-			//}else{
-			//return new ConnectionPool<>(master, masterClientConfig, clientSideCache, masterPoolConfig);
-			//}
-		}
-	}
-
 	private HostAndPort initSentinels(Set<HostAndPort> sentinels) {
-
 		HostAndPort master = null;
 		boolean sentinelAvailable = false;
 
@@ -260,19 +231,15 @@ public class SentineledConnectionProvider<K, V> implements ConnectionProvider<K,
 		for(HostAndPort sentinel : sentinels){
 			logger.debug("Connecting to Sentinel {}...", sentinel);
 
-			try(Jedis jedis = sentinelConnectionFactory.createConnection(sentinel, sentinelClientConfig)){
+			try(StatefulRedisSentinelConnection<String, String> sentinelConnection = sentinelConnectionFactory.createConnection(
+					sentinel, sentinelClientConfig)){
+				SocketAddress masterAddr = sentinelConnection.sync().getMasterAddrByName(masterName);
 
-				List<String> masterAddr = jedis.sentinelGetMasterAddrByName(masterName);
-
-				// connected to sentinel...
-				sentinelAvailable = true;
-
-				if(masterAddr == null || masterAddr.size() != 2){
-					logger.warn("Sentinel {} is not monitoring master {}.", sentinel, masterName);
-					continue;
+				if(masterAddr instanceof InetSocketAddress inetSocketAddress){
+					master = toHostAndPort(inetSocketAddress);
+					sentinelAvailable = true;
 				}
 
-				master = toHostAndPort(masterAddr);
 				logger.debug("Redis master reported at {}.", master);
 				break;
 			}catch(Exception e){
@@ -294,8 +261,6 @@ public class SentineledConnectionProvider<K, V> implements ConnectionProvider<K,
 
 		for(HostAndPort sentinel : sentinels){
 			SentinelListener listener = new SentinelListener(sentinel);
-			// whether SentinelListener threads are alive or not, process can be stopped
-			listener.setDaemon(true);
 			sentinelListeners.add(listener);
 			listener.start();
 		}
@@ -303,30 +268,24 @@ public class SentineledConnectionProvider<K, V> implements ConnectionProvider<K,
 		return master;
 	}
 
-	/**
-	 * Must be of size 2.
-	 */
-	private static HostAndPort toHostAndPort(List<String> masterAddr) {
-		return toHostAndPort(masterAddr.get(0), masterAddr.get(1));
-	}
-
-	private static HostAndPort toHostAndPort(String hostStr, String portStr) {
-		return HostAndPort.of(hostStr, Integer.parseInt(portStr));
+	private static HostAndPort toHostAndPort(InetSocketAddress inetSocketAddress) {
+		return HostAndPort.of(inetSocketAddress.getHostName(), inetSocketAddress.getPort());
 	}
 
 	protected class SentinelListener extends Thread {
 
 		protected final HostAndPort node;
 
-		protected volatile Jedis sentinelJedis;
+		protected volatile StatefulRedisSentinelConnection<String, String> sentinelConnection;
 
 		protected AtomicBoolean running = new AtomicBoolean(false);
 
 		protected long subscribeAttempt = 0;
 
 		public SentinelListener(HostAndPort node) {
-			super(String.format("%s-SentinelListener-[%s]", masterName, node.toString()));
+			super(String.format("%s-LettuceRedisSentinelListener-[%s]", masterName, node.toString()));
 			this.node = node;
+			setDaemon(true);
 		}
 
 		@Override
@@ -336,25 +295,29 @@ public class SentineledConnectionProvider<K, V> implements ConnectionProvider<K,
 			while(running.get()){
 				try{
 					// double check that it is not being shutdown
-					if(!running.get()){
+					if(running.get() == false){
 						break;
 					}
 
-					sentinelJedis = sentinelConnectionFactory.createConnection(node, sentinelClientConfig);
+					sentinelConnection = sentinelConnectionFactory.createConnection(node, sentinelClientConfig);
+					RedisFuture<SocketAddress> future = sentinelConnection.async().getMasterAddrByName(masterName);
 
-					// code for active refresh
-					List<String> masterAddr = sentinelJedis.sentinelGetMasterAddrByName(masterName);
-					if(masterAddr == null || masterAddr.size() != 2){
-						logger.warn("Can not get master {} address. Sentinel: {}.", masterName, node);
-					}else{
-						initMaster(toHostAndPort(masterAddr));
-					}
+					future.thenAccept(masterAddr->{
+						if(masterAddr == null){
+							logger.warn("Can not get master {} address. Sentinel: {}.", masterName, node);
+						}else{
+							if(masterAddr instanceof InetSocketAddress inetSocketAddress){
+								initMaster(toHostAndPort(inetSocketAddress));
+							}
+						}
+					});
 
+
+					/*
 					sentinelJedis.subscribe(new JedisPubSub() {
 
 						@Override
 						public void onSubscribe(String channel, int subscribedChannels) {
-							// Successfully subscribed - reset attempt counter
 							subscribeAttempt = 0;
 							logger.debug("Successfully subscribed to {} on Sentinel {}. Reset attempt counter.",
 									channel, node);
@@ -382,9 +345,10 @@ public class SentineledConnectionProvider<K, V> implements ConnectionProvider<K,
 						}
 					}, "+switch-master");
 
+					 */
 				}catch(Exception e){
 					if(running.get()){
-						long subscribeRetryWaitTimeMillis = resubscribeDelay.delay(subscribeAttempt).toMillis();
+						long subscribeRetryWaitTimeMillis = resubscribeDelay.createDelay(subscribeAttempt).toMillis();
 						subscribeAttempt++;
 						logger.warn("Lost connection to Sentinel {}. Sleeping {}ms and retrying.", node,
 								subscribeRetryWaitTimeMillis, e);
@@ -397,7 +361,7 @@ public class SentineledConnectionProvider<K, V> implements ConnectionProvider<K,
 						logger.debug("Unsubscribing from sentinel {}.", node);
 					}
 				}finally{
-					IOUtils.closeQuietly(sentinelJedis);
+					closeQuietly(sentinelConnection);
 				}
 			}
 		}
@@ -408,17 +372,32 @@ public class SentineledConnectionProvider<K, V> implements ConnectionProvider<K,
 				logger.debug("Shutting down listener on {}.", node);
 				running.set(false);
 				// This isn't good, the Jedis object is not thread safe
-				if(sentinelJedis != null){
-					sentinelJedis.close();
-				}
+				closeQuietly(sentinelConnection);
 			}catch(RuntimeException e){
 				logger.error("Error while shutting down.", e);
 			}
 		}
+
 	}
 
-	protected SentinelConnectionFactory defaultSentinelConnectionFactory() {
-		return (node, config)->new Jedis(node, config);
+	protected SentinelConnectionFactory<String, String> defaultSentinelConnectionFactory() {
+
+		return (node, config)->{
+			RedisURI redisURI = RedisURI.create(node.getHostText(), node.getPort());
+			RedisClient redisClient = RedisClient.create(redisURI);
+			return redisClient.connectSentinel(StringCodec.UTF8, redisURI);
+		};
+
+	}
+
+	private void closeQuietly(AutoCloseable closeable) {
+		if(closeable != null){
+			try{
+				closeable.close();
+			}catch(Exception e){
+				//
+			}
+		}
 	}
 
 	@FunctionalInterface
@@ -429,9 +408,9 @@ public class SentineledConnectionProvider<K, V> implements ConnectionProvider<K,
 	}
 
 	@FunctionalInterface
-	protected interface SentinelConnectionFactory {
+	protected interface SentinelConnectionFactory<K, V> {
 
-		Jedis createConnection(HostAndPort node, LettuceClientConfig config);
+		StatefulRedisSentinelConnection<K, V> createConnection(HostAndPort node, LettuceClientConfig config);
 
 	}
 

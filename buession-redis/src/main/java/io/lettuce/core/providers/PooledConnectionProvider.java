@@ -66,9 +66,9 @@ public class PooledConnectionProvider<K, V> implements ConnectionProvider<K, V> 
 	}
 
 	public PooledConnectionProvider(final HostAndPort hostAndPort, final LettuceClientConfig clientConfig,
-	                                final RedisCodec<K, V> redisCodec,
-	                                final GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig) {
-		this(new ConnectionPool<>(hostAndPort, clientConfig, redisCodec, poolConfig));
+	                                final GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig,
+	                                final RedisCodec<K, V> redisCodec) {
+		this(new ConnectionPool<>(hostAndPort, clientConfig, poolConfig, redisCodec));
 		this.connectionMapKey = hostAndPort;
 	}
 

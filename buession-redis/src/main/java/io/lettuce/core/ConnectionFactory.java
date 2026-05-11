@@ -99,7 +99,6 @@ public class ConnectionFactory<K, V> extends BasePooledObjectFactory<StatefulCon
 
 	@Override
 	public void activateObject(final PooledObject<StatefulConnection<K, V>> connection) throws Exception {
-		// The default implementation is a no-op.
 	}
 
 	@Override

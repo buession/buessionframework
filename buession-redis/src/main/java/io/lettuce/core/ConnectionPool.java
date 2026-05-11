@@ -59,8 +59,8 @@ public class ConnectionPool<K, V> extends GenericObjectPool<StatefulConnection<K
 	}
 
 	public ConnectionPool(final HostAndPort hostAndPort, final LettuceClientConfig clientConfig,
-	                      final RedisCodec<K, V> redisCodec,
-	                      final GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig) {
+	                      final GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig,
+	                      final RedisCodec<K, V> redisCodec) {
 		this(new ConnectionFactory<>(hostAndPort, clientConfig, redisCodec), poolConfig);
 	}
 
