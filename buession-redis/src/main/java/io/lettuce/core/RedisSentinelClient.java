@@ -26,7 +26,9 @@ package io.lettuce.core;
 
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.builders.SentinelClientBuilder;
+import io.lettuce.core.internal.HostAndPort;
 import io.lettuce.core.providers.ConnectionProvider;
+import io.lettuce.core.providers.SentinelConnectionProvider;
 
 /**
  * Lettuce Redis Sentinel 客户端
@@ -43,6 +45,10 @@ public class RedisSentinelClient<K, V> extends BaseRedisClient<K, V> {
 
 	private RedisSentinelClient(ConnectionProvider<K, V> connectionProvider) {
 		super(connectionProvider);
+	}
+
+	public HostAndPort getCurrentMaster() {
+		return ((SentinelConnectionProvider<K, V>) connectionProvider).getCurrentMaster();
 	}
 
 	/**

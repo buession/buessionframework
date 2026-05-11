@@ -234,10 +234,12 @@ public class SentinelConnectionProvider<K, V> implements ConnectionProvider<K, V
 			try(StatefulRedisSentinelConnection<String, String> sentinelConnection = sentinelConnectionFactory.createConnection(
 					sentinel, sentinelClientConfig)){
 				SocketAddress masterAddr = sentinelConnection.sync().getMasterAddrByName(masterName);
+				sentinelAvailable = true;
 
 				if(masterAddr instanceof InetSocketAddress inetSocketAddress){
 					master = toHostAndPort(inetSocketAddress);
-					sentinelAvailable = true;
+				}else{
+					continue;
 				}
 
 				logger.debug("Redis master reported at {}.", master);
@@ -268,8 +270,8 @@ public class SentinelConnectionProvider<K, V> implements ConnectionProvider<K, V
 		return master;
 	}
 
-	private static HostAndPort toHostAndPort(InetSocketAddress inetSocketAddress) {
-		return HostAndPort.of(inetSocketAddress.getHostName(), inetSocketAddress.getPort());
+	private static HostAndPort toHostAndPort(InetSocketAddress masterAddr) {
+		return HostAndPort.of(masterAddr.getHostName(), masterAddr.getPort());
 	}
 
 	protected class SentinelListener extends Thread {
