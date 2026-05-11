@@ -25,7 +25,7 @@
 package com.buession.redis.client.connection.datasource.lettuce;
 
 import com.buession.core.builder.SetBuilder;
-import com.buession.redis.client.connection.SentinelRedisNode;
+import com.buession.redis.client.connection.RedisSentinelNode;
 import com.buession.redis.client.connection.datasource.SentinelDataSource;
 import com.buession.redis.core.Constants;
 import com.buession.redis.core.RedisNode;
@@ -77,13 +77,13 @@ public class LettuceSentinelDataSource extends AbstractLettuceDataSource impleme
 	/**
 	 * Master 名称
 	 */
-	private String masterName = SentinelRedisNode.DEFAULT_MASTER_NAME;
+	private String masterName = RedisSentinelNode.DEFAULT_MASTER_NAME;
 
 	/**
 	 * 哨兵节点
 	 */
-	private Set<SentinelRedisNode> sentinels = SetBuilder.of(
-			new SentinelRedisNode(SentinelRedisNode.DEFAULT_HOST, SentinelRedisNode.DEFAULT_SENTINEL_PORT));
+	private Set<RedisSentinelNode> sentinels = SetBuilder.of(
+			new RedisSentinelNode(RedisSentinelNode.DEFAULT_HOST, RedisSentinelNode.DEFAULT_SENTINEL_PORT));
 
 	@Override
 	public int getDatabase() {
@@ -156,12 +156,12 @@ public class LettuceSentinelDataSource extends AbstractLettuceDataSource impleme
 	}
 
 	@Override
-	public Set<SentinelRedisNode> getSentinels() {
+	public Set<RedisSentinelNode> getSentinels() {
 		return sentinels;
 	}
 
 	@Override
-	public void setSentinels(Set<SentinelRedisNode> sentinels) {
+	public void setSentinels(Set<RedisSentinelNode> sentinels) {
 		this.sentinels = sentinels;
 	}
 

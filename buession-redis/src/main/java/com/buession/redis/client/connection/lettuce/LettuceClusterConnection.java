@@ -43,10 +43,8 @@ import io.lettuce.core.RedisURI;
 import io.lettuce.core.StaticCredentialsProvider;
 import io.lettuce.core.builders.ClusterClientBuilder;
 import io.lettuce.core.codec.RedisCodec;
-import io.lettuce.core.internal.HostAndPort;
 
 import java.time.Duration;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -229,11 +227,8 @@ public class LettuceClusterConnection<K, V> extends AbstractLettuceRedisConnecti
 	}
 
 	@Override
-	protected Status doConnect() throws RedisConnectionFailureException {
-		if(isConnected()){
-			return Status.SUCCESS;
-		}
-
+	protected void internalInit() {
+		super.internalInit();
 		if(client == null){
 			final LettuceClusterDataSource dataSource = (LettuceClusterDataSource) getDataSource();
 			final DefaultLettuceClientConfig.Builder clientConfigBuilder = DefaultLettuceClientConfig.builder();
@@ -241,8 +236,8 @@ public class LettuceClusterConnection<K, V> extends AbstractLettuceRedisConnecti
 			commonClientConfigBuilder(clientConfigBuilder);
 
 			final ClusterClientBuilder<K, V, RedisClusterClient<K, V>> builder = RedisClusterClient.<K, V>builder()
-					.nodes(createNodes(dataSource.getNodes())).clientConfig(clientConfigBuilder.build())
-					.codec(getCodec());
+					.nodes(createNodes(dataSource.getNodes(), RedisNode.DEFAULT_PORT))
+					.clientConfig(clientConfigBuilder.build()).codec(getCodec());
 
 			Optional.ofNullable(getConnectionPoolConfig()).ifPresent(builder::poolConfig);
 			//Optional.ofNullable(getCacheConfig()).ifPresent(builder::cacheConfig);
@@ -255,15 +250,15 @@ public class LettuceClusterConnection<K, V> extends AbstractLettuceRedisConnecti
 
 			client = builder.build();
 		}
-
-		return client == null ? Status.FAILURE : Status.SUCCESS;
 	}
 
-	private static Set<HostAndPort> createNodes(final Set<RedisNode> nodes) {
-		return nodes.stream().filter(Objects::nonNull).map((node)->{
-			int port = node.getPort() == 0 ? RedisNode.DEFAULT_PORT : node.getPort();
-			return HostAndPort.of(node.getHost(), port);
-		}).collect(Collectors.toSet());
+	@Override
+	protected Status doConnect() throws RedisConnectionFailureException {
+		if(isConnected()){
+			return Status.SUCCESS;
+		}
+
+		return client == null ? Status.FAILURE : Status.SUCCESS;
 	}
 
 }

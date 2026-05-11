@@ -74,11 +74,7 @@ public class JedisConnection extends AbstractJedisRedisConnection<RedisClient> i
 	}
 
 	@Override
-	protected Status doConnect() throws RedisConnectionFailureException {
-		if(isConnected()){
-			return Status.SUCCESS;
-		}
-
+	protected void internalInit() {
 		if(client == null){
 			final JedisDataSource dataSource = (JedisDataSource) getDataSource();
 			final DefaultJedisClientConfig.Builder clientConfigBuilder = DefaultJedisClientConfig.builder();
@@ -89,14 +85,21 @@ public class JedisConnection extends AbstractJedisRedisConnection<RedisClient> i
 				clientConfigBuilder.database(dataSource.getDatabase());
 			}
 
-			final StandaloneClientBuilder<RedisClient> builder =
-					RedisClient.builder().clientConfig(clientConfigBuilder.build())
-							.hostAndPort(dataSource.getHost(), dataSource.getPort());
+			final StandaloneClientBuilder<RedisClient> builder = RedisClient.builder()
+					.hostAndPort(dataSource.getHost(), dataSource.getPort())
+					.clientConfig(clientConfigBuilder.build());
 
 			Optional.ofNullable(getConnectionPoolConfig()).ifPresent(builder::poolConfig);
 			Optional.ofNullable(getCacheConfig()).ifPresent(builder::cacheConfig);
 
 			client = builder.build();
+		}
+	}
+
+	@Override
+	protected Status doConnect() throws RedisConnectionFailureException {
+		if(isConnected()){
+			return Status.SUCCESS;
 		}
 
 		return client == null ? Status.FAILURE : Status.SUCCESS;

@@ -40,8 +40,6 @@ import java.time.Duration;
  */
 public class DefaultLettuceClientConfig implements LettuceClientConfig {
 
-	private SslOptions sslOptions = SslOptions.create();
-
 	private Duration connectionTimeout = Duration.ofMillis(RedisURI.DEFAULT_TIMEOUT);
 
 	private Duration socketTimeout = connectionTimeout;
@@ -59,6 +57,10 @@ public class DefaultLettuceClientConfig implements LettuceClientConfig {
 	private Integer requestQueueSize;
 
 	private boolean isSsl;
+
+	private SslOptions sslOptions = SslOptions.create();
+
+	private boolean readOnlyForRedisClusterReplicas = false;
 
 	private DefaultLettuceClientConfig() {
 
@@ -122,6 +124,11 @@ public class DefaultLettuceClientConfig implements LettuceClientConfig {
 	@Override
 	public SslOptions getSslOptions() {
 		return sslOptions;
+	}
+
+	@Override
+	public boolean isReadOnlyForRedisClusterReplicas() {
+		return readOnlyForRedisClusterReplicas;
 	}
 
 	public static Builder builder() {
@@ -271,6 +278,15 @@ public class DefaultLettuceClientConfig implements LettuceClientConfig {
 		public Builder sslOptions(SslOptions sslOptions) {
 			lettuceClientConfig.sslOptions = sslOptions;
 			return this;
+		}
+
+		public Builder readOnlyForRedisClusterReplicas(boolean readOnlyForRedisClusterReplicas) {
+			lettuceClientConfig.readOnlyForRedisClusterReplicas = readOnlyForRedisClusterReplicas;
+			return this;
+		}
+
+		public Builder readOnlyForRedisClusterReplicas() {
+			return readOnlyForRedisClusterReplicas(true);
 		}
 
 		public DefaultLettuceClientConfig build() {

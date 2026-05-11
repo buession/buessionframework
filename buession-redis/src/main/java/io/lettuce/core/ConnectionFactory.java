@@ -29,8 +29,8 @@ import io.lettuce.core.api.StatefulConnection;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.internal.HostAndPort;
 import io.lettuce.core.resource.ClientResources;
+import org.apache.commons.pool2.BasePooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
-import org.apache.commons.pool2.PooledObjectFactory;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +48,7 @@ import java.util.function.Supplier;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class ConnectionFactory<K, V> implements PooledObjectFactory<StatefulConnection<K, V>> {
+public class ConnectionFactory<K, V> extends BasePooledObjectFactory<StatefulConnection<K, V>> {
 
 	private final static PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
 
@@ -88,27 +88,9 @@ public class ConnectionFactory<K, V> implements PooledObjectFactory<StatefulConn
 	}
 
 	@Override
-	public void activateObject(PooledObject<StatefulConnection<K, V>> pooledConnection) throws Exception {
-		// what to do ??
-	}
-
-	@Override
-	public void destroyObject(PooledObject<StatefulConnection<K, V>> pooledConnection) throws Exception {
-		final StatefulConnection<K, V> connection = pooledConnection.getObject();
-		if(connection.isOpen()){
-			try{
-				connection.close();
-			}catch(RuntimeException e){
-				logger.debug("Error while close", e);
-			}
-		}
-	}
-
-	@Override
-	public PooledObject<StatefulConnection<K, V>> makeObject() throws Exception {
+	public StatefulConnection<K, V> create() throws Exception {
 		try{
-			final StatefulConnection<K, V> connection = objectMaker.get();
-			return new DefaultPooledObject<>(connection);
+			return objectMaker.get();
 		}catch(RedisException e){
 			logger.debug("Error while makeObject", e);
 			throw e;
@@ -116,23 +98,35 @@ public class ConnectionFactory<K, V> implements PooledObjectFactory<StatefulConn
 	}
 
 	@Override
-	public void passivateObject(PooledObject<StatefulConnection<K, V>> pooledConnection) throws Exception {
-		final StatefulConnection<K, V> connection = pooledConnection.getObject();
-		reAuthenticate(connection);
+	public void activateObject(final PooledObject<StatefulConnection<K, V>> connection) throws Exception {
+		// The default implementation is a no-op.
 	}
 
 	@Override
-	public boolean validateObject(PooledObject<StatefulConnection<K, V>> pooledConnection) {
-		final StatefulConnection<K, V> connection = pooledConnection.getObject();
+	public boolean validateObject(PooledObject<StatefulConnection<K, V>> connection) {
+		final StatefulConnection<K, V> conn = connection.getObject();
 		try{
-			if(connection.isOpen() == false){
-				return false;
-			}
-			reAuthenticate(connection);
-			return true;//jedis.ping();
+			return conn.isOpen();
 		}catch(final Exception e){
 			logger.warn("Error while validating pooled Connection object.", e);
 			return false;
+		}
+	}
+
+	@Override
+	public PooledObject<StatefulConnection<K, V>> wrap(StatefulConnection<K, V> connection) {
+		return new DefaultPooledObject<>(connection);
+	}
+
+	@Override
+	public void destroyObject(PooledObject<StatefulConnection<K, V>> connection) throws Exception {
+		final StatefulConnection<K, V> conn = connection.getObject();
+		if(conn.isOpen()){
+			try{
+				conn.close();
+			}catch(RuntimeException e){
+				logger.debug("Error while close", e);
+			}
 		}
 	}
 
@@ -190,9 +184,6 @@ public class ConnectionFactory<K, V> implements PooledObjectFactory<StatefulConn
 		//builder.reconnectDelay();
 
 		return builder.build();
-	}
-
-	private void reAuthenticate(StatefulConnection<K, V> connection) throws Exception {
 	}
 
 }

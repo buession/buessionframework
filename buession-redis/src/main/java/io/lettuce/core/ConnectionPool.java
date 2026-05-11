@@ -27,8 +27,8 @@ package io.lettuce.core;
 import io.lettuce.core.api.StatefulConnection;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.internal.HostAndPort;
-import io.lettuce.core.support.caching.RedisCache;
 import org.apache.commons.pool2.PooledObjectFactory;
+import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 /**
@@ -42,34 +42,94 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class ConnectionPool<K, V> extends Pool<StatefulConnection<K, V>> {
+public class ConnectionPool<K, V> extends GenericObjectPool<StatefulConnection<K, V>> {
 
-	public ConnectionPool(PooledObjectFactory<StatefulConnection<K, V>> factory) {
+	public ConnectionPool(final PooledObjectFactory<StatefulConnection<K, V>> factory) {
 		super(factory);
 	}
 
-	public ConnectionPool(PooledObjectFactory<StatefulConnection<K, V>> factory,
-	                      GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig) {
+	public ConnectionPool(final PooledObjectFactory<StatefulConnection<K, V>> factory,
+	                      final GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig) {
 		super(factory, poolConfig);
 	}
 
-	public ConnectionPool(HostAndPort hostAndPort, LettuceClientConfig clientConfig, RedisCodec<K, V> redisCodec) {
+	public ConnectionPool(final HostAndPort hostAndPort, final LettuceClientConfig clientConfig,
+	                      final RedisCodec<K, V> redisCodec) {
 		this(new ConnectionFactory<>(hostAndPort, clientConfig, redisCodec));
 	}
 
-	public ConnectionPool(HostAndPort hostAndPort, LettuceClientConfig clientConfig, RedisCodec<K, V> redisCodec,
-	                      RedisCache<K, V> cache) {
-		this(new ConnectionFactory<>(hostAndPort, clientConfig, redisCodec));
-	}
-
-	public ConnectionPool(HostAndPort hostAndPort, LettuceClientConfig clientConfig, RedisCodec<K, V> redisCodec,
-	                      GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig) {
+	public ConnectionPool(final HostAndPort hostAndPort, final LettuceClientConfig clientConfig,
+	                      final RedisCodec<K, V> redisCodec,
+	                      final GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig) {
 		this(new ConnectionFactory<>(hostAndPort, clientConfig, redisCodec), poolConfig);
 	}
 
-	public ConnectionPool(HostAndPort hostAndPort, LettuceClientConfig clientConfig, RedisCodec<K, V> redisCodec,
-	                      RedisCache<K, V> cache, GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig) {
-		this(new ConnectionFactory<>(hostAndPort, clientConfig, redisCodec), poolConfig);
+	public StatefulConnection<K, V> getResource() {
+		return borrowObject();
+	}
+
+	@Override
+	public StatefulConnection<K, V> borrowObject() {
+		try{
+			return super.borrowObject();
+		}catch(RedisException re){
+			throw re;
+		}catch(Exception e){
+			throw new RedisException("Could not get a resource from the pool", e);
+		}
+	}
+
+	public void returnResource(final StatefulConnection<K, V> resource) {
+		returnObject(resource);
+	}
+
+	@Override
+	public void returnObject(final StatefulConnection<K, V> resource) {
+		if(resource == null){
+			return;
+		}
+
+		try{
+			super.returnObject(resource);
+		}catch(RuntimeException e){
+			throw new RedisException("Could not return the resource to the pool", e);
+		}
+	}
+
+	public void returnBrokenResource(final StatefulConnection<K, V> resource) {
+		if(resource == null){
+			return;
+		}
+
+		try{
+			super.invalidateObject(resource);
+		}catch(Exception e){
+			throw new RedisException("Could not return the broken resource to the pool", e);
+		}
+	}
+
+	@Override
+	public void addObjects(int count) {
+		try{
+			for(int i = 0; i < count; i++){
+				addObject();
+			}
+		}catch(Exception e){
+			throw new RedisException("Error trying to add idle objects", e);
+		}
+	}
+
+	@Override
+	public void close() {
+		try{
+			super.close();
+		}catch(RuntimeException e){
+			throw new RedisException("Could not destroy the pool", e);
+		}
+	}
+
+	public void destroy() {
+		close();
 	}
 
 }

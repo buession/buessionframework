@@ -27,8 +27,10 @@ package com.buession.redis.lettuce;
 import com.buession.core.builder.SetBuilder;
 import com.buession.redis.RedisTemplate;
 import com.buession.redis.client.connection.RedisNode;
+import com.buession.redis.client.connection.RedisSentinelNode;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceClusterDataSource;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceDataSource;
+import com.buession.redis.client.connection.datasource.lettuce.LettuceSentinelDataSource;
 import com.buession.redis.core.Options;
 import com.buession.redis.core.PoolConfig;
 
@@ -45,6 +47,20 @@ public abstract class AbstractLettuceRedisTest {
 		dataSource.setHost("192.168.0.161");
 		dataSource.setPort(30341);
 		dataSource.setDatabase(1);
+		dataSource.setPassword("abc123456");
+		dataSource.setPoolConfig(new PoolConfig());
+
+		return dataSource;
+	}
+
+	protected LettuceSentinelDataSource sentinelDataSource() {
+		LettuceSentinelDataSource dataSource = new LettuceSentinelDataSource();
+		Set<RedisSentinelNode> redisNodes = SetBuilder.<RedisSentinelNode>create()
+				.add(new RedisSentinelNode("192.168.0.161", 32252))
+				.build();
+
+		dataSource.setSentinels(redisNodes);
+		dataSource.setMasterName("sentinel-master");
 		dataSource.setPassword("abc123456");
 		dataSource.setPoolConfig(new PoolConfig());
 
@@ -74,7 +90,7 @@ public abstract class AbstractLettuceRedisTest {
 	protected RedisTemplate redisTemplate() {
 		Options options = new Options();
 		options.setPrefix("test:");
-		RedisTemplate redisTemplate = new RedisTemplate(dataSource(), options);
+		RedisTemplate redisTemplate = new RedisTemplate(sentinelDataSource(), options);
 
 		redisTemplate.afterPropertiesSet();
 

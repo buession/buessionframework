@@ -27,6 +27,7 @@ package com.buession.redis.client.connection.jedis;
 import com.buession.core.utils.FieldUtils;
 import com.buession.core.validator.Validate;
 import com.buession.redis.client.connection.AbstractRedisConnection;
+import com.buession.redis.client.connection.RedisNode;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisRedisDataSource;
 import com.buession.redis.core.PoolConfig;
@@ -41,6 +42,7 @@ import com.buession.redis.transaction.DefaultTransactionProxy;
 import redis.clients.jedis.Connection;
 import redis.clients.jedis.ConnectionPoolConfig;
 import redis.clients.jedis.DefaultJedisClientConfig;
+import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.SslOptions;
 import redis.clients.jedis.UnifiedJedis;
 import redis.clients.jedis.csc.CacheConfig;
@@ -48,6 +50,9 @@ import redis.clients.jedis.providers.ConnectionProvider;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Jedis Redis 连接对象抽象类
@@ -170,10 +175,6 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 		return JedisRedisExceptionUtils.convert(e);
 	}
 
-	@Override
-	protected void internalInit() {
-	}
-
 	protected void commonClientConfigBuilder(final DefaultJedisClientConfig.Builder builder) {
 		if(builder == null){
 			return;
@@ -233,6 +234,13 @@ public abstract class AbstractJedisRedisConnection<C extends UnifiedJedis> exten
 				builder.sslOptions(sslOptionsBuilder.build());
 			}
 		}
+	}
+
+	protected static <N extends RedisNode> Set<HostAndPort> createNodes(final Set<N> nodes, final int defaultPort) {
+		return nodes.stream().filter(Objects::nonNull).map((node)->{
+			int port = node.getPort() == 0 ? defaultPort : node.getPort();
+			return new HostAndPort(node.getHost(), port);
+		}).collect(Collectors.toSet());
 	}
 
 	protected ConnectionProvider getConnectionProvider() {

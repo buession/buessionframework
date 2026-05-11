@@ -30,7 +30,7 @@ package com.buession.redis.client.connection;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class SentinelRedisNode extends RedisNode {
+public class RedisSentinelNode extends RedisNode {
 
 	private final static long serialVersionUID = -1057414498111465489L;
 
@@ -41,7 +41,7 @@ public class SentinelRedisNode extends RedisNode {
 	/**
 	 * 构造函数，设置 Redis 默认地址和默认哨兵端口
 	 */
-	public SentinelRedisNode() {
+	public RedisSentinelNode() {
 		super(DEFAULT_HOST, DEFAULT_SENTINEL_PORT);
 	}
 
@@ -51,7 +51,7 @@ public class SentinelRedisNode extends RedisNode {
 	 * @param host
 	 * 		Redis 地址
 	 */
-	public SentinelRedisNode(String host) {
+	public RedisSentinelNode(String host) {
 		super(host, DEFAULT_SENTINEL_PORT);
 	}
 
@@ -63,7 +63,7 @@ public class SentinelRedisNode extends RedisNode {
 	 * @param port
 	 * 		Redis 哨兵端口
 	 */
-	public SentinelRedisNode(String host, int port) {
+	public RedisSentinelNode(String host, int port) {
 		super(host, port);
 	}
 

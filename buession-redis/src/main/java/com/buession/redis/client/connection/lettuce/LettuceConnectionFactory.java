@@ -49,19 +49,19 @@ public final class LettuceConnectionFactory extends AbstractConnectionFactory<Le
 	@Override
 	public RedisStandaloneConnection getStandaloneConnection() {
 		final LettuceDataSource dataSource = (LettuceDataSource) getDataSource();
-		return new LettuceConnection<>(dataSource, dataSource.getPoolConfig(), new ByteArrayCodec());
+		return new LettuceConnection<>(dataSource, dataSource.getPoolConfig(), ByteArrayCodec.INSTANCE);
 	}
 
 	@Override
 	public RedisSentinelConnection getSentinelConnection() {
 		final LettuceSentinelDataSource dataSource = (LettuceSentinelDataSource) getDataSource();
-		return new LettuceSentinelConnection<>(dataSource, dataSource.getPoolConfig(), new ByteArrayCodec());
+		return new LettuceSentinelConnection<>(dataSource, dataSource.getPoolConfig(), ByteArrayCodec.INSTANCE);
 	}
 
 	@Override
 	public RedisClusterConnection getClusterConnection() {
 		final LettuceClusterDataSource dataSource = (LettuceClusterDataSource) getDataSource();
-		return new LettuceClusterConnection<>(dataSource, dataSource.getPoolConfig(), new ByteArrayCodec());
+		return new LettuceClusterConnection<>(dataSource, dataSource.getPoolConfig(), ByteArrayCodec.INSTANCE);
 	}
 
 }

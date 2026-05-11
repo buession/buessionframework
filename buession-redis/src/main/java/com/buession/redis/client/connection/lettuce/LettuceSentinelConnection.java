@@ -24,12 +24,11 @@
  */
 package com.buession.redis.client.connection.lettuce;
 
-import com.buession.core.converter.mapper.PropertyMapper;
 import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisSentinelConnection;
-import com.buession.redis.client.connection.SentinelRedisNode;
+import com.buession.redis.client.connection.RedisSentinelNode;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceSentinelDataSource;
 import com.buession.redis.core.Constants;
 import com.buession.redis.core.PoolConfig;
@@ -41,28 +40,17 @@ import com.buession.redis.transaction.Transaction;
 import com.buession.redis.utils.SafeEncoder;
 import io.lettuce.core.DefaultLettuceClientConfig;
 import io.lettuce.core.LettuceClientConfig;
-import io.lettuce.core.RedisCredentialsProvider;
 import io.lettuce.core.RedisSentinelClient;
-import io.lettuce.core.RedisURI;
-import io.lettuce.core.StaticCredentialsProvider;
-import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.builders.SentinelClientBuilder;
 import io.lettuce.core.codec.RedisCodec;
-import io.lettuce.core.internal.HostAndPort;
-import io.lettuce.core.sentinel.api.StatefulRedisSentinelConnection;
-import io.lettuce.core.sentinel.api.sync.RedisSentinelCommands;
 
-import java.time.Duration;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -238,62 +226,9 @@ public class LettuceSentinelConnection<K, V> extends AbstractLettuceRedisConnect
 		return transaction;
 	}
 
-	private RedisSentinelCommands<K, V> getSentinelCommands(final LettuceSentinelDataSource dataSource) {
-		return null;//delegate.sync();
-	}
-
-	protected <K, V> StatefulRedisSentinelConnection<K, V> createStatefulRedisConnection(
-			final RedisCodec<K, V> codec) {
-		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
-		final LettuceSentinelDataSource dataSource = (LettuceSentinelDataSource) getDataSource();
-		final RedisURI.Builder redisURIBuilder = RedisURI.builder();
-		final RedisCredentialsProvider redisCredentialsProvider = Validate.hasText(dataSource.getPassword()) ?
-				new StaticCredentialsProvider(Validate.hasText(dataSource.getUsername()) ? dataSource.getUsername() :
-											  null, dataSource.getPassword().toCharArray()) : null;
-
-		if(dataSource.getDatabase() >= 0){
-			redisURIBuilder.withDatabase(dataSource.getDatabase());
-		}
-
-		propertyMapper.from(redisCredentialsProvider).to(redisURIBuilder::withAuthentication);
-		propertyMapper.from(dataSource.getClientName()).to(redisURIBuilder::withClientName);
-
-		if(dataSource.getConnectTimeout() > 0){
-			redisURIBuilder.withTimeout(Duration.ofMillis(dataSource.getConnectTimeout()));
-		}
-
-		redisURIBuilder.withSsl(dataSource.getSslOptions() != null);
-
-		return null;//RedisClient.create(redisURIBuilder.build()).connect(codec);
-	}
-
-	protected <K, V> StatefulRedisConnection<K, V> createStatefulRedisSentinelConnection(
-			final RedisCodec<K, V> codec) {
-		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
-		final LettuceSentinelDataSource dataSource = (LettuceSentinelDataSource) getDataSource();
-		final RedisURI.Builder redisURIBuilder = RedisURI.builder();
-		final RedisCredentialsProvider redisCredentialsProvider = Validate.hasText(dataSource.getPassword()) ?
-				new StaticCredentialsProvider(Validate.hasText(dataSource.getUsername()) ? dataSource.getUsername() :
-											  null, dataSource.getPassword().toCharArray()) : null;
-
-		propertyMapper.from(redisCredentialsProvider).to(redisURIBuilder::withAuthentication);
-		propertyMapper.from(dataSource.getSentinelClientName()).to(redisURIBuilder::withClientName);
-
-		if(dataSource.getSentinelConnectTimeout() > 0){
-			redisURIBuilder.withTimeout(Duration.ofMillis(dataSource.getSentinelConnectTimeout()));
-		}
-
-		redisURIBuilder.withSsl(dataSource.getSslOptions() != null);
-
-		return null;//RedisClient.create(redisURIBuilder.build()).connect(codec);
-	}
-
 	@Override
-	protected Status doConnect() throws RedisConnectionFailureException {
-		if(isConnected()){
-			return Status.SUCCESS;
-		}
-
+	protected void internalInit() {
+		super.internalInit();
 		if(client == null){
 			final LettuceSentinelDataSource dataSource = (LettuceSentinelDataSource) getDataSource();
 			final DefaultLettuceClientConfig.Builder clientConfigBuilder = DefaultLettuceClientConfig.builder();
@@ -305,9 +240,9 @@ public class LettuceSentinelConnection<K, V> extends AbstractLettuceRedisConnect
 			}
 
 			final SentinelClientBuilder<K, V, RedisSentinelClient<K, V>> builder = RedisSentinelClient.<K, V>builder()
+					.sentinels(createNodes(dataSource.getSentinels(), RedisSentinelNode.DEFAULT_SENTINEL_PORT))
 					.clientConfig(clientConfigBuilder.build())
-					.sentinelClientConfig(createSentinelLettuceClientConfig(dataSource))
-					.sentinels(createSentinelHosts(dataSource.getSentinels())).codec(getCodec());
+					.sentinelClientConfig(createSentinelLettuceClientConfig(dataSource)).codec(getCodec());
 
 			Optional.ofNullable(getConnectionPoolConfig()).ifPresent(builder::poolConfig);
 			//Optional.ofNullable(getCacheConfig()).ifPresent(builder::cacheConfig);
@@ -316,6 +251,13 @@ public class LettuceSentinelConnection<K, V> extends AbstractLettuceRedisConnect
 			}
 
 			client = builder.build();
+		}
+	}
+
+	@Override
+	protected Status doConnect() throws RedisConnectionFailureException {
+		if(isConnected()){
+			return Status.SUCCESS;
 		}
 
 		return client == null ? Status.FAILURE : Status.SUCCESS;
@@ -341,17 +283,6 @@ public class LettuceSentinelConnection<K, V> extends AbstractLettuceRedisConnect
 		propertyMapper.from(dataSource.getSentinelClientName()).as(clientConfigBuilder::clientName);
 
 		return clientConfigBuilder.build();
-	}
-
-	protected Set<HostAndPort> createSentinelHosts(final Collection<SentinelRedisNode> sentinelNodes) {
-		if(Validate.isEmpty(sentinelNodes)){
-			return Collections.emptySet();
-		}
-
-		return sentinelNodes.stream().filter(Objects::nonNull).map(node->{
-			int port = node.getPort() == 0 ? SentinelRedisNode.DEFAULT_SENTINEL_PORT : node.getPort();
-			return HostAndPort.of(node.getHost(), port);
-		}).collect(Collectors.toSet());
 	}
 
 	protected List<RedisServer> parseRedisServer(final List<Map<K, V>> nodes, final Role role) {

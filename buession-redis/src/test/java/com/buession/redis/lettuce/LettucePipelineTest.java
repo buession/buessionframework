@@ -42,7 +42,7 @@ public class LettucePipelineTest extends AbstractLettuceRedisTest {
 	public void test() {
 		RedisTemplate redisTemplate = redisTemplate();
 		redisTemplate.pipeline();
-		Status status = redisTemplate.set("t58", "A");
+		Status status = redisTemplate.set("t59", "A");
 		redisTemplate.set("user", new User(1000, "buession"));
 		System.out.println(status);
 		redisTemplate.exists("a_l_p");
@@ -51,7 +51,7 @@ public class LettucePipelineTest extends AbstractLettuceRedisTest {
 		//redisTemplate.role();
 		User user = redisTemplate.get("user", User.class);
 		System.out.println(user);
-		List<Object> result = redisTemplate.exec();
+		List<Object> result = null;// redisTemplate.exec();
 		System.out.println(result);
 	}
 

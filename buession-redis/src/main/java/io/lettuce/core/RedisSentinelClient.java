@@ -24,6 +24,7 @@
  */
 package io.lettuce.core;
 
+import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.builders.SentinelClientBuilder;
 import io.lettuce.core.providers.ConnectionProvider;
 
@@ -55,12 +56,13 @@ public class RedisSentinelClient<K, V> extends BaseRedisClient<K, V> {
 
 	@Override
 	protected RedisCommandsInvocationHandler<K, V> createRedisCommandsInvocationHandler() {
-		return null;
+		return new StatefulRedisCommandsHandler<>((StatefulRedisConnection<K, V>) connectionProvider.getConnection());
 	}
 
 	@Override
 	protected RedisCommandsInvocationHandler<K, V> createRedisAsyncCommandsInvocationHandler() {
-		return null;
+		return new StatefulRedisCommandsHandler<>(
+				(StatefulRedisConnection<K, V>) connectionProvider.getConnection(), true);
 	}
 
 	/**

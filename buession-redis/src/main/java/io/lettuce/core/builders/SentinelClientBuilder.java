@@ -31,6 +31,8 @@ import io.lettuce.core.DefaultLettuceClientConfig;
 import io.lettuce.core.LettuceClientConfig;
 import io.lettuce.core.internal.HostAndPort;
 import io.lettuce.core.providers.ConnectionProvider;
+import io.lettuce.core.providers.PooledConnectionProvider;
+import io.lettuce.core.providers.SentineledConnectionProvider;
 import io.lettuce.core.resource.Delay;
 
 import java.time.Duration;
@@ -153,12 +155,7 @@ public abstract class SentinelClientBuilder<K, V, C> extends AbstractClientBuild
 
 	@Override
 	protected ConnectionProvider<K, V> createDefaultConnectionProvider() {
-		return null;
-		/*
-		return new SentineledConnectionProvider(this.masterName, this.clientConfig, this.cache,
-				this.poolConfig, this.sentinels, this.sentinelClientConfig, sentinelReconnectDelay);
-
-		 */
+		return new SentineledConnectionProvider<>(this.hostAndPort, this.clientConfig, this.codec, this.poolConfig)
 	}
 
 	@Override

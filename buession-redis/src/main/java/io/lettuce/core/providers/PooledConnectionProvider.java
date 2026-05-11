@@ -27,7 +27,6 @@ package io.lettuce.core.providers;
 import io.lettuce.core.ConnectionFactory;
 import io.lettuce.core.ConnectionPool;
 import io.lettuce.core.LettuceClientConfig;
-import io.lettuce.core.Pool;
 import io.lettuce.core.api.StatefulConnection;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.internal.HostAndPort;
@@ -51,40 +50,40 @@ import java.util.Map;
  */
 public class PooledConnectionProvider<K, V> implements ConnectionProvider<K, V> {
 
-	private final Pool<StatefulConnection<K, V>> pool;
+	private final ConnectionPool<K, V> pool;
 
 	private Object connectionMapKey = "";
 
-	public PooledConnectionProvider(HostAndPort hostAndPort, RedisCodec<K, V> redisCodec) {
+	public PooledConnectionProvider(final HostAndPort hostAndPort, final RedisCodec<K, V> redisCodec) {
 		this(new ConnectionFactory<>(hostAndPort, redisCodec));
 		this.connectionMapKey = hostAndPort;
 	}
 
-	public PooledConnectionProvider(HostAndPort hostAndPort, LettuceClientConfig clientConfig,
-	                                RedisCodec<K, V> redisCodec) {
+	public PooledConnectionProvider(final HostAndPort hostAndPort, final LettuceClientConfig clientConfig,
+	                                final RedisCodec<K, V> redisCodec) {
 		this(new ConnectionPool<>(hostAndPort, clientConfig, redisCodec));
 		this.connectionMapKey = hostAndPort;
 	}
 
-	public PooledConnectionProvider(HostAndPort hostAndPort, LettuceClientConfig clientConfig,
-	                                RedisCodec<K, V> redisCodec,
-	                                GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig) {
+	public PooledConnectionProvider(final HostAndPort hostAndPort, final LettuceClientConfig clientConfig,
+	                                final RedisCodec<K, V> redisCodec,
+	                                final GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig) {
 		this(new ConnectionPool<>(hostAndPort, clientConfig, redisCodec, poolConfig));
 		this.connectionMapKey = hostAndPort;
 	}
 
-	public PooledConnectionProvider(PooledObjectFactory<StatefulConnection<K, V>> factory) {
+	public PooledConnectionProvider(final PooledObjectFactory<StatefulConnection<K, V>> factory) {
 		this(new ConnectionPool<>(factory));
 		this.connectionMapKey = factory;
 	}
 
-	public PooledConnectionProvider(PooledObjectFactory<StatefulConnection<K, V>> factory,
-	                                GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig) {
+	public PooledConnectionProvider(final PooledObjectFactory<StatefulConnection<K, V>> factory,
+	                                final GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig) {
 		this(new ConnectionPool<>(factory, poolConfig));
 		this.connectionMapKey = factory;
 	}
 
-	private PooledConnectionProvider(Pool<StatefulConnection<K, V>> pool) {
+	private PooledConnectionProvider(ConnectionPool<K, V> pool) {
 		this.pool = pool;
 	}
 
@@ -93,7 +92,7 @@ public class PooledConnectionProvider<K, V> implements ConnectionProvider<K, V> 
 		pool.close();
 	}
 
-	public final Pool<StatefulConnection<K, V>> getPool() {
+	public final ConnectionPool<K, V> getPool() {
 		return pool;
 	}
 
@@ -108,7 +107,7 @@ public class PooledConnectionProvider<K, V> implements ConnectionProvider<K, V> 
 	}
 
 	@Override
-	public Map<?, Pool<StatefulConnection<K, V>>> getConnectionMap() {
+	public Map<?, ConnectionPool<K, V>> getConnectionMap() {
 		return Collections.singletonMap(connectionMapKey, pool);
 	}
 

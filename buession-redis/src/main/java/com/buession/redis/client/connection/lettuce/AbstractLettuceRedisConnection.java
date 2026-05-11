@@ -27,6 +27,7 @@ package com.buession.redis.client.connection.lettuce;
 import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
 import com.buession.redis.client.connection.AbstractRedisConnection;
+import com.buession.redis.client.connection.RedisNode;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceRedisDataSource;
 import com.buession.redis.core.PoolConfig;
 import com.buession.redis.exception.LettuceRedisExceptionUtils;
@@ -42,10 +43,14 @@ import io.lettuce.core.ConnectionPoolConfig;
 import io.lettuce.core.DefaultLettuceClientConfig;
 import io.lettuce.core.SslOptions;
 import io.lettuce.core.codec.RedisCodec;
+import io.lettuce.core.internal.HostAndPort;
 
 import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Lettuce Redis 连接对象抽象类
@@ -165,6 +170,13 @@ public abstract class AbstractLettuceRedisConnection<K, V, C extends BaseRedisCl
 	@Override
 	protected void internalInit() {
 		Assert.isNull(getCodec(), "Key and value codec cloud not be null.");
+	}
+
+	protected static <N extends RedisNode> Set<HostAndPort> createNodes(final Set<N> nodes, final int defaultPort) {
+		return nodes.stream().filter(Objects::nonNull).map((node)->{
+			int port = node.getPort() == 0 ? defaultPort : node.getPort();
+			return HostAndPort.of(node.getHost(), port);
+		}).collect(Collectors.toSet());
 	}
 
 	protected void commonClientConfigBuilder(final DefaultLettuceClientConfig.Builder builder) {

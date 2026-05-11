@@ -133,4 +133,8 @@ public interface LettuceClientConfig {
 		return SslOptions.create();
 	}
 
+	default boolean isReadOnlyForRedisClusterReplicas() {
+		return false;
+	}
+
 }

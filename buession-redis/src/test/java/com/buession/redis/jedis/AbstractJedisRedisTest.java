@@ -27,7 +27,7 @@ package com.buession.redis.jedis;
 import com.buession.core.builder.SetBuilder;
 import com.buession.redis.RedisTemplate;
 import com.buession.redis.client.connection.RedisNode;
-import com.buession.redis.client.connection.SentinelRedisNode;
+import com.buession.redis.client.connection.RedisSentinelNode;
 import com.buession.redis.client.connection.datasource.jedis.JedisClusterDataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisSentinelDataSource;
@@ -55,15 +55,13 @@ public abstract class AbstractJedisRedisTest {
 
 	protected JedisSentinelDataSource sentinelDataSource() {
 		JedisSentinelDataSource dataSource = new JedisSentinelDataSource();
-		Set<SentinelRedisNode> redisNodes = SetBuilder.<SentinelRedisNode>create()
-				.add(new SentinelRedisNode("192.168.0.231", 26371))
-				.add(new SentinelRedisNode("192.168.0.231", 26372))
-				.add(new SentinelRedisNode("192.168.0.231", 26373))
+		Set<RedisSentinelNode> redisNodes = SetBuilder.<RedisSentinelNode>create()
+				.add(new RedisSentinelNode("192.168.0.161", 32252))
 				.build();
 
 		dataSource.setSentinels(redisNodes);
-		dataSource.setMasterName("redis-master");
-		dataSource.setPassword("rds_PWD");
+		dataSource.setMasterName("sentinel-master");
+		dataSource.setPassword("abc123456");
 		dataSource.setPoolConfig(new PoolConfig());
 
 		return dataSource;
@@ -90,7 +88,7 @@ public abstract class AbstractJedisRedisTest {
 	protected RedisTemplate redisTemplate() {
 		Options options = new Options();
 		options.setPrefix("test:");
-		RedisTemplate redisTemplate = new RedisTemplate(dataSource(), options);
+		RedisTemplate redisTemplate = new RedisTemplate(sentinelDataSource(), options);
 
 		redisTemplate.afterPropertiesSet();
 

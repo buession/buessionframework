@@ -106,11 +106,8 @@ public class LettuceConnection<K, V> extends AbstractLettuceRedisConnection<K, V
 	}
 
 	@Override
-	protected Status doConnect() throws RedisConnectionFailureException {
-		if(isConnected()){
-			return Status.SUCCESS;
-		}
-
+	protected void internalInit() {
+		super.internalInit();
 		if(client == null){
 			final LettuceDataSource dataSource = (LettuceDataSource) getDataSource();
 			final DefaultLettuceClientConfig.Builder clientConfigBuilder = DefaultLettuceClientConfig.builder();
@@ -121,14 +118,21 @@ public class LettuceConnection<K, V> extends AbstractLettuceRedisConnection<K, V
 				clientConfigBuilder.database(dataSource.getDatabase());
 			}
 
-			final StandaloneClientBuilder<K, V, RedisStandaloneClient<K, V>> builder =
-					RedisStandaloneClient.<K, V>builder().clientConfig(clientConfigBuilder.build())
-							.hostAndPort(dataSource.getHost(), dataSource.getPort()).codec(getCodec());
+			final StandaloneClientBuilder<K, V, RedisStandaloneClient<K, V>> builder = RedisStandaloneClient.<K, V>builder()
+					.hostAndPort(dataSource.getHost(), dataSource.getPort()).codec(getCodec())
+					.clientConfig(clientConfigBuilder.build());
 
 			Optional.ofNullable(getConnectionPoolConfig()).ifPresent(builder::poolConfig);
 			//Optional.ofNullable(getCacheConfig()).ifPresent(builder::cacheConfig);
 
 			client = builder.build();
+		}
+	}
+
+	@Override
+	protected Status doConnect() throws RedisConnectionFailureException {
+		if(isConnected()){
+			return Status.SUCCESS;
 		}
 
 		return client == null ? Status.FAILURE : Status.SUCCESS;

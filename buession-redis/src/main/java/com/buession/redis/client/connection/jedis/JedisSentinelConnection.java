@@ -28,7 +28,7 @@ import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisSentinelConnection;
-import com.buession.redis.client.connection.SentinelRedisNode;
+import com.buession.redis.client.connection.RedisSentinelNode;
 import com.buession.redis.client.connection.datasource.jedis.JedisSentinelDataSource;
 import com.buession.redis.core.Constants;
 import com.buession.redis.core.PoolConfig;
@@ -37,24 +37,19 @@ import com.buession.redis.core.RedisServer;
 import com.buession.redis.core.Role;
 import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.exception.RedisConnectionFailureException;
-import redis.clients.jedis.BuilderFactory;
 import redis.clients.jedis.CommandArguments;
 import redis.clients.jedis.Connection;
 import redis.clients.jedis.DefaultJedisClientConfig;
-import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.JedisClientConfig;
 import redis.clients.jedis.Protocol;
 import redis.clients.jedis.RedisSentinelClient;
 import redis.clients.jedis.builders.SentinelClientBuilder;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -256,11 +251,7 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection<RedisS
 	}
 
 	@Override
-	protected Status doConnect() throws RedisConnectionFailureException {
-		if(isConnected()){
-			return Status.SUCCESS;
-		}
-
+	protected void internalInit() {
 		if(client == null){
 			final JedisSentinelDataSource dataSource = (JedisSentinelDataSource) getDataSource();
 			final DefaultJedisClientConfig.Builder clientConfigBuilder = DefaultJedisClientConfig.builder();
@@ -272,15 +263,22 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection<RedisS
 			}
 
 			final SentinelClientBuilder<RedisSentinelClient> builder = RedisSentinelClient.builder()
+					.sentinels(createNodes(dataSource.getSentinels(), RedisSentinelNode.DEFAULT_SENTINEL_PORT))
 					.clientConfig(clientConfigBuilder.build())
-					.sentinelClientConfig(createSentinelJedisClientConfig(dataSource))
-					.sentinels(createSentinelHosts(dataSource.getSentinels()));
+					.sentinelClientConfig(createSentinelJedisClientConfig(dataSource));
 
 			Optional.ofNullable(getConnectionPoolConfig()).ifPresent(builder::poolConfig);
 			Optional.ofNullable(getCacheConfig()).ifPresent(builder::cacheConfig);
 			propertyMapper.from(dataSource.getMasterName()).to(builder::masterName);
 
 			client = builder.build();
+		}
+	}
+
+	@Override
+	protected Status doConnect() throws RedisConnectionFailureException {
+		if(isConnected()){
+			return Status.SUCCESS;
 		}
 
 		return client == null ? Status.FAILURE : Status.SUCCESS;
@@ -305,17 +303,6 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection<RedisS
 		propertyMapper.from(dataSource.getSentinelClientName()).as(clientConfigBuilder::clientName);
 
 		return clientConfigBuilder.build();
-	}
-
-	protected Set<HostAndPort> createSentinelHosts(final Collection<SentinelRedisNode> sentinelNodes) {
-		if(Validate.isEmpty(sentinelNodes)){
-			return Collections.emptySet();
-		}
-
-		return sentinelNodes.stream().filter(Objects::nonNull).map(node->{
-			int port = node.getPort() == 0 ? SentinelRedisNode.DEFAULT_SENTINEL_PORT : node.getPort();
-			return new HostAndPort(node.getHost(), port);
-		}).collect(Collectors.toSet());
 	}
 
 	protected List<RedisServer> parseRedisServer(final List<Map<String, String>> nodes, final Role role) {

@@ -35,14 +35,11 @@ import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.transaction.Transaction;
 import redis.clients.jedis.DefaultJedisClientConfig;
-import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.RedisClusterClient;
 import redis.clients.jedis.builders.ClusterClientBuilder;
 
 import java.time.Duration;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Jedis 集群模式连接器
@@ -137,11 +134,7 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection<RedisCl
 	}
 
 	@Override
-	protected Status doConnect() throws RedisConnectionFailureException {
-		if(isConnected()){
-			return Status.SUCCESS;
-		}
-
+	protected void internalInit() {
 		if(client == null){
 			final JedisClusterDataSource dataSource = (JedisClusterDataSource) getDataSource();
 			final DefaultJedisClientConfig.Builder clientConfigBuilder = DefaultJedisClientConfig.builder();
@@ -149,7 +142,8 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection<RedisCl
 			commonClientConfigBuilder(clientConfigBuilder);
 
 			final ClusterClientBuilder<RedisClusterClient> builder = RedisClusterClient.builder()
-					.nodes(createNodes(dataSource.getNodes())).clientConfig(clientConfigBuilder.build());
+					.nodes(createNodes(dataSource.getNodes(), RedisNode.DEFAULT_PORT))
+					.clientConfig(clientConfigBuilder.build());
 
 			Optional.ofNullable(getConnectionPoolConfig()).ifPresent(builder::poolConfig);
 			Optional.ofNullable(getCacheConfig()).ifPresent(builder::cacheConfig);
@@ -162,14 +156,15 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection<RedisCl
 
 			client = builder.build();
 		}
-
-		return client == null ? Status.FAILURE : Status.SUCCESS;
 	}
 
-	private static Set<HostAndPort> createNodes(final Set<RedisNode> nodes) {
-		return nodes.stream().map((node)->new HostAndPort(node.getHost(),
-						node.getPort() == 0 ? com.buession.redis.core.RedisNode.DEFAULT_PORT : node.getPort()))
-				.collect(Collectors.toSet());
+	@Override
+	protected Status doConnect() throws RedisConnectionFailureException {
+		if(isConnected()){
+			return Status.SUCCESS;
+		}
+
+		return client == null ? Status.FAILURE : Status.SUCCESS;
 	}
 
 }

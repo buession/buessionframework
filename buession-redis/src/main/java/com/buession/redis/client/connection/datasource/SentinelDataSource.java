@@ -24,7 +24,7 @@
  */
 package com.buession.redis.client.connection.datasource;
 
-import com.buession.redis.client.connection.SentinelRedisNode;
+import com.buession.redis.client.connection.RedisSentinelNode;
 
 import java.util.Set;
 
@@ -154,7 +154,7 @@ public interface SentinelDataSource extends DataSource {
 	 *
 	 * @return 哨兵节点
 	 */
-	Set<SentinelRedisNode> getSentinels();
+	Set<RedisSentinelNode> getSentinels();
 
 	/**
 	 * 设置哨兵节点
@@ -162,6 +162,6 @@ public interface SentinelDataSource extends DataSource {
 	 * @param sentinels
 	 * 		哨兵节点
 	 */
-	void setSentinels(Set<SentinelRedisNode> sentinels);
+	void setSentinels(Set<RedisSentinelNode> sentinels);
 
 }
