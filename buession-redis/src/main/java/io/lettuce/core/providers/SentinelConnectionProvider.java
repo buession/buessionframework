@@ -31,6 +31,7 @@ import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisConnectionException;
 import io.lettuce.core.RedisFuture;
 import io.lettuce.core.RedisURI;
+import io.lettuce.core.api.AsyncCloseable;
 import io.lettuce.core.api.StatefulConnection;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.codec.StringCodec;
@@ -74,9 +75,7 @@ public class SentinelConnectionProvider<K, V> implements ConnectionProvider<K, V
 
 	private final static Sleeper DEFAULT_SLEEPER = Thread::sleep;
 
-	private volatile HostAndPort currentMaster;
-
-	private volatile ConnectionPool<K, V> pool;
+	private final Set<HostAndPort> sentinels;
 
 	private final String masterName;
 
@@ -84,9 +83,15 @@ public class SentinelConnectionProvider<K, V> implements ConnectionProvider<K, V
 
 	private final GenericObjectPoolConfig<StatefulConnection<K, V>> masterPoolConfig;
 
-	private final Collection<SentinelListener> sentinelListeners = new ArrayList<>();
+	private volatile HostAndPort currentMaster;
+
+	private volatile ConnectionPool<K, V> pool;
+
+	private final SentinelConnectionFactory<String, String> sentinelConnectionFactory;
 
 	private final LettuceClientConfig sentinelClientConfig;
+
+	protected volatile StatefulRedisSentinelConnection<String, String> sentinelConnection;
 
 	private final RedisCodec<K, V> redisCodec;
 
@@ -94,7 +99,7 @@ public class SentinelConnectionProvider<K, V> implements ConnectionProvider<K, V
 
 	private final Lock initPoolLock = new ReentrantLock(true);
 
-	private final SentinelConnectionFactory<String, String> sentinelConnectionFactory;
+	private final Collection<SentinelListener> sentinelListeners = new ArrayList<>();
 
 	private final Sleeper sleeper;
 
@@ -141,6 +146,7 @@ public class SentinelConnectionProvider<K, V> implements ConnectionProvider<K, V
 	                                   final RedisCodec<K, V> redisCodec, final Delay resubscribeDelay,
 	                                   final SentinelConnectionFactory<String, String> sentinelConnectionFactory,
 	                                   final Sleeper sleeper) {
+		this.sentinels = sentinels;
 		this.masterName = masterName;
 
 		this.masterClientConfig = masterClientConfig;
@@ -181,9 +187,39 @@ public class SentinelConnectionProvider<K, V> implements ConnectionProvider<K, V
 		return Collections.singletonMap(currentMaster, pool);
 	}
 
+	public StatefulRedisSentinelConnection<String, String> getSentinelConnection() {
+		if(sentinelConnection == null){
+			for(HostAndPort sentinel : sentinels){
+				try(StatefulRedisSentinelConnection<String, String> sentinelConnection = getSentinelConnection(
+						sentinel)){
+					this.sentinelConnection = sentinelConnection;
+					break;
+				}catch(Exception e){
+					logger.warn("Connecting to Sentinel {} failure: {}.", sentinel, e.getMessage(), e);
+				}
+			}
+		}
+
+		return sentinelConnection;
+	}
+
+	public StatefulRedisSentinelConnection<String, String> getSentinelConnection(HostAndPort sentinel) {
+		logger.debug("Connecting to Sentinel {}...", sentinel);
+
+		try(StatefulRedisSentinelConnection<String, String> sentinelConnection = sentinelConnectionFactory.createConnection(
+				sentinel, sentinelClientConfig)){
+			return sentinelConnection;
+		}catch(Exception e){
+			logger.warn("Connecting to Sentinel {} failure: {}.", sentinel, e.getMessage(), e);
+			return null;
+		}
+	}
+
 	@Override
 	public void close() {
 		sentinelListeners.forEach(SentinelListener::shutdown);
+
+		asyncCloseQuietly(sentinelConnection);
 
 		pool.close();
 	}
@@ -230,15 +266,15 @@ public class SentinelConnectionProvider<K, V> implements ConnectionProvider<K, V
 
 		for(HostAndPort sentinel : sentinels){
 			logger.debug("Connecting to Sentinel {}...", sentinel);
-
-			try(StatefulRedisSentinelConnection<String, String> sentinelConnection = sentinelConnectionFactory.createConnection(
-					sentinel, sentinelClientConfig)){
+			try(StatefulRedisSentinelConnection<String, String> sentinelConnection = getSentinelConnection()){
 				SocketAddress masterAddr = sentinelConnection.sync().getMasterAddrByName(masterName);
 				sentinelAvailable = true;
 
 				if(masterAddr instanceof InetSocketAddress inetSocketAddress){
 					master = toHostAndPort(inetSocketAddress);
 				}else{
+					closeQuietly(this.sentinelConnection);
+					this.sentinelConnection = getSentinelConnection(sentinel);
 					continue;
 				}
 
@@ -301,7 +337,7 @@ public class SentinelConnectionProvider<K, V> implements ConnectionProvider<K, V
 						break;
 					}
 
-					sentinelConnection = sentinelConnectionFactory.createConnection(node, sentinelClientConfig);
+					sentinelConnection = getSentinelConnection(node);
 					RedisFuture<SocketAddress> future = sentinelConnection.async().getMasterAddrByName(masterName);
 
 					future.thenAccept(masterAddr->{
@@ -363,7 +399,7 @@ public class SentinelConnectionProvider<K, V> implements ConnectionProvider<K, V
 						logger.debug("Unsubscribing from sentinel {}.", node);
 					}
 				}finally{
-					closeQuietly(sentinelConnection);
+					asyncCloseQuietly(sentinelConnection);
 				}
 			}
 		}
@@ -374,7 +410,7 @@ public class SentinelConnectionProvider<K, V> implements ConnectionProvider<K, V
 				logger.debug("Shutting down listener on {}.", node);
 				running.set(false);
 				// This isn't good, the Jedis object is not thread safe
-				closeQuietly(sentinelConnection);
+				asyncCloseQuietly(sentinelConnection);
 			}catch(RuntimeException e){
 				logger.error("Error while shutting down.", e);
 			}
@@ -396,6 +432,16 @@ public class SentinelConnectionProvider<K, V> implements ConnectionProvider<K, V
 		if(closeable != null){
 			try{
 				closeable.close();
+			}catch(Exception e){
+				//
+			}
+		}
+	}
+
+	private void asyncCloseQuietly(AsyncCloseable closeable) {
+		if(closeable != null){
+			try{
+				closeable.closeAsync();
 			}catch(Exception e){
 				//
 			}

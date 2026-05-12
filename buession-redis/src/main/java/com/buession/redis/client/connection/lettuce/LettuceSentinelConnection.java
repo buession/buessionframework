@@ -155,64 +155,64 @@ public class LettuceSentinelConnection<K, V> extends AbstractLettuceRedisConnect
 
 	@Override
 	public String myId() {
-		return null;
+		return client.myId();
 	}
 
 	@Override
 	public List<RedisNode> sentinels(String masterName) {
-		return null;
+		return client.sentinels(masterName);
 	}
 
 	@Override
 	public String sentinelSet(String masterName, Map<String, String> parameters) {
 		Assert.isBlank(masterName, "Redis master name cloud not be 'null' or empty for loading sentinel set.");
-		return null;
+		return client.sentinelSet(masterName, parameters);
 	}
 
 	@Override
 	public List<RedisServer> masters() {
-		return null;
+		return client.masters();
 	}
 
 	@Override
 	public RedisServer master(String masterName) {
 		Assert.isBlank(masterName, "Redis master name cloud not be 'null' or empty for loading master.");
-		return null;
+		return client.master(masterName);
 	}
 
 	@Override
 	public List<RedisServer> slaves(String masterName) {
 		Assert.isBlank(masterName, "Redis master name cloud not be 'null' or empty for loading slaves.");
-		return null;
+		return client.slaves(masterName);
 	}
 
 	@Override
 	public List<RedisServer> replicas(String masterName) {
 		Assert.isBlank(masterName, "Redis master name cloud not be 'null' or empty for loading replicas.");
-		return null;
+		return client.replicas(masterName);
 	}
 
 	@Override
 	public Status failover(String masterName) {
 		Assert.isBlank(masterName, "Redis master name cloud not be 'null' or empty for loading failover.");
-		return null;
+		return client.failover(masterName);
 	}
 
 	@Override
 	public Status monitor(String masterName, String ip, int port, int quorum) {
 		Assert.isBlank(masterName, "Redis master name cloud not be 'null' or empty for loading failover.");
-		return null;
+		return client.monitor(masterName, ip, port, quorum);
 	}
 
 	@Override
 	public Long reset(String pattern) {
-		return null;
+		return client.reset(pattern);
 	}
 
 	@Override
 	public Status remove(String masterName) {
 		Assert.isBlank(masterName, "Redis master name cloud be 'null' or empty when trying to remove.");
-		return null;
+		return client.remove(masterName);
 	}
 
 	@Override

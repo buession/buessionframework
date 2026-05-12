@@ -24,11 +24,19 @@
  */
 package io.lettuce.core;
 
+import com.buession.lang.Status;
+import com.buession.redis.core.Constants;
+import com.buession.redis.core.RedisNode;
+import com.buession.redis.core.RedisServer;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.builders.SentinelClientBuilder;
 import io.lettuce.core.internal.HostAndPort;
 import io.lettuce.core.providers.ConnectionProvider;
 import io.lettuce.core.providers.SentinelConnectionProvider;
+import io.lettuce.core.sentinel.api.sync.RedisSentinelCommands;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Lettuce Redis Sentinel 客户端
@@ -43,12 +51,67 @@ import io.lettuce.core.providers.SentinelConnectionProvider;
  */
 public class RedisSentinelClient<K, V> extends BaseRedisClient<K, V> {
 
+	private RedisSentinelCommands<String, String> redisSentinelCommands;
+
 	private RedisSentinelClient(ConnectionProvider<K, V> connectionProvider) {
 		super(connectionProvider);
 	}
 
 	public HostAndPort getCurrentMaster() {
 		return ((SentinelConnectionProvider<K, V>) connectionProvider).getCurrentMaster();
+	}
+
+	public String myId() {
+		return null;
+	}
+
+	public List<RedisNode> sentinels(String masterName) {
+		return null;
+	}
+
+	public String sentinelSet(String masterName, Map<String, String> parameters) {
+		if(parameters != null){
+			parameters.forEach((key, value)->getRedisSentinelCommands().set(masterName, key, value));
+		}
+
+		return null;
+	}
+
+	public List<RedisServer> masters() {
+		getRedisSentinelCommands().masters();
+		return null;
+	}
+
+	public RedisServer master(String masterName) {
+		getRedisSentinelCommands().master(masterName);
+		return null;
+	}
+
+	public List<RedisServer> slaves(String masterName) {
+		getRedisSentinelCommands().slaves(masterName);
+		return null;
+	}
+
+	public List<RedisServer> replicas(String masterName) {
+		getRedisSentinelCommands().replicas(masterName);
+		return null;
+	}
+
+	public Status failover(String masterName) {
+		return Constants.OK.equals(getRedisSentinelCommands().failover(masterName)) ? Status.SUCCESS : Status.FAILURE;
+	}
+
+	public Status monitor(String masterName, String ip, int port, int quorum) {
+		return Constants.OK.equals(
+				getRedisSentinelCommands().monitor(masterName, ip, port, quorum)) ? Status.SUCCESS : Status.FAILURE;
+	}
+
+	public Long reset(String pattern) {
+		return getRedisSentinelCommands().reset(pattern);
+	}
+
+	public Status remove(String masterName) {
+		return Constants.OK.equals(getRedisSentinelCommands().remove(masterName)) ? Status.SUCCESS : Status.FAILURE;
 	}
 
 	/**
@@ -69,6 +132,15 @@ public class RedisSentinelClient<K, V> extends BaseRedisClient<K, V> {
 	protected RedisCommandsInvocationHandler<K, V> createRedisAsyncCommandsInvocationHandler() {
 		return new StatefulRedisCommandsHandler<>(
 				(StatefulRedisConnection<K, V>) connectionProvider.getConnection(), true);
+	}
+
+	private RedisSentinelCommands<String, String> getRedisSentinelCommands() {
+		if(redisSentinelCommands == null){
+			redisSentinelCommands = ((SentinelConnectionProvider<K, V>) connectionProvider).getSentinelConnection()
+					.sync();
+		}
+
+		return redisSentinelCommands;
 	}
 
 	/**
