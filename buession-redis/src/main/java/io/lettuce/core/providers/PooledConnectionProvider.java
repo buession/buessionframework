@@ -50,7 +50,7 @@ import java.util.Map;
  */
 public class PooledConnectionProvider<K, V> implements ConnectionProvider<K, V> {
 
-	private final ConnectionPool<K, V> pool;
+	private final ConnectionPool<K, V, StatefulConnection<K, V>> pool;
 
 	private Object connectionMapKey = "";
 
@@ -83,7 +83,7 @@ public class PooledConnectionProvider<K, V> implements ConnectionProvider<K, V> 
 		this.connectionMapKey = factory;
 	}
 
-	private PooledConnectionProvider(ConnectionPool<K, V> pool) {
+	private PooledConnectionProvider(ConnectionPool<K, V, StatefulConnection<K, V>> pool) {
 		this.pool = pool;
 	}
 
@@ -92,7 +92,7 @@ public class PooledConnectionProvider<K, V> implements ConnectionProvider<K, V> 
 		pool.close();
 	}
 
-	public final ConnectionPool<K, V> getPool() {
+	public final ConnectionPool<K, V, StatefulConnection<K, V>> getPool() {
 		return pool;
 	}
 
@@ -107,7 +107,7 @@ public class PooledConnectionProvider<K, V> implements ConnectionProvider<K, V> 
 	}
 
 	@Override
-	public Map<?, ConnectionPool<K, V>> getConnectionMap() {
+	public Map<?, ConnectionPool<K, V, StatefulConnection<K, V>>> getConnectionMap() {
 		return Collections.singletonMap(connectionMapKey, pool);
 	}
 

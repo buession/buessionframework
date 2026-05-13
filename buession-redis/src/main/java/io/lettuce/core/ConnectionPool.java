@@ -38,18 +38,19 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
  * 		Key 类型
  * @param <V>
  * 		值类型
+ * @param <CONN>
+ * 		连接类型
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class ConnectionPool<K, V> extends GenericObjectPool<StatefulConnection<K, V>> {
+public class ConnectionPool<K, V, CONN extends StatefulConnection<K, V>> extends GenericObjectPool<CONN> {
 
-	public ConnectionPool(final PooledObjectFactory<StatefulConnection<K, V>> factory) {
+	public ConnectionPool(final PooledObjectFactory<CONN> factory) {
 		super(factory);
 	}
 
-	public ConnectionPool(final PooledObjectFactory<StatefulConnection<K, V>> factory,
-	                      final GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig) {
+	public ConnectionPool(final PooledObjectFactory<CONN> factory, final GenericObjectPoolConfig<CONN> poolConfig) {
 		super(factory, poolConfig);
 	}
 
@@ -59,17 +60,17 @@ public class ConnectionPool<K, V> extends GenericObjectPool<StatefulConnection<K
 	}
 
 	public ConnectionPool(final HostAndPort hostAndPort, final LettuceClientConfig clientConfig,
-	                      final GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig,
+	                      final GenericObjectPoolConfig<CONN> poolConfig,
 	                      final RedisCodec<K, V> redisCodec) {
 		this(new ConnectionFactory<>(hostAndPort, clientConfig, redisCodec), poolConfig);
 	}
 
-	public StatefulConnection<K, V> getResource() {
+	public CONN getResource() {
 		return borrowObject();
 	}
 
 	@Override
-	public StatefulConnection<K, V> borrowObject() {
+	public CONN borrowObject() {
 		try{
 			return super.borrowObject();
 		}catch(RedisException re){
@@ -79,12 +80,12 @@ public class ConnectionPool<K, V> extends GenericObjectPool<StatefulConnection<K
 		}
 	}
 
-	public void returnResource(final StatefulConnection<K, V> resource) {
+	public void returnResource(final CONN resource) {
 		returnObject(resource);
 	}
 
 	@Override
-	public void returnObject(final StatefulConnection<K, V> resource) {
+	public void returnObject(final CONN resource) {
 		if(resource == null){
 			return;
 		}
@@ -96,7 +97,7 @@ public class ConnectionPool<K, V> extends GenericObjectPool<StatefulConnection<K
 		}
 	}
 
-	public void returnBrokenResource(final StatefulConnection<K, V> resource) {
+	public void returnBrokenResource(final CONN resource) {
 		if(resource == null){
 			return;
 		}

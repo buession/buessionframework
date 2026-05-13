@@ -85,7 +85,7 @@ public class SentinelConnectionProvider<K, V> implements ConnectionProvider<K, V
 
 	private volatile HostAndPort currentMaster;
 
-	private volatile ConnectionPool<K, V> pool;
+	private volatile ConnectionPool<K, V, StatefulConnection<K, V>> pool;
 
 	private final SentinelConnectionFactory<String, String> sentinelConnectionFactory;
 
@@ -178,12 +178,12 @@ public class SentinelConnectionProvider<K, V> implements ConnectionProvider<K, V
 	}
 
 	@Override
-	public Map<?, ConnectionPool<K, V>> getConnectionMap() {
+	public Map<?, ConnectionPool<K, V, StatefulConnection<K, V>>> getConnectionMap() {
 		return Collections.singletonMap(currentMaster, pool);
 	}
 
 	@Override
-	public Map<?, ConnectionPool<K, V>> getPrimaryNodesConnectionMap() {
+	public Map<?, ConnectionPool<K, V, StatefulConnection<K, V>>> getPrimaryNodesConnectionMap() {
 		return Collections.singletonMap(currentMaster, pool);
 	}
 
@@ -228,7 +228,7 @@ public class SentinelConnectionProvider<K, V> implements ConnectionProvider<K, V
 		return currentMaster;
 	}
 
-	private ConnectionPool<K, V> createNodePool(HostAndPort master) {
+	private ConnectionPool<K, V, StatefulConnection<K, V>> createNodePool(HostAndPort master) {
 		if(masterPoolConfig == null){
 			return new ConnectionPool<>(master, masterClientConfig, redisCodec);
 		}else{
@@ -243,8 +243,8 @@ public class SentinelConnectionProvider<K, V> implements ConnectionProvider<K, V
 			if(master.equals(currentMaster) == false){
 				currentMaster = master;
 
-				ConnectionPool<K, V> newPool = createNodePool(currentMaster);
-				ConnectionPool<K, V> existingPool = pool;
+				ConnectionPool<K, V, StatefulConnection<K, V>> newPool = createNodePool(currentMaster);
+				ConnectionPool<K, V, StatefulConnection<K, V>> existingPool = pool;
 
 				pool = newPool;
 				logger.info("Created connection pool to master at {}.", master);

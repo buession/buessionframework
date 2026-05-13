@@ -27,6 +27,7 @@ package io.lettuce.core;
 import com.buession.core.converter.mapper.PropertyMapper;
 import io.lettuce.core.api.StatefulConnection;
 import io.lettuce.core.codec.RedisCodec;
+import io.lettuce.core.cluster.RedisClusterClient;
 import io.lettuce.core.internal.HostAndPort;
 import io.lettuce.core.resource.ClientResources;
 import org.apache.commons.pool2.BasePooledObjectFactory;
@@ -44,11 +45,13 @@ import java.util.function.Supplier;
  * 		Key 类型
  * @param <V>
  * 		值类型
+ * @param <CONN>
+ * 		连接类型
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class ConnectionFactory<K, V> extends BasePooledObjectFactory<StatefulConnection<K, V>> {
+public class ConnectionFactory<K, V, CONN extends StatefulConnection<K, V>> extends BasePooledObjectFactory<CONN> {
 
 	private final static PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
 
@@ -60,7 +63,7 @@ public class ConnectionFactory<K, V> extends BasePooledObjectFactory<StatefulCon
 
 	private final boolean autoReconnect;
 
-	private final Supplier<StatefulConnection<K, V>> objectMaker;
+	private final Supplier<CONN> objectMaker;
 
 	private final static Logger logger = LoggerFactory.getLogger(ConnectionFactory.class);
 
@@ -88,7 +91,7 @@ public class ConnectionFactory<K, V> extends BasePooledObjectFactory<StatefulCon
 	}
 
 	@Override
-	public StatefulConnection<K, V> create() throws Exception {
+	public CONN create() throws Exception {
 		try{
 			return objectMaker.get();
 		}catch(RedisException e){
@@ -98,12 +101,8 @@ public class ConnectionFactory<K, V> extends BasePooledObjectFactory<StatefulCon
 	}
 
 	@Override
-	public void activateObject(final PooledObject<StatefulConnection<K, V>> connection) throws Exception {
-	}
-
-	@Override
-	public boolean validateObject(PooledObject<StatefulConnection<K, V>> connection) {
-		final StatefulConnection<K, V> conn = connection.getObject();
+	public boolean validateObject(PooledObject<CONN> connection) {
+		final CONN conn = connection.getObject();
 		try{
 			return conn.isOpen();
 		}catch(final Exception e){
@@ -113,13 +112,13 @@ public class ConnectionFactory<K, V> extends BasePooledObjectFactory<StatefulCon
 	}
 
 	@Override
-	public PooledObject<StatefulConnection<K, V>> wrap(StatefulConnection<K, V> connection) {
+	public PooledObject<CONN> wrap(CONN connection) {
 		return new DefaultPooledObject<>(connection);
 	}
 
 	@Override
-	public void destroyObject(PooledObject<StatefulConnection<K, V>> connection) throws Exception {
-		final StatefulConnection<K, V> conn = connection.getObject();
+	public void destroyObject(PooledObject<CONN> connection) throws Exception {
+		final CONN conn = connection.getObject();
 		if(conn.isOpen()){
 			try{
 				conn.close();
@@ -129,7 +128,7 @@ public class ConnectionFactory<K, V> extends BasePooledObjectFactory<StatefulCon
 		}
 	}
 
-	private StatefulConnection<K, V> build() {
+	private CONN build() {
 		final RedisURI redisURI = RedisURI.create(hostAndPort.getHostText(), hostAndPort.getPort());
 
 		propertyMapper.from(clientConfig.getCredentialsProvider()).to(redisURI::setCredentialsProvider);
@@ -147,10 +146,13 @@ public class ConnectionFactory<K, V> extends BasePooledObjectFactory<StatefulCon
 			redisURI.setTimeout(clientConfig.getSocketTimeout());
 		}
 
+		final RedisClusterClient redisClusterClient = RedisClusterClient.create(createClientResources(), redisURI);
+		propertyMapper.from(createClientOptions()).to(redisClusterClient::setOptions);
+		redisClusterClient.connect(redisCodec);
 		final RedisClient redisClient = RedisClient.create(createClientResources(), redisURI);
 		propertyMapper.from(createClientOptions()).to(redisClient::setOptions);
 
-		return redisClient.connect(redisCodec);
+		return (CONN) redisClient.connect(redisCodec);
 	}
 
 	private ClientOptions createClientOptions() {

@@ -25,16 +25,14 @@
 package io.lettuce.core;
 
 import com.buession.redis.utils.SafeEncoder;
+import io.lettuce.core.cluster.LettuceClusterOperationException;
+import io.lettuce.core.cluster.RedisClusterClient;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.internal.HostAndPort;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import redis.clients.jedis.Connection;
-import redis.clients.jedis.csc.Cache;
-import redis.clients.jedis.exceptions.JedisClusterOperationException;
-import redis.clients.jedis.exceptions.JedisException;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -62,20 +60,27 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public class LettuceClusterInfoCache<K, V> {
 
-	/*
 	private final static int CLUSTER_HASHSLOTS = 16384;
 
 	private final static int MASTER_NODE_INDEX = 2;
 
-	private final Map<String, ConnectionPool<K, V>> nodes = new HashMap<>();
-
-	private final Map<String, ConnectionPool<K, V>> primaryNodesCache = new HashMap<>();
-
-	private final ConnectionPool<K, V>[] slots = new ConnectionPool[CLUSTER_HASHSLOTS];
+	private final Map<String, ConnectionPool<K, V, StatefulRedisClusterConnection<K, V>>> nodes = new HashMap<>();
 
 	private final HostAndPort[] slotNodes = new HostAndPort[CLUSTER_HASHSLOTS];
 
-	private final List<ConnectionPool<K, V>>[] replicaSlots;
+	private final Set<HostAndPort> startNodes;
+
+	private final LettuceClientConfig clientConfig;
+
+	private final GenericObjectPoolConfig<StatefulRedisClusterConnection<K, V>> poolConfig;
+
+	private final RedisCodec<K, V> redisCodec;
+
+	private final Map<String, ConnectionPool<K, V, StatefulRedisClusterConnection<K, V>>> primaryNodesCache = new HashMap<>();
+
+	private final ConnectionPool<K, V, StatefulRedisClusterConnection<K, V>>[] slots = new ConnectionPool[CLUSTER_HASHSLOTS];
+
+	private final List<ConnectionPool<K, V, StatefulRedisClusterConnection<K, V>>>[] replicaSlots;
 
 	private final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
 
@@ -85,60 +90,30 @@ public class LettuceClusterInfoCache<K, V> {
 
 	private final Lock rediscoverLock = new ReentrantLock();
 
-	private final GenericObjectPoolConfig<StatefulRedisClusterConnection<K, V>> poolConfig;
-
-	private final LettuceClientConfig clientConfig;
-
-	private final Cache clientSideCache;
-
-	private final Set<HostAndPort> startNodes;
-
-	private final RedisCodec<K, V> redisCodec;
-
 	/**
 	 * The single thread executor for the topology refresh task.
 	 */
-	/*
 	private ScheduledExecutorService topologyRefreshExecutor = null;
 
 	private static final Logger logger = LoggerFactory.getLogger(LettuceClusterInfoCache.class);
 
-	public LettuceClusterInfoCache(final LettuceClientConfig clientConfig, final Set<HostAndPort> startNodes,
+	public LettuceClusterInfoCache(final Set<HostAndPort> startNodes, final LettuceClientConfig clientConfig,
 	                               final RedisCodec<K, V> redisCodec) {
-		this(clientConfig, null, null, startNodes, redisCodec);
+		this(startNodes, clientConfig, null, redisCodec);
 	}
 
-	public LettuceClusterInfoCache(final LettuceClientConfig clientConfig, Cache clientSideCache,
-	                               final Set<HostAndPort> startNodes, final RedisCodec<K, V> redisCodec) {
-		this(clientConfig, clientSideCache, null, startNodes, redisCodec);
-	}
-
-	public LettuceClusterInfoCache(final LettuceClientConfig clientConfig,
+	public LettuceClusterInfoCache(final Set<HostAndPort> startNodes, final LettuceClientConfig clientConfig,
 	                               final GenericObjectPoolConfig<StatefulRedisClusterConnection<K, V>> poolConfig,
-	                               final Set<HostAndPort> startNodes, final RedisCodec<K, V> redisCodec) {
-		this(clientConfig, null, poolConfig, startNodes, redisCodec);
-	}
-
-	public LettuceClusterInfoCache(final LettuceClientConfig clientConfig, Cache clientSideCache,
-	                               final GenericObjectPoolConfig<StatefulRedisClusterConnection<K, V>> poolConfig,
-	                               final Set<HostAndPort> startNodes, final RedisCodec<K, V> redisCodec) {
-		this(clientConfig, clientSideCache, poolConfig, startNodes, null, redisCodec);
-	}
-
-	public LettuceClusterInfoCache(final LettuceClientConfig clientConfig,
-	                               final GenericObjectPoolConfig<StatefulRedisClusterConnection<K, V>> poolConfig,
-	                               final Set<HostAndPort> startNodes, final Duration topologyRefreshPeriod,
 	                               final RedisCodec<K, V> redisCodec) {
-		this(clientConfig, null, poolConfig, startNodes, topologyRefreshPeriod, redisCodec);
+		this(startNodes, clientConfig, poolConfig, null, redisCodec);
 	}
 
-	public LettuceClusterInfoCache(final LettuceClientConfig clientConfig, Cache clientSideCache,
+	public LettuceClusterInfoCache(final Set<HostAndPort> startNodes, final LettuceClientConfig clientConfig,
 	                               final GenericObjectPoolConfig<StatefulRedisClusterConnection<K, V>> poolConfig,
-	                               final Set<HostAndPort> startNodes, final Duration topologyRefreshPeriod,
+	                               final Duration topologyRefreshPeriod,
 	                               final RedisCodec<K, V> redisCodec) {
 		this.poolConfig = poolConfig;
 		this.clientConfig = clientConfig;
-		this.clientSideCache = clientSideCache;
 		this.startNodes = startNodes;
 		if(topologyRefreshPeriod != null){
 			logger.info("Cluster topology refresh start, period: {}, startNodes: {}", topologyRefreshPeriod,
@@ -155,10 +130,10 @@ public class LettuceClusterInfoCache<K, V> {
 		List<Object> slotsInfo = executeClusterSlots(connection);
 
 		if(slotsInfo.isEmpty()){
-			throw new JedisClusterOperationException("Cluster slots list is empty.");
+			throw new LettuceClusterOperationException("Cluster slots list is empty.");
 		}
 		if(checkClusterSlotSequence(slotsInfo) == false){
-			throw new JedisClusterOperationException("Cluster slots have holes.");
+			throw new LettuceClusterOperationException("Cluster slots have holes.");
 		}
 
 		w.lock();
@@ -204,7 +179,7 @@ public class LettuceClusterInfoCache<K, V> {
 					try{
 						discoverClusterSlots(connection);
 						return;
-					}catch(JedisException e){
+					}catch(RedisException e){
 						// try nodes from all pools
 					}
 				}
@@ -213,25 +188,28 @@ public class LettuceClusterInfoCache<K, V> {
 				// whether it is vip, domain, or physical ip, it will succeed.
 				if(startNodes != null){
 					for(HostAndPort hostAndPort : startNodes){
-						try(Connection j = new Connection(hostAndPort, clientConfig)){
-							discoverClusterSlots(j);
+						RedisURI redisURI = RedisURI.create(hostAndPort.getHostText(), hostAndPort.getPort());
+						io.lettuce.core.cluster.RedisClusterClient redisClusterClient = RedisClusterClient.create(
+								redisURI);
+						try(StatefulRedisClusterConnection<K, V> conn = redisClusterClient.connect(redisCodec)){
+							discoverClusterSlots(conn);
 							return;
-						}catch(JedisException e){
+						}catch(RedisException e){
 							// try next nodes
 						}
 					}
 				}
 
 				// Finally, we go back to the ShuffledNodesPool and try the remaining physical nodes.
-				for(ConnectionPool<K, V> jp : getShuffledNodesPool()){
-					try(StatefulRedisClusterConnection<K, V> j = jp.getResource()){
+				for(ConnectionPool<K, V, StatefulRedisClusterConnection<K, V>> jp : getShuffledNodesPool()){
+					try(StatefulRedisClusterConnection<K, V> conn = jp.getResource()){
 						// If already tried in startNodes, skip this node.
-						if(startNodes != null && startNodes.contains(j.getHostAndPort())){
-							continue;
-						}
-						discoverClusterSlots(j);
+						//if(startNodes != null && startNodes.contains(j.getHostAndPort())){
+						//continue;
+						//}
+						discoverClusterSlots(conn);
 						return;
-					}catch(JedisException e){
+					}catch(RedisException e){
 						// try next nodes
 					}
 				}
@@ -242,21 +220,195 @@ public class LettuceClusterInfoCache<K, V> {
 		}
 	}
 
+	public ConnectionPool<K, V, StatefulRedisClusterConnection<K, V>> setupNodeIfNotExist(final HostAndPort node) {
+		w.lock();
+		try{
+			String nodeKey = getNodeKey(node);
+			ConnectionPool<K, V, StatefulRedisClusterConnection<K, V>> existingPool = nodes.get(nodeKey);
+
+			if(existingPool != null){
+				return existingPool;
+			}
+
+			ConnectionPool<K, V, StatefulRedisClusterConnection<K, V>> nodePool = createNodePool(node);
+			nodes.put(nodeKey, nodePool);
+			return nodePool;
+		}finally{
+			w.unlock();
+		}
+	}
+
+	public void assignSlotToNode(int slot, HostAndPort targetNode) {
+		w.lock();
+		try{
+			ConnectionPool<K, V, StatefulRedisClusterConnection<K, V>> targetPool = setupNodeIfNotExist(targetNode);
+			slots[slot] = targetPool;
+			slotNodes[slot] = targetNode;
+		}finally{
+			w.unlock();
+		}
+	}
+
+	public void assignSlotsToNode(List<Integer> targetSlots, HostAndPort targetNode) {
+		w.lock();
+		try{
+			ConnectionPool<K, V, StatefulRedisClusterConnection<K, V>> targetPool = setupNodeIfNotExist(targetNode);
+			for(Integer slot : targetSlots){
+				slots[slot] = targetPool;
+				slotNodes[slot] = targetNode;
+			}
+		}finally{
+			w.unlock();
+		}
+	}
+
+	public void assignSlotsToReplicaNode(List<Integer> targetSlots, HostAndPort targetNode) {
+		w.lock();
+		try{
+			ConnectionPool<K, V, StatefulRedisClusterConnection<K, V>> targetPool = setupNodeIfNotExist(targetNode);
+			for(Integer slot : targetSlots){
+				if(replicaSlots[slot] == null){
+					replicaSlots[slot] = new ArrayList<>();
+				}
+				replicaSlots[slot].add(targetPool);
+			}
+		}finally{
+			w.unlock();
+		}
+	}
+
+	public ConnectionPool<K, V, StatefulRedisClusterConnection<K, V>> getNode(String nodeKey) {
+		r.lock();
+		try{
+			return nodes.get(nodeKey);
+		}finally{
+			r.unlock();
+		}
+	}
+
+	public ConnectionPool<K, V, StatefulRedisClusterConnection<K, V>> getNode(HostAndPort node) {
+		return getNode(getNodeKey(node));
+	}
+
+	public Map<String, ConnectionPool<K, V, StatefulRedisClusterConnection<K, V>>> getNodes() {
+		r.lock();
+		try{
+			return new HashMap<>(nodes);
+		}finally{
+			r.unlock();
+		}
+	}
+
+	public Map<String, ConnectionPool<K, V, StatefulRedisClusterConnection<K, V>>> getPrimaryNodes() {
+		r.lock();
+		try{
+			return new HashMap<>(primaryNodesCache);
+		}finally{
+			r.unlock();
+		}
+	}
+
+	public HostAndPort getSlotNode(int slot) {
+		r.lock();
+		try{
+			return slotNodes[slot];
+		}finally{
+			r.unlock();
+		}
+	}
+
+	public ConnectionPool<K, V, StatefulRedisClusterConnection<K, V>> getSlotPool(int slot) {
+		r.lock();
+		try{
+			return slots[slot];
+		}finally{
+			r.unlock();
+		}
+	}
+
+	public List<ConnectionPool<K, V, StatefulRedisClusterConnection<K, V>>> getSlotReplicaPools(int slot) {
+		r.lock();
+		try{
+			return replicaSlots[slot];
+		}finally{
+			r.unlock();
+		}
+	}
+
+	public List<ConnectionPool<K, V, StatefulRedisClusterConnection<K, V>>> getShuffledPrimaryNodesPool() {
+		r.lock();
+		try{
+			List<ConnectionPool<K, V, StatefulRedisClusterConnection<K, V>>> pools = new ArrayList<>(
+					primaryNodesCache.values());
+			Collections.shuffle(pools);
+			return pools;
+		}finally{
+			r.unlock();
+		}
+	}
+
+	public List<ConnectionPool<K, V, StatefulRedisClusterConnection<K, V>>> getShuffledNodesPool() {
+		r.lock();
+		try{
+			List<ConnectionPool<K, V, StatefulRedisClusterConnection<K, V>>> pools = new ArrayList<>(nodes.values());
+			Collections.shuffle(pools);
+			return pools;
+		}finally{
+			r.unlock();
+		}
+	}
+
+	/**
+	 * Clear discovered nodes collections and gently release allocated resources
+	 */
+	public void reset() {
+		w.lock();
+		try{
+			resetNodes();
+			resetSlots();
+		}finally{
+			w.unlock();
+		}
+	}
+
+	public void close() {
+		reset();
+		if(topologyRefreshExecutor != null){
+			logger.info("Cluster topology refresh shutdown, startNodes: {}", startNodes);
+			topologyRefreshExecutor.shutdownNow();
+		}
+	}
+
+	private static String getNodeKey(HostAndPort hnp) {
+		return hnp.toString();
+	}
+
+	private HostAndPort generateHostAndPort(List<Object> hostInfos) {
+		String host = SafeEncoder.encode((byte[]) hostInfos.get(0));
+		int port = ((Long) hostInfos.get(1)).intValue();
+		return HostAndPort.of(host, port);
+	}
+
+	private ConnectionPool<K, V, StatefulRedisClusterConnection<K, V>> createNodePool(HostAndPort node) {
+		if(poolConfig == null){
+			return new ConnectionPool<>(node, clientConfig, redisCodec);
+		}else{
+			return new ConnectionPool<>(node, clientConfig, poolConfig, redisCodec);
+		}
+	}
+
 	private void discoverClusterSlots(StatefulRedisClusterConnection<K, V> connection) {
 		List<Object> slotsInfo = executeClusterSlots(connection);
 		if(slotsInfo.isEmpty()){
-			throw new JedisClusterOperationException("Cluster slots list is empty.");
+			throw new LettuceClusterOperationException("Cluster slots list is empty.");
 		}
 		if(!checkClusterSlotSequence(slotsInfo)){
-			throw new JedisClusterOperationException("Cluster slots have holes.");
+			throw new LettuceClusterOperationException("Cluster slots have holes.");
 		}
 
 		w.lock();
 		try{
 			resetSlots();
-			if(clientSideCache != null){
-				clientSideCache.flush();
-			}
 			Set<String> hostAndPortKeys = new HashSet<>();
 
 			for(Object slotInfoObj : slotsInfo){
@@ -287,11 +439,12 @@ public class LettuceClusterInfoCache<K, V> {
 			}
 
 			// Remove dead nodes according to the latest query
-			Iterator<Map.Entry<String, ConnectionPool<K, V>>> entryIt = nodes.entrySet().iterator();
+			Iterator<Map.Entry<String, ConnectionPool<K, V, StatefulRedisClusterConnection<K, V>>>> entryIt = nodes.entrySet()
+					.iterator();
 			while(entryIt.hasNext()){
-				Map.Entry<String, ConnectionPool<K, V>> entry = entryIt.next();
+				Map.Entry<String, ConnectionPool<K, V, StatefulRedisClusterConnection<K, V>>> entry = entryIt.next();
 				if(hostAndPortKeys.contains(entry.getKey()) == false){
-					ConnectionPool<K, V> pool = entry.getValue();
+					ConnectionPool<K, V, StatefulRedisClusterConnection<K, V>> pool = entry.getValue();
 					try{
 						if(pool != null){
 							pool.destroy();
@@ -307,189 +460,6 @@ public class LettuceClusterInfoCache<K, V> {
 		}
 	}
 
-	public ConnectionPool<K, V> setupNodeIfNotExist(final HostAndPort node) {
-		w.lock();
-		try{
-			String nodeKey = getNodeKey(node);
-			ConnectionPool<K, V> existingPool = nodes.get(nodeKey);
-			if(existingPool != null)
-				return existingPool;
-
-			ConnectionPool<K, V> nodePool = createNodePool(node);
-			nodes.put(nodeKey, nodePool);
-			return nodePool;
-		}finally{
-			w.unlock();
-		}
-	}
-
-	public void assignSlotToNode(int slot, HostAndPort targetNode) {
-		w.lock();
-		try{
-			ConnectionPool<K, V> targetPool = setupNodeIfNotExist(targetNode);
-			slots[slot] = targetPool;
-			slotNodes[slot] = targetNode;
-		}finally{
-			w.unlock();
-		}
-	}
-
-	public void assignSlotsToNode(List<Integer> targetSlots, HostAndPort targetNode) {
-		w.lock();
-		try{
-			ConnectionPool<K, V> targetPool = setupNodeIfNotExist(targetNode);
-			for(Integer slot : targetSlots){
-				slots[slot] = targetPool;
-				slotNodes[slot] = targetNode;
-			}
-		}finally{
-			w.unlock();
-		}
-	}
-
-	public void assignSlotsToReplicaNode(List<Integer> targetSlots, HostAndPort targetNode) {
-		w.lock();
-		try{
-			ConnectionPool<K, V> targetPool = setupNodeIfNotExist(targetNode);
-			for(Integer slot : targetSlots){
-				if(replicaSlots[slot] == null){
-					replicaSlots[slot] = new ArrayList<>();
-				}
-				replicaSlots[slot].add(targetPool);
-			}
-		}finally{
-			w.unlock();
-		}
-	}
-
-	public ConnectionPool<K, V> getNode(String nodeKey) {
-		r.lock();
-		try{
-			return nodes.get(nodeKey);
-		}finally{
-			r.unlock();
-		}
-	}
-
-	public ConnectionPool<K, V> getNode(HostAndPort node) {
-		return getNode(getNodeKey(node));
-	}
-
-	public ConnectionPool<K, V> getSlotPool(int slot) {
-		r.lock();
-		try{
-			return slots[slot];
-		}finally{
-			r.unlock();
-		}
-	}
-
-	public HostAndPort getSlotNode(int slot) {
-		r.lock();
-		try{
-			return slotNodes[slot];
-		}finally{
-			r.unlock();
-		}
-	}
-
-	public List<ConnectionPool<K, V>> getSlotReplicaPools(int slot) {
-		r.lock();
-		try{
-			return replicaSlots[slot];
-		}finally{
-			r.unlock();
-		}
-	}
-
-	public Map<String, ConnectionPool<K, V>> getNodes() {
-		r.lock();
-		try{
-			return new HashMap<>(nodes);
-		}finally{
-			r.unlock();
-		}
-	}
-
-	public Map<String, ConnectionPool<K, V>> getPrimaryNodes() {
-		r.lock();
-		try{
-			return new HashMap<>(primaryNodesCache);
-		}finally{
-			r.unlock();
-		}
-	}
-
-	public List<ConnectionPool<K, V>> getShuffledPrimaryNodesPool() {
-		r.lock();
-		try{
-			List<ConnectionPool<K, V>> pools = new ArrayList<>(primaryNodesCache.values());
-			Collections.shuffle(pools);
-			return pools;
-		}finally{
-			r.unlock();
-		}
-	}
-
-	public List<ConnectionPool<K, V>> getShuffledNodesPool() {
-		r.lock();
-		try{
-			List<ConnectionPool<K, V>> pools = new ArrayList<>(nodes.values());
-			Collections.shuffle(pools);
-			return pools;
-		}finally{
-			r.unlock();
-		}
-	}
-
-	/**
-	 * Clear discovered nodes collections and gently release allocated resources
-	 */
-	/*
-	public void reset() {
-		w.lock();
-		try{
-			resetNodes();
-			resetSlots();
-		}finally{
-			w.unlock();
-		}
-	}
-
-	public void close() {
-		reset();
-		if(topologyRefreshExecutor != null){
-			logger.info("Cluster topology refresh shutdown, startNodes: {}", startNodes);
-			topologyRefreshExecutor.shutdownNow();
-		}
-	}
-
-	public static String getNodeKey(HostAndPort hnp) {
-		return hnp.toString();
-	}
-
-	private HostAndPort generateHostAndPort(List<Object> hostInfos) {
-		String host = SafeEncoder.encode((byte[]) hostInfos.get(0));
-		int port = ((Long) hostInfos.get(1)).intValue();
-		return HostAndPort.of(host, port);
-	}
-
-	private ConnectionPool<K, V> createNodePool(HostAndPort node) {
-		if(poolConfig == null){
-			if(clientSideCache == null){
-				return new ConnectionPool<>(node, clientConfig, redisCodec);
-			}else{
-				return new ConnectionPool<>(node, clientConfig, redisCodec);
-			}
-		}else{
-			if(clientSideCache == null){
-				return new ConnectionPool<>(node, clientConfig, redisCodec, poolConfig);
-			}else{
-				return new ConnectionPool<>(node, clientConfig, redisCodec, poolConfig);
-			}
-		}
-	}
-
 	/**
 	 * Check whether the number and order of slots in the cluster topology are equal to CLUSTER_HASHSLOTS
 	 *
@@ -498,22 +468,25 @@ public class LettuceClusterInfoCache<K, V> {
 	 *
 	 * @return if slots is ok, return true, elese return false.
 	 */
-	/*
 	private boolean checkClusterSlotSequence(List<Object> slotsInfo) {
 		List<Integer> slots = new ArrayList<>();
-		for(Object slotInfoObj : slotsInfo){
-			List<Object> slotInfo = (List<Object>) slotInfoObj;
-			slots.addAll(getAssignedSlotArray(slotInfo));
+
+		for(Object slotInfo : slotsInfo){
+			slots.addAll(getAssignedSlotArray((List<Object>) slotInfo));
 		}
+
 		Collections.sort(slots);
+
 		if(slots.size() != CLUSTER_HASHSLOTS){
 			return false;
 		}
+
 		for(int i = 0; i < CLUSTER_HASHSLOTS; ++i){
 			if(i != slots.get(i)){
 				return false;
 			}
 		}
+
 		return true;
 	}
 
@@ -522,7 +495,7 @@ public class LettuceClusterInfoCache<K, V> {
 	}
 
 	private void resetNodes() {
-		for(ConnectionPool<K, V> pool : nodes.values()){
+		for(ConnectionPool<K, V, StatefulRedisClusterConnection<K, V>> pool : nodes.values()){
 			try{
 				if(pool != null){
 					pool.destroy();
@@ -571,7 +544,5 @@ public class LettuceClusterInfoCache<K, V> {
 		}
 
 	}
-
-	 */
 
 }

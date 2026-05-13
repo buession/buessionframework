@@ -27,6 +27,7 @@ package io.lettuce.core.builders;
 import com.buession.core.validator.Validate;
 import com.buession.redis.client.connection.datasource.ClusterDataSource;
 import io.lettuce.core.internal.HostAndPort;
+import io.lettuce.core.providers.ClusterConnectionProvider;
 import io.lettuce.core.providers.ConnectionProvider;
 
 import java.time.Duration;
@@ -157,7 +158,7 @@ public abstract class ClusterClientBuilder<K, V, C>
 
 	@Override
 	protected ConnectionProvider<K, V> createDefaultConnectionProvider() {
-		return null;
+		return new ClusterConnectionProvider<>(this.nodes, this.clientConfig, this.codec);
 	}
 
 	@Override
@@ -180,30 +181,5 @@ public abstract class ClusterClientBuilder<K, V, C>
 			throw new IllegalArgumentException("Topology refresh period cannot be negative for cluster mode");
 		}
 	}
-
-	/*
-	private Set<RedisURI> createRedisURIs(final LettuceClusterDataSource dataSource,
-	                                      final PropertyMapper propertyMapper) {
-		final RedisCredentialsProvider redisCredentialsProvider = Validate.hasText(dataSource.getPassword()) ?
-				new StaticCredentialsProvider(Validate.hasText(dataSource.getUsername()) ? dataSource.getUsername() :
-											  null, dataSource.getPassword().toCharArray()) : null;
-		return dataSource.getNodes().stream().map((node)->{
-			int port = node.getPort() == 0 ? com.buession.redis.core.RedisNode.DEFAULT_PORT : node.getPort();
-			final RedisURI redisURI = RedisURI.create(node.getHost(), port);
-
-			propertyMapper.from(redisCredentialsProvider).to(redisURI::setCredentialsProvider);
-			propertyMapper.from(dataSource.getClientName()).to(redisURI::setClientName);
-
-			if(dataSource.getConnectTimeout() > 0){
-				redisURI.setTimeout(Duration.ofMillis(dataSource.getConnectTimeout()));
-			}
-
-			redisURI.setSsl(dataSource.getSslConfiguration() != null);
-
-			return redisURI;
-		}).collect(Collectors.toSet());
-	}
-
-	 */
 
 }
