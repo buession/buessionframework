@@ -21,10 +21,45 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.core;/**
- * 
+ */
+package com.buession.core;
+
+import com.buession.core.utils.Assert;
+
+import java.time.Duration;
+
+/**
+ * 线程休眠
  *
  * @author Yong.Teng
  * @since 4.0.0
- */public interface Sleeper {
+ */
+@FunctionalInterface
+public interface Sleeper {
+
+	/**
+	 * 线程休眠
+	 *
+	 * @param millis
+	 * 		休眠时间
+	 *
+	 * @throws InterruptedException
+	 * 		异常
+	 */
+	void sleep(long millis) throws InterruptedException;
+
+	/**
+	 * 线程休眠
+	 *
+	 * @param duration
+	 * 		休眠时间
+	 *
+	 * @throws InterruptedException
+	 * 		异常
+	 */
+	default void sleep(Duration duration) throws InterruptedException {
+		Assert.isNull(duration, "Sleep time cloud not be null");
+		sleep(duration.toMillis());
+	}
+
 }
