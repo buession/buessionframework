@@ -93,6 +93,13 @@ public abstract class AbstractRedisConnection<C> implements RedisConnection {
 	private boolean autoReconnect = true;
 
 	/**
+	 * 重连间隔（单位：毫秒）
+	 *
+	 * @since 4.0.0
+	 */
+	private int reconnectDelay;
+
+	/**
 	 * SSL 配置
 	 *
 	 * @since 4.0.0
@@ -209,6 +216,16 @@ public abstract class AbstractRedisConnection<C> implements RedisConnection {
 	@Override
 	public void setAutoReconnect(boolean autoReconnect) {
 		this.autoReconnect = autoReconnect;
+	}
+
+	@Override
+	public int getReconnectDelay() {
+		return reconnectDelay;
+	}
+
+	@Override
+	public void setReconnectDelay(int reconnectDelay) {
+		this.reconnectDelay = reconnectDelay;
 	}
 
 	@Override

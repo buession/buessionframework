@@ -24,18 +24,17 @@
  */
 package io.lettuce.core.providers;
 
-import io.lettuce.core.ClientOptions;
 import io.lettuce.core.ConnectionPool;
 import io.lettuce.core.LettuceClientConfig;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.StatefulConnection;
-import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.codec.StringCodec;
 import io.lettuce.core.internal.HostAndPort;
 import io.lettuce.core.protocol.CommandArgs;
 import io.lettuce.core.sentinel.api.StatefulRedisSentinelConnection;
+import io.lettuce.core.utils.IOUtils;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +60,7 @@ public class SentinelConnectionProvider<K, V> extends AbstractConnectionProvider
 
 	private final String masterName;
 
-	private volatile ConnectionPool<K, V, StatefulRedisConnection<K, V>> pool;
+	private volatile ConnectionPool<K, V, StatefulConnection<K, V>> pool;
 
 	private final SentinelConnectionFactory<String, String> sentinelConnectionFactory;
 
@@ -81,7 +80,7 @@ public class SentinelConnectionProvider<K, V> extends AbstractConnectionProvider
 	public SentinelConnectionProvider(final Set<HostAndPort> sentinels, final String masterName,
 	                                  final LettuceClientConfig masterClientConfig,
 	                                  final LettuceClientConfig sentinelClientConfig,
-	                                  final GenericObjectPoolConfig<StatefulRedisConnection<K, V>> poolConfig,
+	                                  final GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig,
 	                                  final RedisCodec<K, V> redisCodec) {
 		this.sentinels = sentinels;
 		this.masterName = masterName;
@@ -133,8 +132,8 @@ public class SentinelConnectionProvider<K, V> extends AbstractConnectionProvider
 
 	@Override
 	public void close() {
-		asyncCloseQuietly(sentinelConnection);
-		closeQuietly(pool);
+		IOUtils.asyncCloseQuietly(sentinelConnection);
+		IOUtils.closeQuietly(pool);
 	}
 
 	public HostAndPort getCurrentMaster() {
@@ -146,20 +145,6 @@ public class SentinelConnectionProvider<K, V> extends AbstractConnectionProvider
 		}
 
 		return null;
-	}
-
-	private static ClientOptions createClientOptions(final LettuceClientConfig clientConfig) {
-		final ClientOptions.Builder builder = ClientOptions.builder();
-
-		//builder.autoReconnect(autoReconnect);
-		builder.socketOptions(createSocketOptions(clientConfig));
-		propertyMapper.from(clientConfig.getRequestQueueSize()).to(builder::requestQueueSize);
-
-		if(clientConfig.isSsl()){
-			propertyMapper.from(clientConfig.getSslOptions()).to(builder::sslOptions);
-		}
-
-		return builder.build();
 	}
 
 	private RedisClient createRedisClient(final Set<HostAndPort> sentinels, final String masterName,
@@ -195,11 +180,11 @@ public class SentinelConnectionProvider<K, V> extends AbstractConnectionProvider
 		return redisClient;
 	}
 
-	private ConnectionPool<K, V, StatefulRedisConnection<K, V>> createPool(final Set<HostAndPort> sentinels,
-	                                                                       final String masterName,
-	                                                                       final LettuceClientConfig clientConfig,
-	                                                                       final GenericObjectPoolConfig<StatefulRedisConnection<K, V>> poolConfig,
-	                                                                       final RedisCodec<K, V> redisCodec) {
+	private ConnectionPool<K, V, StatefulConnection<K, V>> createPool(final Set<HostAndPort> sentinels,
+	                                                                  final String masterName,
+	                                                                  final LettuceClientConfig clientConfig,
+	                                                                  final GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig,
+	                                                                  final RedisCodec<K, V> redisCodec) {
 		final RedisClient redisClient = createRedisClient(sentinels, masterName, clientConfig);
 		if(poolConfig == null){
 			return new ConnectionPool<>(redisClient, redisCodec);

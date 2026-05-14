@@ -119,8 +119,8 @@ public class LettuceConnection<K, V> extends AbstractLettuceRedisConnection<K, V
 			}
 
 			final StandaloneClientBuilder<K, V, RedisStandaloneClient<K, V>> builder = RedisStandaloneClient.<K, V>builder()
-					.hostAndPort(dataSource.getHost(), dataSource.getPort()).codec(getCodec())
-					.clientConfig(clientConfigBuilder.build());
+					.hostAndPort(dataSource.getHost(), dataSource.getPort()).clientConfig(clientConfigBuilder.build())
+					.codec(getCodec());
 
 			Optional.ofNullable(getConnectionPoolConfig()).ifPresent(builder::poolConfig);
 			//Optional.ofNullable(getCacheConfig()).ifPresent(builder::cacheConfig);

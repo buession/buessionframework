@@ -25,9 +25,9 @@
 package io.lettuce.core.providers;
 
 import com.buession.core.converter.mapper.PropertyMapper;
+import io.lettuce.core.ClientOptions;
 import io.lettuce.core.LettuceClientConfig;
 import io.lettuce.core.SocketOptions;
-import io.lettuce.core.api.AsyncCloseable;
 import io.lettuce.core.resource.ClientResources;
 import io.lettuce.core.resource.Delay;
 
@@ -64,24 +64,18 @@ public abstract class AbstractConnectionProvider<K, V> implements ConnectionProv
 		return builder.build();
 	}
 
-	protected static void closeQuietly(AutoCloseable closeable) {
-		if(closeable != null){
-			try{
-				closeable.close();
-			}catch(Exception e){
-				//
-			}
-		}
-	}
+	protected static ClientOptions createClientOptions(final LettuceClientConfig clientConfig) {
+		final ClientOptions.Builder builder = ClientOptions.builder();
 
-	protected static void asyncCloseQuietly(AsyncCloseable closeable) {
-		if(closeable != null){
-			try{
-				closeable.closeAsync();
-			}catch(Exception e){
-				//
-			}
+		builder.autoReconnect(clientConfig.isAutoReconnect());
+		builder.socketOptions(createSocketOptions(clientConfig));
+		propertyMapper.from(clientConfig.getRequestQueueSize()).to(builder::requestQueueSize);
+
+		if(clientConfig.isSsl()){
+			propertyMapper.from(clientConfig.getSslOptions()).to(builder::sslOptions);
 		}
+
+		return builder.build();
 	}
 
 }

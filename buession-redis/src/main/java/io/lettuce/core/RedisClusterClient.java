@@ -26,6 +26,7 @@ package io.lettuce.core;
 
 import com.buession.redis.client.connection.datasource.ClusterDataSource;
 import io.lettuce.core.builders.ClusterClientBuilder;
+import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.internal.HostAndPort;
 import io.lettuce.core.providers.ConnectionProvider;
 
@@ -67,8 +68,7 @@ public class RedisClusterClient<K, V> extends BaseRedisClient<K, V> {
 	 */
 	public static <K, V> RedisClusterClient<K, V> create(HostAndPort node) {
 		return RedisClusterClient.<K, V>builder().nodes(Collections.singleton(node))
-				.clientConfig(DefaultLettuceClientConfig.builder().timeoutMillis(RedisURI.DEFAULT_TIMEOUT).build())
-				.maxAttempts(ClusterDataSource.DEFAULT_MAX_ATTEMPTS)
+				.clientConfig(DefaultLettuceClientConfig.builder().timeout(RedisURI.DEFAULT_TIMEOUT_DURATION).build())
 				.maxTotalRetriesDuration(
 						Duration.ofMillis(RedisURI.DEFAULT_TIMEOUT * ClusterDataSource.DEFAULT_MAX_ATTEMPTS))
 				.build();
@@ -90,8 +90,7 @@ public class RedisClusterClient<K, V> extends BaseRedisClient<K, V> {
 	 */
 	public static <K, V> RedisClusterClient<K, V> create(Set<HostAndPort> nodes) {
 		return RedisClusterClient.<K, V>builder().nodes(nodes)
-				.clientConfig(DefaultLettuceClientConfig.builder().timeoutMillis(RedisURI.DEFAULT_TIMEOUT).build())
-				.maxAttempts(ClusterDataSource.DEFAULT_MAX_ATTEMPTS)
+				.clientConfig(DefaultLettuceClientConfig.builder().timeout(RedisURI.DEFAULT_TIMEOUT_DURATION).build())
 				.maxTotalRetriesDuration(
 						Duration.ofMillis(RedisURI.DEFAULT_TIMEOUT * ClusterDataSource.DEFAULT_MAX_ATTEMPTS))
 				.build();
@@ -118,7 +117,6 @@ public class RedisClusterClient<K, V> extends BaseRedisClient<K, V> {
 	public static <K, V> RedisClusterClient<K, V> create(Set<HostAndPort> nodes, String user, String password) {
 		return RedisClusterClient.<K, V>builder().nodes(nodes)
 				.clientConfig(DefaultLettuceClientConfig.builder().user(user).password(password).build())
-				.maxAttempts(ClusterDataSource.DEFAULT_MAX_ATTEMPTS)
 				.maxTotalRetriesDuration(
 						Duration.ofMillis(RedisURI.DEFAULT_TIMEOUT * ClusterDataSource.DEFAULT_MAX_ATTEMPTS))
 				.build();
@@ -135,12 +133,14 @@ public class RedisClusterClient<K, V> extends BaseRedisClient<K, V> {
 
 	@Override
 	protected RedisCommandsInvocationHandler<K, V> createRedisCommandsInvocationHandler() {
-		return new StatefulRedisClusterCommandsHandler<>(null);
+		return new StatefulRedisClusterCommandsHandler<>(
+				(StatefulRedisClusterConnection<K, V>) connectionProvider.getConnection());
 	}
 
 	@Override
 	protected RedisCommandsInvocationHandler<K, V> createRedisAsyncCommandsInvocationHandler() {
-		return new StatefulRedisClusterCommandsHandler<>(null);
+		return new StatefulRedisClusterCommandsHandler<>(
+				(StatefulRedisClusterConnection<K, V>) connectionProvider.getConnection(), true);
 	}
 
 	/**

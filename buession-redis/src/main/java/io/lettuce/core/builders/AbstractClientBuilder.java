@@ -28,9 +28,11 @@ import io.lettuce.core.ClientOptions;
 import io.lettuce.core.ConnectionPoolConfig;
 import io.lettuce.core.DefaultLettuceClientConfig;
 import io.lettuce.core.LettuceClientConfig;
+import io.lettuce.core.api.StatefulConnection;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.providers.ConnectionProvider;
 import io.lettuce.core.resource.ClientResources;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 /**
  * Abstract base class for Redis client builders that provides common configuration options.
@@ -45,7 +47,7 @@ import io.lettuce.core.resource.ClientResources;
  */
 public abstract class AbstractClientBuilder<K, V, T extends AbstractClientBuilder<K, V, T, C>, C> {
 
-	protected ConnectionPoolConfig<K, V> poolConfig = new ConnectionPoolConfig<>();
+	protected GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig = new ConnectionPoolConfig<>();
 
 	protected LettuceClientConfig clientConfig;
 

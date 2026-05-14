@@ -42,6 +42,8 @@ public class DefaultLettuceClientConfig implements LettuceClientConfig {
 
 	private Duration connectionTimeout = RedisURI.DEFAULT_TIMEOUT_DURATION;
 
+	private boolean autoReconnect = ClientOptions.DEFAULT_AUTO_RECONNECT;
+
 	private Duration reconnectDelay = RedisURI.DEFAULT_TIMEOUT_DURATION;
 
 	private Duration socketTimeout = connectionTimeout;
@@ -71,6 +73,11 @@ public class DefaultLettuceClientConfig implements LettuceClientConfig {
 	@Override
 	public Duration getConnectionTimeout() {
 		return connectionTimeout;
+	}
+
+	@Override
+	public boolean isAutoReconnect() {
+		return autoReconnect;
 	}
 
 	@Override
@@ -214,6 +221,11 @@ public class DefaultLettuceClientConfig implements LettuceClientConfig {
 
 		public Builder connectionTimeoutMillis(final long timeoutMillis) {
 			return connectionTimeout(Duration.ofMillis(timeoutMillis));
+		}
+
+		public Builder autoReconnect(final boolean autoReconnect) {
+			lettuceClientConfig.autoReconnect = autoReconnect;
+			return this;
 		}
 
 		public Builder reconnectDelay(final Duration reconnectDelay) {

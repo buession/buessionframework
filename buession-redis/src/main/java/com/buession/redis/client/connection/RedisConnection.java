@@ -156,6 +156,21 @@ public interface RedisConnection extends Destroyable, Closeable {
 	void setAutoReconnect(boolean autoReconnect);
 
 	/**
+	 * 返回重连间隔
+	 *
+	 * @return 重连间隔（单位：毫秒）
+	 */
+	int getReconnectDelay();
+
+	/**
+	 * 设置重连间隔
+	 *
+	 * @param reconnectDelay
+	 * 		重连间隔（单位：毫秒）
+	 */
+	void setReconnectDelay(int reconnectDelay);
+
+	/**
 	 * SSL 配置
 	 *
 	 * @return SSL 配置

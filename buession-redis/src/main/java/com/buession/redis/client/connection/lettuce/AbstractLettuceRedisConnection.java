@@ -187,6 +187,10 @@ public abstract class AbstractLettuceRedisConnection<K, V, C extends BaseRedisCl
 		LettuceRedisDataSource dataSource = (LettuceRedisDataSource) getDataSource();
 
 		builder.connectionTimeoutMillis(getConnectTimeout()).socketTimeoutMillis(getSoTimeout());
+		builder.autoReconnect(isAutoReconnect());
+		if(getReconnectDelay() > 0){
+			builder.reconnectDelayMillis(getReconnectDelay());
+		}
 
 		if(Validate.hasText(dataSource.getPassword())){
 			builder.password(dataSource.getPassword());

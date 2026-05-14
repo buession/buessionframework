@@ -46,6 +46,24 @@ public interface LettuceClientConfig {
 	}
 
 	/**
+	 * 返回是否自动重连
+	 *
+	 * @return 是否自动重连
+	 */
+	default boolean isAutoReconnect() {
+		return getAutoReconnect();
+	}
+
+	/**
+	 * 返回是否自动重连
+	 *
+	 * @return 是否自动重连
+	 */
+	default boolean getAutoReconnect() {
+		return ClientOptions.DEFAULT_AUTO_RECONNECT;
+	}
+
+	/**
 	 * 获取重连间隔
 	 *
 	 * @return 重连间隔
