@@ -55,13 +55,36 @@ public final class LettuceConnectionFactory extends AbstractConnectionFactory<Le
 	@Override
 	public RedisSentinelConnection getSentinelConnection() {
 		final LettuceSentinelDataSource dataSource = (LettuceSentinelDataSource) getDataSource();
-		return new LettuceSentinelConnection<>(dataSource, dataSource.getPoolConfig(), ByteArrayCodec.INSTANCE);
+		final RedisSentinelConnection connection = new LettuceSentinelConnection<>(dataSource,
+				dataSource.getPoolConfig(), ByteArrayCodec.INSTANCE);
+
+		if(dataSource.getSentinelConnectTimeout() > 0){
+			connection.setSentinelConnectTimeout(dataSource.getSentinelConnectTimeout());
+		}
+		if(dataSource.getSentinelSoTimeout() > 0){
+			connection.setSentinelSoTimeout(dataSource.getSentinelSoTimeout());
+		}
+
+		return connection;
 	}
 
 	@Override
 	public RedisClusterConnection getClusterConnection() {
 		final LettuceClusterDataSource dataSource = (LettuceClusterDataSource) getDataSource();
-		return new LettuceClusterConnection<>(dataSource, dataSource.getPoolConfig(), ByteArrayCodec.INSTANCE);
+		final RedisClusterConnection connection = new LettuceClusterConnection<>(dataSource,
+				dataSource.getPoolConfig(), ByteArrayCodec.INSTANCE);
+
+		if(dataSource.getMaxRedirects() > 0){
+			connection.setMaxRedirects(dataSource.getMaxRedirects());
+		}
+		if(dataSource.getMaxTotalRetriesDuration() != null && dataSource.getMaxTotalRetriesDuration().isNegative()){
+			connection.setMaxTotalRetriesDuration(dataSource.getMaxTotalRetriesDuration());
+		}
+		if(dataSource.getTopologyRefreshPeriod() != null && dataSource.getTopologyRefreshPeriod().isNegative()){
+			connection.setTopologyRefreshPeriod(dataSource.getTopologyRefreshPeriod());
+		}
+
+		return connection;
 	}
 
 }

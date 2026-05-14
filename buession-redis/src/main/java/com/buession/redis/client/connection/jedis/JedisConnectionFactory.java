@@ -54,13 +54,34 @@ public final class JedisConnectionFactory extends AbstractConnectionFactory<Jedi
 	@Override
 	public RedisSentinelConnection getSentinelConnection() {
 		final JedisSentinelDataSource dataSource = (JedisSentinelDataSource) getDataSource();
-		return new JedisSentinelConnection(dataSource, dataSource.getPoolConfig());
+		final RedisSentinelConnection connection = new JedisSentinelConnection(dataSource, dataSource.getPoolConfig());
+
+		if(dataSource.getSentinelConnectTimeout() > 0){
+			connection.setSentinelConnectTimeout(dataSource.getSentinelConnectTimeout());
+		}
+		if(dataSource.getSentinelSoTimeout() > 0){
+			connection.setSentinelSoTimeout(dataSource.getSentinelSoTimeout());
+		}
+
+		return connection;
 	}
 
 	@Override
 	public RedisClusterConnection getClusterConnection() {
 		final JedisClusterDataSource dataSource = (JedisClusterDataSource) getDataSource();
-		return new JedisClusterConnection(dataSource, dataSource.getPoolConfig());
+		final RedisClusterConnection connection = new JedisClusterConnection(dataSource, dataSource.getPoolConfig());
+
+		if(dataSource.getMaxRedirects() > 0){
+			connection.setMaxRedirects(dataSource.getMaxRedirects());
+		}
+		if(dataSource.getMaxTotalRetriesDuration() != null && dataSource.getMaxTotalRetriesDuration().isNegative()){
+			connection.setMaxTotalRetriesDuration(dataSource.getMaxTotalRetriesDuration());
+		}
+		if(dataSource.getTopologyRefreshPeriod() != null && dataSource.getTopologyRefreshPeriod().isNegative()){
+			connection.setTopologyRefreshPeriod(dataSource.getTopologyRefreshPeriod());
+		}
+
+		return connection;
 	}
 
 }
