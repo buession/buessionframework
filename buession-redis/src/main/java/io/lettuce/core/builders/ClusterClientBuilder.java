@@ -26,6 +26,7 @@ package io.lettuce.core.builders;
 
 import com.buession.core.validator.Validate;
 import com.buession.redis.client.connection.datasource.ClusterDataSource;
+import io.lettuce.core.cluster.ClusterTopologyRefreshOptions;
 import io.lettuce.core.internal.HostAndPort;
 import io.lettuce.core.providers.ClusterConnectionProvider;
 import io.lettuce.core.providers.ConnectionProvider;
@@ -44,7 +45,7 @@ public abstract class ClusterClientBuilder<K, V, C>
 
 	private Set<HostAndPort> nodes = null;
 
-	private int maxAttempts = ClusterDataSource.DEFAULT_MAX_ATTEMPTS;
+	private int maxRedirects = ClusterDataSource.DEFAULT_MAX_ATTEMPTS;
 
 	private Duration maxTotalRetriesDuration;
 
@@ -71,19 +72,15 @@ public abstract class ClusterClientBuilder<K, V, C>
 	}
 
 	/**
-	 * Sets the maximum number of attempts for cluster operations.
-	 * <p>
-	 * When a cluster operation fails (e.g., due to node failure or slot migration), the client will retry up
-	 * to this many times before giving up.
-	 * </p>
+	 * 设置最大尝试次数
 	 *
-	 * @param maxAttempts
-	 * 		the maximum number of attempts (must be positive)
+	 * @param maxRedirects
+	 * 		最大尝试次数
 	 *
 	 * @return this builder
 	 */
-	public ClusterClientBuilder<K, V, C> maxAttempts(int maxAttempts) {
-		this.maxAttempts = maxAttempts;
+	public ClusterClientBuilder<K, V, C> maxRedirects(int maxRedirects) {
+		this.maxRedirects = maxRedirects;
 		return this;
 	}
 
@@ -126,39 +123,28 @@ public abstract class ClusterClientBuilder<K, V, C>
 		return this;
 	}
 
-	protected C createCle() {
-		/*
-		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
-		final LettuceClusterDataSource dataSource = (LettuceClusterDataSource) getDataSource();
-		final Set<RedisURI> redisURIs = createRedisURIs(dataSource, propertyMapper);
-		final ClusterClientOptions.Builder clusterClientOptionsBuilder = ClusterClientOptions.builder();
-		final RedisClusterClient redisClusterClient = RedisClusterClient.create(redisURIs);
-
-		if(getTopologyRefreshPeriod() != null){
-			ClusterTopologyRefreshOptions clusterTopologyRefreshOptions = ClusterTopologyRefreshOptions.builder()
-					.adaptiveRefreshTriggersTimeout(getTopologyRefreshPeriod())
-					.enablePeriodicRefresh(getTopologyRefreshPeriod())
-					.build();
-			clusterClientOptionsBuilder.topologyRefreshOptions(clusterTopologyRefreshOptions);
-
-		}
-		if(getMaxRedirects() > 0){
-			clusterClientOptionsBuilder.maxRedirects(getMaxRedirects());
-		}
-		if(getMaxTotalRetriesDuration() != null){
-		}
-
-		redisClusterClient.setOptions(clusterClientOptionsBuilder.build());
-
-		return redisClusterClient.connect(codec);
-
-		 */
-		return null;
-	}
-
 	@Override
 	protected ConnectionProvider<K, V> createDefaultConnectionProvider() {
-		return new ClusterConnectionProvider<>(this.nodes, this.clientConfig, this.codec);
+		ClusterTopologyRefreshOptions.Builder topologyRefreshOptionsBuilder =
+				ClusterTopologyRefreshOptions.builder();
+
+		if(topologyRefreshPeriod != null){
+			topologyRefreshOptionsBuilder.enablePeriodicRefresh(topologyRefreshPeriod);
+		}
+
+		if(maxTotalRetriesDuration != null){
+			topologyRefreshOptionsBuilder.adaptiveRefreshTriggersTimeout(maxTotalRetriesDuration);
+		}
+
+		topologyRefreshOptionsBuilder.refreshTriggersReconnectAttempts(maxRedirects).closeStaleConnections(true);
+
+		if(this.maxRedirects > 0){
+			return new ClusterConnectionProvider<>(this.nodes, this.clientConfig, this.poolConfig,
+					topologyRefreshOptionsBuilder.build(), this.maxRedirects, this.codec);
+		}else{
+			return new ClusterConnectionProvider<>(this.nodes, this.clientConfig, this.poolConfig,
+					topologyRefreshOptionsBuilder.build(), this.codec);
+		}
 	}
 
 	@Override
@@ -169,7 +155,7 @@ public abstract class ClusterClientBuilder<K, V, C>
 			throw new IllegalArgumentException("At least one cluster node must be specified for cluster mode");
 		}
 
-		if(maxAttempts <= 0){
+		if(maxRedirects <= 0){
 			throw new IllegalArgumentException("Max attempts must be positive for cluster mode");
 		}
 

@@ -40,7 +40,9 @@ import java.time.Duration;
  */
 public class DefaultLettuceClientConfig implements LettuceClientConfig {
 
-	private Duration connectionTimeout = Duration.ofMillis(RedisURI.DEFAULT_TIMEOUT);
+	private Duration connectionTimeout = RedisURI.DEFAULT_TIMEOUT_DURATION;
+
+	private Duration reconnectDelay = RedisURI.DEFAULT_TIMEOUT_DURATION;
 
 	private Duration socketTimeout = connectionTimeout;
 
@@ -69,6 +71,11 @@ public class DefaultLettuceClientConfig implements LettuceClientConfig {
 	@Override
 	public Duration getConnectionTimeout() {
 		return connectionTimeout;
+	}
+
+	@Override
+	public Duration getReconnectDelay() {
+		return reconnectDelay;
 	}
 
 	@Override
@@ -207,6 +214,15 @@ public class DefaultLettuceClientConfig implements LettuceClientConfig {
 
 		public Builder connectionTimeoutMillis(final long timeoutMillis) {
 			return connectionTimeout(Duration.ofMillis(timeoutMillis));
+		}
+
+		public Builder reconnectDelay(final Duration reconnectDelay) {
+			lettuceClientConfig.reconnectDelay = reconnectDelay;
+			return this;
+		}
+
+		public Builder reconnectDelayMillis(final long reconnectDelayMillis) {
+			return reconnectDelay(Duration.ofMillis(reconnectDelayMillis));
 		}
 
 		public Builder socketTimeout(final Duration timeout) {

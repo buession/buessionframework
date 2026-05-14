@@ -46,6 +46,15 @@ public interface LettuceClientConfig {
 	}
 
 	/**
+	 * 获取重连间隔
+	 *
+	 * @return 重连间隔
+	 */
+	default Duration getReconnectDelay() {
+		return null;
+	}
+
+	/**
 	 * 返回读取超时
 	 *
 	 * @return 读取超时

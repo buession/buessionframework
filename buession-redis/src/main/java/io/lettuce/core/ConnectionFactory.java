@@ -24,12 +24,9 @@
  */
 package io.lettuce.core;
 
-import com.buession.core.converter.mapper.PropertyMapper;
 import io.lettuce.core.api.StatefulConnection;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.cluster.RedisClusterClient;
-import io.lettuce.core.internal.HostAndPort;
-import io.lettuce.core.resource.ClientResources;
 import org.apache.commons.pool2.BasePooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
@@ -53,39 +50,16 @@ import java.util.function.Supplier;
  */
 public class ConnectionFactory<K, V, CONN extends StatefulConnection<K, V>> extends BasePooledObjectFactory<CONN> {
 
-	private final static PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
-
-	private final LettuceClientConfig clientConfig;
-
-	private final HostAndPort hostAndPort;
+	private final AbstractRedisClient redisClient;
 
 	private final RedisCodec<K, V> redisCodec;
-
-	private final boolean autoReconnect;
 
 	private final Supplier<CONN> objectMaker;
 
 	private final static Logger logger = LoggerFactory.getLogger(ConnectionFactory.class);
 
-	public ConnectionFactory(final HostAndPort hostAndPort, final RedisCodec<K, V> redisCodec) {
-		this(hostAndPort, ClientOptions.DEFAULT_AUTO_RECONNECT, redisCodec);
-	}
-
-	public ConnectionFactory(final HostAndPort hostAndPort, final LettuceClientConfig clientConfig,
-	                         final RedisCodec<K, V> redisCodec) {
-		this(hostAndPort, clientConfig, ClientOptions.DEFAULT_AUTO_RECONNECT, redisCodec);
-	}
-
-	public ConnectionFactory(final HostAndPort hostAndPort, final boolean autoReconnect,
-	                         final RedisCodec<K, V> redisCodec) {
-		this(hostAndPort, DefaultLettuceClientConfig.builder().build(), autoReconnect, redisCodec);
-	}
-
-	public ConnectionFactory(final HostAndPort hostAndPort, final LettuceClientConfig clientConfig,
-	                         final boolean autoReconnect, final RedisCodec<K, V> redisCodec) {
-		this.hostAndPort = hostAndPort;
-		this.clientConfig = clientConfig;
-		this.autoReconnect = autoReconnect;
+	public ConnectionFactory(final AbstractRedisClient redisClient, final RedisCodec<K, V> redisCodec) {
+		this.redisClient = redisClient;
 		this.redisCodec = redisCodec;
 		this.objectMaker = this::build;
 	}
@@ -128,63 +102,16 @@ public class ConnectionFactory<K, V, CONN extends StatefulConnection<K, V>> exte
 		}
 	}
 
+	@SuppressWarnings({"unchecked"})
 	private CONN build() {
-		final RedisURI redisURI = RedisURI.create(hostAndPort.getHostText(), hostAndPort.getPort());
-
-		propertyMapper.from(clientConfig.getCredentialsProvider()).to(redisURI::setCredentialsProvider);
-		propertyMapper.from(clientConfig.getClientName()).to(redisURI::setClientName);
-
-		if(clientConfig.getDatabase() >= 0){
-			redisURI.setDatabase(clientConfig.getDatabase());
+		if(redisClient instanceof RedisClusterClient redisClusterClient){
+			return (CONN) redisClusterClient.connect(redisCodec);
+		}else if(redisClient instanceof RedisClient){
+			RedisClient redisClient = (RedisClient) this.redisClient;
+			return (CONN) redisClient.connect(redisCodec);
+		}else{
+			throw new IllegalArgumentException("Unsupported redisClient: " + redisClient.getClass());
 		}
-
-		if(clientConfig.isSsl()){
-			redisURI.setSsl(true);
-		}
-
-		if(clientConfig.getSocketTimeout() != null && clientConfig.getSocketTimeout().isNegative() == false){
-			redisURI.setTimeout(clientConfig.getSocketTimeout());
-		}
-
-		final RedisClusterClient redisClusterClient = RedisClusterClient.create(createClientResources(), redisURI);
-		propertyMapper.from(createClientOptions()).to(redisClusterClient::setOptions);
-		redisClusterClient.connect(redisCodec);
-		final RedisClient redisClient = RedisClient.create(createClientResources(), redisURI);
-		propertyMapper.from(createClientOptions()).to(redisClient::setOptions);
-
-		return (CONN) redisClient.connect(redisCodec);
-	}
-
-	private ClientOptions createClientOptions() {
-		ClientOptions.Builder builder = ClientOptions.builder();
-
-		builder.autoReconnect(autoReconnect);
-		propertyMapper.from(clientConfig.getRequestQueueSize()).to(builder::requestQueueSize);
-		builder.socketOptions(createSocketOptions());
-
-		if(clientConfig.isSsl()){
-			builder.sslOptions(clientConfig.getSslOptions());
-		}
-
-		return builder.build();
-	}
-
-	private SocketOptions createSocketOptions() {
-		SocketOptions.Builder builder = SocketOptions.builder();
-
-		propertyMapper.from(clientConfig.getConnectionTimeout()).to(builder::connectTimeout);
-
-		return builder.build();
-	}
-
-	private ClientResources createClientResources() {
-		ClientResources.Builder builder = ClientResources.builder();
-
-		propertyMapper.from(clientConfig.getComputationThreadPoolSize()).to(builder::computationThreadPoolSize);
-		propertyMapper.from(clientConfig.getIoThreadPoolSize()).to(builder::ioThreadPoolSize);
-		//builder.reconnectDelay();
-
-		return builder.build();
 	}
 
 }

@@ -21,27 +21,10 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */
-package io.lettuce.core.providers;
-
-import io.lettuce.core.api.StatefulConnection;
-import io.lettuce.core.protocol.CommandArgs;
-
-/**
- * Lettuce Redis 连接提供者
- *
- * @param <K>
- * 		Key 类型
- * @param <V>
- * 		值类型
+ */package com.buession.core;/**
+ * 
  *
  * @author Yong.Teng
  * @since 4.0.0
- */
-public interface ConnectionProvider<K, V> extends AutoCloseable {
-
-	StatefulConnection<K, V> getConnection();
-
-	StatefulConnection<K, V> getConnection(CommandArgs<K, V> commandArgs);
-
+ */public interface Sleeper {
 }

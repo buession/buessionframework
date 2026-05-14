@@ -24,11 +24,15 @@
  */
 package io.lettuce.core.providers;
 
-import io.lettuce.core.api.StatefulConnection;
-import io.lettuce.core.protocol.CommandArgs;
+import com.buession.core.converter.mapper.PropertyMapper;
+import io.lettuce.core.LettuceClientConfig;
+import io.lettuce.core.SocketOptions;
+import io.lettuce.core.api.AsyncCloseable;
+import io.lettuce.core.resource.ClientResources;
+import io.lettuce.core.resource.Delay;
 
 /**
- * Lettuce Redis 连接提供者
+ * Lettuce Redis 连接提供者基类
  *
  * @param <K>
  * 		Key 类型
@@ -38,10 +42,46 @@ import io.lettuce.core.protocol.CommandArgs;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public interface ConnectionProvider<K, V> extends AutoCloseable {
+public abstract class AbstractConnectionProvider<K, V> implements ConnectionProvider<K, V> {
 
-	StatefulConnection<K, V> getConnection();
+	protected final static PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenNonNull();
 
-	StatefulConnection<K, V> getConnection(CommandArgs<K, V> commandArgs);
+	protected static ClientResources createClientResources(final LettuceClientConfig clientConfig) {
+		ClientResources.Builder builder = ClientResources.builder();
+
+		propertyMapper.from(clientConfig.getComputationThreadPoolSize()).to(builder::computationThreadPoolSize);
+		propertyMapper.from(clientConfig.getIoThreadPoolSize()).to(builder::ioThreadPoolSize);
+		propertyMapper.from(clientConfig.getReconnectDelay()).as(Delay::constant).to(builder::reconnectDelay);
+
+		return builder.build();
+	}
+
+	protected static SocketOptions createSocketOptions(final LettuceClientConfig clientConfig) {
+		final SocketOptions.Builder builder = SocketOptions.builder();
+
+		propertyMapper.from(clientConfig.getConnectionTimeout()).to(builder::connectTimeout);
+
+		return builder.build();
+	}
+
+	protected static void closeQuietly(AutoCloseable closeable) {
+		if(closeable != null){
+			try{
+				closeable.close();
+			}catch(Exception e){
+				//
+			}
+		}
+	}
+
+	protected static void asyncCloseQuietly(AsyncCloseable closeable) {
+		if(closeable != null){
+			try{
+				closeable.closeAsync();
+			}catch(Exception e){
+				//
+			}
+		}
+	}
 
 }

@@ -26,10 +26,9 @@ package io.lettuce.core.providers;
 
 import io.lettuce.core.ConnectionPool;
 import io.lettuce.core.LettuceClientConfig;
-import io.lettuce.core.LettuceClusterInfoCache;
-import io.lettuce.core.RedisConnectionException;
-import io.lettuce.core.RedisException;
 import io.lettuce.core.RedisURI;
+import io.lettuce.core.cluster.ClusterClientOptions;
+import io.lettuce.core.cluster.ClusterTopologyRefreshOptions;
 import io.lettuce.core.cluster.RedisClusterClient;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.codec.RedisCodec;
@@ -37,13 +36,11 @@ import io.lettuce.core.internal.HostAndPort;
 import io.lettuce.core.protocol.CommandArgs;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
-import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Lettuce Redis 集群连接池连接提供者
@@ -51,8 +48,128 @@ import java.util.concurrent.ThreadLocalRandom;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class ClusterConnectionProvider<K, V> implements ConnectionProvider<K, V> {
+public class ClusterConnectionProvider<K, V> extends AbstractConnectionProvider<K, V> {
 
+	private volatile boolean initialized;
+
+	private volatile ConnectionPool<K, V, StatefulRedisClusterConnection<K, V>> pool;
+
+	private final Lock lock = new ReentrantLock();
+
+	public ClusterConnectionProvider(final Set<HostAndPort> clusterNodes, final LettuceClientConfig clientConfig,
+	                                 final RedisCodec<K, V> redisCodec) {
+		this(clusterNodes, clientConfig, null, redisCodec);
+
+	}
+
+	public ClusterConnectionProvider(final Set<HostAndPort> clusterNodes, final LettuceClientConfig clientConfig,
+	                                 final GenericObjectPoolConfig<StatefulRedisClusterConnection<K, V>> poolConfig,
+	                                 final RedisCodec<K, V> redisCodec) {
+		this.pool = createPool(clusterNodes, clientConfig, poolConfig, null, null, redisCodec);
+	}
+
+	public ClusterConnectionProvider(final Set<HostAndPort> clusterNodes, final LettuceClientConfig clientConfig,
+	                                 final GenericObjectPoolConfig<StatefulRedisClusterConnection<K, V>> poolConfig,
+	                                 final Integer maxRedirects, final RedisCodec<K, V> redisCodec) {
+		this.pool = createPool(clusterNodes, clientConfig, poolConfig, null, maxRedirects, redisCodec);
+	}
+
+	public ClusterConnectionProvider(final Set<HostAndPort> clusterNodes, final LettuceClientConfig clientConfig,
+	                                 final GenericObjectPoolConfig<StatefulRedisClusterConnection<K, V>> poolConfig,
+	                                 final ClusterTopologyRefreshOptions topologyRefreshOptions,
+	                                 final RedisCodec<K, V> redisCodec) {
+		this(clusterNodes, clientConfig, poolConfig, topologyRefreshOptions, null, redisCodec);
+	}
+
+	public ClusterConnectionProvider(final Set<HostAndPort> clusterNodes, final LettuceClientConfig clientConfig,
+	                                 final GenericObjectPoolConfig<StatefulRedisClusterConnection<K, V>> poolConfig,
+	                                 final ClusterTopologyRefreshOptions topologyRefreshOptions,
+	                                 final Integer maxRedirects, final RedisCodec<K, V> redisCodec) {
+		this.pool = createPool(clusterNodes, clientConfig, poolConfig, topologyRefreshOptions, maxRedirects,
+				redisCodec);
+	}
+
+	@Override
+	public StatefulRedisClusterConnection<K, V> getConnection() {
+		return pool.getResource();
+	}
+
+	@Override
+	public StatefulRedisClusterConnection<K, V> getConnection(CommandArgs<K, V> commandArgs) {
+		return pool.getResource();
+	}
+
+	@Override
+	public void close() {
+		closeQuietly(pool);
+	}
+
+	private RedisClusterClient createRedisClusterClient(final Set<HostAndPort> clusterNodes,
+	                                                    final LettuceClientConfig clientConfig,
+	                                                    final ClusterTopologyRefreshOptions topologyRefreshOptions,
+	                                                    final Integer maxRedirects) {
+		final List<RedisURI> redisURIS = new ArrayList<>(clusterNodes.size());
+
+		for(HostAndPort sentinel : clusterNodes){
+			RedisURI redisURI = RedisURI.create(sentinel.getHostText(), sentinel.getPort());
+
+			propertyMapper.from(clientConfig.getCredentialsProvider()).to(redisURI::setCredentialsProvider);
+			propertyMapper.from(clientConfig.getClientName()).to(redisURI::setClientName);
+			if(clientConfig.isSsl()){
+				redisURI.setSsl(true);
+			}
+
+			if(clientConfig.getSocketTimeout() != null && clientConfig.getSocketTimeout().isNegative() == false){
+				redisURI.setTimeout(clientConfig.getSocketTimeout());
+			}
+			redisURIS.add(redisURI);
+		}
+
+		final RedisClusterClient redisClusterClient = RedisClusterClient.create(createClientResources(clientConfig),
+				redisURIS);
+
+		propertyMapper.from(createClusterClientOptions(clientConfig, topologyRefreshOptions, maxRedirects))
+				.to(redisClusterClient::setOptions);
+
+		return redisClusterClient;
+	}
+
+	private ConnectionPool<K, V, StatefulRedisClusterConnection<K, V>> createPool(final Set<HostAndPort> clusterNodes,
+	                                                                              final LettuceClientConfig clientConfig,
+	                                                                              final GenericObjectPoolConfig<StatefulRedisClusterConnection<K, V>> poolConfig,
+	                                                                              final ClusterTopologyRefreshOptions topologyRefreshOptions,
+	                                                                              final Integer maxRedirects,
+	                                                                              final RedisCodec<K, V> redisCodec) {
+		final RedisClusterClient redisClusterClient = createRedisClusterClient(clusterNodes, clientConfig,
+				topologyRefreshOptions, maxRedirects);
+
+		if(poolConfig == null){
+			return new ConnectionPool<>(redisClusterClient, redisCodec);
+		}else{
+			return new ConnectionPool<>(redisClusterClient, poolConfig, redisCodec);
+		}
+	}
+
+	private static ClusterClientOptions createClusterClientOptions(final LettuceClientConfig clientConfig,
+	                                                               final ClusterTopologyRefreshOptions topologyRefreshOptions,
+	                                                               final Integer maxRedirects) {
+		final ClusterClientOptions.Builder builder = ClusterClientOptions.builder();
+
+		//builder.autoReconnect(autoReconnect);
+		builder.socketOptions(createSocketOptions(clientConfig));
+		propertyMapper.from(clientConfig.getRequestQueueSize()).to(builder::requestQueueSize);
+		propertyMapper.from(topologyRefreshOptions).to(builder::topologyRefreshOptions);
+		propertyMapper.from(maxRedirects).to(builder::maxRedirects);
+
+		if(clientConfig.isSsl()){
+			propertyMapper.from(clientConfig.getSslOptions()).to(builder::sslOptions);
+		}
+
+		return builder.build();
+	}
+
+
+	/*
 	private final LettuceClusterInfoCache<K, V> cache;
 
 	public ClusterConnectionProvider(final Set<HostAndPort> clusterNodes, final LettuceClientConfig clientConfig,
@@ -74,37 +191,6 @@ public class ClusterConnectionProvider<K, V> implements ConnectionProvider<K, V>
 		this.cache = new LettuceClusterInfoCache<>(clusterNodes, clientConfig, poolConfig, topologyRefreshPeriod,
 				redisCodec);
 		initializeSlotsCache(clusterNodes, clientConfig, redisCodec);
-	}
-
-	private void initializeSlotsCache(Set<HostAndPort> startNodes, LettuceClientConfig clientConfig,
-	                                  RedisCodec<K, V> redisCodec) {
-		if(startNodes.isEmpty()){
-			throw new RedisConnectionException("No nodes to initialize cluster slots cache.");
-		}
-
-		ArrayList<HostAndPort> startNodeList = new ArrayList<>(startNodes);
-		Collections.shuffle(startNodeList);
-
-		RedisException firstException = null;
-		for(HostAndPort hostAndPort : startNodeList){
-			RedisURI redisURI = RedisURI.create(hostAndPort.getHostText(), hostAndPort.getPort());
-			RedisClusterClient redisClusterClient = RedisClusterClient.create(redisURI);
-			try(StatefulRedisClusterConnection<K, V> conn = redisClusterClient.connect(redisCodec)){
-				cache.discoverClusterNodesAndSlots(conn);
-				return;
-			}catch(RedisException e){
-				if(firstException == null){
-					firstException = e;
-				}
-			}
-		}
-
-		RedisConnectionException uninitializedException = new RedisConnectionException(
-				"Could not initialize cluster slots cache.");
-		if(firstException != null){
-			uninitializedException.addSuppressed(firstException);
-		}
-		throw uninitializedException;
 	}
 
 	public Map<String, ConnectionPool<K, V, StatefulRedisClusterConnection<K, V>>> getNodes() {
@@ -138,9 +224,7 @@ public class ClusterConnectionProvider<K, V> implements ConnectionProvider<K, V>
 				if(suppressed == null){ // remembering first suppressed exception
 					suppressed = ex;
 				}
-				if(connection != null){
-					connection.close();
-				}
+				asyncCloseQuietly(connection);
 			}
 		}
 
@@ -187,7 +271,7 @@ public class ClusterConnectionProvider<K, V> implements ConnectionProvider<K, V>
 		List<ConnectionPool<K, V, StatefulRedisClusterConnection<K, V>>> connectionPools = cache.getSlotReplicaPools(
 				slot);
 		ThreadLocalRandom random = ThreadLocalRandom.current();
-		if(connectionPools != null && !connectionPools.isEmpty()){
+		if(connectionPools != null && connectionPools.isEmpty() == false){
 			// pick up randomly a connection
 			int idx = random.nextInt(connectionPools.size());
 			return connectionPools.get(idx).getResource();
@@ -195,7 +279,7 @@ public class ClusterConnectionProvider<K, V> implements ConnectionProvider<K, V>
 
 		renewSlotCache();
 		connectionPools = cache.getSlotReplicaPools(slot);
-		if(connectionPools != null && !connectionPools.isEmpty()){
+		if(connectionPools != null && connectionPools.isEmpty() == false){
 			int idx = random.nextInt(connectionPools.size());
 			return connectionPools.get(idx).getResource();
 		}
@@ -221,13 +305,41 @@ public class ClusterConnectionProvider<K, V> implements ConnectionProvider<K, V>
 		cache.renewClusterSlots(null);
 	}
 
-	public void renewSlotCache(StatefulRedisClusterConnection<K, V> jedis) {
-		cache.renewClusterSlots(jedis);
+	public void renewSlotCache(StatefulRedisClusterConnection<K, V> connection) {
+		cache.renewClusterSlots(connection);
 	}
 
-	@Override
-	public void close() {
-		cache.close();
+	private void initializeSlotsCache(Set<HostAndPort> startNodes, LettuceClientConfig clientConfig,
+	                                  RedisCodec<K, V> redisCodec) {
+		if(startNodes.isEmpty()){
+			throw new RedisConnectionException("No nodes to initialize cluster slots cache.");
+		}
+
+		ArrayList<HostAndPort> startNodeList = new ArrayList<>(startNodes);
+		Collections.shuffle(startNodeList);
+
+		RedisException firstException = null;
+		for(HostAndPort hostAndPort : startNodeList){
+			RedisURI redisURI = RedisURI.create(hostAndPort.getHostText(), hostAndPort.getPort());
+			RedisClusterClient redisClusterClient = RedisClusterClient.create(redisURI);
+			try(StatefulRedisClusterConnection<K, V> conn = redisClusterClient.connect(redisCodec)){
+				cache.discoverClusterNodesAndSlots(conn);
+				return;
+			}catch(RedisException e){
+				if(firstException == null){
+					firstException = e;
+				}
+			}
+		}
+
+		RedisConnectionException uninitializedException = new RedisConnectionException(
+				"Could not initialize cluster slots cache.");
+		if(firstException != null){
+			uninitializedException.addSuppressed(firstException);
+		}
+		throw uninitializedException;
 	}
+
+	 */
 
 }

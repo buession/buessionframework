@@ -24,6 +24,7 @@
  */
 package io.lettuce.core.builders;
 
+import com.buession.core.utils.Assert;
 import com.buession.redis.core.RedisNode;
 import io.lettuce.core.internal.HostAndPort;
 import io.lettuce.core.providers.ConnectionProvider;
@@ -92,10 +93,7 @@ public abstract class StandaloneClientBuilder<K, V, C>
 	@Override
 	protected void validateSpecificConfiguration() {
 		validateCommonConfiguration();
-
-		if(hostAndPort == null){
-			throw new IllegalArgumentException("Either URI or host/port must be specified");
-		}
+		Assert.isNull(hostAndPort, "Either URI or host/port must be specified");
 	}
 
 }

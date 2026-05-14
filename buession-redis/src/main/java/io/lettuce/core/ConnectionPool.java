@@ -26,7 +26,6 @@ package io.lettuce.core;
 
 import io.lettuce.core.api.StatefulConnection;
 import io.lettuce.core.codec.RedisCodec;
-import io.lettuce.core.internal.HostAndPort;
 import org.apache.commons.pool2.PooledObjectFactory;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
@@ -54,15 +53,13 @@ public class ConnectionPool<K, V, CONN extends StatefulConnection<K, V>> extends
 		super(factory, poolConfig);
 	}
 
-	public ConnectionPool(final HostAndPort hostAndPort, final LettuceClientConfig clientConfig,
-	                      final RedisCodec<K, V> redisCodec) {
-		this(new ConnectionFactory<>(hostAndPort, clientConfig, redisCodec));
+	public ConnectionPool(final AbstractRedisClient redisClient, final RedisCodec<K, V> redisCodec) {
+		this(new ConnectionFactory<>(redisClient, redisCodec));
 	}
 
-	public ConnectionPool(final HostAndPort hostAndPort, final LettuceClientConfig clientConfig,
-	                      final GenericObjectPoolConfig<CONN> poolConfig,
+	public ConnectionPool(final AbstractRedisClient redisClient, final GenericObjectPoolConfig<CONN> poolConfig,
 	                      final RedisCodec<K, V> redisCodec) {
-		this(new ConnectionFactory<>(hostAndPort, clientConfig, redisCodec), poolConfig);
+		this(new ConnectionFactory<>(redisClient, redisCodec), poolConfig);
 	}
 
 	public CONN getResource() {

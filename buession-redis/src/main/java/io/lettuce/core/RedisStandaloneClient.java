@@ -51,7 +51,7 @@ public class RedisStandaloneClient<K, V> extends BaseRedisClient<K, V> {
 	}
 
 	/**
-	 * Creates a RedisClient with default host and port (localhost:6379).
+	 * Creates a RedisStandaloneClient with default host and port (localhost:6379).
 	 * <p>
 	 * This is a convenience factory method that uses the builder pattern internally.
 	 * </p>
@@ -63,7 +63,7 @@ public class RedisStandaloneClient<K, V> extends BaseRedisClient<K, V> {
 	}
 
 	/**
-	 * Creates a RedisClient with the specified host and port.
+	 * Creates a RedisStandaloneClient with the specified host and port.
 	 * <p>
 	 * This is a convenience factory method that uses the builder pattern internally.
 	 * </p>
@@ -80,7 +80,7 @@ public class RedisStandaloneClient<K, V> extends BaseRedisClient<K, V> {
 	}
 
 	/**
-	 * Creates a RedisClient with the specified host and port.
+	 * Creates a RedisStandaloneClient with the specified host and port.
 	 * <p>
 	 * This is a convenience factory method that uses the builder pattern internally.
 	 * </p>

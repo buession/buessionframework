@@ -28,11 +28,9 @@ import io.lettuce.core.ClientOptions;
 import io.lettuce.core.ConnectionPoolConfig;
 import io.lettuce.core.DefaultLettuceClientConfig;
 import io.lettuce.core.LettuceClientConfig;
-import io.lettuce.core.api.StatefulConnection;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.providers.ConnectionProvider;
 import io.lettuce.core.resource.ClientResources;
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
 /**
  * Abstract base class for Redis client builders that provides common configuration options.
@@ -41,15 +39,13 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
  * 		Key 类型
  * @param <V>
  * 		值类型
- * @param <C>
- * 		the client type that this builder creates
  *
  * @author Yong.Teng
  * @since 4.0.0
  */
 public abstract class AbstractClientBuilder<K, V, T extends AbstractClientBuilder<K, V, T, C>, C> {
 
-	protected GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig = new ConnectionPoolConfig<>();
+	protected ConnectionPoolConfig<K, V> poolConfig = new ConnectionPoolConfig<>();
 
 	protected LettuceClientConfig clientConfig;
 
@@ -89,7 +85,7 @@ public abstract class AbstractClientBuilder<K, V, T extends AbstractClientBuilde
 	 *
 	 * @return this builder
 	 */
-	public T poolConfig(GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig) {
+	public T poolConfig(ConnectionPoolConfig<K, V> poolConfig) {
 		this.poolConfig = poolConfig;
 		return self();
 	}

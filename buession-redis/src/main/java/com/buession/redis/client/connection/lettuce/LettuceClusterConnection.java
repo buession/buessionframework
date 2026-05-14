@@ -24,8 +24,6 @@
  */
 package com.buession.redis.client.connection.lettuce;
 
-import com.buession.core.converter.mapper.PropertyMapper;
-import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisClusterConnection;
 import com.buession.redis.client.connection.RedisNode;
@@ -38,16 +36,11 @@ import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.transaction.Transaction;
 import io.lettuce.core.DefaultLettuceClientConfig;
 import io.lettuce.core.RedisClusterClient;
-import io.lettuce.core.RedisCredentialsProvider;
-import io.lettuce.core.RedisURI;
-import io.lettuce.core.StaticCredentialsProvider;
 import io.lettuce.core.builders.ClusterClientBuilder;
 import io.lettuce.core.codec.RedisCodec;
 
 import java.time.Duration;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Lettuce 集群模式连接器
@@ -168,63 +161,11 @@ public class LettuceClusterConnection<K, V> extends AbstractLettuceRedisConnecti
 		this.topologyRefreshPeriod = topologyRefreshPeriod;
 	}
 
-	/*
-	protected <K, V> StatefulRedisClusterConnection<K, V> createStatefulRedisClusterConnection(
-			final RedisCodec<K, V> codec) {
-		final PropertyMapper propertyMapper = PropertyMapper.get().alwaysApplyingWhenHasText();
-		final LettuceClusterDataSource dataSource = (LettuceClusterDataSource) getDataSource();
-		final Set<RedisURI> redisURIs = createRedisURIs(dataSource, propertyMapper);
-		final ClusterClientOptions.Builder clusterClientOptionsBuilder = ClusterClientOptions.builder();
-		final RedisClusterClient redisClusterClient = RedisClusterClient.create(redisURIs);
-
-		if(getTopologyRefreshPeriod() != null){
-			ClusterTopologyRefreshOptions clusterTopologyRefreshOptions = ClusterTopologyRefreshOptions.builder()
-					.adaptiveRefreshTriggersTimeout(getTopologyRefreshPeriod())
-					.enablePeriodicRefresh(getTopologyRefreshPeriod())
-					.build();
-			clusterClientOptionsBuilder.topologyRefreshOptions(clusterTopologyRefreshOptions);
-
-		}
-		if(getMaxRedirects() > 0){
-			clusterClientOptionsBuilder.maxRedirects(getMaxRedirects());
-		}
-		if(getMaxTotalRetriesDuration() != null){
-		}
-
-		redisClusterClient.setOptions(clusterClientOptionsBuilder.build());
-
-		return redisClusterClient.connect(codec);
-	}
-
-	 */
-
 	@Override
 	public Transaction multi() {
 		throw new NotSupportedCommandException(RedisMode.CLUSTER, RedisCommand.MULTI);
 	}
 
-	private Set<RedisURI> createRedisURIs(final LettuceClusterDataSource dataSource,
-	                                      final PropertyMapper propertyMapper) {
-		final RedisCredentialsProvider redisCredentialsProvider = Validate.hasText(
-				dataSource.getPassword()) ? new StaticCredentialsProvider(
-				Validate.hasText(dataSource.getUsername()) ? dataSource.getUsername() : null,
-				dataSource.getPassword().toCharArray()) : null;
-		return dataSource.getNodes().stream().map((node)->{
-			int port = node.getPort() == 0 ? RedisNode.DEFAULT_PORT : node.getPort();
-			final RedisURI redisURI = RedisURI.create(node.getHost(), port);
-
-			propertyMapper.from(redisCredentialsProvider).to(redisURI::setCredentialsProvider);
-			propertyMapper.from(dataSource.getClientName()).to(redisURI::setClientName);
-
-			if(dataSource.getConnectTimeout() > 0){
-				redisURI.setTimeout(Duration.ofMillis(dataSource.getConnectTimeout()));
-			}
-
-			redisURI.setSsl(dataSource.getSslOptions() != null);
-
-			return redisURI;
-		}).collect(Collectors.toSet());
-	}
 
 	@Override
 	protected void internalInit() {
@@ -245,7 +186,7 @@ public class LettuceClusterConnection<K, V> extends AbstractLettuceRedisConnecti
 			Optional.ofNullable(getTopologyRefreshPeriod()).ifPresent(builder::topologyRefreshPeriod);
 
 			if(getMaxRedirects() > 0){
-				builder.maxAttempts(getMaxRedirects());
+				builder.maxRedirects(getMaxRedirects());
 			}
 
 			client = builder.build();

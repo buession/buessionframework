@@ -38,7 +38,7 @@ import io.lettuce.core.UnblockType;
 import io.lettuce.core.protocol.CommandKeyword;
 import io.lettuce.core.protocol.CommandType;
 import io.lettuce.core.protocol.ProtocolKeyword;
-import io.lettuce.core.search.arguments.PostProcessingArgs;
+import io.lettuce.core.search.aggregateutils.ReduceFunction;
 
 /**
  * Lettuce {@link AclSetuserArgs} 扩展
@@ -139,7 +139,7 @@ public final class LettuceAclSetuserArgs extends AclSetuserArgs {
 						return Enum.valueOf(BitFieldArgs.OverflowType.class, subCommand.getName());
 					}catch(IllegalArgumentException e3){
 						try{
-							return Enum.valueOf(PostProcessingArgs.ReduceFunction.class, subCommand.getName());
+							return Enum.valueOf(ReduceFunction.class, subCommand.getName());
 						}catch(IllegalArgumentException e4){
 							try{
 								return Enum.valueOf(StreamDeletionPolicy.class, subCommand.getName());

@@ -24,18 +24,20 @@
  */
 package io.lettuce.core.providers;
 
+import io.lettuce.core.ClientOptions;
 import io.lettuce.core.ConnectionFactory;
 import io.lettuce.core.ConnectionPool;
+import io.lettuce.core.DefaultLettuceClientConfig;
 import io.lettuce.core.LettuceClientConfig;
+import io.lettuce.core.RedisClient;
+import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.StatefulConnection;
+import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.internal.HostAndPort;
 import io.lettuce.core.protocol.CommandArgs;
 import org.apache.commons.pool2.PooledObjectFactory;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
-
-import java.util.Collections;
-import java.util.Map;
 
 /**
  * Lettuce Redis 连接池连接提供者
@@ -48,51 +50,40 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class PooledConnectionProvider<K, V> implements ConnectionProvider<K, V> {
+public class PooledConnectionProvider<K, V> extends AbstractConnectionProvider<K, V> {
 
-	private final ConnectionPool<K, V, StatefulConnection<K, V>> pool;
-
-	private Object connectionMapKey = "";
+	private volatile ConnectionPool<K, V, StatefulRedisConnection<K, V>> pool;
 
 	public PooledConnectionProvider(final HostAndPort hostAndPort, final RedisCodec<K, V> redisCodec) {
-		this(new ConnectionFactory<>(hostAndPort, redisCodec));
-		this.connectionMapKey = hostAndPort;
+		this(new ConnectionFactory<>(createRedisClient(hostAndPort, DefaultLettuceClientConfig.builder().build()),
+				redisCodec));
 	}
 
 	public PooledConnectionProvider(final HostAndPort hostAndPort, final LettuceClientConfig clientConfig,
 	                                final RedisCodec<K, V> redisCodec) {
-		this(new ConnectionPool<>(hostAndPort, clientConfig, redisCodec));
-		this.connectionMapKey = hostAndPort;
+		this(new ConnectionPool<>(createRedisClient(hostAndPort, clientConfig), redisCodec));
 	}
 
 	public PooledConnectionProvider(final HostAndPort hostAndPort, final LettuceClientConfig clientConfig,
-	                                final GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig,
+	                                final GenericObjectPoolConfig<StatefulRedisConnection<K, V>> poolConfig,
 	                                final RedisCodec<K, V> redisCodec) {
-		this(new ConnectionPool<>(hostAndPort, clientConfig, poolConfig, redisCodec));
-		this.connectionMapKey = hostAndPort;
+		this(new ConnectionPool<>(createRedisClient(hostAndPort, clientConfig), poolConfig, redisCodec));
 	}
 
-	public PooledConnectionProvider(final PooledObjectFactory<StatefulConnection<K, V>> factory) {
+	public PooledConnectionProvider(final PooledObjectFactory<StatefulRedisConnection<K, V>> factory) {
 		this(new ConnectionPool<>(factory));
-		this.connectionMapKey = factory;
 	}
 
-	public PooledConnectionProvider(final PooledObjectFactory<StatefulConnection<K, V>> factory,
-	                                final GenericObjectPoolConfig<StatefulConnection<K, V>> poolConfig) {
+	public PooledConnectionProvider(final PooledObjectFactory<StatefulRedisConnection<K, V>> factory,
+	                                final GenericObjectPoolConfig<StatefulRedisConnection<K, V>> poolConfig) {
 		this(new ConnectionPool<>(factory, poolConfig));
-		this.connectionMapKey = factory;
 	}
 
-	private PooledConnectionProvider(ConnectionPool<K, V, StatefulConnection<K, V>> pool) {
+	private PooledConnectionProvider(ConnectionPool<K, V, StatefulRedisConnection<K, V>> pool) {
 		this.pool = pool;
 	}
 
-	@Override
-	public void close() {
-		pool.close();
-	}
-
-	public final ConnectionPool<K, V, StatefulConnection<K, V>> getPool() {
+	public final ConnectionPool<K, V, StatefulRedisConnection<K, V>> getPool() {
 		return pool;
 	}
 
@@ -107,8 +98,48 @@ public class PooledConnectionProvider<K, V> implements ConnectionProvider<K, V> 
 	}
 
 	@Override
-	public Map<?, ConnectionPool<K, V, StatefulConnection<K, V>>> getConnectionMap() {
-		return Collections.singletonMap(connectionMapKey, pool);
+	public void close() {
+		closeQuietly(pool);
+	}
+
+	private static RedisClient createRedisClient(final HostAndPort hostAndPort,
+	                                             final LettuceClientConfig clientConfig) {
+		final RedisURI redisURI = RedisURI.create(hostAndPort.getHostText(), hostAndPort.getPort());
+
+		propertyMapper.from(clientConfig.getCredentialsProvider()).to(redisURI::setCredentialsProvider);
+		propertyMapper.from(clientConfig.getClientName()).to(redisURI::setClientName);
+
+		if(clientConfig.getDatabase() >= 0){
+			redisURI.setDatabase(clientConfig.getDatabase());
+		}
+
+		if(clientConfig.isSsl()){
+			redisURI.setSsl(true);
+		}
+
+		if(clientConfig.getSocketTimeout() != null && clientConfig.getSocketTimeout().isNegative() == false){
+			redisURI.setTimeout(clientConfig.getSocketTimeout());
+		}
+
+		final RedisClient redisClient = RedisClient.create(createClientResources(clientConfig), redisURI);
+
+		propertyMapper.from(createClientOptions(clientConfig)).to(redisClient::setOptions);
+
+		return redisClient;
+	}
+
+	private static ClientOptions createClientOptions(final LettuceClientConfig clientConfig) {
+		final ClientOptions.Builder builder = ClientOptions.builder();
+
+		//builder.autoReconnect(autoReconnect);
+		builder.socketOptions(createSocketOptions(clientConfig));
+		propertyMapper.from(clientConfig.getRequestQueueSize()).to(builder::requestQueueSize);
+
+		if(clientConfig.isSsl()){
+			propertyMapper.from(clientConfig.getSslOptions()).to(builder::sslOptions);
+		}
+
+		return builder.build();
 	}
 
 }

@@ -45,11 +45,8 @@ public class LettuceURIHelper {
 	}
 
 	public static boolean isValid(URI uri) {
-		if(Validate.isBlank(uri.getScheme()) || Validate.isBlank(uri.getHost()) || uri.getPort() == -1){
-			return false;
-		}
-
-		return true;
+		return Validate.isBlank(uri.getScheme()) || Validate.isBlank(uri.getHost()) || uri.getPort() == -1 ? false :
+				true;
 	}
 
 	public static HostAndPort getHostAndPort(URI uri) {

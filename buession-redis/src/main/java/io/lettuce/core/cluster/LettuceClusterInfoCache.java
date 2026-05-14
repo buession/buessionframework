@@ -22,11 +22,13 @@
  * | Copyright @ 2013-2026 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package io.lettuce.core;
+package io.lettuce.core.cluster;
 
 import com.buession.redis.utils.SafeEncoder;
-import io.lettuce.core.cluster.LettuceClusterOperationException;
-import io.lettuce.core.cluster.RedisClusterClient;
+import io.lettuce.core.ConnectionPool;
+import io.lettuce.core.LettuceClientConfig;
+import io.lettuce.core.RedisException;
+import io.lettuce.core.RedisURI;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.internal.HostAndPort;
@@ -58,7 +60,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @author Yong.Teng
  * @since 4.0.0
  */
-public class LettuceClusterInfoCache<K, V> {
+public class LettuceClusterInfoCache<K, V> implements AutoCloseable {
 
 	private final static int CLUSTER_HASHSLOTS = 16384;
 
@@ -213,7 +215,6 @@ public class LettuceClusterInfoCache<K, V> {
 						// try next nodes
 					}
 				}
-
 			}finally{
 				rediscoverLock.unlock();
 			}
@@ -371,6 +372,7 @@ public class LettuceClusterInfoCache<K, V> {
 		}
 	}
 
+	@Override
 	public void close() {
 		reset();
 		if(topologyRefreshExecutor != null){
@@ -391,10 +393,11 @@ public class LettuceClusterInfoCache<K, V> {
 
 	private ConnectionPool<K, V, StatefulRedisClusterConnection<K, V>> createNodePool(HostAndPort node) {
 		if(poolConfig == null){
-			return new ConnectionPool<>(node, clientConfig, redisCodec);
+			//return new ConnectionPool<>(node, clientConfig, redisCodec);
 		}else{
-			return new ConnectionPool<>(node, clientConfig, poolConfig, redisCodec);
+			//return new ConnectionPool<>(node, clientConfig, poolConfig, redisCodec);
 		}
+		return null;
 	}
 
 	private void discoverClusterSlots(StatefulRedisClusterConnection<K, V> connection) {
