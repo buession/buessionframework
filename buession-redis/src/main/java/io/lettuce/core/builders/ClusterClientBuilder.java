@@ -47,9 +47,13 @@ public abstract class ClusterClientBuilder<K, V, C>
 
 	private int maxRedirects = ClusterDataSource.DEFAULT_MAX_ATTEMPTS;
 
-	private Duration maxTotalRetriesDuration;
+	private Duration adaptiveRefreshTimeout = ClusterTopologyRefreshOptions.DEFAULT_ADAPTIVE_REFRESH_TIMEOUT_DURATION;
 
-	private Duration topologyRefreshPeriod = null;
+	private Duration topologyRefreshPeriod = ClusterTopologyRefreshOptions.DEFAULT_REFRESH_PERIOD_DURATION;
+
+	private boolean adaptive;
+
+	private boolean dynamicRefreshSources = ClusterTopologyRefreshOptions.DEFAULT_DYNAMIC_REFRESH_SOURCES;
 
 	protected ClusterClientBuilder() {
 
@@ -85,19 +89,20 @@ public abstract class ClusterClientBuilder<K, V, C>
 	}
 
 	/**
-	 * Sets the maximum total duration for retries across all attempts.
-	 * <p>
-	 * This provides a time-based limit on retries in addition to the attempt-based limit. If not set,
-	 * it will be calculated as socketTimeout * maxAttempts.
-	 * </p>
+	 * Set the timeout for adaptive topology updates. This timeout is to rate-limit topology updates initiated by refresh
+	 * triggers to one topology refresh per timeout. Defaults to {@literal 30 SECONDS}. See
+	 * {@link io.lettuce.core.cluster.ClusterTopologyRefreshOptions#DEFAULT_REFRESH_PERIOD}
+	 * and {@link io.lettuce.core.cluster.ClusterTopologyRefreshOptions#DEFAULT_REFRESH_PERIOD_UNIT}.
 	 *
-	 * @param maxTotalRetriesDuration
-	 * 		the maximum total retry duration
+	 * @param adaptiveRefreshTimeout
+	 * 		timeout for rate-limit adaptive topology updates, must be greater than {@literal 0}.
 	 *
-	 * @return this builder
+	 * @return {@code this}
+	 *
+	 * @since 4.0.0
 	 */
-	public ClusterClientBuilder<K, V, C> maxTotalRetriesDuration(Duration maxTotalRetriesDuration) {
-		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
+	public ClusterClientBuilder<K, V, C> adaptiveRefreshTimeout(Duration adaptiveRefreshTimeout) {
+		this.adaptiveRefreshTimeout = adaptiveRefreshTimeout;
 		return this;
 	}
 
@@ -118,6 +123,16 @@ public abstract class ClusterClientBuilder<K, V, C>
 		return this;
 	}
 
+	public ClusterClientBuilder<K, V, C> adaptive(boolean adaptive) {
+		this.adaptive = adaptive;
+		return this;
+	}
+
+	public ClusterClientBuilder<K, V, C> dynamicRefreshSources(boolean dynamicRefreshSources) {
+		this.dynamicRefreshSources = dynamicRefreshSources;
+		return this;
+	}
+
 	@Override
 	protected ClusterClientBuilder<K, V, C> self() {
 		return this;
@@ -126,17 +141,20 @@ public abstract class ClusterClientBuilder<K, V, C>
 	@Override
 	protected ConnectionProvider<K, V> createDefaultConnectionProvider() {
 		ClusterTopologyRefreshOptions.Builder topologyRefreshOptionsBuilder =
-				ClusterTopologyRefreshOptions.builder();
+				ClusterTopologyRefreshOptions.builder().dynamicRefreshSources(dynamicRefreshSources)
+						.refreshTriggersReconnectAttempts(maxRedirects).closeStaleConnections(true);
 
 		if(topologyRefreshPeriod != null){
 			topologyRefreshOptionsBuilder.enablePeriodicRefresh(topologyRefreshPeriod);
 		}
 
-		if(maxTotalRetriesDuration != null){
-			topologyRefreshOptionsBuilder.adaptiveRefreshTriggersTimeout(maxTotalRetriesDuration);
+		if(adaptiveRefreshTimeout != null){
+			topologyRefreshOptionsBuilder.adaptiveRefreshTriggersTimeout(adaptiveRefreshTimeout);
 		}
 
-		topologyRefreshOptionsBuilder.refreshTriggersReconnectAttempts(maxRedirects).closeStaleConnections(true);
+		if(adaptive == false){
+			topologyRefreshOptionsBuilder.disableAllAdaptiveRefreshTriggers();
+		}
 
 		if(this.maxRedirects > 0){
 			return new ClusterConnectionProvider<>(this.nodes, this.clientConfig, this.poolConfig,
@@ -159,12 +177,12 @@ public abstract class ClusterClientBuilder<K, V, C>
 			throw new IllegalArgumentException("Max attempts must be positive for cluster mode");
 		}
 
-		if(maxTotalRetriesDuration != null && maxTotalRetriesDuration.isNegative()){
-			throw new IllegalArgumentException("Max total retries duration cannot be negative for cluster mode");
-		}
-
 		if(topologyRefreshPeriod != null && topologyRefreshPeriod.isNegative()){
 			throw new IllegalArgumentException("Topology refresh period cannot be negative for cluster mode");
+		}
+
+		if(adaptiveRefreshTimeout != null && adaptiveRefreshTimeout.isNegative()){
+			throw new IllegalArgumentException("Refresh per timeout cannot be negative for cluster mode");
 		}
 	}
 

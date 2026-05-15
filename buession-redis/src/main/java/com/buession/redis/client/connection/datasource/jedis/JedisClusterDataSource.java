@@ -28,7 +28,6 @@ import com.buession.redis.client.connection.RedisNode;
 import com.buession.redis.client.connection.datasource.ClusterDataSource;
 import redis.clients.jedis.RedisClusterClient;
 
-import java.time.Duration;
 import java.util.Set;
 
 /**
@@ -50,16 +49,16 @@ public class JedisClusterDataSource extends AbstractJedisDataSource implements C
 	private int maxRedirects = DEFAULT_MAX_ATTEMPTS;
 
 	/**
-	 * 最大重数时长
+	 * 最大重数时长（单位：毫秒）
 	 */
-	private Duration maxTotalRetriesDuration = Duration.ofMillis(maxRedirects * RedisClusterClient.DEFAULT_TIMEOUT);
+	private int maxTotalRetries = maxRedirects * RedisClusterClient.DEFAULT_TIMEOUT;
 
 	/**
-	 * 定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
+	 * 定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长（单位：毫秒）
 	 *
 	 * @since 4.0.0
 	 */
-	private Duration topologyRefreshPeriod = Duration.ofMillis(RedisClusterClient.DEFAULT_TIMEOUT);
+	private int topologyRefreshPeriod = RedisClusterClient.DEFAULT_TIMEOUT;
 
 	@Override
 	public Set<RedisNode> getNodes() {
@@ -81,23 +80,32 @@ public class JedisClusterDataSource extends AbstractJedisDataSource implements C
 		this.maxRedirects = maxRedirects;
 	}
 
-	@Override
-	public Duration getMaxTotalRetriesDuration() {
-		return maxTotalRetriesDuration;
+	/**
+	 * 返回最大重试持续时长（单位：毫秒）
+	 *
+	 * @return 最大重试持续时长
+	 */
+	public int getMaxTotalRetries() {
+		return maxTotalRetries;
+	}
+
+	/**
+	 * 设置最大重试持续时长
+	 *
+	 * @param maxTotalRetries
+	 * 		最大重试持续时长（单位：毫秒）
+	 */
+	public void setMaxTotalRetries(int maxTotalRetries) {
+		this.maxTotalRetries = maxTotalRetries;
 	}
 
 	@Override
-	public void setMaxTotalRetriesDuration(Duration maxTotalRetriesDuration) {
-		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
-	}
-
-	@Override
-	public Duration getTopologyRefreshPeriod() {
+	public int getTopologyRefreshPeriod() {
 		return topologyRefreshPeriod;
 	}
 
 	@Override
-	public void setTopologyRefreshPeriod(Duration topologyRefreshPeriod) {
+	public void setTopologyRefreshPeriod(int topologyRefreshPeriod) {
 		this.topologyRefreshPeriod = topologyRefreshPeriod;
 	}
 

@@ -55,6 +55,11 @@ public abstract class AbstractLettuceDataSource extends AbstractDataSource imple
 	 */
 	private int requestQueueSize;
 
+	/**
+	 * 关闭超时时间（单位：毫秒）
+	 */
+	private int shutdownTimeout;
+
 	@Override
 	public int getComputationThreadPoolSize() {
 		return computationThreadPoolSize;
@@ -85,4 +90,13 @@ public abstract class AbstractLettuceDataSource extends AbstractDataSource imple
 		this.requestQueueSize = requestQueueSize;
 	}
 
+	@Override
+	public int getShutdownTimeout() {
+		return shutdownTimeout;
+	}
+
+	@Override
+	public void setShutdownTimeout(int shutdownTimeout) {
+		this.shutdownTimeout = shutdownTimeout;
+	}
 }

@@ -24,13 +24,11 @@
  */
 package io.lettuce.core;
 
-import com.buession.redis.client.connection.datasource.ClusterDataSource;
 import io.lettuce.core.builders.ClusterClientBuilder;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.internal.HostAndPort;
 import io.lettuce.core.providers.ConnectionProvider;
 
-import java.time.Duration;
 import java.util.Collections;
 import java.util.Set;
 
@@ -69,8 +67,6 @@ public class RedisClusterClient<K, V> extends BaseRedisClient<K, V> {
 	public static <K, V> RedisClusterClient<K, V> create(HostAndPort node) {
 		return RedisClusterClient.<K, V>builder().nodes(Collections.singleton(node))
 				.clientConfig(DefaultLettuceClientConfig.builder().timeout(RedisURI.DEFAULT_TIMEOUT_DURATION).build())
-				.maxTotalRetriesDuration(
-						Duration.ofMillis(RedisURI.DEFAULT_TIMEOUT * ClusterDataSource.DEFAULT_MAX_ATTEMPTS))
 				.build();
 	}
 
@@ -91,8 +87,6 @@ public class RedisClusterClient<K, V> extends BaseRedisClient<K, V> {
 	public static <K, V> RedisClusterClient<K, V> create(Set<HostAndPort> nodes) {
 		return RedisClusterClient.<K, V>builder().nodes(nodes)
 				.clientConfig(DefaultLettuceClientConfig.builder().timeout(RedisURI.DEFAULT_TIMEOUT_DURATION).build())
-				.maxTotalRetriesDuration(
-						Duration.ofMillis(RedisURI.DEFAULT_TIMEOUT * ClusterDataSource.DEFAULT_MAX_ATTEMPTS))
 				.build();
 	}
 
@@ -117,8 +111,6 @@ public class RedisClusterClient<K, V> extends BaseRedisClient<K, V> {
 	public static <K, V> RedisClusterClient<K, V> create(Set<HostAndPort> nodes, String user, String password) {
 		return RedisClusterClient.<K, V>builder().nodes(nodes)
 				.clientConfig(DefaultLettuceClientConfig.builder().user(user).password(password).build())
-				.maxTotalRetriesDuration(
-						Duration.ofMillis(RedisURI.DEFAULT_TIMEOUT * ClusterDataSource.DEFAULT_MAX_ATTEMPTS))
 				.build();
 	}
 

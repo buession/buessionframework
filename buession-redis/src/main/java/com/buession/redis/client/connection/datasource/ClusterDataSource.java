@@ -26,7 +26,6 @@ package com.buession.redis.client.connection.datasource;
 
 import com.buession.redis.client.connection.RedisNode;
 
-import java.time.Duration;
 import java.util.Set;
 
 /**
@@ -69,37 +68,22 @@ public interface ClusterDataSource extends DataSource {
 	void setMaxRedirects(int maxRedirects);
 
 	/**
-	 * 返回最大重试持续时长（单位：秒）
-	 *
-	 * @return 最大重试持续时长
-	 */
-	Duration getMaxTotalRetriesDuration();
-
-	/**
-	 * 设置最大重试持续时长
-	 *
-	 * @param maxTotalRetriesDuration
-	 * 		最大重试持续时长
-	 */
-	void setMaxTotalRetriesDuration(Duration maxTotalRetriesDuration);
-
-	/**
-	 * 返回定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
+	 * 返回定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长（单位：毫秒）
 	 *
 	 * @return 定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
 	 *
 	 * @since 4.0.0
 	 */
-	Duration getTopologyRefreshPeriod();
+	int getTopologyRefreshPeriod();
 
 	/**
 	 * 设置定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
 	 *
 	 * @param topologyRefreshPeriod
-	 * 		定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
+	 * 		定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长（单位：毫秒）
 	 *
 	 * @since 4.0.0
 	 */
-	void setTopologyRefreshPeriod(Duration topologyRefreshPeriod);
+	void setTopologyRefreshPeriod(int topologyRefreshPeriod);
 
 }

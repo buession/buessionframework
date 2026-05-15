@@ -27,6 +27,7 @@ package com.buession.redis.client.connection.lettuce;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisClusterConnection;
 import com.buession.redis.client.connection.RedisNode;
+import com.buession.redis.client.connection.datasource.ClusterDataSource;
 import com.buession.redis.client.connection.datasource.lettuce.LettuceClusterDataSource;
 import com.buession.redis.core.PoolConfig;
 import com.buession.redis.core.RedisMode;
@@ -37,6 +38,7 @@ import com.buession.redis.transaction.Transaction;
 import io.lettuce.core.DefaultLettuceClientConfig;
 import io.lettuce.core.RedisClusterClient;
 import io.lettuce.core.builders.ClusterClientBuilder;
+import io.lettuce.core.cluster.ClusterTopologyRefreshOptions;
 import io.lettuce.core.codec.RedisCodec;
 
 import java.time.Duration;
@@ -59,19 +61,36 @@ public class LettuceClusterConnection<K, V> extends AbstractLettuceRedisConnecti
 	/**
 	 * 最大重定向次数
 	 */
-	private int maxRedirects;
+	private int maxRedirects = ClusterDataSource.DEFAULT_MAX_ATTEMPTS;
 
 	/**
-	 * 最大重数时长
+	 * timeout for rate-limit adaptive topology updates（单位：毫秒）
 	 */
-	private Duration maxTotalRetriesDuration;
+	private int adaptiveRefreshTimeout = (int) ClusterTopologyRefreshOptions.DEFAULT_ADAPTIVE_REFRESH_TIMEOUT;
 
 	/**
-	 * 定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
+	 * 定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长（单位：毫秒）
 	 *
 	 * @since 4.0.0
 	 */
-	private Duration topologyRefreshPeriod;
+	private int topologyRefreshPeriod = (int) ClusterTopologyRefreshOptions.DEFAULT_REFRESH_PERIOD;
+
+	/**
+	 * Whether to discover and query all cluster nodes for obtaining the
+	 * cluster topology. When set to false, only the initial seed nodes are
+	 * used as sources for topology discovery.
+	 *
+	 * @since 4.0.0
+	 */
+	private boolean dynamicRefreshSources = ClusterTopologyRefreshOptions.DEFAULT_DYNAMIC_REFRESH_SOURCES;
+
+	/**
+	 * Whether adaptive topology refreshing using all available refresh
+	 * triggers should be used.
+	 *
+	 * @since 4.0.0
+	 */
+	private boolean adaptive;
 
 	/**
 	 * 构造函数
@@ -88,6 +107,8 @@ public class LettuceClusterConnection<K, V> extends AbstractLettuceRedisConnecti
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource) {
 		super(dataSource);
+		setDynamicRefreshSources(dataSource.isDynamicRefreshSources());
+		setAdaptive(dataSource.isAdaptive());
 	}
 
 	/**
@@ -102,6 +123,8 @@ public class LettuceClusterConnection<K, V> extends AbstractLettuceRedisConnecti
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig) {
 		super(dataSource, poolConfig);
+		setDynamicRefreshSources(dataSource.isDynamicRefreshSources());
+		setAdaptive(dataSource.isAdaptive());
 	}
 
 	/**
@@ -114,6 +137,8 @@ public class LettuceClusterConnection<K, V> extends AbstractLettuceRedisConnecti
 	 */
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, RedisCodec<K, V> codec) {
 		super(dataSource, codec);
+		setDynamicRefreshSources(dataSource.isDynamicRefreshSources());
+		setAdaptive(dataSource.isAdaptive());
 	}
 
 	/**
@@ -129,6 +154,8 @@ public class LettuceClusterConnection<K, V> extends AbstractLettuceRedisConnecti
 	public LettuceClusterConnection(LettuceClusterDataSource dataSource, PoolConfig poolConfig,
 	                                RedisCodec<K, V> codec) {
 		super(dataSource, poolConfig, codec);
+		setDynamicRefreshSources(dataSource.isDynamicRefreshSources());
+		setAdaptive(dataSource.isAdaptive());
 	}
 
 	@Override
@@ -141,24 +168,67 @@ public class LettuceClusterConnection<K, V> extends AbstractLettuceRedisConnecti
 		this.maxRedirects = maxRedirects;
 	}
 
-	@Override
-	public Duration getMaxTotalRetriesDuration() {
-		return maxTotalRetriesDuration;
+	/**
+	 * Returns the timeout for adaptive topology updates. This timeout is to rate-limit topology updates initiated by refresh
+	 * triggers to one topology refresh per timeout. Defaults to {@literal 30 SECONDS}. See
+	 * {@link io.lettuce.core.cluster.ClusterTopologyRefreshOptions#DEFAULT_REFRESH_PERIOD}
+	 * and {@link io.lettuce.core.cluster.ClusterTopologyRefreshOptions#DEFAULT_REFRESH_PERIOD_UNIT}.
+	 *
+	 * @return The imeout for rate-limit adaptive topology updates
+	 *
+	 * @since 4.0.0
+	 */
+	public int getAdaptiveRefreshTimeout() {
+		return adaptiveRefreshTimeout;
+	}
+
+	/**
+	 * Set the timeout for adaptive topology updates. This timeout is to rate-limit topology updates initiated by refresh
+	 * triggers to one topology refresh per timeout. Defaults to {@literal 30 SECONDS}. See
+	 * {@link io.lettuce.core.cluster.ClusterTopologyRefreshOptions#DEFAULT_REFRESH_PERIOD}
+	 * and {@link io.lettuce.core.cluster.ClusterTopologyRefreshOptions#DEFAULT_REFRESH_PERIOD_UNIT}.
+	 *
+	 * @param adaptiveRefreshTimeout
+	 * 		timeout for rate-limit adaptive topology updates, must be greater than {@literal 0}.
+	 *
+	 * @since 4.0.0
+	 */
+	public void setAdaptiveRefreshTimeout(int adaptiveRefreshTimeout) {
+		this.adaptiveRefreshTimeout = adaptiveRefreshTimeout;
 	}
 
 	@Override
-	public void setMaxTotalRetriesDuration(Duration maxTotalRetriesDuration) {
-		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
-	}
-
-	@Override
-	public Duration getTopologyRefreshPeriod() {
+	public int getTopologyRefreshPeriod() {
 		return topologyRefreshPeriod;
 	}
 
 	@Override
-	public void setTopologyRefreshPeriod(Duration topologyRefreshPeriod) {
+	public void setTopologyRefreshPeriod(int topologyRefreshPeriod) {
 		this.topologyRefreshPeriod = topologyRefreshPeriod;
+	}
+
+	public boolean isDynamicRefreshSources() {
+		return getDynamicRefreshSources();
+	}
+
+	public boolean getDynamicRefreshSources() {
+		return dynamicRefreshSources;
+	}
+
+	public void setDynamicRefreshSources(boolean dynamicRefreshSources) {
+		this.dynamicRefreshSources = dynamicRefreshSources;
+	}
+
+	public boolean isAdaptive() {
+		return getAdaptive();
+	}
+
+	public boolean getAdaptive() {
+		return adaptive;
+	}
+
+	public void setAdaptive(boolean adaptive) {
+		this.adaptive = adaptive;
 	}
 
 	@Override
@@ -178,15 +248,19 @@ public class LettuceClusterConnection<K, V> extends AbstractLettuceRedisConnecti
 
 			final ClusterClientBuilder<K, V, RedisClusterClient<K, V>> builder = RedisClusterClient.<K, V>builder()
 					.nodes(createNodes(dataSource.getNodes(), RedisNode.DEFAULT_PORT))
-					.clientConfig(clientConfigBuilder.build()).codec(getCodec());
+					.clientConfig(clientConfigBuilder.build()).codec(getCodec()).adaptive(isAdaptive())
+					.dynamicRefreshSources(getDynamicRefreshSources());
 
 			Optional.ofNullable(getConnectionPoolConfig()).ifPresent(builder::poolConfig);
 			//Optional.ofNullable(getCacheConfig()).ifPresent(builder::cacheConfig);
-			Optional.ofNullable(getMaxTotalRetriesDuration()).ifPresent(builder::maxTotalRetriesDuration);
-			Optional.ofNullable(getTopologyRefreshPeriod()).ifPresent(builder::topologyRefreshPeriod);
-
 			if(getMaxRedirects() > 0){
 				builder.maxRedirects(getMaxRedirects());
+			}
+			if(getAdaptiveRefreshTimeout() > 0){
+				builder.adaptiveRefreshTimeout(Duration.ofMillis(getAdaptiveRefreshTimeout()));
+			}
+			if(getTopologyRefreshPeriod() > 0){
+				builder.topologyRefreshPeriod(Duration.ofMillis(getTopologyRefreshPeriod()));
 			}
 
 			client = builder.build();

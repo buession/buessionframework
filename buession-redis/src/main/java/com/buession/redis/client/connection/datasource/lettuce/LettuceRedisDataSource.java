@@ -26,6 +26,8 @@ package com.buession.redis.client.connection.datasource.lettuce;
 
 import com.buession.redis.client.connection.datasource.DataSource;
 
+import java.time.Duration;
+
 /**
  * Lettuce 数据源
  *
@@ -90,5 +92,24 @@ public interface LettuceRedisDataSource extends DataSource {
 	 * @since 4.0.0
 	 */
 	void setRequestQueueSize(int requestQueueSize);
+
+	/**
+	 * 返回关闭超时时间
+	 *
+	 * @return 关闭超时时间（单位：毫秒）
+	 *
+	 * @since 4.0.0
+	 */
+	int getShutdownTimeout();
+
+	/**
+	 * 设置关闭超时时间
+	 *
+	 * @param shutdownTimeout
+	 * 		关闭超时时间（单位：毫秒）
+	 *
+	 * @since 4.0.0
+	 */
+	void setShutdownTimeout(int shutdownTimeout);
 
 }

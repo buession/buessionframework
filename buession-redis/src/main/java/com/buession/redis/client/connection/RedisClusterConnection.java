@@ -32,7 +32,6 @@ import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.transaction.Transaction;
 
-import java.time.Duration;
 import java.util.List;
 
 /**
@@ -59,28 +58,13 @@ public interface RedisClusterConnection extends RedisConnection {
 	void setMaxRedirects(int maxRedirects);
 
 	/**
-	 * 返回最大重试持续时长
-	 *
-	 * @return 最大重试持续时长
-	 */
-	Duration getMaxTotalRetriesDuration();
-
-	/**
-	 * 设置最大重试持续时长
-	 *
-	 * @param maxTotalRetriesDuration
-	 * 		最大重试持续时长
-	 */
-	void setMaxTotalRetriesDuration(Duration maxTotalRetriesDuration);
-
-	/**
 	 * 返回定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
 	 *
 	 * @return 定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
 	 *
 	 * @since 4.0.0
 	 */
-	Duration getTopologyRefreshPeriod();
+	int getTopologyRefreshPeriod();
 
 	/**
 	 * 设置定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
@@ -90,7 +74,7 @@ public interface RedisClusterConnection extends RedisConnection {
 	 *
 	 * @since 4.0.0
 	 */
-	void setTopologyRefreshPeriod(Duration topologyRefreshPeriod);
+	void setTopologyRefreshPeriod(int topologyRefreshPeriod);
 
 	@Override
 	default Pipeline openPipeline() {

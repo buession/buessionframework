@@ -35,6 +35,7 @@ import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.transaction.Transaction;
 import redis.clients.jedis.DefaultJedisClientConfig;
+import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.RedisClusterClient;
 import redis.clients.jedis.builders.ClusterClientBuilder;
 
@@ -53,19 +54,19 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection<RedisCl
 	/**
 	 * 最大重定向次数
 	 */
-	private int maxRedirects;
+	private int maxRedirects = JedisCluster.DEFAULT_MAX_ATTEMPTS;
 
 	/**
-	 * 最大重数时长
+	 * 最大重数时长（单位：毫秒）
 	 */
-	private Duration maxTotalRetriesDuration;
+	private int maxTotalRetries;
 
 	/**
-	 * 定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长
+	 * 定期主动刷新客户端本地缓存的 Redis 集群拓扑结构时长（单位：毫秒）
 	 *
 	 * @since 4.0.0
 	 */
-	private Duration topologyRefreshPeriod;
+	private int topologyRefreshPeriod;
 
 	/**
 	 * 构造函数
@@ -108,23 +109,36 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection<RedisCl
 		this.maxRedirects = maxRedirects;
 	}
 
-	@Override
-	public Duration getMaxTotalRetriesDuration() {
-		return maxTotalRetriesDuration;
+	/**
+	 * 获取最大重试持续时长
+	 *
+	 * @return 最大重试持续时长（单位：毫秒）
+	 *
+	 * @since 4.0.0
+	 */
+	public int getMaxTotalRetries() {
+		return maxTotalRetries;
+	}
+
+	/**
+	 * 设置最大重试持续时长
+	 *
+	 * @param maxTotalRetries
+	 * 		最大重试持续时长（单位：毫秒）
+	 *
+	 * @since 4.0.0
+	 */
+	public void setMaxTotalRetries(int maxTotalRetries) {
+		this.maxTotalRetries = maxTotalRetries;
 	}
 
 	@Override
-	public void setMaxTotalRetriesDuration(Duration maxTotalRetriesDuration) {
-		this.maxTotalRetriesDuration = maxTotalRetriesDuration;
-	}
-
-	@Override
-	public Duration getTopologyRefreshPeriod() {
+	public int getTopologyRefreshPeriod() {
 		return topologyRefreshPeriod;
 	}
 
 	@Override
-	public void setTopologyRefreshPeriod(Duration topologyRefreshPeriod) {
+	public void setTopologyRefreshPeriod(int topologyRefreshPeriod) {
 		this.topologyRefreshPeriod = topologyRefreshPeriod;
 	}
 
@@ -147,11 +161,15 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection<RedisCl
 
 			Optional.ofNullable(getConnectionPoolConfig()).ifPresent(builder::poolConfig);
 			Optional.ofNullable(getCacheConfig()).ifPresent(builder::cacheConfig);
-			Optional.ofNullable(getMaxTotalRetriesDuration()).ifPresent(builder::maxTotalRetriesDuration);
-			Optional.ofNullable(getTopologyRefreshPeriod()).ifPresent(builder::topologyRefreshPeriod);
 
 			if(getMaxRedirects() > 0){
 				builder.maxAttempts(getMaxRedirects());
+			}
+			if(getMaxTotalRetries() > 0){
+				builder.maxTotalRetriesDuration(Duration.ofMillis(getMaxTotalRetries()));
+			}
+			if(getTopologyRefreshPeriod() > 0){
+				builder.topologyRefreshPeriod(Duration.ofMillis(getTopologyRefreshPeriod()));
 			}
 
 			client = builder.build();
