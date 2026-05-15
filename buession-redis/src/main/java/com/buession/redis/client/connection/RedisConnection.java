@@ -159,6 +159,8 @@ public interface RedisConnection extends Destroyable, Closeable {
 	 * 返回重连间隔
 	 *
 	 * @return 重连间隔（单位：毫秒）
+	 *
+	 * @since 4.0.0
 	 */
 	int getReconnectDelay();
 
@@ -167,6 +169,8 @@ public interface RedisConnection extends Destroyable, Closeable {
 	 *
 	 * @param reconnectDelay
 	 * 		重连间隔（单位：毫秒）
+	 *
+	 * @since 4.0.0
 	 */
 	void setReconnectDelay(int reconnectDelay);
 

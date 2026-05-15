@@ -141,6 +141,12 @@ public abstract class AbstractRedisConnection<C> implements RedisConnection {
 	 */
 	public AbstractRedisConnection(DataSource dataSource) {
 		this.dataSource = dataSource;
+		setConnectTimeout(dataSource.getConnectTimeout());
+		setSoTimeout(dataSource.getSoTimeout());
+		setInfiniteSoTimeout(dataSource.getInfiniteSoTimeout());
+		setAutoReconnect(dataSource.getAutoReconnect());
+		setReconnectDelay(dataSource.getReconnectDelay());
+		setSslOptions(dataSource.getSslOptions());
 	}
 
 	/**

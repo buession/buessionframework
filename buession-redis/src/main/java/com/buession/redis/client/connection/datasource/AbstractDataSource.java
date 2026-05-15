@@ -81,7 +81,14 @@ public abstract class AbstractDataSource implements DataSource {
 	 *
 	 * @since 4.0.0
 	 */
-	private boolean autoReconnect;
+	private boolean autoReconnect = true;
+
+	/**
+	 * 重连间隔（单位：毫秒）
+	 *
+	 * @since 4.0.0
+	 */
+	private int reconnectDelay;
 
 	/**
 	 * SSL 配置
@@ -191,6 +198,26 @@ public abstract class AbstractDataSource implements DataSource {
 	@Override
 	public void setPoolConfig(PoolConfig poolConfig) {
 		this.poolConfig = poolConfig;
+	}
+
+	@Override
+	public boolean getAutoReconnect() {
+		return autoReconnect;
+	}
+
+	@Override
+	public void setAutoReconnect(boolean autoReconnect) {
+		this.autoReconnect = autoReconnect;
+	}
+
+	@Override
+	public int getReconnectDelay() {
+		return reconnectDelay;
+	}
+
+	@Override
+	public void setReconnectDelay(int reconnectDelay) {
+		this.reconnectDelay = reconnectDelay;
 	}
 
 	@Override

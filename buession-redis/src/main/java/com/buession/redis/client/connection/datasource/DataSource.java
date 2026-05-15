@@ -146,6 +146,55 @@ public interface DataSource {
 	void setPoolConfig(PoolConfig poolConfig);
 
 	/**
+	 * 返回是否自动重连
+	 *
+	 * @return 是否自动重连
+	 *
+	 * @since 4.0.0
+	 */
+	default boolean isAutoReconnect() {
+		return getAutoReconnect();
+	}
+
+	/**
+	 * 返回是否自动重连
+	 *
+	 * @return 是否自动重连
+	 *
+	 * @since 4.0.0
+	 */
+	boolean getAutoReconnect();
+
+	/**
+	 * 设置是否自动重连
+	 *
+	 * @param autoReconnect
+	 * 		是否自动重连
+	 *
+	 * @since 4.0.0
+	 */
+	void setAutoReconnect(boolean autoReconnect);
+
+	/**
+	 * 返回重连间隔
+	 *
+	 * @return 重连间隔（单位：毫秒）
+	 *
+	 * @since 4.0.0
+	 */
+	int getReconnectDelay();
+
+	/**
+	 * 设置重连间隔
+	 *
+	 * @param reconnectDelay
+	 * 		重连间隔（单位：毫秒）
+	 *
+	 * @since 4.0.0
+	 */
+	void setReconnectDelay(int reconnectDelay);
+
+	/**
 	 * 返回 SSL 配置
 	 *
 	 * @return SSL 配置
